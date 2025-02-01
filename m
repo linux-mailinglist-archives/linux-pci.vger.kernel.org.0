@@ -1,228 +1,106 @@
-Return-Path: <linux-pci+bounces-20615-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20616-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB381A247D5
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Feb 2025 10:03:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF010A2486C
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Feb 2025 12:00:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 846433A5AF3
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Feb 2025 09:03:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E013166177
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Feb 2025 11:00:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EAB025760;
-	Sat,  1 Feb 2025 09:03:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D83137719;
+	Sat,  1 Feb 2025 11:00:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPfltsev"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jObRT3yy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBBE632;
-	Sat,  1 Feb 2025 09:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378D617BD6
+	for <linux-pci@vger.kernel.org>; Sat,  1 Feb 2025 11:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738400620; cv=none; b=Zec7U4lg6wnGjDpS0CwOnH5rUioZeCBy35eHLajXhomJ1vXPyYXGyNxlh3U6JU8+cE3fwKReQUWYlw8c1zLio/O7b25bl0ySOQOuTrFuvAyj/zyGDBvujnHNj5I9igkNtAa4pMxAQesoIMV0wZe/cv3UhSFIzvID+Nsv1fJu+TI=
+	t=1738407644; cv=none; b=n7GuHTxfAaj3iyZxso/UOoDUTGoXkhqjCBrlliw7BRaTRxJQRhO95MN/fROqbIrXyMP8a7Z/JUz4ubXuCzWwDtpN3y1KZcnz2Bbf1x6LvowPPw8V6AbBnCj8VnB/H2vzjPTsjMWQCNReOZb5QB2+pQdMsJfu7/m1Y6F5XfxV03E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738400620; c=relaxed/simple;
-	bh=dCmznVGGpPhbq7aTQ3oKsuHwb4e+/C/exV6mgmYPB8w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SgLHq4A3G8jTKdcFsmQgZvZUu+s0qVkSOgtqXCzUvSUdeeVD12Rxw5iRiHcV/8VJkPfk9a6wiV80YHFR3UBOOG9RFQ5p8skt/qPBa6aui1g6yDEwFVykbekq6xFkQx5ng+SqmRLqKVJl7CQEqfWysrrTrKu/3nkzSDBEIuE0r0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CPfltsev; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30613802a6bso27669871fa.1;
-        Sat, 01 Feb 2025 01:03:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738400615; x=1739005415; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n9yS6i50fsDPXkXU4ztnrfoQWet2zHGrTDpq9W+LdBY=;
-        b=CPfltsev4XOXd48EBOcUApS2IDOiT/ooON5/e1ROFkIh6oBL2sR9jbJVLtRkavq8Zj
-         LaPOHTLq/jcHSVKYeSTEeJQUtyxT/zbAO28a/1Pogm/fDT+ykrLyxsEc2VZxqzUbxf6J
-         WBUpdjDzMgz5fdKcrPSvNMDe8dl6jsJRTtE1MVREx760qT4L4/gRbW9NNgcnCVXK+mkV
-         eQLnL3WKLehhXZOpHO3MFs9KH2tdoAwy1epKMnpdbwMaeeJdjbv17iyO0sBIEBbyVmVt
-         v0FoQK5yqFA5LnIjomLnvkrHW5uRTtK7YqThPjkZXT/LTa5UVHClJvpvCFvPENcJ2839
-         e4cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738400615; x=1739005415;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n9yS6i50fsDPXkXU4ztnrfoQWet2zHGrTDpq9W+LdBY=;
-        b=c0BlDJi5oLhJpSY1m7btyCrfRqzcx1dUh1zxMkIwjTGE5eBncd+NBmeGL7JGji7nDJ
-         eLpHZlHzwFpTJ4Mxh/vBPKdzOHMlFuQExX+2yKeEbTAAreLnKq8jXqz6zJ9SdjgQHnxm
-         2yORVCyCsyD/NdGXc6p2YGhPBGm5EBOtZbHCvlvPUBC/R5iKCyiaoN/lB3HVDilSoSgR
-         4BVU+TjqsiAqDFQhxt4lQhpdr7b2qdLMjQmioAwnJIQQzhPXB0xb1R+TMRSS3Xz/owlu
-         IsETBQAScynF+mQ3uF2QxQsBls/DHYORc7vbMct6LtPUD7axuDaKQHNqlFO1pqDZ9Jpq
-         VsnQ==
-X-Gm-Message-State: AOJu0Yw64IrevJyA/EFXC9yzaYG9/dGa58jcn6PTqu6eEOa4/o5iNfUR
-	AB6nJEuTWd4bQa8yJ9D7rW7KmyyY3lFpdRg/nBvWD8gbrlWJQLygR30pYAOrQCFo9XWbwsJVquM
-	JGhIKOquAIZJZFIUyaOGOvXoCpm1aeC55dQ==
-X-Gm-Gg: ASbGncvfD9mmZ+m57/SzJCKEkgH+4dsGfhU8zw45LI2gUbLXy6+Dz1tuur95ix8v2YJ
-	6XMvWJu1VBe34rHM3AQN3e4icX3DmjuymP/JaUB/pstSrtIRg9e/EizSDFPUw7D+kF6OWqbX6EQ
-	==
-X-Google-Smtp-Source: AGHT+IG19bf2TA0IIVd+XMsIRlOrA60uehqCuZOGzORiPqBl0Mhro+mb2mSDopob354gWXP80LDade6/uJqaYpY+2PY=
-X-Received: by 2002:a2e:a104:0:b0:306:1397:d5ff with SMTP id
- 38308e7fff4ca-307968f8e8fmr57198801fa.22.1738400615109; Sat, 01 Feb 2025
- 01:03:35 -0800 (PST)
+	s=arc-20240116; t=1738407644; c=relaxed/simple;
+	bh=JmWAHXdOaXV/M3CCGGuc0twYRRreA4gPfNaDgyIKvt4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ea8nYO3P2E41tvOlPE7eivDNkv55zIRprZ2LGFK3gAkaeD1HjrWOMEK0CccddABjS2YLJrxQtzddOLkzzF1yN+eh6GNRZIa1XUVaFGDKsiz4ciWeQ1wgh05dllcZvla/4nQzcqxs5nXmuXGjAvZs0dkPiNjrVPu4QJ++b+EWcXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jObRT3yy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3286C4CED3;
+	Sat,  1 Feb 2025 11:00:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738407643;
+	bh=JmWAHXdOaXV/M3CCGGuc0twYRRreA4gPfNaDgyIKvt4=;
+	h=From:Date:Subject:To:Cc:From;
+	b=jObRT3yyoJqHYF5aDMmUTZBS1b4olMA/WGDtswtX1sg1FnX4jM9X0sbWfPaUoPx+J
+	 DaW8nU+IKhT+oi13JNz9UOHqQ5Lsk3CLqbwsBheuTzz7O7fLn5BMSUeC7JT6wNcNi+
+	 N/IlrlurmoPB/iynqZgAKAdICNNl/zrUx0LUe9xvWBU3voty2uosTzCNcg0e/JHgTn
+	 PtbBJoQoVzE+ZfafA7EprUrsl7flCxV1HVdOkmL0r1KFPWJPsYkBiyxG03oVVtFoAp
+	 g3AKzNL+/TfIWABKHtTMHSfAFLMbZkQi8QS+MSGmjZKk03poAAh+p24Nd4JQTU5mpY
+	 K9IMjjjlGgvdA==
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+Date: Sat, 01 Feb 2025 12:00:18 +0100
+Subject: [PATCH v2] PCI: mediatek-gen3: Remove leftover mac_reset assert
+ for Airoha EN7581 SoC.
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMciSVUzFL+myQTTRD-OZRf+o9UUPDE87SzUxQ2cYdjrfd7iHQ@mail.gmail.com>
-In-Reply-To: <CAMciSVUzFL+myQTTRD-OZRf+o9UUPDE87SzUxQ2cYdjrfd7iHQ@mail.gmail.com>
-From: Naveen Kumar P <naveenkumar.parna@gmail.com>
-Date: Sat, 1 Feb 2025 14:33:23 +0530
-X-Gm-Features: AWEUYZkl7qXY05qxjPCoXgIOxUmznIZ3iFQVpAlxDDtfyd1_72qEIaLGFHWGno0
-Message-ID: <CAMciSVXsuW7b=EKwS1mtNpANF+nRmH1-ofvDy6gp0jQ4jSwE+g@mail.gmail.com>
-Subject: Re: Assistance Needed: PCIe Device BAR Reset Issue
-To: linux-pci@vger.kernel.org, lukas@wunner.de
-Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250201-pcie-en7581-remove-mac_reset-v2-1-a06786cdc683@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAMH+nWcC/x3MQQqEMAwF0KtI1gbailXmKoOIU7+ahVVSEUG8u
+ 2WWb/NuSlBBok9xk+KUJFvMcGVBYRniDJYxm5xxtXHG8h4EjNjUrWXFup3gdQi9IuFg69H8PCp
+ MxlMudsUk17//ds/zAifk0mNuAAAA
+X-Change-ID: 20250201-pcie-en7581-remove-mac_reset-16e7b6e3ef06
+To: Ryder Lee <ryder.lee@mediatek.com>, 
+ Jianjun Wang <jianjun.wang@mediatek.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, Lorenzo Bianconi <lorenzo@kernel.org>
+X-Mailer: b4 0.14.2
 
-Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr-
-Stepping- SERR- FastB2B- DisINTx-
-Does this indicates that memory space (Mem-) and bus mastering
-(BusMaster-) are disabled? Does it suggest the device might have
-entered a low-power state?
+Remove a leftover assert for mac_reset line in mtk_pcie_en7581_power_up().
+This is not harmful since EN7581 does not requires mac_reset and
+mac_reset is not defined in EN7581 device tree.
 
-I see runtime_status as active
-#cat /sys/bus/pci/devices/0000\:01\:00.0/power/runtime_status
-active
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+---
+Changes in v2:
+- fix typo in commit log
+---
+ drivers/pci/controller/pcie-mediatek-gen3.c | 1 -
+ 1 file changed, 1 deletion(-)
 
+diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
+index aa24ac9aaecc749b53cfc4faf6399913d20cdbf2..0f64e76e2111468e6a453889ead7fbc75804faf7 100644
+--- a/drivers/pci/controller/pcie-mediatek-gen3.c
++++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+@@ -940,7 +940,6 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
+ 	 */
+ 	reset_control_bulk_assert(pcie->soc->phy_resets.num_resets,
+ 				  pcie->phy_resets);
+-	reset_control_assert(pcie->mac_reset);
+ 
+ 	/* Wait for the time needed to complete the reset lines assert. */
+ 	msleep(PCIE_EN7581_RESET_TIME_MS);
 
-On Fri, Jan 31, 2025 at 3:37=E2=80=AFPM Naveen Kumar P
-<naveenkumar.parna@gmail.com> wrote:
->
-> Dear Linux Kernel Community,
->
-> I hope this message finds you well. I am reaching out to seek assistance =
-with an issue I am experiencing with a PCIe device on my system.
->
-> System Details:
->
-> PCIe Device: PLDA Device 5555
-> Kernel Version: 5.4.0-148-generic
-> Distribution: Ubuntu 20.04.6 LTS
->
-> After booting the system, I read the Base Address Register (BAR) of the P=
-CIe device using the following command:
->
-> setpci -s 01:00.0 BASE_ADDRESS_0
->
-> Initially, the BAR value is 0xb0400000. However, after some time, reading=
- from the PCIe device's BAR memory fails and returns 0xffff (PCIe memory-ma=
-pped registers read via the readb(), readw(), and readl() kernel mode APIs =
-returned 0xff\0xffff\0xffffffff). Upon rechecking the BAR using the same se=
-tpci command, the result is 0x00000000. Additionally, I verified the BAR0 a=
-ddress using the kernel API pci_resource_start(), and it exhibited the same=
- behavior.
->
-> Steps Taken:
->
-> Verified the device status using lspci -vvv -s 01:00.0:
-> # lspci -vvv -s 01:00.0
-> 01:00.0 RAM memory: PLDA Device 5555
->         Subsystem: Device 4000:0000
->         Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParEr=
-r- Stepping- SERR- FastB2B- DisINTx-
->         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- =
-<TAbort- <MAbort- >SERR- <PERR- INTx-
->         Interrupt: pin A routed to IRQ 16
->         Region 0: Memory at b0400000 (32-bit, non-prefetchable) [virtual]=
- [size=3D4M]
->         Capabilities: [40] Power Management version 3
->                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=3D0mA PME(D0-,D1-,=
-D2-,D3hot-,D3cold-)
->                 Status: D0 NoSoftRst+ PME-Enable- DSel=3D0 DScale=3D0 PME=
--
->         Capabilities: [48] MSI: Enable- Count=3D1/1 Maskable- 64bit-
->                 Address: 00000000  Data: 0000
->         Capabilities: [60] Express (v2) Endpoint, MSI 00
->                 DevCap: MaxPayload 512 bytes, PhantFunc 0, Latency L0s un=
-limited, L1 unlimited
->                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- S=
-lotPowerLimit 0.000W
->                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
->                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
->                         MaxPayload 128 bytes, MaxReadReq 512 bytes
->                 DevSta: CorrErr+ NonFatalErr- FatalErr- UnsupReq- AuxPwr-=
- TransPend-
->                 LnkCap: Port #0, Speed 2.5GT/s, Width x2, ASPM L0s, Exit =
-Latency L0s unlimited
->                         ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
->                 LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
->                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
->                 LnkSta: Speed 2.5GT/s (ok), Width x2 (ok)
->                         TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
->                 DevCap2: Completion Timeout: Range B, TimeoutDis-, NROPrP=
-rP-, LTR-
->                          10BitTagComp-, 10BitTagReq-, OBFF Not Supported,=
- ExtFmt-, EETLPPrefix-
->                          EmergencyPowerReduction Not Supported, Emergency=
-PowerReductionInit-
->                          FRS-, TPHComp-, ExtTPHComp-
->                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
->                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, L=
-TR-, OBFF Disabled
->                          AtomicOpsCtl: ReqEn-
->                 LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- Spe=
-edDis+
->                          Transmit Margin: Normal Operating Range, EnterMo=
-difiedCompliance- ComplianceSOS-
->                          Compliance De-emphasis: -6dB
->                 LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationC=
-omplete-, EqualizationPhase1-
->                          EqualizationPhase2-, EqualizationPhase3-, LinkEq=
-ualizationRequest-
->         Kernel driver in use: M1801 PCI
->         Kernel modules: m1801_pci
->
-> # lspci -xxx -s 01:00.0
-> 01:00.0 RAM memory: PLDA Device 5555
-> 00: 56 15 55 55 00 00 10 00 00 00 00 05 00 00 00 00
-> 10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 20: 00 00 00 00 00 00 00 00 00 00 00 00 00 40 00 00
-> 30: 00 00 00 00 40 00 00 00 00 00 00 00 ff 01 00 00
-> 40: 01 48 03 00 08 00 00 00 05 60 00 00 00 00 00 00
-> 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 60: 10 00 02 00 c2 8f 00 00 10 28 01 00 21 f4 03 00
-> 70: 00 00 21 00 00 00 00 00 00 00 00 00 00 00 00 00
-> 80: 00 00 00 00 02 00 00 00 00 00 00 00 00 00 00 00
-> 90: 20 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
-> a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->
->
-> Verified power management settings:
->
-> cat /sys/module/pcie_aspm/parameters/policy
-> Output: [default] performance powersave powersupersave
->
->
-> Request for Assistance: I would appreciate any guidance or suggestions on=
- how to further debug this issue. Specifically, I am looking for:
->
-> Potential causes for the BAR being reset to 0x00000000.
-> Steps to ensure the device is not being reset or put into a low-power sta=
-te unexpectedly.
-> Any additional diagnostic steps or tools that could help identify the roo=
-t cause.
-> Thank you for your time and assistance.
->
->
-> Best regards,
-> Naveen
->
->
->
+---
+base-commit: 647d69605c70368d54fc012fce8a43e8e5955b04
+change-id: 20250201-pcie-en7581-remove-mac_reset-16e7b6e3ef06
+
+Best regards,
+-- 
+Lorenzo Bianconi <lorenzo@kernel.org>
+
 
