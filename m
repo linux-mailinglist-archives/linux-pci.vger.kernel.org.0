@@ -1,118 +1,120 @@
-Return-Path: <linux-pci+bounces-20626-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20627-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B053EA24AEE
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Feb 2025 18:07:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34BC4A24B29
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Feb 2025 18:39:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5DCE0188481F
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Feb 2025 17:07:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A49E8164038
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Feb 2025 17:39:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5B831BEF9C;
-	Sat,  1 Feb 2025 17:07:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45C491C5D78;
+	Sat,  1 Feb 2025 17:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SrxNuOWB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jCNTjQzE"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B23EAD27;
-	Sat,  1 Feb 2025 17:07:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE321ADC69
+	for <linux-pci@vger.kernel.org>; Sat,  1 Feb 2025 17:39:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738429662; cv=none; b=dRJZgeV9ZPtJBKl2t/eNmO6vf8jf2s5m44pd9EZRVyH6SMBZfIYItMBLiFHQP0Bs8GDFzqnQXsgdKossVULU0HEL4eb3FkkeNIk7Og+V/o/PiAIYgP+T5JnaPX6MK1RV5iqAC13HNF5T9alsGAj9gU5Oyqd96eyzZ/TB534kvDU=
+	t=1738431548; cv=none; b=C672wDNIUEanJzrs2aHlJzXSO7cjo/OU1L4+g8iRAqftoITxW1RBoU0rbvWm+k3Z8RTDZKSXvRoy1BBuwcn0lxr2/FWcw6z4h9nKye/mKwAloHEt/7cxqEiQ2ghwL6U9kolfLd9aFFG1CwEDBsDvaVdGLqeXY7XpiEgNtVe2tx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738429662; c=relaxed/simple;
-	bh=G19+TkOemeOISodRMMtQoREdptCX30LnWf9AyiZ2MyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=eRluOvQm406i3QPg1L+Q8bgOKbzDMoVPjI5Qj0u9Rg2gYgqu+oGDJYmrvenZGR9v6jWqMsYguAtbme0MxkvXpZlgUDHluntmRMp49sqxWylCvNKWp9f7V82rSwqx6FfBRuwqjhEtVFOZXs72JenSfq0xKqt/wgFHgfMjFCD28YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SrxNuOWB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4BD0C4CED3;
-	Sat,  1 Feb 2025 17:07:41 +0000 (UTC)
+	s=arc-20240116; t=1738431548; c=relaxed/simple;
+	bh=La1LNffAEjQFoTKt8KvEAMm8pmD3DHSw6reVmRKo1nk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uKHYxeFLg4nkhXMJw7j21rraHxaaJXPUC6rqjN4Vii/92dpKMdWU9QU3m/7xGAV6/byGHomahTmFlpygFSsgayFAX/9mf2nci/z3LBUkprppxt/SDAR9nuuVCEsyPDLI8MdjOw+60UxBz1nnxqWXXWt/7nLgQ3S5PNWHiS/eEDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jCNTjQzE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21FC1C4CED3;
+	Sat,  1 Feb 2025 17:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738429662;
-	bh=G19+TkOemeOISodRMMtQoREdptCX30LnWf9AyiZ2MyM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=SrxNuOWB1mCam1s7TfwBc2fkdrPjxhstbjjHns9dXBBlZZoxLwrsvREmOrRbIv3j9
-	 USIdiYH2847uQPA1/xQTV/8cXtOfPi/srMm8PSfMwhAIumQdKBfJP+gTF5xv1mR7G5
-	 ym1jkXFjEyUBcnoSEJDzQwSkIV2moDARQiLVUym0OpA+/g/cF8hD9PqJ8DZOiHMZw+
-	 /Q1TYXK9JYCqDG9x5T46K8H5dCf8CRqg2quDaN46CwgHKHBNp/+4FmdSRv8Ta0GaRW
-	 pMQHo3oW/jE6MlTRJKVRMAKj2nF0YyRIB6Mmfp3oTNPsNKUyaWlH3dKqOCkdki+Bsr
-	 R4+Tfh4KII9xA==
-Date: Sat, 1 Feb 2025 11:07:40 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
-Cc: Jianjun Wang =?utf-8?B?KOeOi+W7uuWGmyk=?= <Jianjun.Wang@mediatek.com>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Ryder Lee <Ryder.Lee@mediatek.com>
-Subject: Re: [PATCH] PCI: mediatek: Remove the usage of virt_to_phys
-Message-ID: <20250201170740.GA731664@bhelgaas>
+	s=k20201202; t=1738431547;
+	bh=La1LNffAEjQFoTKt8KvEAMm8pmD3DHSw6reVmRKo1nk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jCNTjQzEmsgMiuJpJy9ZMcl77ksKUMCBqGgVT3yms8WFNMpDFKsnk39f4ThmAH2ai
+	 en9YGabfzDZ5s7c0Zb9eG3RYXCMhBxzEwRIiQabe/rxZByc0ptT287DekjJ3tw0iq0
+	 NnXgrySyNdkw2VjQme2j2CkjH4LMX0lPV8GHdAY+JTmR0S4w9urNmpiJkE9iLJa8qg
+	 WwckDE782/W7I+1hwbHSktSGfNwCm+okEHuREG5baMWcd/SPZhNbgxu0ZzqeCOkwmU
+	 KxT0F/YioJTdf3qzUogeGefI0yeLVFuWEbpvEHIwCf2CDWKlPFlR57fxzFpua+JRtp
+	 mAW5y33bTiaCg==
+Date: Sat, 1 Feb 2025 18:39:01 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jon Hunter <jonathanh@nvidia.com>, Frank Li <Frank.li@nxp.com>,
+	Hans Zhang <18255117159@163.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] misc: pci_endpoint_test: Handle BAR sizes larger than
+ INT_MAX
+Message-ID: <Z55cNWKi8+9h9rUo@x1-carbon>
+References: <20250124093300.3629624-2-cassel@kernel.org>
+ <20250201160154.ih7qhpj2ovjtowcu@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250201162416.azp4slqqeabo2xyl@thinkpad>
+In-Reply-To: <20250201160154.ih7qhpj2ovjtowcu@thinkpad>
 
-On Sat, Feb 01, 2025 at 09:54:16PM +0530, manivannan.sadhasivam@linaro.org wrote:
-> On Mon, Jan 27, 2025 at 06:41:50PM -0600, Bjorn Helgaas wrote:
-> > On Thu, Jan 23, 2025 at 08:11:19AM +0000, Jianjun Wang (王建军) wrote:
-> > > On Wed, 2025-01-15 at 23:01 +0530, Manivannan Sadhasivam wrote:
-> > > > On Tue, Jan 07, 2025 at 01:20:58PM +0800, Jianjun Wang wrote:
-> > > > > Remove the usage of virt_to_phys, as it will cause sparse warnings
-> > > > > when
-> > > > > building on some platforms.
-
-> > > > >       snprintf(name, sizeof(name), "port%d", slot);
-> > > > > -     port->base = devm_platform_ioremap_resource_byname(pdev,
-> > > > > name);
-> > > > > +     regs = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > > > > name);
-> > > > > +     if (!regs)
-> > > > > +             return -EINVAL;
-> > > > > +
-> > > > > +     port->base = devm_ioremap_resource(dev, regs);
-> > > > >       if (IS_ERR(port->base)) {
-> > > > >               dev_err(dev, "failed to map port%d base\n", slot);
-> > > > >               return PTR_ERR(port->base);
-> > > > >       }
-> > > > > 
-> > > > > +     port->msg_addr = regs->start + PCIE_MSI_VECTOR;
+On Sat, Feb 01, 2025 at 09:31:54PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Jan 24, 2025 at 10:33:01AM +0100, Niklas Cassel wrote:
+> > Running 'pcitest -b 0' fails with "TEST FAILED" when the BAR0 size
+> > is e.g. 8 GB.
 > > 
-> > I think this still assumes that a CPU physical address
-> > (regs->start) is the same as the PCI bus address used for MSI, so
-> > this doesn't seem like the right solution to me.
+> > The return value of the pci_resource_len() macro can be larger than that
+> > of a signed integer type. Thus, when using 'pcitest' with an 8 GB BAR,
+> > the bar_size of the integer type will overflow.
 > > 
-> > Apparently they happen to be the same on this platform because (I
-> > assume) MSIs actually do work, but it's not a good pattern for
-> > drivers to copy.  I think what we really need is a dma_addr_t, and
-> > I think there are one or two PCI controller drivers that do that.
+> > Change bar_size from integer to resource_size_t to prevent integer
+> > overflow for large BAR sizes with 32-bit compilers.
+> > 
+> > In order to handle 64-bit resource_type_t on 32-bit platforms, we would
+> > have needed to use a function like div_u64() or similar. Instead, change
+> > the code to use addition instead of division. This avoids the need for
+> > div_u64() or similar, while also simplifying the code.
+> > 
 > 
-> I don't see why we would need 'dma_addr_t' here. The MSI address is
-> a static physical address on this platform and that is not a DMA
-> address. Other drivers can *only* copy this pattern if they also
-> have the physical address allocated for MSI.
+> Fixes tag?
 
-Isn't an MSI on PCI just a DMA write to a certain address?  My
-assumption is that if you put an analyzer on that link, an MSI from a
-device would be structurally indistinguishable from a DMA write from
-the device.  The MSI uses a different address, but doesn't it use the
-same size and kind of address, at least from the PCIe protocol
-perspective?
+size has been of type int since:
+2c156ac71c6b ("misc: Add host side PCI driver for PCI test function device")
 
-Bjorn
+But I think a better SHA1 to use as the Fixes tag would be:
+cda370ec6d1f ("misc: pci_endpoint_test: Avoid using hard-coded BAR sizes")
+
+Which has the one that started using pci_resource_len()
+(while still keeping size as type int).
+
+Perhaps this can be amended while applying?
+
+
+> 
+> > Co-developed-by: Hans Zhang <18255117159@163.com>
+> > Signed-off-by: Hans Zhang <18255117159@163.com>
+> > Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> 
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> > ---
+> > Changes since v1:
+> > -Add reason for why division was changed to addition in commit log.
+> 
+> You removed the history of this patch that was present in v1. Since there is
+> no link to v1, you could've kept it here for the sake of completeness.
+
+Yes, because I made the commit log way more verbose, as requested by Frank,
+so it now includes references to div_u64() even though we are not using it.
+
+
+Kind regards,
+Niklas
 
