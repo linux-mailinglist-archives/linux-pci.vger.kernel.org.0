@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-20635-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20636-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C349A24E88
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Feb 2025 15:17:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D05A1A24EB2
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Feb 2025 15:39:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 49E753A4003
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Feb 2025 14:17:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 85BB31883F31
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Feb 2025 14:39:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 893551F8AE9;
-	Sun,  2 Feb 2025 14:17:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A47FC1FAC26;
+	Sun,  2 Feb 2025 14:39:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IXEp6ZxQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6dXORxf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5DB1F8ADE;
-	Sun,  2 Feb 2025 14:17:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714C81FAC29;
+	Sun,  2 Feb 2025 14:39:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738505860; cv=none; b=hNExena6YbnbdyPAqHEkG3O1ImAZSdgX/7FsmT0YonC7DppKNU55+YxLoIctNlkXI7UHrvEr90j9O7TZfSOLdwnIKr9eNIReT+0YenRMF2vnnrwEyJb9YzI9IBG77DJmv8mQUWnH48Q06/WnGDvpMduXyfIsp7nLvXWqChe/i3w=
+	t=1738507140; cv=none; b=N1LRwrujp5SgW2ZHfoqfFmb4OTGeJbMwBe2ETV9BiDj4JOIBVwyUEUxv+6Bt/FrkvPMp2oECGPEQ5lPDKdqJ+RHzbDvlMFs2iS7XrPjPmPfGeR/VcR6anOYtEzmMiOdZ4pM3FzWsuaBUeGJeSPOpt28mZ22YWGGYv+WL3huTn2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738505860; c=relaxed/simple;
-	bh=bCUGo8rouRaEoQYHA7MIS/WPw4XvUL+N02kgnTBvb18=;
+	s=arc-20240116; t=1738507140; c=relaxed/simple;
+	bh=m/GIr/IEsKSsHVUeW2Q4w6SndLyLLCq83vbReUxX20A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M8r3MBVwd22RVtCLSCeQcnk10OPe5qS0/qsRDtKpuil1UrvIJr9Rk0TnJ81KaloD3yQ2Pf896tXPZ3wII6TRrMEWOgBYf6Uh/Hp0jsrU3qq3oVks7f+sCqGEO5Y+rtqTQrIMEfv3xkMP6t7E/vHM8verm3ur/9+h36HkIpgyTUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IXEp6ZxQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E89DC4CED1;
-	Sun,  2 Feb 2025 14:17:35 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=NE1CDssJQu7NRWzqUaIdSTWTvh9NR1Io3Bri0/DaFOdZ3h2CPSoDbLfBUGs14THRXafgKmLK4hrULOVwf2teliaI0VbzTQLZ625fdwvuhF3NIusnSAqNETivjs7HBsFAG2k6hIZPAcuxCg3izG/U5A2yJ3REYhGrLZDnSbbDRoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6dXORxf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35DE7C4CED1;
+	Sun,  2 Feb 2025 14:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738505860;
-	bh=bCUGo8rouRaEoQYHA7MIS/WPw4XvUL+N02kgnTBvb18=;
+	s=k20201202; t=1738507140;
+	bh=m/GIr/IEsKSsHVUeW2Q4w6SndLyLLCq83vbReUxX20A=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IXEp6ZxQRrzEpq5/UL0Z+LFrzkY77raKG5R/QiRIvd3SYbFCWzktaOUAi8EYtgvEF
-	 L2fXC9ifeV0xwTbTOUK8irC4eQBuIrV9MqU4CwdsIo+vfvV7BvK29xFxEhVTUrZPUy
-	 D2YczWzf9o0+w8RkPNfJNRGfBHLCl0vabH1ZpgBakajWM3/MRjDHXq7yGDHXKgPdJp
-	 Vst9dKBE6xVQA2mO9fWbhW/B7uXA+0NzPGPPrnJnj79McTe7GT7BLFcYhsyNfKFAOM
-	 AZB7G16x0wN8mEZLSMR+hZoMAzQVU3v07Qpo0bfj8ffSFgUqF3E8fVzVOwNZY4wQKw
-	 Vj/ziCZGoasfQ==
-Message-ID: <dd51fdae-0e00-44a9-a5a0-e536ba60fd8c@kernel.org>
-Date: Sun, 2 Feb 2025 15:17:33 +0100
+	b=B6dXORxfBfHsqfIT3VEQU/qlnHnioIPpdv17SXLFwCQ6yb3nWhX8W+eouYC4Acuhb
+	 LB3egQ5cXltR8/iWSG4m/CBw3rDakdvtBinACwm047s2EKT8NCDks77x1rmLZ+OALX
+	 Snc58QuBFDkGY+TSd/ofK2JdX/2Eumx26qHayhsA2aK5ULpkCu8w8Ow+X/9l7ryUxR
+	 51G5hyr4ivvOWvWRhFHCYLFu49rL1fr/x9E3ZyiN40YHoiq+K6xfH/jK0Zgfaf8gQv
+	 hNBQbx5D8m8lVvDT5oakmEEVddfKC5rphVOTOL3/+kM/o9bkGezZbCFxRMRih3Dw0e
+	 kZ53t8sfid53A==
+Message-ID: <128a0301-ca1d-4fe1-8fe9-5dd3aa605e4e@kernel.org>
+Date: Sun, 2 Feb 2025 15:38:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,20 +50,24 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] arm64: dts: agilex: add dtsi for PCIe Root Port
-To: matthew.gerlach@linux.intel.com
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
- conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, matthew.gerlach@altera.com,
- peter.colberg@altera.com
-References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
- <20250127173550.1222427-4-matthew.gerlach@linux.intel.com>
- <ea614dc5-ad24-4795-b9ba-fa682eda428f@kernel.org>
- <22cb714e-db76-b07-8572-2f70f6848369@linux.intel.com>
- <40a3dced-defe-412d-b5b2-efcc9619d172@kernel.org>
- <7c802294-97f6-3e9-4028-686484a525c5@linux.intel.com>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: airoha: Add the pbus-csr node for
+ EN7581 SoC
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
+ Jianjun Wang <jianjun.wang@mediatek.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+References: <20250115-en7581-pcie-pbus-csr-v1-0-40d8fcb9360f@kernel.org>
+ <20250115-en7581-pcie-pbus-csr-v1-1-40d8fcb9360f@kernel.org>
+ <20250118-sturgeon-of-incredible-endeavor-73a815@krzk-bin>
+ <Z54QtFIpX6a1eBm0@lore-desk>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,31 +113,29 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <7c802294-97f6-3e9-4028-686484a525c5@linux.intel.com>
+In-Reply-To: <Z54QtFIpX6a1eBm0@lore-desk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 01/02/2025 20:12, matthew.gerlach@linux.intel.com wrote:
+On 01/02/2025 13:16, Lorenzo Bianconi wrote:
+>>> +maintainers:
+>>> +  - Lorenzo Bianconi <lorenzo@kernel.org>
+>>> +
+>>> +description:
+>>> +  The airoha pbus-csr block provides a configuration interface for the PBUS
+>>> +  controller used to detect if a given address is on PCIE0, PCIE1 or PCIE2.
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    items:
+>>> +      - enum:
+>>> +          - airoha,en7581-pbus-csr
 >>
->>> they are also referenced in the following:
->>>      Documentation/devicetree/bindings/soc/intel/intel,hps-copy-engine.yaml
->>>      arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
->>> I am not exactly sure where the right place is to define them, maybe
->>> Documentation/devicetree/bindings/arm/intel,socfpga.yaml. On the other
->>> hand, no code references these names; so it might make sense to just
->>> remove them.
->>
->> In general: nowhere, because simple bus does not have such properties.
->> It's not about reg-names only - you cannot have reg. You just did not
->> define here simple-bus.
+>> Does not fit standard syscon bindings?
 > 
-> I understand. I will remove reg and reg-names.
+> I think standard syscon is fine. In this case we could drop this patch. Agree?
 
-If you have there IO address space, then removal does not sound right,
-either. You just need to come with the bindings for this dedicated
-device, whatever this is. There is no description here, not much in
-commit msg, so I don't know what is the device you are adding. PCI has
-several bindings, so is this just host bridge?
+Yes.
 
 
 Best regards,
