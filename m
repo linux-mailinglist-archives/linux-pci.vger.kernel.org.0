@@ -1,143 +1,145 @@
-Return-Path: <linux-pci+bounces-20674-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20675-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8802A2629F
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 19:38:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C19CA2630F
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 19:53:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 28456165626
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 18:38:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64F3B1633D9
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 18:53:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02871770E2;
-	Mon,  3 Feb 2025 18:38:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6707A1ADC98;
+	Mon,  3 Feb 2025 18:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S3om0FC6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLhSkgfr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687CA13212A
-	for <linux-pci@vger.kernel.org>; Mon,  3 Feb 2025 18:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9A8194AEC;
+	Mon,  3 Feb 2025 18:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738607900; cv=none; b=T2o1GI1c6jOyWtUaGXvXnUfKslLR1+yJpnilot50WcYBytOYm5NLO8u6VY3IwAQ5YZTrHPtGsOEtehHx3p0uM+W4jLrTSjozAIhUbLYwcwtE6pr6YxCcUlIR6u/eT1fFrhHgwcs1v9rN4RzuMgZCNXM42uh6pVxSkiN7fg4Dnho=
+	t=1738608769; cv=none; b=Ehd01ywIF6P7QlG+xxVPWwbN48J4Wi/EZzuiaY9/A/ldJtM9+MePTVP63CkT/7QCaV99A/ZjWN2W6vdJvvejU0x++/4aEU3JCYjlBGbjrRNQ5BojR1+gQHp8TqcJOYwhUQgUVRSwdma6LJaxK8LkppqXbDmUAQ6ToSgUQ2MUZws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738607900; c=relaxed/simple;
-	bh=NfoHEeS9ety3RUabRC5wtZ/YDZzyPb5mVsFRQaWmcaE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cRQ0uc/7mfVhbo3+VvZBCe6rCfYcxCut/KiPS4w+sebxiCyw58v3csO56LTa4L6ufNmncUbPSiEcNOMaMrvxc/R7mpKzcsLEXfdxWpON3fQ+m3UGBmSCJfVdDmSOJ1/dVmBheN96VUAfjNmcl9t0MD+JLSsWjqUzrVRhXkw4rVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=S3om0FC6; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5f2e31139d9so2230154eaf.0
-        for <linux-pci@vger.kernel.org>; Mon, 03 Feb 2025 10:38:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1738607897; x=1739212697; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=SVQO+IqVJBjIpGvloQABHH8Rsr9K0FypYEqAHJLTov4=;
-        b=S3om0FC66+7ID3mVH850TojMM6AuCcuipWVG63N+rPmEinDNwBQm1h6j3VLmOH9E59
-         lcF4CpagEuXuGgPbQJzY1NXZwhl81++opQaCRgEkdZpekFF5gsbYzJddChA1HEerocMj
-         02sA+W7L4yVzolgvBfCi+9I0/X3wv+3IgkO58=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738607897; x=1739212697;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SVQO+IqVJBjIpGvloQABHH8Rsr9K0FypYEqAHJLTov4=;
-        b=P43X6oaKeKIJWUzbU7Lgl3LCuuBb1GrAFE2FdyJFaIk0tWdnPmt8YMAQ6KxZeJUkf5
-         XGfsgK3XbyRNiJI68PrQuOHurX+Z0YgqlLtrHTMk3ZsaL/4HsoeTeMda1TR5Z36oqryu
-         uCV9ORhSPqmnXAyi55bnCaQwAR9IySKXi4V514aiyeTiG/TvUU/sYQFAz++3DrlIRi84
-         0ZL5ZmRuEJVifIVfjq2RLo4okSpyilHnYvuvFHDS/ZT9Pq4TiLc1nL02LpZne1ZH6Wrf
-         Vps+HaP3696nO9WEazcLniiEAheOCLfmhjgy4LqrlVE6RuNAeygLL0xP3kVicvSFQM8M
-         x3Cw==
-X-Forwarded-Encrypted: i=1; AJvYcCWGeWeoQeqjFN19NASerkOWktHrJuohdze2d9MzKOdCFQPMmOP/xtbSpitQaRNx6XM4zb1wmXuieUs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzq4tVKIm6z5897NOA87cXAfaKCZDnz03qD58kNpM+REob8AZuw
-	F9Re9Gu0UxJ+BRi3mBXwnvzuff/NzEilY/pEhG/cl5mS2U8cYpspIXbAjfdnWg==
-X-Gm-Gg: ASbGnct4F6LiLziQQPzuiSoi8PoKEeVdRbWK3NZawa/pd0NzZKtM40urtRatpp7H1ht
-	kSnEQJp772XtaI2nCJ+fj5aw1T+rTvv4wK6bbVMNhO8qX29U9qWB7Wv90l8wJZ4EgokSEBEkQrS
-	uw2XMwG0SRNIkFkRHoULOWZOifm55V4VSruy3W0v+8iAoRNJ9BDqPZ/3LJm/Od8Y51qX3B2Spvs
-	i/LHQRvKfCEKQkzMzHrKx14Wc1LQm5lTJ2rWusQO7UhNMd2Xq6clnvDhDNWgzvFW5pdnOkj8Mwv
-	yPjdpy6I0xFoeGZnL51Uy7rVKoWGfTBcMD1fod5YbL9IPIVOLWNEhp0=
-X-Google-Smtp-Source: AGHT+IHq0UgRpgomIh9PzY77Gg9Jllh5zVnpCNlPjS94WHuq2Eom48xqYLcjpklGGEZPFXErKSueNA==
-X-Received: by 2002:a05:6820:2d43:b0:5f8:89bd:b99b with SMTP id 006d021491bc7-5fc0045ccccmr13214655eaf.8.1738607897456;
-        Mon, 03 Feb 2025 10:38:17 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc1059ae47sm2782744eaf.28.2025.02.03.10.38.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2025 10:38:16 -0800 (PST)
-Message-ID: <682b3f4e-7a32-4baf-a4ac-04ddf9c01a3c@broadcom.com>
-Date: Mon, 3 Feb 2025 10:38:13 -0800
+	s=arc-20240116; t=1738608769; c=relaxed/simple;
+	bh=cp8ezIVsa4VCsFDICxF3SyrDQWm0vPmWgmthTsoKoqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=SIeuMQOhLrbgT8/8cGa9zAXJf3rfiPqWDVNrlGWlHgbNVLmiIkLHLVlKJVLON7Ba1YGbugO+vd+3EEIZwqvCb0Xf5AUZPHKiy6OTDLO/qZeClJcytaLXt7aYyoduXAqkNFy8WoR8ihVZ0hOyu4Hd8FnV3csf+ANETssi/Y1pPI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sLhSkgfr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7286AC4CED2;
+	Mon,  3 Feb 2025 18:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738608768;
+	bh=cp8ezIVsa4VCsFDICxF3SyrDQWm0vPmWgmthTsoKoqY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=sLhSkgfrtiXM1d6scqupsldIN28bx0T9WxyPXfHVo8A0P9qumifaHA8ihb8wOmVW/
+	 1B9v11/JtaUgT+dJGbOGTr/1gn+6qbtl9NnxCBwzjSoWBh0Uh3xhgO6GUgHFHd9x6z
+	 9eAGB33aOGE2z2GmO4QOBh/YZhLxRQKa4R9q5fHpT1S/M5BZhwxFZjbrgnnUB5D1H+
+	 tyV/Dj5wFHfMY4zuEYR71SaN1vCa3bNp/LPdDqcd1fMxaJXjY1lNInCsO6jjwM1Ia9
+	 OgaFs8I2iicsAKZ2HsG8xcDp4G7eZBDYuMYUGEtIj06JlRFSWOpYhECw3427VyhAVP
+	 QWWr9nrS2c2qA==
+Date: Mon, 3 Feb 2025 12:52:46 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
+Cc: Jianjun Wang =?utf-8?B?KOeOi+W7uuWGmyk=?= <Jianjun.Wang@mediatek.com>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Ryder Lee <Ryder.Lee@mediatek.com>
+Subject: Re: [PATCH] PCI: mediatek: Remove the usage of virt_to_phys
+Message-ID: <20250203185246.GA794570@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: brcmstb: Fix for missing of_node_put
-To: Stanimir Varbanov <svarbanov@suse.de>,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- stable@vger.kernel.org
-References: <20250122222955.1752778-1-svarbanov@suse.de>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250122222955.1752778-1-svarbanov@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250203175049.idxegqqsfwf4dmvq@thinkpad>
 
-On 1/22/25 14:29, Stanimir Varbanov wrote:
-> A call to of_parse_phandle() is incrementing the refcount, of_node_put
-> must be called when done the work on it. Add missing of_node_put() after
-> the check for msi_np == np and MSI initialization.
+On Mon, Feb 03, 2025 at 11:20:49PM +0530, manivannan.sadhasivam@linaro.org wrote:
+> On Sat, Feb 01, 2025 at 11:07:40AM -0600, Bjorn Helgaas wrote:
+> > On Sat, Feb 01, 2025 at 09:54:16PM +0530, manivannan.sadhasivam@linaro.org wrote:
+> > > On Mon, Jan 27, 2025 at 06:41:50PM -0600, Bjorn Helgaas wrote:
+> > > > On Thu, Jan 23, 2025 at 08:11:19AM +0000, Jianjun Wang (王建军) wrote:
+> > > > > On Wed, 2025-01-15 at 23:01 +0530, Manivannan Sadhasivam wrote:
+> > > > > > On Tue, Jan 07, 2025 at 01:20:58PM +0800, Jianjun Wang wrote:
+> > > > > > > Remove the usage of virt_to_phys, as it will cause sparse warnings
+> > > > > > > when
+> > > > > > > building on some platforms.
+> > 
+> > > > > > >       snprintf(name, sizeof(name), "port%d", slot);
+> > > > > > > -     port->base = devm_platform_ioremap_resource_byname(pdev,
+> > > > > > > name);
+> > > > > > > +     regs = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > > > > > > name);
+> > > > > > > +     if (!regs)
+> > > > > > > +             return -EINVAL;
+> > > > > > > +
+> > > > > > > +     port->base = devm_ioremap_resource(dev, regs);
+> > > > > > >       if (IS_ERR(port->base)) {
+> > > > > > >               dev_err(dev, "failed to map port%d base\n", slot);
+> > > > > > >               return PTR_ERR(port->base);
+> > > > > > >       }
+> > > > > > > 
+> > > > > > > +     port->msg_addr = regs->start + PCIE_MSI_VECTOR;
+> > > > 
+> > > > I think this still assumes that a CPU physical address
+> > > > (regs->start) is the same as the PCI bus address used for MSI, so
+> > > > this doesn't seem like the right solution to me.
+
+Apart from the question of what type should be used, what do you think
+about this part?  I don't think we should assume that the address on
+PCI is identical to the CPU physical address.  IOMMUs and (I assume)
+iATUs can make them different, can't they?  If so, this looks like an
+implicit assumption that PCI bus==CPU physical, and I think we should
+make that a little more explicit somehow.
+
+> > > > Apparently they happen to be the same on this platform because (I
+> > > > assume) MSIs actually do work, but it's not a good pattern for
+> > > > drivers to copy.  I think what we really need is a dma_addr_t, and
+> > > > I think there are one or two PCI controller drivers that do that.
+> > > 
+> > > I don't see why we would need 'dma_addr_t' here. The MSI address is
+> > > a static physical address on this platform and that is not a DMA
+> > > address. Other drivers can *only* copy this pattern if they also
+> > > have the physical address allocated for MSI.
+> > 
+> > Isn't an MSI on PCI just a DMA write to a certain address?
 > 
-> Cc: stable@vger.kernel.org # v5.10+
-> Fixes: 40ca1bf580ef ("PCI: brcmstb: Add MSI support")
-> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+> That's from the endpoint prespective when it triggers MSI.
+> 
+> > My assumption is that if you put an analyzer on that link, an MSI
+> > from a device would be structurally indistinguishable from a DMA
+> > write from the device.  The MSI uses a different address, but
+> > doesn't it use the same size and kind of address, at least from
+> > the PCIe protocol perspective?
+> 
+> Yeah, but in this case the address allocated to MSI belongs to a
+> hardcoded region in the host memory (not allocated by the DMA APIs
+> which will have the region attributed as DMA capable). So it doesn't
+> belong to the DMA domain, and we cannot use 'dma_addr_t'.
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+Doesn't .irq_compose_msi_msg() build the Message Address/Data pair
+that is programmed into a device's MSI Capability or MSI-X Table?
+The device will eventually use that to initiate a DMA write to that
+address.
+
+In that sense, I would argue that the Message Address does belong to
+the DMA domain.  I don't think the size of the address (32 vs 64 bits)
+is determined by the CPU physical address size (phys_addr_t); it's
+determined by the size of DMA addresses.
+
+Bjorn
 
