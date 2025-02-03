@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-20665-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20666-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1651A25FE6
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 17:27:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1E3CA26007
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 17:30:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 508CB3A9E00
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 16:27:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F06513A4B62
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 16:30:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C186720ADE0;
-	Mon,  3 Feb 2025 16:27:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52DCB20B20C;
+	Mon,  3 Feb 2025 16:30:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqH2YGW5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I4RYxHBV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928A320ADE4;
-	Mon,  3 Feb 2025 16:27:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C1220B207;
+	Mon,  3 Feb 2025 16:30:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738600061; cv=none; b=TVwSyEQhiAXayF4xMHsW3xMR1rVR8772k3ekblhQlkmqKGE42FV6z/cjzoxAYfba34cz3XvdhRDkBwUnEjTZbdbux1ybfo8d/6pV4CurTTAhsrQeVvyBbiUi2aKClt4ienmi9bY/pe8O8lGTe2feeb1MM+Wn042ePZw+GdwAXJk=
+	t=1738600242; cv=none; b=CGC1XDulUpUYxgwkNrVN5wA9aRzefbV0aN3DlC+6v90aP86u7PflNEoGxGcOZrpGtfn/UrsC5xLL0GjfogehVTxzeKp2BVFpbHUUJW2oo6kDTKBowpexJ6gc5e8INE7DIr3qjvpOlVLzYycPcyvOpwDgisG1rM5Tbbh9UY4VQqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738600061; c=relaxed/simple;
-	bh=o6AbJFplz+yW3+X1hMiZzcVvdGfavQSPrFmogFQoF5M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=N0thtxXUT4iSA//0ArOW4PMvxgW8wxhBvCIvwVrNjAyWWJWz8h+Iiv97eHoPNNpcIwZeViVSEN+MwEWXqxAHPQhm91nFDVqUa8SMa0UPUXDlFD/VxgxwAOtipEtA7KM2OctSfxhNYOVb4ysjgudVN/kKp+rAeiQEKBTx6Cqe0ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqH2YGW5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD3A9C4CED2;
-	Mon,  3 Feb 2025 16:27:34 +0000 (UTC)
+	s=arc-20240116; t=1738600242; c=relaxed/simple;
+	bh=120P35t0XBzvjLG3h/43PRKPKE7064XAzI5+6M4pGiw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RHcZ96PCHQrB8EmSIpdFcdkTEDPvhr0be2XhhEo7alsA2a/WV1Vaxlgd+RovrAQa+qHva5ODhEyLm/Y51hhx7XgyeiGdfyDSylfvTwOyDGOnHG4DCXkhe2VO9feGoT3uVcAnrEGyTYYjjhcaA5SLv2ObdxqP4JlTG5Q9griA79o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I4RYxHBV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0EE4C4CEE3;
+	Mon,  3 Feb 2025 16:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738600061;
-	bh=o6AbJFplz+yW3+X1hMiZzcVvdGfavQSPrFmogFQoF5M=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=nqH2YGW53EEYChZcHqiIE1OHMuGeK2TaXEeYm7mRzLaCy7z+tuZPDFRI/kHoCCeZ8
-	 q3kYQ5SuxGHcnphpqyo7VjbM9EYrjpd4xqZ+5LmAQQPvUtWW2f69ZByixRhrJlBruE
-	 x2IibJ/Mo+W3l8R8ffeyp4JHThb48LzIF8uCiQWKKFEx24bluN8IGy1nHKDlm7Sf8e
-	 OJsVgkcAIEwAas3/VVc6fS92nUbvJxulW6wv1/O9k3yLOzCEpFL5EkR3r7GHqzSvhs
-	 gSyzp3MEGq7nSq2DR353ctSy9CxN5LTZTGT9JidF9bmNR2p4PfCGtTSoMmgOR8UeNY
-	 ccUEkDcPVmKkQ==
-Message-ID: <f7551daa-cce5-47b3-873f-21b9c5026ed2@kernel.org>
-Date: Mon, 3 Feb 2025 17:27:32 +0100
+	s=k20201202; t=1738600240;
+	bh=120P35t0XBzvjLG3h/43PRKPKE7064XAzI5+6M4pGiw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=I4RYxHBV1C2i8NyJw3yvvEnBvI6OimsTgYyNfOOJLiOyLYaCZdfKb0syzuCsAe8r/
+	 g+0BUlYNYiLhqXFzmoMWMKyPNDgsw8ym7jXrTyJxhBZsPODwNaH4sQAkRd7siNEZkM
+	 z3fAZfdZhowW862/u1tZ70Bdoag0gGvT0gzLrqY45dBdSm3McT8xJwyjyJpMBrQvRg
+	 eVQwMLhBneFs2bn/L14LvTeRXK7R/A73NaEQSBvb5kJan7eefvTiXAZMtsPQfGwgrC
+	 YeDU5gETsKK+t0dyoRW+wj2lA84yoNA7tyVXpxIN6mruEiC9nl1XV32cQH6A5h+o98
+	 MSGrhHmDPhb6w==
+Message-ID: <cc1c34f0-0737-469d-a826-2df7f29f6cf3@kernel.org>
+Date: Mon, 3 Feb 2025 17:30:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,10 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/7] arm64: dts: qcom: ipq9574: Reorder reg and
- reg-names
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Varadarajan Narayanan <quic_varada@quicinc.com>, bhelgaas@google.com,
+Subject: Re: [PATCH v9 6/7] arm64: dts: qcom: ipq5332: Add PCIe related nodes
+To: Varadarajan Narayanan <quic_varada@quicinc.com>, bhelgaas@google.com,
  lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
  kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
@@ -61,9 +59,10 @@ To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
  quic_nsekar@quicinc.com, linux-arm-msm@vger.kernel.org,
  linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
-References: <20250122063411.3503097-1-quic_varada@quicinc.com>
- <20250122063411.3503097-5-quic_varada@quicinc.com>
- <e697cc99-e96b-4e84-8b70-23c5ef015a0d@oss.qualcomm.com>
+Cc: Praveenkumar I <quic_ipkumar@quicinc.com>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250128062708.573662-1-quic_varada@quicinc.com>
+ <20250128062708.573662-7-quic_varada@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -109,58 +108,32 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <e697cc99-e96b-4e84-8b70-23c5ef015a0d@oss.qualcomm.com>
+In-Reply-To: <20250128062708.573662-7-quic_varada@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 27/01/2025 11:33, Konrad Dybcio wrote:
-> On 22.01.2025 7:34 AM, Varadarajan Narayanan wrote:
->> The 'reg' & 'reg-names' constraints used in the bindings and dtsi
->> are different resulting in dt_bindings_check errors. Re-order
->> them to address following errors.
->>
->> 	arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: pcie@20000000: reg-names:0: 'parf' was expected
->>
->> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
->> ---
->>  arch/arm64/boot/dts/qcom/ipq9574.dtsi | 52 +++++++++++++++++----------
->>  1 file changed, 34 insertions(+), 18 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
->> index 942290028972..d27c55c7f6e4 100644
->> --- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
->> @@ -876,12 +876,16 @@ frame@b128000 {
->>  
->>  		pcie1: pcie@10000000 {
->>  			compatible = "qcom,pcie-ipq9574";
->> -			reg =  <0x10000000 0xf1d>,
->> -			       <0x10000f20 0xa8>,
->> -			       <0x10001000 0x1000>,
->> -			       <0x000f8000 0x4000>,
->> -			       <0x10100000 0x1000>;
->> -			reg-names = "dbi", "elbi", "atu", "parf", "config";
->> +			reg = <0x000f8000 0x4000>,
->> +			      <0x10000000 0xf1d>,
->> +			      <0x10000f20 0xa8>,
->> +			      <0x10001000 0x1000>,
->> +			      <0x10100000 0x1000>;
-> 
-> The unit address (the one after '@' in the node definition) is supposed to
-> match the first 'reg' entry. So you need to update that and reorder the
-> nodes accordingly.
-> 
-> Krzysztof, is this acceptable to pick up given the reg entries are being
-> shuffled around?
+On 28/01/2025 07:27, Varadarajan Narayanan wrote:
+>  
+> @@ -479,6 +519,230 @@ frame@b128000 {
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		pcie1: pcie@18000000 {
+> +			compatible = "qcom,pcie-ipq5332", "qcom,pcie-ipq9574";
+> +			reg = <0x00088000 0x3000>,
 
-Uh, no, this leads to warnings.
+So as Konrad pointed out now, this was never tested. It's not we who
+should run tests for you. It's you.
 
-BTW, I really hope tools were being used to spot that, not maintainers
-like you or me.
-
-But this is anyway old patchset whose newer version was rejected. There
-is just to many wrong things happening in the process - now one more:
-not running standard tests on this.
+It does not look like you tested the DTS against bindings. Please run
+`make dtbs_check W=1` (see
+Documentation/devicetree/bindings/writing-schema.rst or
+https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+for instructions).
+Maybe you need to update your dtschema and yamllint. Don't rely on
+distro packages for dtschema and be sure you are using the latest
+released dtschema.
 
 Best regards,
 Krzysztof
