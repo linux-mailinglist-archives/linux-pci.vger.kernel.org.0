@@ -1,274 +1,772 @@
-Return-Path: <linux-pci+bounces-20649-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20650-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 893B2A251DF
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 05:45:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED8FCA25273
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 07:26:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 278C23A45EC
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 04:45:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B49D03A4BBB
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 06:25:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3089288CC;
-	Mon,  3 Feb 2025 04:45:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8DD11EE02F;
+	Mon,  3 Feb 2025 06:23:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="s90Dgh6o"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="E6bJyhpG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2059.outbound.protection.outlook.com [40.107.244.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E35C78F49;
-	Mon,  3 Feb 2025 04:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D971D86C3;
+	Mon,  3 Feb 2025 06:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.59
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738557906; cv=fail; b=vAgW1ywFLEek5SoYtxRZDo/ykbxEAPyZWYt5fUcXqXsClzggp5+p591L5srF9sJ3tKqf1xEpWCf3KSSlHX/zNp7g3MGlP0mHfN7wLYKKUJlm3ZUuk4c/HeOGWxMtq5M8bcxC5/bycsu6pBOtxfAY5UgkbpwtLBaYQYXhp3ZnNbI=
+	t=1738563838; cv=fail; b=joYTo8a1NNRVbkQ3cUMSuR5X7R69mhhQ775xcgkvlVzJLl1evWHDMHKOELjb2au8pkMuGt8hLBEKBjITAVA+ZLZxoTy/cLCLRlJqYTk9E6qxSno6ss0LcYt7O2/erCtLiuD2MoF/vd9Z7eEsk9tJtE9JO/T3ItpfiN+R4LjO11M=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738557906; c=relaxed/simple;
-	bh=8uAjuS43zIkIke9jirexEe3nT7xbYizzCdOwiQc7Kiw=;
+	s=arc-20240116; t=1738563838; c=relaxed/simple;
+	bh=d9WU5uwBHZ17Xbc88aKG8KFv+o/+jErY9yTKP99PWlM=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZIMvpOepNsTX1wFEBOyQZDQUFaz6NaQ8uykzhrbgQsI3M9WqtAUAf8Qk/cDysGYMFyoHW51vizu2U+UShqWHoQ3JsIV/B7vqhojr7sWBA9zBIFwWXgd0vXcgYGV3cC6xDEmV93bd/hk0R1sAjcTB9oBHUG/o1eAR6GW0le0ozfU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=s90Dgh6o; arc=fail smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5133DDpf015581;
-	Sun, 2 Feb 2025 20:44:52 -0800
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2048.outbound.protection.outlook.com [104.47.66.48])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 44jnq184e7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 02 Feb 2025 20:44:51 -0800 (PST)
+	 Content-Type:MIME-Version; b=Yd06vtWeei4fYB0JuWmGuk9HLMNlgovS/lScAeIjeKknIj0+nXXEftyWieRAIaUbXhZNtIPnrpg2RnibBLGJ6n8jc85UZklTO8aEzcc1zM/EjHx8/hIfygS8fCgiACo+wjS+A34IujRYR0FBqrE/NOld91Ueqx/27r8v7/CnslE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=E6bJyhpG; arc=fail smtp.client-ip=40.107.244.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wuVUimsfWavfDNtuuf6RsP4oawxpGAk9e4fhzIj9VCOaEij3H3TfuaHphxCNFhR8T9eMkzl+Es2yBTE9TmEzyDBf4wcXcuMNsz43GXpkuffKhQyUrZDDwZ3Z/Oq3g/22VjEfWd1zW0FeTiZj6yv+QwAnyE0pv0d+R71x60/0vce7qyCV7gOqoioMw1g/FQDvxskG0MqAFV5T4x30dL9U1VCF4PHsJAG8WGo1lsAmGONHl2gGhylRrTmkKbIthw5tVA5gp/bl2bxLLBgZfrGg+56E9wAoJTfBGU48h5rHevq8WZ3LHb5o7TuyXIm0KQsScIoNh3CjrUAdvcj2Wc85Lg==
+ b=NuAbjey18R3Ess5JZLToAP9Ixg/R11oiFvE6kXagDnwQ2IueJfuq7qDjY+y64+hNpaakRK6MgYKokH1ICfqqAG5jo67iFRXkwlLXtzPGuRSY/U0CXCHBD0PwlyAWFmUUI5xYalMT7V7n1sw918RQm6+jUQlfuaFeUWWCwrMoDA9Pb07ODoFj9Yxy0Kp2veOAjXyGX5vXH0n57cgn2lCTALBgAaAXO8mwVe71KqaIVTYdRY77U7NQG6WnxF+XQi/2uXZSiU/BF5vHb6BSeuUA3+4XlgK2RyNsSMmOEnOIjJLBBdfDKOkMibKb64r7zuluTGMN+JNzmBToPCiSBkfvAg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8uAjuS43zIkIke9jirexEe3nT7xbYizzCdOwiQc7Kiw=;
- b=hNyrRAPbSoBcK1gG14ExNEVzEH6w6LthKxDuKHau/MFGo1XzOg9LXy3OQ5+8Y3ApGfcuzPxRe5n2rGNH8GhxVPiwXYfAI8LcemAfhGAH078shzMg6lOgoZjMJ4uTxV5f0R2voZMio77grMNSd2aCIcib2yE6ZwouIRcR5KWjnS5ySTkDF0mXYxWMI7836bc6oGd2q/vs9FwW+5Nv/Pl5m1qGZNIQ21aKSbwaMRKZn954jq7AEBAHWqnnosU6PEB3Wh9W1XokCPrCIGUOl58x7xi9qmS8/LrGU/GcVcyyh7+PHlQgWKuh+RZf1sW9v2sBqBmMkijpNYS1BPmd9lZ/cw==
+ bh=SFjcg6AqiayI8dfJDT0laaokSxEhnwsy5H0K9aoi2lM=;
+ b=j4ei8jNUuKXWnbW8MhvbXv1rxq/CKH+2vXPGo/FkExhfuS3OWBx3wHK6QS4d3cCSXbkyNajF/ehp26yxThnFfjSeSCSJDtg0aT7afJ8DImoxneFBmUR4d6MKHBod1YSiybVxh3dImP2nobY63nnuqPiMF8jeicwu8OCLyS2SY5sG78GHzbQWoeU0VMHNvYhWkUo2KXfl5ERHkvJZmtPV7hK71/77nwdK6A43DhTLh0r/WvNwGZFFnt0TT7Ga0Yhx1qgs98ddrALXtEsel4G9CW8gLcq0tFLrfFzXvchQUJlLqTSEQM6NFPJdHtsr8irE4C1oYztiujktYONDOou9eQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
- s=selector1;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8uAjuS43zIkIke9jirexEe3nT7xbYizzCdOwiQc7Kiw=;
- b=s90Dgh6o0k0Wx76XxmlbFwtqLPNpbH4ML266debEuSj/qwEGK/R9zHXSkRjfeDiszAJ+3mTUzPYhXHKDheEb0rpJAlwnCc0HS5nA5ObCBgxZHTTIlBWRuxVhOmkBCP+xUXWvO1H6BqWU3RWbf0CjLMazPJgml1RS2Qc6dNIM0Rg=
-Received: from BY3PR18MB4673.namprd18.prod.outlook.com (2603:10b6:a03:3c4::20)
- by CH0PR18MB4195.namprd18.prod.outlook.com (2603:10b6:610:be::24) with
+ bh=SFjcg6AqiayI8dfJDT0laaokSxEhnwsy5H0K9aoi2lM=;
+ b=E6bJyhpGO0Tgro185Y1eUeROWqAY6hlEslZv8Elb6Gj46+tOt/HfV+qTg3miQEHY1M3hQA+go/cfp24kdx308D7bp2505hQH54lYM2MfKQuucqRLpSU8Of1MeIVXNAKB1CwGb1+JEcG2ySFb9QskLg0+aGPHknS+oPuSUNaO/Zk=
+Received: from SN7PR12MB7201.namprd12.prod.outlook.com (2603:10b6:806:2a8::22)
+ by MW4PR12MB7288.namprd12.prod.outlook.com (2603:10b6:303:223::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Mon, 3 Feb
- 2025 04:44:49 +0000
-Received: from BY3PR18MB4673.namprd18.prod.outlook.com
- ([fe80::fbd6:a3a:9635:98b5]) by BY3PR18MB4673.namprd18.prod.outlook.com
- ([fe80::fbd6:a3a:9635:98b5%3]) with mapi id 15.20.8398.020; Mon, 3 Feb 2025
- 04:44:49 +0000
-From: Wilson Ding <dingwei@marvell.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "kw@linux.com"
-	<kw@linux.com>,
-        "manivannan.sadhasivam@linaro.org"
-	<manivannan.sadhasivam@linaro.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        Sanghoon Lee <salee@marvell.com>
-Subject: RE: [PATCH 1/1] PCI: armada8k: use reset controller to reset mac
-Thread-Topic: [PATCH 1/1] PCI: armada8k: use reset controller to reset mac
-Thread-Index: AQHbdfV5/rFMyCnK6UaiXwIcHEgcJrM0/xQQ
-Date: Mon, 3 Feb 2025 04:44:49 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.18; Mon, 3 Feb
+ 2025 06:23:52 +0000
+Received: from SN7PR12MB7201.namprd12.prod.outlook.com
+ ([fe80::b25:4657:e9:cbc3]) by SN7PR12MB7201.namprd12.prod.outlook.com
+ ([fe80::b25:4657:e9:cbc3%3]) with mapi id 15.20.8398.025; Mon, 3 Feb 2025
+ 06:23:52 +0000
+From: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+To: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>
+CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Simek, Michal"
+	<michal.simek@amd.com>, "Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>
+Subject: RE: [PATCH v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+Thread-Topic: [PATCH v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+Thread-Index: AQHbckFGnEXox34FgUW7RyRWX+Tmz7M1I7Fg
+Date: Mon, 3 Feb 2025 06:23:52 +0000
 Message-ID:
- <BY3PR18MB467365740953603B5B8FAD5BA7F52@BY3PR18MB4673.namprd18.prod.outlook.com>
-References: <20241112070745.759678-1-jpatel2@marvell.com>
- <20241112214134.GA1861807@bhelgaas>
- <BY3PR18MB46737F4B51AD6A3891009B91A7F52@BY3PR18MB4673.namprd18.prod.outlook.com>
-In-Reply-To:
- <BY3PR18MB46737F4B51AD6A3891009B91A7F52@BY3PR18MB4673.namprd18.prod.outlook.com>
+ <SN7PR12MB7201E9D78AC6562F7A333D338BF52@SN7PR12MB7201.namprd12.prod.outlook.com>
+References: <20250129113029.64841-1-thippeswamy.havalige@amd.com>
+ <20250129113029.64841-4-thippeswamy.havalige@amd.com>
+In-Reply-To: <20250129113029.64841-4-thippeswamy.havalige@amd.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BY3PR18MB4673:EE_|CH0PR18MB4195:EE_
-x-ms-office365-filtering-correlation-id: deac0aa8-3422-42de-954e-08dd440d7dc5
+x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|MW4PR12MB7288:EE_
+x-ms-office365-filtering-correlation-id: 21df5801-7097-49b3-4ee7-08dd441b5428
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:13230040|10070799003|376014|7416014|366016|1800799024|38070700018;
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007|38070700018;
 x-microsoft-antispam-message-info:
- =?utf-8?B?OUh6WTRlNzlxeDhnMUxRWGhJRzlVemR2bzhub29XK2Z1aDV5Q3gvVnJPTXo1?=
- =?utf-8?B?V2RSOFAwY3hDK2IxWFlCNjF1QXVlcm84TWpNK3RjUWJCSm9nV0V5ZUdPclQx?=
- =?utf-8?B?bnlxZ1BDRkErdnpwYTNHM0daYUtUeGVUckxwbTBwSkNneTlkemF3bjBtRXVZ?=
- =?utf-8?B?WEozaitadE9MMHUyeVVNdG5lTGc5RnBRcHR5UkpTUWdrWmdLaS9tN004RWhv?=
- =?utf-8?B?QTVQbXIreExQRXQ1RFJaRzhkd2hwUjRsV2xVcWVPcHZ0K0Z3L1ZoQ0FKaS96?=
- =?utf-8?B?cnV1UnN0VU9JaWxUNnNDZmVWYm51aE9FbVBEZnN2TzZJbzRncGFjZ05Bd2ZC?=
- =?utf-8?B?R3JyYzdzck1TREVHTjNFUS9oRWdnbWpXSWtJSUx4SW93MGRMcWhybFhKLzFt?=
- =?utf-8?B?bmFEZVIyL2ZMUy8vdU9EaE80OWJuVy9YdVRhaEV0aGtUbzRBTC9XSHUrMjl4?=
- =?utf-8?B?Z1dMbGFxdVpNOEZ3RE1IRUpIb01OcFNlcDdhd3puYnp0aEMwZjVYWmtoL1Ns?=
- =?utf-8?B?WXE0S2xxTGxpZ2tITEZWL3NtZlJRMkdHc2k4bDE1clhzSlB1UFl5SFZPWGs5?=
- =?utf-8?B?SUE0b213b3dsV0JHSFFjRGh1M0dpZHd2Z0FxWDRCWmF3Rkc4amdMaFRoWXFU?=
- =?utf-8?B?NDQ3ZHA3V1I1VmpjWnNEbFJLMGdxQzNVN3pDaXBOQjVMZUxEYnRVTUlzVWxL?=
- =?utf-8?B?Y0kveFIxYXZHZWg3TG1GdUdROFdTOUx0ZlFUZ0NWeDYzVlJhbTB5WDVCZHd0?=
- =?utf-8?B?V3MwRitVbmRZMWFVTzd3SEtjZ1FwU3RQemx5QTdoS1YzQ3N1czNac1NldkV5?=
- =?utf-8?B?UGZKbDBwaG9Qa3lHZVZVZXhaaDZsdXkzREdYenZkWVlPQXZwckNqaVF1Sm1l?=
- =?utf-8?B?dmdjNHIxbTJsQWkwYkpUcy85YlB0WnYyZ1dFWEVnZFlqaFBHU2plQURVdUVt?=
- =?utf-8?B?RFhoYTMvT29ZVWVGOTA3cHBaeDV4SnZIRjRKdmJPUkNER1BiMG5oOEE5cDBa?=
- =?utf-8?B?NkVqZjJ3OEFJaDV6S1c5eW9vUlR0VjFnNFA4UG81cTZMS3RMTDFaUG9rRkVy?=
- =?utf-8?B?TFpZQlNXY004dTlKbjN4dWhOMHZRRWZaYUVrSWkwUXkyZ0RZWTEvOW51VlEw?=
- =?utf-8?B?UzE4MG5Ha2h6RTh5S3BVMGw3aUpRQ2xqQ2dldzV5WUFnZmt6T3NhUmlEbGRW?=
- =?utf-8?B?Qm9SbXBBMmQvdktEOVIyc2tYVktoYXYvK3VvL21UYnVtb2JZZjVYeVVUR2JX?=
- =?utf-8?B?cTJHTkdlRDhlaVhMWi9JVExzOEs1VmlEb0EyRzZkZ0NDZ2NkNjRCczdyQ2ZH?=
- =?utf-8?B?K3FBdk5RRWZ5VDdZZEFiR1VTMkh0T1pCMnl4cWEzWEdzU05QdDkwZTZRWW9K?=
- =?utf-8?B?T2hRYmhzSHBkemE2bC96R0lTdlY2NlgvaFZJSTZJL2xxRjFtTkt4YzRMWm1P?=
- =?utf-8?B?Q0VNN1k2c2F1anFBaEFyL3VmMU5XbThwZkUzYm9YLyt0cVFtOFAvbnBLMkUx?=
- =?utf-8?B?U1Q1Z3dmWkFDUk9sS2o0eWswZmM4dFl5WWpycXkvaDUyS2RnWlU4enRTai9D?=
- =?utf-8?B?azlodmJQcWNVM05QUXRQK3VuTUYrOXJKYlI4RzNiSGlBZmVLRUgrK1h6czJZ?=
- =?utf-8?B?alhubjlyYTNOalhEcHNpdm8vTnlWM0xSWlBrckxZYVZpem9XWVdua0R1Uk1h?=
- =?utf-8?B?M0l2WWtFUXo2L2NxQ0VYK1lzTkVSdE8rVmdSVVV1QmsrMEhZWC9wczA1bzJh?=
- =?utf-8?B?Ty9WWFJpQWkvSENEVnJCT0xmTHVhMkxXVk9XOHBmaFhuL3B2TEdyUThzeVhw?=
- =?utf-8?B?cXYwZldTSG9JRWhzdjlBMjg2Z1dSeG1yNndFVCs5cFQybGg0ZGtkc1RkeVdp?=
- =?utf-8?B?SWJyeHIzWkI2SDk4WmxCckpOT0cwY0hlQ2h4MTBWaExhSnpsY0tHcVdvMGlK?=
- =?utf-8?Q?t1sL2IxxphAXgl6K2Hv4doEhiuMn1gVD?=
+ =?us-ascii?Q?Vq8kkLWxpRoOC++t25MdDKKB0BIMIbQwmMogv8O8lsPOBwX2YU17wp60K+HM?=
+ =?us-ascii?Q?TERZud7TxIsoDDcKpPT3VkUC4HSS0EFiWuapq7BIrAlo//GopWW79QY2lfB3?=
+ =?us-ascii?Q?aMbrS1EWrwwtFsodjmeMbMpNMhObeM2mGH1MsbOiibA+NpEu0CUS/owzYgMJ?=
+ =?us-ascii?Q?9TgSlCPJVD7yQIISs1kSn8+NgzIpxyBNdNQ8vtHQC14v5swvH2kbmTvovpaC?=
+ =?us-ascii?Q?rTRuIhYMN9WHc5cf3nmTULddgz5rsIp+L7RU1I5OV8V6z8yJNvI3GBFj3G0Q?=
+ =?us-ascii?Q?VI0yeTTFVOV58Xsrefkzh5h4FhVHzTEQoMbZ5z+9eWXFsNhp+NqeGc3uFUNF?=
+ =?us-ascii?Q?jk4oi2JZRt1JnrZnHYEWaKLA+vum9OBgPdP06XF70FtRIeUPFC2ks6VTUE6X?=
+ =?us-ascii?Q?PdulRjbx/K3ozHf2LSucMK0DgjdigmLeOLe6q41VJMQunHjAmDIFMTkFeZDr?=
+ =?us-ascii?Q?jKsVfc1+QiQ+O9Po6LC3FDHFgshuwkHK5vLL3Ob0TsDRlPs4xxD7K/53960M?=
+ =?us-ascii?Q?JkjavUkdRyyrhBioD8l4neyKT4nZ/dswS4C6RWWEGJIfmvD6uZp0qmpSyAo4?=
+ =?us-ascii?Q?miJpUT6I0Nf31P7Mo97vMVWodpdAgoT7sl6Widurnfkq/vzjdDc9jsJLDoZT?=
+ =?us-ascii?Q?yYauZb6BQgDT2SMhGsngoW8elODJjiq8zXCWoK6lPl/ETXngb0fJMB/I7GaQ?=
+ =?us-ascii?Q?pjKEx7oELMdCUUKpSYTEwdex8sl13Ska29tADOteQXxzl4K8QyqSCN1U6gkp?=
+ =?us-ascii?Q?xAcMmsEPGi0JyYLFW/TAzzgnnejKph/Alx9gUWTUPshjnCzzYzEsam6PtGcw?=
+ =?us-ascii?Q?8/lO5VisK3esXnxP2ZxnM1K99DXw36iVjsZoKh3GguEZcfui62uQ/733vzsG?=
+ =?us-ascii?Q?ecguplq68wkOSBvQiFLSaF28AScsNctjN0lKSdL50ziJQeQ5zC4cDMe5N8BA?=
+ =?us-ascii?Q?ZHhHPjYlgGXZ3GbQsX1ZZG6geNjliliFmQuN5yOqjiu35ZlWB16vENGO2IW/?=
+ =?us-ascii?Q?M4fJMYo/QxNwReBen5VUPwjp/PWImWdOG4E7p0KUiSOiOyQ5A/F8A+pbRnWb?=
+ =?us-ascii?Q?LrIgMb2do9IgEYs5V3ajnlYD/FNWGbA1OHKgAaI3BIMzALjOyNhE8YhYz+Nw?=
+ =?us-ascii?Q?3t7NuN4mDqjg1OE85cogFKmoJkSSOckvnK1Pfa3dayIMThmjkQRxq+JzoSEY?=
+ =?us-ascii?Q?qKLN5IwjOJoUsIoiOfobKFKTp7w4XGdPPLn3hmgMuI8BYeH0xlTzbdbbjTuB?=
+ =?us-ascii?Q?Zg07ScZjG0n45aFcl1v8gVICeq8xdwY5F11uG4lze1At8gLnT7AHA06Fpyvl?=
+ =?us-ascii?Q?aZ5n5M8+HtLLNFBgeUTimSvcIiUorks+eNitQTyf3xL4hKFj9nL0UD48JZ8Z?=
+ =?us-ascii?Q?m238EjI+tb/sbQ46k5XjtF2176JRJhR9J9Q+36DqZqu1elCwFVFm+HKYPuOl?=
+ =?us-ascii?Q?/FzpJ7eYZkObN2pHzoRZfzvs4T0rYxSP?=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY3PR18MB4673.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007)(38070700018);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?M0FMa0VMTlJIeUpTbUxMWGxyT3BsSmRXeno2K3IyanJpWnpMamVUNExvQitm?=
- =?utf-8?B?MUgvMTdmUzQ5bzFzM1NSUGt3cFNvdUJNYnBoc3p1MUpHdFZSa1Z2b1JucGhV?=
- =?utf-8?B?VGplYitsWWpGekEwRitNS1AvMURWME5NaURlS0NRQlNFK1FPOTU1NHh4YVF2?=
- =?utf-8?B?N3V6TG5ZVnpobnVSelVab0NOWkxVMCtqVHFyOWYrNll2SEYrS0RVRW9qb1gy?=
- =?utf-8?B?NDE0dVhqSjM1N2xmS2EreUxwaS9pa21DS0NLY0QvVFpONCtWRUw3eWdzR0dm?=
- =?utf-8?B?UTM5YitJYTl2UEl1L1VVaFlmZmpEenBYcDUyTVZUbTVOamh2YTkzZjJMNnNH?=
- =?utf-8?B?SnNKQ0hieXk4aXBSdVBkcndtKzlPTmRYcG45cnFIbS8vZ2FlTDdSWHdxUi9T?=
- =?utf-8?B?dXJrci9zRGFPZUM5TE1PMlZiQ2pwalBRMEpoeTkvYm5zdmJpNzNWV2JzenVV?=
- =?utf-8?B?ZUJJdGRNZWoyYUdMeDBmcmVSMlBtOXVGNXNnNW9YY2VidVk0VEJuaW1tZmVG?=
- =?utf-8?B?TTJ2NEY4Q0tyVG0zOUlLOEczN2pLVHl5RVNvcCtuTUFGem5TYWxMa0o2ZFpW?=
- =?utf-8?B?M2dGYXhRN2tWNjkwZ2pVa01NUVNyalNnVlFZdDNaNE51NjlidTNrb05FMG12?=
- =?utf-8?B?Vkc5dW9UdkhmQmQycjlTb1k5WUsybGphTnI0N0RzR2wvaWN5QkhqV203YmxC?=
- =?utf-8?B?TFQrRTUzOHdxTmZoWS9ZUVVZTnFFRDg1bHdPMVZLb2VLZE1VU3lhT0ZpQVBO?=
- =?utf-8?B?L25ZZ0YwM0JEb3FhTUtyNnYvUWtvY1o4MmkwV2ZrRkpLOGZINFJsZmYyeFVs?=
- =?utf-8?B?bnhrcS9jRVNObi9GSzl1b0x1VDc4OE9NaEwxSWpFeGdGZUM4V2pBUEcxb2NG?=
- =?utf-8?B?RmQxTHBQTndVTUVqUEFVMlpJSXlIWUNrYjFpRk1jYXp6YzA0d251aEoyVFFL?=
- =?utf-8?B?N1lIT2owKzlLRndCeExzc2wyQWw3L0c5U25Ya0ZNRTl4UWdZcWZJdFpPelBD?=
- =?utf-8?B?R1ZFYng4VkErZ2tGVVF1Z08yWWIwQys0eFlGdzJ5Zmw1a0FraEVsVFRIM01y?=
- =?utf-8?B?blJoc0hGdmdKYXZ5SXo3WXR4eEg3bnpnQklSU0Z6MTJVSWEvZHpMaUsrVEhD?=
- =?utf-8?B?SjlvelhnZ1hhS1k0eEo1UWtTaFJNdi9EVHRaNnRvTDJpY0htOTlRc1UwVWFL?=
- =?utf-8?B?UnhEalpQamdUelF0dmVEU1J5RmVHd2xlTlpLN2Y3YUltVGhkYlJ2QU9seTBW?=
- =?utf-8?B?QXphdUtvUG9sNGZWb1RUeVV4NnFpaWFBa3VFYlluTzBQckZKSWVsYlNoa2Yz?=
- =?utf-8?B?NHB5aURDSitwclR5Rmp1b1hqRkJrTEJjL24xeVpPS0JzUDR2enBRcWliRjAx?=
- =?utf-8?B?SmJTaEdjUWcyUHhvVDBGZnB3TUNLTlMzNDRSclc1QnZoTVVHY284OUdrYkxz?=
- =?utf-8?B?ZERKZXZ5MXc2T0tiVlNkQTNvbWJhTjlJcWRCQTJmNkYyRkFCZGpuLzcrdHA1?=
- =?utf-8?B?RjVjM1duMSsxcklsY1BpQzdKTnZrM3hBL1AyVDlpTndSamNCZ1dCM25DSUVT?=
- =?utf-8?B?bXlFWno3SlhEYXZ6M2FyWHJsaUQ1VjJpcytkdWRWZitpbUJlRDNEQnBtdXZh?=
- =?utf-8?B?SHpaSVN3YnE4WGFKV3BtMldvZFozdG83aEZnSkV0Tk11M2E3SVhvTDJmSUtO?=
- =?utf-8?B?MTFSUkFva09GRnV0Ny9rVUtNeTJNY2hDcFRHRmUrSDgvMVlnOW1lZEtFa1Bx?=
- =?utf-8?B?M1ZRcCtLNDZLYjlpditKbXJaMG16SE9xZkUxMjhVN2ZIUytnMHpIcmdoNzE5?=
- =?utf-8?B?VXhlVUpnRGRTVXQxZjhiU2xHVlhrMXBYOHNXdjVFTGdwQVg5OE8zVXc3ZTZZ?=
- =?utf-8?B?am5PbW9wV3Y2SWRlTmtnT1dDdEVqeUNJakJJSllWd21SdFZtVnh4NzdZcDNv?=
- =?utf-8?B?bFU1QVFlQUMydVdZWnA2cFYrdEpoRTNRdEQyMDhvdHBFdVR5QlRqam5QN1lk?=
- =?utf-8?B?M0dpZStUWnpWd1FSNG12WlYwVitGdU9CejJvUnlla1l5ekdYRS9yalJPTnJQ?=
- =?utf-8?B?bHJ4amMzVTVMR0JmeU4wNlZOK2ZOcGxmSjVibEkyeVNidStlM1ZRSDRmOW41?=
- =?utf-8?B?eThXSFM0SUEwMnhXR0VvOVdFb1pwSGZwS2doSkE4anF4ZUlBT1pOUGVnbjB2?=
- =?utf-8?Q?AxwAARKZU1i5j2wrxiwlgitkVT1dm9Y62yVLyDDAM8yW?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ =?us-ascii?Q?r7y8ixraOq5PsU9rxR2pxjPMsxoL8jtUcjEmeTVFGyc5OmDKMs9s6xn7YnNk?=
+ =?us-ascii?Q?WkInAtte1yi4qyH5SCurzACFn0QO9mYbgMAj5oeTbwj8lB2O7Y+o3buVJv7t?=
+ =?us-ascii?Q?6ZEbJztY/rSZOczZ7/r2r6mMepFXkJpMlhVggS2+P8uQXqBGWB1HuJFps0f5?=
+ =?us-ascii?Q?8duPvYsklWq2/vE/dSjyokhpaTh16tkQnQVIObkflnq+4HcCBOW3aTB0givh?=
+ =?us-ascii?Q?jYRpcc3Helcqx3UU/NFcxfFrVs4XIka8VriiPMKjKjSN2vbAUjTn21uXPQXg?=
+ =?us-ascii?Q?0JO7zKjA5TiV5cywl45EGyz1AON2+geN3wtJ/mxalLPh8z8Fujwh/eVdMoqQ?=
+ =?us-ascii?Q?lXN76x69PW0sLVQAn7sDSpvV7Zmsbe8uOpxacCipSUAV5Z5w1R7yVQqRDB9R?=
+ =?us-ascii?Q?884bTcXNtBruxHVVjh3nGd0Y/LBevGp8np0OSm3GHhrlbnKJbSO+zm8HgtUO?=
+ =?us-ascii?Q?0XOuR/g6LimH3ZxTUEkgXlGy3Z2qEa+oWxzzJFMqYkKf/v4db734wjfF6qlk?=
+ =?us-ascii?Q?8aP6I79UQwam7fhhLLjzalhe9yzdIbll/tVaCsDZRvR2z2wZRlAn10KV8JeT?=
+ =?us-ascii?Q?LsBGBhtt4PdYsCKbOS4jV8oxvXa+R1tNGRnMr9H46pZARJv9VaOJYGs0DjaN?=
+ =?us-ascii?Q?qy+CToHpuyfcBS0e8AIm9MzkXXCDYvuNa+QmiA8KBDSDWgsxpltQTcF03B4w?=
+ =?us-ascii?Q?ccvEOAJYp7bjFnXRTaaWCRH31Wgp3sN2Nvbs39TN5QNeN9fPpQeraVwrKbt/?=
+ =?us-ascii?Q?15LWWeaJuahe1M6KjhFHvUTaQuYf64BlntWZV+7lFBBe2XYc8nCfQQPn6++T?=
+ =?us-ascii?Q?UWdwOWnlnRBbl5iY0YyI/rx0BsRghccp1b2VEL8TKSQjt1xYE0z9XLzItj1T?=
+ =?us-ascii?Q?SSSM/zVM3oYb2UUIXOOE3e7ZGII7f7KFps3PaynbcS3E9pGxsvVdRWnU490z?=
+ =?us-ascii?Q?S3ZsMr0ZYx4eCqrpEwTEMEP+g77V5Co1+xc3gifpDKqLNXKqfsQ4mC6n+LqP?=
+ =?us-ascii?Q?DqAnD6mYhLWVv3HF6HU9K3UIgcpRrqSl4w84Ol5cVGMeFyj4O7Ppu7/KZ7nB?=
+ =?us-ascii?Q?YTRdHsMIfDCy6lGKdoxKwAvk4Ej2cRar6DLmNwpxZMzyzSHfP/iP4UOj5Oo+?=
+ =?us-ascii?Q?vl+th9qq+6e5BgTsSYN9VW5JZERLn8nO3IFGNsmsg8Af4QlywixqC0D+KuWi?=
+ =?us-ascii?Q?bS49Eq/jj/upwWE6zcBBcynSz5t3mnNbZqxmZEhM4cvWQGtazhVkXXbrkypO?=
+ =?us-ascii?Q?nbPKNHuTQKMvP/6Yp1MZ33mkkaUlv+JFMW+jvqN48QDwli+k9yqV0OLchKj7?=
+ =?us-ascii?Q?LZXb66fY1wF15/9kxVm5XYMpvOadoWrYD7vE6VQUT2iJ6+ejQCAflaVtZXEW?=
+ =?us-ascii?Q?R6sqeFuRdCtosTz6jN9z0L2sjnn0TM7A/iIIUxvoeUXu0Orc7boWdUaMHuAn?=
+ =?us-ascii?Q?hXTM5ikuqbqUZ46x2SCpcgY0/1tv8jtabow4Jmu3c2VABczn/VlacGKRuNwP?=
+ =?us-ascii?Q?eXWkdNP72PUBL2ONo5owDfKCaYxRq1GXAxFduUkgCAYQ5YjMq8MO7bwxOieZ?=
+ =?us-ascii?Q?n4/xBO8FFmGAN9i3MxQ=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: marvell.com
+X-OriginatorOrg: amd.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY3PR18MB4673.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: deac0aa8-3422-42de-954e-08dd440d7dc5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2025 04:44:49.1313
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7201.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21df5801-7097-49b3-4ee7-08dd441b5428
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2025 06:23:52.2896
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RCGzO4Hau9C5oqwnmwAEdXccweNNXXuSCYpIBqi8EMsDhWxEdK3mpjeag5iKjZE8CHXD1NnlBHQwYeDe8DnX6g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR18MB4195
-X-Proofpoint-ORIG-GUID: -nAE0obJbBn8PBI0Jo3ADQOywqbiM2ai
-X-Proofpoint-GUID: -nAE0obJbBn8PBI0Jo3ADQOywqbiM2ai
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_01,2025-01-31_02,2024-11-22_01
+X-MS-Exchange-CrossTenant-userprincipalname: fMR+grSrf4ZAXXJbQ96ixk+DsKKWz4VPf8hFX1vd2V2+vW3v2Y004+zS7lyHZ68S795SQOus1zmHctBLNwvnJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7288
 
-PiBPYnNlcnZlIHN1YmplY3QgbGluZSBjYXBpdGFsaXphdGlvbiBjb252ZW50aW9uLg0KPiANCj4g
-T24gTW9uLCBOb3YgMTEsIDIwMjQgYXQgMTE6MDc6NDVQTSAtMDgwMCwgSmVuaXNoa3VtYXIgTWFo
-ZXNoYmhhaSBQYXRlbA0KPiB3cm90ZToNCj4gPiBjaGFuZ2UgbWFjIHJlc2V0IGFuZCBtYWMgcmVz
-ZXQgYml0cyB0byByZXNldCBjb250cm9sbGVyDQo+IA0KPiBDYXBpdGFsaXplIHNlbnRlbmNlLg0K
-PiANCj4gcy9tYWMvTUFDLw0KPiANCj4gRXhwbGFpbiB3aHkgd2Ugd2FudCB0aGlzLiAgQXBwYXJl
-bnRseSB5b3UncmUgY2hhbmdpbmcgZnJvbSBvbmUgTUFDIHJlc2V0DQo+IG1ldGhvZCB0byBhbm90
-aGVyIG1ldGhvZD8NCj4gDQo+IENvbGxlY3QgdGhlc2UgaW50byBhIHNlcmllcyBpbnN0ZWFkIG9m
-IHBvc3RpbmcgaW5kaXZpZHVhbCByYW5kb20gcGF0Y2hlcy4NCj4gDQoNClNvcnJ5IGFib3V0IHRo
-ZSBtZXNzLiBZZXMsIHRoZXNlIHBhdGNoZXMgc2hvdWxkIGJlIHBvc3QgaW50byBhIHNlcmllcyBp
-bnN0ZWFkLg0KQW5kIHRoaXMgb25lIGlzIGFjdHVhbCBhbiBpbXByb3ZlbWVudCB0byB0aGUgY29t
-bWl0ICgiUENJOiBhcm1hZGE4azogQWRkDQpsaW5rLWRvd24gaGFuZGxlIikuIEl0IHNpbXBsaWZp
-ZWQgdGhlIE1BQyByZXNldCBjb2RlIGJ5IHJlc2V0IGNvbnRyb2xsZXIgQVBJcy4NCkV2ZW50dWFs
-bHksIGl0IHNob3VsZCBiZSBzcXVhc2hlZCBpbnRvIHRoZSBwcmV2aW91cyBjb21taXQuDQoNCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBKZW5pc2hrdW1hciBNYWhlc2hiaGFpIFBhdGVsDQo+ID4gPG1haWx0
-bzpqcGF0ZWwyQG1hcnZlbGwuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9s
-bGVyL2R3Yy9wY2llLWFybWFkYThrLmMgfCAzMA0KPiA+ICsrKysrKystLS0tLS0tLS0tLS0tLS0N
-Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgMjEgZGVsZXRpb25zKC0pDQo+
-ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1hcm1h
-ZGE4ay5jDQo+ID4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWFybWFkYThrLmMN
-Cj4gPiBpbmRleCA5YTQ4ZWY2MGJlNTEuLmY5ZDY5MDc5MDBkMSAxMDA2NDQNCj4gPiAtLS0gYS9k
-cml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWFybWFkYThrLmMNCj4gPiArKysgYi9kcml2
-ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWFybWFkYThrLmMNCj4gPiBAQCAtMjEsNyArMjEs
-NyBAQA0KPiA+ICAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+ID4gICNpbmNs
-dWRlIDxsaW51eC9yZXNvdXJjZS5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvb2ZfcGNpLmg+DQo+
-ID4gLSNpbmNsdWRlIDxsaW51eC9tZmQvc3lzY29uLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9y
-ZXNldC5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQo+ID4gICNpbmNsdWRlIDxs
-aW51eC9vZl9ncGlvLmg+DQo+ID4NCj4gPiBAQCAtMzUsMTEgKzM1LDEwIEBAIHN0cnVjdCBhcm1h
-ZGE4a19wY2llIHsNCj4gPiAgCXN0cnVjdCBjbGsgKmNsa19yZWc7DQo+ID4gIAlzdHJ1Y3QgcGh5
-ICpwaHlbQVJNQURBOEtfUENJRV9NQVhfTEFORVNdOw0KPiA+ICAJdW5zaWduZWQgaW50IHBoeV9j
-b3VudDsNCj4gPiAtCXN0cnVjdCByZWdtYXAgKnN5c2N0cmxfYmFzZTsNCj4gPiAtCXUzMiBtYWNf
-cmVzdF9iaXRtYXNrOw0KPiA+ICAJc3RydWN0IHdvcmtfc3RydWN0IHJlY292ZXJfbGlua193b3Jr
-Ow0KPiA+ICAJZW51bSBvZl9ncGlvX2ZsYWdzIGZsYWdzOw0KPiA+ICAJc3RydWN0IGdwaW9fZGVz
-YyAqcmVzZXRfZ3BpbzsNCj4gPiArCXN0cnVjdCByZXNldF9jb250cm9sICpyZXNldDsNCj4gPiAg
-fTsNCj4gPg0KPiA+ICAjZGVmaW5lIFBDSUVfVkVORE9SX1JFR1NfT0ZGU0VUCQkweDgwMDANCj4g
-PiBAQCAtMjU3LDEyICsyNTYsOSBAQCBzdGF0aWMgdm9pZCBhcm1hZGE4a19wY2llX3JlY292ZXJf
-bGluayhzdHJ1Y3QNCj4gd29ya19zdHJ1Y3QgKndzKQ0KPiA+ICAJbXNsZWVwKDEwMCk7DQo+ID4N
-Cj4gPiAgCS8qIFJlc2V0IG1hYyAqLw0KPiA+IC0JcmVnbWFwX3VwZGF0ZV9iaXRzX2Jhc2UocGNp
-ZS0+c3lzY3RybF9iYXNlLA0KPiBVTklUX1NPRlRfUkVTRVRfQ09ORklHX1JFRywNCj4gPiAtCQkJ
-CXBjaWUtPm1hY19yZXN0X2JpdG1hc2ssIDAsIE5VTEwsIGZhbHNlLCB0cnVlKTsNCj4gPiArCXJl
-c2V0X2NvbnRyb2xfYXNzZXJ0KHBjaWUtPnJlc2V0KTsNCj4gPiAgCXVkZWxheSgxKTsNCj4gPiAt
-CXJlZ21hcF91cGRhdGVfYml0c19iYXNlKHBjaWUtPnN5c2N0cmxfYmFzZSwNCj4gVU5JVF9TT0ZU
-X1JFU0VUX0NPTkZJR19SRUcsDQo+ID4gLQkJCQlwY2llLT5tYWNfcmVzdF9iaXRtYXNrLCBwY2ll
-LQ0KPiA+bWFjX3Jlc3RfYml0bWFzaywNCj4gPiAtCQkJCU5VTEwsIGZhbHNlLCB0cnVlKTsNCj4g
-PiArCXJlc2V0X2NvbnRyb2xfZGVhc3NlcnQocGNpZS0+cmVzZXQpOw0KPiA+ICAJdWRlbGF5KDEp
-Ow0KPiA+DQo+ID4gIAlyZXQgPSBkd19wY2llX3NldHVwX3JjKHBwKTsNCj4gPiBAQCAtMzMxLDcg
-KzMyNyw3IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBhcm1hZGE4a19wY2llX2lycV9oYW5kbGVyKGlu
-dA0KPiBpcnEsIHZvaWQgKmFyZykNCj4gPiAgCQkgKiBpbml0aWF0ZSBhIGxpbmsgcmV0cmFpbi4g
-SWYgbGluayByZXRyYWlucyB3ZXJlDQo+ID4gIAkJICogcG9zc2libGUsIHRoYXQgaXMuDQo+ID4g
-IAkJICovDQo+ID4gLQkJaWYgKHBjaWUtPnN5c2N0cmxfYmFzZSAmJiBwY2llLT5tYWNfcmVzdF9i
-aXRtYXNrKQ0KPiA+ICsJCWlmIChwY2llLT5yZXNldCkNCj4gPiAgCQkJc2NoZWR1bGVfd29yaygm
-cGNpZS0+cmVjb3Zlcl9saW5rX3dvcmspOw0KPiA+DQo+ID4gIAkJZGV2X2RiZyhwY2ktPmRldiwg
-IiVzOiBsaW5rIHdlbnQgZG93blxuIiwgX19mdW5jX18pOyBAQCAtDQo+IDQ0MCwxOA0KPiA+ICs0
-MzYsMTAgQEAgc3RhdGljIGludCBhcm1hZGE4a19wY2llX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYpDQo+ID4gIAlpZiAoZ3Bpb19pc192YWxpZChyZXNldF9ncGlvKSkNCj4gPiAg
-CQlwY2llLT5yZXNldF9ncGlvID0gZ3Bpb190b19kZXNjKHJlc2V0X2dwaW8pOw0KPiA+DQo+ID4g
-LQlwY2llLT5zeXNjdHJsX2Jhc2UgPSBzeXNjb25fcmVnbWFwX2xvb2t1cF9ieV9waGFuZGxlKHBk
-ZXYtDQo+ID5kZXYub2Zfbm9kZSwNCj4gPiAtCQkJCQkJICAgICAgICJtYXJ2ZWxsLHN5c3RlbS0N
-Cj4gY29udHJvbGxlciIpOw0KPiA+IC0JaWYgKElTX0VSUihwY2llLT5zeXNjdHJsX2Jhc2UpKSB7
-DQo+ID4gLQkJZGV2X3dhcm4oZGV2LCAiZmFpbGVkIHRvIGZpbmQgbWFydmVsbCxzeXN0ZW0tY29u
-dHJvbGxlclxuIik7DQo+ID4gLQkJcGNpZS0+c3lzY3RybF9iYXNlID0gMHgwOw0KPiA+IC0JfQ0K
-PiA+IC0NCj4gPiAtCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKHBkZXYtPmRldi5vZl9ub2Rl
-LCAibWFydmVsbCxtYWMtcmVzZXQtDQo+IGJpdC1tYXNrIiwNCj4gPiAtCQkJCSAgICZwY2llLT5t
-YWNfcmVzdF9iaXRtYXNrKTsNCj4gPiAtCWlmIChyZXQgPCAwKSB7DQo+ID4gLQkJZGV2X3dhcm4o
-ZGV2LCAiY291bGRuJ3QgZmluZCBtYWMgcmVzZXQgYml0IG1hc2s6ICVkXG4iLCByZXQpOw0KPiA+
-IC0JCXBjaWUtPm1hY19yZXN0X2JpdG1hc2sgPSAweDA7DQo+ID4gKwlwY2llLT5yZXNldCA9IGRl
-dm1fcmVzZXRfY29udHJvbF9nZXRfZXhjbHVzaXZlKCZwZGV2LT5kZXYsIE5VTEwpOw0KPiA+ICsJ
-aWYgKElTX0VSUihwY2llLT5yZXNldCkpIHsNCj4gPiArCQlkZXZfd2FybihkZXYsICJmYWlsZWQg
-dG8gZmluZCBtYWMgcmVzZXRcbiIpOw0KPiA+ICsJCXBjaWUtPnJlc2V0ID0gMHgwOw0KPiA+ICAJ
-fQ0KPiA+ICAJcmV0ID0gYXJtYWRhOGtfcGNpZV9zZXR1cF9waHlzKHBjaWUpOw0KPiA+ICAJaWYg
-KHJldCkNCj4gPiAtLQ0KPiA+IDIuMjUuMQ0KPiA+DQo=
+Hi mani,
+
+Please is there update on this patch.
+
+Regards,
+Thippeswamy H
+
+> -----Original Message-----
+> From: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> Sent: Wednesday, January 29, 2025 5:00 PM
+> To: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
+> manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org;
+> conor+dt@kernel.org
+> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; jingoohan1@gmail.com; Simek, Michal
+> <michal.simek@amd.com>; Gogada, Bharat Kumar
+> <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
+> <thippeswamy.havalige@amd.com>
+> Subject: [PATCH v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+>=20
+> Add support for AMD MDB (Multimedia DMA Bridge) IP core as Root Port.
+>=20
+> The Versal2 devices include MDB Module. The integrated block for MDB alon=
+g
+> with the integrated bridge can function as PCIe Root Port controller at
+> Gen5 32-Gb/s operation per lane.
+>=20
+> Bridge supports error and legacy interrupts and are handled using platfor=
+m
+> specific interrupt line in Versal2.
+>=20
+> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> ---
+> changes in v2:
+> -------------
+> - Update Gen5 speed in the patch description.
+> - Modify Kconfig file.
+> - Update string _leg_ to intx.
+> - Get platform structure through automic variables.
+> - Remove _rp_ in function.
+> Changes in v3:
+> --------------
+> -None.
+> Changes in v4:
+> --------------
+> -None.
+> Changes in v5:
+> --------------
+> -None.
+> Changes in v6:
+> --------------
+> - Remove pdev automatic variable.
+> - Update register name to slcr.
+> - Fix whitespace.
+> - remove Spurious extra line.
+> - Update Legacy to INTx.
+> - Add space before (SLCR).
+> - Update menuconfig description.
+> Changes in v7:
+> --------------
+> - None.
+> Changes in v8:
+> --------------
+> - Remove inline keyword.
+> - Fix indentations.
+> - Add AMD MDB prefix to interrupt names.
+> - Remove Kernel doc.
+> - Fix return types.
+> - Modify dev_warn to dev_warn_once.
+> - Add Intx handler & callbacks.
+> ---
+>  drivers/pci/controller/dwc/Kconfig        |  11 +
+>  drivers/pci/controller/dwc/Makefile       |   1 +
+>  drivers/pci/controller/dwc/pcie-amd-mdb.c | 476 ++++++++++++++++++++++
+>  3 files changed, 488 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-amd-mdb.c
+>=20
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/=
+dwc/Kconfig
+> index b6d6778b0698..61d119646749 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -27,6 +27,17 @@ config PCIE_AL
+>  	  required only for DT-based platforms. ACPI platforms with the
+>  	  Annapurna Labs PCIe controller don't need to enable this.
+>=20
+> +config PCIE_AMD_MDB
+> +	bool "AMD MDB Versal2 PCIe Host controller"
+> +	depends on OF || COMPILE_TEST
+> +	depends on PCI && PCI_MSI
+> +	select PCIE_DW_HOST
+> +	help
+> +	  Say Y here if you want to enable PCIe controller support on AMD
+> +	  Versal2 SoCs. The AMD MDB Versal2 PCIe controller is based on
+> DesignWare
+> +	  IP and therefore the driver re-uses the Designware core functions to
+> +	  implement the driver.
+> +
+>  config PCI_MESON
+>  	tristate "Amlogic Meson PCIe controller"
+>  	default m if ARCH_MESON
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller=
+/dwc/Makefile
+> index a8308d9ea986..ae27eda6ec5e 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -3,6 +3,7 @@ obj-$(CONFIG_PCIE_DW) +=3D pcie-designware.o
+>  obj-$(CONFIG_PCIE_DW_HOST) +=3D pcie-designware-host.o
+>  obj-$(CONFIG_PCIE_DW_EP) +=3D pcie-designware-ep.o
+>  obj-$(CONFIG_PCIE_DW_PLAT) +=3D pcie-designware-plat.o
+> +obj-$(CONFIG_PCIE_AMD_MDB) +=3D pcie-amd-mdb.o
+>  obj-$(CONFIG_PCIE_BT1) +=3D pcie-bt1.o
+>  obj-$(CONFIG_PCI_DRA7XX) +=3D pci-dra7xx.o
+>  obj-$(CONFIG_PCI_EXYNOS) +=3D pci-exynos.o
+> diff --git a/drivers/pci/controller/dwc/pcie-amd-mdb.c b/drivers/pci/cont=
+roller/dwc/pcie-
+> amd-mdb.c
+> new file mode 100644
+> index 000000000000..94b83fa649ae
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pcie-amd-mdb.c
+> @@ -0,0 +1,476 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCIe host controller driver for AMD MDB PCIe Bridge
+> + *
+> + * Copyright (C) 2024-2025, Advanced Micro Devices, Inc.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/resource.h>
+> +#include <linux/types.h>
+> +
+> +#include "pcie-designware.h"
+> +
+> +#define AMD_MDB_TLP_IR_STATUS_MISC		0x4C0
+> +#define AMD_MDB_TLP_IR_MASK_MISC		0x4C4
+> +#define AMD_MDB_TLP_IR_ENABLE_MISC		0x4C8
+> +
+> +#define AMD_MDB_PCIE_IDRN_SHIFT			16
+> +
+> +/* Interrupt registers definitions */
+> +#define AMD_MDB_PCIE_INTR_CMPL_TIMEOUT		15
+> +#define AMD_MDB_PCIE_INTR_INTA_ASSERT		16
+> +#define AMD_MDB_PCIE_INTR_INTB_ASSERT		18
+> +#define AMD_MDB_PCIE_INTR_INTC_ASSERT		20
+> +#define AMD_MDB_PCIE_INTR_INTD_ASSERT		22
+> +#define AMD_MDB_PCIE_INTR_PM_PME_RCVD		24
+> +#define AMD_MDB_PCIE_INTR_PME_TO_ACK_RCVD	25
+> +#define AMD_MDB_PCIE_INTR_MISC_CORRECTABLE	26
+> +#define AMD_MDB_PCIE_INTR_NONFATAL		27
+> +#define AMD_MDB_PCIE_INTR_FATAL			28
+> +
+> +#define IMR(x) BIT(AMD_MDB_PCIE_INTR_ ##x)
+> +#define AMD_MDB_PCIE_IMR_ALL_MASK			\
+> +	(						\
+> +		IMR(CMPL_TIMEOUT)	|		\
+> +		IMR(INTA_ASSERT)	|		\
+> +		IMR(INTB_ASSERT)	|		\
+> +		IMR(INTC_ASSERT)	|		\
+> +		IMR(INTD_ASSERT)	|		\
+> +		IMR(PM_PME_RCVD)	|		\
+> +		IMR(PME_TO_ACK_RCVD)	|		\
+> +		IMR(MISC_CORRECTABLE)	|		\
+> +		IMR(NONFATAL)		|		\
+> +		IMR(FATAL)				\
+> +	)
+> +
+> +#define AMD_MDB_TLP_PCIE_INTX_MASK	GENMASK(23, 16)
+> +
+> +/**
+> + * struct amd_mdb_pcie - PCIe port information
+> + * @pci: DesignWare PCIe controller structure
+> + * @slcr: MDB System Level Control and Status Register (SLCR) Base
+> + * @intx_domain: INTx IRQ domain pointer
+> + * @mdb_domain: MDB IRQ domain pointer
+> + */
+> +struct amd_mdb_pcie {
+> +	struct dw_pcie			pci;
+> +	void __iomem			*slcr;
+> +	struct irq_domain		*intx_domain;
+> +	struct irq_domain		*mdb_domain;
+> +	int				intx_irq;
+> +};
+> +
+> +static const struct dw_pcie_host_ops amd_mdb_pcie_host_ops =3D {
+> +};
+> +
+> +static inline u32 pcie_read(struct amd_mdb_pcie *pcie, u32 reg)
+> +{
+> +	return readl_relaxed(pcie->slcr + reg);
+> +}
+> +
+> +static inline void pcie_write(struct amd_mdb_pcie *pcie,
+> +			      u32 val, u32 reg)
+> +{
+> +	writel_relaxed(val, pcie->slcr + reg);
+> +}
+> +
+> +static void amd_mdb_mask_intx_irq(struct irq_data *data)
+> +{
+> +	struct amd_mdb_pcie *pcie =3D irq_data_get_irq_chip_data(data);
+> +	struct dw_pcie *pci =3D &pcie->pci;
+> +	struct dw_pcie_rp *port =3D &pci->pp;
+> +	unsigned long flags;
+> +	u32 mask, val;
+> +
+> +	mask =3D BIT(data->hwirq + AMD_MDB_PCIE_IDRN_SHIFT);
+> +
+> +	raw_spin_lock_irqsave(&port->lock, flags);
+> +	val =3D pcie_read(pcie, AMD_MDB_TLP_IR_MASK_MISC);
+> +	pcie_write(pcie, (val & (~mask)), AMD_MDB_TLP_IR_ENABLE_MISC);
+> +	raw_spin_unlock_irqrestore(&port->lock, flags);
+> +}
+> +
+> +static void amd_mdb_unmask_intx_irq(struct irq_data *data)
+> +{
+> +	struct amd_mdb_pcie *pcie =3D irq_data_get_irq_chip_data(data);
+> +	struct dw_pcie *pci =3D &pcie->pci;
+> +	struct dw_pcie_rp *port =3D &pci->pp;
+> +	unsigned long flags;
+> +	u32 mask;
+> +	u32 val;
+> +
+> +	mask =3D BIT(data->hwirq + AMD_MDB_PCIE_IDRN_SHIFT);
+> +
+> +	raw_spin_lock_irqsave(&port->lock, flags);
+> +	val =3D pcie_read(pcie, AMD_MDB_TLP_IR_MASK_MISC);
+> +	pcie_write(pcie, (val | mask), AMD_MDB_TLP_IR_ENABLE_MISC);
+> +	raw_spin_unlock_irqrestore(&port->lock, flags);
+> +}
+> +
+> +static struct irq_chip amd_mdb_intx_irq_chip =3D {
+> +	.name		=3D "AMD MDB INTx",
+> +	.irq_mask	=3D amd_mdb_mask_intx_irq,
+> +	.irq_unmask	=3D amd_mdb_unmask_intx_irq,
+> +};
+> +
+> +/**
+> + * amd_mdb_pcie_intx_map - Set the handler for the INTx and mark IRQ
+> + * as valid
+> + * @domain: IRQ domain
+> + * @irq: Virtual IRQ number
+> + * @hwirq: HW interrupt number
+> + *
+> + * Return: Always returns 0.
+> + */
+> +static int amd_mdb_pcie_intx_map(struct irq_domain *domain,
+> +				 unsigned int irq, irq_hw_number_t hwirq)
+> +{
+> +	irq_set_chip_and_handler(irq, &amd_mdb_intx_irq_chip,
+> +				 handle_level_irq);
+> +	irq_set_chip_data(irq, domain->host_data);
+> +	irq_set_status_flags(irq, IRQ_LEVEL);
+> +
+> +	return 0;
+> +}
+> +
+> +/* INTx IRQ Domain operations */
+> +static const struct irq_domain_ops amd_intx_domain_ops =3D {
+> +	.map =3D amd_mdb_pcie_intx_map,
+> +};
+> +
+> +static int amd_mdb_pcie_init_port(struct amd_mdb_pcie *pcie)
+> +{
+> +	int val;
+> +
+> +	/* Disable all TLP Interrupts */
+> +	pcie_write(pcie, pcie_read(pcie, AMD_MDB_TLP_IR_ENABLE_MISC) &
+> +		   ~AMD_MDB_PCIE_IMR_ALL_MASK,
+> +		   AMD_MDB_TLP_IR_ENABLE_MISC);
+> +
+> +	/* Clear pending TLP interrupts */
+> +	pcie_write(pcie, pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC) &
+> +		   AMD_MDB_PCIE_IMR_ALL_MASK,
+> +		   AMD_MDB_TLP_IR_STATUS_MISC);
+> +
+> +	/* Enable all TLP Interrupts */
+> +	val =3D pcie_read(pcie, AMD_MDB_TLP_IR_ENABLE_MISC);
+> +	pcie_write(pcie, (val | AMD_MDB_PCIE_IMR_ALL_MASK),
+> +		   AMD_MDB_TLP_IR_ENABLE_MISC);
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t amd_mdb_pcie_event_flow(int irq, void *args)
+> +{
+> +	struct amd_mdb_pcie *pcie =3D args;
+> +	unsigned long val;
+> +	int i;
+> +
+> +	val =3D pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC);
+> +	val &=3D ~pcie_read(pcie, AMD_MDB_TLP_IR_MASK_MISC);
+> +	for_each_set_bit(i, &val, 32)
+> +		generic_handle_domain_irq(pcie->mdb_domain, i);
+> +	pcie_write(pcie, val, AMD_MDB_TLP_IR_STATUS_MISC);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +#define _IC(x, s)[AMD_MDB_PCIE_INTR_ ## x] =3D { __stringify(x), s }
+> +
+> +static const struct {
+> +	const char	*sym;
+> +	const char	*str;
+> +} intr_cause[32] =3D {
+> +	_IC(CMPL_TIMEOUT,	"completion timeout"),
+> +	_IC(PM_PME_RCVD,	"PM_PME message received"),
+> +	_IC(PME_TO_ACK_RCVD,	"PME_TO_ACK message received"),
+> +	_IC(MISC_CORRECTABLE,	"Correctable error message"),
+> +	_IC(NONFATAL,		"Non fatal error message"),
+> +	_IC(FATAL,		"Fatal error message"),
+> +};
+> +
+> +static void amd_mdb_mask_event_irq(struct irq_data *d)
+> +{
+> +	struct amd_mdb_pcie *pcie =3D irq_data_get_irq_chip_data(d);
+> +	struct dw_pcie *pci =3D &pcie->pci;
+> +	struct dw_pcie_rp *port =3D &pci->pp;
+> +	u32 val;
+> +
+> +	raw_spin_lock(&port->lock);
+> +	val =3D pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC);
+> +	val &=3D ~BIT(d->hwirq);
+> +	pcie_write(pcie, val, AMD_MDB_TLP_IR_STATUS_MISC);
+> +	raw_spin_unlock(&port->lock);
+> +}
+> +
+> +static void amd_mdb_unmask_event_irq(struct irq_data *d)
+> +{
+> +	struct amd_mdb_pcie *pcie =3D irq_data_get_irq_chip_data(d);
+> +	struct dw_pcie *pci =3D &pcie->pci;
+> +	struct dw_pcie_rp *port =3D &pci->pp;
+> +	u32 val;
+> +
+> +	raw_spin_lock(&port->lock);
+> +	val =3D pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC);
+> +	val |=3D BIT(d->hwirq);
+> +	pcie_write(pcie, val, AMD_MDB_TLP_IR_STATUS_MISC);
+> +	raw_spin_unlock(&port->lock);
+> +}
+> +
+> +static struct irq_chip amd_mdb_event_irq_chip =3D {
+> +	.name		=3D "AMD MDB RC-Event",
+> +	.irq_mask	=3D amd_mdb_mask_event_irq,
+> +	.irq_unmask	=3D amd_mdb_unmask_event_irq,
+> +};
+> +
+> +static int amd_mdb_pcie_event_map(struct irq_domain *domain,
+> +				  unsigned int irq, irq_hw_number_t hwirq)
+> +{
+> +	irq_set_chip_and_handler(irq, &amd_mdb_event_irq_chip,
+> +				 handle_level_irq);
+> +	irq_set_chip_data(irq, domain->host_data);
+> +	irq_set_status_flags(irq, IRQ_LEVEL);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops event_domain_ops =3D {
+> +	.map =3D amd_mdb_pcie_event_map,
+> +};
+> +
+> +static void amd_mdb_pcie_free_irq_domains(struct amd_mdb_pcie *pcie)
+> +{
+> +	if (pcie->intx_domain) {
+> +		irq_domain_remove(pcie->intx_domain);
+> +		pcie->intx_domain =3D NULL;
+> +	}
+> +
+> +	if (pcie->mdb_domain) {
+> +		irq_domain_remove(pcie->mdb_domain);
+> +		pcie->mdb_domain =3D NULL;
+> +	}
+> +}
+> +
+> +/**
+> + * amd_mdb_pcie_init_irq_domains - Initialize IRQ domain
+> + * @pcie: PCIe port information
+> + * @pdev: platform device
+> + * Return: '0' on success and error value on failure
+> + */
+> +static int amd_mdb_pcie_init_irq_domains(struct amd_mdb_pcie *pcie,
+> +					 struct platform_device *pdev)
+> +{
+> +	struct dw_pcie *pci =3D &pcie->pci;
+> +	struct dw_pcie_rp *pp =3D &pci->pp;
+> +	struct device *dev =3D &pdev->dev;
+> +	struct device_node *node =3D dev->of_node;
+> +	struct device_node *pcie_intc_node;
+> +
+> +	/* Setup INTx */
+> +	pcie_intc_node =3D of_get_next_child(node, NULL);
+> +	if (!pcie_intc_node) {
+> +		dev_err(dev, "No PCIe Intc node found\n");
+> +		return -ENODATA;
+> +	}
+> +
+> +	pcie->mdb_domain =3D irq_domain_add_linear(pcie_intc_node, 32,
+> +						 &event_domain_ops, pcie);
+> +	if (!pcie->mdb_domain) {
+> +		dev_err(dev, "Failed to add mdb_domain\n");
+> +		goto out;
+> +	}
+> +
+> +	irq_domain_update_bus_token(pcie->mdb_domain,
+> DOMAIN_BUS_NEXUS);
+> +
+> +	pcie->intx_domain =3D irq_domain_add_linear(pcie_intc_node,
+> PCI_NUM_INTX,
+> +						  &amd_intx_domain_ops, pcie);
+> +	if (!pcie->intx_domain) {
+> +		dev_err(dev, "Failed to add intx_domain\n");
+> +		goto mdb_out;
+> +	}
+> +
+> +	of_node_put(pcie_intc_node);
+> +	irq_domain_update_bus_token(pcie->intx_domain, DOMAIN_BUS_WIRED);
+> +
+> +	raw_spin_lock_init(&pp->lock);
+> +
+> +	return 0;
+> +mdb_out:
+> +	amd_mdb_pcie_free_irq_domains(pcie);
+> +out:
+> +	of_node_put(pcie_intc_node);
+> +
+> +	return -ENOMEM;
+> +}
+> +
+> +static irqreturn_t dw_pcie_rp_intx_flow(int irq, void *args)
+> +{
+> +	struct amd_mdb_pcie *pcie =3D args;
+> +	unsigned long val;
+> +	int i;
+> +
+> +	val =3D FIELD_GET(AMD_MDB_TLP_PCIE_INTX_MASK,
+> +			pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC));
+> +
+> +	for_each_set_bit(i, &val, 4)
+> +		generic_handle_domain_irq(pcie->intx_domain, i);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t amd_mdb_pcie_intr_handler(int irq, void *args)
+> +{
+> +	struct amd_mdb_pcie *pcie =3D args;
+> +	struct device *dev;
+> +	struct irq_data *d;
+> +
+> +	dev =3D pcie->pci.dev;
+> +
+> +	d =3D irq_domain_get_irq_data(pcie->mdb_domain, irq);
+> +	if (intr_cause[d->hwirq].str)
+> +		dev_warn(dev, "%s\n", intr_cause[d->hwirq].str);
+> +	else
+> +		dev_warn_once(dev, "Unknown IRQ %ld\n", d->hwirq);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int amd_mdb_setup_irq(struct amd_mdb_pcie *pcie,
+> +			     struct platform_device *pdev)
+> +{
+> +	struct dw_pcie *pci =3D &pcie->pci;
+> +	struct dw_pcie_rp *pp =3D &pci->pp;
+> +	struct device *dev =3D &pdev->dev;
+> +	int i, irq, err;
+> +
+> +	pp->irq =3D platform_get_irq(pdev, 0);
+> +	if (pp->irq < 0)
+> +		return pp->irq;
+> +
+> +	for (i =3D 0; i < ARRAY_SIZE(intr_cause); i++) {
+> +		if (!intr_cause[i].str)
+> +			continue;
+> +		irq =3D irq_create_mapping(pcie->mdb_domain, i);
+> +		if (!irq) {
+> +			dev_err(dev, "Failed to map mdb domain interrupt\n");
+> +			return -ENOMEM;
+> +		}
+> +		err =3D devm_request_irq(dev, irq, amd_mdb_pcie_intr_handler,
+> +				       IRQF_SHARED | IRQF_NO_THREAD,
+> +				       intr_cause[i].sym, pcie);
+> +		if (err) {
+> +			dev_err(dev, "Failed to request IRQ %d\n", irq);
+> +			return err;
+> +		}
+> +	}
+> +
+> +	pcie->intx_irq =3D irq_create_mapping(pcie->mdb_domain,
+> +					    AMD_MDB_PCIE_INTR_INTA_ASSERT);
+> +	if (!pcie->intx_irq) {
+> +		dev_err(dev, "Failed to map INTx interrupt\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	/* Plug the INTx handler */
+> +	err =3D devm_request_irq(dev, pcie->intx_irq,
+> +			       dw_pcie_rp_intx_flow,
+> +			       IRQF_SHARED | IRQF_NO_THREAD, NULL, pcie);
+> +	if (err) {
+> +		dev_err(dev, "Failed to request INTx IRQ %d\n", irq);
+> +		return err;
+> +	}
+> +
+> +	/* Plug the main event handler */
+> +	err =3D devm_request_irq(dev, pp->irq, amd_mdb_pcie_event_flow,
+> +			       IRQF_SHARED | IRQF_NO_THREAD, "amd_mdb
+> pcie_irq", pcie);
+> +	if (err) {
+> +		dev_err(dev, "Failed to request event IRQ %d\n", pp->irq);
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int amd_mdb_add_pcie_port(struct amd_mdb_pcie *pcie,
+> +				 struct platform_device *pdev)
+> +{
+> +	struct dw_pcie *pci =3D &pcie->pci;
+> +	struct dw_pcie_rp *pp =3D &pci->pp;
+> +	struct device *dev =3D &pdev->dev;
+> +	int ret;
+> +
+> +	pcie->slcr =3D devm_platform_ioremap_resource_byname(pdev, "slcr");
+> +	if (IS_ERR(pcie->slcr))
+> +		return PTR_ERR(pcie->slcr);
+> +
+> +	ret =3D amd_mdb_pcie_init_irq_domains(pcie, pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	amd_mdb_pcie_init_port(pcie);
+> +
+> +	ret =3D amd_mdb_setup_irq(pcie, pdev);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to set up interrupts\n");
+> +		goto out;
+> +	}
+> +
+> +	pp->ops =3D &amd_mdb_pcie_host_ops;
+> +
+> +	ret =3D dw_pcie_host_init(pp);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize host\n");
+> +		goto out;
+> +	}
+> +
+> +	return 0;
+> +
+> +out:
+> +	amd_mdb_pcie_free_irq_domains(pcie);
+> +	return ret;
+> +}
+> +
+> +static int amd_mdb_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct amd_mdb_pcie *pcie;
+> +	struct dw_pcie *pci;
+> +
+> +	pcie =3D devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> +	if (!pcie)
+> +		return -ENOMEM;
+> +
+> +	pci =3D &pcie->pci;
+> +	pci->dev =3D dev;
+> +
+> +	platform_set_drvdata(pdev, pcie);
+> +
+> +	return amd_mdb_add_pcie_port(pcie, pdev);
+> +}
+> +
+> +static const struct of_device_id amd_mdb_pcie_of_match[] =3D {
+> +	{
+> +		.compatible =3D "amd,versal2-mdb-host",
+> +	},
+> +	{},
+> +};
+> +
+> +static struct platform_driver amd_mdb_pcie_driver =3D {
+> +	.driver =3D {
+> +		.name	=3D "amd-mdb-pcie",
+> +		.of_match_table =3D amd_mdb_pcie_of_match,
+> +		.suppress_bind_attrs =3D true,
+> +	},
+> +	.probe =3D amd_mdb_pcie_probe,
+> +};
+> +builtin_platform_driver(amd_mdb_pcie_driver);
+> --
+> 2.44.1
+
 
