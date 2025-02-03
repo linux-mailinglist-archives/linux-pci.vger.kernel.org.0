@@ -1,197 +1,359 @@
-Return-Path: <linux-pci+bounces-20653-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20657-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67FF2A25907
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 13:12:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05761A25D9E
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 15:59:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1F2718852EE
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 12:13:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 871D13AD9F9
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 14:49:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93BD82040A9;
-	Mon,  3 Feb 2025 12:12:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2623D20AF6A;
+	Mon,  3 Feb 2025 14:45:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RwpBMjvh"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="qFU+Dtjq";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="M+M19SKB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0014ca01.pphosted.com (mx0b-0014ca01.pphosted.com [208.86.201.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB733202F96
-	for <linux-pci@vger.kernel.org>; Mon,  3 Feb 2025 12:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738584774; cv=none; b=ZdfCi6lz+OvonaxkU9VD5ov41vxEVkzy4cdyAxaJYkmfnY/+6510g4Jk7QT6ibaATNh7TXIL5D5Jz0QsNQlTeqhZpFODiV9H7Ov4aKwSoPgTJRTyzF24kqnGW4VvGWYqxeEPlcVohEzkzCuOn91d26qbkAUJHFF+0ZKWRAW2dLQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738584774; c=relaxed/simple;
-	bh=Al5nN7+VVsS+6jTXW2BhemO8tZMv7evAKrd72FfIn8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wr5dx9X2r5CNaB94bJNTKGI5yojrKzFXJuHk1XmLeJcrlxicqQr3lGfc5ip840M6wSKMXVtbfrYPMj/QICFceU6qc+2BbOXVRNaQ9ijdEc6C9T08ahNtCLfB+UyJqhNbRkDynG65nNsFNkkJOi587NA0zrSHlCtJvFj4cnJ480E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RwpBMjvh; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6efe4324f96so25536747b3.1
-        for <linux-pci@vger.kernel.org>; Mon, 03 Feb 2025 04:12:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738584771; x=1739189571; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=G1fCnNO9BE+pRYsCkXAChxvPSR83W+kvApJS3N7O428=;
-        b=RwpBMjvhc76XSBYuCALvMc+iK/K0mSKq9fTFPQuu4KEfONDzTIpNXTCg29fgHyM00n
-         XQKKqulzsIDmkae2zkOS6vWIaqOpiy59T1lSdIKsNn9GHw79qD03dNuTuYoPPuk4WGPo
-         GaVV+O+Zs0NdVT7YuFx2peo3K1TzshxVobFyYIWZUxwbO/zaWofvsgO3pgjDBP1FBz9G
-         ZFu4jAr6oZepExmSKJOWTUpNmp5mnnPmMGMBs6Mad3o9b9/i83/jNRpqJMdC0C3uvKTq
-         xPYGDfXKd+7ROUyQYN6wuJxIELzCvM/JHzzMtUv6koW/qtXSkKKmUvgr8eX6hQXf4iqK
-         0UQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738584771; x=1739189571;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G1fCnNO9BE+pRYsCkXAChxvPSR83W+kvApJS3N7O428=;
-        b=kEDz1gz+d+W10iw4ViSWJoXnn2lxyyHW4AR6K+XTdXvniRxnAbWGk78ycv6gTrK9y1
-         3xr6lLjX2qduOfbFyieAob9OTuwDAiqKYuBS28M1TvKDXSQOx4AulGjBjOPwzGvxi4CX
-         QqLYdsZbP5qSt9tLrrJdVb116KegZu1C6YjCMyU7kP46U4x+uOpYFvakwDVPJSfvPTwB
-         zbOlrq7h1kdRVy8XX1pZOZHpbfYh5qpq1kva0FdDOFIABHacJPAbZGFPVxtCbIiwEU/1
-         k5BZj4nBJ2itnxNWCrF2tG4oRZxrft4PGzB2ayuPBVBFYmQcLlPNRv2BDa0QmEUP1daa
-         KKgg==
-X-Forwarded-Encrypted: i=1; AJvYcCVFcm83ukYcO0KYnKfVTt3eRsunWayCu54aW4oaZBf9IzETTA0XedP9TRkzuSAlnfmU+RktRIPYu9I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBt6B78kSuw5KUp1PSzH3Cyi8qHLVZdpy2hG4RpN6vJDscb9wx
-	uQshNjp7ztZ9rZD0JDZpZnP8sBWS6ezWij2pYTbDQfSSwjRZJ++pItjK8hlq21wQE6z3NeYXqgX
-	pbhwMkJsLyITdaYh+REFxdCCrImgIBAzery3EBj8JOSQOc/WT
-X-Gm-Gg: ASbGncsmVBcUokEf3iD23N1yzaf4Cw0RJk23n0WkiUvsqCA6XqVTO/uMXsu/rDBQUWd
-	2CfxbxSvaVw6nhKslkPoWsOmolUCigJv3my/1+Lshg2+JuLVA4QJlVZczM+c+rcN3s22ze/8bqA
-	==
-X-Google-Smtp-Source: AGHT+IFRUR8JbA29f5mpJGLTtBTaacsV+IGEaozqrnO9adT6XC3/4NobaMzzaIo2HNZrmPqrTbZHo5WN9mGkT+rdHeQ=
-X-Received: by 2002:a05:690c:3581:b0:6f6:7b02:2568 with SMTP id
- 00721157ae682-6f7a8423943mr162561157b3.32.1738584771686; Mon, 03 Feb 2025
- 04:12:51 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B13209F58;
+	Mon,  3 Feb 2025 14:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=208.86.201.193
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738593902; cv=fail; b=D1UmE3NnlaWsolJIagZYTFWFGd5iNKLeHPaWb1dqdzRI8JnHg0mFNFVHYD9cQQbWQzXBbEs1Av+JPV5ZwijPjZFOIXIZ/hIEOVySSxzqW09CaUo2PO4vXSzRL66BMWgEbHNac/qc+WHylMfEVQ92v48GpB/i/vqYPhPo7aelXsI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738593902; c=relaxed/simple;
+	bh=3IWxPcLwgvhYadgjMHwhiFx6BbHGmuS30ABc1JnICoE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=J/KoVMx7IZKVdYmk/KltAeExk0H/rlmvHWr/RlyWtdPhwj2npVTPdb7vnvzyvm1hVWz9v5FxWawtnz31S5mNYeHNWi1647DaUZIK2Dn8E0+tgibD2Vtts7RG8eQ2A7nc/bzLeKQ0kEIC6pzHnRmEKFQtHlJTEalgtnC2UhyDiPs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cadence.com; spf=pass smtp.mailfrom=cadence.com; dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b=qFU+Dtjq; dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b=M+M19SKB; arc=fail smtp.client-ip=208.86.201.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cadence.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cadence.com
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+	by mx0b-0014ca01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513AjAN6027280;
+	Mon, 3 Feb 2025 06:04:21 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=proofpoint;
+	 bh=e8YVVb3EGudIjJanKvJRmOHk9mFHVoK0+R0X3gyhjO0=; b=qFU+DtjqVD34
+	IwFVlKXlfOPuac934/CvBfDMsDNf3avDVFVU9Gspd0rUowt/A8yqP6NL5VL4ZPkl
+	nbWAY++PF0557fJKEkCltFGOiM5GIGokTGuJQGBm1nC0LZXRh07XYENt3JWTfMy4
+	hmK4jjXeRDrTIilp3ZaPUVJuSelbXtMN9NAS360xefA8/bMu9O3eljFHqMCj/R98
+	DXzFm4HjVCsJaER5ZhVjeetP8CVQrHOkGMGsTztip2FigKYDynp4m9nipTxAFo/g
+	7NxDyispdZyUuVGKOGlCDLKsT4EmuF84Y6otagTNrVIDPd2994Wd+EdoItaLtMoQ
+	AXChnTa1gw==
+Received: from ch4pr04cu002.outbound.protection.outlook.com (mail-northcentralusazlp17013059.outbound.protection.outlook.com [40.93.20.59])
+	by mx0b-0014ca01.pphosted.com (PPS) with ESMTPS id 44hg2xddrx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Feb 2025 06:04:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LORQLbl1hJLN3SUKLBJoLclU6mUe5U8xMGvxiUZfx9ttR+suo40Ec/VMSAIVFEETS+TE3TRKCWHwabCVozcUXzX1nI9ehqBQY4n4ck5zJWSUhzCy7FlzZRGGi559SrT54kNhZCVA0VoA0s0LK4WurojTSkt3gy64dT/Cepi9w8RaJjG3BfqrlDXIJrKUCHhclAz8HwWHnM2NmsZL/zgtgrLHh3NdDVbRcyZBmJitUcBfs6bu/0VX09ubysg29rciFXcBEv4ZlM2N7liyOsKDmuoK7/bemWD8AUaL/8cUOTFOxShhzc0NwcXJWocQBGm2sDl9lGK/hhCbXZBzduA37A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e8YVVb3EGudIjJanKvJRmOHk9mFHVoK0+R0X3gyhjO0=;
+ b=OujmCnJ5qA03Ng1mNI5HsJGnotlO+d1ODec36FYOUay+1+j+PIJALbG9z8XpvtPzGcRNuv4yaIun/cd0BkAZQsOMoBXr7tmcHdqXgwjUH2nCPKrb4iKgYVorF7F7RAiFJ73gnUqkzLvF3K6/z64+ac6hALS8W92bss9RMTd8NxoIba11t4PCY9OVptxSM4iMfVngJDLtVevxVoSP6NkbkjK5zxNgkBX22CXFbo5vcRA2ZtTZ7gv22rtZMMjDHeE6uJvaLomb53Yp0c1b8s0I6KSuH7SZMNexDex9fq3NGExQd39nrv1ZKIsPOwMu5y3iIiE40AIKJxlgHKUY+CkR8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e8YVVb3EGudIjJanKvJRmOHk9mFHVoK0+R0X3gyhjO0=;
+ b=M+M19SKBYYa3+7uKTJslKcvH7ht7rZFtqhV0ZyKbrmvOk/cuOiQ72GAmwTbavtioPMad12N+LuI96XAixaT5chDd9EEQmwj0NHqjZzijNmbAcpMtkL9nnDq9/7cxbiQ+VGUxUoB2NKVAPzAQD5SB20Emw+4HzAQSrtPo3Me0yQw=
+Received: from CH2PPF4D26F8E1C.namprd07.prod.outlook.com
+ (2603:10b6:61f:fc00::278) by DS0PR07MB11071.namprd07.prod.outlook.com
+ (2603:10b6:8:1fd::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Mon, 3 Feb
+ 2025 14:04:17 +0000
+Received: from CH2PPF4D26F8E1C.namprd07.prod.outlook.com
+ ([fe80::d517:a32:d647:386c]) by CH2PPF4D26F8E1C.namprd07.prod.outlook.com
+ ([fe80::d517:a32:d647:386c%6]) with mapi id 15.20.8398.025; Mon, 3 Feb 2025
+ 14:04:17 +0000
+From: Manikandan Karunakaran Pillai <mpillai@cadence.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh@kernel.org"
+	<robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] pci: cdns : Function to read controller architecture
+Thread-Topic: [PATCH] pci: cdns : Function to read controller architecture
+Thread-Index: AQHbc9dkPe/t53rtZE2/3AwJ6A7zh7MxNvyAgARnm0A=
+Date: Mon, 3 Feb 2025 14:04:17 +0000
+Message-ID:
+ <CH2PPF4D26F8E1C25BF05614F8C8293EECDA2F52@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+References:
+ <CH2PPF4D26F8E1C5FA4D55D4271BA4F6F0DA2E82@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <20250131183835.GA688678@bhelgaas>
+In-Reply-To: <20250131183835.GA688678@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-dg-ref:
+ =?us-ascii?Q?PG1ldGE+PGF0IGFpPSIwIiBubT0iYm9keS50eHQiIHA9ImM6XHVzZXJzXG1w?=
+ =?us-ascii?Q?aWxsYWlcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVl?=
+ =?us-ascii?Q?LTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1iZjZhNzFlOS1lMjM3LTExZWYtYTM2?=
+ =?us-ascii?Q?OC1jNDQ3NGVkNmNlZTVcYW1lLXRlc3RcYmY2YTcxZWItZTIzNy0xMWVmLWEz?=
+ =?us-ascii?Q?NjgtYzQ0NzRlZDZjZWU1Ym9keS50eHQiIHN6PSI2MzQ2IiB0PSIxMzM4MzA2?=
+ =?us-ascii?Q?NTA1NDQzNzc3NDYiIGg9Im02d291Ry9ZeVNYQlVPcUx0c2VTZmF3MWdiWT0i?=
+ =?us-ascii?Q?IGlkPSIiIGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VB?=
+ =?us-ascii?Q?QUdBSUFBQ1N6OEdCUkhiYkFXRURCTWtwOXVKTllRTUV5U24yNGswS0FBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFIQUFBQUFzQmdBQW5BWUFBTVFCQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFRQUJBQUFBaEZWOHlRQUFBQUFBQUFBQUFBQUFBSjRBQUFC?=
+ =?us-ascii?Q?akFHRUFaQUJsQUc0QVl3QmxBRjhBWXdCdkFHNEFaZ0JwQUdRQVpRQnVBSFFB?=
+ =?us-ascii?Q?YVFCaEFHd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR01BWkFCdUFGOEFkZ0Jv?=
+ =?us-ascii?Q?QUdRQWJBQmZBR3NBWlFCNUFIY0Fid0J5QUdRQWN3QUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
+ =?us-ascii?Q?QUFBQ0FBQUFBQUNlQUFBQVl3QnZBRzRBZEFCbEFHNEFkQUJmQUcwQVlRQjBB?=
+ =?us-ascii?Q?R01BYUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUhBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFB?=
+ =?us-ascii?Q?QUJ6QUc4QWRRQnlBR01BWlFCakFHOEFaQUJsQUY4QVlRQnpBRzBBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+x-dg-refone:
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFB?=
+ =?us-ascii?Q?bmdBQUFITUFid0IxQUhJQVl3QmxBR01BYndCa0FHVUFYd0JqQUhBQWNBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFBQUFBQ2VBQUFBY3dCdkFIVUFj?=
+ =?us-ascii?Q?Z0JqQUdVQVl3QnZBR1FBWlFCZkFHTUFjd0FBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJB?=
+ =?us-ascii?Q?QUFBQUFBQUFBSUFBQUFBQUo0QUFBQnpBRzhBZFFCeUFHTUFaUUJqQUc4QVpB?=
+ =?us-ascii?Q?QmxBRjhBWmdCdkFISUFkQUJ5QUdFQWJnQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFB?=
+ =?us-ascii?Q?QUFuZ0FBQUhNQWJ3QjFBSElBWXdCbEFHTUFid0JrQUdVQVh3QnFBR0VBZGdC?=
+ =?us-ascii?Q?aEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNBQUFBQUFDZUFBQUFjd0J2QUhV?=
+ =?us-ascii?Q?QWNnQmpBR1VBWXdCdkFHUUFaUUJmQUhBQWVRQjBBR2dBYndCdUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+x-dg-reftwo:
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCekFH?=
+ =?us-ascii?Q?OEFkUUJ5QUdNQVpRQmpBRzhBWkFCbEFGOEFjZ0IxQUdJQWVRQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQXhBRUFBQUFBQUFBSUFBQUFBQUFBQUFn?=
+ =?us-ascii?Q?QUFBQUFBQUFBQ0FBQUFBQUFBQUNrQVFBQUNnQUFBRElBQUFBQUFBQUFZd0Jo?=
+ =?us-ascii?Q?QUdRQVpRQnVBR01BWlFCZkFHTUFid0J1QUdZQWFRQmtBR1VBYmdCMEFHa0FZ?=
+ =?us-ascii?Q?UUJzQUFBQUxBQUFBQUFBQUFCakFHUUFiZ0JmQUhZQWFBQmtBR3dBWHdCckFH?=
+ =?us-ascii?Q?VUFlUUIzQUc4QWNnQmtBSE1BQUFBa0FBQUFCd0FBQUdNQWJ3QnVBSFFBWlFC?=
+ =?us-ascii?Q?dUFIUUFYd0J0QUdFQWRBQmpBR2dBQUFBbUFBQUFBQUFBQUhNQWJ3QjFBSElB?=
+ =?us-ascii?Q?WXdCbEFHTUFid0JrQUdVQVh3QmhBSE1BYlFBQUFDWUFBQUFFQUFBQWN3QnZB?=
+ =?us-ascii?Q?SFVBY2dCakFHVUFZd0J2QUdRQVpRQmZBR01BY0FCd0FBQUFKQUFBQUFBQUFB?=
+ =?us-ascii?Q?QnpBRzhBZFFCeUFHTUFaUUJqQUc4QVpBQmxBRjhBWXdCekFBQUFMZ0FBQUFB?=
+ =?us-ascii?Q?QUFBQnpBRzhBZFFCeUFHTUFaUUJqQUc4QVpBQmxBRjhBWmdCdkFISUFkQUJ5?=
+ =?us-ascii?Q?QUdFQWJnQUFBQ2dBQUFBQUFBQUFjd0J2QUhVQWNnQmpBR1VBWXdCdkFHUUFa?=
+ =?us-ascii?Q?UUJmQUdvQVlRQjJBR0VBQUFBc0FBQUFBQUFBQUhNQWJ3QjFBSElBWXdCbEFH?=
+ =?us-ascii?Q?TUFid0JrQUdVQVh3QndBSGtBZEFCb0FHOEFiZ0FBQUNnQUFBQUFBQUFBY3dC?=
+ =?us-ascii?Q?dkFIVUFjZ0JqQUdVQVl3QnZBR1FBWlFCZkFISUFkUUJpQUhrQUFBQT0iLz48?=
+ =?us-ascii?Q?L21ldGE+?=
+x-dg-rorf: true
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH2PPF4D26F8E1C:EE_|DS0PR07MB11071:EE_
+x-ms-office365-filtering-correlation-id: c6ece4bd-7c1a-42ec-63a0-08dd445ba606
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?edIXqeDM7TDuNWl5f1zSfGFIU/GqwryRCMtpq6q55yqnYaOdQpxBh2yyewZq?=
+ =?us-ascii?Q?q8af/tQkY/ThQIjfntExU+sPiq5BtKPX7OseKHXDsxxwybKmdUptHFHGL2zU?=
+ =?us-ascii?Q?qT7xBk/peVnTmWsviRgacGxXUWxpe8wWrcBsglBR4vcpL6WdZc/uFbDHthTy?=
+ =?us-ascii?Q?cOOslJYOcoPaaNNsH5FqjGdU+kj6lWPULpzXtaECC2swGXzvpP5Bk+E1Y6By?=
+ =?us-ascii?Q?vJeCxDL94ZalAA71lB7W5zr0U3XjFSKuXRcL4bO3GCtIeQwt7zUk8SHXOnNT?=
+ =?us-ascii?Q?/8cFMD5XRThEv0dbFVGbqxgdF/0DArM9gVk2Ws8DN9xCwp6iUp/sEQ0qHhDr?=
+ =?us-ascii?Q?iO8kYUwkiAv+TJeUTO9oqyfzllNZsbS4wrAO/Sz7MakndumwQOScKU8VseLq?=
+ =?us-ascii?Q?Ef6Ifg8XhTtgPOzJHWAJw6jXyOh8KTWYcPMuWEfl7nKlJhTWayLmzVJq/Tzo?=
+ =?us-ascii?Q?087ffwZzoH2sx7xR1Niw2vSO82JwsHKonjsV/pjVYT4808oU2oZKiY4QLSLe?=
+ =?us-ascii?Q?7YbnGI31JYAUwfTepv6TQ4SLMQHv9bYzlDBHiGDy2Ot0zaP7NfQmR1W8ADj7?=
+ =?us-ascii?Q?iMz747mP+WJO33q4NJz5M6RkOOsnV5k7Q9ODoOgfcTh3pKOok0Bb7hbXZsZg?=
+ =?us-ascii?Q?QJW32rG6T68dIDT5yg6AIvChMcjPXe1xOBBDcUqn6NtVU1FeqSUmAb8P2Zx3?=
+ =?us-ascii?Q?GTFpAJ5atrJsAD43gzSoTZKgEZiA2Or1rpaPe9BHHg0ISYF2/CXjKDSi+bOZ?=
+ =?us-ascii?Q?TyrjNGxMJk9Uc0Cvw9qjFdMdbPa3/FqLWyT8VwFBs+HWXHanb/vvascdBLC0?=
+ =?us-ascii?Q?6yOmLlRDXwuFeWlBgWcPK1GJhsUwvfVqqLTs55XT50NJx4os2KAdcxB6ch8Z?=
+ =?us-ascii?Q?aoWlm4n58R8Y9cG1XSof5+y+zVmcEAlsS8n2vbJBURX9O3Aa6XOV+qQFRiLP?=
+ =?us-ascii?Q?pcfg4ZadA361DjIDAIThFi4+51H3rUPU+Yj3j9ofQ5MTn8rn+TR0rnYT9FKs?=
+ =?us-ascii?Q?xYAGlyEJWx8p6WJsrT9EFoKIlByZcAXF5vNxGH4OaN/uSbLKdrpepmJQNMtm?=
+ =?us-ascii?Q?He33T6C2yUejItY/32lVxf1Yg7PlAwbRrJN/xW4gnZfL3rrgIu8B+rTBnIIH?=
+ =?us-ascii?Q?nrJewkoQWO4UxzEJI/Nvw56caVt/s4+rdQFaucC+V8ApV6wqqIbiX+JD8RmB?=
+ =?us-ascii?Q?pIpxDtlWH6HzXia0u5INimTOBrL9dtmPGnTLDFmvpkQAlcQQzAxnZj4gkRdg?=
+ =?us-ascii?Q?vrPEsnhy8uY2BV6AhSz+s0pD4N5Zy60SUf2yZ/9MdhTey7iTyfIrLzfLp+kM?=
+ =?us-ascii?Q?SP4LTcs58p1D8Vte4AQ8PES8HmORH4P/rJSh1FG8VoN206zSVX5FeUw+epCz?=
+ =?us-ascii?Q?1uJksqaAGb987Lntu/3OTj1/+WLfxO5c9mE/a/Rh1i1dba38Yg=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PPF4D26F8E1C.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?lQhdEXEmiXwTXOIjwMCUknx9YnPjXtRrlbya16GOc15L2eIB+ZIeUGiILTqp?=
+ =?us-ascii?Q?WRvoXfvkWvB5GjvPBNUiLqpS2njEolOqH0jTdZMw5m4qvmY7BKo/mjNXN4YN?=
+ =?us-ascii?Q?H6EuiFzNLUGfYhIjt3wmYoE9BZ1iF+GLHBuGThqedJINdd+dfCYMuD8KrKuX?=
+ =?us-ascii?Q?+VZf9Qx4aMgcN5AUR501RpTIbODsP6aYmwF5lZyXM/jQb2u4KJr4U4+MFCiu?=
+ =?us-ascii?Q?RDGnvCNvKsvoeTGqQ0I5JHQjh0J8KbbmuMXdg9k9pTASaEqVXcc1aputf8hA?=
+ =?us-ascii?Q?0ncWWiWRUNWZhkcIrxM6p1Mox3QRjBVHnM0D6BY+WxLPn5FCkV6UbrVJHYxg?=
+ =?us-ascii?Q?l8Y94YzIcF3jkJHFiMgZO/F/h0vqDkX7SmsXPJKgyGyLsQCOE9J/1/yqDZw3?=
+ =?us-ascii?Q?oiALb49GLRMs7HWHYGoBeuFjlAekOXmKwI81GbNSgmyuu0ESyAXlNlelojiJ?=
+ =?us-ascii?Q?SLZng/48Ol8jM89cqDC3W4znZcLY0nel6RqX1g/rcLn86qSv809WXTAS5rlY?=
+ =?us-ascii?Q?0yGMiOgJQLMpW4BIEqTftS9nr0/ieq+uLIOdXpwu5jUk+C/VJv2OWuTXzTov?=
+ =?us-ascii?Q?Uuy91Pt9wC//Ser712/Il7F9gDGCVHFBKOMf9AAmsei5kkMwM4xrMDaHxK1d?=
+ =?us-ascii?Q?sHLLdjy1OI8xnNsHxTT1v0v1hwdZ/8oXpJJIJm4wbWprsDQDr8Np28gfQblk?=
+ =?us-ascii?Q?7ioaWVJgiG92CFnYNwqPjMO76KayJxc8/0AdRh5O4UvIEdZRQq1BQzV205W2?=
+ =?us-ascii?Q?HnLEMu3a+f5sZJQ6P+R6YN1ywykeyOaJ5mqRtzXeMxHgnlhZh7rPNobo5SP6?=
+ =?us-ascii?Q?rMM802o9sqObXb2HMQd1BrFyuZoy1kTyqoP1Z5qKbONMPSq+Bz+/Mt37CjW8?=
+ =?us-ascii?Q?ZAmPPMxzA0BaAqZRh+c/VumtOE7tbFXHwhPzCdYHGV7JlW211mvQVoMycNby?=
+ =?us-ascii?Q?djvoJHVyQ1NnULVCLM5Mcqj94dXLEmOSbjfzzRMzC7Ovb9drh2PJyN4OOPMU?=
+ =?us-ascii?Q?AG2R5XAooctUq+GF4rwd52rK27qO7xyb7FbINxI7ireQlI640R0gcEj35bat?=
+ =?us-ascii?Q?KYNZsS1Qvl6c01WTquYYFGKBsKBTFUHwydAlpLavG8Q6yKfR5uwJIV8fgTYr?=
+ =?us-ascii?Q?1geUpfmH8kScqAIxiAK0HhaG43tlGdbZ4YE8Zc3uu4H1hRIUbSoMphmNcVrY?=
+ =?us-ascii?Q?jURguO/+A8dVmYTEAHDyxHRWdHsCdaB8Wu8QoQVOPPyZRLOhNTQzsTEJg6rj?=
+ =?us-ascii?Q?Sd2jKafJA905ELLDc4kBc3opRB8wHaTi+YLU8KZS0heEh84iJCpvBPL14KIn?=
+ =?us-ascii?Q?qPI8hF3+zZBnRmtDJNZ5+eefLx+2Bvga8pVJDPj+rixGRuImxz9YznnndH+7?=
+ =?us-ascii?Q?16J0SO/G307A8qGgOjKUVHyx7CM7f97VR8r+mJEfhR1FL35zhxB3sYRX8i6w?=
+ =?us-ascii?Q?6pTxiPrZHlNKUpAXyrXlVNz6zD+2qt6JbxVa09GByzPeAGKYoq5j5ms+7vXB?=
+ =?us-ascii?Q?s4bfCQQed7noRtOuaH1wd1P75bZ76WggLZWGdCWkovyxvsJr1WzNeXuwTZCa?=
+ =?us-ascii?Q?q/VBMxkRFCK6YTWW61QqGWY0fLWEzxVsRziqn2v6?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <12619233.O9o76ZdvQC@rjwysocki.net> <CAPDyKFpc5p3sXZ6LfdVgt8jR5ZbsQExTgeyMNA-PzcWs5A9U0A@mail.gmail.com>
- <CAJZ5v0gvQjp_P-5Ww7iN1cGiiMJ6tvLLnPpkTQNk++KhoRe=GA@mail.gmail.com>
- <CAPDyKFrBO+r8qYRrhoFZN21__8RuR61ofbsGQZbA=pyQbti5CA@mail.gmail.com>
- <CAJZ5v0jTutgKeXtg3YLR1Onw9gOmvHudHamVVgMxEsieNDXViw@mail.gmail.com>
- <CAPDyKFpmNPhyV3YoBFu7KnW04550DQgqzGHAbGLLqp7=TggVtw@mail.gmail.com>
- <CAJZ5v0iYHBeMra_ba-1Ht4xoPGsyt7gg05RtGxoa_gG91s1xEA@mail.gmail.com>
- <CAPDyKFqkqOXD0oVZoOFR4O6ucqLS4n85_S4SNPvPAc6hfaELgw@mail.gmail.com> <CAJZ5v0jAEJ7DPS4yarwL5Nx_8EVNR0XepjnsCdNuM4pF=Cw9bg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jAEJ7DPS4yarwL5Nx_8EVNR0XepjnsCdNuM4pF=Cw9bg@mail.gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 3 Feb 2025 13:12:15 +0100
-X-Gm-Features: AWEUYZntgiPQgKGhnRjLHhrJxgceqb9ss7gC4Ai8-DSdXsy0Am7_yZUV7wpNkTU
-Message-ID: <CAPDyKFp9RGFAGjChF6jLqy9GttbJm06BGAfOLdZaXUrcagfCgg@mail.gmail.com>
-Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
- parents and children
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
-	Bjorn Helgaas <helgaas@kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
-	Johan Hovold <johan@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Kevin Xie <kevin.xie@starfivetech.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PPF4D26F8E1C.namprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6ece4bd-7c1a-42ec-63a0-08dd445ba606
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2025 14:04:17.4345
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: b4bOlcJRdR04wOxRg5/eYA8ilQGS4itRTt7PSOtDNq1H+yAojAFpIZh2dOgQ29yE5Y9O2yHW2xk+Fg+KXQW5SrSFRqsC4/3jprLTMbyY7wQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR07MB11071
+X-Proofpoint-ORIG-GUID: jXN0BKAcVR1sLmL8fqu_40nczu9xjYmB
+X-Proofpoint-GUID: jXN0BKAcVR1sLmL8fqu_40nczu9xjYmB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ lowpriorityscore=0 impostorscore=0 phishscore=0 mlxscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 clxscore=1015 suspectscore=0 spamscore=0
+ adultscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2501170000 definitions=main-2502030103
 
-[...]
+Would like to change the design to get the architecture value from dts, usi=
+ng a bool hpa
+And store this value in the is_hpa field in the struct as given.
 
-> >
-> > The problem with $subject patch is that drivers/buses are required to
-> > check the runtime PM status, with pm_runtime_suspended(),
-> > pm_runtime_status_suspended() or pm_runtime_active() in one of its
-> > system suspend/resume callbacks , to synchronize it with the HW state
-> > for its device (turn on/off clocks for example).
->
-> Well, I'm kind of unaware of this requirement.
->
-> It clearly is not even followed by the code without the $subject patch.
->
-> The real requirement is that the runtime PM status at the point when
-> runtime PM is re-enabled, that is in device_resume_early(), must
-> reflect the current actual HW state.
+There would be support for legacy and High performance architecture in diff=
+erent files
+And the difference would be basically the registers they write and the offs=
+ets of these=20
+registers. The function names would almost be similar with the tag hpa, emb=
+edded in
+the function name.=20
 
-Right. Seems like we are in agreement, just that there seems to be
-multiple ways to describe the similar problem.
+Would this be an acceptable design for support of these new PCIe cadence co=
+ntrollers ?=20
 
->
-> > Certainly, we can not rely on drivers to conform to this behaviour and
-> > there are plenty of cases where they really don't. For example, we
-> > have drivers that only implements runtime PM support or simply don't
-> > care about the runtime PM status during system resume, but just leaves
-> > the device in the state it is already in.
->
-> Drivers that only support runtime PM are broken with respect to system
-> sleep ATM.  They need to be made to support system sleep or they
-> cannot be used on systems that use system sleep.  There may be a way
-> around this for system suspend/resume (see below), but not for
-> hibernation.
 
-I think calling them broken may be to take this a step too far.
-
-While I certainly agree that these drivers have room for some
-improvements, it looks to me that these drivers work today, but may
-not with $subject patch.
-
+>Look at previous subject lines for changes to these files and follow the p=
+attern.
 >
-> > Moreover, we have the users of pm_runtime_force_suspend|resume(),
-> > which we also know *not* to work with DPM_FLAG_SMART_SUSPEND and thus
-> > $subject patch too. I am less worried about these cases though, as I
-> > believe we should be able to fix them, by taking into account the
-> > suggested "->power.set_active flag", or something along those lines.
+>On Fri, Jan 31, 2025 at 11:58:07AM +0000, Manikandan Karunakaran Pillai
+>wrote:
+>> Add support for getting the architecture for Cadence PCIe controllers
+>> Store the architecture type in controller structure.
 >
-> Yes, and that's what I'm going to do.
+>This needs to be part of a series that uses pcie->is_hpa for something.  T=
+his
+>patch all by itself isn't useful for anything.
 >
-> > That said, it seems like we need another way forward.
+>Please post the resulting series with a cover letter and the patches as
+>responses to it:
 >
-> I still don't see why, sorry.
+>https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel/gi=
+t/t
+>orvalds/linux.git/tree/Documentation/process/5.Posting.rst?id=3Dv6.13*n333=
+__;I
+>w!!EHscmS1ygiU1lA!AkA94rjfoiZElA3AKt_SRyFA74hygGR-
+>X7t7_oZzijqCt3Ojr_UVL2Q9RLTXs4juahroWPLzA6CJFZI$
 >
-> I guess the concern is that if a device suddenly needs to be resumed
-> during system resume even though it was runtime-suspended before the
-> preceding system suspend, there is no way to tell its driver/bus
-> type/etc that this is the case if they all decide to leave the device
-> as is, but as I have said for multiple times in this thread, leaving a
-> device as is during system resume may not be an option unless it is a
-> leaf device without any subordinates.  This has always been the case.
+>You can look at previous postings to see the style, e.g.,
+>https://urldefense.com/v3/__https://lore.kernel.org/linux-
+>pci/20250115074301.3514927-1-
+>pandoh@google.com/T/*t__;Iw!!EHscmS1ygiU1lA!AkA94rjfoiZElA3AKt_SRyFA7
+>4hygGR-X7t7_oZzijqCt3Ojr_UVL2Q9RLTXs4juahroWPLzuNTbmWU$
 >
-> We'll see if there is any damage resulting from the $subject change
-> and we'll fix it if so.
+>> +static void cdns_pcie_ctlr_set_arch(struct cdns_pcie *pcie) {
+>> +	/* Read register at offset 0xE4 of the config space
+>> +	 * The value for architecture is in the lower 4 bits
+>> +	 * Legacy-b'0010 and b'1111 for HPA-high performance architecture
+>> +	 */
 >
-> In the future, though, I'd like to integrate system resume with
-> runtime PM more than it is now.  Namely, it should be possible to move
-> the re-enabling of runtime PM to the front of device_resume_early()
-> and then use pm_runtime_resume() for resuming devices whose drivers
-> support runtime PM (I don't see any fundamental obstacles to this).
-> One benefit of doing this would be that pm_runtime_resume() would
-> automatically trigger a runtime resume for all of the "superior"
-> devices, so they could be left in whatever state they had been in
-> before the preceding system suspend regardless of what happens to
-> their "subordinates".  It is likely that some kind of driver opt-in
-> will be needed for this or maybe the core can figure it out by itself.
-
-Right, I am certainly interested to discuss this topic too. It's not
-an easy thing and the biggest problem is that we can't really just
-change the behaviour without a big risk of breaking things.
-
-Some kind of opt-in behaviour is the only thing that can work, in my
-opinion. Anyway, I am here to review and discuss. :-)
-
+>Don't include the hex register offset in the comment.  That's what
+>CDNS_PCIE_CTRL_ARCH is for.  It doesn't need the bit values either.
 >
-> It can look at what callbacks are implemented etc.  For example, if a
-> driver only implements :runtime_suspend() and :runtime_resume() and no
-> other PM callbacks, it is reasonable to assume that the devices
-> handled by it should be suspended and resumed with the help of the
-> runtime PM infrastructure even during system-wide suspend/resume (that
-> doesn't apply to hibernation, though).
-
-Maybe this can work in some opt-in/out way, but certainly not as a
-solution for all.
-
-For example, we have subsystems that deal with system suspend/resume
-quite differently, where drivers instead implement some subsystem
-specific callbacks, rather than the common system suspend/resume ops.
-
-Kind regards
-Uffe
+>Use the conventional comment style:
+>
+>  /*
+>   * Text ...
+>   */
+>
+>> +	u32 arch, reg;
+>> +
+>> +	reg =3D cdns_pcie_readl(pcie, CDNS_PCIE_CTRL_ARCH);
+>> +	arch =3D FIELD_GET(CDNS_PCIE_CTRL_ARCH_MASK, reg);
+>
+>Thanks for using GENMASK() and FIELD_GET().
+>
+>> +	if (arch =3D=3D CDNS_PCIE_CTRL_HPA) {
+>> +		pcie->is_hpa =3D true;
+>> +	} else {
+>> +		pcie->is_hpa =3D false;
+>> +	}
+>> +}
+>
+>> +/*
+>> + * Read completion time out reset value to decode controller
+>> +architecture  */
+>> +#define CDNS_PCIE_CTRL_ARCH		0xE4
+>
+>Is this another name for the PCI_EXP_DEVCTL2 in the PCIe Capability?
+>Or maybe PCI_EXP_DEVCAP2?  If so, use those existing #defines and the
+>related masks (if it's DEVCAP2, you'd probably have to add a new one for t=
+he
+>Completion Timeout Ranges Supported field).
+>
+>There's something similar in cdns_pcie_retrain(), where
+>CDNS_PCIE_RP_CAP_OFFSET is apparently the config space offset of the PCIe
+>Capability.
+>
+>> +#define CDNS_PCIE_CTRL_ARCH_MASK	GENMASK(3, 0)
+>> +#define CDNS_PCIE_CTRL_HPA		0xF
 
