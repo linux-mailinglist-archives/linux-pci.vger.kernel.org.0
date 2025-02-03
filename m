@@ -1,140 +1,147 @@
-Return-Path: <linux-pci+bounces-20655-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20656-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B7E5A25CDB
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 15:38:50 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A28AAA25D60
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 15:51:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C5913AD43A
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 14:33:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 91556188BDE2
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 14:46:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F3BD211475;
-	Mon,  3 Feb 2025 14:26:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 604102080F4;
+	Mon,  3 Feb 2025 14:42:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s+tecW68"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nEyAGXAa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D81D21129F
-	for <linux-pci@vger.kernel.org>; Mon,  3 Feb 2025 14:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3389B205E23;
+	Mon,  3 Feb 2025 14:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738592773; cv=none; b=aJBa6bfBTsyUiTzMzaOg0lhthQfzBmkLx7RKKVEChyexZQKpiiiff1WwlErXI9QNOo5jf/BnMkwkCXbZ/5LE9itdS7ogPikExv7XUUC+sRiw97OQoBySuCsXwskyKK7VG2NZS93bBpwapLR/RLl4X+92XanjbeqHHqUWh+JCZIU=
+	t=1738593770; cv=none; b=LmQTIDgxTeG6IebfGLgBlpJ3ScFUs96BkdlERpH2bEEWQJbTtF7TjXn03S5YctPQM0A6Js091gIOOCpIuclowhu/tZ1UWHG9aNxcub0qt4hWQtNXCf1KzGTf4BPfmTtOONDTl6GhkqIG3rrP9L6B3LKmbJdAQNV6mHLk3em7Aes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738592773; c=relaxed/simple;
-	bh=eQmN+wSYqNfPSq7/lGm2FRWILAta40UWxadBXdb2dCU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p5yzMXHAAOKxHF0aWQ572JfCE/2i61knhLwYkwr+Fcb00kYQJZ91K3UhyiGfd9f1PqgMvKH7c90vyo9tTDOkBnczBdixCC3KrLYKYbII20Gc6Hled5YQN8wEUNaji7U5VY4+HHwsxic2nHR0qNlJWIzv/CPnh/cJOGUXwdg8wqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s+tecW68; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-21631789fcdso71100015ad.1
-        for <linux-pci@vger.kernel.org>; Mon, 03 Feb 2025 06:26:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738592770; x=1739197570; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Qwfs5ZTiLlNTPpq6GVEveYLjOMUtMGx1iY3Hoyz/gnI=;
-        b=s+tecW689LgIGw0VrSgiByP4ICnBQSld2ZzeFry37wwwBqAKo/17W4SETTGHjCVk2Q
-         i5C2T/NddpZG0wN14JcWW7m8ihJZ4jLvg2icw61leP3VuNqEijc69e/o8tYKqTRHuuV8
-         8b8emQYOnrtBFCaM1T588AjDUPAX58sPapZS1mrJlV7pQuTSgBLU5/6cEWeEMxogjprc
-         Q0bNXnGeHVNZpjVO4bIWUzdWnZHC9jQZcsgL9i2eD/mg2emzKEVVX8+G4imbr5FCfLq8
-         LqGapAPASv3xut9E0NRfyT7fo7OC11RFw4frkNlXDqzDCuWIKphqJKQzJbg1WeJPs19D
-         J/Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738592770; x=1739197570;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qwfs5ZTiLlNTPpq6GVEveYLjOMUtMGx1iY3Hoyz/gnI=;
-        b=bSPPudYtWXMQhL9RK4MLUZWMZA0zSDKDMOWX3T5cJ0G13jHRom4rgTrKw5BTCkVUMM
-         5bEFpeAIYb5Y8Y9PFqxN+5OpEFAdiJa1zITYFKs3xabAXiX6HU2I1lk/61UvXROnzpPT
-         eC8BOLvsJ5mtSbAfTZqWK122EbALXesoKv66WiZU09S2AMgDXVaPRNAmqh7oiwgKP8zM
-         72L8A59ZDQOyBs/X4Mvdj/H8DxoYiG3bFF4NVcq46oL1bPhJD900qAH3rS+EyKxQHube
-         YUKW2GV8Tk5HD4AWDXpmfosQ1Ab8r3XKNdJylhnheqIOaUfECJIy16tvEtAkE8Um8s3H
-         +i7A==
-X-Forwarded-Encrypted: i=1; AJvYcCVHcQtk8GziNrohW/3sGkygy3gAGTSQoUjqbr3D2aNN5jmMtfNAwPOhiwEvDZ9RwstQnQDQz4Y4nh8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBGslChSwDJ0hC99emCvb5mjC9tWDYyltyO4bOzskCVcBESCg6
-	CcRd2nbqqkIsm5Or1QcgOWMmHJAnnYEL9J0FQf4lNWalXS1l5LgJQIwlPgtU6Q==
-X-Gm-Gg: ASbGncvEAHXZ5jcotUD7URPtiS4b0kBhP4MKcJG3CkIEljO79riCqvZtfg0OfSALuDb
-	WGdpmjBhwNzRr3Kk5DxDuzYmn9YSI4oIeE6A3xhUDCGwTSeoY0co6VAu/DqAI+uSBwGIGKJds6Q
-	8DHPJJln403zAu2aJf1Yh/6jKhIMnzXX2eRCQ4hqskhELMpoBrM4SuMb9IUq9yvoPZHSQ8rwy1M
-	RJzFrduFyEyQoYoglqFYzX7HXVw9Wv+NG/bN7PQ6xWLGpx95Z3QZoDNqXJ9X9lSZVaGpc5t72lo
-	A84oVIji+s5F1TYFaJ4YDb8gkw==
-X-Google-Smtp-Source: AGHT+IG8vvs+euO/ez1FxBukXMJbsbYt2P49CFmVm6CSf7uQjAXZ4KTRY4SvUqVfvG4OF84t8Yabqg==
-X-Received: by 2002:a17:902:cecc:b0:215:3998:189f with SMTP id d9443c01a7336-21de19566bemr244795305ad.6.1738592770645;
-        Mon, 03 Feb 2025 06:26:10 -0800 (PST)
-Received: from thinkpad ([120.60.129.34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de32eb995sm75748215ad.148.2025.02.03.06.26.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Feb 2025 06:26:10 -0800 (PST)
-Date: Mon, 3 Feb 2025 19:56:04 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	konrad.dybcio@oss.qualcomm.com, quic_mrana@quicinc.com,
-	quic_vbadigan@quicinc.com, Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Subject: Re: [PATCH v4 1/4] arm64: dts: qcom: x1e80100: Add PCIe lane
- equalization preset properties
-Message-ID: <20250203142604.mh3vx2fzrut5wc3z@thinkpad>
-References: <20250124-preset_v2-v4-0-0b512cad08e1@oss.qualcomm.com>
- <20250124-preset_v2-v4-1-0b512cad08e1@oss.qualcomm.com>
+	s=arc-20240116; t=1738593770; c=relaxed/simple;
+	bh=7qTSLx4AmEwiBlAKop9IxRVdPnJArLy31VhVkFM+m1o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a5Vr/mRkJJuWoL8GEdRXuuz5Bk+cn9ICx4wgqEok9BPMBWpmZe4JRTp222y+5CR2Omex7E8i68AtIdLcGYTMOFwLknPVuoldxH44aJkz0zHGI7sm1BTTCxDsG9iCxjvpjcxXU4gTcVZAPbgOx/fc05wRGISO2L9W5qrqW/iwloY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nEyAGXAa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46BDEC4CED2;
+	Mon,  3 Feb 2025 14:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738593769;
+	bh=7qTSLx4AmEwiBlAKop9IxRVdPnJArLy31VhVkFM+m1o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nEyAGXAa5ZLM2+sCJia0Ss2/FjxWtzQTqw/gf5q4vNJJ7vxGUkS2vXe+kSDCkIZfS
+	 wBPnnTzi8oa7isrD4CP/caDFB7G6/VWOLSmx9SomPeSQygxdlfcu3SAWbD9GhTXPHQ
+	 Kjq//bfj3u1+iz/e47elZ5h483nTWO9C6WTxDbs2c5pWfdMstlKiM9bsZzngHmx+72
+	 3Az3htAPsNvXH2edDe1rCW82AiEL9YfOzJIgSKTk1GbnAIHpTsx+Umz44UqylZZqwT
+	 dNsNcwJXjs/Pi7r+aoO7h0E7Q9GmgVoTtC5svbGdMEfPNNybCwMSKSFKkV8rjzZxbj
+	 Aw1wTov8EIpeg==
+Message-ID: <aa93715c-6659-4cb2-b353-450054df04d9@kernel.org>
+Date: Mon, 3 Feb 2025 15:42:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250124-preset_v2-v4-1-0b512cad08e1@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 5/5] PCI: altera: Add Agilex support
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	dinguyen@kernel.org, joyce.ooi@intel.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	matthew.gerlach@altera.com, peter.colberg@altera.com,
+	"D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>,
+	D@thinkpad.smtp.subspace.kernel.org,
+	M@thinkpad.smtp.subspace.kernel.org
+References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
+ <20250127173550.1222427-6-matthew.gerlach@linux.intel.com>
+ <20250203141819.tqjymcp5p47ti5b2@thinkpad>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250203141819.tqjymcp5p47ti5b2@thinkpad>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 24, 2025 at 04:52:47PM +0530, Krishna Chaitanya Chundru wrote:
-> Add PCIe lane equalization preset properties for 8 GT/s and 16 GT/s data
-> rates used in lane equalization procedure.
+On 03/02/2025 15:18, Manivannan Sadhasivam wrote:
+> On Mon, Jan 27, 2025 at 11:35:50AM -0600, Matthew Gerlach wrote:
+>> From: "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>
+>>
+>> Add PCIe root port controller support for the Agilex family of chips.
+>> The Agilex PCIe IP has three variants that are mostly sw compatible,
+>> except for a couple register offsets. The P-Tile variant supports
+>> Gen3/Gen4 1x16. The F-Tile variant supports Gen3/Gen4 4x4, 4x8, and 4x16.
+>> The R-Tile variant improves on the F-Tile variant by adding Gen5 support.
+>>
+>> To simplify the implementation of pci_ops read/write functions,
+>> ep_{read/write}_cfg() callbacks were added to struct altera_pci_ops
+>> to easily distinguish between hardware variants.
+>>
+>> Signed-off-by: D M, Sharath Kumar <sharath.kumar.d.m@intel.com>
+>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 > 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
-> This patch depends on the this dt binding pull request which got recently
-> merged: https://github.com/devicetree-org/dt-schema/pull/146
-> ---
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> Driver changes LGTM! You just need to fix the checkpatch warnings as reported
+> by krzk. With that,
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> index a36076e3c56b..6a2074297030 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> @@ -2993,6 +2993,10 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
->  			phys = <&pcie6a_phy>;
->  			phy-names = "pciephy";
->  
-> +			eq-presets-8gts = /bits/ 16 <0x5555 0x5555>;
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Why only 2 entries? Isn't the property supposed to define the preset for all
-lanes?
+I expected warnings, because of missing bindings, but there actually are
+bindings, just some unusual order of patches, so maybe nothing to fix.
 
-Same below also.
+Anywy just in case: never mix DTS into the middle of patchset because it
+just raises the question about dependency and you cannot have one. These
+are different subsystems - DTS *always* goes to SoC.
 
-> +
-
-remove newline here.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Best regards,
+Krzysztof
 
