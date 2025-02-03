@@ -1,259 +1,143 @@
-Return-Path: <linux-pci+bounces-20673-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20674-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 246DBA2626F
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 19:30:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8802A2629F
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 19:38:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B0E33A681F
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 18:30:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 28456165626
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 18:38:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C7EA1C1AAA;
-	Mon,  3 Feb 2025 18:28:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02871770E2;
+	Mon,  3 Feb 2025 18:38:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZBsriQZ"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S3om0FC6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42D820E02A;
-	Mon,  3 Feb 2025 18:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687CA13212A
+	for <linux-pci@vger.kernel.org>; Mon,  3 Feb 2025 18:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738607304; cv=none; b=Bbc4vQ+Rc4qgZuHbbL7GOE/iXX+HuWfUE5LXSJ9gI38K53njWozy6fymqOvFi/XGukq3uoE+o5/tYsmFt3MFB50iLXqzrIkZ85pfB1qoXWEHEbMAVeGaYzlKkKrbzCQoTSdGrZjmaLG5XikaJoQCM7632/eQOf3aqLXmTtUiTzY=
+	t=1738607900; cv=none; b=T2o1GI1c6jOyWtUaGXvXnUfKslLR1+yJpnilot50WcYBytOYm5NLO8u6VY3IwAQ5YZTrHPtGsOEtehHx3p0uM+W4jLrTSjozAIhUbLYwcwtE6pr6YxCcUlIR6u/eT1fFrhHgwcs1v9rN4RzuMgZCNXM42uh6pVxSkiN7fg4Dnho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738607304; c=relaxed/simple;
-	bh=1c8bbSUiSo4k8NW3nonAQq0DtXPO5ln/b9UfOacx1H8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=BcJcveia5+qFHUgPsOLSR5N+zqm6eldvUcuv51ZXk5XPZpfWhR39WzXxMQFfA9HuzhD0PL0781x7B9/O3B8sYWlp9NW2UyXBs+PmID9HwgHdvP+ses6QkIaYdajF7QGiJmiLYBX7lo1m2T9cdp468d/Db/OpI1DbknzQFkrEWRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZBsriQZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 265CAC4CED2;
-	Mon,  3 Feb 2025 18:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738607304;
-	bh=1c8bbSUiSo4k8NW3nonAQq0DtXPO5ln/b9UfOacx1H8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=cZBsriQZS1EwV0AZh5a0GP9X+ElOuP4MjVxLs9jgJi7FkWZb2mN3+1JtGmjoAWp43
-	 uxKpNOplcQiQKkYWc3XPI9lj11Apz8ognBtTHtE2kztPhAYrddwkCXhedx/mSewdjg
-	 YZTEynI2WTmFBgo3X1Vj/uw97PQIWOoKWO/wOr2TmNq98RNB2sXYpj6yoQTnlFtH1N
-	 hL3slYQfbzsQqKi/o9RuX8KWXSTao6sGaEVs4fh0EcByDQfnrcvZ1Vbd6QV7JHGsil
-	 7EYXoYeabyNYQGfRRu3MAmeVeyCb1AQUBOn85y8XRLYgs2VygAjTZQhrrZNek7ejSo
-	 TDJMRoCUnoXsg==
-Date: Mon, 3 Feb 2025 12:28:22 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jingoohan1@gmail.com, michal.simek@amd.com,
-	bharat.kumar.gogada@amd.com
-Subject: Re: [PATCH v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
-Message-ID: <20250203182822.GA793389@bhelgaas>
+	s=arc-20240116; t=1738607900; c=relaxed/simple;
+	bh=NfoHEeS9ety3RUabRC5wtZ/YDZzyPb5mVsFRQaWmcaE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cRQ0uc/7mfVhbo3+VvZBCe6rCfYcxCut/KiPS4w+sebxiCyw58v3csO56LTa4L6ufNmncUbPSiEcNOMaMrvxc/R7mpKzcsLEXfdxWpON3fQ+m3UGBmSCJfVdDmSOJ1/dVmBheN96VUAfjNmcl9t0MD+JLSsWjqUzrVRhXkw4rVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=S3om0FC6; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5f2e31139d9so2230154eaf.0
+        for <linux-pci@vger.kernel.org>; Mon, 03 Feb 2025 10:38:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1738607897; x=1739212697; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=SVQO+IqVJBjIpGvloQABHH8Rsr9K0FypYEqAHJLTov4=;
+        b=S3om0FC66+7ID3mVH850TojMM6AuCcuipWVG63N+rPmEinDNwBQm1h6j3VLmOH9E59
+         lcF4CpagEuXuGgPbQJzY1NXZwhl81++opQaCRgEkdZpekFF5gsbYzJddChA1HEerocMj
+         02sA+W7L4yVzolgvBfCi+9I0/X3wv+3IgkO58=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738607897; x=1739212697;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SVQO+IqVJBjIpGvloQABHH8Rsr9K0FypYEqAHJLTov4=;
+        b=P43X6oaKeKIJWUzbU7Lgl3LCuuBb1GrAFE2FdyJFaIk0tWdnPmt8YMAQ6KxZeJUkf5
+         XGfsgK3XbyRNiJI68PrQuOHurX+Z0YgqlLtrHTMk3ZsaL/4HsoeTeMda1TR5Z36oqryu
+         uCV9ORhSPqmnXAyi55bnCaQwAR9IySKXi4V514aiyeTiG/TvUU/sYQFAz++3DrlIRi84
+         0ZL5ZmRuEJVifIVfjq2RLo4okSpyilHnYvuvFHDS/ZT9Pq4TiLc1nL02LpZne1ZH6Wrf
+         Vps+HaP3696nO9WEazcLniiEAheOCLfmhjgy4LqrlVE6RuNAeygLL0xP3kVicvSFQM8M
+         x3Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGeWeoQeqjFN19NASerkOWktHrJuohdze2d9MzKOdCFQPMmOP/xtbSpitQaRNx6XM4zb1wmXuieUs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzq4tVKIm6z5897NOA87cXAfaKCZDnz03qD58kNpM+REob8AZuw
+	F9Re9Gu0UxJ+BRi3mBXwnvzuff/NzEilY/pEhG/cl5mS2U8cYpspIXbAjfdnWg==
+X-Gm-Gg: ASbGnct4F6LiLziQQPzuiSoi8PoKEeVdRbWK3NZawa/pd0NzZKtM40urtRatpp7H1ht
+	kSnEQJp772XtaI2nCJ+fj5aw1T+rTvv4wK6bbVMNhO8qX29U9qWB7Wv90l8wJZ4EgokSEBEkQrS
+	uw2XMwG0SRNIkFkRHoULOWZOifm55V4VSruy3W0v+8iAoRNJ9BDqPZ/3LJm/Od8Y51qX3B2Spvs
+	i/LHQRvKfCEKQkzMzHrKx14Wc1LQm5lTJ2rWusQO7UhNMd2Xq6clnvDhDNWgzvFW5pdnOkj8Mwv
+	yPjdpy6I0xFoeGZnL51Uy7rVKoWGfTBcMD1fod5YbL9IPIVOLWNEhp0=
+X-Google-Smtp-Source: AGHT+IHq0UgRpgomIh9PzY77Gg9Jllh5zVnpCNlPjS94WHuq2Eom48xqYLcjpklGGEZPFXErKSueNA==
+X-Received: by 2002:a05:6820:2d43:b0:5f8:89bd:b99b with SMTP id 006d021491bc7-5fc0045ccccmr13214655eaf.8.1738607897456;
+        Mon, 03 Feb 2025 10:38:17 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fc1059ae47sm2782744eaf.28.2025.02.03.10.38.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Feb 2025 10:38:16 -0800 (PST)
+Message-ID: <682b3f4e-7a32-4baf-a4ac-04ddf9c01a3c@broadcom.com>
+Date: Mon, 3 Feb 2025 10:38:13 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250129113029.64841-4-thippeswamy.havalige@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] PCI: brcmstb: Fix for missing of_node_put
+To: Stanimir Varbanov <svarbanov@suse.de>,
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jim Quinlan <jim2101024@gmail.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ stable@vger.kernel.org
+References: <20250122222955.1752778-1-svarbanov@suse.de>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250122222955.1752778-1-svarbanov@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 29, 2025 at 05:00:29PM +0530, Thippeswamy Havalige wrote:
-> Add support for AMD MDB (Multimedia DMA Bridge) IP core as Root Port.
+On 1/22/25 14:29, Stanimir Varbanov wrote:
+> A call to of_parse_phandle() is incrementing the refcount, of_node_put
+> must be called when done the work on it. Add missing of_node_put() after
+> the check for msi_np == np and MSI initialization.
+> 
+> Cc: stable@vger.kernel.org # v5.10+
+> Fixes: 40ca1bf580ef ("PCI: brcmstb: Add MSI support")
+> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
 
-> +#define AMD_MDB_TLP_IR_STATUS_MISC		0x4C0
-> +#define AMD_MDB_TLP_IR_MASK_MISC		0x4C4
-> +#define AMD_MDB_TLP_IR_ENABLE_MISC		0x4C8
-> +
-> +#define AMD_MDB_PCIE_IDRN_SHIFT			16
-
-Remove this _SHIFT #define and use something like this instead:
-
-  #define AMD_MDB_PCIE_INTX_BIT(x) FIELD_PREP(AMD_MDB_TLP_PCIE_INTX_MASK, BIT(x))
-
-I don't know what exactly the right name for that is; it looks like
-maybe these bits apply to all the above registers
-(AMD_MDB_TLP_IR_STATUS_MISC, AMD_MDB_TLP_IR_MASK_MISC,
-AMD_MDB_TLP_IR_ENABLE_MISC)
-
-> +#define AMD_MDB_PCIE_INTR_INTA_ASSERT		16
-> +#define AMD_MDB_PCIE_INTR_INTB_ASSERT		18
-> +#define AMD_MDB_PCIE_INTR_INTC_ASSERT		20
-> +#define AMD_MDB_PCIE_INTR_INTD_ASSERT		22
-
-It's kind of weird that these skip the odd-numbered bits, since
-dw_pcie_rp_intx_flow(), amd_mdb_mask_intx_irq(),
-amd_mdb_unmask_intx_irq() only use bits 19:16.  Something seems wrong
-and needs either a fix or a comment about why this is the way it is.
-
-> +#define IMR(x) BIT(AMD_MDB_PCIE_INTR_ ##x)
-> +#define AMD_MDB_PCIE_IMR_ALL_MASK			\
-> +	(						\
-> +		IMR(CMPL_TIMEOUT)	|		\
-> +		IMR(INTA_ASSERT)	|		\
-> +		IMR(INTB_ASSERT)	|		\
-> +		IMR(INTC_ASSERT)	|		\
-> +		IMR(INTD_ASSERT)	|		\
-> +		IMR(PM_PME_RCVD)	|		\
-> +		IMR(PME_TO_ACK_RCVD)	|		\
-> +		IMR(MISC_CORRECTABLE)	|		\
-> +		IMR(NONFATAL)		|		\
-> +		IMR(FATAL)				\
-> +	)
-> +
-> +#define AMD_MDB_TLP_PCIE_INTX_MASK	GENMASK(23, 16)
-
-I would drop AMD_MDB_PCIE_INTR_INTA_ASSERT, etc, and just use
-AMD_MDB_TLP_PCIE_INTX_MASK in the AMD_MDB_PCIE_IMR_ALL_MASK
-definition.
-
-If there are really eight bits of INTx-related things here for the
-four INTx interrupts, I think you should make two #defines to separate
-them out.
-
-> +static void amd_mdb_mask_intx_irq(struct irq_data *data)
-> +{
-> +	struct amd_mdb_pcie *pcie = irq_data_get_irq_chip_data(data);
-> +	struct dw_pcie *pci = &pcie->pci;
-> +	struct dw_pcie_rp *port = &pci->pp;
-> +	unsigned long flags;
-> +	u32 mask, val;
-> +
-> +	mask = BIT(data->hwirq + AMD_MDB_PCIE_IDRN_SHIFT);
-> +
-> +	raw_spin_lock_irqsave(&port->lock, flags);
-> +	val = pcie_read(pcie, AMD_MDB_TLP_IR_MASK_MISC);
-
-  val &= ~AMD_MDB_PCIE_INTX_BIT(data->hwirq);
-  pcie_write(pcie, val, AMD_MDB_TLP_IR_ENABLE_MISC);
-
-> +	pcie_write(pcie, (val & (~mask)), AMD_MDB_TLP_IR_ENABLE_MISC);
-> +	raw_spin_unlock_irqrestore(&port->lock, flags);
-> +}
-> +
-> +static void amd_mdb_unmask_intx_irq(struct irq_data *data)
-> +{
-> +	struct amd_mdb_pcie *pcie = irq_data_get_irq_chip_data(data);
-> +	struct dw_pcie *pci = &pcie->pci;
-> +	struct dw_pcie_rp *port = &pci->pp;
-> +	unsigned long flags;
-> +	u32 mask;
-> +	u32 val;
-> +
-> +	mask = BIT(data->hwirq + AMD_MDB_PCIE_IDRN_SHIFT);
-> +
-> +	raw_spin_lock_irqsave(&port->lock, flags);
-> +	val = pcie_read(pcie, AMD_MDB_TLP_IR_MASK_MISC);
-
-  val |= AMD_MDB_PCIE_INTX_BIT(data->hwirq);
-
-> +	pcie_write(pcie, (val | mask), AMD_MDB_TLP_IR_ENABLE_MISC);
-> +	raw_spin_unlock_irqrestore(&port->lock, flags);
-> +}
-> +
-> +static struct irq_chip amd_mdb_intx_irq_chip = {
-> +	.name		= "AMD MDB INTx",
-> +	.irq_mask	= amd_mdb_mask_intx_irq,
-> +	.irq_unmask	= amd_mdb_unmask_intx_irq,
-
-Prefer
-
-  .irq_mask       = amd_mdb_intx_irq_mask,
-  .irq_unmask     = amd_mdb_intx_irq_unmask,
-
-so the function names match the grep pattern of the function pointers
-(".*_irq_mask").
-
-> +static struct irq_chip amd_mdb_event_irq_chip = {
-> +	.name		= "AMD MDB RC-Event",
-> +	.irq_mask	= amd_mdb_mask_event_irq,
-> +	.irq_unmask	= amd_mdb_unmask_event_irq,
-
-Same function name comment.
-
-> +static irqreturn_t dw_pcie_rp_intx_flow(int irq, void *args)
-> +{
-> +	struct amd_mdb_pcie *pcie = args;
-> +	unsigned long val;
-> +	int i;
-> +
-> +	val = FIELD_GET(AMD_MDB_TLP_PCIE_INTX_MASK,
-> +			pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC));
-> +
-> +	for_each_set_bit(i, &val, 4)
-
-  for_each_set_bit(..., PCI_NUM_INTX)
-
-> +		generic_handle_domain_irq(pcie->intx_domain, i);
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-> +
-> +static irqreturn_t amd_mdb_pcie_intr_handler(int irq, void *args)
-> +{
-> +	struct amd_mdb_pcie *pcie = args;
-> +	struct device *dev;
-> +	struct irq_data *d;
-> +
-> +	dev = pcie->pci.dev;
-> +
-> +	d = irq_domain_get_irq_data(pcie->mdb_domain, irq);
-> +	if (intr_cause[d->hwirq].str)
-> +		dev_warn(dev, "%s\n", intr_cause[d->hwirq].str);
-> +	else
-> +		dev_warn_once(dev, "Unknown IRQ %ld\n", d->hwirq);
-
-What's the point of an interrupt handler that only logs it?
-
-> +	return IRQ_HANDLED;
-> +}
-
-> +static int amd_mdb_add_pcie_port(struct amd_mdb_pcie *pcie,
-> +				 struct platform_device *pdev)
-> +{
-> +	struct dw_pcie *pci = &pcie->pci;
-> +	struct dw_pcie_rp *pp = &pci->pp;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	pcie->slcr = devm_platform_ioremap_resource_byname(pdev, "slcr");
-> +	if (IS_ERR(pcie->slcr))
-> +		return PTR_ERR(pcie->slcr);
-> +
-> +	ret = amd_mdb_pcie_init_irq_domains(pcie, pdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	amd_mdb_pcie_init_port(pcie);
-
-amd_mdb_pcie_init_port() doesn't initialize anything other than
-disabling/clearing/enabling interrupts.  Seems like it could be
-squashed into amd_mdb_setup_irq() or called from there so it's
-obvious that it's interrupt-related.
-
-> +	ret = amd_mdb_setup_irq(pcie, pdev);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to set up interrupts\n");
-> +		goto out;
-> +	}
-> +
-> +	pp->ops = &amd_mdb_pcie_host_ops;
-> +
-> +	ret = dw_pcie_host_init(pp);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to initialize host\n");
-> +		goto out;
-> +	}
-> +
-> +	return 0;
-> +
-> +out:
-> +	amd_mdb_pcie_free_irq_domains(pcie);
-> +	return ret;
-> +}
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
