@@ -1,359 +1,533 @@
-Return-Path: <linux-pci+bounces-20657-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20654-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05761A25D9E
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 15:59:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8147DA25C27
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 15:20:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 871D13AD9F9
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 14:49:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 884583A27BD
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 14:19:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2623D20AF6A;
-	Mon,  3 Feb 2025 14:45:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B119207A0B;
+	Mon,  3 Feb 2025 14:18:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="qFU+Dtjq";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="M+M19SKB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zAoqLI1a"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0014ca01.pphosted.com (mx0b-0014ca01.pphosted.com [208.86.201.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B13209F58;
-	Mon,  3 Feb 2025 14:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=208.86.201.193
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738593902; cv=fail; b=D1UmE3NnlaWsolJIagZYTFWFGd5iNKLeHPaWb1dqdzRI8JnHg0mFNFVHYD9cQQbWQzXBbEs1Av+JPV5ZwijPjZFOIXIZ/hIEOVySSxzqW09CaUo2PO4vXSzRL66BMWgEbHNac/qc+WHylMfEVQ92v48GpB/i/vqYPhPo7aelXsI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738593902; c=relaxed/simple;
-	bh=3IWxPcLwgvhYadgjMHwhiFx6BbHGmuS30ABc1JnICoE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=J/KoVMx7IZKVdYmk/KltAeExk0H/rlmvHWr/RlyWtdPhwj2npVTPdb7vnvzyvm1hVWz9v5FxWawtnz31S5mNYeHNWi1647DaUZIK2Dn8E0+tgibD2Vtts7RG8eQ2A7nc/bzLeKQ0kEIC6pzHnRmEKFQtHlJTEalgtnC2UhyDiPs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cadence.com; spf=pass smtp.mailfrom=cadence.com; dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b=qFU+Dtjq; dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b=M+M19SKB; arc=fail smtp.client-ip=208.86.201.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cadence.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cadence.com
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-	by mx0b-0014ca01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 513AjAN6027280;
-	Mon, 3 Feb 2025 06:04:21 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=proofpoint;
-	 bh=e8YVVb3EGudIjJanKvJRmOHk9mFHVoK0+R0X3gyhjO0=; b=qFU+DtjqVD34
-	IwFVlKXlfOPuac934/CvBfDMsDNf3avDVFVU9Gspd0rUowt/A8yqP6NL5VL4ZPkl
-	nbWAY++PF0557fJKEkCltFGOiM5GIGokTGuJQGBm1nC0LZXRh07XYENt3JWTfMy4
-	hmK4jjXeRDrTIilp3ZaPUVJuSelbXtMN9NAS360xefA8/bMu9O3eljFHqMCj/R98
-	DXzFm4HjVCsJaER5ZhVjeetP8CVQrHOkGMGsTztip2FigKYDynp4m9nipTxAFo/g
-	7NxDyispdZyUuVGKOGlCDLKsT4EmuF84Y6otagTNrVIDPd2994Wd+EdoItaLtMoQ
-	AXChnTa1gw==
-Received: from ch4pr04cu002.outbound.protection.outlook.com (mail-northcentralusazlp17013059.outbound.protection.outlook.com [40.93.20.59])
-	by mx0b-0014ca01.pphosted.com (PPS) with ESMTPS id 44hg2xddrx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Feb 2025 06:04:21 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LORQLbl1hJLN3SUKLBJoLclU6mUe5U8xMGvxiUZfx9ttR+suo40Ec/VMSAIVFEETS+TE3TRKCWHwabCVozcUXzX1nI9ehqBQY4n4ck5zJWSUhzCy7FlzZRGGi559SrT54kNhZCVA0VoA0s0LK4WurojTSkt3gy64dT/Cepi9w8RaJjG3BfqrlDXIJrKUCHhclAz8HwWHnM2NmsZL/zgtgrLHh3NdDVbRcyZBmJitUcBfs6bu/0VX09ubysg29rciFXcBEv4ZlM2N7liyOsKDmuoK7/bemWD8AUaL/8cUOTFOxShhzc0NwcXJWocQBGm2sDl9lGK/hhCbXZBzduA37A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e8YVVb3EGudIjJanKvJRmOHk9mFHVoK0+R0X3gyhjO0=;
- b=OujmCnJ5qA03Ng1mNI5HsJGnotlO+d1ODec36FYOUay+1+j+PIJALbG9z8XpvtPzGcRNuv4yaIun/cd0BkAZQsOMoBXr7tmcHdqXgwjUH2nCPKrb4iKgYVorF7F7RAiFJ73gnUqkzLvF3K6/z64+ac6hALS8W92bss9RMTd8NxoIba11t4PCY9OVptxSM4iMfVngJDLtVevxVoSP6NkbkjK5zxNgkBX22CXFbo5vcRA2ZtTZ7gv22rtZMMjDHeE6uJvaLomb53Yp0c1b8s0I6KSuH7SZMNexDex9fq3NGExQd39nrv1ZKIsPOwMu5y3iIiE40AIKJxlgHKUY+CkR8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e8YVVb3EGudIjJanKvJRmOHk9mFHVoK0+R0X3gyhjO0=;
- b=M+M19SKBYYa3+7uKTJslKcvH7ht7rZFtqhV0ZyKbrmvOk/cuOiQ72GAmwTbavtioPMad12N+LuI96XAixaT5chDd9EEQmwj0NHqjZzijNmbAcpMtkL9nnDq9/7cxbiQ+VGUxUoB2NKVAPzAQD5SB20Emw+4HzAQSrtPo3Me0yQw=
-Received: from CH2PPF4D26F8E1C.namprd07.prod.outlook.com
- (2603:10b6:61f:fc00::278) by DS0PR07MB11071.namprd07.prod.outlook.com
- (2603:10b6:8:1fd::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.23; Mon, 3 Feb
- 2025 14:04:17 +0000
-Received: from CH2PPF4D26F8E1C.namprd07.prod.outlook.com
- ([fe80::d517:a32:d647:386c]) by CH2PPF4D26F8E1C.namprd07.prod.outlook.com
- ([fe80::d517:a32:d647:386c%6]) with mapi id 15.20.8398.025; Mon, 3 Feb 2025
- 14:04:17 +0000
-From: Manikandan Karunakaran Pillai <mpillai@cadence.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh@kernel.org"
-	<robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] pci: cdns : Function to read controller architecture
-Thread-Topic: [PATCH] pci: cdns : Function to read controller architecture
-Thread-Index: AQHbc9dkPe/t53rtZE2/3AwJ6A7zh7MxNvyAgARnm0A=
-Date: Mon, 3 Feb 2025 14:04:17 +0000
-Message-ID:
- <CH2PPF4D26F8E1C25BF05614F8C8293EECDA2F52@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
-References:
- <CH2PPF4D26F8E1C5FA4D55D4271BA4F6F0DA2E82@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
- <20250131183835.GA688678@bhelgaas>
-In-Reply-To: <20250131183835.GA688678@bhelgaas>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-dg-ref:
- =?us-ascii?Q?PG1ldGE+PGF0IGFpPSIwIiBubT0iYm9keS50eHQiIHA9ImM6XHVzZXJzXG1w?=
- =?us-ascii?Q?aWxsYWlcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVl?=
- =?us-ascii?Q?LTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1iZjZhNzFlOS1lMjM3LTExZWYtYTM2?=
- =?us-ascii?Q?OC1jNDQ3NGVkNmNlZTVcYW1lLXRlc3RcYmY2YTcxZWItZTIzNy0xMWVmLWEz?=
- =?us-ascii?Q?NjgtYzQ0NzRlZDZjZWU1Ym9keS50eHQiIHN6PSI2MzQ2IiB0PSIxMzM4MzA2?=
- =?us-ascii?Q?NTA1NDQzNzc3NDYiIGg9Im02d291Ry9ZeVNYQlVPcUx0c2VTZmF3MWdiWT0i?=
- =?us-ascii?Q?IGlkPSIiIGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VB?=
- =?us-ascii?Q?QUdBSUFBQ1N6OEdCUkhiYkFXRURCTWtwOXVKTllRTUV5U24yNGswS0FBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFIQUFBQUFzQmdBQW5BWUFBTVFCQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFFQUFRQUJBQUFBaEZWOHlRQUFBQUFBQUFBQUFBQUFBSjRBQUFC?=
- =?us-ascii?Q?akFHRUFaQUJsQUc0QVl3QmxBRjhBWXdCdkFHNEFaZ0JwQUdRQVpRQnVBSFFB?=
- =?us-ascii?Q?YVFCaEFHd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR01BWkFCdUFGOEFkZ0Jv?=
- =?us-ascii?Q?QUdRQWJBQmZBR3NBWlFCNUFIY0Fid0J5QUdRQWN3QUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
- =?us-ascii?Q?QUFBQ0FBQUFBQUNlQUFBQVl3QnZBRzRBZEFCbEFHNEFkQUJmQUcwQVlRQjBB?=
- =?us-ascii?Q?R01BYUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUhBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFB?=
- =?us-ascii?Q?QUJ6QUc4QWRRQnlBR01BWlFCakFHOEFaQUJsQUY4QVlRQnpBRzBBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
-x-dg-refone:
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFB?=
- =?us-ascii?Q?bmdBQUFITUFid0IxQUhJQVl3QmxBR01BYndCa0FHVUFYd0JqQUhBQWNBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFBQUFBQ2VBQUFBY3dCdkFIVUFj?=
- =?us-ascii?Q?Z0JqQUdVQVl3QnZBR1FBWlFCZkFHTUFjd0FBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJB?=
- =?us-ascii?Q?QUFBQUFBQUFBSUFBQUFBQUo0QUFBQnpBRzhBZFFCeUFHTUFaUUJqQUc4QVpB?=
- =?us-ascii?Q?QmxBRjhBWmdCdkFISUFkQUJ5QUdFQWJnQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFB?=
- =?us-ascii?Q?QUFuZ0FBQUhNQWJ3QjFBSElBWXdCbEFHTUFid0JrQUdVQVh3QnFBR0VBZGdC?=
- =?us-ascii?Q?aEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNBQUFBQUFDZUFBQUFjd0J2QUhV?=
- =?us-ascii?Q?QWNnQmpBR1VBWXdCdkFHUUFaUUJmQUhBQWVRQjBBR2dBYndCdUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
-x-dg-reftwo:
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCekFH?=
- =?us-ascii?Q?OEFkUUJ5QUdNQVpRQmpBRzhBWkFCbEFGOEFjZ0IxQUdJQWVRQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQXhBRUFBQUFBQUFBSUFBQUFBQUFBQUFn?=
- =?us-ascii?Q?QUFBQUFBQUFBQ0FBQUFBQUFBQUNrQVFBQUNnQUFBRElBQUFBQUFBQUFZd0Jo?=
- =?us-ascii?Q?QUdRQVpRQnVBR01BWlFCZkFHTUFid0J1QUdZQWFRQmtBR1VBYmdCMEFHa0FZ?=
- =?us-ascii?Q?UUJzQUFBQUxBQUFBQUFBQUFCakFHUUFiZ0JmQUhZQWFBQmtBR3dBWHdCckFH?=
- =?us-ascii?Q?VUFlUUIzQUc4QWNnQmtBSE1BQUFBa0FBQUFCd0FBQUdNQWJ3QnVBSFFBWlFC?=
- =?us-ascii?Q?dUFIUUFYd0J0QUdFQWRBQmpBR2dBQUFBbUFBQUFBQUFBQUhNQWJ3QjFBSElB?=
- =?us-ascii?Q?WXdCbEFHTUFid0JrQUdVQVh3QmhBSE1BYlFBQUFDWUFBQUFFQUFBQWN3QnZB?=
- =?us-ascii?Q?SFVBY2dCakFHVUFZd0J2QUdRQVpRQmZBR01BY0FCd0FBQUFKQUFBQUFBQUFB?=
- =?us-ascii?Q?QnpBRzhBZFFCeUFHTUFaUUJqQUc4QVpBQmxBRjhBWXdCekFBQUFMZ0FBQUFB?=
- =?us-ascii?Q?QUFBQnpBRzhBZFFCeUFHTUFaUUJqQUc4QVpBQmxBRjhBWmdCdkFISUFkQUJ5?=
- =?us-ascii?Q?QUdFQWJnQUFBQ2dBQUFBQUFBQUFjd0J2QUhVQWNnQmpBR1VBWXdCdkFHUUFa?=
- =?us-ascii?Q?UUJmQUdvQVlRQjJBR0VBQUFBc0FBQUFBQUFBQUhNQWJ3QjFBSElBWXdCbEFH?=
- =?us-ascii?Q?TUFid0JrQUdVQVh3QndBSGtBZEFCb0FHOEFiZ0FBQUNnQUFBQUFBQUFBY3dC?=
- =?us-ascii?Q?dkFIVUFjZ0JqQUdVQVl3QnZBR1FBWlFCZkFISUFkUUJpQUhrQUFBQT0iLz48?=
- =?us-ascii?Q?L21ldGE+?=
-x-dg-rorf: true
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH2PPF4D26F8E1C:EE_|DS0PR07MB11071:EE_
-x-ms-office365-filtering-correlation-id: c6ece4bd-7c1a-42ec-63a0-08dd445ba606
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?edIXqeDM7TDuNWl5f1zSfGFIU/GqwryRCMtpq6q55yqnYaOdQpxBh2yyewZq?=
- =?us-ascii?Q?q8af/tQkY/ThQIjfntExU+sPiq5BtKPX7OseKHXDsxxwybKmdUptHFHGL2zU?=
- =?us-ascii?Q?qT7xBk/peVnTmWsviRgacGxXUWxpe8wWrcBsglBR4vcpL6WdZc/uFbDHthTy?=
- =?us-ascii?Q?cOOslJYOcoPaaNNsH5FqjGdU+kj6lWPULpzXtaECC2swGXzvpP5Bk+E1Y6By?=
- =?us-ascii?Q?vJeCxDL94ZalAA71lB7W5zr0U3XjFSKuXRcL4bO3GCtIeQwt7zUk8SHXOnNT?=
- =?us-ascii?Q?/8cFMD5XRThEv0dbFVGbqxgdF/0DArM9gVk2Ws8DN9xCwp6iUp/sEQ0qHhDr?=
- =?us-ascii?Q?iO8kYUwkiAv+TJeUTO9oqyfzllNZsbS4wrAO/Sz7MakndumwQOScKU8VseLq?=
- =?us-ascii?Q?Ef6Ifg8XhTtgPOzJHWAJw6jXyOh8KTWYcPMuWEfl7nKlJhTWayLmzVJq/Tzo?=
- =?us-ascii?Q?087ffwZzoH2sx7xR1Niw2vSO82JwsHKonjsV/pjVYT4808oU2oZKiY4QLSLe?=
- =?us-ascii?Q?7YbnGI31JYAUwfTepv6TQ4SLMQHv9bYzlDBHiGDy2Ot0zaP7NfQmR1W8ADj7?=
- =?us-ascii?Q?iMz747mP+WJO33q4NJz5M6RkOOsnV5k7Q9ODoOgfcTh3pKOok0Bb7hbXZsZg?=
- =?us-ascii?Q?QJW32rG6T68dIDT5yg6AIvChMcjPXe1xOBBDcUqn6NtVU1FeqSUmAb8P2Zx3?=
- =?us-ascii?Q?GTFpAJ5atrJsAD43gzSoTZKgEZiA2Or1rpaPe9BHHg0ISYF2/CXjKDSi+bOZ?=
- =?us-ascii?Q?TyrjNGxMJk9Uc0Cvw9qjFdMdbPa3/FqLWyT8VwFBs+HWXHanb/vvascdBLC0?=
- =?us-ascii?Q?6yOmLlRDXwuFeWlBgWcPK1GJhsUwvfVqqLTs55XT50NJx4os2KAdcxB6ch8Z?=
- =?us-ascii?Q?aoWlm4n58R8Y9cG1XSof5+y+zVmcEAlsS8n2vbJBURX9O3Aa6XOV+qQFRiLP?=
- =?us-ascii?Q?pcfg4ZadA361DjIDAIThFi4+51H3rUPU+Yj3j9ofQ5MTn8rn+TR0rnYT9FKs?=
- =?us-ascii?Q?xYAGlyEJWx8p6WJsrT9EFoKIlByZcAXF5vNxGH4OaN/uSbLKdrpepmJQNMtm?=
- =?us-ascii?Q?He33T6C2yUejItY/32lVxf1Yg7PlAwbRrJN/xW4gnZfL3rrgIu8B+rTBnIIH?=
- =?us-ascii?Q?nrJewkoQWO4UxzEJI/Nvw56caVt/s4+rdQFaucC+V8ApV6wqqIbiX+JD8RmB?=
- =?us-ascii?Q?pIpxDtlWH6HzXia0u5INimTOBrL9dtmPGnTLDFmvpkQAlcQQzAxnZj4gkRdg?=
- =?us-ascii?Q?vrPEsnhy8uY2BV6AhSz+s0pD4N5Zy60SUf2yZ/9MdhTey7iTyfIrLzfLp+kM?=
- =?us-ascii?Q?SP4LTcs58p1D8Vte4AQ8PES8HmORH4P/rJSh1FG8VoN206zSVX5FeUw+epCz?=
- =?us-ascii?Q?1uJksqaAGb987Lntu/3OTj1/+WLfxO5c9mE/a/Rh1i1dba38Yg=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PPF4D26F8E1C.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?lQhdEXEmiXwTXOIjwMCUknx9YnPjXtRrlbya16GOc15L2eIB+ZIeUGiILTqp?=
- =?us-ascii?Q?WRvoXfvkWvB5GjvPBNUiLqpS2njEolOqH0jTdZMw5m4qvmY7BKo/mjNXN4YN?=
- =?us-ascii?Q?H6EuiFzNLUGfYhIjt3wmYoE9BZ1iF+GLHBuGThqedJINdd+dfCYMuD8KrKuX?=
- =?us-ascii?Q?+VZf9Qx4aMgcN5AUR501RpTIbODsP6aYmwF5lZyXM/jQb2u4KJr4U4+MFCiu?=
- =?us-ascii?Q?RDGnvCNvKsvoeTGqQ0I5JHQjh0J8KbbmuMXdg9k9pTASaEqVXcc1aputf8hA?=
- =?us-ascii?Q?0ncWWiWRUNWZhkcIrxM6p1Mox3QRjBVHnM0D6BY+WxLPn5FCkV6UbrVJHYxg?=
- =?us-ascii?Q?l8Y94YzIcF3jkJHFiMgZO/F/h0vqDkX7SmsXPJKgyGyLsQCOE9J/1/yqDZw3?=
- =?us-ascii?Q?oiALb49GLRMs7HWHYGoBeuFjlAekOXmKwI81GbNSgmyuu0ESyAXlNlelojiJ?=
- =?us-ascii?Q?SLZng/48Ol8jM89cqDC3W4znZcLY0nel6RqX1g/rcLn86qSv809WXTAS5rlY?=
- =?us-ascii?Q?0yGMiOgJQLMpW4BIEqTftS9nr0/ieq+uLIOdXpwu5jUk+C/VJv2OWuTXzTov?=
- =?us-ascii?Q?Uuy91Pt9wC//Ser712/Il7F9gDGCVHFBKOMf9AAmsei5kkMwM4xrMDaHxK1d?=
- =?us-ascii?Q?sHLLdjy1OI8xnNsHxTT1v0v1hwdZ/8oXpJJIJm4wbWprsDQDr8Np28gfQblk?=
- =?us-ascii?Q?7ioaWVJgiG92CFnYNwqPjMO76KayJxc8/0AdRh5O4UvIEdZRQq1BQzV205W2?=
- =?us-ascii?Q?HnLEMu3a+f5sZJQ6P+R6YN1ywykeyOaJ5mqRtzXeMxHgnlhZh7rPNobo5SP6?=
- =?us-ascii?Q?rMM802o9sqObXb2HMQd1BrFyuZoy1kTyqoP1Z5qKbONMPSq+Bz+/Mt37CjW8?=
- =?us-ascii?Q?ZAmPPMxzA0BaAqZRh+c/VumtOE7tbFXHwhPzCdYHGV7JlW211mvQVoMycNby?=
- =?us-ascii?Q?djvoJHVyQ1NnULVCLM5Mcqj94dXLEmOSbjfzzRMzC7Ovb9drh2PJyN4OOPMU?=
- =?us-ascii?Q?AG2R5XAooctUq+GF4rwd52rK27qO7xyb7FbINxI7ireQlI640R0gcEj35bat?=
- =?us-ascii?Q?KYNZsS1Qvl6c01WTquYYFGKBsKBTFUHwydAlpLavG8Q6yKfR5uwJIV8fgTYr?=
- =?us-ascii?Q?1geUpfmH8kScqAIxiAK0HhaG43tlGdbZ4YE8Zc3uu4H1hRIUbSoMphmNcVrY?=
- =?us-ascii?Q?jURguO/+A8dVmYTEAHDyxHRWdHsCdaB8Wu8QoQVOPPyZRLOhNTQzsTEJg6rj?=
- =?us-ascii?Q?Sd2jKafJA905ELLDc4kBc3opRB8wHaTi+YLU8KZS0heEh84iJCpvBPL14KIn?=
- =?us-ascii?Q?qPI8hF3+zZBnRmtDJNZ5+eefLx+2Bvga8pVJDPj+rixGRuImxz9YznnndH+7?=
- =?us-ascii?Q?16J0SO/G307A8qGgOjKUVHyx7CM7f97VR8r+mJEfhR1FL35zhxB3sYRX8i6w?=
- =?us-ascii?Q?6pTxiPrZHlNKUpAXyrXlVNz6zD+2qt6JbxVa09GByzPeAGKYoq5j5ms+7vXB?=
- =?us-ascii?Q?s4bfCQQed7noRtOuaH1wd1P75bZ76WggLZWGdCWkovyxvsJr1WzNeXuwTZCa?=
- =?us-ascii?Q?q/VBMxkRFCK6YTWW61QqGWY0fLWEzxVsRziqn2v6?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FD8207A06
+	for <linux-pci@vger.kernel.org>; Mon,  3 Feb 2025 14:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738592309; cv=none; b=L4lJRYychdqhqTeLG7MnvnbS/4SKLx9ruUjjLRedY0W3MCWVWMvN+kylZhClKCCbQ8Uw0oJ+UvhqTPvQB4DWECTC4n49iqgImFPuCo2Y9E1dHnkMDhcKjpo/szjBqNEnW6CQWxzSvgkCM2t0RtF48n1KbTu9PbYYnshXGCDXMHc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738592309; c=relaxed/simple;
+	bh=Tn9bVihJUisc1ICHj7Ewmj1x+YcHyT8N08x1R+4z43w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rh7YEJBow/OSr8LUmzL89PeLkysTsHo8NwpoMcnkAkDnkmjFpVSjgtaqFIL0bpswSxVMsYjyiKvTaNzfdtXca8rTrP2cl6RL+iOzSt0fI/H7i+JHtMEye8ktwzZDFDVpDUFNyykC/SJfbkSbFAsUaSEoH/LNTx7LRb8x5HGmQCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zAoqLI1a; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2163dc5155fso77358385ad.0
+        for <linux-pci@vger.kernel.org>; Mon, 03 Feb 2025 06:18:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738592306; x=1739197106; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=K282g7GTRXZrDJEJ+5rKafhkm/05+mPQiMkhD1zeCV4=;
+        b=zAoqLI1aTFSy0i4OBDAZ8irEf0dkQXLCYzYaG6ZmFCaduBMQNyrEGKwJcJ1rXG5Rjh
+         tNFYY3oIEbAQONmxonv3FBYA44sJTmqRp3FHTZrl6MSYVI3YmeDxbQWGdoIojhYlsrbX
+         zvKmRGA6gVAy6PQWEy/GhZXC4vEvn5cJXsSo4+HR90ULf+6PbUFeEHpwYq3uI0tCPXw/
+         6/CDawQC0mxM7kplYCdn73D78FSC2DXgIvS1HvTceInO0OdQsRYKMJw1wB0vzEBS0Uy8
+         7sH5scqaabeXoFUDBJVxjr2Qf9mEHYI19HoiQtgLT/iVlAQWDXrEN21/DtUhR3Ck1nmv
+         ucWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738592306; x=1739197106;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K282g7GTRXZrDJEJ+5rKafhkm/05+mPQiMkhD1zeCV4=;
+        b=XIRcAw6R39rTVYEoJZISFvvuhrZUBjkHaeKxrxeVJNNeEBgkoQXGhEeiNhjVc9w721
+         ksluBVWthJugJCdiWOuBY1btoPUvalmSHN3Fd6IdECZRVk2qEOYgb1Uh/iVNbFCZNpOK
+         QrXhqbORd/2EJRh3Jm5T2c38bzC5dTNM6PeUAdbzSEAmLUBM0bqDmIP4E5IIGMDbtUJ6
+         Of18SZjBW74AuY/AjWs1Q+pDzohYViRnUdNWCKxC72Pv2FAQI9IjyrK+144utjQtriZR
+         pkAec2KEzpNziKlqKRlha/ZcNQjNsM/W4yc0KgfDbDsa5lgvT/JLOTniVc5Rini4OLXi
+         Kq8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUaMHtn6gZT7zFeXuulhrizsgeygfZXA8ePj+lUUJulp+cSiCizpFaQDVAXyHbj2cd+nINWCs56yIQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWS4a1WYUE0BsRBfVR7vaVVadieGYk0tDDE54eyrTHEufoJglv
+	v/0UmmtPg6VXaZMWeuOrWqxynjGgq4z9XkwhTl/zWwTwizRQBPLeCLEVJmdrnA==
+X-Gm-Gg: ASbGncteWRdHOj4+nqmF/i7jxxvPw92BxlNdWMZraEQw9xjZFZkqJhf8x7gQwUnVAe7
+	qdo+/y8goRRIMWF0Kl64S3LcfcvwBjqAbSgM+ycZlsj0HQlq5LLLmL95uJbCzhM2mIo1EMWQyyV
+	Gf/4hE3zlj81CsoSO6qGpi04rb5xof+U/HHFupuD24eP2fznOlC+l4o+9WM6dS3QeNCfn20qfcW
+	ej0TC1EMpbZPj81e4ddCR7Ie5do6mnF8+IYP+zK8/ma5hafY3DGsqdD8z76aO9IqeHrxNMMws7j
+	5KXIxQ3M1xNRW5AxzvIx8o63Hw==
+X-Google-Smtp-Source: AGHT+IH1pBKKOtwZdk/fVBIkLkQdSgNhggPIw3sWfZDCIK/SQBEs7YOnyq2x8FRKYcEfyOoE5uOTmw==
+X-Received: by 2002:a17:903:11ce:b0:212:996:3536 with SMTP id d9443c01a7336-21dd7c3c80dmr400188925ad.10.1738592306365;
+        Mon, 03 Feb 2025 06:18:26 -0800 (PST)
+Received: from thinkpad ([120.60.129.34])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21de31f64casm76244625ad.53.2025.02.03.06.18.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Feb 2025 06:18:25 -0800 (PST)
+Date: Mon, 3 Feb 2025 19:48:19 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	dinguyen@kernel.org, joyce.ooi@intel.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	matthew.gerlach@altera.com, peter.colberg@altera.com,
+	"D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>,
+	D@thinkpad.smtp.subspace.kernel.org,
+	M@thinkpad.smtp.subspace.kernel.org
+Subject: Re: [PATCH v5 5/5] PCI: altera: Add Agilex support
+Message-ID: <20250203141819.tqjymcp5p47ti5b2@thinkpad>
+References: <20250127173550.1222427-1-matthew.gerlach@linux.intel.com>
+ <20250127173550.1222427-6-matthew.gerlach@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PPF4D26F8E1C.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6ece4bd-7c1a-42ec-63a0-08dd445ba606
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2025 14:04:17.4345
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: b4bOlcJRdR04wOxRg5/eYA8ilQGS4itRTt7PSOtDNq1H+yAojAFpIZh2dOgQ29yE5Y9O2yHW2xk+Fg+KXQW5SrSFRqsC4/3jprLTMbyY7wQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR07MB11071
-X-Proofpoint-ORIG-GUID: jXN0BKAcVR1sLmL8fqu_40nczu9xjYmB
-X-Proofpoint-GUID: jXN0BKAcVR1sLmL8fqu_40nczu9xjYmB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-03_06,2025-01-31_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- lowpriorityscore=0 impostorscore=0 phishscore=0 mlxscore=0 malwarescore=0
- mlxlogscore=999 bulkscore=0 clxscore=1015 suspectscore=0 spamscore=0
- adultscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2501170000 definitions=main-2502030103
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250127173550.1222427-6-matthew.gerlach@linux.intel.com>
 
-Would like to change the design to get the architecture value from dts, usi=
-ng a bool hpa
-And store this value in the is_hpa field in the struct as given.
+On Mon, Jan 27, 2025 at 11:35:50AM -0600, Matthew Gerlach wrote:
+> From: "D M, Sharath Kumar" <sharath.kumar.d.m@intel.com>
+> 
+> Add PCIe root port controller support for the Agilex family of chips.
+> The Agilex PCIe IP has three variants that are mostly sw compatible,
+> except for a couple register offsets. The P-Tile variant supports
+> Gen3/Gen4 1x16. The F-Tile variant supports Gen3/Gen4 4x4, 4x8, and 4x16.
+> The R-Tile variant improves on the F-Tile variant by adding Gen5 support.
+> 
+> To simplify the implementation of pci_ops read/write functions,
+> ep_{read/write}_cfg() callbacks were added to struct altera_pci_ops
+> to easily distinguish between hardware variants.
+> 
+> Signed-off-by: D M, Sharath Kumar <sharath.kumar.d.m@intel.com>
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 
-There would be support for legacy and High performance architecture in diff=
-erent files
-And the difference would be basically the registers they write and the offs=
-ets of these=20
-registers. The function names would almost be similar with the tag hpa, emb=
-edded in
-the function name.=20
+Driver changes LGTM! You just need to fix the checkpatch warnings as reported
+by krzk. With that,
 
-Would this be an acceptable design for support of these new PCIe cadence co=
-ntrollers ?=20
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
+- Mani
 
->Look at previous subject lines for changes to these files and follow the p=
-attern.
->
->On Fri, Jan 31, 2025 at 11:58:07AM +0000, Manikandan Karunakaran Pillai
->wrote:
->> Add support for getting the architecture for Cadence PCIe controllers
->> Store the architecture type in controller structure.
->
->This needs to be part of a series that uses pcie->is_hpa for something.  T=
-his
->patch all by itself isn't useful for anything.
->
->Please post the resulting series with a cover letter and the patches as
->responses to it:
->
->https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel/gi=
-t/t
->orvalds/linux.git/tree/Documentation/process/5.Posting.rst?id=3Dv6.13*n333=
-__;I
->w!!EHscmS1ygiU1lA!AkA94rjfoiZElA3AKt_SRyFA74hygGR-
->X7t7_oZzijqCt3Ojr_UVL2Q9RLTXs4juahroWPLzA6CJFZI$
->
->You can look at previous postings to see the style, e.g.,
->https://urldefense.com/v3/__https://lore.kernel.org/linux-
->pci/20250115074301.3514927-1-
->pandoh@google.com/T/*t__;Iw!!EHscmS1ygiU1lA!AkA94rjfoiZElA3AKt_SRyFA7
->4hygGR-X7t7_oZzijqCt3Ojr_UVL2Q9RLTXs4juahroWPLzuNTbmWU$
->
->> +static void cdns_pcie_ctlr_set_arch(struct cdns_pcie *pcie) {
->> +	/* Read register at offset 0xE4 of the config space
->> +	 * The value for architecture is in the lower 4 bits
->> +	 * Legacy-b'0010 and b'1111 for HPA-high performance architecture
->> +	 */
->
->Don't include the hex register offset in the comment.  That's what
->CDNS_PCIE_CTRL_ARCH is for.  It doesn't need the bit values either.
->
->Use the conventional comment style:
->
->  /*
->   * Text ...
+> ---
+> v5:
+>  - remove unnecessary !!
+>  - Improve macro usage to make comment unnecessary.
+> 
+> v4:
+>  - Add info to commit message.
+>  - Use {read/write}?_relaxed where appropriate.
+>  - Use BIT(12) instead of (1 << 12).
+>  - Clear IRQ before handling it.
+>  - add interrupt number to unexpected IRQ messge.
+> 
+> v3:
+>  - Remove accepted patches from patch set.
+> 
+> v2:
+>  - Match historical style of subject.
+>  - Remove unrelated changes.
+>  - Fix indentation.
+> 
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> ---
+>  drivers/pci/controller/pcie-altera.c | 253 ++++++++++++++++++++++++++-
+>  1 file changed, 244 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> index eb55a7f8573a..42ea9960b9da 100644
+> --- a/drivers/pci/controller/pcie-altera.c
+> +++ b/drivers/pci/controller/pcie-altera.c
+> @@ -6,6 +6,7 @@
+>   * Description: Altera PCIe host controller driver
 >   */
->
->> +	u32 arch, reg;
->> +
->> +	reg =3D cdns_pcie_readl(pcie, CDNS_PCIE_CTRL_ARCH);
->> +	arch =3D FIELD_GET(CDNS_PCIE_CTRL_ARCH_MASK, reg);
->
->Thanks for using GENMASK() and FIELD_GET().
->
->> +	if (arch =3D=3D CDNS_PCIE_CTRL_HPA) {
->> +		pcie->is_hpa =3D true;
->> +	} else {
->> +		pcie->is_hpa =3D false;
->> +	}
->> +}
->
->> +/*
->> + * Read completion time out reset value to decode controller
->> +architecture  */
->> +#define CDNS_PCIE_CTRL_ARCH		0xE4
->
->Is this another name for the PCI_EXP_DEVCTL2 in the PCIe Capability?
->Or maybe PCI_EXP_DEVCAP2?  If so, use those existing #defines and the
->related masks (if it's DEVCAP2, you'd probably have to add a new one for t=
-he
->Completion Timeout Ranges Supported field).
->
->There's something similar in cdns_pcie_retrain(), where
->CDNS_PCIE_RP_CAP_OFFSET is apparently the config space offset of the PCIe
->Capability.
->
->> +#define CDNS_PCIE_CTRL_ARCH_MASK	GENMASK(3, 0)
->> +#define CDNS_PCIE_CTRL_HPA		0xF
+>  
+> +#include <linux/bitfield.h>
+>  #include <linux/delay.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irqchip/chained_irq.h>
+> @@ -77,9 +78,25 @@
+>  #define S10_TLP_FMTTYPE_CFGWR0		0x45
+>  #define S10_TLP_FMTTYPE_CFGWR1		0x44
+>  
+> +#define AGLX_RP_CFG_ADDR(pcie, reg)	(((pcie)->hip_base) + (reg))
+> +#define AGLX_RP_SECONDARY(pcie)		\
+> +	readb(AGLX_RP_CFG_ADDR(pcie, PCI_SECONDARY_BUS))
+> +
+> +#define AGLX_BDF_REG			0x00002004
+> +#define AGLX_ROOT_PORT_IRQ_STATUS	0x14c
+> +#define AGLX_ROOT_PORT_IRQ_ENABLE	0x150
+> +#define CFG_AER				BIT(4)
+> +
+> +#define AGLX_CFG_TARGET			GENMASK(13, 12)
+> +#define AGLX_CFG_TARGET_TYPE0		0
+> +#define AGLX_CFG_TARGET_TYPE1		1
+> +#define AGLX_CFG_TARGET_LOCAL_2000	2
+> +#define AGLX_CFG_TARGET_LOCAL_3000	3
+> +
+>  enum altera_pcie_version {
+>  	ALTERA_PCIE_V1 = 0,
+>  	ALTERA_PCIE_V2,
+> +	ALTERA_PCIE_V3,
+>  };
+>  
+>  struct altera_pcie {
+> @@ -102,6 +119,11 @@ struct altera_pcie_ops {
+>  			   int size, u32 *value);
+>  	int (*rp_write_cfg)(struct altera_pcie *pcie, u8 busno,
+>  			    int where, int size, u32 value);
+> +	int (*ep_read_cfg)(struct altera_pcie *pcie, u8 busno,
+> +			   unsigned int devfn, int where, int size, u32 *value);
+> +	int (*ep_write_cfg)(struct altera_pcie *pcie, u8 busno,
+> +			    unsigned int devfn, int where, int size, u32 value);
+> +	void (*rp_isr)(struct irq_desc *desc);
+>  };
+>  
+>  struct altera_pcie_data {
+> @@ -112,6 +134,9 @@ struct altera_pcie_data {
+>  	u32 cfgrd1;
+>  	u32 cfgwr0;
+>  	u32 cfgwr1;
+> +	u32 port_conf_offset;
+> +	u32 port_irq_status_offset;
+> +	u32 port_irq_enable_offset;
+>  };
+>  
+>  struct tlp_rp_regpair_t {
+> @@ -131,6 +156,28 @@ static inline u32 cra_readl(struct altera_pcie *pcie, const u32 reg)
+>  	return readl_relaxed(pcie->cra_base + reg);
+>  }
+>  
+> +static inline void cra_writew(struct altera_pcie *pcie, const u32 value,
+> +			      const u32 reg)
+> +{
+> +	writew_relaxed(value, pcie->cra_base + reg);
+> +}
+> +
+> +static inline u32 cra_readw(struct altera_pcie *pcie, const u32 reg)
+> +{
+> +	return readw_relaxed(pcie->cra_base + reg);
+> +}
+> +
+> +static inline void cra_writeb(struct altera_pcie *pcie, const u32 value,
+> +			      const u32 reg)
+> +{
+> +	writeb_relaxed(value, pcie->cra_base + reg);
+> +}
+> +
+> +static inline u32 cra_readb(struct altera_pcie *pcie, const u32 reg)
+> +{
+> +	return readb_relaxed(pcie->cra_base + reg);
+> +}
+> +
+>  static bool altera_pcie_link_up(struct altera_pcie *pcie)
+>  {
+>  	return !!((cra_readl(pcie, RP_LTSSM) & RP_LTSSM_MASK) == LTSSM_L0);
+> @@ -145,6 +192,15 @@ static bool s10_altera_pcie_link_up(struct altera_pcie *pcie)
+>  	return !!(readw(addr) & PCI_EXP_LNKSTA_DLLLA);
+>  }
+>  
+> +static bool aglx_altera_pcie_link_up(struct altera_pcie *pcie)
+> +{
+> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie,
+> +				   pcie->pcie_data->cap_offset +
+> +				   PCI_EXP_LNKSTA);
+> +
+> +	return (readw_relaxed(addr) & PCI_EXP_LNKSTA_DLLLA);
+> +}
+> +
+>  /*
+>   * Altera PCIe port uses BAR0 of RC's configuration space as the translation
+>   * from PCI bus to native BUS.  Entire DDR region is mapped into PCIe space
+> @@ -425,6 +481,103 @@ static int s10_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
+>  	return PCIBIOS_SUCCESSFUL;
+>  }
+>  
+> +static int aglx_rp_read_cfg(struct altera_pcie *pcie, int where,
+> +			    int size, u32 *value)
+> +{
+> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
+> +
+> +	switch (size) {
+> +	case 1:
+> +		*value = readb_relaxed(addr);
+> +		break;
+> +	case 2:
+> +		*value = readw_relaxed(addr);
+> +		break;
+> +	default:
+> +		*value = readl_relaxed(addr);
+> +		break;
+> +	}
+> +
+> +	/* interrupt pin not programmed in hardware, set to INTA */
+> +	if (where == PCI_INTERRUPT_PIN && size == 1 && !(*value))
+> +		*value = 0x01;
+> +	else if (where == PCI_INTERRUPT_LINE && !(*value & 0xff00))
+> +		*value |= 0x0100;
+> +
+> +	return PCIBIOS_SUCCESSFUL;
+> +}
+> +
+> +static int aglx_rp_write_cfg(struct altera_pcie *pcie, u8 busno,
+> +			     int where, int size, u32 value)
+> +{
+> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
+> +
+> +	switch (size) {
+> +	case 1:
+> +		writeb_relaxed(value, addr);
+> +		break;
+> +	case 2:
+> +		writew_relaxed(value, addr);
+> +		break;
+> +	default:
+> +		writel_relaxed(value, addr);
+> +		break;
+> +	}
+> +
+> +	/*
+> +	 * Monitor changes to PCI_PRIMARY_BUS register on root port
+> +	 * and update local copy of root bus number accordingly.
+> +	 */
+> +	if (busno == pcie->root_bus_nr && where == PCI_PRIMARY_BUS)
+> +		pcie->root_bus_nr = value & 0xff;
+> +
+> +	return PCIBIOS_SUCCESSFUL;
+> +}
+> +
+> +static int aglx_ep_write_cfg(struct altera_pcie *pcie, u8 busno,
+> +			     unsigned int devfn, int where, int size, u32 value)
+> +{
+> +	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
+> +	if (busno > AGLX_RP_SECONDARY(pcie))
+> +		where |= FIELD_PREP(AGLX_CFG_TARGET, AGLX_CFG_TARGET_TYPE1);
+> +
+> +	switch (size) {
+> +	case 1:
+> +		cra_writeb(pcie, value, where);
+> +		break;
+> +	case 2:
+> +		cra_writew(pcie, value, where);
+> +		break;
+> +	default:
+> +		cra_writel(pcie, value, where);
+> +			break;
+> +	}
+> +
+> +	return PCIBIOS_SUCCESSFUL;
+> +}
+> +
+> +static int aglx_ep_read_cfg(struct altera_pcie *pcie, u8 busno,
+> +			    unsigned int devfn, int where, int size, u32 *value)
+> +{
+> +	cra_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
+> +	if (busno > AGLX_RP_SECONDARY(pcie))
+> +		where |= FIELD_PREP(AGLX_CFG_TARGET, AGLX_CFG_TARGET_TYPE1);
+> +
+> +	switch (size) {
+> +	case 1:
+> +		*value = cra_readb(pcie, where);
+> +		break;
+> +	case 2:
+> +		*value = cra_readw(pcie, where);
+> +		break;
+> +	default:
+> +		*value = cra_readl(pcie, where);
+> +		break;
+> +	}
+> +
+> +	return PCIBIOS_SUCCESSFUL;
+> +}
+> +
+>  static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8 busno,
+>  				 unsigned int devfn, int where, int size,
+>  				 u32 *value)
+> @@ -437,6 +590,10 @@ static int _altera_pcie_cfg_read(struct altera_pcie *pcie, u8 busno,
+>  		return pcie->pcie_data->ops->rp_read_cfg(pcie, where,
+>  							 size, value);
+>  
+> +	if (pcie->pcie_data->ops->ep_read_cfg)
+> +		return pcie->pcie_data->ops->ep_read_cfg(pcie, busno, devfn,
+> +							where, size, value);
+> +
+>  	switch (size) {
+>  	case 1:
+>  		byte_en = 1 << (where & 3);
+> @@ -481,6 +638,10 @@ static int _altera_pcie_cfg_write(struct altera_pcie *pcie, u8 busno,
+>  		return pcie->pcie_data->ops->rp_write_cfg(pcie, busno,
+>  						     where, size, value);
+>  
+> +	if (pcie->pcie_data->ops->ep_write_cfg)
+> +		return pcie->pcie_data->ops->ep_write_cfg(pcie, busno, devfn,
+> +						     where, size, value);
+> +
+>  	switch (size) {
+>  	case 1:
+>  		data32 = (value & 0xff) << shift;
+> @@ -659,7 +820,30 @@ static void altera_pcie_isr(struct irq_desc *desc)
+>  				dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n", bit);
+>  		}
+>  	}
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static void aglx_isr(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct altera_pcie *pcie;
+> +	struct device *dev;
+> +	u32 status;
+> +	int ret;
+> +
+> +	chained_irq_enter(chip, desc);
+> +	pcie = irq_desc_get_handler_data(desc);
+> +	dev = &pcie->pdev->dev;
+>  
+> +	status = readl(pcie->hip_base + pcie->pcie_data->port_conf_offset +
+> +		       pcie->pcie_data->port_irq_status_offset);
+> +	if (status & CFG_AER) {
+> +		writel(CFG_AER, (pcie->hip_base + pcie->pcie_data->port_conf_offset +
+> +				 pcie->pcie_data->port_irq_status_offset));
+> +		ret = generic_handle_domain_irq(pcie->irq_domain, 0);
+> +		if (ret)
+> +			dev_err_ratelimited(dev, "unexpected IRQ %d\n", pcie->irq);
+> +	}
+>  	chained_irq_exit(chip, desc);
+>  }
+>  
+> @@ -694,9 +878,9 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+>  	if (IS_ERR(pcie->cra_base))
+>  		return PTR_ERR(pcie->cra_base);
+>  
+> -	if (pcie->pcie_data->version == ALTERA_PCIE_V2) {
+> -		pcie->hip_base =
+> -			devm_platform_ioremap_resource_byname(pdev, "Hip");
+> +	if (pcie->pcie_data->version == ALTERA_PCIE_V2 ||
+> +	    pcie->pcie_data->version == ALTERA_PCIE_V3) {
+> +		pcie->hip_base = devm_platform_ioremap_resource_byname(pdev, "Hip");
+>  		if (IS_ERR(pcie->hip_base))
+>  			return PTR_ERR(pcie->hip_base);
+>  	}
+> @@ -706,7 +890,7 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
+>  	if (pcie->irq < 0)
+>  		return pcie->irq;
+>  
+> -	irq_set_chained_handler_and_data(pcie->irq, altera_pcie_isr, pcie);
+> +	irq_set_chained_handler_and_data(pcie->irq, pcie->pcie_data->ops->rp_isr, pcie);
+>  	return 0;
+>  }
+>  
+> @@ -719,6 +903,7 @@ static const struct altera_pcie_ops altera_pcie_ops_1_0 = {
+>  	.tlp_read_pkt = tlp_read_packet,
+>  	.tlp_write_pkt = tlp_write_packet,
+>  	.get_link_status = altera_pcie_link_up,
+> +	.rp_isr = altera_pcie_isr,
+>  };
+>  
+>  static const struct altera_pcie_ops altera_pcie_ops_2_0 = {
+> @@ -727,6 +912,16 @@ static const struct altera_pcie_ops altera_pcie_ops_2_0 = {
+>  	.get_link_status = s10_altera_pcie_link_up,
+>  	.rp_read_cfg = s10_rp_read_cfg,
+>  	.rp_write_cfg = s10_rp_write_cfg,
+> +	.rp_isr = altera_pcie_isr,
+> +};
+> +
+> +static const struct altera_pcie_ops altera_pcie_ops_3_0 = {
+> +	.rp_read_cfg = aglx_rp_read_cfg,
+> +	.rp_write_cfg = aglx_rp_write_cfg,
+> +	.get_link_status = aglx_altera_pcie_link_up,
+> +	.ep_read_cfg = aglx_ep_read_cfg,
+> +	.ep_write_cfg = aglx_ep_write_cfg,
+> +	.rp_isr = aglx_isr,
+>  };
+>  
+>  static const struct altera_pcie_data altera_pcie_1_0_data = {
+> @@ -749,11 +944,44 @@ static const struct altera_pcie_data altera_pcie_2_0_data = {
+>  	.cfgwr1 = S10_TLP_FMTTYPE_CFGWR1,
+>  };
+>  
+> +static const struct altera_pcie_data altera_pcie_3_0_f_tile_data = {
+> +	.ops = &altera_pcie_ops_3_0,
+> +	.version = ALTERA_PCIE_V3,
+> +	.cap_offset = 0x70,
+> +	.port_conf_offset = 0x14000,
+> +	.port_irq_status_offset = AGLX_ROOT_PORT_IRQ_STATUS,
+> +	.port_irq_enable_offset = AGLX_ROOT_PORT_IRQ_ENABLE,
+> +};
+> +
+> +static const struct altera_pcie_data altera_pcie_3_0_p_tile_data = {
+> +	.ops = &altera_pcie_ops_3_0,
+> +	.version = ALTERA_PCIE_V3,
+> +	.cap_offset = 0x70,
+> +	.port_conf_offset = 0x104000,
+> +	.port_irq_status_offset = AGLX_ROOT_PORT_IRQ_STATUS,
+> +	.port_irq_enable_offset = AGLX_ROOT_PORT_IRQ_ENABLE,
+> +};
+> +
+> +static const struct altera_pcie_data altera_pcie_3_0_r_tile_data = {
+> +	.ops = &altera_pcie_ops_3_0,
+> +	.version = ALTERA_PCIE_V3,
+> +	.cap_offset = 0x70,
+> +	.port_conf_offset = 0x1300,
+> +	.port_irq_status_offset = 0x0,
+> +	.port_irq_enable_offset = 0x4,
+> +};
+> +
+>  static const struct of_device_id altera_pcie_of_match[] = {
+>  	{.compatible = "altr,pcie-root-port-1.0",
+>  	 .data = &altera_pcie_1_0_data },
+>  	{.compatible = "altr,pcie-root-port-2.0",
+>  	 .data = &altera_pcie_2_0_data },
+> +	{.compatible = "altr,pcie-root-port-3.0-f-tile",
+> +	 .data = &altera_pcie_3_0_f_tile_data },
+> +	{.compatible = "altr,pcie-root-port-3.0-p-tile",
+> +	 .data = &altera_pcie_3_0_p_tile_data },
+> +	{.compatible = "altr,pcie-root-port-3.0-r-tile",
+> +	 .data = &altera_pcie_3_0_r_tile_data },
+>  	{},
+>  };
+>  
+> @@ -791,11 +1019,18 @@ static int altera_pcie_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	/* clear all interrupts */
+> -	cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
+> -	/* enable all interrupts */
+> -	cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
+> -	altera_pcie_host_init(pcie);
+> +	if (pcie->pcie_data->version == ALTERA_PCIE_V1 ||
+> +	    pcie->pcie_data->version == ALTERA_PCIE_V2) {
+> +		/* clear all interrupts */
+> +		cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
+> +		/* enable all interrupts */
+> +		cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
+> +		altera_pcie_host_init(pcie);
+> +	} else if (pcie->pcie_data->version == ALTERA_PCIE_V3) {
+> +		writel(CFG_AER,
+> +		       pcie->hip_base + pcie->pcie_data->port_conf_offset +
+> +		       pcie->pcie_data->port_irq_enable_offset);
+> +	}
+>  
+>  	bridge->sysdata = pcie;
+>  	bridge->busnr = pcie->root_bus_nr;
+> -- 
+> 2.34.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
