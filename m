@@ -1,145 +1,124 @@
-Return-Path: <linux-pci+bounces-20675-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20676-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C19CA2630F
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 19:53:12 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 708EEA26445
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 21:12:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64F3B1633D9
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 18:53:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2EC197A3162
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Feb 2025 20:12:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6707A1ADC98;
-	Mon,  3 Feb 2025 18:52:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 527F81DACB1;
+	Mon,  3 Feb 2025 20:12:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLhSkgfr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUvrNH8v"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9A8194AEC;
-	Mon,  3 Feb 2025 18:52:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B0B522A;
+	Mon,  3 Feb 2025 20:12:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738608769; cv=none; b=Ehd01ywIF6P7QlG+xxVPWwbN48J4Wi/EZzuiaY9/A/ldJtM9+MePTVP63CkT/7QCaV99A/ZjWN2W6vdJvvejU0x++/4aEU3JCYjlBGbjrRNQ5BojR1+gQHp8TqcJOYwhUQgUVRSwdma6LJaxK8LkppqXbDmUAQ6ToSgUQ2MUZws=
+	t=1738613570; cv=none; b=jhn+igES6wkEXr0P7u5pl3M7Ez9pySzMw4IIkK/oH9dRgakFeGmZcLqya1ga4Rq3i6gU3u03dgl0JBVmUE8PfFxkvyhtOTcS35RHWeZfh1UKQ/BK50H/VkIqrIvNbyST5myhW5qswnKb6m2rGv2fRZSh0AxPj9w8huaq/biXXVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738608769; c=relaxed/simple;
-	bh=cp8ezIVsa4VCsFDICxF3SyrDQWm0vPmWgmthTsoKoqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=SIeuMQOhLrbgT8/8cGa9zAXJf3rfiPqWDVNrlGWlHgbNVLmiIkLHLVlKJVLON7Ba1YGbugO+vd+3EEIZwqvCb0Xf5AUZPHKiy6OTDLO/qZeClJcytaLXt7aYyoduXAqkNFy8WoR8ihVZ0hOyu4Hd8FnV3csf+ANETssi/Y1pPI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sLhSkgfr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7286AC4CED2;
-	Mon,  3 Feb 2025 18:52:48 +0000 (UTC)
+	s=arc-20240116; t=1738613570; c=relaxed/simple;
+	bh=eG2IPK5sPmlrFBWUFh+RLYKGrlmKlAjDRe5QcO5P5GI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=rz4bnVjvPh97yNKxM2mKiU1k0B1KbV12ZmCO77W5gjdqLOHRSLlJwOzVoG9w7Tk/CSYpG+xkIZ4fuKVaHbCZZK+oiRXaOQog9fNuaOyVlm5YGkJt1LpAZhD5uMvo5nbPc3S1T7oAdl/CezXy1B1+NPpD7k2EMkxhQplKjLruDT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUvrNH8v; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8726AC4CEE5;
+	Mon,  3 Feb 2025 20:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738608768;
-	bh=cp8ezIVsa4VCsFDICxF3SyrDQWm0vPmWgmthTsoKoqY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=sLhSkgfrtiXM1d6scqupsldIN28bx0T9WxyPXfHVo8A0P9qumifaHA8ihb8wOmVW/
-	 1B9v11/JtaUgT+dJGbOGTr/1gn+6qbtl9NnxCBwzjSoWBh0Uh3xhgO6GUgHFHd9x6z
-	 9eAGB33aOGE2z2GmO4QOBh/YZhLxRQKa4R9q5fHpT1S/M5BZhwxFZjbrgnnUB5D1H+
-	 tyV/Dj5wFHfMY4zuEYR71SaN1vCa3bNp/LPdDqcd1fMxaJXjY1lNInCsO6jjwM1Ia9
-	 OgaFs8I2iicsAKZ2HsG8xcDp4G7eZBDYuMYUGEtIj06JlRFSWOpYhECw3427VyhAVP
-	 QWWr9nrS2c2qA==
-Date: Mon, 3 Feb 2025 12:52:46 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
-Cc: Jianjun Wang =?utf-8?B?KOeOi+W7uuWGmyk=?= <Jianjun.Wang@mediatek.com>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Ryder Lee <Ryder.Lee@mediatek.com>
-Subject: Re: [PATCH] PCI: mediatek: Remove the usage of virt_to_phys
-Message-ID: <20250203185246.GA794570@bhelgaas>
+	s=k20201202; t=1738613569;
+	bh=eG2IPK5sPmlrFBWUFh+RLYKGrlmKlAjDRe5QcO5P5GI=;
+	h=From:Date:Subject:To:Cc:From;
+	b=eUvrNH8vZx4QvXbGaLJSOP/oGTGtQzUzDuwspkYhOOOWhwVidxK92O4KNRyHK/91Q
+	 uRpJ7Sp8TDy+7RG6iUxQUBo7yROijvNTgxBwpS96YfJurmXnFNfF+n9+LaYleFHdSg
+	 YVQMYWLvlQfaN+wqKGFLKnneOMwHxddm6WOXrAy5nSu0C6xFMy66oco6O0SgDVPWD8
+	 /m7DAowV8RcRK4ZmRiiF79WR9Je1D2f1UmJZVTGibLsPelNBG0sFrIxrm+f/B7xRQ/
+	 dE2iId4QASVHZ9TwSQuBkP7RX6EnrJmLy7cRBfcP/clMW7EokbXaFS6dlYnyJ9Xkj+
+	 ltGD9nVD++MLg==
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5f321876499so2535256eaf.1;
+        Mon, 03 Feb 2025 12:12:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU9WjvqfSJg9vXrc6evEFLXaRUUWRZUull+9+b3wUq4aJzmM0Ijd+ukbg0J2cDOZAmYorCw11Gw/NlEE2g=@vger.kernel.org, AJvYcCXq5RNMSlW2MhHrQBnhhYLhrvkkAXSnFvcimiM9RkibSYRjwLbUtKPWEFqXGloywoenG19dJf+Yd08=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfmWXDcsnFAGo2p9nWgY3onBVmOuuaLHoK2U+R8DGQN+BtzzOS
+	zdU0zv/xSMcGD8mQg/fWnNSkQsQB4TyTz0KbX16CzpAo5mWruYZOE2YntTasidpDc3XIoHr55Qm
+	JKI3yIqNZpCTD2E2Lanca6/vVg1U=
+X-Google-Smtp-Source: AGHT+IFvlcyI88YyxfQjmWaIJxi8/D3mhhw/h/Xarh0sXbPC6zgrTUKXc7dWN9ur49vtzFJmYvzJdmhEg0leG78Mr0o=
+X-Received: by 2002:a4a:d08b:0:b0:5f2:c0df:7ed5 with SMTP id
+ 006d021491bc7-5fc3bf5874fmr386760eaf.3.1738613568803; Mon, 03 Feb 2025
+ 12:12:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250203175049.idxegqqsfwf4dmvq@thinkpad>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 3 Feb 2025 21:12:37 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iKmynOQ5vKSQbg1J_FmavwZE-nRONovOZ0mpMVauheWg@mail.gmail.com>
+X-Gm-Features: AWEUYZlg0pfw8ANAD7dIS37BOlgitXSC9gnRxIBpuMXS1W0hQkz8dJAWXX3S_UY
+Message-ID: <CAJZ5v0iKmynOQ5vKSQbg1J_FmavwZE-nRONovOZ0mpMVauheWg@mail.gmail.com>
+Subject: [Regression in 6.14-rc1] System suspend/resume broken by PCI commit 1db806ec06b7c
+To: Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>
+Cc: Linux PCI <linux-pci@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 03, 2025 at 11:20:49PM +0530, manivannan.sadhasivam@linaro.org wrote:
-> On Sat, Feb 01, 2025 at 11:07:40AM -0600, Bjorn Helgaas wrote:
-> > On Sat, Feb 01, 2025 at 09:54:16PM +0530, manivannan.sadhasivam@linaro.org wrote:
-> > > On Mon, Jan 27, 2025 at 06:41:50PM -0600, Bjorn Helgaas wrote:
-> > > > On Thu, Jan 23, 2025 at 08:11:19AM +0000, Jianjun Wang (王建军) wrote:
-> > > > > On Wed, 2025-01-15 at 23:01 +0530, Manivannan Sadhasivam wrote:
-> > > > > > On Tue, Jan 07, 2025 at 01:20:58PM +0800, Jianjun Wang wrote:
-> > > > > > > Remove the usage of virt_to_phys, as it will cause sparse warnings
-> > > > > > > when
-> > > > > > > building on some platforms.
-> > 
-> > > > > > >       snprintf(name, sizeof(name), "port%d", slot);
-> > > > > > > -     port->base = devm_platform_ioremap_resource_byname(pdev,
-> > > > > > > name);
-> > > > > > > +     regs = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > > > > > > name);
-> > > > > > > +     if (!regs)
-> > > > > > > +             return -EINVAL;
-> > > > > > > +
-> > > > > > > +     port->base = devm_ioremap_resource(dev, regs);
-> > > > > > >       if (IS_ERR(port->base)) {
-> > > > > > >               dev_err(dev, "failed to map port%d base\n", slot);
-> > > > > > >               return PTR_ERR(port->base);
-> > > > > > >       }
-> > > > > > > 
-> > > > > > > +     port->msg_addr = regs->start + PCIE_MSI_VECTOR;
-> > > > 
-> > > > I think this still assumes that a CPU physical address
-> > > > (regs->start) is the same as the PCI bus address used for MSI, so
-> > > > this doesn't seem like the right solution to me.
+Hi,
 
-Apart from the question of what type should be used, what do you think
-about this part?  I don't think we should assume that the address on
-PCI is identical to the CPU physical address.  IOMMUs and (I assume)
-iATUs can make them different, can't they?  If so, this looks like an
-implicit assumption that PCI bus==CPU physical, and I think we should
-make that a little more explicit somehow.
+The following commit:
 
-> > > > Apparently they happen to be the same on this platform because (I
-> > > > assume) MSIs actually do work, but it's not a good pattern for
-> > > > drivers to copy.  I think what we really need is a dma_addr_t, and
-> > > > I think there are one or two PCI controller drivers that do that.
-> > > 
-> > > I don't see why we would need 'dma_addr_t' here. The MSI address is
-> > > a static physical address on this platform and that is not a DMA
-> > > address. Other drivers can *only* copy this pattern if they also
-> > > have the physical address allocated for MSI.
-> > 
-> > Isn't an MSI on PCI just a DMA write to a certain address?
-> 
-> That's from the endpoint prespective when it triggers MSI.
-> 
-> > My assumption is that if you put an analyzer on that link, an MSI
-> > from a device would be structurally indistinguishable from a DMA
-> > write from the device.  The MSI uses a different address, but
-> > doesn't it use the same size and kind of address, at least from
-> > the PCIe protocol perspective?
-> 
-> Yeah, but in this case the address allocated to MSI belongs to a
-> hardcoded region in the host memory (not allocated by the DMA APIs
-> which will have the region attributed as DMA capable). So it doesn't
-> belong to the DMA domain, and we cannot use 'dma_addr_t'.
+commit 1db806ec06b7c6e08e8af57088da067963ddf117
+Author: Jian-Hong Pan <jhp@endlessos.org>
+Date:   Fri Nov 15 15:22:02 2024 +0800
 
-Doesn't .irq_compose_msi_msg() build the Message Address/Data pair
-that is programmed into a device's MSI Capability or MSI-X Table?
-The device will eventually use that to initiate a DMA write to that
-address.
+   PCI/ASPM: Save parent L1SS config in pci_save_aspm_l1ss_state()
 
-In that sense, I would argue that the Message Address does belong to
-the DMA domain.  I don't think the size of the address (32 vs 64 bits)
-is determined by the CPU physical address size (phys_addr_t); it's
-determined by the size of DMA addresses.
+   After 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for
+   suspend/resume"), pci_save_aspm_l1ss_state(dev) saves the L1SS state for
+   "dev", and pci_restore_aspm_l1ss_state(dev) restores the state for both
+   "dev" and its parent.
 
-Bjorn
+   The problem is that unless pci_save_state() has been used in some other
+   path and has already saved the parent L1SS state, we will restore junk t=
+o
+   the parent, which means the L1 Substates likely won't work correctly.
+
+   Save the L1SS config for both the device and its parent in
+   pci_save_aspm_l1ss_state().  When restoring, we need both because L1SS m=
+ust
+   be enabled at the parent (the Downstream Port) before being enabled at t=
+he
+   child (the Upstream Port).
+
+   Link: https://lore.kernel.org/r/20241115072200.37509-3-jhp@endlessos.org
+   Fixes: 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for
+suspend/resume")
+   Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218394
+   Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+   Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+   [bhelgaas: parallel save/restore structure, simplify commit log, patch a=
+t
+   https://lore.kernel.org/r/20241212230340.GA3267194@bhelgaas]
+   Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+   Tested-by: Jian-Hong Pan <jhp@endlessos.org> # Asus B1400CEAE
+
+broke system suspend/resume on my Dell XPS13 9360.  It doesn't even
+pass suspend/resume testing after "echo devices > /sys/power/pm_test".
+
+It looks like PCIe links are all down during resume after the above
+commit, but it is rather hard to collect any data in that state.
+
+Reverting the above commit on top of 6.14-rc1 makes things work again,
+no problem.
+
+I'm unsure what exactly the problem is ATM, but I'm going to check a
+couple of theories.
+
+Cheers, Rafael
 
