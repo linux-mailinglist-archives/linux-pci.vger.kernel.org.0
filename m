@@ -1,77 +1,53 @@
-Return-Path: <linux-pci+bounces-20711-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20713-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBB4CA27A31
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 19:40:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 903F0A27CD7
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 21:34:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 63232166290
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 18:40:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 499E21886793
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 20:34:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52D11216E39;
-	Tue,  4 Feb 2025 18:40:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 646B0219A8E;
+	Tue,  4 Feb 2025 20:34:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="RnTbtXVw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b="wH/g5+st"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx05lb.world4you.com (mx05lb.world4you.com [81.19.149.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B948B20DD4B
-	for <linux-pci@vger.kernel.org>; Tue,  4 Feb 2025 18:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D38203710;
+	Tue,  4 Feb 2025 20:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.149.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738694443; cv=none; b=allocFu246eCNHwy9ikmjhuI32zkFpvnMtf0nYp14EWm+zUsELJEBWZcUcgFpRUe+jEmUoOSb9JREAudU1DxqtEFFQXw3L26AxFsweEdQw+SZlAY7MqYeH+YRSRh/+4/4cQQrb8dStioEPS8f6tPqyuKKKbHeuLtD91jUfcbfZs=
+	t=1738701290; cv=none; b=qGoWoqRU1VOpM/1eroaB/8mzMdcX55DEljpdnI2a3PI1itPYryJKijUmtqxF9A5JBt9UzesBY1FeQ9Hb7vk+Pn0huf68XjvDva7+jjz4o2xpsf9vDho/9zJJZDGd29B+ltVJ/VwBRcHX3Uji/yStejxUdfW3KdLXBQ9ro7IXuz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738694443; c=relaxed/simple;
-	bh=2KEjCwLD6q1LhwaYXfd8OhgZvM4Ygt1ban138+5LVyE=;
+	s=arc-20240116; t=1738701290; c=relaxed/simple;
+	bh=iu18eYYQR4fLthqgNOhu/VAmwYelaQmKNYCEv86pKn4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GuVzB/6HIDo9ZbeH3AhkKz6pkQl8alUNn3BTQWcpITjfaiAcurlRrTrbufOWcDLDnU3Zb/REgp/lAYR+ItROtbg63iy++vsgIbkeWfk5b4nd6ocG03NVNAyguuLJ0103Sh+d63tP70qSADAciIO0dcGU41ZHYNQ6EiLYGiRtOPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=RnTbtXVw; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2f9c97af32eso1220060a91.2
-        for <linux-pci@vger.kernel.org>; Tue, 04 Feb 2025 10:40:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1738694441; x=1739299241; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=rr3YMX43/Tloo6QL2s4yaCM8c/Si1AW2XmMJtfVf9E0=;
-        b=RnTbtXVwzlxuKc4FLzOShcM84R8ch2BsA0RVQ8xgRiv1e0sdPSoa4HFjauayAKjhRF
-         ZHdJcQGvJqCHcYeed82GKO7GhnLkBmTsXziEB6zLfl/CZDQoZUcK1XH2F9EspgjEOiNH
-         LYbOJJfXFkO5Fdz224+xIIf4RfRKBbj2xJCsQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738694441; x=1739299241;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rr3YMX43/Tloo6QL2s4yaCM8c/Si1AW2XmMJtfVf9E0=;
-        b=fdmx43It/QAsJ+S1e64DA8Coevwhlcs7jI8VRXhYy49ryDn61dtpAZ2nPxfXzXigmw
-         eBsBp1OGPA2YDoP0E2mbZculIQLVcM2FAPAyTYp5n6YaK7NnAk40PfNXoU9yDkreb5ia
-         eo6a/s2K4jX7I/UHndeH3puB1hjtFAoovMsUuokOsLFlofPTbB0WgvceDgD3nfNzkQc9
-         ax2GOqe2K/MvGkXzTYNRDuXejmzundQSYoeQava7AsU5w7dwVG4Zju3NhY0V3Jj4f8Pm
-         8d7rFbziMq/ROthdvj5yNx1lL9qqRZ2EjPXMk3pFsT39CwAu84fii7WKkmFAR91xYHeM
-         xGcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVx+QrOvWou37ipEisR7GTOHnbZbuSab/S/QjFD6zpX1xtWAnx4oKbo6J1bUT0gtKkFJ0LKBIOppJ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuCsHQptt3hAVazctKEGJDlIqAs5k0Smr0U4i7CF/UEmTj3dfI
-	yzgq4IpnzF0XcMrtcwAX4ASk7Xw9iC6Gf6owUzx+MZaPIF0rJ2CovEOIs6l1qA==
-X-Gm-Gg: ASbGncuYl+fhwKbiE0PZLoExpQdDLuVDD5VGLiWiVVa2MSqvBM7hkxln5NmSPwgRmNC
-	FCUkcOHdScOQdibF4nkb+B8OHjuDnzOSsBqe+sx/kg3VMChR3B3YE+fcmQNvQgUAseREgx9ufsQ
-	kxifGe5gUlJum3JM0ujc7q2LbiudiPwe6YtH0G6VXeXf538q62wiViJ2ctETVtSNJOId2WsLtR9
-	fwT+gO/E1303DgBYw1HX0/39u7GLZYEescy9DZISMztKDggwT1H4kZ7IrlPbLkKC7A+wdDX3KTx
-	stdk6ntKGVlC8q0hr3JIoRxcaYdTaqZRCCF17PFph1KvOnPPePYgZNc=
-X-Google-Smtp-Source: AGHT+IGJndWAWJ5vbNbdd6bjRwA+UbEuIyBJrgJX2s7NpyKketJ6Ni4wV9ZRPzf7pgw/PGeNk8p+jQ==
-X-Received: by 2002:a17:90a:dfc5:b0:2ee:9d65:65a7 with SMTP id 98e67ed59e1d1-2f83ac86a84mr38834985a91.29.1738694441007;
-        Tue, 04 Feb 2025 10:40:41 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bc97ca8sm15322901a91.1.2025.02.04.10.40.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2025 10:40:40 -0800 (PST)
-Message-ID: <a7a5dbb5-25ba-4bf3-9f36-f188f2c6eea8@broadcom.com>
-Date: Tue, 4 Feb 2025 10:40:38 -0800
+	 In-Reply-To:Content-Type; b=u4CXL+rqF+zaFMnwGA7hnG0ztzdMjb+U5Umf1PIIm9h0gc5J5th5j/GjfaH3O2LGVp3PWjEGk3SLOgRlmUqlwMlksCVKKEpEKGD5VSAbNWYtCbS4tb5J7xcAXBxikxqxUztiXnsl4tVkzaxcGEEgnmgrS5Fvq21mx9FKeiHYolU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com; spf=pass smtp.mailfrom=engleder-embedded.com; dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b=wH/g5+st; arc=none smtp.client-ip=81.19.149.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engleder-embedded.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=engleder-embedded.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Dso1EsGyxnhW5FWhayp/zMY4aUV2+LaYO3ijOICijXI=; b=wH/g5+strem6Fjbax6JIGuA4jI
+	zAz+g1rjHx2TLNWIJccj9GLm/xwcXe9FkCI5BIZFy3yXAWoaU1WMs4Zn7YjJLn7dKfMhLeavUdNJh
+	/pjcw3iMEz4nrkA+a8xScAmUKmcEE2XhzLwCPfjRK+kna7A46CgYgiZ/bdZ8qkKkDPPs=;
+Received: from [88.117.60.28] (helo=[10.0.0.160])
+	by mx05lb.world4you.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <gerhard@engleder-embedded.com>)
+	id 1tfPNK-000000005UN-3Y68;
+	Tue, 04 Feb 2025 21:18:27 +0100
+Message-ID: <bd604c16-0f5c-479c-aa13-932f1570e5b5@engleder-embedded.com>
+Date: Tue, 4 Feb 2025 21:18:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,62 +55,89 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: brcmstb: Adjust message if L23 cannot be entered
-To: Stefan Wahren <wahrenst@gmx.net>, Rob Herring <robh@kernel.org>,
- Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org,
- bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org
-References: <20250201121420.32316-1-wahrenst@gmx.net>
+Subject: Re: [PATCH iwl-next v4] e1000e: Fix real-time violations on link up
+To: anthony.l.nguyen@intel.com
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-pci@vger.kernel.org, przemyslaw.kitszel@intel.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, kuba@kernel.org,
+ edumazet@google.com, pabeni@redhat.com, bhelgaas@google.com,
+ pmenzel@molgen.mpg.de, aleksander.lobakin@intel.com,
+ Gerhard Engleder <eg@keba.com>, Vitaly Lifshits <vitaly.lifshits@intel.com>,
+ Avigail Dahan <avigailx.dahan@intel.com>, Simon Horman <horms@kernel.org>
+References: <20241219192743.4499-1-gerhard@engleder-embedded.com>
+ <20250106111752.GC4068@kernel.org>
 Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250201121420.32316-1-wahrenst@gmx.net>
+From: Gerhard Engleder <gerhard@engleder-embedded.com>
+In-Reply-To: <20250106111752.GC4068@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-AV-Do-Run: Yes
 
-On 2/1/25 04:14, Stefan Wahren wrote:
-> The entering of L23 lower-power state is optional, because the
-> connected endpoint might doesn't support it. So pcie-brcmstb shouldn't
-> print an error if it fails.
+On 06.01.25 12:17, Simon Horman wrote:
+> On Thu, Dec 19, 2024 at 08:27:43PM +0100, Gerhard Engleder wrote:
+>> From: Gerhard Engleder <eg@keba.com>
+>>
+>> Link down and up triggers update of MTA table. This update executes many
+>> PCIe writes and a final flush. Thus, PCIe will be blocked until all
+>> writes are flushed. As a result, DMA transfers of other targets suffer
+>> from delay in the range of 50us. This results in timing violations on
+>> real-time systems during link down and up of e1000e in combination with
+>> an Intel i3-2310E Sandy Bridge CPU.
+>>
+>> The i3-2310E is quite old. Launched 2011 by Intel but still in use as
+>> robot controller. The exact root cause of the problem is unclear and
+>> this situation won't change as Intel support for this CPU has ended
+>> years ago. Our experience is that the number of posted PCIe writes needs
+>> to be limited at least for real-time systems. With posted PCIe writes a
+>> much higher throughput can be generated than with PCIe reads which
+>> cannot be posted. Thus, the load on the interconnect is much higher.
+>> Additionally, a PCIe read waits until all posted PCIe writes are done.
+>> Therefore, the PCIe read can block the CPU for much more than 10us if a
+>> lot of PCIe writes were posted before. Both issues are the reason why we
+>> are limiting the number of posted PCIe writes in row in general for our
+>> real-time systems, not only for this driver.
+>>
+>> A flush after a low enough number of posted PCIe writes eliminates the
+>> delay but also increases the time needed for MTA table update. The
+>> following measurements were done on i3-2310E with e1000e for 128 MTA
+>> table entries:
+>>
+>> Single flush after all writes: 106us
+>> Flush after every write:       429us
+>> Flush after every 2nd write:   266us
+>> Flush after every 4th write:   180us
+>> Flush after every 8th write:   141us
+>> Flush after every 16th write:  121us
+>>
+>> A flush after every 8th write delays the link up by 35us and the
+>> negative impact to DMA transfers of other targets is still tolerable.
+>>
+>> Execute a flush after every 8th write. This prevents overloading the
+>> interconnect with posted writes.
+>>
+>> Signed-off-by: Gerhard Engleder <eg@keba.com>
+>> Link: https://lore.kernel.org/netdev/f8fe665a-5e6c-4f95-b47a-2f3281aa0e6c@lunn.ch/T/
+>> CC: Vitaly Lifshits <vitaly.lifshits@intel.com>
+>> Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+>> Tested-by: Avigail Dahan <avigailx.dahan@intel.com>
+>> ---
+>> v4:
+>> - add PREEMPT_RT dependency again (Vitaly Lifshits)
+>> - fix comment styple (Alexander Lobakin)
+>> - add to comment each 8th and explain why (Alexander Lobakin)
+>> - simplify check for every 8th write (Alexander Lobakin)
+>>
+>> v3:
+>> - mention problematic platform explicitly (Bjorn Helgaas)
+>> - improve comment (Paul Menzel)
+>>
+>> v2:
+>> - remove PREEMPT_RT dependency (Andrew Lunn, Przemek Kitszel)
 > 
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> Reviewed-by: Simon Horman <horms@kernel.org>
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+Is there anything left from my side to get this change over iwl-next
+into net-next?
+
+Gerhard
 
