@@ -1,139 +1,134 @@
-Return-Path: <linux-pci+bounces-20709-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20710-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDE34A2799F
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 19:19:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF337A279E8
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 19:33:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D4913A4C12
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 18:19:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77A24162010
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 18:33:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21556217679;
-	Tue,  4 Feb 2025 18:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="QLuSB3Cp"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE7F8217711;
+	Tue,  4 Feb 2025 18:33:30 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A213520DD4B
-	for <linux-pci@vger.kernel.org>; Tue,  4 Feb 2025 18:19:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A68A20DD4B;
+	Tue,  4 Feb 2025 18:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738693163; cv=none; b=lYDjWnQRlZ4lP8gyW+Wb528q4dBHV6CIamQkJk+wyuE/GOh86U9+e6/bYK+eWxNdNfn4lSUCl7iTKNOmb0GhsJ5nJOVUkaOrFdzYMZnqDvIJ80EzY11JtGAk8uerkyFsSuVZYP/fCsHjEZhW4lpHQyDNpEL6fV6PYviNtv5MW18=
+	t=1738694010; cv=none; b=oMrB8wk+dCx7IMLjxusREzK1ZLfnuv6ASrdj0j5V0GPp9Moswqtyn9U4WKry1FLhSGqYggPxEJX1Sa3xBQpNYzjpoc8H4uM4+dLkqoS+P7SDb23XRdqOQfvoBSRkgmCc1Vvx83Ra5chyuFNfCqQAbhKUOoVvYymC1QfAireOtPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738693163; c=relaxed/simple;
-	bh=TCqqBaH/6DxhhY4LxUIZxLWTUzfo7FZ0g9lCT/VEHVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cHGvy2eJyhku6T9Cq0vRAzt8tt+CRs7bFdR3BihOxmheEFBQ6ukJRjdteRS2bdfNsTzPK+Hy6C+VQ2ar8cVaDrV1CI/ZUKJQQ+5uUT6i4qx5FMtO1bPaNtgS45tyO0dQppJbsW94i+C9JQlCIAK/wAcHoTqCKSzcgga5Sd6xjw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=QLuSB3Cp; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 40BC2240028
-	for <linux-pci@vger.kernel.org>; Tue,  4 Feb 2025 19:19:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1738693152; bh=TCqqBaH/6DxhhY4LxUIZxLWTUzfo7FZ0g9lCT/VEHVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=QLuSB3Cp5wmxvy0AcnxYAbea4vAVqLHQ2qWlm36gLR16yyS9Z6v9YRiCvyp4j4gn5
-	 LgZDTviocjTkkrBZfKjqIX7HKrKmbEgZd5usiMBwfyowuAzH7n9ya5rw+1WcRG1Oim
-	 61l/YRbLQ/MuqjUeCkWoQ1kkGDN+vaSKCCpYDwnidKomCYAjqhFy+gkv+aXN4VknA6
-	 SHTFc7qSWaWjKRuglfENNnh6zyhAw0zuaTMO+sMLjEjkDm5sMj/UWLXt8eIducymRH
-	 jcDEMinpzWrqCDL2LTwSNhNU1eiDWLfNxb9bwY4wxFJwO7H3iV26supD7Xr4Uco5Zq
-	 7tomMw0Ep2Izg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4YnWpc4lyZz6tw4;
-	Tue,  4 Feb 2025 19:19:03 +0100 (CET)
-Date: Tue,  4 Feb 2025 18:19:03 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Rob Herring <robh@kernel.org>
-Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
-	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Scott Wood <oss@buserror.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 5/9] dt-bindings: dma: Convert fsl,elo*-dma bindings to
- YAML
-Message-ID: <Z6JaFxfwC0tAB4uQ@probook>
-References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
- <20250126-ppcyaml-v1-5-50649f51c3dd@posteo.net>
- <20250127044735.GD3106458-robh@kernel.org>
- <Z5zYGdZU-IXwIuR6@probook>
- <CAL_JsqJAX1QbXvG16NV2g6DGece6KiG_V-uyKQQLA618Oq9miw@mail.gmail.com>
+	s=arc-20240116; t=1738694010; c=relaxed/simple;
+	bh=9tCl/OAJveyPGvp2Qy6lKZ2tmZJINBFUAGiCJIMj5IU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RmpFC7OFADaI10/iFleScJho2Igo4g6KmMFPnzbVyBv3RlCRif11o0PUOH45LLwzJ0GQsvXt+nNEc6fxYUaQQQ9HWjE5nTIBP1UOEsLBEq6turCiCALszjqLvsG9DEQ/pVI16j0AZhB6iPDOaqrT4ZNK7bSva+B6sXBqZ86nOnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B80611FB;
+	Tue,  4 Feb 2025 10:33:51 -0800 (PST)
+Received: from [10.57.35.4] (unknown [10.57.35.4])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF4D73F58B;
+	Tue,  4 Feb 2025 10:33:22 -0800 (PST)
+Message-ID: <a373416b-bf00-4cf7-9b46-bd95599d114c@arm.com>
+Date: Tue, 4 Feb 2025 18:33:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqJAX1QbXvG16NV2g6DGece6KiG_V-uyKQQLA618Oq9miw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V7 2/5] PCI/TPH: Add Steering Tag support
+To: Wei Huang <wei.huang2@amd.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ netdev@vger.kernel.org
+Cc: Jonathan.Cameron@Huawei.com, helgaas@kernel.org, corbet@lwn.net,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, alex.williamson@redhat.com, gospo@broadcom.com,
+ michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
+ somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
+ manoj.panicker2@amd.com, Eric.VanTassell@amd.com, vadim.fedorenko@linux.dev,
+ horms@kernel.org, bagasdotme@gmail.com, bhelgaas@google.com,
+ lukas@wunner.de, paul.e.luse@intel.com, jing2.liu@intel.com
+References: <20241002165954.128085-1-wei.huang2@amd.com>
+ <20241002165954.128085-3-wei.huang2@amd.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20241002165954.128085-3-wei.huang2@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 31, 2025 at 04:16:07PM -0600, Rob Herring wrote:
-> On Fri, Jan 31, 2025 at 8:03 AM J. Neuschäfer <j.ne@posteo.net> wrote:
-> >
-> > On Sun, Jan 26, 2025 at 10:47:35PM -0600, Rob Herring wrote:
-> > > On Sun, Jan 26, 2025 at 07:59:00PM +0100, J. Neuschäfer wrote:
-> > > > The devicetree bindings for Freescale DMA engines have so far existed as
-> > > > a text file. This patch converts them to YAML, and specifies all the
-> > > > compatible strings currently in use in arch/powerpc/boot/dts.
-> > > >
-> > > > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> > > > ---
-> > > >  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 129 +++++++++++++
-> > > >  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 105 +++++++++++
-> > > >  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 120 ++++++++++++
-> > > >  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
-> > > >  4 files changed, 354 insertions(+), 204 deletions(-)
-> > [...]
-> > > > +patternProperties:
-> > > > +  "^dma-channel@.*$":
-> > > > +    type: object
-> > >
-> > >        additionalProperties: false
-> >
-> > I'll add it.
-> >
-> > > (The tools should have highlighted this)
-> >
-> > With dtschema 2024.11 installed, "make dt_binding_check
-> > DT_SCHEMA_FILES=fsl,elo-dma.yaml" does not highlight this.
-> 
-> Actually, it's the top-level 'addtionalProperties: true' that disables
-> the check here. That should be false as well.
+On 2024-10-02 5:59 pm, Wei Huang wrote:
+[...]
+> +/**
+> + * pcie_tph_set_st_entry() - Set Steering Tag in the ST table entry
+> + * @pdev: PCI device
+> + * @index: ST table entry index
+> + * @tag: Steering Tag to be written
+> + *
+> + * This function will figure out the proper location of ST table, either in the
+> + * MSI-X table or in the TPH Extended Capability space, and write the Steering
+> + * Tag into the ST entry pointed by index.
+> + *
+> + * Returns: 0 if success, otherwise negative value (-errno)
+> + */
+> +int pcie_tph_set_st_entry(struct pci_dev *pdev, unsigned int index, u16 tag)
+> +{
+> +	u32 loc;
+> +	int err = 0;
+> +
+> +	if (!pdev->tph_cap)
+> +		return -EINVAL;
+> +
+> +	if (!pdev->tph_enabled)
+> +		return -EINVAL;
+> +
+> +	/* No need to write tag if device is in "No ST Mode" */
+> +	if (pdev->tph_mode == PCI_TPH_ST_NS_MODE)
+> +		return 0;
+> +
+> +	/* Disable TPH before updating ST to avoid potential instability as
+> +	 * cautioned in PCIe r6.2, sec 6.17.3, "ST Modes of Operation"
+> +	 */
+> +	set_ctrl_reg_req_en(pdev, PCI_TPH_REQ_DISABLE);
+> +
+> +	loc = get_st_table_loc(pdev);
+> +	/* Convert loc to match with PCI_TPH_LOC_* defined in pci_regs.h */
+> +	loc = FIELD_PREP(PCI_TPH_CAP_LOC_MASK, loc);
+> +
+> +	switch (loc) {
+> +	case PCI_TPH_LOC_MSIX:
+> +		err = write_tag_to_msix(pdev, index, tag);
+> +		break;
+> +	case PCI_TPH_LOC_CAP:
+> +		err = write_tag_to_st_table(pdev, index, tag);
+> +		break;
+> +	default:
+> +		err = -EINVAL;
+> +	}
+> +
+> +	if (err) {
+> +		pcie_disable_tph(pdev);
+> +		return err;
+> +	}
+> +
+> +	set_ctrl_reg_req_en(pdev, pdev->tph_mode);
 
-Noted. This did indeed help me find more errors.
+Just looking at this code in mainline, and I don't trust my 
+understanding quite enough to send a patch myself, but doesn't this want 
+to be pdev->tph_req_type, rather than tph_mode?
 
+Thanks,
+Robin.
 
-Best regards,
-J. Neuschäfer
+> +
+> +	pci_dbg(pdev, "set steering tag: %s table, index=%d, tag=%#04x\n",
+> +		(loc == PCI_TPH_LOC_MSIX) ? "MSI-X" : "ST", index, tag);
+> +
+> +	return 0;
+> +}
 
