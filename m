@@ -1,82 +1,82 @@
-Return-Path: <linux-pci+bounces-20698-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20699-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E21C3A2724C
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 13:56:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAE97A27252
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 13:58:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 617A73A1409
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 12:56:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 41FE51880475
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 12:58:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FDB5212B3E;
-	Tue,  4 Feb 2025 12:46:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B22132139B6;
+	Tue,  4 Feb 2025 12:46:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jG7MDLos"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gdTBd9yF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2056.outbound.protection.outlook.com [40.107.243.56])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2088.outbound.protection.outlook.com [40.107.94.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C101C212B33;
-	Tue,  4 Feb 2025 12:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6482135DA;
+	Tue,  4 Feb 2025 12:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.88
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738673205; cv=fail; b=Cp31zsu06kkqeHJWmT+1jdcMp4mqnbcPOfuRzXYDuD7lh7U8A6hbmN/paOdtvlrWUqxtbrRyJM2qz9xxhidUt2rPHWwrZiiMl5eojMiSbNIdB233JQ48VjRfyXq4hO3g4k/GqWVEaeRwgn1ZHBO66hkjWA5VQQJeYKwWKchuXno=
+	t=1738673211; cv=fail; b=ReV+nfskp5cny0VSYsZoVPlmz+XPJaWP7UNwoeucrGDSl3276kFv5wMRlM9cYRthZ3GfxuGLyNbSWBAR8fyATdDFgwle+FnsDrKhGilWPdbzttSRKaiogS6zG+PHffi8YoEUK1eCpXANuBiMF0ZPJ/Abb4a9aWyGL2y73Y5G9l4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738673205; c=relaxed/simple;
-	bh=5Fd4TF3sj92GYjpg8MYn18J8WHvD957aeMdwJ+7spBo=;
+	s=arc-20240116; t=1738673211; c=relaxed/simple;
+	bh=P++m/d0VsVM7YoQP933dmJ5YCSpDg+4lbR1AW4nF4Bs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NL/BvYochGmuiA7v7uh0Hq0yuMs8Nw+puOa2nx2YjWePkHcyPLW+1wi0nt9q0PEGWbhSosUdMILVuqOqlK31ZLuEN2zEYqPCtcxInssRDi9wmAAsbZpRSprh+nGYynFDhiBjgiiXx1tp5ak+vyN27qTrH39vll9grjRKhs97ZFw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jG7MDLos; arc=fail smtp.client-ip=40.107.243.56
+	 MIME-Version:Content-Type; b=DHQE09s/eBKzR0kWD9psNLPQzZVASDUk5dyRazyG6NmcjppSYmV2R4CqlEO+cPGb4reuTh9ftX5ViASxahDhxfV9EqWW1CZSiy/VvuSbq3QwTUnj+eZnn9dXrdbQ4cgeZQAqBSNPAsa+ia6ZUJuy7bvNePxxpM09NUnQNWaNnco=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gdTBd9yF; arc=fail smtp.client-ip=40.107.94.88
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rOnAzcjMXsyEqLxRWMSaE46Ob9tneOQ63hJCz+enDLlsz2WXk7aJ1lH0TLIe3Kga1alnzIL88nsstOinD36Mgvl8lq+vA0KtCEmcq1cm8NPmdqmhv3jqC/SjL1reTkVq6T7Y2IQe7f6YnmR2dukP2GYtYBP/vGfGe1vW+GH/ZqlWCAs2Y9J6VYc1++xD2TMxPyzazQfLhEw+aukgaLk6C5CZ42MjMKyYeEMjm+bQoCZj30Q26quYikjwRf0fyQ70iMZMbhpj1sDkmVPnyuq0rVtKOdpdKYGeiIo9Hd8gZBpYrcjAHEWutFvEZmi7T6lIx7IAPJGlBWgsd0tTjn/a8g==
+ b=E4jfn7TjQZhOnZo8vfIoesNC6WrHzN4F12NzIuXiQZIpMy/Z2i2CkBXGD04kHVF3qoyUcRP8oUgUG/CLfSQ27s8Us2AkYSakgmw1kXGi7bLbQk20j0ZohuSn+hEPe9tYg1dqfotXWS8cU2vNL48FMXl8tXqCkcZ75czzb/YnvKW1wS4EqETmD+MHIvrlDFEdWIsgipF+aBBRhyIYJiKFpaQH7IddfviH2nPHRq3RLsWivQ9Ysqb0+t6QFEXmT4CxnA9Lmdy0m2LcMa2u8i/EqNKMVpw/goDVgSuYIeFU2BjJZ5RT7sO4aN4n7tHaN218hRz8jOvUiPQygvI8xPKabA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pmuiMExSuLi857K93Wzl2hGnv/r3L2sbz3CADuHqcww=;
- b=Am9D7VACI2Q9pu22IlHn1R5CbETmCQwqcpJPpp3Kmf0kIKuIGYwFpPY4Jp3iUw4q0lkZanGNA5EtRdfAtxuH4ejFaF/R1Zv1P9BhZfelb/aEJ791zfYqH5PQBxEELlBM5peIYA2AI1+EhO/rj3EQ45TJ85iAUKjy9A1CHEz3N+qfPTmnL3ZysmIr3sp40lYpHhKyAbUr9f6InG2FxpnPFhPUvlkDHZt/9QMs2g40rSR2EW5H/eTrCVPSAasT2XzJoqsPmdzS4UXueZw60juwNcmlzWu6sq2VUuFgo+QSnFHlGgwFQ0A4AK9jcy3pilFvZwql+l5YyGGCVQwQSVlXag==
+ bh=BST0epFSfHjcKvOXbqWE5L+9NdM4BbrcpBt11Pjuw5Q=;
+ b=LXiguXXfKtkj67XX6L2cNGB4oIM7BMxt9t2v4wSRavWqM1e74C6bxTClHsftTBAaQlo82qtQOracPvIjy7uSMF9BOF52+wYUQ39GJYlL+6Bqlc03fXu6mIkzw8Ulq6+UQjJQGj8pEYqbd6NK+4VgP0FyrZYbE9KgZQfbiUZkSwG8pyvqFevmM70n5xCNjoZXHguixp7k58Bzcvy5ZStNQmrqG0vPYy9qvN3b1B7WBxH1ovpGrNhDR4Neyb6iTzMbAKqrgq2wohJbwbl+znK9PEIDFOcSzGco0vELwgPH6dZx6h3Eb2wyxmCgmktRTOTp2uHMQ74xAxZicyZRYQ1c/A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pmuiMExSuLi857K93Wzl2hGnv/r3L2sbz3CADuHqcww=;
- b=jG7MDLosEgCswPtG81xa/bS9oK+APqGVga3mhlkn+Mtw9CruJj/7/StKpuOBpBm+qM8crJnCPlgOojAXXQn4j9RxQKGHONYi2p/5l5eHJUjcMb5P8NEmSUiM8ySQHK2yFhjKYWLI0wr3/T79md0Mx3oUES0Fiz3TubusgvH1PFo=
-Received: from DM6PR06CA0102.namprd06.prod.outlook.com (2603:10b6:5:336::35)
- by DM6PR12MB4281.namprd12.prod.outlook.com (2603:10b6:5:21e::10) with
+ bh=BST0epFSfHjcKvOXbqWE5L+9NdM4BbrcpBt11Pjuw5Q=;
+ b=gdTBd9yFHBZS0j0JRmanMMAjYhxiKxd5roxvMlC4SHIExav5JvwsIV62LZezIwkfykl+totkCLUXWyQBgGNJl1QMxBgvPQBHoeEav20nbFthfbqqRcbNi7wnhQH9GK0Ktj2YaybRoicODFyRHM7ui+qsYTonz/QfF2oGMf4qQvk=
+Received: from BLAPR03CA0012.namprd03.prod.outlook.com (2603:10b6:208:32b::17)
+ by CY8PR12MB8410.namprd12.prod.outlook.com (2603:10b6:930:6d::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.25; Tue, 4 Feb
- 2025 12:46:39 +0000
-Received: from DS2PEPF00003439.namprd02.prod.outlook.com
- (2603:10b6:5:336:cafe::7f) by DM6PR06CA0102.outlook.office365.com
- (2603:10b6:5:336::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.25 via Frontend Transport; Tue,
- 4 Feb 2025 12:46:39 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.26; Tue, 4 Feb
+ 2025 12:46:43 +0000
+Received: from BL02EPF0001A0FD.namprd03.prod.outlook.com
+ (2603:10b6:208:32b:cafe::a3) by BLAPR03CA0012.outlook.office365.com
+ (2603:10b6:208:32b::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8398.26 via Frontend Transport; Tue,
+ 4 Feb 2025 12:46:43 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS2PEPF00003439.mail.protection.outlook.com (10.167.18.36) with Microsoft
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BL02EPF0001A0FD.mail.protection.outlook.com (10.167.242.104) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Tue, 4 Feb 2025 12:46:39 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.8398.14 via Frontend Transport; Tue, 4 Feb 2025 12:46:42 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 4 Feb
- 2025 06:46:38 -0600
+ 2025 06:46:42 -0600
 Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
  (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 4 Feb
- 2025 06:46:38 -0600
+ 2025 06:46:42 -0600
 Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Tue, 4 Feb 2025 06:46:34 -0600
+ Transport; Tue, 4 Feb 2025 06:46:38 -0600
 From: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
 To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
 	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
@@ -85,9 +85,9 @@ CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <jingoohan1@gmail.com>,
 	<michal.simek@amd.com>, <bharat.kumar.gogada@amd.com>, Thippeswamy Havalige
 	<thippeswamy.havalige@amd.com>
-Subject: [PATCH v9 1/3] dt-bindings: PCI: dwc: Add AMD Versal2 mdb slcr support
-Date: Tue, 4 Feb 2025 18:16:25 +0530
-Message-ID: <20250204124628.106754-2-thippeswamy.havalige@amd.com>
+Subject: [PATCH v9 2/3] dt-bindings: PCI: amd-mdb: Add AMD Versal2 MDB PCIe Root Port Bridge
+Date: Tue, 4 Feb 2025 18:16:26 +0530
+Message-ID: <20250204124628.106754-3-thippeswamy.havalige@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250204124628.106754-1-thippeswamy.havalige@amd.com>
 References: <20250204124628.106754-1-thippeswamy.havalige@amd.com>
@@ -103,86 +103,223 @@ Received-SPF: None (SATLEXMB05.amd.com: thippeswamy.havalige@amd.com does not
  designate permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF00003439:EE_|DM6PR12MB4281:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2f30ac79-3c70-4912-5f2a-08dd4519f7e2
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FD:EE_|CY8PR12MB8410:EE_
+X-MS-Office365-Filtering-Correlation-Id: b1817393-e935-435a-c190-08dd4519fa26
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024|7416014;
+	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024|13003099007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9ggrJDNDtZnDbXKuyob2GVL8w79yagFKg9lpPXFhQds764R+KzztvXSx0gMT?=
- =?us-ascii?Q?vDIHeInrc4867NbWFf+w+s8Xmgzo7cWGyJd60q9bx527TvOU3AEYudzwfzat?=
- =?us-ascii?Q?cbzGTgNUOGdi/GST00cv8LfATvtXzBBzhC4ldfXbw72G5TiNeQR5BMNWICjV?=
- =?us-ascii?Q?Hi870xX2E0xNp/VJj5N/f5PsJQmzkhLPrm6IHw7568vrf/Xj0HneyK/FJOnD?=
- =?us-ascii?Q?/wD2mhuyBkeGFaz1TUJ0bQHgDMvO+DpdyMpZ41gqfL1v8X4xtKFvDQ/WZ9fn?=
- =?us-ascii?Q?Ktvqbds4T+pHPO7C3MrIwRIS+hdoS4nbgThTErPJpgJkHp18OfKIeqS8KEbC?=
- =?us-ascii?Q?S/6hza/CHQoO80T9vnTfYKJlJshPrN7h06veyY+uh0vS6l4qZwSTMo08BLs/?=
- =?us-ascii?Q?j4Alnl3liB0ayHIMtWAruGECM2+CZN+SGHnf8QwzfbWSU8oFRgHzfIAU64yN?=
- =?us-ascii?Q?LSyXPF+9f9qT8RWi8V3jJwW2IOWJkFMVvFtIItRWkkInbg+Own5Zl1G8D7Mj?=
- =?us-ascii?Q?eC9D0ENlsonnIWXJMJ4Cmw80D5L37bcmI8NkF+L+WsrN1+6jMAbVdhHVBQEI?=
- =?us-ascii?Q?KlM5bEcTzQmZ42JVkLa0W0Pn+2Sk4qdRbGA0nsV4Sp+LTuWPZ5jhPPpmpgqk?=
- =?us-ascii?Q?/YGuA5sqUDz00PWgmfNVkACpfd8kn/jNGBp6hlNGPypnEWX0O1Nv8Px61hLt?=
- =?us-ascii?Q?7nOe914nvVAVdI5gLRZWdHjFDYY2sUpPS+G7RXvITyEilm3sKtehyR9VsZea?=
- =?us-ascii?Q?KlF7egsA5pEQjdRBdz6SwpNDZCtqB1GBEG0kM59QaLAEdJgw1s6B1pfizqrt?=
- =?us-ascii?Q?WlPYCmhbXHkG5tdvxb9MWpbcKPJeQTjA79ck7X6vLraDzsdVF91DdVbaiQKL?=
- =?us-ascii?Q?tUySNjwlunIg2YuN8U4eit2OmXXeEHbcWanSvLzDPXaZBMhkHd9qFQfPiKx+?=
- =?us-ascii?Q?0V19q7dGuucY07FGyt5mAJZjEhSZje5+XQr7eKp0uClEQs0Xns19XWnJOL/8?=
- =?us-ascii?Q?N9ThDgFwmgPRqv7b8KOISqBKQqEWd+rAQW+ilWwC9WjKYkeHlV+0p8W4pjgZ?=
- =?us-ascii?Q?L1rQeCZcefwL+lMFIIK/fALLQ41lb51YHVrgyxc7QFirfRPvN3z0ITSYGjSP?=
- =?us-ascii?Q?Dghi4F/ZAwyWRpYWFTdH18hBiC3wuxG5a9glxXctJ7lKdieckKh6vDBr7rsX?=
- =?us-ascii?Q?lk+qMAeVxPDvHS0i0p1TJuNXLWsxZK3gHu8/RmigF5Ri4h8HadBSWoHd+dLE?=
- =?us-ascii?Q?wnneHGALiQKiFhgUj8DmMIABuzwrm6Pyr3up3j5Iykh98JBPtWGXiAguhvrx?=
- =?us-ascii?Q?CESEaUlxRoDY6f3Eipeq9vy2HPU8zn7tZcK7a6aaYsXzR1/8cBWwUeIQppo+?=
- =?us-ascii?Q?zkQyzSCzvFejI5d2HYA8SR+LP6vCk9okM4TUQBSCfBppRkEOe9R66Y9NeLx7?=
- =?us-ascii?Q?1wP/7ED/0y0o4MODZov7MmWJdLkngnRT53nYDSqI+zX5W1jhtC1nh3xjf2Yq?=
- =?us-ascii?Q?TrQMFaUL1Q5FFFE=3D?=
+	=?us-ascii?Q?UQK8kWtmvABKR8OFXgJManFcl5rPbVFKV6J7jfydAtGl9YDPRKS39AmrMSoP?=
+ =?us-ascii?Q?9mUEXDd+N88RpcLx+ETEWVtKLIxtggOEC8OrVCAVSmNacl1aI1L1A+S9IJfD?=
+ =?us-ascii?Q?bvlFwMw+jYmLKDjg9JI7w/KTOSDj5RNBqsSRC0K4ewu4OmvjoTmy/pOkCWDY?=
+ =?us-ascii?Q?OwMIjeFSCBRqlxwwncEIoHtrfBpKi0ctYsWtdz0V6BW8GCoDFtDGsKnPAzLu?=
+ =?us-ascii?Q?A2w5hSCXnyPM4TXfAInrza78zIKI3G8f/ZgzTt3iw3eUded0OJJ2L/27RXTk?=
+ =?us-ascii?Q?NiZWsb9TY4aIArWznLXcu15j6+/SqZ/h7/Psx9Kbh+jw4FcZsquQ+U1mFutg?=
+ =?us-ascii?Q?xRTJ68ikHO/jinPN14CmiwypcEiGJrA9eYwSPL8TH1NPWBhre7O3+9DONyxa?=
+ =?us-ascii?Q?RykrswVTSP9g6ezkVw3bssQCmldgzq8tcO5DU8lB7Um577vXwMcj9vDbc3JA?=
+ =?us-ascii?Q?kRb61eL7tjxGdXJ+BDYLx95Ozh4WUbNMOtnr5Ibxnu7xKRyzIyH4X4B0EqGD?=
+ =?us-ascii?Q?JGYYmbIi6aF3acuHz+x74iUmgRLgZJ8/t2a6tnpQZytaPsKZdPaFPDOiYLjD?=
+ =?us-ascii?Q?dc5m7DXIRVYrMvwb3kKZNAKcTTSsm/zda0hWEvPb2v4NBOhugjKeAR1kkCKX?=
+ =?us-ascii?Q?vtuMW5iS2QVg1r2CaJ6Smr4NRnfOJ8tOh/gX0cj3W1/uxuAYLWKt8czORlkv?=
+ =?us-ascii?Q?pskMCuf9fWGmcFf0A/2gQnTo8Ru2seTwNY0mETFbFd0GneDouzxOedQcWD+2?=
+ =?us-ascii?Q?T4wqdOf5VG1ZxG4yp4tB2kLSBrii8Bp6KCU5luXAFLkfo2M1/ijy0ohx5Xwp?=
+ =?us-ascii?Q?2TN4veIcoIyr6EY5auEoC+LPjOvJUOws8rhg+ocQ9QHwId0i3wvAZFrlNeeJ?=
+ =?us-ascii?Q?S+lD7WlPY8MiLXBLUsRE3wytxqHYTPpcpdbBBwwphlXEZp+7mEjxS3Rzgy81?=
+ =?us-ascii?Q?78/HQgRR3MxeokoEecexeZziqG4VF44d3McAFm+0dMjLzgsaZ0Sw6r8WGkFY?=
+ =?us-ascii?Q?r/eQgqS3ho5HPyQsK87HHw3h8TS4BAJu3MmJC4aMhsRaTWTpcZ16iZ11ePI4?=
+ =?us-ascii?Q?Cz9me3wOXkJ1dHTXNqs8Tr4oxF8t+CSNZtziVy7MWpQjtuYeuQn3++FUdusi?=
+ =?us-ascii?Q?+WITX0ZieSaiSaOzfUPmA8C4y29Otq1YRtkhDFzCqVtXviR0/MMpOFsEIYL8?=
+ =?us-ascii?Q?pbKyiEa/1OSepSztipgK4zbPa0xZMybCstT8J5a2AyzNWsRe94kQsJERJqZW?=
+ =?us-ascii?Q?DcVU2AcwTSGMnIveMm+adu9hsMyvPs8/kLLdjapiG7nlj3rCBjks9zyIbGbi?=
+ =?us-ascii?Q?X5RbIwe3HHitAF+FguRGql4QzFDdAPBuvIUrYk/vQo/SE2RohFlEY51z3vEc?=
+ =?us-ascii?Q?aj77OZLb6Briv8m/tMT3NHsQy4DqGitFNYlWQGwHYenB+9Y4bG7V7datxNWt?=
+ =?us-ascii?Q?jflTQQETHNsovJQfsBDSaddZ0VZSGbz4?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024)(13003099007);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 12:46:39.0691
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2025 12:46:42.9040
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f30ac79-3c70-4912-5f2a-08dd4519f7e2
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1817393-e935-435a-c190-08dd4519fa26
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF00003439.namprd02.prod.outlook.com
+	BL02EPF0001A0FD.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4281
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8410
 
-Add support for mdb slcr aperture that is only supported for AMD Versal2
-devices.
+Add AMD Versal2 MDB (Multimedia DMA Bridge) PCIe Root Port Bridge.
 
 Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
+ .../bindings/pci/amd,versal2-mdb-host.yaml    | 121 ++++++++++++++++++
+Changes in v2:
+-------------
+- Modify patch subject.
+- Add pcie host bridge reference.
+- Modify filename as per compatible string.
+- Remove standard PCI properties.
+- Modify interrupt controller description.
+- Indentation
+
 Changes in v3:
 -------------
-- Introduced below changes in dwc yaml schema.
+- Modified SLCR to lower case.
+- Add dwc schemas.
+- Remove common properties.
+- Move additionalProperties below properties.
+- Remove ranges property from required properties.
+- Drop blank line.
+- Modify pci@ to pcie@
+
+Changes in v4:
+-------------
+- None.
+
 Changes in v5:
 -------------
-- Modify mdb_pcie_slcr as constant.
+- None.
 Changes in v6:
--------------
--Modify slcr constant
+--------------
+- Reduce dbi size to 4k.
+- update register name to slcr.
+Changes in v7:
+--------------
+- Add reviewed-by
 ---
- Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ 1 file changed, 121 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
 
-diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-index 205326fb2d75..fdecfe6ad5f1 100644
---- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-@@ -113,6 +113,8 @@ properties:
-               enum: [ smu, mpu ]
-             - description: Tegra234 aperture
-               enum: [ ecam ]
-+            - description: AMD MDB PCIe slcr region
-+              const: slcr
-     allOf:
-       - contains:
-           const: dbi
+diff --git a/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml b/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
+new file mode 100644
+index 000000000000..43dc2585c237
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
+@@ -0,0 +1,121 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/amd,versal2-mdb-host.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: AMD Versal2 MDB(Multimedia DMA Bridge) Host Controller
++
++maintainers:
++  - Thippeswamy Havalige <thippeswamy.havalige@amd.com>
++
++allOf:
++  - $ref: /schemas/pci/pci-host-bridge.yaml#
++  - $ref: /schemas/pci/snps,dw-pcie.yaml#
++
++properties:
++  compatible:
++    const: amd,versal2-mdb-host
++
++  reg:
++    items:
++      - description: MDB System Level Control and Status Register (SLCR) Base
++      - description: configuration region
++      - description: data bus interface
++      - description: address translation unit register
++
++  reg-names:
++    items:
++      - const: slcr
++      - const: config
++      - const: dbi
++      - const: atu
++
++  ranges:
++    maxItems: 2
++
++  msi-map:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-map-mask:
++    items:
++      - const: 0
++      - const: 0
++      - const: 0
++      - const: 7
++
++  interrupt-map:
++    maxItems: 4
++
++  "#interrupt-cells":
++    const: 1
++
++  interrupt-controller:
++    description: identifies the node as an interrupt controller
++    type: object
++    additionalProperties: false
++    properties:
++      interrupt-controller: true
++
++      "#address-cells":
++        const: 0
++
++      "#interrupt-cells":
++        const: 1
++
++    required:
++      - interrupt-controller
++      - "#address-cells"
++      - "#interrupt-cells"
++
++required:
++  - reg
++  - reg-names
++  - interrupts
++  - interrupt-map
++  - interrupt-map-mask
++  - msi-map
++  - "#interrupt-cells"
++  - interrupt-controller
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++        pcie@ed931000 {
++            compatible = "amd,versal2-mdb-host";
++            reg = <0x0 0xed931000 0x0 0x2000>,
++                  <0x1000 0x100000 0x0 0xff00000>,
++                  <0x1000 0x0 0x0 0x1000>,
++                  <0x0 0xed860000 0x0 0x2000>;
++            reg-names = "slcr", "config", "dbi", "atu";
++            ranges = <0x2000000 0x00 0xa0000000 0x00 0xa0000000 0x00 0x10000000>,
++                     <0x43000000 0x1100 0x00 0x1100 0x00 0x00 0x1000000>;
++            interrupts = <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-parent = <&gic>;
++            interrupt-map-mask = <0 0 0 7>;
++            interrupt-map = <0 0 0 1 &pcie_intc_0 0>,
++                            <0 0 0 2 &pcie_intc_0 1>,
++                            <0 0 0 3 &pcie_intc_0 2>,
++                            <0 0 0 4 &pcie_intc_0 3>;
++            msi-map = <0x0 &gic_its 0x00 0x10000>;
++            #address-cells = <3>;
++            #size-cells = <2>;
++            #interrupt-cells = <1>;
++            device_type = "pci";
++            pcie_intc_0: interrupt-controller {
++                #address-cells = <0>;
++                #interrupt-cells = <1>;
++                interrupt-controller;
++           };
++        };
++    };
 -- 
 2.43.0
 
