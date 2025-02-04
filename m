@@ -1,40 +1,77 @@
-Return-Path: <linux-pci+bounces-20710-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20711-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF337A279E8
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 19:33:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBB4CA27A31
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 19:40:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 77A24162010
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 18:33:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 63232166290
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Feb 2025 18:40:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE7F8217711;
-	Tue,  4 Feb 2025 18:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52D11216E39;
+	Tue,  4 Feb 2025 18:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="RnTbtXVw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A68A20DD4B;
-	Tue,  4 Feb 2025 18:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B948B20DD4B
+	for <linux-pci@vger.kernel.org>; Tue,  4 Feb 2025 18:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738694010; cv=none; b=oMrB8wk+dCx7IMLjxusREzK1ZLfnuv6ASrdj0j5V0GPp9Moswqtyn9U4WKry1FLhSGqYggPxEJX1Sa3xBQpNYzjpoc8H4uM4+dLkqoS+P7SDb23XRdqOQfvoBSRkgmCc1Vvx83Ra5chyuFNfCqQAbhKUOoVvYymC1QfAireOtPg=
+	t=1738694443; cv=none; b=allocFu246eCNHwy9ikmjhuI32zkFpvnMtf0nYp14EWm+zUsELJEBWZcUcgFpRUe+jEmUoOSb9JREAudU1DxqtEFFQXw3L26AxFsweEdQw+SZlAY7MqYeH+YRSRh/+4/4cQQrb8dStioEPS8f6tPqyuKKKbHeuLtD91jUfcbfZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738694010; c=relaxed/simple;
-	bh=9tCl/OAJveyPGvp2Qy6lKZ2tmZJINBFUAGiCJIMj5IU=;
+	s=arc-20240116; t=1738694443; c=relaxed/simple;
+	bh=2KEjCwLD6q1LhwaYXfd8OhgZvM4Ygt1ban138+5LVyE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RmpFC7OFADaI10/iFleScJho2Igo4g6KmMFPnzbVyBv3RlCRif11o0PUOH45LLwzJ0GQsvXt+nNEc6fxYUaQQQ9HWjE5nTIBP1UOEsLBEq6turCiCALszjqLvsG9DEQ/pVI16j0AZhB6iPDOaqrT4ZNK7bSva+B6sXBqZ86nOnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B80611FB;
-	Tue,  4 Feb 2025 10:33:51 -0800 (PST)
-Received: from [10.57.35.4] (unknown [10.57.35.4])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF4D73F58B;
-	Tue,  4 Feb 2025 10:33:22 -0800 (PST)
-Message-ID: <a373416b-bf00-4cf7-9b46-bd95599d114c@arm.com>
-Date: Tue, 4 Feb 2025 18:33:19 +0000
+	 In-Reply-To:Content-Type; b=GuVzB/6HIDo9ZbeH3AhkKz6pkQl8alUNn3BTQWcpITjfaiAcurlRrTrbufOWcDLDnU3Zb/REgp/lAYR+ItROtbg63iy++vsgIbkeWfk5b4nd6ocG03NVNAyguuLJ0103Sh+d63tP70qSADAciIO0dcGU41ZHYNQ6EiLYGiRtOPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=RnTbtXVw; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2f9c97af32eso1220060a91.2
+        for <linux-pci@vger.kernel.org>; Tue, 04 Feb 2025 10:40:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1738694441; x=1739299241; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=rr3YMX43/Tloo6QL2s4yaCM8c/Si1AW2XmMJtfVf9E0=;
+        b=RnTbtXVwzlxuKc4FLzOShcM84R8ch2BsA0RVQ8xgRiv1e0sdPSoa4HFjauayAKjhRF
+         ZHdJcQGvJqCHcYeed82GKO7GhnLkBmTsXziEB6zLfl/CZDQoZUcK1XH2F9EspgjEOiNH
+         LYbOJJfXFkO5Fdz224+xIIf4RfRKBbj2xJCsQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738694441; x=1739299241;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rr3YMX43/Tloo6QL2s4yaCM8c/Si1AW2XmMJtfVf9E0=;
+        b=fdmx43It/QAsJ+S1e64DA8Coevwhlcs7jI8VRXhYy49ryDn61dtpAZ2nPxfXzXigmw
+         eBsBp1OGPA2YDoP0E2mbZculIQLVcM2FAPAyTYp5n6YaK7NnAk40PfNXoU9yDkreb5ia
+         eo6a/s2K4jX7I/UHndeH3puB1hjtFAoovMsUuokOsLFlofPTbB0WgvceDgD3nfNzkQc9
+         ax2GOqe2K/MvGkXzTYNRDuXejmzundQSYoeQava7AsU5w7dwVG4Zju3NhY0V3Jj4f8Pm
+         8d7rFbziMq/ROthdvj5yNx1lL9qqRZ2EjPXMk3pFsT39CwAu84fii7WKkmFAR91xYHeM
+         xGcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVx+QrOvWou37ipEisR7GTOHnbZbuSab/S/QjFD6zpX1xtWAnx4oKbo6J1bUT0gtKkFJ0LKBIOppJ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuCsHQptt3hAVazctKEGJDlIqAs5k0Smr0U4i7CF/UEmTj3dfI
+	yzgq4IpnzF0XcMrtcwAX4ASk7Xw9iC6Gf6owUzx+MZaPIF0rJ2CovEOIs6l1qA==
+X-Gm-Gg: ASbGncuYl+fhwKbiE0PZLoExpQdDLuVDD5VGLiWiVVa2MSqvBM7hkxln5NmSPwgRmNC
+	FCUkcOHdScOQdibF4nkb+B8OHjuDnzOSsBqe+sx/kg3VMChR3B3YE+fcmQNvQgUAseREgx9ufsQ
+	kxifGe5gUlJum3JM0ujc7q2LbiudiPwe6YtH0G6VXeXf538q62wiViJ2ctETVtSNJOId2WsLtR9
+	fwT+gO/E1303DgBYw1HX0/39u7GLZYEescy9DZISMztKDggwT1H4kZ7IrlPbLkKC7A+wdDX3KTx
+	stdk6ntKGVlC8q0hr3JIoRxcaYdTaqZRCCF17PFph1KvOnPPePYgZNc=
+X-Google-Smtp-Source: AGHT+IGJndWAWJ5vbNbdd6bjRwA+UbEuIyBJrgJX2s7NpyKketJ6Ni4wV9ZRPzf7pgw/PGeNk8p+jQ==
+X-Received: by 2002:a17:90a:dfc5:b0:2ee:9d65:65a7 with SMTP id 98e67ed59e1d1-2f83ac86a84mr38834985a91.29.1738694441007;
+        Tue, 04 Feb 2025 10:40:41 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2f83bc97ca8sm15322901a91.1.2025.02.04.10.40.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Feb 2025 10:40:40 -0800 (PST)
+Message-ID: <a7a5dbb5-25ba-4bf3-9f36-f188f2c6eea8@broadcom.com>
+Date: Tue, 4 Feb 2025 10:40:38 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -42,93 +79,62 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V7 2/5] PCI/TPH: Add Steering Tag support
-To: Wei Huang <wei.huang2@amd.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: Jonathan.Cameron@Huawei.com, helgaas@kernel.org, corbet@lwn.net,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, alex.williamson@redhat.com, gospo@broadcom.com,
- michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
- somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
- manoj.panicker2@amd.com, Eric.VanTassell@amd.com, vadim.fedorenko@linux.dev,
- horms@kernel.org, bagasdotme@gmail.com, bhelgaas@google.com,
- lukas@wunner.de, paul.e.luse@intel.com, jing2.liu@intel.com
-References: <20241002165954.128085-1-wei.huang2@amd.com>
- <20241002165954.128085-3-wei.huang2@amd.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20241002165954.128085-3-wei.huang2@amd.com>
+Subject: Re: [PATCH] PCI: brcmstb: Adjust message if L23 cannot be entered
+To: Stefan Wahren <wahrenst@gmx.net>, Rob Herring <robh@kernel.org>,
+ Jim Quinlan <jim2101024@gmail.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org,
+ bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org
+References: <20250201121420.32316-1-wahrenst@gmx.net>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250201121420.32316-1-wahrenst@gmx.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2024-10-02 5:59 pm, Wei Huang wrote:
-[...]
-> +/**
-> + * pcie_tph_set_st_entry() - Set Steering Tag in the ST table entry
-> + * @pdev: PCI device
-> + * @index: ST table entry index
-> + * @tag: Steering Tag to be written
-> + *
-> + * This function will figure out the proper location of ST table, either in the
-> + * MSI-X table or in the TPH Extended Capability space, and write the Steering
-> + * Tag into the ST entry pointed by index.
-> + *
-> + * Returns: 0 if success, otherwise negative value (-errno)
-> + */
-> +int pcie_tph_set_st_entry(struct pci_dev *pdev, unsigned int index, u16 tag)
-> +{
-> +	u32 loc;
-> +	int err = 0;
-> +
-> +	if (!pdev->tph_cap)
-> +		return -EINVAL;
-> +
-> +	if (!pdev->tph_enabled)
-> +		return -EINVAL;
-> +
-> +	/* No need to write tag if device is in "No ST Mode" */
-> +	if (pdev->tph_mode == PCI_TPH_ST_NS_MODE)
-> +		return 0;
-> +
-> +	/* Disable TPH before updating ST to avoid potential instability as
-> +	 * cautioned in PCIe r6.2, sec 6.17.3, "ST Modes of Operation"
-> +	 */
-> +	set_ctrl_reg_req_en(pdev, PCI_TPH_REQ_DISABLE);
-> +
-> +	loc = get_st_table_loc(pdev);
-> +	/* Convert loc to match with PCI_TPH_LOC_* defined in pci_regs.h */
-> +	loc = FIELD_PREP(PCI_TPH_CAP_LOC_MASK, loc);
-> +
-> +	switch (loc) {
-> +	case PCI_TPH_LOC_MSIX:
-> +		err = write_tag_to_msix(pdev, index, tag);
-> +		break;
-> +	case PCI_TPH_LOC_CAP:
-> +		err = write_tag_to_st_table(pdev, index, tag);
-> +		break;
-> +	default:
-> +		err = -EINVAL;
-> +	}
-> +
-> +	if (err) {
-> +		pcie_disable_tph(pdev);
-> +		return err;
-> +	}
-> +
-> +	set_ctrl_reg_req_en(pdev, pdev->tph_mode);
+On 2/1/25 04:14, Stefan Wahren wrote:
+> The entering of L23 lower-power state is optional, because the
+> connected endpoint might doesn't support it. So pcie-brcmstb shouldn't
+> print an error if it fails.
+> 
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 
-Just looking at this code in mainline, and I don't trust my 
-understanding quite enough to send a patch myself, but doesn't this want 
-to be pdev->tph_req_type, rather than tph_mode?
-
-Thanks,
-Robin.
-
-> +
-> +	pci_dbg(pdev, "set steering tag: %s table, index=%d, tag=%#04x\n",
-> +		(loc == PCI_TPH_LOC_MSIX) ? "MSI-X" : "ST", index, tag);
-> +
-> +	return 0;
-> +}
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
