@@ -1,107 +1,122 @@
-Return-Path: <linux-pci+bounces-20735-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20736-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65EBDA28B10
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2025 13:58:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 399FBA28BB4
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2025 14:31:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F07BE188149D
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2025 12:58:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 508B63A284A
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2025 13:31:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A2055FB95;
-	Wed,  5 Feb 2025 12:57:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2901617BA1;
+	Wed,  5 Feb 2025 13:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dArVt+xM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F510F507;
-	Wed,  5 Feb 2025 12:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D49E195;
+	Wed,  5 Feb 2025 13:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738760250; cv=none; b=tIhXt9ur00hY/luXx1Gyx8Iddj4bzxgJe+Cq2FuVCBJFk+cU8OeeqZLpwpQoOV/Fu8ixKJiRwts/jrUqz8ueQTun16xTW7lbgngxmfEt0KWOw+kXUdGFoPVZgaDNpQ6tnTNzFNgOkPTq/D2YkeZiBEFLf8UTFH4XOTp7/JImKss=
+	t=1738762297; cv=none; b=r1cju+mzBRok72o8Ugh53/gHVZkceF/lEMShWvWMJ0uJJ6dc2RziT0mFZL+utBJu9JYM6ulmFzttfE9J9QbU1toAayQqaN4cUXIbJVkaiyOXlQ3SgcFPmdNcCDNRneI9DHKAAccSUICZWeNvLjA5BxyBUK6HRaNXqhn7uoB7M/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738760250; c=relaxed/simple;
-	bh=gx24NkCwpwV9AcPPbFrtwlbx9niJwvD4f0qfvasEhoU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lWGFsPj09tkbIbsvMNIZ0ZF+3bbpMKJOeamTng0xMBq5vi2OU/2n1FbHhLmBsElrwqgINwc+V0f0RmUKUs/St1v0qq6X9h/s1T3Pl5ZwX9UyhDX0BZi6mfZvWEGABgsCMcJRbI4+r+enCMCthmsIa4Hhg5nVV1Uf9tesIRjy05o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D01471007;
-	Wed,  5 Feb 2025 04:57:50 -0800 (PST)
-Received: from [10.57.35.21] (unknown [10.57.35.21])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01ABF3F63F;
-	Wed,  5 Feb 2025 04:57:22 -0800 (PST)
-Message-ID: <4294edaf-8621-41b2-9009-7f5f3bb6c7f8@arm.com>
-Date: Wed, 5 Feb 2025 12:57:21 +0000
+	s=arc-20240116; t=1738762297; c=relaxed/simple;
+	bh=Jtny5v5xwyP3zMuUPiJUoDCkBGR6m8XkjW2Bk5fbJBQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BIQyQVT2igaHPuSF1KowCQjPnMEoakuOoZRwRFhQDheOQlI770vUzemc/icqv4SihV2jZJDwus5ZX0guMO1Fx5ExZCLLEGMm3Gntg8G4bhB1PQU0ZzFZeeuNpV52gZU0vA/k9MzBfMuNMMqu9ojN+XrLOLaa3QUeYadpuEN+ygQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dArVt+xM; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1738762283; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=OC0ysBz7zniKgFykvNd2f4lB0AnD//qysLg9NE0XTac=;
+	b=dArVt+xM390W19tCYLi24L/3a7DHdYMwEgT1Fp8fjePKehtGEZ0v6fc63ZeKMTV/2Okdd+tl+pPlhAte2t//a9xIiSQp3qgjrpoZWQYv8F8iynEwrYqN9vYPp7KNP1H1WmoLNTXxKWf1S2d6+trYXEyQTLfO9Cm4sNqIkkoD+YY=
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WOsbfIs_1738762282 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 05 Feb 2025 21:31:23 +0800
+Date: Wed, 5 Feb 2025 21:31:22 +0800
+From: Feng Tang <feng.tang@linux.alibaba.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Cameron <Jonthan.Cameron@huawei.com>,
+	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] PCI: Disable PCIE hotplug interrupts early when msi
+ is disabled
+Message-ID: <Z6NoKq6RQWNZC3s2@U-2FWC9VHC-2323.local>
+References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
+ <20250204053758.6025-2-feng.tang@linux.alibaba.com>
+ <Z6HaYkIKLXji_EO7@wunner.de>
+ <Z6MF3DuNc4OWHNm-@U-2FWC9VHC-2323.local>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V7 2/5] PCI/TPH: Add Steering Tag support
-To: Wei Huang <wei.huang2@amd.com>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: Jonathan.Cameron@Huawei.com, helgaas@kernel.org, corbet@lwn.net,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, alex.williamson@redhat.com, gospo@broadcom.com,
- michael.chan@broadcom.com, ajit.khaparde@broadcom.com,
- somnath.kotur@broadcom.com, andrew.gospodarek@broadcom.com,
- manoj.panicker2@amd.com, Eric.VanTassell@amd.com, vadim.fedorenko@linux.dev,
- horms@kernel.org, bagasdotme@gmail.com, bhelgaas@google.com,
- lukas@wunner.de, paul.e.luse@intel.com, jing2.liu@intel.com
-References: <20241002165954.128085-1-wei.huang2@amd.com>
- <20241002165954.128085-3-wei.huang2@amd.com>
- <a373416b-bf00-4cf7-9b46-bd95599d114c@arm.com>
- <f6b34f2e-31c9-4997-abfe-38d7e774b4fa@amd.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <f6b34f2e-31c9-4997-abfe-38d7e774b4fa@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z6MF3DuNc4OWHNm-@U-2FWC9VHC-2323.local>
 
-On 2025-02-04 8:18 pm, Wei Huang wrote:
+On Wed, Feb 05, 2025 at 02:31:56PM +0800, Feng Tang wrote:
+> On Tue, Feb 04, 2025 at 10:14:10AM +0100, Lukas Wunner wrote:
+> > On Tue, Feb 04, 2025 at 01:37:58PM +0800, Feng Tang wrote:
+> > > There was a irq storm bug when testing "pci=nomsi" case, and the root
+> > > cause is: 'nomsi' will disable MSI and let devices and root ports use
+> > > legacy INTX inerrupt, and likely make several devices/ports share one
+> > > interrupt. In the failure case, BIOS doesn't disable the PCIE hotplug
+> > > interrupts, and  actually asserts the command-complete interrupt.
+> > > As MSI is disabled, ACPI initialization code will not enumerate root
+> > > port's PCIE hotplug capability, and pciehp service driver wont' be
+> > > enabled for the root port to handle that interrupt, later on when it is
+> > > shared and enabled by other device driver like NVME or NIC, the "nobody
+> > > care irq storm" happens.
+> > > 
+> > > So disable the pcie hotplug CCIE/HPIE interrupt in early boot phase when
+> > > MSI is not enbaled.
+> > 
+> > So I think this issue should go away if disabling the interrupt
+> > by portdrv is no longer conditional on
+> > 
+> >   (pcie_ports_native || host->native_pcie_hotplug)
+> > 
+> > like I've just proposed here:
+> > 
+> >   https://lore.kernel.org/r/Z6HYuBDP6uvE1Sf4@wunner.de/
+> > 
+> > ... in which case this patch won't be necessary.  Can you confirm that?
 > 
+> Thanks for the suggestion! I will try to get the platform for test,
+> and report back.
+ 
+I haven't got the platform, but I recalled something, that disabling HP
+interrupts inside get_port_device_capability()/portdrv_probe() got called
+after the nvme_probe(), so it may still cause the irq storm due to:
+
+* pcie root port's hotplug interrupt asserted
+* the interrupt is shared with NVME and other device
+* those device drivers enable the interrupt line early before portdrv's
+  probe()
+
+That's why we tried to put the disabling early in PCI initialization code.
+
+Thanks,
+Feng
+
+> As for the change, 
+> 	 +		if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+> 	 +			pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> 	 +				  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
 > 
-> On 2/4/25 12:33 PM, Robin Murphy wrote:
->> On 2024-10-02 5:59 pm, Wei Huang wrote:
->> [...]
->>> +
->>> +    if (err) {
->>> +        pcie_disable_tph(pdev);
->>> +        return err;
->>> +    }
->>> +
->>> +    set_ctrl_reg_req_en(pdev, pdev->tph_mode);
->>
->> Just looking at this code in mainline, and I don't trust my
->> understanding quite enough to send a patch myself, but doesn't this want
->> to be pdev->tph_req_type, rather than tph_mode?
+> The CONFIG_HOTPLUG_PCI_PCIE is always enabled on our platform and many
+> distros, I guess the check needs to be removed, which sees the 1 second
+> waiting again, and need the waiting logic in 1/2 patch?
 > 
-> Yeah, you are right - this is supposed to be pdev->tph_req_type instead 
-> of tph_mode. We disable TPH first by clearing (zero) the "TPH Requester 
-> Enable" field and needs to set it back using tph_req_type.
-> 
-> Do you want to send in a fix? I can ACK it. Thanks for spotting it.
-
-Done[1] - cheers for confirming!
-
-Robin.
-
-
-[1] 
-https://lore.kernel.org/linux-pci/13118098116d7bce07aa20b8c52e28c7d1847246.1738759933.git.robin.murphy@arm.com/
-
-> 
-> -Wei
-> 
->>
->> Thanks,
->> Robin.
->>
-
+> Thanks,
+> Feng
 
