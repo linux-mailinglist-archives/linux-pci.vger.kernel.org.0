@@ -1,126 +1,289 @@
-Return-Path: <linux-pci+bounces-20766-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20767-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3312DA29417
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2025 16:20:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9668BA29442
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2025 16:22:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DC553AFF3D
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2025 15:11:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D2A2C16B1A7
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2025 15:19:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCC3618BC26;
-	Wed,  5 Feb 2025 15:10:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA2D718C332;
+	Wed,  5 Feb 2025 15:17:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="FuNkhrAH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K9RZ0k0n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032C4186284;
-	Wed,  5 Feb 2025 15:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822073C6BA;
+	Wed,  5 Feb 2025 15:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738768238; cv=none; b=oV6lu1fm2naFvtqk4g9W9ImlTnS16nHcZQfiR4YBcubO9DNth/mJMIdpmllyJfA3taX1Qge5GT+blMnlfuGzV5BbAqRlH6Gnal6CH0d6u3OgZNCZEfIgyDBH1qdn4siGa2qYiyx+2mWTa6I8orbeYfdTs0cE38Z4O6j8TdpLf4c=
+	t=1738768653; cv=none; b=ECPtfksZSj7S22tPmTlitOTKMglBdxhgtVLkqY+jAxAhOv/evcIgP8QckwIwC47nZzPv9gck6Rlo4sNbsZIBqxSX9M/nnauHRN1kt10z5KeBADI7cSLZjY6xhH1ML7JU44xnUCUXy6aMSr+ancp8M4yxrpBm8LhXRcDnJbfPGok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738768238; c=relaxed/simple;
-	bh=5bnC+RMJy9Go74Xk7wf5n2n16fM9EiwTk6qRnyxUz0M=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=e/ecxW3EvZ+86i/+kIu72eDcNKFUI0YGbRH6bT1wrWqV3DUWvJUyfFe24pUuQHuqnMlJjc7tNrZHwliU7lS31LTV8FT2wCJlZnXcEaNOSUKZVJnLwnuTfu6u4Gm/CD6GPeCcqqhjbmGb6hmQ2TbztEpfkEDSh5roj8xwCvJR+vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=FuNkhrAH; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738768233; x=1739373033; i=markus.elfring@web.de;
-	bh=ZTYLfFE7cC+DQ7FxXv045p/gA84CPFiSe7CIyfB3gPw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=FuNkhrAHcHpgcrJ1R8UThkvUXb5tSzPA65qjDDR8C+8Ln1RsWNgPC1kwuWw+D2x+
-	 sQSA6o1sB6KWw63NXRridI7fAinIMGr/b3iLr1jUSlI4jMll9qL4wTAWVTf0na6Z7
-	 wmHGUDV9/JW0uFeN2jr/R6pBXHGPsFFSWNWdCi9/WFzZN2UVUOF3t8QTJOjsGNa8X
-	 wUMd9HJt1vyPv/2ZwKQ2Zi4engNWhj7TPap7MeOJ7KSuPzfwRA7W9EaHS5Gf2pAeH
-	 b7J8fE3F+tiebfZ2ULuUM8rZ+jrnh8O92salF599hYHKM/A9SZKqoW6+P1UTFw9sR
-	 DYA37Pen7SJ5SHGgTw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.30]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M5Qq9-1tgVrR1wk1-00EhNq; Wed, 05
- Feb 2025 16:10:32 +0100
-Message-ID: <f5462109-1603-4866-895c-b5c349261296@web.de>
-Date: Wed, 5 Feb 2025 16:10:29 +0100
+	s=arc-20240116; t=1738768653; c=relaxed/simple;
+	bh=AGMSV6XJS5wPbIAzqbe1aAfwBLkAaQyYlHq8Vt9ZUqM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=PJQVYx5tZaPCon7CwLiAxVQR65k7EWRFvDE2bR67ZX2r0DauDXAklls55X3vKsQ0+8ekFInKhcUMB0pltJPZy5SuC938m3zWVTnfmhl/qzR7uPyDjDb1aQC42yCtpAX+DYU1ldGan/Yx1z/wQoGbMnHQAkbND1FiHDkzXCfDZZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K9RZ0k0n; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25130C4CED6;
+	Wed,  5 Feb 2025 15:17:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738768653;
+	bh=AGMSV6XJS5wPbIAzqbe1aAfwBLkAaQyYlHq8Vt9ZUqM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=K9RZ0k0nHN5W+tFxUtm47PGtEuWd+DqjXl0HUgZ78M00U3dU4Dq4fJJL+Qi7To9cg
+	 +VTY2NxkBsM7QxxkpxyEQZl0N2Cb08NGwPDGzoM01iqUSNmuMv+1PfjYctJ85zp/5k
+	 w0evjjBkVL9xHRq+35wzGWFSlIz/2M5420mqQvzin8bGa1qqyygDP2y/I1AbYtVV+Y
+	 dt+lmOxnlPzxMkybdbjfFNys5delNHm7zMMbMpRZgdOMiQ3Ja6knJQh3XGbwwLTypZ
+	 /5drsY9+vKa61p0BlkS9SWOKLx0YU4KAchrwpCHlY/JAdDqgfwwmlEUNnA2aAfyLJw
+	 ujiXdYdyzruGg==
+Date: Wed, 5 Feb 2025 09:17:31 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Roger Pau Monne <roger.pau@citrix.com>
+Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+	linux-pci@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v2 3/3] pci/msi: remove pci_msi_ignore_mask
+Message-ID: <20250205151731.GA915292@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84s?=
- =?UTF-8?Q?ki?= <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
- Jingoo Han <jingoohan1@gmail.com>, Michal Simek <michal.simek@amd.com>
-References: <20250129113029.64841-4-thippeswamy.havalige@amd.com>
-Subject: Re: [PATCH v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250129113029.64841-4-thippeswamy.havalige@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:hHjPFyBsqQkZjlLdf4YmgMoKUnnN3S+V7S4jHFw41yxYr9N7tJm
- tLjQOZeqby2CZ2iUWA3XQisRnZinluElcoVSzF7Bk2mYG17d8pYNmBL0m7ASl2N3jNxeP9d
- ENWs60isQuYfdknyekw1fol5plBXXIY3jEo8iXA0aqWglpqMUbV7v49SscFmXL8tO40I+y0
- GOUr8Tmt2HhKeRQM2ZYYw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:y5KBcZ97QHc=;mvS+lr44qC0nRsDpM6iISqhJSIV
- GodAgrZ7cY5pH7w+jTGJjqHQiK6hgXyN8SyvMhAOOL2vk0yckSftL0a82908aQjXmaSfmVKRJ
- sjAxdzdKIcPpGS1rIYDN0apgN+Bph7qsh1yyG0knegLgYahfN4EJhhNwjqFHnpCkbn8uaUwy8
- FSUTC6vA4isva94mNFMOdVZDtDJHzlvQVN5ZToOiA71QOp1VDKOy0ipSCT1Ty335UltlKtVm2
- eClKjwNUpYmkHWni9MNGXLCpyCd1Ai+aQtOw7mQcSCy9u3NjweqlqAtwF0iIXV/e59IFRDm06
- 5dsyD4wI4PLBKKNaKRm7YdX4b1MgagmAQy45J3zhWw/2MU0+/QvPUEuXJ8J/54vpI8fKKivVF
- YrbK+CcuHhTMtZ7rJkrccr0qw2m4dO0hAYX8avPX3AYxUoSvgj5FHU0uI5/Ue4H3UJTUuJ8kr
- 1uERLFdPHa+9LLgAFipXP/c2hn0GRnqUvkbCgnfTAERITqCIcPQSWoZ5gt/fAR5TBC63CH4t7
- 1bUf9GHLT30ma6kY84DgDgtvfoomE4fh5OHy1ltgiVIlAqj3eHmj9u9eZ2k1wpFkegIXqcNBY
- n18Nsc9e9Mky517yjzAz31PemdczFALiyaw1oboy092+0HufoLsG57xJSJqJx6VEc0Z01e0rv
- fP1rwhnkxHuFjyY8U4rsa0G11qTvjmc39vTRm/LI/zdZTZI5OtB4kn4ZGZNFJHArWxyEvpvqb
- tJHxIrsI08EUo+iiCGggg6rjn0OwM6hzaWfY2/qd9kYL5qDgHWJqAKHoPi0HxzKsitOKoWy7t
- U8fcmz338g0+xeVGUn+1Ig1DZPundegragMR7tKXQwBHIwPJNexdIL+S2GVKRxybre1YL4oM1
- U68jlEHc/02IZtqyNgKR5a3YGf9MXO/gB5IrZ/OOdqhmc2TV0m0r4NmVYmFWxWKoCmmpLUaN5
- svQthnALpcUVwG+qQS29uLJtUD4UrpNU/82pZGVb51mKYUvjDWoCJQ3eF37dqPOtqQOkvgSMY
- ep2TSANTlVfqBwB1izge1VFblK8YHmrJPvCdw+VwwXJr4U6g/eGDqAG5oRJyz4F+zzApmW8Qd
- DLcJn4Mctuu5hzGzoDQCv8Ta+ThXjxUQVldjJGrfM0I8CZpPZaWGuFMhEAoxsaqCB/RQVIen5
- DK0xCI5GxGFg0W2llqFmNz+XKm/vojNOjkpn0HFkx+zw+AvWIRgBMB/LYfhaemArqRkREUA2i
- Mk6n6Bw5jF2A7IigPioCpWXTjdsjm1kzWJ+Dvdb/jJE+HgDYUskzmj13RBDn6OU+SQ5MeuTTC
- trD4t/q9h8e+R0fn6lqAGcxb2d6otOD6hITu3s9Nv7Qe5pyIJiaJ5lD+Dt0DEZKApLZE7W3Zb
- ye5/HolT3GB4cOXPmvd+6wgke0n0Mrkm1oWznoCEl3SmXiqkD+VCmVdPy2yEikaRi9yJIesZu
- 32uoDKjN8otSwfT7w7aO5NgggYMU=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250114103315.51328-4-roger.pau@citrix.com>
 
-=E2=80=A6
-> +++ b/drivers/pci/controller/dwc/pcie-amd-mdb.c
-> @@ -0,0 +1,476 @@
-=E2=80=A6
-> +static void amd_mdb_mask_intx_irq(struct irq_data *data)
-> +{
-=E2=80=A6
-> +	raw_spin_lock_irqsave(&port->lock, flags);
-> +	val =3D pcie_read(pcie, AMD_MDB_TLP_IR_MASK_MISC);
-> +	pcie_write(pcie, (val & (~mask)), AMD_MDB_TLP_IR_ENABLE_MISC);
-> +	raw_spin_unlock_irqrestore(&port->lock, flags);
-> +}
-=E2=80=A6
+Please run git log --oneline and match the subject line capitalization
+style, i.e.,
 
-Under which circumstances would you become interested to apply a statement
-like =E2=80=9Cguard(raw_spinlock_irqsave)(&port->lock);=E2=80=9D?
-https://elixir.bootlin.com/linux/v6.13.1/source/include/linux/spinlock.h#L=
-551
+  PCI/MSI: Remove ...
 
-Regards,
-Markus
+But it doesn't look like this actually *removes* the functionality, it
+just implements it differently so it can be applied more selectively.
+
+So maybe the subject should say something like "control use of MSI
+masking per IRQ domain, not globally"
+
+On Tue, Jan 14, 2025 at 11:33:13AM +0100, Roger Pau Monne wrote:
+> Setting pci_msi_ignore_mask inhibits the toggling of the mask bit for both
+> MSI and MSI-X entries globally, regardless of the IRQ chip they are using.
+> Only Xen sets the pci_msi_ignore_mask when routing physical interrupts over
+> event channels, to prevent PCI code from attempting to toggle the maskbit,
+> as it's Xen that controls the bit.
+> 
+> However, the pci_msi_ignore_mask being global will affect devices that use
+> MSI interrupts but are not routing those interrupts over event channels
+> (not using the Xen pIRQ chip).  One example is devices behind a VMD PCI
+> bridge.  In that scenario the VMD bridge configures MSI(-X) using the
+> normal IRQ chip (the pIRQ one in the Xen case), and devices behind the
+> bridge configure the MSI entries using indexes into the VMD bridge MSI
+> table.  The VMD bridge then demultiplexes such interrupts and delivers to
+> the destination device(s).  Having pci_msi_ignore_mask set in that scenario
+> prevents (un)masking of MSI entries for devices behind the VMD bridge.
+> 
+> Move the signaling of no entry masking into the MSI domain flags, as that
+> allows setting it on a per-domain basis.  Set it for the Xen MSI domain
+> that uses the pIRQ chip, while leaving it unset for the rest of the
+> cases.
+> 
+> Remove pci_msi_ignore_mask at once, since it was only used by Xen code, and
+> with Xen dropping usage the variable is unneeded.
+> 
+> This fixes using devices behind a VMD bridge on Xen PV hardware domains.
+> 
+> Albeit Devices behind a VMD bridge are not known to Xen, that doesn't mean
+> Linux cannot use them.  By inhibiting the usage of
+> VMD_FEAT_CAN_BYPASS_MSI_REMAP and the removal of the pci_msi_ignore_mask
+> bodge devices behind a VMD bridge do work fine when use from a Linux Xen
+> hardware domain.  That's the whole point of the series.
+> 
+> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+
+Needs an ack from Thomas.
+
+> ---
+> Changes since v1:
+>  - Fix build.
+>  - Expand commit message.
+> ---
+>  arch/x86/pci/xen.c    |  8 ++------
+>  drivers/pci/msi/msi.c | 37 +++++++++++++++++++++----------------
+>  include/linux/msi.h   |  3 ++-
+>  kernel/irq/msi.c      |  2 +-
+>  4 files changed, 26 insertions(+), 24 deletions(-)
+> 
+> diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
+> index 0f2fe524f60d..b8755cde2419 100644
+> --- a/arch/x86/pci/xen.c
+> +++ b/arch/x86/pci/xen.c
+> @@ -436,7 +436,8 @@ static struct msi_domain_ops xen_pci_msi_domain_ops = {
+>  };
+>  
+>  static struct msi_domain_info xen_pci_msi_domain_info = {
+> -	.flags			= MSI_FLAG_PCI_MSIX | MSI_FLAG_FREE_MSI_DESCS | MSI_FLAG_DEV_SYSFS,
+> +	.flags			= MSI_FLAG_PCI_MSIX | MSI_FLAG_FREE_MSI_DESCS |
+> +				  MSI_FLAG_DEV_SYSFS | MSI_FLAG_NO_MASK,
+>  	.ops			= &xen_pci_msi_domain_ops,
+>  };
+>  
+> @@ -484,11 +485,6 @@ static __init void xen_setup_pci_msi(void)
+>  	 * in allocating the native domain and never use it.
+>  	 */
+>  	x86_init.irqs.create_pci_msi_domain = xen_create_pci_msi_domain;
+> -	/*
+> -	 * With XEN PIRQ/Eventchannels in use PCI/MSI[-X] masking is solely
+> -	 * controlled by the hypervisor.
+> -	 */
+> -	pci_msi_ignore_mask = 1;
+>  }
+>  
+>  #else /* CONFIG_PCI_MSI */
+> diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+> index 3a45879d85db..dcbb4f9ac578 100644
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -10,12 +10,12 @@
+>  #include <linux/err.h>
+>  #include <linux/export.h>
+>  #include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+>  
+>  #include "../pci.h"
+>  #include "msi.h"
+>  
+>  int pci_msi_enable = 1;
+> -int pci_msi_ignore_mask;
+>  
+>  /**
+>   * pci_msi_supported - check whether MSI may be enabled on a device
+> @@ -285,6 +285,8 @@ static void pci_msi_set_enable(struct pci_dev *dev, int enable)
+>  static int msi_setup_msi_desc(struct pci_dev *dev, int nvec,
+>  			      struct irq_affinity_desc *masks)
+>  {
+> +	const struct irq_domain *d = dev_get_msi_domain(&dev->dev);
+> +	const struct msi_domain_info *info = d->host_data;
+>  	struct msi_desc desc;
+>  	u16 control;
+>  
+> @@ -295,8 +297,7 @@ static int msi_setup_msi_desc(struct pci_dev *dev, int nvec,
+>  	/* Lies, damned lies, and MSIs */
+>  	if (dev->dev_flags & PCI_DEV_FLAGS_HAS_MSI_MASKING)
+>  		control |= PCI_MSI_FLAGS_MASKBIT;
+> -	/* Respect XEN's mask disabling */
+> -	if (pci_msi_ignore_mask)
+> +	if (info->flags & MSI_FLAG_NO_MASK)
+>  		control &= ~PCI_MSI_FLAGS_MASKBIT;
+>  
+>  	desc.nvec_used			= nvec;
+> @@ -600,12 +601,15 @@ static void __iomem *msix_map_region(struct pci_dev *dev,
+>   */
+>  void msix_prepare_msi_desc(struct pci_dev *dev, struct msi_desc *desc)
+>  {
+> +	const struct irq_domain *d = dev_get_msi_domain(&dev->dev);
+> +	const struct msi_domain_info *info = d->host_data;
+> +
+>  	desc->nvec_used				= 1;
+>  	desc->pci.msi_attrib.is_msix		= 1;
+>  	desc->pci.msi_attrib.is_64		= 1;
+>  	desc->pci.msi_attrib.default_irq	= dev->irq;
+>  	desc->pci.mask_base			= dev->msix_base;
+> -	desc->pci.msi_attrib.can_mask		= !pci_msi_ignore_mask &&
+> +	desc->pci.msi_attrib.can_mask		= !(info->flags & MSI_FLAG_NO_MASK) &&
+>  						  !desc->pci.msi_attrib.is_virtual;
+>  
+>  	if (desc->pci.msi_attrib.can_mask) {
+> @@ -655,9 +659,6 @@ static void msix_mask_all(void __iomem *base, int tsize)
+>  	u32 ctrl = PCI_MSIX_ENTRY_CTRL_MASKBIT;
+>  	int i;
+>  
+> -	if (pci_msi_ignore_mask)
+> -		return;
+> -
+>  	for (i = 0; i < tsize; i++, base += PCI_MSIX_ENTRY_SIZE)
+>  		writel(ctrl, base + PCI_MSIX_ENTRY_VECTOR_CTRL);
+>  }
+> @@ -710,6 +711,8 @@ static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries
+>  static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+>  				int nvec, struct irq_affinity *affd)
+>  {
+> +	const struct irq_domain *d = dev_get_msi_domain(&dev->dev);
+> +	const struct msi_domain_info *info = d->host_data;
+>  	int ret, tsize;
+>  	u16 control;
+>  
+> @@ -740,15 +743,17 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+>  	/* Disable INTX */
+>  	pci_intx_for_msi(dev, 0);
+>  
+> -	/*
+> -	 * Ensure that all table entries are masked to prevent
+> -	 * stale entries from firing in a crash kernel.
+> -	 *
+> -	 * Done late to deal with a broken Marvell NVME device
+> -	 * which takes the MSI-X mask bits into account even
+> -	 * when MSI-X is disabled, which prevents MSI delivery.
+> -	 */
+> -	msix_mask_all(dev->msix_base, tsize);
+> +	if (!(info->flags & MSI_FLAG_NO_MASK)) {
+> +		/*
+> +		 * Ensure that all table entries are masked to prevent
+> +		 * stale entries from firing in a crash kernel.
+> +		 *
+> +		 * Done late to deal with a broken Marvell NVME device
+> +		 * which takes the MSI-X mask bits into account even
+> +		 * when MSI-X is disabled, which prevents MSI delivery.
+> +		 */
+> +		msix_mask_all(dev->msix_base, tsize);
+> +	}
+>  	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
+>  
+>  	pcibios_free_irq(dev);
+> diff --git a/include/linux/msi.h b/include/linux/msi.h
+> index b10093c4d00e..59a421fc42bf 100644
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -73,7 +73,6 @@ struct msi_msg {
+>  	};
+>  };
+>  
+> -extern int pci_msi_ignore_mask;
+>  /* Helper functions */
+>  struct msi_desc;
+>  struct pci_dev;
+> @@ -556,6 +555,8 @@ enum {
+>  	MSI_FLAG_PCI_MSIX_ALLOC_DYN	= (1 << 20),
+>  	/* PCI MSIs cannot be steered separately to CPU cores */
+>  	MSI_FLAG_NO_AFFINITY		= (1 << 21),
+> +	/* Inhibit usage of entry masking */
+> +	MSI_FLAG_NO_MASK		= (1 << 22),
+>  };
+>  
+>  /**
+> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+> index 396a067a8a56..7682c36cbccc 100644
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -1143,7 +1143,7 @@ static bool msi_check_reservation_mode(struct irq_domain *domain,
+>  	if (!(info->flags & MSI_FLAG_MUST_REACTIVATE))
+>  		return false;
+>  
+> -	if (IS_ENABLED(CONFIG_PCI_MSI) && pci_msi_ignore_mask)
+> +	if (info->flags & MSI_FLAG_NO_MASK)
+>  		return false;
+>  
+>  	/*
+> -- 
+> 2.46.0
+> 
 
