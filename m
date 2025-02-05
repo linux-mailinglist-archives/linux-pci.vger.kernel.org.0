@@ -1,55 +1,65 @@
-Return-Path: <linux-pci+bounces-20771-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20772-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD3D1A297F3
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2025 18:50:18 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3ECAA29900
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2025 19:28:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 840321620A1
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2025 17:49:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 82AF218806B0
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2025 18:28:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0862A1F8908;
-	Wed,  5 Feb 2025 17:49:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A4AE1FCFE1;
+	Wed,  5 Feb 2025 18:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="KToc3Ji9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m7edtQC/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7908A1FBEBF;
-	Wed,  5 Feb 2025 17:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471E11FCCE1;
+	Wed,  5 Feb 2025 18:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738777739; cv=none; b=arK0GVSdrLkxO5p95kHcu+dGiSfkhcORrlaAZLnQgk9LPdlYPzeVt6UUxfXvBM5qsTr2QMae/GPqUGZICU8HfFfFcjro1u3RH60CVSOk10DIEgGO6TrEO1DH6k6GSGf6uMan+IFiW3f4gwNfPRuh/V+3HhmmOnf0wxPsdyfow0g=
+	t=1738780039; cv=none; b=Jujpi7DXCaa6+co9OIsxWBBvy62aHMfCuQWJ3t4cIZ1miJ5SYN0bUhe1WEG5KIdOgy9/X69E+XGXxFBVms6RAagz7o+QRs0uGQ6s5elqVKCNh4VjEUmLqwj3oX8KXz5lKS5RZBLRtE1uXBqDUjyM9PKH4+lfrh1GXxTr45nAEuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738777739; c=relaxed/simple;
-	bh=2wGvyYMnVgwfZDd+X3Vz5ct1HNuTyg4x337XNUZTx1A=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=CkUQ1mz6hGqemC1NK6/VD63H6qJkeQeO2obnw3bWgHtUS5ybtjWeIiYIvhJok1B7TrmllY2diUqKDJMgTIfKqJZMEVkVAD+jw3P0YMsbCfqemnOUVtPHMqHBFGutn1dShvouxc/9wJXbaLe7fpltQIaNuZr1Om8tH9X1zjsUcQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=KToc3Ji9; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738777719; x=1739382519; i=markus.elfring@web.de;
-	bh=2wGvyYMnVgwfZDd+X3Vz5ct1HNuTyg4x337XNUZTx1A=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=KToc3Ji9eKlJRjf9lLa5NGBwmaib1ECzHS9D5u+mYXvnUfFelN4U6VMVzOrH2DWF
-	 AUNIn6I4kQK56OVKS9dQY103EKmWgv0JmfFHBFOHAof5jFJJGj1IgU8dlqhkiVz2M
-	 GvzC2rU5wV//Dni/Dezv3nK3V/7yrkVTeojQslUaVI5zIbB3f/jInpf5OFoCZJDsb
-	 P8STSlmF9ZFa0tHRjSNSgtXBPRks5ExOenr4ImvZrZCkdYCb/SLGmLPFlfNF7CqsG
-	 IGA8MolEYDMlFrBTSnVifqAdZgKCqHjSRzqeFNTFrYdVhHMibVQdqj8HGcwYBEtcq
-	 Ft3y/z0bP2FHq1DL1A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.30]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MJWoe-1tzboc2sdE-00X3oZ; Wed, 05
- Feb 2025 18:48:39 +0100
-Message-ID: <b6f97a22-4b24-4ca1-b9e9-38a4b0e69f04@web.de>
-Date: Wed, 5 Feb 2025 18:48:35 +0100
+	s=arc-20240116; t=1738780039; c=relaxed/simple;
+	bh=XTlhPmk51GDVC6DlWA9yXxy+ISHtOrb+IWkiux/fELw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M+QHBiIpNhl6a74bB6QDxDmQw7dbI+WeNV8D938vW8wh0+cNcuDVyg2OGy4dhwuveQhHntzF72vM50qg9l9llS9KBYbdrSC9b9gck7r3bKgL8FX/GnSDRDaoa1ML0f+rQ/vd8hy3Ax7MS39deWvX/Q+c8YKGXfFDxX1UYU68qiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m7edtQC/; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738780037; x=1770316037;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=XTlhPmk51GDVC6DlWA9yXxy+ISHtOrb+IWkiux/fELw=;
+  b=m7edtQC/oyshDa6xiUVPV2aEEudl0BIUPlqq4XQkfC9Ik/oWHHm5NGcg
+   1G1r3ltMWtKQ3NcH4Yj/RuL1LTqTWtT1ZG7D+VDt1YKNl7ZAge2kFvatf
+   34lTEmNEK21ttBVDA0xTOAmLzNOQooB9qK+XefdHlfmmwcmWg/6yob17z
+   74nbO4TbH2Y0rUzICRh9t0NRloky3WGgQKtcchzuz3z2nYPB8h2RTkaE7
+   p9hzZ7x0ODofCjx/5KmeVBTOrJyfg2JV83q45PVNCfgJ+0R8EGah0Wtt0
+   X8hP2tlR1Idq5P53kqGKtHFqdYeb1zjRaXR1wPrnAbc+lh0Fum1hlvYFj
+   w==;
+X-CSE-ConnectionGUID: 7h97O7OnRZed1KX7+tew/w==
+X-CSE-MsgGUID: MS8nEX73TkWf8+MZ0NbjNQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="39388164"
+X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
+   d="scan'208";a="39388164"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 10:27:16 -0800
+X-CSE-ConnectionGUID: HyM0g3kIQx2POYoCUoS8FA==
+X-CSE-MsgGUID: 0tZY022HQkipK2/4msdY7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,262,1732608000"; 
+   d="scan'208";a="110870664"
+Received: from daliomra-mobl3.amr.corp.intel.com (HELO [10.124.220.14]) ([10.124.220.14])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2025 10:27:16 -0800
+Message-ID: <7e5e9bad-b66b-4a7f-8868-af5f1ab2fda1@linux.intel.com>
+Date: Wed, 5 Feb 2025 10:26:59 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,60 +67,126 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Feng Tang <feng.tang@linux.alibaba.com>, linux-pci@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
 Subject: Re: [PATCH 1/2] PCI/portdrv: Add necessary delay for disabling
  hotplug events
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
+To: Feng Tang <feng.tang@linux.alibaba.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jonathan Cameron <Jonthan.Cameron@huawei.com>,
+ ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
 In-Reply-To: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Mf1TZS7zMuR+t1RajiJ5ezWp2B9JsBYz+0mHhuDgsZxlohT+5GG
- uXNlnBicAwYLHxd7d2x3dLw8emHRubFR2inyRREgpVY/44B5qQvqzOhP8uqs3wsR+L8x35p
- McfgO3rZi7FLC0gq3u7EhkwocNUThAkHItBqbB10NzFcqQxcUpH4tNv0UcoiVPZ2qxK4hUD
- 20nTQTR6ae12xnt8iK7Pw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:67Xz/2/uR7Y=;o1APCCmxO+pUUFUCCtaP8J9jK6C
- +o9/5SurHdnE93JNlRJqMiGWlK+fAvUqU3ybLF+FOPYUZ4TW/Y21r1ys/69a4DPLHMvSCpr2t
- /ej8UBepJjyiVGz8DDCMYIgaepJjHLljaHdh4x6Bxrhe2ZUvilc4XjlmsvO3pw68qV5ejUgeU
- lUDK4tWHfvlpFRqhlUJNzSxZOczKWIEpw1nZLhQpzgv7lUjaK0Pt5n4gwFyfeTeVtU05RuK7J
- ZaGW2P9xSamj9Riyxx8uZh/xLL8aeFhmK5PU6PWy2KubdGsZbNa8IEIScOVOuqjxnwp/L8dNX
- fmneLEb4pNQcxTl22fvhNM8U2AD9GGkp6uSt/CCu0Pxc3N0teSNxI7DQ+MkRZvB/yU1GpH9C9
- 872zD5Iz+Jjv2gct3WiK4lVUOlNJrLnU/qapM0xZs/iI8kmYjeYpOqvzPlgQdudPc/5Ah3POd
- ZO+cF46eDq0p7FFNram6sk47/Cqh7DedIn2eqsnXeb94PsxNh5LIVaOUHXx6hZBKhsLA14Kcx
- W8MK1JEJhj4nWUD78kzqKDGKTmZS9bwdIQusx1kVLutAy5b8kzGhkxY451KTjAj5HHebi8GxW
- /nWhbqlzCGgtWLY1ae4PuU0VuEKjsdUzXauVzsNoaWwutd0ACvFl1GmaHSHnSAs/q900fm8Sa
- 62/rwqTxKjM39pJx6/bYLav7aDQYSeKF4n2PlGVAFG1cAcxJY6yc0iRVqZEMwztEoOzWFdKMV
- q4eYk7NU6tfIIxrWF6el9OZDWu07A7MUJGP2X3PMYnp+xk2V2J2BJoHy4QmDoq5/OZHErUeEw
- Pm37CKx6LSVZqz25R/9Z3dfpGiV4cwTt1kVo5ZG8bT+4pV86Qw66P2IAnjmPLj0OIkKzOXFVk
- qVd9R4d5Q5pRxhZDV/54GUmqlKbshGZ8hma5cEJ72jCG4yJKsngsPizc5Po3HVaKHOiYJ1dQq
- fTjCSSD+KeYygM18/2OLOz6G+8xov+r3ZkI66ob10tkn7gyET5dzpMmSRB6AbZD7SX/j73Adt
- pcE+km3Db0NlUnYnOyZLL2hyY+QzXZAYcxiKttutC19xyJKdeLytn5CX+ymGuw0A/pyy8PTxl
- Y7kEHm9RF0k7++Q0CmHSWTFAhk2aHXFunL19KJEXG7N5vGXtG8XUQtAhLx4vvB7PHKJdh0rIQ
- z8saaldzHdx/YlbdsEuXJFGBph9SFmuVRzPjduJSO2L8MQJc7VDYqw7uIs+AGV+qSU3gG69Hy
- StALmGar+wA27MjGrEOP8VFJF5NyTwcgI+rE/v6W73FDN7ySTSj81W91Rv7N3jyB8prZdchSk
- /u0RAhMjzH+3KnqIFvW0KjlUvmucLCWO086sjUZCUJ+w0qDJcP2U5M/d6Da9pSbHEigmio823
- JZTQOWUnm9BbZUhZYPHUanYKZtrto0pZelhwkqylNIxeAuBRCQGBvq0/zAsM1OLPa2lo+Gy+e
- ymcGhWA==
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-=E2=80=A6
-> Add the necessary wait to comply with PCIe spec. The waiting logic refer=
-s
+
+On 2/3/25 9:37 PM, Feng Tang wrote:
+> According to PCIe 6.1 spec, section 6.7.3.2, software need to wait at
+> least 1 second for the command-complete event, before resending the cmd
+> or sending a new cmd.
+>
+> Currently get_port_device_capability() sends slot control cmd to disable
+> PCIe hotplug interrupts without waiting for its completion and there was
+> real problem reported for the lack of waiting.
+
+Can you include the error log associated with this issue? What is the
+actual issue you are seeing and in which hardware?
+
+>
+> Add the necessary wait to comply with PCIe spec. The waiting logic refers
 > existing pcie_poll_cmd().
+>
+> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+> ---
+>   drivers/pci/pci.h          |  2 ++
+>   drivers/pci/pcie/portdrv.c | 33 +++++++++++++++++++++++++++++++--
+>   2 files changed, 33 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 01e51db8d285..c1e234d1b81d 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -759,12 +759,14 @@ static inline void pcie_ecrc_get_policy(char *str) { }
+>   #ifdef CONFIG_PCIEPORTBUS
+>   void pcie_reset_lbms_count(struct pci_dev *port);
+>   int pcie_lbms_count(struct pci_dev *port, unsigned long *val);
+> +void pcie_disable_hp_interrupts_early(struct pci_dev *dev);
+>   #else
+>   static inline void pcie_reset_lbms_count(struct pci_dev *port) {}
+>   static inline int pcie_lbms_count(struct pci_dev *port, unsigned long *val)
+>   {
+>   	return -EOPNOTSUPP;
+>   }
+> +static inline void pcie_disable_hp_interrupts_early(struct pci_dev *dev) {}
+>   #endif
+>   
+>   struct pci_dev_reset_methods {
+> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+> index 02e73099bad0..16010973bfe2 100644
+> --- a/drivers/pci/pcie/portdrv.c
+> +++ b/drivers/pci/pcie/portdrv.c
+> @@ -18,6 +18,7 @@
+>   #include <linux/string.h>
+>   #include <linux/slab.h>
+>   #include <linux/aer.h>
+> +#include <linux/delay.h>
+>   
+>   #include "../pci.h"
+>   #include "portdrv.h"
+> @@ -205,6 +206,35 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+>   	return 0;
+>   }
+>   
+> +static int pcie_wait_sltctl_cmd_raw(struct pci_dev *pdev)
+> +{
+> +	u16 slot_status;
+> +	/* 1000 ms, according toPCIe spec 6.1, section 6.7.3.2 */
+> +	int timeout = 1000;
+> +
+> +	do {
+> +		pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &slot_status);
+> +		if (slot_status & PCI_EXP_SLTSTA_CC) {
+> +			pcie_capability_write_word(pdev, PCI_EXP_SLTSTA,
+> +						   PCI_EXP_SLTSTA_CC);
+> +			return 0;
+> +		}
+> +		msleep(10);
+> +		timeout -= 10;
+> +	} while (timeout);
+> +
+> +	/* Timeout */
+> +	return  -1;
+> +}
 
-* How do you think about to add any tags (like =E2=80=9CFixes=E2=80=9D and=
- =E2=80=9CCc=E2=80=9D) accordingly?
+May be this logic can be simplified using readl_poll_timeout()?
 
-* Will cover letters be usually helpful for such patch series?
+> +
+> +void pcie_disable_hp_interrupts_early(struct pci_dev *dev)
+> +{
+> +	pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> +		  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> +	if (pcie_wait_sltctl_cmd_raw(dev))
+> +		pci_info(dev, "Timeout on disabling hot-plug interrupts\n");
+> +}
+> +
+>   /**
+>    * get_port_device_capability - discover capabilities of a PCI Express port
+>    * @dev: PCI Express port to examine
+> @@ -230,8 +260,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+>   		 * Disable hot-plug interrupts in case they have been enabled
+>   		 * by the BIOS and the hot-plug service driver is not loaded.
+>   		 */
+> -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> +		pcie_disable_hp_interrupts_early(dev);
+>   	}
+>   
+>   #ifdef CONFIG_PCIEAER
 
-* You would probably like to avoid a typo in an email address.
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-
-Regards,
-Markus
 
