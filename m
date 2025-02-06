@@ -1,81 +1,81 @@
-Return-Path: <linux-pci+bounces-20825-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20826-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01426A2B112
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 19:31:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41D5CA2B12A
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 19:34:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 583E43A8F84
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 18:30:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 22656188BC9A
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 18:33:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35529189919;
-	Thu,  6 Feb 2025 18:23:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6C09239582;
+	Thu,  6 Feb 2025 18:27:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="S6lPJyW0"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FYijBbcO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F22A19D880
-	for <linux-pci@vger.kernel.org>; Thu,  6 Feb 2025 18:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC07419C546
+	for <linux-pci@vger.kernel.org>; Thu,  6 Feb 2025 18:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738866191; cv=none; b=Oi4f3QvnpMlN8ykdy4WZ9+Ae46NvxtxKk6pS6Acr6oZgz4i8Q6q+/o9GvKyfMPYQkJusmwWZTur5qaRhJ0AmNST6XQBRt0buRayuKz0BRwWScZXFC27Hk4fxv4aS5BLkmtOcfYHeOTMYR/byfox8p5dkoXNWwgQiCZDqIkvE7zc=
+	t=1738866479; cv=none; b=L1xGyMAajKyRIMvyK0nqqF5bLcSU+qyyyYH4FhvggDKBwbBg1X4HagL2ll97nLfQbfVrWEO4CCjHYTCMbZQVh5eCdvAGdFkbNUoWvJ2y5k2SDGq9zdzz1GBggTFL8YU5TLGZcOVQgZSHlmFjvzLd5WAuWpAyUQcAAQ8R+uOtRgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738866191; c=relaxed/simple;
-	bh=tDapBJZkCIjyktEYaAqS+CbR4wHDax+XwkREXCD/y3U=;
+	s=arc-20240116; t=1738866479; c=relaxed/simple;
+	bh=RDxshFrGGqUncF3jbW8WFrk01NHy6KEdHDVoPC1P3aI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h3MS1f89QWYl3K/hXGYKKn1+gGvApvrw8WKWktNCpoegsNSb0SthBbVj6N3wJBuFHkX54V4wOZLigSNMBamFEfdKHYLk8sa2KrxVSlxFXpiUN8/BCKCFTzTICJR5achPDg0yMZ8I5OYJQgwbSrWdK+iHx6vfYVJtOcJvqyp1P7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=S6lPJyW0; arc=none smtp.client-ip=209.85.167.49
+	 To:Cc:Content-Type; b=UBIXEWiYC4ZfhwSVgF2TiOiKyuuQTWO56iFpVxntkByqV1cjIUexGDe9U1FEx4CQtFlLsMUmLf47gCp1kyzeAEttWjxFgyK2U7CBzfQG1eIoZXXEN+wx7nPvYqTCfBmnj0rJvzeSjDoy+x0pOFK6BnUSBcKS79wL7/fCYSfiwMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=FYijBbcO; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5401bd6cdb7so1337668e87.2
-        for <linux-pci@vger.kernel.org>; Thu, 06 Feb 2025 10:23:08 -0800 (PST)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-543e47e93a3so1336978e87.2
+        for <linux-pci@vger.kernel.org>; Thu, 06 Feb 2025 10:27:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1738866187; x=1739470987; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1738866476; x=1739471276; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kkkV8mkrz/0gvk6UQ+w0g+SzAIV+LliQCH4y6G5U6fQ=;
-        b=S6lPJyW0O9sQY54gCGkaBHDzgub4wM/RyFnTUFwMZ2dhqAoNEWt1SWlJJK9J0KuPP9
-         TVfoju1Cl5YZbHRiW29ET+LV+UPiLnFCPgb1g25gWOzUWTQjG0XCQHTesaTJUtGW8LK0
-         mz/jXFtUBt+Y9yx9GaaPHyJd51F8XiwugEGJY=
+        bh=5SN17pm/qBGhBIPCl3UfJe6k5kUMuMslIH03Bk9ST0o=;
+        b=FYijBbcOeVwJ9w8lJUTdDRT8lLnOBP8RlR+8KGslcofW6vbwgUhLJ+0pK5TmyBfMg9
+         PF3nd8NWzCuCbTevnbTUHv9Rpf32UaDkoOYB6IvdtYfvLYyOSreXGrCLEHmitl+dmHag
+         cYk7TUKBC0cfhWp6a/CunL8Ekn9+BKIRWV/Ls=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738866187; x=1739470987;
+        d=1e100.net; s=20230601; t=1738866476; x=1739471276;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kkkV8mkrz/0gvk6UQ+w0g+SzAIV+LliQCH4y6G5U6fQ=;
-        b=Aa+agx7iZzlVaTOpg0K+xWm9+4a4IGJ5QLtezMYYa20wZChqM5iXslkuEHLgv1nzvy
-         TYoge8Mf44y0FdJoAaACOni4p+VUx4gu0p+v8k4JntQosAUfBozbAJQcUQhvH+6X8ABQ
-         rZP/nrLJD2WE3ovqblkUDP8E1CJsBPT6TJ0tsbkCQtVR8K470WDMhdyZNlacqjP8HFP9
-         uiGXj+cI426l4Yefv4fEtBEViBCHdPuReg6hK7EMBM2aiN35/90zrMMTwZW+GNwQHE+T
-         8gEY3xQM+1zWavtP3HbwclDmr0mj1qd3UdQeMvrXWoiaX9/Tn3UiFN4VplcOAcNQmx0G
-         ef8g==
-X-Gm-Message-State: AOJu0Yx6J+UADlqoMB23vaVRzWymSwplAaDQketyMneHQ1kPVrdQbcAz
-	aGKz4a+Les8C+z6xQup8ABw+OjTqsFxFk+iu6aJd00wZQmrMAvPSRFYjs/C3rrpcsJpRqc/FRcq
-	H+gW196G9/IPpoXPK6UbLZR+e0eNwK8Jv8ZVu
-X-Gm-Gg: ASbGncvxCS72r27VVPVsQjxDNaBE49m/s+8N089D4fQ2PGH/EpLDbOb1fEEUOmOKFn7
-	IFsUQFJjqDIutOIOESuENQL965pIhVH4+0sRQK5T9aDf2CXGvdHKDIG+Aa68joa/w4+85vb1Cbw
+        bh=5SN17pm/qBGhBIPCl3UfJe6k5kUMuMslIH03Bk9ST0o=;
+        b=VNRLtG6WNZ4FGTx2MytxZwIms/N9CEu2viI0EnSKDjDfXJ3wcSxNEvoXU6vxhecN13
+         y/NicZafliavn+jAuifMRBG6GLDiF5eZTpdd48X1yXi1bgRVFCkyB3InxxE5iW2PjFXN
+         WwzSq+owioL2ZaV0ipdmsN8Vl//zofz+DUGwCNJ8Kp5rbbYL4yqmDC5WXUaDvzUg0qCn
+         aewn+Wxc8PiLd9GSdVPgz9bPYWWWkX5MK+ilLGbdA1zrp92nUCsgD69T3nT3CKj69wkp
+         WywvkvC7pbudzySnKIpzE+PkH4OuiqlC42DxC0uZvN1us3vn301YUHNHLAcMiok90rFn
+         VCTg==
+X-Gm-Message-State: AOJu0Yz0A1QxbHas9gbL+2U9sHIfDawc3EZNjIDmIPrceSHAZwBWOL+t
+	Liug08ydXbrk6KiRtSA4nhPLfV1NcH0VbT7bdabf6xF2CNuKCsCvCtfQGX8zsQ7zgXcuzAWxe1l
+	FYOLipKXUrX/FmPSzdd5o2T+iX6Gy8OrL4pZe
+X-Gm-Gg: ASbGncu52oVqnOE3TE9NlTy5zA/NE09TWIMbcR/qgVJU8DNYJR+qb2u33+mMtb57zpE
+	Ht9B7wggeK5jUqPveD8xKCColYdeMchncDyI9+ZjBYVk3kjNgbFG8fgKFD+iaF1LLlmPi6aMxVQ
 	==
-X-Google-Smtp-Source: AGHT+IHi45XGnqX4UCmHmYEXTyMJIB46zws7U31zlWlfnvQXRYTq6GAaiEPh+osfqQE8zZtk5vst6LTN7WXrkMMPnKU=
-X-Received: by 2002:a05:6512:318f:b0:544:b5:7487 with SMTP id
- 2adb3069b0e04-54405a17a44mr2833383e87.17.1738866187202; Thu, 06 Feb 2025
- 10:23:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHIwsA+HwY8ulNZvcSdBQxkzlbi4o6HBlkMOETgMCnwsDth9saknsyrOUq1Z6JJqEXzkC2yxek+n9BEtEH4kSo=
+X-Received: by 2002:a05:6512:b20:b0:543:9a5c:1906 with SMTP id
+ 2adb3069b0e04-54405a23143mr2890762e87.17.1738866475817; Thu, 06 Feb 2025
+ 10:27:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250205191213.29202-3-james.quinlan@broadcom.com> <20250206172935.GA990026@bhelgaas>
-In-Reply-To: <20250206172935.GA990026@bhelgaas>
+References: <20250205191213.29202-2-james.quinlan@broadcom.com> <20250206170417.GA989059@bhelgaas>
+In-Reply-To: <20250206170417.GA989059@bhelgaas>
 From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Thu, 6 Feb 2025 13:22:54 -0500
-X-Gm-Features: AWEUYZlUMeWB20WhMn5B_gHFzQh42jgGcqDP6fch1EzD4_oaIIn7aQjExWD8WrY
-Message-ID: <CA+-6iNwws3On9-VJ-vF55o5LwKYpOHtfRYLtoQ5=bh7uGTfYkg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/6] PCI: brcmstb: Fix error path upon call of regulator_bulk_get()
+Date: Thu, 6 Feb 2025 13:27:44 -0500
+X-Gm-Features: AWEUYZk-ZLpZaP6sZppE42gBAP8u6jWeeP564q0Ft05oiQwjuzu8e_bosC0DpdE
+Message-ID: <CA+-6iNwY-Fc-nfawc_EtDRBvYht_491v80THW=4F-iY7Nqa81w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/6] PCI: brcmstb: Refactor max speed limit functionality
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
 	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
@@ -88,89 +88,103 @@ Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
 	open list <linux-kernel@vger.kernel.org>
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000006d0566062d7d558b"
+	boundary="000000000000a080aa062d7d6612"
 
---0000000000006d0566062d7d558b
+--000000000000a080aa062d7d6612
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 6, 2025 at 12:29=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
+On Thu, Feb 6, 2025 at 12:04=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
 wrote:
 >
-> On Wed, Feb 05, 2025 at 02:12:02PM -0500, Jim Quinlan wrote:
-> > If regulator_bulk_get() returns an error, no regulators are
-> > created and we need to set their number to zero.  If we do
-> > not do this and the PCIe link-up fails, regulator_bulk_free()
-> > will be invoked and effect a panic.
+> On Wed, Feb 05, 2025 at 02:12:01PM -0500, Jim Quinlan wrote:
+> > Make changes to the code that limits the PCIe max speed.
 > >
-> > Also print out the error value, as we cannot return an error
-> > upwards as Linux will WARN on an error from add_bus().
+> > (1) Do the changes before link-up, not after.  We do not want
+> >     to temporarily rise to a higher speed than desired.
 >
-> Wrap all these commit logs to fill 75 columns.  No point in leaving
-> unused space when most things are formatted to fill 80ish columns or
-> more.
+> This is a functional change that should be split into its own patch.
+> That will also make it obvious that this is not simple refactoring as
+> the subject line advertises.
 ack
 >
-> > Fixes: 9e6be018b263 ("PCI: brcmstb: Enable child bus device regulators =
-from DT")
+> > (2) Use constants from pci_reg.h when possible
+> > (3) Use uXX_replace_bits(...) for setting a register field.
+>
+> > (4) Use the internal link capabilities register for writing
+> >     the max speed, not the official config space register
+> >     where the speed field is RO.  Updating this field is
+> >     not necessary to limit the speed so this mistake was
+> >     harmless.
+>
+> Also a bug fix (though harmless in this case) that deserves to be
+> split out so the distinction between the internal and the architected
+> paths to the register is highlighted and may help prevent the same
+> mistake in the future.
+ack
+>
 > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 > > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >  drivers/pci/controller/pcie-brcmstb.c | 16 +++++++++-------
+> >  1 file changed, 9 insertions(+), 7 deletions(-)
 > >
 > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/contro=
 ller/pcie-brcmstb.c
-> > index f8fc3d620ee2..bf919467cbcd 100644
+> > index 546056f7f0d3..f8fc3d620ee2 100644
 > > --- a/drivers/pci/controller/pcie-brcmstb.c
 > > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -1417,7 +1417,8 @@ static int brcm_pcie_add_bus(struct pci_bus *bus)
+> > @@ -47,6 +47,7 @@
 > >
-> >               ret =3D regulator_bulk_get(dev, sr->num_supplies, sr->sup=
-plies);
-> >               if (ret) {
-> > -                     dev_info(dev, "No regulators for downstream devic=
-e\n");
-> > +                     dev_info(dev, "Did not get regulators; err=3D%d\n=
-", ret);
-> > +                     sr->num_supplies =3D 0;
-> >                       goto no_regulators;
+> >  #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY                    0x04dc
+> >  #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK 0xc00
+> > +#define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_MAX_LINK_SPEED_MASK       0=
+xf
 >
-> I think it might have been better if we could do the
-> regulator_bulk_get() separately, before pci_host_probe(), so that if
-> this error happens, we can deal with it more easily.
-
-Hi Bjorn,
-
-Keep in mind that brcm_pcie_add_bus() cannot return a non-zero error
-code, as it will get a WARN() from the caller if it does.
-
-Would you  accept deallocating the "sr" array and setting it to NULL
-like the following error condition does?  In that way we would not be
-invoking any regulator_bulk_xxxx() functions with nr=3D=3D0.  I'm really
-wary of moving things around...
-
+> If the format of this internal register is different, of course we
+> need a new #define for this.  But if this is just a different path to
+> LNKCAP, and both paths read the same bits in the same format, I don't
+> see the point of a new #define.
+ack
 >
-> Setting num_supplies =3D 0 is an unusual way of handling this error, and
-> if this pattern of managing PCIe regulators spreads to other drivers,
-> we might trip over this again.
-Understood.
+> >  #define PCIE_RC_CFG_PRIV1_ROOT_CAP                   0x4f8
+> >  #define  PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK   0xf8
+> > @@ -413,12 +414,12 @@ static int brcm_pcie_set_ssc(struct brcm_pcie *pc=
+ie)
+> >  static void brcm_pcie_set_gen(struct brcm_pcie *pcie, int gen)
+> >  {
+> >       u16 lnkctl2 =3D readw(pcie->base + BRCM_PCIE_CAP_REGS + PCI_EXP_L=
+NKCTL2);
+> > -     u32 lnkcap =3D readl(pcie->base + BRCM_PCIE_CAP_REGS + PCI_EXP_LN=
+KCAP);
+> > +     u32 lnkcap =3D readl(pcie->base + PCIE_RC_CFG_PRIV1_LINK_CAPABILI=
+TY);
+> >
+> > -     lnkcap =3D (lnkcap & ~PCI_EXP_LNKCAP_SLS) | gen;
+> > -     writel(lnkcap, pcie->base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCAP);
+> > +     u32p_replace_bits(&lnkcap, gen, PCIE_RC_CFG_PRIV1_LINK_CAPABILITY=
+_MAX_LINK_SPEED_MASK);
+> > +     writel(lnkcap, pcie->base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+> >
+> > -     lnkctl2 =3D (lnkctl2 & ~0xf) | gen;
+> > +     u16p_replace_bits(&lnkctl2, gen, PCI_EXP_LNKCTL2_TLS);
 >
-> Not asking for a redesign here, and maybe it wouldn't even be
-> possible, but it kind of fits with thinking about splitting Root Port
-> support from the Root Complex/host bridge support.
+>
+> OK.  I am not really a fan of the uXX_replace_bits() thing because
+> it's not widely used (I found 341 instances tree-wide, compared to
+> 14000+ for FIELD_PREP()), grep can't find the definition easily, and
+> stylistically it doesn't fit with GENMASK(), FIELD_PREP(), etc.
+>
+> But it's already used throughout brcmstb.c, so we should be
+> consistent.
 
-IIRC there was a submission having custom/modified port drivers owning
-regulators, but I don't think it got accepted.  FWIW, we were
-considering  switching to that.
+And here I thought that uXX_replace_bits()  was the up-and-coming
+solution to be used :-)
 
 Regards,
 Jim Quinlan
 Broadcom STB/CM
 
->
-> Bjorn
-
---0000000000006d0566062d7d558b
+--000000000000a080aa062d7d6612
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -241,14 +255,14 @@ AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
 75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
 AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
 AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCgZzsC3VOqsHE0KWAhLhZy0CRYLwru
-xuG1ZHEsrqcZUjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTAy
-MDYxODIzMDdaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCANktrH1vDidhFBB/uzZZo/sajJ5dAg
+TVfuzucy0mSZSjAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTAy
+MDYxODI3NTZaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
 hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAcz9IOOntn6Nc2+COHv5rCC7OnMuT6jiKNfV+qBdUvSuiNQfe
-f5cejJIDd33747YbAS+znx8LLmTKar+Gp89b9ghBVdRTXqPLl5gPYnfD2QIun6AxDG0KO3Ha8Ptz
-xtfkAMdscDgGg/UGpKGTkvdXYLZpVo3yzfv0r6CtLW5H24HR/dD38KEPwr4luh/lFjEoBVPB0HBg
-IrrCCKpISnfsEBAeCsF4PvLv0WPnYqTbDtpBOez0VxK+pFLkOwHgyyge5NPXHdPzpy51II9QkQdO
-P1YY6yNMlaxFRLjQGKOm5eXhShCf1YuCBWNyzLkDaXcd4v2JWgQHpgXcAultfiLSLg==
---0000000000006d0566062d7d558b--
+AgEwDQYJKoZIhvcNAQEBBQAEggEAj1cEfUeU2VC4QQUIb81R06nzsZgB5SsGR7sfsCVtiD/ZFoSV
+57gvTRaeG1407mgBMX568JFURoVFBZYTVQtkZw35TG0p0ASu9siVoPmGQ29KmDi/mZ7CorAlZb+P
+YHD1pw8OR8YW4d5ovoJkC7tz7Kw0mQ40FbgqUaNyy2aVK8yZua+/XMTVvCDqs/p+ze4R3GklfCsf
+rNmxKIt2vSZTF9Us7s/MXLjFfXavYFMpGRV2Jm2DrBQ5SYl2LxoGdAIHjgtaAekMJujtBxIjjIeR
+psWD0wrh+v76j3Louv/H3SDJsGBfrZzSS0B5skNdSzH8bbtDznLtfOHtOWgNwc/4Hg==
+--000000000000a080aa062d7d6612--
 
