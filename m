@@ -1,155 +1,339 @@
-Return-Path: <linux-pci+bounces-20840-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20841-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 186F3A2B4F2
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 23:20:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B4CAA2B513
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 23:31:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A0A9B167441
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 22:19:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C8C73A6931
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 22:30:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB04A1A9B3D;
-	Thu,  6 Feb 2025 22:19:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D172023908F;
+	Thu,  6 Feb 2025 22:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="R6Igtnxw"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="c5FRc5Z1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E06E23C390;
-	Thu,  6 Feb 2025 22:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A3122FF3A
+	for <linux-pci@vger.kernel.org>; Thu,  6 Feb 2025 22:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738880395; cv=none; b=ftyzOBFPIBbEYUtAnR1MujlUYMGbf9zCTNmLBdfaSHImDZzAhubNFYUQ5yJ9ghXdl34l6Lex1azJgoE8j7/5E9H1/Zs6Q+NyZpt7IvDO/7oNfdXQ5TEOr5rHOZyH4pZjrZv0bxnN9FH/LfDtxBUEeTYas95VH2VsIioIVntaw/w=
+	t=1738881028; cv=none; b=HFIjwP4ctEKHKdVv4cE3yITqN+6aZ0UBPl6KCtfvl4GAnaXw8Y73Fscr9Bo3seNtmyM00P5sjDiPVKxlOAi5C57EZhm8t6QEBgcS6VHi9kYUFS+j+Mco1E0K6r+rPiR9wF0pmN/0rjerd4zNHdmhg2vc7KZDuxpB9Ui8ZNk5ylM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738880395; c=relaxed/simple;
-	bh=iplvGjxVtSNZieYITESjTh9ezPgWjVbjCyW+2fiP9dI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G4ucaT9tNSXf+NqfI1CQG8Lf7KP73lnL0VpQyUegigjE7olva18LC5ylFSuWIKRo1Qn2VrDaxevXOzczqw5ZepbHWeMQabLPHKrlRd9K+exvDAWiWyvp5BaBTCoFwDTjQC5xA7GncWOtZzAd8epE6DJ6sa3Suv6eAH/ce3QzCUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=R6Igtnxw; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1738880391; x=1739485191; i=wahrenst@gmx.net;
-	bh=dxtZrCctgBhiPn6B+3RMzEgrZOTooCI6T92FZv6MTPk=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=R6IgtnxwhC/48wpm38U/C1njOpeUq9DonRCJ50qndlZyB6SDDvTKwqxmnNUoPl0T
-	 Cahkwq0zAmhBLnpt23ROyFo7mmyg6fu4dyzTQI4+eSixGgSi4AeRNpmDYRMyyayZj
-	 mmoddlOhmEKwqt5WuaN5frPUPzNXuEYMaahU5DI6iug4pwugWtgNNcSlbuQSbUhSU
-	 bPvPtYAfzNJToDiu3SRtW4U9jwBTFcJha4ZLQX51yJnE9ha+MWKS9oOjKxKh4Hgvt
-	 ABvsJgexP2XiO+luOscnTl+kRrijcTG5957Y/bvtSNQlCpTA2ZlWF9zYHpZFcQ1pk
-	 IC8SfJhTBloKDFR7qw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1McH5Q-1t8Cux0kmq-00kgXn; Thu, 06
- Feb 2025 23:19:51 +0100
-Message-ID: <67b38b32-ce4e-4d8d-a55f-d56d5389b488@gmx.net>
-Date: Thu, 6 Feb 2025 23:19:49 +0100
+	s=arc-20240116; t=1738881028; c=relaxed/simple;
+	bh=u6G1eD2kmbp6domphDX7910Spwzkgf3Yjk2DeO59O7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=icdq9MZtI99or+pmzrACVL98CJRz7MyAuMMlYWQIYpa/jl5HKp6nxodoZ+/ne1lKpFDUGZjwNGuA39uxbcKn4KKwQY8q0VS2qZ2sTsCuAVNUpyEbweI0KDRtYWFWkX2dy5KLLuuvYHohgcOtytmTwm4Vig16KKO++0hfHspUYnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=c5FRc5Z1; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 0B98E24002B
+	for <linux-pci@vger.kernel.org>; Thu,  6 Feb 2025 23:30:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1738881024; bh=u6G1eD2kmbp6domphDX7910Spwzkgf3Yjk2DeO59O7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=c5FRc5Z1mSvp/+GCXMNE/IhAPZJPUhNCYYX+mJ4OZDRmFYvr77ONBwgyfDjabWym8
+	 J3R7Vn6RjOIBg1T+9npW9jo/GTAlTFB6zYiZZXCtkjgjsdD3eX/321vxjixKycER4X
+	 ldhoBl66cDDVV9/S4iQpVUpCAseJDQ12l71btksfBWSO2xCPXULCHoUsmicZ/NkhXS
+	 PDFAKli6NF8+T02xOfQVnS6BPA1dz0fo3UaNgiMl6g3yz/ty5x0sZ/J1L4oQ8gLdaT
+	 IheY4kW8KHreJBW7qy3EjK2YOZ9Q57k9R58tgrFZgyC2gU0oyFUfFDACdvuHB2+5tT
+	 l2Lb9a3j+JjpA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YpsHY0mq5z9rxF;
+	Thu,  6 Feb 2025 23:30:16 +0100 (CET)
+Date: Thu,  6 Feb 2025 22:30:15 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH RFC 9/9] dt-bindings: nand: Convert fsl,elbc bindings to
+ YAML
+Message-ID: <Z6U39wKiLO2I6vrI@probook>
+References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
+ <20250126-ppcyaml-v1-9-50649f51c3dd@posteo.net>
+ <20250127-cuddly-dalmatian-of-saturation-5f1ae2@krzk-bin>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 6/6] PCI: brcmstb: Cast an int variable to an
- irq_hw_number_t
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250205191213.29202-1-james.quinlan@broadcom.com>
- <20250205191213.29202-7-james.quinlan@broadcom.com>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=wahrenst@gmx.net; keydata=
- xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
- IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
- NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
- JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
- TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
- f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
- V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
- aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <20250205191213.29202-7-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:sTGnfuSTXZK7MNvCp5CKmJzOpF5On8p7IkfI//o0gj6Vs+nZ3zo
- HIgCyeUZCL+1EetfpRQ79B69GgcxGbIHPTicg/Pn0Sqj62W/9RMLRBH1Z8K1h9eOfay9Iyp
- aDTp97Q+1glUN5bYInLOb2GTCwl1TFa8G3Rfy/3stJszHIeb8xR/iTj3MqC7hrzP9Yl2Ek6
- 3sGEeafqsDL0/i+myDJdA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:7t9Vbysqt/o=;fZrYQ9MrCW2wQMR1vnqMNUEr3j7
- YNy0Sy0mrI8o56qCWcPXMbwFeKvZSYDLQIc0Ijjhgm03dUSzahEEI5f5HJDL+lLnbJH2mHfsu
- /3aSr79J7grLGa3G2M+UjL2cM2GJi3NHbLIlCl8WD/mHq46Imv2v59bRf+pYfKGvX/ZuvOiYU
- DnpmpV7kbDT6/fhZ8JXVgC1OTplZDPTbyAMxG3hN+A+5NKx0WKjbPoSA0sK0STWM7FQQcD8ax
- GSUE32/VvkPo4Q5TL+5IAfE4GpCO6q0qCl9b5MTtUrN1Gi54ZVrqd8bpNnHPJmaqCXeVnyou3
- 8OOgngG3NtWM7mIq6HwTu6tlL675ZJZkBpb0N9ysRQoxScqa82aWYgW1uGHP7iw1tr9OTlklW
- Af8JdgneDmNsftOWp0XDewJbxL6k+YIcrIcueNzIBB6Lp2+RcsbIG1RLEJOyJSlFxLwb32uJn
- 0jlg22vKVVvftzg9MnniqUVC1PFueFP15WpJbZXZ1oibjbxXxofS9B0qc76OazPveloHMcz1v
- juErKA0P7mjiZHs2rOfXF/63Y7/UgHN4EPeK7Lf/SLhBLd9CAp5zsjtLjg2WUspzU8Wmhq8FQ
- 4xQlK9pPBjF4OzQzeP9S/8Wm8rSKdFT21BIOD9PDdCz/Lu2JH9/ZSkTFXVQIKlRmwZH6RWf9D
- hWGqFCSyi9R+GLlpH0VeiIQgX7RFbxBZ/4H+9a2HJb7Z4uwDZlIx2vcNXknXiUfi3vwd7iOCa
- 9Ux2ZzhNHYrfR8sd0Pfaac1Z4QnVrPn96ootZ6uCoEW2a+qLIlKjnXSdr6CKE9T89NCw/ltJM
- f1SP3PvPyUDOqQfA37h77OS5cbURdmHKlf7V6qHI6EQXXwRVdJx8MlbA35ZKxlGTie5BcMb+7
- ljtTmjbMjfWPnr5kvGf1WC5Vm36wRbcapLgR7Zw78ZJuleZJFcwSn3Youn/pZfxIhZEu1rTBr
- kdFZeHuBxobBDCLVX+YDNhdybXvWsMolE1kiGuaQyahnNZZlUiZr+K936rLe0Fe9aQ7YU7nsw
- zcXgl7CIMy9JFlLP8vt/htmDplcHa3T4otinI33g+OhHD9WGAvgofic0ppXuZnfloA/3FXtCL
- vbFuMGcs6t56hhNbXeQO3WKBMo6vQUYLK8YwvIlAJe+JBlEJNdpVoLvQfOjRqy5PwnlPqGHNh
- QAYf3sOGhrKgEKmbE2Fm8SJOfRWOnHe00WNkYmWfQBgW+6L4hOfLRusGvrSAjrWmvxdwC8ij4
- /Z6fcj7NHesEs7wTPqxsNSd+KnzBLsicXb3JgMzhq0jcMlko52WGkRAA7du/tljgWcHV17A4N
- MWYZ+vZaPs2nqjGy5EUqS9QM/7cDA7pRhMQcL5mZw2wj4v2SW67P8nn6IDVHzxR70H9v7YjtB
- /IPW04WzyIOb1frR17z8o28MBkjrXl84b3NqhSOcFy8bChaAduQTKy+Wtf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250127-cuddly-dalmatian-of-saturation-5f1ae2@krzk-bin>
 
-Hi Jim,
+On Mon, Jan 27, 2025 at 09:37:32AM +0100, Krzysztof Kozlowski wrote:
+> On Sun, Jan 26, 2025 at 07:59:04PM +0100, J. Neuschäfer wrote:
+> > Convert the Freescale localbus controller bindings from text form to
+> > YAML. The list of compatible strings reflects current usage.
+> 
+> simple-bus and 20 other compatibles you used were not present in the
+> original binding. Does above "list of compatible strings" mean you just
+> added them?
 
-Am 05.02.25 um 20:12 schrieb Jim Quinlan:
-> Just make it clear to the reader that there is a conversion happening,
-> in this case from an int type to an irq_hw_number_t, an unsigned long in=
-t.
-I'm not a fan of this generic subject. A possible suggestion might be:
+Ah, I should make this clearer:
 
-PCI: brcmstb: Clarify conversion by irq_domain_set_info
+ - by "list of compatible strings" I mean the list as it is after
+   applying the patch
+ - by "current usage" I mean what is found in arch/*/boot/dts
 
-Regards
->
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> ---
->   drivers/pci/controller/pcie-brcmstb.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/control=
-ler/pcie-brcmstb.c
-> index da7b10036948..1e24e7fc895c 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -560,7 +560,7 @@ static int brcm_irq_domain_alloc(struct irq_domain *=
-domain, unsigned int virq,
->   		return hwirq;
->
->   	for (i =3D 0; i < nr_irqs; i++)
-> -		irq_domain_set_info(domain, virq + i, hwirq + i,
-> +		irq_domain_set_info(domain, virq + i, (irq_hw_number_t)hwirq + i,
->   				    &brcm_msi_bottom_irq_chip, domain->host_data,
->   				    handle_edge_irq, NULL, NULL);
->   	return 0;
+> 
+> > 
+> > Changes compared to the txt version:
+> >  - removed the board-control (fsl,mpc8272ads-bcsr) node because it only
+> >    appears in this example and nowhere else
+> >  - added a new example with NAND flash
+> > 
+> > Remaining issues:
+> >  - The localbus is not really a simple-bus: Unit addresses are not simply
+> >    addresses on a memory bus. Instead, they have a format: The first cell
+> >    is a chip select number, the remaining one or two cells are bus
+> >    addresses.
+> > 
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> > ---
+> >  .../devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml |  61 +++++++++
+> >  .../bindings/powerpc/fsl/fsl,elbc-gpcm-uio.yaml    |  55 ++++++++
+> 
+> Please split the conversion from adding new bindings. For example above
+> file and its compatible fsl,elbc-gpcm-uio was not documented in original
+> TXT.
 
+Fair point, I'll split them.
+
+> 
+> ...
+> 
+> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc.yaml b/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..6bbceb82c77826499abe85879e9189b18d396eea
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc.yaml
+> > @@ -0,0 +1,150 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/powerpc/fsl/fsl,elbc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Freescale Enhanced Local Bus Controller
+> 
+> What sort of bus is it? Memory bus? Then place it with others, see
+> memory directory.
+
+Yes, a memory bus controller with explicit chip-select lines, for
+various kinds of memory (flash, RAM), and possibly other peripherals.
+I'll move it to bindings/memory-controllers.
+
+> 
+> > +
+> > +maintainers:
+> > +  - J. Neuschäfer <j.ne@posteo.net>
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "^localbus@[0-9a-f]+$"
+> > +
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - fsl,mpc8313-elbc
+> > +              - fsl,mpc8315-elbc
+> > +              - fsl,mpc8377-elbc
+> > +              - fsl,mpc8378-elbc
+> > +              - fsl,mpc8379-elbc
+> > +              - fsl,mpc8536-elbc
+> > +              - fsl,mpc8569-elbc
+> > +              - fsl,mpc8572-elbc
+> > +              - fsl,p1020-elbc
+> > +              - fsl,p1021-elbc
+> > +              - fsl,p1023-elbc
+> > +              - fsl,p2020-elbc
+> > +              - fsl,p2041-elbc
+> > +              - fsl,p3041-elbc
+> > +              - fsl,p4080-elbc
+> > +              - fsl,p5020-elbc
+> > +              - fsl,p5040-elbc
+> > +          - const: fsl,elbc
+> > +          - const: simple-bus
+> > +
+> > +      - items:
+> > +          - const: fsl,mpc8272-localbus
+> > +          - const: fsl,pq2-localbus
+> > +
+> > +      - items:
+> > +          - enum:
+> > +              - fsl,mpc8247-localbus
+> > +              - fsl,mpc8248-localbus
+> > +              - fsl,mpc8360-localbus
+> > +          - const: fsl,pq2pro-localbus
+> > +          - const: simple-bus
+> > +
+> > +      - items:
+> > +          - enum:
+> > +              - fsl,mpc8540-localbus
+> > +              - fsl,mpc8544-lbc
+> > +              - fsl,mpc8544-localbus
+> > +              - fsl,mpc8548-lbc
+> > +              - fsl,mpc8548-localbus
+> > +              - fsl,mpc8560-localbus
+> > +              - fsl,mpc8568-localbus
+> > +          - const: fsl,pq3-localbus
+> > +          - const: simple-bus
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  "#address-cells":
+> > +    enum: [2, 3]
+> > +    description: |
+> > +      The first cell is the chipselect number, and the remaining cells are the
+> > +      offset into the chipselect.
+> > +
+> > +  "#size-cells":
+> > +    enum: [1, 2]
+> > +    description: |
+> > +      Either one or two, depending on how large each chipselect can be.
+> > +
+> > +  ranges:
+> > +    description: |
+> > +      Each range corresponds to a single chipselect, and covers the entire
+> > +      access window as configured.
+> > +
+> > +patternProperties:
+> > +  "^.*@.*$":
+> > +    type: object
+> 
+> And probably you need 
+
+  ?
+
+
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    localbus@f0010100 {
+> > +        compatible = "fsl,mpc8272-localbus",
+> > +                     "fsl,pq2-localbus";
+> > +        #address-cells = <2>;
+> > +        #size-cells = <1>;
+> > +        reg = <0xf0010100 0x40>;
+> 
+> compatible, then reg - see DTS coding style.
+
+I'll clean up the various style issues in the examples.
+(These examples are quite old, either from the old version of this
+binding or from existing dts files.)
+
+
+Best regards,
+J. Neuschäfer
+
+> 
+> > +
+> > +        ranges = <0x0 0x0 0xfe000000 0x02000000
+> > +                  0x1 0x0 0xf4500000 0x00008000
+> > +                  0x2 0x0 0xfd810000 0x00010000>;
+> > +
+> > +        flash@0,0 {
+> > +            compatible = "jedec-flash";
+> > +            reg = <0x0 0x0 0x2000000>;
+> 
+> Well, here it is correct
+> 
+> > +            bank-width = <4>;
+> > +            device-width = <1>;
+> > +        };
+> > +
+> > +        simple-periph@2,0 {
+> > +            compatible = "fsl,elbc-gpcm-uio";
+> > +            reg = <0x2 0x0 0x10000>;
+> > +            elbc-gpcm-br = <0xfd810800>;
+> > +            elbc-gpcm-or = <0xffff09f7>;
+> > +        };
+> > +    };
+> > +
+> > +  - |
+> > +    localbus@e0005000 {
+> 
+> compatible, reg
+> 
+> > +        #address-cells = <2>;
+> > +        #size-cells = <1>;
+> > +        compatible = "fsl,mpc8315-elbc", "fsl,elbc", "simple-bus";
+> > +        reg = <0xe0005000 0x1000>;
+> > +        interrupts = <77 0x8>;
+> > +        interrupt-parent = <&ipic>;
+> > +
+> > +        ranges = <0x0 0x0 0xfe000000 0x00800000
+> > +                  0x1 0x0 0xe0600000 0x00002000
+> > +                  0x2 0x0 0xf0000000 0x00020000
+> > +                  0x3 0x0 0xfa000000 0x00008000>;
+> > +
+> > +        flash@0,0 {
+> 
+> compatible, reg
+> 
+> > +            #address-cells = <1>;
+> > +            #size-cells = <1>;
+> > +            compatible = "cfi-flash";
+> > +            reg = <0x0 0x0 0x800000>;
+> > +            bank-width = <2>;
+> > +            device-width = <1>;
+> > +        };
+> > +
+> > +        nand@1,0 {
+> 
+> compatible, reg
+> 
+> > +            #address-cells = <1>;
+> > +            #size-cells = <1>;
+> > +            compatible = "fsl,mpc8315-fcm-nand",
+> > +                         "fsl,elbc-fcm-nand";
+> > +            reg = <0x1 0x0 0x2000>;
+> > +        };
+> 
+> Best regards,
+> Krzysztof
+> 
 
