@@ -1,190 +1,404 @@
-Return-Path: <linux-pci+bounces-20803-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20804-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 513D4A2AB81
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 15:36:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B75C7A2AC3E
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 16:14:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D8C73A314B
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 14:36:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4497C16A976
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 15:14:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A1F8236429;
-	Thu,  6 Feb 2025 14:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D4F21EA7F1;
+	Thu,  6 Feb 2025 15:14:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SAZghjPX"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pFzIhik+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B790236428
-	for <linux-pci@vger.kernel.org>; Thu,  6 Feb 2025 14:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFC011A5BBD;
+	Thu,  6 Feb 2025 15:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738852566; cv=none; b=ZQ1/SkGHhl+dOnE+yzh0LbbY0YNBDdVKF138GFdgUKvCgtT5lPTd6RFnWLUiw8PUKGqBj+DuTEPUmCldj/W7Ef+OLcjeeGBPaMwX/cRHf5SKi3KejAqsyBjcTySGvL7tS/4yFsqP/9Sfy8hHkI9HUhlLcg5Er+9SOm4Pry9ND9c=
+	t=1738854891; cv=none; b=Jf7+n85YCdw3U7HJIxTsQLP4GNTp4aY0BM8oNShIJi3+Qqr2CAb99n6MxwWlc49TdgZHNtvIGbQr9N5hHv3G8qYThhgQfLJWTFyJKZHq3ojzSetv7qYOVi4rlVE8wBK+TLh0JtkPppsAXHAkpjsKGFLc6WaT4Ism9BpX2+8jkDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738852566; c=relaxed/simple;
-	bh=iO43D0PL+o1QdnLJZ0VQ/BtvTi+SA72B/I1+koMgHj8=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EG45vd1A2vMfWqBc0hciGZgTu0kBRuSkI07spEVUVejMtCfPbDpW86zEenUOETNJx1pWtYSWcX7Q9DfzdePDI3Q8pGT9JrsJ5P2qcy5M40t/LNwvhjVtT8ir1zp8MxK4SPux+fbt7hYxIgu3LGr4m7kHtvzBLkCxczEX2VIkjbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SAZghjPX; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738852563;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yQmwnNYhVl7y4z+j+mWJ9koQSChBra4hwvud7jF7bEM=;
-	b=SAZghjPXd+hp0k547ZvN1y9wsFroTQmIwAP2/286JPkKu/YbiUu78aeNiIbFHMJ4HrykE7
-	01oRtfjAlyDSNA3BHrv+G6YgKaFd8mhcBg9z5iHwK2mrIb0fsHcW6AZTABS7+PEsjB3sbZ
-	c7/owoAmEcQFKzmjhRqw70lBbR0EFrQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-185-_rkK42xjNSG5sI9FdhVF3g-1; Thu, 06 Feb 2025 09:36:02 -0500
-X-MC-Unique: _rkK42xjNSG5sI9FdhVF3g-1
-X-Mimecast-MFC-AGG-ID: _rkK42xjNSG5sI9FdhVF3g
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38da839b458so400527f8f.2
-        for <linux-pci@vger.kernel.org>; Thu, 06 Feb 2025 06:36:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738852561; x=1739457361;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yQmwnNYhVl7y4z+j+mWJ9koQSChBra4hwvud7jF7bEM=;
-        b=m0DiySBCNXFk8a3LiNJmKXDx8rbvitopjNVu5ihmJBiDsCWoYFnykgeMeDWlqChxub
-         kkjRRGPYXhKL1z111v77Yp0thJHebsrDJBNrmVFTRbmmf3fHUQHQABRjvFXjuuohVhln
-         0uZ0ezYuAwY6zJtuTkf4A+nPGGXRcyZ2ffhLqJBOv8WhhiAD8B/otygsZo7nH7V43Cle
-         AJ9P42Gi2F6AomyEJi1JwWr3EjtZDRQXFVDGat8jKxYGv+Mq5ls7L7iP4rieFostSKj5
-         d6Dfqe0CBvnVgCCvkZ71EFj0U0epbu4v35odieleRA+4P+T+J6PE3RdCCzwHgecEv+P1
-         EsPA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrBKbk89/TIRNKel9Tc79fNB8f5p2YF+0sHO4T53WOiLhwO1PXCIrZNnwBALZx9vQZSy96x7J8Y4M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFRzAWosSRCNLomd48/w9KR4x73XXdKNWaVSsWTgPQlJ8UZSPP
-	GJrkkFyQUUyFPgjzlLfDgDjio9GPeIYOyVmOd/lg+vCxB3/c4vpCB37plC+PmkAbeHalQTihbYj
-	svtzIh94OZXXXAmmNk9bzFayOLFo/hzvGNXVExVh6Rc9wFCmgfj6meTOpDQ==
-X-Gm-Gg: ASbGncvFKFXpZf1/ifTafPlnraEo21x4SloRl9wviisA1Iu4EsmYu8E7Lgm/IWhO+PN
-	tcbrm6yABwKm+N+LdvF1YxXtYqKtgpueu0tALRbm5Bpr9vIIOqCiJyqtiuD1gNTPWSmjpecZjo8
-	yrSEhZVZbzNEeAXF9VrSdcZyWdKXFVJMC45vwwsszqmKS2Mu42me+eAo38O5HsbvXmxB6QtdvKf
-	Lg1R2LVI/US9VOGTBN57WcK3fXuPecewWnYVVZ4KJpJYGi/L6zSfP1z397WZ5K1bdSx4gM+uoGJ
-	LhmMty8wFZvOoxpFwet/4frQPFotcXFjWzJNy2HtfoBpWSiO5SIb78ZQZBP/O5tRE3EGUNzzuAL
-	V0KGlXS+ewfEJIi63okVa/oGCnAUKKdQVHIfbYuk=
-X-Received: by 2002:adf:f9ce:0:b0:386:3835:9fec with SMTP id ffacd0b85a97d-38db492a155mr5075615f8f.44.1738852560938;
-        Thu, 06 Feb 2025 06:36:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEWL+AzOHE6y1/ZV3p8MQR6Ck4yDVM/9HbJTRC8drQg9XkPqYLMfOUri6+TKbLHY9CtZKzhGw==
-X-Received: by 2002:adf:f9ce:0:b0:386:3835:9fec with SMTP id ffacd0b85a97d-38db492a155mr5075602f8f.44.1738852560598;
-        Thu, 06 Feb 2025 06:36:00 -0800 (PST)
-Received: from ?IPv6:2001:16b8:2d3c:3d00:a7b1:b563:1454:3233? (200116b82d3c3d00a7b1b56314543233.dip.versatel-1u1.de. [2001:16b8:2d3c:3d00:a7b1:b563:1454:3233])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d94d7c7sm56422415e9.14.2025.02.06.06.35.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 06:36:00 -0800 (PST)
-Message-ID: <7547778507b5e98e103c0cb54e7705b9d65f93e3.camel@redhat.com>
-Subject: Re: [PATCH] serial: 8250_pci: Fix Warning at
- drivers/pci/devres.c:603 pcim_add_mapping_to_legacy_table
-From: Philipp Stanner <pstanner@redhat.com>
-To: Helge Deller <deller@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-parisc@vger.kernel.org, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  Jiri Slaby <jirislaby@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Date: Thu, 06 Feb 2025 15:35:59 +0100
-In-Reply-To: <Z5XmLKzhKpLAlzHt@p100>
-References: <Z5XmLKzhKpLAlzHt@p100>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1738854891; c=relaxed/simple;
+	bh=THHeSWzWqdi+rHd9N14KmDq3qXNDaIZicWrt1Um9iNk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Q+EXpAgcRD5aWNt44nqIbm6l66yzREX+8UyICW4+jee81Hf/HJS6jkN7AOPchC6G7sM9PvmxuQzwq2/Zxw5y8Ob6F60qoKVOjH9QDxin4uoXY+lCpkVeQ2uvGqyTFzFDQUnwDHU5OHKrzo9Td5535mxBA1cNM0c7WExa50e/wVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=pFzIhik+; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=24UwM
+	qhVnv7oQWifOAu1e14eK5QqgdytWOv2YcNIUeE=; b=pFzIhik+DfQbeHTRAgj4i
+	eQQ+xj54Uq/BlSbQKoqMfeIEaIzi+YryNoTGqZH/Ln2j39v+gZG0sOW69tf3Pv+b
+	LHSQ4ZivMZYQsUZJiape7mo6/EbeQ306j7ZQMNQ4sIHOHZsdo+qgNL+Tvfe+eyly
+	tev5hT3JAxeLZW9fznTApE=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wDXRyeq0aRnSD6NKQ--.56583S2;
+	Thu, 06 Feb 2025 23:13:47 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: jingoohan1@gmail.com,
+	shradha.t@samsung.com
+Cc: manivannan.sadhasivam@linaro.org,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	Frank.Li@nxp.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rockswang7@gmail.com,
+	Hans Zhang <18255117159@163.com>
+Subject: [v2] PCI: dwc: Add the debugfs property to provide the LTSSM status of the PCIe link
+Date: Thu,  6 Feb 2025 23:13:43 +0800
+Message-Id: <20250206151343.26779-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDXRyeq0aRnSD6NKQ--.56583S2
+X-Coremail-Antispam: 1Uf129KBjvAXoWfGr47Kw1UKFy7Xry8Ar43KFg_yoW8Jw45uo
+	Z3GF1fW3WxAa4jva47ZF17GFy8Zw1I9a47tF4vyF4rur9xC3WUt3yUXrn5Ja1Ykr48Aw4U
+	Zr4DX3W7Gr4UWrnrn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjTRajg3UUUUU
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwHro2ekx5WKvgAAs3
 
-On Sun, 2025-01-26 at 08:37 +0100, Helge Deller wrote:
-> Some PA-RISC servers have BMC management cards (Diva) with up to 5
-> serial
-> UARTS per memory PCI bar. This triggers since at least kernel 6.12
-> for each of
-> the UARTS (beside the first one) the following warning in devres.c:
->=20
-> =C2=A00000:00:02.0: ttyS2 at MMIO 0xf0822000 (irq =3D 21, base_baud =3D
-> 115200) is a 16550A
-> =C2=A00000:00:02.0: ttyS3 at MMIO 0xf0822010 (irq =3D 21, base_baud =3D
-> 115200) is a 16550A
-> =C2=A0------------[ cut here ]------------
-> =C2=A0WARNING: CPU: 1 PID: 1 at drivers/pci/devres.c:603
-> pcim_add_mapping_to_legacy_table+0x5c/0x8c
-> =C2=A0CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.12.11+ #2621
-> =C2=A0Hardware name: 9000/778/B160L
-> =C2=A0
-> =C2=A0 IAOQ[0]: pcim_add_mapping_to_legacy_table+0x5c/0x8c
-> =C2=A0 IAOQ[1]: pcim_add_mapping_to_legacy_table+0x60/0x8c
-> =C2=A0 RP(r2): pcim_add_mapping_to_legacy_table+0x4c/0x8c
-> =C2=A0Backtrace:
-> =C2=A0 [<10c1eb10>] pcim_iomap+0xd4/0x10c
-> =C2=A0 [<10ca8784>] serial8250_pci_setup_port+0xa8/0x11c
-> =C2=A0 [<10ca9a34>] pci_hp_diva_setup+0x6c/0xc4
-> =C2=A0 [<10cab134>] pciserial_init_ports+0x150/0x324
-> =C2=A0 [<10cab470>] pciserial_init_one+0xfc/0x20c
-> =C2=A0 [<10c14780>] pci_device_probe+0xc0/0x190
-> =C2=A0 ...
-> =C2=A0---[ end trace 0000000000000000 ]---
->=20
-> I see three options to avoid this warning:
-> a) drop the WARNING() from devrec.c,
-> b) modify pcim_iomap() to return an existing mapping if it exists
-> =C2=A0=C2=A0 instead of creating a new mapping, or
-> c) change serial8250_pci_setup_port() to only create a new mapping
-> =C2=A0=C2=A0 if none exists yet.
->=20
-> This patch implements option c).
->=20
-> Signed-off-by: Helge Deller <deller@gmx.de>
-> Cc: <stable@vger.kernel.org> # v6.12+
->=20
->=20
-> diff --git a/drivers/tty/serial/8250/8250_pcilib.c
-> b/drivers/tty/serial/8250/8250_pcilib.c
-> index ea906d721b2c..fc024bf86c1f 100644
-> --- a/drivers/tty/serial/8250/8250_pcilib.c
-> +++ b/drivers/tty/serial/8250/8250_pcilib.c
-> @@ -19,7 +19,9 @@ int serial8250_pci_setup_port(struct pci_dev *dev,
-> struct uart_8250_port *port,
-> =C2=A0		return -EINVAL;
-> =C2=A0
-> =C2=A0	if (pci_resource_flags(dev, bar) & IORESOURCE_MEM) {
-> -		if (!pcim_iomap(dev, bar, 0) &&
-> !pcim_iomap_table(dev))
-> +		/* might have been mapped already with other offset
-> */
-> +		if (!pcim_iomap_table(dev) ||
-> !pcim_iomap_table(dev)[bar] ||
-> +			!pcim_iomap(dev, bar, 0))
-> =C2=A0			return -ENOMEM;
-> =C2=A0
-> =C2=A0		port->port.iotype =3D UPIO_MEM;
->=20
+Add the debugfs property to provide a view of the current link's LTSSM
+status from the root port device.
 
-[Answering despite the ignore-hint to provide some tips for a v2]
+  /sys/kernel/debug/dwc_pcie_<dev>/ltssm_status
 
-Alright, so this worked before 6.12 because pcim_iomap() just silently
-returned NULL if a mapping already existed. Which it still does, but
-with a warning.
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+Changes since v1:
+https://lore.kernel.org/linux-pci/20250123071326.1810751-1-18255117159@163.com/
 
-If you have to rework 8250_pcilib.c anyways, would be good to get rid
-of pcim_iomap_table() as you're at it, because it's deprecated and
-problematic.
+- Do not place into sysfs node as recommended by maintainer. Shradha-based patch
+  is put into debugfs.
+- Submissions based on the following patches:
+https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-2-shradha.t@samsung.com/
+https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-3-shradha.t@samsung.com/
+https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-4-shradha.t@samsung.com/
+https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-5-shradha.t@samsung.com/
+---
+ Documentation/ABI/testing/debugfs-dwc-pcie    |  6 ++
+ .../controller/dwc/pcie-designware-debugfs.c  | 70 ++++++++++++++++---
+ .../pci/controller/dwc/pcie-designware-ep.c   |  4 +-
+ .../pci/controller/dwc/pcie-designware-host.c | 54 +++++++++++++-
+ drivers/pci/controller/dwc/pcie-designware.h  | 43 ++++++++++--
+ 5 files changed, 159 insertions(+), 18 deletions(-)
 
-It seems to me that this driver would be best of it could store in its
-state (uart_8250_port) whether that BAR has already been mapped, and if
-yes, take the existing addr and add the offset as needed for your new
-addr.
+diff --git a/Documentation/ABI/testing/debugfs-dwc-pcie b/Documentation/ABI/testing/debugfs-dwc-pcie
+index d3f84f46b400..bf0116012175 100644
+--- a/Documentation/ABI/testing/debugfs-dwc-pcie
++++ b/Documentation/ABI/testing/debugfs-dwc-pcie
+@@ -142,3 +142,9 @@ Description:	(RW) Some lanes in the event list are lane specific events. These i
+ 		events 1) - 11) and 34) - 35).
+ 		Write lane number for which counter needs to be enabled/disabled/dumped.
+ 		Read will return the current selected lane number. Lane0 is selected by default.
++
++What:		/sys/kernel/debug/dwc_pcie_<dev>/ltssm_status
++Date:		February 2025
++Contact:	Hans Zhang <18255117159@163.com>
++Description:	(RO) Read will return the current value of the PCIe link status raw value and
++		string status.
+diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+index 5d883b13be84..ddfb854aa684 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
++++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+@@ -465,7 +465,7 @@ static const struct file_operations dwc_pcie_counter_value_ops = {
+ 	.read = counter_value_read,
+ };
+ 
+-void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
++static void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
+ {
+ 	struct dwc_pcie_rasdes_info *rinfo = pci->rasdes_info;
+ 
+@@ -473,13 +473,12 @@ void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
+ 	mutex_destroy(&rinfo->reg_lock);
+ }
+ 
+-int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci)
++static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
+ {
+-	struct dentry *dir, *rasdes_debug, *rasdes_err_inj, *rasdes_event_counter, *rasdes_events;
++	struct dentry *rasdes_debug, *rasdes_err_inj, *rasdes_event_counter, *rasdes_events;
+ 	struct dwc_pcie_rasdes_info *rasdes_info;
+ 	struct dwc_pcie_rasdes_priv *priv_tmp;
+ 	const struct dwc_pcie_vendor_id *vid;
+-	char dirname[DWC_DEBUGFS_BUF_MAX];
+ 	struct device *dev = pci->dev;
+ 	int ras_cap, i, ret;
+ 
+@@ -498,12 +497,6 @@ int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci)
+ 	if (!rasdes_info)
+ 		return -ENOMEM;
+ 
+-	/* Create main directory for each platform driver */
+-	snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
+-	dir = debugfs_create_dir(dirname, NULL);
+-	if (IS_ERR(dir))
+-		return PTR_ERR(dir);
+-
+ 	/* Create subdirectories for Debug, Error injection, Statistics */
+ 	rasdes_debug = debugfs_create_dir("rasdes_debug", dir);
+ 	rasdes_err_inj = debugfs_create_dir("rasdes_err_inj", dir);
+@@ -559,3 +552,60 @@ int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci)
+ 	dwc_pcie_rasdes_debugfs_deinit(pci);
+ 	return ret;
+ }
++
++static int dwc_pcie_ltssm_status_show(struct seq_file *s, void *v)
++{
++	struct dw_pcie *pci = s->private;
++	enum dw_pcie_ltssm val;
++
++	val = dw_pcie_get_ltssm(pci);
++	seq_printf(s, "%s (0x%02x)\n", dw_ltssm_sts_string(val), val);
++
++	return 0;
++}
++
++static int dwc_pcie_ltssm_status_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, dwc_pcie_ltssm_status_show, inode->i_private);
++}
++
++static const struct file_operations dwc_pcie_ltssm_status_ops = {
++	.open = dwc_pcie_ltssm_status_open,
++	.read = seq_read,
++};
++
++static void dwc_pcie_ltssm_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
++{
++	debugfs_create_file("ltssm_status", 0444, dir, pci,
++			    &dwc_pcie_ltssm_status_ops);
++}
++
++void dwc_pcie_debugfs_deinit(struct dw_pcie *pci)
++{
++	dwc_pcie_rasdes_debugfs_deinit(pci);
++	debugfs_remove_recursive(pci->debugfs);
++}
++
++int dwc_pcie_debugfs_init(struct dw_pcie *pci)
++{
++	char dirname[DWC_DEBUGFS_BUF_MAX];
++	struct device *dev = pci->dev;
++	struct dentry *dir;
++	int ret;
++
++	/* Create main directory for each platform driver */
++	snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
++	dir = debugfs_create_dir(dirname, NULL);
++	if (IS_ERR(dir))
++		return PTR_ERR(dir);
++
++	pci->debugfs = dir;
++	ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
++	if (ret)
++		dev_dbg(dev, "rasdes debugfs init failed\n");
++
++	dwc_pcie_ltssm_debugfs_init(pci, dir);
++
++	return 0;
++}
++
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 84b5f27a2c69..a87a714bb472 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -642,7 +642,7 @@ void dw_pcie_ep_cleanup(struct dw_pcie_ep *ep)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 
+-	dwc_pcie_rasdes_debugfs_deinit(pci);
++	dwc_pcie_debugfs_deinit(pci);
+ 	dw_pcie_edma_remove(pci);
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_ep_cleanup);
+@@ -814,7 +814,7 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+ 
+ 	dw_pcie_ep_init_non_sticky_registers(pci);
+ 
+-	ret = dwc_pcie_rasdes_debugfs_init(pci);
++	ret = dwc_pcie_debugfs_init(pci);
+ 	if (ret)
+ 		goto err_remove_edma;
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 1cd282f70830..a271dcd260c5 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -418,6 +418,56 @@ static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
+ 	}
+ }
+ 
++char *dw_ltssm_sts_string(enum dw_pcie_ltssm ltssm)
++{
++	char *str;
++
++	switch (ltssm) {
++#define DW_PCIE_LTSSM_NAME(n) case n: str = #n; break
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_QUIET);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_ACT);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_ACTIVE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_COMPLIANCE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_CONFIG);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_PRE_DETECT_QUIET);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_WAIT);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LINKWD_START);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LINKWD_ACEPT);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LANENUM_WAI);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LANENUM_ACEPT);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_COMPLETE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_IDLE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_LOCK);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_SPEED);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_RCVRCFG);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_IDLE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L0);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L0S);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L123_SEND_EIDLE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L1_IDLE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L2_IDLE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L2_WAKE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DISABLED_ENTRY);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DISABLED_IDLE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DISABLED);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_ENTRY);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_ACTIVE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_EXIT);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_EXIT_TIMEOUT);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_HOT_RESET_ENTRY);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_HOT_RESET);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ0);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ1);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ2);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ3);
++	default:
++		str = "DW_PCIE_LTSSM_UNKNOWN";
++		break;
++	}
++
++	return str + strlen("DW_PCIE_LTSSM_");
++}
++
+ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+@@ -524,7 +574,7 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+ 	if (ret)
+ 		goto err_remove_edma;
+ 
+-	ret = dwc_pcie_rasdes_debugfs_init(pci);
++	ret = dwc_pcie_debugfs_init(pci);
+ 	if (ret)
+ 		goto err_remove_edma;
+ 
+@@ -575,7 +625,7 @@ void dw_pcie_host_deinit(struct dw_pcie_rp *pp)
+ 
+ 	dw_pcie_stop_link(pci);
+ 
+-	dwc_pcie_rasdes_debugfs_deinit(pci);
++	dwc_pcie_debugfs_deinit(pci);
+ 
+ 	dw_pcie_edma_remove(pci);
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 8d5dc22f06f7..a3c2d2b6284b 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -330,8 +330,40 @@ enum dw_pcie_ltssm {
+ 	/* Need to align with PCIE_PORT_DEBUG0 bits 0:5 */
+ 	DW_PCIE_LTSSM_DETECT_QUIET = 0x0,
+ 	DW_PCIE_LTSSM_DETECT_ACT = 0x1,
++	DW_PCIE_LTSSM_POLL_ACTIVE = 0x2,
++	DW_PCIE_LTSSM_POLL_COMPLIANCE = 0x3,
++	DW_PCIE_LTSSM_POLL_CONFIG = 0x4,
++	DW_PCIE_LTSSM_PRE_DETECT_QUIET = 0x5,
++	DW_PCIE_LTSSM_DETECT_WAIT = 0x6,
++	DW_PCIE_LTSSM_CFG_LINKWD_START = 0x7,
++	DW_PCIE_LTSSM_CFG_LINKWD_ACEPT = 0x8,
++	DW_PCIE_LTSSM_CFG_LANENUM_WAI = 0x9,
++	DW_PCIE_LTSSM_CFG_LANENUM_ACEPT = 0xa,
++	DW_PCIE_LTSSM_CFG_COMPLETE = 0xb,
++	DW_PCIE_LTSSM_CFG_IDLE = 0xc,
++	DW_PCIE_LTSSM_RCVRY_LOCK = 0xd,
++	DW_PCIE_LTSSM_RCVRY_SPEED = 0xe,
++	DW_PCIE_LTSSM_RCVRY_RCVRCFG = 0xf,
++	DW_PCIE_LTSSM_RCVRY_IDLE = 0x10,
+ 	DW_PCIE_LTSSM_L0 = 0x11,
++	DW_PCIE_LTSSM_L0S = 0x12,
++	DW_PCIE_LTSSM_L123_SEND_EIDLE = 0x13,
++	DW_PCIE_LTSSM_L1_IDLE = 0x14,
+ 	DW_PCIE_LTSSM_L2_IDLE = 0x15,
++	DW_PCIE_LTSSM_L2_WAKE = 0x16,
++	DW_PCIE_LTSSM_DISABLED_ENTRY = 0x17,
++	DW_PCIE_LTSSM_DISABLED_IDLE = 0x18,
++	DW_PCIE_LTSSM_DISABLED = 0x19,
++	DW_PCIE_LTSSM_LPBK_ENTRY = 0x1a,
++	DW_PCIE_LTSSM_LPBK_ACTIVE = 0x1b,
++	DW_PCIE_LTSSM_LPBK_EXIT = 0x1c,
++	DW_PCIE_LTSSM_LPBK_EXIT_TIMEOUT = 0x1d,
++	DW_PCIE_LTSSM_HOT_RESET_ENTRY = 0x1e,
++	DW_PCIE_LTSSM_HOT_RESET = 0x1f,
++	DW_PCIE_LTSSM_RCVRY_EQ0 = 0x20,
++	DW_PCIE_LTSSM_RCVRY_EQ1 = 0x21,
++	DW_PCIE_LTSSM_RCVRY_EQ2 = 0x22,
++	DW_PCIE_LTSSM_RCVRY_EQ3 = 0x23,
+ 
+ 	DW_PCIE_LTSSM_UNKNOWN = 0xFFFFFFFF,
+ };
+@@ -463,6 +495,7 @@ struct dw_pcie {
+ 	struct reset_control_bulk_data	core_rsts[DW_PCIE_NUM_CORE_RSTS];
+ 	struct gpio_desc		*pe_rst;
+ 	bool			suspended;
++	struct dentry		*debugfs;
+ 	void			*rasdes_info;
+ };
+ 
+@@ -679,6 +712,8 @@ static inline enum dw_pcie_ltssm dw_pcie_get_ltssm(struct dw_pcie *pci)
+ 	return (enum dw_pcie_ltssm)FIELD_GET(PORT_LOGIC_LTSSM_STATE_MASK, val);
+ }
+ 
++char *dw_ltssm_sts_string(enum dw_pcie_ltssm ltssm);
++
+ #ifdef CONFIG_PCIE_DW_HOST
+ irqreturn_t dw_handle_msi_irq(struct dw_pcie_rp *pp);
+ int dw_pcie_setup_rc(struct dw_pcie_rp *pp);
+@@ -799,14 +834,14 @@ dw_pcie_ep_get_func_from_ep(struct dw_pcie_ep *ep, u8 func_no)
+ #endif
+ 
+ #ifdef CONFIG_PCIE_DW_DEBUGFS
+-int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci);
+-void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci);
++int dwc_pcie_debugfs_init(struct dw_pcie *pci);
++void dwc_pcie_debugfs_deinit(struct dw_pcie *pci);
+ #else
+-static inline int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci)
++static inline int dwc_pcie_debugfs_init(struct dw_pcie *pci)
+ {
+ 	return 0;
+ }
+-static inline void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
++static inline void dwc_pcie_debugfs_deinit(struct dw_pcie *pci)
+ {
+ }
+ #endif
 
-Feel free to reach out if I can provide further tips
-
-
-Greetings
-P.
+base-commit: 7004a2e46d1693848370809aa3d9c340a209edbb
+prerequisite-patch-id: 6e5987e85df22c4d3859d21765617055faca96a1
+prerequisite-patch-id: 200b28aafcac3933da9feffce2381a2a9b4a6243
+prerequisite-patch-id: faf05c564e8d6a7b78ea4aaac3a02abcad53fe27
+prerequisite-patch-id: 8b199e3e1baa2eafa59ad45640db1f34992bcb32
+-- 
+2.25.1
 
 
