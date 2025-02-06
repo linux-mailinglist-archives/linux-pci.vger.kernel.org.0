@@ -1,187 +1,110 @@
-Return-Path: <linux-pci+bounces-20790-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20791-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 276C8A2A3D1
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 10:04:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E530A2A7C2
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 12:42:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 694633A352A
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 09:04:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AA637166741
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 11:42:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93F84225A2B;
-	Thu,  6 Feb 2025 09:04:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D33D22ACF1;
+	Thu,  6 Feb 2025 11:41:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CE1JmQ18"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="a7ReaMBs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFF02248AC;
-	Thu,  6 Feb 2025 09:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A3122F395;
+	Thu,  6 Feb 2025 11:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738832665; cv=none; b=k5f2ZJqcWKC85MLfzBZ0AhrPTS426OTe2Wr/+JYWP6SAlakVPGEq2aLFoF64o19iUTkkn2fI5wGB/IXD5QMojn1lvYrokHPPNE0VK8bYzuYXhQ4vZBhLDi5tN4nPNFcrAyKHs7umcl5uJAkOH2xpIEIyRFrZSKd6jzzmf7Y8/Qk=
+	t=1738842066; cv=none; b=crj1eTrE3itog/w4Bgopkhu69VGwiZYDl9miNQEV5Hu8FgchiF3q4TVsbilmq98pSFe2WrpA9ExYhTcX+9k41fkKFKcXs5sO5KU7XhlACHUs4aaL5vQXER5rGb3G35CR+sHuW5FRDN3sOr/P9OGhl+1JKqwhQT9PTEfhVLWoCsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738832665; c=relaxed/simple;
-	bh=8eG7UI0hfNWaK2mXqVw5c7deZzv7yKrvlpZtUeX6xgg=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h4lTtzeMiY8MOZ1CMDJHkKAavAS8WORkNJl02zGm4xz1TtBJRr3JOgOXUZ9sCnbx1AGQrhjn/7Xbe8fwWjlBcaYx0C/3ZAS6D8sCR1AB/RxzMxMMzhKuYqmn+QpWLXPD4P+alzsR22N7xfQQLlUa60WozTcMt3YmclbFE0XRhcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CE1JmQ18; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA6CFC4CEDD;
-	Thu,  6 Feb 2025 09:04:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738832664;
-	bh=8eG7UI0hfNWaK2mXqVw5c7deZzv7yKrvlpZtUeX6xgg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CE1JmQ18aDBlvGcwxkqEg7l1m7hdhTlmxC/Rt9EvPBJTNPVq4OvliUkuddk0ZZG/u
-	 CgToeBS0lriBfdZzuqOFNwUVM12L7oRInzTwgYeld64fFtqogOQaDPjCH7tmU4WXQp
-	 UqaBJ8pnWuWXahnm3KmmcTBBdxRmRfjLyhdEALFibRx4IM2bsJNx+ARU1LhrBWMuCw
-	 pqLzCNkvHTi+0Xcso4/8ZGXqrxHyNRoqQjKadxBB6yeKntWgiArn5krn9xympsgn4z
-	 TE5lJSvIEDLFuO2gwa1EUjt097VHw5SXr3Xj764+7opLuPWWJ1r/MjH/vClXpFHMS0
-	 SFp/VKZQ+7zjg==
-Received: from 82-132-233-249.dab.02.net ([82.132.233.249] helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tfxo5-0013cQ-BO;
-	Thu, 06 Feb 2025 09:04:22 +0000
-Date: Thu, 06 Feb 2025 09:04:00 +0000
-Message-ID: <87ed0btpfj.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,	Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>,	linux-pci@vger.kernel.org,	Rob Herring
- <robh@kernel.org>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,	Krzysztof
- =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,	Bjorn Helgaas
- <bhelgaas@google.com>,	linux-kernel@vger.kernel.org,	Brian Norris
- <briannorris@google.com>
-Subject: Re: [PATCH v2] PCI: dwc: Use level-triggered handler for MSI IRQs
-In-Reply-To: <20250205151635.v2.1.Id60295bee6aacf44aa3664e702012cb4710529c3@changeid>
-References: <20250205151635.v2.1.Id60295bee6aacf44aa3664e702012cb4710529c3@changeid>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1738842066; c=relaxed/simple;
+	bh=1E6Hu2C7qFiD2//pufJW1Q2YD753Bi9yu4ZCmW59VfE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NcdnqX6PwOaliRuPOEfDBshRzMOybDwPqGgcgS+Tw1xa9/KBAOejvSFvSUYN5Z8xAQxGUYuWr6tLk6EvjCMvs1dxMDTNt6+kYuoI8gEoHhx+7EyXhFBDf8JRXIKmxa9diD3rqzDe+0eP++/NfXSpeHD0sGWejiflQ69mRiElcjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=a7ReaMBs; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1738842055; x=1739446855; i=markus.elfring@web.de;
+	bh=1E6Hu2C7qFiD2//pufJW1Q2YD753Bi9yu4ZCmW59VfE=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=a7ReaMBshILFjP2WttcxDdzbKHtAyQbCQHBuc7oFyuoYi1BFbGkTOvEz1XpCn06S
+	 tJGt02+VgHiym6hI3FJLnDixLPxnqv3yevI5sZkIOEEM0ZpNs7fuPWa8xjs/PI23G
+	 kUQTcq/sbXMeyTMM410HzzWkHfV13fltv1Y1W6Ic5pDw14twszr+Bk6QL3IFYSTgm
+	 bHxJNZwVLgb3Ds3Wuzh216fG6jqgegv4mWWYpqZ+sv1wduXULts3E9qH7AGMY+yCY
+	 XLu14YG/skTzkJBoozpk+dkXhxt+lF/t2zizh89jgRqYrw/+KHXNlmCqGwNLJZHL9
+	 LXUVu6lGFnGFf835CA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.8]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MWi5i-1tvTmZ0YSe-00OuzO; Thu, 06
+ Feb 2025 12:40:55 +0100
+Message-ID: <01a579e0-4a5d-4cdf-9ac4-7e6212279bd0@web.de>
+Date: Thu, 6 Feb 2025 12:40:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 82.132.233.249
-X-SA-Exim-Rcpt-To: briannorris@chromium.org, jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org, linux-pci@vger.kernel.org, robh@kernel.org, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, linux-kernel@vger.kernel.org, briannorris@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [1/2] PCI/portdrv: Add necessary delay for disabling hotplug
+ events
+To: Feng Tang <feng.tang@linux.alibaba.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ LKML <linux-kernel@vger.kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, rafael.j.wysocki@intel.com
+References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
+ <b6f97a22-4b24-4ca1-b9e9-38a4b0e69f04@web.de>
+ <Z6Qho7k_zj7NcA37@U-2FWC9VHC-2323.local>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <Z6Qho7k_zj7NcA37@U-2FWC9VHC-2323.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:vwIx6WZB8R6dl55f2heNMfRVoYATPT7R1IS6ntgBXkGEPhZa54V
+ nSPepfwgF4Px8hM+lcnfxl713zXUMGrL0KYCe9SJEd5SU9AR1nI3hEBXnHgh3sZAEuUZDj+
+ GABKrPsURhBvH94sFjMCCpb9nN+l8LduHgaGxTiD3s/b1JNIbNvLanzk8PbVa3eHnD2RGa5
+ lsoR6XgPNE5Kobv5nPuvQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:zkez2vHVfS8=;CZsYkPeLXtY6ZX5lA5o62iaUr+D
+ EpydLBbLXvd8OpRvPiPGVL3jZKjgUvp6QjBjCZOdG2GB4rBeJoe/y4NrMB3+orJDBiQbMRx2j
+ UPSYcdP4aTDv+4ettOMdtE7tu4Y8l64E0pAZoxu7eZ/n3iLT7xmNB+ZLn1amTxT1h+Zrejqhu
+ w5ncsz7g9SO23b49TtOC6qC/JsOPh7bwWgKOwGSaTr2uhzSfLOYoybVwEqeDVwxpbjPh6C1lt
+ zPv0IEIDCamdZIzrYeek5IzRgOtr/Ysi7O0UvBpZVHy1mXwSXqNjMHQSeVWw41bQKldSGZ0Us
+ vNaRojLS7tz009j8Eyu59YtQUytMEP6gUwWugGBqtK/tWnGraplvodwvDnXjku0ohaS5J7htW
+ zY0eXefFw3q/lA88H1h4nMFSvm3strafIePkYsomNV9WNfA4/3pG5lrc6k2Bpu1Gwj+hf9Kdq
+ vKE/BkPMM2sDNtq2eROVjbr/nFeAgBxoLM0ZiAX8L6UsdoIuWo2jwBINyvr53tubr//arsRai
+ dqmf0WmW4+Ln/6macbJZbIONG2e3kBftmeCNFtoeB6f+82BSTi/OTDXwjNhq3JfdkrK7JiRv2
+ 6IkQZ/carUxqxiZ8ZOCF9dlxuNFs95VDa1RBHjUfHjQzjy6PJys8mQY2NRtsJepbjD4d951am
+ vIL8tIvSH76LmpVfZSBj3e44WG9jTru1qdXPEmucIXjD3fsDwwPJhjH0PIM9pCbE/A/fHaoAy
+ X9UcYZyCD9be3l8/YtAPbl7DsJTbVENh+/PPdF3gji7QWIUm4ui95ZTFsL7QhUuaKbB80G50w
+ txMB0IiLDcazabJiK2zVlxQVY7bYfJyhvE7xQXM33UuWLmm5c7pyKo+L71Z8uMzLrQQyTiJlu
+ bREFgv+ufDM+b25HyJA45s+c17sYhydMvwEm0Y2fm1Oz/YoSPMVjRKDzGXPEM9HWL9hUjUzjR
+ ku7t1BlOG/YlZNxvd+gS1IJEOE4CMT7xCMiV9X5qSNK0PQT2lhOjJxxT1T3X28c+kejiKt04l
+ Ze7GJXz9jmRtcjmuGNb9lQpkT+mJMFRRTnQCI5eZrsrkg/E6JV4o/0ErIfxOQdZYVVmYjDZzc
+ uoUkCMxbe1ef/W4i9E9N7nJYy3hSy/cXg9IfJhBukWfYU+Rr7HfwlPqT7RlSINL7Rj/eKGMfN
+ DkZeeHkCN3bUjiN7zmlvfi2trf5ua5gBZxGbuleaXD7e8ZzMuWucC9HrShELKj5txRTMyeBOO
+ FUYgsvRfV8umo7ytdEb6LvN0JNp+MMa33k1xwR3Npe4YMHsZ4U/Cd5PoYryeB/kxqzVxsQm1K
+ KZoxbB9SRfFcgDG56KXReDtZCqRreHRtRWOvHEBI5g45aZKf6WAXqcxJGZSI+6hDpRNp1F2+9
+ 6X2nGI+5FgM6Ehhhqts/feoTqMhXKnQiYHZQ9Posdsgae0FGmKYHe11OPPxstSXmXSFnoPAj6
+ EdF6oVQ==
 
-On Wed, 05 Feb 2025 23:16:36 +0000,
-Brian Norris <briannorris@chromium.org> wrote:
-> 
-> From: Brian Norris <briannorris@google.com>
-> 
-> Per Synopsis's documentation [1], the msi_ctrl_int signal is
-> level-triggered, not edge-triggered.
-> 
-> The use of handle_edge_trigger() was chosen in commit 7c5925afbc58
-> ("PCI: dwc: Move MSI IRQs allocation to IRQ domains hierarchical API"),
-> which actually dropped preexisting use of handle_level_trigger().
-> Looking at the patch history, this change was only made by request:
-> 
->   Subject: Re: [PATCH v6 1/9] PCI: dwc: Add IRQ chained API support
->   https://lore.kernel.org/all/04d3d5b6-9199-218d-476f-c77d04b8d2e7@arm.com/
-> 
->   "Are you sure about this "handle_level_irq"? MSIs are definitely edge
->    triggered, not level."
-> 
-> However, while the underlying MSI protocol is edge-triggered in a sense,
-> the DesignWare IP is actually level-triggered.
+> Could you be more specific? I got the mail addresses from get_maintainers.pl.
+Would you like to take another look at information also according to Jonathan Cameron
+(for example in your patch recipient list)?
 
-You are confusing two things:
-
-- MSIs are edge triggered. No ifs, no buts. That's because you can't
-  "unwrite" something. Even the so-called level-triggered MSIs are
-  build on a pair of edges (one up, one down).
-
-- The DisgustWare IP multiplexes MSIs onto a single interrupt, and
-  *latches* them, presenting a level sensitive signal *for the
-  latch*. Not for the MSIs themselves.
-
->
-> So, let's switch back to level-triggered.
-> 
-> In many cases, the distinction doesn't really matter here, because this
-> signal is hidden behind another (chained) top-level IRQ which can be
-> masked on its own. But it's still wise to manipulate this interrupt line
-> according to its actual specification -- specifically, to mask it while
-> we handle it.
-
-The distinction absolutely matters, because you are not dealing with
-the actual MSIs, but with a latch.
-
-> 
-> [1] From:
-> 
->   DesignWare Cores PCI Express RP Controller Reference Manual
->   Version 6.00a, June 2022
->   Section 2.89 MSI Interface Signals
-> 
-> msi_ctrl_int is described as:
-> 
->   "Asserted when an MSI interrupt is pending. De-asserted when there is
->   no MSI interrupt pending.
->   ...
->   Active State: High (level)"
-> 
-> It also points at the databook for more info. One relevant excerpt from
-> the databook:
-> 
->   DesignWare Cores PCI Express Controller Databook
->   Version 6.00a, June 2022
->   Section 3.9.2.3 iMSI-RX: Integrated MSI Receiver [AXI Bridge]
-> 
->   "When any status bit remains set, then msi_ctrl_int remains asserted.
->   The interrupt status register provides a status bit for up to 32
->   interrupt vectors per Endpoint. When the decoded interrupt vector is
->   enabled but is masked, then the controller sets the corresponding bit
->   in interrupt status register but the it [sic] does not assert the
->   top-level controller output msi_ctrl_int.
-
-Key word: *output*. That is the level-triggered line. Not the MSIs,
-which are *input* signals to the mux.
-
-> 
-> Signed-off-by: Brian Norris <briannorris@google.com>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
-> 
-> Changes in v2:
->  * add documentation references
-> 
->  drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index ffaded8f2df7..89a1207754d3 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -198,7 +198,7 @@ static int dw_pcie_irq_domain_alloc(struct irq_domain *domain,
->  	for (i = 0; i < nr_irqs; i++)
->  		irq_domain_set_info(domain, virq + i, bit + i,
->  				    pp->msi_irq_chip,
-> -				    pp, handle_edge_irq,
-> +				    pp, handle_level_irq,
->  				    NULL, NULL);
->  
->  	return 0;
-
-I don't buy this, at least not without further justification based on
-the programming model of the mux. It also breaks the semantics of
-interrupt being made pending while we were handling them (retrigger
-being one).
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Regards,
+Markus
 
