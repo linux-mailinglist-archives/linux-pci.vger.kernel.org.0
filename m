@@ -1,118 +1,180 @@
-Return-Path: <linux-pci+bounces-20823-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20824-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F30EFA2B0D7
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 19:27:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9779DA2B103
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 19:30:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDC361691B9
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 18:27:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0219D160B0C
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 18:30:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0153A1BE87B;
-	Thu,  6 Feb 2025 18:18:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C4FF19CCF5;
+	Thu,  6 Feb 2025 18:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="mbSs+E6K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QhK3vg5Z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4581ACECB
-	for <linux-pci@vger.kernel.org>; Thu,  6 Feb 2025 18:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A81239563;
+	Thu,  6 Feb 2025 18:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738865921; cv=none; b=j/dtQYP4CvkNRPuRcQa09HMoeTl821KvG4nA4Y7X/heAAWsjtOaJk8moB32Bgbzu/KQj8DH9seboeYhLDjQ709ok4aQBscT8/Sz2AoQpyIb9qYu7zHMM+cImm67NOL/VNqwAtjYWFf4pQ+pvy0gq+eZnp+iI6tNqbw1Nax4iwiI=
+	t=1738866135; cv=none; b=EeHC1473mu3aQr0mo3+9Ii/1HJhcbikWTxe0w9S9pNs66GZJApnriBijXlTP8LFsrDoCJ60XUSMwfdcoBmMrP46bP8lYTtOZ2Pe/T9vcf00t/NCwvu1ESd6yd6lvnatmolrP4dqURX0StoQbhsJGvKeVca6xy4+7eq3r+Q49yeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738865921; c=relaxed/simple;
-	bh=svxamlkxBUKcTv2w6ZafIS1La0uoCbSywKilubANIRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bk9VBxJ8aIIOoM5Frqppf3L4ny3kq5tUVc0Rd9AycX4nPQak4SfnVc2ky4dBh8OupO2TTzf+WYZvpscPAKNlJE+BrZHdC+M3amj34ymPHHgJi8Rvzs+69VdTZvhga4KTDlbNOl63G9maSqyOXhmKKJxfwMOnvAjfh4i5j4Drny0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=mbSs+E6K; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7b6e9db19c8so97855585a.3
-        for <linux-pci@vger.kernel.org>; Thu, 06 Feb 2025 10:18:39 -0800 (PST)
+	s=arc-20240116; t=1738866135; c=relaxed/simple;
+	bh=I0JoylfEjf5NYy/dEPAYeoaY68CrQJsOX33kLDUGtDA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JDDEj4o88iaDqGTr1dLYZ5EzmwWHdXAB/NtF4dStQ4iwgai8jJYSNYyfC5bdOhv41yHNMd86Qg7hh022KAGo71bIE/U1nlt9jLc9RSBoLcdNKTERS/X7KzcgzRVWhw//FOwhdEJfC80uzu5j8UKHksJdnvZiTV7J21eE166obe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QhK3vg5Z; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30616d71bb0so12684921fa.3;
+        Thu, 06 Feb 2025 10:22:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738865918; x=1739470718; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sUG6NzheiadFCQgj6TrWOr68/8bmtDa4jtIU00ptXAY=;
-        b=mbSs+E6K1mng+bdaDcGEHpilu6UD9hQ+MzTDmdB0rMQViksbRMFL5Y6WlrW2SA2tA+
-         K1mjJ2eoEShi78wee1z1RUpdF2a/WvieNFxjY6ZM74woVzYTmvesov0oCDwoUJAaRAOT
-         Zbsx5jvu465jpl4LQUWVy5K96G32hhd6WjZJJMLYRVrjbHQ4/1Jr9mofTXMfyyACkWOS
-         TUvPkB0eaTxJnAwmUS0kLy/rnHZi+32AcOoyF5RRQeOtfhPjV+vtRP1ge6PrWk9fdpQt
-         Yf9l2/+bFZ+bTJN/wHbGRyioUtpupBCAX3L5YWRvWA81YZlIRaExlWC1R4ti/TytXugZ
-         8tUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738865918; x=1739470718;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1738866132; x=1739470932; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sUG6NzheiadFCQgj6TrWOr68/8bmtDa4jtIU00ptXAY=;
-        b=aYld4V8qFLMJNRNJQBAq+Ct+B1ilSK03K/zsL8kl28VnIkhmIwJXTbWvK6Iqlrb/wx
-         nXPvtXHgMl9G9AeUq+F/zd75F7fMXrGSvXAChg0bSmVyQ8hkyQ0EblP1F3O7FcPMGxxe
-         LsS90F7cmV+CNyOVeftLNuI+IPVqCadnUfsd1Ly1v7uf2BILG4BwvJmeqVgYXrQ17Zwu
-         MvpQ3x3eXo3daCboTefBzIaY3t8lG2IPsWfcpC0qEc9UJd41AUKXSvtpjdzqhedjMRa0
-         aUyaRaJSi9qbgBqA9M9Nm0bLlkaQtUcYYigl73KM5knupar+l1i3Cc6kRZLQmkbOQgQx
-         1V7w==
-X-Forwarded-Encrypted: i=1; AJvYcCWEi9q09sSmX5D6CHBu8CKGTKWC1Dg1+z8efBvBPJJN8W1kmrIM5rWyau6M0mPUS6fO3XE23/RfK1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOSz39qJkyCfg8sC8wezSWTezBIg9YKdOLF8ynnPYcfDmZRoAI
-	+YMxGtVz6X6wXPckaARR1ZnncomxBGGNo21InQ60lzeEUU+vnDNV+WCIMkidJ0s=
-X-Gm-Gg: ASbGncsFKiaCvNmf4zkGq6XMJHDcYN61D03IMki+1IKJAuyqW1U3EftTtaKC53+G7mD
-	0tXDG9foe4K3EWMIJtG7vAthyxaB0QqnQGpX1yFgbHlRZMDmSHkpp84yvmVxuCt0dJ0bwbV6mTS
-	f+3rX8qPC1aLb3NV+8cfLBfR8kJUFoLU2EgXrpgalhp4FqWsGVzdGwXVhfD1eqQnM6ghZ8Ilza1
-	CMR0aadkTQopBpHsI+2cqeF6+qdlHCdJ/Kk7Fg3nzYnZRUYa171B8q13oU67wLdS4s5ZBelLChV
-	6ZlmSUfyvfrApmr2aScRTndl0xl+UdipM1ciWO5ZFboZJ4HAnOf+YMXdy7QWHyfMVm6sOGzikg=
-	=
-X-Google-Smtp-Source: AGHT+IE0GG1TtDuISiUGDhpqfV/qZ02GwpSV6gJbe4kGblMEMNURq4Dlgd839ByGnXLwhq51VKDVqg==
-X-Received: by 2002:a05:620a:43a1:b0:7b6:d6dd:8826 with SMTP id af79cd13be357-7c047c9512bmr16375185a.55.1738865918192;
-        Thu, 06 Feb 2025 10:18:38 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041e9f94csm86724485a.78.2025.02.06.10.18.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 10:18:37 -0800 (PST)
-Date: Thu, 6 Feb 2025 13:18:35 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
-	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
-	rrichter@amd.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
-	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com,
-	alucerop@amd.com
-Subject: Re: [PATCH v5 04/16] PCI/AER: Modify AER driver logging to report
- CXL or PCIe bus error type
-Message-ID: <Z6T8-zXvcdQrCWdu@gourry-fedora-PF4VCD3F>
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-5-terry.bowman@amd.com>
+        bh=1FjSp+nhTVRHLJUEeTrWTXh4h3mEMg91XlDhqYRzaKA=;
+        b=QhK3vg5Z+rYBcSoaVonZJqG9t4bhW3mzGouUsruuobdwLqxjN+Ktu6PIIZ6btXtpym
+         1S7uhswcGQKJ5CJNT+B42EB8hCGDmgC9KlWS4sZb/imVZdN/KO09BcekILuvrfNDqXha
+         jtbRm5Vv/Ggt8zHAlk2jOUgRwL+UtXcb/jMDlY5RnYX3cpyrGiIq0ncnx3lwNibKPxn+
+         C2nKecrRc3F2V35eYKNmfZ/gaC07ohkIKTkI7QEg8+qZAHoARxHhMvi3j4RrWqhXKDQ5
+         EHFc2nYLK/ZmfNTFeewe/NaC8DnjbPk7GRDKKt+xcjNCpaUQCH/H4822YNuwRbZKcFg0
+         GuRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738866132; x=1739470932;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1FjSp+nhTVRHLJUEeTrWTXh4h3mEMg91XlDhqYRzaKA=;
+        b=cUIe+yx8wsfidCrpDHpzGNUVAme/jclbYwWmS7lLLy1sUVmJtbH65i/dw/nNfccml/
+         JbZQoeULPNO6YKHVW+Zev38dXY9qI9j/1s+G5O9IY+q8ll2GYB25s/PpV+HuDQttxYBd
+         59CxSllyxIvPHcbPsfHUiSV7teImMqyzeZ3g1ZoifpuQ8+CZzRn9q0NaHXGLcg58VLPB
+         4NdMCV0PSlmkZSWxo6S6LchzvsofS6z/ZUr3TP3wpf1y+Tr3CJiKsfjv0nW9HFfydrLw
+         mma8v6+juY+KIeHoxi+Hy6HYgBvyAnm5J/toJBBH3k8wnT5rCXJ1GI5X7JVB2UVMfQKR
+         Hk2A==
+X-Forwarded-Encrypted: i=1; AJvYcCU9pEZ+4S+H9c+Ts+0R7bOnxDlB7RoUzQIdmm50VkD6v2IthnWwlYneWrhOk8R4ay/khaw+0HaHpjwkNVefb1E=@vger.kernel.org, AJvYcCUQX6j12XrVt/uzOgOeWYoxzyX/pBaDvyT3oAubhziqDcDTFtidP1HQa/Km5sCP4CjuGwZAdinZBi6iJWfa@vger.kernel.org, AJvYcCWeQ3/MXwoz9z0X3Wpq40xRBiv04vF6IaSt9E5B76A3CTl34x/PAuWVIOUzgcGGImFRdXmZDbVXtrB7Oa2E@vger.kernel.org, AJvYcCWtXmJNu/ljEJr4XqD6qrsAVUpM6MDaiOTu4WiAFCjv6esRIae84l56eGcIFSKHGKdF+C4wvdbrLbGs@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUkdv49jr/MoJJ0guDX9zaA9mepKFf+/Ep/OgfvJM4eir14K9K
+	QUNukcAN7rDL6kqLAvbuoBAZLRn3wKhMRbHNHlQjNUDjBOjulw0Rt01Bb5oa1L2bYbp2Pq7wCBe
+	pqFG8439daUwbM5sQxTcF06DYkwU=
+X-Gm-Gg: ASbGncseT4NRJHz9em8drOOtIbW/9VrNGR6QV4+RJqI5UMkGNPLbqawo1sw9DGgjvmX
+	Suseh8ikwbun2Oln6GKeVZbg2vKhR8xOxLfHaYfWH02QMy5IOkeZT/UwVTgagY1mPmUCPTaOqB/
+	U5GC6xYT0Ru/g+hOgNfN1Hue/3SIJs
+X-Google-Smtp-Source: AGHT+IEubimIA/g2sUr+3XzIBjy9/U2wu4nTdN7tTx5dIs+4tZe9yiBHBtVxk1U/1rj6RdxXlb9+mDwbhGiHZDgWVvc=
+X-Received: by 2002:a05:651c:4cb:b0:302:3356:3a98 with SMTP id
+ 38308e7fff4ca-307cf38ede2mr31148911fa.37.1738866131482; Thu, 06 Feb 2025
+ 10:22:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250107143852.3692571-5-terry.bowman@amd.com>
+References: <20250206-rust-xarray-bindings-v15-0-a22b5dcacab3@gmail.com>
+ <20250206-rust-xarray-bindings-v15-2-a22b5dcacab3@gmail.com> <Z6Tu8E4r5ZEolFX1@Mac.home>
+In-Reply-To: <Z6Tu8E4r5ZEolFX1@Mac.home>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 6 Feb 2025 13:21:35 -0500
+X-Gm-Features: AWEUYZkTDBIg-NNTe4OrrwEA8Z6ZCqWhhpkzyhj8VTuO0g9oQTLIoNgu_4Un96M
+Message-ID: <CAJ-ks9nGZCMjgTTzeRz3DUCQyLVu-xWKau4AFkMGutLtomK-fA@mail.gmail.com>
+Subject: Re: [PATCH v15 2/3] rust: xarray: Add an abstraction for XArray
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Matthew Wilcox <willy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	=?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
+	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 07, 2025 at 08:38:40AM -0600, Terry Bowman wrote:
-> The AER driver and aer_event tracing currently log 'PCIe Bus Type'
-> for all errors.
-> 
-> Update the driver and aer_event tracing to log 'CXL Bus Type' for CXL
-> device errors.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+Hi Boqun,
 
-Worth a macro/static function?  Wonder what else could use this.
+On Thu, Feb 6, 2025 at 12:18=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> Hi Tamir,
+>
+> This looks good to me overall, a few comments below:
+>
+> On Thu, Feb 06, 2025 at 11:24:44AM -0500, Tamir Duberstein wrote:
+> [...]
+> > +impl<'a, T: ForeignOwnable> Guard<'a, T> {
+> [...]
+> > +    /// Loads an entry from the array.
+> > +    ///
+> > +    /// Returns the entry at the given index.
+> > +    pub fn get(&self, index: usize) -> Option<T::Borrowed<'_>> {
+> > +        self.load(index, |ptr| {
+> > +            // SAFETY: `ptr` came from `T::into_foreign`.
+> > +            unsafe { T::borrow(ptr.as_ptr()) }
+> > +        })
+> > +    }
+> > +
+> > +    /// Loads an entry from the array.
+>
+> Nit: firstly, this function has the same description of `get()`, also
+> I would prefer something like "Returns a [`T::Borrowed`] of the object
+> at `index`" rather then "Loads an entry from the array", thoughts?
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+I was trying to avoid repeating the signature in the comment. In other
+words I was trying to write a comment that wouldn't have to change if
+the signature (but not the semantics) of the function changed. Since
+the difference between `get` and `get_mut` is completely described in
+the type system, the two functions got the same comment. Shall I
+change it?
+
+> > +    ///
+> > +    /// Returns the entry at the given index.
+> > +    pub fn get_mut(&mut self, index: usize) -> Option<T::BorrowedMut<'=
+_>> {
+> > +        self.load(index, |ptr| {
+> > +            // SAFETY: `ptr` came from `T::into_foreign`.
+> > +            unsafe { T::borrow_mut(ptr.as_ptr()) }
+> > +        })
+> > +    }
+> > +
+> > +    /// Erases an entry from the array.
+>
+> Nit: s/Erases/Removes?
+
+Will change. I used "erase" because that's the verb used in the C
+function name but named it "remove" because that's the verb used in
+the Rust standard library. The result is neither here nor there :)
+
+>
+> > +    ///
+> > +    /// Returns the entry which was previously at the given index.
+> > +    pub fn remove(&mut self, index: usize) -> Option<T> {
+> > +        // SAFETY: `self.xa.xa` is always valid by the type invariant.
+> > +        //
+> > +        // SAFETY: The caller holds the lock.
+> > +        let ptr =3D unsafe { bindings::__xa_erase(self.xa.xa.get(), in=
+dex) }.cast();
+> > +        // SAFETY: `ptr` is either NULL or came from `T::into_foreign`=
+.
+>
+> SAFETY comment here needs to mention why there is no alive `T::Borrowed`
+> or `T::BorrowedMut` out there per the safety requirement.
+
+Will do.
+
+> Regards,
+> Boqun
+>
+> > +        unsafe { T::try_from_foreign(ptr) }
+> > +    }
+> > +
+> [...]
+
+Thanks for the review!
 
