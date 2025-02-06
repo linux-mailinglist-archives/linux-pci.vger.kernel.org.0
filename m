@@ -1,55 +1,55 @@
-Return-Path: <linux-pci+bounces-20841-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20842-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B4CAA2B513
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 23:31:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBA3AA2B61B
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 23:59:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C8C73A6931
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 22:30:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE8603A5850
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 22:59:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D172023908F;
-	Thu,  6 Feb 2025 22:30:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 632FB2417CA;
+	Thu,  6 Feb 2025 22:59:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="c5FRc5Z1"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="p+RkgaMV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A3122FF3A
-	for <linux-pci@vger.kernel.org>; Thu,  6 Feb 2025 22:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA962417DB
+	for <linux-pci@vger.kernel.org>; Thu,  6 Feb 2025 22:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738881028; cv=none; b=HFIjwP4ctEKHKdVv4cE3yITqN+6aZ0UBPl6KCtfvl4GAnaXw8Y73Fscr9Bo3seNtmyM00P5sjDiPVKxlOAi5C57EZhm8t6QEBgcS6VHi9kYUFS+j+Mco1E0K6r+rPiR9wF0pmN/0rjerd4zNHdmhg2vc7KZDuxpB9Ui8ZNk5ylM=
+	t=1738882755; cv=none; b=cDAjlmZmsN5v407bPZB9b2XRYqYZVKm0sQVhoFDrOvK3r3GUtsN3Xo9EadRNfyXy6RW2tUgPr6fXUMmsbW3IcqC4GrhhDwREkinMxIs+83uqARhMcmA2UHCci3WKtMCeTOv5/5Qph4IGgMc/mFS2BkfHnZCzYkM5o8CtqNY0Kfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738881028; c=relaxed/simple;
-	bh=u6G1eD2kmbp6domphDX7910Spwzkgf3Yjk2DeO59O7o=;
+	s=arc-20240116; t=1738882755; c=relaxed/simple;
+	bh=0ntnTKWhZutag/x3HVhP8VZ4Ui4mFuohPb6mz+tL+nc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=icdq9MZtI99or+pmzrACVL98CJRz7MyAuMMlYWQIYpa/jl5HKp6nxodoZ+/ne1lKpFDUGZjwNGuA39uxbcKn4KKwQY8q0VS2qZ2sTsCuAVNUpyEbweI0KDRtYWFWkX2dy5KLLuuvYHohgcOtytmTwm4Vig16KKO++0hfHspUYnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=c5FRc5Z1; arc=none smtp.client-ip=185.67.36.65
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wrd/Dm5x4Oc0T1I9SDftlC3vLuHGXiEMI9/Jy9R33BKEc1OfTt5YxPjHKR3XLQALjrs/eAFZxPI8TAd64vVHPFMqus5/zzu6JPNWrhbGoqUJpvzoPKoUOF7u3OTNk+PxeE237W8ggQlppUBn35qNcDIPQ1nI+J58pYh9lTV9Kpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=p+RkgaMV; arc=none smtp.client-ip=185.67.36.66
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
 Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 0B98E24002B
-	for <linux-pci@vger.kernel.org>; Thu,  6 Feb 2025 23:30:24 +0100 (CET)
+	by mout02.posteo.de (Postfix) with ESMTPS id 55DF9240101
+	for <linux-pci@vger.kernel.org>; Thu,  6 Feb 2025 23:59:10 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1738881024; bh=u6G1eD2kmbp6domphDX7910Spwzkgf3Yjk2DeO59O7o=;
+	t=1738882750; bh=0ntnTKWhZutag/x3HVhP8VZ4Ui4mFuohPb6mz+tL+nc=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
 	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=c5FRc5Z1mSvp/+GCXMNE/IhAPZJPUhNCYYX+mJ4OZDRmFYvr77ONBwgyfDjabWym8
-	 J3R7Vn6RjOIBg1T+9npW9jo/GTAlTFB6zYiZZXCtkjgjsdD3eX/321vxjixKycER4X
-	 ldhoBl66cDDVV9/S4iQpVUpCAseJDQ12l71btksfBWSO2xCPXULCHoUsmicZ/NkhXS
-	 PDFAKli6NF8+T02xOfQVnS6BPA1dz0fo3UaNgiMl6g3yz/ty5x0sZ/J1L4oQ8gLdaT
-	 IheY4kW8KHreJBW7qy3EjK2YOZ9Q57k9R58tgrFZgyC2gU0oyFUfFDACdvuHB2+5tT
-	 l2Lb9a3j+JjpA==
+	b=p+RkgaMV9VIAIT8MYZFio3VSfTcUJfYA5FEc+zjfP1EnW22lPFrmANL4PS3LwQnNT
+	 602ylrOf2+AntvRiDwn14Jhfy2V1nnrN9wFBJI/kI4PU/+5npRjv6xJ5/AKy/RW6Fv
+	 f2YlHOM7k210lFFssN1JAaYVF1YyIKI+GQ7tKJM9pc/jWJBzOM7DVXjYe2MOUXkiue
+	 adEt/Bw2fk5rtfWCmrCQoBw9fD94uNiGGmSrUf1QNQ80AgJUDYsJdGYQqwmqTTrn2R
+	 oMDGYBC4J4au3YLekaecSKppQGFujoThS8rsOtEJnu5EMXQ+xZWUsk7caf5RSxDEGG
+	 7rekhBdR5x3gA==
 Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4YpsHY0mq5z9rxF;
-	Thu,  6 Feb 2025 23:30:16 +0100 (CET)
-Date: Thu,  6 Feb 2025 22:30:15 +0000
+	by submission (posteo.de) with ESMTPSA id 4Ypswl20Tqz6txc;
+	Thu,  6 Feb 2025 23:59:02 +0100 (CET)
+Date: Thu,  6 Feb 2025 22:59:01 +0000
 From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Krzysztof Kozlowski <krzk@kernel.org>
+To: Rob Herring <robh@kernel.org>
 Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
 	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
 	Scott Wood <oss@buserror.net>,
@@ -57,7 +57,7 @@ Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
 	Michael Ellerman <mpe@ellerman.id.au>,
 	Nicholas Piggin <npiggin@gmail.com>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Naveen N Rao <naveen@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Damien Le Moal <dlemoal@kernel.org>,
@@ -81,10 +81,10 @@ Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
 	linux-mtd@lists.infradead.org
 Subject: Re: [PATCH RFC 9/9] dt-bindings: nand: Convert fsl,elbc bindings to
  YAML
-Message-ID: <Z6U39wKiLO2I6vrI@probook>
+Message-ID: <Z6U-tVhmbwwULuzQ@probook>
 References: <20250126-ppcyaml-v1-0-50649f51c3dd@posteo.net>
  <20250126-ppcyaml-v1-9-50649f51c3dd@posteo.net>
- <20250127-cuddly-dalmatian-of-saturation-5f1ae2@krzk-bin>
+ <20250127042321.GA3067818-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -94,24 +94,12 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250127-cuddly-dalmatian-of-saturation-5f1ae2@krzk-bin>
+In-Reply-To: <20250127042321.GA3067818-robh@kernel.org>
 
-On Mon, Jan 27, 2025 at 09:37:32AM +0100, Krzysztof Kozlowski wrote:
+On Sun, Jan 26, 2025 at 10:23:21PM -0600, Rob Herring wrote:
 > On Sun, Jan 26, 2025 at 07:59:04PM +0100, J. Neuschäfer wrote:
 > > Convert the Freescale localbus controller bindings from text form to
 > > YAML. The list of compatible strings reflects current usage.
-> 
-> simple-bus and 20 other compatibles you used were not present in the
-> original binding. Does above "list of compatible strings" mean you just
-> added them?
-
-Ah, I should make this clearer:
-
- - by "list of compatible strings" I mean the list as it is after
-   applying the patch
- - by "current usage" I mean what is found in arch/*/boot/dts
-
-> 
 > > 
 > > Changes compared to the txt version:
 > >  - removed the board-control (fsl,mpc8272ads-bcsr) node because it only
@@ -123,108 +111,171 @@ Ah, I should make this clearer:
 > >    addresses on a memory bus. Instead, they have a format: The first cell
 > >    is a chip select number, the remaining one or two cells are bus
 > >    addresses.
+> 
+> That's every external parallel bus. See bindings/memory-controllers/*
+> 
+> Probably fine to leave 'simple-bus' if that's your question. It's more 
+> that there is configuration for the chipselect timings that make's this 
+> not a simple-bus. But the address translation should work just fine.
+
+My concern mainly stems from the resulting warnings if I allow/use simple-bus:
+
+Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dts:77.23-84.15:
+  Warning (simple_bus_reg): /example-1/localbus@e0005000/flash@0,0: simple-bus unit address format error, expected "0"
+Documentation/devicetree/bindings/memory-controllers/fsl,elbc.example.dts:86.22-92.15:
+  Warning (simple_bus_reg): /example-1/localbus@e0005000/nand@1,0: simple-bus unit address format error, expected "100000000"
+
+Existing devicetrees specify the eLBC with compatible = ..., "simple-bus",
+which lead me to include the simple-bus compatible both in the binding
+itself and in the examples, which in turn leads to (correct) warnings
+from DTC about node names such as nand@1,0 (it expects 100000000).
+nand@1,0 was however completely correct for the eLBC bus, because it's
+not one big linear address, but rather a chip select (1) and an address (0).
+
+My current idea to resolve this contradiction is to remove simple-bus
+from the binding and change affected devicetrees later.
+
+> 
 > > 
 > > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 > > ---
 > >  .../devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml |  61 +++++++++
 > >  .../bindings/powerpc/fsl/fsl,elbc-gpcm-uio.yaml    |  55 ++++++++
-> 
-> Please split the conversion from adding new bindings. For example above
-> file and its compatible fsl,elbc-gpcm-uio was not documented in original
-> TXT.
-
-Fair point, I'll split them.
-
-> 
-> ...
-> 
-> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc.yaml b/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc.yaml
+> >  .../devicetree/bindings/powerpc/fsl/fsl,elbc.yaml  | 150 +++++++++++++++++++++
+> >  .../devicetree/bindings/powerpc/fsl/lbc.txt        |  43 ------
+> >  4 files changed, 266 insertions(+), 43 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml b/Documentation/devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml
 > > new file mode 100644
-> > index 0000000000000000000000000000000000000000..6bbceb82c77826499abe85879e9189b18d396eea
+> > index 0000000000000000000000000000000000000000..127f164443972bbaf50fd9daa80c504577ddd7bd
 > > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc.yaml
-> > @@ -0,0 +1,150 @@
+> > +++ b/Documentation/devicetree/bindings/mtd/fsl,elbc-fcm-nand.yaml
+> > @@ -0,0 +1,61 @@
 > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > > +%YAML 1.2
 > > +---
-> > +$id: http://devicetree.org/schemas/powerpc/fsl/fsl,elbc.yaml#
+> > +$id: http://devicetree.org/schemas/mtd/fsl,elbc-fcm-nand.yaml#
 > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > +
-> > +title: Freescale Enhanced Local Bus Controller
+> > +title: NAND flash attached to Freescale eLBC
+> > +
+> > +maintainers:
+> > +  - J. Neuschäfer <j.ne@posteo.net>
+> > +
+> > +allOf:
+> > +  - $ref: nand-chip.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
 > 
-> What sort of bus is it? Memory bus? Then place it with others, see
-> memory directory.
+> Don't need oneOf.
 
-Yes, a memory bus controller with explicit chip-select lines, for
-various kinds of memory (flash, RAM), and possibly other peripherals.
-I'll move it to bindings/memory-controllers.
+How would I express "either one of various chip-specific strings
+followed by fsl,elbc-fcm-nand, or fsl,elbc-fcm-nand alone"?
 
 > 
+> > +      - items:
+> > +          - enum:
+> > +              - fsl,mpc8313-fcm-nand
+> > +              - fsl,mpc8315-fcm-nand
+> > +              - fsl,mpc8377-fcm-nand
+> > +              - fsl,mpc8378-fcm-nand
+> > +              - fsl,mpc8379-fcm-nand
+> > +              - fsl,mpc8536-fcm-nand
+> > +              - fsl,mpc8569-fcm-nand
+> > +              - fsl,mpc8572-fcm-nand
+> > +              - fsl,p1020-fcm-nand
+> > +              - fsl,p1021-fcm-nand
+> > +              - fsl,p1025-fcm-nand
+> > +              - fsl,p2020-fcm-nand
+> > +          - const: fsl,elbc-fcm-nand
+> > +      - const: fsl,elbc-fcm-nand
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  "#address-cells": true
+> > +
+> > +  "#size-cells": true
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +additionalProperties: false
+> 
+> If you use anything from nand-chip.yaml, then you need 
+> unevaluatedProperties here.
+
+Noted, will fix.
+
+> 
+> > +
+> > +examples:
+> > +  - |
+> > +    localbus {
+> > +        #address-cells = <2>;
+> > +        #size-cells = <1>;
+> > +
+> > +        nand@1,0 {
+> > +            #address-cells = <1>;
+> > +            #size-cells = <1>;
+> > +            compatible = "fsl,mpc8315-fcm-nand",
+> > +                         "fsl,elbc-fcm-nand";
+> > +            reg = <0x1 0x0 0x2000>;
+> > +        };
+> > +    };
+> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc-gpcm-uio.yaml b/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc-gpcm-uio.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..60f849b79c11a4060f2fa4ab163f9fa9317df130
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc-gpcm-uio.yaml
+> > @@ -0,0 +1,55 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/powerpc/fsl/fsl,elbc-gpcm-uio.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Userspace I/O interface for Freescale eLBC devices
 > > +
 > > +maintainers:
 > > +  - J. Neuschäfer <j.ne@posteo.net>
 > > +
 > > +properties:
-> > +  $nodename:
-> > +    pattern: "^localbus@[0-9a-f]+$"
-> > +
 > > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - fsl,mpc8313-elbc
-> > +              - fsl,mpc8315-elbc
-> > +              - fsl,mpc8377-elbc
-> > +              - fsl,mpc8378-elbc
-> > +              - fsl,mpc8379-elbc
-> > +              - fsl,mpc8536-elbc
-> > +              - fsl,mpc8569-elbc
-> > +              - fsl,mpc8572-elbc
-> > +              - fsl,p1020-elbc
-> > +              - fsl,p1021-elbc
-> > +              - fsl,p1023-elbc
-> > +              - fsl,p2020-elbc
-> > +              - fsl,p2041-elbc
-> > +              - fsl,p3041-elbc
-> > +              - fsl,p4080-elbc
-> > +              - fsl,p5020-elbc
-> > +              - fsl,p5040-elbc
-> > +          - const: fsl,elbc
-> > +          - const: simple-bus
-> > +
-> > +      - items:
-> > +          - const: fsl,mpc8272-localbus
-> > +          - const: fsl,pq2-localbus
-> > +
-> > +      - items:
-> > +          - enum:
-> > +              - fsl,mpc8247-localbus
-> > +              - fsl,mpc8248-localbus
-> > +              - fsl,mpc8360-localbus
-> > +          - const: fsl,pq2pro-localbus
-> > +          - const: simple-bus
-> > +
-> > +      - items:
-> > +          - enum:
-> > +              - fsl,mpc8540-localbus
-> > +              - fsl,mpc8544-lbc
-> > +              - fsl,mpc8544-localbus
-> > +              - fsl,mpc8548-lbc
-> > +              - fsl,mpc8548-localbus
-> > +              - fsl,mpc8560-localbus
-> > +              - fsl,mpc8568-localbus
-> > +          - const: fsl,pq3-localbus
-> > +          - const: simple-bus
+> > +    const: fsl,elbc-gpcm-uio
 > > +
 > > +  reg:
 > > +    maxItems: 1
 > > +
-> > +  interrupts:
-> > +    maxItems: 1
+> > +  elbc-gpcm-br:
+> > +    description: Base Register (BR) value to set
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
 > > +
+> > +  elbc-gpcm-or:
+> > +    description: Option Register (OR) value to set
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +  device_type: true
+> 
+> This should be dropped.
+
+Will do
+
+
+> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc.yaml b/Documentation/devicetree/bindings/powerpc/fsl/fsl,elbc.yaml
+[...]
 > > +  "#address-cells":
 > > +    enum: [2, 3]
 > > +    description: |
+> 
+> Don't need '|' unless there's some formatting.
+
+Will remove.
+
+> 
 > > +      The first cell is the chipselect number, and the remaining cells are the
 > > +      offset into the chipselect.
 > > +
@@ -240,100 +291,13 @@ I'll move it to bindings/memory-controllers.
 > > +
 > > +patternProperties:
 > > +  "^.*@.*$":
-> > +    type: object
 > 
-> And probably you need 
+> You should define the unit-address format here: @<chipselect>,<offset>
 
-  ?
-
-
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    localbus@f0010100 {
-> > +        compatible = "fsl,mpc8272-localbus",
-> > +                     "fsl,pq2-localbus";
-> > +        #address-cells = <2>;
-> > +        #size-cells = <1>;
-> > +        reg = <0xf0010100 0x40>;
-> 
-> compatible, then reg - see DTS coding style.
-
-I'll clean up the various style issues in the examples.
-(These examples are quite old, either from the old version of this
-binding or from existing dts files.)
+Will do.
 
 
-Best regards,
+
+Thanks,
 J. Neuschäfer
-
-> 
-> > +
-> > +        ranges = <0x0 0x0 0xfe000000 0x02000000
-> > +                  0x1 0x0 0xf4500000 0x00008000
-> > +                  0x2 0x0 0xfd810000 0x00010000>;
-> > +
-> > +        flash@0,0 {
-> > +            compatible = "jedec-flash";
-> > +            reg = <0x0 0x0 0x2000000>;
-> 
-> Well, here it is correct
-> 
-> > +            bank-width = <4>;
-> > +            device-width = <1>;
-> > +        };
-> > +
-> > +        simple-periph@2,0 {
-> > +            compatible = "fsl,elbc-gpcm-uio";
-> > +            reg = <0x2 0x0 0x10000>;
-> > +            elbc-gpcm-br = <0xfd810800>;
-> > +            elbc-gpcm-or = <0xffff09f7>;
-> > +        };
-> > +    };
-> > +
-> > +  - |
-> > +    localbus@e0005000 {
-> 
-> compatible, reg
-> 
-> > +        #address-cells = <2>;
-> > +        #size-cells = <1>;
-> > +        compatible = "fsl,mpc8315-elbc", "fsl,elbc", "simple-bus";
-> > +        reg = <0xe0005000 0x1000>;
-> > +        interrupts = <77 0x8>;
-> > +        interrupt-parent = <&ipic>;
-> > +
-> > +        ranges = <0x0 0x0 0xfe000000 0x00800000
-> > +                  0x1 0x0 0xe0600000 0x00002000
-> > +                  0x2 0x0 0xf0000000 0x00020000
-> > +                  0x3 0x0 0xfa000000 0x00008000>;
-> > +
-> > +        flash@0,0 {
-> 
-> compatible, reg
-> 
-> > +            #address-cells = <1>;
-> > +            #size-cells = <1>;
-> > +            compatible = "cfi-flash";
-> > +            reg = <0x0 0x0 0x800000>;
-> > +            bank-width = <2>;
-> > +            device-width = <1>;
-> > +        };
-> > +
-> > +        nand@1,0 {
-> 
-> compatible, reg
-> 
-> > +            #address-cells = <1>;
-> > +            #size-cells = <1>;
-> > +            compatible = "fsl,mpc8315-fcm-nand",
-> > +                         "fsl,elbc-fcm-nand";
-> > +            reg = <0x1 0x0 0x2000>;
-> > +        };
-> 
-> Best regards,
-> Krzysztof
-> 
 
