@@ -1,249 +1,119 @@
-Return-Path: <linux-pci+bounces-20819-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20820-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1D31A2AEBF
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 18:23:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A22EA2AED4
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 18:29:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8428E1884C9B
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 17:23:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DBBD6165708
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 17:29:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC43942A99;
-	Thu,  6 Feb 2025 17:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 228E4165F01;
+	Thu,  6 Feb 2025 17:29:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aykkiNeM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LjldJCd1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D8B239572;
-	Thu,  6 Feb 2025 17:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBE7239572;
+	Thu,  6 Feb 2025 17:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738862592; cv=none; b=Bz7LqsRfCRI855vcS3z1O+jtKAeuVIaRMqYPz1Qw345ehgAWeUJ6JD/oDFk5tbIfTDbAmLVSPgm0cXtRL2dkG//23wjMW8DnrU3/Jcx5m+2ROIuLyRjm13vQ3SrMMOC4trapgWedGHboCDolzMWAISzGk8Ln/xTeawYuWnOe/jo=
+	t=1738862977; cv=none; b=md4gP+zK92ewkXRPAEjG8FZY6lmd5xcVJdmcGO3MVW6CNIrL4H9F6Rr6Kfcj4XSkTeJvtnNAJJC01J4NgxMkuvu/LGzj1TUulU2ty0RAmJ7f4G094ZzOcjWOiF1EKoDtnKq+Lv5FKrJmR2ldo1Blh0ZlcVx4u+GWNl6rUWATnS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738862592; c=relaxed/simple;
-	bh=aOlIb3GrtUb94/9tx8SwRQttF+ZHn3JmSd+o6phwsIs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=psxO7tp0at4xDsI6M/vQp9q+AQaYkg5jpNvIOskL/WKlCj2pu9kfYxnn13rYWmnySIvpXPL+gxK39EEhrl4Q2DIAFh/+w4qHtuX5fA0lOuiACf8i6uWZWBSz/7F3j4TJJl/P4m83/su1Rum0uT/xE0fRdHSLoz8fUSANDjQkRao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aykkiNeM; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30737db1ab1so9773311fa.1;
-        Thu, 06 Feb 2025 09:23:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738862589; x=1739467389; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CtS2LSS0vjwz5nne7JgrymnedyIyoSCc7U6z284XAgw=;
-        b=aykkiNeMFDqczhSbAD5It5yAjvjIEmKurj2wP0c+EU9naB7LRvBEomgTpV49XJeUnY
-         RsVtHKhgTPZSOwFAuSpr8SlwkEFemsgU7sO2reNt6wjHFPUZ8H2ezu/4IfcgVx8GX7LH
-         CVh0FTufqq7aJnsLZd9b0isxZFl+Qce5sfHyDJ53uHRIlx7X2lQ+2pGemf3DxmQaMRev
-         LauFrn+/etVJxD+qyKg77fmmhwB9KYvB41Bj9l3hvYBz3H7fa/zxJfTLPBIgh/Kv65zq
-         wrb11VSsuypLT5L2Odlgs5W7XS9WOqxluBeMHVZfNtD/X5lnj3BJ7CUD7ImUKV9xKNeT
-         pZfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738862589; x=1739467389;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CtS2LSS0vjwz5nne7JgrymnedyIyoSCc7U6z284XAgw=;
-        b=Nc3DYJimYuZr/adZUbEIcX+LP56qgdW6NUk0OKlVi13C4nFlIpyvYp/52Ufd3i1wgh
-         FFPa5IkT7jRiMbXRPtcOce2jz2odPfPs7cTPFDt1ZYKit8j2WJ26TH6wU5E8z1K9JWJ0
-         Y/sgJAslQNMUtetlO8SsjLE4BTkmgswJuWiuHKmt1MvF49G/OjrBktud92+j17HxNgb9
-         eptBelMxlO3XhCYz3kMqR055QhdGjwixZ8YLsa/JwrnzucDRBWZWUG8GtCcKy+m1l/bI
-         6FZ+KZ8hymttkFwIgVqotzx4vibKOOHmo7u8KMR90yayorBPJAI9zB7uhLLMU3JVnSMZ
-         JMsg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjGUnM2NQ7+YeEsL0UPisaEmS9MWCDl+fH6LoBsLA0M9TNgCjSpK/FBXjwDeelPommKnKv1pCXaz2OPDQhgog=@vger.kernel.org, AJvYcCVuGTHWJw0OzKjEvHAUu9DQQp+ACi+RbYSoVx7MLun6EndbcSXO1Y2CgnOflIJ/ZU0f8gHiknc2wSee@vger.kernel.org, AJvYcCXK8v1rywsNSbj+m/WY8gA9/ilmkcrUsp1KsK/61yc5bXwHooFdUaxX63PhdTucM8P9mNEenOs3rP8rqmCH@vger.kernel.org, AJvYcCXsnxuVmwkRstHUQ0TCX8QkDo5vntfaqqv0ffhXnvdQp49cs1SgEJcDby6V+nEGuzWmAdZNLCAOLfcYPXHx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4l+J1RwnERzvU4EOTKFLgPtdgpCTESbGpmZVXYRXXDiiFayEg
-	FV2jxhT145AX0CB877En3GjmYxobhFvvQKyANuXDF69Ry3KiuFpWfdXF9lB0br6IbstoUpa2t+c
-	OKHmeVWFVPSa53qqOzKi62TRztzY=
-X-Gm-Gg: ASbGnctmCFF+yYOxzHkqCR/501Q9AkP2IqCNtr4UJtJvzGJaw8IeKVvXfJDXjn35gz5
-	pt8AumxxUlRfHgasurgNIPlR5kbdenw69hDpV2xZR10IHqsk+bt5xgGnC0Q5mlt2OV0cIG1CPAy
-	eygaFDpRXcmYCEiDn9IOp7eaQaW2rttg==
-X-Google-Smtp-Source: AGHT+IFCKQidDHUSKUVfNzVCxtO4kJumyNyooPKxZlUf9l5k1u7tlukxnKOcJOAct8R4yY7ySfTSLrOK29uReAM9QWk=
-X-Received: by 2002:a05:651c:509:b0:300:3e1c:b8b1 with SMTP id
- 38308e7fff4ca-307cf3140b0mr32469311fa.18.1738862588347; Thu, 06 Feb 2025
- 09:23:08 -0800 (PST)
+	s=arc-20240116; t=1738862977; c=relaxed/simple;
+	bh=ZFUgiEXBwBsq3cq1cnrV8wXRIbWYk/FzOHDXWiMPIuo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=i5C0ArgofKzfT8CqscNk/Mf/iGi9URws5t4tB1nqfiHrPFK858mQiEE3dLG1wucDgdipPylXuBJ+8z9jQlOCFzJHfYNnOZxEpmdd+bkgKLoLvYU59QcVYaHu9oXrjY886G9t9E24ASweb44+2yoBMRYiMth+zcTYY4kMG/7OD/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LjldJCd1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B3A1C4CEDD;
+	Thu,  6 Feb 2025 17:29:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738862976;
+	bh=ZFUgiEXBwBsq3cq1cnrV8wXRIbWYk/FzOHDXWiMPIuo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=LjldJCd1N9i6F2+at+s8vw0UYjW1hZLi57idJMOjzMxFeT4puhC5nOo/zQbwL1vJ2
+	 7u/TX3Cy6iIfP3iLdZHOuHL4VvCH04iI4FehKGJJAziJmjjfe3mpNTuG5RGnVFwWuO
+	 sjJcCSj+6facGTP/+OOSpRQQ8oEuPXJqWvmG5VzAHWJmycziliimQjwFT8qVUiYTG7
+	 pBsRHA7avRWoZf/lMX3EhDLaF/a6LQaGz+yEvsayHlCGPglJlXeJIJmifPvEunADF9
+	 VazugdRiewd1sVVTgAgvt27p9fVn+w7MUoxYZn/6RHL4IkSZcTHLEYGru8EhTmPRbh
+	 Zu5CyshDpgWZQ==
+Date: Thu, 6 Feb 2025 11:29:35 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Cyril Brulebois <kibi@debian.org>,
+	Stanimir Varbanov <svarbanov@suse.de>,
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 2/6] PCI: brcmstb: Fix error path upon call of
+ regulator_bulk_get()
+Message-ID: <20250206172935.GA990026@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206-rust-xarray-bindings-v15-0-a22b5dcacab3@gmail.com>
- <20250206-rust-xarray-bindings-v15-1-a22b5dcacab3@gmail.com> <Z6Tlsn2RIiE121Lg@cassiopeiae>
-In-Reply-To: <Z6Tlsn2RIiE121Lg@cassiopeiae>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 6 Feb 2025 12:22:32 -0500
-X-Gm-Features: AWEUYZlsb7hvkfENYsFn-FcmN-sfRN0LGVKAr5ROPUMS7Hi6j_4LKu_iYv0VAsw
-Message-ID: <CAJ-ks9kzfM+U=UptZaafoxCHz-4Dtjxc8o1bpTe93+NEMwN5EA@mail.gmail.com>
-Subject: Re: [PATCH v15 1/3] rust: types: add `ForeignOwnable::PointedTo`
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Matthew Wilcox <willy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	=?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250205191213.29202-3-james.quinlan@broadcom.com>
 
-On Thu, Feb 6, 2025 at 11:39=E2=80=AFAM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> On Thu, Feb 06, 2025 at 11:24:43AM -0500, Tamir Duberstein wrote:
-> > Allow implementors to specify the foreign pointer type; this exposes
-> > information about the pointed-to type such as its alignment.
-> >
-> > This requires the trait to be `unsafe` since it is now possible for
-> > implementors to break soundness by returning a misaligned pointer.
-> >
-> > Encoding the pointer type in the trait (and avoiding pointer casts)
-> > allows the compiler to check that implementors return the correct
-> > pointer type. This is preferable to directly encoding the alignment in
-> > the trait using a constant as the compiler would be unable to check it.
-> >
-> > Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > ---
-> >  rust/kernel/alloc/kbox.rs | 38 ++++++++++++++++++++------------------
-> >  rust/kernel/miscdevice.rs |  7 ++++++-
-> >  rust/kernel/pci.rs        |  5 ++++-
-> >  rust/kernel/platform.rs   |  5 ++++-
-> >  rust/kernel/sync/arc.rs   | 21 ++++++++++++---------
-> >  rust/kernel/types.rs      | 46 +++++++++++++++++++++++++++++++--------=
--------
-> >  6 files changed, 77 insertions(+), 45 deletions(-)
-> >
-> > diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
-> > index e14433b2ab9d..f1a081dd64c7 100644
-> > --- a/rust/kernel/miscdevice.rs
-> > +++ b/rust/kernel/miscdevice.rs
-> > @@ -225,13 +225,15 @@ impl<T: MiscDevice> VtableHelper<T> {
-> >          Ok(ptr) =3D> ptr,
-> >          Err(err) =3D> return err.to_errno(),
-> >      };
-> > +    let ptr =3D ptr.into_foreign();
-> > +    let ptr =3D ptr.cast();
-> >
-> >      // This overwrites the private data with the value specified by th=
-e user, changing the type of
-> >      // this file's private data. All future accesses to the private da=
-ta is performed by other
-> >      // fops_* methods in this file, which all correctly cast the priva=
-te data to the new type.
-> >      //
-> >      // SAFETY: The open call of a file can access the private data.
-> > -    unsafe { (*raw_file).private_data =3D ptr.into_foreign() };
-> > +    unsafe { (*raw_file).private_data =3D ptr };
->
-> Why not just ptr.into_foreign().cast()?
+On Wed, Feb 05, 2025 at 02:12:02PM -0500, Jim Quinlan wrote:
+> If regulator_bulk_get() returns an error, no regulators are
+> created and we need to set their number to zero.  If we do
+> not do this and the PCIe link-up fails, regulator_bulk_free()
+> will be invoked and effect a panic.
+> 
+> Also print out the error value, as we cannot return an error
+> upwards as Linux will WARN on an error from add_bus().
 
-That would work too. I was trying to move stuff out of the unsafe block.
+Wrap all these commit logs to fill 75 columns.  No point in leaving
+unused space when most things are formatted to fill 80ish columns or
+more.
 
-> >
-> >      0
-> >  }
-> > @@ -246,6 +248,7 @@ impl<T: MiscDevice> VtableHelper<T> {
-> >  ) -> c_int {
-> >      // SAFETY: The release call of a file owns the private data.
-> >      let private =3D unsafe { (*file).private_data };
-> > +    let private =3D private.cast();
-> >      // SAFETY: The release call of a file owns the private data.
-> >      let ptr =3D unsafe { <T::Ptr as ForeignOwnable>::from_foreign(priv=
-ate) };
-> >
-> > @@ -267,6 +270,7 @@ impl<T: MiscDevice> VtableHelper<T> {
-> >  ) -> c_long {
-> >      // SAFETY: The ioctl call of a file can access the private data.
-> >      let private =3D unsafe { (*file).private_data };
-> > +    let private =3D private.cast();
-> >      // SAFETY: Ioctl calls can borrow the private data of the file.
-> >      let device =3D unsafe { <T::Ptr as ForeignOwnable>::borrow(private=
-) };
-> >
-> > @@ -316,6 +320,7 @@ impl<T: MiscDevice> VtableHelper<T> {
-> >  ) {
-> >      // SAFETY: The release call of a file owns the private data.
-> >      let private =3D unsafe { (*file).private_data };
-> > +    let private =3D private.cast();
-> >      // SAFETY: Ioctl calls can borrow the private data of the file.
-> >      let device =3D unsafe { <T::Ptr as ForeignOwnable>::borrow(private=
-) };
-> >      // SAFETY:
-> > diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> > index 4c98b5b9aa1e..eb25fabbff9c 100644
-> > --- a/rust/kernel/pci.rs
-> > +++ b/rust/kernel/pci.rs
-> > @@ -72,10 +72,12 @@ extern "C" fn probe_callback(
-> >
-> >          match T::probe(&mut pdev, info) {
-> >              Ok(data) =3D> {
-> > +                let data =3D data.into_foreign();
-> > +                let data =3D data.cast();
-> >                  // Let the `struct pci_dev` own a reference of the dri=
-ver's private data.
-> >                  // SAFETY: By the type invariant `pdev.as_raw` returns=
- a valid pointer to a
-> >                  // `struct pci_dev`.
-> > -                unsafe { bindings::pci_set_drvdata(pdev.as_raw(), data=
-.into_foreign() as _) };
-> > +                unsafe { bindings::pci_set_drvdata(pdev.as_raw(), data=
-) };
->
-> This change isn't necessary for this patch, is it? I think it makes sense=
- to
-> replace `as _` with cast(), but this should be a separate patch then.
+> Fixes: 9e6be018b263 ("PCI: brcmstb: Enable child bus device regulators from DT")
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> ---
+>  drivers/pci/controller/pcie-brcmstb.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index f8fc3d620ee2..bf919467cbcd 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -1417,7 +1417,8 @@ static int brcm_pcie_add_bus(struct pci_bus *bus)
+>  
+>  		ret = regulator_bulk_get(dev, sr->num_supplies, sr->supplies);
+>  		if (ret) {
+> -			dev_info(dev, "No regulators for downstream device\n");
+> +			dev_info(dev, "Did not get regulators; err=%d\n", ret);
+> +			sr->num_supplies = 0;
+>  			goto no_regulators;
 
-Sure, I can make this a separate (prequel) patch.
+I think it might have been better if we could do the
+regulator_bulk_get() separately, before pci_host_probe(), so that if 
+this error happens, we can deal with it more easily.
 
-> >              }
-> >              Err(err) =3D> return Error::to_errno(err),
-> >          }
-> > @@ -87,6 +89,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::pc=
-i_dev) {
-> >          // SAFETY: The PCI bus only ever calls the remove callback wit=
-h a valid pointer to a
-> >          // `struct pci_dev`.
-> >          let ptr =3D unsafe { bindings::pci_get_drvdata(pdev) };
-> > +        let ptr =3D ptr.cast();
-> >
-> >          // SAFETY: `remove_callback` is only ever called after a succe=
-ssful call to
-> >          // `probe_callback`, hence it's guaranteed that `ptr` points t=
-o a valid and initialized
-> > diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-> > index 50e6b0421813..53764cb7f804 100644
-> > --- a/rust/kernel/platform.rs
-> > +++ b/rust/kernel/platform.rs
-> > @@ -63,10 +63,12 @@ extern "C" fn probe_callback(pdev: *mut bindings::p=
-latform_device) -> kernel::ff
-> >          let info =3D <Self as driver::Adapter>::id_info(pdev.as_ref())=
-;
-> >          match T::probe(&mut pdev, info) {
-> >              Ok(data) =3D> {
-> > +                let data =3D data.into_foreign();
-> > +                let data =3D data.cast();
-> >                  // Let the `struct platform_device` own a reference of=
- the driver's private data.
-> >                  // SAFETY: By the type invariant `pdev.as_raw` returns=
- a valid pointer to a
-> >                  // `struct platform_device`.
-> > -                unsafe { bindings::platform_set_drvdata(pdev.as_raw(),=
- data.into_foreign() as _) };
-> > +                unsafe { bindings::platform_set_drvdata(pdev.as_raw(),=
- data) };
->
-> Same here.
+Setting num_supplies = 0 is an unusual way of handling this error, and
+if this pattern of managing PCIe regulators spreads to other drivers,
+we might trip over this again.
 
-Yep. Will do.
+Not asking for a redesign here, and maybe it wouldn't even be
+possible, but it kind of fits with thinking about splitting Root Port
+support from the Root Complex/host bridge support.
+
+Bjorn
 
