@@ -1,156 +1,187 @@
-Return-Path: <linux-pci+bounces-20789-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20790-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77B2DA2A32F
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 09:33:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 276C8A2A3D1
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 10:04:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8E66D7A07D4
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 08:32:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 694633A352A
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 09:04:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 005D92253F1;
-	Thu,  6 Feb 2025 08:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93F84225A2B;
+	Thu,  6 Feb 2025 09:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="vuKM3SuC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CE1JmQ18"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3060E224AF6
-	for <linux-pci@vger.kernel.org>; Thu,  6 Feb 2025 08:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFF02248AC;
+	Thu,  6 Feb 2025 09:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738830814; cv=none; b=IiuN5zBWqQkrJiNtC3QOmlt3WqEuwWSXkdsAYqWrKW/NCZHiR2MGKOdfow6PNA1K7TVTEHl9yZjJtm2HKlavY9Pn+EYl6Ep9UQ0qdSDXpAZH4UJ/l5fuNv6koZCQ6mRU8OJiNutMSjFwjlXsHb4cuDejPoWHcW2IS36Qr+b6LJE=
+	t=1738832665; cv=none; b=k5f2ZJqcWKC85MLfzBZ0AhrPTS426OTe2Wr/+JYWP6SAlakVPGEq2aLFoF64o19iUTkkn2fI5wGB/IXD5QMojn1lvYrokHPPNE0VK8bYzuYXhQ4vZBhLDi5tN4nPNFcrAyKHs7umcl5uJAkOH2xpIEIyRFrZSKd6jzzmf7Y8/Qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738830814; c=relaxed/simple;
-	bh=9g9b7hVg1k4pXSTZtAUsL9yHZfplVe0rwP+E/mjt+6Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GoXdlTO4KVzO4SdzyaU19LmXDzYad/Y4zH0VqDQ4IEBHQtg9HxEjP/t9cbkSV/wpxX500uopUL+0GW4NkPtxKbkhIsCL2b1hiofDNjLPlNNFGD8WJqd4swFqwFAHm1EKKDdB7r9VX6wdA/8Ai4MyPrjuNSJFTzsIYxNKD7sGkCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=vuKM3SuC; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f2339dcfdso9201895ad.1
-        for <linux-pci@vger.kernel.org>; Thu, 06 Feb 2025 00:33:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1738830812; x=1739435612; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zFa4VDutdaAqwxVE7IcEmL8yhkUm6WYSGjjVCCVP30o=;
-        b=vuKM3SuCH75Yd3OYODa8Q9XgL5gE3G2nCFl4g3YGf39Yxvty/KeQx8hwhHThWoV0iW
-         XLXAv14cd2Vga8hfDa0krw871yijOV6ziYxlOJJl7MI1D5XT30Uz6yRUVkCgXKkpmOa9
-         gla1/fMNOyqD+R8JXmJouHWO1JmVbQl//Aa94=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738830812; x=1739435612;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zFa4VDutdaAqwxVE7IcEmL8yhkUm6WYSGjjVCCVP30o=;
-        b=jQk2iAoxqNIhIFayhrQEDbkLpXe7jhWA44oNJ6pW2oS8Z+qfRF7yomRDUXVPTCQvPN
-         ypdT+XsM1nE/hjvs8So8d4HFNWDJq3XVEA2g7gFk0+dFqyCgJR4FfCO6wt3L30RqIE3B
-         xfi1F51NP/FIy20r9f1Ew/GxVD2czjnbCui4iVMpz6HZehDMHciHJTqfjg52soQPIJct
-         YaObG1syGpmoVJ6CgUTsbNDHbwkBwfNxWr4HLMt6Xs2IZ+3Qogz1tLk2lKYljP9DZwQB
-         pAo08eX22c6MrLmyvCbUHvbj7ekMcU4yfT7mRYcXfSn79KW0ej3A2zcPSfVisD8V5w2n
-         Us7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXMiECNfR5PvRPiV4ZOLrhW4rirahVOEUR9L2d+bkTqr2zZeqHg95Xmr2Awfnvi1WTqiYDkHnewLyE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3cd5pKx2cQO0p60qaVRF3xv69wfiIdTL5wbQwLGQmgtZfNnLf
-	pI5bj6+7B+9x9ZHu/BJTwfgh+wUAraKWYvhG1Zrbi/2X7Bg6iGvZ0EGghmYEZCM=
-X-Gm-Gg: ASbGnctxxaNjqBfJ0dTLMW8G+RTpUNG6QaQI3Q1QPVm81tkW/l9rypLA3HR9JZFWEWx
-	a52gu5C+ibt3Dx7vY+g/p5HkZgC1ubOxzyKrCiOSBPuEA1BpTjpdvWHL4T84dWGTT+RMU4LEzUa
-	i3MwhwE4lTxY+e3F9WjcGFlQwM78DUotga+8ZFN7TM6uIInVEtHGzQ5ZoVLq06JvZ+yBcTHDVDh
-	3M9eGE1WNlD4Wi1PV1SFJe8b8IB31Ij0IJb0yyDupOOw2ry8S/3yKT2lYc85cIuqmdVRWP4TsoH
-	Ak/Sa/tmBkn1R9miCef3
-X-Google-Smtp-Source: AGHT+IF+K06oAWXkF0s7xGk9CXHkZ3d4umQ124gCDvUWBbfXf2qnmgVpjF06/0gYCP3LpXrycYtCTg==
-X-Received: by 2002:a17:902:e80a:b0:215:6c5f:d142 with SMTP id d9443c01a7336-21f2f1b4759mr41887255ad.20.1738830812389;
-        Thu, 06 Feb 2025 00:33:32 -0800 (PST)
-Received: from localhost ([84.78.159.3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f368da60bsm7040865ad.258.2025.02.06.00.33.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 00:33:31 -0800 (PST)
-Date: Thu, 6 Feb 2025 09:33:26 +0100
-From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To: Bjorn Helgaas <helgaas@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-	linux-pci@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v2 3/3] pci/msi: remove pci_msi_ignore_mask
-Message-ID: <Z6Rz1o3CnnuUiaoI@macbook.local>
-References: <20250114103315.51328-4-roger.pau@citrix.com>
- <20250205151731.GA915292@bhelgaas>
+	s=arc-20240116; t=1738832665; c=relaxed/simple;
+	bh=8eG7UI0hfNWaK2mXqVw5c7deZzv7yKrvlpZtUeX6xgg=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h4lTtzeMiY8MOZ1CMDJHkKAavAS8WORkNJl02zGm4xz1TtBJRr3JOgOXUZ9sCnbx1AGQrhjn/7Xbe8fwWjlBcaYx0C/3ZAS6D8sCR1AB/RxzMxMMzhKuYqmn+QpWLXPD4P+alzsR22N7xfQQLlUa60WozTcMt3YmclbFE0XRhcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CE1JmQ18; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA6CFC4CEDD;
+	Thu,  6 Feb 2025 09:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738832664;
+	bh=8eG7UI0hfNWaK2mXqVw5c7deZzv7yKrvlpZtUeX6xgg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CE1JmQ18aDBlvGcwxkqEg7l1m7hdhTlmxC/Rt9EvPBJTNPVq4OvliUkuddk0ZZG/u
+	 CgToeBS0lriBfdZzuqOFNwUVM12L7oRInzTwgYeld64fFtqogOQaDPjCH7tmU4WXQp
+	 UqaBJ8pnWuWXahnm3KmmcTBBdxRmRfjLyhdEALFibRx4IM2bsJNx+ARU1LhrBWMuCw
+	 pqLzCNkvHTi+0Xcso4/8ZGXqrxHyNRoqQjKadxBB6yeKntWgiArn5krn9xympsgn4z
+	 TE5lJSvIEDLFuO2gwa1EUjt097VHw5SXr3Xj764+7opLuPWWJ1r/MjH/vClXpFHMS0
+	 SFp/VKZQ+7zjg==
+Received: from 82-132-233-249.dab.02.net ([82.132.233.249] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tfxo5-0013cQ-BO;
+	Thu, 06 Feb 2025 09:04:22 +0000
+Date: Thu, 06 Feb 2025 09:04:00 +0000
+Message-ID: <87ed0btpfj.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,	Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>,	linux-pci@vger.kernel.org,	Rob Herring
+ <robh@kernel.org>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,	Krzysztof
+ =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,	Bjorn Helgaas
+ <bhelgaas@google.com>,	linux-kernel@vger.kernel.org,	Brian Norris
+ <briannorris@google.com>
+Subject: Re: [PATCH v2] PCI: dwc: Use level-triggered handler for MSI IRQs
+In-Reply-To: <20250205151635.v2.1.Id60295bee6aacf44aa3664e702012cb4710529c3@changeid>
+References: <20250205151635.v2.1.Id60295bee6aacf44aa3664e702012cb4710529c3@changeid>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250205151731.GA915292@bhelgaas>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 82.132.233.249
+X-SA-Exim-Rcpt-To: briannorris@chromium.org, jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org, linux-pci@vger.kernel.org, robh@kernel.org, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, linux-kernel@vger.kernel.org, briannorris@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Feb 05, 2025 at 09:17:31AM -0600, Bjorn Helgaas wrote:
-> Please run git log --oneline and match the subject line capitalization
-> style, i.e.,
+On Wed, 05 Feb 2025 23:16:36 +0000,
+Brian Norris <briannorris@chromium.org> wrote:
 > 
->   PCI/MSI: Remove ...
+> From: Brian Norris <briannorris@google.com>
 > 
-> But it doesn't look like this actually *removes* the functionality, it
-> just implements it differently so it can be applied more selectively.
+> Per Synopsis's documentation [1], the msi_ctrl_int signal is
+> level-triggered, not edge-triggered.
 > 
-> So maybe the subject should say something like "control use of MSI
-> masking per IRQ domain, not globally"
+> The use of handle_edge_trigger() was chosen in commit 7c5925afbc58
+> ("PCI: dwc: Move MSI IRQs allocation to IRQ domains hierarchical API"),
+> which actually dropped preexisting use of handle_level_trigger().
+> Looking at the patch history, this change was only made by request:
+> 
+>   Subject: Re: [PATCH v6 1/9] PCI: dwc: Add IRQ chained API support
+>   https://lore.kernel.org/all/04d3d5b6-9199-218d-476f-c77d04b8d2e7@arm.com/
+> 
+>   "Are you sure about this "handle_level_irq"? MSIs are definitely edge
+>    triggered, not level."
+> 
+> However, while the underlying MSI protocol is edge-triggered in a sense,
+> the DesignWare IP is actually level-triggered.
 
-What about:
+You are confusing two things:
 
-PCI/MSI: convert pci_msi_ignore_mask to per MSI domain flag
+- MSIs are edge triggered. No ifs, no buts. That's because you can't
+  "unwrite" something. Even the so-called level-triggered MSIs are
+  build on a pair of edges (one up, one down).
 
-Which is slightly shorter?
+- The DisgustWare IP multiplexes MSIs onto a single interrupt, and
+  *latches* them, presenting a level sensitive signal *for the
+  latch*. Not for the MSIs themselves.
+
+>
+> So, let's switch back to level-triggered.
+> 
+> In many cases, the distinction doesn't really matter here, because this
+> signal is hidden behind another (chained) top-level IRQ which can be
+> masked on its own. But it's still wise to manipulate this interrupt line
+> according to its actual specification -- specifically, to mask it while
+> we handle it.
+
+The distinction absolutely matters, because you are not dealing with
+the actual MSIs, but with a latch.
 
 > 
-> On Tue, Jan 14, 2025 at 11:33:13AM +0100, Roger Pau Monne wrote:
-> > Setting pci_msi_ignore_mask inhibits the toggling of the mask bit for both
-> > MSI and MSI-X entries globally, regardless of the IRQ chip they are using.
-> > Only Xen sets the pci_msi_ignore_mask when routing physical interrupts over
-> > event channels, to prevent PCI code from attempting to toggle the maskbit,
-> > as it's Xen that controls the bit.
-> > 
-> > However, the pci_msi_ignore_mask being global will affect devices that use
-> > MSI interrupts but are not routing those interrupts over event channels
-> > (not using the Xen pIRQ chip).  One example is devices behind a VMD PCI
-> > bridge.  In that scenario the VMD bridge configures MSI(-X) using the
-> > normal IRQ chip (the pIRQ one in the Xen case), and devices behind the
-> > bridge configure the MSI entries using indexes into the VMD bridge MSI
-> > table.  The VMD bridge then demultiplexes such interrupts and delivers to
-> > the destination device(s).  Having pci_msi_ignore_mask set in that scenario
-> > prevents (un)masking of MSI entries for devices behind the VMD bridge.
-> > 
-> > Move the signaling of no entry masking into the MSI domain flags, as that
-> > allows setting it on a per-domain basis.  Set it for the Xen MSI domain
-> > that uses the pIRQ chip, while leaving it unset for the rest of the
-> > cases.
-> > 
-> > Remove pci_msi_ignore_mask at once, since it was only used by Xen code, and
-> > with Xen dropping usage the variable is unneeded.
-> > 
-> > This fixes using devices behind a VMD bridge on Xen PV hardware domains.
-> > 
-> > Albeit Devices behind a VMD bridge are not known to Xen, that doesn't mean
-> > Linux cannot use them.  By inhibiting the usage of
-> > VMD_FEAT_CAN_BYPASS_MSI_REMAP and the removal of the pci_msi_ignore_mask
-> > bodge devices behind a VMD bridge do work fine when use from a Linux Xen
-> > hardware domain.  That's the whole point of the series.
-> > 
-> > Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+> [1] From:
 > 
-> Needs an ack from Thomas.
+>   DesignWare Cores PCI Express RP Controller Reference Manual
+>   Version 6.00a, June 2022
+>   Section 2.89 MSI Interface Signals
+> 
+> msi_ctrl_int is described as:
+> 
+>   "Asserted when an MSI interrupt is pending. De-asserted when there is
+>   no MSI interrupt pending.
+>   ...
+>   Active State: High (level)"
+> 
+> It also points at the databook for more info. One relevant excerpt from
+> the databook:
+> 
+>   DesignWare Cores PCI Express Controller Databook
+>   Version 6.00a, June 2022
+>   Section 3.9.2.3 iMSI-RX: Integrated MSI Receiver [AXI Bridge]
+> 
+>   "When any status bit remains set, then msi_ctrl_int remains asserted.
+>   The interrupt status register provides a status bit for up to 32
+>   interrupt vectors per Endpoint. When the decoded interrupt vector is
+>   enabled but is masked, then the controller sets the corresponding bit
+>   in interrupt status register but the it [sic] does not assert the
+>   top-level controller output msi_ctrl_int.
 
-Thanks, moved him to the 'To:' field.
+Key word: *output*. That is the level-triggered line. Not the MSIs,
+which are *input* signals to the mux.
 
-Regards, Roger.
+> 
+> Signed-off-by: Brian Norris <briannorris@google.com>
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> ---
+> 
+> Changes in v2:
+>  * add documentation references
+> 
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index ffaded8f2df7..89a1207754d3 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -198,7 +198,7 @@ static int dw_pcie_irq_domain_alloc(struct irq_domain *domain,
+>  	for (i = 0; i < nr_irqs; i++)
+>  		irq_domain_set_info(domain, virq + i, bit + i,
+>  				    pp->msi_irq_chip,
+> -				    pp, handle_edge_irq,
+> +				    pp, handle_level_irq,
+>  				    NULL, NULL);
+>  
+>  	return 0;
+
+I don't buy this, at least not without further justification based on
+the programming model of the mux. It also breaks the semantics of
+interrupt being made pending while we were handling them (retrigger
+being one).
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
 
