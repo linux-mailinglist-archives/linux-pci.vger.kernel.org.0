@@ -1,118 +1,137 @@
-Return-Path: <linux-pci+bounces-20838-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20839-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6475EA2B438
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 22:36:45 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23FC9A2B4C4
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 23:07:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97C3F3A3D55
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 21:36:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D8ABC7A57CF
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 22:05:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89CE822258C;
-	Thu,  6 Feb 2025 21:36:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 584B422FF21;
+	Thu,  6 Feb 2025 22:05:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U6AULSlE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTVyGaAB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C978222257E;
-	Thu,  6 Feb 2025 21:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF5222FF32
+	for <linux-pci@vger.kernel.org>; Thu,  6 Feb 2025 22:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738877800; cv=none; b=foe8PF4f4b7WlFdFxaaIXY5bPMnLE7tSaS/NI73RGZPt+wkuB1v3OSvcQC7ZFghtTqWAAEg3sRLPiJJnfiFll1+B5xwstBR9EmprQldiDdW20UebtQpKeFbus9Slx6qxRRRlbo0GqbgrXvM4sR290R78i4sOvrPq9YTl2GydzYo=
+	t=1738879524; cv=none; b=Q2so+xitQRhgu6pCVcYfW3JvptJjWFtp4V1qGdavtbYmNGFV7+Lk6XU3H+sBnPI+LSjohS2RRIfHfmwC/b1HoEyD5wv2dqNvB8ImhZVxreCnYBT1bU1HfVc8g8MosyQPhys661lNV/fgL0eZxG6CdCY9/VC34pHW4Wml3uWcosg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738877800; c=relaxed/simple;
-	bh=nCwZyzhpC0hkV2m1x93EBihOAA8Sdpu3DRgaf+2cGTM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=If1CidTVkNWzG42u7Ti9R35cM3AOmL3GrA6nLFDTx5Idh5g72TDvdmgk1A1zg2hczx6mPeV1GtnKrfXVuNVbs8IKyjEm7dmWuHks+apiMuhegluLpexkzfj6eC6fNpIV+5gnXsU8rIKSgaIc0ynoW47u4pEofXuQMKFcFlTM0RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U6AULSlE; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5401ab97206so1531987e87.3;
-        Thu, 06 Feb 2025 13:36:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738877797; x=1739482597; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nCwZyzhpC0hkV2m1x93EBihOAA8Sdpu3DRgaf+2cGTM=;
-        b=U6AULSlEdtwCXKL+XU+5JZ7t/Ky74yjHIXFYYLtjvixYilC2Z6/dLOfnBIO0h6k5VL
-         zO9MH2XTcpODLQkeJcVar6JVJ5mLfOy7hOzQcKiBRMiE4MqA9N1FqbwfoSF8DErKpOHe
-         ahx4QeNj2Ixa7cHOXGuyAiZF13q0mOdWTgOkfJVpKIaairsz4qrkdYC0RAlz57CNTm0N
-         VNCPMtPYEX3BYnWR40eqkqViChPmXVyPzVY0ZnQIbm+tBmMsI+MKM/4HI8WYyQ+IW1cM
-         9uLRgLywyft6M1x+2cfbf2Zg6/Jt5sAu4oyhLpGzAAOBamecBzEunUe5OddJaVzkjM2J
-         ra2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738877797; x=1739482597;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nCwZyzhpC0hkV2m1x93EBihOAA8Sdpu3DRgaf+2cGTM=;
-        b=IraD7VEnxTzw11KO/MpaH5Sf4eoB3egb2rEul+ckvVbdZFguplGAzhQ3aqGnIvWJBu
-         9GY7mMuqhx43PNWx1G0TWaFy6cQ4+nDwQbUdrVZ+zT1K+uopyMtV4uWocvCcGGCKR8oM
-         wY1V5shkY7B4syTkDqBzCop8dZ1qYtfFf6gSujnmTxwbzt/HWAwEiZXH8SD01oPgTNpJ
-         11kGIQWZVh7+qkrYRz5uhWNgNuFp1yVWdFXq6D/uwxRM83wG/xRxMRuPERSQHEHOb7y8
-         kK4aZmXt7w6SIUTT3Fjv5YTQWCHAEHuYe7Kr2EERGycEfj6q3lw7oxPAre4ezo3eNezU
-         Bcjw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGRT1AOnQPY+3NCz5XgTTvaJzYaa6XAkJ00nWqPv/Ml5e76Pu6Sf8DtKkjmMM9HJjMlWYKAWEEpY/B@vger.kernel.org, AJvYcCUY4KPfQ9wqbfdxQIGRZ4/CXXGnGBF3i2juzoHUgYkaadNLZKM2m/4GxjU1kraIASLqY6YjN2qVImFpz1oz@vger.kernel.org, AJvYcCWPlshqPFmjLbf14TiHqTf9sFbuqSoXWSyiJz8CcvshaTkGBvOAN5adtS34A1TyP8hEndYh/vRtfk7nS6Yd@vger.kernel.org, AJvYcCXfVjlgeASMfrrPBJRYqyIrlSjowY1glt5F7mD7Gtyq+JbXs1PNiiNMroFeRs8IepkM8GU9ef1brgsxYuIAuO4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQzcV1ObW1nY+fgiQOrU/MUXJqLmSMQYPl2JDj0NpZzcwho6tj
-	uQ9SujkQ5xMkZF64bMSCxoF4e381HGHgCCxton9vXwcOygZljRn+T0xk3QmWauEjRfq7hBwIgWb
-	i3Fvmq6VsjfOMV39pCGzVbWedaWI=
-X-Gm-Gg: ASbGncsR/mSKi/naLJgT/NB8AnTCPynZ4vHa1IZaFFPU0KcDIWW0h2jcU22Z6jaa3FD
-	Uj8G9aaPMsgtiyjNhka5faaEtadH5U88p0xhVEQq1Win3z4dQa26SgvXsxswNixt8Er67S4Jh+B
-	emy5udZq//8D34OnAfxCtqxtYSG/4z
-X-Google-Smtp-Source: AGHT+IFKsZ4neZ3WNle2nn5hNbX0wbEg2tMqnTVyt1oi7sWysli/k1ZAwtqDYExTcUt41YFmoVh1a7cBIrlW1sD9mcc=
-X-Received: by 2002:a05:6512:2814:b0:544:1201:c0bb with SMTP id
- 2adb3069b0e04-54414a9649emr111216e87.2.1738877796593; Thu, 06 Feb 2025
- 13:36:36 -0800 (PST)
+	s=arc-20240116; t=1738879524; c=relaxed/simple;
+	bh=0M7JvaXwu5Q/u0qWGYRPcs3VVvrYUOZiDOQJvch8KD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=bPLiPGRNz2d+FR7lGAuXcyaeXQ5yNw5BvRIqDAWyqW0dvwkCJ35vFmFhWzlI36HmXJd+DV5GMDN15Rpu0sa5zMXmyJwitVKakTTWRpsXtETA1/k3wttH70ecjxMTRkhCpHPLztQCEUAfSQOFNNMdJ66cSX1tz9l1Ao8thhZilCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTVyGaAB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 639A4C4CEDD;
+	Thu,  6 Feb 2025 22:05:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738879523;
+	bh=0M7JvaXwu5Q/u0qWGYRPcs3VVvrYUOZiDOQJvch8KD0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=nTVyGaABBy+yCoo/Ytk4cAkpTZZH7CC5OoykoVyEaS0NMtVQCpCemmFjjwKLbOpVz
+	 WtvqIrte+SCAXqgb37WPlsg7te5WrpKG+Sbl+ocGy+Znhu36wLqF4ZhFZHnlWEYCdd
+	 JtKeSUoD82nmvBlD6Gg1Nbkp9x1SZEkasFz3+g17UtKqTZA36Vy7lQs72IItHhWJPh
+	 w1gbA/iT9U3GTbHdi5jf6xnh4hkJZkye/E/5LnMLQiQrxZs3CM7U983nC9FLTTkDP6
+	 X9u1yoG1GJ94u2csCWDWk1I2CVVP7Cx1/A1zyfey8Dwh1x5bLAm9QUUX8annVL2t9a
+	 pfS9Avh/Fnzhw==
+Date: Thu, 6 Feb 2025 16:05:21 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux-pci@vger.kernel.org
+Cc: tasev.stefanoska@skynet.be,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	=?utf-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Jian-Hong Pan <jhp@endlessos.org>
+Subject: Re: [Bug 219755] New: Wifi card intel 7265D not detected with kernel
+ 6.14-rc1
+Message-ID: <20250206220521.GA1007958@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250206-rust-xarray-bindings-v15-0-a22b5dcacab3@gmail.com>
- <20250206-rust-xarray-bindings-v15-2-a22b5dcacab3@gmail.com>
- <Z6Tu8E4r5ZEolFX1@Mac.home> <CAJ-ks9nGZCMjgTTzeRz3DUCQyLVu-xWKau4AFkMGutLtomK-fA@mail.gmail.com>
- <Z6UiNYOTUshEKNcL@boqun-archlinux>
-In-Reply-To: <Z6UiNYOTUshEKNcL@boqun-archlinux>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 6 Feb 2025 16:35:59 -0500
-X-Gm-Features: AWEUYZmUCZ0vWErylmSBmkD9QhhwDT4zy6MbR2nP6txP7jrlOwmvXIgfTGOJo9o
-Message-ID: <CAJ-ks9=urZ54L5NkoyUw5rk+kSqJ1kS6n20WbC4THACU-TFfrg@mail.gmail.com>
-Subject: Re: [PATCH v15 2/3] rust: xarray: Add an abstraction for XArray
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Matthew Wilcox <willy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	=?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bug-219755-41252@https.bugzilla.kernel.org/>
 
-On Thu, Feb 6, 2025 at 3:58=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> wr=
-ote:
->
-> Your call ;-) It's a nitpicking after all, and you're the maintainer.
-> However, I do want to make the point that being a bit more comprehensive
-> won't hurt when providing an API.
->
-> Regards,
-> Boqun
+For completeness, sending this to the list since most people don't
+look at bugzilla.  I *think* this should be fixed by Ilpo's patch:
+https://lore.kernel.org/r/20250131152913.2507-1-ilpo.jarvinen@linux.intel.com,
+which I just asked Linus to pull for v6.14-rc2.
 
-Point taken, and I appreciate your feedback! I went with something a
-bit more informative without being repetitive, inspired by std again.
-Will send v16 tomorrow.
+(Jian-Hong, my abject apologies because I think this whole mess was my
+fault for editing your patch before applying it.  I also meant to cc
+you on the pull request but obviously forgot.)
 
-Cheers.
-Tamir
+On Thu, Feb 06, 2025 at 06:47:21PM +0000, bugzilla-daemon@kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=219755
+> 
+> Created attachment 307580
+>   --> https://bugzilla.kernel.org/attachment.cgi?id=307580&action=edit
+> Dmesg from kernel 6.14-rc1
+> 
+> Hi
+> 
+> With kernel 6.14-rc1 my wifi card is not detected anymore on my Asus UX305FA
+> after boot.
+> 
+> Boot dmesg 6.14-rc1:
+> 
+> dmesg | grep iwl
+> [    4.006347] iwlwifi 0000:02:00.0: Unable to change power state from D3cold
+> to D0, device inaccessible
+> [    4.008072] iwlwifi 0000:02:00.0: HW_REV=0xFFFFFFFF, PCI issues?
+> [    4.009912] iwlwifi 0000:02:00.0: probe with driver iwlwifi failed with
+> error -5
+> ...
+
+> I start bisecting and the first bad commit is:
+> 
+> 1db806ec06b7c6e08e8af57088da067963ddf117 is the first bad commit
+> commit 1db806ec06b7c6e08e8af57088da067963ddf117
+> Author: Jian-Hong Pan <jhp@endlessos.org>
+> Date:   Fri Nov 15 15:22:02 2024 +0800
+> 
+>     PCI/ASPM: Save parent L1SS config in pci_save_aspm_l1ss_state()
+> 
+>     After 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for
+>     suspend/resume"), pci_save_aspm_l1ss_state(dev) saves the L1SS state for
+>     "dev", and pci_restore_aspm_l1ss_state(dev) restores the state for both
+>     "dev" and its parent.
+> 
+>     The problem is that unless pci_save_state() has been used in some other
+>     path and has already saved the parent L1SS state, we will restore junk to
+>     the parent, which means the L1 Substates likely won't work correctly.
+> 
+>     Save the L1SS config for both the device and its parent in
+>     pci_save_aspm_l1ss_state().  When restoring, we need both because L1SS must
+>     be enabled at the parent (the Downstream Port) before being enabled at the
+>     child (the Upstream Port).
+> 
+>     Link: https://lore.kernel.org/r/20241115072200.37509-3-jhp@endlessos.org
+>     Fixes: 17423360a27a ("PCI/ASPM: Save L1 PM Substates Capability for
+> suspend/resume")
+>     Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218394
+>     Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+>     Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+>     [bhelgaas: parallel save/restore structure, simplify commit log, patch at
+>     https://lore.kernel.org/r/20241212230340.GA3267194@bhelgaas]
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>     Tested-by: Jian-Hong Pan <jhp@endlessos.org> # Asus B1400CEAE
+> 
+>  drivers/pci/pcie/aspm.c | 33 ++++++++++++++++++++++++++++-----
+>  1 file changed, 28 insertions(+), 5 deletions(-)
+> 
+> Reverting the patch and rebuild the 6.14-rc1 kernel fixed the problem for me,
+> my wifi card is detected again.
 
