@@ -1,58 +1,57 @@
-Return-Path: <linux-pci+bounces-20782-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20783-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 042ACA29D94
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 00:38:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8C51A29EE9
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 03:42:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D2981679D5
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Feb 2025 23:38:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B142F18891B3
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 02:43:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 093881519B7;
-	Wed,  5 Feb 2025 23:38:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3D7A13A88A;
+	Thu,  6 Feb 2025 02:42:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aMFoi0SA"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Nt/IXHmh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C090715198F;
-	Wed,  5 Feb 2025 23:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B1CDF60;
+	Thu,  6 Feb 2025 02:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738798700; cv=none; b=LtJIfBYAkTzPzReS5DukAizG1109lRzBZLtgZm0/zSaRLjwficG0IwK0cYMHrY2ZmV/uMyvF1Ml+l3FY6LdSglhLinQZwDPAtRThpN9ZvNxor9V9+7jnnvrLR86FSm6kM4t/Buy5LbIuBuWxhuv/OX6NP4mpl0dfpJ5vAbSP0TQ=
+	t=1738809773; cv=none; b=VMiiSTdWxgMdLY1H0eUsLEwMzT4IZna58gySutF2BQd+UayASdTDlwJ42rwo26iByJRMIWBUMW9ZR2sGtdKqT3yJ1cR/fjHrpPu+zjoctP6m9TydygHV2PI5pL0gagjnX/L92FaOAwkqJ8YdieqabyTfphnfe2F19IjGAv1pNUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738798700; c=relaxed/simple;
-	bh=Yl7vdVYZ3uVeTXvJQ3z2No+XRSNYHdbj0OTkCw9O71o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=A25zyAbZ4D3yVKZ4HOczJ5BofKrTfLMvqTmq+hSxkHqCJpaoj7pV34My7fiCfgNVFzITjI2CwEUNNAISXWgSUauaLxbyVcT+R+hH6ZCI6zInER7lE+n0mHXd20ylEJ7QV23c/ArOXTN+n16PJpV5hzNXvX3qzhyFEzBpb/wbEHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aMFoi0SA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D626C4CED1;
-	Wed,  5 Feb 2025 23:38:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738798700;
-	bh=Yl7vdVYZ3uVeTXvJQ3z2No+XRSNYHdbj0OTkCw9O71o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=aMFoi0SA4J27vdHiguS7Q6MqT2JEgBmPxCY9mMLTDr3ZatvBYMKD3FgzMY4+lTZU6
-	 QyHbffl3O+luWnVo/l9BFLMqw8IwZ/ISZepE7E3ulNTJPQpS4uaz6iclvBsvio2+UW
-	 k2ryhBeFE3Xp7neTIGe9kXLVckLZ9Ianad/pI4W9kG4nY86qfCSNJuJjzZuvxPh9vm
-	 lSHi/NdYJT6z8DfOuyHfGM9Kdmx9xyTBRbWKnOzNtzJ64JBoLkvIlqY2PVV7el7TK6
-	 0bRKY8OAEldZ9OAPwEhBm/6x81Xbg9PBiSvowheCuS8Vz1LqdyiwlFAEfxvV1BC2Dp
-	 x1bfEH4U9Hzng==
-Date: Wed, 5 Feb 2025 17:38:17 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-pm@vger.kernel.org, regressions@lists.linux.dev,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+	s=arc-20240116; t=1738809773; c=relaxed/simple;
+	bh=obPsUTG9l7hlhoWWnQW+m78FONuYS+mMfGdELNaNUaw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S04f4BnG8N8AT3yZBhrfc7VYmihADWCtqxyxURFqBYhNWYOmX5rsXTozVU8g1rhE5E9WoWSRliDjBrYRyveuZSw+rcYHWDBSGDJsznmIFJdYs6jXuJzxN+srMkF6ZDoAqRVw2Een+uJkErhdGVRr/BFGthiar4sHbWnMVFPl9yI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Nt/IXHmh; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1738809766; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=tl7YeugdbGjrRop0ZKiaKnPCf8v2adSmHAleD7lAl1E=;
+	b=Nt/IXHmhE4NpZhZn562IsLZsRVMHjxb58869sP0HfnnXUZPcz346vuQ/eBGmA4wpc5HfbSf5eGtADI3dqyNgiPOgdcbQDbhwZCgR08VlW7tfaZVmuSPPOlcWyp9e7cwYMh07aJA7J8NrW/85BjhwLWoRT6U25XtGGiCIUbisQ2A=
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WOu.C-h_1738809765 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 06 Feb 2025 10:42:45 +0800
+Date: Thu, 6 Feb 2025 10:42:43 +0800
+From: Feng Tang <feng.tang@linux.alibaba.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
 	LKML <linux-kernel@vger.kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>
-Subject: Re: Linux warns `rtsx_pci 0000:3b:00.0: PM: dpm_run_callback():
- pci_pm_resume returns -110`
-Message-ID: <20250205233817.GA949434@bhelgaas>
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	rafael.j.wysocki@intel.com
+Subject: Re: [PATCH 1/2] PCI/portdrv: Add necessary delay for disabling
+ hotplug events
+Message-ID: <Z6Qho7k_zj7NcA37@U-2FWC9VHC-2323.local>
+References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
+ <b6f97a22-4b24-4ca1-b9e9-38a4b0e69f04@web.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,36 +61,47 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e30f47ea-396e-45c7-a2aa-d141d27dae4c@molgen.mpg.de>
+In-Reply-To: <b6f97a22-4b24-4ca1-b9e9-38a4b0e69f04@web.de>
 
-On Wed, Feb 05, 2025 at 10:48:24PM +0100, Paul Menzel wrote:
-> Thank you for your instant reply.
-> 
-> Am 05.02.25 um 09:44 schrieb Ilpo Järvinen:
-> > On Tue, 4 Feb 2025, Paul Menzel wrote:
-> > 
-> > > #regzbot introduced: b46c89c08f41..aa22f4da2a46
-> 
-> > > On the Intel Kaby Lake laptop Dell XPS 13 9360, at least Linux
-> > > 6.13.0-07632-gaa22f4da2a46 logs the new warnings:
-> 
-> (Just a side note, these are actually logged with level error.)
-> 
-> > >      rtsx_pci 0000:3b:00.0: Unable to change power state from D0 to D3hot, device inaccessible
-> > >      rtsx_pci 0000:3b:00.0: PM: dpm_run_callback(): pci_pm_resume returns -110
-> > >      rtsx_pci 0000:3b:00.0: PM: failed to resume async: error -110
-> > > 
-> > > These were not present up to including Linux 6.13.0-07078-gb46c89c08f41.
-> ...
+Hi Markus,
 
-> > Please try if this fix helps:
-> > 
-> > https://lore.kernel.org/linux-pci/20250131152913.2507-1-ilpo.jarvinen@linux.intel.com/
-> 
-> Yes, after applying the patch these errors were *not* logged in three ACPI
-> S3 suspend/resume cycles.
+Thanks for the review and reminding!
 
-Thanks, I added your Reported-by to the patch, which should appear in
-v6.14-rc2.  Happy to also add your Tested-by if you feel confident
-enough.
+On Wed, Feb 05, 2025 at 06:48:35PM +0100, Markus Elfring wrote:
+> …
+> > Add the necessary wait to comply with PCIe spec. The waiting logic refers
+> > existing pcie_poll_cmd().
+> 
+> * How do you think about to add any tags (like “Fixes” and “Cc”) accordingly?
+ 
+The code went through some refactor, and the related commit should be:
+
+	commit 2bd50dd800b52245294cfceb56be62020cdc7515
+	Author: Rafael J. Wysocki <rjw@rjwysocki.net>
+	Date:   Sat Aug 21 01:57:39 2010 +0200
+
+	    PCI: PCIe: Disable PCIe port services during port initialization
+	    
+	    In principle PCIe port services may be enabled by the BIOS, so it's
+	    better to disable them during port initialization to avoid spurious
+	    events from being generated.
+	    
+	    Signed-off-by: Rafael J. Wysocki <rjw@sisk.pl>
+	    Reviewed-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+	    Signed-off-by: Jesse Barnes <jbarnes@virtuousgeek.org>
+
+Add Rafael to cc.
+
+> * Will cover letters be usually helpful for such patch series?
+
+Initially I planned to send the 2 patches seprately as they handle
+different issues, but as 2/2 will reuse the helper function added
+by 1/2, I put them together. 
+
+> * You would probably like to avoid a typo in an email address.
+
+Could you be more specific? I got the mail addresses from get_maintainers.pl.
+thanks!
+
+- Feng
 
