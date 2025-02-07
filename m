@@ -1,122 +1,124 @@
-Return-Path: <linux-pci+bounces-20883-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20885-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB991A2C0C3
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 11:41:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4454DA2C118
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 11:59:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A188E7A10CC
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 10:40:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3DE7166C5B
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 10:59:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74F111547F8;
-	Fri,  7 Feb 2025 10:41:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8844D1A76AE;
+	Fri,  7 Feb 2025 10:59:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q0XrUub7"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jo+mV9y8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A0353A7;
-	Fri,  7 Feb 2025 10:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7B4718FDD5;
+	Fri,  7 Feb 2025 10:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738924895; cv=none; b=MiFhI0kPnfnH/FRfdBxFNN3WYMaSnOmgMx70TCtS3jzZu/8cZLitEFjcMPm/1sPd2ZWhnPk6y5Kj74PHqh2qXdkR8lCZVBuYNXKh/b8rdjpXS0OCML14vJqcb7Ihdx0o8v/CCnQpn0kXMRpR9lZpgC/Ik/30PmXSyieG4AUfk/E=
+	t=1738925977; cv=none; b=DZDnGxFx5BGQrtwbQ37OKgopKOL3ymBXxkb7Ec5no78RUvQ3A1cU6sCWGcBSYhA/z92o5EmYxNzNgpkZFEKR/eQrzDlSbO8PPKldTRxjO2065zSyZg0VPyNIO6iPEswT/U/sMQW8e/Vly9/j4JLMYOz0CJmqAwW7FUbbfkU5A7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738924895; c=relaxed/simple;
-	bh=UzsjoUCqhTOFiLpomAhh9OUmFU4xJr7T+OHaniS6+Js=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SKzW2ULZHgmlvXcESYkSuKP8BCQrSXXx0/iRhXigOKIKLDcXGECh+4jMnCtVJ0kf2ZHtQxA49WwxD5w/Iy9C35TB/siDesjKaLFd0YgUy4tTBUsk8i9HOlieIZsUnNEXSywf9dJtZycd7c8i6gp8aDs1y+T3NCKlvjAxP5qN/2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q0XrUub7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0917CC4CED1;
-	Fri,  7 Feb 2025 10:41:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738924893;
-	bh=UzsjoUCqhTOFiLpomAhh9OUmFU4xJr7T+OHaniS6+Js=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q0XrUub7ZzUUrFOvSlVSs1xNDC5AFx6d6VmTXMC8qZRuQmLm6jCAns/4Aga4JvE0O
-	 09WhXvfwuv5SdTdSaHryWRPh9sGaHjKS+3GbUe/XdkJJnV+PXqSCAI4R+CZQkeWA6D
-	 gCZ8aP3U/Z6ho77enkGuwrk5HgMpfymKoPa2HmxYAG/d5YQIkEQoB9KlxfYN6Gbd5z
-	 ZPXMB5SACHoCEmf568E/dC9GKli/t/XrtYoDuhMPe9d2FDol24g3GSel6tkUoHgGVd
-	 Ay+QA/9QvDeI5Tft4bsM9JGhDgF5Ab7Zw+WxEndJ8hurCZ/i2EOtfRaIBbE4+zKmVm
-	 fZlktHlXq416Q==
-Date: Fri, 7 Feb 2025 11:41:28 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Thierry Reding <treding@nvidia.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Vidya Sagar <vidyas@nvidia.com>, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	quic_schintav@quicinc.com, johan+linaro@kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
-	sagar.tv@gmail.com
-Subject: Re: [PATCH V1] PCI: tegra194: Add support for PCIe RC & EP in
- Tegra234 Platforms
-Message-ID: <Z6XjWJd9jm0HHNXW@ryzen>
-References: <20250128044244.2766334-1-vidyas@nvidia.com>
- <Z5jH0G3V7fPXk0BG@ryzen>
- <20250203165932.72kezmi3dtqpytvg@thinkpad>
- <zaj4vcbduaoceaueqq5hvbw5rvoksk5oz6via3jhfp7lyzlxnh@2umxfxphupgd>
+	s=arc-20240116; t=1738925977; c=relaxed/simple;
+	bh=09GEDZOBjJebNIp9BxeX+G4r6l6zI1/5kwZj27WKTCE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=BF7tl/n48ct5Jo7YCGaYw3PE8SG86jyN5I/HpSVIfuEDfgUU0luC5VRR5B5Y5zOT3IBiDV6R9+mII3g3undUBxQkQSXnEKGtSWTlrpoqNZJ77bBpZ7VTOoWbVIXi3s9r5hJOMBb+hu9AsZI96ldb7sNT4sMjzj3RcwlR8OQBd+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jo+mV9y8; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=+gT7krOuH2+RgpEMb8xy3/JNXgH+wrXNxHLDB4T4b+o=;
+	b=jo+mV9y8F1LxRJOs/GpvpUI9smsOopaATolG8vi/wF2CbEqSdvO6eGBBaEXK5Z
+	LfD9TdV4tbYzJY//hBVS12oyEWmVc5tYoj6+0nnZJJRRQ1M5sxePHZ3iRmmcudtr
+	dFR+Wpzn5+P/AM1DojO+29nRtJvBedGxhkXCawEK016Q4=
+Received: from [192.168.243.52] (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wD3v7Bu56VnFvRUKQ--.7416S2;
+	Fri, 07 Feb 2025 18:58:55 +0800 (CST)
+Message-ID: <acf18b4c-8ad5-48ea-9767-5383b138ca74@163.com>
+Date: Fri, 7 Feb 2025 18:58:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <zaj4vcbduaoceaueqq5hvbw5rvoksk5oz6via3jhfp7lyzlxnh@2umxfxphupgd>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: cadence: Fix sending message with data or without
+ data
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org
+Cc: kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ bhelgaas@google.com, bwawrzyn@cisco.com, cassel@kernel.org,
+ wojciech.jasko-EXT@continental-corporation.com, a-verma1@ti.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
+References: <20250207103101.31287-1-18255117159@163.com>
+Content-Language: en-US
+In-Reply-To: <20250207103101.31287-1-18255117159@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wD3v7Bu56VnFvRUKQ--.7416S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kw1UCFyfJrWkJrWfCFWUCFg_yoW8uF1fpF
+	W8Ga4Sy3WIqrWavan5Za1UAF13J3Z3tF9rX3yv934fuFnru34UGr129Fy5GFW7GrWkWr1x
+	A3WDtF9rKF4fAFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UJ73kUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxnso2el4eZdYwAAs2
 
-On Tue, Feb 04, 2025 at 06:19:51PM +0100, Thierry Reding wrote:
-> On Mon, Feb 03, 2025 at 10:29:32PM +0530, Manivannan Sadhasivam wrote:
-> > On Tue, Jan 28, 2025 at 01:04:32PM +0100, Niklas Cassel wrote:
-> > > Hello Vidya,
-> > > 
-> > > On Tue, Jan 28, 2025 at 10:12:44AM +0530, Vidya Sagar wrote:
-> > > > Add PCIe RC & EP support for Tegra234 Platforms.
-> > > 
-> > > The commit log does leave quite a few questions unanswered.
-> > > 
-> > > Since you are just updating the Kconfig and nothing else:
-> > > Does the DT binding already have support for the Tegra234 SoC?
-> > > Does the driver already have support for the Tegra234 SoC?
-> > > 
-> > > Looking at the DT binding and driver, the answer to both questions
-> > > is yes. (This should have been in the commit message IMO.)
-> > > 
-> > > 
-> > > But that leads me to the question, since there is support for Tegra234
-> > > SoC in the driver, does this means that this fixes a regression, e.g.
-> > > the Kconfig ARCH_TEGRA_234_SOC was added after the driver support in
-> > > this driver was added. In this case, you should have a Fixes: tag that
-> > > points to the commit that added ARCH_TEGRA_234_SOC.
-> > > 
-> > > Or has the the driver support for Tegra234 been "dead-code" since it
-> > > was originally added? (Because without this patch, no one can have
-> > > tested it, at least not without COMPILE_TEST.)
-> > > In this case, you should add:
-> > > Fixes: a54e19073718 ("PCI: tegra194: Add Tegra234 PCIe support")
-> > > 
-> > 
-> > TBH, I don't like muddling with Kconfig like this. Ideally, the driver should
-> > just depend on ARCH_TEGRA || COMPILE_TEST and the driver should be selected by
-> > the relevant defconfig.
+
+
+On 2025/2/7 18:31, Hans Zhang wrote:
+> From: "hans.zhang" <hans.zhang@cixtech.com>
+
+I'm so sorry, guys.
+The correct email address should be: Hans Zhang <18255117159@163.com>
+
+> View from cdns document cdn_pcie_gen4_hpa_axi_ips_ug_v1.04.pdf.
+> In section 9.1.7.1 AXI Subordinate to PCIe Address Translation
+> Registers below:
 > 
-> ARCH_TEGRA is a symbol that exists both on 32-bit and 64-bit ARM. This
-> driver is completely useless on 32-bit ARM and only used on a very small
-> subset of 64-bit ARM devices. It doesn't make sense to be able to enable
-> this if you want to build a kernel for say Tegra210.
+> axi_s_awaddr bits 16 is 1 for MSG with data and 0 for MSG without data.
+> 
+> Signed-off-by: hans.zhang <hans.zhang@cixtech.com>
 
-Well, if you look in drivers/pci/controller/dwc/Kconfig
-there are quite a few drivers that does:
+The correct Signed-off should be: Hans Zhang <18255117159@163.com>
 
-depends on ARM64 or ARM and then a ARCH_ something.
+> ---
+>   drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 +--
+>   drivers/pci/controller/cadence/pcie-cadence.h    | 2 +-
+>   2 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> 
+> base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index e0cc4560dfde..0bf4cde34f51 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -352,8 +352,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
+>   	spin_unlock_irqrestore(&ep->lock, flags);
+>   
+>   	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
+> -		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code) |
+> -		 CDNS_PCIE_MSG_NO_DATA;
+> +		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code);
+>   	writel(0, ep->irq_cpu_addr + offset);
+>   }
+>   
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index f5eeff834ec1..39ee9945c903 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -246,7 +246,7 @@ struct cdns_pcie_rp_ib_bar {
+>   #define CDNS_PCIE_NORMAL_MSG_CODE_MASK		GENMASK(15, 8)
+>   #define CDNS_PCIE_NORMAL_MSG_CODE(code) \
+>   	(((code) << 8) & CDNS_PCIE_NORMAL_MSG_CODE_MASK)
+> -#define CDNS_PCIE_MSG_NO_DATA			BIT(16)
+> +#define CDNS_PCIE_MSG_DATA			BIT(16)
+>   
+>   struct cdns_pcie;
+>   
 
-I don't see why you can't do
-depends on (ARCH_TEGRA && ARM64) || COMPILE_TEST
-
-
-Kind regards,
-Niklas
 
