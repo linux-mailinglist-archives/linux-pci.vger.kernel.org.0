@@ -1,101 +1,103 @@
-Return-Path: <linux-pci+bounces-20987-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20988-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5095AA2D07B
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 23:28:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8358FA2D15D
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 00:17:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 725C11889765
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 22:28:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 569FF3AD32C
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 23:17:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 214E21AF0B6;
-	Fri,  7 Feb 2025 22:28:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BC9B1BCA0A;
+	Fri,  7 Feb 2025 23:17:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hfbRCUSJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nvPoqqau"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDC719CD13;
-	Fri,  7 Feb 2025 22:28:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D114D194091;
+	Fri,  7 Feb 2025 23:17:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738967323; cv=none; b=ZfugSQwckQI2pcIk5ocUdId60QXNV7skvKh7VSoJxc2ITW6MboKHHLsmGLi3BeUyqhPgKeeQ7IeV8l68ag0dtmpQFzcSXWZtXr56wdI9ZtOV8yCAkdtN7HdqQSsa1dRvwixqvkHUEShIDsE5XmtKckx6DqtYjcTCq9uZDZKYn7A=
+	t=1738970263; cv=none; b=e5QwQAyOd5bBw4V70OLNi0vcuII+BAmzryuOD/qdTl2e8WUOIflrAlXGhmCAbKzB825tNlyTZlVKqh0r/Q/vud4EFSiw9UOGOxXc+fmAi/tD969G8l2GzZ+O5HiDnYn8HQc1MKc0jPVq39Dc4rArsaxm6rfMzGRxUIRtkTWE4SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738967323; c=relaxed/simple;
-	bh=y0lMlknWz7h6hi48vGEQ5WXn3IyNTFR6Jsc4G941ZaI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=l4+OEXS6vdq4M3h5qAf+CoxC4oq9GgGZ5RSsaWocPs7SZh5JUfpodIdZMuf24RkooTdQ9CqapSg43KN0iA6b15ayo89qYDMpDDayZ+HAePGJgd4Dtr3QZaFC3tAu3HfhLRpR9KaYyRRZi3sToJCJD/hh43NDEonmvlaGeTvQC9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hfbRCUSJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B622C4CED1;
-	Fri,  7 Feb 2025 22:28:42 +0000 (UTC)
+	s=arc-20240116; t=1738970263; c=relaxed/simple;
+	bh=uBu6t4ty0hQZKKSCZBRKb4E9WpdD1GpGMPNfBVQXDVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BKfghTE94I+QN6B0lBCgPsiW92/aEQ1umLsQqSLBGlSr80CdZ4yOMq2TOT7f/7KpJr62f2zQoXLJGHrQpXkJTxLvjNu+3BMGUcV1SbzofLtNcpaX+Mo4Y7kaJghdhhaMhQi3I024PuPfGTx2iI1BLl2XiIcafm6fG9HHGY2O+jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nvPoqqau; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0028C4CEE2;
+	Fri,  7 Feb 2025 23:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738967322;
-	bh=y0lMlknWz7h6hi48vGEQ5WXn3IyNTFR6Jsc4G941ZaI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=hfbRCUSJVaelL0DjWFz/52IfumhZGHs2WxW8E629XPCB1nBRBLI3SCVnL4dTprfp3
-	 g310+jH+owfkPwWDxS/zVVNAmOA4Csgn0GicfnZwcL0h7sORihso9+vDvKKGW6axll
-	 TK3+9ESKXhAdjGFEApI2DHkmEZudwUM7gzm8/H8BkNhgwcVWNwni8ipiKaCvgOwkYZ
-	 nW3hBn6VA552SAARFyLlJ5hKBSGu6hH4/56HDXz92IU1A72UZuOKN10BjMPmTcFL6h
-	 bDw8Twa/uEwIDMCk/Q7BcHIL99sKjaGmoEoSM5mg/GNI4fcRVSHRDqe2L2E4SLg+Tx
-	 HfuJBjpsoKUyQ==
-Date: Fri, 7 Feb 2025 16:28:40 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, linux-sound@vger.kernel.org,
-	kai.vehmanen@linux.intel.com, ranjani.sridharan@linux.intel.com,
-	yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] PCI: pci_ids: add INTEL_HDA_PTL_H
-Message-ID: <20250207222840.GA1073192@bhelgaas>
+	s=k20201202; t=1738970260;
+	bh=uBu6t4ty0hQZKKSCZBRKb4E9WpdD1GpGMPNfBVQXDVg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nvPoqqaucbZ+Zi7dcFcDf19MmSlaU676cQ27+TNgNPph5SnE0OcWAbUo6mtU6XA70
+	 CRj64dcDZGAl20MNFWj5ElGlRslwwc5/82rTjSJ/eeDkPagVEXOvKsD37lz5OmauQ/
+	 BljW5xyk6RVr97YBC4nN3jG9BDk7HPMnGeR5w/afedLrOmISQIhvJXZa2NMYrUgnwM
+	 +ems6aj8tw36WCnlJU03Wieogvtqo9kWaQrsmW8KgpgFP0XAmUNUufDSjHc1B4z7ZF
+	 HP5wB6OAf2XEnk0gkYoiiGTKTKW1VOfe52a2OyomRnFgIxjFCNSp7ViFtzhQ4/rN4C
+	 MKlSVzR3S6BAg==
+Message-ID: <8de72c76-6fea-4f8a-b818-72c8de07a78c@kernel.org>
+Date: Sat, 8 Feb 2025 08:17:34 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207133736.4591-2-peter.ujfalusi@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/12] dt-bindings: ata: Convert fsl,pq-sata to YAML
+To: j.ne@posteo.net, devicetree@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: imx@lists.linux.dev, Scott Wood <oss@buserror.net>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+ Vinod Koul <vkoul@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, =?UTF-8?Q?J=2E_Neusch=C3=A4fer?=
+ <j.neuschaefer@gmx.net>, Wim Van Sebroeck <wim@linux-watchdog.org>,
+ Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+ linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-watchdog@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-2-8137b0c42526@posteo.net>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20250207-ppcyaml-v2-2-8137b0c42526@posteo.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Please update subject to match the history, e.g.,
-
-  PCI: Add Intel PTL-H audio Device ID
-
-On Fri, Feb 07, 2025 at 03:37:33PM +0200, Peter Ujfalusi wrote:
-> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+On 2/8/25 06:30, J. Neuschäfer via B4 Relay wrote:
+> From: "J. Neuschäfer" <j.ne@posteo.net>
 > 
-> More PCI ids for Intel audio.
-
-  Add Intel PTL-H audio Device ID.
-
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-> Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-> Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
->  include/linux/pci_ids.h | 1 +
->  1 file changed, 1 insertion(+)
+> Convert the Freescale PowerQUICC SATA controller binding from text form
+> to YAML. The list of compatible strings reflects current usage.
 > 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index de5deb1a0118..1a2594a38199 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -3134,6 +3134,7 @@
->  #define PCI_DEVICE_ID_INTEL_HDA_LNL_P	0xa828
->  #define PCI_DEVICE_ID_INTEL_S21152BB	0xb152
->  #define PCI_DEVICE_ID_INTEL_HDA_BMG	0xe2f7
-> +#define PCI_DEVICE_ID_INTEL_HDA_PTL_H	0xe328
->  #define PCI_DEVICE_ID_INTEL_HDA_PTL	0xe428
->  #define PCI_DEVICE_ID_INTEL_HDA_CML_R	0xf0c8
->  #define PCI_DEVICE_ID_INTEL_HDA_RKL_S	0xf1c8
-> -- 
-> 2.48.1
+> To clarify the description, I changed it to mention "each SATA
+> controller" instead of each port.
 > 
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+
+Acked-by: Damien Le Moal <dlemoal@kernel.org>
+
+-- 
+Damien Le Moal
+Western Digital Research
 
