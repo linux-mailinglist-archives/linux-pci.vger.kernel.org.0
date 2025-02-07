@@ -1,92 +1,98 @@
-Return-Path: <linux-pci+bounces-20922-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20923-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92841A2CA70
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 18:42:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B8D2A2CA84
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 18:49:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 361AF168CA6
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 17:42:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 59FF63A718B
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 17:49:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAF1719597F;
-	Fri,  7 Feb 2025 17:42:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF4F8199EAD;
+	Fri,  7 Feb 2025 17:49:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hVQq5HUg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="etM+490N"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1156318E050
-	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 17:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF67191F62
+	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 17:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738950143; cv=none; b=ryssEthMK+u01w/pynWK5pfRfcEjOuE8Pni5sq1EV5jC+k+rLTBGwZuRHHmwmoS5VO+TgdvbLnV0aVMiIr3VgZkwM2+uzJo/m35LC4/R7t4bwnZmygUNNhMi/bf3MApjujLboL1fihQKwv9YJpzvdFN6uDvQWxwZor1bRHdWu2E=
+	t=1738950591; cv=none; b=TOe+IZGZeOaY87ewYu4BPeRBuDnN1si9BUadeE0kikgw9vfqk5FIpLqB0ZKlCtjAu0PtLWrO8uIuT6/X65Djrm9ANKxXw8TLrJffvK4PwFV12EckEyO00p0V/He1i//b8u5his/trpTYha5hMHJeaAu2TwVuynj66AaepWs4r8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738950143; c=relaxed/simple;
-	bh=V+TOaV5qdmU9SIRsToCl8KcD83Gtj4THu6wwGrTpqwI=;
+	s=arc-20240116; t=1738950591; c=relaxed/simple;
+	bh=OjHf0/La6zmx4FAbdAnxgighWHZDuLFxwPxDymnae2w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rNan/HZjBZvPvWc6o56769jCqvdktvuRve0xj2xPVOREV6hCqYqWFNTBLCS6OfCPqzP+XjiWBMMPIr3zkrYHmwme44C2tGbEJUUXHGN7Z0yLJV60zBq39bjAIaRXrMeeeFPGMoegbAmsQH2V5HGg6rxbiPRcE8Bzr2jCVGz6q0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hVQq5HUg; arc=none smtp.client-ip=209.85.214.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=FoFqmvmMhFi/Ollp1QU4FPs2oAzZhdc2VAo+fMFYkac3AYkRR8CqA5nJKCDiygfDyr5sQXzbtxijbiKM7R3FanNAxIp3QNZqjNALkfYF12Ihs+mU6NKeyXUIQ0uVZ+9UQseiDLGTLxrJyTyzjQQSc2QBvDfNykL3CNpvYgt6PCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=etM+490N; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2166651f752so53533585ad.3
-        for <linux-pci@vger.kernel.org>; Fri, 07 Feb 2025 09:42:21 -0800 (PST)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-21c2f1b610dso58755685ad.0
+        for <linux-pci@vger.kernel.org>; Fri, 07 Feb 2025 09:49:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738950141; x=1739554941; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1738950589; x=1739555389; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=m1q/NMsxfkxaHPOgWZWtDFb3oS/ioGl5xgxP5qKiYDA=;
-        b=hVQq5HUgwcfAe4YXMJnU2Ebr1oEeQyDLf2nOrKcOXstCffG4+iS4NZsKCgnp9Gtv3E
-         2ulhSx7ee1+52jfesBDzQ/ldPpakGaL4HBT4xvUAQtzzrQ48i1NdcZYusuDXSJnv5MFX
-         pmBUMe4rNOkDKJGNca+3x0h8i3/y27eKehdCwxzM/U+HBg2Rf2s/iQ7xVWYjQ9ffLWO5
-         vzU+JESGkMrOgK96p/h+do9lRHcNfug8OKEFqKmlxsIHAopw0skIhUBi1alSRK81OCJ2
-         Agf09Af/maZw3CWYJHUIM+d65xzlgcb/yGaQDi7rBWsNsGb4VglYIklT4JQA7/WrCiDV
-         GRYA==
+        bh=7ueL8uhdRjf52HSBhlGadO+O+QftLnA6FgREnqVSmz0=;
+        b=etM+490NN9p12nFXzw29ymoF8JE8Y9ga99SBrjuc+HxWrBjTdXgU/BsjShDJp84shc
+         BIMWmjJXva7ruuH478MI7cTkj6bv3E7h0n5e2kvbfwcTonEAn2QvwWOjNsMvoTVTvxgB
+         w+HHHBySYTz61U2sRPnhtaSp25AJXNtQkpZ2Yvgr0h8IJejP0yXLpXYiVYCS+plIlHKi
+         PUZcVGI819TxTEpjdwJld0ciq/8wyhuiCIP8GpI2aYEklghJSm46QeQEOijYAxWQFOKe
+         w6Ykmbvfr5MDQMHDjNVtkGrNPSiQKyeldLSojG67HoSJN8uvJfMY6t+GcPxfJ2HsSsJ2
+         OAsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738950141; x=1739554941;
+        d=1e100.net; s=20230601; t=1738950589; x=1739555389;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m1q/NMsxfkxaHPOgWZWtDFb3oS/ioGl5xgxP5qKiYDA=;
-        b=fpHHSzZ4ndFDQBUoJ6j0JjW12IIzzxN1WhcJ8bV5dJFHSyDqYRQE+yzTEYAgYa916U
-         pJl61h86fGBkONtqRWNEUgJblPEBcCRugSE8PFqLyggwTtIZSB3pf64NHQBE6PsFX89e
-         w+VoD9Rf/Zus6rxTc2OeM7KsVkDgAXVgq9eraJg11M1xE1kKAhriPN3U11S3ol2Zgy5q
-         katPP5pbuPPhVCyJEFowOnlnpaM1hq0eVI/V5VCnuY9zF5AJFvxFnuf41Hfyb+c9XB5X
-         4hum0TNBMbNKoBKAfbqjxnftsfzn+KtHI8eLRBr4wwZZ3xagz+9HtjjozuUHXzBiBrZs
-         VkFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXAW0HrWQKICHZRsaVJ8ziyUhvGkq35hTVi7jU+5vf1E5P7YkrYtfmh2c9d3V3TNk5CW1Im44vxI6g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxypTm35uaeFByrKG6hV41HqIDKFMOL8uAgNeWJ23jzslip7mU7
-	sSCzwLSrS2rZ0+yAUjkfTr/Yudfv7jYJt3g6qv3gbMsD9ANvWSJuM10ms4rGXg==
-X-Gm-Gg: ASbGncurkMu33Jva5uYtqXti4TzN86m2NJzBVMaVZ8fvMJvphFqn7doRgQHTU2GLuDB
-	dFkWPXDFyDTpJkOkUVsSKiv6cEoXp1Mo3RKmCGQTOJYL1OhCj84vmW2IZromUG9tD4YulqCjsf5
-	yqezOtmk6NJdC4vfZmjnwTFXuaLqlijdrWTTKr2RZxEq/LJ3HGwTGii21fegVoybZw+bo4e9BCQ
-	T2cszIwPehDwTLuZ820cRn68FgqYabFbaGtjQbb4cSJ29utxpjUbZ2kQmPz5oBzAHIFAiBFJrC/
-	S6NQu/edUyfyfvRyx38jYsbfvg==
-X-Google-Smtp-Source: AGHT+IHKVnEp41E5iC5LME3eaGpBcGT/WyvCoALxNdXsgOqSoWBPVx/pKaTy0lP4GqNkJVL+Co/j9Q==
-X-Received: by 2002:a17:902:ce8b:b0:216:7cd8:e964 with SMTP id d9443c01a7336-21f4e6dedc4mr66020495ad.22.1738950141299;
-        Fri, 07 Feb 2025 09:42:21 -0800 (PST)
+        bh=7ueL8uhdRjf52HSBhlGadO+O+QftLnA6FgREnqVSmz0=;
+        b=lltrn+fNkzs+UHK3CXz/FqdL/z5PTnPXmdLEul4bXeECwwfmqUi+/+k2CCfBxtPPFz
+         8T762H1o4aKQmfVuZKMOrfzV93h75zBcjb669gfJgMdhSD89BJ+N/hYWvwzUeaST37hO
+         IgM49psxGU7k5mzpD9pa/yZauOhzf2e4FtQFs9G+cFyqCWyrfHkiDfvXnTJ7/3kMi7KS
+         t9NV2+cI5mHPX2xL0to0mNpdXMBXNxNA0qDN/LKso4jdjRD1uERNk05Aquus3pjd35qW
+         /NL4pUIGgjCTUOggmcuwTETP9VILGGH7nUDah5YgJDW7IAJv2a8CcB9IY0nuIGB+C61Y
+         qtBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVObqrbOzt5OLQ8dGdxEBsMifUbXGh3t9DWpDUIqwD2Cbtld7M416lN6uZbIfeSPMtO+5qL5me0jeA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yya+fuzokBkBbjzzMYTzGFgsN5NJePc+Ax/GMiVLKfk/lSodSH8
+	+JLWls2KNH+D5ll/JccHrl4pI01/chpkA6vOF/lkaNtoPe0OJnDwP3nFYtfw8Q==
+X-Gm-Gg: ASbGnctSHTh+5pjoyEBh3HvaSztYzY9aG7+6LckL1SkKGqBZmveUCtRTd/8HSTmr4SQ
+	UAY3yae1aSKZaF4z0zscK8/FE+wKhz1zHaMkaiexMQtP3YOGHNOrE6HCGrqAN3KXMO6ysxxNKM+
+	tBF1KUCUHxnWpSXl78U3njXFSUfHiRVlAiiX7LeoV5Par4qjJTicSP4M28Rhu9qTumRg4rP/uVi
+	PrSkM5ADwXmcChTmpsQb88lXMa6yyIGRITyAxnwOyLlbgnujEXsoKScTY+bbZjFIdq+bY5v2fyB
+	hG372ux+pHEe2v64pChXcrxnmA==
+X-Google-Smtp-Source: AGHT+IE6OgQOwi69kOmyTP+cvlnuvv/NziCa4NqzRul258V7kLWTeAlJ+6B/WB+eU+A9dOCwtErZPw==
+X-Received: by 2002:a17:902:e74a:b0:216:4064:53ad with SMTP id d9443c01a7336-21f4e7ed222mr70009195ad.48.1738950587991;
+        Fri, 07 Feb 2025 09:49:47 -0800 (PST)
 Received: from thinkpad ([120.60.76.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650f087sm33672085ad.6.2025.02.07.09.42.18
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f36541c36sm33757455ad.63.2025.02.07.09.49.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 09:42:20 -0800 (PST)
-Date: Fri, 7 Feb 2025 23:12:17 +0530
+        Fri, 07 Feb 2025 09:49:47 -0800 (PST)
+Date: Fri, 7 Feb 2025 23:19:39 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jon Hunter <jonathanh@nvidia.com>, Frank Li <Frank.li@nxp.com>,
-	Hans Zhang <18255117159@163.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] misc: pci_endpoint_test: Handle BAR sizes larger than
- INT_MAX
-Message-ID: <20250207174217.i5sgoxf7rikwrmxq@thinkpad>
-References: <20250124093300.3629624-2-cassel@kernel.org>
- <20250201160154.ih7qhpj2ovjtowcu@thinkpad>
- <Z55cNWKi8+9h9rUo@x1-carbon>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Chen Wang <unicorn_wang@outlook.com>, Chen Wang <unicornxw@gmail.com>,
+	kw@linux.com, u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu,
+	arnd@arndb.de, bhelgaas@google.com, conor+dt@kernel.org,
+	guoren@kernel.org, inochiama@outlook.com, krzk+dt@kernel.org,
+	lee@kernel.org, lpieralisi@kernel.org, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, pbrobinson@gmail.com, robh@kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
+	chao.wei@sophgo.com, xiaoguang.xing@sophgo.com,
+	fengchun.li@sophgo.com, helgaas@kernel.org
+Subject: Re: [PATCH v3 2/5] PCI: sg2042: Add Sophgo SG2042 PCIe driver
+Message-ID: <20250207174939.w2e2bdvvcmqojlse@thinkpad>
+References: <cover.1736923025.git.unicorn_wang@outlook.com>
+ <ddedd8f76f83fea2c6d3887132d2fe6f2a6a02c1.1736923025.git.unicorn_wang@outlook.com>
+ <20250119122353.v3tzitthmu5tu3dg@thinkpad>
+ <BM1PR01MB254540560C1281CE9898A5A0FEE12@BM1PR01MB2545.INDPRD01.PROD.OUTLOOK.COM>
+ <20250122173451.5c7pdchnyee7iy6t@thinkpad>
+ <86msfhviek.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,42 +102,74 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z55cNWKi8+9h9rUo@x1-carbon>
+In-Reply-To: <86msfhviek.wl-maz@kernel.org>
 
-On Sat, Feb 01, 2025 at 06:39:01PM +0100, Niklas Cassel wrote:
-> On Sat, Feb 01, 2025 at 09:31:54PM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Jan 24, 2025 at 10:33:01AM +0100, Niklas Cassel wrote:
-> > > Running 'pcitest -b 0' fails with "TEST FAILED" when the BAR0 size
-> > > is e.g. 8 GB.
+On Thu, Jan 23, 2025 at 12:12:03PM +0000, Marc Zyngier wrote:
+> On Wed, 22 Jan 2025 17:34:51 +0000,
+> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+> > 
+> > + Marc (for the IRQCHIP implementation review)
+> > 
+> > On Wed, Jan 22, 2025 at 09:28:12PM +0800, Chen Wang wrote:
 > > > 
-> > > The return value of the pci_resource_len() macro can be larger than that
-> > > of a signed integer type. Thus, when using 'pcitest' with an 8 GB BAR,
-> > > the bar_size of the integer type will overflow.
+> > > > > +static int sg2042_pcie_setup_msi(struct sg2042_pcie *pcie,
+> > > > > +				 struct device_node *msi_node)
+> > > > > +{
+> > > > > +	struct device *dev = pcie->cdns_pcie->dev;
+> > > > > +	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+> > > > > +	struct irq_domain *parent_domain;
+> > > > > +	int ret = 0;
+> > > > > +
+> > > > > +	if (!of_property_read_bool(msi_node, "msi-controller"))
+> > > > > +		return -ENODEV;
+> > > > > +
+> > > > > +	ret = of_irq_get_byname(msi_node, "msi");
+> > > > > +	if (ret <= 0) {
+> > > > > +		dev_err(dev, "%pOF: failed to get MSI irq\n", msi_node);
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +	pcie->msi_irq = ret;
+> > > > > +
+> > > > > +	irq_set_chained_handler_and_data(pcie->msi_irq,
+> > > > > +					 sg2042_pcie_msi_chained_isr, pcie);
+> > > > > +
+> > > > > +	parent_domain = irq_domain_create_linear(fwnode, MSI_DEF_NUM_VECTORS,
+> > > > > +						 &sg2042_pcie_msi_domain_ops, pcie);
+> > > > > +	if (!parent_domain) {
+> > > > > +		dev_err(dev, "%pfw: Failed to create IRQ domain\n", fwnode);
+> > > > > +		return -ENOMEM;
+> > > > > +	}
+> > > > > +	irq_domain_update_bus_token(parent_domain, DOMAIN_BUS_NEXUS);
+> > > > > +
+> > > > The MSI controller is wired to PLIC isn't it? If so, why can't you use
+> > > > hierarchial MSI domain implementation as like other controller drivers?
 > > > 
-> > > Change bar_size from integer to resource_size_t to prevent integer
-> > > overflow for large BAR sizes with 32-bit compilers.
-> > > 
-> > > In order to handle 64-bit resource_type_t on 32-bit platforms, we would
-> > > have needed to use a function like div_u64() or similar. Instead, change
-> > > the code to use addition instead of division. This avoids the need for
-> > > div_u64() or similar, while also simplifying the code.
+> > > The method used here is somewhat similar to dw_pcie_allocate_domains() in
+> > > drivers/pci/controller/dwc/pcie-designware-host.c. This MSI controller is
+> > > about Method A, the PCIe controller implements an MSI interrupt controller
+> > > inside, and connect to PLIC upward through only ONE interrupt line. Because
+> > > MSI to PLIC is multiple to one, I use linear mode here and use chained ISR
+> > > to handle the interrupts.
 > > > 
 > > 
-> > Fixes tag?
+> > Hmm, ok. I'm not an IRQCHIP expert, but I'll defer to Marc to review the IRQCHIP
+> > implementation part.
 > 
-> size has been of type int since:
-> 2c156ac71c6b ("misc: Add host side PCI driver for PCI test function device")
+> I don't offer this service anymore, I'm afraid.
 > 
-> But I think a better SHA1 to use as the Fixes tag would be:
-> cda370ec6d1f ("misc: pci_endpoint_test: Avoid using hard-coded BAR sizes")
+> As for the "I create my own non-hierarchical IRQ domain", this is
+> something that happens for all completely mis-designed interrupt
+> controllers, MSI or not, that multiplex interrupts.
 > 
-> Which has the one that started using pci_resource_len()
-> (while still keeping size as type int).
+> These implementations are stuck in the previous century, and seeing
+> this on modern designs, for a "server SoC", is really pathetic.
 > 
-> Perhaps this can be amended while applying?
+> maybe you now understand why I don't offer this sort of reviewing
+> service anymore.
 > 
 
-Sure.
+Ok, I can understand your pain as a maintainer. I'll try my best to review these
+implementations as I have no other choice :)
 
 - Mani
 
