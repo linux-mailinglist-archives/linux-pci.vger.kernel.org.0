@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-20891-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20892-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 593AFA2C3CF
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 14:37:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DC59A2C3DD
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 14:39:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CDE3016B526
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 13:37:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45FE93AC772
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 13:37:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73FB71F8EF1;
-	Fri,  7 Feb 2025 13:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 200B21F8AC0;
+	Fri,  7 Feb 2025 13:37:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ba/2A3e9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Udg3avW5"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DEE1F8AC0;
-	Fri,  7 Feb 2025 13:37:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC8D1F9421;
+	Fri,  7 Feb 2025 13:37:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738935433; cv=none; b=c1Lp483rwCzw2cS/P/+w9eJW+I1lB2fg4YtgF5V9gBFE01svFtkdxWYzCZBp9+bd1cGdE8lEBZKv09EuZvXjuqnCGgKHJN9nBRxGLrwYC1s06meSX38YQXabRJ6N9Pz/XbpWdZNuUQNWdvkIsLg75AXgqjpCxVc6KW3KY0zg3tw=
+	t=1738935437; cv=none; b=TtuRhpuZXkdMIV/F4Xw1Z1mbrwE6PC9nnqna63hC4ICurFmA/X4phCt9uGMcRGqWgp5cjZQaGsCOdAwuUJK4KGV1f9E0bVZblLitFGO3Jf7DDC6fa0gJfkl7GrDgm4BLNPEqI/s1+n9njU7mLQosrQIMXD+qJhoThB9HBWFersE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738935433; c=relaxed/simple;
-	bh=HUEX+jOJKQ8HDRUrrsvAcXd0ktW5Qr3AEqgWm8o9Md0=;
+	s=arc-20240116; t=1738935437; c=relaxed/simple;
+	bh=1gPbmt2CETIzLFEDnbd4H1EjyjVkwI381ioMsJl4KW0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hRt7ixhFeyaNZ6aXO7s2nZ0ll+PYt13mhq8wa+A/9Tof34jLWU47kn3mPdb24+GqpQzvNrzD5b6VBteAy0P3y5wyaum8rca7Q4GAttxvVknEqtzEMUfL0FUcThG4GZZzyNIWyyx17RmsIX3pbZmFYo/NchW9SgausIyzC+rUTKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ba/2A3e9; arc=none smtp.client-ip=198.175.65.20
+	 MIME-Version; b=lRCG06haP8dqUrJAYLTZb61NuvWag8Ocuk90klKkiMoIdxyWVkx+U6RmFYz8HqZb80dZSHSX9K/CSuBAsQaBLzKdZo/wuRQ7C0H6wn+kjpXiRwJ4sXAzFlwqZzBGSIBKTqung2ANyoc+AKPpxRReGHU3TQ7XH0Bd8o/gtNS1vts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Udg3avW5; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738935432; x=1770471432;
+  t=1738935435; x=1770471435;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=HUEX+jOJKQ8HDRUrrsvAcXd0ktW5Qr3AEqgWm8o9Md0=;
-  b=Ba/2A3e9NeU0O6jZu42yzUtqnNAiPiWcrOasAQRhS61cJWk2KXGKp8ey
-   sncoRLBHtTDXB1hxfT0F7bShrFPykDWL5GmPf+B8SVrhTNabiZ7mlSsq/
-   nA32o4SBkwjJXcwGHR6i0cP/hrr/o6/h5KnqP0MMoIvj8rJ94dO1J6fOp
-   VbbGIsvBmBk1CVoXstzeYnR1S8A//ZqDzvx0P33O/qdZyZh7rVHl4EhKl
-   z5vaFvS3gR+GH+QDct2psHPUcCQ3uJgurCEgRZtMnpk/p6MfGVFhvaLXn
-   zE7RO7Z72SKAzqX4QKoFGuM2/HTbFC7Cfg6rBvLra/gbIQu3Is3Au7K3G
+  bh=1gPbmt2CETIzLFEDnbd4H1EjyjVkwI381ioMsJl4KW0=;
+  b=Udg3avW5kNrUr5K2tY5Fk7ddUqbXuZ59GQFr33TUfcU6iJbOCCn1tA0C
+   JicOpj+LgR8wWEWGXhmxriYvsFey2Zz5tZI3fBbCW8WY3vma+lU4ubvFX
+   bkNzD3Veq8bz1t6sSsesWk/44+tb5qKWAKUswY/AoOyYgAbbzj0/FpRq6
+   m2OJ4SWDf19yKvXznDHKdI8yq6SzC1bMEBaGKJmhvkJI+HotJqsrclxAT
+   z6OF7JK2nZDWFDtsV2jJZ2WYo4iPAoy29YnIAq+InTEuScYGcarf+jLrt
+   EjahjeRa0YBt9wSS7oiefrod3CeXNskWoKa46HyXUXN3X/S/0NBKMtMF+
    Q==;
-X-CSE-ConnectionGUID: yMrOXdUITJKxos3pmdJsBA==
-X-CSE-MsgGUID: Go/0IEbGSyeDbibdSQw+ag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39268445"
+X-CSE-ConnectionGUID: wHYVtijIT+mJF/3YG4nxeQ==
+X-CSE-MsgGUID: eDGhiEA2TPuHHE0tJc77NA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="39268459"
 X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="39268445"
+   d="scan'208";a="39268459"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:37:12 -0800
-X-CSE-ConnectionGUID: Sn6Wbf4hRC+KnQveXB6Uzw==
-X-CSE-MsgGUID: AtcsYrJ6SKyTR/K0Y+JwoQ==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:37:15 -0800
+X-CSE-ConnectionGUID: UU5DFwFzQVagWK+sgVoTUw==
+X-CSE-MsgGUID: YawrmXTXR3SOkZKF45OZCQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="148739884"
+   d="scan'208";a="148739906"
 Received: from hrotuna-mobl2.ger.corp.intel.com (HELO pujfalus-desk.intel.com) ([10.245.246.100])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:37:09 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:37:12 -0800
 From: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
 To: lgirdwood@gmail.com,
 	broonie@kernel.org
@@ -69,9 +69,9 @@ Cc: linux-sound@vger.kernel.org,
 	bhelgaas@google.com,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] ASoC: SOF: Intel: pci-ptl: Add support for PTL-H
-Date: Fri,  7 Feb 2025 15:37:35 +0200
-Message-ID: <20250207133736.4591-4-peter.ujfalusi@linux.intel.com>
+Subject: [PATCH 4/4] ALSA: hda: hda-intel: add Panther Lake-H support
+Date: Fri,  7 Feb 2025 15:37:36 +0200
+Message-ID: <20250207133736.4591-5-peter.ujfalusi@linux.intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250207133736.4591-1-peter.ujfalusi@linux.intel.com>
 References: <20250207133736.4591-1-peter.ujfalusi@linux.intel.com>
@@ -83,27 +83,31 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-PTL-H uses the same configuration as PTL.
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
+One more PCI ID.
+
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
 Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 ---
- sound/soc/sof/intel/pci-ptl.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/hda/hda_intel.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/sof/intel/pci-ptl.c b/sound/soc/sof/intel/pci-ptl.c
-index 0aacdfac9fb4..c4fb6a2441b7 100644
---- a/sound/soc/sof/intel/pci-ptl.c
-+++ b/sound/soc/sof/intel/pci-ptl.c
-@@ -50,6 +50,7 @@ static const struct sof_dev_desc ptl_desc = {
- /* PCI IDs */
- static const struct pci_device_id sof_pci_ids[] = {
- 	{ PCI_DEVICE_DATA(INTEL, HDA_PTL, &ptl_desc) }, /* PTL */
-+	{ PCI_DEVICE_DATA(INTEL, HDA_PTL_H, &ptl_desc) }, /* PTL-H */
- 	{ 0, }
- };
- MODULE_DEVICE_TABLE(pci, sof_pci_ids);
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 7d7f9aac50a9..67540e037309 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2496,6 +2496,8 @@ static const struct pci_device_id azx_ids[] = {
+ 	{ PCI_DEVICE_DATA(INTEL, HDA_ARL, AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE) },
+ 	/* Panther Lake */
+ 	{ PCI_DEVICE_DATA(INTEL, HDA_PTL, AZX_DRIVER_SKL | AZX_DCAPS_INTEL_LNL) },
++	/* Panther Lake-H */
++	{ PCI_DEVICE_DATA(INTEL, HDA_PTL_H, AZX_DRIVER_SKL | AZX_DCAPS_INTEL_LNL) },
+ 	/* Apollolake (Broxton-P) */
+ 	{ PCI_DEVICE_DATA(INTEL, HDA_APL, AZX_DRIVER_SKL | AZX_DCAPS_INTEL_BROXTON) },
+ 	/* Gemini-Lake */
 -- 
 2.48.1
 
