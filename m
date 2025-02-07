@@ -1,153 +1,138 @@
-Return-Path: <linux-pci+bounces-20947-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20956-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F8FAA2CCD1
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 20:42:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 728A5A2CE64
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 21:43:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A3F216CAD6
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 19:42:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C45D3AB247
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 20:43:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA4731A8F79;
-	Fri,  7 Feb 2025 19:41:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A52661B4F15;
+	Fri,  7 Feb 2025 20:43:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="SumRsikh"
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="cFou6mXp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56E919EEBF
-	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 19:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BF91ACEB7
+	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 20:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738957273; cv=none; b=Q3COy1he7M/5CcxqqZOcxtyFnblgqDunqlCVOLH0kgg0KwgLY+xNiuP7JLPpzIfTIv8KGvvqtIaXMlSriqIBv9XfMbL1QVc3Hhuf7DLzOjZsZhrB4jRAJgLHILB0fsO5PyjTSVPonSsal0rnh5+dZsFJzRkU7Jjz8Hcj7Dgs6ZY=
+	t=1738961004; cv=none; b=W0xNZUK1wVNpq+dv6TDWc/cdVC6whtTI/+46LeecKzRsLh47zn9dUbTu45Zz4sO6JCf+2hJn50lmBPwfac0SKNLr1PqwGzhhjTXbvLG9JhL12DaHF3mVE2zzPqm86LW6I5o2VgwzIAOPU1nT8i+3GPnk9J+fsKOShK+8WEym/aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738957273; c=relaxed/simple;
-	bh=hY6Zloh4mg7ZCNsjbeJ0HY1B9qv651w6ooNCAsuy9XI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BfVY3lB+5zvkcJJwsg8cZ5xFJI/K4vJgtukdwvDyS2sT6WnUtj/fsxl4k+ULt/pPBKBhLHwvMDeOTJ+grdDTEJqyi3UyXEVy7FyVZZnEW2VW38H2VnEUdv8NGLYmWWNDBSp6g75dhi0N/cWJmL4K7q0BEKZ4U5qK+ECej7K+t08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=SumRsikh; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e436c59113so21495776d6.3
-        for <linux-pci@vger.kernel.org>; Fri, 07 Feb 2025 11:41:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738957269; x=1739562069; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a4oAel342nYv5nBJe0AwxOmOsZherwYKX7ofeLtPQ0c=;
-        b=SumRsikhI0AhtJmT+/ynpcaDr4MxquUujj0Z58+BysgwZy5/gQTy/yQJrLmc89hkl8
-         JU2mO/402QKY8zBx1YzOZs/I/TA0CiNR0FPrXn4FcobOuhGrTCs2b1qMU9jbt8P5L2y3
-         14qKVGQnt65GDvm153a2DctQGRQ1uTls4UGmSfrmah1ET2S2d7MaJcVYF19J+Olhhlnd
-         6KGjrNhbp30urdjBEJKZ0bTZx2+2yy6Re+u7tIrNZ5PUJLGOPRSy1NbMTOuTS6fGiwYx
-         q330Nw6QkuxEGd6Wm3IcXlHVDpUKzZk+kFHzT7SfAVvei9UJPaBOKp+v9CNSuJNpHhOD
-         kPLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738957269; x=1739562069;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a4oAel342nYv5nBJe0AwxOmOsZherwYKX7ofeLtPQ0c=;
-        b=nky29MNvEpSjNkuXptHFBSBMWM2TZRqtHEWCH6wMEJ6K0teYejfHJdSaNgh3Ik56Zx
-         5f9CHpR2vas5GDVP4Keni2VjfuhKOof05+Kr/Bw4QkVZPNcdX9mi0ak3UzSq8il7W+KC
-         SnyrohQhvCGX1jq/Cit/TCgoiGGFYJ8DU3F80qPC/vzhUgk0sxulRoaH3a7spRIWlaI/
-         hMlCN18MUiLaAr37fMMUGu7cPd4av5vMZ8gmrH329nTYojlGF+8APRRT6rbSxrcyk6rY
-         Tq3ymfBxyEHm5NZK3MjHEBdqbcIMAUA6/ZmjGRzZy72m4hFUlmTQHudUGjATi2WR/3x9
-         ZSfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXL8glwb3is0bOhde1F0Af3c27xTYePMdOhbTsxRLPjQ4/4iIRVarjwpPabMnuoo4y73r46l2HUgus=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyia/mEbLpKET559/rriG9kx3g0QJaOEqrOCW+d8KOeiOBR1NvM
-	8zTr4krTH3hMtm+yBAogBz1nK39XPieooxOKPD1YV5Xut7EiykacSqCigCXAjcM=
-X-Gm-Gg: ASbGncsCtTxmVsHoxJN//HyAJMEvAUBzkRqDkftZyVVlyy5XE+tJpNpLVRyeMN8D8Vl
-	3BQ369nrALXnBw+1cj6CVvKDUxjx/ZKi7KALcJ9jAVaDes9BhkHukeX4vlNoqbzEOVLpZrGhGhG
-	kirx7ZiH+0kJwjxH+2MIWakGQZLN66A04q0vCo5kYuUnN02NzOAQGRoe0gVKy5B/+Hp295yM2Gx
-	zFsnsqFs+36xoHCbpsgB37aL67HtldUTMbpLd+Zi5M2d1p261Itt7vVvebNX0OtPWiN6E4o/6KO
-	eMMw7fcwbeiweNQlK4NQ5Zz3sITpUN1xI42OyQ85E3IUEsS1rhzwN22PwcMzxsItQZbnPXRVLg=
-	=
-X-Google-Smtp-Source: AGHT+IHaxpZee3sCSGfBDBfxwHempye2pj5zZfAfTlfZq36QNyZhbhDUkJdEyf8Z1mLKSaGiyhRixA==
-X-Received: by 2002:ad4:576b:0:b0:6d4:3593:2def with SMTP id 6a1803df08f44-6e4455c246fmr61051826d6.5.1738957268471;
-        Fri, 07 Feb 2025 11:41:08 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e445621334sm12230366d6.64.2025.02.07.11.41.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 11:41:07 -0800 (PST)
-Date: Fri, 7 Feb 2025 14:41:05 -0500
-From: Gregory Price <gourry@gourry.net>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
-	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
-	rrichter@amd.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
-	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com,
-	alucerop@amd.com
-Subject: Re: [PATCH v5 13/16] cxl/pci: Add error handler for CXL PCIe Port
- RAS errors
-Message-ID: <Z6Zh0faJrwxsVBLD@gourry-fedora-PF4VCD3F>
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-14-terry.bowman@amd.com>
- <Z6W92JUQQt4Lf6Ip@gourry-fedora-PF4VCD3F>
- <5df5c06a-b1fe-4b79-a313-2b4c5b088f83@amd.com>
+	s=arc-20240116; t=1738961004; c=relaxed/simple;
+	bh=z0+n2F/GnBBk1WcmrYwhGwA6iB4IgjYuLUG2XO5N1uo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nSXhAf6DrBJfRmaTwbdLol3gbAy6SeeYeuJMgWawjX1MjHsUwDmo9COR5Sn5VhBDvfAnbZlk9unO3wR9uN6fKMMc97E8bYUecP56sVA/kaDPlObVIOpDZ3kW0xrn+/qWHZZNd7+MBUq2GnR0ktK8kw5dv3XOApFa4ECTibV6/gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=cFou6mXp; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 517IbIhi007391
+	for <linux-pci@vger.kernel.org>; Fri, 7 Feb 2025 12:43:21 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=s2048-2021-q4; bh=cfctgHpA6cVD+Z+IaQ
+	3W7mih4GF2EBtWvFPBHeZSd1c=; b=cFou6mXpMXeSq1rwFU4Bqe9rh43SaZUNSD
+	iLByeLg9HJ/Qp89wITA8IEledc3cmBz+/kEx1DQiS64lRvaG5EKtnabbuQwZU0m0
+	i/hSqNL4lRHqadXKTsv7nnHUqI+vu2CO6LoadKokc2vVTJ0S9KzF0yRUosbfEDNQ
+	pmoaPa4UW3/CHPZAYngi6mwUrE7jzY8K2NjOVCZxTDTIfE1o87zY4wsADIxjU6JE
+	lN/TFkpGxidrxss0pua5BcGYPBW9UrSxU2EzojqjrO4T/oZf4S8o8Mb24MakUhhL
+	35+eI5LyPP/eFNIMU7BrkFNoFLtaNEpC3xM4nIilikIdPpeg0YzQ==
+Received: from maileast.thefacebook.com ([163.114.135.16])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 44nqkwrxy0-4
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Fri, 07 Feb 2025 12:43:21 -0800 (PST)
+Received: from twshared3815.08.ash9.facebook.com (2620:10d:c0a8:1b::30) by
+ mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1544.14; Fri, 7 Feb 2025 20:43:20 +0000
+Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
+	id AAF6F17C4C446; Fri,  7 Feb 2025 12:43:13 -0800 (PST)
+From: Keith Busch <kbusch@meta.com>
+To: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
+CC: Keith Busch <kbusch@kernel.org>
+Subject: [PATCH] pci: allow user specifiy a reset wait timeout
+Date: Fri, 7 Feb 2025 12:43:10 -0800
+Message-ID: <20250207204310.2546091-1-kbusch@meta.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5df5c06a-b1fe-4b79-a313-2b4c5b088f83@amd.com>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: hGmHq8Muergd_NgxFjzvGMjYFSKv-pkV
+X-Proofpoint-GUID: hGmHq8Muergd_NgxFjzvGMjYFSKv-pkV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-07_09,2025-02-07_03,2024-11-22_01
 
-On Fri, Feb 07, 2025 at 01:23:06PM -0600, Bowman, Terry wrote:
-> 
-> 
-> On 2/7/2025 2:01 AM, Gregory Price wrote:
-> > On Tue, Jan 07, 2025 at 08:38:49AM -0600, Terry Bowman wrote:
-> >> +static void __iomem *cxl_pci_port_ras(struct pci_dev *pdev)
-> >> +{
-> >> +	struct cxl_port *port;
-> >> +
-> >> +	if (!pdev)
-> >> +		return NULL;
-> >> +
-> >> +	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) ||
-> >> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM)) {
-> >> +		struct cxl_dport *dport;
-> >> +		void __iomem *ras_base;
-> >> +
-> >> +		port = find_cxl_port(&pdev->dev, &dport);
-> >> +		ras_base = dport ? dport->regs.ras : NULL;
-> > I'm fairly certain dport can come back here uninitialized, you
-> > probably want to put this inside the `if (port)` block and 
-> > pre-initialize dport to NULL.
-> Right, it can. NULL dport check here covers this, no?:
-> 
-> 		ras_base = dport ? dport->regs.ras : NULL;
+From: Keith Busch <kbusch@kernel.org>
 
-dport can be garbage (whatever is on the stack) at this check because
-nothing ever intializes it to NULL.
+The spec does not provide any upper limit to how long a device may
+return Request Retry Status. It just says "Some devices require a
+lengthy self-initialization sequence to complete". The kernel
+arbitrarily chose 60 seconds since that really ought to be enough. But
+there are devices where this turns out not to be enough.
 
-> 
-> Terry
-> 
-> >> +		if (port)
-> >> +			put_device(&port->dev);
-> >> +		return ras_base;
-> > You can probably even simplify this down to something like
-> >
-> > 		struct_cxl_dport *dport = NULL;
-> >
-> > 		port = find_cxl_port(&pdev->dev, &dport);
-> > 		if (port)
-> > 			put_device(&port->dev);
-> >
-> > 		return dport ? dport->regs.ras : NULL;
-> >
-> >
-> > ~Gregory
-> 
+Since any timeout choice would be arbitrary, and 60 seconds is generally
+more than enough for the majority of hardware, let's make this a
+parameter so an admin can adjust it specifically to their needs if the
+default timeout isn't appropriate.
+
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 3 +++
+ drivers/pci/pci.c                               | 6 +++++-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
+ion/admin-guide/kernel-parameters.txt
+index fb8752b42ec85..1aed555ef8b40 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4843,6 +4843,9 @@
+=20
+ 				Note: this may remove isolation between devices
+ 				and may put more devices in an IOMMU group.
++		reset_wait=3Dnn	The number of milliseconds to wait after a
++				reset while seeing Request Retry Status.
++				Default is 60000 (1 minute).
+ 		force_floating	[S390] Force usage of floating interrupts.
+ 		nomio		[S390] Do not use MIO instructions.
+ 		norid		[S390] ignore the RID field and force use of
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 869d204a70a37..20817dd5ebba7 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -75,7 +75,8 @@ struct pci_pme_device {
+  * limit, but 60 sec ought to be enough for any device to become
+  * responsive.
+  */
+-#define PCIE_RESET_READY_POLL_MS 60000 /* msec */
++#define PCIE_RESET_READY_POLL_MS pci_reset_ready_wait
++unsigned long pci_reset_ready_wait =3D 60000; /* msec */
+=20
+ static void pci_dev_d3_sleep(struct pci_dev *dev)
+ {
+@@ -6841,6 +6842,9 @@ static int __init pci_setup(char *str)
+ 				disable_acs_redir_param =3D str + 18;
+ 			} else if (!strncmp(str, "config_acs=3D", 11)) {
+ 				config_acs_param =3D str + 11;
++			} else if (!strncmp(str, "reset_wait=3D", 11)) {
++				pci_reset_ready_wait =3D
++					simple_strtoul(str + 11, &str, 0);
+ 			} else {
+ 				pr_err("PCI: Unknown option `%s'\n", str);
+ 			}
+--=20
+2.43.5
+
 
