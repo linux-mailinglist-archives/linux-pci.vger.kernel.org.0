@@ -1,265 +1,384 @@
-Return-Path: <linux-pci+bounces-20929-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20930-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6B90A2CAF4
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 19:14:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4793A2CB69
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 19:37:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07D49188A9B7
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 18:14:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97DC83A3AAD
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 18:37:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F32AE19DF62;
-	Fri,  7 Feb 2025 18:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0221F1DED60;
+	Fri,  7 Feb 2025 18:24:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z+la3ER1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M+GQ6leg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0858199EB7;
-	Fri,  7 Feb 2025 18:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13611DE89A
+	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 18:24:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738952080; cv=none; b=QadlWuDlLzNrMbJM+nZNzGjaF5JsOet2PPcYrvovTyPkU/rvSeGOYK8wKy4wLop/l/199Ogsmk6rkbJ2+qNp7BwffsbItu1tH8jGTy8rYn5kvo8Rb538htXcgcjIPlqO7mfK8tUaRKhLmBgNkqNnFSzvZxkPnhWXOKDiT1HDQfQ=
+	t=1738952657; cv=none; b=eUD6etyw6zJNsc4rUqw9AmmvaFtH0xdWsklx4dHgJNifpONv0ZQDnT9UFnSCiksLNp/VIB+P93fKZn1/ioL3XtVGF+7HHBCyCpzNdBES5ZKzEH8kfKsj9xt2bgDTbAAWmETuUF8NE6eg6/YpDCyiw+f/3oOz4kpnU7nbzSyhZRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738952080; c=relaxed/simple;
-	bh=2vRQARBPfRDe4Y7LUWzZxwe6nvtPE+deE1jVBXnCDRM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gx0lu5ro3GfMw0AYsDP6jmo8VTfAmN4rG8OCfb97eetU9XrgiL8bz404H6kafQvLZuBlN7KhCeRwz/m7f+XpPq+Er9tNr7Idq/psKblnQQc6Iw7xSN8G8jfegPzmVNVGTTWavPbI77gwjipdwm+FztDhqhPY7vdRyVCxDX7wOlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z+la3ER1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BE80C4CEE5;
-	Fri,  7 Feb 2025 18:14:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738952080;
-	bh=2vRQARBPfRDe4Y7LUWzZxwe6nvtPE+deE1jVBXnCDRM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Z+la3ER1pTtRYJCGc5WodTYtCbhNFjnKTd2flqLFtAwWANwKZBmF8BvdDt0oEbzOA
-	 eK7hXvvvk5T9nGy8/5YksIBna5j4vBuV38bVxbkkkzp/U1+rnNJkjmWBeiEA2cyHPN
-	 LgKooOIU94q1ozAAkUQjklavjNyXb6bHSjnu0611vBoHlO6MGk9SnHz3yfYGOE/KQk
-	 oa9MeUxI+Tgw4o3hQfA4YjAybLCZGZ4ETry86e0LRzFcWZaYtJA/dVlwvlP76yf14P
-	 /OI1PLt6832NaQ0VvJE0SkZHkwpXLnAznr2erI1Jv94H+HRB+xysLdB/A/2rjBxcpl
-	 5FGERo52uk+oQ==
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5fa2a2bdde9so677304eaf.0;
-        Fri, 07 Feb 2025 10:14:40 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUM3pzl5no+QXVQJZy0TIc7P/iduxd1qCMYxSispAnLCCvhBzXCTw7jeNyJ5F/6mfn4x2WjzieYuYg/wOE=@vger.kernel.org, AJvYcCVg5OJ5oKPgU79Viu9pQ0WVjo96EzA6qyw/r59efeF7Ueks7VN18smO8P6IgG19uCyHJrwB/BUU4WE9@vger.kernel.org, AJvYcCWIvToEI6mjr+YT2j2ub5n60MBwBIWaxvXG+Tb8xOppsxx3HWTNk4UtR2YrYzrzu4WnM5O4+J4Ef3isMKE=@vger.kernel.org, AJvYcCXq2rQJbYZjpRMUq9bqIhHgZR1taCYt2ykdmxrnsx4ngXBlLc7Z4ux4ldUbLifFqo0k++5RJ9oiquY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsVHlTxzulWqI6Fk+1SQyUcqOf3g8W56KNG27ZWVa0c84A+m22
-	t0KMPqesunklxVLLS/QJY7UpeG8pUgpr4Fr2UO1JSSumG3uMECAIEpMJXvYg6b0engrubkSa/Ye
-	yMWq/4kleN/8tTg1QO96yfzjgGGM=
-X-Google-Smtp-Source: AGHT+IHGI0WXftuL7wk8a3wFGS2gQ6lju6Fy2RlUNGM9RMxSD4fsyY9blHC5wTJ99nQoBl2LvRdE2HLCP4IXR/lyXfg=
-X-Received: by 2002:a05:6820:209:b0:5fa:61b9:3efb with SMTP id
- 006d021491bc7-5fc5e70f19fmr2791995eaf.4.1738952079465; Fri, 07 Feb 2025
- 10:14:39 -0800 (PST)
+	s=arc-20240116; t=1738952657; c=relaxed/simple;
+	bh=c3Wx1XIoKpeCpjmwt5ragirFyD8d6iZ7jAaoQ+syRZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q8ADJqlV8JXztn4JreJ+TQWsmMXvIBRF3rgV7FkADQk1BWiTlBvL5hvaw/q6OgQY41lrHE6dO4Li/nLMbbnBQkRfEw1p7fXd4GhbdupwYEkkCwCFMkwzUU7gHQw8ld8JPEKgDR2RarYQM/NxXVKMBi7k/m2hGd3hdmXbEivKeP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M+GQ6leg; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-21f3c119fe6so50222745ad.0
+        for <linux-pci@vger.kernel.org>; Fri, 07 Feb 2025 10:24:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1738952655; x=1739557455; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DkwAJF68ddKYCYzSotu3EQrgC/afwa7x23RU3wj1Lu4=;
+        b=M+GQ6legghx9arWZIaxbhPXWx5AIWQORXBcpdyTXETJ570dKJkcOSRm8ba7AwFsqsO
+         xezFiYDsIZxA0g40EeFDV79w5WwiDNRPB23Z57RrbjTUv/L4hiMMnzl2snYL597+S5ZC
+         iOyF8Mq4kvSPpsuAuQ8E6dB1bgOAZt1URWRgYKhZ2XUYWEBwUKri3+Y3o3kDgT3bIMhQ
+         jAFiFwRg9ZQAlYd6+Bi1sHX+TZC2rOxzCwhzW0kcRSKcTRHp8k9iL2DpmSlU8yhMvWh9
+         eRh6SlklmZBfqzqtjGrMDvG7TuNcWOy7sV2kw57X/ku0LR3ox9p/PcGD7MPsx9I/169x
+         iG7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738952655; x=1739557455;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DkwAJF68ddKYCYzSotu3EQrgC/afwa7x23RU3wj1Lu4=;
+        b=KuaKWmD42wUWdkedZNqmngogGGqIoUrqrVYsk1yPVbe/DFGVna3aISEj7YnTpKZrAa
+         PWOsIw6EZF71wLJ/dde60+94Am8jDlyyYwNxq2++IaPCgZDdiBrS3q3FUNFa2icQ7ERR
+         OPOGqD4xslZxNqNSGSy52ySU4++pUOIGz6oQrptloZZMaCB6yyqGnoXQQJCarmzydxef
+         R24vVxn8/xRbbV8Xiq29BaZucHbg3RAXNZdPJBxtNUKtrUWWi3JBo6/GGosJXipAr6tD
+         CLBogUe2VqwCDJDCAjshPozVliQDJ7qUa2AwDjNdbReVVlGJPNLq4lZAzPcSOJjCMpWM
+         Olrg==
+X-Forwarded-Encrypted: i=1; AJvYcCV4+0d9zDKb+s/L3JG9H1vf4X9/2ai/PBDBX0JoEHTENtaonHMQ6dmEMPrxtSHk5E6MALvIX7wFku0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjR0TY/QggsQzvoRDKl8xnpmZ26wd8BuI1BIzzAtuC7UMUS46T
+	qPbE1+bDn9IfEAciUcLW7lwJ6tFukGr30gbWX+GjO99Y23zW26qMPruQEReT+g==
+X-Gm-Gg: ASbGnctXyfcix9SBwaKhqPGqQiOROWEH7LxL0VCY7Yq5OuDG8jJ+e2wLoQakSQy1JkQ
+	RmoinKYts9IsFSK3wIQZFNDtWE761T7NwvvE6iim08qeqx9iLaHW1DbAuha5z0LdMRcp/Lv7LP/
+	lrLQKp28rD+2TBtJTt3xNFxN71++N4GKcWnDRAwT35mOV5cdVOnBdlM1rfJOI5VqpSTYOlAdKMs
+	Jp1Q+w4WOF0IvBJZl2xSXuOZog7JFllnje/6IxnoSs8LY6EJ1HVzyN1K7czU+wTFyq/Fn8iM1UZ
+	a3s8sjaVn0N2tqkBywunUjVh4g==
+X-Google-Smtp-Source: AGHT+IGA7rR64+8iuyium8I0L5YN9X5M5xr/Pbcn8VKunOXV0dz9WjvNVRMuT/szkavIDCp3qlMBoA==
+X-Received: by 2002:a17:903:987:b0:215:a964:e680 with SMTP id d9443c01a7336-21f4e6ce779mr71018085ad.25.1738952655067;
+        Fri, 07 Feb 2025 10:24:15 -0800 (PST)
+Received: from thinkpad ([120.60.76.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650e6c0sm33523025ad.22.2025.02.07.10.24.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 10:24:14 -0800 (PST)
+Date: Fri, 7 Feb 2025 23:54:08 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+	jingoohan1@gmail.com, p.zabel@pengutronix.de,
+	johan+linaro@kernel.org, quic_schintav@quicinc.com,
+	cassel@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	fabrice.gasnier@foss.st.com
+Subject: Re: [PATCH v4 03/10] PCI: stm32: Add PCIe host support for STM32MP25
+Message-ID: <20250207182408.ila3lng3el4s7kf6@thinkpad>
+References: <20250128120745.334377-1-christian.bruel@foss.st.com>
+ <20250128120745.334377-4-christian.bruel@foss.st.com>
+ <20250202130657.zcnvnnwclxup6y7i@thinkpad>
+ <f4be9537-5631-4d11-9237-0cc421891669@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <12619233.O9o76ZdvQC@rjwysocki.net> <1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com>
- <Z6YPpbRF_U0TxAbf@hovoldconsulting.com> <Z6YcjFBWAVVVANf2@hovoldconsulting.com>
- <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
- <Z6YviAFD4Az3EIBa@hovoldconsulting.com> <Z6Y0NlW40yHTIlzm@hovoldconsulting.com>
-In-Reply-To: <Z6Y0NlW40yHTIlzm@hovoldconsulting.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 7 Feb 2025 19:14:27 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gBCQW2wwdB+4SyBXtqiis2k1Z2L8SOVKwcVbNxPHqvYA@mail.gmail.com>
-X-Gm-Features: AWEUYZlA78d4afzHjo-SK92VyRsVbR94MpDMbDNVuWS4dzSNsm4T_ttlhRpNfD0
-Message-ID: <CAJZ5v0gBCQW2wwdB+4SyBXtqiis2k1Z2L8SOVKwcVbNxPHqvYA@mail.gmail.com>
-Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
- parents and children
-To: Johan Hovold <johan@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Jon Hunter <jonathanh@nvidia.com>, 
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
-	Bjorn Helgaas <helgaas@kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Xie <kevin.xie@starfivetech.com>, 
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000fa9276062d915482"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f4be9537-5631-4d11-9237-0cc421891669@foss.st.com>
 
---000000000000fa9276062d915482
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, Feb 04, 2025 at 05:23:05PM +0100, Christian Bruel wrote:
 
-On Fri, Feb 7, 2025 at 5:26=E2=80=AFPM Johan Hovold <johan@kernel.org> wrot=
-e:
->
-> On Fri, Feb 07, 2025 at 05:06:32PM +0100, Johan Hovold wrote:
-> > On Fri, Feb 07, 2025 at 04:41:18PM +0100, Rafael J. Wysocki wrote:
-> > > On Fri, Feb 7, 2025 at 3:45=E2=80=AFPM Johan Hovold <johan@kernel.org=
-> wrote:
-> > > > On Fri, Feb 07, 2025 at 02:50:29PM +0100, Johan Hovold wrote:
-> >
-> > > > Ok, so the driver data is never set and runtime PM is never enabled=
- for
-> > > > this simple bus device, which uses pm_runtime_force_suspend() for s=
-ystem
-> > > > sleep.
-> > >
-> > > This is kind of confusing.  Why use pm_runtime_force_suspend() if
-> > > runtime PM is never enabled and cannot really work?
-> >
-> > It's only done for some buses that this driver handles. The driver is
-> > buggy; I'm preparing a fix for it regardless of the correctness of the
-> > commit that now triggered this.
->
-> Hmm. The driver implementation is highly odd, but actually works as long
-> as the runtime PM status is left at 'suspended' (as
-> pm_runtime_force_resume() won't enable runtime PM unless it was enabled
-> before suspend).
->
-> So we'd strictly only need something like the below if we are going to
-> keep the set_active propagation.
+[...]
 
-I think you are right.
+> > > +static int stm32_pcie_suspend_noirq(struct device *dev)
+> > > +{
+> > 
+> > Can you consider making use of dw_pcie_{suspend/resume}_noirq()?
+> 
+> I considered this, but dw_pcie_suspend_noirq needs to be tweaked as it
+> checks both the pme_turn_off hook and whether we are entering into L2, which
+> we don't support.
+> 
+> For the former, I can check the PCI_EXP_DEVSTAT_AUXPD capability before
+> polling for L2 LTSSM. It looks like only the Layerscape platform uses this.
+> I will need a Tested-by for this new dw_pcie_suspend_noirq.
+> 
+> Do you advise keeping stm32_pcie_suspend_noirq or modifying
+> dw_pcie_suspend_noirq to this effect?
+> 
 
-> diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
-> index 5dea31769f9a..d8e029e7e53f 100644
-> --- a/drivers/bus/simple-pm-bus.c
-> +++ b/drivers/bus/simple-pm-bus.c
-> @@ -109,9 +109,29 @@ static int simple_pm_bus_runtime_resume(struct devic=
-e *dev)
->         return 0;
->  }
->
-> +static int simple_pm_bus_suspend(struct device *dev)
-> +{
-> +       struct simple_pm_bus *bus =3D dev_get_drvdata(dev);
-> +
-> +       if (!bus)
-> +               return 0;
-> +
-> +       return pm_runtime_force_suspend(dev);
-> +}
-> +
-> +static int simple_pm_bus_resume(struct device *dev)
-> +{
-> +       struct simple_pm_bus *bus =3D dev_get_drvdata(dev);
-> +
-> +       if (!bus)
-> +               return 0;
-> +
-> +       return pm_runtime_force_resume(dev);
-> +}
-> +
->  static const struct dev_pm_ops simple_pm_bus_pm_ops =3D {
->         RUNTIME_PM_OPS(simple_pm_bus_runtime_suspend, simple_pm_bus_runti=
-me_resume, NULL)
-> -       NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_fo=
-rce_resume)
-> +       NOIRQ_SYSTEM_SLEEP_PM_OPS(simple_pm_bus_suspend, simple_pm_bus_re=
-sume)
->  };
->
->  #define ONLY_BUS       ((void *) 1) /* Match if the device is only a bus=
-. */
+Please modify dw_pcie_suspend_noirq() to fit your needs. We will review the
+change.
 
-In the meantime, I've cut the attached (untested) patch that should
-take care of the pm_runtime_force_suspend() issue altogether.
+For testing the change, you can CC the Layerscape maintainer and request for
+testing.
 
-It changes the code to only set the device's runtime PM status to
-"active" if runtime PM is going to be enabled for it by the first
-pm_runtime_enable() call, which never happens for devices where
-runtime PM has never been enabled (because it is disabled for them
-once again in device_suspend_late()) and for devices subject to
-pm_runtime_force_suspend() during system suspend (because it disables
-runtime PM for them once again).
+> Thanks,
+> 
+> > 
+> > > +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
+> > > +
+> > > +	stm32_pcie_stop_link(&stm32_pcie->pci);
+> > > +
+> > > +	stm32_pcie_assert_perst(stm32_pcie);
+> > > +
+> > > +	clk_disable_unprepare(stm32_pcie->clk);
+> > > +
+> > > +	if (!device_may_wakeup(dev))
+> > > +		phy_exit(stm32_pcie->phy);
+> > > +
+> > > +	return pinctrl_pm_select_sleep_state(dev);
+> > > +}
+> > > +
+> > > +static int stm32_pcie_resume_noirq(struct device *dev)
+> > > +{
+> > > +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
+> > > +	struct dw_pcie_rp *pp = &stm32_pcie->pci.pp;
+> > > +	int ret;
+> > > +
+> > > +	/*
+> > > +	 * The core clock is gated with CLKREQ# from the COMBOPHY REFCLK,
+> > > +	 * thus if no device is present, must force it low with an init pinmux
+> > > +	 * to be able to access the DBI registers.
+> > > +	 */
+> > > +	if (!IS_ERR(dev->pins->init_state))
+> > > +		ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
+> > > +	else
+> > > +		ret = pinctrl_pm_select_default_state(dev);
+> > > +
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to activate pinctrl pm state: %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	if (!device_may_wakeup(dev)) {
+> > > +		ret = phy_init(stm32_pcie->phy);
+> > > +		if (ret) {
+> > > +			pinctrl_pm_select_default_state(dev);
+> > > +			return ret;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	ret = clk_prepare_enable(stm32_pcie->clk);
+> > > +	if (ret)
+> > > +		goto err_phy_exit;
+> > > +
+> > > +	stm32_pcie_deassert_perst(stm32_pcie);
+> > > +
+> > > +	ret = dw_pcie_setup_rc(pp);
+> > > +	if (ret)
+> > > +		goto err_disable_clk;
+> > > +
+> > > +	ret = stm32_pcie_start_link(&stm32_pcie->pci);
+> > > +	if (ret)
+> > > +		goto err_disable_clk;
+> > > +
+> > > +	/* Ignore errors, the link may come up later */
+> > > +	dw_pcie_wait_for_link(&stm32_pcie->pci);
+> > 
+> > These can be dropped when using dw_pcie_resume_noirq().
+> 
+> OK for dw_pcie_resume_noirq if we can keep it balanced with
+> dw_pcie_suspend_noirq
+> 
+> > 
+> > > +
+> > > +	pinctrl_pm_select_default_state(dev);
+> > > +
+> > > +	return 0;
+> > > +
+> > > +err_disable_clk:
+> > > +	stm32_pcie_assert_perst(stm32_pcie);
+> > > +	clk_disable_unprepare(stm32_pcie->clk);
+> > > +
+> > > +err_phy_exit:
+> > > +	phy_exit(stm32_pcie->phy);
+> > > +	pinctrl_pm_select_default_state(dev);
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static const struct dev_pm_ops stm32_pcie_pm_ops = {
+> > > +	NOIRQ_SYSTEM_SLEEP_PM_OPS(stm32_pcie_suspend_noirq,
+> > > +				  stm32_pcie_resume_noirq)
+> > > +	SYSTEM_SLEEP_PM_OPS(stm32_pcie_suspend, stm32_pcie_resume)
+> > > +};
+> > > +
+> > > +static const struct dw_pcie_host_ops stm32_pcie_host_ops = {
+> > > +};
+> > > +
+> > > +static const struct dw_pcie_ops dw_pcie_ops = {
+> > > +	.start_link = stm32_pcie_start_link,
+> > > +	.stop_link = stm32_pcie_stop_link
+> > > +};
+> > > +
+> > > +static int stm32_add_pcie_port(struct stm32_pcie *stm32_pcie,
+> > > +			       struct platform_device *pdev)
+> > > +{
+> > > +	struct device *dev = stm32_pcie->pci.dev;
+> > > +	struct dw_pcie_rp *pp = &stm32_pcie->pci.pp;
+> > > +	int ret;
+> > > +
+> > 
+> > You need to assert PERST# before configuring the resources.
+> 
+> It is already initialized to GPIOD_OUT_HIGH in gpiod_get, I can have an
+> explicit stm32_pcie_assert_perst but is it necessary ?
+> 
 
---000000000000fa9276062d915482
-Content-Type: text/x-patch; charset="US-ASCII"; name="pm-runtime-cond-set-active.patch"
-Content-Disposition: attachment; filename="pm-runtime-cond-set-active.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_m6v342uq0>
-X-Attachment-Id: f_m6v342uq0
+Ok, not necessary. Although, I would recommend to keep a comment here so that if
+someone refactors the code, they would notice it.
 
-LS0tCiBkcml2ZXJzL2Jhc2UvcG93ZXIvbWFpbi5jICAgIHwgICAyMCArKysrKysrKysrKysrKysr
-LS0tLQogZHJpdmVycy9iYXNlL3Bvd2VyL3J1bnRpbWUuYyB8ICAgNDEgKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrLS0tLS0KIGluY2x1ZGUvbGludXgvcG1fcnVudGltZS5oICAg
-fCAgICA1ICsrKysrCiAzIGZpbGVzIGNoYW5nZWQsIDU3IGluc2VydGlvbnMoKyksIDkgZGVsZXRp
-b25zKC0pCgotLS0gYS9kcml2ZXJzL2Jhc2UvcG93ZXIvbWFpbi5jCisrKyBiL2RyaXZlcnMvYmFz
-ZS9wb3dlci9tYWluLmMKQEAgLTY1NSwxNCArNjU1LDI1IEBACiAJICogdGhpcyBkZXZpY2UgbGF0
-ZXIsIGl0IG5lZWRzIHRvIGFwcGVhciBhcyAic3VzcGVuZGVkIiB0byBQTS1ydW50aW1lLAogCSAq
-IHNvIGNoYW5nZSBpdHMgc3RhdHVzIGFjY29yZGluZ2x5LgogCSAqCi0JICogT3RoZXJ3aXNlLCB0
-aGUgZGV2aWNlIGlzIGdvaW5nIHRvIGJlIHJlc3VtZWQsIHNvIHNldCBpdHMgUE0tcnVudGltZQot
-CSAqIHN0YXR1cyB0byAiYWN0aXZlIiB1bmxlc3MgaXRzIHBvd2VyLnNldF9hY3RpdmUgZmxhZyBp
-cyBjbGVhciwgaW4KLQkgKiB3aGljaCBjYXNlIGl0IGlzIG5vdCBuZWNlc3NhcnkgdG8gdXBkYXRl
-IGl0cyBQTS1ydW50aW1lIHN0YXR1cy4KKwkgKiBPdGhlcndpc2UsIHRoZSBkZXZpY2UgaXMgZ29p
-bmcgdG8gYmUgcmVzdW1lZCwgc28gdHJ5IHRvIHVwZGF0ZSBpdHMKKwkgKiBQTS1ydW50aW1lIHN0
-YXR1cyB1bmxlc3MgaXRzIHBvd2VyLnNldF9hY3RpdmUgZmxhZyBpcyBjbGVhciwgaW4gd2hpY2gK
-KwkgKiBjYXNlIGl0IGlzIG5vdCBuZWNlc3NhcnkgdG8gZG8gdGhhdC4KIAkgKi8KIAlpZiAoc2tp
-cF9yZXN1bWUpIHsKIAkJcG1fcnVudGltZV9zZXRfc3VzcGVuZGVkKGRldik7CiAJfSBlbHNlIGlm
-IChkZXYtPnBvd2VyLnNldF9hY3RpdmUpIHsKLQkJcG1fcnVudGltZV9zZXRfYWN0aXZlKGRldik7
-CisJCS8qCisJCSAqIElmIFBNLXJ1bnRpbWUgaXMgbm90IGdvaW5nIHRvIGJlIGFjdHVhbGx5IGVu
-YWJsZWQgZm9yIHRoZQorCQkgKiBkZXZpY2UgYnkgYSBzdWJzZXF1ZW50IHBtX3J1bnRpbWVfZW5h
-YmxlZCgpIGNhbGwsIGl0IG1heQorCQkgKiBoYXZlIG5ldmVyIGJlZW4gZW5hYmxlZCBvciBwbV9y
-dW50aW1lX2ZvcmNlX3N1c3BlbmQoKSBtYXkKKwkJICogaGF2ZSBiZWVuIHVzZWQuICBEb24ndCB1
-cGRhdGUgdGhlIFBNLXJ1bnRpbWUgc3RhdHVlIGluCisJCSAqIHRoYXQgY2FzZSBhbmQgc2V0IHBv
-d2VyLm5lZWRzX2ZvcmNlX3Jlc3VtZSBpbiBjYXNlCisJCSAqIHBtX3J1bnRpbWVfZm9yY2VfcmVz
-dW1lKCkgd2lsbCBiZSBjYWxsZWQgZm9yIHRoZSBkZXZpY2UKKwkJICogc3Vic2VxdWVudGx5Lgor
-CQkgKi8KKwkJaWYgKHBtX3J1bnRpbWVfY29uZF9zZXRfYWN0aXZlKGRldikgPiAwKQorCQkJZGV2
-LT5wb3dlci5uZWVkc19mb3JjZV9yZXN1bWUgPSB0cnVlOworCiAJCWRldi0+cG93ZXIuc2V0X2Fj
-dGl2ZSA9IGZhbHNlOwogCX0KIApAQCAtOTg4LDYgKzk5OSw3IEBACiAgRW5kOgogCWVycm9yID0g
-ZHBtX3J1bl9jYWxsYmFjayhjYWxsYmFjaywgZGV2LCBzdGF0ZSwgaW5mbyk7CiAJZGV2LT5wb3dl
-ci5pc19zdXNwZW5kZWQgPSBmYWxzZTsKKwlkZXYtPnBvd2VyLm5lZWRzX2ZvcmNlX3Jlc3VtZSA9
-IGZhbHNlOwogCiAgVW5sb2NrOgogCWRldmljZV91bmxvY2soZGV2KTsKLS0tIGEvZHJpdmVycy9i
-YXNlL3Bvd2VyL3J1bnRpbWUuYworKysgYi9kcml2ZXJzL2Jhc2UvcG93ZXIvcnVudGltZS5jCkBA
-IC0xMjUzLDkgKzEyNTMsMTAgQEAKIEVYUE9SVF9TWU1CT0xfR1BMKHBtX3J1bnRpbWVfZ2V0X2lm
-X2luX3VzZSk7CiAKIC8qKgotICogX19wbV9ydW50aW1lX3NldF9zdGF0dXMgLSBTZXQgcnVudGlt
-ZSBQTSBzdGF0dXMgb2YgYSBkZXZpY2UuCisgKiBwbV9ydW50aW1lX3NldF9zdGF0dXNfaW50ZXJu
-YWwgLSBTZXQgcnVudGltZSBQTSBzdGF0dXMgb2YgYSBkZXZpY2UuCiAgKiBAZGV2OiBEZXZpY2Ug
-dG8gaGFuZGxlLgogICogQHN0YXR1czogTmV3IHJ1bnRpbWUgUE0gc3RhdHVzIG9mIHRoZSBkZXZp
-Y2UuCisgKiBAY29uZDogQ2hhbmdlIHRoZSBzdGF0dXMgaWYgcnVudGltZSBQTSB3aWxsIGJlIGVu
-YWJsZWQgYnkgdGhlIG5leHQgYXR0ZW1wdC4KICAqCiAgKiBJZiBydW50aW1lIFBNIG9mIHRoZSBk
-ZXZpY2UgaXMgZGlzYWJsZWQgb3IgaXRzIHBvd2VyLnJ1bnRpbWVfZXJyb3IgZmllbGQgaXMKICAq
-IGRpZmZlcmVudCBmcm9tIHplcm8sIHRoZSBzdGF0dXMgbWF5IGJlIGNoYW5nZWQgZWl0aGVyIHRv
-IFJQTV9BQ1RJVkUsIG9yIHRvCkBAIC0xMjc1LDggKzEyNzYsMTIgQEAKICAqIG9mIHRoZSBAc3Rh
-dHVzIHZhbHVlKSBhbmQgdGhlIHN1cHBsaWVycyB3aWxsIGJlIGRlYWN0aWNhdGVkIG9uIGV4aXQu
-ICBUaGUKICAqIGVycm9yIHJldHVybmVkIGJ5IHRoZSBmYWlsaW5nIHN1cHBsaWVyIGFjdGl2YXRp
-b24gd2lsbCBiZSByZXR1cm5lZCBpbiB0aGF0CiAgKiBjYXNlLgorICoKKyAqIElmIEBjb25kIGlz
-IHNldCwgb25seSBjaGFuZ2UgdGhlIHN0YXR1cyBpZiBwb3dlci5kaXNhYmxlX2RlcHRoIGlzIGVx
-dWFsIHRvIDEsCisgKiBvciBkbyBub3RoaW5nIGFuZCByZXR1cm4gKHBvd2VyLmRpc2FibGVfZGVw
-dGggLSAxKSBvdGhlcndpc2UuCiAgKi8KLWludCBfX3BtX3J1bnRpbWVfc2V0X3N0YXR1cyhzdHJ1
-Y3QgZGV2aWNlICpkZXYsIHVuc2lnbmVkIGludCBzdGF0dXMpCitzdGF0aWMgaW50IHBtX3J1bnRp
-bWVfc2V0X3N0YXR1c19pbnRlcm5hbChzdHJ1Y3QgZGV2aWNlICpkZXYsCisJCQkJCSAgdW5zaWdu
-ZWQgaW50IHN0YXR1cywgYm9vbCBjb25kKQogewogCXN0cnVjdCBkZXZpY2UgKnBhcmVudCA9IGRl
-di0+cGFyZW50OwogCWJvb2wgbm90aWZ5X3BhcmVudCA9IGZhbHNlOwpAQCAtMTI5MiwxMCArMTI5
-NywyNiBAQAogCSAqIFByZXZlbnQgUE0tcnVudGltZSBmcm9tIGJlaW5nIGVuYWJsZWQgZm9yIHRo
-ZSBkZXZpY2Ugb3IgcmV0dXJuIGFuCiAJICogZXJyb3IgaWYgaXQgaXMgZW5hYmxlZCBhbHJlYWR5
-IGFuZCB3b3JraW5nLgogCSAqLwotCWlmIChkZXYtPnBvd2VyLnJ1bnRpbWVfZXJyb3IgfHwgZGV2
-LT5wb3dlci5kaXNhYmxlX2RlcHRoKQotCQlkZXYtPnBvd2VyLmRpc2FibGVfZGVwdGgrKzsKLQll
-bHNlCisJaWYgKGRldi0+cG93ZXIucnVudGltZV9lcnJvcikgeworCQlpZiAoY29uZCkKKwkJCWVy
-cm9yID0gLUVJTlZBTDsKKwkJZWxzZQorCQkJZGV2LT5wb3dlci5kaXNhYmxlX2RlcHRoKys7CisJ
-fSBlbHNlIGlmIChkZXYtPnBvd2VyLmRpc2FibGVfZGVwdGgpIHsKKwkJLyoKKwkJICogSWYgY29u
-ZCBpcyBzZXQsIG9ubHkgYXR0ZW1wdCB0byBjaGFuZ2UgdGhlIHN0YXR1cyBpZiB0aGUKKwkJICog
-bmV4dCBpbnZvY2F0aW9uIG9mIHBtX3J1bnRpbWVfZW5hYmxlKCkgZm9yIHRoZSBkZXZpY2UgaXMK
-KwkJICogZ29pbmcgdG8gYWN0dWFsbHkgZW5hYmxlIHJ1bnRpbWUgUE0gZm9yIGl0LgorCQkgKgor
-CQkgKiBUaGlzIGlzIHVzZWQgaW4gYSBjb3JuZXIgY2FzZSBkdXJpbmcgc3lzdGVtLXdpZGUgcmVz
-dW1lLgorCQkgKi8KKwkJaWYgKGNvbmQgJiYgZGV2LT5wb3dlci5kaXNhYmxlX2RlcHRoID4gMSkK
-KwkJCWVycm9yID0gZGV2LT5wb3dlci5kaXNhYmxlX2RlcHRoIC0gMTsKKwkJZWxzZQorCQkJZGV2
-LT5wb3dlci5kaXNhYmxlX2RlcHRoKys7CisJfSBlbHNlIHsKIAkJZXJyb3IgPSAtRUFHQUlOOwor
-CX0KIAogCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmRldi0+cG93ZXIubG9jaywgZmxhZ3MpOwog
-CkBAIC0xMzc2LDYgKzEzOTcsMTYgQEAKIAogCXJldHVybiBlcnJvcjsKIH0KKworaW50IHBtX3J1
-bnRpbWVfY29uZF9zZXRfYWN0aXZlKHN0cnVjdCBkZXZpY2UgKmRldikKK3sKKwlyZXR1cm4gcG1f
-cnVudGltZV9zZXRfc3RhdHVzX2ludGVybmFsKGRldiwgUlBNX0FDVElWRSwgdHJ1ZSk7Cit9CisK
-K2ludCBfX3BtX3J1bnRpbWVfc2V0X3N0YXR1cyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHVuc2lnbmVk
-IGludCBzdGF0dXMpCit7CisJcmV0dXJuIHBtX3J1bnRpbWVfc2V0X3N0YXR1c19pbnRlcm5hbChk
-ZXYsIHN0YXR1cywgZmFsc2UpOworfQogRVhQT1JUX1NZTUJPTF9HUEwoX19wbV9ydW50aW1lX3Nl
-dF9zdGF0dXMpOwogCiAvKioKLS0tIGEvaW5jbHVkZS9saW51eC9wbV9ydW50aW1lLmgKKysrIGIv
-aW5jbHVkZS9saW51eC9wbV9ydW50aW1lLmgKQEAgLTc1LDYgKzc1LDcgQEAKIGV4dGVybiBpbnQg
-cG1fcnVudGltZV9nZXRfaWZfYWN0aXZlKHN0cnVjdCBkZXZpY2UgKmRldik7CiBleHRlcm4gaW50
-IHBtX3J1bnRpbWVfZ2V0X2lmX2luX3VzZShzdHJ1Y3QgZGV2aWNlICpkZXYpOwogZXh0ZXJuIGlu
-dCBwbV9zY2hlZHVsZV9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IGRl
-bGF5KTsKK2V4dGVybiBpbnQgcG1fcnVudGltZV9jb25kX3NldF9hY3RpdmUoc3RydWN0IGRldmlj
-ZSAqZGV2KTsKIGV4dGVybiBpbnQgX19wbV9ydW50aW1lX3NldF9zdGF0dXMoc3RydWN0IGRldmlj
-ZSAqZGV2LCB1bnNpZ25lZCBpbnQgc3RhdHVzKTsKIGV4dGVybiBpbnQgcG1fcnVudGltZV9iYXJy
-aWVyKHN0cnVjdCBkZXZpY2UgKmRldik7CiBleHRlcm4gdm9pZCBwbV9ydW50aW1lX2VuYWJsZShz
-dHJ1Y3QgZGV2aWNlICpkZXYpOwpAQCAtMjY4LDYgKzI2OSwxMCBAQAogewogCXJldHVybiAtRUlO
-VkFMOwogfQorc3RhdGljIGlubGluZSBpbnQgcG1fcnVudGltZV9jb25kX3NldF9hY3RpdmUoc3Ry
-dWN0IGRldmljZSAqZGV2KQoreworCXJldHVybiAxOworfQogc3RhdGljIGlubGluZSBpbnQgX19w
-bV9ydW50aW1lX3NldF9zdGF0dXMoc3RydWN0IGRldmljZSAqZGV2LAogCQkJCQkgICAgdW5zaWdu
-ZWQgaW50IHN0YXR1cykgeyByZXR1cm4gMDsgfQogc3RhdGljIGlubGluZSBpbnQgcG1fcnVudGlt
-ZV9iYXJyaWVyKHN0cnVjdCBkZXZpY2UgKmRldikgeyByZXR1cm4gMDsgfQo=
---000000000000fa9276062d915482--
+> > 
+> > > +	ret = phy_set_mode(stm32_pcie->phy, PHY_MODE_PCIE);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = phy_init(stm32_pcie->phy);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
+> > > +				 STM32MP25_PCIECR_TYPE_MASK,
+> > > +				 STM32MP25_PCIECR_RC);
+> > > +	if (ret)
+> > > +		goto err_phy_exit;
+> > > +
+> > > +	reset_control_assert(stm32_pcie->rst);
+> > > +	reset_control_deassert(stm32_pcie->rst);
+> > > +
+> > > +	ret = clk_prepare_enable(stm32_pcie->clk);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Core clock enable failed %d\n", ret);
+> > > +		goto err_phy_exit;
+> > > +	}
+> > > +
+> > > +	stm32_pcie_deassert_perst(stm32_pcie);
+> > > +
+> > > +	pp->ops = &stm32_pcie_host_ops;
+> > > +	ret = dw_pcie_host_init(pp);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to initialize host: %d\n", ret);
+> > > +		goto err_disable_clk;
+> > > +	}
+> > 
+> > Technically, dw_pcie_host_init() is not related to root port. So please move it
+> > to probe() instead.
+> 
+> OK will move, thanks
+> 
+> > 
+> > > +
+> > > +	return 0;
+> > > +
+> > > +err_disable_clk:
+> > > +	clk_disable_unprepare(stm32_pcie->clk);
+> > > +	stm32_pcie_assert_perst(stm32_pcie);
+> > > +
+> > > +err_phy_exit:
+> > > +	phy_exit(stm32_pcie->phy);
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static int stm32_pcie_parse_port(struct stm32_pcie *stm32_pcie)
+> > > +{
+> > > +	struct device *dev = stm32_pcie->pci.dev;
+> > > +	struct device_node *root_port;
+> > > +
+> > > +	root_port = of_get_next_available_child(dev->of_node, NULL);
+> > > +
+> > > +	stm32_pcie->phy = devm_of_phy_get(dev, root_port, NULL);
+> > > +	if (IS_ERR(stm32_pcie->phy))
+> > > +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->phy),
+> > > +				     "Failed to get pcie-phy\n");
+> > 
+> > OF refcount not decremented in both the error and success case.
+> 
+> I don't understand your point, isn't devm_of_phy_get managed to decrement
+> the phy resources ?
+> 
+
+You should drop the refcount of the root_port using of_node_put().
+
+> > 
+> > > +
+> > > +	stm32_pcie->perst_gpio = devm_fwnode_gpiod_get(dev, of_fwnode_handle(root_port),
+> > > +						       "reset", GPIOD_OUT_HIGH, NULL);
+> > > +	if (IS_ERR(stm32_pcie->perst_gpio)) {
+> > > +		if (PTR_ERR(stm32_pcie->perst_gpio) != -ENOENT)
+> > > +			return dev_err_probe(dev, PTR_ERR(stm32_pcie->perst_gpio),
+> > > +					     "Failed to get reset GPIO\n");
+> > > +		stm32_pcie->perst_gpio = NULL;
+> > > +	}
+> > > +
+> > > +	if (device_property_read_bool(dev, "wakeup-source")) {
+> > 
+> > As per the current logic, 'wakeup-source' is applicable even without WAKE# GPIO,
+> > which doesn't make sense.
+> 
+> Agree, wakeup-source is not needed
+> 
+> > 
+> > > +		stm32_pcie->wake_gpio = devm_fwnode_gpiod_get(dev, of_fwnode_handle(root_port),
+> > > +							      "wake", GPIOD_IN, NULL);
+> > > +
+> > > +		if (IS_ERR(stm32_pcie->wake_gpio)) {
+> > > +			if (PTR_ERR(stm32_pcie->wake_gpio) != -ENOENT)
+> > > +				return dev_err_probe(dev, PTR_ERR(stm32_pcie->wake_gpio),
+> > > +						     "Failed to get wake GPIO\n");
+> > > +			stm32_pcie->wake_gpio = NULL;
+> > > +		}
+> > 
+> > Hmm. I think we need to move WAKE# handling inside drivers/pci/pcie/portdrv.c
+> > since that is responsible for the root port. While other root port properties
+> > have some dependency with the RC (like PERST#, PHY etc...), WAKE# handling could
+> > be moved safel >
+> > And once done, it can benefit all platforms.
+> 
+> OK I'll check if there is a convenient way to do this through a port_service
+> 
+
+You can drop the WAKE# support altogether and add it in the subsequent patches
+once this initial driver gets merged. It is up to you.
+
+> > 
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+
+[...]
+
+> > You can just move these definitions inside the driver itself.
+> > 
+> 
+> Some definitions will be duplicated with the ep driver, but on the other
+> side this file is very small... is it OK to duplicate definitions instead of
+> having the bitfields together ?
+> 
+
+I didn't notice that these are reused by the ep driver. Fine with me.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
