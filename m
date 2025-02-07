@@ -1,123 +1,176 @@
-Return-Path: <linux-pci+bounces-20866-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20867-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36994A2BD90
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 09:09:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 995CBA2BEE4
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 10:13:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 72E771698C0
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 08:09:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BF8B16A344
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 09:13:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F8EF235BEC;
-	Fri,  7 Feb 2025 08:08:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF5E71D61BC;
+	Fri,  7 Feb 2025 09:13:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="GTHNJpve"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTGXTo58"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F131A9B52
-	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 08:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68671D618E;
+	Fri,  7 Feb 2025 09:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738915730; cv=none; b=kZo22F81hJzdbE6wdcI20uAR0W4U3sKrRHclPz6Nx2AQu9/EaOXu4Bv+QAppse53h7z7k15DuXy6ZCAUt7tIrAit2Bma0Z5XP3Ebqa4utgujAxQdkBSUDK5BHEcJ34GN59DGD1cAq9RnRoOIHuVh3CM8w8m+8c9ckVoIiFMd/AU=
+	t=1738919616; cv=none; b=ODCN0hZSfy1+2hyykOK3NimSN3quZzACPaHvhCF2AdgT/+KrlQMjdAIXespkhoboSCSqm7fHBYo1aZqnfwhgIO7XPnbsNHERcMTlW2bYtMX2mFa71Hc9ZaFwPpGY7PXgEwAg2qb5WA/toxi6W39Kme4cRTMlnMiVedfvjiT/2lU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738915730; c=relaxed/simple;
-	bh=h3JF4kg25Ak8+7nLLyUwiuxQxmkQn+2HaY0HuhcaeGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iwTYaiyHHMN5JEKnGpyPWxpKZulB32dG1/4sEYiGXFOoRQ0cEfZycCTWeIGMbHfI03bmPzu2H3SLN2cFQl+ou1IsFLJzBz5s6mXQLUh20aUkuteScjlmKcFQ6Qx4UHXQ0RjT/dDzFv16hEkdmZCTXvfiBetpJi0Ft/+GUC4rHZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=GTHNJpve; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7b6e9586b82so159749385a.1
-        for <linux-pci@vger.kernel.org>; Fri, 07 Feb 2025 00:08:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738915727; x=1739520527; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DUqfa/7a3uRLS8Wt1E1OLUz0+AKRuiORplPEOlwtwdU=;
-        b=GTHNJpvev4shxMIW0h+r+Ukpx+zVOG3Hxjc9gPtcsLQl3yETnJgjJwUvkCHNUut5p8
-         8LhAB1fO6CExbw+vbrFzEfycyeRaImUtXufNvEKvBuZ6UjDt0cKCxXcUgq4VrFQyZBSI
-         8qqUEVw3Tn3v8lW/mQD+eSOq4B2a5WaUFJkZNUX1ocdp48fpeTFZTAzxKOVs/ZrdaDar
-         jroyiq0BHqOa4wn4KvgT4RoZrL+bDnypnFxxUS/X7eopJmHbcbcS6qRq7Qj850qxVAY/
-         PHmRQUhfB/ZF9cOvu9Ct3XEaijXwxu3i86XGg6qBRE0pE3GI6RcqeCscdttaLcKF5mOj
-         UWwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738915727; x=1739520527;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DUqfa/7a3uRLS8Wt1E1OLUz0+AKRuiORplPEOlwtwdU=;
-        b=woqg+Sq2K21s6uXHfJQ2S+JEIDW0D+U87RCLMkXybbcHDyohxBQHRq/kjL43h+JrLJ
-         E23ZMS5TBr/X70mF9B9/S/yi6HEbV0Z3zI83yS234LEjCx8ZlB2mI4XoZsdzR4kegtZ5
-         Zz7cMKQrOmUJUjoYgg+DrP+umcO0FJkWlUemhLHHtsRVwSZrR8yYC60/joUr2ZPn5CAJ
-         iGtYu0L5yxfHnwtiQiVZOPX7GsH92cEGPJ7+Oxazx9q6jIgz98oYET4ZdWcd4dUr5yXr
-         hSpNlbm1zWPdk9IXojiZnldVRAlRg22bplmj+YyVzerH2Pqe+aPfe217b3DlHDE/kzle
-         4anw==
-X-Forwarded-Encrypted: i=1; AJvYcCUuRHQgtkSzRP2xbigtRYe5Y0Cy3ghihEzrrqBeGA3wsBofrx6hh0G+m3sheL3WWQ7erqZsh2kzLj4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8AsRQewT0iCUQbSw7ZfCHds2PtnLOJNn9WDo6zD8myNmdeWs2
-	N+aUWby+vFLjHCL+ZrEpfo4pxWaAz5/fbW7zVODElLZ6AKZcMxbAamzjEJIPUco=
-X-Gm-Gg: ASbGncv3KwKDTKwBHOBwjCISgKWn05JoI6KTBCfCjkSOAauv1NeFx6IIqm+hhTGPsh9
-	mfVZWmBVABQlT7tHDb4SmP16zYWXla2wtvmP6vVewt9jFWHjsYapVbpg+DgEIQCZwLinMBhRIuN
-	T4N4UzVZQo6Yt4Kg98wrtsYTCklSLxcbqWXcs4OvXvtobdeE0uZuzxBFoh+ODEZRZLvlSdbOuCj
-	VO+hhlEBBxcIleuJyBugZKeBqXlqQ8MbiD36y1iLysIzAeW4x47Ravl36iocN2E5DSL18CQmAyR
-	yLl/Gs8rL6xUITKpv8bbhRVkRW99/bB4HR13QhKG/carLy8GdveBiU5LBqHosm/sppFixDknOQ=
-	=
-X-Google-Smtp-Source: AGHT+IGSIwnmOaKReWyusyTMXh+GJeL3zpoikJuNLhCbaUo+fvusPWKlRI8qdyFQIn++zwWdc6+B/Q==
-X-Received: by 2002:a05:6214:1d26:b0:6e1:6c94:b5c5 with SMTP id 6a1803df08f44-6e4455c554amr26905936d6.4.1738915726917;
-        Fri, 07 Feb 2025 00:08:46 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43baacee1sm14268386d6.84.2025.02.07.00.08.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 00:08:46 -0800 (PST)
-Date: Fri, 7 Feb 2025 03:08:44 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
-	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
-	rrichter@amd.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
-	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com,
-	alucerop@amd.com
-Subject: Re: [PATCH v5 15/16] cxl/pci: Add support to assign and clear
- pci_driver::cxl_err_handlers
-Message-ID: <Z6W_jKNZfrRBIirQ@gourry-fedora-PF4VCD3F>
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-16-terry.bowman@amd.com>
+	s=arc-20240116; t=1738919616; c=relaxed/simple;
+	bh=FR17TxotLW0QQw+3bvyS+jwauiNif/8A88Dzr0glndw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lXyCrd99IlxblujgoliSLCmPOxsS2Etx/Bw24IML4ib2OXoHQ6iFNKfLIFT9+gx7LemQzZw4paYe2Ctrzp0NV24lmOS3twoGO8UBHdS8aAelXyS1YKcEmM8WeB7F2tUhXzMe87PaknsTudE3FoYTxXjCuNLo+AQau3vsF5eoGBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTGXTo58; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21FECC4CEE2;
+	Fri,  7 Feb 2025 09:13:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738919616;
+	bh=FR17TxotLW0QQw+3bvyS+jwauiNif/8A88Dzr0glndw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RTGXTo58yrhWc7IfXlgn9D9EMNwv6l4w8GDzX68v80U/GsgVs5CYRxCuFcEHoqzpo
+	 EaLXJW6lsqJVy9a+NWIfUuw/XjcpboFxfAsFmeMBIRKzLBi0l5xOEUOCnwN0tsqQNX
+	 gBBvcFuBIdAAU5LGyMYlJJUPIS7eBAySJkuaAXTrnAiPi3OyjWLkLlnzmE7ue7ETje
+	 luPA9KOGEWs3U4CqMp0W2U0CLbI0i2T20nZash5OkYLhhm3Mv/hwU2018FQO23VEwx
+	 NZdlfPcF8v7lPJ0xNfZdjnm4MSOseCCnIMUWrq7fn33eJbneTNEhdp+4qVJSpjnQJO
+	 C+f4PCZjYv1Jw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tgKQX-001Yrn-Hk;
+	Fri, 07 Feb 2025 09:13:33 +0000
+Date: Fri, 07 Feb 2025 09:13:32 +0000
+Message-ID: <86mseyt8w3.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,	Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>,	linux-pci@vger.kernel.org,	Rob Herring
+ <robh@kernel.org>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,	Krzysztof
+ =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,	Bjorn Helgaas
+ <bhelgaas@google.com>,	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: dwc: Use level-triggered handler for MSI IRQs
+In-Reply-To: <Z6UWK6EvOLRrtRDH@google.com>
+References: <20250205151635.v2.1.Id60295bee6aacf44aa3664e702012cb4710529c3@changeid>
+	<87ed0btpfj.wl-maz@kernel.org>
+	<Z6UWK6EvOLRrtRDH@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250107143852.3692571-16-terry.bowman@amd.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: briannorris@chromium.org, jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org, linux-pci@vger.kernel.org, robh@kernel.org, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, Jan 07, 2025 at 08:38:51AM -0600, Terry Bowman wrote:
-> pci_driver::cxl_err_handlers are not currently assigned handler callbacks.
-> The handlers can't be set in the pci_driver static definition because the
-> CXL PCIe Port devices are bound to the portdrv driver which is not CXL
-> driver aware.
+On Thu, 06 Feb 2025 20:06:03 +0000,
+Brian Norris <briannorris@chromium.org> wrote:
 > 
-> Add cxl_assign_port_error_handlers() in the cxl_core module. This
-> function will assign the default handlers for a CXL PCIe Port device.
+> Hi Marc,
 > 
-> When the CXL Port (cxl_port or cxl_dport) is destroyed the device's
-> pci_driver::cxl_err_handlers must be set to NULL indicating they should no
-> longer be used.
-> 
-> Create cxl_clear_port_error_handlers() and register it to be called
-> when the CXL Port device (cxl_port or cxl_dport) is destroyed.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> First off, thanks for reviewing. I'm a bit unsure about some of this
+> area, which is one reason I sent this patch. Maybe it could have been
+> "RFC".
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+RFC means nothing to me. Or rather, RFC is a sure indication that a
+patch can safely be ignored! ;-) My advise on this front is to either
+post patches as you have done, or not post it at all.
 
+> 
+> (See also v1: https://lore.kernel.org/all/Z3ho7eJMWvAy3HHC@google.com/
+> 
+> I'm dealing with HW bugs that cause me to have to configure the output
+> signal -- msi_ctrl_int -- as EDGE-triggered on my GIC. This is adjacent
+> to that problem, but doesn't really solve it.)
+
+Configuring a level-triggered signal as edge is another recipe for
+disaster (a sure way to miss interrupts), but short of a description
+of your particular issue, I can't help on that.
+
+> 
+> On Thu, Feb 06, 2025 at 09:04:00AM +0000, Marc Zyngier wrote:
+> > On Wed, 05 Feb 2025 23:16:36 +0000,
+> > Brian Norris <briannorris@chromium.org> wrote:
+> > > 
+> > > From: Brian Norris <briannorris@google.com>
+> > > 
+> > > Per Synopsis's documentation [1], the msi_ctrl_int signal is
+> > > level-triggered, not edge-triggered.
+> > > 
+> > > The use of handle_edge_trigger() was chosen in commit 7c5925afbc58
+> > > ("PCI: dwc: Move MSI IRQs allocation to IRQ domains hierarchical API"),
+> > > which actually dropped preexisting use of handle_level_trigger().
+> > > Looking at the patch history, this change was only made by request:
+> > > 
+> > >   Subject: Re: [PATCH v6 1/9] PCI: dwc: Add IRQ chained API support
+> > >   https://lore.kernel.org/all/04d3d5b6-9199-218d-476f-c77d04b8d2e7@arm.com/
+> > > 
+> > >   "Are you sure about this "handle_level_irq"? MSIs are definitely edge
+> > >    triggered, not level."
+> > > 
+> > > However, while the underlying MSI protocol is edge-triggered in a sense,
+> > > the DesignWare IP is actually level-triggered.
+> > 
+> > You are confusing two things:
+> > 
+> > - MSIs are edge triggered. No ifs, no buts. That's because you can't
+> >   "unwrite" something. Even the so-called level-triggered MSIs are
+> >   build on a pair of edges (one up, one down).
+> > 
+> > - The DisgustWare IP multiplexes MSIs onto a single interrupt, and
+> >   *latches* them, presenting a level sensitive signal *for the
+> >   latch*. Not for the MSIs themselves.
+> 
+> Indeed, I probably was a little confused, and distracted by my
+> aforementioned HW bug, which can be at least partially mitigated by
+> masking (which this patch does). I also didn't understand the original
+> choices in various DW-based PCIe drivers, since their choice of
+> handle_level_irq vs handle_edge_irq seemed a bit arbitrary.
+> 
+> ...
+> 
+> > It also breaks the semantics of
+> > interrupt being made pending while we were handling them (retrigger
+> > being one).
+> 
+> What do you mean here? Are you referring to SW state (a la
+> IRQS_PENDING), or HW state? For HW state, MSIs are accumulated in the
+> STATUS register even when we're masked, so they'll "retrigger" when
+> we're done handling. But I'm less clear about some of the IRQ framework
+> semantics here.
+
+IRQS_PENDING is indeed what indicates the SW-driven retrigger state,
+by which any part of the kernel can decide to reinject an *edge*
+interrupt if, for any reason, it needs to.
+
+This is actually how lazy masking is implemented, by not masking the
+interrupt, taking it (which is a "consume" operation), realising we
+were logically masked, masking it for good and marking it as
+SW-pending for later processing. Hence the while{} loop in
+handle_edge_irq().
+
+Switching to level triggered removes most of that processing, since by
+definition, a level is not consumed when acking the interrupt. You
+need to talk to the end-point for the level to drop, so simply masking
+the interrupt is enough to get it back when unmasking it.
+
+HTH,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
 
