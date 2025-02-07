@@ -1,173 +1,227 @@
-Return-Path: <linux-pci+bounces-20878-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20879-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87CB9A2BFE2
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 10:50:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05378A2C003
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 10:56:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5F4647A05F4
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 09:49:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 846EE169D51
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 09:56:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F60A1CDFCC;
-	Fri,  7 Feb 2025 09:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B32441DE3AB;
+	Fri,  7 Feb 2025 09:56:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="R0QQ6qqk"
+	dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b="WOKA8iiT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7775F32C8B
-	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 09:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E4C192D77
+	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 09:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738921797; cv=none; b=bEx2iN6dq0MkU/f1R8dJf1w39R7c2YTWE8SmstaZim1X3twIH6sTFJpKqVgkNach5x3HztxeL+CuyBc3/5sGY5PuHXSy7BBrumJIGattTovcdma+4w9NOPXLka5RgoChXJM/r2uE9ksoR0nzz1I9zlkWbYRJsVdOddq1UMyM/JE=
+	t=1738922200; cv=none; b=jlRhPHB7A2YdEK7zdhBef1YWvi9NNkrdIymqx7DtBb0a3OZln8z86sncT4QF0vUB+BnAxuE2pf7eJhP7sg3Y3YY7S2A9fATS4qFFZyWSNxaWMdF8K7lA+FPlCt0eg5x9QHbkcGHlKHl+4Sg/9N9HDBlxGgcBUsKMLttCKwhjsNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738921797; c=relaxed/simple;
-	bh=S4p6LLSLOPSpJE9g1forZYx4llbSsosHafGdaXkcLks=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N/glBzeC437TaaepTbXnLj3B22EXk1bE9Al8djJHfLgROiUaRR60nSlB2Uo3KkuNqPKfCHWhslQWVpm970Fq70T1Qp5AV7nJiQzs9Ij2Fs8G/UImdp576Wx0uUB0A8+MToiapvbku/Q9r9hdJzZIjXLh/Va6/Rbm4xDqMf8/S/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=R0QQ6qqk; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ab2c9b8aecaso337789466b.0
-        for <linux-pci@vger.kernel.org>; Fri, 07 Feb 2025 01:49:55 -0800 (PST)
+	s=arc-20240116; t=1738922200; c=relaxed/simple;
+	bh=8dSp7jpKHxboTrZ29vEvzIoTaKmW9cItRIc7qe/m/qM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NUj6Ppi7MAR4CXhOdT3jNDsTn89+MsRv+1hNYJJARlPBj8DwP2n6KBe/zcjqv96v3FjT94MsNj9iRnhlbMj70cEkhf7q3ptiU7rfUUd+0P7hWm48qX61i8bXbw4e+YjXrqgQlTRpG6qAWVBUfqx6Jvwbb2AtvJKrdarBBFUFrMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org; spf=pass smtp.mailfrom=endlessos.org; dkim=pass (2048-bit key) header.d=endlessos.org header.i=@endlessos.org header.b=WOKA8iiT; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=endlessos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=endlessos.org
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21f2f386cbeso32713435ad.0
+        for <linux-pci@vger.kernel.org>; Fri, 07 Feb 2025 01:56:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738921794; x=1739526594; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hHxN1cJYA/N06QjEqFReiwPXLdQZSTCuNsi3b9gHzjE=;
-        b=R0QQ6qqkuCHyh/Lspg5x220NQrmp3N6wdbNGoWH7PyXNdhvxz4Jbe7NchDCCV30XOR
-         4UrnQQ0BAftdo0xjDtYM/BhzjoxDNhCnK34Yghwjgj4YH3Z24bCg8BkDMUE3cBgRNqoW
-         IN/BOoMUZKikliYvQvrQhGKp5soXPZt7bLmqMnjeOaoYU/2tpjpLxYXKJbjHw7zOiTqT
-         Jb0g9NZP4p3/v2EQoEOMoMl4ILwB4ZGwXP6h8dqQJOw5YWwV47WyQt2MnRb6xO1swpGW
-         M+TB33esmktLN3zuHbZ6n5BvKOB6V9Gwuspyo58dC6FTQjuOuV/zfe3lbKR/zWYucP9I
-         CxeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738921794; x=1739526594;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=endlessos.org; s=google; t=1738922197; x=1739526997; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hHxN1cJYA/N06QjEqFReiwPXLdQZSTCuNsi3b9gHzjE=;
-        b=jCPbmIXHeSrj0rxqUwtjj9Y82A8wxT+tGi3wsCq9RL6TFszzlfgZqkOqwNzfqCUQxx
-         DwvnMufL74FkKR5DvLrtvOBVBek4SYIUSLkAs922XPlUX4Delh6OL0BQdPEV5xVpiwYo
-         OaKh7qHeqEypDnoirxjze7Z2ghyGfEIzHo/6rUJSJvFRaCWz9Z//XRG3Z/Z7GCCtrZku
-         0uMRX/56WOIzRCGyY9bpjZBh2u8e7iUb3dnP03C4ip7wL+URXt0W5rK/PsrO5X+JqfO7
-         k+WOT2CMRgGuPfgYUJBnMM+yRccdphtDpzOwqfTjSbQ+ILQ+Y78IF7WLIpamfDI8O1xx
-         65wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+NBuJoA7K9nL057ObexGD0iy41ztQqGzMgy3LoPR0mjJw6/YIk0jvvC8PS7o0uDb0LUKZgTccbSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKaqIpNQqxdY1gpS+cnxD92li7hOeLac8JoPMtwLU5G+8wiqFA
-	D6kdQguf0E0ULtQGj3GZUIIwsyaMfLw7Eczoa2rW97Wyd1Sw+tcfHDQWy9/XAys=
-X-Gm-Gg: ASbGncvfxZPwDjLj+GfNbEzTQR7IQnGZoDxyAnMXXooQ0BvoA7SwcXfd53JQaiPKzHF
-	G/omLX960u1FUPFxV182MLvGKKcVlID2HGZfNdn8A5Fv7k4z4lel2VtKJgp3EoyOku6yRL62iHF
-	pZqf+wPD0S3E3aLP0mJxstYl5qF+AzN5snaW1eFvNwGrH6TJ+bmI+ZGV43B4AF2Y2Kfl7lx17Zn
-	8BfEsm8kCJqVnsCs8NtjG29Ag39C6kqjvRA8WYHsS36qyQI6YrOqzsCIGUteb69ECQX1hMB4Kg4
-	rXFoTAPV1Zbc45jttYj8+AOO8pV/T8ZvPi2H+uMGdOTNW2zyFIZW2ocF6RE=
-X-Google-Smtp-Source: AGHT+IHCzEFvSIhfMGLJjDLN8sAOhYITMeHBywqkNc2QJXqBWAThFj4V/KSvjovgix5IZ8ADaCm//w==
-X-Received: by 2002:a17:907:1b27:b0:ab2:f8e9:723c with SMTP id a640c23a62f3a-ab789a9ed0amr257773366b.5.1738921793776;
-        Fri, 07 Feb 2025 01:49:53 -0800 (PST)
-Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772fd6ba1sm235401366b.79.2025.02.07.01.49.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 01:49:53 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Fri, 7 Feb 2025 10:50:52 +0100
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v6 05/10] clk: rp1: Add support for clocks provided by RP1
-Message-ID: <Z6XXfL1-ER2dLmZI@apocalypse>
-References: <b12caa1c8c674a56afa7b2de780d9ae5423159a3.1736776658.git.andrea.porta@suse.com>
- <20250203234443.GA810409@bhelgaas>
+        bh=FFa0TwOfaeXeN6TUv3CVAI4nkkhAF2OdqwCTnqd5M/Y=;
+        b=WOKA8iiToA1iq46FdNlA6XW4IQbhDFLACJ2RnvJMe3yV/ETcAlry9xlQ6Kx1LP9IXM
+         lAdgduHGgQdq1Qd+d5c06ye6ZIgWDy5uZfjS1QJnixBYdibc/cVRWb7cIfdKT6ABNz0o
+         P0PXYUyQpbU8yh6GB5rTfVwvhnzaCSInAHAl30bA1+Nd0o77K6PolilMrDSo5A2pW6DT
+         YoQ/09SvgzlPHnIvhDEC+zsjhlmiu7vzAAgcxXOc8QTPtGPJhGkd+JsqfrBjKRPceQ2q
+         AjFZOYksURfu18I3TZ7ibLLWAjjFc5xElHAyLSPHr7EGPafHg0y4SR+SgOci509M1/FI
+         fycw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738922197; x=1739526997;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FFa0TwOfaeXeN6TUv3CVAI4nkkhAF2OdqwCTnqd5M/Y=;
+        b=Ltjiixvr2Bo73mVDy17iU4wYsa0wFIWlosdbP7IMIsSbtv0YBrN6LfMkEshgV5gui7
+         nATTa95ssHdGASb26hRuVzgImOTeGCj2X/ROP8+hdjEUqOLJ7UIR1cG09Q8rO1JHA3ag
+         dXQcCg7MoU0ZAzpvc71r2hgQf5d1S2DsA6IYqjT1JDF9xaBTbP20JPxVyXTwxA3buHWP
+         64u7Nij47eAlzmhzcymvzYLELC+IRy3MAgVf1FZmzQvpWBKl8v+ARXQi27t5ryuY6G3j
+         +36LxrEWk6BZGzg8IGSKh/OWUQZsxzv3YBIiFSI/MWdyXIg75GZ2rnSV/fv//fPKMCAA
+         YpkA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6ju2CmjWrVihCCbRfS+MbPJwJAub1PKbynq6J4CUw4sYNeTG+YNnp26wF3prRqMlKU2ApkskVeFc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvkU5lKpR+RflhPQ02x+6kBXfjX9itWDyGDTneOharE0E9INDJ
+	j9PcTzKd6IZddVQnfgcqC2FrqKYJqnqL3wYAxiQu62tUpUcEbaGBq7jufvQfOACJl9qVEw1qGQp
+	l4ecQIeaM7JDAbLfN36sLf9Uj3o6rY9TPRxfUbg==
+X-Gm-Gg: ASbGncttNi4t+MPvFlh3fNjb0DrFCN9znDTBTE9tfLGGHy7zcq88vQKsHS2byKdl5VJ
+	yRUjgolh8E3jYE7ncDKqX/7QbXtvibKqRFOwntADYfcpk8zr/qUxDOB51iRkM45zNyLRXIlDD
+X-Google-Smtp-Source: AGHT+IHFsq67V9fZ6rUZE9lwc+hW9hSgTgLl260hi13irnaaHCOdFVGrplRNPaMrZzRN26tBc6n2xDx1800vyAUMGlM=
+X-Received: by 2002:a17:903:32cb:b0:21d:dfae:300c with SMTP id
+ d9443c01a7336-21f4e6a064dmr47724015ad.3.1738922197049; Fri, 07 Feb 2025
+ 01:56:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250203234443.GA810409@bhelgaas>
+References: <167dfe31-89cb-6135-aafc-ece0cb234daa@linux.intel.com> <20250205133707.GA910099@bhelgaas>
+In-Reply-To: <20250205133707.GA910099@bhelgaas>
+From: Jian-Hong Pan <jhp@endlessos.org>
+Date: Fri, 7 Feb 2025 17:56:01 +0800
+X-Gm-Features: AWEUYZmSIbYXwpTueTUNZARdYQzw_ZN0Jf23ei1FezC0aIP7wNJvJt6gC5HE750
+Message-ID: <CAPpJ_edsGMBobHaG+9YYpdSgp2tR5CDqDhDY-MuD606hp5Q-=Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1] PCI/ASPM: Fix L1SS saving
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>, 
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Bjorn,
+Bjorn Helgaas <helgaas@kernel.org> =E6=96=BC 2025=E5=B9=B42=E6=9C=885=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=889:37=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Wed, Feb 05, 2025 at 10:38:24AM +0200, Ilpo J=C3=A4rvinen wrote:
+> > On Tue, 4 Feb 2025, Bjorn Helgaas wrote:
+> >
+> > > [+cc Rafael]
+> > >
+> > > On Fri, Jan 31, 2025 at 05:29:13PM +0200, Ilpo J=C3=A4rvinen wrote:
+> > > > The commit 1db806ec06b7 ("PCI/ASPM: Save parent L1SS config in
+> > > > pci_save_aspm_l1ss_state()") aimed to perform L1SS config save for =
+both
+> > > > the Upstream Port and its upstream bridge when handling an Upstream
+> > > > Port, which matches what the L1SS restore side does. However,
+> > > > parent->state_saved can be set true at an earlier time when the
+> > > > upstream bridge saved other parts of its state.
+> > >
+> > > So I guess the scenario is that we got here because some driver calle=
+d
+> > > pci_save_state(pdev):
+> > >
+> > >   pci_save_state
+> > >     dev->state_saved =3D true                <--
+> > >     pci_save_pcie_state
+> > >       pci_save_aspm_l1ss_state
+> > >         if (pcie_downstream_port(pdev))
+> > >           return
+> > >         # save pdev L1SS state here
+> > >         if (parent->state_saved)           <--
+> > >           return
+> > >         # save parent L1SS state here
+> > >
+> > > and the problem is that we previously called pci_save_state(parent),
+> > > which set "parent->state_saved =3D true" but did not save its L1SS st=
+ate
+> > > because pci_save_aspm_l1ss_state() is a no-op for Downstream Ports,
+> > > right?
+> >
+> > Yes! An unfortunate interaction between those two checks.
+> >
+> > > But I would think this would be a very common situation because
+> > > pcie_portdrv_probe() calls pci_save_state() for Downstream Ports when
+> > > pciehp, AER, PME, etc, are enabled, and this would happen before the
+> > > pci_save_state() calls from Endpoint drivers.
+> > >
+> > > So I'm a little surprised that this didn't blow up for everybody
+> > > immediately.  Is there something that makes this unusual?
+> >
+> > I agree it should be very common and was quite surprised that -next
+> > did not catch it. What I recall though is you modified the patch while
+> > applying it by adding those Downstream Port checks so the fix
+> > patch's Tested-by was for different code from what got applied (and it
+> > would have been caught would the original author have tested also the
+> > modified commit).
+>
+> Sigh, that makes sense, it's probably my fault, sorry.  I apologize
+> for messing this up and causing all this extra work.
+>
+> I applied this to pci/for-linus yesterday, so it should make it for
+> v6.14-rc2.
 
-On 17:44 Mon 03 Feb     , Bjorn Helgaas wrote:
-> On Mon, Jan 13, 2025 at 03:58:04PM +0100, Andrea della Porta wrote:
-> > RaspberryPi RP1 is an MFD providing, among other peripherals, several
-> > clock generators and PLLs that drives the sub-peripherals.
-> > Add the driver to support the clock providers.
-> 
-> > +#define PLL_PRIM_DIV1_SHIFT		16
-> > +#define PLL_PRIM_DIV1_WIDTH		3
-> > +#define PLL_PRIM_DIV1_MASK		GENMASK(PLL_PRIM_DIV1_SHIFT + \
-> > +						PLL_PRIM_DIV1_WIDTH - 1, \
-> > +						PLL_PRIM_DIV1_SHIFT)
-> > +
-> > +#define PLL_PRIM_DIV2_SHIFT          12
-> > +#define PLL_PRIM_DIV2_WIDTH          3
-> > +#define PLL_PRIM_DIV2_MASK           GENMASK(PLL_PRIM_DIV2_SHIFT + \
-> > +                                             PLL_PRIM_DIV2_WIDTH - 1, \
-> > +                                             PLL_PRIM_DIV2_SHIFT)
-> 
-> Maybe this is standard drivers/clk style, but this seems like overkill
-> to me.  I think this would be sufficient and easier to read:
-> 
->   #define PLL_PRIM_DIV1_MASK   GENMASK(18, 16)
->   #define PLL_PRIM_DIV2_MASK   GENMASK(14, 12)
+Just back from holidays.
 
-Ack.
+Thanks to Nikl=C4=81vs' bug report, Ilpo's quick fix and Bjorn's cooperatio=
+n.
 
-> 
-> > +static unsigned long rp1_pll_recalc_rate(struct clk_hw *hw,
-> > +					 unsigned long parent_rate)
-> > +{
-> > +	struct rp1_clk_desc *pll = container_of(hw, struct rp1_clk_desc, hw);
-> > +	struct rp1_clockman *clockman = pll->clockman;
-> > +	const struct rp1_pll_data *data = pll->data;
-> > +	u32 prim, prim_div1, prim_div2;
-> > +
-> > +	prim = clockman_read(clockman, data->ctrl_reg);
-> > +	prim_div1 = (prim & PLL_PRIM_DIV1_MASK) >> PLL_PRIM_DIV1_SHIFT;
-> > +	prim_div2 = (prim & PLL_PRIM_DIV2_MASK) >> PLL_PRIM_DIV2_SHIFT;
-> 
-> And then here, I think you can just use FIELD_GET():
-> 
->   prim_div1 = FIELD_GET(PLL_PRIM_DIV1_MASK, prim);
->   prim_div2 = FIELD_GET(PLL_PRIM_DIV2_MASK, prim);
-> 
-> It looks like the same could be done for PLL_SEC_DIV_MASK,
-> PLL_CS_REFDIV_SHIFT, PLL_PH_PHASE_SHIFT, CLK_CTRL_AUXSRC_MASK, etc.
+Acked-by: Jian-Hong Pan <jhp@endlessos.org>
 
-Ack.
-
-Regards,
-Andrea
+> > Unfortunately, I cannot think of anything that would be so unusual to
+> > warrant not detecting it earlier. Maybe it was just the holiday period
+> > causing less testing and lower level of awareness in general? The machi=
+ne
+> > doesn't always hang because of the problem as was the case with Nikl=C4=
+=81vs,
+> > so it might have occurred but went unnoticed if it occurred for a devic=
+e
+> > that is not critical.
+> >
+> > > > Then later when
+> > > > attempting to save the L1SS config while handling the Upstream Port=
+,
+> > > > parent->state_saved is true in pci_save_aspm_l1ss_state() resulting=
+ in
+> > > > early return and skipping saving bridge's L1SS config because it is
+> > > > assumed to be already saved. Later on restore, junk is written into
+> > > > L1SS config which causes issues with some devices.
+> > > >
+> > > > Remove parent->state_saved check and unconditionally save L1SS conf=
+ig
+> > > > also for the upstream bridge from an Upstream Port which ought to b=
+e
+> > > > harmless from correctness point of view. With the Upstream Port che=
+ck
+> > > > now present, saving the L1SS config more than once for the bridge i=
+s no
+> > > > longer a problem (unlike when the parent->state_saved check got
+> > > > introduced into the fix during its development).
+> > > >
+> > > > Fixes: 1db806ec06b7 ("PCI/ASPM: Save parent L1SS config in pci_save=
+_aspm_l1ss_state()")
+> > > > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D219731
+> > > > Reported-by: Nikl=C4=81vs Ko=C4=BCes=C5=86ikovs <pinkflames.linux@g=
+mail.com>
+> > > > Tested-by: Nikl=C4=81vs Ko=C4=BCes=C5=86ikovs <pinkflames.linux@gma=
+il.com>
+> > > > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > > > ---
+> > > >  drivers/pci/pcie/aspm.c | 3 ---
+> > > >  1 file changed, 3 deletions(-)
+> > > >
+> > > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > > > index e0bc90597dca..da3e7edcf49d 100644
+> > > > --- a/drivers/pci/pcie/aspm.c
+> > > > +++ b/drivers/pci/pcie/aspm.c
+> > > > @@ -108,9 +108,6 @@ void pci_save_aspm_l1ss_state(struct pci_dev *p=
+dev)
+> > > >   pci_read_config_dword(pdev, pdev->l1ss + PCI_L1SS_CTL2, cap++);
+> > > >   pci_read_config_dword(pdev, pdev->l1ss + PCI_L1SS_CTL1, cap++);
+> > > >
+> > > > - if (parent->state_saved)
+> > > > -         return;
+> > > > -
+> > > >   /*
+> > > >    * Save parent's L1 substate configuration so we have it for
+> > > >    * pci_restore_aspm_l1ss_state(pdev) to restore.
+> > > >
+> > > > base-commit: 72deda0abee6e705ae71a93f69f55e33be5bca5c
+> > > > --
+> > > > 2.39.5
+> > > >
+> > >
+> >
+> > --
+> >  i.
+>
 
