@@ -1,127 +1,403 @@
-Return-Path: <linux-pci+bounces-20938-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20950-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8113A2CCB2
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 20:40:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E00DA2CCD9
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 20:42:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5048F16BFFA
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 19:40:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ABA2316CFEE
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 19:42:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACB09198831;
-	Fri,  7 Feb 2025 19:39:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAF121A08DF;
+	Fri,  7 Feb 2025 19:41:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gx+BIpAH"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Es/b5eaA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2062.outbound.protection.outlook.com [40.107.21.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1045818C930
-	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 19:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738957198; cv=none; b=qUqPw4MPjnp0mmcMH7OSwWrkjI4K/nUl/njmW3lAmlz4+HqnHA0q/zjoFCB+kn0oEYfIEbR3EytwJwjh8SXBn/sVWGQTFjOG0Ib7QWer1zaPMMg/AVTmqU6JTScAvaBGJvwdORP4YpfnihY3di7EWukJ7F2m02yHf5PcGXmWAsE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738957198; c=relaxed/simple;
-	bh=s68IMjEbM4K+2/scksXJORrf7isnIwyyzdntKTO/ea0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UQliKF6eCeqsl5T4I5IPx9rJ2PzfzbZy5AZuWMGUZYOq70uvoW2qz+keWlAYdkcaWG0dh6iPRAE8JAPRQLF4O11qTQsIMTZtuhzbbWNhicWKTkM2+TPIb48HXKeBfCr1gayoELmaAagvHMkaUb0+snnu9EDhnC5ONCBBB0hGaHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gx+BIpAH; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-46c8474d8daso19051271cf.3
-        for <linux-pci@vger.kernel.org>; Fri, 07 Feb 2025 11:39:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738957194; x=1739561994; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HoCXaz7FZACGfE1FRe1gWStT7EUpURyoBtQiate1bg4=;
-        b=gx+BIpAHAJvejz7jTsL32KD8GaArD9zgssrqvClGHnTpcGmwzeIEvI/SK5tYVIgPSO
-         FHLV9/iGzu8w8SBqERyoHqaOycd5GzB+BXLxg1ZR2T82GtzsZdm5kJe/e4rerriMr+BW
-         RD3o/T79ExaUPEYLzmj+t73FgYG15gg4+d8uETCdxvZUzsOmsvh32LzQDekNfsuHLem3
-         6f92nu9gIy2AYBLF97k40PjxU8vkrL2pfOC4J8kgeRKRz9Foi4M1nCN5XkOM65p5SxMs
-         x59ihCuep+bSoUYHZxaI/Z32G2BNFHFyIlV5qdDDz13LDomI4FYIq5wNcijCcZkTjsok
-         JhtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738957194; x=1739561994;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HoCXaz7FZACGfE1FRe1gWStT7EUpURyoBtQiate1bg4=;
-        b=sUjyLq4spMNgywEavo4WkxZUazSu3a9iIABUwzHBHFJ1V38WkseJY+Km/0dkrkoIia
-         ybFPEf5vfIjY+CpFhl4m+grFZC3AY0z54YdYtX0TWZ4649SfOCNAUf2jOePugj2FeCZz
-         0LGvOMwn9eImSJXZ3AAX2Ow40fBbYYPjnVHqrXAFB8zEjNCeLFFVaataPD1Kwc7Mgpbj
-         6UaFg8qiDxYtkBbiDFtDQG1VCxdtsVw3Np0MdA4+EYM604YxxplOZW14eqjTuIE0yYSq
-         hajaYt3HRefT0fKUAfSyIUE7EPoMtbYBVuqojvLgFZjGNoY/MiNBql/E02ojyKMsLOi4
-         jweQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyM9lXHOJkmtFo39SwG3CJwfS+r51ePPkRHh9B/JKDx/TnPceRS4bfhhIy2dwRdPgLtzAIPhasJAQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxbr/XQ4YFSoaqxOAORwrcFxjhCz1b4S95234RpRaXKJcrb7WPF
-	pPDX1AW5AChX45IY65GRxuzPr+E24E7Uer2qIkklVKb8sJJ6uYud+hOD7udLPJc=
-X-Gm-Gg: ASbGncst/Y2t/QBiNu0soviTRq2z90jeYFLRLngx2wwUZ6OcoCJLF3gP3usWBjn1/kV
-	I5FZG5g0eLyiNqEwCmC+eeyYLewKy0ziy+p6Sbv1mnUX/7UUHt4HLgok3lkKCUHadNDT8XkiGKX
-	/kP8iWRK7HLF7hr7Ohf7JuIQNScG+cBeaiasG2pgiv7IJssnOWT+7xcp7Vqd621+zVWwfu4lPH8
-	QVs86GijdbFdRKjQAg5QP/Ro8jKhRicFRfZt6cPQ+Sfs/wW+IF2D/BfZId/cGavFAdgBBoLQzXq
-	ue4ihFgKKhopMvyJ8ItHMBiiYB3GK4G2yc6aN4HGvwPKs4CIeWi4z56xVSBaQFmxQ/9FoFDVHg=
-	=
-X-Google-Smtp-Source: AGHT+IFM4XYo7Sj0iZNNa5Y9RLAXbsSkxk7abPcbr2zA4DPL877A+xt+JaTMpBqXgKQnFgS8Cf3yJQ==
-X-Received: by 2002:ac8:7f55:0:b0:46e:541b:c80e with SMTP id d75a77b69052e-471679ee853mr72470601cf.20.1738957193702;
-        Fri, 07 Feb 2025 11:39:53 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471492a856fsm20177991cf.28.2025.02.07.11.39.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 11:39:53 -0800 (PST)
-Date: Fri, 7 Feb 2025 14:39:51 -0500
-From: Gregory Price <gourry@gourry.net>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
-	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
-	rrichter@amd.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
-	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com,
-	alucerop@amd.com
-Subject: Re: [PATCH v5 08/16] cxl/pci: Map CXL PCIe Root Port and Downstream
- Switch Port RAS registers
-Message-ID: <Z6Zhh9MVjee4dGr5@gourry-fedora-PF4VCD3F>
-References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-9-terry.bowman@amd.com>
- <Z6W2hFI7UsEslB3U@gourry-fedora-PF4VCD3F>
- <6749f386-4bd0-4395-9ad4-a9663fac9bc1@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F98919D07E;
+	Fri,  7 Feb 2025 19:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738957291; cv=fail; b=qXDpjDn7VI7jrWsy+ImbnRrQLXqZwybHB2wdgGXdbG7uJz2t8FtoqxrZKGh49gQnsB9ydN8IwGLfGMJJIoA4Ca9ftwgBb5ifZYMqjkf2ChBzGYySAO8C2kYJu/5xYmtws6hYsifmxUmB6EGy/PMowI2Vo6dN/38430IikRNoL3E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738957291; c=relaxed/simple;
+	bh=cBbHPYl59BqEWZgs9oM7up4sogl7vTD8SxSGWaSbPIk=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=VfY4oIHC+uJblkjNLzh0iJcQ4n0n7P3O9/AIjo5bRnGyIawOAn/RUuRJlpT9hR8GSLC5+03hmgtAHTzRf3S2hU/cTAsMwvxCLMU+amBz+Yv3OjUIZTnNkPe/lWcmtSEpKW74KCSsIhldPbdy0b4RTI4DR/un6lv0924qNGM+gv8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Es/b5eaA; arc=fail smtp.client-ip=40.107.21.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Hqci1JKKSm2gLGLIrzOCY4R4KI126wu6vgO80RrwngSM1qHeuELDVnHTOsASE4ZHlbrRl3DJ13IaFUWZ2PrE+d0TkbSzzCQj4scSKOE8STQnvix4FSOnSQZu1B0Z7z0OefXvK3jyT8VsRxAu2mi+S7hpdKQQcrnUTbU3E5S8t46IqTDGMgfm9M/fHuCq0Cdj6KMvzQ/XSYYp4iT+Ar9Vm8z84dy7ZvrvneUaPFKXCnDX8tcOhDF5uwKtQOW1StqqAeM94Qrm3iDWKH5W4ocEEV/2TELfb5iHwi7FS8O1F7QNjECnJbC1brbpmV1SBEbdhSKngdrsg1wCXxZ6zGL9/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GMntrNDt4uf3nylEoQt5BkoO+wskEGqCv9nSD9K1cPI=;
+ b=ZC1QNvTuMk/w77CISseMB2qLaFR6uosEOwQ3erj/W3q78k5Grw7zkZoixxJWbqir917cJT6KapzvzOZ4A+sqREHXvaWK3IcZ2fQBLxgv/FTko9pp+gyqJe9eUn6/DmpbFIUc63EbKvl8vXhnyjy492ZQOkFnlVMQoUbKThT6OkSabvBKkXy6smW0OFWgg5+5KRgQKyWptgBfwnLJ2DFIsAPeKYG2pzzU6sDkCCKJqxPlTXQzs+HPOhvCwJ0d084s3flvmg1sFiGNQxZCRN9vLKKtYTl9WYG5zfZLuGo1bjHWYq2WzNsTtd7ei0NqKD1KWzdBLlJLazrprB/JVCpGFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GMntrNDt4uf3nylEoQt5BkoO+wskEGqCv9nSD9K1cPI=;
+ b=Es/b5eaAfWzDcvuzohxuzNJ35vfOxL1scAh73hyaAQi5kixoWRACn2u7D1Pn/aJmr48gYiiU5+YmCVYPH39v5aFaKRQ0yYe/KP9CD0tVIwaBHf1hUmivBrNlv3DtKKp9A0lvplDqThxKKnMUP39S2zCmp8ETloWbBWeIKu/lKfgmk6uspgt/yUOi54rzKp59Vyu2KGcPua/6+nnTCHlBe86RSEFeMZBxxNzlyuB3NBcVu6hLIbfjpei66HJslo0Cp616ZoyjvvgoRhRCO4H8CfcFZvCBQV0ds2K+23NZP+K7pZ+ikQSdjyyYQ3meS5VDOokrxaq/QcUKy45+ES/LgQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by VI1PR04MB9787.eurprd04.prod.outlook.com (2603:10a6:800:1d8::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.14; Fri, 7 Feb
+ 2025 19:41:26 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8422.012; Fri, 7 Feb 2025
+ 19:41:26 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Date: Fri, 07 Feb 2025 14:39:52 -0500
+Subject: [PATCH v14 10/15] misc: pci_endpoint_test: Add doorbell test case
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250207-ep-msi-v14-10-9671b136f2b8@nxp.com>
+References: <20250207-ep-msi-v14-0-9671b136f2b8@nxp.com>
+In-Reply-To: <20250207-ep-msi-v14-0-9671b136f2b8@nxp.com>
+To: Kishon Vijay Abraham I <kishon@kernel.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Anup Patel <apatel@ventanamicro.com>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Shuah Khan <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>, 
+ Lucas Stach <l.stach@pengutronix.de>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org, jdmason@kudzu.us, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ imx@lists.linux.dev, devicetree@vger.kernel.org, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1738957203; l=6317;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=cBbHPYl59BqEWZgs9oM7up4sogl7vTD8SxSGWaSbPIk=;
+ b=8xYctc3RMTYAqWd5KEHaWPd4uhdLfAkQ6WcjDkFLnrWNCsdDAI7ZHzQ8V43vBKYI3YHgxgOtv
+ ML2YCZMRe8VC6SJ6z5Nw1/PsDVAg+Yl4hcpiH9pnVRN83JIGD8I4bF3
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: SJ0P220CA0004.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:41b::9) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6749f386-4bd0-4395-9ad4-a9663fac9bc1@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI1PR04MB9787:EE_
+X-MS-Office365-Filtering-Correlation-Id: ab585e30-19a6-4dcf-cb9d-08dd47af693f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|366016|376014|52116014|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NzlYM210YWU3YXVscjduVDBPRlM3M2FDVk9lWUx1bjZUYXpnOHNrMlNSUUUy?=
+ =?utf-8?B?Q2dvdlVXN1l5ZXBuQUMzK01zQlVtamN6N25Ma2I0SFczZUhVMUtaYXJoZDln?=
+ =?utf-8?B?RzVjclU5eG1MakJJNWZkL0ZjemtFbXVVd3RaVzRXRmNIWExFVXBnbFZIcjFM?=
+ =?utf-8?B?QWR2Z1RHbFBDWnBSWEdvWWFSN1BOUXJpMUZNaWNHWjhJdE1rT0xmWE9KaklF?=
+ =?utf-8?B?elFoU09qd1prVEk5S0tBdDdvSXVVQnljWVF4bzNCU3hKUmRvMUdGck5wRjQr?=
+ =?utf-8?B?a3FEdm43MkhEamt5SWdmTWVoL2FLQlkwL1R6MVVOV1p2NWt5K1I3OXk5VVlz?=
+ =?utf-8?B?Rkp0L2pBNDQveFVlbmZQVThleEhVOU9sQUdmMXlvem9VRGV5cHd5ZzVUNTk1?=
+ =?utf-8?B?QldBbjZTSlB2NElIY3dxTUFuVWJwY3BQT2gwekdjdjdDeTJIbWZRQ1ppRGFu?=
+ =?utf-8?B?RnNvNUNnaHAyYWhnNkpCL2JYM0g1dnBEY0Y4T0hyYnB3aEVzdTFqY3ZyZFVw?=
+ =?utf-8?B?eEVSK1VkRTNFOG9PdjJZVThpbDFrRzZ1SjRNTHR6LzJuSUNiMUxEY2FnUTV3?=
+ =?utf-8?B?T1hnVXovSENSUE8rL3dKOTZnU2k2VUN0NTFLZVRnNENFcisyRWhmb3dhSHNI?=
+ =?utf-8?B?cFVYSzZ1MWVQL29adXJoWTAzTlNacUxsa0Q5Yi9pdmp0NDFNV2dQMExGQjNE?=
+ =?utf-8?B?R2VTbzN5REZhdVhyQ1VZUTFkYmQ3QUxSMTBuVVVOLzVpWGdmUGV1TkMzQ0Fp?=
+ =?utf-8?B?RUExeHdTZjAwTjdsM0JlV2ZXSXpqekhGNWlvcjJUdXlsc09Dc1FKV3ZEVS9W?=
+ =?utf-8?B?VWlaZ3dPQmx5UXVES0daNlZQSU5mMGREMU56akZwdlZyMnFlREJRZEV0WXBM?=
+ =?utf-8?B?RG5yREVuNmFZN1poTG85d0FQTFlyWGdkcGtjR25PYkNtSzhYZ1AzMC8wZmRK?=
+ =?utf-8?B?RHNVaVR6eGczTjVoM24zL0U2MkM0cFB3WndRMDJCQzM0aVRIeE41MzVLZGdt?=
+ =?utf-8?B?dGlOa2t3dHd6ZXR4MHpuY3dCeGMyOUJqelQyK1VEZWJTeDduOWVOWjFyNWlC?=
+ =?utf-8?B?K2dOeEN6em1uSGMzcEFOSGJsa0JKTDQwamZZdEdBTEFjUE50TnhZMnhseC9J?=
+ =?utf-8?B?cm5mME5ROGFLdzZHTG5ybmR0QkhuWU1FcVZZeHlUOGh6ZEM2WE1zUjAxZ3BN?=
+ =?utf-8?B?bVZSaWVYQTdtSmFNWWFncmE5K0JNMkd2L0U5T0o1c0ZxTDRicnZyK1QwUjVE?=
+ =?utf-8?B?Rjlld2VObFc4SHU2MVJLTnIwZHIrbk9CMWY4dWZkbG9hRDI4ellPOU04YUFx?=
+ =?utf-8?B?YzBVZ2c1bnhWK2paSUFCQjM0c1IrUlR5dUpmZlY5dUx1V05Pdjd0akdFSmw1?=
+ =?utf-8?B?S2pXakgzZmlrQjNNeFlGN1JhRktyVGQyN0luM3hOUmFDZWE4aU1OU2tRd0wz?=
+ =?utf-8?B?dGRweE1sbWxoUWlOUzIwTkV3R0MyR25ZbWlMYzdTdUhISVhJd3dXWGdSMzgw?=
+ =?utf-8?B?L1hNR0ZockJtRXk2enlhREdySWlFdHlWZlFkRFdlL1B5WjhjR08vUEkySG1T?=
+ =?utf-8?B?dFVCTmpoNk16QnVMV0JhdDF0eXhGMGxCNEEvSzd0WnRBRm1KVHM3OVZDWFZv?=
+ =?utf-8?B?WFJpOHFnbDJWYzlIMTh0WnhocHo5RnFoTDhVR0ZmNTVLOVdIN3FuQ05qSUdz?=
+ =?utf-8?B?VEVxbVhvZ1dwVE9vbzJkcDN5SzgvV3QzWVJqeE9WMUs4YUtUVTB2R1FCeXNH?=
+ =?utf-8?B?NG1XcmltemlDdVl1clF0YWVvQzcwNEhFR1FacjZWSExTUTFibzg5NGhkd2hX?=
+ =?utf-8?B?QkwrcUpOQk0xM2crOWJNeE5JeFFFNXRtd0h0dFcyazFxa0lFRXdnN1FmYzJJ?=
+ =?utf-8?B?ZlFqVGNlbjhobFhBNG5PMEJCQ3lZMHFVTzNjbGIvM0U1TmJRTUp5YXk0RXpz?=
+ =?utf-8?B?Tk92dWNqMzllUS9jOXZaUTFJYS93UUZUN216c2F3M1ZXVGNyWWlYR1JLQlo5?=
+ =?utf-8?B?TmNIWmhYQ0l3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(366016)(376014)(52116014)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?V1V4VTcwc3FuTmNJeHNiWVBodTVOVVlaRnBhKzdEYmgxYUNSL1FFT2l2MmpK?=
+ =?utf-8?B?blJEeHUyVVFZa2RkQURyNmI3Vzlmb2FxdUk4UHl5ZEhTRmZxWjNZSTdieGxG?=
+ =?utf-8?B?ZGliZjM1dXVBWFhGVHJJeTdvVGpKU2J2Q2xxNzZob2Q2dmVrZzVhWWhPOC8w?=
+ =?utf-8?B?SmYzdlc3VXVySmdmOHJxWEp6bWpta01iZ0toc3lvaUcwVGUrTDVrZGxXcTFS?=
+ =?utf-8?B?cTNUdFBwZ3ViTUkrWkk1dCs2YTVwVXQzdDVRVEJpSFIyM3p1eEM2ZVdQQmhH?=
+ =?utf-8?B?MmZycStoNnlBQjh0UWJ5Mk83b2ZNZDkwOXo3WDcxTlEwOUppV2pXSDE0UHhB?=
+ =?utf-8?B?THZ1YXRzbTd3RzF3VG9ZZ3VZdUFLaHNRbWEwKzFZc2l6U3VXWSs5dnFaQjYx?=
+ =?utf-8?B?N2NUb2V0b0h5dTZUenZDTlNHVnQwNEc0dW5TWkgxbnV1VE41TzBvcVpMMjJV?=
+ =?utf-8?B?V3BJY1hNNnNHaHYyZ1NId08yQ1dGNm9nNVVTd0RLZEhXcktBZjFXQ0UzZVZ3?=
+ =?utf-8?B?MnhlUDU4N2pyZ2UwbmFhdmZYSWtJdTlsMW4xdkFqUmlHWjdMbE9ORi9Rdmlx?=
+ =?utf-8?B?R25uaVE0b2FvbEZpUXdmZFJBcThSQkJjZnNjZVFoVzYzR0tQMjVEblE0SUlt?=
+ =?utf-8?B?NmxtN01sa0RJekNzSnkzbkVBVis5THRBWFRtMW1MOVMrdUV1ZHVJMTZXYWow?=
+ =?utf-8?B?VWhFWXhxeWJKK0UyUjlSakhkZGg1Qk45cDRwd0NndWlMN3kzeDBZT0ZDRUZ5?=
+ =?utf-8?B?ZXo0U3V6d0dxa09qK2pDOFdZeVFlWnRRNDBkblY0WHpueksvemVEVzR0T25h?=
+ =?utf-8?B?VmtjckpOUHYxN3YrQjJpNGR6UGNkc2dNSVowRFo5YlhKNGo1dHFsVDAxb3Jl?=
+ =?utf-8?B?aVJSM0FSUHoxK2w1UE9icFBVdFRveTdwRVkyTUdEZkpKQWZLMVRaN2VDQkxj?=
+ =?utf-8?B?M09xenJQQ0N2d2dvMUt3N0JKa2N5UG5TblEvbXE1S2MyVWxtOFlEbUJROVB0?=
+ =?utf-8?B?VWpPUitXWlltZEU3Mzk4QzJ0bHRmRmVzVk01ci9oRFVVUWk1cGt5c0hzN28v?=
+ =?utf-8?B?bklUOHg4S3R0eWRuN0xhM3FVcHhCNW5XemZmQjZkZnFtUmFab2Z3dUpNZkZl?=
+ =?utf-8?B?QnBHOWtoSll5WnpvOWc3NjJSUjBLTUlSRFMyaHhlOXU4L0xmYmk0SzVFM1lU?=
+ =?utf-8?B?SHpaZ2kzYUpVYVZMblJzSjJkL3FaR1BpcDBSY0NDdll5WXh6Y2xSYUR3QU8w?=
+ =?utf-8?B?Qjkycm1iQ0NpZEc2SG53cE1mOFZMejZXYlkwYm9hL215Vm5hUVBBKzdtcVBF?=
+ =?utf-8?B?OFpidk1TbUwzS0FsbXRRU05LVTdtOVVnaTZkUG9JaGdGcXBqMjY2VEoyQWtL?=
+ =?utf-8?B?RUlxekpLdksxSG0yWVg4bFdKNGZncko4aVprK3FsK2VSN295eC9xcEd4UXBs?=
+ =?utf-8?B?OVVGNUQ1S0d2cThMdkowU1FOY2YycHhSWkk1MUJvSlp4K3A2WU9JalNIaTJC?=
+ =?utf-8?B?NjBWbGRUbGlOOTBXYXV5YVdmVXpUL1duY1cyWWY1WmFNUWJKbEU4L3ArNm43?=
+ =?utf-8?B?WGFQa1RPVHZBZzR5OHdld2VyR2t4SmJnTkVxMFBKdDRmeVZvaTZnVGFLdzZE?=
+ =?utf-8?B?a1hSaGovTGFxZFEveVpVc2QrbnZQOEVmRWhYY2xheWs2K0dFWmRQQjVISUwv?=
+ =?utf-8?B?dHZzeGFhQUlweElMTDhHS0xDcnZINjc0TExucXVHMnNGTUYyVnNLcGMvV1VY?=
+ =?utf-8?B?OWR0VHltWmowbldIb1dEOXlic1VKRSs2RGtaN3FCcVdzdFRubXVPQSsydzJx?=
+ =?utf-8?B?cEN6WlBkNmVNWWxXZGs5QjN6QzZlY1FtQjhzZ3lRWkl3NnR0UXF2bmpUTzli?=
+ =?utf-8?B?NFpjaVZIKzdPNkxXODdIL2RUS1pvVm5ISjdzMkp4dStOZDdVa3c1OGVUaFdE?=
+ =?utf-8?B?azBKTEI0TXF1ZU5OSlQwYXhpbUNPV2R5THRjVWRobzFhWHZ5S0diU2VKSG5o?=
+ =?utf-8?B?Mmx3RHdXZUNwS3oxTzhrRm1TdkxwZ1VHYjg1ZnU3U1dPdEVmdW9jSXFmZytY?=
+ =?utf-8?B?cWtEWlc3bTlEcnFTWmhSVk9reG9lS3paTklsUkM0WHZIWnZ1NjQwbWR3NUZG?=
+ =?utf-8?Q?MOTSggDQydb5CGGzZaEXPtoqG?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab585e30-19a6-4dcf-cb9d-08dd47af693f
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2025 19:41:26.8468
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kEk0384/YyJQIbjsikMahtUdVdEbDQxMi+XfvkzOOb9iV4aiwQJqr1hn92Kri1qb88nfJbTsmAcKLDV0flSRRQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9787
 
-On Fri, Feb 07, 2025 at 01:08:35PM -0600, Bowman, Terry wrote:
-> 
-> >> +
-> >> +		if (dev_is_cxl_pci(dport_dev, PCI_EXP_TYPE_DOWNSTREAM) ||
-> >> +		    dev_is_cxl_pci(dport_dev, PCI_EXP_TYPE_ROOT_PORT))
-> > Mostly an observation - this kind of comparison seems to be coming up
-> > more.  Wonder if an explicit set of APIs for these checks would be worth
-> > it to clean up the 3 or 4 different comparison variants i've seen.
-> >
-> > Either way
-> >
-> > Reviewed-by: Gregory Price <gourry@gourry.net>
-> >
-> > ~Gregory
-> Do you recommend moving dev_is_cxl_pci() to pci library as is? Thanks for 'Reviewed-by:`. Terry
+Add three registers: PCIE_ENDPOINT_TEST_DB_BAR, PCIE_ENDPOINT_TEST_DB_ADDR,
+and PCIE_ENDPOINT_TEST_DB_DATA.
 
-I'd have to go look around and see how much the PCI_EXP_TYPE items are
-being used for comparison and how - I was just commenting internally on
-this patch set.  If this set is the only place it's being used (so far)
-then it's probably not worth extra work yet.
+Trigger the doorbell by writing data from PCI_ENDPOINT_TEST_DB_DATA to the
+address provided by PCI_ENDPOINT_TEST_DB_OFFSET and wait for endpoint
+feedback.
 
-~Gregory
+Add two command to COMMAND_ENABLE_DOORBELL and COMMAND_DISABLE_DOORBELL
+to enable EP side's doorbell support and avoid compatible problem, which
+host side driver miss-match with endpoint side function driver. See below
+table:
+
+		Host side new driver	Host side old driver
+EP: new driver		S			F
+EP: old driver		F			F
+
+S: If EP side support MSI, 'pci_endpoint_test -f pcie_ep_doorbell' return
+success.
+   If EP side doesn't support MSI, the same to 'F'.
+
+F: 'pci_endpoint_test -f pcie_ep_doorbell' return failure, other case as
+usual.
+
+Tested-by: Niklas Cassel <cassel@kernel.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Change from v13 to v14
+- update to use pci_endpoint_test -f pcie_ep_doorbell
+- change ioctrl id to fix conflict
+
+Change from v9 to v13
+- none
+
+Change from v8 to v9
+- change PCITEST_DOORBELL to 0xa
+
+Change form v6 to v8
+- none
+
+Change from v5 to v6
+- %s/PCI_ENDPOINT_TEST_DB_ADDR/PCI_ENDPOINT_TEST_DB_OFFSET/g
+
+Change from v4 to v5
+- remove unused varible
+- add irq_type at pci_endpoint_test_doorbell();
+
+change from v3 to v4
+- Add COMMAND_ENABLE_DOORBELL and COMMAND_DISABLE_DOORBELL.
+- Remove new DID requirement.
+---
+ drivers/misc/pci_endpoint_test.c | 81 ++++++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/pcitest.h     |  1 +
+ 2 files changed, 82 insertions(+)
+
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index d5ac71a493865..7ac021bcc7152 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -42,6 +42,8 @@
+ #define COMMAND_READ				BIT(3)
+ #define COMMAND_WRITE				BIT(4)
+ #define COMMAND_COPY				BIT(5)
++#define COMMAND_ENABLE_DOORBELL			BIT(6)
++#define COMMAND_DISABLE_DOORBELL		BIT(7)
+ 
+ #define PCI_ENDPOINT_TEST_STATUS		0x8
+ #define STATUS_READ_SUCCESS			BIT(0)
+@@ -53,6 +55,11 @@
+ #define STATUS_IRQ_RAISED			BIT(6)
+ #define STATUS_SRC_ADDR_INVALID			BIT(7)
+ #define STATUS_DST_ADDR_INVALID			BIT(8)
++#define STATUS_DOORBELL_SUCCESS			BIT(9)
++#define STATUS_DOORBELL_ENABLE_SUCCESS		BIT(10)
++#define STATUS_DOORBELL_ENABLE_FAIL		BIT(11)
++#define STATUS_DOORBELL_DISABLE_SUCCESS		BIT(12)
++#define STATUS_DOORBELL_DISABLE_FAIL		BIT(13)
+ 
+ #define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR	0x0c
+ #define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR	0x10
+@@ -67,11 +74,16 @@
+ #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
+ 
+ #define PCI_ENDPOINT_TEST_FLAGS			0x2c
++
+ #define FLAG_USE_DMA				BIT(0)
+ 
+ #define PCI_ENDPOINT_TEST_CAPS			0x30
+ #define CAP_UNALIGNED_ACCESS			BIT(0)
+ 
++#define PCI_ENDPOINT_TEST_DB_BAR		0x34
++#define PCI_ENDPOINT_TEST_DB_OFFSET		0x38
++#define PCI_ENDPOINT_TEST_DB_DATA		0x3c
++
+ #define PCI_DEVICE_ID_TI_AM654			0xb00c
+ #define PCI_DEVICE_ID_TI_J7200			0xb00f
+ #define PCI_DEVICE_ID_TI_AM64			0xb010
+@@ -111,6 +123,7 @@ enum pci_barno {
+ 	BAR_3,
+ 	BAR_4,
+ 	BAR_5,
++	NO_BAR = -1,
+ };
+ 
+ struct pci_endpoint_test {
+@@ -829,6 +842,71 @@ static int pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
+ 	return 0;
+ }
+ 
++static int pci_endpoint_test_doorbell(struct pci_endpoint_test *test)
++{
++	struct pci_dev *pdev = test->pdev;
++	struct device *dev = &pdev->dev;
++	int irq_type = test->irq_type;
++	enum pci_barno bar;
++	u32 data, status;
++	u32 addr;
++
++	if (irq_type < IRQ_TYPE_INTX || irq_type > IRQ_TYPE_MSIX) {
++		dev_err(dev, "Invalid IRQ type option\n");
++		return -EINVAL;
++	}
++
++	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
++	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
++	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
++				 COMMAND_ENABLE_DOORBELL);
++
++	wait_for_completion_timeout(&test->irq_raised, msecs_to_jiffies(1000));
++
++	status = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS);
++	if (status & STATUS_DOORBELL_ENABLE_FAIL) {
++		dev_err(dev, "Failed to enable doorbell\n");
++		return -EINVAL;
++	}
++
++	data = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_DATA);
++	addr = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_OFFSET);
++	bar = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_BAR);
++
++	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE, irq_type);
++	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, 1);
++
++	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_STATUS, 0);
++
++	bar = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_DB_BAR);
++
++	writel(data, test->bar[bar] + addr);
++
++	wait_for_completion_timeout(&test->irq_raised, msecs_to_jiffies(1000));
++
++	status = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS);
++
++	if (!(status & STATUS_DOORBELL_SUCCESS))
++		dev_err(dev, "Endpoint have not received Doorbell\n");
++
++	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
++				 COMMAND_DISABLE_DOORBELL);
++
++	wait_for_completion_timeout(&test->irq_raised, msecs_to_jiffies(1000));
++
++	status |= pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_STATUS);
++
++	if (status & STATUS_DOORBELL_DISABLE_FAIL) {
++		dev_err(dev, "Failed to disable doorbell\n");
++		return -EINVAL;
++	}
++
++	if (!(status & STATUS_DOORBELL_SUCCESS))
++		return -EINVAL;
++
++	return 0;
++}
++
+ static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
+ 				    unsigned long arg)
+ {
+@@ -879,6 +957,9 @@ static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
+ 	case PCITEST_CLEAR_IRQ:
+ 		ret = pci_endpoint_test_clear_irq(test);
+ 		break;
++	case PCITEST_DOORBELL:
++		ret = pci_endpoint_test_doorbell(test);
++		break;
+ 	}
+ 
+ ret:
+diff --git a/include/uapi/linux/pcitest.h b/include/uapi/linux/pcitest.h
+index acd261f498666..80f4c0e05679b 100644
+--- a/include/uapi/linux/pcitest.h
++++ b/include/uapi/linux/pcitest.h
+@@ -21,6 +21,7 @@
+ #define PCITEST_SET_IRQTYPE	_IOW('P', 0x8, int)
+ #define PCITEST_GET_IRQTYPE	_IO('P', 0x9)
+ #define PCITEST_BARS		_IO('P', 0xa)
++#define PCITEST_DOORBELL	_IO('P', 0xb)
+ #define PCITEST_CLEAR_IRQ	_IO('P', 0x10)
+ 
+ #define PCITEST_FLAGS_USE_DMA	0x00000001
+
+-- 
+2.34.1
+
 
