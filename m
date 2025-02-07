@@ -1,118 +1,94 @@
-Return-Path: <linux-pci+bounces-20895-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20896-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49D01A2C3E8
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 14:41:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E7CC3A2C410
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 14:47:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6BF703A4529
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 13:41:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E4F6188DFD6
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 13:47:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C215E1F417A;
-	Fri,  7 Feb 2025 13:41:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 574621EDA3E;
+	Fri,  7 Feb 2025 13:47:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V8keFPHi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rfjvOGqn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350891D61AC;
-	Fri,  7 Feb 2025 13:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A62F13BAE4;
+	Fri,  7 Feb 2025 13:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738935676; cv=none; b=FUD5d1rUjJvzWGZy6RkxdR/VClH4nkDVo7xIaV9nLrSeiO1P3UKow+k184lOmqtnf1dL2H1+KyLZNYCGNmyj8J+Ydwp2N+fd10MPabT6oOYv1al1+o+7GeSz/nM9dv0JQakxkQnExSXFmaoaRgTClYQbfRAhT4SY22l8pxeTtqQ=
+	t=1738936061; cv=none; b=IuF29jndPLRBItLwhTVnJfUfykTevSqTJnnQwRq3XOwE+nzLmIQlV6MnBTKdeKM6Lxv/nqHktVki0wZ4/NogrgVMoHXqpwer2fGSUozwDZbfW2XMeyqkOk3biff5551L9rU1Kq5aqRFOyeV1r5UxxOQHn9Sn2e09kxAUDIpgNvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738935676; c=relaxed/simple;
-	bh=DVhuDK56jFHQaEvFXFTvW7N3oqzH9vN5MkrlzTfQ7pQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ptF/Vufw6faVQd1fspuMJmm/yEDj4X5kkOEmPi3sPY/ZW5iVt8LSzbx84AshAeqzj4fLkowjRhjS1tEuhH5hNmbTHVYJaIlQ8pyTPjDgmv7P9G/tY7evMYdSvUNzOPQQHna5LWy9ZGB4mJTFj7d9UuehpjDda9n95lLyT0gjVYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V8keFPHi; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738935675; x=1770471675;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=DVhuDK56jFHQaEvFXFTvW7N3oqzH9vN5MkrlzTfQ7pQ=;
-  b=V8keFPHiIMR8Sgkm97Olc4PrHUTv0vN7n8psIvrxKBvQDU2FV093nbMB
-   dh6IAUubtFpa0pkoHZSsucfHfWzn4eHwhVvehzimcCHqpfVyHABkk6SSq
-   nNRMWHcvQeP86j5OvXQdZeQz1HNZIkPhrdGfH+S4YSuIPNw7h1Yx6bPEP
-   sd/nRFUY9BptbHxvP7URhOat1PMSiAMx54H3UkQ0igyj3dn6ALSbhhlNr
-   jx6puw3gPoGymAtZRhQrHHPQuEaxctJIvaSay8RvG3s183Ak3r/Z9MLoh
-   fGu9oRkNYxabViF+lLPhhlkKPfLp1ZaSrSKWW0FyE9EWLORqUwqKW6Qbn
-   A==;
-X-CSE-ConnectionGUID: xH/ooRo2Rh2ifOosOQjAZw==
-X-CSE-MsgGUID: XyJ35utjRS6LWLupOfgH5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="38805323"
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="38805323"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:41:14 -0800
-X-CSE-ConnectionGUID: 0c66oyQZRumw5fZ85etKlg==
-X-CSE-MsgGUID: 7vqOUHQVSmyZCqDRNsUP7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115616385"
-Received: from hrotuna-mobl2.ger.corp.intel.com (HELO [10.245.246.100]) ([10.245.246.100])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 05:41:11 -0800
-Message-ID: <ef0da9dc-3fc8-477c-9605-8951fd9aabec@linux.intel.com>
-Date: Fri, 7 Feb 2025 15:41:38 +0200
+	s=arc-20240116; t=1738936061; c=relaxed/simple;
+	bh=uBQ1famFvoY/Lcb70uekbtaFYTvtmzkryqa2fAmSOkI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rebonv8DHrSVWB0/G532t6Oq0buXisjiwjyAg6QxwDEDBKav7VWHhnYro8aF+w/TrRqoEl5Htd3JqAfPmWRZCrNYP54SDxkaGoKfbFyxZh5HjVzCLUvsejFkRVEvwGMuZ+rz6SFqoMRpmIlTHbUlPYyunmXc6ca/XMPK4Bf6j6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rfjvOGqn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5142C4CED1;
+	Fri,  7 Feb 2025 13:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738936061;
+	bh=uBQ1famFvoY/Lcb70uekbtaFYTvtmzkryqa2fAmSOkI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rfjvOGqn5r4Wt/uPvxR/qvXnndAyOkkGyZkFqFlXZiBMzNfLUZAXY82JDM3xF6vd1
+	 RGG5c+7MTMZctAUR13iw37mXChAort3mfxWceiJ8f+5YiSzSmQVMcD2RFT9J6jQrvz
+	 OzKxjY556U8OilPIzxZ2nNbnp61cETPoGT4QGpSE2MFDMvSV8IjWn1+TRlY+Vk06oU
+	 Zpe/7Q5B3fTMvyrGrIdoNJ2Zu7pArA4A4gJJYR/MOk+WeXC4lVRa2LmdFVcZDXRKSH
+	 XEtU7IeOaNCNDWJb2NJXjH1Gwcwvw3++INDx8gwXyPM6gMF3jRGchZCWxPZolMeu4y
+	 StnPiVqfIleXg==
+Date: Fri, 7 Feb 2025 13:47:36 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Cc: lgirdwood@gmail.com, linux-sound@vger.kernel.org,
+	kai.vehmanen@linux.intel.com, ranjani.sridharan@linux.intel.com,
+	yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] ASoC: SOF: Intel: pci-ptl: Add support for PTL-H
+Message-ID: <a4836940-ebbe-422c-a5f9-fdf83f84bd47@sirena.org.uk>
+References: <20250207133736.4591-1-peter.ujfalusi@linux.intel.com>
+ <20250207133736.4591-4-peter.ujfalusi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] ASoC/SOF/PCI/Intel: add PantherLake H support
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
-To: lgirdwood@gmail.com, broonie@kernel.org
-Cc: linux-sound@vger.kernel.org, kai.vehmanen@linux.intel.com,
- ranjani.sridharan@linux.intel.com, yung-chuan.liao@linux.intel.com,
- pierre-louis.bossart@linux.dev, bhelgaas@google.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Takashi Iwai <tiwai@suse.com>
-References: <20250207133736.4591-1-peter.ujfalusi@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <20250207133736.4591-1-peter.ujfalusi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="G3YjZ3bA0oD0VIhI"
+Content-Disposition: inline
+In-Reply-To: <20250207133736.4591-4-peter.ujfalusi@linux.intel.com>
+X-Cookie: MMM-MM!!  So THIS is BIO-NEBULATION!
 
-On 07/02/2025 15:37, Peter Ujfalusi wrote:
-> Hi,
-> 
-> The audio IP in PTL-H is identical to the already supported PTL but the
-> PCI-ID has been changes due to the differences in the product's
-> configuration outside of audio.
-> 
-> To support PTL-H we really just need to wire up the new ID.
 
-Somehow I have missed Takashi-san from recipients list...
-Cc-d in here, sorry.
+--G3YjZ3bA0oD0VIhI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> Regards,
-> Peter
-> ---
-> Peter Ujfalusi (1):
->   ASoC: SOF: Intel: pci-ptl: Add support for PTL-H
-> 
-> Pierre-Louis Bossart (3):
->   PCI: pci_ids: add INTEL_HDA_PTL_H
->   ALSA: hda: intel-dsp-config: Add PTL-H support
->   ALSA: hda: hda-intel: add Panther Lake-H support
-> 
->  include/linux/pci_ids.h       | 1 +
->  sound/hda/intel-dsp-config.c  | 5 +++++
->  sound/pci/hda/hda_intel.c     | 2 ++
->  sound/soc/sof/intel/pci-ptl.c | 1 +
->  4 files changed, 9 insertions(+)
-> 
+On Fri, Feb 07, 2025 at 03:37:35PM +0200, Peter Ujfalusi wrote:
+> PTL-H uses the same configuration as PTL.
 
--- 
-Péter
+Acked-by: Mark Brown <broonie@kernel.org>
 
+--G3YjZ3bA0oD0VIhI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmemDvcACgkQJNaLcl1U
+h9BwUgf+Joou1s8rR6AWZnJd02P/O2SCnnLlZkkobECLp/tl+v5Rchvh8SR17bT8
+JLZgUsVQ8em1X82PZ5gjchnfFSgMa8/vpKfryIBFlJ9G1lMIVN/v5iVvZE2U++DP
+Bwpp68d4SKag8k7T9F6kwFZ/4uoErFcm6n5xa7NybQuRQaX/XIHh6WTvIgBKxDkQ
+9FGAwaCOpjdyrc1xFGHg58FFezAPdFbxItYuut8+OKkD6MqkmSBSJQYa8umi9ZFf
+Z3F91neUYI8A7ASQN9UMnRqgjqzYtH6DV7uD7SQNk33KKE31jAlnZsWl/RYxkAGf
+NAyzEiD8mQa+k620ni7MLLHuRl0Lgw==
+=JgLV
+-----END PGP SIGNATURE-----
+
+--G3YjZ3bA0oD0VIhI--
 
