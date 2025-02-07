@@ -1,121 +1,135 @@
-Return-Path: <linux-pci+bounces-20859-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20860-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7671A2BBF6
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 08:01:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E7B1A2BC41
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 08:30:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B0C871886A39
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 07:01:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D2C73A7FD0
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 07:30:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECD9B235BFA;
-	Fri,  7 Feb 2025 06:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B265C1991AE;
+	Fri,  7 Feb 2025 07:30:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jQMvUHgv"
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="QUmg4KVO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513DD19A298
-	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 06:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D010318A92D
+	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 07:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738911574; cv=none; b=r/Id+Y7BO9rn3lA3tT4PCydhOmh+8xTNxplv/lZyxy/0xirQ2a8nZoGi93wLTUcusTr9AGARHRYSjkjhkumRvhycTlj6PZsBSGOtYOaLTabI9XhdlxKbN2iiTaSxAB/rL/4MYQkhj7tkcMiywD/myafnssQ3NZq0SvP97HCWZi4=
+	t=1738913419; cv=none; b=YSH4uC1zxXJ5m1VGd02na0+tZoBG0UTYb3QRCNonQzEfRU0JodWl+vE/dr1rCGGWI12QVH2y63CcpQowKLoLhxxANhuWenpSJT6AyV8vjzaJJcbRe5KZW62IeT/GBuvCQkiR9P+LloPwB+oAsYs46orgtU3GPQRHfMB1sToUhd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738911574; c=relaxed/simple;
-	bh=6kaouR7oZgNLN17kEeH+Pxk7KmscGY+LGC8DZcas6YQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=l5dYibLKgcD5MqkMosFFXe7XFyJnwQIZV4ILMuPlS9kQl6mdkuQgcZngM1lEzFM6owGoygGaNwKtu+OLYEEX/sNXAju5K7tQla+t9gmYKDRl4ITl7x1quXhG8K0rIGoYC7atp/u2IADNvbt9kls08lIxHJrKrpHNsvXdtKZ8FeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jQMvUHgv; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2166f1e589cso44284705ad.3
-        for <linux-pci@vger.kernel.org>; Thu, 06 Feb 2025 22:59:33 -0800 (PST)
+	s=arc-20240116; t=1738913419; c=relaxed/simple;
+	bh=UJ/X1bqhgQUvz5mZeiZ7mu1qy+hSSJPVO7P9gCXAgpM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HqRJK4tGsqCTqPzlAwiiUICrc9sbd/3+pe+xrXKjHRVu61p7SmmgQZ5Z86xGoBa4Pgj7AKjuRxseMtyUvZ0GT5c33MQ/LPgSHr/PIJw5S/l199LVHsXw0m7pkB4jbuS+E1eenmN7+rgcQP1FxT4WoJXv0zZskB17nwD4MfYVpAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=QUmg4KVO; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7b6f95d2eafso193751585a.3
+        for <linux-pci@vger.kernel.org>; Thu, 06 Feb 2025 23:30:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738911572; x=1739516372; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=W679lNgXvpPBehgEqKaCNaQXg+NBsATD/PMGTi0DCZQ=;
-        b=jQMvUHgvhqshc1UDYlbmrn7hqzKAA/xWfHWqExxrt5kGXZIwAatmqk4K8bxLgf09CD
-         BI1of/w7CPPv2OC/bV20MX0bbYP+miLMF3LFD74xrAmheqJaBM+1O3bnkpDcaMXq/Y8+
-         iiF8IdWi1XlT05eFIt9/p5K04KuodMeWbf7F0zQ8v704jds+1JU32OG8lZJDvppe8o7B
-         4gWcuNNImslOa7CMbEVomrRbcDzfnw55BaxYVl8LmyqUMrJdp1yveAOUsXQzTbKhXHaK
-         6Yd1HaGVyZ+vwCtKTJvElFGUS46Lc5MkB9/8dWHmgnIMTqhax5/0790QcNk9n34GHefV
-         YN0A==
+        d=gourry.net; s=google; t=1738913415; x=1739518215; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oPFVTqdvqhZPbZ75tXTbpYN0u9AO7uq3Z5LkOr9vDgk=;
+        b=QUmg4KVO//ZOMjblIhmUd0wAkIb0y/DVT082yrB2YAiEoL5XBk4DrJ/O+kYMFCS0dr
+         gu53Q3nNaauskTEGqfecPrVveTP+68vp8AJRSduWPyK0z5rWqB2kKUiA/G/8w1TF5efL
+         Bwo/ke4dAQV+Ts/HuZKHYinRZ1hgH+aCXUE3UHUp0QMI4/z9Qvd6wutMkhn77UEw24Lk
+         lncrA8vur+aUhjjpwe4J8MUWLQSZqNWWLTYOznyqn5ldgVFgWdVMms3RyiONd0analJD
+         sd30GmggwX1/Pug2I2kYvQYvq6q4UWE/eh4z+OrhK+CHyIGvF/rpBw1qqUXLazNmBSVF
+         krbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738911572; x=1739516372;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=W679lNgXvpPBehgEqKaCNaQXg+NBsATD/PMGTi0DCZQ=;
-        b=Qs3tmPPm8apXkBTEx7lxFeMfCJsnR568RyMTNqCvwX63a/fVmYj00lHX36NUUkB7Ec
-         A9RW1ksXvy88FarZCvOuBapzYco+SGxZwdGUoFZEwi0vjjoDjIX/KZuoRHXFctNakjVK
-         VNMiTQwkg+FjOjoYjBKEvJwFbwKS7nKaHrxXzyl9PIuNdfa8ulcoz+PeU+mGEJi2swiH
-         o4KfYAWYtwWcDNW/LW+sSShbPXr9Nj6+ZT1x+PGuZVCUQtse9xlwsG7X4cVrnGHqOauv
-         sxdIQkYb7Al0euCVNZdqyeTn20cbdZH4aBY1L7qnl6rfGRYa562QYEHV/3RYbAqSa6S6
-         Kudg==
-X-Gm-Message-State: AOJu0Yy25DIrdk4PH1uim/rfyy0C0k027le5vl4skr3vl4S7/o84tk96
-	qffRd9kakW18cubhBkJS1EAdl1PPVKfd06Kuhy1b4Ya4Lks+gFsCYfJKpoUWiQ==
-X-Gm-Gg: ASbGncv9hUiWCjLUG18Ilfw7ZO+EOa86kHmDVM+Q4JVKnEF2cUy4GzjHysYOAaQCCjt
-	1+3MQNA6LGai97opG8kDwqnRpa37THlyhBZKceDsrSHtpXlpGoLHcHrpAFSilxt7Bg3DqVJdOHR
-	7jvPGxVSiqKVbdPXGusZ6gAOSRwn4eemMu0iJ6haiC0Y6oLL1QU/USA20wlSRO/KfqYhqjs7pTx
-	vl3yKi1SC2rHCAkiu7CD7wQ7bPTeHQB5ukR5uXeuHLsOskkXKzDDq3KXzNOJqSM6mFuEa12AhKu
-	BubYHctJXv/gKB0RvTI0297SSw==
-X-Google-Smtp-Source: AGHT+IF2LpdEJOzHM/r4B4JdjSv0QcjVX0ilM/S1u0uF9+87CF7k8lNOP5/Clx4J5u89poWFyLFT4w==
-X-Received: by 2002:a05:6a20:43ab:b0:1ed:a4e2:8631 with SMTP id adf61e73a8af0-1ee03c00212mr4065052637.38.1738911572638;
-        Thu, 06 Feb 2025 22:59:32 -0800 (PST)
-Received: from thinkpad ([120.60.76.168])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ad51ea79a47sm2226085a12.76.2025.02.06.22.59.27
+        d=1e100.net; s=20230601; t=1738913415; x=1739518215;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oPFVTqdvqhZPbZ75tXTbpYN0u9AO7uq3Z5LkOr9vDgk=;
+        b=W26Gge3du9weOJUfU8m16ZT7l8Z1kTmR9HIhiBA/Qfw2EoQvlrwVZjnvcM3ToV1I3V
+         xjnKdC3O64Ce/dfqXsJw70Es9M/mxXGqt4Zr44KM6PtuvByMhNpV30uDd994I4Vvv4cE
+         TI8gYz54GAhrPh6XmMEFnRiNPN5MVK/+cWBW2PKpglnMG/utmcvanGSRjvoaQN+9Buxi
+         jw89wefk4sR0dMck5t+IIVd9FDdxojsCKpChha+GtEA8/cCuhl66OZKi+kfNiZasT4Mb
+         hnQxzORKSK/8RIbKT78MEFQ0aivsR3+v9RInng98NPJKU1zaHJ7KHxD6xfp2mYLS+e6i
+         xX3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWvIZIkb5gPpml8AMbsxMxWPKySK0IogNNiL8ROZI1GVb6WSfAiylAP8zkyND6Y4ZCYjAZDJBrMVb4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUeLdM1pi5SjExiQBlsJbuQRucNVccwI4C3Dz0lbymOn+SwEOA
+	Di2AvgSxkXgrg89RD6xR+bxP0kyITVXoKpqZ975FEvvuGlkbgvtDkbpMtPNK9zU=
+X-Gm-Gg: ASbGncssQNiO768Ym+QvSXT+6a3WtdwQN2eMJTFIqomBNGtFsKDRYq2HvJStU57O8cV
+	CQvoDyuVhKmBDz9GA3u8b8pmQEZ9tQS1ykjPxh8q8o4cBQZjda3K9iNsi5JZ4SSTCFerpf+y79m
+	GrOeeEhs1r8uQ0Br/tPs1uGRLO80tXcMAGo54fpcmaXdK0rzSml4RdNAb8Eswn9VKgqY4BHng/q
+	QCae7RHvU6ceCYreKFH0i8DsbILkvTHFgtn646cOmE9K9PevgdyHeJOAlOgQqNf5jWvmsAcoxrM
+	LdkRr0sQ9MbKTfeQjuFUXOt3/Cl9/+toyIx/lOF8dXqN9Eal6NB5vhHP+v2mpSZY6CNZrmJUog=
+	=
+X-Google-Smtp-Source: AGHT+IGTJPM+Z54YDmRhIyxJSdkL86rCqVxm6xIrfmJkTfPa05ZDK3edZmGObvoT1vj6Sn3CLYdpzQ==
+X-Received: by 2002:a05:620a:4448:b0:7c0:b82:8f90 with SMTP id af79cd13be357-7c047c2139amr359435985a.35.1738913415678;
+        Thu, 06 Feb 2025 23:30:15 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041e9f917sm157836585a.79.2025.02.06.23.30.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 22:59:32 -0800 (PST)
-Date: Fri, 7 Feb 2025 12:29:25 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Markus Elfring <Markus.Elfring@web.de>,
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-	Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Michal Simek <michal.simek@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
-Message-ID: <20250207065925.6u7bemyn2aireiii@thinkpad>
+        Thu, 06 Feb 2025 23:30:15 -0800 (PST)
+Date: Fri, 7 Feb 2025 02:30:12 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+	rrichter@amd.com, nathan.fontenot@amd.com,
+	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com,
+	alucerop@amd.com
+Subject: Re: [PATCH v5 08/16] cxl/pci: Map CXL PCIe Root Port and Downstream
+ Switch Port RAS registers
+Message-ID: <Z6W2hFI7UsEslB3U@gourry-fedora-PF4VCD3F>
+References: <20250107143852.3692571-1-terry.bowman@amd.com>
+ <20250107143852.3692571-9-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <60c5504d-341f-4ce5-b337-1eca92a9506f@web.de>
+In-Reply-To: <20250107143852.3692571-9-terry.bowman@amd.com>
 
-On Fri, Feb 07, 2025 at 07:39:03AM +0100, Markus Elfring wrote:
-> > I don't *really* like guard() anyway because it's kind of magic in
-> > that the unlock doesn't actually appear in the code, and it's kind of
-> > hard to unravel what guard() is and how it works.  But I guess that's
-> > mostly because it's just a new idiom that takes time to internalize.
-> How will the circumstances evolve further for growing applications of
-> scope-based resource management?
-> 
+On Tue, Jan 07, 2025 at 08:38:44AM -0600, Terry Bowman wrote:
+> +static bool dev_is_cxl_pci(struct device *dev, u32 pcie_type)
+> +{
+> +	struct pci_dev *pdev;
+> +
+> +	if (!dev || !dev_is_pci(dev))
+> +		return false;
+> +
+> +	pdev = to_pci_dev(dev);
+> +
+> +	return (pci_pcie_type(pdev) == pcie_type);
+> +}
+> +
+> +static void cxl_init_ep_ports_aer(struct cxl_ep *ep)
+> +{
+> +	struct cxl_dport *dport = ep->dport;
+> +
+> +	if (dport) {
+> +		struct device *dport_dev = dport->dport_dev;
+> +
+> +		if (dev_is_cxl_pci(dport_dev, PCI_EXP_TYPE_DOWNSTREAM) ||
+> +		    dev_is_cxl_pci(dport_dev, PCI_EXP_TYPE_ROOT_PORT))
 
-Please ignore the comments from Markus.
+Mostly an observation - this kind of comparison seems to be coming up
+more.  Wonder if an explicit set of APIs for these checks would be worth
+it to clean up the 3 or 4 different comparison variants i've seen.
 
-Reference: https://lkml.org/lkml/2024/5/20/724
+Either way
 
-- Mani
+Reviewed-by: Gregory Price <gourry@gourry.net>
 
--- 
-மணிவண்ணன் சதாசிவம்
+~Gregory
 
