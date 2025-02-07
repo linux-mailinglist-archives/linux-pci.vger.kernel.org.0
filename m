@@ -1,273 +1,138 @@
-Return-Path: <linux-pci+bounces-20850-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20851-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14B74A2B6AE
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 00:42:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C3AC6A2B720
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 01:27:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 98A2B1675C8
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Feb 2025 23:42:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5A12C166297
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 00:27:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA19C21504A;
-	Thu,  6 Feb 2025 23:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FAD64A1E;
+	Fri,  7 Feb 2025 00:27:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FdkH8nm5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jw2bLgFx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3272417EF;
-	Thu,  6 Feb 2025 23:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738885369; cv=fail; b=a02nho/IoqQfrSIMdYBqBbWbhshNA/aEqm4qPhVxkPIutASNQ86NVYLlGT4js6jaIrwKbcfQJdfkuXTVqg26NMr3NOD+Iqz9qdhukjx3g6FRl/Or+GIQzD4xpxDNO0b297tERo1xy1n82gQ/4NnyI2QP2vYOtl+99hh5hxoEBXM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738885369; c=relaxed/simple;
-	bh=Qk8EPFORV5myx6IHohDk278zBDmQvG6geU0nijytT74=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=cp9Tm3YJodLwnEKYDUnkyzIa/+r4xvYAsGEMubB/APdE/88mcsZbfENEagkHgvJOcmBgnstoO6E2RlCym/ABz+HDRrvPcHYnNhMVcR9X477hYHd0uyhWbm5wRagN0w88K1+6kOaNPOF1Nol3f54EaWice7x7RfxwMYxYIoqldmQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FdkH8nm5; arc=fail smtp.client-ip=40.107.93.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dTj1r7weWAW/pWZDhQT1TUOn4inCys4WYynHmpwVWUEitps8sStLCPcqQWjzLqJroKzJGJE4VxwUFhtHdFTq0myIShKKkxjeVPKIuWdx1Mi/RWWJbTfEKOuEyrq0s0ZqgTLvN/nMsiQQ2k97zIoMbeIo+ZmVXLdChQ1xm2BJfVeuMoCPeB97XlAg2rf3bqwdFsGA0pqquD8BZvPXkeUXuqmfFFOZcdnmx6MPzvLG4TDKmd3khTGHuu/P5lUYF8w2/5nvwdQPYGWnP41Or7/tvaiFFJVXVIklKdW8sa3L4q7IliupQNhmEfzMuS7v1EqvCt/DnYIulCzDaGJ1qmE7KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gtBVAeW+NdfKsfI9Tx/jhi34oQLL8DU7Fbu8PZLwZi8=;
- b=GNxKaksMGu9Z2yVhzMBaBqm93/T/cxNMR5NZEZcPWEQ6SeWU5341yjK/zkMoSob2VhsGunZ1XBVFX1Dctv0h0d/t/7fpFVp76oq86jET2JSHgHaSBtF1HN3i/RfesCN08XOZF6XMs5jaHtLh2Hh+/+i/R/baUAUhxg8zUnZawCb5mahW3Eq28IPHXaFMj/5Vcx9ZY1c4Kby4TPMX1aMlLeoFXsarYejQBwy9PgIH2Yx//yXGKNVuwnC2g9Czom4HVCT01Dr9QB3Ee8B+wgs+xYM+0l07CEfdN9RGKgMdYvmtJAQZKzhGrC10TreEr8NHEXPQrh5kqdGwFoRPk6e9Jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gtBVAeW+NdfKsfI9Tx/jhi34oQLL8DU7Fbu8PZLwZi8=;
- b=FdkH8nm5AlTJhfiuMCTIQm5kirjCHd+mQm7rvhOHRvy1MBwBjNICLyd1gA03YXF74xBFoyrCCquCjL58ujhikAQ+EgRVcTOyshnC8rBTAp8Kq7X7nmAy/OVmGU7bbobKIlo+jfZ0+rV9f/VkCeNm8rK6mQEmBAWMpQnP7pEv1tgpMk0s/X38AOZX+U5WiQmYpVcCiQqXJ8gSXynLwqKPJVIrEVAxJ6rm97u9wpLaT8s0qQTNkJBKifVymRzU3wKZnscKgSjgGBoV50+pp/qIa7WBq3+ECoyxNESazvo2BNmr+R9IdEU4FDX07Mnr1OL7iUWcy4UUfCUqgCUbpA/6aQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SA1PR12MB7272.namprd12.prod.outlook.com (2603:10b6:806:2b6::7)
- by SA1PR12MB7444.namprd12.prod.outlook.com (2603:10b6:806:2b3::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.12; Thu, 6 Feb
- 2025 23:42:44 +0000
-Received: from SA1PR12MB7272.namprd12.prod.outlook.com
- ([fe80::a970:b87e:819a:1868]) by SA1PR12MB7272.namprd12.prod.outlook.com
- ([fe80::a970:b87e:819a:1868%7]) with mapi id 15.20.8398.018; Thu, 6 Feb 2025
- 23:42:43 +0000
-From: Balbir Singh <balbirs@nvidia.com>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	apopple@nvidia.com,
-	jhubbard@nvidia.com,
-	jgg@nvidia.com,
-	Balbir Singh <balbirs@nvidia.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <kees@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v2] x86/kaslr: Revisit entropy when CONFIG_PCI_P2PDMA is enabled
-Date: Fri,  7 Feb 2025 10:42:34 +1100
-Message-ID: <20250206234234.1912585-1-balbirs@nvidia.com>
-X-Mailer: git-send-email 2.48.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SY6PR01CA0041.ausprd01.prod.outlook.com
- (2603:10c6:10:e9::10) To SA1PR12MB7272.namprd12.prod.outlook.com
- (2603:10b6:806:2b6::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A792114;
+	Fri,  7 Feb 2025 00:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1738888026; cv=none; b=n/VmTArMUDtUhfGS9teNlA8EIBDvgpmmSb72KYI82EMtv+CERfiQ7Kr6aIfXRLVt6A2PTCV6S/VGoT29KK2AaNZtaFrYPjz94C58v6cqdeWhlWU8/+wYo96aGJtS9/VAxQxdPqGZe5ndcjl7CNiFAzgb2RK6gJs7ZbgF0ewANpk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1738888026; c=relaxed/simple;
+	bh=ReiMhCLMlTNgHwo9FPKsO3ylp9nDTKWc4Br0gNb2CkQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OZaMxRaCo5WBo3y6KI6jjo7VroF1vCvvP2lKKMIMLA9yn7a9CKKRA0WhJkgXCKpMA53iIa4kZdeZq20MmZtULkKvVivbK2Uppu5deQyEGhRYCqUkSqS8fF/u8b2Mr0UYiPG2hHwAwllC9iBWoQzbDQzx5ppXZi9WOTCSJ6Chse8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jw2bLgFx; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738888025; x=1770424025;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ReiMhCLMlTNgHwo9FPKsO3ylp9nDTKWc4Br0gNb2CkQ=;
+  b=Jw2bLgFxPt59XCtisF8DK8ca1h7SCRE7DcuSCCKDRJcSclejyA3fEi7H
+   +LwcR9SYKtLYHoXwmfQo6CLvjWFIoZMO7t96goRfVRIAPhlGNPqMoc4YW
+   ECg9T2TXw03tzXhE22+pO++0HtezHqFsdALbK6fxrm0OOWT2NxMJrK2hk
+   c2MdfwJeUXqCRev52WtZdtgS7unqoFz9vBlKOkF2UP6uzttI3j7KFFAI0
+   M2ytFpSwksaHRj5D5zDaiO3zbMvvN4n9nWIvVpxQnyqIu8s1lhu4W7V6n
+   yeBQpMkIef44O31/ZMfLB+i+0my9ssvQj/LUFFq2oMHQOeFu+ZA+zfDkx
+   Q==;
+X-CSE-ConnectionGUID: ZtPiQNbPTUqD0hfvWCMwgw==
+X-CSE-MsgGUID: sTqh7MJNTqisAjKkO3F7xA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11336"; a="27125902"
+X-IronPort-AV: E=Sophos;i="6.13,265,1732608000"; 
+   d="scan'208";a="27125902"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 16:27:04 -0800
+X-CSE-ConnectionGUID: w2bqmIqASrWez6DyJoBWdQ==
+X-CSE-MsgGUID: uBn19G2jSIGHsaVqAxQn7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="134604463"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.111.17]) ([10.125.111.17])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2025 16:27:02 -0800
+Message-ID: <76d970d7-e183-4c7b-addd-3b00fa39f9b6@intel.com>
+Date: Thu, 6 Feb 2025 16:27:04 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR12MB7272:EE_|SA1PR12MB7444:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2917f440-9095-4a1c-551b-08dd4707f3a5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ysHWtZFT+JtPZiNvI4AzI5n8K6T89yNbE1MScfLUiGSKb4yZ+vhShyrFsWxe?=
- =?us-ascii?Q?jkRgDL08eYoHZhvOBIoRLBeNoaHoCjwk5/gfaeqBx3SscnXlAAw4MLtZVsqE?=
- =?us-ascii?Q?USLg83SDtpZ28rUrr6KpH9JnvSL1Cevphe7mFEFgQM9wByB75MTcigAeO3fn?=
- =?us-ascii?Q?p9BYROZvtNR9/7/ulbHzHgXe8EapYbUlcGVzuGc/LBm9KzEvL1yABphpQS79?=
- =?us-ascii?Q?hEEFPYAPKEvxpZP/b+17Fdsg9IP0G5Enwu1l6CJrIvy8GEyNxe3nkBmaCayw?=
- =?us-ascii?Q?NrK9G4PzZaSJk05d3SsnAPVkF2GCwzoje3i1BXV754UTXhFzJmXU78QjLRPE?=
- =?us-ascii?Q?hclbwuiLFpSlk0gJCRbRn4/KgYR1eeSv02vN0yRRB1jhV2fb7CcV1lEeoOe9?=
- =?us-ascii?Q?yhM/K+TKG3W+hm+s4wjXqcGY/deMRHxyBtzEW534JG7lWvppUUCDU5MyfIFU?=
- =?us-ascii?Q?yNQ493pgGCIQg+r8QVjX3EcCqG9n4bTEjhTLwD1mpFGEV39at2GplLISmBef?=
- =?us-ascii?Q?at3bZZyuiAHT0n5Of7STgOhGZz2U2vASKjkfDohJI6VRX0rj8G+apTGrdku/?=
- =?us-ascii?Q?Kd8Y9PPM9WbCLla1G4AR1lvw28oxXhwAXboMAOAG/T1V37jw9quw1GdrP+Wf?=
- =?us-ascii?Q?xZZHvC2ygGlWi+uMI1FncFg20mBiIcMQBkXSgmN8aVVcakNmWgDM3hNwNvHs?=
- =?us-ascii?Q?ag7mS+4fA2Wt/EOU2qD03Zou8xx8jUwL+e6Q+Ebz7k4ucU0dWQdUb6QoTq7C?=
- =?us-ascii?Q?3QIxmG1wI1WdX+5J1zPzWkBjfSnA4676jc82CO1H6h187gvjLiwy8MK3hKyM?=
- =?us-ascii?Q?VQP4/PyGTSkrg5hYDAkt3/+3LJGpRScY+3Df1jm6ApZ7LPIU/7iCBQj55e0+?=
- =?us-ascii?Q?0DtO1GHmssZUf6GRh99T6ctXXPcSx/eA1m8lzDzzTdCsKOCHlsUvSLoNloTi?=
- =?us-ascii?Q?gPiCg/rvvrQh3Xw4S6zRC7fNuhs+lTx8EebhETU584SdgGqgZaSGKdeejuWO?=
- =?us-ascii?Q?XCLZjrwy883yazzEcjBuXI2XDY+BZe21Roi0SMBT5xJthoMCqvfDG6wa1iUE?=
- =?us-ascii?Q?vtBwsmgdBqIvaTyUThLIWMdi4uR50IkJHp371VWKPzUmfazyfeebyUa2QdYz?=
- =?us-ascii?Q?udxIugtg4QYRfuHqcZ4Eg8P/cW8EiXA97WAUREuNWXD/S3Fo3qrD4EIQhoc5?=
- =?us-ascii?Q?uhszm/bUpjjS/EVVoGebH+fJBIygk5PdNa+2zw82vHA27NalKTJJyk6W0/Ip?=
- =?us-ascii?Q?nOPEABk/WJx2uv0ntXhgI8x6MJopAhaQGa8ivDVrWUfzpEgZ9GC49gUMgB63?=
- =?us-ascii?Q?4pPPBAFu57YHuBXrnWdqqw/Iu3xkanJRmbevnUUlp4hZxylu5F8RYbHHC61G?=
- =?us-ascii?Q?TWYUXwDH8LhHF8JTR5s6n3ArDTs6?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB7272.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ZNIQ+0FurPIu8cx3Mxp2MbqRnmbPEAvLS5mInCd1Wdgg2P+TOcBohYWUQR5a?=
- =?us-ascii?Q?mj2iozECGFPC7fdr/4fy6pO8jjA4kXEki44io/YZq/q2FwUgRGGbu+546ABy?=
- =?us-ascii?Q?sVszk/TAaDYxc38YEAvV4/utYBxvMTHkVtwzGiQQl+kTNFl0UUfXrAg/Cdm4?=
- =?us-ascii?Q?720B8RD39lPWbCip5h1O9b/1UKxb7XIwc9I1fICk2H6AyMLDS3sl6LR1Pi9i?=
- =?us-ascii?Q?PDrAe504tPO0fwwdfLawDso/D3c9p8+8CDsafIo0RNYYred2YEs6aMLed+ok?=
- =?us-ascii?Q?nIZ8CBD02FbrHWgKyFMTJvo02RGMUE8EPbM1KbgU955ETx/bET9UIttfyUpo?=
- =?us-ascii?Q?NDPuVtbZCKWJuVV7O5vx5rwFfwY3K72wpeiCqLOWxCo4dlbR3WfbG0KqH75/?=
- =?us-ascii?Q?Rcmog/3yO3jEMByGR0V6AnWVQuWhGk2JU2FpFjXQnNRQD3EYF+q38lH6T6HU?=
- =?us-ascii?Q?WKQQXh4tQ6QtgwCxAgnKxy4phKShqMRH5WOYnXjENh7umI/YshdL3o5d0sy9?=
- =?us-ascii?Q?g05zFSeTTuqTOfsqugs6sMRP4uGSM4vbvHAyEQZ+gLEO6LEgYqlBwFbCTZcu?=
- =?us-ascii?Q?0QRIZ0MqAianHi6xO6BnrXuARpd3jDXareZ56alvQGX4FwzCBNzEguD9bgS4?=
- =?us-ascii?Q?NG83AA20OHOQ8nr4FX3iyIOPK2Df7uFLC9qu7vMPg4QPaVzY/Ph764UHit67?=
- =?us-ascii?Q?+7lxEJR5ZJrYWhuMFGyuLqb2uxHcf+kQptVIsQvMSdC8QYptpdB8gGRJ5Hxr?=
- =?us-ascii?Q?ch1D4sSsQ9+KbJtyzwEgbyFG/ADeu7xVf/SX/jECNzzV8z1toD3iLNX3LF58?=
- =?us-ascii?Q?/h4BiK7exo0Iz8et2kS1SU74JVZsfUjojbG1/aPbeqV7voqSbSkUf7GIlZ26?=
- =?us-ascii?Q?22N+nIpzZQMHdhISJGBGG1yog5BEhEs0CNRdticaTihJ378bdTJydxk+BWUA?=
- =?us-ascii?Q?HefjG0Ifm9vF0XpeENK7FWoev6GDYIX1v2RGJeTNSi2BsdOjumBMpBUWv/oS?=
- =?us-ascii?Q?oB2+IBIDCeFTwJP+pgXxWHocs1FTdPqF81kXMvBF4KbnmN2INb26whR9LTx8?=
- =?us-ascii?Q?22uXnX0n7AqQ8Z+gJ/eHsMH4oPHMAWgIzAJxF/GevuTNcYtAWIYqSNBMoCgT?=
- =?us-ascii?Q?kwILrmpgh51K63ko/SN03bwrVzMrrgPz7RG2ltZSxzFT9UMG8oekSHsKrsPB?=
- =?us-ascii?Q?NGlO+6cuQlwQbD7vUQKLJP7mBj2N6Bec6uyuynuVXz9PjYmL8OayQttRAFHD?=
- =?us-ascii?Q?WKMywSkwvIUHAXZUJKw+/t07p858hQqFtIgWkbYUppad50QnujwuAeA2ImDi?=
- =?us-ascii?Q?VUcsW+EavTFY0QNB07Kzi7yzqgfWx1hmOux9G3gVoXILq8QZ0AuVO99QlH0y?=
- =?us-ascii?Q?yLJSbtgbme5HHMVpf35QWpgXhrINy3kdxmC+Rr/4t1SDD9EDH34AQbQTUHwv?=
- =?us-ascii?Q?e3e5/9sTvWVr0G0PKljNt6Z9YXxeAdK2X3r6w7dPtszKuY/oZKMyAckXB/lr?=
- =?us-ascii?Q?Oy9Bb+ExfypRCkQW9+c5TZx/uHl5vRyo6DN5XmMFnXRvN0CpEGUPvjSn6xSn?=
- =?us-ascii?Q?ep6AOVooO9B+6bYsYaMIHYn0buDf3zAM/hzHV4kX?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2917f440-9095-4a1c-551b-08dd4707f3a5
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB7272.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2025 23:42:43.8263
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LuB61HV/G1ktEVUmW6G1pBDWQ4z56K3CDJ1kktIRw74aRdOjApeLwoFwxAY0cIPEp6H83Q+xNWbffkZ3u5wc9g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7444
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] x86/kaslr: Revisit entropy when CONFIG_PCI_P2PDMA is
+ enabled
+To: Balbir Singh <balbirs@nvidia.com>, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ apopple@nvidia.com, jhubbard@nvidia.com, jgg@nvidia.com,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ Kees Cook <kees@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+References: <20250206234234.1912585-1-balbirs@nvidia.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250206234234.1912585-1-balbirs@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When CONFIG_PCI_P2PDMA is enabled, it maps the PFN's via a
-ZONE_DEVICE mapping using devm_memremap_pages(). The mapped
-virtual address range corresponds to the pci_resource_start()
-of the BAR address and size corresponding to the BAR length.
+On 2/6/25 15:42, Balbir Singh wrote:
+> Fix this by not shrinking the size of direct map when CONFIG_PCI_P2PDMA
+> is enabled. This reduces the total available entropy, but it's
+> better than the current work around of having to disable KASLR
+> completely.
 
-When KASLR is enabled, the direct map range of the kernel is
-reduced to the size of physical memory plus additional padding.
-If the BAR address is beyond this limit, PCI peer to peer DMA
-mappings fail.
-
-Fix this by not shrinking the size of direct map when CONFIG_PCI_P2PDMA
-is enabled. This reduces the total available entropy, but it's
-better than the current work around of having to disable KASLR
-completely.
-
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kees Cook <kees@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Link: https://lore.kernel.org/lkml/20250206023201.1481957-1-balbirs@nvidia.com/
-
-Signed-off-by: Balbir Singh <balbirs@nvidia.com>
----
-Changelog v2
-  - Add information about entropy drop when PCI_P2PDMA is
-    selected
-
-Testing:
-
-  commit 0483e1fa6e09d ("x86/mm: Implement ASLR for kernel memory regions") mentions the
-  problems that the following problems need to be addressed.
-
-  1 The three target memory sections are never at the same place between
-    boots.
-  2 The physical memory mapping can use a virtual address not aligned on
-    the PGD page table.
-  3 Have good entropy early at boot before get_random_bytes is available.
-  4 Add optional padding for memory hotplug compatibility.
-
-  Ran an automated test to ensure that (1) holds true across several
-  iterations of automated reboot testing. 2, 3 and 4 are not impacted
-  by this patch.
-
-  Manual Testing on a system where the problem reproduces
-  
-  1. With KASLR
-
-     Hotplug memory [0x240000000000-0x242000000000] exceeds maximum addressable range [0x0-0xaffffffffff]
-     ------------[ cut here ]------------
-  2. With the fixes
-
-     added peer-to-peer DMA memory 0x240000000000-0x241fffffffff
-
-     KASLR is still enabled as seen by kaslr_offset() (difference
-     between __START_KERNEL and _stext)
-  3. Without the fixes and KASLR disabled
-
-
- arch/x86/mm/kaslr.c | 10 ++++++++--
- drivers/pci/Kconfig |  6 ++++++
- 2 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-index 11a93542d198..3c306de52fd4 100644
---- a/arch/x86/mm/kaslr.c
-+++ b/arch/x86/mm/kaslr.c
-@@ -113,8 +113,14 @@ void __init kernel_randomize_memory(void)
- 	memory_tb = DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT) +
- 		CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
- 
--	/* Adapt physical memory region size based on available memory */
--	if (memory_tb < kaslr_regions[0].size_tb)
-+	/*
-+	 * Adapt physical memory region size based on available memory,
-+	 * except when CONFIG_PCI_P2PDMA is enabled. P2PDMA exposes the
-+	 * device BAR space assuming the direct map space is large enough
-+	 * for creating a ZONE_DEVICE mapping in the direct map corresponding
-+	 * to the physical BAR address.
-+	 */
-+	if (!IS_ENABLED(CONFIG_PCI_P2PDMA) && (memory_tb < kaslr_regions[0].size_tb))
- 		kaslr_regions[0].size_tb = memory_tb;
- 
- 	/*
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 2fbd379923fd..5c3054aaec8c 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -203,6 +203,12 @@ config PCI_P2PDMA
- 	  P2P DMA transactions must be between devices behind the same root
- 	  port.
- 
-+	  Enabling this option will reduce the entropy of x86 KASLR memory
-+	  regions. For example - on a 46 bit system, the entropy goes down
-+	  from 16 bits to 15 bits. The actual reduction in entropy depends
-+	  on the physical address bits, on processor features, kernel config
-+	  (5 level page table) and physical memory present on the system.
-+
- 	  If unsure, say N.
- 
- config PCI_LABEL
--- 
-2.48.1
-
+Is the size of these P2PDMA mappings known up front? Or do you just need
+them to be as large as possible?
 
