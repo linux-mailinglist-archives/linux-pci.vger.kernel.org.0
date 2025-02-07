@@ -1,99 +1,117 @@
-Return-Path: <linux-pci+bounces-20857-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20858-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36D34A2BB44
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 07:17:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 023B4A2BB9C
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 07:40:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 673E53A5F01
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 06:17:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 15ADE3A9651
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 06:39:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD8C01552F5;
-	Fri,  7 Feb 2025 06:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5CAA176AB5;
+	Fri,  7 Feb 2025 06:39:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="DzOSZZY7"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="h5901ET1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689B942AB4;
-	Fri,  7 Feb 2025 06:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE31155321;
+	Fri,  7 Feb 2025 06:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738909038; cv=none; b=EmR5dOPyjBcu9NqnTdA7VXcn+bU/4pZhfrjE784TaZMNoZVs4XWyendR8+CT4s/Ng+TsL8Qn7TCdsfyhBrqTx1jRZil/0IFkSnH4mJoQOpHSBxH2e+9o6Ly7JlqAR7OG5XHULq5cUGLH84cxfiZbuZC4xqp0oKLATZzD/xUl8zs=
+	t=1738910393; cv=none; b=gmQXrNjOsJ0EIdAxjZvFvuF5B/2scPxh7tmEBNyGIsJq73qqnpY52qzpYctzwMUNRqe8+e5mUEsygepZ28Q2lOAoWwqQpj7E9BWzhwyzLHrEh4FSXwUCVBeFbsv3uT/95CVK/ukT1G3nWFYo+NvOpUwa5HKvPvjDmW2EqSiEmrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738909038; c=relaxed/simple;
-	bh=BoigqwLejTiy6WOwR+LnLI+62cWTTtAoeFaLAurGVgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iEKedgR6soHOGbf6zcMg/zKxoZKtRuidOnBVJfLMejvk6dDs4maik8i5klBjxzAQOIuIv75pkAcsym4dppFhuqq97dJabOenWtxqXzhmUapNVoeAkFAiTf8Jz1DNc1xlGoXLQyzEvbik9XO6suHmSwZPmaivbKu5LI62rX6uT70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=DzOSZZY7; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1738909029; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=zmB4+fPDEzx6le1QnJ4899+cMimXu8esoXeDNGgAD1k=;
-	b=DzOSZZY7cio+F9uqC+DLNTXl+RoAGsSRZKHa4YfDEBN1Hi4PSPwR6YHt2Lu71C+iMXsv6zur7vpphldl6Ji53nDkcqLorYWOpsjMsWKVFosk7h2hi/75YPpUilIvC5fpYBLkf324jmzFPZ4wRbgyXEF7CFqeFJ3U1H68DztZ8G4=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WOyMQuC_1738909028 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 07 Feb 2025 14:17:09 +0800
-Date: Fri, 7 Feb 2025 14:17:08 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonthan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI/portdrv: Add necessary delay for disabling
- hotplug events
-Message-ID: <Z6WlZGcnXExWLITZ@U-2FWC9VHC-2323.local>
-References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
- <7e5e9bad-b66b-4a7f-8868-af5f1ab2fda1@linux.intel.com>
- <Z6QqGRNQ0UQZSKBB@U-2FWC9VHC-2323.local>
- <11a01c9b-5e52-46b8-ab13-e68ae79083ff@linux.intel.com>
+	s=arc-20240116; t=1738910393; c=relaxed/simple;
+	bh=mZf+64j7IJ9OcN720VTUhKgpoeEI3CV5TslwobD69Co=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jL4dl8rYNkOKx4lFff0pMvX1FXS+6fkaGsUGS+QhxjE8kMUFAk9OxsNCZVFR04TBVG9nwI2GsJj2jeBqRR4fnyxCMXUG0+iY8Fl2RvFtHuvzjG145mybVjB95ZtTUpc2/NLEO+m2VDimC/S64rg6uT2Pt5pVaqLT/wyylb4n09w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=h5901ET1; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1738910357; x=1739515157; i=markus.elfring@web.de;
+	bh=Q+GMZrWbQPeFgGXVAUNcUDEPcQrHqKVSUyxOWHSP9pY=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=h5901ET12iU/tY8yrJpVzEwLOOpslR80K8iIrwX5CLCoEZPnmwegULl749/j5Q0c
+	 P4j2QZGF9cidayGnaYtFMCqPcguATqTAhEWDm24TjX5o3pSYhVO4hNxax4q8Evtw5
+	 h4iHJsQQA0/RrxHwwhbkr0byfmSl4eriY8acMv0S7/FuYGjH9FMmA2saFz9Ff5bId
+	 p4d05bBXZoyqvbFItIpCMesosoQGPW9cexJofrr+sNipspc3ZENOeK/xbXUjWHarJ
+	 6TDD+uY7vY31vvnuzx0M5ehw3W4WXSTkcdFM72EBNwPapnl3QphDFceSpKp22hojf
+	 YmyWFBDxATLNGwrgQg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.29]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MovjQ-1t4BFi4BuY-00gzab; Fri, 07
+ Feb 2025 07:39:17 +0100
+Message-ID: <60c5504d-341f-4ce5-b337-1eca92a9506f@web.de>
+Date: Fri, 7 Feb 2025 07:39:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <11a01c9b-5e52-46b8-ab13-e68ae79083ff@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+To: Bjorn Helgaas <helgaas@kernel.org>,
+ Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+ linux-pci@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>,
+ Jingoo Han <jingoohan1@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Michal Simek <michal.simek@amd.com>, Peter Zijlstra <peterz@infradead.org>
+References: <20250206202654.GA1000968@bhelgaas>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250206202654.GA1000968@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:ptz3nnZtmUVmcg1qEZL/aod4GKTb9kszv30HNUilffQRioTZtjn
+ N26Yiwfdzw2FW9CEUkbZycLr0hf2IuFw592zSvETmERrSVEMTpnwV4JBuAInsHpb457OW8+
+ p3rrr4irZZlF3LUaur/uuh+tVrFCylQ4iK+Nhupp7RkqE27DBMg5FNcgLugsMMTktox63CX
+ 9zNkbpVV7ftDJ5Wh5NkrA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:+JDvlsTy8GI=;za+YhPRmymZVqd3v58UcuzexL2K
+ C4I2tvcEOfrN1BlviofhFXm6NRQ4JhVjkGDi98kJ4okJLyuGaXQb3EcDkOb3WXIJ9XYefHoLa
+ 9U2Z8ABxy4RnJ3aqMiieMZkRl9SfME3KiKjL+sgnQeK3sVoymkzNdrPJ92wxXNkYwbw0ubuG5
+ xP7/OLJ2qw5vZN6CkPyLL2v0+AeHVSbcAPuiL2Oek0lyv3S+tS0hdJUEc1vRGEFK+uNoj6Fm4
+ GQCgE/F8SzNnoeOwFhjeZbIn6BQrXsPT8yATrPG8wBd2I5zEvgWh7Yi46T2zXL7GsQOBrcjN8
+ 4BNd8mAa/mjBE12lMbA6qq4tNPq/ASSCS6Wb2kUDpV6wIKWLkiG8Aki/3UMMFfw663c4Spn+3
+ As2Gf+fK11jZzdlcaajI75lAujLcfcfUT7OFPoGyz+CvdloP1/vfhvzgOcAjWqzn8v47/wbWP
+ 3Ga+gcs5xk3c+BpDjE+uTOXGByIHhqMrAt/+7YbpdnDZyfmYsOPdXBsLJpoocGZGMH4s56jJE
+ 9chQojhyjuFG0NitOx2WIsxdW1uB1rphL26N+lVm4Z7pC6np8XfZMhfhch2ADLXYmqm50UqDJ
+ ifchxbISjN/0HlXGwu+Di4RPMzB9PjYi1devvSya4mKvl+ImiDxkbUi2AijNej2aOWiH2BdWK
+ vW8OHE0VAF41H7GVBGtO7h6vig7iVJh9DBT1ZM7VwaKRBsBGzAED2/zR83WJ2BRxPlT2x6CcF
+ zWuZNsLieDpXJQy7bB8jWQ+t0bNg8DyEdL4razsNm3lA7g9mjXeDn3aYzbX5xy3wjAvUg22MH
+ ZIEFmzKvUwp5UW/tw7SytCJd3cmSDuCPOv4yFs5EnBe2DI9rlxpOrC1m5K+EX8Kez6x1ATbj9
+ 5ly6B4pUkmkoIUYPHjRUKl22ztCMq4azsdgU0hPWI6+JefwYldLOxS4NCivRJi9PSe37oMKcY
+ A1ZWaYBTzo6IzpQZUmPviIS3MnalUzJ/AjH1YQIXPqGDj1qnUmfPh0WyQKAFU5BOkT4b4HIEX
+ 7EvOvaTT8jR9R77WeKe8q1jufd1TQusnqKQZXD8lVxfp3G4cJnVSgT0KhgWhiqV2gyiRwEPjp
+ 9tcqWfKmqcgHje1mLUpSlKk/ZrldyBGdXiRm+C8RYgO0LX5R1oMD6JOja7X2vvBJ+vg/ypPuQ
+ 4D9lxu7szxj9s9xghHj4QjiqNYoVIfa/gEmwo2PLoakgdvg8o3Tsu3hwilIC0MAjX22iKldP0
+ F7D94h8oIVsYZ9lR/LQDPSkMoQqqZPKqVaOf6Xjr75MGzO/RZuVATr69cawJxNo6EJBowHuw2
+ S4rTrNRMNZfof3kQgL1ZxEPJSFwzvw5LKUzujdM34niir30uCzCPlLoaDSN4V4G49uyuXAuiV
+ 7pr8x2Rrr5Hooop+SHovwKVH0DabY+Yzh1ZpxeLiNY3AUJKuFjhaUI6Xe6ZjKZlB1tIJxZvCX
+ 5tGTTeg==
 
-On Thu, Feb 06, 2025 at 08:26:13PM -0800, Sathyanarayanan Kuppuswamy wrote:
-> 
-> On 2/5/25 7:18 PM, Feng Tang wrote:
-> > Hi Sathyanarayanan,
-> > 
-> > On Wed, Feb 05, 2025 at 10:26:59AM -0800, Sathyanarayanan Kuppuswamy wrote:
-> > > On 2/3/25 9:37 PM, Feng Tang wrote:
-> > > > According to PCIe 6.1 spec, section 6.7.3.2, software need to wait at
-> > > > least 1 second for the command-complete event, before resending the cmd
-> > > > or sending a new cmd.
-> > > > 
-> > > > Currently get_port_device_capability() sends slot control cmd to disable
-> > > > PCIe hotplug interrupts without waiting for its completion and there was
-> > > > real problem reported for the lack of waiting.
-> > > Can you include the error log associated with this issue? What is the
-> > > actual issue you are seeing and in which hardware?
-> > For this one, we don't have specific log, as it was raised by firmware
-> > developer, as in https://lore.kernel.org/lkml/Z6LRAozZm1UfgjqT@U-2FWC9VHC-2323.local/
-> > 
-> > When handling PCI hotplug problem, they hit issue and found their state
-> > machine corrupted , and back traced to OS. They didn't expect to receive
-> > 2 link control commands at almost the same time, which doesn't comply to
-> 
-> Which 2 commands from OS? Did you identify both commands?
+> I don't *really* like guard() anyway because it's kind of magic in
+> that the unlock doesn't actually appear in the code, and it's kind of
+> hard to unravel what guard() is and how it works.  But I guess that's
+> mostly because it's just a new idiom that takes time to internalize.
+How will the circumstances evolve further for growing applications of
+scope-based resource management?
 
-Firmware developer saw 2 programming to PCIE Slot Control register of
-one root port, first is writing 0x5ca, the second is writing 0x15f8. 
-
-IIUC, the first one is to disable CCIE/HPIE here from get_port_device_capability()
-
-Thanks,
-Feng
-
+Regards,
+Markus
 
