@@ -1,176 +1,123 @@
-Return-Path: <linux-pci+bounces-20867-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20872-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 995CBA2BEE4
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 10:13:41 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18DFCA2BF7B
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 10:36:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BF8B16A344
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 09:13:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1B2CF7A1C39
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 09:35:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF5E71D61BC;
-	Fri,  7 Feb 2025 09:13:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AA0B1DE3A7;
+	Fri,  7 Feb 2025 09:35:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTGXTo58"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xN6X0AaD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out199-7.us.a.mail.aliyun.com (out199-7.us.a.mail.aliyun.com [47.90.199.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68671D618E;
-	Fri,  7 Feb 2025 09:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD3D236A89;
+	Fri,  7 Feb 2025 09:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738919616; cv=none; b=ODCN0hZSfy1+2hyykOK3NimSN3quZzACPaHvhCF2AdgT/+KrlQMjdAIXespkhoboSCSqm7fHBYo1aZqnfwhgIO7XPnbsNHERcMTlW2bYtMX2mFa71Hc9ZaFwPpGY7PXgEwAg2qb5WA/toxi6W39Kme4cRTMlnMiVedfvjiT/2lU=
+	t=1738920924; cv=none; b=AHa0ecnAxFqPXF3Rf28ajLj8WoFSlcrS4ylgoaFc7VxxpkQES72f5vp49THH54HqAd6hWs9SjyVWLFaxf4aa0aH/HED/dfSz8p/4/ZepM69RkVUa93DFjvCyvA0cMfSOllWFDVzSI029KMp9KAg1HMemBOzhyq1G/ztyEiDdFLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738919616; c=relaxed/simple;
-	bh=FR17TxotLW0QQw+3bvyS+jwauiNif/8A88Dzr0glndw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lXyCrd99IlxblujgoliSLCmPOxsS2Etx/Bw24IML4ib2OXoHQ6iFNKfLIFT9+gx7LemQzZw4paYe2Ctrzp0NV24lmOS3twoGO8UBHdS8aAelXyS1YKcEmM8WeB7F2tUhXzMe87PaknsTudE3FoYTxXjCuNLo+AQau3vsF5eoGBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTGXTo58; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21FECC4CEE2;
-	Fri,  7 Feb 2025 09:13:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738919616;
-	bh=FR17TxotLW0QQw+3bvyS+jwauiNif/8A88Dzr0glndw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RTGXTo58yrhWc7IfXlgn9D9EMNwv6l4w8GDzX68v80U/GsgVs5CYRxCuFcEHoqzpo
-	 EaLXJW6lsqJVy9a+NWIfUuw/XjcpboFxfAsFmeMBIRKzLBi0l5xOEUOCnwN0tsqQNX
-	 gBBvcFuBIdAAU5LGyMYlJJUPIS7eBAySJkuaAXTrnAiPi3OyjWLkLlnzmE7ue7ETje
-	 luPA9KOGEWs3U4CqMp0W2U0CLbI0i2T20nZash5OkYLhhm3Mv/hwU2018FQO23VEwx
-	 NZdlfPcF8v7lPJ0xNfZdjnm4MSOseCCnIMUWrq7fn33eJbneTNEhdp+4qVJSpjnQJO
-	 C+f4PCZjYv1Jw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tgKQX-001Yrn-Hk;
-	Fri, 07 Feb 2025 09:13:33 +0000
-Date: Fri, 07 Feb 2025 09:13:32 +0000
-Message-ID: <86mseyt8w3.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,	Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>,	linux-pci@vger.kernel.org,	Rob Herring
- <robh@kernel.org>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,	Krzysztof
- =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,	Bjorn Helgaas
- <bhelgaas@google.com>,	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: dwc: Use level-triggered handler for MSI IRQs
-In-Reply-To: <Z6UWK6EvOLRrtRDH@google.com>
-References: <20250205151635.v2.1.Id60295bee6aacf44aa3664e702012cb4710529c3@changeid>
-	<87ed0btpfj.wl-maz@kernel.org>
-	<Z6UWK6EvOLRrtRDH@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1738920924; c=relaxed/simple;
+	bh=n+KDLJ+vD3Bt+/Cr8vhSTfA6mf0eChU3PqcwnHXsbxk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nII9D5ZfdkCFLMqhrA2U2FDci30Ir7rN2J1topg2XHwNjfFGHv1F0ZylFmvonDQN8gJgs6bhcCfWRLYo6F0u5G/qnxloFuj8I817Wwjykx1xwBpKrJsseMGmIW3YBAi5o/2Mz99Ds08Hp/Gs/Px/wrR6vvTEpFRE3QXAf4n+SHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xN6X0AaD; arc=none smtp.client-ip=47.90.199.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1738920903; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=nsVyOK7lf4dncZjmNZ83lvgaF7otJZXfXf1rIy5TN2k=;
+	b=xN6X0AaDFM134nZqlPaxRnASZZMaC2hMpMH3uXDA0G+P44VstETa8W97PIBU6co8ewkSCzzzsBvGlD9lL9Gdwlmfa5Aux+++wJzebNNarpEVmX2nBQWFMj/c5ZGCxINbD4E12MxxAWSSKQ30ylK2Zmu0FJ7PtW6Ysywk+YsFSzA=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WOyzNCd_1738920901 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 07 Feb 2025 17:35:02 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	bhelgaas@google.com,
+	kbusch@kernel.org,
+	sathyanarayanan.kuppuswamy@linux.intel.com
+Cc: mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	xueshuai@linux.alibaba.com,
+	Jonathan.Cameron@huawei.com,
+	terry.bowman@amd.com
+Subject: [PATCH v3 0/4] PCI/AER: Report fatal errors of RCiEP and EP if link recoverd
+Date: Fri,  7 Feb 2025 17:34:56 +0800
+Message-ID: <20250207093500.70885-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: briannorris@chromium.org, jingoohan1@gmail.com, manivannan.sadhasivam@linaro.org, linux-pci@vger.kernel.org, robh@kernel.org, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 06 Feb 2025 20:06:03 +0000,
-Brian Norris <briannorris@chromium.org> wrote:
-> 
-> Hi Marc,
-> 
-> First off, thanks for reviewing. I'm a bit unsure about some of this
-> area, which is one reason I sent this patch. Maybe it could have been
-> "RFC".
+changes since v2:
+- moving the "err_port" rename to a separate patch per Sathyanarayanan
+- rewrite comments of dpc_process_error per Sathyanarayanan
+- remove NULL initialization for err_dev per Sathyanarayanan
 
-RFC means nothing to me. Or rather, RFC is a sure indication that a
-patch can safely be ignored! ;-) My advise on this front is to either
-post patches as you have done, or not post it at all.
+changes since v1:
+- rewrite commit log per Bjorn
+- refactor aer_get_device_error_info to reduce duplication per Keith
+- fix to avoid reporting fatal errors twice for root and downstream ports per Keith
 
-> 
-> (See also v1: https://lore.kernel.org/all/Z3ho7eJMWvAy3HHC@google.com/
-> 
-> I'm dealing with HW bugs that cause me to have to configure the output
-> signal -- msi_ctrl_int -- as EDGE-triggered on my GIC. This is adjacent
-> to that problem, but doesn't really solve it.)
+The AER driver has historically avoided reading the configuration space of an
+endpoint or RCiEP that reported a fatal error, considering the link to that
+device unreliable. Consequently, when a fatal error occurs, the AER and DPC
+drivers do not report specific error types, resulting in logs like:
 
-Configuring a level-triggered signal as edge is another recipe for
-disaster (a sure way to miss interrupts), but short of a description
-of your particular issue, I can't help on that.
+   pcieport 0000:30:03.0: EDR: EDR event received
+   pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+   pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+   pcieport 0000:30:03.0: AER: broadcast error_detected message
+   nvme nvme0: frozen state error detected, reset controller
+   nvme 0000:34:00.0: ready 0ms after DPC
+   pcieport 0000:30:03.0: AER: broadcast slot_reset message
 
-> 
-> On Thu, Feb 06, 2025 at 09:04:00AM +0000, Marc Zyngier wrote:
-> > On Wed, 05 Feb 2025 23:16:36 +0000,
-> > Brian Norris <briannorris@chromium.org> wrote:
-> > > 
-> > > From: Brian Norris <briannorris@google.com>
-> > > 
-> > > Per Synopsis's documentation [1], the msi_ctrl_int signal is
-> > > level-triggered, not edge-triggered.
-> > > 
-> > > The use of handle_edge_trigger() was chosen in commit 7c5925afbc58
-> > > ("PCI: dwc: Move MSI IRQs allocation to IRQ domains hierarchical API"),
-> > > which actually dropped preexisting use of handle_level_trigger().
-> > > Looking at the patch history, this change was only made by request:
-> > > 
-> > >   Subject: Re: [PATCH v6 1/9] PCI: dwc: Add IRQ chained API support
-> > >   https://lore.kernel.org/all/04d3d5b6-9199-218d-476f-c77d04b8d2e7@arm.com/
-> > > 
-> > >   "Are you sure about this "handle_level_irq"? MSIs are definitely edge
-> > >    triggered, not level."
-> > > 
-> > > However, while the underlying MSI protocol is edge-triggered in a sense,
-> > > the DesignWare IP is actually level-triggered.
-> > 
-> > You are confusing two things:
-> > 
-> > - MSIs are edge triggered. No ifs, no buts. That's because you can't
-> >   "unwrite" something. Even the so-called level-triggered MSIs are
-> >   build on a pair of edges (one up, one down).
-> > 
-> > - The DisgustWare IP multiplexes MSIs onto a single interrupt, and
-> >   *latches* them, presenting a level sensitive signal *for the
-> >   latch*. Not for the MSIs themselves.
-> 
-> Indeed, I probably was a little confused, and distracted by my
-> aforementioned HW bug, which can be at least partially mitigated by
-> masking (which this patch does). I also didn't understand the original
-> choices in various DW-based PCIe drivers, since their choice of
-> handle_level_irq vs handle_edge_irq seemed a bit arbitrary.
-> 
-> ...
-> 
-> > It also breaks the semantics of
-> > interrupt being made pending while we were handling them (retrigger
-> > being one).
-> 
-> What do you mean here? Are you referring to SW state (a la
-> IRQS_PENDING), or HW state? For HW state, MSIs are accumulated in the
-> STATUS register even when we're masked, so they'll "retrigger" when
-> we're done handling. But I'm less clear about some of the IRQ framework
-> semantics here.
+AER status registers are sticky and Write-1-to-clear. If the link recovered
+after hot reset, we can still safely access AER status of the error device.
+In such case, report fatal errors which helps to figure out the error root
+case.
 
-IRQS_PENDING is indeed what indicates the SW-driven retrigger state,
-by which any part of the kernel can decide to reinject an *edge*
-interrupt if, for any reason, it needs to.
+After this patch set, the logs like:
 
-This is actually how lazy masking is implemented, by not masking the
-interrupt, taking it (which is a "consume" operation), realising we
-were logically masked, masking it for good and marking it as
-SW-pending for later processing. Hence the while{} loop in
-handle_edge_irq().
+   pcieport 0000:30:03.0: EDR: EDR event received
+   pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+   pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+   pcieport 0000:30:03.0: AER: broadcast error_detected message
+   nvme nvme0: frozen state error detected, reset controller
+   pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
+   nvme 0000:34:00.0: ready 0ms after DPC
+   nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
+   nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
+   nvme 0000:34:00.0:    [ 4] DLP                    (First)
+   pcieport 0000:30:03.0: AER: broadcast slot_reset message 
 
-Switching to level triggered removes most of that processing, since by
-definition, a level is not consumed when acking the interrupt. You
-need to talk to the end-point for the level to drop, so simply masking
-the interrupt is enough to get it back when unmasking it.
+Shuai Xue (4):
+  PCI/DPC: Rename pdev to err_port for dpc_handler
+  PCI/EDR: Rename edev to err_port for edr_handle_event
+  PCI/DPC: Run recovery on device that detected the error
+  PCI/AER: Report fatal errors of RCiEP and EP if link recoverd
 
-HTH,
-
-	M.
+ drivers/pci/pci.h      |  5 +++--
+ drivers/pci/pcie/aer.c | 11 +++++++----
+ drivers/pci/pcie/dpc.c | 31 ++++++++++++++++++++++++-------
+ drivers/pci/pcie/edr.c | 35 ++++++++++++++++++-----------------
+ drivers/pci/pcie/err.c |  9 +++++++++
+ 5 files changed, 61 insertions(+), 30 deletions(-)
 
 -- 
-Without deviation from the norm, progress is not possible.
+2.39.3
+
 
