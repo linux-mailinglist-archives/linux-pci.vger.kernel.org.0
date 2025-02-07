@@ -1,113 +1,173 @@
-Return-Path: <linux-pci+bounces-20877-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20878-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0663A2BFD0
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 10:46:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87CB9A2BFE2
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 10:50:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 86B3916832E
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 09:46:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5F4647A05F4
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 09:49:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 042211DE8A6;
-	Fri,  7 Feb 2025 09:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F60A1CDFCC;
+	Fri,  7 Feb 2025 09:49:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="I+eU5nPo"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="R0QQ6qqk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C041D7E21;
-	Fri,  7 Feb 2025 09:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7775F32C8B
+	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 09:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738921546; cv=none; b=GRIUe/KJuPcpqgsennmhnv+fVHJ6q4nj1QNt0XWXjgVZO4wfD32aKbbc1baQfkIYL2OqTHRyBJWyqzEGBFLwolzetrWd+y/fgDvsI1Zl19bCDrdKauhhOl5Z1NUMILs7A9vNzqE132NqCwKGu079ZRmHe6n0hZ8i/JMyJU+m7ws=
+	t=1738921797; cv=none; b=bEx2iN6dq0MkU/f1R8dJf1w39R7c2YTWE8SmstaZim1X3twIH6sTFJpKqVgkNach5x3HztxeL+CuyBc3/5sGY5PuHXSy7BBrumJIGattTovcdma+4w9NOPXLka5RgoChXJM/r2uE9ksoR0nzz1I9zlkWbYRJsVdOddq1UMyM/JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738921546; c=relaxed/simple;
-	bh=EtiEn7NHh3nbo00IjjxVgadUdQcYzfcZj0lYUhwK4iE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iOto9cjWfpnEZotqhejpuITkYJphxSKG+YRqRCEQqzBVDfKFrCozlj7v38GfGSa15Cr8ktm4SYu3t7PGIa/okQV7jycYl7Ca9Elafy/I8dYekgEXKv85nbLxVOEhOMkr4aSABZ2L2sdxjJgWX1F3JjM8jpaJ9OXdEZzLwqPhv8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=I+eU5nPo; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1738921518; x=1739526318; i=markus.elfring@web.de;
-	bh=EtiEn7NHh3nbo00IjjxVgadUdQcYzfcZj0lYUhwK4iE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=I+eU5nPocV2Z+aRnkdr0njmJa4XhMrwZxi+Abw2vkZRwx8UKMYp7GEv+42jk7+ZO
-	 bkL1IPwMz3gHfLx5xHtq+hyfblq8mln5iiSOhWsx7Eu71rC+ldlGvlZxZAklBDLEI
-	 2fe7eEiesAMWShxO0tPS3AWlvzUvb3Vrh/xyxhjrFo130yGlbSjFbTmMd2K233ZSF
-	 bnSMEF0yvZATeUfytCdGWYPfNBgn1HI0jiJLb8y9E/3dAey6YNJq3fYw6v5EQEg0M
-	 tv5vxr5GgTq9FHafLK4K83pMFpl9bIFRl53CjVGmfpaqHcjc7OtfQpcdMHpy42+Zq
-	 F8PpMtFD8qgqr3SP5g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.29]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mo6Jl-1t56M10XoR-00eaQC; Fri, 07
- Feb 2025 10:45:18 +0100
-Message-ID: <2f8cec76-c882-4f48-8345-d03fb09404c1@web.de>
-Date: Fri, 7 Feb 2025 10:45:14 +0100
+	s=arc-20240116; t=1738921797; c=relaxed/simple;
+	bh=S4p6LLSLOPSpJE9g1forZYx4llbSsosHafGdaXkcLks=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N/glBzeC437TaaepTbXnLj3B22EXk1bE9Al8djJHfLgROiUaRR60nSlB2Uo3KkuNqPKfCHWhslQWVpm970Fq70T1Qp5AV7nJiQzs9Ij2Fs8G/UImdp576Wx0uUB0A8+MToiapvbku/Q9r9hdJzZIjXLh/Va6/Rbm4xDqMf8/S/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=R0QQ6qqk; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ab2c9b8aecaso337789466b.0
+        for <linux-pci@vger.kernel.org>; Fri, 07 Feb 2025 01:49:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1738921794; x=1739526594; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hHxN1cJYA/N06QjEqFReiwPXLdQZSTCuNsi3b9gHzjE=;
+        b=R0QQ6qqkuCHyh/Lspg5x220NQrmp3N6wdbNGoWH7PyXNdhvxz4Jbe7NchDCCV30XOR
+         4UrnQQ0BAftdo0xjDtYM/BhzjoxDNhCnK34Yghwjgj4YH3Z24bCg8BkDMUE3cBgRNqoW
+         IN/BOoMUZKikliYvQvrQhGKp5soXPZt7bLmqMnjeOaoYU/2tpjpLxYXKJbjHw7zOiTqT
+         Jb0g9NZP4p3/v2EQoEOMoMl4ILwB4ZGwXP6h8dqQJOw5YWwV47WyQt2MnRb6xO1swpGW
+         M+TB33esmktLN3zuHbZ6n5BvKOB6V9Gwuspyo58dC6FTQjuOuV/zfe3lbKR/zWYucP9I
+         CxeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738921794; x=1739526594;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hHxN1cJYA/N06QjEqFReiwPXLdQZSTCuNsi3b9gHzjE=;
+        b=jCPbmIXHeSrj0rxqUwtjj9Y82A8wxT+tGi3wsCq9RL6TFszzlfgZqkOqwNzfqCUQxx
+         DwvnMufL74FkKR5DvLrtvOBVBek4SYIUSLkAs922XPlUX4Delh6OL0BQdPEV5xVpiwYo
+         OaKh7qHeqEypDnoirxjze7Z2ghyGfEIzHo/6rUJSJvFRaCWz9Z//XRG3Z/Z7GCCtrZku
+         0uMRX/56WOIzRCGyY9bpjZBh2u8e7iUb3dnP03C4ip7wL+URXt0W5rK/PsrO5X+JqfO7
+         k+WOT2CMRgGuPfgYUJBnMM+yRccdphtDpzOwqfTjSbQ+ILQ+Y78IF7WLIpamfDI8O1xx
+         65wQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+NBuJoA7K9nL057ObexGD0iy41ztQqGzMgy3LoPR0mjJw6/YIk0jvvC8PS7o0uDb0LUKZgTccbSw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKaqIpNQqxdY1gpS+cnxD92li7hOeLac8JoPMtwLU5G+8wiqFA
+	D6kdQguf0E0ULtQGj3GZUIIwsyaMfLw7Eczoa2rW97Wyd1Sw+tcfHDQWy9/XAys=
+X-Gm-Gg: ASbGncvfxZPwDjLj+GfNbEzTQR7IQnGZoDxyAnMXXooQ0BvoA7SwcXfd53JQaiPKzHF
+	G/omLX960u1FUPFxV182MLvGKKcVlID2HGZfNdn8A5Fv7k4z4lel2VtKJgp3EoyOku6yRL62iHF
+	pZqf+wPD0S3E3aLP0mJxstYl5qF+AzN5snaW1eFvNwGrH6TJ+bmI+ZGV43B4AF2Y2Kfl7lx17Zn
+	8BfEsm8kCJqVnsCs8NtjG29Ag39C6kqjvRA8WYHsS36qyQI6YrOqzsCIGUteb69ECQX1hMB4Kg4
+	rXFoTAPV1Zbc45jttYj8+AOO8pV/T8ZvPi2H+uMGdOTNW2zyFIZW2ocF6RE=
+X-Google-Smtp-Source: AGHT+IHCzEFvSIhfMGLJjDLN8sAOhYITMeHBywqkNc2QJXqBWAThFj4V/KSvjovgix5IZ8ADaCm//w==
+X-Received: by 2002:a17:907:1b27:b0:ab2:f8e9:723c with SMTP id a640c23a62f3a-ab789a9ed0amr257773366b.5.1738921793776;
+        Fri, 07 Feb 2025 01:49:53 -0800 (PST)
+Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab772fd6ba1sm235401366b.79.2025.02.07.01.49.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 01:49:53 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Fri, 7 Feb 2025 10:50:52 +0100
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v6 05/10] clk: rp1: Add support for clocks provided by RP1
+Message-ID: <Z6XXfL1-ER2dLmZI@apocalypse>
+References: <b12caa1c8c674a56afa7b2de780d9ae5423159a3.1736776658.git.andrea.porta@suse.com>
+ <20250203234443.GA810409@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v8 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
- Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- devicetree@vger.kernel.org, Bharat Kumar Gogada
- <bharat.kumar.gogada@amd.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Conor Dooley <conor+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84s?=
- =?UTF-8?Q?ki?= <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Michal Simek <michal.simek@amd.com>, Peter Zijlstra <peterz@infradead.org>,
- Rob Herring <robh@kernel.org>
-References: <20250207065925.6u7bemyn2aireiii@thinkpad>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250207065925.6u7bemyn2aireiii@thinkpad>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:XpeVuxEZzZPZKVrplBoSdaZIWts8OscNE8mi4ye49l0yNVNMzPK
- ikYoI468e5S8HbI3eQER1Eqk551Ex5/u/4A1taKF8qg8ICTxQH3kEeOc5ubnLmHXLkPVUnB
- PPVF0f6FYQrCQnWg2QCrVgUDtYgqorENvBSUUasSsSq7XU3Rd/r4Baa/3dlxBDvI8YJdeN+
- ICJ3p8tRXTMxAqK5uhJDg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:R2NmjkEBWHE=;yBCi1rHnyYuPNimhd8q9wyKO89+
- zHnO8ztuQvNXvxvRhyMgZpRg1jY9SDkGA8M60DlSNdlhfgBbpSe9n7jSyaEFkEYX43S0bIbUg
- AoB7+/JVrMINBx0W69rWNKT7F38CbseiNJ0R5ZScOE0GEeqfGO0a30T8eFpVQs9y73c68evaP
- 3lF261L46kjEIrb0qETdKb0EBxFMaGq5ov7pq1ulR7rGp787pUzvl/TMhcatOGTqfL2VONxQj
- rCRIsUc2Q3mZ0e/47m/vlONdGX1TFw2tS6rX2uT/EuhLASHU9pvxytTM2mxbPxEUa9tftzqq1
- qOCPGeAEsTo389vJrf99yP0u8TerISgmr/NwthJ3fsC9lEb3EwehXMVjxWiLBLjF6tcqUo/2j
- s0JFbI2KeHkEEJItElrCDMCYC60cGYcoo1AIRRdIHM/+wyi+FTJFdVR+/IxZbTLcLG8/paZdI
- GsttAKZUAi7zTm4PxTfKwUE4nMAJHgUxACtgLOzh3okZMqO51cxG0NcnNiKGGfBHNXWmw26HE
- HldaKvbregZfxU/7Y7txCeyyT/4NIwEVP1m8siy50W+KwSzBtr0jIyaGcBzpFeKgpHvepAwCp
- xNsGo1oFiKZSLWJM0IFiyQthTRSYAR6c4roNEDokUBldzhZtkYOJBUIfdkW2mRvFLuwj2y4//
- UmDI8xJP0EZDkMT6gZHCTG7JO90mSt3/2F9zdlLq48i4URDxVL0NJeb3kUveizE+gATRB9Eoa
- 1dYAJwS+ZBmQpM3nyAnQ5mAYqB/3MWW+nR53WYsH31gv1ibfepNpJ8dYqvj44cl89HGLNTeQb
- cq2SPovzNlUoCSYH+Ys9xb27lJHM9P+gpQ31BxUoplX4fku8BGGiWfx2/iBDmuo8fkdQ4fdwm
- SOSvlCnryKZKRt4zJdTQkb++Zra4ud+9S1Qm1RUsbc6rB0cR4lnI6k9usCl4qn1VW7WrKc9Yz
- X2+JG4S6AHEQQN5KL3KiseoyG2mqQ6mFWXrPAnWsHbh8qlc+fkLvgmQDjn5YQ/3YUL7hjVVWT
- 5AEomn6nkRxtSm1gXSIdpO9P/+kN6D0kcKA0Lkc4AsIdDWQR+ovJYwouh5uGyz4zq4Fy9AmUE
- wGk9FBI6yHN+AX59yg9YwfvnxWfYETOVoK9PfEDK2qiCzpb3e3IXZvjDPI6nSCfhierDhDHqh
- wLhQIawEl1J9DeLsZojY7vbnRmsRL3h7DK0lvlhc89m9J6bcdx3RV+kAmDM2ZWq8EGVEeBtmU
- B2O3cBY9j61hWcp7XPA05l1fT0r15mM/2mU0DQow04NiIxXY2PCPKoUYAPYE7KIK0ri98D/1K
- CKpEFN0Y0rt4485/drYglAcED2qHKOe0LbaKjHVJN+bR+ksASsRYYeEy+SiLwV1EAysRiyiZd
- gddSf1bPJSUi39UwVE5VsYuy2bknMx6xpADmLAnmDo+zD+XdVrWs6KBfzFa804jQFhspAJuXe
- W1kuO3/C44JVL8ry8dIJIWZBQmVU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250203234443.GA810409@bhelgaas>
 
-> Please ignore the comments from Markus.
-I hope that patch review and software development discussions can become more constructive again
-also for related topics.
+Hi Bjorn,
+
+On 17:44 Mon 03 Feb     , Bjorn Helgaas wrote:
+> On Mon, Jan 13, 2025 at 03:58:04PM +0100, Andrea della Porta wrote:
+> > RaspberryPi RP1 is an MFD providing, among other peripherals, several
+> > clock generators and PLLs that drives the sub-peripherals.
+> > Add the driver to support the clock providers.
+> 
+> > +#define PLL_PRIM_DIV1_SHIFT		16
+> > +#define PLL_PRIM_DIV1_WIDTH		3
+> > +#define PLL_PRIM_DIV1_MASK		GENMASK(PLL_PRIM_DIV1_SHIFT + \
+> > +						PLL_PRIM_DIV1_WIDTH - 1, \
+> > +						PLL_PRIM_DIV1_SHIFT)
+> > +
+> > +#define PLL_PRIM_DIV2_SHIFT          12
+> > +#define PLL_PRIM_DIV2_WIDTH          3
+> > +#define PLL_PRIM_DIV2_MASK           GENMASK(PLL_PRIM_DIV2_SHIFT + \
+> > +                                             PLL_PRIM_DIV2_WIDTH - 1, \
+> > +                                             PLL_PRIM_DIV2_SHIFT)
+> 
+> Maybe this is standard drivers/clk style, but this seems like overkill
+> to me.  I think this would be sufficient and easier to read:
+> 
+>   #define PLL_PRIM_DIV1_MASK   GENMASK(18, 16)
+>   #define PLL_PRIM_DIV2_MASK   GENMASK(14, 12)
+
+Ack.
+
+> 
+> > +static unsigned long rp1_pll_recalc_rate(struct clk_hw *hw,
+> > +					 unsigned long parent_rate)
+> > +{
+> > +	struct rp1_clk_desc *pll = container_of(hw, struct rp1_clk_desc, hw);
+> > +	struct rp1_clockman *clockman = pll->clockman;
+> > +	const struct rp1_pll_data *data = pll->data;
+> > +	u32 prim, prim_div1, prim_div2;
+> > +
+> > +	prim = clockman_read(clockman, data->ctrl_reg);
+> > +	prim_div1 = (prim & PLL_PRIM_DIV1_MASK) >> PLL_PRIM_DIV1_SHIFT;
+> > +	prim_div2 = (prim & PLL_PRIM_DIV2_MASK) >> PLL_PRIM_DIV2_SHIFT;
+> 
+> And then here, I think you can just use FIELD_GET():
+> 
+>   prim_div1 = FIELD_GET(PLL_PRIM_DIV1_MASK, prim);
+>   prim_div2 = FIELD_GET(PLL_PRIM_DIV2_MASK, prim);
+> 
+> It looks like the same could be done for PLL_SEC_DIV_MASK,
+> PLL_CS_REFDIV_SHIFT, PLL_PH_PHASE_SHIFT, CLK_CTRL_AUXSRC_MASK, etc.
+
+Ack.
 
 Regards,
-Markus
+Andrea
 
