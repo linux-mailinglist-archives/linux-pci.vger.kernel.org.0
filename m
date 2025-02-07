@@ -1,121 +1,94 @@
-Return-Path: <linux-pci+bounces-20886-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20887-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A5ABA2C11D
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 12:00:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E01FDA2C30D
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 13:49:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 401CA188D044
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 11:00:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0B31C1885F5F
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 12:49:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F8811A2645;
-	Fri,  7 Feb 2025 11:00:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78B6A1E0DE5;
+	Fri,  7 Feb 2025 12:49:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="nyIMq1L0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHvt6snT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C2C91A0BE1;
-	Fri,  7 Feb 2025 11:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D07D1DFE04;
+	Fri,  7 Feb 2025 12:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738926034; cv=none; b=uAoGYqGFxNZHE+Uzz4FWyeSX6pudMFjDbwTWHnGliHT0Qyt6EAS3cUQdLsI+NQVKGIwhrdv1B2SHmGO4eHRB0x8I8/hf0YxNOhchghntB2FWe/hrk6v2N5G9HuTUvqY804UxvRHFUwQ0q8ObNkBXaetdhWoHEX4W5/CSJzwaKwg=
+	t=1738932554; cv=none; b=CaTygLo+8DXzB4bFzxcXnfrI7DkkG1PZ+yTwffExN5q6CNLj+fp9GRdg7USgg39P7zsAbLGan49wyrvsdnsZiz4Q7apWD6AOHO1ZZfw1jKLKbQu4oU5RyfJBATULWpozv8KGEPZ1JURsXALLWlWXDyx7rdcCKorYqkipDSjEKaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738926034; c=relaxed/simple;
-	bh=L8vvMrHqXLuRIWhjPqJkNJ5PayyKWV2E94TOwWeQJqE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a7EixwqbD+QLMRvSu2AZ/73RZ6t09u2yiQSraColZehxVEtZiuk+jCLRPHPm3OubJkvMr01LoNZCV94zj/DAa/+/Wa7/DkMjrC7JNX5JHWCCv+aDh3kHujMwtf94czbqEz0WTTS5Go5ihhBLpYveeGRnPkbtZau1cOoSS4779rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=nyIMq1L0; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=Q+3SYsBr294PAVI7H7PNiNYZ1DD9Gyw0/GPNKUH8NjM=;
-	b=nyIMq1L0m6GkNYYbb2gJ2XXV2rCnDfi3LzktELM9TmBCpCTtmd7cvFQNC558x9
-	NY739kEhOPtlVtN7d3PgH5OwUrbY0CA2DO2U+1TqY0m0XYDTdKDVk9IjAPGvzyxJ
-	dOxuCxDCOg1YF2TSn0WWRX33WY2ephZSpXQfXKgQbf/5I=
-Received: from [192.168.243.52] (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wBXn0aV56VnXQ1VKQ--.4483S2;
-	Fri, 07 Feb 2025 18:59:34 +0800 (CST)
-Message-ID: <c1f39ecf-0c2d-4c04-9681-fc8ca5b41334@163.com>
-Date: Fri, 7 Feb 2025 18:59:33 +0800
+	s=arc-20240116; t=1738932554; c=relaxed/simple;
+	bh=rewFqSNHRICHMfqkDxgVEbgGirdxnhjcREMT1ec102k=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=fbXioQtKfxLjTXPDtX0H2G1mqTuo4xnok2t/menyT+iksmFjhNmbGnnalKqjl2evdunnOnR16XOzXH68UBLDAK+fHL8dGeoy6ktRibbQhkiisQA1fFZ083AHBIqn4kjnz60re+j2011LXUESwDh+WU9yIEZNQP2YAhQ68OuRwbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHvt6snT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA43C4CED1;
+	Fri,  7 Feb 2025 12:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738932553;
+	bh=rewFqSNHRICHMfqkDxgVEbgGirdxnhjcREMT1ec102k=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=jHvt6snT8i5LVK0+zxXKmikH/dFAT8bh55vD4J+GS0yGZY9e1An4XHhqrV/KG7Mn3
+	 fZ3aPT8L9xIjwyktOU2tSf4mYly9Z6RhMW+k7C06amDzCUwio1BgcidR926HKam6HG
+	 npEVrC2x9DWWOfF8cYLrEu/X1JbwU4xZRGNzDgt0LNbupTSowKYR+WXJn0U6Ws9uHV
+	 5Txb88152dscL/tPpw/cUIiu2afCvOwNBKloajCBMShon3DO+6QQVJQO6RR/bp+mSq
+	 BYLxAEs1AVUA9edvNm1hDGwD3LA2LRdaroXEBTB7jsJUk7Iz9JCOI4fR0dU1z5a/r5
+	 LjzzXjZAGLdiQ==
+Date: Fri, 7 Feb 2025 13:49:10 +0100 (CET)
+From: Jiri Kosina <jikos@kernel.org>
+To: Philipp Stanner <phasta@kernel.org>
+cc: Even Xu <even.xu@intel.com>, Xinpeng Sun <xinpeng.sun@intel.com>, 
+    Benjamin Tissoires <bentiss@kernel.org>, 
+    Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, linux-input@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] HID: intel-thc-hid: Remove deprecated PCI API calls
+In-Reply-To: <20250128101156.77868-2-phasta@kernel.org>
+Message-ID: <96151032-84p2-17q9-3997-sn60r0n13sp9@xreary.bet>
+References: <20250128101156.77868-2-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2] PCI: cadence: Fix sending message with data or without data
-To: lpieralisi@kernel.org
-Cc: kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
- bhelgaas@google.com, bwawrzyn@cisco.com, cassel@kernel.org,
- wojciech.jasko-EXT@continental-corporation.com, a-verma1@ti.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
-References: <20250207103757.31958-1-18255117159@163.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250207103757.31958-1-18255117159@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wBXn0aV56VnXQ1VKQ--.4483S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Kw43JryDKF1rJryUCFykZrb_yoW8Zw15pF
-	y8Ga4Sy3WIqrWavan5Za1UZF13J3ZxtF97Ww4v934fuFnru34UGF12kFy5GFW5GrWkXr17
-	A3WDtF9rKFs3AFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UpnmiUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWx7so2el4eZgNAAAsb
+Content-Type: text/plain; charset=US-ASCII
 
+On Tue, 28 Jan 2025, Philipp Stanner wrote:
 
-
-On 2025/2/7 18:37, Hans Zhang wrote:
-> View from cdns document cdn_pcie_gen4_hpa_axi_ips_ug_v1.04.pdf.
-> In section 9.1.7.1 AXI Subordinate to PCIe Address Translation
-> Registers below:
+> intel-thc-hid reintroduced the already deprecated PCI API functions
 > 
-> axi_s_awaddr bits 16 is 1 for MSG with data and 0 for MSG without data.
+> 	pcim_iomap_table(),
+> 	pcim_iomap_regions(),
+> 	pcim_iounmap_regions(),
 > 
-> Signed-off-by: hans.zhang <hans.zhang@cixtech.com>
-
-I'm so sorry, guys.
-The correct Signed-off should be: Hans Zhang <18255117159@163.com>
-
+> none of which should be used anymore.
+> 
+> Furthermore, calling managed (pcim_*) functions in remove() and probe()
+> for cleanup is not necessary, since the managed functions clean up
+> automatically.
+> 
+> Replace / remove the deprecated functions.
+> 
+> Fixes: 61bb2714dc3a1 ("HID: intel-thc-hid: intel-quicki2c: Add THC QuickI2C driver skeleton")
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
 > ---
-> Changes since v1:
-> - Change email number
-> ---
->   drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 +--
->   drivers/pci/controller/cadence/pcie-cadence.h    | 2 +-
->   2 files changed, 2 insertions(+), 3 deletions(-)
+> Hi,
 > 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> index e0cc4560dfde..0bf4cde34f51 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> @@ -352,8 +352,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
->   	spin_unlock_irqrestore(&ep->lock, flags);
->   
->   	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
-> -		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code) |
-> -		 CDNS_PCIE_MSG_NO_DATA;
-> +		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code);
->   	writel(0, ep->irq_cpu_addr + offset);
->   }
->   
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index f5eeff834ec1..39ee9945c903 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -246,7 +246,7 @@ struct cdns_pcie_rp_ib_bar {
->   #define CDNS_PCIE_NORMAL_MSG_CODE_MASK		GENMASK(15, 8)
->   #define CDNS_PCIE_NORMAL_MSG_CODE(code) \
->   	(((code) << 8) & CDNS_PCIE_NORMAL_MSG_CODE_MASK)
-> -#define CDNS_PCIE_MSG_NO_DATA			BIT(16)
-> +#define CDNS_PCIE_MSG_DATA			BIT(16)
->   
->   struct cdns_pcie;
->   
-> 
-> base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
+> I'm trying to remove this API since a year. Please pay attention to the
+> docstrings in PCI which mark certain functions as deprecated.
+
+Applied, thanks.
+
+-- 
+Jiri Kosina
+SUSE Labs
 
 
