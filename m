@@ -1,97 +1,114 @@
-Return-Path: <linux-pci+bounces-20907-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20908-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 044F9A2C84A
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 17:06:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4FBDA2C866
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 17:19:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95531162783
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 16:06:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F2613A2335
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 16:18:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6C5B1DE4EA;
-	Fri,  7 Feb 2025 16:06:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D651182D9;
+	Fri,  7 Feb 2025 16:19:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKRyN7DX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e5YYyGpq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A507723C8BA;
-	Fri,  7 Feb 2025 16:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AACF23C8C5;
+	Fri,  7 Feb 2025 16:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738944383; cv=none; b=EGhU0rbyKE2qfVmNw3kou9q3srZcmkLeW3fKDcEXrfCWMwlssEgGbQxaKqavE14qanKZudXNBXgwRRkRG7NsL43jkbGfYBZvLUXakLp2TZV/eC4VmwhDepxkVtDvMoIUCAtGLYUjaqANjm5beBwDM1cWSnbv+RkgmbcBeIWb6UA=
+	t=1738945140; cv=none; b=baZLFE7bqgVORnXH+qnY5GJo+tLd5+r1rZditjhXRYp2pgpMz+iitl58pmNunCQQEhdcIj70S2BVjDzax4eQru5hKAf+3UbR0vN+v61SWaldO6k5dwRKovRXdNfVW2CFS/pOdXw5HXGzif11Q8jQcLY20pvC1Px1BbaHz4unQ1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738944383; c=relaxed/simple;
-	bh=HnHgKw5S43ISE7VAWcFFXSGNAVbgSBW92k7zYjpnP+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FLhZaPk8k4yzmQWFufOStTcfxPQezC9ZoCFRG4Wyo/eY13UG2ENoQJKqYElxE/SK0bWkNu17txJ4cPhvNUTQsq9jbbyCcPqZSANbx5P8GVexmzBpcqP2e0HGtdTQLI/xoAGasnyc4hb3yrGMAPDuw3YINQ8pt+n3z0az1Fx6PwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKRyN7DX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A347C4CED1;
-	Fri,  7 Feb 2025 16:06:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738944383;
-	bh=HnHgKw5S43ISE7VAWcFFXSGNAVbgSBW92k7zYjpnP+c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RKRyN7DXTTFGL2kajCIA3dkNOWGDeGB1cTDOn7RTq96CkOiMw9/nBJFQmyzjwgQX9
-	 BQ1zs7UdI0G+aitry/eU23E0tzlNe4zbUy1SOYF3iOo0Vb6ecfgymKljJ0feHTpk2j
-	 1OZVyuU3Ty7S3YMjSPGxFrA/8Kfjrl1xsykooUKzFOC2y7RmTQZC+ml/Z+QxrkJ3Ex
-	 jgFqzZ4sKikPY5jSve7yyqpcdfYiuvDey3QdKKstyme5vfTa0AZNL1H7E+Hc+v4QVG
-	 CMd5LT/EBiFvvkac1DgN0OJLrhdqYqaZP2Mu5hH99y3kYjb1eFGFk2s3dfEkY9QlLZ
-	 rH3uRlY5Mi3Vw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tgQsC-000000004Uq-21Bm;
-	Fri, 07 Feb 2025 17:06:32 +0100
-Date: Fri, 7 Feb 2025 17:06:32 +0100
-From: Johan Hovold <johan@kernel.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Jon Hunter <jonathanh@nvidia.com>,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	Linux PM <linux-pm@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Linux PCI <linux-pci@vger.kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Kevin Xie <kevin.xie@starfivetech.com>,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
- parents and children
-Message-ID: <Z6YviAFD4Az3EIBa@hovoldconsulting.com>
-References: <12619233.O9o76ZdvQC@rjwysocki.net>
- <1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com>
- <Z6YPpbRF_U0TxAbf@hovoldconsulting.com>
- <Z6YcjFBWAVVVANf2@hovoldconsulting.com>
- <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
+	s=arc-20240116; t=1738945140; c=relaxed/simple;
+	bh=ffYOgS4UhPejR6mXfcmPkQCxK4R+XKjUS4+aNbxNe9I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=IWMlzgB5CVdqhFRWTvQO085vCKd8rbKOC7MizdmN3sLMZd055T0GXCRT1oE2ky2jf4yFYzelVL03Ygga7YrYw/zbNvmfGeV/3kizXZy12jlu5hEvtCanwAaHlpmGrq5lkWAoAnWnhLGh9Ca1en9+vy+9w3JEmWj+NC9HjIwEhpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e5YYyGpq; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1738945139; x=1770481139;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ffYOgS4UhPejR6mXfcmPkQCxK4R+XKjUS4+aNbxNe9I=;
+  b=e5YYyGpq6sSS236QgoiGWyfGl3eOCVUqhSOERgEXFupUC1zjFURAzyvX
+   GFC2yJNj2khlSc3ICsnVE3otpFAnuObEaamtXdfDPMYQ61Efn15eLCiBz
+   QCOBDy3OGHNTWIWCIYrzS1/tVFfO2vUPqcnlNdAoLHKBaDhj6uLZz1ns1
+   cuKC6fvgZpY0h5xzCeicm2W69kOPGGQUeqghDLBmZ/C8qvSxhTJBCU85e
+   2fcV6vEIYd37X0KE28BBrdwD1en2TDG4EgZIUlPr8qoQf5Bm5rZyor2V/
+   6IbSoAyrsT5UIkkn3PcjGYrh3H+8ZEe2MlkzJXzIF48mk6U0N6vcRC/nY
+   Q==;
+X-CSE-ConnectionGUID: zYUjbysLRCOdfSCxpwGcSQ==
+X-CSE-MsgGUID: K6oxL43qT92dal6QKpJ8tQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="57006818"
+X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
+   d="scan'208";a="57006818"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 08:18:58 -0800
+X-CSE-ConnectionGUID: uxOX1lgPSoii9D6Sxtphgg==
+X-CSE-MsgGUID: Prm7B2SPQRG+ICL20NFI0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="116502373"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.116])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 08:18:54 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	Lukas Wunner <lukas@wunner.de>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-kernel@vger.kernel.org,
+	Borislav Petkov <bp@alien8.de>,
+	linux-edac@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Oliver O'Halloran" <oohall@gmail.com>,
+	Tony Luck <tony.luck@intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v2 0/2] PCI: Add support for logging Flit Mode TLPs (PCIe6)
+Date: Fri,  7 Feb 2025 18:18:34 +0200
+Message-Id: <20250207161836.2755-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
 
-On Fri, Feb 07, 2025 at 04:41:18PM +0100, Rafael J. Wysocki wrote:
-> On Fri, Feb 7, 2025 at 3:45 PM Johan Hovold <johan@kernel.org> wrote:
-> > On Fri, Feb 07, 2025 at 02:50:29PM +0100, Johan Hovold wrote:
+This series adds support for Flit Mode (PCIe6).
 
-> > Ok, so the driver data is never set and runtime PM is never enabled for
-> > this simple bus device, which uses pm_runtime_force_suspend() for system
-> > sleep.
-> 
-> This is kind of confusing.  Why use pm_runtime_force_suspend() if
-> runtime PM is never enabled and cannot really work?
+v2:
+- Rebased
 
-It's only done for some buses that this driver handles. The driver is
-buggy; I'm preparing a fix for it regardless of the correctness of the
-commit that now triggered this.
+Ilpo Järvinen (2):
+  PCI: Track Flit Mode Status & print it with link status
+  PCI: Handle TLP Log in Flit mode
 
-Johan
+ drivers/pci/hotplug/pciehp_hpc.c |  5 +--
+ drivers/pci/pci.c                | 12 ++++---
+ drivers/pci/pci.h                |  6 ++--
+ drivers/pci/pcie/aer.c           |  1 +
+ drivers/pci/pcie/dpc.c           | 18 ++++++++--
+ drivers/pci/pcie/tlp.c           | 56 ++++++++++++++++++++++----------
+ drivers/pci/probe.c              |  5 +--
+ include/linux/aer.h              | 12 +++++--
+ include/linux/pci.h              |  1 +
+ include/ras/ras_event.h          | 12 +++----
+ include/uapi/linux/pci_regs.h    |  6 +++-
+ 11 files changed, 94 insertions(+), 40 deletions(-)
+
+
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+2.39.5
+
 
