@@ -1,200 +1,144 @@
-Return-Path: <linux-pci+bounces-20911-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20912-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F0DEA2C89B
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 17:23:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BD5AA2C8B6
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 17:27:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1CFC1188B106
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 16:23:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96C133A978F
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 16:26:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E967318BB9C;
-	Fri,  7 Feb 2025 16:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31FEB189B94;
+	Fri,  7 Feb 2025 16:26:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vhs65qZ2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAdAD63Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE45189B94;
-	Fri,  7 Feb 2025 16:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B5A23C8C5;
+	Fri,  7 Feb 2025 16:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738945392; cv=none; b=T8iUTkmotH/GNuJ/IGlPSCsH6aeVzCRGCQLq4FQs1dpYqkXuR2hgkptHCMPvIGdqRfCDjxxiMiNwX5O2CuL9fCA4e5ooi4/nPxbnMo/2kJp06EY993oY/17araVOF3yfgbnhu4QB0I7kOYRBtbfK//B+rEOJ+XJImgNxjbJKhJY=
+	t=1738945582; cv=none; b=hORszu2FEaduGf8U7ohBhiEq+ZrOhuJBsy74//PlKI46x4y5mrf6A4Uoe5vj87sNCQa1s8JOHKjDdrPBlHzSkrCiyFDjIXwVCG7FQaEJpOcBro+9MKALVaJOjfN6H9QW2/aAPK6KuQbQpfQLpJayAJ5e2xdLOw7zfFxk3QSTeD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738945392; c=relaxed/simple;
-	bh=whCYzTnNytr7VcqUble5w8K5UFVk9Nv8AzFfMYiEqW4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=a9UNBL0s/+x7A3DzmZoUP1ipYjIBVT6BZTJtDsaJnr1yMvawN3XbWHGa6Lw89g+8LsRE5Vicij5jY1h+JvXxhoYRn37qULcpMQnOdvTd3YPW4KqjoC+Lc3YMOdQVALqmRvRL7PwWgqE08b74MkhI/tB9xKpHWSptLgsTNbPQJX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vhs65qZ2; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1738945391; x=1770481391;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=whCYzTnNytr7VcqUble5w8K5UFVk9Nv8AzFfMYiEqW4=;
-  b=Vhs65qZ251mGPIAPQolOmeFMNbfVMHtr8/jNAhcPi2c6IMmbGTCV0YEE
-   8SZaHwAClrC4NLnL9+NNJUvFou+PNcpw0kJ/qzwMkdC/NSX42oc92Baf5
-   tmwgvn1DMzHYB6evQXoOA7TUib5Qm4f2pSX9YKYFZWqS8xepuoTQxqv0w
-   4gxc8Q9AT7oajvnXZwrtCRhgdyTB8dT6javfpWD01BA2wc6jMGaxUuNUN
-   cBNZAWvWGK7OAxQ000AFehwkalTWd3oIrM6dMBP6j7qVJfyXgznvRAjrM
-   lTzqP1tQ7JYo1WNS6OtxcaoJ0oxva6iVHBYe5V7M75f5QJXTpIGHWgElD
-   Q==;
-X-CSE-ConnectionGUID: GV7feD1LRA6+oMzS9JXdOg==
-X-CSE-MsgGUID: zA10FSpeROCoCILlJ3tyRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11338"; a="38822160"
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="38822160"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 08:23:10 -0800
-X-CSE-ConnectionGUID: kigaWAt4SQKCSzyrh3bYVQ==
-X-CSE-MsgGUID: fOhFIS8dQqygyyCb/qvOxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,267,1732608000"; 
-   d="scan'208";a="111483494"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.116])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2025 08:23:08 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 1/1] PCI: Cleanup dev->resource + resno to use pci_resource_n()
-Date: Fri,  7 Feb 2025 18:23:01 +0200
-Message-Id: <20250207162301.2842-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1738945582; c=relaxed/simple;
+	bh=Z+23uYCPl3ES/TnEirPH6od61dFnbsbYONvlDb8AxhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BI/Z1UMGiKbbGaDjRjG8Sfwvza5qxHS+fKBVvHBWH/mU1cXiC/JpteyRcJu2b/hZTKgBouBd/UICnrDjx36j5yttvyRldoFM08d9XZgCeddECnukZwSEsHj2YFXPB6z8CUCNIw+WvLARBx5+LEjA23mtLslzOqwIgEXpgA0OJk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAdAD63Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68F25C4CED1;
+	Fri,  7 Feb 2025 16:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738945581;
+	bh=Z+23uYCPl3ES/TnEirPH6od61dFnbsbYONvlDb8AxhI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lAdAD63QAj0slvJUgQanww6BNt31Ti49f1rHTmTdsTakP4eSnvcathTR60y93R/j/
+	 lLYbaRwIE3c39Bcq/BMEtFsHpoY121jDeyzqYcBUiKPX2CKc5ijJACpwrDfqPYuILz
+	 PaLbR9AXANWjCb/cOjMxfQC9m9VazW7drAMXZgub43MTqReEiizyeupMDRhzN2Ipfb
+	 r4/KIsd6TCRLLSOWxHoVeepMQbFlGWKXbLTOOYC5mkzxZe4kRzsrpAbK53FyvCTtqq
+	 r4mS7kwHSaTlMkocGM9mbZCDAWr9ZJywtazy8HEPCuZl8II6pkHAfRZFrT4fu3fHTl
+	 mgC4HoDGLcVbQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1tgRBW-000000004oe-034F;
+	Fri, 07 Feb 2025 17:26:30 +0100
+Date: Fri, 7 Feb 2025 17:26:30 +0100
+From: Johan Hovold <johan@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
+ parents and children
+Message-ID: <Z6Y0NlW40yHTIlzm@hovoldconsulting.com>
+References: <12619233.O9o76ZdvQC@rjwysocki.net>
+ <1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com>
+ <Z6YPpbRF_U0TxAbf@hovoldconsulting.com>
+ <Z6YcjFBWAVVVANf2@hovoldconsulting.com>
+ <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
+ <Z6YviAFD4Az3EIBa@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6YviAFD4Az3EIBa@hovoldconsulting.com>
 
-Replace pointer arithmentic in finding the correct resource entry with
-the pci_resource_n() helper.
+On Fri, Feb 07, 2025 at 05:06:32PM +0100, Johan Hovold wrote:
+> On Fri, Feb 07, 2025 at 04:41:18PM +0100, Rafael J. Wysocki wrote:
+> > On Fri, Feb 7, 2025 at 3:45 PM Johan Hovold <johan@kernel.org> wrote:
+> > > On Fri, Feb 07, 2025 at 02:50:29PM +0100, Johan Hovold wrote:
+> 
+> > > Ok, so the driver data is never set and runtime PM is never enabled for
+> > > this simple bus device, which uses pm_runtime_force_suspend() for system
+> > > sleep.
+> > 
+> > This is kind of confusing.  Why use pm_runtime_force_suspend() if
+> > runtime PM is never enabled and cannot really work?
+> 
+> It's only done for some buses that this driver handles. The driver is
+> buggy; I'm preparing a fix for it regardless of the correctness of the
+> commit that now triggered this.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/pci/iov.c       |  2 +-
- drivers/pci/pci.c       |  2 +-
- drivers/pci/quirks.c    |  4 ++--
- drivers/pci/setup-res.c | 12 ++++++------
- 4 files changed, 10 insertions(+), 10 deletions(-)
+Hmm. The driver implementation is highly odd, but actually works as long
+as the runtime PM status is left at 'suspended' (as
+pm_runtime_force_resume() won't enable runtime PM unless it was enabled
+before suspend).
 
-diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-index 9e4770cdd4d5..121540f57d4b 100644
---- a/drivers/pci/iov.c
-+++ b/drivers/pci/iov.c
-@@ -952,7 +952,7 @@ void pci_iov_remove(struct pci_dev *dev)
- void pci_iov_update_resource(struct pci_dev *dev, int resno)
- {
- 	struct pci_sriov *iov = dev->is_physfn ? dev->sriov : NULL;
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	int vf_bar = resno - PCI_IOV_RESOURCES;
- 	struct pci_bus_region region;
- 	u16 cmd;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 869d204a70a3..c4f710f782f6 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1884,7 +1884,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
- 
- 		pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &ctrl);
- 		bar_idx = ctrl & PCI_REBAR_CTRL_BAR_IDX;
--		res = pdev->resource + bar_idx;
-+		res = pci_resource_n(pdev, bar_idx);
- 		size = pci_rebar_bytes_to_size(resource_size(res));
- 		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
- 		ctrl |= FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b84ff7bade82..5cc4610201b7 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -621,7 +621,7 @@ static void quirk_io(struct pci_dev *dev, int pos, unsigned int size,
- {
- 	u32 region;
- 	struct pci_bus_region bus_region;
--	struct resource *res = dev->resource + pos;
-+	struct resource *res = pci_resource_n(dev, pos);
- 	const char *res_name = pci_resource_name(dev, pos);
- 
- 	pci_read_config_dword(dev, PCI_BASE_ADDRESS_0 + (pos << 2), &region);
-@@ -671,7 +671,7 @@ static void quirk_io_region(struct pci_dev *dev, int port,
- {
- 	u16 region;
- 	struct pci_bus_region bus_region;
--	struct resource *res = dev->resource + nr;
-+	struct resource *res = pci_resource_n(dev, nr);
- 
- 	pci_read_config_word(dev, port, &region);
- 	region &= ~(size - 1);
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index ca14576bf2bf..ad6436007148 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -29,7 +29,7 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
- 	u16 cmd;
- 	u32 new, check, mask;
- 	int reg;
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	const char *res_name = pci_resource_name(dev, resno);
- 
- 	/* Per SR-IOV spec 3.4.1.11, VF BARs are RO zero */
-@@ -262,7 +262,7 @@ resource_size_t __weak pcibios_align_resource(void *data,
- static int __pci_assign_resource(struct pci_bus *bus, struct pci_dev *dev,
- 		int resno, resource_size_t size, resource_size_t align)
- {
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	resource_size_t min;
- 	int ret;
- 
-@@ -325,7 +325,7 @@ static int _pci_assign_resource(struct pci_dev *dev, int resno,
- 
- int pci_assign_resource(struct pci_dev *dev, int resno)
- {
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	const char *res_name = pci_resource_name(dev, resno);
- 	resource_size_t align, size;
- 	int ret;
-@@ -372,7 +372,7 @@ EXPORT_SYMBOL(pci_assign_resource);
- int pci_reassign_resource(struct pci_dev *dev, int resno,
- 			  resource_size_t addsize, resource_size_t min_align)
- {
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	const char *res_name = pci_resource_name(dev, resno);
- 	unsigned long flags;
- 	resource_size_t new_size;
-@@ -411,7 +411,7 @@ int pci_reassign_resource(struct pci_dev *dev, int resno,
- 
- void pci_release_resource(struct pci_dev *dev, int resno)
- {
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	const char *res_name = pci_resource_name(dev, resno);
- 
- 	pci_info(dev, "%s %pR: releasing\n", res_name, res);
-@@ -428,7 +428,7 @@ EXPORT_SYMBOL(pci_release_resource);
- 
- int pci_resize_resource(struct pci_dev *dev, int resno, int size)
- {
--	struct resource *res = dev->resource + resno;
-+	struct resource *res = pci_resource_n(dev, resno);
- 	struct pci_host_bridge *host;
- 	int old, ret;
- 	u32 sizes;
+So we'd strictly only need something like the below if we are going to
+keep the set_active propagation.
 
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
--- 
-2.39.5
+Johan
 
+
+diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
+index 5dea31769f9a..d8e029e7e53f 100644
+--- a/drivers/bus/simple-pm-bus.c
++++ b/drivers/bus/simple-pm-bus.c
+@@ -109,9 +109,29 @@ static int simple_pm_bus_runtime_resume(struct device *dev)
+ 	return 0;
+ }
+ 
++static int simple_pm_bus_suspend(struct device *dev)
++{
++	struct simple_pm_bus *bus = dev_get_drvdata(dev);
++
++	if (!bus)
++		return 0;
++
++	return pm_runtime_force_suspend(dev);
++}
++
++static int simple_pm_bus_resume(struct device *dev)
++{
++	struct simple_pm_bus *bus = dev_get_drvdata(dev);
++
++	if (!bus)
++		return 0;
++
++	return pm_runtime_force_resume(dev);
++}
++
+ static const struct dev_pm_ops simple_pm_bus_pm_ops = {
+ 	RUNTIME_PM_OPS(simple_pm_bus_runtime_suspend, simple_pm_bus_runtime_resume, NULL)
+-	NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
++	NOIRQ_SYSTEM_SLEEP_PM_OPS(simple_pm_bus_suspend, simple_pm_bus_resume)
+ };
+ 
+ #define ONLY_BUS	((void *) 1) /* Match if the device is only a bus. */
 
