@@ -1,95 +1,95 @@
-Return-Path: <linux-pci+bounces-20864-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-20865-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12166A2BCD0
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 08:47:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A512A2BD88
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 09:08:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 59F78188B088
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 07:47:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1EF477A6128
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Feb 2025 08:04:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A71301A76DA;
-	Fri,  7 Feb 2025 07:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C704E1991CF;
+	Fri,  7 Feb 2025 08:01:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="YZ87KQj/"
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="h00gLq/4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FF4239082
-	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 07:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21737185B67
+	for <linux-pci@vger.kernel.org>; Fri,  7 Feb 2025 08:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738914347; cv=none; b=gzjeU4vYj+Y7FZu3Vo4ylH9wm2DRWRPYsYqnkMiZwR7MD4oWqre7N683QFySalGiusG5rKcKSTuy6LFIrdWXF6pDfU4eu7zRQ8+Oc8BU4wfuU5qHTy0cu2UKM1w/EjIqMNUgn1zxQz33owlutFLPZLSeHGYEVvQXWwOIGZUFfCI=
+	t=1738915294; cv=none; b=sEf5D0nujsdoR8djzX/+UGBmXmlcsaFsNEjnd4qQobA6bWrkmJ93A8CUu5MLD4CH2+tszi30fGXuGRUTtkoDVeChkwe6hzfyi0J4Z0ITjLa22a0bn2+H6eBAXtCUVk+80jJ+RFubhyPJTOBXb+KS+wl6nxALwxrVkpHl7yqo768=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738914347; c=relaxed/simple;
-	bh=ypUvBmqeSA5zmnvQEnD0qriNJ7GpCmT00dwkj1UgV7A=;
+	s=arc-20240116; t=1738915294; c=relaxed/simple;
+	bh=+1Sc8DvEXSqZhxSPhaoZkti61/HFD7B/mhsc91OQR4Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gelwM7acEiize7EP8Ua8EgB2zGK5Tqq3RdrF8b2K7TTM/fJq70tuAvKDh+FewioLMkENe6Hflo0nEtvc+ljYPaxN+P3nWEK6dBozhxz/e7esk5vSPvNtYifI3jibJ3fdQPQzeyQQxkawpt3g3qSejG6vz7w8NJQFoyjO5bIiU2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=YZ87KQj/; arc=none smtp.client-ip=209.85.222.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=h0pxZB9v9UWs9NAcJsHCVm7yAuZdQLViliprqGmjxx3YQKtvXvX0m8A38VElPZFx7E4bYgFB9tMbB0bPjzqIx39oZEYu0BfeKEtMFERASayrHIYE6CRVPz3IlX6RujQSb+gqMe70ZjF0DhG64OdO8Mt86qymkZr8tVvH6dgoT+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=h00gLq/4; arc=none smtp.client-ip=209.85.219.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7b6ed9ed5b9so308373085a.2
-        for <linux-pci@vger.kernel.org>; Thu, 06 Feb 2025 23:45:45 -0800 (PST)
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6e17d3e92d9so13748446d6.1
+        for <linux-pci@vger.kernel.org>; Fri, 07 Feb 2025 00:01:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1738914344; x=1739519144; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1738915292; x=1739520092; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ITCo0zOF3w7fSYlcXsHoFxkXnBWTFovbLH+EqkDvJfQ=;
-        b=YZ87KQj/2Wz2//tCO4yiUVNBh+MZLwMQRP01c8zikvLiaW+Fw59EXFXKxN3HQHrqAA
-         LrSekBOj2fWJ9ol/XdsvnNfXqFjF+RMW2Lf9aCLNXqiKtoj0QurHuWlqVdvxV9IegdNl
-         E09ZdtIIP3MW568i+MAa5fwW3OJz3Nj+qm8G7R2eEe2isPcNRZSI3bzEBzvuPEpacSIu
-         yBpU0DZFoprMkLVKfZ6M7/UWKfUG7zZ897WbSDztsNYgK9b3FWI6s/hj5hGvCcKhfpyU
-         sYSP/1N5HreUWfwNAgWN5wtLnFOaEgL6OKafYex1Jc3PKuKFy+YbL+lxH7GHPpDYwIdb
-         N/ag==
+        bh=53rCUEYLoP6SzGQ7dltS09SOj08LJRV41NYySfcgmkU=;
+        b=h00gLq/4BHkrGLsQbD+eQFL+zXZcdYJg/nNfz3jfhyjbKJRsU38zlizAKV1dL0ypAX
+         uEDtzv3OVKjH2YTXcToeWDv6CQuF+63K1KYatBacD0UpAEsfsfwdufuET4X6p8iKFDpH
+         puUyfpxmfQ54a7TFNVU7MkaXlig1f4lWRpzMFjDJtS8+4NQG1rhzFnCMuptH5NVP9WXZ
+         5UbMXAbsxbeSO5Yxgr/h/XmlPxoE1UGJUYmep+EfVK1HFUkaV1eOLN1Uy7yD8mz3prj1
+         6h94jvBfSxzun92cm0+1a9i6pBEZMUkOQgiahYGzlHuDzqcCLoRaD13VJ8us/Tb3FOH2
+         S1hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738914344; x=1739519144;
+        d=1e100.net; s=20230601; t=1738915292; x=1739520092;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ITCo0zOF3w7fSYlcXsHoFxkXnBWTFovbLH+EqkDvJfQ=;
-        b=wei8XP0Zf+6X4dXce5kGq1xjr7egDdoog9IiH6XQ4rWTORLxU4CpnOeLFUko3f6Sew
-         IU9EROwmcadV5eIYDRg6TPmT0F5Zm7Km425H+7usxhJn3H2IQGLshAyItSM9+Dk5ebSD
-         LyMmJyEC4xu1ERGrKUS35fs5R8apez5h5cmTjylNSNPO3Mlna6GLeAXE2U4Wl7mY/Gc4
-         OWRSfFr+68FBKyxAQHndRwkaOPs2zQDuoeYON62cYPdWe+9barkKspkpexxUM3fEKOtU
-         LDVMqZa5d4ay4X4P3erlBv8H9VeK4Kmpr5GtSO3J7qXuPiEQL9vNEtlz+Dn+1q0qyMe9
-         ld6g==
-X-Forwarded-Encrypted: i=1; AJvYcCV+oL9IFWutLPt3AKTyHYRJYYMULBYqohhTT3qLOdReDI16avPGnKKNNXO3XACi066r7hWgNHnWFhQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpSFld5xinMuLwWoBdrXVWz4/RwyqK1uWojjgXfPrSRhYNLiG3
-	EudE7d6+F6whYG5d4g2siMuyZYtp868QNslIkjOYQCdilSLNBOegsht+cQydiWg=
-X-Gm-Gg: ASbGnctNOvgUu0Vp26vlQTkh3wXCCsvorKLdgEYSOG/hZQvjrlZegbXtUJu5YisGpep
-	YgOy+jKXX/cW7UW5tmNpAM1gOYoHaiJ/1Z8ca4/Xj+fQz50B400+jLs2s/tRhOvRkYD74yQNMcT
-	xMo35x8lOzWtSp8ymlToEBBYQelq7ImG7a9Tl+/4QH3do4CbF4hwwj6Hrg8PZFGbgZElJZXWWhO
-	z1dPLKAAczh5HMiVeZgc9EVP7v3nKrK7oBFidJsgre0Hq24gJ0SVe5KW9OKE3yTE4biBOJUyYww
-	X9BRxKcxWxKfM5sYGjTHW2wUx09NHMHnV3kGoTLa4Nbz0GkMlo6X9BuU72VtBmOkWLuQiAp6iQ=
+        bh=53rCUEYLoP6SzGQ7dltS09SOj08LJRV41NYySfcgmkU=;
+        b=k/yijmw4A4DHFc+isLecX4TRXDj825Z5WfDhNp9oOzwDGbTWUkdhOgEtpSHhLmtLRP
+         OFZrSRwsuPeanNfqCBMUoGPJ7cd5jHID3JoxyUzjZbhJ6aUzskDr6OdWPxSvAymZEmjx
+         uCcgzoHCuD29XFXGj3QIy6u6W7HfF21trNIonIe06PUI1/J8kja7U4H4BhrYEvbRaKwr
+         fDDFEAgczA5XlOPOwMx3/96TZFE5IZdELlPjWSARu63QPFFRZCClj+0QnUHkb/WP8Qq9
+         ESVfoFv0Y3yH9GgRK0DXi6lg5zbbJNWMJhkR+OkLTnESeOILnWhSZNcpTr1lsgx88acr
+         nPXg==
+X-Forwarded-Encrypted: i=1; AJvYcCWYXDcpXCkl6hbh0YePpzEAgXjs98XNNBafmM7nWuL57oWSdTWv0601oQ9u5VI4+J9p7RqYIoBaBVs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVMbQOKLVLD8r+MsG3HO2QW9tpSKfRR1eqzXcTV3SATgcp0cQ6
+	n3UwRHX9TRJJmLTgqvsM7nZzU46E1himqh9AnZYfEJhAlcnesg15290Y6LYElPo=
+X-Gm-Gg: ASbGncuNYL3sC4P94oTNrV6lOdWJtDBfJcFCysbxSIYmDSXvbMBM20Ls9rSxnHKZbPk
+	tasIg9dsRz3vyADxmk3pQwt6H3atu67FrCTwsNOHCkBkHU6dFRsT+gcsNHqh+zA8PcxWxjXElGZ
+	uIz4ZVsG2sSfnghj+fAckfuNKE5Z3sI/ZpSJhvuHbdLsoXy0rWVxZ6fwQMRlx8lZf+UA6LymkNN
+	/DpKnhLIQZoS1Ct7iEpIBUUtcGbVfdIuavZe9qOEHvu2Uv7Mu9/QyntYuOzD3xNXXj8sfXvbMMw
+	9XaJcUQTCjoUrEmnnGWzcmli07TRdg4V7+jI7hqDuErf8uXmkI/E0jyh4YSrOIcmuNtSdkLSAw=
 	=
-X-Google-Smtp-Source: AGHT+IEEbQrgliT3+ZX90iWNqouIwlVzy6+xrcLd8rmzxealOsnm5pyXJqkj1L0uucgsijhy4P9hAA==
-X-Received: by 2002:a05:620a:390a:b0:7be:3d02:b5d3 with SMTP id af79cd13be357-7c047ba6bbamr305582885a.1.1738914344599;
-        Thu, 06 Feb 2025 23:45:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHVh9GKjiTCyuhbzPrNi9cz7oIOwuNi4yAC6Z7SgEopNjBBBR7Jr4474gD2P2gHYgAE+nm67Q==
+X-Received: by 2002:ad4:5ce8:0:b0:6d8:7ed4:336a with SMTP id 6a1803df08f44-6e4456fb76amr33866786d6.31.1738915292012;
+        Fri, 07 Feb 2025 00:01:32 -0800 (PST)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041e11bd3sm157511285a.51.2025.02.06.23.45.43
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43babc865sm14190686d6.101.2025.02.07.00.01.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 23:45:43 -0800 (PST)
-Date: Fri, 7 Feb 2025 02:45:41 -0500
+        Fri, 07 Feb 2025 00:01:31 -0800 (PST)
+Date: Fri, 7 Feb 2025 03:01:28 -0500
 From: Gregory Price <gourry@gourry.net>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, oohall@gmail.com,
-	Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com,
-	lukas@wunner.de, ming.li@zohomail.com,
-	PradeepVineshReddy.Kodamati@amd.com, alucerop@amd.com
-Subject: Re: [PATCH v5 12/16] cxl/pci: Change find_cxl_port() to non-static
-Message-ID: <Z6W6JcRYjSOglSit@gourry-fedora-PF4VCD3F>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+	rrichter@amd.com, nathan.fontenot@amd.com,
+	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com,
+	alucerop@amd.com
+Subject: Re: [PATCH v5 13/16] cxl/pci: Add error handler for CXL PCIe Port
+ RAS errors
+Message-ID: <Z6W92JUQQt4Lf6Ip@gourry-fedora-PF4VCD3F>
 References: <20250107143852.3692571-1-terry.bowman@amd.com>
- <20250107143852.3692571-13-terry.bowman@amd.com>
- <6786e3fc8432f_186d9b29414@iweiny-mobl.notmuch>
+ <20250107143852.3692571-14-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -98,36 +98,42 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6786e3fc8432f_186d9b29414@iweiny-mobl.notmuch>
+In-Reply-To: <20250107143852.3692571-14-terry.bowman@amd.com>
 
-On Tue, Jan 14, 2025 at 04:23:56PM -0600, Ira Weiny wrote:
-> Terry Bowman wrote:
-> > CXL PCIe Port Protocol Error support will be added in the future. This
-> > requires searching for a CXL PCIe Port device in the CXL topology as
-> > provided by find_cxl_port(). But, find_cxl_port() is defined static
-> > and as a result is not callable outside of this source file.
-> > 
-> > Update the find_cxl_port() declaration to be non-static.
-> > 
-> > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> Generally I think Dan prefers this type of patch to be squashed with the
-> patch which requires the change.  But I'm ok with the smaller patches...
-> 
-> :-D
-> 
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> 
+On Tue, Jan 07, 2025 at 08:38:49AM -0600, Terry Bowman wrote:
+> +static void __iomem *cxl_pci_port_ras(struct pci_dev *pdev)
+> +{
+> +	struct cxl_port *port;
+> +
+> +	if (!pdev)
+> +		return NULL;
+> +
+> +	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) ||
+> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM)) {
+> +		struct cxl_dport *dport;
+> +		void __iomem *ras_base;
+> +
+> +		port = find_cxl_port(&pdev->dev, &dport);
+> +		ras_base = dport ? dport->regs.ras : NULL;
 
-I've read elsewhere that changelog entries should avoid telling
-the future - and simply state what the patch is doing.
+I'm fairly certain dport can come back here uninitialized, you
+probably want to put this inside the `if (port)` block and 
+pre-initialize dport to NULL.
 
-I.e.: "do the thing" as opposed to "In the future... so do the thing"
+> +		if (port)
+> +			put_device(&port->dev);
+> +		return ras_base;
 
-The existence of the patch implies there is a user for it.
+You can probably even simplify this down to something like
 
-anyway
+		struct_cxl_dport *dport = NULL;
 
-Reviewed-by: Gregory Price <gourry@gourry.net>
+		port = find_cxl_port(&pdev->dev, &dport);
+		if (port)
+			put_device(&port->dev);
+
+		return dport ? dport->regs.ras : NULL;
+
+
+~Gregory
 
