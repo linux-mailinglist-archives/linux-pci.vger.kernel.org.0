@@ -1,208 +1,193 @@
-Return-Path: <linux-pci+bounces-21026-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21027-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3425BA2D6FA
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 16:44:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 219E3A2D700
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 16:46:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44A8418875E6
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 15:44:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2DE79167473
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 15:45:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9B3C2594AB;
-	Sat,  8 Feb 2025 15:44:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 803F22475FF;
+	Sat,  8 Feb 2025 15:45:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KiuCzYsr"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="jTRhGSW6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from SJ2PR03CU002.outbound.protection.outlook.com (mail-westusazolkn19013084.outbound.protection.outlook.com [52.103.2.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12E32594A4;
-	Sat,  8 Feb 2025 15:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739029464; cv=none; b=tXbNDjBdPl9ZwrFnlzbJencDzca/ekFYPxtPD9nRUT5h13B853nUKbooAHcnuMr6+dE4p1PG802nGuc4e65NBnTmM2cd3l43CNBz3BuL6TJFNt98FB2jo+MzrAUK2QaDPTmzfq3SsADFx9+4XURQuPPuQOF7zsvJW+gGuGqzAoI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739029464; c=relaxed/simple;
-	bh=vedQ/xlv/QU000yE0skGWbHGRgwRxdG2Fa5jS6xm4JQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KsYpeVL+IyavMxIs0kYb04W/3E0sYgujaJlEYNbkJF/TebK+b8BQ2OcyA3sH57Qq5kXKva+NZVcvDLQSE3ZuM6KB3hcFdXN+Q8IHvB6jGu3yuYOSyrpoZLDKDsGnsLLDrLXtpKFoJi0+kuZoTcOZx8/xifdBhF+id+I73A8HMRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KiuCzYsr; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739029463; x=1770565463;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vedQ/xlv/QU000yE0skGWbHGRgwRxdG2Fa5jS6xm4JQ=;
-  b=KiuCzYsrjT09V/wzh8pMNCClGs9cbjCGjaYONdvI6maEgepoJ60TvzzK
-   uarrEDLic1xIOUndaCYOkbbFxBjNc2MWr2kzE+MGbiULhccIfW7GAQAIy
-   Whp4KKJPUXbfAyJVLHDfwQSkTwTG2c+8H95BLlUhKjF49hNsMd0jbQPlz
-   73gAyFRYFch+BH+JqR+N6d9kmfY49nE7H8zzUwXqCvrcs0kQKhHEs58JE
-   kogYy8m61CS8Pz/FXFLpOqSc0QBZ3Ng8fGOPbZZqJC3NUDdRm0KEQrm2h
-   xM4KJbCjluWeq7PJSFWvx8D9ZugOd1f39GBa666hL+ZQcXS9HqWpTKigt
-   w==;
-X-CSE-ConnectionGUID: AupWIZUnRJOC8K1Ejqyi7g==
-X-CSE-MsgGUID: /TlZXJjRSH6Mv+Eb4qqJGg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="50285396"
-X-IronPort-AV: E=Sophos;i="6.13,270,1732608000"; 
-   d="scan'208";a="50285396"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 07:44:22 -0800
-X-CSE-ConnectionGUID: klnNFTy8QHC7aXzvmp2Vfg==
-X-CSE-MsgGUID: NYgnIkmqSGaduiX5X8UORA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112682427"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 08 Feb 2025 07:44:14 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tgn08-0010Dv-20;
-	Sat, 08 Feb 2025 15:44:12 +0000
-Date: Sat, 8 Feb 2025 23:43:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Frank Li <Frank.Li@nxp.com>, Kishon Vijay Abraham I <kishon@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
-	dlemoal@kernel.org, jdmason@kudzu.us, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH v14 09/15] PCI: endpoint: pci-epf-test: Add doorbell test
- support
-Message-ID: <202502082311.G1hWGggF-lkp@intel.com>
-References: <20250207-ep-msi-v14-9-9671b136f2b8@nxp.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40AF154C0D;
+	Sat,  8 Feb 2025 15:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739029532; cv=fail; b=oKW8nMLdy7ZafcrFBOl0LJs/yWlrkQwU7TaRGNFNXCd2Bc+fcB0TolunOCnc/NGVd23rBhqzLVDPTwbUwwgZOThZYOj7kQUMlf81DZ4pies3CtUQ0OgpZRYJBjvxw17sqky1DurTNAUDnODbqAQAMP2MwfZ9S75NqMlkIdUNglM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739029532; c=relaxed/simple;
+	bh=7HOn+3uoGKIeDRyDz5jriQ73hgyf2uA8tQ2bl6cYKu8=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=VCgNAYsJewm0AEwH8N3lHCOZ9d5663YU9O4XT4ihBwU+6IiwnB4v2Uc22E0En7NomEiDCQuMUNG6pdo67/Mk4yVQcpTvY/BQIil27CFN5ElOx+lVY8Qt90lu82XHDUusUcPKv1RZ6kAKD+xzLSO+qo/dT9mKkZ6JPp4ceGLbqEw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=jTRhGSW6; arc=fail smtp.client-ip=52.103.2.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YOLq2Bmp7UK0Bj9YEEfHNkcH6sxc5xni7ACBiN/4DZqsglz2kJVweqBlibTJLsLEUJfG5wQ4xk/mC270BQEMuXdEnrvqCcVXMkqCJJ+u/cvCmQa8GP+TRlVdXgnrr+86sxVwl/h825qc2lsHMGcP6WYQPmwqKSkldfpRRJp52N0zFzRgFn4jnDenNCUvDP3+VI1yypoclhHIh8P2NE/4oYH2VEfYpydwcNLYoFtlaKAq00FwqKmsoilcDYU1E4guYQjNkHCdD5YKhlT4UVzgy9NbdGzCedaWtnWp82Glm9E5YY99HtAg99k3ztr3VD/4QHJj7E4BYBdwPy8sVX1Ftg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=speSJo4o9U6GK9eBe9QT8dk1TLPvPEgCVWmKTrODfGw=;
+ b=IXpa6AVBib/yl2vTkalJ5sxbAIByqUwhGBmCg6rB84ZfAggJwcMUNNoVrxFFiISCfDY/NReiLQDOG/hs3XeTdsLp+gColFA4yEg/isHylls5XC1UohrHjWi7xUpLIuoC2xJbit2YNYXPnbHsjIbRgsUbpbxiH2S63IbJpm+n/Q5rM6hLQZFSCjETw+9QoIqrH4GxhElj3bTNesKJDjYyeMW7WgtikrxvdmBkJi0Yayv1weSBfnnnGzlD6KapqyXo9DWF3ahK52rEwNtVp2qujjkiYa0ddEL6iYYhEkzxHFY25+B3TIdHTDkofIASSdd1XmEfk6ramentWjI+PQyWgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=speSJo4o9U6GK9eBe9QT8dk1TLPvPEgCVWmKTrODfGw=;
+ b=jTRhGSW6f0lp4xJsKnzwQMq+wHe0DaPFN6vh88nxWfOPdDnrNyqQpkF9E6tMnZC1NnTe4MCThLGzvzAnyvOh+ony5SBG91riQGgoSNa7LfASidS6c9um/gNrAYKbJf1XjbmEZ3ZZkFN/Tca3LFCUTlvv/d5R33U+/CYaerT2b3mrCN4Tqc0REEl0gV+NeoJSWoD0oycdExQCQsTgyPsmWgv/pHljJ5k1jBhiG97EanydWQFoiOuoYcyHydXbafkjNiJ7p9vCo8FrRWssxZG6z6f5631kI08uL6pBCIz8efH7UrkxuZQWpvC2/hVubYr8py+H5EEGXE4/jf/uxqOBsg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SJ0PR02MB7216.namprd02.prod.outlook.com (2603:10b6:a03:297::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.15; Sat, 8 Feb
+ 2025 15:45:28 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8422.010; Sat, 8 Feb 2025
+ 15:45:28 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>, "K. Y. Srinivasan"
+	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?=
+	<kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob
+ Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "open
+ list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>, "open
+ list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
+	<linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+	"Hyper-V/Azure@web.codeaurora.org" <Hyper-V/Azure@web.codeaurora.org>,
+	"CORE@web.codeaurora.org" <CORE@web.codeaurora.org>, "AND@web.codeaurora.org"
+	<AND@web.codeaurora.org>, "DRIVERS@web.codeaurora.org"
+	<DRIVERS@web.codeaurora.org>, "\"status:Supported\"@web.codeaurora.org"
+	<"status:Supported"@web.codeaurora.org>, "PCI@web.codeaurora.org"
+	<PCI@web.codeaurora.org>, "NATIVE@web.codeaurora.org"
+	<NATIVE@web.codeaurora.org>, "HOST@web.codeaurora.org"
+	<HOST@web.codeaurora.org>, "BRIDGE@web.codeaurora.org"
+	<BRIDGE@web.codeaurora.org>, "ENDPOINT@web.codeaurora.org"
+	<ENDPOINT@web.codeaurora.org>, "SUBSYSTEM@web.codeaurora.org"
+	<SUBSYSTEM@web.codeaurora.org>
+Subject: RE: [PATCH v2] PCI: hv: Correct a comment
+Thread-Topic: [PATCH v2] PCI: hv: Correct a comment
+Thread-Index: AQHbeZOPTbepn/kxw0S6yEZY8HxUM7M9jWIg
+Date: Sat, 8 Feb 2025 15:45:28 +0000
+Message-ID:
+ <SN6PR02MB41570947C2A84614FAFCF8EED4F02@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250207190716.89995-1-eahariha@linux.microsoft.com>
+In-Reply-To: <20250207190716.89995-1-eahariha@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB7216:EE_
+x-ms-office365-filtering-correlation-id: 00399910-083b-4029-d42c-08dd48579c91
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|19110799003|15080799006|8060799006|461199028|8062599003|440099028|3412199025|102099032;
+x-microsoft-antispam-message-info:
+ =?iso-8859-2?Q?RXg1a7znmKYJPYT8KAFpnakE8Jkb9BD8qeS6pjJBvp9sW7J9bbDQjrD8S0?=
+ =?iso-8859-2?Q?nBuygVzjcjNScT+4W3NBstgLwEsxkCwnNC0tb+yF/ehmGnPHnorjWJ0ZGh?=
+ =?iso-8859-2?Q?3S8TOyPdEAN7rPZ5dhOvb8j418ARWO6fOUSAX5UinYYQEp/ITOW2+3sFXF?=
+ =?iso-8859-2?Q?QJoJQuXxg5+me5khP+I5d0jlyEwwS63vBILmPwobTX+ub4sKmGWP20Fo3f?=
+ =?iso-8859-2?Q?m7uYir9i5RHjNDaLjn406+8QynsaYHtQymemUpQmxjYNyudd+6DYFMFva0?=
+ =?iso-8859-2?Q?so91mck/2LH3BJgUxxxSERL7K1iIv9nNgQqo9Ahyk+aSxhh3ngcStXE/ds?=
+ =?iso-8859-2?Q?wsIiwj01QaNvCTzC9nRqB4ZojOS4UeqsQILYD7ohgyJGJS4MCEUiQAW253?=
+ =?iso-8859-2?Q?VGjOGCWNhBEk9SnZXA7C8xA7jkt1WvbqTwHy1b3qQgqBdZF5lZrnjo6zR9?=
+ =?iso-8859-2?Q?VrZEOal2VRkuCWMZVSsXvgfc7W/hVzb+yVlDOEXHNU980sVF+BwiGBG240?=
+ =?iso-8859-2?Q?hF8sMVdgeEd49xrZpGaI23rVkiha+shCQzYQ1ZruQBnI0Ma6pmMinfukqq?=
+ =?iso-8859-2?Q?C9Ou9fA6Qq1liRpvbiJhSuh6TPt/JbD8OU3uy4Lk4wcA0POPlsct7Ikz5O?=
+ =?iso-8859-2?Q?KpgcZ571U0w+66/lf1yRm4HIxvbuXKymlI0rZPKrhgXpJchwNy+pizKxa0?=
+ =?iso-8859-2?Q?iJzHpVPDcXajmXDM4KfcjdF6QxX0dxYffP7hJrit4Rqn4oe1EiYdYmuCZy?=
+ =?iso-8859-2?Q?C5SlUYtlWuwAsx+FdsYDAyg0xCZ209fLGd4vHEFLMR2clo1kSF55rB1V1Y?=
+ =?iso-8859-2?Q?AfqZFKrtLboymjQdjkimPfzY014zdZpQnpJ1DRKiZ+IqjFBQNqE877XgsO?=
+ =?iso-8859-2?Q?HGf+FtB8dGk2QRIDXYNJRjYGG0GVCML3+QnZey4bUCq87y1b03/y+6l+Hv?=
+ =?iso-8859-2?Q?n2vArafaBOMGb8fUEx8MO7mGHh4DLtlTNSMsAvq1zIkLgAcmqOorf1kzY3?=
+ =?iso-8859-2?Q?YPOzBHYEi3FMyXPx9KVf77uwtbkkYYl5yYW6tM5olDwLkFT26yrIObrMMC?=
+ =?iso-8859-2?Q?1yuSJr1mCXTtP8/lZAopoDg=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?DDQeJxscfpVKG9BgGDUFngsGK64PHujWk5W7ecSB0Cth7YnLjSyNB3LYv/?=
+ =?iso-8859-2?Q?jh4QqPCqGwdRsNO+x71/MjBaFR12g8+DCNssnOaHDrFAVKLP5JucKun45D?=
+ =?iso-8859-2?Q?uB4lMjqUBqddAWaLBdVjaIk4APHdwSr2ul81bJohJ4lo34Omr+PV5GFgTO?=
+ =?iso-8859-2?Q?GtaozYlplz1gAxPTpJSDsxU4oawmkGQ359tbDREr9PdhG8cfB/qPTdYrHG?=
+ =?iso-8859-2?Q?jOhSQWDE97wzaQeat3GjDcIGUgVUvLZCmzoz/EdetS3gEiX31dkZ4robZd?=
+ =?iso-8859-2?Q?0pmTPEl3DGFc6KHxGgRRUYbY175W2nfsqE/AnxNd34OeBadN6kJpu9BKVf?=
+ =?iso-8859-2?Q?mQ7DHSbyx8ml5ZJwW0++cO+KtP6XcT70j6QNcDttHxbW+rkNDcabY3tr7K?=
+ =?iso-8859-2?Q?wtPOqrJ324mVBqtvfDoMxE/YCFZXyfHp5WgdkL+gEVEKCIHsYRguajE5S7?=
+ =?iso-8859-2?Q?1a83+hIbd4jkMD9i3ENmWIpH/YNpzuHtuS7o1mADsA2zf0XHdyVmcy/ZAx?=
+ =?iso-8859-2?Q?4IeBsRfdndNV+jyVJWFG937r+OFLZr23ENCf1ZYlngN4WnEwCsjw1wvXwl?=
+ =?iso-8859-2?Q?/ODy1YxUp27yQSudK3xyTfTbZklwnAkC9DW1vpfLFJulSiBx1u5Uve9OMF?=
+ =?iso-8859-2?Q?g3eLBQAsjvefNlwtzQZaFIKnucP7DzysCKKhjt+CsZQhaPWEArP2GWkFrv?=
+ =?iso-8859-2?Q?OkUADwF669WiSUPnqnzw/Or9sDn12FOYfO1buQl2RiOzOKGIo72wvOf9pL?=
+ =?iso-8859-2?Q?7PBQCxttc+7/j16gCimv+tLEiOntJiQTTUc7RlC7peAJGaVozeTguk+X1b?=
+ =?iso-8859-2?Q?FYKYrAfU0Y9AzFVEkkHpVaSm12CcABPiz02wiShp7fpix4apjKeVkP8r2k?=
+ =?iso-8859-2?Q?vdxmM/mVIdIMUKzNKnEBPx7Pe53hJBdp1HZqsnYknlaxXY8+Tra90FzUrJ?=
+ =?iso-8859-2?Q?FZUFYAuvFb9Wwy6aF4sIEISQ4Ilwgz9ee9k5zOD0VTQFbPT2Exbs/LUVdw?=
+ =?iso-8859-2?Q?4YnO4Cpc7wGxkjT8qdBS5DXtpJAKXPNgzWkTiwJKhRiuXKwB4r8y4ipD+K?=
+ =?iso-8859-2?Q?86nw5tQexpeubIQoMJSTL0sPNWnr7YhErqsR4wZSTwtyjWdmpwV27TpegA?=
+ =?iso-8859-2?Q?/bD2OR36gVoIa/HFZaob9B8ZEcMiOgA0khD6Hpe+jlrTxYZ8ipAY26D6lF?=
+ =?iso-8859-2?Q?QqnrTHcgQ0ld4Inu4gNEGD44kT1wyxgcFJzf28hSZHSVzNCUyck/wtqVd4?=
+ =?iso-8859-2?Q?4GYFQoXHx5lrCfupTK8DJeZiekh2iZk38iG4DAkts=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207-ep-msi-v14-9-9671b136f2b8@nxp.com>
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00399910-083b-4029-d42c-08dd48579c91
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Feb 2025 15:45:28.2341
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB7216
 
-Hi Frank,
+From: Easwar Hariharan <eahariha@linux.microsoft.com> Sent: Friday, Februar=
+y 7, 2025 11:07 AM
+>=20
+> The VF driver controls an endpoint attached to the pci-hyperv
+> controller. An invalidation sent by the PF driver in the host would be
+> delivered *to* the endpoint driver by the controller driver.
+>=20
+> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
+/pci-hyperv.c
+> index 6084b38bdda1..3ae3a8a79dcf 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1356,7 +1356,7 @@ static struct pci_ops hv_pcifront_ops =3D {
+>   *
+>   * If the PF driver wishes to initiate communication, it can "invalidate=
+" one or
+>   * more of the first 64 blocks.  This invalidation is delivered via a ca=
+llback
+> - * supplied by the VF driver by this driver.
+> + * supplied to the VF driver by this driver.
+>   *
+>   * No protocol is implied, except that supplied by the PF and VF drivers=
+.
+>   */
+> --
+> 2.43.0
+>=20
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on 00f3246adeeacbda0bd0b303604e46eb59c32e6e]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/platform-msi-Add-msi_remove_device_irq_domain-in-platform_device_msi_free_irqs_all/20250208-034445
-base:   00f3246adeeacbda0bd0b303604e46eb59c32e6e
-patch link:    https://lore.kernel.org/r/20250207-ep-msi-v14-9-9671b136f2b8%40nxp.com
-patch subject: [PATCH v14 09/15] PCI: endpoint: pci-epf-test: Add doorbell test support
-config: i386-buildonly-randconfig-003-20250208 (https://download.01.org/0day-ci/archive/20250208/202502082311.G1hWGggF-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502082311.G1hWGggF-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502082311.G1hWGggF-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/pci/endpoint/functions/pci-epf-test.c: In function 'pci_epf_test_enable_doorbell':
->> drivers/pci/endpoint/functions/pci-epf-test.c:726:42: error: passing argument 4 of 'pci_epf_align_inbound_addr' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     726 |                                          &epf_test->db_bar.phys_addr, &offset);
-         |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |                                          |
-         |                                          dma_addr_t * {aka unsigned int *}
-   In file included from include/linux/pci-epc.h:12,
-                    from drivers/pci/endpoint/functions/pci-epf-test.c:19:
-   include/linux/pci-epf.h:245:47: note: expected 'u64 *' {aka 'long long unsigned int *'} but argument is of type 'dma_addr_t *' {aka 'unsigned int *'}
-     245 |                                u64 addr, u64 *base, size_t *off);
-         |                                          ~~~~~^~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/pci_epf_align_inbound_addr +726 drivers/pci/endpoint/functions/pci-epf-test.c
-
-   686	
-   687	static void pci_epf_test_enable_doorbell(struct pci_epf_test *epf_test,
-   688						 struct pci_epf_test_reg *reg)
-   689	{
-   690		struct pci_epf *epf = epf_test->epf;
-   691		struct pci_epc *epc = epf->epc;
-   692		struct msi_msg *msg;
-   693		enum pci_barno bar;
-   694		size_t offset;
-   695		int ret;
-   696	
-   697		ret = pci_epf_alloc_doorbell(epf, 1);
-   698		if (ret) {
-   699			reg->status |= STATUS_DOORBELL_ENABLE_FAIL;
-   700			return;
-   701		}
-   702	
-   703		msg = &epf->db_msg[0].msg;
-   704		bar = pci_epc_get_next_free_bar(epf_test->epc_features, epf_test->test_reg_bar + 1);
-   705		if (bar < BAR_0 || bar == epf_test->test_reg_bar || !epf->db_msg) {
-   706			reg->status |= STATUS_DOORBELL_ENABLE_FAIL;
-   707			return;
-   708		}
-   709	
-   710		ret = request_irq(epf->db_msg[0].virq, pci_epf_test_doorbell_handler, 0,
-   711				  "pci-test-doorbell", epf_test);
-   712		if (ret) {
-   713			dev_err(&epf->dev,
-   714				"Failed to request irq %d, doorbell feature is not supported\n",
-   715				epf->db_msg[0].virq);
-   716			reg->status |= STATUS_DOORBELL_ENABLE_FAIL;
-   717			pci_epf_test_doorbell_cleanup(epf_test);
-   718			return;
-   719		}
-   720	
-   721		reg->doorbell_data = msg->data;
-   722		reg->doorbell_bar = bar;
-   723	
-   724		msg = &epf->db_msg[0].msg;
-   725		ret = pci_epf_align_inbound_addr(epf, bar, ((u64)msg->address_hi << 32) | msg->address_lo,
- > 726						 &epf_test->db_bar.phys_addr, &offset);
-   727	
-   728		if (ret) {
-   729			reg->status |= STATUS_DOORBELL_ENABLE_FAIL;
-   730			pci_epf_test_doorbell_cleanup(epf_test);
-   731			return;
-   732		}
-   733	
-   734		reg->doorbell_offset = offset;
-   735	
-   736		epf_test->db_bar.barno = bar;
-   737		epf_test->db_bar.size = epf->bar[bar].size;
-   738		epf_test->db_bar.flags = epf->bar[bar].flags;
-   739	
-   740		ret = pci_epc_set_bar(epc, epf->func_no, epf->vfunc_no, &epf_test->db_bar);
-   741		if (ret) {
-   742			reg->status |= STATUS_DOORBELL_ENABLE_FAIL;
-   743			pci_epf_test_doorbell_cleanup(epf_test);
-   744		} else {
-   745			reg->status |= STATUS_DOORBELL_ENABLE_SUCCESS;
-   746		}
-   747	}
-   748	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
