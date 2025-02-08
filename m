@@ -1,282 +1,240 @@
-Return-Path: <linux-pci+bounces-21016-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21017-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62E39A2D597
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 11:36:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F903A2D5FC
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 13:10:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6764F3AADFA
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 10:36:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 264BA3A8780
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 12:10:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32A291B3930;
-	Sat,  8 Feb 2025 10:36:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB3372451D2;
+	Sat,  8 Feb 2025 12:10:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nVqKCau5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1txwx7R"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CFD1A8F71
-	for <linux-pci@vger.kernel.org>; Sat,  8 Feb 2025 10:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59BF10E5;
+	Sat,  8 Feb 2025 12:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739010987; cv=none; b=lFjL+07Gp6XBLVD86qn7pPTVuM5+n3/FTiq+eNB791nf+04S3auSPu5y3b8l3OxJAY7X23pzc/3nfoZF5kB8ngM2ExGRLVV9/M/Ad8lSxX1HOXUYYOzvkGHuWXV2iVpKTQ71iKK3vANfHvK6p30mDyJYNYZ6O+mtQOnDGs+Ix3s=
+	t=1739016632; cv=none; b=Ra5AkgyOzyZUl1n1FiAWnUJY6JqWM8yimSZ46sTtBk58RoEtYqCJL4qPszViuqW1dsudAX/r2tDrw6rR3EayVxELqBn5+kinRfA8r5CKqlNghDs1WxOe5hr9Zo5t9okhYOnUXhS7vw9UJPDNz9aYpsBfjHQI/HTRJ4uVSh9AOtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739010987; c=relaxed/simple;
-	bh=SW5UhacMkzZWCSkVTvHO3TFBny3T2LZZG3994FQBevE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hj0X103PckhW+uMD4KU5o8k5x4JIteKSdTD8pfZjd15IzEraSvkzysYf4OARlrgDt8bVilVQcJbYCQIDnyonR2L/5k6Plu5QslcnGQtv/nEDz6BP/tO9hDSPQSfwoDZg5sAFmhozdX0ZfkGi+S+Fqgq8GUXC/FM0YS7E6qp/dN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nVqKCau5; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-21f62cc4088so15876015ad.3
-        for <linux-pci@vger.kernel.org>; Sat, 08 Feb 2025 02:36:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739010984; x=1739615784; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BoaAnmRJfikjMJJ5mT1KSvwU4+ZQgSKozzj6VL4ELUQ=;
-        b=nVqKCau5qY104+K3c/bjRqgBH78/pgL8bdTs3QOVFHbx5nZ2wFxDXK0KlA64lql/Ir
-         0L22Cf0zKnjXQFAR8bD7dG28KBB2s+U2cQOa84NHXoOAXMtynnXP42wJPkgCMibyELhu
-         kfbZCXkHFr305B8X3aQ0pRhf/BEOyDvuuAymGo0qCsSIyYYdB7LV0MBHZALe6GgkQNmw
-         Z0Z2ZKttxibL4wyBx5kj0gj7rP7TwEwt3pzLSLXnP9XuhMoySvNLoIIHBKnR8BeXpYBC
-         AOFWdgJUBMa1RoTaPkjNmkqZl1Dixii9XBta/aAJeHdHhLS5FhbpJY9/jqTS4QL+eDb0
-         A7iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739010984; x=1739615784;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BoaAnmRJfikjMJJ5mT1KSvwU4+ZQgSKozzj6VL4ELUQ=;
-        b=Rn+CZs0vaoElx0CGmTGoHjpcBADSHY1T6NNxlVDo9d9ppacNpsY/Tz58M1jBdLFgWI
-         ErO0o+hIpA5RUqujyTRZ1EWI0QALkJcironJRGnhsXxBADcFcACHVpvmGZifiHoKh3sl
-         lCn67bbLSzOKGG4TwqErH8okryT/xkKb+fyT0q2Jgz6sU8jXUzxIPjBy4+RnNXwjynbb
-         +fwjS0F9fzzWRQsg4J6j2+AmAZh5sqFVqHXi90KO/IbPuXt17kqsrZlMTI65cShDx4JV
-         Qx9gFBGtZXa0fe7GhSElvElvO+Y/EgBqQpQ++n13aPHZ3hPvYTsmWNb3lbvrnSqAfL2J
-         BjPA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQxPztcclpom0v2o096nmCVP5YOFzmC87rnwNtm203otBvrazC/9yH8Qtg4ZOpNaRNhxDQLcuPXgQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoJ+UYyVX0EiULK5UdEGgKdRmFpMHWA8FWeXschCmyV1o7QrpC
-	1ziZov4LyiAa2x0/IMxBzsm9HKzb8twJHi3A0IPhfUubvkU1LTAO0B3A/ww3bA==
-X-Gm-Gg: ASbGncv/9D5I1YGgSTfbc5bx3/WUf0U9mWElKyn+4hNg2A5OcWMDyexR/qvtmTHWilS
-	IZU2TOXm9Zu7YaNeuuHdSQyxdx6TMqk5os0irUorZkU//vIqlPZf/A1uhxPgx5bgoRu9hKK67I0
-	44yqRLoGnWdAfNHiGz5U2SjRX2BCm3cWlE3FRNUqRwgcoJ1QhEBZzXxopqrLCHRYXhKeXG5zih5
-	iSvP1cNAmas1TVYJIw6xZWqlEcLOd1JxFI5r/h1Uxd6iMmTEfJhlvrnrQgUf3me6YX78oKZwrCZ
-	S4UnveKl9fOMoVG/awSygLv5
-X-Google-Smtp-Source: AGHT+IE9RgAXmno9t4rWIPgdel/xLwnILZhf5pQ1KhWjVCU87NJl/bhU5fdwOYmDPaXFBy/uv0e86Q==
-X-Received: by 2002:a17:903:2309:b0:215:6b4c:89fa with SMTP id d9443c01a7336-21f4e1ced38mr93272025ad.8.1739010984539;
-        Sat, 08 Feb 2025 02:36:24 -0800 (PST)
-Received: from thinkpad ([120.60.69.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3683d8ffsm44251845ad.150.2025.02.08.02.36.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 02:36:24 -0800 (PST)
-Date: Sat, 8 Feb 2025 16:06:18 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Wilson Ding <dingwei@marvell.com>
-Cc: "cassel@kernel.org" <cassel@kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Sanghoon Lee <salee@marvell.com>
-Subject: Re: [EXTERNAL] Re: [PATCH 1/1] PCI: armada8k: Add link-down handle
-Message-ID: <20250208103618.2binrjgry7ghoavc@thinkpad>
-References: <20241112213255.GA1861331@bhelgaas>
- <AD287CCE-9FFE-49BC-B9CA-B5CED4F05AF1@linaro.org>
- <BY3PR18MB46737FB5FDBD75CF31B505B8A7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
- <BY3PR18MB4673207A36B2CD7C3B75EBA0A7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
- <20250207175759.jzmoox5mke3rachy@thinkpad>
- <BY3PR18MB46738F5857319F9637FA5050A7F12@BY3PR18MB4673.namprd18.prod.outlook.com>
+	s=arc-20240116; t=1739016632; c=relaxed/simple;
+	bh=6oZ5OWghXld3PvdlVB3z/5/NzoGFEbUv/gndN8DA9PU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n1aV639lt3asuVwqRqWrLjih+7l2tpn0Z2Glbgmha8HIOtOW1GfPOkjrtw3ZD4fRmND0CUy4z37wKi5B+LBC1cC+jVymbTE+8E+lX/8dXwGjXArUp/jZkcDlnlFDjcRu35rIlSMpom808FE4F6GWgKipn0u4Kay7ZI5RJ6CsYjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1txwx7R; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 111C4C4CEE2;
+	Sat,  8 Feb 2025 12:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739016632;
+	bh=6oZ5OWghXld3PvdlVB3z/5/NzoGFEbUv/gndN8DA9PU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=a1txwx7Rz9vQvHyhAdvFHeZ6lkokhOXDlJL8omqvwEKYX+38riZy8Xjas/SHNpg4+
+	 XY0FJObJ9szhV2hZtu5LFxZsVBLtoe2Ickyk63Ed1lEy9C7xwRS8Hyh3R8ksXrV+ci
+	 vn3t1Sev5NCCVvJfSs6eYuyp9CS7VP54GfsuX2aBRoda9neyN+mfXcvRow1yL0Inqr
+	 /2xK95tBVdHHiURH+NhE98wyBJFBJWADMSoqDyxGdbnqMHgCvcJHou5CkJJNXoNFQI
+	 xdTRSdY4iY4EWebk088ChTuvcI70T/wtpxGtGasNrMZYC18LP7DNm5ydTS7UsjLGcQ
+	 MVvahGwyA7wmA==
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5fa2685c5c0so1172049eaf.3;
+        Sat, 08 Feb 2025 04:10:32 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVDGNMwHi7x9c3Esu0mJTCvEczkbvsH6UZYYutWldn8uQzGSlzt9IixLPxL8FQMv+ZT2jvqMWWvoN/Nh0M=@vger.kernel.org, AJvYcCWviU3Q4Apxen2INMQA6BQ0GgzqXoNNMhfa/wYBzYtEul5G70nmw3RtV8asnojHlJGVkWNpXDg8SuXMOJQ=@vger.kernel.org, AJvYcCX6T6CfvVib1Ya/cpt2AwrSd0vcwHP/A9CwkY+bZe0p1WJC327U/AK0XD1esfGDncHwSaWVr8RCPJo=@vger.kernel.org, AJvYcCXJTRdHbwA/9xUhbqrY83uwjwsdMTKqswLnIsMrtydsWD+6/17KsXtN7yI0Rx1UdPTiX6Q+CDeompaT@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5gR2xQmhiwc0TOJYbU1JRdrA+VGVWzgB+WFkCDJfA91RtUGUS
+	9JoomuWQ4gUepkm7xx8ui0rzafksRyJuz52cLMYI3SaQl10oyxtMLawLnemePW1iC/ILj1AQzjG
+	SXJu1qDILjQ0VNiz1sm9fXF9ZLmg=
+X-Google-Smtp-Source: AGHT+IFq6fmcRzmDyKnw2OvsUb4nru+t3ZEYcOH4DS7zxRquZD+pDngpr41ZsPvbiECMzLbO5HL5S1HnGi5n1h9xpLw=
+X-Received: by 2002:a05:6820:827:b0:5fa:73ed:de8 with SMTP id
+ 006d021491bc7-5fc5e71b079mr4287646eaf.6.1739016631273; Sat, 08 Feb 2025
+ 04:10:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BY3PR18MB46738F5857319F9637FA5050A7F12@BY3PR18MB4673.namprd18.prod.outlook.com>
+References: <12619233.O9o76ZdvQC@rjwysocki.net> <1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com>
+ <Z6YPpbRF_U0TxAbf@hovoldconsulting.com> <Z6YcjFBWAVVVANf2@hovoldconsulting.com>
+ <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
+ <Z6YviAFD4Az3EIBa@hovoldconsulting.com> <Z6Y0NlW40yHTIlzm@hovoldconsulting.com>
+ <CAJZ5v0gBCQW2wwdB+4SyBXtqiis2k1Z2L8SOVKwcVbNxPHqvYA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gBCQW2wwdB+4SyBXtqiis2k1Z2L8SOVKwcVbNxPHqvYA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Sat, 8 Feb 2025 13:10:19 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0gUcy4V-iztFumRZDUArQHiXE01vW3uC8Y01xnBD6Xi0Q@mail.gmail.com>
+X-Gm-Features: AWEUYZl8o4c7RwAXBNYFREaNrw5dxg8_D3B3WawlN0Lh8IZl08GlNF1Jk9NXMxk
+Message-ID: <CAJZ5v0gUcy4V-iztFumRZDUArQHiXE01vW3uC8Y01xnBD6Xi0Q@mail.gmail.com>
+Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
+ parents and children
+To: Johan Hovold <johan@kernel.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Xie <kevin.xie@starfivetech.com>, 
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="00000000000090f20d062da05cec"
 
-On Fri, Feb 07, 2025 at 06:46:22PM +0000, Wilson Ding wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Sent: Friday, February 7, 2025 9:58 AM
-> > To: Wilson Ding <dingwei@marvell.com>; cassel@kernel.org
-> > Cc: Bjorn Helgaas <helgaas@kernel.org>; lpieralisi@kernel.org;
-> > thomas.petazzoni@bootlin.com; kw@linux.com; robh@kernel.org;
-> > bhelgaas@google.com; linux-pci@vger.kernel.org; linux-arm-
-> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Sanghoon Lee
-> > <salee@marvell.com>
-> > Subject: [EXTERNAL] Re: [PATCH 1/1] PCI: armada8k: Add link-down handle
-> > 
-> > + Niklas (who was interested in link down handling) On Sat, Feb 01, 2025
-> > + at 11: 05: 56PM +0000, Wilson Ding wrote: > > On November 13, 2024 3: 
-> > + 02: 55 AM GMT+05: 30, Bjorn Helgaas > > <mailto: helgaas@ kernel. org>
-> > + wrote: > >
-> > 
-> > + Niklas (who was interested in link down handling)
-> > 
-> > On Sat, Feb 01, 2025 at 11:05:56PM +0000, Wilson Ding wrote:
-> > > > On November 13, 2024 3:02:55 AM GMT+05:30, Bjorn Helgaas
-> > > > <mailto:helgaas@kernel.org> wrote:
-> > > > >In subject:
-> > > > >
-> > > > >  PCI: armada8k: Add link-down handling
-> > > > >
-> > > > >On Mon, Nov 11, 2024 at 10:48:13PM -0800, Jenishkumar Maheshbhai
-> > > > Patel wrote:
-> > > > >> In PCIE ISR routine caused by RST_LINK_DOWN we schedule work to
-> > > > >> handle the link-down procedure.
-> > > > >> Link-down procedure will:
-> > > > >> 1. Remove PCIe bus
-> > > > >> 2. Reset the MAC
-> > > > >> 3. Reconfigure link back up
-> > > > >> 4. Rescan PCIe bus
-> > > > >
-> > > > >s/PCIE/PCIe/
-> > > > >
-> > > > >Rewrap to fill 75 columns.
-> > > > >
-> > > > >I assume this basically removes a Root Port (and the hierarchy
-> > > > >below
-> > > > >it) if the link goes down, and then resets the MAC and tries to
-> > > > >bring up the link and enumerate the hierarchy again.
-> > > > >
-> > > > >No other drivers do this, so why does armada8k need it?  Is this to
-> > > > >work around some unreliable link?
-> > > >
-> > > > Certainly Qcom IPs have this same feature and I was also looking to
-> > > > implement it. But the link down should not be handled by this in the
-> > controller driver.
-> > > >
-> > > > Instead, it should be tied to bus reset in the core and the reset
-> > > > should be done through a callback implemented in the controller
-> > > > drivers. This way, the reset cannot happen in the back of PCI core and client
-> > drivers.
-> > > >
-> > > > That said, the Link down IRQ received by this driver should also be
-> > > > propagated back to the PCI core and the core should then call the
-> > > > callback to reset the bus that I mentioned above.
-> > > >
+--00000000000090f20d062da05cec
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Feb 7, 2025 at 7:14=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.org=
+> wrote:
+>
+> On Fri, Feb 7, 2025 at 5:26=E2=80=AFPM Johan Hovold <johan@kernel.org> wr=
+ote:
+> >
+> > On Fri, Feb 07, 2025 at 05:06:32PM +0100, Johan Hovold wrote:
+> > > On Fri, Feb 07, 2025 at 04:41:18PM +0100, Rafael J. Wysocki wrote:
+> > > > On Fri, Feb 7, 2025 at 3:45=E2=80=AFPM Johan Hovold <johan@kernel.o=
+rg> wrote:
+> > > > > On Fri, Feb 07, 2025 at 02:50:29PM +0100, Johan Hovold wrote:
 > > >
-> > > It's more than a work-around for the unreliable link. A few customers
-> > > may have such application - independent power supply to the device
-> > > with dedicated reset GPIO to #PRST. In this way, the power cycle and
-> > > warm reset of RC and EP won't have impact on each other. However, it
-> > > may lead into the PCI driver not aware of the link down when an unexpected
-> > power down or reset occurs on the device.
-> > > We cannot assume the link will be recovered soon. The worse thing is
-> > > the driver may continue access to the device, which may hang the bus.
-> > > Since the device is no longer present on the bus, it's better to
-> > > remove it. Besides, in order to bring up the link, the only way is to
-> > > reset the MAC, which starts over the state machine of LTSSM.
+> > > > > Ok, so the driver data is never set and runtime PM is never enabl=
+ed for
+> > > > > this simple bus device, which uses pm_runtime_force_suspend() for=
+ system
+> > > > > sleep.
+> > > >
+> > > > This is kind of confusing.  Why use pm_runtime_force_suspend() if
+> > > > runtime PM is never enabled and cannot really work?
 > > >
-> > > Well, we also noticed that there is no other driver that did this. I
-> > > agree it is not necessary if the power cycle or warm reset of the
-> > > device is done gracefully. The user can remove the device prior to the
-> > > power cycle/reset.  And do the rescan after the link is recovered. However,
-> > the unexpected power down is still possible.
-> > > Please enlighten me if there is any better approach to handle such
-> > > unexpected link down.
-> > >
-> > 
-> > There is no issue in retraining the link. My concern is that, the retrain should
-> > not happen autonomously in the controller driver. PCI core should be made
-> > informed of it. More below.
-> > 
-> 
-> Do you mean 
-> - pass the link down/up events to PCI core
-> - remove the device or hierarchy by PCI core upon link down
-> - initiate the link retraining in PCI core by calling the platform retrain callbacks 
-> - rescan the bus once link is recovered
-> 
+> > > It's only done for some buses that this driver handles. The driver is
+> > > buggy; I'm preparing a fix for it regardless of the correctness of th=
+e
+> > > commit that now triggered this.
+> >
+> > Hmm. The driver implementation is highly odd, but actually works as lon=
+g
+> > as the runtime PM status is left at 'suspended' (as
+> > pm_runtime_force_resume() won't enable runtime PM unless it was enabled
+> > before suspend).
+> >
+> > So we'd strictly only need something like the below if we are going to
+> > keep the set_active propagation.
+>
+> I think you are right.
+>
+> > diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
+> > index 5dea31769f9a..d8e029e7e53f 100644
+> > --- a/drivers/bus/simple-pm-bus.c
+> > +++ b/drivers/bus/simple-pm-bus.c
+> > @@ -109,9 +109,29 @@ static int simple_pm_bus_runtime_resume(struct dev=
+ice *dev)
+> >         return 0;
+> >  }
+> >
+> > +static int simple_pm_bus_suspend(struct device *dev)
+> > +{
+> > +       struct simple_pm_bus *bus =3D dev_get_drvdata(dev);
+> > +
+> > +       if (!bus)
+> > +               return 0;
+> > +
+> > +       return pm_runtime_force_suspend(dev);
+> > +}
+> > +
+> > +static int simple_pm_bus_resume(struct device *dev)
+> > +{
+> > +       struct simple_pm_bus *bus =3D dev_get_drvdata(dev);
+> > +
+> > +       if (!bus)
+> > +               return 0;
+> > +
+> > +       return pm_runtime_force_resume(dev);
+> > +}
+> > +
+> >  static const struct dev_pm_ops simple_pm_bus_pm_ops =3D {
+> >         RUNTIME_PM_OPS(simple_pm_bus_runtime_suspend, simple_pm_bus_run=
+time_resume, NULL)
+> > -       NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_=
+force_resume)
+> > +       NOIRQ_SYSTEM_SLEEP_PM_OPS(simple_pm_bus_suspend, simple_pm_bus_=
+resume)
+> >  };
+> >
+> >  #define ONLY_BUS       ((void *) 1) /* Match if the device is only a b=
+us. */
+>
+> In the meantime, I've cut the attached (untested) patch that should
+> take care of the pm_runtime_force_suspend() issue altogether.
+>
+> It changes the code to only set the device's runtime PM status to
+> "active" if runtime PM is going to be enabled for it by the first
+> pm_runtime_enable() call, which never happens for devices where
+> runtime PM has never been enabled (because it is disabled for them
+> once again in device_suspend_late()) and for devices subject to
+> pm_runtime_force_suspend() during system suspend (because it disables
+> runtime PM for them once again).
 
-Yeah. This is what I came up with quickly:
+All right, this is not going to work.
 
-```
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b6536ed599c3..561eeb464220 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -706,6 +706,33 @@ void pci_free_host_bridge(struct pci_host_bridge *bridge)
- }
- EXPORT_SYMBOL(pci_free_host_bridge);
- 
-+void pci_host_bridge_handle_link_down(struct pci_host_bridge *bridge)
-+{
-+       struct pci_bus *bus = bridge->bus;
-+       struct pci_dev *child, *tmp;
-+       int ret;
-+
-+       pci_lock_rescan_remove();
-+
-+       /* Knock the devices off bus since we cannot access them */
-+       list_for_each_entry_safe(child, tmp, &bus->devices, bus_list)
-+               pci_stop_and_remove_bus_device(child);
-+
-+       /* Now retrain the link in a controller specific way to bring it back */
-+       if (bus->ops->retrain_link) {
-+               ret = bus->ops->retrain_link(bus);
-+               if (ret) {
-+                       dev_err(&bridge->dev, "Failed to retrain the link!\n");
-+                       pci_unlock_rescan_remove();
-+                       return;
-+               }
-+       }
-+
-+       pci_rescan_bus(bus);
-+       pci_unlock_rescan_remove();
-+}
-+EXPORT_SYMBOL(pci_host_bridge_handle_link_down);
-+
- /* Indexed by PCI_X_SSTATUS_FREQ (secondary bus mode and frequency) */
- static const unsigned char pcix_bus_speed[] = {
-        PCI_SPEED_UNKNOWN,              /* 0 */
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 47b31ad724fa..1c6f18a51bdd 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -637,6 +637,7 @@ struct pci_host_bridge *pci_alloc_host_bridge(size_t priv);
- struct pci_host_bridge *devm_pci_alloc_host_bridge(struct device *dev,
-                                                   size_t priv);
- void pci_free_host_bridge(struct pci_host_bridge *bridge);
-+void pci_host_bridge_handle_link_down(struct pci_host_bridge *bridge);
- struct pci_host_bridge *pci_find_host_bridge(struct pci_bus *bus);
- 
- void pci_set_host_bridge_release(struct pci_host_bridge *bridge,
-@@ -804,6 +805,7 @@ struct pci_ops {
-        void __iomem *(*map_bus)(struct pci_bus *bus, unsigned int devfn, int where);
-        int (*read)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val);
-        int (*write)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val);
-+       int (*retrain_link)(struct pci_bus *bus);
- };
- 
- /*
-```
+I see two problems and both are related to pm_runtime_force_suspend/resume(=
+).
 
-Your controller driver has to call pci_host_bridge_handle_link_down() during the
-link down event (make it threaded if not done already). Then you should also
-populate the pci_ops::retrain_link() callback with the function that retrains
-the broken link. Finally, the bus will be rescanned to enumerate the devices.
+The first problem is that pm_runtime_force_suspend() doesn't
+distinguish devices for which runtime PM has never been enabled from
+devices that have been runtime-suspended.  This clearly is a mistake
+as demonstrated by the breakage at hand.
 
-I do have plans to plug this retrain callback to one of the bus_reset()
-functions in the future so that we can bring the link back while doing bus level
-reset (uncorrectable AERs and such). But this will do the job for now.
+The second problem is that pm_runtime_force_resume() expects all
+devices to be resumed to have both runtime PM status set to
+RPM_SUSPENDED and power.needs_force_resume set.  AFAICS, checking
+power.needs_force_resume alone should be sufficient there, but even
+that is problematic because something needs to set the flag for
+devices that are expected to be resumed.
 
-I will send a series on Monday with Qcom driver as a reference.
+Unfortunately, they both are not straightforward to address.  I have
+ideas, but nothing clear yet.
 
-- Mani
+For now, the power.set_active propagation can be restricted to the
+parent of the device with DPM_FLAG_SMART_SUSPEND set that needs to be
+resumed and that will just be sufficient ATM, so attached is a patch
+doing this.
 
--- 
-மணிவண்ணன் சதாசிவம்
+In the future, though, all of this needs to be addressed properly
+because if one device in a dependency chain needs to be resumed,
+whatever the reason, all of the devices depended on by it need to be
+resumed as well.
+
+--00000000000090f20d062da05cec
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="pm-sleep-restrict-set_active-propagation.patch"
+Content-Disposition: attachment; 
+	filename="pm-sleep-restrict-set_active-propagation.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_m6w5k7t70>
+X-Attachment-Id: f_m6w5k7t70
+
+LS0tCiBkcml2ZXJzL2Jhc2UvcG93ZXIvbWFpbi5jIHwgICAyMSArKysrKysrKystLS0tLS0tLS0t
+LS0KIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDEyIGRlbGV0aW9ucygtKQoKLS0t
+IGEvZHJpdmVycy9iYXNlL3Bvd2VyL21haW4uYworKysgYi9kcml2ZXJzL2Jhc2UvcG93ZXIvbWFp
+bi5jCkBAIC0xMTkxLDI0ICsxMTkxLDE4IEBACiAJcmV0dXJuIFBNU0dfT047CiB9CiAKLXN0YXRp
+YyB2b2lkIGRwbV9zdXBlcmlvcl9zZXRfbXVzdF9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2LCBi
+b29sIHNldF9hY3RpdmUpCitzdGF0aWMgdm9pZCBkcG1fc3VwZXJpb3Jfc2V0X211c3RfcmVzdW1l
+KHN0cnVjdCBkZXZpY2UgKmRldikKIHsKIAlzdHJ1Y3QgZGV2aWNlX2xpbmsgKmxpbms7CiAJaW50
+IGlkeDsKIAotCWlmIChkZXYtPnBhcmVudCkgeworCWlmIChkZXYtPnBhcmVudCkKIAkJZGV2LT5w
+YXJlbnQtPnBvd2VyLm11c3RfcmVzdW1lID0gdHJ1ZTsKLQkJaWYgKHNldF9hY3RpdmUpCi0JCQlk
+ZXYtPnBhcmVudC0+cG93ZXIuc2V0X2FjdGl2ZSA9IHRydWU7Ci0JfQogCiAJaWR4ID0gZGV2aWNl
+X2xpbmtzX3JlYWRfbG9jaygpOwogCi0JbGlzdF9mb3JfZWFjaF9lbnRyeV9yY3VfbG9ja2VkKGxp
+bmssICZkZXYtPmxpbmtzLnN1cHBsaWVycywgY19ub2RlKSB7CisJbGlzdF9mb3JfZWFjaF9lbnRy
+eV9yY3VfbG9ja2VkKGxpbmssICZkZXYtPmxpbmtzLnN1cHBsaWVycywgY19ub2RlKQogCQlsaW5r
+LT5zdXBwbGllci0+cG93ZXIubXVzdF9yZXN1bWUgPSB0cnVlOwotCQlpZiAoc2V0X2FjdGl2ZSkK
+LQkJCWxpbmstPnN1cHBsaWVyLT5wb3dlci5zZXRfYWN0aXZlID0gdHJ1ZTsKLQl9CiAKIAlkZXZp
+Y2VfbGlua3NfcmVhZF91bmxvY2soaWR4KTsKIH0KQEAgLTEyODcsOSArMTI4MSwxMiBAQAogCQlk
+ZXYtPnBvd2VyLm11c3RfcmVzdW1lID0gdHJ1ZTsKIAogCWlmIChkZXYtPnBvd2VyLm11c3RfcmVz
+dW1lKSB7Ci0JCWRldi0+cG93ZXIuc2V0X2FjdGl2ZSA9IGRldi0+cG93ZXIuc2V0X2FjdGl2ZSB8
+fAotCQkJZGV2X3BtX3Rlc3RfZHJpdmVyX2ZsYWdzKGRldiwgRFBNX0ZMQUdfU01BUlRfU1VTUEVO
+RCk7Ci0JCWRwbV9zdXBlcmlvcl9zZXRfbXVzdF9yZXN1bWUoZGV2LCBkZXYtPnBvd2VyLnNldF9h
+Y3RpdmUpOworCQlpZiAoZGV2X3BtX3Rlc3RfZHJpdmVyX2ZsYWdzKGRldiwgRFBNX0ZMQUdfU01B
+UlRfU1VTUEVORCkpIHsKKwkJCWRldi0+cG93ZXIuc2V0X2FjdGl2ZSA9IHRydWU7CisJCQlpZiAo
+ZGV2LT5wYXJlbnQpCisJCQkJZGV2LT5wYXJlbnQtPnBvd2VyLnNldF9hY3RpdmUgPSB0cnVlOwor
+CQl9CisJCWRwbV9zdXBlcmlvcl9zZXRfbXVzdF9yZXN1bWUoZGV2KTsKIAl9CiAKIENvbXBsZXRl
+Ogo=
+--00000000000090f20d062da05cec--
 
