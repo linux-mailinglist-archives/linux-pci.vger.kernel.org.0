@@ -1,200 +1,192 @@
-Return-Path: <linux-pci+bounces-21020-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21021-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF9EDA2D684
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 15:01:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58050A2D693
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 15:18:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC9243A814D
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 14:01:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E3D46166799
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 14:18:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70D0E1AF0BC;
-	Sat,  8 Feb 2025 14:01:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 580C424635E;
+	Sat,  8 Feb 2025 14:18:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNFDGzdu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nbUq05oo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18AB1DDE9;
-	Sat,  8 Feb 2025 14:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 549FA20328;
+	Sat,  8 Feb 2025 14:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739023289; cv=none; b=Bd7+1bQoqfPieE/MBCcUq9jCIt4N3GEsrDDhRv9G8TXKqBjG2+b50jLlgMel/Ket7QCDZ5UrdGM07dmDnOS/F7WnvxdWOtVz7SBEEHlOeFRgOpqyJ5EioVgNf/vBTrdOCylwQbtTBK/eKD1uoqvSk+nTPxN4gR1iMa3hfd9+jeE=
+	t=1739024293; cv=none; b=Z8RdPYz3cbqheYE+NnVz62gi4CbtEUE9CG//yYtnyZysXlQzZlt8rtFth3VdJ+vD4mbgtWy7qGI8iqqNyw2TOSPXj3nwjkWnhFcmB/QMWg42liUXtgMSrgRVXMRzLpdaPrAI2Ko5maTobCjODJ8Cnf/tHyyQ25Ls+kw1nUiAMAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739023289; c=relaxed/simple;
-	bh=dnme0i90eALZ1naFbu3KAXL141QXeax5ndsu+0TgDPQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AKAXhHHj+BvqtPh83uh/CUVzLnSVDxnfThCcJSVQ0q/irHQ3slypN1idVs7hSSeaYhshJszvkmxClnm9LvAS8tW0I8IrapvPiQArN5eebneFfwyWtWfaYu2m11tgjjp97tdBlydD++WY3N2xuR4kfUrc32ZzmDtM+KOiXYQaroc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cNFDGzdu; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-21f710c17baso5142995ad.1;
-        Sat, 08 Feb 2025 06:01:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739023287; x=1739628087; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8vTZdMPLMSqXrnhxcnWbbB76ba6UXQT8qWGFRDWozPI=;
-        b=cNFDGzduiAfeeto+6NmViDWE2WGRuAZ8RLy0t4oZUDa7fNWF644zaLmTrJqLlKoAMd
-         zr3BN8LFIA2seedklBx0E32e9ECk6qPsvoulP3s9gZC9vLXDXatOE37187RcprJIu93p
-         51aEpINQicW+35z1OSuMjiopTaakLoBl6v2LMFhHBnsVNwrivdNh2Tx2rYl2R/4CCDm1
-         OvvSf/p3guho+MATfGiKfojYa3n8SV8KFB+DIhhaugb/Yb1thU7AcIf6vhXigb0a5THc
-         gMYJ+pCSjVcpRBAaBN+NNYSMD7syCYkgwxJeOH4ZWh+aChi8EZCHI3aCFwWJ5eTDtsXs
-         sRcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739023287; x=1739628087;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8vTZdMPLMSqXrnhxcnWbbB76ba6UXQT8qWGFRDWozPI=;
-        b=w5gkOI9SP0iJWyxX7dZMCuJm6grzfca2Dh+Iikduldf3dXYYc1Z31wFzEX3zUskK1s
-         U3nAXszLylBdOGQqaJ5W12VbhX46EemFqbhV1YN7+CqhNXTHAoi6IQDBA52BTEBTHCJd
-         H1vGMnQL3zRrGwqcW5kZ8XNRqo4DhImC42YKubBnHks72617B7BIOOmRE/dp0CaojuAk
-         MgWvltPowqMcb2hmrtQROinDgi5wQ9CxAqofZ3fxL4ObcDoNQaU3a0g9lp1g6P4IbJpH
-         gmVAnsJ4vJSOGZlVwOt4AN/K0ijgNbGZH5fUZIFDJdqtxlPgOlCWPyRt2jWQsGwK+eDx
-         1e7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUiWfKCKXUrYVWCzFyq0Lyf/2zlqroYdrwfMoyPeT+NOi7g8o84iQSk0ilMzBp/R8WGOPrU10bYURmH@vger.kernel.org, AJvYcCUqYvZ6b5WM45lXGGVmamYeOtRuzv4paCZyhHTTyb1tM7OEXNDjGe1arIerKjHt330gys362AbkNoDPKlc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxauGbq1Q/KVY3RqzrTEtht253dKBBVzeIPT/ABKu/3gZyW7UyE
-	RpmalSoaMv4OF3UMt8e3X5zyFWSsDs0ElUWwuS68V+5JjM4qI33kx680vA==
-X-Gm-Gg: ASbGncvcvzI5d4Z23phN5y7zH1oPNtIeD/bxMDehgdS1YmXcRRe2RmLvK3jhbYApuFf
-	NaQqFprhZ8Xx5E7RjKAOvBHyvDOZw6s2s8FkMTKlAHSZM9ojqr8xXtMEkvGgdPNt1HwDaK9rzP/
-	ThKjbSm+uo9cChXG+0ZwlvPPgnlDJOJOWIOSZC65mTa4m/qc/XDIVHVas5fv05AuqKEWG0H5VPi
-	8awfoOBVYYk2HCPo9r99L3x7uqFBUeVrT+PO0anabMqi1kJPTt3tttstW+8pZlKHvnZo8Yro1nn
-	yfXxxZ25DF1RvPG0ryRzOsrUEQjQlA==
-X-Google-Smtp-Source: AGHT+IHOV0YjO8FrqIWkreeg9lltDRiF9MtKGpnQ6FydqiN+TMar2coLflk6oXPZZEYEe2H2CfYMxA==
-X-Received: by 2002:a05:6a20:c896:b0:1ed:e7cc:ee7e with SMTP id adf61e73a8af0-1ee03b10078mr13675773637.32.1739023287016;
-        Sat, 08 Feb 2025 06:01:27 -0800 (PST)
-Received: from localhost.localdomain ([110.44.101.11])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-730796ba9absm932063b3a.87.2025.02.08.06.01.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2025 06:01:26 -0800 (PST)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Kevin Xie <kevin.xie@starfivetech.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	s=arc-20240116; t=1739024293; c=relaxed/simple;
+	bh=VPpd2YYWjZluEJs9Qvp1Y2nnNlnf0rQUcWOQWnGi/4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i03lqfHqxa2U5v3DTwrs3wNY4J8bOynkIVdsm3iuJ18vNUgpZNz4aEaZkO/sKJPscsbKjHVmghsf88pe+ftq4QEXfoNM9TfXQnQ+CEwFPGjJ8UXZl6t/mnH7VHLLGcVEmaPXxJvd9z98Wd2CAjN7gWPHwX7ca8Q6lTORX6Y99C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nbUq05oo; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739024290; x=1770560290;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VPpd2YYWjZluEJs9Qvp1Y2nnNlnf0rQUcWOQWnGi/4E=;
+  b=nbUq05oojgR1cH6uSddvh9ZyyMCKHie15sZ2GCfGEI2YVksj3CQGGbhu
+   7ZDBThtyfUoXmYYzfAFF9ZO0Wz7ZdvFCyu7eOfwsS5WwwkSirATBWqAAN
+   ABTC0rshmo89U/owjU9pnfT7qvDb7SNU4qm+TJQ+ix4kC2Lhqixaw5Ckn
+   cEOPXOAIiGnSusTeZw4yFlZOvpzfb86woGCBPSmNvn6fQ7YP1DceIUqQQ
+   kEXtJ+S4JYYVflUi5mJmDWapudmBvDogP8ZaPMXOUNeqPE2iQ+s7GQeqN
+   K27yV70aoEOWbtbmt8xBzgCBFKSAGbF9+XQLo1UhKLoc9GfGfEfHmkXmb
+   Q==;
+X-CSE-ConnectionGUID: a6VuQ+ByRuuuJDqOZiBVkA==
+X-CSE-MsgGUID: J7dVg1nETcKi0ErbuifjJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11339"; a="51044191"
+X-IronPort-AV: E=Sophos;i="6.13,270,1732608000"; 
+   d="scan'208";a="51044191"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2025 06:18:10 -0800
+X-CSE-ConnectionGUID: 5SCY/wYtTf2L5TycPuB0vA==
+X-CSE-MsgGUID: 0P956+EpRVirLOVEYoefGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,270,1732608000"; 
+   d="scan'208";a="116788686"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 08 Feb 2025 06:18:03 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tglei-00103D-12;
+	Sat, 08 Feb 2025 14:18:00 +0000
+Date: Sat, 8 Feb 2025 22:17:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Frank Li <Frank.Li@nxp.com>, Kishon Vijay Abraham I <kishon@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Minda Chen <minda.chen@starfivetech.com>,
-	linux-pci@vger.kernel.org (open list:PCIE DRIVER FOR STARFIVE JH71x0),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's IRQ handling
-Date: Sat,  8 Feb 2025 19:31:08 +0530
-Message-ID: <20250208140110.2389-1-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Niklas Cassel <cassel@kernel.org>,
+	dlemoal@kernel.org, jdmason@kudzu.us, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, imx@lists.linux.dev
+Subject: Re: [PATCH v14 06/15] PCI: endpoint: Add RC-to-EP doorbell support
+ using platform MSI controller
+Message-ID: <202502082204.6PRR3cfG-lkp@intel.com>
+References: <20250207-ep-msi-v14-6-9671b136f2b8@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207-ep-msi-v14-6-9671b136f2b8@nxp.com>
 
-kmemleak reported following debug log
+Hi Frank,
 
-$ sudo cat /sys/kernel/debug/kmemleak
-unreferenced object 0xffffffd6c47c2600 (size 128):
-  comm "kworker/u16:2", pid 38, jiffies 4294942263
-  hex dump (first 32 bytes):
-    cc 7c 5a 8d ff ff ff ff 40 b0 47 c8 d6 ff ff ff  .|Z.....@.G.....
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace (crc 4f07ff07):
-    __create_object+0x2a/0xfc
-    kmemleak_alloc+0x38/0x98
-    __kmalloc_cache_noprof+0x296/0x444
-    request_threaded_irq+0x168/0x284
-    devm_request_threaded_irq+0xa8/0x13c
-    plda_init_interrupts+0x46e/0x858
-    plda_pcie_host_init+0x356/0x468
-    starfive_pcie_probe+0x2f6/0x398
-    platform_probe+0x106/0x150
-    really_probe+0x30e/0x746
-    __driver_probe_device+0x11c/0x2c2
-    driver_probe_device+0x5e/0x316
-    __device_attach_driver+0x296/0x3a4
-    bus_for_each_drv+0x1d0/0x260
-    __device_attach+0x1fa/0x2d6
-    device_initial_probe+0x14/0x28
-unreferenced object 0xffffffd6c47c2900 (size 128):
-  comm "kworker/u16:2", pid 38, jiffies 4294942281
+kernel test robot noticed the following build errors:
 
-This patch addresses a kmemleak reported during StarFive PCIe driver
-initialization. The leak was observed with kmemleak reporting
-unreferenced objects related to IRQ handling. The backtrace pointed
-to the `request_threaded_irq` and related functions within the
-`plda_init_interrupts` path, indicating that some allocated memory
-related to IRQs was not being properly freed.
+[auto build test ERROR on 00f3246adeeacbda0bd0b303604e46eb59c32e6e]
 
-The issue was that while the driver requested IRQs, it wasn't
-correctly handling the lifecycle of the associated resources.
-This patch introduces an event IRQ handler and the necessary
-infrastructure to manage these IRQs, preventing the memory leak.
+url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/platform-msi-Add-msi_remove_device_irq_domain-in-platform_device_msi_free_irqs_all/20250208-034445
+base:   00f3246adeeacbda0bd0b303604e46eb59c32e6e
+patch link:    https://lore.kernel.org/r/20250207-ep-msi-v14-6-9671b136f2b8%40nxp.com
+patch subject: [PATCH v14 06/15] PCI: endpoint: Add RC-to-EP doorbell support using platform MSI controller
+config: i386-buildonly-randconfig-003-20250208 (https://download.01.org/0day-ci/archive/20250208/202502082204.6PRR3cfG-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250208/202502082204.6PRR3cfG-lkp@intel.com/reproduce)
 
-Fixes: 647690479660 ("PCI: microchip: Add request_event_irq() callback function")
-Cc: Minda Chen <minda.chen@starfivetech.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
- drivers/pci/controller/plda/pcie-starfive.c | 39 +++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502082204.6PRR3cfG-lkp@intel.com/
 
-diff --git a/drivers/pci/controller/plda/pcie-starfive.c b/drivers/pci/controller/plda/pcie-starfive.c
-index e73c1b7bc8ef..a57177a8be8a 100644
---- a/drivers/pci/controller/plda/pcie-starfive.c
-+++ b/drivers/pci/controller/plda/pcie-starfive.c
-@@ -381,7 +381,46 @@ static const struct plda_pcie_host_ops sf_host_ops = {
- 	.host_deinit = starfive_pcie_host_deinit,
- };
- 
-+/* IRQ handler for PCIe events */
-+static irqreturn_t starfive_event_handler(int irq, void *dev_id)
-+{
-+	struct plda_pcie_rp *port = dev_id;
-+	struct irq_data *data;
-+
-+	/* Retrieve IRQ data */
-+	data = irq_domain_get_irq_data(port->event_domain, irq);
-+
-+	if (data) {
-+		dev_err_ratelimited(port->dev, "Event IRQ %ld triggered\n",
-+				    data->hwirq);
-+	} else {
-+		dev_err_ratelimited(port->dev, "Invalid event IRQ %d\n", irq);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/* Request an IRQ for a specific event */
-+static int starfive_request_event_irq(struct plda_pcie_rp *plda, int event_irq,
-+				      int event)
-+{
-+	int ret;
-+
-+	/* Request the IRQ and associate it with the handler */
-+	ret = devm_request_irq(plda->dev, event_irq, starfive_event_handler,
-+			       IRQF_SHARED, "starfivepcie", plda);
-+
-+	if (ret) {
-+		dev_err(plda->dev, "Failed to request IRQ %d: %d\n", event_irq,
-+			ret);
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
- static const struct plda_event stf_pcie_event = {
-+	.request_event_irq = starfive_request_event_irq,
- 	.intx_event = EVENT_PM_MSI_INT_INTX,
- 	.msi_event  = EVENT_PM_MSI_INT_MSI
- };
+All errors (new ones prefixed by >>):
 
-base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
+   drivers/pci/endpoint/pci-ep-msi.c: In function 'pci_epf_alloc_doorbell':
+>> drivers/pci/endpoint/pci-ep-msi.c:53:15: error: implicit declaration of function 'platform_device_msi_init_and_alloc_irqs' [-Werror=implicit-function-declaration]
+      53 |         ret = platform_device_msi_init_and_alloc_irqs(&epf->dev, num_db, pci_epf_write_msi_msg);
+         |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/pci/endpoint/pci-ep-msi.c: In function 'pci_epf_free_doorbell':
+>> drivers/pci/endpoint/pci-ep-msi.c:75:9: error: implicit declaration of function 'platform_device_msi_free_irqs_all' [-Werror=implicit-function-declaration]
+      75 |         platform_device_msi_free_irqs_all(&epf->dev);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/platform_device_msi_init_and_alloc_irqs +53 drivers/pci/endpoint/pci-ep-msi.c
+
+    26	
+    27	int pci_epf_alloc_doorbell(struct pci_epf *epf, u16 num_db)
+    28	{
+    29		struct pci_epc *epc = epf->epc;
+    30		struct device *dev = &epf->dev;
+    31		struct irq_domain *dom;
+    32		void *msg;
+    33		u32 rid;
+    34		int ret;
+    35		int i;
+    36	
+    37		rid = PCI_EPF_DEVID(epf->func_no, epf->vfunc_no);
+    38		dom = of_msi_map_get_device_domain(epc->dev.parent, rid, DOMAIN_BUS_PLATFORM_MSI);
+    39		if (!dom) {
+    40			dev_err(dev, "Can't find msi domain\n");
+    41			return -EINVAL;
+    42		}
+    43	
+    44		dev_set_msi_domain(dev, dom);
+    45	
+    46		msg = kcalloc(num_db, sizeof(struct pci_epf_doorbell_msg), GFP_KERNEL);
+    47		if (!msg)
+    48			return -ENOMEM;
+    49	
+    50		epf->num_db = num_db;
+    51		epf->db_msg = msg;
+    52	
+  > 53		ret = platform_device_msi_init_and_alloc_irqs(&epf->dev, num_db, pci_epf_write_msi_msg);
+    54		if (ret) {
+    55			/*
+    56			 * The pcie_ep DT node has to specify 'msi-parent' for EP
+    57			 * doorbell support to work. Right now only GIC ITS is
+    58			 * supported. If you have GIC ITS and reached this print,
+    59			 * perhaps you are missing 'msi-map' in DT.
+    60			 */
+    61			dev_err(dev, "Failed to allocate MSI\n");
+    62			kfree(msg);
+    63			return -ENOMEM;
+    64		}
+    65	
+    66		for (i = 0; i < num_db; i++)
+    67			epf->db_msg[i].virq = msi_get_virq(dev, i);
+    68	
+    69		return ret;
+    70	}
+    71	EXPORT_SYMBOL_GPL(pci_epf_alloc_doorbell);
+    72	
+    73	void pci_epf_free_doorbell(struct pci_epf *epf)
+    74	{
+  > 75		platform_device_msi_free_irqs_all(&epf->dev);
+
 -- 
-2.48.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
