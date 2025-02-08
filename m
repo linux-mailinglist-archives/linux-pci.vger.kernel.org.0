@@ -1,61 +1,61 @@
-Return-Path: <linux-pci+bounces-21006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3595BA2D242
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 01:34:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 548A2A2D244
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 01:34:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E1C7E7A691F
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 00:33:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5CA23ADC01
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 00:34:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8453F5C603;
-	Sat,  8 Feb 2025 00:32:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 072442AE7F;
+	Sat,  8 Feb 2025 00:32:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FXKLKu2p"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LYqhZmFW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2069.outbound.protection.outlook.com [40.107.93.69])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2080.outbound.protection.outlook.com [40.107.96.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E93F13B2A4;
-	Sat,  8 Feb 2025 00:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE2F145FE8;
+	Sat,  8 Feb 2025 00:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.80
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738974751; cv=fail; b=IQHr74/jUru2RR+JEKzqyCpqeQubSAlXwVbNyHoHPyQwQhzC5Rn5jWfyfgVUR7YCmXqULvrkwoyLyuTunR5coIBI1ULmG3lfA30cUnOOTp+IC5dCxCgDb+ejVy11r3yzCzn42bpb2XZrMXR33Al2hNq/M8rBEP1hmqQeEFZO020=
+	t=1738974762; cv=fail; b=iAq8H4bJ1fuZXs0OurwxRZGfHvdpy2AS86H86QtCrNf6tFeHS+pVpFq3Pf4ZTk2M6gqb3MXUv97G/nSI2ticgi5PSkNKrSPrmx6UDCJLdQwuqtXU+eGPXgfxZne9nGSRAnzX9JV/0Xt58HDWJQxnsuNJkvz/sCThobe5rQIqb+w=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738974751; c=relaxed/simple;
-	bh=r2/ls2rEEAOli7c2hu7c/v6GJFSddjpxoyMIEuN3nSM=;
+	s=arc-20240116; t=1738974762; c=relaxed/simple;
+	bh=0ntoOUn+r6Po/Gqrl52ELdIZ5Du3B0P/l7LgzwvZbFg=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lfqeZiP53erEIjS2GCuCvmNm6wjP5kvS8jXisyZsq9ftVfi/ptrVLgYQNOI2Xmsfwyc2guwxaffxDKAaVdH8WJdh//f00qAhHreQKEHGLG566p6vWg6fSImrdhEuQkCjU495I3UuzmcCcQ2aZZ7zUg8KhKvQe4ikOn3YYd88khI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FXKLKu2p; arc=fail smtp.client-ip=40.107.93.69
+	 MIME-Version:Content-Type; b=C1SodHfeDsfdzZh8xqzbpXS7Re/JZv+InOaoerOmqR1P+U2No0PMdJK5KP7y2ebOr47R0pzBpWt5h8Z0LMmDUBsFyYAcu3KlG5Taez34/kyfabBBrpb2t6ljDxHaiKW1uCDgnNB9GSGxXxbGiQ5+DNhOTybE/Be55F9mHNmuVs8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LYqhZmFW; arc=fail smtp.client-ip=40.107.96.80
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PIPjWzHdS9mGLDOChYrOTQoihm2rCpkbV4+ttz5hkiIrcKGCzsMhlVhK+8ETCy1CpaK8moa4vqGe7IW1YovdNz+3Hf3utxmw1+zcE9DFP+GheXQUAURsxFuT2304zgUozC0u/6FUtc+8qL0awQtJlqML/+r+2hHkYb95fanzjZtz+V2IKrRCys8QVvG9OOeifOAJaI2JKV2N8MXaEKsDfIH9J4wnpID13h+7lkZ7dgcdxXyEsSyzsm5E1W6aNysurA7PKygN0QT9qZwF9YrTOqYJplTxr13m41NoA7vw6eYHR47WoVuAga0OrikTJDtrFbRw+lQL2Y7J1u0LgP/xuA==
+ b=Ne/b5qPt4LgtsagGsrTuEGaY3Xw5kpmg5It3EhDMBFYwzkr0VCYQ7tRXpGxlodnxPjFOzi08kN8ODYMlr1g/aeH+uO1eMBHsAl198EqJ0rPCjbeaRxeM8pVTlA6y/qYHwLQxWgPY/nbOVDTBUg4mO4ijKKkiFYbCU4QrODTSC39rcurcpp0Ena8Joi0cgSu9O97+nmUBFfmrlPTZkTtCUoVc8Vg9cbrdtBBvY+AVwiR3tFqNb/kOZNB/Gf9GiiUjl0t+hE5ixpGYVzkN+NtGUjneYi/pJ1ymaWyhOQtMaoasLyyQVC6/90cqYgvZBt9AnrpwgaQrr92JaBBc+FqRQA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qlnfhzW7P8Z9mDGPuSQpv+AzzgYQtJX+ANjMkNt8Xio=;
- b=bKCo4xw8S5M1x/HFcA9hKak4GEkQdtC+ej6m4pK5fuRwDT+Jg3pYyjVHyC0ILqtJJx2CaHrVXaRTLYhznpd0YGVyeuS2+A8CSodeSrNzN0Ave7kIZ5hpg1+thKc4NgK1a5248k8jXB/QEb7J3UmW9TZfZ6eZapbvpDeYpR/7TUYk+JtXZoDZqCF5VeHJsySezBygPJlnrdKHDO0+OOoPkvul+yJZUV5wW5WdWD8UKLqccSsuC1EJtw8khJ5whcFu+IpehcbhFkFykpsFSk4vx74gsBJiVjP0VT/1j/u7BbO5R+Xmzt32drqMfgeKMLKWlX5y0ofhqJCRQTDz8Tq9LQ==
+ bh=WvhTLc+jPoHYjGbJCgrTb2mvlZY993cTERpJ22pq16U=;
+ b=jdI0l9qx+VQ/GcSh3elG/S1VoQuISQFlfVVwQzCdgJeehXSsxUChv25SZj1nfl8t5pZ4Dg2i4TV2TRG6t4qm+RYkUGjFgqI6YfqhLSB4bpN1TiIiU1GqoMDKl1wxxF6lDsy3T4Ho12X1pf1cQHqZawAlZx5y18A71mBGhkyc7/LmZv2JTKkOTOS+9X74wwpmDNXH7z37vPwPTDseRSCVa2un4Jl68GLrkOmJjOxBhmHnM2OQHLQIFVBfZUtgXQkYKeMrt3BGRJT5yfQrnCs2kqSA23MZzyRo7NK0pJbGZy63cS8jxZsC0gjF7dSk4cqsWyz9O7QCwY0jaPFLpoBM1Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qlnfhzW7P8Z9mDGPuSQpv+AzzgYQtJX+ANjMkNt8Xio=;
- b=FXKLKu2pSm1ytH8pJpco4gu0kjZ8MZJgPpO/WhKAXaBBTrozBJmjBHEFcC+ZsWbaOTQJU4bDrdb30tUaTQnzeAqk+2EbVbLjm7hN1Pp15y42M/Ij6k5fgMz5k6Xn1OnlXv2xnUWb4e3JeY0Z7Rl8waFQYG1l98FajoPOh+LZJxw=
-Received: from BY5PR16CA0014.namprd16.prod.outlook.com (2603:10b6:a03:1a0::27)
- by CY5PR12MB6156.namprd12.prod.outlook.com (2603:10b6:930:24::15) with
+ bh=WvhTLc+jPoHYjGbJCgrTb2mvlZY993cTERpJ22pq16U=;
+ b=LYqhZmFWjQnAR4XAlYG8x2Pn5+o301ps4az3yQdz3trhFDxozKEHpkk9+xy0epyW4sAj6fgJbwAuFiT06CQnlRFPc0O1Y0ubNpdNHKFqtd82vFgT5SuNpN5PKl1vq1p0JG4/0GFtPfJjQT5vUh5E9zWZY46KFXNNtkw2VL7nlzc=
+Received: from SJ0PR13CA0139.namprd13.prod.outlook.com (2603:10b6:a03:2c6::24)
+ by SA3PR12MB8437.namprd12.prod.outlook.com (2603:10b6:806:2f5::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.14; Sat, 8 Feb
- 2025 00:32:25 +0000
-Received: from SJ1PEPF000023D2.namprd02.prod.outlook.com
- (2603:10b6:a03:1a0:cafe::ee) by BY5PR16CA0014.outlook.office365.com
- (2603:10b6:a03:1a0::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8356.20 via Frontend Transport; Sat,
- 8 Feb 2025 00:32:25 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.11; Sat, 8 Feb
+ 2025 00:32:36 +0000
+Received: from SJ1PEPF000023CB.namprd02.prod.outlook.com
+ (2603:10b6:a03:2c6:cafe::34) by SJ0PR13CA0139.outlook.office365.com
+ (2603:10b6:a03:2c6::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8445.8 via Frontend Transport; Sat, 8
+ Feb 2025 00:32:36 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -63,13 +63,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF000023D2.mail.protection.outlook.com (10.167.244.9) with Microsoft
+ SJ1PEPF000023CB.mail.protection.outlook.com (10.167.244.5) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8398.14 via Frontend Transport; Sat, 8 Feb 2025 00:32:25 +0000
+ 15.20.8398.14 via Frontend Transport; Sat, 8 Feb 2025 00:32:36 +0000
 Received: from ethanolx7ea3host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 7 Feb
- 2025 18:32:23 -0600
+ 2025 18:32:34 -0600
 From: Terry Bowman <terry.bowman@amd.com>
 To: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
@@ -80,9 +80,9 @@ To: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<rrichter@amd.com>, <nathan.fontenot@amd.com>, <terry.bowman@amd.com>,
 	<Smita.KoralahalliChannabasappa@amd.com>, <lukas@wunner.de>,
 	<ming.li@zohomail.com>, <PradeepVineshReddy.Kodamati@amd.com>
-Subject: [PATCH v6 14/17] cxl/pci: Update CXL Port RAS logging to also display PCIe SBDF
-Date: Fri, 7 Feb 2025 18:29:38 -0600
-Message-ID: <20250208002941.4135321-15-terry.bowman@amd.com>
+Subject: [PATCH v6 15/17] cxl/pci: Add support to assign and clear pci_driver::cxl_err_handlers
+Date: Fri, 7 Feb 2025 18:29:39 -0600
+Message-ID: <20250208002941.4135321-16-terry.bowman@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250208002941.4135321-1-terry.bowman@amd.com>
 References: <20250208002941.4135321-1-terry.bowman@amd.com>
@@ -98,272 +98,173 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D2:EE_|CY5PR12MB6156:EE_
-X-MS-Office365-Filtering-Correlation-Id: 59077212-e34a-404a-13a8-08dd47d80f7b
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000023CB:EE_|SA3PR12MB8437:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6c4d15ae-73f1-4b14-23ee-08dd47d815e8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|36860700013|7416014|82310400026|921020;
+	BCL:0;ARA:13230040|1800799024|82310400026|7416014|376014|36860700013|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZA5zuhARXH3AEgOXCMj7+8tX+mll2fdz5guPnfrOBNLLuE1fzdvpW0z1Tjpc?=
- =?us-ascii?Q?JHEGgRA1oKcSxPLz8zcD9coTknAn7sWGjKMWxvoIrKKhvcSB1zs871ImqH7Y?=
- =?us-ascii?Q?ZjrdZTx4jfn14z7hR6Uh6basay9fmp7H8Hy3NPvZCloaUghEkK5/PlhjcSpw?=
- =?us-ascii?Q?LGPZ7x1mnMa4MSgwYv8Qy0HBfkVfHKnNYG7u9clw7Nh6vDnJrLT7dlD/UEgv?=
- =?us-ascii?Q?dCO7T1231yNUIATZzUasgZyTCuMOfKQF++akkPfK3Euuxc78wOE8G5j3Y3rv?=
- =?us-ascii?Q?MiSpDWx49fVtX9hhCepmQz6hstjLFm7GE5+wXnGXJetXyYa1e/p3+OWg6fSA?=
- =?us-ascii?Q?MMsCGD/nFDFNBPTRCJKN+3BvCGcWSDcjHoNErL/Eg56Aeoiii5GoQSEiDqTi?=
- =?us-ascii?Q?eMhuVsgGSz6yxIJeDUqIfSaxwEpw13dpezzeiekykGEkwjpWyiJ2a2Z0N5L8?=
- =?us-ascii?Q?CqK9HilTqB9fQOf09bf5jW82OTvxaxACovMQGhgfVHIKkRnK/XPQKn11OksP?=
- =?us-ascii?Q?z/0IkVBr2Bok7HfOC+TrvaYeQaZZvb6MGDb+DiReyv5/3rtw9y4BHSk1DmFf?=
- =?us-ascii?Q?hqlwKVA7TguiEIFamd96ZfpeOoEqQDlhkh2YubGi+uv+tSEoCv13GCTDRAhE?=
- =?us-ascii?Q?PkddBLjUpzskQa8OImbftu/UMP+TOyRDLP89VHD97t9Sg8KiTA0EgLj97Ewi?=
- =?us-ascii?Q?KrMH1QliTlKiLjdXRfPJFglhHkDeWNosRzNbovTVM6rJp75QRTRTOuhAU63n?=
- =?us-ascii?Q?S7/I/VYVAL6LU72lutLXKbtlo2m3sbrrT95+aE/ncH8PM/wbSpQXNVE4tFwn?=
- =?us-ascii?Q?U2v3tqxsEqyp7iSoSkghEHOlg9/YOH+dUVrhBod83CZbfbe6CsNkRvRTm7HJ?=
- =?us-ascii?Q?3molekLyQqy7D0PFx3EQCVTs/qh8BgtoQIWMGAI/7NuLhD3ska2WHbCDpOMN?=
- =?us-ascii?Q?WEt8v7gzLUozZI6yakcjEYstoQQVFUuDpcBf1Q7+yffoAjsO7uLap1uuCj6x?=
- =?us-ascii?Q?+UP0RChYkUa/ceUPpwS7yzSju/hlDHHhzOpy0rArsKAyROyMTeh/vPJ4BG8g?=
- =?us-ascii?Q?RO1D5O8YcOIZJa/27/C8Gf8uliGC4Ix0MsZ9Gx4854sG4alxWr1njFgslXHv?=
- =?us-ascii?Q?c0K3QKRqEucJkfQyW3G6KqvoErQlcxqif4X9nFACOhIESruFGoetK0byTiob?=
- =?us-ascii?Q?5GrhnYRdlF61Mz/7CKgyqv5hHKuWLVC3NLdDlmdiUsHyyvtVb14t2/0xbbX8?=
- =?us-ascii?Q?ZlEZ8BYmAjXegREJxV0ZqqS6mi4FWd5DIKYAEmuZ1CoL505kVM/aNIclWqXh?=
- =?us-ascii?Q?RhrIsah0i4eiYlnwijMNwDXrB2625irmDusE87S+RSd3ZfH92Kj19PvUXvv/?=
- =?us-ascii?Q?upuO7uHCd05oghqvZp6wnSXhJH2e5gQhf96sMug4/fTBJHJSn9QNATw9Iwhi?=
- =?us-ascii?Q?s8aY5YC3JmSMVrJg13Czsgi5lvzXHcLWN9mtLB7dQ9MuIvMlcdx2bVaFRQdJ?=
- =?us-ascii?Q?cuzV95pkKuLSOL7x0JnU/d3a/KdIHq3FtZHP?=
+	=?us-ascii?Q?JUrbUzpb0fSjXh/wztaKBZOVyaePvOlGIYwD8ZHlhy0sjYsyjjnWfehDLTk2?=
+ =?us-ascii?Q?8ygAbRdidOosHrgPzRax7TcMXsf9pXa3Vh936HdVfF3adf6iiiEEeTv1UB4v?=
+ =?us-ascii?Q?vLRjxZZmTLmPfKbXEhvIZSEnpD1tww9E4Xw63UUWxcug+ERMwnRRWZw/sFD9?=
+ =?us-ascii?Q?kKtFnJFPyDi2MbQKoVuXR+OwJYhmByquHWkQJR/ihCsRUmpzLDV1NeeHQzAi?=
+ =?us-ascii?Q?DI7jY+Z50Xp9Ld6ZF1YT/mmUtv4BW8wcfF5YOeYEtvxbkaTCt5VaFywIjQ1c?=
+ =?us-ascii?Q?Cs1Owsa43w+8fWGzTtAh/8yZgAt+vqgmgIxypk6BWQPkJPHaqlxi00JuDpgW?=
+ =?us-ascii?Q?0DRznfUWi5u1oYhayMcK30nMzlFtVBmefjoNuUCEe+jbdQ6VG8FSnwJBy+ap?=
+ =?us-ascii?Q?kSXNO/FkiJoi3QkGUQFo/SAatHgC7h14z2JBkmo46H7t4ZCEgCBxEe/gDAg+?=
+ =?us-ascii?Q?eU+lUNV/Z6u4jrG5DigMMquZvg13RpdIkmJm7xxESM/aRi1M50VU4hZEPrJa?=
+ =?us-ascii?Q?z0JnaTg7f9/f2O1zACA+1D1zWy2N8vPaFOKfiCqQMlMkQLKyekn7TGSx98tb?=
+ =?us-ascii?Q?ezPV90OFnHCRV2v84MlT1LcTXOdOrSi/kZjPTI9obSTEukp+MeXF+uTdlZRe?=
+ =?us-ascii?Q?xNYDhZBsboPV44rpxW5A28v7mE9N8V4JR39cw9mRIpY7Xz3BeAIH+dYO0J4M?=
+ =?us-ascii?Q?zxBiAvftvDyXFN38SIxO2wiaQ7yDxsRfj67SIw1KkRg9sngCbQbl8sHdAUpX?=
+ =?us-ascii?Q?L7khsp4ZlrW17Zs0N5Fpv2p+cvpFYvQxI9nixlEy4BU0plBG95VPTv1tRxO5?=
+ =?us-ascii?Q?pMXAqg2c6NFl/he6ZzFzKCBl8XZPCSFD1roFHgzpT1gskPtD7mMGB1W0hsA6?=
+ =?us-ascii?Q?F4IoCZ2r+mcPHrxm8Z5EvZcEMtukZK705A1H8tDodLKmSQ5obj1N9CJmtI/x?=
+ =?us-ascii?Q?45Rl9FWVrETXxUGAfIy/VvajnyAqi4tNzSPTOkYGNcXtFG5vSoLicOGO+gc4?=
+ =?us-ascii?Q?ADliaeEb+mAhE0fMdChZPzDWPCaDl2TMOuOkAJ0+dqO69sJab58XQh3LkD26?=
+ =?us-ascii?Q?UgY+Xk8BrVabbzTMtJREdpl0RI4URPRuBpBsdzVYMdaET3ZgqFeHJcUUjepI?=
+ =?us-ascii?Q?Xz45WTCxWN0zCcbqcmrpWfmCPp8WxGH2GUETv6ouXBQPc0+suLo/I+BtoMIu?=
+ =?us-ascii?Q?cDYHTuosUC5299HUBtmhOim9inPVj4QBi1z1laLCVMZDkJPBq+PvVjFb0hyX?=
+ =?us-ascii?Q?h/CZfmxPylJy8gm2G1ZJR8EQAEbvRSS4fdVDfte5yRJxqBl5uo3tK8pJFW1M?=
+ =?us-ascii?Q?CM9PyZehjS4/vD8DNMQNTC+QZ6sEhZbhPDyJC4tklTL4vmIacTrpHHmXNLp0?=
+ =?us-ascii?Q?NGvDOk61Rru0OXrxWJJopIBVQtq9ivD3Xc4Lf1xnW2OJHA4SvSE3701fY6Cv?=
+ =?us-ascii?Q?UcjiRe/7X9xWeBlS0bmqbUw7L3xnbS/n1SCRoAjIyPe6ZZ4HX6iRgCBCsDrw?=
+ =?us-ascii?Q?RoPKgtOxCq3iZcG9NKLw9hiX6yFxEAR/Gv3o?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(7416014)(82310400026)(921020);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(376014)(36860700013)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2025 00:32:25.3148
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2025 00:32:36.0959
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59077212-e34a-404a-13a8-08dd47d80f7b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c4d15ae-73f1-4b14-23ee-08dd47d815e8
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF000023D2.namprd02.prod.outlook.com
+	SJ1PEPF000023CB.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6156
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8437
 
-CXL RAS errors are currently logged using the associated CXL port's name
-returned from devname(). They are typically named with 'port1', 'port2',
-etc. to indicate the hierarchial location in the CXL topology. But, this
-doesn't clearly indicate the CXL card or slot reporting the error.
+pci_driver::cxl_err_handlers are not currently assigned handler callbacks.
+The handlers can't be set in the pci_driver static definition because the
+CXL PCIe Port devices are bound to the portdrv driver which is not CXL
+driver aware.
 
-Update the logging to also log the corresponding PCIe devname. This will
-give a PCIe SBDF or ACPI object name (in case of CXL HB). This will provide
-details helping users understand which physical slot and card has the
-error.
+Add cxl_assign_port_error_handlers() in the cxl_core module. This
+function will assign the default handlers for a CXL PCIe Port device.
 
-Below is example output after making these changes.
+When the CXL Port (cxl_port or cxl_dport) is destroyed the device's
+pci_driver::cxl_err_handlers must be set to NULL indicating they should no
+longer be used.
 
-Correctable error example output:
-cxl_port_aer_correctable_error: device=port1 (0000:0c:00.0) parent=root0 (pci0000:0c) status='Received Error From Physical Layer'
-
-Uncorrectable error example output:
-cxl_port_aer_uncorrectable_error: device=port1 (0000:0c:00.0) parent=root0 (pci0000:0c) status: 'Memory Byte Enable Parity Error' first_error: 'Memory Byte Enable Parity Error'
+Create cxl_clear_port_error_handlers() and register it to be called
+when the CXL Port device (cxl_port or cxl_dport) is destroyed.
 
 Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Reviewed-by: Gregory Price <gourry@gourry.net>
 ---
- drivers/cxl/core/pci.c   | 31 +++++++++++++++--------------
- drivers/cxl/core/trace.h | 42 +++++++++++++++++++++++++---------------
- 2 files changed, 42 insertions(+), 31 deletions(-)
+ drivers/cxl/core/pci.c | 59 ++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 57 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 61e6d33d2270..f154dcf6dfda 100644
+index f154dcf6dfda..03ae21a944e0 100644
 --- a/drivers/cxl/core/pci.c
 +++ b/drivers/cxl/core/pci.c
-@@ -652,14 +652,14 @@ void read_cdat_data(struct cxl_port *port)
- }
- EXPORT_SYMBOL_NS_GPL(read_cdat_data, "CXL");
- 
--static void __cxl_handle_cor_ras(struct device *dev,
-+static void __cxl_handle_cor_ras(struct device *cxl_dev, struct device *pcie_dev,
- 				 void __iomem *ras_base)
- {
- 	void __iomem *addr;
- 	u32 status;
- 
- 	if (!ras_base) {
--		dev_warn_once(dev, "CXL RAS register block is not mapped");
-+		dev_warn_once(cxl_dev, "CXL RAS register block is not mapped");
- 		return;
- 	}
- 
-@@ -677,7 +677,7 @@ static void __cxl_handle_cor_ras(struct device *dev,
- 
- static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
- {
--	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, cxlds->regs.ras);
-+	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, NULL, cxlds->regs.ras);
+@@ -860,8 +860,39 @@ static pci_ers_result_t cxl_port_error_detected(struct pci_dev *pdev)
+ 	return __cxl_handle_ras(dev, &pdev->dev, ras_base);
  }
  
- /* CXL spec rev3.0 8.2.4.16.1 */
-@@ -701,7 +701,8 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
-  * Log the state of the RAS status registers and prepare them to log the
-  * next error status. Return 1 if reset needed.
-  */
--static pci_ers_result_t __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
-+static pci_ers_result_t __cxl_handle_ras(struct device *cxl_dev, struct device *pcie_dev,
-+					 void __iomem *ras_base)
- {
- 	u32 hl[CXL_HEADERLOG_SIZE_U32];
- 	void __iomem *addr;
-@@ -709,7 +710,7 @@ static pci_ers_result_t __cxl_handle_ras(struct device *dev, void __iomem *ras_b
- 	u32 fe;
- 
- 	if (!ras_base) {
--		dev_warn_once(dev, "CXL RAS register block is not mapped");
-+		dev_warn_once(cxl_dev, "CXL RAS register block is not mapped");
- 		return PCI_ERS_RESULT_NONE;
- 	}
- 
-@@ -730,10 +731,10 @@ static pci_ers_result_t __cxl_handle_ras(struct device *dev, void __iomem *ras_b
- 	}
- 
- 	header_log_copy(ras_base, hl);
--	if (is_cxl_memdev(dev))
--		trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
--	else if (is_cxl_port(dev))
--		trace_cxl_port_aer_uncorrectable_error(dev, status, fe, hl);
-+	if (is_cxl_memdev(cxl_dev))
-+		trace_cxl_aer_uncorrectable_error(to_cxl_memdev(cxl_dev), status, fe, hl);
-+	else if (is_cxl_port(cxl_dev))
-+		trace_cxl_port_aer_uncorrectable_error(cxl_dev, pcie_dev, status, fe, hl);
- 
- 	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
- 
-@@ -742,7 +743,7 @@ static pci_ers_result_t __cxl_handle_ras(struct device *dev, void __iomem *ras_b
- 
- static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
- {
--	return __cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->regs.ras);
-+	return __cxl_handle_ras(&cxlds->cxlmd->dev, NULL, cxlds->regs.ras);
- }
- 
- #ifdef CONFIG_PCIEAER_CXL
-@@ -814,7 +815,7 @@ static void __iomem *cxl_pci_port_ras(struct pci_dev *pdev, struct device **dev)
- 		struct cxl_dport *dport = NULL;
- 
- 		port = find_cxl_port(&pdev->dev, &dport);
--		if (!port) {
-+		if (!port || !is_cxl_port(&port->dev)) {
- 			pci_err(pdev, "Failed to find root/dport in CXL topology\n");
- 			return NULL;
- 		}
-@@ -848,7 +849,7 @@ static void cxl_port_cor_error_detected(struct pci_dev *pdev)
- 	struct device *dev;
- 	void __iomem *ras_base = cxl_pci_port_ras(pdev, &dev);
- 
--	__cxl_handle_cor_ras(dev, ras_base);
-+	__cxl_handle_cor_ras(dev, &pdev->dev, ras_base);
- }
- 
- static pci_ers_result_t cxl_port_error_detected(struct pci_dev *pdev)
-@@ -856,7 +857,7 @@ static pci_ers_result_t cxl_port_error_detected(struct pci_dev *pdev)
- 	struct device *dev;
- 	void __iomem *ras_base = cxl_pci_port_ras(pdev, &dev);
- 
--	return __cxl_handle_ras(dev, ras_base);
-+	return __cxl_handle_ras(dev, &pdev->dev, ras_base);
- }
- 
++static const struct cxl_error_handlers cxl_port_error_handlers = {
++	.error_detected	= cxl_port_error_detected,
++	.cor_error_detected = cxl_port_cor_error_detected,
++};
++
++static void cxl_assign_port_error_handlers(struct pci_dev *pdev)
++{
++	struct pci_driver *pdrv;
++
++	if (!pdev || !pdev->driver || !get_device(&pdev->dev))
++		return;
++
++	pdrv = pdev->driver;
++	pdrv->cxl_err_handler = &cxl_port_error_handlers;
++	put_device(&pdev->dev);
++}
++
++static void cxl_clear_port_error_handlers(void *data)
++{
++	struct pci_dev *pdev = data;
++	struct pci_driver *pdrv;
++
++	if (!pdev || !pdev->driver || !get_device(&pdev->dev))
++		return;
++
++	pdrv = pdev->driver;
++	pdrv->cxl_err_handler = NULL;
++	put_device(&pdev->dev);
++}
++
  void cxl_uport_init_ras_reporting(struct cxl_port *port)
-@@ -909,13 +910,13 @@ EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
- static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
- 					  struct cxl_dport *dport)
  {
--	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, dport->regs.ras);
-+	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, NULL, dport->regs.ras);
- }
++	struct pci_dev *pdev = to_pci_dev(port->uport_dev);
  
- static bool cxl_handle_rdport_ras(struct cxl_dev_state *cxlds,
- 				       struct cxl_dport *dport)
+ 	/* uport may have more than 1 downstream EP. Check if already mapped. */
+ 	mutex_lock(&ras_init_mutex);
+@@ -872,9 +903,15 @@ void cxl_uport_init_ras_reporting(struct cxl_port *port)
+ 
+ 	port->reg_map.host = &port->dev;
+ 	if (cxl_map_component_regs(&port->reg_map, &port->uport_regs,
+-				   BIT(CXL_CM_CAP_CAP_ID_RAS)))
++				   BIT(CXL_CM_CAP_CAP_ID_RAS))) {
+ 		dev_err(&port->dev, "Failed to map RAS capability\n");
++		mutex_unlock(&ras_init_mutex);
++		return;
++	}
+ 	mutex_unlock(&ras_init_mutex);
++
++	cxl_assign_port_error_handlers(pdev);
++	devm_add_action_or_reset(&port->dev, cxl_clear_port_error_handlers, pdev);
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_uport_init_ras_reporting, "CXL");
+ 
+@@ -886,6 +923,8 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
  {
--	return __cxl_handle_ras(&cxlds->cxlmd->dev, dport->regs.ras);
-+	return __cxl_handle_ras(&cxlds->cxlmd->dev, NULL, dport->regs.ras);
+ 	struct device *dport_dev = dport->dport_dev;
+ 	struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport_dev);
++	struct pci_dev *pdev = to_pci_dev(dport_dev);
++	struct cxl_port *port;
+ 
+ 	dport->reg_map.host = dport_dev;
+ 	if (dport->rch && host_bridge->native_aer) {
+@@ -901,9 +940,25 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
+ 	}
+ 
+ 	if (cxl_map_component_regs(&dport->reg_map, &dport->regs.component,
+-				   BIT(CXL_CM_CAP_CAP_ID_RAS)))
++				   BIT(CXL_CM_CAP_CAP_ID_RAS))) {
+ 		dev_err(dport_dev, "Failed to map RAS capability\n");
++		mutex_unlock(&ras_init_mutex);
++		return;
++	}
+ 	mutex_unlock(&ras_init_mutex);
++
++	if (dport->rch)
++		return;
++
++	port = find_cxl_port(dport_dev, NULL);
++	if (!port) {
++		dev_err(dport_dev, "Failed to find upstream port\n");
++		return;
++	}
++
++	cxl_assign_port_error_handlers(pdev);
++	devm_add_action_or_reset(&port->dev, cxl_clear_port_error_handlers, pdev);
++	put_device(&port->dev);
  }
+ EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
  
- /*
-diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index b536233ac210..a74803f4aa22 100644
---- a/drivers/cxl/core/trace.h
-+++ b/drivers/cxl/core/trace.h
-@@ -49,18 +49,22 @@
- )
- 
- TRACE_EVENT(cxl_port_aer_uncorrectable_error,
--	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
--	TP_ARGS(dev, status, fe, hl),
-+	TP_PROTO(struct device *cxl_dev, struct device *pcie_dev, u32 status, u32 fe, u32 *hl),
-+	TP_ARGS(cxl_dev, pcie_dev, status, fe, hl),
- 	TP_STRUCT__entry(
--		__string(devname, dev_name(dev))
--		__string(parent, dev_name(dev->parent))
-+		__string(cxl_name, dev_name(cxl_dev))
-+		__string(cxl_parent_name, dev_name(cxl_dev->parent))
-+		__string(pcie_name, dev_name(pcie_dev))
-+		__string(pcie_parent_name, dev_name(pcie_dev->parent))
- 		__field(u32, status)
- 		__field(u32, first_error)
- 		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
- 	),
- 	TP_fast_assign(
--		__assign_str(devname);
--		__assign_str(parent);
-+		__assign_str(cxl_name);
-+		__assign_str(cxl_parent_name);
-+		__assign_str(pcie_name);
-+		__assign_str(pcie_parent_name);
- 		__entry->status = status;
- 		__entry->first_error = fe;
- 		/*
-@@ -69,8 +73,9 @@ TRACE_EVENT(cxl_port_aer_uncorrectable_error,
- 		 */
- 		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
- 	),
--	TP_printk("device=%s parent=%s status: '%s' first_error: '%s'",
--		__get_str(devname), __get_str(parent),
-+	TP_printk("device=%s (%s) parent=%s (%s) status: '%s' first_error: '%s'",
-+		__get_str(cxl_name), __get_str(pcie_name),
-+		__get_str(cxl_parent_name), __get_str(pcie_parent_name),
- 		show_uc_errs(__entry->status),
- 		show_uc_errs(__entry->first_error)
- 	)
-@@ -125,20 +130,25 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
- )
- 
- TRACE_EVENT(cxl_port_aer_correctable_error,
--	TP_PROTO(struct device *dev, u32 status),
--	TP_ARGS(dev, status),
-+	TP_PROTO(struct device *cxl_dev, struct device *pcie_dev, u32 status),
-+	TP_ARGS(cxl_dev, pcie_dev, status),
- 	TP_STRUCT__entry(
--		__string(devname, dev_name(dev))
--		__string(parent, dev_name(dev->parent))
-+		__string(cxl_name, dev_name(cxl_dev))
-+		__string(cxl_parent_name, dev_name(cxl_dev->parent))
-+		__string(pcie_name, dev_name(pcie_dev))
-+		__string(pcie_parent_name, dev_name(pcie_dev->parent))
- 		__field(u32, status)
- 	),
- 	TP_fast_assign(
--		__assign_str(devname);
--		__assign_str(parent);
-+		__assign_str(cxl_name);
-+		__assign_str(cxl_parent_name);
-+		__assign_str(pcie_name);
-+		__assign_str(pcie_parent_name);
- 		__entry->status = status;
- 	),
--	TP_printk("device=%s parent=%s status='%s'",
--		__get_str(devname), __get_str(parent),
-+	TP_printk("device=%s (%s) parent=%s (%s) status='%s'",
-+		__get_str(cxl_name), __get_str(pcie_name),
-+		__get_str(cxl_parent_name), __get_str(pcie_parent_name),
- 		show_ce_errs(__entry->status)
- 	)
- );
 -- 
 2.34.1
 
