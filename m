@@ -1,81 +1,81 @@
-Return-Path: <linux-pci+bounces-21011-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21012-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB2A1A2D3DF
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 05:50:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B769A2D3EF
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 06:03:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A20416BB8F
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 04:50:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C591D16B88D
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 05:03:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 933E74B5AE;
-	Sat,  8 Feb 2025 04:50:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C17B188006;
+	Sat,  8 Feb 2025 05:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SW9h8Za6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FF6137E
-	for <linux-pci@vger.kernel.org>; Sat,  8 Feb 2025 04:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0416BA41;
+	Sat,  8 Feb 2025 05:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738990217; cv=none; b=ZAGFYSfNXzOHMSXP5Rt15zl54f1f6kuCEFF2R8y2F+hErYFgvqmfQvOV1LRsdyga5zdDABZa1xFrsviyt9JGenLVNsgS6p33tEPSaEGyqbMI62eG0gkspSko3gEF96cB9B/uTmK8MwN5AU7+bMmrd1mdA/x9U0JTlJ8+KRPKp/c=
+	t=1738991014; cv=none; b=fHYDr3Sjq8BoNniX4Arp6LMRR6Gwxj+fU+6GSdYTwiP5UEhMP9kVGYStGlfVFp+7nLUxYboCHnhyUjCC2v3pVVUHxX6dXeD0hbXAVa++9zpL3ZecDxBuZzE4qgHha2d41vYxpWvCB/KpINGupWqeNyCL0sJ5BNcQvo3BfCfZFH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738990217; c=relaxed/simple;
-	bh=42rJKSyJOMqN9hgGg8yGlDpgDC1Pap6cAo3z2Ma99dI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PZv8Wxlv0PBCYuUfAL/U8W7MRgLzcdbqe65PkIpnui1d3kALZCJLrk3Dl+FNBYLaP92BIuPytm0FY1jMEorXEBpgt+jr2d/TDyXVbEuLRb/neW27KPJNcEU+rj6+fARuk46SjnqcDV8U0rCmgruTrdRrBDEjXYbAdAIxQraclDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 874BC28008B00;
-	Sat,  8 Feb 2025 05:50:04 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 735B714B477; Sat,  8 Feb 2025 05:50:04 +0100 (CET)
-Date: Sat, 8 Feb 2025 05:50:04 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Keith Busch <kbusch@meta.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH] pci: allow user specifiy a reset wait timeout
-Message-ID: <Z6bifFBdh-jfEiXQ@wunner.de>
-References: <20250207204310.2546091-1-kbusch@meta.com>
+	s=arc-20240116; t=1738991014; c=relaxed/simple;
+	bh=2ODyCk+gKJrnseQ6g1H+QXVp8LXA5ZinHiJQ8be5+pI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Gy+QBkRbuBy+63iP0RhEyIbMx5l2dD6A4iiwwabUcReVcJAZ4qYP0+2IBw5Cf0icw5Ue6YLXjjXCOTEUcWb8Yy+Ly5wr/6pihkt/VPiRnoYF7NoFBc5Q5KbRj2Vi6HtVMw/yJsWo36S9LelcB4K2NGJh0DGmZHq/GKYi6GFoqQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SW9h8Za6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 582BAC4CED6;
+	Sat,  8 Feb 2025 05:03:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738991013;
+	bh=2ODyCk+gKJrnseQ6g1H+QXVp8LXA5ZinHiJQ8be5+pI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SW9h8Za6Lc76MUxTeFAyeb81vf6sLc8s74eAUK7rVJ7tNdoOOCH+Iyih1yKU1ORnu
+	 oRuq9uhqHkMqwUXBK2hNxNuzbIuUmplMubpCuFwXYldf+Obvn9id1WO0oLE4jvb4dj
+	 IC3jyA9eyu59GtPl1oP9lcHdcEetx9HEwfSMGBSu5rFclmZMHCAi2tVU3KL3MHlADR
+	 UXzKU6lI481bZzQe8yVNYVmGBO7qHpCJxn8I+kaiWg4rZOBhqumLWGJRAUYt0ZCZpz
+	 vklAGsjL8Rw58GH8nqHK0ENlkRZGueyqmgAu2mOb2XikrJeDtSZX4H5AoQxLm5U4BP
+	 OxWk8iBeLKx0g==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Alex Williamson <alex.williamson@redhat.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
+Cc: linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 0/2] PCI: Avoid capability searches in save/restore state
+Date: Fri,  7 Feb 2025 23:03:27 -0600
+Message-Id: <20250208050329.1092214-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250207204310.2546091-1-kbusch@meta.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 07, 2025 at 12:43:10PM -0800, Keith Busch wrote:
-> The spec does not provide any upper limit to how long a device may
-> return Request Retry Status. It just says "Some devices require a
-> lengthy self-initialization sequence to complete". The kernel
-> arbitrarily chose 60 seconds since that really ought to be enough. But
-> there are devices where this turns out not to be enough.
-> 
-> Since any timeout choice would be arbitrary, and 60 seconds is generally
-> more than enough for the majority of hardware, let's make this a
-> parameter so an admin can adjust it specifically to their needs if the
-> default timeout isn't appropriate.
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-There are d3hot_delay and d3cold_delay members in struct pci_dev.
-How about adding a reset_delay which can be set in a device-specific
-quirk?  I think I'd prefer that over a command line parameter.
+Reduce the number of times we search config space for PCI capabilities when
+saving and restoring device state.
 
-A D3cold -> D0 transition implies a reset, but I'm not sure it's
-appropriate to (ab)use d3cold_delay as a reset_delay.
+Bjorn Helgaas (2):
+  PCI: Avoid pointless capability searches
+  PCI: Cache offset of Resizable BAR capability
 
-Thanks,
+ drivers/pci/pci.c       | 36 +++++++++++++++++++++---------------
+ drivers/pci/pci.h       |  1 +
+ drivers/pci/pcie/aspm.c | 15 ++++++++-------
+ drivers/pci/probe.c     |  1 +
+ drivers/pci/vc.c        | 22 +++++++++++-----------
+ include/linux/pci.h     |  1 +
+ 6 files changed, 43 insertions(+), 33 deletions(-)
 
-Lukas
+-- 
+2.34.1
+
 
