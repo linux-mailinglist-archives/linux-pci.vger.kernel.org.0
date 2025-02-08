@@ -1,240 +1,172 @@
-Return-Path: <linux-pci+bounces-21017-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21018-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F903A2D5FC
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 13:10:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78D30A2D640
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 14:22:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 264BA3A8780
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 12:10:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A459188CE87
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 13:22:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB3372451D2;
-	Sat,  8 Feb 2025 12:10:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D435F1E04BB;
+	Sat,  8 Feb 2025 13:22:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1txwx7R"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="M7AwhCE3"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59BF10E5;
-	Sat,  8 Feb 2025 12:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0B21D8A0D
+	for <linux-pci@vger.kernel.org>; Sat,  8 Feb 2025 13:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739016632; cv=none; b=Ra5AkgyOzyZUl1n1FiAWnUJY6JqWM8yimSZ46sTtBk58RoEtYqCJL4qPszViuqW1dsudAX/r2tDrw6rR3EayVxELqBn5+kinRfA8r5CKqlNghDs1WxOe5hr9Zo5t9okhYOnUXhS7vw9UJPDNz9aYpsBfjHQI/HTRJ4uVSh9AOtg=
+	t=1739020938; cv=none; b=smmvKBLV0SF8Fd7fx4D3cF9i6fbGGAnMZ721ZUROZVZvmaVQRIzPlpOf8H+Bg+p7VsoyvyvgbYuz9ISWAmL/ef/cZchW1NpBf3uT/q0cziqMmA8FAC3EKRLFw3w0+h4WykgDscev+Xqp6KBIZtsQ0X+DCZE0JSYobSCmoq1XJVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739016632; c=relaxed/simple;
-	bh=6oZ5OWghXld3PvdlVB3z/5/NzoGFEbUv/gndN8DA9PU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n1aV639lt3asuVwqRqWrLjih+7l2tpn0Z2Glbgmha8HIOtOW1GfPOkjrtw3ZD4fRmND0CUy4z37wKi5B+LBC1cC+jVymbTE+8E+lX/8dXwGjXArUp/jZkcDlnlFDjcRu35rIlSMpom808FE4F6GWgKipn0u4Kay7ZI5RJ6CsYjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1txwx7R; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 111C4C4CEE2;
-	Sat,  8 Feb 2025 12:10:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739016632;
-	bh=6oZ5OWghXld3PvdlVB3z/5/NzoGFEbUv/gndN8DA9PU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=a1txwx7Rz9vQvHyhAdvFHeZ6lkokhOXDlJL8omqvwEKYX+38riZy8Xjas/SHNpg4+
-	 XY0FJObJ9szhV2hZtu5LFxZsVBLtoe2Ickyk63Ed1lEy9C7xwRS8Hyh3R8ksXrV+ci
-	 vn3t1Sev5NCCVvJfSs6eYuyp9CS7VP54GfsuX2aBRoda9neyN+mfXcvRow1yL0Inqr
-	 /2xK95tBVdHHiURH+NhE98wyBJFBJWADMSoqDyxGdbnqMHgCvcJHou5CkJJNXoNFQI
-	 xdTRSdY4iY4EWebk088ChTuvcI70T/wtpxGtGasNrMZYC18LP7DNm5ydTS7UsjLGcQ
-	 MVvahGwyA7wmA==
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5fa2685c5c0so1172049eaf.3;
-        Sat, 08 Feb 2025 04:10:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVDGNMwHi7x9c3Esu0mJTCvEczkbvsH6UZYYutWldn8uQzGSlzt9IixLPxL8FQMv+ZT2jvqMWWvoN/Nh0M=@vger.kernel.org, AJvYcCWviU3Q4Apxen2INMQA6BQ0GgzqXoNNMhfa/wYBzYtEul5G70nmw3RtV8asnojHlJGVkWNpXDg8SuXMOJQ=@vger.kernel.org, AJvYcCX6T6CfvVib1Ya/cpt2AwrSd0vcwHP/A9CwkY+bZe0p1WJC327U/AK0XD1esfGDncHwSaWVr8RCPJo=@vger.kernel.org, AJvYcCXJTRdHbwA/9xUhbqrY83uwjwsdMTKqswLnIsMrtydsWD+6/17KsXtN7yI0Rx1UdPTiX6Q+CDeompaT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5gR2xQmhiwc0TOJYbU1JRdrA+VGVWzgB+WFkCDJfA91RtUGUS
-	9JoomuWQ4gUepkm7xx8ui0rzafksRyJuz52cLMYI3SaQl10oyxtMLawLnemePW1iC/ILj1AQzjG
-	SXJu1qDILjQ0VNiz1sm9fXF9ZLmg=
-X-Google-Smtp-Source: AGHT+IFq6fmcRzmDyKnw2OvsUb4nru+t3ZEYcOH4DS7zxRquZD+pDngpr41ZsPvbiECMzLbO5HL5S1HnGi5n1h9xpLw=
-X-Received: by 2002:a05:6820:827:b0:5fa:73ed:de8 with SMTP id
- 006d021491bc7-5fc5e71b079mr4287646eaf.6.1739016631273; Sat, 08 Feb 2025
- 04:10:31 -0800 (PST)
+	s=arc-20240116; t=1739020938; c=relaxed/simple;
+	bh=uOD95K3sscgsIYCQX6yo4FXvRz6B0gyyuMdCGjLmlW0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cyb2Je3WnEODsrTOyu5mpcMtnWicb2mG/vfZxXlapS/eIrj94nPk9cTXsrRrjJs8TQ8uo4JEPh+34WU8oMI8a3aOfDDqNqZ1Ev3fnUco7Suezgyi4yflYWcnc8JNDVjONwXczysFTHK6sY21haBVNoSwIyyzKTC4p9L9g4FnjrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=M7AwhCE3; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1739020926; x=1739625726; i=wahrenst@gmx.net;
+	bh=dWN/WMPQcbVfSDc9fPPJzIhIiZWYJckBwsKgU2OM4rk=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=M7AwhCE33XGfAydDLp1Ad+zVEOlBypotrSfXepweD9SGs5UxcKJHFDc4ZpURSHHr
+	 lpPc2+sLr7HSHNUiOAMazmVXBJ4SlUR/Fy6fSMLe6UsQM2PFYTp8KJb3tH7CjYN74
+	 EKXicmXsw+QKjKaV98bBzTy+KShedSSouAVgj3zVCJWxMksL+jY8reXUXf2eOUMbg
+	 iU9P1xURrl1ge1lEUgSjEqkzw0u7hm2esblDU1+KdLzPuWNVRvRXQ/7Sbwl8e2/h0
+	 eovFiTHmuPlaOwWNgPIhpK1FffDrUIiAet9lJQ7XV1BBa9t2pzCMzVbzdQKNN4EDP
+	 SkkDfWe0RLAWuU6w+w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mof9F-1t5EE03hH7-00hAbQ; Sat, 08
+ Feb 2025 14:22:06 +0100
+Message-ID: <32e74c11-d6cb-4c42-b9e0-a52bab608c16@gmx.net>
+Date: Sat, 8 Feb 2025 14:22:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <12619233.O9o76ZdvQC@rjwysocki.net> <1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com>
- <Z6YPpbRF_U0TxAbf@hovoldconsulting.com> <Z6YcjFBWAVVVANf2@hovoldconsulting.com>
- <CAJZ5v0iHjkfoh2A+hAmMCTG9_nBcJrsRYFD0Hp4ZChYUo7bFEg@mail.gmail.com>
- <Z6YviAFD4Az3EIBa@hovoldconsulting.com> <Z6Y0NlW40yHTIlzm@hovoldconsulting.com>
- <CAJZ5v0gBCQW2wwdB+4SyBXtqiis2k1Z2L8SOVKwcVbNxPHqvYA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gBCQW2wwdB+4SyBXtqiis2k1Z2L8SOVKwcVbNxPHqvYA@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Sat, 8 Feb 2025 13:10:19 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gUcy4V-iztFumRZDUArQHiXE01vW3uC8Y01xnBD6Xi0Q@mail.gmail.com>
-X-Gm-Features: AWEUYZl8o4c7RwAXBNYFREaNrw5dxg8_D3B3WawlN0Lh8IZl08GlNF1Jk9NXMxk
-Message-ID: <CAJZ5v0gUcy4V-iztFumRZDUArQHiXE01vW3uC8Y01xnBD6Xi0Q@mail.gmail.com>
-Subject: Re: [PATCH v1] PM: sleep: core: Synchronize runtime PM status of
- parents and children
-To: Johan Hovold <johan@kernel.org>
-Cc: Jon Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Xie <kevin.xie@starfivetech.com>, 
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="00000000000090f20d062da05cec"
-
---00000000000090f20d062da05cec
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: brcmstb: Adjust message if L23 cannot be entered
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org,
+ bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+ Jonathan Bell <jonathan@raspberrypi.com>
+References: <20250201121420.32316-1-wahrenst@gmx.net>
+ <20250208102748.2aytlzgzbvm6u4vi@thinkpad>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <20250208102748.2aytlzgzbvm6u4vi@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Th+KIiOCiIiw1MY1//6zdwJu9I+IeP3cHWtK/iTHEMJah+6DHB1
+ yAQhJRdfN2IAUvWdKHrRsTI+B+YkyoJ/IOt3M7EHSnqE++BpHuqk6/U19rmdqVw3y25V1iK
+ fq3I4OOKvMhp3JmTLFpI/5kcGx4ON6OxxAqDPOIjzyKqV83PJO+dWUPcRYMeG2Wd7KAHc9m
+ XpGvncZ01v1JFwWtl+huw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:UYMJ1v9vVw0=;m+GDyp6P17KHI1DxBeCSYS9Vmwr
+ PrbMWxRloDnN/1xnz3dv+hf1W9vsKIp4iPF1rsMMUqVYpiYkrqJKNkaWAAkessjZTSCGt4e9+
+ OUnm3fC7B3CXa+eU3RCreFAGJtNMLMKbc+y1d7x0jNYx1l9YZS8W2mjJkwdzFEERX7KOOE5eL
+ RbEuWMsYYUrav/uNT72oYca61gUCRcV9+ZGrXRnwr7wZwLTTh/7SIPdX1yqomlGKyfaPD2MJg
+ HuSCWmUVAcCmnxwvrO0IR/kZDyHvIHVG1vsJfQXJX890SAgDWsgnwCf8590rq+ql5hH6f10SH
+ CCe8UIgE1+gmT2IOGDLaq32YA4jBGmdIIYma9aBOgo9N3jP93epSaTaycH4xcMMoOXKzlz9yh
+ j/skxwLN1GrB5xMKtB2EjrSmazm+w2eS1s31d9xyV63pCbHG6Uxc1ZhEiCj5K+a/9nQETFHTQ
+ 7fHYFOEePSLJsCDs/n6jV2rGewYnbGYtOkTGSEfdd4O1pNah38/1FISGAYbx1R+gSk8Mwu5q+
+ eQeCOqf54v8iPbHlC4Z21UtfD57xi+y6CRiP/jLD30cFBK14nazPEOyHe4Kz35/SUnjRPfIrA
+ fCZkn+nKiCsLuXPqDrRjuPP3R5065xn53BvBqD2+Qpv0iYT0LVVanRUGshHr61+TFYWWAcSxq
+ jx3vLSsW0tmFzg6k6O4MLxzVpfeTS4vojl9AmQ4WEaqKdvu6tcLcHGK3i5ZTpbzbsSFu1xGej
+ xwj8z1BmbSUBHZ0VgQQSluWQgSoX7sJrgnIACJKfGsC4rtWNy2fZWppc9usv6lnwWUvcvxc/q
+ V3kr8DfeOGtV8Kf4cP+8iw6/ijstn9og5GYrY0wAL/u7yKOhelCopxxFkdNgux1QksY5TIZyC
+ yCSYuUfyudA9/p+HQHNX7/SC1YbWUMluK2oFomxYdv4tvkqc8AkEyQ8BM1pnh0Y2G22XY93KK
+ FKiqxARwEC4GlbJa8b84RUvrruAAIh4ksiKYEo04yUUsqS3B4gaUDB1nVVgvwesozVpkv8v/W
+ n8hiWakXgSP76LOEcPQjNQzkDMGabiMocfO/czhU7JK8YlS/sATxs2iFqF0J+DftDGzRAKyUY
+ +7oG2t5WLMRIkSpfMwXvz+rUpTmvVujMX+e84HCXI1X4nllbEQsDIgwOYacSOCa5XUVLgq/7q
+ sBvcPh/H2KylZ5cFqCsRPoz/kek8hdF04uAV3GlrJpPgaxkJRTOJ5qnLy8l3RVc2iC3vS0Fqr
+ +3U1EZcp3xLhV8mNIzm4QSMFJ2M3z8QtRg6vxCdYUKz+09Px/y1ub6W75w6AVzOFWmvOQRFte
+ Q8MX5abcLrr4bB55NASBxHz6sHCGcKczu+UiFmNUcAlz4s0X4cJtXK4xtmXcjAYtgY9c6EYoY
+ qw5/rGFruFz5d/XcsB9bdux7/X6v8OTUvVN7bUx7ckQeO1eOY4NdSuD4Fv
 
-On Fri, Feb 7, 2025 at 7:14=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.org=
-> wrote:
+Hi Mani,
+
+Am 08.02.25 um 11:27 schrieb Manivannan Sadhasivam:
+> On Sat, Feb 01, 2025 at 01:14:20PM +0100, Stefan Wahren wrote:
+>> The entering of L23 lower-power state is optional, because the
+>> connected endpoint might doesn't support it. So pcie-brcmstb shouldn't
+>> print an error if it fails.
+>>
+> Which part of the PCIe spec states that the L23 Ready state is optional?
+tbh i don't have access to the PCIe spec, so my statement based on this
+comment [1].
+
+Thanks
+
+[1] -
+https://lore.kernel.org/all/CADQZjwcjLMTLZB1tzp+PYKK9rm=3DKe7a-KoGKMKb9zoW=
+odcRK-A@mail.gmail.com/
 >
-> On Fri, Feb 7, 2025 at 5:26=E2=80=AFPM Johan Hovold <johan@kernel.org> wr=
-ote:
-> >
-> > On Fri, Feb 07, 2025 at 05:06:32PM +0100, Johan Hovold wrote:
-> > > On Fri, Feb 07, 2025 at 04:41:18PM +0100, Rafael J. Wysocki wrote:
-> > > > On Fri, Feb 7, 2025 at 3:45=E2=80=AFPM Johan Hovold <johan@kernel.o=
-rg> wrote:
-> > > > > On Fri, Feb 07, 2025 at 02:50:29PM +0100, Johan Hovold wrote:
-> > >
-> > > > > Ok, so the driver data is never set and runtime PM is never enabl=
-ed for
-> > > > > this simple bus device, which uses pm_runtime_force_suspend() for=
- system
-> > > > > sleep.
-> > > >
-> > > > This is kind of confusing.  Why use pm_runtime_force_suspend() if
-> > > > runtime PM is never enabled and cannot really work?
-> > >
-> > > It's only done for some buses that this driver handles. The driver is
-> > > buggy; I'm preparing a fix for it regardless of the correctness of th=
-e
-> > > commit that now triggered this.
-> >
-> > Hmm. The driver implementation is highly odd, but actually works as lon=
-g
-> > as the runtime PM status is left at 'suspended' (as
-> > pm_runtime_force_resume() won't enable runtime PM unless it was enabled
-> > before suspend).
-> >
-> > So we'd strictly only need something like the below if we are going to
-> > keep the set_active propagation.
+> - Mani
 >
-> I think you are right.
->
-> > diff --git a/drivers/bus/simple-pm-bus.c b/drivers/bus/simple-pm-bus.c
-> > index 5dea31769f9a..d8e029e7e53f 100644
-> > --- a/drivers/bus/simple-pm-bus.c
-> > +++ b/drivers/bus/simple-pm-bus.c
-> > @@ -109,9 +109,29 @@ static int simple_pm_bus_runtime_resume(struct dev=
-ice *dev)
-> >         return 0;
-> >  }
-> >
-> > +static int simple_pm_bus_suspend(struct device *dev)
-> > +{
-> > +       struct simple_pm_bus *bus =3D dev_get_drvdata(dev);
-> > +
-> > +       if (!bus)
-> > +               return 0;
-> > +
-> > +       return pm_runtime_force_suspend(dev);
-> > +}
-> > +
-> > +static int simple_pm_bus_resume(struct device *dev)
-> > +{
-> > +       struct simple_pm_bus *bus =3D dev_get_drvdata(dev);
-> > +
-> > +       if (!bus)
-> > +               return 0;
-> > +
-> > +       return pm_runtime_force_resume(dev);
-> > +}
-> > +
-> >  static const struct dev_pm_ops simple_pm_bus_pm_ops =3D {
-> >         RUNTIME_PM_OPS(simple_pm_bus_runtime_suspend, simple_pm_bus_run=
-time_resume, NULL)
-> > -       NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_=
-force_resume)
-> > +       NOIRQ_SYSTEM_SLEEP_PM_OPS(simple_pm_bus_suspend, simple_pm_bus_=
-resume)
-> >  };
-> >
-> >  #define ONLY_BUS       ((void *) 1) /* Match if the device is only a b=
-us. */
->
-> In the meantime, I've cut the attached (untested) patch that should
-> take care of the pm_runtime_force_suspend() issue altogether.
->
-> It changes the code to only set the device's runtime PM status to
-> "active" if runtime PM is going to be enabled for it by the first
-> pm_runtime_enable() call, which never happens for devices where
-> runtime PM has never been enabled (because it is disabled for them
-> once again in device_suspend_late()) and for devices subject to
-> pm_runtime_force_suspend() during system suspend (because it disables
-> runtime PM for them once again).
+>> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+>> ---
+>>   drivers/pci/controller/pcie-brcmstb.c | 7 +++++--
+>>   1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/contro=
+ller/pcie-brcmstb.c
+>> index e733a27dc8df..9e7c5349c6c2 100644
+>> --- a/drivers/pci/controller/pcie-brcmstb.c
+>> +++ b/drivers/pci/controller/pcie-brcmstb.c
+>> @@ -1399,7 +1399,10 @@ static void brcm_pcie_remove_bus(struct pci_bus =
+*bus)
+>>   	pcie->sr =3D NULL;
+>>   }
+>>
+>> -/* L23 is a low-power PCIe link state */
+>> +/*
+>> + * Try to enter L23 ( low-power PCIe link state )
+>> + * This might fail if connected endpoint doesn't support it.
+>> + */
+>>   static void brcm_pcie_enter_l23(struct brcm_pcie *pcie)
+>>   {
+>>   	void __iomem *base =3D pcie->base;
+>> @@ -1422,7 +1425,7 @@ static void brcm_pcie_enter_l23(struct brcm_pcie =
+*pcie)
+>>   	}
+>>
+>>   	if (!l23)
+>> -		dev_err(pcie->dev, "failed to enter low-power link state\n");
+>> +		dev_dbg(pcie->dev, "Unable to enter low-power link state\n");
+>>   }
+>>
+>>   static int brcm_phy_cntl(struct brcm_pcie *pcie, const int start)
+>> --
+>> 2.34.1
+>>
+>>
 
-All right, this is not going to work.
-
-I see two problems and both are related to pm_runtime_force_suspend/resume(=
-).
-
-The first problem is that pm_runtime_force_suspend() doesn't
-distinguish devices for which runtime PM has never been enabled from
-devices that have been runtime-suspended.  This clearly is a mistake
-as demonstrated by the breakage at hand.
-
-The second problem is that pm_runtime_force_resume() expects all
-devices to be resumed to have both runtime PM status set to
-RPM_SUSPENDED and power.needs_force_resume set.  AFAICS, checking
-power.needs_force_resume alone should be sufficient there, but even
-that is problematic because something needs to set the flag for
-devices that are expected to be resumed.
-
-Unfortunately, they both are not straightforward to address.  I have
-ideas, but nothing clear yet.
-
-For now, the power.set_active propagation can be restricted to the
-parent of the device with DPM_FLAG_SMART_SUSPEND set that needs to be
-resumed and that will just be sufficient ATM, so attached is a patch
-doing this.
-
-In the future, though, all of this needs to be addressed properly
-because if one device in a dependency chain needs to be resumed,
-whatever the reason, all of the devices depended on by it need to be
-resumed as well.
-
---00000000000090f20d062da05cec
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="pm-sleep-restrict-set_active-propagation.patch"
-Content-Disposition: attachment; 
-	filename="pm-sleep-restrict-set_active-propagation.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_m6w5k7t70>
-X-Attachment-Id: f_m6w5k7t70
-
-LS0tCiBkcml2ZXJzL2Jhc2UvcG93ZXIvbWFpbi5jIHwgICAyMSArKysrKysrKystLS0tLS0tLS0t
-LS0KIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDEyIGRlbGV0aW9ucygtKQoKLS0t
-IGEvZHJpdmVycy9iYXNlL3Bvd2VyL21haW4uYworKysgYi9kcml2ZXJzL2Jhc2UvcG93ZXIvbWFp
-bi5jCkBAIC0xMTkxLDI0ICsxMTkxLDE4IEBACiAJcmV0dXJuIFBNU0dfT047CiB9CiAKLXN0YXRp
-YyB2b2lkIGRwbV9zdXBlcmlvcl9zZXRfbXVzdF9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2LCBi
-b29sIHNldF9hY3RpdmUpCitzdGF0aWMgdm9pZCBkcG1fc3VwZXJpb3Jfc2V0X211c3RfcmVzdW1l
-KHN0cnVjdCBkZXZpY2UgKmRldikKIHsKIAlzdHJ1Y3QgZGV2aWNlX2xpbmsgKmxpbms7CiAJaW50
-IGlkeDsKIAotCWlmIChkZXYtPnBhcmVudCkgeworCWlmIChkZXYtPnBhcmVudCkKIAkJZGV2LT5w
-YXJlbnQtPnBvd2VyLm11c3RfcmVzdW1lID0gdHJ1ZTsKLQkJaWYgKHNldF9hY3RpdmUpCi0JCQlk
-ZXYtPnBhcmVudC0+cG93ZXIuc2V0X2FjdGl2ZSA9IHRydWU7Ci0JfQogCiAJaWR4ID0gZGV2aWNl
-X2xpbmtzX3JlYWRfbG9jaygpOwogCi0JbGlzdF9mb3JfZWFjaF9lbnRyeV9yY3VfbG9ja2VkKGxp
-bmssICZkZXYtPmxpbmtzLnN1cHBsaWVycywgY19ub2RlKSB7CisJbGlzdF9mb3JfZWFjaF9lbnRy
-eV9yY3VfbG9ja2VkKGxpbmssICZkZXYtPmxpbmtzLnN1cHBsaWVycywgY19ub2RlKQogCQlsaW5r
-LT5zdXBwbGllci0+cG93ZXIubXVzdF9yZXN1bWUgPSB0cnVlOwotCQlpZiAoc2V0X2FjdGl2ZSkK
-LQkJCWxpbmstPnN1cHBsaWVyLT5wb3dlci5zZXRfYWN0aXZlID0gdHJ1ZTsKLQl9CiAKIAlkZXZp
-Y2VfbGlua3NfcmVhZF91bmxvY2soaWR4KTsKIH0KQEAgLTEyODcsOSArMTI4MSwxMiBAQAogCQlk
-ZXYtPnBvd2VyLm11c3RfcmVzdW1lID0gdHJ1ZTsKIAogCWlmIChkZXYtPnBvd2VyLm11c3RfcmVz
-dW1lKSB7Ci0JCWRldi0+cG93ZXIuc2V0X2FjdGl2ZSA9IGRldi0+cG93ZXIuc2V0X2FjdGl2ZSB8
-fAotCQkJZGV2X3BtX3Rlc3RfZHJpdmVyX2ZsYWdzKGRldiwgRFBNX0ZMQUdfU01BUlRfU1VTUEVO
-RCk7Ci0JCWRwbV9zdXBlcmlvcl9zZXRfbXVzdF9yZXN1bWUoZGV2LCBkZXYtPnBvd2VyLnNldF9h
-Y3RpdmUpOworCQlpZiAoZGV2X3BtX3Rlc3RfZHJpdmVyX2ZsYWdzKGRldiwgRFBNX0ZMQUdfU01B
-UlRfU1VTUEVORCkpIHsKKwkJCWRldi0+cG93ZXIuc2V0X2FjdGl2ZSA9IHRydWU7CisJCQlpZiAo
-ZGV2LT5wYXJlbnQpCisJCQkJZGV2LT5wYXJlbnQtPnBvd2VyLnNldF9hY3RpdmUgPSB0cnVlOwor
-CQl9CisJCWRwbV9zdXBlcmlvcl9zZXRfbXVzdF9yZXN1bWUoZGV2KTsKIAl9CiAKIENvbXBsZXRl
-Ogo=
---00000000000090f20d062da05cec--
 
