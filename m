@@ -1,193 +1,117 @@
-Return-Path: <linux-pci+bounces-21027-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21028-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 219E3A2D700
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 16:46:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FF57A2D760
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 17:34:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2DE79167473
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 15:45:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A2E616683C
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Feb 2025 16:34:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 803F22475FF;
-	Sat,  8 Feb 2025 15:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B3AF24816B;
+	Sat,  8 Feb 2025 16:33:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="jTRhGSW6"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="WGrN0B4B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from SJ2PR03CU002.outbound.protection.outlook.com (mail-westusazolkn19013084.outbound.protection.outlook.com [52.103.2.84])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40AF154C0D;
-	Sat,  8 Feb 2025 15:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.2.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739029532; cv=fail; b=oKW8nMLdy7ZafcrFBOl0LJs/yWlrkQwU7TaRGNFNXCd2Bc+fcB0TolunOCnc/NGVd23rBhqzLVDPTwbUwwgZOThZYOj7kQUMlf81DZ4pies3CtUQ0OgpZRYJBjvxw17sqky1DurTNAUDnODbqAQAMP2MwfZ9S75NqMlkIdUNglM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739029532; c=relaxed/simple;
-	bh=7HOn+3uoGKIeDRyDz5jriQ73hgyf2uA8tQ2bl6cYKu8=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VCgNAYsJewm0AEwH8N3lHCOZ9d5663YU9O4XT4ihBwU+6IiwnB4v2Uc22E0En7NomEiDCQuMUNG6pdo67/Mk4yVQcpTvY/BQIil27CFN5ElOx+lVY8Qt90lu82XHDUusUcPKv1RZ6kAKD+xzLSO+qo/dT9mKkZ6JPp4ceGLbqEw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=jTRhGSW6; arc=fail smtp.client-ip=52.103.2.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YOLq2Bmp7UK0Bj9YEEfHNkcH6sxc5xni7ACBiN/4DZqsglz2kJVweqBlibTJLsLEUJfG5wQ4xk/mC270BQEMuXdEnrvqCcVXMkqCJJ+u/cvCmQa8GP+TRlVdXgnrr+86sxVwl/h825qc2lsHMGcP6WYQPmwqKSkldfpRRJp52N0zFzRgFn4jnDenNCUvDP3+VI1yypoclhHIh8P2NE/4oYH2VEfYpydwcNLYoFtlaKAq00FwqKmsoilcDYU1E4guYQjNkHCdD5YKhlT4UVzgy9NbdGzCedaWtnWp82Glm9E5YY99HtAg99k3ztr3VD/4QHJj7E4BYBdwPy8sVX1Ftg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=speSJo4o9U6GK9eBe9QT8dk1TLPvPEgCVWmKTrODfGw=;
- b=IXpa6AVBib/yl2vTkalJ5sxbAIByqUwhGBmCg6rB84ZfAggJwcMUNNoVrxFFiISCfDY/NReiLQDOG/hs3XeTdsLp+gColFA4yEg/isHylls5XC1UohrHjWi7xUpLIuoC2xJbit2YNYXPnbHsjIbRgsUbpbxiH2S63IbJpm+n/Q5rM6hLQZFSCjETw+9QoIqrH4GxhElj3bTNesKJDjYyeMW7WgtikrxvdmBkJi0Yayv1weSBfnnnGzlD6KapqyXo9DWF3ahK52rEwNtVp2qujjkiYa0ddEL6iYYhEkzxHFY25+B3TIdHTDkofIASSdd1XmEfk6ramentWjI+PQyWgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=speSJo4o9U6GK9eBe9QT8dk1TLPvPEgCVWmKTrODfGw=;
- b=jTRhGSW6f0lp4xJsKnzwQMq+wHe0DaPFN6vh88nxWfOPdDnrNyqQpkF9E6tMnZC1NnTe4MCThLGzvzAnyvOh+ony5SBG91riQGgoSNa7LfASidS6c9um/gNrAYKbJf1XjbmEZ3ZZkFN/Tca3LFCUTlvv/d5R33U+/CYaerT2b3mrCN4Tqc0REEl0gV+NeoJSWoD0oycdExQCQsTgyPsmWgv/pHljJ5k1jBhiG97EanydWQFoiOuoYcyHydXbafkjNiJ7p9vCo8FrRWssxZG6z6f5631kI08uL6pBCIz8efH7UrkxuZQWpvC2/hVubYr8py+H5EEGXE4/jf/uxqOBsg==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SJ0PR02MB7216.namprd02.prod.outlook.com (2603:10b6:a03:297::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.15; Sat, 8 Feb
- 2025 15:45:28 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8422.010; Sat, 8 Feb 2025
- 15:45:28 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Easwar Hariharan <eahariha@linux.microsoft.com>, "K. Y. Srinivasan"
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?=
-	<kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob
- Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, "open
- list:Hyper-V/Azure CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>, "open
- list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
-	<linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
-	"Hyper-V/Azure@web.codeaurora.org" <Hyper-V/Azure@web.codeaurora.org>,
-	"CORE@web.codeaurora.org" <CORE@web.codeaurora.org>, "AND@web.codeaurora.org"
-	<AND@web.codeaurora.org>, "DRIVERS@web.codeaurora.org"
-	<DRIVERS@web.codeaurora.org>, "\"status:Supported\"@web.codeaurora.org"
-	<"status:Supported"@web.codeaurora.org>, "PCI@web.codeaurora.org"
-	<PCI@web.codeaurora.org>, "NATIVE@web.codeaurora.org"
-	<NATIVE@web.codeaurora.org>, "HOST@web.codeaurora.org"
-	<HOST@web.codeaurora.org>, "BRIDGE@web.codeaurora.org"
-	<BRIDGE@web.codeaurora.org>, "ENDPOINT@web.codeaurora.org"
-	<ENDPOINT@web.codeaurora.org>, "SUBSYSTEM@web.codeaurora.org"
-	<SUBSYSTEM@web.codeaurora.org>
-Subject: RE: [PATCH v2] PCI: hv: Correct a comment
-Thread-Topic: [PATCH v2] PCI: hv: Correct a comment
-Thread-Index: AQHbeZOPTbepn/kxw0S6yEZY8HxUM7M9jWIg
-Date: Sat, 8 Feb 2025 15:45:28 +0000
-Message-ID:
- <SN6PR02MB41570947C2A84614FAFCF8EED4F02@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250207190716.89995-1-eahariha@linux.microsoft.com>
-In-Reply-To: <20250207190716.89995-1-eahariha@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ0PR02MB7216:EE_
-x-ms-office365-filtering-correlation-id: 00399910-083b-4029-d42c-08dd48579c91
-x-microsoft-antispam:
- BCL:0;ARA:14566002|19110799003|15080799006|8060799006|461199028|8062599003|440099028|3412199025|102099032;
-x-microsoft-antispam-message-info:
- =?iso-8859-2?Q?RXg1a7znmKYJPYT8KAFpnakE8Jkb9BD8qeS6pjJBvp9sW7J9bbDQjrD8S0?=
- =?iso-8859-2?Q?nBuygVzjcjNScT+4W3NBstgLwEsxkCwnNC0tb+yF/ehmGnPHnorjWJ0ZGh?=
- =?iso-8859-2?Q?3S8TOyPdEAN7rPZ5dhOvb8j418ARWO6fOUSAX5UinYYQEp/ITOW2+3sFXF?=
- =?iso-8859-2?Q?QJoJQuXxg5+me5khP+I5d0jlyEwwS63vBILmPwobTX+ub4sKmGWP20Fo3f?=
- =?iso-8859-2?Q?m7uYir9i5RHjNDaLjn406+8QynsaYHtQymemUpQmxjYNyudd+6DYFMFva0?=
- =?iso-8859-2?Q?so91mck/2LH3BJgUxxxSERL7K1iIv9nNgQqo9Ahyk+aSxhh3ngcStXE/ds?=
- =?iso-8859-2?Q?wsIiwj01QaNvCTzC9nRqB4ZojOS4UeqsQILYD7ohgyJGJS4MCEUiQAW253?=
- =?iso-8859-2?Q?VGjOGCWNhBEk9SnZXA7C8xA7jkt1WvbqTwHy1b3qQgqBdZF5lZrnjo6zR9?=
- =?iso-8859-2?Q?VrZEOal2VRkuCWMZVSsXvgfc7W/hVzb+yVlDOEXHNU980sVF+BwiGBG240?=
- =?iso-8859-2?Q?hF8sMVdgeEd49xrZpGaI23rVkiha+shCQzYQ1ZruQBnI0Ma6pmMinfukqq?=
- =?iso-8859-2?Q?C9Ou9fA6Qq1liRpvbiJhSuh6TPt/JbD8OU3uy4Lk4wcA0POPlsct7Ikz5O?=
- =?iso-8859-2?Q?KpgcZ571U0w+66/lf1yRm4HIxvbuXKymlI0rZPKrhgXpJchwNy+pizKxa0?=
- =?iso-8859-2?Q?iJzHpVPDcXajmXDM4KfcjdF6QxX0dxYffP7hJrit4Rqn4oe1EiYdYmuCZy?=
- =?iso-8859-2?Q?C5SlUYtlWuwAsx+FdsYDAyg0xCZ209fLGd4vHEFLMR2clo1kSF55rB1V1Y?=
- =?iso-8859-2?Q?AfqZFKrtLboymjQdjkimPfzY014zdZpQnpJ1DRKiZ+IqjFBQNqE877XgsO?=
- =?iso-8859-2?Q?HGf+FtB8dGk2QRIDXYNJRjYGG0GVCML3+QnZey4bUCq87y1b03/y+6l+Hv?=
- =?iso-8859-2?Q?n2vArafaBOMGb8fUEx8MO7mGHh4DLtlTNSMsAvq1zIkLgAcmqOorf1kzY3?=
- =?iso-8859-2?Q?YPOzBHYEi3FMyXPx9KVf77uwtbkkYYl5yYW6tM5olDwLkFT26yrIObrMMC?=
- =?iso-8859-2?Q?1yuSJr1mCXTtP8/lZAopoDg=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-2?Q?DDQeJxscfpVKG9BgGDUFngsGK64PHujWk5W7ecSB0Cth7YnLjSyNB3LYv/?=
- =?iso-8859-2?Q?jh4QqPCqGwdRsNO+x71/MjBaFR12g8+DCNssnOaHDrFAVKLP5JucKun45D?=
- =?iso-8859-2?Q?uB4lMjqUBqddAWaLBdVjaIk4APHdwSr2ul81bJohJ4lo34Omr+PV5GFgTO?=
- =?iso-8859-2?Q?GtaozYlplz1gAxPTpJSDsxU4oawmkGQ359tbDREr9PdhG8cfB/qPTdYrHG?=
- =?iso-8859-2?Q?jOhSQWDE97wzaQeat3GjDcIGUgVUvLZCmzoz/EdetS3gEiX31dkZ4robZd?=
- =?iso-8859-2?Q?0pmTPEl3DGFc6KHxGgRRUYbY175W2nfsqE/AnxNd34OeBadN6kJpu9BKVf?=
- =?iso-8859-2?Q?mQ7DHSbyx8ml5ZJwW0++cO+KtP6XcT70j6QNcDttHxbW+rkNDcabY3tr7K?=
- =?iso-8859-2?Q?wtPOqrJ324mVBqtvfDoMxE/YCFZXyfHp5WgdkL+gEVEKCIHsYRguajE5S7?=
- =?iso-8859-2?Q?1a83+hIbd4jkMD9i3ENmWIpH/YNpzuHtuS7o1mADsA2zf0XHdyVmcy/ZAx?=
- =?iso-8859-2?Q?4IeBsRfdndNV+jyVJWFG937r+OFLZr23ENCf1ZYlngN4WnEwCsjw1wvXwl?=
- =?iso-8859-2?Q?/ODy1YxUp27yQSudK3xyTfTbZklwnAkC9DW1vpfLFJulSiBx1u5Uve9OMF?=
- =?iso-8859-2?Q?g3eLBQAsjvefNlwtzQZaFIKnucP7DzysCKKhjt+CsZQhaPWEArP2GWkFrv?=
- =?iso-8859-2?Q?OkUADwF669WiSUPnqnzw/Or9sDn12FOYfO1buQl2RiOzOKGIo72wvOf9pL?=
- =?iso-8859-2?Q?7PBQCxttc+7/j16gCimv+tLEiOntJiQTTUc7RlC7peAJGaVozeTguk+X1b?=
- =?iso-8859-2?Q?FYKYrAfU0Y9AzFVEkkHpVaSm12CcABPiz02wiShp7fpix4apjKeVkP8r2k?=
- =?iso-8859-2?Q?vdxmM/mVIdIMUKzNKnEBPx7Pe53hJBdp1HZqsnYknlaxXY8+Tra90FzUrJ?=
- =?iso-8859-2?Q?FZUFYAuvFb9Wwy6aF4sIEISQ4Ilwgz9ee9k5zOD0VTQFbPT2Exbs/LUVdw?=
- =?iso-8859-2?Q?4YnO4Cpc7wGxkjT8qdBS5DXtpJAKXPNgzWkTiwJKhRiuXKwB4r8y4ipD+K?=
- =?iso-8859-2?Q?86nw5tQexpeubIQoMJSTL0sPNWnr7YhErqsR4wZSTwtyjWdmpwV27TpegA?=
- =?iso-8859-2?Q?/bD2OR36gVoIa/HFZaob9B8ZEcMiOgA0khD6Hpe+jlrTxYZ8ipAY26D6lF?=
- =?iso-8859-2?Q?QqnrTHcgQ0ld4Inu4gNEGD44kT1wyxgcFJzf28hSZHSVzNCUyck/wtqVd4?=
- =?iso-8859-2?Q?4GYFQoXHx5lrCfupTK8DJeZiekh2iZk38iG4DAkts=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37641F24DD;
+	Sat,  8 Feb 2025 16:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739032439; cv=none; b=HwtQ1LtVuHo5v6aoSvhOR+Cv+aCrWifbFQD+BQJHWOUUK0k+IwEI30oPO0JnbWk07kWoljUArKwUp5f9lfN9fokJIHMcp3RmKj+vstavvKwPQw7OxHJKXKK2N6PdGBJyZf86AqeI13nGX1c8Le9AQ0t+kz5e1FFuYPIX4nkhUQs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739032439; c=relaxed/simple;
+	bh=2odnIPKdmRpcI4fWPxxLuCsa99gwlsPFuClUYQtj1p8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=HdY8qXsTu2UKkpOevT+WMiVcg4jtybA0ymhpEfeMzxXGWNO09wWYCWB/YwW3FABg9/+Mv2HoMPC3eyKALBevuYGGDVeAALbhUUM8XuYEhxQUgR5apkypb3kHrcNERxgPdNbV2nQ44XZwAqt2Eyeu8FWPgpBraBqIpp4pLXQCdmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=WGrN0B4B; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1739032422; x=1739637222; i=markus.elfring@web.de;
+	bh=2odnIPKdmRpcI4fWPxxLuCsa99gwlsPFuClUYQtj1p8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=WGrN0B4BRzejXR+jRSydrGGdzoqy2iu3CCnw9wRmHs2BqlGgGrds7nFMxljFhrta
+	 I3fRI/HpHYtBqIbEn4yD1MJUmQnFwm/V5p8QWuvEKD7qMF2D5N+iUhMGfJTBK/Qov
+	 vM8ihqZ/VTe7HZluTyQP8JrQfAWUHS1+XVrU218ZOEulqt9F5SqYqK5Ld0ob/KDgn
+	 NzlK4gCtaUphLDGOf93hpkcHXTjTJ2fd2ARiEtLAxGNnscmuJIvIZYt5BrKC2YmpS
+	 boeZQ+C6A3eYUxMZbq0aFnK1C3WgLmcSuyosCbejhx5em8m6jOSIl4VOxCcLogfQd
+	 AYhzkRFFYbJuXza3Yg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.11]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MGgJM-1tbtx604LC-004d7Q; Sat, 08
+ Feb 2025 17:33:42 +0100
+Message-ID: <4195480d-f2f3-41ad-a035-c81e8f2ab0f4@web.de>
+Date: Sat, 8 Feb 2025 17:33:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00399910-083b-4029-d42c-08dd48579c91
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Feb 2025 15:45:28.2341
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB7216
+User-Agent: Mozilla Thunderbird
+To: Anand Moon <linux.amoon@gmail.com>, linux-pci@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Kevin Xie <kevin.xie@starfivetech.com>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Minda Chen <minda.chen@starfivetech.com>
+References: <20250208140110.2389-1-linux.amoon@gmail.com>
+Subject: Re: [PATCH] PCI: starfive: Fix kmemleak in StarFive PCIe driver's IRQ
+ handling
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250208140110.2389-1-linux.amoon@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ckmcvGlM0JdmTWKDkKFF9D6w0vSs1Cu1XzrhyP10Elfoz09yniv
+ 9bV+ee5DGnPrY3bTrhx8rQ2KV+Rjav3xea2CiPqervgOTKSVyA//AnbOgIEFDEDcfbIVERL
+ nqpX2DXS0QqXi+1FQYlrWPhWFEDgXBH/RX5l769dJ/18ogC7B6Onyf0LPjIEQZn5noExmaM
+ oQHL66Zy9FeRr338pP/Dw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:7VSHSfAg9bM=;VHuVFXf/3oCcPfEkxzr1q/timT5
+ LZRc5El9LJyIAR4qc2wXCvX/sPqKuRCQcGd4hkV01GGSENbAYB8KuWlVSLh+DgLuBDK+xbzkk
+ u5PN+S/4L79tD0T6perXmm3oRq6ytTBsCdy46KB9fBTCUMczdtxreMqPFkqW4DxdiJ7hTKT1X
+ MyIev+GrdRe+49ftG0aIFGCMWuAKOh8q5O0wH4F/U+KXKiRrtCpoZ/urI5VVm3clKdFNtrToP
+ 4WBidwZGnRD99nYDrCo/Z+hzkDUn5+8Wr3O+EYLWTctZFxf0uaZjV3qoJ/Ms+0pYub7/weo68
+ y3TzdKZ6P88x30GAok4LJEuBeg77XjyByXiMCN86wHg0Z7+/MpKJTrHEFiALumP96eYko+2Ue
+ dah8f6Vr0p99KmnaalzbwOLJZhQv/FYawdSYIJgVD8p856SmnjtDsASX2goF6Go8OpK/JrMvh
+ +im/81HM8FOxzQCV2SD1SdRqVEZhaPp0gk+Qys9zXepCJk57sVA2fVwjcX+MBaNEthC35Q5//
+ VhJjRe1viinEBlsfcapJtQUhBmRxCHZ2vPqyJAlfOhR3y5NGNDa9PJuodTwUaX92OS42iZz/+
+ Bj24ouuFbWuegQxwn3uuzAAxZ6IYUWVnXIzlvjSpFwVylU2u9mxB4kI0WjT1vN40Say+6LSpJ
+ EtWmmcqKw1S9YXXtiwwKScqLJrq0KKcO1puqcTMdjHOBerE/7BIDlnEOkIjXPzkYlbns+Cp4o
+ tugewgQszdBNxtnpuDgHwUCboawTEiTb1WgDadULdEiD9/2dxguUYPCVVOUBLo2EQ3w14mHf8
+ EIaQELiT69xTbwM3OYK9TC104R/1CBBWYfwoBpVLMt6v+hl9raEvNg7PNRq05OAZC87fCSHDp
+ URtXC3+OTnxtZY00vvqk53uZpIH/6pwNpTHq9bolD8tsw82NIf/ivH5Eet34I76J8EMHbBkcQ
+ zqU4v2HKXXI5GLTb6tagVXNTNa4FpZP1rr355atRzr6Ft3yehhpCVqw65n+zTO+bFXqnwvUmt
+ VvopRxNOlKc/myBOJ5MfrvvLDmuo23dKrhiB/W/1amdGTeFHpMc5Yy98FvXaKRBcfa6Wu6+Gv
+ oVBFYPYrSGcCKBICwyVEVl6xw/S34pNuZ8Kyfy1qII7gvRq3CZBD+u7efLHfL9N0b/8/Q7fe2
+ tQtCDYNakkwGbozMMthf25YygimbJjI61xP75zMK8BXRjfV7ZrMWr/jPWsdmZlpV6mmdr9oZg
+ LUeEG+ZoieilmKOQcX0yUOeBcM9AGXmvojTI4uXzeh0R5aXvNiqASCqJHFRYrzy+y+5OsfQo/
+ WCmIxRScV6iB8hNu2HfBvoUNRxxKUSfZSQzAyQZzrx+tjhfoH4J1rRozHbdc/HMj6bZwDRmub
+ sJvle+xR2xLe2Cjjsf5KcMvZakohbf19TS5hM+scKQbAiPrpZhyZcarM8EmC6HEb/frikqmrQ
+ 3DXGF8A==
 
-From: Easwar Hariharan <eahariha@linux.microsoft.com> Sent: Friday, Februar=
-y 7, 2025 11:07 AM
->=20
-> The VF driver controls an endpoint attached to the pci-hyperv
-> controller. An invalidation sent by the PF driver in the host would be
-> delivered *to* the endpoint driver by the controller driver.
->=20
-> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index 6084b38bdda1..3ae3a8a79dcf 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1356,7 +1356,7 @@ static struct pci_ops hv_pcifront_ops =3D {
->   *
->   * If the PF driver wishes to initiate communication, it can "invalidate=
-" one or
->   * more of the first 64 blocks.  This invalidation is delivered via a ca=
-llback
-> - * supplied by the VF driver by this driver.
-> + * supplied to the VF driver by this driver.
->   *
->   * No protocol is implied, except that supplied by the PF and VF drivers=
-.
->   */
-> --
-> 2.43.0
->=20
+=E2=80=A6
+> This patch addresses a kmemleak reported during StarFive PCIe driver
+=E2=80=A6
+> This patch introduces an event IRQ handler and the necessary
+> infrastructure to manage these IRQs, preventing the memory leak.
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+See also:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.13#n94
+
+Regards,
+Markus
 
