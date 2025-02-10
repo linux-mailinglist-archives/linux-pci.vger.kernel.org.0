@@ -1,177 +1,172 @@
-Return-Path: <linux-pci+bounces-21083-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21084-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86727A2ECBC
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 13:40:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1D76A2ED01
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 13:55:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 357DF163836
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 12:40:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3901B7A4A1A
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 12:53:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9CBC222588;
-	Mon, 10 Feb 2025 12:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13A422236E8;
+	Mon, 10 Feb 2025 12:54:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="N52TpGkr"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="P3h0rmGS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from pv50p00im-ztdg10012101.me.com (pv50p00im-ztdg10012101.me.com [17.58.6.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20B2153BC1
-	for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 12:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937C422259A
+	for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 12:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739191223; cv=none; b=uhiLFl4tj8CL3w2gMPzEUVWQf4hUoGTorfDyuABlY4+CfrPHx5DfaxIHTvNmb2b0kHwluDgc8y0BOKYRuyifl0Qb3uoEYiyob0zXqwW171pijy84Xs+XNNR60UNTsIl0RGvrLFxo7xMX5jqr52kqD862GnT51GEtwC97lp2lvP0=
+	t=1739192045; cv=none; b=Cmn/0hmoaMvMiKCeOrdrcjwmJuy5wnBfCNBXaHQGAOkrU2G34+g3V429rxx5RuIVH42yxZqtKmB71pQsM7oDOi2ko6cjNShoEAdjn/9UzfzURCsSlp6eb6JMNqWhqTaTug8yna6TlV9D5Y1kGmoOeK6qozqPXVVGTHcg4kxkuI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739191223; c=relaxed/simple;
-	bh=Yaj8fqOglkS3iOOnKEAW1Jb4zD/d4qG3IVFyO3VCHb8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eO/SR74uPHe5nPXA+hvcRnLc3dxKvTXJ21PexSuhcdhGIRmySO4cXZeb6USAdzeArteW/F3Xs72IyYN2JozJFvTbmQ+EFuLIvWEEAVQtpHVAV5ACYIAK/hsjjGFTdRb+T2iKFW+Dct0XbtRmUFKDVc5QeO8hiDyQ5U5eOfsU7YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=N52TpGkr; arc=none smtp.client-ip=17.58.6.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=l9pahT3RXJ+ISB76Fj4wpfGgtAA5bRerlsHnpTButD0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=N52TpGkryogkIDj/CIPXYMnX9SvA/Qj9H0r91yVnRtHrcW4IaUnYl8VaAlB8i0N8G
-	 jJj6aU7svOG7EZJkjEZvvDAH7cRgfuO1HjNgagZrV5A0GfyzHMdM0ECTRE8KefnNOp
-	 Jfb4Q1xwWXdxvhccjKE8QBkWJ6nxomeeYhd1PRa6IfGkoMp2IlXtPuRsAY+8SQ5YJ+
-	 D48kChRUrAIufxUAjPVwM9qDcOnyTwwWuK70cjSXHTs9XDhrVQ6J6ucNEIwheXbnAK
-	 WbIYemyrxfhgFenx/heIBsIe0KCIR/wXXQHXkDA3y+uXItAAbrs8VyoPYkQqu33N0b
-	 ZlcEKbNAD2XCQ==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10012101.me.com (Postfix) with ESMTPSA id D8DD7740190;
-	Mon, 10 Feb 2025 12:40:14 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Mon, 10 Feb 2025 20:39:53 +0800
-Subject: [PATCH] PCI: endpoint: Remove API devm_pci_epc_destroy()
+	s=arc-20240116; t=1739192045; c=relaxed/simple;
+	bh=7A6tQDHT8Gygs27nVXNQUFzlGL1/SnpgPWEJccOdUoo=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jPE2xjek63X24Mr8IXwW0G2J01nGrCuXAsLpVGUTErkCxiAai3s7Z76aLtRfd/r1Zmq3PrslmHepzrrNgRp2IDdfTBnHjeXvedlq1rj0fPWHQQCfeORXfS+GJWO/dwzpWgpzT4uLZd2VUMaHCgXhi/7QBjJtBmEnxpggC5qya6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=P3h0rmGS; arc=none smtp.client-ip=209.85.218.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-ab7cb1154abso89539166b.0
+        for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 04:54:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1739192041; x=1739796841; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rf85jElMNnrDZvKC7vVh5MfFio59DRgJHRcTUJEvgGI=;
+        b=P3h0rmGSIzJypOlZkNcOiyOuXI9tPLb8MlACDEThOAmgaAuxTYNrH+YuKT7i7yUlJe
+         3GV7NlcMOfW4VBTuhIIPv267BuafGzPV1lho4qwXOY7/1CvHrjhg+v4v+hWTL5gKOmFA
+         h6egxTBbEwr5mmM4yJvfrYuUDz+Z3ybIOY70fvMIfk+jM4yS+Jdvdmv+NH1DuGF/yn+B
+         eK82cPFvWzpWNWbg57bM2nERXIMKbOa2lVAllWKClLUiUXvd+X/DNIhXSWpWVHk0PqNe
+         U/x2tQfgAgNUvIFXKhvVwAhpjwIqKPTdBvxkdDss43zbnZMMlY77rzoTYBgTMANcMrkV
+         wwzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739192041; x=1739796841;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rf85jElMNnrDZvKC7vVh5MfFio59DRgJHRcTUJEvgGI=;
+        b=bj/XVtvvJd+SDXU5ndU6XUE2a0HmWMgCvkt6pbzygjltpAC6wwfHs+PvPdfX+Fj7na
+         uJkr+90kZx4lgh3QO9I1nIG2RvNo7OsLR/5EsBKFsusVgdm/EFL6Gq72x2/YRMplb0rJ
+         HjChLp/psCxHtrroIKNDZP++YSBZBTCBTt8P98Zt4HEZDdrfhHFMgOct5D437HNXC18M
+         1FN7znmPIHSCaTHcA7T5knEW5Hsm+UHwTvZuaIJ9Ht7ik0uZ1Zbo76+3qPC6s6VtYPPZ
+         +0AftY6Ft9NyoajIc6U26wSfculVjqeIlcMUo8vfQ8xvjFGpAQ5bY7Hvudx4+7BtbIJ4
+         v+jA==
+X-Forwarded-Encrypted: i=1; AJvYcCWw1p9EIFZOP2KIzVtkOJNMmqkOELa0C6h17Zx/mJ9YHMgNTC4N1IakrmulFwYTnbKvCdkYsRyOjbw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1Me25ZrM4EPPfQQ/+vi9ly00HKHo1DNX1VvxcoBm/Aw8cwBCs
+	CJ9IvuhVFBHCsiqGwOc5rvAVnwX5h0idZK8YakdgnS0+Tw1Ovr4Gu+7D1DZZqBQ=
+X-Gm-Gg: ASbGncvh+IBIji9nhNpQtrvynaS/agduVa70agvx1g+ArBSNuc9cg97c+8ZSG19HL00
+	QQv9a4/X2634oU6kk9xciRGToqV9JSUjPLSruYRB97jQTlh3DW8GeyMChLqqpCfOkSSH/Ul1sK8
+	CpFAzPzCjwAhb5JTQ68LpQNHWLQXwe9+Cta0HsiCYI2iyvGY4tXAO9KAsL77/T3coJX2l5MJHJG
+	fg9MJcm77hbVgLdpG/f1+3z2L+1LyiDzW+SfYKDZCnP3q0nTCRaLOZadXT5QB8x9V2GHNYWAMoD
+	JA2yGRmIB36oJFDEF/jZdffvTKinLKhVW2Q71rqyxV8/esiUDGaCNzrSW+0=
+X-Google-Smtp-Source: AGHT+IExaOon2TXZW9Vep+azLuX3PC+zXsCFuFLx/CO8qnQeXU427WnR0bcNBj8GMhFUwVXVl5oCDw==
+X-Received: by 2002:a05:6402:5290:b0:5dc:6e27:e6e8 with SMTP id 4fb4d7f45d1cf-5de450706fcmr34849448a12.24.1739192040759;
+        Mon, 10 Feb 2025 04:54:00 -0800 (PST)
+Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5de5a2fc79esm4970729a12.10.2025.02.10.04.53.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 04:54:00 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Mon, 10 Feb 2025 13:55:00 +0100
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v7 11/11] arm64: defconfig: Enable OF_OVERLAY option
+Message-ID: <Z6n3JLOn-PrSt3Pa@apocalypse>
+References: <cover.1738963156.git.andrea.porta@suse.com>
+ <49da5d0cf961fef23a1622253825443eb51d660d.1738963156.git.andrea.porta@suse.com>
+ <ab88fe2a-4f59-47d1-855b-517d98773f3c@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250210-remove_api-v1-1-8ae6b36e3a5c@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAJjzqWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDI0MD3aLU3Pyy1PjEgkxdy+Q0w9RES1NLA8NUJaCGgqLUtMwKsGHRsbW
- 1AFC0Q8JcAAAA
-X-Change-ID: 20250210-remove_api-9cf1ea95901e
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-pci@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: jrihuWMNevOcXl3v441CMgRu87qWnNPT
-X-Proofpoint-ORIG-GUID: jrihuWMNevOcXl3v441CMgRu87qWnNPT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_07,2025-02-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- clxscore=1015 malwarescore=0 adultscore=0 phishscore=0 mlxlogscore=791
- spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2502100106
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab88fe2a-4f59-47d1-855b-517d98773f3c@gmx.net>
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+Hi Stefan,
 
-Static devm_pci_epc_match() is only invoked by API devm_usb_put_phy(), and
-the API has not had callers since 2017-04-10 when it was introduced.
+On 14:42 Sat 08 Feb     , Stefan Wahren wrote:
+> Hi Andrea,
+> 
+> Am 07.02.25 um 22:31 schrieb Andrea della Porta:
+> > The RP1 driver uses the infrastructure enabled by OF_OVERLAY config
+> > option. Enable that option in defconfig in order to produce a kernel
+> > usable on RaspberryPi5 avoiding to enable it separately.
+> > 
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > ---
+> > This patch is *OPTIONAL* since I'm not sure if OF_OVERLAY is a desirable
+> > feature to have enabled by default. It would be advisable to have it included
+> > so that 'make defconfig' can produce a kernel config that will work out
+> > of the box on Rpi5, otherwise OF_OVERLAY has to be enabled separately.
+> I think this isn't a good approach to convince the arm64 maintainer.
+> This change is not really optional for the Raspberry Pi 5 and possible
+> users/testers/CI rely on a working default configuration.
+> 
+> So my first suggestion would be to provide a scripts/bloat-o-meter
+> output (before/after). Based on this the maintainer can better decided.
 
-Remove both the API and the static function.
+I agree with you. IIUC what you are proposing, the following metrics should
+help to decide. The defconfig kernel with CONFIG_OF_OVERLAY=y added (wrt to
+the defconfig one without that set) has:
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- Documentation/PCI/endpoint/pci-endpoint.rst |  7 +++----
- drivers/pci/endpoint/pci-epc-core.c         | 25 -------------------------
- include/linux/pci-epc.h                     |  1 -
- 3 files changed, 3 insertions(+), 30 deletions(-)
+- same uncompressed kernel image size (due to ELF section alignment I guess)
 
-diff --git a/Documentation/PCI/endpoint/pci-endpoint.rst b/Documentation/PCI/endpoint/pci-endpoint.rst
-index 35f82f2d45f5ef155b657e337e1eef51b85e68ac..599763aa01ca9d017b59c2c669be92a850e171c4 100644
---- a/Documentation/PCI/endpoint/pci-endpoint.rst
-+++ b/Documentation/PCI/endpoint/pci-endpoint.rst
-@@ -57,11 +57,10 @@ by the PCI controller driver.
-    The PCI controller driver can then create a new EPC device by invoking
-    devm_pci_epc_create()/pci_epc_create().
+- ~7Kb bigger Image.gz
+
+- 3 new modules (all related to RP1, i.e.: clk-rp1, pinctrl-rp1 and rp1-pci)
+
+- 27 added symbols, of which 5 exported
  
--* devm_pci_epc_destroy()/pci_epc_destroy()
-+* pci_epc_destroy()
- 
--   The PCI controller driver can destroy the EPC device created by either
--   devm_pci_epc_create() or pci_epc_create() using devm_pci_epc_destroy() or
--   pci_epc_destroy().
-+   The PCI controller driver can destroy the EPC device created by
-+   pci_epc_create() using pci_epc_destroy().
- 
- * pci_epc_linkup()
- 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 9e9ca5f8e8f860a57d49ce62597b0f71ef6009ba..cf2e19b80551a2e02136a4411fc61b13e1556d7a 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -25,13 +25,6 @@ static void devm_pci_epc_release(struct device *dev, void *res)
- 	pci_epc_destroy(epc);
- }
- 
--static int devm_pci_epc_match(struct device *dev, void *res, void *match_data)
--{
--	struct pci_epc **epc = res;
--
--	return *epc == match_data;
--}
--
- /**
-  * pci_epc_put() - release the PCI endpoint controller
-  * @epc: epc returned by pci_epc_get()
-@@ -931,24 +924,6 @@ void pci_epc_destroy(struct pci_epc *epc)
- }
- EXPORT_SYMBOL_GPL(pci_epc_destroy);
- 
--/**
-- * devm_pci_epc_destroy() - destroy the EPC device
-- * @dev: device that wants to destroy the EPC
-- * @epc: the EPC device that has to be destroyed
-- *
-- * Invoke to destroy the devres associated with this
-- * pci_epc and destroy the EPC device.
-- */
--void devm_pci_epc_destroy(struct device *dev, struct pci_epc *epc)
--{
--	int r;
--
--	r = devres_release(dev, devm_pci_epc_release, devm_pci_epc_match,
--			   epc);
--	dev_WARN_ONCE(dev, r, "couldn't find PCI EPC resource\n");
--}
--EXPORT_SYMBOL_GPL(devm_pci_epc_destroy);
--
- static void pci_epc_release(struct device *dev)
- {
- 	kfree(to_pci_epc(dev));
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index e818e3fdcded95ca053db074eb75484a2876ea6b..82a26945d038d3e45e2bbbfe3c60b7ef647f247a 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -257,7 +257,6 @@ __devm_pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
- struct pci_epc *
- __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
- 		 struct module *owner);
--void devm_pci_epc_destroy(struct device *dev, struct pci_epc *epc);
- void pci_epc_destroy(struct pci_epc *epc);
- int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
- 		    enum pci_epc_interface_type type);
+hoping this is enough to gather a rough idea of the impact.
 
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250210-remove_api-9cf1ea95901e
+> 
+> In case this change is still rejected, we still have the option of
+> something like this [1]
 
-Best regards,
--- 
-Zijun Hu <quic_zijuhu@quicinc.com>
+I'm ready to go down this way should the previous numbers not be convincing
+enough.
 
+Many thanks,
+Andrea
+
+> 
+> Best regards
+> 
+> [1] -
+> https://patchwork.kernel.org/project/linux-kbuild/patch/20200203184820.4433-3-nsaenzjulienne@suse.de/
 
