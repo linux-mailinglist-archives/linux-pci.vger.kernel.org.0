@@ -1,91 +1,91 @@
-Return-Path: <linux-pci+bounces-21078-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21079-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53898A2E9A2
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 11:37:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0AD2A2EB1A
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 12:31:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5E20167B2A
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 10:37:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B9981887F45
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 11:31:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8775E1D416E;
-	Mon, 10 Feb 2025 10:37:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E1DB1DF738;
+	Mon, 10 Feb 2025 11:31:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i+QMuXop"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="JpmWN1g6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99AA1CD208
-	for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 10:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6689D1DF985
+	for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 11:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739183835; cv=none; b=c2Hlm7EFK7NvBZUeeGJ40hf8RMszvb/RY35FGzboqKptvv+/Yr7uR2xzuk4ueVmEy3gHp6ysi68IqU5zfmlgiyw7Af5EbM3VardAdfmR//usxs6fpDc/1nb8fgqUfwV4clvZdrYx5O6uEw1xLKJDp5wJx50xgnJLFeLL9e/AM/Y=
+	t=1739187096; cv=none; b=Iy9rycQ+YL9L3R/sH7uh+SyB0z2tJhkAQ3k3HEM/Lwx6YanxG9wfrGgQzKed0BOHaoPX8RkJUr96TpCrXuV7Safa2KYguyEnDhq7LWX+sVwd0GI5/wRidamIGCDhmvyDVoSbr6JwLhm8uP1xCcYbPdYkfJxBlJSEUBOYai7lfqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739183835; c=relaxed/simple;
-	bh=X2daA4b8KZBEmI/roOKQ/JNdi2WdnT0BXi6PoHlaWgE=;
+	s=arc-20240116; t=1739187096; c=relaxed/simple;
+	bh=JF/n15lnAm7NZMFbEUTi4J8f8m2TQ7lxj7+v1eHdIuY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VI0dWT160gS74+evr4kf4p+6EwOc7ogzsI2qbLyFy+bAfLqSYfvWiOc7eggqvHJkMnUj2H5ln64OUpuJd/6jIey0t2VMyi1JzW9em8Nw11DrxrNJuUaDLxa1rPu0Qh4FgLeFtP7SbEGmp1NTX0i1mFd+vFHHyFDkutp5MMkfiL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i+QMuXop; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2fa1d9fb990so6268218a91.2
-        for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 02:37:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739183833; x=1739788633; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Ed3HwmGDccuaWYbTyHyaVTzv4wASH1XGS6TfCk4H9oo=;
-        b=i+QMuXop+3T5Ds4jhR+tXfhx9arAvKL7/DPcNHwVJjE7gdp1S/ooAF+E/RE02vF9vy
-         yHi1MOu4TVGXWiG6Mxfrk3W5sZR7P7LLk9vXKsVqINZF0QkZhfdDm/TwKdrrNH94KVQH
-         04NBP2NtFSGzHVc/P9hFPlvZ2T/uIg/HLfTNmwavLOJ5AVuboNTXQFEI6ni26y2QQHYX
-         J9fh9VbNqvDDAGW5lEHq6g4Zcvz78ZMspV2YLI1JantdTDD8pe8MEpvS/+eN2bFvQKyF
-         SGSWhifzKRoU1si50CyBprvurgzIzWy0gIrjbXk/QrS7aHkMU5BOgUUH3WaWgsIhoxo5
-         o07A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739183833; x=1739788633;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ed3HwmGDccuaWYbTyHyaVTzv4wASH1XGS6TfCk4H9oo=;
-        b=fezTCZFjzMD0q09Ht66MlpTz8qpkYfnKpMBvN/nN2atKsXdafP67cjwKmms2bqy3ko
-         gHj5dgnANimRGdQHq0zHTFreRJsS5JWhyKBD6GUF+BplbsjrUYkWAH4mOrsGCZOT2FKl
-         or/g9LsLwKGlsiJ1VctvKnbdQpJkZNs4lYXxa7b1H2OcvGQwrNaerSa3EYmShRkpFQI7
-         wPi1lKcEVrhZebu7A8sTUCfwUvEzRF2++0z5r3EtluZCZurxZ18cKgJ5IjuLJgdS7+9H
-         WrHGIf5voRN5NrKovZYw4GZjpXlAzPXtAzOZElAFBwuA3P146qqlFkJbFOMkStEZ6vQZ
-         0PCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOXjw74Zoz4BeYkT6rCc08aQY19YqGQ2WIuQTxdQPrTJ5AsNIv9kuCUvExuarAJaZePn2EI5/CaUw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTGgxXacCo0EbNUZM8SdN6hi01Th6C6N+XbytFJl53NIGFmmT7
-	vBlFO1V3Y4yvX+kfSH+1ocaPR89XJWYEuI7tMZg8AIL53JuQKzus9nQ/DR+cQg==
-X-Gm-Gg: ASbGncu3Z8ZfQhOVH8HP6aF4/tfIFPKeCGyrFkwQP4qjdbkaNyPogKDiWqdQ5wF7+l3
-	BtwUavkDcUiRWvEJdK8HtirZaAtOzLB1v4OCaqxkxLyy0x+Q5nb7tj4SLUOo0BAbuPM6buvQEVj
-	V/FUH+iVBFWeedenlESW/rBhZguMPiSqTe96kJP1Eo/CfWIJNm2t/iBjRKczmDvDd6r6uvG/+LO
-	xShvPzeXAADpRidN8tTlT9RgVT+qNPTA9d0tMkkDOTpFqMCSd6TgIuVMmZUzKKWE9eW1lgqu64o
-	MGqLV4zl4Fx2tQ6gZRb4W0hPQuj9
-X-Google-Smtp-Source: AGHT+IH+EZSozw+jru34fUmFnJ9GiwELwA5qvlNGOOzM35DgohR3W+M4Z4wp+SiWS/lt6+tMpE0BSw==
-X-Received: by 2002:a17:90b:364d:b0:2ee:c4f2:a76d with SMTP id 98e67ed59e1d1-2fa24274bd2mr18771623a91.21.1739183832952;
-        Mon, 10 Feb 2025 02:37:12 -0800 (PST)
-Received: from thinkpad ([220.158.156.173])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fa099f4dadsm8179079a91.10.2025.02.10.02.37.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 02:37:12 -0800 (PST)
-Date: Mon, 10 Feb 2025 16:07:07 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bo Sun <Bo.Sun.CN@windriver.com>
-Cc: Kexin.Hao@windriver.com, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=EYuJoAAARB+vl0nO5hZ22/QL4IpJW4+eqF2BLhD25IzEbxSKD6g6fzThN2EKeuBEm5iyaeQM7vHi07WcZNGaCLWodFAqwaLZgQ0zlpvZAPU1Z3obrtoJGTV0L8EwCa63OpaRHc7alsMCr6LXux6d4ZUdHA4k+heqYbIuACmXCMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=JpmWN1g6; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 30D55240104
+	for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 12:31:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1739187085; bh=JF/n15lnAm7NZMFbEUTi4J8f8m2TQ7lxj7+v1eHdIuY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=JpmWN1g6e9WQyrXQ7YqKa6Kz7YaEDYolPFawuJollCAzXyAykqbJGoZ+zalrhTLl8
+	 0f20eLO/gb+kGMQG2fH5TKmJEFrqGaN6UwBOAyyTSCiSuA57Gfh1FfJR75F2BTuW7Y
+	 /y2wCp2bUoNfwe8q67lwJI2tleg3YW+PS4g+S57IUQyxrG6AeC8sx71dc9aXf0Q5rE
+	 ikLvW6yzzw4cRkk6JOrSz2ttcOw/XLuzsx6rsHe0z0p6E3OCWI5L8kDFa14iqPeDcP
+	 /xijkoq/1z1YJJwTE3M4e6n7DlQEG+y3BB99cR2HqY4pCUnD30XDSw+fWIzzAOuBpH
+	 CY8rACCyyxnAw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Ys2TK4ysMz6tw3;
+	Mon, 10 Feb 2025 12:31:17 +0100 (CET)
+Date: Mon, 10 Feb 2025 11:31:01 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Crystal Wood <oss@buserror.net>
+Cc: j.ne@posteo.net, devicetree@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [PATCH] PCI: controller: Restore PCI_REASSIGN_ALL_BUS when
- PCI_PROBE_ONLY is enabled
-Message-ID: <20250210103707.c5ubeaowk7xwt6p5@thinkpad>
-References: <20250117082428.129353-1-Bo.Sun.CN@windriver.com>
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org, Li Yang <leoyang.li@nxp.com>,
+	John Ogness <john.ogness@linutronix.de>
+Subject: Re: [PATCH v2 09/12] dt-bindings: memory-controllers: Convert
+ fsl,elbc to YAML
+Message-ID: <Z6njdeo8kHw6RtYH@probook>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-9-8137b0c42526@posteo.net>
+ <Z6kQpuQf5m-bXTyt@buserror.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -95,109 +95,187 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250117082428.129353-1-Bo.Sun.CN@windriver.com>
+In-Reply-To: <Z6kQpuQf5m-bXTyt@buserror.net>
 
-On Fri, Jan 17, 2025 at 04:24:14PM +0800, Bo Sun wrote:
-> On our Marvell OCTEON CN96XX board, we observed the following panic on
-> the latest kernel:
-> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000080
-> Mem abort info:
->   ESR = 0x0000000096000005
->   EC = 0x25: DABT (current EL), IL = 32 bits
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
->   FSC = 0x05: level 1 translation fault
-> Data abort info:
->   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
->   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
->   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> [0000000000000080] user address but active_mm is swapper
-> Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
-> Modules linked in:
-> CPU: 9 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.13.0-rc7-00149-g9bffa1ad25b8 #1
-> Hardware name: Marvell OcteonTX CN96XX board (DT)
-> pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> pc : of_pci_add_properties+0x278/0x4c8
-> lr : of_pci_add_properties+0x258/0x4c8
-> sp : ffff8000822ef9b0
-> x29: ffff8000822ef9b0 x28: ffff000106dd8000 x27: ffff800081bc3b30
-> x26: ffff800081540118 x25: ffff8000813d2be0 x24: 0000000000000000
-> x23: ffff00010528a800 x22: ffff000107c50000 x21: ffff0001039c2630
-> x20: ffff0001039c2630 x19: 0000000000000000 x18: ffffffffffffffff
-> x17: 00000000a49c1b85 x16: 0000000084c07b58 x15: ffff000103a10f98
-> x14: ffffffffffffffff x13: ffff000103a10f96 x12: 0000000000000003
-> x11: 0101010101010101 x10: 000000000000002c x9 : ffff800080ca7acc
-> x8 : ffff0001038fd900 x7 : 0000000000000000 x6 : 0000000000696370
-> x5 : 0000000000000000 x4 : 0000000000000002 x3 : ffff8000822efa40
-> x2 : ffff800081341000 x1 : ffff000107c50000 x0 : 0000000000000000
-> Call trace:
->  of_pci_add_properties+0x278/0x4c8 (P)
->  of_pci_make_dev_node+0xe0/0x158
->  pci_bus_add_device+0x158/0x210
->  pci_bus_add_devices+0x40/0x98
->  pci_host_probe+0x94/0x118
->  pci_host_common_probe+0x120/0x1a0
->  platform_probe+0x70/0xf0
->  really_probe+0xb4/0x2a8
->  __driver_probe_device+0x80/0x140
->  driver_probe_device+0x48/0x170
->  __driver_attach+0x9c/0x1b0
->  bus_for_each_dev+0x7c/0xe8
->  driver_attach+0x2c/0x40
->  bus_add_driver+0xec/0x218
->  driver_register+0x68/0x138
->  __platform_driver_register+0x2c/0x40
->  gen_pci_driver_init+0x24/0x38
->  do_one_initcall+0x4c/0x278
->  kernel_init_freeable+0x1f4/0x3d0
->  kernel_init+0x28/0x1f0
->  ret_from_fork+0x10/0x20
-> Code: aa1603e1 f0005522 d2800044 91000042 (f94040a0)
+On Sun, Feb 09, 2025 at 02:31:34PM -0600, Crystal Wood wrote:
+> On Fri, Feb 07, 2025 at 10:30:26PM +0100, J. Neuschäfer via B4 Relay wrote:
+> > From: "J. Neuschäfer" <j.ne@posteo.net>
+> > 
+> > Convert the Freescale localbus controller bindings from text form to
+> > YAML. The updated list of compatible strings reflects current usage
+> > in arch/powerpc/boot/dts/, except that many existing device trees
+> > erroneously specify "simple-bus" in addition to fsl,*elbc.
+> > 
+> > Changes compared to the txt version:
+> >  - removed the board-control (fsl,mpc8272ads-bcsr) node because it only
+> >    appears in this example and nowhere else
+> >  - added a new example with NAND flash
+> >  - updated list of compatible strings
+> > 
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> > ---
+> > 
+> > V2:
+> > - fix order of properties in examples, according to dts coding style
+> > - move to Documentation/devicetree/bindings/memory-controllers
+> > - clarify the commit message a tiny bit
+> > - remove unnecessary multiline markers (|)
+> > - define address format in patternProperties
+> > - trim subject line (remove "binding")
+> > - remove use of "simple-bus", because it's technically incorrect
 > 
-> This regression was introduced by commit 7246a4520b4b ("PCI: Use
-> preserve_config in place of pci_flags"). On our board, the 002:00:07.0
-> bridge is misconfigured by the bootloader. Both its secondary and
-> subordinate bus numbers are initialized to 0, while its fixed secondary
-> bus number is set to 8.
+> While I admit I haven't been following recent developments in this area,
+> as someone who was involved when "simple-bus" was created (and was on the
+> ePAPR committee that standardized it) I'm surprised to hear simple-bus
+> being called "erroneous" or "technically incorrect" here.
 
-What do you mean by 'fixed secondary bus number'?
+It is quite possible that my understanding of it is incomplete or wrong.
 
-> However, bus number 8 is also assigned to another
-> bridge (0002:00:0f.0). Although this is a bootloader issue, before the
-> change in commit 7246a4520b4b, the PCI_REASSIGN_ALL_BUS flag was
-> set by default when PCI_PROBE_ONLY was enabled, ensuing that all the
-> bus number for these bridges were reassigned, avoiding any conflicts.
 > 
-
-Isn't the opposite? PCI_REASSIGN_ALL_BUS was only added if the PCI_PROBE_ONLY
-flag was not set:
-
-	/* Do not reassign resources if probe only */
-	if (!pci_has_flag(PCI_PROBE_ONLY))
-		pci_add_flags(PCI_REASSIGN_ALL_BUS);
-
-
-> After the change introduced in commit 7246a4520b4b, the bus numbers
-> assigned by the bootloader are reused by all other bridges, except
-> the misconfigured 002:00:07.0 bridge. The kernel attempt to reconfigure
-> 002:00:07.0 by reusing the fixed secondary bus number 8 assigned by
-> bootloader. However, since a pci_bus has already been allocated for
-> bus 8 due to the probe of 0002:00:0f.0, no new pci_bus allocated for
-> 002:00:07.0.
-
-How come 0002:00:0f.0 is enumerated before 0002:00:07.0 in a depth first manner?
-
-> This results in a pci bridge device without a pci_bus
-> attached (pdev->subordinate == NULL). Consequently, accessing
-> pdev->subordinate in of_pci_prop_bus_range() leads to a NULL pointer
-> dereference.
+> For non-NAND devices this bus generally meets the definition of "an
+> internal I/O bus that cannot be probed for devices" where "devices on the
+> bus can be accessed directly without additional configuration
+> required".  NAND flash is an exception, but those devices have
+> compatibles that are specific to the bus controller.
 > 
+> The fact that the address encoding is non-linear is irrelevant; the
+> addresses can still be translated using the standard "ranges" mechanism. 
+> This seems to be a disconnect between the schema verification and the way
+> the compatible has previously been defined and used.
 
-Looks like it is a bug to let a bridge proceed without 'pdev->subordinate'
-assigned.
+This is what led me to my assumptions: The simple-bus validation logic
+in dtc complains about unit addresses such as nand@1,0 which are quite
+appropriate for the eLBC.
 
-- Mani
+> 
+> And as a practical matter, unless I'm missing something (which I might be
+> since I haven't been in devicetree-land for nearly a decade), Linux is
+> relying on simple-bus to probe these devices.  There is a driver that
+> binds to the bus itself but that is just for error interrupts and NAND.
 
--- 
-மணிவண்ணன் சதாசிவம்
+As of now, yes, that's correct. Without simple-bus, a current Linux
+kernel doesn't find the device nodes inside such a localbus.
+
+> 
+> You'd probably need something like commit 3e25f800afb82bd9e5f8 ("memory:
+> fsl_ifc: populate child devices without relying on simple-bus") and the 
+> subsequent fix in dd8adc713b1656 ("memory: fsl_ifc: populate child
+> nodes of buses and mfd devices")...
+
+I have prepared such a patch, based on the same assumptions:
+
+  [PATCH] powerpc/fsl_lbc: Explicitly populate bus
+  https://lore.kernel.org/lkml/20250209-localbus-v1-1-efcd780153a0@posteo.net/
+
+> 
+> I'm curious what the reasoning was for removing simple-bus from IFC.  It
+> seems that the schema verification also played a role in that:
+> https://www.spinics.net/lists/devicetree/msg220418.html
+
+Yes, that's the same as my reasoning.
+
+> 
+> ...but there's also the comment in 985ede63a045eabf3f9d ("dt-bindings:
+> memory: fsl: convert ifc binding to yaml schema") that "this will help to
+> enforce the correct probe order between parent device and child devices",
+> but was that really not already guaranteed by the parent/child
+> relationship (and again, it should only really matter for NAND except for
+> the possibility of missing error reports during early boot)?
+
+I'm inclined to agree with you, but it's somewhat beyond my skill level.
+
+I'll let Li Yang or Rob Herring comment on that.
+
+> 
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - fsl,mpc8313-elbc
+> > +              - fsl,mpc8315-elbc
+> > +              - fsl,mpc8377-elbc
+> > +              - fsl,mpc8378-elbc
+> > +              - fsl,mpc8379-elbc
+> > +              - fsl,mpc8536-elbc
+> > +              - fsl,mpc8569-elbc
+> > +              - fsl,mpc8572-elbc
+> > +              - fsl,p1020-elbc
+> > +              - fsl,p1021-elbc
+> > +              - fsl,p1023-elbc
+> > +              - fsl,p2020-elbc
+> > +              - fsl,p2041-elbc
+> > +              - fsl,p3041-elbc
+> > +              - fsl,p4080-elbc
+> > +              - fsl,p5020-elbc
+> > +              - fsl,p5040-elbc
+> > +          - const: fsl,elbc
+> 
+> Is it really necessary to list every single chip?
+> 
+> And then it would need to be updated when new ones came out?  I know this
+> particular line of chips is not going to see any new members at this
+> point, but as far as the general approach goes...
+
+As far as I'm aware, this reflects common practice today.
+
+> 
+> Does the schema validation complain if it sees an extra compatible it
+> doesn't recognize?  If so that's obnoxious.
+
+Yes.
+
+> 
+> > +examples:
+> > +  - |
+> > +    localbus@f0010100 {
+> > +        compatible = "fsl,mpc8272-localbus",
+> > +                     "fsl,pq2-localbus";
+> > +        reg = <0xf0010100 0x40>;
+> > +        ranges = <0x0 0x0 0xfe000000 0x02000000
+> > +                  0x1 0x0 0xf4500000 0x00008000
+> > +                  0x2 0x0 0xfd810000 0x00010000>;
+> > +        #address-cells = <2>;
+> > +        #size-cells = <1>;
+> > +
+> > +        flash@0,0 {
+> > +            compatible = "jedec-flash";
+> > +            reg = <0x0 0x0 0x2000000>;
+> > +            bank-width = <4>;
+> > +            device-width = <1>;
+> > +        };
+> > +
+> > +        simple-periph@2,0 {
+> > +            compatible = "fsl,elbc-gpcm-uio";
+> > +            reg = <0x2 0x0 0x10000>;
+> > +            elbc-gpcm-br = <0xfd810800>;
+> > +            elbc-gpcm-or = <0xffff09f7>;
+> > +        };
+> 
+> I know this isn't new, but... since we're using this as an example,
+> where is the documentation for this fsl,elbc-gpcm-uio and
+> elbc-gpcm-br/or?  What exactly is a simple-periph?
+
+fsl,elbc-gpcm-uio is handled in the following patch
+(dt-bindings: memory-controllers: Add fsl,elbc-gpcm-uio).
+
+simple-periph is something I haven't thought about, because this whole
+example comes from the old txt-format binding. The whole purpose of
+fsl,elbc-gpcm-uio is to allow userspace drivers to interact with
+localbus devices, so that doesn't make the intention any clearer, either.
+
+> 
+> There are no in-tree device trees that use this either.  The bcsr
+> node was actually a much more normal example, despite that particular
+> platform having been removed.  There are other bcsr nodes that still
+> exist that could be used instead.
+
+Ah, fsl,mpc8568mds-bcsr for example, good point. I'll add it back.
+
+> 
+> -Crystal
+
+Thank you for reaching out!
+
+Best regards,
+J. Neuschäfer
 
