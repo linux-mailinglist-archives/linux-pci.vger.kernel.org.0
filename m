@@ -1,260 +1,380 @@
-Return-Path: <linux-pci+bounces-21111-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21112-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03DE9A2F926
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 20:43:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93F9FA2F91F
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 20:43:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8DD057A2F5F
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 19:42:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3AEDC18895B3
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 19:43:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFB66253F07;
-	Mon, 10 Feb 2025 19:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1858F254AF6;
+	Mon, 10 Feb 2025 19:39:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZMBbGDjA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="cVWl0KC+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2057.outbound.protection.outlook.com [40.107.20.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3C6257AD8;
-	Mon, 10 Feb 2025 19:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739216365; cv=none; b=CjpIs1lSx2w2K2yQeP39/Tjo8goHLvHlla4kwoAT2K7LhALYP4O2gjXZx6ZvVsNc1HnMLWo8J56559d74tyD5Lpcq+19ckuzkYesg3me3/LG9qcvHhu60Vntv1BySW3DG7SAM59lpcJnsTlm7E6YmPaZX+9AEnhRc2Cmsyy7Mvw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739216365; c=relaxed/simple;
-	bh=BgdNhKDXz/no7DglHpg1Pb5zNJDUriBtVyzHzDAG2Q8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iQOANu6LbZIGPRCNKGrrohUUacooCdP2mdw7YICll8K7do4HajkPvoZQvWm7pidpBSRckHOsGqX9MMrDUAS8Mt/wEeq4zRvm6zpwIriIZ3sbZPEVe1ErCdLbr9kuS0l89e+iV2IowOxqBT0zafyXHXP71QhDh6pnXaavcVSFZDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZMBbGDjA; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-aaeec07b705so755171766b.2;
-        Mon, 10 Feb 2025 11:39:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739216362; x=1739821162; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1UGevfOpAUPjzC/KiI8YLKFnVe3l8iDORylTqnw5Vwk=;
-        b=ZMBbGDjAnjbONph0O5EGnIgQCG1J0M0/C+swNfZDcEIqac60fq66nigcguMaq0S91R
-         atHeSM6DGJOrf+CwSFrGoy3Ffwsf2scQM9cO4XgWIEIQlkKdAGs/MkmsNR2fTSbz5WaU
-         00y+GvdOv84VxzpbzfzHrV/upAPPrOU31HMlJ9D692Mler+WE/EapwFQe5qo0tNPgN3W
-         6ILu9cJ1ZT97xI0u06DGfx/m3LNghcWqEJdAOP/imT4ZrDQH30GuaoHfqh0eRw/kHb6o
-         Rnl2ie3H7HfKXlqsWerdvlenmRrlQ+jSkW31CTJffC43WNgndZS5rrBQUWhDhIU/tQQ0
-         QGKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739216362; x=1739821162;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1UGevfOpAUPjzC/KiI8YLKFnVe3l8iDORylTqnw5Vwk=;
-        b=PrRh0sTDJiiAlP+ujV9ipgiET/6r4qxplz65S94sg40KRK07tAiSYykMZodUPqxUHg
-         FY5RyXs3FTDdtgLz3FNrnUEGAv6ekv1jOfy3VFcca6RqabQUuUNvQ5RS67QQIBpaZlWQ
-         Fh6ernjpUzteBlgiX7Wg41Wzkc3KdyYY54g12NVlxqD42X4v+9SdgW1DHGCflKzpbBhp
-         Q0hjrTHHcvuRR5vNMBIu+fEaoIyfc4lVwdtJ5slPQLU4f9w4b5eeQ2CjOA9ciiCiYzYd
-         AS+8dA1lDUD50mvlUl+5xLFXp0UqNcoGrOc7MNtOvSQM8kbHN59FLQAlC4QEgit5Dpeh
-         e4PA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDDkX/RXYmT83/n/3pAuyjupaMvaMLX/uJbnLPO2I3/mBkuNaaDQTzWfoygUUPo0bKtFP8y+yJTr7nkmI=@vger.kernel.org, AJvYcCXZmSS0YDPVm/kia4k9ReYaW72Rbynmlrp3olTsfxpEZKmdHrfyMyEpDEGQDZK3+XY6MJDVKTA6q9cL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjpxfZ+j4JLBMlljKlNJGr56VUmTNbg8UlvhiuE+tL4tr4gfru
-	+NCzAjBrlGcuQtq5wmz/DpNUhdTL84ed6aQPB7Mcs+KJD8ZLT6i8XG2bTcgF4RBZwWwc73cLeY+
-	Z9EreJDj/r2a7+ikKqk2rFwHLlt4=
-X-Gm-Gg: ASbGnctuRO9520dVXm546bx2fY1UsGCAzfuHFRBBcGVbEVzGnjILqss0Nwm0Td/vKUv
-	CrXdPPhxffJ1SdLUYWW0MKpsicLXUA4X7gfF18EHO+ejbczxV3JMHKs8A1Ie17U5k7jUKhPcd
-X-Google-Smtp-Source: AGHT+IHkH1T+CuWeIT0XKMZ6C94TIWLCg4ypBx01FMwdD/FhknfWIjYmY5tPWTGl4EGOg28RVj85qmiAFX2QsLtQwbc=
-X-Received: by 2002:a17:907:6d1e:b0:ab2:faed:f180 with SMTP id
- a640c23a62f3a-ab789aef85amr1823164866b.33.1739216361832; Mon, 10 Feb 2025
- 11:39:21 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC1D257AD7;
+	Mon, 10 Feb 2025 19:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739216372; cv=fail; b=W0jZi3Afz4S2/CvEtjLaaargKVhFvI0QH8+6ED14S3CNDjs5PKLCRSr1NckcRz+H1q6hUSlOnIqrX/79sDNYLdchYp7Fr7B3dJMyOxNSgxId9UFtAH5jdGwVo9Rxba09/bh28HS6YgjZOofRNPOaJKHEzn3ncrIKEPWP8eF+POo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739216372; c=relaxed/simple;
+	bh=O5UQJ6m0QegWod86GYvv4WRCexXGiOFdyfSV//pq8xQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=FKLfbnATbmjoVfoXabAKH6EUFdpgGbzab0GV7QYVpVn/LXdDe55632ybYH4s7zM0H2hnameOAbnNa3DjGRM0L3tYn9eUv9kBQK+lYSSUzHzBkUey9cOuZeAMa19yN8LbrnRhfJGtXw8x0uk0jQPfUG3m28qhLMKqGBBcZCIV4d8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=cVWl0KC+ reason="signature verification failed"; arc=fail smtp.client-ip=40.107.20.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iAJpQ+2GjJJj0n1zqNUXSkOkUennzMxS6gF5iOgSLELEo2dDA+GqCsWyKBUBbvmjA+FosGF/mWshuMWARIIMpy+suK4MD6ZrB0+uABMy3ivSRVqZQ+3H+HVxS4GtrkleUel7puJ6/sIG7rOZYw4zqAuEWcrTp9zludI54JPuYMkeS5l9XSZy1dSK6ohqokcl9jvlV62A/7scoRkuGeEyGQgzzeF0PDcBXM0rHJWPZheG3sA0fsF9i1HFFy6GwfobHV4jUnqj4R7/Thc5Z95vAHXYUxOWJR5ytnzIFJZVkwS7awZMii1LeDNV6m6cXomKSnVEb6nv4WikPJ801rJHrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UAmwXK8s2ViFQmlIUMzFtDUrgM6KezMlhSGOuLiVbQE=;
+ b=pBKWSGke4Rez57EuVexYl14f/335/OO3qBheGPirbDVRC0zjI/eZvSUCjdeVJtNnIcLKbdXPMra8hNyWenWbp2Hl/fs0c5Gatnf+ucbt+cth7Y8D4Gq86w5pWlZ2jDCuAA2XeuH/8BIGc3l8TwRY17naw6kKq3JZK3R+c2CVHs23rsTRss4K3pAynutIytBz8C+GgKdez2LMAtko+GORTwBo2ol8NW55q6aQCxM6DhxmGr4PMOc+pkYrmY6YoVLg1yyJ//hGe3ySUTZZBQAWkhXnuN+rSyPYcmh2irG3trfcnQk1JuT2Qt1czCEFHFhmNjq2mb20j8NG2T8wI1AUnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UAmwXK8s2ViFQmlIUMzFtDUrgM6KezMlhSGOuLiVbQE=;
+ b=cVWl0KC+MxY1/HfspmyAtzgqj+yRGWu+dLLmZl3v/glIHoov1ulS8hjgD1UEA7APf2jxMuIbTcCKY42m5/Z5Wji72y3TwSWhvsg700iyqKKoH6VgtwFdZETvYAtelhNjds2wSu2yyCXnY3PL1JBQUcX2W6qm3F1SMBPXLTWDHxk5tsXMy02eCYXGcfm60ZfNgig5QrMUpMTaodQyuHY5uAIc8LUGtiZpA55aERFKVszIZQ49XvPlAe6CI5XPuYSMvAbbevXOG0/IQg6y6EN2D5k5i4Yjq4mFdI1WW52p/2yutSW8o7S3WkzKwAgwq4jrEHqORHMOOVgRrQBgMo9FnA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DB9PR04MB8122.eurprd04.prod.outlook.com (2603:10a6:10:25d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Mon, 10 Feb
+ 2025 19:39:27 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8422.012; Mon, 10 Feb 2025
+ 19:39:27 +0000
+Date: Mon, 10 Feb 2025 14:39:13 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: j.ne@posteo.net
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 05/12] dt-bindings: dma: Convert fsl,elo*-dma to YAML
+Message-ID: <Z6pV4eauZj75+911@lizhi-Precision-Tower-5810>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-5-8137b0c42526@posteo.net>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250207-ppcyaml-v2-5-8137b0c42526@posteo.net>
+X-ClientProxiedBy: BY3PR05CA0048.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b::23) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208140110.2389-1-linux.amoon@gmail.com> <20250210174400.b63bhmtkuqhktb57@thinkpad>
-In-Reply-To: <20250210174400.b63bhmtkuqhktb57@thinkpad>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Tue, 11 Feb 2025 01:09:04 +0530
-X-Gm-Features: AWEUYZkHVuEkkPy1KSE2EKLXcjM9zVRd3pbM5-SmxlzbW8tM9XT1xK4MY0lSdG4
-Message-ID: <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
-Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
- IRQ handling
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Kevin Xie <kevin.xie@starfivetech.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Minda Chen <minda.chen@starfivetech.com>, 
-	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB8122:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8a9a187b-6804-4a4d-74cc-08dd4a0aa174
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|52116014|1800799024|376014|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?iso-8859-1?Q?Z13eRVXqqrGBb+B2ovc8EN0jGjelZdXbNvTd3IgA2CMlD8AYbXJByqwOVJ?=
+ =?iso-8859-1?Q?RamfIeWgVCZTUreTLloUYwEECqlnZ9Y6Ww6uRNJEf2FgjVZw6NCaKjYPcO?=
+ =?iso-8859-1?Q?HUf7yPNdSaGhsb2OxYA6UIFw8mF5c5RX5cAMEatUkICzpiKvW1OgXvW8T8?=
+ =?iso-8859-1?Q?aM2wEvFJkBQiVHZHanzD0T/IDhX8A0P86HFhT/a7Vlj/kHTPqN1lEgBeYs?=
+ =?iso-8859-1?Q?4rRasMFATgO8DedovYkDW8HoMhdTH6Zb2kJu/W/TCr5wGWpqJbIofLBcwy?=
+ =?iso-8859-1?Q?UHqrJ1TE72zbyGJoIvv+y278a+Chc5hqtOhVL158haHGLXNXMffghimhZF?=
+ =?iso-8859-1?Q?0q/Oo65O4ymQ78lFMnsxlNjwj+p2Q8GNJBdNpDJGOPfE4UaZzU/T4sV3DO?=
+ =?iso-8859-1?Q?LGwna3THjdu+Zw62Im2tjio6xED0jZaTJ5jfnr6hJmpsP2I3Bv2sYQy1uB?=
+ =?iso-8859-1?Q?VofFUYMhAJlPnnRAXLJO20ZxyjNyBBIjwQ7echfaURVCtqwONL38VyRijD?=
+ =?iso-8859-1?Q?xUS13lGa1veA13mmj35d1FVw77Itk/thrlZGx4udG2qIYeTy52xOg0FGfi?=
+ =?iso-8859-1?Q?ZCJblRTMJe086NrjF0mkHXdE2hVRe4CM0Nn179jxz9QUYfzwebIaqZaJXu?=
+ =?iso-8859-1?Q?5C2LI4gSbXX5tzQFOOyKzjgKw7HfSurLZr6YpauH1J121UiFxdDuGmK7ka?=
+ =?iso-8859-1?Q?FRjg4sSokGJ8AQKFroLWIKRkOJt6iYgDCdkmeLuIP2zeLY6QRAh2XJuvbC?=
+ =?iso-8859-1?Q?uXv/1nGwyp4DInmmourPFyutcOZOEO8UoTvA+0PbZNt3zK2+Q6lkCLztpi?=
+ =?iso-8859-1?Q?8o9wRlpm9giH5u/TvJlN+6+StBhZJIk7unTC4w45QP+Qfn/UUhCvLo9H4U?=
+ =?iso-8859-1?Q?1x2q3FyzdoQfqug2QGMEinX5veHDHkSImBV92reNAh/p8HqzNkePSS/Oeo?=
+ =?iso-8859-1?Q?o2bmJronNk8d+dbEO3kDTewa8wMJ0CugtNgWkigwTD/2BgnKgyMpyESmM5?=
+ =?iso-8859-1?Q?W/bodeuy+R1Lq++Yf8S33CQetkdDTgDbKn26DXXmDJRocTmOty166MXV2f?=
+ =?iso-8859-1?Q?4f/Tk26kp6Dd5xS1et0qZUN963y7Zd+OqbHzb1bdjd0OUe7Lr+uDJzuuhI?=
+ =?iso-8859-1?Q?cR6hcXEBX2jUPR2uU/XE8L0A/Q/DeIbqDEZZP6bHs1sIeiWcKUVeWmk4vJ?=
+ =?iso-8859-1?Q?Lhri6VM7OKfw4LJJcp5JTu7jxMyiAFdTKnu0d0EFJ3vBYtNWyGWBtV630V?=
+ =?iso-8859-1?Q?RYH18Z2P/iM45dWu63R7mBGZlg9OgTd95Icrrr5p2IUJs0kEER/oJcu86L?=
+ =?iso-8859-1?Q?eVvRxiaYqOVLShXTHjPE74Hz69Z2PXkovRyhMKYGGeUgmPVxEgW1qQ4Pli?=
+ =?iso-8859-1?Q?aA3wBmKczUwgnUIY6xim2PKEd9JnAu/GJpxgJVE697ZzTYMnEsuJIN7u4N?=
+ =?iso-8859-1?Q?WlnPX39oKeWynIRs?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(52116014)(1800799024)(376014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?TiK1F3ZA+N7z3JvoR1KuSdRVEXOvU/UJMDIy/TP0gzVJ6g/1uKKNXQpk3r?=
+ =?iso-8859-1?Q?AV8fM12AO/cmTdNl3DXf6CAhoGaNvx+RrQQAdN12CTKo/rwkJTO9m34aPR?=
+ =?iso-8859-1?Q?AUCbYD/NVo+Bc8ftDkBuRKyPMANUtpH3FkQK1VMiycvAwRt1H0vMl13Rt8?=
+ =?iso-8859-1?Q?bNWGmOKbJJSXIKY0Twj3fL5P7/u8IECvZSy6ixafcDLDoW31ka3hkfRdfV?=
+ =?iso-8859-1?Q?qGvFYcWFeOQvlh2i8kcQrcY5KkFRpmNTc8Jfa3G7si34fbJIU7nfpSm8Xt?=
+ =?iso-8859-1?Q?GplVeavAw5ws3Fyvt39hVj8cirbX46E6vnI1I4ZW5SVC3QLubkCEPn4jQh?=
+ =?iso-8859-1?Q?v9IS0sFqGjv+23gtVn70YaRj9vN0h2jqN3UhwuDUASAxtwKIzGZsnzkmbw?=
+ =?iso-8859-1?Q?gkws5rSe4dTluUggq39NoY8LNrgx3nonV0pwnox10Ce1vf2hRA/spEqgAD?=
+ =?iso-8859-1?Q?w+Qh5UYkSCi1MHds4nub10JucRyHGXXsHRErgg0oKaDtevmW/NxZQ7PzxT?=
+ =?iso-8859-1?Q?sFGJuIHbnx+OvvlbaliuIAelrvtJ2PaUV9EqXzfeZGnCTCJDy/iZHHTmsT?=
+ =?iso-8859-1?Q?jSin9VHqqUgJZPBcaj0EQ5ACcwbKfzIemb0av8UphJIbNgLE6rNKRoid7I?=
+ =?iso-8859-1?Q?0xVl6U0QA3BSttFG0yPF+FVl6Z+XZLArVxnlVdF3srMNfn6gvmwG+lwQHs?=
+ =?iso-8859-1?Q?1CUynWnGTasB87TPvV39dj2bjWlsTzICgVvwwDpo06ekgxshcpF2fIdLKs?=
+ =?iso-8859-1?Q?mVg2m1f4AAZPpxGwtO7aJZ/GaCgmb6bxxd/BjNjwHr0dzZZQcu2UUgjuPX?=
+ =?iso-8859-1?Q?EsPNlT0OzRV8kCGcIAww1PGiVV17F+PvjlWTuJZqNDW2tDb1GXcXwYhAL+?=
+ =?iso-8859-1?Q?Dk6o3jBWv8WqdCbCV3o5DgZ/6pL+8GldB+Q7qs6lgWeMmSK4kWjroKQ05E?=
+ =?iso-8859-1?Q?/hPh/vGvceaXbodHPCucwR9bKwCNCcYqzRAhy6RdKP7rfZV0ICv1xX6ghq?=
+ =?iso-8859-1?Q?/4Z14WXW3y3meRQ2wTw/5JtlQamzCpSNpNPOXbH7wsd3fTlxlZrRd7Bp+u?=
+ =?iso-8859-1?Q?mvgV3+5R5vQle0oNGyFSF12I8AgfLsn8f/Zy041ITEgbNQgtRNCuGHgztr?=
+ =?iso-8859-1?Q?xUnFTMls7ZU2T/o/ZaNixaabcSGiZR5U5l4cO/po9mM/TEWa6U5iKiOKEg?=
+ =?iso-8859-1?Q?53xBgIOaN9IZ0ZT8ff1xKD41EQ7J0iByMzo4FRTCt7H3sGO6MZPfACrRHl?=
+ =?iso-8859-1?Q?/aHdz4a2pIhQgveEOdfp7D+kNfwOJKw4Bg+bO6hjV5jq1bCuhcdOXo27H7?=
+ =?iso-8859-1?Q?EEoQ6eWX3iF57L/k7BgniYVIotRgDeV3bpkdwZHVxX81h8bEs7hnhGnWIj?=
+ =?iso-8859-1?Q?sL+PeKpUjYSDiAWHMWFTnBvqtqWOGLiREW4sIyh84uJsMntgnimzTuDkCg?=
+ =?iso-8859-1?Q?6HUGNBqhdP8GREq/gRYt62fhjJHA5aAejaVv3c/e95fSPb89nM882I+yrG?=
+ =?iso-8859-1?Q?FJYwajMLWHPPVlZMYC5MhD9ttoxA4vk+fiIzIH8fqmaeMsxEshSZ9g7CFP?=
+ =?iso-8859-1?Q?gWa+N9NkvYkMJJNXqneRfat/m2hd8YSdBpp9gv+u08QqaNerLiOv7tdCQ2?=
+ =?iso-8859-1?Q?rIQCGAYInqqUVKQTUfTXd3ryrWgpZDOqYZ?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a9a187b-6804-4a4d-74cc-08dd4a0aa174
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2025 19:39:27.6968
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xDbOgUH1H2xht5eGoiMgguOU8McRyV34gRLpnvirib3HBnmLpZiZdB0dythALSMWC8oYrbMuh8ZsBgeCGfR04w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8122
 
-Hi Manivannan
-
-On Mon, 10 Feb 2025 at 23:14, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+On Fri, Feb 07, 2025 at 10:30:22PM +0100, J. Neuschäfer via B4 Relay wrote:
+> From: "J. Neuschäfer" <j.ne@posteo.net>
 >
-> On Sat, Feb 08, 2025 at 07:31:08PM +0530, Anand Moon wrote:
-> > kmemleak reported following debug log
-> >
-> > $ sudo cat /sys/kernel/debug/kmemleak
-> > unreferenced object 0xffffffd6c47c2600 (size 128):
-> >   comm "kworker/u16:2", pid 38, jiffies 4294942263
-> >   hex dump (first 32 bytes):
-> >     cc 7c 5a 8d ff ff ff ff 40 b0 47 c8 d6 ff ff ff  .|Z.....@.G.....
-> >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> >   backtrace (crc 4f07ff07):
-> >     __create_object+0x2a/0xfc
-> >     kmemleak_alloc+0x38/0x98
-> >     __kmalloc_cache_noprof+0x296/0x444
-> >     request_threaded_irq+0x168/0x284
-> >     devm_request_threaded_irq+0xa8/0x13c
-> >     plda_init_interrupts+0x46e/0x858
-> >     plda_pcie_host_init+0x356/0x468
-> >     starfive_pcie_probe+0x2f6/0x398
-> >     platform_probe+0x106/0x150
-> >     really_probe+0x30e/0x746
-> >     __driver_probe_device+0x11c/0x2c2
-> >     driver_probe_device+0x5e/0x316
-> >     __device_attach_driver+0x296/0x3a4
-> >     bus_for_each_drv+0x1d0/0x260
-> >     __device_attach+0x1fa/0x2d6
-> >     device_initial_probe+0x14/0x28
-> > unreferenced object 0xffffffd6c47c2900 (size 128):
-> >   comm "kworker/u16:2", pid 38, jiffies 4294942281
-> >
-> > This patch addresses a kmemleak reported during StarFive PCIe driver
-> > initialization. The leak was observed with kmemleak reporting
-> > unreferenced objects related to IRQ handling. The backtrace pointed
-> > to the `request_threaded_irq` and related functions within the
-> > `plda_init_interrupts` path, indicating that some allocated memory
-> > related to IRQs was not being properly freed.
-> >
-> > The issue was that while the driver requested IRQs, it wasn't
-> > correctly handling the lifecycle of the associated resources.
+> The devicetree bindings for Freescale DMA engines have so far existed as
+> a text file. This patch converts them to YAML, and specifies all the
+> compatible strings currently in use in arch/powerpc/boot/dts.
 >
-> What resources?
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> ---
 >
-The Microchip PCIe host driver [1] handles  PCI, SEC, DEBUG, and LOCAL
-hardware events
-through a dedicated framework [2]. This framework allows the core driver [3=
-]
-to monitor and wait for these specific events.
-
-[1]: https://github.com/torvalds/linux/blob/master/drivers/pci/controller/p=
-lda/pcie-microchip-host.c#L90-L292
-[2]: https://github.com/torvalds/linux/blob/master/drivers/pci/controller/p=
-lda/pcie-microchip-host.c#L374-L499
-[3]: https://github.com/torvalds/linux/blob/master/drivers/pci/controller/p=
-lda/pcie-plda-host.c#L448-L466
-
-StarFive PCIe driver currently lacks the necessary `request_event_irq`
-implementation
-to integrate with this event-handling mechanism, which prevents the core dr=
-iver
-from properly responding to these events on StarFive platforms.
-
-static const struct plda_event mc_event =3D {
-.  request_event_irq =3D mc_request_event_irq,
-  .intx_event        =3D EVENT_LOCAL_PM_MSI_INT_INTX,
-  .msi_event         =3D EVENT_LOCAL_PM_MSI_INT_MSI,
-};
-
-This patch implements dummy `request_event_irq` for the StarFive PCIe drive=
-r,
-Since the core [3] driver is monitoring for these events
-
-> > This patch introduces an event IRQ handler and the necessary
-> > infrastructure to manage these IRQs, preventing the memory leak.
-> >
+> V2:
+> - remove unnecessary multiline markers
+> - fix additionalProperties to always be false
+> - add description/maxItems to interrupts
+> - add missing #address-cells/#size-cells properties
+> - convert "Note on DMA channel compatible properties" to YAML by listing
+>   fsl,ssi-dma-channel as a valid compatible value
+> - fix property ordering in examples: compatible and reg come first
+> - add missing newlines in examples
+> - trim subject line (remove "bindings")
+> ---
+>  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 140 ++++++++++++++
+>  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 123 +++++++++++++
+>  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 134 ++++++++++++++
+>  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
+>  4 files changed, 397 insertions(+), 204 deletions(-)
 >
-> These handles appear pointless to me. What purpose are they serving?
->
-Yes, you are correct, the core event monitoring framework [3] triggered a
-kernel memory leak. This patch adds a dummy IRQ callback as a
-placeholder for proper event handling, which can be implemented in a
-future patch.
+> diff --git a/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..3d8be9973fb98891a73cb701c1f983a63f444837
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/fsl,elo-dma.yaml
+> @@ -0,0 +1,140 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/fsl,elo-dma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale Elo DMA Controller
+> +
+> +maintainers:
+> +  - J. Neuschäfer <j.ne@posteo.net>
+> +
+> +description:
+> +  This is a little-endian 4-channel DMA controller, used in Freescale mpc83xx
+> +  series chips such as mpc8315, mpc8349, mpc8379 etc.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - fsl,mpc8313-dma
+> +          - fsl,mpc8315-dma
+> +          - fsl,mpc8323-dma
+> +          - fsl,mpc8347-dma
+> +          - fsl,mpc8349-dma
+> +          - fsl,mpc8360-dma
+> +          - fsl,mpc8377-dma
+> +          - fsl,mpc8378-dma
+> +          - fsl,mpc8379-dma
+> +      - const: fsl,elo-dma
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description:
+> +      DMA General Status Register, i.e. DGSR which contains status for
+> +      all the 4 DMA channels.
 
-> - Mani
->
-Thanks
--Anand
+needn't maxItems
+items:
+  - description: DMA ...
 
-> > Fixes: 647690479660 ("PCI: microchip: Add request_event_irq() callback =
-function")
-> > Cc: Minda Chen <minda.chen@starfivetech.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >  drivers/pci/controller/plda/pcie-starfive.c | 39 +++++++++++++++++++++
-> >  1 file changed, 39 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/plda/pcie-starfive.c b/drivers/pci/=
-controller/plda/pcie-starfive.c
-> > index e73c1b7bc8ef..a57177a8be8a 100644
-> > --- a/drivers/pci/controller/plda/pcie-starfive.c
-> > +++ b/drivers/pci/controller/plda/pcie-starfive.c
-> > @@ -381,7 +381,46 @@ static const struct plda_pcie_host_ops sf_host_ops=
- =3D {
-> >       .host_deinit =3D starfive_pcie_host_deinit,
-> >  };
-> >
-> > +/* IRQ handler for PCIe events */
-> > +static irqreturn_t starfive_event_handler(int irq, void *dev_id)
-> > +{
-> > +     struct plda_pcie_rp *port =3D dev_id;
-> > +     struct irq_data *data;
-> > +
-> > +     /* Retrieve IRQ data */
-> > +     data =3D irq_domain_get_irq_data(port->event_domain, irq);
-> > +
-> > +     if (data) {
-> > +             dev_err_ratelimited(port->dev, "Event IRQ %ld triggered\n=
-",
-> > +                                 data->hwirq);
-> > +     } else {
-> > +             dev_err_ratelimited(port->dev, "Invalid event IRQ %d\n", =
-irq);
-> > +     }
-> > +
-> > +     return IRQ_HANDLED;
-> > +}
-> > +
-> > +/* Request an IRQ for a specific event */
-> > +static int starfive_request_event_irq(struct plda_pcie_rp *plda, int e=
-vent_irq,
-> > +                                   int event)
-> > +{
-> > +     int ret;
-> > +
-> > +     /* Request the IRQ and associate it with the handler */
-> > +     ret =3D devm_request_irq(plda->dev, event_irq, starfive_event_han=
-dler,
-> > +                            IRQF_SHARED, "starfivepcie", plda);
-> > +
-> > +     if (ret) {
-> > +             dev_err(plda->dev, "Failed to request IRQ %d: %d\n", even=
-t_irq,
-> > +                     ret);
-> > +             return ret;
-> > +     }
-> > +
-> > +     return ret;
-> > +}
-> > +
-> >  static const struct plda_event stf_pcie_event =3D {
-> > +     .request_event_irq =3D starfive_request_event_irq,
-> >       .intx_event =3D EVENT_PM_MSI_INT_INTX,
-> >       .msi_event  =3D EVENT_PM_MSI_INT_MSI
-> >  };
-> >
-> > base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
-> > --
-> > 2.48.1
-> >
->
+> +
+> +  cell-index:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Controller index. 0 for controller @ 0x8100.
+> +
+> +  ranges: true
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: Controller interrupt.
+
+Needn't description because no any additional informaiton.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +patternProperties:
+> +  "^dma-channel@.*$":
+> +    type: object
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      compatible:
+> +        oneOf:
+> +          # native DMA channel
+> +          - items:
+> +              - enum:
+> +                  - fsl,mpc8315-dma-channel
+> +                  - fsl,mpc8323-dma-channel
+> +                  - fsl,mpc8347-dma-channel
+> +                  - fsl,mpc8349-dma-channel
+> +                  - fsl,mpc8360-dma-channel
+> +                  - fsl,mpc8377-dma-channel
+> +                  - fsl,mpc8378-dma-channel
+> +                  - fsl,mpc8379-dma-channel
+> +              - const: fsl,elo-dma-channel
+> +
+> +          # audio DMA channel, see fsl,ssi.yaml
+> +          - const: fsl,ssi-dma-channel
+> +
+> +      reg:
+> +        maxItems: 1
+> +
+> +      cell-index:
+> +        description: DMA channel index starts at 0.
+> +
+> +      interrupts:
+> +        maxItems: 1
+> +        description:
+> +          Per-channel interrupt. Only necessary if no controller interrupt has
+> +          been provided.
+> +
+> +additionalProperties: false
+
+Need ref to dma-common.yaml?
+
+> +
+> +examples:
+> +  - |
+> +    dma@82a8 {
+> +        compatible = "fsl,mpc8349-dma", "fsl,elo-dma";
+> +        reg = <0x82a8 4>;
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +        ranges = <0 0x8100 0x1a4>;
+> +        interrupt-parent = <&ipic>;
+> +        interrupts = <71 8>;
+> +        cell-index = <0>;
+> +
+> +        dma-channel@0 {
+> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+> +            reg = <0 0x80>;
+> +            cell-index = <0>;
+> +            interrupt-parent = <&ipic>;
+> +            interrupts = <71 8>;
+
+'8',  use predefine MACRO for irq type.
+
+Frank
+
+> +        };
+> +
+> +        dma-channel@80 {
+> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+> +            reg = <0x80 0x80>;
+> +            cell-index = <1>;
+> +            interrupt-parent = <&ipic>;
+> +            interrupts = <71 8>;
+> +        };
+> +
+> +        dma-channel@100 {
+> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+> +            reg = <0x100 0x80>;
+> +            cell-index = <2>;
+> +            interrupt-parent = <&ipic>;
+> +            interrupts = <71 8>;
+> +        };
+> +
+> +        dma-channel@180 {
+> +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+> +            reg = <0x180 0x80>;
+> +            cell-index = <3>;
+> +            interrupt-parent = <&ipic>;
+> +            interrupts = <71 8>;
+> +        };
+> +    };
+> +
+
+...
+
 > --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+> 2.48.0.rc1.219.gb6b6757d772
+>
+>
 
