@@ -1,134 +1,121 @@
-Return-Path: <linux-pci+bounces-21092-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21093-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D781A2F310
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 17:20:13 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D242A2F38F
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 17:31:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB81C163886
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 16:20:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0719F16558B
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 16:31:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37CD12580E0;
-	Mon, 10 Feb 2025 16:20:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 626131C5D7C;
+	Mon, 10 Feb 2025 16:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9PX+r4/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOVT2n8I"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B022580C8;
-	Mon, 10 Feb 2025 16:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F0F2580D6;
+	Mon, 10 Feb 2025 16:30:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739204407; cv=none; b=iV64aRtO/wcuMhYRDqVX1qrDa3odZhAhBFj1KdAtuuGLJwiQOaKx7Wl79s0oIGd7bd5Sm5E+Q4CG4API6rMQFnqa7/s5qt349ksd9sPO/oWp2YdFlcyabo0xql5XMJljdtAtfk+cXUULTUCAgU8RLPJ3yc7x2AVjyzg4S50FCMk=
+	t=1739205048; cv=none; b=Qc069ibELeA5kr7QMRLLivpaKXMdkDt6zy53a5gUyEPNI9fh6ztMPmdaBD2N4b5X1sSN8KmaesdMAZ4/lw1/Vkkjzvy7YtKGI3WZ3xP3P3CNCm9AyCY0w3WUyfgdq3tMYDBKkBsfuUEjWp4gwg4AEzYKBEA7Cq4jWokv3GVK3Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739204407; c=relaxed/simple;
-	bh=NWngG/kFcyT8WtXP/QQ25Wit1MvMYs4YLqlxYuAuRm0=;
+	s=arc-20240116; t=1739205048; c=relaxed/simple;
+	bh=z+1Kq60tzkMsngBcFA1I3F53of+lTcYmSG8z/d3l6Sg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DSOdNIl7mE6U9IIIlPyn0s47K2PxshHJ2OvASIOr5pF8r692UZD5d3UjUS/y3tRF2R9JEUTVO80OvCkNFgHH3HGIe6MmQ1x0b+Cxd1Rba9aBz2xu/1M/FZ2YEWnny4ZpLMAR/kVqXxK5zS2C7ODhfU6CDizINcfgmsS1fxWeCcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O9PX+r4/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74E92C4CED1;
-	Mon, 10 Feb 2025 16:19:59 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=ogAA2TCigawSHsdVLiSI/B59wemvcGj/mbHD7Wf9B6HLnZb2OOrfK6yvs14+hRfgheGebEjvv8ORISNef9GYssS4xkLulDeQMdAJbLgLRC46IHFn2U1d02Ag4EvEeyO1UqlRbCp1D+jYs/VWtwIijY0zOurpzwlHEWlD4KXL53M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOVT2n8I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75E6AC4CEDF;
+	Mon, 10 Feb 2025 16:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739204406;
-	bh=NWngG/kFcyT8WtXP/QQ25Wit1MvMYs4YLqlxYuAuRm0=;
+	s=k20201202; t=1739205047;
+	bh=z+1Kq60tzkMsngBcFA1I3F53of+lTcYmSG8z/d3l6Sg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O9PX+r4//9gugSEWU7m1K8ZM3qhMdimRiJbSiYe86/w+9bR4X4/MhCjFvOn6jCtWl
-	 vB28xXU/PEd8OdGhiVaNzDs/FBXWoLFRH4kptOE8xbXpq2qGI6a1OOZVnXI0ym83jq
-	 LnGs4AcqzboBOb0532JVxtDrX12IZ6wn//naY2MVFJBPlNYsR41f8I13OeonC84QCk
-	 69CbLAibibKHMCZuy3S8PjUceMx28EdXjIP8T0trrzPnKbKuzKWElzT2zR5LGP78Nt
-	 r0Zexk9OTbCG39S9//bUNzD+y+hVdVaV0KhwIcQGWehOvV4XsKy2wNZZpg0KLnYd2E
-	 5bjdCF+rvXDcw==
-Date: Mon, 10 Feb 2025 16:19:56 +0000
-From: Mark Brown <broonie@kernel.org>
-To: =?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.ne@posteo.net>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
-	Scott Wood <oss@buserror.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
+	b=eOVT2n8IUIHT6BoMqW3rMtlZriffRLGo4r9pyBNpQO+CoyWL0bTNGdvV34FwaMxTj
+	 8qe+enyeWOQbtYXlar8wl1UEzemKHyZ4avrGbedVatNmVlw6aT8vWFmyEYKI+X+8eX
+	 eB7uytdL1rkqEMUWatRzVzJODlLz5dNefzKu6QWpSTcuxg84wd5Qxpj7XVks8YEX6v
+	 WjkXvTPZGL8hZP6yAr0nyxO9OZIwhyNdobClOaVIQp0QrpiFhS+il5GDqBVCG8HhUT
+	 tZcoxcy6qi3/UOmkD2IgDonuZmfXzUbZNNXg6QDEB6RPGZa3qLH0osWvakOrdLip++
+	 YUZ3aehpXW7Tg==
+Date: Mon, 10 Feb 2025 17:30:42 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 00/12] YAML conversion of several Freescale/PowerPC DT
- bindings
-Message-ID: <8087f0dc-8c79-48a2-abf4-f78636c23be6@sirena.org.uk>
-References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
- <611e47da-ba87-4c21-a6b7-cf051dc88158@sirena.org.uk>
- <Z6a_f03Ct9aB7Bbn@probook>
- <0fe3416c-c3f3-44c4-a1c0-7e8262c54d4b@sirena.org.uk>
- <Z6oh9t2QQzz17Yt6@probook>
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] misc: pci_endpoint_test: Remove global irq_type
+Message-ID: <Z6opssGJ91MVWgRC@ryzen>
+References: <20250210075812.3900646-1-hayashi.kunihiko@socionext.com>
+ <20250210075812.3900646-5-hayashi.kunihiko@socionext.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dFkCMkVIcP+mIwAz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z6oh9t2QQzz17Yt6@probook>
-X-Cookie: A beer delayed is a beer denied.
+In-Reply-To: <20250210075812.3900646-5-hayashi.kunihiko@socionext.com>
+
+On Mon, Feb 10, 2025 at 04:58:11PM +0900, Kunihiko Hayashi wrote:
+> The global variable "irq_type" preserves the current value of
+> ioctl(GET_IRQTYPE), however, it's enough to use test->irq_type.
+> Remove the variable, and replace with test->irq_type.
+
+I think the commit message is missing the biggest point.
+
+ioctl(SET_IRQTYPE) sets test->irq_type.
+PCITEST_WRITE/PCITEST_READ/PCITEST_COPY all use test->irq_type when
+writing the PCI_ENDPOINT_TEST_IRQ_TYPE register in test_reg_bar.
+
+The endpoint function driver (pci-epf-test) will look at
+PCI_ENDPOINT_TEST_IRQ_TYPE register in test_reg_bar when determining
+which type of IRQ it should raise.
+
+This means that the kernel module parameter is basically useless,
+since it is unused if anyone has called ioctl(SET_IRQTYPE).
+
+Both the old pcitest.sh and the new pci_endpoint_test kselftest call
+ioctl(SET_IRQTYPE), so in practice the irq_type kernel module parameter
+is dead code.
 
 
---dFkCMkVIcP+mIwAz
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> The ioctl(GET_IRQTYPE) returns an error if test->irq_type has
+> IRQ_TYPE_UNDEFINED.
+> 
+> Suggested-by: Niklas Cassel <cassel@kernel.org>
+> Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/misc/pci_endpoint_test.c | 13 ++++---------
+>  1 file changed, 4 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index 6a0972e7674f..8d98cd18634d 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -100,10 +100,6 @@ static bool no_msi;
+>  module_param(no_msi, bool, 0444);
+>  MODULE_PARM_DESC(no_msi, "Disable MSI interrupt in pci_endpoint_test");
 
-On Mon, Feb 10, 2025 at 03:57:42PM +0000, J. Neusch=E4fer wrote:
-> On Mon, Feb 10, 2025 at 12:59:35PM +0000, Mark Brown wrote:
+Considering that you are removing the irq_type kernel module parameter,
+it doesn't make sense to keep the no_msi kernel module parameter IMO.
 
-> > Please don't do this, it just makes it harder to merge things since it
-> > makes it look like there's cross tree merges needed when that's not the
-> > case, complicating merging, and puts the entire series in everyone's
-> > inbox which makes things more noisy.
+The exact same argument for why we are removing irq_type, can be made for
+no_msi.
 
-> How should I proceed with this series, in your opinion?
-> I see potential advantages (less of the issues you describe) and
-> disadvantages (somewhat harder to track patches) of splitting it up
-> before sending v3.
 
-I'd rather that at least the SPI stuff were sent separately (well,
-ideally what you've done already is fine and it doesn't need a resend at
-all).
-
---dFkCMkVIcP+mIwAz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmeqJysACgkQJNaLcl1U
-h9DNKQf/fZPJSroWubfTO8FLkUiOu5OAUNqM92OSlaM82yLjpcppqTwDH2c/TMS7
-uzik6Kqwe9iL95z0VpO/SEQh2gEiVVotP2LwUfc0VHm6Mj0CYUhJVu5CFspP2PTu
-H7A2qsXCPw2ASwOg8ZA+oH0PpNAI2mBdDeb7Dii4r186WNPit5Xunpx8I+9DoEyr
-Zr6lOUeCFVfJVy6oNc7ZCQUhRljOVtlyRzPVMTpsyaMzgT22K+F+CHvQR/XatQQF
-/2ywiEFKi5u2DSNtEgro0CF6bJ4U/ZtRMGcnEq9r6RmhpAINqFJhS0dysaqOIJfS
-37TAqV/OvijdnS0RGY+GC+jyvnaoJA==
-=DC91
------END PGP SIGNATURE-----
-
---dFkCMkVIcP+mIwAz--
+Kind regards,
+Niklas
 
