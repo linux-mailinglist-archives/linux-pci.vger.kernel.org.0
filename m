@@ -1,66 +1,54 @@
-Return-Path: <linux-pci+bounces-21130-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21131-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1732BA2FDD9
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 23:54:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FA76A2FE1D
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 00:03:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DABA83A5035
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 22:54:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0E923A4A1C
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 23:03:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3953925A2BB;
-	Mon, 10 Feb 2025 22:54:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530D2253F17;
+	Mon, 10 Feb 2025 23:03:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GyRI67Ln"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sf80Nv9r"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0994F2586DC;
-	Mon, 10 Feb 2025 22:54:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26BF81B85FD;
+	Mon, 10 Feb 2025 23:03:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739228074; cv=none; b=UtH7OZYz5hZTUGToFnQgSvanad8NKM7oHyFviUZl9raMw4B3T0aZcJ7uiQ/Oa0QdDHk9IH9I+BMXgW3F11a6RavAin9siPMOMGuz8RjNUF8PzviJfA30B2n0gBY7jJh/rnuUT9yHDuAqoi8+s7XollRlzTBQwM8/Na8JcNEKhxc=
+	t=1739228609; cv=none; b=utcb+4+5a0r1wauAsGBwU2qY3cXm+KM6eTcDcqG6n9S1udlRbNkIiAg4zk2xpBjaF5TIgydAO6NiR8sj1/9Ex2JjwagK8SmzD/mAIWCFjfRuLqOe5Oxn3ip2GCok8HrkysEhhoQ5UqcYrL5OK5Pwn8PzMPv6wXnYdGRWrcDh3XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739228074; c=relaxed/simple;
-	bh=Q8RgZGfu6/4fLSoxxxA7fP+5VfBEWk/q/XN4oDjBeUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=pTuUAAJN7Z/Dg1baItVaDyhrETIpLNLLJrUAzw5ecZ5cEcXNT9FKmcdkowxDKWfr2AcIWCcDDEus+us72fBfzZy3ln/PxLeqI7sJXy8dLQhNNX6tLkxp/WVt21Jj93b37AkU+D634aF1stqjgUe+a92KdLjkUKg5+VmlexoItV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GyRI67Ln; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40726C4CED1;
-	Mon, 10 Feb 2025 22:54:33 +0000 (UTC)
+	s=arc-20240116; t=1739228609; c=relaxed/simple;
+	bh=6UlHl/0c8/etRCnPbCWlR9BLr2AyA3Da//0TswrwiLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bWOSzOvf46LDwdk8d2sR81fst7PgBLwPE24GIboiweh1DIIZ+oZZai9fD5wqVaM5fqySGkjFJGIM5hkZj6MQY8D0lSLeQbvGZurIwhnpGTBFAsORmSMT27DRtL2qD4I7maosXCOplwS1smuSg44KKteY6qiFXsB/qAqMQXcrroI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sf80Nv9r; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B7D6C4CED1;
+	Mon, 10 Feb 2025 23:03:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739228073;
-	bh=Q8RgZGfu6/4fLSoxxxA7fP+5VfBEWk/q/XN4oDjBeUM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=GyRI67Ln2Dzs/4iqHaa2+qLV2lwLd+ycNlXoprGS2D7x75zoWVqAZINFrL2cUxuLJ
-	 0uMH2SEcWV1rIPBLg+6dUi/i1rPfqIbTuolR2qrxzih7nGDXXsV/1EsMwbA3wp2q3U
-	 IdRIRBqzE96rklMThPyc3h73wun7BOrqcQZjPVbAJyPbrhgDL2YIunKdQ+hC9ji44c
-	 QwKJMB6JuXurHcu4JeNKX1gMEIs4zMxC7EGW6vuWHkYCMRkG/7oXdxyyo5ZoxHQxpH
-	 ZXylddAQVs1Z7PhAEH+xS9h+Lu82wJBw8FAj32bpNpD5yL5k7Fq4kAyeNUk5pLafQN
-	 h455LvLZsRCwg==
-Date: Mon, 10 Feb 2025 16:54:31 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: cros-qcom-dts-watchers@chromium.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com,
-	quic_mrana@quicinc.com, quic_vpernami@quicinc.com,
-	mmareddy@quicinc.com
-Subject: Re: [PATCH v4 4/4] PCI: qcom: Enable ECAM feature
-Message-ID: <20250210225431.GA21989@bhelgaas>
+	s=k20201202; t=1739228608;
+	bh=6UlHl/0c8/etRCnPbCWlR9BLr2AyA3Da//0TswrwiLs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sf80Nv9rIs+QV+kwhZ/0tZ1N8O2ybpQcJCEzAMrFpsI8IN3A+ulA8hj0f2yXWvD7b
+	 6iS5Mh11Zf/wCMJgfop+7F+xVhFsf8zbix5//5nsSz+ZrLIg6QhDFpgq1ySwDTRt3Q
+	 NQO0Db1LGOiid5ZD46VXcHBSRzLl3N9L+X0BQcUI2vPKRk4APik5Nit8Kmeaj5EuR+
+	 wZLIZMJDIoTK8N+3ZNFm+G+bbVksmYL3yz35nTXWI0ZEeqaptqQPGDIcnHwGJIrkRh
+	 k9Cg5bakgi/35Rsid7dg7RvBFwpxWrVuLi4JcSEGJTLvINTjqJtSWpfyCtzyiNA9pn
+	 5zl5L3FrtJh3w==
+Date: Mon, 10 Feb 2025 16:03:26 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Purva Yeshi <purvayeshi550@gmail.com>
+Cc: bhelgaas@google.com, skhan@linuxfoundation.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: pci: Fix flexible array usage
+Message-ID: <Z6qFvrf1gsZGSIGo@kbusch-mbp>
+References: <20250210132740.20068-1-purvayeshi550@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,27 +57,38 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207-ecam_v4-v4-4-94b5d5ec5017@oss.qualcomm.com>
+In-Reply-To: <20250210132740.20068-1-purvayeshi550@gmail.com>
 
-On Fri, Feb 07, 2025 at 04:58:59AM +0530, Krishna Chaitanya Chundru wrote:
-> The ELBI registers falls after the DBI space, PARF_SLV_DBI_ELBI register
-> gives us the offset from which ELBI starts. so use this offset and cfg
-> win to map these regions instead of doing the ioremap again.
+On Mon, Feb 10, 2025 at 06:57:40PM +0530, Purva Yeshi wrote:
+> Fix warning detected by smatch tool:
+> Array of flexible structure occurs in 'pci_saved_state' struct
+> 
+> The warning occurs because struct pci_saved_state contains struct
+> pci_cap_saved_data cap[], where cap[] has a flexible array member (data[]).
+> Arrays of structures with flexible members are not allowed, leading to this
+> warning.
+> 
+> Replaced cap[] with a pointer (*cap), allowing dynamic memory allocation
+> instead of embedding an invalid array of flexible structures.
+> 
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> ---
+>  drivers/pci/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 869d204a7..648a080ef 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1929,7 +1929,7 @@ EXPORT_SYMBOL(pci_restore_state);
+>  
+>  struct pci_saved_state {
+>  	u32 config_space[16];
+> -	struct pci_cap_saved_data cap[];
+> +	struct pci_cap_saved_data *cap;
+>  };
 
-> +	/* Set the ECAM base */
-> +	writel_relaxed(lower_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE);
-> +	writel_relaxed(upper_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE_HI);
-> +
-> +	/*
-> +	 * The only device on root bus is the Root Port. Any access other than that
-> +	 * should not go out of the link and should return all F's. Since the iATU
-> +	 * is configured for the buses which starts after root bus, block the transactions
-> +	 * starting from function 1 of the root bus to the end of the root bus (i.e from
-> +	 * dbi_base + 4kb to dbi_base + 1MB) from going outside the link.
-
-99% of this file fits in 80 columns.  Wrap comments to do the same.
-
-The text doesn't quite make sense because accesses to devices on the
-root bus *never* involve a link.  Only Root Ports have links and the
-links all lead to buses other than the root bus.
+I don't think this is right. Previously the space for "cap" was
+allocated at the end of the pci_saved_state, but now it's just an
+uninitialized pointer.
 
