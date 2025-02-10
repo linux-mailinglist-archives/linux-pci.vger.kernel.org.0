@@ -1,128 +1,103 @@
-Return-Path: <linux-pci+bounces-21107-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21108-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5110A2F7A6
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 19:45:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 228F7A2F7F0
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 19:52:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 619671889E5F
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 18:45:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EDE293A26FF
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 18:51:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0209D257AD0;
-	Mon, 10 Feb 2025 18:44:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7BBB25E455;
+	Mon, 10 Feb 2025 18:51:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Qy5FLFnL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dmod7NZH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C9D257AEB
-	for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 18:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB5B25E452;
+	Mon, 10 Feb 2025 18:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739213044; cv=none; b=AVNSQXuSgen8vWkw99YNCYtorv0mbu89Zohk+YO7LYDhyAgr7u/QGKsQkV2lvYj9I7pTJUeWnSiMFv1DFMHFy6aNCECKSqwzCM1VOLgEqEuQ66Dj/JYJ72ie8SEcd/LAqmBBAUJ02BL8gncGhWWSEl8Ex43Sj3vQpAkaxvwehEM=
+	t=1739213478; cv=none; b=h0yBIbegZcWMWdLf1oBqO+fW69VezfUUoRNH+Th9Gqdb0Cb7Ge235UFMfv5JZkiGiT2pHU1T+gHlActGFzXS+6v598VMd9b//7nb+AAJ76xRsV4V65U2A53B4A4hGehWTOsbu1hdeCdYvurvw7udJlg8K43HH/xemhs8ClCzh7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739213044; c=relaxed/simple;
-	bh=g+RLLz/xLn8yq3bJBjBR4VvexLtC/q9+LhWR2+/8h0g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FkqoaaVsjMtoIMRKcLwLMQIYRX1dcZwY4Nxjo3xjVBUjIBsQJOX5vIpWzfF/bs5vXmmIUm273SNSrCvYpn94Z9OIjXDpeNfmwIC77zwCpl7ZS7NJBSoIenEv8q9+Yn7gPoIrVePidXtPKAFCUG6kOtvst2qBBfXMnlovnhyvOmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Qy5FLFnL; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6dd0d09215aso36645676d6.2
-        for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 10:44:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1739213040; x=1739817840; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mKqmSL2H/APhjIZ2w+BTA5IvzYblxi2A05dvCygiAwA=;
-        b=Qy5FLFnLjh32XI1zhzBCAjmSj/G5+YjKBZtlgsqxR6DVQYTLKlOB55yhBl42YjN9AV
-         Qk4tvo9s4UxLngjTQRR5vMIrBuuV9Q/mpQbWBemdu1FHjyDyWFZmlbQJjnWy2k91Kdw0
-         lZi6ysDQSmjAaFzcOWHXZdkYUdj1Idm4vwnTf+3rtVCM8biyT2NaqogR1pVEMf+7ERbK
-         jVNJ04yacpJJ7PFFSZgGIweFYlWf6bp4TqWBldtlqjC7x08FXMgS60imNiQ0h47TP6FN
-         pV8eiaPwtcr+sQ5kyYG1euniON+TOAOxZS48wuElJbRlIfc7oekjUDW68kJIXuXgMYA2
-         Z9Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739213040; x=1739817840;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mKqmSL2H/APhjIZ2w+BTA5IvzYblxi2A05dvCygiAwA=;
-        b=rlRLKqnzvHniaMyazKFNznYmfftz1x84/00QaZZTJhwZYatPJ/JOfBtCCT0+en3JE3
-         /421mdpkk5K3nfDeZuQZphsncRFQOYRT78VTkUoXXvHsPPNBX3ybVzwKEXfEY7CPqV0c
-         zWLsmCGOY2jD4OX3HhobsBQzkGhTpWxxtORYArwIX/dXOIwt5NnIUhL7TgURPeq9Jn2a
-         rEEidd6uD1wh7AaPs0Am1HW2TCnvvah/GwKWRa7z1Wb4GLpMNgYtfjTj+xWQ3jL8GFeZ
-         i6sppskDy87o5ZuLwB8RoZUSVr1H4Fbs9IbRI6Q3oYbUOEs41d0zZ8ETJx2uMOeWH9a6
-         VAow==
-X-Forwarded-Encrypted: i=1; AJvYcCX+/uBiwGo1wC2+UjDN7w0wnuT2Iqwmxcw/ppQKbIGg52NnsPz0MSXWW/kNA/jn+Nx2jO6ZZu6571s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSPYVKv7eBOU8DDaxH7nRw7SEMiMGTy8L5ffSBBvQ5ZAbg6Exi
-	zpSSZx+a+7ypB3QgPZN62XqJqKHqkxapGEF+K44qCGASE+cnNjLrMeylCKzx7BQ=
-X-Gm-Gg: ASbGncsdE9lgqcrc3R3oA3fMgmJYhR1cB34devIlWNMU/BTVYaCzqXmaKxS6mN9mpoo
-	sCiK2FwBxeGoDE4McF1l+2OmsdjvaH2I7mejRoXcUN/V6OaRh5Ii6MzsCb20a0fSzV6KGjlGpM3
-	urdpSPpSgn6Jx4TjSn+gscmdl07dAoPI3CIzSwd0phyWYHchwpXI49AuX9GA8foIcvuJgUAxT8b
-	wekGhjEXlQbTL9zfnHiCeOC2DqfF3OafNYRx5bzdS6+IPxTorn9KT+0Yqdn3ICeSstnLR6Oi3Yr
-	iZyE8M5TpUZYvjLXXAGnmmsKiS2YNr3rD9QJXPw4+6v2bn3Es7m3VnOim04tgCzMyxBeGBPEBA=
-	=
-X-Google-Smtp-Source: AGHT+IGPN0vUu+9xImUv/0T7AL/p7HAa65vynZmWp2hLCNl+jzDCkk1rpyc+ciMt5y0usbsQ2BCrTA==
-X-Received: by 2002:a05:6214:21a1:b0:6d4:215d:91b9 with SMTP id 6a1803df08f44-6e4455e6ed1mr222298246d6.11.1739213040662;
-        Mon, 10 Feb 2025 10:44:00 -0800 (PST)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e43dd7818esm47643626d6.68.2025.02.10.10.43.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 10:44:00 -0800 (PST)
-Date: Mon, 10 Feb 2025 13:43:58 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
-	ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
-	rrichter@amd.com, nathan.fontenot@amd.com,
-	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
-	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
-Subject: Re: [PATCH v6 06/17] PCI/AER: Add CXL PCIe Port uncorrectable error
- recovery in AER service driver
-Message-ID: <Z6pI7oGXYyoecJzG@gourry-fedora-PF4VCD3F>
-References: <20250208002941.4135321-1-terry.bowman@amd.com>
- <20250208002941.4135321-7-terry.bowman@amd.com>
+	s=arc-20240116; t=1739213478; c=relaxed/simple;
+	bh=vKwUfzZZsVXH9hNtIlfjBh7hnT/kWSNPj917d5FaKno=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KNjux0K94ZrIy0Fgz1gls2wuRIP6Acy5znjNEqloI0F0IQA53pSmF7V0VlVDEeeDdAXcW49M7/9SCGwqn67HpSW7FGA1xzWWwOkyceg/4aVt3vS7pAqJbQuc+jRi/2jeFX6AuyMcs2SY/8NCnb2K59HAqeSDIWl6J2y1DxQ0huQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dmod7NZH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1329DC4CED1;
+	Mon, 10 Feb 2025 18:51:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739213478;
+	bh=vKwUfzZZsVXH9hNtIlfjBh7hnT/kWSNPj917d5FaKno=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dmod7NZHfmfXTYzQIYatAogcnlZKKzsEeQBK4AEqk2acknQ4ljDVIrMqKASskdH1L
+	 04xbMAt+cACW3e5XakoZ8v8ZPtuWCVLwH0Oyh3w+M7gemcMSypUnKw+B7yB7Znd+ii
+	 NuUk5zIRd3w9dKfvQB8XhIqCZylJHmQOmI9dZWEwnsxu9azb7g5CBdKi7BdYW84cm8
+	 BOif943ltYn+XVIWvkW3CvUiuV3ZimWNMxs71u+Z23d472w9f8Htu+pJnAnPhYS4rt
+	 UJ0wZKIN5tnPEOqj8j9yumLNLtpRdLQ0xT38I9RFZtkJWcIdBQ5Mxyu0/YbE5gCqlf
+	 5gKhOLo/M61Qw==
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3f3ac0f24ddso996856b6e.0;
+        Mon, 10 Feb 2025 10:51:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX41+hlHPWMTzU4YvlSWo4dXy0v+yLIPzSmFWFi+FkEnLo2bZsnNN/9KMGT0mPVBfUH4hQAo2+YOA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzv0QLFIZNkFBi6q67tdku0st2II2Jz9DI1oT3aMJ1nTqo9jDxa
+	XA5qrRxWEC3brTcfH6jlDvT6SfO5BJ14n2rlxAlby62UquUKOgDbShiynI+RxE9vcgrkvwN/tId
+	PTnOW7h0fyUgvFa4Q1jCpXP/D3q0=
+X-Google-Smtp-Source: AGHT+IHDdIHyYy8iVGVh+78ne5N+j0fzXD18WmH+kELAzrN2cmKB86xmsmBvCW/rDiJE710r9yfqE4OHgILKSmSOdvU=
+X-Received: by 2002:a05:6808:1a1e:b0:3f3:b153:c231 with SMTP id
+ 5614622812f47-3f3c2ae0cf6mr307977b6e.17.1739213477364; Mon, 10 Feb 2025
+ 10:51:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250208002941.4135321-7-terry.bowman@amd.com>
+References: <20250210170715.GA8877@bhelgaas> <CAJZ5v0gN=Go7kg=hhEDCpOhbw7H0hQYow_TW7G1wZRXs4jAkVA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gN=Go7kg=hhEDCpOhbw7H0hQYow_TW7G1wZRXs4jAkVA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 10 Feb 2025 19:51:06 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0jQT=hTi0RS4W34QX3ZXFBByTj+neX6wZ3Gt+pvc0B_7Q@mail.gmail.com>
+X-Gm-Features: AWEUYZkpAJqJHVu3JirqxqHqL3_ke29U4SjGZSz9zG4DaAImeLZ5RRoG0pn0YmQ
+Message-ID: <CAJZ5v0jQT=hTi0RS4W34QX3ZXFBByTj+neX6wZ3Gt+pvc0B_7Q@mail.gmail.com>
+Subject: Re: [bugzilla-daemon@kernel.org: [Bug 219765] New: Regression: VFIO
+ NVIDIA GPU Passthrough Fails in Linux 6.13.0 (GPU Reset & Audio Controller Disappears)]
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, Alex Williamson <alex.williamson@redhat.com>, 
+	linux-pm@vger.kernel.org, regressions@leemhuis.info
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 07, 2025 at 06:29:30PM -0600, Terry Bowman wrote:
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index a5c65f79db18..eda532f7440c 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -661,10 +661,16 @@ static void __cxl_handle_cor_ras(struct cxl_dev_state *cxlds,
->  
->  	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
->  	status = readl(addr);
-> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> -		trace_cxl_aer_correctable_error(cxlds->cxlmd, status);
-> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK)) {
-> +		dev_err(cxl_dev, "%s():%d: CE Status is empty\n", __func__, __LINE__);
-> +		return;
->  	}
-> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> +
-> +	if (is_cxl_memdev(cxl_dev))
-> +		trace_cxl_aer_correctable_error(to_cxl_memdev(cxl_dev), status);
-> +	else if (is_cxl_port(cxl_dev))
-> +		trace_cxl_port_aer_correctable_error(cxl_dev, pcie_dev, status);
-                                                              ^^^^^^^^
-Parameter isn't added until patch 14 - causes a build error.
+On Mon, Feb 10, 2025 at 6:33=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+>
+> On Mon, Feb 10, 2025 at 6:07=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org=
+> wrote:
+> >
+> > #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D219765
+> >
+> > I don't see an obvious culprit between v6.12 and v6.13, suggested
+> > bisection if possible.
+> >
+> > Workaround: boot with pcie_port_pm=3Doff
+> >
+> > Given the workaround, maybe it's worth trying a revert of this:
+> >
+> >   dc421bb3c0db ("PCI: Enable runtime PM of the host bridge")
+>
+> I would ask the reporter to revert it and see if that helps.
+>
+> The
+>
+> vfio-pci 0000:01:00.1: Unable to change power state from D0 to D3hot,
+> device inaccessible
+>
+> message in the failing case is kind of unexpected.
 
-~Gregory
+And this message is unlikely to be related to commit dc421bb3c0db
+because it indicates a failure to change device power states.
 
