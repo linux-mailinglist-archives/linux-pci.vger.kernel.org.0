@@ -1,87 +1,125 @@
-Return-Path: <linux-pci+bounces-21089-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21090-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0EEEA2F1C6
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 16:32:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FD75A2F24F
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 16:58:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 567921611A0
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 15:32:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8EC1E3A0314
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 15:57:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC45623BF84;
-	Mon, 10 Feb 2025 15:32:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A321244E8A;
+	Mon, 10 Feb 2025 15:57:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aXyO3kbX"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="XJ32rxft"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B689623AE8E
-	for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 15:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE44244195
+	for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 15:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739201525; cv=none; b=QfHI6CYlpcfda4fq5ZlNvOK/cV3Vx4A8ru+Pj07YW3Qmr1wGNDatQ2kFmjgtJv/TjaJfXU8VtT4tPDsJJUn+/eCQpegRScICW6hYgQpVxX0SiIWXlsWyNCDm1LKvFtrxGKBMS9MSFevaRkBBynduNVsakh8ftTpWtZZhKY7FCPE=
+	t=1739203073; cv=none; b=nWAk7pZ0GA8wKd/+8MjS/1nRzQq9nN46k3JRkzIe3z666ngdOmIav50Wk8RDm3fz1bb1trukmWOgZ1qfiu7CpK0AWIadeLQSgxfKAjIaoQxjYyflGjHb2Ad3hmt4Zoh22TUdiCoc+AbNgBF8XlblvtDfd9oAFUSmS8MOb4cnYLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739201525; c=relaxed/simple;
-	bh=J1txiC+7XGCUcKNAIj9Ckq31hPjHma/hMYcKlWTKvbU=;
+	s=arc-20240116; t=1739203073; c=relaxed/simple;
+	bh=lQ9xjXE4fQ5E3R9uQe1RdCFTA3rQo7TSFCMdjBUTzJk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MY0BCpyh5PVjuxn12vRWLfdGfvilihuhpnfCRRnFAwax1icuBg4qxQMWFwKPxOnkyUTkgO+23h52WFdP2TD1uH310EooMGG2wB9gd4qrgO21s9D8AXzqLMEZeSZIvWqq+iEcIqb/DriIR9LPJtEa/gRrKE0kN3vE1/NW39XPFG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aXyO3kbX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34175C4CEDF;
-	Mon, 10 Feb 2025 15:32:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739201525;
-	bh=J1txiC+7XGCUcKNAIj9Ckq31hPjHma/hMYcKlWTKvbU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aXyO3kbXy81dvrQuQPVE1sZ8kXQH6cuoMHFOcU9fefLdVAx1O8Ajf/+eJxHUyBfs9
-	 qygkvdCvmRIKjWbMj5f/UoK5G85MfDKlB5+a9aYC0d3Tug/PkqMvTJxqK4WQIZwImc
-	 i+Gmp6z/Llx/O30tzXzuBfl1MBxXU28f+YebjB5aGtr+bPPhT7KgCPbhehKzWQaDkH
-	 XK11zjMZ/677zcXnQpgTrm9+RoOXGt/sQlaGCBcNqUrT5gIV1rq5XBvJkzjTzG+Mqm
-	 zORlqQ6QUGConP/FyIfuySkNfVU48qt6zTUF4SUS8RYaSns+iENJfIgHqku+pF5mba
-	 Y4al4U5RJ8m6Q==
-Date: Mon, 10 Feb 2025 08:32:03 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Keith Busch <kbusch@meta.com>, bhelgaas@google.com,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] pci: allow user specifiy a reset wait timeout
-Message-ID: <Z6ob8zU52N5IkfHf@kbusch-mbp>
-References: <20250207204310.2546091-1-kbusch@meta.com>
- <Z6bifFBdh-jfEiXQ@wunner.de>
- <Z6oUNYyPzAFkDOSR@kbusch-mbp>
- <Z6oYKnX9HHPDoCU2@wunner.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=scg2WBLWJ4/i6apE/2x/SpOqnn+NoJfNQBc7GpG+6EIGyCoiEIRoAuvHCmU8ltzxP6/5pptEx20gR0DYPCA5lrpAuELJDzcMj0HmXxl9r6a0+3Axybi9IwyTCVxVjpAcBWO560STHPfm7mSl2n6k3p2qiWtO3iBZiJPXC3IBiqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=XJ32rxft; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 8852D240028
+	for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 16:57:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1739203069; bh=lQ9xjXE4fQ5E3R9uQe1RdCFTA3rQo7TSFCMdjBUTzJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=XJ32rxft95edBr+EDeVQZGHUeecj5jwxAYiaY0fmQiw2umt38i4PSHy9Xqg3hFJiG
+	 /zwvz+V5oKOw72WAw2xrq8hAP8wB+Yc79C5RKXPI+nT84dGnO8FJJe6BgjV+2KCv1K
+	 1a/Sv9v6+tUMPu1OxatgL5s/rO/RkvTTXucwVQkuLC0FQKgeXGmOlzDLtEJL/rvaCK
+	 3aSKa8WrXTNh5x1YiXZFYpqIAEdpStyegfE2z3NDSW+zSkvotggBkO6XagnhOYe+Gy
+	 f22mnkpYg4Jfa392j6ToQbc6mTrz2xOh4/2lLIwaI1sSOLm6xfkPKEKVOGeJI1JRD3
+	 asuBpZK0jhXeA==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Ys8Nl2HW4z9rxD;
+	Mon, 10 Feb 2025 16:57:42 +0100 (CET)
+Date: Mon, 10 Feb 2025 15:57:42 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Mark Brown <broonie@kernel.org>
+Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
+	devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 00/12] YAML conversion of several Freescale/PowerPC DT
+ bindings
+Message-ID: <Z6oh9t2QQzz17Yt6@probook>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <611e47da-ba87-4c21-a6b7-cf051dc88158@sirena.org.uk>
+ <Z6a_f03Ct9aB7Bbn@probook>
+ <0fe3416c-c3f3-44c4-a1c0-7e8262c54d4b@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z6oYKnX9HHPDoCU2@wunner.de>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0fe3416c-c3f3-44c4-a1c0-7e8262c54d4b@sirena.org.uk>
 
-On Mon, Feb 10, 2025 at 04:15:54PM +0100, Lukas Wunner wrote:
-> On Mon, Feb 10, 2025 at 07:59:01AM -0700, Keith Busch wrote:
-> > My concern with quirking it is that we'd have to settle on what we think
-> > is the worst case timeout, then it becomes compiled into that kernel for
-> > that device. The devices I'm dealing with are actively under
-> > development, and the time to ready gets bigger or smaller as updates
-> > occur, or some new worst case scenario is discovered. Making this a boot
-> > time decicion really helps with experimentation here.
-> 
-> I understand, but honestly this doesn't sound like something which
-> needs to be in the upstream kernel.  If it's for experimentation only,
-> I'd keep it in the downstream kernel used for experimentation
-> and if it turns out that 60 sec is insufficient for the final
-> production device, I'd submit a quirk for that.
+On Mon, Feb 10, 2025 at 12:59:35PM +0000, Mark Brown wrote:
+> On Sat, Feb 08, 2025 at 02:20:47AM +0000, J. Neusch=C3=A4fer wrote:
+> > On Fri, Feb 07, 2025 at 09:38:05PM +0000, Mark Brown wrote:
+>=20
+> > > What's the story with dependencies here - why is all this stuff in one
+> > > series?
+>=20
+> > The patches are independent of each other, except for the four elbc/nand
+> > patches. They are in the same series because they came up during the
+> > same project and achieve similar goals, but it isn't necessary.
+>=20
+> Please don't do this, it just makes it harder to merge things since it
+> makes it look like there's cross tree merges needed when that's not the
+> case, complicating merging, and puts the entire series in everyone's
+> inbox which makes things more noisy.
 
-It's always a pain to carry out of tree patches. These might be devices
-having active development, but they are used in production and the
-systems they're in follow the standard kernel updates. And before this
-generation of devices even settles on an appropriate quirk timeout might
-require (if that ever happens), I have the next generations to deal
-with, so this need isn't going to go away. Carrying such an out of tree
-patch for eternity sounds unpleasant.
+How should I proceed with this series, in your opinion?
+I see potential advantages (less of the issues you describe) and
+disadvantages (somewhat harder to track patches) of splitting it up
+before sending v3.
+
+(Outside of this series, the conclusion is clear and simple)
+
+
+J. Neusch=C3=A4fer
 
