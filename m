@@ -1,281 +1,188 @@
-Return-Path: <linux-pci+bounces-21079-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21080-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0AD2A2EB1A
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 12:31:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EEE3A2EB24
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 12:32:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B9981887F45
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 11:31:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 29E061661A0
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 11:32:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E1DB1DF738;
-	Mon, 10 Feb 2025 11:31:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 842381D5CE8;
+	Mon, 10 Feb 2025 11:32:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="JpmWN1g6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ArL8VDkD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6689D1DF985
-	for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 11:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C58158538
+	for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 11:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739187096; cv=none; b=Iy9rycQ+YL9L3R/sH7uh+SyB0z2tJhkAQ3k3HEM/Lwx6YanxG9wfrGgQzKed0BOHaoPX8RkJUr96TpCrXuV7Safa2KYguyEnDhq7LWX+sVwd0GI5/wRidamIGCDhmvyDVoSbr6JwLhm8uP1xCcYbPdYkfJxBlJSEUBOYai7lfqw=
+	t=1739187134; cv=none; b=bFjewVoLaXrVIdjSV/A4SYUVOaUxPIQ0oIBitbA187dvv4/68lGOqjAkxVaFfNxwmBgLo73fmpoqtLOEUR9O8t+eJJ0H6RWtIR+GCnvjuhRyt6khY5YIxmeGNdYdM4y7gTSuq3PoPGzwnHxpa586xqLhXzCBrYtJumlDQ2+DFa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739187096; c=relaxed/simple;
-	bh=JF/n15lnAm7NZMFbEUTi4J8f8m2TQ7lxj7+v1eHdIuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EYuJoAAARB+vl0nO5hZ22/QL4IpJW4+eqF2BLhD25IzEbxSKD6g6fzThN2EKeuBEm5iyaeQM7vHi07WcZNGaCLWodFAqwaLZgQ0zlpvZAPU1Z3obrtoJGTV0L8EwCa63OpaRHc7alsMCr6LXux6d4ZUdHA4k+heqYbIuACmXCMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=JpmWN1g6; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 30D55240104
-	for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 12:31:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1739187085; bh=JF/n15lnAm7NZMFbEUTi4J8f8m2TQ7lxj7+v1eHdIuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=JpmWN1g6e9WQyrXQ7YqKa6Kz7YaEDYolPFawuJollCAzXyAykqbJGoZ+zalrhTLl8
-	 0f20eLO/gb+kGMQG2fH5TKmJEFrqGaN6UwBOAyyTSCiSuA57Gfh1FfJR75F2BTuW7Y
-	 /y2wCp2bUoNfwe8q67lwJI2tleg3YW+PS4g+S57IUQyxrG6AeC8sx71dc9aXf0Q5rE
-	 ikLvW6yzzw4cRkk6JOrSz2ttcOw/XLuzsx6rsHe0z0p6E3OCWI5L8kDFa14iqPeDcP
-	 /xijkoq/1z1YJJwTE3M4e6n7DlQEG+y3BB99cR2HqY4pCUnD30XDSw+fWIzzAOuBpH
-	 CY8rACCyyxnAw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Ys2TK4ysMz6tw3;
-	Mon, 10 Feb 2025 12:31:17 +0100 (CET)
-Date: Mon, 10 Feb 2025 11:31:01 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Crystal Wood <oss@buserror.net>
-Cc: j.ne@posteo.net, devicetree@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org, Li Yang <leoyang.li@nxp.com>,
-	John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH v2 09/12] dt-bindings: memory-controllers: Convert
- fsl,elbc to YAML
-Message-ID: <Z6njdeo8kHw6RtYH@probook>
-References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
- <20250207-ppcyaml-v2-9-8137b0c42526@posteo.net>
- <Z6kQpuQf5m-bXTyt@buserror.net>
+	s=arc-20240116; t=1739187134; c=relaxed/simple;
+	bh=9yL8yKsVg56eXF6gBgrbmMDEHR/t0nnj17bTdgOkCA0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O3NWDwP4k7FW2WJIwDmhh4kGRHi5NjHWpTt5Q+gzAkZy7V3LHmTbvyzNZUeICY0Q1P8hT/OTXnqAulCt2LHi05pMPefLdp+G0imDbSt2i7bCrQ/Fyb1r0CRQYWMa0QdnKJuzZ3Kv4L6dwHlyFv//OK5WQILVT0cGeESZA++39qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ArL8VDkD; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e5b4d615362so2241967276.2
+        for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 03:32:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739187131; x=1739791931; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=K0t7XPMJtnScQiFAUkjXlhhg/FgQ9ukhMGIEHnDiTC8=;
+        b=ArL8VDkD1DO0w75b9uzLu1QfVV2U/xSyzaBV9aasCM67TOJJISiMm4JRArMLp4kbm5
+         2pRCjQMb99x/eMTAE4xibqfh+FH5/7WzB8Ish83dHkXZx9V62ERD1a6QC9bVubw24C+P
+         6q1sqEYDQyGkc8WBtsCC7c3yOVKuR35KCZQr3QEU0PSEtJhVAU178rB31vaYxVi4cDbC
+         LOtfcm5yvinCrHifUl+QuxVJj9nvSAeLzmSRepni4R+LRCakkPCzg5jtHmB2HkDqk7Yx
+         K0xdgBk4skSLqdXP7oXFhMx4+ilXtNgcJ4Elf+uJv9XEQWk3KZpsRJdjTYl9j1aEsN2h
+         f9Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739187131; x=1739791931;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K0t7XPMJtnScQiFAUkjXlhhg/FgQ9ukhMGIEHnDiTC8=;
+        b=xJ7tgdlfgIMcvRl1Cm0dBuVdp4sOvuZVD9QApUoSKjUpWmZM6J70jxNrvWnXFAgHnm
+         ksZ9HuVtB7YDC27tqnToVtly8vHCMnlb/t91C9AkICk5oxeOhNW8ecbyntxBtpF/QB8h
+         Mp0XIOzTSaopsAHwpRGYGVq87LnBNio+isuzm2SAwKaBeZMWZU3OreDhxFwsu6z/YgAF
+         xxC5m7MXkLTQ5unjwF5Qe5iEaJEhqKcW/AVLrDhoww+yDpvQP7Of3w02uIiWt1tbRsBT
+         DjYWK/kZiQuztt/hP/ddh2xHvASQEtR4ex4fJFryG17FeGorLvNQImuDy+oQz4sD63ty
+         jTaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUfXqj33Ip/qCRBMDPMGYatv8YN6KL7HA6n9bgf7jo8kLkVqOg2uiyu3i/YiOga8CdXg+VsLs6szHg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg77u2Xb7D/zAiowMtkn/5UsstI9BVIrkow854YsFSZXmvpGf9
+	6yHdc3vyfpWeOd+zgrAZAWFYh/FVDRhG/HnDlCJlABwRaTu/WHgMj9hDeNx69o6/iLTREbE3XXa
+	muWOmgD5UHMtodzdb4cvTKxUL3KbygZJ7LEulHw==
+X-Gm-Gg: ASbGncu4QHm0wDn3eH9GEJFjiF35csT0vNPlCfIXroiv9xa1HfKFCpg2nwhfqlo0Xsv
+	kSxJmDFiwoY2lAjpI21w7TB4+fMxcRIz8QzL59QUSRTBSVG7BWRlPUHS7MTv0P/Z9XHRZGDBcsw
+	==
+X-Google-Smtp-Source: AGHT+IG0aR9/4plkySCbp1bqTtI82MdpqrOiHVZLPWZsEQ6ce+6yiD5Wlvdmwvaf0DBMBOWwyD2Skk7a8hAGjrj5wzE=
+X-Received: by 2002:a05:6902:32a2:b0:e5b:54b0:6ad5 with SMTP id
+ 3f1490d57ef6-e5b54b06b74mr5887024276.43.1739187131488; Mon, 10 Feb 2025
+ 03:32:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z6kQpuQf5m-bXTyt@buserror.net>
+References: <6137505.lOV4Wx5bFT@rjwysocki.net>
+In-Reply-To: <6137505.lOV4Wx5bFT@rjwysocki.net>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 10 Feb 2025 12:31:34 +0100
+X-Gm-Features: AWEUYZmHSQbQffF7_ka9s0NS0kXgD2P_JnaSOcnNvX6dibEuupIM41BukF4WqIA
+Message-ID: <CAPDyKFqEK3jBQxmuGTRHGHgyNUY+veE+iiujgcJpyOuLjw0vBg@mail.gmail.com>
+Subject: Re: [PATCH v1] PM: sleep: core: Restrict power.set_active propagation
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>, Johan Hovold <johan@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kevin Xie <kevin.xie@starfivetech.com>, 
+	Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Feb 09, 2025 at 02:31:34PM -0600, Crystal Wood wrote:
-> On Fri, Feb 07, 2025 at 10:30:26PM +0100, J. Neuschäfer via B4 Relay wrote:
-> > From: "J. Neuschäfer" <j.ne@posteo.net>
-> > 
-> > Convert the Freescale localbus controller bindings from text form to
-> > YAML. The updated list of compatible strings reflects current usage
-> > in arch/powerpc/boot/dts/, except that many existing device trees
-> > erroneously specify "simple-bus" in addition to fsl,*elbc.
-> > 
-> > Changes compared to the txt version:
-> >  - removed the board-control (fsl,mpc8272ads-bcsr) node because it only
-> >    appears in this example and nowhere else
-> >  - added a new example with NAND flash
-> >  - updated list of compatible strings
-> > 
-> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> > ---
-> > 
-> > V2:
-> > - fix order of properties in examples, according to dts coding style
-> > - move to Documentation/devicetree/bindings/memory-controllers
-> > - clarify the commit message a tiny bit
-> > - remove unnecessary multiline markers (|)
-> > - define address format in patternProperties
-> > - trim subject line (remove "binding")
-> > - remove use of "simple-bus", because it's technically incorrect
-> 
-> While I admit I haven't been following recent developments in this area,
-> as someone who was involved when "simple-bus" was created (and was on the
-> ePAPR committee that standardized it) I'm surprised to hear simple-bus
-> being called "erroneous" or "technically incorrect" here.
+On Sat, 8 Feb 2025 at 18:54, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Commit 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status of
+> parents and children") exposed an issue related to simple_pm_bus_pm_ops
+> that uses pm_runtime_force_suspend() and pm_runtime_force_resume() as
+> bus type PM callbacks for the noirq phases of system-wide suspend and
+> resume.
+>
+> The problem is that pm_runtime_force_suspend() does not distinguish
+> runtime-suspended devices from devices for which runtime PM has never
+> been enabled, so if it sees a device with runtime PM status set to
+> RPM_ACTIVE, it will assume that runtime PM is enabled for that device
+> and so it will attempt to suspend it with the help of its runtime PM
+> callbacks which may not be ready for that.  As it turns out, this
+> causes simple_pm_bus_runtime_suspend() to crash due to a NULL pointer
+> dereference.
+>
+> Another problem related to the above commit and simple_pm_bus_pm_ops is
+> that setting runtime PM status of a device handled by the latter to
+> RPM_ACTIVE will actually prevent it from being resumed because
+> pm_runtime_force_resume() only resumes devices with runtime PM status
+> set to RPM_SUSPENDED.
+>
+> To mitigate these issues, do not allow power.set_active to propagate
+> beyond the parent of the device with DPM_FLAG_SMART_SUSPEND set that
+> will need to be resumed, which should be a sufficient stop-gap for the
+> time being, but they will need to be properly addressed in the future
+> because in general during system-wide resume it is necessary to resume
+> all devices in a dependency chain in which at least one device is going
+> to be resumed.
+>
+> Fixes: 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status of parents and children")
+> Closes: https://lore.kernel.org/linux-pm/1c2433d4-7e0f-4395-b841-b8eac7c25651@nvidia.com/
+> Reported-by: Jon Hunter <jonathanh@nvidia.com>
+> Tested-by: Johan Hovold <johan+linaro@kernel.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-It is quite possible that my understanding of it is incomplete or wrong.
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-> 
-> For non-NAND devices this bus generally meets the definition of "an
-> internal I/O bus that cannot be probed for devices" where "devices on the
-> bus can be accessed directly without additional configuration
-> required".  NAND flash is an exception, but those devices have
-> compatibles that are specific to the bus controller.
-> 
-> The fact that the address encoding is non-linear is irrelevant; the
-> addresses can still be translated using the standard "ranges" mechanism. 
-> This seems to be a disconnect between the schema verification and the way
-> the compatible has previously been defined and used.
+Kind regards
+Uffe
 
-This is what led me to my assumptions: The simple-bus validation logic
-in dtc complains about unit addresses such as nand@1,0 which are quite
-appropriate for the eLBC.
-
-> 
-> And as a practical matter, unless I'm missing something (which I might be
-> since I haven't been in devicetree-land for nearly a decade), Linux is
-> relying on simple-bus to probe these devices.  There is a driver that
-> binds to the bus itself but that is just for error interrupts and NAND.
-
-As of now, yes, that's correct. Without simple-bus, a current Linux
-kernel doesn't find the device nodes inside such a localbus.
-
-> 
-> You'd probably need something like commit 3e25f800afb82bd9e5f8 ("memory:
-> fsl_ifc: populate child devices without relying on simple-bus") and the 
-> subsequent fix in dd8adc713b1656 ("memory: fsl_ifc: populate child
-> nodes of buses and mfd devices")...
-
-I have prepared such a patch, based on the same assumptions:
-
-  [PATCH] powerpc/fsl_lbc: Explicitly populate bus
-  https://lore.kernel.org/lkml/20250209-localbus-v1-1-efcd780153a0@posteo.net/
-
-> 
-> I'm curious what the reasoning was for removing simple-bus from IFC.  It
-> seems that the schema verification also played a role in that:
-> https://www.spinics.net/lists/devicetree/msg220418.html
-
-Yes, that's the same as my reasoning.
-
-> 
-> ...but there's also the comment in 985ede63a045eabf3f9d ("dt-bindings:
-> memory: fsl: convert ifc binding to yaml schema") that "this will help to
-> enforce the correct probe order between parent device and child devices",
-> but was that really not already guaranteed by the parent/child
-> relationship (and again, it should only really matter for NAND except for
-> the possibility of missing error reports during early boot)?
-
-I'm inclined to agree with you, but it's somewhat beyond my skill level.
-
-I'll let Li Yang or Rob Herring comment on that.
-
-> 
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - fsl,mpc8313-elbc
-> > +              - fsl,mpc8315-elbc
-> > +              - fsl,mpc8377-elbc
-> > +              - fsl,mpc8378-elbc
-> > +              - fsl,mpc8379-elbc
-> > +              - fsl,mpc8536-elbc
-> > +              - fsl,mpc8569-elbc
-> > +              - fsl,mpc8572-elbc
-> > +              - fsl,p1020-elbc
-> > +              - fsl,p1021-elbc
-> > +              - fsl,p1023-elbc
-> > +              - fsl,p2020-elbc
-> > +              - fsl,p2041-elbc
-> > +              - fsl,p3041-elbc
-> > +              - fsl,p4080-elbc
-> > +              - fsl,p5020-elbc
-> > +              - fsl,p5040-elbc
-> > +          - const: fsl,elbc
-> 
-> Is it really necessary to list every single chip?
-> 
-> And then it would need to be updated when new ones came out?  I know this
-> particular line of chips is not going to see any new members at this
-> point, but as far as the general approach goes...
-
-As far as I'm aware, this reflects common practice today.
-
-> 
-> Does the schema validation complain if it sees an extra compatible it
-> doesn't recognize?  If so that's obnoxious.
-
-Yes.
-
-> 
-> > +examples:
-> > +  - |
-> > +    localbus@f0010100 {
-> > +        compatible = "fsl,mpc8272-localbus",
-> > +                     "fsl,pq2-localbus";
-> > +        reg = <0xf0010100 0x40>;
-> > +        ranges = <0x0 0x0 0xfe000000 0x02000000
-> > +                  0x1 0x0 0xf4500000 0x00008000
-> > +                  0x2 0x0 0xfd810000 0x00010000>;
-> > +        #address-cells = <2>;
-> > +        #size-cells = <1>;
-> > +
-> > +        flash@0,0 {
-> > +            compatible = "jedec-flash";
-> > +            reg = <0x0 0x0 0x2000000>;
-> > +            bank-width = <4>;
-> > +            device-width = <1>;
-> > +        };
-> > +
-> > +        simple-periph@2,0 {
-> > +            compatible = "fsl,elbc-gpcm-uio";
-> > +            reg = <0x2 0x0 0x10000>;
-> > +            elbc-gpcm-br = <0xfd810800>;
-> > +            elbc-gpcm-or = <0xffff09f7>;
-> > +        };
-> 
-> I know this isn't new, but... since we're using this as an example,
-> where is the documentation for this fsl,elbc-gpcm-uio and
-> elbc-gpcm-br/or?  What exactly is a simple-periph?
-
-fsl,elbc-gpcm-uio is handled in the following patch
-(dt-bindings: memory-controllers: Add fsl,elbc-gpcm-uio).
-
-simple-periph is something I haven't thought about, because this whole
-example comes from the old txt-format binding. The whole purpose of
-fsl,elbc-gpcm-uio is to allow userspace drivers to interact with
-localbus devices, so that doesn't make the intention any clearer, either.
-
-> 
-> There are no in-tree device trees that use this either.  The bcsr
-> node was actually a much more normal example, despite that particular
-> platform having been removed.  There are other bcsr nodes that still
-> exist that could be used instead.
-
-Ah, fsl,mpc8568mds-bcsr for example, good point. I'll add it back.
-
-> 
-> -Crystal
-
-Thank you for reaching out!
-
-Best regards,
-J. Neuschäfer
+> ---
+>  drivers/base/power/main.c |   21 +++++++++------------
+>  1 file changed, 9 insertions(+), 12 deletions(-)
+>
+> --- a/drivers/base/power/main.c
+> +++ b/drivers/base/power/main.c
+> @@ -1191,24 +1191,18 @@
+>         return PMSG_ON;
+>  }
+>
+> -static void dpm_superior_set_must_resume(struct device *dev, bool set_active)
+> +static void dpm_superior_set_must_resume(struct device *dev)
+>  {
+>         struct device_link *link;
+>         int idx;
+>
+> -       if (dev->parent) {
+> +       if (dev->parent)
+>                 dev->parent->power.must_resume = true;
+> -               if (set_active)
+> -                       dev->parent->power.set_active = true;
+> -       }
+>
+>         idx = device_links_read_lock();
+>
+> -       list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
+> +       list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node)
+>                 link->supplier->power.must_resume = true;
+> -               if (set_active)
+> -                       link->supplier->power.set_active = true;
+> -       }
+>
+>         device_links_read_unlock(idx);
+>  }
+> @@ -1287,9 +1281,12 @@
+>                 dev->power.must_resume = true;
+>
+>         if (dev->power.must_resume) {
+> -               dev->power.set_active = dev->power.set_active ||
+> -                       dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND);
+> -               dpm_superior_set_must_resume(dev, dev->power.set_active);
+> +               if (dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) {
+> +                       dev->power.set_active = true;
+> +                       if (dev->parent && !dev->parent->power.ignore_children)
+> +                               dev->parent->power.set_active = true;
+> +               }
+> +               dpm_superior_set_must_resume(dev);
+>         }
+>
+>  Complete:
+>
+>
+>
 
