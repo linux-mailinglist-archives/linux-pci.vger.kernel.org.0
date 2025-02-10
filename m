@@ -1,78 +1,53 @@
-Return-Path: <linux-pci+bounces-21128-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21129-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E20A2A2FDBC
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 23:47:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D4D37A2FDBD
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 23:48:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 536313A8285
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 22:47:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D818D3A90F8
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 22:47:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A1B225A2BF;
-	Mon, 10 Feb 2025 22:46:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D74F253F30;
+	Mon, 10 Feb 2025 22:47:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CkfJYXDP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMVQzcdN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C81D2586DD
-	for <linux-pci@vger.kernel.org>; Mon, 10 Feb 2025 22:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7316F1C5D6A;
+	Mon, 10 Feb 2025 22:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739227615; cv=none; b=axV6R2tAiM+KJcFyIMzlJXRTDTsfozA/5c/GH3bRMcly1oJXxHRqeEwuClaPEbNqMHCANkv8WsQNNrPwvkXg1tsihOOw+jcc/1+cphvPCqDuOXb/NBOhrsYnC6oMiohYl8z7t7IDvdKohjuCD55j4DifNp06QGRyv+GL0hdQ8Lk=
+	t=1739227656; cv=none; b=fK6oEfPnk1oyEmd9miWmMt51Z07hIycuIfuIxzHGCCDWq3VhGldAVmtJDEJm0FtSaLVcSNWJ5h2mTqimjQfVImTK4ZcVxwhtY6hx/ir5KI3iWN/QaeA2xelxDdeuvAr6fumJN9elxwkiUO/Fgx7KNpwP8rfI0fAtkTkftfNgDgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739227615; c=relaxed/simple;
-	bh=zn0b5FXEtro91qXSK9PMPMd8PchrIJqar6gJZ6bLBbA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h2GRQKFWv0X2yMPoIGJ1OOPCAdANjZuu1lbhMAilGuPmaOHjMeWz2abDPi4tRKzGqO6RtBQSwHVLR4vmHVXX1UNur5xXjOAxF+3CHHMDTo9Hj95u7HKKzxrqOdkZRqWcvNV1UaD1oNlWgDrd3q68z7WTtCmwBXzi8P3INM+w6e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CkfJYXDP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739227612;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WObvk3zO4HetFPfsvOiJrCg4fJAx8pPDhesxtWw1PoU=;
-	b=CkfJYXDPHiUKDF6aArpvOpPbzgWGxQBOSACZuKd0sC9HNZeIwepiETPTvUq30uwmCQ/JQN
-	UWweBwGI8MmDmfSlifHM9dsVP9ToQby1FwExJ3TlSdWMi/flnE2swhBxiubEuYbE0cJsIW
-	11CyTtvH5CSFBApHfVg5rNuBki1vPxU=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-513-WkkOY9LuOrqdAcWTci_xIQ-1; Mon,
- 10 Feb 2025 17:46:48 -0500
-X-MC-Unique: WkkOY9LuOrqdAcWTci_xIQ-1
-X-Mimecast-MFC-AGG-ID: WkkOY9LuOrqdAcWTci_xIQ
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8C1491800873;
-	Mon, 10 Feb 2025 22:46:46 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.113])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 7316F19560A3;
-	Mon, 10 Feb 2025 22:46:43 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 10 Feb 2025 23:46:19 +0100 (CET)
-Date: Mon, 10 Feb 2025 23:46:15 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mitchell.augustin@canonical.com, ilpo.jarvinen@linux.intel.com
-Subject: Re: [PATCH v2] PCI: Batch BAR sizing operations
-Message-ID: <20250210224615.GN32480@redhat.com>
-References: <20250120182202.1878581-1-alex.williamson@redhat.com>
- <20250209154512.GA18688@redhat.com>
- <20250210093641.0be242ae.alex.williamson@redhat.com>
- <20250210195658.GK32480@redhat.com>
- <20250210200819.GL32480@redhat.com>
- <20250210134848.78a1ab4a.alex.williamson@redhat.com>
- <20250210221107.60d608ba@pumpkin>
+	s=arc-20240116; t=1739227656; c=relaxed/simple;
+	bh=Ndp3Pvp3DkE/0UB6QNhcVOG9JupyDTKsubirAJ2gBLk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=olG1/uep6iHQdPB0EtaeGjD3GpaiHWU2v6pqUCI4ZcNO9CIbLlj1OkOB4OecDK8cUryy5yiPVfElRevzta4P3zAyd92FCANaUOdttdcFPagiAi6cqYnHXTWuhT7P2RSh5JuwCFzGd6QrY2dY05c5rUCfYe/vxAKjndndHjmJkrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMVQzcdN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A8E3C4CED1;
+	Mon, 10 Feb 2025 22:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739227656;
+	bh=Ndp3Pvp3DkE/0UB6QNhcVOG9JupyDTKsubirAJ2gBLk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=TMVQzcdNARn6CFZTTS7lHpJpnJgAwo2YC4HPztAvQi8arGez9ZXimMT2LWdonx3uB
+	 2RDew0Zif3TbZ4zDlq5XBoaCjI/fK3bY73P6EmATUNxlkJN4gY2l4ZFaTb1gSxEiKF
+	 H70wihzHWoEAYNn435ZYGlEoC9eoEuB491oTYffrtQ8jrEY0xOzPWvySonKpGWwq93
+	 WVDNe/CZWsB7WXjw0MrmHwLiOVY/8oGjXorTiGYivaVmRGVvY2IZM18McDysz02cG4
+	 QfYntT2qxTjr/xFTFXXLf0Xks1kE+KCAx9fapKl3yfvxkm6iSDBfc6Mcka+dg4Madl
+	 B3/hJ8CFf6o+g==
+Date: Mon, 10 Feb 2025 16:47:34 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Purva Yeshi <purvayeshi550@gmail.com>
+Cc: bhelgaas@google.com, skhan@linuxfoundation.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: pci: Fix flexible array usage
+Message-ID: <20250210224734.GA21793@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -81,41 +56,46 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250210221107.60d608ba@pumpkin>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <20250210132740.20068-1-purvayeshi550@gmail.com>
 
-On 02/10, David Laight wrote:
->
-> On Mon, 10 Feb 2025 13:48:48 -0700
-> Alex Williamson <alex.williamson@redhat.com> wrote:
->
-> > On Mon, 10 Feb 2025 21:08:19 +0100
-> > Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > > On 02/10, Oleg Nesterov wrote:
-> > > >
-> > > > On 02/10, Alex Williamson wrote:
-> > > > >
-> > > > > --- a/drivers/pci/probe.c
-> > > > > +++ b/drivers/pci/probe.c
-> > > > > @@ -345,7 +345,8 @@ static void pci_read_bases(struct pci_dev *dev, unsigned int howmany, int rom)
->
-> You probably need __always_inline to have any chance of a compile-time
-> test of howmany.
+On Mon, Feb 10, 2025 at 06:57:40PM +0530, Purva Yeshi wrote:
+> Fix warning detected by smatch tool:
+> Array of flexible structure occurs in 'pci_saved_state' struct
+> 
+> The warning occurs because struct pci_saved_state contains struct
+> pci_cap_saved_data cap[], where cap[] has a flexible array member (data[]).
+> Arrays of structures with flexible members are not allowed, leading to this
+> warning.
+> 
+> Replaced cap[] with a pointer (*cap), allowing dynamic memory allocation
+> instead of embedding an invalid array of flexible structures.
+> 
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
 
-Can't really comment...
+Applied with subject:
 
-But note that nobody else reported this problem, so I guess the newer
-compilers are smart enough? Not that I am sure we can rely on it...
+  PCI: Fix array of flexible structure usage in struct pci_saved_state
 
-> > > >
-> > > > 	BUILD_BUG_ON(__builtin_constant_p(howmany) && howmany > PCI_STD_NUM_BARS);
->
-> 	statically_true(howmany > PCI_STD_NUM_BARS)
+to pci/enumeration for v6.15, thanks!
 
-Indeed.
-
-Oleg.
-
+> ---
+>  drivers/pci/pci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 869d204a7..648a080ef 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1929,7 +1929,7 @@ EXPORT_SYMBOL(pci_restore_state);
+>  
+>  struct pci_saved_state {
+>  	u32 config_space[16];
+> -	struct pci_cap_saved_data cap[];
+> +	struct pci_cap_saved_data *cap;
+>  };
+>  
+>  /**
+> -- 
+> 2.34.1
+> 
 
