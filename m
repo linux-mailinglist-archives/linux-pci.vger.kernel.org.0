@@ -1,433 +1,257 @@
-Return-Path: <linux-pci+bounces-21104-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21105-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E509A2F601
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 18:55:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 239D7A2F60A
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 18:56:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56CF5162EC1
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 17:55:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 651E61884633
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 17:56:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1F61255E24;
-	Mon, 10 Feb 2025 17:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 365EB25B66C;
+	Mon, 10 Feb 2025 17:56:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="LMVzhSKe"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GFMW6vfU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2089.outbound.protection.outlook.com [40.107.223.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1531F463E;
-	Mon, 10 Feb 2025 17:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5324B25B67D;
+	Mon, 10 Feb 2025 17:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.89
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739210113; cv=fail; b=nDWnEKbL5eWMV8XeL8+0BD4w5wtwc3oomeD24uJCh3Hk/BI6RYAsRKhus4yInERBNvjQLvspPRktmQrs0Abwl+TwwW3V1SB+WKvgyjQOBt2/UFKLbS/u87sc0k+RVjSxw9EzFT5Jti+2WKLsjZwm4a7FXLLfN4wx7bQ4W+OuL7U=
+	t=1739210200; cv=fail; b=Pv86L42xjRPOKw4p+38FiZdci1J9m/7fouTimywAShikD5um09lGO6yBQtgJkJbJmSAfy60ZDetwe+V4kH+sPl9AoJCu2XyaRVzy8BkuhMQQLUkTCqyWIVl5HCYbN00kmS/9c1d7heXGttR6jFDhckDSI0RGCKWyFPbnHAmyR+4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739210113; c=relaxed/simple;
-	bh=5f+3eHc/joFilP5jSaTstqotvhqSYY3wZuG7nYxOfl0=;
+	s=arc-20240116; t=1739210200; c=relaxed/simple;
+	bh=lhht+s7N+S78Qv37RLzrtxPNIQxFVNCCvoVaQ0of6lU=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=lE3qVzTccaHQkKuaMM1SRFqgTwKbikwdK7G3zf13nj5ilitADKWz+tPLLw1fNxmM12tF5Nv4Cy2W1aCQg3ChdBu0r9HNVQJT4YwePLLAK8/WXjpoIJoCgt8eHzxhUii0lrZihrNqJET1S5LsncdSXfsrslK/b+mvcHy46LRQN6Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=fail (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=LMVzhSKe reason="signature verification failed"; arc=fail smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 519NICn9007889;
-	Mon, 10 Feb 2025 09:54:47 -0800
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2042.outbound.protection.outlook.com [104.47.66.42])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 44pw2r2crv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Feb 2025 09:54:47 -0800 (PST)
+	 Content-Type:MIME-Version; b=sk3Ux5pC7/A4kSynIoktdeKg+nHUEe5uxi24mUthqvIxdidOjUluj5YJtin/l5Ibvx1kM28c3dwgpkQ5ShW3iLGn/Crkw6QAttupP6TiYtJTphC2mjQ/ui/FMqvmURcRFpey/oB7bTdQuuBGpfsf4b0xFUZDKndLKuyhiXGd/w4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GFMW6vfU; arc=fail smtp.client-ip=40.107.223.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=j2u/W74QDQRhGYrP6gVra4xsVFYJ4Zy2EtutZLwADcPuMGKPCVKYG5bBbTSQX34/nE+QT7YWeqX9VvHCDQRtwonQxFbeYtBa/ohBkrGpqyjsqTPu1TBuwLdJsjzMAUjairVpbUdIDhBdpMzuBgBERwgEdiy2Nfnm/+sjTHAR9Z1vN6q9jaxNZ889v/9zP0hc5bglTayl2k0RFjtfRQHR58T9SVV+cdqvPaTXItnDeQPeG3GMW0B1IcVsSJ0UefISFa1LjzOt/CU/+iAUnPpyEmI4wocyGZaqcBl87Al834L8tQ5Kf3Z7pTCfnhD7CXyxCY94whhgDk/mi6XJhWzZ8w==
+ b=qw347g3lokc2YnvFQtv3GXjU1aIpcQ8IxOnPLkw4XukjpTpTmpN0H+F3JdXr/IQ6XZPFw05Yl2li9r+9XulP2CeTsSI762LP2a19qI85KV9XyXpBgDf63PDz/bCyKENknZbsTGBF7ujlIzqectmLnpnOvUCjyLp5LDHWLzrfaR2GVLyjNGulvIh8YX3QBAk85SOn7UoNkTsJP7vkTZzWFzLhMoWME3S+WkNnHwVH+e6jpjieJ4gWS1vtQ6vSFzfH870qYSaXetct++gMypCktyb8LRF0RCWSl1MWcFV0zbO4BilwY6h80j1a6606y5yeZXuhg7/vJINPxBAm0qiU0A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FSYSgmX3fU4LGU4sZNnfRkhBL7zlV+/ywl30N1qmMfQ=;
- b=Df6p4BnrOcQt3dPNmZ9TFYP1NFKmsK7pjv+oK0coNufhKiz47y9eo5p+u+UURbl89RGeB5JyT3Rx3Wt7MqGb7tHX8SbprM0f+nilzH98ZS/oi/HNP7qVaIo5ULcvjEja6zfcarV3ssaxgWIB6IA8W5kzAb98ZD2Salz6YT94FxOdyFg2NUHZ+uYEoB/yNfptKxt8hw4OHucnxEoAJCc4Mz+iaIrackhd3paEg9dN4xlkmJCkq6oPrFhbrtB7DuyDiXWoVEGVaBKycayZSt90eoKvAxdeAfnniGgeOZ1h0m2cwqyqD0v8EUJO2fAfgic0UiuhOAz03U0CBcPs7EhhcQ==
+ bh=lhht+s7N+S78Qv37RLzrtxPNIQxFVNCCvoVaQ0of6lU=;
+ b=tQSLsZIWlyxprYmAOIM3isIezg80SF9RqFQCBJ1fMaBgugdazAabbqKq62dbx/YKU59BNk7XX6DjuZkBXvhtqNNB1+/2ApCAh/vQi9BmCFg7DVzNKWJcf/MRsUGmtP4Wo4TCQUfbZQA5NjNM7TI101zHzuSKfPkPjGJLHOcwalJT6EdurI7rCgizIg5FeD47OGszTvZMjojc0wOxljgkBZUVQFu6jZ7LXPv3+FsvrXZZnKLuWngPfTpg+YNyyVo6Xgln6BThMJ5cp/GKi4PAQUvoHzBbHcGpKTINJGew8dHrndzN3V9cIooJukCLykUM+XXyEXBm+K4+PIRYyE4hXQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
- s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FSYSgmX3fU4LGU4sZNnfRkhBL7zlV+/ywl30N1qmMfQ=;
- b=LMVzhSKeTk0Gn/XMQtBmAzozGfEKoC8C1c6bYFxoWNbSvygrSMhwRnOxiEDn0mW8SdMh3EARGJ/bRuVKZD62f9YIQt37HWMrHCCo75vvIQTtci0D7PWJrlWEdvCQ9uh1CLP+Ds1aOf62I17nUuMyZq11K0lkS/lk21pzdgUK/PU=
-Received: from CO1PR18MB4682.namprd18.prod.outlook.com (2603:10b6:303:e5::12)
- by SJ0PR18MB5088.namprd18.prod.outlook.com (2603:10b6:a03:437::9) with
+ bh=lhht+s7N+S78Qv37RLzrtxPNIQxFVNCCvoVaQ0of6lU=;
+ b=GFMW6vfUVpygrgifChZnFPC4BtN6XS6jzRUkLBljm0sJvs5Pd8MTBhqP+Beysh9Af1feN/4ZPjUQBV6ugxQPglp1/ucYws7f/KPJprvrFMfRMNGux/5IHwZUiNPsezpCZuv09oZB92EJKPUhMuVobA55CMUVHzcdzn+qwHQeE/CxFGvOLczKW6feDxtfAZEw6K2z7ZP8DJFC2fRvwJFYnu+Il2+8N28eeF1hPV3/AN0NFzmZ2COJQkEu4fp0a1knWklIPpj7uvM9fDL+Nm+flNpKBWCisJHyYb9mdU1+b7epHcniHg31LSN73FLd7FC+H3D9dywd3TxPvFrqLmkjIg==
+Received: from BN9PR12MB5323.namprd12.prod.outlook.com (2603:10b6:408:104::19)
+ by SJ2PR12MB9138.namprd12.prod.outlook.com (2603:10b6:a03:565::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Mon, 10 Feb
- 2025 17:54:44 +0000
-Received: from CO1PR18MB4682.namprd18.prod.outlook.com
- ([fe80::ca55:457f:38a6:5ee]) by CO1PR18MB4682.namprd18.prod.outlook.com
- ([fe80::ca55:457f:38a6:5ee%7]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
- 17:54:44 +0000
-From: Wilson Ding <dingwei@marvell.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: "cassel@kernel.org" <cassel@kernel.org>,
-        Bjorn Helgaas
-	<helgaas@kernel.org>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "kw@linux.com"
-	<kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com"
-	<bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        Sanghoon Lee <salee@marvell.com>
-Subject: Re: [PATCH 1/1] PCI: armada8k: Add link-down handle
-Thread-Topic: [PATCH 1/1] PCI: armada8k: Add link-down handle
-Thread-Index: AQHbe+TdhFpf+VtWCUaTz/qc3I6GNA==
-Date: Mon, 10 Feb 2025 17:54:43 +0000
+ 2025 17:56:35 +0000
+Received: from BN9PR12MB5323.namprd12.prod.outlook.com
+ ([fe80::efb1:9741:c066:f01c]) by BN9PR12MB5323.namprd12.prod.outlook.com
+ ([fe80::efb1:9741:c066:f01c%5]) with mapi id 15.20.8422.015; Mon, 10 Feb 2025
+ 17:56:35 +0000
+From: Vidya Sagar <vidyas@nvidia.com>
+To: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
+CC: Niklas Cassel <cassel@kernel.org>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "robh@kernel.org"
+	<robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"quic_schintav@quicinc.com" <quic_schintav@quicinc.com>,
+	"johan+linaro@kernel.org" <johan+linaro@kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding
+	<treding@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Krishna Thota
+	<kthota@nvidia.com>, Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+	"sagar.tv@gmail.com" <sagar.tv@gmail.com>
+Subject: RE: [PATCH V1] PCI: tegra194: Add support for PCIe RC & EP in
+ Tegra234 Platforms
+Thread-Topic: [PATCH V1] PCI: tegra194: Add support for PCIe RC & EP in
+ Tegra234 Platforms
+Thread-Index: AQHbcT8nBepV4G+xqEWbd1qc6N38crMsFxYAgBSVZnOAADmqAIAAALNg
+Date: Mon, 10 Feb 2025 17:56:35 +0000
 Message-ID:
- <CO1PR18MB46826E60C5512A113B5F8938A7F22@CO1PR18MB4682.namprd18.prod.outlook.com>
-References: <20241112213255.GA1861331@bhelgaas>
- <AD287CCE-9FFE-49BC-B9CA-B5CED4F05AF1@linaro.org>
- <BY3PR18MB46737FB5FDBD75CF31B505B8A7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
- <BY3PR18MB4673207A36B2CD7C3B75EBA0A7EB2@BY3PR18MB4673.namprd18.prod.outlook.com>
- <20250207175759.jzmoox5mke3rachy@thinkpad>
- <BY3PR18MB46738F5857319F9637FA5050A7F12@BY3PR18MB4673.namprd18.prod.outlook.com>
- <20250208103618.2binrjgry7ghoavc@thinkpad>
-In-Reply-To: <20250208103618.2binrjgry7ghoavc@thinkpad>
-Accept-Language: en-US
+ <BN9PR12MB53239715E7131254B07CCAE9B8F22@BN9PR12MB5323.namprd12.prod.outlook.com>
+References: <20250128044244.2766334-1-vidyas@nvidia.com>
+ <Z5jH0G3V7fPXk0BG@ryzen>
+ <BN9PR12MB5323E59E530FA1F87DE3C7FCB8F22@BN9PR12MB5323.namprd12.prod.outlook.com>
+ <20250210175050.5htfgtgkyrfcjtre@thinkpad>
+In-Reply-To: <20250210175050.5htfgtgkyrfcjtre@thinkpad>
+Accept-Language: en-US, en-IN
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CO1PR18MB4682:EE_|SJ0PR18MB5088:EE_
-x-ms-office365-filtering-correlation-id: 3d01d8fc-cee2-4852-1a9b-08dd49fc003a
+x-ms-traffictypediagnostic: BN9PR12MB5323:EE_|SJ2PR12MB9138:EE_
+x-ms-office365-filtering-correlation-id: 2d80513e-6352-4caa-de07-08dd49fc426d
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|366016|1800799024|38070700018;
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018|7053199007;
 x-microsoft-antispam-message-info:
- =?utf-8?B?NTFlQVdOSU0rS1pmWkVDVE1LaGY3QkpsbmgrU0lqZDB4WG00WGxVY1dWazlY?=
- =?utf-8?B?Tm5pcGZJY0VpQmczZHNOV2RMK2dpbXlGTHVWOE9Fd2sxa0gyeEN4YVRQOURC?=
- =?utf-8?B?VzlDSStQSXJPdVRFK0dpTkM4dmVCQXF5eFFZMVk4dHNnRTRwWHlyOVRQdkY4?=
- =?utf-8?B?L2dDNlNDUmp0L2c5d1owN1dZV281NWNvdnlEVVQxMm1WU3NTb0NFZkxTemE1?=
- =?utf-8?B?RWFrWHk5TkhiWnFvZzRBR3RXT1NzcjRDTExWSk1LM2haSDdCMW1yOXBGLytp?=
- =?utf-8?B?eVRJVlc3YmVLZkVadThGTWlDTjRYbFh3TnBzR0JxMFFRL1VRTjBzanUxNm16?=
- =?utf-8?B?MVBvV0hjdzU3UmVIWWwwVnBNalN3VW5nRHNxTk43TmxDVXkwUFNHTE56dkph?=
- =?utf-8?B?NVEwSzFKTVVCUWh1dUsxSGdsNWhvQVpjT3ZDU3l2MDdjWjVzSk84QnZMT2p0?=
- =?utf-8?B?RlN3aFM4Z3FRTFJlRkxrS0ExUUIvd3UvTldrSkNGckwvMDdKOFBDSWFKRHhw?=
- =?utf-8?B?RWRuR1NUdUVkQmRSaEVhc1krOUVJbUJKVWNnNjBBcXhBbXU5MGE0dGJSQkEv?=
- =?utf-8?B?ZG95Q3RndzRrWjkvSU91TWMvbHEreCtRYm5KS3FSb0sxR3BDZXJ5OGJiem9V?=
- =?utf-8?B?dVNuS0hIMVdpdFdqRTlxMzFjOHBpSG9TblUzcDh3MnpFUitFcjBRNW1rTXo4?=
- =?utf-8?B?Q3d0YUYwR1EvQmNhaEo3azRBOFJKVTRBajlDaVFGc2tqSUV5bzN0aVNmeDYw?=
- =?utf-8?B?Q2Y5SG1Ia0tZVW4rc3RjQWdETCtvWGtSM3pjM3Z1NUs3QWo2R09NMDFVemJR?=
- =?utf-8?B?Y3B6QWlpSFVYT0RQd3FJQnFLbzdjWUllei92MkxxMlhZSXJaZGM5TFhrRnBR?=
- =?utf-8?B?WDV1OWlSdUFsczlveVc4Z3MyYzBFM2hFbURFMTl5ZktWOE9DcS84NVhCNHdm?=
- =?utf-8?B?SUpqUkNZeEtVVVdqZnN0VkxuQUFwZXYwclpJMmFZcjlpanZmbFY0N0hQZTRP?=
- =?utf-8?B?S0VwQnA1amNDTTlWSGY1UWl4V3BLampZbDd2UEFRWjBNaEw0Q01kVnVxa28z?=
- =?utf-8?B?N01qamFLYldyaGI3VXJJNlUvUUdTcXdVQ1ZxTE5lbm9wUy9TL2hBZW4xUXU1?=
- =?utf-8?B?ZldvaktqZmkybVJqdEZtM0ZBOCtYWlNxSTZmM05rcTZDdkhsdTduRUIrSnYr?=
- =?utf-8?B?Mlp6c2VoY3krc0lxTHhKdGwwMnQzRis4dWh2djdvVjMveTQ0OFJwWTdjUXJi?=
- =?utf-8?B?Z01JYmtvVVUwR3FXazArQnhQNXFjR0NkMm1PQis5cHBWWTRrejl1UG9nTGF1?=
- =?utf-8?B?a3I1Qkw3STNhd0RhRUkzY081eGtnZEpDKzlYUVFpNFRoSnBRWURYdW43M1Jy?=
- =?utf-8?B?WWVLTmt1dFFpclpkSVRtMGlLck9CRlVIdWhPd0M1WjBzeEwvN3JKanRYbG54?=
- =?utf-8?B?QnppZ3J3aTl6bGQrekdPakhGR2Q1WmVZOGw3ekFmbERTWFk1aTcyT0hSeWRs?=
- =?utf-8?B?bUpadGQxMDFhUWRJdjJiczZheDJpMWpNSUp4QlY3blg1KzZNdDNwdmZHdUV1?=
- =?utf-8?B?ancvVzNtM0V6UzVQZk13T3ZCSUdMZUgwb2o0MERrZFI2R3lyRHlFWldZRjFT?=
- =?utf-8?B?QVIzS1gyWnBUcW96d3VFaU9zTzJGVG9jVmtEMlZzUU91NVdiT3BZMHdnc2Ew?=
- =?utf-8?B?STlMVHZaSVY4Z003dTVMOURydWlEUGtDako1MkNCT0RLRy9xUmc1N1cvTDFF?=
- =?utf-8?B?dXdwS1ova3dRbDNuMDh5aHNnL0pGU3F6M3NCa2hoZWl2RXpUNGVrdzVTb2Fh?=
- =?utf-8?B?OFl1NUdQNEhsVUZISTdWcGt4RzQ5RXc4QWdhaVpwNGhCZ0FPcExuYnh1c3Zk?=
- =?utf-8?B?TnMrWUtjdm9QWmZiQnpCMk1WM2ZmOHhWNzh3RmVsOXdoL1E9PQ==?=
+ =?utf-8?B?cktjZ2pUSFFxaUpyWEdkUndjeGdQclV0SU9NanlvaHMvYWFWLzJOMHNQWTlS?=
+ =?utf-8?B?dGo2MjVGM1VoVUFwN3dreHZsUm81YXNiWW9xR1ErM3NibTE2WlpXa0lwaDBx?=
+ =?utf-8?B?enkwSVo4elUvQzAwZmR6bVlRU09FZ1BXY0o1ZFFBVGFNU0YzenNLSUZSRm1q?=
+ =?utf-8?B?VzV5UWNhWCtRVzR1ZVlrZzVwTE10bGhiTkVqSExZT2xYQUZiYzVHc2FRekE0?=
+ =?utf-8?B?T1NCMlA0OXBOTGZHWnhvSmExZ3JXSVc4cjlHOXh5ZktHbmo0ajgxWjFuZFFs?=
+ =?utf-8?B?bkZaSXYra0Y3RFhSNE93MlgrRVdhS2NzdzJ2cE9IMk5RNTlaOVVPTDFHMXhw?=
+ =?utf-8?B?cy8wVXd4UElwR2d3MXdyWWtycXNqT2FsZWgzRkw3UndTVDh3dXI1UjRQcEhr?=
+ =?utf-8?B?OFRMRjBmVTB0ZXVFMU5QWmZQU2lpU0dSaTk2TDM5NDdEODd2ZnpSaHNSdTBJ?=
+ =?utf-8?B?S0V6b0dpc0dwMERxbGFNUkxKdUQ5RXpUOE15WEFCN0ZaWmdOYklGVGZwSUgw?=
+ =?utf-8?B?N05tZ21NMTE3dkNQblhuZkUrY1p3TndLd1NJaStocDNNT2ZnbUcrcWFpamdR?=
+ =?utf-8?B?dkl2ckZqYlluQzRtY2dKcHZKRllsdElmNnJmZEdNNHBXYWhQVGZIbVJnSjN3?=
+ =?utf-8?B?QTBjVFc2NjUydUlKZzRVRnpFVTYxWTQzLzdnc3phRWhTTE1KTUNkQlhPNHdp?=
+ =?utf-8?B?VlcyWmRzTWo3Y0tZWWduNjJoc256dVd3NmI4c2NkTW9scnluL2Rleldoemw5?=
+ =?utf-8?B?Q2dvTFpFVE5GNjNTY3VleCtJTVl0T3JMa3VUU3p2VWE0ZWxtL0xsQzlFMVA1?=
+ =?utf-8?B?bnVUbnBsS0p0cldyaXBFMFlaM1VQQk9Ha2N6K3IxODZNWFpacmNmbUZ3TTVv?=
+ =?utf-8?B?RWY4UGt2Qk5FVTZxUHJyc2hMTVh0dnYvSFFieVJPWWszMlZWWTZsSEJEdFJw?=
+ =?utf-8?B?SWprTG5HbmRtd1gzRWhDZnVld3ZvQkRWc20wMXFVZFhqbm53QkloQ2grbWQz?=
+ =?utf-8?B?a1IyTHVGZ3YrNTFibjdKYThja21sTE5VYjFIY294dTBsY3dCMXhIQkllWlFW?=
+ =?utf-8?B?QjRzRjNNcjBrbk1MZURDUXVjMURLNWJrbXdmVDVoL0VuTWo3cC9GN1ZHUktn?=
+ =?utf-8?B?QnZubUNkWWpMNDRXNXdsQS9HTWVXZExEcTFONmQ0ZE9vY2xDVWNoRTJwcjZ1?=
+ =?utf-8?B?VWo5NEx5Q0ZlQkpUQjgyYTlYTllHemZHTSs3ZXJmZnRYeUc1QnVhUVZBU3F5?=
+ =?utf-8?B?WXlpbk04S1dMNFFuWUVlVlFOWjVrcmR3OGROeHM0Q055YTRPN0F4a1IxOUFW?=
+ =?utf-8?B?cVJGSHRseVZJNUE3R2o0WG40SnRabGE3SkpkSDcyWmF6OHFnZUxBdk9xSXdn?=
+ =?utf-8?B?aHdzL21KSGRObkRTSzRvQlE4QzRmWU1ReVo2V293bTRHUmttWnhMN0ZDRHF0?=
+ =?utf-8?B?YUpJMXdpTlR2eTBHcVE2dE9SdWlibDhXZ3pJUWpicEsxVlA3VEwxTmEyQUph?=
+ =?utf-8?B?YkJJN3VpbGRDajhVVWl1NVo4UEp0aW9VdWwwL05UNUI4emVnSG15dmhzNnhw?=
+ =?utf-8?B?dkwvUTlrcUQrSFoweHJYVHB6WGRLZ3IrT3g4bGdiSlhxWFliR25ONk91QlJh?=
+ =?utf-8?B?UXZBNDZ5WG45MEttK3grTm8wTWJ4b092Mmwrb3ZnUi9LZnBoejU5ZzBwWDNO?=
+ =?utf-8?B?aWpVM3ZQNFl5YUl2eUsxR2tPWFJVVzNYUm9XSkZ3NExZUXY2dnYzc1M1S3hy?=
+ =?utf-8?B?K29NR0pnM3JKMENMUHQ1Q1ZmRUdUNmlLN3pidVZKS0VoS1N4ZEdTZlI3UFlk?=
+ =?utf-8?B?VXNKa1ZWSDJnZ1RIb0pVLzdsdmVURW5EeWIrTXNUeTJzWnhJdWt5aHJkcXkr?=
+ =?utf-8?B?aDhQNUZRa3V3VlNuWDNOSXlCWHBONENncWo3K09IWUJERWxPRkRjUGFGRWhz?=
+ =?utf-8?Q?hCrCTpCCClinlpaX9sJWI12R4/0Jxb5O?=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR18MB4682.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5323.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018)(7053199007);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?NWZFSVFIMjlXK0lNUVVWY1RTYlcrRy8vZ1BKQnVXdTZQZzlzcGpxMWRVVUJL?=
- =?utf-8?B?NVprZkVpWWJYTHF6WFk2WkpYOFJaeG5KeW1kdXNGUGtna3hJM1lyMmUxOGt4?=
- =?utf-8?B?R2IvZUNENU1yVjEvQkhFRk1FRUl1N0VGRHViVkg5dTBYTVY4SVJJeUNOSXd1?=
- =?utf-8?B?RDhhVTNjZGdMRnZqTVRMQ1V4SjZEUGo1SnNsenNIaEI3aWM1Ky95NjJPTmJr?=
- =?utf-8?B?WEl2cVVmemRBK28vSk5lWEM5M1dLRzNySmtpdDZhSDMrSS94SW1mb01ZeWFs?=
- =?utf-8?B?eUVYdm4zdXFmNWpUYjFOQXpkK0RBcGRyMUxBUnBXRmF1Y1UrOGpwSFdPL3p6?=
- =?utf-8?B?cHNUNUhOWU95NDZYQVVCaVhJa0c0RVVzWnRNWW80YTZzbzA0dzYwWXhjcXJj?=
- =?utf-8?B?WnBCTS9sYW9FT1d3bUZDTEoyb3BzMUVJL2NSc2s0VDVxOTR2cFl6NW83RHox?=
- =?utf-8?B?TEdNeGdSN0ZZR0E3Q3VVYkxidjhUMXh3Z29vdWFhdGlDS3lMM0tBNTI1SnZy?=
- =?utf-8?B?aC91Y3E1cGpTU2o2aVBNaXZVQkI0ZERpRnVxSzlrL04xSU8rNW4ycDFsTXRL?=
- =?utf-8?B?aGV5RnRCeWdOVWM2WFZVa1ptS1Y0bFNwaXdVZnJ0WEpWQ2t6TEwzMXdab1Uy?=
- =?utf-8?B?WnlMbjY3VTFKM0lLK3owNWU1dzIzdU5LY3JxVUhHU3Jud0NVd2tHbko2QitZ?=
- =?utf-8?B?Y3FUSlc1WTRva3Awai9ia2h3TTU2aUhsN1dkQXBiVnE0Z1pzcTVqSmtkampy?=
- =?utf-8?B?QTlkYnlIaGFOSWtWcXhZdCtERm1UaWlnQWE5OHdNNlBjb3BPSk5DTE5HRWxH?=
- =?utf-8?B?UnduNCtLUjRPazkwdmZjTW9xZUdrWllGRmtFWE5TOWE3Q1k5UGwzakxJenk5?=
- =?utf-8?B?MlZRNTc2NEkyZzBybWRCbjg5ZHFOQVJxK3E5cE1BRVRpeFpNQmp4a3I0V0tM?=
- =?utf-8?B?eTZIY0tnNlhWd1M1Sm5WbytYSGUyek9SNldubW1RaG5FQ0dLWmJyK3pQa1dt?=
- =?utf-8?B?bWw1T1NNSkVWdFJjZXBlR1FyZ20wSFVNMWxoL3dTeklNS3RFc2Zia1ZhYWhk?=
- =?utf-8?B?NXpmdkU3ZlZSUVdsSkQ3bVB5cDZkTlBJMFB5TEM3N0doODRXS1NEVTBpOHo0?=
- =?utf-8?B?K2cwTnFINCtCeEsxSyt5NUVpTm9STlk4WHR5V1J3OWJmRjltRCtPNDZWSm96?=
- =?utf-8?B?Ym10aXJKekkraERnRjdxdHQzSnlrRlIwekQzRDBjRmRsRXFqOUFITGhFSkJQ?=
- =?utf-8?B?TENSN0RZUkV5TVNrKzU3OTRtRmlSYnJwS2xYK3BJREQwY1hqbTBGQkJxTFhl?=
- =?utf-8?B?bm9peVlMNE1lQXh3QU40U2dnSDFMeElCRDJpK2E2b1FKMDRXbWZjSmRpN1RT?=
- =?utf-8?B?WVhucUdBSHlaWlV4ZEIySk9KYm9IYm4yNHB1NENzMnl0RFJDYjVFdEY3M1Fl?=
- =?utf-8?B?MHJvY0FiazNhNHNabWhSRGs1U1JQcWZkd3BNU0V2ZnJLcytONjdBb1dqZ0R6?=
- =?utf-8?B?NDEvalJ1RERBUXBCSDVBVG9sSWF6QWtVbmpJTjRRRlZWRUtsOTVkU1pGWCtN?=
- =?utf-8?B?aVI3NXYvUHZORzJnUWZWUG8wRUdxTjBhY1pENFMzY0lQeHJSQUgyWEdMb1ZZ?=
- =?utf-8?B?emFPTTF5Mk1tNnd0MXJDVlZoOE1DUm44TksvNVk3Q2tCa0hnUGlGOGFuRUIv?=
- =?utf-8?B?bExIdGNsVHdhc0JobnNEb1RXWVZ2MHl0bkZQSG0rSU5PSDd2ZkVsMmM1Q3Jy?=
- =?utf-8?B?NTFTTzM0SGFLaGJPQ0tZblYxQnFNdDlueDZkL0RNLzV4VUZieldDeHFsd0t3?=
- =?utf-8?B?NU0waUNhVEJQY2Q0S3duYUIzZUpVS2E0a3VjZVF2L0FaN3VJYjFwNS8zZXJK?=
- =?utf-8?B?aStMejkvRytIOTdTaFVsNVRKRW9XSmp6eS84a3Nqd0txUEZvazJEUGxWc2FS?=
- =?utf-8?B?YkhpRnQvMXl6VFpCU2ZoTDA1cTluRzRPeVExM3Y2aSt4WWJybkZ6eUdubFZj?=
- =?utf-8?B?M1M0dzNYNjBYWkhodS9TVittcVZuSUs1WlFFNGtEWm55RHJmc2t4OS9zVVNT?=
- =?utf-8?B?OUxWcWphcGFPdk1yWmdFOU8vZGZUQzZNRUVCdDhpUFltcnRqT1cwU0E4M1JF?=
- =?utf-8?Q?1n6X0vLQknT/A2I999iBRMsOg?=
+ =?utf-8?B?NDJ2eStNRG14VEpCRDJQcXAzMTBIalNLMGc0YzhiTC9wTWlOT1p3Yk95bk80?=
+ =?utf-8?B?NWhXbGFVbUd3UDV3RFRtMzNXYitRUkFNWXVoVzhJVjk2cUVkUGk2UlVUTE5t?=
+ =?utf-8?B?VFdHb0pMY0FnRGN3ZlQyQ3pTdEdGUWNiQmlaWjNhMWExbW11UzlIVTNxendO?=
+ =?utf-8?B?ZkpRVjVHNUVObE1TZVcyQkNSQnJ3ZXBCWkJDN3N1SkFPVXFMY2Ird2NDM3Yv?=
+ =?utf-8?B?SURibldXdndUTHRHbDdmRW9pQ0hHMjJ1RFd4ZUV3aGNCWlpINGhNU1k1QTRM?=
+ =?utf-8?B?U2JOL1RkeFFrRlJ0TU1xMUlhcXc3d2x5NFFXTmsyVm9KeEtBMXIvd0IzTHJG?=
+ =?utf-8?B?a2tweWFGaEdiN001UlpBMUJEQVJ4c0tiRldieUpuV2pTMnJQcTNsYzFBbGhS?=
+ =?utf-8?B?RnY4Ym5NenRnWGxoQXBKRjkvNEh0UldHQ3loODRET3J5dWQvMW0xQjZUN04w?=
+ =?utf-8?B?T2JVdTNtWWhUelNBY0VERGIxU0JpOXFSY09jMklmdkFBcGRsZUpXZU1ienhx?=
+ =?utf-8?B?bEVTeDZtbzdOc1RHV2puUTRzaFBMbzVPREY2RjJJUnFDSXAvVFh3UGd0Z3kr?=
+ =?utf-8?B?bzdHakpqNFVlbytHZ0FRYzNNUm5pN0c3Q0szWG9vRzBUVjg4ZFZvVmFZL1Jk?=
+ =?utf-8?B?SjhoUVJ6QlZJbjVhTW5UUUZxNllPYnpkZ2JJWTVRRGJzZFBaVjRsSk5aM3Nj?=
+ =?utf-8?B?VTNqa3lBT0xoSkdpK2FjSXdlVEtuSXhTd25zbCtjTHIxNzRsZzUxNElnbTdQ?=
+ =?utf-8?B?OW1GWEFadCtSeTZQQUhXYnp4RW9LTGJkNGpiZktJaDBnV3dobHVabmp1aXh5?=
+ =?utf-8?B?Ylg4Snd0UlJqKy9saFQycUVLWGY0MUxaSSsvMmhoQTVJem1yR0lUNnR1SUJv?=
+ =?utf-8?B?ODNVdzlsUVZabmprS29odHVEaUdyY2ZSbkZYUEdGN2Exb255VWM3dmExaGQ0?=
+ =?utf-8?B?d3pyWWR5R3JXMHA3NkNRRTRRMHE5dnV2eVMyRHBCZE5lZlliTG9HVHFibFBi?=
+ =?utf-8?B?dis5ajdJbXhKZHVSWmxOOHpuaXo4Skp1a2lHbWJrTjhqZ1dnZ2J3Q0dYUzdt?=
+ =?utf-8?B?RDRxbVBBNmsxb0M1ZEJuM2NyRlY5UU5DU2l0WHdOMDk1eit3cXl0VWdGWGpY?=
+ =?utf-8?B?RDVWVWZDeWNyYkN5WXpFcnZGUUdvcVlHblBoWnlmeGgvOE45V1RrYXByeWU5?=
+ =?utf-8?B?YVZpTHJTNmtkSUhObzlmc2s0MC9JRVIrUUVSdHdUcXl1clBTb3FnS3FrdjlG?=
+ =?utf-8?B?RzFVS1RqUXJIL1VBTm1BbGx0RDV1a1JJOURWcnp2Sk02NzZaZmFhQ2ZFYXNn?=
+ =?utf-8?B?ZC8xZm9lMHJSWkZHMTVubjlJalFwUDZQc0JlaGkwQjNPL3dJOHQvdEtRL3d3?=
+ =?utf-8?B?NkllNEI1ZDMwdkU3UUwvMmNObkdHbUpZaU1qS09BTU9ZdDhkYWlyQXNOa2VV?=
+ =?utf-8?B?VU9mUHozdHFzaG1OS0k5K3didWR6ZzRQU3BDcEJ4Y0VKblgyYU81N3RCTS9i?=
+ =?utf-8?B?bXFpdGFKRnVtTWQ5ckVMREs4bkI5cjdFVTAyd3FESFRTVHBIUGdvN2ZiODZy?=
+ =?utf-8?B?Sm84ZnIzNkVxMXZWRXFJRmFuWVVhZzFmK29mdTNZSjN1RjlJY0ZFOFk2K2pa?=
+ =?utf-8?B?ZURXcUpSQ0o3U2NiWkJodzFrNGRCZ0NzZkUvbDM5M2d2eGpuVVBhMmF5cXVW?=
+ =?utf-8?B?NkkvVEhQRi9LNWl6WEpGeFFkNVRYeWZINDhtUkZPMUprRkFyTytpQ1FQSUd4?=
+ =?utf-8?B?Y1BBYVQ0TWNYZDlvZUg4WUJEMXhFbzI1RXdXb09zdHR5SWl4dlIrY3NoaUVu?=
+ =?utf-8?B?TDA2ejQ5elM0U29rZlJOdVNvbWxNQjV0RW9lREExWFg3UEh1cVpWRmpQUUJJ?=
+ =?utf-8?B?eVdmck0ySGszak9rNU5jWTRndk1YM04rbkEvZGZDcXdHbmd0OEp1U2RDUmp5?=
+ =?utf-8?B?dDBDZksrUFVzRG9yY3BTUmpLVWFvRXJmVmRLbFdmVkM0aGpkcFJadGNIdHd6?=
+ =?utf-8?B?MFp0WW1NajFySXdMVkhLTW5EQlhhK0xvU29tdDdCUlRscmFVVXdBWXNRbFBz?=
+ =?utf-8?B?UlJRR20zaThjNzJuL1hzbnozUDAwbzJDR0wxMENmNm81TmtmQmJiL0wzNSti?=
+ =?utf-8?Q?Zqu4=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: marvell.com
+X-OriginatorOrg: Nvidia.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR18MB4682.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d01d8fc-cee2-4852-1a9b-08dd49fc003a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2025 17:54:44.0760
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5323.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d80513e-6352-4caa-de07-08dd49fc426d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2025 17:56:35.0962
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: D+E2Y5XvSIU4wIQLrVzWXh0tVwouqXTBYuR6OJa8diSoBSEtVE4RBalK9/khrXzlFa6HdeKRJslTelemkgD0Cw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR18MB5088
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-GUID: tAEVOhUImhMAEMhuTI5_LVlYLzTcFX_W
-X-Proofpoint-ORIG-GUID: tAEVOhUImhMAEMhuTI5_LVlYLzTcFX_W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-10_09,2025-02-10_01,2024-11-22_01
+X-MS-Exchange-CrossTenant-userprincipalname: HVI/ZnXwlU2Vbqbbni8k7eLgU+CoX8VXrCOteFEwx8PS3La+v+aeG9yhCT2egbqcMhSE5xzvtmkTTiw2yRhCmg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9138
 
-
-
-> -----Original Message-----
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Sent: Saturday, February 8, 2025 2:36 AM
-> To: Wilson Ding <dingwei@marvell.com>
-> Cc: cassel@kernel.org; Bjorn Helgaas <helgaas@kernel.org>;
-> lpieralisi@kernel.org; thomas.petazzoni@bootlin.com; kw@linux.com;
-> robh@kernel.org; bhelgaas@google.com; linux-pci@vger.kernel.org; linux-
-> arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Sanghoon Lee
-> <salee@marvell.com>
-> Subject: Re: [EXTERNAL] Re: [PATCH 1/1] PCI: armada8k: Add link-down
-> handle
->=20
-> On Fri, Feb 07, 2025 at 06:=E2=80=8A46:=E2=80=8A22PM +0000, Wilson Ding w=
-rote: > > > > -----
-> Original Message----- > > From: Manivannan Sadhasivam
-> <manivannan.=E2=80=8Asadhasivam@=E2=80=8Alinaro.=E2=80=8Aorg> > > Sent: F=
-riday, February 7, 2025
-> 9:=E2=80=8A58 AM >=20
-> On Fri, Feb 07, 2025 at 06:46:22PM +0000, Wilson Ding wrote:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Sent: Friday, February 7, 2025 9:58 AM
-> > > To: Wilson Ding <dingwei@marvell.com>; cassel@kernel.org
-> > > Cc: Bjorn Helgaas <helgaas@kernel.org>; lpieralisi@kernel.org;
-> > > thomas.petazzoni@bootlin.com; kw@linux.com; robh@kernel.org;
-> > > bhelgaas@google.com; linux-pci@vger.kernel.org; linux-arm-
-> > > kernel@lists.infradead.org; linux-kernel@vger.kernel.org; Sanghoon
-> > > Lee <salee@marvell.com>
-> > > Subject: [EXTERNAL] Re: [PATCH 1/1] PCI: armada8k: Add link-down
-> > > handle
-> > >
-> > > + Niklas (who was interested in link down handling) On Sat, Feb 01,
-> > > + 2025 at 11:=E2=80=8A05:=E2=80=8A56PM +0000, Wilson Ding wrote: > > =
-On November 13,
-> 2024 3:
-> > > + 02:=E2=80=8A55 AM GMT+05:=E2=80=8A30, Bjorn Helgaas > > <mailto:=E2=
-=80=8Ahelgaas@=E2=80=8Akernel.=E2=80=8A
-> > > + org>
-> > > + wrote: > >
-> > >
-> > > + Niklas (who was interested in link down handling)
-> > >
-> > > On Sat, Feb 01, 2025 at 11:05:56PM +0000, Wilson Ding wrote:
-> > > > > On November 13, 2024 3:02:55 AM GMT+05:30, Bjorn Helgaas
-> > > > > <mailto:helgaas@kernel.org> wrote:
-> > > > > >In subject:
-> > > > > >
-> > > > > >  PCI: armada8k: Add link-down handling
-> > > > > >
-> > > > > >On Mon, Nov 11, 2024 at 10:48:13PM -0800, Jenishkumar
-> > > > > >Maheshbhai
-> > > > > Patel wrote:
-> > > > > >> In PCIE ISR routine caused by RST_LINK_DOWN we schedule work
-> > > > > >> to handle the link-down procedure.
-> > > > > >> Link-down procedure will:
-> > > > > >> 1. Remove PCIe bus
-> > > > > >> 2. Reset the MAC
-> > > > > >> 3. Reconfigure link back up
-> > > > > >> 4. Rescan PCIe bus
-> > > > > >
-> > > > > >s/PCIE/PCIe/
-> > > > > >
-> > > > > >Rewrap to fill 75 columns.
-> > > > > >
-> > > > > >I assume this basically removes a Root Port (and the hierarchy
-> > > > > >below
-> > > > > >it) if the link goes down, and then resets the MAC and tries to
-> > > > > >bring up the link and enumerate the hierarchy again.
-> > > > > >
-> > > > > >No other drivers do this, so why does armada8k need it?  Is
-> > > > > >this to work around some unreliable link?
-> > > > >
-> > > > > Certainly Qcom IPs have this same feature and I was also looking
-> > > > > to implement it. But the link down should not be handled by this
-> > > > > in the
-> > > controller driver.
-> > > > >
-> > > > > Instead, it should be tied to bus reset in the core and the
-> > > > > reset should be done through a callback implemented in the
-> > > > > controller drivers. This way, the reset cannot happen in the
-> > > > > back of PCI core and client
-> > > drivers.
-> > > > >
-> > > > > That said, the Link down IRQ received by this driver should also
-> > > > > be propagated back to the PCI core and the core should then call
-> > > > > the callback to reset the bus that I mentioned above.
-> > > > >
-> > > >
-> > > > It's more than a work-around for the unreliable link. A few
-> > > > customers may have such application - independent power supply to
-> > > > the device with dedicated reset GPIO to #PRST. In this way, the
-> > > > power cycle and warm reset of RC and EP won't have impact on each
-> > > > other. However, it may lead into the PCI driver not aware of the
-> > > > link down when an unexpected
-> > > power down or reset occurs on the device.
-> > > > We cannot assume the link will be recovered soon. The worse thing
-> > > > is the driver may continue access to the device, which may hang the=
- bus.
-> > > > Since the device is no longer present on the bus, it's better to
-> > > > remove it. Besides, in order to bring up the link, the only way is
-> > > > to reset the MAC, which starts over the state machine of LTSSM.
-> > > >
-> > > > Well, we also noticed that there is no other driver that did this.
-> > > > I agree it is not necessary if the power cycle or warm reset of
-> > > > the device is done gracefully. The user can remove the device
-> > > > prior to the power cycle/reset.  And do the rescan after the link
-> > > > is recovered. However,
-> > > the unexpected power down is still possible.
-> > > > Please enlighten me if there is any better approach to handle such
-> > > > unexpected link down.
-> > > >
-> > >
-> > > There is no issue in retraining the link. My concern is that, the
-> > > retrain should not happen autonomously in the controller driver. PCI
-> > > core should be made informed of it. More below.
-> > >
-> >
-> > Do you mean
-> > - pass the link down/up events to PCI core
-> > - remove the device or hierarchy by PCI core upon link down
-> > - initiate the link retraining in PCI core by calling the platform
-> > retrain callbacks
-> > - rescan the bus once link is recovered
-> >
->=20
-> Yeah. This is what I came up with quickly:
->=20
-> ```
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c index
-> b6536ed599c3..561eeb464220 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -706,6 +706,33 @@ void pci_free_host_bridge(struct pci_host_bridge
-> *bridge)  }  EXPORT_SYMBOL(pci_free_host_bridge);
->=20
-> +void pci_host_bridge_handle_link_down(struct pci_host_bridge *bridge) {
-> +       struct pci_bus *bus =3D bridge->bus;
-> +       struct pci_dev *child, *tmp;
-> +       int ret;
-> +
-> +       pci_lock_rescan_remove();
-> +
-> +       /* Knock the devices off bus since we cannot access them */
-> +       list_for_each_entry_safe(child, tmp, &bus->devices, bus_list)
-> +               pci_stop_and_remove_bus_device(child);
-> +
-> +       /* Now retrain the link in a controller specific way to bring it =
-back */
-> +       if (bus->ops->retrain_link) {
-> +               ret =3D bus->ops->retrain_link(bus);
-> +               if (ret) {
-> +                       dev_err(&bridge->dev, "Failed to retrain the link=
-!\n");
-> +                       pci_unlock_rescan_remove();
-> +                       return;
-> +               }
-> +       }
-> +
-> +       pci_rescan_bus(bus);
-> +       pci_unlock_rescan_remove();
-> +}
-> +EXPORT_SYMBOL(pci_host_bridge_handle_link_down);
-> +
->  /* Indexed by PCI_X_SSTATUS_FREQ (secondary bus mode and frequency) */
-> static const unsigned char pcix_bus_speed[] =3D {
->         PCI_SPEED_UNKNOWN,              /* 0 */
-> diff --git a/include/linux/pci.h b/include/linux/pci.h index
-> 47b31ad724fa..1c6f18a51bdd 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -637,6 +637,7 @@ struct pci_host_bridge *pci_alloc_host_bridge(size_t
-> priv);  struct pci_host_bridge *devm_pci_alloc_host_bridge(struct device =
-*dev,
->                                                    size_t priv);  void pc=
-i_free_host_bridge(struct
-> pci_host_bridge *bridge);
-> +void pci_host_bridge_handle_link_down(struct pci_host_bridge *bridge);
->  struct pci_host_bridge *pci_find_host_bridge(struct pci_bus *bus);
->=20
->  void pci_set_host_bridge_release(struct pci_host_bridge *bridge, @@ -804=
-,6
-> +805,7 @@ struct pci_ops {
->         void __iomem *(*map_bus)(struct pci_bus *bus, unsigned int devfn,=
- int
-> where);
->         int (*read)(struct pci_bus *bus, unsigned int devfn, int where, i=
-nt size, u32
-> *val);
->         int (*write)(struct pci_bus *bus, unsigned int devfn, int where, =
-int size,
-> u32 val);
-> +       int (*retrain_link)(struct pci_bus *bus);
->  };
->=20
->  /*
-> ```
->=20
-> Your controller driver has to call pci_host_bridge_handle_link_down() dur=
-ing
-> the link down event (make it threaded if not done already). Then you shou=
-ld
-> also populate the pci_ops::retrain_link() callback with the function that
-> retrains the broken link. Finally, the bus will be rescanned to enumerate=
- the
-> devices.
->=20
-> I do have plans to plug this retrain callback to one of the bus_reset() f=
-unctions
-> in the future so that we can bring the link back while doing bus level re=
-set
-> (uncorrectable AERs and such). But this will do the job for now.
->=20
-> I will send a series on Monday with Qcom driver as a reference.
->=20
-> - Mani
->=20
-
-Sounds great. Looking forward to your patches. Thanks a lot!
-
-> --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbWFuaXZhbm5hbi5zYWRo
+YXNpdmFtQGxpbmFyby5vcmcgPG1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8ub3JnPg0KPiBT
+ZW50OiAxMCBGZWJydWFyeSAyMDI1IDIzOjIxDQo+IFRvOiBWaWR5YSBTYWdhciA8dmlkeWFzQG52
+aWRpYS5jb20+DQo+IENjOiBOaWtsYXMgQ2Fzc2VsIDxjYXNzZWxAa2VybmVsLm9yZz47IGxwaWVy
+YWxpc2lAa2VybmVsLm9yZzsga3dAbGludXguY29tOw0KPiByb2JoQGtlcm5lbC5vcmc7IGJoZWxn
+YWFzQGdvb2dsZS5jb207IHF1aWNfc2NoaW50YXZAcXVpY2luYy5jb207DQo+IGpvaGFuK2xpbmFy
+b0BrZXJuZWwub3JnOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdl
+ci5rZXJuZWwub3JnOw0KPiBUaGllcnJ5IFJlZGluZyA8dHJlZGluZ0BudmlkaWEuY29tPjsgSm9u
+IEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+OyBLcmlzaG5hDQo+IFRob3RhIDxrdGhvdGFA
+bnZpZGlhLmNvbT47IE1hbmlrYW50YSBNYWRkaXJlZGR5IDxtbWFkZGlyZWRkeUBudmlkaWEuY29t
+PjsNCj4gc2FnYXIudHZAZ21haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjFdIFBDSTog
+dGVncmExOTQ6IEFkZCBzdXBwb3J0IGZvciBQQ0llIFJDICYgRVAgaW4gVGVncmEyMzQNCj4gUGxh
+dGZvcm1zDQo+IA0KPiBFeHRlcm5hbCBlbWFpbDogVXNlIGNhdXRpb24gb3BlbmluZyBsaW5rcyBv
+ciBhdHRhY2htZW50cw0KPiANCj4gDQo+IE9uIE1vbiwgRmViIDEwLCAyMDI1IGF0IDAyOjI1OjQz
+UE0gKzAwMDAsIFZpZHlhIFNhZ2FyIHdyb3RlOg0KPiA+IFRoYW5rcyBOaWtsYXMgZm9yIHRoZSBy
+ZXZpZXcuDQo+ID4gSSdsbCByZXdyaXRlIHRoZSBjb21taXQgbWVzc2FnZSBhZGQgdGhlIGZvbGxv
+d2luZyBsaW5lDQo+ID4gRml4ZXM6IGE1NGUxOTA3MzcxOCAoIlBDSTogdGVncmExOTQ6IEFkZCBU
+ZWdyYTIzNCBQQ0llIHN1cHBvcnQiKQ0KPiA+DQo+IA0KPiBObywgcGxlYXNlLiBUcnkgdG8gdXNl
+IHRoZSBnZW5lcmljIEFSQ0ggc3ltYm9sIGRlcGVuZGVuY3kgYXMgc3VnZ2VzdGVkLg0KV2Ugd2Fu
+dGVkIHRvIGhhdmUgbW9yZSBncmFudWxhcml0eSBpbiB0ZXJtcyBvZiBlbmFibGluZyB0aGUgZHJp
+dmVyDQpmb3Igb25seSB0aG9zZSBTb0NzIHdoZXJlIHRoZSByZXNwZWN0aXZlIGhhcmR3YXJlIGlz
+IGF2YWlsYWJsZS4NCkJ1dCwgaWYgdGhlIGNvbW11bml0eSBoYXMgc3Ryb25nIHByZWZlcmVuY2Ug
+dG93YXJkcyBlbmFibGluZw0KdGhlIGRyaXZlcnMgYXQgYSBoaWdoZXIgbGV2ZWwsIEknbGwgbW9k
+aWZ5IGFuZCBzZW5kIG5leHQgdmVyc2lvbg0Kb2YgdGhlIHBhdGNoIGFjY29yZGluZ2x5Lg0KDQot
+IFZpZHlhIFNhZ2FyDQoNCj4gDQo+IC0gTWFuaQ0KPiANCj4gPiBUaGFua3MNCj4gPiBWaWR5YSBT
+YWdhcg0KPiA+DQo+ID4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gPiBGcm9t
+OiBOaWtsYXMgQ2Fzc2VsIDxjYXNzZWxAa2VybmVsLm9yZz4NCj4gPiBTZW50OiBUdWVzZGF5LCBK
+YW51YXJ5IDI4LCAyMDI1IDE3OjM0DQo+ID4gVG86IFZpZHlhIFNhZ2FyIDx2aWR5YXNAbnZpZGlh
+LmNvbT4NCj4gPiBDYzogbHBpZXJhbGlzaUBrZXJuZWwub3JnIDxscGllcmFsaXNpQGtlcm5lbC5v
+cmc+OyBrd0BsaW51eC5jb20NCj4gPiA8a3dAbGludXguY29tPjsgbWFuaXZhbm5hbi5zYWRoYXNp
+dmFtQGxpbmFyby5vcmcNCj4gPiA8bWFuaXZhbm5hbi5zYWRoYXNpdmFtQGxpbmFyby5vcmc+OyBy
+b2JoQGtlcm5lbC5vcmcgPHJvYmhAa2VybmVsLm9yZz47DQo+ID4gYmhlbGdhYXNAZ29vZ2xlLmNv
+bSA8YmhlbGdhYXNAZ29vZ2xlLmNvbT47IHF1aWNfc2NoaW50YXZAcXVpY2luYy5jb20NCj4gPiA8
+cXVpY19zY2hpbnRhdkBxdWljaW5jLmNvbT47IGpvaGFuK2xpbmFyb0BrZXJuZWwub3JnDQo+ID4g
+PGpvaGFuK2xpbmFyb0BrZXJuZWwub3JnPjsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZw0KPiA+
+IDxsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+Zw0KPiA+IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgVGhpZXJyeSBSZWRpbmcgPHRy
+ZWRpbmdAbnZpZGlhLmNvbT47DQo+ID4gSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5jb20+
+OyBLcmlzaG5hIFRob3RhIDxrdGhvdGFAbnZpZGlhLmNvbT47DQo+ID4gTWFuaWthbnRhIE1hZGRp
+cmVkZHkgPG1tYWRkaXJlZGR5QG52aWRpYS5jb20+OyBzYWdhci50dkBnbWFpbC5jb20NCj4gPiA8
+c2FnYXIudHZAZ21haWwuY29tPg0KPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjFdIFBDSTogdGVn
+cmExOTQ6IEFkZCBzdXBwb3J0IGZvciBQQ0llIFJDICYgRVAgaW4NCj4gPiBUZWdyYTIzNCBQbGF0
+Zm9ybXMNCj4gPg0KPiA+IEV4dGVybmFsIGVtYWlsOiBVc2UgY2F1dGlvbiBvcGVuaW5nIGxpbmtz
+IG9yIGF0dGFjaG1lbnRzDQo+ID4NCj4gPg0KPiA+IEhlbGxvIFZpZHlhLA0KPiA+DQo+ID4gT24g
+VHVlLCBKYW4gMjgsIDIwMjUgYXQgMTA6MTI6NDRBTSArMDUzMCwgVmlkeWEgU2FnYXIgd3JvdGU6
+DQo+ID4gPiBBZGQgUENJZSBSQyAmIEVQIHN1cHBvcnQgZm9yIFRlZ3JhMjM0IFBsYXRmb3Jtcy4N
+Cj4gPg0KPiA+IFRoZSBjb21taXQgbG9nIGRvZXMgbGVhdmUgcXVpdGUgYSBmZXcgcXVlc3Rpb25z
+IHVuYW5zd2VyZWQuDQo+ID4NCj4gPiBTaW5jZSB5b3UgYXJlIGp1c3QgdXBkYXRpbmcgdGhlIEtj
+b25maWcgYW5kIG5vdGhpbmcgZWxzZToNCj4gPiBEb2VzIHRoZSBEVCBiaW5kaW5nIGFscmVhZHkg
+aGF2ZSBzdXBwb3J0IGZvciB0aGUgVGVncmEyMzQgU29DPw0KPiA+IERvZXMgdGhlIGRyaXZlciBh
+bHJlYWR5IGhhdmUgc3VwcG9ydCBmb3IgdGhlIFRlZ3JhMjM0IFNvQz8NCj4gPg0KPiA+IExvb2tp
+bmcgYXQgdGhlIERUIGJpbmRpbmcgYW5kIGRyaXZlciwgdGhlIGFuc3dlciB0byBib3RoIHF1ZXN0
+aW9ucyBpcw0KPiA+IHllcy4gKFRoaXMgc2hvdWxkIGhhdmUgYmVlbiBpbiB0aGUgY29tbWl0IG1l
+c3NhZ2UgSU1PLikNCj4gPg0KPiA+DQo+ID4gQnV0IHRoYXQgbGVhZHMgbWUgdG8gdGhlIHF1ZXN0
+aW9uLCBzaW5jZSB0aGVyZSBpcyBzdXBwb3J0IGZvciBUZWdyYTIzNA0KPiA+IFNvQyBpbiB0aGUg
+ZHJpdmVyLCBkb2VzIHRoaXMgbWVhbnMgdGhhdCB0aGlzIGZpeGVzIGEgcmVncmVzc2lvbiwgZS5n
+Lg0KPiA+IHRoZSBLY29uZmlnIEFSQ0hfVEVHUkFfMjM0X1NPQyB3YXMgYWRkZWQgYWZ0ZXIgdGhl
+IGRyaXZlciBzdXBwb3J0IGluDQo+ID4gdGhpcyBkcml2ZXIgd2FzIGFkZGVkLiBJbiB0aGlzIGNh
+c2UsIHlvdSBzaG91bGQgaGF2ZSBhIEZpeGVzOiB0YWcgdGhhdA0KPiA+IHBvaW50cyB0byB0aGUg
+Y29tbWl0IHRoYXQgYWRkZWQgQVJDSF9URUdSQV8yMzRfU09DLg0KPiA+DQo+ID4gT3IgaGFzIHRo
+ZSB0aGUgZHJpdmVyIHN1cHBvcnQgZm9yIFRlZ3JhMjM0IGJlZW4gImRlYWQtY29kZSIgc2luY2Ug
+aXQNCj4gPiB3YXMgb3JpZ2luYWxseSBhZGRlZD8gKEJlY2F1c2Ugd2l0aG91dCB0aGlzIHBhdGNo
+LCBubyBvbmUgY2FuIGhhdmUNCj4gPiB0ZXN0ZWQgaXQsIGF0IGxlYXN0IG5vdCB3aXRob3V0IENP
+TVBJTEVfVEVTVC4pIEluIHRoaXMgY2FzZSwgeW91DQo+ID4gc2hvdWxkIGFkZDoNCj4gPiBGaXhl
+czogYTU0ZTE5MDczNzE4ICgiUENJOiB0ZWdyYTE5NDogQWRkIFRlZ3JhMjM0IFBDSWUgc3VwcG9y
+dCIpDQo+ID4NCj4gPg0KPiA+IEtpbmQgcmVnYXJkcywNCj4gPiBOaWtsYXMNCj4gDQo+IC0tDQo+
+IOCuruCuo+Cuv+CuteCuo+CvjeCuo+CuqeCvjSDgrprgrqTgrr7grprgrr/grrXgrq7gr40NCg==
 
