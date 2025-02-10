@@ -1,239 +1,165 @@
-Return-Path: <linux-pci+bounces-21044-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21045-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4A06A2E0D2
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Feb 2025 22:18:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0EB1A2E20F
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 02:39:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EBBA71882446
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Feb 2025 21:18:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F23391887BB1
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Feb 2025 01:40:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63A85236432;
-	Sun,  9 Feb 2025 21:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=buserror.net header.i=@buserror.net header.b="0UnPtkDc"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70FA81119A;
+	Mon, 10 Feb 2025 01:39:53 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from baldur.buserror.net (baldur.buserror.net [165.227.176.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB81A1DFE16;
-	Sun,  9 Feb 2025 21:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.227.176.147
+Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98DBD23CB;
+	Mon, 10 Feb 2025 01:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739135911; cv=none; b=MNwEr+nn9+4g2L8bz7nAjFGVL4iE6HwuIVR9WpzukCjwi6cbGV/3iT35XX5B0uS0cUzQAeBKbSBbmgFFJj+MwhQ8hsMpK2/iWRlfKz6eYqoyVBiSM4d4bP5E62whuB2A6FG2RzF/fItzo/GZQ6NJgEuoJ/7te4eTAfFEDTDFl5o=
+	t=1739151593; cv=none; b=oUHfvgunDLCjvXg6Rzyk5skCytPxJybT+Hh7vc1jPHTedU7oqPh+1DLefO4GOkZg+Q5M4DG3y2QCK5PSFuLLQvHepyImXLlmNi3RTHDFY57U+1NOu1zvsWmGtMOyRCeaaPMrG+1hRQnvHjqDt2E8HNtIh/iumIDZ6DT++W3fORg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739135911; c=relaxed/simple;
-	bh=Kg6oaiN5VgUed118o3orQZEWOHSb84YE2ygFB+H2ORo=;
-	h=Date:From:To:Cc:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:Subject; b=dU7dlYWvVjs2yHmPCYz9K7BAbCKotz8kkMlb5ky3IEdRrGHKMWyFrcYC34CfyFIVchSjoMQpv/9SWRnNwdnEc0VzsOi6b+Y4eadHUZZlGOkAGP5BvMSa20l/j1F0YYdU++oinV5IewEXtrT85cACLK8fqPKaBEvOIc4awoS/0+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=buserror.net; spf=pass smtp.mailfrom=buserror.net; dkim=pass (2048-bit key) header.d=buserror.net header.i=@buserror.net header.b=0UnPtkDc; arc=none smtp.client-ip=165.227.176.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=buserror.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buserror.net
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=buserror.net; s=rsa_sel; h=Subject:In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Cc:To:From:Date:Sender:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=EpToGD3dUgsdAKwVgr42gOxVA1d/S1QPZ4reqp0Dgs8=; b=0UnPtkDcmzDcjvHDUHyLT2CjRU
-	Wu31RLzuZn8p0dV1DURWjhl+4+u/yXCjfpbN//Fv+gzr7dFxyWAIY13siJk1+2c2h7flpXKEbo5GK
-	Nzb0MrDhlkKl23df30ZGunrnNmUcpvB/tY7q0jPyZACh4u0zgcDKAURgcZgDdJCfSub1blBNmf6Ye
-	2sc/RnS11ATYBdxLh4TOGHrIUM868ob5a1q6cLyIoCxxUqwRzg3HVOyqHUfIDBNgC955YJewdlyOP
-	VUcjGVLAyzhCUnLHWphUkyZmWKmwZrAiNhydfaGiX5Yiakntm82WcDWO+upyCLZ9SU2k3ajGLNyec
-	oI4TO6mg==;
-Received: from oss by baldur.buserror.net with local (Exim 4.96)
-	(envelope-from <oss@buserror.net>)
-	id 1thDxm-00C5Xt-1r;
-	Sun, 09 Feb 2025 14:31:35 -0600
-Date: Sun, 9 Feb 2025 14:31:34 -0600
-From: Crystal Wood <oss@buserror.net>
-To: j.ne@posteo.net
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org, Li Yang <leoyang.li@nxp.com>,
-	John Ogness <john.ogness@linutronix.de>
-Message-ID: <Z6kQpuQf5m-bXTyt@buserror.net>
-References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
- <20250207-ppcyaml-v2-9-8137b0c42526@posteo.net>
+	s=arc-20240116; t=1739151593; c=relaxed/simple;
+	bh=6tI7QAXib5VmS3pEdyl1MKQdUwVYq/ESMzWC+7SK860=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JA8gv4Yce2+F9fpl2H7QW42c/QiV2vzQ9jS75R0D6zxlldeBNodcXvRJrjjYxEKvwwHbjDtNV0WO7NNBn9jLxlv/VBHswQzIxLgJSlG116aoOc/MlonOTsmUKwCadqB6I82FZLsxi7FWePFAoeoR1n8iZ1riJfMa3RAERbbKYQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
+Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 10 Feb 2025 10:39:43 +0900
+Received: from mail.mfilter.local (mail-arc01.css.socionext.com [10.213.46.36])
+	by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 8D8232006EA4;
+	Mon, 10 Feb 2025 10:39:43 +0900 (JST)
+Received: from iyokan2.css.socionext.com ([172.31.9.53]) by m-FILTER with ESMTP; Mon, 10 Feb 2025 10:39:43 +0900
+Received: from [10.212.246.222] (unknown [10.212.246.222])
+	by iyokan2.css.socionext.com (Postfix) with ESMTP id 32C5CAB187;
+	Mon, 10 Feb 2025 10:39:43 +0900 (JST)
+Message-ID: <90c7077f-0e2e-4d9e-912d-913a51170acc@socionext.com>
+Date: Mon, 10 Feb 2025 10:39:42 +0900
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250207-ppcyaml-v2-9-8137b0c42526@posteo.net>
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: j.ne@posteo.net, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, krzk@kernel.org, imx@lists.linux.dev, maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, dlemoal@kernel.org, cassel@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, lee@kernel.org, vkoul@kernel.org, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, bhelgaas@google.com, j.neuschaefer@gmx.net, wim@linux-watchdog.org, linux@roeck-us.net, broonie@kernel.org, miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org, linux-pci@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, leoyang.li@nxp.com, john.ogness@linutronix.de
-X-SA-Exim-Mail-From: oss@buserror.net
-X-Spam-Level: 
-X-Spam-Report: 
-	*  -15 BAYES_00 BODY: Bayes spam probability is 0 to 1%
-	*      [score: 0.0000]
-	* -0.0 NO_RELAYS Informational: message was not relayed via SMTP
-Subject: Re: [PATCH v2 09/12] dt-bindings: memory-controllers: Convert
- fsl,elbc to YAML
-X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] misc: pci_endpoint_test: Avoid issue of interrupts
+ remaining after request_irq error
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250122022446.2898248-1-hayashi.kunihiko@socionext.com>
+ <20250122022446.2898248-2-hayashi.kunihiko@socionext.com>
+ <20250128141242.pog2tuorvqmobain@thinkpad>
+ <2cdb5e43-47e0-43ba-ba17-87e8d5dc602d@socionext.com>
+ <20250207180229.klwodx7m3rmmopnq@thinkpad>
+Content-Language: en-US
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+In-Reply-To: <20250207180229.klwodx7m3rmmopnq@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 07, 2025 at 10:30:26PM +0100, J. Neuschäfer via B4 Relay wrote:
-> From: "J. Neuschäfer" <j.ne@posteo.net>
+Hi Manivannan,
+
+On 2025/02/08 3:02, Manivannan Sadhasivam wrote:
+> On Wed, Jan 29, 2025 at 04:54:46PM +0900, Kunihiko Hayashi wrote:
+>> Hi Manivannan,
+>>
+>> On 2025/01/28 23:12, Manivannan Sadhasivam wrote:
+>>> On Wed, Jan 22, 2025 at 11:24:44AM +0900, Kunihiko Hayashi wrote:
+>>>> After devm_request_irq() fails with error,
+>>>> pci_endpoint_test_free_irq_vectors() is called to free allocated
+>>>> vectors
+>>>> with pci_free_irq_vectors().
+>>>>
+>>>
+>>> You should mention the function name which you are referring to. Here it
+>>> is,
+>>> pci_endpoint_test_request_irq().
+>>
+>> I see. I'll make the commit message more clear.
+>>
+>>>> However some requested IRQs are still allocated, so there are still
+>>>
+>>> This is confusing. Are you saying that the previously requested IRQs are
+>>> not
+>>> freed when an error happens during the for loop in
+>>> pci_endpoint_test_request_irq()?
+>>
+>> Yes, after jumping to "fail:" label, it just prints an error message and
+>> returns the function.
+>>
+>> The pci_endpoint_test_request_irq() is called from the following
+>> functions:
+>> - pci_endpoint_test_probe()
+>> - pci_endpoint_test_set_irq()
+>>
+>> Both call pci_endpoint_test_free_irq_vectors() after the error, though,
+>> requested IRQs are not freed anywhere.
+>>
 > 
-> Convert the Freescale localbus controller bindings from text form to
-> YAML. The updated list of compatible strings reflects current usage
-> in arch/powerpc/boot/dts/, except that many existing device trees
-> erroneously specify "simple-bus" in addition to fsl,*elbc.
+> You should not use the word 'allocated' since that has a different meaning
+> and the source of confusion.
+
+Surely, 'allocated' means the vectors allocated with pci_irq_vectors(), not
+the interrupts requested with request_irq().
+
+I'll rewrite with a right description.
+
+>>>> /proc/irq/* entries remaining and we encounters WARN() with the
+>>>> following
+>>>> message:
+>>>>
+>>>>       remove_proc_entry: removing non-empty directory 'irq/30', leaking
+>>>> at
+>>>>       least 'pci-endpoint-test.0'
+>>>>       WARNING: CPU: 0 PID: 80 at fs/proc/generic.c:717
+>>>> remove_proc_entry
+>>>>       +0x190/0x19c
+>>>
+>>> When did you encounter this WARN?
+>>
+>> Usually request_irq() can successfully get an interrupt.
+>> If request_irq() returned an error, pci_endpoint_test_free_irq_vectors()
+>> was
+>> called and the following call-trace was obtained:
+>>
+>> [   18.772522] Call trace:
+>> [   18.773743]  remove_proc_entry+0x190/0x19c
+>> [   18.775789]  unregister_irq_proc+0xd0/0x104
+>> [   18.777881]  free_desc+0x4c/0xcc
+>> [   18.779495]  irq_free_descs+0x68/0x8c
+>> [   18.781325]  irq_domain_free_irqs+0x15c/0x1bc
+>> [   18.783502]  msi_domain_free_locked.part.0+0x184/0x1d4
+>> [   18.786069]  msi_domain_free_irqs_all_locked+0x64/0x8c
+>> [   18.788637]  pci_msi_teardown_msi_irqs+0x48/0x54
+>> [   18.790947]  pci_free_msi_irqs+0x18/0x38
+>> [   18.792907]  pci_free_irq_vectors+0x64/0x8c
+>> [   18.794997]  pci_endpoint_test_ioctl+0x7e8/0xf40
+>> [   18.797304]  __arm64_sys_ioctl+0xa4/0xe8
+>> [   18.799265]  invoke_syscall+0x48/0x110
+>> [   18.801139]  el0_svc_common.constprop.0+0x40/0xe8
+>> [   18.803489]  do_el0_svc+0x20/0x2c
+>> [   18.805145]  el0_svc+0x30/0xd0
+>> [   18.806673]  el0t_64_sync_handler+0x13c/0x158
+>> [   18.808850]  el0t_64_sync+0x190/0x194
+>> [   18.810680] ---[ end trace 0000000000000000 ]---
+>>
 > 
-> Changes compared to the txt version:
->  - removed the board-control (fsl,mpc8272ads-bcsr) node because it only
->    appears in this example and nowhere else
->  - added a new example with NAND flash
->  - updated list of compatible strings
-> 
-> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> ---
-> 
-> V2:
-> - fix order of properties in examples, according to dts coding style
-> - move to Documentation/devicetree/bindings/memory-controllers
-> - clarify the commit message a tiny bit
-> - remove unnecessary multiline markers (|)
-> - define address format in patternProperties
-> - trim subject line (remove "binding")
-> - remove use of "simple-bus", because it's technically incorrect
+> Please add this info to the patch description.
 
-While I admit I haven't been following recent developments in this area,
-as someone who was involved when "simple-bus" was created (and was on the
-ePAPR committee that standardized it) I'm surprised to hear simple-bus
-being called "erroneous" or "technically incorrect" here.
+Okay, I'll add the call trace into the patch.
 
-For non-NAND devices this bus generally meets the definition of "an
-internal I/O bus that cannot be probed for devices" where "devices on the
-bus can be accessed directly without additional configuration
-required".  NAND flash is an exception, but those devices have
-compatibles that are specific to the bus controller.
+Thank you,
 
-The fact that the address encoding is non-linear is irrelevant; the
-addresses can still be translated using the standard "ranges" mechanism. 
-This seems to be a disconnect between the schema verification and the way
-the compatible has previously been defined and used.
-
-And as a practical matter, unless I'm missing something (which I might be
-since I haven't been in devicetree-land for nearly a decade), Linux is
-relying on simple-bus to probe these devices.  There is a driver that
-binds to the bus itself but that is just for error interrupts and NAND.
-
-You'd probably need something like commit 3e25f800afb82bd9e5f8 ("memory:
-fsl_ifc: populate child devices without relying on simple-bus") and the 
-subsequent fix in dd8adc713b1656 ("memory: fsl_ifc: populate child
-nodes of buses and mfd devices")...
-
-I'm curious what the reasoning was for removing simple-bus from IFC.  It
-seems that the schema verification also played a role in that:
-https://www.spinics.net/lists/devicetree/msg220418.html
-
-...but there's also the comment in 985ede63a045eabf3f9d ("dt-bindings:
-memory: fsl: convert ifc binding to yaml schema") that "this will help to
-enforce the correct probe order between parent device and child devices",
-but was that really not already guaranteed by the parent/child
-relationship (and again, it should only really matter for NAND except for
-the possibility of missing error reports during early boot)?
-
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,mpc8313-elbc
-> +              - fsl,mpc8315-elbc
-> +              - fsl,mpc8377-elbc
-> +              - fsl,mpc8378-elbc
-> +              - fsl,mpc8379-elbc
-> +              - fsl,mpc8536-elbc
-> +              - fsl,mpc8569-elbc
-> +              - fsl,mpc8572-elbc
-> +              - fsl,p1020-elbc
-> +              - fsl,p1021-elbc
-> +              - fsl,p1023-elbc
-> +              - fsl,p2020-elbc
-> +              - fsl,p2041-elbc
-> +              - fsl,p3041-elbc
-> +              - fsl,p4080-elbc
-> +              - fsl,p5020-elbc
-> +              - fsl,p5040-elbc
-> +          - const: fsl,elbc
-
-Is it really necessary to list every single chip?
-
-And then it would need to be updated when new ones came out?  I know this
-particular line of chips is not going to see any new members at this
-point, but as far as the general approach goes...
-
-Does the schema validation complain if it sees an extra compatible it
-doesn't recognize?  If so that's obnoxious.
-
-> +examples:
-> +  - |
-> +    localbus@f0010100 {
-> +        compatible = "fsl,mpc8272-localbus",
-> +                     "fsl,pq2-localbus";
-> +        reg = <0xf0010100 0x40>;
-> +        ranges = <0x0 0x0 0xfe000000 0x02000000
-> +                  0x1 0x0 0xf4500000 0x00008000
-> +                  0x2 0x0 0xfd810000 0x00010000>;
-> +        #address-cells = <2>;
-> +        #size-cells = <1>;
-> +
-> +        flash@0,0 {
-> +            compatible = "jedec-flash";
-> +            reg = <0x0 0x0 0x2000000>;
-> +            bank-width = <4>;
-> +            device-width = <1>;
-> +        };
-> +
-> +        simple-periph@2,0 {
-> +            compatible = "fsl,elbc-gpcm-uio";
-> +            reg = <0x2 0x0 0x10000>;
-> +            elbc-gpcm-br = <0xfd810800>;
-> +            elbc-gpcm-or = <0xffff09f7>;
-> +        };
-
-I know this isn't new, but... since we're using this as an example,
-where is the documentation for this fsl,elbc-gpcm-uio and
-elbc-gpcm-br/or?  What exactly is a simple-periph?
-
-There are no in-tree device trees that use this either.  The bcsr
-node was actually a much more normal example, despite that particular
-platform having been removed.  There are other bcsr nodes that still
-exist that could be used instead.
-
--Crystal
+---
+Best Regards
+Kunihiko Hayashi
 
