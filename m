@@ -1,203 +1,142 @@
-Return-Path: <linux-pci+bounces-21166-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21158-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E1D3A31010
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 16:45:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E8C1A30F80
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 16:21:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 245787A061E
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 15:45:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 56F3C3A5B8B
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 15:21:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 479FF1F1527;
-	Tue, 11 Feb 2025 15:45:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13408253B41;
+	Tue, 11 Feb 2025 15:21:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="F2unZw7G";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/E8DrGDJ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="F2unZw7G";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/E8DrGDJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DFN7UHBE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9661C5D40;
-	Tue, 11 Feb 2025 15:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFA22528FD;
+	Tue, 11 Feb 2025 15:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739288752; cv=none; b=EkLDRXmlc7wCP2B4Wd+aPpO3XCU69YylfrJHWkQyjVRgzxDrskkGp2RlURzTKh72bdKxwFQxy/m+mcANSguwE8EE8Rw6+o8wO+WaK9SQXIj2TWJ9thWR2kJHgdOn5M/kLEfffSxjWI1Gh714vJxF/bN+adnl7fGZZ3cP7Bde1qI=
+	t=1739287282; cv=none; b=TUiNCy2WiMvl4xfCPVwWiEsZPp5Tg/hiD83oRmFXbIr+jrVJGLb/AsYrBBZZTILQl+EpFi0EwogRdbmC6C3LEhXM432q3c1mxWzLUpxT+gurmvM9JVRLVxFb4i4hj1OF+NkEp7i0EcfsBig/NA86+WTMVQMCb4azLpwkdPxay9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739288752; c=relaxed/simple;
-	bh=YH9L8BAvGg8Ojm7t/vF2VDWs1nrhICjErmvv7ZpWAA4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P7gDxELE8BwkuXdc2rRmWDcxwUdNoXqe7szahGloJGdFw/9Snmp/5KM2oLhz0kzjNGB3eKEvbmR0fylGdCrYtyeD7hmT+Ij769gjchIu+6OxQ1KsHtGWK13ZCAIP6pUOzsFginm1MpmVEXVP1Ly80aLdK/912HHh3ZnXMQB3KTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=F2unZw7G; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/E8DrGDJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=F2unZw7G; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/E8DrGDJ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 50D1635353;
-	Tue, 11 Feb 2025 13:30:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739280628; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C23Gwwkn7m1Wdwav9p34gnuQqrDiAzm3UcBEGEmFUh0=;
-	b=F2unZw7G8aguyoj/n2LjlG1oaHG8LPWWa8jgBjJqM+RuaqrhZi5VGv2xCXiiT5Ss/Ml0Ts
-	O54ks37bGh0wkaiAw3eTUAgIgG1G2dKdjKXED/toW8ns+VQ/dseMTWyJeNBt3sXTu+NqV4
-	J4qyIilZuZMQmGQIi4NFAZN02Xdh3/I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739280628;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C23Gwwkn7m1Wdwav9p34gnuQqrDiAzm3UcBEGEmFUh0=;
-	b=/E8DrGDJ7w/U26RXWQV2J3Hir2AvbD69OWCrorjvdSGGAw4xZ3mRwhBthVYARewb5EkM7E
-	LXQRKZkVENd0zEBg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739280628; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C23Gwwkn7m1Wdwav9p34gnuQqrDiAzm3UcBEGEmFUh0=;
-	b=F2unZw7G8aguyoj/n2LjlG1oaHG8LPWWa8jgBjJqM+RuaqrhZi5VGv2xCXiiT5Ss/Ml0Ts
-	O54ks37bGh0wkaiAw3eTUAgIgG1G2dKdjKXED/toW8ns+VQ/dseMTWyJeNBt3sXTu+NqV4
-	J4qyIilZuZMQmGQIi4NFAZN02Xdh3/I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739280628;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C23Gwwkn7m1Wdwav9p34gnuQqrDiAzm3UcBEGEmFUh0=;
-	b=/E8DrGDJ7w/U26RXWQV2J3Hir2AvbD69OWCrorjvdSGGAw4xZ3mRwhBthVYARewb5EkM7E
-	LXQRKZkVENd0zEBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3BC6613AA6;
-	Tue, 11 Feb 2025 13:30:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id rjLlC/NQq2exOQAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Tue, 11 Feb 2025 13:30:27 +0000
-Message-ID: <a74f5917-af94-42a1-9a7a-dd449d34dbfc@suse.de>
-Date: Tue, 11 Feb 2025 15:30:22 +0200
+	s=arc-20240116; t=1739287282; c=relaxed/simple;
+	bh=CGSwf25guNoWZMHrRvspLqfl9GXU5HCfs6tZNoQhsKY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kIduVT96/qIyf/rzcYnlUIf9iIqRX9Wj5VYjJWo+JD4m9CR99CpHIKXkYyEyKlgvi7OkuSHuvMIkz+aeThikTJXcvbNedDgv1xQm8L8FXk56k/2w1gj11MAiQyfhFxiBF+eAzNZC/JjT4a1YUtJYnLWgxW2XZkoubxVG+VxrEhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DFN7UHBE; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739287280; x=1770823280;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CGSwf25guNoWZMHrRvspLqfl9GXU5HCfs6tZNoQhsKY=;
+  b=DFN7UHBEm+m8XTQD0f8nqV7SxOmCxupKUmG1epr/pQS7GSDfl5YsEaEw
+   gfz6nrcYzPqBmjb4FX0hFudDneOrwyysUFVVBv/CcngX5tEonu1qBo9en
+   7HZPhD2OIa5rCdby9oKLxTMVbqlnyJFBhfA9t72ii52F22hpm71HcD4KP
+   UUm/o/3w1HF9fF/2qLiXsBo+3El8fUZ4UK+d/64k3uXH6Gpfe2dcjAICS
+   /TCQzSn9+E7SJbpWmDKaa/dM6QIBIkFXMNt+ckJXhUBX11XYfLjJbuQJP
+   RlYK9/eph4ch97psCxxXMKe8CP0OkJX1SewjRcTA56Qw3Y9ryLthekJJm
+   Q==;
+X-CSE-ConnectionGUID: aju0c5aSSh+b2tQ588Y5Cg==
+X-CSE-MsgGUID: Boig6RSMROGONBdz8WzOyA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50548274"
+X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
+   d="scan'208";a="50548274"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:21:20 -0800
+X-CSE-ConnectionGUID: y7x9n1ezTUijlkVCFAhA1g==
+X-CSE-MsgGUID: PPxH6mulSayoFZuoPkqtNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="112392589"
+Received: from test2-linux-lab.an.altera.com ([10.244.157.115])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:21:18 -0800
+From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	dinguyen@kernel.org,
+	joyce.ooi@intel.com,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: matthew.gerlach@altera.com,
+	peter.colberg@altera.com,
+	Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: [PATCH v6 0/7] Add PCIe Root Port support for Agilex family of chips
+Date: Tue, 11 Feb 2025 09:17:18 -0600
+Message-Id: <20250211151725.4133582-1-matthew.gerlach@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 -next 00/11] Add PCIe support for bcm2712
-To: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrea della Porta <andrea.porta@suse.com>,
- Phil Elwell <phil@raspberrypi.com>, Jonathan Bell
- <jonathan@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>
-References: <20250120130119.671119-1-svarbanov@suse.de>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <20250120130119.671119-1-svarbanov@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linutronix.de,kernel.org,broadcom.com,gmail.com,linux.com,pengutronix.de,suse.com,raspberrypi.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-Hi Bjorn,
+This patch set adds PCIe Root Port support for the Agilex family of FPGA chips.
+Version 6 refactors duplicate dts snippets into dtsi's for correctness and
+maintainability.
 
-Do I need to send a new version with the collected Acked/Reviewed tags?
+Patch 1:
+  Add new compatible strings for the three variants of the Agilex PCIe controller IP.
 
-Thanks,
-~Stan
+Patch 2:
+  Fix fixed-clock schema warnings in socfpga_agilex.dtsi before adding to it.
 
-On 1/20/25 3:01 PM, Stanimir Varbanov wrote:
-> Here is v5 of the series which aims to add support for PCIe on bcm2712 SoC
-> used by RPi5. Previous v4 can be found at [1].
-> 
-> Based the series on linux-next because of vc4 gpu node in bcm2712.dtsi.
-> 
-> v4 -> v5 changes include:
->  - Addressed comments to interrupt-controller driver. (Thomas)
->  - Fixed DTB warnings  broadcom/bcm2712-rpi-5-b.dtb.
->  - New patch in the series to fix missing of_node_put.
->  - New patch to make a softdep to a MIP MSI-X driver.
->  - Dropped the patch which adds MSI-X support in pcie-brcmstb driver,
->    and instead use DT dma-ranges to pass the needed information. (Jim)
-> 
-> For more detailed info check patches.
-> 
-> Comments are welcome!
-> ~Stan
-> 
-> [1] https://patchwork.kernel.org/project/linux-pci/cover/20241025124515.14066-1-svarbanov@suse.de/
-> 
-> Stanimir Varbanov (11):
->   dt-bindings: interrupt-controller: Add bcm2712 MSI-X DT bindings
->   dt-bindings: PCI: brcmstb: Update bindings for PCIe on bcm2712
->   irqchip: Add Broadcom bcm2712 MSI-X interrupt controller
->   PCI: brcmstb: Reuse config structure
->   PCI: brcmstb: Expand inbound window size up to 64GB
->   PCI: brcmstb: Add bcm2712 support
->   PCI: brcmstb: Adjust PHY PLL setup to use a 54MHz input refclk
->   PCI: brcmstb: Adding a softdep to MIP MSI-X driver
->   PCI: brcmstb: Fix for missing of_node_put
->   arm64: dts: broadcom: bcm2712: Add PCIe DT nodes
->   arm64: dts: broadcom: bcm2712-rpi-5-b: Enable PCIe DT nodes
-> 
->  .../brcm,bcm2712-msix.yaml                    |  60 ++++
->  .../bindings/pci/brcm,stb-pcie.yaml           |   6 +-
->  .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     |   8 +
->  arch/arm64/boot/dts/broadcom/bcm2712.dtsi     | 147 +++++++++
->  drivers/irqchip/Kconfig                       |  16 +
->  drivers/irqchip/Makefile                      |   1 +
->  drivers/irqchip/irq-bcm2712-mip.c             | 292 ++++++++++++++++++
->  drivers/pci/controller/pcie-brcmstb.c         | 147 ++++++---
->  8 files changed, 632 insertions(+), 45 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2712-msix.yaml
->  create mode 100644 drivers/irqchip/irq-bcm2712-mip.c
-> 
+Patch 3:
+  Move bus@80000000 dt node to socfpga_agilex.dtsi.
+
+Patch 4:
+  Refactor duplicate dts into dtsi.
+
+Patch 5:
+  Add base dtsi for PCIe Root Port support of the Agilex family of chips.
+
+Patch 6:
+  Add dts enabling PCIe Root Port support on an Agilex F-series Development Kit.
+
+Patch 7:
+  Update Altera PCIe controller driver to support the Agilex family of chips.
+
+D M, Sharath Kumar (1):
+  PCI: altera: Add Agilex support
+
+Matthew Gerlach (6):
+  dt-bindings: PCI: altera: Add binding for Agilex
+  arm64: dts: agilex: Fix fixed-clock schema warnings
+  arm64: dts: agilex: move bus@80000000 to socfpga_agilex.dtsi
+  arm64: dts: agilex: refactor shared dts into dtsi
+  arm64: dts: agilex: add dtsi for PCIe Root Port
+  arm64: dts: agilex: add dts enabling PCIe Root Port
+
+ .../bindings/pci/altr,pcie-root-port.yaml     |  10 +
+ arch/arm64/boot/dts/intel/Makefile            |   1 +
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi |  14 +
+ .../socfpga_agilex7f_socdk_pcie_root_port.dts |  87 ++++++
+ .../boot/dts/intel/socfpga_agilex_n6000.dts   |  28 +-
+ .../intel/socfpga_agilex_pcie_root_port.dtsi  |  48 ++++
+ .../boot/dts/intel/socfpga_agilex_socdk.dts   |  62 +----
+ .../boot/dts/intel/socfpga_agilex_socdk.dtsi  |  65 +++++
+ .../dts/intel/socfpga_agilex_socdk_nand.dts   |  62 +----
+ drivers/pci/controller/pcie-altera.c          | 253 +++++++++++++++++-
+ 10 files changed, 481 insertions(+), 149 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex7f_socdk_pcie_root_port.dts
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_pcie_root_port.dtsi
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dtsi
+
+-- 
+2.34.1
 
 
