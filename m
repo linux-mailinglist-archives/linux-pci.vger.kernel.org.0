@@ -1,257 +1,253 @@
-Return-Path: <linux-pci+bounces-21133-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21134-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCE1BA2FEF6
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 01:19:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95E5CA3004D
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 02:34:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5AFDE166F56
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 00:19:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D06F9162BEC
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 01:34:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 838BA5234;
-	Tue, 11 Feb 2025 00:19:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B532E1EDA37;
+	Tue, 11 Feb 2025 01:30:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="QeDq6wSa"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XQZMVeFY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70F9191;
-	Tue, 11 Feb 2025 00:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233144; cv=none; b=QStGyBa+UBZDXYa3sTMxVhtymU+/gqt2r4UFD10EWMd2q9vayfMDy1gjNFZF7FhICaHIb3E7xTEjEhqh+Dms+w8uEPzwDCoZyWY+WkRIQYdZ46Kz8RJV0hKg08cL+MNKj5Jg7++lHQPfkOZX6a5W72khZ18Wlnc5Xjge1FaiJts=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739233144; c=relaxed/simple;
-	bh=K42GwEHzXU9S+gWUaSIIkZ2h974drgPTV7TQKd/F6ag=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VwUgBMnPBZ56QwYBX8NWDblohFR7kzosh59++QrukU2EN/VrlQNQg9l6moXQhZ8PBuglQ0Ect6YyH+GkIDc7HJZpU/34QR60tahgEqaXIfFs6BndGrWeIXhw5WotoVQetDyoJbXADmzdoND4jDQSvdh4aFRAMaYfKK/MCFL5IM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=QeDq6wSa; arc=none smtp.client-ip=166.84.1.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
-Received: from [192.168.80.133] (unknown [207.7.121.250])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4YsMW14vdDz4FfP;
-	Mon, 10 Feb 2025 19:18:53 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1739233135; bh=K42GwEHzXU9S+gWUaSIIkZ2h974drgPTV7TQKd/F6ag=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=QeDq6wSaW5ddK0IlMN7saAP4tblNZa9UHEK6mmEVZr6sp+lj/jlpR37g1PV0UkVVH
-	 8Wp6GFwA5YHZuxNU2+47kfgFAAGnaxc6WrarcJOzbuM2ir41wB3i9c1WarJf1GU3NQ
-	 Bk5/sZsrT1qeJE1ew7JDFpNijb0+XBjYVGkwi4PA=
-Message-ID: <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
-Date: Mon, 10 Feb 2025 16:18:51 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5AA1EC012;
+	Tue, 11 Feb 2025 01:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739237440; cv=fail; b=iOVHeZGO7s1d8f17mCTpgDbi/WxxipIeNQBqJ14mOGjds91Js/qN4R4deagp1tRfk1i473GX5O2Wm6ObIj8rmm6vc6gX6azsfdwlNVqzrlAwDy6nyWnRGxGSNkeHgVs5pHuBFnQQq/BwmnQb5wn1C4K+1m3i0ptaoCriO4kSSRk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739237440; c=relaxed/simple;
+	bh=+NB78wCOh/BwZ0Nk0skobcNLwlG5dBTyCCZ2hTVwgF0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Epq4TNejnxnDfpaE11fcOekdsJbfKtNAYILPrPE4EPc/e/7YhG1tHEMgtp63VINAd72WHQAGjkl8Agptuw8tdtt9RhcykcXVKhcBxNC+VubTg5BACceByj+3ZpD3KjqXNg4Mit392nK2xkbNGUFcbT4WoRhPyx8DNTpVMSD8tgk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XQZMVeFY; arc=fail smtp.client-ip=40.107.93.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VJpzbd4TPngXTMihEiHMJ0u1kIOLFzn/T+5OoRe4IhctvL4gua+/RYsKCJj68LLjnpkkQHcsrDjYmq6esbb8idnOQx8XYd1oywBjFbePgX4vyxOhFejk9mgSITOOR0/dy1OZaDk+0j7CMEjzC/JTvHvjIkyMBgKiBIxPbmyUgxxVitvzFLzXxzsG+9Iblb9/XobXRbibHt8oPTfRyMxRnk23FRrNrz+N1xhCAJVG3AEJZl1EhIjjxc5rjesaJHwCRFgAwCPWMjWS15a691w8H/P4or0R72zK4D3UybTbJLVs/SaUyyKrqZCQAhLMWKvGsNsbPIG+8kgy4wNROomEYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zOyHJatpc8tK8hdDgaZEadthUaZrbL7Edgfn5oIuadI=;
+ b=GtZqtrD0hoEaheYgqZ82FUakhgnwXuP3h/3KWv5zxJxF3siNeIeeFS6fc2CPg7HqHpCNkdvXlQEr/s3t5yeTGMNu38RdpWPM1jiV7ZwOXZvpM0fhwy4+axP3DuYaoVNEPIBOUwozfd+BQkJicEDNoi+BCqQEYTQRW+mGv/1lC/IeNzk+3kSajrgaqT87j55T+QRx4xE25LeP2g+7aYaKIbfVsWLRkvUP3P+BBc1rySGKN49sNOOijSqRZh3mFesOMsiawt+CUqb7DJOULTd1/pjrjegpTy3wiwRSBF7GdkxduMIYWiIzqc65f0am/srRM523fbaMa3HSa2FCOmo8SA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zOyHJatpc8tK8hdDgaZEadthUaZrbL7Edgfn5oIuadI=;
+ b=XQZMVeFYISy9zdqboRUxsmgmsUjkrZCleFv+FgaNIzaz7iO/nhjDodx87k/vKPM+1w1DuZFia2DESZIMfHowbdKGvD/GfhiFoGzmOBtvGj3NAMpoZi04mbPBoT5u1XwurBxJc4dOg1CReejvNyy6lYtJKs7hkl6h9GmtfKguv9c=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
+ by LV8PR12MB9154.namprd12.prod.outlook.com (2603:10b6:408:190::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Tue, 11 Feb
+ 2025 01:30:34 +0000
+Received: from CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
+ ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.8422.015; Tue, 11 Feb 2025
+ 01:30:34 +0000
+Message-ID: <b1595ceb-a916-4ff0-97bd-1a223e0cef15@amd.com>
+Date: Tue, 11 Feb 2025 12:30:21 +1100
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v2 00/18] PCI device authentication
+Content-Language: en-US
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Bjorn Helgaas <helgaas@kernel.org>, David Howells <dhowells@redhat.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>,
+ David Woodhouse <dwmw2@infradead.org>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>,
+ linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-coco@lists.linux.dev, keyrings@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linuxarm@huawei.com,
+ David Box <david.e.box@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+ "Li, Ming" <ming4.li@intel.com>,
+ Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+ Alistair Francis <alistair.francis@wdc.com>,
+ Wilfred Mallawa <wilfred.mallawa@wdc.com>,
+ Damien Le Moal <dlemoal@kernel.org>, Dhaval Giani <dhaval.giani@amd.com>,
+ Gobikrishna Dhanuskodi <gdhanuskodi@nvidia.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Peter Gonda <pgonda@google.com>,
+ Jerome Glisse <jglisse@google.com>, Sean Christopherson <seanjc@google.com>,
+ Alexander Graf <graf@amazon.com>, Samuel Ortiz <sameo@rivosinc.com>,
+ Eric Biggers <ebiggers@google.com>, Stefan Berger <stefanb@linux.ibm.com>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>
+References: <cover.1719771133.git.lukas@wunner.de>
+ <2140c4e4-6df0-47c7-8301-c6eb70ada27d@amd.com> <ZovrK7GsDpOMp3Bz@wunner.de>
+From: Alexey Kardashevskiy <aik@amd.com>
+In-Reply-To: <ZovrK7GsDpOMp3Bz@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MEWPR01CA0022.ausprd01.prod.outlook.com
+ (2603:10c6:220:1e4::14) To CH3PR12MB9194.namprd12.prod.outlook.com
+ (2603:10b6:610:19f::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac)
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: ilpo.jarvinen@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
- Jian-Hong Pan <jhp@endlessos.org>, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- =?UTF-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
- Andreas Noever <andreas.noever@gmail.com>,
- Michael Jamet <michael.jamet@intel.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org,
- Kenneth Crudup <kenny@panix.com>
-References: <20250210210502.GA15655@bhelgaas>
-Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <20250210210502.GA15655@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|LV8PR12MB9154:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8fb1d8e6-9228-45a0-a099-08dd4a3badcf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ejdEeElhaWdTOVd6QW5qWmhqWUl0TzNFRFlGMENKQXQ4TWIyWEl2K0NSWlUz?=
+ =?utf-8?B?WjhXbHljektIMzk0MWlObDBRSjlZS1I1c2tWS0FGeEFLR2UzZXUxbTA4d3hm?=
+ =?utf-8?B?QVB2MXNUWFpJMlNWdUJDTEJrNnZlQkZNVUtqUEZzaWhyMzhvZmRDVkJzcjZi?=
+ =?utf-8?B?c0pXRU9oTTVzdzFBK25UWURwKytRTENXQzZCT2k3QzRCZGtUTXNYclJsMEFI?=
+ =?utf-8?B?Q3RTK2d6Q0wyWkhZbWlqMTRjU3QrRThVZ0tuM004ZXk1bzY5enp2VXg5cmNU?=
+ =?utf-8?B?QlJkTFdUekRPdTZXWXhYTDI1Tld0Lyt5d1EvcVZLL1IwM3BLREtxMWZkbTE2?=
+ =?utf-8?B?OERlYlREckZnQXN2dkNZMzl3RnBkV3VZYXdKZHZJV0VtNXZ6VUtUUVlDUzI3?=
+ =?utf-8?B?aXQ1MDdRaXNOTXpJVjllN1dtTEZLMlZCZXRJUGZWcnhydS9FeW11a091bktl?=
+ =?utf-8?B?aGZkb2I2bkFWY3kzK2ZIdHRvb1VGRVhkQmJPLzlkc2Z0UDFZUncyWkV2L3hr?=
+ =?utf-8?B?VHNWd1A5TlJRanZEbjRHc3NrZEZVRTVmRjFLTzF3ZCtqQ1pieE1kaGNDaGVn?=
+ =?utf-8?B?NTkvK0xNeTFDTWpxNzJXa0cxWVQ1Um85SkNyWG93UDlpbjVxZWh4TFY2Vms5?=
+ =?utf-8?B?dGNmWnc3VHA3TnVEUVlpOTFyZnpkWGIwR3RlTHZkdHAwbThxYmxUVUI2QlVY?=
+ =?utf-8?B?dk1qcitiY25TUDhoVXJhb3NOeURNQWRlRXYzV01XUFpQZkZKa083RTg0clc4?=
+ =?utf-8?B?dXFFeFRERVRwMnZqZGdBVEJJQjUxTjFNNHViRzhBUWZlNjE1dWZCeHFPL3RM?=
+ =?utf-8?B?QlpPQzZkZTJXNnNXSW01WFk5WWlXMzB6a010eE51UlJaUmpZWmZZM2VNeDA2?=
+ =?utf-8?B?VDRWTmNqWU9yb243N1pZYXB1MlUybzB0RUJPV3V4Wjh0Zi9udjJqdlF0ZHJK?=
+ =?utf-8?B?R2pGY0Jxb1FYbW5QZklVRzkwaDc5MDI2S2w0UkJjczV4bmxjcHUzTWlJY1FD?=
+ =?utf-8?B?d040YUFURWczUVlabnNEMUh2N1NobFlDK0JjZ3JxMVQrSk5UU3J3V2tONmEv?=
+ =?utf-8?B?dzZ4b0hFUW44aUNpcUNLQVppQkcyWi9CNE1tb0ZTNDU1bjJUQ2N1RHc2M05i?=
+ =?utf-8?B?M0VNNGovZ1lkMmNkQWM4d01PNG8zWituN2VqODlCakFaVWl0RGdFblpIVnpy?=
+ =?utf-8?B?dGw5b2I2MElGR1g0RFBqVDJiRERwemd4M0xwdDVacHY4TlpjOUhOQ0NySmRm?=
+ =?utf-8?B?L1h4VVByZWhqYWlaSDhQNHBVL1ZpM2lXeStNVlMzVWQrbG9ld0hoY1VPd2Fi?=
+ =?utf-8?B?RllIR3J5MlZCVlVRWnhlc2NSeWxWemtGRjBSeDlVNUpDR3ZpSjQ5M1F2YzR0?=
+ =?utf-8?B?TTJ0MzF4ZkdLcThaZ2VmZWdqcVlFTW9DdXZyRUFkd2REZ0dNTmFYNURsV1Qz?=
+ =?utf-8?B?YXAvSGZvcDVqdDJ5VjhEM0xZeXJHdkVSK016K3FVYWMxVDNjaWRyQW9xd2RE?=
+ =?utf-8?B?d1Y4dDM5MXQ5U3k0OFNxbEtsT1RWTWNQYVBYWWhIaS9tSHMzbi8yZG9ySW9C?=
+ =?utf-8?B?UHFydG84WHJPNzhXOC8rRlkzV2o0WFh4V3IrOVd2c0VVejdpZmNsekloVTcw?=
+ =?utf-8?B?djg2cnRRQm5SOVVXODd4c09vUVRWaFZZaVhzdVU5L256ZS9NQW11UnU0ZkdS?=
+ =?utf-8?B?aTdwMlV6eENXUGEzYzFWUWtYQjFhdjFDdU9FM2diSVNkNjUwRGI5VE5tbE8z?=
+ =?utf-8?B?WjVlaWplVTFOdG0wSFBqVTVOK2RSdWZiYS81MGZSREJlMTkwWHZkL3RWbnhr?=
+ =?utf-8?B?cXpFRkhWNnM0Y1dxMExpdz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VUhpekszdUUxRGQ5b3J4cFpxNzR1R3dRSFRIOUpBcEZ0cjNOTTlrM3pUaFUw?=
+ =?utf-8?B?aEU4TjRFcG84T3BnREpTdk5pNW04TW5lQ2todUt5YWw4VkkzTWZjU29KQnRy?=
+ =?utf-8?B?OXhPY0U0cFp4ZWI2b1Jqdk1RZjIvVkFKSjhBWmc5N0dXMjFqYklIZ2gwUWZO?=
+ =?utf-8?B?Ri9BRkdKeWRLQnBpVWo3TmhFMkg1Um1iVm5oai9qb1RlRFVNRTlTTUppUlRi?=
+ =?utf-8?B?NnRvbVFoMzhXcnZCTStsQ21LdVlnbnd0SVJaYkE4QzZSUXIrU0FhL21rd241?=
+ =?utf-8?B?VGdpei9kWGI2MVhnK3hsMGZwRmxEQVdHUmJ5SWhyUS83NU1aUitHRGNGTEU2?=
+ =?utf-8?B?SEM1bGw3a0l5RG9WbWdWUHdBekwvWjh1am83UVcxV1J0a01VZnBla0JKWWVy?=
+ =?utf-8?B?Z0twYVlIcTlaU1dHQUlxQldBYjBvV2h4SkNTZWZaSWNaUXk3NlE4WGNvVnRh?=
+ =?utf-8?B?cXp1U1hYMTRJdlRnTEd4d3hsZ0VtNjFNWW1IWGpXekpldjY5ZUl4bVE4ZEJR?=
+ =?utf-8?B?ZUVuVXB5ck1PbGcrNFVDSWY5ZWp4ZStrSlhJWnB2VTVNR25kOXdHamo3N3I4?=
+ =?utf-8?B?WnlMWi9zTzJpaHhNaWdhQmh5WWdKQmZlQ1ZuQnNSdVJSMXRmaTFtL1NtVHRX?=
+ =?utf-8?B?U0ZUS3V4VEdURVdxNGlFM0dEanpqNnhlWjVVUWwwd3RxRTJhQTV1N1QybXJa?=
+ =?utf-8?B?MzFQeXBPQVlZcGxkM0w4UXlOcU1aVjdKZVJ4M1Z1eFVTdnlELzBUWUNQVjlV?=
+ =?utf-8?B?TnU4VTZRZjVUVU1FNVhRczBHREh5ZzhxSnNVK1YvQXdOcjliWWh2eGp4Ny9t?=
+ =?utf-8?B?UUVsQ01OdkxrcDFkelVvYnZxNkVQYzR2ZWpsTlhUMWovbm9rQ3F6dUNXd3Fv?=
+ =?utf-8?B?OE1RZ21iRkhSVzJGZy83V2dBb21wVzVVaWQwNlUzRlYybzYrbW1EYmR3Z1dV?=
+ =?utf-8?B?QS9rR0htSXRmUzVjRXNERFlhYjhTbTVDT003N2FoYkFTZ0xFOVdOSHBPVHBW?=
+ =?utf-8?B?UlNlZjI4OGpWM1FRNWpwa1hwSWIrWXh2ekpGVzRRMUg1MEhMSWUzU3AyREox?=
+ =?utf-8?B?SHg0bUI3dXNabU9Sc3hmMzZzV3dMU1ZsV3UxMFdQV1EzcDVFNHdTd3J3Z3Nm?=
+ =?utf-8?B?SSt3N3dmUU55RnZmb2ZWWHJkMUUrRElvM3lDamUyUUJHbVBROHdMT0N0WC9W?=
+ =?utf-8?B?ZEc3UExtK3J0VXBCUk13dGV3M0l3K21rUlBNZklpNmV0algxT2NLY2pMUmVo?=
+ =?utf-8?B?Y1VKekJBOU9mTVdmRnlqM2NlbkF1QTJ3b1V4NktaYzBPT3lTTTR4Y1JjaGVM?=
+ =?utf-8?B?QXR6K2Z5c1lZUXFOcU5kVUdGS2ZPSHVSSXRWVml1Qlo2V29XQzh1RTVkZWRK?=
+ =?utf-8?B?NlJuUmhBN1gwUFNlU2dtUE9obkNkMmpxdVAxRHlFYVdRbk4wNzVqVFFwd0Vn?=
+ =?utf-8?B?NXdRSVY4aFRRNGhrcy9aR3g0bGx0bmpMMUpyN1U5Kzh2VDR6SGZROHRtbjVi?=
+ =?utf-8?B?NC85Y0ZxNVFFUExDNGlQQ01GQjBTalQyOElxU1duK2VRMitEanhTRnptdVBH?=
+ =?utf-8?B?djFYamRsdU01bUhaOGxJendzTXZka1hvY2RJdHhHL05jZVpsMnJudHFPTnFi?=
+ =?utf-8?B?VzJ6WHhVN2t3bWd6QTYzSFp4M3JLL1JkMzB6K3BpN1hMOHMyZWZucXJjTWhT?=
+ =?utf-8?B?aEd3NU5pUGdMOGwrZ3pJU1BjeWxkZ0g5Rk5lR1VkTHZnRkRVSTRpM245STFu?=
+ =?utf-8?B?Ny9yWHJnQ0dMcklrcS9ZaGx5ajJBOHJzdS90NTRsVTdKOW1vcEZENUkzMVFL?=
+ =?utf-8?B?Y3Uzam1icnp4Vkg1dUJxZXhCcU1SYnJPcXh1NHNmdHh4SStiWlRNUkJVNHkv?=
+ =?utf-8?B?b2EwVGUrUDBWTldGOXJlOXhuRU0wclhldU8wd3UwTkJUcjlZZUNyQ2NsOENK?=
+ =?utf-8?B?NFhUUGNyK0czSUVXa3pyTmRmd2VzZm1nLzR1c1U4K0hnZHp6bExnYmhxNjIy?=
+ =?utf-8?B?NVFlQXpTVHAxVFR4N3VrQVBhS1VjcS8vWVhOQUxDODRwbzFTSk14VHpWWTBG?=
+ =?utf-8?B?MGgzTmJHUk1qRjdyeitjbGhSeGNSTnVhVDBha0hkUEdQc1gxQUJuZS9TNDlX?=
+ =?utf-8?Q?BHRDb3EZ6akxOSC39EbIqkvfI?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8fb1d8e6-9228-45a0-a099-08dd4a3badcf
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Feb 2025 01:30:33.9298
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aLKEpxrAfGQisD0Lfx/mvHLPdGIPUrAqzC6wJGyRpg7yafJrk1AmWIrTWbnlTGTKyAfaBxAqJXYsx3GRbecnTQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9154
 
-
-I wonder about that, too- but for the most part, my resumes from 
-hibernate/suspend tend to work most of the time.
-
-I've instrumented .../drivers/thunderbolt/path.c to add some pr_info()s 
-in __tb_path_deactivate_hop() to see if it's either tripping up on a NPE 
-and to see where it dies, but since then nothing has happened again, so 
-I do wonder sometimes if it's an errant driver (i.e., just subtle 
-changes in the ordering of code could be making a difference).
-
-That being said, leaving a USB4-to-NVMe bridged NVMe device connected to 
-a Thunderbolt dock on suspend causes hangs on resume that only the power 
-button seems to recover from. I've really been trying to bisect the 
-cause on this one as it's usually my only failure mode (and frustrating 
-when I forget to unplug before I suspend). What complicates that one 
-more is it now doesn't happen EVERY time.
-
-One change I've done from Linus' master (which I tend to grab every few 
-days) and have for a while is this:
-
-----
--        cflags-$(CONFIG_MCORE2)                += -march=core2
-+        cflags-$(CONFIG_MCORE2) += \
-+                $(call cc-option,-march=alderlake,$(call 
-cc-option,-mtune=native)) \
-+                $(call cc-option,-mtune=alderlake,$(call 
-cc-option,-mtune=native))
-----
-
-But I'm running "gcc (Ubuntu 14.2.0-4ubuntu2) 14.2.0", so that should be 
-mature enough to not introduce any Intel-chipset-specific bugs, right?
-
--Kenny
-
-On 2/10/25 13:05, Bjorn Helgaas wrote:
-> [+cc Thunderbolt folks, original post
-> https://lore.kernel.org/r/04091f53-3c94-4533-ab48-e9296e6e2841@panix.com]
+On 8/7/24 23:35, Lukas Wunner wrote:
+> On Mon, Jul 08, 2024 at 07:47:51PM +1000, Alexey Kardashevskiy wrote:
+>> On 1/7/24 05:35, Lukas Wunner wrote:
+>>> PCI device authentication v2
+>>>
+>>> Authenticate PCI devices with CMA-SPDM (PCIe r6.2 sec 6.31) and
+>>> expose the result in sysfs.
+>>
+>> What is it based on?
 > 
-> Wow, something about your platform or usage is really good at finding
-> these bugs ;)  The original post is a page fault in xe_display_pm_resume()
-> and this one a NULL pointer dereference in __tb_path_deactivate_hop().
-> You see these so frequently that I would think Google would find more
-> reports, but I don't see any, which makes me wonder if this is some
-> kind of memory corruption related to a driver on your system.
+> This series is based on v6.10-rc1.
 > 
-> On Sat, Feb 08, 2025 at 07:47:10PM -0800, Kenneth Crudup wrote:
->> Eh, NVM.
->>
->> Just had another resume crash with it reverted:
->>
->> ----
->> <6>[69848.656985][T25549] CPU19 is up
->> <6>[69848.666220][T25549] ACPI: PM: Waking up from system sleep state S4
->> <6>[69848.693976][T25549] ACPI: EC: interrupt unblocked
->> <4>[69848.704735][T25549] thunderbolt 0000:00:0d.2: 0:5: path does not end
->> on a DP adapter, cleaning up
->> <1>[69848.706322][T25549] BUG: kernel NULL pointer dereference, address:
->> 0000000000000384
->> <1>[69848.706324][T25549] #PF: supervisor read access in kernel mode
->> <1>[69848.706325][T25549] #PF: error_code(0x0000) - not-present page
->> <6>[69848.706326][T25549] PGD 0 P4D 0
->> <4>[69848.706327][T25549] Oops: Oops: 0000 [#1] PREEMPT SMP
->> <4>[69848.706330][T25549] CPU: 1 UID: 0 PID: 25549 Comm: systemd-sleep
->> Tainted: G S   U     O       6.14.0-rc1-kenny+ #4
->> <4>[69848.706332][T25549] Tainted: [S]=CPU_OUT_OF_SPEC, [U]=USER,
->> [O]=OOT_MODULE
->> <4>[69848.706332][T25549] Hardware name: Dell Inc. XPS 9320/0KNXGD, BIOS
->> 2.18.1 12/24/2024
->> <4>[69848.706333][T25549] RIP: 0010:__tb_path_deactivate_hop+0x25/0x220
->> <4>[69848.706337][T25549] Code: 5d 5d c3 c3 90 55 48 89 e5 41 57 41 56 41 55
->> 41 54 53 48 83 ec 18 89 55 c4 65 48 8b 04 25 28 00 00 00 48 89 45 d0 48 8b
->> 47 20 <80> b8 84 03 00 00 00 0f 85 64 01 00 00 8b 90 04 03 00 00 44 8d 2c
->> <4>[69848.706338][T25549] RSP: 0000:ffffa2d40a9fb7f8 EFLAGS: 00010292
->> <4>[69848.706339][T25549] RAX: 0000000000000000 RBX: 0000000000000001 RCX:
->> 0000000000000002
->> <4>[69848.706340][T25549] RDX: 000000000000000e RSI: 00000000a863e150 RDI:
->> ffffa2d400803b00
->> <4>[69848.706340][T25549] RBP: ffffa2d40a9fb838 R08: 0000000000000000 R09:
->> ffffffffa9a55760
->> <4>[69848.706341][T25549] R10: 0000000000000000 R11: 0000000000000000 R12:
->> ffff8d1fc6bce7c0
->> <4>[69848.706341][T25549] R13: 0000000000000028 R14: ffff8d1fc1861000 R15:
->> ffff8d1fc18513e8
->> <4>[69848.706342][T25549] FS:  00007fb5b3631940(0000)
->> GS:ffff8d272f440000(0000) knlGS:0000000000000000
->> <4>[69848.706343][T25549] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> <4>[69848.706343][T25549] CR2: 0000000000000384 CR3: 00000003cea00003 CR4:
->> 0000000000770ef0
->> <4>[69848.706344][T25549] PKRU: 55555554
->> <4>[69848.706344][T25549] Call Trace:
->> <4>[69848.706345][T25549]  <TASK>
->> <4>[69848.706348][T25549]  ? show_regs.part.0+0x1d/0x20
->> <4>[69848.706351][T25549]  ? __die+0x52/0x91
->> <4>[69848.706352][T25549]  ? page_fault_oops+0x9a/0x220
->> <4>[69848.706354][T25549]  ? exc_page_fault+0x2fc/0x5c0
->> <4>[69848.706357][T25549]  ? asm_exc_page_fault+0x27/0x30
->> <4>[69848.706359][T25549]  ? __tb_path_deactivate_hop+0x25/0x220
->> <4>[69848.706360][T25549]  __tb_path_deactivate_hops+0x37/0x60
->> <4>[69848.706361][T25549]  tb_path_deactivate+0x1e/0x110
->> <4>[69848.706362][T25549]  tb_tunnel_deactivate+0x65/0x120
->> <4>[69848.706363][T25549]  tb_tunnel_discover_dp+0x373/0x670
->> <4>[69848.706364][T25549]  tb_switch_discover_tunnels+0x71/0x1e0
->> <4>[69848.706366][T25549]  tb_resume_noirq+0x91/0x2a0
->> <4>[69848.706368][T25549]  tb_domain_resume_noirq+0x3f/0x60
->> <4>[69848.706369][T25549]  nhi_resume_noirq+0x34/0x90
->> <4>[69848.706370][T25549]  pci_pm_restore_noirq+0x71/0xc0
->> <4>[69848.706372][T25549]  ? new_id_store+0x1b0/0x1b0
->> <4>[69848.706373][T25549]  dpm_run_callback+0x40/0xb0
->> <4>[69848.706375][T25549]  device_resume_noirq+0xc4/0x2a0
->> <4>[69848.706376][T25549]  dpm_noirq_resume_devices+0x11b/0x150
->> <4>[69848.706376][T25549]  dpm_resume_start+0xc/0x30
->> <4>[69848.706377][T25549]  hibernation_snapshot+0x26d/0x430
->> <4>[69848.706379][T25549]  hibernate.cold+0x9c/0x333
->> <4>[69848.706380][T25549]  state_store+0xbe/0xc0
->> <4>[69848.706381][T25549]  kobj_attr_store+0xf/0x20
->> <4>[69848.706383][T25549]  sysfs_kf_write+0x34/0x40
->> <4>[69848.706385][T25549]  kernfs_fop_write_iter+0x134/0x1e0
->> <4>[69848.706386][T25549]  vfs_write+0x244/0x410
->> <4>[69848.706388][T25549]  ksys_write+0x63/0xd0
->> <4>[69848.706389][T25549]  __x64_sys_write+0x14/0x20
->> <4>[69848.706390][T25549]  x64_sys_call+0x9eb/0xa00
->> <4>[69848.706392][T25549]  do_syscall_64+0x63/0xf0
->> <4>[69848.706394][T25549]  ? do_filp_open+0xbe/0x170
->> <4>[69848.706395][T25549]  ? do_wp_page+0x7f3/0xe80
->> <4>[69848.706398][T25549]  ? ___pte_offset_map+0x17/0xe0
->> <4>[69848.706399][T25549]  ? __handle_mm_fault+0xb13/0x1160
->> <4>[69848.706400][T25549]  ? do_syscall_64+0x6f/0xf0
->> <4>[69848.706401][T25549]  ? strncpy_from_user+0x25/0xf0
->> <4>[69848.706402][T25549]  ? __count_memcg_events+0x49/0xe0
->> <4>[69848.706403][T25549]  ? handle_mm_fault+0x181/0x2a0
->> <4>[69848.706404][T25549]  ? irqentry_exit+0x4a/0x60
->> <4>[69848.706405][T25549]  ? exc_page_fault+0x196/0x5c0
->> <4>[69848.706406][T25549]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
->> <4>[69848.706407][T25549] RIP: 0033:0x7fb5b3526274
->> <4>[69848.706411][T25549] Code: Unable to access opcode bytes at
->> 0x7fb5b352624a.
->> <4>[69848.706411][T25549] RSP: 002b:00007ffe667063f8 EFLAGS: 00000202
->> ORIG_RAX: 0000000000000001
->> <4>[69848.706412][T25549] RAX: ffffffffffffffda RBX: 0000000000000005 RCX:
->> 00007fb5b3526274
->> <4>[69848.706413][T25549] RDX: 0000000000000005 RSI: 000055ae2380a030 RDI:
->> 0000000000000007
->> <4>[69848.706413][T25549] RBP: 00007ffe66706420 R08: 0000000000000000 R09:
->> 0000000000000001
->> <4>[69848.706414][T25549] R10: 0000000000000003 R11: 0000000000000202 R12:
->> 0000000000000005
->> <4>[69848.706414][T25549] R13: 000055ae2380a030 R14: 000055ae237f62a0 R15:
->> 00007fb5b360fea0
->> <4>[69848.706415][T25549]  </TASK>
->> <4>[69848.706415][T25549] Modules linked in: vmw_vmci snd_soc_sof_sdw
->> snd_soc_sdw_utils snd_sof_probes iwlmvm mei_hdcp mei_pxp mac80211
->> snd_sof_pci_intel_tgl snd_sof_pci_intel_cnl snd_sof_intel_hda_generic
->> snd_sof_pci soundwire_intel soundwire_generic_allocation soundwire_cadence
->> snd_sof_intel_hda_common snd_soc_hdac_hda iwlwifi btusb
->> snd_sof_intel_hda_mlink btintel snd_sof_intel_hda cfg80211 mei_me ov01a10 xe
->> drm_ttm_helper gpu_sched drm_suballoc_helper drm_gpuvm drm_exec i915
->> drm_buddy intel_gtt drm_display_helper cec ttm
->> <4>[69848.706433][T25549] CR2: 0000000000000384
->> <4>[69848.706435][T25549] ---[ end trace 0000000000000000 ]
->> ----
->>
->> On 2/8/25 12:56, Kenneth Crudup wrote:
->>>
->>> Guys, I don't think this commit is right; I've had 2 out of three resume
->>> failures since this change went into Linus' master. I've attached a
->>> pstore dump of the latest crash, and while it appears to be coming from
->>> the Intel XE driver, 95% of my (s0ix) resumes worked previously[1]
->>> before this change.
->>>
->>> LMK if you need more information.
->>>
->>> -Kenny
->>>
->>> [1] - unless I forget to detach my NVMe USB4 external drive before
->>> suspending, which is a breakage that appears to have gone in sometime
->>> around the 6.10 series, but I haven't been able to bisect it
->>
->> -- 
->> Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange County
->> CA
->>
+> I also successfully cherry-picked the patches onto v6.10-rc6 and
+> linux-next 20240628 (no merge conflicts and no issues reported by 0-day).
 > 
+> Older kernels than v6.10-rc1 won't work because they're missing
+> ecdsa-nist-p521 support as well as a few preparatory sysfs patches
+> of mine that went into v6.10-rc1.
+> 
+> 
+>> I am using https://github.com/l1k/linux.git branch cma_v2 for now but wonder
+>> if that's the right one.
+> 
+> Yes that's fine.
+> 
+> There's now also a kernel.org repository with a testing branch:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/devsec/spdm.git/
+> 
+> Future maintenance of the SPDM library is intended to be happening
+> in that repo.  I assumed that Bjorn may not be keen on having to
+> deal with SPDM patches forever, so creating a dedicated repo seemed
+> to make sense.
+
+
+Has any further development happened since then? I am asking as I have 
+the CMA-v2 in my TSM exercise tree (to catch conflicts, etc) but I do 
+not see any change in your github or kernel.org/devsec since v2 and that 
+v2 does not merge nicely with the current upstream. Thanks,
+
+
+
+> Most patches in this series with a "PCI/CMA: " subject actually
+> only change very few lines in the PCI core.  The bulk of the changes
+> is in the SPDM library instead.  I used that subject merely to
+> highlight that at least an ack from Bjorn is required.  The only
+> patches containing PCI core changes to speak of are patches 8, 9, 10.
+> 
+> The devsec group (short for Device Security Alphabet Soup) currently
+> only contains the spdm.git repo.  Going forward, further repos may be
+> added below the devsec umbrella, such as tsm.git to deal with a
+> vendor-neutral interface between kernel and Trusted Security Module.
+> 
+> Thanks,
+> 
+> Lukas
 
 -- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
+Alexey
 
 
