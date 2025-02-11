@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-21219-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21220-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3D51A31694
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 21:25:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8FB4A31696
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 21:26:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9344D1670FF
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 20:25:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 407E73A7D56
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 20:26:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D60B6262D0F;
-	Tue, 11 Feb 2025 20:25:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86ED4262D39;
+	Tue, 11 Feb 2025 20:26:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dSHFFhfC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tu6/x393"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A780926156B;
-	Tue, 11 Feb 2025 20:25:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BCF9262D0F;
+	Tue, 11 Feb 2025 20:26:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739305553; cv=none; b=LsnkQfWcvyyzmVUNGsMH6gL+b6IFBMnwIlGruvOkuYJhqRGAxFmN1wiIrxiphusNcLUBVWB2qe7d1OieWtTdyZNthZggEwsdHFasf072UcPhsBEWu18qWAQqJ3B8LqbmF7dUb6xP3yV2RV0dR0uqxxurW/i6xSo+FsIqViWAbs4=
+	t=1739305566; cv=none; b=kTbtDhtMRZ4+RdFDHXi5URrVeK30MlbCYuBhQMnQx+Ob/iK7ECA0/FgE3eAIKkIO+i0AeP1csNfSDsqZa/llpqsgqU2OTnj+IfOQ+XdoP+RjVnkisWkQEevSff/G4t/Vr6528jY1GWm5TWaGqeUCyDJAq1/hNmojyhkFjV4vIRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739305553; c=relaxed/simple;
-	bh=48gzJgcITRa5XQ6Ud238wwhbUgPKwfcs2YVV+bj1R28=;
+	s=arc-20240116; t=1739305566; c=relaxed/simple;
+	bh=Ycf8GeNK3oJr/THE/xV8tWmOvGVer0MVw/oFS1f1YUY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JR/hAO4PoiW3bxeYiW3156NymM0HMsfclS5OIt19405XhlBFrbLglNpmNvfnDVVCHSznLusRoxfw6/d9Mp56IOnbm3e0xJNzqsmZyiW2HKgsoIBmGsT0pCbvE7xeoVFyXXN45NC1KuPR6Fx1/94IWt0UEUy9MH2Rk2GsoJ8/+zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dSHFFhfC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F24BFC4CEDD;
-	Tue, 11 Feb 2025 20:25:52 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=sRWh+20inJaXKf5RUKa2B3qSFBsgPQMyZZN7TialFtIXzgEQ/NDMNUuw9W2xCy7U6eINjXollI87pUymgSX2m2Kx11spaZBGB90xh/02G87TC0zjLHR4sSmlazstdK9tK7rOrUy4YWSLiIW3fKGfvbmZDGAiBMBLcVmjdjAW6cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tu6/x393; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1104DC4CEE9;
+	Tue, 11 Feb 2025 20:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739305553;
-	bh=48gzJgcITRa5XQ6Ud238wwhbUgPKwfcs2YVV+bj1R28=;
+	s=k20201202; t=1739305566;
+	bh=Ycf8GeNK3oJr/THE/xV8tWmOvGVer0MVw/oFS1f1YUY=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=dSHFFhfCn2aAHOp8I+VYdlzYczQUJ5Ci6383Tx+zoVH4ERGEpu/TizYzyXuqSEx7V
-	 oMd30x4ZBQQ6dujTtBYzpu6edrs3qKoBhfTTq17lXteYd+fWY6MuoBAVoUKFhzE12D
-	 VfOy5V5GNF5e6nVGchPlQgtn8AxO0g75KXhjis0yLVkobapPyltVWFQBrylFYEwygx
-	 ET0PacuXk2zjD4nkIesY1SxjyoNcBePYS/ZfIWhs1y3gRUYR2FCPog1loYN9IenQSL
-	 VO6zK9Vq/Z1xrTqEz9a8L1AL9kMIZM93PKS53Hgtt3/eHFoDmQ5voLuHcoXYnMHC4d
-	 ZXBN4B0pHgulg==
-Date: Tue, 11 Feb 2025 14:25:51 -0600
+	b=Tu6/x393RDmdnScd7oljfVOGSdDGjpQuVUQXALt41aAnfdnFJNmMXfAd1EvYMiGUQ
+	 bbDEGKKEeP+VcnIkmWIg1fYT+p70CV0FRpYrI4F+mnNuAlooSFp3k3W7Sncoie8qlo
+	 cw9AVa6w0stNltXYI9Ie//eBoXwCdQAO9l2Xp1exeQmsfABRsWTA7EKA2ddiihqY+N
+	 Jcw13Je3K4NOdDVDUem90VETrgw5IrjMU9BlL9eXUIYwXt2nfFuxh7ACLAvYSehZCZ
+	 jB71FS6+FlwsXLEk6hJzTGxgb8LZlfLa0xO+iLDCzJgUpPn0jfiE1ZS6Cy72yZPCDR
+	 wg22LZ7Nee2ew==
+Date: Tue, 11 Feb 2025 14:26:04 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Terry Bowman <terry.bowman@amd.com>
 Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -53,9 +53,9 @@ Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
 	rrichter@amd.com, nathan.fontenot@amd.com,
 	Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
 	ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
-Subject: Re: [PATCH v7 01/17] PCI/AER: Introduce 'struct cxl_err_handlers'
- and add to 'struct pci_driver'
-Message-ID: <20250211202551.GA53774@bhelgaas>
+Subject: Re: [PATCH v7 02/17] PCI/AER: Rename AER driver's interfaces to also
+ indicate CXL PCIe Port support
+Message-ID: <20250211202604.GA53817@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,22 +64,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250211192444.2292833-2-terry.bowman@amd.com>
+In-Reply-To: <20250211192444.2292833-3-terry.bowman@amd.com>
 
-On Tue, Feb 11, 2025 at 01:24:28PM -0600, Terry Bowman wrote:
-> CXL.io is implemented on top of PCIe Protocol Errors. But, CXL.io and PCIe
-> have different handling requirements for uncorrectable errors (UCE).
+On Tue, Feb 11, 2025 at 01:24:29PM -0600, Terry Bowman wrote:
+> The AER service driver already includes support for Restricted CXL host
+> (RCH) Downstream Port Protocol Error handling. The current implementation
+> is based on CXL1.1 using a Root Complex Event Collector.
 > 
-> The PCIe AER service driver may attempt recovering PCIe devices with
-> UCE while recovery is not used for CXL.io. Recovery is not used in the
-> CXL.io case because of potential corruption on what can be system memory.
+> Rename function interfaces and parameters where necessary to include
+> virtual hierarchy (VH) mode CXL PCIe Port error handling alongside the RCH
+> handling.[1] The CXL PCIe Port Protocol Error handling support will be
+> added in a future patch.
 > 
-> Create pci_driver::cxl_err_handlers structure similar to
-> pci_driver::error_handler. Create handlers for correctable and
-> uncorrectable CXL.io error handling.
+> Limit changes to renaming variable and function names. No functional
+> changes are added.
 > 
-> The CXL error handlers will be used in future patches adding CXL PCIe
-> Port Protocol Error handling.
+> [1] CXL 3.1 Spec, 9.12.2 CXL Virtual Hierarchy
 > 
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
@@ -91,44 +91,82 @@ On Tue, Feb 11, 2025 at 01:24:28PM -0600, Terry Bowman wrote:
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
 > ---
->  include/linux/pci.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/pci/pcie/aer.c | 28 ++++++++++++++--------------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
 > 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 47b31ad724fa..1d62e785ae1f 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -884,6 +884,14 @@ struct pci_error_handlers {
->  	void (*cor_error_detected)(struct pci_dev *dev);
->  };
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 508474e17183..6e8de77d0fc4 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1024,7 +1024,7 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+>  	return 0;
+>  }
 >  
-> +/* Compute Express Link (CXL) bus error event callbacks */
-> +struct cxl_error_handlers {
-> +	/* CXL bus error detected on this device */
-> +	pci_ers_result_t (*error_detected)(struct pci_dev *dev);
-> +
-> +	/* Allow device driver to record more details of a correctable error */
-> +	void (*cor_error_detected)(struct pci_dev *dev);
-> +};
+> -static void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+> +static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+>  	/*
+>  	 * Internal errors of an RCEC indicate an AER error in an
+> @@ -1047,30 +1047,30 @@ static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
+>  	return *handles_cxl;
+>  }
 >  
->  struct module;
+> -static bool handles_cxl_errors(struct pci_dev *rcec)
+> +static bool handles_cxl_errors(struct pci_dev *dev)
+>  {
+>  	bool handles_cxl = false;
 >  
-> @@ -929,6 +937,7 @@ struct module;
->   * @sriov_get_vf_total_msix: PF driver callback to get the total number of
->   *              MSI-X vectors available for distribution to the VFs.
->   * @err_handler: See Documentation/PCI/pci-error-recovery.rst
-> + * @cxl_err_handler: Compute Express Link specific error handlers.
->   * @groups:	Sysfs attribute groups.
->   * @dev_groups: Attributes attached to the device that will be
->   *              created once it is bound to the driver.
-> @@ -954,6 +963,7 @@ struct pci_driver {
->  	int  (*sriov_set_msix_vec_count)(struct pci_dev *vf, int msix_vec_count); /* On PF */
->  	u32  (*sriov_get_vf_total_msix)(struct pci_dev *pf);
->  	const struct pci_error_handlers *err_handler;
-> +	const struct cxl_error_handlers *cxl_err_handler;
->  	const struct attribute_group **groups;
->  	const struct attribute_group **dev_groups;
->  	struct device_driver	driver;
+> -	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC &&
+> -	    pcie_aer_is_native(rcec))
+> -		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
+> +	    pcie_aer_is_native(dev))
+> +		pcie_walk_rcec(dev, handles_cxl_error_iter, &handles_cxl);
+>  
+>  	return handles_cxl;
+>  }
+>  
+> -static void cxl_rch_enable_rcec(struct pci_dev *rcec)
+> +static void cxl_enable_internal_errors(struct pci_dev *dev)
+>  {
+> -	if (!handles_cxl_errors(rcec))
+> +	if (!handles_cxl_errors(dev))
+>  		return;
+>  
+> -	pci_aer_unmask_internal_errors(rcec);
+> -	pci_info(rcec, "CXL: Internal errors unmasked");
+> +	pci_aer_unmask_internal_errors(dev);
+> +	pci_info(dev, "CXL: Internal errors unmasked");
+>  }
+>  
+>  #else
+> -static inline void cxl_rch_enable_rcec(struct pci_dev *dev) { }
+> -static inline void cxl_rch_handle_error(struct pci_dev *dev,
+> -					struct aer_err_info *info) { }
+> +static inline void cxl_enable_internal_errors(struct pci_dev *dev) { }
+> +static inline void cxl_handle_error(struct pci_dev *dev,
+> +				    struct aer_err_info *info) { }
+>  #endif
+>  
+>  /**
+> @@ -1108,7 +1108,7 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+>  
+>  static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+> -	cxl_rch_handle_error(dev, info);
+> +	cxl_handle_error(dev, info);
+>  	pci_aer_handle_error(dev, info);
+>  	pci_dev_put(dev);
+>  }
+> @@ -1491,7 +1491,7 @@ static int aer_probe(struct pcie_device *dev)
+>  		return status;
+>  	}
+>  
+> -	cxl_rch_enable_rcec(port);
+> +	cxl_enable_internal_errors(port);
+>  	aer_enable_rootport(rpc);
+>  	pci_info(port, "enabled with IRQ %d\n", dev->irq);
+>  	return 0;
 > -- 
 > 2.34.1
 > 
