@@ -1,73 +1,73 @@
-Return-Path: <linux-pci+bounces-21150-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21151-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15A35A305A4
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 09:22:55 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2097DA305AA
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 09:24:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C33803A1C84
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 08:22:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD5BA1610EC
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 08:24:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B4361EE021;
-	Tue, 11 Feb 2025 08:22:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B90C91EE7AA;
+	Tue, 11 Feb 2025 08:24:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c4Vu4kQf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ftv/MSLa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1CA26BDA8
-	for <linux-pci@vger.kernel.org>; Tue, 11 Feb 2025 08:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACA526BDA8
+	for <linux-pci@vger.kernel.org>; Tue, 11 Feb 2025 08:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739262171; cv=none; b=cmHKvnz3Adzj+bjW0B/6l/OzKL3waeXrWPloRGzYJTsRMGO33GGhL/cH6TSNrbzXflBdLZ8/ifclO33SLdR2LGndfJd8Dd4w6V66M0rr4CHaOtGBNaXfnxhEiiRygrjf6flKiWx3PiNIK6JsHayfLt9rErNQI2o4Qo9t8HXrW1o=
+	t=1739262247; cv=none; b=Cj2JrBrpvde8nf/vw/HuVPlvhLMo44tqa3j7FT9nErfAaBJA4DXL7L7q3Vu9YCooNTKQDaxBxR6J1+/U2S6pYWlcyxRO6hQNerxDb+7w+0cAU28kWugrHKMzhLpfoWScgvvCf08tfTk8HvVwQdi+fNwNLineBtNGQl4PLNvxsks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739262171; c=relaxed/simple;
-	bh=gy53+7YWq60+YCqnliLLcvcpL1WFePHHckn4ON83i/8=;
+	s=arc-20240116; t=1739262247; c=relaxed/simple;
+	bh=ifRLaJBktqmTpnnCcmwfpSFvdxOP2c2F4flLBgStzXE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IMaA9c4PbmYCyVnS1SyXdX2FJcRawf4SFfAt0pV/Ct06c1skFqGUMmQk9rcrJqIIk2Zo0PfJcUjbw+ELULxOmayk7rVppidTxFnKar373ud27NMfgH359EXbh04KvWSd+1MhNj2Nqm2wFVFcj8Ryb9eHYuKf3RMkAqtfuCfVbKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c4Vu4kQf; arc=none smtp.client-ip=209.85.222.175
+	 To:Cc:Content-Type; b=k5JcHwITimAfPRSX9RiOmXJJ6k771RCc9ZwKzDXM3ZWCXw3tY9texmJdzbm3mHqcmAzFFFeeETVb2fM2Wp5vqiTWwHrI/4T2/IlYW7Fm4aalVuhi87YwViPDCF5EjwRWtYOkM/7KK9ZRPrZNa9HwDsM/T80WHD4CESQ7LonTLfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ftv/MSLa; arc=none smtp.client-ip=209.85.160.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7be8f28172dso305665585a.3
-        for <linux-pci@vger.kernel.org>; Tue, 11 Feb 2025 00:22:49 -0800 (PST)
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-46fd4bf03cbso82343361cf.0
+        for <linux-pci@vger.kernel.org>; Tue, 11 Feb 2025 00:24:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739262169; x=1739866969; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1739262245; x=1739867045; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gy53+7YWq60+YCqnliLLcvcpL1WFePHHckn4ON83i/8=;
-        b=c4Vu4kQf5IsC3abSAkDcgoWbvbKBA0VfK9DDd5o7TBdGAg+OHtHu2vRNmcW5hlNhqr
-         D2AGsB9exwaoFA8KzvSPXh6Uk2UnFkN0LfqunPvaRDwhZoASWpgQii9LDeJJtrK2uJvu
-         mEwN8oaCmgfTWv0NYyrrWk/MIy3ErQQ7EL/fh+jXGI8bC5uACODwImk5MN/l0fkdYJ20
-         redZg8qXlDavYb7y5EPdhAvAjSUE3KMA5Mhx3kfTyopCbd6A89fdAyfSjP3rewCGDQgR
-         hq3fZGyZEgonCwMyuexqVTIXJyWtzNahIpMhgTsdCpO0elddZ06OIPkiXmFBSzdMvBJx
-         jyZw==
+        bh=ifRLaJBktqmTpnnCcmwfpSFvdxOP2c2F4flLBgStzXE=;
+        b=ftv/MSLaFgXO5IRPUhY4W8hqUlH3yFG/oNWjWHcS2WsscRbshAS2zxJNyGj3WBk99s
+         NJ0IOUraYb9Wnd/DEkv+7YEWH0k/wL8xOreeAv3DImj1JutpNatWMvjd/K0L5ivBPqN7
+         fvqUDHeArWybPcqsqGwhh4s8dzFt48Om5Qgn0SI7hvqfzDtyv+4Y1qX05vIeHUgk1iK2
+         Z/zI7OmAJMa7/QgCTx3K/b3hV5hsID0L6e6YgjnKXW7Fw7ZwGzdNRPz80Iv0hnVFuvuq
+         GS9HadOj9uJPx0m/TG6pgVrHxjXGdxfOuIL7XXCOb0s/K2HWb/y8JA7QYW868NP2ZmYL
+         h6Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739262169; x=1739866969;
+        d=1e100.net; s=20230601; t=1739262245; x=1739867045;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gy53+7YWq60+YCqnliLLcvcpL1WFePHHckn4ON83i/8=;
-        b=K7BsuQph4BNL+L8zTCA7yKyLLTKKOPw8PltuAWT6MzXieA/Mge0d4fNVtNz4h3wi2g
-         aa4JLhLkvU6sF4uvbYlO5grXwIzjsaDRfIjD9LRiI3AYDF6GVhJpp64s3xn1MSQSegJQ
-         RzwY539MP67x/yPNamFM/B8uT7vyVhrhaSswDjT+UzWJGB4yaFG4qrHM3IZKyFwxOX2/
-         njaC+evXHUNymi6fYxL6/hAyjwfGb5t4AgOSVYaKw1tTQcXIS4Lz92Z9/Ylh+3vOEu1L
-         Jlr0wvMVw9jnSjSyZEQx7YWhMDqVwDBwykMX1Gv808nc2lay1pb0TM87kn39cRR1VOC7
-         Hrpg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5ezQyDi30tuheL72i3IbppvHoF1VaZq1C537cqoAZga1hkhC4c7wneMe56sjrmuW/K+8PpWOGZGs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycFmgY/o4QFvfkXVFWpxUjfzOq2SZ1ph9+0wb06pe/yUICumoi
-	bT3RFVEISe3r7pqTPVeuU3RMlJccUjOT8v1cWhuA9rw6oKIwWtWu5BQwiZ1G3CjK0/QCSBBzG++
-	iOK7Q9FQPxrtszFHl2wbJLN7MqwbIY5sqjgzk
-X-Gm-Gg: ASbGncvBsHaMfCr0E+DClk+V4ipXVdNEDu9KUPpFzF94mFFbbn0Xd/QcCJV+FBfeRj7
-	fL5mywr5FCT2fjGtZxkiqt3ssnUvzzWLVKBWQo5ToxtemCO4B/Brym1LZWsay3qGFMszrgEJe+u
-	9sBY7I/OyLROZDc4mU6Ps3djJM3Q==
-X-Google-Smtp-Source: AGHT+IHwF0wryvqqm3Up6z7YvEwhZgV5NvrvHjMQJCPE3EtfGqz7RUN7DJJD/KdadV1iSLMwtxyS2ed3VaZ1pKJ7000=
-X-Received: by 2002:a05:620a:2602:b0:7c0:34cd:8d45 with SMTP id
- af79cd13be357-7c047bc7246mr2731914285a.31.1739262168675; Tue, 11 Feb 2025
- 00:22:48 -0800 (PST)
+        bh=ifRLaJBktqmTpnnCcmwfpSFvdxOP2c2F4flLBgStzXE=;
+        b=dIcK0ANlzf/64m1wLEHB9+zHECd3jlPAruXDtUWj/3I1yPvj6QkELZhbm2WxFa39Pt
+         rOCD2w5BypTYTavx5BzpY1PBYbp0OucnhRQB5kilPRXq2IMQB/lnMgHwTEO4SB97fHOV
+         /tyudtVoeAPQ8MPXEwpgt5XgAITm4ODhmfWu57tDyXMLMsg9NPuEHLQDjNkB+Vcqagbq
+         e05mgzXx8G6rQdypaeWCgPVoL2V6hJjmJDD1Z2+FVI6fO8qLBMlwHvzmNvhzZs90mOZ2
+         WdGuY2uuitsT1QJz8wgFyvABSe6ehdNbnReTvlyw0A41EPQfPlp9NzJ8mmiWhbDwbUNb
+         H+qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXlGkjlve7LqdNiFLRUqCE+G6ojKB7vmGc334ZCyWax92I3LXVY3oBGqftScyflHh0+6IiO47u8DoI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM7HZr0VC2edYvfBS0N6E843GpByt9ZUHVJeULi3T/r8NzTcsM
+	wnLjaVmifelG7HAivApO6O8frTncnY5qveRgE1d3UwPyw6ul+eYrJFqGfkySdkOrPJrtDh+p2RE
+	mPJRPSa1TQunuSiz4wyOxKFX6IFQf15RrcrSo
+X-Gm-Gg: ASbGncuGd2/5aqQ44oMo6qL9LswSMeojPNtSbTcZ6eeHByzDwymdhJKzV2roJ+cCyHK
+	9qBWngAFiGgyyNoH59EJun5N+LbI6BPO71CYnrhPPxyxvQmAMAip33qq1NMGoAmW/PcXiuTnprX
+	UCeARr3q8UxukYh24M5XnJXbrgLA==
+X-Google-Smtp-Source: AGHT+IEvG6S6xcs56xjN0nAUZZfVaTqnDAf5ILSFNzFLCOwaS5lU1oNUSBNzc9q69gPfSSzsqPjwgrmOwYvAwkgXN1A=
+X-Received: by 2002:ac8:7d8b:0:b0:46c:71f6:819b with SMTP id
+ d75a77b69052e-47167b24764mr273409231cf.49.1739262244899; Tue, 11 Feb 2025
+ 00:24:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,9 +79,9 @@ References: <20250115083215.2781310-1-danielsftsai@google.com>
  <20250211075654.zxjownqe5guwzdlf@thinkpad>
 In-Reply-To: <20250211075654.zxjownqe5guwzdlf@thinkpad>
 From: Tsai Sung-Fu <danielsftsai@google.com>
-Date: Tue, 11 Feb 2025 16:22:37 +0800
-X-Gm-Features: AWEUYZlaB7DolovRgG_sbTNH7rlKChKxnzB4vEI2fXR5Ci6XWsGjDCoDwuPAams
-Message-ID: <CAK7fddAZd2fmxC06N-CCKjeH2N2TZ=0_6UyyZ=fCquXWcaGPsg@mail.gmail.com>
+Date: Tue, 11 Feb 2025 16:23:53 +0800
+X-Gm-Features: AWEUYZnc6i7aRRZ6RIQtCX8U-116xZHmxdqCHXzanRXGs3ByiGoUulWq36x3aKs
+Message-ID: <CAK7fddDkQX1aj5ZyTjh1_Pk+XME3AY=m5ouEFRgmLuJjBJytbA@mail.gmail.com>
 Subject: Re: [PATCH] PCI: dwc: Separate MSI out to different controller
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -105,6 +105,7 @@ We have another patch that would like to add the
 dw_pci_msi_set_affinity feature.
 Would it be a possible try from your perspective ?
 
+Thank you
 
 
 On Tue, Feb 11, 2025 at 3:57=E2=80=AFPM Manivannan Sadhasivam
