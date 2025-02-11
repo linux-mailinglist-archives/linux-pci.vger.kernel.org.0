@@ -1,256 +1,201 @@
-Return-Path: <linux-pci+bounces-21234-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21235-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47850A31855
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 22:59:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4455DA31859
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 23:00:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9D8A3A4CCF
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 21:59:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E0850161A7C
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 22:00:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36D73268681;
-	Tue, 11 Feb 2025 21:59:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B0D3268C7B;
+	Tue, 11 Feb 2025 22:00:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AkMUGVTD"
+	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="IACazbVJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="urQjZ87Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A94267AED;
-	Tue, 11 Feb 2025 21:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5AB9268FC4;
+	Tue, 11 Feb 2025 22:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739311163; cv=none; b=dH4PA7WwjtcKGo3aev/QJwrtL3O8pp9xGHFNjfNs3Xi+cz/D1EUrRNn8pnHIwmmo7fg5rLGxS8V/amWJUr+zA5tDpPQIrZLIs564AoExzVxY6Rxs9cfC0mbJeDLgkWusaFTVQUVLS+ERlpoe+XJbLwLjblrbuWxEUH/Xex5lGls=
+	t=1739311225; cv=none; b=r4h2kZyjmP9eKGg4cnJwYBKYbrbDIMy08mi5AiCntDKBQoSqYltdhrQUnSAWnVOnbONk9MsPwcHT78eMVl0xP5KcTuetcU8pKjAYPuNcTTXvF7D0aokA9XOcFgx7zFwVIf4EGUt69xPduaNn4b+PtUbRdPNknya+WkRBi1wA/Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739311163; c=relaxed/simple;
-	bh=HHNG9dS8Ep/HZFpPcUrUCKf0Y5dfT3JzOw9HYMuGiCw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FnxVegBQ8DfezAAU7wSSN9ypxHH8WWYO3s8ZLMPDvXpzkwtQMUPD3/v9ULB0d3gMzpNIVRsL+SO+XD5Tcr4JAMzgwuiz62OK6HazYZuxJQhRw+6WoSyUkM8rfwVb/xYwjNzBimWioGtjnKuOTOTw/DCWSfYr538CMMFq6UNT8ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AkMUGVTD; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739311161; x=1770847161;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=HHNG9dS8Ep/HZFpPcUrUCKf0Y5dfT3JzOw9HYMuGiCw=;
-  b=AkMUGVTDYKLT2dB8W4y6LBvL2VEqJ/gnEEG+VXmuM6W8E9LiENUMzKcL
-   15V719ShvqW4QWhQZ4nfKBVHaTJCCnJS0Uoxo22RdWVClTDbi7oXKlDz9
-   dgJY/9AZOctBfFvQIKkWmka2n8FEgZuK4YGXy+F9hagC3N9M9m3fZa6vu
-   8qqUIFOTXgzRCr3OLOwf3qZkqIpvXiOMj3PX4B4fKD6OVoxMeyKWlnl8q
-   zTp5P3SoNcvbk+4vKhL9/RMWibpB2jGGXq3A/HVrKta/oceUbJuRwBQAq
-   Db0ZV5gaOeL3EswiUgqA1J0I27x0svJLZssWTrsHJ9/z8zf1NldHKAoJr
-   Q==;
-X-CSE-ConnectionGUID: y62BIXO+S6SGj42t2rdH+A==
-X-CSE-MsgGUID: JdRoPYHnSIyJrMve9cK/2g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="43714221"
-X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="43714221"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 13:59:21 -0800
-X-CSE-ConnectionGUID: DR5lJ5ZLT5OuyJChBuPEvQ==
-X-CSE-MsgGUID: /ugxUpNkSvG7nj4daDEh0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113115735"
-Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.108.65]) ([10.125.108.65])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 13:59:18 -0800
-Message-ID: <8cb2bf50-2689-4268-b3db-05553dd22e72@intel.com>
-Date: Tue, 11 Feb 2025 14:59:17 -0700
+	s=arc-20240116; t=1739311225; c=relaxed/simple;
+	bh=lW3UwyDr2I/ENsb8Jco5YCmUTbiZO2iEDsoALXd/HCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eRG9vSs67AyAIhGbFGA5djftXd966CPSwD1w1ROdztpenY3s3AtwICtckATkTZHunlUIbMyK23/VuoLI/JL5txDLODHOwdObj4UAucr/X8ADZG9NyCh3nTxs6vwZqemIr4bQpChbGz4tg80+cPJHlZTAv/gveZEmucJFD9CkMJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=IACazbVJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=urQjZ87Q; arc=none smtp.client-ip=202.12.124.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 90CFC2540108;
+	Tue, 11 Feb 2025 17:00:22 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Tue, 11 Feb 2025 17:00:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1739311222; x=1739397622; bh=xDuUeB511X
+	EsJ9aYOfz6uSdSV2r8Wn7+ToSuq8Neosk=; b=IACazbVJOr+/0SV8BsMXSE+z01
+	lCpbKPtnxbDGVGxGRE3QS2Xy8meAwFT+JKkkmce4PswzzLsvVMEiAne+5DxO0TOA
+	fwmrBCuzcF4d6btWxTILkOaTZkPqWczwubjy40swu5Hd+oNXUv/jjPzyrzAE4XDa
+	gUATO6Lk4FD/21bo33w9LV/EAZAyG5sE1hSP7fppZwUd1umnbKSjnqSxBWeRMnaJ
+	EZV2G3NV3sg2MqCw5BpuWi4n5HWBMMGTCZdod9l7OzgS6GZiXhcr7zYDUM82+yQ7
+	ROvpJqv87czY5o0Qwr7yU320T9zZHJAsoVy7uoKO7+FgC7t05BtQfjCo4LWQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1739311222; x=1739397622; bh=xDuUeB511XEsJ9aYOfz6uSdSV2r8Wn7+ToS
+	uq8Neosk=; b=urQjZ87Q+1ik9N9K4932mTz4AwnK7D7SP6E6m3yHL0A8u8kYJGO
+	qUbLopmtZxzNBeOT3yQMd48Xcggg1WLyFOD7+oFN5+VFFuC3IAEEzPQH1UMO0b55
+	6F11nzlF7JEa7Aco73pNDKGylePOHEKTsfXWf+Mlbmd5kpkOae7I1V1+r/NzR6B9
+	ZDU2RxuzQd21hubzEJqNHgemVd+2MDeK4dWGTTZS6svVQHm6IYGPDruvbiuNBYNk
+	zQL6xkDy9G1GNFUs9iGBX2itPB7jhBoD7NTnWJTHS1WJ0c3WyrAeqFI5BEPVHdph
+	wihIF3TdLehwwvjtWNBeAS4ziHlf/DQtBzg==
+X-ME-Sender: <xms:dcirZ24nFMi7PqRO0O11AaBDIx7DDsJoixzFGp3tFsgpWEL6i-Ws6Q>
+    <xme:dcirZ_65X1EpZVynSs0tHoZEUAMNUU_LHtCTSo2eXrczMT3M68gaVKfl52raHls7i
+    F_mggY4qZ_tpp3gpdw>
+X-ME-Received: <xmr:dcirZ1e9ZFgBmCMFGosNnvbA--_D5nrTVS9iC95eeOZoVkFdJFn6TS9J5iJ15U7T-rYIzC1kWW4OSwBQ-9KBqON4kMvKwMpp0Oc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegvddugecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
+    necuhfhrohhmpeflrghnnhgvucfirhhunhgruhcuoehjsehjrghnnhgruhdrnhgvtheqne
+    cuggftrfgrthhtvghrnhepgfdvffevleegudejfeefheehkeehleehfefgjefffeetudeg
+    tefhuedufeehfeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepjhesjhgrnhhnrghurdhnvghtpdhnsggprhgtphhtthhopeelpdhmohguvgep
+    shhmthhpohhuthdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopegrlhihshhsrgesrhhoshgvnhiifigvihhgrdhiohdprhgtphhtthhopehl
+    phhivghrrghlihhsiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhifsehlihhnuh
+    igrdgtohhmpdhrtghpthhtohepmhgrnhhivhgrnhhnrghnrdhsrgguhhgrshhivhgrmhes
+    lhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhi
+    nhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuh
+    igqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:dcirZzI0GGjQ4J6wInV6X-5tJrPBC7D13yptVE6PkG3hvnNJ03z8Ug>
+    <xmx:dcirZ6LpjsflYJ3c2aYevprO4vUuRwWRCtkad4rM2ZnktWVYr2FMYw>
+    <xmx:dcirZ0yi_7uAVY85f9LmDeb6CYQH0QAEWQIoE_fBgEgnmFa6UjyaSA>
+    <xmx:dcirZ-LzVbDLYCONsCA1qXje9Fa_n813Nr162mOs5BMfkX1HR-FzWA>
+    <xmx:dsirZ3XFSiL0kdNevTWXDfmOU42Zc9Yr5vVe_Pk3Beg13lztpUT9igB1>
+Feedback-ID: i47b949f6:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 11 Feb 2025 17:00:21 -0500 (EST)
+Date: Tue, 11 Feb 2025 23:00:19 +0100
+From: Janne Grunau <j@jannau.net>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: apple: Add depends on PAGE_SIZE_16KB
+Message-ID: <20250211220019.GC810942@robin.jannau.net>
+References: <20250211-pci-16k-v1-1-7fc7b34327f2@rosenzweig.io>
+ <20250211183859.GA51030@bhelgaas>
+ <20250211195601.GB810942@robin.jannau.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 06/17] PCI/AER: Add CXL PCIe Port uncorrectable error
- recovery in AER service driver
-To: Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com,
- dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
- ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
- rrichter@amd.com, nathan.fontenot@amd.com,
- Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
- ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
-References: <20250211192444.2292833-1-terry.bowman@amd.com>
- <20250211192444.2292833-7-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250211192444.2292833-7-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250211195601.GB810942@robin.jannau.net>
 
+On Tue, Feb 11, 2025 at 08:56:04PM +0100, Janne Grunau wrote:
+> On Tue, Feb 11, 2025 at 12:38:59PM -0600, Bjorn Helgaas wrote:
+> > On Tue, Feb 11, 2025 at 01:03:52PM -0500, Alyssa Rosenzweig wrote:
+> > > From: Janne Grunau <j@jannau.net>
+> > > 
+> > > The iommu on Apple's M1 and M2 supports only a page size of 16kB and is
+> > > mandatory for PCIe devices. Mismatched page sizes will render devices
+> > > useless due to non-working DMA. While the iommu prints a warning in this
+> > > scenario, it seems a common and hard to debug problem, so prevent it at
+> > > build-time.
+> > 
+> > Can we include a sample iommu warning here to help people debug this
+> > problem?
+> 
+> I don't remember and it might have changed in the meantime due to iommu
+> subsystem changes. What currently happens is that
+> apple_dart_attach_dev_identity() fails with -EINVAL. I can't say whether
+> that results in a failure to probe now. I'll test and report back.
 
+Using a kernel with 4K page size It results now in following warning per
+PCI device:
 
-On 2/11/25 12:24 PM, Terry Bowman wrote:
-> Existing recovery procedure for PCIe uncorrectable errors (UCE) does not
-> apply to CXL devices. Recovery can not be used for CXL devices because of
-> potential corruption on what can be system memory. Also, current PCIe UCE
-> recovery, in the case of a Root Port (RP) or Downstream Switch Port (DSP),
-> does not begin at the RP/DSP but begins at the first downstream device.
-> This will miss handling CXL Protocol Errors in a CXL RP or DSP. A separate
-> CXL recovery is needed because of the different handling requirements
-> 
-> Add a new function, cxl_do_recovery() using the following.
-> 
-> Add cxl_walk_bridge() to iterate the detected error's sub-topology.
-> cxl_walk_bridge() is similar to pci_walk_bridge() but the CXL flavor
-> will begin iteration at the RP or DSP rather than beginning at the
-> first downstream device.
-> 
-> pci_walk_bridge() is candidate to possibly reuse cxl_walk_bridge() but
-> needs further investigation. This will be left for future improvement
-> to make the CXL and PCI handling paths more common.
-> 
-> Add cxl_report_error_detected() as an analog to report_error_detected().
-> It will call pci_driver::cxl_err_handlers for each iterated downstream
-> device. The pci_driver::cxl_err_handler's UCE handler returns a boolean
-> indicating if there was a UCE error detected during handling.
-> 
-> cxl_do_recovery() uses the status from cxl_report_error_detected() to
-> determine how to proceed. Non-fatal CXL UCE errors will be treated as
-> fatal. If a UCE was present during handling then cxl_do_recovery()
-> will kernel panic.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+| ------------[ cut here ]------------
+| WARNING: CPU: 7 PID: 260 at drivers/iommu/iommu.c:2979 iommu_setup_default_domain+0x348/0x590
+| Modules linked in: sm4_ce_gcm(-) tg3(+) nvme_apple(+) apple_sart nvme_core snd_soc_apple_mca clk_apple_nco snd_pcm_dmaengine apple_admac i2c_pasemi_platform apple_dart apple_soc_cpufreq i2c_pasemi_core
+| CPU: 7 UID: 0 PID: 260 Comm: systemd-udevd Not tainted 6.14.0-rc1+ #asahi-dev
+| Hardware name: Apple Mac mini (M1, 2020) (DT)
+| pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+| pc : iommu_setup_default_domain+0x348/0x590
+| lr : iommu_setup_default_domain+0x340/0x590
+| sp : ffffffc082c3b6b0
+| x29: ffffffc082c3b6b0 x28: 0000000000000000 x27: ffffffc082c3bcc0
+| x26: ffffffc082c3bbc0 x25: ffffffc0817d12f8 x24: ffffffc0816bf6c4
+| x23: 0000000000000000 x22: ffffff80301d5400 x21: ffffff80301d5448
+| x20: ffffffc079a332b8 x19: 00000000ffffffea x18: 0000000000000000
+| x17: 00000000007bb020 x16: 0000000000000020 x15: 0000000000000004
+| x14: 0000000000000002 x13: 0000000000000001 x12: 0000000000000000
+| x11: 0000000000000000 x10: 0000000000082630 x9 : ffffffc0808e7ad4
+| x8 : 0101010101010101 x7 : 0000000000000000 x6 : 0304000af2f9adf2
+| x5 : ffffff803030a480 x4 : ffffff81dfb29d40 x3 : 0000000000000001
+| x2 : ffffffc079a2d408 x1 : ffffff80266f60c8 x0 : 00000000ffffffea
+| Call trace:
+|  iommu_setup_default_domain+0x348/0x590 (P)
+|  __iommu_probe_device+0x340/0x3f8
+|  iommu_probe_device+0x3c/0x88
+|  of_iommu_configure+0xa8/0x258
+|  of_dma_configure_id+0x114/0x2a0
+|  pci_dma_configure+0x5c/0xc0
+|  really_probe+0x7c/0x3a0
+|  __driver_probe_device+0x84/0x160
+|  driver_probe_device+0x44/0x130
+|  __driver_attach+0xcc/0x208
+|  bus_for_each_dev+0x90/0x100
+|  driver_attach+0x2c/0x40
+|  bus_add_driver+0x118/0x250
+|  driver_register+0x70/0x140
+|  __pci_register_driver+0x4c/0x60
+|  tg3_driver_init+0x30/0xff8 [tg3]
+|  do_one_initcall+0x60/0x2a0
+|  do_init_module+0x5c/0x228
+|  load_module+0x1aec/0x20d8
+|  init_module_from_file+0x90/0xe0
+|  __arm64_sys_finit_module+0x274/0x380
+|  invoke_syscall.constprop.0+0x58/0xf0
+|  do_el0_svc+0x48/0xe8
+|  el0_svc+0x34/0x148
+|  el0t_64_sync_handler+0x10c/0x140
+|  el0t_64_sync+0x198/0x1a0
+| ---[ end trace 0000000000000000 ]---
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+In addition the ethernet device for the connected tg3 does not exists
+and PCIe xhci_hcd spews following errors:
 
-> ---
->  drivers/pci/pci.h      |  3 +++
->  drivers/pci/pcie/aer.c |  4 +++
->  drivers/pci/pcie/err.c | 58 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci.h    |  3 +++
->  4 files changed, 68 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 01e51db8d285..deb193b387af 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -722,6 +722,9 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  		pci_channel_state_t state,
->  		pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev));
->  
-> +/* CXL error reporting and handling */
-> +void cxl_do_recovery(struct pci_dev *dev);
-> +
->  bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
->  int pcie_retrain_link(struct pci_dev *pdev, bool use_lt);
->  
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 34ec0958afff..ee38db08d005 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1012,6 +1012,8 @@ static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
->  			err_handler->error_detected(dev, pci_channel_io_normal);
->  		else if (info->severity == AER_FATAL)
->  			err_handler->error_detected(dev, pci_channel_io_frozen);
-> +
-> +		cxl_do_recovery(dev);
->  	}
->  out:
->  	device_unlock(&dev->dev);
-> @@ -1041,6 +1043,8 @@ static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
->  			pdrv->cxl_err_handler->cor_error_detected(dev);
->  
->  		pcie_clear_device_status(dev);
-> +	} else {
-> +		cxl_do_recovery(dev);
->  	}
->  }
->  
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 31090770fffc..05f2d1ef4c36 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -24,6 +24,9 @@
->  static pci_ers_result_t merge_result(enum pci_ers_result orig,
->  				  enum pci_ers_result new)
->  {
-> +	if (new == PCI_ERS_RESULT_PANIC)
-> +		return PCI_ERS_RESULT_PANIC;
-> +
->  	if (new == PCI_ERS_RESULT_NO_AER_DRIVER)
->  		return PCI_ERS_RESULT_NO_AER_DRIVER;
->  
-> @@ -276,3 +279,58 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  
->  	return status;
->  }
-> +
-> +static void cxl_walk_bridge(struct pci_dev *bridge,
-> +			    int (*cb)(struct pci_dev *, void *),
-> +			    void *userdata)
-> +{
-> +	if (cb(bridge, userdata))
-> +		return;
-> +
-> +	if (bridge->subordinate)
-> +		pci_walk_bus(bridge->subordinate, cb, userdata);
-> +}
-> +
-> +static int cxl_report_error_detected(struct pci_dev *dev, void *data)
-> +{
-> +	const struct cxl_error_handlers *cxl_err_handler;
-> +	pci_ers_result_t vote, *result = data;
-> +	struct pci_driver *pdrv;
-> +
-> +	device_lock(&dev->dev);
-> +	pdrv = dev->driver;
-> +	if (!pdrv || !pdrv->cxl_err_handler ||
-> +	    !pdrv->cxl_err_handler->error_detected)
-> +		goto out;
-> +
-> +	cxl_err_handler = pdrv->cxl_err_handler;
-> +	vote = cxl_err_handler->error_detected(dev);
-> +	*result = merge_result(*result, vote);
-> +out:
-> +	device_unlock(&dev->dev);
-> +	return 0;
-> +}
-> +
-> +void cxl_do_recovery(struct pci_dev *dev)
-> +{
-> +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> +	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
-> +
-> +	cxl_walk_bridge(dev, cxl_report_error_detected, &status);
-> +	if (status == PCI_ERS_RESULT_PANIC)
-> +		panic("CXL cachemem error.");
-> +
-> +	/*
-> +	 * If we have native control of AER, clear error status in the device
-> +	 * that detected the error.  If the platform retained control of AER,
-> +	 * it is responsible for clearing this status.  In that case, the
-> +	 * signaling device may not even be visible to the OS.
-> +	 */
-> +	if (host->native_aer || pcie_ports_native) {
-> +		pcie_clear_device_status(dev);
-> +		pci_aer_clear_nonfatal_status(dev);
-> +		pci_aer_clear_fatal_status(dev);
-> +	}
-> +
-> +	pci_info(dev, "CXL uncorrectable error.\n");
-> +}
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 82a0401c58d3..5b539b5bf0d1 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -864,6 +864,9 @@ enum pci_ers_result {
->  
->  	/* No AER capabilities registered for the driver */
->  	PCI_ERS_RESULT_NO_AER_DRIVER = (__force pci_ers_result_t) 6,
-> +
-> +	/* System is unstable, panic  */
-> +	PCI_ERS_RESULT_PANIC = (__force pci_ers_result_t) 7,
->  };
->  
->  /* PCI bus error event callbacks */
+| xhci_hcd 0000:02:00.0: Abort failed to stop command ring: -110
+| xhci_hcd 0000:02:00.0: xHCI host controller not responding, assume dead
+| xhci_hcd 0000:02:00.0: HC died; cleaning up
+| xhci_hcd 0000:02:00.0: Error while assigning device slot ID: Command Aborted
+| xhci_hcd 0000:02:00.0: Max number of devices this xHCI host supports is 32.
+| usb usb1-port1: couldn't allocate usb_device
+| usb usb2-port1: couldn't allocate usb_device
 
+This is much less sutle than I remember up to the point that I'm not
+sure if this change is still needed.
+
+Silently disabled CONFIG_* due to missing dependencies aren't nice either.
+
+Janne
 
