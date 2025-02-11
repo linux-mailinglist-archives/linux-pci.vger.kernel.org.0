@@ -1,34 +1,34 @@
-Return-Path: <linux-pci+bounces-21159-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21160-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 918BFA30F81
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 16:21:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 90365A30F87
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 16:22:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C47F91655E8
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 15:21:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 96CBF3A3958
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 15:21:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09962253330;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A536253B5F;
 	Tue, 11 Feb 2025 15:21:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X81rUFE7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TvnLGD+2"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214CA253B42;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF20253B49;
 	Tue, 11 Feb 2025 15:21:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739287283; cv=none; b=hShEA71TqwxibpPGnYxoT6J5+A9lehWOhYdLZ4G2hq8cjihpYh1d+BmcASBX9S1nWWbyZvwY1Q2469Jz8332Dq0ddBnSkLqklXCVFTIQ0djdLcncs3Ele5KR9iLBmJLRliswduzyJ0GY5OvsJdUL9W7D4Ki4C/R2EcYlAjoyu3s=
+	t=1739287284; cv=none; b=dpPMeDYsCyWXtmaKPGU77YiTHLgjETElzw6c6mwmRTNaqzJN2t4TcBao7azwcEzz+jh0RL1lcwH05RyWuTwzSiBtf0e8MZbNKnvJ+1nkXWquV62FgdXuep5FpVDfapeju6nojGr3GuLFyApggMYRkThCHGT/MeDpch8kgmRT+98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739287283; c=relaxed/simple;
-	bh=TzAW+nYsKMP2HK51u3cfkEC/ErXD//jID9IQMb+P0mE=;
+	s=arc-20240116; t=1739287284; c=relaxed/simple;
+	bh=OnVFRWVku+EZPnORw141A2bHknfm7AgB6L31jvKe4Nw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CzeycKCmq3vE9XIxgkUyXIW2x6WaCWLj3GuJNN8Xw9nSoRdxJ4ewnQIw7CWFDU7bYPIasJLKzJMX0LpkbwQ2uzTXDRIp+dBgsucJ467E1ULmVa3pUpBm5Td+B7S/d+AHoMMWUm12rp7bHEBjNGSxzlNXTof5M5wmj6qON1zCzz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X81rUFE7; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=o8cEf339z85B7y0g9Yt2ts4wAwIlYr10xv2y+Ql33kRWLuWPpWj7fKh8VJY/LhEOkOzd1KVvfOOhRPv+fGsEcSsDQ9r8FuGWGpHfZ+DcdY420oBJkE9pusFUrpLQaoUfXodpKuovIRCZjLp0GzEmT3zayVTa6iY12O/l5k/tK9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TvnLGD+2; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
@@ -36,28 +36,28 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   t=1739287282; x=1770823282;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=TzAW+nYsKMP2HK51u3cfkEC/ErXD//jID9IQMb+P0mE=;
-  b=X81rUFE7bZzwxNB6gAJ0zR2LFNPGh11ny7YzBAuUvLGgR6Lgqb3AXrvz
-   1CEu4ayPLzPzkXjXt0YiJzS6iXTvhU531d9n32tUcg6IafetiryEUg8fl
-   UxiePoeBVHQoXMmQO3uK8QWIccYrhaxUS+aQ8/RqIZo3k2keftbVmnWoF
-   o9O4/V1EnTT0sP56aYz3nvLe3gpgRkbmI4Rcq7QJNUqwQjATwJAtzJFdC
-   y77Q8DzoMeRDxt70ZXDUj3R5yjgxnly+ndQcsH9mF1HsROu+HDbh6Jf+F
-   rNx71/WnC8diOkXGEyBj6diDRaNq/npKgmq7k/gef0ZLKeCI0IrbSQZLa
-   A==;
-X-CSE-ConnectionGUID: T3+LeHdPSW6TvWQ7OTSH9Q==
-X-CSE-MsgGUID: PjulTswnToKQ4hwtIU4zmw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50548281"
+  bh=OnVFRWVku+EZPnORw141A2bHknfm7AgB6L31jvKe4Nw=;
+  b=TvnLGD+21ZzaqbRAypNwre59aCZShobF7PNF+otyyz9zHHG9zWaZLIlR
+   2v7Mky6ZkgzBhfcC47vTYi5fzjlJaD2LtbmFOpY2ju+A/15H/MYukd9l/
+   oR4gPWs+UCpiVSBPaEb7fs/G9lbfgIPu+bHuMSFQqQr0TdDHaa/urXwPa
+   2+EETMEhbsmv4vBLZ+VCuGQvr4Mlf726OHWVsTP8ETZE3VpEaO/joXTOI
+   5Wq14knoh97GdQFcL+zUx2sTn6v+A03LdQGwHtxFWBu410dcBNbcGt1wC
+   6Aorzwr+ntYI68PH7i8lWZ3TepTGChG5pAIDEqNTvv0iZ4qvVsSRlf/Qr
+   g==;
+X-CSE-ConnectionGUID: Au55tAHGTHmuTlKHloDI4g==
+X-CSE-MsgGUID: T4W0BeGoSsuwZW1OvHGkrw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50548289"
 X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="50548281"
+   d="scan'208";a="50548289"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:21:20 -0800
-X-CSE-ConnectionGUID: EfABvA8IRgeni+pkQiB2Pw==
-X-CSE-MsgGUID: eXt2iLcIRa2iZJHZ+biTWQ==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:21:22 -0800
+X-CSE-ConnectionGUID: 7MqMQxMaRK+NrQGdHaH6Rw==
+X-CSE-MsgGUID: 0s/rYiKCRGOtyxmsVTTi1Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="112392594"
+   d="scan'208";a="112392597"
 Received: from test2-linux-lab.an.altera.com ([10.244.157.115])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:21:19 -0800
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 07:21:21 -0800
 From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 To: lpieralisi@kernel.org,
 	kw@linux.com,
@@ -74,9 +74,9 @@ To: lpieralisi@kernel.org,
 Cc: matthew.gerlach@altera.com,
 	peter.colberg@altera.com,
 	Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Subject: [PATCH v6 1/7] dt-bindings: PCI: altera: Add binding for Agilex
-Date: Tue, 11 Feb 2025 09:17:19 -0600
-Message-Id: <20250211151725.4133582-2-matthew.gerlach@linux.intel.com>
+Subject: [PATCH v6 2/7] arm64: dts: agilex: Fix fixed-clock schema warnings
+Date: Tue, 11 Feb 2025 09:17:20 -0600
+Message-Id: <20250211151725.4133582-3-matthew.gerlach@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250211151725.4133582-1-matthew.gerlach@linux.intel.com>
 References: <20250211151725.4133582-1-matthew.gerlach@linux.intel.com>
@@ -88,45 +88,47 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the compatible bindings for the three variants of Agilex
-PCIe Hard IP.
+Add required clock-frequency property to fixed-clock nodes
+to fix schema check warnings.
 
 Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
 v6:
- - Enhance compatible description.
-
-v3:
- - Remove accepted patches from patch set.
+ - New patch to series.
 ---
- .../devicetree/bindings/pci/altr,pcie-root-port.yaml   | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-index 52533fccc134..1f93120d8eef 100644
---- a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-+++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
-@@ -12,9 +12,19 @@ maintainers:
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+index 1235ba5a9865..42cb24cfa6da 100644
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+@@ -114,21 +114,25 @@ clocks {
+ 		cb_intosc_hs_div2_clk: cb-intosc-hs-div2-clk {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
++			clock-frequency = <0>;
+ 		};
  
- properties:
-   compatible:
-+    description: Each family of socfpga has its own implementation
-+      of the pci controller. altr,pcie-root-port-1.0 is used for the Cyclone5
-+      family of chips. The Stratix10 family of chips is supported
-+      by altr,pcie-root-port-2.0. The Agilex family of chips has
-+      three, non-register compatible, variants of PCIe Hard IP referred to as
-+      the f-tile, p-tile, and r-tile, depending on the specific chip instance.
-+
-     enum:
-       - altr,pcie-root-port-1.0
-       - altr,pcie-root-port-2.0
-+      - altr,pcie-root-port-3.0-f-tile
-+      - altr,pcie-root-port-3.0-p-tile
-+      - altr,pcie-root-port-3.0-r-tile
+ 		cb_intosc_ls_clk: cb-intosc-ls-clk {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
++			clock-frequency = <0>;
+ 		};
  
-   reg:
-     items:
+ 		f2s_free_clk: f2s-free-clk {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
++			clock-frequency = <0>;
+ 		};
+ 
+ 		osc1: osc1 {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
++			clock-frequency = <0>;
+ 		};
+ 
+ 		qspi_clk: qspi-clk {
 -- 
 2.34.1
 
