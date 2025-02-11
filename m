@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-21238-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21239-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F4DDA318F4
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 23:42:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB9E2A31945
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 00:02:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58E5116A46D
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 22:42:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 24A5B1885AD7
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 23:02:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2792F27293C;
-	Tue, 11 Feb 2025 22:40:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B7D227293A;
+	Tue, 11 Feb 2025 23:02:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DVgM1Fvn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MeoARZ3u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2903272936;
-	Tue, 11 Feb 2025 22:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D2027293C;
+	Tue, 11 Feb 2025 23:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739313633; cv=none; b=iA+DZSCCh5GSJioMjnPdpPB5BCX8rrslq+80ZvG/kqFEfxh2qdTS6Lej9YYqnneWo7lJH4SUjBeSoIv1CZ+wqr7VIQhaX07vWGIGthONhevyxoBh0IeEijIxlBEL7GLEFIwTTnpUw/Q72XfrMokTcWzuPeqDW/xw1/q0BB3lhOI=
+	t=1739314956; cv=none; b=ULRlc/vaw5/4x30YGFuwJyistZNjYdbiYQqaGL+vAQ1POKjargGu6eS3VVJmTGVAnHjsAxRwHDoh9LAYqlGCQm777pgHUV27s4Rd3mbr+sIbkAUD9bVH6Z0gV5A3qMgofo5eWO3aMGaDT6a4AnlMUjHZ38BqUSLHkgProTdk1F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739313633; c=relaxed/simple;
-	bh=lxY7YWs23ALTUlbu00zkYyApnWvBoO3seZeWzyxudFc=;
+	s=arc-20240116; t=1739314956; c=relaxed/simple;
+	bh=xQgsE9rA1Dgv6PH+aG++0LXJ52qEJWoMLGNX0KvlTpo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Mu9+0kAfbrbcAPfrfQtuWeUOWEZtENquOZauuUdk0wo0imlfwwWXrVPtXUiRjSWHYddQqrDmdSF8ws4BapARLFGwtib3oSOS6w3qyZlbxfnwLUfwZCLLXzOkPq6DXwgE9JeqO2c/FHjJKgpPXNMy2zDINaISV6OHAbTAJ8En13Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DVgM1Fvn; arc=none smtp.client-ip=198.175.65.18
+	 In-Reply-To:Content-Type; b=L27WQfTW6OcOOVMbL0eh8okeLjftlvVkWI6dkXobHm8IyTyEt66VGnc6320cb0JSJoCOQkb3DLbhTFIh4nyHBGhRCm+Owh8SMvv1rpSPSOlHUeUmkRd957+TVSCJDV2hFG2+H5dcTWYwIb6dOcC/Ps0RveAYz0MYIZIa+xXbFrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MeoARZ3u; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739313631; x=1770849631;
+  t=1739314955; x=1770850955;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=lxY7YWs23ALTUlbu00zkYyApnWvBoO3seZeWzyxudFc=;
-  b=DVgM1FvnGgHDW/vc//KPAzoyh9KiCcQNeRo6pZGCY6vQsJ3MVwY/3C59
-   pkPEc1I2IzS3K9Alxw5pVhNFmWZAGA4fngkiuMjqXijybdxOa+F9bKZQU
-   nP7wlzDi3PkamJEWsEwT0WM6DzRlmed54d1As2WqEMFOqdrae9FbR3JAD
-   Wr6lduP8LKtDPXolYg8kE6wTJxqLYSrn/VbGLB8DjqOyyVI3jJyokrhnX
-   hzWVdTqVjb00V58KIre8gZ7y9FYhA9jiICPaIWdqfkmNuhPPZdEXRukx4
-   DkLuKu2yCzZ2aaTIrxseRF+IRec5L3EqufIB4VE9qsq8IH0AvqtVCfVS/
-   w==;
-X-CSE-ConnectionGUID: 393WiFU4RWSy0MheVcxa1Q==
-X-CSE-MsgGUID: ayIDvFlJRnmLMh7G6Twkow==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40074988"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="40074988"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 14:40:30 -0800
-X-CSE-ConnectionGUID: TWlsenWFRReCOYH/rumA3g==
-X-CSE-MsgGUID: Cj2k7IsIQlKWeK/CDpyvhQ==
-X-ExtLoop1: 1
+  bh=xQgsE9rA1Dgv6PH+aG++0LXJ52qEJWoMLGNX0KvlTpo=;
+  b=MeoARZ3uwtAK9Z1lJT7gUBRLR6h6CwNDunAVTWoVfoSTgxsc2dNx3Txw
+   FVb2zMW7dAAdg1d3g+OWCToGN7Q/ORsHOCbqR4P1KMiB7gwFZMx+CZJXH
+   UjwiOMWUKAMinY9CBB9pRH8zcYl8756E/f0NIGRFWBxkl+4OzAXmEjKp1
+   l4JZ40dMiw3P9FPsUqqIRwLRaAqSapx8ftAdogqIe+gYgkGut/tCgeW4u
+   pgjU8/wy+u/Xg2Ag+DL2u41kQuwfhOpccDRhtuWghdY+ekI104cpmBpAe
+   xEbKIZBnzr0WzQOIP+CoLYQjsyJAhwIaWAi+4qY6aIm5NdWEau4h06F2F
+   g==;
+X-CSE-ConnectionGUID: qg5EXiNeQiyuWspkkdr1Zw==
+X-CSE-MsgGUID: 6VmcSf6QR/m296pD5pIPVg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="50179390"
 X-IronPort-AV: E=Sophos;i="6.13,278,1732608000"; 
-   d="scan'208";a="112469516"
+   d="scan'208";a="50179390"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 15:02:34 -0800
+X-CSE-ConnectionGUID: dKfOVGqsQX2U6yTo21T2MQ==
+X-CSE-MsgGUID: c9ppi4RKTW+GmuPX0y/r8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113127012"
 Received: from agladkov-desk.ger.corp.intel.com (HELO [10.125.108.65]) ([10.125.108.65])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 14:40:28 -0800
-Message-ID: <f0040956-a09b-4a9d-999b-80db4917f336@intel.com>
-Date: Tue, 11 Feb 2025 15:40:27 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 15:02:32 -0800
+Message-ID: <4fff3c86-090b-497e-a432-6f591502a84b@intel.com>
+Date: Tue, 11 Feb 2025 16:02:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,8 +67,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 07/17] cxl/pci: Map CXL PCIe Root Port and Downstream
- Switch Port RAS registers
+Subject: Re: [PATCH v7 08/17] cxl/pci: Map CXL PCIe Upstream Switch Port RAS
+ registers
 To: Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
@@ -79,217 +79,141 @@ To: Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
  Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
  ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
 References: <20250211192444.2292833-1-terry.bowman@amd.com>
- <20250211192444.2292833-8-terry.bowman@amd.com>
+ <20250211192444.2292833-9-terry.bowman@amd.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250211192444.2292833-8-terry.bowman@amd.com>
+In-Reply-To: <20250211192444.2292833-9-terry.bowman@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 2/11/25 12:24 PM, Terry Bowman wrote:
-> The CXL mem driver (cxl_mem) currently maps and caches a pointer to RAS
-> registers for the endpoint's Root Port. The same needs to be done for
-> each of the CXL Downstream Switch Ports and CXL Root Ports found between
-> the endpoint and CXL Host Bridge.
+> Add logic to map CXL PCIe Upstream Switch Port (USP) RAS registers.
 > 
-> Introduce cxl_init_ep_ports_aer() to be called for each CXL Port in the
-> sub-topology between the endpoint and the CXL Host Bridge. This function
-> will determine if there are CXL Downstream Switch Ports or CXL Root Ports
-> associated with this Port. The same check will be added in the future for
-> upstream switch ports.
+> Introduce 'struct cxl_regs' member into 'struct cxl_port' to cache a
+> pointer to the CXL Upstream Port's mapped RAS registers.
 > 
-> Move the RAS register map logic from cxl_dport_map_ras() into
-> cxl_dport_init_ras_reporting(). This eliminates the need for the helper
-> function, cxl_dport_map_ras().
+> Also, introduce cxl_uport_init_ras_reporting() to perform the USP RAS
+> register mapping. This is similar to the existing
+> cxl_dport_init_ras_reporting() but for USP devices.
 > 
-> cxl_init_ep_ports_aer() calls cxl_dport_init_ras_reporting() to map
-> the RAS registers for CXL Downstream Switch Ports and CXL Root Ports.
+> The USP may have multiple downstream endpoints. Before mapping RAS
+> registers check if the registers are already mapped.
 > 
-> cxl_dport_init_ras_reporting() must check for previously mapped registers
-> before mapping. This is required because multiple Endpoints under a CXL
-> switch may share an upstream CXL Root Port, CXL Downstream Switch Port,
-> or CXL Downstream Switch Port. Ensure the RAS registers are only mapped
-> once.
-> 
-> Introduce a mutex for synchronizing accesses to the cached RAS mapping.
+> Introduce a mutex for synchronizing accesses to the cached RAS
+> mapping.
+
+s/Introduce a mutex/Use the ras_init_mutex/ since it was introduced in the previous patch.
 > 
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Reviewed-by: Gregory Price <gourry@gourry.net>
 
-Couple minor comments below.
+Just a minor comment below
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > ---
->  drivers/cxl/core/pci.c | 42 ++++++++++++++++++++----------------------
->  drivers/cxl/cxl.h      |  6 ++----
->  drivers/cxl/mem.c      | 31 +++++++++++++++++++++++++++++--
->  3 files changed, 51 insertions(+), 28 deletions(-)
+>  drivers/cxl/core/pci.c | 19 ++++++++++++++++++-
+>  drivers/cxl/cxl.h      |  4 ++++
+>  drivers/cxl/mem.c      |  8 ++++++++
+>  3 files changed, 30 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index a5c65f79db18..143c853a52c4 100644
+> index 143c853a52c4..25513b9a8aff 100644
 > --- a/drivers/cxl/core/pci.c
 > +++ b/drivers/cxl/core/pci.c
-> @@ -24,6 +24,8 @@ static unsigned short media_ready_timeout = 60;
->  module_param(media_ready_timeout, ushort, 0644);
->  MODULE_PARM_DESC(media_ready_timeout, "seconds to wait for media ready");
->  
-> +static DEFINE_MUTEX(ras_init_mutex);
-> +
->  struct cxl_walk_context {
->  	struct pci_bus *bus;
->  	struct cxl_port *port;
-> @@ -749,18 +751,6 @@ static void cxl_dport_map_rch_aer(struct cxl_dport *dport)
->  	}
+> @@ -775,6 +775,24 @@ static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
+>  	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
 >  }
 >  
-> -static void cxl_dport_map_ras(struct cxl_dport *dport)
-> -{
-> -	struct cxl_register_map *map = &dport->reg_map;
-> -	struct device *dev = dport->dport_dev;
-> -
-> -	if (!map->component_map.ras.valid)
-> -		dev_dbg(dev, "RAS registers not found\n");
-> -	else if (cxl_map_component_regs(map, &dport->regs.component,
-> -					BIT(CXL_CM_CAP_CAP_ID_RAS)))
-> -		dev_dbg(dev, "Failed to map RAS capability.\n");
-> -}
-> -
->  static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
->  {
->  	void __iomem *aer_base = dport->regs.dport_aer;
-> @@ -788,22 +778,30 @@ static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
->  /**
->   * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
->   * @dport: the cxl_dport that needs to be initialized
-> - * @host: host device for devm operations
->   */
-> -void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host)
-> +void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
->  {
-> -	dport->reg_map.host = host;
-> -	cxl_dport_map_ras(dport);
-> -
-> -	if (dport->rch) {
-> -		struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport->dport_dev);
-> -
-> -		if (!host_bridge->native_aer)
-> -			return;
-> +	struct device *dport_dev = dport->dport_dev;
-> +	struct pci_host_bridge *host_bridge = to_pci_host_bridge(dport_dev);
->  
-> +	dport->reg_map.host = dport_dev;
-> +	if (dport->rch && host_bridge->native_aer) {
->  		cxl_dport_map_rch_aer(dport);
->  		cxl_disable_rch_root_ints(dport);
->  	}
+> +void cxl_uport_init_ras_reporting(struct cxl_port *port)
+> +{
 > +
-> +	/* dport may have more than 1 downstream EP. Check if already mapped. */
+> +	/* uport may have more than 1 downstream EP. Check if already mapped. */
 > +	mutex_lock(&ras_init_mutex);
 
-I think you can just call guard() here and not deal with unlock?
+You can use guard() here. 
 
-> +	if (dport->regs.ras) {
+> +	if (port->uport_regs.ras) {
 > +		mutex_unlock(&ras_init_mutex);
 > +		return;
 > +	}
 > +
-> +	if (cxl_map_component_regs(&dport->reg_map, &dport->regs.component,
+> +	port->reg_map.host = &port->dev;
+> +	if (cxl_map_component_regs(&port->reg_map, &port->uport_regs,
 > +				   BIT(CXL_CM_CAP_CAP_ID_RAS)))
-> +		dev_err(dport_dev, "Failed to map RAS capability\n");
+> +		dev_err(&port->dev, "Failed to map RAS capability\n");
 > +	mutex_unlock(&ras_init_mutex);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_uport_init_ras_reporting, "CXL");
 > +
+>  /**
+>   * cxl_dport_init_ras_reporting - Setup CXL RAS report on this dport
+>   * @dport: the cxl_dport that needs to be initialized
+> @@ -801,7 +819,6 @@ void cxl_dport_init_ras_reporting(struct cxl_dport *dport)
+>  				   BIT(CXL_CM_CAP_CAP_ID_RAS)))
+>  		dev_err(dport_dev, "Failed to map RAS capability\n");
+>  	mutex_unlock(&ras_init_mutex);
+> -
 >  }
 >  EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
 >  
 > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 6baec4ba9141..82d0a8555a11 100644
+> index 82d0a8555a11..49f29a3ef68e 100644
 > --- a/drivers/cxl/cxl.h
 > +++ b/drivers/cxl/cxl.h
-> @@ -754,11 +754,9 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
->  					 resource_size_t rcrb);
+> @@ -581,6 +581,7 @@ struct cxl_dax_region {
+>   * @parent_dport: dport that points to this port in the parent
+>   * @decoder_ida: allocator for decoder ids
+>   * @reg_map: component and ras register mapping parameters
+> + * @uport_regs: mapped component registers
+>   * @nr_dports: number of entries in @dports
+>   * @hdm_end: track last allocated HDM decoder instance for allocation ordering
+>   * @commit_end: cursor to track highest committed decoder for commit ordering
+> @@ -602,6 +603,7 @@ struct cxl_port {
+>  	struct cxl_dport *parent_dport;
+>  	struct ida decoder_ida;
+>  	struct cxl_register_map reg_map;
+> +	struct cxl_component_regs uport_regs;
+>  	int nr_dports;
+>  	int hdm_end;
+>  	int commit_end;
+> @@ -755,8 +757,10 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
 >  
 >  #ifdef CONFIG_PCIEAER_CXL
-> -void cxl_setup_parent_dport(struct device *host, struct cxl_dport *dport);
-> -void cxl_dport_init_ras_reporting(struct cxl_dport *dport, struct device *host);
-> +void cxl_dport_init_ras_reporting(struct cxl_dport *dport);
+>  void cxl_dport_init_ras_reporting(struct cxl_dport *dport);
+> +void cxl_uport_init_ras_reporting(struct cxl_port *port);
 >  #else
-> -static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport,
-> -						struct device *host) { }
-> +static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport) { }
+>  static inline void cxl_dport_init_ras_reporting(struct cxl_dport *dport) { }
+> +static inline void cxl_uport_init_ras_reporting(struct cxl_port *port) { }
 >  #endif
 >  
 >  struct cxl_decoder *to_cxl_decoder(struct device *dev);
 > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index 9675243bd05b..8c1144bbc058 100644
+> index 8c1144bbc058..541cabca434e 100644
 > --- a/drivers/cxl/mem.c
 > +++ b/drivers/cxl/mem.c
-> @@ -45,6 +45,31 @@ static int cxl_mem_dpa_show(struct seq_file *file, void *data)
->  	return 0;
+> @@ -60,6 +60,7 @@ static bool dev_is_cxl_pci(struct device *dev, u32 pcie_type)
+>  static void cxl_init_ep_ports_aer(struct cxl_ep *ep)
+>  {
+>  	struct cxl_dport *dport = ep->dport;
+> +	struct cxl_port *port = ep->next;
+>  
+>  	if (dport) {
+>  		struct device *dport_dev = dport->dport_dev;
+> @@ -68,6 +69,13 @@ static void cxl_init_ep_ports_aer(struct cxl_ep *ep)
+>  		    dev_is_cxl_pci(dport_dev, PCI_EXP_TYPE_ROOT_PORT))
+>  			cxl_dport_init_ras_reporting(dport);
+>  	}
+> +
+> +	if (port) {
+> +		struct device *uport_dev = port->uport_dev;
+> +
+> +		if (dev_is_cxl_pci(uport_dev, PCI_EXP_TYPE_UPSTREAM))
+> +			cxl_uport_init_ras_reporting(port);
+> +	}
 >  }
 >  
-> +static bool dev_is_cxl_pci(struct device *dev, u32 pcie_type)
-> +{
-> +	struct pci_dev *pdev;
-> +
-> +	if (!dev || !dev_is_pci(dev))
-> +		return false;
-> +
-> +	pdev = to_pci_dev(dev);
-> +
-> +	return (pci_pcie_type(pdev) == pcie_type);
-> +}
-
-dev_is_pcie_type()?
-
-DJ
-
-> +
-> +static void cxl_init_ep_ports_aer(struct cxl_ep *ep)
-> +{
-> +	struct cxl_dport *dport = ep->dport;
-> +
-> +	if (dport) {
-> +		struct device *dport_dev = dport->dport_dev;
-> +
-> +		if (dev_is_cxl_pci(dport_dev, PCI_EXP_TYPE_DOWNSTREAM) ||
-> +		    dev_is_cxl_pci(dport_dev, PCI_EXP_TYPE_ROOT_PORT))
-> +			cxl_dport_init_ras_reporting(dport);
-> +	}
-> +}
-> +
 >  static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
->  				 struct cxl_dport *parent_dport)
->  {
-> @@ -52,6 +77,9 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
->  	struct cxl_port *endpoint, *iter, *down;
->  	int rc;
->  
-> +	if (parent_dport->rch)
-> +		cxl_dport_init_ras_reporting(parent_dport);
-> +
->  	/*
->  	 * Now that the path to the root is established record all the
->  	 * intervening ports in the chain.
-> @@ -62,6 +90,7 @@ static int devm_cxl_add_endpoint(struct device *host, struct cxl_memdev *cxlmd,
->  
->  		ep = cxl_ep_load(iter, cxlmd);
->  		ep->next = down;
-> +		cxl_init_ep_ports_aer(ep);
->  	}
->  
->  	/* Note: endpoint port component registers are derived from @cxlds */
-> @@ -166,8 +195,6 @@ static int cxl_mem_probe(struct device *dev)
->  	else
->  		endpoint_parent = &parent_port->dev;
->  
-> -	cxl_dport_init_ras_reporting(dport, dev);
-> -
->  	scoped_guard(device, endpoint_parent) {
->  		if (!endpoint_parent->driver) {
->  			dev_err(dev, "CXL port topology %s not enabled\n",
 
 
