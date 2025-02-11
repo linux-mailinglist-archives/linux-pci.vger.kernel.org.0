@@ -1,52 +1,53 @@
-Return-Path: <linux-pci+bounces-21209-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21210-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F455A31607
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 20:54:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F1EDFA3160C
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 20:55:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 406473A1434
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 19:54:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A85193A05CE
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Feb 2025 19:55:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D17C265622;
-	Tue, 11 Feb 2025 19:54:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46E8B262D1F;
+	Tue, 11 Feb 2025 19:54:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="c+gXPHYR"
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="pDEX3FAD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598A4265617
-	for <linux-pci@vger.kernel.org>; Tue, 11 Feb 2025 19:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361D226563B
+	for <linux-pci@vger.kernel.org>; Tue, 11 Feb 2025 19:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739303680; cv=none; b=tNrIXr513lhDopTiOKNShldZPXLML1GHx0MpHkWyEMDlyGx9DoGRXirVJAie1dxTTwOzY2839VCrqqcDQ8rnKe5eIdh6VVvCmHbXzD4l8E9ZRaPvaqOHdPKDJdMnvVSjEru9wAYygg68BgyaN/fIcPyVgFPdWCjjv1CEG/6Hc+8=
+	t=1739303683; cv=none; b=IP4JiZB7r7llPpc6TCnHTVIVO9y3Ara+yZLdeWvtVnLA8e+XRo7EK390AfitO4I/0toY1jKSsTIkmgzppiL1Wdxbn5tV6gCGXNtUGvwuhsQN564dc102QeYDYxa/4JYhuhnvUfzRgg0hpMSgzZ89u2pcsYympBzG5XW4TxSFaIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739303680; c=relaxed/simple;
-	bh=pFpf8dL5ADZfvFnoqSP2NvXLSTIOTz1Wa6whLoN7LuU=;
+	s=arc-20240116; t=1739303683; c=relaxed/simple;
+	bh=yl+USkLKEMh9QsdKOr60k5N73ynmCqgb8FX+a+0tI1Y=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EJZsmsADnjiwVa+Q+3DbUK32hIsbUD7NK1fA8gPT7nZF9DnoTDTfM48Cn9HSccWD+VIOEe0kwv/p613ewNvWU7Tsg3fBaw0Fz1nerf+4SpIF/lS28L+iSfhYXEZywRQTqgjLimWa/HJb94+bVNBFDaxEt47mFLj6TXxFRWfXw4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=c+gXPHYR; arc=none smtp.client-ip=91.218.175.178
+	 In-Reply-To:To:Cc; b=hCPwQeGkVnpkJRnMfHUu0u4PFMTGZ6KF56TffljTn0beT5FUBG2lfmm1Y/J9dJadKUqEM8R8UE6ZL6xhV7T0xjYVmYzcrAfJiH0Ba7aq9Hfbt90+Ppfy2GOFO2ZhFhSgKLCwzfKohnAfeouHnfL8FRFZmQQGzshEHqE4rLwGFTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=pDEX3FAD; arc=none smtp.client-ip=91.218.175.185
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1739303676;
+	s=key1; t=1739303679;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9z3aAv8IagfPXTqvWHznNbHWmTyNuVAlNgwMD8bOopE=;
-	b=c+gXPHYRXLFvGM7DA1cUyWXIsY1fL2QlNrQv+qo+cy+YuIKJRaYQmfX5TXPD9S25GhPzgI
-	rGD9XAFOgED3gMWGl7QVBFwXlPx9kRiFE4vrbdSi2mUluO4paEZf0ZU8D/K9hVJYxoREFR
-	THXO9Tw8To2Slxj7abSFgSI5GqN55ZFInxWkenTCtYKHqhMcDppzvIIjHKlHjv3Xw2etCw
-	hbWRSAl+Nkbpf3hPkCahb9CVLVEwNzl18JuWnuqa5x31DN3O56wg+7i6k+8l4yERRZfjTc
-	T6CmwO46lScEVf4lNT+y4gV+u75X3UdoT6hbt8Mfrnv5Sc7JkBB+MMssNcma7g==
+	bh=94QHz8s3x5xn+pO8rBCK3/IvZxkKB7/6zt01u+1XuTM=;
+	b=pDEX3FADIaxZqP3isL/WiMyLef1K4xb9sxTX7LRopb4HsNgAR6VYntUTm4OhNJ6V1ZqCNO
+	uRYkF0RR5WbaKAGWRZf0N4RBMib6cjbYWFRN2szniy9IE5gOEFvi3QKUUUPaLwqCnTVkLk
+	uwE1XS1V2ldcaUQox8EDq9meAxiOAzzyf6OBL+ztG0B9Kfq64Rxg14wzyleimmABWnutSC
+	vk+UcuDyDm0AwrQn5e3ID5G9o4UYqfJ4B02UukNqbXvB6+81OHaVZwtsW89fbEqBeaQebz
+	+d+TQmBvQ4Sbnpv/GABq7Qe3WUu1BwkOfS8rhvJeqcuFgO5bLcdwsGCmonkLKA==
 From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Date: Tue, 11 Feb 2025 14:54:26 -0500
-Subject: [PATCH 1/7] dt-bindings: pci: apple,pcie: Add t6020 support
+Date: Tue, 11 Feb 2025 14:54:27 -0500
+Subject: [PATCH 2/7] PCI: apple: Fix missing OF node reference in
+ apple_pcie_setup_port
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250211-pcie-t6-v1-1-b60e6d2501bb@rosenzweig.io>
+Message-Id: <20250211-pcie-t6-v1-2-b60e6d2501bb@rosenzweig.io>
 References: <20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io>
 In-Reply-To: <20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io>
 To: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
@@ -69,43 +70,50 @@ To: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
 Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
  linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Alyssa Rosenzweig <alyssa@rosenzweig.io>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=788; i=alyssa@rosenzweig.io;
- h=from:subject:message-id; bh=pFpf8dL5ADZfvFnoqSP2NvXLSTIOTz1Wa6whLoN7LuU=;
- b=owEBbQKS/ZANAwAIAf7+UFoK9VgNAcsmYgBnq6r1TeeVHZs1Xd12TSUBL6/EGOnx4tDyU6cMg
- OlYJ/9tK9yJAjMEAAEIAB0WIQRDXuCbsK8A0B2q9jj+/lBaCvVYDQUCZ6uq9QAKCRD+/lBaCvVY
- DdKxD/9rD0CnxsgdepfE6OswMxwTF4VjruMeWCA6bEaPLzpHPU+237FDLpVVWeJGnkDpLOY/r5I
- kS1dAHlEFPfwD7jwwqmW6Kwx/5COt5GE0RcDDxjdGY7GX9Tw16alajpKqqSLGgRUlpYc1sMl+Kj
- E84JOrk3z4uutDS5oqCZw458sRgEUmjcKfh1dkA4/MuLkMlj+ADav6JCr2lgcHrZIb/CBixPbFs
- dAbGIJJ6ePr9fpTrXVZj4LUxMljCTi009B2EW3vnfSRe5cdlpjGsR5uc7fJw9K3ByFldsaHgbLI
- 1lMcYf1FDm/c1dJAunf02CSgi1ZWUIvMFyAoyUGQXGpNyTUyeLdKfYTh+SdUBiLuIZzl0OcbXau
- kgEMnXqTpmJU0xuKtLhLrdybTkFid/9frs0dZJUsXuxi0R2R6n3jEiNODLsc3+tQsfJoTpMg1RB
- xAFSs0lGmPRWyDNSLRbMUDf4Pe3K43WEs39uj96bf/7O0WKOh49SoHirE+XrjJXijK/g1HGUwbh
- watKZzg7cNHN957cBKH+nAzA1Gvmd6e0H9zSm2GRmLd+J7nXktn6xKTzqwTnDQSYJm69Mbw8k3n
- DILYGrbsxTSfbe2VpH8DgRq1f46+Ca6I1lTdFrDRlSpvKXCd1l2dR05A9CJXxajvwUzTbFZRiuB
- Z/CfA9cCixoB9iQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=946; i=alyssa@rosenzweig.io;
+ h=from:subject:message-id; bh=br8u3Lwb/VWy9zwnA4KwWQFXuGukXNpIxSbrSFqjuw4=;
+ b=owEBbQKS/ZANAwAIAf7+UFoK9VgNAcsmYgBnq6r1lSpZWagAS4cG/cY2wbT3jejBBZIBmSm+c
+ HyLBDRftpiJAjMEAAEIAB0WIQRDXuCbsK8A0B2q9jj+/lBaCvVYDQUCZ6uq9QAKCRD+/lBaCvVY
+ DTX/EACUiHlwws8oozaS9C1v7YbZPWIKXIdhfYeASI4iF7fyekhYgal15Vnzf/jqgkN2Ma7vARE
+ LOc23fkA9UBb0ydPBMRvOH3PyMzd1LZkrVTgBKkPqp0PN6o8XOB3MBdR2h2OB97ijw0rhJ0gds4
+ yvE2X2F428EGB7LFX3/RAO9RhmZm54WpYy1ZMlh5UpLWKPi7NV1mErTYOs7ED2dFcaGOlg/ZekL
+ 1iFMNMmDCOX1vO0d1lFOl3/DGkoGmbCJlcATohXlsMfTApneIyUj92wmNUVgXjL/PEuLxFRTLcp
+ a2Qr0qUK8disAbWvUQ+EFhvkc4qheHUaU5qukpSfTZdg81aznoVxSO4p44h5ihIDBr4KZlJLGaw
+ 0kAElwx+RZyQ/SSLjdgX+CAPxkC8Ir7MULoIX/t8LdWvXqk3NJJDxV4pFbnr8Z0KgD+URZXM5TL
+ IulEHFmdkqEP3ZtmqqJg45zrTdWy2gZkGKhj4L9goQyTTaQt7w9fKaWX+rQqxqFkwvv86Ad6+NY
+ eyO8G5FagnpQJhjyqGBPKP53Gb63LmTNX/coWpXY4H3AsyeIFJD7DERYM42A0EIsplFeZa0hE5O
+ SkmOz4ly5bDySc1nGE5VoKjQm/sJO7S2u4WOXmbRktKy5xJedSE7dGzkJGdlZzQac/4heXHon3X
+ Nb1lCU+DOd7WJow==
 X-Developer-Key: i=alyssa@rosenzweig.io; a=openpgp;
  fpr=435EE09BB0AF00D01DAAF638FEFE505A0AF5580D
 X-Migadu-Flow: FLOW_OUT
 
-This shuffles some registers versus t6000, so requires a new compatible.
+From: Hector Martin <marcan@marcan.st>
 
+In the success path we hang onto a reference to the node, so make sure
+to grab one. The caller iterator puts our borrowed reference when we
+return.
+
+Signed-off-by: Hector Martin <marcan@marcan.st>
 Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 ---
- Documentation/devicetree/bindings/pci/apple,pcie.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/pcie-apple.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-index c8775f9cb071339dfa6f17f9f4a99f031c98b70a..4885788ff623eebe6a79bccc0f8a9a231a01c5ca 100644
---- a/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-@@ -35,6 +35,7 @@ properties:
-           - apple,t8103-pcie
-           - apple,t8112-pcie
-           - apple,t6000-pcie
-+          - apple,t6020-pcie
-       - const: apple,pcie
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+index a7e51bc1c2fe8ec31902816e9be6749b756ec77d..8ea3e258fe2768a33ec56f0a8a86d168ed615973 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -584,6 +584,9 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 	list_add_tail(&port->entry, &pcie->ports);
+ 	init_completion(&pcie->event);
  
-   reg:
++	/* In the success path, we keep a reference to np around */
++	of_node_get(np);
++
+ 	ret = apple_pcie_port_register_irqs(port);
+ 	WARN_ON(ret);
+ 
 
 -- 
 2.48.1
