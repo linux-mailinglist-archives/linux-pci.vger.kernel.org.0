@@ -1,84 +1,125 @@
-Return-Path: <linux-pci+bounces-21299-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21300-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D7EAA32E1E
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 19:04:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C716DA32EF4
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 19:54:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF0883A8FA3
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 18:04:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A607B167DA2
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 18:54:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFC2B25B66C;
-	Wed, 12 Feb 2025 18:04:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5510A260A42;
+	Wed, 12 Feb 2025 18:54:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ad6Y00Hx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pz2jRufu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28DE209663;
-	Wed, 12 Feb 2025 18:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDDC25EFAA
+	for <linux-pci@vger.kernel.org>; Wed, 12 Feb 2025 18:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739383460; cv=none; b=nTmXjpjhLRwedyx74MyMRKSIFpDQ4wKsmyD1hhxOwUxhWXFtgJOtX33juVkVa3vuKDb69CNLIGJLkSLegBCnOJWe2YUqKSkEs3vXFqa2dIyEdcSdOVtnC7d/Sp3gzMvLZs+LZWtzTjIvDkhO2xJWc+dqwWVPUhSgf/ZgFtK+dDQ=
+	t=1739386443; cv=none; b=p7izxK9D3PUEvT4y6PKVJsxGHz0WcfXu9ApdyPuZmORxLC4DHm4BKuhsAUNxoPflhzlo9XuBAcQ+cvyk1AD7iB5U9rIlHjIbqaiji58eeBK0D28fXcieowReRmHBi4l/iObQ3zTmM6xBlTRDw0rFvsr/sCNKWrxxBTFbpHqUo1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739383460; c=relaxed/simple;
-	bh=WS+R/MsKFg8gFxvOplGbhuZvpxRikRAbX5wBQj9Cnjk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=eDzYjaMzh9LOsxmFneUVa0BSNZpogrbiJQn8+TDmS2rws+2Oq5F8Bnij0LQqKVnI0XeGp0Sgdqc2Bd5BM9PF3P1rIigED/2O+vt0qbEpZe379iopjdC9dGwCV3/E4dsZxEIthOCuIPHmjPR91EZcKY/ovM0R7AA5jQjSWbXxWFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ad6Y00Hx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC491C4CEE2;
-	Wed, 12 Feb 2025 18:04:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739383460;
-	bh=WS+R/MsKFg8gFxvOplGbhuZvpxRikRAbX5wBQj9Cnjk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ad6Y00Hxis2VHNE+cLwsU1pGxEAgDcklFFThTU3lTKWlQEkO53CLvt6/yvyOE9vL1
-	 xPzPSsqbISnQ/0bjC3XVm4y16gziqZuV0252ZL8tUB8HBB9bgzmE/ytl350C6b3ryJ
-	 aq5XDJSj1CM5tQEsXNopN28X6to4bUQbLDi1xWzjlfcE8nK8qvACpcLCEaEEoxLS4k
-	 qzUZ5NBOCtLUhAIlY/p04DuY205BpRJtzUOJhjJlN2QV3TZ6nmcwAWYWS3psncyobs
-	 +V3Fe1KvyOeYSpLD1CIMHja55bMZ3J2U8nSHz6yzM29U5zArLuTkRuEYHMz0uVThus
-	 aNnePWVa/TpAA==
-Date: Wed, 12 Feb 2025 12:04:16 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Stanimir Varbanov <svarbanov@suse.de>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Jonathan Bell <jonathan@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>
-Subject: Re: [PATCH v5 -next 00/11] Add PCIe support for bcm2712
-Message-ID: <20250212180416.GA86064@bhelgaas>
+	s=arc-20240116; t=1739386443; c=relaxed/simple;
+	bh=88U6LkkyjwbgU3fwElzt9RyVjJumxgt5JSaA4PqEjSE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JT9IZvHTNcBh7OORGvDASf/QgAPqRli9lhhmxlQQ3MJRv7HG9XwaTFukOjNgKV97vSZQ3XJlzksmXke5qtzLZG/dFF+ruIjEYIAfeaVkbK2JppRwRaKa92KhJugDtM/63OZjfaMVKF5gDGjKbH9o82ZxZLpYOt7q904lFgnV7u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pz2jRufu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739386440;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8Pk1/OrFBXHG51Uy+54VqQQAZpp/Rcxfrj0+oCV3QUE=;
+	b=Pz2jRufuIyEjOBqdZ3yzPG3sT5bPjFb/XS2eIcMBHZChs0f50dQ5J8it88N4SUzHyFmmgM
+	ZPlHKXE73lF4Zhg62xfQ3VGQenPUX3jOrYQw7jpncLA9X5fgQoI0NEP+I9os/tfvC85bO8
+	oAHzooF7GfnjZ7GhFLHQx21hg2AGC1k=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-657--a0L9dtiOOiU_a_5OBq_GA-1; Wed,
+ 12 Feb 2025 13:53:58 -0500
+X-MC-Unique: -a0L9dtiOOiU_a_5OBq_GA-1
+X-Mimecast-MFC-AGG-ID: -a0L9dtiOOiU_a_5OBq_GA
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A488719560A7;
+	Wed, 12 Feb 2025 18:53:56 +0000 (UTC)
+Received: from omen.home.shazbot.org (unknown [10.22.88.77])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3C6B21800876;
+	Wed, 12 Feb 2025 18:53:54 +0000 (UTC)
+From: Alex Williamson <alex.williamson@redhat.com>
+To: bhelgaas@google.com
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mitchell.augustin@canonical.com,
+	ilpo.jarvinen@linux.intel.com,
+	david.laight.linux@gmail.com,
+	Oleg Nesterov <oleg@redhat.com>
+Subject: [PATCH v2] PCI: Fix BUILD_BUG_ON usage for old gcc
+Date: Wed, 12 Feb 2025 11:53:32 -0700
+Message-ID: <20250212185337.293023-1-alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a74f5917-af94-42a1-9a7a-dd449d34dbfc@suse.de>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Tue, Feb 11, 2025 at 03:30:22PM +0200, Stanimir Varbanov wrote:
-> Hi Bjorn,
-> 
-> Do I need to send a new version with the collected Acked/Reviewed tags?
+As reported in the below link, it seems older versions of gcc cannot
+determine that the howmany variable is known for all callers.  Include
+a test so that newer compilers can enforce this sanity check and older
+compilers can still work.  Add __always_inline attribute to give the
+compiler an even better chance to know the inputs.
 
-No need to resend unless you change the code.
+Fixes: 4453f360862e ("PCI: Batch BAR sizing operations")
+Link: https://lore.kernel.org/all/20250209154512.GA18688@redhat.com
+Reported-by: Oleg Nesterov <oleg@redhat.com>
+Tested-by: Oleg Nesterov <oleg@redhat.com>
+Tested-by: Mitchell Augustin <mitchell.augustin@canonical.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
 
-Bjorn
+v2:
+ - Switch to statically_true (David Laight)
+ - Add __always_inline (David Laight)
+ - Included Tested-by reports
+
+ drivers/pci/probe.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index b6536ed599c3..246744d8d268 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -339,13 +339,14 @@ int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
+ 	return (res->flags & IORESOURCE_MEM_64) ? 1 : 0;
+ }
+ 
+-static void pci_read_bases(struct pci_dev *dev, unsigned int howmany, int rom)
++static __always_inline void pci_read_bases(struct pci_dev *dev,
++					   unsigned int howmany, int rom)
+ {
+ 	u32 rombar, stdbars[PCI_STD_NUM_BARS];
+ 	unsigned int pos, reg;
+ 	u16 orig_cmd;
+ 
+-	BUILD_BUG_ON(howmany > PCI_STD_NUM_BARS);
++	BUILD_BUG_ON(statically_true(howmany > PCI_STD_NUM_BARS));
+ 
+ 	if (dev->non_compliant_bars)
+ 		return;
+-- 
+2.48.1
+
 
