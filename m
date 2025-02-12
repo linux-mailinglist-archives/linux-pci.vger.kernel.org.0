@@ -1,147 +1,139 @@
-Return-Path: <linux-pci+bounces-21286-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21287-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D38F0A32689
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 14:06:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1817AA327F2
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 15:04:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7284518832A0
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 13:04:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B01F73A2B1A
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 14:04:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 037AC20C49F;
-	Wed, 12 Feb 2025 13:04:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7B1020E6F3;
+	Wed, 12 Feb 2025 14:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="IO69Mgzy"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="BZqz+PMT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5BD20ADF9;
-	Wed, 12 Feb 2025 13:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFD6320AF62;
+	Wed, 12 Feb 2025 14:04:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739365486; cv=none; b=BaPJk8qgALCI5wbKpAldcfinltrPNaNeBYxDW7gCtWSdSeEkxvFsB1BqU6U1YG95sSKr0uKTe1yoiHryq85UZeWVx7YeJ8w87oidQpFMdYb+QS0O122uMbJS5mIOhkgL8au+2PkxDgmLZqaMGfLwhBv6nLOtk8UGKgCiWyMtnuk=
+	t=1739369065; cv=none; b=tB+RWyxAgAfKamhORjJBd1GwV3/rUJ/+OUbrTE01omnHnIVny1ANH0nwIzPnLCfmaRiZdB0dH+Dc2wgwiN6mwi3NCCvjhNRi73wWsaCm9NUhzq7iLU3KXlBO1DPNJD2iUBF5O6i7eKu5hKhWVQWBxVZVGM/jgY9HxThNPRNqZjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739365486; c=relaxed/simple;
-	bh=WCZsRoAfBIeeP3j95FBTutfOm1Sci4pePFSJGSy/PIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aTYUiSjOqS7U2T1ytLqrcPDAVemaSDYo5An2qAygsO2aEVS+kNmv6n/Lrl0rKhs1yFyb6zS3GtLegHaM1RRUagrd9Vfw1vb3vhXLGXlxR1GakS3Vk7WJQkpsfO0hSrtfNS3wFxDxKLLC1EOnOcTGz1Ou9tNSuxnUTezxUbdrjgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=IO69Mgzy; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739365474; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=+4pi028ZDZ90b4IIC+xGLwCUNexH+xZRBu7t7xVHCM8=;
-	b=IO69Mgzy5WxTI9luBqerMpIHLn94KMSSvDcU7TT4W3L9Qt0xO99ZkPWaudlAtTmDw3dBa8X/vpWbvg6UuNlT4KzaccKAmJ7sb4UaY73ar/XyTUHyaOv0Ahj2/wixzwwueZ8o6Rym0d/eRzwbSpnGVdbgiG3xcf5SJcx8t0Yll9E=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WPKJpeQ_1739365473 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 12 Feb 2025 21:04:33 +0800
-Date: Wed, 12 Feb 2025 21:04:32 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Lukas Wunner <lukas@wunner.de>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonthan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: Disable PCIE hotplug interrupts early when msi
- is disabled
-Message-ID: <Z6ycYOKUeOECrcgb@U-2FWC9VHC-2323.local>
-References: <20250204053758.6025-1-feng.tang@linux.alibaba.com>
- <20250204053758.6025-2-feng.tang@linux.alibaba.com>
- <Z6HcoUB3i51bzQDs@wunner.de>
- <Z6LhzGaYBW5S41MJ@U-2FWC9VHC-2323.local>
- <Z6RU-681eXl7hcp6@wunner.de>
+	s=arc-20240116; t=1739369065; c=relaxed/simple;
+	bh=kkHearOQsdIh49mchxJVzszhh4miLNu92TKqOARKaGY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eo+rbETUKgJgxF21209fiJ77YzlgbB9qTNq7CNBWQ+2g9NQiogGyyLQmGCWHkfxC2Q+ZJ6oiPB2sxeBUUAYui0L3kCrCdMMlmJxJQmii5IVmEj4fWgCM8Kv1bknszcLbx93hzI1jtg81ZZoZBa6JmxDpog17javpmrYxIrDMYyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BZqz+PMT; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=3rPEv+OpCQsqOisf3ZwycCoUtkDWnaoLlzqXtadB8Fk=;
+	b=BZqz+PMTKBVNBY0iYeTWFQWo0ty9eAuj4tUirsuaGFfZtxE6BMR4llu+DcOW5F
+	0wSJl/ibzhpmtObkSEdiRWsVFrpTzVgUTfSOVNOD0yV9CYXdC/hwO9lmqlgmJnmE
+	/NH0GtajkUiO7ahmNlbNkbujCC65YMWzk7Lwaryc+yo1U=
+Received: from [192.168.243.52] (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wCXHlI4qqxnp2cGLQ--.10645S2;
+	Wed, 12 Feb 2025 22:03:38 +0800 (CST)
+Message-ID: <40c3d54b-677b-422d-b002-2155dc7ac66c@163.com>
+Date: Wed, 12 Feb 2025 22:03:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z6RU-681eXl7hcp6@wunner.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2] PCI: dwc: Add the debugfs property to provide the LTSSM
+ status of the PCIe link
+To: Shradha Todi <shradha.t@samsung.com>, jingoohan1@gmail.com
+Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
+ robh@kernel.org, bhelgaas@google.com, Frank.Li@nxp.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
+References: <CGME20250206151446epcas5p43a35270da73181b97deb628ff49f3ddd@epcas5p4.samsung.com>
+ <20250206151343.26779-1-18255117159@163.com>
+ <000001db7d42$d6b56fd0$84204f70$@samsung.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <000001db7d42$d6b56fd0$84204f70$@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wCXHlI4qqxnp2cGLQ--.10645S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Aryxtw43WrW8ZF4DZr1rCrg_yoW8WFyxpa
+	95Xw4Ykr48Arn5Wr1fuF4IvrySya95uF43AanFgw4Svw17tF12qF1YkayUAry3Gr1Ykr12
+	kF4Yqw1YvF1DXrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UBrWwUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiDxfxo2espdU8HwAAsS
 
-On Thu, Feb 06, 2025 at 07:21:47AM +0100, Lukas Wunner wrote:
-> [to += Rafael, start of thread is here:
-> https://lore.kernel.org/all/Z6HcoUB3i51bzQDs@wunner.de/
-> ]
-> 
-> Hi Rafael,
-> 
-> On Wed, Feb 05, 2025 at 11:58:04AM +0800, Feng Tang wrote:
-> > On Tue, Feb 04, 2025 at 10:23:45AM +0100, Lukas Wunner wrote:
-> > > On Tue, Feb 04, 2025 at 01:37:58PM +0800, Feng Tang wrote:
-> > > > There was a irq storm bug when testing "pci=nomsi" case, and the root
-> > > > cause is: 'nomsi' will disable MSI and let devices and root ports use
-> > > > legacy INTX inerrupt, and likely make several devices/ports share one
-> > > > interrupt. In the failure case, BIOS doesn't disable the PCIE hotplug
-> > > > interrupts, and  actually asserts the command-complete interrupt.
-> > > > As MSI is disabled, ACPI initialization code will not enumerate root
-> > > > port's PCIE hotplug capability, and pciehp service driver wont' be
-> > > > enabled for the root port to handle that interrupt, later on when it is
-> > > > shared and enabled by other device driver like NVME or NIC, the "nobody
-> > > > care irq storm" happens.
-> > >
-> > > Is there a section in the PCI Firmware Spec which says ACPI doesn't
-> > > enumerate the hotplug capability if MSI is disabled?
-> > 
-> > No, I didn't get it from spec, but found the logic by code reading
-> > during debugging the irq storm issue. The related code is about:
-> > 
-> > #define ACPI_PCIE_REQ_SUPPORT (OSC_PCI_EXT_CONFIG_SUPPORT \
-> > 				| OSC_PCI_ASPM_SUPPORT \
-> > 				| OSC_PCI_CLOCK_PM_SUPPORT \
-> > 				| OSC_PCI_MSI_SUPPORT)
-> 
-> Commit 415e12b23792 ("PCI/ACPI: Request _OSC control once for each root
-> bridge (v3)") contains a change which doesn't seem to be explained in
-> the commit message:
-> 
-> If the user passes "pci=nomsi" on the command line, Linux doesn't
-> request hotplug control (or any other control) from the platform.
-> So ACPI always remains responsible for hotplug in the "pci=nomsi"
-> case.
-> 
-> The commit sought to fix a cpu hog issue:
-> 
-> https://bugzilla.kernel.org/show_bug.cgi?id=29722
-> 
-> It's unclear to me if that bug was fixed by requesting _OSC only once,
-> as the commit message suggests, or if the addition of OSC_MSI_SUPPORT
-> to ACPI_PCIE_REQ_SUPPORT fixed the issue.
-> 
-> Since the latter is not mentioned in the commit message,
-> it seems plausible to assume that the OSC_MSI_SUPPORT change
-> was unintentional.
-> 
-> In any case it doesn't seem to make sense to not request any
-> control in the "pci=nomsi" case.
-> 
-> It's also worth noting that the behavior is different on
-> Apple machines as they use a fixed _OSC set even for "pci=nomsi".
-> 
-> I'm wondering if OSC_PCI_MSI_SUPPORT should simply be removed
-> from ACPI_PCIE_REQ_SUPPORT, but I'm worried that it may cause
-> reappearance of the cpu hog issue.
- 
-Hi Lukas,
 
-I tried to remove OSC_PCI_MSI_SUPPORT from ACPI_PCIE_REQ_SUPPORT, but
-after negotiate_os_control(), the 'PCIeHotplug' control is still
-disabled in the control capability after ACPI query_osc, run_osc
-routines (I haven't figured out why yet), thus the pciehp severvice
-driver can't be loader.
 
-Thanks,
-Feng
+On 2025/2/12 19:39, Shradha Todi wrote:
+>> @@ -463,6 +495,7 @@ struct dw_pcie {
+>>   	struct reset_control_bulk_data	core_rsts[DW_PCIE_NUM_CORE_RSTS];
+>>   	struct gpio_desc		*pe_rst;
+>>   	bool			suspended;
+>> +	struct dentry		*debugfs;
+> 
+> This pointer to main directory dentry is already present as rasdes_dir in struct dwc_pcie_rasdes_info.
+> So struct dentry *debugfs is duplicating it.
+> 
+> We have a few options to solve this:
+> 1. Remove struct dentry *rasdes_dir from dwc_pcie_rasdes_info and continue to have 2 pointers exposed
+> in struct dw_pcie.
+> 
+> struct dwc_pcie_rasdes_info {
+>          u32 ras_cap_offset;
+>          struct mutex reg_lock;
+> };
+> struct dw_pcie {
+>         .
+>         .
+>         struct dentry           *debugfs;
+>          void                    *rasdes_info;
+>   };
+> 
+> 2. Change rasdes_info to debugfs info:
+> 
+> struct dwc_pcie_rasdes_info {
+>          u32 ras_cap_offset;
+>          struct mutex reg_lock;
+> };
+> struct dwc_pcie_debugfs_info {
+>          struct dwc_pcie_rasdes_info *rinfo;
+>          struct dentry           *debugfs;
+> };
+> struct dw_pcie {
+>         .
+>         .
+>          void                    *debugfs_info;
+>   };
+> 
+> 3. Let ras related info get initialized to 0 even when rasdes cap is not present:
+> 
+> struct dwc_pcie_debugfs_info {
+>          u32 ras_cap_offset;
+>          struct mutex reg_lock;
+>          struct dentry *debugfs;
+> };
+> struct dw_pcie {
+>         .
+>         .
+>          void                    *debugfs_info;
+>   };
+> 
+> I think option 2 would be the best, though it will need a bit of changes in my files. What do you suggest?
+> 
 
-> Thoughts?
-> 
-> Thanks,
-> 
-> Lukas
+I couldn't agree more. Can you build the debugfs framework? I or other 
+developers can add some other debugfs nodes to this framework, not only 
+dwc_pcie_rasdes_debugfs_init, but also dwc_pcie_debugfs_init.
+
+I will add my patch with your next version. Please CC email me.
+
+Best regards
+Hans
+
 
