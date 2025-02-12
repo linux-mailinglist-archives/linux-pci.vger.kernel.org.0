@@ -1,262 +1,114 @@
-Return-Path: <linux-pci+bounces-21319-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21320-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0111A3331E
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 00:02:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 538DCA33341
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 00:20:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E8C3167897
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 23:02:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 068F3161E8A
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 23:19:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6EF2204582;
-	Wed, 12 Feb 2025 23:02:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 443D320011F;
+	Wed, 12 Feb 2025 23:19:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="Zp/7ORf3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YISDnGxA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M1ZvVKCl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985F11FFC62;
-	Wed, 12 Feb 2025 23:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC151FF1D6
+	for <linux-pci@vger.kernel.org>; Wed, 12 Feb 2025 23:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739401335; cv=none; b=Ho9xu/YLNeHfOqY/QHaC8Xo1D8u9m794hPsxG2YB2DlEYx0EzGpeJmPE2BUYR14gNXju9uHv6IherBOBWyCtbcGT8g2yq/BbYzgpgUXkPmQ5d0uOElFRaHQoxtxK5wem5G1Rk4mHs+ewVYIzBQtTn05WWgPw36g1NResLqO0vPE=
+	t=1739402396; cv=none; b=ok7py15L+FolSoZV4FfjiO22lfoQ0GwAQ+x0GXzs2CxudZR0VQiQ62SoN8/bvvl12dsktFRB20/u8SJbV/8QfuS2hlSukfZe9XVEp8X+y+n0COdsI7Xd7/H0aEK8W6sOo4ZWgiAbzxxHSc8vMTEmYyJaP9650kzS7slOMm0/5l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739401335; c=relaxed/simple;
-	bh=gYV5pNsaziPaRqczJjIyZmNtqifrQLWyFt7m14ynusQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E4tW1BZC81I20mcyQWI6CwLc55cXuR8KSQFK3Hb4NqxG6KJbxhbfvDMjpRbGief6p/lbh3f3XwfLXEGw7u9hVbA7YtjSmvt4PblGCBd77gF2JCmrRdzZaawJ58+5DMNy17h1/z7da6RKiWNG89vqagAiE02cRWC3eoDu709QGio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=Zp/7ORf3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YISDnGxA; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 990201140145;
-	Wed, 12 Feb 2025 18:02:12 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Wed, 12 Feb 2025 18:02:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1739401332;
-	 x=1739487732; bh=mSLUyvLxPqNC6IhIvsE0Cg1/kRtqYX/vKSqEHTV46K4=; b=
-	Zp/7ORf31ua3T8ozk53VvAE29KuJJ5eZ3sSXp5kYEpoOvCSvRpd8nTMQCdZzR+37
-	1YcHqHYR9PgMLhtCWBjAXwb7xsBZjle55mSGMfn+ZvUkxEMyI6vrvS99RNjjHExn
-	skZzWBqFo9OKn1PFQ3vnPeMkKqXOF3I1U9NMEUDp/nhn3bojYAvtO1opTa1aCVMh
-	Nn4/lhKK2WttYgaUbZPIl4luNOEy32hbzh7TmgSe8Pdt4XxSxPQLPLn/aQ7lzoWL
-	aRbzFt2TA9DmCiSmPJznG5VZIndqUGPpNkrkhDVFi9zrgLHDBKM+3moKSMH1yC0c
-	EJZPG3joj63hJQUUT8f/0Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1739401332; x=1739487732; bh=mSLUyvLxPqNC6IhIvsE0Cg1/kRtqYX/vKSq
-	EHTV46K4=; b=YISDnGxA6WgUsrDzv1DAWej34JZ2R4swhetv/bQc+CR+M+hsonW
-	2Mw04/1FvzkkZRL0gMavpoO11ADWKV6Gg2x1LcqseW3PeCp/yP1+HW7PUUfzQwna
-	JKe2DpYJfl6cwKVnblcAq1aCN4SG6RHBn4NmWSGrBTSUU0NTCg+NB8aYIginR5vT
-	IoKQQn18e4pv4zlxdGckoJBNpelzEOxx6ivW5WUfkZj6yvHgHoXvUJSSN+wZW6Um
-	lVfixNqsZskRyn9UlzVlMh3QyMf58yximQKhXORxYxAq+Nu+dPyKhr3+H64W1kFw
-	VQ3Gmahof5DDdXLwg1BxoEmXKH89xL5ehhg==
-X-ME-Sender: <xms:cyitZ6wS1hpg0C1Npkn878Wf3m-fqJlboVy7Uw6ilwLZ6-Ogk1l3mA>
-    <xme:cyitZ2SXcmjmITPa0Ymzq3OOLo39-1BwphaXDAUIXeQDjvLUGgcDHK8Rqy0SwHkGY
-    taHLrUECFkPWA>
-X-ME-Received: <xmr:cyitZ8WlXqy_muD-XnlTi65J6j-BCVjj4aMRfAT6AIMWqioGBSZFvOCBZuqU4iczG27zm0vTxfwwWosQY-QkBqut5onqRG7nmQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdegheduhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehgtderredttdej
-    necuhfhrohhmpeforghrvghkucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoe
-    hmrghrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucgg
-    tffrrghtthgvrhhnpedvieegfefgieejuedutefhffehjeegjeevuedtgeduteeujeetve
-    evudevieffkeenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhr
-    ghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrg
-    hrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhmpdhnsggprhgt
-    phhtthhopedvtddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohephhgvlhhgrggrsh
-    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehjghhrohhsshesshhushgvrdgtohhmpdhrtg
-    hpthhtoheprhhoghgvrhdrphgruhestghithhrihigrdgtohhmpdhrtghpthhtohepsgho
-    rhhishdrohhsthhrohhvshhkhiesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepnhgsug
-    esnhgsugdrnhgrmhgvpdhrtghpthhtoheplhhorhgvnhiioheskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheprhihuggvrhdrlhgvvgesmhgvughirghtvghkrdgtohhmpdhrtghpth
-    htohepjhgsvghulhhitghhsehsuhhsvgdrtghomh
-X-ME-Proxy: <xmx:cyitZwj_ulnQQWj3jqX3PgiaV3jPPywaT3HTNdN_usKHkYWLzwOAdw>
-    <xmx:cyitZ8CKY30ytdi5u-GqB1eYGB12mdKwr9xTbQ5HmozN3831jugz0A>
-    <xmx:cyitZxIw8bv7d9umQh_YBnCxTh99Q_K9YuNVTr4CD1oThJniT1CngQ>
-    <xmx:cyitZzA1FxaRpfG3lQak1LP_aux0L17ko49CMLlz9p0em-a9P7alKg>
-    <xmx:dCitZzDY7Je-Lz3fKhkwosJBe71lFQdr60-SS_ul3VTP4YVlfKZUw3uh>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 12 Feb 2025 18:02:08 -0500 (EST)
-Date: Thu, 13 Feb 2025 00:02:06 +0100
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org,
-	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>, Jan Beulich <jbeulich@suse.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Deren Wu <Deren.Wu@mediatek.com>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Shayne Chen <Shayne.Chen@mediatek.com>,
-	Sean Wang <Sean.Wang@mediatek.com>,
-	Leon Yen <Leon.Yen@mediatek.com>,
-	linux-mediatek@lists.infradead.org, regressions@lists.linux.dev,
-	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI: Avoid FLR for Mediatek MT7922 WiFi
-Message-ID: <Z60obmDgwk0VZ75A@mail-itl>
-References: <20250212193516.88741-1-helgaas@kernel.org>
+	s=arc-20240116; t=1739402396; c=relaxed/simple;
+	bh=JTD4FuRV/LhHKuxL7RioLGejiptbf8PQLqOdgssxrnM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SxnNNOxMkZ6QmmuCUDXF3NKVfUcrJ70MdZrwkrS59iXWAZW8W2c0QhIaVwlEG6jVfTc/TtmK6pIudXeZIL9j4/o2SK6DU8pTNOP9dtyTm+VTVGW963xp0Zesb0dZrEsOqjgC50hv1RPrJ+c0pBkTeBXcBZ8nBI3PxRxEmWkFkeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M1ZvVKCl; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab7c81b8681so58560066b.0
+        for <linux-pci@vger.kernel.org>; Wed, 12 Feb 2025 15:19:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739402393; x=1740007193; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JTD4FuRV/LhHKuxL7RioLGejiptbf8PQLqOdgssxrnM=;
+        b=M1ZvVKCl9sFBHHIy92GPD6jT3E7MfslawhM2XrwTplQeDrtKr/L/QKINeQIKvoezLo
+         apw080SCTe/D8lCwjUU+D3L5DfKOZ0ojYkXKHRmaKOBGtVLgT4lc0WJkerYUek6Xdvio
+         WIyUCLGlAcLZejH/W7tDaoSs3GwIOHOMV4K3ln6cyztk9N23ABbMd/rwUBMn8kjsMKoB
+         pSqG9bBmjK0IIpRHMnI+1N4EeoSokSaMBGQkXtbfy3fBVTLwBS+9CWbwarQcTApPeew5
+         Y76M2VPD2C9f6i6St97GNS2wXNvY1nObZCaSxlhzLuBGI7mt4WCXUb+Xwsz2y+W1kLwL
+         bz4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739402393; x=1740007193;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JTD4FuRV/LhHKuxL7RioLGejiptbf8PQLqOdgssxrnM=;
+        b=pAKWw6BdMQD6m5ypnLwwCxZHAlSgjKep4qz8pljPRp1u4re4GGjDYNsZaNfICibUt5
+         9XrpjfUnj7exbF1Lpqz5hHkZiBBY/vHIb68JJ0AiQ44bHaeswXsmmz4/nzXTr+mw5O3x
+         qSjhmoDwBQIB3kwxQEQsmbCzQwKAgfCf3FqImklnmq8nYJtkMyyyFmch0l0hZv/hUJwx
+         Hxq2z42EP21rFbFXfWm71so18wgXSCa1mRCDuXpSObk26N2272XVT9YJ4hpr1z1ZFznk
+         8kgojevDzEtqOddjJeQ8mhr3WPWGdRGH1JWEUaLK/DgjluAF2U5QTB2/DImrPrObZWlt
+         3yhA==
+X-Gm-Message-State: AOJu0YwQasnLcHtDixf+lUJjlEKdhXarQXVLn5GH+MMZDmVJvq+LQqdc
+	W9053Bb9D6sY5nHDsBcbBWUNEJg5tAKd5xg4R8xxlUiyMS6a3BcGCIBSUfU+mMnclluDDhBUo9+
+	qIuryuKJ89F/tA/g7XeqCiyE1ZZoNpGSjXdYA
+X-Gm-Gg: ASbGncs5fuZnECGIzQ6f+ENKoiEKuBMZvdjHV55b2n0JlNh1hX9EkOFkSVYgYW1SH3Q
+	Ri5w+V0VOqXwOtDUcNV4B1qHzOBIUPxMzjjXxQKbURmmCR6MktVpF254l8xFnA8F9bw5Prq8wLO
+	cXO/X3TUZatETeVeQjyzVO8AzRrUk=
+X-Google-Smtp-Source: AGHT+IHzBhnuBjfRu4Ka8s7HnmF56k8bGRDTAyY5xK2nSu/SKw3NxLrpbMSvbc0PdJA7vmEtt3w29gsSYE8kG/iKYJU=
+X-Received: by 2002:a17:906:6a0d:b0:ab2:bd0b:acdf with SMTP id
+ a640c23a62f3a-ab7f38768bdmr475053366b.36.1739402392687; Wed, 12 Feb 2025
+ 15:19:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0tz+zSavbvKwuCEI"
-Content-Disposition: inline
-In-Reply-To: <20250212193516.88741-1-helgaas@kernel.org>
-
-
---0tz+zSavbvKwuCEI
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20250115074301.3514927-1-pandoh@google.com> <8f26a854-5d49-4993-a838-efec7270155a@oracle.com>
+In-Reply-To: <8f26a854-5d49-4993-a838-efec7270155a@oracle.com>
+From: Jon Pan-Doh <pandoh@google.com>
+Date: Wed, 12 Feb 2025 15:19:41 -0800
+X-Gm-Features: AWEUYZn_jT0nHCAR_ONIvWwEje1TRiidqUwnevbBX2CmGDURQlrqZEwhrQoN3sA
+Message-ID: <CAMC_AXXVQHZZFeDxsdqGzCuCS24iCZDHEZcbOppu9Vxvt-gH6Q@mail.gmail.com>
+Subject: Re: [PATCH 0/8] Rate limit AER logs/IRQs
+To: Karolina Stolarek <karolina.stolarek@oracle.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller <ben.fuller@oracle.com>, 
+	Drew Walton <drewwalton@microsoft.com>, Anil Agrawal <anilagrawal@meta.com>, 
+	Tony Luck <tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Feb 2025 00:02:06 +0100
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org,
-	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>, Jan Beulich <jbeulich@suse.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Deren Wu <Deren.Wu@mediatek.com>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Shayne Chen <Shayne.Chen@mediatek.com>,
-	Sean Wang <Sean.Wang@mediatek.com>,
-	Leon Yen <Leon.Yen@mediatek.com>,
-	linux-mediatek@lists.infradead.org, regressions@lists.linux.dev,
-	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI: Avoid FLR for Mediatek MT7922 WiFi
 
-On Wed, Feb 12, 2025 at 01:35:16PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> The Mediatek MT7922 WiFi device advertises FLR support, but it apparently
-> does not work, and all subsequent config reads return ~0:
->=20
->   pci 0000:01:00.0: [14c3:0616] type 00 class 0x028000 PCIe Endpoint
->   pciback 0000:01:00.0: not ready 65535ms after FLR; giving up
->=20
-> After an FLR, pci_dev_wait() waits for the device to become ready.  Prior
-> to d591f6804e7e ("PCI: Wait for device readiness with Configuration RRS"),
-> it polls PCI_COMMAND until it is something other that PCI_POSSIBLE_ERROR
-> (~0).  If it times out, pci_dev_wait() returns -ENOTTY and
-> __pci_reset_function_locked() tries the next available reset method.
-> Typically this is Secondary Bus Reset, which does work, so the MT7922 is
-> eventually usable.
->=20
-> After d591f6804e7e, if Configuration Request Retry Status Software
-> Visibility (RRS SV) is enabled, pci_dev_wait() polls PCI_VENDOR_ID until =
-it
-> is something other than the special 0x0001 Vendor ID that indicates a
-> completion with RRS status.
->=20
-> When RRS SV is enabled, reads of PCI_VENDOR_ID should return either 0x000=
-1,
-> i.e., the config read was completed with RRS, or a valid Vendor ID.  On t=
-he
-> MT7922, it seems that all config reads after FLR return ~0 indefinitely.
-> When pci_dev_wait() reads PCI_VENDOR_ID and gets 0xffff, it assumes that's
-> a valid Vendor ID and the device is now ready, so it returns with success.
->=20
-> After pci_dev_wait() returns success, we restore config space and continu=
-e.
-> Since the MT7922 is not actually ready after the FLR, the restore fails a=
-nd
-> the device is unusable.
->=20
-> We considered changing pci_dev_wait() to continue polling if a
-> PCI_VENDOR_ID read returns either 0x0001 or 0xffff.  This "works" as it d=
-id
-> before d591f6804e7e, although we have to wait for the timeout and then fa=
-ll
-> back to SBR.  But it doesn't work for SR-IOV VFs, which *always* return
-> 0xffff as the Vendor ID.
->=20
-> Mark Mediatek MT7922 WiFi devices to avoid the use of FLR completely.  Th=
-is
-> will cause fallback to another reset method, such as SBR.
->=20
-> Fixes: d591f6804e7e ("PCI: Wait for device readiness with Configuration R=
-RS")
-> Link: https://github.com/QubesOS/qubes-issues/issues/9689#issuecomment-25=
-82927149
-> Link: https://lore.kernel.org/r/Z4pHll_6GX7OUBzQ@mail-itl
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+On Thu, Feb 6, 2025 at 5:32=E2=80=AFAM Karolina Stolarek
+<karolina.stolarek@oracle.com> wrote:
+> Do you have any update on the series?
+>
+> I'm aware that a lot is happening in the AER code right now, so I was
+> thinking if it would be helpful to split up the series to get the logs
+> ratelimiting in sooner. There are some concerns about disabling error
+> generation that should be discussed, but I don't want them to block the
+> logs ratelimit changes. I think it would be good to fix this first to
+> save people (myself included) from overflown syslogs.
 
-It works, thanks!
+Sorry for the delayed response. I was on vacation and hadn't had time
+to address the comments. I think splitting the series into log
+ratelimits vs. irq ratelimits is a good idea as we continue to discuss
+the latter. I'll aim to send out v2 by the end of week.
 
-Tested-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingslab.com>
+One outstanding item (mentioned off-list) is Bjorn's desire to
+consolidate the logging paths (aer_print_error() for AER IRQ and
+pci_print_error() for CXL/GHES) as a prerequisite (clean up/reduce
+tech debt). Maybe you could help with this?
 
-> ---
->  drivers/pci/quirks.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index b84ff7bade82..82b21e34c545 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5522,7 +5522,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443,=
- quirk_intel_qat_vf_cap);
->   * AMD Matisse USB 3.0 Host Controller 0x149c
->   * Intel 82579LM Gigabit Ethernet Controller 0x1502
->   * Intel 82579V Gigabit Ethernet Controller 0x1503
-> - *
-> + * Mediatek MT7922 802.11ax PCI Express Wireless Network Adapter
->   */
->  static void quirk_no_flr(struct pci_dev *dev)
->  {
-> @@ -5534,6 +5534,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, =
-quirk_no_flr);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x7901, quirk_no_flr);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_MEDIATEK, 0x0616, quirk_no_flr);
-> =20
->  /* FLR may cause the SolidRun SNET DPU (rev 0x1) to hang */
->  static void quirk_no_flr_snet(struct pci_dev *dev)
-> --=20
-> 2.34.1
->=20
-
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-
---0tz+zSavbvKwuCEI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmetKG4ACgkQ24/THMrX
-1yxrrQf8DcaaeLNDT4iNQ62TsecJBfBfwazR8kITzW+Ljwe2R5+WlZlSB58A/yN3
-MAO8oyedNHISFcJ2YiqrGW/kFPGf3ns7PFfohV6DBYyNTjoj1UNywkWZ0zxXuaxH
-YnNLoNJeOZEVW86+MOgJZ67MaQqGbuuv2juS7SPVwteezRykssZLvepfPIonJiNt
-vK4WylRTvPH+Kkkf5Ys744gDdSd4virRagaIxrytlbF3BV6n1o5UTuuaYwRfJ/kj
-J+jAHvmFBHD2zEa1qCodVG/2GS1BuRD9TZ/dGHLUGH+vTikCUttyplbXpuhwgAoR
-Lb6nsNLNMm4iXqwgyfTw306hP01rVQ==
-=EIdg
------END PGP SIGNATURE-----
-
---0tz+zSavbvKwuCEI--
+Thanks,
+Jon
 
