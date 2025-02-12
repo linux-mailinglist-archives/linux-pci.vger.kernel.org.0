@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-21278-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21279-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2346A31E5D
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 06:57:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C2EBA31E64
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 06:59:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E2753A732A
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 05:57:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1A7A37A0695
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 05:58:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D921FAC57;
-	Wed, 12 Feb 2025 05:57:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3631B1FAC57;
+	Wed, 12 Feb 2025 05:59:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWmcHhUG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dp7Sevwr"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263DF1FAC5B;
-	Wed, 12 Feb 2025 05:57:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 041AE2B9BC;
+	Wed, 12 Feb 2025 05:59:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739339843; cv=none; b=P1eScOVF70zOTLpNGa3MZ7dlz+Q92cV1fxY+qusUq6X0kwkpOh3qN2Y4PCqI///EtGAPgl2698pIczV0aOaaCiH4xrEPosCEv1YTYYB9v65nGeQExBXeOxOk48DYrE3Y+Di7d19TrEU2wazPMWAYD1kmnX8v3pW8QYhIv7wEWN4=
+	t=1739339963; cv=none; b=lGkSjQVzPHhNtbPkmJHNZxsNSveoM8u8GZruL34tELVx87YRRmmIrVH4E73ITuLCCpyBgGy5Ie/AnkMpKWxI0S9KnQxcov7x21bKUC1DyuDx/4B15JoXWRateD+UF9WAniJaoSxACmSfMTwT6Ts34j3qvHTAUSvQGo2bU3O/Mqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739339843; c=relaxed/simple;
-	bh=WBxhnT3k4XJ8sdI3owlB//G4F1gO4Jtahnet4CiM9x4=;
+	s=arc-20240116; t=1739339963; c=relaxed/simple;
+	bh=Q6J7EQ5yIrt6MadsEqiRZhstsTE2qq7OXBLbyoucptw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AB8t0V/AD5CgI814/SfVvt/QrtAhqvI1USfu81nmVBdDh1UpHJ7hi/oYQ5M/9EsMnx4XlbsVK/Ht3GTF3NALGrEww3L3WQme8B6TXN7/Gap+c1G+2ok1oZ7CMoaDt5mNF2FOSbxtt6yTHNoy1WnMSvw7ikCRb1B59o9x8fjeL1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZWmcHhUG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D7A1C4CEDF;
-	Wed, 12 Feb 2025 05:57:17 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=rOHQ4aGTgNZ9s2c3a4j4qkodBLFkwchjH3lhBwS6PXNtopFpUYPSX6fwo3/GeJREtLYbLaDuY7Qkj0HnZ7XlZjfLOs1tM7O2tbhad5IrSoJtoz++ZVwiePRfX8Nxp+Ibie5Ni7weu0IWtIYejyZKNI9ODL78plL4V6n/hDTOnuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dp7Sevwr; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6408DC4CEDF;
+	Wed, 12 Feb 2025 05:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739339842;
-	bh=WBxhnT3k4XJ8sdI3owlB//G4F1gO4Jtahnet4CiM9x4=;
+	s=k20201202; t=1739339962;
+	bh=Q6J7EQ5yIrt6MadsEqiRZhstsTE2qq7OXBLbyoucptw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZWmcHhUGjAoyDhLANodgCcaqfCnniiC6qc7pBcuwjrM1vOX2YvjtAkbfeN4YuyC3o
-	 DtSBRTHMCXvSEelw7rsH39P4lVQC5DEAIYu6Aq9n1ROduAwXoct/Q86V9g6RIGUea7
-	 lzGnGa3udTr5X6Asy6zBrPm1yo/jl5OlaaKXltmYM5HaGoZ3e9xLfB1hFCpiLbU1In
-	 vjllqdEaZ2kI0kqczqafTTgGUbvLf0FF7bhcOw0XUrlbe3g/jkud7vrkDt/jXclBZH
-	 gvB8du4pp7Jj9I5dsTVMzhSTFJzaexE4U33Pi7e6HPIivmhOQE/uzOdWDRvFwd2bEq
-	 uDVSLXAOQR5xA==
-Message-ID: <38816f27-f2b4-4189-811b-d1809fad35e7@kernel.org>
-Date: Wed, 12 Feb 2025 06:57:14 +0100
+	b=dp7SevwreotHfWmzOod4EnUEXhtYuZdKVeuTPF2vk8aTRxttQxqdMd2NdNoLuFW1k
+	 nTj5Sx80QaJlXBDSI+FbX7LelKxYuzzsNUkycpBo00dGVeoU6qBoOm9jzir1XUlIQW
+	 f7uVPNE4a+qe7fIGMQjXlUWgreZiHVi2bibaagPwzalmL2/0m5KWRDLI9tqTJymGDi
+	 ODqkGw6664Blzlx6M6bZn0G5FONyVoxP2M7AOBTyGrEajhlJQcGaf3xxRTEee82JJ2
+	 Cyxsw0OTyjnHbBnDmPCIz/tVRBWd46vL1ZF3v6SRUY1VVof8ar8OYlNW5yUTpxhbgV
+	 cECsjBWAPLEng==
+Message-ID: <3c6cb77a-6e12-4e6c-a197-11a63b3dc74d@kernel.org>
+Date: Wed, 12 Feb 2025 06:59:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/7] arm64: dts: agilex: move bus@80000000 to
- socfpga_agilex.dtsi
+Subject: Re: [PATCH v6 4/7] arm64: dts: agilex: refactor shared dts into dtsi
 To: Matthew Gerlach <matthew.gerlach@linux.intel.com>, lpieralisi@kernel.org,
  kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
  bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org,
@@ -59,7 +58,7 @@ To: Matthew Gerlach <matthew.gerlach@linux.intel.com>, lpieralisi@kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: matthew.gerlach@altera.com, peter.colberg@altera.com
 References: <20250211151725.4133582-1-matthew.gerlach@linux.intel.com>
- <20250211151725.4133582-4-matthew.gerlach@linux.intel.com>
+ <20250211151725.4133582-5-matthew.gerlach@linux.intel.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -105,93 +104,38 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250211151725.4133582-4-matthew.gerlach@linux.intel.com>
+In-Reply-To: <20250211151725.4133582-5-matthew.gerlach@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 11/02/2025 16:17, Matthew Gerlach wrote:
-> The bus from HPS to the FPGA is part of the SoC. Move its
-> device tree node to socfpga_agilex.dtsi to allow it to be
-> referenced by any board.
+> Move common device tree from socfpga_agilex_socdk*.dts to
+> socfpga_agilex_socdk.dtsi.
 > 
 > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> ---
-> v6:
->  - New patch to series.
-> ---
->  arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 10 +++++++
->  .../boot/dts/intel/socfpga_agilex_n6000.dts   | 28 +++++++------------
->  2 files changed, 20 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-> index 42cb24cfa6da..26ccdf042281 100644
-> --- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
-> @@ -678,5 +678,15 @@ qspi: spi@ff8d2000 {
->  
->  			status = "disabled";
->  		};
+>  ---
+
+
+
+
+> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dtsi
+> new file mode 100644
+> index 000000000000..e0f3ff60aa33
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dtsi
+> @@ -0,0 +1,65 @@
+> +// SPDX-License-Identifier:     GPL-2.0
+> +/*
+> + * Copyright (C) 2019, Intel Corporation
+> + */
 > +
-> +		bus80000000: bus@80000000 {
-> +			compatible = "simple-bus";
-> +			reg = <0x80000000 0x60000000>,
-> +			      <0xf9000000 0x00100000>;
-> +			reg-names = "axi_h2f", "axi_h2f_lw";
-> +			#address-cells = <2>;
-> +			#size-cells = <1>;
-> +			ranges = <0x00000000 0x00000000 0x00000000 0x00000000>;
-> +		};
->  	};
->  };
-> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts b/arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
-> index d22de06e9839..350c040ce9fe 100644
-> --- a/arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
-> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex_n6000.dts
-> @@ -25,24 +25,6 @@ memory@80000000 {
->  		/* We expect the bootloader to fill in the reg */
->  		reg = <0 0x80000000 0 0>;
->  	};
-> -
-> -	soc@0 {
-> -		bus@80000000 {
-> -			compatible = "simple-bus";
-> -			reg = <0x80000000 0x60000000>,
-> -				<0xf9000000 0x00100000>;
-> -			reg-names = "axi_h2f", "axi_h2f_lw";
-> -			#address-cells = <2>;
-> -			#size-cells = <1>;
-> -			ranges = <0x00000000 0x00000000 0xf9000000 0x00001000>;
-> -
-> -			dma-controller@0 {
-> -				compatible = "intel,hps-copy-engine";
-> -				reg = <0x00000000 0x00000000 0x00001000>;
-> -				#dma-cells = <1>;
-> -			};
-> -		};
-> -	};
->  };
->  
->  &osc1 {
-> @@ -64,3 +46,13 @@ &watchdog0 {
->  &fpga_mgr {
->  	status = "disabled";
->  };
-> +
-> +&bus80000000 {
+> +/ {
+> +	model = "SoCFPGA Agilex SoCDK";
+> +	compatible = "intel,socfpga-agilex-socdk", "intel,socfpga-agilex";
 
-Keep some sort of sorting.
+That's not correct. Compatible is not being shared between different
+boards. Different boards have different compatible.
 
-> +	ranges = <0x00000000 0x00000000 0xf9000000 0x00001000>;
-
-ranges is property of the SoC in such case.
-
-> +
-> +	dma-controller@0 {
-> +		compatible = "intel,hps-copy-engine";
-> +		reg = <0x00000000 0x00000000 0x00001000>;
-> +		#dma-cells = <1>;
-> +	};
-> +};
 
 
 Best regards,
