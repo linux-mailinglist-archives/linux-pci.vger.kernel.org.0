@@ -1,218 +1,295 @@
-Return-Path: <linux-pci+bounces-21309-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21310-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3E99A33044
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 20:58:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAB68A330D4
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 21:28:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70F881649E5
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 19:58:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46C173A720B
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 20:28:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79CC8200118;
-	Wed, 12 Feb 2025 19:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC3BB20126C;
+	Wed, 12 Feb 2025 20:28:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d1RJa8aT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S3dtN+I5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22FFB1FF7A9;
-	Wed, 12 Feb 2025 19:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739390283; cv=fail; b=m06klv3ogNx9/NoSMlXWZ41ZX6x4tdRBlkdeQwoYe2VHnyM+yvNYsGn9KWZmi3BP9qNtWC42Qh4S+fdk2OFPNS3RBRHbccNWUGMyxZcFi3Bzn5BJUBAFEfq4v4cyfX666R5PhBOEuFh9tCQhue8pneTUQjUSWZrw6RQJWxbiuDc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739390283; c=relaxed/simple;
-	bh=Lnyc+wbLYz/q0w6RTi0PqGggl8UASNCDBqBjATZO4M8=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=FDf5W6pNwg6t4NpNOG2X8MqTGR9lRkD7CZghi6mCQ6tDlkrwlNsv72OqkLfMrjQTA/k9gL1d39dZwvuNMsAmTJuntQSidxiz1y/rI5RIowJcvZHiWDA49Csu0ybVdWaoA+y7Bgr2Vc6Io09kJ2NCzgvDIx1gvejzyBgJdinMlH0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d1RJa8aT; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739390281; x=1770926281;
-  h=date:from:to:subject:message-id:references:in-reply-to:
-   mime-version;
-  bh=Lnyc+wbLYz/q0w6RTi0PqGggl8UASNCDBqBjATZO4M8=;
-  b=d1RJa8aT+ZIdZdFkUrxilVm971F0qIIPC6BtXck/8pcglpGw0/2vA8Jq
-   jxQXcpztyLTF+LPiz6xGknd5Q1wrORe0sYw0QpTK0o/BCyS/dQQbSWEHD
-   HK1p1k2Ha7AWri9QA/osqfBZ2gW4TgI73X+/pSw33CKeSxZ0EgMFZea4/
-   9Y0od9cxYLBF8mHMiIXCYrt521sNwAfOB5AyJrmcyUT2n6cI7Qjamacot
-   l/iWRduZZixUq1uezRpcUt1eihaJtDDsM9t7zndHcQy21QNBOUoX/MMPr
-   Qm2buwVs6cbuQzuSmnhoj1gdzFSJZvBOAlz5N1zRMzrnqEuvOnB3bpSR6
-   Q==;
-X-CSE-ConnectionGUID: mYtXbM63TtGll2DI9sYHLg==
-X-CSE-MsgGUID: F97Sg5ruTbWwZWp2OOoSng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="62534678"
-X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
-   d="scan'208";a="62534678"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 11:58:01 -0800
-X-CSE-ConnectionGUID: hBAXW9fPT4yeEtNpFzYQ3Q==
-X-CSE-MsgGUID: JoS9btpERbaQ+G7Nb3QYJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,280,1732608000"; 
-   d="scan'208";a="117926143"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 12 Feb 2025 11:58:00 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 12 Feb 2025 11:57:59 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 12 Feb 2025 11:57:59 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.42) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 12 Feb 2025 11:57:58 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gXxsP2AJKDorixhK/PEN8kbqjl7Du3qoumODSt+j4vHNba1aL0RA/UTodesnjuHglTyTQ6Ns+WFdCq0SFbw9pDOcgGxWFv6iLwXil+ZnpVM/uGQmJHjTDCjkmG/tRxJMXLUR7rkZQL37Lq0NSd0cO8z1teueAhDAzpm9qgks3p+TQb3icGu5R0SC/B24+QbEnmvWJ+yn759M1brTV6f3sW8Sm6DjxJEoG3AmK2XlVvuOPFg59KywHINmFY9Vub3O7Yq4R0neuUnHool3kHyqfwc13zfZ9fG4Xmhe6egChuZfsC3o11nWXfRwmmrRVFEzm0oLJfuyrjC5s+EGchMGnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r8uwTmp1U6qNOSyFUCTdm6SFMvny9j7f7jAabJGwY1c=;
- b=bu2Wh2W3AirUtsoGA5L2dwTzzhifbu/dFGRbG7q3XfozV0N+In3IjrqKDNRDNsC0ii+0lPT4eF+qF4HjyAN+z/PfGNtVF6NYbTlmlavrAQQOnIwAkwSbB1C8EsfgWxSTTJEBfOoZ95YrPEArjOaN7s+ZB7+r4A7zmg8vOFKt4e5TKSE911yXYNH7kYn3tK7ZAccy4aOLaknItQKjks0Eq/IEGhImbe3i4RIWz/ON0HNDPNTecbYvvs142GVtK+iDJawtHD5UlqNOy+cSI+UkN9uCePKPqJmS9koBhaFq1tqpLFpw9KQS9/Dhs7e4PCiBQWBa9NgYNAkLQ2C0d13rAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CY8PR11MB7108.namprd11.prod.outlook.com (2603:10b6:930:50::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.19; Wed, 12 Feb
- 2025 19:57:28 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8445.008; Wed, 12 Feb 2025
- 19:57:27 +0000
-Date: Wed, 12 Feb 2025 11:57:24 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: "Bowman, Terry" <terry.bowman@amd.com>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<nifan.cxl@gmail.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <bhelgaas@google.com>, <mahesh@linux.ibm.com>,
-	<ira.weiny@intel.com>, <oohall@gmail.com>, <Benjamin.Cheatham@amd.com>,
-	<rrichter@amd.com>, <nathan.fontenot@amd.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <lukas@wunner.de>,
-	<ming.li@zohomail.com>, <PradeepVineshReddy.Kodamati@amd.com>
-Subject: Re: [PATCH v7 04/17] PCI/AER: Modify AER driver logging to report
- CXL or PCIe bus error type
-Message-ID: <67acfd24a4245_2d1e29437@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250211192444.2292833-1-terry.bowman@amd.com>
- <20250211192444.2292833-5-terry.bowman@amd.com>
- <67abe1903a8ed_2d1e2942f@dwillia2-xfh.jf.intel.com.notmuch>
- <9035be0b-7102-4abc-a21a-61648211be55@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <9035be0b-7102-4abc-a21a-61648211be55@amd.com>
-X-ClientProxiedBy: MW4PR04CA0131.namprd04.prod.outlook.com
- (2603:10b6:303:84::16) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBAA5201100
+	for <linux-pci@vger.kernel.org>; Wed, 12 Feb 2025 20:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739392100; cv=none; b=C7Us/ZBPxiWGYCwzoTGEZTuH4I9xxbZHILWztcU8IZkXp1NlDTakKIvsj0o5oj2rql7H03EMPEXd41wPiRK/ha7XMM4vehRHagWERieekCj0muxwYe29Ekkg2YTJciaCLoJgov33z/yk/QLYotPUScipH8NZZZezgYyalX7nNdQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739392100; c=relaxed/simple;
+	bh=sjyb8CO9UDI0bkvCcVRPvdxFy6b8B/z8MMi7G+pzvSs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jFjMnumj3ZpUrodeizrf8fOWF3gxPX/vBBvjaTwiE2EVxJpgA3GabKzMajJXMSv5xZA7gZepfK4opIp/E7K8DsdcTrAYoZHxkzQDc7R47wS4Q5+v1O0a6ozMYspfcR8yreUjG6DQrSTWAKPyLmZTEgHYgTu5OHuKBd+6ys3nXt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S3dtN+I5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739392096;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UEoeLSsS3aCEim/Ww8cGuMBb2a0y/QZooCtBWDiEWjA=;
+	b=S3dtN+I55XaLdh8p0ehDOL+JzDJBJmMsnaNNPr7kwClBcM4f3hmmwLkz9eVY+Vm3E+I0/l
+	MUAuIfr4OG1pO11Ysrtjr2KaCXseAdjHPkjy+/NTFjrSau284FCXl4fxjXG0lo8OoibpuL
+	vG4m/MH8Xw+hmB7nSvx+1GQRFiFKzlw=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-75-391qEhpaPtSmCmnnvnR31Q-1; Wed, 12 Feb 2025 15:28:15 -0500
+X-MC-Unique: 391qEhpaPtSmCmnnvnR31Q-1
+X-Mimecast-MFC-AGG-ID: 391qEhpaPtSmCmnnvnR31Q_1739392095
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85525a681ecso2233139f.0
+        for <linux-pci@vger.kernel.org>; Wed, 12 Feb 2025 12:28:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739392095; x=1739996895;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UEoeLSsS3aCEim/Ww8cGuMBb2a0y/QZooCtBWDiEWjA=;
+        b=hBXDRceUJDF6iOJuk+Vc0RTwhpzomSEv6RHb9ER61Omb/m0BahdNG2KAw0dRcP9bok
+         GTKwogrWl9yQ/Mbp6ROLOjV75JU+2tETCznm40aUX5nlz3CpC5pCzDCAyEf7/Emo2CE6
+         XBDQQsrnM2bBf7+057Mhsx8riHVVK35WUV4DlrIdCBOak0mOW5hRv0uN/7PFO1xXXGyh
+         wIYdJduEWmdJ6a4XerczAkv6dPsSihRkVVvWgCC8gwoDrcI+YGTxZUL82ejuYyALLN2x
+         wDAnkTKqtvtZkCOUE+bsJSil0bL6pGxuohppdvPu4LyCqw+H5L10srggO3Xzo1HHXVop
+         tv4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXMAQOtEakW+ZiWYzmiLSv6Z0xB39101dNbs3lYkrMq/Q4UlCMMDfVTI1IVH+naZKogFpLzooFSOOQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxfwh0AkxK6sR7MNY+rNQW8YxB7yQBgvhs0tpHAY/6XuymPcgtr
+	zsV6aBxGoJ72Pn9MXXsdG9cGt8bJw3lB+J2j0XWXDfHsy0Npn2rhz2p/+VTaQ6JegxDQuA7TCDR
+	0Nqhivvq8rKqgw478M+lRFPKbxBAzvNsvPDmAMeLoGsl0zy3Yy4emYaPMug==
+X-Gm-Gg: ASbGnctENnd/gO55wRDEEWkDf9uw+uzyIIdb1vyjrtTK0pOk1YI0zcR1WJG72JAUlZY
+	Kruu8YqtXW/qZy3swJUakb3ayAwnG0Mk/y634OHlCkTnIHgKb5VAR5uK0+VHb4KV/J0p1rR9k7k
+	jCWTuNDDqxrm6Fo6ppyyzG7yrA64a5vpg1F+72mC4CoIUqSUAbgGjJn+W2vbwPkA2FlpV3yhmUn
+	6Oi81d97E615z4A3YgjSMOJHp06Tqbe16Dpr6HsU4ibfueShEsFZdma5Ia+JPueHAE93GAZqtyp
+	CXhVmBZ9
+X-Received: by 2002:a92:cd84:0:b0:3d0:17d2:a02a with SMTP id e9e14a558f8ab-3d17bffab44mr9449665ab.6.1739392094516;
+        Wed, 12 Feb 2025 12:28:14 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGyMnLl5ryneXcFqbJLdWXtkIqeCdaQ3vDzYtJyQFOGuNj5RmpgPu7yQTnc7ZA4uZtoSr3rVg==
+X-Received: by 2002:a92:cd84:0:b0:3d0:17d2:a02a with SMTP id e9e14a558f8ab-3d17bffab44mr9449525ab.6.1739392094143;
+        Wed, 12 Feb 2025 12:28:14 -0800 (PST)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4eccf9afc38sm3393858173.1.2025.02.12.12.28.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 12:28:12 -0800 (PST)
+Date: Wed, 12 Feb 2025 13:28:08 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Alexandra Winter <wintera@linux.ibm.com>, Gerd Bayer
+ <gbayer@linux.ibm.com>, Matthew Rosato <mjrosato@linux.ibm.com>, Jason
+ Gunthorpe <jgg@ziepe.ca>, Thorsten Winkler <twinkler@linux.ibm.com>, Bjorn
+ Helgaas <bhelgaas@google.com>, Julian Ruess <julianr@linux.ibm.com>, Halil
+ Pasic <pasic@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Gerald
+ Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] PCI: s390: Support mmap() of BARs and replace
+ VFIO_PCI_MMAP by a device flag
+Message-ID: <20250212132808.08dcf03c.alex.williamson@redhat.com>
+In-Reply-To: <20250212-vfio_pci_mmap-v5-2-633ca5e056da@linux.ibm.com>
+References: <20250212-vfio_pci_mmap-v5-0-633ca5e056da@linux.ibm.com>
+	<20250212-vfio_pci_mmap-v5-2-633ca5e056da@linux.ibm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY8PR11MB7108:EE_
-X-MS-Office365-Filtering-Correlation-Id: bd31fe6e-8be6-4239-0cd0-08dd4b9f7a1d
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024|921020;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?DAqPVKoz1bfLspUShJvLcioaGOWxTB4kpeHanezUSkvb5CORjtmxuu47NxQN?=
- =?us-ascii?Q?MGUkytPZrPdBb0592Uzpi0Sef1yQb6y8eFdyqmlSsqKGtN41XZ8GfXRNCXJv?=
- =?us-ascii?Q?kTKlJQrP9BDnAN+pEpAjwJVFsrnZYYeyNsFrtg7l+8BNMXuluEGt5mFzf5Q3?=
- =?us-ascii?Q?NM3AInWwbADP0Vkv+4w2hlz5se6l7qu+wDxIgclY64IjrjqS2Nvf6p+2kMgN?=
- =?us-ascii?Q?YnyH/BEkjF5Va0KE3E4NeWaYjzHdpgDIMyQn/+G3FBTKp6SdwhrqdIjSYxX5?=
- =?us-ascii?Q?cdh9/YqoSHd7XkMZon4ruqec+hl7x9oIN9VK7HD3Zy2zA8hH+kewfmyM07DC?=
- =?us-ascii?Q?TJh6Ph1Dx/Jz+BSczcbR0Q5GBd9rbWOurne+EFfnyllLjO71Xekb+QBNns2j?=
- =?us-ascii?Q?Qc7/2BcqP4qfXGCEFGe6MNUMvhDV7nZeMv4IL46Qlk6VPURVXJMwrtI3zGg8?=
- =?us-ascii?Q?Ch0UebfMzhLNMfipK+Fah9vhg7tYthRG6REJd4/THMYd91cr3aqMNGoYvgx4?=
- =?us-ascii?Q?LuoRTGhrxMhY+2ziAeSUagYS0QwNG5Eocavog3/ks1c+12bCu8oq/uD+SRJS?=
- =?us-ascii?Q?DNhffQgCfRpdh6cVx/egFxxTA9X6N0Fa2FCs5iCtGA6TpzPx121P71qzdd7g?=
- =?us-ascii?Q?5tEyIAgAFBiwckYVS/AJwtAxDEHKIHZrhHrbjiHrOolwKWLWYR4hAY/1ZjDE?=
- =?us-ascii?Q?X6Yo+mspwtFaJmHSGIRZAqwhFfZFgNCElqRURKPbNLDT9ZTFxzg0rb2tuaMd?=
- =?us-ascii?Q?JbW1aDPnJkzDahUuOEGlESSD/ezex+u6090koctfd+DMnls+OFvMduktWwPy?=
- =?us-ascii?Q?F5YKHSVPvG55NXbcZi/ApIkjbgVuDMaQ6pQXruurE4HFZkvt/EWdf6oijjCj?=
- =?us-ascii?Q?RQTPQkc538912Nc+BCLRi0DfiScTUtq1KetD4TbuYYCRU+wiw5LoUkp+Ia7j?=
- =?us-ascii?Q?U6Te6FW/wlAAMWAHEMPrt7dCzBwlzZRsgVjiZ0+ushnB2xkXlqnStLXuhaFj?=
- =?us-ascii?Q?Fpnd/u+aEHDHbKDyCAbQpikc5DUFg7g1cLEdqiguA93gwfJYNYaLRIle4IXK?=
- =?us-ascii?Q?fDX2Lr3xYbF9qPxjQhTKZn8iDqyhZALhcAroL/sIYrMGTTAD0KxXFmU9GQGU?=
- =?us-ascii?Q?zLIszHzen/ENNcMofOMfPVBBr1Ua570p0PWX8565bG/2v2E40Rf7plZ7cOn4?=
- =?us-ascii?Q?6pgR9ZGHiXz6xwKrf9rXWgRmeexKF+vDUBLg3k8Ga3H0Qk/9TVgm+z/DQtNJ?=
- =?us-ascii?Q?O+AFLAeW+/CstJYyT81ZsM0ufPT8wHyA6hgGVAVS/0+SkR8IUeECTx0uNJwl?=
- =?us-ascii?Q?eTu980N6mEt3nI1aE2cP9fY9umlBTNIE9ihY+fBXJH1nNxr1Ja5wK3aRgZIg?=
- =?us-ascii?Q?5pvrH0HHbsWgWH9l9FQx3IY4jS4M2lsZtQ7FZ0hvLUHrhN5UfP/JTHKZ6PGI?=
- =?us-ascii?Q?/FLKElqF29c=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lnUocReuOctiXrW4p+OsueVRzkaYlx3I77GZ28gDXRtfL8Ng0uwF1s6tdTKQ?=
- =?us-ascii?Q?7YFAJq5D3UuKofN/gj01kTzxNQMrkxCEpoaybiPmWcHlysFlIxFI1jZ0Ktm7?=
- =?us-ascii?Q?SdvY3OU10ZqGuM3jWwfrZkKCuhug3irpFebco92yJr1br2ExyPOvA2xLr+8s?=
- =?us-ascii?Q?XPB6loPVZ5CYDwkGL3VWXEJWHeCFlMVCWgfcZAAbY4QSmCQ1zv/pZhGftpVH?=
- =?us-ascii?Q?bqBQyRnI9wIKT1iURzvVImUStUtrydMHsxpceKB4r1E7lo2LwJQU8NXQEMq/?=
- =?us-ascii?Q?uF7qBWm8RA7dizsLBUiFpzWSrPkLjFaC8YhINAV5UEGHxIMRVEVs7E7iWAXh?=
- =?us-ascii?Q?4HwakNEP3R7Kd1ApAUgrC6JRnWys4iV2kVMv7PhqlK0acRM6mULbEgCzuciD?=
- =?us-ascii?Q?oyAedTMNe+SlvOtacgmChX7yhGEVvxnPS8p8N0jn6p3lGSWWut7AbGPpUKqj?=
- =?us-ascii?Q?n8URyjY6648iHcMcGqOkDozdTu1kfSwZZQ2GhoiqoUs3lMaO5Rag67OT688b?=
- =?us-ascii?Q?Tfwo7zqcgVV1RMumeS5Jfd4oOCYWvqbe7zCZ1GVbHwhfCNhNhV38/wHzMyEk?=
- =?us-ascii?Q?zbaipi6uujm0MtIjRihaqlTywY9iX7/H5yf4RV/t9n5UlRYGZicn13y2pbtm?=
- =?us-ascii?Q?NTaXJVaWN6KMsrFtrg8wcx/TZoUbeiLPCQZuQyTnbVTk0izKS01wqtbcVczV?=
- =?us-ascii?Q?g/kAPa3KqE5FOYhk9d82fkwyR+IJMxlFUpyId5Dm1PMRI8Rlv1Qe0V782EoM?=
- =?us-ascii?Q?lle+PGuiXenky9+J+0bMr9Qz8dHtodZwveQYOxtkZrQ9Z8O4mMkTVE5JWlZB?=
- =?us-ascii?Q?LWjjQd2tvLPTLATkkdH2tjiFagkaUUmjSZZr5bm2e3W6Nq3wL0Dxwv3C/7Gh?=
- =?us-ascii?Q?h8ca4ILcft8DahqOn7xOiW76b8l8R/5JP/kFQgc3WV59bHfmOpCtU2xpw7im?=
- =?us-ascii?Q?y2As9lqcIMF2RgS6d/8NI2Cl+gafc1pHbUnlaN1dqN+h/9VF/0Zp0hyTm2oX?=
- =?us-ascii?Q?sMDamIfRhb39oHRcUoM5V5G3G2URpSQvuduF/VTS3pV9pF/cTsNUdsSHK9sH?=
- =?us-ascii?Q?+AU0sonAcjcLKjsBiZ45sCorw5L593SCVCdHUUt/kgsOgamOe+0JmLT3D/8t?=
- =?us-ascii?Q?/1yCpAyG7NEflEvvLJ3eRIXEdg5fu+w6LbmCGl8DGRx8irH7a/4E3jcqqb8S?=
- =?us-ascii?Q?5bR3T+qAo6dRWG9NwKMY2LoigDtpgo4Eqr7k0Fpqfv1C+Z+Ccjuhl+fXAeun?=
- =?us-ascii?Q?G8P4YdONsU267e8b++NveoJMzJC0HWsus4trf9iA56+ABF3MXtganSIqhtb0?=
- =?us-ascii?Q?8rcnGsApetvzMkjJIDsCvvY9ZDAgvyQMuAqdSmN+cYWEl2y5+Jk5J7yjEY3k?=
- =?us-ascii?Q?MiyDZiZufNVbpLZv2BXxpWxW+ym2igS5rntHmPQWIlIXNCtcmC1TlmM0yI5l?=
- =?us-ascii?Q?w2QJnR0zRONinoTGx4rU3FngKZYUv/ehySVX09Ce0itQVWHxjUJmoWTtGpaY?=
- =?us-ascii?Q?JImKdpvAPDLoFbAMkL1Q0ykviUZVLIzW9q8jN8GEO0M+o2jTO5GtJX5xa/rm?=
- =?us-ascii?Q?fNcjdVHrxIbSOW+HXOKFyeY50I8KjW8UB6eolDbziU5GKeGNeQrnK23lcwpq?=
- =?us-ascii?Q?tw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd31fe6e-8be6-4239-0cd0-08dd4b9f7a1d
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2025 19:57:27.8651
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eHDJaTfNadJrI7X/h+nKzta9RGqCWdKxP0vnD50uibBY/lkZUUmztq6yYw+/Ljcnr6jN1BboAM/ZtMEEV3Rem/V/LOpkdvF3dHzv8tyLyhk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7108
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Bowman, Terry wrote:
-[..]
-> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Ok. I can add is_cxl to 'struct aer_err_info'. Shall I set it by reading the
-> alternate protocol link state?
+On Wed, 12 Feb 2025 16:28:32 +0100
+Niklas Schnelle <schnelle@linux.ibm.com> wrote:
 
-I am thinking no because dev->is_cxl at least indicates that a CXL link
-was up at some point, and racing CXL link down is not something the
-error core can reasonably mitigate.
+> On s390 there is a virtual PCI device called ISM which has a few
+> peculiarities. For one, it presents a 256 TiB PCI BAR whose size leads
+> to any attempt to ioremap() the whole BAR failing. This is problematic
+> since mapping the whole BAR is the default behavior of for example
+> vfio-pci in combination with QEMU and VFIO_PCI_MMAP enabled.
+> 
+> Even if one tried to map this BAR only partially, the mapping would not
+> be usable without extra precautions on systems with MIO support enabled.
+> This is because of another oddity, in that this virtual PCI device does
+> not support the newer memory I/O (MIO) PCI instructions and legacy PCI
+> instructions are not accessible through writeq()/readq() when MIO is in
+> use.
+> 
+> In short the ISM device's BAR is not accessible through memory mappings.
+> Indicate this by introducing a new non_mappable_bars flag for the ISM
+> device and set it using a PCI quirk. Use this flag instead of the
+> VFIO_PCI_MMAP Kconfig option to block mapping with vfio-pci. This was
+> the only use of the Kconfig option so remove it. Note that there are no
+> PCI resource sysfs files on s390x already as HAVE_PCI_MMAP is currently
+> not set. If this were to be set in the future pdev->non_mappable_bars
+> can be used to prevent unusable resource files for ISM from being
+> created.
 
-In the end I think that it should be something like:
+I think we should also look at it from the opposite side, not just
+s390x maybe adding HAVE_PCI_MMAP in the future, but the fact that we're
+currently adding a generic PCI device flag which isn't honored by the
+one mechanism that PCI core provides to mmap MMIO BARs to userspace.
+It seems easier to implement it in pci_mmap_resource() now rather than
+someone later discovering there's no enforcement outside of the very
+narrow s390x use case.  Thanks,
 
-   info->is_cxl = dev->is_cxl && is_internal_error()
+Alex
 
-...on the expectation that a CXL device is unlikely to multiplex
-internal errors across CXL protocol error events and device-specific
-internal events. Even if a device *did* multiplex those I think it is
-reasonable for the kernel to treat a device-specific UCE the same as a
-CXL protocol UCE and panic the system.
+> As s390x has no PCI quirk handling add basic support modeled after x86's
+> arch/x86/pci/fixup.c and move the ISM device's PCI ID to the common
+> header to make it accessible. Also enable CONFIG_PCI_QUIRKS whenever
+> CONFIG_PCI is enabled.
+> 
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+>  arch/s390/Kconfig                |  4 +---
+>  arch/s390/pci/Makefile           |  2 +-
+>  arch/s390/pci/pci_fixup.c        | 23 +++++++++++++++++++++++
+>  drivers/s390/net/ism_drv.c       |  1 -
+>  drivers/vfio/pci/Kconfig         |  4 ----
+>  drivers/vfio/pci/vfio_pci_core.c |  2 +-
+>  include/linux/pci.h              |  1 +
+>  include/linux/pci_ids.h          |  1 +
+>  8 files changed, 28 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index 9c9ec08d78c71b4d227beeafab1b82d6434cb5c7..e48741e001476f765e8aba0037a1b386df393683 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -41,9 +41,6 @@ config AUDIT_ARCH
+>  config NO_IOPORT_MAP
+>  	def_bool y
+>  
+> -config PCI_QUIRKS
+> -	def_bool n
+> -
+>  config ARCH_SUPPORTS_UPROBES
+>  	def_bool y
+>  
+> @@ -258,6 +255,7 @@ config S390
+>  	select PCI_DOMAINS		if PCI
+>  	select PCI_MSI			if PCI
+>  	select PCI_MSI_ARCH_FALLBACKS	if PCI_MSI
+> +	select PCI_QUIRKS		if PCI
+>  	select SPARSE_IRQ
+>  	select SWIOTLB
+>  	select SYSCTL_EXCEPTION_TRACE
+> diff --git a/arch/s390/pci/Makefile b/arch/s390/pci/Makefile
+> index df73c5182990ad3ae4ed5a785953011feb9a093c..1810e0944a4ed9d31261788f0f6eb341e5316546 100644
+> --- a/arch/s390/pci/Makefile
+> +++ b/arch/s390/pci/Makefile
+> @@ -5,6 +5,6 @@
+>  
+>  obj-$(CONFIG_PCI)	+= pci.o pci_irq.o pci_clp.o \
+>  			   pci_event.o pci_debug.o pci_insn.o pci_mmio.o \
+> -			   pci_bus.o pci_kvm_hook.o pci_report.o
+> +			   pci_bus.o pci_kvm_hook.o pci_report.o pci_fixup.o
+>  obj-$(CONFIG_PCI_IOV)	+= pci_iov.o
+>  obj-$(CONFIG_SYSFS)	+= pci_sysfs.o
+> diff --git a/arch/s390/pci/pci_fixup.c b/arch/s390/pci/pci_fixup.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..35688b645098329f082d0c40cc8c59231c390eaa
+> --- /dev/null
+> +++ b/arch/s390/pci/pci_fixup.c
+> @@ -0,0 +1,23 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Exceptions for specific devices,
+> + *
+> + * Copyright IBM Corp. 2025
+> + *
+> + * Author(s):
+> + *   Niklas Schnelle <schnelle@linux.ibm.com>
+> + */
+> +#include <linux/pci.h>
+> +
+> +static void zpci_ism_bar_no_mmap(struct pci_dev *pdev)
+> +{
+> +	/*
+> +	 * ISM's BAR is special. Drivers written for ISM know
+> +	 * how to handle this but others need to be aware of their
+> +	 * special nature e.g. to prevent attempts to mmap() it.
+> +	 */
+> +	pdev->non_mappable_bars = 1;
+> +}
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_IBM,
+> +			PCI_DEVICE_ID_IBM_ISM,
+> +			zpci_ism_bar_no_mmap);
+> diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
+> index e36e3ea165d3b2b01d68e53634676cb8c2c40220..d32633ed9fa80c1764724f493b363bfd6cb4f9cf 100644
+> --- a/drivers/s390/net/ism_drv.c
+> +++ b/drivers/s390/net/ism_drv.c
+> @@ -20,7 +20,6 @@
+>  MODULE_DESCRIPTION("ISM driver for s390");
+>  MODULE_LICENSE("GPL");
+>  
+> -#define PCI_DEVICE_ID_IBM_ISM 0x04ED
+>  #define DRV_NAME "ism"
+>  
+>  static const struct pci_device_id ism_device_table[] = {
+> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+> index bf50ffa10bdea9e52a9d01cc3d6ee4cade39a08c..c3bcb6911c538286f7985f9c5e938d587fc04b56 100644
+> --- a/drivers/vfio/pci/Kconfig
+> +++ b/drivers/vfio/pci/Kconfig
+> @@ -7,10 +7,6 @@ config VFIO_PCI_CORE
+>  	select VFIO_VIRQFD
+>  	select IRQ_BYPASS_MANAGER
+>  
+> -config VFIO_PCI_MMAP
+> -	def_bool y if !S390
+> -	depends on VFIO_PCI_CORE
+> -
+>  config VFIO_PCI_INTX
+>  	def_bool y if !S390
+>  	depends on VFIO_PCI_CORE
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 586e49efb81be32ccb50ca554a60cec684c37402..c8586d47704c74cf9a5256d65bbf888db72b2f91 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -116,7 +116,7 @@ static void vfio_pci_probe_mmaps(struct vfio_pci_core_device *vdev)
+>  
+>  		res = &vdev->pdev->resource[bar];
+>  
+> -		if (!IS_ENABLED(CONFIG_VFIO_PCI_MMAP))
+> +		if (vdev->pdev->non_mappable_bars)
+>  			goto no_mmap;
+>  
+>  		if (!(res->flags & IORESOURCE_MEM))
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 47b31ad724fa5bf7abd7c3dc572947551b0f2148..7192b9d78d7e337ce6144190325458fe3c0f1696 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -476,6 +476,7 @@ struct pci_dev {
+>  	unsigned int	no_command_memory:1;	/* No PCI_COMMAND_MEMORY */
+>  	unsigned int	rom_bar_overlap:1;	/* ROM BAR disable broken */
+>  	unsigned int	rom_attr_enabled:1;	/* Display of ROM attribute enabled? */
+> +	unsigned int	non_mappable_bars:1;	/* BARs can't be mapped to user-space  */
+>  	pci_dev_flags_t dev_flags;
+>  	atomic_t	enable_cnt;	/* pci_enable_device has been called */
+>  
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index de5deb1a0118fcf56570d461cbe7a501d4bd0da3..ec6d311ed12e174dc0bad2ce8c92454bed668fee 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -518,6 +518,7 @@
+>  #define PCI_DEVICE_ID_IBM_ICOM_V2_ONE_PORT_RVX_ONE_PORT_MDM	0x0251
+>  #define PCI_DEVICE_ID_IBM_ICOM_V2_ONE_PORT_RVX_ONE_PORT_MDM_PCIE 0x0361
+>  #define PCI_DEVICE_ID_IBM_ICOM_FOUR_PORT_MODEL	0x252
+> +#define PCI_DEVICE_ID_IBM_ISM		0x04ED
+>  
+>  #define PCI_SUBVENDOR_ID_IBM		0x1014
+>  #define PCI_SUBDEVICE_ID_IBM_SATURN_SERIAL_ONE_PORT	0x03d4
+> 
+
 
