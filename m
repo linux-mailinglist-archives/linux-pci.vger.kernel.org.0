@@ -1,302 +1,428 @@
-Return-Path: <linux-pci+bounces-21288-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21291-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 537B1A32A05
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 16:29:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD860A32B66
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 17:20:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 067A53A5441
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 15:29:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 088D11886822
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 16:20:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFFC321171B;
-	Wed, 12 Feb 2025 15:29:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1BDB211297;
+	Wed, 12 Feb 2025 16:20:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gpx57zOI"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iuvHRKS+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2085.outbound.protection.outlook.com [40.107.223.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D615920ADF0;
-	Wed, 12 Feb 2025 15:29:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739374160; cv=none; b=Yv6+H6HjPj5+qjt3Q0/7QhD3/MrdzrWKURv6+sjFhLq5oirvAhF4NEc66F5csspJMM4Fci0SPgPC54uFafoAsH7UYjU2JdnPpmoh3JPX4qInVoqiXL/LjrGIM5+j/ibf17qAT14iEJXMVT+0zGXtH0NNf9Bpi5S0bW4DI/q6uXw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739374160; c=relaxed/simple;
-	bh=A4oHbJb5jJdSpuXGv/aDAAcnboxGoMy0VXy/ohzGM/Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CS2xNcFed8D8vbjDmiEElKYuPiaGaNSKzG90is4+XKEX7OK5J+hSVY5AbK9fEcSesWhXsjzI4i/vu0FU4B4wcdgwj62NWQ+ruHEoplN1dxwy5gvciKNLreu9aeavvjaMMFeApmZfIPoteE1DoAEi8RIIaxkldhSTF6vYvDxDltE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gpx57zOI; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51CDVSx7020778;
-	Wed, 12 Feb 2025 15:29:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ER5GUA
-	jqTUhAGd6FMvKojsj6c77div0TKQXOpHhRqok=; b=gpx57zOIRBx+ejjDncBSxJ
-	JK887MVpm5J+4Psj1Jz8S4BAREDBc5ztepiZzwl4CYyjRAXQ39Q1wqEzKRA3dHRl
-	LoNTcNv9S0M0CDNhz7VteAxUdPlScvI8fXC8tawLSwND16DbVtBjS139hijzcQQj
-	s8NAMH2f6wMovQrMEd+aCg9jnwx0RaYV4OF7EJP+yez4Cp0jnnNwLJir+ekoBVGc
-	VA37S3V3yNNYHQQ5XTGPVsPGIviQUwiLNbGFWL+3nJfJDU7oPy+CCi+wg6Eem8im
-	71B5pF8+nx7wdyYTclRezMDGQpzjCNDpCrPg0qlv1myLwlx8mlpJTFwjfWzlbxPA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44r9cuefs5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 15:29:04 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51CF72Mk022243;
-	Wed, 12 Feb 2025 15:29:03 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44r9cuefs3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 15:29:03 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51CFQCOU021722;
-	Wed, 12 Feb 2025 15:29:02 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44phkssnx6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Feb 2025 15:29:02 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51CFT1CA18744012
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Feb 2025 15:29:01 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4975E5805B;
-	Wed, 12 Feb 2025 15:29:01 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AD82358058;
-	Wed, 12 Feb 2025 15:28:57 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 12 Feb 2025 15:28:57 +0000 (GMT)
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-Date: Wed, 12 Feb 2025 16:28:32 +0100
-Subject: [PATCH v5 2/2] PCI: s390: Support mmap() of BARs and replace
- VFIO_PCI_MMAP by a device flag
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39BA1D516D;
+	Wed, 12 Feb 2025 16:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739377238; cv=fail; b=laOA/wFjudAVXAI+mIbAY/RzIXimkq9NKd4e7E0npNJM92fkuczAo3W1m79RoOmCU+nqDkIr0dpGPtxyzjxTT7EMKp7Bzu3BYj/NWPKzcAekrL6cFsg5Y3I7pkt0KiVQoWeZttY+zZthX+ZEvud0WwOC6ThJbub6Ue6Q8CC2FOQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739377238; c=relaxed/simple;
+	bh=vY7lFWPZ8SIkAlPfgfI4Lmta1bkg9/pP39xsrmamkpg=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=shsNJ0XUGlY+dEPjA82Zdw7JtXExQkJpbUAhgf5DGIYgzmKeARn/244ZvL9ZHgGGkid3l2RLmBJHOnhLlq8FG4DM0zoiKDZ0lneXtcbQOfpokL+TkiVftggxMA69nrtQdz+fnS1pV+PN6K3ep1VCYyp+SjVD47rLJXr8q+HX10c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iuvHRKS+; arc=fail smtp.client-ip=40.107.223.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FOZUP+dMxJQeNTrVVHP8FYZfWVIO6TnxMZwyVhLWK2nUOTlAz20ZLb6E7KbfpFSGdaD+ZDyzr1uctz5wK5BsrWWBdwSvtWoi0U/xEy4fscu9+LGrjWVEuofDz727BXDnavcYY+1UPAGaJCMb/k16fM52ot6hBKi+3pAUS3NVBv2S5kpFStpjT7YWJCz8V4xEov8dWqI8Y94tv5NUopCLC8U1r7OvvsMfDBPPYEbIZzGsxJneSpr/EdNhNcm4957qly97zTKcGUpJSzDiQqrwaopyv4dsNa+aNz8XAdMNOJIkV8Njm822j1OR9mDJ1Ja6UzycPow5xH2pWJKRwichIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FUIHPwb6KItmUzUaRtVcrNw00YsFT4POS1Az5E0en4c=;
+ b=oS9WHH07O8CufaBTBCbVQ5UqdSqdtYCx6Tnts/t+lYBSchYF0yN0Y6U2rvhpvk02cdByPr+5y+lmZUJ8G9gbqX/uZXIKTep8MlRQYOa+ksf5FwZRtga+ctIs0SB2ZKRfWyE2Ua8F/MYcmZ9OlGOGmsza0shkJmQOL9jY/6rEw7gdW16rwhgkvzyOOlCcCP+JGeqnv7Z2vJBpwqC4NFecvyOn/hRQWBdJWm/2NzodogDqy9QKUb57qrWuGvvyQTE7rE9uGSLFbdgITA6c8q77gso6uJGwV6S9kWY74EG7yRiAu3GufC0xbONyejzKOCVuQRtak/GVXcvbyWCqxTW9cw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FUIHPwb6KItmUzUaRtVcrNw00YsFT4POS1Az5E0en4c=;
+ b=iuvHRKS+OWu2ZeSiWsomjarTGzW5UmqxdYuSPnxTUSeTEQIgDLm/dtxaAXEmzKfYACab7H3CIrOKGyFf+GxuZSSJMGlonUGPBHByQp+6luIIYcPgPRqixUQhAIDXW6h/n3tH1KAGrIOhuC13Nvb1XBkvYsETJomZauviyLrdc+s=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ BL4PR12MB9508.namprd12.prod.outlook.com (2603:10b6:208:58e::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.11; Wed, 12 Feb
+ 2025 16:20:33 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8422.010; Wed, 12 Feb 2025
+ 16:20:33 +0000
+Message-ID: <84ef3743-5f55-4278-995b-bc9ff013be4b@amd.com>
+Date: Wed, 12 Feb 2025 10:20:29 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 14/17] cxl/pci: Update CXL Port RAS logging to also
+ display PCIe SBDF
+To: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+ ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+References: <20250211192444.2292833-1-terry.bowman@amd.com>
+ <20250211192444.2292833-15-terry.bowman@amd.com>
+ <0f8f7891-5d2a-4470-8427-6282f7bc3351@intel.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <0f8f7891-5d2a-4470-8427-6282f7bc3351@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR13CA0157.namprd13.prod.outlook.com
+ (2603:10b6:806:28::12) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250212-vfio_pci_mmap-v5-2-633ca5e056da@linux.ibm.com>
-References: <20250212-vfio_pci_mmap-v5-0-633ca5e056da@linux.ibm.com>
-In-Reply-To: <20250212-vfio_pci_mmap-v5-0-633ca5e056da@linux.ibm.com>
-To: Bjorn Helgaas <helgaas@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Alexandra Winter <wintera@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Gerd Bayer <gbayer@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Thorsten Winkler <twinkler@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc: Julian Ruess <julianr@linux.ibm.com>, Halil Pasic <pasic@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6677;
- i=schnelle@linux.ibm.com; h=from:subject:message-id;
- bh=A4oHbJb5jJdSpuXGv/aDAAcnboxGoMy0VXy/ohzGM/Q=;
- b=owGbwMvMwCX2Wz534YHOJ2GMp9WSGNLX7NN+mT33qD7nPe2dse+42SUL7duMfPdd2pS6ImKf4
- +0PuV28HaUsDGJcDLJiiiyLupz91hVMMd0T1N8BM4eVCWQIAxenAEykwYqRYXdG7KnFm0x69q8S
- E60R2+MQ/tzyxL/ZcVeVFHLX1rC58jEyrA7bf2lPwq798+JWXGrqeJB7P9hJtXzR41fBM0UVwwu
- OMwIA
-X-Developer-Key: i=schnelle@linux.ibm.com; a=openpgp;
- fpr=9DB000B2D2752030A5F72DDCAFE43F15E8C26090
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: bRKSy-jtQSrVTKPBckP1qIdDRbBFu3V-
-X-Proofpoint-GUID: JjJ4qJNR7NBmZHJDktAKHqPG-DsCLoHg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-12_04,2025-02-11_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 suspectscore=0 adultscore=0 impostorscore=0 phishscore=0
- bulkscore=0 mlxlogscore=999 mlxscore=0 clxscore=1011 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502120114
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|BL4PR12MB9508:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4139be68-9179-409e-331f-08dd4b812cb0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eG5sY0tzZmRvektIbUNXcVVDakhqajMzYVZOUzZZdkllSzVzdVVTcGthTkg2?=
+ =?utf-8?B?Nmh2cU9YWmZ1Ylg5Uk83T3pyRENUajBVN0lJcVNzOVZvYTZGOU1MakpEL2FT?=
+ =?utf-8?B?d1djcTdoenJ1a2ZlS2R0RU1TNUt5NDg0cHJ2cXNzNmdjcklvZFZyTFR6Z1Y5?=
+ =?utf-8?B?UUhhTTVTVFVOT1UvYVFGNFl4Slo3ZVhiUm9SQnV3SGFYMUZGY1Qza3JDVGZw?=
+ =?utf-8?B?S0t1K2dvK1Z5ZlQzOS8vTE4vQ2Vkd21Vc0syRHV2NHVISGdxWlIrRThhaGp5?=
+ =?utf-8?B?OEVIUlY2S3JrazM4cDRrZVdKdHpSRHVEWUpvU2UzWE9xZGNrSzBhdnl5Mmlj?=
+ =?utf-8?B?T3RhK3pRa1pqTUFRdjU1aUhsVmtyMHE5aXFlcFdTYmNGVnBpVks1bGVzNGk0?=
+ =?utf-8?B?NXgvNDVISjVaUXBTMkNMdWRTdFdZMWJxRmNkQWR6NlUxeU12cmQxQkVKR2Fp?=
+ =?utf-8?B?cHNHZlRudzR3eUZZU1ZnTGFLcmN0S2MzRjZJdHQ0SDFWK1Y2YXZIMnFXajRl?=
+ =?utf-8?B?TlUzbDhsc2czYWRWTWM1ZHRXQjZyYm1yQ0NXZWxnaXlrUFVRVDVnbWN0cVZw?=
+ =?utf-8?B?SHk2RmlYSEU5TGZEdGVNMEkxNHdrTzkvcjdiMDlQRFFhVGZiTkdsRm1EOEZJ?=
+ =?utf-8?B?MzFnNFJuVDduWDNXSWMzdlk2RGZ2eU4yd0xsNkd3cDNHcGhQc1drbHJtcS9y?=
+ =?utf-8?B?QzdhZ2x4TUdkb2RDOGwxWmd2NEl2QWhSVHkxOTdHS1M4dCtvZUd2UUlPcVpm?=
+ =?utf-8?B?eTFQcmFGMGM4YitJTlhTYkhyWTBqMlp6WS9DeVRqY0h4WUxCNm5jQmVSdG9j?=
+ =?utf-8?B?cndjR1FMNzVPaGZiOVh2b1BrUktRVVMrVDBXT1V0d1lVYVd2RE5RTXBTV05P?=
+ =?utf-8?B?R3g5Mlp6NjFadmN2bEh1R0JBWCs3Z2ovYzFhVFJqN28zbjV0K1dlV252UW1k?=
+ =?utf-8?B?U1VoV1oyUkt0cjFZU29YS1dEdENPZmp5dzBsQnU4Y2lsOUFFUkZHSDhXTjlT?=
+ =?utf-8?B?QXdaVUNTMWdmcVBYY1JOeklRRGJreFBVWDFlTFpOU3ptSjNXOEcyd0hZVkF0?=
+ =?utf-8?B?Qi9XcjZ4bytGY2dGd2FiRzdpSGl4Nk1LMzBTRGNRMWdqaWdSSytnZ2NBck8x?=
+ =?utf-8?B?VDl1eUlMYTZHK0NvVXIwaGRtaUVIdXh6ZEhhWnJ4NTdwSFV1UDRlSUhoR0E0?=
+ =?utf-8?B?dDV6b2dFUFZ6aE9hTjBKeDU2OVJVaTM0cTUyWjFPdkJmSlg4YkRaVXUzUTZC?=
+ =?utf-8?B?elBKZlpZNndPVGN0bHU3eER0NTgzSXhqb3E0bytkR0Zyb2QvdGhsMmYvZDFM?=
+ =?utf-8?B?czNnVFliN08wMStWU05NSXJhQWt0TlQ3YUFaMnpuM2J5UWZ2SExIWnZvTE5Y?=
+ =?utf-8?B?Q1ZFNlIzWHJkY2xONnBPaVNIak5ZUjEyTStoVm5QdGllREpJKzg5Q0dsUTJD?=
+ =?utf-8?B?V2cvaW9abndvTHFZR2xqVGpaZWc5bFNjbENFVHU4eXA1SnovMjFCcE05M3oz?=
+ =?utf-8?B?YlFNZTNWZm41OFIxWjBCZzZxdWo3ekJxTEg0cHI2K2FVMDZDWHFDU2IxVkRI?=
+ =?utf-8?B?K2I4K2FkQTNkSlRHcTdxQkNrK0UvK1VCbEc2M2IzTklVWUhSbkh2WElNRjhX?=
+ =?utf-8?B?d3RyMUlzWWE3SnJOeDkydUMzZlM5T2VOTTZYRzdDMFlwQTZaQ1ZlZnJDbWRM?=
+ =?utf-8?B?S2lNcU5QK1puZHJpMmVXWWZqUGdaNjlSRzlqT1M2SDc1eFZaOHpCdFIyc3JY?=
+ =?utf-8?B?Y29xOUhRVmxFNGRWbjBvdHJEL0pnSWtCRTlGT3JpRERtUGdjNVZTb0xrWU1p?=
+ =?utf-8?B?UmJIMWN4MTRKSE5kQURlOVVOemtCZ3pwVU1oTVJJWG5hZTExbE4wSVNqL1JU?=
+ =?utf-8?B?bVczOGlmZ1hMVWZDMFJ6ckpxci9GQ0ZlZUt6TFhhUVpiM0p1MERwNTR4SUYr?=
+ =?utf-8?Q?x/vc61cwxl4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OHd1akxWUUVEWW51K0FkL0t5L3lJKzV2VmNqTGJtK1p5Q3NDcUVEcEZPSDVG?=
+ =?utf-8?B?b2tDbHlCajdDS2tsM1N4RktlNC9YRnZ0azNvYWFEajZzSUhqRDdhaDVmMFUv?=
+ =?utf-8?B?TC9USFYySGxqNnY2SWxaM0xEUlNyZjlIYUFjaURzTDA3clZmODI4V3Z4S0pQ?=
+ =?utf-8?B?UXl3UnpadzRXcy91Q3drQXdXdFhpSzJHV01vZEFIYWNZTHFTQVBzdEIrdDU2?=
+ =?utf-8?B?SjUzcG5Hc21DWm5RR1lpZHRWNXoycjhJRytaTHUvbkRpQXR5aVZkWTAyS1Za?=
+ =?utf-8?B?c0NNSEY5WGx2U0ZJcE1jbWRlZ1cvWldvRFFyQ1drNkpUeHRad01yRkdwa20w?=
+ =?utf-8?B?Zk95Y3hjRklzMW9YRGU1UDdrb1FqekRGNkNtSFVTYjAzN1JXaGRDT2s2Y1Bw?=
+ =?utf-8?B?ZjhxSzNpMkRZZTNPZWlUdkpxYnppU24zN08wK2VxWll2RGVpcURhSmdUOWxY?=
+ =?utf-8?B?Y0Y1aXZWUTZSS0lyK3grTDhYV0pvam5CcTJ1UThuK0xMTEUyMDdBcWpMcVlS?=
+ =?utf-8?B?b0ZHRUZXYkFCczhoSTBEMTBBZC9WendzK253cmgvbEt2MXVtVzFkV2pzNEtj?=
+ =?utf-8?B?TC9ZdFR5UW10YzdLT3QzYVJxeHo1L0VWbjlTMmhqMmYrbEdFbnZtTU5qMGlv?=
+ =?utf-8?B?WVpPUTVkRnduczN0WVEvSkZiM3dLaS9HajIyRXR4eEV5Y05LV2NRQnR4NEMw?=
+ =?utf-8?B?QmxKZDQzMDRsblc1NUdSTnJZSEY4czBRYWl6eWRvUkJic1ZTWnlyU3IyZkQ1?=
+ =?utf-8?B?MGdzZ0tpK3VhV1VONDhCNW12K2d1KzJKd3hCbEwrbTQvSFZLYTFLWXBjZWVv?=
+ =?utf-8?B?Rk4zQ1JFY3hTcDA1VVNzNUdvQS9Nd0U0MDZXbWJLOExjSlZESzgvNTdsellL?=
+ =?utf-8?B?Sm55OUJsL3MxL1dJTnJsc3ptcjZsRXBLQkViN0FBMVYvTlhrSXQ0bk9kL3Nj?=
+ =?utf-8?B?WU05U3l6U1J0VzBYbDZTeDBJcWkxa1FSajhvV01jaDRMMkpNdmY5Y3VZODNp?=
+ =?utf-8?B?T2tPYm5CTnZSVm1wM3N1RjUyY2M3R0xzYmFnWmRJUWVQVk5sT05TMEF3Y2R3?=
+ =?utf-8?B?VlE0alEwRlAzNG1EQk54VFhxNjIra2RQczU4RVBIWHZ3SnlKbnMvdTl6ZzVX?=
+ =?utf-8?B?eStCL29HNTltSDliN2RZc2E2cUs3Q1VsWFZYbTI0K3dJMGllTUlUS0VPS3ZQ?=
+ =?utf-8?B?aW5HTDhwL0h1TFN3c2hLYi85ZGxEM3QyTXNZcENPTTBnS3VIQ3lydTA2OXdB?=
+ =?utf-8?B?M0cxRHV2RXV3K3RKTWcrZm5yLzc2V3J6YjJKWHZ2S3UwSWRZNmZ6dFUyUDE5?=
+ =?utf-8?B?MFJETUZLc005ekpodThEY09KUnBtckw1R0pWb21hQnFSZDFxU25NaDNxV0RV?=
+ =?utf-8?B?OFoxNzFJbHo5U1B2ajJ3UmFxRU81eldxa0R3YzB5RkVLRHV1NkJhVHpzMXNw?=
+ =?utf-8?B?YkFyNXdkdVJhaWN5cWtHT2xtYVJKYVNnSXlod0RVNHhFSWYrS2dIYkpWT3Rq?=
+ =?utf-8?B?akdhUjZ4SlFvZDFyUDVsV3JiQ0hVZGlaRUFVSUpNNHBybkVJTG5WUENHQVQv?=
+ =?utf-8?B?RE9xQzRCamhoT2lmNlMzSWM0bVVMSlFoUXJFVlNtVlp3TFh5Z1ZMQTZCTFVn?=
+ =?utf-8?B?ZWxZWThKUzBqRVdUZ1p0QllPQmVhZzB6M094Y3dRNC9iZEd6ellEWnhiTHR3?=
+ =?utf-8?B?ZStPSjdFM2EvSjU4djkvQlVDREg1dnp3MzF0dGYxSkI3eVU4VTlENEhQc1Zx?=
+ =?utf-8?B?Z3I4ZFhPZXpSMFhMcEkwU3kwdlcyeXBkaDM2WnQvNmZvR2FsUTdmdEJ3blZX?=
+ =?utf-8?B?a3lCeElaN2c0dlVpbWVRWDZpUE9wNFBObUkrU0tQWVZGNllXYTN6VXViSmdw?=
+ =?utf-8?B?MzFPdk5vM25rbmRRREUvOWlhZTBPd1ZPSHQ4L2djSlBya09NT2I1RDRmZTRO?=
+ =?utf-8?B?NTJoT25KeWlveDNwOU9GV2tybEE3ZTAwZmFXSU8yQlYrRmVUVURHK0s4ZFph?=
+ =?utf-8?B?RFVJMVpKLzNwc1FRZFZvOFpJdklSQU80V2YwNk9RVkpWQXpJa3ZNbm1oWlpL?=
+ =?utf-8?B?UGYrOTRUd2lvSXQvWTk0WFRBbHZTMVZFd0RYa21SNE9IR3hlNW1FNEU4WS9n?=
+ =?utf-8?Q?h36GNIl95KCYiXUdm+aehD1o0?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4139be68-9179-409e-331f-08dd4b812cb0
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2025 16:20:33.0964
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YN8NXRQmsVQl5CS2sBL81/2tC12DeGhwULn/lGFyp26po+Y1MsgNHD9Nb/Il2Kq+wJsLsYF86o5Dm3+qyh2UhQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR12MB9508
 
-On s390 there is a virtual PCI device called ISM which has a few
-peculiarities. For one, it presents a 256 TiB PCI BAR whose size leads
-to any attempt to ioremap() the whole BAR failing. This is problematic
-since mapping the whole BAR is the default behavior of for example
-vfio-pci in combination with QEMU and VFIO_PCI_MMAP enabled.
 
-Even if one tried to map this BAR only partially, the mapping would not
-be usable without extra precautions on systems with MIO support enabled.
-This is because of another oddity, in that this virtual PCI device does
-not support the newer memory I/O (MIO) PCI instructions and legacy PCI
-instructions are not accessible through writeq()/readq() when MIO is in
-use.
 
-In short the ISM device's BAR is not accessible through memory mappings.
-Indicate this by introducing a new non_mappable_bars flag for the ISM
-device and set it using a PCI quirk. Use this flag instead of the
-VFIO_PCI_MMAP Kconfig option to block mapping with vfio-pci. This was
-the only use of the Kconfig option so remove it. Note that there are no
-PCI resource sysfs files on s390x already as HAVE_PCI_MMAP is currently
-not set. If this were to be set in the future pdev->non_mappable_bars
-can be used to prevent unusable resource files for ISM from being
-created.
+On 2/11/2025 6:21 PM, Dave Jiang wrote:
+>
+> On 2/11/25 12:24 PM, Terry Bowman wrote:
+>> CXL RAS errors are currently logged using the associated CXL port's name
+>> returned from devname(). They are typically named with 'port1', 'port2',
+>> etc. to indicate the hierarchial location in the CXL topology. But, this
+>> doesn't clearly indicate the CXL card or slot reporting the error.
+>>
+>> Update the logging to also log the corresponding PCIe devname. This will
+>> give a PCIe SBDF or ACPI object name (in case of CXL HB). This will provide
+>> details helping users understand which physical slot and card has the
+>> error.
+>>
+>> Below is example output after making these changes.
+>>
+>> Correctable error example output:
+>> cxl_port_aer_correctable_error: device=port1 (0000:0c:00.0) parent=root0 (pci0000:0c) status='Received Error From Physical Layer'
+>>
+>> Uncorrectable error example output:
+>> cxl_port_aer_uncorrectable_error: device=port1 (0000:0c:00.0) parent=root0 (pci0000:0c) status: 'Memory Byte Enable Parity Error' first_error: 'Memory Byte Enable Parity Error'
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> I wonder if there's any benefit in identifying if the PCIe device is USP or DSP...
+>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-As s390x has no PCI quirk handling add basic support modeled after x86's
-arch/x86/pci/fixup.c and move the ISM device's PCI ID to the common
-header to make it accessible. Also enable CONFIG_PCI_QUIRKS whenever
-CONFIG_PCI is enabled.
+That would be nice for the user. I'll add it to the TODO list.
+Thanks for reviewing.
 
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- arch/s390/Kconfig                |  4 +---
- arch/s390/pci/Makefile           |  2 +-
- arch/s390/pci/pci_fixup.c        | 23 +++++++++++++++++++++++
- drivers/s390/net/ism_drv.c       |  1 -
- drivers/vfio/pci/Kconfig         |  4 ----
- drivers/vfio/pci/vfio_pci_core.c |  2 +-
- include/linux/pci.h              |  1 +
- include/linux/pci_ids.h          |  1 +
- 8 files changed, 28 insertions(+), 10 deletions(-)
-
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 9c9ec08d78c71b4d227beeafab1b82d6434cb5c7..e48741e001476f765e8aba0037a1b386df393683 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -41,9 +41,6 @@ config AUDIT_ARCH
- config NO_IOPORT_MAP
- 	def_bool y
- 
--config PCI_QUIRKS
--	def_bool n
--
- config ARCH_SUPPORTS_UPROBES
- 	def_bool y
- 
-@@ -258,6 +255,7 @@ config S390
- 	select PCI_DOMAINS		if PCI
- 	select PCI_MSI			if PCI
- 	select PCI_MSI_ARCH_FALLBACKS	if PCI_MSI
-+	select PCI_QUIRKS		if PCI
- 	select SPARSE_IRQ
- 	select SWIOTLB
- 	select SYSCTL_EXCEPTION_TRACE
-diff --git a/arch/s390/pci/Makefile b/arch/s390/pci/Makefile
-index df73c5182990ad3ae4ed5a785953011feb9a093c..1810e0944a4ed9d31261788f0f6eb341e5316546 100644
---- a/arch/s390/pci/Makefile
-+++ b/arch/s390/pci/Makefile
-@@ -5,6 +5,6 @@
- 
- obj-$(CONFIG_PCI)	+= pci.o pci_irq.o pci_clp.o \
- 			   pci_event.o pci_debug.o pci_insn.o pci_mmio.o \
--			   pci_bus.o pci_kvm_hook.o pci_report.o
-+			   pci_bus.o pci_kvm_hook.o pci_report.o pci_fixup.o
- obj-$(CONFIG_PCI_IOV)	+= pci_iov.o
- obj-$(CONFIG_SYSFS)	+= pci_sysfs.o
-diff --git a/arch/s390/pci/pci_fixup.c b/arch/s390/pci/pci_fixup.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..35688b645098329f082d0c40cc8c59231c390eaa
---- /dev/null
-+++ b/arch/s390/pci/pci_fixup.c
-@@ -0,0 +1,23 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Exceptions for specific devices,
-+ *
-+ * Copyright IBM Corp. 2025
-+ *
-+ * Author(s):
-+ *   Niklas Schnelle <schnelle@linux.ibm.com>
-+ */
-+#include <linux/pci.h>
-+
-+static void zpci_ism_bar_no_mmap(struct pci_dev *pdev)
-+{
-+	/*
-+	 * ISM's BAR is special. Drivers written for ISM know
-+	 * how to handle this but others need to be aware of their
-+	 * special nature e.g. to prevent attempts to mmap() it.
-+	 */
-+	pdev->non_mappable_bars = 1;
-+}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_IBM,
-+			PCI_DEVICE_ID_IBM_ISM,
-+			zpci_ism_bar_no_mmap);
-diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
-index e36e3ea165d3b2b01d68e53634676cb8c2c40220..d32633ed9fa80c1764724f493b363bfd6cb4f9cf 100644
---- a/drivers/s390/net/ism_drv.c
-+++ b/drivers/s390/net/ism_drv.c
-@@ -20,7 +20,6 @@
- MODULE_DESCRIPTION("ISM driver for s390");
- MODULE_LICENSE("GPL");
- 
--#define PCI_DEVICE_ID_IBM_ISM 0x04ED
- #define DRV_NAME "ism"
- 
- static const struct pci_device_id ism_device_table[] = {
-diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-index bf50ffa10bdea9e52a9d01cc3d6ee4cade39a08c..c3bcb6911c538286f7985f9c5e938d587fc04b56 100644
---- a/drivers/vfio/pci/Kconfig
-+++ b/drivers/vfio/pci/Kconfig
-@@ -7,10 +7,6 @@ config VFIO_PCI_CORE
- 	select VFIO_VIRQFD
- 	select IRQ_BYPASS_MANAGER
- 
--config VFIO_PCI_MMAP
--	def_bool y if !S390
--	depends on VFIO_PCI_CORE
--
- config VFIO_PCI_INTX
- 	def_bool y if !S390
- 	depends on VFIO_PCI_CORE
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 586e49efb81be32ccb50ca554a60cec684c37402..c8586d47704c74cf9a5256d65bbf888db72b2f91 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -116,7 +116,7 @@ static void vfio_pci_probe_mmaps(struct vfio_pci_core_device *vdev)
- 
- 		res = &vdev->pdev->resource[bar];
- 
--		if (!IS_ENABLED(CONFIG_VFIO_PCI_MMAP))
-+		if (vdev->pdev->non_mappable_bars)
- 			goto no_mmap;
- 
- 		if (!(res->flags & IORESOURCE_MEM))
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 47b31ad724fa5bf7abd7c3dc572947551b0f2148..7192b9d78d7e337ce6144190325458fe3c0f1696 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -476,6 +476,7 @@ struct pci_dev {
- 	unsigned int	no_command_memory:1;	/* No PCI_COMMAND_MEMORY */
- 	unsigned int	rom_bar_overlap:1;	/* ROM BAR disable broken */
- 	unsigned int	rom_attr_enabled:1;	/* Display of ROM attribute enabled? */
-+	unsigned int	non_mappable_bars:1;	/* BARs can't be mapped to user-space  */
- 	pci_dev_flags_t dev_flags;
- 	atomic_t	enable_cnt;	/* pci_enable_device has been called */
- 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index de5deb1a0118fcf56570d461cbe7a501d4bd0da3..ec6d311ed12e174dc0bad2ce8c92454bed668fee 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -518,6 +518,7 @@
- #define PCI_DEVICE_ID_IBM_ICOM_V2_ONE_PORT_RVX_ONE_PORT_MDM	0x0251
- #define PCI_DEVICE_ID_IBM_ICOM_V2_ONE_PORT_RVX_ONE_PORT_MDM_PCIE 0x0361
- #define PCI_DEVICE_ID_IBM_ICOM_FOUR_PORT_MODEL	0x252
-+#define PCI_DEVICE_ID_IBM_ISM		0x04ED
- 
- #define PCI_SUBVENDOR_ID_IBM		0x1014
- #define PCI_SUBDEVICE_ID_IBM_SATURN_SERIAL_ONE_PORT	0x03d4
-
--- 
-2.45.2
+Terry
+>> ---
+>>  drivers/cxl/core/pci.c   | 39 +++++++++++++++++++------------------
+>>  drivers/cxl/core/trace.h | 42 +++++++++++++++++++++++++---------------
+>>  2 files changed, 46 insertions(+), 35 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+>> index 9a3090dae46a..f154dcf6dfda 100644
+>> --- a/drivers/cxl/core/pci.c
+>> +++ b/drivers/cxl/core/pci.c
+>> @@ -652,14 +652,14 @@ void read_cdat_data(struct cxl_port *port)
+>>  }
+>>  EXPORT_SYMBOL_NS_GPL(read_cdat_data, "CXL");
+>>  
+>> -static void __cxl_handle_cor_ras(struct device *dev,
+>> +static void __cxl_handle_cor_ras(struct device *cxl_dev, struct device *pcie_dev,
+>>  				 void __iomem *ras_base)
+>>  {
+>>  	void __iomem *addr;
+>>  	u32 status;
+>>  
+>>  	if (!ras_base) {
+>> -		dev_warn_once(dev, "CXL RAS register block is not mapped");
+>> +		dev_warn_once(cxl_dev, "CXL RAS register block is not mapped");
+>>  		return;
+>>  	}
+>>  
+>> @@ -669,15 +669,15 @@ static void __cxl_handle_cor_ras(struct device *dev,
+>>  		return;
+>>  	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+>>  
+>> -	if (is_cxl_memdev(dev))
+>> -		trace_cxl_aer_correctable_error(to_cxl_memdev(dev), status);
+>> -	else if (is_cxl_port(dev))
+>> -		trace_cxl_port_aer_correctable_error(dev, status);
+>> +	if (is_cxl_memdev(cxl_dev))
+>> +		trace_cxl_aer_correctable_error(to_cxl_memdev(cxl_dev), status);
+>> +	else if (is_cxl_port(cxl_dev))
+>> +		trace_cxl_port_aer_correctable_error(cxl_dev, pcie_dev, status);
+>>  }
+>>  
+>>  static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
+>>  {
+>> -	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, cxlds->regs.ras);
+>> +	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, NULL, cxlds->regs.ras);
+>>  }
+>>  
+>>  /* CXL spec rev3.0 8.2.4.16.1 */
+>> @@ -701,7 +701,8 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
+>>   * Log the state of the RAS status registers and prepare them to log the
+>>   * next error status. Return 1 if reset needed.
+>>   */
+>> -static pci_ers_result_t __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+>> +static pci_ers_result_t __cxl_handle_ras(struct device *cxl_dev, struct device *pcie_dev,
+>> +					 void __iomem *ras_base)
+>>  {
+>>  	u32 hl[CXL_HEADERLOG_SIZE_U32];
+>>  	void __iomem *addr;
+>> @@ -709,7 +710,7 @@ static pci_ers_result_t __cxl_handle_ras(struct device *dev, void __iomem *ras_b
+>>  	u32 fe;
+>>  
+>>  	if (!ras_base) {
+>> -		dev_warn_once(dev, "CXL RAS register block is not mapped");
+>> +		dev_warn_once(cxl_dev, "CXL RAS register block is not mapped");
+>>  		return PCI_ERS_RESULT_NONE;
+>>  	}
+>>  
+>> @@ -730,10 +731,10 @@ static pci_ers_result_t __cxl_handle_ras(struct device *dev, void __iomem *ras_b
+>>  	}
+>>  
+>>  	header_log_copy(ras_base, hl);
+>> -	if (is_cxl_memdev(dev))
+>> -		trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
+>> -	else if (is_cxl_port(dev))
+>> -		trace_cxl_port_aer_uncorrectable_error(dev, status, fe, hl);
+>> +	if (is_cxl_memdev(cxl_dev))
+>> +		trace_cxl_aer_uncorrectable_error(to_cxl_memdev(cxl_dev), status, fe, hl);
+>> +	else if (is_cxl_port(cxl_dev))
+>> +		trace_cxl_port_aer_uncorrectable_error(cxl_dev, pcie_dev, status, fe, hl);
+>>  
+>>  	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
+>>  
+>> @@ -742,7 +743,7 @@ static pci_ers_result_t __cxl_handle_ras(struct device *dev, void __iomem *ras_b
+>>  
+>>  static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
+>>  {
+>> -	return __cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->regs.ras);
+>> +	return __cxl_handle_ras(&cxlds->cxlmd->dev, NULL, cxlds->regs.ras);
+>>  }
+>>  
+>>  #ifdef CONFIG_PCIEAER_CXL
+>> @@ -814,7 +815,7 @@ static void __iomem *cxl_pci_port_ras(struct pci_dev *pdev, struct device **dev)
+>>  		struct cxl_dport *dport = NULL;
+>>  
+>>  		port = find_cxl_port(&pdev->dev, &dport);
+>> -		if (!port) {
+>> +		if (!port || !is_cxl_port(&port->dev)) {
+>>  			pci_err(pdev, "Failed to find root/dport in CXL topology\n");
+>>  			return NULL;
+>>  		}
+>> @@ -848,7 +849,7 @@ static void cxl_port_cor_error_detected(struct pci_dev *pdev)
+>>  	struct device *dev;
+>>  	void __iomem *ras_base = cxl_pci_port_ras(pdev, &dev);
+>>  
+>> -	__cxl_handle_cor_ras(dev, ras_base);
+>> +	__cxl_handle_cor_ras(dev, &pdev->dev, ras_base);
+>>  }
+>>  
+>>  static pci_ers_result_t cxl_port_error_detected(struct pci_dev *pdev)
+>> @@ -856,7 +857,7 @@ static pci_ers_result_t cxl_port_error_detected(struct pci_dev *pdev)
+>>  	struct device *dev;
+>>  	void __iomem *ras_base = cxl_pci_port_ras(pdev, &dev);
+>>  
+>> -	return __cxl_handle_ras(dev, ras_base);
+>> +	return __cxl_handle_ras(dev, &pdev->dev, ras_base);
+>>  }
+>>  
+>>  void cxl_uport_init_ras_reporting(struct cxl_port *port)
+>> @@ -909,13 +910,13 @@ EXPORT_SYMBOL_NS_GPL(cxl_dport_init_ras_reporting, "CXL");
+>>  static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
+>>  					  struct cxl_dport *dport)
+>>  {
+>> -	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, dport->regs.ras);
+>> +	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, NULL, dport->regs.ras);
+>>  }
+>>  
+>>  static bool cxl_handle_rdport_ras(struct cxl_dev_state *cxlds,
+>>  				       struct cxl_dport *dport)
+>>  {
+>> -	return __cxl_handle_ras(&cxlds->cxlmd->dev, dport->regs.ras);
+>> +	return __cxl_handle_ras(&cxlds->cxlmd->dev, NULL, dport->regs.ras);
+>>  }
+>>  
+>>  /*
+>> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+>> index b536233ac210..a74803f4aa22 100644
+>> --- a/drivers/cxl/core/trace.h
+>> +++ b/drivers/cxl/core/trace.h
+>> @@ -49,18 +49,22 @@
+>>  )
+>>  
+>>  TRACE_EVENT(cxl_port_aer_uncorrectable_error,
+>> -	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
+>> -	TP_ARGS(dev, status, fe, hl),
+>> +	TP_PROTO(struct device *cxl_dev, struct device *pcie_dev, u32 status, u32 fe, u32 *hl),
+>> +	TP_ARGS(cxl_dev, pcie_dev, status, fe, hl),
+>>  	TP_STRUCT__entry(
+>> -		__string(devname, dev_name(dev))
+>> -		__string(parent, dev_name(dev->parent))
+>> +		__string(cxl_name, dev_name(cxl_dev))
+>> +		__string(cxl_parent_name, dev_name(cxl_dev->parent))
+>> +		__string(pcie_name, dev_name(pcie_dev))
+>> +		__string(pcie_parent_name, dev_name(pcie_dev->parent))
+>>  		__field(u32, status)
+>>  		__field(u32, first_error)
+>>  		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+>>  	),
+>>  	TP_fast_assign(
+>> -		__assign_str(devname);
+>> -		__assign_str(parent);
+>> +		__assign_str(cxl_name);
+>> +		__assign_str(cxl_parent_name);
+>> +		__assign_str(pcie_name);
+>> +		__assign_str(pcie_parent_name);
+>>  		__entry->status = status;
+>>  		__entry->first_error = fe;
+>>  		/*
+>> @@ -69,8 +73,9 @@ TRACE_EVENT(cxl_port_aer_uncorrectable_error,
+>>  		 */
+>>  		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+>>  	),
+>> -	TP_printk("device=%s parent=%s status: '%s' first_error: '%s'",
+>> -		__get_str(devname), __get_str(parent),
+>> +	TP_printk("device=%s (%s) parent=%s (%s) status: '%s' first_error: '%s'",
+>> +		__get_str(cxl_name), __get_str(pcie_name),
+>> +		__get_str(cxl_parent_name), __get_str(pcie_parent_name),
+>>  		show_uc_errs(__entry->status),
+>>  		show_uc_errs(__entry->first_error)
+>>  	)
+>> @@ -125,20 +130,25 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+>>  )
+>>  
+>>  TRACE_EVENT(cxl_port_aer_correctable_error,
+>> -	TP_PROTO(struct device *dev, u32 status),
+>> -	TP_ARGS(dev, status),
+>> +	TP_PROTO(struct device *cxl_dev, struct device *pcie_dev, u32 status),
+>> +	TP_ARGS(cxl_dev, pcie_dev, status),
+>>  	TP_STRUCT__entry(
+>> -		__string(devname, dev_name(dev))
+>> -		__string(parent, dev_name(dev->parent))
+>> +		__string(cxl_name, dev_name(cxl_dev))
+>> +		__string(cxl_parent_name, dev_name(cxl_dev->parent))
+>> +		__string(pcie_name, dev_name(pcie_dev))
+>> +		__string(pcie_parent_name, dev_name(pcie_dev->parent))
+>>  		__field(u32, status)
+>>  	),
+>>  	TP_fast_assign(
+>> -		__assign_str(devname);
+>> -		__assign_str(parent);
+>> +		__assign_str(cxl_name);
+>> +		__assign_str(cxl_parent_name);
+>> +		__assign_str(pcie_name);
+>> +		__assign_str(pcie_parent_name);
+>>  		__entry->status = status;
+>>  	),
+>> -	TP_printk("device=%s parent=%s status='%s'",
+>> -		__get_str(devname), __get_str(parent),
+>> +	TP_printk("device=%s (%s) parent=%s (%s) status='%s'",
+>> +		__get_str(cxl_name), __get_str(pcie_name),
+>> +		__get_str(cxl_parent_name), __get_str(pcie_parent_name),
+>>  		show_ce_errs(__entry->status)
+>>  	)
+>>  );
 
 
