@@ -1,108 +1,132 @@
-Return-Path: <linux-pci+bounces-21326-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21327-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0FDBA3334B
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 00:20:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D075A33361
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 00:30:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5A94E3A5CB3
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 23:20:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 426C71670B9
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 23:30:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9684253F0A;
-	Wed, 12 Feb 2025 23:20:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0C91209F4F;
+	Wed, 12 Feb 2025 23:30:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y6bsCeYg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JvRg5a0y"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEE2209F53
-	for <linux-pci@vger.kernel.org>; Wed, 12 Feb 2025 23:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0EC1D5143;
+	Wed, 12 Feb 2025 23:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739402444; cv=none; b=KL8kGtWtuBUis++WuuOLAnjqmAzXJigSOInDnNon4Wgeoup7SbD3DQxdWaddjhLKUQV9h99JNuQaQps8e7D3tMx+S3S3cNqGJoC4qadbEhJ0Fx5FwCCcRLLovP3RuCUWtsIvPder1J99qsmGStmX5VLpvLCy7NI+JTanhkjn1BU=
+	t=1739403049; cv=none; b=EeqT9FnFWzY2xifA2BQlkV4zdsU1f6F5k5Fmod4W3pE4PULPlMrG4J9J8whtZzdyYNnWxybq5ASN1hKqA6jRUA0spgLExHDwmpGDHfM04jbtSDdfb1kYU7rDlMa6rGMOiHPAlo7D5z7FD0DZZunlXoGcjb+uUhASKzPjs8/XRdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739402444; c=relaxed/simple;
-	bh=QapRnGrAaKxszsVuUBUEG/isw4uxYOKD/1H+q1VL74c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rilJSN62wTLerDGPj+oBOA9NQDd9b4TSz3UHrSgK0J/qsxva94h+Y+n1dZES3ZU1HSEICm+C243gcPftUK0zZF+ijcXwKRh+Vp2EBs56YZpJs1TqwBAByLhXKouZWSP1jL7h9DhMQCBWTuEG28hStUq32Xh+uOxH2APrUowijZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y6bsCeYg; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ab7e3d0921bso55541066b.3
-        for <linux-pci@vger.kernel.org>; Wed, 12 Feb 2025 15:20:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739402441; x=1740007241; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QapRnGrAaKxszsVuUBUEG/isw4uxYOKD/1H+q1VL74c=;
-        b=Y6bsCeYgXlDLs7QKFh4dyTI795BUyF39XXNJUJqo6u8Kwbi1JY4z4SiEUZ3hjM++tr
-         GApilw2ERiukf0QgWKU3WBUg1PMTw7xl/twS6WJ0O3JU3TFpaMpQJobKIdXy1pQCXCqK
-         P7KX2bBfQaCrqbJSp771/kwb9JWOrEV2UrwmCTYy9xE0qaxywq1qpG3BnN+muHBk8957
-         4KPXR9J76CR++ALhIbFUl8tk+6HxR2/ojlgVKcDOQWoXA2tbofYvP21fyHdWsr1R5HHh
-         3y2dE/qSqTsHLzXAt87zwKTAUycdh58l6BHYfoGPsfBy1PVbfr5HqovrK+N8Cc4s/xtu
-         UV5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739402441; x=1740007241;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QapRnGrAaKxszsVuUBUEG/isw4uxYOKD/1H+q1VL74c=;
-        b=NNpyYpmbHHguGYlYfrl37SIlIiDfNBL7C7OlJnNe+LDb2WCNqKvFBHC84LK0M05PIY
-         q0DYAPMrXaX96kyyw/Jx0m5e3ZDF4jCujtCjhImgTIALrBY9UN2m3tqvgGmg/AN1h5fz
-         2t+6x8LvNx1KkaPTmV6587ap/Eu6o4H5aYN6ihehu+gnzliIf+zpsUUVekUQIrQA9YP4
-         jbbhGC+5oc+9fXRvp/ztS0HEpp8CGYuc8eFQiPzXrY/4jiZKWsV4f1evJdP0cflw/fZg
-         muQfRW/9MoTDm92vsOo1ipeQM6juEzSL3G10T7NdlfKivmHG1ZIC6kiI1DSx25RdilaS
-         YfMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYgY4WumLNf7isDzEhqZhMIFShy7yUTSssK/RyrApuwHuptLpYO8zHxizhD/QRaKaddwfufCUujfU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx89xmM34cDTmM3BnPXM/2BLvGdwgni0qD9aPSgjLl1BBim4Dtu
-	IC0/ap32V1Wg6IdG6G9Wg3gnyuDnX58qOdr0ycOZOEr7quu6nmt+H84SLUVMVi4rFkDwHNv+ntJ
-	D9BOihm0ljINs8ZukEnQwUdVjmiDM5Y79/cPi
-X-Gm-Gg: ASbGncvUwq88dWkvKuGvqUxOxL+5VyRUizzqwuDqruGylHSZ1OBwWY4vnkI6CXdCip5
-	3ELk6/aavhMmek4aIwTffFgWEl/hhzwuJBP9ioOv501wRhP7XxotO/CksH455iUchY3pS/REjQw
-	rU+3rlq5sYQIMGoeKgqkHiuc8WKL8=
-X-Google-Smtp-Source: AGHT+IFYqGC9ubpe3sb/19hskGk7rQ4sqMnHYTILuR+/9ndIvEw+EcGmTfL8cu0DH6O9+CA6MIz/C/5QYSf7edyWmrg=
-X-Received: by 2002:a17:907:3d8e:b0:ab7:7c58:7bd0 with SMTP id
- a640c23a62f3a-aba4eb88d83mr110714466b.10.1739402441336; Wed, 12 Feb 2025
- 15:20:41 -0800 (PST)
+	s=arc-20240116; t=1739403049; c=relaxed/simple;
+	bh=Gky+ek+f6dQ1foZALEI0/TAWTKqzdPow3GkeyJofb+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NpLrP8laLpL1Ocb5EmENf4/o4N3uu8fckGhv2NdP6Ic+vmqJf8ENDnzagFvn+lxZsQfjFx2/jLO0Jy1dV0gk5OXF0gijkugHGnDyCp5Jn2AOoEG3sW4ZxeNg3Gz9OEgUZhs6gP4kXWPu88AISZYCjsfSzDt7mF/PtIDxv+Bq6NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JvRg5a0y; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739403048; x=1770939048;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Gky+ek+f6dQ1foZALEI0/TAWTKqzdPow3GkeyJofb+U=;
+  b=JvRg5a0yg1dJNmeWBJSNIOUX3d1dZpwD5vBRe2NCU2NrOlHp6l3tfx/U
+   WAQKwlox8Cg7guVZI0lbcvulUsf7h4xfRysIZEdET1k3IymSmkb+YlOwd
+   Axb0n6YSTdGQ9Ye/e2nDtlXMjLXGPmdiiMSulG1G+rYmYD0so2vC8JEZf
+   zfW3tW05aBPKBxR1b22oXSnLdURVW7ZvcnykrdLsLme45hI1k6MI5ihkW
+   1wpmcJ669weqhkgIXQtQpFJe9SoXCyeFb/Bx//hYBaBzONBQqlacI8PRv
+   Un1BOqgnc9D32Mii2bW6NIpL8/og6ezDSIQQxTI2iXL3YteyswD1iC3or
+   g==;
+X-CSE-ConnectionGUID: 78dOxnzpSVWQ5Qqgc5sPnw==
+X-CSE-MsgGUID: DTkHK4VlQtyBw+mCAnqApQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11343"; a="40118303"
+X-IronPort-AV: E=Sophos;i="6.13,281,1732608000"; 
+   d="scan'208";a="40118303"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 15:30:47 -0800
+X-CSE-ConnectionGUID: gTqfFyaFSginqyhtZ0OSWQ==
+X-CSE-MsgGUID: Px8W/QkFRmGKFN5OaIUw0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="118142063"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO aschofie-mobl2.lan) ([10.125.108.123])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 15:30:46 -0800
+Date: Wed, 12 Feb 2025 15:30:45 -0800
+From: Alison Schofield <alison.schofield@intel.com>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	vishal.l.verma@intel.com, dan.j.williams@intel.com,
+	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
+	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
+	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com,
+	lukas@wunner.de, ming.li@zohomail.com,
+	PradeepVineshReddy.Kodamati@amd.com
+Subject: Re: [PATCH v7 14/17] cxl/pci: Update CXL Port RAS logging to also
+ display PCIe SBDF
+Message-ID: <Z60vJYIJQxJ7Cu9d@aschofie-mobl2.lan>
+References: <20250211192444.2292833-1-terry.bowman@amd.com>
+ <20250211192444.2292833-15-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250115074301.3514927-1-pandoh@google.com> <20250115074301.3514927-2-pandoh@google.com>
- <696e0a5c-5d5d-4a58-b00e-7c678290713e@linux.intel.com>
-In-Reply-To: <696e0a5c-5d5d-4a58-b00e-7c678290713e@linux.intel.com>
-From: Jon Pan-Doh <pandoh@google.com>
-Date: Wed, 12 Feb 2025 15:20:30 -0800
-X-Gm-Features: AWEUYZnTEzfiuc_Gi50ZgIhsDt5etGHV5dR8c_GIslfNGQD-N4fVJoOs1UXVkTU
-Message-ID: <CAMC_AXX3pN5huHCzMPaSNf6Jgfd2ayMTLeKMhU7d2h2zodHuoQ@mail.gmail.com>
-Subject: Re: [PATCH 1/8] PCI/AER: Remove aer_print_port_info
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>, 
-	linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
-	Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-	Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211192444.2292833-15-terry.bowman@amd.com>
 
-On Fri, Jan 24, 2025 at 8:15=E2=80=AFPM Sathyanarayanan Kuppuswamy
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> Any issue with logging when no source device is found in device
-> hierarchy?
+On Tue, Feb 11, 2025 at 01:24:41PM -0600, Terry Bowman wrote:
+> CXL RAS errors are currently logged using the associated CXL port's name
+> returned from devname(). They are typically named with 'port1', 'port2',
+> etc. to indicate the hierarchial location in the CXL topology. But, this
+> doesn't clearly indicate the CXL card or slot reporting the error.
+> 
+> Update the logging to also log the corresponding PCIe devname. This will
+> give a PCIe SBDF or ACPI object name (in case of CXL HB). This will provide
+> details helping users understand which physical slot and card has the
+> error.
+> 
+> Below is example output after making these changes.
+> 
+> Correctable error example output:
+> cxl_port_aer_correctable_error: device=port1 (0000:0c:00.0) parent=root0 (pci0000:0c) status='Received Error From Physical Layer'
+> 
+> Uncorrectable error example output:
+> cxl_port_aer_uncorrectable_error: device=port1 (0000:0c:00.0) parent=root0 (pci0000:0c) status: 'Memory Byte Enable Parity Error' first_error: 'Memory Byte Enable Parity Error'
 
-When there is no source device, an error is logged (pci_info()) with
-the same BDF info that is found in aer_print_port_info() (i.e. from
-aer_error_info). Will add it to v2 commit message to be more explicit.
+snip
+> 
+>  
+>  TRACE_EVENT(cxl_port_aer_uncorrectable_error,
+> -	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
+> -	TP_ARGS(dev, status, fe, hl),
+> +	TP_PROTO(struct device *cxl_dev, struct device *pcie_dev, u32 status, u32 fe, u32 *hl),
+> +	TP_ARGS(cxl_dev, pcie_dev, status, fe, hl),
+>  	TP_STRUCT__entry(
+> -		__string(devname, dev_name(dev))
+> -		__string(parent, dev_name(dev->parent))
+> +		__string(cxl_name, dev_name(cxl_dev))
+> +		__string(cxl_parent_name, dev_name(cxl_dev->parent))
+> +		__string(pcie_name, dev_name(pcie_dev))
+> +		__string(pcie_parent_name, dev_name(pcie_dev->parent))
 
-> Please remove time stamp from dmesg log.
+I get the rename of devname->cxl_name and parent->cxl_parent_name
+since now we have pcie names too.  How about making those changes
+in the previous patch where devname and parent are introduced. Then
+this patch doesn't have any changes other than adding the pcie names.
 
-Ack.
+Having said that, should/can this merge with the patch before it?
 
-Thanks,
-Jon
+
+snip
 
