@@ -1,70 +1,69 @@
-Return-Path: <linux-pci+bounces-21296-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21297-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1555FA32DE4
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 18:51:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79E16A32E0D
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 19:00:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A89F1887689
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 17:51:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 140003A7D40
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Feb 2025 18:00:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97D9D25C6EB;
-	Wed, 12 Feb 2025 17:51:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5C922586F7;
+	Wed, 12 Feb 2025 18:00:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/Du+3LF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGtzyqkY"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6358A2116E0;
-	Wed, 12 Feb 2025 17:51:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A1F2BD10;
+	Wed, 12 Feb 2025 18:00:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739382664; cv=none; b=YGLy3wcb9juAQR7uwqUxENf2QW6ljVrgPGLu7mwuKu5EmV4HydbCKTktJs7535u52OPs0V86u1nFuF/u+kpg3UZfKk0etTKwilgPsM8xMgMO5xYKf/5ZHaOPOncC79uPvNSj5JK0j30iv7MIl4lsj9CuzAX/mjbM4jD+yDzJLGU=
+	t=1739383217; cv=none; b=EMY7pfLKBrisadSyccNV7/VvFYdbStiF1uGQaJ9GHGPsO01j5BUWY/SJVhqvDNHqcmST2+IRc5CnBPtdi1SeLnXyGg/owP2eGWV/CDXKS3KktX4MINVke8rlP7+kjj1WS/5sI42juY3pr5aDjXpdx/bLkR33Des3ENg9irjHD+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739382664; c=relaxed/simple;
-	bh=am/bFZ5n+x/LiN4DKmDL+UQAHSZFP6LZFw/XXWZjeNA=;
+	s=arc-20240116; t=1739383217; c=relaxed/simple;
+	bh=hsK/ij+5FFV9WezWD6dLNN9TbHcCGeKOn7f2QjrIAkk=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=NX94dwuez0Xqae8lmrBq6NjkSmqV3bzvozvjy5ZdZHOIpoyCVL3r0NaYtJpnam4p3RBY6wjKXkD4islwbhPALPSQ7h+lNkfht+xH+gl+/QkJKRsz/5P4Oa1TSXsGvOWr/aSdp/O3bpn21L1Ehm4PsDpCrqKkT07UGhilOi/CG3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/Du+3LF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC0FEC4CEDF;
-	Wed, 12 Feb 2025 17:51:03 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Pl02uj4GgOyjzK2dF+i8GLzZN6P5Ygn7ojY0M61yoRt2fupri8uDR1dM1oGoEMspZou9D04mKgirP9zOMhYUYHgLWpbtATrEouPnaElN528kkeQuBKPMhLjM0Sfmft91qZi76bsVqJ5fzhZuUmIjv8TRB92bk9Vo2aPCwET6kUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGtzyqkY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C10FEC4CEDF;
+	Wed, 12 Feb 2025 18:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739382663;
-	bh=am/bFZ5n+x/LiN4DKmDL+UQAHSZFP6LZFw/XXWZjeNA=;
+	s=k20201202; t=1739383217;
+	bh=hsK/ij+5FFV9WezWD6dLNN9TbHcCGeKOn7f2QjrIAkk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=h/Du+3LFQEJrp5IxiAYoRoHP12C9WU8T37rPCFO1pTpEo5RCm579OH76aGlnFQ1hk
-	 r4oflm4TFXg4Wufml7sduTPiZVqAlEamBAdM6ktgngZ5iprNDYN0OVQPfAD8OBINEJ
-	 csS79ZbPcr6IUBpikpTnVW8qkhQ0Ov9rdaw4HxhT+WQqUTxly9n3F7g3vmJsks15k3
-	 SDbG8HSdj22ypg8ubci3oyMC4dgHtpzsxe+9mZulUcOZjIoBu3qvKRkZTudwyDtmKu
-	 pawZWdTejdb0VXwmF9flaWqmuyeak/oTjAL2X9YVlrjdvyQUyDZ9uV3tYz4/2rclqV
-	 JHeWh8NVNrUPg==
-Date: Wed, 12 Feb 2025 11:51:02 -0600
+	b=AGtzyqkY5Co/VF4YcoGd4mbPW4K3DlF88Nn+KcbRZZYwfHbIAU/PtcmPqp6Lzi+pK
+	 BKmMjpBsoSlGwVNt9VUOF12rix04O9ZwrPNys5fomIAgHGX17hPA8EW+oLHFTdhxym
+	 uF61M3wy/GQIRASKaWWcjpknlJK96XSga60FsKG1t2FsPtqrABGF/oBpmvbUJkmlD5
+	 P6/Hr14Gh2j4Tsukl/XTN8qwfc32Lime8GfUzAb/90QZKvxOwg0odz6HvFp2mdxRzO
+	 nE+t2k/51g1ziUM5tfp/LQETQycXrI/fHtbTDnDbIt/nJoonjhY9QJyQGNUVP+PO7N
+	 JxGVUxvAcsJ/A==
+Date: Wed, 12 Feb 2025 12:00:09 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Alexandra Winter <wintera@linux.ibm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Gerd Bayer <gbayer@linux.ibm.com>,
-	Matthew Rosato <mjrosato@linux.ibm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Thorsten Winkler <twinkler@linux.ibm.com>,
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Julian Ruess <julianr@linux.ibm.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] PCI: s390: Support mmap() of BARs and replace
- VFIO_PCI_MMAP by a device flag
-Message-ID: <20250212175102.GA85244@bhelgaas>
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Jonathan Bell <jonathan@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v5 -next 05/11] PCI: brcmstb: Expand inbound window size
+ up to 64GB
+Message-ID: <20250212180009.GA85559@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,54 +72,47 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250212-vfio_pci_mmap-v5-2-633ca5e056da@linux.ibm.com>
+In-Reply-To: <20250120130119.671119-6-svarbanov@suse.de>
 
-On Wed, Feb 12, 2025 at 04:28:32PM +0100, Niklas Schnelle wrote:
-> On s390 there is a virtual PCI device called ISM which has a few
-> peculiarities. For one, it presents a 256 TiB PCI BAR whose size leads
-> to any attempt to ioremap() the whole BAR failing. This is problematic
-> since mapping the whole BAR is the default behavior of for example
-> vfio-pci in combination with QEMU and VFIO_PCI_MMAP enabled.
+On Mon, Jan 20, 2025 at 03:01:13PM +0200, Stanimir Varbanov wrote:
+> BCM2712 memory map can support up to 64GB of system memory, thus expand
+> the inbound window size in calculation helper function.
 > 
-> Even if one tried to map this BAR only partially, the mapping would not
-> be usable without extra precautions on systems with MIO support enabled.
-> This is because of another oddity, in that this virtual PCI device does
-> not support the newer memory I/O (MIO) PCI instructions and legacy PCI
-> instructions are not accessible through writeq()/readq() when MIO is in
-> use.
-> 
-> In short the ISM device's BAR is not accessible through memory mappings.
-> Indicate this by introducing a new non_mappable_bars flag for the ISM
-> device and set it using a PCI quirk. Use this flag instead of the
-> VFIO_PCI_MMAP Kconfig option to block mapping with vfio-pci. This was
-> the only use of the Kconfig option so remove it. Note that there are no
-> PCI resource sysfs files on s390x already as HAVE_PCI_MMAP is currently
-> not set. If this were to be set in the future pdev->non_mappable_bars
-> can be used to prevent unusable resource files for ISM from being
-> created.
-> 
-> As s390x has no PCI quirk handling add basic support modeled after x86's
-> arch/x86/pci/fixup.c and move the ISM device's PCI ID to the common
-> header to make it accessible. Also enable CONFIG_PCI_QUIRKS whenever
-> CONFIG_PCI is enabled.
-> 
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> The change is save for the currently supported SoCs that has smaller
+> inbound window sizes.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+If you repost:
 
-> +++ b/include/linux/pci_ids.h
-> @@ -518,6 +518,7 @@
->  #define PCI_DEVICE_ID_IBM_ICOM_V2_ONE_PORT_RVX_ONE_PORT_MDM	0x0251
->  #define PCI_DEVICE_ID_IBM_ICOM_V2_ONE_PORT_RVX_ONE_PORT_MDM_PCIE 0x0361
->  #define PCI_DEVICE_ID_IBM_ICOM_FOUR_PORT_MODEL	0x252
-> +#define PCI_DEVICE_ID_IBM_ISM		0x04ED
+s/save/safe/
+s/that has/that have/
 
-Use lower-case hex to match other entries.
+Otherwise we can fix these when merging.
 
->  #define PCI_SUBVENDOR_ID_IBM		0x1014
->  #define PCI_SUBDEVICE_ID_IBM_SATURN_SERIAL_ONE_PORT	0x03d4
+> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> ---
+> v4 -> v5:
+>  - No changes.
 > 
+>  drivers/pci/controller/pcie-brcmstb.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 48b2747d8c98..59190d8be0fb 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -304,8 +304,8 @@ static int brcm_pcie_encode_ibar_size(u64 size)
+>  	if (log2_in >= 12 && log2_in <= 15)
+>  		/* Covers 4KB to 32KB (inclusive) */
+>  		return (log2_in - 12) + 0x1c;
+> -	else if (log2_in >= 16 && log2_in <= 35)
+> -		/* Covers 64KB to 32GB, (inclusive) */
+> +	else if (log2_in >= 16 && log2_in <= 36)
+> +		/* Covers 64KB to 64GB, (inclusive) */
+>  		return log2_in - 15;
+>  	/* Something is awry so disable */
+>  	return 0;
 > -- 
-> 2.45.2
+> 2.47.0
 > 
 
