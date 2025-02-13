@@ -1,268 +1,191 @@
-Return-Path: <linux-pci+bounces-21348-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21349-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22DDBA340CB
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 14:52:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C788A340DE
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 14:55:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C357016796E
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 13:52:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D7DA16A7CE
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 13:54:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 427A91487ED;
-	Thu, 13 Feb 2025 13:52:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFEAE12E7F;
+	Thu, 13 Feb 2025 13:54:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CBOBopqe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M3ntzWuX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA84221555;
-	Thu, 13 Feb 2025 13:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D6924BC15;
+	Thu, 13 Feb 2025 13:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739454734; cv=none; b=quNFI5sKeiYQKMjI4eTg1op2CL4SSj3NugvJ+2kSZ3Zp1YC8+QC/hOfIN2e5qsV4nYR6lv3ok50pzJ8NaEQngCUHzOmfwl5wsjRXmfz84k8jSavwC3KpSQpWxe2Az+j7WMxIOtxWAmZk4WqlI8vlzdWRMR6bFrGorKNU2jS8Th8=
+	t=1739454886; cv=none; b=UtyCLM7hOATlLMb+Z3QdFVSngUOHJrWcd4HJWFzhls4k9aaqdtE+5DdpDs9VJ4L8kjx1Rz7/+oRu3hGkxgIR3+j9wlxm5Fnp4TBpek/1XiVIY2FLe6BxxkB2KJhrtPQ6d047v7Yd37ld5nE+/qg++R781C8TqR3CeGyepaQRRuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739454734; c=relaxed/simple;
-	bh=hPyij9w0+TSS5N0ObgF86Lemn6NDwDx+jt3IirxrcuI=;
+	s=arc-20240116; t=1739454886; c=relaxed/simple;
+	bh=cJI7jSGBeMlBar7+EWkFpZ1IplMJwWUEjiBSpKW+aD0=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jVVIhTsTUuHjonqs4U4fWvSEMVvZKBpHrvLx353noNm6+LbrfLK3vtQIcldbxJ71cRuu+6Qx+SUSNyt2Wac2K8C8aYYDe3piNd/LjjPaEBmrVWVsNqKvg0akfzYWgn13v9vcKUTRDO3Wkc2Rvwe2408AwAdN3lqF2hmQonBlRoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CBOBopqe; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=upokSkebtIE841HypjqzYlY07J/3bjxiu4235k5deF/0cfI3jFqJcd6/S/JiOjvJlZr+PoFYZdCp/cqKTd08l1t4LnX3HMnCIWcJq1PVA3piG37RVaKj9zTRtiiAuerS78Zp/7jsh/LDu7Ia5lHEjvQ/jIv1BfXpLIJzmPtNBS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M3ntzWuX; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739454733; x=1770990733;
+  t=1739454885; x=1770990885;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=hPyij9w0+TSS5N0ObgF86Lemn6NDwDx+jt3IirxrcuI=;
-  b=CBOBopqe8hPzYhwRhfSTJLFe/Ik0qgd1r69do0NAo7yMDk6Dmd33eY1S
-   rulolu9vzg7PbSV9mWWPG56TJ7Uc7mqfbTiE+EMtFPYatQGMGn+U8ms35
-   sRlxpS85HMI1w4+a2SmSxA5DMBHtNvnWH+eRmSIXaKE68B+KCsB6jnGIN
-   w2A7kaTN3XDly0UVkBHDN5OdXnyy7TmZNXpAzrJcnX/5gQPvvfKr6w4BB
-   UPW0zNUgOdBM/tdKFbQn+F6Ao2LbcQhl6Fp90rm1mM2VZy8iJ+35m1oJB
-   jea5rQWBOeDdPiKtltD+7RmSpnVqzWUzS2t2WRGe5UNfl57aJUWSptP7p
-   w==;
-X-CSE-ConnectionGUID: oX1Goor9TViCeaVIwEmwSg==
-X-CSE-MsgGUID: 07yO4N8VTDOt82PaYpHg/w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="50370767"
+  bh=cJI7jSGBeMlBar7+EWkFpZ1IplMJwWUEjiBSpKW+aD0=;
+  b=M3ntzWuXKsu0Lsw78cFz5n0az1tE4psH0GMz1CFXZcRkqXSXFGpGt/nS
+   qgpUCL/KQVpdDNVgm7H8ezrAsXwNPlmyyKYo5C2zeeAspFEkayoivdnhf
+   nizNMqqI6GeWiMg6vcNpNGTPDdu7dFkGdLqadV8v92j0lrjEZYUmPbiA9
+   Wiy0hn24i8lktTiHEII58o0ZpfR3rAK93sp5MnWluyYwrFIEsKywl+NJ/
+   AxcWTlIHv6pkFav9X3CXQoyajwkv6aT5GsinP02pBzK+1zIoPibut9EVK
+   u17HG3QCHX2IUpiQagx+Ph8xjEfyuxFbk9ApFmbdQ55H6BSVHI9FtLm6S
+   g==;
+X-CSE-ConnectionGUID: oDUTqKLhTjWZXVuYcxoYVw==
+X-CSE-MsgGUID: 3NcqEwsgQUKDo4vN05Od0Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="51554182"
 X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="50370767"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 05:52:12 -0800
-X-CSE-ConnectionGUID: a/CaCx9GTWySUKAqSkvuvw==
-X-CSE-MsgGUID: 8VguVIf8TDKDfLiOckraDw==
+   d="scan'208";a="51554182"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 05:54:45 -0800
+X-CSE-ConnectionGUID: q185DkdGTQyur7kuyCwDkw==
+X-CSE-MsgGUID: vNmTYbuhT/Klxw9nmHksTw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="144096049"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="113020022"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.48])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 05:52:08 -0800
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 05:54:42 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 13 Feb 2025 15:52:05 +0200 (EET)
+Date: Thu, 13 Feb 2025 15:54:39 +0200 (EET)
 To: Bjorn Helgaas <helgaas@kernel.org>
 cc: Alex Williamson <alex.williamson@redhat.com>, 
     =?ISO-8859-15?Q?Christian_K=F6nig?= <ckoenig.leichtzumerken@gmail.com>, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
     Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/2] PCI: Avoid pointless capability searches
-In-Reply-To: <20250208050329.1092214-2-helgaas@kernel.org>
-Message-ID: <7dbb0d8b-3708-60ba-ee9e-78aa48bee160@linux.intel.com>
-References: <20250208050329.1092214-1-helgaas@kernel.org> <20250208050329.1092214-2-helgaas@kernel.org>
+Subject: Re: [PATCH 2/2] PCI: Cache offset of Resizable BAR capability
+In-Reply-To: <20250208050329.1092214-3-helgaas@kernel.org>
+Message-ID: <75bb62bd-7944-1d74-ad84-fd676c8bfb91@linux.intel.com>
+References: <20250208050329.1092214-1-helgaas@kernel.org> <20250208050329.1092214-3-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/mixed; boundary="8323328-264264680-1739454879=:12944"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-264264680-1739454879=:12944
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
 On Fri, 7 Feb 2025, Bjorn Helgaas wrote:
 
 > From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Many of the save/restore functions in the pci_save_state() and
-> pci_restore_state() paths depend on both a PCI capability of the device and
-> a pci_cap_saved_state structure to hold the configuration data, and they
-> skip the operation if either is missing.
-> 
-> Look for the pci_cap_saved_state first so if we don't have one, we can skip
-> searching for the device capability, which requires several slow config
-> space accesses.
-> 
-> Remove some error messages if the pci_cap_saved_state is not found so we
-> don't complain about having no saved state for a capability the device
-> doesn't have.  We have already warned in pci_allocate_cap_save_buffers() if
-> the capability is present but we were unable to allocate a buffer.
-> 
-> Other than the message change, no functional change intended.
-> 
+>=20
+> Previously most resizable BAR interfaces (pci_rebar_get_possible_sizes(),
+> pci_rebar_set_size(), etc) as well as pci_restore_state() searched config
+> space for a Resizable BAR capability.  Most devices don't have such a
+> capability, so this is wasted effort, especially for pci_restore_state().
+>=20
+> Search for a Resizable BAR capability once at enumeration-time and cache
+> the offset so we don't have to search every time we need it.  No function=
+al
+> change intended.
+>=20
 > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->  drivers/pci/pci.c       | 27 ++++++++++++++-------------
->  drivers/pci/pcie/aspm.c | 15 ++++++++-------
->  drivers/pci/vc.c        | 22 +++++++++++-----------
->  3 files changed, 33 insertions(+), 31 deletions(-)
-> 
+>  drivers/pci/pci.c   | 9 +++++++--
+>  drivers/pci/pci.h   | 1 +
+>  drivers/pci/probe.c | 1 +
+>  include/linux/pci.h | 1 +
+>  4 files changed, 10 insertions(+), 2 deletions(-)
+>=20
 > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 869d204a70a3..503376bf7e75 100644
+> index 503376bf7e75..cf2632080a94 100644
 > --- a/drivers/pci/pci.c
 > +++ b/drivers/pci/pci.c
-> @@ -1686,10 +1686,8 @@ static int pci_save_pcie_state(struct pci_dev *dev)
->  		return 0;
->  
->  	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
-> -	if (!save_state) {
-> -		pci_err(dev, "buffer not found in %s\n", __func__);
-> +	if (!save_state)
->  		return -ENOMEM;
-> -	}
->  
->  	cap = (u16 *)&save_state->cap.data[0];
->  	pcie_capability_read_word(dev, PCI_EXP_DEVCTL, &cap[i++]);
-> @@ -1742,19 +1740,17 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
->  
->  static int pci_save_pcix_state(struct pci_dev *dev)
->  {
-> -	int pos;
->  	struct pci_cap_saved_state *save_state;
-> +	u8 pos;
+> @@ -1872,7 +1872,7 @@ static void pci_restore_rebar_state(struct pci_dev =
+*pdev)
+>  =09unsigned int pos, nbars, i;
+>  =09u32 ctrl;
+> =20
+> -=09pos =3D pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
+> +=09pos =3D pdev->rebar_cap;
+>  =09if (!pos)
+>  =09=09return;
+> =20
+> @@ -3719,6 +3719,11 @@ void pci_acs_init(struct pci_dev *dev)
+>  =09pci_enable_acs(dev);
+>  }
+> =20
+> +void pci_rebar_init(struct pci_dev *pdev)
+> +{
+> +=09pdev->rebar_cap =3D pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBA=
+R);
+> +}
 > +
-> +	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
-> +	if (!save_state)
-> +		return -ENOMEM;
->  
->  	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
->  	if (!pos)
->  		return 0;
->  
-> -	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
-> -	if (!save_state) {
-> -		pci_err(dev, "buffer not found in %s\n", __func__);
-> -		return -ENOMEM;
-> -	}
-> -
->  	pci_read_config_word(dev, pos + PCI_X_CMD,
->  			     (u16 *)save_state->cap.data);
->  
-> @@ -1763,14 +1759,19 @@ static int pci_save_pcix_state(struct pci_dev *dev)
->  
->  static void pci_restore_pcix_state(struct pci_dev *dev)
->  {
-> -	int i = 0, pos;
->  	struct pci_cap_saved_state *save_state;
-> +	u8 pos;
-> +	int i = 0;
->  	u16 *cap;
->  
->  	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
-> -	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
-> -	if (!save_state || !pos)
-> +	if (!save_state)
->  		return;
-> +
-> +	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
-> +	if (!pos)
-> +		return;
-> +
->  	cap = (u16 *)&save_state->cap.data[0];
->  
->  	pci_write_config_word(dev, pos + PCI_X_CMD, cap[i++]);
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index e0bc90597dca..007e4a082e6f 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -35,16 +35,14 @@ void pci_save_ltr_state(struct pci_dev *dev)
->  	if (!pci_is_pcie(dev))
->  		return;
->  
-> +	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-> +	if (!save_state)
-> +		return;
-> +
->  	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
->  	if (!ltr)
->  		return;
->  
-> -	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-> -	if (!save_state) {
-> -		pci_err(dev, "no suspend buffer for LTR; ASPM issues possible after resume\n");
-> -		return;
-> -	}
-> -
->  	/* Some broken devices only support dword access to LTR */
->  	cap = &save_state->cap.data[0];
->  	pci_read_config_dword(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, cap);
-> @@ -57,8 +55,11 @@ void pci_restore_ltr_state(struct pci_dev *dev)
->  	u32 *cap;
->  
->  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
-> +	if (!save_state)
-> +		return;
-> +
->  	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
-> -	if (!save_state || !ltr)
-> +	if (!ltr)
->  		return;
->  
->  	/* Some broken devices only support dword access to LTR */
-> diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
-> index a4ff7f5f66dd..c39f3be518d4 100644
-> --- a/drivers/pci/vc.c
-> +++ b/drivers/pci/vc.c
-> @@ -355,20 +355,17 @@ int pci_save_vc_state(struct pci_dev *dev)
->  	int i;
->  
->  	for (i = 0; i < ARRAY_SIZE(vc_caps); i++) {
-> -		int pos, ret;
->  		struct pci_cap_saved_state *save_state;
-> +		int pos, ret;
-> +
-> +		save_state = pci_find_saved_ext_cap(dev, vc_caps[i].id);
-> +		if (!save_state)
-> +			return -ENOMEM;
->  
->  		pos = pci_find_ext_capability(dev, vc_caps[i].id);
->  		if (!pos)
->  			continue;
->  
-> -		save_state = pci_find_saved_ext_cap(dev, vc_caps[i].id);
-> -		if (!save_state) {
-> -			pci_err(dev, "%s buffer not found in %s\n",
-> -				vc_caps[i].name, __func__);
-> -			return -ENOMEM;
-> -		}
+>  /**
+>   * pci_rebar_find_pos - find position of resize ctrl reg for BAR
+>   * @pdev: PCI device
+> @@ -3733,7 +3738,7 @@ static int pci_rebar_find_pos(struct pci_dev *pdev,=
+ int bar)
+>  =09unsigned int pos, nbars, i;
+>  =09u32 ctrl;
+> =20
+> -=09pos =3D pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_REBAR);
+> +=09pos =3D pdev->rebar_cap;
+>  =09if (!pos)
+>  =09=09return -ENOTSUPP;
+> =20
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 01e51db8d285..d7b46ddfd6d2 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -799,6 +799,7 @@ static inline int acpi_get_rc_resources(struct device=
+ *dev, const char *hid,
+>  }
+>  #endif
+> =20
+> +void pci_rebar_init(struct pci_dev *pdev);
+>  int pci_rebar_get_current_size(struct pci_dev *pdev, int bar);
+>  int pci_rebar_set_size(struct pci_dev *pdev, int bar, int size);
+>  static inline u64 pci_rebar_size_to_bytes(int size)
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index b6536ed599c3..24dd3dcfd223 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2564,6 +2564,7 @@ static void pci_init_capabilities(struct pci_dev *d=
+ev)
+>  =09pci_rcec_init(dev);=09=09/* Root Complex Event Collector */
+>  =09pci_doe_init(dev);=09=09/* Data Object Exchange */
+>  =09pci_tph_init(dev);=09=09/* TLP Processing Hints */
+> +=09pci_rebar_init(dev);=09=09/* Resizable BAR */
+> =20
+>  =09pcie_report_downtraining(dev);
+>  =09pci_init_reset_methods(dev);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 47b31ad724fa..9e5bbd996c83 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -353,6 +353,7 @@ struct pci_dev {
+>  =09struct pci_dev  *rcec;          /* Associated RCEC device */
+>  #endif
+>  =09u32=09=09devcap;=09=09/* PCIe Device Capabilities */
+> +=09u16=09=09rebar_cap;=09/* Resizable BAR capability offset */
+>  =09u8=09=09pcie_cap;=09/* PCIe capability offset */
+>  =09u8=09=09msi_cap;=09/* MSI capability offset */
+>  =09u8=09=09msix_cap;=09/* MSI-X capability offset */
 
-I think this order change will cause a functional change because 
-pci_allocate_vc_save_buffers() only allocated for those capabilities that 
-are exist for dev. Thus, the loop will prematurely exit.
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-> -
->  		ret = pci_vc_do_save_buffer(dev, pos, save_state, true);
->  		if (ret) {
->  			pci_err(dev, "%s save unsuccessful %s\n",
-> @@ -392,12 +389,15 @@ void pci_restore_vc_state(struct pci_dev *dev)
->  	int i;
->  
->  	for (i = 0; i < ARRAY_SIZE(vc_caps); i++) {
-> -		int pos;
->  		struct pci_cap_saved_state *save_state;
-> +		int pos;
-> +
-> +		save_state = pci_find_saved_ext_cap(dev, vc_caps[i].id);
-> +		if (!save_state)
-> +			continue;
->  
->  		pos = pci_find_ext_capability(dev, vc_caps[i].id);
-> -		save_state = pci_find_saved_ext_cap(dev, vc_caps[i].id);
-> -		if (!save_state || !pos)
-> +		if (!pos)
->  			continue;
->  
->  		pci_vc_do_save_buffer(dev, pos, save_state, false);
-> 
-
--- 
+--=20
  i.
 
+--8323328-264264680-1739454879=:12944--
 
