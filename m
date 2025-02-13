@@ -1,168 +1,125 @@
-Return-Path: <linux-pci+bounces-21340-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21341-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EA86A33CF0
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 11:49:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68D2FA34057
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 14:26:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0C6857A3B15
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 10:48:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 223CE16A21F
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 13:26:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF86620E717;
-	Thu, 13 Feb 2025 10:49:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C871221733;
+	Thu, 13 Feb 2025 13:26:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2cV9Wio"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/UUx3at"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44539190477;
-	Thu, 13 Feb 2025 10:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2157723F417;
+	Thu, 13 Feb 2025 13:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739443747; cv=none; b=L6PaVbePKlelkWgWSsUIq6Xh6WsMn3TWPUyjQvEtzEy0cmmlVKcFdRQxpa2ZAWfel6BtUo70Yab89DeuN1ihaEPNcjsUUXojf83/t8JH3LM7lEUMu/zik8Q+zxwZZbfzn1dFkuKjLGq2Ntz0jutlQmP/4m3XwIfqaGilFYFMIWw=
+	t=1739453210; cv=none; b=TnDF5/oLOacfu9RBMLeqVRSdghRMysBws0V0h6zJolZr8ulAstmUTX8LJImOOPv1wwLbOLT3HfyBM+EpV6cg/Ty41Kn9QkyH7qq/n16/uKrDv5ZNC7lx3LejunfpG8B003tmDNCzabbVOp4hINNc5rKweZMPugVTxFQYGpgqQss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739443747; c=relaxed/simple;
-	bh=XJcMuzWHcfvIFulAAXufOZytkAhIQZd/BEnzBVlNqzE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gqH1gum7SzWHLQW+liDHCYJaM0qOrtJaIWpfbwmRZ5iTgIO/vKg16GeVM6FyO4h8TjZcEGZA7jl2Tk1+chmkGeCcHEGhjMEYl8l1awQdl3d/3ZCSCfl5iN6t4bJiByEmxyQXcsoabGFYtqQUPgKQ13rZHbFFkePIMyofRm/LKD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B2cV9Wio; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-220d28c215eso9160425ad.1;
-        Thu, 13 Feb 2025 02:49:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739443744; x=1740048544; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6gAqXc8HUCVABGZPiT8WxinVa7t3RXf3lPMGTe4zgq4=;
-        b=B2cV9Wio1fnZsCFO91/jAWT0RrxSqGUtJqs2SlI1utBaImRMqO1Ev97Irsr3FhLYgT
-         Ce1xm+4SVlUYqxZbfW1i6GEq7E86vXMtLQM6tqr3a0+VnnXnxeQYT0Wp5UI/4TZeanw/
-         JmsT8HNpaVJlOo1AlUdoIEVRCU3geMK7uJTZQyFDM0ffjyeAeVpwgposzSksU6vSk2AJ
-         ruCp8olhYdrKno2Hb1LFqqWVgVVfYSifhtp1Cwq93MlhmaAfrJ1/rh9J2NYODsrkYV5k
-         B7n66DW5pwTnhupEw4ObgxDJ+GKfmov2D9JBqtrp9iDVmIG5Cv2qzmBvYrWk7DUBkaKX
-         URhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739443744; x=1740048544;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6gAqXc8HUCVABGZPiT8WxinVa7t3RXf3lPMGTe4zgq4=;
-        b=T6uP0CqLBWNrleQrLEsimq/+O0g5LFddJ6bzYVaIplUuzps3ASUYw3xNkG0Kiu6uNS
-         x8iJROk0TVhihs19iXBoXNRMgijbK6gxD+FDosmNzbAUL144VerkLwxTubLuOHMm5w7Z
-         ytD3wvSIRs1gyyklOyc4FAkTdJt777og5Ih7mARLlrIzosQ3IjuCBoG0LKAwMJ8tiPVF
-         byBA4+txVJZ8G/o1cdW8BbvIkC61QZLp7T3HB3N7BlBglps3FOjTwtptmloc0k/iHswY
-         z0etJCQJVw/VSMBHDZtxLMur5HIvqB5k9QW3kQA22x5YJQxmCLUMhtpn/xl4k31qX9Lq
-         nL6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWOV2DP+gy580cvCTiBNVBgWhCsqXFXkC19ZjZ8Guej8+Gjt/29QFST42klGZ4TNdPzJVtcjhQXQgtjwDo=@vger.kernel.org, AJvYcCXsMj6Ve91bNHWVPiXosfp0O96zZtE9aX9HtyOJcjeP6VWHPXoLbXV4fNsPS+JEUcwq1OeTEoAYP81C@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRnh58OXKR9E6znuk1wyrsShPTeZ4v+a2cHk3sZx+0ncH8mB+Q
-	IX3ITCOouZz821EnYFFFYOZKN17sF3EuOeB7zlR1hHOPqykEzGNHPPpOMA==
-X-Gm-Gg: ASbGncsHSmT3XC0DQFDiQFZBa4L6aZ3CqUbcPwpFjU/hzSNOoLWtIJmhAEjRpF4L+Ce
-	AxM82xDfb15gLMY0x4017w2+iBBoIOeqSi9eBXzcw3mu9gpnfAbAoDrzgyeH2+HCwOvYL+F3yN2
-	i0/CVG1TWiAdmMh0J7D+3tHuidD3E+Rx6y4BTuLMuJs7axKCyomuR8BoszFzYSTaJmA9M31R9oj
-	9TDXBgLYZ1a5Lmvmb1wGWkSQO5gZpiAicn3UbeQ7Mh6CIMpk27VqLj5QkDSF7OTa4SqehfdJUg3
-	0XrXexHdkXedpx/KP7xDxJeP+p+FgrZhREQt2G0BBDU87CdtLGAmQgKnZzE=
-X-Google-Smtp-Source: AGHT+IHPI73iqJAhygL+ckoDjjYEVJ+PufLrEnm/87ssHD8ijoBVNGHMmXX1kXE88O++SXm+YNWUKg==
-X-Received: by 2002:a17:903:22cd:b0:220:c63b:d945 with SMTP id d9443c01a7336-220d1ed1d7amr49577425ad.14.1739443744433;
-        Thu, 13 Feb 2025 02:49:04 -0800 (PST)
-Received: from ?IPV6:2409:40c0:2e:ea4:cd5f:9fc:dd5e:c44e? ([2409:40c0:2e:ea4:cd5f:9fc:dd5e:c44e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5585708sm9752485ad.217.2025.02.13.02.49.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Feb 2025 02:49:04 -0800 (PST)
-Message-ID: <922bc558-4d5e-4e8d-bf9e-99fe0babfa5d@gmail.com>
-Date: Thu, 13 Feb 2025 16:18:58 +0530
+	s=arc-20240116; t=1739453210; c=relaxed/simple;
+	bh=ZKIHzO3MmoYTOlkYq7wpIbMxe+b5FuF0Cg59iiDAdz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gc7EGcZTBkLkgI1wY1Kos8pg/OYWDS+Q7Oj6/yv+mmdaAMkYP2VVx3vWc5EdWP2zx/oJkq2uTRft1I9STVxMMGXN/opRtAAYCFXzrsxtDZ3Oc9q2mQwL1/GmMxhSBYkCB7yw6wrrsgCLbjDcuEwT1wfrdUz7Kr6/0Xml9PYSTSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G/UUx3at; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30B13C4CED1;
+	Thu, 13 Feb 2025 13:26:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739453209;
+	bh=ZKIHzO3MmoYTOlkYq7wpIbMxe+b5FuF0Cg59iiDAdz8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G/UUx3atwiIbNuSprBKdrXNY1FKJK5o5lggdnt3LGge622e7qvDIu1pSc39IXnrzV
+	 actNRAiam3iyq1AsBhMNPjoLzNqZgcmGjRlDP165L/mcRjp2oaNnf54Aaa6XZSQ+Tq
+	 SkAWSpXsvCmJglX5TyMFIrbhz55AEzAVV6KW1M1s9DUfH+HQ6OFJDqs++cVJV7+Tkp
+	 e+RHGPUnz/Dl5WrJsL9Lj32WvUadCxWtZ7ApzVmwpWKVScm58519VnXmllJEVBBW25
+	 3yAVfaHnnjVksYUOfJTbpOV90IHbiUWEDRNfxTFA4kAplTnd5TwOxtKh7ibxHUxG02
+	 XuRZwdBNX84xA==
+Date: Thu, 13 Feb 2025 14:26:44 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3 3/5] misc: pci_endpoint_test: Fix irq_type to convey
+ the correct type
+Message-ID: <Z63zFBn6jDZG4s9d@ryzen>
+References: <20250210075812.3900646-1-hayashi.kunihiko@socionext.com>
+ <20250210075812.3900646-4-hayashi.kunihiko@socionext.com>
+ <Z6oi7lH7hhA3uN46@ryzen>
+ <9c465e4c-ed43-4fd1-b7a7-b4c49a996fe4@socionext.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drivers: pci: Fix flexible array usage
-To: Keith Busch <kbusch@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, skhan@linuxfoundation.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Alex Williamson <alex.williamson@redhat.com>
-References: <Z6qFvrf1gsZGSIGo@kbusch-mbp> <20250211210235.GA54524@bhelgaas>
- <Z6u-pwlktLnPZNF-@kbusch-mbp>
-Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <Z6u-pwlktLnPZNF-@kbusch-mbp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9c465e4c-ed43-4fd1-b7a7-b4c49a996fe4@socionext.com>
 
-On 12/02/25 02:48, Keith Busch wrote:
-> On Tue, Feb 11, 2025 at 03:02:35PM -0600, Bjorn Helgaas wrote:
->> This is kind of a complicated data structure.  IIUC, a struct
->> pci_saved_state is allocated only in pci_store_saved_state(), where
->> the size is determined by the sum of the sizes of all the entries in
->> the dev->saved_cap_space list.
->>
->> The pci_saved_state is filled by copying from entries in the
->> dev->saved_cap_space list.  The entries need not be all the same size
->> because we copy each entry manually based on its size.
->>
->> So cap[] is really just the base of this buffer of variable-sized
->> entries.  Maybe "struct pci_cap_saved_data cap[]" is not the best
->> representation of this, but *cap (a pointer) doesn't seem better.
+On Thu, Feb 13, 2025 at 07:21:45PM +0900, Kunihiko Hayashi wrote:
+> Hi Niklas,
 > 
-> The original code is actually correct despite using a flexible array of
-> a struct that contains a flexible array. That arrangement just means you
-> can't index into it, but the code is only doing pointer arithmetic, so
-> should be fine.
+> On 2025/02/11 1:01, Niklas Cassel wrote:
+> > On Mon, Feb 10, 2025 at 04:58:10PM +0900, Kunihiko Hayashi wrote:
+> > > There are two variables that indicate the interrupt type to be used
+> > > in the next test execution, "irq_type" as global and test->irq_type.
+> > > 
+> > > The global is referenced from pci_endpoint_test_get_irq() to preserve
+> > > the current type for ioctl(PCITEST_GET_IRQTYPE).
+> > > 
+> > > The type set in this function isn't reflected in the global "irq_type",
+> > > so ioctl(PCITEST_GET_IRQTYPE) returns the previous type.
+> > > As a result, the wrong type will be displayed in "pcitest" as follows:
+> > > 
+> > >      # pcitest -i 0
+> > >      SET IRQ TYPE TO LEGACY:         OKAY
+> > >      # pcitest -I
+> > >      GET IRQ TYPE:           MSI
+> > > 
+> > > Fix this issue by propagating the current type to the global "irq_type".
+> > > 
+> > > Cc: stable@vger.kernel.org
+> > > Fixes: b2ba9225e031 ("misc: pci_endpoint_test: Avoid using module
+> > parameter to determine irqtype")
+> > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > > ---
+> > >   drivers/misc/pci_endpoint_test.c | 1 +
+> > >   1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/drivers/misc/pci_endpoint_test.c
+> > b/drivers/misc/pci_endpoint_test.c
+> > > index f13fa32ef91a..6a0972e7674f 100644
+> > > --- a/drivers/misc/pci_endpoint_test.c
+> > > +++ b/drivers/misc/pci_endpoint_test.c
+> > > @@ -829,6 +829,7 @@ static int pci_endpoint_test_set_irq(struct
+> > pci_endpoint_test *test,
+> > >   		return ret;
+> > >   	}
+> > > +	irq_type = test->irq_type;
+> > 
+> > It feels a bit silly to add this line, when you remove this exact line in
+> > the next patch. Perhaps just drop this patch?
 > 
-> With this struct:
-> 
-> struct pci_saved_state {
->   	u32 config_space[16];
-> 	struct pci_cap_saved_data cap[];
-> };
-> 
-> Accessing "cap" field returns the address right after the config_space[]
-> member. When it's changed to a pointer type, though, it needs to be
-> initialized to *something* but the code doesn't do that. The code just
-> expects the cap to follow right after the config.
-> 
-> Anyway, to silence the warning we can just make it an anonymous member
-> and add 1 to the state to get to the same place in memory as before.
-> 
-> ---
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 869d204a70a37..e562037644fd0 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1929,7 +1929,6 @@ EXPORT_SYMBOL(pci_restore_state);
->   
->   struct pci_saved_state {
->   	u32 config_space[16];
-> -	struct pci_cap_saved_data cap[];
->   };
->   
->   /**
-> @@ -1961,7 +1960,7 @@ struct pci_saved_state *pci_store_saved_state(struct pci_dev *dev)
->   	memcpy(state->config_space, dev->saved_config_space,
->   	       sizeof(state->config_space));
->   
-> -	cap = state->cap;
-> +	cap = (void *)(state + 1);
->   	hlist_for_each_entry(tmp, &dev->saved_cap_space, next) {
->   		size_t len = sizeof(struct pci_cap_saved_data) + tmp->cap.size;
->   		memcpy(cap, &tmp->cap, len);
-> @@ -1991,7 +1990,7 @@ int pci_load_saved_state(struct pci_dev *dev,
->   	memcpy(dev->saved_config_space, state->config_space,
->   	       sizeof(state->config_space));
->   
-> -	cap = state->cap;
-> +	cap = (void *)(state + 1);
->   	while (cap->size) {
->   		struct pci_cap_saved_state *tmp;
->   
-> --
+> This fix will be removed in patch 4/5, so it seems no means.
+> However, there is an issue in the stable version, as mentioned in the
+> commit message, so I fix it here.
 
-Thanks for the clarification. I now see that the original use of a 
-flexible array inside 'pci_saved_state' is correct. Would you like me to 
-resend the patch with the modifications you suggested?
+Ok. Having a small fix first that can be backported, which is then followed
+by a bigger cleanup, makes sense in this case.
+
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
 
