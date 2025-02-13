@@ -1,170 +1,82 @@
-Return-Path: <linux-pci+bounces-21333-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21334-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17ECBA33A2E
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 09:39:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C739A33AC9
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 10:15:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 10A07188CDB3
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 08:38:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B49EC3AB551
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 09:13:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C71F20C469;
-	Thu, 13 Feb 2025 08:38:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8535211A2A;
+	Thu, 13 Feb 2025 09:09:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MsTGk3Dv";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="brnM1jO4";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MsTGk3Dv";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="brnM1jO4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A4xw9V3n"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF9720C025;
-	Thu, 13 Feb 2025 08:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74333211A0D;
+	Thu, 13 Feb 2025 09:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739435909; cv=none; b=HzjLgXux2C6LI1hxBAbYuSzl6vLOkmW7XvFIGQdYVSl6geRfaABAwCcChytcUYg751ncQyE4P9mQDFzCRUVvp+eL7WSJduq/4VWoK8KvKzZH0jwN2feO6bBb8OQRnmylB3+RHcKqGEKGoAG+OkUNdVmV5x5IsRfsrZBMQxisZ/o=
+	t=1739437798; cv=none; b=Oxd+/4Z7/ZeVsGp1lIG337jTNApa23wUhSzdI533JzRmJ0oiCe0c2guX+2gk0DTSCxYCyl+bYwfuJtbTPjMMwI5C/Fsyg+B2oRwKaf1Tlte9OtGw+PqzMGB9ZT3RMASBx0QJMb3jIhObZDMfw3qCY3xSLJ9fYSw0geQ58cHXMr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739435909; c=relaxed/simple;
-	bh=HJpCxvhCY2DXuslYs2erMx1LynYtSqN+doSESQr/4a0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FnSlHQN+p7eKA+IyOZjvEWZQQpH1H9rYERF6I69bFEq/pr6Qyzv1MzZhhs8EFETJYrohjdBwcD+2ym3t8KKKgSj5pjPYvAqOiLDqbJRcrvirOghpHGvamCvzKhkQ3EHM0LvnUPNZGYUfe6lTku+0NrxbDEpd1ApUe3ZYV9Q/vGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MsTGk3Dv; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=brnM1jO4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MsTGk3Dv; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=brnM1jO4; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9CBD7220A7;
-	Thu, 13 Feb 2025 08:38:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739435905; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=otOkzlJsKO7j/ah8zQ5Pm/e4WJCfWL+ivuU6UE+K9H4=;
-	b=MsTGk3DvD05bVUFG2ykkdN4zNunbEDORKol2WEknEyOpVttQqeQLHazm69GChvn4YAs+ph
-	Rhv3hQFewhKiHj1SM9Z9RMIqg/PvwsFfPOwDmoav7gHqQ3AF4TzlAPAl0t06lffN3Egw2V
-	jjC4cOeOEcWCc/mNEvjOfixBYYCfEFQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739435905;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=otOkzlJsKO7j/ah8zQ5Pm/e4WJCfWL+ivuU6UE+K9H4=;
-	b=brnM1jO4Ql8tmRw87+2n05FTeQU4ou6FHbMvtINPsyTN7mtOfCR0zvlhYCm3vrv2d646t9
-	nS38fHLQOUjIWRDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1739435905; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=otOkzlJsKO7j/ah8zQ5Pm/e4WJCfWL+ivuU6UE+K9H4=;
-	b=MsTGk3DvD05bVUFG2ykkdN4zNunbEDORKol2WEknEyOpVttQqeQLHazm69GChvn4YAs+ph
-	Rhv3hQFewhKiHj1SM9Z9RMIqg/PvwsFfPOwDmoav7gHqQ3AF4TzlAPAl0t06lffN3Egw2V
-	jjC4cOeOEcWCc/mNEvjOfixBYYCfEFQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1739435905;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=otOkzlJsKO7j/ah8zQ5Pm/e4WJCfWL+ivuU6UE+K9H4=;
-	b=brnM1jO4Ql8tmRw87+2n05FTeQU4ou6FHbMvtINPsyTN7mtOfCR0zvlhYCm3vrv2d646t9
-	nS38fHLQOUjIWRDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4E7E9137DB;
-	Thu, 13 Feb 2025 08:38:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1257EICvrWeybwAAD6G6ig
-	(envelope-from <svarbanov@suse.de>); Thu, 13 Feb 2025 08:38:24 +0000
-Message-ID: <1ff57101-9aa4-4508-b5e5-3f34a89888d8@suse.de>
-Date: Thu, 13 Feb 2025 10:38:08 +0200
+	s=arc-20240116; t=1739437798; c=relaxed/simple;
+	bh=yzTo+VSqdbP5hYD2auan7a+l2E2+Wwt1B7liKWHLG5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hE3M20ri2ObC9GezMnZeqDGGwZ7FF1jx5CNnEPFw1Ln1zaPbxmkHv48OANtiLpcA3CFoT4LWa1GSo8We+4nimJ2aWaxCrP7DRhJNhPEuEgw5q2RF93vnKGIgDOLZOvMA5vkHEbakajsk22kqW6zzshCYe4ERWXD20qWLMqNnDEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A4xw9V3n; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B1E3C4CEE6;
+	Thu, 13 Feb 2025 09:09:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739437798;
+	bh=yzTo+VSqdbP5hYD2auan7a+l2E2+Wwt1B7liKWHLG5U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A4xw9V3nRsRa6ghT9q+jymjVNL2RKfNOZ2YBFCEGAkzEyQWHExLusTZusYF8k7vaF
+	 kIkkKWGJEIZUucKG7cSvSytTwjgRa6WiLUGWQU9LX8JLeVoFewPLUv+ZIvDahdhSpZ
+	 E+k/ZRDjgWb0+NwPxPjtHcJuFMxFP3uwgeCBkI+nPdVsrj7vAKNw9LUrMXz3KWvzFm
+	 /qf9TC0syXuIecZUGTaFX8/+QF4Ug6oVsyAVx4sQ4uNP23Wj7HKcGu6dA0PkvSyHUQ
+	 mFZXoKFadv37t+Cdqk4Kb8sBcTAnJ/3kPdyGqvgCKEVDLwSEDPCLHPCzhnrAxoLAeJ
+	 Jl1FczADjsROA==
+Date: Thu, 13 Feb 2025 10:09:54 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Mark Kettenis <kettenis@openbsd.org>, 
+	Marc Zyngier <maz@kernel.org>, Stan Skowronek <stan@corellium.com>, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] dt-bindings: pci: apple,pcie: Add t6020 support
+Message-ID: <20250213-faithful-ibex-of-feminism-3aea45@krzk-bin>
+References: <20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io>
+ <20250211-pcie-t6-v1-1-b60e6d2501bb@rosenzweig.io>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 -next 00/11] Add PCIe support for bcm2712
-To: Bjorn Helgaas <helgaas@kernel.org>, Stanimir Varbanov <svarbanov@suse.de>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Bjorn Helgaas
- <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Jim Quinlan <jim2101024@gmail.com>,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, kw@linux.com,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Andrea della Porta <andrea.porta@suse.com>,
- Phil Elwell <phil@raspberrypi.com>, Jonathan Bell
- <jonathan@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>
-References: <20250212180416.GA86064@bhelgaas>
-Content-Language: en-US
-From: Stanimir Varbanov <svarbanov@suse.de>
-In-Reply-To: <20250212180416.GA86064@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,broadcom.com,google.com,linutronix.de,kernel.org,gmail.com,linux.com,pengutronix.de,suse.com,raspberrypi.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250211-pcie-t6-v1-1-b60e6d2501bb@rosenzweig.io>
 
-Hi Bjorn,
-
-On 2/12/25 8:04 PM, Bjorn Helgaas wrote:
-> On Tue, Feb 11, 2025 at 03:30:22PM +0200, Stanimir Varbanov wrote:
->> Hi Bjorn,
->>
->> Do I need to send a new version with the collected Acked/Reviewed tags?
+On Tue, Feb 11, 2025 at 02:54:26PM -0500, Alyssa Rosenzweig wrote:
+> This shuffles some registers versus t6000, so requires a new compatible.
 > 
-> No need to resend unless you change the code.
+> Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> ---
+>  Documentation/devicetree/bindings/pci/apple,pcie.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-At this point I have no plans to change the code.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> 
-> Bjorn
-
-Thank you!
-
-~Stan
+Best regards,
+Krzysztof
 
 
