@@ -1,55 +1,56 @@
-Return-Path: <linux-pci+bounces-21388-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21389-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA2B8A350A1
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 22:46:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD588A350E5
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 23:05:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 53BB13ADD33
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 21:46:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 787B71890CAD
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 22:05:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3556B24169C;
-	Thu, 13 Feb 2025 21:46:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3E0020D50E;
+	Thu, 13 Feb 2025 22:04:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDVYB6ZP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="talKcyaI"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9141714B7;
-	Thu, 13 Feb 2025 21:46:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C1A20CCE2;
+	Thu, 13 Feb 2025 22:04:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739483181; cv=none; b=Lo4AfRmojvHEVZCJRDBaY8yAjXcxM2WNCOnbYk0v1Y8UXz5yU20pj3PtajPVvT6+pMxwxKtfxvFWOwzEtT9xETOtxseTrdbodcuduVv+I1WcuxlFRa40aqjrLA7f+cZs1T66p4jjaeaMTsyW73mZfZK+I9B9tcJn3q9sS7V/lBE=
+	t=1739484295; cv=none; b=K9axs+9X/5ZYP/eFNBq3bH8FJvMfSFMYeiCt7JF2P217YXx2+4hTR9HA1kAwMg/nC1MPyXWgMXo8YMxbSgoIsVkMzZ967JbCv/hMpfCNvLkIs+eAz5t6bzXGosDjY8OJvIqxgTlMkG9iekH8Q0Pl+NELlqwXk+G+oGRygM9VaNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739483181; c=relaxed/simple;
-	bh=WN1izrHpHS8vpC+8IvMWIbDSUAEMyvQrALWFdqnuBdo=;
+	s=arc-20240116; t=1739484295; c=relaxed/simple;
+	bh=1/WveDm/ekbxB+e2hgWNoswGMfH9BEp6P/yKiJf4W30=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=D2WEihNHY8YjuYWB+7ywhDjdKvGn3WUzdqRIACNWdCyLiO9yjqUo9pjj7YQejBl47UkAXom+9VxLULfLG5IlYxPxu46rw82B5JZne3yUTVKn9LTMPQMCc/vb596/QhGDmTG1WPlgN1fgG1tjYoJFQyAX+L5qNHvg7GahgX+z93I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDVYB6ZP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE65C4CEE9;
-	Thu, 13 Feb 2025 21:46:20 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=ESze8nDBaSTpYaysg0Pm+CXByg4k3LI66cV4oolK2XowqDuyqjqMHPtuf/B8zF4ucZJQSchCEdcVrRrLjaiUoeG5fSt9pJzbKxWRIueFygVLDuDpZaNcJrngrCLM1Pyn/3CCiCNbwOG63wbwifPIlB+s9WMnALQ/vyrYn+zkmYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=talKcyaI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA989C4CED1;
+	Thu, 13 Feb 2025 22:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739483180;
-	bh=WN1izrHpHS8vpC+8IvMWIbDSUAEMyvQrALWFdqnuBdo=;
+	s=k20201202; t=1739484295;
+	bh=1/WveDm/ekbxB+e2hgWNoswGMfH9BEp6P/yKiJf4W30=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=nDVYB6ZP3BEivt/jaDZwf8tWnqX/1BhpDuW0zGcXfyiiAWUtNGI1V9IIi53/EBI1i
-	 cKAeJH/MJ1g/86kibrbANTYDqvZu+VR/jRolfljZikAhxGkS47yEQzAj4H5G34ETnQ
-	 ebT48FZDQ2CzM7IqfJ9t7iaLXOZyCDvUnqJls+sHELbPfi8tPZkMO3D16Nh/v0z+9K
-	 zkd5HDws1HGebBHv1uk8zq9Tdk2hG1l+a/v9L8f0yVP2798Y7yRFn9vscL/x2nnMin
-	 eBYGyRylU7JexwdNHLNCt9EoAnmRw4YYpLTZsxYaL4LYDSDwzS9LwvLDXgsqR2Tw+k
-	 ROHTo44WTzr5g==
-Date: Thu, 13 Feb 2025 15:46:18 -0600
+	b=talKcyaIhuIqjTNEjZE/LJL4lAacjN+SrWguhvlv7aYxpZiEg2znEHLgZvJygvpFk
+	 iaNUgjNYGHyxc1HYl3ewtpvlmNDrHmYlwCqZFXytRQVgxtDPXlHqX5g74W1MzH3PTX
+	 7xNaQCHaSbgPzLovB0fjp/MByTd/XiDzkYBTY6DPh7TdIDmkVz7YL/hRIzOqt7kEnG
+	 Ae6TjTTO0rnZpJE9GK2HYgAKwyf9Wd9hH9bCbWvfAirWeZSRXa1msSZdXCk9TeBmT5
+	 CC4NbHkEb2TqpwY1f8kWK/QLNnToTzUqKGgASD1ZWBEI9AS33rk9N3SXE3cPXIzrpt
+	 PpfdHG9z+E+jg==
+Date: Thu, 13 Feb 2025 16:04:53 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
-	Igor Mammedov <imammedo@redhat.com>, linux-kernel@vger.kernel.org,
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 00/25] PCI: Resource fitting/assignment fixes and cleanups
-Message-ID: <20250213214618.GA131855@bhelgaas>
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>
+Subject: Re: [PATCH 3/4] PCI: shpchp: Cleanup logging and debug wrappers
+Message-ID: <20250213220453.GA135512@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,74 +60,47 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20241216161012.1774-4-ilpo.jarvinen@linux.intel.com>
 
-On Mon, Dec 16, 2024 at 07:56:07PM +0200, Ilpo Järvinen wrote:
-> Hi all,
+On Mon, Dec 16, 2024 at 06:10:11PM +0200, Ilpo Järvinen wrote:
+> The shpchp hotplug driver defines logging wrappers ctrl_*() and another
+> set of wrappers with generic names which are just duplicates of
+> existing generic printk() wrappers. Only the former are useful to
+> preserve as they handle the controller dereferencing (the latter are
+> also unused).
 > 
-> This series focuses on PCI resource fitting and assignment algorithms.
-> I've further changes in works to enable handling resizable BARs better
-> during resource fitting built on top of these, but that's still WIP and
-> this series seems way too large as is to have more stuff included.
-> 
-> First there are small tweaks and fixes to the relaxed tail alignment
-> code and applying the lessons learned to other similar cases. They are
-> sort of independent of the rest. Then a large set of pure cleanups and
-> refactoring that are not intended to make any functional changes.
-> Finally, starting from "PCI: Extend enable to check for any optional
-> resource" are again patches that aim to make behavioral changes to fix
-> bridge window sizing to consider expansion ROM as an optional resource
-> (to fix a remove/rescan cycle issue) and improve resource fitting
-> algorithm in general.
-> 
-> The series includes one of the change from Michał Winiarski
-> <michal.winiarski@intel.com> as these changes also touch the same IOV
-> checks.
-> 
-> Please let me know if you'd prefer me to order the changes differently
-> or split it into smaller chunks.
-> 
-> 
-> I've extensively tested this series over the hosts in our lab which
-> have quite heterogeneous PCI setup each. There were no losses of any
-> important resource. Without pci=realloc, there's some churn in which of
-> the disabled expansion ROMs gets a scarce memory space assigned (with
-> pci=realloc, they are all assigned large enough bridge window).
-> 
-> 
-> Ilpo Järvinen (24):
->   PCI: Remove add_align overwrite unrelated to size0
->   PCI: size0 is unrelated to add_align
->   PCI: Simplify size1 assignment logic
->   PCI: Optional bridge window size too may need relaxing
->   PCI: Fix old_size lower bound in calculate_iosize() too
->   PCI: Use SZ_* instead of literals in setup-bus.c
->   PCI: resource_set_range/size() conversions
->   PCI: Check resource_size() separately
->   PCI: Add pci_resource_num() helper
->   PCI: Add dev & res local variables to resource assignment funcs
->   PCI: Converge return paths in __assign_resources_sorted()
->   PCI: Refactor pdev_sort_resources() & __dev_sort_resources()
->   PCI: Use while loop and break instead of gotos
->   PCI: Rename retval to ret
->   PCI: Consolidate assignment loop next round preparation
->   PCI: Remove wrong comment from pci_reassign_resource()
->   PCI: Add restore_dev_resource()
->   PCI: Extend enable to check for any optional resource
->   PCI: Always have realloc_head in __assign_resources_sorted()
->   PCI: Indicate optional resource assignment failures
->   PCI: Add debug print when releasing resources before retry
->   PCI: Use res->parent to check is resource is assigned
->   PCI: Perform reset_resource() and build fail list in sync
->   PCI: Rework optional resource handling
-> 
-> Michał Winiarski (1):
->   PCI: Add a helper to identify IOV resources
-> 
->  drivers/pci/pci.h       |  44 +++-
->  drivers/pci/setup-bus.c | 566 +++++++++++++++++++++++-----------------
->  drivers/pci/setup-res.c |   8 +-
->  3 files changed, 364 insertions(+), 254 deletions(-)
+> The "shpchp_debug" module parameter is used to enable debug logging.
+> The generic ability to turn on/off debug prints dynamically covers this
+> usecase already so there is no need to module specific debug handling.
+> The ctrl_dbg() wrapper also uses a low-level pci_printk() despite
+> always using KERN_DEBUG level.
 
-Applied to pci/resource for v6.15, thanks, Ilpo!
+I think it's great to get rid of the module param.  Can you include
+a hint about how users of shpchp_debug should now enable debug prints?
+
+The one I have in my notes is to set CONFIG_DYNAMIC_DEBUG=y and boot
+with 'dyndbg="file drivers/pci/* +p"'.
+
+> Convert ctrl_dbg() to use the pci_dbg() and remove "shpchp_debug" check
+> from it.
+> 
+> Removing the non-ctrl variants of logging wrappers and "shpchp_debug"
+> module parameter as they are no longer used.
+
+> -#define dbg(format, arg...)						\
+> -do {									\
+> -	if (shpchp_debug)						\
+> -		printk(KERN_DEBUG "%s: " format, MY_NAME, ## arg);	\
+> -} while (0)
+> -#define err(format, arg...)						\
+> -	printk(KERN_ERR "%s: " format, MY_NAME, ## arg)
+> -#define info(format, arg...)						\
+> -	printk(KERN_INFO "%s: " format, MY_NAME, ## arg)
+> -#define warn(format, arg...)						\
+> -	printk(KERN_WARNING "%s: " format, MY_NAME, ## arg)
+
+The above are unused, aren't they?  Can we make a separate patch to
+remove these, for ease of describing and reviewing?
+
+Bjorn
 
