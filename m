@@ -1,121 +1,183 @@
-Return-Path: <linux-pci+bounces-21374-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21375-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC224A34CAE
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 19:01:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66090A34CB4
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 19:01:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0B1D3A4B4D
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 18:00:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 034001885D94
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 18:01:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F110221725;
-	Thu, 13 Feb 2025 18:00:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B707206F0C;
+	Thu, 13 Feb 2025 18:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="cJCGrLX+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKkAptOe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF9B28A2C3
-	for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 18:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3C928A2AE;
+	Thu, 13 Feb 2025 18:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739469659; cv=none; b=qKNrp+0WkhXNcOBOVRcR7c/TfTbOdZJQETA+Xt22Cj/Mgxo3W0Cqv8l28iLD3etn68ZWG/Ko2NZPWE9SjSVML7FL6QMmysXOijh9pT+usCf/mIqHwGiX6RN/oixAAS22x3iBeaRkUdqcshe+qVoyRVVCQlviy9yiunUTg0QTumE=
+	t=1739469698; cv=none; b=gbid2NpzVzdT6yB/73i2uE7xVKpKKPyNQpLoZ1C4DyABYS74+eHFTWyIADE4WkKCU0nkiCGK+tna6rfafyMdb1qeccBO9WJ+/E0FIKX97zIEP7+R7chmbPuj/Bt10W7meM0CHwlatcRDrogAcGJNyoV2Jrzrq7eO7lqnpnuCp00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739469659; c=relaxed/simple;
-	bh=4abGwX6CzCq8We7SpM6V7/PXsy+lszV/t7IY70ml+U4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JIXUlpsUv8P8oXiiWiw33sdF8GxFiQBm6GASvUcDtFoT7yotwZ4koRCcM74m+rD9WQ6SWcY0+3PacwhlgynfBSG723iY/q0R1ezEOyGs4BWQe0kIEHeVQaDNYMccLgdZuAvhI5YtSHnFmWnswhneqYcMmZens9ErrqfPrKO2iKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=cJCGrLX+; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ab7c07e8b9bso212027266b.1
-        for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 10:00:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1739469656; x=1740074456; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4abGwX6CzCq8We7SpM6V7/PXsy+lszV/t7IY70ml+U4=;
-        b=cJCGrLX+wDKWARKqV36CmQ8v+Y8fjyp2liuM+b6HHeROpMu51/0IkJyyX9+E78Edx8
-         8BXOOyB8smbNCYf7SGv8GpQ6RN02D19CjPfSQn8vXnZhR0gFSFPRqf+OrbfzzdKwh+0R
-         VMlvu5+gB5geyZ+YsYgzBwrNBp6rE0BtISkAKInDyjNy6EQpEB6gFOyUGreWJ3LaeQsd
-         zd9fRqW+ErWYIBZeFeg+sGiwOyi3qvVWWw5aYY0JMvDCJFHkpB6VqBj6EJTfPFs17L5j
-         apV2zGKzMeMZaLDxTDfZh/BLXpPfEa2Qoooa/yYVgK7RNkUTYmHUac9MajCY5eyI9qSb
-         sbNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739469656; x=1740074456;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4abGwX6CzCq8We7SpM6V7/PXsy+lszV/t7IY70ml+U4=;
-        b=JqXEADSt8jccc7xaflHPblvlclJlRQAh+Neb2wwy9KVdEhgorOTv/UklYmKNpgwWhA
-         QYU6ikg4m0Y/mXmJjWaJ9+3iftN2GIWAMt9Bw+Wbk+/p1/OqGXoWzmLrJHm2zTW6IUje
-         cxUbAIUnWm9plGNTQBQ8Y4uySiYF+ywnMQ6tKZgViEUZhdu0+E3U13E6hSxSVUMs/Aku
-         Zk9C3+mwYLD71dmOCyLWHviSx9akutS0mevuf71L4WNMXu+zdOXq/MAXHY/AkmCwrusu
-         FZy+xRtAd/ZDLUPHy4aCWfwJ+h2lSt9+l/xsFzWzAV0PCx4Prz1Hz62YnvwhTxVClZ6N
-         PVmA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrcwZLPXbftXYXygMJ5dHU6R1CTr9Er6zt4VfGg7ww+TqBS+Rxt6tLUBmQ7NqMVDPYT8wpzVGKUZQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycZWdZbbBcWKyAJZIzzPP+e1yNgcbkh+C6VvZTpD2TnRqC7bpQ
-	z9YOMrvLjnsbHfGbe8DPq+zIXLEUwFD+joVUU8RQuRUp/EItfHvBpV2ZaTdnY/7QIwKSuG9YDrp
-	exLPqRNF7g+7bS3ofhhcAbXYu7GpzDVjthMbXYg==
-X-Gm-Gg: ASbGnct0mDgl/te8Mu+1g5sy7bqXkW3TxTAGasKmYxxJ9OKBmPLUJMfTJ2gszxzJEkV
-	M2fwteb6GqDd6u67J2wx4eOH8W9lbBbIz55Ytg8QnYu28+2wA6BcLH4oLB2Qr5pdEGpy6MvJb5V
-	SvcTpuJGxfNzjvLoaIxU5wj5l4nmbD
-X-Google-Smtp-Source: AGHT+IEPn1vehWPEneMvy4h+MekCpIWgHCiWfjunKXP/Rg/zGzFsLUQXgBKZUi6VnPclc10evNFU6A3yPAiro3jiL5E=
-X-Received: by 2002:a17:906:7807:b0:ab7:6369:83fc with SMTP id
- a640c23a62f3a-ab7f34af3d5mr742379366b.38.1739469655305; Thu, 13 Feb 2025
- 10:00:55 -0800 (PST)
+	s=arc-20240116; t=1739469698; c=relaxed/simple;
+	bh=NW1OYpe2mVwwte24KvqPb9pRL5isVReq3c3DtOOBBMA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bfHK71XE+ZeO9pXVHwCccTxoo2bA6241SbkPLdtqBAupemSKXoD0t7Dgye8oV+Cdck94jh/0tepfPTNfYjKKPMV45FBNgF5xqZtLQcElUdowIEdW0mWcgig24KCJcEqnApB0HJH8U9/91DpTXf68TRyefgITvLPBFZd2ArbZmLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKkAptOe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC4BC4CED1;
+	Thu, 13 Feb 2025 18:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739469697;
+	bh=NW1OYpe2mVwwte24KvqPb9pRL5isVReq3c3DtOOBBMA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lKkAptOe5ZG6vP8rPEis0AlEiA/1jNEChi09tTGq67mYGQvoYjq2QsQirFo+qzZgb
+	 lQ+hWQtnhgTT5QDZIgLE0LLK/qzdHBxEs1u3jP1jbVy94VndeSRhUaa42fTPoXmUqj
+	 pivxwi3j9oPp4knqLBaU597hhT9pV1fhknls8UaWBTrKic1gyFlvuxDovPaJkjkHow
+	 fOkRlYpLpYgd8zNL2X4qtYZnDaLpQS5UPyQudbGm2tBsFUeanF/x7OySGyxItxrZ2K
+	 CIQ52uBM+57WBFOnOJvGIdA3m2yKZ4t4E+ybCY5Pd/bwH1tUj0GrrJZymNHMOSdvEg
+	 JRwnbdjsJbEOQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tidWn-003nTm-Sy;
+	Thu, 13 Feb 2025 18:01:35 +0000
+Date: Thu, 13 Feb 2025 18:01:33 +0000
+Message-ID: <86r041sozm.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,	Hector Martin
+ <marcan@marcan.st>,	Sven Peter <sven@svenpeter.dev>,	Bjorn Helgaas
+ <bhelgaas@google.com>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,	Krzysztof
+ =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,	Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>,	Krzysztof Kozlowski
+ <krzk+dt@kernel.org>,	Conor Dooley <conor+dt@kernel.org>,	Mark Kettenis
+ <kettenis@openbsd.org>,	Stan Skowronek <stan@corellium.com>,
+	asahi@lists.linux.dev,	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/7] PCI: apple: Add T602x PCIe support
+In-Reply-To: <CAL_JsqJ-sYsy-11_UiEKrKok49-a-VJUvm3vBGbpu9vY3TKLUw@mail.gmail.com>
+References: <20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io>
+	<20250211-pcie-t6-v1-7-b60e6d2501bb@rosenzweig.io>
+	<CAL_JsqJ-sYsy-11_UiEKrKok49-a-VJUvm3vBGbpu9vY3TKLUw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
- <20250213171435.1c2ce376@bootlin.com> <a3c5103c-829a-4301-ba53-6ef9bd1e74e7@lunn.ch>
- <CAMEGJJ3-JXhin_Ht76EqUNAwLiNisa9PrCrdUzCgj=msGZfb5A@mail.gmail.com>
- <20250213180733.11999e07@bootlin.com> <CAMEGJJ2FB-wwyOtjjCmPJ-vUDpZaV-8MMXxV13qXnKxYSzt9pw@mail.gmail.com>
- <07b973c1-4e35-440c-9009-85302a455912@lunn.ch>
-In-Reply-To: <07b973c1-4e35-440c-9009-85302a455912@lunn.ch>
-From: Phil Elwell <phil@raspberrypi.com>
-Date: Thu, 13 Feb 2025 18:00:44 +0000
-X-Gm-Features: AWEUYZk57dt7oMdE7oJWluEUSR6yrcUWkxTlMHydzKGl0ZQ5NYeC-9oOiQGkrQw
-Message-ID: <CAMEGJJ3++pZtOEvjAm2zMPVrLxQPtuzBWh4QQzGAt3NWuyyrJQ@mail.gmail.com>
-Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device using
- a DT overlay
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Herve Codina <herve.codina@bootlin.com>, Andrea della Porta <andrea.porta@suse.com>, 
-	Arnd Bergmann <arnd@arndb.de>, 
-	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com, brgl@bgdev.pl, 
-	Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>, derek.kiernan@amd.com, 
-	devicetree@vger.kernel.org, dragan.cvetic@amd.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org, kw@linux.com, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, lpieralisi@kernel.org, 
-	luca.ceresoli@bootlin.com, manivannan.sadhasivam@linaro.org, 
-	masahiroy@kernel.org, Michael Turquette <mturquette@baylibre.com>, 
-	Rob Herring <robh@kernel.org>, saravanak@google.com, Stephen Boyd <sboyd@kernel.org>, 
-	thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, 
-	Will Deacon <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: robh@kernel.org, alyssa@rosenzweig.io, marcan@marcan.st, sven@svenpeter.dev, bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, krzk+dt@kernel.org, conor+dt@kernel.org, kettenis@openbsd.org, stan@corellium.com, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, 13 Feb 2025 at 17:51, Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > etc. The same problem would exist for U-boot. Even though RP1 has a
-> > standard XHCI controller
->
-> Although it is a standard XHCI controller, i assume it is not a PCIe
-> XHCI controller which can just be enumerated as a PCIe device?
+On Thu, 13 Feb 2025 17:56:19 +0000,
+Rob Herring <robh@kernel.org> wrote:
+>=20
+> On Tue, Feb 11, 2025 at 1:54=E2=80=AFPM Alyssa Rosenzweig <alyssa@rosenzw=
+eig.io> wrote:
+> >
+> > From: Hector Martin <marcan@marcan.st>
+> >
+> > This version of the hardware moved around a bunch of registers, so we
+> > drop the old compatible for these and introduce register offset
+> > structures to handle the differences.
+> >
+> > Signed-off-by: Hector Martin <marcan@marcan.st>
+> > Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> > ---
+> >  drivers/pci/controller/pcie-apple.c | 125 ++++++++++++++++++++++++++++=
+++------
+> >  1 file changed, 105 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controll=
+er/pcie-apple.c
+> > index 7f4839fb0a5b15a9ca87337f53c14a1ce08301fc..7c598334427cb56ca066890=
+ac61143ae1d3ed744 100644
+> > --- a/drivers/pci/controller/pcie-apple.c
+> > +++ b/drivers/pci/controller/pcie-apple.c
+> > @@ -26,6 +26,7 @@
+> >  #include <linux/list.h>
+> >  #include <linux/module.h>
+> >  #include <linux/msi.h>
+> > +#include <linux/of_device.h>
+>=20
+> Drivers should not need this...
+>=20
+> > +const struct reg_info t602x_hw =3D {
+> > +       .phy_lane_ctl =3D 0,
+> > +       .port_msiaddr =3D PORT_T602X_MSIADDR,
+> > +       .port_msiaddr_hi =3D PORT_T602X_MSIADDR_HI,
+> > +       .port_refclk =3D 0,
+> > +       .port_perst =3D PORT_T602X_PERST,
+> > +       .port_rid2sid =3D PORT_T602X_RID2SID,
+> > +       .port_msimap =3D PORT_T602X_MSIMAP,
+> > +       .max_rid2sid =3D 512, /* 16 on t602x, guess for autodetect on f=
+uture HW */
+> > +       .max_msimap =3D 512, /* 96 on t602x, guess for autodetect on fu=
+ture HW */
+> > +};
+> > +
+> > +static const struct of_device_id apple_pcie_of_match_hw[] =3D {
+> > +       { .compatible =3D "apple,t6020-pcie", .data =3D &t602x_hw },
+> > +       { .compatible =3D "apple,pcie", .data =3D &t8103_hw },
+> > +       { }
+> > +};
+>=20
+> You should not have 2 match tables.
+>=20
+> > @@ -750,13 +828,19 @@ static int apple_pcie_init(struct pci_config_wind=
+ow *cfg)
+> >         struct platform_device *platform =3D to_platform_device(dev);
+> >         struct device_node *of_port;
+> >         struct apple_pcie *pcie;
+> > +       const struct of_device_id *match;
+> >         int ret;
+> >
+> > +       match =3D of_match_device(apple_pcie_of_match_hw, dev);
+> > +       if (!match)
+> > +               return -ENODEV;
+> > +
+> >         pcie =3D devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> >         if (!pcie)
+> >                 return -ENOMEM;
+> >
+> >         pcie->dev =3D dev;
+> > +       pcie->hw =3D match->data;
+> >
+> >         mutex_init(&pcie->lock);
+> >
+> > @@ -795,6 +879,7 @@ static const struct pci_ecam_ops apple_pcie_cfg_eca=
+m_ops =3D {
+> >  };
+> >
+> >  static const struct of_device_id apple_pcie_of_match[] =3D {
+> > +       { .compatible =3D "apple,t6020-pcie", .data =3D &apple_pcie_cfg=
+_ecam_ops },
+> >         { .compatible =3D "apple,pcie", .data =3D &apple_pcie_cfg_ecam_=
+ops },
+> >         { }
+>=20
+> You are going to need to merge the data to 1 struct.
+>=20
+> And then use (of_)?device_get_match_data() in probe().
 
-There are too many sub-devices in RP1 for them each to get their own
-function. Instead, they all share a single function, with DT to
-declare them.
+No, that will break the driver. This isn't a standalone driver, but
+only an ECAM shim (as you can tell from the actual probe function).
 
-Phil
+	M.
+
+--=20
+Without deviation from the norm, progress is not possible.
 
