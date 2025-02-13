@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-21373-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21374-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71022A34C93
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 18:57:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CC224A34CAE
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 19:01:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 959E23A4506
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 17:57:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C0B1D3A4B4D
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 18:00:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DB2A241663;
-	Thu, 13 Feb 2025 17:57:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F110221725;
+	Thu, 13 Feb 2025 18:00:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="DCdtDMF5"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="cJCGrLX+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C93328A2AB
-	for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 17:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF9B28A2C3
+	for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 18:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739469472; cv=none; b=EVh3LVQYLxMe9qC5w6hcOTPYX4B/oItg+gfrGY+FloDyfwv1cyRhL0j6rb90lJW2t4HQaK1VSxj0RS7gY4g8A4DsWRo5k/+N6L+kRbtfYXKQHVTPxDykePhFqkemBGPVtsp/OAWRjK25O8iakcZGmIwQcBtQvgpDqHiPWR5zQrc=
+	t=1739469659; cv=none; b=qKNrp+0WkhXNcOBOVRcR7c/TfTbOdZJQETA+Xt22Cj/Mgxo3W0Cqv8l28iLD3etn68ZWG/Ko2NZPWE9SjSVML7FL6QMmysXOijh9pT+usCf/mIqHwGiX6RN/oixAAS22x3iBeaRkUdqcshe+qVoyRVVCQlviy9yiunUTg0QTumE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739469472; c=relaxed/simple;
-	bh=uxe/sPCuvuszkG09tatgP/sxrgyFyklm5riZrTlzQJA=;
+	s=arc-20240116; t=1739469659; c=relaxed/simple;
+	bh=4abGwX6CzCq8We7SpM6V7/PXsy+lszV/t7IY70ml+U4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mqMMXh8+VRrktRGrDnGIxw7PMj8A4IKoiVGxXdc5+jZDJthgc6UCHuw3FnkJ+e+3z0Xml/KYPK4fe80owWNvTstLlPJOMlIrgWcR7pRFCcMvpk0h419NG9cvFi86XFzo6/NBZaSJU9eJB2PZ1KsxIPlA3jFAtrsGOg8PSaEU9U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=DCdtDMF5; arc=none smtp.client-ip=209.85.218.51
+	 To:Cc:Content-Type; b=JIXUlpsUv8P8oXiiWiw33sdF8GxFiQBm6GASvUcDtFoT7yotwZ4koRCcM74m+rD9WQ6SWcY0+3PacwhlgynfBSG723iY/q0R1ezEOyGs4BWQe0kIEHeVQaDNYMccLgdZuAvhI5YtSHnFmWnswhneqYcMmZens9ErrqfPrKO2iKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=cJCGrLX+; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-aaecf50578eso249046266b.2
-        for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 09:57:50 -0800 (PST)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ab7c07e8b9bso212027266b.1
+        for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 10:00:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1739469469; x=1740074269; darn=vger.kernel.org;
+        d=raspberrypi.com; s=google; t=1739469656; x=1740074456; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uxe/sPCuvuszkG09tatgP/sxrgyFyklm5riZrTlzQJA=;
-        b=DCdtDMF5xCu6D99J8ipr2xNNMloOw+nxwbV7J0RxdRxacuH4MLAcWkzqtpIHvJYCsM
-         KGY4uK5XpYAuDtgVd4Ss3RTctRp88G8zCecrUOV27ugzkMoH7212U2Rs+kcEbKuKRNsC
-         +jX9HQbSahUZr3i8BcpOM4+R0eJzFvitJafrZFsHdXPaXbYmguyaG/uPo64CMcfSYKAs
-         7klaC8saAfUGmAB3+4njsEQkayE/iCvnAOWqyl/7R3VHT4+UWu8hUK0tJo/izRYCY52A
-         rVD6D6AGDYBB5GYW+BeM0dZ2MHE3K/nTA9ZOG0U/bHhHZalhV6dmmVuojwom3Xybtn/4
-         Wdxg==
+        bh=4abGwX6CzCq8We7SpM6V7/PXsy+lszV/t7IY70ml+U4=;
+        b=cJCGrLX+wDKWARKqV36CmQ8v+Y8fjyp2liuM+b6HHeROpMu51/0IkJyyX9+E78Edx8
+         8BXOOyB8smbNCYf7SGv8GpQ6RN02D19CjPfSQn8vXnZhR0gFSFPRqf+OrbfzzdKwh+0R
+         VMlvu5+gB5geyZ+YsYgzBwrNBp6rE0BtISkAKInDyjNy6EQpEB6gFOyUGreWJ3LaeQsd
+         zd9fRqW+ErWYIBZeFeg+sGiwOyi3qvVWWw5aYY0JMvDCJFHkpB6VqBj6EJTfPFs17L5j
+         apV2zGKzMeMZaLDxTDfZh/BLXpPfEa2Qoooa/yYVgK7RNkUTYmHUac9MajCY5eyI9qSb
+         sbNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739469469; x=1740074269;
+        d=1e100.net; s=20230601; t=1739469656; x=1740074456;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uxe/sPCuvuszkG09tatgP/sxrgyFyklm5riZrTlzQJA=;
-        b=xIMQikRbKNee/iY5O/vXHdcY8G2wt8X75VPUkD+3DqiN6v8pY7GMyDBCbav9YeiQ4m
-         k34iuh6rhvAmxARMEUSZfqTrUxl2xp9gOy9ST8xipnN6IL5kDvH6VxFq9y1oGbFKrijL
-         IOlNozAg/kyzT+6Fq+FXyZ9I8Y0eze1xfMtvNgKbmftWN8mvW9i1dD3Gd46JymVDdyEO
-         8CzRX+F/+WZzlHxRF9Ko3P24JlhJG0lVRRnhaDSJCbSVGBlNtHPBdQucZNhbJil96R16
-         lXaP8zkooaEdWcGygHA37/swmmpdjM2PH+1EO8U8XFEbfnC+qif1mmle2Gub5VmGeVYM
-         UsGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV028NsutDZ73n9xhcoAZexayOHkNiHZj+nPYhr4FdnoTQSmBea/qAabzp0OO02RcP19sNL02A/3AM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwavU16RJjwS//5g29wGHwVcuEaYqRHCLfHYSPOd2QnL6QEyyhP
-	finpBG6MQS9giz6lJJ0e8pNlK11qD9wEjaqkXJ5kzqIO4lJoQz99qIRtB7K5ChVX7pHKFXI7lbY
-	e9POItWV+wIiynamfBkX5gxAv6c367Y1kWGTByg==
-X-Gm-Gg: ASbGncvF7ntRX9D8CDEcu055nhkOSmdK7TWdfbfcqEomiBw48MpP2HWRAlf55iS9o0g
-	gUi7f05bR9CT2AeGURRR8rmHMXFmD3PtEQ2Ltsu6Zxg4zDZn/wnY1kHuaUgFEnkEGoD4l0DArnL
-	2FUvL41rEYu2A9WNwASO6SCJNOdWZF
-X-Google-Smtp-Source: AGHT+IEK78m51sGJDd3X7obouAmtice1DYZhDC7vdVZTdA3vPC4baSC0McAYMZqXZ2JdRz2CuZ0fh5G5y4aENoDxPdM=
-X-Received: by 2002:a17:907:971a:b0:ab9:63bf:8105 with SMTP id
- a640c23a62f3a-ab963bf8270mr490444566b.1.1739469468776; Thu, 13 Feb 2025
- 09:57:48 -0800 (PST)
+        bh=4abGwX6CzCq8We7SpM6V7/PXsy+lszV/t7IY70ml+U4=;
+        b=JqXEADSt8jccc7xaflHPblvlclJlRQAh+Neb2wwy9KVdEhgorOTv/UklYmKNpgwWhA
+         QYU6ikg4m0Y/mXmJjWaJ9+3iftN2GIWAMt9Bw+Wbk+/p1/OqGXoWzmLrJHm2zTW6IUje
+         cxUbAIUnWm9plGNTQBQ8Y4uySiYF+ywnMQ6tKZgViEUZhdu0+E3U13E6hSxSVUMs/Aku
+         Zk9C3+mwYLD71dmOCyLWHviSx9akutS0mevuf71L4WNMXu+zdOXq/MAXHY/AkmCwrusu
+         FZy+xRtAd/ZDLUPHy4aCWfwJ+h2lSt9+l/xsFzWzAV0PCx4Prz1Hz62YnvwhTxVClZ6N
+         PVmA==
+X-Forwarded-Encrypted: i=1; AJvYcCXrcwZLPXbftXYXygMJ5dHU6R1CTr9Er6zt4VfGg7ww+TqBS+Rxt6tLUBmQ7NqMVDPYT8wpzVGKUZQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycZWdZbbBcWKyAJZIzzPP+e1yNgcbkh+C6VvZTpD2TnRqC7bpQ
+	z9YOMrvLjnsbHfGbe8DPq+zIXLEUwFD+joVUU8RQuRUp/EItfHvBpV2ZaTdnY/7QIwKSuG9YDrp
+	exLPqRNF7g+7bS3ofhhcAbXYu7GpzDVjthMbXYg==
+X-Gm-Gg: ASbGnct0mDgl/te8Mu+1g5sy7bqXkW3TxTAGasKmYxxJ9OKBmPLUJMfTJ2gszxzJEkV
+	M2fwteb6GqDd6u67J2wx4eOH8W9lbBbIz55Ytg8QnYu28+2wA6BcLH4oLB2Qr5pdEGpy6MvJb5V
+	SvcTpuJGxfNzjvLoaIxU5wj5l4nmbD
+X-Google-Smtp-Source: AGHT+IEPn1vehWPEneMvy4h+MekCpIWgHCiWfjunKXP/Rg/zGzFsLUQXgBKZUi6VnPclc10evNFU6A3yPAiro3jiL5E=
+X-Received: by 2002:a17:906:7807:b0:ab7:6369:83fc with SMTP id
+ a640c23a62f3a-ab7f34af3d5mr742379366b.38.1739469655305; Thu, 13 Feb 2025
+ 10:00:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,12 +75,14 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
  <20250213171435.1c2ce376@bootlin.com> <a3c5103c-829a-4301-ba53-6ef9bd1e74e7@lunn.ch>
- <CAMEGJJ3-JXhin_Ht76EqUNAwLiNisa9PrCrdUzCgj=msGZfb5A@mail.gmail.com> <821d4c74-09b0-4c1b-b8ef-f8c08d0f6b5b@lunn.ch>
-In-Reply-To: <821d4c74-09b0-4c1b-b8ef-f8c08d0f6b5b@lunn.ch>
+ <CAMEGJJ3-JXhin_Ht76EqUNAwLiNisa9PrCrdUzCgj=msGZfb5A@mail.gmail.com>
+ <20250213180733.11999e07@bootlin.com> <CAMEGJJ2FB-wwyOtjjCmPJ-vUDpZaV-8MMXxV13qXnKxYSzt9pw@mail.gmail.com>
+ <07b973c1-4e35-440c-9009-85302a455912@lunn.ch>
+In-Reply-To: <07b973c1-4e35-440c-9009-85302a455912@lunn.ch>
 From: Phil Elwell <phil@raspberrypi.com>
-Date: Thu, 13 Feb 2025 17:57:37 +0000
-X-Gm-Features: AWEUYZnQGb_LTFgRMGvR2NkevZWJdZdjShSWV1aYMFwhkUzlH95FjIU8_Kkz2O0
-Message-ID: <CAMEGJJ0QbzCScfTRA_pw_8A=iMYMAAFs69zFNLwcOxF5Syugpw@mail.gmail.com>
+Date: Thu, 13 Feb 2025 18:00:44 +0000
+X-Gm-Features: AWEUYZk57dt7oMdE7oJWluEUSR6yrcUWkxTlMHydzKGl0ZQ5NYeC-9oOiQGkrQw
+Message-ID: <CAMEGJJ3++pZtOEvjAm2zMPVrLxQPtuzBWh4QQzGAt3NWuyyrJQ@mail.gmail.com>
 Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device using
  a DT overlay
 To: Andrew Lunn <andrew@lunn.ch>
@@ -103,23 +105,17 @@ Cc: Herve Codina <herve.codina@bootlin.com>, Andrea della Porta <andrea.porta@su
 	Will Deacon <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 13 Feb 2025 at 17:45, Andrew Lunn <andrew@lunn.ch> wrote:
+On Thu, 13 Feb 2025 at 17:51, Andrew Lunn <andrew@lunn.ch> wrote:
 >
-> > > Or do you mean a custom board, which has a CPU, RP1 and the button and
-> > > fan are directly on this custom board? You then want a board DTS which
-> > > includes all these pieces?
-> >
-> > That depends on whether you count the Raspberry Pi 5 as a custom board.
+> > etc. The same problem would exist for U-boot. Even though RP1 has a
+> > standard XHCI controller
 >
-> So you mean the Pi 5 board would itself make use of the resources the
-> RP1 device has? They are not simply connected to headers for plugin
-> boards, but used by the main board? Hence you want to describe them in
-> the board .DTS file.
+> Although it is a standard XHCI controller, i assume it is not a PCIe
+> XHCI controller which can just be enumerated as a PCIe device?
 
-That's correct. But even for plug-in devices, those which are on
-non-discoverable buses need overlays to declare them, which causes a
-problem when the overlay application happens before the kernel is
-started.
+There are too many sub-devices in RP1 for them each to get their own
+function. Instead, they all share a single function, with DT to
+declare them.
 
 Phil
 
