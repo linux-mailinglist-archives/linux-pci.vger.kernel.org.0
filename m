@@ -1,183 +1,183 @@
-Return-Path: <linux-pci+bounces-21375-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21376-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66090A34CB4
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 19:01:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0827CA34CEE
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 19:06:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 034001885D94
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 18:01:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A91D9163C02
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 18:06:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B707206F0C;
-	Thu, 13 Feb 2025 18:01:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FAAC26982E;
+	Thu, 13 Feb 2025 18:03:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKkAptOe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JFlcFson"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3C928A2AE;
-	Thu, 13 Feb 2025 18:01:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DF2245030;
+	Thu, 13 Feb 2025 18:03:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739469698; cv=none; b=gbid2NpzVzdT6yB/73i2uE7xVKpKKPyNQpLoZ1C4DyABYS74+eHFTWyIADE4WkKCU0nkiCGK+tna6rfafyMdb1qeccBO9WJ+/E0FIKX97zIEP7+R7chmbPuj/Bt10W7meM0CHwlatcRDrogAcGJNyoV2Jrzrq7eO7lqnpnuCp00=
+	t=1739469803; cv=none; b=VKWVB5ukkQSqM1kmNI/D4u/EWkWCXtXQWKFiVTGmL8/ZDej+o4HuDjMMcboNWHqoR9EjG4vQY/YHGWppj+g4Pj/6IuQpT2dhIUfRrM1N/V8Rh1GsPJ/kSmis6nKLJQC0nAFfWSB9rJ1EOZ7RXconx0n/5b2nNQqSLc0ZXJ7u+mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739469698; c=relaxed/simple;
-	bh=NW1OYpe2mVwwte24KvqPb9pRL5isVReq3c3DtOOBBMA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bfHK71XE+ZeO9pXVHwCccTxoo2bA6241SbkPLdtqBAupemSKXoD0t7Dgye8oV+Cdck94jh/0tepfPTNfYjKKPMV45FBNgF5xqZtLQcElUdowIEdW0mWcgig24KCJcEqnApB0HJH8U9/91DpTXf68TRyefgITvLPBFZd2ArbZmLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKkAptOe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC4BC4CED1;
-	Thu, 13 Feb 2025 18:01:37 +0000 (UTC)
+	s=arc-20240116; t=1739469803; c=relaxed/simple;
+	bh=WbXwHDiWR7XWg4WjQ4/T8ldzDcjVVx3R4v88F9Z6gJQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J1V9iOpXXzXVDXSsRHlWIqCx/AXz6RqY5BozS7LQDpclPY4vutcTmGfDs1uKRKN7abVSpGbBEs9tNK3A4R0A7gEwJ1CicnbEVwWEKf8RdG1AVct1TKmYtbEKvgZM5UPiGDBYKJpRAn5vUTW+vi3uAP3CJ9dm+hPGbk7gnpkwGj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JFlcFson; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC902C4CED1;
+	Thu, 13 Feb 2025 18:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739469697;
-	bh=NW1OYpe2mVwwte24KvqPb9pRL5isVReq3c3DtOOBBMA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lKkAptOe5ZG6vP8rPEis0AlEiA/1jNEChi09tTGq67mYGQvoYjq2QsQirFo+qzZgb
-	 lQ+hWQtnhgTT5QDZIgLE0LLK/qzdHBxEs1u3jP1jbVy94VndeSRhUaa42fTPoXmUqj
-	 pivxwi3j9oPp4knqLBaU597hhT9pV1fhknls8UaWBTrKic1gyFlvuxDovPaJkjkHow
-	 fOkRlYpLpYgd8zNL2X4qtYZnDaLpQS5UPyQudbGm2tBsFUeanF/x7OySGyxItxrZ2K
-	 CIQ52uBM+57WBFOnOJvGIdA3m2yKZ4t4E+ybCY5Pd/bwH1tUj0GrrJZymNHMOSdvEg
-	 JRwnbdjsJbEOQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tidWn-003nTm-Sy;
-	Thu, 13 Feb 2025 18:01:35 +0000
-Date: Thu, 13 Feb 2025 18:01:33 +0000
-Message-ID: <86r041sozm.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,	Hector Martin
- <marcan@marcan.st>,	Sven Peter <sven@svenpeter.dev>,	Bjorn Helgaas
- <bhelgaas@google.com>,	Lorenzo Pieralisi <lpieralisi@kernel.org>,	Krzysztof
- =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,	Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>,	Krzysztof Kozlowski
- <krzk+dt@kernel.org>,	Conor Dooley <conor+dt@kernel.org>,	Mark Kettenis
- <kettenis@openbsd.org>,	Stan Skowronek <stan@corellium.com>,
-	asahi@lists.linux.dev,	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] PCI: apple: Add T602x PCIe support
-In-Reply-To: <CAL_JsqJ-sYsy-11_UiEKrKok49-a-VJUvm3vBGbpu9vY3TKLUw@mail.gmail.com>
-References: <20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io>
-	<20250211-pcie-t6-v1-7-b60e6d2501bb@rosenzweig.io>
-	<CAL_JsqJ-sYsy-11_UiEKrKok49-a-VJUvm3vBGbpu9vY3TKLUw@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1739469802;
+	bh=WbXwHDiWR7XWg4WjQ4/T8ldzDcjVVx3R4v88F9Z6gJQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JFlcFsonbuTOSnOfR4qSEuNbP6OqQO4MkCgmkJkU3qk/lFWl4DcL9Ny7+hL5pGItP
+	 X8euWWBe+4vkvZ28rziKTnwiAN6h635psymMpbkwRtULAQulnND73pl1GQ0SEOLw+C
+	 bMyAgJM5CI6DnWYEqTMaRqqnyTOVWJthiT3yj0D3KTJ11oN0uKvQaP1eLSHQXp//sT
+	 x90CYDFiKV6X3Nbgav+6OERLLLgqLuZxAL1XgCN6K07OvJ3s1v8T36rfjAL06pX26I
+	 STTI/G/uteVexNzLyPLhM66cveAjEv+pRL9cAmHIazhxI4itpUtiWCaqBx8fK/eWWw
+	 BHRgRHaw2a2YQ==
+Message-ID: <e45c47bb-2c69-42b3-9c2d-7ec789f94cc5@kernel.org>
+Date: Thu, 13 Feb 2025 19:03:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/7] arm64: dts: agilex: Fix fixed-clock schema
+ warnings
+To: matthew.gerlach@linux.intel.com
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
+ conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, matthew.gerlach@altera.com,
+ peter.colberg@altera.com
+References: <20250211151725.4133582-1-matthew.gerlach@linux.intel.com>
+ <20250211151725.4133582-3-matthew.gerlach@linux.intel.com>
+ <8bf87b59-fe80-4bb5-a558-bff35d876e67@kernel.org>
+ <d6b453b-5819-d663-7cc1-6ef154c5d965@linux.intel.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <d6b453b-5819-d663-7cc1-6ef154c5d965@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: robh@kernel.org, alyssa@rosenzweig.io, marcan@marcan.st, sven@svenpeter.dev, bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, krzk+dt@kernel.org, conor+dt@kernel.org, kettenis@openbsd.org, stan@corellium.com, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7bit
 
-On Thu, 13 Feb 2025 17:56:19 +0000,
-Rob Herring <robh@kernel.org> wrote:
->=20
-> On Tue, Feb 11, 2025 at 1:54=E2=80=AFPM Alyssa Rosenzweig <alyssa@rosenzw=
-eig.io> wrote:
-> >
-> > From: Hector Martin <marcan@marcan.st>
-> >
-> > This version of the hardware moved around a bunch of registers, so we
-> > drop the old compatible for these and introduce register offset
-> > structures to handle the differences.
-> >
-> > Signed-off-by: Hector Martin <marcan@marcan.st>
-> > Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> > ---
-> >  drivers/pci/controller/pcie-apple.c | 125 ++++++++++++++++++++++++++++=
-++------
-> >  1 file changed, 105 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controll=
-er/pcie-apple.c
-> > index 7f4839fb0a5b15a9ca87337f53c14a1ce08301fc..7c598334427cb56ca066890=
-ac61143ae1d3ed744 100644
-> > --- a/drivers/pci/controller/pcie-apple.c
-> > +++ b/drivers/pci/controller/pcie-apple.c
-> > @@ -26,6 +26,7 @@
-> >  #include <linux/list.h>
-> >  #include <linux/module.h>
-> >  #include <linux/msi.h>
-> > +#include <linux/of_device.h>
->=20
-> Drivers should not need this...
->=20
-> > +const struct reg_info t602x_hw =3D {
-> > +       .phy_lane_ctl =3D 0,
-> > +       .port_msiaddr =3D PORT_T602X_MSIADDR,
-> > +       .port_msiaddr_hi =3D PORT_T602X_MSIADDR_HI,
-> > +       .port_refclk =3D 0,
-> > +       .port_perst =3D PORT_T602X_PERST,
-> > +       .port_rid2sid =3D PORT_T602X_RID2SID,
-> > +       .port_msimap =3D PORT_T602X_MSIMAP,
-> > +       .max_rid2sid =3D 512, /* 16 on t602x, guess for autodetect on f=
-uture HW */
-> > +       .max_msimap =3D 512, /* 96 on t602x, guess for autodetect on fu=
-ture HW */
-> > +};
-> > +
-> > +static const struct of_device_id apple_pcie_of_match_hw[] =3D {
-> > +       { .compatible =3D "apple,t6020-pcie", .data =3D &t602x_hw },
-> > +       { .compatible =3D "apple,pcie", .data =3D &t8103_hw },
-> > +       { }
-> > +};
->=20
-> You should not have 2 match tables.
->=20
-> > @@ -750,13 +828,19 @@ static int apple_pcie_init(struct pci_config_wind=
-ow *cfg)
-> >         struct platform_device *platform =3D to_platform_device(dev);
-> >         struct device_node *of_port;
-> >         struct apple_pcie *pcie;
-> > +       const struct of_device_id *match;
-> >         int ret;
-> >
-> > +       match =3D of_match_device(apple_pcie_of_match_hw, dev);
-> > +       if (!match)
-> > +               return -ENODEV;
-> > +
-> >         pcie =3D devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> >         if (!pcie)
-> >                 return -ENOMEM;
-> >
-> >         pcie->dev =3D dev;
-> > +       pcie->hw =3D match->data;
-> >
-> >         mutex_init(&pcie->lock);
-> >
-> > @@ -795,6 +879,7 @@ static const struct pci_ecam_ops apple_pcie_cfg_eca=
-m_ops =3D {
-> >  };
-> >
-> >  static const struct of_device_id apple_pcie_of_match[] =3D {
-> > +       { .compatible =3D "apple,t6020-pcie", .data =3D &apple_pcie_cfg=
-_ecam_ops },
-> >         { .compatible =3D "apple,pcie", .data =3D &apple_pcie_cfg_ecam_=
-ops },
-> >         { }
->=20
-> You are going to need to merge the data to 1 struct.
->=20
-> And then use (of_)?device_get_match_data() in probe().
+On 13/02/2025 18:37, matthew.gerlach@linux.intel.com wrote:
+> 
+> 
+> On Wed, 12 Feb 2025, Krzysztof Kozlowski wrote:
+> 
+>> On 11/02/2025 16:17, Matthew Gerlach wrote:
+>>> Add required clock-frequency property to fixed-clock nodes
+>>> to fix schema check warnings.
+>>>
+>>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>>> ---
+>>> v6:
+>>>  - New patch to series.
+>>> ---
+>>>  arch/arm64/boot/dts/intel/socfpga_agilex.dtsi | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+>>> index 1235ba5a9865..42cb24cfa6da 100644
+>>> --- a/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+>>> +++ b/arch/arm64/boot/dts/intel/socfpga_agilex.dtsi
+>>> @@ -114,21 +114,25 @@ clocks {
+>>>  		cb_intosc_hs_div2_clk: cb-intosc-hs-div2-clk {
+>>>  			#clock-cells = <0>;
+>>>  			compatible = "fixed-clock";
+>>> +			clock-frequency = <0>;
+>>
+>> That's not a correct frequency. You silence some error by introducing
+>> incorrect properties. That's wrong.
+> 
+> A clock-frequency of 0 seems valid for a clock that is disabled or not 
+> used on a particular board. I chose this approach because it already has 
+> widespread usage in the kernel:
+> 
+>  	grep 'clock-frequency = <0>' arch/arm64/boot/dts/*/*.dtsi | wc -l
+>  	198
 
-No, that will break the driver. This isn't a standalone driver, but
-only an ECAM shim (as you can tell from the actual probe function).
+If the clock is not there, it should be removed or disabled. Otherwise
+what is the point of setting here clock frequency=0? To silence some
+warning. Why is there warning in the first place?
 
-	M.
 
---=20
-Without deviation from the norm, progress is not possible.
+> 
+>>
+>> Don't fix the warnings just to silence them, while keeping actual errors
+>> still in the code.
+> 
+> I actually want to fix the existing warnings, but it seems appropriate to 
+> only address the existing warnings that are related to this patch set of 
+> adding PCIe Root Port support to the Agilex family of chips. This patch 
+> set requires touching the file, socfpga_agilex.dtsi; so I fixed the 
+> warnings I thought were in this file. I believe the other warnings need to 
+> be fixed by converting text binding descriptions to yaml or by touching 
+> files unrelated to this patch set.
+> 
+> Setting the value of the status property to "disabled" also silences the 
+> particular fixed-clock, but I didn't see any other usage by a fixed-clock. 
+> What do suggest is the best way to handle this warning?
+
+DTSI and DTS represent actual hardware, so common DTSI should not have
+clocks which do not exist. Such clocks should be in DTS or some other
+common DTSI file, depending on how the hardware is organized.
+
+Instead of fixing the warning, look at the cause - what is wrong in DTSI
+in this hardware description.
+
+Best regards,
+Krzysztof
 
