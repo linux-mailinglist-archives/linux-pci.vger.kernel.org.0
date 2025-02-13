@@ -1,215 +1,290 @@
-Return-Path: <linux-pci+bounces-21397-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21398-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A989FA35209
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 00:16:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EA89A35220
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 00:24:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA4213AAD47
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 23:15:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8A18816B07D
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 23:24:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46D2327541B;
-	Thu, 13 Feb 2025 23:15:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11A58245027;
+	Thu, 13 Feb 2025 23:23:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fze4OOh8"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="aufp7fKv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDBC2753F5;
-	Thu, 13 Feb 2025 23:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739488558; cv=fail; b=W27dm6G81EafQGFOjv6wFGX7QayM69t9Z1Xi2gQObpru82YIpnwYkZ1QKoiYfs87/Ld33Vxq5tNHxoCE6K+a20uHkwAsEYf878lelndllsbEL2VILmg4/7qCtJlZCxbVOc8iD882MHOBLlYoCb8syRfhRxM2k5grGBk8ZDAA6k8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739488558; c=relaxed/simple;
-	bh=yhqp78H5OtULd1a8af5fApAtTL0amNdx2hzQHm1dDgU=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=cPTsEWlv0FM+QKUvfXohToBE4eHd6dubKKVCpl4Fx4WMSksjgVxuO2KhHVCBYwLMQT1dHjIa5KLNIxJ/L6BwpAeHNodTcynRgSVn93PYJ0g90IhDa3a2iq2PiA7vYeqr+Fb8bVNV9baAZby0q6nn66/u51A/yZt0p6aT1BCjQmA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fze4OOh8; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739488556; x=1771024556;
-  h=date:from:to:subject:message-id:references:in-reply-to:
-   mime-version;
-  bh=yhqp78H5OtULd1a8af5fApAtTL0amNdx2hzQHm1dDgU=;
-  b=Fze4OOh8E/lscsAAT8PlKatMo0XqOfblamyUXRtowuyGIyoZJcYazuP/
-   FdMOYVEkNm+l9IjG5o0ozx3fOfWLOa52oCBtkGv4juVy24v8G7Prj7qs7
-   35Y8TjPZ9bAaL/mjr4s1n4QG13IJk5ofef55v66dENNsNdNbbueQ6+ntz
-   6JTNeC7L1fk93j1wuJnuhcVhxmIStwnoYtfCnXL1LkPGa0B9m/r0f+HIN
-   IuU4YShEKWZqUHWbJ2U2pJfwzHfG0cO4PUIQYFWNDnRmXnexjhgZzW9c7
-   p8El6pjDuIDIFCWJro5w1QlsdQFfEpZwgZ3IREIzzkTi3Xnw6sI3EfTSG
-   g==;
-X-CSE-ConnectionGUID: TP5Zr1RNT5yMxdm5DmgWgQ==
-X-CSE-MsgGUID: COD6nRBPQ0CmX4AFwlgAOg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="43987709"
-X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="43987709"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 15:15:56 -0800
-X-CSE-ConnectionGUID: 2gWfZEHuQiakXe554OtcXA==
-X-CSE-MsgGUID: wUTgxg27TTyKoRLa9A6aTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118494448"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Feb 2025 15:15:56 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 13 Feb 2025 15:15:55 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 13 Feb 2025 15:15:55 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.47) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 13 Feb 2025 15:15:53 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SbZSXhV1zmd1GEY7Rc0tiBgD09aqH68dP2id0JuWtYDoyY1F4Ug87lJUknhWPMLrA+rv5kJRR+rcq0ykWWsZYhWJpk+jXUQNv2FBEwL1tiiGA8NXFA291+Krf+zKhz+NxynT4pQJPpHioAaG5oDZ7Hiu27mL3QR/pNIfRLzQFnHgLHWiFlGjD77VigQ/6ZfQ+Z5YwjnBlv9XFxiiFJ9icIG6o8pjoZWwb6+KdQj4DVPZmGn9tFKVegYjkS/VHLzPF3nqRV62Hol4jMAUMRJtzN4x2zJu0fxfrsQkbIJ21cYyy7TjHs8Y5T1BJQyRpGc/N8BoyWsGC/4wqIifZYzxSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VrrqgFXWxaRSNFNUFVKoimFrz0QRRELMPXA1Cyx3KpM=;
- b=apQPRXNhvuG36g6cvrvYdGp69iqU6WH4etw2GhMpPBv6FEbxk092Ziu6YGZfpNhb2Za6caaZLiySzmf0U7+V1E+0BCDJW6CkEfjgof0Lh3WoqE3zW3PZFfoClNhYWaQYcbH7QxVp1nx6ZA+zwMoP76+GNPB0+9TdFp0iGrupFA10HnhZnrT2dDvVtgKGNT0Dn0QBJDh4sEzgWZr+BeTxOeUQotJlmTf1B58t5eh7fPC3OxVLyVEPLK1+XeKgGIioLtAgBPQ0s5/rq/hSBFkBbU4kq3/2mX0AGCQh1YK7yj8vkRbjhSRo6GLRYbAOaJV6U43tbzRB2btPtRchLiQE4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CYYPR11MB8386.namprd11.prod.outlook.com (2603:10b6:930:bf::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Thu, 13 Feb
- 2025 23:15:51 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8445.008; Thu, 13 Feb 2025
- 23:15:51 +0000
-Date: Thu, 13 Feb 2025 15:15:48 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Terry Bowman <terry.bowman@amd.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<nifan.cxl@gmail.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<lukas@wunner.de>, <ming.li@zohomail.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>
-Subject: Re: [PATCH v7 11/17] cxl/pci: Change find_cxl_port() to non-static
-Message-ID: <67ae7d24bfedd_2d1e294b1@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250211192444.2292833-1-terry.bowman@amd.com>
- <20250211192444.2292833-12-terry.bowman@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250211192444.2292833-12-terry.bowman@amd.com>
-X-ClientProxiedBy: MW4P222CA0030.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:303:114::35) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4646D22D7BC;
+	Thu, 13 Feb 2025 23:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739489038; cv=none; b=RRWhIzT2x2ZzQYE0WHefIbNN9E0AYi+wACbHiQ/RPGFeA4NtW7dzyR6WEu2UMYBiK7eg7uYiRvpNXTr2UKxG1y4f6UPTd0k9pIk6/SsqyzFHrsrpxZ9iXq24r+Az9b23/HjIY6eM+WUARNGlJaOqHvp1391IXLy0iFwXfcMCRBc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739489038; c=relaxed/simple;
+	bh=l+cSvSfFeSSvWEX+0CLmMC7EeXoOaYuP0euT1eP9zjg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FMJe5+nxBoN+9sF8gur2u3TcmUplWHU+fwqSRe2qtAX/79qaEscKY830fH9Fz53pLi45fOu/zeHUq0Mb5paQbS5gzCks3a1UcLHdQVc3VS65w/y9SzVMVi6o31O3xvFUVNRufQfCFElbpCxlN1LrZluRupkO69dZLnKuqer6qg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=aufp7fKv; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 7A9B7203F3E8;
+	Thu, 13 Feb 2025 15:23:56 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A9B7203F3E8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739489036;
+	bh=Hk/UhzyNXmtkIV3ySCx19ki8dNWuqGbbCLmGSDE/xLs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aufp7fKvZThXkNOUfRjDldRf0rvzjk9ePefQmU34QNQDzjKEBlugM1QQnoyaGdByr
+	 UvcGblhHXCbjBa/k4MpcRsnzZtdKGCD/hDb4AqXA9uZUdtcTEEmtCsn/SbibhrumUh
+	 FawOmhzoUKT+be6mPRofqUQ3NjSfwRNz4fTK8QNo=
+Message-ID: <593c22ca-6544-423d-84ee-7a06c6b8b5b9@linux.microsoft.com>
+Date: Thu, 13 Feb 2025 15:23:56 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CYYPR11MB8386:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5e55dd33-841c-4be3-62d0-08dd4c845bc7
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007|921020;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?SCgiLOKBS0KtXt6DRftq19bOTkxJu2Z3PIorhD/EYUGoAf76lrlPcQ1DXnOG?=
- =?us-ascii?Q?jjNwVkS5Ifep9lsIOedr2Y4zTbYw5UTP++zuY6smKaDxATP3lkjdE6KQCyDf?=
- =?us-ascii?Q?Mia5HD2AR4fp36rGTSNuYJ6zfFsjnsmdLgSzHUszhuc7HYbBcjjNiSImQkEa?=
- =?us-ascii?Q?txYYdRciThPzg7u2tQIYmKQDDtVEZ6ZHYmaeSgW/JJIiFTqu5jfEJLvXfZtC?=
- =?us-ascii?Q?VZfBu5biRJQnN/uATGw4oUEq7ATbFkKlfKMRBMQeqEDSNydMlu/DCa6rZ5mQ?=
- =?us-ascii?Q?wAELP0Z5FobjgOLtJSFdNvuReTKbOt2mFIm0nwPbMQOtw4mQhuzJzwxCJE1y?=
- =?us-ascii?Q?zx8N4M5tCyY4vL9luoqnanpcDTJK7xLyXHSL1xMjpH2ylkkc0qgwLsMAt2uJ?=
- =?us-ascii?Q?SLlbJMFc15psPrmaXZY1Q/OxaVVzAqklNxWNQ6rpTsdvH6kIDHRCtOO1E9VL?=
- =?us-ascii?Q?+S6OwWucN/mnWUja0fbrOGcYTLoQMzRTJln05zqwtZO115XMVsAAk6mBaLv7?=
- =?us-ascii?Q?0A0U6bAMIqcpfeQXLzYyUVaW2OQ+YiJyTPtbAer8BE9R0qMfURkoNn8+3aqV?=
- =?us-ascii?Q?c/hC5/p4hks7zwWkSsf/Am1NSK9NcJfjbACdu1Mpco+cpfprlxuq7YI8NBWv?=
- =?us-ascii?Q?gF8Naxm6R+wT43Wv1JSFa8AdtR7wnZZ0RarIGFIo1BRqdIGYX2mK4JI9sP3M?=
- =?us-ascii?Q?DObqXiggqM1a7sibDF4s7vu9qCpG2eeE1TVIN6jCRzFwql6XPs6KZAKoM0re?=
- =?us-ascii?Q?6L6l4+cI9YtZdsUO7NfP/qdodjk+3J6OiXVrImOyumZCW/6HEXFFoIV+Rfxz?=
- =?us-ascii?Q?Y88YZBoxkP6jxp/rDcTnhV/tkhS1r/4HMymRNEBO3tjXzFss6reJSvhrQoBK?=
- =?us-ascii?Q?wjQ9oePRCkqJUt6pLaypbfakq9eyKVcn2arOLe9zbgZwOg3XY982I1Px0dRD?=
- =?us-ascii?Q?/DrEa897ccKtHjFUX5XurwEACKqjZIyWmE67Dw+dwxhWdGTndnQ+X3WtEymt?=
- =?us-ascii?Q?HpgGvfSguzQLg/Th95LQCizK5fHBp6HA7zJ7qLLWDKSA56sOfS32l0SByTVE?=
- =?us-ascii?Q?UZMZFwSmqPJUCYrwj2UeR+svOuAFtMafEH6qfIq4vUPU+dqROdXWHdO6oxdh?=
- =?us-ascii?Q?XbsUbW5VmuLqW8uCizR/dXuwk3Qt4ktKqiUQTHXNkm70pugZg7SCxVkv2NAN?=
- =?us-ascii?Q?2m9U8WDvGgmN5KmwHpSsRwHOuzwikSgvvVeEaMfvHWjYG0rcxtoHHTxNrUCO?=
- =?us-ascii?Q?xaXSJ0/FyhWU7nnG6XqPLt4V3Jw5IQiJUHZ9tE7UujjnOSsG46+7puaLuzwY?=
- =?us-ascii?Q?w7cMMjyU++APRsnrbdmc5+j51x52rt2Je9By46Zovv9R1uk/DLVHbhZuVziM?=
- =?us-ascii?Q?2l/NyLckVhyVh81LYurIQhI6hwA53vnDl5hJyLa3gdSwRyrHAPdYliKO7A4i?=
- =?us-ascii?Q?4oM0rK09uZI=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5T6NVkaooERG3v1TxmU09JSNSSL40Af0X9CP7HF+brQ8lWWVi+PuCc8Su4yR?=
- =?us-ascii?Q?XUZdp4yx5inhCxX/bO0DDs7+a/3HBLOzSgMYHB4x+Ay8I2vWd3fL/cmA9QuW?=
- =?us-ascii?Q?r45yk3c9nFhvjEH9xX0MBsGZQvc2fR6alw4N+Ak9YzgMXmGF1a4iK4/Kd6vh?=
- =?us-ascii?Q?0GlwaeaGG9TriozcbUp0kykMPq2KF3M691jwApLvXg3y2zIZy9hdK4ot2qcC?=
- =?us-ascii?Q?FEf353N8cQUfL1nMewTt4s2Fp4X3P8AzRNvg1jAAbE1NtGyE2waz0AnZGZ7T?=
- =?us-ascii?Q?3U/eMEQ6lQUVxwhz8trwpd5Z6Yn1C+OmdhotHpLxstUrS8WYfGoh7nMQb0cI?=
- =?us-ascii?Q?LWodsg5Epuj4abpoMRySuNI7JvHHZwYNl38Vtd52v/X4JNHUXPh33lHh/H+g?=
- =?us-ascii?Q?OKhgkeQ9LRWMrugkZfkfusqcD8q0sEAB7l6b2HvVhnQvuLUIn/5DuG1WhAx4?=
- =?us-ascii?Q?iTb2fFP42J/b0NkFVx4Qj2iLT7wKhuTPSqbEMcfAbor3SvfbADNW4v1nxG/E?=
- =?us-ascii?Q?tp0MwVWyfL7bc3/bGXnXeYYUhD7o+vMEGkvPKAvbVmalsBK2Gke5mXDL4ZgV?=
- =?us-ascii?Q?7Q62ZprhOOZQMy4Kklb6czVNAWnFw+oN1knchV5S/49Axro5Mn2ncG7jjBnO?=
- =?us-ascii?Q?h8g2bhoJiCPm0J5TVXh9CpXED2qgz7WIJkke/Q94sc+lGFi6sqO4wNsMdBPr?=
- =?us-ascii?Q?+nm7Q3TuZm/MxvCsz7QVURRARQtf5d5J6Lu72UfQaKAhoR3AHi64poMIzt9s?=
- =?us-ascii?Q?htoepKAfpX+1wsFtMfJUN/xGLEa5c8n4ebT7cEtybMnzcznd3qZRiqPo7Nuy?=
- =?us-ascii?Q?n9uatMZB3uOPUjM4aaSeqnosoh8m9edNHys7ME/vlWnuYkDCRKrVnkh1KMfB?=
- =?us-ascii?Q?Qp8Le9WAEIHHQpve2z+Xcfw3tnw7ARZgCXwk+9L0lpwb1r8FJykgLN0N/Li0?=
- =?us-ascii?Q?jVSZhphcz1ShsnM5mrjSC9XERWi3D7N1t6U8NqLGWUTN2F9rUvjBdwNirV9O?=
- =?us-ascii?Q?rEs/2mf9ZPXePQt6YAx32o3ffi50QEyC8Lb3MYZjjmhuRI7t+eyYWyhtABN+?=
- =?us-ascii?Q?Fk2JeZOLlMiiWtfis3sW+zwCCZvJZwOAwhV0BXJpLX7fa0GmjCSkDOw4paHh?=
- =?us-ascii?Q?VaucK3yj0ztNcQNG8EcwnRjm/UwcVpr+eOhZVW+aCcneqVntbuA6CUtGpFz/?=
- =?us-ascii?Q?8BxoW3Vxgl+VPrwqv2xLAWqMrapU4yTml2a+PGVyWnrrsWFzEwbqehLuuEh6?=
- =?us-ascii?Q?hruwKO6O6QE2AynulkjrRolZwnePDN6tT63xZMUPh0QOiukxL9penzOudr6E?=
- =?us-ascii?Q?ViTmIzWggVLfXhHca8Ivwpf++3cpmwhHqwS0X3wpH38vt9UbAe3CHpW4AFv7?=
- =?us-ascii?Q?MYMqS6RV/R04Z0Ha9M/PJ9Wle8EofvovkYL7lK5CItrfpx3OYooR8jO2jjc7?=
- =?us-ascii?Q?GvITCduZm6ZmgYV/460UgHLKaDYL7Ottn9EFgUs+aN+mJxj/vTXOxp80dHCl?=
- =?us-ascii?Q?LdRwLHZBtIy27cQdh9R5Or089z67weBu9dz84wsCNtB1fXdwTpO5FhmEx3i9?=
- =?us-ascii?Q?dDHra7JnXt0cxHJIk5SfLbkjiYJLpTO72zuDlwNJKZvQAGVtKPulirgpS3RY?=
- =?us-ascii?Q?Og=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e55dd33-841c-4be3-62d0-08dd4c845bc7
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Feb 2025 23:15:51.7499
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: t+rfFLxUHRpDRnUUr9WvoiQ7dRtz2VwVrlD4wEAmGk0Z01Wg38EpL5BG8ZsBgvWrqgtf0A65egXqqMQeIsOh9yEHq0ooLNu12Ink62yf81Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR11MB8386
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v4 1/6] arm64: hyperv: Use SMCCC to detect
+ hypervisor presence
+To: Arnd Bergmann <arnd@arndb.de>, bhelgaas@google.com,
+ Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
+ Conor Dooley <conor+dt@kernel.org>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Dexuan Cui <decui@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ krzk+dt@kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Ingo Molnar <mingo@redhat.com>, Rob Herring <robh@kernel.org>,
+ ssengar@linux.microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
+ Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>,
+ devicetree@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
+Cc: benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
+References: <20250212014321.1108840-1-romank@linux.microsoft.com>
+ <20250212014321.1108840-2-romank@linux.microsoft.com>
+ <1b14e3de-4d3e-420c-819c-31ffb2d448bd@app.fastmail.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <1b14e3de-4d3e-420c-819c-31ffb2d448bd@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Terry Bowman wrote:
-> CXL PCIe Port Protocol Error support will be added in the future. This
-> requires searching for a CXL PCIe Port device in the CXL topology as
-> provided by find_cxl_port(). But, find_cxl_port() is defined static
-> and as a result is not callable outside of this source file.
-> 
-> Update the find_cxl_port() declaration to be non-static.
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> ---
->  drivers/cxl/core/core.h | 2 ++
->  drivers/cxl/core/port.c | 4 ++--
->  2 files changed, 4 insertions(+), 2 deletions(-)
 
-Looks ok, but this tiny patch has no justification by itself and should
-be squashed with the first consumer.
+
+On 2/11/2025 10:54 PM, Arnd Bergmann wrote:
+> On Wed, Feb 12, 2025, at 02:43, Roman Kisel wrote:
+>> +static bool hyperv_detect_via_smccc(void)
+>> +{
+>> +	struct arm_smccc_res res = {};
+>> +
+>> +	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
+>> +		return false;
+>> +	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
+>> +	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
+>> +		return false;
+>> +
+>> +	return res.a0 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_0 &&
+>> +		res.a1 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_1 &&
+>> +		res.a2 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_2 &&
+>> +		res.a3 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_3;
+>> +}
+> 
+> I had to double-check that this function is safe to call on
+> other hypervisors, at least when they follow the smccc spec.
+> 
+> Seeing that we have the same helper function checking for
+> ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_* and there was another
+> patch set adding a copy for gunyah, I wonder if we can
+> put this into a drivers/firmware/smccc/smccc.c directly
+> the same way we handle soc_id, and make it return a uuid_t,
+> or perhaps take a constant uuid_t to compare against.
+
+That would be very neat! I implemented the idea [1], please let me know
+what you think. I can use that in the next version of the patch series
+if looks good.
+
+There is a function and a macro to make calling
+the function easier. As the SMCCC header is used by the assembler, too,
+hence I had to add __ASSEBLER__ guardrails. Another option could be to
+pass four u32's not to use uuid_t so the header stays a healthy food
+for the assembler :) For Gunyah, that would be
+
+ARM_SMCCC_HYP_PRESENT(GUNYAH)
+
+when using the change below.
+
+
+ From f0d645e900c24f5be045b0f831f1e11494967b7f Mon Sep 17 00:00:00 2001
+From: Roman Kisel <romank@linux.microsoft.com>
+Date: Thu, 13 Feb 2025 15:10:45 -0800
+Subject: [PATCH] drivers, smcc: Introduce arm_smccc_hyp_present
+
+---
+  arch/arm64/hyperv/mshyperv.c       | 18 +----------------
+  drivers/firmware/smccc/kvm_guest.c |  9 +--------
+  drivers/firmware/smccc/smccc.c     | 24 ++++++++++++++++++++++
+  include/linux/arm-smccc.h          | 32 ++++++++++++++++++++++++++++++
+  4 files changed, 58 insertions(+), 25 deletions(-)
+
+diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
+index 16e721d8e5df..0c5babe9e1ff 100644
+--- a/arch/arm64/hyperv/mshyperv.c
++++ b/arch/arm64/hyperv/mshyperv.c
+@@ -41,22 +41,6 @@ static bool hyperv_detect_via_acpi(void)
+  #endif
+  }
+
+-static bool hyperv_detect_via_smccc(void)
+-{
+-	struct arm_smccc_res res = {};
+-
+-	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
+-		return false;
+-	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
+-	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
+-		return false;
+-
+-	return res.a0 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_0 &&
+-		res.a1 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_1 &&
+-		res.a2 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_2 &&
+-		res.a3 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_3;
+-}
+-
+  static int __init hyperv_init(void)
+  {
+  	struct hv_get_vp_registers_output	result;
+@@ -69,7 +53,7 @@ static int __init hyperv_init(void)
+  	 *
+  	 * In such cases, do nothing and return success.
+  	 */
+-	if (!hyperv_detect_via_acpi() && !hyperv_detect_via_smccc())
++	if (!hyperv_detect_via_acpi() && !ARM_SMCCC_HYP_PRESENT(HYPERV))
+  		return 0;
+
+  	/* Setup the guest ID */
+diff --git a/drivers/firmware/smccc/kvm_guest.c 
+b/drivers/firmware/smccc/kvm_guest.c
+index f3319be20b36..ae37476cabc1 100644
+--- a/drivers/firmware/smccc/kvm_guest.c
++++ b/drivers/firmware/smccc/kvm_guest.c
+@@ -17,14 +17,7 @@ void __init kvm_init_hyp_services(void)
+  	struct arm_smccc_res res;
+  	u32 val[4];
+
+-	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
+-		return;
+-
+-	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
+-	if (res.a0 != ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_0 ||
+-	    res.a1 != ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_1 ||
+-	    res.a2 != ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_2 ||
+-	    res.a3 != ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_3)
++	if (!ARM_SMCCC_HYP_PRESENT(KVM))
+  		return;
+
+  	memset(&res, 0, sizeof(res));
+diff --git a/drivers/firmware/smccc/smccc.c b/drivers/firmware/smccc/smccc.c
+index a74600d9f2d7..86f75f44895f 100644
+--- a/drivers/firmware/smccc/smccc.c
++++ b/drivers/firmware/smccc/smccc.c
+@@ -67,6 +67,30 @@ s32 arm_smccc_get_soc_id_revision(void)
+  }
+  EXPORT_SYMBOL_GPL(arm_smccc_get_soc_id_revision);
+
++bool arm_smccc_hyp_present(const uuid_t *hyp_uuid)
++{
++	struct arm_smccc_res res = {};
++	struct {
++		u32 dwords[4]
++	} __packed res_uuid;
++
++	BUILD_BUG_ON(sizeof(res_uuid) != sizeof(uuid_t));
++
++	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
++		return false;
++	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
++	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
++		return false;
++
++	res_uuid.dwords[0] = res.a0;
++	res_uuid.dwords[1] = res.a1;
++	res_uuid.dwords[2] = res.a2;
++	res_uuid.dwords[3] = res.a3;
++
++	return uuid_equal((uuid_t *)&res_uuid, hyp_uuid);
++}
++EXPORT_SYMBOL_GPL(arm_smccc_hyp_present);
++
+  static int __init smccc_devices_init(void)
+  {
+  	struct platform_device *pdev;
+diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+index 67f6fdf2e7cd..63925506a0e5 100644
+--- a/include/linux/arm-smccc.h
++++ b/include/linux/arm-smccc.h
+@@ -7,6 +7,11 @@
+
+  #include <linux/args.h>
+  #include <linux/init.h>
++
++#ifndef __ASSEMBLER__
++#include <linux/uuid.h>
++#endif
++
+  #include <uapi/linux/const.h>
+
+  /*
+@@ -333,6 +338,33 @@ s32 arm_smccc_get_soc_id_version(void);
+   */
+  s32 arm_smccc_get_soc_id_revision(void);
+
++#ifndef __ASSEMBLER__
++
++/**
++ * arm_smccc_hyp_present(const uuid_t *hyp_uuid)
++ *
++ * Returns `true` if the hypervisor advertises its presence via SMCCC.
++ *
++ * When the function returns `false`, the caller shall not assume that
++ * there is no hypervisor running. Instead, the caller must fall back to
++ * other approaches if any are available.
++ */
++bool arm_smccc_hyp_present(const uuid_t *hyp_uuid);
++
++#define ARM_SMCCC_HYP_PRESENT(HYP) 								\
++	({															\
++		const u32 uuid_as_dwords[4] = {							\
++			ARM_SMCCC_VENDOR_HYP_UID_ ## HYP ## _REG_0,			\
++			ARM_SMCCC_VENDOR_HYP_UID_ ## HYP ## _REG_1,			\
++			ARM_SMCCC_VENDOR_HYP_UID_ ## HYP ## _REG_2,			\
++			ARM_SMCCC_VENDOR_HYP_UID_ ## HYP ## _REG_3			\
++		};														\
++																\
++		arm_smccc_hyp_present((const uuid_t *)uuid_as_dwords);	\
++	})															\
++
++#endif /* !__ASSEMBLER__ */
++
+  /**
+   * struct arm_smccc_res - Result from SMC/HVC call
+   * @a0-a3 result values from registers 0 to 3
+-- 
+2.43.0
+
+
+
+> 
+>        Arnd
+
+-- 
+Thank you,
+Roman
+
 
