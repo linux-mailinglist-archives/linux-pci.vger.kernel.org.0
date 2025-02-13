@@ -1,108 +1,122 @@
-Return-Path: <linux-pci+bounces-21346-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21347-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9886A34089
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 14:41:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD675A340BD
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 14:49:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 704797A2DC1
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 13:40:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1850188365B
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 13:48:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16726221721;
-	Thu, 13 Feb 2025 13:41:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5095A24BBF0;
+	Thu, 13 Feb 2025 13:48:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZfXtDQ5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="npEbHu3t"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A8120B80D
-	for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 13:41:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285FA24BBE0;
+	Thu, 13 Feb 2025 13:48:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739454078; cv=none; b=Qhf5hxXjJu2IYlW+qWTOqay+Ar65CcEI5TUvOUqP3gFOgxS60NANyI0nP94+VxmRnvlU385cQg5phKiqgVCn7r96VUYf13Mnh6WHFpz5g5DEfe7H88e0htIlDAl0yWJre1+GO4MRDUO0/I4icn3HEs/0CN5q78VwpV5/mEbHOtQ=
+	t=1739454487; cv=none; b=ndq4BG9MBYVNRWZlQKoMM35UNDSl0mQ3D0Wgu/ih4GH8mH7zE5EQIN5jo1Y3PRvsV+6XyA+QZRI1dFd83O4HNkRP8v9ZK6PmcJ1j+iTFIJFa71zbAywgR3pfQdaCP+ThtJFhmlrrYGUQTpnQBoalHkvYiBTwJsHXbCyYFOkg51Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739454078; c=relaxed/simple;
-	bh=j6YrB5TGg1ZmLL/UTNokQX/55IJabM9jfHGQ9GDUyZM=;
+	s=arc-20240116; t=1739454487; c=relaxed/simple;
+	bh=867wMZfyYGgWQ1cuhrOhpL5F/n/DCChjt3xV3kORdUw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K20APDMclE4iL5FIGsVhI/iTxyhEMTSr1ERSZ8Ymh/s4pgY79Smi0B+pRpArZ1CWBiTa3TMl30ZPPVVPSe1J5cPgKmOKKYOb3jz9Mb5595QVVSQRDoC6X2g8kl0GVYKkSMxoj+Ax28ryvCThO9wgmlsU6NunTXXxc+oNc4Ky57I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZfXtDQ5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EA5EC4CED1;
-	Thu, 13 Feb 2025 13:41:12 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q53jkstnf7Zp7WUWLz3WTIJ6SfuWRJAcotX/M7mrMt7tkfHtWF97bFFXGJcT0xkOreLBMJD1fcKxNZ5hRsCmMBm3nBNtqAMsiCtvYzmEkm3646B+Mx7+38of1X/pFLPcLj/Ruw/9HcichBQAM8NLupmYgxstv8WbxLHCf3WPAII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=npEbHu3t; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 320E3C4CED1;
+	Thu, 13 Feb 2025 13:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739454074;
-	bh=j6YrB5TGg1ZmLL/UTNokQX/55IJabM9jfHGQ9GDUyZM=;
+	s=k20201202; t=1739454486;
+	bh=867wMZfyYGgWQ1cuhrOhpL5F/n/DCChjt3xV3kORdUw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LZfXtDQ5rlTajBgdaT9VydBOblOqHI2ko5pJdGhYEjsLsBRLJJ6DvSTe9UWI8uLw5
-	 7wSMVNqdI9UD2/WxZoXoau/+a3Y6NxJPh9YSrEv1Nm8iK8rwz5/roSfmAmkiB1MsIp
-	 lCI/WJfAN7VEijhzSILtRuBF5/o3KjY0gV8R/YIj25pUJDVP5XjsVZJUWp6XpYSx9p
-	 6pXKmv7fFurbouCbCXsB0asproM0RjEY2/LXh5BFVfBGN5TYHVoZAx6lP7WDxY+APF
-	 0iPo5uoXxaEEgbubNBHevlV7A1EAesos7yL2c0oJe8ugpVKvOj79qBx48GBbb4hAkK
-	 9aDdkN4lPSa8A==
-Date: Thu, 13 Feb 2025 14:41:10 +0100
+	b=npEbHu3tCW3MnPGceBw1oXid2Xn2XTZ+TduSosdzDsmlYjKEqH3YrcqP0F7bJQ3Ox
+	 6GDAmBsbwf1R6YFOOM2JCDNDpcVCoL1eFe7WpDcCQSap7awNGzgJ7+0aLUcjyDccce
+	 xmb3K9A31AnVwR4U4aX+tSXkU3hyHUnxhwFZ8enhxmz56ttX4hm5KnVU1QT+VjZiyb
+	 3RyRprhJfYMHRt8JjYSuhLXWS1vRWozkq2RYeFKMe2eMUoNz5uVIEbKE8//+gmGW0/
+	 kkgJL+C8fb3QEKpNdJrqIt8OZCERf9rXE2kxVpn1kMDeopKtMe4OuFR9Wpas2CpWgV
+	 G11PpEsvO7FAw==
+Date: Thu, 13 Feb 2025 14:48:02 +0100
 From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-pci@vger.kernel.org
-Subject: Re: [PATCH] misc: pci_endpoint_test: Fix potential truncation in
- pci_endpoint_test_probe()
-Message-ID: <Z632dhmGkqJIaCOA@ryzen>
-References: <20250123103127.3581432-2-cassel@kernel.org>
+To: bhelgaas@google.com, kw@linux.com
+Cc: linux-pci@vger.kernel.org, shuah@kernel.org,
+	linux-kselftest@vger.kernel.org, manivannan.sadhasivam@linaro.org
+Subject: Re: [PATCH 1/2] misc: pci_endpoint_test: Give disabled BARs a
+ distinct error code
+Message-ID: <Z634EqRu3LhKoF7F@ryzen>
+References: <20250123120147.3603409-3-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250123103127.3581432-2-cassel@kernel.org>
+In-Reply-To: <20250123120147.3603409-3-cassel@kernel.org>
 
-On Thu, Jan 23, 2025 at 11:31:28AM +0100, Niklas Cassel wrote:
-> Increase the size of the string buffer to avoid potential truncation in
-> pci_endpoint_test_probe().
+On Thu, Jan 23, 2025 at 01:01:48PM +0100, Niklas Cassel wrote:
+> The current code returns -ENOMEM if test->bar[barno] is NULL.
 > 
-> This fixes the following build warning when compiling with W=1:
+> There can be two reasons why test->bar[barno] is NULL:
+> 1) The pci_ioremap_bar() call in pci_endpoint_test_probe() failed.
+> 2) The BAR was skipped, because it is disabled by the endpoint.
 > 
-> drivers/misc/pci_endpoint_test.c:29:49: note: directive argument in the range [0, 2147483647]
->    29 | #define DRV_MODULE_NAME                         "pci-endpoint-test"
->       |                                                 ^~~~~~~~~~~~~~~~~~~
-> drivers/misc/pci_endpoint_test.c:998:38: note: in expansion of macro ‘DRV_MODULE_NAME’
->   998 |         snprintf(name, sizeof(name), DRV_MODULE_NAME ".%d", id);
->       |                                      ^~~~~~~~~~~~~~~
-> drivers/misc/pci_endpoint_test.c:998:9: note: ‘snprintf’ output between 20 and 29 bytes into a destination of size 24
->   998 |         snprintf(name, sizeof(name), DRV_MODULE_NAME ".%d", id);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> Many PCI endpoint controller drivers will disable all BARs in their
+> init function. A disabled BAR will have a size of 0.
+> 
+> A PCI endpoint function driver will be able to enable any BAR that
+> is not marked as BAR_RESERVED (which means that the BAR should not
+> be touched by the EPF driver).
+> 
+> Thus, perform check if the size is 0, before checking if
+> test->bar[barno] is NULL, such that we can return different errors.
+> 
+> This will allow the selftests to return SKIP instead of FAIL for
+> disabled BARs.
 > 
 > Signed-off-by: Niklas Cassel <cassel@kernel.org>
 > ---
->  drivers/misc/pci_endpoint_test.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Hello PCI maintainers.
+> This patch might give a trivial conflict with:
+> https://lore.kernel.org/linux-pci/20250123095906.3578241-2-cassel@kernel.org/T/#u
+> because the context lines (lines that haven't been changed)
+> might be different. If there is a conflict, simply look at
+> this patch by itself, and resolution should be trivial.
+> 
+>  drivers/misc/pci_endpoint_test.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 8e48a15100f1..b0db94161d31 100644
+> index d5ac71a49386..b95980b29eb9 100644
 > --- a/drivers/misc/pci_endpoint_test.c
 > +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -912,7 +912,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
->  {
->  	int ret;
->  	int id;
-> -	char name[24];
-> +	char name[29];
->  	enum pci_barno bar;
->  	void __iomem *base;
->  	struct device *dev = &pdev->dev;
+> @@ -292,11 +292,13 @@ static int pci_endpoint_test_bar(struct pci_endpoint_test *test,
+>  	void *read_buf __free(kfree) = NULL;
+>  	struct pci_dev *pdev = test->pdev;
+>  
+> +	bar_size = pci_resource_len(pdev, barno);
+> +	if (!bar_size)
+> +		return -ENODATA;
+> +
+>  	if (!test->bar[barno])
+>  		return -ENOMEM;
+>  
+> -	bar_size = pci_resource_len(pdev, barno);
+> -
+>  	if (barno == test->test_reg_bar)
+>  		bar_size = 0x4;
+>  
 > -- 
 > 2.48.1
 > 
 
-Gentle ping.
+Gentle ping on this series.
 
 
 Kind regards,
