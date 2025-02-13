@@ -1,137 +1,230 @@
-Return-Path: <linux-pci+bounces-21350-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21351-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F051FA3413E
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 15:05:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 891CEA3427B
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 15:37:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3611C3AB489
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 14:02:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F2BD41886848
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 14:34:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4236D242938;
-	Thu, 13 Feb 2025 13:59:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D92A328382;
+	Thu, 13 Feb 2025 14:34:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OGa3VQ+4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z5Q2IoWj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F332222CE;
-	Thu, 13 Feb 2025 13:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1CF281341;
+	Thu, 13 Feb 2025 14:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739455159; cv=none; b=e32MrrdLYwH9F3IY8C9F2jfgCpvln7gbNVc0Dq1Fj660rBTO7EtZi9YKymz9MfFx81ZxTt4xKww668WDNygp94Y9/f6/BHLKqblLESll8s1jo+MHXPhty87vLEAORzNTwl5ogpmLWL1ZlOTsiWR1S44rEptoVHmDZemi/F+BzhU=
+	t=1739457266; cv=none; b=YRRelRcj50de8MstzCqikwEQ1O+tCT7r29C0o+CeAdDGGR4dpkMk+phJ1+m4tl9bitqm18d6Lp4WP/WwHUqa/ajYmHsxgXHKnTrI2HSudHZSfa6dLH9Kmn7NHFu3VR2gfYpGr4/OI4PZyM2WesCGhJVCA+dKnFtF4ayo92ACIcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739455159; c=relaxed/simple;
-	bh=euBBwIvDl7tFCURaGUj3PZmj5h1cb0chWSv5lC4FY7A=;
+	s=arc-20240116; t=1739457266; c=relaxed/simple;
+	bh=x9esiaGq0KK2qewu87bHS3Bit8mLr73xNbk4rWWChKQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WUE9xVMKUTw5NnItVaQRDHOKpEkXfVZl0r7LDLG4nNiySq2Sk+GynAO00PaZ3oaSmRsXHw+EUB6kVhVyKqjzE2Gl9VuzRtei4eRfNQAEvLKEwiawaiSkSm91yfqmYhspazWwFJW7IWvtCJQNK8T4Cz5Qcd5aZzdb7cv6Ubo7U+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OGa3VQ+4; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739455158; x=1770991158;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=euBBwIvDl7tFCURaGUj3PZmj5h1cb0chWSv5lC4FY7A=;
-  b=OGa3VQ+41bSQNmXGf9mCtwOiuJj9X+H08BpuYLdGxOn5yQqnK+4F3KdY
-   1mtPovJBu7niUknlYoA6w7CtDG05RCrjXjbDvJzsDKPtulRQ1PxvUyWaZ
-   ANoknf6biXf8H3ixSnA11dVCNPLXrk3JhY4Db1pNKpjaRS0Uy5MRp+e1T
-   px1MwvPcEAhcI7iDcXpGAiPcVmmlzmFajCivC6+wbbpQUo+x6nUruuD8c
-   9ZWNyRUy+7XpGgR12Xi89TnrvSTGN3K+7H8WhxAfpqq5+3L3PlEGL5yOV
-   7yL3DDuQlrO7jRo/MSIOPmCHwStt10cu/S3GghOonPA7mY3ZhhgIXlGxA
-   g==;
-X-CSE-ConnectionGUID: vcx5dfXkTgq0+GhUJWc9Mg==
-X-CSE-MsgGUID: FOtI2ojXQDmSp45Sv+y/pQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40189093"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="40189093"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 05:59:16 -0800
-X-CSE-ConnectionGUID: tHRhaz9eRf6DnqbU8OsLZQ==
-X-CSE-MsgGUID: I2OxGvF3TRyCM+nntBIXpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="118157960"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP; 13 Feb 2025 05:59:13 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 99C9C1FD; Thu, 13 Feb 2025 15:59:11 +0200 (EET)
-Date: Thu, 13 Feb 2025 15:59:11 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Kenneth Crudup <kenny@panix.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jian-Hong Pan <jhp@endlessos.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?utf-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Michael Jamet <michael.jamet@intel.com>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
-Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
- Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
-Message-ID: <20250213135911.GG3713119@black.fi.intel.com>
-References: <20250210210502.GA15655@bhelgaas>
- <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
- <20250211055722.GW3713119@black.fi.intel.com>
- <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fGzoeKWB19eRwvH/yhfBsZaZ2zL1xOYbE3mKUWmz9wljxjU/z6pKF6helrZ0ssUEZEf50pShrBJ899dEXCApXDP4fHlR4L2etG/dT1aq1GPelUlCpB9qQR4XJOv3qv2tLdRQGGcjRm1nYVbWOREFzhh2jaLhf8cpsutEAjX2o3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z5Q2IoWj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3D77C4CEE7;
+	Thu, 13 Feb 2025 14:34:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739457266;
+	bh=x9esiaGq0KK2qewu87bHS3Bit8mLr73xNbk4rWWChKQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z5Q2IoWjfOynnESM6yPsukIJs9UG7UgPVA9SZHtmsMk+3lplnYggDYx4hcy5DMM63
+	 wlA1aUM+jPufjIgVLgH+9dknto67zahYpd+1s4iRousCKmfExM7HFPbHc5BdBFoaK8
+	 Rfoc9kbZDknt/9Zz6eqAsKfmr7oPPRgSUkleUquqGUWh0rYE5F8XNy5JgOCI+pIlRH
+	 aPT4ZnJQ2nKPGmOVP+h0gEttCFn04mp7/c3SqeC7AFzPkFH8uuEGC+HxJ8/6w1jq0f
+	 5mHCHzstuEYRA0OHLhaQT30WRLnrYdgXPuRonn+Eq9nNDBet0jGwm8d9yaA6FnczJn
+	 OdguZOtp8h4sw==
+Date: Thu, 13 Feb 2025 15:34:21 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: jingoohan1@gmail.com, shradha.t@samsung.com,
+	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	Frank.Li@nxp.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rockswang7@gmail.com
+Subject: Re: [v2] PCI: dwc: Add the debugfs property to provide the LTSSM
+ status of the PCIe link
+Message-ID: <Z64C7dzY3J7hCbZy@ryzen>
+References: <20250206151343.26779-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
+In-Reply-To: <20250206151343.26779-1-18255117159@163.com>
 
-Hi,
-
-On Mon, Feb 10, 2025 at 10:17:47PM -0800, Kenneth Crudup wrote:
+On Thu, Feb 06, 2025 at 11:13:43PM +0800, Hans Zhang wrote:
+> Add the debugfs property to provide a view of the current link's LTSSM
+> status from the root port device.
 > 
-> The setup is fairly simple (once I'd figured out the failure mode):
+>   /sys/kernel/debug/dwc_pcie_<dev>/ltssm_status
 > 
-> - Have an ASMedia 246x NVMe-to-USB4 housing (with NVMe drive) attached to
-> the system via my TB4 dock (CalDigit TS4, but I've had it happen with a Dell
-> dock as well (either with the drive mounted, or not) when I suspend
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+> Changes since v1:
+> https://lore.kernel.org/linux-pci/20250123071326.1810751-1-18255117159@163.com/
 > 
-> - Resume with the drive disconnected (i.e., I've gone from home to the
-> office).
+> - Do not place into sysfs node as recommended by maintainer. Shradha-based patch
+>   is put into debugfs.
+> - Submissions based on the following patches:
+> https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-2-shradha.t@samsung.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-3-shradha.t@samsung.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-4-shradha.t@samsung.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-5-shradha.t@samsung.com/
+> ---
+>  Documentation/ABI/testing/debugfs-dwc-pcie    |  6 ++
+>  .../controller/dwc/pcie-designware-debugfs.c  | 70 ++++++++++++++++---
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  4 +-
+>  .../pci/controller/dwc/pcie-designware-host.c | 54 +++++++++++++-
+>  drivers/pci/controller/dwc/pcie-designware.h  | 43 ++++++++++--
+>  5 files changed, 159 insertions(+), 18 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/debugfs-dwc-pcie b/Documentation/ABI/testing/debugfs-dwc-pcie
+> index d3f84f46b400..bf0116012175 100644
+> --- a/Documentation/ABI/testing/debugfs-dwc-pcie
+> +++ b/Documentation/ABI/testing/debugfs-dwc-pcie
+> @@ -142,3 +142,9 @@ Description:	(RW) Some lanes in the event list are lane specific events. These i
+>  		events 1) - 11) and 34) - 35).
+>  		Write lane number for which counter needs to be enabled/disabled/dumped.
+>  		Read will return the current selected lane number. Lane0 is selected by default.
+> +
+> +What:		/sys/kernel/debug/dwc_pcie_<dev>/ltssm_status
+> +Date:		February 2025
+> +Contact:	Hans Zhang <18255117159@163.com>
+> +Description:	(RO) Read will return the current value of the PCIe link status raw value and
+> +		string status.
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> index 5d883b13be84..ddfb854aa684 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> @@ -465,7 +465,7 @@ static const struct file_operations dwc_pcie_counter_value_ops = {
+>  	.read = counter_value_read,
+>  };
+>  
+> -void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
+> +static void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
+>  {
+>  	struct dwc_pcie_rasdes_info *rinfo = pci->rasdes_info;
+>  
+> @@ -473,13 +473,12 @@ void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
+>  	mutex_destroy(&rinfo->reg_lock);
+>  }
+>  
+> -int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci)
+> +static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
+>  {
+> -	struct dentry *dir, *rasdes_debug, *rasdes_err_inj, *rasdes_event_counter, *rasdes_events;
+> +	struct dentry *rasdes_debug, *rasdes_err_inj, *rasdes_event_counter, *rasdes_events;
+>  	struct dwc_pcie_rasdes_info *rasdes_info;
+>  	struct dwc_pcie_rasdes_priv *priv_tmp;
+>  	const struct dwc_pcie_vendor_id *vid;
+> -	char dirname[DWC_DEBUGFS_BUF_MAX];
+>  	struct device *dev = pci->dev;
+>  	int ras_cap, i, ret;
+>  
+> @@ -498,12 +497,6 @@ int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci)
+>  	if (!rasdes_info)
+>  		return -ENOMEM;
+>  
+> -	/* Create main directory for each platform driver */
+> -	snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
+> -	dir = debugfs_create_dir(dirname, NULL);
+> -	if (IS_ERR(dir))
+> -		return PTR_ERR(dir);
+> -
+>  	/* Create subdirectories for Debug, Error injection, Statistics */
+>  	rasdes_debug = debugfs_create_dir("rasdes_debug", dir);
+>  	rasdes_err_inj = debugfs_create_dir("rasdes_err_inj", dir);
+> @@ -559,3 +552,60 @@ int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci)
+>  	dwc_pcie_rasdes_debugfs_deinit(pci);
+>  	return ret;
+>  }
+> +
+> +static int dwc_pcie_ltssm_status_show(struct seq_file *s, void *v)
+> +{
+> +	struct dw_pcie *pci = s->private;
+> +	enum dw_pcie_ltssm val;
+> +
+> +	val = dw_pcie_get_ltssm(pci);
+> +	seq_printf(s, "%s (0x%02x)\n", dw_ltssm_sts_string(val), val);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dwc_pcie_ltssm_status_open(struct inode *inode, struct file *file)
+> +{
+> +	return single_open(file, dwc_pcie_ltssm_status_show, inode->i_private);
+> +}
+> +
+> +static const struct file_operations dwc_pcie_ltssm_status_ops = {
+> +	.open = dwc_pcie_ltssm_status_open,
+> +	.read = seq_read,
+> +};
+> +
+> +static void dwc_pcie_ltssm_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
+> +{
+> +	debugfs_create_file("ltssm_status", 0444, dir, pci,
+> +			    &dwc_pcie_ltssm_status_ops);
+> +}
+> +
+> +void dwc_pcie_debugfs_deinit(struct dw_pcie *pci)
+> +{
+> +	dwc_pcie_rasdes_debugfs_deinit(pci);
+> +	debugfs_remove_recursive(pci->debugfs);
+> +}
+> +
+> +int dwc_pcie_debugfs_init(struct dw_pcie *pci)
+> +{
+> +	char dirname[DWC_DEBUGFS_BUF_MAX];
+> +	struct device *dev = pci->dev;
+> +	struct dentry *dir;
+> +	int ret;
+> +
+> +	/* Create main directory for each platform driver */
+> +	snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
+> +	dir = debugfs_create_dir(dirname, NULL);
+> +	if (IS_ERR(dir))
+> +		return PTR_ERR(dir);
+> +
+> +	pci->debugfs = dir;
+> +	ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
+> +	if (ret)
+> +		dev_dbg(dev, "rasdes debugfs init failed\n");
+> +
+> +	dwc_pcie_ltssm_debugfs_init(pci, dir);
+> +
+> +	return 0;
+> +}
+> +
 
-I see this is fairly normal use-case (sans the disk I guess). Steps to
-follow are then something like:
+Stray newline here.
+This causes:
 
-1. Boot the system, nothing connected.
-2. Connect CalDigit TS4 (PCIe tunnel is enabled by the UI) to the host Type-C port.
-3. Connect ASMedia NVMe to CalDigit downstream Type-C port (PCIe tunnel is enabled by the UI).
-4. Verify that the NVMe is visible (lspci, lsblk).
+/home/nks/src/linux/.git/worktrees/linux-scratch/rebase-apply/patch:136: new blank line at EOF.
++
+warning: 1 line adds whitespace errors.
 
-The topology looks like below:
+when doing git am.
 
-  Host <- TB -> CalDigit TS4 <- TB -> NVMe
 
-5. Suspend the system (close the lid).
-6. Unplug the CalDigit TS4.
-7. Resume the system (open the lid).
+Also, this patch does not apply anymore, because of a conflict introduce by:
+112aba9a7934 ("PCI: dwc: Remove LTSSM state test in dw_pcie_suspend_noirq()")
 
-Expectation: system wakes up just fine.
-Actual behavior: system crashes and burns.
+Which added:
++       DW_PCIE_LTSSM_DETECT_WAIT = 0x6,
+to drivers/pci/controller/dwc/pcie-designware.h
 
-Do you BTW, unmount the filesystem before you suspend?
 
-> It doesn't happen every time, and for some crazy reason elapsed time between
-> suspend and resume seems to make it more likely to happen. Plus it seems
-> directly attaching the drive (i.e., no dock in between) doesn't cause
-> resumes to fail.
-
-It would be good to see the dmesg output (with thunderbolt.dyndbg=+p) with
-these connected, even without suspending so see if there is anything
-missing. Since it is Dell system I would expect they have tested this in
-Linux pretty well so probably we don't see anything weird there.
-
-I have similar here (not the same devices though) so I can try on my end if
-this repros.
+Kind regards,
+Niklas
 
