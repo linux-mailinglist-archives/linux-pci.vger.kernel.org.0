@@ -1,155 +1,132 @@
-Return-Path: <linux-pci+bounces-21387-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21388-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DF57A35074
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 22:26:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA2B8A350A1
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 22:46:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 515C316DA2E
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 21:26:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 53BB13ADD33
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 21:46:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD9E52661AF;
-	Thu, 13 Feb 2025 21:26:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3556B24169C;
+	Thu, 13 Feb 2025 21:46:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxcId6lt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDVYB6ZP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A332266194;
-	Thu, 13 Feb 2025 21:26:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9141714B7;
+	Thu, 13 Feb 2025 21:46:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739481989; cv=none; b=Lp/svnhZaQex0xUs80IwSifabL60LOtDidVFVSHYP6M3yX/VpNH4ubspioImZIGYOnSNBFXS5eMRqn+2NwgXlKrNgNe1qT4DYr+SBSY5sam3dZ1Y153mL+PojBwe9nLoE1KyOhqLP98h/4foet14/z32PcQKvK4mseF1gM/9CLE=
+	t=1739483181; cv=none; b=Lo4AfRmojvHEVZCJRDBaY8yAjXcxM2WNCOnbYk0v1Y8UXz5yU20pj3PtajPVvT6+pMxwxKtfxvFWOwzEtT9xETOtxseTrdbodcuduVv+I1WcuxlFRa40aqjrLA7f+cZs1T66p4jjaeaMTsyW73mZfZK+I9B9tcJn3q9sS7V/lBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739481989; c=relaxed/simple;
-	bh=kd5YH4NzkubOTTFMv3z34LQ4GBHbqGwLBDJZ3FgGaHw=;
+	s=arc-20240116; t=1739483181; c=relaxed/simple;
+	bh=WN1izrHpHS8vpC+8IvMWIbDSUAEMyvQrALWFdqnuBdo=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=FRKczMfboCUg/dXUV24p2ZNtFDnukKvnqLRIL8evEbyKun7Mb/GC5jOpW4tzuuVy9WTsV6F7WzH9Lsr1xbe9x18YZWHHOS/7L75Vs2lp/I0PlM1seWXW1/XGFHW0tlFhxcmW0HY64HvJsZ25KsWOXYPEphnDHJAy91KQOWxkA2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxcId6lt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9425C4CED1;
-	Thu, 13 Feb 2025 21:26:28 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=D2WEihNHY8YjuYWB+7ywhDjdKvGn3WUzdqRIACNWdCyLiO9yjqUo9pjj7YQejBl47UkAXom+9VxLULfLG5IlYxPxu46rw82B5JZne3yUTVKn9LTMPQMCc/vb596/QhGDmTG1WPlgN1fgG1tjYoJFQyAX+L5qNHvg7GahgX+z93I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDVYB6ZP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE65C4CEE9;
+	Thu, 13 Feb 2025 21:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739481989;
-	bh=kd5YH4NzkubOTTFMv3z34LQ4GBHbqGwLBDJZ3FgGaHw=;
+	s=k20201202; t=1739483180;
+	bh=WN1izrHpHS8vpC+8IvMWIbDSUAEMyvQrALWFdqnuBdo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=DxcId6ltk/cwmtittF2HjOuXY+DT7BGPXEpyiGpfxRoBIECUspiS6lS2YzmbrWsNp
-	 tFAsq9H5dtX1qfdyhUktXJKm8iJ3DOx6P2a/hLUvSnjylALLcOiXBt3mFhJHgFrl1Y
-	 i1b3GF0C2CtUGz+tvuStdRPNcuWOKvvlUBv+cX5Py6sLDqUvEEN7mRHvoHEhvFslAx
-	 sCBWceOVWraY9KZoGZsyJFP8T6sPovu7WyuQ8booJ9T+CNNZySz1r3pIU3Zi0c1FtO
-	 MFur9HfUCFb5QryHdpp87yWxA8BIB3Dm4rHDy59cgEOuzmu4X2CugbIAAeNAvG4zx5
-	 XazZIaW7V1RRg==
-Date: Thu, 13 Feb 2025 15:26:27 -0600
+	b=nDVYB6ZP3BEivt/jaDZwf8tWnqX/1BhpDuW0zGcXfyiiAWUtNGI1V9IIi53/EBI1i
+	 cKAeJH/MJ1g/86kibrbANTYDqvZu+VR/jRolfljZikAhxGkS47yEQzAj4H5G34ETnQ
+	 ebT48FZDQ2CzM7IqfJ9t7iaLXOZyCDvUnqJls+sHELbPfi8tPZkMO3D16Nh/v0z+9K
+	 zkd5HDws1HGebBHv1uk8zq9Tdk2hG1l+a/v9L8f0yVP2798Y7yRFn9vscL/x2nnMin
+	 eBYGyRylU7JexwdNHLNCt9EoAnmRw4YYpLTZsxYaL4LYDSDwzS9LwvLDXgsqR2Tw+k
+	 ROHTo44WTzr5g==
+Date: Thu, 13 Feb 2025 15:46:18 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-Cc: scott@spiteful.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] PCI: cpci: remove unused fields
-Message-ID: <20250213212627.GA129476@bhelgaas>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
+	Igor Mammedov <imammedo@redhat.com>, linux-kernel@vger.kernel.org,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 00/25] PCI: Resource fitting/assignment fixes and cleanups
+Message-ID: <20250213214618.GA131855@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250213173925.200404-1-trintaeoitogc@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
 
-On Thu, Feb 13, 2025 at 02:39:25PM -0300, Guilherme Giacomo Simoes wrote:
-> The `get_power()` and `set_power()` function pointers in the
-> `cpci_hp_controller ops` struct were declared but never implemented by
-> any driver. To improve code readability and reduce resource usage,
-> remove this pointers and replace with a `flags` field.
+On Mon, Dec 16, 2024 at 07:56:07PM +0200, Ilpo Järvinen wrote:
+> Hi all,
 > 
-> Use the new `flags` field in `enable_slot()`, `disable_slot()`, and
-> `cpci_get_power_s atus()` to track the slot's power state using the
-> `SLOT_ENABLED` macro.
+> This series focuses on PCI resource fitting and assignment algorithms.
+> I've further changes in works to enable handling resizable BARs better
+> during resource fitting built on top of these, but that's still WIP and
+> this series seems way too large as is to have more stuff included.
 > 
-> Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-> ---
->  drivers/pci/hotplug/cpci_hotplug.h      |  3 +--
->  drivers/pci/hotplug/cpci_hotplug_core.c | 21 +++++++--------------
->  2 files changed, 8 insertions(+), 16 deletions(-)
+> First there are small tweaks and fixes to the relaxed tail alignment
+> code and applying the lessons learned to other similar cases. They are
+> sort of independent of the rest. Then a large set of pure cleanups and
+> refactoring that are not intended to make any functional changes.
+> Finally, starting from "PCI: Extend enable to check for any optional
+> resource" are again patches that aim to make behavioral changes to fix
+> bridge window sizing to consider expansion ROM as an optional resource
+> (to fix a remove/rescan cycle issue) and improve resource fitting
+> algorithm in general.
 > 
-> diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
-> index 03fa39ab0c88..c5cb12cad2b4 100644
-> --- a/drivers/pci/hotplug/cpci_hotplug.h
-> +++ b/drivers/pci/hotplug/cpci_hotplug.h
-> @@ -44,8 +44,7 @@ struct cpci_hp_controller_ops {
->  	int (*enable_irq)(void);
->  	int (*disable_irq)(void);
->  	int (*check_irq)(void *dev_id);
-> -	u8  (*get_power)(struct slot *slot);
-> -	int (*set_power)(struct slot *slot, int value);
-> +	int flags;
->  };
->  
->  struct cpci_hp_controller {
-> diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
-> index d0559d2faf50..87a743c2a5f1 100644
-> --- a/drivers/pci/hotplug/cpci_hotplug_core.c
-> +++ b/drivers/pci/hotplug/cpci_hotplug_core.c
-> @@ -27,6 +27,8 @@
->  #define DRIVER_AUTHOR	"Scott Murray <scottm@somanetworks.com>"
->  #define DRIVER_DESC	"CompactPCI Hot Plug Core"
->  
-> +#define SLOT_ENABLED 0x00000001
-> +
->  #define MY_NAME	"cpci_hotplug"
->  
->  #define dbg(format, arg...)					\
-> @@ -71,13 +73,12 @@ static int
->  enable_slot(struct hotplug_slot *hotplug_slot)
->  {
->  	struct slot *slot = to_slot(hotplug_slot);
-> -	int retval = 0;
->  
->  	dbg("%s - physical_slot = %s", __func__, slot_name(slot));
->  
-> -	if (controller->ops->set_power)
-> -		retval = controller->ops->set_power(slot, 1);
-> -	return retval;
-> +	controller->ops->flags |= SLOT_ENABLED;
+> The series includes one of the change from Michał Winiarski
+> <michal.winiarski@intel.com> as these changes also touch the same IOV
+> checks.
+> 
+> Please let me know if you'd prefer me to order the changes differently
+> or split it into smaller chunks.
+> 
+> 
+> I've extensively tested this series over the hosts in our lab which
+> have quite heterogeneous PCI setup each. There were no losses of any
+> important resource. Without pci=realloc, there's some churn in which of
+> the disabled expansion ROMs gets a scarce memory space assigned (with
+> pci=realloc, they are all assigned large enough bridge window).
+> 
+> 
+> Ilpo Järvinen (24):
+>   PCI: Remove add_align overwrite unrelated to size0
+>   PCI: size0 is unrelated to add_align
+>   PCI: Simplify size1 assignment logic
+>   PCI: Optional bridge window size too may need relaxing
+>   PCI: Fix old_size lower bound in calculate_iosize() too
+>   PCI: Use SZ_* instead of literals in setup-bus.c
+>   PCI: resource_set_range/size() conversions
+>   PCI: Check resource_size() separately
+>   PCI: Add pci_resource_num() helper
+>   PCI: Add dev & res local variables to resource assignment funcs
+>   PCI: Converge return paths in __assign_resources_sorted()
+>   PCI: Refactor pdev_sort_resources() & __dev_sort_resources()
+>   PCI: Use while loop and break instead of gotos
+>   PCI: Rename retval to ret
+>   PCI: Consolidate assignment loop next round preparation
+>   PCI: Remove wrong comment from pci_reassign_resource()
+>   PCI: Add restore_dev_resource()
+>   PCI: Extend enable to check for any optional resource
+>   PCI: Always have realloc_head in __assign_resources_sorted()
+>   PCI: Indicate optional resource assignment failures
+>   PCI: Add debug print when releasing resources before retry
+>   PCI: Use res->parent to check is resource is assigned
+>   PCI: Perform reset_resource() and build fail list in sync
+>   PCI: Rework optional resource handling
+> 
+> Michał Winiarski (1):
+>   PCI: Add a helper to identify IOV resources
+> 
+>  drivers/pci/pci.h       |  44 +++-
+>  drivers/pci/setup-bus.c | 566 +++++++++++++++++++++++-----------------
+>  drivers/pci/setup-res.c |   8 +-
+>  3 files changed, 364 insertions(+), 254 deletions(-)
 
-There are no implementations of ->set_power() or ->get_power(), are
-there?  If not, we can just remove them and the calls to them.
-
-I don't see why we should add SLOT_ENABLED.
-
-> +	return 0;
->  }
->  
->  static int
-> @@ -109,11 +110,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
->  	}
->  	cpci_led_on(slot);
->  
-> -	if (controller->ops->set_power) {
-> -		retval = controller->ops->set_power(slot, 0);
-> -		if (retval)
-> -			goto disable_error;
-> -	}
-> +	controller->ops->flags &= ~SLOT_ENABLED;
->  
->  	slot->adapter_status = 0;
->  
-> @@ -129,11 +126,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
->  static u8
->  cpci_get_power_status(struct slot *slot)
->  {
-> -	u8 power = 1;
-> -
-> -	if (controller->ops->get_power)
-> -		power = controller->ops->get_power(slot);
-> -	return power;
-> +	return controller->ops->flags & SLOT_ENABLED;
->  }
->  
->  static int
-> -- 
-> 2.34.1
-> 
+Applied to pci/resource for v6.15, thanks, Ilpo!
 
