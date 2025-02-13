@@ -1,80 +1,80 @@
-Return-Path: <linux-pci+bounces-21394-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21403-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B83ADA351AC
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 23:54:25 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E253A3527B
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 01:13:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C04616C9D2
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 22:54:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5DF407A451D
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 00:12:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7F932753ED;
-	Thu, 13 Feb 2025 22:54:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00EA380B;
+	Fri, 14 Feb 2025 00:13:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="mfDFaQVa"
+	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="Qwi3OBhl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx08-001d1705.pphosted.com (mx08-001d1705.pphosted.com [185.183.30.70])
+Received: from mx07-001d1705.pphosted.com (mx07-001d1705.pphosted.com [185.132.183.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9672753EA
-	for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 22:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.183.30.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EB2173;
+	Fri, 14 Feb 2025 00:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.183.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739487261; cv=none; b=KQwhfGBgwxv32w59bN8mZhymU0hmXdQRMN+H0ce/av43vsLNEsTguo8X5SjpSvR/nwoDwEjPT1V3UKdMGKemjXkXfh4KBrCbLwrBzrquJwGR/7KoKfD4kSv3RLQHqqZhZCZgIjdWZyKaq6aV4Aqr/5qTkvjDByWtClogwzboVo8=
+	t=1739492000; cv=none; b=s3Dn/cO4UKMNZZpYCkCUCiK9I8VSB7cw6E4/21fi5GAXR3iMLlqMfItH4NWEMlV5mlD8i8jL/YJhKvHM42fdgkPUAaBJETw/1Cc/3ggX0jnZGZYGr1TsL2n+0PT7iPJRjS/LnTBKmQu3OZY/ExsOdsf6BAXK37VRw0YKDcpT+OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739487261; c=relaxed/simple;
-	bh=4sJVtUSZV5DCbBYo/FKqwGWgbqjpBe4x5gnO3LMl4ZQ=;
+	s=arc-20240116; t=1739492000; c=relaxed/simple;
+	bh=J8lfdNURsyQQwG/brZwueVqAFyDlbQLxSQQj/vw6JCk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C1bkmbFYJQydnBQ2XEKNK/iCPkbOs5rRDCmDSb1ZElDexvUgOFNjum+6nKg36uBAod778U3pm9VKc1irUpaB4FUWxEis8r419pM0Gc9QQevu5V/FDpQvw5HLaewf6OX2itLD3qaAGePoJq7DblZS0eYzCXLlpH0b9jfX0G7vrwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=mfDFaQVa; arc=none smtp.client-ip=185.183.30.70
+	 MIME-Version; b=WGDP8FGwvenyU+dPyBEdQG8zjswMkgI81l2fKV7mM6nXHHdnxsX/jVBiiBDBLYvAKhmyhmGlGRy5Vb78oGKsDlFKy2SsPyfGd1yb935gvcEJvHBt5Cbveb9DJZVeUkjTytzeS/tOH4IUgbi9bUU7faW+UWLYlvumxbP62HqEMVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=Qwi3OBhl; arc=none smtp.client-ip=185.132.183.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
-Received: from pps.filterd (m0209319.ppops.net [127.0.0.1])
-	by mx08-001d1705.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DMPH01005547;
-	Thu, 13 Feb 2025 22:53:59 GMT
+Received: from pps.filterd (m0209327.ppops.net [127.0.0.1])
+	by mx08-001d1705.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51DMBVvD005865;
+	Thu, 13 Feb 2025 22:54:04 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sony.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=S1; bh=k+yvTWxEteJcSK2IF9
-	7K9DbxdiD+0v96dCzvMfoC4Rg=; b=mfDFaQVaCkSt6sXERbGdq6UzNOq7vXjbhv
-	YgfIIKtq/J+6HN1FUtYvhD8Y2VU2fEgBVWxtLXm7Xql3FE+z7jVudwB3b6rxsCx7
-	Khu3NQk+MfYxjfd3BGWuxU3gucnDDfXvluPZsxtPgY5qHUqKFtoijHstX8TTVmcI
-	+Qgp4C/1Tga5v2VZQc0kcWa80lReHf1T6RdVr+e6D0zamOOsBsB8HjAcGR4FGZLx
-	czCsgSTwXwS1XYPMOMBPFGJwV3zkfpD5Oe19y2jhfC8CYuC42Icqe3/P6E54T7kw
-	XLzQOcT+oO6CEjTq+f6oWQdyUlqdn1Z50ltkM52mmp6Cv6ocMjaw==
-Received: from usculxsnt01v.am.sony.com (usculxsnt01v.am.sony.com [160.33.194.232])
-	by mx08-001d1705.pphosted.com (PPS) with ESMTPS id 44p0ngn0ux-1
+	:mime-version:references:subject:to; s=S1; bh=dOVBIbU7CeccHBPHc4
+	No+HRUbQGRhXCcN5B0Wo/jQuE=; b=Qwi3OBhlguoApGv8LQIo9Eou0g/iyJtTMG
+	v57yXxZlwBeExXzri/f7pWhN/ygW34pL+m/Z0PeYQwcsgFqa8cyybg3vmgIpI8Z9
+	T+k+xZ40rPzWJjPxKsM6ADDBHmO3iofZafIul+yGECTbD6uEWRJIa8XP8abZXAU5
+	RCAtzf7AGz2OlusO+VjluqZavAYIrf/fCfGiPsBhcoYhnPjSdftIyySqyKVLctub
+	QyEbdSnUa2+HWi/KT0Do6KQQ11fnGvHGffv1hqABX1wQbfnpsS+I57svIp9cpCP5
+	FnhHFTXxvlV7vmyNtInvG5SteQoRAAtbexRh04We7C8of53iV49A==
+Received: from sgppsea02v.sg.gdce.sony.com.sg ([121.100.43.226])
+	by mx08-001d1705.pphosted.com (PPS) with ESMTPS id 44p0rfngwd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 13 Feb 2025 22:53:58 +0000 (GMT)
-Received: from pps.filterd (USCULXSNT01v.am.sony.com [127.0.0.1])
-	by USCULXSNT01v.am.sony.com (8.17.1.19/8.17.1.19) with ESMTP id 51DKrJgP027746;
-	Thu, 13 Feb 2025 22:53:57 GMT
+	Thu, 13 Feb 2025 22:54:04 +0000 (GMT)
+Received: from pps.filterd (SGPPSEA02v.sg.gdce.sony.com.sg [127.0.0.1])
+	by SGPPSEA02v.sg.gdce.sony.com.sg (8.17.1.19/8.17.1.19) with ESMTP id 51DLDKQ9012983;
+	Thu, 13 Feb 2025 22:54:02 GMT
 Received: from usculxsnt14v.am.sony.com ([146.215.230.38])
-	by USCULXSNT01v.am.sony.com (PPS) with ESMTPS id 44nxhfthwk-1
+	by SGPPSEA02v.sg.gdce.sony.com.sg (PPS) with ESMTPS id 44p0bn0de2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Feb 2025 22:53:57 +0000
+	Thu, 13 Feb 2025 22:54:02 +0000
 Received: from pps.filterd (usculxsnt14v.am.sony.com [127.0.0.1])
-	by USCULXSNT14V.am.sony.com (8.17.1.19/8.17.1.19) with ESMTP id 51DM62Vx025105;
-	Thu, 13 Feb 2025 22:53:57 GMT
+	by USCULXSNT14V.am.sony.com (8.17.1.19/8.17.1.19) with ESMTP id 51DM62W1025105;
+	Thu, 13 Feb 2025 22:53:59 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by USCULXSNT14V.am.sony.com (PPS) with ESMTPS id 44pnhvvph1-1
+	by USCULXSNT14V.am.sony.com (PPS) with ESMTPS id 44pnhvvph4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 13 Feb 2025 22:53:57 +0000
+	Thu, 13 Feb 2025 22:53:59 +0000
 Received: from usculxsnt14v.am.sony.com (usculxsnt14v.am.sony.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51DMriAp125634;
-	Thu, 13 Feb 2025 22:53:56 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51DMriAr125634;
+	Thu, 13 Feb 2025 22:53:59 GMT
 Received: from cronos-ws00.ad.gaikai.biz ([10.10.10.214])
-	by USCULXSNT14V.am.sony.com (PPS) with ESMTP id 44pnhvvpg7-3;
-	Thu, 13 Feb 2025 22:53:56 +0000
+	by USCULXSNT14V.am.sony.com (PPS) with ESMTP id 44pnhvvpg7-4;
+	Thu, 13 Feb 2025 22:53:58 +0000
 From: Maciej Grochowski <Maciej.Grochowski@sony.com>
 To: kurt.schwemmer@microsemi.com, logang@deltatee.com
 Cc: jdmason@kudzu.us, dave.jiang@intel.com, allenbh@gmail.com,
         linux-pci@vger.kernel.org, ntb@lists.linux.dev,
         Maciej Grochowski <Maciej.Grochowski@sony.com>
-Subject: [PATCH 2/3] [PATCH 2/3] ntb: ntb_hw_switchtec: Fix array-index-out-of-bounds access
-Date: Thu, 13 Feb 2025 14:53:18 -0800
-Message-Id: <20250213225319.1965-3-Maciej.Grochowski@sony.com>
+Subject: [PATCH 3/3] [PATCH 3/3] ntb: ntb_hw_switchtec: Increase MAX_MWS limit to 256
+Date: Thu, 13 Feb 2025 14:53:19 -0800
+Message-Id: <20250213225319.1965-4-Maciej.Grochowski@sony.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20250213225319.1965-1-Maciej.Grochowski@sony.com>
 References: <20250213225319.1965-1-Maciej.Grochowski@sony.com>
@@ -85,46 +85,43 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Sony-BusinessRelay-GUID: qfs6c7YoaYPJF44IJ2MG_YZNCsRjYjmQ
+X-Sony-BusinessRelay-GUID: lpVoi5jRH5ThVpzvoGqDa1eB7_8pkQaN
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-13_07,2025-02-13_01,2024-11-22_01
-X-Sony-EdgeRelay-GUID: hwZkNV2y2D-3l8_37FgVK5GIMHBVvEDc
+X-Sony-EdgeRelay-GUID: dFo13wMvq61BJ-C2DEfQBC13pO0DgY9C
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-13_08,2025-02-13_01,2024-11-22_01
-X-Proofpoint-GUID: zpuSiJ7hHGTx41ppE8y8BWQXGEFnm_94
-X-Proofpoint-ORIG-GUID: zpuSiJ7hHGTx41ppE8y8BWQXGEFnm_94
-X-Sony-Outbound-GUID: zpuSiJ7hHGTx41ppE8y8BWQXGEFnm_94
+ definitions=2025-02-13_07,2025-02-13_01,2024-11-22_01
+X-Proofpoint-GUID: 1E1q9M_0U7ij98JiPvEw6bVKFEwhnpdp
+X-Proofpoint-ORIG-GUID: 1E1q9M_0U7ij98JiPvEw6bVKFEwhnpdp
+X-Sony-Outbound-GUID: 1E1q9M_0U7ij98JiPvEw6bVKFEwhnpdp
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-13_08,2025-02-13_01,2024-11-22_01
 
-Number of MW LUTs depends on NTB configuration and can be set to MAX_MWS,
-This patch protects against invalid index out of bounds access to mw_sizes
-When invalid access print message to user that configuration is not valid.
+Microchip NTB switchtec devices supports up to 512 LUT's across all
+NT partitions. This patch enable symmetric NTB configuration to utilize 
+all 512 memory windows across 2 peers partitions.
 
 Signed-off-by: Maciej Grochowski <Maciej.Grochowski@sony.com>
 ---
- drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/ntb/hw/mscc/ntb_hw_switchtec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-index 6ab094b0850a..51a3766b3f67 100644
+index 51a3766b3f67..98cd4121bef2 100644
 --- a/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
 +++ b/drivers/ntb/hw/mscc/ntb_hw_switchtec.c
-@@ -1316,6 +1316,11 @@ static void switchtec_ntb_init_shared(struct switchtec_ntb *sndev)
- 	for (i = 0; i < sndev->nr_lut_mw; i++) {
- 		int idx = sndev->nr_direct_mw + i;
+@@ -29,7 +29,7 @@ MODULE_PARM_DESC(use_lut_mws,
+ 		 "Enable the use of the LUT based memory windows");
  
-+		if (idx >= MAX_MWS) {
-+			dev_err(&sndev->stdev->dev,
-+				"Total number of MW cannot be bigger than %d", MAX_MWS);
-+			break;
-+
- 		sndev->self_shared->mw_sizes[idx] = LUT_SIZE;
- 	}
- }
+ #define SWITCHTEC_NTB_MAGIC 0x45CC0001
+-#define MAX_MWS     128
++#define MAX_MWS     256
+ 
+ struct shared_mw {
+ 	u32 magic;
 -- 
 2.20.1
 
