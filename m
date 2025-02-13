@@ -1,146 +1,148 @@
-Return-Path: <linux-pci+bounces-21344-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21345-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AEA1A3407D
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 14:37:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2C2AA34087
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 14:39:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B54C516A7A1
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 13:37:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC9993A8F97
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 13:39:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C161221554;
-	Thu, 13 Feb 2025 13:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60DE370830;
+	Thu, 13 Feb 2025 13:39:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WVxxFiMf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k+dkZpsR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFF823F439
-	for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 13:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7AA227EB5
+	for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 13:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739453865; cv=none; b=lyR5DBEGhKjRsb8GjHD2BMSK8nJZkFM9TK9p54Ob4ouSL6lpkDQGSZYGrwDzE59qVOLNh3w/lfdPWsxttRuWVm7dK+C5tTKjJyHykK709Zny8DDJyP1rwuuclxZrBhVcDQlh7YKoZGb1AbHjxwt9fNZnx99E2IVbUC6zRlpegK0=
+	t=1739453964; cv=none; b=WqX7BVBGGb0sfJK8NaD/eE1TGybm6VZHTC1Geggmmdr11br0ppmLcmhwHlq8HjrLa3kWo45+TProcwKZptcGRGcEIXad7WBvEq66ajrcd88xVu1VtjRcFE0MRvFi6HmL+K6ICXu9XVm+DbToZG1CmRCUzsESajpv88IycImDGRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739453865; c=relaxed/simple;
-	bh=VwoVqFvbHwOvEtHzMgL9ILbRzaH5KFuPLOLH75H5kRQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=MVZ4f9qOrJqSzK1vp3WZe2J4eqkqlznGzsiHbFcqxmEIs3/jzo0G6ega78hMxT/ZlJBgQrb9yYRqwi+sz9qCql+94sqAFvhswnNd78N8QDVk1Xj5g2/QKN8OkPm5X9Q2NwoDJEAQPHDDgpcnFTf2k0yjignaLwmyeclaCkrdCHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WVxxFiMf; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739453863; x=1770989863;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=VwoVqFvbHwOvEtHzMgL9ILbRzaH5KFuPLOLH75H5kRQ=;
-  b=WVxxFiMfoWQo69NBkr859nv6W9+FQRXta0+/pnGAPc+is+B+OuEtJSts
-   vE5PKDV+6k3fYcXvhGmzg6/WQSbVNAROTFH1x2SmjNBtsV5+EukSrHRdG
-   ohF7DP7AJApv04l021FRf9B17n0XS0adS4EwOtxJumvyk9LT2AO9Uq8rR
-   sFsm/sEKsnh9lOlcTNTnq5F0dlFzOSd9X54lLIxNphombmmkQ0IlpHK+A
-   wo4EQ+u1A1KsHq6B1Q5hWEpmKCEe+KLbFOIO0ypnbEIFR1ccoskbyCaLc
-   y52ARUXaT/haUbIWkaMJD4krXcczXs9T8b0sKjGExFm06Jk/TZ6ykNHsk
-   Q==;
-X-CSE-ConnectionGUID: rlUOmFtqRxGdgET6FYLgYg==
-X-CSE-MsgGUID: 73M52rh+SXuwHORBkvdS4w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40026671"
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="40026671"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 05:37:41 -0800
-X-CSE-ConnectionGUID: ZKpJZHfTThenAWBo18umQw==
-X-CSE-MsgGUID: BdLde0qWTkKY4lxcYt1ISQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
-   d="scan'208";a="113675936"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.48])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 05:37:39 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 13 Feb 2025 15:37:34 +0200 (EET)
-To: Keith Busch <kbusch@meta.com>
-cc: bhelgaas@google.com, linux-pci@vger.kernel.org, 
-    Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH] pci: allow user specifiy a reset wait timeout
-In-Reply-To: <20250207204310.2546091-1-kbusch@meta.com>
-Message-ID: <693ad66c-877b-6ef8-50ef-50ca797787bd@linux.intel.com>
-References: <20250207204310.2546091-1-kbusch@meta.com>
+	s=arc-20240116; t=1739453964; c=relaxed/simple;
+	bh=3Y8JAMvGwkl0I4uP/Jr71t7t/vUuJfYtZWoM6GgZXfI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LxmB1Yi9c8NeFTMT98rr14m7wGI/frtXijWb5G3tO1JMuDv94c4j0RJ9SjMrmIfnYlx2VKpeiICIjYdmoaBPA2/sjK6FXCEoWzPdvKj6sRwHBUc/zuEneKSkcB9bEfOGM9WXhnGin/U3h5+EnW+z51fAWBR5C3AcAztHSOjqtF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k+dkZpsR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777A4C4CED1;
+	Thu, 13 Feb 2025 13:39:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739453963;
+	bh=3Y8JAMvGwkl0I4uP/Jr71t7t/vUuJfYtZWoM6GgZXfI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=k+dkZpsRhp0RUgGSypGaPL2P7+yUHGHbYQhDQzszjajGNYsLVZ26a+KEq069YNC74
+	 GILZOeDumDo+dnn5znYbB8XpqPGVJvJxsmXy7BFhTK2Co5MFaIh46mG/+O6uFl7i/f
+	 vHY4CEmCOdCP+GS8kVC7mezRGIooOLNp+e0AFlda4Uyk7g5YTYqGGsGsaWyt76qwRs
+	 3yne3+9IQWbuMHrg/G29Mk80MfZvFSqIpsNPp24Qta5zUowlzXuBIYFZdJ6nCvSqTJ
+	 2eLcNoXgcr+pQAWXbagKuau8vlu4DFsPx4QES82IHJQjz3beCoO+d/Fky16thmmvZn
+	 8QtGQdtlS9CYA==
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Niklas Cassel <cassel@kernel.org>,
+	Hans Zhang <18255117159@163.com>,
+	Frank Li <Frank.Li@nxp.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v3] misc: pci_endpoint_test: Handle BAR sizes larger than INT_MAX
+Date: Thu, 13 Feb 2025 14:39:14 +0100
+Message-ID: <20250213133913.17391-2-cassel@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2867; i=cassel@kernel.org; h=from:subject; bh=3Y8JAMvGwkl0I4uP/Jr71t7t/vUuJfYtZWoM6GgZXfI=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLXfmOc/Kdq9m7PwuCuB1qP4/5mbdl18dHOl1aHlxUuS 54p6NE3raOUhUGMi0FWTJHF94fL/uJu9ynHFe/YwMxhZQIZwsDFKQAT2WfGyHBENcDzQ1CjuccJ U+bnkydbn7F+/eKMwfrPnUY2/y6f1drE8L8sIl50y23VLX8nHfn2QDFrh5z6Fd2mq3K7o1dkPw+ /94IZAA==
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
-On Fri, 7 Feb 2025, Keith Busch wrote:
+Running 'pcitest -b 0' fails with "TEST FAILED" when the BAR0 size
+is e.g. 8 GB.
 
-> From: Keith Busch <kbusch@kernel.org>
-> 
-> The spec does not provide any upper limit to how long a device may
-> return Request Retry Status. It just says "Some devices require a
-> lengthy self-initialization sequence to complete". The kernel
-> arbitrarily chose 60 seconds since that really ought to be enough. But
-> there are devices where this turns out not to be enough.
-> 
-> Since any timeout choice would be arbitrary, and 60 seconds is generally
-> more than enough for the majority of hardware, let's make this a
-> parameter so an admin can adjust it specifically to their needs if the
-> default timeout isn't appropriate.
-> 
-> Signed-off-by: Keith Busch <kbusch@kernel.org>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 3 +++
->  drivers/pci/pci.c                               | 6 +++++-
->  2 files changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index fb8752b42ec85..1aed555ef8b40 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4843,6 +4843,9 @@
->  
->  				Note: this may remove isolation between devices
->  				and may put more devices in an IOMMU group.
-> +		reset_wait=nn	The number of milliseconds to wait after a
-> +				reset while seeing Request Retry Status.
-> +				Default is 60000 (1 minute).
->  		force_floating	[S390] Force usage of floating interrupts.
->  		nomio		[S390] Do not use MIO instructions.
->  		norid		[S390] ignore the RID field and force use of
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 869d204a70a37..20817dd5ebba7 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -75,7 +75,8 @@ struct pci_pme_device {
->   * limit, but 60 sec ought to be enough for any device to become
->   * responsive.
->   */
-> -#define PCIE_RESET_READY_POLL_MS 60000 /* msec */
-> +#define PCIE_RESET_READY_POLL_MS pci_reset_ready_wait
-> +unsigned long pci_reset_ready_wait = 60000; /* msec */
+The return value of the pci_resource_len() macro can be larger than that
+of a signed integer type. Thus, when using 'pcitest' with an 8 GB BAR,
+the bar_size of the integer type will overflow.
 
-I don't think masking variables with defines like that is a good idea.
+Change bar_size from integer to resource_size_t to prevent integer
+overflow for large BAR sizes with 32-bit compilers.
 
-I also suggest you put the unit as a postfix to the variable name.
+In order to handle 64-bit resource_type_t on 32-bit platforms, we would
+have needed to use a function like div_u64() or similar. Instead, change
+the code to use addition instead of division. This avoids the need for
+div_u64() or similar, while also simplifying the code.
 
->  static void pci_dev_d3_sleep(struct pci_dev *dev)
->  {
-> @@ -6841,6 +6842,9 @@ static int __init pci_setup(char *str)
->  				disable_acs_redir_param = str + 18;
->  			} else if (!strncmp(str, "config_acs=", 11)) {
->  				config_acs_param = str + 11;
-> +			} else if (!strncmp(str, "reset_wait=", 11)) {
-> +				pci_reset_ready_wait =
-> +					simple_strtoul(str + 11, &str, 0);
->  			} else {
->  				pr_err("PCI: Unknown option `%s'\n", str);
->  			}
-> 
+Fixes: cda370ec6d1f ("misc: pci_endpoint_test: Avoid using hard-coded BAR sizes")
+Co-developed-by: Hans Zhang <18255117159@163.com>
+Signed-off-by: Hans Zhang <18255117159@163.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+Changes since v2:
+-Add Fixes: tag.
 
+ drivers/misc/pci_endpoint_test.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index d5ac71a49386..8e48a15100f1 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -272,9 +272,9 @@ static const u32 bar_test_pattern[] = {
+ };
+ 
+ static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
+-					enum pci_barno barno, int offset,
+-					void *write_buf, void *read_buf,
+-					int size)
++					enum pci_barno barno,
++					resource_size_t offset, void *write_buf,
++					void *read_buf, int size)
+ {
+ 	memset(write_buf, bar_test_pattern[barno], size);
+ 	memcpy_toio(test->bar[barno] + offset, write_buf, size);
+@@ -287,10 +287,11 @@ static int pci_endpoint_test_bar_memcmp(struct pci_endpoint_test *test,
+ static int pci_endpoint_test_bar(struct pci_endpoint_test *test,
+ 				  enum pci_barno barno)
+ {
+-	int j, bar_size, buf_size, iters;
++	resource_size_t bar_size, offset = 0;
+ 	void *write_buf __free(kfree) = NULL;
+ 	void *read_buf __free(kfree) = NULL;
+ 	struct pci_dev *pdev = test->pdev;
++	int buf_size;
+ 
+ 	if (!test->bar[barno])
+ 		return -ENOMEM;
+@@ -314,11 +315,12 @@ static int pci_endpoint_test_bar(struct pci_endpoint_test *test,
+ 	if (!read_buf)
+ 		return -ENOMEM;
+ 
+-	iters = bar_size / buf_size;
+-	for (j = 0; j < iters; j++)
+-		if (pci_endpoint_test_bar_memcmp(test, barno, buf_size * j,
+-						 write_buf, read_buf, buf_size))
++	while (offset < bar_size) {
++		if (pci_endpoint_test_bar_memcmp(test, barno, offset, write_buf,
++						 read_buf, buf_size))
+ 			return -EIO;
++		offset += buf_size;
++	}
+ 
+ 	return 0;
+ }
 -- 
- i.
+2.48.1
 
 
