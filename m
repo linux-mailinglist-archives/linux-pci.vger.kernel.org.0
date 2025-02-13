@@ -1,152 +1,160 @@
-Return-Path: <linux-pci+bounces-21353-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21354-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34382A3430E
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 15:44:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B62E9A3433D
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 15:45:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2CCEF1887630
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 14:41:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6554818943F5
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Feb 2025 14:42:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F21AD2222A7;
-	Thu, 13 Feb 2025 14:40:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBDE7221552;
+	Thu, 13 Feb 2025 14:41:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tsx9dFEj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RiQZxLbQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38CB281349;
-	Thu, 13 Feb 2025 14:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE779281349;
+	Thu, 13 Feb 2025 14:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739457623; cv=none; b=DXvwaKwFJoN8xW+97d4imj8c5q9KjQpzDDOaIIRtzTMqN6wy2mbyvSxmTAAT9p5ZvKdq+bpErKkQanpcPHgqakgZmhJ1w9/T3ZqYsGmgBTgwcSbIORyPUEXCAFxx+1xL7uwVD0j40YXSOFZFGktPud8lo4H9zTVO+X3Y674Xd9E=
+	t=1739457707; cv=none; b=UGHYJypGVxPj/MTdBs0HKQX7S1U0IIto/i2bpTPs8Zot4oWSZUqFC8O8EwA9LIoceKzIsRDTK1+fqEZtDu/rOY/VZrf/hYb7cM+IynM5Zx/goIBCh2HdMg+s0E3awmjFn5VotUy2viqqMRMyqS1/4z8rc/nkeIXFHgpMtEPfe38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739457623; c=relaxed/simple;
-	bh=c2EICeY4G2Sh4ub6i//PddhAY/cHWby1P7zXvPMW3SM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=R9BjgFbcas3bTarjWs+4vVwYuHUbUrARMxMuYAjJaaohgiYJ8x01//Awhlf1iOIxfA+L4sPTIpI+RXH5acbyD3JlB7RDYUmo9nXkSfoYa5Lw/GVmVy9+MfXl+1tlMh++ej+rY2qraJrTw7TMmSsSAOG2FQU1smqk2d49QlkdMuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tsx9dFEj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 592D4C4CED1;
-	Thu, 13 Feb 2025 14:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739457623;
-	bh=c2EICeY4G2Sh4ub6i//PddhAY/cHWby1P7zXvPMW3SM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=tsx9dFEjBaK+AawFbQcXoElNPU7qIwnloBmvgufjKOAwVh5LLDuVNyz5hpceHJO2T
-	 3qpOWYilaa/vs/YHgU60T/29cv15HjCgIKss0ibnUz+8k3fOcrafSM3dvnfkgKViWG
-	 9GU3ujspmzjIDN1rBVI8c0r/uNK7DinvsZ4js0NihiJsIYvJo4ECDOuJI0WQyq3Bv7
-	 PSGws4wLn8+tG1bv7ue27JqdnpVV4JySewDSfbSErYgDXn4m3YNQlDgiEJ/3glPQ6F
-	 KlVm0zFwVSoMqYMG8Kf/n4LoCv+wwAToYy5BJPmbJyF2M8AC9uqcS591VKr3+FzosD
-	 BpAcj9zg4ZAWw==
-Date: Thu, 13 Feb 2025 08:40:21 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>,
-	linux-pci@vger.kernel.org
-Cc: =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>, Jan Beulich <jbeulich@suse.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Deren Wu <Deren.Wu@mediatek.com>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Shayne Chen <Shayne.Chen@mediatek.com>,
-	Sean Wang <Sean.Wang@mediatek.com>,
-	Leon Yen <Leon.Yen@mediatek.com>,
-	linux-mediatek@lists.infradead.org, regressions@lists.linux.dev,
-	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] PCI: Avoid FLR for Mediatek MT7922 WiFi
-Message-ID: <20250213144021.GA114126@bhelgaas>
+	s=arc-20240116; t=1739457707; c=relaxed/simple;
+	bh=Rq8fIdQMi+gnpDfTYBDiGG6pp7bH7+BqFv+HH8CSRNw=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=mrfRhgDbD90rluUPjjsElHP74WubEIo9/S+TsEZXvJAwJkDvu15ZUAloc7fqCQrH6p0uue4fqim1f1+yeqBxS5BTNeUtP0UtveRtvN7fSPIYrjooBG0ztz28HZyKlal+ylHTXEax02dOd7f+Yjz0oyHHRZB36WJ4jQTzVdGA2WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RiQZxLbQ; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739457706; x=1770993706;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Rq8fIdQMi+gnpDfTYBDiGG6pp7bH7+BqFv+HH8CSRNw=;
+  b=RiQZxLbQzT9IqwD/AgvdXGwEeEJq7mxxEiNPPOHCQ6fo8QAhuVPT6Ik8
+   gyLjATPqG74riQHgpb/Q0tBbk9/6j5hmAq50229jj9bnlH1mNFhsA6GIl
+   PJEUkwsPYZ0yZDqIYJpWTEB1sVvj7W79ySh/xAqo92xZ1Yq1FrNJwDaBI
+   Y+PbKdxyMfZrqR33puCyY4ClDF1pDEuRz6+wzXfudU+p1arRe/yRfF6Wk
+   /xE5CDx7mQhGF4hD4mlp0pKFmMZjxkE/t7cfGTT5Jw8AGLTg2wkXhGPYg
+   SkIJckjSTT3c1JA0LVUMbS7FeanogWyJ4Ka4/D5feY0qe4GseN5SmTjXw
+   A==;
+X-CSE-ConnectionGUID: jBWUGsTHR9yYAUVcN7DH7g==
+X-CSE-MsgGUID: 3sVzZBzZQGK/G4S1iiaqUA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40312991"
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="40312991"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 06:41:45 -0800
+X-CSE-ConnectionGUID: MsVKU+nDRKmcoXBn6D4PcQ==
+X-CSE-MsgGUID: urJ9zrrDSRqSGVKzwWhNTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,282,1732608000"; 
+   d="scan'208";a="113826355"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.48])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 06:41:43 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 13 Feb 2025 16:41:40 +0200 (EET)
+To: Keith Busch <kbusch@kernel.org>
+cc: Bjorn Helgaas <helgaas@kernel.org>, Purva Yeshi <purvayeshi550@gmail.com>, 
+    bhelgaas@google.com, skhan@linuxfoundation.org, linux-pci@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH] drivers: pci: Fix flexible array usage
+In-Reply-To: <Z6u-pwlktLnPZNF-@kbusch-mbp>
+Message-ID: <ccdd2c39-1b28-551f-decf-e0d7609f2464@linux.intel.com>
+References: <Z6qFvrf1gsZGSIGo@kbusch-mbp> <20250211210235.GA54524@bhelgaas> <Z6u-pwlktLnPZNF-@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250212193516.88741-1-helgaas@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Feb 12, 2025 at 01:35:16PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> The Mediatek MT7922 WiFi device advertises FLR support, but it apparently
-> does not work, and all subsequent config reads return ~0:
-> 
->   pci 0000:01:00.0: [14c3:0616] type 00 class 0x028000 PCIe Endpoint
->   pciback 0000:01:00.0: not ready 65535ms after FLR; giving up
-> 
-> After an FLR, pci_dev_wait() waits for the device to become ready.  Prior
-> to d591f6804e7e ("PCI: Wait for device readiness with Configuration RRS"),
-> it polls PCI_COMMAND until it is something other that PCI_POSSIBLE_ERROR
-> (~0).  If it times out, pci_dev_wait() returns -ENOTTY and
-> __pci_reset_function_locked() tries the next available reset method.
-> Typically this is Secondary Bus Reset, which does work, so the MT7922 is
-> eventually usable.
-> 
-> After d591f6804e7e, if Configuration Request Retry Status Software
-> Visibility (RRS SV) is enabled, pci_dev_wait() polls PCI_VENDOR_ID until it
-> is something other than the special 0x0001 Vendor ID that indicates a
-> completion with RRS status.
-> 
-> When RRS SV is enabled, reads of PCI_VENDOR_ID should return either 0x0001,
-> i.e., the config read was completed with RRS, or a valid Vendor ID.  On the
-> MT7922, it seems that all config reads after FLR return ~0 indefinitely.
-> When pci_dev_wait() reads PCI_VENDOR_ID and gets 0xffff, it assumes that's
-> a valid Vendor ID and the device is now ready, so it returns with success.
-> 
-> After pci_dev_wait() returns success, we restore config space and continue.
-> Since the MT7922 is not actually ready after the FLR, the restore fails and
-> the device is unusable.
-> 
-> We considered changing pci_dev_wait() to continue polling if a
-> PCI_VENDOR_ID read returns either 0x0001 or 0xffff.  This "works" as it did
-> before d591f6804e7e, although we have to wait for the timeout and then fall
-> back to SBR.  But it doesn't work for SR-IOV VFs, which *always* return
-> 0xffff as the Vendor ID.
-> 
-> Mark Mediatek MT7922 WiFi devices to avoid the use of FLR completely.  This
-> will cause fallback to another reset method, such as SBR.
-> 
-> Fixes: d591f6804e7e ("PCI: Wait for device readiness with Configuration RRS")
-> Link: https://github.com/QubesOS/qubes-issues/issues/9689#issuecomment-2582927149
-> Link: https://lore.kernel.org/r/Z4pHll_6GX7OUBzQ@mail-itl
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, 11 Feb 2025, Keith Busch wrote:
 
-Applied with Marek's tested-by to pci/for-linus for v6.14.
-
-I also added a cc: stable tag.
-
+> On Tue, Feb 11, 2025 at 03:02:35PM -0600, Bjorn Helgaas wrote:
+> > This is kind of a complicated data structure.  IIUC, a struct
+> > pci_saved_state is allocated only in pci_store_saved_state(), where
+> > the size is determined by the sum of the sizes of all the entries in
+> > the dev->saved_cap_space list.
+> > 
+> > The pci_saved_state is filled by copying from entries in the
+> > dev->saved_cap_space list.  The entries need not be all the same size
+> > because we copy each entry manually based on its size.
+> > 
+> > So cap[] is really just the base of this buffer of variable-sized
+> > entries.  Maybe "struct pci_cap_saved_data cap[]" is not the best
+> > representation of this, but *cap (a pointer) doesn't seem better.
+> 
+> The original code is actually correct despite using a flexible array of
+> a struct that contains a flexible array. That arrangement just means you
+> can't index into it, but the code is only doing pointer arithmetic, so
+> should be fine.
+> 
+> With this struct:
+> 
+> struct pci_saved_state {
+>  	u32 config_space[16];
+> 	struct pci_cap_saved_data cap[];
+> };
+> 
+> Accessing "cap" field returns the address right after the config_space[]
+> member. When it's changed to a pointer type, though, it needs to be
+> initialized to *something* but the code doesn't do that. The code just
+> expects the cap to follow right after the config.
+> 
+> Anyway, to silence the warning we can just make it an anonymous member
+> and add 1 to the state to get to the same place in memory as before.
+> 
 > ---
->  drivers/pci/quirks.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index b84ff7bade82..82b21e34c545 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5522,7 +5522,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x443, quirk_intel_qat_vf_cap);
->   * AMD Matisse USB 3.0 Host Controller 0x149c
->   * Intel 82579LM Gigabit Ethernet Controller 0x1502
->   * Intel 82579V Gigabit Ethernet Controller 0x1503
-> - *
-> + * Mediatek MT7922 802.11ax PCI Express Wireless Network Adapter
->   */
->  static void quirk_no_flr(struct pci_dev *dev)
->  {
-> @@ -5534,6 +5534,7 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x7901, quirk_no_flr);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
->  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_MEDIATEK, 0x0616, quirk_no_flr);
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 869d204a70a37..e562037644fd0 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1929,7 +1929,6 @@ EXPORT_SYMBOL(pci_restore_state);
 >  
->  /* FLR may cause the SolidRun SNET DPU (rev 0x1) to hang */
->  static void quirk_no_flr_snet(struct pci_dev *dev)
-> -- 
-> 2.34.1
+>  struct pci_saved_state {
+>  	u32 config_space[16];
+> -	struct pci_cap_saved_data cap[];
+
+Can't just [] be dropped from it (and removed from the size calculation)?
+
+It's not a real flex array because the second pci_cap_saved_data is not at 
+->cap[1] but calculated by the loop by adding in the data in between. But 
+there's one entry at ->cap[0] which is same as ->cap, no need to make it 
+a flex array at all, IMO.
+
+>  };
+>  
+>  /**
+> @@ -1961,7 +1960,7 @@ struct pci_saved_state *pci_store_saved_state(struct pci_dev *dev)
+>  	memcpy(state->config_space, dev->saved_config_space,
+>  	       sizeof(state->config_space));
+>  
+> -	cap = state->cap;
+> +	cap = (void *)(state + 1);
+>  	hlist_for_each_entry(tmp, &dev->saved_cap_space, next) {
+>  		size_t len = sizeof(struct pci_cap_saved_data) + tmp->cap.size;
+>  		memcpy(cap, &tmp->cap, len);
+> @@ -1991,7 +1990,7 @@ int pci_load_saved_state(struct pci_dev *dev,
+>  	memcpy(dev->saved_config_space, state->config_space,
+>  	       sizeof(state->config_space));
+>  
+> -	cap = state->cap;
+> +	cap = (void *)(state + 1);
+>  	while (cap->size) {
+>  		struct pci_cap_saved_state *tmp;
+>  
+> --
 > 
+
+-- 
+ i.
+
 
