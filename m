@@ -1,86 +1,86 @@
-Return-Path: <linux-pci+bounces-21512-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21513-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF392A364E7
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 18:44:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5D21A364EB
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 18:45:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E296F3A7B92
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 17:44:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0719B3A79D8
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 17:45:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA8D826869A;
-	Fri, 14 Feb 2025 17:44:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD549268C5D;
+	Fri, 14 Feb 2025 17:45:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aknN/cZd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VDuCv44Z"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30520267AEB
-	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 17:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1471B266597
+	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 17:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739555074; cv=none; b=kT9VwGPaaGDor5xAAkSG/JHgqlopo2CjhDdqgoAbXoYymP/KwWess2/LR7WCY5kE93AmoMsw3nTc21ViSS0/04Wt7yTq/anh/fpTFsMogYz066rSMJ6rdHAsdxVTup3QgQiJVefbk8rKxNN2ql3rO4O4woYts5ADtrpoGvX01/Y=
+	t=1739555111; cv=none; b=prCUT5SwYvd0UlJGmCBUMzcuuRpv9tbGbGFN+AH+nuIVRRsi+De50f5LRxj3vKzt/EiJqRGGV/ZyyzC3J3TreBxiaqBF5NkK2++KffWYmGaVTg7ntqEvbb+8Z+KpaIjaIXZwWO2IKqx5XuDWXyZMSD/w/BFgfPCNricUDSjA2DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739555074; c=relaxed/simple;
-	bh=yB/N/dmodWxGpg2pNJzfl2ggwDQTXm2uu8GMzqjQxVQ=;
+	s=arc-20240116; t=1739555111; c=relaxed/simple;
+	bh=ybmFuF9ibx8fsXQXA1od1ZQ512hbYjs8egXp1ixsiv4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MYiJTztF7d6pwNWjPM3vEt7Od2csLBUWJRgd1mL761MOaUU3lLEF8p1J4h580HGFeMwSMKj0q1QVGJTpS0QDjcEYli0s5ujNgJ2PffYxmYJA4BBe8LLtyRhYCBCxAveXPrP/snM8sw8gJA+0gInjYcnk5NCet1hIV1NAGj665gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aknN/cZd; arc=none smtp.client-ip=209.85.214.181
+	 Content-Type:Content-Disposition:In-Reply-To; b=XQFFU9cqXb1WvnkT+DlW5s78ZTfb6dqx5IDukaVcDBeJ5qfhP2fj7y25e/NPUF1bjrSLwddD9KPksitMIG9OXdMy/Zif+Dgtp4tEd2nKMgx1boqtl1oSIZdwnj00Wy5XTTPUsC9t2lyHE1QPR7q2dt1hs2IcOa6pLTcXxXsaauU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VDuCv44Z; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-220d39a5627so35187985ad.1
-        for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 09:44:32 -0800 (PST)
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-21f5660c2fdso48886005ad.2
+        for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 09:45:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739555072; x=1740159872; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739555109; x=1740159909; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=rMF2FQJwD4AiHWSw8XkooqqJGsGsXZnRmnTTxBxizF4=;
-        b=aknN/cZdCOlaw0lwj+7BUUxITG4LWMxHfb7DOO5onPXlMpsIh6lGzFRxv6BdCRuzPI
-         6yCDgXxTKRvZ1Ol5hwZobvrlc1qetZpCZVSQwqcxKnEPPeqYFyEQDV9D6efpOtJoSBOw
-         k7yDw9z70qwKAaXfdh3UHg7k6egrJM50F3wbRYZnOhSv9lQtUy8656db3yWEBXeDzVby
-         CY/wScXpKOFOa03HDDimq/tTly5CVsrnjBQ4S+6OZIATQh/u0p7Y5U+2m+cp4nwsaBmo
-         4/h2bcLvYhMCojlaGCY1UD1M3MxNNGKYO24LLMkNwAQ2XNEI2jAgLuXwZ0hYlVFZ7Fd2
-         8gnQ==
+        bh=5mJWLq0PJ55ynNZW1CqmDU64iYck9U3dQjbL7H23J8o=;
+        b=VDuCv44ZA0jDklNf/WlzOgVRgSDMMJqdxq9g2SSzncn6IKMbKnU4fWOAGmh5L4WMY3
+         3sqsOypS+nd9DU/8Og2a3p49+v20xk2BlJmqnv7JYFDr1zT8+ZsG7urnF2fv5SMs2HKg
+         5jvkqjMhKNHIgDLld68/OatgSUdo6RcEgpPG/Fifo00pDbmIwvy6u5I33TVYQM6n/YHs
+         Mj3JQw0Qxefp7nA6W/gXjpGT6cGqGeci1CVVQhDafJava34V1oVymviZs+hBq0vsgTEJ
+         qZ/CJncYVsxWWZ8aAH0XdFaQY96scm+V2hEVxl59HncnvJ+9c13h0VVjP19mNrhj/Da/
+         fssQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739555072; x=1740159872;
+        d=1e100.net; s=20230601; t=1739555109; x=1740159909;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rMF2FQJwD4AiHWSw8XkooqqJGsGsXZnRmnTTxBxizF4=;
-        b=HnQkyQ+BFTPs7Wb2pBs/D7pu1HyL+cNKp4geSHpdV6chRFLZ+yoCO33zrgubRF+yuu
-         2/Q5HJIpU0TDk2hBWsBQvRqrGkLzGaqMP4XOHt+DrUSw1AbXxDuh4CaqKu2ettI25qYB
-         TmUwJDV+uEfcpehkKFIlJVEFofkHeQ1E6vzkTwCjvNOmOW0Eg8K3tOQdVWP8mdO5jw1s
-         JjMY7AmWrKBmiVp8CxldC6cPJkswxIU6vF1IEyrUThS4n2/R1GujmsA/ykrBZUQcKTBW
-         6cuDKkg+I1+UQZR+8aa7g5WTu235KaDbhT4IMap3Why2wEdgPL9YNODF9kGTJHtyHAAm
-         SDcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQD/OY97UkFbpltSwPSGoh8UDE6JUSW60Avw6XnwhLoyQCle8HA6lMwbz77cSE/e2VdJnmj9j2d8s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjAO11OX52bcfXILaAQM/1sA6lOJ7JQEYuWMM29VK7TSkn2IdH
-	85DJanWlswtj1J38eFdd+PDwpb5bG+9MH/4GbYVo4j0/9+Lo5eme8t5Jp018Ag==
-X-Gm-Gg: ASbGnctoUDNSgZRZtCO3ttxRODuTLBpuv2fUIS5VlM2V70PFVmZpf+fOtrj+OC6/8XZ
-	dpF9LaJKmouidR7HT4e1TJxPej1gWSRv6vo5AXZJzcwvZyaUZvLwYzUowziI3wQAnRjk7okaYMG
-	d4AY7mJe40Z9kL8tMgmVcQlD6Q+IBaoyaXfS7gl0svgoQOXjg0XoOYsSv1G01O72Z8c79Ip2ra5
-	+Xlf5Y+NrSSL8/WLkkCrrUpEn+fFGPDjCndC7OgidDcBDDQTzp9mJWLpkAJvXKfqO4lAn9b8PeT
-	eRFQv4SlP4epRxf+ksu0sCpuXag=
-X-Google-Smtp-Source: AGHT+IFPPV2L6UfIjBOJCgYVAwQL+H1yJLajnoN7rIqvq0UHGG8ilpnrBf/ind5JB91U3cBDb9FvKA==
-X-Received: by 2002:a17:902:e848:b0:216:31aa:12eb with SMTP id d9443c01a7336-22104064cd6mr1615855ad.31.1739555072461;
-        Fri, 14 Feb 2025 09:44:32 -0800 (PST)
+        bh=5mJWLq0PJ55ynNZW1CqmDU64iYck9U3dQjbL7H23J8o=;
+        b=BZTCdqsbxsc0Si8kl6aNLpUsE5n8Z+4R0jriLm6xiA7DwlmLHT2eIyzgkmAFjUE8mA
+         yLrhxC+1YPBpGxuKaxQ2w/OZ4CpmHHm9eIpeNbQkooK6oXpiF3ahrZcO44eawhEFa+oT
+         tc2rmtiyW63awIFBop+jgxWANAIF12jtP4Xe8CPEDn6wg861Xq19V8IwOWA482u7YOLo
+         vFJAPJo6SwAoWP86UQmMBbrrRoq29ABPBUnwx8OqvZ7uhtLzkVElUnkA+FFztM6UmI9Z
+         /Al4XnbOyh4zCSPZknfXn0ViKeppgRphrUa4iUtiC0cjdmBVz9tkDC8bE8ZdZiBs9w9B
+         nA2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVOQlX+QxCe1mcwZg6RVt5f2eHehiZVTw+UQmMhLaJUyxHdm2BJqs/iYmHW0cP4UYsH3kbZKHrBMAs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTkaV3PqaVy5iEA+LrHuwMrPhkklLDmlcLXG9jc9jYLXnodFya
+	UBqt17CEvZDrK4aSZAJpNtd6VlDmmKEbGASl68x9Okpl3eYEv2CtiN1F4LhwEw==
+X-Gm-Gg: ASbGncv8ivIXl3WFiJilkrS6LFsyS3CZRA5/F5GpQE4UnosE5f2LtTler6mUJphGZG3
+	t8nJmsm51pmMeIl9JPA7DDRH2yO8eVaBrEsckjNvlWmElJsvyfEa2AT6+dNbe6DKcfOpjPqSXI7
+	7pyS4qfm/E4+Kbd0NakTkOefFibmDhBuRA43QGgwtc2mUQKuoWEawY1C59S0DBQILPoGmk0bMqr
+	Vsom5HlySNJ0Vo+RD/FvXHGXWLSG/qNid+UMwJB34kzn/jPOMv9LuqGaGZXLH4euuaS5hlZB/60
+	XSjB+IZNdn/d3vaRQsaA8iIYXjo=
+X-Google-Smtp-Source: AGHT+IErjq3v7C8zZFbR9QpBV8b3Rae4Pp44QaWUlDQobtQDaZ0FJlpuEU0JZbEjGpy5/bpbsPDRFg==
+X-Received: by 2002:a05:6a00:2e28:b0:732:5a8f:f51b with SMTP id d2e1a72fcca58-7326179ebd4mr449479b3a.8.1739555109254;
+        Fri, 14 Feb 2025 09:45:09 -0800 (PST)
 Received: from thinkpad ([120.60.134.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d559614dsm31649175ad.256.2025.02.14.09.44.30
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7324256aa6asm3514115b3a.60.2025.02.14.09.45.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 09:44:32 -0800 (PST)
-Date: Fri, 14 Feb 2025 23:14:28 +0530
+        Fri, 14 Feb 2025 09:45:08 -0800 (PST)
+Date: Fri, 14 Feb 2025 23:15:05 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Niklas Cassel <cassel@kernel.org>
 Cc: bhelgaas@google.com, kw@linux.com, linux-pci@vger.kernel.org,
 	shuah@kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/2] misc: pci_endpoint_test: Give disabled BARs a
- distinct error code
-Message-ID: <20250214174428.bosbckzfvouh76o4@thinkpad>
+Subject: Re: [PATCH 2/2] selftests: pci_endpoint: Skip disabled BARs
+Message-ID: <20250214174505.5bo473evkpovjtyt@thinkpad>
 References: <20250123120147.3603409-3-cassel@kernel.org>
+ <20250123120147.3603409-4-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -90,27 +90,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250123120147.3603409-3-cassel@kernel.org>
+In-Reply-To: <20250123120147.3603409-4-cassel@kernel.org>
 
-On Thu, Jan 23, 2025 at 01:01:48PM +0100, Niklas Cassel wrote:
-> The current code returns -ENOMEM if test->bar[barno] is NULL.
+On Thu, Jan 23, 2025 at 01:01:49PM +0100, Niklas Cassel wrote:
+> Currently BARs that have been disabled by the endpoint controller driver
+> will result in a test FAIL.
 > 
-> There can be two reasons why test->bar[barno] is NULL:
-> 1) The pci_ioremap_bar() call in pci_endpoint_test_probe() failed.
-> 2) The BAR was skipped, because it is disabled by the endpoint.
+> Returning FAIL for a BAR that is disabled seems overly pessimistic.
 > 
-> Many PCI endpoint controller drivers will disable all BARs in their
-> init function. A disabled BAR will have a size of 0.
+> There are EPC that disables one or more BARs intentionally.
 > 
-> A PCI endpoint function driver will be able to enable any BAR that
-> is not marked as BAR_RESERVED (which means that the BAR should not
-> be touched by the EPF driver).
+> One reason for this is that there are certain EPCs that are hardwired to
+> expose internal PCIe controller registers over a certain BAR, so the EPC
+> driver disables such a BAR, such that the host will not overwrite random
+> registers during testing.
 > 
-> Thus, perform check if the size is 0, before checking if
-> test->bar[barno] is NULL, such that we can return different errors.
+> Such a BAR will be disabled by the EPC driver's init function, and the
+> BAR will be marked as BAR_RESERVED, such that it will be unavailable to
+> endpoint function drivers.
 > 
-> This will allow the selftests to return SKIP instead of FAIL for
-> disabled BARs.
+> Let's return FAIL only for BARs that are actually enabled and failed the
+> test, and let's return skip for BARs that are not even enabled.
 > 
 > Signed-off-by: Niklas Cassel <cassel@kernel.org>
 
@@ -119,35 +119,21 @@ Applied to pci/endpoint!
 - Mani
 
 > ---
-> Hello PCI maintainers.
-> This patch might give a trivial conflict with:
-> https://lore.kernel.org/linux-pci/20250123095906.3578241-2-cassel@kernel.org/T/#u
-> because the context lines (lines that haven't been changed)
-> might be different. If there is a conflict, simply look at
-> this patch by itself, and resolution should be trivial.
+>  tools/testing/selftests/pci_endpoint/pci_endpoint_test.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
->  drivers/misc/pci_endpoint_test.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index d5ac71a49386..b95980b29eb9 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -292,11 +292,13 @@ static int pci_endpoint_test_bar(struct pci_endpoint_test *test,
->  	void *read_buf __free(kfree) = NULL;
->  	struct pci_dev *pdev = test->pdev;
+> diff --git a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
+> index c267b822c108..576c590b277b 100644
+> --- a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
+> +++ b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
+> @@ -65,6 +65,8 @@ TEST_F(pci_ep_bar, BAR_TEST)
+>  	int ret;
 >  
-> +	bar_size = pci_resource_len(pdev, barno);
-> +	if (!bar_size)
-> +		return -ENODATA;
-> +
->  	if (!test->bar[barno])
->  		return -ENOMEM;
->  
-> -	bar_size = pci_resource_len(pdev, barno);
-> -
->  	if (barno == test->test_reg_bar)
->  		bar_size = 0x4;
+>  	pci_ep_ioctl(PCITEST_BAR, variant->barno);
+> +	if (ret == -ENODATA)
+> +		SKIP(return, "BAR is disabled");
+>  	EXPECT_FALSE(ret) TH_LOG("Test failed for BAR%d", variant->barno);
+>  }
 >  
 > -- 
 > 2.48.1
