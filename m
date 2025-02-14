@@ -1,83 +1,115 @@
-Return-Path: <linux-pci+bounces-21475-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21476-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C8F7A3622C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 16:47:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CD46A3624B
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 16:53:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A94A33B247D
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 15:45:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AAEDF18923E2
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 15:51:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B48FF267382;
-	Fri, 14 Feb 2025 15:45:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 133BC267385;
+	Fri, 14 Feb 2025 15:51:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQnbNgfP"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="cOgvKaT2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87159266F19;
-	Fri, 14 Feb 2025 15:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 571213234;
+	Fri, 14 Feb 2025 15:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739547953; cv=none; b=Y5bpzB+MI1rQ4bgMaprNHHVulUboLasNNZsZ6rFAIEr9VTCM3vWuTiEcI7CYom9wC8AfBiIGBVGZEF/TCIKvPmL6i/3+hBPLYwEUV8xb6TVQuWkVwe8k4ZmM6ODP0oAQ9tYsRlIwILVeBR+UQk76WSzQSkrYcLrMdYLxU7tF5rE=
+	t=1739548299; cv=none; b=oOdeob9aZsb93+rorVY7RE5dNBWEpC8jY/d/dZqFzq3RkXsri1xtQSItNqsE/hFnnazib2mCrtmNSSq2J4SMEXhXoRUjjECduvXXPLK+5cbHSpeSLu6gMnlUNSOQ+vGjBLWd5X+BGPipAm9LLSygUg3D9ym2rgOvXnruq24yCmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739547953; c=relaxed/simple;
-	bh=9JgdACbhkpAouEWMMO/S2geqxFPM40RbgjRRU/HIkmc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hdeX7SooZVWHz8PQN8iVAewPHkXdRzFzRtGXpgS83kb8rgxSJ2Xx0UNnPAo4pZqpCQmTd3bUSijFU0qXPoA+5CDRFwVzwks6vGH40JXp1+Ikgdnwkye66RC/mvCVdCBhA0xSt+R7kXW72b0OuBZE81saRAbzhgPyrhzUliQ1yeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQnbNgfP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A55C4CED1;
-	Fri, 14 Feb 2025 15:45:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739547953;
-	bh=9JgdACbhkpAouEWMMO/S2geqxFPM40RbgjRRU/HIkmc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PQnbNgfPvxfzFLltrMfaOcr1qGRnTclWmD9PTEJ61L3bixWGfushyl5Ok1kVuCnOU
-	 U0PmLntEhS5DlThl7JNh1WjoGK/aMG613SnKl7saNXAUSLNNLjS8EnJHzWdRLcwMSH
-	 P1zKRq/BpESwaBAo6zdPk2QamXe/vRQ6T2o9sC0CqF2TJr+5Y3fvdqrS2UUE+7Cyqv
-	 oaVmkB49bTxmINM6ih83v38QZLN199uZiUEc0sVVl/36B08FIsUCeNgxIVenXMcDoA
-	 lzH+cAc8l9zNwRtJCPrYe8S5hhDMfohOcY1/eWbUgwoPF02bpl+A42DmnEl7MAntnV
-	 GmvK8pup29Fwg==
-Date: Fri, 14 Feb 2025 21:15:39 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: xilinx-cpm: Add compatible
- string for CPM5NC Versal Net host
-Message-ID: <20250214154539.jqbjkms32ew5zpd2@thinkpad>
-References: <20250212055059.346452-1-thippeswamy.havalige@amd.com>
- <20250212055059.346452-2-thippeswamy.havalige@amd.com>
+	s=arc-20240116; t=1739548299; c=relaxed/simple;
+	bh=IDTr1Eq3cziq+DUkNqSv2uD2a5GpF3XqUFMvXRcIcAM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gQk9OVcIclWOSdeIuj/Rg8WF0NSPYfJc1iqrp1gqyBv0SxjRVni/MDzy3LTVrwU07yFP+p74Bdna3ZM3rC/M3qb1jg2h8ensPW9MHp202oaTaea41lpmSc3oXcX+7c4etq2ifRoOvZIJpypgtO2EOD3pr3OZE/yEX3lw0I56FaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=cOgvKaT2; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=ifmXkuEVqR4hvNL7Ti3tLm85mmbETlFEp0sPfcah6gI=;
+	b=cOgvKaT21pxQzx1r0FRbiRUvxkkM0LYZvifYm1R9KLN5V3jr2UcS4qloeWdFS7
+	eTAiuA/1wupeLxloNnxZFm9Sdh3rUdAhH/6SoOfa2bgY5ACeNtDPzTkBdTNjsaCa
+	oXLM5gs+r/tEjHuy8rCrYAKjYh6fpRzLA1xiSewHp0AxI=
+Received: from [192.168.71.44] (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wC3+S_AZa9nvmfeMA--.26732S2;
+	Fri, 14 Feb 2025 23:48:17 +0800 (CST)
+Message-ID: <3d3d8772-08ba-4e5a-bf1f-71821cf056e7@163.com>
+Date: Fri, 14 Feb 2025 23:48:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250212055059.346452-2-thippeswamy.havalige@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v3] PCI: cadence: Fix sending message with data or without data
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+ bwawrzyn@cisco.com, cassel@kernel.org,
+ wojciech.jasko-EXT@continental-corporation.com, a-verma1@ti.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
+References: <20250207103923.32190-1-18255117159@163.com>
+ <20250214073030.4vckeq2hf6wbb4ez@thinkpad>
+ <7eb9fedc-67c9-4886-9470-d747273f136c@163.com>
+ <20250214132115.fpiqq65tqtowl2wa@thinkpad>
+ <332ec463-ebd9-477c-8b10-157887343225@163.com>
+ <20250214153103.4cjlawksw4xobc2l@thinkpad>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250214153103.4cjlawksw4xobc2l@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wC3+S_AZa9nvmfeMA--.26732S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ur18JFyxCw1rAF1UGw4fGrg_yoW8Xr1kpa
+	9xKa4Skws5KrZYvF1xZr1IqrnrGFWfXa15Cry8ZryFyws09FyFkryIka1jga4rGw1rAFWY
+	vryjgFZrAa12vFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVMKtUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiDwTzo2evZK4OwQAAsW
 
-On Wed, Feb 12, 2025 at 11:20:58AM +0530, Thippeswamy Havalige wrote:
-> The Xilinx Versal Net series has Coherency and PCIe Gen5 Module
-> Next-Generation compact (CPM5NC) block which supports Root Port
-> controller functionality at Gen5 speed.
+
+
+On 2025/2/14 23:31, Manivannan Sadhasivam wrote:
+> On Fri, Feb 14, 2025 at 10:28:11PM +0800, Hans Zhang wrote:
+>> Sorry Mani, I shouldn't have spread this SOC bug. This is a bug in RTL
+>> design, the WSTRB signal of AXI bus is not connected correctly, so the first
+>> generation SOC cannot send message, because we mainly use RC mode, and we
+>> cannot send PME_Turn_OFF, that is, our SOC does not support L2. I have no
+>> choice about this, I entered the company relatively late, and our SOC has
+>> already TO.
 > 
-> Error interrupts are handled CPM5NC specific interrupt line and
-> INTx interrupt is not support.
+> Ok. Just to clear my head, this patch is needed irrespective of the hw issue,
+> right? And with or without this patch, first revision hw cannot send any MSG
+> TLPs?
 
-supported?
+Yes, that was a problem with our own SOC design, the Cadence RTL bug.	
 
-- Mani
+> If so, it is fine. But is there a way we could detect those first generation IPs
+> and flag it to users about broken MSG TLP support? Atleast, that would make the
+> users aware of broken hw.
 
--- 
-மணிவண்ணன் சதாசிவம்
+I don't know how to do it, but here are the questions that were actually 
+tested.
+
+>>
+>> This patch is to solve the Cadence common code bug, and does not conform to
+>> Cadence documentation.
+> 
+> you mean 'does'?
+> 
+
+What I mean is that common code bit16=1 is to send a message without 
+data, while Cadence's development document says that bit16=0 is to send 
+a message without data. This is not consistent with the documentation 
+description, and the final verification results, the development 
+documentation described is correct.
+
+Best regards
+Hans
+
 
