@@ -1,75 +1,75 @@
-Return-Path: <linux-pci+bounces-21503-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21504-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1B6FA364D0
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 18:41:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9EF3A364D8
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 18:42:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2BB09171BB1
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 17:40:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6AB0A1897A8A
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 17:40:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05E64268C54;
-	Fri, 14 Feb 2025 17:40:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC3F0268C74;
+	Fri, 14 Feb 2025 17:40:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="exceKfgg"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WHFxHSuS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A7D2690E6
-	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 17:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490F9268C68
+	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 17:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739554805; cv=none; b=eqKs0IFg6LlA09Wsq6fe6O8K2H5mqlOr+hGN2IbRyirTykYkC3g+vALf0saApx/aMedXIjhi2duUZtkOxkFcdFGADrnkvzQGW/n0sfninC9rngxadAqyu40DZFY/WEs1dikFUE3wTM5DP+se1VN5vq5UX+EbqgQ56nTiKFfYopo=
+	t=1739554809; cv=none; b=lHhxCOPZ9aNYFMTngykxqfZQJMjrOnprElaxJoelZsjCoLSMzAS7sTs3dwikcAwYoiaT09EAseo9Uiz9qDakTgO/65Ypi3uUbNWES0xvjLaVqjsuBepilSDjCUpSDSnizlBEHHOYsDVmaNLEYgSmi4p7XLYvnwIMvvZF6jQk23M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739554805; c=relaxed/simple;
-	bh=lsg4Fcw8VcMaHZ6PHXq4ByEugOSBshba/6E5rrl25tM=;
+	s=arc-20240116; t=1739554809; c=relaxed/simple;
+	bh=hpYFno3xFpTtIFF8NpBFjFKOov5U886g51Xm0GPpMkw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dTLho7B5SA/wRTKSEGrJPipzsWscpikWFM+XrZRfGXZaYGnjsBxuizEOaQYRfxM4mi43XEBpmMB/+QR52OTuB/EZ8BR6+InbfFCo7xp/bizUPx26k7a6h68yxqamKtyMytgLBhAGaD4VC3bwIe9ACxC65O4tZA6S3VlHzFWIdI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=exceKfgg; arc=none smtp.client-ip=209.85.161.41
+	 MIME-Version; b=kty48ukDqtdKzM11gaOCQhhRaEzRF64HEMgx3XKmm9bSUu02KeZLBVNC4J+AIjEfwxLDFYKWXvPqoVMuM6TLsIcyvxKQ+pCGgshpbbdchhpKGZsTeuz8au3H1jpKQuFdRbM33xgETLWBsxm4zbKGUuGKe6PTo/NE8MfbLjE623s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=WHFxHSuS; arc=none smtp.client-ip=209.85.161.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5f4d935084aso990546eaf.2
-        for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 09:40:04 -0800 (PST)
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5fc6cd89f85so1089867eaf.1
+        for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 09:40:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1739554803; x=1740159603; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1739554806; x=1740159606; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ucKiOpBc+S4NSSHbPlsmk0SXtuaeNxQ7iIuZM167kvY=;
-        b=exceKfggvwVwPwKg7SYRopQVAV81v171osSSePbwsLvvaqGiEN2O74Ta5eWgPJIJb6
-         ydBKbeI06ppsIZAD1Ki0UkNB8MWNh637z5QpZpvj/dfxu+YGJj1o8D5krc7KX/YvbYwD
-         pEbVv+548KVJSjgO+jDHFvaBsQ5z48EveIyHs=
+        bh=TW9nWifCzwYZy8eQdCTo6EqgINRvFFYuVj87cGvTYVY=;
+        b=WHFxHSuSMEUZc0NEZk60+QjWikrCDjNZrflG9iuLSfcSNseE8X6ZfGUbUrJwXW1ebC
+         cL+jqmO1KKePcZifWYNYcGIWNMBa2MQIMSQNLWeF2oo6pGeIz1gXMsR6s3pKAP9BXK6M
+         TO7zRNAvSX8E0msGMnLDFg5L8di4xPTEZUqgs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739554803; x=1740159603;
+        d=1e100.net; s=20230601; t=1739554806; x=1740159606;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ucKiOpBc+S4NSSHbPlsmk0SXtuaeNxQ7iIuZM167kvY=;
-        b=FCzHJC48oyaLdHNKg/fbDIjJ5aSGG4AIGY0LBKIBG/WBUjbiSfpT+qpDfRmIKHWcdD
-         bDJxWBX9qFfzZcltOjnRRou1ysUGRztSbTEsH5zW0kAmNKXxAbAOwI9uDc1IeSXU0sRj
-         JwCeCqZZKJmztohkH4rTWOkeMNFUmzX1qj0D1fqf9wNphheONXzUCNOro4tjCDDy2++r
-         eoDJIAbFj4FulbJV10fWucoGG1fLyNctGYogFulsSshzUkd4pkaRa4PJntZDMUDU7r+x
-         WLPsiOKvYVazz/12xTYNRuDVadCzpiOukO6scuU3UxONVMKGiVwejv6xfTILaZ2WDvbb
-         uvhQ==
-X-Gm-Message-State: AOJu0Yxhw9ZokE534swyDTBpc1K43uK5Q76I42PEcB5koi9GRTUcaPCQ
-	g6Pp5qudDcnpsA8cGdi/0CFIf78eCCv8Y91bhDd43JRK+BiV/jLggfEmNRihBsdQGFNKeu3gEiC
-	tuo3xf4lQNQHX0apD3oX4H9RkFOZhTcpBPtIRaBuBeZC+dVhRs9/b/q2d1R3cst8X8XIW8jPnNF
-	HGx9jsRiTUuPPtPdbmPkn4PsSkVIuCgqwhdfZI0ZIYFRhpfXg7
-X-Gm-Gg: ASbGncsOR18uQMcORNZf52WmSESKmVpUzABNTTMC5wAU1R71rFz15HyYqxOa7K/lSIe
-	60pskUyPr/iGeLJrZANizqW106FTRJvvI+tjTnKdMwtRMgALi+PSWa09h4j66odmQi24iPmuDbA
-	y0XaE0dNdV8bNqAaljKb+G6QvJGvckQSHIckGYVd89gtJhlN9uAE9BAJj80Mna29dKV5jyIeJqD
-	3jSJ4p8SfXIXnXKo+/uZskWypuXwVp8S4wZEuIJVN8hxKx/3ECJpMZ3pWlQWXLHEYkDIQ9XUzWq
-	Xrmay7kjjqGcPUIJn557q+ZVUtEzCP/BF6SpSAgvUAopoG6MrTMoh5795G0rV9olYzfiilc=
-X-Google-Smtp-Source: AGHT+IEHCQouVhYnVU0zbdmV9+4+4+6gGSYlzxuVdn+GGhOSlftYZsrzvcgZIZVnH8WQyajm4LLIQQ==
-X-Received: by 2002:a05:6820:220d:b0:5fc:ba35:d704 with SMTP id 006d021491bc7-5fcba35d7fcmr2395959eaf.5.1739554803022;
-        Fri, 14 Feb 2025 09:40:03 -0800 (PST)
+        bh=TW9nWifCzwYZy8eQdCTo6EqgINRvFFYuVj87cGvTYVY=;
+        b=umeuet9YvNTsWnUWXLlmK5NDSQ7z9S9QHAD8/WIbhFwpTrD+MwH/5eRB81OGdyn3v+
+         I/c56qnVB+CpGqlfaRsrqePkQrLLg44JSEPYgIs3DkVYBcmUze54Cr8VrptWhQ9f8rT+
+         D7AH1I9xd1hEvuE62+/UkmzHNyDIN6ZVr4vbQb9QXkemNBsQpMsbZH9M+/Cb8oa9Vmuf
+         QWiO+F0icoyzOUkqfyKX8CzjQI0WdTMFRPMeq7a9jdzfHXt2zpVTlCwxrxZMVET7TU4O
+         D5BDF9w5nmpr1BU+F7qJ2iNzkyzCxksgMwDZ5ceZmPHKzd3C5vxs2fy3ne89Td/jX8dI
+         MqRg==
+X-Gm-Message-State: AOJu0Ywln04Tagna8xyrzmM97Ou6Vu0+JUS3IBkRlG6BVkmH0/s928NF
+	Zx+IC+JwLU1n38a9XdlLscm9UkDQ6nGlt4jtn9MV/GtXy8WAFhoqBr+/wfXYtsvjp1wDItUclbd
+	Uz+E0tchX4Xa0MiLFCStAsWkwIExcOc1utScUCud3w/k62FmkrCVgVwTfV/FL65IMlVJO6WDs2Q
+	3yB24dPaU/lqmb9VDsu7bzoCaiSXSY+dVj0/G1ejfcnkzh7xyf
+X-Gm-Gg: ASbGncv1REzimqoGE13b5rU7OzP0T8Zk5yq7//x4nlQKFaDBmMy/yRetUkiYuvYcucn
+	FREPPNXJ7ZWX9UW76wGenNT5DFbCHvc8IZghwZv47qko2dgmQ5BuE4/PWb8DeZC0UCm85WzwuNP
+	gDzHMjL0Fefxke5Hzx0TEdqEsQpNS2OKwRUGDT3J25L32NsLWLDnMgsMbCDWDLdFkwgF9uaRHd1
+	VepsR9AaC3Nc5MZ8FPaKMCgttunc9U/8GJ1Rh/ibhtTykLqAipN/ZBp+U0DkQ7AHe/h1T1vXplY
+	AjUCmRqf6kbCBPaFMRtc+0JrNYRiuGOGo5a9vlVp+neKei0j1ukdEABdfnqD1c+zkVa/cgI=
+X-Google-Smtp-Source: AGHT+IHsRBlmYmWP6ec6QvQPHeSSiuic4NDtKAA7m7DLRipohduC9tXO6eBUjYvMvWROPLOlA/zw6g==
+X-Received: by 2002:a05:6820:c85:b0:5fc:b1d9:9b68 with SMTP id 006d021491bc7-5fcb1d99d08mr4047840eaf.5.1739554806336;
+        Fri, 14 Feb 2025 09:40:06 -0800 (PST)
 Received: from stbsrv-and-02.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fcb17a4ca4sm1284073eaf.30.2025.02.14.09.39.59
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fcb17a4ca4sm1284073eaf.30.2025.02.14.09.40.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 09:40:01 -0800 (PST)
+        Fri, 14 Feb 2025 09:40:04 -0800 (PST)
 From: Jim Quinlan <james.quinlan@broadcom.com>
 To: linux-pci@vger.kernel.org,
 	Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -88,9 +88,9 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 3/8] PCI: brcmstb: Do not assume that reg field starts at LSB
-Date: Fri, 14 Feb 2025 12:39:31 -0500
-Message-ID: <20250214173944.47506-4-james.quinlan@broadcom.com>
+Subject: [PATCH v2 4/8] PCI: brcmstb: Fix error path upon call of regulator_bulk_get()
+Date: Fri, 14 Feb 2025 12:39:32 -0500
+Message-ID: <20250214173944.47506-5-james.quinlan@broadcom.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250214173944.47506-1-james.quinlan@broadcom.com>
 References: <20250214173944.47506-1-james.quinlan@broadcom.com>
@@ -102,35 +102,32 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When setting a register field it was assumed that the field started at the
-lsb of the register.  Although the masks do indeed start at the lsb, and
-this will probably not change, it is prudent to use a method that makes no
-assumption about the mask's placement in the register.
+If regulator_bulk_get() returns an error, no regulators are created and we
+need to set their number to zero.  If we do not do this and the PCIe
+link-up fails, regulator_bulk_free() will be invoked and effect a panic.
 
-The uXXp_replace_bits() calls are used since they are already prevalent
-in this driver.
+Also print out the error value, as we cannot return an error upwards as
+Linux will WARN on an error from add_bus().
 
+Fixes: 9e6be018b263 ("PCI: brcmstb: Enable child bus device regulators from DT")
 Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 98542e74aa16..e0b20f58c604 100644
+index e0b20f58c604..56b49d3cae19 100644
 --- a/drivers/pci/controller/pcie-brcmstb.c
 +++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -415,10 +415,10 @@ static void brcm_pcie_set_gen(struct brcm_pcie *pcie, int gen)
- 	u16 lnkctl2 = readw(pcie->base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCTL2);
- 	u32 lnkcap = readl(pcie->base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
+@@ -1416,7 +1416,8 @@ static int brcm_pcie_add_bus(struct pci_bus *bus)
  
--	lnkcap = (lnkcap & ~PCI_EXP_LNKCAP_SLS) | gen;
-+	u32p_replace_bits(&lnkcap, gen, PCI_EXP_LNKCAP_SLS);
- 	writel(lnkcap, pcie->base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
- 
--	lnkctl2 = (lnkctl2 & ~0xf) | gen;
-+	u16p_replace_bits(&lnkctl2, gen, PCI_EXP_LNKCTL2_TLS);
- 	writew(lnkctl2, pcie->base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCTL2);
- }
+ 		ret = regulator_bulk_get(dev, sr->num_supplies, sr->supplies);
+ 		if (ret) {
+-			dev_info(dev, "No regulators for downstream device\n");
++			dev_info(dev, "Did not get regulators; err=%d\n", ret);
++			pcie->sr = NULL;
+ 			goto no_regulators;
+ 		}
  
 -- 
 2.43.0
