@@ -1,177 +1,151 @@
-Return-Path: <linux-pci+bounces-21462-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21463-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63629A36033
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 15:20:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C71E5A36062
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 15:29:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E62E1893558
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 14:20:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9FD171894CB2
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 14:29:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD87F264A82;
-	Fri, 14 Feb 2025 14:20:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6DEE265CB6;
+	Fri, 14 Feb 2025 14:29:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R+oengna"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="I5cXHKML"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D463B22E405;
-	Fri, 14 Feb 2025 14:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C4D35BAF0;
+	Fri, 14 Feb 2025 14:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739542842; cv=none; b=sz4hez6V/doZv+GnAXE6zxfaNyWQFD1FBg8RMhtYfgGkaW4eEDo2PBF8d10Tk39OzZK4STsq5rv819Us+KTefBg0mk37FLEBkK/WH9TaxR2NWtMCP9+IQiLAAdyRIHoL/LeOB27a2Pk+m9OlIcVkHhJMm8lgbwTVRB1a+pCHsNg=
+	t=1739543342; cv=none; b=Tn5lNFrrMgXCgZfO2acD6Oab64HDee4i5prhMVARyWQF7PItRLJN4LCwiTb8MOUSHtv9HLr95OxLFPI5Jmx6slDbj8LpoZ55Bf3i6IHGQ0rROmOHRr+qUvE2nG2nBoKI4RclOIoS4x97ayHl2zel0RYoQYjbZFDrXawBsG8+cFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739542842; c=relaxed/simple;
-	bh=+BoJUTYiUXLY4ADWAJfvGxG7gOy6R+8l/PK5l6b+W/U=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=GMrKJJpiQ+fzVx3kDds8DwtcPUB+OGlkEQiEpYDhINY4F71F8hEoqSZQlfsCQgLTE2MvvCJnnQYmEWByTUYJZ+qzhNNNV45gnju5gGeXQrf/2h6nDOjic/S8qO5Pa94IGOvB2MRphVlvz249rdjVBvmcG/C/kRvFoSPVSmZj+bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R+oengna; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739542841; x=1771078841;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=+BoJUTYiUXLY4ADWAJfvGxG7gOy6R+8l/PK5l6b+W/U=;
-  b=R+oengna2oqlmMOv/BVEw4YOCorrUV7HC/sHh13rNu5wYpumjI0N86Gh
-   IcmX6G2JIXyUt7ZU08Se5psBkEiRRLyE+YgFIKSRbayHT6iKrR/XeiEYH
-   2UzsN0ZT2OMsl2ZTlFDYfrCd06lPI6Mg4sQD5ZJt2K924Eax1kjDOAHzR
-   h0oftqL/TLILjTgqaTpxgf5iJTcY2UKXClWPFn+kZc0SyOnXIDJfcELHV
-   mDFGVI6aeVpKTmKTzm1k5sw5n3OqvMTpoAo+jMY57JPvLjw7AhQ87TqYG
-   e3Zq69UTtPbpR4kjEN/WcOiD3Zl1gFaqtc7iF3X7gF6lPZ/+q2oUo4nZ0
-   w==;
-X-CSE-ConnectionGUID: 3O/aBGa7RAK3l5/+3j19ow==
-X-CSE-MsgGUID: gigUwS0/QrKBE8MTZyZTxw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="51692281"
-X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
-   d="scan'208";a="51692281"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 06:20:40 -0800
-X-CSE-ConnectionGUID: nW6MOpGtQpOMH2AYPi+YbA==
-X-CSE-MsgGUID: ogpQ13uCTPe8fxE5cv2hMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="118401372"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.228])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 06:20:37 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 14 Feb 2025 16:20:34 +0200 (EET)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: Alex Williamson <alex.williamson@redhat.com>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <ckoenig.leichtzumerken@gmail.com>, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/2] PCI: Avoid pointless capability searches
-In-Reply-To: <20250213163850.GA114277@bhelgaas>
-Message-ID: <c45cf368-a31d-6b5d-f7fb-23dcc6cfc420@linux.intel.com>
-References: <20250213163850.GA114277@bhelgaas>
+	s=arc-20240116; t=1739543342; c=relaxed/simple;
+	bh=MrEM/iHmIbineORQLS8NmrG1GLmj/4CMf3zVWTU8Asc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tteqJhbrumLX5Tfsn05gPWrpG7kVgl2et+PJ6hHrZYCGUW7E+HEXQ69LJPqW/BTVJUOmh35apklKiLhmAI6pkJ9Y1EeiNsZ+5X8QpYto5auCpjI+YLGPuDFsUl6OvK88RHfDf40HmGenHRxk6IOsJ5MKox6fNfGI/Vz9RIZhbsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=I5cXHKML; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=ZWPwF0vF6Snifzn+9M+0+9hnpb87+w9sonDEwMS6fNg=;
+	b=I5cXHKML20836aQvCf1KDjmXYIdHk3/mIIaFz5L+MRZQoCqaRkjY1U0uOFX3iL
+	lylQ1vxeyXuByRDPhy0e6qK8N6nrOGxPKBvAEHIFf1vNCDqXxLlhQ9T/CMVgTsWG
+	zso7uH9njwPCaVXDvh5GGSQZmTyIwied5dLyzbetZO+mo=
+Received: from [192.168.243.52] (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wD3Pw_8Uq9n_qCGMA--.61782S2;
+	Fri, 14 Feb 2025 22:28:13 +0800 (CST)
+Message-ID: <332ec463-ebd9-477c-8b10-157887343225@163.com>
+Date: Fri, 14 Feb 2025 22:28:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-976812073-1739542834=:944"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-976812073-1739542834=:944
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Thu, 13 Feb 2025, Bjorn Helgaas wrote:
-
-> On Thu, Feb 13, 2025 at 03:52:05PM +0200, Ilpo J=C3=A4rvinen wrote:
-> > On Fri, 7 Feb 2025, Bjorn Helgaas wrote:
-> > > Many of the save/restore functions in the pci_save_state() and
-> > > pci_restore_state() paths depend on both a PCI capability of the devi=
-ce and
-> > > a pci_cap_saved_state structure to hold the configuration data, and t=
-hey
-> > > skip the operation if either is missing.
-> > >=20
-> > > Look for the pci_cap_saved_state first so if we don't have one, we ca=
-n skip
-> > > searching for the device capability, which requires several slow conf=
-ig
-> > > space accesses.
->=20
-> > > +++ b/drivers/pci/vc.c
-> > > @@ -355,20 +355,17 @@ int pci_save_vc_state(struct pci_dev *dev)
-> > >  =09int i;
-> > > =20
-> > >  =09for (i =3D 0; i < ARRAY_SIZE(vc_caps); i++) {
-> > > -=09=09int pos, ret;
-> > >  =09=09struct pci_cap_saved_state *save_state;
-> > > +=09=09int pos, ret;
-> > > +
-> > > +=09=09save_state =3D pci_find_saved_ext_cap(dev, vc_caps[i].id);
-> > > +=09=09if (!save_state)
-> > > +=09=09=09return -ENOMEM;
-> > > =20
-> > >  =09=09pos =3D pci_find_ext_capability(dev, vc_caps[i].id);
-> > >  =09=09if (!pos)
-> > >  =09=09=09continue;
-> > > =20
-> > > -=09=09save_state =3D pci_find_saved_ext_cap(dev, vc_caps[i].id);
-> > > -=09=09if (!save_state) {
-> > > -=09=09=09pci_err(dev, "%s buffer not found in %s\n",
-> > > -=09=09=09=09vc_caps[i].name, __func__);
-> > > -=09=09=09return -ENOMEM;
-> > > -=09=09}
-> >=20
-> > I think this order change will cause a functional change because=20
-> > pci_allocate_vc_save_buffers() only allocated for those capabilities th=
-at=20
-> > are exist for dev. Thus, the loop will prematurely exit.
->=20
-> Oof, thank you for catching this!  I'll drop this for now.
->=20
-> It would be nice to make pci_save_vc_state() parallel with
-> pci_restore_vc_state() (and with most other pci_save_*_state()
-> functions) and have it return void.  But pci_save_state() returns the
-> pci_save_vc_state() return value, and there are ~20 pci_save_state()
-> callers that pay attention to that return value.
->=20
-> I'm not convinced there's real value in pci_save_state() error
-> returns, given that so few callers check it, but it definitely
-> requires more analysis before removing it.
-
-Indeed, I also though that -ENOMEM even in the original is questionable.
-These are not the real sources of the failure but just secondary effect=20
-from the failure that occurred earlier in _pci_add_cap_save_buffer().
-
---=20
- i.
-
-> > >  =09=09ret =3D pci_vc_do_save_buffer(dev, pos, save_state, true);
-> > >  =09=09if (ret) {
-> > >  =09=09=09pci_err(dev, "%s save unsuccessful %s\n",
-> > > @@ -392,12 +389,15 @@ void pci_restore_vc_state(struct pci_dev *dev)
-> > >  =09int i;
-> > > =20
-> > >  =09for (i =3D 0; i < ARRAY_SIZE(vc_caps); i++) {
-> > > -=09=09int pos;
-> > >  =09=09struct pci_cap_saved_state *save_state;
-> > > +=09=09int pos;
-> > > +
-> > > +=09=09save_state =3D pci_find_saved_ext_cap(dev, vc_caps[i].id);
-> > > +=09=09if (!save_state)
-> > > +=09=09=09continue;
-> > > =20
-> > >  =09=09pos =3D pci_find_ext_capability(dev, vc_caps[i].id);
-> > > -=09=09save_state =3D pci_find_saved_ext_cap(dev, vc_caps[i].id);
-> > > -=09=09if (!save_state || !pos)
-> > > +=09=09if (!pos)
-> > >  =09=09=09continue;
-> > > =20
-> > >  =09=09pci_vc_do_save_buffer(dev, pos, save_state, false);
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v3] PCI: cadence: Fix sending message with data or without data
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+ bhelgaas@google.com, bwawrzyn@cisco.com, cassel@kernel.org,
+ wojciech.jasko-EXT@continental-corporation.com, a-verma1@ti.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
+References: <20250207103923.32190-1-18255117159@163.com>
+ <20250214073030.4vckeq2hf6wbb4ez@thinkpad>
+ <7eb9fedc-67c9-4886-9470-d747273f136c@163.com>
+ <20250214132115.fpiqq65tqtowl2wa@thinkpad>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250214132115.fpiqq65tqtowl2wa@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wD3Pw_8Uq9n_qCGMA--.61782S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZryUWFWxCr4kAr1kKFW3Wrg_yoW5tFy7pF
+	W8GFyFyF1xXrW3ua1vvw4kGF13tan3tay7Wr4qk34xuFnF9FyUGFy7KFy5WrW5GrWvqr17
+	ZwnFqF9rGFsIya7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UBVbkUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxfzo2evIoSj1wACsQ
 
 
---8323328-976812073-1739542834=:944--
+
+On 2025/2/14 21:21, Manivannan Sadhasivam wrote:
+> On Fri, Feb 14, 2025 at 04:23:33PM +0800, Hans Zhang wrote:
+>>
+>>
+>> On 2025/2/14 15:30, Manivannan Sadhasivam wrote:
+>>> On Fri, Feb 07, 2025 at 06:39:23PM +0800, Hans Zhang wrote:
+>>>> View from cdns document cdn_pcie_gen4_hpa_axi_ips_ug_v1.04.pdf.
+>>>> In section 9.1.7.1 AXI Subordinate to PCIe Address Translation
+>>>> Registers below:
+>>>>
+>>>> axi_s_awaddr bits 16 is 1 for MSG with data and 0 for MSG without data.
+>>>>
+>>>> Signed-off-by: hans.zhang <18255117159@163.com>
+>>>> ---
+>>>> Changes since v1-v2:
+>>>> - Change email number and Signed-off-by
+>>>> ---
+>>>>    drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 +--
+>>>>    drivers/pci/controller/cadence/pcie-cadence.h    | 2 +-
+>>>>    2 files changed, 2 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>>>> index e0cc4560dfde..0bf4cde34f51 100644
+>>>> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+>>>> @@ -352,8 +352,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
+>>>>    	spin_unlock_irqrestore(&ep->lock, flags);
+>>>>    	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
+>>>> -		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code) |
+>>>> -		 CDNS_PCIE_MSG_NO_DATA;
+>>>> +		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code);
+>>>>    	writel(0, ep->irq_cpu_addr + offset);
+>>>>    }
+>>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+>>>> index f5eeff834ec1..39ee9945c903 100644
+>>>> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+>>>> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+>>>> @@ -246,7 +246,7 @@ struct cdns_pcie_rp_ib_bar {
+>>>>    #define CDNS_PCIE_NORMAL_MSG_CODE_MASK		GENMASK(15, 8)
+>>>>    #define CDNS_PCIE_NORMAL_MSG_CODE(code) \
+>>>>    	(((code) << 8) & CDNS_PCIE_NORMAL_MSG_CODE_MASK)
+>>>> -#define CDNS_PCIE_MSG_NO_DATA			BIT(16)
+>>>> +#define CDNS_PCIE_MSG_DATA			BIT(16)
+>>>
+>>> Oops! So how did you spot the issue? Did INTx triggering ever worked? RC should
+>>> have reported it as malformed TLP isn't it?
+>>>
+>> In our first generation SOC, sending messages did not work, and the length
+>> of messages was all 1. Cadence fixed this problem in the second generation
+>> SOC. And I have verified in the EMU environment that it is OK to send
+>> various messages, including INTx.
+>>
+>> And that's what Cadence's release documentation says:
+>> axi_s_awaddr bits 16 is 1 for MSG with data and 0 for MSG without data.
+> 
+> I'm confused now. So the change in axi_s_awaddr bit applies to second generation
+> SoCs only? What about the first ones?
+> 
+> Are you saying that the first generation SoCs can never send any message TLPs at
+> all? This sounds horrible.
+
+
+Sorry Mani, I shouldn't have spread this SOC bug. This is a bug in RTL 
+design, the WSTRB signal of AXI bus is not connected correctly, so the 
+first generation SOC cannot send message, because we mainly use RC mode, 
+and we cannot send PME_Turn_OFF, that is, our SOC does not support L2. I 
+have no choice about this, I entered the company relatively late, and 
+our SOC has already TO.
+
+
+This patch is to solve the Cadence common code bug, and does not conform 
+to Cadence documentation.
+
+Best regards
+Hans
+
+
 
