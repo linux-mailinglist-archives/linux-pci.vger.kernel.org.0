@@ -1,151 +1,92 @@
-Return-Path: <linux-pci+bounces-21448-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21449-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 57DBCA35C39
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 12:13:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 027BDA35D1F
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 12:55:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C3AA116E994
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 11:13:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FF433B0225
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 11:53:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 545EC25E44A;
-	Fri, 14 Feb 2025 11:13:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 893FB2066D8;
+	Fri, 14 Feb 2025 11:53:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPjAke+D"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N8QhK/y4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EwcgCNJz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA6925D539;
-	Fri, 14 Feb 2025 11:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA2F275412;
+	Fri, 14 Feb 2025 11:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739531631; cv=none; b=Oyqh5Yg4/EVu4yxTJziNy1VHFP8DP2cw1gCVYadSYLtNvb8nOtoi9rxhipwj8heHqTnTzpiyCdLm95In7ukEuEfkw/eUzYS49hx+2juXr06CUWt/5n6E7aJVAelZDrGS0yiJvT+Qfwh3afmLiBy3dCyhjurWham4m0E0aMmr5mg=
+	t=1739534004; cv=none; b=oDYy8NpvaLyM3xh4pUg51exdedk9Q1VrQxYO6R7SwELTmid6X/vS8KCrfjjYkpqh294z8btUUcP//pMfTjbu54/RwAeQPCfILvgT6LtQk1qM4BRDvnZFxPnwu1IjinyiSlZGWWAj5cKp/rjRwuc5HOM4coFWh9M27i8ic/gBCIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739531631; c=relaxed/simple;
-	bh=Ghs6jbYLNaRf8/9wC8oW8++BeIr/vpU43iyEmcHTTM8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D0FJUGlmtdlTJQXiAoSDoc/RxQH3VUgP9alO3ZfvURXYkk773VXRt2qI1IK06FblGNlVE9PLfCqleJMOM/plVK+MdHD59I1Drh8WV02m3cT9a3JQHoyZPYRF1KMh1oDV6aPnaaTbMaqifrJjLh2163gecwDFtng8lE/nqCMGlAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPjAke+D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AD86C4CEDF;
-	Fri, 14 Feb 2025 11:13:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739531630;
-	bh=Ghs6jbYLNaRf8/9wC8oW8++BeIr/vpU43iyEmcHTTM8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RPjAke+DeIttbRlfFrrglJj5OoCQ/CZXX5ysuHMIJm9asBk83sDkJAhk/V/D7clQk
-	 lfH0OWsItmQCPmEo+2W62MKWfSwyJa9PNaBiSvnls3mVeJw8HVkRuXTjpGx30zv3T1
-	 WvqB6eDSr3D7Cr7FScO1/2FXrh/JLQTZZSj31ahgMjr4bNN9XszGAwjgos2/RgeKVK
-	 ljfuZk8V4JfQGj6qvClnerF4Fpzj8b9Pi0hxVexdd7hqYvXYclsHs7zLL0tg8TRfnN
-	 OnBPKX6LZ3TGkli5tchQFUdTyRhfMQt+VSNmPjhC4S/r2CXFoeWq0zs6vg6oelaICV
-	 0Im+JInrKqwlg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1titdk-0042lN-3F;
-	Fri, 14 Feb 2025 11:13:48 +0000
-Date: Fri, 14 Feb 2025 11:13:47 +0000
-Message-ID: <86o6z4srro.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: "Sven Peter" <sven@svenpeter.dev>
-Cc: "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,	"Hector Martin"
- <marcan@marcan.st>,	"Bjorn Helgaas" <bhelgaas@google.com>,
-	"Lorenzo Pieralisi" <lpieralisi@kernel.org>,	Krzysztof =?UTF-8?B?V2lsY3p5?=
- =?UTF-8?B?xYRza2k=?= <kw@linux.com>,	"Manivannan Sadhasivam"
- <manivannan.sadhasivam@linaro.org>,	"Rob Herring" <robh@kernel.org>,
-	"Krzysztof Kozlowski" <krzk+dt@kernel.org>,	"Conor Dooley"
- <conor+dt@kernel.org>,	"Mark Kettenis" <kettenis@openbsd.org>,
-	"Stan Skowronek" <stan@corellium.com>,	asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] PCI: apple: Add T602x PCIe support
-In-Reply-To: <ae7bdc0c-c691-43a7-8cd7-b1c22c7623c0@app.fastmail.com>
-References: <20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io>
-	<20250211-pcie-t6-v1-7-b60e6d2501bb@rosenzweig.io>
-	<86y0ybsd0d.wl-maz@kernel.org>
-	<ae7bdc0c-c691-43a7-8cd7-b1c22c7623c0@app.fastmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1739534004; c=relaxed/simple;
+	bh=md5n2k/tf1pks0MeAndLT0GhIynJyuMazB/ncs9fZG0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=c29S2/OdbIgX2kt3GI+TbHLxmAisFd1xYjemWd/uDK1Y6lvbK40bnLG2W8POjeq+K/ewOTzQkFFFJs0RD5cKEwCuQ9hYYwCMqhtyz7vqt4XxXKHJPWZRcY40b2oEG2EliW3hlBTB35G+BC+m9jCzqp4qN90Y+eFMJcU4k+U1eYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N8QhK/y4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EwcgCNJz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739534001;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lWEz1ZWdWkion5MIyu8qQHqr+FAKdZJBuw4TfNzpQAw=;
+	b=N8QhK/y4dwnmr4ugopa5yoykfbkMb8irN7O3zRSTu/OhAxgGch6PkMzgo5jTSnzvPacPST
+	v3jPvkpIUXQS3zrDSU3W3BUS/djaZCd4dnn2t2Y3Md/hao3nIhs+R2LB3Vy1/lHaVJuXEs
+	FLpI6P5RnGaeBUaQqCTNSD4hLsjWTXfZIKURDbpzH4NN8PgUcWQryMdczRnRbB3pEepWtJ
+	DmBDZnV8fvk1jX1KtjWR+ylmkeBIDzaSYufyW4gslApJDYkdL87HhwfwXIjC+qXcCxl0e9
+	fr7b0WjrkvdcgA3Qsb94A3uHLxp/2J4H4a3M9ntP9i+e0euRUfxd+Qzmr5SaZQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739534001;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lWEz1ZWdWkion5MIyu8qQHqr+FAKdZJBuw4TfNzpQAw=;
+	b=EwcgCNJzpir6XiFKZvbnPTawfCwZpEXo80qK9V1v65lBdmcVUHhzp/u/6wMu7bLxiQYVJ6
+	6J0zFKm64ELGmNDQ==
+To: Bjorn Helgaas <helgaas@kernel.org>, Roger Pau Monne <roger.pau@citrix.com>
+Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-pci@vger.kernel.org, Juergen Gross <jgross@suse.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v2 3/3] pci/msi: remove pci_msi_ignore_mask
+In-Reply-To: <20250205151731.GA915292@bhelgaas>
+References: <20250205151731.GA915292@bhelgaas>
+Date: Fri, 14 Feb 2025 12:53:20 +0100
+Message-ID: <87y0y8ivyn.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: sven@svenpeter.dev, alyssa@rosenzweig.io, marcan@marcan.st, bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, kettenis@openbsd.org, stan@corellium.com, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 13 Feb 2025 19:51:31 +0000,
-"Sven Peter" <sven@svenpeter.dev> wrote:
-> 
-> Hi,
-> 
-> On Wed, Feb 12, 2025, at 10:55, Marc Zyngier wrote:
-> > On Tue, 11 Feb 2025 19:54:32 +0000,
-> > Alyssa Rosenzweig <alyssa@rosenzweig.io> wrote:
-> >> 
-> >> From: Hector Martin <marcan@marcan.st>
-> >> 
-> >> This version of the hardware moved around a bunch of registers, so we
-> >> drop the old compatible for these and introduce register offset
-> >> structures to handle the differences.
-> >> 
-> >> Signed-off-by: Hector Martin <marcan@marcan.st>
-> >> Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> >> ---
-> >>  drivers/pci/controller/pcie-apple.c | 125 ++++++++++++++++++++++++++++++------
-> >>  1 file changed, 105 insertions(+), 20 deletions(-)
-> >> 
-> >> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> >> index 7f4839fb0a5b15a9ca87337f53c14a1ce08301fc..7c598334427cb56ca066890ac61143ae1d3ed744 100644
-> ...
-> >
-> >> +	else
-> >> +		rmw_set(PHY_LANE_CFG_REFCLKCGEN, port->phy + PHY_LANE_CFG);
-> >> +	rmw_clear(PORT_APPCLK_CGDIS, port->base + PORT_APPCLK);
-> >> +
-> >
-> > Can you elaborate on this particular change?
-> >
-> > I always assumed this was some clock-gating that needed to occur
-> > *before* the link training was started. This is now taking place after
-> > training, and the commit message doesn't say anything about it.
-> 
-> It's been a while but as far as I can tell APPCLK seems to be related
-> to the IOMMUs attached to this controller. If it's disabled all reads
-> from the respective IOMMU MMIO either came back as 0xffff.. or SError
-> (don't remember which one it was) but pcie itself worked just fine
-> (until any device tried DMA ofc).
-> 
-> At least on M1 this entire sequence only works because we already
-> setup PORT_APPCLK_EN inside m1n1. If we didn't do this (like e.g
-> for the thunderbolt pcie/dart) the DART probe would already fail.
+On Wed, Feb 05 2025 at 09:17, Bjorn Helgaas wrote:
+>> Albeit Devices behind a VMD bridge are not known to Xen, that doesn't me=
+an
+>> Linux cannot use them.  By inhibiting the usage of
+>> VMD_FEAT_CAN_BYPASS_MSI_REMAP and the removal of the pci_msi_ignore_mask
+>> bodge devices behind a VMD bridge do work fine when use from a Linux Xen
+>> hardware domain.  That's the whole point of the series.
+>>=20
+>> Signed-off-by: Roger Pau Monn=C3=A9 <roger.pau@citrix.com>
+>
+> Needs an ack from Thomas.
 
-OK, so the exact location of this particular write doesn't matter as
-long as it happens before we start enabling a device on that port.
+No objections from my side (aside of your change log comments).
 
-I'm still perplexed by this one though:
-
-+	if (pcie->hw->port_refclk)
-+		rmw_clear(PORT_REFCLK_CGDIS, port->base + PORT_REFCLK);
-+	else
-+		rmw_set(PHY_LANE_CFG_REFCLKCGEN, port->phy + PHY_LANE_CFG);
-
-which looks like it switches on the reference clock for the port. I
-have a very vague recollection that it was required early before
-m1n1/u-boot grew some PCI initialisation (yes, a long while ago).
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
