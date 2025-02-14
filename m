@@ -1,134 +1,177 @@
-Return-Path: <linux-pci+bounces-21461-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21462-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E48CDA35F66
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 14:41:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63629A36033
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 15:20:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3517F3A2BD9
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 13:39:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E62E1893558
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 14:20:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E2DA263F47;
-	Fri, 14 Feb 2025 13:39:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD87F264A82;
+	Fri, 14 Feb 2025 14:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R+oengna"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25920263C69
-	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 13:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D463B22E405;
+	Fri, 14 Feb 2025 14:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739540375; cv=none; b=VIn0Xl15V+odGF6qhXMvgQ1xHIVTlPHDBQ+dZhgZiofasnryqu9XP9enbSFQEn9w5kg6u1/hhr3wsUXZBxmd3Q4tx+WQVgxZdb6kRyPG3tdFTOAtNw4l9GofQHAYLwcRTYdsX/U50IjK8DwmFwtAiY+qIqEAm1iAaKAoQJzSBLE=
+	t=1739542842; cv=none; b=sz4hez6V/doZv+GnAXE6zxfaNyWQFD1FBg8RMhtYfgGkaW4eEDo2PBF8d10Tk39OzZK4STsq5rv819Us+KTefBg0mk37FLEBkK/WH9TaxR2NWtMCP9+IQiLAAdyRIHoL/LeOB27a2Pk+m9OlIcVkHhJMm8lgbwTVRB1a+pCHsNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739540375; c=relaxed/simple;
-	bh=88h6dTPn4xihZyIICx/Dd6nf7n/mX4y6GIVHNMUQDJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z2g2z/dzIAj0nUpNnyLzfmdeODuk8g0iHYayBdEiiy9A2rRPd2JZEzZtbdQHFUHJCqPVEPYZIemxAbPxhb23k1yGFWnZ/ipyV6a6PlaAvETy6D4OytrKvc6OlM3qYrngfdeQ9U5iquvAW22hvz6tgyguaEcgRdvea7gylHXHeBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0331C4CED1;
-	Fri, 14 Feb 2025 13:39:28 +0000 (UTC)
-Date: Fri, 14 Feb 2025 19:09:19 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Ajay Agarwal <ajayagarwal@google.com>
-Cc: Johan Hovold <johan@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>,
-	Doug Zobel <zobel@google.com>,
-	William McVicker <willmcvicker@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
-	Joao.Pinto@synopsys.com
-Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
-Message-ID: <20250214133919.vnf3kccxwzjgcgim@thinkpad>
-References: <ZcC_xMhKdpK2G_AS@google.com>
- <20240206171043.GE8333@thinkpad>
- <ZdTikV__wg67dtn5@google.com>
- <20240228172951.GB21858@thinkpad>
- <Zeha9dCwyXH7C35j@google.com>
- <20240310135140.GF3390@thinkpad>
- <Z68JlygEqQBSDWPA@google.com>
- <Z68KYxSniCxdMMAg@hovoldconsulting.com>
- <20250214094255.jmfpkmzwqn5facsy@thinkpad>
- <Z68UpU0nofdUWddW@google.com>
+	s=arc-20240116; t=1739542842; c=relaxed/simple;
+	bh=+BoJUTYiUXLY4ADWAJfvGxG7gOy6R+8l/PK5l6b+W/U=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=GMrKJJpiQ+fzVx3kDds8DwtcPUB+OGlkEQiEpYDhINY4F71F8hEoqSZQlfsCQgLTE2MvvCJnnQYmEWByTUYJZ+qzhNNNV45gnju5gGeXQrf/2h6nDOjic/S8qO5Pa94IGOvB2MRphVlvz249rdjVBvmcG/C/kRvFoSPVSmZj+bU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R+oengna; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739542841; x=1771078841;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=+BoJUTYiUXLY4ADWAJfvGxG7gOy6R+8l/PK5l6b+W/U=;
+  b=R+oengna2oqlmMOv/BVEw4YOCorrUV7HC/sHh13rNu5wYpumjI0N86Gh
+   IcmX6G2JIXyUt7ZU08Se5psBkEiRRLyE+YgFIKSRbayHT6iKrR/XeiEYH
+   2UzsN0ZT2OMsl2ZTlFDYfrCd06lPI6Mg4sQD5ZJt2K924Eax1kjDOAHzR
+   h0oftqL/TLILjTgqaTpxgf5iJTcY2UKXClWPFn+kZc0SyOnXIDJfcELHV
+   mDFGVI6aeVpKTmKTzm1k5sw5n3OqvMTpoAo+jMY57JPvLjw7AhQ87TqYG
+   e3Zq69UTtPbpR4kjEN/WcOiD3Zl1gFaqtc7iF3X7gF6lPZ/+q2oUo4nZ0
+   w==;
+X-CSE-ConnectionGUID: 3O/aBGa7RAK3l5/+3j19ow==
+X-CSE-MsgGUID: gigUwS0/QrKBE8MTZyZTxw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="51692281"
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="51692281"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 06:20:40 -0800
+X-CSE-ConnectionGUID: nW6MOpGtQpOMH2AYPi+YbA==
+X-CSE-MsgGUID: ogpQ13uCTPe8fxE5cv2hMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="118401372"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.228])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 06:20:37 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 14 Feb 2025 16:20:34 +0200 (EET)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: Alex Williamson <alex.williamson@redhat.com>, 
+    =?ISO-8859-15?Q?Christian_K=F6nig?= <ckoenig.leichtzumerken@gmail.com>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 1/2] PCI: Avoid pointless capability searches
+In-Reply-To: <20250213163850.GA114277@bhelgaas>
+Message-ID: <c45cf368-a31d-6b5d-f7fb-23dcc6cfc420@linux.intel.com>
+References: <20250213163850.GA114277@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-976812073-1739542834=:944"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-976812073-1739542834=:944
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z68UpU0nofdUWddW@google.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Fri, Feb 14, 2025 at 03:32:13PM +0530, Ajay Agarwal wrote:
-> On Fri, Feb 14, 2025 at 03:12:55PM +0530, Manivannan Sadhasivam wrote:
-> > On Fri, Feb 14, 2025 at 10:18:27AM +0100, Johan Hovold wrote:
-> > > On Fri, Feb 14, 2025 at 02:45:03PM +0530, Ajay Agarwal wrote:
-> > > 
-> > > > Restarting this discussion for skipping the 1 sec of wait time if a
-> > > > certain platform does not necessarily wish or expect to bring the link
-> > > > up during probe time. I discussed with William and we think that a
-> > > > module parameter can be added which if true, would lead to the skipping
-> > > > of the wait time. By default, this parameter would be false, thereby
-> > > > ensuring that the current behaviour to wait for the link is maintained.
-> > > > 
-> > > > Please let me know if this is worth exploring.
-> > > 
-> > > No, module parameters are a thing of the past (except possibly in vendor
-> > > kernels). The default behaviour should just work.
-> > > 
-> > 
-> > +1
-> > 
-> > Btw, you need to come up with a valid argument for not enabling the link during
-> The argument for the link to not come up during probe is simply that the
-> product does not need the link to be up during probe. The requirement is
-> that the PCIe RC SW structures be prepared for link-up later, when there
-> is a trigger from the userspace or the vendor kernel driver.
-> 
+On Thu, 13 Feb 2025, Bjorn Helgaas wrote:
 
-This is the problem. You are fixing the behavior of the controller driver to
-a single product line and this is not going to work if the same controller is
-used in a different product. Instead you should fix the userspace.
+> On Thu, Feb 13, 2025 at 03:52:05PM +0200, Ilpo J=C3=A4rvinen wrote:
+> > On Fri, 7 Feb 2025, Bjorn Helgaas wrote:
+> > > Many of the save/restore functions in the pci_save_state() and
+> > > pci_restore_state() paths depend on both a PCI capability of the devi=
+ce and
+> > > a pci_cap_saved_state structure to hold the configuration data, and t=
+hey
+> > > skip the operation if either is missing.
+> > >=20
+> > > Look for the pci_cap_saved_state first so if we don't have one, we ca=
+n skip
+> > > searching for the device capability, which requires several slow conf=
+ig
+> > > space accesses.
+>=20
+> > > +++ b/drivers/pci/vc.c
+> > > @@ -355,20 +355,17 @@ int pci_save_vc_state(struct pci_dev *dev)
+> > >  =09int i;
+> > > =20
+> > >  =09for (i =3D 0; i < ARRAY_SIZE(vc_caps); i++) {
+> > > -=09=09int pos, ret;
+> > >  =09=09struct pci_cap_saved_state *save_state;
+> > > +=09=09int pos, ret;
+> > > +
+> > > +=09=09save_state =3D pci_find_saved_ext_cap(dev, vc_caps[i].id);
+> > > +=09=09if (!save_state)
+> > > +=09=09=09return -ENOMEM;
+> > > =20
+> > >  =09=09pos =3D pci_find_ext_capability(dev, vc_caps[i].id);
+> > >  =09=09if (!pos)
+> > >  =09=09=09continue;
+> > > =20
+> > > -=09=09save_state =3D pci_find_saved_ext_cap(dev, vc_caps[i].id);
+> > > -=09=09if (!save_state) {
+> > > -=09=09=09pci_err(dev, "%s buffer not found in %s\n",
+> > > -=09=09=09=09vc_caps[i].name, __func__);
+> > > -=09=09=09return -ENOMEM;
+> > > -=09=09}
+> >=20
+> > I think this order change will cause a functional change because=20
+> > pci_allocate_vc_save_buffers() only allocated for those capabilities th=
+at=20
+> > are exist for dev. Thus, the loop will prematurely exit.
+>=20
+> Oof, thank you for catching this!  I'll drop this for now.
+>=20
+> It would be nice to make pci_save_vc_state() parallel with
+> pci_restore_vc_state() (and with most other pci_save_*_state()
+> functions) and have it return void.  But pci_save_state() returns the
+> pci_save_vc_state() return value, and there are ~20 pci_save_state()
+> callers that pay attention to that return value.
+>=20
+> I'm not convinced there's real value in pci_save_state() error
+> returns, given that so few callers check it, but it definitely
+> requires more analysis before removing it.
 
-> I am looking to treat this like USB, say. The USB DWC could be probed when
-> the cable is not connected. That does not fail the probe. Later when the
-> cable is connected, the USB link comes up and the enumeration is
-> performed.
-> 
+Indeed, I also though that -ENOMEM even in the original is questionable.
+These are not the real sources of the failure but just secondary effect=20
+from the failure that occurred earlier in _pci_add_cap_save_buffer().
 
-Same with DWC controllers as well, probe doesn't fail even if the link did not
-come up. Previously you were trying to avoid the delay while waiting for the
-link up during probe (for which I also asked you to probe the controller driver
-asynchronously to mitigate the delay). Is this the same case still?
+--=20
+ i.
 
-And what makes me nervous is the fact that you are trying to upstream a change
-for your downstream driver, which is a big no-go.
+> > >  =09=09ret =3D pci_vc_do_save_buffer(dev, pos, save_state, true);
+> > >  =09=09if (ret) {
+> > >  =09=09=09pci_err(dev, "%s save unsuccessful %s\n",
+> > > @@ -392,12 +389,15 @@ void pci_restore_vc_state(struct pci_dev *dev)
+> > >  =09int i;
+> > > =20
+> > >  =09for (i =3D 0; i < ARRAY_SIZE(vc_caps); i++) {
+> > > -=09=09int pos;
+> > >  =09=09struct pci_cap_saved_state *save_state;
+> > > +=09=09int pos;
+> > > +
+> > > +=09=09save_state =3D pci_find_saved_ext_cap(dev, vc_caps[i].id);
+> > > +=09=09if (!save_state)
+> > > +=09=09=09continue;
+> > > =20
+> > >  =09=09pos =3D pci_find_ext_capability(dev, vc_caps[i].id);
+> > > -=09=09save_state =3D pci_find_saved_ext_cap(dev, vc_caps[i].id);
+> > > -=09=09if (!save_state || !pos)
+> > > +=09=09if (!pos)
+> > >  =09=09=09continue;
+> > > =20
+> > >  =09=09pci_vc_do_save_buffer(dev, pos, save_state, false);
 
-> > probe. Also, not waiting for link during probe is also not going to work across
-> > all platforms where the controller is used, unless your hardware supports
-> > hotplug or LINK_UP IRQ.
-> We do not necessarily need the hotplug or LINK_UP IRQ right? Once the
-> LTSSM training is enabled using the triggers I mentioned above, I can
-> then wait for the link to come up using `dw_pcie_wait_for_link`. IOW,
-> polling for the link, which is what the `dw_pcie_host_init` does.
-> 
 
-Oh, you do not want link training to be started during probe? So how your
-'userspace trigger' is starting it? What is the reason to hold off the link
-training?
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+--8323328-976812073-1739542834=:944--
 
