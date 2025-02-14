@@ -1,89 +1,86 @@
-Return-Path: <linux-pci+bounces-21511-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21512-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D85E3A364E5
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 18:43:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF392A364E7
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 18:44:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ED47518965AE
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 17:43:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E296F3A7B92
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 17:44:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A37D267B0D;
-	Fri, 14 Feb 2025 17:42:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA8D826869A;
+	Fri, 14 Feb 2025 17:44:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XVBWQZ8T"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aknN/cZd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AB4267B11
-	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 17:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30520267AEB
+	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 17:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739554971; cv=none; b=seS4UYHMxeMfc4lOvllg3LKZtLvGK6CULaqOgewY4CRlfSQzvL//urO94zQUo9mUqxzcfCXrZzTODpAQu3iCgA5UjklGqjwm/mkcvZwUTzs9hWhwQ+jcMA+rf59GzbZ2wd/N2E25bBf+E1ThmD3judX63n/TK1B3O3KheVtj/cU=
+	t=1739555074; cv=none; b=kT9VwGPaaGDor5xAAkSG/JHgqlopo2CjhDdqgoAbXoYymP/KwWess2/LR7WCY5kE93AmoMsw3nTc21ViSS0/04Wt7yTq/anh/fpTFsMogYz066rSMJ6rdHAsdxVTup3QgQiJVefbk8rKxNN2ql3rO4O4woYts5ADtrpoGvX01/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739554971; c=relaxed/simple;
-	bh=/ymiZOUY9ORSTPXKt1ZNTWsHlubF2CeRjFYgQFPGc2U=;
+	s=arc-20240116; t=1739555074; c=relaxed/simple;
+	bh=yB/N/dmodWxGpg2pNJzfl2ggwDQTXm2uu8GMzqjQxVQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DmjtazY3lvqlFYyvDo36gOauyeEqPzuDwXM66OhAjTm79AUOIB2c5BeztScYy77Zp0yzEi/+l4sglkeMWVSywBmrqpPUC8uv/2XqFazUpnDWsXi94sUVCzW+8tze1MbOkzBTTh+Xl1vE9nwD96oGKrJz2+JydAmrIlBTG/vv2uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XVBWQZ8T; arc=none smtp.client-ip=209.85.216.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=MYiJTztF7d6pwNWjPM3vEt7Od2csLBUWJRgd1mL761MOaUU3lLEF8p1J4h580HGFeMwSMKj0q1QVGJTpS0QDjcEYli0s5ujNgJ2PffYxmYJA4BBe8LLtyRhYCBCxAveXPrP/snM8sw8gJA+0gInjYcnk5NCet1hIV1NAGj665gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aknN/cZd; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2f42992f608so3812740a91.0
-        for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 09:42:49 -0800 (PST)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-220d39a5627so35187985ad.1
+        for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 09:44:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739554969; x=1740159769; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739555072; x=1740159872; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=XBwFdz8o1N3nJCjb2V1Fwqg9orFJvPM16MYAOtFfhHE=;
-        b=XVBWQZ8TY83RoKrBWboDhEXhCbPELdCjAwPbT9PBZ8193ZJzxjxU71MYX8xWVnp+5f
-         Des8s565RaZF3Fpnb/65hBlhePWeYaK9MEGh+naPxfDDTfAcn8Owi1rwbCpYG6Y1Tezo
-         cy+Gh0Vo/7fHLXElBVCkaSPwHikJVZWxE3SSP3s1b39rodOGvyHd0jd3h7j56kwgLhOw
-         o2YJYXuSpDaUUur6MS8QUFx0Emnt0ZtwLGUnZ2vJOrkJ/pacvliqj72rT3Ikl4aB/qaO
-         Nupfx2q6bzdYModjKJFcaTvtgGAm/+ETlX1fcyUfjD3LSFZ7PYNCtEX0n6MKMCTgXW7d
-         aT5Q==
+        bh=rMF2FQJwD4AiHWSw8XkooqqJGsGsXZnRmnTTxBxizF4=;
+        b=aknN/cZdCOlaw0lwj+7BUUxITG4LWMxHfb7DOO5onPXlMpsIh6lGzFRxv6BdCRuzPI
+         6yCDgXxTKRvZ1Ol5hwZobvrlc1qetZpCZVSQwqcxKnEPPeqYFyEQDV9D6efpOtJoSBOw
+         k7yDw9z70qwKAaXfdh3UHg7k6egrJM50F3wbRYZnOhSv9lQtUy8656db3yWEBXeDzVby
+         CY/wScXpKOFOa03HDDimq/tTly5CVsrnjBQ4S+6OZIATQh/u0p7Y5U+2m+cp4nwsaBmo
+         4/h2bcLvYhMCojlaGCY1UD1M3MxNNGKYO24LLMkNwAQ2XNEI2jAgLuXwZ0hYlVFZ7Fd2
+         8gnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739554969; x=1740159769;
+        d=1e100.net; s=20230601; t=1739555072; x=1740159872;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XBwFdz8o1N3nJCjb2V1Fwqg9orFJvPM16MYAOtFfhHE=;
-        b=JK0sA8x45xc4Q1RUS3hf4odS96CZZVj5eMLfCdXjDRat82k6BBVU0IYjRtY5Nxk5St
-         G5r0UpQ5Ru70npRFaGUrO2juEJhSy7H6YJ0ddvarreIKNl/6ZV793UC99uD98G59kurG
-         3K1sUAy17ndArPNUI9yJLsaRmMq4SO/vp7/5sYpyUYQ5MMtNdBcYJF5l2Hj9+1H4W80s
-         jGCKprbzlp+psox4oOu1LPut58hYTPsQ+DXG3t/YWBvXxzNL1ZqHtUIvRnKVh6U3ZNXG
-         JYmbieiSi8gexTsPM5XO2EA7bES1eKU0ybtpiboG50As2/6lHiGlZV53AjEIV9alWUQP
-         iIvw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnEEXQKmtfLlK1VvJdG34WEOCLlX6L88c3qAPQAgAfBGDy6TKDyLS0YJAi5Lw5DOqTwAXUCAr4VNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7It5bJVvUoDNuvCXPY558ZggY/9+Sxk+CgwILesCgdUF76LRU
-	NQ2WQA2xE+ZEgrdhPtKPy2+5BafRs2qrAm78ufEYkBczNbIeVDqHNI34BYyMkw==
-X-Gm-Gg: ASbGnctr29VrWTckfoHNDIeDGLmRuq+jlYKHP8n1ChhLwDgqG99fBbycPB/1sU9vSiV
-	qbAWxrxXhDqslNvZSuj+/3Wc22wGJJBIEdZ4lmb9kAZHDeUTZlYlQZ96T5ykczeAYj7+1WIC8it
-	UDx0347HBbGRTLyFAiApUBJFQsFtqwtkuuct3Il4o5j91EPHjFeZ8UhmPc1HgrXq+N3F5tlqux+
-	sUZdk6RXw/scDplFQakw6rqgn7Zxn32eDAzwXTU6JjIc6CMsfR6f6rqKLtq8MOGub5naBhxqq4V
-	lIGtUVnvdwrhF/qytS31O51pRwg=
-X-Google-Smtp-Source: AGHT+IFwlsunpuMjX/d1aKypFFMNs39qFkwdbYlbdBr70XsnPQn3e/XNa75mGopRCVBPunXplK/iDQ==
-X-Received: by 2002:a17:90b:1b0d:b0:2ee:aa28:79aa with SMTP id 98e67ed59e1d1-2fc0dfc8d31mr11198310a91.6.1739554969066;
-        Fri, 14 Feb 2025 09:42:49 -0800 (PST)
+        bh=rMF2FQJwD4AiHWSw8XkooqqJGsGsXZnRmnTTxBxizF4=;
+        b=HnQkyQ+BFTPs7Wb2pBs/D7pu1HyL+cNKp4geSHpdV6chRFLZ+yoCO33zrgubRF+yuu
+         2/Q5HJIpU0TDk2hBWsBQvRqrGkLzGaqMP4XOHt+DrUSw1AbXxDuh4CaqKu2ettI25qYB
+         TmUwJDV+uEfcpehkKFIlJVEFofkHeQ1E6vzkTwCjvNOmOW0Eg8K3tOQdVWP8mdO5jw1s
+         JjMY7AmWrKBmiVp8CxldC6cPJkswxIU6vF1IEyrUThS4n2/R1GujmsA/ykrBZUQcKTBW
+         6cuDKkg+I1+UQZR+8aa7g5WTu235KaDbhT4IMap3Why2wEdgPL9YNODF9kGTJHtyHAAm
+         SDcA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQD/OY97UkFbpltSwPSGoh8UDE6JUSW60Avw6XnwhLoyQCle8HA6lMwbz77cSE/e2VdJnmj9j2d8s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjAO11OX52bcfXILaAQM/1sA6lOJ7JQEYuWMM29VK7TSkn2IdH
+	85DJanWlswtj1J38eFdd+PDwpb5bG+9MH/4GbYVo4j0/9+Lo5eme8t5Jp018Ag==
+X-Gm-Gg: ASbGnctoUDNSgZRZtCO3ttxRODuTLBpuv2fUIS5VlM2V70PFVmZpf+fOtrj+OC6/8XZ
+	dpF9LaJKmouidR7HT4e1TJxPej1gWSRv6vo5AXZJzcwvZyaUZvLwYzUowziI3wQAnRjk7okaYMG
+	d4AY7mJe40Z9kL8tMgmVcQlD6Q+IBaoyaXfS7gl0svgoQOXjg0XoOYsSv1G01O72Z8c79Ip2ra5
+	+Xlf5Y+NrSSL8/WLkkCrrUpEn+fFGPDjCndC7OgidDcBDDQTzp9mJWLpkAJvXKfqO4lAn9b8PeT
+	eRFQv4SlP4epRxf+ksu0sCpuXag=
+X-Google-Smtp-Source: AGHT+IFPPV2L6UfIjBOJCgYVAwQL+H1yJLajnoN7rIqvq0UHGG8ilpnrBf/ind5JB91U3cBDb9FvKA==
+X-Received: by 2002:a17:902:e848:b0:216:31aa:12eb with SMTP id d9443c01a7336-22104064cd6mr1615855ad.31.1739555072461;
+        Fri, 14 Feb 2025 09:44:32 -0800 (PST)
 Received: from thinkpad ([120.60.134.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98b3310sm5404297a91.9.2025.02.14.09.42.46
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d559614dsm31649175ad.256.2025.02.14.09.44.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 09:42:48 -0800 (PST)
-Date: Fri, 14 Feb 2025 23:12:45 +0530
+        Fri, 14 Feb 2025 09:44:32 -0800 (PST)
+Date: Fri, 14 Feb 2025 23:14:28 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Niklas Cassel <cassel@kernel.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] misc: pci_endpoint_test: Fix potential truncation in
- pci_endpoint_test_probe()
-Message-ID: <20250214174245.ctrzbp7bcd5v4xdt@thinkpad>
-References: <20250123103127.3581432-2-cassel@kernel.org>
+Cc: bhelgaas@google.com, kw@linux.com, linux-pci@vger.kernel.org,
+	shuah@kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/2] misc: pci_endpoint_test: Give disabled BARs a
+ distinct error code
+Message-ID: <20250214174428.bosbckzfvouh76o4@thinkpad>
+References: <20250123120147.3603409-3-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,23 +90,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250123103127.3581432-2-cassel@kernel.org>
+In-Reply-To: <20250123120147.3603409-3-cassel@kernel.org>
 
-On Thu, Jan 23, 2025 at 11:31:28AM +0100, Niklas Cassel wrote:
-> Increase the size of the string buffer to avoid potential truncation in
-> pci_endpoint_test_probe().
+On Thu, Jan 23, 2025 at 01:01:48PM +0100, Niklas Cassel wrote:
+> The current code returns -ENOMEM if test->bar[barno] is NULL.
 > 
-> This fixes the following build warning when compiling with W=1:
+> There can be two reasons why test->bar[barno] is NULL:
+> 1) The pci_ioremap_bar() call in pci_endpoint_test_probe() failed.
+> 2) The BAR was skipped, because it is disabled by the endpoint.
 > 
-> drivers/misc/pci_endpoint_test.c:29:49: note: directive argument in the range [0, 2147483647]
->    29 | #define DRV_MODULE_NAME                         "pci-endpoint-test"
->       |                                                 ^~~~~~~~~~~~~~~~~~~
-> drivers/misc/pci_endpoint_test.c:998:38: note: in expansion of macro ‘DRV_MODULE_NAME’
->   998 |         snprintf(name, sizeof(name), DRV_MODULE_NAME ".%d", id);
->       |                                      ^~~~~~~~~~~~~~~
-> drivers/misc/pci_endpoint_test.c:998:9: note: ‘snprintf’ output between 20 and 29 bytes into a destination of size 24
->   998 |         snprintf(name, sizeof(name), DRV_MODULE_NAME ".%d", id);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> Many PCI endpoint controller drivers will disable all BARs in their
+> init function. A disabled BAR will have a size of 0.
+> 
+> A PCI endpoint function driver will be able to enable any BAR that
+> is not marked as BAR_RESERVED (which means that the BAR should not
+> be touched by the EPF driver).
+> 
+> Thus, perform check if the size is 0, before checking if
+> test->bar[barno] is NULL, such that we can return different errors.
+> 
+> This will allow the selftests to return SKIP instead of FAIL for
+> disabled BARs.
 > 
 > Signed-off-by: Niklas Cassel <cassel@kernel.org>
 
@@ -118,22 +119,36 @@ Applied to pci/endpoint!
 - Mani
 
 > ---
->  drivers/misc/pci_endpoint_test.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Hello PCI maintainers.
+> This patch might give a trivial conflict with:
+> https://lore.kernel.org/linux-pci/20250123095906.3578241-2-cassel@kernel.org/T/#u
+> because the context lines (lines that haven't been changed)
+> might be different. If there is a conflict, simply look at
+> this patch by itself, and resolution should be trivial.
+> 
+>  drivers/misc/pci_endpoint_test.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 8e48a15100f1..b0db94161d31 100644
+> index d5ac71a49386..b95980b29eb9 100644
 > --- a/drivers/misc/pci_endpoint_test.c
 > +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -912,7 +912,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
->  {
->  	int ret;
->  	int id;
-> -	char name[24];
-> +	char name[29];
->  	enum pci_barno bar;
->  	void __iomem *base;
->  	struct device *dev = &pdev->dev;
+> @@ -292,11 +292,13 @@ static int pci_endpoint_test_bar(struct pci_endpoint_test *test,
+>  	void *read_buf __free(kfree) = NULL;
+>  	struct pci_dev *pdev = test->pdev;
+>  
+> +	bar_size = pci_resource_len(pdev, barno);
+> +	if (!bar_size)
+> +		return -ENODATA;
+> +
+>  	if (!test->bar[barno])
+>  		return -ENOMEM;
+>  
+> -	bar_size = pci_resource_len(pdev, barno);
+> -
+>  	if (barno == test->test_reg_bar)
+>  		bar_size = 0x4;
+>  
 > -- 
 > 2.48.1
 > 
