@@ -1,174 +1,162 @@
-Return-Path: <linux-pci+bounces-21470-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21471-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B08A6A361B1
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 16:28:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0EF6A361BD
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 16:31:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C6C13A8E55
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 15:28:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D7F5116F2D9
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 15:31:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36F3326656A;
-	Fri, 14 Feb 2025 15:28:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04ECE26618E;
+	Fri, 14 Feb 2025 15:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byETr5W9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BEE1747F;
-	Fri, 14 Feb 2025 15:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF65266B7D;
+	Fri, 14 Feb 2025 15:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739546928; cv=none; b=gAHrKOEkzUt98i1fBLkiQo8vZRXWUxIy5MSFJBKEeL2v8r2fNdwlETYSbsg8METfdB54u+RmWCTXCCpnU4lo4uA0skKAPCVaup+zLGSkykJ2JqdbR92dKHy/8FuQdere6V2+B7xjL44zyyS6tzsNFuf+2I7oNftSeq35DLD5vtk=
+	t=1739547079; cv=none; b=MfmncqP07/w4AsDgIWn17cKJe8IHS+36EC8PAVJuB2tfD+3c4W6/8kZp9obJCdxY1cTEWdRDjIVQunARn7dA1dmJX3nxUBj8yFw3926m0okMu6nkqjfEQRY7ZAAFeofEFpPwL8TTQCQzv6k9ohoBnyCx08QalenDQOEmbajOmu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739546928; c=relaxed/simple;
-	bh=QGoEqJ4Pyx+hYl5icZkKTw5uyF1Gu5Jen5eezGi8pdI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h+u2Lismt7cA53NnCWHC2VdfothX7jBrJT8IoVtSnPaQm5dDVRhe1Xv3/deIBKvyT0pSsZK5PXlxuaXovSj2NsmApe1MuRpe6VmwhzV+v4NTaoD6Eg4hoPlbos5chr7Cw1q0+rTZwc4tlkRD12omy8NmuqlZ75Bz1W6LLawL5DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YvbWs0N9Lz6HJfF;
-	Fri, 14 Feb 2025 23:27:21 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id AD021140B38;
-	Fri, 14 Feb 2025 23:28:42 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 14 Feb
- 2025 16:28:41 +0100
-Date: Fri, 14 Feb 2025 15:28:40 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: "Bowman, Terry" <terry.bowman@amd.com>
-CC: Dan Williams <dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<nifan.cxl@gmail.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<lukas@wunner.de>, <ming.li@zohomail.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <shiju.jose@huawei.com>
-Subject: Re: [PATCH v7 10/17] cxl/pci: Add log message and add type check in
- existing RAS handlers
-Message-ID: <20250214152840.00002172@huawei.com>
-In-Reply-To: <d56fcbea-8405-4f61-9c32-63db88f1483c@amd.com>
-References: <20250211192444.2292833-1-terry.bowman@amd.com>
-	<20250211192444.2292833-11-terry.bowman@amd.com>
-	<67ad27da2f65c_2d2c294b9@dwillia2-xfh.jf.intel.com.notmuch>
-	<d56fcbea-8405-4f61-9c32-63db88f1483c@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1739547079; c=relaxed/simple;
+	bh=PlPgOjpUQNDGrv1qPEHfg/ayDOmOHC8LX2wPVVoaStk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kRc2mAQdaxE89KuvBwf9z7j+vooVGBAWi2p5jmDM0/dvO+nrRVzNpILa+wYfqRqlFEXw3FZY2vX0OEvzoy02l+U+QgQwidumSTSckDAr8NzgPphcroo1G+i/5rHja0myZrM4jNqjhpHAaJXqKQJOZ30qKy6vEhSc3UYb10aaKfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byETr5W9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99F7BC4CEDD;
+	Fri, 14 Feb 2025 15:31:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739547079;
+	bh=PlPgOjpUQNDGrv1qPEHfg/ayDOmOHC8LX2wPVVoaStk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=byETr5W9doDE1zeWMB1evIVk3+JLa4Sk3euPWAAJRNM73xXlmpRi9Mwb8LwhMGNOR
+	 x9JCOAkTsqrQ7oRrIc3GcLH6u7SV9IdE4hUpWnsKwy9/VdcAR3miSsb/T7mFC7PizP
+	 rUYYLm8uiBPUo3uOs8xhud6nRVZ6ua7ofDNjuIZSqECRiRXKj6Mm+UpJbRqAexRMpU
+	 g6gzmDNnVliup1VtMd3E25GJsQLQnKS1Bm94w8a0LFE9e4UDSJhGcb7+6SFMpr3ZD3
+	 +RnuvoPWRYcDCo3X3yC1EBvWLbOMw/iQI2DZYTG+KrbZt9WBclegnBhWgCd8jSJZ4G
+	 VcNUFCKAupyaQ==
+Date: Fri, 14 Feb 2025 21:01:03 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, bwawrzyn@cisco.com, cassel@kernel.org,
+	wojciech.jasko-EXT@continental-corporation.com, a-verma1@ti.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rockswang7@gmail.com
+Subject: Re: [v3] PCI: cadence: Fix sending message with data or without data
+Message-ID: <20250214153103.4cjlawksw4xobc2l@thinkpad>
+References: <20250207103923.32190-1-18255117159@163.com>
+ <20250214073030.4vckeq2hf6wbb4ez@thinkpad>
+ <7eb9fedc-67c9-4886-9470-d747273f136c@163.com>
+ <20250214132115.fpiqq65tqtowl2wa@thinkpad>
+ <332ec463-ebd9-477c-8b10-157887343225@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <332ec463-ebd9-477c-8b10-157887343225@163.com>
 
-On Wed, 12 Feb 2025 18:08:13 -0600
-"Bowman, Terry" <terry.bowman@amd.com> wrote:
+On Fri, Feb 14, 2025 at 10:28:11PM +0800, Hans Zhang wrote:
+> 
+> 
+> On 2025/2/14 21:21, Manivannan Sadhasivam wrote:
+> > On Fri, Feb 14, 2025 at 04:23:33PM +0800, Hans Zhang wrote:
+> > > 
+> > > 
+> > > On 2025/2/14 15:30, Manivannan Sadhasivam wrote:
+> > > > On Fri, Feb 07, 2025 at 06:39:23PM +0800, Hans Zhang wrote:
+> > > > > View from cdns document cdn_pcie_gen4_hpa_axi_ips_ug_v1.04.pdf.
+> > > > > In section 9.1.7.1 AXI Subordinate to PCIe Address Translation
+> > > > > Registers below:
+> > > > > 
+> > > > > axi_s_awaddr bits 16 is 1 for MSG with data and 0 for MSG without data.
+> > > > > 
+> > > > > Signed-off-by: hans.zhang <18255117159@163.com>
+> > > > > ---
+> > > > > Changes since v1-v2:
+> > > > > - Change email number and Signed-off-by
+> > > > > ---
+> > > > >    drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 +--
+> > > > >    drivers/pci/controller/cadence/pcie-cadence.h    | 2 +-
+> > > > >    2 files changed, 2 insertions(+), 3 deletions(-)
+> > > > > 
+> > > > > diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> > > > > index e0cc4560dfde..0bf4cde34f51 100644
+> > > > > --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> > > > > +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> > > > > @@ -352,8 +352,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
+> > > > >    	spin_unlock_irqrestore(&ep->lock, flags);
+> > > > >    	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
+> > > > > -		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code) |
+> > > > > -		 CDNS_PCIE_MSG_NO_DATA;
+> > > > > +		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code);
+> > > > >    	writel(0, ep->irq_cpu_addr + offset);
+> > > > >    }
+> > > > > diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> > > > > index f5eeff834ec1..39ee9945c903 100644
+> > > > > --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> > > > > +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> > > > > @@ -246,7 +246,7 @@ struct cdns_pcie_rp_ib_bar {
+> > > > >    #define CDNS_PCIE_NORMAL_MSG_CODE_MASK		GENMASK(15, 8)
+> > > > >    #define CDNS_PCIE_NORMAL_MSG_CODE(code) \
+> > > > >    	(((code) << 8) & CDNS_PCIE_NORMAL_MSG_CODE_MASK)
+> > > > > -#define CDNS_PCIE_MSG_NO_DATA			BIT(16)
+> > > > > +#define CDNS_PCIE_MSG_DATA			BIT(16)
+> > > > 
+> > > > Oops! So how did you spot the issue? Did INTx triggering ever worked? RC should
+> > > > have reported it as malformed TLP isn't it?
+> > > > 
+> > > In our first generation SOC, sending messages did not work, and the length
+> > > of messages was all 1. Cadence fixed this problem in the second generation
+> > > SOC. And I have verified in the EMU environment that it is OK to send
+> > > various messages, including INTx.
+> > > 
+> > > And that's what Cadence's release documentation says:
+> > > axi_s_awaddr bits 16 is 1 for MSG with data and 0 for MSG without data.
+> > 
+> > I'm confused now. So the change in axi_s_awaddr bit applies to second generation
+> > SoCs only? What about the first ones?
+> > 
+> > Are you saying that the first generation SoCs can never send any message TLPs at
+> > all? This sounds horrible.
+> 
+> 
+> Sorry Mani, I shouldn't have spread this SOC bug. This is a bug in RTL
+> design, the WSTRB signal of AXI bus is not connected correctly, so the first
+> generation SOC cannot send message, because we mainly use RC mode, and we
+> cannot send PME_Turn_OFF, that is, our SOC does not support L2. I have no
+> choice about this, I entered the company relatively late, and our SOC has
+> already TO.
 
-> On 2/12/2025 4:59 PM, Dan Williams wrote:
-> > Terry Bowman wrote: =20
-> >> The CXL RAS handlers do not currently log if the RAS registers are
-> >> unmapped. This is needed in order to help debug CXL error handling. Up=
-date
-> >> the CXL driver to log a warning message if the RAS register block is
-> >> unmapped.
-> >>
-> >> Also, add type check before processing EP or RCH DP.
-> >>
-> >> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> >> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> >> Reviewed-by: Gregory Price <gourry@gourry.net>
-> >> ---
-> >>  drivers/cxl/core/pci.c | 20 ++++++++++++++------
-> >>  1 file changed, 14 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> >> index 69bb030aa8e1..af809e7cbe3b 100644
-> >> --- a/drivers/cxl/core/pci.c
-> >> +++ b/drivers/cxl/core/pci.c
-> >> @@ -658,15 +658,19 @@ static void __cxl_handle_cor_ras(struct device *=
-dev,
-> >>  	void __iomem *addr;
-> >>  	u32 status;
-> >> =20
-> >> -	if (!ras_base)
-> >> +	if (!ras_base) {
-> >> +		dev_warn_once(dev, "CXL RAS register block is not mapped");
-> >>  		return;
-> >> +	}
-> >> =20
-> >>  	addr =3D ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
-> >>  	status =3D readl(addr);
-> >> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-> >> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> >> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK))
-> >> +		return;
-> >> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> >> +
-> >> +	if (is_cxl_memdev(dev))
-> >>  		trace_cxl_aer_correctable_error(to_cxl_memdev(dev), status); =20
-> > I think trace_cxl_aer_correctable_error() should always fire and this
-> > should somehow be unified with the CPER record trace-event for protocol
-> > errors.
-> >
-> > The only usage of @memdev in this trace is retrieving the device serial
-> > number. If the device is not a memdev then print zero for the serial
-> > number, or something like that.
-> >
-> > In the end RAS daemon should only need to enable one trace event to get
-> > protocol errors and header logs from ports or endpoints, either
-> > natively, or via CPER.
-> > =20
-> That would be: we use 'struct *device' instead of 'struct *cxl_memdev'
-> and pass serial# in as a parameter (0 in non-EP cases)?
+Ok. Just to clear my head, this patch is needed irrespective of the hw issue,
+right? And with or without this patch, first revision hw cannot send any MSG
+TLPs?
 
-For a USP may well have a serial number cap. Might be worth getting it?
+If so, it is fine. But is there a way we could detect those first generation IPs
+and flag it to users about broken MSG TLP support? Atleast, that would make the
+users aware of broken hw.
 
-slightly nasty thing here will be change of memdev=3D%s to devname=3D%s or
-similar.  Meh. It's a TP_printk() I'm not sure anyone will care.
-Need to be careful with the tracepoint itself though and the rasdaemon
-etc handling.
-https://github.com/mchehab/rasdaemon/blob/master/ras-cxl-handler.c#L351
-We may have to just add another field.
+> 
+> 
+> This patch is to solve the Cadence common code bug, and does not conform to
+> Cadence documentation.
 
->=20
-> >> -	}
-> >>  }
-> >> =20
-> >>  static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
-> >> @@ -702,8 +706,10 @@ static bool __cxl_handle_ras(struct device *dev, =
-void __iomem *ras_base)
-> >>  	u32 status;
-> >>  	u32 fe;
-> >> =20
-> >> -	if (!ras_base)
-> >> +	if (!ras_base) {
-> >> +		dev_warn_once(dev, "CXL RAS register block is not mapped"); =20
-> > Is this a "never can happen" print? It seems like an oversight in an
-> > upper layer to get this far down error reporting without the registers
-> > mapped.
-> >
-> > Like maybe this is a bug in a driver that should crash, or the driver
-> > should not be registering broken error handlers? =20
-> Correct. The error handler assignment and enablement is gated by RAS mapp=
-ing
-> in cxl_uport_init_ras_reporting() and cxl_dport_init_ras_reporting().
->=20
-> Terry
-> =A0=A0=A0=A0=A0=A0=A0
->=20
->=20
->=20
->=20
+you mean 'does'?
 
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
