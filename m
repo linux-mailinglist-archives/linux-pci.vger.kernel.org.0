@@ -1,62 +1,60 @@
-Return-Path: <linux-pci+bounces-21474-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21475-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E73AA36225
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 16:47:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C8F7A3622C
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 16:47:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 54445189511F
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 15:45:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A94A33B247D
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 15:45:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B39326773A;
-	Fri, 14 Feb 2025 15:44:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B48FF267382;
+	Fri, 14 Feb 2025 15:45:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u7z+ajB5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQnbNgfP"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4113B267733;
-	Fri, 14 Feb 2025 15:44:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87159266F19;
+	Fri, 14 Feb 2025 15:45:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739547875; cv=none; b=czjpBL0jROIIYzwhHB2GXEpotHn41dFooC7nyXftHgV5Om4wrsxc4tGpv8lj/4K0QsWfvw6VpYTfmEz638pZC1mt0Bd0dBTe/7uEwTDK549BSiGsjN4X/6YfRYcQZEFsJ5vTXkcAEV8tjbA9TLsSpmoioQVsZMSSRixbvc0nSCs=
+	t=1739547953; cv=none; b=Y5bpzB+MI1rQ4bgMaprNHHVulUboLasNNZsZ6rFAIEr9VTCM3vWuTiEcI7CYom9wC8AfBiIGBVGZEF/TCIKvPmL6i/3+hBPLYwEUV8xb6TVQuWkVwe8k4ZmM6ODP0oAQ9tYsRlIwILVeBR+UQk76WSzQSkrYcLrMdYLxU7tF5rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739547875; c=relaxed/simple;
-	bh=0qPMF2GZH1hf43cYEUxXLAbgzi4XUuPhz9OnFLfkrlc=;
+	s=arc-20240116; t=1739547953; c=relaxed/simple;
+	bh=9JgdACbhkpAouEWMMO/S2geqxFPM40RbgjRRU/HIkmc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZpB0AkrvYLGC+psNVWZWEOB7hcDN159IrTtcVPYAQTUxFnDv5YYvUBQVSCsZsEryb3xQHFWlMSQpDhvmrmR59rtPSy800jshbGaSUXRZSzfX6S1N7oI03csF10LKo/nwoUuCsFPDt6XKEsG3eecp+9WMfXsoM6nOwlOkhSxUbD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u7z+ajB5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC79C4CED1;
-	Fri, 14 Feb 2025 15:44:27 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=hdeX7SooZVWHz8PQN8iVAewPHkXdRzFzRtGXpgS83kb8rgxSJ2Xx0UNnPAo4pZqpCQmTd3bUSijFU0qXPoA+5CDRFwVzwks6vGH40JXp1+Ikgdnwkye66RC/mvCVdCBhA0xSt+R7kXW72b0OuBZE81saRAbzhgPyrhzUliQ1yeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQnbNgfP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A55C4CED1;
+	Fri, 14 Feb 2025 15:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739547874;
-	bh=0qPMF2GZH1hf43cYEUxXLAbgzi4XUuPhz9OnFLfkrlc=;
+	s=k20201202; t=1739547953;
+	bh=9JgdACbhkpAouEWMMO/S2geqxFPM40RbgjRRU/HIkmc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u7z+ajB5o/TOUvRsTSI9RlPkFmYllMrMCBgdTHF5c+JHAP4oQIMRVxChwjjppjc5Y
-	 GGMjJNLy+H2amQc/RAEedrKqUC/+KmpF5jOkgO9n/Eukc9vSgqDtdJkfSA7S0/tmK2
-	 KMd/8lf6Czr8i1lOME2IrUY4IbOW+ETMqJyNZ1KovYQB4AjsJkDvP+tcC8fUBiA9y5
-	 oHxupsOrIIqiiPwq4zUZnUG3J+P7nsiEZqFmHH7CZsDZ0oxMrAlF8id2hL7VN//4Dw
-	 jjva6itCuZH6JmLWJ0Ob7Vt8lTZo7yICycaf4y5Rd0uR9iG/O8QsqC0pwgT48h6DSD
-	 RRK3dzwQkSiDA==
-Date: Fri, 14 Feb 2025 21:14:15 +0530
+	b=PQnbNgfPvxfzFLltrMfaOcr1qGRnTclWmD9PTEJ61L3bixWGfushyl5Ok1kVuCnOU
+	 U0PmLntEhS5DlThl7JNh1WjoGK/aMG613SnKl7saNXAUSLNNLjS8EnJHzWdRLcwMSH
+	 P1zKRq/BpESwaBAo6zdPk2QamXe/vRQ6T2o9sC0CqF2TJr+5Y3fvdqrS2UUE+7Cyqv
+	 oaVmkB49bTxmINM6ih83v38QZLN199uZiUEc0sVVl/36B08FIsUCeNgxIVenXMcDoA
+	 lzH+cAc8l9zNwRtJCPrYe8S5hhDMfohOcY1/eWbUgwoPF02bpl+A42DmnEl7MAntnV
+	 GmvK8pup29Fwg==
+Date: Fri, 14 Feb 2025 21:15:39 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Janne Grunau <j@jannau.net>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: apple: Add depends on PAGE_SIZE_16KB
-Message-ID: <20250214154415.ns5li3ywlxawmzz6@thinkpad>
-References: <20250211-pci-16k-v1-1-7fc7b34327f2@rosenzweig.io>
- <20250211183859.GA51030@bhelgaas>
- <20250211195601.GB810942@robin.jannau.net>
- <20250211220019.GC810942@robin.jannau.net>
+To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: xilinx-cpm: Add compatible
+ string for CPM5NC Versal Net host
+Message-ID: <20250214154539.jqbjkms32ew5zpd2@thinkpad>
+References: <20250212055059.346452-1-thippeswamy.havalige@amd.com>
+ <20250212055059.346452-2-thippeswamy.havalige@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,35 +64,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250211220019.GC810942@robin.jannau.net>
+In-Reply-To: <20250212055059.346452-2-thippeswamy.havalige@amd.com>
 
-On Tue, Feb 11, 2025 at 11:00:19PM +0100, Janne Grunau wrote:
-> On Tue, Feb 11, 2025 at 08:56:04PM +0100, Janne Grunau wrote:
-> > On Tue, Feb 11, 2025 at 12:38:59PM -0600, Bjorn Helgaas wrote:
-> > > On Tue, Feb 11, 2025 at 01:03:52PM -0500, Alyssa Rosenzweig wrote:
-> > > > From: Janne Grunau <j@jannau.net>
-> > > > 
-> > > > The iommu on Apple's M1 and M2 supports only a page size of 16kB and is
-> > > > mandatory for PCIe devices. Mismatched page sizes will render devices
-> > > > useless due to non-working DMA. While the iommu prints a warning in this
-> > > > scenario, it seems a common and hard to debug problem, so prevent it at
-> > > > build-time.
-> > > 
-> > > Can we include a sample iommu warning here to help people debug this
-> > > problem?
-> > 
-> > I don't remember and it might have changed in the meantime due to iommu
-> > subsystem changes. What currently happens is that
-> > apple_dart_attach_dev_identity() fails with -EINVAL. I can't say whether
-> > that results in a failure to probe now. I'll test and report back.
+On Wed, Feb 12, 2025 at 11:20:58AM +0530, Thippeswamy Havalige wrote:
+> The Xilinx Versal Net series has Coherency and PCIe Gen5 Module
+> Next-Generation compact (CPM5NC) block which supports Root Port
+> controller functionality at Gen5 speed.
 > 
-> Using a kernel with 4K page size It results now in following warning per
-> PCI device:
-> 
-> | ------------[ cut here ]------------
-> | WARNING: CPU: 7 PID: 260 at drivers/iommu/iommu.c:2979 iommu_setup_default_domain+0x348/0x590
+> Error interrupts are handled CPM5NC specific interrupt line and
+> INTx interrupt is not support.
 
-This should be added to the patch description.
+supported?
 
 - Mani
 
