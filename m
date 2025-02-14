@@ -1,132 +1,152 @@
-Return-Path: <linux-pci+bounces-21498-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21500-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9EF1A364B2
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 18:37:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C17FA364C6
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 18:40:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 373DA188FF4B
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 17:37:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5FF2B17116D
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 17:39:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABB2C267AEB;
-	Fri, 14 Feb 2025 17:36:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D740264A80;
+	Fri, 14 Feb 2025 17:39:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TfX9S/Ut"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Rpmpuhi/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDF1264A80
-	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 17:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEA2267B15
+	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 17:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739554614; cv=none; b=gu2zqTvIVBzUe1ryIvwVtM56q+zTm7vUUTAbl40c5mOXxOtO85BxWTiK+9+vUQ12uAijxpHMM+6Sx3j7nFEOjTvBfrDfdOzrU1+mnemkSNtrJ7s1xSlpQDDgrhSq6khZ1b0+kUnxStEeIVGDwyugZvtfv4Eb9IAuzoV0WW2Uj2w=
+	t=1739554794; cv=none; b=nFGKiFt+5VHQP7EqGmJxxoTIhnGgyyuupBt5Kg+UDAboB6XHD7NAPWEe3lar7oGl71LiecVtc7oBXI1LkRErBPCWJEtQvNDTAWFVHNGt08fpqdo6u5x767iP9CqqGK7Vccs82fGT4Ajm0f9edgqfhqMj4qU7WbsqBAS7gtOkTE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739554614; c=relaxed/simple;
-	bh=CgVwuAmZaaHCwkq2wGyHJ0bk/+ozIDvB+bJn963eaOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MfGD1vz8/haP63M1RkzkMV9ndR4gAXyXAjgw2edolFweewn3/e6XAwT4+aZdmRg4jbbL0KRBcN2QC4VSotPoKui5tRdpQtBmMnN4/dlO2T4q1RMzKlw0NeERDgC535YtIYB+mPoHHdDT7d3/SqnpenU4yezvzSAi2B6plOeF30w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TfX9S/Ut; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2f44353649aso3490287a91.0
-        for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 09:36:52 -0800 (PST)
+	s=arc-20240116; t=1739554794; c=relaxed/simple;
+	bh=xtjOZepvLWucE2YN/q7n9CFllGSrwG6Q7wsBi8+kBdk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cKCChVhjfDOWMeiwjFJMj4qlwmCtIRRPYuBhuTcFNO5v18kNHh9ycqltugZVdP2v4b2IvTth9zAK83tLjlHtVjE4Vcmwy65OvCDoXIxW+Z0hGx4NbeSyixXTAz5xDmRipIuKX9HyIX7dNrQRuT/rl8BnV1WLXm37XMwwLEOoC00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Rpmpuhi/; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5fcb2901eb3so916231eaf.1
+        for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 09:39:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739554612; x=1740159412; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=x0jY19iaea2nNrTmHpo4mZf39vSCWNkS4XHLE1IKd7s=;
-        b=TfX9S/UtU5QpZNKo3ZjQgizPih6egREO3CAer15mv+Mh0Qd7B6g2r4mpQ4czrQJMxD
-         5YQl+37wgxgTUipv2lSzk1CrPRUVlheXU2DfUGKe4EMz3HRaRWIS4khaf/Bja6p6obrF
-         I+5T1UA3HRPrxpKb3+t6rDjwz68lPCjGOgGmMJPximZ68Quuhu1MXjNNUpXn60KCmrWv
-         UOVeLTdhxipzrbBQpRTfDvB0Bg/n8OFnEEmZ1gsoHCoUFDEfqtV4yetuiUM8g+CjXVNo
-         c4VMzfKx/4dlSkDp96a1+NFliwCP03/sMYk4yFR5yX4wVTEyA+NhQlg90COXnDKGVP7g
-         YWbg==
+        d=broadcom.com; s=google; t=1739554791; x=1740159591; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PsGKDfz7/jaPpiyMeSia4iIgjyJuYXTHPPt+s6+yzBM=;
+        b=Rpmpuhi/MiLe+vKJ/i4KbdHvKkcpdUcwCWs7S/qRs0D8jm2rs1SQlPoOY7ewTKQPmJ
+         IBPFrwm+vKJbNOskdyxCdZjEioA5ChGv2y4jNjIj07uEMbQ4QfFVgRaCO2BGjwJUcIce
+         7J4C5l/49kW5hkZB7+pLbDKsz07UTwZYuZpCg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739554612; x=1740159412;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x0jY19iaea2nNrTmHpo4mZf39vSCWNkS4XHLE1IKd7s=;
-        b=NTzDW56V2vw4Clugmq7MxUgon+VQETH/911mwCWNLyvOtjnPPm98pQvO0lXLktLQxN
-         LvTEqtJ4Go7FGFwvBlz+0orkxLAN8UKepqt4UnbjpJ78vP+xDvnUTdVJhJOk80RawS5t
-         ultlDkw/Ki6WdcQHFaTBH8d3OKIlzy/Ix081TI8zb3z87fPPwDIbEaxV3KvARsQr/54R
-         m/JFAhbn1wG1jTiUKQo2qla0XSDB9t9458AYOcqyDinbAAruc3hDDP2R1Z60pgm8E4Kb
-         Z2FQDHTM5H1RLQsRmvP8vrETEIAIRhTgYfGOzcZemAgpERlG8llRLQeZQKzS6hcMg6Zr
-         NZMA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/dDEDapYjnLI0vkSBU9bWDIH0IPHOqMk8yeIsBX6B5vNaAzgVYCAJ86tQ+EvbwD1+HhyV4Sh2hps=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEDmSYbpfCaeL1tIGsdN6ICLU01+xBcc2kwMp183QRrTzXHWbg
-	KrNBIcHG1rrKynS3KkQipnrAXocMsuOn4d2a/LOZKsexC3sDNul6PcDB+jPnbjDJCsRCPeffWdQ
-	=
-X-Gm-Gg: ASbGnctaEnRoH1YvbPkFlW6qXuJX1Lkicv4aOcaC/zPD5oJqgflrfoDdgrtg0CpRUI9
-	NsxRJSakkBY+/roBdVtxTvNebijn79mQteszrMCxFMdfOpni33g09sWd9jNTSM87ACNdDGLDnnJ
-	QUFYkaWjvNi3aT8hJu4VH0E5AlvaXIxQJntxrIpk8T4jSp38JWHL8G7sN+SMgjXkIua57Vy5FZp
-	zUWfJ5cvUzvu2PnWyvhSkGRK8eHVmTNuMWppPD0Gh4KpbOX2sL7KUlfr7HJBNkDnstqYk1tKP3M
-	J53eeudqmKUuB4vNPSD4jLHLRqU=
-X-Google-Smtp-Source: AGHT+IHKfrs4FETuoSjUaKGkOVOod6jMEGCivG1TYtrtM3L4Cegl83GReBakCUd0Jg/vqR4qQAqZ5w==
-X-Received: by 2002:a17:90b:54d0:b0:2f4:47fc:7f18 with SMTP id 98e67ed59e1d1-2fbf8f32cddmr17994333a91.10.1739554612431;
-        Fri, 14 Feb 2025 09:36:52 -0800 (PST)
-Received: from thinkpad ([120.60.134.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98f0facsm5470601a91.23.2025.02.14.09.36.49
+        d=1e100.net; s=20230601; t=1739554791; x=1740159591;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PsGKDfz7/jaPpiyMeSia4iIgjyJuYXTHPPt+s6+yzBM=;
+        b=Ehh6eE9O6hRqaVd7gq0YaAL2XLce1AWI1zTcmlGa5qFeune1nLrkTDQLZ4G37H8uzf
+         VMwfkIxVzX6FPi0DQ8Iq1bqpc8KBKlobFP6bLzUZdQgEoiWvF9hY75uvwVjZ67Yk8I72
+         i2c1D+UGLUH7DfHGNYKeRYxzG8x+mL0GOYC5VyPrfviBU3miYRIGsClS0uYPtrphu9A3
+         czYpUkvZEyFskmhi6KyZ9TtQ20T1YWEvV76wwOJYlDJkZzxQQWJY2wUXTuNH5CsFYqbl
+         68lOzq4Va6q01kKk8rg3ILKzWI/fE2/WGuEGeNpbAjlTJFyRyxcwo4X/OE7ws6UKoHw5
+         NpiQ==
+X-Gm-Message-State: AOJu0YyNJh318xi1TpS0hpL0SbyrDTe4aU3R+cN1LNhkh9Cjm1SzQC/J
+	JFoqWgoLO4i1Fw26Ua+1AzisBBJBcmgYhXnUz+fN3deTBX6GUPNftj8huxUWUdS+s18lcF1n8On
+	a7G34HSdAgFc3Q0oIRd+5ZrxpoY5zB7YFGS02hLffGFOOOaUaRMpZ1f15Ztooi8wZSreepnV0LZ
+	Lr78MUApSmEwd96YZR45TDrDglKowkVNnxlR/xK7vlNcD/pYfJ
+X-Gm-Gg: ASbGnctb5uWsZNlEAA17LaIzb6HzXd4oflWAxsEpmQ1iyEUE1Cur9Pb19gRR9RKocDR
+	rglmVJwLn2OpV9ej82G/oMY9pBKhlOeJMSSTnL38IYkbGqjgpRcW5Amgz6tgkdxcuMGZFVxNCxy
+	gZQ7DX+Tb9niZzU2FcyRlpk74z09NWqZYq0ELpSWTqOunavMrCQDxqDxSjXc7WI/EeB+Sz53ZUI
+	j2inggDJ5HSN8QTBG3us9XPnxYd0DgUiyZJQVTtYlcCDkvcN8PaGM5X+BqPQYSZa0oKrxopa8xi
+	uGwnz56VbQ5KsFxMufMdARy+3xheZo1WIazvUEKtnG6terIaoH8pScFef8KYwL7if4whH8M=
+X-Google-Smtp-Source: AGHT+IGDUd5DZupELTIH1ZNHElTcoWH0Jy+aI2jHUJxfXC+3Fwg31SHzk1pcdrf8sVKAQ1860xNHbQ==
+X-Received: by 2002:a05:6820:229d:b0:5fc:89d9:a050 with SMTP id 006d021491bc7-5fcc55ce468mr11226eaf.1.1739554791273;
+        Fri, 14 Feb 2025 09:39:51 -0800 (PST)
+Received: from stbsrv-and-02.and.broadcom.net ([192.19.144.250])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fcb17a4ca4sm1284073eaf.30.2025.02.14.09.39.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 09:36:52 -0800 (PST)
-Date: Fri, 14 Feb 2025 23:06:46 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Rob Herring <robh@kernel.org>, Jim Quinlan <jim2101024@gmail.com>,
+        Fri, 14 Feb 2025 09:39:49 -0800 (PST)
+From: Jim Quinlan <james.quinlan@broadcom.com>
+To: linux-pci@vger.kernel.org,
 	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-arm-kernel@lists.infradead.org,
-	bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-	Jonathan Bell <jonathan@raspberrypi.com>
-Subject: Re: [PATCH] PCI: brcmstb: Adjust message if L23 cannot be entered
-Message-ID: <20250214173646.gnq2xz3zwxgguqqw@thinkpad>
-References: <20250201121420.32316-1-wahrenst@gmx.net>
- <20250208102748.2aytlzgzbvm6u4vi@thinkpad>
- <32e74c11-d6cb-4c42-b9e0-a52bab608c16@gmx.net>
- <9d7ddfdd-4355-4566-a160-770c661281a0@gmx.net>
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Cyril Brulebois <kibi@debian.org>,
+	Stanimir Varbanov <svarbanov@suse.de>,
+	bcm-kernel-feedback-list@broadcom.com,
+	jim2101024@gmail.com,
+	james.quinlan@broadcom.com
+Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE),
+	linux-kernel@vger.kernel.org (open list),
+	linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE)
+Subject: [PATCH v2 0/8] PCI: brcmstb: Misc small tweaks and fixes
+Date: Fri, 14 Feb 2025 12:39:28 -0500
+Message-ID: <20250214173944.47506-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9d7ddfdd-4355-4566-a160-770c661281a0@gmx.net>
 
-On Thu, Feb 13, 2025 at 07:59:38PM +0100, Stefan Wahren wrote:
-> Hi Mani,
-> 
-> Am 08.02.25 um 14:22 schrieb Stefan Wahren:
-> > Hi Mani,
-> > 
-> > Am 08.02.25 um 11:27 schrieb Manivannan Sadhasivam:
-> > > On Sat, Feb 01, 2025 at 01:14:20PM +0100, Stefan Wahren wrote:
-> > > > The entering of L23 lower-power state is optional, because the
-> > > > connected endpoint might doesn't support it. So pcie-brcmstb shouldn't
-> > > > print an error if it fails.
-> > > > 
-> > > Which part of the PCIe spec states that the L23 Ready state is optional?
-> > tbh i don't have access to the PCIe spec, so my statement based on
-> > this comment [1].
-> Please tell, how can we proceed here? In case L23 is required by the
-> specs the driver also need adjustment.
-> 
+V2: Changes from V1
 
-I don't think the spec mentions that the L23 Ready state is optional. Atleast, I
-cannot find the reference. In that case, I do not see a reason to drop the
-error.
+  o All Commits: Wrap all commit messages to 75 cols (Bjorn)
+  o Commit: Refactor max speed limit functionality
+    -- Split into three commits (Bjorn)
+  o Commit: "Fix error path upon call of regulator_bulk_get()"
+    -- Changed so regulator_bulk_xxx() funcs do not get called with
+       num_regulators==0 (Bjorn)
+  o Commit: "Fix potential premature regluator disabling"
+    -- s/regluator/regulator/ (Bjorn)
+  o Commit: "Cast an int variable to an irq_hw_number_t"
+    -- Change commit subject line (Stephan)
 
-- Mani
 
+V1:
+
+  Six small fixes and improvements for the driver.  This may be applied
+  before or after Stan's V5 [1] on pci-next (they should not conflict).
+
+  [1] https://lore.kernel.org/linux-pci/20250127113251.b2tqacoalcjrtcap@localhost.localdomain/T/#rfe31466507e3e540ad681278924e0ae4e0b8a727
+
+
+Jim Quinlan (8):
+  PCI: brcmstb: Set gen limitation before link, not after
+  PCI: brcmstb: Write to internal register to change link cap
+  PCI: brcmstb: Do not assume that reg field starts at LSB
+  PCI: brcmstb: Fix error path upon call of regulator_bulk_get()
+  PCI: brcmstb: Fix potential premature regulator disabling
+  PCI: brcmstb: Use same constant table for config space access
+  PCI: brcmstb: Make two changes in MDIO register fields
+  PCI: brcmstb: Clarify conversion of irq_domain_set_info() param
+
+ drivers/pci/controller/pcie-brcmstb.c | 40 ++++++++++++++-------------
+ 1 file changed, 21 insertions(+), 19 deletions(-)
+
+
+base-commit: 647d69605c70368d54fc012fce8a43e8e5955b04
+prerequisite-patch-id: 17728ad3425bcbd72e06271f2537a5aeec9ec0f2
+prerequisite-patch-id: fab98130bbf5ffc881704b02153e387aa4a08e87
+prerequisite-patch-id: 0d2d8d02821ca742aed46f16e9ed60db2ead359d
+prerequisite-patch-id: 8cddbbc69bd26c0284784d29f5abcc30db1c8327
+prerequisite-patch-id: b5d9165e3627079a44c08faaa306c17ef735fc9f
+prerequisite-patch-id: 95858e79f69b693a7955cf12549ff1ce8df27699
+prerequisite-patch-id: cc66e7df1fc7acef4ce10f99033a39359b6d57ab
+prerequisite-patch-id: af00ddbf164acf1742020616d8c0f05cbd5c1fa0
+prerequisite-patch-id: e37b800216e856a32ec7e7231d5191f17026ebc9
+prerequisite-patch-id: edeed902cf9a962e3431132dacbd95781b1cf970
+prerequisite-patch-id: da4f731901ffc44f2f1a3e69c1c35213d531fcae
 -- 
-மணிவண்ணன் சதாசிவம்
+2.43.0
+
 
