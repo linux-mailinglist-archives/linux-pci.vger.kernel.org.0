@@ -1,196 +1,258 @@
-Return-Path: <linux-pci+bounces-21451-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21452-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0817A35D2A
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 12:57:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D97AA35DB2
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 13:35:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10E343A9B57
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 11:56:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C25153AFD58
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 12:35:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E41625C6FD;
-	Fri, 14 Feb 2025 11:56:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7BF0263C84;
+	Fri, 14 Feb 2025 12:35:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VuvKN/86"
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="D5Xod9Nn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B58221541;
-	Fri, 14 Feb 2025 11:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0BE263C73
+	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 12:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739534216; cv=none; b=TqoCEOADpMxJTDfr2P79OsJUBUNGvpoJrtRnUAgDHSQcDvJJke66RSEP3XOoU13fikQfSoi0JfInG1nTQ3C2QKTCIW0/E6vpHMs7XOqx/p0QGTrZP4BUs+AcMoTNUj3UN3rJyGi76yaWJaUnIdssrymbvIQTDVefzajmumt+axw=
+	t=1739536553; cv=none; b=igkddDmFGLldf3mf+vS7nDRCOrzPUopef9wBAku15UneifhV5kFheEISVbpBnIpIY7xMkehAaepoZV6pCcGHWSmSzsE23X2SFZWAqDJh905C2MDTsddgx0Eet/vQWaS4sXpnsx9fBUjGDekAMDRTRfblBdfVUBuN6i7P1XTShjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739534216; c=relaxed/simple;
-	bh=FC6cHtpFmo9WG6l7crjEmz9kgRp7okbpmsc+ca1qwDk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VdxiYM0Mijr/7TBZvac++mDWgUCR3DZr5bCVNF+mTknwAYfUM6HMHIGI+d2+jx6kJNqRBRDDUM0/XVERmEJuVLLRis55bTCTTH0fsc6JV4GHY2WY29axWDSOwH0AMyJ59cc+Wsagq8AwyhYKMCRvnMlhQdId7gWz5tE8He4lzao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VuvKN/86; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739534214; x=1771070214;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=FC6cHtpFmo9WG6l7crjEmz9kgRp7okbpmsc+ca1qwDk=;
-  b=VuvKN/86+pxkADxibMbI+CRL+z+i04T/EGxx3Gc1/zCr+rvKZaKgIhY2
-   jdFPzQ7V8yfe00xnqENJeW1y1B0ambb0SrKqm9/EFB4+mos0jT2Wm85sI
-   UUJ7T5dK+eqXHgBwpqmHcbK0tKAKEHTgluDG3UYcyPiwXQ0MLP9bIu+Cp
-   MjcX1GzoL/OHfncaCBLD3sTTKRYSMPpKb2L6pld62Eq2LQbNgKHCmXMDs
-   KKHu1X2TLAUzq0HEdrwsirfuTP78Y1fhhV5q53dSjNTBu3YTRalYF7EG/
-   78BSRQqFyZ01OtxHpq5I4lDWX1BcDB44QGW49zDFRUZQwyYbSNsiOLl+j
-   w==;
-X-CSE-ConnectionGUID: 5cHRazCfRrCgrJWuN9GeRw==
-X-CSE-MsgGUID: CuH5xwwRTm+lL+MYEkl5Sg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="62744499"
-X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
-   d="scan'208";a="62744499"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 03:56:54 -0800
-X-CSE-ConnectionGUID: Xqp4iC4HQ2KoSQIoW7voTA==
-X-CSE-MsgGUID: XvTbuJ/HQlaTsnjUCVRnbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="150615629"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.228])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 03:56:51 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 14 Feb 2025 13:56:47 +0200 (EET)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    Karolina Stolarek <karolina.stolarek@oracle.com>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/4] PCI: Descope pci_printk() to aer_printk()
-In-Reply-To: <20250213221043.GA136196@bhelgaas>
-Message-ID: <91014487-c584-af8c-9810-48291a16b643@linux.intel.com>
-References: <20250213221043.GA136196@bhelgaas>
+	s=arc-20240116; t=1739536553; c=relaxed/simple;
+	bh=DhdTMX1B/VBmrfjg4gCD28dH1z0ZeJtuCVVqdYJtLzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G4LGweHPS1V0C1Zdy6MD3m0J2qfOjs57KIspFno+hHh5raQ032UviEcp7TKP5stdkv/1nLJbb1WOGmeGn/F3fT8ACQnIzOR38uve9bhuhuGftvDPQmB7ZilHMdyfBnkH6SqlKo+fgyN2omEJtzyKMLZVJiTCFlfWx0ByGS16nWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=D5Xod9Nn; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id C7341240027
+	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 13:35:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1739536549; bh=DhdTMX1B/VBmrfjg4gCD28dH1z0ZeJtuCVVqdYJtLzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:From;
+	b=D5Xod9Nnl1WE6g1L7y5neIscsjHlzP9MY5Mw6Agu8uZD51CniEAu5nc1a/M7uOuay
+	 FnPzKuG+5DhX1AR2By4JLt2+6SePYX9dxTPP26BbYZz5yslylfLJ5HeYXeZKigJTD8
+	 wXckP4BTVk0rpmFwPrtSM3F5JmFkYBbJwcZ9ILZoY9XREALy+R8PMLWVfRJJIqegGR
+	 ip0tDQNNZvhC+Ac7P9yckRRncsRnZpwesWfImxAkK3WxgCwLbe+EOgHyElpxRWrYjw
+	 JI/8foXkGFM8JegiqDKfVrOw0juWrGF0P67jAcRLWyShcX0FBJqPObf2fUnzLcM0WW
+	 OMX71QAVAqbKw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4YvWjq1cxCz9rxG;
+	Fri, 14 Feb 2025 13:35:41 +0100 (CET)
+Date: Fri, 14 Feb 2025 12:35:41 +0000
+From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+To: Frank Li <Frank.li@nxp.com>
+Cc: j.ne@posteo.net, devicetree@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
+	Scott Wood <oss@buserror.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
+	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 05/12] dt-bindings: dma: Convert fsl,elo*-dma to YAML
+Message-ID: <Z684nUnDX4Sb98rQ@probook>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-5-8137b0c42526@posteo.net>
+ <Z6pV4eauZj75+911@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1614684521-1739533222=:944"
-Content-ID: <2580e7ea-ab5e-88a3-f089-e7774e6b27da@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6pV4eauZj75+911@lizhi-Precision-Tower-5810>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1614684521-1739533222=:944
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <0337222c-5138-e394-0891-fe22bb2b35e1@linux.intel.com>
-
-On Thu, 13 Feb 2025, Bjorn Helgaas wrote:
-
-> On Mon, Dec 16, 2024 at 06:10:12PM +0200, Ilpo J=E4rvinen wrote:
-> > include/linux/pci.h provides low-level pci_printk() interface that is
-> > only used by AER because it needs to print the same message with
-> > different levels depending on the error severity. No other PCI code
-> > uses that functionality and calls pci_<level>() logging functions
-> > directly with the appropriate level.
-> >=20
-> > Descope pci_printk() into AER as aer_printk().
-> >=20
-> > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
->=20
-> I applied this patch by itself on pci/aer for v6.15.
->=20
-> We also have some work-in-progress on rate limiting errors, which
-> might conflict, but this is simple and shouldn't be hard to reconcile.
->=20
+On Mon, Feb 10, 2025 at 02:39:13PM -0500, Frank Li wrote:
+> On Fri, Feb 07, 2025 at 10:30:22PM +0100, J. Neuschäfer via B4 Relay wrote:
+> > From: "J. Neuschäfer" <j.ne@posteo.net>
+> >
+> > The devicetree bindings for Freescale DMA engines have so far existed as
+> > a text file. This patch converts them to YAML, and specifies all the
+> > compatible strings currently in use in arch/powerpc/boot/dts.
+> >
+> > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 > > ---
-> >  drivers/pci/pcie/aer.c | 10 +++++++---
-> >  include/linux/pci.h    |  3 ---
-> >  2 files changed, 7 insertions(+), 6 deletions(-)
-> >=20
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index 80c5ba8d8296..bfc6b94dad4d 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -17,6 +17,7 @@
-> > =20
-> >  #include <linux/bitops.h>
-> >  #include <linux/cper.h>
-> > +#include <linux/dev_printk.h>
-> >  #include <linux/pci.h>
-> >  #include <linux/pci-acpi.h>
-> >  #include <linux/sched.h>
-> > @@ -35,6 +36,9 @@
-> >  #include "../pci.h"
-> >  #include "portdrv.h"
-> > =20
-> > +#define aer_printk(level, pdev, fmt, arg...) \
-> > +=09dev_printk(level, &(pdev)->dev, fmt, ##arg)
+> >
+> > V2:
+> > - remove unnecessary multiline markers
+> > - fix additionalProperties to always be false
+> > - add description/maxItems to interrupts
+> > - add missing #address-cells/#size-cells properties
+> > - convert "Note on DMA channel compatible properties" to YAML by listing
+> >   fsl,ssi-dma-channel as a valid compatible value
+> > - fix property ordering in examples: compatible and reg come first
+> > - add missing newlines in examples
+> > - trim subject line (remove "bindings")
+> > ---
+> >  .../devicetree/bindings/dma/fsl,elo-dma.yaml       | 140 ++++++++++++++
+> >  .../devicetree/bindings/dma/fsl,elo3-dma.yaml      | 123 +++++++++++++
+> >  .../devicetree/bindings/dma/fsl,eloplus-dma.yaml   | 134 ++++++++++++++
+> >  .../devicetree/bindings/powerpc/fsl/dma.txt        | 204 ---------------------
+> >  4 files changed, 397 insertions(+), 204 deletions(-)
+[...]
+> > +  reg:
+> > +    maxItems: 1
+> > +    description:
+> > +      DMA General Status Register, i.e. DGSR which contains status for
+> > +      all the 4 DMA channels.
+> 
+> needn't maxItems
+> items:
+>   - description: DMA ...
+
+Good point, I'll do that.
+
+> 
 > > +
-> >  #define AER_ERROR_SOURCES_MAX=09=09128
-> > =20
-> >  #define AER_MAX_TYPEOF_COR_ERRS=09=0916=09/* as per PCI_ERR_COR_STATUS=
- */
-> > @@ -692,7 +696,7 @@ static void __aer_print_error(struct pci_dev *dev,
-> >  =09=09if (!errmsg)
-> >  =09=09=09errmsg =3D "Unknown Error Bit";
-> > =20
-> > -=09=09pci_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
-> > +=09=09aer_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
-> >  =09=09=09=09info->first_error =3D=3D i ? " (First)" : "");
-> >  =09}
-> >  =09pci_dev_aer_stats_incr(dev, info);
-> > @@ -715,11 +719,11 @@ void aer_print_error(struct pci_dev *dev, struct =
-aer_err_info *info)
-> > =20
-> >  =09level =3D (info->severity =3D=3D AER_CORRECTABLE) ? KERN_WARNING : =
-KERN_ERR;
-> > =20
-> > -=09pci_printk(level, dev, "PCIe Bus Error: severity=3D%s, type=3D%s, (=
-%s)\n",
-> > +=09aer_printk(level, dev, "PCIe Bus Error: severity=3D%s, type=3D%s, (=
-%s)\n",
-> >  =09=09   aer_error_severity_string[info->severity],
-> >  =09=09   aer_error_layer[layer], aer_agent_string[agent]);
-> > =20
-> > -=09pci_printk(level, dev, "  device [%04x:%04x] error status/mask=3D%0=
-8x/%08x\n",
-> > +=09aer_printk(level, dev, "  device [%04x:%04x] error status/mask=3D%0=
-8x/%08x\n",
-> >  =09=09   dev->vendor, dev->device, info->status, info->mask);
-> > =20
-> >  =09__aer_print_error(dev, info);
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index db9b47ce3eef..02d23e795915 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -2685,9 +2685,6 @@ void pci_uevent_ers(struct pci_dev *pdev, enum  p=
-ci_ers_result err_type);
-> > =20
-> >  #include <linux/dma-mapping.h>
-> > =20
-> > -#define pci_printk(level, pdev, fmt, arg...) \
-> > -=09dev_printk(level, &(pdev)->dev, fmt, ##arg)
+> > +  cell-index:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description: Controller index. 0 for controller @ 0x8100.
+> > +
+> > +  ranges: true
+> > +
+> > +  "#address-cells":
+> > +    const: 1
+> > +
+> > +  "#size-cells":
+> > +    const: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +    description: Controller interrupt.
+> 
+> Needn't description because no any additional informaiton.
 
-Both shpchp and aer do use pci_printk() before this series (it seems LKP=20
-has also catched it already).
+True.
 
-If you split this series into different branches, this removal of=20
-pci_printk() has to be postponed until the next kernel release (fine for=20
-me if that's what you want to do, just remove this part from this patch=20
-and perhaps adjust the commit message to say it's to prepare for removal=20
-of the pci_printk()).
+> 
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+[...]
+> > +additionalProperties: false
+> 
+> Need ref to dma-common.yaml?
 
-> >  #define pci_emerg(pdev, fmt, arg...)=09dev_emerg(&(pdev)->dev, fmt, ##=
-arg)
-> >  #define pci_alert(pdev, fmt, arg...)=09dev_alert(&(pdev)->dev, fmt, ##=
-arg)
-> >  #define pci_crit(pdev, fmt, arg...)=09dev_crit(&(pdev)->dev, fmt, ##ar=
-g)
+Sounds good, but I'm not sure what to do about the #dma-cells property,
+which is required by dma-common.yaml.
 
---=20
- i.
---8323328-1614684521-1739533222=:944--
+There aren't many examples of DMA channels being explicitly declared in
+device trees. One example that I could find is the the xilinx_dma.txt
+binding:
+
+
+	axi_vdma_0: axivdma@40030000 {
+		compatible = "xlnx,axi-vdma-1.00.a";
+		#dma_cells = <1>;
+		reg = < 0x40030000 0x10000 >;
+		dma-ranges = <0x00000000 0x00000000 0x40000000>;
+		xlnx,num-fstores = <0x8>;
+		xlnx,flush-fsync = <0x1>;
+		xlnx,addrwidth = <0x20>;
+		clocks = <&clk 0>, <&clk 1>, <&clk 2>, <&clk 3>, <&clk 4>;
+		clock-names = "s_axi_lite_aclk", "m_axi_mm2s_aclk", "m_axi_s2mm_aclk",
+			      "m_axis_mm2s_aclk", "s_axis_s2mm_aclk";
+		dma-channel@40030000 {
+			compatible = "xlnx,axi-vdma-mm2s-channel";
+			interrupts = < 0 54 4 >;
+			xlnx,datawidth = <0x40>;
+		};
+		dma-channel@40030030 {
+			compatible = "xlnx,axi-vdma-s2mm-channel";
+			interrupts = < 0 53 4 >;
+			xlnx,datawidth = <0x40>;
+		};
+	};
+
+	...
+
+	vdmatest_0: vdmatest@0 {
+		compatible ="xlnx,axi-vdma-test-1.00.a";
+		dmas = <&axi_vdma_0 0
+			&axi_vdma_0 1>;
+		dma-names = "vdma0", "vdma1";
+	};
+
+It has #dma_cells (I'm sure #dma-cells was intended) on the controller.
+
+
+Another example is in arch/powerpc/boot/dts/fsl/p1022si-post.dtsi:
+
+	dma@c300 {
+		dma00: dma-channel@0 {
+			compatible = "fsl,ssi-dma-channel";
+		};
+		dma01: dma-channel@80 {
+			compatible = "fsl,ssi-dma-channel";
+		};
+	};
+
+	...
+
+	ssi@15000 {
+		compatible = "fsl,mpc8610-ssi";
+		cell-index = <0>;
+		reg = <0x15000 0x100>;
+		interrupts = <75 2 0 0>;
+		fsl,playback-dma = <&dma00>;
+		fsl,capture-dma = <&dma01>;
+		fsl,fifo-depth = <15>;
+	};
+
+
+There, the DMA channels are used directly and without additional
+information (i.e. #dma-cells = <0>, althought it isn't specified).
+
+
+> > +        dma-channel@0 {
+> > +            compatible = "fsl,mpc8349-dma-channel", "fsl,elo-dma-channel";
+> > +            reg = <0 0x80>;
+> > +            cell-index = <0>;
+> > +            interrupt-parent = <&ipic>;
+> > +            interrupts = <71 8>;
+> 
+> '8',  use predefine MACRO for irq type.
+
+Good catch, will do
+
+> 
+> Frank
+
+Thanks for your review!
+J. Neuschäfer
 
