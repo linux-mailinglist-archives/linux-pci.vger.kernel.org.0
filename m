@@ -1,69 +1,69 @@
-Return-Path: <linux-pci+bounces-21415-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21416-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADAF2A354C8
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 03:36:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D657A354C9
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 03:36:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 22EEE3ACA91
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 02:36:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F0E016DEFA
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 02:36:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF762C2EF;
-	Fri, 14 Feb 2025 02:36:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 836CF137930;
+	Fri, 14 Feb 2025 02:36:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GFFmORj5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F+s3kjsP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64FA2137930
-	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 02:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16686136326
+	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 02:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739500579; cv=none; b=W3TwGt5BFQce6s1Hj3eHxpXA6mKZZFL2ZBzPpob5c28nx39W5bFZis48lIf9yAH/N8RMf+rxzEEtDOscfa9Yab1keqTNEUf3fcU/ZSMnTsSANtMfTyanmoRBw9007Xj4VsRyAqO83+FaE8K4q9vAeVJjIqP4fE1drcDjq0+lZ+A=
+	t=1739500582; cv=none; b=V4hEGVXoh0KtYo6iDsgebmJzE0srW7YtShdxHNzYFMAusAhu2Sapb5EuXpyu+jJe7IoByoz+iOhuXsWBiP7FSfXJbIQVWXntOYB7TRLObV/jihITWmKJyMUdUaN3P+wvXXdiAeGhEyf2r5zyTDvesRKwCzWof6SUv2q5fEUvhAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739500579; c=relaxed/simple;
-	bh=GPzOoUZY2/G8/jdv5l9hLV+gKD/CWyouhEXll5KMmJc=;
+	s=arc-20240116; t=1739500582; c=relaxed/simple;
+	bh=EzL9kqERF1mODaTi99Vbdpckz6nLMDysk548L5d6Vb4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LRAmkAMFia79Hs9cV4Oi9vCuC2jgUix6TTceyxBKq0nRgS+ajS00ZtvmdcpNmpJxcGjg4M8dMhA5R8mO4FBx8apCLImWBbMWqKh/cZGFcePefHQQ++wYHNldmUgGpTrkefC4YKzl3hhH+DEW/4ZlxtPlkGP69xxtkdA8mmdrHls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pandoh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GFFmORj5; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=QkBHRV1VlmpBk4oAc9gY2uuJQRlyJgYa9+C+vauQhnm5oYceVJkD7SP7U8iNvzbjojVc45/NND5TmC5dkb/x/VkAmDXdo4oeotmdz/fnIfPAt40IW0cruHVgCz7RJdqh/CdjpXYtRCrI6wsq8ShuXx2oyDu73su6pnRMLCKQ/Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pandoh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F+s3kjsP; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pandoh.bounces.google.com
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc318bd470so84189a91.0
-        for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 18:36:18 -0800 (PST)
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-21f81fc2248so31889665ad.1
+        for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 18:36:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739500577; x=1740105377; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1739500580; x=1740105380; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9W9BFxI+YRnR7tfqCSoyQdI4xkMFTHFH7uD6a1Bk1nc=;
-        b=GFFmORj5Tem6kV4JtqSl9ER1+ayodWJzz/EfPVhsSWFZNCjpaQVhZ6czfeS59Jl8ke
-         IEwHWGl42jChAv0v0xhfhIgrSpvTzsKcJSnyS1FAB3hIOLaUIX5cvQiXFS6ilphB2Lsw
-         fmhYXIAA/0czN7c6m90MuptvVIPz6EAdKJcjAaX+3exIKNXW4uVhP4v31aV9LEz3mieY
-         4lK7miPNsn2mTclL6lu9JiiYyvnXa75/b44HHkPjGNVWVI3DYtkdwdOaHmThvL4Cp47s
-         YatvULo6TYmtESWLYB5OOn/xPKYc7xB2MXnuHSuZVEyfJ2dXkEcY7wO5jPtX6tjcWt8Z
-         wRNw==
+        bh=Td3ceVC7nM5D2trC4k/dzsDkTskRZy82gMGh4G32pR8=;
+        b=F+s3kjsPUPv+CHYZkwG1xL+KCyFn5Qpee3K0zRhsbcaaGx05yNes1Xu7tJ6tE2CPvT
+         OgxrjaagTeysK2GWsTWmEvbx1qH7/zpWtq7h/LtkOWOoXuEB4wT9mZgm20EvNrLENXRd
+         o36k6Ka8N58sMhftAQ5FRsWcTvkwOZq2TDeHSXWrax1GZr0jQz+BYER+6W6s7SmScpqG
+         jHDJnTz9OpdpPIrWnX9r5t1MD5/+rQ20CdxJzuuU+PAAS6v/cmqmFYqEBsl1MyEdomCa
+         LeCEz654/OMgRzhZwN1dTxSE2wuzIDrhUMSOje4cdeN76r3NLBA6h1Jzo94OtJ8sSl6Y
+         L4Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739500577; x=1740105377;
+        d=1e100.net; s=20230601; t=1739500580; x=1740105380;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9W9BFxI+YRnR7tfqCSoyQdI4xkMFTHFH7uD6a1Bk1nc=;
-        b=DHUttPoOBsYGsmFwHKAJBJ56/+pDxTlgZlimhITrvy9qURC6I88beVUcUWUGm41fyB
-         1YyMy7zg6LBIut0i/3rBLkzQ7lr/BD6/WxbNmp+uXMaPRVjZqtqEqvHU83g6n2bC7o+e
-         WK5IgymLrrd+5ov1ltGlOumkQDhkY2oTp0KqxnVokO+j/MX8vIFvEhkCO+dq3fciqf0R
-         EvKUEq5xE/jGiDS7aeLONiTo61/DMGBdH3QdzLSt/7FY5MBFMF/DifHMOgamkGABiP1E
-         SWkkuGDh5a5kBsYi3UWHG46aUIQOKk2Zlv4KmHJLJVO2AH04QPyTWALT1iNHHdJPPZqJ
-         l6rA==
-X-Gm-Message-State: AOJu0YxgzXUhW1Hj9tbmMV1PlAY/+a5fmSAuGMHi6iFPZqLjTAxAMYFC
-	gSDeCcR6VZ2FVtycnQMYrg5omYgjpH6W5mz7mTaPt9VZGC15TgkIIyDwAHUPekXlzseW3NSlEsP
-	i/Q==
-X-Google-Smtp-Source: AGHT+IFeVdRVPjECaLJLPQPxCuwg3oEgqlTj0jR54Zq3B6tDKvAISVm/S8W7wz5Yr9SGXCnExhyEdLXgAXI=
-X-Received: from pglo12.prod.google.com ([2002:a63:4e4c:0:b0:7fd:3ffb:bf1b])
- (user=pandoh job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6da8:b0:1e1:cbbf:be0
- with SMTP id adf61e73a8af0-1ee5e5bbea4mr17562703637.22.1739500577538; Thu, 13
- Feb 2025 18:36:17 -0800 (PST)
-Date: Thu, 13 Feb 2025 18:35:40 -0800
+        bh=Td3ceVC7nM5D2trC4k/dzsDkTskRZy82gMGh4G32pR8=;
+        b=WlLjNQ2Ck9xvJGBORyvGN2Di65A72J16fhVIrnrwGtbbvVgOV7X4etYD/ACFio+ZYJ
+         Uxl5Kd8O8RGQycjx+VDUhqwYwyyfiXvi15iAODoDW6lkY5btwr+q/Yvdc3zs17i9f2zu
+         OdRVhCjBoaLO4LYDui+P1Ts1tCvKQO9kHWtSvyQqjX6sV26RhHQF1w2HkHt7G9CGg/gS
+         Z8lmgT0avwyqmluvwbVisIgP8XjC+XiDVe3A2D8XOOJzJVacHm4OdZ8cZ/eymqc4NcU0
+         q74J8eYgOq4LqassBFtsT7mewGTlT90M1CCbBXg1bKANV8Aiozdfnx7m4Bbg2MgNEjLY
+         z+Uw==
+X-Gm-Message-State: AOJu0YwfkPGIWUBFuaJOHdt419cdJsaUTn+AvB3gs9nQ7UJQJPzAtgg7
+	QPGiz47G7lFqvKPGJUfwUDJ5DIprW92S94jaZyQfEqFuphknlDKNbREsGJLZHKIxprFz9vfc9Nh
+	YnQ==
+X-Google-Smtp-Source: AGHT+IEWL/tiYuXrrzRgSg6FkYb3PyvmccoXHAVXizuwydkViuZezPyz14DTdeAyr8AlWR2uoZ8puctTn34=
+X-Received: from plbkb11.prod.google.com ([2002:a17:903:338b:b0:220:d668:ff89])
+ (user=pandoh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:950:b0:220:e63c:5b08
+ with SMTP id d9443c01a7336-220e63c5e07mr48241045ad.11.1739500580401; Thu, 13
+ Feb 2025 18:36:20 -0800 (PST)
+Date: Thu, 13 Feb 2025 18:35:41 -0800
 In-Reply-To: <20250214023543.992372-1-pandoh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -73,8 +73,8 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250214023543.992372-1-pandoh@google.com>
 X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <20250214023543.992372-6-pandoh@google.com>
-Subject: [PATCH v2 5/8] PCI/AER: Introduce ratelimit for error logs
+Message-ID: <20250214023543.992372-7-pandoh@google.com>
+Subject: [PATCH v2 6/8] PCI/AER: Add ratelimits to PCI AER Documentation
 From: Jon Pan-Doh <pandoh@google.com>
 To: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>
 Cc: linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
@@ -85,105 +85,32 @@ Cc: linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Jon Pan-Doh <pandoh@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Spammy devices can flood kernel logs with AER errors and slow/stall
-execution. Add per-device ratelimits for AER errors (correctable and
-uncorrectable). Set the default rate to the default kernel ratelimit
-(10 per 5s).
-
-Tested using aer-inject[1]. Sent 11 AER errors. Observed 10 errors logged
-while AER stats (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) show
-true count of 11.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
+Add ratelimits section for rationale and defaults.
 
 Signed-off-by: Jon Pan-Doh <pandoh@google.com>
 ---
- drivers/pci/pcie/aer.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ Documentation/PCI/pcieaer-howto.rst | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index b4f902fd5ef6..c5b5381e2930 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -28,6 +28,7 @@
- #include <linux/interrupt.h>
- #include <linux/delay.h>
- #include <linux/kfifo.h>
-+#include <linux/ratelimit.h>
- #include <linux/slab.h>
- #include <acpi/apei.h>
- #include <acpi/ghes.h>
-@@ -88,6 +89,10 @@ struct aer_report {
- 	u64 rootport_total_cor_errs;
- 	u64 rootport_total_fatal_errs;
- 	u64 rootport_total_nonfatal_errs;
+diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
+index f013f3b27c82..167c0b277b62 100644
+--- a/Documentation/PCI/pcieaer-howto.rst
++++ b/Documentation/PCI/pcieaer-howto.rst
+@@ -85,6 +85,14 @@ In the example, 'Requester ID' means the ID of the device that sent
+ the error message to the Root Port. Please refer to PCIe specs for other
+ fields.
+ 
++AER Ratelimits
++--------------
 +
-+	/* Ratelimits for errors */
-+	struct ratelimit_state cor_log_ratelimit;
-+	struct ratelimit_state uncor_log_ratelimit;
- };
- 
- #define AER_LOG_TLP_MASKS		(PCI_ERR_UNC_POISON_TLP|	\
-@@ -378,6 +383,10 @@ void pci_aer_init(struct pci_dev *dev)
- 		return;
- 
- 	dev->aer_report = kzalloc(sizeof(struct aer_report), GFP_KERNEL);
-+	ratelimit_state_init(&dev->aer_report->cor_log_ratelimit,
-+			     DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST);
-+	ratelimit_state_init(&dev->aer_report->uncor_log_ratelimit,
-+			     DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST);
- 
- 	/*
- 	 * We save/restore PCI_ERR_UNCOR_MASK, PCI_ERR_UNCOR_SEVER,
-@@ -697,6 +706,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
- {
- 	int layer, agent;
- 	int id = pci_dev_id(dev);
-+	struct ratelimit_state *ratelimit;
- 
- 	if (!info->status) {
- 		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-@@ -704,6 +714,14 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
- 		goto out;
- 	}
- 
-+	if (info->severity == AER_CORRECTABLE)
-+		ratelimit = &dev->aer_report->cor_log_ratelimit;
-+	else
-+		ratelimit = &dev->aer_report->uncor_log_ratelimit;
++Error messages are ratelimited per device and error type. This prevents
++spammy devices from flooding the console and stalling execution. Set the
++default ratelimit to DEFAULT_RATELIMIT_BURST over
++DEFAULT_RATELIMIT_INTERVAL (10 per 5 seconds).
 +
-+	if (!__ratelimit(ratelimit))
-+		return;
-+
- 	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
- 	agent = AER_GET_AGENT(info->severity, info->status);
+ AER Statistics / Counters
+ -------------------------
  
-@@ -749,12 +767,15 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 	u32 status, mask;
- 	const char *level;
- 	struct aer_err_info info;
-+	struct ratelimit_state *ratelimit;
- 
- 	if (aer_severity == AER_CORRECTABLE) {
-+		ratelimit = &dev->aer_report->cor_log_ratelimit;
- 		status = aer->cor_status;
- 		mask = aer->cor_mask;
- 		level = KERN_WARNING;
- 	} else {
-+		ratelimit = &dev->aer_report->uncor_log_ratelimit;
- 		status = aer->uncor_status;
- 		mask = aer->uncor_mask;
- 		tlp_header_valid = status & AER_LOG_TLP_MASKS;
-@@ -772,6 +793,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 
- 	pci_dev_aer_stats_incr(dev, &info);
- 
-+	if (!__ratelimit(ratelimit))
-+		return;
-+
- 	aer_printk(level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
- 	__aer_print_error(dev, &info, level);
- 	aer_printk(level, dev, "aer_layer=%s, aer_agent=%s\n",
 -- 
 2.48.1.601.g30ceb7b040-goog
 
