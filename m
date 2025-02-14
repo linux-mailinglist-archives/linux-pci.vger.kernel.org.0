@@ -1,59 +1,64 @@
-Return-Path: <linux-pci+bounces-21477-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21478-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2DF47A3625A
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 16:55:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 241ACA3628B
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 17:01:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D1986161BB9
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 15:55:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24F6E3B07D3
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 15:58:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B19CC267388;
-	Fri, 14 Feb 2025 15:55:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 615482676CD;
+	Fri, 14 Feb 2025 15:57:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F8ujkg42"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ruDAGkPu"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF15267382;
-	Fri, 14 Feb 2025 15:55:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CDA2676C5;
+	Fri, 14 Feb 2025 15:57:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739548546; cv=none; b=ttceddPJ3RhcQuh9ZbvDZ3ScXtuaecMO44ah5+MMv6hvRSa2PzpqydnoAkzUSAY3pN0qIArzN5AafudzSRYjHjndKsPVGktT5KXJ9UdUOE62tBSe3PJRoWlq+OB7Yc1KmuynpUlXaDMFYcwVNBQ8WRQXSlJziTMbDgtP+yF74GU=
+	t=1739548659; cv=none; b=uT/xCRHL7nZV2oT8hwRUoo5U/548nO9Q7ZV8pUKhMZe3e9anL2bJnUIHrv6uCR73mCcdH3m43GaZgxCOzjvS+7v2hF867IGjeynKUVQvm6ahD9GkDDAluMSx4TXz1k6vqQp3t8F9pRbebjnPW02eYFNMUeqTmBNNJ6UlUSa+dHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739548546; c=relaxed/simple;
-	bh=LlVze+kxKmlHWCECDwA3PL6Dfqv4CqLXlK6+rWbnHB0=;
+	s=arc-20240116; t=1739548659; c=relaxed/simple;
+	bh=k10pvCmmHysowNYWxzueRHt8N58k2IAsGCBI2j82cfY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NyuVnQh3dPcyTdOsOJXU0O6uaLU0a9TiVf473nRy9G25oyQOZo239HBo9kvj6GjE2MDK2U/QYaQ8nuTTM+y72kYqT7YhoZ1B/xQf6ovGibsZ+6CTvqdQTnfgp40ommjzMMWHMRwhgzrJarx1lNNSqOStwSuqTU7ivkhFf/HQv+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F8ujkg42; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A871C4CED1;
-	Fri, 14 Feb 2025 15:55:40 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=XBSUhQEwFsOH6hmip32Bumkq5CfpXZKCMxfu3LuOKeW3VnxEOwysi5iWWs/oNV0YLzgEwbQrC43JT1JD9zE0fXp9X1Mw8I8LNfZ4bqG/0jAC/e3W48CwycjcXshL0kv+JT74cN5o7g9HK3JARsqD+kowt8oXcGoQznfwhYfMTfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ruDAGkPu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5313C4CED1;
+	Fri, 14 Feb 2025 15:57:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739548544;
-	bh=LlVze+kxKmlHWCECDwA3PL6Dfqv4CqLXlK6+rWbnHB0=;
+	s=k20201202; t=1739548658;
+	bh=k10pvCmmHysowNYWxzueRHt8N58k2IAsGCBI2j82cfY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F8ujkg42rDbkAuU1sBoQ9Kv/wIKbO72nJ+oygvzvZikFgEi/v+auOXdb5vplXB6we
-	 DfG03k4mP1snl1V3IS7/duCej8wYsO76C+Cyn07LZ7xtscWwvGH6UcQqize8a70T8Y
-	 /2hlqeaMErss4ZfBAvfDz6CpN7W3ErLoUC4QicO09gI/voz4sNbA8CYWdVes+VFtcj
-	 9Vt2vs+A2KDFYFLQZOR0HCtmF7x3IuZ14uRuvwm52OG7vMYp/SOX4tRb8O2wsyMenj
-	 xyalrkKRDDUR9LhcROWDpQgerA4838/qjKD8kNFEJb62UGyq9A2lWTRpy6bsBNh1gV
-	 jFiMa/mjBoBNQ==
-Date: Fri, 14 Feb 2025 21:25:36 +0530
+	b=ruDAGkPup3uA9Ik8IdZwo73H2VQYKkhwrgnZz7hGgcxo8aWX5epCL2b5Fve6ivI4E
+	 SuOAshQ5sdAqaKKXDskhV18cs1wK/E77YyecTIKyMWZIMNFEF3KDJX03AH/oXuElFn
+	 Rw+YC3TlGPzuMrioj/Ar3S5Ry3tFCOQ+PkmrXzUwUhrmGzFH1RibPYynzOUSLF1HWU
+	 e2Kdi59e4GZ4JFywu2Gm4INGZDEszJ25K3DMZcb6fT0NdpwE8fgpu8iAmX8fieKQTj
+	 Lxh/XKnjsYylN5n+yQ8rv6J0To9SbWcEU9YDGvs0R8BsaWZsmojywjDOEDY7/d5ovg
+	 5b4KCAwWBrZxA==
+Date: Fri, 14 Feb 2025 21:27:25 +0530
 From: Manivannan Sadhasivam <mani@kernel.org>
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com
-Subject: Re: [PATCH v2 2/2] PCI: xilinx-cpm: Add support for Versal Net
- CPM5NC Root Port controller
-Message-ID: <20250214155536.ap7mjvutnuledkki@thinkpad>
-References: <20250212055059.346452-1-thippeswamy.havalige@amd.com>
- <20250212055059.346452-3-thippeswamy.havalige@amd.com>
+To: Hans Zhang <18255117159@163.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, bwawrzyn@cisco.com, cassel@kernel.org,
+	wojciech.jasko-EXT@continental-corporation.com, a-verma1@ti.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rockswang7@gmail.com
+Subject: Re: [v3] PCI: cadence: Fix sending message with data or without data
+Message-ID: <20250214155725.jpkd4vtcycav4yrc@thinkpad>
+References: <20250207103923.32190-1-18255117159@163.com>
+ <20250214073030.4vckeq2hf6wbb4ez@thinkpad>
+ <7eb9fedc-67c9-4886-9470-d747273f136c@163.com>
+ <20250214132115.fpiqq65tqtowl2wa@thinkpad>
+ <332ec463-ebd9-477c-8b10-157887343225@163.com>
+ <20250214153103.4cjlawksw4xobc2l@thinkpad>
+ <3d3d8772-08ba-4e5a-bf1f-71821cf056e7@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,97 +68,52 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250212055059.346452-3-thippeswamy.havalige@amd.com>
+In-Reply-To: <3d3d8772-08ba-4e5a-bf1f-71821cf056e7@163.com>
 
-On Wed, Feb 12, 2025 at 11:20:59AM +0530, Thippeswamy Havalige wrote:
-> The Versal Net ACAP (Adaptive Compute Acceleration Platform) devices
-> incorporate the Coherency and PCIe Gen5 Module, specifically the
-> Next-Generation Compact Module (CPM5NC).
+On Fri, Feb 14, 2025 at 11:48:16PM +0800, Hans Zhang wrote:
 > 
-> The integrated CPM5NC block, along with the built-in bridge, can function
-> as a PCIe Root Port & supports the PCIe Gen5 protocol with data transfer
-> rates of up to 32 GT/s, capable of supporting up to a x16 lane-width
-> configuration.
 > 
-> Bridge errors are managed using a specific interrupt line designed for
-> CPM5N. Intx interrupt support is not available.
+> On 2025/2/14 23:31, Manivannan Sadhasivam wrote:
+> > On Fri, Feb 14, 2025 at 10:28:11PM +0800, Hans Zhang wrote:
+> > > Sorry Mani, I shouldn't have spread this SOC bug. This is a bug in RTL
+> > > design, the WSTRB signal of AXI bus is not connected correctly, so the first
+> > > generation SOC cannot send message, because we mainly use RC mode, and we
+> > > cannot send PME_Turn_OFF, that is, our SOC does not support L2. I have no
+> > > choice about this, I entered the company relatively late, and our SOC has
+> > > already TO.
+> > 
+> > Ok. Just to clear my head, this patch is needed irrespective of the hw issue,
+> > right? And with or without this patch, first revision hw cannot send any MSG
+> > TLPs?
 > 
-> Currently in this patch Bridge errors support is not added.
-
-s/patch/commit,
-
+> Yes, that was a problem with our own SOC design, the Cadence RTL bug.	
 > 
-> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> ---
-> Changes in v2:
-> - Update commit message.
-> ---
->  drivers/pci/controller/pcie-xilinx-cpm.c | 85 ++++++++++++++----------
->  1 file changed, 51 insertions(+), 34 deletions(-)
+> > If so, it is fine. But is there a way we could detect those first generation IPs
+> > and flag it to users about broken MSG TLP support? Atleast, that would make the
+> > users aware of broken hw.
 > 
-> diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-> index 81e8bfae53d0..c26ba662efd7 100644
-> --- a/drivers/pci/controller/pcie-xilinx-cpm.c
-> +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-> @@ -84,6 +84,7 @@ enum xilinx_cpm_version {
->  	CPM,
->  	CPM5,
->  	CPM5_HOST1,
-> +	CPM5NC_HOST,
->  };
->  
->  /**
-> @@ -483,31 +484,33 @@ static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
->  	else
->  		dev_info(port->dev, "PCIe Link is DOWN\n");
->  
-> -	/* Disable all interrupts */
-> -	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
-> -		   XILINX_CPM_PCIE_REG_IMR);
-> -
-> -	/* Clear pending interrupts */
-> -	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
-> -		   XILINX_CPM_PCIE_IMR_ALL_MASK,
-> -		   XILINX_CPM_PCIE_REG_IDR);
-> -
-> -	/*
-> -	 * XILINX_CPM_PCIE_MISC_IR_ENABLE register is mapped to
-> -	 * CPM SLCR block.
-> -	 */
-> -	writel(variant->ir_misc_value,
-> -	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
-> +	if (variant->version != CPM5NC_HOST) {
+> I don't know how to do it, but here are the questions that were actually
+> tested.
+> 
 
-How about,
+Not related to this patch, but please check if it is possible to detect those
+controllers.
 
-	if (variant->version != CPM5NC_HOST)
-		return;
+> > > 
+> > > This patch is to solve the Cadence common code bug, and does not conform to
+> > > Cadence documentation.
+> > 
+> > you mean 'does'?
+> > 
+> 
+> What I mean is that common code bit16=1 is to send a message without data,
+> while Cadence's development document says that bit16=0 is to send a message
+> without data. This is not consistent with the documentation description, and
+> the final verification results, the development documentation described is
+> correct.
+> 
 
-Btw, what is the reason to skip these register settings for this controller?
-Especially the 'Bridge enable bit'.
-
-> +		/* Disable all interrupts */
-> +		pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
-> +			   XILINX_CPM_PCIE_REG_IMR);
-> +
-> +		/* Clear pending interrupts */
-> +		pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
-> +			   XILINX_CPM_PCIE_IMR_ALL_MASK,
-> +			   XILINX_CPM_PCIE_REG_IDR);
-> +
-> +		/*
-> +		 * XILINX_CPM_PCIE_MISC_IR_ENABLE register is mapped to
-> +		 * CPM SLCR block.
-
-Please make use of 80 column width.
-
-> +		 */
-> +		writel(variant->ir_misc_value,
-> +		       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
-> +
-> +		if (variant->ir_enable) {
-
-nit: you don't need braces here.
+Ok, makes sense now.
 
 - Mani
 
