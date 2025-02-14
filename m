@@ -1,94 +1,94 @@
-Return-Path: <linux-pci+bounces-21424-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21425-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62A34A356BF
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 07:10:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A631FA357B1
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 08:16:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3DC84169FA4
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 06:09:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6928C16CADF
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 07:16:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F28D21DD0E7;
-	Fri, 14 Feb 2025 06:09:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48743185B48;
+	Fri, 14 Feb 2025 07:16:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fkRaTZ3w"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KbMGqLFw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351401DC9AC
-	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 06:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B5513A3EC
+	for <linux-pci@vger.kernel.org>; Fri, 14 Feb 2025 07:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739513384; cv=none; b=TJ38dB9LKABK+8h8ELRzqWmHokH82nS7hJoqbEivhsHB5D97z6K7P5x+XQZdcsbWAEEiIE/JkY+ylA2x5GkAUhRNXp66WloXFt9W4vNtCVJIiRgBGH/5Uw3LlFVvCZp+wKZiq5gwv35/KcYLL+SVkvgs9MCZAkwRnexiYlFcQv8=
+	t=1739517361; cv=none; b=ofbVhQJTdVvaDEmvUjEyjhBX/gomnFys0TKdzQyY/GB7MztWkxFaGUmH97LVzAP3MzsfRfnFJqodHGvHEdilnbJnh9frvH0xzwMJU4xeoiH1Is03DLIL+02jdLJkcYvKYHHb3tmgzB2eGlIlHdO39pLzrEknf5LABtDjDJMsl9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739513384; c=relaxed/simple;
-	bh=gslqCHxXuliK3k42oXZWCxQ/0azTZyYkThTDVb/Huws=;
+	s=arc-20240116; t=1739517361; c=relaxed/simple;
+	bh=d85vQEKXzobX9r5qZo9mtj6Cou/uCva0qLJ6RmcWFcs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r/IgOYnu2cJqhtshxjTrvjuwl86C0q7ly41Zs7a+Rkv4O2+xv/1BebWgXFPa71EEOOjVzTnjheONmY6vA/pQvdKxfGAFwZkYsx2wtrlRpcN+v7tXwgBkmyH8x/1sX5dsdS8Ic7lucta760rgewh1ep77ETtIZJ9Wjbqyh9bC+tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fkRaTZ3w; arc=none smtp.client-ip=209.85.216.41
+	 Content-Type:Content-Disposition:In-Reply-To; b=R/NyEw+QSUW25pxYbEGH59NCNWv9Nb3K/p5ELbLGGMd4h3tZjn+zaMblfdxh+6g0fUQv0cFDDDgSUsN3X6mppUqn6lmLHoXOBAQUUCmjAYHK+cvDESpfW1XRZfH0oR3294dG5q8+FuoG+8gZkVMB7J4Uh39HXXyHuD6InC9MDBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KbMGqLFw; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2fbfe16cc39so3207210a91.3
-        for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 22:09:42 -0800 (PST)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fbfc9ff0b9so2786705a91.2
+        for <linux-pci@vger.kernel.org>; Thu, 13 Feb 2025 23:15:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1739513382; x=1740118182; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1739517359; x=1740122159; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Qvr3z8yXwbqcPQYudFZGi2O6Yo/lZbNexZYPGGJGKds=;
-        b=fkRaTZ3w9zDI9tzKrpxo1hsDDxwiw7FHKHfX3XCeT6gi97VuF7yunzRjt76xiip445
-         uBDXWt44VnJH9lHKm+boridLB7EmfKsQTEijoeQC4mRtjjkS3T1C220nGj4rrQKW2tXA
-         OhQTKkAoxFfuaFE9He4LsIgmGLAjBlm6BzAD3uw0VtUVqjb3TXvyIQYOnz3iDXAqeWZW
-         et8wsE95g+tf5tW13JLa2NVjOiHa6gXWXO0aobCKpV+o7SDMV20dBcZtO/OMOIGMVE5O
-         c1I4SE1Ejvt+Q8+BHpwdiSHsov4/AXbdGUa4GmGC7wDQQwxbyhxhPXlvZBiDVFOw9BnL
-         GUkw==
+        bh=i8tciIHtrTxfE7xK87cnn1lbhRKqUoH9Dla36dWV9Zg=;
+        b=KbMGqLFwdzi+gTP8GCXcwJ6iRoCGa8o+QnzSVAwcJq9Fh5Gxi70F+GulDOtcGWrToD
+         mj0ughrGzB6kKwh+5kC9OSQgmCkWfoR+JRHsOCuw6xmktpl0ZsSNJjMG0RrfKJNwDVO2
+         Gikz1zGjnPbKXqT+MRYluqz/8VwLbmb+H/zPyK2drEjMCtYyrzB+xASktSHTLV2ANhJ3
+         wrpx1icPS++HRzASlxJri7BzQQrM/YZy+8lBBIq/mhPDabCafdhs57UlHo0WS5vvPuV3
+         wZuIWUEAd5DGuu+k1ixM9aGUMTGtq1oMoog1NZ5Uq9vtd+iKyiP1z9e7NRXOxnJnOgMN
+         IeeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739513382; x=1740118182;
+        d=1e100.net; s=20230601; t=1739517359; x=1740122159;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qvr3z8yXwbqcPQYudFZGi2O6Yo/lZbNexZYPGGJGKds=;
-        b=xI2yp0FVI0dywh0DVnHgPXmIlqMyLlT12Xuxx/aPPmm7i1NToeEIMgUzimPAxQeWYd
-         Lcxpom0KsB3THl5S1GhlpJ7gCp6NmHNYdmjVWUzngq5I1iOtHjbTPaxCJnVcWFuPPR7W
-         AAsRZx1nzRA2JVjGITZXU7T8DmUxlgNe0t+rW46Cx6nzqno0EOJfgtPcTJt5csvi/dYO
-         kf0BkyfMZxPRPgvo3SM4GPVvveu3PZVXAOA92kA6dzzjlc3sBlJNh951PtR/Khpww518
-         pBQzmKs811c/+rMCGlRgjemY9VYdyyC5XDNEJX5CUruhRdar4IUYHAsz5BwA2dMzSOgE
-         LyMA==
-X-Forwarded-Encrypted: i=1; AJvYcCX+8dPDcriTKpLd5q1gvE5OPiWurH6Glo+wubj/Hqouke81pJups4u12/d78WlTz+FWP/1LvfB18Es=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKrJVffzcjEO9tR7Jq69v3QcvTfbhf+0Y3zZmFNxNZJyoVA5xc
-	LeHrUmkkcTbLu5o/KsRbITvhVk+NwpfcNcO8V70nsUJSW67JlfNyx3UHrH4SYg==
-X-Gm-Gg: ASbGncty7V+Ry8q0dMmcwch6DzhdTV/50Xz2bROS3fwrH/e5baapS0PO1ROglXCbJWi
-	kEgByzzPlAhdp9Mb7FoOT/udfMXwaRvoxin2tzeKPHdWehitYputtWZLvEZXvV/sl4cG4LSEdVf
-	n/34vN9Oai+2ojBVzAQgW95Re8sUxPaIF81dgeSkwQI2ikB4+tuwu31xOROUaToB+8eQS7Nl5PE
-	qru8zMoq80zOwdKg72atG3XjIaQURa2ppE7bxK6vbZKnnBY4lGi2OmnI0ZA1WupYAKineZqw7T2
-	68REWnsbN8B42qYbWhAg/CpBdbq07NY=
-X-Google-Smtp-Source: AGHT+IGJ3PDtM/43vWXCC0cF5aeFBeRUcz79hhv9m7sp4Xsbx/Vh9naI+GxiQ5/c5A05umj2CLzzHA==
-X-Received: by 2002:a17:90b:2743:b0:2fa:17dd:6afa with SMTP id 98e67ed59e1d1-2fbf5c0f614mr17644772a91.17.1739513382401;
-        Thu, 13 Feb 2025 22:09:42 -0800 (PST)
+        bh=i8tciIHtrTxfE7xK87cnn1lbhRKqUoH9Dla36dWV9Zg=;
+        b=bPhi0YAGMuqJ6nF73B1nsJ3HX/UCcdWz54RWGEekjtnyHxyp4HCNODdBdMi4lIHWcY
+         iHfl4EEt9U2E48JoZNjW9+rqMhqf/jpBcX7ZZgWe2oReYYUv5GqhPW45rl4r6QgU+Vvb
+         zV9nJj+bzJiUG21/yYQBQb0X9udz6nIlGb9UqNMX2f13zgPa1epVYwTmVLZuZgf/5RCR
+         9EQfvsg3MHgQZfjUhjfmyMjrRtLDkqJP7nxPzW9ZY3Y6KzLQOodVLD4YQ/HVCsaiGjoc
+         SsZmHbYzbAHxE5MQisBonj1LJSCCfoYJHIQuzLwNn98gW9kSplo1srmygcvtlwGJd97g
+         WrkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3zCmrkBZK1ZTwaz8UF9lIDfXkkImhZ4ScORohJo0zaxSDA4NC3xiMyHakgaeHXNlhyP0Ssn01df4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRHFDMVeLtQqhubsGXwgXlwEd8dhFhkdmwYVNUzFcKO1ZvcK12
+	YB6PjxmnAjezyn/pM/WPXr63O04AdqqleQIJXoLl8Gv0J2fuLJJ1KzU+bn2a9Q==
+X-Gm-Gg: ASbGncsTSaHOm+wwn3x0qzcN+3O+zDp63uQbmbbbELTw3VroYLLVzE6mZtyO9UW4nwO
+	GSPAFYrPU888Yx0USZe+AS11ddSPq1nnPJk3DHUm+6hwUgbkFdCA5l/kFvCeryCwwXbl4qpiOot
+	GUmdLIs7BRPefNeXNm60rMMIEhl4spr2kl4E1wl86B+YOwiowv7hRub6gDxkFW5RC7zH/UQR/Dn
+	tNiT146Lsw6YVW7q33RmVA1KIbr2v8IH8JgXp0mvAQLkBz7Dz/r+fyRhQBxyZuBCPAXtp/Xnb0/
+	P+JwEC7lZv3Z8JgDsQOZ0wbm30hXO4A=
+X-Google-Smtp-Source: AGHT+IFWwENUebCr4voLH+7s7sJwk7o6ApVHXiQcusFpsycULm7vbHAgg//4YnMm7TLwfmgr806IKQ==
+X-Received: by 2002:a17:90b:180a:b0:2ee:5bc9:75c7 with SMTP id 98e67ed59e1d1-2fc0dfc7a5emr8983543a91.5.1739517358814;
+        Thu, 13 Feb 2025 23:15:58 -0800 (PST)
 Received: from thinkpad ([2409:40f4:304f:ad8a:8cb7:72db:3a5e:1287])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fc13ad7c62sm2228797a91.29.2025.02.13.22.09.38
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d53643ddsm23043555ad.70.2025.02.13.23.15.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 22:09:41 -0800 (PST)
-Date: Fri, 14 Feb 2025 11:39:35 +0530
+        Thu, 13 Feb 2025 23:15:58 -0800 (PST)
+Date: Fri, 14 Feb 2025 12:45:52 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Kevin Xie <kevin.xie@starfivetech.com>,
+To: Tsai Sung-Fu <danielsftsai@google.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Minda Chen <minda.chen@starfivetech.com>,
-	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
- IRQ handling
-Message-ID: <20250214060935.cgnc436upawnfzn6@thinkpad>
-References: <20250208140110.2389-1-linux.amoon@gmail.com>
- <20250210174400.b63bhmtkuqhktb57@thinkpad>
- <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Brian Norris <briannorris@google.com>,
+	Andrew Chant <achant@google.com>, Sajid Dalvi <sdalvi@google.com>
+Subject: Re: [PATCH] PCI: dwc: Separate MSI out to different controller
+Message-ID: <20250214071552.l4fufap6q5latcit@thinkpad>
+References: <20250115083215.2781310-1-danielsftsai@google.com>
+ <20250127100740.fqvg2bflu4fpqbr5@thinkpad>
+ <CAK7fddC6eivmD0-CbK5bbwCUGUKv2m9a75=iL3db=CRZy+A5sg@mail.gmail.com>
+ <20250211075654.zxjownqe5guwzdlf@thinkpad>
+ <CAK7fddDkQX1aj5ZyTjh1_Pk+XME3AY=m5ouEFRgmLuJjBJytbA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -98,102 +98,29 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
+In-Reply-To: <CAK7fddDkQX1aj5ZyTjh1_Pk+XME3AY=m5ouEFRgmLuJjBJytbA@mail.gmail.com>
 
-On Tue, Feb 11, 2025 at 01:09:04AM +0530, Anand Moon wrote:
-> Hi Manivannan
+On Tue, Feb 11, 2025 at 04:23:53PM +0800, Tsai Sung-Fu wrote:
+> >Because you cannot set affinity for chained MSIs as these MSIs are muxed to
+> >another parent interrupt. Since the IRQ affinity is all about changing which CPU
+> >gets the IRQ, affinity setting is only possible for the MSI parent.
 > 
-> On Mon, 10 Feb 2025 at 23:14, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Sat, Feb 08, 2025 at 07:31:08PM +0530, Anand Moon wrote:
-> > > kmemleak reported following debug log
-> > >
-> > > $ sudo cat /sys/kernel/debug/kmemleak
-> > > unreferenced object 0xffffffd6c47c2600 (size 128):
-> > >   comm "kworker/u16:2", pid 38, jiffies 4294942263
-> > >   hex dump (first 32 bytes):
-> > >     cc 7c 5a 8d ff ff ff ff 40 b0 47 c8 d6 ff ff ff  .|Z.....@.G.....
-> > >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> > >   backtrace (crc 4f07ff07):
-> > >     __create_object+0x2a/0xfc
-> > >     kmemleak_alloc+0x38/0x98
-> > >     __kmalloc_cache_noprof+0x296/0x444
-> > >     request_threaded_irq+0x168/0x284
-> > >     devm_request_threaded_irq+0xa8/0x13c
-> > >     plda_init_interrupts+0x46e/0x858
-> > >     plda_pcie_host_init+0x356/0x468
-> > >     starfive_pcie_probe+0x2f6/0x398
-> > >     platform_probe+0x106/0x150
-> > >     really_probe+0x30e/0x746
-> > >     __driver_probe_device+0x11c/0x2c2
-> > >     driver_probe_device+0x5e/0x316
-> > >     __device_attach_driver+0x296/0x3a4
-> > >     bus_for_each_drv+0x1d0/0x260
-> > >     __device_attach+0x1fa/0x2d6
-> > >     device_initial_probe+0x14/0x28
-> > > unreferenced object 0xffffffd6c47c2900 (size 128):
-> > >   comm "kworker/u16:2", pid 38, jiffies 4294942281
-> > >
-> > > This patch addresses a kmemleak reported during StarFive PCIe driver
-> > > initialization. The leak was observed with kmemleak reporting
-> > > unreferenced objects related to IRQ handling. The backtrace pointed
-> > > to the `request_threaded_irq` and related functions within the
-> > > `plda_init_interrupts` path, indicating that some allocated memory
-> > > related to IRQs was not being properly freed.
-> > >
-> > > The issue was that while the driver requested IRQs, it wasn't
-> > > correctly handling the lifecycle of the associated resources.
-> >
-> > What resources?
-> >
-> The Microchip PCIe host driver [1] handles  PCI, SEC, DEBUG, and LOCAL
-> hardware events
-> through a dedicated framework [2]. This framework allows the core driver [3]
-> to monitor and wait for these specific events.
+> So if we can find the MSI parent by making use of chained
+> relationships (32 MSI vectors muxed to 1 parent),
+> is it possible that we can add that implementation back ?
+> We have another patch that would like to add the
+> dw_pci_msi_set_affinity feature.
+> Would it be a possible try from your perspective ?
 > 
 
-Microchip driver also has its own 'event_ops' and 'event_irq_chip', so defining
-'request_event_irq()' callback makes sense to me.
+This question was brought up plenty of times and the concern from the irqchip
+maintainer Marc was that if you change the affinity of the parent when the child
+MSI affinity changes, it tends to break the userspace ABI of the parent.
 
-> [1]: https://github.com/torvalds/linux/blob/master/drivers/pci/controller/plda/pcie-microchip-host.c#L90-L292
-> [2]: https://github.com/torvalds/linux/blob/master/drivers/pci/controller/plda/pcie-microchip-host.c#L374-L499
-> [3]: https://github.com/torvalds/linux/blob/master/drivers/pci/controller/plda/pcie-plda-host.c#L448-L466
-> 
-> StarFive PCIe driver currently lacks the necessary `request_event_irq`
-> implementation
-> to integrate with this event-handling mechanism, which prevents the core driver
-> from properly responding to these events on StarFive platforms.
-> 
-> static const struct plda_event mc_event = {
-> .  request_event_irq = mc_request_event_irq,
->   .intx_event        = EVENT_LOCAL_PM_MSI_INT_INTX,
->   .msi_event         = EVENT_LOCAL_PM_MSI_INT_MSI,
-> };
-> 
-> This patch implements dummy `request_event_irq` for the StarFive PCIe driver,
-> Since the core [3] driver is monitoring for these events
-> 
+See below links:
 
-This still doesn't make sense to me. Under what condition you observed the
-kmemleak? Since it points to devm_request_irq(), I can understand that the
-memory allocated for the IRQ is not freed. But when does it happen?
-
-> > > This patch introduces an event IRQ handler and the necessary
-> > > infrastructure to manage these IRQs, preventing the memory leak.
-> > >
-> >
-> > These handles appear pointless to me. What purpose are they serving?
-> >
-> Yes, you are correct, the core event monitoring framework [3] triggered a
-> kernel memory leak. This patch adds a dummy IRQ callback as a
-> placeholder for proper event handling, which can be implemented in a
-> future patch.
-> 
-
-The dummy request_event_irq() callback is not supposed to be needed in the first
-place. So clearly, this patch is not fixing the actual memory leak but trying to
-cover it up.
+https://lore.kernel.org/all/87mtg0i8m8.wl-maz@kernel.org/
+https://lore.kernel.org/all/874k0bf7f7.wl-maz@kernel.org/
 
 - Mani
 
