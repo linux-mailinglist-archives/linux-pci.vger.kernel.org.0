@@ -1,151 +1,136 @@
-Return-Path: <linux-pci+bounces-21463-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21464-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C71E5A36062
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 15:29:07 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75415A36095
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 15:37:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9FD171894CB2
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 14:29:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B42C169F5E
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 14:37:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6DEE265CB6;
-	Fri, 14 Feb 2025 14:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E474A264A9C;
+	Fri, 14 Feb 2025 14:37:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="I5cXHKML"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CN3KP+5P"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C4D35BAF0;
-	Fri, 14 Feb 2025 14:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB9815199A;
+	Fri, 14 Feb 2025 14:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739543342; cv=none; b=Tn5lNFrrMgXCgZfO2acD6Oab64HDee4i5prhMVARyWQF7PItRLJN4LCwiTb8MOUSHtv9HLr95OxLFPI5Jmx6slDbj8LpoZ55Bf3i6IHGQ0rROmOHRr+qUvE2nG2nBoKI4RclOIoS4x97ayHl2zel0RYoQYjbZFDrXawBsG8+cFI=
+	t=1739543857; cv=none; b=EM0LlMO4NSq/YmxwTzTUjJU8S13H2m/1Pr8W6ulBM2kYwkSzrWN51/HDd2jKko23gRHRqjIcze3sp5s1yGdP3uznembrsp4rvzypf+LRtSPqnrJqNh0rspJIbFRVRlPa9me9lIOTeqI4wUIYVHyGpqO472dPbLEqz7qsjDN6S1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739543342; c=relaxed/simple;
-	bh=MrEM/iHmIbineORQLS8NmrG1GLmj/4CMf3zVWTU8Asc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tteqJhbrumLX5Tfsn05gPWrpG7kVgl2et+PJ6hHrZYCGUW7E+HEXQ69LJPqW/BTVJUOmh35apklKiLhmAI6pkJ9Y1EeiNsZ+5X8QpYto5auCpjI+YLGPuDFsUl6OvK88RHfDf40HmGenHRxk6IOsJ5MKox6fNfGI/Vz9RIZhbsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=I5cXHKML; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=ZWPwF0vF6Snifzn+9M+0+9hnpb87+w9sonDEwMS6fNg=;
-	b=I5cXHKML20836aQvCf1KDjmXYIdHk3/mIIaFz5L+MRZQoCqaRkjY1U0uOFX3iL
-	lylQ1vxeyXuByRDPhy0e6qK8N6nrOGxPKBvAEHIFf1vNCDqXxLlhQ9T/CMVgTsWG
-	zso7uH9njwPCaVXDvh5GGSQZmTyIwied5dLyzbetZO+mo=
-Received: from [192.168.243.52] (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wD3Pw_8Uq9n_qCGMA--.61782S2;
-	Fri, 14 Feb 2025 22:28:13 +0800 (CST)
-Message-ID: <332ec463-ebd9-477c-8b10-157887343225@163.com>
-Date: Fri, 14 Feb 2025 22:28:11 +0800
+	s=arc-20240116; t=1739543857; c=relaxed/simple;
+	bh=iP9rILo1pieoX7MujpuvZrfyhcl6FWNIG3xPCJe47D8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=V8tnI2nkWkK2HzYiWurSPnAv8FUdILhYk+2uD61bhqJjh/hFXpRQ9PWBCAsBww334k2BcbQR9KZlJ8dAdVRjZ044UiUxjDVU25tWykaVaaYFDMMtEUcnMXHs/Pvo2EpD9CjiUFQDJikfNs/xm/R9gKQkFqsC4wIw+om2bXoRmPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CN3KP+5P; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739543856; x=1771079856;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=iP9rILo1pieoX7MujpuvZrfyhcl6FWNIG3xPCJe47D8=;
+  b=CN3KP+5PtSMcPVFEYrFDskyCN3a3SSo+XiyMg0pCnTcbI5InuePlamSa
+   OG2Fqc6KM0U5xKslJPTkorDffw3df7/h7Ew8/Z4ON/ZziaacxY+mMZaL5
+   Mxt/1p8TWk7n/hGsV7bVHY53z9M+shU8RCMJCYp6ICzl1ceooHWB1Qwv8
+   TBuHerSIV0unLVehmFozs8MuhtFX5zwnN6ZIP8KjOxYQo9zdCnsaWunME
+   Kz35sUKIcx0JHYg5QrVfMkWloTvInag+4DQf2Wy3kmZ33XyNFFSN4+g51
+   GJmii3SB/fbBzIj8A2uItm2+ZbtZBCp1+18Y/LpaN2RuOsH+1yB5r7ihi
+   w==;
+X-CSE-ConnectionGUID: GOfeAuWIRBifHbwW0tKI4g==
+X-CSE-MsgGUID: +tRJ9aauRfKzXpuzk+DTGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40157595"
+X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
+   d="scan'208";a="40157595"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 06:37:36 -0800
+X-CSE-ConnectionGUID: qH+p86lhRk6Y+78IEsYq6g==
+X-CSE-MsgGUID: uOBG/QX5SeO3uRT0KYLYGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="136699809"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.228])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 06:37:33 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 14 Feb 2025 16:37:30 +0200 (EET)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>
+Subject: Re: [PATCH 3/4] PCI: shpchp: Cleanup logging and debug wrappers
+In-Reply-To: <20250213220453.GA135512@bhelgaas>
+Message-ID: <582c718e-568d-7f70-aef7-b0206600d3a3@linux.intel.com>
+References: <20250213220453.GA135512@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v3] PCI: cadence: Fix sending message with data or without data
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
- bhelgaas@google.com, bwawrzyn@cisco.com, cassel@kernel.org,
- wojciech.jasko-EXT@continental-corporation.com, a-verma1@ti.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, rockswang7@gmail.com
-References: <20250207103923.32190-1-18255117159@163.com>
- <20250214073030.4vckeq2hf6wbb4ez@thinkpad>
- <7eb9fedc-67c9-4886-9470-d747273f136c@163.com>
- <20250214132115.fpiqq65tqtowl2wa@thinkpad>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250214132115.fpiqq65tqtowl2wa@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wD3Pw_8Uq9n_qCGMA--.61782S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZryUWFWxCr4kAr1kKFW3Wrg_yoW5tFy7pF
-	W8GFyFyF1xXrW3ua1vvw4kGF13tan3tay7Wr4qk34xuFnF9FyUGFy7KFy5WrW5GrWvqr17
-	ZwnFqF9rGFsIya7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UBVbkUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxfzo2evIoSj1wACsQ
+Content-Type: multipart/mixed; boundary="8323328-872026427-1739543850=:944"
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323328-872026427-1739543850=:944
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On 2025/2/14 21:21, Manivannan Sadhasivam wrote:
-> On Fri, Feb 14, 2025 at 04:23:33PM +0800, Hans Zhang wrote:
->>
->>
->> On 2025/2/14 15:30, Manivannan Sadhasivam wrote:
->>> On Fri, Feb 07, 2025 at 06:39:23PM +0800, Hans Zhang wrote:
->>>> View from cdns document cdn_pcie_gen4_hpa_axi_ips_ug_v1.04.pdf.
->>>> In section 9.1.7.1 AXI Subordinate to PCIe Address Translation
->>>> Registers below:
->>>>
->>>> axi_s_awaddr bits 16 is 1 for MSG with data and 0 for MSG without data.
->>>>
->>>> Signed-off-by: hans.zhang <18255117159@163.com>
->>>> ---
->>>> Changes since v1-v2:
->>>> - Change email number and Signed-off-by
->>>> ---
->>>>    drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 +--
->>>>    drivers/pci/controller/cadence/pcie-cadence.h    | 2 +-
->>>>    2 files changed, 2 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
->>>> index e0cc4560dfde..0bf4cde34f51 100644
->>>> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
->>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
->>>> @@ -352,8 +352,7 @@ static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn, u8 intx,
->>>>    	spin_unlock_irqrestore(&ep->lock, flags);
->>>>    	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
->>>> -		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code) |
->>>> -		 CDNS_PCIE_MSG_NO_DATA;
->>>> +		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code);
->>>>    	writel(0, ep->irq_cpu_addr + offset);
->>>>    }
->>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
->>>> index f5eeff834ec1..39ee9945c903 100644
->>>> --- a/drivers/pci/controller/cadence/pcie-cadence.h
->>>> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
->>>> @@ -246,7 +246,7 @@ struct cdns_pcie_rp_ib_bar {
->>>>    #define CDNS_PCIE_NORMAL_MSG_CODE_MASK		GENMASK(15, 8)
->>>>    #define CDNS_PCIE_NORMAL_MSG_CODE(code) \
->>>>    	(((code) << 8) & CDNS_PCIE_NORMAL_MSG_CODE_MASK)
->>>> -#define CDNS_PCIE_MSG_NO_DATA			BIT(16)
->>>> +#define CDNS_PCIE_MSG_DATA			BIT(16)
->>>
->>> Oops! So how did you spot the issue? Did INTx triggering ever worked? RC should
->>> have reported it as malformed TLP isn't it?
->>>
->> In our first generation SOC, sending messages did not work, and the length
->> of messages was all 1. Cadence fixed this problem in the second generation
->> SOC. And I have verified in the EMU environment that it is OK to send
->> various messages, including INTx.
->>
->> And that's what Cadence's release documentation says:
->> axi_s_awaddr bits 16 is 1 for MSG with data and 0 for MSG without data.
-> 
-> I'm confused now. So the change in axi_s_awaddr bit applies to second generation
-> SoCs only? What about the first ones?
-> 
-> Are you saying that the first generation SoCs can never send any message TLPs at
-> all? This sounds horrible.
+On Thu, 13 Feb 2025, Bjorn Helgaas wrote:
 
+> On Mon, Dec 16, 2024 at 06:10:11PM +0200, Ilpo J=C3=A4rvinen wrote:
+> > The shpchp hotplug driver defines logging wrappers ctrl_*() and another
+> > set of wrappers with generic names which are just duplicates of
+> > existing generic printk() wrappers. Only the former are useful to
+> > preserve as they handle the controller dereferencing (the latter are
+> > also unused).
+> >=20
+> > The "shpchp_debug" module parameter is used to enable debug logging.
+> > The generic ability to turn on/off debug prints dynamically covers this
+> > usecase already so there is no need to module specific debug handling.
+> > The ctrl_dbg() wrapper also uses a low-level pci_printk() despite
+> > always using KERN_DEBUG level.
+>=20
+> I think it's great to get rid of the module param.  Can you include
+> a hint about how users of shpchp_debug should now enable debug prints?
+>=20
+> The one I have in my notes is to set CONFIG_DYNAMIC_DEBUG=3Dy and boot
+> with 'dyndbg=3D"file drivers/pci/* +p"'.
 
-Sorry Mani, I shouldn't have spread this SOC bug. This is a bug in RTL 
-design, the WSTRB signal of AXI bus is not connected correctly, so the 
-first generation SOC cannot send message, because we mainly use RC mode, 
-and we cannot send PME_Turn_OFF, that is, our SOC does not support L2. I 
-have no choice about this, I entered the company relatively late, and 
-our SOC has already TO.
+Sure, I'll add the info and split the change as you suggested below.
 
+> > Convert ctrl_dbg() to use the pci_dbg() and remove "shpchp_debug" check
+> > from it.
+> >=20
+> > Removing the non-ctrl variants of logging wrappers and "shpchp_debug"
+> > module parameter as they are no longer used.
+>=20
+> > -#define dbg(format, arg...)=09=09=09=09=09=09\
+> > -do {=09=09=09=09=09=09=09=09=09\
+> > -=09if (shpchp_debug)=09=09=09=09=09=09\
+> > -=09=09printk(KERN_DEBUG "%s: " format, MY_NAME, ## arg);=09\
+> > -} while (0)
+> > -#define err(format, arg...)=09=09=09=09=09=09\
+> > -=09printk(KERN_ERR "%s: " format, MY_NAME, ## arg)
+> > -#define info(format, arg...)=09=09=09=09=09=09\
+> > -=09printk(KERN_INFO "%s: " format, MY_NAME, ## arg)
+> > -#define warn(format, arg...)=09=09=09=09=09=09\
+> > -=09printk(KERN_WARNING "%s: " format, MY_NAME, ## arg)
+>=20
+> The above are unused, aren't they?  Can we make a separate patch to
+> remove these, for ease of describing and reviewing?
 
-This patch is to solve the Cadence common code bug, and does not conform 
-to Cadence documentation.
+--=20
+ i.
 
-Best regards
-Hans
-
-
+--8323328-872026427-1739543850=:944--
 
