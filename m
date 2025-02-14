@@ -1,66 +1,65 @@
-Return-Path: <linux-pci+bounces-21528-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21529-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A726CA367A8
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 22:43:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D610CA36835
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 23:23:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5F08116C3A9
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 21:43:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CBC501886B6D
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 22:23:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EA3E1B6CE3;
-	Fri, 14 Feb 2025 21:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D9D41DF993;
+	Fri, 14 Feb 2025 22:23:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nOJlmxGV"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JEf0SBKG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2074.outbound.protection.outlook.com [40.107.243.74])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2079.outbound.protection.outlook.com [40.107.94.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B3117E;
-	Fri, 14 Feb 2025 21:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CB31953A9;
+	Fri, 14 Feb 2025 22:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.79
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739569431; cv=fail; b=d3jB5EwSHMoNhAooMzozaUfTgELPzHhQIelAOW4p6RkZbZw46oNio8p7fB7/01/EkCSprAl8/8GG6vemnU5VujaLJrM/asniYut+EUYMOE+F8zIB82rKD07GLSyaLXq98GP3K+5S6zkk/IJhd7BRqCvC9K5iqYnVvSuBwQqHM6g=
+	t=1739571813; cv=fail; b=hBnAOe57AxbycSgTAsL5/IJzYlvU6s2C0DTQMaD9MR1ERoGkyRukWzjfTSSAC4JTjdvtYs9WnjsDBvsvrw++hLp6xUnKwNY9HXKvcGZee249lboTanh3dnZsf2Qi0GfM0hyi6rmZvkRke4BkMzwB2Rd5a1JJbeGI1JOvTuF+AmI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739569431; c=relaxed/simple;
-	bh=kNRu9g+CG8+rY6NirqdQOg8QbyxXfnGIvzUppuXfkqY=;
+	s=arc-20240116; t=1739571813; c=relaxed/simple;
+	bh=c/6M/JU9V5nifIDg8gqgR9VHyYmyxP/7R9GbyY2fDQU=;
 	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Xr/PBcasJsxaEosNSYQLp3kb0NQUTHUhy0vsnWww+NDVGNfUmbMBk6mlWZWu4yKNGufSqz0vtkKjioF1yki3dIw77xRcLR3PlskW5gr4AQZGOq1rNrrtgLoeOb91ejgRFXKxE/hsEpdLMxGQdT48BTO0G+i6o5TudIleaozGS1E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nOJlmxGV; arc=fail smtp.client-ip=40.107.243.74
+	 Content-Type:MIME-Version; b=NS2+++RQ/3tfMpHrZe91XB0bgKBU9Vh3jGv/DAjnNJPtNLwSlP7wHoSOnRiYzlRFoThRiRjh2nX9biYUr89hZ7yv425QI7vMVkwbkQIucb+fbbwFyr7mnO5pLZTDjYlkI+gZmSLU9BCYMbpqVG4sLUoY3ZEO9A3IcMK2LDTlKbs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JEf0SBKG; arc=fail smtp.client-ip=40.107.94.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O1nbIiGXj4bGLYrQTXKummnJzy/BHLEWg15ScjnrnM4JPY7oBDkOQkjqrTkKQA7/qF/sxAEh1gzCz6YLIRmhjfSeyMxFJ2A+srx6GTnl/zHopQ7TSia89CUpVyfd8tCT6WiZhIgkHk8+q6kcYlCAy0x562lqZRwmH7HFQkQ0gt1W9NzgJ6z2T4NHWBkLoer0LOrUyydZd9jW3wCAiisbGpmn0y7k7Z2rBh4R9z3zJfpq1EDzuh0ocCKLtr1dvEhVO8HKrF9cHH1N+SugkoNiTMcRy6XGH1HszS9MEIfDrTSqwijKQzKc5rk/QkmEAW0P5npmX7ImqPWHeMKCYcxCPw==
+ b=Ud4GYJfurJ3IuScpw5KnRAMfmuEg9qbept8rv56N/XMIA2niqIANEtdpC6kwweJ2VbrErFMBDGVov2o5hRoOeuhpkjXnqyH+uvkm9TBFAo8h+L68ul+9k5Byw0QxTbyTtPM2HKrFO1ZG4dTFmzRLo66dVZRO+P6+/yS9HmHG2XwoJYZ6Wlqb5kKh9aP5UO8G3AtLlq3x9ce46jgT3dv9hr43b464MJng93M1Tsh22xjILBEUVj2U29OZ7Ff8KSOwv7FR5Xt+XuwSKX28IMyKrtFg8Lr9B0eJO+0KOv4NGY0lwqZG7E7MKbKTH+N7sBcPRoIVddGKcFNfTS6tuc0c9w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0CfabDPFO+342ak4qGgyS6P3dTO9z5NsRLHjEEVtceE=;
- b=whQjWSNI/34ydvCIioPx8k2l8mqHp6vqkhRbT7HGA7AKXHaZNtz7fqYge4MEEKWAWkFKsv2qXIZYMRbcqrPlPndv2JY6hu/R2cwHmTkVLmWdSDds05bHKJRhbKoEmm2uoqeMQyOua8yUb+Tqc8/3hSsqQeBwEXz0MVy4vtyBfGsJubNTIHJupuxs/q8qGQYTlToVrlZVN3Ev2nWXw14hxRq/Q0093ULxyIcOL3qgocYSGpiGu0zSzdn2C1GyCHS+SyjoQEll9ZHcd8L42VQFoyT9dI3AsWlZBfDFgkSnSugArQ3anphaOkwtboRJu0uPw5zghIi6JRuWxiZ5tS/73w==
+ bh=ZwJGJ99xx5XRXMsKKHXnD1WIiUvRbcfJCOwqoM3gGG8=;
+ b=cuNyZrkdD1yy37P6EJkoVjBf7WO8UKyEwnSId64a8dc5KwC0gQLwuN9sg4yGXcgfcBZsAiSaBpSJoTjmGAmvbbcU+MJl/ARXWv9LTtxhK9d8u9mAmCTNfcXfgN8fpVlpzWsIXnnwexTf4gyba4t7nt9961CquuTRza4AuhMF0NcDhJBrzdBIFhxEH0GYzhwhCgkQYsrmm1+XcR9QnkZrgqNc83ZwYNDG6HR7XUiehFFhWhAKJrt8psho0HAcnFlZp/auG2VNmjq6BYqTnvI8cC3fOMTtPZFxH8JiSs1nWUwfI9zFepu/pm7ggLSgSZ8mqDq7QlCjafNq4mz2vyUJSQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0CfabDPFO+342ak4qGgyS6P3dTO9z5NsRLHjEEVtceE=;
- b=nOJlmxGVHPpLBRCzzg6ZJTbbWQ/IQJ/B342DGXPgIQVvI0O2abNE7Z38TyMGjNHgFc51+vsLsUfCc/3ivUrmdgrzXjusK74+x1Il7dFdSk2bJtSiddv5pm/TefttjBqDYzbGss/gfvlw9t8pf/hW7AX9daH5AHP3swMzmU3xXM4=
+ bh=ZwJGJ99xx5XRXMsKKHXnD1WIiUvRbcfJCOwqoM3gGG8=;
+ b=JEf0SBKGqT6IQDNKmdE8YdM/BOmdj6k7ZFa3yCcJcOLvXVZALmPiNqcRy0q7xNA9WUIurpK7J7P89nkE3nRx66oyVVld+ryjEOSGaQpg33FApU91qdewhGP1Dbn6teFf2RGBYVp5jWl/pWgV9ncRmX0l2YrUZORZLUTUTbEqtms=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
- PH7PR12MB5781.namprd12.prod.outlook.com (2603:10b6:510:1d0::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Fri, 14 Feb
- 2025 21:43:46 +0000
+ BL1PR12MB5993.namprd12.prod.outlook.com (2603:10b6:208:399::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8445.14; Fri, 14 Feb 2025 22:23:29 +0000
 Received: from DS0PR12MB6390.namprd12.prod.outlook.com
  ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
  ([fe80::38ec:7496:1a35:599f%3]) with mapi id 15.20.8422.010; Fri, 14 Feb 2025
- 21:43:46 +0000
-Message-ID: <408f6acb-108b-4225-81ac-4f17a6486020@amd.com>
-Date: Fri, 14 Feb 2025 15:43:43 -0600
+ 22:23:29 +0000
+Message-ID: <ba21e8fd-831a-4215-9e4f-60b5036d63b0@amd.com>
+Date: Fri, 14 Feb 2025 16:23:25 -0600
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 12/17] cxl/pci: Add error handler for CXL PCIe Port RAS
- errors
+Subject: Re: [PATCH v7 07/17] cxl/pci: Map CXL PCIe Root Port and Downstream
+ Switch Port RAS registers
 To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
  nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
@@ -70,15 +69,17 @@ To: Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
  nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com,
  lukas@wunner.de, ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
 References: <20250211192444.2292833-1-terry.bowman@amd.com>
- <20250211192444.2292833-13-terry.bowman@amd.com>
- <67aea8002a005_2d1e29466@dwillia2-xfh.jf.intel.com.notmuch>
+ <20250211192444.2292833-8-terry.bowman@amd.com>
+ <67abf81f4617b_2d1e2946a@dwillia2-xfh.jf.intel.com.notmuch>
+ <609a02bb-3271-4021-9499-8b281a959f62@amd.com>
+ <67afb4955252f_2d2c294b2@dwillia2-xfh.jf.intel.com.notmuch>
 Content-Language: en-US
 From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <67aea8002a005_2d1e29466@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <67afb4955252f_2d2c294b2@dwillia2-xfh.jf.intel.com.notmuch>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN7PR04CA0094.namprd04.prod.outlook.com
- (2603:10b6:806:122::9) To DS0PR12MB6390.namprd12.prod.outlook.com
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA0PR11CA0075.namprd11.prod.outlook.com
+ (2603:10b6:806:d2::20) To DS0PR12MB6390.namprd12.prod.outlook.com
  (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -87,291 +88,223 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|PH7PR12MB5781:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8fc0fc5c-f003-452c-e339-08dd4d40a8bc
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|BL1PR12MB5993:EE_
+X-MS-Office365-Filtering-Correlation-Id: 23cf9115-caf9-4013-21e8-08dd4d4634fb
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|921020;
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?V3lTSStieUtJdWhHYjFMRHljZS9KSlJjQXp5WUZQM2RRV2ZHaGlVSUdhaFlD?=
- =?utf-8?B?SEIrWmJxNXdGUnFzQ3d1TmdIYnJBMFhPQlJNNDZ3RW9jRkxpeTY3QjhxTW5C?=
- =?utf-8?B?TytzcjJDTnlmLzJuSTQ1WlhVc1pKZlovbllqWjdGNW9UR1hnTnZIQUZkVkFB?=
- =?utf-8?B?M3pBN0xTZlJ6ak5vTU9WUW1FLzB0dEJTMWN2V1JYSnFrTHY0NC9qaGd4bUVr?=
- =?utf-8?B?cG1hZUI5Sml0TlFZN1B2ZWl4NXM0QVNCYTIzUWhkRjlvN2duNFFhSWRqU2xI?=
- =?utf-8?B?bkFWcU1DcWtPcStGa24xb0FtTmZUNDdNR3pBcG5scG1BNGhUVnFUOTA2UW5y?=
- =?utf-8?B?UlBMZ1VVVUVpT3daZHJibUg3d1I3TDBsa1dscWhBcFkvR0FueWRPazJkSiti?=
- =?utf-8?B?aFNZUERNR3BWZ2NSWWdySWhEei9BWHVKRThZK1BiSk1Qc09OVUhRYWcwaFZW?=
- =?utf-8?B?cmRwd3JSZWlUTURsYUFweU8vZk14ZHpVaTFiaVcyYzZ3bmF3bkZzemxYUkcz?=
- =?utf-8?B?MDNrU05ZTnEyLzdxOG5KSkFzVzlqeUVzakRQMWJUV0RoNUZHTUNkSUx1dnYv?=
- =?utf-8?B?dVBUb21pbE5aSGhyVUIrVEVZOU9pNFZhcUREdnJQTjlCbm1pK214RUZtVWZz?=
- =?utf-8?B?QmVuTDZiUktSU2ZJRkoxN3U5RWQ2OGZPMDFMcnY2Uk43SndOeWZzSERHS09Z?=
- =?utf-8?B?bXlVdFI1ODk2RVBpSFRLbE45OWE5c0cxMGJHSHViV3JMclRzMWd1N3loWmxo?=
- =?utf-8?B?VnJ4QkpCKzM2MkIxbXNQN21YbHdwbDFNdW52NkhEQzNiejNjYjdnV2JVMndJ?=
- =?utf-8?B?YzBmTW5wcnBlMjd4Rm0rY3Fyc2VGd2pRdmxLZGkvY005M0o4VFgrU2pQVmFw?=
- =?utf-8?B?SFRPSTA2MzBucEpwWjlLZjhwclE2RzlDdW10SEY1aU5OeFBIeXJVQ1dJVUE5?=
- =?utf-8?B?MEpjYk5Ocm1JY3hPMjFCMHVJZGxhT0RpWDhSOE1jZkd3WUNXYnFocmtpbWsy?=
- =?utf-8?B?VkNjZmtjQ3JUQXBVMWRqWVl1TFA5WlIyY2I1akpES2lIN1VlTndSZFJlK3Uw?=
- =?utf-8?B?RUsrMzNicUllV1lPb1pDcEg1MVMrWkxtaDdrM2ZtQi8rZ0ZtWnhpcUgyZ1pW?=
- =?utf-8?B?SGo1ZTZwSmpzYldjYlRPMDF2M1AwVlhDVWxLTkRWZ1FNZjFYOHE0ZGRPb1Bk?=
- =?utf-8?B?aFRoWmN4TVlHUnFNRmsvQTNSU3didzhvWGYvT3BCWks2Y1E4MG5ManRXckhn?=
- =?utf-8?B?WWMvL1JYV3AxRVpKRUFBSTdZTVFOdkVaZEd4MmU1Y0JKKy9YVGhqcGJaU2Jr?=
- =?utf-8?B?NFFINEo1Y3RQUlFaTktjMWh3WFlYcCtzcUJxM2IzSG5Fd0hGMElyaFVtM2RO?=
- =?utf-8?B?bStPRkYzeFVCV0ZhblUrejI4MWtQdmJnaGwyb3FYRy93RzdLdlVuclA5Y2VC?=
- =?utf-8?B?LzNLaUNxWmxXWUZ5VXR5bWw4UVJJMHcxTXdoVGFpaHpUaTIwSER5Z0MvWXdX?=
- =?utf-8?B?Q1JFdTl4OWcyZmt0WkFIZ1ZTd3p5c3dDaVdRVDNyYjEwL012S2dvd3AyU3hW?=
- =?utf-8?B?VWRKcWdKald1Ulh5eGh4bis5RUVBRk5Hb05TLzNVUU5kSWdVTDQwZEVwc0Nn?=
- =?utf-8?B?ZmxYVkIxSnY0Tk13TjZpM1UrV01scTBEdXg0WHhWQTZTeTNEQmhhRFNXZ2Nj?=
- =?utf-8?B?MmRXWHNPU0llSDBuU2FnYXhFbDl2ZXVMaWI1b1Q1T201bDRUcFBvY1Z5SHJp?=
- =?utf-8?B?ZjVGYWFUdUJzSGd5V09OdHhSN3dGU0xQelJ1YytNcHFzWjE4THZNbEdIQi9s?=
- =?utf-8?B?YjlUTjFUd1Uxc1crajcvb1pkVk5oR1RwMmlFYlJOLzlrbE9ndVo5dStOa1ly?=
- =?utf-8?B?clcyb1MzZjhiUGZFTHpia1RUamtVWmk1TDBRQXdsSHdTckJYUmpBcktMZTN1?=
- =?utf-8?Q?eZhnORccjBE=3D?=
+	=?utf-8?B?TkkxZzhpZG1CUkxvQVkxeitjQS8rU1lFMmpydHV4TGg1ak9VVHBYVDEzMVlG?=
+ =?utf-8?B?MkE3YnluSkFub3Fhc01oVXpRZzB1UFVITFJFQWdoc2pMRTZZeHBSMmtkUTAr?=
+ =?utf-8?B?RFlrSStlNVhNeDFJaXh4ZXB2enhzZDl4eHJrOTFhOTVOUVE5amdHR3RwMHBZ?=
+ =?utf-8?B?MFJLNCtTOXB4aVd4NkFCT2RObUhSSEJjdWQwWWQvcjJGU3hESGozK0NacFh4?=
+ =?utf-8?B?VEpvSzMwelZQMWhuV3RndHUzYVhscnR0VG9vZXV0akZNZ2xuMWxvVTBYODlH?=
+ =?utf-8?B?anJHZzY0WnhDcGNBL1d5NUZmM2lWaTFlZnpsK1FDbldaOEFGZmhDdm84ZDhw?=
+ =?utf-8?B?c0NtWVRaWEJReFVFT0JPUjdjK1J1dmU4OEZYcFlmaFhGa0dpUUVZSTB1R05Q?=
+ =?utf-8?B?S24wN1NlWFVqY2FIVXlEbkpEbkZRRjFjWTl1bEZ5cnlaVnlHNXkxc0Q0alY2?=
+ =?utf-8?B?a1hqL29ocS8yTEhDTStkdUhYMzBFQjhtMThlL2FmUHpianVsUHB2aE5adExP?=
+ =?utf-8?B?czc0QVBLMUtEMFRUZmF5bVhlaG04SkFkVktzOHRrUEZlZlM0dnJXM3FKYXFz?=
+ =?utf-8?B?OWhWcDdtSk1qci9sWG9VcnBFZTBBVnRhUTBaeUxNcFpvbUF5dGl4azlmbFY0?=
+ =?utf-8?B?L21PRXVzUU1PdThZamtBaE85SzJ1UjdJVTFGclJBTkpJMyt0SDRQWmVuQURi?=
+ =?utf-8?B?SGNFNGhDSXpGVXpiUU5wR1V1eHg0bTNxbmcwT0FjRTVKNm5GQ3l3cGp2TXkw?=
+ =?utf-8?B?cmhhbHlyS2FIR3F3STE5MEh2OENzcTJKeTJhdUNtR0h1M0tkbXBtdlZSVTNY?=
+ =?utf-8?B?SGJSMHQ0T1FVQjdmamJNT2t2VlZ6dzNpYUtxcG54YTRxZUxDWUxTWENnV2FM?=
+ =?utf-8?B?NTFuR2R6blV1eFVWMkRJdDhhd2FUQ2oxNjkxVnQyalZ6MjM5SGtaYW5SL0s2?=
+ =?utf-8?B?SzNnTmFaUjM5REpRRmhIQlQwYVdQYkl0VW9lZkpYNVFTYytXRnVJU2YreWdE?=
+ =?utf-8?B?UzNNVE5qSG1jamxmRVhQc1l6OFd0cnBvc3dBRHMrOG5ZWndHSmlzbWJRQzl3?=
+ =?utf-8?B?QkprajZNQldkQUxRcWllWnRLNWNIdUQwY2MvYTg2cUhHRnRabDQyeHlJU3A0?=
+ =?utf-8?B?S0d1a2xVS283eCtaZWQzNlZtdWI4VGNLMnhpYUJRK0s5ZCtQbnh5UkxtMWx5?=
+ =?utf-8?B?b2FLR29kT3BLUmJ1S1gxRSt2Y2lYMzRBYWsvVTlVbEtjcWZVNmVhdVEwT1ZF?=
+ =?utf-8?B?aWtCakpBQ0x0WHZNdVk0SjhkaVhqMlY4ampKeE9RTXdEd1FwTmNGMFoyNExq?=
+ =?utf-8?B?bXF4c1IrVS9PaW9iMURaamNlRGFlTDIzbkVkeEhVM3l5Sm5Ub0R0VGQxVHpP?=
+ =?utf-8?B?R3A5dnVCS2cyYkVrdkJtWEt1bC95ZTRPWEJRd1lIMmtraC95TmsreGZJOEtl?=
+ =?utf-8?B?aDZhU2tZR2VuL29yNTR4OGpNMkVFNEFhKzJDTi9xcnF0czI3N3psNDQzTUVM?=
+ =?utf-8?B?d2VZNFQ1dDIxZitCNGNSRGdSUjlTd0JxbDU3aGdWN1pVaDNKVHdMSWZWYWZT?=
+ =?utf-8?B?VXlVUUVVc090b1ExS2QzQXVlaXFqb2FyR1BwSzc3NlFJdWl1dFpKd1NYbUNE?=
+ =?utf-8?B?ZlNDaS9qd1A3VnJ5enN2dXE5bk1xUUFEZkVSb3drREVTcSt3T1RoWnc3V21j?=
+ =?utf-8?B?bGh3NUhYTXBwUTBVR3czM3RTYnFwMm9Ha2drL0RuOHNZYTFEd24zL2g4ZUdj?=
+ =?utf-8?B?UTdZSzgvMXBWZy9KV05jQVRvYWYyaTE0N2R5cU03VnZZOHlUemozQ3RSVnd0?=
+ =?utf-8?B?YXlOMzIrSm9yRkVRUWF1VTc0clNVcXl1UnNaT2Eyd0dHRGlMTEZFNllZOEVp?=
+ =?utf-8?B?ejhDSENDWFZwWHlWWUUya0hxUDd0ZDNGUGZkNDEyVGpKYnUrZzdiYnhHaS9j?=
+ =?utf-8?Q?wxCXRVdmRv0=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(921020);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TTMyUERwRUZwR0MrRDIrbXBQSlB2SUY2ckRITHVqSEdkZHdsQnd0SXEzczhV?=
- =?utf-8?B?QXpJcjg0RFJTdDYvQklqbmNsQkpocGdQcHNHeDE2MGdBQ0ZsUVV3TjNwdWZG?=
- =?utf-8?B?ZnhQMnBKeFV3T3h0QXhMTUV0aWQ1WFVHeFNHQUhRR1VHSXNmSWdLQVBIQVNP?=
- =?utf-8?B?VHVlQnJUYUlXczFPYmovWXFqYWc5TkliTlcxTmFUQm5TNlgvRTF2MjFoKzFU?=
- =?utf-8?B?VUtvcG9tREkrdEdSNlUrRGk0dncvRnpibmpOOU43U3A5Y3c2TGIxUWUrenJ3?=
- =?utf-8?B?K3J0QlNodWpqVXR2UEdnRVppYkxzdmp1RDRvMlQ1Q3ZyK2EwYUNoREJISlZN?=
- =?utf-8?B?NS9HZS9vUUdpeS9UWk8vTUtQUjdGRHBybitaakZMSWRhTmlhMXdGWkkzOXh1?=
- =?utf-8?B?MUMxQk9mOFMvL0E3anhKWDZ6cjR2ZVlDNVg1VFdEOWRISWV1TTZvNlZSd2ZI?=
- =?utf-8?B?aDJqd2pjSS9VUnlxV3pGb0VXdmNkaFFHZzBnaGovdzdLTTJpdDlVL014bGdD?=
- =?utf-8?B?amsrVDY1THNheC9kQytvVDRGaVNNaWxjVWdkVEZGNjVXU1VxR2VOUzNCSUU4?=
- =?utf-8?B?SkxCUG1sb0VNTjUwWXZ0dm5GVnFTeFFDSm81c1FXRWpkdnJiSFBER0g0WDNZ?=
- =?utf-8?B?THg3eGV5WXpRQ0xhSW1YTEI0dmlQZk9LaHFCdmlCY3NKWXk1U0k4Z1VTZHpE?=
- =?utf-8?B?SzBHVWFTMFZmQ2k2d01EelgrMm5MU2xzKzZWUHZYWjMvc3E2eDYyWFZ1blBL?=
- =?utf-8?B?RkV4bHNGem9ucllNbnhjK2pBZVh2ekNCOHlMYjhVL0tVckVBOEhrOVJIUEx4?=
- =?utf-8?B?TXkyU1RYd0dQNXVKNDYvdk9heWRBU2tMYUNraTV5Umo1WjZhMlkrSGxLRmNx?=
- =?utf-8?B?cWlhV0dwRVYzbUV3dGYyZ21QaVlRNFBDdzFiUjlpa1l2Q0RyRVN5TkpLaVBT?=
- =?utf-8?B?RVdzcmFwVkMwa3U2UnhiUXY1aDhpQTVZY0JOdmxXMmhVSVNHdFZwVnh5cllY?=
- =?utf-8?B?d2s2NXE3djFoVjV4WFdqc2QyVGgxb2V3ZDJYUzQ5Unk5WlNpVm1ET1AzY0Zr?=
- =?utf-8?B?dU82ampGUFJtYjFHQ0thRlNEalhMckc3NmxsV0JoN0tMZW5CdXFqMzJua0Uw?=
- =?utf-8?B?YUdyYW5iaC9PQlJkLy9YdkJiRzdnVjNIanVTaThyYUhxR1pqRXNncWZuRWoz?=
- =?utf-8?B?Zi9IVFRIUG5sODRabjc4c2hDdFVVZkF2Y0JvRnBxOG1Xdy95aTFpUU04U1NJ?=
- =?utf-8?B?M0FESVd3R0tBbm9MUjkzQ3ZNOUVBL1RqQnprY2JMS2F6eFRjMzl2WU1leFZ2?=
- =?utf-8?B?aWpQZ21VTjdBZldWTnBpWG94b3lTVCs2aHRiQkc2K3FDRFJqUWorWU92N01J?=
- =?utf-8?B?eHBGQkpGTU00TTk5T3NqY2xsckNZeG0yR3VnaVptdTNlSlNnVHZtVXIwM05O?=
- =?utf-8?B?eXF2WW90ZDZUc2pZTEt5NFlBM2szMSt0TGlDZ01SY0wrVDVsTGVlZEQycWcr?=
- =?utf-8?B?bDBKSmNYUm1OSzgrdFdvU3dKdGRBUFRhekd3czB5Wi9MRE5sWXMrSzVvK0VD?=
- =?utf-8?B?WjIxZGJJaFptdW01cngvZDMwYnNZUW50dXBSL0IrZkxaMjI2TzRKSFd5YWZ6?=
- =?utf-8?B?b050YmkyWExleEFDSmxtbjlXZGNXUUJjcWlzVW1rbDhHaXhBQlBVMURzOEZP?=
- =?utf-8?B?UHJlUjJBZWlzK29DcUcxRUUrM3FKSHlCYllDSE9zbUVlWTFQZGlMZzVVWWtn?=
- =?utf-8?B?S2VjNFozQ2o3bGdKWFg2cEh2dnRxQnF3dGpnL0ZoakdDUG42RDBjMXpDaXBR?=
- =?utf-8?B?VUtFN2d6MFRIOW9sWm9sVyt0NzNsd2F5OEV6aWJQVmJyWTZmOTRIcjBpRVhm?=
- =?utf-8?B?ZGY5ZDJtOW9yWEJuTW0weDljNXFnd0hVaytpUHNEdHJBRUorVkZQNlhzMGFt?=
- =?utf-8?B?QmlpazllSDhjMjZLZkdlQnYzaVJaU29tdFlza1ZWZzVJbFowVzNmdjg2bCtB?=
- =?utf-8?B?N3BJdlNIbW51dmI3Z2s1MVFnbXY0V3lyOGxmc2FLMnhaMDFBSXJ6MmQvdTF0?=
- =?utf-8?B?aHJxMzBKZW5ieCtMdGliTWM3cHFJb2FFcDhlRnlBSjNCUnhpNDMvWjRzT2ZN?=
- =?utf-8?Q?T1Yspk8mrGTA9rwRrloJLODLM?=
+	=?utf-8?B?RWh3bGI2N0szQU1CSTFQSjlRaVNaMzRYUHVUMVpsZlNYaFlYVWE5bFZIanZH?=
+ =?utf-8?B?MDF5RlkydkRTc21UYUQ3MkgzY3ZTODA1djNXMzV6MzZhRG83K2NSaDBxRElR?=
+ =?utf-8?B?b3Y3WVh5Y2hKdzVodE9mRElsK3k0bGJBZGdvMm9rN2ltRGQxT3dLWDZITE0x?=
+ =?utf-8?B?clhwUmZCL1NxdlA3TGg0d1JzRjBYUUd1MENtUjZMVnlRUjBHczVsQ3IxZUR1?=
+ =?utf-8?B?a2hIZHI4YzREckhHajVDelEzdk9MQW00Mm9zZ3htYXNWYkVuVjY3ejduWkpt?=
+ =?utf-8?B?NFhyL0xIQ3BlYW5ZTWRGMmJhMThvdnN5RFg1NHhBR0x4ck1NQnhJbXV0TEpP?=
+ =?utf-8?B?Y3MxQm9xUXh2anNJNk5jdXJnWXhMekNLVE5PMkJycXREMEVkcm96VlRNZjg1?=
+ =?utf-8?B?Q3JLaDVMUm5rV1ovTXJDOSs3SUhiWS85ajVjeTlVakFZM2pGV0gzSFZkWkpC?=
+ =?utf-8?B?VEZQRWVCaFZUcGErOWN6aWNpQXBycjNoUDl4WWlpZGl5MHpVcVZuVlZCWmEz?=
+ =?utf-8?B?a1VrNnZPTXl2cFNRajFtYUY5Q2FuM1ZXWHhEdW03am0xNHRXYVhEcFBUZVJa?=
+ =?utf-8?B?ejF3cU9pQjlqRld3UG5CaGluNks1WFdLV2kzb0g5OUhDTmZRaG9wcnA2N1hN?=
+ =?utf-8?B?TUxZT2YwSnNIdlh5dHNRTWtoZ21sTmxwazRnNVNLYW1tTzV4bS9abjVnWktV?=
+ =?utf-8?B?OEMvczdrOEdibWI1OVBuWWFSb0J5dXk1RmtuU0hFMndSdEQvQ09VT29aT2Za?=
+ =?utf-8?B?WGMwNUFVMW1pd3l0SHhzMURWazhXVlJNOWZRNFRqTC9YaVRFRXVCWjVPYVlX?=
+ =?utf-8?B?YkNuSm5YOWdneE5ua3RvTnhRV2JEbXlTVElvNmtaVHBBNWNHT296M0R4MmYz?=
+ =?utf-8?B?bm1hWWRMUjlLVG1US25SMG5nZFh4TlZIcGFsZ2lhRzBmVlVqc1RwYXg2RVcw?=
+ =?utf-8?B?Z1dpN2ZScHZ2N01KR1QxK2NSRkxyd1VZOVh1dGw4b2tIMlFWNHRTeXZmdTdn?=
+ =?utf-8?B?V1dwOWFLSVVGYnphY0ZVYnp0L0htcHNGanNPN0x3WEk1VVA0UnMrWjVsY2M5?=
+ =?utf-8?B?djQ0c3FqMUp1TXl4R0lGVEJIbU9yUkIyVUdNVGJMTTZaTmY3dnhqRnpxOXpt?=
+ =?utf-8?B?ZmJkWVF5dE93S1J3aEdKcFl1UXlSQ2dYV1NrM1hlQmtrN2xRWjdiZktDanJz?=
+ =?utf-8?B?Q2dPRWl6ZTF5bXlPenJiZXpzUmlCRlZ1amNvWk5YTHhuRnpyT2ZIbGlMSnMz?=
+ =?utf-8?B?TFVuRzM2Q2RDNVIxSUs2MkJ2cys1bmxMTU9VYU5iS0tTZ0NaVlc4SHhZOW04?=
+ =?utf-8?B?V2YvL2YyMmVmUGRyQkJmN0hqMHM4MkVvMlZ5ekZLRFM1UjZSK3FWYi9NTkhq?=
+ =?utf-8?B?ZGNybFBxQWNUcUt1ZWY5dTNZRkx3aWo0WUdNazF5d2Z1U2hMTkh5NkhFWWVX?=
+ =?utf-8?B?elUwa0NiV2tBZm1TQVJwUklDRHNWUVpVVnFZUkJNUGtPRVBHNkhLM0dqUHFl?=
+ =?utf-8?B?MUg3dklTaVpnU2p5bVcrZktadUxiWlBraE56QXhuRDhhZXNXM1hUaXBabXQr?=
+ =?utf-8?B?Z21QV0xVWmVETDRORmRvcm1FVWJUSE0yQWdOWmt1VTQrT25XVWhRRkdjajhD?=
+ =?utf-8?B?NWQ2VUpvNFlxZXB4S1Z3YVZlV1pXbDdjYmZqaXRMdjQyeVkvY2kwYTZrQ2E3?=
+ =?utf-8?B?VCtmWEVyMmk0ZW1XTzF6Y0hWeTRMckNia0VXYXZWa2hQYWg2YUhYWXJKOWVQ?=
+ =?utf-8?B?c3h1MU5UNElnY1BldWU4KytvVUp0ODJwdWhWYjUrSTA1RnlzVStDNzdvcjNY?=
+ =?utf-8?B?WERwbzh6bkpWWk1LQWZvYTBrNVpMdTB4WWdpWjg2SUZMeHBiVVczb01USlBa?=
+ =?utf-8?B?UC8vNFpjNlYvTjNYUEkrWnlIVXhzMnlXMTBKNFFJVldTVU9GRGlwTzNHTExh?=
+ =?utf-8?B?S3RLSmU5WFNZMnNhOERyK2NCdUlJSEFrcGlsaEx5OUlNVG5ML0ZEMzF3VlBI?=
+ =?utf-8?B?c3psYXpVT29zN3FBelh5SkJLVjBYdUJaRWdDY3MrN1lhUGYxZExEbk8wSi9p?=
+ =?utf-8?B?K1Y3R1phdXRDWE0zZUU1M1RveWp1SGw1SFkzbGlLRllJSmV2ZEdWQk5wOVlo?=
+ =?utf-8?Q?3La4mTcNdrx9IwjXlWq/D3D7j?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8fc0fc5c-f003-452c-e339-08dd4d40a8bc
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23cf9115-caf9-4013-21e8-08dd4d4634fb
 X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 21:43:46.2327
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 22:23:29.0063
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EoNvEx964Ttqxl8GrwLViQoY1l8vFsmvZEaVZfVZXSNxp8nHbqJ7gVbSpEcxEBcH+XEB2ZHOx55B3rq0i1ySeA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5781
+X-MS-Exchange-CrossTenant-UserPrincipalName: MkuJ9wgpgdPq3wtttf4CmgiEj+tD5IcD0xbROBTvoad3P5Yr69zPZpm7FONPHTG+YHJ4h3FzOyxhSb1eiyfPvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5993
 
 
 
-On 2/13/2025 8:18 PM, Dan Williams wrote:
-> Terry Bowman wrote:
->> Introduce correctable and uncorrectable (UCE) CXL PCIe Port Protocol Error
->> handlers.
+On 2/14/2025 3:24 PM, Dan Williams wrote:
+> Bowman, Terry wrote:
 >>
->> The handlers will be called with a 'struct pci_dev' parameter
->> indicating the CXL Port device requiring handling. The CXL PCIe Port
->> device's underlying 'struct device' will match the port device in the
->> CXL topology.
+>> On 2/11/2025 7:23 PM, Dan Williams wrote:
+>>> Terry Bowman wrote:
+>>>> The CXL mem driver (cxl_mem) currently maps and caches a pointer to RAS
+>>>> registers for the endpoint's Root Port. The same needs to be done for
+>>>> each of the CXL Downstream Switch Ports and CXL Root Ports found between
+>>>> the endpoint and CXL Host Bridge.
+>>>>
+>>>> Introduce cxl_init_ep_ports_aer() to be called for each CXL Port in the
+>>>> sub-topology between the endpoint and the CXL Host Bridge. This function
+>>>> will determine if there are CXL Downstream Switch Ports or CXL Root Ports
+>>>> associated with this Port. The same check will be added in the future for
+>>>> upstream switch ports.
+>>>>
+>>>> Move the RAS register map logic from cxl_dport_map_ras() into
+>>>> cxl_dport_init_ras_reporting(). This eliminates the need for the helper
+>>>> function, cxl_dport_map_ras().
+>>> Not sure about the motivation here...
+>>>
+>>>> cxl_init_ep_ports_aer() calls cxl_dport_init_ras_reporting() to map
+>>>> the RAS registers for CXL Downstream Switch Ports and CXL Root Ports.
+>>> Ok, makes sense...
+>>>
+>>>> cxl_dport_init_ras_reporting() must check for previously mapped registers
+>>>> before mapping. This is required because multiple Endpoints under a CXL
+>>>> switch may share an upstream CXL Root Port, CXL Downstream Switch Port,
+>>>> or CXL Downstream Switch Port. Ensure the RAS registers are only mapped
+>>>> once.
+>>> Sounds broken. Every device upstream-port only has one downstream port.
+>>>
+>>> A CXL switch config looks like this:
+>>>
+>>>            │             
+>>> ┌──────────┼────────────┐
+>>> │SWITCH   ┌┴─┐          │
+>>> │         │UP│          │
+>>> │         └─┬┘          │
+>>> │    ┌──────┼─────┐     │
+>>> │    │      │     │     │
+>>> │   ┌┴─┐  ┌─┴┐  ┌─┴┐    │
+>>> │   │DP│  │DP│  │DP│    │
+>>> │   └┬─┘  └─┬┘  └─┬┘    │
+>>> └────┼──────┼─────┼─────┘
+>>>     ┌┴─┐  ┌─┴┐  ┌─┴┐     
+>>>     │EP│  │EP│  │EP│     
+>>>     └──┘  └──┘  └──┘     
+>>>
+>>> ...so how can an endpoint ever find that its immediate parent downstream
+>>> port has already been mapped?
 >>
->> Use the PCIe Port's device object to find the matching CXL Upstream Switch
->> Port, CXL Downstream Switch Port, or CXL Root Port in the CXL topology. The
->> matching CXL Port device should contain a cached reference to the RAS
->> register block. The cached RAS block will be used in handling the error.
+>>             ┌─┴─┐
+>>             │RP1│
+>>             └─┬─┘
+>>   ┌───────────┼───────────┐
+>>   │SWITCH   ┌─┴─┐         │
+>>   │         │UP1│         │   RP1 - 0c:00.0
+>>   │         └─┬─┘         │   UP1 - 0d:00.0
+>>   │    ┌──────┼─────┐     │   DP1 - 0e:00.0
+>>   │    │      │     │     │
+>>   │  ┌─┴─┐  ┌─┴─┐ ┌─┴─┐   │
+>>   │  │DP1│  │DP2│ │DP3│   │
+>>   │  └─┬─┘  └─┬─┘ └─┬─┘   │
+>>   └────┼──────┼─────┼─────┘
+>>      ┌─┴─┐  ┌─┴─┐ ┌─┴─┐
+>>      │EP1│  │EP2│ │EP3│
+>>      └───┘  └───┘ └───┘
 >>
->> Invoke the existing __cxl_handle_ras() or __cxl_handle_cor_ras() using
->> a reference to the RAS registers as a parameter. These functions will use
->> the RAS register reference to indicate an error and clear the device's RAS
->> status.
 >>
->> Update __cxl_handle_ras() to return PCI_ERS_RESULT_PANIC in the case
->> an error is present in the RAS status. Otherwise, return
->> PCI_ERS_RESULT_NONE.
-> So I have been having this nagging feeling while reviewing this set that
-> perhaps the CXL error handlers should not be 'struct pci_error_handlers'
-> relative to a 'struct pci_driver', but instead 'struct
-> cxl_error_handlers' that are added to 'struct cxl_driver', in particular
-> 'cxl_port_driver'.
->
-> See below for what I *think* are insurmountable problems when a PCI
-> error handler is tasked with looking up @ras_base in a race free manner.
-> Note I say "think" because I could be misreading or missing some other
-> circumstance that makes this ok, so do please challenge if you think I
-> missed something because what follows below is another major direction
-> change.
->   
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->> ---
->>  drivers/cxl/core/pci.c | 81 +++++++++++++++++++++++++++++++++++++++---
->>  1 file changed, 77 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->> index af809e7cbe3b..3f13d9dfb610 100644
->> --- a/drivers/cxl/core/pci.c
->> +++ b/drivers/cxl/core/pci.c
->> @@ -699,7 +699,7 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
->>   * Log the state of the RAS status registers and prepare them to log the
->>   * next error status. Return 1 if reset needed.
->>   */
->> -static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
->> +static pci_ers_result_t __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
->>  {
->>  	u32 hl[CXL_HEADERLOG_SIZE_U32];
->>  	void __iomem *addr;
->> @@ -708,13 +708,13 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
->>  
->>  	if (!ras_base) {
->>  		dev_warn_once(dev, "CXL RAS register block is not mapped");
->> -		return false;
->> +		return PCI_ERS_RESULT_NONE;
->>  	}
->>  
->>  	addr = ras_base + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
->>  	status = readl(addr);
->>  	if (!(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK))
->> -		return false;
->> +		return PCI_ERS_RESULT_NONE;
->>  
->>  	/* If multiple errors, log header points to first error from ctrl reg */
->>  	if (hweight32(status) > 1) {
->> @@ -733,7 +733,7 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
->>  
->>  	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
->>  
->> -	return true;
->> +	return PCI_ERS_RESULT_PANIC;
->>  }
->>  
->>  static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
->> @@ -782,6 +782,79 @@ static void cxl_disable_rch_root_ints(struct cxl_dport *dport)
->>  	writel(aer_cmd, aer_base + PCI_ERR_ROOT_COMMAND);
->>  }
->>  
->> +static int match_uport(struct device *dev, const void *data)
->> +{
->> +	const struct device *uport_dev = data;
->> +	struct cxl_port *port;
->> +
->> +	if (!is_cxl_port(dev))
->> +		return 0;
->> +
->> +	port = to_cxl_port(dev);
->> +
->> +	return port->uport_dev == uport_dev;
->> +}
->> +
->> +static void __iomem *cxl_pci_port_ras(struct pci_dev *pdev, struct device **dev)
->> +{
->> +	void __iomem *ras_base;
->> +
->> +	if (!pdev || !*dev) {
->> +		pr_err("Failed, parameter is NULL");
->> +		return NULL;
->> +	}
->> +
->> +	if ((pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT) ||
->> +	    (pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM)) {
->> +		struct cxl_port *port __free(put_cxl_port);
->> +		struct cxl_dport *dport = NULL;
->> +
->> +		port = find_cxl_port(&pdev->dev, &dport);
-> side comment: please always declare and assign scope-based-cleanup
-> variables on the same line, i.e.:
->
->         struct cxl_port *port __free(put_cxl_port) =
->                 find_cxl_port(&pdev->dev, &dport);
->
-> Yes, that means violating the coding-style rule of preferring variable
-> declarations at the top of blocks. This is for 2 reasons:
->
-> * The variable is uninitialized. If future refactoring injects an early
->   exit then unitialized garbage gets passed to put_cxl_port().
->
-> * The cosmetic order of the declaration is not the unwind order. If
->   future refactoring introduces other scope-based-cleanup variables it
->   requires additional cleanup to move the declaration to satisfy unwind
->   dependencies.
-Got it. Thanks for pointing out.
+>> It cant but the root RP and USP have duplicate calls for each EP in the example diagram.
+>> The function's purpose is to map RAS registers and cache the address. This reuses the
+>> same function for RP and DSP. The DSP will never be previously mapped as you indicated.
+> Are you talking about in the current code, which should have already
+> reported problems due to multiple overlapping mappings, or with the
+> proposed changes? Can you clarify the sequenece of calls that triggers
+> the multiple mappings of RP1?
+Yes, in this thread I was discussing the current implementation. The
+multiple calls to map RPs and USPs occur with the below calls. It iterates from
+endpoint to RP. From patches 7 and 8 (v7):
 
->> +		if (!port) {
->> +			pci_err(pdev, "Failed to find root/dport in CXL topology\n");
->> +			return NULL;
->> +		}
->> +
->> +		ras_base = dport ? dport->regs.ras : NULL;
->> +		*dev = &port->dev;
-> Ok, so here is where the trouble I was alluding to earlier begins. At
-> this point we leave this scope which means @port will have its reference
-> dropped and may be freed by the time the caller tries to use it.
+devm_cxl_add_endpoint() cxl_init_ep_ports_aer(ep) - Calls for each port between EP and RP.cxl_dport_init_ras_reporting() - Maps DP/RP RAS
+
+> Also, if EP1 and EP2 race to establish the RP1 mapping, then wouldn't
+> EP1 and EP2 also race to tear it down? What prevents EP2 from unmapping
+> RP1 if EP1 still needs it mapped?
 >
-> Additionally, @ras_base is only valid while @port->dev.driver is set. In
-> this set, cxl_do_recovery() is only holding the device lock of @pdev
-> which means nothing synchronizes against @ras_base pointing to garbage
-> because a cxl_port was unbound / unplugged / disabled while error
-> recovery was running.
+> I would prefer that rather than EP1 being responsible for mapping RP1
+> RAS, and a lock to prevent EP2 and EP3 from also repeating that, it
+> should be UP1 in cxl_switch_port_probe() taking responsibility for
+> mapping RP1 RAS.
 >
-> Both of those problems go away if upon entry to ->error_detected() it
-> can already be assumed that the context holds both a 'struct cxl_port'
-> object reference, and the device_lock() for that object.
+> One of the known problems with cxl_switch_port_probe() is that it
+> enumerates all dports regardless of attachment. That would be where I
+> would expect problems of dports already going through initialization
+> prematurely in advance of an endpoint showing up. However, that's a
+> different fix.
+Yes, there is a problem with the unmapping. Your recommendation is a good
+idea.
 
-I think the question is will there be much gained by taking the lock
-earlier? The difference between the current implementation and the
-proposed would be when the reference (or lock) is taken: cxl_report_error()
-or cxl_port_error_detected()/cxl_port_cor_error_detected(). It's only a
-few function calls difference but the biggest difference is in the CXL
-topology search without reference or lock protection (you point at here).
-
-> As for how to fix it, one idea is to have the AER core post CXL events
-> to their own fifo for the CXL core to handle. Something like have
-> aer_isr_one_error(), upon detection of an internal error on a CXL port
-> device, post the 'struct aer_err_source' to a new kfifo and wake up a
-> CXL core thread to run cxl_do_recovery() against the CXL port device
-> topology instead of the PCI device topology.
->
-> Essentially, the main point of cxl_do_recovery() is the acknowledgement
-> that the PCI core does not have the context to judge the severity of
-> CXL events, or fully annotate events with all the potential kernel
-> objects impacted by an event. It is also the case that we need a common
-> landing spot for PCI AER notified CXL error events and ACPI GHES
-> notified CXL CPER records. So both PCI AER, and CPER notified errors
-> need to end up in the same cxl_do_recovery() path that walks the CXL
-> port topology.
-Understood, it would fold in the GHES CPER too.
-> The CXL Type-2 series is showing uptake on accelerators registering
-> 'struct cxl_memdev' objects to report their CXL.mem capabilities. I
-> imagine that effort would eventually end up with a scheme that
-> accelerators can register a cxl_error_handler instance with that memdev
-> to get involved in potentially recovering CXL.mem errors. For example,
-> it may be the case that CXL error isolation finally has a viable use
-> case when the accelerator knows it is the only device impacted by an
-> isolation event and can safely reset that entire host-bridge to recover.
-> That is difficult to achieve in the PCI error handler context.
-Which directory do you see the CXL error handling and support landing
-in: pci/pcie/ or cxl/core/ or elsewhere ?
-
-Should we consider submitting this patchset first and then adding the CXL
-kfifo changes you mention? It sounds like we need this for FW-first and
-could be reused to solve the OS-first issue (time without a lock).
-
-Or, if you like I can start to add the CXL kfifo changes now.
-
-Terry
+Shouldn't cxl_switch_port_probe() map UP1 RAS as well?
+> [..]
+>>>> +
+>>>> +	/* dport may have more than 1 downstream EP. Check if already mapped. */
+>>>> +	mutex_lock(&ras_init_mutex);
+>>> I suspect this lock and check got added to workaround "Failed to request
+>>> region" messages coming out of devm_cxl_iomap_block() in testing? Per
+>>> above, that's not "more than 1 downstream EPi", that's "failure to clean
+>>> up the last mapping for the next cxl_mem_probe() event of the same
+>>> endpoint".
+>> Synchronization was added to handle the concurrent accesses. I never observed
+>> issues due to the race condition for RP and USP but I confirmed through further
+>> testing it is a real potential issue for the RP and USP.
+> It is still not clear to me how this singleton lock helps when multiple
+> EPs are sharing a resource that both races init and shutdown.
+It doesn't. I overlooked the chaotic unmap situation unfortunately.
+>> You recommended, in the next patch, to map USP RAS registers from cxl_endpoint_port_probe().
+>> Would you like the RP and DSP mapping to be called from cxl_endpoint_port_probe() as well? Terry
+> I think it is broken for an EP to be reaching through a switch to
+> initialize a shared resource at the RP level. Each level of the
+> hierarchy should take care of its immediate parent. We need this
+> bottom-up incremental arrangement due to the way that CXL hides
+> register blocks until CXL link up.
+Ok, understood. I have already moved over the port iteration that was in cxl_init_ep_ports_aer() to cxl_endpoint_port_probe(). I now need to change the logic that iterates EP to RP to be more localized (just to the endpoint's immediate DSP/RP). And from your comments above I understand I need to update the cxl_switch_port_probe() to map upstream RP (DSP for multi-level SW).Terry
 
 
