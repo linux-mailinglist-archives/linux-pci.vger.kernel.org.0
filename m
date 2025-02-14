@@ -1,115 +1,177 @@
-Return-Path: <linux-pci+bounces-21481-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21482-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C215DA3631C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 17:31:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAD20A36399
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 17:51:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1D2F16ECA1
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 16:31:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F244171B2D
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 16:48:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EE90267AE5;
-	Fri, 14 Feb 2025 16:29:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D98EE26772E;
+	Fri, 14 Feb 2025 16:47:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PjCwvRAu"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IW63B+KZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED002753FD;
-	Fri, 14 Feb 2025 16:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4010626738A;
+	Fri, 14 Feb 2025 16:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739550595; cv=none; b=Z2TXDZU63zMlE0QmXkQl0WrFPftwKooRr3fcc/xCxATgi7lFfC1BL2Q09SR5IODscWfTOL1YpPUOEzdXow8+IBUeYkB+v9Z7PxmFAYdLR9WemZTnkMrXALZIXaA+ojNZqtHq8+E/yZ5s5hEiwwcC2AX8JTkBAeGmZPVqL0k2J7U=
+	t=1739551654; cv=none; b=qKMuln+igWwa3fXt5TQRGOwjoCA2SVZ+JVUTLmxUKy99Ijx2Y1RIhL91jsMt6VqACXEFXkaHiHXf8obi1nJw2z60L4CbFmU0ZlG5nb5MF5GDQofZttWLt0RAE8kbKb4/18EJYXk135Oqq1aacIY4Da3mjJI4vB2u1MQijcG/Tlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739550595; c=relaxed/simple;
-	bh=4wnU/qWMOp5jEapFPdVzMSzoA3DPqJt1dDDol0w3OY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tDrtd2a30TrVdGMnLrfBon8qckgSqQEC7iVjkMdzcv7hXGQT7xjgbnuFbTWfKhkL/BJCJx3JS6QuCUJbSgKEIu5fA79OTP7cQPTfr2lTYeElgV15tuAWT06TtGXmz3y6JJVZB/PNfaSWmDcKhcIshh+VXZATSEcqH8jnRzErMeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PjCwvRAu; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739550594; x=1771086594;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4wnU/qWMOp5jEapFPdVzMSzoA3DPqJt1dDDol0w3OY8=;
-  b=PjCwvRAuvcvKT8OJr1DKhrE19z5FM6ZTb55AucceBHEOdFsx1oqMXWhn
-   9ZpelKVnAQqbn/R2hThrD35Q7fBqdsu8Ns6BdW3KIoq9YPLP7PxM9gJpK
-   PD3+/m5GYlcofZwRbDB4Jv9CnDTbTnNYqQHdTviOcJUKvAj/+EAAq3S+I
-   gLrhA9Z+atqzm1QqfqxC7n//jgOtifX+70of/bOhsCTQsZz98LSMAST1F
-   I7Kmv24IhgVspetQaAF2alED5B/yfzZZ5WraPTthjpLXd4zHgNuLxCOKQ
-   cj5tEWnmCkHDm7patM2Ad8/3aYkS334k8LWLNzu/UkUXSvXkvuaq7IA65
-   g==;
-X-CSE-ConnectionGUID: SO2qqjG5Q4GA2Pj8s3sRsg==
-X-CSE-MsgGUID: P8p/XNJ3TD65pLxejUISiw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11345"; a="40447380"
-X-IronPort-AV: E=Sophos;i="6.13,286,1732608000"; 
-   d="scan'208";a="40447380"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 08:29:53 -0800
-X-CSE-ConnectionGUID: T584mMUeTmqd6JV8/2Embw==
-X-CSE-MsgGUID: VrKmQHZmRUyj2M0vTnSRsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118697344"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP; 14 Feb 2025 08:29:50 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 63020123; Fri, 14 Feb 2025 18:29:48 +0200 (EET)
-Date: Fri, 14 Feb 2025 18:29:48 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Kenneth Crudup <kenny@panix.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jian-Hong Pan <jhp@endlessos.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?utf-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Michael Jamet <michael.jamet@intel.com>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
-Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
- Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
-Message-ID: <20250214162948.GJ3713119@black.fi.intel.com>
-References: <20250210210502.GA15655@bhelgaas>
- <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
- <20250211055722.GW3713119@black.fi.intel.com>
- <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
- <20250213135911.GG3713119@black.fi.intel.com>
- <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
+	s=arc-20240116; t=1739551654; c=relaxed/simple;
+	bh=/rhhtehKnzVERc8rGOCCGCco2aFpt2BSW0xXHFau/Ho=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gc6jvGZxHzzNzRNbtqlU8t24t/liW8Rft2Ivs8m8MbF8nCQuqXjw60DtL1YJOXy5Vd0YwSgJXnJ/yZxZcDLgqewPRRJEnwMy3AxOwkNY/YNUSWEQeecYe6+xIc2acPFTi06W79GK/IWPIfdqVF+cMVS6O6o77DrFLuAXGssqiB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IW63B+KZ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5AB9D203F3FA;
+	Fri, 14 Feb 2025 08:47:32 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5AB9D203F3FA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739551652;
+	bh=28IvIq5nHgvTTsS1xkW6rKGY+23JWzsECQOgFfIsF5A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IW63B+KZ14zR7bqnRbpO33qkUJyw4qDrPsbj9UBbRpj0a+6lr+6RXpWIDuKREAgzH
+	 2Qg6HF8nC6RiAuSTMsFtmtMVu1yKOWfbHulTasDK13lhcgOfJ2rZeCJKN1EasDLBka
+	 ovOZ+fKPesWAq+xITmqp5mNqjeWSHCgiRBxJSqaY=
+Message-ID: <6e4685fe-68e9-43bd-96c5-b871edb1b971@linux.microsoft.com>
+Date: Fri, 14 Feb 2025 08:47:32 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v4 1/6] arm64: hyperv: Use SMCCC to detect
+ hypervisor presence
+To: Arnd Bergmann <arnd@arndb.de>, bhelgaas@google.com,
+ Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
+ Conor Dooley <conor+dt@kernel.org>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Dexuan Cui <decui@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ krzk+dt@kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Ingo Molnar <mingo@redhat.com>, Rob Herring <robh@kernel.org>,
+ ssengar@linux.microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
+ Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>,
+ devicetree@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
+Cc: benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
+References: <20250212014321.1108840-1-romank@linux.microsoft.com>
+ <20250212014321.1108840-2-romank@linux.microsoft.com>
+ <1b14e3de-4d3e-420c-819c-31ffb2d448bd@app.fastmail.com>
+ <593c22ca-6544-423d-84ee-7a06c6b8b5b9@linux.microsoft.com>
+ <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
 
-On Thu, Feb 13, 2025 at 11:19:35AM -0800, Kenneth Crudup wrote:
-> 
-> On 2/13/25 05:59, Mika Westerberg wrote:
-> 
-> > Hi,
-> 
-> As Murphy's would have it, now my crashes are display-driver related (this
-> is Xe, but I've also seen it with i915).
-> 
-> Attached here just for the heck of it, but I'll be better testing the NVMe
-> enclosure-related failures this weekend. Stay tuned!
 
-Okay, I checked quickly and no TB related crash there but I was actually
-able to reproduce hang when I unplug the device chain during suspend. I did
-not yet have time to look into it deeper. I'm sure this has been working
-fine in the past as we tested all kinds of topologies including similar to
-this.
+On 2/14/2025 12:05 AM, Arnd Bergmann wrote:
+> On Fri, Feb 14, 2025, at 00:23, Roman Kisel wrote:
+>> On 2/11/2025 10:54 PM, Arnd Bergmann wrote:
+> 
+>> index a74600d9f2d7..86f75f44895f 100644
+>> --- a/drivers/firmware/smccc/smccc.c
+>> +++ b/drivers/firmware/smccc/smccc.c
+>> @@ -67,6 +67,30 @@ s32 arm_smccc_get_soc_id_revision(void)
+>>    }
+>>    EXPORT_SYMBOL_GPL(arm_smccc_get_soc_id_revision);
+>>
+>> +bool arm_smccc_hyp_present(const uuid_t *hyp_uuid)
+> 
+> The interface looks good to me.
 
-I will be out next week for vacation but will continue after that if the
-problem is not alraedy solved ;-)
+Great :)
+
+> 
+>> +{
+>> +	struct arm_smccc_res res = {};
+>> +	struct {
+>> +		u32 dwords[4]
+>> +	} __packed res_uuid;
+> 
+> The structure definition here looks odd because of the
+> unexplained __packed attribute and the nonstandard byteorder.
+> 
+
+Fair points, thank you, will straighten this out!
+
+> The normal uuid_t is defined as an array of 16 bytes,
+> so if you try to represent it in 32-bit words you need to
+> decide between __le32 and __be32 representation.
+> 
+>> +	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
+>> +		return false;
+>> +	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
+>> +	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
+>> +		return false;
+>> +
+>> +	res_uuid.dwords[0] = res.a0;
+>> +	res_uuid.dwords[1] = res.a1;
+>> +	res_uuid.dwords[2] = res.a2;
+>> +	res_uuid.dwords[3] = res.a3;
+>> +
+>> +	return uuid_equal((uuid_t *)&res_uuid, hyp_uuid);
+> 
+> The SMCCC standard defines the four words to be little-endian,
+> so in order to compare them against a uuid byte array, you'd
+> need to declare the array as __le32 and swap the result
+> members with cpu_to_le32().
+> 
+> Alternatively you could pass the four u32 values into the
+> function in place of the uuid.
+> 
+> Since the callers have the same endianess confusion, your
+> implementation ends up working correctly even on big-endian,
+> but I find it harder to follow when you call uuid_equal() on
+> something that is not the actual uuid_t value.
+> 
+
+I'll make sure the implementation is clearer, thanks!
+
+>> +
+>> +#define ARM_SMCCC_HYP_PRESENT(HYP) 								\
+>> +	({															\
+>> +		const u32 uuid_as_dwords[4] = {							\
+>> +			ARM_SMCCC_VENDOR_HYP_UID_ ## HYP ## _REG_0,			\
+>> +			ARM_SMCCC_VENDOR_HYP_UID_ ## HYP ## _REG_1,			\
+> 
+> I don't think using a macro is helpful here, it just makes
+> it impossible to grep for ARM_SMCCC_VENDOR_HYP_UID_* values when
+> reading the source.
+> 
+> I would suggest moving the UUID values into a variable next
+> to the caller like
+> 
+> #define ARM_SMCCC_VENDOR_HYP_UID_KVM \
+>      UUID_INIT(0x28b46fb6, 0x2ec5, 0x11e9, 0xa9, 0xca, 0x4b, 0x56, 0x4d, 0x00, 0x3a, 0x74)
+> 
+> and then just pass that into arm_smccc_hyp_present(). (please
+> double-check the endianess of the definition here, I probably
+> got it wrong myself).
+
+Will remove the macro and will use UUID_INIT, appreciate taking the
+time to review the draft and your suggestions on improving it very much!
+
+> 
+>       Arnd
+
+-- 
+Thank you,
+Roman
+
 
