@@ -1,95 +1,87 @@
-Return-Path: <linux-pci+bounces-21532-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21533-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76CEDA36934
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Feb 2025 00:50:23 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB984A36942
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Feb 2025 01:03:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 61FA91895FB1
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Feb 2025 23:49:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12EF27A2EFB
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Feb 2025 00:02:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 924981FC7D0;
-	Fri, 14 Feb 2025 23:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EA66623;
+	Sat, 15 Feb 2025 00:03:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q+oQalFX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLWwr8Ak"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680B71FC0FC;
-	Fri, 14 Feb 2025 23:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148374314B;
+	Sat, 15 Feb 2025 00:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739576946; cv=none; b=Gu7d+ScTnIvZvvE2+02pMz8nvOVgXgIVBhGzfoyKeqTnSk9cLoAw4T9OHRho1SIrqqhWvIhgNhiqfFJpVt3gTGzG5iV4ZeYwV7LyIvrJMazc+A6E6HD54022zTLcZXZ0qUTuXim/OhgThLpDbeHe+440lr+BudUCyeP4V/5AX04=
+	t=1739577787; cv=none; b=ZdwOQxKXR3f2Wg9u5wMNitAIgMdmfsuddlVy6/uY38zqB4f9Yz1a4V5ouggKLRVgGV0i2BglPnapwOlw8cIB5AIIC6FzGXpE4Hp1o2amYwIUwaiR6HgUlKWoa+BGh6jHQAuKMcIA/KoRwDVUP3PW7l4kuRRMoUWqmTbPYgcXVwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739576946; c=relaxed/simple;
-	bh=NHKzuo0Hc3Gclm/kbNpZ50VcBVY7WS+gvm9+b1Kjkcw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GTVXq8okUs6Cz0Q+CNlLX2O/7sRgtKhUbFOPhvN9FPsaL5KHlYI1t3A8Tak8NtIi9QM2uJkNDZLAlvSDdDEI/0CO2gO3Ky/SfPpV+W+GEBr2UDrbLWnH5pejEF0cDO+Hr2MDvNK5Q3+Vz67zMNZRBqX2U7W9DZQ1ZeE/ZbVdOOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q+oQalFX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09D16C4CED1;
-	Fri, 14 Feb 2025 23:49:05 +0000 (UTC)
+	s=arc-20240116; t=1739577787; c=relaxed/simple;
+	bh=iW+MrykrbylejRiXBKBgkl6Powy5HIH+S5gFCuZLyVs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=L6zkvOScdglOGxPAnqTImojCmcS/pSXgk01cd9P0GnN4KGWJ/+tdnx2Sc7p//jl3KRueHl4d3MTF2AZvPE3O1GwK9Qj4w1NI4d3JMZwGsTWQPaoE9Ev2Z/Y3M5kYMH2xuu4tDJLxutga/sbNR4yoKggy6WxAotqYEEKMrPC89Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLWwr8Ak; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D330C4CED1;
+	Sat, 15 Feb 2025 00:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739576946;
-	bh=NHKzuo0Hc3Gclm/kbNpZ50VcBVY7WS+gvm9+b1Kjkcw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=q+oQalFXEZqMRDKqPTt6CMQsprVR/QKthhmZKa+HhBL79EorifPWU8XssYcZ6hTfS
-	 YjeyPMbG3w7udOhWPg0okoHTH2D8uV1YqL0Is1bs7iA25SFF1niVWENT375d6L1Syc
-	 THGPwSr8rZf2SfI2T+yyJXSx0yX3wluMeqSjbG+qnVlFxSMf7qcVip9nJkREiPXX0h
-	 oJvjuet1CYnLVVK8mZ17lseSy9Oz7FEIhQBjLu02J6trLCf8wJ6OzPhoZ9xmsI9Dlk
-	 AKLHBKS3YbET69EcWgCLBk8jHsNjN/3+tPYO55ZtkBl9cRv6obPkplAliWpmHbQieh
-	 i/E0FLHe5J1eA==
-Date: Fri, 14 Feb 2025 17:49:04 -0600
+	s=k20201202; t=1739577785;
+	bh=iW+MrykrbylejRiXBKBgkl6Powy5HIH+S5gFCuZLyVs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TLWwr8Ak+yHpQXmV8oiHcRD+47G1BLf07aoQVkikjMA72aBAwkZJITIQ+jcFTdmfA
+	 /RG8icY28pYhn1QOZfTqROOQRSGpDzBXcFmSoFwYot7M53hHcvIcA/rDz69K/zZrp5
+	 JwcPtgYm1XadasqBmQmX74FLT2MklAB3gBJm00LECDippkJmOkWYugqNsRMgkyrnDk
+	 MLNoUpK58pPMdyKFtaKa4ZRo+lsth8/Vw6xuUtwXq21y+n3aO8FGy3IpCJEAGtQ2O4
+	 dlUaXL+pp4+qyIgAd0da8K3ZubyRqG0M6elI9PzrTaaYPIQMPG3RIXmZmtTTPE1g3t
+	 VE6naDRcodJyg==
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Oleg Nesterov <oleg@redhat.com>
-Subject: [GIT PULL] PCI fixes for v6.14
-Message-ID: <20250214234904.GA174406@bhelgaas>
+To: linux-pci@vger.kernel.org
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2 0/2] PCI: Avoid capability searches in save/restore state
+Date: Fri, 14 Feb 2025 18:02:59 -0600
+Message-Id: <20250215000301.175097-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+Reduce the number of times we search config space for PCI capabilities when
+saving and restoring device state.
 
-are available in the Git repository at:
+Bjorn Helgaas (2):
+  PCI: Avoid pointless capability searches
+  PCI: Cache offset of Resizable BAR capability
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.14-fixes-3
+ drivers/pci/pci.c       | 36 +++++++++++++++++++++---------------
+ drivers/pci/pci.h       |  1 +
+ drivers/pci/pcie/aspm.c | 15 ++++++++-------
+ drivers/pci/probe.c     |  1 +
+ include/linux/pci.h     |  1 +
+ 5 files changed, 32 insertions(+), 22 deletions(-)
 
-for you to fetch changes up to 81f64e925c29fe6e99f04b131fac1935ac931e81:
+v2 changes:
+  - Drop VC change that broke saving state (thanks, Ilpo)
 
-  PCI: Avoid FLR for Mediatek MT7922 WiFi (2025-02-13 08:36:54 -0600)
+v1: https://lore.kernel.org/r/20250208050329.1092214-1-helgaas@kernel.org
 
-----------------------------------------------------------------
-- Update a BUILD_BUG_ON() usage that works on current compilers, but breaks
-  compilation on gcc 5.3.1 (Alex Williamson)
+-- 
+2.34.1
 
-- Avoid use of FLR for Mediatek MT7922 WiFi; the device previously worked
-  after a long timeout and fallback to SBR, but after a recent RRS change
-  it doesn't work at all after FLR (Bjorn Helgaas)
-
-----------------------------------------------------------------
-Alex Williamson (1):
-      PCI: Fix BUILD_BUG_ON usage for old gcc
-
-Bjorn Helgaas (1):
-      PCI: Avoid FLR for Mediatek MT7922 WiFi
-
- drivers/pci/probe.c  | 5 +++--
- drivers/pci/quirks.c | 3 ++-
- 2 files changed, 5 insertions(+), 3 deletions(-)
 
