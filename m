@@ -1,98 +1,87 @@
-Return-Path: <linux-pci+bounces-21556-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21557-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DA0AA371A6
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Feb 2025 02:46:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDB19A37290
+	for <lists+linux-pci@lfdr.de>; Sun, 16 Feb 2025 09:33:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1BFC16E7A1
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Feb 2025 01:46:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F8161889079
+	for <lists+linux-pci@lfdr.de>; Sun, 16 Feb 2025 08:33:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7295ACA6B;
-	Sun, 16 Feb 2025 01:45:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B122152196;
+	Sun, 16 Feb 2025 08:33:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lLGV0P/i"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="KlsuNfZ5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2083.outbound.protection.outlook.com [40.107.101.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFBFBA50
-	for <linux-pci@vger.kernel.org>; Sun, 16 Feb 2025 01:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739670348; cv=none; b=Xdxta/6nF2gNYlFUNd6JLR0f54UQ61yZfbhjgzjEnnIdEWIMNpxVt2iAgnueXzab579ZgrRFHL3JnzdBQs0qPCB1Fqzi3OyXPsj5ui0PkRvFjoICOCS8ODe0kx57aMKKvz5m8d5VV005kxKO6YLBYUULpakQ/UkSdA8mnBy0QU4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739670348; c=relaxed/simple;
-	bh=BGcJQ3Ll6glAfMQXdp/lUcU5Vrse7Olu5opVqRzh+DE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=du8MPPrnLdT7gZMQWwLaKkRBdyXA79Fa6mLpG3Oca7UxCQU3h/Q2P5PRhf1xyWT0VnHDTSzAIc26QudUMXK4QI/8X18TjdEXQBTE5rD1qud1mVEA6kMW7c4dmOuLzC42i4oGv6tCe0mVKLV8g93dyzZVGFaMuxxB0qvDAwixxUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lLGV0P/i; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51G1Km74008341
-	for <linux-pci@vger.kernel.org>; Sun, 16 Feb 2025 01:45:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=jPVONscn72E
-	ctMrzq7jWfE2rC2sdmlOx+fZ773e4rMw=; b=lLGV0P/iKQys++M8x2cRh1fr0F+
-	DT8hJ4pTVDTP7qL0hD+mHtNxFYiCla0zGqXc9Vn9e6eleDlTTw39JIX6NfhR+MBL
-	m8K/eqypNXRtXJSibsSPu+AzYiCl0GyHMR+/Wb72LfKH1fn/ItDbAbH/n7wdhOpi
-	K+NnjK84Rt13viM2rGlgedAM5c1HQLWi3suDnRkIikD8sRLkImarbVSd0h+cmIw1
-	PYA1WFZgbjTH2J7Yugxx34v1xznI1s9mDFVGhNneTYAHqxmt3KmCAABzLAth7jom
-	m3bBIWsKt4zMi/2bbzBeEzdjTMOzVSn+8mcKBnO54EfkX2IVXODcChXgiLw==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44u46hr52n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Sun, 16 Feb 2025 01:45:45 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-221063a808dso13011505ad.1
-        for <linux-pci@vger.kernel.org>; Sat, 15 Feb 2025 17:45:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739670344; x=1740275144;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jPVONscn72EctMrzq7jWfE2rC2sdmlOx+fZ773e4rMw=;
-        b=q8x8oqWfFzA+rphkQpRNVWKdI8h/9/A/yRxLKSHFH6KbQqvn22kDfX33rHLp9VExyv
-         Ra0d49uKqZtdO/jTELFwBGRR/QOWLLK3jzWlICzM69Dm8esLf+z1K+zspUA3yFuPtOj/
-         VhhI39LO/47WZJ7rU+yVdbvzKK1+Cds6ykJKlafAQ3cvQjPbEPGHyOhIEIlriTNzp67O
-         aV3mbBTvHLggOJD6jVhN+0BbxF6Sj2uyLnIwqFibOwGIv6ztvlhZNQaP9Pxy+tmqewgA
-         KW3aqUQ9UFsEDou4JhaZNTUG0sxzR3zostLhvA3f6tVVqKGo3SVf9Q0zArNe1eX5rHDN
-         Skog==
-X-Forwarded-Encrypted: i=1; AJvYcCUDwgSFM/IE6wq2ERb5VrwOQcFACVuqZNL3wqh1x4d1UEB6cqBsGqHTOtdgtt5rns/KHx/X6Z0s0tc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkKTRNDGIo7PrqIJAzLC5EoHv9i/VXE7Z1mg/tquVPauyfJNbz
-	LEfKBR7mLXks+2CnATrPkVvtaNh3Jz8MdJ2ar6hRYmG7CYVMzilp527xzxg30zIwtww9xxIn+Ix
-	nFd/2tQ+69xtyFQ/L2rmb1h/FRgGQUswpNXPUp24T3rG4zQSpsUd57v38Jz0=
-X-Gm-Gg: ASbGnctTz9nwvk5WFBv6ptWb1sGy+FN3pq6OvV0kt3UdrRcocH6030PhW1nKm05G86X
-	NBMBmbx5K2NnBhHqtVWi5SbMeSXOJng4Udkbmk44bFoCpOTd/A5Wd8LLVmD1qbRVz9CgG+xA1Em
-	7x95AUPNCA0KugZnmQm9mDyvVU/p3tw6jFHhwHtge3AJuA/D6jFkaaYzroG8SBT53ohzdM/sa6z
-	ul0rIqlM9/bnHDLvyTVDPu0cxlNyvsA6O6CtGNFoz2hzeuNrqj4q3Taf1HXWdq8p/HIWvMOfM+v
-	1imikhUQ9D82iTuTDraU7RCnHT2pwWn4KoCJVuX0
-X-Received: by 2002:a17:902:e5d0:b0:215:89a0:416f with SMTP id d9443c01a7336-22104058b35mr58608925ad.30.1739670343814;
-        Sat, 15 Feb 2025 17:45:43 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEOZ+s1hML65+t/oMtnG25500NghTCO06Dip85+ffWni6ZFpcXj+VIoxImhNSiQ1ejvbPABEw==
-X-Received: by 2002:a17:902:e5d0:b0:215:89a0:416f with SMTP id d9443c01a7336-22104058b35mr58608675ad.30.1739670343430;
-        Sat, 15 Feb 2025 17:45:43 -0800 (PST)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d536455esm49896955ad.74.2025.02.15.17.45.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2025 17:45:42 -0800 (PST)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-To: andersson@kernel.org, robh@kernel.org, dmitry.baryshkov@linaro.org,
-        manivannan.sadhasivam@linaro.org, krzk@kernel.org, helgaas@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        lpieralisi@kernel.org, kw@linux.com, conor+dt@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree-spec@vger.kernel.org, quic_vbadigan@quicinc.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: [PATCH V3 2/2] schemas: pci: bridge: Document PCIe N_FTS
-Date: Sun, 16 Feb 2025 07:15:10 +0530
-Message-Id: <20250216014510.3990613-3-krishna.chundru@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250216014510.3990613-1-krishna.chundru@oss.qualcomm.com>
-References: <20250216014510.3990613-1-krishna.chundru@oss.qualcomm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB04366;
+	Sun, 16 Feb 2025 08:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739694820; cv=fail; b=AHqEz84bEEb5ejrAFOP5xGaxdgXeZF0jn7A/CnldoJwY1UPYtVSlgc1RiuVfk+b2o/0ycKatpcM0PwfeMkjG7+xNwG9QogjYNE2fljbTxCAQs54PGZ30aPWNRWjcvi65IGKv6nrKqpI/81ZdCZB1ik/MHanOiZ/olbPUhI8Zu/w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739694820; c=relaxed/simple;
+	bh=WQtj71kvxocI2eEwkHuTnYDDGrQMzEx3jBPkCyvIwJA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pphZXL16f8/z1WmjEskkH5VnyXs4umt+S8aOLMmqsiA8fvUKWHCR/XLrXq0iZ1uwrSdNeL5z/B6fMyWmuErJzsFpU84ppdcvGzce9qfOF9DE+3Noh64PR8zRdLQH4qv0ci0gRA6nEhP1QAtpASkokl1kqgUxqaMtpOQ8Evyan1E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=KlsuNfZ5; arc=fail smtp.client-ip=40.107.101.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cx4SfzXMtKiJlFyklICVEY5p8PfknZQ+I/aO4fLN8WvpUEzQAFpJlhrWyWLtcc1Z+B0UXLCttsP0bvgvIcAZo1p+YyusQWbBzhoIagJly4CpYdqrtX2XiOleNx5LZD0XtXeHZfcBIrW/C5/+/cJXG6wA7WM72HvhDPxG+5Nriu3m49FrQZQu67Fhi30bh7RLNgz87W/Y2o3W/16U25pUC0VihsVPgZV2x/ccaXeBnHVY4Siu4SnIE62ryVqAm+Sa6fpSgoXntEjqb9K98q6abXk6y44t/6yOCBYtl8eC2WT69/u7hkUNBp0oAGTs6dA76gsUXALSbLj/VXWV785eCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9rb67f/FMJ/hTLyvC32zc19UHMttFDE+mF1hvav9dYo=;
+ b=P87CqzpVmr8ZnSqUh5YMff77cYH+NqdrLkqyMDlsMvDjlRzduMFFyMkwWJC4wQ6uN9i/HpSyFETmhcPEdWPuv8MNvlCOahZdTwGB+h/PlisR0r228dEBlIMRbp0sAIApviHXf+tBU9T8dKMGeVPtwQPCVPzR36hM1SQYZ3L7Hk+eeCoUgQr0E8p/BJe8HAtZGt6HWORs6Izqo7sdRmwGTWulbtEVvvJujjx2fZ2iw1gHIQOhJ8yukqpXjb4Hqh1vj7WPBuSmAtENc+3vqFE7izjOO5e4iS5ennjEajnfs2+jPntL42rBDh/2zd49qXwYdl6S6xPqD0aRdPTVuaVp4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9rb67f/FMJ/hTLyvC32zc19UHMttFDE+mF1hvav9dYo=;
+ b=KlsuNfZ5azZ+VmbID+47lJMFDbecPg2xSh/ApJJQ9Z59SxcWyNfcb2tTolFxGloV73QYubh1//hNmiZbZ2dPT9ZJ1JQe8EJ98vFxGhOvhdkZ4DpgoS3vGDzMR1qsQg1tyrIRheLzDSPMOucJfGKTSpzGVI+He47FBB+0HmanybYVadX0ytwT2hkoM7DBJ7WeyHkiXQ16Aq0dyHT9wZ0Qf3zozmajaOBRhDhAuZofP/pPp9/FsaZ6nhbM1xqnz5QZfwO6ficJ6lHy85H3C4rFSJuJlYfob4G1qS3rwTI7oWmBXGMFOytsywJufyZNVYioaWcfDnJCFpx6V8INtyg4cw==
+Received: from BY3PR05CA0012.namprd05.prod.outlook.com (2603:10b6:a03:254::17)
+ by SJ0PR12MB8615.namprd12.prod.outlook.com (2603:10b6:a03:484::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.17; Sun, 16 Feb
+ 2025 08:33:33 +0000
+Received: from MWH0EPF000A672E.namprd04.prod.outlook.com
+ (2603:10b6:a03:254:cafe::16) by BY3PR05CA0012.outlook.office365.com
+ (2603:10b6:a03:254::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.10 via Frontend Transport; Sun,
+ 16 Feb 2025 08:33:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ MWH0EPF000A672E.mail.protection.outlook.com (10.167.249.20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8466.11 via Frontend Transport; Sun, 16 Feb 2025 08:33:33 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 16 Feb
+ 2025 00:33:22 -0800
+Received: from nps-server-23.mtl.labs.mlnx (10.126.230.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Sun, 16 Feb 2025 00:33:20 -0800
+From: Shay Drory <shayd@nvidia.com>
+To: <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, Shay Drory <shayd@nvidia.com>, Keith Busch
+	<kbusch@kernel.org>, Leon Romanovsky <leonro@nvidia.com>
+Subject: [PATCH] PCI: Fix NULL dereference in SR-IOV VF creation error path
+Date: Sun, 16 Feb 2025 10:32:54 +0200
+Message-ID: <20250216083254.38501-1-shayd@nvidia.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -100,54 +89,136 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: qq0pBwoo9EcVjv12rJbJDBLYyudRciFc
-X-Proofpoint-GUID: qq0pBwoo9EcVjv12rJbJDBLYyudRciFc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-15_09,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 adultscore=0 suspectscore=0 bulkscore=0 impostorscore=0
- clxscore=1015 malwarescore=0 mlxlogscore=950 lowpriorityscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502160014
+Content-Type: text/plain
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000A672E:EE_|SJ0PR12MB8615:EE_
+X-MS-Office365-Filtering-Correlation-Id: a06b8e82-dbd7-4945-d8f2-08dd4e64999f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/q9oar1rT2p7vFJsheuTNJRzVe+b0pEAVHtSn5cN0t6EX0jSIfzsryAnT6s/?=
+ =?us-ascii?Q?CnCProxCewZBGnImghbVmwlaTheUQGXC8efovZB7oefKFhyJg0hUSE4oB46U?=
+ =?us-ascii?Q?GFwxfNVmf+cCcF1IsnehacQWttkhG0YBHJOz20A9EcqrsTO5B90UCfFtd+7R?=
+ =?us-ascii?Q?qgMtPpjpVzHtRVzYL/z9uQOz2bCC9jqCWOuexYvyeuD3X06Der9oHeIXKZLC?=
+ =?us-ascii?Q?TrtG7InfM+Jiw5SMV1p60WmloqTNVy4wW4YadgzG2w6RVs6dGflQTpQUFq/i?=
+ =?us-ascii?Q?7wY5RA2dPjtDsf5wdD82Ga9nDXGi6LSFMaIyKNnNJf+f+vcnRSJO09l+FNex?=
+ =?us-ascii?Q?ZveJ0dKeuoV9F0pM4oZroYJJ6OyIUgQjUKxp6RRtoMVMepCssTlrt6wWq8pV?=
+ =?us-ascii?Q?GVxVS5TllkfGwBCtmX1VwYUzuKAas0BWJ7+buCWsqx54tqA86WwCCW586Jg6?=
+ =?us-ascii?Q?nch+zi88sgtedS1GymfGyCqocqqLvJtqNiCTyuM3lYa1AR7Jk8dkXWgHK8gp?=
+ =?us-ascii?Q?ahib50hDCJ80lAbUfXqfIDOIOdrRW8ZZ4xEKr4zSw/spKF9eJeroeuZRHxww?=
+ =?us-ascii?Q?rztgLqFQ5Y33DXoG5YD678az1+a3TOeRKzW1KVfvCXqvP1lCPV+u7xJHIUul?=
+ =?us-ascii?Q?oFFF/fBjcCHImuUlt6R+/v4uwupO2aHcDAS+FasU/skZq+Lrb7aYozK2/UaZ?=
+ =?us-ascii?Q?HWr49JrxY5kcaCKNZPvNELgGNxYtNKtdOJqzRUoaOeIzWvWjxXWx8B8lws3X?=
+ =?us-ascii?Q?5Er8AL69+ndDMooyQj0NLx7Lk2putYEyJ+t/h8MFeDD31OwQ0JOOY/lHygKh?=
+ =?us-ascii?Q?Wlet3M4izTG8lCQft/rMVWViW7SpFLM9hNXI8qnSDRNJmIXHD4t0ABDQr0HU?=
+ =?us-ascii?Q?Gygq4Vs9seTIzpaWrlzHWli5fgkKXVPJ3CXj8ntwxhDPRR9ic25APirP/PDy?=
+ =?us-ascii?Q?hDEzKF5zVnSPsAsFkdwuXjclIluqWowOr0jZJ5I9wlHQk9B6T2g++FNpfGgN?=
+ =?us-ascii?Q?iR3C5KfvC+aaVvv9P8iql6FQR2RoxbJuDm5yw6zDkfZez19JLMDmSE8xoWYT?=
+ =?us-ascii?Q?dj8IXdPJ1tGP3Bw01PWe3EHVsH8h7RHaz55Bf8TDJhcgoSUN4569Dtu6gbql?=
+ =?us-ascii?Q?jCiNl7RCJ2WFT4yN8qZpmEiccWh6oqiskcdTkw82CaKWnMnneCfG9JqY+SR7?=
+ =?us-ascii?Q?YcR22kUYEr1ayD1Mi7qz6s2FNArKJ3filBVyyPr0JggI27FUB1bcSU+8rd2W?=
+ =?us-ascii?Q?v3fl1yE3gqGdo4vBvM8IqxG9JIKwXBqsvGpEZwrvlmR3xDSqnA9BWYztkt0e?=
+ =?us-ascii?Q?cD70ZooO47Lyfwj9yp1CP4Nvhka4ChsJcQ6o3yy+Fe4Ah+hJRAh6TD0t5Oob?=
+ =?us-ascii?Q?3AaZjNmEd92PwR2IixFHgxvNHIUJeF7ZlBJDFrb1xi3v6f8AVRVuyLsiBFvF?=
+ =?us-ascii?Q?YXeNLHy7ShV0Lx7OM+i+bfDkP63KK9jPGLk1A69nzSmcP9m0xe4Mg34XAMlN?=
+ =?us-ascii?Q?JLd0vG/Izl1jCpY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2025 08:33:33.6783
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a06b8e82-dbd7-4945-d8f2-08dd4e64999f
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000A672E.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB8615
 
-Per PCIe r6.0, sec 4.2.5.1, during Link training, a PCIe component
-captures the N_FTS value it receives.  Per 4.2.5.6, when
-transitioning the Link from L0s to L0, it must transmit N_FTS Fast
-Training Sequences to enable the receiver to obtain bit and Symbol
-lock.
+Add proper cleanup when virtfn setup fails to prevent NULL pointer
+dereference during device removal. The kernel oops[1] occurred due to
+Incorrect error handling flow when pci_setup_device() fails.
 
-Components may have device-specific ways to configure N_FTS values
-to advertise during Link training.  Define an n_fts array with an
-entry for each supported data rate.
+Fix it by properly cleaning up virtfn resources when pci_setup_device()
+fails, instead of invoking pci_stop_and_remove_bus_device().
+This prevents accessing partially initialized virtfn devices during
+removal.
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+[1]
+BUG: kernel NULL pointer dereference, address: 00000000000000d0
+PGD 0 P4D 0
+Oops: Oops: 0000 [#1] SMP
+CPU: 22 UID: 0 PID: 1151 Comm: bash Not tainted 6.13.0+ #1
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+RIP: 0010:device_del+0x3d/0x3d0
+Call Trace:
+ <TASK>
+ ? __die+0x20/0x60
+ ? page_fault_oops+0x150/0x3e0
+ ? exc_page_fault+0x74/0x130
+ ? asm_exc_page_fault+0x22/0x30
+ ? device_del+0x3d/0x3d0
+ pci_remove_bus_device+0x7c/0x100
+ pci_iov_add_virtfn+0xfa/0x200
+ sriov_enable+0x208/0x420
+ mlx5_core_sriov_configure+0x6a/0x160 [mlx5_core]
+ sriov_numvfs_store+0xae/0x1a0
+ kernfs_fop_write_iter+0x109/0x1a0
+ vfs_write+0x2c0/0x3e0
+ ksys_write+0x62/0xd0
+ do_syscall_64+0x4c/0x100
+ entry_SYSCALL_64_after_hwframe+0x4b/0x53
+
+Fixes: e3f30d563a38 ("PCI: Make pci_destroy_dev() concurrent safe")
+CC: Keith Busch <kbusch@kernel.org>
+Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
+Signed-off-by: Shay Drory <shayd@nvidia.com>
 ---
- dtschema/schemas/pci/pci-bus-common.yaml | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/pci/iov.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
-index a9309af..ca97a00 100644
---- a/dtschema/schemas/pci/pci-bus-common.yaml
-+++ b/dtschema/schemas/pci/pci-bus-common.yaml
-@@ -128,6 +128,16 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     enum: [ 1, 2, 4, 8, 16, 32 ]
+diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+index 9e4770cdd4d5..3dfcbf10e127 100644
+--- a/drivers/pci/iov.c
++++ b/drivers/pci/iov.c
+@@ -314,8 +314,11 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+ 		pci_read_vf_config_common(virtfn);
  
-+  n-fts:
-+    description:
-+      The number of Fast Training Sequences (N_FTS) required by the
-+      Receiver (this component) when transitioning the Link from L0s
-+      to L0; advertised during initial Link training. Each entry in
-+      the array specifies a PCIe data rate
-+    $ref: /schemas/types.yaml#/definitions/uint8-array
-+    minItems: 1
-+    maxItems: 5
-+
-   reset-gpios:
-     description: GPIO controlled connection to PERST# signal
-     maxItems: 1
+ 	rc = pci_setup_device(virtfn);
+-	if (rc)
++	if (rc) {
++		pci_bus_put(virtfn->bus);
++		kfree(virtfn);
+ 		goto failed1;
++	}
+ 
+ 	virtfn->dev.parent = dev->dev.parent;
+ 	virtfn->multifunction = 0;
+@@ -336,14 +339,15 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+ 	pci_device_add(virtfn, virtfn->bus);
+ 	rc = pci_iov_sysfs_link(dev, virtfn, id);
+ 	if (rc)
+-		goto failed1;
++		goto failed2;
+ 
+ 	pci_bus_add_device(virtfn);
+ 
+ 	return 0;
+ 
+-failed1:
++failed2:
+ 	pci_stop_and_remove_bus_device(virtfn);
++failed1:
+ 	pci_dev_put(dev);
+ failed0:
+ 	virtfn_remove_bus(dev->bus, bus);
 -- 
-2.34.1
+2.38.1
 
 
