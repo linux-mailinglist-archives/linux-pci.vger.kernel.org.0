@@ -1,83 +1,84 @@
-Return-Path: <linux-pci+bounces-21554-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21555-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1B96A3719B
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Feb 2025 02:45:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B2E8A3719F
+	for <lists+linux-pci@lfdr.de>; Sun, 16 Feb 2025 02:46:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 04A867A39CD
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Feb 2025 01:44:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CCBC73AF812
+	for <lists+linux-pci@lfdr.de>; Sun, 16 Feb 2025 01:45:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0245D748F;
-	Sun, 16 Feb 2025 01:45:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 069E04C96;
+	Sun, 16 Feb 2025 01:45:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IFBbSwP+"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QNGkFf93"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EC2A2D
-	for <linux-pci@vger.kernel.org>; Sun, 16 Feb 2025 01:45:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6880C15E96
+	for <linux-pci@vger.kernel.org>; Sun, 16 Feb 2025 01:45:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739670338; cv=none; b=KyqItBU66Tw5z42f/yIcdjZflkvpk5yCY9ITYWSxr2Ozxlco5iik4DVHhRUkN/XwBOhZAlFX7Upbj94l6cR8f2QSND6VtrLuxyuQfzlJRwVQaavkwtUF5114/F/fEt+cq/R4rxn4mUD1iv12mHMSvDfxdLOSYLWx3XYeNNnF6ZY=
+	t=1739670342; cv=none; b=P1uyIyk0X9j6GX+HTjBbo39jXGg9NRRcXQJhGRlFYXj2YogimHQ9NkujI/Wyiuzp8fPIfuBYQF64dmMp3eeXWDA7GD8oJGa4iKaKwVgMLwNkv0J57OLVE3lFLT7nLjzfwvR2kaB2ZhGJjNKq1vZ9OCByL27+S4s9Rdo7htDOu3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739670338; c=relaxed/simple;
-	bh=6d/C0OzP206Bfx6ax3rRPN3TPah22XiTEZpdfRfQaV0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s976ys9rKlp8qYKbveWhX1aHY2mcsbKKJGV/3Q6+xtNIa6AZ3/UEZwiUTVjHcyjMsDf0EYayrAgbC5idSDxlgbh9MDcbPmmCajF3hrBIRj3BPM61s4DelQdC8e3gPNvk15N0UpHwpVFluliuNtL+/y6kyxArmT2uwFx1vxeLx1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IFBbSwP+; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1739670342; c=relaxed/simple;
+	bh=Fk5tEvSGj966u5MNAJ6KeljaVlxKuCrisn/aqCxdhBw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OWjrkN5iOIJ2lqi2FBPXviL9+SBbWqgisWTLiQPpO70jeMgJfl26GZmfCutkQbG0lrDJ9LkhRETLLD3Sw2cyzwQmRED34gC3h9H0dPbtcHWLHLkcxgcr84vYPgSdNTmhNTTr56eZiudnS2Eim+x/S+HzROwv+McHaVDHL92H7NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QNGkFf93; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51G0Lqin018651
-	for <linux-pci@vger.kernel.org>; Sun, 16 Feb 2025 01:45:36 GMT
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51G0tAN8005240
+	for <linux-pci@vger.kernel.org>; Sun, 16 Feb 2025 01:45:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=QChqI6vVHRRW6C7u3A4HFPKyjHOOONIPmTq
-	BbAmlM34=; b=IFBbSwP+L+TKBLOwDGTSfMR5We3MsKpzulNpXwSmmpszde/zIOm
-	Q8atyutJnYwGXXt5ApAhqftF4z3CgCIRxqaY4ffma2ANRT2wy/VpyT2ARs5t3vJf
-	aVQCycsROPe94dL9Dz37E7CF0ZNfPZ5HyD0ICHeO4zWWN9UFkyB5CKQ9oaOSwMnz
-	baNoZWcwENPE2huuhp7qJSzqnXVzKMBlg/pZygLUzuDyyJQ6hk1OZUQPJpTq2vrD
-	GAdTggzkFcElz/AbFews+Q/PPuLkXeJWxyPayXAPdLyHrnuTWqM3z/VRssjLnUYN
-	FMiqu6+jWjsEV2jndKlSmjhAbmhl4uF0MlQ==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44tktf9b1k-1
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=uBFsWeSYOmq
+	gaCuFxuf/xhhEESZ518ip0a8YRr+64yE=; b=QNGkFf931rknH/8YWJAz9QemnD/
+	f9RRsMjk5UY42TexsNNRuSOT5PlGKFuac1LCUTX46Q4AxVf9Vg8SQnNSIDq+JDCS
+	LJkAZaZZJQsB4xzs+c+DTty0iJaYTm9RnxQaonF6VTjoEGMBlSIdJwxtrdlDCb/a
+	6NwxEQRrNN1hiXkoIzjm9cPHcYlbNoVTYjvvE1CiimWecBrtbGXwEuvBzpCah6AM
+	doEkLusongbS9ucxtJFGv93zaMsMBM0XQXTELuM+SYK3LZEwwuYsCsoLl7VJilXS
+	7nqMcHTkiXus1EiuXt5YyIVH8YD35tHAnGEJ/2Dh48nv9b0OcPvSbGx1ouw==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44tkqh1ay1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Sun, 16 Feb 2025 01:45:35 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-220d6018858so52723605ad.2
-        for <linux-pci@vger.kernel.org>; Sat, 15 Feb 2025 17:45:35 -0800 (PST)
+	for <linux-pci@vger.kernel.org>; Sun, 16 Feb 2025 01:45:40 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-220e7d654acso49082835ad.0
+        for <linux-pci@vger.kernel.org>; Sat, 15 Feb 2025 17:45:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739670334; x=1740275134;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QChqI6vVHRRW6C7u3A4HFPKyjHOOONIPmTqBbAmlM34=;
-        b=ElzpfRct/5PYElLAxegCfswmtoJ11G/gdAlO8JAwwxUW96NrLrSFk1xovCewInhTKN
-         3klNKjR9Sturw5dBmkkSarbD9gXTOGe3GNDmk45FKGgBsWREhtx5czFyfN1kXebvkctk
-         QPvA26lO5wQb63UL/SbRejH+5tzc0JOOV6TF5FV1jyD9jBzG4Nm3rNGxsNYCJzW3Exqk
-         GwPmQg3r86oU2gAqKgViYYRn6Jcd4u/CNaZDnKDRch/qi9GnaX9RvzuPlbD4oxUMrp4i
-         3WMSWMFgHVWcV5VLa77SM+2MaqR4e7+8B7MuKQUjmJc3UaUZRhnW3rmAyh8IFN+9XLjR
-         C90Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWRPJITkLldQKYfPFNczgcLFbov66Th2t2zS0bCDX/AVyAHNar/K75en5oNFGjvcELmsIuJ34euWU8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGC2+PPOUMpsBge9L3MPZuYrc90PfCJaiuJ3P+ao65KWMx5Pjh
-	lvqOGqaXpI7U1blDF/vuWavabJr2cWAAJ6d8eGb0mp4HQeslfnrQJCVIY5DOFQMAFQZSA/7ZWgK
-	UWAmC2KeF6sp/M6UtmEqmDPswjCs2eZYEKghop2YvmvD8Z238j3aToSBm5ZM=
-X-Gm-Gg: ASbGnctF54EQGr4yqs20+T68jxRfmm2nYAnPZFtZV2ogKxj/X9aL4x9Ifw0rHNc8kqa
-	V32oW/QQ2y7JPSAqWA33tc81/LmNo5PcbkTqrnaNC+MLn2DmhibO9bMSU25Wgp4j1pjm0UyYZqn
-	KMU/HeCJFA6lSCuB/6Tc834Yu8+Q0vMriB9Yj4dw4OB9IrvEDqo2uO4clB0cw0X+q6ACvyLGO+v
-	nnaC13RZJl3UbL7jkoZe48cWnGHLfYQDllW+q7+2afq1rEaP8CHWEXLahj0AA7HvxQ+r/dxlGhJ
-	HFm0oBjwPXKyh8LE0YAwBY+egwHLjxVjljqthJ2f
-X-Received: by 2002:a17:902:fb45:b0:21f:89e5:2704 with SMTP id d9443c01a7336-221040b1427mr59927815ad.34.1739670334385;
-        Sat, 15 Feb 2025 17:45:34 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGk0Wm6pBDN1zI1JP/eN7P464Mszuon80WKDa6iniNlFdMaUXzJp9MDPJ+nFawzsFqmexnMJw==
-X-Received: by 2002:a17:902:fb45:b0:21f:89e5:2704 with SMTP id d9443c01a7336-221040b1427mr59927565ad.34.1739670333991;
-        Sat, 15 Feb 2025 17:45:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739670339; x=1740275139;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uBFsWeSYOmqgaCuFxuf/xhhEESZ518ip0a8YRr+64yE=;
+        b=RoGX1JZnr6IBx3Yln0wt4UThePSbEqfYdM9oMO3/jO1UWh3vRdgTMiOFVvNEbp1v2n
+         hIL8RpRiVuSu2J3koNTIDnwM2VpBI/EcoG6PyM31w7pSaVwxyrZfEVnwe8SGKInKIi/E
+         jBs9hv594vVNVY3z5BmbBy4JxYQqedS4MwF3G48n3WVTdjGTxCW59BOORSxZnhRvof71
+         bSdIeHMKTFmP6ZSRlFFovaKALDXa7kfnhiQc4jrPqtKEMGK0BSY55axAsKyWa07R2y8p
+         ywfm6pGnCFtn0mCbODGWbDtAWr2/rIDjshco2q96hVJ98q2Y9NBRnSqzFgqWQGR637iU
+         JpvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSUwN0z4hHZJ+K8sQWiwD+p2eUmk2aKhGS3eRQKqBJRj/2Wlx18s8cCZLhrdgSUK39o92qhZP8LX0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY/rl+j/tXa7rro1fr0rt8ZjRFtPc9lU4pGK8OfvrFCr5/jyTX
+	ysGRWkUakPy71uXL8L2Szs5H7BFrlOdq0TbTQKiZ/qpiyYx3H4hfnWZoeg8Nq8DZaTCiKRh+b9A
+	Fo6WJi6ELYBbBbK6wpEk/DZA3+MlGyxnzvSAgYo+nE6og/3AE5GtGfH454RQ=
+X-Gm-Gg: ASbGncu17manWtOf01fjJ016vvS+CxD8FQKRHkRxh7a8EIriLeIY1MUX8ee4s8KzBiO
+	Ap/voSWbMOnbcJq5r/y0sbJnJ7vI8U2hwRPMbz/iE58kUfUN37rdT6U8Fb8EGlPlXVAgcqd1FBw
+	o53jxl3lupJC7/wUJ4KxaZQ/uQXXd4zh1ZyZA1hu8VO/I9THraLCH9tTZxp7YCo0yvvj65aVaHM
+	bakKEI3xBqLSw6Y0mOS8kCSHNAeszrkit4k/8U448nVVkLh9rmH3DXx6RYCEAA8kYvnSypnPbEW
+	+ircLwXEqHSiZ3zWoIMDijOy1KfMC6Nvnr2e8lZl
+X-Received: by 2002:a17:902:cf08:b0:220:fe36:650c with SMTP id d9443c01a7336-221047179dfmr77346995ad.23.1739670338767;
+        Sat, 15 Feb 2025 17:45:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFtn0S+vjVcVhx9pqmU7t/1GUwT1n4B1MxV5GxUJhmy6ojrRHtS/+9ejqHefQ8Ia6K1n3p9LQ==
+X-Received: by 2002:a17:902:cf08:b0:220:fe36:650c with SMTP id d9443c01a7336-221047179dfmr77346735ad.23.1739670338393;
+        Sat, 15 Feb 2025 17:45:38 -0800 (PST)
 Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d536455esm49896955ad.74.2025.02.15.17.45.29
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d536455esm49896955ad.74.2025.02.15.17.45.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Feb 2025 17:45:33 -0800 (PST)
+        Sat, 15 Feb 2025 17:45:38 -0800 (PST)
 From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 To: andersson@kernel.org, robh@kernel.org, dmitry.baryshkov@linaro.org,
         manivannan.sadhasivam@linaro.org, krzk@kernel.org, helgaas@kernel.org
@@ -86,10 +87,12 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree-spec@vger.kernel.org, quic_vbadigan@quicinc.com,
         Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Subject: [PATCH V3 0/2] schemas: pci: bridge: Document PCI L0s & L1 entry delay and N_FTS
-Date: Sun, 16 Feb 2025 07:15:08 +0530
-Message-Id: <20250216014510.3990613-1-krishna.chundru@oss.qualcomm.com>
+Subject: [PATCH V3 1/2] schemas: pci: bridge: Document PCI L0s & L1 entry delay
+Date: Sun, 16 Feb 2025 07:15:09 +0530
+Message-Id: <20250216014510.3990613-2-krishna.chundru@oss.qualcomm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250216014510.3990613-1-krishna.chundru@oss.qualcomm.com>
+References: <20250216014510.3990613-1-krishna.chundru@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,46 +100,45 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: 7hjcTDzGTUbpgHXunSO7sCN5V3rQpoVW
-X-Proofpoint-GUID: 7hjcTDzGTUbpgHXunSO7sCN5V3rQpoVW
+X-Proofpoint-GUID: RKQJSKRz2xjKAm4BsYidm5hjuDUJP30z
+X-Proofpoint-ORIG-GUID: RKQJSKRz2xjKAm4BsYidm5hjuDUJP30z
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-15_09,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- priorityscore=1501 adultscore=0 phishscore=0 suspectscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 clxscore=1015 impostorscore=0 lowpriorityscore=0
+ adultscore=0 phishscore=0 spamscore=0 mlxscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2501170000 definitions=main-2502160014
 
 Some controllers and endpoints provide provision to program the entry
 delays of L0s & L1 which will allow the link to enter L0s & L1 more
 aggressively to save power.
 
-Per PCIe r6.0, sec 4.2.5.1, during Link training, a PCIe component
-captures the N_FTS value it receives.  Per 4.2.5.6, when
-transitioning the Link from L0s to L0, it must transmit N_FTS Fast
-Training Sequences to enable the receiver to obtain bit and Symbol
-lock.
-
-Components may have device-specific ways to configure N_FTS values
-to advertise during Link training.  Define an n-fts array with an
-entry for each supported data rate.
+These values needs to be programmed before link training.
 
 Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 ---
-changes in v3:-
-- Update the description to specfify about entries of the array (rob)
-changes in v2:-
-- Split N_FTS & L1 and L0s entry delay in two patches (bjorn)
-- Update the commit text, description (bjorn)
+ dtschema/schemas/pci/pci-bus-common.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Krishna Chaitanya Chundru (2):
-  schemas: pci: bridge: Document PCI L0s & L1 entry delay
-  schemas: pci: bridge: Document PCIe N_FTS
-
- dtschema/schemas/pci/pci-bus-common.yaml | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
+diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
+index 94b648f..a9309af 100644
+--- a/dtschema/schemas/pci/pci-bus-common.yaml
++++ b/dtschema/schemas/pci/pci-bus-common.yaml
+@@ -150,6 +150,12 @@ properties:
+     description: Disables ASPM L0s capability
+     type: boolean
+ 
++  aspm-l0s-entry-delay-ns:
++    description: ASPM L0s entry delay
++
++  aspm-l1-entry-delay-ns:
++    description: ASPM L1 entry delay
++
+   vpcie12v-supply:
+     description: 12v regulator phandle for the slot
+ 
 -- 
 2.34.1
 
