@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-21643-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21644-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C937EA38970
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 17:38:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FB18A38974
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 17:38:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 553CC3AC917
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 16:38:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9504E3AD522
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 16:38:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60B68226185;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00145226196;
 	Mon, 17 Feb 2025 16:37:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhkip5dm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNmRLxlb"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E99225A4E;
-	Mon, 17 Feb 2025 16:37:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18379226176;
+	Mon, 17 Feb 2025 16:37:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739810254; cv=none; b=DB/FdG5xUFbpUqGEIbvNmvXVFxUIIILPw73MATqE72QEgG4xTzkWc33n/wqRFCIYEtxAixtUiy/9G8xu20W3QfxzEf4A4nsNarjuEncMzGRMp30O4ieOtg2+uT46+N9M6hg4FyCisvJo34AP+pw3xy5S7H0x+eZk+FNzvGuhcZ8=
+	t=1739810254; cv=none; b=WnnzJhNfQ71kPU+yRx5EsrAQK0Tu8epcvaOSL90VpcF/546xN/TripbHp8hz7hEPrHx6PsFz160e7myD/BRQjK6n/kaU9Q74ZB2dNYCxT5CRuFQdEWb1vQ7BjkpssOj8ZTOCgZxzaC4nf1cIvivAb91gY1Gc0KIQB6F2qLTwcLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739810254; c=relaxed/simple;
-	bh=zE3UeHdwgOpQSnjKFq4GICu7rZN5tRJ5Y9xFvM16G0g=;
+	bh=DuPHIcrT6Z5/GlVXfn7nt7Gawv/AJP9WOltQ42MmeC8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ieeo32d5dMGbtAcD4g2Z8YE1RxhKJZewafaM1/3ysfIO4/AKMen72ugOJAiuKdcqSCHr7Q79X03M55xQ2WNdoWVq27goI0P1fFV7ecvVP/D2mlAw1OQbUDvJ160JYy1O+AhRRfs8sZr9l4aL7EJrODy+Ojxr1ZLmeeESU/NP4Dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mhkip5dm; arc=none smtp.client-ip=209.85.221.50
+	 MIME-Version; b=apQmSkDsf3zblBZ48d1DlSJkALm5eem9za7EmZtk2zC3/GohLuTrK7uCKX4xomDHEaCzE2ovFss7/GKNvEWPFefvHeApDF88a6CIguaqYtMC8/OCQfVPbivfGnvpBK9nGd1fdzl3lhPHV5MAyNOmTZpy0VqFsvdo/AdClsiptHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jNmRLxlb; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38f504f087eso844f8f.1;
-        Mon, 17 Feb 2025 08:37:30 -0800 (PST)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38f3913569fso1072170f8f.1;
+        Mon, 17 Feb 2025 08:37:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739810249; x=1740415049; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739810251; x=1740415051; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=z/Pliae2eQBpyDaB/rhM+Xrce+n5H7ftTZ7yML/5v4Q=;
-        b=mhkip5dmbbsCjESZaRdP1N1oEic1bND9ecebVAzEgrkp0Vav8eQf0TMjvQh76vrCa4
-         QAB7rXYnPiW7WnHcnoxjgpZPWILiv4O5LkmtoucWrQQQ/hb4orbPegSBngkMw9aojsWR
-         80sr/E0vjbG5SWLl7Acc1oGILrX9WvnFubCT3d8uQ0wx5ZCKibdi43ndiSHdc8x0D2K/
-         wLFPdY/cFHCEWDHG5vm69txxKw06AbuyLLiIr1WFwcVn7aQ9EKT/HL8YXAku6xbOJLJR
-         4dbjEy5t62MQuYNja8K4MVMy7I+DRFQIBGOklendJtgSvHjviG8EWO2dbhqLIu8NchXf
-         X19w==
+        bh=YX3Bs3MZrgBGo5LMWaEIe0GFuG33MQ381ctUNe/mVnI=;
+        b=jNmRLxlb0rkZICLY+y5RxaeDJkeYR38znxIyxyh2/lE8j3OgbVt0Uq9/RU3KjufrsN
+         bneLXYkMxv5GhjlUTqaA51yvIa6wdP6ZYwQl16zjr6cVGMpACl8FErVZsLLAXjw5LB5K
+         vTdRPqKCIR5X3QOXo/gK2C9HqTKfZe//a5siHFEqw/1e7mJmOEyJTwR1qwDZo3kJTN7a
+         fDBrlk1Z6lcp27UPoseoyNbSUV1heAAUDcKE+Ov0+DNQT9/PEJWXLBGjsJDLVTbDlkuQ
+         f9AMvpUittFSYrC9mtRRtQwGy3CTYYGo1M/Y6IRSJxMUOACTpi8RzLFfpM5CpaHY+L1B
+         xv9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739810249; x=1740415049;
+        d=1e100.net; s=20230601; t=1739810251; x=1740415051;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z/Pliae2eQBpyDaB/rhM+Xrce+n5H7ftTZ7yML/5v4Q=;
-        b=WmTglVqVt+nsArPllXrtB7FGoHLtjdviK13WvQRhvONY88zPtpI0+B/I5j/iuHdM+x
-         eIuVWx8nCn3g+w9S0SyKlzOdOcF5X93rT5ilgNg47h2oGA5+JYfos32BBzywB0PYTn3o
-         Mt+7Aef6tkvLeo9/jLfoseO3sRS4mYJxH6Xb3uMxNEIHtRJuTzVX8WGian5lSYlINgcM
-         Du56Er0Q0PPDeTb0RiF1FyYEzPic6ndGkZTGU5/JhCZYO/IjraFtsUUkwlm5rmr3gdQh
-         IhkB46JvzA7W7nTweaubKjb50Cyld0gfyXj6k3dOPWJpeVJH+REn8QzkY20DsiyQJrMj
-         FTBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUp5BPWExB60JS/FLVI+9W4TQYFY2AtgEBgk/Z5Zsu30ioECY3qudey2ccXz09W41CAajxDdbwBJIFzRQ==@vger.kernel.org, AJvYcCVOatbdctZwf1F9XcQ/5K0Zt1j1vlCJMnJ28AHMWBtvGaMpKVQiniDI2EEJKM4WhU4gR7x2CMjfsOs=@vger.kernel.org, AJvYcCWSlB5dpH9tUkM46Gl0zXf45wQlGC8WhaYLqAPIt9zgMdn1zb9Yek8T3uKBVa18XuzODYgxsGzDvqyy@vger.kernel.org, AJvYcCX9SHs9NVTynY/ZOFybn8Mi4sPBFJs2PUKopsOeyoHqhSTCspOeIcTQv5VJKf1SbA32OKvu97wdFKkOeV4P@vger.kernel.org, AJvYcCXbXpPfyrn76cSuFZPZ2oqJve+rS8+nq1VcBm2LcIfzdHaIPsvvWzR85srIPQ6cXsmsZg2K3FT2nzZD@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJyOnEsFgV2eGKUbfCCeb4G40FnKlpDqEVysUVmm/bKej+AIQi
-	JgcdNGK/c7M0ffAczR8zX8OzyRiVlJ+hzAbRi1J6P/O79TdmogJy
-X-Gm-Gg: ASbGncvfNjDKaqCA3Hl4RK8NuxtF0szZ/NzZ5OgHWXtQDnFcp24dM436C//WLkr2TNo
-	ctLqwwNXTQC0LiqbZGaU0VZKvs6AmuVCJWODjAXoQrITuOLasKQvnrxwv/rhCprQimcg1qLDO0H
-	yCnm6OJHxrLqSKWF6PXaxyt4MzyAF3EfkyCE317ORidrNFLBd8w2lbPXEnhCuUXwnmiLNV1/aYW
-	fY0IWSCTL4bk6BU6/mKouA4EQn+gxUOfYwKhMTSj6AkkP7KDx8Sg0mx2722xWNCcuSfmgQiJFdk
-	MuvUzd504J9RZFIpUgWoCdTwJXF0p7s7kUxNDS6M3j+qtQQ7o31rOS67AQgVHobRyhI39nCzh0t
-	Y9QAtdMM=
-X-Google-Smtp-Source: AGHT+IEcmZoV9E3nZ+6g02c1M8tS19/XgVVrKGZ1S0RbQ0hvdrhxp+y24wkbvweGnlTFrgLbDmIhiQ==
-X-Received: by 2002:a5d:6a0a:0:b0:38f:2e78:450c with SMTP id ffacd0b85a97d-38f33f2961cmr6950160f8f.19.1739810249186;
-        Mon, 17 Feb 2025 08:37:29 -0800 (PST)
+        bh=YX3Bs3MZrgBGo5LMWaEIe0GFuG33MQ381ctUNe/mVnI=;
+        b=ewsZcErsZCWIR08c0bPe5xYtrSb5jQZ7JmgQcUywpa5J69ScO4ILJIlkLPRFk82NJ/
+         IsmBNHVvXDu2Ick1Y7grlyGU+y8xbKLRk0ANr00SQTTH6R/wbBvRu+HyerXqLT064P74
+         6Jc3MC7chrjo0KgyyeGGL+r236zhcUTBpGyY5Fgg8cyfpfiyBxXDjuiop8xLxq7WHVrc
+         reU4azjfKMAoZHPiNhf1HVy6V1YpVbnQM9ooEGbfkoJW2g5hjTc54J7+RoS4KbIY4jE8
+         QPSy91E6k+V2495pTqQHJJxTRUUDWgpggNsE2dyEaPFKwL08SHvvrUAUivsjTLfqwVU7
+         VK3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUMkG0qxlxyCgSHgs4FllWxC9SAqyCQOMfHkf5SOO3cyiB+2yDR0oP4zxh3E+yQti052HB1MPaVvsA63YYn@vger.kernel.org, AJvYcCUg/LPsTBIWK6ZPatdFxh2LQbtUPhRI//zF47qhDDpY4Kbl1xYQFFDB0lL3iRP9S2UwZTB6Du2H+D4/@vger.kernel.org, AJvYcCWC8wKTSukGSMU8fLK5x9Ieogq4SoW4ZgY+hFidznYzz+jCz1z7wwyX8MEymufSlUseqORvXR9vqbw=@vger.kernel.org, AJvYcCWqwj0I5YrbinOZrlaw1hp4+3wwa1zOJO1VvSJ4UC3xIGVDuXmRk25OEWTrRv/sNmx5es9IAzirH9/nBA==@vger.kernel.org, AJvYcCXRBvfauaBhTIyabkGFL10zpIO9BJr7DxBcU9UETUCcYt0tyLoLmGIk+yVZYVsOCCJGyTuh30qZFiLy@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaqYcTuTCEgFBg89ed7LLsfbihZ46BZynv8On08Fn4nHcZYocZ
+	6SDU3s8uTyPXJgSbwdHNDeo4gZTvcuL8DcYhbbF08DcR/8fA9UUNHEfhVA==
+X-Gm-Gg: ASbGncsU4AdyfXOO3EWkljV5kiRiDuwmikRmRDNqWqE4WLAsKT8F8+7LuXDbP2gZcZ4
+	WCnRU50JzdjRS+a8hftLvQxX2BR9CEeoRtuoSNyGnreEnmpGOb4hh/TXk8CvJbjuo4nBxYJ+JNj
+	OLJ6i44XXC/LBFmQlUqHZcMuZ9rBwtqff9LJp16DmdWFIAVKO5Oafgsx8a34vmlRpmlfjUzYZj9
+	52Vdx45uwdE/pvm6DKKeuSc9fUQ3jxJmGBqrbNVikDwSYgApTUK5+NDZ4UDHEdKS8pi5v2LJsvT
+	2RQQMDHwKCUxcQzWCqGoWLwIXB12GMgEKaENsG6qvWECkHHlF5c9COePk2Yz7d8Djp0wHQOawif
+	f0Uw7keQ=
+X-Google-Smtp-Source: AGHT+IGKeFn1JZI+61Y36W80rkeFL6tO0xV+0w/zCm2hwXiflv2MWSmUK04720sV0csGUnPk6PUGmQ==
+X-Received: by 2002:adf:9bdd:0:b0:38d:dffc:c14f with SMTP id ffacd0b85a97d-38f24ce77dcmr14937408f8f.1.1739810251284;
+        Mon, 17 Feb 2025 08:37:31 -0800 (PST)
 Received: from localhost (p200300e41f22a600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f22:a600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38f259fe1efsm12791371f8f.97.2025.02.17.08.37.27
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38f259d5d8bsm12702877f8f.70.2025.02.17.08.37.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 08:37:28 -0800 (PST)
+        Mon, 17 Feb 2025 08:37:30 -0800 (PST)
 From: Thierry Reding <thierry.reding@gmail.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: x86@kernel.org,
@@ -85,9 +85,9 @@ Cc: x86@kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/7] clk: ingenic: tcu: Embed syscore_ops in TCU context
-Date: Mon, 17 Feb 2025 17:37:10 +0100
-Message-ID: <20250217163713.211949-5-thierry.reding@gmail.com>
+Subject: [PATCH 5/7] clk: mvebu: Embed syscore_ops in clock context
+Date: Mon, 17 Feb 2025 17:37:11 +0100
+Message-ID: <20250217163713.211949-6-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250217163713.211949-1-thierry.reding@gmail.com>
 References: <20250217163713.211949-1-thierry.reding@gmail.com>
@@ -101,107 +101,83 @@ Content-Transfer-Encoding: 8bit
 
 From: Thierry Reding <treding@nvidia.com>
 
-This enables the syscore callbacks to obtain the TCU context without
+This enables the syscore callbacks to obtain the clock context without
 relying on a separate global variable.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/clk/ingenic/tcu.c | 54 ++++++++++++++++++---------------------
- 1 file changed, 25 insertions(+), 29 deletions(-)
+ drivers/clk/mvebu/common.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
-index 85bd4bc73c1b..503a58d08224 100644
---- a/drivers/clk/ingenic/tcu.c
-+++ b/drivers/clk/ingenic/tcu.c
-@@ -53,9 +53,9 @@ struct ingenic_tcu {
- 	struct clk *clk;
+diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
+index ee77d307efe0..53712c3e5087 100644
+--- a/drivers/clk/mvebu/common.c
++++ b/drivers/clk/mvebu/common.c
+@@ -189,6 +189,7 @@ void __init mvebu_coreclk_setup(struct device_node *np,
+ DEFINE_SPINLOCK(ctrl_gating_lock);
  
- 	struct clk_hw_onecell_data *clocks;
--};
- 
--static struct ingenic_tcu *ingenic_tcu;
+ struct clk_gating_ctrl {
 +	struct syscore_ops syscore;
-+};
- 
- static inline struct ingenic_tcu_clk *to_tcu_clk(struct clk_hw *hw)
- {
-@@ -332,6 +332,24 @@ static const struct of_device_id __maybe_unused ingenic_tcu_of_match[] __initcon
- 	{ /* sentinel */ }
+ 	spinlock_t *lock;
+ 	struct clk **gates;
+ 	int num_gates;
+@@ -196,11 +197,15 @@ struct clk_gating_ctrl {
+ 	u32 saved_reg;
  };
  
-+static int __maybe_unused tcu_pm_suspend(struct syscore_ops *ops)
+-static struct clk_gating_ctrl *ctrl;
++static inline struct clk_gating_ctrl *from_syscore(struct syscore_ops *ops)
 +{
-+	struct ingenic_tcu *tcu = container_of(ops, typeof(*tcu), syscore);
-+
-+	if (tcu->clk)
-+		clk_disable(tcu->clk);
-+
-+	return 0;
++	return container_of(ops, struct clk_gating_ctrl, syscore);
 +}
-+
-+static void __maybe_unused tcu_pm_resume(struct syscore_ops *ops)
-+{
-+	struct ingenic_tcu *tcu = container_of(ops, typeof(*tcu), syscore);
-+
-+	if (tcu->clk)
-+		clk_enable(tcu->clk);
-+}
-+
- static int __init ingenic_tcu_probe(struct device_node *np)
+ 
+ static struct clk *clk_gating_get_src(
+ 	struct of_phandle_args *clkspec, void *data)
  {
- 	const struct of_device_id *id = of_match_node(ingenic_tcu_of_match, np);
-@@ -430,7 +448,11 @@ static int __init ingenic_tcu_probe(struct device_node *np)
- 		goto err_unregister_ost_clock;
- 	}
++	struct clk_gating_ctrl *ctrl = data;
+ 	int n;
  
--	ingenic_tcu = tcu;
-+	if (IS_ENABLED(CONFIG_PM_SLEEP)) {
-+		tcu->syscore.suspend = tcu_pm_suspend;
-+		tcu->syscore.resume = tcu_pm_resume;
-+		register_syscore_ops(&tcu->syscore);
-+	}
+ 	if (clkspec->args_count < 1)
+@@ -217,23 +222,23 @@ static struct clk *clk_gating_get_src(
  
+ static int mvebu_clk_gating_suspend(struct syscore_ops *ops)
+ {
++	struct clk_gating_ctrl *ctrl = from_syscore(ops);
++
+ 	ctrl->saved_reg = readl(ctrl->base);
  	return 0;
- 
-@@ -455,38 +477,12 @@ static int __init ingenic_tcu_probe(struct device_node *np)
- 	return ret;
  }
  
--static int __maybe_unused tcu_pm_suspend(struct syscore_ops *ops)
--{
--	struct ingenic_tcu *tcu = ingenic_tcu;
--
--	if (tcu->clk)
--		clk_disable(tcu->clk);
--
--	return 0;
--}
--
--static void __maybe_unused tcu_pm_resume(struct syscore_ops *ops)
--{
--	struct ingenic_tcu *tcu = ingenic_tcu;
--
--	if (tcu->clk)
--		clk_enable(tcu->clk);
--}
--
--static struct syscore_ops __maybe_unused tcu_pm_ops = {
--	.suspend = tcu_pm_suspend,
--	.resume = tcu_pm_resume,
+ static void mvebu_clk_gating_resume(struct syscore_ops *ops)
+ {
++	struct clk_gating_ctrl *ctrl = from_syscore(ops);
++
+ 	writel(ctrl->saved_reg, ctrl->base);
+ }
+ 
+-static struct syscore_ops clk_gate_syscore_ops = {
+-	.suspend = mvebu_clk_gating_suspend,
+-	.resume = mvebu_clk_gating_resume,
 -};
 -
- static void __init ingenic_tcu_init(struct device_node *np)
+ void __init mvebu_clk_gating_setup(struct device_node *np,
+ 				   const struct clk_gating_soc_desc *desc)
  {
- 	int ret = ingenic_tcu_probe(np);
++	static struct clk_gating_ctrl *ctrl;
+ 	struct clk *clk;
+ 	void __iomem *base;
+ 	const char *default_parent = NULL;
+@@ -284,7 +289,9 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
  
- 	if (ret)
- 		pr_crit("Failed to initialize TCU clocks: %d\n", ret);
--
--	if (IS_ENABLED(CONFIG_PM_SLEEP))
--		register_syscore_ops(&tcu_pm_ops);
- }
+ 	of_clk_add_provider(np, clk_gating_get_src, ctrl);
  
- CLK_OF_DECLARE_DRIVER(jz4740_cgu, "ingenic,jz4740-tcu", ingenic_tcu_init);
+-	register_syscore_ops(&clk_gate_syscore_ops);
++	ctrl->syscore.suspend = mvebu_clk_gating_suspend;
++	ctrl->syscore.resume = mvebu_clk_gating_resume;
++	register_syscore_ops(&ctrl->syscore);
+ 
+ 	return;
+ gates_out:
 -- 
 2.48.1
 
