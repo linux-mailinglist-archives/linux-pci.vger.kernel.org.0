@@ -1,49 +1,60 @@
-Return-Path: <linux-pci+bounces-21568-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21569-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF1DCA379C0
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 03:36:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 51AF5A379D5
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 03:42:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE3D43AD1C1
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 02:36:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E0A73AE622
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 02:42:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 116E027702;
-	Mon, 17 Feb 2025 02:36:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F22741C71;
+	Mon, 17 Feb 2025 02:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="AzZJF1qv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B6084D0E;
-	Mon, 17 Feb 2025 02:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA3546BF;
+	Mon, 17 Feb 2025 02:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739759773; cv=none; b=jYjPxjS9axVVTAfWvRipVkhEH0vx5ogYU5juIVYirwFRY8EYelZwgWV0Qq8PP8/WuZkZTgDGx46mih8hqHmnnH5SkqummB8RQj06MpPR/hb06nrQCCyYw78e7NcM2cuLArHphmJHvgqb+rKzQB+WDi5nPdcJ5G1farFThmwRfrQ=
+	t=1739760150; cv=none; b=n7aTD3LAvZ3zFk7W+NvlThkiNkZAsWWrejsd6Z3ClX2U54VJOn0INuwZ946VrLDw8vKgZk1BMQYqdkudgowJauBgRMQ/h36FgG6LCxtgmR/wd7dbyaX6ZQbPGHdZ+Zfycw1PWcmEE0DEgzAJDBSci7hFXDdWmt/RdCyjS7drzSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739759773; c=relaxed/simple;
-	bh=5Je1TcOPfL5lsh3I7rTPOoi/YIo85AytXCjFmzZDMeA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nBUnalOW/u3FY24pMgiUDhzzB30iiw2X5US+qQz2aSgquIMRGU+Y7Fdp5mKA+bl6/zsKga6tjr3VajJXEYvwc3sRci8Ge6NF03pKVzoGPKn0CfdW7kcrBt11LhQsib6+Gs4IrUh1Mc7jikreFxhudcBbe90pz7Vt/2RZyWglQJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-01 (Coremail) with SMTP id qwCowACnrNCCoLJnHiEBDg--.38765S2;
-	Mon, 17 Feb 2025 10:35:55 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: bhelgaas@google.com,
-	arnd@arndb.de,
-	treding@nvidia.com
-Cc: linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1739760150; c=relaxed/simple;
+	bh=g18vLvEIV15RdL6Pta+w/k1IEM9YdjuSeCpk6WlEJpc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=moRUceFxJejYOLaz8SqCwevAPsXA5MT7APjE8Q2p/XqcdsdQubEHy/SlwLoZVMQKJJRAGxbZIZaogbSx714hdZu25me802atkH48BGFWhzjdU789iqy/SAMUTgxkfRDxZIE07oqiU0pfOUovWvIvjNYIoW8y7coW0Nko4ZIiEU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=AzZJF1qv; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739760142; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=IWnXk2v+MvIdKRnunCl5x6oEXE/uiljBcFUSPpVL73o=;
+	b=AzZJF1qvWmZsVNMAImWeksAs2HzPevm7zSvoCp9JuXiNjwO8kyB9z7QOTQFtVp9W9XWp1jrT5Xo8MKB3UPyT6AK0NZB1l5ypceQynMnQBzjd2yyfzQ/yLSKiFOhVh732npjKbnFpwRE8lbj9u/Lp7sOW9x1gtE6TnylIwhqOQAs=
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WPYBR1G_1739760140 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 17 Feb 2025 10:42:22 +0800
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	Ma Ke <make24@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] PCI: fix reference leak in pci_register_host_bridge()
-Date: Mon, 17 Feb 2025 10:35:45 +0800
-Message-Id: <20250217023545.2248438-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	linuxppc-dev@lists.ozlabs.org,
+	bhelgaas@google.com,
+	kbusch@kernel.org,
+	sathyanarayanan.kuppuswamy@linux.intel.com
+Cc: mahesh@linux.ibm.com,
+	oohall@gmail.com,
+	xueshuai@linux.alibaba.com,
+	Jonathan.Cameron@huawei.com,
+	terry.bowman@amd.com,
+	tianruidong@linux.alibaba.com
+Subject: [PATCH v4 0/3] PCI/AER: Report fatal errors of RCiEP and EP if link recoverd
+Date: Mon, 17 Feb 2025 10:42:15 +0800
+Message-ID: <20250217024218.1681-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -51,62 +62,67 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowACnrNCCoLJnHiEBDg--.38765S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7GF13GrWUGF4kuFy3ZF43Jrb_yoWkArXEgr
-	109Fy7Zr48G3Zagr13ArnxZrn2k3ZrWrWfGr48tFZ7AayrXFZIg3ZxZryYyr17Can8Zr1D
-	JF1UXr4DCr1I9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb3AFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	4UJVWxJr1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
-	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r
-	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAq
-	YI8I648v4I1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfUY3kuUUUUU
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-Once device_register() failed, we should call put_device() to
-decrement reference count for cleanup. Or it could cause memory leak.
+changes since v3:
+- squash patch 1 and 2 into one patch per Sathyanarayanan
+- add comments note for dpc_process_error per Sathyanarayanan
+- pick up Reviewed-by tag from Sathyanarayanan
 
-device_register() includes device_add(). As comment of device_add()
-says, 'if device_add() succeeds, you should call device_del() when you
-want to get rid of it. If device_add() has not succeeded, use only
-put_device() to drop the reference count'.
+changes since v2:
+- moving the "err_port" rename to a separate patch per Sathyanarayanan
+- rewrite comments of dpc_process_error per Sathyanarayanan
+- remove NULL initialization for err_dev per Sathyanarayanan
 
-Found by code review.
+changes since v1:
+- rewrite commit log per Bjorn
+- refactor aer_get_device_error_info to reduce duplication per Keith
+- fix to avoid reporting fatal errors twice for root and downstream ports per Keith
 
-Cc: stable@vger.kernel.org
-Fixes: 37d6a0a6f470 ("PCI: Add pci_register_host_bridge() interface")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
----
-Changes in v2:
-- modified the patch description.
----
- drivers/pci/probe.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+The AER driver has historically avoided reading the configuration space of an
+endpoint or RCiEP that reported a fatal error, considering the link to that
+device unreliable. Consequently, when a fatal error occurs, the AER and DPC
+drivers do not report specific error types, resulting in logs like:
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b6536ed599c3..03dc65cf48f1 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1017,8 +1017,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 	name = dev_name(&bus->dev);
- 
- 	err = device_register(&bus->dev);
--	if (err)
-+	if (err) {
-+		put_device(&bus->dev);
- 		goto unregister;
-+	}
- 
- 	pcibios_add_bus(bus);
- 
+   pcieport 0000:30:03.0: EDR: EDR event received
+   pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+   pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+   pcieport 0000:30:03.0: AER: broadcast error_detected message
+   nvme nvme0: frozen state error detected, reset controller
+   nvme 0000:34:00.0: ready 0ms after DPC
+   pcieport 0000:30:03.0: AER: broadcast slot_reset message
+
+AER status registers are sticky and Write-1-to-clear. If the link recovered
+after hot reset, we can still safely access AER status of the error device.
+In such case, report fatal errors which helps to figure out the error root
+case.
+
+After this patch set, the logs like:
+
+   pcieport 0000:30:03.0: EDR: EDR event received
+   pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+   pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+   pcieport 0000:30:03.0: AER: broadcast error_detected message
+   nvme nvme0: frozen state error detected, reset controller
+   pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
+   nvme 0000:34:00.0: ready 0ms after DPC
+   nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
+   nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
+   nvme 0000:34:00.0:    [ 4] DLP                    (First)
+   pcieport 0000:30:03.0: AER: broadcast slot_reset message 
+
+Shuai Xue (3):
+  PCI/DPC: Clarify naming for error port in DPC Handling
+  PCI/DPC: Run recovery on device that detected the error
+  PCI/AER: Report fatal errors of RCiEP and EP if link recoverd
+
+ drivers/pci/pci.h      |  5 +++--
+ drivers/pci/pcie/aer.c | 11 +++++++----
+ drivers/pci/pcie/dpc.c | 34 +++++++++++++++++++++++++++-------
+ drivers/pci/pcie/edr.c | 35 ++++++++++++++++++-----------------
+ drivers/pci/pcie/err.c |  9 +++++++++
+ 5 files changed, 64 insertions(+), 30 deletions(-)
+
 -- 
-2.25.1
+2.39.3
 
 
