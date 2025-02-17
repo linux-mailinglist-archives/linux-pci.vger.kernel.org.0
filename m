@@ -1,302 +1,183 @@
-Return-Path: <linux-pci+bounces-21671-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21675-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DFD6A38D1D
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 21:20:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9B2FA38D5C
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 21:37:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 32CD01889ACC
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 20:20:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD7013B1B8B
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 20:37:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76E45234970;
-	Mon, 17 Feb 2025 20:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FE5623770B;
+	Mon, 17 Feb 2025 20:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="UgZAcIse"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CCuI9sh/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB45149C41;
-	Mon, 17 Feb 2025 20:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C820C2376FF
+	for <linux-pci@vger.kernel.org>; Mon, 17 Feb 2025 20:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739823603; cv=none; b=OlH5I9R5T0jVEEViT6CEW+5Jufz31wnctjoMM6WO+bMGTNoWpvPPRRkxQq6dZMrx4HK3s187DT3sRrDtFZFSsSiTdFMjnOOMA6RmgxXnrqUPt5TdIQ6wqv3vZteKQVJjdufzZ3KVGOMY8Rkj85gbPML+GO6r+HLO4eufdw/vvwQ=
+	t=1739824660; cv=none; b=XAAeMDCAFCDdemqbKeigOoAj4seUjc7Of4sS9TPdU3gQE77w4uNg/6bcnppGn5S2dskVfPvCbZtLB5wlnoKYuCZ588xi+qeHGnIJRPFppo007utpzPCa83XxD43El6Mfwz5yNirB1dTkD5ekR9TybEC4rk+C5vUjM6gGRxNd+hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739823603; c=relaxed/simple;
-	bh=/YPL+Qdj5nQduva774o+9werrMjy/VnTRhIWBdp51IY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jW15XPLRUIctmAMhgvePBrj/Ra6oPUJSEAwayXmjdy6K61zG2ZsXn4Vh5N+PbuYAruToCjpQdgcCJBb716nn5sC0mWpdMJi66qdapR1dSKhdXP6VIrFMQdatyXzye//gx2ENqKJK6FFT637jITOLP5cNbXnXctTcAxS3mbySf4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=UgZAcIse; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
- id 2349e9a2f8523f5c; Mon, 17 Feb 2025 21:19:58 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id DD39E9100B0;
-	Mon, 17 Feb 2025 21:19:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1739823598;
-	bh=/YPL+Qdj5nQduva774o+9werrMjy/VnTRhIWBdp51IY=;
-	h=From:Subject:Date;
-	b=UgZAcIseRHmcvWA9lqNRWIUhtqmltkrpQElTb7JwiseKC00S1azy4uLecGc22JKbb
-	 T3i8v00K70VF9jCHNFfPE+zftOV9O9ArCJQEsVbz0TBVtugH3ehpF/nrGXZB+WcVv0
-	 L75iqbrb2HIoJZD2ICtjivFnSAxdtpnb1veCpgfvHAhMH4x3iRZXrZeA0q0+3Sof6V
-	 /ojoIPzvpZ6yG/ZmNYMLcjl81W/viR8RJkjdZGQjOe+NYMksH9uBpwMfNA1xv0vf/x
-	 mnyH0KFdAUXQVZi1HRnJs9LjnyyhXrs+xpSZwWMFw+yB0GNNQKZFt3OkCSOoK6gx8C
-	 AiceuAiIL91mg==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alan Stern <stern@rowland.harvard.edu>, Bjorn Helgaas <helgaas@kernel.org>,
- Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
- Johan Hovold <johan@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Jon Hunter <jonathanh@nvidia.com>, Linux ACPI <linux-acpi@vger.kernel.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 3/3] PM: sleep: Use DPM_FLAG_SMART_SUSPEND conditionally
-Date: Mon, 17 Feb 2025 21:19:41 +0100
-Message-ID: <2000822.PYKUYFuaPT@rjwysocki.net>
-In-Reply-To: <4966939.GXAFRqVoOG@rjwysocki.net>
-References: <4966939.GXAFRqVoOG@rjwysocki.net>
+	s=arc-20240116; t=1739824660; c=relaxed/simple;
+	bh=40yunI3yQW/2DdKCzEtatR7phgE4kq+dY4t2RGcCxM4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HMGZFApaFkxuVL/KJp+p7nhglYH2thefv+ev+l1hcFWi7w7xnletnbBox0gsqA2sOUqjVvWEppu/MYZql5orLiP8IDNn0z7sqeVM/RxeSdupKI7BhHpWu5p+8IoNVBz6uZ38VKSPLJtJOiwmwvrFEKEx37yVG+6dag04C/yVbSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CCuI9sh/; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51HJoJZ4029316
+	for <linux-pci@vger.kernel.org>; Mon, 17 Feb 2025 20:37:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	CV29D+VkgPF5aICSXzzJ3Sj2koCJ4HZ6NDnOP1bLDuI=; b=CCuI9sh/QQ/Kwo/s
+	wf77AoI9MclxtLFrzGIgZPGik88XpTbCshnaefKPYlIwjM2hStDf5DO1r5w6e33p
+	GQDloP1qV19bUvL8udgpMDsAVcRJ7EJTcivQAi1PWT4GZHSI7vKhuE0aroDuA6SY
+	cJILg28P+hxnUmLXb77tNM5IqL4U7XKPTfjtiGXda+P3EZu+G63h2oiSVcc09zqg
+	b8RsC4b8Vz63eyeV88z9kBUAIhUi6nCVX3Cr6Ru4yjPGAF4s4/Tj2/mXXhWsTbD2
+	6nOljOdAxALpQvibh/kq1pUDu8k0VhtRV2AbpjHq6lYzT4Sc0IfJMrBZ9Q2A2YhR
+	2KBRmg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44v3du1e69-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 17 Feb 2025 20:37:37 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c098c6c0caso28049385a.1
+        for <linux-pci@vger.kernel.org>; Mon, 17 Feb 2025 12:37:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739824649; x=1740429449;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CV29D+VkgPF5aICSXzzJ3Sj2koCJ4HZ6NDnOP1bLDuI=;
+        b=ofQZ2yvuTQB76nHQloAAUTFppaeAf0CHuCRlY3/wSZBf4mygCE+ypuMR36avEr4TQ/
+         IM82PV8d4qtDaeIinVO3BYIWtkYLRaWbbrgnGcelYpjP65s8q8ih9o9lXPHxUOZcHZVj
+         ypDGcB6BLcKRxffjxxDX5CJUivwmCuJ0gf/yY5nl9A727HDsQW2RhArrfVyR1fB7x21+
+         3P84pSfR0eUrebweqv/n+OATWRnHSGTLCPXx6267JDFD1RwIOZ+byIy0zY4xahsCtgzm
+         MF7mS5fR/2XoGc5QASz/2ss9Hp2qD4t65e7blsV6FpxxCDgiHt9U+m4kkaY97OAxL8OO
+         IlNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXU/AZHyv3Tv9mpMWjGzI1U1/JKV/JzjS0mXnU49iVjtte3CWlLB3xoLdOIdgeQyJXSK9sXqnWr880=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRK2Sa8oz1t92A5Jb5i1x3vMB1MdNK+WMdDDO9qSh4au300VBm
+	/zINadsILpi+xvAJz7ZwykOpz+7qD5TAtt+swNPPy5/ZiLMSWgf+Dff6N9TBeRc6imwM9JXbJvc
+	deNLUas02aaexo5M8qtQYrEXqABuAbF1osYhgHxEp/fXqzpiaKW8VE7XJvq8=
+X-Gm-Gg: ASbGncusuUQbQe2WM54sdD+GETK3iOw3ueo53T8C+GMN4V87Ow5OFZiGcRylWK3NmQk
+	rkL72XMgac4ANOx0BhaXCvcOn52J0Egu65vzdL3ImLQI17JGk6O1MwNDvX0o9KS0Xt6pvprV5vA
+	QOBPCtqthDljmnalwSb07WS9bpVOIVNl+CglL3Th6YHFaz2M3u75HdGcOK7fzqdI89kRAdYMKJh
+	yTkCpn4G9oHfEqo9844tnz5riFhvHfBnOlEM8m1+mwCg3bG8IKqfCFUR1hZUNrio4SO9zQ/x2V8
+	UFFOm1sSR0UJ91eHtgqwY7UzNNvbZ0xPRaNZUWz8pO2eIEC1CFK9Whkw7IA=
+X-Received: by 2002:a05:6214:2486:b0:6e6:60f6:56db with SMTP id 6a1803df08f44-6e66ccec03amr55360206d6.6.1739824649409;
+        Mon, 17 Feb 2025 12:37:29 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGHv+qR2wsgQJ90G8fUvLKPqMsKYbwLEjQtGdVt1KH2wyx/HZgHBqQJnVnTbguYokKhiD4oEg==
+X-Received: by 2002:a05:6214:2486:b0:6e6:60f6:56db with SMTP id 6a1803df08f44-6e66ccec03amr55359946d6.6.1739824649033;
+        Mon, 17 Feb 2025 12:37:29 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb9553fbd0sm310488366b.84.2025.02.17.12.37.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Feb 2025 12:37:28 -0800 (PST)
+Message-ID: <33f5d722-da5d-4b9b-bddf-922e820d8b7a@oss.qualcomm.com>
+Date: Mon, 17 Feb 2025 21:37:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehleefgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeefudduuedtuefgleffudeigeeitdeufeelvdejgefftdethffhhfethfeljefgteenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhtvghrnhesrhhofihlrghnugdrhhgrrhhvrghrugdrvgguuhdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhi
-X-DCC--Metrics: v370.home.net.pl 1024; Body=12 Fuz1=12 Fuz2=12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/6] arm64: dts: qcom: sm8450: add PCIe EP device nodes
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250217-sar2130p-pci-v1-0-94b20ec70a14@linaro.org>
+ <20250217-sar2130p-pci-v1-6-94b20ec70a14@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250217-sar2130p-pci-v1-6-94b20ec70a14@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: Cwar-NbVnnApWAOpPxym-GxH9SZqWJTE
+X-Proofpoint-GUID: Cwar-NbVnnApWAOpPxym-GxH9SZqWJTE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-17_08,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 mlxscore=0 suspectscore=0 adultscore=0 clxscore=1015
+ impostorscore=0 bulkscore=0 mlxlogscore=936 lowpriorityscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502170161
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 17.02.2025 7:56 PM, Dmitry Baryshkov wrote:
+> On the Qualcomm SM8450 platform the second PCIe host can be used
+> either as an RC or as an EP device. Add device node for the PCIe EP.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8450.dtsi | 52 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> index 9c809fc5fa45a98ff5441a0b6809931588897243..ad0ec15b18e5ca7bea196be1564152f7faf51d9f 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> @@ -2262,6 +2262,58 @@ pcie@0 {
+>  			};
+>  		};
+>  
+> +		pcie1_ep: pcie-ep@1c08000 {
+> +			compatible = "qcom,sm8450-pcie-ep";
+> +			reg = <0x0 0x01c08000 0x0 0x3000>,
+> +			      <0x0 0x40000000 0x0 0xf1d>,
+> +			      <0x0 0x40000f20 0x0 0xa8>,
+> +			      <0x0 0x40001000 0x0 0x1000>,
+> +			      <0x0 0x40200000 0x0 0x1000000>,
+> +			      <0x0 0x01c0b000 0x0 0x1000>,
+> +			      <0x0 0x40002000 0x0 0x1000>;
+> +			reg-names = "parf", "dbi", "elbi", "atu", "addr_space",
+> +				    "mmio", "dma";
+> +
+> +			clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
+> +				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
+> +				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
+> +				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
+> +				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>,
+> +				 <&rpmhcc RPMH_CXO_CLK>,
+> +				 <&gcc GCC_DDRSS_PCIE_SF_TBU_CLK>,
+> +				 <&gcc GCC_AGGRE_NOC_PCIE_1_AXI_CLK>;
+> +			clock-names = "aux",
+> +				      "cfg",
+> +				      "bus_master",
+> +				      "bus_slave",
+> +				      "slave_q2a",
+> +				      "ref",
+> +				      "ddrss_sf_tbu",
+> +				      "aggre_noc_axi";
+> +
+> +			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "global", "doorbell", "dma";
+> +
+> +			interconnects = <&pcie_noc MASTER_PCIE_1 0 &mc_virt SLAVE_EBI1 0>,
+> +					<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_PCIE_1 0>;
 
-A recent discussion has revealed that using DPM_FLAG_SMART_SUSPEND
-unconditionally is generally problematic because it may lead to
-situations in which the device's runtime PM information is internally
-inconsistent or does not reflect its real state [1].
+same comments as patch 5, plus please use tags
 
-For this reason, change the handling of DPM_FLAG_SMART_SUSPEND so that
-it is only taken into account if it is consistently set by the drivers
-of all devices having any PM callbacks throughout dependency graphs in
-accordance with the following rules:
-
- - The "smart suspend" feature is only enabled for devices whose drivers
-   ask for it (that is, set DPM_FLAG_SMART_SUSPEND) and for devices
-   without PM callbacks unless they have never had runtime PM enabled.
-
- - The "smart suspend" feature is not enabled for a device if it has not
-   been enabled for the device's parent unless the parent does not take
-   children into account or it has never had runtime PM enabled.
-
- - The "smart suspend" feature is not enabled for a device if it has not
-   been enabled for one of the device's suppliers taking runtime PM into
-   account unless that supplier has never had runtime PM enabled.
-
-Namely, introduce a new device PM flag called smart_suspend that is only
-set if the above conditions are met and update all DPM_FLAG_SMART_SUSPEND
-users to check power.smart_suspend instead of directly checking the
-latter.
-
-At the same time, drop the power.set_active flage introduced recently
-in commit 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status
-of parents and children") because it is now sufficient to check
-power.smart_suspend along with the dev_pm_skip_resume() return value
-to decide whether or not pm_runtime_set_active() needs to be called
-for the device.
-
-Link: https://lore.kernel.org/linux-pm/CAPDyKFroyU3YDSfw_Y6k3giVfajg3NQGwNWeteJWqpW29BojhQ@mail.gmail.com/  [1]
-Fixes: 7585946243d6 ("PM: sleep: core: Restrict power.set_active propagation")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/device_pm.c  |    6 +---
- drivers/base/power/main.c |   63 +++++++++++++++++++++++++++++++++++-----------
- drivers/mfd/intel-lpss.c  |    2 -
- drivers/pci/pci-driver.c  |    6 +---
- include/linux/pm.h        |    2 -
- 5 files changed, 55 insertions(+), 24 deletions(-)
-
---- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -1161,8 +1161,7 @@
-  */
- int acpi_subsys_suspend(struct device *dev)
- {
--	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
--	    acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
-+	if (!dev->power.smart_suspend || acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
- 		pm_runtime_resume(dev);
- 
- 	return pm_generic_suspend(dev);
-@@ -1320,8 +1319,7 @@
-  */
- int acpi_subsys_poweroff(struct device *dev)
- {
--	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
--	    acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
-+	if (!dev->power.smart_suspend || acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
- 		pm_runtime_resume(dev);
- 
- 	return pm_generic_poweroff(dev);
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -656,15 +656,13 @@
- 	 * so change its status accordingly.
- 	 *
- 	 * Otherwise, the device is going to be resumed, so set its PM-runtime
--	 * status to "active" unless its power.set_active flag is clear, in
-+	 * status to "active" unless its power.smart_suspend flag is clear, in
- 	 * which case it is not necessary to update its PM-runtime status.
- 	 */
--	if (skip_resume) {
-+	if (skip_resume)
- 		pm_runtime_set_suspended(dev);
--	} else if (dev->power.set_active) {
-+	else if (dev->power.smart_suspend)
- 		pm_runtime_set_active(dev);
--		dev->power.set_active = false;
--	}
- 
- 	if (dev->pm_domain) {
- 		info = "noirq power domain ";
-@@ -1282,14 +1280,8 @@
- 	      dev->power.may_skip_resume))
- 		dev->power.must_resume = true;
- 
--	if (dev->power.must_resume) {
--		if (dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) {
--			dev->power.set_active = true;
--			if (dev->parent && !dev->parent->power.ignore_children)
--				dev->parent->power.set_active = true;
--		}
-+	if (dev->power.must_resume)
- 		dpm_superior_set_must_resume(dev);
--	}
- 
- Complete:
- 	complete_all(&dev->power.completion);
-@@ -1797,6 +1789,49 @@
- 	return error;
- }
- 
-+static void device_prepare_smart_suspend(struct device *dev)
-+{
-+	struct device_link *link;
-+	int idx;
-+
-+	/*
-+	 * The "smart suspend" feature is enabled for devices whose drivers ask
-+	 * for it and for devices without PM callbacks unless runtime PM is
-+	 * disabled and enabling it is blocked for them.
-+	 *
-+	 * However, if "smart suspend" is not enabled for the device's parent
-+	 * or any of its suppliers that take runtime PM into account, it cannot
-+	 * be enabled for the device either.
-+	 */
-+	dev->power.smart_suspend = (dev->power.no_pm_callbacks ||
-+		dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) &&
-+		!pm_runtime_blocked(dev);
-+
-+	if (!dev->power.smart_suspend)
-+		return;
-+
-+	if (dev->parent && !pm_runtime_blocked(dev->parent) &&
-+	    !dev->parent->power.ignore_children && !dev->parent->power.smart_suspend) {
-+		dev->power.smart_suspend = false;
-+		return;
-+	}
-+
-+	idx = device_links_read_lock();
-+
-+	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
-+		if (!(link->flags | DL_FLAG_PM_RUNTIME))
-+			continue;
-+
-+		if (!pm_runtime_blocked(link->supplier) &&
-+		    !link->supplier->power.smart_suspend) {
-+			dev->power.smart_suspend = false;
-+			break;
-+		}
-+	}
-+
-+	device_links_read_unlock(idx);
-+}
-+
- /**
-  * device_prepare - Prepare a device for system power transition.
-  * @dev: Device to handle.
-@@ -1858,6 +1893,7 @@
- 		pm_runtime_put(dev);
- 		return ret;
- 	}
-+	device_prepare_smart_suspend(dev);
- 	/*
- 	 * A positive return value from ->prepare() means "this device appears
- 	 * to be runtime-suspended and its state is fine, so if it really is
-@@ -2033,6 +2069,5 @@
- 
- bool dev_pm_skip_suspend(struct device *dev)
- {
--	return dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) &&
--		pm_runtime_status_suspended(dev);
-+	return dev->power.smart_suspend && pm_runtime_status_suspended(dev);
- }
---- a/drivers/mfd/intel-lpss.c
-+++ b/drivers/mfd/intel-lpss.c
-@@ -480,7 +480,7 @@
- 
- static int resume_lpss_device(struct device *dev, void *data)
- {
--	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND))
-+	if (!dev->power.smart_suspend)
- 		pm_runtime_resume(dev);
- 
- 	return 0;
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -812,8 +812,7 @@
- 	 * suspend callbacks can cope with runtime-suspended devices, it is
- 	 * better to resume the device from runtime suspend here.
- 	 */
--	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
--	    pci_dev_need_resume(pci_dev)) {
-+	if (!dev->power.smart_suspend || pci_dev_need_resume(pci_dev)) {
- 		pm_runtime_resume(dev);
- 		pci_dev->state_saved = false;
- 	} else {
-@@ -1151,8 +1150,7 @@
- 	}
- 
- 	/* The reason to do that is the same as in pci_pm_suspend(). */
--	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
--	    pci_dev_need_resume(pci_dev)) {
-+	if (!dev->power.smart_suspend || pci_dev_need_resume(pci_dev)) {
- 		pm_runtime_resume(dev);
- 		pci_dev->state_saved = false;
- 	} else {
---- a/include/linux/pm.h
-+++ b/include/linux/pm.h
-@@ -680,8 +680,8 @@
- 	bool			syscore:1;
- 	bool			no_pm_callbacks:1;	/* Owned by the PM core */
- 	bool			async_in_progress:1;	/* Owned by the PM core */
-+	bool			smart_suspend:1;	/* Owned by the PM core */
- 	bool			must_resume:1;		/* Owned by the PM core */
--	bool			set_active:1;		/* Owned by the PM core */
- 	bool			may_skip_resume:1;	/* Set by subsystems */
- #else
- 	bool			should_wakeup:1;
-
-
-
+Konrad
 
