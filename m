@@ -1,225 +1,184 @@
-Return-Path: <linux-pci+bounces-21612-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21613-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D475DA382A1
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 13:13:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47034A382CC
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 13:19:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B3701891613
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 12:13:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CC143AC158
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 12:18:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 398CC219A72;
-	Mon, 17 Feb 2025 12:13:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4118D21773C;
+	Mon, 17 Feb 2025 12:19:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sF2WsCXn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zj3zJVGL"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D822185A8;
-	Mon, 17 Feb 2025 12:12:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196BA18DB37;
+	Mon, 17 Feb 2025 12:19:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739794380; cv=none; b=pz57ANKm9F1crhq+0NOXUVHdsf0Ul/n6MEjGZFoMBnII0lat23HWI/ZqicglecMnxJHXZthLtCy9YMlpDgV+L/i9ydtibeYR/jfZlqJBIm8LWZhDFsWWxPFMOG6xTdjsILi9DBgxKu2reLdWYmAuknKvfPxOH9msChS523mn3Ag=
+	t=1739794743; cv=none; b=jYm0vk/D5h79EpR5M50012rHUPSVF8RcG7wReQSo+jHzT3Q1N5GO9fMKNjuGk1KD8dN6jjnNwJL/sHNg63LIG/S8HZBqPc+eln44rvAITYwHj/g6vfWnu7ik9RPKsvkgEwLOGpM9c0dycY8X5wj5yrH5U8G0ZXeN7/3fiIVBmCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739794380; c=relaxed/simple;
-	bh=VJNVrcvoIcKGWBC4m+wwvcuEU2F2sV9NM4ZPEjdhRA0=;
+	s=arc-20240116; t=1739794743; c=relaxed/simple;
+	bh=wyEMxJSE4ut2qD9vvgKYF1uHbf5olLm7PCB7mopaezc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ti2g6STouqN97krAphPnZVywqT2hHIOAfayGT837V90l9BOIjuYlCdJ7AqXf/9YKmpXzBFnXGy3k8/rptlw6vMsxfjueEk0C8FcdU6mY1Q/rc53zOt8FV8HaSgCdCggZbWgDfXrjfrQsgHOw9OoRoIES/J0qaJz2kfXDFEVEfqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sF2WsCXn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0FC7C4CED1;
-	Mon, 17 Feb 2025 12:12:54 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=jRTNw8sV+SMEejLtrYPLL82eePjXyNoWuz434iFr1/b2sU8JN4Kc3qcxBZU4iCKXEyW1AXf4LPDxv2zmuk1cHSw/nCYwEjwFzv2IFKtCndqL+WY4i9L9n/RMykLG15QPzffuGPTzi3kmS+E/pUTe7ZVTXwsvV6xrApo+7RHCnqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zj3zJVGL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 256D2C4CED1;
+	Mon, 17 Feb 2025 12:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739794379;
-	bh=VJNVrcvoIcKGWBC4m+wwvcuEU2F2sV9NM4ZPEjdhRA0=;
+	s=k20201202; t=1739794742;
+	bh=wyEMxJSE4ut2qD9vvgKYF1uHbf5olLm7PCB7mopaezc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sF2WsCXnNO2Mq09ZP8eSrQmmecWEJZ6QCZhrPgk69AgUzET9dlUqjJDIWCzUCPaXi
-	 XgYLSeUO/aw0P3rJE8SbUet5UGF3b7SZFuw72dDnFbVXzCZXFmW7Cc4cXokrYIRKpJ
-	 nni21nwzpaC1ZBEzhUMsTfl59HQ6Gc3+ZOkz35+gE+RRIUl10OF3Xhso+ULq/JLgCE
-	 aP0VHmM27BR2OcELOO6pHlSLkKQcTPctahl1VztCZON8O1G2PIokz75s6hbUPjk3bE
-	 0H2a1ekaqdCVSNMvyc9F3QB1b/UiWwaqe1WXhvTvcwhirt15WONul4o3b642kNFsH/
-	 cBdb+gVEj0FEg==
-Date: Mon, 17 Feb 2025 13:12:52 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Matthew Wilcox <willy@infradead.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
-	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
-Subject: Re: [PATCH v16 2/4] rust: types: add `ForeignOwnable::PointedTo`
-Message-ID: <Z7MnxKSSNY7IyExt@cassiopeiae>
-References: <20250207-rust-xarray-bindings-v16-0-256b0cf936bd@gmail.com>
- <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com>
+	b=Zj3zJVGLaouZLXnzIJXFuNsrKpMsmPoeDnw9lLcRLibpLL+oIqHjoQnx53/NpJMaT
+	 1obkaYTrOUIoO+baSTIgHL3v+87w0VtQxnnPh71a6wpmwuy0OlH/uutPpBt2ASdEXw
+	 Y1a2lkUKXWaHGBHR/ao6nkcEvLaBe4SbvJCu0rwZySIQcJfLNqJO6AtZsIjlcQXqAt
+	 FJ1jA4lLVpjCBWk1vSr7bY0oGqyJx9vu4bR5NYF+SFaWIvvWyyTLhAXMr3Qb/A0wlo
+	 GUzWRedJnc7Q4WYfKXUEGhiklHWnDqROR2KlwtKY5zO7ZIHZUhEBsP01yqAW2DqRha
+	 b95ToCfNsaezA==
+Date: Mon, 17 Feb 2025 13:19:00 +0100
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Ryder Lee <ryder.lee@mediatek.com>,
+	Jianjun Wang <jianjun.wang@mediatek.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/2] PCI: mediatek-gen3: Configure PBUS_CSR registers
+ for EN7581 SoC
+Message-ID: <Z7MpNADDFxPTX1Yy@lore-desk>
+References: <20250202-en7581-pcie-pbus-csr-v2-0-65dcb201c9a9@kernel.org>
+ <20250202-en7581-pcie-pbus-csr-v2-2-65dcb201c9a9@kernel.org>
+ <20250214171106.ul3fwzcwhadhdwhj@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2DDNq2ksAqtJIqnN"
 Content-Disposition: inline
-In-Reply-To: <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com>
+In-Reply-To: <20250214171106.ul3fwzcwhadhdwhj@thinkpad>
 
-On Fri, Feb 07, 2025 at 08:58:25AM -0500, Tamir Duberstein wrote:
-> Allow implementors to specify the foreign pointer type; this exposes
-> information about the pointed-to type such as its alignment.
-> 
-> This requires the trait to be `unsafe` since it is now possible for
-> implementors to break soundness by returning a misaligned pointer.
-> 
-> Encoding the pointer type in the trait (and avoiding pointer casts)
-> allows the compiler to check that implementors return the correct
-> pointer type. This is preferable to directly encoding the alignment in
-> the trait using a constant as the compiler would be unable to check it.
-> 
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-> Reviewed-by: Fiona Behrens <me@kloenk.dev>
 
-I know that Andreas also asked you to pick up the RBs from [1], but - without
-speaking for any of the people above - given that you changed this commit after
-you received all those RBs you should also consider dropping them. Especially,
-since you do not mention the changes you did for this commit in the version
-history.
+--2DDNq2ksAqtJIqnN
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Just to be clear, often it is also fine to keep tags for minor changes, but then
-you should make people aware of them in the version history, such that they get
-the chance to double check.
+> On Sun, Feb 02, 2025 at 08:34:24PM +0100, Lorenzo Bianconi wrote:
+> > Configure PBus base address and address mask to allow the hw
+> > to detect if a given address is on PCIE0, PCIE1 or PCIE2.
+> >=20
+> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > ---
+> >  drivers/pci/controller/pcie-mediatek-gen3.c | 30 +++++++++++++++++++++=
++++++++-
+> >  1 file changed, 29 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/=
+controller/pcie-mediatek-gen3.c
+> > index aa24ac9aaecc749b53cfc4faf6399913d20cdbf2..9c2a592cae959de8fbe9ca5=
+c5c2253f8eadf2c76 100644
+> > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
+> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
+> > @@ -15,6 +15,7 @@
+> >  #include <linux/irqchip/chained_irq.h>
+> >  #include <linux/irqdomain.h>
+> >  #include <linux/kernel.h>
+> > +#include <linux/mfd/syscon.h>
+> >  #include <linux/module.h>
+> >  #include <linux/msi.h>
+> >  #include <linux/of_device.h>
+> > @@ -24,6 +25,7 @@
+> >  #include <linux/platform_device.h>
+> >  #include <linux/pm_domain.h>
+> >  #include <linux/pm_runtime.h>
+> > +#include <linux/regmap.h>
+> >  #include <linux/reset.h>
+> > =20
+> >  #include "../pci.h"
+> > @@ -127,6 +129,13 @@
+> > =20
+> >  #define PCIE_MTK_RESET_TIME_US		10
+> > =20
+> > +#define PCIE_EN7581_PBUS_ADDR(_n)	(0x00 + ((_n) << 3))
+> > +#define PCIE_EN7581_PBUS_ADDR_MASK(_n)	(0x04 + ((_n) << 3))
+> > +#define PCIE_EN7581_PBUS_BASE_ADDR(_n)	\
+> > +	((_n) =3D=3D 2 ? 0x28000000 :	\
+> > +	 (_n) =3D=3D 1 ? 0x24000000 : 0x20000000)
+> > +#define PCIE_EN7581_PBUS_BASE_ADDR_MASK	GENMASK(31, 26)
+> > +
+> >  /* Time in ms needed to complete PCIe reset on EN7581 SoC */
+> >  #define PCIE_EN7581_RESET_TIME_MS	100
+> > =20
+> > @@ -931,7 +940,8 @@ static int mtk_pcie_parse_port(struct mtk_gen3_pcie=
+ *pcie)
+> >  static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
+> >  {
+> >  	struct device *dev =3D pcie->dev;
+> > -	int err;
+> > +	struct regmap *map;
+> > +	int err, slot;
+> >  	u32 val;
+> > =20
+> >  	/*
+> > @@ -945,6 +955,24 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen=
+3_pcie *pcie)
+> >  	/* Wait for the time needed to complete the reset lines assert. */
+> >  	msleep(PCIE_EN7581_RESET_TIME_MS);
+> > =20
+> > +	map =3D syscon_regmap_lookup_by_phandle(dev->of_node,
+> > +					      "mediatek,pbus-csr");
+> > +	if (IS_ERR(map))
+> > +		return PTR_ERR(map);
+>=20
+> So this is going to regress the devicetree's that do not define this sysc=
+on
+> region? But I do not see any devicetree using this 'airoha,en7581-pcie'
+> compatible, so not sure if this is going to be an issue. Are the downstre=
+am
+> devicetrees used?
 
-[1] https://lore.kernel.org/rust-for-linux/20250131-configfs-v1-1-87947611401c@kernel.org/
+AFAIK there is no upstream or downstream (e.g. OpenWrt) en7581 dts with PCIe
+support yet so I do not know if this is an issue or not. If so, I guess we
+need to add the proper Fixes tag:
 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
->  rust/kernel/alloc/kbox.rs | 38 ++++++++++++++++++++------------------
->  rust/kernel/miscdevice.rs |  7 ++++++-
->  rust/kernel/pci.rs        |  2 ++
->  rust/kernel/platform.rs   |  2 ++
->  rust/kernel/sync/arc.rs   | 21 ++++++++++++---------
->  rust/kernel/types.rs      | 46 +++++++++++++++++++++++++++++++---------------
->  6 files changed, 73 insertions(+), 43 deletions(-)
-> 
-> diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
-> index e14433b2ab9d..f1a081dd64c7 100644
-> --- a/rust/kernel/miscdevice.rs
-> +++ b/rust/kernel/miscdevice.rs
-> @@ -225,13 +225,15 @@ impl<T: MiscDevice> VtableHelper<T> {
->          Ok(ptr) => ptr,
->          Err(err) => return err.to_errno(),
->      };
-> +    let ptr = ptr.into_foreign();
-> +    let ptr = ptr.cast();
+Fixes: f6ab898356dd ("PCI: mediatek-gen3: Add Airoha EN7581 support")
 
-I still think that it's unnecessary to factor this out, you can just do it
-inline as you did in previous versions of this patch and as this code did
-before.
+Regards,
+Lorenzo
 
->  
->      // This overwrites the private data with the value specified by the user, changing the type of
->      // this file's private data. All future accesses to the private data is performed by other
->      // fops_* methods in this file, which all correctly cast the private data to the new type.
->      //
->      // SAFETY: The open call of a file can access the private data.
-> -    unsafe { (*raw_file).private_data = ptr.into_foreign() };
-> +    unsafe { (*raw_file).private_data = ptr };
->  
->      0
->  }
-> @@ -246,6 +248,7 @@ impl<T: MiscDevice> VtableHelper<T> {
->  ) -> c_int {
->      // SAFETY: The release call of a file owns the private data.
->      let private = unsafe { (*file).private_data };
-> +    let private = private.cast();
->      // SAFETY: The release call of a file owns the private data.
->      let ptr = unsafe { <T::Ptr as ForeignOwnable>::from_foreign(private) };
->  
-> @@ -267,6 +270,7 @@ impl<T: MiscDevice> VtableHelper<T> {
->  ) -> c_long {
->      // SAFETY: The ioctl call of a file can access the private data.
->      let private = unsafe { (*file).private_data };
-> +    let private = private.cast();
->      // SAFETY: Ioctl calls can borrow the private data of the file.
->      let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
->  
-> @@ -316,6 +320,7 @@ impl<T: MiscDevice> VtableHelper<T> {
->  ) {
->      // SAFETY: The release call of a file owns the private data.
->      let private = unsafe { (*file).private_data };
-> +    let private = private.cast();
->      // SAFETY: Ioctl calls can borrow the private data of the file.
->      let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
->      // SAFETY:
-> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> index 6c3bc14b42ad..eb25fabbff9c 100644
-> --- a/rust/kernel/pci.rs
-> +++ b/rust/kernel/pci.rs
-> @@ -73,6 +73,7 @@ extern "C" fn probe_callback(
->          match T::probe(&mut pdev, info) {
->              Ok(data) => {
->                  let data = data.into_foreign();
-> +                let data = data.cast();
+>=20
+> - Mani
+>=20
+> --=20
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
-Same here and below, see also [2].
+--2DDNq2ksAqtJIqnN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I understand you like this style and I'm not saying it's wrong or forbidden and
-for code that you maintain such nits are entirely up to you as far as I'm
-concerned.
+-----BEGIN PGP SIGNATURE-----
 
-But I also don't think there is a necessity to convert things to your preference
-wherever you touch existing code.
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ7MpNAAKCRA6cBh0uS2t
+rIuEAP9rnTTRV1mWaP3Z7uCsLUu0NlHr8BpEtVsjDGVDIPv7+wEA9eryLOzy0dp5
+zACOFi5/qvhsY75r70+bG8mpUeyRYg8=
+=IvLf
+-----END PGP SIGNATURE-----
 
-I already explicitly asked you not to do so in [3] and yet you did so while
-keeping my ACK. :(
-
-(Only saying the latter for reference, no need to send a new version of [3],
-otherwise I would have replied.)
-
-[2] https://lore.kernel.org/rust-for-linux/Z7MYNQgo28sr_4RS@cassiopeiae/
-[3] https://lore.kernel.org/rust-for-linux/20250213-aligned-alloc-v7-1-d2a2d0be164b@gmail.com/
-
->                  // Let the `struct pci_dev` own a reference of the driver's private data.
->                  // SAFETY: By the type invariant `pdev.as_raw` returns a valid pointer to a
->                  // `struct pci_dev`.
-> @@ -88,6 +89,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
->          // SAFETY: The PCI bus only ever calls the remove callback with a valid pointer to a
->          // `struct pci_dev`.
->          let ptr = unsafe { bindings::pci_get_drvdata(pdev) };
-> +        let ptr = ptr.cast();
->  
->          // SAFETY: `remove_callback` is only ever called after a successful call to
->          // `probe_callback`, hence it's guaranteed that `ptr` points to a valid and initialized
-> diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-> index dea104563fa9..53764cb7f804 100644
-> --- a/rust/kernel/platform.rs
-> +++ b/rust/kernel/platform.rs
-> @@ -64,6 +64,7 @@ extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> kernel::ff
->          match T::probe(&mut pdev, info) {
->              Ok(data) => {
->                  let data = data.into_foreign();
-> +                let data = data.cast();
->                  // Let the `struct platform_device` own a reference of the driver's private data.
->                  // SAFETY: By the type invariant `pdev.as_raw` returns a valid pointer to a
->                  // `struct platform_device`.
-> @@ -78,6 +79,7 @@ extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> kernel::ff
->      extern "C" fn remove_callback(pdev: *mut bindings::platform_device) {
->          // SAFETY: `pdev` is a valid pointer to a `struct platform_device`.
->          let ptr = unsafe { bindings::platform_get_drvdata(pdev) };
-> +        let ptr = ptr.cast();
->  
->          // SAFETY: `remove_callback` is only ever called after a successful call to
->          // `probe_callback`, hence it's guaranteed that `ptr` points to a valid and initialized
-
+--2DDNq2ksAqtJIqnN--
 
