@@ -1,139 +1,269 @@
-Return-Path: <linux-pci+bounces-21657-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21658-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2876A38AD5
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 18:44:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47C8AA38AF4
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 18:56:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2339B18920C3
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 17:44:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F5C21890539
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 17:56:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC5B022B8CC;
-	Mon, 17 Feb 2025 17:44:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FF11232363;
+	Mon, 17 Feb 2025 17:56:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEqnG1BC"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dBGwhhD9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE16224AF6;
-	Mon, 17 Feb 2025 17:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78150D528;
+	Mon, 17 Feb 2025 17:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739814250; cv=none; b=NitXBQ9cjJCKV8ysG0D4S80ut7XIF9Umx5Salfn0iM3FU8Xt7QMZJBOt2HL1ldrSHfvyFO/VVQekM9AzpgQ3Yct5HUKlA+RgE+xjNxpWzxFEHdd9i2zGZyHupwyFY8ygHSq27k8dOzsFy/PmeghYSAfzoG0EsH4UuU9KWxLBFmg=
+	t=1739814968; cv=none; b=PL8yLF/ElczI+RTyusGl5SvNucT9XfzTrEsXBkbNEzqplHGetZv4NroUABJ1lyqXHEbYDS5qp/TkVytq+pkgDZnbqhYS3Xih3x+JSL1JvTeeUjo441zfrfZ9/Y2Ir8lQqohXqHyNHdig2g/Kr7tnYcPIzMANvxJzxJYAwTJLL0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739814250; c=relaxed/simple;
-	bh=QJEQnNzyerVZgPIqexLxIHlai98K7LAJ91eV7IWhhIo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l3JoxNlROLac9OWNRIrwhWSupbcxZMlvgmJWHHj2L7C19NNQcMScEckSBGnQ5Mp6Bv0V/GTooYjTKgMgdq1qyHjXz2YlEvN28qXxjNBAve7uMLksUVLg5IqrCIWHtdgfmMZzl+SBbJkyT5Z7EwVm2uisdxj7ld2tu0Ujrc3U6IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JEqnG1BC; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-546237cd3cbso1158305e87.0;
-        Mon, 17 Feb 2025 09:44:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739814246; x=1740419046; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QJEQnNzyerVZgPIqexLxIHlai98K7LAJ91eV7IWhhIo=;
-        b=JEqnG1BCXjgLFFHv9Eey4/b8QHXJzxCpLoO6zPBEqeFIp4rUSXHhmIrUy6bfi+1DI3
-         I6C8wK8imrdSyf0lEkWugBzPVBSTKqRg6Xaz5X3qzfv94VYQRjvF6L9oiDZpP1jo4IDa
-         aDAqCSikuOozKwHQmMYxMvg5thYgelTGUMrRgQFTbDHtiLhZ2cz5xa/Xn68w4bxw6UaF
-         N8Hb04Pp6waWd6IcA9DTcr2x4W04qOXw/nuca+51/iIthV9FoGtwM1jz7dLp5dhH/n4U
-         mrH9FBSQDkIX/exfWJRGUpVT5BA1nSFGiGLyHNevsWJnMNRL2o6q2WggdfQJ8yApuV8T
-         J9sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739814246; x=1740419046;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QJEQnNzyerVZgPIqexLxIHlai98K7LAJ91eV7IWhhIo=;
-        b=U9pxbFhAH0rJR4LWmeZNji0gVjOIxeKTXS1L7Ml9jyVBweoC3rjsGQQZD44gGi+JTr
-         PKNFrcuhDVgiH1UAjyn0HiDD+r9wGix6frpIFoYdZ9Vh4VGzyu+ZTtNIv+60ajqBFyDz
-         VI4oOYG6Py8TJ1tpGWJUeB98hINmOgkDHGOTp2JjDKE62KVyGgx54uNmxR8ftUHGITCE
-         3YwPK66tcVxTdiWGZ1oJoHJhF+4X6z9IcCmlyZBahDIf9cQTBahaPDbS5TG8IIbB2dH5
-         N32RpxGkm5Q1fH4RHA5iRdr7nx3vKV5c+wvi+wxpaJF+gRBXkcWed49IeDpmqXBxiGbZ
-         Ve+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUSry5Q9oA6+f2tLAiRCxH25bdB+c1prOSugarlTMPL/IFaLn5K0JP28suK/CfsuOnA0Fuy4wjiCc7MRW+p@vger.kernel.org, AJvYcCVDpFzXMgCkhcoN682c2AZz9sLJGdIT9tQY6CncF3oXpfJibTSrJvxDINXTGTjuMPbBY2NJhg86Xp2fMm4C@vger.kernel.org, AJvYcCX5/HPrMMorqprzyquxS8C3Yr8mM3GKRoMdseXKg8TDg1vXr6DOtibPlqNtFIwJu4kRqWKxZudU5Cnp@vger.kernel.org, AJvYcCXCpp9Or7MWq1Xxixil8ArbxPxvqq7eEt+ljWBiR3B7JVP4/M+YjsypVU2TrJNaBO8lOD+yw2NRt3Rw6r9yQc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvmnJauB/rQ4+HVN3s6jdj0d0oXyJi1pSyFPlB2XrE/xygLGp2
-	kqgaKh069EyNT5HT/EjN5HtB/VS4nDSFBr2zNhw9rNO8ynH9VKRCONxw+u5oTEkKHZdpUkfLdiM
-	PzLi7Z61R6YGhYejJkx9qxCzrBGM=
-X-Gm-Gg: ASbGnct3/aDfWRExs6GnWW/eElweUh74By7emnk8uhAx2qrv9Ic/aIYGpyEmSF3Vbyv
-	MJQHYJmkpwiBK/+m1rVD+QRGf1lskehuAUqTzjcPyCdOjP+ZDCWx2gcYSVHUYASGIf51dpttkRW
-	cpjasbnaApSZSIGF3jCzLzFnFiAGiEuck=
-X-Google-Smtp-Source: AGHT+IGvTTJx+4fmB6AiH15jyXQdH56zreYNvD8IuJPmSgHpB2B5M+YKesYWMnr39buRTcTkrufTrgW10VlcB2t4AYk=
-X-Received: by 2002:a05:6512:12c4:b0:545:81b:1510 with SMTP id
- 2adb3069b0e04-5452fe2cf34mr2727826e87.2.1739814245579; Mon, 17 Feb 2025
- 09:44:05 -0800 (PST)
+	s=arc-20240116; t=1739814968; c=relaxed/simple;
+	bh=v4d8g6Zss+ZZElac2aEjNvU4+9ul3z2rtSI2buTKt/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ux52ZR2gMlLsp50fK1VFyXlaSa4YtSoHAOiepaPGxq7LmCfxlGGJT2pyL2neJAFxGBIbYcf5jSTbh1IRlBbMX6T8w86CK4bQVKJ8Iv2QEUOX53dmjDmiPzXU6v36Dt6YCftfT8uUP2BlXFNwByZk6+gSLflZqQ3ak1EngqmZB94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dBGwhhD9; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9DF5A442C2;
+	Mon, 17 Feb 2025 17:56:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739814963;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W+FExaZ6awrhNUR+O/77ICcKPBMvq+e06oZnkz4XEEQ=;
+	b=dBGwhhD9TPznMPEScqRh19KvL6CEKEuLzlFafe7E1jnKps3zMUCBrrMRYguWZJLHPI44oV
+	ekTkDtdkum0ZeJ6hkcNiQW6qr9z6y0HRLyzv2E2xoHG2N0TUiR3KEr3qiiv523eslP3GZq
+	mbfJKM7PvHWK2qZ50LsuyZFxtPAjPqp70A3C84kBw9Mj0ZPcptakpKA7ulM8xWOQbXG2+g
+	zxqDOf/ixcKxH8kvhJszWrMu1W1LFZi+o7u+zfWNdnkwQL3JKaID9KGRmNehk0XpsNweNv
+	qlZrhiy31AlPoLJw/hDv2uNwsyWJoxEKF80XjMH2xfBJplAxm7aUMO9QpDxYcw==
+Date: Mon, 17 Feb 2025 18:55:59 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Phil Elwell <phil@raspberrypi.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Andrea della Porta
+ <andrea.porta@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+ "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE"
+ <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com,
+ brgl@bgdev.pl, Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
+ <conor+dt@kernel.org>, derek.kiernan@amd.com, devicetree@vger.kernel.org,
+ dragan.cvetic@amd.com, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org,
+ kw@linux.com, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open
+ list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
+ <linux-pci@vger.kernel.org>, "moderated list:BROADCOM BCM2711/BCM2835 ARM
+ ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
+ lpieralisi@kernel.org, luca.ceresoli@bootlin.com,
+ manivannan.sadhasivam@linaro.org, masahiroy@kernel.org, Michael Turquette
+ <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
+ saravanak@google.com, Stephen Boyd <sboyd@kernel.org>,
+ thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon
+ <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <20250217185559.2e56bd75@bootlin.com>
+In-Reply-To: <CAMEGJJ13476pKJb441o5X0Y+rbfromj5-3V-j2KZiOt326OL4A@mail.gmail.com>
+References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
+	<20250213171435.1c2ce376@bootlin.com>
+	<a3c5103c-829a-4301-ba53-6ef9bd1e74e7@lunn.ch>
+	<CAMEGJJ3-JXhin_Ht76EqUNAwLiNisa9PrCrdUzCgj=msGZfb5A@mail.gmail.com>
+	<821d4c74-09b0-4c1b-b8ef-f8c08d0f6b5b@lunn.ch>
+	<CAMEGJJ0QbzCScfTRA_pw_8A=iMYMAAFs69zFNLwcOxF5Syugpw@mail.gmail.com>
+	<20250213195304.3a2df02c@bootlin.com>
+	<CAMEGJJ0kGCj=tjM6KswbG_+ZFkzMwPY+06BXCU0qSnbBKz0=ug@mail.gmail.com>
+	<20250213220639.373da07b@bootlin.com>
+	<CAMEGJJ2_HVKfsE3P22baadbzxSDAX=yTr=m76YuXa5A2cJsJig@mail.gmail.com>
+	<20250217165306.3f055b94@bootlin.com>
+	<CAMEGJJ13476pKJb441o5X0Y+rbfromj5-3V-j2KZiOt326OL4A@mail.gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207-rust-xarray-bindings-v16-0-256b0cf936bd@gmail.com>
- <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com>
- <Z7MnxKSSNY7IyExt@cassiopeiae> <CAJ-ks9=OG2zPPPPfZd5KhGKgNsv3Qm9iHr2eWXFeL7Zv16QVdw@mail.gmail.com>
- <Z7NEZfuXSr3Ofh1G@cassiopeiae> <CAJ-ks9=TrFHiLFkRfyawNquDY2x6t3dwGi6FxnfgFLvQLYwc+A@mail.gmail.com>
- <CANiq72kAhw6XwPzGu+FrF64PZ9P_eSzX3gqG9CLvy7YJnbXgoQ@mail.gmail.com>
- <CAJ-ks9mFT1Gaao+OrdYF+hg6Sp=XghyHWu1VTALdeMJPwkX=Uw@mail.gmail.com>
- <CANiq72kFpDt230zBugN12q978LRSJiZB5dJZszWkL2p7XqQ52w@mail.gmail.com> <CANiq72kjAx4a20cnE3XrJ-z4K=8pCRuc+TOa+WtcuUsdZ22tSA@mail.gmail.com>
-In-Reply-To: <CANiq72kjAx4a20cnE3XrJ-z4K=8pCRuc+TOa+WtcuUsdZ22tSA@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 17 Feb 2025 12:43:28 -0500
-X-Gm-Features: AWEUYZnFvQEX9h2gQjKgTPirDmHanhzbOTBFPiisQ8hREXZBp_w-sIzV1ECjzO4
-Message-ID: <CAJ-ks9nZNzrPbK577ibUUjs_aE_o5QrpZbRuwCTEKuuSKG6ZHQ@mail.gmail.com>
-Subject: Re: [PATCH v16 2/4] rust: types: add `ForeignOwnable::PointedTo`
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Matthew Wilcox <willy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, "Rob Herring (Arm)" <robh@kernel.org>, 
-	=?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehledtiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvhfeljedtfedtjeevffegtddutdeghfettdduhfeuhfdttdffieeuiefgvdfhvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefhedprhgtphhtthhopehphhhilhesrhgrshhpsggvrhhrhihpihdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegrnhgurhgvrgdrphhorhhtrgesshhushgvrdgtohhmpdhrtghpthhtoheprghrn
+ hgusegrrhhnuggsrdguvgdprhgtphhtthhopegstghmqdhkvghrnhgvlhdqfhgvvggusggrtghkqdhlihhsthessghrohgruggtohhmrdgtohhmpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomh
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Mon, Feb 17, 2025 at 12:36=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Mon, Feb 17, 2025 at 6:24=E2=80=AFPM Miguel Ojeda
-> <miguel.ojeda.sandonis@gmail.com> wrote:
+On Mon, 17 Feb 2025 17:03:34 +0000
+Phil Elwell <phil@raspberrypi.com> wrote:
+
+> Hi Hervé,
+> 
+> On Mon, 17 Feb 2025 at 15:53, Herve Codina <herve.codina@bootlin.com> wrote:
 > >
-> > I understand the rationale -- what I meant to ask is if you saw that
->
-> By the way, I don't agree with the rationale, because it sounds to me
-> like optimizing for `git blame` readers, while pessimizing for normal
-> readers.
->
-> We do a lot of `git blame` in the kernel, especially since our Git log
-> is quite good, but we still read the files themselves more... I can
-> imagine ending up with a lot of extra lines over time everywhere, it
-> could dissuade small fixes and so on.
+> > Hi Phil,
+> >
+> > On Thu, 13 Feb 2025 21:12:43 +0000
+> > Phil Elwell <phil@raspberrypi.com> wrote:
+> >  
+> > > On Thu, 13 Feb 2025, 21:06 Herve Codina, <herve.codina@bootlin.com> wrote:  
+> > > >
+> > > > Hi Phil,
+> > > >
+> > > > On Thu, 13 Feb 2025 20:15:06 +0000
+> > > > Phil Elwell <phil@raspberrypi.com> wrote:
+> > > >  
+> > > > > Once more, with plain text, which I'd hoped the Android GMail client
+> > > > > would work out for itself.
+> > > > >
+> > > > > On Thu, 13 Feb 2025, 18:53 Herve Codina, <herve.codina@bootlin.com> wrote:  
+> > > > > >
+> > > > > > Hi Phil,
+> > > > > >
+> > > > > > On Thu, 13 Feb 2025 17:57:37 +0000
+> > > > > > Phil Elwell <phil@raspberrypi.com> wrote:
+> > > > > >  
+> > > > > > > On Thu, 13 Feb 2025 at 17:45, Andrew Lunn <andrew@lunn.ch> wrote:  
+> > > > > > > >  
+> > > > > > > > > > Or do you mean a custom board, which has a CPU, RP1 and the button and
+> > > > > > > > > > fan are directly on this custom board? You then want a board DTS which
+> > > > > > > > > > includes all these pieces?  
+> > > > > > > > >
+> > > > > > > > > That depends on whether you count the Raspberry Pi 5 as a custom board.  
+> > > > > > > >
+> > > > > > > > So you mean the Pi 5 board would itself make use of the resources the
+> > > > > > > > RP1 device has? They are not simply connected to headers for plugin
+> > > > > > > > boards, but used by the main board? Hence you want to describe them in
+> > > > > > > > the board .DTS file.  
+> > > > > > >
+> > > > > > > That's correct. But even for plug-in devices, those which are on
+> > > > > > > non-discoverable buses need overlays to declare them, which causes a
+> > > > > > > problem when the overlay application happens before the kernel is
+> > > > > > > started.
+> > > > > > >  
+> > > > > >
+> > > > > > Hum, I see.
+> > > > > >
+> > > > > > We worked on overlay usage on non-discoverable buses wired to a connector
+> > > > > > and we did a talk about issues we are facing on at Plumber [0].
+> > > > > >
+> > > > > > You can also find our big picture in [1] and a last contribution introducing
+> > > > > > export-symbols feature in [2]. export-symbols is also under discussion on
+> > > > > > some other threads.
+> > > > > >
+> > > > > > Also, we proposed the i2c bus extensions feature [3] whose goal is to allow
+> > > > > > an addon board to add devices on an i2c bus provided by a base board and
+> > > > > > wired to an connector the addon board is connected to.
+> > > > > >
+> > > > > > Maybe in your case, you can decouple resources (gpio, pwm) provided by the
+> > > > > > addon board and used by the base board using also nexus node.
+> > > > > >
+> > > > > > We use a nexus node [4] (not presented at the Plumbers talk because the idea
+> > > > > > came during 'out of talk' discussions in Plumbers) in order to allow our
+> > > > > > addon board to use resources provided by the base board.
+> > > > > >
+> > > > > > In your case, if I understood, you are in the other direction but why not
+> > > > > > using also a nexus node to decouple and translate resources in this other
+> > > > > > direction ?
+> > > > > >
+> > > > > > Don't know if this idea can help but feel free to ask for some more
+> > > > > > information if needed.  
+> > > > >
+> > > > > Nexus nodes look interesting - I see them as adding a layer of
+> > > > > abstraction such that, for example, boards can declare which of their
+> > > > > specific resources performs a common function so that clients can
+> > > > > treat them all the same. We do the same thing in a limited way by
+> > > > > using common labels on nodes, but this goes much further.
+> > > > >
+> > > > > In the case of Pi 5 and RP1, I imagine you are proposing that the Pi 5
+> > > > > dtb declares the connector node and the overlay fills in the content
+> > > > > with references to its GPIO controller, PWM controller etc. However, I
+> > > > > think the overlay would also have to be board specific because it's
+> > > > > not possible to patch part of a property from an overlay, so you'd end
+> > > > > up overwriting the GPIO number as well as the controller reference.
+> > > > >
+> > > > > What is needed to make this work is the ability to cope with
+> > > > > unresolved references in the base dtb, to be resolved as each overlay
+> > > > > is applied, with runtime checking that each reference is resolved
+> > > > > before it is used, all of which sounds like a nightmare. Plus, we
+> > > > > really don't want to have to change the way all our camera and display
+> > > > > overlays work on all Raspberry Pis just to accommodate somebody's idea
+> > > > > of how RP1 should be handled.  
+> > > >
+> > > > Just to be clear, my comments were not there to tell you how RP1 should
+> > > > work. I just proposed ideas without trying to force anything and I can
+> > > > fully understand that ideas proposed don't feed your needs.
+> > > >
+> > > > Sorry if my approach was misunderstood.  
+> > >
+> > > I feel I've been misunderstood - I appreciate your ideas.
+> > >
+> > > Perhaps it would help if you could outline how you think we could
+> > > apply your suggestions?
+> > >  
+> >
+> > I was thinking about what your mentioned, i.e. the overlay fill the nexus node.
+> > No sure to understand why the overlay should patch some properties.
+> > Also where are the unresolved references in that case. The base DT refers to
+> > the Nexus node.
+> > The issue will probably be that the translation performed by the nexus node is
+> > not available until the overlay is applied. The consumer will see errors other
+> > than PROBE_DEFER when if probes while the overlay is not applied.  
+> 
+> The job of the nexus node would be to translate a generic request for
+> a numbered resource to a specific request for an RP1 resource with
+> arbitrary properties. The arbitrary properties could be GPIO offsets,
+> which are board specific, while the node supplying the resource is
+> provided by the overlay. This means that an entry in the table,
+> described by a single property, could have contributions from the base
+> DT and the overlay, which is not possible since overlays overwrite
+> whole properties.
 
-I almost addressed this in my original reply - I regret that I didn't.
+Hum, I am a bit lost.
+Some DT example (base and overlay) could help me to understand.
 
-I agree with you that optimizing for git blame while pessimizing for
-normal readers is not what we should do. I don't agree that putting
-boilerplate on its own line is a pessimization for the normal reader -
-in my opinion it is the opposite. Trivial expressions of the form
+> 
+> Perhaps that particular problem could be overcome by creating a
+> single-entry map, using the map-mask feature to pass through all of
+> the GPIO offset and flags to the parent, so that the whole table
+> becomes a proxy for RP1's GPIO controller. Is that what you had in
+> mind?
+> 
+> > Also, the solution will lead to memory leak at runtime. Indeed, the overlay
+> > add properties in an already existing node.
+> > If the overlay is applied by the Kernel itself, this lead to memory leak when
+> > the overlay is removed.
+> > Indeed, an overlay can add/remove node without any issue but it cannot
+> > add/remove properties to/from existing nodes.  
+> 
+> Fortunately for me I'm not arguing _for_ the use of an overlay.
+> 
+> > In the case described here, the nexus node is already present in the DT and the
+> > overlay add/remove properties to/from this existing node.  
+> 
+> I think I can see how that could be made to work for GPIOs. It looks
+> as though the GPIO subsystem is the only one making use of
+> of_parse_phandle_with_args_map. Interrupts seem to have an open-coded
+> equivalent, and iommus. What about I2C and PWM?
 
-let foo =3D foo.cast();
+Support for PWM has been recently accepted.
+  https://lore.kernel.org/all/ufl4kwrjyp4zid4muvghefevqc6hk3zyvxnsu72fxd4f46fzg6@hufkci2dzjid/
 
-can be very easily skimmed by a reader, whereas an expression of the form
+For i2c, nexus node is not suitable.
 
-unsafe { <type as trait>::associated_type::function(foo.cast()) }
+Nexus node works well when resources are indexed (gpio line in a gpio chip
+for instance). For bus controller there is no index.
+I mean we never refer a i2c bus controller using <&i2c-ctrl 12>.
 
-become more difficult to read with every operation that is added to it.
+For i2c, I proposed i2c bus extension:
+  https://lore.kernel.org/all/20250205173918.600037-1-herve.codina@bootlin.com/
 
-As always, this is just my opinion.
+Best regards,
+Hervé
 
