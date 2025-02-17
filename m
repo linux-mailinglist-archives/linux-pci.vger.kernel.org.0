@@ -1,176 +1,146 @@
-Return-Path: <linux-pci+bounces-21593-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21594-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B47BA37E68
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 10:29:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F016FA37E88
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 10:31:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 350423A6A2B
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 09:28:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4BDF73A96D8
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 09:31:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BF0D212FA6;
-	Mon, 17 Feb 2025 09:29:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D8662153E2;
+	Mon, 17 Feb 2025 09:31:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZXucOYvP"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fK/H46QJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8258A212F82;
-	Mon, 17 Feb 2025 09:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BF921519C;
+	Mon, 17 Feb 2025 09:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739784541; cv=none; b=PCH2dbkr3lqj2R1hj+4ggXTbWU5J5OsEjcqvZJtAblGOpQiJw/XAgQCit33yt6SjWsdzpOSx3oSxPCwRnAqn8YKSlTikDUVcgn+OLCn8uPRUhrhlE1lLe45dXxkFGkGeqJYI5k11Y0VXVGEQ5sCSqSIztLS+iyxU3aiwDveT8eE=
+	t=1739784677; cv=none; b=ulOktqqRNfoXDIsk2NBqhnfPAOBrnjIH1BcyyW7IcRRSX+LFfWtVj4mIwt8WUxL2X3KIftuWNO+Xx3ylICEzuueG2qIkB8tGvj0B2Xi0+yXKCq3y3QAAxjwj4YCUaHShJzR7n21qBtvIVvqsBrk1V1/i0CR2Jjfg3cbppCqXqcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739784541; c=relaxed/simple;
-	bh=uR0ahrBe/WAWEbfMIemRA6wzjqECzyWw0ycIUrRe8OA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=eTOKRwROY5ehrYW5r9P/Vj7dQdGhtSNSu6Qwt0U/cjZV/9NIZ8Gy2GoBnrsOq5bMDeQBVhythrA0R4akZaip5d4id6uwkGQIcNapslQAsKf9eVrmyuR3CpXJbVIxV3f8JQf95rwhvrebeeEbSPXiBQXby20OSetkdl0WpV0R7TE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZXucOYvP; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739784539; x=1771320539;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=uR0ahrBe/WAWEbfMIemRA6wzjqECzyWw0ycIUrRe8OA=;
-  b=ZXucOYvPLWMmjCEqAEj1Y9Jfd+4iGeudDMiPXVVMUEA9GkLsuk6GQvEL
-   Xu/Ggdm/1sftlSZLdMoYtoeSS3K3mReNvHwhcTGK5d9AmQWmvj7Q2Hgrq
-   Vnc7sKZ8dFvF/VJN7DhnpRtxOHoyzcQSB4rsohmPXDryPm9dnM8dm2pEd
-   CYQ6CYOoRuE2HXyOwbhKWw8BIZK15l7o56Igk7uQQplMgAOGuwoieSdkO
-   jHFyarHF8ZwvYuj/uiWzYpRYm5a4E8mPYpXqQaYr8oJ3OoyEuYRDcT84h
-   lq0EdMNvsKucUdaKeD64DnsQ4zCANATNGyDGrA8g2R7Mg6Uf0mSFR5PLx
-   w==;
-X-CSE-ConnectionGUID: VIM0Fa91SfqMLsvgUaY4tA==
-X-CSE-MsgGUID: s2QfhcR2RHSsiSnvmTzU1Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11347"; a="40723656"
-X-IronPort-AV: E=Sophos;i="6.13,292,1732608000"; 
-   d="scan'208";a="40723656"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 01:28:58 -0800
-X-CSE-ConnectionGUID: 1d74vD5uQOeDd00f7fDiXQ==
-X-CSE-MsgGUID: WrTi6TyuSnSs1+mMwsmFlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="119283191"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.163])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 01:28:53 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 17 Feb 2025 11:28:49 +0200 (EET)
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Rob Herring <robh@kernel.org>, Johannes Berg <johannes@sipsolutions.net>, 
-    Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, 
-    mhi@lists.linux.dev, linux-wireless@vger.kernel.org, 
-    ath11k@lists.infradead.org, quic_jjohnson@quicinc.com, 
-    quic_pyarlaga@quicinc.com, quic_vbadigan@quicinc.com, 
-    quic_vpernami@quicinc.com, quic_mrana@quicinc.com
-Subject: Re: [PATCH 2/8] PCI/bwctrl: Add support to scale bandwidth before
- & after link re-training
-In-Reply-To: <20250217-mhi_bw_up-v1-2-9bad1e42bdb1@oss.qualcomm.com>
-Message-ID: <f58ff91f-95a1-1a0d-91e9-972f0eeddd4c@linux.intel.com>
-References: <20250217-mhi_bw_up-v1-0-9bad1e42bdb1@oss.qualcomm.com> <20250217-mhi_bw_up-v1-2-9bad1e42bdb1@oss.qualcomm.com>
+	s=arc-20240116; t=1739784677; c=relaxed/simple;
+	bh=BF3BWMnRAgV+XVc7QLQRap/ja+b/weSZ+YkZOb083OM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FppWIrHncgthL/3PAW17LeknnXOPLzh+HVIqoKzujxJs+Vft7irobBNoGbojA8Mk0psF/vWiF/Jhb9+rbku5knZ9XCmA8FuxdUNGyaerS75h/Kd3IB3AZnnxgK/Hy1utkQobRzd+aZDJJBFJlZglMcETZmy7mFfel2hXRSsJSqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fK/H46QJ; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6D2C04328A;
+	Mon, 17 Feb 2025 09:31:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1739784672;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gzSgtFsogf3LvL+ai4nE5Lt4B+3+Fu9VUwcYPOuEIZQ=;
+	b=fK/H46QJFMLPMcRVkjjcBvXz3suQapWq9E5PCchE4muxik4Ug0FIztPKlE1SGb5DuDwz5a
+	Uoo/64V/Eik/EAM40u63rxPdOzMTUc5FKFGxbkaMwRtBN5QXugz6xEKYFf59C2CPI3qGmh
+	u2dWyZ6LCPd2sA0i6Nm2l6QZWCbNwHDiaPP9GOa9zcetatAYq2HNqRYOpUPYEdK/9SEZcv
+	QBSU/EiTcIELPURB8EgJ9MV8wakky8b0GJorTq/QHU9O5rUi5u4wERdnNw3OTb4gL4kLQh
+	1ripd4J1y7IWjqrj7Anhj4dIEqUdf7WF3Tl1AosWjOQZfn//HL8/QDLv01yDpA==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: J. =?utf-8?Q?Neusch=C3=A4fer?= <j.ne@posteo.net>
+Cc: J. =?utf-8?Q?Neusch=C3=A4fer?= via B4 Relay
+ <devnull+j.ne.posteo.net@kernel.org>,
+  devicetree@vger.kernel.org,  linuxppc-dev@lists.ozlabs.org,  Krzysztof
+ Kozlowski <krzk@kernel.org>,  imx@lists.linux.dev,  Scott Wood
+ <oss@buserror.net>,  Madhavan Srinivasan <maddy@linux.ibm.com>,  Michael
+ Ellerman <mpe@ellerman.id.au>,  Nicholas Piggin <npiggin@gmail.com>,
+  Christophe Leroy <christophe.leroy@csgroup.eu>,  Naveen N Rao
+ <naveen@kernel.org>,  Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
+ <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Damien Le Moal
+ <dlemoal@kernel.org>,  Niklas Cassel <cassel@kernel.org>,  Herbert Xu
+ <herbert@gondor.apana.org.au>,  "David S. Miller" <davem@davemloft.net>,
+  Lee Jones <lee@kernel.org>,  Vinod Koul <vkoul@kernel.org>,  Lorenzo
+ Pieralisi <lpieralisi@kernel.org>,  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kw@linux.com>,
+  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  Bjorn Helgaas
+ <bhelgaas@google.com>,  J. =?utf-8?Q?Neusch=C3=A4fer?=
+ <j.neuschaefer@gmx.net>,  Wim Van
+ Sebroeck <wim@linux-watchdog.org>,  Guenter Roeck <linux@roeck-us.net>,
+  Mark Brown <broonie@kernel.org>,  Richard Weinberger <richard@nod.at>,
+  Vignesh Raghavendra <vigneshr@ti.com>,  linux-kernel@vger.kernel.org,
+  linux-ide@vger.kernel.org,  linux-crypto@vger.kernel.org,
+  dmaengine@vger.kernel.org,  linux-pci@vger.kernel.org,
+  linux-watchdog@vger.kernel.org,  linux-spi@vger.kernel.org,
+  linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 12/12] dt-bindings: mtd: raw-nand-chip: Relax node
+ name pattern
+In-Reply-To: <Z7Iqir-qaZDt6tsx@probook> ("J. =?utf-8?Q?Neusch=C3=A4fer=22'?=
+ =?utf-8?Q?s?= message of "Sun, 16
+	Feb 2025 18:12:26 +0000")
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+	<20250207-ppcyaml-v2-12-8137b0c42526@posteo.net>
+	<87o6zaurv9.fsf@bootlin.com> <Z7Iqir-qaZDt6tsx@probook>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 17 Feb 2025 10:31:08 +0100
+Message-ID: <87tt8svrxf.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehkedtgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdevhffgtdfhhefggeeftdeiffduiedtgffftddutdehteejhfevieelveegveetnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefledprhgtphhtthhopehjrdhnvgesphhoshhtvghordhnvghtpdhrtghpthhtohepuggvvhhnuhhllhdojhdrnhgvrdhpohhsthgvohdrnhgvtheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugihpphgtqdguvghvsehlihhsthhsrdhoi
+ ihlrggsshdrohhrghdprhgtphhtthhopehkrhiikheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehoshhssegsuhhsvghrrhhorhdrnhgvthdprhgtphhtthhopehmrgguugihsehlihhnuhigrdhisghmrdgtohhm
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Mon, 17 Feb 2025, Krishna Chaitanya Chundru wrote:
+Hello,
 
-> If the driver wants to move to higher data rate/speed than the current data
-> rate then the controller driver may need to change certain votes so that
-> link may come up at requested data rate/speed like QCOM PCIe controllers
-> need to change their RPMh (Resource Power Manager-hardened) state. Once
-> link retraining is done controller drivers needs to adjust their votes
-> based on the final data rate.
-> 
-> Some controllers also may need to update their bandwidth voting like
-> ICC bw votings etc.
-> 
-> So, add pre_scale_bus_bw() & post_scale_bus_bw() op to call before & after
-> the link re-train.
-> 
-> In case of PCIe switch, if there is a request to change target speed for a
-> downstream port then no need to call these function ops as these are
-> outside the scope of the controller drivers.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  drivers/pci/pcie/bwctrl.c | 15 +++++++++++++++
->  include/linux/pci.h       |  2 ++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-> index 0a5e7efbce2c..e3faa4d1f935 100644
-> --- a/drivers/pci/pcie/bwctrl.c
-> +++ b/drivers/pci/pcie/bwctrl.c
-> @@ -161,6 +161,8 @@ static int pcie_bwctrl_change_speed(struct pci_dev *port, u16 target_speed, bool
->  int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
->  			  bool use_lt)
->  {
-> +	struct pci_host_bridge *host = pci_find_host_bridge(port->bus);
-> +	bool is_root = pci_is_root_bus(port->bus);
+>> > In some scenarios, such as under the Freescale eLBC bus, there are raw
+>> > NAND chips with a unit address that has a comma in it (cs,offset).
+>> > Relax the $nodename pattern in raw-nand-chip.yaml to allow such unit
+>> > addresses.
+>>=20
+>> This is super specific to this controller, I'd rather avoid that in the
+>> main (shared) files. I believe you can force another node name in the
+>> controller's binding instead?
+>
+> It's a bit tricky. AFAICS, when I declare a node name pattern in my
+> specific binding in addition to the generic binding, the result is that
+> both of them apply, so I can't relax stricter requirements:
+>
+> # raw-nand-chip.yaml
+> properties:
+>   $nodename:
+>     pattern: "^nand@[a-f0-9]$"
+>
+> # fsl,elbc-fcm-nand.yaml
+> properties:
+>   $nodename:
+>     pattern: "^nand@[a-f0-9](,[0-9a-f]*)?$"
 
-is_rootport ?
+Well, I guess this is creating a second possible node name.
 
->  	struct pci_bus *bus = port->subordinate;
->  	u16 target_speed;
->  	int ret;
-> @@ -173,6 +175,16 @@ int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
->  
->  	target_speed = pcie_bwctrl_select_speed(port, speed_req);
->  
-> +	/*
-> +	 * The controller driver may need to be scaled for targeted speed
-> +	 * otherwise link might not come up at requested speed.
-> +	 */
-> +	if (is_root && host->ops->pre_scale_bus_bw) {
-> +		ret = host->ops->pre_scale_bus_bw(host->bus, target_speed);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	scoped_guard(rwsem_read, &pcie_bwctrl_setspeed_rwsem) {
->  		struct pcie_bwctrl_data *data = port->link_bwctrl;
->  
-> @@ -197,6 +209,9 @@ int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
->  	    !list_empty(&bus->devices))
->  		ret = -EAGAIN;
->  
-> +	if (is_root && host->ops->post_scale_bus_bw)
-> +		host->ops->post_scale_bus_bw(host->bus, pci_bus_speed2lnkctl2(bus->cur_bus_speed));
+> # dtc
+> /.../fsl,elbc-fcm-nand.example.dtb:
+> nand@1,0: $nodename:0: 'nand@1,0' does not match '^nand@[a-f0-9]$'
+>         from schema $id:
+> 	http://devicetree.org/schemas/mtd/fsl,elbc-fcm-nand.yaml#
 
-Is the naming of these callbacks too specific for your use case? Does PCIe 
-spec actually call changing the Target Speed "scaling bus bandwidth" or 
-something along those line?
+What about fixing the DT instead?
 
->  	return ret;
->  }
->  
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 47b31ad724fa..58f1de626c37 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -804,6 +804,8 @@ struct pci_ops {
->  	void __iomem *(*map_bus)(struct pci_bus *bus, unsigned int devfn, int where);
->  	int (*read)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val);
->  	int (*write)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val);
-> +	int (*pre_scale_bus_bw)(struct pci_bus *bus, int target_speed);
-> +	void (*post_scale_bus_bw)(struct pci_bus *bus, int current_speed);
+> (I changed the second pattern to nand-fail@... and dtc warned about it
+>  mismatching too.)
+>
+> Perhaps I'm missing a DT-schema trick to override a value/pattern.
+>
+> Alternatively (pending discussion on patch 11/12), I might end up not
+> referencing raw-nand-chip.yaml.
 
-Please document these, including the locking requirements.
+Ok.
 
--- 
- i.
-
+Thanks,
+Miqu=C3=A8l
 
