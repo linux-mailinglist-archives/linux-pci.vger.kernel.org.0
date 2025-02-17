@@ -1,225 +1,207 @@
-Return-Path: <linux-pci+bounces-21634-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21635-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F255A388AF
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 17:06:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5BF23A388C4
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 17:08:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D4F60176E30
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 16:00:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D0D83A477F
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 16:02:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A80F225410;
-	Mon, 17 Feb 2025 15:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CE1615666D;
+	Mon, 17 Feb 2025 16:00:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="S757mGQv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WtWOrk6/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8B2149E16;
-	Mon, 17 Feb 2025 15:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35ED21ADD3
+	for <linux-pci@vger.kernel.org>; Mon, 17 Feb 2025 16:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739807595; cv=none; b=drDf4hA/Pcmt6NsiVh9YPmnj+EA+di453j0W0/ugzvz7b9b1tQfw/Dfx0WwKbR4t0w7LO3tyZiuvPoLAANMV6d4ND4DpKk6nldxWBaqh7R6CPmuzYWmns1ZRkUiCYonqzpOODH6BURxhKT6BQPt+i/fNNqDFovKNVCEkG0rtpBY=
+	t=1739808017; cv=none; b=rRt3/IeVQq2yTg/CgIojqPRQ9nyaycVAhbuhlNDcnTd58jPKwdAzfV3iRsLR26wCt9CqAcMO58VONKALwb7NKpFLiIzmt9hH0snTIFm1Usk9j01mW4mVYGVYBA0nnz1QpIU39NxuKT9fziDtY/siSQlcTj6jrMIYM/Ck0iDyDYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739807595; c=relaxed/simple;
-	bh=wMdlwX1zycQ/olpFgvqq2mKqCvRYB6SEdDAMSGU4EHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=amNLHM/7mRIlzMpTjeLZW8qFHWIe+fzZzncSLzQC7LuUa7k/vusUzSHN584WbSyhVEMr8ITg4ZZ1VLVvPxR6/ohluBsdOa2jilVxJapZhXTL6SwUGaI5skXDweeFyHJpqQlxCKyR2bXDu5Pn3qGKRse6j95vgBF8qmbwqIlguSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=S757mGQv; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BC6DA4431C;
-	Mon, 17 Feb 2025 15:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1739807591;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BUY8RBuJLNPYXLzFRSZTltcWOxb/JvQg0i4KGslCkvs=;
-	b=S757mGQvV6XaSYr+mgBWjh0K/YWYYsvnfs9J/kFPfSNhsPJ+UKZgTntfAgOV5a76Ra4iQA
-	JvQHnjeKsW7dOOkALyAJeE97I18GirxyxL+75bh/DaHkQ+VgZwSYgV/K7UI4IXmWotroF2
-	R8D1Sv6uIma2Sd7bR/UZOYq57MOfecag85vXp/cYfMgR/rcKJu79TllCMfbNRgdS0DFtOh
-	w6zH6dvx5KrkkCnCHJ5v+GeGMJgSOFuqAXr8U1zsBMcJwgWlOP1rmdjyNLVY43k5kWWQkL
-	4C+wainse0oqxUNQ8XDKfOV3L4AvpWoa716e9sYsO8Qjtq3MfXSKtmtX1MFykw==
-Date: Mon, 17 Feb 2025 16:53:06 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Phil Elwell <phil@raspberrypi.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Andrea della Porta
- <andrea.porta@suse.com>, Arnd Bergmann <arnd@arndb.de>,
- "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE"
- <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com,
- brgl@bgdev.pl, Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
- <conor+dt@kernel.org>, derek.kiernan@amd.com, devicetree@vger.kernel.org,
- dragan.cvetic@amd.com, Florian Fainelli <florian.fainelli@broadcom.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org,
- kw@linux.com, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel
- <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open
- list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS"
- <linux-pci@vger.kernel.org>, "moderated list:BROADCOM BCM2711/BCM2835 ARM
- ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
- lpieralisi@kernel.org, luca.ceresoli@bootlin.com,
- manivannan.sadhasivam@linaro.org, masahiroy@kernel.org, Michael Turquette
- <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
- saravanak@google.com, Stephen Boyd <sboyd@kernel.org>,
- thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon
- <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
-Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device
- using a DT overlay
-Message-ID: <20250217165306.3f055b94@bootlin.com>
-In-Reply-To: <CAMEGJJ2_HVKfsE3P22baadbzxSDAX=yTr=m76YuXa5A2cJsJig@mail.gmail.com>
-References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
-	<20250213171435.1c2ce376@bootlin.com>
-	<a3c5103c-829a-4301-ba53-6ef9bd1e74e7@lunn.ch>
-	<CAMEGJJ3-JXhin_Ht76EqUNAwLiNisa9PrCrdUzCgj=msGZfb5A@mail.gmail.com>
-	<821d4c74-09b0-4c1b-b8ef-f8c08d0f6b5b@lunn.ch>
-	<CAMEGJJ0QbzCScfTRA_pw_8A=iMYMAAFs69zFNLwcOxF5Syugpw@mail.gmail.com>
-	<20250213195304.3a2df02c@bootlin.com>
-	<CAMEGJJ0kGCj=tjM6KswbG_+ZFkzMwPY+06BXCU0qSnbBKz0=ug@mail.gmail.com>
-	<20250213220639.373da07b@bootlin.com>
-	<CAMEGJJ2_HVKfsE3P22baadbzxSDAX=yTr=m76YuXa5A2cJsJig@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1739808017; c=relaxed/simple;
+	bh=Y0ojYpZAKDPexG2BiUyStjFiHltHtvwtQSc2W4A51To=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EngI9AS97rfzefFvHVhxgpsOBVI9bkc4qbdsrBH8cZtF2ODd7Noat49s7UcSUXZejfP8YFePj4g7bOJHzf04BDkrbuQzzx0zsa5TsGTlKENrd4SfgEeEkSAMEX3cK0IXtDF0YRXCsF+TJyxenM15R6bFswCJMVuhtMsURBEivQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WtWOrk6/; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fbf706c9cbso1096009a91.3
+        for <linux-pci@vger.kernel.org>; Mon, 17 Feb 2025 08:00:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739808014; x=1740412814; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ueTj5ZO31uXjyv/62G6E104VecareS4hLbaJX3FHHb0=;
+        b=WtWOrk6/RNRDF/ncsZw99RicZAur+V+ObTwGV8uJGAbY06NyE5iGAMW2q7xmn0F2sb
+         LqSghjw+A3FitWufAWtxyruGxJvN3MyU0+he/QaVEW3HASU5beindMDyTjd5Hm9MINlr
+         jhvQsGc/gP6mQbXItdKLodXG5ckNlfowXq5nWSfD6T7FEEy02B9rgg/OqrWTAkhYbK5e
+         m5wRym4kr9jogJ3gptrT52PMcIuhmUDulqmux13WPHwr77qOwGEqw41KRarS8qtMMJp/
+         0LXCxqFw2wfYWotwtg8L137Q1SsnyURAMvSHLCURpJxpZ1hySFSf/NkETUrH055BqsNp
+         /2dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739808014; x=1740412814;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ueTj5ZO31uXjyv/62G6E104VecareS4hLbaJX3FHHb0=;
+        b=m6QcxC5CXuPktOakIRVsEV4goa2aR4F3XuCq9g+1+FqC1AQTVESDY/L3fqLLseTqGy
+         VRBhUSdJnwAxhKiYeuaREObo2B2fbVY8gFOxKo3t2A4UWO2a1O9q/YEZSItEGMPi71gK
+         miG4DU6JEdlnFYlApeQ7TdBKtdkYhdG0K/IiAtLJNsZ2i2yUrVr6PAodBNhT0iIO9WTF
+         R7Mpn8vwPmiiKidRhBgz7rXgJDM5XfeJx5slEuXtS5/WKELy6H95yxttaN9RAoyb4vJW
+         +hhL1fKPYjkpQd7m0Lfnd8YczTEENiFcyus3K3w6oDihD13ZG8eyBQHV+muGOsuqmI64
+         +FRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVSmBdbkiBny8ZycBmYAE6rXbuTzqoJveGrB9MFzAcuu/eozFg2xVgBLd0T5Z75yGW8ug40oHxIj3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo62P1T+bt0zN0pDiVr0+Vc8tLtS6pV+bCIfcYKgQ6Yomu61bf
+	hVS9WqDx1CBMbwrfZyxTGju+Zy9pM4UM7OBfYfvFVayeQJ8I9dEdE3Yak/30LDY2xwjh9vn6VC+
+	gBKDb+yO8pcy0gy2vL4SnDZ+Cjm8=
+X-Gm-Gg: ASbGncurVZtWaRj+vWR/tXAKYhwWmrIv8nuUlZWA4XLzRAgtN2PvG3GRgncu/sBcAot
+	uuS0E4NbL1xA/Ifnggzx9RjGQDK0Ffliw+OtaHiGm3ULZnGgfh5gNw86eGmc+Cv3Khy4SgjPY
+X-Google-Smtp-Source: AGHT+IHO9/ak88DCQz1bcYSUoj5Y5QgAVWei+EhPjy+Pwmflvp2i1lowLTD/lmvhwbzrTOmOncULAnttHlaPdegO07I=
+X-Received: by 2002:a17:90b:4c46:b0:2ee:f59a:94d3 with SMTP id
+ 98e67ed59e1d1-2fc40792d5bmr6279923a91.0.1739808012618; Mon, 17 Feb 2025
+ 08:00:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdehkeekudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeehpdhrtghpthhtohepphhhihhlsehrrghsphgsvghrrhihphhirdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtoheprghnughrvggrrdhpohhrthgrsehsuhhsvgdrtghomhdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtoheps
- ggtmhdqkhgvrhhnvghlqdhfvggvuggsrggtkhdqlhhishhtsegsrhhorggutghomhdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhm
-X-GND-Sasl: herve.codina@bootlin.com
+References: <20250217151053.420882-1-alexander.deucher@amd.com>
+ <1654fb6c-e0e8-4dde-8554-7058cf73503d@amd.com> <CADnq5_NUEuMFsd__w1eGBWALxcQwtX7sa2Sn53vDjaxrqNuhPQ@mail.gmail.com>
+In-Reply-To: <CADnq5_NUEuMFsd__w1eGBWALxcQwtX7sa2Sn53vDjaxrqNuhPQ@mail.gmail.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 17 Feb 2025 11:00:00 -0500
+X-Gm-Features: AWEUYZmGoN9BY0F6L8OwbUtyHoHkrVjfUrEeojzRF-byVv_RMIaipxzCHHwLogY
+Message-ID: <CADnq5_NEhv-E9ZxHvxhBtFb_cBkPqMfu-nsQfEknO30tNBjA2Q@mail.gmail.com>
+Subject: Re: [PATCH] PCI: fix Sapphire PCI rebar quirk
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>, bhelgaas@google.com, 
+	linux-pci@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
+	Mario.Limonciello@amd.com, Nirmoy Das <nirmoy.aiemd@gmail.com>
+Content-Type: multipart/mixed; boundary="00000000000091e707062e589e83"
 
-Hi Phil,
+--00000000000091e707062e589e83
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 13 Feb 2025 21:12:43 +0000
-Phil Elwell <phil@raspberrypi.com> wrote:
-
-> On Thu, 13 Feb 2025, 21:06 Herve Codina, <herve.codina@bootlin.com> wrote:
+On Mon, Feb 17, 2025 at 10:45=E2=80=AFAM Alex Deucher <alexdeucher@gmail.co=
+m> wrote:
+>
+> On Mon, Feb 17, 2025 at 10:38=E2=80=AFAM Christian K=C3=B6nig
+> <christian.koenig@amd.com> wrote:
 > >
-> > Hi Phil,
+> > Am 17.02.25 um 16:10 schrieb Alex Deucher:
+> > > There was a quirk added to add a workaround for a Sapphire
+> > > RX 5600 XT Pulse.  However, the quirk only checks the vendor
+> > > ids and not the subsystem ids.  The quirk really should
+> > > have checked the subsystem vendor and device ids as now
+> > > this quirk gets applied to all RX 5600 and it seems to
+> > > cause problems on some Dell laptops.  Add a subsystem vendor
+> > > id check to limit the quirk to Sapphire boards.
 > >
-> > On Thu, 13 Feb 2025 20:15:06 +0000
-> > Phil Elwell <phil@raspberrypi.com> wrote:
-> >  
-> > > Once more, with plain text, which I'd hoped the Android GMail client
-> > > would work out for itself.
-> > >
-> > > On Thu, 13 Feb 2025, 18:53 Herve Codina, <herve.codina@bootlin.com> wrote:  
-> > > >
-> > > > Hi Phil,
-> > > >
-> > > > On Thu, 13 Feb 2025 17:57:37 +0000
-> > > > Phil Elwell <phil@raspberrypi.com> wrote:
-> > > >  
-> > > > > On Thu, 13 Feb 2025 at 17:45, Andrew Lunn <andrew@lunn.ch> wrote:  
-> > > > > >  
-> > > > > > > > Or do you mean a custom board, which has a CPU, RP1 and the button and
-> > > > > > > > fan are directly on this custom board? You then want a board DTS which
-> > > > > > > > includes all these pieces?  
-> > > > > > >
-> > > > > > > That depends on whether you count the Raspberry Pi 5 as a custom board.  
-> > > > > >
-> > > > > > So you mean the Pi 5 board would itself make use of the resources the
-> > > > > > RP1 device has? They are not simply connected to headers for plugin
-> > > > > > boards, but used by the main board? Hence you want to describe them in
-> > > > > > the board .DTS file.  
-> > > > >
-> > > > > That's correct. But even for plug-in devices, those which are on
-> > > > > non-discoverable buses need overlays to declare them, which causes a
-> > > > > problem when the overlay application happens before the kernel is
-> > > > > started.
-> > > > >  
-> > > >
-> > > > Hum, I see.
-> > > >
-> > > > We worked on overlay usage on non-discoverable buses wired to a connector
-> > > > and we did a talk about issues we are facing on at Plumber [0].
-> > > >
-> > > > You can also find our big picture in [1] and a last contribution introducing
-> > > > export-symbols feature in [2]. export-symbols is also under discussion on
-> > > > some other threads.
-> > > >
-> > > > Also, we proposed the i2c bus extensions feature [3] whose goal is to allow
-> > > > an addon board to add devices on an i2c bus provided by a base board and
-> > > > wired to an connector the addon board is connected to.
-> > > >
-> > > > Maybe in your case, you can decouple resources (gpio, pwm) provided by the
-> > > > addon board and used by the base board using also nexus node.
-> > > >
-> > > > We use a nexus node [4] (not presented at the Plumbers talk because the idea
-> > > > came during 'out of talk' discussions in Plumbers) in order to allow our
-> > > > addon board to use resources provided by the base board.
-> > > >
-> > > > In your case, if I understood, you are in the other direction but why not
-> > > > using also a nexus node to decouple and translate resources in this other
-> > > > direction ?
-> > > >
-> > > > Don't know if this idea can help but feel free to ask for some more
-> > > > information if needed.  
-> > >
-> > > Nexus nodes look interesting - I see them as adding a layer of
-> > > abstraction such that, for example, boards can declare which of their
-> > > specific resources performs a common function so that clients can
-> > > treat them all the same. We do the same thing in a limited way by
-> > > using common labels on nodes, but this goes much further.
-> > >
-> > > In the case of Pi 5 and RP1, I imagine you are proposing that the Pi 5
-> > > dtb declares the connector node and the overlay fills in the content
-> > > with references to its GPIO controller, PWM controller etc. However, I
-> > > think the overlay would also have to be board specific because it's
-> > > not possible to patch part of a property from an overlay, so you'd end
-> > > up overwriting the GPIO number as well as the controller reference.
-> > >
-> > > What is needed to make this work is the ability to cope with
-> > > unresolved references in the base dtb, to be resolved as each overlay
-> > > is applied, with runtime checking that each reference is resolved
-> > > before it is used, all of which sounds like a nightmare. Plus, we
-> > > really don't want to have to change the way all our camera and display
-> > > overlays work on all Raspberry Pis just to accommodate somebody's idea
-> > > of how RP1 should be handled.  
+> > That's not correct. The issue is present on all RX 5600 boards, not jus=
+t the Sapphire ones.
+>
+> I suppose the alternative would be to disable resizing on the
+> problematic DELL systems only.
+
+How about this attached patch instead?
+
+Alex
+
+>
 > >
-> > Just to be clear, my comments were not there to tell you how RP1 should
-> > work. I just proposed ideas without trying to force anything and I can
-> > fully understand that ideas proposed don't feed your needs.
+> > The problems with the Dell laptops are most likely the general instabil=
+ity of the RX 5600 again which this quirk just make more obvious because of=
+ the performance improvement.
 > >
-> > Sorry if my approach was misunderstood.  
-> 
-> I feel I've been misunderstood - I appreciate your ideas.
-> 
-> Perhaps it would help if you could outline how you think we could
-> apply your suggestions?
-> 
+> > Do you have a specific bug report for the Dell laptops?
+> >
+> > Regards,
+> > Christian.
+> >
+> > >
+> > > Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/1707
+>
+> ^^^ this bug report
+>
+> Alex
+>
+>
+> > > Fixes: 907830b0fc9e ("PCI: Add a REBAR size quirk for Sapphire RX 560=
+0 XT Pulse")
+> > > Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> > > Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
+> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > Cc: Nirmoy Das <nirmoy.aiemd@gmail.com>
+> > > ---
+> > >  drivers/pci/pci.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index 225a6cd2e9ca3..dec917636974e 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -3766,6 +3766,7 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev=
+ *pdev, int bar)
+> > >
+> > >       /* Sapphire RX 5600 XT Pulse has an invalid cap dword for BAR 0=
+ */
+> > >       if (pdev->vendor =3D=3D PCI_VENDOR_ID_ATI && pdev->device =3D=
+=3D 0x731f &&
+> > > +         pdev->subsystem_vendor =3D=3D 0x1da2 &&
+> >
+> >
+> >
+> >
+> > >           bar =3D=3D 0 && cap =3D=3D 0x700)
+> > >               return 0x3f00;
+> > >
+> >
 
-I was thinking about what your mentioned, i.e. the overlay fill the nexus node.
-No sure to understand why the overlay should patch some properties.
-Also where are the unresolved references in that case. The base DT refers to
-the Nexus node.
-The issue will probably be that the translation performed by the nexus node is
-not available until the overlay is applied. The consumer will see errors other
-than PROBE_DEFER when if probes while the overlay is not applied.
+--00000000000091e707062e589e83
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-drm-amdgpu-disable-BAR-resize-on-Dell-G5-SE.patch"
+Content-Disposition: attachment; 
+	filename="0001-drm-amdgpu-disable-BAR-resize-on-Dell-G5-SE.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_m798rc7j0>
+X-Attachment-Id: f_m798rc7j0
 
-Also, the solution will lead to memory leak at runtime. Indeed, the overlay
-add properties in an already existing node.
-If the overlay is applied by the Kernel itself, this lead to memory leak when
-the overlay is removed.
-Indeed, an overlay can add/remove node without any issue but it cannot
-add/remove properties to/from existing nodes.
-
-In the case described here, the nexus node is already present in the DT and the
-overlay add/remove properties to/from this existing node.
-
-I haven't got any better idea for the moment in order to have this kind of
-'reverse' Nexus node.
-
-Best regards,
-Hervé
+RnJvbSAzODQxZGQ5MDQ4NDQ4NjA4NjNjNDg5Nzk2NzEwZDJkOWZlZTA1YmNiIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBBbGV4IERldWNoZXIgPGFsZXhhbmRlci5kZXVjaGVyQGFtZC5j
+b20+CkRhdGU6IE1vbiwgMTcgRmViIDIwMjUgMTA6NTU6MDUgLTA1MDAKU3ViamVjdDogW1BBVENI
+XSBkcm0vYW1kZ3B1OiBkaXNhYmxlIEJBUiByZXNpemUgb24gRGVsbCBHNSBTRQoKVGhlcmUgd2Fz
+IGEgcXVpcmsgYWRkZWQgdG8gYWRkIGEgd29ya2Fyb3VuZCBmb3IgYSBTYXBwaGlyZQpSWCA1NjAw
+IFhUIFB1bHNlIHRoYXQgZGlkbid0IGFsbG93IEJBUiByZXNpemluZy4gIEhvd2V2ZXIsCnRoZSBx
+dWlyayBjYXN1c2VkIGEgcmVncmVzc2lvbiBvbiBEZWxsIGxhcHRvcHMgdXNpbmcgdGhvc2UKY2hp
+cHMsIHJhdGhlciB0aGFuIG5hcnJvd2luZyB0aGUgc2NvcGUgb2YgdGhlIHJlc2l6aW5nCnF1aXJr
+LCBhZGQgYSBxdWlyayB0byBwcmV2ZW50IGFtZGdwdSBmcm9tIHJlc2l6aW5nIHRoZSBCQVIKb24g
+dGhvc2UgRGVsbCBwbGF0Zm9ybXMuCgpDbG9zZXM6IGh0dHBzOi8vZ2l0bGFiLmZyZWVkZXNrdG9w
+Lm9yZy9kcm0vYW1kLy0vaXNzdWVzLzE3MDcKRml4ZXM6IDkwNzgzMGIwZmM5ZSAoIlBDSTogQWRk
+IGEgUkVCQVIgc2l6ZSBxdWlyayBmb3IgU2FwcGhpcmUgUlggNTYwMCBYVCBQdWxzZSIpClNpZ25l
+ZC1vZmYtYnk6IEFsZXggRGV1Y2hlciA8YWxleGFuZGVyLmRldWNoZXJAYW1kLmNvbT4KLS0tCiBk
+cml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfZGV2aWNlLmMgfCA2ICsrKysrKwogMSBm
+aWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
+bS9hbWQvYW1kZ3B1L2FtZGdwdV9kZXZpY2UuYyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1
+L2FtZGdwdV9kZXZpY2UuYwppbmRleCA1MTJlNjQyNDc3YTdlLi41NmZkODc0YTIyZGU4IDEwMDY0
+NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfZGV2aWNlLmMKKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2RldmljZS5jCkBAIC0xNjYyLDYgKzE2
+NjIsMTIgQEAgaW50IGFtZGdwdV9kZXZpY2VfcmVzaXplX2ZiX2JhcihzdHJ1Y3QgYW1kZ3B1X2Rl
+dmljZSAqYWRldikKIAlpZiAoYW1kZ3B1X3NyaW92X3ZmKGFkZXYpKQogCQlyZXR1cm4gMDsKIAor
+CS8qIHNraXAgcmVzaXppbmcgb24gRGVsbCBHNSBTRSBwbGF0Zm9ybXMgKi8KKwlpZiAoYWRldi0+
+cGRldi0+dmVuZG9yID09IFBDSV9WRU5ET1JfSURfQVRJICYmCisJICAgIGFkZXYtPnBkZXYtPmRl
+dmljZSA9PSAweDczMWYgJiYKKwkgICAgYWRldi0+cGRldi0+c3Vic3lzdGVtX3ZlbmRvciA9PSBQ
+Q0lfVkVORE9SX0lEX0RFTEwpCisJCXJldHVybiAwOworCiAJLyogUENJX0VYVF9DQVBfSURfVk5E
+UiBleHRlbmRlZCBjYXBhYmlsaXR5IGlzIGxvY2F0ZWQgYXQgMHgxMDAgKi8KIAlpZiAoIXBjaV9m
+aW5kX2V4dF9jYXBhYmlsaXR5KGFkZXYtPnBkZXYsIFBDSV9FWFRfQ0FQX0lEX1ZORFIpKQogCQlE
+Uk1fV0FSTigiU3lzdGVtIGNhbid0IGFjY2VzcyBleHRlbmRlZCBjb25maWd1cmF0aW9uIHNwYWNl
+LCBwbGVhc2UgY2hlY2shIVxuIik7Ci0tIAoyLjQ4LjEKCg==
+--00000000000091e707062e589e83--
 
