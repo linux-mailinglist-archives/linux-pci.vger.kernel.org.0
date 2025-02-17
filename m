@@ -1,733 +1,390 @@
-Return-Path: <linux-pci+bounces-21618-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21619-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66F2CA38429
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 14:13:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC752A384CE
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 14:38:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 805B418976E8
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 13:10:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 528B83A3845
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 13:31:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3B4421CFEA;
-	Mon, 17 Feb 2025 13:08:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E6EF1E515;
+	Mon, 17 Feb 2025 13:32:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pHzsKwPh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UzLH0zVb";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="hRgqhw1a"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2058.outbound.protection.outlook.com [40.107.236.58])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A3121CFE0;
-	Mon, 17 Feb 2025 13:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7FF216E35
+	for <linux-pci@vger.kernel.org>; Mon, 17 Feb 2025 13:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739797738; cv=fail; b=KgZ/kxjplv2mOo4iTrdy6BLYnUIrNlRgODo8Da8ncqBL0eySZNQZB8y9Xl40a415sHPtKtSZu7gv/q9GGWccLwmRwo9yuIkLZpsAYN+mFkuLeFJwVB80Tpyi/sQEz9DPrPcQsTtlbmDPSF3FPvYRXiDiWtEjTVqbOiqVkK+Wnqs=
+	t=1739799120; cv=fail; b=jENqSnXmgyAQVvH2dcAB0tkYh4tKbu8N2N2ftTMIWwz4CWP7Mo6jS370pXEsqzzKEP6NTkjGhJ5cbFzcD3aIoHkLEYG0VssilYSunGOY6hs+MDo/S33iGw8Bi1RGeyAICyBLcK5OaPdg5XEqcIaXsUOrCMgTf16f1nHcx49XSaI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739797738; c=relaxed/simple;
-	bh=m8EXtQNLJ4AemI8SL04HxirQ2m6dc0vxGgpaDix2hKE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Yo1e9wfVG5A7bX3PcmsC27cRsd/Nis7Q0C/bhIRxrNbVoJZ4jjggXST7gX++usnX3pJ969rV2kfhDjvvygtldRk6cZgZ0ZIkDS5w7wl07dBzsHZBm66GI5tjUQu5aIdZXU/gl2c1H1f3Na1ZAzAIrpo+gPXgtty9PdEMbYejvTI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pHzsKwPh; arc=fail smtp.client-ip=40.107.236.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1739799120; c=relaxed/simple;
+	bh=PdSCfOtZsNb/j9KR1CBa+MqK7f+Kp08NQjaTAjLfhpU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HwkZY4BYtjS5Flf13uQr2GoPCRa2IjQP/k7d+keMdyyUfwPh2XybKSv/yC9wHNaj0pl9UuRqnkjFz7vw9iA2qJVRmmP0/knBnjC2GazgM6NqfvBzj+63rggU3AQcvXGZeBNeqFKLWe6z9NFFf//q9QBvvBnfW2Gw0+H2Tge+ZzM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=UzLH0zVb; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=hRgqhw1a; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51HBXXro008941;
+	Mon, 17 Feb 2025 13:31:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=83RbbyIu4aIU5i8bq9CuI16d0yxHn0m8gckLJIBzF34=; b=
+	UzLH0zVb5nuygKniMKTj3S8pIFxuKGWNONsbP256aM+CuTchwNQR0DVa08kRVR6y
+	KHyJ9o+2NHXWUjCnLSywqOkpL8lSXE8NLSyuyU/PpbZsq8E5rciSrzoQzLEuqp3d
+	KGTJtKPCZV0lUORxEZWjQcAHPUGIie8hxuVPdnAZzK+bYv4TncMqy+oSTjuFM97t
+	ZWt7q8EUvRl8V+x7jZGwIYDDtBtW21mDEDnwZXCrDriFMV/wHGk3numKBRgDesfg
+	MOyyH1F1bshCfo9UflbuND+6Ohqsv69StnHa5K4vs+FE+A23/uhx9vla4HJoHZCC
+	kK6O+K+i+W1BgVw2ZtyfTA==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44thq2mcup-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Feb 2025 13:31:42 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51HC0xsa002115;
+	Mon, 17 Feb 2025 13:31:33 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2174.outbound.protection.outlook.com [104.47.57.174])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44thce63e7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Feb 2025 13:31:33 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=neqJVUiw+n0Wh2CFepxkCzxqV+jk0K9ZHao74tf32q+bJT0dj1OeD44EJOPkgbFAlLTiL19t7nS7/U6PgGEceYTauc4uwW9D32iPNQM9kuKTH2szcQOzaUnWv5znqFdShe2ZOMrxlIq+c6vBYr+gQYZsdvTVn8taAqKzrTrD71S0qKy3m8+NCoh4WXRuJuYY4BmdcNu8ML0sPm8KxbSWYP++V2gX1g1doJvWTy9wmPzBSgaGSV4WSTAHJs7YdGIuoerzr/AWxYnB+9EeDIFEeTGCZAdo/DcJoTfP9VsdM0jtDSXVvMkzqN+pCeYjCxWHmzY0P5O9e4u0OXsLFoVg8A==
+ b=L+OeFtXSiWI4ATjtQOwfjPcNiMDgnzwAlHwowotMtM+ZjLeJ6DBin43O3BC7zKrLFZGMu778YXIS1pL7ke76ZUMbqPhEpg7U+hYm6Ss82NcSohYKh1gaqtCLDtjv7N04yJczAiISHKgdsIY7TKQTPV36irwfGANHAkQGsD4SeXJRjb3SxNXj2ooqNbPbvtyNlsIQ82xMms5S6iZY00psifTAIXw54+QvUBiW/GFsre/GS0NAzYt10PJjZ/TABKlZNqamts8QBlDsFma4n8bLgcDF7z85sZWIed5iWxY5vhiWrATDGWLJn8PW9FU2HnsPSeYmG40S9F3fMjJgpVBUaw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nWUV/enEcJVdOXunqU+IfPWhWULRibvEZNa1XLiMiYo=;
- b=qkfSC7FtZK/LbyI8EfsL1LtRKxWdqzMCrvkcQj877aTwcTUPW63xPnXDlmJl4N++Epiv+/5E30Sl31yC1POx8gDMd9TMV1IoigvhV7NIxltmfaHKSKptb9VLUSbdTdJNKq4JUD18ruzH3fIi2/ZKAUcOCx0aQ3SR1aBdWG4DO+a+0UwDm21is7KPRBHAQyoUxiClXB6pMjrhNXd0BtM0qKk3Df9NRJa11hI0epo8Q295UqVPBi9KPPo/2+7LIOIwHf6uMUA/jM/KWsU4wrHIzTtVxdJVMwyyaVaXm9s1fVhuA+cbfID6RdCa5MUyaRcqM1gjw86LnmW/+Ay+mp5Jbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=83RbbyIu4aIU5i8bq9CuI16d0yxHn0m8gckLJIBzF34=;
+ b=tyF3Cintc3vcZLCTKmJpR1Xksp1Gym7RJwO+Uqy8ltoTtiD1dv37Vj/ZKFWhClHiGEt3LOrmRa75/8zTvJJjRRhvrt83Dg1j03LNB/A0eHt6HiXcg6O/9nflRcw0VVV3TsDI4oJi9gsM7JrPOuYPOD8w3arqoaMfHGqkf3oa8siC6eYj1cQqGNSsLxbX01lwVMBuBQTAG+Y6ZCnscjOo5sOncfeFZbz/1qRXhY/B3Nka9S+kUWj/TRomqIGQ3H9w9L6opQVBSP3T3SbZUIVLcmNEQoa1CHwwhsopmTe/HN/RKHuRw4VE+mmjN+bOrHik4fZqmXf9pwe400NOrytz7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nWUV/enEcJVdOXunqU+IfPWhWULRibvEZNa1XLiMiYo=;
- b=pHzsKwPhdphl4fMqsOeuBW0KkPYw1dljzmQGVw7JC0GlP5X3E5GPvDZcNCaYINQ041DN8nrcyEHqNYNGa6MEIeKw9WrvQ9qdXBx/pwpKSgwJY+3VqchxNZkJVoKUTH0tHBoWguIGkPSQv20GVIyluA5TrYiVl6rcpDB70qn8Gj0=
-Received: from BYAPR11CA0098.namprd11.prod.outlook.com (2603:10b6:a03:f4::39)
- by SJ2PR12MB9139.namprd12.prod.outlook.com (2603:10b6:a03:564::6) with
+ bh=83RbbyIu4aIU5i8bq9CuI16d0yxHn0m8gckLJIBzF34=;
+ b=hRgqhw1a9pj360pVcVcVzHfG6GA9f0llVjMKEic6eQzfcEk1JLzmBEhGhPyV7d0CDL4YKIRwDSjzKea3l5LwirT46PY/4dF8x5ZvfC40fUP8/lw+3CuHNBRGvNtc15wiGGybr/o1Pd8b68KtTb3uTuTk8sk+qQyPQZN5Z5J2DYQ=
+Received: from CO6PR10MB5396.namprd10.prod.outlook.com (2603:10b6:303:13c::9)
+ by DS0PR10MB7901.namprd10.prod.outlook.com (2603:10b6:8:1a8::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Mon, 17 Feb
- 2025 13:08:47 +0000
-Received: from SJ5PEPF000001EC.namprd05.prod.outlook.com
- (2603:10b6:a03:f4:cafe::7e) by BYAPR11CA0098.outlook.office365.com
- (2603:10b6:a03:f4::39) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8445.16 via Frontend Transport; Mon,
- 17 Feb 2025 13:08:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- SJ5PEPF000001EC.mail.protection.outlook.com (10.167.242.200) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8466.11 via Frontend Transport; Mon, 17 Feb 2025 13:08:47 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 17 Feb
- 2025 07:08:46 -0600
-Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Mon, 17 Feb 2025 07:08:42 -0600
-From: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
-	<bharat.kumar.gogada@amd.com>, <jingoohan1@gmail.com>, Thippeswamy Havalige
-	<thippeswamy.havalige@amd.com>
-Subject: [PATCH v11 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
-Date: Mon, 17 Feb 2025 18:38:28 +0530
-Message-ID: <20250217130828.663816-4-thippeswamy.havalige@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250217130828.663816-1-thippeswamy.havalige@amd.com>
-References: <20250217130828.663816-1-thippeswamy.havalige@amd.com>
+ 2025 13:31:30 +0000
+Received: from CO6PR10MB5396.namprd10.prod.outlook.com
+ ([fe80::4487:ae4:5f2d:d555]) by CO6PR10MB5396.namprd10.prod.outlook.com
+ ([fe80::4487:ae4:5f2d:d555%6]) with mapi id 15.20.8445.008; Mon, 17 Feb 2025
+ 13:31:30 +0000
+Message-ID: <38451a01-4e95-44ff-922b-8fda725eb25b@oracle.com>
+Date: Mon, 17 Feb 2025 14:31:25 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 7/8] PCI/AER: Add AER sysfs attributes for log
+ ratelimits
+To: Jon Pan-Doh <pandoh@google.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>,
+        Ben Fuller <ben.fuller@oracle.com>,
+        Drew Walton <drewwalton@microsoft.com>,
+        Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20250214023543.992372-1-pandoh@google.com>
+ <20250214023543.992372-8-pandoh@google.com>
+Content-Language: en-US
+From: Karolina Stolarek <karolina.stolarek@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <20250214023543.992372-8-pandoh@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM9P250CA0021.EURP250.PROD.OUTLOOK.COM
+ (2603:10a6:20b:21c::26) To CO6PR10MB5396.namprd10.prod.outlook.com
+ (2603:10b6:303:13c::9)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB03.amd.com: thippeswamy.havalige@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001EC:EE_|SJ2PR12MB9139:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6585769f-77b3-4145-a99c-08dd4f543735
+X-MS-TrafficTypeDiagnostic: CO6PR10MB5396:EE_|DS0PR10MB7901:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2c8bcc85-ab84-4d8d-095f-08dd4f576349
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|7416014|1800799024|36860700013;
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?tPJirTQQgCO6RXUapecdoU4ZEQCFm/PNr6+jNJpD1MZAD3Ysf367QLm3hBkQ?=
- =?us-ascii?Q?0VUSZdxlDafjfsIQQ+bWvw49GjHOWtjwrcWWhSvoVXzXHgEm6+p9bzKMb+4r?=
- =?us-ascii?Q?sgRAqmPHsy46B2OEVb27gtbj5sEWBFJ4LPMbm+7d+EKjB6hGpUYEPiQOyTkZ?=
- =?us-ascii?Q?wju3ggMvOztxEwawmzEbPd35YvQ04/t1TgyGhaQJaxZmROQ+umlAR6WqE4jO?=
- =?us-ascii?Q?myLP9TFoGrHjpdaz8OCBuE2GMINchg93lzkF0ZVy+lkdF9WgF8k23OPXlglp?=
- =?us-ascii?Q?1I7t4Hk1eL44w3uDItAvHGIPWlWsCi/6GVTSKgy/f/31NuwjLTx5/SZ+r1vx?=
- =?us-ascii?Q?mES6dE3jPkbldjrwSUdrMrTlR4O+FjFSdbpsU1MR75gtApZgtZre7IS1TZhr?=
- =?us-ascii?Q?jRYaheN7qKww1/yKVsTKtyHjBaE4OpSvvyfxR6T/m0TPsHaR/ewNWwIAnQtJ?=
- =?us-ascii?Q?b6DYnNFAlZ1s8pvcgL7UV7PYaUeBsjFQH8QWsxuc8PUi8dL/ji6jD/kZkEWP?=
- =?us-ascii?Q?TvYOyT5NY4LvyNg3KGo48xcwE0NK10y3iqg4bN90M59Vy6nvO50Y9DycdCTS?=
- =?us-ascii?Q?B3y9OXOT/i0tBkJX2Qfdr1GjMBKauoGAUTTwELv/CAKfZRVrt1RXowokEakF?=
- =?us-ascii?Q?aetovzwJKxMAyQo1g/A9vYT23Y+tbFx+DF4JQIM65FliCIkyoeADCki22xs/?=
- =?us-ascii?Q?gkXZ9iwr5G4KXc+30y9elvjtxhurbPhHTi18b4F7zZRgKSCaS30jdDlm3JEB?=
- =?us-ascii?Q?GaaIMUTVsd/lBLWi2By+OPzvR/TJhVNibtu1MaAq7CQzFzbNQCtzO2ykq4D6?=
- =?us-ascii?Q?uFD8OyUSMSz7Yl/Qi9PCJBBnuBPstxRqZzSATT4lN+oykriDlTVd/GVfNjMW?=
- =?us-ascii?Q?+wfqIhEsDmYa+u3gndrbwTRCy+8h3HIqnMe7XgdqotsGzrZYlFSqZ7Eak4Hp?=
- =?us-ascii?Q?ntuHuegGdRBpF07WAEQi4IXyF4nyGYOKgHeuWl1Xqgp980PTGlWyZT4qJL4p?=
- =?us-ascii?Q?5TnLyy9X7UxTr1m+2x0l8dZw7VkaBnukY5DJM1epc/+azYJg6cuKk9v6MB2Z?=
- =?us-ascii?Q?hbLYGj03JfGkYsonJ8hQEprcBVEtBDQ/tMhx7BzVf3yzjAOKlVraZbsjUiut?=
- =?us-ascii?Q?dtChjUteGuIpk8launGoAD9uFaHPpunZe3VWgUZGZH48bNybEsAAHyk1P0zx?=
- =?us-ascii?Q?2FjlVgNFFvyCl/XlmMJ6G7vMFoJzjPLJ8/4j78m6HbaWKuUS0OWO78WETE1d?=
- =?us-ascii?Q?qalog98UtONI5WeVL4+XB8xJdOfWAnyBEamOYOT92cYYbF4LXLXM9GaihI0+?=
- =?us-ascii?Q?cV2T0puOI7VpkJNgaxJhl4Pzrr2VCkLrf+jBU5Q/9tgMgrbOUGSgJOVKqzwZ?=
- =?us-ascii?Q?pAkdv8Sso1qu6jaLv4GmT2kV7f3TyZecL0VSo2AvOCit9AQ2TX88M+WD83rX?=
- =?us-ascii?Q?+IsjUSVbI8KG1X/5f7IfDWEwYHuna0QYO9KvGsWnecjtUcloJTe/iB/pFBob?=
- =?us-ascii?Q?hfUT2F+BmOuCRUE=3D?=
+	=?utf-8?B?dXZLU1hVLytiVlBwZkd0UnI2YUUzQ3JKeW9ZUE80NXVNV2ZwTUdPYWVFd3py?=
+ =?utf-8?B?QmNhZmdwQ292NWRGekh6UzVwN282cWhOL1NETm5IQy9tYm9lSVQrUlFjaGI3?=
+ =?utf-8?B?WElka0RkdHhSMFdVb3Z3QkpCZkNDNURNNnd3T2R3aGF1TzArOG91WmxvRE00?=
+ =?utf-8?B?bnpKSTJNVCtkeHNqOTNZOGl0SXhydGtoM1BsNmg4S0hzUWRDbjJOY2FuaUJD?=
+ =?utf-8?B?T2JVYUZJTjh5N3lzelltb2VMSzRYdjJ2YmIxOEc2aDFCNkt0eVZJMSs2N2Jm?=
+ =?utf-8?B?bXNiVmE3enZQc09KZkNiKzRqbUFySEVVODF5T3QzdU9NSnhCMEZMUFA5ZGYx?=
+ =?utf-8?B?UU9iZWN5UFJqZEtrNWgya0h4UWxGWklMM2dNYjhVaDhxcTBQN2xRY0JhU3Nv?=
+ =?utf-8?B?RTJ5QTRuNHRsWkZqdU85RUFocTN3VVNQeXVoendQTXlMUmJJcnI3T0ZSZ3c1?=
+ =?utf-8?B?anZiNDdnQlVZZndYRWpGVEdnbWIweGlWZzdnMGtPWDI2OWNxSGd5VnpqREox?=
+ =?utf-8?B?NFBQdGdYcUNaNHJadzRNR2lHMDNJUytZMnpSNGg5N3VTUER1RXdieFlvYVBk?=
+ =?utf-8?B?c3VzVlRtZkJSd3laK1BtdnY3N2ZaVythMkpISWhJVy95RlBsSGtta205VUx4?=
+ =?utf-8?B?UnR0UytCWHVZLzVGS0tZd1NqRERsbEZXeWhRYUN0bHF2TER5UGtKVDZ2VmZS?=
+ =?utf-8?B?Y0I2dFlyaVREZVVFSUh1eHhiZlFKZkFvN2dOb08rb2xVR2NxZjJId20vVzdl?=
+ =?utf-8?B?MTI5bHNWT1k5aUtSTjJwWklUQ3Z0OW0xZWNpeG9uOFpoUVY1REN0L0xLcGgz?=
+ =?utf-8?B?SWY1MUN1YmlNc2lBTTkyOFdUcWpRU3FBQm9acFU0OW1URzh1bXd5K2l1TjUv?=
+ =?utf-8?B?MEVwVnlXSWFhT3B1MjVxWHVCaWU1dGdBQjdUSkpLOUJDZjdpNTIwZzhsMHEr?=
+ =?utf-8?B?SE1xbmpBYXlURThXQno4MW9Heng2ZHhyVFBRTUd4UTl3elQ3aHNRTEZ2b2FZ?=
+ =?utf-8?B?cnl2MDQrbkIwNzVIYk42NkdwaEZWc05rQ29mUUsxTnNwKzc5T2xodmtTUk4z?=
+ =?utf-8?B?VHlRdytiYnB5enBuQXJqWlQ4bUlRSThCZzVXajJpdnpjWWtOSzJWY3JzalE2?=
+ =?utf-8?B?SzM4TVBXbDVHbHJOdDRpOTJGaXMvSVJrMWU4RHI0djVRb0RUM1ZBeGI5MzQ4?=
+ =?utf-8?B?MGFvR25sM2QrcjNST21YbHJ6V2RtMXRpUklMeHU5WkZtbGlVdVNjSDFTZlp3?=
+ =?utf-8?B?dXE0VHN4YXd4bW9IUnJlWVUyMk1XUHVyQWhHQjFMbEdTaXBZQjJlelQwR0pt?=
+ =?utf-8?B?QjNZRjN6d3hHb3g3QWhiRVE3MndkL2NSUE5UYUtubVp4ZExLOGg0TTlKdDhy?=
+ =?utf-8?B?cCtBVmJ4b3Z4WmFVeE9nWDkvODFVdmZ2SGt2bVhNcHpGZWMwQmh1RXluR09q?=
+ =?utf-8?B?OFRLTzdtZGh6b2V6Wkhqblc2OE5YYjM2Zmcya2VscTZPak1wb0dyNlZFQ0la?=
+ =?utf-8?B?eEhEc1FlcFZ1eUNNQ1RUeVh6NHByZDQvRDlaOXdhbmJ6cG12emwyQ0FMVG9n?=
+ =?utf-8?B?blo0NFcyL3FQSXkwQ3dHUXZ1YkYzaGtTVXp0QWtQRXQ3dzRVZWF0WmdHK1Zv?=
+ =?utf-8?B?R2kvKzY3YzkzRndwSkppMnJ6N1F0NmFJeFlXV0lzMmxxajk1OFFEanNJT3VN?=
+ =?utf-8?B?ZDZWWXpkTUlTYysrSnE2d09OTzZrd0xXOVJVQkprK2hLaERnTGZTczJhNFZ0?=
+ =?utf-8?B?bVZrZlowdkN2R2xhd3c3U3FYT2w2M0NzUG1VcXdkT0ZPdEVLMGZYeGVjMDVq?=
+ =?utf-8?B?SUptUy9WVWVwQTlsL1FWSDdaR3htRXhiMkk2WVNILzdlUHg3RjBSNEQyN0o1?=
+ =?utf-8?Q?x82BU2g/riF+3?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(7416014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 13:08:47.7026
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR10MB5396.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MkltbzFURlRlNlJCcEg2OHdIRXdER1NQay8vQlpNQTl3aVpHL3lPcE0rMm1o?=
+ =?utf-8?B?M25OTDZoRHVkWjVGeUd2cUlmeU9kVTUvREdzODk5WkFMcGlyVzFUK0tSLzlQ?=
+ =?utf-8?B?bitRbGgwUWRtSWVSZjJhQ0FZdmhQMmJ1eVNidDlYa0VKTHU4bUhGSGZpZTBy?=
+ =?utf-8?B?RUIrVU5ESVdlMGowMWVTWFBBVXhpVWV2M3NRZ2NURURuU0dBTWJTWWxNaXBN?=
+ =?utf-8?B?ZXh5N29QNS9VZFpvcTV6dEFBaGZZaUNYa0V3UkZabjA1VmdTQldsaGtrb09B?=
+ =?utf-8?B?Vzhvc2VYUmorZkNXWTd3VEp2TEF0a3FDckdDQzFXUFpURThob29XSW5VOGE1?=
+ =?utf-8?B?eWpWMy9BL01KOTZwa3NVaXJUeHE1MnNLd3U5R3FubDlsc3MveXFTVXVSM2NB?=
+ =?utf-8?B?ZXVhM0phTnBWdUtwMkRZcDQ3V0E3bS9SL21pYTVXTjFVcGJvem83UFRBMW0y?=
+ =?utf-8?B?VGVZZ3h2anJ5cHcvYlB0U1RaZ3d2TlZneVpoYktZNjV6YXdMTG5kdVRSTnB3?=
+ =?utf-8?B?ZGxQa2VUdUZWYklubWlnNWpSdDNxWVZrZUZMb1NIa2xjZTlDYW5ueitodHNR?=
+ =?utf-8?B?aDlKcmdrQklQNXJCSENEKzlOMFZnVTJFaFN1UENwR2Q1aTdlb3FLcm93K1Aw?=
+ =?utf-8?B?c2VTcDZ3MHJCSE01a1RYNWtxT2tnSkd6ak9OaWZEcmNucnlyTUhCbDVZR242?=
+ =?utf-8?B?WUEzWEM4V1JUbXFzVi85V1N5blBBOGZaVjR5S2RRWUpiQTBYNGdoUzNCdGtV?=
+ =?utf-8?B?NXN2SlVMaHluZWY5TmxSaVhjR1VBUXRnS3QrNURJM0RYY2k5M1VRS2ozWDBs?=
+ =?utf-8?B?STIxSmtPVlkrQUFkcGEvZDhKNFo5Z1lOR2VPWEV5aC9YK3VyMW1RMEN6eUIz?=
+ =?utf-8?B?bmE3NGE4QWpBRFdHUGpLamdoeEtRL2hjeXpubHJ6THIxbUtFTVhCU0pzeGFs?=
+ =?utf-8?B?eFh6d0pwbTZ4S3dpUmxoVVVMRVdacmc3dmdxbElwcWQ5bytuUEdnaGsrMnQr?=
+ =?utf-8?B?V2RZT1NMbkdLcURvMW5sREczUUMwc1hQYWwwQ2V5SGx0RVpPeTBqWndOWnFv?=
+ =?utf-8?B?ZExBRHUrTmFuMUpnMUZuOGY5bE9tYWJnREtBcG82bk5iRXRxblRGZTNaZjFG?=
+ =?utf-8?B?REhqdHoyRy91d2xjNTdpcWlGSE5SSUthS2xRWDc3Vi83WUJRN1Qxcnp2aXZv?=
+ =?utf-8?B?OUVjY3VRcWI3SjdGYjhPNkJGZWxWMWdYalZJb1Y3cjlISG1WR1RRYzRoRStR?=
+ =?utf-8?B?SEhFbnlDdExDSUVOTVZsdG9uMWdoaWFHS0txbTFNMWxlL2h1enBGcGhxRkpz?=
+ =?utf-8?B?MkNQZ0VwZEJBOUFYV0owODZRVm1YQUJjTjY2NEhhcDJsRTEvU0kxZDIwZnRs?=
+ =?utf-8?B?Mk9ybThhTFI5SFhPSFNSOTliejhseGZFbG5Ta0N3b203VkM1VFBZWmpPdWoz?=
+ =?utf-8?B?Z0xiSmFTOGhxNjd5L3ZVL05vd1ZZSFB6Tmk3NHJZcVdqVGJ0NDNDK0l6N2Zs?=
+ =?utf-8?B?Smk5bVdlK3ZOd2ZETVdNT1JPSHdEWGlHNG9SRG4zRVhBcExuWkVMZGxxK29k?=
+ =?utf-8?B?dWt3bFB3eWg5YWxuTE1RVnpxRWJ2OGtGeXY4cGVQakdvdHlXTklkazBVOGxT?=
+ =?utf-8?B?b2kxOVcwZ0JFMVI2WkhHaE0zSGU3QUJLNmFMVGpmQ3Z6d0hnUE5kaU9vclNn?=
+ =?utf-8?B?NVBCUEtWK3F4aytyQkNHaU0rdktTQzdxK3dNNkVkZ3dIOGlvbS94TlJJWWNk?=
+ =?utf-8?B?bVdpVjUwdit2VlpzdXhseUZ0a3hvNTlsdThoenJmVXZxbXRqL285dFhjeHhI?=
+ =?utf-8?B?emg3R2htbm42ZXl0NXZkUWthS25UWUFSMzZJWFM5WExtMEJNVHdNbzRIVWF1?=
+ =?utf-8?B?YWY3M1Z1c1BkODMyOVhoeGxDbFNUckFjTjgwSXoydzJZSEZQWGZzS0hZNS9V?=
+ =?utf-8?B?RnlRMVJzN2RhdkVTME9FWGphN1JpcHoxVHByS1U2QXUyZ09hR2VUVzBIVnRU?=
+ =?utf-8?B?bEh6NXRWamtzUzB5ekpZMXFmY0Nmd0tiWlg5QTRYaGNrSkNDRHJjUlZrMlg0?=
+ =?utf-8?B?OGlCZVdMN2h6QSszbUJYRElGK0VFNDJBOFoxN1BjVnVCclpOSzYzRnFNeFdn?=
+ =?utf-8?B?WE5sT01vT0RrbWVhdmNLQklnY1pMQkxnQm13ZUhISC9DbVJKdjdheVdjU3hL?=
+ =?utf-8?B?VXc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	JFASbuOxAaB9lY5d8/poibsObr/Au9uaLYbri+CdclPriogHXCW/T4c5M4hp9vP5BPcDDUEEq6t/Mnxu1p/riaJSu9FfkO0gZXKt5pB1whMibaJhSU4mCK60UgRLmz6gaCo9OwMg/KoGvx0vz7+xjcsjFD6F+qmDNZh7Iijfb4kRmuX9IKSFyc4s2oiqcCXgoAYO/JcFG28KLFSZrWCY1NMmsQKTU1+193ST/5YW7MMrc5CmQ2WNeY9nOLcRe9n5jnXrzn1XJ6uuWxjSduDBBv0j9h9hkYKUKH2fLcrgxGvKblV0nQ31lodHrFxcbGh7FU+Nh6BFoi38OsgS3/zTOVBsUPT33ExFgJZPFcCskOPUXuN9d8dqopfAEmfglR6wUuQb8EqnW7kxO7vP0gkT+ofoQG/gP5mFk5ofw/8UP8gluaNX3gcK+bq87W/HTyKf+uM8WJ0nebyp5NQ7H5kUiWxdg0Lrp/Uk3+ixXZDmlt2PIeOCe4Dtg4OS/lnyn9J4cazJQnmk2YUlq1BPigonopehDHfArDNlRiD7Z/GJjTuCYturUW88jv7L/RtumRRNyorg2j8+S/ImbZhA1+7yti3K9yap7a7PNZD20zUE0EE=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2c8bcc85-ab84-4d8d-095f-08dd4f576349
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR10MB5396.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 13:31:30.6866
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6585769f-77b3-4145-a99c-08dd4f543735
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001EC.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9139
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eQemWP4T2mwIxrVFSZUd1ZaS4Ai8FI43b4RFpa5JVazRW48VoCcUcgOenJ2b4A2ZD5WQ9jWWUX88j0OL5OggFiv7lqWZI69uqbSxxV2cDWE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB7901
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-17_05,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 spamscore=0 suspectscore=0 mlxscore=0 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2501170000 definitions=main-2502170117
+X-Proofpoint-ORIG-GUID: 9DSwPxevLdo_yjRdUX56M-h_f8lOSHC8
+X-Proofpoint-GUID: 9DSwPxevLdo_yjRdUX56M-h_f8lOSHC8
 
-Add support for AMD MDB (Multimedia DMA Bridge) IP core as Root Port.
+On 14/02/2025 03:35, Jon Pan-Doh wrote:
+> Allow userspace to read/write log ratelimits per device. Create aer/ sysfs
+> directory to store them and any future aer configs.
 
-The Versal2 devices include MDB Module. The integrated block for MDB along
-with the integrated bridge can function as PCIe Root Port controller at
-Gen5 32-Gb/s operation per lane.
+I don't think it's neccessary to keep ratelimits in a separate directory 
+when we decided to we keep the rest of AER attributes at the dev level.
 
-Bridge supports error and legacy interrupts and are handled using platform
-specific interrupt line in Versal2.
+> 
+> Tested using aer-inject[1]. Configured correctable log ratelimits to 5.
+> Sent 6 AER errors. Observed 5 errors logged while AER stats
+> (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) shows 6.
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
+> 
+> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
+> ---
+>   .../testing/sysfs-bus-pci-devices-aer_stats   | 20 +++++++
+>   Documentation/PCI/pcieaer-howto.rst           |  3 ++
+>   drivers/pci/pci-sysfs.c                       |  1 +
+>   drivers/pci/pci.h                             |  1 +
+>   drivers/pci/pcie/aer.c                        | 52 +++++++++++++++++++
+>   5 files changed, 77 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> index d1f67bb81d5d..c1221614c079 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> @@ -117,3 +117,23 @@ Date:		July 2018
+>   KernelVersion:	4.19.0
+>   Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+>   Description:	Total number of ERR_NONFATAL messages reported to rootport.
+> +
+> +PCIe AER ratelimits
+> +-------------------
+> +
+> +These attributes show up under all the devices that are AER capable.
+> +Provides configurable ratelimits of logs/irq per error type. Writing a
 
-Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
----
-changes in v2:
--------------
-- Update Gen5 speed in the patch description.
-- Modify Kconfig file.
-- Update string _leg_ to intx.
-- Get platform structure through automic variables.
-- Remove _rp_ in function.
-Changes in v3:
---------------
--None.
-Changes in v4:
---------------
--None.
-Changes in v5:
---------------
--None.
-Changes in v6:
---------------
-- Remove pdev automatic variable.
-- Update register name to slcr.
-- Fix whitespace.
-- remove Spurious extra line.
-- Update Legacy to INTx.
-- Add space before (SLCR).
-- Update menuconfig description.
-Changes in v7:
---------------
-- None.
-Changes in v8:
---------------
-- Remove inline keyword.
-- Fix indentations.
-- Add AMD MDB prefix to interrupt names.
-- Remove Kernel doc.
-- Fix return types.
-- Modify dev_warn to dev_warn_once.
-- Add Intx handler & callbacks.
-Changes in v10:
----------------
-- Add intx assert & deassert macros.
-- Move amd_mdb_pcie_init_port function.
-- Add kernel doc for error warning messages.
-Changes in v11:
----------------
-- Remove intx deassert macro & generic handler.
-- Update Kconfig description.
-- Update INTx mask macro to handle only asser bits.
-- Move INTx handler.
-- Address other review comments.
----
- drivers/pci/controller/dwc/Kconfig        |  11 +
- drivers/pci/controller/dwc/Makefile       |   1 +
- drivers/pci/controller/dwc/pcie-amd-mdb.c | 474 ++++++++++++++++++++++
- 3 files changed, 486 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-amd-mdb.c
+This sentence seems to refer to _one_ attribute and mentions IRQ 
+ratelimiting, which is not a part of the series.
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index b6d6778b0698..882f4b558133 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -27,6 +27,17 @@ config PCIE_AL
- 	  required only for DT-based platforms. ACPI platforms with the
- 	  Annapurna Labs PCIe controller don't need to enable this.
- 
-+config PCIE_AMD_MDB
-+	bool "AMD MDB Versal2 PCIe Host controller"
-+	depends on OF || COMPILE_TEST
-+	depends on PCI && PCI_MSI
-+	select PCIE_DW_HOST
-+	help
-+	  Say Y here if you want to enable PCIe controller support on AMD
-+	  Versal2 SoCs. The AMD MDB Versal2 PCIe controller is based on
-+	  DesignWare IP and therefore the driver re-uses the Designware core
-+	  functions to implement the driver.
-+
- config PCI_MESON
- 	tristate "Amlogic Meson PCIe controller"
- 	default m if ARCH_MESON
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index a8308d9ea986..ae27eda6ec5e 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -3,6 +3,7 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
- obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
- obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
- obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
-+obj-$(CONFIG_PCIE_AMD_MDB) += pcie-amd-mdb.o
- obj-$(CONFIG_PCIE_BT1) += pcie-bt1.o
- obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
- obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
-diff --git a/drivers/pci/controller/dwc/pcie-amd-mdb.c b/drivers/pci/controller/dwc/pcie-amd-mdb.c
-new file mode 100644
-index 000000000000..6d36790bfe0f
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-amd-mdb.c
-@@ -0,0 +1,474 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCIe host controller driver for AMD MDB PCIe Bridge
-+ *
-+ * Copyright (C) 2024-2025, Advanced Micro Devices, Inc.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/gpio.h>
-+#include <linux/interrupt.h>
-+#include <linux/irqdomain.h>
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/of_device.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/resource.h>
-+#include <linux/types.h>
-+
-+#include "pcie-designware.h"
-+
-+#define AMD_MDB_TLP_IR_STATUS_MISC		0x4C0
-+#define AMD_MDB_TLP_IR_MASK_MISC		0x4C4
-+#define AMD_MDB_TLP_IR_ENABLE_MISC		0x4C8
-+
-+#define AMD_MDB_TLP_PCIE_INTX_MASK	GENMASK(23, 16)
-+
-+#define AMD_MDB_PCIE_INTR_INTX_ASSERT(x)	BIT((x) * 2)
-+
-+/* Interrupt registers definitions */
-+#define AMD_MDB_PCIE_INTR_CMPL_TIMEOUT		15
-+#define AMD_MDB_PCIE_INTR_INTX			16
-+#define AMD_MDB_PCIE_INTR_PM_PME_RCVD		24
-+#define AMD_MDB_PCIE_INTR_PME_TO_ACK_RCVD	25
-+#define AMD_MDB_PCIE_INTR_MISC_CORRECTABLE	26
-+#define AMD_MDB_PCIE_INTR_NONFATAL		27
-+#define AMD_MDB_PCIE_INTR_FATAL			28
-+
-+#define IMR(x) BIT(AMD_MDB_PCIE_INTR_ ##x)
-+#define AMD_MDB_PCIE_IMR_ALL_MASK			\
-+	(						\
-+		IMR(CMPL_TIMEOUT)	|		\
-+		IMR(PM_PME_RCVD)	|		\
-+		IMR(PME_TO_ACK_RCVD)	|		\
-+		IMR(MISC_CORRECTABLE)	|		\
-+		IMR(NONFATAL)		|		\
-+		IMR(FATAL)		|		\
-+		AMD_MDB_TLP_PCIE_INTX_MASK		\
-+	)
-+
-+#define AMD_MDB_PCIE_INTX_BIT(x) (1U << (2 * (x) + AMD_MDB_PCIE_INTR_INTX))
-+/**
-+ * struct amd_mdb_pcie - PCIe port information
-+ * @pci: DesignWare PCIe controller structure
-+ * @slcr: MDB System Level Control and Status Register (SLCR) Base
-+ * @intx_domain: INTx IRQ domain pointer
-+ * @mdb_domain: MDB IRQ domain pointer
-+ */
-+struct amd_mdb_pcie {
-+	struct dw_pcie			pci;
-+	void __iomem			*slcr;
-+	struct irq_domain		*intx_domain;
-+	struct irq_domain		*mdb_domain;
-+	int				intx_irq;
-+};
-+
-+static const struct dw_pcie_host_ops amd_mdb_pcie_host_ops = {
-+};
-+
-+static inline u32 pcie_read(struct amd_mdb_pcie *pcie, u32 reg)
-+{
-+	return readl_relaxed(pcie->slcr + reg);
-+}
-+
-+static inline void pcie_write(struct amd_mdb_pcie *pcie,
-+			      u32 val, u32 reg)
-+{
-+	writel_relaxed(val, pcie->slcr + reg);
-+}
-+
-+static void amd_mdb_intx_irq_mask(struct irq_data *data)
-+{
-+	struct amd_mdb_pcie *pcie = irq_data_get_irq_chip_data(data);
-+	struct dw_pcie *pci = &pcie->pci;
-+	struct dw_pcie_rp *port = &pci->pp;
-+	unsigned long flags;
-+	u32 val;
-+
-+	raw_spin_lock_irqsave(&port->lock, flags);
-+	val = pcie_read(pcie, AMD_MDB_TLP_IR_MASK_MISC);
-+	val &= ~AMD_MDB_PCIE_INTX_BIT(data->hwirq);
-+	pcie_write(pcie, val, AMD_MDB_TLP_IR_ENABLE_MISC);
-+	raw_spin_unlock_irqrestore(&port->lock, flags);
-+}
-+
-+static void amd_mdb_intx_irq_unmask(struct irq_data *data)
-+{
-+	struct amd_mdb_pcie *pcie = irq_data_get_irq_chip_data(data);
-+	struct dw_pcie *pci = &pcie->pci;
-+	struct dw_pcie_rp *port = &pci->pp;
-+	unsigned long flags;
-+	u32 val;
-+
-+	raw_spin_lock_irqsave(&port->lock, flags);
-+	val = pcie_read(pcie, AMD_MDB_TLP_IR_MASK_MISC);
-+	val |= AMD_MDB_PCIE_INTX_BIT(data->hwirq);
-+	pcie_write(pcie, val, AMD_MDB_TLP_IR_ENABLE_MISC);
-+	raw_spin_unlock_irqrestore(&port->lock, flags);
-+}
-+
-+static struct irq_chip amd_mdb_intx_irq_chip = {
-+	.name		= "AMD MDB INTx",
-+	.irq_mask	= amd_mdb_intx_irq_mask,
-+	.irq_unmask	= amd_mdb_intx_irq_unmask,
-+};
-+
-+/**
-+ * amd_mdb_pcie_intx_map - Set the handler for the INTx and mark IRQ
-+ * as valid
-+ * @domain: IRQ domain
-+ * @irq: Virtual IRQ number
-+ * @hwirq: HW interrupt number
-+ *
-+ * Return: Always returns 0.
-+ */
-+static int amd_mdb_pcie_intx_map(struct irq_domain *domain,
-+				 unsigned int irq, irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_and_handler(irq, &amd_mdb_intx_irq_chip,
-+				 handle_level_irq);
-+	irq_set_chip_data(irq, domain->host_data);
-+	irq_set_status_flags(irq, IRQ_LEVEL);
-+
-+	return 0;
-+}
-+
-+/* INTx IRQ Domain operations */
-+static const struct irq_domain_ops amd_intx_domain_ops = {
-+	.map = amd_mdb_pcie_intx_map,
-+};
-+
-+static irqreturn_t dw_pcie_rp_intx_flow(int irq, void *args)
-+{
-+	struct amd_mdb_pcie *pcie = args;
-+	unsigned long val;
-+	int i;
-+
-+	val = FIELD_GET(AMD_MDB_TLP_PCIE_INTX_MASK,
-+			pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC));
-+
-+	for (i = 0; i < PCI_NUM_INTX; i++) {
-+		if (val & AMD_MDB_PCIE_INTR_INTX_ASSERT(i))
-+			generic_handle_domain_irq(pcie->intx_domain, i);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+#define _IC(x, s)[AMD_MDB_PCIE_INTR_ ## x] = { __stringify(x), s }
-+
-+static const struct {
-+	const char	*sym;
-+	const char	*str;
-+} intr_cause[32] = {
-+	_IC(CMPL_TIMEOUT,	"completion timeout"),
-+	_IC(PM_PME_RCVD,	"PM_PME message received"),
-+	_IC(PME_TO_ACK_RCVD,	"PME_TO_ACK message received"),
-+	_IC(MISC_CORRECTABLE,	"Correctable error message"),
-+	_IC(NONFATAL,		"Non fatal error message"),
-+	_IC(FATAL,		"Fatal error message"),
-+};
-+
-+static void amd_mdb_event_irq_mask(struct irq_data *d)
-+{
-+	struct amd_mdb_pcie *pcie = irq_data_get_irq_chip_data(d);
-+	struct dw_pcie *pci = &pcie->pci;
-+	struct dw_pcie_rp *port = &pci->pp;
-+	u32 val;
-+
-+	raw_spin_lock(&port->lock);
-+	val = pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC);
-+	val &= ~BIT(d->hwirq);
-+	pcie_write(pcie, val, AMD_MDB_TLP_IR_STATUS_MISC);
-+	raw_spin_unlock(&port->lock);
-+}
-+
-+static void amd_mdb_event_irq_unmask(struct irq_data *d)
-+{
-+	struct amd_mdb_pcie *pcie = irq_data_get_irq_chip_data(d);
-+	struct dw_pcie *pci = &pcie->pci;
-+	struct dw_pcie_rp *port = &pci->pp;
-+	u32 val;
-+
-+	raw_spin_lock(&port->lock);
-+	val = pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC);
-+	val |= BIT(d->hwirq);
-+	pcie_write(pcie, val, AMD_MDB_TLP_IR_STATUS_MISC);
-+	raw_spin_unlock(&port->lock);
-+}
-+
-+static struct irq_chip amd_mdb_event_irq_chip = {
-+	.name		= "AMD MDB RC-Event",
-+	.irq_mask	= amd_mdb_event_irq_mask,
-+	.irq_unmask	= amd_mdb_event_irq_unmask,
-+};
-+
-+static int amd_mdb_pcie_event_map(struct irq_domain *domain,
-+				  unsigned int irq, irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_and_handler(irq, &amd_mdb_event_irq_chip,
-+				 handle_level_irq);
-+	irq_set_chip_data(irq, domain->host_data);
-+	irq_set_status_flags(irq, IRQ_LEVEL);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops event_domain_ops = {
-+	.map = amd_mdb_pcie_event_map,
-+};
-+
-+static irqreturn_t amd_mdb_pcie_event_flow(int irq, void *args)
-+{
-+	struct amd_mdb_pcie *pcie = args;
-+	unsigned long val;
-+	int i;
-+
-+	val = pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC);
-+	val &= ~pcie_read(pcie, AMD_MDB_TLP_IR_MASK_MISC);
-+	for_each_set_bit(i, &val, 32)
-+		generic_handle_domain_irq(pcie->mdb_domain, i);
-+	pcie_write(pcie, val, AMD_MDB_TLP_IR_STATUS_MISC);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void amd_mdb_pcie_free_irq_domains(struct amd_mdb_pcie *pcie)
-+{
-+	if (pcie->intx_domain) {
-+		irq_domain_remove(pcie->intx_domain);
-+		pcie->intx_domain = NULL;
-+	}
-+
-+	if (pcie->mdb_domain) {
-+		irq_domain_remove(pcie->mdb_domain);
-+		pcie->mdb_domain = NULL;
-+	}
-+}
-+
-+static int amd_mdb_pcie_init_port(struct amd_mdb_pcie *pcie)
-+{
-+	int val;
-+
-+	/* Disable all TLP Interrupts */
-+	pcie_write(pcie, pcie_read(pcie, AMD_MDB_TLP_IR_ENABLE_MISC) &
-+		   ~AMD_MDB_PCIE_IMR_ALL_MASK,
-+		   AMD_MDB_TLP_IR_ENABLE_MISC);
-+
-+	/* Clear pending TLP interrupts */
-+	pcie_write(pcie, pcie_read(pcie, AMD_MDB_TLP_IR_STATUS_MISC) &
-+		   AMD_MDB_PCIE_IMR_ALL_MASK,
-+		   AMD_MDB_TLP_IR_STATUS_MISC);
-+
-+	/* Enable all TLP Interrupts */
-+	val = pcie_read(pcie, AMD_MDB_TLP_IR_ENABLE_MISC);
-+	pcie_write(pcie, (val | AMD_MDB_PCIE_IMR_ALL_MASK),
-+		   AMD_MDB_TLP_IR_ENABLE_MISC);
-+
-+	return 0;
-+}
-+
-+/**
-+ * amd_mdb_pcie_init_irq_domains - Initialize IRQ domain
-+ * @pcie: PCIe port information
-+ * @pdev: platform device
-+ * Return: '0' on success and error value on failure
-+ */
-+static int amd_mdb_pcie_init_irq_domains(struct amd_mdb_pcie *pcie,
-+					 struct platform_device *pdev)
-+{
-+	struct dw_pcie *pci = &pcie->pci;
-+	struct dw_pcie_rp *pp = &pci->pp;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = dev->of_node;
-+	struct device_node *pcie_intc_node;
-+
-+	/* Setup INTx */
-+	pcie_intc_node = of_get_next_child(node, NULL);
-+	if (!pcie_intc_node) {
-+		dev_err(dev, "No PCIe Intc node found\n");
-+		return -ENODATA;
-+	}
-+
-+	pcie->mdb_domain = irq_domain_add_linear(pcie_intc_node, 32,
-+						 &event_domain_ops, pcie);
-+	if (!pcie->mdb_domain) {
-+		dev_err(dev, "Failed to add mdb_domain\n");
-+		goto out;
-+	}
-+
-+	irq_domain_update_bus_token(pcie->mdb_domain, DOMAIN_BUS_NEXUS);
-+
-+	pcie->intx_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
-+						  &amd_intx_domain_ops, pcie);
-+	if (!pcie->intx_domain) {
-+		dev_err(dev, "Failed to add intx_domain\n");
-+		goto mdb_out;
-+	}
-+
-+	of_node_put(pcie_intc_node);
-+	irq_domain_update_bus_token(pcie->intx_domain, DOMAIN_BUS_WIRED);
-+
-+	raw_spin_lock_init(&pp->lock);
-+
-+	return 0;
-+mdb_out:
-+	amd_mdb_pcie_free_irq_domains(pcie);
-+out:
-+	of_node_put(pcie_intc_node);
-+
-+	return -ENOMEM;
-+}
-+
-+static irqreturn_t amd_mdb_pcie_intr_handler(int irq, void *args)
-+{
-+	struct amd_mdb_pcie *pcie = args;
-+	struct device *dev;
-+	struct irq_data *d;
-+
-+	dev = pcie->pci.dev;
-+
-+	/*
-+	 * In future, error reporting will be hooked to the AER subsystem.
-+	 * Currently, the driver prints a warning message to the user.
-+	 */
-+	d = irq_domain_get_irq_data(pcie->mdb_domain, irq);
-+	if (intr_cause[d->hwirq].str)
-+		dev_warn(dev, "%s\n", intr_cause[d->hwirq].str);
-+	else
-+		dev_warn_once(dev, "Unknown IRQ %ld\n", d->hwirq);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int amd_mdb_setup_irq(struct amd_mdb_pcie *pcie,
-+			     struct platform_device *pdev)
-+{
-+	struct dw_pcie *pci = &pcie->pci;
-+	struct dw_pcie_rp *pp = &pci->pp;
-+	struct device *dev = &pdev->dev;
-+	int i, irq, err;
-+
-+	amd_mdb_pcie_init_port(pcie);
-+
-+	pp->irq = platform_get_irq(pdev, 0);
-+	if (pp->irq < 0)
-+		return pp->irq;
-+
-+	for (i = 0; i < ARRAY_SIZE(intr_cause); i++) {
-+		if (!intr_cause[i].str)
-+			continue;
-+		irq = irq_create_mapping(pcie->mdb_domain, i);
-+		if (!irq) {
-+			dev_err(dev, "Failed to map mdb domain interrupt\n");
-+			return -ENOMEM;
-+		}
-+		err = devm_request_irq(dev, irq, amd_mdb_pcie_intr_handler,
-+				       IRQF_SHARED | IRQF_NO_THREAD,
-+				       intr_cause[i].sym, pcie);
-+		if (err) {
-+			dev_err(dev, "Failed to request IRQ %d\n", irq);
-+			return err;
-+		}
-+	}
-+
-+	pcie->intx_irq = irq_create_mapping(pcie->mdb_domain,
-+					    AMD_MDB_PCIE_INTR_INTX);
-+	if (!pcie->intx_irq) {
-+		dev_err(dev, "Failed to map INTx interrupt\n");
-+		return -ENXIO;
-+	}
-+
-+	err = devm_request_irq(dev, pcie->intx_irq,
-+			       dw_pcie_rp_intx_flow,
-+			       IRQF_SHARED | IRQF_NO_THREAD, NULL, pcie);
-+	if (err) {
-+		dev_err(dev, "Failed to request INTx IRQ %d\n", irq);
-+		return err;
-+	}
-+
-+	/* Plug the main event handler */
-+	err = devm_request_irq(dev, pp->irq, amd_mdb_pcie_event_flow,
-+			       IRQF_SHARED | IRQF_NO_THREAD, "amd_mdb pcie_irq",
-+			       pcie);
-+	if (err) {
-+		dev_err(dev, "Failed to request event IRQ %d\n", pp->irq);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int amd_mdb_add_pcie_port(struct amd_mdb_pcie *pcie,
-+				 struct platform_device *pdev)
-+{
-+	struct dw_pcie *pci = &pcie->pci;
-+	struct dw_pcie_rp *pp = &pci->pp;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	pcie->slcr = devm_platform_ioremap_resource_byname(pdev, "slcr");
-+	if (IS_ERR(pcie->slcr))
-+		return PTR_ERR(pcie->slcr);
-+
-+	ret = amd_mdb_pcie_init_irq_domains(pcie, pdev);
-+	if (ret)
-+		return ret;
-+
-+	ret = amd_mdb_setup_irq(pcie, pdev);
-+	if (ret) {
-+		dev_err(dev, "Failed to set up interrupts\n");
-+		goto out;
-+	}
-+
-+	pp->ops = &amd_mdb_pcie_host_ops;
-+
-+	ret = dw_pcie_host_init(pp);
-+	if (ret) {
-+		dev_err(dev, "Failed to initialize host\n");
-+		goto out;
-+	}
-+
-+	return 0;
-+
-+out:
-+	amd_mdb_pcie_free_irq_domains(pcie);
-+	return ret;
-+}
-+
-+static int amd_mdb_pcie_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct amd_mdb_pcie *pcie;
-+	struct dw_pcie *pci;
-+
-+	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-+	if (!pcie)
-+		return -ENOMEM;
-+
-+	pci = &pcie->pci;
-+	pci->dev = dev;
-+
-+	platform_set_drvdata(pdev, pcie);
-+
-+	return amd_mdb_add_pcie_port(pcie, pdev);
-+}
-+
-+static const struct of_device_id amd_mdb_pcie_of_match[] = {
-+	{
-+		.compatible = "amd,versal2-mdb-host",
-+	},
-+	{},
-+};
-+
-+static struct platform_driver amd_mdb_pcie_driver = {
-+	.driver = {
-+		.name	= "amd-mdb-pcie",
-+		.of_match_table = amd_mdb_pcie_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = amd_mdb_pcie_probe,
-+};
-+builtin_platform_driver(amd_mdb_pcie_driver);
--- 
-2.43.0
+How about rephrasing this section to say that the attributes allow 
+configuration of the rate at which AER errors are reported, with each of 
+them dedicated to one error type (correctable or uncorrectable)? 
+Something along these lines.
+
+> +nonzero value changes the number of errors (burst) allowed per 5 second
+> +window before ratelimiting. Reading gets the current ratelimits.
+> +
+> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_cor_log
+> +Date:		March 2025
+> +KernelVersion:	6.15.0
+> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
+> +Description:	Log ratelimit for correctable errors.
+> +
+> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_uncor_log
+> +Date:		March 2025
+> +KernelVersion:	6.15.0
+> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
+> +Description:	Log ratelimit for uncorrectable errors.
+> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
+> index 167c0b277b62..ab5b0f232204 100644
+> --- a/Documentation/PCI/pcieaer-howto.rst
+> +++ b/Documentation/PCI/pcieaer-howto.rst
+> @@ -93,6 +93,9 @@ spammy devices from flooding the console and stalling execution. Set the
+>   default ratelimit to DEFAULT_RATELIMIT_BURST over
+>   DEFAULT_RATELIMIT_INTERVAL (10 per 5 seconds).
+>   
+> +Ratelimits are exposed in the form of sysfs attributes and configurable.
+> +See Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats.
+> +
+>   AER Statistics / Counters
+>   -------------------------
+>   
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index b46ce1a2c554..16de3093294e 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1801,6 +1801,7 @@ const struct attribute_group *pci_dev_attr_groups[] = {
+>   	&pcie_dev_attr_group,
+>   #ifdef CONFIG_PCIEAER
+>   	&aer_stats_attr_group,
+> +	&aer_attr_group,
+>   #endif
+>   #ifdef CONFIG_PCIEASPM
+>   	&aspm_ctrl_attr_group,
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 26104aee06c0..26d30a99c48b 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -887,6 +887,7 @@ void pci_no_aer(void);
+>   void pci_aer_init(struct pci_dev *dev);
+>   void pci_aer_exit(struct pci_dev *dev);
+>   extern const struct attribute_group aer_stats_attr_group;
+> +extern const struct attribute_group aer_attr_group;
+>   void pci_aer_clear_fatal_status(struct pci_dev *dev);
+>   int pci_aer_clear_status(struct pci_dev *dev);
+>   int pci_aer_raw_clear_status(struct pci_dev *dev);
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index c5b5381e2930..1237faee6542 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -626,6 +626,58 @@ const struct attribute_group aer_stats_attr_group = {
+>   	.is_visible = aer_stats_attrs_are_visible,
+>   };
+>   
+> +#define aer_ratelimit_attr(name, ratelimit)				\
+> +	static ssize_t							\
+> +	name##_show(struct device *dev, struct device_attribute *attr,	\
+> +		    char *buf)						\
+> +{									\
+> +	struct pci_dev *pdev = to_pci_dev(dev);				\
+> +	return sysfs_emit(buf, "%u errors every %u seconds\n",		\
+
+The convention is that sysfs files should provide one value per file. It 
+won't be just people interacting with this interface, but scripts as 
+well. Parsing such a string is a hassle. As we can only change the burst 
+of the ratelimit, I'd simply emit pdev->aer_report->ratelimit.burst.
+
+All the best,
+Karolina
+
+> +			  pdev->aer_report->ratelimit.burst,		\
+> +			  pdev->aer_report->ratelimit.interval / HZ);	\
+> +}									\
+> +									\
+> +	static ssize_t							\
+> +	name##_store(struct device *dev, struct device_attribute *attr,	\
+> +		     const char *buf, size_t count)			\
+> +{									\
+> +	struct pci_dev *pdev = to_pci_dev(dev);				\
+> +	int burst;							\
+> +									\
+> +	if (kstrtoint(buf, 0, &burst) < 0)				\
+> +		return -EINVAL;						\
+> +									\
+> +	pdev->aer_report->ratelimit.burst = burst;			\
+> +	return count;							\
+> +}									\
+> +static DEVICE_ATTR_RW(name)
+> +
+> +aer_ratelimit_attr(ratelimit_cor_log, cor_log_ratelimit);
+> +aer_ratelimit_attr(ratelimit_uncor_log, uncor_log_ratelimit);
+> +
+> +static struct attribute *aer_attrs[] __ro_after_init = {
+> +	&dev_attr_ratelimit_cor_log.attr,
+> +	&dev_attr_ratelimit_uncor_log.attr,
+> +	NULL
+> +};
+> +
+> +static umode_t aer_attrs_are_visible(struct kobject *kobj,
+> +				     struct attribute *a, int n)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	if (!pdev->aer_report)
+> +		return 0;
+> +	return a->mode;
+> +}
+> +
+> +const struct attribute_group aer_attr_group = {
+> +	.name = "aer",
+> +	.attrs = aer_attrs,
+> +	.is_visible = aer_attrs_are_visible,
+> +};
+> +
+>   void pci_dev_aer_stats_incr(struct pci_dev *pdev, struct aer_err_info *info)
+>   {
+>   	unsigned long status = info->status & ~info->mask;
 
 
