@@ -1,88 +1,83 @@
-Return-Path: <linux-pci+bounces-21589-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21590-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BDCFA37D15
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 09:22:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 582AFA37D43
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 09:37:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE7BA1887006
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 08:22:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 10FB4189424A
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 08:37:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D85019CC02;
-	Mon, 17 Feb 2025 08:22:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9507519D081;
+	Mon, 17 Feb 2025 08:37:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="cMS4seh4"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="EMOy8Ad1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011039.outbound.protection.outlook.com [52.103.67.39])
+Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010008.outbound.protection.outlook.com [52.103.68.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E5F17B506;
-	Mon, 17 Feb 2025 08:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406D13D68;
+	Mon, 17 Feb 2025 08:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.8
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739780547; cv=fail; b=hgOd/8EP/7uPm5wpurmeRwtaAHoLwnGAkpVC3pA2bKDzhaZWCOVSlFZCbBYhsvj0UtvqpUZ+LWnHfMkRnNZbh3DACQpDiF+gAJNToGL90C7fSgSYqLCPKB0XR9M7Qli+pwwSOGIadcDvOPu4i0rwCv8SRhkUDx6n8YLhK/cqZrA=
+	t=1739781437; cv=fail; b=f7sGlbjT7jGOVAdQJdr3Sl9UbTeSgPSKCTaf+cvMv0VTtm0gsP4bKD8dzYIZr9KHpbNMAd5VyPdN638hErnxHwdtHTaaSNYLhvMxsjIZd5UFUjtO9jBrdASp2FeOaVKcPmqgweZOFNAIVUirDwN3xnI0sGdrfP0Ox4TEwH+VHYQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739780547; c=relaxed/simple;
-	bh=MYbbFLfn8NU05AYSvjk7PNzVZotERAXVIAgEqXeiBow=;
+	s=arc-20240116; t=1739781437; c=relaxed/simple;
+	bh=cDDjq8Rc0W7pwnzSzNOO36t2fVDFZ5b3cylx5XxXOqU=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=OSzI4cYoo6OvOWZPgxiwjn4VzsfedKTDkDNetTt8RhmQhO9vWoSy1DbhQj0frJnGKHMxn7ZnyaobmT9+8IWEZd7b0UB/SWtcPw6zPoMFVroeixs+xH14POspQpFBQey3fnSLqOL55LrroMSLhdlhzGN/dtbMTiNz+3ttrf8XVpk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=cMS4seh4; arc=fail smtp.client-ip=52.103.67.39
+	 Content-Type:MIME-Version; b=YCpdBRkBN8gzE2be3b8lHneyLpH5L/gq9rpRR0+KKFOVBTf+phiGU5YC3kRb+uHwEgTD1dEM7pk2eK5sLyYp9iPnt589jGdYtvzR9H/zB5mKu+9R8KRAB49oMoU1TItoKZnXuvSCUibtsDUvSDuDVYAkQ6Jfval6FKGfdEm2lMo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=EMOy8Ad1; arc=fail smtp.client-ip=52.103.68.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u2oCNUiBmlOG73nVn0rA6EYbbUf1Xolbi/evrY+oSf967G0Jpia1yfe/pCrg54+Q0EYCTneHbwYAO2AN4auIYHWlPycHJB16hYofYYpFynqwhrDCXJUqeHoMD68K7O7H1NQKsFvyB8WIU3KVTskqT3MmJ46iDOKrGqy0+xJdJyjK2Uzjft9W6oQH4ELyx8TAi+CAPbEdqOX/yDux42mnApXXCw7Bxw6eZgHTMvTqqZ489105K7jO9wOQZyqwiQJrldya0VCwJoDRz0hB/Hp/t1ZNEyve0wfUodvge97dKvIcMz7us+XOm0w8cywBHqVO4yQs7ZmjSwfg8VHHNA8ubQ==
+ b=ZCAOIrjCYaXyrLtWSgPlPBABkKfOnu5cyRHFrVNBs7Ue9J3KMKoGWS1vXHmaLJWd9HIRCFxxBHGhoYDXn8kqk8Ose3R3gsdDs1UsJVMizD5Xx9nUBHnsBjaitNsIuSoQDW8r0pe4Lwh8YUA3jwguvWWzjTnqJyzSIOXxLL3vcbepXaLPBWy1x3qxM6wk8j2Xu6DVixCqTGDuwvEYHe9PKv/cT6VNpSDJ+2HHpF8GM6vZVVlGEtQI7kc7I7+7LXp9i1Y8K38jvrkY7SYIktJ1Hgp43odWtbBlUv09SxXgrTuIrTplOwMlQpYsLIVevMH4UOxEIyEkuay6JuyMEOyooA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U1Z80JjkPmiEvyWEEXR8fcj0Ka9yDmmar+GY94yExG0=;
- b=Kaes00iKK8v0Rqaw1Y2V2ZpLwXvJBe4xHE4FesCU0ffkmozG45QQAxS1Efpu0stL96zcj+kbfCCYh6I1o4oaFdKwNE78NOjBsMoAFtJ0qZIkQ3gFUIZVfgt0Rf2UkdkV+K0KhjME8BTbhuPMTr9Rv9Rcqs7Bjhy52abCjGFWorfWuMlV2P+vTAmXggCF9bUjcIpfwv4o2CGYuT7fsc93A9S+tqLigp4+gGONKAWB5F3+B1ibCITz3Irol+84v84eIesiY5cJr7m/3sXxHuZBRITci2lTvLol1LPdCZvqsdMmJaCsHjeUFRf99KSgoBfkitWl0eKSQWqrVagQmqbDxg==
+ bh=+/lmH3hliXFfrwhuPd2qi9Ax/nF386Fu4E7znrcRs5w=;
+ b=XSK13fnoIzAO2ILIGO5fZnjaqO3ooE9VmArEse4uUfE3muQmxOW7iHHKVys9kJUtGBZ3B+K7aaXLgGhM1mp2RBjmDqaVOYsdJ2nOZotYQv0Tg6WZj5uDD8Gwl2bVJqaeKYtQ71xaS75Egr18F7XphXT4z93ypG7MT2n51qHJr7FGx1le/SyjHQLT8Nf/6YGLlrx/sMEOpeE+s1BHnMa1WdSLNBMb20jzTkyooTvzHWXJFqOP/XpZhCq5EBvNaPSR+KdwS2Ctvl8Qm5isqiHOPxyKDyAyDDq6L7iFBVMQabGe3ZNSFpFnc2WQ3QNnCAOX/jfq+0oGOk+QmZYCfDvAtw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U1Z80JjkPmiEvyWEEXR8fcj0Ka9yDmmar+GY94yExG0=;
- b=cMS4seh4E5B2w3bdFOV9T6L7wp6qHoIAmjvUUq+cghGHiWRAeqXtBaBK+WSE6TPCieo2OgSJrjp/VmrcgYgTguiXMcpDH24+3So/Xm46sDhhLW7NRfuDlikidOe26yeXikWrTSSGF9Uard6jfnGo2LDk6zu5OY6wRmTY+evGN4j0Gyt6YdmpQ4q9J2ZisHZAiOIZ0VMrR3UZZtkWxi2vF5MOyVxtM+d3rgvNPZHeM6s97bKBG9lgcp5H0zTKotnD6J6uP6RvAtHjGi/AOQ3yGJ+6Ousg9rzVpjus9zF4DGqxyexHhPWsP5lrw+phU9Gs5fQ1NrKzTt3xg/AxuxBppA==
+ bh=+/lmH3hliXFfrwhuPd2qi9Ax/nF386Fu4E7znrcRs5w=;
+ b=EMOy8Ad1ETTXN73Ut++u+Ap/t4f4uy1gSDsM78yVCa7K4VKugudk9Ed+Bmlc/FuGAh1Za38tQdKuVguagXK2O+FXM1THvyHrOmaubLmN37tq0Gurb9jQv6Z2NWwWYNtvmDdIJbJC/T/mBiKfBwYUJAsVxJQ3119FziyqR7tIsL9QGuPTk/1OSScwC0wM+ud2rZCRVzc74f35ZaR5Lmjc5i6Roq/M/QukTKYn1xluaQQIqWE5j8p8/MJ0ownn8sJ/laDfFaGfLDSLHSB80kFo+c5FhVwPvemF2P8RbyS9OJ/IMtnL/IyPOle7SX9X6CW2WcNCADm9DrHTurFCaxNRKg==
 Received: from MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:6e::9)
- by PN0PR01MB7719.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:b6::5) with
+ by MA0PR01MB6441.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:79::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Mon, 17 Feb
- 2025 08:22:15 +0000
+ 2025 08:37:04 +0000
 Received: from MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM
  ([fe80::6e06:bc2e:85c0:c2ee]) by MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM
  ([fe80::6e06:bc2e:85c0:c2ee%2]) with mapi id 15.20.8445.017; Mon, 17 Feb 2025
- 08:22:15 +0000
+ 08:37:04 +0000
 Message-ID:
- <MA0PR01MB56715414B26AA601CFFB54C8FEFB2@MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM>
-Date: Mon, 17 Feb 2025 16:22:08 +0800
+ <MA0PR01MB56715CA3F83F4ADF298D2E4CFEFB2@MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM>
+Date: Mon, 17 Feb 2025 16:36:59 +0800
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 2/5] PCI: sg2042: Add Sophgo SG2042 PCIe driver
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, maz@kernel.org
-Cc: Chen Wang <unicornxw@gmail.com>, kw@linux.com,
- u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu, arnd@arndb.de,
- bhelgaas@google.com, conor+dt@kernel.org, guoren@kernel.org,
+To: Bjorn Helgaas <helgaas@kernel.org>, Chen Wang <unicornxw@gmail.com>
+Cc: kw@linux.com, u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu,
+ arnd@arndb.de, bhelgaas@google.com, conor+dt@kernel.org, guoren@kernel.org,
  inochiama@outlook.com, krzk+dt@kernel.org, lee@kernel.org,
- lpieralisi@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
- pbrobinson@gmail.com, robh@kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-riscv@lists.infradead.org, chao.wei@sophgo.com,
- xiaoguang.xing@sophgo.com, fengchun.li@sophgo.com, helgaas@kernel.org
-References: <cover.1736923025.git.unicorn_wang@outlook.com>
- <ddedd8f76f83fea2c6d3887132d2fe6f2a6a02c1.1736923025.git.unicorn_wang@outlook.com>
- <20250119122353.v3tzitthmu5tu3dg@thinkpad>
- <BM1PR01MB254540560C1281CE9898A5A0FEE12@BM1PR01MB2545.INDPRD01.PROD.OUTLOOK.COM>
- <20250122173451.5c7pdchnyee7iy6t@thinkpad>
+ lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, palmer@dabbelt.com,
+ paul.walmsley@sifive.com, pbrobinson@gmail.com, robh@kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
+ chao.wei@sophgo.com, xiaoguang.xing@sophgo.com, fengchun.li@sophgo.com
+References: <20250122213303.GA1102149@bhelgaas>
 From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <20250122173451.5c7pdchnyee7iy6t@thinkpad>
+In-Reply-To: <20250122213303.GA1102149@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TYBP286CA0011.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:404:ce::23) To MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM
+X-ClientProxiedBy: SG2PR02CA0117.apcprd02.prod.outlook.com
+ (2603:1096:4:92::33) To MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM
  (2603:1096:a01:6e::9)
 X-Microsoft-Original-Message-ID:
- <82f5ef91-4305-4b18-ae57-5d6f20a33fc7@outlook.com>
+ <762afb26-e11d-4f55-a374-6bd215bb79ba@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,164 +86,299 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0PR01MB5671:EE_|PN0PR01MB7719:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a7df507-f591-4f13-99ee-08dd4f2c2f1a
+X-MS-TrafficTypeDiagnostic: MA0PR01MB5671:EE_|MA0PR01MB6441:EE_
+X-MS-Office365-Filtering-Correlation-Id: 08562252-7ca3-43d9-f27f-08dd4f2e417c
 X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|6090799003|5072599009|19110799003|8060799006|15080799006|461199028|7092599003|3412199025|440099028|41001999003;
+	BCL:0;ARA:14566002|15080799006|461199028|7092599003|6090799003|5072599009|8060799006|19110799003|1602099012|4302099013|3412199025|10035399004|440099028|12091999003|41001999003;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eTczTmo3MGpxZEJuR0ZmWHhlbWdEUEgySGlzdEFyRTJYL1JrQmZKenpjTFgw?=
- =?utf-8?B?RXM1d0Mvdk13RWE5ODZYdGt3VTNnREZhRTJ3ZUwwbUJ0L1dvVndieEtSd3J4?=
- =?utf-8?B?ekxuK2lxMUFXR0ptanJNOXhGdCtKdGJRWHJWem93WWNnVUI2RUg0ZmpOYnEy?=
- =?utf-8?B?UW14dTN6NEZXZHNpWG5FTGV3d0x6ajhiZTlzSk9wZTd5eVZWbnA5clRpVzBF?=
- =?utf-8?B?TGdNRFZxTnU4ZlkrTkJ0dlNXMjF2VzVoVHJkb0RMM0xIYXFpUGY1ajR1NmJZ?=
- =?utf-8?B?dzR2UHFoU1FnYjEvczd2VnJobGFOYlc3d0dSSUptaUZTR1IrYmJmTkZPdlBY?=
- =?utf-8?B?UUhpanI3U0dvTUpvczhmYTBuM3ZRbjBUdFJxVXEvY01lN3hxZzZTUlVkWFRX?=
- =?utf-8?B?WEFLSjhQR3pjanJuSGZza2pSZW44S2JhcGdqMkJiOWtwa3kyeEU5Szc5UW9k?=
- =?utf-8?B?c0t3bk9GRU9sdWlVUnR0cTFWQVRQLzF6aERTeVdHdk5jOUJhdmVoOG0rUWRm?=
- =?utf-8?B?dk1kcmoxajVxSzF4cnUzbnF4NTFtRjZvaWlZS3VqU1VobUNwSmdhb2I5YzBN?=
- =?utf-8?B?SFpXWjBXOWhYVTROSVluQjNHSFkrcWl6WVdLNllDeUJOZXgxVmJKTC9HV09S?=
- =?utf-8?B?UnVsMlpLbEdBVkhjcjBRTERJcllsMGR3dkgrSlN2eUpua2J1RDJUQ2x0ekJu?=
- =?utf-8?B?Vld6WlVBdEUyU0ZiS3pycUZIOU9kbWkyY3B1aEU1WU4vVEZIY295L1IzSEh5?=
- =?utf-8?B?NVV6aDdpa3FTVUhKbXdCeWdYSk15NXZnTHI2ZGFTOHU3elIvajNGTnBGMnJM?=
- =?utf-8?B?aWtsRU1OSmF3YjZKZVhCUVJ0eFcvREx2U0N3NjN5OHpYYi9sUWRveUszSkFP?=
- =?utf-8?B?TkthN0NRL2tjZHFYSGFxNzJzc09RVUtocmdNVFRsakJSMlJyZUpwQm9nZzVj?=
- =?utf-8?B?bjZ1WWdsOHdNQjZMdmpvcjgxOFFINUpRWktBSUtqakQ0TSsxaU5VTVdTQ0pz?=
- =?utf-8?B?MHEwVGVlVGFNSWhNTmxPN1hldFRKYVRyaCs1dTB0d1JZQnpsNER4VUVDWTBW?=
- =?utf-8?B?M0tLQXFtcU9PRmhHL1RLYzFnN1NZSFp3Y2VKTnpUTlNuSjZXY3U2TUxhU204?=
- =?utf-8?B?eFdLcnFtMUJ1WW5kbHc2OTNNR3BVSlB6Vi9MaWtQUWQ0aS9uR1dvaG41SDBY?=
- =?utf-8?B?dXM5M2MySUo3d0x2RSt0WXJNcGJVc1Q2YnBWMi9MSklGdXZuM0xQVkc2alpY?=
- =?utf-8?B?VGFpcWI5RGdFclphREtLSzRKMjJreGg2LzJTMVF4WXhVYWRrcDVaeUhhenpn?=
- =?utf-8?B?MUptTGg0T0MzVXJPT0VNZXlLQWoyTlp5Yi9OYWdnMTd0L08yRVF5eDZHQW8r?=
- =?utf-8?B?cVBOMCtyMFBpVTU4bnJCK2hRdUNrZ2c3OE8wOEJRT21GT3J0K1VBTzhoOC90?=
- =?utf-8?B?NjRvdHRDT3FrblN1c2JLNVdjSzNVQlFncXdrenN5dkNFSGxlRlp0L1Y4RWpW?=
- =?utf-8?B?T1JtNlgxS2FwK2dEM3QrRUI3WHdneFF4eGRTWWxOSmo5VzVEanYrcVlMV1Ri?=
- =?utf-8?B?Q0hRZz09?=
+	=?utf-8?B?NzZ0YlJ4L2hVU1JNVEpBTGMvQ2xXSG1SNGtLZFU5QWlYNFNWVUc5ZlZzQW93?=
+ =?utf-8?B?ZnBqOE1pT21YVGlQOTV6VXcyczZMbEpMZit2RmJKS2FUL0dZcGtmL2tINmVJ?=
+ =?utf-8?B?K204YnlXUUgyUUFZSzdTb01ocEdPb1U5Rk9vdkpCTEVwSWlEb3hyWkJiU256?=
+ =?utf-8?B?Tyt3WW1zMjJUQmJ2a2dUalNiSEhyZ2ZtZnlGS3BGeUVzMXJRemx6VmZ5bEV6?=
+ =?utf-8?B?N0t1bksyMVdQNm1sTXJZUXFPYTU4YUlBcVVkRGs3bkFLdE9XeGJyZDd0Tzkx?=
+ =?utf-8?B?Z0dBRHlCWHpGYVFia3hRbFExL3FjK1JCQmZPcGRrcnZFQWZqTUI1K3kzNTZx?=
+ =?utf-8?B?YkNpSWRZblRnTzcrK0FUNnNSeE5PbXYvcUQveW9QeHlONC9YNmEyVmtrRXJL?=
+ =?utf-8?B?SW9YcjZuWVMzSmxtVnRoQW9VMjVtU2dVY09zUzF4anVXdk9qVHBCcVB1SE4z?=
+ =?utf-8?B?bkJ3em8yeFV0VStjZmRtWjBHRk0yVVVDVXM0SG1VWXpoRjhwclVmZkZtSmFX?=
+ =?utf-8?B?dGliSk9hRGVkczFyQTEzYVBJUE9tRUJFdTdPSzVZWTJMaC9UeE90YW5WNENs?=
+ =?utf-8?B?Z1dPVUVIRm42Qyt3YTJUWFgwZnNTb29LWWZtUnNPajQ1M0kraVdBWW1kN3d5?=
+ =?utf-8?B?QjUzSk9ySDh5Ni9GdmdOUXN0Q0dlS3BGeksxcS9SUlp1Y1VyTkhpMmpNUUI0?=
+ =?utf-8?B?UTQ4ZXhLVGo1SDU5b1VpV1hNK3BWSHJSdCt2Mkxvdk1yYWhyR3h3RmVOQjNn?=
+ =?utf-8?B?MmJ4WmhTZm5nTVNmQjhubkdhVEN1RS9qM1pKL0d0VkFQQXp4b3FKaWg5NElM?=
+ =?utf-8?B?STR5VzJ2cDFCeHN0SGQybjUvcDF1MjF0Y1NPTlM0ZVlRU1NIeFh3bStBaGJX?=
+ =?utf-8?B?QTZXVmQ5cUU2anpKbFVCSEp3TXc2L0xleS8wcGhRSXBRVmU2c1NQZ1RjSHY3?=
+ =?utf-8?B?NlMzYmRPOGx5aXNIT2txRlV0bzdpUzk3ck9BMW5odDNNRE4wY2l4RUNBUjdi?=
+ =?utf-8?B?SWFCeWd5TDQ3RERlSHRKQXBhNDl0QmYxQUxhcWo1QzJRK0wxLy9yU1JRWThD?=
+ =?utf-8?B?OE90dUh1emZSZVcrcDA0ZkFpR1p5WS9XemcwYTRsYWhpWjgwbWN6TklQMkds?=
+ =?utf-8?B?dUZaVUI0M0ltOG5hMEpueFJreUgwK3B0cUIxTlM4Z2xOa0NkUUJvd2hReStW?=
+ =?utf-8?B?bk1KVlBYd1h5ek9KQnBzWDhCaElXMEg5NGJJYmVxMTExTWhlQ2lYQm5YS3I2?=
+ =?utf-8?B?N3lmVVExZHdiQzlPSlZoRkhtM1lSeGVLM3pkc05UbVQxT25UVFNZWmNOOEs2?=
+ =?utf-8?B?ck9ZaWhOMVgxU1BaejNabGhVaEdJeHY2UW1IZWNDNElRWVlwcm1mYml6NWVz?=
+ =?utf-8?B?U1NITTZ5aE4wVXdtekxyTTZGK2pObjRIbVdGUno0b1YwL0Z6cjBmYlpYWm14?=
+ =?utf-8?B?UGRQTkswNFlXakNkSHVaMHg1NHlkQ3dLTHlqdERQdWdKVnJuUldpS0VXNWVj?=
+ =?utf-8?B?UGJDckRJSHQyY0ZGQlBuL1dsTnBVeC81T1Rjb1ZrRUtNZ0QyYjl6dlhRUVVs?=
+ =?utf-8?B?Z09NUDJ0K1Zld1ZsTkFDM1M4OVFWKzNJME9Lb1BvcW50eHpBb1l3d2h6Q3Jo?=
+ =?utf-8?B?UmxEUDlkemMwZWsrUzM1aERGSGZ4bWlqMG5yS1AxQzFBRlZvZjVWb0pmSm5R?=
+ =?utf-8?B?c2grTE15cnJJQzhLSGcrMU1JemhMbjJuNk1xMktHcFNvcFhrNXpEd0lHK0hp?=
+ =?utf-8?B?M091OXJtbnJzbDVXWUZPMnV0NDB4dHZFTnVQNUNUUXpQUnFHRUVRODlKTk1I?=
+ =?utf-8?B?eTJramMvSTVwS1BvWndEZz09?=
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MHpCTkpXY3ZDRjM4S0YzLzQ5ZUs1UGJ0UVFmL0xsYzZsVTBHYS9WeXNZVU54?=
- =?utf-8?B?SkxkWlpwUkpyeE5PR3o4QnI0Z3VpbXhneGhKZWxlZ3hDNkVQZXltRDN4ampx?=
- =?utf-8?B?RWdLRzkrM2lVN2Rab1dUd2ExUnkwSGp3cjlSUklIZng0Mmo1UU13ZWw0eGFI?=
- =?utf-8?B?RnBqWUxBUFpKY1VucXVWQ2hLU09DUFJEbVFpRElybC9lcklhRisyQ3FNZVJW?=
- =?utf-8?B?T2ZLTWs2STcwQ1FRN28yenlNcHg3emxNTE9uYjRWOWNQaVA2aFJrMlVuRll5?=
- =?utf-8?B?ZzZ4UEdkQXdEUVFFWjFXSzFHeFBWRzQrc0xQUG1iWit4eDZoVkVMdkU2b3Az?=
- =?utf-8?B?NlVINm1nZ1JiUEY0M3grRUNNbnlhaUl3dU4vbXR1dmlaMjV4cUZpTm1iczR5?=
- =?utf-8?B?d0ZYSFdjMVhXVE4rUHBtTE0xSmJZYnZ3WU5rRE5ETERzSVJzTDNHcnlzVElo?=
- =?utf-8?B?ZVd2VnA5RlpyWW5rNlZweTM2ZGxyL295SHpOaWxOZ2VvQk1lR3d4M0l4aHho?=
- =?utf-8?B?ZnZtRXZaOWs5dzRDRnBGVzBTSVo2cjlpaU5OK1BTazNESGM2QUJTNHJ5aGpl?=
- =?utf-8?B?cjZFQzlJZENRUmhXT2FMNGxoMTBsZzU5VFBsbjg2VFRKMTk5TVpyY2ZtU3BD?=
- =?utf-8?B?bk82TStvUWJ4RlRZdEVyUjRldk9URW9IbnRYOXZJWHdsb1BkYjJ3bXptbXFk?=
- =?utf-8?B?dzN4OHFiN3JIMnk4WlpOaHVycGRtWkpLYTFra1RlekRrN243UkduUThSZWZz?=
- =?utf-8?B?SG9XRWE1RllQRlkrTnpCT2JrZHg3aEptVjJ3WnN3cWdQdXFXQ3lRTFZoWjB5?=
- =?utf-8?B?dHpsOHNuTG1sZFBWMG5vdnJCS0M5eDdaN1FBUllhNVpYUEJoZXRCdGlDQ0gz?=
- =?utf-8?B?UGJydzJIb2xaczhmQndHTGU2UzdpVXlST1dwK0RVZ3pJV0hGdGQzTDFUNnJC?=
- =?utf-8?B?ODFuSGh0YVBuTG14MVhDZHdlVkxhemJzMTljcU1zelRhRlBBNVFKMlUyQTZi?=
- =?utf-8?B?SGZJWHZTMDAvTlZ6L0NZbG9sRS9tcWVoRU5HN3JGbDR0NmM1eXZOZEFsZDNm?=
- =?utf-8?B?a3lxdG9FaTJHMlhnOFJDRXVLZEFjQ2pUSnFmVUFodi9XUlgyZlBaK01Rc1pV?=
- =?utf-8?B?em9XbE9ZRFkzelpjdW0yUE1Sd0UrR3JzUG9vMmoyZ0djNVZYNWJNVHZpN3hq?=
- =?utf-8?B?SzliUTIxeGtHeDR6dWhpRS9aYlZXdllYZFFKY05nV2lvR1h5eG9GS09KSGp0?=
- =?utf-8?B?bWZJb0FESVFCNHREREovZTBaMjlpenJMbEQyMVdlY3ZqaFlVZlMyZDJ1YTdN?=
- =?utf-8?B?dE9FcDB3NkdRMHVqZFh0bXY0S2p2VGkxK1crc1lNc1ZBWTBzVVlWaEM0blpo?=
- =?utf-8?B?SWhnMkFFbzFyenFFdnhPaTVZU0cwVGZLeThvTVR0N0gwd3pWZkUyeFM3VUdz?=
- =?utf-8?B?UU9zbXZ6SnVQdXBrTWloRkppYk1rZXVhRHNJa1djQjV3TlNNWmtrL1NMa1Bp?=
- =?utf-8?B?U0VCMi9oWWJ0YVRoU2pWbnNKU0N2NnpwQmRSZklUQ3I2ZHBlK29MYVpIY1Uz?=
- =?utf-8?B?eUl4OUlhcXVtT0dNSHpzeURMbXVBLzJGSUJlcHNneTk3WnF2OGlhcjhsWFhO?=
- =?utf-8?B?c1NZSnF6WkZIeXJ5MlpsODZnWlJkdk1jKzBCeFduNk1zNi9UQ2x3MGpCWG4z?=
- =?utf-8?B?NnVZRmJUdjNnNFR3VTRGTFR1RnIvbnFkQjFneTEvWWt6NXVuRHk1U2JxSlN5?=
- =?utf-8?Q?rB0uUzsedTznTSpTG5NIJWk6IwvjlpQ2bd0HUXv?=
+	=?utf-8?B?SDQvV01Sai8zc01iaXRVN1JTL1NNbnZ0S3UxRmdyNTlRNzNxeUZPSGZrZ0hT?=
+ =?utf-8?B?N0NacUx3ZllOWHhQdHQ3cmFmNTQ3QXlSMXVaOVpuZkhsS2krYjY4SGx6YUlY?=
+ =?utf-8?B?dS90S3MxVTVZT0wzeVg1eHRVQVBOM2xTeTZRcDlnMDh0djNrdWx3bnBrbmpY?=
+ =?utf-8?B?TWZyQ21kVEhScVZVNlUrUjNoVXM0RVNJMUpWTGQ1OXhlRDNxTFhTTjJHOWll?=
+ =?utf-8?B?ZHVzZHhDcWxHM0NyMWJPVGRMRzZ3dUtVbzRkek9PZ2x0S25VWko0TDBhbGRG?=
+ =?utf-8?B?b1lIaWJRRnAxSTFtNlBMcDh4SnRXdVN2VFd3Tk9RUk9hdDFoM2QvK0RqeDZh?=
+ =?utf-8?B?VUF2QlZiTTIyaUlPeEtLQzZtRHVvOHRuelJkcDRrbGJBUjY4QWwvRHhhTTFI?=
+ =?utf-8?B?TDBFVUJpUkVwRTBHS0c2a1BMYlMwWVhYSW5HSFBPeExLOCtEQXRvc3ZOdllC?=
+ =?utf-8?B?TDhBM2g0NjYyVjhKamRnL2xxbm1MUjVuV3NKa0RTQUYzeXlXckxXdVErNk9p?=
+ =?utf-8?B?d0Vpb0F5T0lLOWwvK0VyampYYldHNkkyaVkxNEpSQmtYWFBOY1kyWXpnSHZB?=
+ =?utf-8?B?SFhyN1MxUU5oZFkwN1M2Ulo5NzJJckl1dzdZTVpGRk9vbncyNTFWUHdKT0dI?=
+ =?utf-8?B?KzBMaGFYUENvc1VHdkNFL0JQeEhEMjFVVFZXbEN3ZTNPZE5YclFjblJMdjRF?=
+ =?utf-8?B?aC9qd0xqRkI3MFM4SkpUN1RkOVcyYy9iUnR3REVHN1JrM0oxcFZKZnQvWWlN?=
+ =?utf-8?B?L0w2aVBhTGFjY2dJbDJpeDVuRmhmQ3BCRFVQMEFiU3RNV3Zsc0xkRm5Qb1pW?=
+ =?utf-8?B?MXdORXNFdlFxbndIditnL3NLVzBuMnVGUmcwVlNiYXV3bVQybkR3Y0xEemY4?=
+ =?utf-8?B?emZ5QUlBWFdoQXNmd0I4dml2eWQyemtleXFDT0tNdjNoWlVNMzUvOC9WSnNl?=
+ =?utf-8?B?ZyticEovcFJnRXRjL1I2ZDBQV28rN0hqQUF2MW9JdXhUVndqOUJSc2ZoQ1BK?=
+ =?utf-8?B?NTRFdHlMUTRoS3REZEZLOEtrNnBwQVJwM3JHR0t6eGpCVUI2WENwbDFhVE9J?=
+ =?utf-8?B?QU8rSEhpcktoK3NITHlRRjJZdVovRW9KbkdhdVBwNHgyWFlLTENWR2VOOGhh?=
+ =?utf-8?B?bS9KN0psSkhqN1MvcU9rb3RpdkdXMHpEeG9RZExsUmsvSDJaNDdVYWVnL0hs?=
+ =?utf-8?B?QzY5THpxeHJJSmMwZ0FSNitUOTlOUmd3aENPckVzeEw1WjJLNXgzczN5WnF0?=
+ =?utf-8?B?cmhBblFYNmV5SDVmdzIwcVE0SS9YTVlvOHNKME9WVHBZL2p2cWhwSzhvODN6?=
+ =?utf-8?B?TXRBZVpDa2ZmSWUyd1NzZ21neGxxRHlBUzFJME0xZ3c2LytvN0FHMWdLWFVj?=
+ =?utf-8?B?SjdhZnZWWnRqRm9rUkZSalMrOWxrSjRueXB4bmdxc2xPL1lxeTk5M2VqUkpG?=
+ =?utf-8?B?b1Z6bTVENnJOTytOWXhVVU5QdllBOEp2bm9VYkZNdXFsSDRMbXZySTA2UEQr?=
+ =?utf-8?B?QzlQWGU0QlUzZDhIVFFrczRRT2JSVnNsUDJHeWhvM1Q0TWhvV3JHbEUwcUcr?=
+ =?utf-8?B?REpUWDhIRFR4U09EUUlRczA5Q1YyK1R6K0NVa0dnWnI0dlRGQmxQWW5IK2Fp?=
+ =?utf-8?B?WGREdUMvNE1PWEVCblE1Z0UrNk5iOGZhZHRVdGg5ekw5OXkxVmRtblN1ZnR3?=
+ =?utf-8?B?VnNaYTBzdmxGT3d5QUQvaE1OUVE0RXU1WUxBQlZiNDU5YUlzOWtYc2ZTMk54?=
+ =?utf-8?Q?215U/nFU1fmgQ9xdFZD68h8jdlDyAqwW9nwJWjX?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a7df507-f591-4f13-99ee-08dd4f2c2f1a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08562252-7ca3-43d9-f27f-08dd4f2e417c
 X-MS-Exchange-CrossTenant-AuthSource: MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 08:22:14.8558
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2025 08:37:04.6868
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
 	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB7719
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0PR01MB6441
 
 
-On 2025/1/23 1:34, Manivannan Sadhasivam wrote:
+On 2025/1/23 5:33, Bjorn Helgaas wrote:
+> On Wed, Jan 15, 2025 at 03:06:57PM +0800, Chen Wang wrote:
+>> From: Chen Wang <unicorn_wang@outlook.com>
+>>
+>> Add support for PCIe controller in SG2042 SoC. The controller
+>> uses the Cadence PCIe core programmed by pcie-cadence*.c. The
+>> PCIe controller will work in host mode only.
+>> + * pcie-sg2042 - PCIe controller driver for Sophgo SG2042 SoC
+> I'm guessing this is the first of a *family* of Sophgo SoCs, so
+> "sg2042" looks like it might be a little too specific if there will be
+> things like "sg3042" etc added in the future.
+As I know, SG2042 will be the only one SoC using Cadence IP from Sophgo. 
+They have switched to other IP(DWC) later.
+>> +#include "../../../irqchip/irq-msi-lib.h"
+> I know you're using this path because you're relying on Marc's
+> work in progress [1].
+>
+> But I don't want to carry around an #include like this in drivers/pci
+> while we're waiting for that, so I think you should use the existing
+> published MSI model until after Marc's update is merged.  Otherwise we
+> might end up with this ugly path here and no real path to migrate to
+> the published, supported one.
+>
+> [1] https://lore.kernel.org/linux-riscv/20241204124549.607054-2-maz@kernel.org/
+OK, I will switch back to use the existing published MSI model.
+>> + * SG2042 PCIe controller supports two ways to report MSI:
+>> + *
+>> + * - Method A, the PCIe controller implements an MSI interrupt controller
+>> + *   inside, and connect to PLIC upward through one interrupt line.
+>> + *   Provides memory-mapped MSI address, and by programming the upper 32
+>> + *   bits of the address to zero, it can be compatible with old PCIe devices
+>> + *   that only support 32-bit MSI address.
+>> + *
+>> + * - Method B, the PCIe controller connects to PLIC upward through an
+>> + *   independent MSI controller "sophgo,sg2042-msi" on the SOC. The MSI
+>> + *   controller provides multiple(up to 32) interrupt sources to PLIC.
+> Maybe expand "PLIC" the first time?
+Sure.
+>
+> s/SOC/SoC/ to match previous uses, e.g., in commit log
+> s/multiple(up to 32)/up to 32/
+ok
+>> + *   Compared with the first method, the advantage is that the interrupt
+>> + *   source is expanded, but because for SG2042, the MSI address provided by
+>> + *   the MSI controller is fixed and only supports 64-bit address(> 2^32),
+>> + *   it is not compatible with old PCIe devices that only support 32-bit MSI
+>> + *   address.
+> "Supporting 64-bit address" means supporting any address from 0 to
+> 2^64 - 1, but I don't think that's what you mean here.
+>
+> I think what you mean here is that with Method B, the MSI address is
+> fixed and it can only be above 4GB.
+Yes, I will fix it.
+>> +#define REG_CLEAR_LINK0_BIT	2
+>> +#define REG_CLEAR_LINK1_BIT	3
+>> +#define REG_STATUS_LINK0_BIT	2
+>> +#define REG_STATUS_LINK1_BIT	3
+>> +static void sg2042_pcie_msi_clear_status(struct sg2042_pcie *pcie)
+>> +{
+>> +	u32 status, clr_msi_in_bit;
+>> +
+>> +	if (pcie->link_id == 1)
+>> +		clr_msi_in_bit = BIT(REG_CLEAR_LINK1_BIT);
+>> +	else
+>> +		clr_msi_in_bit = BIT(REG_CLEAR_LINK0_BIT);
+> Why not put the BIT() in the #defines for REG_CLEAR_LINK0_BIT,
+> REG_STATUS_LINK0_BIT, ...?  Then this code is slightly simpler, and
+> you can use similar style in sg2042_pcie_msi_chained_isr() instead of
+> shifting there.
+Ok, I will check this out in new version.
+>> +	regmap_read(pcie->syscon, REG_CLEAR, &status);
+>> +	status |= clr_msi_in_bit;
+>> +	regmap_write(pcie->syscon, REG_CLEAR, status);
+>> +static void sg2042_pcie_msi_irq_compose_msi_msg(struct irq_data *d,
+>> +						struct msi_msg *msg)
+>> +{
+>> +	struct sg2042_pcie *pcie = irq_data_get_irq_chip_data(d);
+>> +	struct device *dev = pcie->cdns_pcie->dev;
+>> +
+>> +	msg->address_lo = lower_32_bits(pcie->msi_phys) + BYTE_NUM_PER_MSI_VEC * d->hwirq;
+>> +	msg->address_hi = upper_32_bits(pcie->msi_phys);
+> This seems a little suspect because adding "BYTE_NUM_PER_MSI_VEC *
+> d->hwirq" could cause overflow into the upper 32 bits.  I think you
+> should add first, then take the lower/upper 32 bits of the 64-bit
+> result.
+OK, I will check this out in new version.
+>> +	if (d->hwirq > pcie->num_applied_vecs)
+>> +		pcie->num_applied_vecs = d->hwirq;
+> "num_applied_vecs" is a bit of a misnomer; it's actually the *max*
+> hwirq.
+"max_applied_vecs"？
+>
+>> +static const struct irq_domain_ops sg2042_pcie_msi_domain_ops = {
+>> +	.alloc	= sg2042_pcie_irq_domain_alloc,
+>> +	.free	= sg2042_pcie_irq_domain_free,
+> Mention "msi" in these function names, e.g.,
+> sg2042_pcie_msi_domain_alloc().
+ok
+>
+>> +static int sg2042_pcie_init_msi_data(struct sg2042_pcie *pcie)
+>> +{
+>> ...
+>> +	/* Program the MSI address and size */
+>> +	if (pcie->link_id == 1) {
+>> +		regmap_write(pcie->syscon, REG_LINK1_MSI_ADDR_LOW,
+>> +			     lower_32_bits(pcie->msi_phys));
+>> +		regmap_write(pcie->syscon, REG_LINK1_MSI_ADDR_HIGH,
+>> +			     upper_32_bits(pcie->msi_phys));
+>> +
+>> +		regmap_read(pcie->syscon, REG_LINK1_MSI_ADDR_SIZE, &value);
+>> +		value = (value & REG_LINK1_MSI_ADDR_SIZE_MASK) | MAX_MSI_IRQS;
+>> +		regmap_write(pcie->syscon, REG_LINK1_MSI_ADDR_SIZE, value);
+>> +	} else {
+>> +		regmap_write(pcie->syscon, REG_LINK0_MSI_ADDR_LOW,
+>> +			     lower_32_bits(pcie->msi_phys));
+>> +		regmap_write(pcie->syscon, REG_LINK0_MSI_ADDR_HIGH,
+>> +			     upper_32_bits(pcie->msi_phys));
+>> +
+>> +		regmap_read(pcie->syscon, REG_LINK0_MSI_ADDR_SIZE, &value);
+>> +		value = (value & REG_LINK0_MSI_ADDR_SIZE_MASK) | (MAX_MSI_IRQS << 16);
+>> +		regmap_write(pcie->syscon, REG_LINK0_MSI_ADDR_SIZE, value);
+>> +	}
+> Would be nicer to set temporaries to the link_id-dependent values (as
+> you did elsewhere) so it's obvious that the code is identical, e.g.,
+>
+>    if (pcie->link_id == 1) {
+>      msi_addr = REG_LINK1_MSI_ADDR_LOW;
+>      msi_addr_size = REG_LINK1_MSI_ADDR_SIZE;
+>      msi_addr_size_mask = REG_LINK1_MSI_ADDR_SIZE;
+>    } else {
+>      ...
+>    }
+>
+>    regmap_write(pcie->syscon, msi_addr, lower_32_bits(pcie->msi_phys));
+>    regmap_write(pcie->syscon, msi_addr + 4, upper_32_bits(pcie->msi_phys));
+>    ...
+Ok，I will check this out.
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static irqreturn_t sg2042_pcie_msi_handle_irq(struct sg2042_pcie *pcie)
+> Which driver are you using as a template for function names and code
+> structure?  There are probably a dozen different names for functions
+> that iterate like this around a call to generic_handle_domain_irq(),
+> but you've managed to come up with a new one.  If you can pick a
+> similar name to copy, it makes it easier to compare drivers and find
+> and fix defects across them.
+>
+>> +{
+>> +	u32 i, pos;
+>> +	unsigned long val;
+>> +	u32 status, num_vectors;
+>> +	irqreturn_t ret = IRQ_NONE;
+>> +
+>> +	num_vectors = pcie->num_applied_vecs;
+>> +	for (i = 0; i <= num_vectors; i++) {
+>> +		status = readl((void *)(pcie->msi_virt + i * BYTE_NUM_PER_MSI_VEC));
+>> +		if (!status)
+>> +			continue;
+>> +
+>> +		ret = IRQ_HANDLED;
+>> +		val = status;
+> I don't think you need both val and status.
+Yes, I will fix this.
+>
+>> +		pos = 0;
+>> +		while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
+>> +					    pos)) != MAX_MSI_IRQS_PER_CTRL) {
+> Most drivers use for_each_set_bit() here.
+Ok, I will check this out.
+>> +			generic_handle_domain_irq(pcie->msi_domain,
+>> +						  (i * MAX_MSI_IRQS_PER_CTRL) +
+>> +						  pos);
+>> +			pos++;
+>> +		}
+>> +		writel(0, ((void *)(pcie->msi_virt) + i * BYTE_NUM_PER_MSI_VEC));
+>> +	}
+>> +	return ret;
+>> +}
+>> +static int sg2042_pcie_setup_msi(struct sg2042_pcie *pcie,
+>> +				 struct device_node *msi_node)
+>> +{
+>> +	struct device *dev = pcie->cdns_pcie->dev;
+>> +	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+>> +	struct irq_domain *parent_domain;
+>> +	int ret = 0;
+> Pointless initialization of "ret".
+Yes, I will fix this.
+>> +	if (!of_property_read_bool(msi_node, "msi-controller"))
+>> +		return -ENODEV;
+>> +
+>> +	ret = of_irq_get_byname(msi_node, "msi");
+>> +	if (ret <= 0) {
+>> +		dev_err(dev, "%pOF: failed to get MSI irq\n", msi_node);
+>> +		return ret;
+>> +	}
+>> +	pcie->msi_irq = ret;
+>> +
+>> +	irq_set_chained_handler_and_data(pcie->msi_irq,
+>> +					 sg2042_pcie_msi_chained_isr, pcie);
+>> +
+>> +	parent_domain = irq_domain_create_linear(fwnode, MSI_DEF_NUM_VECTORS,
+>> +						 &sg2042_pcie_msi_domain_ops, pcie);
+> Wrap to fit in 80 columns like 99% of the rest of this file.
 
-[......]
->>>> +/*
->>>> + * SG2042 PCIe controller supports two ways to report MSI:
->>>> + *
->>>> + * - Method A, the PCIe controller implements an MSI interrupt controller
->>>> + *   inside, and connect to PLIC upward through one interrupt line.
->>>> + *   Provides memory-mapped MSI address, and by programming the upper 32
->>>> + *   bits of the address to zero, it can be compatible with old PCIe devices
->>>> + *   that only support 32-bit MSI address.
->>>> + *
->>>> + * - Method B, the PCIe controller connects to PLIC upward through an
->>>> + *   independent MSI controller "sophgo,sg2042-msi" on the SOC. The MSI
->>>> + *   controller provides multiple(up to 32) interrupt sources to PLIC.
->>>> + *   Compared with the first method, the advantage is that the interrupt
->>>> + *   source is expanded, but because for SG2042, the MSI address provided by
->>>> + *   the MSI controller is fixed and only supports 64-bit address(> 2^32),
->>>> + *   it is not compatible with old PCIe devices that only support 32-bit MSI
->>>> + *   address.
->>>> + *
->>>> + * Method A & B can be configured in DTS, default is Method B.
->>> How to configure them? I can only see "sophgo,sg2042-msi" in the binding.
->>
->> The value of the msi-parent attribute is used in dts to distinguish them,
->> for example:
->>
->> ```dts
->>
->> msi: msi-controller@7030010300 {
->>      ......
->> };
->>
->> pcie_rc0: pcie@7060000000 {
->>      msi-parent = <&msi>;
->> };
->>
->> pcie_rc1: pcie@7062000000 {
->>      ......
->>      msi-parent = <&msi_pcie>;
->>      msi_pcie: interrupt-controller {
->>          ......
->>      };
->> };
->>
->> ```
->>
->> Which means:
->>
->> pcie_rc0 uses Method B
->>
->> pcie_rc1 uses Method A.
->>
-> Ok. you mentioned 'default method' which is not accurate since the choice
-> obviously depends on DT. Maybe you should say, 'commonly used method'? But both
-> the binding and dts patches make use of in-built MSI controller only (method A).
-
-"commonly used method" looks ok to me.
-
-Binding example only shows the case for Method A, due to I think the 
-writing of case for Method A  covers the writing of case for Method B.
-
-DTS patches use both Method A and B. You can see patch 4 of this 
-patchset, pcie_rc1 uses Method A, pcie_rc0 & pcie_rc2 use Method B.
-
-> In general, for MSI implementations inside the PCIe IP, we don't usually add a
-> dedicated devicetree node since the IP is the same. But in your reply to the my
-> question on the bindings patch, you said it is a separate IP. I'm confused now.
-
-I learned the writing of DTS from "brcm,iproc-pcie", see 
-arch/arm/boot/dts/broadcom/bcm-cygnus.dtsi for example. Wouldn't it be 
-clearer to embed an msi controller in topo?
-
-And regarding what you said, "we don't usually add a dedicated 
-devicetree node", do you have any example I can refer to?
+Ok, I will check this out.
 
 Thanks,
 
 Chen
 
-[......]
-
-
+>
+> Bjorn
 
