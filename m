@@ -1,142 +1,148 @@
-Return-Path: <linux-pci+bounces-21660-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21661-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B3FAA38B3B
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 19:25:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91EE8A38BA5
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 19:56:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F2EA67A3008
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 18:24:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 588501894484
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 18:56:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F11B723537A;
-	Mon, 17 Feb 2025 18:24:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 169B5236457;
+	Mon, 17 Feb 2025 18:56:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qkdj9jrX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DUdfwXWD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6AE235359;
-	Mon, 17 Feb 2025 18:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9AA22DFBF
+	for <linux-pci@vger.kernel.org>; Mon, 17 Feb 2025 18:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739816693; cv=none; b=VDBl+TXnuGfw3bZe6zoefm2IQIsnYvVXcvm2uPBH+kuHYToBYvidHsWYSAkV05S6MQsYhGBgCyN7u1DMlPJofPMG6jVcEXOt+heumDJEq7lLgDm5rvHYdw6aRXOufvq5iLMDCxUoF1oaQVKmsNWRSXY80wfUo+NOLQ0HP93BZZQ=
+	t=1739818585; cv=none; b=Xuvf16lz1MP9KkiicbrgX3hLsdQKKnr58wVbFjkz4sQUtZTeuwTwz+2K3n26WOIjPTDl+TKiTZTfDqwnPZurSvxosEBIifbu/dkWZwl0N6eb353uTGPPCP33AEwwAps4j2aiwxbLOR9p3xVpdFoakEOMcDgmCUYm7tNfQnvWvW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739816693; c=relaxed/simple;
-	bh=gn0QjBFQOKxAe0g2/k4/mFmZgvlOFoIke7zUVB/fbtQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ulgf3xT3WMF6p71j8V/FObKpCyYBhWZwq+ch+DFdeZsCSdGbsS1uNujJ+kjU1dJDFLcRtJ4R+5CWnH9A8luudCnb/zgwLBDfZnbASL+ieb1CbZxa14A7r7trm2xTAw4w0JSnMZDW/0PWBfHmpx5QILuVJoSOSGZB025mvLcx5fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qkdj9jrX; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30a2594435dso15502831fa.1;
-        Mon, 17 Feb 2025 10:24:50 -0800 (PST)
+	s=arc-20240116; t=1739818585; c=relaxed/simple;
+	bh=21GINV+jTT0ljh6iGdE46yNUcUdBiV7LkViktY34c6I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ddkD2rTesp/SqHn5qVvuHWEuhUl5tpSRHdDWp9I/LlI4sUXMkQ46NyE4GOlABeAe3N9tsWtWcY+iP79fdifi6xvykHDPWa96Y1It3A75K6vQ5/XTuOLkmZXY2oOx9exMM1s+/NADoZuy9eyUbUXBFb9Xe2VxasxzXaoGbz50G+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DUdfwXWD; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54529e15643so2870270e87.1
+        for <linux-pci@vger.kernel.org>; Mon, 17 Feb 2025 10:56:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739816689; x=1740421489; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gn0QjBFQOKxAe0g2/k4/mFmZgvlOFoIke7zUVB/fbtQ=;
-        b=Qkdj9jrXvkxhEG/7VdXZl08gHjKcB0RVLY8IpEQzaptz4rDNGYrJUm0i0ZGSXUeYen
-         vbiQBDsBIhwxuRpB5k3KeUQJjw7cip4L+icdd2Tg9IlJ50/7qHojElWO5uf61yw0wrZi
-         tLBb79ou73siNbiROR0sZ6D+5WwQREsgAxTeZ4Q+184EZI4QfMRqJBWyUcwZPNemKXX+
-         F8OEQXrzaQ7xPgtbxNxdhR4+WQ4LRd7n8DUS46T+I060Xz+JN++NGxEQpnY1/ccb7W4A
-         uD8SBlPIdFXekRzc86i9IK8tJRuQhaGV1od5C7roQU8NKqDbToxsM2aVfXYuNVzXRjKe
-         M+HQ==
+        d=linaro.org; s=google; t=1739818580; x=1740423380; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BAW81WUtaGDrpjLpQFuAf8r7igrxWydrW/CS4LG6Lcw=;
+        b=DUdfwXWDXbJ3zRHYRYMQzfEGUnTzfpMardaJCnn6vjoCU8Cs6fEha0dWus6Z+XEJqQ
+         MR7V8it4014lTyV51JazCh7RDTICk30uhF/B54wo6nnCt68e2b3LStm5NDCVZ79VBETW
+         Xjb4ogk0u40EeLXZeoe7BYfFkZi9wU7INzpqg7mS8169yrwt6oT7Tz0Y80rtfy89x1gx
+         IMk1A3Z0zGFan+GKzfdloX27bxwB7VGRi3VTKD9CNnNOeug7AwxeZPoQ9xRmtdbiTx5n
+         lHIoXnUhkAVT4F3pQghdrbNy0+LkVcxRds3C3FC6VCepHg+f1vxRAipp6hHHSb0k9Ek9
+         RwaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739816689; x=1740421489;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gn0QjBFQOKxAe0g2/k4/mFmZgvlOFoIke7zUVB/fbtQ=;
-        b=nS4tz/Q8nUSCG7W+U3HBulgnIkbpQgAVTbWKBpPT764O5eQFMy9WieJU1/4J6pdMOW
-         L2ClcqkNekiW2/FQZ7ketQE7qmNIkVX1De+Pv5soGK85ni1wPSWEtoXhV694la35bBmJ
-         NVdQ4ssv2C4rE9D8eScIdlC02IFbk8YuzlxSG83DS5UiqePN1jrj3ysSj9FRDFOQBUGQ
-         Ah5u612FwSkPeXyE+Fbrx0kDgV8xFXb0moVt2eRkUk0Bmc+F1jDi9zHU6yyoQWAu9YWw
-         NrSwtAaENgHN57Ss/JSSej9ohEzHotzkQN5jZ245WUwOsqQq9c5bRhHB0qy80fF069aw
-         E4lw==
-X-Forwarded-Encrypted: i=1; AJvYcCUm3qyVrxErnHIyaXeHPetURWb0I+g+QSNe6E1HBip2RayN7xk8ueOg0Wf1U7nwEU7SptgTEk4eIHtD@vger.kernel.org, AJvYcCVyn+pBBL9nfjeQuu8x4kRg5h7lgoVs/2gCGyqVQCgHfnVx3kzoUjt2zu+EzosenWmdu2BbmCoVDIn3nNVU@vger.kernel.org, AJvYcCWzdzl8DQp8QgeyLCDwgKrivPyipN58rUQE905e8MGahYMJV+rll4OvCX9e+6sttyy8cIPPFrWhjfk1LWAt@vger.kernel.org, AJvYcCXYFGr/8h3Qd/59LSbO2nzrejvIc10wC2dUvRiJ8Ysk6s1qrqC189CG//g37XXiFCsGstOuVISq0Uw4eF4u2GY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTCuSTJ9PJoWrBhwfB+4ggrmXtZPjYjDzsdgLiEUu0qfqZRNsc
-	viEQdI21YUgCGyMDpd0TS7Ey+Pyw00EQPwT+Fec5tSS3hKRcyYk0Tj23jYFasK7toRjn8Kqtpz/
-	vlQs8cSEK80QYtBlCXLza/9zrZ+0=
-X-Gm-Gg: ASbGnctWT8wLJoBpJffctQyl/GRL6OaAUrh4lse/D7VxkrzPXgCa/Lmg9C9+a1VhpnO
-	kmxE/Tqh1Eat5fx7xdxVTstTXV493Reb5UklmlXcZyv8B41mXqqRqIiz/cB8b8s96acjERkuIsI
-	dBOmiHH+4PMBHo4S7YmxvcdgERsQ3tPk8=
-X-Google-Smtp-Source: AGHT+IF5nUcc45TCNyTyJENRSlv8p48gA51c8C9Bfv5GRzkgcYG1j+d6OpNURrgeLJQwKLz8eBbpQln2PvkXNQmB4Zc=
-X-Received: by 2002:a2e:9517:0:b0:308:ee65:7f44 with SMTP id
- 38308e7fff4ca-309288ca32dmr27136571fa.8.1739816688951; Mon, 17 Feb 2025
- 10:24:48 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739818580; x=1740423380;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BAW81WUtaGDrpjLpQFuAf8r7igrxWydrW/CS4LG6Lcw=;
+        b=k6zh2UZ3S7uerveFXoJr1YMkHbUMZ6GupiL9cMhYa0LYXaGCZsJc4+SeyHaUXNK00u
+         ysgYIdaurL15DNyKm2NE+uwp4MEljy79i8R9fKbbUNZzzU/d0BW4B4/lmRcsvKTsPEo2
+         fN2PycmU/sHeGL21TsPFS6BSTUG0GBYeSzLRps9TO0wcerVep8HxbYhdWXps/5nCnEXK
+         rmbZ/nMl4hC2Rh9WMExaSycEkzQ0W9weOgI+TJjaLCVLtMymMV+am8arF41XgETU8BaB
+         5B5Exe43Dq0dZIDfGaZ0iR5tYvSZAYynd0349U1D85zPDqYooEBisGZ8eLKvd3psYIzn
+         ADmw==
+X-Forwarded-Encrypted: i=1; AJvYcCXfhLPevsvLFmCPDVqnb5vcfU8VcPVkXFw3xzIpaYVAydhaF6mZCBWMgElky7mcRyScZR6eAc5qLGY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycRSgnMbbt8bbGxYzKeHMk5Vn6xKSDc5s8+IxoxWaCFX+oROhi
+	MKIcrDSJfGSAaMorsyR5eTdPXBCSNhyWr/0GjHDV2tOn1wF8ch+DX2e7BWtoVoo=
+X-Gm-Gg: ASbGncvEf4BhMLZ7kZA37AzXLJtEAIZ+XqQgMDFzKV3vLTQps0Qf6ORx30upBO8vB7L
+	D/hhzNJgXpyXXoD7goqhOxuLHqQ68tSipfqsEOyu33WK7F0OUSW8nQ7g5qDYPxzHplgMpjOKvHn
+	tVTZCbtn4EbYUn+Ca7nXrYetQcFqtuL0KHbx4j56aoSk/i0BZF/bgt3dUwy5/6Vu7fh/OoWCXt0
+	feT9M4/e6hw0OTsF/Gvr1qWARIejthhXoNhBARQJLVfnu+v56sP3YfGiLGB68+31dYmVyDJvuHv
+	8CykG+NBQ/pvr38IZsFqSNSA3G5RzliMUMKsyp7/06uQIbr+/6nQ58bGWxA=
+X-Google-Smtp-Source: AGHT+IG63ghCxYPnwVWx4j5CKiVfpEwlnjS1CxJrziNrE6kVkwoM1IgOqX0WRSrlQIdssIrnOIfZtw==
+X-Received: by 2002:a05:6512:3c86:b0:545:31d8:f384 with SMTP id 2adb3069b0e04-54531d8f982mr2456362e87.10.1739818580218;
+        Mon, 17 Feb 2025 10:56:20 -0800 (PST)
+Received: from [127.0.1.1] (2001-14ba-a0c3-3a00--782.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::782])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5462006b0ecsm559806e87.160.2025.02.17.10.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 10:56:18 -0800 (PST)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH 0/6] PCI: qcom-ep: add support for using the EP on SAR2130P
+ and SM8450
+Date: Mon, 17 Feb 2025 20:56:12 +0200
+Message-Id: <20250217-sar2130p-pci-v1-0-94b20ec70a14@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207-rust-xarray-bindings-v16-0-256b0cf936bd@gmail.com>
- <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com>
- <Z7MnxKSSNY7IyExt@cassiopeiae> <CAJ-ks9=OG2zPPPPfZd5KhGKgNsv3Qm9iHr2eWXFeL7Zv16QVdw@mail.gmail.com>
- <Z7NEZfuXSr3Ofh1G@cassiopeiae> <CAJ-ks9=TrFHiLFkRfyawNquDY2x6t3dwGi6FxnfgFLvQLYwc+A@mail.gmail.com>
- <CANiq72kAhw6XwPzGu+FrF64PZ9P_eSzX3gqG9CLvy7YJnbXgoQ@mail.gmail.com>
- <CAJ-ks9mFT1Gaao+OrdYF+hg6Sp=XghyHWu1VTALdeMJPwkX=Uw@mail.gmail.com>
- <CANiq72kFpDt230zBugN12q978LRSJiZB5dJZszWkL2p7XqQ52w@mail.gmail.com>
- <CANiq72kjAx4a20cnE3XrJ-z4K=8pCRuc+TOa+WtcuUsdZ22tSA@mail.gmail.com>
- <CAJ-ks9nZNzrPbK577ibUUjs_aE_o5QrpZbRuwCTEKuuSKG6ZHQ@mail.gmail.com> <CANiq72mUW_PBmwjTqx2vH4Xucykea9MRhpDMs3OvwLJ6zdN8+A@mail.gmail.com>
-In-Reply-To: <CANiq72mUW_PBmwjTqx2vH4Xucykea9MRhpDMs3OvwLJ6zdN8+A@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 17 Feb 2025 13:24:12 -0500
-X-Gm-Features: AWEUYZm8nj7xTn7dcDtYCzihPsz3j2vH6bg1FPlz6OV-5OeM_FPCxoMkLLZucoE
-Message-ID: <CAJ-ks9nB8Y_i7szABOgJbG1vZS45XsL5f9LU4zSf2S7bpoZ4TA@mail.gmail.com>
-Subject: Re: [PATCH v16 2/4] rust: types: add `ForeignOwnable::PointedTo`
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Matthew Wilcox <willy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, "Rob Herring (Arm)" <robh@kernel.org>, 
-	=?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEyGs2cC/x3MQQqAIBBA0avErBMcrZSuEi1Ep5qNiUIE4t2Tl
+ m/xf4VCmanAOlTI9HDhO3bgOIC/XDxJcOgGJdWEEo0oLivUMonkWVgZHOnZLYYs9CRlOvj9d9v
+ e2gdugY24XgAAAA==
+X-Change-ID: 20241017-sar2130p-pci-80dae35a67e8
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Mrinmay Sarkar <quic_msarkar@quicinc.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1086;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=21GINV+jTT0ljh6iGdE46yNUcUdBiV7LkViktY34c6I=;
+ b=owEBbQKS/ZANAwAKARTbcu2+gGW4AcsmYgBns4ZP0jFRqK6qM7lWJy6cx2BjsR04fO27y4jOd
+ r9Hus3kApOJAjMEAAEKAB0WIQRdB85SOKWMgfgVe+4U23LtvoBluAUCZ7OGTwAKCRAU23LtvoBl
+ uEBcEACuIgxA9prRR/xwlBxoo3AZmYE8/63IIPLOGRh7R7tcaHvJdytVxWaZhqcOlvqZf4okNP5
+ 5Z1UOE6tOd/FU7rJPT+xUOXlcUZTH9EfThdlN/vVRqUIiKWQhmOh6bAc5c+ABLsyQwzRIxtFUMM
+ PuIoC5w/IFZ7Bb+wCEVlV6dOmiItiVKjoFRtDXabZCu10h3KlIQ2wEqCKg/L2aUtd8GjiV6Nrpd
+ rvcayMWA7kQ5dem+kdho1Ya6QYeDJr0nCohNTkQhEPV/9VO+vtel+bE8+o0k1wxaWxn3zNrDjy8
+ 264bEYvFSkmmsltk7hssijQsHpujUpYQXoiGJX82vSiZFLMGepdhYIpCv22cIjKYZ4qEbkNehpx
+ r1fZInrtPsvvulmrxBz5A5S1IutG0rHqQVBU2NHTcCrIOxeEpgRQxC9oGsCT74BPnWwvN4g2wJE
+ CP5PpobZWDBAvLSs2VmTwE0duE1NYFQDgrx0w+J/4rptKjtdWUPBa0H/dxidHb8gloWtwPUuLSR
+ xP48B+MYUuWF6H1UMTAGKEgdYkpVDVGjgoeZNoNcS/FTDTkPYxg1rDt3EiYTJO02M96vSFyAs/y
+ 9zoRm+S5ddy6EH9tpwEaMvM9jHsKP0H7UMLGQW8zRhw/KAZctK6RmHSzyNDLo+pUYjkum5tPIZy
+ QM3Nusena5oU6Uw==
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-On Mon, Feb 17, 2025 at 1:13=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Mon, Feb 17, 2025 at 6:44=E2=80=AFPM Tamir Duberstein <tamird@gmail.co=
-m> wrote:
-> >
-> > I agree with you that optimizing for git blame while pessimizing for
-> > normal readers is not what we should do. I don't agree that putting
-> > boilerplate on its own line is a pessimization for the normal reader -
-> > in my opinion it is the opposite. Trivial expressions of the form
->
-> But that is a different argument, unrelated to `git blame`, no?
+Update the incomplete SM8450 support and bring in SAR2130P support for
+the PCIe1 controller to be used in EP mode.
 
-Yes it is. I suppose I misunderstood your objection to this rationale,
-along with
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+Dmitry Baryshkov (6):
+      dt-bindings: PCI: qcom-ep: describe optional IOMMU
+      dt-bindings: PCI: qcom-ep: enable DMA for SM8450
+      dt-bindings: PCI: qcom-ep: add SAR2130P compatible
+      PCI: dwc: pcie-qcom-ep: enable EP support for SAR2130P
+      arm64: dts: qcom: sar2130p: add PCIe EP device nodes
+      arm64: dts: qcom: sm8450: add PCIe EP device nodes
 
-> So if you have a change like that, please just change the line, rather
-than adding new ones just for `git blame`.
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 69 ++++++++++++++++++++--
+ arch/arm64/boot/dts/qcom/sar2130p.dtsi             | 53 +++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               | 52 ++++++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          |  1 +
+ 4 files changed, 169 insertions(+), 6 deletions(-)
+---
+base-commit: 34598f5b38950c59f15caa5194cfccbf6ec03c99
+change-id: 20241017-sar2130p-pci-80dae35a67e8
 
-as an objection to the decision, so I was giving additional rationale.
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-> What I was saying is that, if the only reason one is adding a line is
-> for `git blame`, then it shouldn't be done.
->
-> But, of course, if there is a different, good reason to add a line,
-> then it should be done.
->
-> In other words, `git blame` does not play a role here.
->
-> I mean, a reasonable person could say it should at least have a small
-> weight into the decision, sure. But I don't think we currently do that
-> and it makes decisions even more complex...
-
-Unclear where this leaves us so I'll just go with .cast() in-line.
 
