@@ -1,184 +1,182 @@
-Return-Path: <linux-pci+bounces-21613-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21614-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47034A382CC
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 13:19:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F187DA382F6
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 13:27:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CC143AC158
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 12:18:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B780B170399
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 12:27:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4118D21773C;
-	Mon, 17 Feb 2025 12:19:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B863421A452;
+	Mon, 17 Feb 2025 12:27:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zj3zJVGL"
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="H2HroW0h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pv50p00im-zteg10011401.me.com (pv50p00im-zteg10011401.me.com [17.58.6.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196BA18DB37;
-	Mon, 17 Feb 2025 12:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75553217F5C
+	for <linux-pci@vger.kernel.org>; Mon, 17 Feb 2025 12:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739794743; cv=none; b=jYm0vk/D5h79EpR5M50012rHUPSVF8RcG7wReQSo+jHzT3Q1N5GO9fMKNjuGk1KD8dN6jjnNwJL/sHNg63LIG/S8HZBqPc+eln44rvAITYwHj/g6vfWnu7ik9RPKsvkgEwLOGpM9c0dycY8X5wj5yrH5U8G0ZXeN7/3fiIVBmCo=
+	t=1739795240; cv=none; b=fX/Fh6v1W8rfM0iKqEO43DAuXKhvJCp94W7TTFUucBcnGRNpEYq3Q56+Q6IGiyc0KqdE5fS0wSyDIT+Jo9gLPvw+8hDTVav1WBtq2w66vOVUt1SKlg7BauIwwDRoodb9gBtvxLQixDz6g81sYCp8OlCT3/OclD3o7kxrY67dGno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739794743; c=relaxed/simple;
-	bh=wyEMxJSE4ut2qD9vvgKYF1uHbf5olLm7PCB7mopaezc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jRTNw8sV+SMEejLtrYPLL82eePjXyNoWuz434iFr1/b2sU8JN4Kc3qcxBZU4iCKXEyW1AXf4LPDxv2zmuk1cHSw/nCYwEjwFzv2IFKtCndqL+WY4i9L9n/RMykLG15QPzffuGPTzi3kmS+E/pUTe7ZVTXwsvV6xrApo+7RHCnqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zj3zJVGL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 256D2C4CED1;
-	Mon, 17 Feb 2025 12:19:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739794742;
-	bh=wyEMxJSE4ut2qD9vvgKYF1uHbf5olLm7PCB7mopaezc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zj3zJVGLaouZLXnzIJXFuNsrKpMsmPoeDnw9lLcRLibpLL+oIqHjoQnx53/NpJMaT
-	 1obkaYTrOUIoO+baSTIgHL3v+87w0VtQxnnPh71a6wpmwuy0OlH/uutPpBt2ASdEXw
-	 Y1a2lkUKXWaHGBHR/ao6nkcEvLaBe4SbvJCu0rwZySIQcJfLNqJO6AtZsIjlcQXqAt
-	 FJ1jA4lLVpjCBWk1vSr7bY0oGqyJx9vu4bR5NYF+SFaWIvvWyyTLhAXMr3Qb/A0wlo
-	 GUzWRedJnc7Q4WYfKXUEGhiklHWnDqROR2KlwtKY5zO7ZIHZUhEBsP01yqAW2DqRha
-	 b95ToCfNsaezA==
-Date: Mon, 17 Feb 2025 13:19:00 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/2] PCI: mediatek-gen3: Configure PBUS_CSR registers
- for EN7581 SoC
-Message-ID: <Z7MpNADDFxPTX1Yy@lore-desk>
-References: <20250202-en7581-pcie-pbus-csr-v2-0-65dcb201c9a9@kernel.org>
- <20250202-en7581-pcie-pbus-csr-v2-2-65dcb201c9a9@kernel.org>
- <20250214171106.ul3fwzcwhadhdwhj@thinkpad>
+	s=arc-20240116; t=1739795240; c=relaxed/simple;
+	bh=+dIR+LeHo5kZKBeudNiXzL2GMb5J0NlWFTmwEAPjc9w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hGLkVTu50p3JUHa0QtwhDeKrQBM5h040XRFlPZ/N+0kXfnnGC5iV7H7DN/AV4M95++FhiQb7HgwZC+T2NX1tnyzZ7Ru++rJFeO77YbLkN5C6j17vekzX7jQ/+ptPRW05l9ON68Vzi2H6RNA+XSWG+BYpZ82wG0R4Lvm/o0Vx8u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=H2HroW0h; arc=none smtp.client-ip=17.58.6.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=Pi7+rTG0m4v7zpGViDVCQo5NVyykXLI+pXUfY4RsiVI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=H2HroW0hTMUdfZo6MiZQpBP0aiBenvObYk4BxCYgvT4X03H46ggvOUXWM2lPw2vvk
+	 w022AOgNWDITlcqbRiViKm2tcLXPgKZkB4wY1iYG7PwJdo+JBeKwV8461EdTT2SYcl
+	 XOqJZdSxDVxolxgFqNqjWQ/clrLDbg718Ej0EJWQPvOLLy/ROqQY6op6M5rSzmjw8E
+	 RstWGaeZxxxsMwBk5HEcmA7wmDjEFITFfgiiyflCgZVIYqMQeZM1ux0lNBT0RC1WOi
+	 lxem4cysWmn4ZYZvYRtkG8/X5Cl9hheDMXvbJrmd4+SRHQs97e45TjjeMiEvYkkVth
+	 6M8sFD3k9zpfg==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10011401.me.com (Postfix) with ESMTPSA id 920DE34BA68E;
+	Mon, 17 Feb 2025 12:27:12 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Mon, 17 Feb 2025 20:26:46 +0800
+Subject: [PATCH v2] PCI: endpoint: Remove API devm_pci_epc_destroy()
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2DDNq2ksAqtJIqnN"
-Content-Disposition: inline
-In-Reply-To: <20250214171106.ul3fwzcwhadhdwhj@thinkpad>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250217-remove_api-v2-1-b169c9117045@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAAUrs2cC/23MQQrCMBCF4auUWRvJpKQYV95DisRxamfRpiYal
+ JK7G7t2+T943wqJo3CCY7NC5CxJwlzD7Bqg0c93VnKrDUYbqw1qFXkKmS9+EeVoQPbOOo0M9bB
+ EHuS9Yee+9ijpGeJnszP+1r9MRoXq4Lm7th233tLp8RKSmfYUJuhLKV/lE89WpgAAAA==
+X-Change-ID: 20250210-remove_api-9cf1ea95901e
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-pci@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: aO8HdjU9xAh7e-Xl860WkIUQwEJ0m9eN
+X-Proofpoint-ORIG-GUID: aO8HdjU9xAh7e-Xl860WkIUQwEJ0m9eN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-17_05,2025-02-13_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=878
+ malwarescore=0 bulkscore=0 phishscore=0 spamscore=0 adultscore=0
+ mlxscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2502170109
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
---2DDNq2ksAqtJIqnN
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Static devm_pci_epc_match() is only invoked by API devm_pci_epc_destroy()
+and the API has not had callers since 2017-04-10 when it was introduced.
 
-> On Sun, Feb 02, 2025 at 08:34:24PM +0100, Lorenzo Bianconi wrote:
-> > Configure PBus base address and address mask to allow the hw
-> > to detect if a given address is on PCIE0, PCIE1 or PCIE2.
-> >=20
-> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > ---
-> >  drivers/pci/controller/pcie-mediatek-gen3.c | 30 +++++++++++++++++++++=
-+++++++-
-> >  1 file changed, 29 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/=
-controller/pcie-mediatek-gen3.c
-> > index aa24ac9aaecc749b53cfc4faf6399913d20cdbf2..9c2a592cae959de8fbe9ca5=
-c5c2253f8eadf2c76 100644
-> > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/irqchip/chained_irq.h>
-> >  #include <linux/irqdomain.h>
-> >  #include <linux/kernel.h>
-> > +#include <linux/mfd/syscon.h>
-> >  #include <linux/module.h>
-> >  #include <linux/msi.h>
-> >  #include <linux/of_device.h>
-> > @@ -24,6 +25,7 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pm_domain.h>
-> >  #include <linux/pm_runtime.h>
-> > +#include <linux/regmap.h>
-> >  #include <linux/reset.h>
-> > =20
-> >  #include "../pci.h"
-> > @@ -127,6 +129,13 @@
-> > =20
-> >  #define PCIE_MTK_RESET_TIME_US		10
-> > =20
-> > +#define PCIE_EN7581_PBUS_ADDR(_n)	(0x00 + ((_n) << 3))
-> > +#define PCIE_EN7581_PBUS_ADDR_MASK(_n)	(0x04 + ((_n) << 3))
-> > +#define PCIE_EN7581_PBUS_BASE_ADDR(_n)	\
-> > +	((_n) =3D=3D 2 ? 0x28000000 :	\
-> > +	 (_n) =3D=3D 1 ? 0x24000000 : 0x20000000)
-> > +#define PCIE_EN7581_PBUS_BASE_ADDR_MASK	GENMASK(31, 26)
-> > +
-> >  /* Time in ms needed to complete PCIe reset on EN7581 SoC */
-> >  #define PCIE_EN7581_RESET_TIME_MS	100
-> > =20
-> > @@ -931,7 +940,8 @@ static int mtk_pcie_parse_port(struct mtk_gen3_pcie=
- *pcie)
-> >  static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
-> >  {
-> >  	struct device *dev =3D pcie->dev;
-> > -	int err;
-> > +	struct regmap *map;
-> > +	int err, slot;
-> >  	u32 val;
-> > =20
-> >  	/*
-> > @@ -945,6 +955,24 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen=
-3_pcie *pcie)
-> >  	/* Wait for the time needed to complete the reset lines assert. */
-> >  	msleep(PCIE_EN7581_RESET_TIME_MS);
-> > =20
-> > +	map =3D syscon_regmap_lookup_by_phandle(dev->of_node,
-> > +					      "mediatek,pbus-csr");
-> > +	if (IS_ERR(map))
-> > +		return PTR_ERR(map);
->=20
-> So this is going to regress the devicetree's that do not define this sysc=
-on
-> region? But I do not see any devicetree using this 'airoha,en7581-pcie'
-> compatible, so not sure if this is going to be an issue. Are the downstre=
-am
-> devicetrees used?
+Remove both the API and the static function.
 
-AFAIK there is no upstream or downstream (e.g. OpenWrt) en7581 dts with PCIe
-support yet so I do not know if this is an issue or not. If so, I guess we
-need to add the proper Fixes tag:
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+Changes in v2:
+- Correct commit message error pointed out by Manivannan Sadhasivam.
+- Link to v1: https://lore.kernel.org/r/20250210-remove_api-v1-1-8ae6b36e3a5c@quicinc.com
+---
+ Documentation/PCI/endpoint/pci-endpoint.rst |  7 +++----
+ drivers/pci/endpoint/pci-epc-core.c         | 25 -------------------------
+ include/linux/pci-epc.h                     |  1 -
+ 3 files changed, 3 insertions(+), 30 deletions(-)
 
-Fixes: f6ab898356dd ("PCI: mediatek-gen3: Add Airoha EN7581 support")
+diff --git a/Documentation/PCI/endpoint/pci-endpoint.rst b/Documentation/PCI/endpoint/pci-endpoint.rst
+index 35f82f2d45f5ef155b657e337e1eef51b85e68ac..599763aa01ca9d017b59c2c669be92a850e171c4 100644
+--- a/Documentation/PCI/endpoint/pci-endpoint.rst
++++ b/Documentation/PCI/endpoint/pci-endpoint.rst
+@@ -57,11 +57,10 @@ by the PCI controller driver.
+    The PCI controller driver can then create a new EPC device by invoking
+    devm_pci_epc_create()/pci_epc_create().
+ 
+-* devm_pci_epc_destroy()/pci_epc_destroy()
++* pci_epc_destroy()
+ 
+-   The PCI controller driver can destroy the EPC device created by either
+-   devm_pci_epc_create() or pci_epc_create() using devm_pci_epc_destroy() or
+-   pci_epc_destroy().
++   The PCI controller driver can destroy the EPC device created by
++   pci_epc_create() using pci_epc_destroy().
+ 
+ * pci_epc_linkup()
+ 
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 9e9ca5f8e8f860a57d49ce62597b0f71ef6009ba..cf2e19b80551a2e02136a4411fc61b13e1556d7a 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -25,13 +25,6 @@ static void devm_pci_epc_release(struct device *dev, void *res)
+ 	pci_epc_destroy(epc);
+ }
+ 
+-static int devm_pci_epc_match(struct device *dev, void *res, void *match_data)
+-{
+-	struct pci_epc **epc = res;
+-
+-	return *epc == match_data;
+-}
+-
+ /**
+  * pci_epc_put() - release the PCI endpoint controller
+  * @epc: epc returned by pci_epc_get()
+@@ -931,24 +924,6 @@ void pci_epc_destroy(struct pci_epc *epc)
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_destroy);
+ 
+-/**
+- * devm_pci_epc_destroy() - destroy the EPC device
+- * @dev: device that wants to destroy the EPC
+- * @epc: the EPC device that has to be destroyed
+- *
+- * Invoke to destroy the devres associated with this
+- * pci_epc and destroy the EPC device.
+- */
+-void devm_pci_epc_destroy(struct device *dev, struct pci_epc *epc)
+-{
+-	int r;
+-
+-	r = devres_release(dev, devm_pci_epc_release, devm_pci_epc_match,
+-			   epc);
+-	dev_WARN_ONCE(dev, r, "couldn't find PCI EPC resource\n");
+-}
+-EXPORT_SYMBOL_GPL(devm_pci_epc_destroy);
+-
+ static void pci_epc_release(struct device *dev)
+ {
+ 	kfree(to_pci_epc(dev));
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index e818e3fdcded95ca053db074eb75484a2876ea6b..82a26945d038d3e45e2bbbfe3c60b7ef647f247a 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -257,7 +257,6 @@ __devm_pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
+ struct pci_epc *
+ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
+ 		 struct module *owner);
+-void devm_pci_epc_destroy(struct device *dev, struct pci_epc *epc);
+ void pci_epc_destroy(struct pci_epc *epc);
+ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
+ 		    enum pci_epc_interface_type type);
 
-Regards,
-Lorenzo
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250210-remove_api-9cf1ea95901e
 
->=20
-> - Mani
->=20
-> --=20
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+Best regards,
+-- 
+Zijun Hu <quic_zijuhu@quicinc.com>
 
---2DDNq2ksAqtJIqnN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ7MpNAAKCRA6cBh0uS2t
-rIuEAP9rnTTRV1mWaP3Z7uCsLUu0NlHr8BpEtVsjDGVDIPv7+wEA9eryLOzy0dp5
-zACOFi5/qvhsY75r70+bG8mpUeyRYg8=
-=IvLf
------END PGP SIGNATURE-----
-
---2DDNq2ksAqtJIqnN--
 
