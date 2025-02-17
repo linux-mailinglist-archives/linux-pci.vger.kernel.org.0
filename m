@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-21655-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21656-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9BE4A38A83
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 18:25:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 480ACA38AA5
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 18:36:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 949D13A3908
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 17:25:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 57F4E3A1606
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Feb 2025 17:36:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8FC1227563;
-	Mon, 17 Feb 2025 17:25:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D44F722688B;
+	Mon, 17 Feb 2025 17:36:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ca44laX1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gGRWO/0E"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A944EB51;
-	Mon, 17 Feb 2025 17:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8CB155C83;
+	Mon, 17 Feb 2025 17:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739813106; cv=none; b=H3fQwni3byJ3q7+vkkEjqLmklW6ZoBqmJs5Hd71gNl2918W0lFEgpnky/a+UvkfLUMqitygLPaRcRqToUsm3SGyVTHAQkl5fDWmE+2FsSNTDX312GqQ8j0Rh3gmZllV/9tqFNIdAEbohW925gFkiJI847LFQXltiRU4XSIB1p2M=
+	t=1739813798; cv=none; b=nRxh7SEKaSUIxn/IbJO3BOgr6y564DK2Jb9RB1jO9Ux6u8kCHKH+cAM8caKVSioUowv/Br3Tae0PeQfA4bYCYAHQtweniwHhJkv6SSYb+CSU2uqSGPWyQweORwDDLDSt+CfEwa8cFGA1jBFqsm3WTyddSijFEaPhOBAyPYWBh2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739813106; c=relaxed/simple;
-	bh=FcpGYvmdtwwhIJ4dHydo5UqPEJfKoMifDwgHkRA98O8=;
+	s=arc-20240116; t=1739813798; c=relaxed/simple;
+	bh=SwO7vDsfD9Xzz/NGxBz8ksCtoWFceyTR4jwgR61JskQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lm0msnTa5iMS1IRcqRX4hSobuRzvo4uW4KxCcJuAuzWtZeK4fw++a1OrQieN7XOx52nKj15+GGyYoMPp+4nskOQVw6tHW75IEAvGS+nTVxyRLAffdRD1v6Pfy1rg9mzm4ioTSnswgmsezZbTdGiMRfdbdY4JxPxy8q6WQ0uR3So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ca44laX1; arc=none smtp.client-ip=209.85.216.48
+	 To:Cc:Content-Type; b=naiLadESxdkrC+90+sKOa5DduPlSMPQ6msCpK3ZtbQ0OUJlS72zZ4/5ajbBQAJn24nOEsHRd8sND7jIZDcZ72rr/7IUUgsXRdUgaELqJALfzpi95luHW2UA184qfMVotmoOwodI5HRwzJkZhj6CDwCNlzPM1+4Qkve/toQc3YII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gGRWO/0E; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2fc0ab102e2so1050166a91.1;
-        Mon, 17 Feb 2025 09:25:04 -0800 (PST)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2166db59927so9957725ad.0;
+        Mon, 17 Feb 2025 09:36:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739813104; x=1740417904; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1739813797; x=1740418597; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FcpGYvmdtwwhIJ4dHydo5UqPEJfKoMifDwgHkRA98O8=;
-        b=Ca44laX1FuqU+mEewq/Z9xb6PIgwS6D1ZhpbXtg2psk7BCRMl9168ywwS5mPaI0Vaz
-         QdVe1BEkbilNp6+Ad+XO+JmzOuzqSuqXwwRHZZ7P8pYq0DX1HxkRxgl/KYpEiuohebsk
-         W4fiFLWS6+qSdK4TU2SayBeXUlSWP7/udyhJsoU5CXtr+RNGbXodLNd9bmkbVILi2p+u
-         oYzsFj9jEVl75q3AGJyTqEOKGXRZMa1Y6zGAC61C+o97ghKEQ4zGJx+AwnSL6RSlBSy0
-         9Vj6yAKZ1uFBnVSbVtkLkRpK/vpTdxgt5jidiX9K16DWoAfFRsIWsT0740ZDPKsrlYxS
-         Ek7A==
+        bh=SwO7vDsfD9Xzz/NGxBz8ksCtoWFceyTR4jwgR61JskQ=;
+        b=gGRWO/0E7YpMAthvkN5RjZkzmA6OCmCs4e0zpWd42CdCPT4T1ljwsIjkwf7kDdXobK
+         5DquvPuLO7EEcQVaiKh1yywltIitli5bGUwas1+cThYYMLwIuMtRzyToF5uKR6MCcoUO
+         CJ0MkXSBHZWihzVyVKt79UUuS4gbNs3RZtvyoXx3chKSe5vP9yJOVeHxT+OaclXJmr0B
+         LE68zzCim7xlwj0NEwy1E+aCafm6rQMtSKAxamiRK4KH3yv7y0LSrbfSedFWRIuq2PDZ
+         PPApD11j+sP8tZ4BR0aBOWncwLI4r8KU4KEfSGW175eKALKYTGneE/wfc2ygRTT+0UH7
+         PEIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739813104; x=1740417904;
+        d=1e100.net; s=20230601; t=1739813797; x=1740418597;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FcpGYvmdtwwhIJ4dHydo5UqPEJfKoMifDwgHkRA98O8=;
-        b=fw9rZVVU1mwQMexsYWnWvWKiQQsWZbPPGW1aPEFZKgvldVDvn05atYvn/qTuMJJ2bW
-         Etz/OOxu4rXuWobd0pRA0izmAyhQt+i3HVrP+p/THmDnDj3A07LOdGonM3IiEFDfGrcx
-         XeWSIsYI81OuNFumnbmPAg9p1TXaHTg/PKk8BaDyu/Nm0JIf3fMtxgGLNjrur0DbcJFW
-         T/hYsZILwxhEcwOIv/4PTKiVezkiRsiEpKLHBmvU7IyDyY26BlFIwAP6RAIzjY2Y2DWn
-         jnJJm0FFfvLNZUSKuKgQTZMtMYOqt5ragh/LAIQqZcXKwCzL+2NhgQdm3ule/FohK+F0
-         V3Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCV7QnFVJKmD3lYVd/zWXnsdiqlO++eKtLZEq9OdZOwD99LoeXhThqhqFBp8jXo+25lmfYNpfcpRthnX+8K2@vger.kernel.org, AJvYcCWpLJAT1zOc61L57w0G5DpVNxgDZe58hrp/W0ppUUaUU8voS3v/NWJkMfUDvR8p4qLQFDDmKtZo3ZnimXxR@vger.kernel.org, AJvYcCWscz9l48NdnQ+lgfNEOSOfFDTHZzl3AaP47QHvj2J9rNuqGv2sIkFwmptorvaoSnhgvsO0N2nwjmbI@vger.kernel.org, AJvYcCXRLe4gBXeSkikiPfJf5o/9wcEg596Qf/6QPRYiv4leZQDcsWO3lI0skWrU7/xdwdjXDYUlCty/SOuTuHn5yx4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yywv2MBquZ7wzlCbzKN6XbixMaET1GM5kGJw0IyMAhHLMrPlRcb
-	yl/i6X9iIGUMEvZ7Qao3jkoxca9cpMPpNZygJbJtLg3L7a1+Bfw3QQSBPqCd9xMREmBQpw1U1pS
-	K4/RtluiI9awxb56fYL4y6/WYvGk=
-X-Gm-Gg: ASbGncvowQgtqv7ffouJsYuDGMaMw1Rga/BjAVdHKaJD/h3jh6aoYSiRkBj0BRZFiPR
-	J1E5xu9LGMHJLw3akiPLgGssOnCEMp36ttP3eJDjg1jg1Ra1JWF4Gt83EUpd3mFitPQh/t+KH
-X-Google-Smtp-Source: AGHT+IGfwCTeqstsgIsiK/MKQ/iUTmSLXB7VCe5xjH1OnjLFDvxLl/DUXxKb+UsY5FqLU1Cu/EIytJpEOjkXgoF3fu8=
-X-Received: by 2002:a17:90b:2fc3:b0:2fa:6055:17e7 with SMTP id
- 98e67ed59e1d1-2fc41173947mr6075604a91.8.1739813104405; Mon, 17 Feb 2025
- 09:25:04 -0800 (PST)
+        bh=SwO7vDsfD9Xzz/NGxBz8ksCtoWFceyTR4jwgR61JskQ=;
+        b=hjCv2ntj33lO923Y1RKe7dlKw8XnYNr5eZm6SolHhsEWlw7OSXn37ulfNhlZZOWrVs
+         RPNmB1lV74C/WosQESccVsaKi7aUrP+E23DK6vbOZjgQ5kaDORr6IQjtDn/0Q9ra49t0
+         d3Szk8oxVfU3tr4Q8K+RUGprtXc+NcaTaZxOJn5DSWhKNB9mrAhBkZUl1ldnz17+zu9O
+         iFRvdtYUc/XFlMavVKougD1Sx4OKoQD6svxfAkqow5eASZVOLnFlHdii00gWJTR4VXBv
+         6gRzMveOBwlq/Q1QJu989UJ5Y93BooYcFRgWh4QCRo/2OlTay7cCwkaVhZrGUc0GBdrz
+         zoug==
+X-Forwarded-Encrypted: i=1; AJvYcCWZTfggrVYKGA11fgEone7VyJ6xBzJOWt72/7EsVYFpCWj8xDIsABmsnSYiDuZ7hU9PqMT+pSPXbQt/9U4y@vger.kernel.org, AJvYcCWbUA6UUDVcAfeTXMABwSx6z5dQwr9HxrXGQrcBfrbOTHbYibkUfaJTNAgBtWGOxA5xLk66CB+Stjrpxv8e@vger.kernel.org, AJvYcCX57Lb1jt59VRqZD0bY9zQdQ+2a7cKYxi4b9MHoKzS/SLnw3NnHqZ4BeadsFmq4qTYn0xA05/3/7fwi@vger.kernel.org, AJvYcCXbikPIGdaTLshzK33v/x2+52yxfULne5Abwti0OqIWxmLZ5DokDetSczDf+7yeg2pJI0lA/rPyHnh8TwjXDD0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9M3iN74xZUUW2LJiyYXPsR64mUvywGJPrdS1qWD8UrNncMj2h
+	trbmlXF3H0i2doSKzGRmdrkUrI0Cmzri5yZn+zAa53GFtEFl2AVtWL1eEgZi6hAwOIJmg1QNkw1
+	GmVU88mIsk2+ZJkw1J05Ch0XOccg=
+X-Gm-Gg: ASbGncvl64YG5kq0AlP9RYErZGTNbsq5Jhv/RsVdbBVKkrLa5cYyb6Yv9EbqN6MKfRi
+	Xojxa97r9rSO+GwJKuStq4pR5uxN85BNQ61vks7ENv0Io9yqDmA3EepIbgYxvhOVk+JTvwnZX
+X-Google-Smtp-Source: AGHT+IHoUzKFz6KdsRlLbiPBD4oc1ayhlO4iOKanwFszVBIiP5IHTNgEjME2IqdlTDlUFzJMK4fxDeg1fRPOi9UfJDY=
+X-Received: by 2002:a17:902:fc8d:b0:215:8721:30b7 with SMTP id
+ d9443c01a7336-221040a7a59mr62404795ad.11.1739813796701; Mon, 17 Feb 2025
+ 09:36:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -77,12 +77,13 @@ References: <20250207-rust-xarray-bindings-v16-0-256b0cf936bd@gmail.com>
  <20250207-rust-xarray-bindings-v16-2-256b0cf936bd@gmail.com>
  <Z7MnxKSSNY7IyExt@cassiopeiae> <CAJ-ks9=OG2zPPPPfZd5KhGKgNsv3Qm9iHr2eWXFeL7Zv16QVdw@mail.gmail.com>
  <Z7NEZfuXSr3Ofh1G@cassiopeiae> <CAJ-ks9=TrFHiLFkRfyawNquDY2x6t3dwGi6FxnfgFLvQLYwc+A@mail.gmail.com>
- <CANiq72kAhw6XwPzGu+FrF64PZ9P_eSzX3gqG9CLvy7YJnbXgoQ@mail.gmail.com> <CAJ-ks9mFT1Gaao+OrdYF+hg6Sp=XghyHWu1VTALdeMJPwkX=Uw@mail.gmail.com>
-In-Reply-To: <CAJ-ks9mFT1Gaao+OrdYF+hg6Sp=XghyHWu1VTALdeMJPwkX=Uw@mail.gmail.com>
+ <CANiq72kAhw6XwPzGu+FrF64PZ9P_eSzX3gqG9CLvy7YJnbXgoQ@mail.gmail.com>
+ <CAJ-ks9mFT1Gaao+OrdYF+hg6Sp=XghyHWu1VTALdeMJPwkX=Uw@mail.gmail.com> <CANiq72kFpDt230zBugN12q978LRSJiZB5dJZszWkL2p7XqQ52w@mail.gmail.com>
+In-Reply-To: <CANiq72kFpDt230zBugN12q978LRSJiZB5dJZszWkL2p7XqQ52w@mail.gmail.com>
 From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 17 Feb 2025 18:24:52 +0100
-X-Gm-Features: AWEUYZkbsI3FPn2Xmxj8TJ-MBdTZiQo90g9XW-TdOOtJ4TRiM_QuFvTbEcwSBR0
-Message-ID: <CANiq72kFpDt230zBugN12q978LRSJiZB5dJZszWkL2p7XqQ52w@mail.gmail.com>
+Date: Mon, 17 Feb 2025 18:36:24 +0100
+X-Gm-Features: AWEUYZkXXe9ucp731IUnfF8Mkzrw90VtoilSTq_--wgHn6jSTiKyQT8lGbY5FVI
+Message-ID: <CANiq72kjAx4a20cnE3XrJ-z4K=8pCRuc+TOa+WtcuUsdZ22tSA@mail.gmail.com>
 Subject: Re: [PATCH v16 2/4] rust: types: add `ForeignOwnable::PointedTo`
 To: Tamir Duberstein <tamird@gmail.com>
 Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
@@ -100,21 +101,19 @@ Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 17, 2025 at 6:11=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
+On Mon, Feb 17, 2025 at 6:24=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
 >
-> Only my personal experience with git blame. The `.cast()` call itself
-> is boilerplate that arises from the difference in types between the
-> abstractions and the bindings; my opinion is that a user of git blame
-> is more likely to be interested in the rationale accompanying the
-> implementation rather than that of the type shuffle.
+> I understand the rationale -- what I meant to ask is if you saw that
 
-I understand the rationale -- what I meant to ask is if you saw that
-rule in kernel documentation or similar, because I could be missing
-something, but I don't think we do that in the kernel.
+By the way, I don't agree with the rationale, because it sounds to me
+like optimizing for `git blame` readers, while pessimizing for normal
+readers.
 
-So if you have a change like that, please just change the line, rather
-than adding new ones just for `git blame`.
+We do a lot of `git blame` in the kernel, especially since our Git log
+is quite good, but we still read the files themselves more... I can
+imagine ending up with a lot of extra lines over time everywhere, it
+could dissuade small fixes and so on.
 
 Cheers,
 Miguel
