@@ -1,230 +1,210 @@
-Return-Path: <linux-pci+bounces-21731-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21732-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A919A39CB9
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 14:02:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60AA0A39D31
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 14:18:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E527B1893EE9
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 13:02:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 47255178099
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 13:10:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9DDE268C7E;
-	Tue, 18 Feb 2025 13:01:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1467268687;
+	Tue, 18 Feb 2025 13:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/FBPtc7"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mEoZZXjW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFF7246348;
-	Tue, 18 Feb 2025 13:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0469E267396
+	for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 13:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739883707; cv=none; b=U9xNU7Xm+ElKEJNtAIxzeRCL0r4cdk9kiX/Wiu+E6Fzq84HyD4ycFzKZhZgIh3oh/tRUD24ponSs7vY/zmRT0KZL+RGWjTpmnW+KOSWgt+8tWkZX7kgkNcDv/YAAC0TZXVmEz6s9SaRDWsIskIq8EtM+cWyYInnm4p+/SWLtL6g=
+	t=1739884226; cv=none; b=TsjrKW2qDhpdkce8OrfD2eSc/ctryXThvPBG6EdLGwNnUUn0hPj6y76LIRuNBOepMhZ6Wp1Q6Vk9esefIT2xMe0PbHOTDbbLpwjLqeRGSATLPwe9usNJmo9OjutOeqW5qx0U2jDFWOLMwSpdZ0JFNyCItYQIoyFhrLzgr0wSbsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739883707; c=relaxed/simple;
-	bh=2zW3eoVhp4ZhIG3Q3PxubL2zysHFAPbbePCSi0p7gLc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EYbyrTHcFu5Kf2CJk29NXQIgnk/CTE2a1Hfu91er6mGJF/NN6vg4Hv3fPCSF9MIfCth0kBH3JQtuzQTgQADP0kbLjPR0emqIre5VFLS2U+qCT8uptWSDwGaMJlzthjwcc05eoOiZ6KB1gDX2g4BO68piwVvpVRtWiGNYBBawE/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/FBPtc7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E7DC4CEE2;
-	Tue, 18 Feb 2025 13:01:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739883707;
-	bh=2zW3eoVhp4ZhIG3Q3PxubL2zysHFAPbbePCSi0p7gLc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=k/FBPtc7gKTN/ulJ61Id3RvN4yHJ/rBllMCEizSDW9G4nklhZClvfXQgHS46pXc5D
-	 VQUD45BTLZdtoBJ6WXyhIgXwNDjLONm4lYrtjZ5g6k+o9+lmq+SslVVIGAUCYhp95v
-	 LHcI8RqC+jJ7y7Na6JhX4ukAxOiV2djKcmUzhLjBausOfjwuuY2VEFoWsmXMmDQpkA
-	 ABzi26PnR2un3vnxRukwx00nCN1VBGmGKR/xWJLIHbz8eBowT6S77KuEXXUULG3Nst
-	 nKwuAk2Bnn6CXa/xpuoDMClFri35gJaRTRHAhrfgUFpPk2cehV9IhGNSxKI17+TQ2Q
-	 UZmPIh3ea4okQ==
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3f3eafbbfefso1506125b6e.1;
-        Tue, 18 Feb 2025 05:01:46 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUAF/SX1IMkJy4WjxqDt025q19/YD2KrX1JIxag1ayj92Q+9J0yqSk4X8RcgmvN/6PG94ll4HVHCCruzKPg@vger.kernel.org, AJvYcCVXlVQ8EbL3/tgRZyVcEVV8Msz3bZBDjg1a550HKw198uQM/ItXMxclzmv7XF0CIDcDkbg/mHaOnEJc@vger.kernel.org, AJvYcCWUe6tUGNGsHHUedLbqIAvuzeRQ3X7qTTI+1DUE5+9PIzjWwOzy7egFApcdrvqb9yItNEijqAXWkrer@vger.kernel.org, AJvYcCXj4HWl3gZRCOmaUwWvoWG7imJow5tHVrRUNTPevhBcp5SkMHyzHBHeK6SyfUShGAVkghONAg90klc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE4spJPNv69Wc6ZzzFDVQ4C8z9gRXNp0nkaZUCjMga5+HAD+Kc
-	AnG59jbngfq+FTpiIcAfe5UgOSadG1a9TuCx8CBTKeO2ynsX9Rh6kVA30m/nTwGkNlef8ESosHK
-	W5LnolVcOtXyeQfuCs8y2bF5l3aY=
-X-Google-Smtp-Source: AGHT+IHDBDFx5HY/aKrD75j0Q3mkwkH0ciUHvaut556qU7exPc826sMdc3Nnya6ssaM79G3+VHru0lnsXlzmpICLHbY=
-X-Received: by 2002:a05:6808:1823:b0:3eb:5562:34ba with SMTP id
- 5614622812f47-3f3eb140e3dmr6820884b6e.25.1739883706349; Tue, 18 Feb 2025
- 05:01:46 -0800 (PST)
+	s=arc-20240116; t=1739884226; c=relaxed/simple;
+	bh=2NX/soq7o1lmsjPfkOJXZgeMODahB3el6IQKzgFoXO4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=moz+Fo7v+j5wx/xFntxyLIAhGW7xP2tkfEnUEjPgq6J9wItAEEMYDIJD5LJ5PWJZ70rgOfFhCJFRasIFXgOzSACFnYY/GTkjJ8Fr9hwpMZKcMcOZU5vhPCZTvRPRJmXokm2HZih5gqM6mSODBdvkiA22y4iiQBBJKz1XY+lsFtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mEoZZXjW; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51IAdvw2007275
+	for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 13:10:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	bu+FrAFzuDjPYs9/S2U5VhFeI0pxwHRuzCoCg2u+mJE=; b=mEoZZXjW7wH3BjfN
+	YKr3q5FdUFJ3ZqTs9IwtJrNR6FG02i6BLnvctz7xfoNniEoWj4qckmhSJxoonNy7
+	f2/rX0+5aMNQddbBiBthfxW5XxPRcKsIoQ4l49uvyg495dLwUz2Z1PSJy4J+WEAm
+	gu73UxuzwMLKHDyX8dTz/pQ0J+eY+d5PVXAPl98GpN39wy3vadaabvlxSFPCnfHv
+	si3f9M6QCpy8Zo1V6SjCFSae9JiV3ha0JzMFK5oBR0zFbKMEqnnG3kOnAMh/rh6f
+	vsnZWHEy8PJ6KdUBnpkzf+/yDP3RS/+dMkZ1OgWeriAtrIiFCZrAO0wQQ9lanW09
+	FhZLuA==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vrne0cr9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 13:10:24 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e422f1ceadso11805346d6.0
+        for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 05:10:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739884222; x=1740489022;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bu+FrAFzuDjPYs9/S2U5VhFeI0pxwHRuzCoCg2u+mJE=;
+        b=Rp0dQ8Nmh4B5N2J5ALDwG0LsZOwX6SET/MM3+XyhaWweM+TI55J7zWUM8nzQ2fqGYi
+         KJQ3OvcDPgYri8X/l0roh50xUyOWbocXMRoUaQZPwFFfnuH5ihTD60capg9zrL9507wH
+         PfZCFS9QWktWlY0+A4oMbawUD48fAuT5G7I68L7g93ue3Tn5gew9OBNyQup6sv7xZh3N
+         K7RRs4KZkGkKW7Jig44NGGhu4NiDGlQU629HPjePjZruUToIBTHYqKhVx9RcN4/nkyiZ
+         1liTsCYuIlnRBGBSvscTcqlvywEXjayH0xHs1G4DFy38DqmTFnB0Gq0qY0kiulEJHggi
+         OTrw==
+X-Forwarded-Encrypted: i=1; AJvYcCX8fxghDcxH0EZgklCbvQmj6Y/dRfIKYGrV1rSGCW9U5+DeDIjsbIX6D2++Ht6kLJQXvlKuSkjhrw4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyL/wwVcQ5HHvZn39iOJGuTXqjrwEKG+LEN2aUJ2C97S7Kh0vj
+	I5w4WXF46DCity+Ysk79XgAKd88WP7bYf22FiAbxp5oDl28Z0qg5l5TNXlh7zk94Fs7NcYRc3Aq
+	gmPOJNqOv4LnXLtR1p52eNlj519fwJh0url6NnBtU0sVnYBhNyOL+U/Mj+g8=
+X-Gm-Gg: ASbGncu4QPpDx8Q0F8PaOQjNDbpyo23x29/KuzbejKslMwWDUp7K7QlJZKeQjaDbDfO
+	Ohh8SgKxNS9Yy3PXddPYAjjB+C2fpk43ctN3GFWZUhP0wAh+gKfdPrXD1c3LzEVvXQOQ1I2ASJa
+	OfniGvoh7AOkM6dPHDd50cgZ/fYvXvg/7wrUM0T2o7hiZHItWFM1TiEASDSDC7fgoVhpxKSW+nx
+	dFmjBisvsp1NsGXz0xlrHSchv5sVlKEIYbj+ktIr7oEVkV2/sp7i6BxK1FBI8G5iF+8ZxenclvI
+	BGcBJgrH/JOFJu0idI7V7ylDEfZ5ggjEiScTqdlwzk7C4n2Tg49DRwbWwwQ=
+X-Received: by 2002:a05:6214:20c2:b0:6d8:a091:4f52 with SMTP id 6a1803df08f44-6e66cd087f1mr65192356d6.7.1739884222588;
+        Tue, 18 Feb 2025 05:10:22 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFPVrEvTNH6ixtQsdRndhLJ8B4JHgPLPktdDd05jwA+9wZRDTdteTM3DAb60xvi3qVRSo9nWw==
+X-Received: by 2002:a05:6214:20c2:b0:6d8:a091:4f52 with SMTP id 6a1803df08f44-6e66cd087f1mr65192196d6.7.1739884222252;
+        Tue, 18 Feb 2025 05:10:22 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb95cc7451sm436932366b.92.2025.02.18.05.10.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2025 05:10:21 -0800 (PST)
+Message-ID: <39efdf43-1f42-4361-85ed-f41df8347471@oss.qualcomm.com>
+Date: Tue, 18 Feb 2025 14:10:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4966939.GXAFRqVoOG@rjwysocki.net> <2984234.e9J7NaK4W3@rjwysocki.net>
- <CAPDyKFonaX6gfHgj-OJaowUxhYZR4qQ8EZvvLHfF9AP1GvqrZw@mail.gmail.com>
-In-Reply-To: <CAPDyKFonaX6gfHgj-OJaowUxhYZR4qQ8EZvvLHfF9AP1GvqrZw@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 18 Feb 2025 14:01:34 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0i6uEDj+55yYyZHgmDFh-pVZKJ8es3mB6TdV9CKQxV=2A@mail.gmail.com>
-X-Gm-Features: AWEUYZnefwmZjxYnkv29ltteu1wJgKKa7v83BRsrcBFH8mIV5i0AO4DnmJq3S3Y
-Message-ID: <CAJZ5v0i6uEDj+55yYyZHgmDFh-pVZKJ8es3mB6TdV9CKQxV=2A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] PM: Block enabling of runtime PM during system suspend
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
-	Bjorn Helgaas <helgaas@kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
-	Johan Hovold <johan@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Jon Hunter <jonathanh@nvidia.com>, Linux ACPI <linux-acpi@vger.kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/6] arm64: dts: qcom: sar2130p: add PCIe EP device nodes
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250217-sar2130p-pci-v1-0-94b20ec70a14@linaro.org>
+ <20250217-sar2130p-pci-v1-5-94b20ec70a14@linaro.org>
+ <17aa47df-1daf-4ec2-8f6a-48c3bc375dd3@oss.qualcomm.com>
+ <qafwztwsn3eiz76ot4ej7uv3ahprrri7u6x5jt3tvkx4j7xu34@5yeaj2d5a535>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <qafwztwsn3eiz76ot4ej7uv3ahprrri7u6x5jt3tvkx4j7xu34@5yeaj2d5a535>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: OxEo0KsQtoPtnDZusvijQmeBEtDEW2FQ
+X-Proofpoint-GUID: OxEo0KsQtoPtnDZusvijQmeBEtDEW2FQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-18_05,2025-02-18_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ mlxlogscore=858 lowpriorityscore=0 clxscore=1015 impostorscore=0
+ spamscore=0 suspectscore=0 adultscore=0 phishscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502180100
 
-On Tue, Feb 18, 2025 at 1:49=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org=
-> wrote:
->
-> On Mon, 17 Feb 2025 at 21:20, Rafael J. Wysocki <rjw@rjwysocki.net> wrote=
-:
-> >
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > If device_prepare() runs on a device that has never had runtime
-> > PM enabled so far, it may reasonably assume that runtime PM will
-> > not be enabled for that device during the system suspend-resume
-> > cycle currently in progress, but this has never been guaranteed.
-> >
-> > To verify this assumption, make device_prepare() arrange for
-> > triggering a device warning accompanied by a call trace dump if
-> > runtime PM is enabled for such a device after it has returned.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  drivers/base/power/main.c    |    9 +++++++++
-> >  drivers/base/power/runtime.c |   24 ++++++++++++++++++++++++
-> >  include/linux/pm.h           |    1 +
-> >  include/linux/pm_runtime.h   |    6 +++++-
-> >  4 files changed, 39 insertions(+), 1 deletion(-)
-> >
-> > --- a/drivers/base/power/main.c
-> > +++ b/drivers/base/power/main.c
-> > @@ -1109,6 +1109,8 @@
-> >         device_unlock(dev);
-> >
-> >  out:
-> > +       /* If enabling runtime PM for the device is blocked, unblock it=
-. */
-> > +       pm_runtime_unblock(dev);
-> >         pm_runtime_put(dev);
-> >  }
-> >
-> > @@ -1815,6 +1817,13 @@
-> >          * it again during the complete phase.
-> >          */
-> >         pm_runtime_get_noresume(dev);
-> > +       /*
-> > +        * If runtime PM is disabled for the device at this point and i=
-t has
-> > +        * never been enabled so far, it should not be enabled until th=
-is system
-> > +        * suspend-resume cycle is complete, so prepare to trigger a wa=
-rning on
-> > +        * subsequent attempts to enable it.
-> > +        */
-> > +       pm_runtime_block_if_disabled(dev);
-> >
-> >         if (dev->power.syscore)
-> >                 return 0;
-> > --- a/drivers/base/power/runtime.c
-> > +++ b/drivers/base/power/runtime.c
-> > @@ -1460,6 +1460,26 @@
-> >  }
-> >  EXPORT_SYMBOL_GPL(pm_runtime_barrier);
-> >
-> > +void pm_runtime_block_if_disabled(struct device *dev)
-> > +{
-> > +       spin_lock_irq(&dev->power.lock);
-> > +
-> > +       if (dev->power.disable_depth && dev->power.last_status =3D=3D R=
-PM_INVALID)
-> > +               dev->power.last_status =3D RPM_BLOCKED;
-> > +
-> > +       spin_unlock_irq(&dev->power.lock);
-> > +}
-> > +
-> > +void pm_runtime_unblock(struct device *dev)
-> > +{
-> > +       spin_lock_irq(&dev->power.lock);
-> > +
-> > +       if (dev->power.last_status =3D=3D RPM_BLOCKED)
-> > +               dev->power.last_status =3D RPM_INVALID;
-> > +
-> > +       spin_unlock_irq(&dev->power.lock);
-> > +}
-> > +
-> >  void __pm_runtime_disable(struct device *dev, bool check_resume)
-> >  {
-> >         spin_lock_irq(&dev->power.lock);
-> > @@ -1518,6 +1538,10 @@
-> >         if (--dev->power.disable_depth > 0)
-> >                 goto out;
-> >
-> > +       if (dev->power.last_status =3D=3D RPM_BLOCKED) {
-> > +               dev_warn(dev, "Attempt to enabled runtime PM when it is=
- blocked\n");
->
-> /s/enabled/enable
->
-> > +               dump_stack();
-> > +       }
-> >         dev->power.last_status =3D RPM_INVALID;
-> >         dev->power.accounting_timestamp =3D ktime_get_mono_fast_ns();
-> >
-> > --- a/include/linux/pm.h
-> > +++ b/include/linux/pm.h
-> > @@ -597,6 +597,7 @@
-> >         RPM_RESUMING,
-> >         RPM_SUSPENDED,
-> >         RPM_SUSPENDING,
-> > +       RPM_BLOCKED,
-> >  };
-> >
-> >  /*
-> > --- a/include/linux/pm_runtime.h
-> > +++ b/include/linux/pm_runtime.h
-> > @@ -77,8 +77,10 @@
-> >  extern int pm_schedule_suspend(struct device *dev, unsigned int delay)=
-;
-> >  extern int __pm_runtime_set_status(struct device *dev, unsigned int st=
-atus);
-> >  extern int pm_runtime_barrier(struct device *dev);
-> > +extern void pm_runtime_block_if_disabled(struct device *dev);
-> > +extern void pm_runtime_unblock(struct device *dev);
-> >  extern void pm_runtime_enable(struct device *dev);
-> > -extern void __pm_runtime_disable(struct device *dev, bool check_resume=
-);
-> > +extern void __pm_runtime_disable(struct device *dev, bool regular);
->
-> This looks unrelated to the $subject patch.
->
-> >  extern void pm_runtime_allow(struct device *dev);
-> >  extern void pm_runtime_forbid(struct device *dev);
-> >  extern void pm_runtime_no_callbacks(struct device *dev);
-> > @@ -271,6 +273,8 @@
-> >  static inline int __pm_runtime_set_status(struct device *dev,
-> >                                             unsigned int status) { retu=
-rn 0; }
-> >  static inline int pm_runtime_barrier(struct device *dev) { return 0; }
-> > +static inline void pm_runtime_block_if_disabled(struct device *dev) {}
-> > +static inline void pm_runtime_unblock(struct device *dev) {}
-> >  static inline void pm_runtime_enable(struct device *dev) {}
-> >  static inline void __pm_runtime_disable(struct device *dev, bool c) {}
-> >  static inline void pm_runtime_allow(struct device *dev) {}
-> >
-> >
-> >
->
-> With the minor things above fixed, feel free to add:
+On 18.02.2025 4:11 AM, Dmitry Baryshkov wrote:
+> On Mon, Feb 17, 2025 at 08:23:28PM +0100, Konrad Dybcio wrote:
+>> On 17.02.2025 7:56 PM, Dmitry Baryshkov wrote:
+>>> On the Qualcomm AR2 Gen1 platform the second PCIe host can be used
+>>> either as an RC or as an EP device. Add device node for the PCIe EP.
+>>>
+>>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>> ---
+>>>  arch/arm64/boot/dts/qcom/sar2130p.dtsi | 53 ++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 53 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/sar2130p.dtsi b/arch/arm64/boot/dts/qcom/sar2130p.dtsi
+>>> index dd832e6816be85817fd1ecc853f8d4c800826bc4..7f007fad6eceebac1b2a863d9f85f2ce3dfb926a 100644
+>>> --- a/arch/arm64/boot/dts/qcom/sar2130p.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/sar2130p.dtsi
+>>> @@ -1474,6 +1474,59 @@ pcie@0 {
+>>>  			};
+>>>  		};
+>>>  
+>>> +		pcie1_ep: pcie-ep@1c08000 {
+>>> +			compatible = "qcom,sar2130p-pcie-ep";
+>>> +			reg = <0x0 0x01c08000 0x0 0x3000>,
+>>> +			      <0x0 0x40000000 0x0 0xf1d>,
+>>> +			      <0x0 0x40000f20 0x0 0xa8>,
+>>> +			      <0x0 0x40001000 0x0 0x1000>,
+>>> +			      <0x0 0x40200000 0x0 0x1000000>,
+>>> +			      <0x0 0x01c0b000 0x0 0x1000>,
+>>> +			      <0x0 0x40002000 0x0 0x2000>;
+>>> +			reg-names = "parf", "dbi", "elbi", "atu", "addr_space",
+>>> +				    "mmio", "dma";
+>>
+>> vertical list, please
+> 
+> Ack
+> 
+>>
+>>> +
+>>> +			clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
+>>> +				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
+>>> +				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
+>>> +				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
+>>> +				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>,
+>>> +				 <&gcc GCC_DDRSS_PCIE_SF_CLK>,
+>>> +				 <&gcc GCC_AGGRE_NOC_PCIE_1_AXI_CLK>,
+>>> +				 <&gcc GCC_CFG_NOC_PCIE_ANOC_AHB_CLK>,
+>>> +				 <&gcc GCC_QMIP_PCIE_AHB_CLK>;
+>>
+>> please make sure this one is actually required
+> 
+> Hmm, this one seems to be present in pcie0 and pcie1 RC, but in the EP
+> deivice (in the vendor DT). Are you saying that it is not used for the
+> EP? I think I just c&p'ed RC clocks here.
 
-I'll fix these in v2.
+QMIP clocks did something special. I don't recall what clock ops are
+translated to, but I suppose keeping them online makes sense..
 
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+>>
+>>> +			clock-names = "aux",
+>>> +				      "cfg",
+>>> +				      "bus_master",
+>>> +				      "bus_slave",
+>>> +				      "slave_q2a",
+>>> +				      "ddrss_sf_tbu",
+>>> +				      "aggre_noc_axi",
+>>> +				      "cnoc_sf_axi",
+>>> +				      "qmip_pcie_ahb";
+>>> +
+>>> +			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
+>>> +			interrupt-names = "global", "doorbell", "dma";
+>>
+>> and here
+> 
+> This is used for the eDMA implementation. Unlike the vendor kernel,
+> there is no separate device for eDMA.
 
-Thanks!
+Sorry, I wrote this before looking at the clocks, I meant please make
+interrupt-names a vertical list, too
+
+Konrad
 
