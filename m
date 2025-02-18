@@ -1,60 +1,56 @@
-Return-Path: <linux-pci+bounces-21769-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21770-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDD17A3ABBD
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 23:33:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3CCBA3ABD5
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 23:39:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 951421631FE
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 22:33:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1D5E188B3C1
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 22:40:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F6341D0F5A;
-	Tue, 18 Feb 2025 22:33:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8ABD81B6CEC;
+	Tue, 18 Feb 2025 22:39:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NkuwkLj3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVE+IoFa"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B941B87EB;
-	Tue, 18 Feb 2025 22:33:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6654F286297
+	for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 22:39:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739918036; cv=none; b=IAFX4Kkhv7bDmbK6SLgpMTrYSU7Ty26A+ekBbdcB1aubIBW5Mf37n2wjFUYQP4pEwKonnoCH0HdLFV9NT2NQHhyYfcxmWBSUtPh+ukh/Qk0tdpn5ez8zgW6uYXpCvqzUOD/c/TVzzrmQh9zj/GkHf/ShXXlHDUCKc4BNe4lLV/M=
+	t=1739918396; cv=none; b=X4SdW4FeohZuo91m7xmO1o82Oin7TozzV86jh86Yymgd5588+8SfGhiuMEXnX++Q19Wyc1nemVY+DTm0dq8QsctOg2WFsQRsK4ghljCodMezwl7Ros47neRFdNZkrvUv69FF40POyqkTI5roVV7qnOINmjxdXZ6MtfwH2dbrxzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739918036; c=relaxed/simple;
-	bh=P6sZ3lNpHHpplB4AD6dWKBij+UC5ODnu6yXG6d0hA9Y=;
+	s=arc-20240116; t=1739918396; c=relaxed/simple;
+	bh=1uueerDudQDzZM3rMjq1jkGqVCReNeWeedbmGZ7WwGg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=J0g0CHmCOsUgYLVm4igvkjMWR9/Crw5t7pLQumFYN7sidJBAcMhQcPKeJa5nP7shph4umj2O4SnGF9UAPq90QKAVed/qvlmWlo++fJcY+m5ouBMYIIY2BB7QHjBuiCUx/3CxeDLtObf+xSO+snMwu44stKL44GECQfPOejL6D/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NkuwkLj3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9F74C4CEE2;
-	Tue, 18 Feb 2025 22:33:55 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=YSpJtqQ0fv4N6rNJqVunWmPEtUNsXwzhgpQcBAJ2CmzpVnsnn7SSyP7aML6aXJSlsjGL+a9Iu5jD/Y2QeFyYYCRKqAGjHcuCEWo412177YNk6oBlg0fcnISfHZ3019sjADZDdq5dNsesIUB2FdxJ5rQSGmoYE0u+GfYykezfqts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVE+IoFa; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9F21C4CEE2;
+	Tue, 18 Feb 2025 22:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739918035;
-	bh=P6sZ3lNpHHpplB4AD6dWKBij+UC5ODnu6yXG6d0hA9Y=;
+	s=k20201202; t=1739918395;
+	bh=1uueerDudQDzZM3rMjq1jkGqVCReNeWeedbmGZ7WwGg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=NkuwkLj3PkFL0Ng4mzbutDA/bj9RAYmBvq1aLtZvMK2HBgh93GVKt20ul8PJTeoJj
-	 oDmXtJOH5LQ6/vj0s6j2A31/Glap7l95tD3NCTTKVrZrUAqKxP8ttLM0GFTBjkdwN4
-	 EJqiOqaNHT9hWZqE4pKSEpZEbjA9mnPvGmFq9x29VkEAiuxlrNHYlPyAIWh7STyOgg
-	 aaCGfWWDKmjRZomOccAL3LhmOrRACl7cjDoYmUbwLooJWgQ/S+r05t2fqkB2blU5cX
-	 7wd61R+vGpdcwP0S5yth+2eMSa3yOUlZH27knbwsAC4KzwGUUkseRGn3TGz9oT1a9v
-	 5ptiZB6XVcg1g==
-Date: Tue, 18 Feb 2025 16:33:54 -0600
+	b=iVE+IoFaXWo8WVx6/0+PaF3CnXwscKlA4xl4fpgvGengoBrdGXy8mkRT2zK6OLzUt
+	 DWPavIQXis1YNQ5qV3abNFrWBX5h+4xnu4c0QsNoD3bbIj1WCT+JElOGyVG4hWp+5/
+	 QRexkChB71Udn/RbwcSmWh1JZOmcFGNpV+iqSkxv9whO82VcRr56RtUZ3MH4Mb8IOh
+	 4KidYcyIeuReqEn1e/bR50BottqttBIYXQ7LC+VzNKfExAV81BGz1se5ru23G5PZ6D
+	 ctHrfozEaommAcPaEOjUB/n1Kk3aX0GAtnSzjBrr0x4J1QzSMNwkhlYLw4YDixks83
+	 pvgh7P17Nw8lw==
+Date: Tue, 18 Feb 2025 16:39:54 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Feng Tang <feng.tang@linux.alibaba.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Liguang Zhang <zhangliguang@linux.alibaba.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>, rafael@kernel.org,
-	Markus Elfring <Markus.Elfring@web.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] PCI/portdrv: Add necessary wait for disabling
- hotplug events
-Message-ID: <20250218223354.GA196886@bhelgaas>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: bhelgaas@google.com, kw@linux.com, linux-pci@vger.kernel.org,
+	Shradha Todi <shradha.t@samsung.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: Re: [PATCH] PCI: Add Rockchip vendor ID
+Message-ID: <20250218223954.GA197669@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,161 +59,88 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250218034859.40397-1-feng.tang@linux.alibaba.com>
+In-Reply-To: <20250218092120.2322784-2-cassel@kernel.org>
 
-On Tue, Feb 18, 2025 at 11:48:58AM +0800, Feng Tang wrote:
-> There was problem reported by firmware developers that they received
-> 2 pcie link control commands in very short intervals on an ARM server,
-> which doesn't comply with pcie spec, and broke their state machine and
-> work flow. According to PCIe 6.1 spec, section 6.7.3.2, software needs
-> to wait at least 1 second for the command-complete event, before
-> resending the cmd or sending a new cmd.
-
-s/link control/hotplug/ (also below)
-s/2/two/
-s/pcie/PCIe/ (also below)
-
-> And the first link control command firmware received is from
-> get_port_device_capability(), which sends cmd to disable pcie hotplug
-> interrupts without waiting for its completion.
+On Tue, Feb 18, 2025 at 10:21:21AM +0100, Niklas Cassel wrote:
+> From: Shawn Lin <shawn.lin@rock-chips.com>
 > 
-> Fix it by adding the necessary wait to comply with PCIe spec, referring
-> pcie_poll_cmd().
+> This patch moves PCI_VENDOR_ID_ROCKCHIP from pci_endpoint_test.c to
+> pci_ids.h. And reuse it in pcie-rockchip-host.c.
 > 
-> Also make the interrupt disabling not dependent on whether pciehp
-> service driver will be loaded as suggested by Lukas.
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Krzysztof Wilczynski <kw@linux.com>
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
 
-This sounds like maybe it should be two separate patches.
+Applied to pci/controller/rockchip for v6.15, thanks.
 
-> Fixes: 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port services during port initialization")
-> Originally-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
-> Suggested-by: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
 > ---
-> Changlog:
+> Hello PCI maintainers,
 > 
->   since v1:
->     * Add the Originally-by for Liguang. The issue was found on a 5.10 kernel,
->       then 6.6. I was initially given a 5.10 kernel tar bar without git info to
->       debug the issue, and made the patch. Thanks to Guanghui who recently pointed
->       me to tree https://gitee.com/anolis/cloud-kernel which show the wait logic
->       in 5.10 was originally from Liguang, and never hit mainline.
->     * Make the irq disabling not dependent on wthether pciehp service driver
->       will be loaded (Lukas Wunner) 
->     * Use read_poll_timeout() API to simply the waiting logic (Sathyanarayanan
->       Kuppuswamy)
->     * Add logic to skip irq disabling if it is already disabled.
+> This patch was previously part of of series that seems to have stagnated.
+> Bjorn did provide his Ack on this patch for that series, however, I suggest
+> that this patch is merged by the PCI tree.
+> (Shradha's series will be merged via PCI tree, so we will need this patch
+> in PCI tree anyway to enable Rockchip in the DWC specific debugfs file.)
 > 
->  drivers/pci/pci.h          |  2 ++
->  drivers/pci/pcie/portdrv.c | 44 +++++++++++++++++++++++++++++++++-----
->  2 files changed, 41 insertions(+), 5 deletions(-)
+>  drivers/misc/pci_endpoint_test.c            | 1 -
+>  drivers/pci/controller/pcie-rockchip-host.c | 2 +-
+>  drivers/pci/controller/pcie-rockchip.h      | 1 -
+>  include/linux/pci_ids.h                     | 2 ++
+>  4 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 01e51db8d285..c1e234d1b81d 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -759,12 +759,14 @@ static inline void pcie_ecrc_get_policy(char *str) { }
->  #ifdef CONFIG_PCIEPORTBUS
->  void pcie_reset_lbms_count(struct pci_dev *port);
->  int pcie_lbms_count(struct pci_dev *port, unsigned long *val);
-> +void pcie_disable_hp_interrupts_early(struct pci_dev *dev);
->  #else
->  static inline void pcie_reset_lbms_count(struct pci_dev *port) {}
->  static inline int pcie_lbms_count(struct pci_dev *port, unsigned long *val)
->  {
->  	return -EOPNOTSUPP;
->  }
-> +static inline void pcie_disable_hp_interrupts_early(struct pci_dev *dev) {}
->  #endif
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index d5ac71a49386..b002740acf8d 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -88,7 +88,6 @@
+>  #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
+>  #define PCI_DEVICE_ID_RENESAS_R8A779F0		0x0031
 >  
->  struct pci_dev_reset_methods {
-> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> index 02e73099bad0..2470333bba2f 100644
-> --- a/drivers/pci/pcie/portdrv.c
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -18,6 +18,7 @@
->  #include <linux/string.h>
->  #include <linux/slab.h>
->  #include <linux/aer.h>
-> +#include <linux/iopoll.h>
+> -#define PCI_VENDOR_ID_ROCKCHIP			0x1d87
+>  #define PCI_DEVICE_ID_ROCKCHIP_RK3588		0x3588
 >  
->  #include "../pci.h"
->  #include "portdrv.h"
-> @@ -205,6 +206,40 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
->  	return 0;
->  }
->  
-> +static int pcie_wait_sltctl_cmd_raw(struct pci_dev *dev)
-> +{
-> +	u16 slot_status = 0;
-> +	int ret, ret1, timeout_us;
-> +
-> +	/* 1 second, according to PCIe spec 6.1, section 6.7.3.2 */
-> +	timeout_us = 1000000;
-> +	ret = read_poll_timeout(pcie_capability_read_word, ret1,
-> +				(slot_status & PCI_EXP_SLTSTA_CC), 10000,
-> +				timeout_us, true, dev, PCI_EXP_SLTSTA,
-> +				&slot_status);
-> +	if (!ret)
-> +		pcie_capability_write_word(dev, PCI_EXP_SLTSTA,
-> +						PCI_EXP_SLTSTA_CC);
-> +
-> +	return  ret;
-
-Ugh.  I really don't like the way this basically duplicates
-pcie_poll_cmd().  I don't have a great suggestion to fix it; maybe we
-need a way to build part of pciehp unconditionally.  At the very least
-we need a comment here pointing to pcie_poll_cmd().
-
-And IIUC this will add a one second delay for ports that don't need
-command completed events.  I don't think that's fair to those ports.
-
-> +}
-> +
-> +void pcie_disable_hp_interrupts_early(struct pci_dev *dev)
-> +{
-> +	u16 slot_ctrl = 0;
-> +
-> +	pcie_capability_read_word(dev, PCI_EXP_SLTCTL, &slot_ctrl);
-> +	/* Bail out early if it is already disabled */
-> +	if (!(slot_ctrl & (PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE)))
-> +		return;
-> +
-> +	pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> +		  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
-> +
-> +	if (pcie_wait_sltctl_cmd_raw(dev))
-> +		pci_info(dev, "Timeout on disabling PCIE hot-plug interrupt\n");
-
-s/PCIE/PCIe/
-
-> +}
-> +
->  /**
->   * get_port_device_capability - discover capabilities of a PCI Express port
->   * @dev: PCI Express port to examine
-> @@ -222,16 +257,15 @@ static int get_port_device_capability(struct pci_dev *dev)
->  
->  	if (dev->is_hotplug_bridge &&
->  	    (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> -	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM) &&
-> -	    (pcie_ports_native || host->native_pcie_hotplug)) {
-> -		services |= PCIE_PORT_SERVICE_HP;
-> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM)) {
-> +		if (pcie_ports_native || host->native_pcie_hotplug)
-> +			services |= PCIE_PORT_SERVICE_HP;
->  
->  		/*
->  		 * Disable hot-plug interrupts in case they have been enabled
->  		 * by the BIOS and the hot-plug service driver is not loaded.
->  		 */
-> -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
-> +		pcie_disable_hp_interrupts_early(dev);
+>  static DEFINE_IDA(pci_endpoint_test_ida);
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index 5adac6adc046..6a46be17aa91 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -367,7 +367,7 @@ static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+>  		}
 >  	}
 >  
->  #ifdef CONFIG_PCIEAER
+> -	rockchip_pcie_write(rockchip, ROCKCHIP_VENDOR_ID,
+> +	rockchip_pcie_write(rockchip, PCI_VENDOR_ID_ROCKCHIP,
+>  			    PCIE_CORE_CONFIG_VENDOR);
+>  	rockchip_pcie_write(rockchip,
+>  			    PCI_CLASS_BRIDGE_PCI_NORMAL << 8,
+> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+> index 11def598534b..14954f43e5e9 100644
+> --- a/drivers/pci/controller/pcie-rockchip.h
+> +++ b/drivers/pci/controller/pcie-rockchip.h
+> @@ -200,7 +200,6 @@
+>  #define AXI_WRAPPER_NOR_MSG			0xc
+>  
+>  #define PCIE_RC_SEND_PME_OFF			0x11960
+> -#define ROCKCHIP_VENDOR_ID			0x1d87
+>  #define PCIE_LINK_IS_L2(x) \
+>  	(((x) & PCIE_CLIENT_DEBUG_LTSSM_MASK) == PCIE_CLIENT_DEBUG_LTSSM_L2)
+>  #define PCIE_LINK_TRAINING_DONE(x) \
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index de5deb1a0118..e1a270e7e0c5 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2609,6 +2609,8 @@
+>  
+>  #define PCI_VENDOR_ID_ZHAOXIN		0x1d17
+>  
+> +#define PCI_VENDOR_ID_ROCKCHIP		0x1d87
+> +
+>  #define PCI_VENDOR_ID_HYGON		0x1d94
+>  
+>  #define PCI_VENDOR_ID_META		0x1d9b
 > -- 
-> 2.43.5
+> 2.48.1
 > 
 
