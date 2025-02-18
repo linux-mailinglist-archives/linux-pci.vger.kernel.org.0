@@ -1,262 +1,166 @@
-Return-Path: <linux-pci+bounces-21725-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21726-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 016F9A39B06
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 12:33:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 337A2A39B2E
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 12:42:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04941189510B
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 11:32:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 138DB1893D55
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 11:42:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4965D236A61;
-	Tue, 18 Feb 2025 11:31:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B01323FC4F;
+	Tue, 18 Feb 2025 11:41:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LZ5w4Xj2"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="fLzPseWo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2080.outbound.protection.outlook.com [40.107.236.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5780E23ED76
-	for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 11:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739878305; cv=fail; b=I4wq6O1zYl+grrXlGUgiwwf8na9a1EMLqw5o4PGYl7XJaqn8/g46NuLfSzWeCp2SSDfp1zKHuJTeWUFrEEZcRWNGzR+zQGexMy3np6MB0/Mh13t2aCxvo6GYx7KJMpxK+V9ZA6dkuKsWJ97rkjH+Fa3siHh1vsz6wMmy58zwpg0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739878305; c=relaxed/simple;
-	bh=j7VJ6TpLAzEQrl3ojjv0kI9MtHpflAYkVPFzJFrXReo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=GwrHXa6/K6135Ctrl7lFS9xAY5BJaQRWlKFugnDZp+NFXNFWYbZtCweTPyYwr+hRfw975FGgBTTY8n5oJcJ1g8INQgstzfksf6/aY9pI2WHc5ezaEGROj7SCaH8Ty09ECEp62Vb+LiBEESR1UKITc/bD7VaijFrcp4FlHWGk8DA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LZ5w4Xj2; arc=fail smtp.client-ip=40.107.236.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=etYrswF2Q2UEfPBLluBBheMyekNr9MZ31V+LHOFbr2Hr6bRjCCsfWWK0QM50fOcmChTUPdBdIg8oLGIWKmk7n7XmuX/VSs/JbfnBC9Aox4ty+xF8LKA5JiPnL3p7S2SXfqzyETk1goALdqqzHZLTZc5b5pZdtxvFsz4nZLO2nOQn36os9d7y3IoplnU/JbMMsuKMzbgI7LKJQxndxKYZh6ccmpWTPXG6SIRyWgHo4Ewsma8XXKzt27cjZ/OyNvuZcbySP4PPYVcN1LzRDQbFuVVLUA9ZkgrL+32JZZzq9fvt56us6+QANnA/SJNjCWOJXhnWMpzL9VrbOQbRWYVAPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j7VJ6TpLAzEQrl3ojjv0kI9MtHpflAYkVPFzJFrXReo=;
- b=lZyz+ndOoaLdm1g1dlokgKEV7ncBLJAE2Tz8QyqaSxgxGbJgvq0RkwhhC9azrdLZ/dX1OR8KG2eCtG13hOSLxHwWFT8UB1OCi48fdRWCORxV/gBCIycSblVuDTPfAgO6Z+7p2WEm7lIp4hxmGMk3ebB/Kgju+hNurM5QKWI+U5M7O+UJ9GPaYDNF79q3m5su0W5sCU4b0HoqXh14bBvH578x2eGeBeNzl8EeWR6I6ohZbWg9OaGZJR37R3Lsyv22grYfm+nApYRU/izxZunAED+WTGGUjTdiLaEBYHLjcyHQ4BiwTboOyX8M9Pyi/TcmxCHcPPXL3OFTJsaz/Z7lCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j7VJ6TpLAzEQrl3ojjv0kI9MtHpflAYkVPFzJFrXReo=;
- b=LZ5w4Xj242APo3qvoR7u//7lbulcyPJG/vkC+U+QYJ1Ie8sRzhsBeDccY55ZemhvJ3nwOiiY/8pHJAFtbbLTbKB7W0mk8Ka5JGx2G4qAjqd15ygcI1/jwTOgs4dGT72N/aZKG9D8WNMQ5bSpz/GMdMw8Lt9j6T62gZhmjEM2lyQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by PH7PR12MB7377.namprd12.prod.outlook.com (2603:10b6:510:20c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.16; Tue, 18 Feb
- 2025 11:31:38 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%5]) with mapi id 15.20.8445.017; Tue, 18 Feb 2025
- 11:31:38 +0000
-Message-ID: <5093abf4-27d5-48fb-8668-c59f56a76ad3@amd.com>
-Date: Tue, 18 Feb 2025 12:31:33 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: fix Sapphire PCI rebar quirk
-To: "Lazar, Lijo" <lijo.lazar@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Alex Deucher <alexdeucher@gmail.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>, bhelgaas@google.com,
- linux-pci@vger.kernel.org, amd-gfx@lists.freedesktop.org,
- Nirmoy Das <nirmoy.aiemd@gmail.com>
-References: <20250217151053.420882-1-alexander.deucher@amd.com>
- <1654fb6c-e0e8-4dde-8554-7058cf73503d@amd.com>
- <CADnq5_NUEuMFsd__w1eGBWALxcQwtX7sa2Sn53vDjaxrqNuhPQ@mail.gmail.com>
- <CADnq5_NEhv-E9ZxHvxhBtFb_cBkPqMfu-nsQfEknO30tNBjA2Q@mail.gmail.com>
- <a2645312-0903-4fa9-9735-7f2a77986cb8@amd.com>
- <97e803f4-f00e-4fb0-8ed8-714ea9960e5a@gmail.com>
- <e098c309-e89b-4135-b5f1-dc8629445bc7@amd.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <e098c309-e89b-4135-b5f1-dc8629445bc7@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR3P281CA0105.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a1::6) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DE223FC43
+	for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 11:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739878919; cv=none; b=NdbFLynXxGcEf24YG5lFNE/9aU7dVMR7m/UBLg5FtnujmH3qva+A56efwIImvaeyrxQu9Xn1nXgGoB3sz856nuzcDzSGSWJPci1n277MX4LZVAwjlbjHEJKu1V9z1+K0DfxGr74VAjiP9IY4eDrLRzNjbhp0qNNoiu55bbMnWvc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739878919; c=relaxed/simple;
+	bh=qetabGxYbS2Xn9VVfPXOuzSTSZeCSKTs2TYqNLNDv8U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UKFnpBPD6CAd2PYQ03W2wlF4ZgCfB+rgf0m2f03G8hLqqeZU7xX9TrupTkpISTf1WxUaeijNLAb9WEJTudn1qZDDJz2c1n0QebU1+tmuBYqUgt11u8/4BqPgUImC8Yujkh+CD8aMND+Qf56drzbM1pAZEIaQUstf54c3IMS4dN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=fLzPseWo; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-abb7520028bso372986866b.3
+        for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 03:41:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1739878915; x=1740483715; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8aKmlMmkGK0UfyeuqhRhT99w4TL2OYZoP6ekSWwvJ0Q=;
+        b=fLzPseWoH2hHIdsJvFm5EYZJ5fe2BQ2oyyryYNXQlkSZHNxxgBhMrCzgkN0n3FGmc/
+         TCYlHYeRKhydcmYvbb1WAHRpODulIpLojkkwbiw6IWSzqUqUr1J/TXZihfmpMCei/8KG
+         3dnuVsojDWrJYJ24vI/5sI9u7vyI9aSPSpQih0ULu7y1cWWide6ZG73jl012J4VQwMdW
+         PMNzuG2XGRHLAASQFJSNmN/kyLkmKndyhhJlzr7DKJ4XCpNgg+XGdS3nFBPx//EpVcvm
+         rF7cerWXZjrZyvnaBWIoA+De5bTAaZWTuW8CABQytJ5zrrvJP77+XmNk8u52doe+YeZW
+         lhKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739878915; x=1740483715;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8aKmlMmkGK0UfyeuqhRhT99w4TL2OYZoP6ekSWwvJ0Q=;
+        b=It7KOOICm6DEcpreKHIhpXvwkjTDsXQD/ReOBx1p3y6LnwMSr16Upux5ud55GxhAcO
+         fAFpFsi6M+eukmseGnFxr3xSD6eRaezqlACngORP30+ZYQzjqt1avcZtp2Wtsy2fD9Xl
+         GbqPl2uA5nZfbToVrXFNDDMe9EnrfHxsCPz+Ml2Sp0A0jID+uN25ek5gdmvzSo5ZmkuS
+         N4CgabInLigoTyOm9uxVNep1Ap8B2PfBIrRQP1CuL9/r5TC8zS8Bet0VXK0hWrYzp2Ty
+         WmGegbTX49F9n1NYKRmvR+ft1LuG9EvlTABb+8R4IkWogLbqeBEPiLlTkxxqFLf3DjW8
+         Qcnw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAAWHXVTDBio4npyXfM/oewInTRJzD+EkeWDcdgA/qcdSF+GTnvbMQhnkPx/9RkVxVSTqVAn04QeM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmxYAe8ydyW+qmkfbnDUCO+i+MVaueWA/IqmuRnPzWLMoXyUXc
+	ykdAM0A9bL0C1tKT/QdY4MXq/kc8HqarUwKlx4BHmD5NsZ+NPuxMUfS5DUh8P8kjb6rr5LZZtoS
+	K6aO/agL5zmzHJTISOHqf1oM0Po/pWKf6Zwy5zQ==
+X-Gm-Gg: ASbGncvUWSszLqhVqar9ByNR8Sl4CbPN5eDQ4Dvprgq9s5IzK3kUCLsNVhBplPG6t1t
+	ei8S9c04jkxDzH/Ek7RM7434w8/iD5NDohCQGhET6arTWqbUSsIyoUNNNwB3QRdITQB5/KsZa
+X-Google-Smtp-Source: AGHT+IEPNee71mSksjXSeSsWHrS2KAR9wIT4sz1ud5v06geo9drLnl7hEt7tvSIgJJ+4DJzXS69UPDMhP8dla+sJ57w=
+X-Received: by 2002:a17:907:c1f:b0:ab7:86af:9e19 with SMTP id
+ a640c23a62f3a-abb70db8274mr1197625166b.43.1739878915362; Tue, 18 Feb 2025
+ 03:41:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|PH7PR12MB7377:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5c3ad9c6-014e-4c2c-c10e-08dd500fcf03
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UXZhbEt3dlo3cWpsaGJOQWJhMXNiUmRQN21MQk1uOFFWK3BCeHZGQTd1Sis3?=
- =?utf-8?B?NklUT0NJWXBlUGY1WFJNZHZRQUFRNFV6d29OM1p6aGk0Qk5ROEM3T0pFc0hD?=
- =?utf-8?B?TGFDRW9tZWdmLzl0eUdoMzh3c080c3BWR3NKMVpTMzYyWnRuU1ZCUUptNE1l?=
- =?utf-8?B?Y0h2c2FtSC9Idk5GazNuc25OUFhTUkQzY2E3eEFzYXVzR0N6QkMxd0ZXYWtz?=
- =?utf-8?B?TmcreUxwTFNYZzV0NmhLRUFDRlc3bnp3dlFlU29DNmxRdWNYLzFxT01EUzJh?=
- =?utf-8?B?ZnBPQmtBK2l5L0JkbVQ3bSt6UnFNSitkbklKMlVIbEpJeWtBU1BPamFtWFBQ?=
- =?utf-8?B?ekY1enFZSTd0Zm5MZmFGYjQ2RmhuRlhQWmFaNlJPMml0UXF0SERGVGMzc2hL?=
- =?utf-8?B?dlpVSVZmTUVHRTA3QkJBZW4zMmZCcFd1clVsTTMzdEt0WjNBYVorRkY1eExv?=
- =?utf-8?B?Q0pseVJja0hOUDF1cHYwMTI5RGphQ3NEeUVGY3hxUExWZTVCang3MzR6a1hz?=
- =?utf-8?B?Z3lsaDFPYXdtTzBvOWRKazRsUEtSTzcxOHAwbko1cGU3SkFtMkZyNmQvM255?=
- =?utf-8?B?OUEwSFkxU0FiZVZEVUZCT0pBREx6VHA5Qm1iVjRzR29MRitWd1VGUTZFUVRa?=
- =?utf-8?B?QlVwN0F6ZmI5ZTZkY1hiRVV3L09yQm9NdERNUkNZdlNQRnlDcGEwU05FaHpo?=
- =?utf-8?B?bmZweExNSy9wak4wSHAvV3FGU0p0MWNUdDlQSnAwWXR6V2Z3K2dyb2R1WG1w?=
- =?utf-8?B?bEtFcy92QkN2R3gvT2d3enBsd1d5cmJpY0VTK1RmOTg3NXNEN1M3WEhQdFdW?=
- =?utf-8?B?OVdoRWlWVWZRZVczYnh4NEx5MVBuSHJ6dlE1TnFPUEZDZng2SUpuT3NiY0Zo?=
- =?utf-8?B?eGhIWGNkUGc1NGI4MStYTlZXL1JQb0ZidkpoV2dUTGxuMnBURWY2WERaMnRr?=
- =?utf-8?B?Y0JmNHNQUTVsMG04bzc2VWI2V012SExNeit2eHFoWlZZQWZyejBxRGE3TDEz?=
- =?utf-8?B?ZWFnR0dLZWM3bGpxNzVxWll6eVNRblBsR2szRmc3VTNUMVUwY1Z2bU0xalNT?=
- =?utf-8?B?ZEtid1p0Y09PaUI4UzJEREsxVTVXVk5WMElmNlArR1BlTFdKVzhPYytxZENG?=
- =?utf-8?B?VXJ2ZFdoZ3ROanp0L2g0Uy9ablJ0K2pYeU5qdElkaFB6cjY0dUhDdlprUzI1?=
- =?utf-8?B?bzF1TDdERG5CTmtWRFRDUlBqdlFCTThBNVU4aCs5S2VkZkpWMGNBQUc3NXA5?=
- =?utf-8?B?SFFSR3Bqd2RibVRaUWJXcUFsbGNsbXFFWlhac0NNRmpFTVl0Mmk0NmZ3dkNp?=
- =?utf-8?B?eHdsNXpsdXlQMTBzd2svYmhrNWxTSURXa3BHcS9nbElhTDVCZFNjZWZWaG5U?=
- =?utf-8?B?RnJYM3huOTYrcXNka3R0cy8rcTdIK2g1SmExRm5IM3BlaFg4NXRYbmJvY1RI?=
- =?utf-8?B?MzBicmNkVno4dTRYa0JUVXhRMmxBbW9GRm5jaXBNZU41eE5sVHQ4T2ZNanFO?=
- =?utf-8?B?TVZUOUN5dGd4a2tERTFIZFN3djRKS3E0QVpxa01DOHlET1lnamJNNVAvSGt0?=
- =?utf-8?B?NWF2MVRLTHZHSU85MTBqVXZ1ejRadWxCY2crUmlWVUhGSjRuRXY4b3dXZklZ?=
- =?utf-8?B?MnNvSEo0cEhFVExDV29hS0g3d0NwNS9veGxZUUhvL2pNVCtYQ3dsQWlwdFpB?=
- =?utf-8?B?ODR1cVdFbFNNS0k5b1pGd0tPM2thYldjYjFHZHhoYzg3cjY4VVppc1RCUjMy?=
- =?utf-8?B?L2FnZGhCUGFpRFhBQWhDZFV5YWowYWh4SG0yYzRDellURSs5LzRmcS9BbUtO?=
- =?utf-8?B?VXZLc2h5UWpNaGNYMXg1dz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Y01wV3IzM0ovYVl2bVprVHFlM0FvMkdWcHZDN2FtanFpUzlwQXpIenV0NjVv?=
- =?utf-8?B?cGxJaVptdVJMbXFZbDBidkVIc2Zab2ZJRGpGMlRaSkNkeGRjZHRIOWVkZldO?=
- =?utf-8?B?cFl3c2xTWW5Tci9Xc1R1TCtwcUs0Q3hJSVVheTQ3QWlIS0FaSko3U2Jicm1L?=
- =?utf-8?B?Nzd0UWphUjFmcTYvTFZEWWtMd1VMVHpIOVRhdmZmaGFFUjVNbm5oWW9iNjlz?=
- =?utf-8?B?VTlIcnRIVEo5dXloSC9EQTJ3Z01CQnFLV3RTVDMvUHhhdFA5M3ZUOUI0dDU2?=
- =?utf-8?B?N2hCcUppRU1iTm5RTkllMTFldTVDZzY3eDlXZTIxSEpOZVI4OURHVTZ2amRs?=
- =?utf-8?B?VnFYNkJkdWtvZ1BOUC9kbjNHYnl2TUhtYnJJZHlYekRmZ1lxN1J1a29YWGEw?=
- =?utf-8?B?RTdlVWYzV2Z3MkoyWUl1VWx0QitPczVBRVNsdk41Y2tDRHB1NzB2TXord2cy?=
- =?utf-8?B?amI1NW93YTFNeS9ETldweStSK2gxQ0o0c0h2eXRWQkhlWDVjUHB4K3VTVm1Y?=
- =?utf-8?B?REJ3NkN1RUdUMFlLcUpBYnozbmI0TXdBVkxPaFAwczZZRUJyL3FhSFg4aGpq?=
- =?utf-8?B?eWpoeG50cGVpME1lMkYrbTFnVERLekxPKytlMUFDV3Z4TndudEJ2YUZ4dUVK?=
- =?utf-8?B?TzlQVGVwSjgwKytOMEtiSERuQU9pM1ZVSFJRQlNwcDRKVUgvZ3B6VUFPRHJF?=
- =?utf-8?B?Q0NjcEQ1MW5pZGUvU1F1cFhGTWx3NnUwNG5vbHN5QzZVdGhtUGFkeGxQYnVu?=
- =?utf-8?B?R1dUeTRGNFRpb2hCbU50WVNoc3FURmswM3V6TitKc1VDSDVnbmgxZW1RbDRy?=
- =?utf-8?B?dk1ESTJSRG9GalJ3Q0krRy9OSHVGL0dPdnEvNUdaUUU5K1MwNTBCTFJNTFJx?=
- =?utf-8?B?Y2gxZWpKMUNJNlgrWks5SnhQNzNoRUgwNG9COG8wUVFaeE8zc3lmVDUrMDF4?=
- =?utf-8?B?SUdMWUpJKzJuVXpqaWJYSGpOOFpCcTFKMkZqUkFvOEt5bkI4MGxtakhWSXhj?=
- =?utf-8?B?aG9qNmVyUlloK3dlcTA5YmdYcC9zM1dFcWJQME9Sd3hJSU84ZFB3MENEZElj?=
- =?utf-8?B?RXJRVnFBbW5YalBsa2RhMm42OEhEalA1RCtyNTBJNWlJcFFhMWNwNHJCWFY4?=
- =?utf-8?B?Vno4Z2dvVHFLNFovd29mVml0MEdBKzQ0OUJvMHVhVExYZTlZaFI3eEI3MUN4?=
- =?utf-8?B?N1J6NHdVR3VyckRzT1UxWVBzdkx2Y1lWdC9QTStrV2VVRkQyYjBWcUVGTnRs?=
- =?utf-8?B?cUErSWc0eUkvMmVqaUFrYXJQUzBIZ1FqSlFsNklxQWtVNVN0dGJIbHI5NWdC?=
- =?utf-8?B?WkdOU3doS2tYWmhxMUZJc1p4MFlWaWFVTVVTY0JNbHZiZUNidkcrcCtmOVVK?=
- =?utf-8?B?a01JVG01SXg4MGgxemVnMnZGZ0lCUllVSGFlT29RbFlEY3BPTGl2ME5tWUp2?=
- =?utf-8?B?WUpLVkJsQkhtZkhZSHFTU0hmVkl1RS9KcUNBNi9jNHBpdm45Wm9iRmFFQ0Z4?=
- =?utf-8?B?ek00WG5nd3pPdUxUYTdaMUNSUGIvQ28xaHkzOHBaeWxZTCtLaEpzaTB4dnJI?=
- =?utf-8?B?bm9WdFJKNXA1Q0UwRmxKZVJXTXMvdXkyNGFMQnFyVXNOL1d3cm41VDFaMVBY?=
- =?utf-8?B?Rm1kVWpRTy8zdnQ4M2M0Q21VMnJlK2NKbkpRQkFQL1lzMmh1OGRjbzM2eC9S?=
- =?utf-8?B?bHloYStxSWV6UlN4QTh4Y3l1R2cwSEllVnMzL256NkJidmhnWGxtdXJXUTFM?=
- =?utf-8?B?YW00YUZnMk5URVpRTTZiQmhadW5YMXoxV0llZ0h2SU5sNWR5NjZwemdxZ0VV?=
- =?utf-8?B?c2Jic3FSOHhLY0ZWVnh5QjNZM0dQeTJEdFRkQkQ3a2dVeEl3Unp2T0Fnc055?=
- =?utf-8?B?OGpqdm1PbTBzY1hCVGJnWVdLb0VqQnR4WklWbW5IZktqczJpK0k5RzBOQm02?=
- =?utf-8?B?K3NIZHZxTzdlRW42NEJhNTFWOUNNM0FHVTFWdmNTb0dpb0tEOC9DT2dtU0Fp?=
- =?utf-8?B?NkVxVlJ0cVcvbktqVG1nNldsRG0vbndNMFB3LzVyZUorV1JzYjczSUM5bGdO?=
- =?utf-8?B?cWd0a1BwaWNQQWxJYkt4VEhnQWRDcHR5bVY2Ylp3WGVveTdnS1NreWRLU09Q?=
- =?utf-8?Q?k9yS7MTxfZSprK9cdkS3D8Bad?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c3ad9c6-014e-4c2c-c10e-08dd500fcf03
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 11:31:38.5834
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g0oolRi7tr2dEnzXcRCz59kpAfoZbQ721JpO6P8VGoN7pMVhF6O/lMV0uYyPTM9s
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7377
+References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
+ <20250213171435.1c2ce376@bootlin.com> <a3c5103c-829a-4301-ba53-6ef9bd1e74e7@lunn.ch>
+ <CAMEGJJ3-JXhin_Ht76EqUNAwLiNisa9PrCrdUzCgj=msGZfb5A@mail.gmail.com>
+ <821d4c74-09b0-4c1b-b8ef-f8c08d0f6b5b@lunn.ch> <CAMEGJJ0QbzCScfTRA_pw_8A=iMYMAAFs69zFNLwcOxF5Syugpw@mail.gmail.com>
+ <20250213195304.3a2df02c@bootlin.com> <CAMEGJJ0kGCj=tjM6KswbG_+ZFkzMwPY+06BXCU0qSnbBKz0=ug@mail.gmail.com>
+ <20250213220639.373da07b@bootlin.com> <CAMEGJJ2_HVKfsE3P22baadbzxSDAX=yTr=m76YuXa5A2cJsJig@mail.gmail.com>
+ <20250217165306.3f055b94@bootlin.com> <CAMEGJJ13476pKJb441o5X0Y+rbfromj5-3V-j2KZiOt326OL4A@mail.gmail.com>
+ <20250217185559.2e56bd75@bootlin.com>
+In-Reply-To: <20250217185559.2e56bd75@bootlin.com>
+From: Phil Elwell <phil@raspberrypi.com>
+Date: Tue, 18 Feb 2025 11:41:43 +0000
+X-Gm-Features: AWEUYZmepFe2lsLe25Me9NjAHmXEX0-yOAHWU0twEqpljxZQoXOSSXs2uoT9kzs
+Message-ID: <CAMEGJJ2m+Qjk4L5xFJZk+X7XSiop_63BH9gsrykLwz3+VMAQfA@mail.gmail.com>
+Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device using
+ a DT overlay
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Andrea della Porta <andrea.porta@suse.com>, Arnd Bergmann <arnd@arndb.de>, 
+	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, bhelgaas@google.com, brgl@bgdev.pl, 
+	Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley <conor+dt@kernel.org>, derek.kiernan@amd.com, 
+	devicetree@vger.kernel.org, dragan.cvetic@amd.com, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org, kw@linux.com, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, lpieralisi@kernel.org, 
+	luca.ceresoli@bootlin.com, manivannan.sadhasivam@linaro.org, 
+	masahiroy@kernel.org, Michael Turquette <mturquette@baylibre.com>, 
+	Rob Herring <robh@kernel.org>, saravanak@google.com, Stephen Boyd <sboyd@kernel.org>, 
+	thomas.petazzoni@bootlin.com, Stefan Wahren <wahrenst@gmx.net>, 
+	Will Deacon <will@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Am 18.02.25 um 10:58 schrieb Lazar, Lijo:
-> On 2/18/2025 1:33 PM, Christian König wrote:
->> Am 17.02.25 um 17:04 schrieb Mario Limonciello:
->>> On 2/17/2025 10:00, Alex Deucher wrote:
->>>> On Mon, Feb 17, 2025 at 10:45 AM Alex Deucher <alexdeucher@gmail.com> wrote:
->>>>> On Mon, Feb 17, 2025 at 10:38 AM Christian König
->>>>> <christian.koenig@amd.com> wrote:
->>>>>> Am 17.02.25 um 16:10 schrieb Alex Deucher:
->>>>>>> There was a quirk added to add a workaround for a Sapphire
->>>>>>> RX 5600 XT Pulse.  However, the quirk only checks the vendor
->>>>>>> ids and not the subsystem ids.  The quirk really should
->>>>>>> have checked the subsystem vendor and device ids as now
->>>>>>> this quirk gets applied to all RX 5600 and it seems to
->>>>>>> cause problems on some Dell laptops.  Add a subsystem vendor
->>>>>>> id check to limit the quirk to Sapphire boards.
->>>>>> That's not correct. The issue is present on all RX 5600 boards, not just the Sapphire ones.
->>>>> I suppose the alternative would be to disable resizing on the
->>>>> problematic DELL systems only.
->>>> How about this attached patch instead?
->>> JFYI Typo in the commit message:
->>>
->>> s,casused,caused,
->> With that fixed feel free to add my rb. It's just that the Dell systems are unstable even without the resizing.
->>
->> The resizing just makes it more likely to hit the issue because ti massively improves performance on the RX 5600 boards.
->>
-> As a workaround, from the thread, the most reliable one seems to be to
-> disable runpm on the device.
-
-Yeah, really good point. Actually trying to fix the underlying issue is my strong preference as well.
-
-Regards,
-Christian.
-
+On Mon, 17 Feb 2025 at 17:56, Herve Codina <herve.codina@bootlin.com> wrote:
 >
-> Thanks,
-> Lijo
+> On Mon, 17 Feb 2025 17:03:34 +0000
+> Phil Elwell <phil@raspberrypi.com> wrote:
 >
->> Regards,
->> Christian.
->>
->>>> Alex
->>>>
->>>>>> The problems with the Dell laptops are most likely the general instability of the RX 5600 again which this quirk just make more obvious because of the performance improvement.
->>>>>>
->>>>>> Do you have a specific bug report for the Dell laptops?
->>>>>>
->>>>>> Regards,
->>>>>> Christian.
->>>>>>
->>>>>>> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/1707
->>>>> ^^^ this bug report
->>>>>
->>>>> Alex
->>>>>
->>>>>
->>>>>>> Fixes: 907830b0fc9e ("PCI: Add a REBAR size quirk for Sapphire RX 5600 XT Pulse")
->>>>>>> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
->>>>>>> Cc: Christian König <christian.koenig@amd.com>
->>>>>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
->>>>>>> Cc: Nirmoy Das <nirmoy.aiemd@gmail.com>
->>>>>>> ---
->>>>>>>   drivers/pci/pci.c | 1 +
->>>>>>>   1 file changed, 1 insertion(+)
->>>>>>>
->>>>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>>>>>> index 225a6cd2e9ca3..dec917636974e 100644
->>>>>>> --- a/drivers/pci/pci.c
->>>>>>> +++ b/drivers/pci/pci.c
->>>>>>> @@ -3766,6 +3766,7 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
->>>>>>>
->>>>>>>        /* Sapphire RX 5600 XT Pulse has an invalid cap dword for BAR 0 */
->>>>>>>        if (pdev->vendor == PCI_VENDOR_ID_ATI && pdev->device == 0x731f &&
->>>>>>> +         pdev->subsystem_vendor == 0x1da2 &&
->>>>>>
->>>>>>
->>>>>>
->>>>>>>            bar == 0 && cap == 0x700)
->>>>>>>                return 0x3f00;
->>>>>>>
 
+<snip>
+
+> > The job of the nexus node would be to translate a generic request for
+> > a numbered resource to a specific request for an RP1 resource with
+> > arbitrary properties. The arbitrary properties could be GPIO offsets,
+> > which are board specific, while the node supplying the resource is
+> > provided by the overlay. This means that an entry in the table,
+> > described by a single property, could have contributions from the base
+> > DT and the overlay, which is not possible since overlays overwrite
+> > whole properties.
+>
+> Hum, I am a bit lost.
+> Some DT example (base and overlay) could help me to understand.
+
+I could, but I think it is becoming a distraction.
+
+<snip>
+
+> > I think I can see how that could be made to work for GPIOs. It looks
+> > as though the GPIO subsystem is the only one making use of
+> > of_parse_phandle_with_args_map. Interrupts seem to have an open-coded
+> > equivalent, and iommus. What about I2C and PWM?
+>
+> Support for PWM has been recently accepted.
+>   https://lore.kernel.org/all/ufl4kwrjyp4zid4muvghefevqc6hk3zyvxnsu72fxd4f46fzg6@hufkci2dzjid/
+>
+> For i2c, nexus node is not suitable.
+>
+> Nexus node works well when resources are indexed (gpio line in a gpio chip
+> for instance). For bus controller there is no index.
+> I mean we never refer a i2c bus controller using <&i2c-ctrl 12>.
+>
+> For i2c, I proposed i2c bus extension:
+>   https://lore.kernel.org/all/20250205173918.600037-1-herve.codina@bootlin.com/
+
+I don't see in principle why an address-cells of 0 should cause a
+problem - it's a degenerate case, but it's still conceptually valid.
+
+However, we seem to be having to invent a lot of new infrastructure -
+some of it already supported by the kernel, some of it not - because
+we have made the mistake of using a discoverable bus for a
+point-to-point link on a PCB. I don't see how this is fundamentally
+different to the USB-attached Ethernet controller on e.g. the Pi 3B.
+Despite the fact that the Ethernet interface is discoverable, it has a
+Device Tree declaration (see
+arch/arm/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi) in order that
+the firmware can supply a MAC address. Yes, the RP1 DT declaration is
+significantly larger, but size shouldn't matter for what seems to be
+objections based on tenets.
+
+Phil
 
