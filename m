@@ -1,222 +1,459 @@
-Return-Path: <linux-pci+bounces-21755-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21756-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60F54A3A3ED
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 18:18:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F10DA3A4AF
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 18:54:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 518B31888211
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 17:16:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6ADBD1888F0B
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 17:54:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17E0F26E648;
-	Tue, 18 Feb 2025 17:16:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5941F26F45E;
+	Tue, 18 Feb 2025 17:54:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ANGsRR4X"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NV2ML6bv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E2018C907;
-	Tue, 18 Feb 2025 17:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739898970; cv=fail; b=YiF8QNxWIw+MxMffl0izj2sR/Ni1o7rLAHAUx/Q+f3yZN8+hgsWzv7THidx4hXSvkM4SzdIbGbwtoxv3stOUNIWEW6Gxl/aXt/pHwEqcwCbzlbXiJkc9ljVWp5VR4NdsbjK7IGF10M9D8puf/ajWUnQzvDtqlwtO/HgIENEhRmQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739898970; c=relaxed/simple;
-	bh=X5dZs95QE0ASSCxrExJHuK9eE40OiCHX9JBOAkEvutk=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ZRdqH5XXOXcqVdXZ511SVbZyVhP+/fvP2yXOpI7AtG2r3SFKV0PYi87KS/Lu4ymOPCQGj2BYhoFl0jcTm2LbTBiNEAvMJZfZbuFpRmRp034AU78gPiO+rZStVbWiDHwFDfmgwELkGPIPnSmAOsHmyBL2cKBe1BKkSfjz4wucsuw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ANGsRR4X; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739898968; x=1771434968;
-  h=date:from:to:subject:message-id:references:in-reply-to:
-   mime-version;
-  bh=X5dZs95QE0ASSCxrExJHuK9eE40OiCHX9JBOAkEvutk=;
-  b=ANGsRR4XFKnOWH/9UTvy16jQkV0Im/t64Fkbwjg9tsM4JSvSzQrv8DAF
-   4e6EqiHSyfi6kHMPe3vOaK/b3PWDs1FbcpaTapOOdojU8PlU0yr6ZGwRc
-   dhzTPlWNlhUQrDEB5jF2Bmver0LiEWq+dEHuSBzeok47lj2uNLMmUr1Js
-   D4eAua/EY0oCt3sDp5xd0Rc5tEfmSn2yNJI5DvtEraLqYzUWmCl97/KVN
-   sGzXaKbSz1Xm1l+UnMWER0rfwZPbH4CcN+97vbTjIFjCn1KUx/2qQwFie
-   ZKcsD3Zx4q+So62RZ2pEuLv6gdaZafsJfvC4cnuTSfe8l9sz2wF+Kisaj
-   Q==;
-X-CSE-ConnectionGUID: MF2Vt8yHSXeLwfWLB80w1Q==
-X-CSE-MsgGUID: MDGbdCj0SHa2b81hZg0byA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="28208715"
-X-IronPort-AV: E=Sophos;i="6.13,296,1732608000"; 
-   d="scan'208";a="28208715"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 09:16:07 -0800
-X-CSE-ConnectionGUID: +lUZ/Rj2SqWFTszINWeubg==
-X-CSE-MsgGUID: P87Vz7t+QBaDx8esEIqyOw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,296,1732608000"; 
-   d="scan'208";a="114190804"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 18 Feb 2025 09:16:06 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 18 Feb 2025 09:16:06 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Tue, 18 Feb 2025 09:16:06 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 18 Feb 2025 09:16:04 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PtGfRa9IZ1YhL/6lSiqYPsTcUrL2yp90DnBE6j+aTmClMuISLplA2d/farhTqz89J5xjl0FXTQxr4bzftbeUOxiRtBvjqdJYudjwXS4/LPR/uuDLA6jHedK1Mleu992Uw/lD27+K3J5bIQBVI2ks8BwfcDSDk3HTYCYCK+4nsOWTO7XcMhzFuKCx48fnLOhvn9gQqDDAl2XmZY2v3bUTaXNwjIeJu+gL8oDDzlMXiaDuK/Q58sWjSLFqBoee8l4MMeSQt0NsFa8iIdeQxK9MsMJcf9uLQ5cGEVj5+StxiLapu+UWS0o1T7LHLt26XronE7OZuJ1YKjga18PkJNdj2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+10xjbz+sgNTKuxThtIyciyPgaIdysTx6xhiarKllKs=;
- b=U7oL5kZhtxlauGgi7xFtn/odmH8DeS5BPWHm5uik2YPG74NuF1Ppei9qu/YqQiS6G4zAD+Dek36C71KyjdvOd48zCh+phYfPdc0u5Vc0iJC6igIksliiKiEgLMiOtzn9jdhBPgKyQrrqYnhVGLbpjsrNXrGGJHe0uo6KT3EFQR/Lluy8XOTirqtGD2kLKK/64kQxDa1X6RieyVVxDgnweeNFGUJIiRiU02ULyU56izrUurXSJZXkTcJfVF/UXG7PyTQQRfB5HPaMQwdWjuEZTxwiddUx0c0o4WrAAIhzzSgxKVIaCsTMLK/TqQjw7lMazViit+Q67AgfxJ4R90ysYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH8PR11MB6562.namprd11.prod.outlook.com (2603:10b6:510:1c1::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.17; Tue, 18 Feb
- 2025 17:16:02 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8445.017; Tue, 18 Feb 2025
- 17:16:02 +0000
-Date: Tue, 18 Feb 2025 09:15:58 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: "Bowman, Terry" <terry.bowman@amd.com>, Dan Williams
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<nifan.cxl@gmail.com>, <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <bhelgaas@google.com>, <mahesh@linux.ibm.com>,
-	<ira.weiny@intel.com>, <oohall@gmail.com>, <Benjamin.Cheatham@amd.com>,
-	<rrichter@amd.com>, <nathan.fontenot@amd.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <lukas@wunner.de>,
-	<ming.li@zohomail.com>, <PradeepVineshReddy.Kodamati@amd.com>
-Subject: Re: [PATCH v7 12/17] cxl/pci: Add error handler for CXL PCIe Port
- RAS errors
-Message-ID: <67b4c04e96439_2d2c29478@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250211192444.2292833-1-terry.bowman@amd.com>
- <20250211192444.2292833-13-terry.bowman@amd.com>
- <67aea8002a005_2d1e29466@dwillia2-xfh.jf.intel.com.notmuch>
- <408f6acb-108b-4225-81ac-4f17a6486020@amd.com>
- <67afddbec62a8_2d2c294a4@dwillia2-xfh.jf.intel.com.notmuch>
- <4c42244a-cc6f-48cb-8013-012e5dc49b81@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <4c42244a-cc6f-48cb-8013-012e5dc49b81@amd.com>
-X-ClientProxiedBy: MW4PR04CA0065.namprd04.prod.outlook.com
- (2603:10b6:303:6b::10) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4941426E171
+	for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 17:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739901272; cv=none; b=e62kwug8mEmBwCMc0Rt/WP7X8NHKknTV3JoEJDng1fZSRT6Bl26TIp+6L5jd01HY2hTVwu4m73WcZ9VvfywFTFvbSLSK8OwtUzLjcAmhmyBDaGxZnNxcf4NT1qdEBcvsR9E4NQGFK+hfcriA8vZsxg8+P5vmVuAgGUF0nYwF/bM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739901272; c=relaxed/simple;
+	bh=7O7gacnsM6mOex+DDr8AyxTmbm8LNjdmfOHtWP0MKZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DKaFruWAvHQTwKc4U5DFYp7hPA7nlyULpXif1p2470KACBg+MxkfwLtoZggOE28nR/31IjK1/+NeGxkLs12rHQpCJxIFJ0EjCFQMiBb+CLzQk7RVEXT4ueibxycnILfcN5gLt2aTn5pGCQrImbqrD6x1xRKn7gwStzUHwQAXaWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NV2ML6bv; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30918c29da2so48279461fa.0
+        for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 09:54:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739901267; x=1740506067; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YI+znzuuXksA7qnH+pwXOwBdUnfrRNphP1Aa+shefSI=;
+        b=NV2ML6bvD9nkQSH+Ip2sZQbA54ijce2jAZmR4vrngKNrqK2ZEaAdF+/fuYrkzV+CY6
+         ndkscb0Vky2vPNRMq7dYtz1nGm2PbG0R3K4KuMtnmgnjUmB3zduYBBIyB8RXaSWIhSFH
+         YtylWBfZCx1NESM+kYRuyTc0s5Vl56C7G57QE+54D10Oz0HG2hV5JBH0lLq3GmglDQ3j
+         pv2jUlWlcjZdyunPQEcf3IbtpRk6J9TMo5Pt83j4goaEwQE1akN96hADXbpFNldBWrjZ
+         0CewrZ05wgdOCxqTnY8FBeCTs+IyXTNhJEt0lVkzahKA3JnpMrRbREwhLlyURI3JvKjN
+         yfcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739901267; x=1740506067;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YI+znzuuXksA7qnH+pwXOwBdUnfrRNphP1Aa+shefSI=;
+        b=QyygwftAhG6tw7E5vUDgID5iZE7OldXPDUrt4JnQJYvsHw3ErF6khp088iEoFvTuAV
+         0dAO9i6MAQ5g84jKwuU2AQWNviNbo4fxZhPoKmTr60L7DhMpkql336LPpYNvEi0ByHkN
+         YFnGgmmiYJaP8OzEWJ3zwxMeNy8UdkOAzXUbLdJ8CQz3r9pKGxsHTNeWv/K22JYreO+o
+         vI2yVTpdS1VkvD0L10AsQVcFgYcIn/mfSchylJ93Ryp361Co60+3a0t4i0cc8pllbjjF
+         ZipgxCGTs7mjJQhDr8shziahLfhvY0FfDHgkHp2Hcd7WuFHhUWdFvQOsZ5HLwvYdMkDu
+         3JCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdrPC9G0BnoMfknOwzVhV/iCOEBHNwgAFNvBTBzzFvGufzPNzUlnfC558ybRm0oG6g0lsYmExjriU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQB1Pvxd0g8uUfdh9QdSdK5jEkAZxjQ9iWWKDd++bOZOGXs5JZ
+	ky3HzYDfS/NRCCJGH4PD2d8amE2lv63VRF1ZXKpmDCIJ04M62F/6HuXxoSJ9RKI=
+X-Gm-Gg: ASbGncua7hhwV5Njjd/IT6kCeU3y82ON7Zh4rfD8WBS5G7rNXxTqqLRa1GHSPyoYsFd
+	gY9RX/xKIYNqvEVt7OwDI86n3HljbD1Fc8VgHMizD97sqINdApMxCojQq02f6Ail3LywDo8fOvD
+	Z4/PKZuI7UYLMq3CQ4cXFyGdu0IB1bqmv6KTBXmqweS+1JPMJogltyQ4YT+Nq2vILLMMsNE2Q0I
+	lKUTtSLQUvLu00915RKDZ4bZEz1V9MR/4/hJ/d4I6MI5SQisl3owQ+XL9BQ4niVN5IotZbClxpx
+	OflBaAma6sp+9uxOOcTtMmnVWK6Xq32BDX3QE/+NHfUV0XXjibTAzuatMKqGRy4485bjcMQ=
+X-Google-Smtp-Source: AGHT+IGgS2rblfca+YLr7ikEH5fosM1HrQ1yesZD3FLHOUzZMq39lE7Z3Ptzi8ujTytXRTzK6lCM7Q==
+X-Received: by 2002:a2e:878c:0:b0:2ff:e7c3:9e2e with SMTP id 38308e7fff4ca-30927a6f5d5mr43954511fa.17.1739901267137;
+        Tue, 18 Feb 2025 09:54:27 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a25195701sm11365691fa.4.2025.02.18.09.54.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 09:54:26 -0800 (PST)
+Date: Tue, 18 Feb 2025 19:54:24 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: manivannan.sadhasivam@linaro.org
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, 
+	Jing Zhang <renyu.zj@linux.alibaba.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jingoohan1@gmail.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 3/4] PCI: dwc: Add sysfs support for PTM
+Message-ID: <qvkpasuxn54dpsvsq6vinuyjvnphvnvfcedqzvmhkpgbrgurvm@7e55l7rkkqo4>
+References: <20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org>
+ <20250218-pcie-qcom-ptm-v1-3-16d7e480d73e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH8PR11MB6562:EE_
-X-MS-Office365-Filtering-Correlation-Id: 25a4b405-fc06-4692-08e1-08dd503feb84
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?t4P5fG/eFCldt81C00sk+4lcB8u+5UlbME7DsZ59AEuJJK9+jQ9cL+nfji++?=
- =?us-ascii?Q?froU9S3ao4kCRUQGWH8S+yRMjxTPNw1JQWoC9seFNpXYhQWDINTGOVPMnq4m?=
- =?us-ascii?Q?zs858BaPvCd1C85159tmqpVtDTvL40OYvK/4lT1E9bn4/KeUDzA4CBtu3yu+?=
- =?us-ascii?Q?ODwtjwtgh5KGDCRctvgUQNJE5kFy+CeIfWjfMvJ+TeHZomTbOgna9yZQPI8T?=
- =?us-ascii?Q?o/bwp0TPQjPlug+4/TtZZW/mPT8dS7sS+6YFPZMw25CwJmXw4GCdi3jDgGXl?=
- =?us-ascii?Q?FXPRE9KbZpoARNh36NdtX3fQHlUYWdh0zyCwWab1El5esQ0JSSUgB/vM9C72?=
- =?us-ascii?Q?jwJTAVtN8UNJSJ0lvzV1t7T7qRCuL8WDs+zWKrbbb8yEDWaQhaWEqCb18dwf?=
- =?us-ascii?Q?exB2loX5JzEmqCBix6W+BQ/6Lyf/LJp179rizv1b3JXG5X3nXTMGk6/28oXv?=
- =?us-ascii?Q?eZkXjJDMBXEOCWd/PBPi+X0W3j2I02adjYnIGaB1WaBzPEGdpP4/DlVls09+?=
- =?us-ascii?Q?3cmNytygfOUwoTu4YfPH2TpjUGkqaA/eSdNF3cXeRQ/8aO+HBnsAtGmp7js0?=
- =?us-ascii?Q?9QermkC7FLkFpVPV+ejlMF0WMSpzefOevaXpUkC78dGafp48kmNqcuvEgPiU?=
- =?us-ascii?Q?RfQ16atR0PsIf/e1ILHotLAjcBS3Ni7TlyG09lfPbOMxRjxuhN6VV7HjuH3s?=
- =?us-ascii?Q?tOQwZ5qwmquo3ZVfJCCg8rD5ozKEz2JB6xzg+8fQvhf9Zw1T5n4XvHUCVDKF?=
- =?us-ascii?Q?UZ3PpZB+/CGyj3Vc8WtgTbpALexYlBHqQNjm97+qQleK3vQhf96ThoIytbLT?=
- =?us-ascii?Q?QJ3CFufTTcUVQJ14WeRDYxcovGfUciSGFs0N7j00HPpAWXnkCdUs9Qcu3iS7?=
- =?us-ascii?Q?5FY0Wph1ynwOPkQ0mc3LaZBQU9jvEsA07kqrDlkBojveS1nIVEdcMB8EPAlQ?=
- =?us-ascii?Q?temy/8xgMOxzYC8iU9lX65YZJllH9R8r9xmsJw0ZDjU7L1EXXtkbZ3hl5y2w?=
- =?us-ascii?Q?sC100neq1icQU/cHI+56/lnbNDjKzoZZjmIdjIgEe44rmXp6d5poCGGkPzvE?=
- =?us-ascii?Q?kGwov7NZmHpYgamewPxHfwJORHcdQOHHxmnDTWb89vqD7MT621+LyHiEreml?=
- =?us-ascii?Q?EXsXpCyx/YSuvzrXmbhYssvKBVpBa0wQohxmDyc5zPX6AwpnHnc3CFEwT9Wj?=
- =?us-ascii?Q?Agqxfl+GCBhURORHC4veXdr/Hbtx+CeEIsmQfWsz16Hyj6s67fpIjHaLDt4L?=
- =?us-ascii?Q?tmUQl1AM7OX2+l2W+vqJQj2UYUP1keDy72YDntOyXm693l2m68dzEl9ZwzkL?=
- =?us-ascii?Q?mPo5MaZgi0x9Sh0M2YG2OuLMdrguLWMyCBKavjY4ZYk/tV0bqGB1h97OEzA2?=
- =?us-ascii?Q?CO6bYtxttpFCb+Cr9P5/R2q0hu9XvuJz5dCEzgAng+K5TLfV1/YJxN1EWKvn?=
- =?us-ascii?Q?pKkZ57m/fm4=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3bTVr56Ytg+Q5xaFoV/bi/pZ4SCORRnUYxPFCxxmPVNsp0PwCsIwpg+BUcu+?=
- =?us-ascii?Q?IFRMU4Vqr1c++rauvfQ0kHCxloSj5a/jPrkZ/sDwRLFDFzHsKe8KIEmWuMJK?=
- =?us-ascii?Q?fXWQ3lTXIoP7Z5lmrQgX/1HmHJgT+mEBa9e/aV27k7pdq0NeTitl5P8GCTsm?=
- =?us-ascii?Q?1viaQ8HnuTX1Les0tmlEmeTXZoGMWXPKPwyCkGx8fsGXF1y4E6INrA2keY9p?=
- =?us-ascii?Q?nhtOg+pppPczU0u8/AgaoMOg6h1vHC6Tx063Xkeb14MKkwTpA2gxnbnUkO5H?=
- =?us-ascii?Q?LPF+ZjcIu4cDO3X6htXmnTO99WS7RPwV/B2Dg06Mli7heQ0EiEWv/kENB+lI?=
- =?us-ascii?Q?HUjyzyjhLpiduBOFhs/uqw0VeUqpsJD5lTULoWBjteYhkzMgsIQ+hLu+Wk7h?=
- =?us-ascii?Q?NMjdECq3hnplwjUc1N1mHYH11DgAxSm0vPn/U8E6OCCoIgPy0WHkOEwDazfr?=
- =?us-ascii?Q?toCaf7n+GWvOwwsn7meoyJJrdc47qxy+B6Pgpp2yGVPxd1Ti3gh/+tMLvnLO?=
- =?us-ascii?Q?Cdf5CfzDf28qUUE1epZBPye+jyyNYqiMgtQQc23zdDgX0XazwQUZ/ULEdMoz?=
- =?us-ascii?Q?sY28CQQmTk/GAn2LWBDHFF33luuyxQDk6FkjiwADdZk66aQMnDNpkzsfDVr9?=
- =?us-ascii?Q?G9PvmbsJnKGScmh02Pq+5svH7uL+T6oguljTZ3TQKlXDUQnwQtEDJfD24tbS?=
- =?us-ascii?Q?N4vxB5vo3OtmpxJJXTGbBqqBXtSvMbnzAlSmb0eI1Fi6X42nGXJSsRoxVnuK?=
- =?us-ascii?Q?JdRd+DnPMZK7Oklt06x6StGCpTRJkBCvEmQaF02XB8TEhbhcmcdTAUq8fj9C?=
- =?us-ascii?Q?A+zIGIHwgi+s/+KQW9QaiRg37kRnUK+3lJ/Ldc6f190LCQQEFKJrtWw6MRkL?=
- =?us-ascii?Q?XDQJqKins6vtok9AiLt4DAjNujS7ULFbHo1LK7O29h80vFXwFasiycx4WV6F?=
- =?us-ascii?Q?pQtdrO5lKm0CV3xg1jd3mMAc9xY3HcArj+NcLioTUaToEoso/vEbNsqH6GEV?=
- =?us-ascii?Q?oI83viPYg2v2esWBMOtx2z2aK7Y/X14ebCqA/qTqEJS9eFJJYFSDuEwzcryj?=
- =?us-ascii?Q?2mLHVbCFFAh5vFCEVMdZuVbfqwFaGIbIKUWsKb9OE5E2Bo2Zhcqt3A3JPOq8?=
- =?us-ascii?Q?QQaXKOCTtpBQMdec9/wQNpJL7yoHxH6iX7x3WWpoUNZyfFjtH4NxpaPV0Iv2?=
- =?us-ascii?Q?raQs0Zi28Fd1tiRa+PGO4vdHB7uwhcPoSfTs0KI9QnmUUkWjd7FI/jkMIPpd?=
- =?us-ascii?Q?UMVLICw0+WW9UGLPsz7w8+VrpidSSk50k6SbAk+G1tGZbCzg511hRt67lOZG?=
- =?us-ascii?Q?OeCRFGXwGr8Z8thbqqvdz6hLI8kFFyCYsh+neccltZ/lbHLltax4KElqLiCJ?=
- =?us-ascii?Q?ca+fsoQe/JI900kQXZaaR41IhmunVlhrpSBxU1Ie/47zRmOk4dZawQHxgIE2?=
- =?us-ascii?Q?HkjopDuNzOBdCRpNCY/EDXwVucO8FOD3XNwjzasvkTrsEIylH/T0BnYNovFS?=
- =?us-ascii?Q?2HTWAo1Cd9eY2SDfdZLNSdMnGuGe+cwGQIJb019Itg0T0b2w0Ak8+iHRcF5c?=
- =?us-ascii?Q?reyH0nTrEyiOOsdf8OVypc5NQ0MBa9vdn/nZD7SrPdEvDWUrDVImKutj5YOg?=
- =?us-ascii?Q?zg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25a4b405-fc06-4692-08e1-08dd503feb84
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 17:16:02.2936
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JxKWqM+v6RqlUJuZGsh1CtkOgnCJXHDUV7c+pQIKorkSDq4Or3WYd9KVQacOBIMEzh9gDXMzDWKj8O1RvBFN0/XxUHM1lJcfotqJpG2+p20=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6562
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218-pcie-qcom-ptm-v1-3-16d7e480d73e@linaro.org>
 
-Bowman, Terry wrote:
-[..]
-> >> Or, if you like I can start to add the CXL kfifo changes now.
-> > I feel like there's enough examples of kfifo in error handling to make
-> > this not too burdensome, but let me know if you disagree. Otherwise,
-> > would need to spend the time to figure out how to keep the test
-> > environment functioning (cxl-test depends on modular core builds).
+On Tue, Feb 18, 2025 at 08:06:42PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> Thanks for the feedback. Yes, there are several examples and Smita is using for
-> FW-first as well. Correct me if I'm wrong but the goal in this case is
-> for the FW-first and OS-first to use the same kfifo.
+> Precision Time Management (PTM) mechanism defined in PCIe spec r6.0,
+> sec 6.22 allows precise coordination of timing information across multiple
+> components in a PCIe hierarchy with independent local time clocks.
+> 
+> While the PTM support itself is indicated by the presence of PTM Extended
+> Capability structure, Synopsys Designware IPs expose the PTM context
+> (timing information) through Vendor Specific Extended Capability (VSEC)
+> registers.
+> 
+> Hence, add the sysfs support to expose the PTM context information to
+> userspace from both PCIe RC and EP controllers. Below PTM context are
+> exposed through sysfs:
+> 
+> PCIe RC
+> =======
+> 
+> 1. PTM Local clock
+> 2. PTM T2 timestamp
+> 3. PTM T3 timestamp
+> 4. PTM Context valid
+> 
+> PCIe EP
+> =======
+> 
+> 1. PTM Local clock
+> 2. PTM T1 timestamp
+> 3. PTM T4 timestamp
+> 4. PTM Master clock
+> 5. PTM Context update
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  Documentation/ABI/testing/sysfs-platform-dwc-pcie  |  70 ++++++
+>  MAINTAINERS                                        |   1 +
+>  drivers/pci/controller/dwc/Makefile                |   2 +-
+>  drivers/pci/controller/dwc/pcie-designware-ep.c    |   3 +
+>  drivers/pci/controller/dwc/pcie-designware-host.c  |   4 +
+>  drivers/pci/controller/dwc/pcie-designware-sysfs.c | 278 +++++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.c       |   6 +
+>  drivers/pci/controller/dwc/pcie-designware.h       |  22 ++
+>  include/linux/pcie-dwc.h                           |   8 +
+>  9 files changed, 393 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-platform-dwc-pcie b/Documentation/ABI/testing/sysfs-platform-dwc-pcie
+> new file mode 100644
+> index 000000000000..6b429108cd09
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-platform-dwc-pcie
 
-Not necessarily, the leaf handlers should unify around
-cxl_do_recovery(), however you will notice that CPER PCIe AER events get
-routed to the aer_recover_ring kfifo and native PCIe AER events get
-collected by the aer_rpc.aer_fifo.  Both of those route to
-pcie_do_recovery() on the backend.
+Should be a class or just a ptm group in the PCIe controller device? How
+generic are those attributes?
 
-The CXL kfifo is to allow the CXL subsystem to remain modular and only
-minimally burden the PCIe AER flow with just enough logic to determine
-"not a PCIe AER event".
+> @@ -0,0 +1,70 @@
+> +What:		/sys/devices/platform/*/dwc/ptm/ptm_local_clock
+> +Date:		February 2025
+> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +Description:
+> +		(RO) PTM local clock in nanoseconds. Applicable for both Root
+> +		Complex and Endpoint mode.
+> +
+> +What:		/sys/devices/platform/*/dwc/ptm/ptm_master_clock
+> +Date:		February 2025
+> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +Description:
+> +		(RO) PTM master clock in nanoseconds. Applicable only for
+> +		Endpoint mode.
+> +
+> +What:		/sys/devices/platform/*/dwc/ptm/ptm_t1
+> +Date:		February 2025
+> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +Description:
+> +		(RO) PTM T1 timestamp in nanoseconds. Applicable only for
+> +		Endpoint mode.
+> +
+> +What:		/sys/devices/platform/*/dwc/ptm/ptm_t2
+> +Date:		February 2025
+> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +Description:
+> +		(RO) PTM T2 timestamp in nanoseconds. Applicable only for
+> +		Root Complex mode.
+> +
+> +What:		/sys/devices/platform/*/dwc/ptm/ptm_t3
+> +Date:		February 2025
+> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +Description:
+> +		(RO) PTM T3 timestamp in nanoseconds. Applicable only for
+> +		Root Complex mode.
+> +
+> +What:		/sys/devices/platform/*/dwc/ptm/ptm_t4
+> +Date:		February 2025
+> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +Description:
+> +		(RO) PTM T4 timestamp in nanoseconds. Applicable only for
+> +		Endpoint mode.
+> +
+> +What:		/sys/devices/platform/*/dwc/ptm/ptm_context_update
+> +Date:		February 2025
+> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +Description:
+> +		(RW) Control the PTM context update mode. Applicable only for
+> +		Endpoint mode.
+> +
+> +		Following values are supported:
+> +
+> +		* auto = PTM context auto update trigger for every 10ms
+> +
+> +		* manual = PTM context manual update. Writing 'manual' to this
+> +			   file triggers PTM context update (default)
+> +
+> +What:		/sys/devices/platform/*/dwc/ptm/ptm_context_valid
+> +Date:		February 2025
+> +Contact:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +Description:
+> +		(RW) Control the PTM context validity (local clock timing).
+> +		Applicable only for Root Complex mode. PTM context is
+> +		invalidated by hardware if the Root Complex enters low power
+> +		mode or changes link frequency.
+> +
+> +		Following values are supported:
+> +
+> +		* 0 = PTM context invalid (default)
+> +
+> +		* 1 = PTM context valid
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b4d09d52a750..1c3e21cfbc6e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -18120,6 +18120,7 @@ M:	Jingoo Han <jingoohan1@gmail.com>
+>  M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Maintained
+> +F:	Documentation/ABI/testing/sysfs-platform-dwc-pcie
+>  F:	Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
+>  F:	Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
+>  F:	drivers/pci/controller/dwc/*designware*
+
+[...]
+
+> +
+> +static struct attribute *ptm_attrs[] = {
+> +	&dev_attr_ptm_context_update.attr,
+> +	&dev_attr_ptm_context_valid.attr,
+> +	&dev_attr_ptm_local_clock.attr,
+> +	&dev_attr_ptm_master_clock.attr,
+> +	&dev_attr_ptm_t1.attr,
+> +	&dev_attr_ptm_t2.attr,
+> +	&dev_attr_ptm_t3.attr,
+> +	&dev_attr_ptm_t4.attr,
+> +	NULL
+> +};
+> +
+> +static umode_t ptm_attr_visible(struct kobject *kobj, struct attribute *attr,
+> +				int n)
+> +{
+> +	struct device *dev = container_of(kobj, struct device, kobj);
+> +	struct dw_pcie *pci = dev_get_drvdata(dev);
+> +
+> +	/* RC only needs local, t2 and t3 clocks and context_valid */
+> +	if ((attr == &dev_attr_ptm_t1.attr && pci->mode == DW_PCIE_RC_TYPE) ||
+> +	    (attr == &dev_attr_ptm_t4.attr && pci->mode == DW_PCIE_RC_TYPE) ||
+> +	    (attr == &dev_attr_ptm_master_clock.attr && pci->mode == DW_PCIE_RC_TYPE) ||
+> +	    (attr == &dev_attr_ptm_context_update.attr && pci->mode == DW_PCIE_RC_TYPE))
+> +		return 0;
+
+The pci->mode checks definitely can be refactored to a top-level instead
+of being repeated on each line.
+
+> +
+> +	/* EP only needs local, master, t1, and t4 clocks and context_update */
+> +	if ((attr == &dev_attr_ptm_t2.attr && pci->mode == DW_PCIE_EP_TYPE) ||
+> +	    (attr == &dev_attr_ptm_t3.attr && pci->mode == DW_PCIE_EP_TYPE) ||
+> +	    (attr == &dev_attr_ptm_context_valid.attr && pci->mode == DW_PCIE_EP_TYPE))
+> +		return 0;
+> +
+> +	return attr->mode;
+
+I think it might be better to register two separate groups, one for RC,
+one for EP and use presense of the corresponding capability in the
+.is_visible callback to check if the PTM attributes should be visible at
+all.
+
+> +}
+> +
+> +static const struct attribute_group ptm_attr_group = {
+> +	.name = "ptm",
+> +	.attrs = ptm_attrs,
+> +	.is_visible = ptm_attr_visible,
+> +};
+> +
+> +static const struct attribute_group *dwc_pcie_attr_groups[] = {
+> +	&ptm_attr_group,
+> +	NULL,
+> +};
+> +
+> +static void pcie_designware_sysfs_release(struct device *dev)
+> +{
+> +	kfree(dev);
+> +}
+> +
+> +void pcie_designware_sysfs_init(struct dw_pcie *pci,
+> +				    enum dw_pcie_device_mode mode)
+> +{
+> +	struct device *dev;
+> +	int ret;
+> +
+> +	/* Check for capabilities before creating sysfs attrbutes */
+> +	ret = dw_pcie_find_ptm_capability(pci);
+> +	if (!ret) {
+> +		dev_dbg(pci->dev, "PTM capability not present\n");
+> +		return;
+> +	}
+> +
+> +	pci->ptm_vsec_offset = ret;
+> +	pci->mode = mode;
+> +
+> +	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+> +	if (!dev)
+> +		return;
+> +
+> +	device_initialize(dev);
+> +	dev->groups = dwc_pcie_attr_groups;
+> +	dev->release = pcie_designware_sysfs_release;
+> +	dev->parent = pci->dev;
+> +	dev_set_drvdata(dev, pci);
+> +
+> +	ret = dev_set_name(dev, "dwc");
+> +	if (ret)
+> +		goto err_free;
+> +
+> +	ret = device_add(dev);
+> +	if (ret)
+> +		goto err_free;
+> +
+> +	pci->sysfs_dev = dev;
+
+Why do you need to add a new device under the PCIe controller?
+
+> +
+> +	return;
+> +
+> +err_free:
+> +	put_device(dev);
+> +}
+> +
+> +void pcie_designware_sysfs_exit(struct dw_pcie *pci)
+> +{
+> +	if (pci->sysfs_dev)
+> +		device_unregister(pci->sysfs_dev);
+> +}
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index a7c0671c6715..30825ec0648e 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -323,6 +323,12 @@ static u16 dw_pcie_find_vsec_capability(struct dw_pcie *pci,
+>  	return 0;
+>  }
+>  
+> +u16 dw_pcie_find_ptm_capability(struct dw_pcie *pci)
+> +{
+> +	return dw_pcie_find_vsec_capability(pci, dwc_pcie_ptm_vsec_ids);
+> +}
+> +EXPORT_SYMBOL_GPL(dw_pcie_find_ptm_capability);
+
+This API should go into the previous patch. Otherwise it will result in
+unused function warnings.
+
+> +
+>  int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+>  {
+>  	if (!IS_ALIGNED((uintptr_t)addr, size)) {
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 501d9ddfea16..7d3cbdce37c8 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -260,6 +260,21 @@
+>  
+>  #define PCIE_RAS_DES_EVENT_COUNTER_DATA		0xc
+>  
+> +/* PTM register definitions */
+> +#define PTM_RES_REQ_CTRL		0x8
+> +#define PTM_RES_CCONTEXT_VALID		BIT(0)
+> +#define PTM_REQ_AUTO_UPDATE_ENABLED	BIT(0)
+> +#define PTM_REQ_START_UPDATE		BIT(1)
+> +
+> +#define PTM_LOCAL_LSB			0x10
+> +#define PTM_LOCAL_MSB			0x14
+> +#define PTM_T1_T2_LSB			0x18
+> +#define PTM_T1_T2_MSB			0x1c
+> +#define PTM_T3_T4_LSB			0x28
+> +#define PTM_T3_T4_MSB			0x2c
+> +#define PTM_MASTER_LSB			0x38
+> +#define PTM_MASTER_MSB			0x3c
+> +
+>  /*
+>   * The default address offset between dbi_base and atu_base. Root controller
+>   * drivers are not required to initialize atu_base if the offset matches this
+> @@ -439,6 +454,7 @@ struct dw_pcie_ops {
+>  
+>  struct dw_pcie {
+>  	struct device		*dev;
+> +	struct device		*sysfs_dev;
+>  	void __iomem		*dbi_base;
+>  	resource_size_t		dbi_phys_addr;
+>  	void __iomem		*dbi_base2;
+> @@ -464,6 +480,8 @@ struct dw_pcie {
+>  	struct reset_control_bulk_data	app_rsts[DW_PCIE_NUM_APP_RSTS];
+>  	struct reset_control_bulk_data	core_rsts[DW_PCIE_NUM_CORE_RSTS];
+>  	struct gpio_desc		*pe_rst;
+> +	u16			ptm_vsec_offset;
+> +	enum			dw_pcie_device_mode mode;
+>  	bool			suspended;
+>  };
+>  
+> @@ -478,6 +496,7 @@ void dw_pcie_version_detect(struct dw_pcie *pci);
+>  
+>  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap);
+>  u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap);
+> +u16 dw_pcie_find_ptm_capability(struct dw_pcie *pci);
+>  
+>  int dw_pcie_read(void __iomem *addr, int size, u32 *val);
+>  int dw_pcie_write(void __iomem *addr, int size, u32 val);
+> @@ -499,6 +518,9 @@ void dw_pcie_setup(struct dw_pcie *pci);
+>  void dw_pcie_iatu_detect(struct dw_pcie *pci);
+>  int dw_pcie_edma_detect(struct dw_pcie *pci);
+>  void dw_pcie_edma_remove(struct dw_pcie *pci);
+> +void pcie_designware_sysfs_init(struct dw_pcie *pci,
+> +				enum dw_pcie_device_mode mode);
+> +void pcie_designware_sysfs_exit(struct dw_pcie *pci);
+>  
+>  static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
+>  {
+> diff --git a/include/linux/pcie-dwc.h b/include/linux/pcie-dwc.h
+> index 261ae11d75a4..13835896290a 100644
+> --- a/include/linux/pcie-dwc.h
+> +++ b/include/linux/pcie-dwc.h
+> @@ -31,4 +31,12 @@ static const struct dwc_pcie_vsec_id dwc_pcie_pmu_vsec_ids[] = {
+>  	{} /* terminator */
+>  };
+>  
+> +static const struct dwc_pcie_vsec_id dwc_pcie_ptm_vsec_ids[] = {
+> +	{ .vendor_id = PCI_VENDOR_ID_QCOM, /* EP */
+> +	  .vsec_id = 0x03, .vsec_rev = 0x1 },
+> +	{ .vendor_id = PCI_VENDOR_ID_QCOM, /* RC */
+> +	  .vsec_id = 0x04, .vsec_rev = 0x1 },
+> +	{ }
+> +};
+> +
+>  #endif /* LINUX_PCIE_DWC_H */
+> 
+> -- 
+> 2.25.1
+> 
+> 
+
+-- 
+With best wishes
+Dmitry
 
