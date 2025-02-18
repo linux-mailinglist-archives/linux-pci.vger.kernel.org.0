@@ -1,66 +1,63 @@
-Return-Path: <linux-pci+bounces-21765-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21766-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DA91A3AB77
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 23:07:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 153EAA3AB90
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 23:21:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C6FD1897502
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 22:07:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64F73166282
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 22:20:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB3791D0F5A;
-	Tue, 18 Feb 2025 22:07:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B83D1D6DAD;
+	Tue, 18 Feb 2025 22:20:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBWsNAQn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rrps7Z44"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60B91C701A;
-	Tue, 18 Feb 2025 22:07:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE331D5ADD;
+	Tue, 18 Feb 2025 22:20:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739916450; cv=none; b=bQPC7pVxyP+cYy3TnOm0IYoXkonIrRdfXFposG9A2h8idOupj/Hi8pjQDJfyIlh09yPgwyGj+mlDEbeEKd5W7nT6iK0olRP6r+g7R35XAEL9lfdmO7ntUAlwzWMZtZ2n2Czeahk/dgPNYvndlbKbKtaOhmmD+o3/mnLuxJaXZ/A=
+	t=1739917213; cv=none; b=HhLmeBgg0jblWRJGqtmqyJa2e6xJjryTR16iOB8u0XiRDkkLFN1oQp5hPjopTpiKQ3HzvjU9vRMGQD6xrWflTK4vw2p6YPoHg+a9qL0yzbUZ4t73c4p/DmVQA8lEZY4jBLKLcG5KrXi/pyTS+5m3qf5IGms9rcAp2gDbEEgapFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739916450; c=relaxed/simple;
-	bh=NZOWiC+glLsY8qZo0mE4K4nGd+wVcIoNUq4I6bumeiU=;
+	s=arc-20240116; t=1739917213; c=relaxed/simple;
+	bh=I0IiWl4AnootTxUzZoy1+8cUWjBHZs4frbwCdopXAg0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=co6zHLJAKma3Bq5y/xrnI4pawUOktAtQODf3yAPxPn0IjUDYOmO1VCy2eTsu6o/QOT6EKGJFFYAJbmhpDy2wUlo0v8NIl3W1NNb36+vazkgJx5R+rMvhKsDRkOBS6TFRx7awesjLv0VFzcMB66ELLogXq7f4cmjmvoNPd3JpLk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBWsNAQn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1A86C4CEE2;
-	Tue, 18 Feb 2025 22:07:29 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=QoFnd4+ntOnlpOFIJDt6ETw09+4Yk5wCkcRdjSeRFMGwWs062sOGtIC6gH85pg7rEXgUwHAI7vIq7/9D9JcibTNvpmHzOPn8JmcfnaLK59ghzToz+yjruEVjHZ1aIZdgwsSUtL3JwSUOlSoZRO0aXMFyoAIYAqMZ8Lg/iRLbZC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rrps7Z44; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279B0C4CEE2;
+	Tue, 18 Feb 2025 22:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739916450;
-	bh=NZOWiC+glLsY8qZo0mE4K4nGd+wVcIoNUq4I6bumeiU=;
+	s=k20201202; t=1739917213;
+	bh=I0IiWl4AnootTxUzZoy1+8cUWjBHZs4frbwCdopXAg0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=XBWsNAQnXEBFVzMi2wOxo+aI15uZwNSrE7WK8dzWdCzuS131u3gCjVmwyiEFHMNm3
-	 pM6H8UtOGiaVKAMtsQvc6PPBZ1SJOTiF9SXc0SzOe2qKqNznBRCwvGn2bAaxNUkvqL
-	 o1Eeab/OepqaasRX0QMayV8ABDywbK5xFer3PEHM760RpbkNoqIytbQmtzqryOuX/V
-	 x10DlupQiN7JHfUdErs+Ya7QroonPr2jf2IZa0qJRneU1f/r509POY5CNCt2i49Czm
-	 sMG+SJDZ4n6lgQGEnnhWhiCjXSSk4SXGH4V3LRpDeCEkchs49lb/kxYshH3Hi6D1l+
-	 bodSzda7o3FvA==
-Date: Tue, 18 Feb 2025 16:07:28 -0600
+	b=Rrps7Z44DLlKlKnb0wY8EJKfdtd8Ey5K0Qqk8Ge0taW+FQve+1T9LZzmfk7v4ka2K
+	 tsMa+sH8sjsEnjNF9HrryaytVI/lCPW0U3GsE17MBnOJD4jjN3C93dAAVwJ0POGFzB
+	 59AJrJj8Bi+ceGQADfBOT2ylJZNWJkItUn0c4CyRCc7sZKIQbvToiumo5KTgRwb/8p
+	 8ZARjP57ZlY4xgM4cyeArBDoiW924fvbn89JCYBXcksyAbjFiDz82w6JYE9tMDAAa/
+	 hgzWOFs8/ZMEFBH9p4pCpvLLV1uOcuoisXe/FCJMlR79dp0EnCdsF9TU+2yaCayCix
+	 js8svsniGh+TA==
+Date: Tue, 18 Feb 2025 16:20:11 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Linux PCI <linux-pci@vger.kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Johan Hovold <johan@kernel.org>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	mhi@lists.linux.dev, linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org, quic_jjohnson@quicinc.com,
-	quic_pyarlaga@quicinc.com, quic_vbadigan@quicinc.com,
-	quic_vpernami@quicinc.com, quic_mrana@quicinc.com
-Subject: Re: [PATCH 4/8] PCI: dwc: qcom: Update ICC & OPP votes based upon
- the requested speed
-Message-ID: <20250218220728.GA194681@bhelgaas>
+	Jon Hunter <jonathanh@nvidia.com>,
+	Linux ACPI <linux-acpi@vger.kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v2 3/4] PM: sleep: Use DPM_FLAG_SMART_SUSPEND
+ conditionally
+Message-ID: <20250218222011.GA196831@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,64 +66,251 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250217-mhi_bw_up-v1-4-9bad1e42bdb1@oss.qualcomm.com>
+In-Reply-To: <1914558.tdWV9SEqCh@rjwysocki.net>
 
-Make subject line match history for this file.
+On Tue, Feb 18, 2025 at 09:16:48PM +0100, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> A recent discussion has revealed that using DPM_FLAG_SMART_SUSPEND
+> unconditionally is generally problematic because it may lead to
+> situations in which the device's runtime PM information is internally
+> inconsistent or does not reflect its real state [1].
+> 
+> For this reason, change the handling of DPM_FLAG_SMART_SUSPEND so that
+> it is only taken into account if it is consistently set by the drivers
+> of all devices having any PM callbacks throughout dependency graphs in
+> accordance with the following rules:
+> 
+>  - The "smart suspend" feature is only enabled for devices whose drivers
+>    ask for it (that is, set DPM_FLAG_SMART_SUSPEND) and for devices
+>    without PM callbacks unless they have never had runtime PM enabled.
+> 
+>  - The "smart suspend" feature is not enabled for a device if it has not
+>    been enabled for the device's parent unless the parent does not take
+>    children into account or it has never had runtime PM enabled.
+> 
+>  - The "smart suspend" feature is not enabled for a device if it has not
+>    been enabled for one of the device's suppliers taking runtime PM into
+>    account unless that supplier has never had runtime PM enabled.
+> 
+> Namely, introduce a new device PM flag called smart_suspend that is only
+> set if the above conditions are met and update all DPM_FLAG_SMART_SUSPEND
+> users to check power.smart_suspend instead of directly checking the
+> latter.
+> 
+> At the same time, drop the power.set_active flage introduced recently
+> in commit 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status
+> of parents and children") because it is now sufficient to check
+> power.smart_suspend along with the dev_pm_skip_resume() return value
+> to decide whether or not pm_runtime_set_active() needs to be called
+> for the device.
+> 
+> Link: https://lore.kernel.org/linux-pm/CAPDyKFroyU3YDSfw_Y6k3giVfajg3NQGwNWeteJWqpW29BojhQ@mail.gmail.com/  [1]
+> Fixes: 7585946243d6 ("PM: sleep: core: Restrict power.set_active propagation")
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-On Mon, Feb 17, 2025 at 12:04:11PM +0530, Krishna Chaitanya Chundru wrote:
-> QCOM PCIe controllers needs to disable ASPM before initiating link
-> re-train. So as part of pre_bw_scale() disable ASPM and as part of
-> post_scale_bus_bw() enable ASPM back.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com> # drivers/pci
 
-s/needs/need/
-
-Why does Qcom need to disable ASPM?  Is there a PCIe spec restriction
-about this that should be applied to all PCIe host bridges?  Or is
-this a Qcom defect?
-
-> Update ICC & OPP votes based on the requested speed so that RPMh votes
-> gets updated based on the speed.
-
-s/gets/get/
-
-> Bring out the core logic from qcom_pcie_icc_opp_update() to new function
-> qcom_pcie_set_icc_opp().
-
-This refactoring possibly could be a separate patch to make the meat
-of this change clearer.
-
-> +static int qcom_pcie_set_icc_opp(struct qcom_pcie *pcie, int speed, int width)
+> ---
+> 
+> v1 -> v2:
+>    * Add helper function for reading power.smart_suspend() (Ulf), add the R-by.
+>    * Rearrange conditionals in device_prepare_smart_suspend() so that the checks
+>      involving locking are done last.
+> 
+> ---
+>  drivers/acpi/device_pm.c  |    4 +-
+>  drivers/base/power/main.c |   63 +++++++++++++++++++++++++++++++++++-----------
+>  drivers/mfd/intel-lpss.c  |    2 -
+>  drivers/pci/pci-driver.c  |    6 +---
+>  include/linux/device.h    |    5 +++
+>  include/linux/pm.h        |    2 -
+>  6 files changed, 60 insertions(+), 22 deletions(-)
+> 
+> --- a/drivers/acpi/device_pm.c
+> +++ b/drivers/acpi/device_pm.c
+> @@ -1161,7 +1161,7 @@
+>   */
+>  int acpi_subsys_suspend(struct device *dev)
+>  {
+> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
+> +	if (!dev_pm_smart_suspend(dev) ||
+>  	    acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
+>  		pm_runtime_resume(dev);
+>  
+> @@ -1320,7 +1320,7 @@
+>   */
+>  int acpi_subsys_poweroff(struct device *dev)
+>  {
+> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
+> +	if (!dev_pm_smart_suspend(dev) ||
+>  	    acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
+>  		pm_runtime_resume(dev);
+>  
+> --- a/drivers/base/power/main.c
+> +++ b/drivers/base/power/main.c
+> @@ -656,15 +656,13 @@
+>  	 * so change its status accordingly.
+>  	 *
+>  	 * Otherwise, the device is going to be resumed, so set its PM-runtime
+> -	 * status to "active" unless its power.set_active flag is clear, in
+> +	 * status to "active" unless its power.smart_suspend flag is clear, in
+>  	 * which case it is not necessary to update its PM-runtime status.
+>  	 */
+> -	if (skip_resume) {
+> +	if (skip_resume)
+>  		pm_runtime_set_suspended(dev);
+> -	} else if (dev->power.set_active) {
+> +	else if (dev_pm_smart_suspend(dev))
+>  		pm_runtime_set_active(dev);
+> -		dev->power.set_active = false;
+> -	}
+>  
+>  	if (dev->pm_domain) {
+>  		info = "noirq power domain ";
+> @@ -1282,14 +1280,8 @@
+>  	      dev->power.may_skip_resume))
+>  		dev->power.must_resume = true;
+>  
+> -	if (dev->power.must_resume) {
+> -		if (dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) {
+> -			dev->power.set_active = true;
+> -			if (dev->parent && !dev->parent->power.ignore_children)
+> -				dev->parent->power.set_active = true;
+> -		}
+> +	if (dev->power.must_resume)
+>  		dpm_superior_set_must_resume(dev);
+> -	}
+>  
+>  Complete:
+>  	complete_all(&dev->power.completion);
+> @@ -1797,6 +1789,49 @@
+>  	return error;
+>  }
+>  
+> +static void device_prepare_smart_suspend(struct device *dev)
 > +{
-> +	struct dw_pcie *pci = pcie->pci;
-> +	unsigned long freq_kbps;
-> +	struct dev_pm_opp *opp;
-> +	int ret, freq_mbps;
+> +	struct device_link *link;
+> +	int idx;
 > +
-> +	if (pcie->icc_mem) {
-> +		ret = icc_set_bw(pcie->icc_mem, 0,
-> +				 width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
-> +		if (ret) {
-> +			dev_err(pci->dev, "Failed to set bandwidth for PCIe-MEM interconnect path: %d\n",
-> +				ret);
-> +		}
-> +	} else if (pcie->use_pm_opp) {
-> +		freq_mbps = pcie_dev_speed_mbps(pcie_link_speed[speed]);
-> +		if (freq_mbps < 0)
-> +			return -EINVAL;
+> +	/*
+> +	 * The "smart suspend" feature is enabled for devices whose drivers ask
+> +	 * for it and for devices without PM callbacks unless runtime PM is
+> +	 * disabled and enabling it is blocked for them.
+> +	 *
+> +	 * However, if "smart suspend" is not enabled for the device's parent
+> +	 * or any of its suppliers that take runtime PM into account, it cannot
+> +	 * be enabled for the device either.
+> +	 */
+> +	dev->power.smart_suspend = (dev->power.no_pm_callbacks ||
+> +		dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) &&
+> +		!pm_runtime_blocked(dev);
 > +
-> +		freq_kbps = freq_mbps * KILO;
-> +		opp = dev_pm_opp_find_freq_exact(pci->dev, freq_kbps * width,
-> +						 true);
-> +		if (!IS_ERR(opp)) {
-> +			ret = dev_pm_opp_set_opp(pci->dev, opp);
-> +			if (ret)
-> +				dev_err(pci->dev, "Failed to set OPP for freq (%lu): %d\n",
-> +					freq_kbps * width, ret);
-> +			dev_pm_opp_put(opp);
+> +	if (!dev_pm_smart_suspend(dev))
+> +		return;
+> +
+> +	if (dev->parent && !dev_pm_smart_suspend(dev->parent) &&
+> +	    !dev->parent->power.ignore_children && !pm_runtime_blocked(dev->parent)) {
+> +		dev->power.smart_suspend = false;
+> +		return;
+> +	}
+> +
+> +	idx = device_links_read_lock();
+> +
+> +	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
+> +		if (!(link->flags | DL_FLAG_PM_RUNTIME))
+> +			continue;
+> +
+> +		if (!dev_pm_smart_suspend(link->supplier) &&
+> +		    !pm_runtime_blocked(link->supplier)) {
+> +			dev->power.smart_suspend = false;
+> +			break;
 > +		}
 > +	}
 > +
-> +	return ret;
-
-Looks uninitialized in some paths.
+> +	device_links_read_unlock(idx);
+> +}
+> +
+>  /**
+>   * device_prepare - Prepare a device for system power transition.
+>   * @dev: Device to handle.
+> @@ -1858,6 +1893,7 @@
+>  		pm_runtime_put(dev);
+>  		return ret;
+>  	}
+> +	device_prepare_smart_suspend(dev);
+>  	/*
+>  	 * A positive return value from ->prepare() means "this device appears
+>  	 * to be runtime-suspended and its state is fine, so if it really is
+> @@ -2033,6 +2069,5 @@
+>  
+>  bool dev_pm_skip_suspend(struct device *dev)
+>  {
+> -	return dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) &&
+> -		pm_runtime_status_suspended(dev);
+> +	return dev_pm_smart_suspend(dev) && pm_runtime_status_suspended(dev);
+>  }
+> --- a/drivers/mfd/intel-lpss.c
+> +++ b/drivers/mfd/intel-lpss.c
+> @@ -480,7 +480,7 @@
+>  
+>  static int resume_lpss_device(struct device *dev, void *data)
+>  {
+> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND))
+> +	if (!dev_pm_smart_suspend(dev))
+>  		pm_runtime_resume(dev);
+>  
+>  	return 0;
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -812,8 +812,7 @@
+>  	 * suspend callbacks can cope with runtime-suspended devices, it is
+>  	 * better to resume the device from runtime suspend here.
+>  	 */
+> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
+> -	    pci_dev_need_resume(pci_dev)) {
+> +	if (!dev_pm_smart_suspend(dev) || pci_dev_need_resume(pci_dev)) {
+>  		pm_runtime_resume(dev);
+>  		pci_dev->state_saved = false;
+>  	} else {
+> @@ -1151,8 +1150,7 @@
+>  	}
+>  
+>  	/* The reason to do that is the same as in pci_pm_suspend(). */
+> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
+> -	    pci_dev_need_resume(pci_dev)) {
+> +	if (!dev_pm_smart_suspend(dev) || pci_dev_need_resume(pci_dev)) {
+>  		pm_runtime_resume(dev);
+>  		pci_dev->state_saved = false;
+>  	} else {
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -1025,6 +1025,11 @@
+>  	return !!(dev->power.driver_flags & flags);
+>  }
+>  
+> +static inline bool dev_pm_smart_suspend(struct device *dev)
+> +{
+> +	return dev->power.smart_suspend;
+> +}
+> +
+>  static inline void device_lock(struct device *dev)
+>  {
+>  	mutex_lock(&dev->mutex);
+> --- a/include/linux/pm.h
+> +++ b/include/linux/pm.h
+> @@ -680,8 +680,8 @@
+>  	bool			syscore:1;
+>  	bool			no_pm_callbacks:1;	/* Owned by the PM core */
+>  	bool			async_in_progress:1;	/* Owned by the PM core */
+> +	bool			smart_suspend:1;	/* Owned by the PM core */
+>  	bool			must_resume:1;		/* Owned by the PM core */
+> -	bool			set_active:1;		/* Owned by the PM core */
+>  	bool			may_skip_resume:1;	/* Set by subsystems */
+>  #else
+>  	bool			should_wakeup:1;
+> 
+> 
+> 
 
