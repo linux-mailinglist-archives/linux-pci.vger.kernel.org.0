@@ -1,119 +1,114 @@
-Return-Path: <linux-pci+bounces-21763-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21764-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24179A3A912
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 21:32:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22293A3AB4A
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 22:44:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 77D383B7EF2
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 20:30:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 139633A61E7
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 21:44:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28DD21E25E3;
-	Tue, 18 Feb 2025 20:25:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A57D1CDFD4;
+	Tue, 18 Feb 2025 21:44:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpEU+jCM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mLHG70B9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033561D63CC;
-	Tue, 18 Feb 2025 20:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB9B2862A5;
+	Tue, 18 Feb 2025 21:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739910348; cv=none; b=FE3DRTTc7KJZSBdauVcmrOfN5elSKBLeJsAK2wx6RD4XUXI0p8y+6kF19c45oprBabRHvzL3YfiThBrr5unxHyBpzdZfzSbwZ46pADGwIT2qDUX6kc0TtjqgH0zD8tcmdyj5X+6ztqsR6U2YCKkzLy9H7hX0WH9GH9hC1f+z1A0=
+	t=1739915079; cv=none; b=eZ84T+Spsm/LgkTRvBUveoVA74vslXNAlRqDLl2kfhVTjRvBE/Q2JfS9x796bHaCkIT3QscOm4uvnqL8LdI4l1x0m9LxCpb15SWVupQWUbFOAJYm8J6pzBrgH0ehOT9JKZlNFeR9liYWMcarEiuR7tjPK3vqWoFTApDc6vmucnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739910348; c=relaxed/simple;
-	bh=RLervQf979kstkgoUrYWN04RQ6hrfhFVnDHU20XRDZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=sG1vtIPZzZF/ZC461R7gjDXAiilx5oM+DiWyEq0LsrQ8K18bL8UL+sXC/wr3CGiYpsY5jy2qGEUY8R6zJwjMvLPaCsvrzwVUx2wrmXHoEfNiyTCznAefOhXXw2EhUlPRqVL0EQjd1OTvAh70Ua8iewzNI8ZS//fJCgf8Mzz+SGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpEU+jCM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EFD6C4CEE4;
-	Tue, 18 Feb 2025 20:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739910347;
-	bh=RLervQf979kstkgoUrYWN04RQ6hrfhFVnDHU20XRDZo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=cpEU+jCMGRMpzZ2LsCrYuDeOQr8uj/u/3r/DxNIWyPabKIAVhqs3CanHpl/261VjX
-	 XJ5sLxzJWt+ZCDBK2kUoTv2hNRPNWQkS67F/PP6pg2bCgB2fZsh4cRRK0k1Lk0tM9F
-	 LmqM2gPZ8SftTUPw9sETiM8HuNaZgfM/VVg7y5d49Hr8WF2V+v67WQTnkn8VkOhrsq
-	 7Es9mVR/u9JmmCQvr0eFZ3gO3W7D8V6exoIIYASGUwYGcjAquNIG0ZNA78GYRpD2/9
-	 ZuP8PKYBRxQzzyYRDIXlPoldtjrVhmsDv2Qlz8e2cEIp5ZdMWtkL5FGVdUnGTWMxxO
-	 WKI9clUXzmDow==
-Date: Tue, 18 Feb 2025 14:25:45 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Subject: Re: [PATCH] PCI: Update Resizable BAR Capability Register fields
-Message-ID: <20250218202545.GA177904@bhelgaas>
+	s=arc-20240116; t=1739915079; c=relaxed/simple;
+	bh=W+pJ7fkzR5SYWeUg2yaBW1+rHQotkuFqRrRIpePuwnQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Jy6b2kxXa48C5PwEnpImsnIMxOUySR7bDJy6z6jWYyufPcrrWKIdby4eAbeuV7aESXbGCX7EAgOhQjeutu7mNHwW9Rs2ku+O0ppe30de7kaSfh4LZ2MuhAu3byL52II04xEpbQ5SH2c0KzG2RTQqJEMwdIxKSRUofC8bJjY99mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mLHG70B9; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739915078; x=1771451078;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=W+pJ7fkzR5SYWeUg2yaBW1+rHQotkuFqRrRIpePuwnQ=;
+  b=mLHG70B9NQs1PX2yQIZtmDXXdyG5asDqN8EFAwbN5XA6yD2t2ivQgJIm
+   kJjgIlzICY64UbwpNVpeXDprDncaQRd96Ys9cxuz0jXhbHwrSHmc3XAJU
+   H7sMxDpKj1HmxvBEfhxPYnXBeGWwaf3lyHM0BOAXeo0wuK4o/nOdNxaFT
+   Jz/9IH9H3ouwZ0iKAdg+RPmt0rj+zuNX2zVFfImVmCR0jKi785i93n6f1
+   rN5pNDRmpqyXmeLx9RMLtGViAqBsbhSN2Ki2trtfTwUoqd5NuwtO7Yp2D
+   0rSYW/kd5Tf2/cxZWzgQeaW4d37+6tcIP9j1S+lHjpNJvwMtE6YJpmKRh
+   A==;
+X-CSE-ConnectionGUID: L44NtO3KTJqNIpG39P5D6w==
+X-CSE-MsgGUID: auHiXmMISCiNNmFJBiPHRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44392115"
+X-IronPort-AV: E=Sophos;i="6.13,296,1732608000"; 
+   d="scan'208";a="44392115"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 13:44:38 -0800
+X-CSE-ConnectionGUID: ZnrSGHdBQiKOR5Q5AX3MPw==
+X-CSE-MsgGUID: abLMHqF7TBqct4g1dE2xvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115414299"
+Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 13:44:36 -0800
+Date: Tue, 18 Feb 2025 13:44:36 -0800 (PST)
+From: matthew.gerlach@linux.intel.com
+To: Krzysztof Kozlowski <krzk@kernel.org>
+cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
+    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
+    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
+    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
+    peter.colberg@altera.com
+Subject: Re: [PATCH v7 3/7] arm64: dts: agilex: Fix fixed-clock schema
+ warnings
+In-Reply-To: <20250216-astonishing-funky-skylark-c64bba@krzk-bin>
+Message-ID: <c5755f14-3efd-d4ef-4e34-6446608dedfd@linux.intel.com>
+References: <20250215155359.321513-1-matthew.gerlach@linux.intel.com> <20250215155359.321513-4-matthew.gerlach@linux.intel.com> <20250216-astonishing-funky-skylark-c64bba@krzk-bin>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250218064003.238868-1-daizhiyuan@phytium.com.cn>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-[+cc Christian]
 
-On Tue, Feb 18, 2025 at 02:40:03PM +0800, Zhiyuan Dai wrote:
-> This commit modifies the Resizable BAR Capability Register fields to better
-> support varying BAR sizes. Additionally, the function `pci_rebar_get_possible_sizes`
-> has been updated with a more detailed comment to clarify its role in querying
-> and returning the supported BAR sizes.
-> 
-> For more details, refer to PCI Express庐 Base Specification Revision 5.0, Section 7.8.6.2.
 
-Wrap to fit in 75 columns.
+On Sun, 16 Feb 2025, Krzysztof Kozlowski wrote:
 
-Drop "庐" above.
+> On Sat, Feb 15, 2025 at 09:53:55AM -0600, Matthew Gerlach wrote:
+>> All Agilex SoCs have the fixed-clocks defined in socfpga_agilex.dsti,
+>
+>
+> That's not what I asked / talked about. If the clocks are in SoC, they
+> cannot be disabled.
 
-Update spec citation to r6.x.
+There are two clocks, cb_intoosc_hs_div2_clk and cb_intosc_ls_clk, in the 
+SoC with a known frequency. These warnings can be fixed in the DTSI.
 
-Spec r6.0 defines BAR size up to 8 EB (2^63 bytes), but supporting
-anything bigger than 128TB requires changes to
-pci_rebar_get_possible_sizes() to read the additional Capability bits
-from the Control register.
+>
+> If they clocks are not in SoC, they should not be in DTSI.
 
-> Signed-off-by: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
-> ---
->  drivers/pci/pci.c             | 2 +-
->  include/uapi/linux/pci_regs.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 661f98c6c63a..03fe5e6e1d72 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3752,7 +3752,7 @@ static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
->   * @bar: BAR to query
->   *
->   * Get the possible sizes of a resizable BAR as bitmask defined in the spec
-> - * (bit 0=1MB, bit 19=512GB). Returns 0 if BAR isn't resizable.
-> + * (bit 0=1MB, bit 31=128TB). Returns 0 if BAR isn't resizable.
->   */
->  u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
->  {
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 1601c7ed5fab..ce99d4f34ce5 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1013,7 +1013,7 @@
->  
->  /* Resizable BARs */
->  #define PCI_REBAR_CAP		4	/* capability register */
-> -#define  PCI_REBAR_CAP_SIZES		0x00FFFFF0  /* supported BAR sizes */
-> +#define  PCI_REBAR_CAP_SIZES		0xFFFFFFF0  /* supported BAR sizes */
->  #define PCI_REBAR_CTRL		8	/* control register */
->  #define  PCI_REBAR_CTRL_BAR_IDX		0x00000007  /* BAR index */
->  #define  PCI_REBAR_CTRL_NBAR_MASK	0x000000E0  /* # of resizable BARs */
-> -- 
-> 2.43.0
-> 
+The two clocks, f2s_free_clk and osc1, are not in the SoC; so they should 
+be removed from DTSI.
+
+>
+> These were my statements last time and this patch does not comple.
+> Commit msg does not explain why this should be done differently.
+>
+> Best regards,
+> Krzysztof
+>
+>
+
+Thanks for the feedback,
+Matthew Gerlach
 
