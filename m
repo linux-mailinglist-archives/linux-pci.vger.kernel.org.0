@@ -1,52 +1,79 @@
-Return-Path: <linux-pci+bounces-21736-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21740-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BA1CA3A019
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 15:38:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A200A3A040
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 15:44:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 47090189482C
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 14:38:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CBA617A42A
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 14:39:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04DA126B099;
-	Tue, 18 Feb 2025 14:36:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E425B26E171;
+	Tue, 18 Feb 2025 14:37:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mi1FAJjd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PBE19Myi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB0826AA8D;
-	Tue, 18 Feb 2025 14:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA8526B2DB;
+	Tue, 18 Feb 2025 14:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739889418; cv=none; b=DdjZ9Y34dQnPStZziv9+VjLjEEmHL++WQDNAC3TSKu/SFcqvHzqB0tqxP/lHwl6lTkulhN9IiW7t+QnYCnGFHeJ2Xf6JEQYsSxwUMwyD6jBVQed08D8nsqHA1l6qgrbNYFcn1p2vcVTd5nEZs0PA5BQihkXEyVxIYjC+oA7jX/Y=
+	t=1739889472; cv=none; b=pYSap0VBHWCZ52iRCkfO3cwNV9WIpu/GN8FW8Rsp6MEs3APr8n691XmVGfb0Cj6MwE4PBbr7j8pCwYELLHXe6HooxhNQDBYNpb0Z8h70DZlOFiPEZZoIZUCD5dNd0PWDDj69PAEwCYkU/COGV3ehwIU4BPfY+I+cNTP2mo82F0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739889418; c=relaxed/simple;
-	bh=96dzHbNUlonjbIF4OjJogOraBYUUAqyVClMsMXe91/E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VYP3kBJKfR19+4Sj4rRTXfl4k+DvNNik+zpLssh75R2E2GF7ZNZaK0IjSRfUgKKArijwGvxYBaZYfPExmdYJ572B+rjs5v0lRM1AV1Fe6IX5BTepPPOYxXH3UUYX6e0DdUYXv/VCv0SHgMVkEf8EouJM+guNfILqQyWmkB8or1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mi1FAJjd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7882BC4CEEC;
-	Tue, 18 Feb 2025 14:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739889418;
-	bh=96dzHbNUlonjbIF4OjJogOraBYUUAqyVClMsMXe91/E=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=mi1FAJjdE5tCGT+xgGO+2PtN+j4OMI4wQjoObwvkV+7oSqqLTI9nt/kXTO9ajuliB
-	 W2DfOFP4siqKsKWg4IeVTVFVbLPJ/WoifbO7m8VcwmYUPuTLsCOHm0YgMLEfdYt859
-	 odnppm7yEz+HFsZJz+B5cQZQv6lZdMNw6r7GXqK8OprqJrfmWvLlJN+ancb+33hKZC
-	 rz+S67v0YrRRukViKCmg9n2FYz0r0i77dwaBsm19YU/tKDcrUxYLFdHAKcSBx6RhZa
-	 N/m7NjSYWHK5gYT6varQ3sF+UPFvLFbzTU9WY8jho2OJMqlHhIjFbzf0zGbBDfJe6A
-	 aZ4uQXgkWheNw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8F5C02198;
-	Tue, 18 Feb 2025 14:36:58 +0000 (UTC)
-From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Tue, 18 Feb 2025 20:06:43 +0530
-Subject: [PATCH 4/4] PCI: qcom-ep: Mask PTM_UPDATING interrupt
+	s=arc-20240116; t=1739889472; c=relaxed/simple;
+	bh=kTZkgisOeW801Sth2+lerhok9tOzKPXAzYpArOKOy6U=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=J818UMEMoN7kyeX9AA1h2v0skWOjla0QEkb2wWJZdhY8rXury5bri5UuUUh+LYpaBsJbeDmhg+sTVlyBKIO/yYNyUtCcRKkx6abHLk0yePrpx9ZCqHlmScAJg65mf4gO9FRQmEfRpAyxogLZk9oUdfkUUdr/OLbKK65VFQdPN5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PBE19Myi; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-471f257f763so16314031cf.0;
+        Tue, 18 Feb 2025 06:37:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739889470; x=1740494270; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+HcaZw8R1wNpH+/hwT2VE9RWMhIZpp47OuhMJQ43oHw=;
+        b=PBE19MyiA6N1yIcjTl3Mz55/aM9hzFAqGPkNCe8ia8XxGCl6ZWu/5dSM7UyLj819T2
+         cwA6H6s1A9sg/ukSUc85PQA0SX2BmIfgYZntwYat705J5wyoaNSLRFvjNjGe+sL4FvU1
+         LMyRAnlPaww/RNpzDlcT2WDe/3PtudgmMRVWmgyaOH0xodA0uJTy5Bn8AwM40snfRBHP
+         yyLZGNvJdqVznhR26ilLvVul56HrD6J7OdIZfkh22KsYI2Tc7ms/Vpm+Ga7qx0LYoFz/
+         aL8UVrfkYh69IPs+8WMmlUa7gbSz+myJ+iq5NSwgmH8m9n15w1L7OopM5bxZo+5SsUr0
+         BVeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739889470; x=1740494270;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+HcaZw8R1wNpH+/hwT2VE9RWMhIZpp47OuhMJQ43oHw=;
+        b=upozvza4G3c74X4obCFPODUbB8D6ZvGTrMpSCI3alApyNiLOPtpevwOwqAmuvG38qp
+         oEGX5ky/m1Hb7ioyTqGO8WvgZHDk7wHstBWlrQeFfeYMMew6awXqBfaWRtqKRc2K9iuP
+         e7FRRNflavwxeTnn6Tsj6aBgwrY6A1oF+9rUdagnKG8mJY3ivUzM/IU/MZTWQZ0PXqRt
+         fJp3ysUaTN1lZtmSKcnip4uG8m4Y8nCdxCnHRm6Ar/j2LhJbsGe6o4nA2dHkSQIZznyp
+         KusTRO5g3u1egmAT/zNMsRlvoYi38sfRoV9nsVXnREQhjqNjZVZNA9kUIGcETZUW0ilf
+         yhCw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAfvoK6RB6qhBoEr1M8WIFUDGYmp4nfiK3KpPVqmO8tHs/CqlgC/yCDAZbQ0hEwA2s0/WKuIKz0XNxcI81@vger.kernel.org, AJvYcCVB9HRsGJH7LVdnGn6ligFKPQVigb/iDBgUtiPAZLEwt8PnWVhV3PAxflL+5MwE65ZYqO3SGUMQqOXH@vger.kernel.org, AJvYcCWZhdbTPYp2BABtbR5QsFt/KXlySxVRvwQWEFtYe15k4aV6WcXZOo0sVMHkX0R/zYFtr9cb4NnpY9DGaR8c@vger.kernel.org, AJvYcCWpGQGoq7npRrIkgLctAOipmBibiqw3C91tHFrzzCR/goppMgDUsz0hC852hMF8CgXwttx/ycnpr5DdHawfl70=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDJvnEe2QHztdf4u/sYPRK35GhCkWN47wbX+vS1Kr4+grXhNMl
+	ZV0BoiToGQ6JDGtpUtEgzabNJEodr9Uq5duqA0uXk8hR0ej5xw4l1JeHeI9P
+X-Gm-Gg: ASbGncsbtshNGC2+WZY8l+FX270Uc/UteUxdlrj1Nb0kuYqSjCKxTnpOW+2TpKuT1l9
+	jrqmQy43oCw+ASZz/2zphvZwikcFwEt8uQBclH/lJnyojufAcwdQGV0I4YApe8+DEi0J1cnBa2k
+	gPXwhgnLYsbX0KiPWgWC+g+qMGAyNLHObHaK+AllWQVuXfjTiwJ9Eo+bVGBF4O+W9rG4Avfsf0e
+	aJB/XTSad/Mk3yeV60h4zT8akcubM2qIBUJUjpKRKn6qpfAw5nfripA7Eh6SPiWdKYxhjALuqES
+	9FyssthjZkniXP3GuQNMUgcu4Bc55joxMYBrh1k=
+X-Google-Smtp-Source: AGHT+IG7VJe+61wvnIsolh0sANxc/xJbP61UOhGcDR2IAysdCbfSG3tsR8slb+Tj/RTbi9efoyXXNg==
+X-Received: by 2002:ac8:5892:0:b0:471:cdae:ac44 with SMTP id d75a77b69052e-471dbe978a2mr220943451cf.47.1739889469779;
+        Tue, 18 Feb 2025 06:37:49 -0800 (PST)
+Received: from tamird-mac.local ([2600:4041:5be7:7c00:283f:a857:19c2:7622])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471ef0a5943sm24409281cf.51.2025.02.18.06.37.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 06:37:49 -0800 (PST)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v17 0/3] rust: xarray: Add a minimal abstraction for XArray
+Date: Tue, 18 Feb 2025 09:37:42 -0500
+Message-Id: <20250218-rust-xarray-bindings-v17-0-f3a99196e538@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -54,87 +81,124 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-pcie-qcom-ptm-v1-4-16d7e480d73e@linaro.org>
-References: <20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org>
-In-Reply-To: <20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>, 
- Jing Zhang <renyu.zj@linux.alibaba.com>, Will Deacon <will@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jingoohan1@gmail.com>, 
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIADabtGcC/3XSzW7DIAwH8Fepch4VNpiEnfoe0w5AIEVqko2kU
+ auq7z6afTRSlqMt/OMP8q0YfIp+KF53tyL5KQ6x73IB5cuucEfTNZ7FOjcK5CiBI2fpPIzsYlI
+ yV2ZjV8euGZj1gUCCRK2qIo9+JB/iZXbf3nMdUt+y8Zi8+cO44BoFaSz3oCoNxJC1znTmdIiNO
+ UWzd337YyX/ec7Rxid4jMPYp+uce9KP7ndCgOr/hJNmnAkE7WpLQlV0aFoTT/MlD3ACvlC23pl
+ PZcYgWbTcBqpwxcCTQS62GMgMVUZTDaL0bs3gggHcYvDBaGO1hSBr9CtGLJnNNCIzlSICJb1CG
+ VaMXDLlFiMzo4MPwvngrIQVQ78M5U1SWwzNX4yWamecsWLFqCWzmUZlBklZ7oIWytZL5n6/fwF
+ gM3Xg+wIAAA==
+X-Change-ID: 20241020-rust-xarray-bindings-bef514142968
+To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Matthew Wilcox <willy@infradead.org>, 
  Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>
-Cc: Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1708;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=X8FrHGG/Y5bqtzA78r7NFQEcJV50dm29EwABf+RgvWo=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBntJsHhjGbHY6Q7I/y/ze6vd3blhN1A0HrKeF+F
- yr/ctlRT0KJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ7SbBwAKCRBVnxHm/pHO
- 9UzoCACPUS9F6y/oWa2xHAIMf40x74TmzYyirduM/fPhPjn597iCw0IwZxVLOEI3IRYlnVT1RDo
- mcd10VKMQ8VlNnJ6x6frBvsGlur7q3MQUIsXcV+THeCgIKy3OgtpFTtTK6bhZn37Zrd+x0PcNpV
- y1yl7ZfgaYktanFCAigjXnpuMsmP+tuxXilWIwARjnCON+sVJ9qVyGaa6yRoUR/YCWUbQmLTM2H
- PAbIM1OB/mBew1IK24SX65V+vKmT3MjdFlhSMmcrLDugije2FR0DUSTUqffXehJjYmMZ1OHV+eR
- MxuVOFB27w1mdmz7fWLLwKEMcOgDestH4kocGjtFMi3tE/8U
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
-X-Endpoint-Received: by B4 Relay for
- manivannan.sadhasivam@linaro.org/default with auth_id=185
-X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reply-To: manivannan.sadhasivam@linaro.org
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Tamir Duberstein <tamird@gmail.com>, 
+ FUJITA Tomonori <fujita.tomonori@gmail.com>, 
+ "Rob Herring (Arm)" <robh@kernel.org>
+Cc: =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
+ Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org
+X-Mailer: b4 0.15-dev
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+This is a reimagining relative to earlier versions[0] by Asahi Lina and
+Maíra Canal.
 
-When PTM is enabled, PTM_UPDATING interrupt will be fired for each PTM
-context update, which will be once every 10ms in the case of auto context
-update. Since the interrupt is not strictly needed for making use of PTM,
-mask it to avoid the overhead of processing it.
+It is needed to support rust-binder, though this version only provides
+enough machinery to support rnull.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Link: https://lore.kernel.org/rust-for-linux/20240309235927.168915-2-mcanal@igalia.com/ [0]
 ---
- drivers/pci/controller/dwc/pcie-qcom-ep.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Changes in v17:
+- Drop patch "rust: remove redundant `as _` casts". (Danilo Krummrich)
+- Drop trailers for shared commit from configfs series[0]. (Danilo
+  Krummrich)
+- Avoid shadowing expressions with .cast() calls. (Danilo Krummrich)
+- Link to v16: https://lore.kernel.org/r/20250207-rust-xarray-bindings-v16-0-256b0cf936bd@gmail.com
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-index c08f64d7a825..940edb7be1b9 100644
---- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-@@ -60,6 +60,7 @@
- #define PARF_DEVICE_TYPE			0x1000
- #define PARF_BDF_TO_SID_CFG			0x2c00
- #define PARF_INT_ALL_5_MASK			0x2dcc
-+#define PARF_INT_ALL_3_MASK			0x2e18
- 
- /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
- #define PARF_INT_ALL_LINK_DOWN			BIT(1)
-@@ -132,6 +133,9 @@
- /* PARF_INT_ALL_5_MASK fields */
- #define PARF_INT_ALL_5_MHI_RAM_DATA_PARITY_ERR	BIT(0)
- 
-+/* PARF_INT_ALL_3_MASK fields */
-+#define PARF_INT_ALL_3_PTM_UPDATING		BIT(4)
-+
- /* ELBI registers */
- #define ELBI_SYS_STTS				0x08
- #define ELBI_CS2_ENABLE				0xa4
-@@ -497,6 +501,10 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
- 		writel_relaxed(val, pcie_ep->parf + PARF_INT_ALL_5_MASK);
- 	}
- 
-+	val = readl_relaxed(pcie_ep->parf + PARF_INT_ALL_3_MASK);
-+	val &= ~PARF_INT_ALL_3_PTM_UPDATING;
-+	writel_relaxed(val, pcie_ep->parf + PARF_INT_ALL_3_MASK);
-+
- 	ret = dw_pcie_ep_init_registers(&pcie_ep->pci.ep);
- 	if (ret) {
- 		dev_err(dev, "Failed to complete initialization: %d\n", ret);
+Changes in v16:
+- Extract prequel patch for `as _` casts. (Danilo Krummrich)
+- Improve doc and safety comments. (Boqun Feng)
+- Pull trailers for shared commit from configfs series[0]. (Andreas Hindborg, Alice Ryhl, Fiona Behrens)
+- Link to configfs series: https://lore.kernel.org/rust-for-linux/20250131-configfs-v1-1-87947611401c@kernel.org/
+- Link to v15: https://lore.kernel.org/r/20250206-rust-xarray-bindings-v15-0-a22b5dcacab3@gmail.com
 
+Changes in v15:
+- Rebase on v6.14-rc1.
+- Add MAINTAINERS entry.
+- Link to v14: https://lore.kernel.org/r/20241217-rust-xarray-bindings-v14-0-9fef3cefcb41@gmail.com
+
+Changes in v14:
+- Remove TODO made stale by Gary Guo's FFI type series.
+- Link: https://lore.kernel.org/all/20240913213041.395655-5-gary@garyguo.net/
+- Link to v13: https://lore.kernel.org/r/20241213-rust-xarray-bindings-v13-0-8655164e624f@gmail.com
+
+Changes in v13:
+- Replace `bool::then` with `if`. (Miguel Ojeda)
+- Replace `match` with `let` + `if`. (Miguel Ojeda)
+- Link to v12: https://lore.kernel.org/r/20241212-rust-xarray-bindings-v12-0-59ab9b1f4d2e@gmail.com
+
+Changes in v12:
+- Import `core::ptr::NonNull`. (Alice Ryhl)
+- Introduce `StoreError` to allow `?` to be used with `Guard::store`.
+  (Alice Ryhl)
+- Replace `{crate,core}::ffi::c_ulong` and clarify TODO with respect to
+  `usize`. (Alice Ryhl)
+- Drop `T: Sync` bound on `impl Sync for XArray<T>`. (Alice Ryhl)
+- Reword `Send` and `Sync` safety comments to match the style used in
+  `lock.rs`. (Alice Ryhl and Andreas
+  Hindborg)
+- Link to v11: https://lore.kernel.org/r/20241203-rust-xarray-bindings-v11-0-58a95d137ec2@gmail.com
+
+Changes in v11:
+- Consolidate imports. (Alice Ryhl)
+- Use literal `0` rather than `MIN`. (Alice Ryhl)
+- Use bulleted list in SAFETY comment. (Alice Ryhl)
+- Document (un)locking behavior of `Guard::store`. (Alice Ryhl)
+- Document Normal API behavior WRT `XA_ZERO_ENTRY`. (Alice Ryhl)
+- Rewrite `unsafe impl Sync` SAFETY comment. (Andreas Hindborg)
+- Link to v10: https://lore.kernel.org/r/20241120-rust-xarray-bindings-v10-0-a25b2b0bf582@gmail.com
+
+Changes in v10:
+- Guard::get takes &self instead of &mut self. (Andreas Hindborg)
+- Guard is !Send. (Boqun Feng)
+- Add Inspired-by tags. (Maíra Canal and Asahi Lina)
+- Rebase on linux-next, use NotThreadSafe. (Alice Ryhl)
+- Link to v9: https://lore.kernel.org/r/20241118-rust-xarray-bindings-v9-0-3219cdb53685@gmail.com
+
+---
+Tamir Duberstein (3):
+      rust: types: add `ForeignOwnable::PointedTo`
+      rust: xarray: Add an abstraction for XArray
+      MAINTAINERS: add entry for Rust XArray API
+
+ MAINTAINERS                     |  11 ++
+ rust/bindings/bindings_helper.h |   6 +
+ rust/helpers/helpers.c          |   1 +
+ rust/helpers/xarray.c           |  28 ++++
+ rust/kernel/alloc/kbox.rs       |  38 +++---
+ rust/kernel/lib.rs              |   1 +
+ rust/kernel/miscdevice.rs       |  10 +-
+ rust/kernel/pci.rs              |   2 +-
+ rust/kernel/platform.rs         |   2 +-
+ rust/kernel/sync/arc.rs         |  21 +--
+ rust/kernel/types.rs            |  46 ++++---
+ rust/kernel/xarray.rs           | 276 ++++++++++++++++++++++++++++++++++++++++
+ 12 files changed, 393 insertions(+), 49 deletions(-)
+---
+base-commit: 11668f3b4a446222f0f3fe89b21247c176928c72
+change-id: 20241020-rust-xarray-bindings-bef514142968
+
+Best regards,
 -- 
-2.25.1
-
+Tamir Duberstein <tamird@gmail.com>
 
 
