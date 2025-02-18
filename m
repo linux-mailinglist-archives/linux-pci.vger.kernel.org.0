@@ -1,142 +1,173 @@
-Return-Path: <linux-pci+bounces-21742-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21744-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E975CA3A049
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 15:45:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2A79A3A061
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 15:49:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A5DD917A97D
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 14:40:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F1D0417BD65
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 14:42:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8817826B2DB;
-	Tue, 18 Feb 2025 14:37:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D176A26E16F;
+	Tue, 18 Feb 2025 14:40:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBVREB9p"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yzS9Jomi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E601826E65F;
-	Tue, 18 Feb 2025 14:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74D526B97A
+	for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 14:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739889477; cv=none; b=bW6cXx3KsmIL0Rw9bBPCylE7YMnZQgoap6aItzKMM9hds4lztv27lgbwsGgRxrodrVkRJMSwa+EhMUI6ZOyngb/DZQLUtXc5hwCZLo9cIuzXZ+eSwkKW5WzzZwPslPN90gnyl/yvybhFNXczc4RHudkFZge2Ljvrz+FF5UP+EB8=
+	t=1739889626; cv=none; b=DuwO0mgm0Hro88NzC0Y8WOgn2/PUHFdoA8F/AvmsD3kE3f1PHYd1x3AaMLcMEnqzvev8PerlSDX8ehC4R4q+FD/PH0swVbua5FlPeOdIkkmcT+DHQgl9lmHfUVkdS036G8jw505bTcpYw42Xg1dKbzpl5todprS82uaTlT/jK50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739889477; c=relaxed/simple;
-	bh=nGhttoR1swOP1QTQwepuqeDirYgZPEDMvtJFLrL5dpk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mkZPmMK8afVxLTbWeruaETjl+UPgrcZPqOWur3wA66iYoFqSz2ly6sQKnQ+7v3P+hcUGNenYbS/xiBLkP9LPGflNgeCD2Ml65J/N7gPJigMjcBGfjX3l07P3q47HYae1HU+i9XrrdrhFqFauw5im7/aghfcxs3yaQEE2oGTgYOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OBVREB9p; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-472049c72afso4996381cf.2;
-        Tue, 18 Feb 2025 06:37:55 -0800 (PST)
+	s=arc-20240116; t=1739889626; c=relaxed/simple;
+	bh=mr+2Jhhmfhv+3seL9n1mB+VOznYBvn3lX+NZfQylTqg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GAnKtMGkJXnKJN9dKVwknaV51N8cjakp4FdfpfX0tsP+y01jWbQ5XpItS7BtASYa8RxjXA1DE0JBJOHR0eTamr737arGvSumwn3rffGNYcbeztt8I70+QoiDZNtvajYkR8Rka91KHzxbJC+6DLaflvxmXEQMRVAU7WB/Fp2uESo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yzS9Jomi; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e587cca1e47so5006140276.0
+        for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 06:40:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739889475; x=1740494275; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ipEWRTbUNI0fhw7p2quxgycmIwXwELriTrZg15QiXvk=;
-        b=OBVREB9pgEgdLUh6F0I+4MfTfVDqRDqBiKPVkqVfiZn2EgTb3Q/LcW6OUoYVDpuorz
-         U/zeGhQIOiyg7ZsANU4U1yA8BeDsMQOWsz8wGUf2+LZ+k3MlJn4x8P1vMinXJ+r+nccd
-         nc+6V1CPGfknC2edtfqWAJJjgqoghBAVrze4LEmrHvDI5KrkltVWO3ZQNsv13OCSgRvx
-         ubud8JVA1eDJvdGB7jpkDVi3OlD+E5ssz9kuHX3WkZiwT4NZSK+yMl+D/PJ9/RIFtGpY
-         sNhyoLgqrEicSJVOp7Mj4gzrSZ8C5dKJUFBhvm7CyiFh7hY8e609GAoKoftio07/UIpW
-         TlPg==
+        d=linaro.org; s=google; t=1739889624; x=1740494424; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2wkeEEWV1t+jTfGMDjVEd0UQWJSursxJ+qu65t0oVks=;
+        b=yzS9JomiL+1VCRq5xGA/LVJBda1hD0LHa+tIsrOwo+8YCI4bbA8FZadK/V/4waPQQH
+         9aFpqNh/ia1C10WgvRzuB5wF2U66/lYcRX0QP2L1I3eQBf6yiuSOHZmFx2d7MpQ/D7zY
+         U4ZFcDr7s9T1qxzTzHpwAigz1L8lTWxIO0rcZsWkoNBRq0D4NxcLBiCyVoniZJywJJ7s
+         xsWKhTGX/urMFShw+xctToQ4jo4bUdGFKRL2aGJPp513TUp5dN5+B1OYXD4C9f+yFbaw
+         RGlT0VlSjnEtn1qTEGgF0XzOGk/xU6ENK+5wByLpc0RPumM9RquuK4enTt/nGOnnii8s
+         FbRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739889475; x=1740494275;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ipEWRTbUNI0fhw7p2quxgycmIwXwELriTrZg15QiXvk=;
-        b=Eo2Ebv9UhOleK6MW36P/z2PKv8CZiU+k3YJIdnbptKE3XpWo9N5ubMBj5Wze0ky9gu
-         jqu6xQSLAs0N9yp9TakS+mjADV02A9ROhcztW6J4HoauCV2EdZj4LvnrRGPnQneq8Pw1
-         rbti3toOpiE5egRTWGxdDCw8Mt/3T6YvBN6d/gaAQqxRbiGjEyTLMlQqhQh2Ihx18zAR
-         seYcBpw6BChuWigQaO5j8Z3VhkT0x3RJ7991wyjDFCJWylfQuhhstVZia4Ugvph9EiPC
-         H5Dn80n5Q3FpQ6mAfIOD1MB2ZUtzXPGwWhPd8vZcrGkRMjJKbm0xrlJQNwEmwRoDben2
-         cjBA==
-X-Forwarded-Encrypted: i=1; AJvYcCURid0dLYlIZyydYmY02y/WJg9ItrYBigijRVpctpibIp5bX7NEGbLc7wImCf4Yzv9p5cBGZGdLRejw@vger.kernel.org, AJvYcCV6PjIqeMPZ31WX25VJsDUlUpIT56PpCeegNgPC02sy8PwKg/OYbWl8WImSoSO6HMa9PK4S4nvULeWNhyjX@vger.kernel.org, AJvYcCVO1B/d9q24Zd9LxXCDBlhlg0PDEaCK2v14hOJerA8AxnCm/oqT+c4QxHAXFrQ8amrl8DaadfTAxVrjFR0u@vger.kernel.org, AJvYcCW99I+pjF1XGgNQam3n+TBIL6xLgUAkZR6uYZskITMRWjNO6lP21kni2cVjBvMn9oKnS8W8+2ocUGnCDFVr6qA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHCqs0tdOjlMovYeHr103Fw9K3W1LoOsLwqyzzCGWSepTDmlGE
-	NN1ISkHw1dSuvVlghHuaC7mICd2gBEml7JWFtXDWIuTTNvvkgTYb
-X-Gm-Gg: ASbGncsg6iTmnNesH2/Fn5VruiWRVhUdMQaBlKaBhb+8lBffnH5QSd1Z5mNtAxnLlTA
-	/q2N90SVlZWkV5HPEJYvPcmZT2JsJ+sNq++iVKVCfRxQHhI+RmIeNx0D1QSSveQjV3FcVwM32Gh
-	uyiSS32JtiYgrSbT+4Wlg2nhNMVoIxryQg+Hnxm2ZFlZVRlE89h8edub4kfKEjNhZwcUzEdhulT
-	IUsCLRuIe2hbicLuxbEyse30tiPhnDlaaAF8vIwjmHiimZcdfG1ICjIAENdGZy9eG2JfUabk2Zb
-	T3Ed74tVik4ZPMi6qww1r5ns6G3PLdqsJVLJ5rA=
-X-Google-Smtp-Source: AGHT+IGWGozAyJpwGUgR/1ZiePcXGyBqaVKmWP4LBKOh5G7+06ogLFFHWvR9tghEbSQhwtHQ6RAYsQ==
-X-Received: by 2002:ac8:5e0b:0:b0:471:837f:d5bf with SMTP id d75a77b69052e-471dbd1a17amr194869601cf.12.1739889474669;
-        Tue, 18 Feb 2025 06:37:54 -0800 (PST)
-Received: from tamird-mac.local ([2600:4041:5be7:7c00:283f:a857:19c2:7622])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471ef0a5943sm24409281cf.51.2025.02.18.06.37.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 06:37:54 -0800 (PST)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 18 Feb 2025 09:37:45 -0500
-Subject: [PATCH v17 3/3] MAINTAINERS: add entry for Rust XArray API
+        d=1e100.net; s=20230601; t=1739889624; x=1740494424;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2wkeEEWV1t+jTfGMDjVEd0UQWJSursxJ+qu65t0oVks=;
+        b=uArdU6qtRUkYn0hZ2Im7HhdgExyBrGPqSylgAbViYUMwlbY2aQHaPSBUEJWlPrxcC3
+         3fMUeJKWypPxwgT4y6x9Ue9NhRV36FCbI6Wt8rggaclTNlO0jp6mDdFFB1iX/nQIgWyZ
+         P5Ut8tQ2x2v0Juo/TAe0t6y+w77KUSbGgj3YDaCdHDmAUdJDF4kZbFJpMD6mPVgf525D
+         M+0HfezlgelqxBCaLCnIcinwMwpNp/xQOOY0Gaxg8BdCKr/tKHTNugIWVpm+qk3apJkP
+         zFNofzyHBDDLcqegzBa67u0eK3xeacMBiL2DYTGDyTC23vfWeEh9ZmTSrEc2vRNfPBX8
+         KtTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUH7nNO0ODUrL2PTsacwKNVLB8ZPGXpqtucGNrNoPj1Ji7MHzhP0jbRbKuQZP65p6+YZuIxVxY7KeU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz12s3yK4a8gvGJzEpzkqaIftd2Rt6llzqmgFTnu/ictKIg3zJ6
+	ggWs4o74kGCyJ9neGEok2MWlicQ9Jtq2wdkzyw+jpM/x4TOQ8eJJML+gHYUQ9h/luq0n2tdavYS
+	SPM/BWNtTuCOx7vdouuFkOvD+L/39HgS7ET1FUQ==
+X-Gm-Gg: ASbGncvIOQhFhAaDgbXuz8G0wYOFitM1LPJoOoL9WUvFPKZ8OpfmDtp1yQQ6d/lDofu
+	PE3+swEzmxidXM3JO0mOypYFQFOwxWsHOiI5ACs9ok/eZadfYKtoWOjdLkrTmKhzUgMe9S/5iug
+	==
+X-Google-Smtp-Source: AGHT+IGc7tsTon1APxRniRGgusdip7zanYIlI5kyK12K1ApVdClP0yClUsQd8ZYL07bK78dVmjWR+9yq+z6BP2esIog=
+X-Received: by 2002:a05:6902:15c4:b0:e20:25bb:7893 with SMTP id
+ 3f1490d57ef6-e5dc9305520mr9687881276.46.1739889623851; Tue, 18 Feb 2025
+ 06:40:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250218-rust-xarray-bindings-v17-3-f3a99196e538@gmail.com>
-References: <20250218-rust-xarray-bindings-v17-0-f3a99196e538@gmail.com>
-In-Reply-To: <20250218-rust-xarray-bindings-v17-0-f3a99196e538@gmail.com>
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Matthew Wilcox <willy@infradead.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Tamir Duberstein <tamird@gmail.com>, 
- FUJITA Tomonori <fujita.tomonori@gmail.com>, 
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
- Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org
-X-Mailer: b4 0.15-dev
+References: <4966939.GXAFRqVoOG@rjwysocki.net> <2000822.PYKUYFuaPT@rjwysocki.net>
+ <CAPDyKFoB0fQCabahYpx=A_Ns7vJgWYdK=rxuHk+XHVv35cFvWQ@mail.gmail.com> <CAJZ5v0iHsOw4_UbEWGk_-jPpc3q2K3fUXBs4T3JCooPGV10CHQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iHsOw4_UbEWGk_-jPpc3q2K3fUXBs4T3JCooPGV10CHQ@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 18 Feb 2025 15:39:47 +0100
+X-Gm-Features: AWEUYZkUeOWjKpfEpylPzwUgMmhW5JCtP7D9lSJ8wjRrv-WgzsAF82ls-gYur34
+Message-ID: <CAPDyKFqshaVNzHPe0KL3HRTpiuzyKVJ-LuDsaAne5PawFLMJow@mail.gmail.com>
+Subject: Re: [PATCH v1 3/3] PM: sleep: Use DPM_FLAG_SMART_SUSPEND conditionally
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
+	Bjorn Helgaas <helgaas@kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, 
+	Johan Hovold <johan@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Jon Hunter <jonathanh@nvidia.com>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Saravana Kannan <saravanak@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Add an entry for the Rust xarray abstractions.
+[...]
 
-Acked-by: Andreas Hindborg <a.hindborg@kernel.org>
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+> > >
+> > > +static void device_prepare_smart_suspend(struct device *dev)
+> > > +{
+> > > +       struct device_link *link;
+> > > +       int idx;
+> > > +
+> > > +       /*
+> > > +        * The "smart suspend" feature is enabled for devices whose drivers ask
+> > > +        * for it and for devices without PM callbacks unless runtime PM is
+> > > +        * disabled and enabling it is blocked for them.
+> > > +        *
+> > > +        * However, if "smart suspend" is not enabled for the device's parent
+> > > +        * or any of its suppliers that take runtime PM into account, it cannot
+> > > +        * be enabled for the device either.
+> > > +        */
+> > > +       dev->power.smart_suspend = (dev->power.no_pm_callbacks ||
+> > > +               dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) &&
+> > > +               !pm_runtime_blocked(dev);
+> > > +
+> > > +       if (!dev->power.smart_suspend)
+> > > +               return;
+> > > +
+> > > +       if (dev->parent && !pm_runtime_blocked(dev->parent) &&
+> > > +           !dev->parent->power.ignore_children && !dev->parent->power.smart_suspend) {
+> > > +               dev->power.smart_suspend = false;
+> > > +               return;
+> > > +       }
+> > > +
+> > > +       idx = device_links_read_lock();
+> > > +
+> > > +       list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
+> > > +               if (!(link->flags | DL_FLAG_PM_RUNTIME))
+> > > +                       continue;
+> > > +
+> > > +               if (!pm_runtime_blocked(link->supplier) &&
+> > > +                   !link->supplier->power.smart_suspend) {
+> >
+> > This requires device_prepare() for all suppliers to be run before its
+> > consumer. Is that always the case?
+>
+> Yes, it is by design.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index efee40ea589f..f8d6a5f4a4cc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -25794,6 +25794,17 @@ F:	lib/test_xarray.c
- F:	lib/xarray.c
- F:	tools/testing/radix-tree
- 
-+XARRAY API [RUST]
-+M:	Tamir Duberstein <tamird@gmail.com>
-+M:	Andreas Hindborg <a.hindborg@kernel.org>
-+L:	rust-for-linux@vger.kernel.org
-+S:	Supported
-+W:	https://rust-for-linux.com
-+B:	https://github.com/Rust-for-Linux/linux/issues
-+C:	https://rust-for-linux.zulipchat.com
-+T:	git https://github.com/Rust-for-Linux/linux.git rust-next
-+F:	rust/kernel/xarray.rs
-+
- XBOX DVD IR REMOTE
- M:	Benjamin Valentin <benpicco@googlemail.com>
- S:	Maintained
+Okay! I was worried that fw_devlink could mess this up.
 
--- 
-2.48.1
+>
+> > > +                       dev->power.smart_suspend = false;
+> > > +                       break;
+> > > +               }
+> > > +       }
+> > > +
+> > > +       device_links_read_unlock(idx);
+> >
+> > From an execution overhead point of view, did you check if the above
+> > code had some measurable impact on the latency for dpm_prepare()?
+>
+> It didn't on my systems.
+>
+> For the vast majority of devices the overhead is just checking
+> power.no_pm_callbacks and DPM_FLAG_SMART_SUSPEND.  For some,
+> pm_runtime_blocked() needs to be called which requires grabbing a
+> spinlock and there are only a few with power.smart_suspend set to
+> start with.
+>
+> I'm wondering why you didn't have this concern regarding other changes
+> that involved walking suppliers or consumers, though.
 
+Well, the concern is mostly generic from my side. When introducing
+code that potentially could impact latency during system
+suspend/resume, we should at least check it.
+
+That said, I think the approach makes sense, so no objections from my side!
+
+Feel free to add:
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Kind regards
+Uffe
 
