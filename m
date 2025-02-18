@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-21747-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21748-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F56AA3A0FD
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 16:21:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B8B0A3A11C
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 16:25:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA836188B77C
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 15:21:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9FF43ABFCD
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 15:24:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA30E26B94D;
-	Tue, 18 Feb 2025 15:21:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A83A226B962;
+	Tue, 18 Feb 2025 15:24:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hxh+gLyo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eWQce89l"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A68326B941;
-	Tue, 18 Feb 2025 15:21:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7881F26B09B;
+	Tue, 18 Feb 2025 15:24:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739892097; cv=none; b=gnyJOuyN4cjrm3OXa+csV/GQZgIMVx/sRd/rIWHrsZfuasUE+pbHevaanJii43BZ2XW2Vdz7q3Wat0F5nmtsp7OrDS2qwZpYliUzviMWLG0MjU+N03PPjM+FmlYh/Xab6tptP/uOIwAru7LjipDt+pQ0PSKn4RkOV3oRML9Emq4=
+	t=1739892280; cv=none; b=k9ttj28rxFERDvyjOBwvPMBu6JoIMfuQYdqKPciNEFo/mtkB1UsYMP1Zok8fa/dtVVnBGIV2kvVo+fzlAdqmSftiP9/lg+59idKKsAwoCc+KwI5vZlBI2oY+lITiYdPBokz9sY9544vHBy3qNmhOHZSl0wOpyFwCajf0b/OmOt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739892097; c=relaxed/simple;
-	bh=mWpV972E5ut4sDMGsVOXViJCPA83Mo2K6cuKVK5+Fnw=;
+	s=arc-20240116; t=1739892280; c=relaxed/simple;
+	bh=TB4nv8hn+O/HSxNWQn+GodE7JrdKRLhqMpoEBtPoIuU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LjXDYyLBTtlIfK7300Ih5HjQi8ZY/7x9UrDd2MHmFbMHMXZhaXt4VG1FEvu0iEXA2sOMXtc2lAyhHVcStIC0JzRb5iqIE8JDmIF2zISSlh53+naiqOfTnvY1hJ5VHyTtwqjNVO4D780jrk2g+xEdEU4yNDhlC2sVwWHCmTlH2GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hxh+gLyo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91CB9C4CEE2;
-	Tue, 18 Feb 2025 15:21:32 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=VgslxscEuNDkOU10TEcV/YiMGCv0f8T1RmbxFJ9msXf1kf7HKKLdEJmfjDPfFFDQH1Khtc0FW7MAa21Yrcxpj0tEKYu/qCPN4FU9iue4b+C7d50VjzrYbmpOSuAmI08iw7L3yxoCMo0z88R+XTSqti5oLEffbdUEKwmQyP/D3VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eWQce89l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1000C4CEE2;
+	Tue, 18 Feb 2025 15:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739892097;
-	bh=mWpV972E5ut4sDMGsVOXViJCPA83Mo2K6cuKVK5+Fnw=;
+	s=k20201202; t=1739892280;
+	bh=TB4nv8hn+O/HSxNWQn+GodE7JrdKRLhqMpoEBtPoIuU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hxh+gLyoFPfHfSBBy+QYQexE+ze8nE5J8ewaFjq8ABA7xntuy8TAvHNnpMyPyV24b
-	 gS8pavJbUSs3FE7whbN8LpAmxEBP9iE0nhWUYwwbcRyFVn1D2Yx2g/XGvaCHEIW3el
-	 k2xmX4irZxai0UgDTSJnuUQI85BNSfp9aKg7uCvH68oq6hG+EKitRCMJyoZHkMgI1J
-	 HPnL+3c+JjZJB7vgLmsVsI3AhKjT9yOCkNpTDYYKV1r9aWqQ4jrN2zMIra3NEG+Nxn
-	 S9Snf6RLsqBsQqCUrF5vBGeo+FANra/h6KzbRnf+TdvyGMZUqVT+7bNzKsnO/G4BEx
-	 3brYVBooKx17A==
-Date: Tue, 18 Feb 2025 16:21:29 +0100
+	b=eWQce89l5hCWid+82f3s1KD/CfccKWGp+s+7ayW71dT/5p95y7sbwbqNTO/ps3RCa
+	 CTvWkPaGaqex5pMqUEKhbLTRRcB8UKp8CD+f25NWjKtVwNU05E5PmHdFaxoPg/csos
+	 FE+hUb7XHC8NTPi3FRtbTveLMY3y+m9eMlC2+6l7cnmmRdNN0jWaUWTCcvfwiONv+M
+	 /D7jEevk9cyGcTMBBH63KJ77xOqxasnpVA0JUMwLXPZe+4ynym9e3TIe4F5f/LRL+q
+	 e9s04oUfKlzwpdVd1lb4fR9AgAztia50tF6Z67GS1QgZIpCKKQKOQ4KKeAtxraLBxQ
+	 4CcOUwdomhH3w==
+Date: Tue, 18 Feb 2025 16:24:33 +0100
 From: Danilo Krummrich <dakr@kernel.org>
 To: Tamir Duberstein <tamird@gmail.com>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
@@ -60,10 +60,10 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v17 0/3] rust: xarray: Add a minimal abstraction for
- XArray
-Message-ID: <Z7SlefHJtpZFzV6t@pollux>
+Subject: Re: [PATCH v17 1/3] rust: types: add `ForeignOwnable::PointedTo`
+Message-ID: <Z7SmMdl5Hl_CRAzs@pollux>
 References: <20250218-rust-xarray-bindings-v17-0-f3a99196e538@gmail.com>
+ <20250218-rust-xarray-bindings-v17-1-f3a99196e538@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,28 +72,21 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250218-rust-xarray-bindings-v17-0-f3a99196e538@gmail.com>
+In-Reply-To: <20250218-rust-xarray-bindings-v17-1-f3a99196e538@gmail.com>
 
-On Tue, Feb 18, 2025 at 09:37:42AM -0500, Tamir Duberstein wrote:
-> Changes in v17:
+On Tue, Feb 18, 2025 at 09:37:43AM -0500, Tamir Duberstein wrote:
+> Allow implementors to specify the foreign pointer type; this exposes
+> information about the pointed-to type such as its alignment.
+> 
+> This requires the trait to be `unsafe` since it is now possible for
+> implementors to break soundness by returning a misaligned pointer.
+> 
+> Encoding the pointer type in the trait (and avoiding pointer casts)
+> allows the compiler to check that implementors return the correct
+> pointer type. This is preferable to directly encoding the alignment in
+> the trait using a constant as the compiler would be unable to check it.
+> 
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-> - Drop patch "rust: remove redundant `as _` casts". (Danilo Krummrich)
-
-Just to clarify, I did not suggest to drop the patch, but rather move it after
-patch 1 ("rust: types: add `ForeignOwnable::PointedTo`").
-
-Instead you proposed to make this a good first issue, which is fine too.
-
-> - Drop trailers for shared commit from configfs series[0]. (Danilo
->   Krummrich)
-
-Clarifying further, I pointed out that it's worth to consider dropping them when
-making subsequent changes that haven't been discussed on the list and are not
-listed in the change log (e.g. because they seem minor).
-
-This was an expression of opinion, not a request.
-
-> - Avoid shadowing expressions with .cast() calls. (Danilo Krummrich)
-
-I appreciate that, thanks!
+Acked-by: Danilo Krummrich <dakr@kernel.org>
 
