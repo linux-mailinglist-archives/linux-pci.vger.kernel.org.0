@@ -1,168 +1,116 @@
-Return-Path: <linux-pci+bounces-21767-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21768-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17E5BA3ABB9
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 23:32:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E870A3ABBB
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 23:32:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 276361889AF3
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 22:32:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED15F16A5FC
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 22:32:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B95E41C3F1C;
-	Tue, 18 Feb 2025 22:32:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24BB11C3F1C;
+	Tue, 18 Feb 2025 22:32:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nbqb+bYN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAAd/qX4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D39F2862A5;
-	Tue, 18 Feb 2025 22:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED7B2862A5;
+	Tue, 18 Feb 2025 22:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739917928; cv=none; b=R65xx/QPrgWdIj1YtQrUr4JGIKxUkOoScT/ahj0k3wcH/V5wmeYr4spzJpFPj1Plr7LHQ5LZsuPRPq9KnTgjazbbAY5OoqluSJtYHCvpmZ/HyCzJjTPfWvoBtq9upwjG1EjIKzYo1VkD+hrU+NV3Kq7hGhH5fvZhR1O+AiqYPO4=
+	t=1739917975; cv=none; b=s9KB/IDEpqnOwTpeYD8p0YJh8rLW1s90rk8syvfYlVjRLdCAWXMjRXVH/d39TcugIzlfGSVbyUDjlgDYenVud23VwD3q8FbPRVN3DE1gVll+KYhBah8Z8B+1Rskjh9iFodc87gC7CTAe54S8h7Mrd7QRj4oF5feQ/IC8UTTtFOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739917928; c=relaxed/simple;
-	bh=MNyQrzrM2hdZD5RtjbM9UexD/z0IBigwTDdl/68TcTw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qJ6On1smVG+oGVh3LPxLmvHp+1orsAewBXnYKstYH27uNbgcg8N50C3Rz7MjnACQ6AM+7xsnzkBs1vPydZHj1PdZfsmcTcM/iq/ihgqH20iWeWKU54Mq0BWwVzWGBnkD84fmBEUWd2qFhAdwFeaf6kl/Gu+kWk2oBiFT7ijuy4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nbqb+bYN; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4E96820376ED;
-	Tue, 18 Feb 2025 14:32:06 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4E96820376ED
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1739917926;
-	bh=wkHtF8Q1p9OLsyZ01ZxOlGG224lrcQMUsc6UkXJicro=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nbqb+bYNVQ0gup+rvq/dhImqOWkwYohvkh5vvpwNHfMeSwBVbDosoWWE57JaQtoSf
-	 SCCcRwRTFnVYwSEG2WcM2hfuquEeiOufFJUpLjad8c4/n4jB+k1nw8BbzOsEFrced2
-	 0YoLSIqvXbVccqXXco4HoZ+xIZRWRpOZkJdTff94=
-Message-ID: <19435dae-89b5-4c23-af1e-c8917e29c857@linux.microsoft.com>
-Date: Tue, 18 Feb 2025 14:32:06 -0800
+	s=arc-20240116; t=1739917975; c=relaxed/simple;
+	bh=/b5Hpj1f7yJgvbKrphP6Ri0sMcj4xtt856FZzy0Lv7k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZVZm3fvT1g5pC6UbnVzci8zBZ+dIo9FjQw6JGsX2U1Fy3b0GyMW3dE12UVw67p5Mxy5iiFPZj9IJsuKNXIADL/CB6YMHAG5melaVGcCCrJgBBWLbHUYsT4EY9vRcYpp2cjMY/+9gv+TEUUTVo/IRpGrts7bHoWd0DHz34spZwN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAAd/qX4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 617D2C4CEE9;
+	Tue, 18 Feb 2025 22:32:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739917974;
+	bh=/b5Hpj1f7yJgvbKrphP6Ri0sMcj4xtt856FZzy0Lv7k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KAAd/qX4UOvDbOwNnhWOnlSwHp9kAmGQ64rcnfcha4VPFqcKzzPy3wnVBNqdeayU9
+	 E4qMTUn3yqV+IKUdiM50yniYT21B/NNal6fQDhAYAmGDCOh87Q8S0ZvLX1qJFHtF/q
+	 9WQMrx25vPmyxDijosbOyJ5TMHqJgTJkKbyr99tJJzDeKgcUwpgL4rqepj4yRaLhzO
+	 zauBBurpWXWZw9Wn2lDhivKVIiitHef0bUTr7CsPCbkG+h3wBtGL1z+6IYA0XhNsCB
+	 0rwrJ6depsuUybBDKl3cTu5P/Ogw6h5mvFB98bAiry74dLQ8c8K0tsLdq3WftPBbSR
+	 RoR2ELnMav7sg==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e0452f859cso4888091a12.2;
+        Tue, 18 Feb 2025 14:32:54 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXMDUxRFJXpw9gLEL9aJojlrYQGjjPM/muG08/HPIJpI7/2/0TPink4TBLAfMQzbPyeqHamuwbEuWPm@vger.kernel.org, AJvYcCXdpAYlfzfDiwcb1Y/TfzKVAaFlmR4eUM8A7pL0FL+nuWUMagP95TgAYLeyQO7S/v2jiI1kFIm0ctlZWPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIzZS0iYrIt5r7vf7Zpbxgi9xNy4Kceib4PrXWqfCSPMHtPk9u
+	DwkLFBUrT6p8Juz/kGLxyp5d+6+pdmyEhLL6YVCBmOgdccl/7Hom+FflS38fSPVN0AvleKh8jrf
+	TaSgwfYGgeyEa3fuvB4QKqMoDkg==
+X-Google-Smtp-Source: AGHT+IGbj8cBtp91/Fe3BaEKNO/HdIdSWwYsIibl0UALaecSgf4d1GNu8D2qYOSALt4T7Q0kztSe3FjfBDbHrtJdeXg=
+X-Received: by 2002:a05:6402:50c8:b0:5dc:a44d:36bd with SMTP id
+ 4fb4d7f45d1cf-5e089521896mr976943a12.8.1739917972966; Tue, 18 Feb 2025
+ 14:32:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v4 6/6] PCI: hv: Get vPCI MSI IRQ domain from
- DeviceTree
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
- catalin.marinas@arm.com, conor+dt@kernel.org, dave.hansen@linux.intel.com,
- decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
- krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com, lpieralisi@kernel.org,
- manivannan.sadhasivam@linaro.org, mingo@redhat.com, robh@kernel.org,
- ssengar@linux.microsoft.com, tglx@linutronix.de, wei.liu@kernel.org,
- will@kernel.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
- benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
-References: <20250212174203.GA81135@bhelgaas>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <20250212174203.GA81135@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20241107153255.2740610-1-robh@kernel.org> <20241115073104.gsgf3xfbv4gg67ut@thinkpad>
+ <20250216165406.jp2dzfwdfucklt5b@pali>
+In-Reply-To: <20250216165406.jp2dzfwdfucklt5b@pali>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 18 Feb 2025 16:32:40 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLhYy4cdD8nnn4EjEfdipwS2EQfZAuG4QtKopXM95P2Ag@mail.gmail.com>
+X-Gm-Features: AWEUYZnZOHLmJ7BNmzdA8bqCUJoLvmFX4gKX9vplzHjuoT53syEnpMmsZXAO0EQ
+Message-ID: <CAL_JsqLhYy4cdD8nnn4EjEfdipwS2EQfZAuG4QtKopXM95P2Ag@mail.gmail.com>
+Subject: Re: [PATCH] PCI: mvebu: Use for_each_of_range() iterator for parsing "ranges"
+To: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Feb 16, 2025 at 10:54=E2=80=AFAM Pali Roh=C3=A1r <pali@kernel.org> =
+wrote:
+>
+> On Friday 15 November 2024 13:01:04 Manivannan Sadhasivam wrote:
+> > On Thu, Nov 07, 2024 at 09:32:55AM -0600, Rob Herring (Arm) wrote:
+> > > The mvebu "ranges" is a bit unusual with its own encoding of addresse=
+s,
+> > > but it's still just normal "ranges" as far as parsing is concerned.
+> > > Convert mvebu_get_tgt_attr() to use the for_each_of_range() iterator
+> > > instead of open coding the parsing.
+> > >
+> > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> >
+> > LGTM!
+> >
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >
+> > Could someone please verify it on mvebu machine?
+> >
+> > - Mani
+>
+> That is mostly impossible as pci-mvebu is broken. Bjorn and Krzysztof in
+> past already refused to take patches which would fix the driver or
+> extend it for other platforms.
 
+That makes no sense. The driver is broken and we won't take patches to fix =
+it.
 
-On 2/12/2025 9:42 AM, Bjorn Helgaas wrote:
-> On Tue, Feb 11, 2025 at 05:43:21PM -0800, Roman Kisel wrote:
+> So I do not understand why you are rewriting something which worked,
+> instead of fixing something which is broken. The only point can be to
+> make driver even more broken...
 
-[...]
+We make coding improvements to the kernel code all the time. There is
+no way folks can test every platform. Either drivers need to get
+tested at some frequency or they should just be removed until someone
+cares enough to maintain them.
 
->> +	 * function called later.
-> 
-> The rest of this file fits in 80 columns; please wrap this to match.
-> 
-
-Will fix, thank you for taking the time to review that!
-
->> +	 */
->> +	if (!domain)
->> +		WARN_ONCE(1, "No interrupt-parent found, check the DeviceTree data.\n");
-> 
-> Is there a way to include a hint about what specific part of the
-> devicetree to look at, e.g., the node that lacks a parent?
-
-I'll improve this, will mention the bus, thanks!
-
-[...]
-
->> +	 * the messy ifdef below.
-> 
-> Add a blank line if you intend a new paragraph here.  Otherwise, wrap
-> to fill 78 columns or so.
-
-Will fix this, appreciate noticing that!
-
-> 
->> +	 * There is apparently no such default in the OF subsystem, and
->> +	 * `hv_pci_of_irq_domain_parent` finds the parent IRQ domain that
->> +	 * points to the GIC as well.
-> 
-> And here.
-
-Will fix, thanks!
-
->> +	 * None of these two cases reaches for the MSI parent domain.
-> 
-> I don't know what "reaches for the MSI parent domain" means.  Neither
-> "searches for"?
-> 
-
-My bad, sorry about the incomprehensible phrasing! Will fix this, thank
-you!
-
->>   	 */
->> -	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
->> -							  fn, &hv_pci_domain_ops,
->> -							  chip_data);
->> +#ifdef CONFIG_ACPI
->> +	if (!acpi_disabled)
->> +		hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
->> +			fn, &hv_pci_domain_ops,
->> +			chip_data);
->> +#endif
->> +#if defined(CONFIG_OF)
->> +	if (!hv_msi_gic_irq_domain)
->> +		hv_msi_gic_irq_domain = irq_domain_create_hierarchy(
->> +			hv_pci_of_irq_domain_parent(), 0, HV_PCI_MSI_SPI_NR,
->> +			fn, &hv_pci_domain_ops,
->> +			chip_data);
->> +#endif
-> 
-> I don't know if acpi_irq_create_hierarchy() is helping or hurting
-> here.  It obscures the fact that the only difference is the first
-> argument to irq_domain_create_hierarchy().  If we could open-code or
-> have a helper to figure out that irq_domain "parent" argument for the
-> ACPI case, then we'd only have one call of
-> irq_domain_create_hierarchy() here and it seems like it might be
-> simpler.
-> 
-
-That looks quite dirty, no dispute over that... The root device was
-static/provate for the ACPI case, and I didn't go for changing the ACPI
-subsystem code to improve this patch, thought the only user wouldn't
-justify tinkering with the whole ACPI subsystem. Maybe I also will
-need to see if that can be used from a module/builti-in, locking,
-bogus usage, i.e. all that normally comes with promoting a private
-interface to public.
-
-Let me work out the details and post the change here to see what
-feedback that receives.
-
-Last but certainly not least: owing a great debt of gratitude to you
-(and all other folks) for helping in bringing this to the best shape
-possible!
-
--- 
-Thank you,
-Roman
-
+Rob
 
