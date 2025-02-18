@@ -1,148 +1,133 @@
-Return-Path: <linux-pci+bounces-21774-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21775-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37D17A3AC04
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 23:51:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40D7CA3AC6B
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 00:16:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 19EC23B132E
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 22:51:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1954B174C25
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 23:16:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17A6F1CF5E2;
-	Tue, 18 Feb 2025 22:51:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C13D61A8F6D;
+	Tue, 18 Feb 2025 23:16:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IJzIFiv7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qy09Eemj"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0A82862B7;
-	Tue, 18 Feb 2025 22:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67751D61A1
+	for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 23:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739919090; cv=none; b=KqoutcO4CS3xt5lq9ppSPpba1PwxRnYIm2G/NtIbrIYTzi70nhPA6j5blfgGDFMBstS1iEcztJfEi7ikjOE2tOpbyNiYrV7Jyc0Ltc1nDOzWD5dr3cp/MOrM7xyEjIDWI38sSNTn45EFmk63OM6Zcy3QMQ+gAXPZrUPWE+oSM6o=
+	t=1739920584; cv=none; b=AOcFs5YjqD4W3B+6iUjqYkWwWHni3O6jJzvruQZGKX+PCdEMouO8iDzF/8cuWrYvF/32HjRXIgh0dyRuPM6CZue5j2VWnxAM6ebFt4BSj+Ica+4/jFllMVtB0I6f+nih+a266SZ8KyP827mg/LxOd6m1m4gydEljNnTuqbPcfCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739919090; c=relaxed/simple;
-	bh=41Ju47sY0lMfM/I4sXVYmijlHz2g9fuRqHfzZwSEb2c=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=LMHz0P5HM5IIufXEPGLg7e3atsIoG3VAK9Fz0gBOaNFoRePoPJEmBzfWAu4hpFhlK924saJWM1GAbI2YZwg59FsL7jxBoJedb426pPM8wZhNKcSc/+hlIq/Q15XYiJK1EKWgoYppMjtwA9BUoGZpmghUXVS1n2E2P/sFxBXDPhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IJzIFiv7; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1739920584; c=relaxed/simple;
+	bh=1/cYWTAkl57CmWDHOZlHOjFWVo2sF0ZzKAbUx9sM2Ak=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=f+gIfTrW6HxT7JJloGgfpGvm2b9bl3ijoVNoIkyDp8vAUC3lxhRpDuZMc5+20kKXPwJcOBwGyO+bdkGvMDz4r+iiqoMHlqMNz8sL/jtmJkK2yOR8d4wh4K1TWRoEg/BXOcRAUw2HzZv7lYQamt5xwW71BxkMRZhoFalTDsOkh8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qy09Eemj; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739919088; x=1771455088;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=41Ju47sY0lMfM/I4sXVYmijlHz2g9fuRqHfzZwSEb2c=;
-  b=IJzIFiv7JQEHBFbnOA+aNIrs77a8XzirojFdkZKS7dT3Xnj0rmeQM4uZ
-   6vQ0osmmVjfxTneEnvw/Dl4gXdrZ6xPI4MxGQU6vwNUUrh2ETG8n4N3iX
-   1OeqOfz2GJlXR46tGtmNjd1pToeiG3oYDzKvKR7vM9e7agk2g9yvdUYVg
-   zhCy9Bp2akFnehAWuuS/aZ3LqTZwTHXPvbFknqXAyL916jg3rUkwvhfsh
-   ZGAwWeSmjlAQBbV0UVYM+585ZdlJNHe9Ek6gNYcg76hVYUT6fDXzHmA/k
-   v1UDdOz2+nmlUzeW7KsvsxeZnvhSKmiwl5WHNCb/41JKJYm69ajRPrtdP
+  t=1739920583; x=1771456583;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=1/cYWTAkl57CmWDHOZlHOjFWVo2sF0ZzKAbUx9sM2Ak=;
+  b=Qy09Eemj/rt4ZRK+wYFensqZf1Gkb8LmiMExVPT65tdY0RI4Q9+0863L
+   pRxU2tUgCm2GPCcdofzP95Qg89GqCXTxyWZcSU0t/F2da5aed2FxNDI+m
+   KIJwvoKmt0tfznkjBBrrDIlufOxYscONmbg2TLq8JXM1Na9xX0EPg6y9D
+   K563fSJywuCCzMshLPc/rBLSj9HHJOg9HnVSo6cQLLdFA6WiWR6xONMym
+   OwJZtJx+jmGqU3wPrzaBOzZWGxBWpZ9Lnbn3UPHz7J+7YAf7x2erK1zC+
+   SjKxENyojJ3i9pVGhZNcw7wxSm+wLVuFJ9+46f0iGZ+gForEyiAB9q1m7
    w==;
-X-CSE-ConnectionGUID: Q4MrmnkQSbKNlOLLheLdCw==
-X-CSE-MsgGUID: cknWGdK5R1ulu9jYirWzUA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44556748"
+X-CSE-ConnectionGUID: a+XTi533THujK1JLymbh6Q==
+X-CSE-MsgGUID: aPv+GY4PSQiAzYNYI8BZvw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="51624039"
 X-IronPort-AV: E=Sophos;i="6.13,296,1732608000"; 
-   d="scan'208";a="44556748"
+   d="scan'208";a="51624039"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 14:51:28 -0800
-X-CSE-ConnectionGUID: SGqeKsewS3S1PEGd7PS0eg==
-X-CSE-MsgGUID: qBLaGenvS024Odg4vAPM9g==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 15:16:22 -0800
+X-CSE-ConnectionGUID: HbqaA4bWSleolyIZEP7RVA==
+X-CSE-MsgGUID: l3KN5cScQZi7Q2RZ0Vyt6Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,296,1732608000"; 
-   d="scan'208";a="119642688"
-Received: from sj-2308-osc3.sj.altera.com ([10.244.138.69])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 14:51:26 -0800
-Date: Tue, 18 Feb 2025 14:51:27 -0800 (PST)
-From: matthew.gerlach@linux.intel.com
-To: Krzysztof Kozlowski <krzk@kernel.org>
-cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
-    robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
-    conor+dt@kernel.org, dinguyen@kernel.org, joyce.ooi@intel.com, 
-    linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, matthew.gerlach@altera.com, 
-    peter.colberg@altera.com
-Subject: Re: [PATCH v7 2/7] dt-bindings: intel: document Agilex PCIe Root
- Port
-In-Reply-To: <3894efe9-fb8a-4a6f-bc50-ed54b6f7614d@kernel.org>
-Message-ID: <21475024-ba4e-6842-d760-3efe4cab9819@linux.intel.com>
-References: <20250215155359.321513-1-matthew.gerlach@linux.intel.com> <20250215155359.321513-3-matthew.gerlach@linux.intel.com> <20250216-ubiquitous-agile-spoonbill-cf12ab@krzk-bin> <dcd28035-6ba8-5d67-daa3-26812c4fc99d@linux.intel.com>
- <3894efe9-fb8a-4a6f-bc50-ed54b6f7614d@kernel.org>
+   d="scan'208";a="119648941"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 18 Feb 2025 15:16:20 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tkWp8-0000xT-1g;
+	Tue, 18 Feb 2025 23:16:18 +0000
+Date: Wed, 19 Feb 2025 07:15:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: [pci:hotplug 1/2] drivers/pci/hotplug/shpchp_core.c:330:9: error:
+ implicit declaration of function 'dbg'
+Message-ID: <202502190754.ogAfcyNP-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git hotplug
+head:   42e8331215cfd096f86b8605822a0fe8b0a2e2bb
+commit: bf8863c9be49b92db646b78fecd445e59a4c1e9f [1/2] PCI: shpchp: Remove unused logging wrappers
+config: arm-randconfig-001-20250219 (https://download.01.org/0day-ci/archive/20250219/202502190754.ogAfcyNP-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250219/202502190754.ogAfcyNP-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502190754.ogAfcyNP-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/pci/hotplug/shpchp_core.c: In function 'shpcd_init':
+>> drivers/pci/hotplug/shpchp_core.c:330:9: error: implicit declaration of function 'dbg' [-Wimplicit-function-declaration]
+     330 |         dbg("%s: pci_register_driver = %d\n", __func__, retval);
+         |         ^~~
+>> drivers/pci/hotplug/shpchp_core.c:331:9: error: implicit declaration of function 'info' [-Wimplicit-function-declaration]
+     331 |         info(DRIVER_DESC " version: " DRIVER_VERSION "\n");
+         |         ^~~~
+--
+   drivers/pci/hotplug/shpchp_hpc.c: In function 'shpc_get_cur_bus_speed':
+>> drivers/pci/hotplug/shpchp_hpc.c:678:9: error: implicit declaration of function 'dbg' [-Wimplicit-function-declaration]
+     678 |         dbg("Current bus speed = %d\n", bus_speed);
+         |         ^~~
 
 
+vim +/dbg +330 drivers/pci/hotplug/shpchp_core.c
 
-On Tue, 18 Feb 2025, Krzysztof Kozlowski wrote:
+^1da177e4c3f415 Linus Torvalds  2005-04-16  324  
+^1da177e4c3f415 Linus Torvalds  2005-04-16  325  static int __init shpcd_init(void)
+^1da177e4c3f415 Linus Torvalds  2005-04-16  326  {
+f652e7d2916fe2f Bjorn Helgaas   2013-01-11  327  	int retval;
+e24dcbef93dbbf5 Tejun Heo       2010-10-18  328  
+^1da177e4c3f415 Linus Torvalds  2005-04-16  329  	retval = pci_register_driver(&shpc_driver);
+66bef8c059015ba Harvey Harrison 2008-03-03 @330  	dbg("%s: pci_register_driver = %d\n", __func__, retval);
+^1da177e4c3f415 Linus Torvalds  2005-04-16 @331  	info(DRIVER_DESC " version: " DRIVER_VERSION "\n");
+f652e7d2916fe2f Bjorn Helgaas   2013-01-11  332  
+^1da177e4c3f415 Linus Torvalds  2005-04-16  333  	return retval;
+^1da177e4c3f415 Linus Torvalds  2005-04-16  334  }
+^1da177e4c3f415 Linus Torvalds  2005-04-16  335  
 
-> On 17/02/2025 16:47, matthew.gerlach@linux.intel.com wrote:
->>
->>
->> On Sun, 16 Feb 2025, Krzysztof Kozlowski wrote:
->>
->>> On Sat, Feb 15, 2025 at 09:53:54AM -0600, Matthew Gerlach wrote:
->>>> The Agilex7f devkit can support PCIe End Points with the appropriate
->>>> daughter card.
->>>>
->>>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->>>> ---
->>>> v7:
->>>>  - New patch to series.
->>>> ---
->>>>  Documentation/devicetree/bindings/arm/intel,socfpga.yaml | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/intel,socfpga.yaml b/Documentation/devicetree/bindings/arm/intel,socfpga.yaml
->>>> index 2ee0c740eb56..0da5810c9510 100644
->>>> --- a/Documentation/devicetree/bindings/arm/intel,socfpga.yaml
->>>> +++ b/Documentation/devicetree/bindings/arm/intel,socfpga.yaml
->>>> @@ -20,6 +20,7 @@ properties:
->>>>                - intel,n5x-socdk
->>>>                - intel,socfpga-agilex-n6000
->>>>                - intel,socfpga-agilex-socdk
->>>> +              - intel,socfpga-agilex7f-socdk-pcie-root-port
->>>
->>> Compatible should represent the board, so what is here exactly the
->>> board? 7f? Agilex7f? socdk? Or is it standard agilex-socdk but with some
->>> things attached?
->>
->> The board is the Agilex 7 FPGA F-Series Transceiver-Soc Development Kit:
->> https://www.intel.com/content/www/us/en/products/details/fpga/development-kits/agilex/si-agf014.html
->
-> Isn't Agilex7 a SoC? I don't see it in the list of compatibles.
-There are actually 3 different variants of the Agilex7 SoC.
->
->>
->> There is not a single, standard agilex-socdk board. There are currently
->> three variants. In addition to the F-Series socdk, there are I-Series and
->> M-Series devkits:
->> https://www.intel.com/content/www/us/en/products/details/fpga/development-kits/agilex/si-agi027.html
->> https://www.intel.com/content/www/us/en/products/details/fpga/development-kits/agilex/agm039.html
->
-> Pages above show distinctive names for the boards, so I am confused why
-> they are not used.
+:::::: The code at line 330 was first introduced by commit
+:::::: 66bef8c059015ba2b36bb5759080336feb01e680 PCI: replace remaining __FUNCTION__ occurrences
 
-Yes, the distinctive names of the boards should be used:
-               - intel,socfpga-agilex7f-socdk
-               - intel,socfpga-agilex7i-socdk
-               - intel,socfpga-agilex7m-socdk
->
->
->
-> Best regards,
-> Krzysztof
->
+:::::: TO: Harvey Harrison <harvey.harrison@gmail.com>
+:::::: CC: Greg Kroah-Hartman <gregkh@suse.de>
 
-Thanks for the feedback,
-Matthew Gerlach
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
