@@ -1,185 +1,183 @@
-Return-Path: <linux-pci+bounces-21734-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21737-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 31BEDA39E7E
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 15:16:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83BB6A3A034
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 15:43:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 03E687A4917
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 14:15:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6E4E93B5F9D
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 14:37:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB97126A0B4;
-	Tue, 18 Feb 2025 14:16:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11AD126B0A1;
+	Tue, 18 Feb 2025 14:36:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="htSu3g77"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sV/8NlDs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54FA269D03
-	for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 14:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB7326AA8E;
+	Tue, 18 Feb 2025 14:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739888199; cv=none; b=QLX8mvS+nwEO7oKbex6knZyYK/YMNrN66RAzrkHquZWAcLawVoKKP7fK+VoHytVB2RoMBM/1yvDcSTDMuswKDyh71H8GKiZQStYo2bz9McALPRsx0hDvfqsKVxZzkUESGeATSh94WlHRQoykmrEGRag/PERcXRH6VhGCZZZgdMM=
+	t=1739889418; cv=none; b=mT+rSeu92gUKckW3q+xfAmH9l8tllsHgL9BLNLVLgZE9rMxEex9dlic2G2T9GEMWGVPHZ4yBbaSTQUjFy/Ii9Iv0+ppqyr5jS+w3DkZ1KwwOEiletLsAZZ3eF0EUn+gLilOAex8+LELH0jPx5yNR/Lfea1/Q6nuLcLVuJgFTMME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739888199; c=relaxed/simple;
-	bh=H5OrTZZF1T4+dJOoCeOR8BRC+wmih1HhO3WIjrfxabQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tg+hR1mS83Kdf4GSirsRR5gTKvPv10jI/nDHzeHxitVtgP9au7byI7N5weBwnD2MXSkRk+AwiQhyXIEPWfhwTYRzggqo/v5uuAnHof3/rmSDzJKrvnXePedei8ML+lXzuZRrX0ldB5GiQa7GgiMKdhS08RIVeiWy+TYc7QB75hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=htSu3g77; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e65be7d86fso51651456d6.1
-        for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 06:16:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1739888196; x=1740492996; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vW41P4u1zMYmLe3HNGTznFnlXAaZ2jlrVM/2Fm/eU+s=;
-        b=htSu3g772Koeih9rq+ETGyDQyK0fLJLUJ4lHLA36xWeEES5ExANZ4Lt4W+wl53N7n2
-         oqcIYuWZdsB7nHUzdiwFQoKXHRtrIM8QpxvJx/b0Kt2FwMphbAjcRAiSnSWZeD7jMUyU
-         Z59kqBe34+K35qykVGWuMjoRQR6u5RBUZaUXvRIJlrUUEgs5bWFguTOOFxxhzpTlywPe
-         4DF+p6cQypJV86EbpHnsscPI42Pdo16u6UIP3UQKIdlny86q+9QbuHygW2CF+9odcIRX
-         9oaFymvRWYVpoAsLhSJBOXGVVNi4V5nalQvluazefFomz5w6l7tPaUYmMHpYJIzjMRqg
-         Uo+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739888196; x=1740492996;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vW41P4u1zMYmLe3HNGTznFnlXAaZ2jlrVM/2Fm/eU+s=;
-        b=rYfG84U9LX/09s4CPY/7WNBtE+c0kGw+EWvgWwwNGyjG8TSQutUcHbqobM6wrzVKnR
-         NPLaG8ys5g2DIa1Da6GDmPeWryLX11svURl2GP3Q/VSThiQTMnuw/cH3ROQElUhR3ySp
-         3LvnbvLYtRrfnA86xq8rYVmYCtYJ7QhhVMMC9Gx+E3YLOuhXOUJNMcViXHU+P9U1rS0f
-         /OXvo/bpaDD1/i1aisdMyk/cZTMdp42CL9OfY2oQmCKf5oa3LmEDh0aszHDmBo4MOKNs
-         aq74Cj9LwQTncL3QOaR0FWU4E5kZ94+gHkOJgyylJGtSz6pFhOhppItvaDFztMl674EG
-         Io/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWGicITne4uoWo9ThagCJRfNH2uJDK8ezjMm2dAMQ59mxk3RsP3ZNHPCaZaTgs3CObH0Z4FTfhw1V0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPnmgjdRXqI6JGlWN+Ifo0WsHdgbiq4S/YLYkJTT+FWGLzoh6X
-	GurJJYv4lsgvmYDlzWV247Po4K5fZXlE/R1SuKiRoXasR81L7fIR/GR+GcFXJ7o=
-X-Gm-Gg: ASbGnct5LM2QNiICKAuvt6mkPJ3XVSI2THgCqwao/3Hx5YHcizt2oonGEx9V7KLEw2N
-	bg9CTku9HM0n3c/CgONBlJWPe28YOa/Kg0td4/+WmauzoUd0friaLzC4u0EENKd03Jlvq530JU4
-	ihZn1ADBpvN7609LoKRlubcx0fg2Hi3sQQEY/Z8nC7RgkopyGmklVwR3PDPNRaO5ofIoLKbXjv3
-	jKQAXWbua3ZG3bSIrv8o9EDkG9WcMNhRe5JgVo58VyhMFsUA09owjPk+zwlw9k0XEASlNqkyALS
-	VjYToipc1hv/JSzMIEV6fhMmnbWRXFkTZ+rj9V7SslNTU8EmtVKpwUCsTmumzYxp
-X-Google-Smtp-Source: AGHT+IHJ10gwa7TkqX4u90KVitfcSqaAYhvBMLdYu0xRO1z75bkcNOGu9RXUBILo5K1eyOZ8Epx6hg==
-X-Received: by 2002:a05:6214:c6c:b0:6e2:3761:71b0 with SMTP id 6a1803df08f44-6e66cfd6c68mr183301176d6.5.1739888196592;
-        Tue, 18 Feb 2025 06:16:36 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65d779271sm64214796d6.3.2025.02.18.06.16.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 06:16:34 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tkOOo-0000000HUGc-0mkn;
-	Tue, 18 Feb 2025 10:16:34 -0400
-Date: Tue, 18 Feb 2025 10:16:34 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: x86@kernel.org, kvm@vger.kernel.org, linux-crypto@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Christoph Hellwig <hch@lst.de>, Nikunj A Dadhania <nikunj@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>,
-	Joao Martins <joao.m.martins@oracle.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Steve Sistare <steven.sistare@oracle.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Dionna Glaze <dionnaglaze@google.com>, Yi Liu <yi.l.liu@intel.com>,
-	iommu@lists.linux.dev, linux-coco@lists.linux.dev,
-	Zhi Wang <zhiw@nvidia.com>, AXu Yilun <yilun.xu@linux.intel.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-Subject: Re: [RFC PATCH v2 12/22] iommufd: Allow mapping from guest_memfd
-Message-ID: <20250218141634.GI3696814@ziepe.ca>
-References: <20250218111017.491719-1-aik@amd.com>
- <20250218111017.491719-13-aik@amd.com>
+	s=arc-20240116; t=1739889418; c=relaxed/simple;
+	bh=JomdOoiQ17paEXI4f+PdfOHyWq+hd8mMOpVRmJpqAqk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=noTEc3doFWRXmtJVdeOP7erVyZuhuUmOdHF2XZkHUadgfnkHDGNW30JCtllHvSXRwECGx5bL72EawBi8pUpf9NiPIh9yoh4TFeEk9oeqnL7tfboMmaGARDiaNNNIeWJ+IFu3/HY7INbVCTxB9dNq6R5Kl/Xa9dha8X0uSkzX4WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sV/8NlDs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3E999C4CEE2;
+	Tue, 18 Feb 2025 14:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739889418;
+	bh=JomdOoiQ17paEXI4f+PdfOHyWq+hd8mMOpVRmJpqAqk=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=sV/8NlDsG7hDLXzrOchAa5HKlL/GKdnU0iXRBEPJx8HHjUTaYZ8JLaKeJErQhYOIM
+	 aEC/K9YsvKPpdJ8iRdfF9JB6N1nvt2X1/nL1NGhf0scDmwE9gzLpndVSzMzltxYg2u
+	 hZunI9y3hzXLIydeUEB+qLcmY73ZNIB+z1FuMWjgiCPd7OTk+rL7PkFQrtXGbUCGZ8
+	 xXBc73fXVz4ESqEwjrA3y8b+CHDs2TY02RAMewvI4J0oMtMRSI6ptRAj0/dQVDggRI
+	 81+poiRg1OQ8bM1QrjAeR7fR01yHoAXEJqFHUhH7oTccuBsEdgHaRPX6yFTOwDMs06
+	 1HkDEyghT1OHA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186FDC02198;
+	Tue, 18 Feb 2025 14:36:58 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
+Subject: [PATCH 0/4] PCI: dwc: Add PTM sysfs support
+Date: Tue, 18 Feb 2025 20:06:39 +0530
+Message-Id: <20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218111017.491719-13-aik@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPeatGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDI0ML3YLkzFTdwuT8XN2CklzdpDQzS1OjNNNkk1RTJaCegqLUtMwKsHn
+ RsbW1ADxCJLNfAAAA
+To: Shuai Xue <xueshuai@linux.alibaba.com>, 
+ Jing Zhang <renyu.zj@linux.alibaba.com>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jingoohan1@gmail.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>
+Cc: Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3647;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=JomdOoiQ17paEXI4f+PdfOHyWq+hd8mMOpVRmJpqAqk=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBntJsCRFv6m9eazV1uDz0AhPMpFELd3Ewc3zgXo
+ +fhwihHEpuJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ7SbAgAKCRBVnxHm/pHO
+ 9bJICACZnuPkpD/+2MJa10YW7L52k2KZ9u9IjOvhXxIj2mVM8PULlDt3iUY4gLBw7c+1SWVf0r/
+ x22opFo0IspCHMj11sYpyfq5huuUizvadSYKa5mS9wr4EWwHP9m32Q0yRVvc1R0u+Z9Iks9mDTy
+ 5lCWYYs5SRez6erms0QnXTbV6lYimtHrkqy7B3qcUURXDOsBsDGzAVJRnKG/S2vXp28U06zMHlI
+ 4BK4kWsWvl1i8ai4bkGEYOKvaicCm2aXZ1yuwb+7TYyDZNZd2WII4jFA4D/F2zlwpg8p0pYJaXZ
+ N1Yu5D/wUOytbANzHVEmTmCyFWJMVtLaLjz7MmEVEh3Nkc36
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@linaro.org/default with auth_id=185
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reply-To: manivannan.sadhasivam@linaro.org
 
-On Tue, Feb 18, 2025 at 10:09:59PM +1100, Alexey Kardashevskiy wrote:
-> CoCo VMs get their private memory allocated from guest_memfd
-> ("gmemfd") which is a KVM facility similar to memfd.
-> At the moment gmemfds cannot mmap() so the usual GUP API does
-> not work on these as expected.
-> 
-> Use the existing IOMMU_IOAS_MAP_FILE API to allow mapping from
-> fd + offset. Detect the gmemfd case in pfn_reader_user_pin() and
-> simplified mapping.
-> 
-> The long term plan is to ditch this workaround and follow
-> the usual memfd path.
+Hi,
 
-How is that possible though?
+This series adds sysfs support for PCIe PTM in Synopsys Designware IPs.
 
-> +static struct folio *guest_memfd_get_pfn(struct file *file, unsigned long index,
-> +					 unsigned long *pfn, int *max_order)
-> +{
-> +	struct folio *folio;
-> +	int ret = 0;
-> +
-> +	folio = filemap_grab_folio(file_inode(file)->i_mapping, index);
-> +
-> +	if (IS_ERR(folio))
-> +		return folio;
-> +
-> +	if (folio_test_hwpoison(folio)) {
-> +		folio_unlock(folio);
-> +		folio_put(folio);
-> +		return ERR_PTR(-EHWPOISON);
-> +	}
-> +
-> +	*pfn = folio_pfn(folio) + (index & (folio_nr_pages(folio) - 1));
-> +	if (!max_order)
-> +		goto unlock_exit;
-> +
-> +	/* Refs for unpin_user_page_range_dirty_lock->gup_put_folio(FOLL_PIN) */
-> +	ret = folio_add_pins(folio, 1);
-> +	folio_put(folio); /* Drop ref from filemap_grab_folio */
-> +
-> +unlock_exit:
-> +	folio_unlock(folio);
-> +	if (ret)
-> +		folio = ERR_PTR(ret);
-> +
-> +	return folio;
-> +}
+First patch moves the common DWC struct definitions (dwc_pcie_vsec_id) to
+include/pci/pcie-dwc.h from dwc-pcie-pmu driver. This allows reusing the same
+definitions in pcie-designware-sysfs driver introduced in this series and also
+in the debugfs series by Shradha [1].
 
-Connecting iommufd to guestmemfd through the FD is broadly the right
-idea, but I'm not sure this matches the design of guestmemfd regarding
-pinnability. IIRC they were adamant that the pages would not be
-pinned..
+Second patch adds support for searching the Vendor Specific Extended Capability
+(VSEC) in the pcie-designware driver. This patch was originally based on
+Shradha's patch [2], but modified to accept 'struct dwc_pcie_vsec_id' to avoid
+iterating through the vsec_ids in the driver.
 
-folio_add_pins() just prevents the folio from being freed, it doesn't
-prevent the guestmemfd code from messing with the filemap.
+Third patch adds the actual sysfs support for PTM in a new file
+pcie-designware-sysfs.c built along with pcie-designware.c.
 
-You should separate this from the rest of the series and discuss it
-directly with the guestmemfd maintainers.
- 
-As I understood it the requirement here is to have some kind of
-invalidation callback so that iommufd can drop mappings, but I don't
-really know and AFAIK AMD is special in wanting private pages mapped
-to the hypervisor iommu..
+Finally, fourth patch masks the PTM_UPDATING interrupt in the pcie-qcom-ep
+driver to avoid processing the interrupt for each PTM context update.
 
-Jason
+Testing
+=======
+
+This series is tested on Qcom SA8775p Ride Mx platform where one SA8775p acts as
+RC and another as EP with following instructions:
+
+RC
+--
+
+$ echo 1 > /sys/devices/platform/1c10000.pcie/dwc/ptm/ptm_context_valid
+
+EP
+--
+
+$ echo auto > /sys/devices/platform/1c10000.pcie-ep/dwc/ptm/ptm_context_update
+
+$ cat /sys/devices/platform/1c10000.pcie-ep/dwc/ptm/ptm_local_clock
+159612570424
+
+$ cat /sys/devices/platform/1c10000.pcie-ep/dwc/ptm/ptm_master_clock
+159609466232
+
+$ cat /sys/devices/platform/1c10000.pcie-ep/dwc/ptm/ptm_t1
+159609466112
+
+$ cat /sys/devices/platform/1c10000.pcie-ep/dwc/ptm/ptm_t4
+159609466518
+
+NOTE: To make use of the PTM feature, the host PCIe client driver has to call
+'pci_enable_ptm()' API during probe. This series was tested with enabling PTM in
+the MHI host driver with a local change (which will be upstreamed later).
+Technically, PTM could also be enabled in the pci_endpoint_test driver, but I
+didn't add the change as I'm not sure we'd want to add random PCIe features in
+the test driver without corresponding code in pci-epf-test driver.
+
+Merging Strategy
+================
+
+I'd like to have an ACK from the perf maintainers to take the whole series
+through PCI tree.
+
+[1] https://lore.kernel.org/linux-pci/20250214105007.97582-1-shradha.t@samsung.com
+[2] https://lore.kernel.org/linux-pci/20250214105007.97582-2-shradha.t@samsung.com
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+Manivannan Sadhasivam (4):
+      perf/dwc_pcie: Move common DWC struct definitions to 'pcie-dwc.h'
+      PCI: dwc: Add helper to find the Vendor Specific Extended Capability (VSEC)
+      PCI: dwc: Add sysfs support for PTM
+      PCI: qcom-ep: Mask PTM_UPDATING interrupt
+
+ Documentation/ABI/testing/sysfs-platform-dwc-pcie  |  70 ++++++
+ MAINTAINERS                                        |   2 +
+ drivers/pci/controller/dwc/Makefile                |   2 +-
+ drivers/pci/controller/dwc/pcie-designware-ep.c    |   3 +
+ drivers/pci/controller/dwc/pcie-designware-host.c  |   4 +
+ drivers/pci/controller/dwc/pcie-designware-sysfs.c | 278 +++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.c       |  46 ++++
+ drivers/pci/controller/dwc/pcie-designware.h       |  22 ++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          |   8 +
+ drivers/perf/dwc_pcie_pmu.c                        |  23 +-
+ include/linux/pcie-dwc.h                           |  42 ++++
+ 11 files changed, 478 insertions(+), 22 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250218-pcie-qcom-ptm-bf6952f5c4e5
+
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+
 
