@@ -1,73 +1,73 @@
-Return-Path: <linux-pci+bounces-21695-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21696-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D601A3957D
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 09:34:41 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AF2CA395E4
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 09:46:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A54516D763
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 08:31:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0BE427A1378
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 08:45:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24E4A1991B8;
-	Tue, 18 Feb 2025 08:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D78822D4F3;
+	Tue, 18 Feb 2025 08:46:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="G9Ixn6WA"
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="UllbpAq9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF9E202C4C
-	for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 08:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091621DD886
+	for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 08:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739867514; cv=none; b=BAvviDYJ1Irqkt5VN932BTZrmMie64MgMgF5VFFOeFfAi3Viq6WzNoXSrFcySKYF3Rj7AvtSrVY231M2VGsyp8ESZoC6fMzmrxu9ZYDDRz/T7OkEeZo1yvTV2vgIIdjCbAzJCdlQOrgYey+NRgH1RqZpTbr9O04C9NqAS8H/Nb4=
+	t=1739868386; cv=none; b=IIUx6SwaTSBKudcX0CtFVEL6Je75I03qHbPMav9BlcMP4oZYKysJFDjCMW38qgqgfbn12wtCv1NdN0TVHko9+EMW4+N5hZneN6OA/BQDFp5qp69LZ8L8ReG4zGyooo/otDSJ9JiOdOWzs3mhq5NLKNoL8Tc04MN3nlX+x2KQF8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739867514; c=relaxed/simple;
-	bh=SsbAnIdLUxCmvoZx0vz9iFZutB0fWqPdzrUOPpXqTJE=;
+	s=arc-20240116; t=1739868386; c=relaxed/simple;
+	bh=yDSnXVIa40AnZA99OPBLMMAd5wSVjLokTovYdqQrcNc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SNCe9GpV7riqeMiqYURLZIKyIpwXSzfSc28HQ713+oFM7RPX8MMm12nCpfGjrvCIRO/aW2bd+YijH3CKtsjVAgjTrv88U+dyiqG8u8Y7S+BkOQ+lJfFP692GKk8Qbol37zhpzTP2LUa26sxAyBLJDmzGpkEvvkhw9Q5nFJjNNuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=G9Ixn6WA; arc=none smtp.client-ip=209.85.161.45
+	 To:Cc:Content-Type; b=pAo1XgUcwebKZlVOfMtgEkplY+7CpPFYF2GcczMvX7NGlt8Tt2IPOPfR57qc41WTdPXGwgs5zG2UTB4HCWEfplfNVJTtcaZlY3sOl/Te+dDzsE24yZfGE0VoSP0NihE1vYOGa0F3madB+VxXRzJ0+baxcYLgZT3ghMqq77VNfCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=UllbpAq9; arc=none smtp.client-ip=209.85.160.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5fc447b03f2so1285795eaf.0
-        for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 00:31:52 -0800 (PST)
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2b8e2606a58so2762558fac.0
+        for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 00:46:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1739867511; x=1740472311; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1739868380; x=1740473180; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pgMKlsrMP1eBCbeaAVjxhZXck6mumn4aUs8hwiTVomI=;
-        b=G9Ixn6WArpM9qHIJScfIHBYv5Q0u79tZoRzugjjrjAghOXer3nJwvwdGYGQWu/ziJK
-         rOKTde9GXEn08c+rFiZj+QY5nf6ba6DOFB0uwbPjSuyCp0MtRM0+EBFaQAjN8G/S83ha
-         uqSGqFO7xPqpk+QIrCDKETw+bp+0QAA3pqL/Oq9iwNMS/Q9ttmCrHkjmUsdq3L+fiSIf
-         dDtc1yhSQw/SIeolULO7f8XGDZ7crQJsE/C3y0n53jgqexkOUNLOBXBYT82s5lhVLeJs
-         0uIZhbjqeBo2FsUlW0JXd2tHJVuClZlhlBfWNVJnI/vGfCvYQ8s6hQN77darTlKTetfp
-         6TpQ==
+        bh=GJd7nq6QzBYjb9npIZDy/jgRU4O0VseneW2dwq1EDmY=;
+        b=UllbpAq9qJZRClX+hvn7DP1YB6SxCXtO4R04MByNwwdUZm2TsT4+bAhnvUKtJ+I76s
+         Cs0ZNpEAAqTI7P/QsVZanVjWKmcM2+E7tpavfmTf83Lk7NWlPfzGx8si8hYznoCgpFg/
+         kFvnm/It3cuyQeAbTqrJBI8J/t5m1mvexXGRdYTCTpm6wgxLC1jY4JVL/D3+leoue9W6
+         L6VPDwuS3kwxfUOz49KTSSeFEi3QIyRvwbVwPCBPmP5W6hmQILtBFXFeHu2gQ02EeR6k
+         1p76zquMMbDBNU7YkuVaXIJf4S/6381qplAClMIEtHH8TFe3FquGLlMgntZcxC0QrLbz
+         t6kA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739867511; x=1740472311;
+        d=1e100.net; s=20230601; t=1739868380; x=1740473180;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pgMKlsrMP1eBCbeaAVjxhZXck6mumn4aUs8hwiTVomI=;
-        b=v78Gt19L+KuCNXcS8iTHS18cLHTZqXZC0XkK9oy9yqBNhLtvloRWnLgzLo+zdJzyMK
-         cwAZWYeonqOPlF7ItSCxmM8HavjIfniN5Q0YuCu9qMAkMWCrdjpcciAavZr4mB1lUnxZ
-         ZKfAk+45HeivTeDUrQfU0Zmgi9Mvwj0DDST7B9bX5uydBJUENeOcJeOObUJTWSvfSJaF
-         27bGVQzLV0TEZintd+LrQun9hRkHkxY2NtXHrWq8aWU1OQoqgyJJbYjeCZ7j1ZDMyeM8
-         PbGPeCno98m9AssbY2BJ7RW+4/ttNQFN1Co/RXiF5fMejpEzSBMItDXowIH0XKUapGhw
-         +Uwg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyC98wN+0D6KhiQWRGj/4nDJkcmWbtP5IJcZWcUZKfjRyy1LmBLALNMB6VsCSlfeRi7jwFS9xqVzw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxE/eDpsINbJYcPRUNZxSSvvD6Z/CLd9wh3u0FVIrZjR6wjlLa/
-	xTfKZHdpqH90hRv43BxAxG5b0nej6fq6srnsvFeOeXgEX5mFPat76gKIbPEI/RcjH7TmlpyW4sJ
-	aDbHwRhjkk3/j/FSKgy86bp1INGIH7+rkKnZweQ==
-X-Gm-Gg: ASbGncuQmL5BdUQfvrGFvhlAhlCOpnzCc+oNaCjyOvxbeawxBf7KhIRrMQoOzB+annr
-	PczMDeVPQKSjW5daBsKpWPnz08bbyF8orY1n7n/9ZaftRHG4jmka4udyZS4wWqfenqhlEd3gAbj
-	M=
-X-Google-Smtp-Source: AGHT+IGHJuM9IfNPGlGcPH7aa44uhxOWYRwrS2rEKmNkeW+giAvfsVbkjj5RarhaVn+9MIgY3oxSFWNSlHJgrM3c2SI=
-X-Received: by 2002:a05:6870:be8b:b0:29e:3531:29da with SMTP id
- 586e51a60fabf-2bc99a937bdmr9235473fac.9.1739867511250; Tue, 18 Feb 2025
- 00:31:51 -0800 (PST)
+        bh=GJd7nq6QzBYjb9npIZDy/jgRU4O0VseneW2dwq1EDmY=;
+        b=nFIUq1MY3mSe3mHBIZiLfYYPgv78F7nBE+2WGtPoexe3GpzSgJQjYgyX1WU4zGBUY2
+         dF4tyOJm8+IVYeVMgPk6P1mk0YXUaJaNhixiy+jttGaJrS+oiJyr64RGOGP7S7NdZo0O
+         IKCsR0MX4OVQZBzss1opRqfTC0UMJLWeLOhZO2vnNj/+2apMVNTeqP43q6115G84f4+5
+         ZfY+4eoqoofPf/DkoJSlzieUEsLXP3GCpwANJZJf4A89fFB6YQasLksgAyUKWP5Ssfd7
+         AjK48bb6rf2/4ezhM8W5ZONZsnvxqZP7UtpRMaTxHhJ6Y3FQnb3AQPWO7LmV6IhuqLov
+         hnaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlvF+vjzZDLbXh35NrPJpK6V2qzIfhlQEImVuvrnp+t++lc/X3fgGUTIqVX6xgtwMKvw5zqyIygdE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiuKyyfwqExDDSN+/Emn1zHZ8t87WjHNGsrVUGUAqwC3a8jA73
+	bYEEdLGOF3vl+GagEhp6/jtqhJhyud9LVyfcJdHEidr519DcUqRlywebP+PH2V5R69dUf8/QNh/
+	isr28fN1KejVETbE2SIIx7uTWe8WLAjQse+Zb7A==
+X-Gm-Gg: ASbGncszQqgRQL8Du5S1c2AyeaMLSSwQaZDhb8FwSHJZAnUbV8rqukmB0QpziEAqKi3
+	Hsvf/Jihfwhx27eXfYwcRm5bku62SwBQwS6PeRFqIN6VNnKWqZyaJERLiV49yAoYskeFztWwPGK
+	o=
+X-Google-Smtp-Source: AGHT+IFm9vNEQ8X126IwADvLb9rT5XMr1pesOHyHKgcPIaN+xUJPxTGUWHrghfMYHG0o0nWqEBP/oKVjpG31b6OWn1o=
+X-Received: by 2002:a05:6870:b623:b0:297:23cf:d3db with SMTP id
+ 586e51a60fabf-2bc99dcc23fmr8163637fac.37.1739868380048; Tue, 18 Feb 2025
+ 00:46:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,87 +75,129 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250208104002.60332-1-cuiyunhui@bytedance.com>
- <20250208104002.60332-2-cuiyunhui@bytedance.com> <d1db3047-f478-4d8f-b9f6-e7a5820d5a29@linux.alibaba.com>
-In-Reply-To: <d1db3047-f478-4d8f-b9f6-e7a5820d5a29@linux.alibaba.com>
+ <20250208104002.60332-3-cuiyunhui@bytedance.com> <2fedcf43-05f9-40da-a4f7-1b836f30b0df@linux.alibaba.com>
+In-Reply-To: <2fedcf43-05f9-40da-a4f7-1b836f30b0df@linux.alibaba.com>
 From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Tue, 18 Feb 2025 16:31:40 +0800
-X-Gm-Features: AWEUYZkcD7V4dyG01R1nkwYjrYmf-ApvAaWIkuajdXDd_s9zqaV_RoEhFC_HhyY
-Message-ID: <CAEEQ3wmaD61DMV0nXrQeVEk6r-J3JYxFceXZmH=t0aQrESqJew@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v3 1/2] perf/dwc_pcie: fix some unreleased resources
+Date: Tue, 18 Feb 2025 16:46:08 +0800
+X-Gm-Features: AWEUYZlKaYI0ZGCGtjcpg77WiA6ZuKperDHgxYMipoc-2RT3j86BH0keI_z0DXQ
+Message-ID: <CAEEQ3wk5AhHK5cbZ-m1ibz93qqGJ1OPXM_NE_6rWjkuPM=Gw=g@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v3 2/2] perf/dwc_pcie: fix duplicate
+ pci_dev devices
 To: Shuai Xue <xueshuai@linux.alibaba.com>
 Cc: renyu.zj@linux.alibaba.com, will@kernel.org, mark.rutland@arm.com, 
 	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-pci@vger.kernel.org
+	linux-kernel@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hi Shuai,
 
-On Tue, Feb 11, 2025 at 4:05=E2=80=AFPM Shuai Xue <xueshuai@linux.alibaba.c=
+On Tue, Feb 11, 2025 at 4:02=E2=80=AFPM Shuai Xue <xueshuai@linux.alibaba.c=
 om> wrote:
 >
 >
 >
 > =E5=9C=A8 2025/2/8 18:40, Yunhui Cui =E5=86=99=E9=81=93:
-> > Release leaked resources, such as plat_dev and dev_info.
+> > During platform_device_register, wrongly using struct device
+> > pci_dev as platform_data caused a kmemdup copy of pci_dev. Worse
+> > still, accessing the duplicated device leads to list corruption as its
+> > mutex content (e.g., list, magic) remains the same as the original.
 > >
 > > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 > > ---
-> >   drivers/perf/dwc_pcie_pmu.c | 33 ++++++++++++++++++++++-----------
-> >   1 file changed, 22 insertions(+), 11 deletions(-)
+> >   drivers/perf/dwc_pcie_pmu.c | 20 +++++++++++++-------
+> >   1 file changed, 13 insertions(+), 7 deletions(-)
 > >
 > > diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-> > index cccecae9823f..19fa2ba8dd67 100644
+> > index 19fa2ba8dd67..4f6599e32bba 100644
 > > --- a/drivers/perf/dwc_pcie_pmu.c
 > > +++ b/drivers/perf/dwc_pcie_pmu.c
-> > @@ -572,8 +572,10 @@ static int dwc_pcie_register_dev(struct pci_dev *p=
-dev)
+> > @@ -565,9 +565,7 @@ static int dwc_pcie_register_dev(struct pci_dev *pd=
+ev)
+> >       u32 sbdf;
+> >
+> >       sbdf =3D (pci_domain_nr(pdev->bus) << 16) | PCI_DEVID(pdev->bus->=
+number, pdev->devfn);
+> > -     plat_dev =3D platform_device_register_data(NULL, "dwc_pcie_pmu", =
+sbdf,
+> > -                                              pdev, sizeof(*pdev));
+> > -
+> > +     plat_dev =3D platform_device_register_simple("platform_dwc_pcie",=
+ sbdf, NULL, 0);
+> >       if (IS_ERR(plat_dev))
 > >               return PTR_ERR(plat_dev);
 > >
-> >       dev_info =3D kzalloc(sizeof(*dev_info), GFP_KERNEL);
-> > -     if (!dev_info)
-> > +     if (!dev_info) {
-> > +             platform_device_unregister(plat_dev);
-> >               return -ENOMEM;
-> > +     }
+> > @@ -616,18 +614,26 @@ static struct notifier_block dwc_pcie_pmu_nb =3D =
+{
 > >
-> >       /* Cache platform device to handle pci device hotplug */
-> >       dev_info->plat_dev =3D plat_dev;
-> > @@ -730,6 +732,15 @@ static struct platform_driver dwc_pcie_pmu_driver =
-=3D {
-> >       .driver =3D {.name =3D "dwc_pcie_pmu",},
-> >   };
-> >
-> > +static void dwc_pcie_cleanup_devices(void)
-> > +{
-> > +     struct dwc_pcie_dev_info *dev_info, *tmp;
-> > +
-> > +     list_for_each_entry_safe(dev_info, tmp, &dwc_pcie_dev_info_head, =
-dev_node) {
-> > +             dwc_pcie_unregister_dev(dev_info);
-> > +     }
-> > +}
-> > +
-> >   static int __init dwc_pcie_pmu_init(void)
+> >   static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
 > >   {
-> >       struct pci_dev *pdev =3D NULL;
-> > @@ -742,7 +753,7 @@ static int __init dwc_pcie_pmu_init(void)
-> >               ret =3D dwc_pcie_register_dev(pdev);
-> >               if (ret) {
-> >                       pci_dev_put(pdev);
+> > -     struct pci_dev *pdev =3D plat_dev->dev.platform_data;
+> > +     struct pci_dev *pdev;
+> >       struct dwc_pcie_pmu *pcie_pmu;
+> >       char *name;
+> >       u32 sbdf;
+> >       u16 vsec;
+> >       int ret;
+> >
+> > +     sbdf =3D plat_dev->id;
+> > +     pdev =3D pci_get_domain_bus_and_slot(sbdf >> 16, PCI_BUS_NUM(sbdf=
+ & 0xffff),
+> > +                                        sbdf & 0xff);
+> > +     if (!pdev) {
+> > +             pr_err("No pdev found for the sbdf 0x%x\n", sbdf);
+> > +             return -ENODEV;
+> > +     }
+> > +
+> >       vsec =3D dwc_pcie_des_cap(pdev);
+> >       if (!vsec)
+> >               return -ENODEV;
 >
-> Should we get a reference count of pdev in dwc_pcie_register_dev and put =
-it in
-> dwc_pcie_unregister_dev?
+> pci_dev_put(pdev) should move ahead to aovid return here.
+>
+> >
+> > -     sbdf =3D plat_dev->id;
+> > +     pci_dev_put(pdev);
+> >       name =3D devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport=
+_%x", sbdf);
+> >       if (!name)
+> >               return -ENOMEM;
+> > @@ -642,7 +648,7 @@ static int dwc_pcie_pmu_probe(struct platform_devic=
+e *plat_dev)
+> >       pcie_pmu->on_cpu =3D -1;
+> >       pcie_pmu->pmu =3D (struct pmu){
+> >               .name           =3D name,
+> > -             .parent         =3D &pdev->dev,
+> > +             .parent         =3D &plat_dev->dev,
+> >               .module         =3D THIS_MODULE,
+> >               .attr_groups    =3D dwc_pcie_attr_groups,
+> >               .capabilities   =3D PERF_PMU_CAP_NO_EXCLUDE,
+> > @@ -729,7 +735,7 @@ static int dwc_pcie_pmu_offline_cpu(unsigned int cp=
+u, struct hlist_node *cpuhp_n
+> >
+> >   static struct platform_driver dwc_pcie_pmu_driver =3D {
+> >       .probe =3D dwc_pcie_pmu_probe,
+> > -     .driver =3D {.name =3D "dwc_pcie_pmu",},
+> > +     .driver =3D {.name =3D "platform_dwc_pcie",},
+>
+> Aha, it is very difficult to come up with a name that satisfies everyone.=
+ The
+> original name uses the '_pmu' suffix to follow the unwritten convention o=
+f
+> other PMU drivers.
+>
+> Personally, I think the original name is more appropriate, but I'll leave=
+ the
+> decision to @Will.
 
-Personally, it's not an issue because RP devices are generally not unloaded=
-.
+Since Will hasn't replied, I'll update to the next version to keep the
+original name.
 
 >
 > Thanks.
+> Best Regards.
 > Shuai
->
 
 Thanks,
 Yunhui
