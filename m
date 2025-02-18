@@ -1,55 +1,55 @@
-Return-Path: <linux-pci+bounces-21761-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21760-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2C8BA3A897
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 21:21:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62945A3A893
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 21:21:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C53018908AC
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 20:21:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D8A816FC2B
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 20:21:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 653F81CEAA3;
-	Tue, 18 Feb 2025 20:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB6D71C6FED;
+	Tue, 18 Feb 2025 20:21:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="g7OzTkKK"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="GYhb5TsL"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ACD1B87F2;
-	Tue, 18 Feb 2025 20:21:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326E121B9E1;
+	Tue, 18 Feb 2025 20:21:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739910065; cv=none; b=FWSV8Cd1L3PduFs01d5ig2iL75cR7gTcKVtGpkuCMMtPkPH9pUdci8SRLLvx2jA1ktbCqpMSq85eUOcBa9NMzeJw/EGKp/0WQXSSyrky8oSBfCvWCJJ9elKYTWcAcNO85beM9BBLTwqpyv7/T/UZe1qLpYyE7bzcFgs1/tknY3s=
+	t=1739910064; cv=none; b=WJz2HvZl4cYclZOERrAbtdTd21DviXYn0aASDM4k3LKshiyMF3JFe6HN7V/ntxWnSDDxr6NAkW41cYCjNgRzXeQKtelMLep9u4gWQD32lq//b9+znb1t0QWizHhxUXfgZci2V+jDkcRa0KeMrqOUgNzLiRmaFkEP4oxKP+vh1vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739910065; c=relaxed/simple;
-	bh=IAYZ73oZUjA3Og3NA7vq+SF9k6/cmTVsArqXa/W4RBg=;
+	s=arc-20240116; t=1739910064; c=relaxed/simple;
+	bh=ehbbhur3xJOIzDNh17ILpSUkzLXRzagOxKu96FYhXDg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sw/XK1A+puLyERqjt3M4eGFqzmuUjhCRw92kQXxprHwy2Wbkik60eiGsBkijHu7AqbRbUoScQZzvmEf+JORAqdeBYrHLSgFBd+odYRazbIZifn1xKzpuyjhm+ZySS+fwHnSsJhIY3jektrDCzse2cYzWe+SUbt0oZvAwZkDAKGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=g7OzTkKK; arc=none smtp.client-ip=79.96.170.134
+	 MIME-Version:Content-Type; b=j5Oj4EGWDwO0uZysP1tqQIf1J9ovnDmFNObjYHZLs6PIuvLcAJEE0Dwnnjd+mlABKVt/Ur/yyhzi/xbRG+JdO//vUinuff/G82CnJo3A+d73SRnOKk4MnKzQrTfqq+JgDYBR1VGqD4/vFn2vcSICzWnCroo7LFoJPJpE4tZjtI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=GYhb5TsL; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
  by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
- id b4a096f98544a87d; Tue, 18 Feb 2025 21:20:54 +0100
+ id dd35bb12e63d55d5; Tue, 18 Feb 2025 21:20:54 +0100
 Received: from kreacher.localnet (unknown [195.136.19.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 4AEB396554D;
-	Tue, 18 Feb 2025 21:20:54 +0100 (CET)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 70AD496554D;
+	Tue, 18 Feb 2025 21:20:53 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
 	s=dkim; t=1739910054;
-	bh=IAYZ73oZUjA3Og3NA7vq+SF9k6/cmTVsArqXa/W4RBg=;
+	bh=ehbbhur3xJOIzDNh17ILpSUkzLXRzagOxKu96FYhXDg=;
 	h=From:Subject:Date;
-	b=g7OzTkKKczDQpO+8x7rcbb2mDSPy8F6kHTree/aSre+R1fS3zi6ozwz2OEtVp2ZBH
-	 z0PC7t6hgKQHcvaT4jYEvCAtk5oV/RIEjM59bLMFg5IIOyDQTzn58+5BTJV5E5fxmp
-	 Hr2xYJQukpzRuuUjJMQPj5059I+ysSIzin+bXE6VsbINYA0FEcL9ijyHnIVOjbPSxk
-	 MPXirI7tSq7k9ib/MNw/OQD7wbSU2g89GKYqnVYMM5TQQeVzDu7Fl0pqpaJy3RsKXE
-	 RfldoFTZcTb54KYu2f7LHOy/LDRo3ZusanLxV5RQS2b9hmWxNynXT4SJa7AU9TSNxL
-	 IZBrFSh6R8C6A==
+	b=GYhb5TsLajwqp67HlS8mIaGrrupbIWs8tFGXBXvjlVFMolipIubG11CsMR10QjRSH
+	 mD49f38fo80Hek1yrCqQ/+k6f+FSg4hcW2ThalqiuuJcIHCRep0csnRCBh4Dg2knk1
+	 X7NM/NG9cYkWvR2HsAZRfrOzytExNfLPTzcr/dPOfheZkPe4gpkj1IWeC+z5z30Bxp
+	 J99Ps+YdXfeSkshj+dogNYfLkF7+DC9p/l9/FFG1tdBMdmaiepyuF0Ddmy+297La58
+	 kQ58qvjfje+2D3jCnYaKDXmtymfJJhJhSpPlhd/rtoAOroLiXpbsLZNTR+3NtYkQcA
+	 A+xr7OKHvqK1A==
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux PM <linux-pm@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>,
@@ -60,9 +60,9 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
  Jon Hunter <jonathanh@nvidia.com>, Linux ACPI <linux-acpi@vger.kernel.org>,
  Mika Westerberg <mika.westerberg@linux.intel.com>,
  Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 1/4] PM: Block enabling of runtime PM during system suspend
-Date: Tue, 18 Feb 2025 21:11:42 +0100
-Message-ID: <6131109.lOV4Wx5bFT@rjwysocki.net>
+Subject: [PATCH v2 2/4] PM: runtime: Introduce pm_runtime_blocked()
+Date: Tue, 18 Feb 2025 21:13:09 +0100
+Message-ID: <4632087.LvFx2qVVIh@rjwysocki.net>
 In-Reply-To: <12612706.O9o76ZdvQC@rjwysocki.net>
 References: <12612706.O9o76ZdvQC@rjwysocki.net>
 Precedence: bulk
@@ -81,123 +81,67 @@ X-DCC--Metrics: v370.home.net.pl 1024; Body=12 Fuz1=12 Fuz2=12
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-If device_prepare() runs on a device that has never had runtime
-PM enabled so far, it may reasonably assume that runtime PM will
-not be enabled for that device during the system suspend-resume
-cycle currently in progress, but this has never been guaranteed.
-
-To verify this assumption, make device_prepare() arrange for
-triggering a device warning accompanied by a call trace dump if
-runtime PM is enabled for such a device after it has returned.
+Introduce a new helper function called pm_runtime_blocked()
+for checking the power.last_status value indicating whether or not
+enabling runtime PM for the given device has been blocked (which
+happens in the "prepare" phase of system-wide suspend if runtime
+PM is disabled for the given device at that point).
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
 
-v1 -> v2: Fix a typo in a message and remove an unrelated change (Ulf).
+v1 -> v2: Add the R-by, no other changes.
 
 ---
- drivers/base/power/main.c    |    9 +++++++++
- drivers/base/power/runtime.c |   24 ++++++++++++++++++++++++
- include/linux/pm.h           |    1 +
- include/linux/pm_runtime.h   |    4 ++++
- 4 files changed, 38 insertions(+)
+ drivers/base/power/runtime.c |   17 +++++++++++++++++
+ include/linux/pm_runtime.h   |    2 ++
+ 2 files changed, 19 insertions(+)
 
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -1109,6 +1109,8 @@
- 	device_unlock(dev);
- 
- out:
-+	/* If enabling runtime PM for the device is blocked, unblock it. */
-+	pm_runtime_unblock(dev);
- 	pm_runtime_put(dev);
- }
- 
-@@ -1815,6 +1817,13 @@
- 	 * it again during the complete phase.
- 	 */
- 	pm_runtime_get_noresume(dev);
-+	/*
-+	 * If runtime PM is disabled for the device at this point and it has
-+	 * never been enabled so far, it should not be enabled until this system
-+	 * suspend-resume cycle is complete, so prepare to trigger a warning on
-+	 * subsequent attempts to enable it.
-+	 */
-+	pm_runtime_block_if_disabled(dev);
- 
- 	if (dev->power.syscore)
- 		return 0;
 --- a/drivers/base/power/runtime.c
 +++ b/drivers/base/power/runtime.c
-@@ -1460,6 +1460,26 @@
+@@ -1555,6 +1555,23 @@
  }
- EXPORT_SYMBOL_GPL(pm_runtime_barrier);
+ EXPORT_SYMBOL_GPL(pm_runtime_enable);
  
-+void pm_runtime_block_if_disabled(struct device *dev)
++bool pm_runtime_blocked(struct device *dev)
 +{
++	bool ret;
++
++	/*
++	 * dev->power.last_status is a bit field, so in case it is updated via
++	 * RMW, read it under the spin lock.
++	 */
 +	spin_lock_irq(&dev->power.lock);
 +
-+	if (dev->power.disable_depth && dev->power.last_status == RPM_INVALID)
-+		dev->power.last_status = RPM_BLOCKED;
++	ret = dev->power.last_status == RPM_BLOCKED;
 +
 +	spin_unlock_irq(&dev->power.lock);
++
++	return ret;
 +}
 +
-+void pm_runtime_unblock(struct device *dev)
-+{
-+	spin_lock_irq(&dev->power.lock);
-+
-+	if (dev->power.last_status == RPM_BLOCKED)
-+		dev->power.last_status = RPM_INVALID;
-+
-+	spin_unlock_irq(&dev->power.lock);
-+}
-+
- void __pm_runtime_disable(struct device *dev, bool check_resume)
+ static void pm_runtime_disable_action(void *data)
  {
- 	spin_lock_irq(&dev->power.lock);
-@@ -1518,6 +1538,10 @@
- 	if (--dev->power.disable_depth > 0)
- 		goto out;
- 
-+	if (dev->power.last_status == RPM_BLOCKED) {
-+		dev_warn(dev, "Attempt to enable runtime PM when it is blocked\n");
-+		dump_stack();
-+	}
- 	dev->power.last_status = RPM_INVALID;
- 	dev->power.accounting_timestamp = ktime_get_mono_fast_ns();
- 
---- a/include/linux/pm.h
-+++ b/include/linux/pm.h
-@@ -597,6 +597,7 @@
- 	RPM_RESUMING,
- 	RPM_SUSPENDED,
- 	RPM_SUSPENDING,
-+	RPM_BLOCKED,
- };
- 
- /*
+ 	pm_runtime_dont_use_autosuspend(data);
 --- a/include/linux/pm_runtime.h
 +++ b/include/linux/pm_runtime.h
-@@ -77,6 +77,8 @@
- extern int pm_schedule_suspend(struct device *dev, unsigned int delay);
- extern int __pm_runtime_set_status(struct device *dev, unsigned int status);
- extern int pm_runtime_barrier(struct device *dev);
-+extern void pm_runtime_block_if_disabled(struct device *dev);
-+extern void pm_runtime_unblock(struct device *dev);
+@@ -81,6 +81,7 @@
+ extern void pm_runtime_unblock(struct device *dev);
  extern void pm_runtime_enable(struct device *dev);
  extern void __pm_runtime_disable(struct device *dev, bool check_resume);
++extern bool pm_runtime_blocked(struct device *dev);
  extern void pm_runtime_allow(struct device *dev);
-@@ -271,6 +273,8 @@
- static inline int __pm_runtime_set_status(struct device *dev,
- 					    unsigned int status) { return 0; }
- static inline int pm_runtime_barrier(struct device *dev) { return 0; }
-+static inline void pm_runtime_block_if_disabled(struct device *dev) {}
-+static inline void pm_runtime_unblock(struct device *dev) {}
+ extern void pm_runtime_forbid(struct device *dev);
+ extern void pm_runtime_no_callbacks(struct device *dev);
+@@ -277,6 +278,7 @@
+ static inline void pm_runtime_unblock(struct device *dev) {}
  static inline void pm_runtime_enable(struct device *dev) {}
  static inline void __pm_runtime_disable(struct device *dev, bool c) {}
++static inline bool pm_runtime_blocked(struct device *dev) { return true; }
  static inline void pm_runtime_allow(struct device *dev) {}
+ static inline void pm_runtime_forbid(struct device *dev) {}
+ 
 
 
 
