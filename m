@@ -1,316 +1,168 @@
-Return-Path: <linux-pci+bounces-21766-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21767-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 153EAA3AB90
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 23:21:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17E5BA3ABB9
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 23:32:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64F73166282
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 22:20:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 276361889AF3
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Feb 2025 22:32:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B83D1D6DAD;
-	Tue, 18 Feb 2025 22:20:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B95E41C3F1C;
+	Tue, 18 Feb 2025 22:32:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rrps7Z44"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nbqb+bYN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE331D5ADD;
-	Tue, 18 Feb 2025 22:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D39F2862A5;
+	Tue, 18 Feb 2025 22:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739917213; cv=none; b=HhLmeBgg0jblWRJGqtmqyJa2e6xJjryTR16iOB8u0XiRDkkLFN1oQp5hPjopTpiKQ3HzvjU9vRMGQD6xrWflTK4vw2p6YPoHg+a9qL0yzbUZ4t73c4p/DmVQA8lEZY4jBLKLcG5KrXi/pyTS+5m3qf5IGms9rcAp2gDbEEgapFI=
+	t=1739917928; cv=none; b=R65xx/QPrgWdIj1YtQrUr4JGIKxUkOoScT/ahj0k3wcH/V5wmeYr4spzJpFPj1Plr7LHQ5LZsuPRPq9KnTgjazbbAY5OoqluSJtYHCvpmZ/HyCzJjTPfWvoBtq9upwjG1EjIKzYo1VkD+hrU+NV3Kq7hGhH5fvZhR1O+AiqYPO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739917213; c=relaxed/simple;
-	bh=I0IiWl4AnootTxUzZoy1+8cUWjBHZs4frbwCdopXAg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=QoFnd4+ntOnlpOFIJDt6ETw09+4Yk5wCkcRdjSeRFMGwWs062sOGtIC6gH85pg7rEXgUwHAI7vIq7/9D9JcibTNvpmHzOPn8JmcfnaLK59ghzToz+yjruEVjHZ1aIZdgwsSUtL3JwSUOlSoZRO0aXMFyoAIYAqMZ8Lg/iRLbZC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rrps7Z44; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279B0C4CEE2;
-	Tue, 18 Feb 2025 22:20:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739917213;
-	bh=I0IiWl4AnootTxUzZoy1+8cUWjBHZs4frbwCdopXAg0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Rrps7Z44DLlKlKnb0wY8EJKfdtd8Ey5K0Qqk8Ge0taW+FQve+1T9LZzmfk7v4ka2K
-	 tsMa+sH8sjsEnjNF9HrryaytVI/lCPW0U3GsE17MBnOJD4jjN3C93dAAVwJ0POGFzB
-	 59AJrJj8Bi+ceGQADfBOT2ylJZNWJkItUn0c4CyRCc7sZKIQbvToiumo5KTgRwb/8p
-	 8ZARjP57ZlY4xgM4cyeArBDoiW924fvbn89JCYBXcksyAbjFiDz82w6JYE9tMDAAa/
-	 hgzWOFs8/ZMEFBH9p4pCpvLLV1uOcuoisXe/FCJMlR79dp0EnCdsF9TU+2yaCayCix
-	 js8svsniGh+TA==
-Date: Tue, 18 Feb 2025 16:20:11 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux PM <linux-pm@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Alan Stern <stern@rowland.harvard.edu>,
-	Linux PCI <linux-pci@vger.kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Johan Hovold <johan@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jon Hunter <jonathanh@nvidia.com>,
-	Linux ACPI <linux-acpi@vger.kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 3/4] PM: sleep: Use DPM_FLAG_SMART_SUSPEND
- conditionally
-Message-ID: <20250218222011.GA196831@bhelgaas>
+	s=arc-20240116; t=1739917928; c=relaxed/simple;
+	bh=MNyQrzrM2hdZD5RtjbM9UexD/z0IBigwTDdl/68TcTw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qJ6On1smVG+oGVh3LPxLmvHp+1orsAewBXnYKstYH27uNbgcg8N50C3Rz7MjnACQ6AM+7xsnzkBs1vPydZHj1PdZfsmcTcM/iq/ihgqH20iWeWKU54Mq0BWwVzWGBnkD84fmBEUWd2qFhAdwFeaf6kl/Gu+kWk2oBiFT7ijuy4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nbqb+bYN; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4E96820376ED;
+	Tue, 18 Feb 2025 14:32:06 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4E96820376ED
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1739917926;
+	bh=wkHtF8Q1p9OLsyZ01ZxOlGG224lrcQMUsc6UkXJicro=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nbqb+bYNVQ0gup+rvq/dhImqOWkwYohvkh5vvpwNHfMeSwBVbDosoWWE57JaQtoSf
+	 SCCcRwRTFnVYwSEG2WcM2hfuquEeiOufFJUpLjad8c4/n4jB+k1nw8BbzOsEFrced2
+	 0YoLSIqvXbVccqXXco4HoZ+xIZRWRpOZkJdTff94=
+Message-ID: <19435dae-89b5-4c23-af1e-c8917e29c857@linux.microsoft.com>
+Date: Tue, 18 Feb 2025 14:32:06 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1914558.tdWV9SEqCh@rjwysocki.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v4 6/6] PCI: hv: Get vPCI MSI IRQ domain from
+ DeviceTree
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, conor+dt@kernel.org, dave.hansen@linux.intel.com,
+ decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
+ krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com, lpieralisi@kernel.org,
+ manivannan.sadhasivam@linaro.org, mingo@redhat.com, robh@kernel.org,
+ ssengar@linux.microsoft.com, tglx@linutronix.de, wei.liu@kernel.org,
+ will@kernel.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
+ benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
+References: <20250212174203.GA81135@bhelgaas>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <20250212174203.GA81135@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 18, 2025 at 09:16:48PM +0100, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> A recent discussion has revealed that using DPM_FLAG_SMART_SUSPEND
-> unconditionally is generally problematic because it may lead to
-> situations in which the device's runtime PM information is internally
-> inconsistent or does not reflect its real state [1].
-> 
-> For this reason, change the handling of DPM_FLAG_SMART_SUSPEND so that
-> it is only taken into account if it is consistently set by the drivers
-> of all devices having any PM callbacks throughout dependency graphs in
-> accordance with the following rules:
-> 
->  - The "smart suspend" feature is only enabled for devices whose drivers
->    ask for it (that is, set DPM_FLAG_SMART_SUSPEND) and for devices
->    without PM callbacks unless they have never had runtime PM enabled.
-> 
->  - The "smart suspend" feature is not enabled for a device if it has not
->    been enabled for the device's parent unless the parent does not take
->    children into account or it has never had runtime PM enabled.
-> 
->  - The "smart suspend" feature is not enabled for a device if it has not
->    been enabled for one of the device's suppliers taking runtime PM into
->    account unless that supplier has never had runtime PM enabled.
-> 
-> Namely, introduce a new device PM flag called smart_suspend that is only
-> set if the above conditions are met and update all DPM_FLAG_SMART_SUSPEND
-> users to check power.smart_suspend instead of directly checking the
-> latter.
-> 
-> At the same time, drop the power.set_active flage introduced recently
-> in commit 3775fc538f53 ("PM: sleep: core: Synchronize runtime PM status
-> of parents and children") because it is now sufficient to check
-> power.smart_suspend along with the dev_pm_skip_resume() return value
-> to decide whether or not pm_runtime_set_active() needs to be called
-> for the device.
-> 
-> Link: https://lore.kernel.org/linux-pm/CAPDyKFroyU3YDSfw_Y6k3giVfajg3NQGwNWeteJWqpW29BojhQ@mail.gmail.com/  [1]
-> Fixes: 7585946243d6 ("PM: sleep: core: Restrict power.set_active propagation")
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com> # drivers/pci
 
-> ---
+On 2/12/2025 9:42 AM, Bjorn Helgaas wrote:
+> On Tue, Feb 11, 2025 at 05:43:21PM -0800, Roman Kisel wrote:
+
+[...]
+
+>> +	 * function called later.
 > 
-> v1 -> v2:
->    * Add helper function for reading power.smart_suspend() (Ulf), add the R-by.
->    * Rearrange conditionals in device_prepare_smart_suspend() so that the checks
->      involving locking are done last.
+> The rest of this file fits in 80 columns; please wrap this to match.
 > 
-> ---
->  drivers/acpi/device_pm.c  |    4 +-
->  drivers/base/power/main.c |   63 +++++++++++++++++++++++++++++++++++-----------
->  drivers/mfd/intel-lpss.c  |    2 -
->  drivers/pci/pci-driver.c  |    6 +---
->  include/linux/device.h    |    5 +++
->  include/linux/pm.h        |    2 -
->  6 files changed, 60 insertions(+), 22 deletions(-)
+
+Will fix, thank you for taking the time to review that!
+
+>> +	 */
+>> +	if (!domain)
+>> +		WARN_ONCE(1, "No interrupt-parent found, check the DeviceTree data.\n");
 > 
-> --- a/drivers/acpi/device_pm.c
-> +++ b/drivers/acpi/device_pm.c
-> @@ -1161,7 +1161,7 @@
->   */
->  int acpi_subsys_suspend(struct device *dev)
->  {
-> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
-> +	if (!dev_pm_smart_suspend(dev) ||
->  	    acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
->  		pm_runtime_resume(dev);
->  
-> @@ -1320,7 +1320,7 @@
->   */
->  int acpi_subsys_poweroff(struct device *dev)
->  {
-> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
-> +	if (!dev_pm_smart_suspend(dev) ||
->  	    acpi_dev_needs_resume(dev, ACPI_COMPANION(dev)))
->  		pm_runtime_resume(dev);
->  
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -656,15 +656,13 @@
->  	 * so change its status accordingly.
->  	 *
->  	 * Otherwise, the device is going to be resumed, so set its PM-runtime
-> -	 * status to "active" unless its power.set_active flag is clear, in
-> +	 * status to "active" unless its power.smart_suspend flag is clear, in
->  	 * which case it is not necessary to update its PM-runtime status.
->  	 */
-> -	if (skip_resume) {
-> +	if (skip_resume)
->  		pm_runtime_set_suspended(dev);
-> -	} else if (dev->power.set_active) {
-> +	else if (dev_pm_smart_suspend(dev))
->  		pm_runtime_set_active(dev);
-> -		dev->power.set_active = false;
-> -	}
->  
->  	if (dev->pm_domain) {
->  		info = "noirq power domain ";
-> @@ -1282,14 +1280,8 @@
->  	      dev->power.may_skip_resume))
->  		dev->power.must_resume = true;
->  
-> -	if (dev->power.must_resume) {
-> -		if (dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) {
-> -			dev->power.set_active = true;
-> -			if (dev->parent && !dev->parent->power.ignore_children)
-> -				dev->parent->power.set_active = true;
-> -		}
-> +	if (dev->power.must_resume)
->  		dpm_superior_set_must_resume(dev);
-> -	}
->  
->  Complete:
->  	complete_all(&dev->power.completion);
-> @@ -1797,6 +1789,49 @@
->  	return error;
->  }
->  
-> +static void device_prepare_smart_suspend(struct device *dev)
-> +{
-> +	struct device_link *link;
-> +	int idx;
-> +
-> +	/*
-> +	 * The "smart suspend" feature is enabled for devices whose drivers ask
-> +	 * for it and for devices without PM callbacks unless runtime PM is
-> +	 * disabled and enabling it is blocked for them.
-> +	 *
-> +	 * However, if "smart suspend" is not enabled for the device's parent
-> +	 * or any of its suppliers that take runtime PM into account, it cannot
-> +	 * be enabled for the device either.
-> +	 */
-> +	dev->power.smart_suspend = (dev->power.no_pm_callbacks ||
-> +		dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND)) &&
-> +		!pm_runtime_blocked(dev);
-> +
-> +	if (!dev_pm_smart_suspend(dev))
-> +		return;
-> +
-> +	if (dev->parent && !dev_pm_smart_suspend(dev->parent) &&
-> +	    !dev->parent->power.ignore_children && !pm_runtime_blocked(dev->parent)) {
-> +		dev->power.smart_suspend = false;
-> +		return;
-> +	}
-> +
-> +	idx = device_links_read_lock();
-> +
-> +	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
-> +		if (!(link->flags | DL_FLAG_PM_RUNTIME))
-> +			continue;
-> +
-> +		if (!dev_pm_smart_suspend(link->supplier) &&
-> +		    !pm_runtime_blocked(link->supplier)) {
-> +			dev->power.smart_suspend = false;
-> +			break;
-> +		}
-> +	}
-> +
-> +	device_links_read_unlock(idx);
-> +}
-> +
->  /**
->   * device_prepare - Prepare a device for system power transition.
->   * @dev: Device to handle.
-> @@ -1858,6 +1893,7 @@
->  		pm_runtime_put(dev);
->  		return ret;
->  	}
-> +	device_prepare_smart_suspend(dev);
->  	/*
->  	 * A positive return value from ->prepare() means "this device appears
->  	 * to be runtime-suspended and its state is fine, so if it really is
-> @@ -2033,6 +2069,5 @@
->  
->  bool dev_pm_skip_suspend(struct device *dev)
->  {
-> -	return dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) &&
-> -		pm_runtime_status_suspended(dev);
-> +	return dev_pm_smart_suspend(dev) && pm_runtime_status_suspended(dev);
->  }
-> --- a/drivers/mfd/intel-lpss.c
-> +++ b/drivers/mfd/intel-lpss.c
-> @@ -480,7 +480,7 @@
->  
->  static int resume_lpss_device(struct device *dev, void *data)
->  {
-> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND))
-> +	if (!dev_pm_smart_suspend(dev))
->  		pm_runtime_resume(dev);
->  
->  	return 0;
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -812,8 +812,7 @@
->  	 * suspend callbacks can cope with runtime-suspended devices, it is
->  	 * better to resume the device from runtime suspend here.
->  	 */
-> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
-> -	    pci_dev_need_resume(pci_dev)) {
-> +	if (!dev_pm_smart_suspend(dev) || pci_dev_need_resume(pci_dev)) {
->  		pm_runtime_resume(dev);
->  		pci_dev->state_saved = false;
->  	} else {
-> @@ -1151,8 +1150,7 @@
->  	}
->  
->  	/* The reason to do that is the same as in pci_pm_suspend(). */
-> -	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
-> -	    pci_dev_need_resume(pci_dev)) {
-> +	if (!dev_pm_smart_suspend(dev) || pci_dev_need_resume(pci_dev)) {
->  		pm_runtime_resume(dev);
->  		pci_dev->state_saved = false;
->  	} else {
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -1025,6 +1025,11 @@
->  	return !!(dev->power.driver_flags & flags);
->  }
->  
-> +static inline bool dev_pm_smart_suspend(struct device *dev)
-> +{
-> +	return dev->power.smart_suspend;
-> +}
-> +
->  static inline void device_lock(struct device *dev)
->  {
->  	mutex_lock(&dev->mutex);
-> --- a/include/linux/pm.h
-> +++ b/include/linux/pm.h
-> @@ -680,8 +680,8 @@
->  	bool			syscore:1;
->  	bool			no_pm_callbacks:1;	/* Owned by the PM core */
->  	bool			async_in_progress:1;	/* Owned by the PM core */
-> +	bool			smart_suspend:1;	/* Owned by the PM core */
->  	bool			must_resume:1;		/* Owned by the PM core */
-> -	bool			set_active:1;		/* Owned by the PM core */
->  	bool			may_skip_resume:1;	/* Set by subsystems */
->  #else
->  	bool			should_wakeup:1;
+> Is there a way to include a hint about what specific part of the
+> devicetree to look at, e.g., the node that lacks a parent?
+
+I'll improve this, will mention the bus, thanks!
+
+[...]
+
+>> +	 * the messy ifdef below.
 > 
+> Add a blank line if you intend a new paragraph here.  Otherwise, wrap
+> to fill 78 columns or so.
+
+Will fix this, appreciate noticing that!
+
 > 
+>> +	 * There is apparently no such default in the OF subsystem, and
+>> +	 * `hv_pci_of_irq_domain_parent` finds the parent IRQ domain that
+>> +	 * points to the GIC as well.
 > 
+> And here.
+
+Will fix, thanks!
+
+>> +	 * None of these two cases reaches for the MSI parent domain.
+> 
+> I don't know what "reaches for the MSI parent domain" means.  Neither
+> "searches for"?
+> 
+
+My bad, sorry about the incomprehensible phrasing! Will fix this, thank
+you!
+
+>>   	 */
+>> -	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
+>> -							  fn, &hv_pci_domain_ops,
+>> -							  chip_data);
+>> +#ifdef CONFIG_ACPI
+>> +	if (!acpi_disabled)
+>> +		hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
+>> +			fn, &hv_pci_domain_ops,
+>> +			chip_data);
+>> +#endif
+>> +#if defined(CONFIG_OF)
+>> +	if (!hv_msi_gic_irq_domain)
+>> +		hv_msi_gic_irq_domain = irq_domain_create_hierarchy(
+>> +			hv_pci_of_irq_domain_parent(), 0, HV_PCI_MSI_SPI_NR,
+>> +			fn, &hv_pci_domain_ops,
+>> +			chip_data);
+>> +#endif
+> 
+> I don't know if acpi_irq_create_hierarchy() is helping or hurting
+> here.  It obscures the fact that the only difference is the first
+> argument to irq_domain_create_hierarchy().  If we could open-code or
+> have a helper to figure out that irq_domain "parent" argument for the
+> ACPI case, then we'd only have one call of
+> irq_domain_create_hierarchy() here and it seems like it might be
+> simpler.
+> 
+
+That looks quite dirty, no dispute over that... The root device was
+static/provate for the ACPI case, and I didn't go for changing the ACPI
+subsystem code to improve this patch, thought the only user wouldn't
+justify tinkering with the whole ACPI subsystem. Maybe I also will
+need to see if that can be used from a module/builti-in, locking,
+bogus usage, i.e. all that normally comes with promoting a private
+interface to public.
+
+Let me work out the details and post the change here to see what
+feedback that receives.
+
+Last but certainly not least: owing a great debt of gratitude to you
+(and all other folks) for helping in bringing this to the best shape
+possible!
+
+-- 
+Thank you,
+Roman
+
 
