@@ -1,72 +1,72 @@
-Return-Path: <linux-pci+bounces-21849-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21850-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D545DA3CD7C
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 00:27:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61C90A3CD7E
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 00:28:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C72C1189AC07
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 23:27:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 299B73AE2B6
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 23:28:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 877371D7E30;
-	Wed, 19 Feb 2025 23:27:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8090425D556;
+	Wed, 19 Feb 2025 23:28:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gEpif9IY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A9J8YI18"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE30C25D556
-	for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 23:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A741D7E30
+	for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 23:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740007651; cv=none; b=ZRvwu403W+3qnS6LfqGAj770M/w9XsdbUIr6oZbE1VGQdHgNRQ/al1FOw0W8IiTs+HAZ02TTLsa6aFAjzFETFdQcXve4oIxQ4PHd76PScmi1q4BJpR0jFhJUE2vl2EHHf/RXBggQ/j77uEMNAb/ugRBkJtH2NQOgbMbDS9w8mqA=
+	t=1740007719; cv=none; b=bKBRHBwY+Al8E3Whpsw6pTOU7za6wg0ugoqE88RFmEJLYcDfvMLnBqHO1w/+94QILAfyYunWwWAy8rIcfz18iQv0F2NtNGAS7BcBVMcNBJcIotdD1dh2Of259XKNRQNXEM1DAUs3EBIqnsWdZdH3gSg5Uu+v0eIKeoMN6tslyIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740007651; c=relaxed/simple;
-	bh=O2wlRjgaN+IxXIV9dwDq8gkM9BuZoh8QB3n4+qOTVtQ=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=CzkEGaf/Sp8SBXj9vQG5JhsBvgBcsLx2hmd+0Mpf+NekthJS0xi1NLsZipIMSPcKn4TaFg7FN6OpHpyZZ9GJ9Wc9P7IZzIzjAEr0+ICdIdH7CtIc+bW+1Zs6Qd7ppuQmi0B36JOinBOfr87m6kvV8sM0R9idcSWLjdNWhgBh1wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gEpif9IY; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1740007719; c=relaxed/simple;
+	bh=v/UHuJMu7GnA5tHTiql70jRZjmUlRIg7XsZjEAeP1wE=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=BrGkJEUmZ/5UsJCirsK0yN/Obtfoboai0u4aozQqoPjGqyPkQn1x9YTiOrdCeewqumn8CoX27yPVTxwl01/h9L51iXH6gnj0DD4UoTM0MY0vR446FbiLqoncEQgJNnBrhj8kXXCcwYZWayDA80PfyI+2XiShAE+bVh99gHiNQn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A9J8YI18; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740007649; x=1771543649;
+  t=1740007718; x=1771543718;
   h=date:from:to:cc:subject:message-id;
-  bh=O2wlRjgaN+IxXIV9dwDq8gkM9BuZoh8QB3n4+qOTVtQ=;
-  b=gEpif9IYPlptw11HyiPCl53l8lg8sxsawN0RFpqQ5rHdJBHzyWd6jLXZ
-   klL4Rcx4xnKUsN/r+6v8JAfQqsk1ITIIADWEP8ajODzdVJrCPWwDuTMvU
-   BR1p+fmYEUSw8PZenF6fo80xxPBZWz9OzvrIO+q5G9GaFnJd2EDj14itR
-   pqU0Z99F5qCr8OFVrk5tjecnB56INQce8RymDjBvyukNsTfluaGfZOyHY
-   LfT8DYME4Ssm9FJcSXoeJKebhp8RLPvgVxBkRatBMMDUcj+DDWZ5vStjD
-   HZ3k5/pTI1Pmc24T8749Q/6EHENMsRqPyWiEFFRlEoLcCst+LzHQOeIpT
+  bh=v/UHuJMu7GnA5tHTiql70jRZjmUlRIg7XsZjEAeP1wE=;
+  b=A9J8YI18QQ7d+upvY7glbAN7kTyfGA8oid2oWduoLGNwyIeMbupw4NoD
+   oSzET1ao6FQwnoS4sD9PvJmr+X0VnhG+2C7dYUit6NrXVFr1pFhKg9RyM
+   YBklPFtZG/OxBT/cyGvtWGqaWgcNnekh8HUD9ykG4y0aeFQOdcYHl6pLs
+   dwr6nheYBZU/PXqPVjbfwKhgqj6Ny7KvUAaGSDYav1ODklKsyT8A+sISs
+   xG7PivLdH4wgCLFR+KSm8DLlhp/TQgX+5OdGnX/GKyPnaddHzhl+20BK6
+   2ZDwuflIVqZB32Z0CRESHDAX8tBM0acoYBulIr/AEnoE3i1Bmh3XrMnJa
    g==;
-X-CSE-ConnectionGUID: vPcArfmjTr6Y9ZfDDPI4bw==
-X-CSE-MsgGUID: ssEbhKlKT/mpDBSJ+W2oow==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="43597575"
+X-CSE-ConnectionGUID: iT0AK08FS5aUKTpCJDIdag==
+X-CSE-MsgGUID: rxQGnoL9S8ibfGyhM39Cig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="51409966"
 X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="43597575"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 15:27:29 -0800
-X-CSE-ConnectionGUID: Uw5Y/RgASqqHhtH4wvtyEA==
-X-CSE-MsgGUID: 0JKWp9v4ThG6hA6UhdnzuQ==
+   d="scan'208";a="51409966"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 15:28:37 -0800
+X-CSE-ConnectionGUID: 8QfxkvwuSh2qAhHzZGir7w==
+X-CSE-MsgGUID: 2chY9IuRRP6OYJ0N+eFiMA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,299,1732608000"; 
-   d="scan'208";a="114699817"
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="152067214"
 Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa006.fm.intel.com with ESMTP; 19 Feb 2025 15:27:28 -0800
+  by orviesa001.jf.intel.com with ESMTP; 19 Feb 2025 15:28:36 -0800
 Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1tktTR-0003bv-2W;
-	Wed, 19 Feb 2025 23:27:25 +0000
-Date: Thu, 20 Feb 2025 07:26:32 +0800
+	id 1tktUU-0003c1-1E;
+	Wed, 19 Feb 2025 23:28:31 +0000
+Date: Thu, 20 Feb 2025 07:28:08 +0800
 From: kernel test robot <lkp@intel.com>
 To: Bjorn Helgaas <helgaas@kernel.org>
 Cc: linux-pci@vger.kernel.org
-Subject: [pci:enumeration] BUILD SUCCESS
- b1f7c5223fc96e35ed3f28745565edc306a4a95f
-Message-ID: <202502200726.9di2YV4r-lkp@intel.com>
+Subject: [pci:resource] BUILD SUCCESS
+ 2499f53484314303f1b90f86424d9ec1bef9119d
+Message-ID: <202502200703.EY6UJ22G-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -74,10 +74,10 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
-branch HEAD: b1f7c5223fc96e35ed3f28745565edc306a4a95f  PCI: Cache offset of Resizable BAR capability
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git resource
+branch HEAD: 2499f53484314303f1b90f86424d9ec1bef9119d  PCI: Rework optional resource handling
 
-elapsed time: 1455m
+elapsed time: 1456m
 
 configs tested: 80
 configs skipped: 1
