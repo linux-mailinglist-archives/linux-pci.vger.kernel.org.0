@@ -1,195 +1,131 @@
-Return-Path: <linux-pci+bounces-21809-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21810-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5795EA3C44D
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 16:59:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDBBEA3C5A1
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:06:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EA8A188C3FE
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 15:59:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0638188C415
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 17:06:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5989F1F8F09;
-	Wed, 19 Feb 2025 15:59:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A3C521421D;
+	Wed, 19 Feb 2025 17:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N3GT3MVn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDED192580;
-	Wed, 19 Feb 2025 15:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D233214216;
+	Wed, 19 Feb 2025 17:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739980755; cv=none; b=ehT5i3W9bHQtkd+hvVSPnNzRsv4G0LsQaKnHYAeTIvM+OPoKgcIJX8hYzsebbhYQfwRdKJepmKmHj955VyFznTFqqfRe1dDM5hNhNs+VxV72WvDOAKqlMs05dF9se85Y3JSpNm232st3Ut0bBckd/QYWXXaTpUVyvoZz0kBUPrQ=
+	t=1739984803; cv=none; b=giZujX1v9PcLaLUBSRLf9wca3k8OHVzTVAI9w+qv63T9etyx5GrRrb4E2GpdCDIQZN0E4Uw7gdKY6Bi7U54xSGuhIpUONuYpWcj0NwHfuOT37zDARIELyFbzxJla801A6OoXa5g5Iii2/bGONrm72eH6pVMS4GSRZ7EhNH/+vEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739980755; c=relaxed/simple;
-	bh=PGJydsIQuR3b30jEX9zs6NTl+06JSoqWi7rQevLCPbQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I22Qd96v1lfVIm3qxLKsmMcrw0vgZlsp2dGiTt8fn8N97GiNwKX+JZrqQILeTQQvVHsNLTr3Bz2BhUnkOcgx3r0j5amqPOm3DvyH3NK8zrHEvooXkeWI4gut7VWWSfYRXSZ4bkSRgl/bb4Ht0hFh+kw5BnHckkJ5Xm4HckJIM3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YygyJ0q6Zz6GDC2;
-	Wed, 19 Feb 2025 23:57:28 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 07682140AB8;
-	Wed, 19 Feb 2025 23:59:04 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 19 Feb
- 2025 16:59:03 +0100
-Date: Wed, 19 Feb 2025 15:59:01 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Herve Codina <herve.codina@bootlin.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Rob Herring
-	<robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
-	<bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
-	<steen.hegelund@microchip.com>, Thomas Petazzoni
-	<thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 1/5] driver core: Introduce
- device_{add,remove}_of_node()
-Message-ID: <20250219155901.000009e4@huawei.com>
-In-Reply-To: <20250204073501.278248-2-herve.codina@bootlin.com>
-References: <20250204073501.278248-1-herve.codina@bootlin.com>
-	<20250204073501.278248-2-herve.codina@bootlin.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1739984803; c=relaxed/simple;
+	bh=MyfLEvfS7yxTS8fAcMru9YtZORPP55M03oOVf1wJwag=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=kGF4R4ivL5cPuYYMHOeN62bV+uZoua9l5HE/vWz/zrb7uGP/iXNWHOh7eKwZmpcuaBbMao50w8fPXDIUOfnpzJVphel55AyuLdI1SwXhjx9QkHEg2bVzYO28nrdmo6R/5QK3KSqKG5JLTNG+2v0S7/IispFUILwwf9EHmH3LXXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N3GT3MVn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93FBAC4CED1;
+	Wed, 19 Feb 2025 17:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739984802;
+	bh=MyfLEvfS7yxTS8fAcMru9YtZORPP55M03oOVf1wJwag=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=N3GT3MVnRSqdikNeUBuH8nooDmDSlHq7qhQNbdzQQCBEGY3dgQF0c2xzPbt3cCgiA
+	 lhHU9ac9zww9+54xp2eKqSDGZxs75xiSiOssp9krqAWzxWE+s6Oe9DhqUR77zl4qrc
+	 A6EmmpD2rftmBbwBcwNpj0lgDLE1HXFvJl+Dd28ZnoM1iO2OC5HGl973pPhUaPIZlq
+	 0hmYPkmqrNwb1egOEbiaDPZ2azBpMG8b2a49onzyMIiRwc2pDpqLzb8M1DYWorRpPR
+	 b9JuBolf8uORmuCE3CnN2fH5FMWgUs0XAJCEvfHt/da38pNyBNJQOXY5+pBaG2Q7VS
+	 SkQqm5nFNM+jw==
+Date: Wed, 19 Feb 2025 11:06:40 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Naveen Kumar P <naveenkumar.parna@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernelnewbies <kernelnewbies@kernelnewbies.org>,
+	linux-acpi@vger.kernel.org
+Subject: Re: PCI: hotplug_event: PCIe PLDA Device BAR Reset
+Message-ID: <20250219170640.GA219612@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMciSVU4vv7=WjVUhuP3PJHdpnYqrgMPCmz-HnijEbhyxk54eQ@mail.gmail.com>
 
-On Tue,  4 Feb 2025 08:34:56 +0100
-Herve Codina <herve.codina@bootlin.com> wrote:
+[+cc linux-acpi]
 
-> An of_node can be set to a device using device_set_node().
-> This function cannot prevent any of_node and/or fwnode overwrites.
+On Wed, Feb 19, 2025 at 05:52:47PM +0530, Naveen Kumar P wrote:
+> Hi all,
 > 
-> When adding an of_node on an already present device, the following
-> operations need to be done:
-> - Attach the of_node if no of_node were already attached
-> - Attach the of_node as a fwnode if no fwnode were already attached
+> I am writing to seek assistance with an issue we are experiencing with
+> a PCIe device (PLDA Device 5555) connected through PCI Express Root
+> Port 1 to the host bridge.
 > 
-> This is the purpose of device_add_of_node().
-> device_remove_of_node() reverts the operations done by
-> device_add_of_node().
+> We have observed that after booting the system, the Base Address
+> Register (BAR0) memory of this device gets reset to 0x0 after
+> approximately one hour or more (the timing is inconsistent). This was
+> verified using the lspci output and the setpci -s 01:00.0
+> BASE_ADDRESS_0 command.
 > 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-A few passing comments. Not suggestions to actually change anything
-at this stage though. Maybe a potential follow up if you think it's
-a good idea.
-
-> ---
->  drivers/base/core.c    | 61 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/device.h |  2 ++
->  2 files changed, 63 insertions(+)
+> To diagnose the issue, we checked the dmesg log, but it did not
+> provide any relevant information. I then enabled dynamic debugging for
+> the PCI subsystem (drivers/pci/*) and noticed the following messages
+> related ACPI hotplug in the dmesg log:
 > 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 5a1f05198114..d1b044af64de 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -5170,6 +5170,67 @@ void set_secondary_fwnode(struct device *dev, struct fwnode_handle *fwnode)
->  }
->  EXPORT_SYMBOL_GPL(set_secondary_fwnode);
->  
-> +/**
-> + * device_remove_of_node - Remove an of_node from a device
-> + * @dev: device whose device-tree node is being removed
-> + */
-> +void device_remove_of_node(struct device *dev)
-> +{
-> +	dev = get_device(dev);
-> +	if (!dev)
-> +		return;
-Maybe use
-	struct device *d __free(put_device) = get_device(dev);
+> [    0.465144] pci 0000:01:00.0: reg 0x10: [mem 0xb0400000-0xb07fffff]
+> ...
+> [ 6710.000355] ACPI: \_SB_.PCI0.RP01: acpiphp_glue: Bus check in hotplug_event()
+> [ 7916.250868] perf: interrupt took too long (4072 > 3601), lowering
+> kernel.perf_event_max_sample_rate to 49000
+> [ 7984.719647] perf: interrupt took too long (5378 > 5090), lowering
+> kernel.perf_event_max_sample_rate to 37000
+> [11051.409115] ACPI: \_SB_.PCI0.RP01: acpiphp_glue: Bus check in hotplug_event()
+> [11755.388727] ACPI: \_SB_.PCI0.RP01: acpiphp_glue: Bus check in hotplug_event()
+> [12223.885715] ACPI: \_SB_.PCI0.RP01: acpiphp_glue: Bus check in hotplug_event()
+> [14303.465636] ACPI: \_SB_.PCI0.RP01: acpiphp_glue: Bus check in hotplug_event()
+> After these messages appear, reading the device BAR memory results in
+> 0x0 instead of the expected value.
+> 
+> I would like to understand the following:
+> 
+> 1. What could be causing these hotplug_event debug messages?
 
-	if (!d->of_node);
-		return;
+This is an ACPI Notify event.  Basically the platform is telling us to
+re-enumerate the hierarchy below RP01 because a device might have been
+added or removed.
 
-Not a reason to respin though!
+Unfortunately the only real information we get is the ACPI device
+(RP01) and the notification value (ACPI_NOTIFY_BUS_CHECK).
 
+You could instrument acpiphp_check_bridge() to see what path we take.
+The main paths look like enable_slot() or disable_slot(), but those
+both include a pr_debug() than you apparently don't see.
 
-> +
-> +	if (!dev->of_node)
-> +		goto end;
-> +
-> +	if (dev->fwnode == of_fwnode_handle(dev->of_node))
-> +		dev->fwnode = NULL;
-> +
-> +	of_node_put(dev->of_node);
-> +	dev->of_node = NULL;
-> +
-> +end:
-> +	put_device(dev);
-> +}
-> +EXPORT_SYMBOL_GPL(device_remove_of_node);
-> +
-> +/**
-> + * device_add_of_node - Add an of_node to an existing device
-> + * @dev: device whose device-tree node is being added
-> + * @of_node: of_node to add
-> + *
-> + * Return: 0 on success or error code on failure.
-> + */
-> +int device_add_of_node(struct device *dev, struct device_node *of_node)
-> +{
-> +	int ret;
-> +
-> +	if (!of_node)
-> +		return -EINVAL;
-> +
-> +	dev = get_device(dev);
+A remove followed by add would definitely reset the device, including
+its BARs.  But you would normally see some messages related to
+enumerating a new device.
 
-Likewise could use __free() magic here as well for slight simpliciations.
+If this doesn't help, try to reproduce the problem with a recent
+kernel, e.g., v6.13, and post the complete dmesg log.
 
-> +	if (!dev)
-> +		return -EINVAL;
-> +
-> +	if (dev->of_node) {
-> +		dev_err(dev, "Cannot replace node %pOF with %pOF\n",
-> +			dev->of_node, of_node);
-> +		ret = -EBUSY;
-> +		goto end;
-> +	}
-> +
-> +	dev->of_node = of_node_get(of_node);
-> +
-> +	if (!dev->fwnode)
-> +		dev->fwnode = of_fwnode_handle(of_node);
-> +
-> +	ret = 0;
-> +end:
-> +	put_device(dev);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(device_add_of_node);
-> +
->  /**
->   * device_set_of_node_from_dev - reuse device-tree node of another device
->   * @dev: device whose device-tree node is being set
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 80a5b3268986..1244e5892292 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -1191,6 +1191,8 @@ int device_online(struct device *dev);
->  void set_primary_fwnode(struct device *dev, struct fwnode_handle *fwnode);
->  void set_secondary_fwnode(struct device *dev, struct fwnode_handle *fwnode);
->  void device_set_node(struct device *dev, struct fwnode_handle *fwnode);
-> +int device_add_of_node(struct device *dev, struct device_node *of_node);
-> +void device_remove_of_node(struct device *dev);
->  void device_set_of_node_from_dev(struct device *dev, const struct device *dev2);
->  
->  static inline struct device_node *dev_of_node(struct device *dev)
-
+> 2. Why does this result in the BAR memory being reset?
+> 3. How can we resolve this issue?
+> 
+> I have verified that the issue occurs even without loading the driver
+> for the PLDA Device 5555, so it does not appear to be related to the
+> device driver.
+> 
+> Any help or guidance on debugging this issue would be greatly appreciated.
+> 
+> Thank you for your assistance.
+> 
+> Best regards,
+> Naveen
 
