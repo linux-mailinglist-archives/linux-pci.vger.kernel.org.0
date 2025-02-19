@@ -1,147 +1,109 @@
-Return-Path: <linux-pci+bounces-21789-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21790-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59C45A3B033
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 04:56:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4756CA3B101
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 06:43:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21B1B172294
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 03:56:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2FAC83AB371
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 05:42:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FC4B189F3B;
-	Wed, 19 Feb 2025 03:56:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B8A41B4253;
+	Wed, 19 Feb 2025 05:43:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/tE3AWb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="era62A4A"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C38A8C0B;
-	Wed, 19 Feb 2025 03:56:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA8A25760
+	for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 05:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739937405; cv=none; b=Bx/QcU7bbMAHuDExlnoZQoV5KThAJ1QthdRHx9Ns10lvFFBucguIT3ZctogCnRy/adXnT7u7zJqIjA6UR3CvTfl+YfCzmEgfUislbQVFAi7xCTOi66hn6EH5ZXTwqk770bgPPvhpwWRcbJgyaOW6Dv5dOVOgRM0VA3nmjeAyAzI=
+	t=1739943783; cv=none; b=L5p23yO/x+iEWhhjsU/mZxgcdpRC9zKilCS5/HaYVNrm37dDwvcNk7MWHp5YwiSb6g6P8xhLOT1T0iFPgvQeN8BRyexLoEzpYFJT8YqvdhvklagAv6/97O7EmG2DJKZ98V2E8gsVNdvNHiDNJfRYNHKD3wtXznBQOn+NLgTXld0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739937405; c=relaxed/simple;
-	bh=i5IcOWQi0O8bxInU7mflve6qdpwNp+GrKXSYxYEM57s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sbRuZhdEtDnU3GpmcCFtZ/x0In1wG9HjrRr20yovqw21wxrddw1YuwNQrBjfeh76mLKpIlyj0qQB4qGH806s0aLf/FGPF7o0JesqzEFTLg6tQU9UA/cffUzUqUgFLL5JLK6Kv3V4Dfl445PoVlcbfm3yTtxY3wHHpFrOKfKuN8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/tE3AWb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA144C4CED1;
-	Wed, 19 Feb 2025 03:56:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739937404;
-	bh=i5IcOWQi0O8bxInU7mflve6qdpwNp+GrKXSYxYEM57s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=s/tE3AWbM5GT5p2/ZuZ4WwfbyXzJSizCAvKFCbsipvVELsg1r9AvXkg/D6KpdLMeT
-	 846n4D5dBMkjtmZMQ7WY8bMF4mR3gbYz0DMgq4JKdecEjbc3DNuhA/ewAlOGMsdRpk
-	 PWh27OuBkU9mePxAVgJt3UFtF6sKq2x558kpYWGioYane6f+bXb99Zj7+NCP6sZLJG
-	 5C68y9dIV9OH37lpVvCrtCmg6icG4PB5eApB+9ABZMbmFmTWWh1Sx55jd712vQmIxP
-	 bzBG2cq72fWsSctK3AJMfkJFNvcX2lNLpI10w/1KuUKoIzw+gnIJGFI54V+JRRkYD4
-	 d6aBQhyjPx9UA==
-Message-ID: <d914e3c5-f38c-4e2f-b46b-8edb1e8940d1@kernel.org>
-Date: Tue, 18 Feb 2025 21:56:42 -0600
+	s=arc-20240116; t=1739943783; c=relaxed/simple;
+	bh=cNdgI6Lnk0EJfyZsrjALV4Wx1Cs5MjpDot82WJnw4AA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GDG/3nmSnKk8THfnVEOe/WllET9Mq4AFPQ8MoP2eIcbsxIz0NopQsXbAKPPjsLIBhIaMUBKgOVjHxSErbAyFbnxfDiZht5Jw0XKlhTY2N62V0q67/U+f29YiglOfmA4O8kNSDUm63Oz5xacK2V/q8+oIePOSqV6rhGs1Bfs+mtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=era62A4A; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aaeec07b705so939404566b.2
+        for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 21:43:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739943780; x=1740548580; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cNdgI6Lnk0EJfyZsrjALV4Wx1Cs5MjpDot82WJnw4AA=;
+        b=era62A4Ab1Slyy34S5j5xp3IXm6U9HfrplWdvRNMfh/DrK9kOR0J8C1gYXDar53IF9
+         UksnrWPWgoZKREVDOwBIhUO1r4i82EJgrsy3KcZEI+FJKNnNOW743ZcGGE3vL4TeJffx
+         NAjgj5DR/rOBW4Daxkj3+ylZJi0r7b54bwZKeYpHUY5NTR6sqmV2xOuJ7EibC15KqCWW
+         6PMy/7eMDQJWtGikv3FYKsuFUROtYneks3rnxYOAUNXfK6zM+pFBBftyozB2VzpdZZG7
+         E3PxASYi4GGwnYW0r0ubW0boijCBbl19nifK8n+tzz8A9XR1DaRqC/NZuAucuRp4cLDg
+         nqug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739943780; x=1740548580;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cNdgI6Lnk0EJfyZsrjALV4Wx1Cs5MjpDot82WJnw4AA=;
+        b=iDyzV2zgvpHT5rt5HAyzsymG7OPS1sfLyb1OfQoT9cvOUh8QE8w/3K//JpxSyFFXeO
+         xA5xpyAOAjHrAwYHezDb9cUwBDz11X6m9NwzWgzV5BE8O1DXV1AJO+CcDXcZtncYcRB0
+         inCp6Zgx4VscWbrO3QRuhMORBE+Py04bmb/460cqDb+Zs9mw81y7mX1QHVagWjYrS+hn
+         /cXWcR/9uJCsoUSWjY6jBB6jvKdeHgcEgecNgVFo+D8Qr1mhLnhPkK7F2DE6jzYkBuUx
+         N1IDFlOLzk5Rn7cSaqxvIE9T+MVNvipMaDhT7uF/JZWm+A34WOkhx0I3dBvo0rJ4C14n
+         5wNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6SoLmEgypN1bvzut8/xqttPmYCsTbM7WQBsAwB895ST015fOXJaFwpeBLNodSZiBj4RnE/eayqGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzfyh9a7hRBHSUCHONQj7pL2MAIqirzYzHfzp+9uwrBt77sDSlP
+	kMNEXO+N5N2ZU4I1EtEr7J/fR+PV1nNzGEj8joqGuy13GBMZF0PeP9QojfvdiKKc3JdGfmmDs1U
+	Mzzei0kfNdCaZCj6lk+cG6w2MW8/vC43nMAP8
+X-Gm-Gg: ASbGncvLtZMaf4dBh9WIVJ0qH1cDxfTrb8AjhoHUzVwzAHSXfk2QC8tSNcOsRfm4pjs
+	3+mlNAPD4rvd0vq9LJiYRz+DNHkTdhW2aA5Jxw25uMwcLHnXPHBrNEvq0tqe3Tv+3VkxfxQ==
+X-Google-Smtp-Source: AGHT+IG6BaIDHo3VQIs6Suwq6fAu96Q+gzv/vbHWUexAaIP3KqMbvipjPLrthuRXY44R6ugw8izf2++GtXUXgZdY3bE=
+X-Received: by 2002:a17:907:1c84:b0:abb:cb01:f3b7 with SMTP id
+ a640c23a62f3a-abbcb01f533mr293642966b.1.1739943779622; Tue, 18 Feb 2025
+ 21:42:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI/PM: Put devices to low power state on shutdown
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- AceLan Kao <acelan.kao@canonical.com>,
- "Limonciello, Mario" <mario.limonciello@amd.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>, Kai-Heng Feng
- <kaihengf@nvidia.com>, mika.westerberg@linux.intel.com
-References: <20241208074147.22945-1-kaihengf@nvidia.com>
- <69ddda46-62cc-445f-a1ef-f4651ec0b138@app.fastmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <69ddda46-62cc-445f-a1ef-f4651ec0b138@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250214023543.992372-1-pandoh@google.com> <20250214023543.992372-8-pandoh@google.com>
+ <38451a01-4e95-44ff-922b-8fda725eb25b@oracle.com>
+In-Reply-To: <38451a01-4e95-44ff-922b-8fda725eb25b@oracle.com>
+From: Jon Pan-Doh <pandoh@google.com>
+Date: Tue, 18 Feb 2025 21:42:48 -0800
+X-Gm-Features: AWEUYZlwhkSEgYsKtPttKQl_EQhYqGhLcMb5WP8BZSmlYii0EGpbkvUtWW5bEsA
+Message-ID: <CAMC_AXU7L3dFw_w5v7usMUJ-144Tq0BSzkYW+efReuRLQXrCSg@mail.gmail.com>
+Subject: Re: [PATCH v2 7/8] PCI/AER: Add AER sysfs attributes for log ratelimits
+To: Karolina Stolarek <karolina.stolarek@oracle.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller <ben.fuller@oracle.com>, 
+	Drew Walton <drewwalton@microsoft.com>, Anil Agrawal <anilagrawal@meta.com>, 
+	Tony Luck <tony.luck@intel.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Feb 17, 2025 at 5:31=E2=80=AFAM Karolina Stolarek
+<karolina.stolarek@oracle.com> wrote:
+> The convention is that sysfs files should provide one value per file. It
+> won't be just people interacting with this interface, but scripts as
+> well. Parsing such a string is a hassle. As we can only change the burst
+> of the ratelimit, I'd simply emit pdev->aer_report->ratelimit.burst.
 
+Realized that Jonathan said something similar in v1[1] (that I forgot
+to fix). In addition to the reason you provided, he stated that
+convention is to read/write the same thing to a sysfs file.
 
-On 1/17/25 14:31, Mark Pearson wrote:
-> Hi,
-> 
-> On Sun, Dec 8, 2024, at 2:41 AM, Kai-Heng Feng wrote:
->> Some laptops wake up after poweroff when HP Thunderbolt Dock G4 is
->> connected.
->>
->> The following error message can be found during shutdown:
->> pcieport 0000:00:1d.0: AER: Correctable error message received from
->> 0000:09:04.0
->> pcieport 0000:09:04.0: PCIe Bus Error: severity=Correctable, type=Data
->> Link Layer, (Receiver ID)
->> pcieport 0000:09:04.0:   device [8086:0b26] error
->> status/mask=00000080/00002000
->> pcieport 0000:09:04.0:    [ 7] BadDLLP
->>
->> Calling aer_remove() during shutdown can quiesce the error message,
->> however the spurious wakeup still happens.
->>
->> The issue won't happen if the device is in D3 before system shutdown, so
->> putting device to low power state before shutdown to solve the issue.
->>
->> ACPI Spec 6.5, "7.4.2.5 System \_S4 State" says "Devices states are
->> compatible with the current Power Resource states. In other words, all
->> devices are in the D3 state when the system state is S4."
->>
->> The following "7.4.2.6 System \_S5 State (Soft Off)" states "The S5
->> state is similar to the S4 state except that OSPM does not save any
->> context." so it's safe to assume devices should be at D3 for S5.
->>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=219036
->> Cc: AceLan Kao <acelan.kao@canonical.com>
->> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
->> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
->> Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
->> ---
->>   drivers/pci/pci-driver.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
->> index 35270172c833..248e0c9fd161 100644
->> --- a/drivers/pci/pci-driver.c
->> +++ b/drivers/pci/pci-driver.c
->> @@ -510,6 +510,14 @@ static void pci_device_shutdown(struct device *dev)
->>   	if (drv && drv->shutdown)
->>   		drv->shutdown(pci_dev);
->>
->> +	/*
->> +	 * If driver already changed device's power state, it can mean the
->> +	 * wakeup setting is in place, or a workaround is used. Hence keep it
->> +	 * as is.
->> +	 */
->> +	if (!kexec_in_progress && pci_dev->current_state == PCI_D0)
->> +		pci_prepare_to_sleep(pci_dev);
->> +
->>   	/*
->>   	 * If this is a kexec reboot, turn off Bus Master bit on the
->>   	 * device to tell it to not continue to do DMA. Don't touch
->> -- 
->> 2.47.0
-> 
-> Just a note that we've tested this in the Lenovo Linux team and confirmed that it reduces the power draw on a powered off Z16 G2 by 0.6W.
-> This is enough to bring Linux inline with Windows, and more importantly allow the platform to pass e-star energy certification (which it otherwise fails). We suspect other platforms will show similar benefits.
-> 
-> Let me know if there's anything we can do to help get this patch moving along - I think it's important.
-> 
-> Tested-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> 
-> Mark
-> 
-
-Bjorn,
-
-Anything else that you would like to see for this patch?
-Or different direction you would like to see it go?
+[1] https://lore.kernel.org/linux-pci/20250131143246.000037a2@huawei.com/
 
 Thanks,
+Jon
 
