@@ -1,152 +1,145 @@
-Return-Path: <linux-pci+bounces-21825-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21826-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7382A3C6E4
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 19:01:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF172A3C6F2
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 19:03:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9949A165C48
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:00:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6DE1C1890137
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:02:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C35514B092;
-	Wed, 19 Feb 2025 18:00:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4888A1C173F;
+	Wed, 19 Feb 2025 18:02:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7OPUOA7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q+SwWDxE"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077301D554
-	for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 18:00:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E5D214810;
+	Wed, 19 Feb 2025 18:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739988058; cv=none; b=HmisfzSrcnrhm7y7j7JzAQTIGLjhvt9Pe9JiJnDwsiEYqlAugUqHl/U61IpTP1sO4MhCUu6+yT23qlFC84jqc5RNnwQduIfixsJvtCSPSGEVxmWc9L7whP+OCYDOOuZihbjnySW4bOQstyQ4ZP8I3lc0+14W2fKqGBTUcb9GjcY=
+	t=1739988148; cv=none; b=pRTifMEm6/pIKxfdbSOnKHC/tJVKM/Z/MTDhjGSOuSOEKDGZYcTNqaqKK1Mh4tgW3qaTK7ZUjYZkvRTE+UMTUXJG3XsqDuReL77S79EUVROwxBtFKN7HDlIG4QjkHAm8lu2CMJfW1zc7acGo8a30MQQs4U/ZqgnIwXSkoiQiHsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739988058; c=relaxed/simple;
-	bh=10ugBIMWWecRCfAep3sGGxgeI0M1ddYl0HmhIv357cY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AAzHzQyhTUBZu7ckjD3+1BDJlq2NjcTgr4aUE2yqUNWquapYdeyQ8k/j9gqyAg1Kp5jd3Ig50NL3xQCOTkW7TYiwXYmzgRE31Xw1kd8dzT17n8tqPaYasM1jSARh7kNCF1qE+U7qAf1pn8GoWG12QglNas64s+Gt8/4C9Bu6Mb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E7OPUOA7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61880C4CED1;
-	Wed, 19 Feb 2025 18:00:55 +0000 (UTC)
+	s=arc-20240116; t=1739988148; c=relaxed/simple;
+	bh=jIxiebXULrZLfiLVV15tFXoNClQddGSFBGNxWb8PZvw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jibwdjD8bypokbCIRcfyL5WaxPcXGEvMNhu1AMlOegLmpJwhPkbkkyoKOhCe9zBZDSsdgpmvV+U4WP4CsdPaRPYy1QS+vLOfb5g48Ws7cYTDLniJC7yj3KFrLto4DoNuBaL2RdnokB/JMxJmdgXGog8SXQ0+vv8SX8eMch7tKSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q+SwWDxE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9270FC4CED1;
+	Wed, 19 Feb 2025 18:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739988057;
-	bh=10ugBIMWWecRCfAep3sGGxgeI0M1ddYl0HmhIv357cY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E7OPUOA7U0GPV/BsHMhWSbUVR3ybX3fGkzsHrsS1uWeGUVKC19y9gJS8+QnadyZ1c
-	 ex/FY9uHx/dCgGwkIzo0CvNoZqASbRdJQDVCZ8PY3b6mu4s677QrEOAbN8RUGNSdll
-	 myCvCuWia294AqT+nIhw5glI5STfmrCIBMAyC2B+KJfZP2lQNXmVuBu3DHDUWvnm1X
-	 qB1NFhzWVxKbW0bfLlDIxjGVGpUyNEeJPWKUe3Dp5y7UjXXNCxkAoVAHa4dKVKHSBW
-	 DJCjSnbZgPNwaSB1WC2jM0Gux68uPcRLLnua3ZXjx9yJd1DTCczKR3udfuKOCu+GVm
-	 UW60CiLl1qLqg==
-Date: Wed, 19 Feb 2025 19:00:52 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Udit Kumar <u-kumar1@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 2/7] PCI: endpoint: Add pci_epc_bar_size_to_rebar_cap()
-Message-ID: <Z7YcVEa95ulOh81p@ryzen>
-References: <Z7YTukXh-Y3_HQsb@ryzen>
- <20250219174927.GA224883@bhelgaas>
+	s=k20201202; t=1739988147;
+	bh=jIxiebXULrZLfiLVV15tFXoNClQddGSFBGNxWb8PZvw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=q+SwWDxE5346KmNvnWU5IU3DD7Kz5NT5RNA/UsiW/yHdA/uBSpW13obnxOHu3PIwb
+	 2HvYTGDk5TS1BzB4pnePDZI0Qh8xD21Y8k3d7xmaacGomDJxQSHQIspBfgKphd6JUf
+	 hMS/hPy3cLLxIZ04q8Up96csFG+cJq45merKJGD8DgSInTqa0YBgMSXCHFJAUw9wTt
+	 vBul1HBfJ1dcwC7W1Ttut8I4FSh1IuM+c9n1xcqL4xkqQpSvTZ4EliuOJSPMaVuzA5
+	 LlRyR/BvWzGae5Oui24oNt80KfwVSusOvbAMYuSvOr1Gk6TuM6uwze+mI2sT14Hfjc
+	 HUNL04hRyF1kg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tkoOv-005uv3-LS;
+	Wed, 19 Feb 2025 18:02:25 +0000
+Date: Wed, 19 Feb 2025 18:02:24 +0000
+Message-ID: <8634g9sthr.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Brian Norris <briannorris@chromium.org>,	Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>,	Tsai Sung-Fu <danielsftsai@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,	Lorenzo Pieralisi
+ <lpieralisi@kernel.org>,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kw@linux.com>,	Rob Herring <robh@kernel.org>,	Bjorn Helgaas
+ <bhelgaas@google.com>,	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,	Andrew Chant <achant@google.com>,	Sajid Dalvi
+ <sdalvi@google.com>
+Subject: Re: [PATCH] PCI: dwc: Separate MSI out to different controller
+In-Reply-To: <20250219175119.vjfdgvltutpzyyp5@thinkpad>
+References: <20250115083215.2781310-1-danielsftsai@google.com>
+	<20250127100740.fqvg2bflu4fpqbr5@thinkpad>
+	<CAK7fddC6eivmD0-CbK5bbwCUGUKv2m9a75=iL3db=CRZy+A5sg@mail.gmail.com>
+	<20250211075654.zxjownqe5guwzdlf@thinkpad>
+	<CAK7fddDkQX1aj5ZyTjh1_Pk+XME3AY=m5ouEFRgmLuJjBJytbA@mail.gmail.com>
+	<20250214071552.l4fufap6q5latcit@thinkpad>
+	<Z6-fjJv3LXTir1Yj@google.com>
+	<20250219175119.vjfdgvltutpzyyp5@thinkpad>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219174927.GA224883@bhelgaas>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: mani@kernel.org, briannorris@chromium.org, manivannan.sadhasivam@linaro.org, danielsftsai@google.com, jingoohan1@gmail.com, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, achant@google.com, sdalvi@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Feb 19, 2025 at 11:49:27AM -0600, Bjorn Helgaas wrote:
-> On Wed, Feb 19, 2025 at 06:24:10PM +0100, Niklas Cassel wrote:
-> > On Tue, Feb 18, 2025 at 10:48:04AM -0600, Bjorn Helgaas wrote:
-> > > On Fri, Jan 31, 2025 at 07:29:51PM +0100, Niklas Cassel wrote:
-> > > > Add a helper function to convert a size to the representation used by the
-> > > > Resizable BAR Capability Register.
-> > > 
-> > > > +/**
-> > > > + * pci_epc_bar_size_to_rebar_cap() - convert a size to the representation used
-> > > > + *				     by the Resizable BAR Capability Register
-> > > > + * @size: the size to convert
-> > > > + * @cap: where to store the result
-> > > > + *
-> > > > + * Returns 0 on success and a negative error code in case of error.
-> > > > + */
-> > > > +int pci_epc_bar_size_to_rebar_cap(size_t size, u32 *cap)
-> > > > +{
-> > > > +	/*
-> > > > +	 * According to PCIe base spec, min size for a resizable BAR is 1 MB,
-> > > > +	 * thus disallow a requested BAR size smaller than 1 MB.
-> > > > +	 * Disallow a requested BAR size larger than 128 TB.
-> > > > +	 */
-> > > > +	if (size < SZ_1M || (u64)size > (SZ_128G * 1024))
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	*cap = ilog2(size) - ilog2(SZ_1M);
-> > > > +
-> > > > +	/* Sizes in REBAR_CAP start at BIT(4). */
-> > > > +	*cap = BIT(*cap + 4);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(pci_epc_bar_size_to_rebar_cap);
-> > > 
-> > > This doesn't seem specific to EPC.  It looks basically similar to
-> > > pci_rebar_bytes_to_size().  Can we consolidate anything there?
-> > 
-> > This function is to convert a size to
-> > "Resizable BAR Capability Register", which includes one or more supported
-> > BAR sizes.
-> > 
-> > This register should only ever by written by a PCI endpoint function,
-> > so I think its current home in drivers/pci/endpoint/ is correct.
-> > 
-> > pci_rebar_bytes_to_size() is used to convert a size to
-> > "Resizable BAR Control Register", specifically the field
-> > "BAR Size".
-> > 
-> > This "BAR Size" field in the "Resizable BAR Control Register" can be
-> > written by the host side (or endpoint side), to select one of the
-> > supported bar sizes. So I think it makes sense for
-> > pci_rebar_bytes_to_size() to live in pci.h.
+On Wed, 19 Feb 2025 17:51:19 +0000,
+Manivannan Sadhasivam <mani@kernel.org> wrote:
 > 
-> Thanks, I agree.
+> On Fri, Feb 14, 2025 at 11:54:52AM -0800, Brian Norris wrote:
+> > On Fri, Feb 14, 2025 at 12:45:52PM +0530, Manivannan Sadhasivam wrote:
+> > > On Tue, Feb 11, 2025 at 04:23:53PM +0800, Tsai Sung-Fu wrote:
+> > > > >Because you cannot set affinity for chained MSIs as these MSIs are muxed to
+> > > > >another parent interrupt. Since the IRQ affinity is all about changing which CPU
+> > > > >gets the IRQ, affinity setting is only possible for the MSI parent.
+> > > > 
+> > > > So if we can find the MSI parent by making use of chained
+> > > > relationships (32 MSI vectors muxed to 1 parent),
+> > > > is it possible that we can add that implementation back ?
+> > > > We have another patch that would like to add the
+> > > > dw_pci_msi_set_affinity feature.
+> > > > Would it be a possible try from your perspective ?
+> > > > 
+> > > 
+> > > This question was brought up plenty of times and the concern from the irqchip
+> > > maintainer Marc was that if you change the affinity of the parent when the child
+> > > MSI affinity changes, it tends to break the userspace ABI of the parent.
+> > > 
+> > > See below links:
+> > > 
+> > > https://lore.kernel.org/all/87mtg0i8m8.wl-maz@kernel.org/
+> > > https://lore.kernel.org/all/874k0bf7f7.wl-maz@kernel.org/
+> > 
+> > It's hard to meaningfully talk about a patch that hasn't been posted
+> > yet, but the implementation we have at least attempts to make *some*
+> > kind of resolution to those ABI questions. For one, it rejects affinity
+> > changes that are incompatible (by some definition) with affinities
+> > requested by other virqs shared on the same parent line. It also updates
+> > their effective affinities upon changes.
+> > 
+> > Those replies seem to over-focus on dynamic, user-space initiated
+> > changes too. But how about for "managed-affinity" interrupts? Those are
+> > requested by drivers internally to the kernel (a la
+> > pci_alloc_irq_vectors_affinity()), and can't be changed by user space
+> > afterward. It seems like there'd be room for supporting that, provided
+> > we don't allow conflicting/non-overlapping configurations.
+> > 
+> > I do see that Marc sketched out a complex sysfs/hierarchy API in some of
+> > his replies. I'm not sure that would provide too much value to the
+> > managed-affinity cases we're interested in, but I get the appeal for
+> > user-managed affinity.
+> > 
 > 
-> It looks like pci_epc_bar_size_to_rebar_cap() is only called once per
-> BAR.  Does that mean an endpoint driver can only set a single
-> supported size for a Resizable BAR in the Capability register?
+> Whatever your proposal is, please get it reviewed by Marc.
 
-Yes, that is the current design.
+Please see b673fe1a6229a and avoid dragging me into discussion I have
+purposely removed myself from. I'd also appreciate if you didn't
+volunteer me for review tasks I have no intention to perform (this is
+the second time you are doing it, and that's not on).
 
-(Which is an improvement to before this series was merged, where a Resizable
-BAR had to be forced to 1 MB size, so EPF drivers could not configure a size
-larger/different than 1 MB.)
+	M.
 
-
-
-It is possible to allow the endpoint framework to allow multiple Resizable
-BAR sizes to be supported in the future.
-
-On e.g. rk3588, the EP gets an IRQ when the host side writes the "BAR Size"
-field in the "Resizable BAR Control Register".
-
-So one can image that the drivers could call some function in the EPC
-framework that allocates + copies + frees new backing memory for the BARs.
-
-But right now, I don't have a need for such a use-case, so let's defer that
-until someone actually wants/needs that, since it will undoubtedly also add
-more code complexity to the EPC framework.
-
-
-Kind regards,
-Niklas
+-- 
+Without deviation from the norm, progress is not possible.
 
