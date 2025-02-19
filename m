@@ -1,57 +1,60 @@
-Return-Path: <linux-pci+bounces-21836-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21837-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EB77A3C7DD
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 19:47:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EAA5A3C912
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 20:49:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12FBC3B00FB
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:46:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1A147178867
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 19:49:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C43A21481A;
-	Wed, 19 Feb 2025 18:46:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C164222B8A2;
+	Wed, 19 Feb 2025 19:49:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jNe2cJC4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qoYl5k9l"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC071E4AB;
-	Wed, 19 Feb 2025 18:46:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866E01ADC86;
+	Wed, 19 Feb 2025 19:49:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739990809; cv=none; b=icTnEk46DZCihD6sHyajfplPrbJMB7Nf+ZPMZ5w2h15o3DlH5KuG2us1yZZh6aqBrHyG3wah6uCSkZ1qjPqWMqiP4oIB+1hJTwcDShHxok4H0/O3TYJnYQEhTgWiX8SdU53I1elxQnB8Wel9lZ6lKIHFWRNs3JTWE1a5HMi0d3o=
+	t=1739994565; cv=none; b=hNKtOAOL7qB+9qkB0mJwpgY1VGgFJqqwdFhqeLmhxoDcjC4aXMdRDMIxNmxFUw5MxvT9T/8p5KqoatftYpmxs3A+lrlHBQKOZYjMyZFalPjUx2qCxm+Kmol4taLgGu+qGR8xKK/zYGBlWtkIljvI9wAbqAortSAxUD2oVUplwyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739990809; c=relaxed/simple;
-	bh=aWMFQ2zDDAVtHHfcPcX1+CRkmv36nV0yhax/HAyClbg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=jrakmitzmvKUa5QJvBOF9WDlH5SxbDFU2YL84KElIZ6a+AAakZcZY4NdjoojOKKr7UNhmleQ76XuJP3Ysqk8O+d9xONZ01ARGUPp2Y5bi/Y74pkNedUoU57219aXnP9IfJEzsk1wTebUWg3FLmjKtMqofowaS15tUF3NM36ZX1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jNe2cJC4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6961EC4CED1;
-	Wed, 19 Feb 2025 18:46:48 +0000 (UTC)
+	s=arc-20240116; t=1739994565; c=relaxed/simple;
+	bh=UYy/lu0qQ2sbGAMvLTq/G1MIeAdrMLKHu1KjRZuiZK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RRGAS1Vpm4IcN5TjUDZ7o9xSoLTi9m/OT/90k+iFRYN1sueL1ghyKv6vwuYKrOZ75sbKHN6Wd/h0UfIaXBmpAP4/oTEGrNt+FA5AI9HTrj69458Agt0k1CsizUP89uuMwtBeDEagnLjCRX9IyFlbj/ODskyYocP6JyvB1I8t+54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qoYl5k9l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB2D4C4CED1;
+	Wed, 19 Feb 2025 19:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739990808;
-	bh=aWMFQ2zDDAVtHHfcPcX1+CRkmv36nV0yhax/HAyClbg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=jNe2cJC4XJAIb4Qj59HQFTi4BzSldncwzHKet61psAIarl/gT3lsxzGlT5AZfhw1s
-	 wn3CuUMXIKwKoOhE2Tzwctu8rmbQWHsIoinIWmgXoOHJnjYbcRnna3Y/IObqPm4n1h
-	 Qu6nLLutEgGoJ6s/OrX5xAxGZWujPwSOp2UKRpNQGsNdbyPHAECggmxs7IE1wF/adc
-	 1Eon0TT6U18qR/3tMLzuzQM8t9drxCV9S5llRVapA8nuly2wKoCTxefXWeqym3m7pN
-	 ad1+TOnET1Uw1tWlMYcywYcF/E9UV1/blNKu/2wd/fk4825mw9Wv8JO5DrFqReZCMQ
-	 Q36G+bNd/64vQ==
-Date: Wed, 19 Feb 2025 12:46:46 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kai-Heng Feng <kaihengf@nvidia.com>,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: bhelgaas@google.com, mika.westerberg@linux.intel.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	AceLan Kao <acelan.kao@canonical.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/PM: Put devices to low power state on shutdown'
-Message-ID: <20250219184646.GA226882@bhelgaas>
+	s=k20201202; t=1739994565;
+	bh=UYy/lu0qQ2sbGAMvLTq/G1MIeAdrMLKHu1KjRZuiZK8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qoYl5k9l2SDx44RekQuCJla114E3wfs6aYeD6rwHHgZtsjRe/9gxcKjKEqmqrzJXB
+	 8neAg8ezfGb4OJyLGxOPOBsj6TTjq7EXlrnbrvImAs27D3UCfS4iQY58V9K1iPksXK
+	 jQzJXMg5S5dbRX24Ws9ls9RdSlUNr7Qz/q3HFD0yvorBUyUoV1YalZO6B4ppru1MmH
+	 Y9moeE0KUc5n1l9OPMM9aEWPZpU+PObBrSJj1sGQcPOgo5iBa1EhL9JsK2APaqA7EZ
+	 OalRrjsOI4cf+L78KuEL3QflG0U1BabWgoAchX9IYy1AdMwH0voeU57ROxpgDjf7fm
+	 pcbJpyISf6GuA==
+Date: Wed, 19 Feb 2025 13:49:23 -0600
+From: Rob Herring <robh@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: andersson@kernel.org, dmitry.baryshkov@linaro.org,
+	manivannan.sadhasivam@linaro.org, krzk@kernel.org,
+	helgaas@kernel.org, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, lpieralisi@kernel.org, kw@linux.com,
+	conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree-spec@vger.kernel.org,
+	quic_vbadigan@quicinc.com
+Subject: Re: [PATCH V3 0/2] schemas: pci: bridge: Document PCI L0s & L1 entry
+ delay and N_FTS
+Message-ID: <20250219194923.GA2776564-robh@kernel.org>
+References: <20250216014510.3990613-1-krishna.chundru@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,77 +63,39 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241208074147.22945-1-kaihengf@nvidia.com>
+In-Reply-To: <20250216014510.3990613-1-krishna.chundru@oss.qualcomm.com>
 
-[+to Rafael, +cc linux-pm]
-
-On Sun, Dec 08, 2024 at 03:41:47PM +0800, Kai-Heng Feng wrote:
-> Some laptops wake up after poweroff when HP Thunderbolt Dock G4 is
-> connected.
+On Sun, Feb 16, 2025 at 07:15:08AM +0530, Krishna Chaitanya Chundru wrote:
+> Some controllers and endpoints provide provision to program the entry
+> delays of L0s & L1 which will allow the link to enter L0s & L1 more
+> aggressively to save power.
 > 
-> The following error message can be found during shutdown:
-> pcieport 0000:00:1d.0: AER: Correctable error message received from 0000:09:04.0
-> pcieport 0000:09:04.0: PCIe Bus Error: severity=Correctable, type=Data Link Layer, (Receiver ID)
-> pcieport 0000:09:04.0:   device [8086:0b26] error status/mask=00000080/00002000
-> pcieport 0000:09:04.0:    [ 7] BadDLLP
+> Per PCIe r6.0, sec 4.2.5.1, during Link training, a PCIe component
+> captures the N_FTS value it receives.  Per 4.2.5.6, when
+> transitioning the Link from L0s to L0, it must transmit N_FTS Fast
+> Training Sequences to enable the receiver to obtain bit and Symbol
+> lock.
 > 
-> Calling aer_remove() during shutdown can quiesce the error message,
-> however the spurious wakeup still happens.
-
-aer_remove() disables AER interrupts, so I guess there must be a
-non-AER interrupt being generated during shutdown?
-
-If so, AER is a red herring and including the AER details above is a
-distraction from whatever the real interrupt cause is.
-
-> The issue won't happen if the device is in D3 before system shutdown, so
-> putting device to low power state before shutdown to solve the issue.
+> Components may have device-specific ways to configure N_FTS values
+> to advertise during Link training.  Define an n-fts array with an
+> entry for each supported data rate.
 > 
-> ACPI Spec 6.5, "7.4.2.5 System \_S4 State" says "Devices states are
-> compatible with the current Power Resource states. In other words, all
-> devices are in the D3 state when the system state is S4."
-> 
-> The following "7.4.2.6 System \_S5 State (Soft Off)" states "The S5
-> state is similar to the S4 state except that OSPM does not save any
-> context." so it's safe to assume devices should be at D3 for S5.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=219036
-> Cc: AceLan Kao <acelan.kao@canonical.com>
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Kai-Heng Feng <kaihengf@nvidia.com>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 > ---
->  drivers/pci/pci-driver.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> changes in v3:-
+> - Update the description to specfify about entries of the array (rob)
+> changes in v2:-
+> - Split N_FTS & L1 and L0s entry delay in two patches (bjorn)
+> - Update the commit text, description (bjorn)
 > 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 35270172c833..248e0c9fd161 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -510,6 +510,14 @@ static void pci_device_shutdown(struct device *dev)
->  	if (drv && drv->shutdown)
->  		drv->shutdown(pci_dev);
->  
-> +	/*
-> +	 * If driver already changed device's power state, it can mean the
-> +	 * wakeup setting is in place, or a workaround is used. Hence keep it
-> +	 * as is.
-> +	 */
-> +	if (!kexec_in_progress && pci_dev->current_state == PCI_D0)
-> +		pci_prepare_to_sleep(pci_dev);
-
-
-I don't know enough to draw inferences about PCI_D0 meaning a wakeup
-setting is in place or a workaround being used.  That doesn't seem
-like enough to be useful for me to maintain this in the future.  But
-my power management understanding is pretty meager.
-
-Would like an ack from Rafael for this.
-
->  	/*
->  	 * If this is a kexec reboot, turn off Bus Master bit on the
->  	 * device to tell it to not continue to do DMA. Don't touch
-> -- 
-> 2.47.0
+> Krishna Chaitanya Chundru (2):
+>   schemas: pci: bridge: Document PCI L0s & L1 entry delay
+>   schemas: pci: bridge: Document PCIe N_FTS
 > 
+>  dtschema/schemas/pci/pci-bus-common.yaml | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+
+Applied, thanks.
+
+Rob
 
