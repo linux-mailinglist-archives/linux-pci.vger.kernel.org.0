@@ -1,62 +1,62 @@
-Return-Path: <linux-pci+bounces-21816-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21817-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E441DA3C657
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:39:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FEE2A3C678
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:46:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F1EE3A82C1
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 17:39:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 32DB2188EB85
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 17:46:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 784321F941B;
-	Wed, 19 Feb 2025 17:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 893481714B2;
+	Wed, 19 Feb 2025 17:45:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tC1eUyJW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OBJq3tT+"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6721B415B;
-	Wed, 19 Feb 2025 17:39:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603021F61C;
+	Wed, 19 Feb 2025 17:45:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739986756; cv=none; b=Ui4oeySEif6lhqyDsmgdAFHoxSqI+i2Eslr97lVdza3gY3VciH4mf1mHtnISdUTwDVFXRLLWhMsUjppJUQebADOShAOzN2X2wuChBbpmJieUke54kDac3OaXkspQJ0KjgdgfDdXSnTBlr+uTi+dP3z8MSU0akPSu0LB4D5RSA3k=
+	t=1739987156; cv=none; b=j5RhzpE/kT5W4Zu9JnnACkDZ11VA6IrV16gZp68ouWaUMZoNYLwW3TNkOel2JLyvlpVPGWLev7Y5tfPS+ykEP5uqk4a+yfbYQ7w3OGCFBAp/AeFkY2KnLwCndkGAxl6WF8ev1Bu3FjTdBqwEbikKuxpFxrOjE3KAnjlXb3pnN94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739986756; c=relaxed/simple;
-	bh=envBoeOud7Q/RcNE6x7hX9HI5r3dhh7frxZMCujiSME=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=XrTZ4M66cn8H06shjg9DSYdn40Jx3ryr/cGQpkLregYTrPcTsvXmfr8udgVD9u8m1aU7ZCxwAq+xDy4ZRlWA4bvGennfQUP2DEAWLwVKExxL4/UVWvMWNaaql17RDytnx4s0yQPecPH1Y7eGs46QYXKzVSVXiKCv+D7ukjNGPh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tC1eUyJW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84CB5C4CED1;
-	Wed, 19 Feb 2025 17:39:14 +0000 (UTC)
+	s=arc-20240116; t=1739987156; c=relaxed/simple;
+	bh=OoQAimFA7R4sw2wy3Xb8P7B/ZeQ9EXQikBds9cRlDpo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NRsymumqnoWSpeEpyI0Nrp1KSLbrX1FpFFXnt8/ddoZNg1Z20lKZBl2sBUM1c3BsZS1a7SdZBC3zjOmUGPI9r066lbf3aknYjfg6M7werCBh18FW2nrIkwxeDY/suzEgYCWUhk9SB1buq0fbTCRR3idSQFy2iiOss+XNLHcvnD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OBJq3tT+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 526B9C4CED1;
+	Wed, 19 Feb 2025 17:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739986754;
-	bh=envBoeOud7Q/RcNE6x7hX9HI5r3dhh7frxZMCujiSME=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=tC1eUyJWR+wzlPDrec1L/z+XhGm3pnnj3ygbLrIUrDmK/LjKH+gMMbRadY1HvZtLb
-	 7+h3u/S7JjH4xun86GlfvkW9TmsSbC0rK8txbiCswoaxY9jPLm5zvOsr73zMjNY+Aw
-	 u7XOZ5r6OCQ/Z8sCjbtFZePJNA0OfqxX9Zyq6OnbIiUmLgGyq6gYIv+LEmkiXLm2xN
-	 sBsSShEY0Si7dqMFlEJPt2x+kJeR866cJOmdMPVLrxYwleyj9Ezkyl2JhxWUYXOqLh
-	 lCoxVZh8ZTC2RFl9ukjx4x0MZ/h/y6nQdFX4/wNx1i9lxxizLu2gNEV0FTc2gAQ9px
-	 wilA2sN0QymLA==
-Date: Wed, 19 Feb 2025 11:39:12 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 5/5] PCI: of: Create device-tree PCI host bridge node
-Message-ID: <20250219173912.GA224527@bhelgaas>
+	s=k20201202; t=1739987155;
+	bh=OoQAimFA7R4sw2wy3Xb8P7B/ZeQ9EXQikBds9cRlDpo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OBJq3tT+ep9ojdjKhW+ra0Tar8VThKkamqTYbtZCPdKcCfuEv4uYczXgI9EHPzSO0
+	 e6oyAnWt0v5yQNAlz/UlVQBq8aIxV+5pFRl6+tEIjCnYbgYTXrK8phe78HT1mpsZ3Q
+	 zLZMG7uIFGiu0LMqwsHZWTLC7RbLmgHBEDmNqFgtVRhzyHWxXmUKIvx/WAptmcOXjD
+	 oaYyTJie7hH8HhsKgUe/GE5d0G4wdcWKqcsmJP9qEoT7jy9LxO9qNmHyrrmRlmr7vO
+	 QMAme0n/gEqKxXOaqpMT+Zo56gLEgURrUQiGuCYSmIFiApf5J4aeOzfPzwBsa3I1p6
+	 rxqFJg5MxS03Q==
+Date: Wed, 19 Feb 2025 18:45:49 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	jingoohan1@gmail.com, Jonathan.Cameron@huawei.com,
+	fan.ni@samsung.com, nifan.cxl@gmail.com, a.manzanares@samsung.com,
+	pankaj.dubey@samsung.com, 18255117159@163.com,
+	quic_nitegupt@quicinc.com, quic_krichai@quicinc.com,
+	gost.dev@samsung.com
+Subject: Re: [PATCH v6 0/4] Add support for debugfs based RAS DES feature in
+ PCIe DW
+Message-ID: <Z7YYzdN-MboQKIt-@ryzen>
+References: <CGME20250214105330epcas5p13b0d5bef72b012d71e850c9454015880@epcas5p1.samsung.com>
+ <20250214105007.97582-1-shradha.t@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,43 +65,35 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250204073501.278248-6-herve.codina@bootlin.com>
+In-Reply-To: <20250214105007.97582-1-shradha.t@samsung.com>
 
-On Tue, Feb 04, 2025 at 08:35:00AM +0100, Herve Codina wrote:
-> PCI devices device-tree nodes can be already created. This was
-> introduced by commit 407d1a51921e ("PCI: Create device tree node for
-> bridge").
+On Fri, Feb 14, 2025 at 04:20:03PM +0530, Shradha Todi wrote:
+> DesignWare controller provides a vendor specific extended capability
+> called RASDES as an IP feature. This extended capability  provides
+> hardware information like:
+>  - Debug registers to know the state of the link or controller. 
+>  - Error injection mechanisms to inject various PCIe errors including
+>    sequence number, CRC
+>  - Statistical counters to know how many times a particular event
+>    occurred
 > 
-> In order to have device-tree nodes related to PCI devices attached on
-> their PCI root bus (the PCI bus handled by the PCI host bridge), a PCI
-> root bus device-tree node is needed. This root bus node will be used as
-> the parent node of the first level devices scanned on the bus. On
-> device-tree based systems, this PCI root bus device tree node is set to
-> the node of the related PCI host bridge. The PCI host bridge node is
-> available in the device-tree used to describe the hardware passed at
-> boot.
+> However, in Linux we do not have any generic or custom support to be
+> able to use this feature in an efficient manner. This is the reason we
+> are proposing this framework. Debug and bring up time of high-speed IPs
+> are highly dependent on costlier hardware analyzers and this solution
+> will in some ways help to reduce the HW analyzer usage.
 > 
-> On non device-tree based system (such as ACPI), a device-tree node for
-> the PCI host bridge or for the root bus does not exist. Indeed, the PCI
-> host bridge is not described in a device-tree used at boot simply
-> because no device-tree are passed at boot.
+> The debugfs entries can be used to get information about underlying
+> hardware and can be shared with user space. Separate debugfs entries has
+> been created to cater to all the DES hooks provided by the controller.
+> The debugfs entries interacts with the RASDES registers in the required
+> sequence and provides the meaningful data to the user. This eases the
+> effort to understand and use the register information for debugging.
 > 
-> The device-tree PCI host bridge node creation needs to be done at
-> runtime. This is done in the same way as for the creation of the PCI
-> device nodes. I.e. node and properties are created based on computed
-> information done by the PCI core. Also, as is done on device-tree based
-> systems, this PCI host bridge node is used for the PCI root bus.
+> This series creates a generic debugfs framework for DesignWare PCIe
+> controllers where other debug features apart from RASDES can also be
+> added as and when required.
 
-This is a detailed low-level description of what this patch does.  Can
-we include a high level outline of what the benefit is and why we want
-this patch?
-
-Based on 185686beb464 ("misc: Add support for LAN966x PCI device"), I
-assume the purpose is to deal with some kind of non-standard PCI
-topology, e.g., a single B/D/F function contains several different
-pieces of functionality to be driven by several different drivers, and
-we build a device tree description of those pieces and then bind those
-drivers to the functionality using platform_device interfaces?
-
-Bjorn
+FWIW, for the series:
+Tested-by: Niklas Cassel <cassel@kernel.org>
 
