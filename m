@@ -1,147 +1,234 @@
-Return-Path: <linux-pci+bounces-21791-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21792-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AD5BA3B126
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 06:58:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EBD3DA3B1D6
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 07:54:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 71F201896C98
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 05:58:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C9A48188902B
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 06:54:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82B4B1B86E9;
-	Wed, 19 Feb 2025 05:58:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1ED41BD018;
+	Wed, 19 Feb 2025 06:53:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DqWVgQiV"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="eUGjJ8c0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD721B85D0;
-	Wed, 19 Feb 2025 05:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6731B425D;
+	Wed, 19 Feb 2025 06:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739944688; cv=none; b=Gdtm5MbrOcnOulitV3xdV+O98gpQ8hIWe9yKAygaqKmG/WOkB0VUssh+ibDqW3MXglC6Ieq8uiEhNsmfR+Ejfy0UjCP/TeYl+VzWhNxCRVHOi+knjjgpnYN8oAoPCTFMCm09e+JPOT48i8OuSgU4gm5Q07jochTPgE6z+7PNlYk=
+	t=1739948035; cv=none; b=NeVF7o2AKMc5j0hBSW0zfrgKwirFvSyhxbk5a/ZX/I0M56+9V+Jx4qDDBBTQcSu4ZE5zN/7FMUxlTUdTTNUzag1omqudhvX7iqSGRuhJtv3kUUzqRuhi3gKqVdOokA0BkbxxHZwk/vO8aIHMZyNBEBoCqBSKlZUbxp0T2p5LcOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739944688; c=relaxed/simple;
-	bh=EDAsRXB8SZ2ht5Mbs7TF8sqNUbcycQ0l2Gg1SrMSF1M=;
+	s=arc-20240116; t=1739948035; c=relaxed/simple;
+	bh=koRbriV2FJHYpkx4yetqvAA3ugjCmnG0nn4gTbjWO0E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OFW/eXQCQcX4/CetZ494nsY1jEsQ+E6Z5IBsB7UgodlvwjTKAqKcCQlwHYtsjwnUmXtTOpFoXUvzB1e6gBd2voWidpp874GNw90Fyphe5Q/agFVCvBIV8CIkjQ4dsPGnVHhPtbuqGuW2+fcKzvmKHPhvrwO2H9GG6QvCy+0bCD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DqWVgQiV; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739944686; x=1771480686;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EDAsRXB8SZ2ht5Mbs7TF8sqNUbcycQ0l2Gg1SrMSF1M=;
-  b=DqWVgQiVPrednhncW/8NvK+JmlU+iCI98nFHOi7xk0++RZ/ClvNinKPV
-   uY5HTfRX93IGzuwplN7xw/+vZyYUysxYekUI2wp/Bt0TKcmtmj+lKwH1k
-   bKiuPBTty69ioT9iWq2yAO1ln7tkLYfRAu/0e5nbOcxySnlzjsh+pJ2UA
-   Qd6LXOObyr2VYGWD8nBBqaZ8tM7RFoDYjr0AKmvfTjiPWGM/XsnmGmjZq
-   poIIeogXaoCK66A3mx5hw8NEfRZdL0vJrNopXWU65OhlgeYsO43XbzCry
-   X67Al69Xi84/+XI5zJfoPuPYDkvXY17Mr4s6INL2i5si7toYO8t8ZD4TQ
-   g==;
-X-CSE-ConnectionGUID: yE7ivT+QRDiKtk0e/zpMSg==
-X-CSE-MsgGUID: GXJVo/TtRHSceCzr46GJlQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="40875971"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="40875971"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2025 21:58:06 -0800
-X-CSE-ConnectionGUID: eKIsJRRiS9i0NSqKzBmVQg==
-X-CSE-MsgGUID: vz1Wvbg7SlqLNr1jajCn5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="115093235"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 18 Feb 2025 21:58:02 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tkd5s-0001IH-0M;
-	Wed, 19 Feb 2025 05:58:00 +0000
-Date: Wed, 19 Feb 2025 13:57:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: Feng Tang <feng.tang@linux.alibaba.com>,
-	Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nw1uhGT+TutPEoozAP+wBQ+zDV4J3JLryjKgUxb4/mvd1C3Z1KxPF4yTVB7DO83eO8Uo6EFlhZFep28QDHdpWh2HOLUT9XIqhLKcADS1EDbzjlq6mIv7uyM6ooWx+dkdgBs7w4+6CBPCHITrF5kRhTQt5b9f8AGHNMo4t7Rbe60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=eUGjJ8c0; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1739948027; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=2FnyiGRSEFSuMDZlvV3tsUAzNH+mhZyEV7s87LjUa9Q=;
+	b=eUGjJ8c0njfS5WYJBWfFMVJTxbLVgtk8VKHJiLhs17/oteW13z4t9MRdhSkkxQJ6U3LYQYJ1/czqMe8gD0uYIBfaudQkI3yRZgg4S3zGnjZRnmLhe0hmL8HrLAmsIfoTEjXCLIE3heUrBOjqzKJldI1boNGZD2iVkJw+dFpecoo=
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WPoD3cj_1739948026 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 19 Feb 2025 14:53:46 +0800
+Date: Wed, 19 Feb 2025 14:53:44 +0800
+From: Feng Tang <feng.tang@linux.alibaba.com>
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
 	Liguang Zhang <zhangliguang@linux.alibaba.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>, rafael@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Markus Elfring <Markus.Elfring@web.de>,
+	Guanghui Feng <guanghuifeng@linux.alibaba.com>, rafael@kernel.org,
+	Markus Elfring <Markus.Elfring@web.de>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Feng Tang <feng.tang@linux.alibaba.com>
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2 1/2] PCI/portdrv: Add necessary wait for disabling
  hotplug events
-Message-ID: <202502191308.uQbXkZna-lkp@intel.com>
+Message-ID: <Z7V_-KuL483hU8Dw@U-2FWC9VHC-2323.local>
 References: <20250218034859.40397-1-feng.tang@linux.alibaba.com>
+ <99d1cd4d-2526-4ce0-aabd-508fa03cb100@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250218034859.40397-1-feng.tang@linux.alibaba.com>
+In-Reply-To: <99d1cd4d-2526-4ce0-aabd-508fa03cb100@linux.intel.com>
 
-Hi Feng,
+Hi Sathyanarayanan,
 
-kernel test robot noticed the following build warnings:
+On Tue, Feb 18, 2025 at 10:58:19AM -0800, Sathyanarayanan Kuppuswamy wrote:
+> 
+> On 2/17/25 7:48 PM, Feng Tang wrote:
+> > There was problem reported by firmware developers that they received
+> > 2 pcie link control commands in very short intervals on an ARM server,
+> > which doesn't comply with pcie spec, and broke their state machine and
+> > work flow. According to PCIe 6.1 spec, section 6.7.3.2, software needs
+> > to wait at least 1 second for the command-complete event, before
+> > resending the cmd or sending a new cmd.
+> > 
+> > And the first link control command firmware received is from
+> > get_port_device_capability(), which sends cmd to disable pcie hotplug
+> > interrupts without waiting for its completion.
+> 
+> Were you able to narrow down the source of the second command? The
+> reason I am asking is, the commit you are trying to fix seems to have
+> existed for 10+ years and no one had faced any issues with it. So
+> I am wondering whether this needs to fixed at this place or before
+> executing the second command.
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.14-rc3 next-20250218]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The second command comes from pcie_enable_notification(), which in our
+case will send command to enable hotplug interrupt again.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Feng-Tang/PCI-Disable-PCIE-hotplug-interrupts-early-when-msi-is-disabled/20250218-115134
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250218034859.40397-1-feng.tang%40linux.alibaba.com
-patch subject: [PATCH v2 1/2] PCI/portdrv: Add necessary wait for disabling hotplug events
-config: csky-randconfig-002-20250219 (https://download.01.org/0day-ci/archive/20250219/202502191308.uQbXkZna-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250219/202502191308.uQbXkZna-lkp@intel.com/reproduce)
+The firmware developer found the problem when handling some device
+hotplug case, kind of stress case. 
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502191308.uQbXkZna-lkp@intel.com/
+I think maybe it's better to add the wait after this first command,
+which follows the PCIe spec naturally. Also v2 patch adds the logic
+of skipping the interrupt-disabling command, if it has been disabled
+earlier, either by kernel or BIOS.
 
-All warnings (new ones prefixed by >>):
+> 
+> > 
+> > Fix it by adding the necessary wait to comply with PCIe spec, referring
+> > pcie_poll_cmd().
+> > 
+> > Also make the interrupt disabling not dependent on whether pciehp
+> > service driver will be loaded as suggested by Lukas.
+> 
+> May be this needs a new patch?
 
-   drivers/pci/pcie/portdrv.c: In function 'pcie_wait_sltctl_cmd_raw':
->> drivers/pci/pcie/portdrv.c:212:18: warning: variable 'ret1' set but not used [-Wunused-but-set-variable]
-     212 |         int ret, ret1, timeout_us;
-         |                  ^~~~
+Yes, will do.
 
+> > 
+> > Fixes: 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port services during port initialization")
+> > Originally-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+> > Suggested-by: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+> > ---
+> 
+> Code wise it looks fine to me.
 
-vim +/ret1 +212 drivers/pci/pcie/portdrv.c
+Thanks for the review!
 
-   208	
-   209	static int pcie_wait_sltctl_cmd_raw(struct pci_dev *dev)
-   210	{
-   211		u16 slot_status = 0;
- > 212		int ret, ret1, timeout_us;
-   213	
-   214		/* 1 second, according to PCIe spec 6.1, section 6.7.3.2 */
-   215		timeout_us = 1000000;
-   216		ret = read_poll_timeout(pcie_capability_read_word, ret1,
-   217					(slot_status & PCI_EXP_SLTSTA_CC), 10000,
-   218					timeout_us, true, dev, PCI_EXP_SLTSTA,
-   219					&slot_status);
-   220		if (!ret)
-   221			pcie_capability_write_word(dev, PCI_EXP_SLTSTA,
-   222							PCI_EXP_SLTSTA_CC);
-   223	
-   224		return  ret;
-   225	}
-   226	
+- Feng
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> > Changlog:
+> > 
+> >    since v1:
+> >      * Add the Originally-by for Liguang. The issue was found on a 5.10 kernel,
+> >        then 6.6. I was initially given a 5.10 kernel tar bar without git info to
+> >        debug the issue, and made the patch. Thanks to Guanghui who recently pointed
+> >        me to tree https://gitee.com/anolis/cloud-kernel which show the wait logic
+> >        in 5.10 was originally from Liguang, and never hit mainline.
+> >      * Make the irq disabling not dependent on wthether pciehp service driver
+> >        will be loaded (Lukas Wunner)
+> >      * Use read_poll_timeout() API to simply the waiting logic (Sathyanarayanan
+> >        Kuppuswamy)
+> >      * Add logic to skip irq disabling if it is already disabled.
+> > 
+> >   drivers/pci/pci.h          |  2 ++
+> >   drivers/pci/pcie/portdrv.c | 44 +++++++++++++++++++++++++++++++++-----
+> >   2 files changed, 41 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index 01e51db8d285..c1e234d1b81d 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -759,12 +759,14 @@ static inline void pcie_ecrc_get_policy(char *str) { }
+> >   #ifdef CONFIG_PCIEPORTBUS
+> >   void pcie_reset_lbms_count(struct pci_dev *port);
+> >   int pcie_lbms_count(struct pci_dev *port, unsigned long *val);
+> > +void pcie_disable_hp_interrupts_early(struct pci_dev *dev);
+> >   #else
+> >   static inline void pcie_reset_lbms_count(struct pci_dev *port) {}
+> >   static inline int pcie_lbms_count(struct pci_dev *port, unsigned long *val)
+> >   {
+> >   	return -EOPNOTSUPP;
+> >   }
+> > +static inline void pcie_disable_hp_interrupts_early(struct pci_dev *dev) {}
+> >   #endif
+> >   struct pci_dev_reset_methods {
+> > diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+> > index 02e73099bad0..2470333bba2f 100644
+> > --- a/drivers/pci/pcie/portdrv.c
+> > +++ b/drivers/pci/pcie/portdrv.c
+> > @@ -18,6 +18,7 @@
+> >   #include <linux/string.h>
+> >   #include <linux/slab.h>
+> >   #include <linux/aer.h>
+> > +#include <linux/iopoll.h>
+> >   #include "../pci.h"
+> >   #include "portdrv.h"
+> > @@ -205,6 +206,40 @@ static int pcie_init_service_irqs(struct pci_dev *dev, int *irqs, int mask)
+> >   	return 0;
+> >   }
+> > +static int pcie_wait_sltctl_cmd_raw(struct pci_dev *dev)
+> > +{
+> > +	u16 slot_status = 0;
+> > +	int ret, ret1, timeout_us;
+> > +
+> > +	/* 1 second, according to PCIe spec 6.1, section 6.7.3.2 */
+> > +	timeout_us = 1000000;
+> > +	ret = read_poll_timeout(pcie_capability_read_word, ret1,
+> > +				(slot_status & PCI_EXP_SLTSTA_CC), 10000,
+> > +				timeout_us, true, dev, PCI_EXP_SLTSTA,
+> > +				&slot_status);
+> > +	if (!ret)
+> > +		pcie_capability_write_word(dev, PCI_EXP_SLTSTA,
+> > +						PCI_EXP_SLTSTA_CC);
+> > +
+> > +	return  ret;
+> > +}
+> > +
+> > +void pcie_disable_hp_interrupts_early(struct pci_dev *dev)
+> > +{
+> > +	u16 slot_ctrl = 0;
+> > +
+> > +	pcie_capability_read_word(dev, PCI_EXP_SLTCTL, &slot_ctrl);
+> > +	/* Bail out early if it is already disabled */
+> > +	if (!(slot_ctrl & (PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE)))
+> > +		return;
+> > +
+> > +	pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> > +		  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> > +
+> > +	if (pcie_wait_sltctl_cmd_raw(dev))
+> > +		pci_info(dev, "Timeout on disabling PCIE hot-plug interrupt\n");
+> > +}
+> > +
+> >   /**
+> >    * get_port_device_capability - discover capabilities of a PCI Express port
+> >    * @dev: PCI Express port to examine
+> > @@ -222,16 +257,15 @@ static int get_port_device_capability(struct pci_dev *dev)
+> >   	if (dev->is_hotplug_bridge &&
+> >   	    (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> > -	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM) &&
+> > -	    (pcie_ports_native || host->native_pcie_hotplug)) {
+> > -		services |= PCIE_PORT_SERVICE_HP;
+> > +	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM)) {
+> > +		if (pcie_ports_native || host->native_pcie_hotplug)
+> > +			services |= PCIE_PORT_SERVICE_HP;
+> >   		/*
+> >   		 * Disable hot-plug interrupts in case they have been enabled
+> >   		 * by the BIOS and the hot-plug service driver is not loaded.
+> >   		 */
+> > -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> > -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> > +		pcie_disable_hp_interrupts_early(dev);
+> >   	}
+> >   #ifdef CONFIG_PCIEAER
+> 
+> -- 
+> Sathyanarayanan Kuppuswamy
+> Linux Kernel Developer
 
