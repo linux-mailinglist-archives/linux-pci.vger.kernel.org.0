@@ -1,230 +1,144 @@
-Return-Path: <linux-pci+bounces-21814-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21815-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED19CA3C647
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:34:46 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09732A3C64D
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:37:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD3691796E6
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 17:34:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E6D3D7A6F5B
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 17:36:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44B821F941B;
-	Wed, 19 Feb 2025 17:34:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 855DC2144D3;
+	Wed, 19 Feb 2025 17:36:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oI9vlvmq"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Uez5vy9/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142861B415B;
-	Wed, 19 Feb 2025 17:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693E01FE469
+	for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 17:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739986482; cv=none; b=izoC2OEVHTU4ULTuHQfNB594DlrRpcHaC4ffU51qALo9xppKhYPgN3Xs9A2KdM1km2Wa6GBxfSheEo9uFrO6efK1UjKBLlq+pJj2l3rmUIAS07Bf2FmIoiMXlufKO13zdgE9VA5f2gN2IiuVPYBmtEGDeXQ2p7Q9g/kpPx/9m1s=
+	t=1739986601; cv=none; b=YpRMVzTguVySsPey08UXduTCwpFkfx5LJDsJsDVkODCGrQ6URXJMp/hDjWLvUa3GID2+l26gOwU77A10kg1wqSFcUvI1ck4tu5JYNVZsKAMAy7tdrQm6cw5rRi4QfTxV/Jzbslo5H4PvY2JqT/XHPVnEZjifpEumyUl+PngipKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739986482; c=relaxed/simple;
-	bh=HzJNiGOiMYX0Crg+B8+7PkiZ5AKt2PCRmbNn1YM0ALM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=l+VtOVVFtXHcmoDWchKEn9oGZ6uTZLK0SDF3dByRhDQDTQaoAoz8IWHLHjjTZYUNSYb/cy2j4X7pIGkQOQ6VtIYtPaoW1OmjEpHtx4I8BBxdlnQG4QhyrZEEU6+JHcmfb5MjyH1gJho0ccW8vmzXuP4/njoyCySu9Mq2g3kaOQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oI9vlvmq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A08DC4CED1;
-	Wed, 19 Feb 2025 17:34:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739986481;
-	bh=HzJNiGOiMYX0Crg+B8+7PkiZ5AKt2PCRmbNn1YM0ALM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=oI9vlvmqXFMtGRoD+mt7qTgMDeV/O/zv6wJTURNSBEVPFd3mKlZGp0n3kxMt14YMw
-	 K+LDXgcSV9hsSvhBqNpwuZgfY1LeaF1MuaZDs+gr1ji2wlr5cb6u90bOYNLWrpYyCT
-	 8Zvqs9+QQ89axH1/YmFqp7YWitH6anydlYH/kOcRUA1yXLNukdnNl5sf8NwMiE4X3D
-	 AswZh6mT9k7GUJtzxfi96tgOV7IdSY2bSDipfgFb27L+pgXFs96ewk3JByIuMovu9l
-	 HwEVjD8/WCd/Bfc5S3kA/z60PkNm7dVs9ZFzhmXyY5XARxXEyRstSb8He0H7wV5sls
-	 UP6vVJ6CC9nmQ==
-Date: Wed, 19 Feb 2025 11:34:39 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>, Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 0/5] Add support for the PCI host bridge device-tree
- node creation.
-Message-ID: <20250219173439.GA224477@bhelgaas>
+	s=arc-20240116; t=1739986601; c=relaxed/simple;
+	bh=cTRVC5cVHHMwudxEBc5SELgNQq75C7XYr5CxcEbuix0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dc5on1mXl4hzShF4kQsh7i0RlJW/nvDCWkJ6CVd1o3+qXelBNN9lYyYKpZG2Z9I9aDJ/HBaIAKnugGnCSuwfczMQdYVw4KusW28/yWxBGHsZb9WFaZlKc8NPtkPxpbhw2EL31iT9XrHZql1Zdz3/MzWBFIPnnWsX2gFg9cx5bJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Uez5vy9/; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JH4Mx1009730
+	for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 17:36:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Ee6+eorvO+pF3kR9F+2d8nZr7k36mhnL8mV9SwVW8g0=; b=Uez5vy9/RyiB0tv/
+	f+sAocr9hCj/X06Z3bMHTU+2ai1VgItIHof8aKzgmHvGInh5ayGKtEfnXeb8ay+A
+	42eTidUs9ObQN05SdI57k7/45KJWBJRKZuAceU+KJGrJE3HYVbLjhxbDA6hLOcBC
+	jenY1OhDJbmYu3n3RPlwv8rn23DJZg0QzteZ2BFAObmStL5ANhGoz3dxZtqVKtY8
+	QlTkh28gT6Ar9FJgpxTvoovJ/eG/z/AabQFRSV0uKIiiyoPVlg2b+Hvp3HRTTwJv
+	9YlWggH5LJlgFvV8apnkfboxrm8dYbZwu2sPVuqpm94SVbwgBWIz8U55bnXOFW7S
+	cyBPXA==
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy1uh50-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 17:36:37 +0000 (GMT)
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2f46b7851fcso119215a91.1
+        for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 09:36:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739986596; x=1740591396;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ee6+eorvO+pF3kR9F+2d8nZr7k36mhnL8mV9SwVW8g0=;
+        b=a18FfEXFk16YPL2gq81MBPkrk+FVNl5igoel+BMFacDYtQxew6avJ94o+wsKfXCbyV
+         PJRxVp7wV7HcrnP9CAGVmqfSaKZ9MfocDhVrs5YX4s4+wemy3BRw2640+zT7duFOmNvi
+         p3cIF/ACR7LlN08/HgvqvmUFf8uH/9VRyNg/yHEYcmjimO7dbm+vMRf7P/pa6k4OHFLM
+         +wRiDOvtMqXezy3Pgkau3mRi9ZSLh/QkX5qgX5QkuRu5qs687EmHnl0Ho3CLw7UVYBTB
+         Qmxqohq9q+c8slFb4Bf+DoCwn9uIdtq6xW3zSI81fEJk2D+jmBEt0UEkZRPndgF5Hqqh
+         SjqQ==
+X-Gm-Message-State: AOJu0YxjmTN+rgvHm6Ee1Gqdv/Jo1D5MBTE1W6biptpEzde9wg1RNKAW
+	/UTF1xzIpr/bX0QGtG0YFJpaeVE8fCJqRQOAouafqJWsO0NhO3Nfs7UTD+qhsPZ1tvbCN2cdZA2
+	xZatEn9kZ5wnPhRf3BUR2Dz4DuAtXYG1oH7B3hNcTutZ0021mFAWmcVmX1ww=
+X-Gm-Gg: ASbGncu5RxhqfVCG9WVNRDd93ywSX2K9/WSGUY0dpBt2ukNK3nJbtkhE5QacTtd1MYi
+	pTwJMj4+L1x7LrmD0Arxanu6X//SYNxtTP6tqMSzbqCeqWfhtKz8kG8KjxXwzx5g+wC3AJDOnYO
+	uXlRfkp5RNFGRrCurq+lHjcWU20ucufT8KlUareTFnsp4wXYiMI43/LxypI/mkfPBuCE40nIAdR
+	Oy1O5C3axyHXzdjvtnxd5z1kVTrpy33rZtyZlO/R6TgFyuxV4BTUhyAOB0utLKaWc6NYlW3kyqY
+	9gQv+HtypUF/A0sPTDbpfBt+LoEC/RTL6U6wKaVQU5f3QI6+MQZ0x3rKV/KD
+X-Received: by 2002:a17:90b:3b92:b0:2fc:3264:365d with SMTP id 98e67ed59e1d1-2fc40f0ea25mr29237105a91.11.1739986595760;
+        Wed, 19 Feb 2025 09:36:35 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHJWmXWsxGjClVm/zthfCXF+H+3XyeXB7GQZrRmqkGHU6xzsOjlVcHnjYZJYGEt/oE92j+xNw==
+X-Received: by 2002:a17:90b:3b92:b0:2fc:3264:365d with SMTP id 98e67ed59e1d1-2fc40f0ea25mr29237070a91.11.1739986595423;
+        Wed, 19 Feb 2025 09:36:35 -0800 (PST)
+Received: from [10.227.110.203] (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98f4f62sm14557474a91.26.2025.02.19.09.36.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2025 09:36:35 -0800 (PST)
+Message-ID: <b0027c1e-cc0b-46ff-8b46-774259f3ed0f@oss.qualcomm.com>
+Date: Wed, 19 Feb 2025 09:36:32 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250204073501.278248-1-herve.codina@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/8] PCI: Make pcie_link_speed variable public & export
+ pci_set_target_speed()
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+        linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+        quic_jjohnson@quicinc.com, quic_pyarlaga@quicinc.com,
+        quic_vbadigan@quicinc.com, quic_vpernami@quicinc.com,
+        quic_mrana@quicinc.com
+References: <20250217-mhi_bw_up-v1-0-9bad1e42bdb1@oss.qualcomm.com>
+ <20250217-mhi_bw_up-v1-7-9bad1e42bdb1@oss.qualcomm.com>
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <20250217-mhi_bw_up-v1-7-9bad1e42bdb1@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: Af6Akt8cw2y7p4eWLTYWMEKk--dV56hm
+X-Proofpoint-ORIG-GUID: Af6Akt8cw2y7p4eWLTYWMEKk--dV56hm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-19_07,2025-02-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
+ bulkscore=0 phishscore=0 suspectscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 mlxscore=0
+ mlxlogscore=590 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502190136
 
-[cc->to: Rob; I'd like Rob's ack for the PCI parts]
+On 2/16/2025 10:34 PM, Krishna Chaitanya Chundru wrote:
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 58f1de626c37..8a3b3195122d 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -305,6 +305,7 @@ enum pci_bus_speed {
+>  
+>  enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
+>  enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
+> +extern const unsigned char pcie_link_speed[];
 
-On Tue, Feb 04, 2025 at 08:34:55AM +0100, Herve Codina wrote:
-> Hi,
-> 
-> This series adds support for creating a device-tree node for the PCI
-> host bridge on non device-tree based system.
-> 
-> Creating device-tree nodes for PCI devices and PCI-PCI bridges already
-> exists upstream. It was added in commit 407d1a51921e ("PCI: Create
-> device tree node for bridge"). Created device-tree nodes need a parent
-> node to be attached to. For the first level devices, on device-tree
-> based system, this parent node (i.e. the PCI host bridge) is described
-> in the base device-tree. The PCI bus related to this bridge (PCI root
-> bus) inherit of the PCI host bridge device-tree node.
-> 
-> The LAN966x PCI device driver, available since commit 185686beb464
-> ("misc: Add support for LAN966x PCI device"), relies on this feature.
-> 
-> On system where the base hardware is not described by a device-tree, the
-> PCI host bridge to which first level created PCI devices need to be
-> attach to does not exist. This is the case for instance on ACPI
-> described systems such as x86.
-> 
-> This series goal is to handle this case.
-> 
-> In order to have the PCI host bridge device-tree node available even
-> on x86, this top level node is created (if not already present) based on
-> information computed by the PCI core. It follows the same mechanism as
-> the one used for PCI devices device-tree node creation.
-> 
-> As for device-tree based system, the PCI root bus handled by the PCI
-> host bridge inherit of this created node.
-> 
-> In order to have this feature available, a number of changes are needed:
->   - Patch 1 and 2: Introduce and use device_{add,remove}_of_node().
->     This function will also be used in the root PCI bus node creation.
-> 
->   - Patch 3 and 4: Improve existing functions to reuse them in the root
->     PCI bus node creation.
-> 
->   - Patch 5: The PCI host bridge device-tree node creation itself.
-> 
-> With those modifications, the LAN966x PCI device is working on x86 systems
-> and all device-tree kunit tests (including the of_unittest_pci_node test)
-> pass successfully with the following command:
->   qemu-system-x86_64 -machine q35 -nographic \
->     -kernel arch/x86_64/boot/bzImage --append console=ttyS0 \
->     -device pcie-root-port,port=0x10,chassis=9,id=pci.9,bus=pcie.0,multifunction=on,addr=0x3 \
->     -device pcie-root-port,port=0x11,chassis=10,id=pci.10,bus=pcie.0,addr=0x3.0x1 \
->     -device x3130-upstream,id=pci.11,bus=pci.9,addr=0x0 \
->     -device xio3130-downstream,port=0x0,chassis=11,id=pci.12,bus=pci.11,multifunction=on,addr=0x0 \
->     -device i82801b11-bridge,id=pci.13,bus=pcie.0,addr=0x4 \
->     -device pci-bridge,chassis_nr=14,id=pci.14,bus=pci.13,addr=0x0 \
->     -device pci-testdev,bus=pci.12,addr=0x0
-> 
-> Compare to previous iteration, this v7 series is the v6 series rebased
-> on top of v6.14-rc1 without other modifications.
-> 
-> Best regards,
-> Hervé Codina
-> 
-> Changes v6 -> v7
->   v6: https://lore.kernel.org/lkml/20250110082143.917590-1-herve.codina@bootlin.com/
-> 
->   Rebase on top of v6.14-rc1
-> 
-> Changes v5 -> v6
->   v5: https://lore.kernel.org/lkml/20241209130339.81354-1-herve.codina@bootlin.com/
-> 
->   - Patch 1
->     Add a return error code in device_add_of_node()
-> 
->   - Patches 2 and 5
->     Handle the device_add_of_node() error code
-> 
->   - Patches 3 and 4
->     No changes
-> 
-> Changes v4 -> v5
->   v4: https://lore.kernel.org/lkml/20241202131522.142268-1-herve.codina@bootlin.com/
-> 
->   - Patch 1
->     Use dev_warn() instead of WARN()
-> 
->   - Patches 2 to 4
->     No changes
-> 
->   - Patch 5 (v4 patch 6)
->     Use dev_err()
->     Fix a typo in commit log
-> 
->   Patch removed in v5
->     - Patch 5 in v4
->       Already applied
-> 
-> Changes v3 -> v4
->   v3: https://lore.kernel.org/lkml/20241114165446.611458-1-herve.codina@bootlin.com/
-> 
->   Rebase on top of v6.13-rc1
-> 
->   - Patches 1 to 6
->     No changes
-> 
-> Changes v2 -> v3
->   v2: https://lore.kernel.org/lkml/20241108143600.756224-1-herve.codina@bootlin.com/
-> 
->   - Patch 5
->     Fix commit log.
->     Use 2 for #size-cells.
-> 
->   - Patches 1 to 4 and 6
->     No changes
-> 
-> Changes v1 -> v2
->   v1: https://lore.kernel.org/lkml/20241104172001.165640-1-herve.codina@bootlin.com/
-> 
->   - Patch 1
->     Remove Cc: stable
-> 
->   - Patch 2
->     Remove Fixup tag and Cc: stable
-> 
->   - Patches 3 and 4
->     No changes
-> 
->   - Patch 5
->     Add #address-cells/#size-cells in the empty root DT node instead of
->     updating default values for x86.
->     Update commit log and commit title.
-> 
->   - Patch 6
->     Create device-tree node for the PCI host bridge and reuse it for
->     the PCI root bus. Rename functions accordingly.
->     Use "pci" instead of "pci-root" for the PCI host bridge node name.
->     Use "res->start - windows->offset" for the PCI bus addresses.
->     Update commit log and commit title.
-> 
-> Herve Codina (5):
->   driver core: Introduce device_{add,remove}_of_node()
->   PCI: of: Use device_{add,remove}_of_node() to attach of_node to
->     existing device
->   PCI: of_property: Add support for NULL pdev in of_pci_set_address()
->   PCI: of_property: Constify parameter in of_pci_get_addr_flags()
->   PCI: of: Create device-tree PCI host bridge node
-> 
->  drivers/base/core.c       |  61 ++++++++++++++++++++
->  drivers/pci/of.c          | 115 +++++++++++++++++++++++++++++++++++++-
->  drivers/pci/of_property.c | 114 +++++++++++++++++++++++++++++++++++--
->  drivers/pci/pci.h         |   6 ++
->  drivers/pci/probe.c       |   2 +
->  drivers/pci/remove.c      |   2 +
->  include/linux/device.h    |   2 +
->  7 files changed, 295 insertions(+), 7 deletions(-)
-> 
-> -- 
-> 2.47.1
-> 
+This, and the Patch 8/8 change that uses it, make me cringe.
+
+Should we instead have a functional interface so that the client calls a
+function to perform the lookup?
+
+/jeff
 
