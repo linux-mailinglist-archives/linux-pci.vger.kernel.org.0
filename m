@@ -1,264 +1,260 @@
-Return-Path: <linux-pci+bounces-21841-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21842-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C366CA3CB76
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 22:31:03 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1CDDA3CBD8
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 22:54:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 843403AAC1D
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 21:30:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DE5027A20E8
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 21:53:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C090820F082;
-	Wed, 19 Feb 2025 21:30:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15480257AFD;
+	Wed, 19 Feb 2025 21:54:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gOHR1Yt0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wPiPoa7p"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2073.outbound.protection.outlook.com [40.107.243.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E620E15746F;
-	Wed, 19 Feb 2025 21:30:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740000658; cv=fail; b=I9GoE+QWhyFaZ5q4035vspOCX8dn7h27IZmpKJWZv4DGQO1Ct/X2bY4l/yJ3RfIjBeSIYku5HLrcS4NkJ1pUrfS4hOX2yxjuV9p8QJ1gZAWFM04LiLS8bJpW0F4qTB9shGScb7YSw27ssURpdPPqSV/9BC17CWBQ674ESQwy5U4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740000658; c=relaxed/simple;
-	bh=9EHyKzgADGM/EJpJWEy5A5QZ+nAgDoIiF9cKBRLhRyQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=klmjJ8OEfKLVwsiz5LcN3EJPCamtTi6JUGJITNYbDBddn2hjLBc3ajW2xYsbiFZROxN5cmFlfjQIdLGsXieaymkEzVoyiymuSu324eaBPlLZf9DXVp9dP/NzytvDg+qCe1tldd5pozmGqaWN0gbvVgysEgrClNBMedo52WiLYSU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gOHR1Yt0; arc=fail smtp.client-ip=40.107.243.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BDgPJ1UbQ3Esq27sl8i8YEw0gkJZz4nlFm6M7aMsJ/jrVjdk6TzSfsf/kiL61vcI9BWkFMsxQ/U9U74FuiaqtZQHF48BsNlqS0ktwOL+iespVHtd0M7S63XgL7d0jMbTrQBYQF3QRPBBQaowQG3r1V9eZnb2gnLUSFeiy4HzNjz+VmO35xqrt0uKA3u/eMnFav7xurqpue6i7USXDvGK+DnTpMLfvW78STD7eAHYRXAomjhCM2uwZ4AXLJWr+v8d/Io9diiTPglfBTt2zFpyAMdR0VHkJcCYkX5HMK6o2iLBDjj/x+7aKeOvMSCUxLxj5sU91Eq9wTHLnR8IcYggdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9IcoYsuB9Y+TLT/NL6CnO+DW1g4W7y8ja7rTXsu8zos=;
- b=CeoKLYCIY3OYa+qWU3WMmi9qafxYVApi3+71ksps01B1K8rEUZ2BmDT6gG51UIm+ajaSDwYAWeMQC4pliSsoZqH4eta4XNlTiNF0JYAh4oQUwS7behTQXA0yE143n4mMm/hSKLdwwzdh1xEsbA/MS8C5YsEOSxOi3Vl4VvjO5xnDjvn8XAJBc6Ov5wAynZuOTJKjEpVVw6ujmqayCrAepWrQXH1PDn4YYGWSybpARKtlP+DrIQNomanHoaTibW1hbubwYFwoDbLIKB+sC1LUeUBERSPlym4Fj96caOL5dnNQ/U2M53UDINqAve2csgwTlgN43V9oKhMGlXmv05zkqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=ziepe.ca smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9IcoYsuB9Y+TLT/NL6CnO+DW1g4W7y8ja7rTXsu8zos=;
- b=gOHR1Yt0LeCZcn86mB3Q2RoKeyFP462Wkf5XsUHq8XrQcKyrpc08rzFysg+7eAQ+bJsbwaXw1MLeerRZxxgINOm8eqntZxT9nYnRx48i6lS3mD2fWc+uOJxUXLxOFP5oBbNh+LExLG1pP+V6mOlNZP7eJ0dspWhEB6mLtH83xBI=
-Received: from BN9PR03CA0462.namprd03.prod.outlook.com (2603:10b6:408:139::17)
- by CH2PR12MB4136.namprd12.prod.outlook.com (2603:10b6:610:a4::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Wed, 19 Feb
- 2025 21:30:53 +0000
-Received: from BN3PEPF0000B36E.namprd21.prod.outlook.com
- (2603:10b6:408:139:cafe::15) by BN9PR03CA0462.outlook.office365.com
- (2603:10b6:408:139::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8445.19 via Frontend Transport; Wed,
- 19 Feb 2025 21:30:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN3PEPF0000B36E.mail.protection.outlook.com (10.167.243.165) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8489.2 via Frontend Transport; Wed, 19 Feb 2025 21:30:52 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Feb
- 2025 15:30:52 -0600
-Date: Wed, 19 Feb 2025 15:30:37 -0600
-From: Michael Roth <michael.roth@amd.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-CC: Alexey Kardashevskiy <aik@amd.com>, <x86@kernel.org>,
-	<kvm@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <linux-arch@vger.kernel.org>, "Sean
- Christopherson" <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>,
-	"Tom Lendacky" <thomas.lendacky@amd.com>, Ashish Kalra
-	<ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>, Suravee Suthikulpanit
-	<suravee.suthikulpanit@amd.com>, Robin Murphy <robin.murphy@arm.com>, "Kevin
- Tian" <kevin.tian@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, "Dan
- Williams" <dan.j.williams@intel.com>, Christoph Hellwig <hch@lst.de>, "Nikunj
- A Dadhania" <nikunj@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, Joao
- Martins <joao.m.martins@oracle.com>, Nicolin Chen <nicolinc@nvidia.com>, Lu
- Baolu <baolu.lu@linux.intel.com>, Steve Sistare <steven.sistare@oracle.com>,
-	"Lukas Wunner" <lukas@wunner.de>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Dionna Glaze <dionnaglaze@google.com>, Yi Liu <yi.l.liu@intel.com>,
-	<iommu@lists.linux.dev>, <linux-coco@lists.linux.dev>, Zhi Wang
-	<zhiw@nvidia.com>, AXu Yilun <yilun.xu@linux.intel.com>, "Aneesh Kumar K . V"
-	<aneesh.kumar@kernel.org>
-Subject: Re: [RFC PATCH v2 12/22] iommufd: Allow mapping from guest_memfd
-Message-ID: <20250219213037.ku2wi7oyd5kxtwiv@amd.com>
-References: <20250218111017.491719-1-aik@amd.com>
- <20250218111017.491719-13-aik@amd.com>
- <20250218141634.GI3696814@ziepe.ca>
- <340d8dba-1b09-4875-8604-cd9f66ca1407@amd.com>
- <20250218235105.GK3696814@ziepe.ca>
- <06b850ab-5321-4134-9b24-a83aaab704bf@amd.com>
- <20250219133516.GL3696814@ziepe.ca>
- <20250219202324.uq2kq27kmpmptbwx@amd.com>
- <20250219203708.GO3696814@ziepe.ca>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193EF20F082
+	for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 21:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740002045; cv=none; b=DvRtmmaOljt8/wMc2NckRcP0SgVIgAQnpBmrLVUQMdWUpIzZX6LnABJN5jHDCx/v0rCbO77RoMRu3HqLYOJKy1GrIxAS9GX7Y0uOx9j8wNIkzHFnRl8JZ6xvDhy/n3OD5ECUWu0nJ8iHBVjPn2nGdYEKuImmD9h1wpt1ZivtoPM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740002045; c=relaxed/simple;
+	bh=f2Evl1/Y2JRZTJBM8MgwzdslOMp6PcDTZCILmIIZjgI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TomddjW2q7+N08WpTFyhYP0WnjaftrfeMTxacUO31oOCCbJ+Gcv6hpN5lGTyCltRtnxfxgkJauuWrWDLveYAdVpG20jhsAAsPif/azUY868spktH2vAPi24SyBaeGkGq4HHsZDHiDMqVaX5OktnicdtHplFwU9Z3HlKnIqEAZCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wPiPoa7p; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e04f2b1685so346861a12.0
+        for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 13:54:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740002041; x=1740606841; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hly2+E/pWLYHFHzBEhpYiIK1H+/yy5Tlka93bMM+wKs=;
+        b=wPiPoa7pP09xjsSP70pkj/bvYFKd8x4lNN0emVrSQKf2EdGmTdHIwxYbfq/D5U/v7v
+         HNweq3GlDYEk4vlyOlA4AA3oA2ER6qqWPtPaq7KIrkmGz3S31FPtfYRFqXse1fmpDih+
+         js2cqwMLiire1+Wic3M1WykeFStfatbO17Fl6mYzgD5QjB5SIEwVKPIWt+Se/LmY246M
+         KvsxSviAtIozPXJu6NLqQ3eKjsuGjr4FcnEPNnHxDFrvgbdisJ5Us6VuZK8mqdEjtQqf
+         DDjgBwEAa1aNRhC6xfCj9QR9YWfoCEpi6xtk45cHLQjk+OlINjGznmuvSZCEeRB6Kk4w
+         REVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740002041; x=1740606841;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hly2+E/pWLYHFHzBEhpYiIK1H+/yy5Tlka93bMM+wKs=;
+        b=HNYQ0WjY7B2eg8GFVFM0Hu19UfXq+SMZYbca/bCzLQkrLcFR3B9TT3p+EjHefhd8xF
+         G6Bqfqc36oxM7DtgP7O61KtXw3rpoqkw6axYROWsK9/Dy/voUFN7vMgQW7xO4M20RqOU
+         GAFkwn9zOm8kUaQvt743EbPCAA1UvVaKzS7XNKj+dxBWeSZ+ErFV6gTW51ABLUz7hrvC
+         7rNz429bpv8gg1Lihu5MfwWzhAbIAEcxc2w/Jq9aFI76L/46YOBGbACbQwgvZkxo9Zj5
+         O/RtjIc/WI54/76sFo3da6D7eeuT9S52COBqYM1XdwCHuXxK/M7spf+/RY5kU+q7rTTj
+         ltNg==
+X-Forwarded-Encrypted: i=1; AJvYcCW327Sc2Lb52mMnR8zdDlAFj7Kmpjb+PHe6FP/6hjpBaPol4RGK9AB7cpMIYJZ3NPBP3GAw/je3a/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1GluJpuMKxX/8xs0xHnF9OVToPxoDURsI07rU04K/QH0f0u4y
+	uz4QTxBhBS1qs1N1cb74ymv/w5oGjOaFugFtNSoWLwdP0FxGoz6yUYPpcAlLUpjl6Zpuy2opbl3
+	MB1TJ8QfJ+DZbcBrpg7EVANDuX05YO4+7tMamwv7mqGNE9chMsOjMtMsVUQ==
+X-Gm-Gg: ASbGnctTd+Mk0tWfC6Zmlqkvry6RI0mBLbqYNRzBA+HMubO5AKl/9N/UFIJ8pyb2KL/
+	A8FFY0H+BuNJgB8tPglvQ8sd+Yn9KF/pXsrSH5Z6q5EZ75/TTK+O1lsEU7565scx9joPcutv7
+X-Google-Smtp-Source: AGHT+IE8hY7HZbQxDsGR2DbY0WjBS8/vjMy9cpF4Uk6YeOTrso2rzJyYUK3piSrXg5oFlVO1VY67vEoPtoW7JVgAxy4=
+X-Received: by 2002:a05:6402:35cb:b0:5dc:caab:9447 with SMTP id
+ 4fb4d7f45d1cf-5e036063e6amr49959261a12.18.1740002041121; Wed, 19 Feb 2025
+ 13:54:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250219203708.GO3696814@ziepe.ca>
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36E:EE_|CH2PR12MB4136:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8bb993ed-a4bb-4add-7fe8-08dd512cafe8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|36860700013|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?wxyUKPalpo6xou9cy1uguTfvw/Xy6hdpVOeiSdTLYtvbz/8AfcUCbgzQPHS8?=
- =?us-ascii?Q?eEqf/Y68x6jUATKiFU9GdUDi9IPY2mVp8a83Cj3xpJnQbeEs+7iCpvaCZF0M?=
- =?us-ascii?Q?0dcZv/0lHlv4tIn3bAouDYuTPQAEMqf1iHkeoUFFBOISnHL1zVMNN/VCiYLj?=
- =?us-ascii?Q?pqqT7g/Rtz2l8G6R7sqKhTUCQVytQInodW697bslGLmL+zdxrszjR+f+4kGU?=
- =?us-ascii?Q?TuBSiF17sd/TpwB2ysAyvt7oeQNB8J+vigd4raPlKtWv5D5WCfd+ZVcgTBe5?=
- =?us-ascii?Q?i5ik0VSbta9irJeJ8u+SSlcz2WMNkpccczo1Q8Eg1HpRy4xZ9FqoavUhwJT1?=
- =?us-ascii?Q?kK+3NgVZ7kbqjItXIwYoAaGTIDtEmbhbg/VImunGlR6itRB5k5fwKjgmIuQy?=
- =?us-ascii?Q?NRSgf6Dq1wJ2SIeinUHmsLD71ZVym/6zPAuvIU7ExM/j05xllZPD19UNGOFF?=
- =?us-ascii?Q?+exQjfHo0lcyAWBLcxzhT0MY0+f3Mu0kI4L7RA54SccTe4YfcS26aI2C7cjm?=
- =?us-ascii?Q?EkXnBPqNryawAeMxDDi1ZbaND9O+iWrG+/QXKhH4vXMpYT0edQa6DFyIDN0k?=
- =?us-ascii?Q?uWM/FKyemg8A22YhdNHRfh3hM0uamSc0AypqVSchIT2pLBzwNN2NzSLef9hJ?=
- =?us-ascii?Q?gbu4YdrH1Iz5qnTRF6OKy1Wh+AP0nwMBSEBABLhibvuCxLqDcLj7J5WwDHTv?=
- =?us-ascii?Q?SHaX+80t0bIqHBoWv6LTAq78Penxnae/bgCp2nyP8Y/+qMZBWsEX9/AorgkU?=
- =?us-ascii?Q?to+p2OCFPks7HOZF5aPhwou74XFkGpmO+lXG2iNj+oW/ufQh4rtktDy0PoGi?=
- =?us-ascii?Q?OPbWNI3KHk3z1XS9nwToTjZdxCwQQoKuma+X8eYLa/CKeza7F/KMxG2PLExA?=
- =?us-ascii?Q?tcAfue7dBZ99NM9skJPV1LdGzKj3NQweJ+5Z0vCkby8BReJ5qyy8/ZDULwKn?=
- =?us-ascii?Q?gVnMbHnThUrun7Rc3unQsExQGJuLCjbzaaEEFoEy7obGu07aB4tF1WkPLz3P?=
- =?us-ascii?Q?h9ShFzoeGAMBcKpDXuCK6dWykRfu7ztqXdENwH8qLAvwscyNJMAzwKLEXKrW?=
- =?us-ascii?Q?1oZMal80iJsiqzEciqMdadpnDU3sJTB81mn9EIUlBvYqtHUv8sT0HQTuLLRt?=
- =?us-ascii?Q?t1BTOceNZIeBiyn+N3EJS3yuVTs5mMqblo6flTXkPYtTlwFqycrn/l3MqKJt?=
- =?us-ascii?Q?knfo5l2Gu5ZAv3vkSIS18YlojbAmws9qHMhKs8ulhXuDmfWfhTdKST7/UY1z?=
- =?us-ascii?Q?HUm998HrVH7i6PqmG8m6pMwyX1JNmaDBkEEFrdhQQv9pHWGPoD+QpDt9Xiaa?=
- =?us-ascii?Q?AxyjHm/X6NOPePQAvwLTfzLqZS/HwTjogg8D82LdtIA7p+dZFEKxnd1+UziP?=
- =?us-ascii?Q?X9sTAefe9E0CXaOpkelMJGMFynkIW2RHBXxCWernMCYcmgy5R8pilAsNq9ha?=
- =?us-ascii?Q?8cJGnf7L49b8f+7qKZAip7jFq7Yf6/yxtYqHSkbChRZ/eaooL3f4Hx/S4U8s?=
- =?us-ascii?Q?tZd0Q+WUWDiFAJw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2025 21:30:52.7670
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8bb993ed-a4bb-4add-7fe8-08dd512cafe8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B36E.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4136
+References: <20241118193024.2695876-1-jperaza@google.com> <2024111818-molecule-pedicure-db1b@gregkh>
+In-Reply-To: <2024111818-molecule-pedicure-db1b@gregkh>
+From: Joshua Peraza <jperaza@google.com>
+Date: Wed, 19 Feb 2025 13:53:48 -0800
+X-Gm-Features: AWEUYZkO-tcQ2iOyT9akmDadkWwc5wTxIV3gUrRKPZqCyQfwcTlPQkMZ347whJ8
+Message-ID: <CAFRSFxLF-i9Yvcf653-5gThV6PS_USqM3C5C8AaWrXuFaj8EZg@mail.gmail.com>
+Subject: Re: [v8 PATCH 0/2] PCI/ACPI: Support Microsoft's "DmaProperty"
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: baolu.lu@linux.intel.com, bhelgaas@google.com, dtor@google.com, 
+	dwmw2@infradead.org, helgaas@kernel.org, iommu@lists.linux-foundation.org, 
+	jean-philippe@linaro.org, joro@8bytes.org, jsbarnes@google.com, 
+	lenb@kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, mika.westerberg@linux.intel.com, oohall@gmail.com, 
+	pavel@denx.de, rafael.j.wysocki@intel.com, rafael@kernel.org, 
+	rajatja@google.com, rajatxjain@gmail.com, will@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 19, 2025 at 04:37:08PM -0400, Jason Gunthorpe wrote:
-> On Wed, Feb 19, 2025 at 02:23:24PM -0600, Michael Roth wrote:
-> > Just for clarity: at least for normal/nested page table (but I'm
-> > assuming the same applies to IOMMU mappings), 1G mappings are
-> > handled similarly as 2MB mappings as far as RMP table checks are
-> > concerned: each 2MB range is checked individually as if it were
-> > a separate 2MB mapping:
-> 
-> Well, IIRC we are dealing with the AMDv1 IO page table here which
-> supports more sizes than 1G and we likely start to see things like 4M
-> mappings and the like. So maybe there is some issue if the above
-> special case really only applies to 1G and only 1G.
+On Mon, Nov 18, 2024 at 11:43=E2=80=AFAM Greg KH <gregkh@linuxfoundation.or=
+g> wrote:
+>
+> On Mon, Nov 18, 2024 at 07:30:22PM +0000, Joshua Peraza wrote:
+> > This patchset rebases two previously posted patches supporting
+> > recognition of Microsoft's DmaProperty.
+> >
+> > v8: Joshua renames untrusted_dma to requires_dma_protection and updates
+> > some comments, reducing use of the word "trust" to refer to PCI devices
+> > and matching the word choice in Microsoft's documentation.
+>
+> So this is the "clarity"?  I'm not sold, sorry.  Again, did you look at
+> the previous discussions we had about this name?  We don't have to use
+> Microsoft's term here as it is used differently by Linux today, right?
+> If you really want to support the DmaProperty, why not just support that
+> with a new bit as that's something different here, right?
+>
+> Again, look at what this is supposed to be conveying.  They ability to
+> DMA to anywhere isn't really the root issue here, or is it?  What is the
+> threat model you are trying to mitigate?
+>
+> > v7: Rajat updates a comment with Robin's suggestion. Joshua re-sends an=
+d
+> > Greg requests clarity and documentation on why untrusted_dma is the
+> > right name.
+> >
+> > v6: Rajat renames pci_dev_has_dma_property and links to Microsoft's
+> > documentation in the commit message. Robin suggests clarifying a
+> > comment.
+> >
+> > v5: Rajat changes the name to untrusted_dma. Bjorn suggesting changing
+> > another function's name pci_acpi_check_for_dma_protection to
+> > pci_dev_has_dma_property and seeks clarified documentation.
+> >
+> > v4: Rajat changes the name to poses_dma_risk. Christoph suggests this
+> > name doesn't capture the intent as well as untrusted_dma and Rafael
+> > agrees.
+> >
+> > v1,v2,v3: Greg suggests that (un)trusted is the wrong word for referrin=
+g
+> > to PCI devices, recommending a name something like "platform wants to
+> > protect dma access for this device."
+>
+> Or is it?  I said this when?  Just how old is this patch series?
+>
+> confused,
+>
+> greg k-h
 
-I think the documentation only mentioned 1G specifically since that's
-the next level up in host/nested page table mappings, and that more
-generally anything mapping at a higher granularity than 2MB would be
-broken down into individual checks on each 2MB range within. But it's
-quite possible things are handled differently for IOMMU so definitely
-worth confirming.
+(sorry if you're getting this again; re-sending as plain text)
 
-> 
-> > But the point still stands for 4K RMP entries and 2MB mappings: a 2MB
-> > mapping either requires private page RMP entries to be 2MB, or in the
-> > case of 2MB mapping of shared pages, every page in the range must be
-> > shared according to the corresponding RMP entries.
-> 
->  Is 4k RMP what people are running?
+Sorry for the confusion! What do you think about the following for a
+new cover letter?
 
-Unfortunately yes, but that's mainly due to guest_memfd only handling
-4K currently. Hopefully that will change soon, but in the meantime
-there's only experimental support for larger private page sizes that
-make use of 2MB RMP entries (via THP).
+Threat model: An overview of the security implications of strict vs
+non-strict IOMMU is presented at [1]. This change is motivated by
+=E2=80=9CCase 1=E2=80=9D where a DMA-capable device is processing untrusted=
+ inputs,
+e.g. network devices.
 
-But regardless, we'll still end up dealing with 4K RMP entries since
-we'll need to split 2MB RMP entries in response to private->conversions
-that aren't 2MB aligned/sized.
+This patchset proposes using =E2=80=9CDMA protection=E2=80=9D to mitigate t=
+his risk.
+This has the following effects, currently controlled by the
+=E2=80=9Cpci_dev::untrusted=E2=80=9D flag.
 
-> 
-> > I think, for the non-SEV-TIO use-case, it had more to do with inability
-> > to unmap a 4K range once a particular 4K page has been converted
-> 
-> Yes, we don't support unmap or resize. The entire theory of operation
-> has the IOPTEs cover the guest memory and remain static at VM boot
-> time. The RMP alone controls access and handles the static/private.
-> 
-> Assuming the host used 2M pages the IOPTEs in an AMDv1 table will be
-> sized around 2M,4M,8M just based around random luck.
-> 
-> So it sounds like you can get to a situation with a >=2M mapping in
-> the IOPTE but the guest has split it into private/shared at lower
-> granularity and the HW cannot handle this?
+- Separate IOMMU DMA domains
+- Use of SWIOTLB if CONFIG_SWIOTLB
+- Disables =E2=80=9Cquirks=E2=80=9D in intel IOMMU
+- Disables Address Translation Services
 
-Remembering more details: the situation is a bit more specific to
-guest_memfd. In general, for non-SEV-TIO, everything in the IOMMU will
-be always be for shared pages, and because of that the RMP checks don't
-impose any additional restrictions on mapping size (a shared page can
-be mapped 2MB even if the RMP entry is 4K (the RMP page-size bit only
-really applies for private pages)).
+The =E2=80=9Cuntrusted=E2=80=9D flag was introduced in 2018 in [2]. The mot=
+ivation for
+that change was to enable using IOMMU to protect against DMA attacks
+from externally facing devices such as thunderbolt ports. The patchset
+introduces the =E2=80=9Cuntrusted=E2=80=9D flag which =E2=80=9Cis supposed =
+to cover various
+PCIe devices that may be used to conduct DMA attacks.=E2=80=9D The patchset
+originally proposes naming the flag =E2=80=9Cis_external=E2=80=9D but is re=
+named to
+=E2=80=9Cis_untrusted=E2=80=9D and then =E2=80=9Cuntrusted=E2=80=9D supposi=
+ng that it could apply to
+more than just externally facing thunderbolt devices. The fact that
+=E2=80=9CExternalFacingPort=E2=80=9D is not part of any standard is called =
+out during
+review but also that Windows expecting firmware to identify external
+facing ports makes it =E2=80=9Cas good as a formal standard in the Windows
+world.=E2=80=9D
 
-The issue with guest_memfd is that it is only used for private pages
-(at least until in-place conversion is supported), so when we "convert"
-shared pages to private we are essentially discarding those pages and
-re-allocating them via guest_memfd, so the mappings for those discarded
-pages become stale and need to be removed. But since this can happen
-at 4K granularities, we need to map as 4K because we don't have a way
-to split them later on (at least, not currently...).
+This current patch series was first proposed in January 2022 [3]. It
+originally proposed a new property =E2=80=9CUntrustedDevice=E2=80=9D which =
+would cause
+the untrusted flag to be set. In V1 Greg questions whether the new
+property is part of the ACPI standard, asks who is making this policy
+decision, and states =E2=80=9CThis notion of =E2=80=98trust=E2=80=99 for PC=
+I devices is
+crazy=E2=80=A6.=E2=80=9D Mika links to Microsoft's documentation of =E2=80=
+=9CDmaProperty=E2=80=9D and
+suggests that property is adopted instead. Greg objects that Linux
+does not have =E2=80=9Cdma protection=E2=80=9D but Mika says that this is t=
+he IOMMU.
+The term =E2=80=9CDMA protection=E2=80=9D is also used in thunderbolt drive=
+r code for
+the same purpose and in an Intel white paper [4] describing the
+technique. Mika also observes that Linux has recognized several
+properties documented by Microsoft but not part of the ACPI standard.
+There is discussion between Mika, Rafael, and Rajat about seeking to
+align with Microsoft on the semantics of =E2=80=9CDmaProperty=E2=80=9D for
+compatibility with firmware produced for Windows.
 
-The other approach is to not discard these shared pages after conversion
-and just not free them back, which ends up using more host memory, but
-allows for larger IOMMU mappings.
+V2 of this patch series [5] again proposed an =E2=80=9CUntrustedDevice=E2=
+=80=9D
+property which Greg objects to because it is not sufficiently
+descriptive, not sufficiently documented, and policies about trust
+don=E2=80=99t belong in the kernel. Rajat describes the =E2=80=9Cuntrusted=
+=E2=80=9D flag=E2=80=99s
+current use, controlling IOMMU and Greg suggests naming the flag
+=E2=80=9Cuse_iommu=E2=80=9D or =E2=80=9Cable to do DMA=E2=80=9D
 
-> 
-> > from shared to private if it was originally installed via a 2MB IOPTE,
-> > since the guest could actively be DMA'ing to other shared pages in
-> > the 2M range (but we can be assured it is not DMA'ing to a particular 4K
-> > page it has converted to private), and the IOMMU doesn't (AFAIK) have
-> > a way to atomically split an existing 2MB IOPTE to avoid this. 
-> 
-> The iommu can split it (with SW help), I'm working on that
-> infrastructure right now..
-> 
-> So you will get a notification that the guest has made a
-> private/public split and the iommu page table can be atomically
-> restructured to put an IOPTE boundary at the split.
-> 
-> Then the HW will not see IOPTEs that exceed the shared/private
-> granularity of the VM.
+V3 of this patch series [6] proposes recognizing =E2=80=9CDmaProperty=E2=80=
+=9D with
+slightly altered semantics from Microsoft=E2=80=99s documentation. Greg
+suggests adhering to Microsoft=E2=80=99s semantics for =E2=80=9CDmaProperty=
+=E2=80=9D and to
+introduce a new property with new semantics instead. Greg again states
+that the flag being named =E2=80=9Cuntrusted=E2=80=9D (not changed in this =
+patch) is
+confusing.
 
-That sounds very interesting. It would allow us to use larger IOMMU
-mappings even for guest_memfd as it exists today, while still supporting
-shared memory discard and avoiding the additional host memory usage
-mentioned above. Are there patches available publicly?
+V4 renames =E2=80=9Cuntrusted=E2=80=9D to =E2=80=9Cposes_dma_risk=E2=80=9D.=
+ Christoph suggests
+=E2=80=9Cuntrusted_dma=E2=80=9D and Rafael agrees.
 
-Thanks,
+V5 renames the flag to =E2=80=9Cuntrusted_dma=E2=80=9D. Bjorn asks for clar=
+ification
+about whether the semantics of this flag will match Microsoft=E2=80=99s
+documentation. Rajat responds that Microsoft has agreed to update
+their documentation to have aligned semantics, in particular =E2=80=9Cthe
+property is not restricted to identify =E2=80=98internal PCIe hierarchies=
+=E2=80=99
+(starting at root port), but to "any PCI device". As of today,
+Microsoft=E2=80=99s documentation does not appear to have been updated.
 
-Mike
+In V6 Rajat updates a link to Microsoft=E2=80=99s documentation, renames a
+function to pci_dev_has_dma_property() and uses
+acpi_dev_get_property() to read =E2=80=9CDmaProperty=E2=80=9D.
 
-> 
-> Jason
+In V7-V8 Joshua re-sends and Greg requests a summary of the history of
+debate about the name for the =E2=80=9Cuntrusted=E2=80=9D flag as well as w=
+hat is the
+threat model, what does this property convey, and why we should use
+Microsoft=E2=80=99s DmaProperty and its semantics instead of inventing
+something new.
+
+Links:
+[1] https://lore.kernel.org/linux-arm-msm/20210624101557.v2.3.Icde6be7601a5=
+939960caf802056c88cd5132eb4e@changeid/
+[2] https://lore.kernel.org/lkml/20181129155153.35840-1-mika.westerberg@lin=
+ux.intel.com/
+[3] https://lore.kernel.org/all/20220120000409.2706549-1-rajatja@google.com=
+/
+[4] https://www.intel.com/content/dam/develop/external/us/en/documents/inte=
+l-whitepaper-using-iommu-for-dma-protection-in-uefi-820238.pdf
+[5] https://lore.kernel.org/all/20220202020103.2149130-1-rajatja@google.com=
+/
+[6] https://lore.kernel.org/all/20220216220541.1635665-1-rajatja@google.com=
+/
 
