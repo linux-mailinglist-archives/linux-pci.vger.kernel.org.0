@@ -1,141 +1,111 @@
-Return-Path: <linux-pci+bounces-21782-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21783-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98A37A3AF93
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 03:27:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2D2EA3AFC8
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 03:48:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 701F916DA9D
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 02:27:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7CE773AA660
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 02:48:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8F9D16F841;
-	Wed, 19 Feb 2025 02:27:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44547191F72;
+	Wed, 19 Feb 2025 02:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l+R6mxyn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABF4D15B543;
-	Wed, 19 Feb 2025 02:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E46719007D
+	for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 02:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739932062; cv=none; b=SvR0XvM8B//94rwpT2fkhdt7KsJT09x7sZ+FUBgEh47NmfR++qx2+7JRkH0cRVYlT8Xewt/3TfKZJEnszyELSSkrhovIGXa8Aewhx2FKMibrhmi8joo2IocAB/WqIQ1QM2ol3nV57gzWXzHfjLVCTOCcEn/m1NtIzfFkdxS7D9Q=
+	t=1739933318; cv=none; b=ZJKhBk/HXde54fQEy+9P4fiA6zs/5cp4nA5XS1Arj8cRal6gjfq7wvgYnqvZIOO3/gJjCnZHAHokYFMj4XoS5gYaeMri/Yvg7xvVi5/83RAIIOnE9X+9IOGEfn+wtx9N6eSljr6LLKtW63Gqvof2M1qVYv/5KV2kT9Eo1prCdfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739932062; c=relaxed/simple;
-	bh=GHv/arb+LD6QvPJoEEjCWKKQwB2btzeVJ/8m5os1omg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rc/BE76ycWDO/Gu7f1miC+B0cQuMc2lE2HyY+cnO4OYnXZaOshaa0dgxoK0WK90aCDlcnEjEx0nW2yQwlbeQCT/T7MkHwdMijXeAlZ59/pN974tkyrFLkLqzCkyqxL1uBFd5yYdsJhqUpwkJjnN/19u/u+5RDqI0mcsfR/wFwfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwAHaT6KQbVnOSWrAw--.23116S2;
-	Wed, 19 Feb 2025 10:27:22 +0800 (CST)
-Received: from localhost.localdomain (unknown [219.142.137.151])
-	by mail (Coremail) with SMTP id AQAAfwD3+ISDQbVni6wrAA--.6812S2;
-	Wed, 19 Feb 2025 10:27:20 +0800 (CST)
-From: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
-To: helgaas@kernel.org
-Cc: bhelgaas@google.com,
-	christian.koenig@amd.com,
-	daizhiyuan@phytium.com.cn,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v2] PCI: Update Resizable BAR Capability Register fields
-Date: Wed, 19 Feb 2025 10:27:12 +0800
-Message-ID: <20250219022712.276287-1-daizhiyuan@phytium.com.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250218202545.GA177904@bhelgaas>
-References: <20250218202545.GA177904@bhelgaas>
+	s=arc-20240116; t=1739933318; c=relaxed/simple;
+	bh=whNrgrV3i7+5zOOXKm0Fl7LCINpbZPBvF4e0Ljc7vtw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Bw0cjfjGbBZRkqE8oMQw/ek/dz+WLyLMgWb4aFsgrlrxk7szIsDw/ySHKSwXI6cSz3o1PxeZyBw1nmoPr7jFEyeUw5L6c8QUBxIB1twoZ/PmaxyRok3Ke+RdMv7oQRRgUWhw9EBvnVl8yXNfNw7hGRCQjt2GwM8pRVsuccFB2WU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l+R6mxyn; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e04f2b1685so4353565a12.0
+        for <linux-pci@vger.kernel.org>; Tue, 18 Feb 2025 18:48:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739933314; x=1740538114; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=whNrgrV3i7+5zOOXKm0Fl7LCINpbZPBvF4e0Ljc7vtw=;
+        b=l+R6mxyngMt2du6RrxkbEv+qMbOnY1eSsP/myIwUSRfr6G9pgrZoqEe78piYoRsFFQ
+         F2ljrYY8p8Ecvezy/MieGscQ0wCXZh4yrzzENyKRo+9m5uHLugVB7IaaKSKxZbbeduT3
+         fIITnp41j4pU1/tF5nIO9FRBR696YAnBz6yaikVG1ZnPxflKkuIhJYjBQM9PviPEApPz
+         6u6mKSOJH2IJJxmGgOfZHbFBK9uoM7urA4YAsGGX5AC2iMprdr5HT3f+QPMJYL9X7l4w
+         Yx6fk851NeLHBv6S41y1zC4FO1LfxLEpMlB+1165fCk5y2+k0FZJNDA9yDoZLvx5H0k4
+         3pAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739933314; x=1740538114;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=whNrgrV3i7+5zOOXKm0Fl7LCINpbZPBvF4e0Ljc7vtw=;
+        b=lJT6WEIeQxvpHW03VV9vii4gm73K77t0Q/Jrxt2vDeocJCtEZUHPebhebi4GOr3yY1
+         LmQtO0VYk33JerEv2Cx0PWR4ALuRGdTNpm7q6dt/KbRpjEueDwRC0LfDsAjG2GqTqE5u
+         tKSNnzwRpspjo7xz/XIMPAJ0qMS8oQmjzQvYjiY81X/FVlS1g+1KceCf3AkkHlodltIx
+         Y/fVDaG4nUJS6VVKbmQD4i9omNulG26v0ZJNNDIC0MOTnleM6lJlDKC6tIPBAM/xeQkO
+         /qjA24wOdMOO1k04A/bzfEABsqloOP7tZ78PngSInAcvkDeA14HBXlCha3TcvEMIwAPI
+         plrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzwkreokBscVaxuj+2Rx4iKflnTqxbfD/rel3RdIhYelHfHRyiQ71pfwfe4KAEkay2kddY+SmDDGE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSXJ1Myg/dUH+XeDH3Jnap6EcivAxgehmUAhnPzv145pFy0OK4
+	Zwg4XK0pFx3jG2K1ROWZ0pK2jHPFKBnheDDj/ZiOj+6LyaYBZ+JWVgjQz1YJK7Z5nCGmSGfSRDs
+	U/pSAg66JcZiJqCA1QjQidg/Ab4ilyjMMBMlT
+X-Gm-Gg: ASbGncv4k5NK0z9uJD+DEs8OmklEVM2NgotiEBvViPDXSXvhMrE2Ae39wHFfFOEaK9d
+	O/mfmoO3+HhacVosFFJo4AIxngNyO9C21w0g7Ax39H2Fj1gQIGDcOOc6qKD5DalSmVDBo+MnUxd
+	DOoxfC/wecWzF1Jl1joXCBV/XBM6A=
+X-Google-Smtp-Source: AGHT+IEuQQASBsUaC+lpsQxUZiHt3/hxUDEcrm2Ks7E+/oz362q868epXuR9KYRnXFiHjyU4nLRqtrmrmnj8X/X7FQ8=
+X-Received: by 2002:a05:6402:3547:b0:5dc:cf9b:b04a with SMTP id
+ 4fb4d7f45d1cf-5e035ff9d49mr34171058a12.1.1739933314551; Tue, 18 Feb 2025
+ 18:48:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwD3+ISDQbVni6wrAA--.6812S2
-X-CM-SenderInfo: hgdl6xpl1xt0o6sk53xlxphulrpou0/
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=daizhiyuan
-	@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAFWDXFWfGFW3Ww1fGF43Awb_yoW5Cr1kpr
-	WDCa97Gr4rGFZF9w1kZ3W0yw45K393ZFy5CrWSg39ruFn0k3Z2qr1jka45Ja4rJrs7ZF45
-	Gr9rt345Wrn8JaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+References: <20250214023543.992372-1-pandoh@google.com> <20250214023543.992372-3-pandoh@google.com>
+ <8e94ccbf-497b-4097-87a5-761cbc7c205d@oracle.com>
+In-Reply-To: <8e94ccbf-497b-4097-87a5-761cbc7c205d@oracle.com>
+From: Jon Pan-Doh <pandoh@google.com>
+Date: Tue, 18 Feb 2025 18:48:23 -0800
+X-Gm-Features: AWEUYZkdRsKvV4tTrdxX4Bm5cyoLRyDY-YOdJzkw4dv9ELaTfQqVTxVTqAubNQs
+Message-ID: <CAMC_AXVgYegnfc-vyKuxZS-Ck=aCJ95=HqdYNraVv99kXxw1QA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/8] PCI/AER: Use the same log level for all messages
+To: Karolina Stolarek <karolina.stolarek@oracle.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller <ben.fuller@oracle.com>, 
+	Drew Walton <drewwalton@microsoft.com>, Anil Agrawal <anilagrawal@meta.com>, 
+	Tony Luck <tony.luck@intel.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PCI Express Base Spec r6.0 defines BAR size up to 8 EB (2^63 bytes),
-but supporting anything bigger than 128TB requires changes to pci_rebar_get_possible_sizes()
-to read the additional Capability bits from the Control register.
+On Mon, Feb 17, 2025 at 3:25=E2=80=AFAM Karolina Stolarek
+<karolina.stolarek@oracle.com> wrote:
+> It seems that the printk's alignment is wonky after the rebase.
+> Checkpatch agrees with me here...
 
-Signed-off-by: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
----
- drivers/pci/pci.c             | 14 ++++++++++----
- include/uapi/linux/pci_regs.h |  3 ++-
- 2 files changed, 12 insertions(+), 5 deletions(-)
+Odd. It passed checkpatch for me. These are the commands I used:
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 661f98c6c63a..8903deb2d891 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3752,12 +3752,13 @@ static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
-  * @bar: BAR to query
-  *
-  * Get the possible sizes of a resizable BAR as bitmask defined in the spec
-- * (bit 0=1MB, bit 19=512GB). Returns 0 if BAR isn't resizable.
-+ * (bit 0=1MB, bit 43=8EB). Returns 0 if BAR isn't resizable.
-  */
--u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
-+u64 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
- {
- 	int pos;
--	u32 cap;
-+	u64 cap;
-+	u32 cap2;
- 
- 	pos = pci_rebar_find_pos(pdev, bar);
- 	if (pos < 0)
-@@ -3766,6 +3767,11 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
- 	pci_read_config_dword(pdev, pos + PCI_REBAR_CAP, &cap);
- 	cap = FIELD_GET(PCI_REBAR_CAP_SIZES, cap);
- 
-+	pci_read_config_dword(pdev, pos + PCI_REBAR_CTRL, &cap2);
-+	cap2 = FIELD_GET(PCI_REBAR_CTRL_CAP_SIZES, cap2);
-+
-+	cap |= (cap2 << 32);
-+
- 	/* Sapphire RX 5600 XT Pulse has an invalid cap dword for BAR 0 */
- 	if (pdev->vendor == PCI_VENDOR_ID_ATI && pdev->device == 0x731f &&
- 	    bar == 0 && cap == 0x700)
-@@ -3800,7 +3806,7 @@ int pci_rebar_get_current_size(struct pci_dev *pdev, int bar)
-  * pci_rebar_set_size - set a new size for a BAR
-  * @pdev: PCI device
-  * @bar: BAR to set size to
-- * @size: new size as defined in the spec (0=1MB, 19=512GB)
-+ * @size: new size as defined in the spec (0=1MB, 43=8EB)
-  *
-  * Set the new size of a BAR as defined in the spec.
-  * Returns zero if resizing was successful, error code otherwise.
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 1601c7ed5fab..345f45264567 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -1013,13 +1013,14 @@
- 
- /* Resizable BARs */
- #define PCI_REBAR_CAP		4	/* capability register */
--#define  PCI_REBAR_CAP_SIZES		0x00FFFFF0  /* supported BAR sizes */
-+#define  PCI_REBAR_CAP_SIZES		0xFFFFFFF0  /* supported BAR sizes */
- #define PCI_REBAR_CTRL		8	/* control register */
- #define  PCI_REBAR_CTRL_BAR_IDX		0x00000007  /* BAR index */
- #define  PCI_REBAR_CTRL_NBAR_MASK	0x000000E0  /* # of resizable BARs */
- #define  PCI_REBAR_CTRL_NBAR_SHIFT	5	    /* shift for # of BARs */
- #define  PCI_REBAR_CTRL_BAR_SIZE	0x00001F00  /* BAR size */
- #define  PCI_REBAR_CTRL_BAR_SHIFT	8	    /* shift for BAR size */
-+#define  PCI_REBAR_CTRL_CAP_SIZES	0xFFFF0000  /* supported BAR sizes */
- 
- /* Dynamic Power Allocation */
- #define PCI_DPA_CAP		4	/* capability register */
--- 
-2.43.0
+{Kernel home dir}$ scripts/checkpatch.pl {diff (e.g. downloaded from Patchw=
+ork)}
+{Kernel home dir}$ scripts/checkpatch.pl -f drivers/pci/pcie/aer.c
 
+Maybe I'm not using it correctly. Could you paste your checkpatch
+command/output?
+
+Thanks,
+Jon
 
