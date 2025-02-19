@@ -1,131 +1,92 @@
-Return-Path: <linux-pci+bounces-21810-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21811-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDBBEA3C5A1
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:06:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A4D3A3C5E6
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:17:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0638188C415
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 17:06:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3A2E17A618
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 17:15:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A3C521421D;
-	Wed, 19 Feb 2025 17:06:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ABBD1DE2CD;
+	Wed, 19 Feb 2025 17:15:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N3GT3MVn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h5KWwB+b"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D233214216;
-	Wed, 19 Feb 2025 17:06:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250178F58
+	for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 17:15:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739984803; cv=none; b=giZujX1v9PcLaLUBSRLf9wca3k8OHVzTVAI9w+qv63T9etyx5GrRrb4E2GpdCDIQZN0E4Uw7gdKY6Bi7U54xSGuhIpUONuYpWcj0NwHfuOT37zDARIELyFbzxJla801A6OoXa5g5Iii2/bGONrm72eH6pVMS4GSRZ7EhNH/+vEQ=
+	t=1739985312; cv=none; b=W9yMztLYWjr5gvywLWRc/def9g4/HDbeIBR0lc+JjmKbSSOzsNXbdomLeR8+G35f+aYEqTdi61S9vcoJsp+WZflT7aZEmFha4dN83ynwfOQSi4fNyWXflOIlCzXYK9NHAwQqoWuWZTkWqw3G0GR+wkIz/c+YDL17XoRVFFpmRlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739984803; c=relaxed/simple;
-	bh=MyfLEvfS7yxTS8fAcMru9YtZORPP55M03oOVf1wJwag=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=kGF4R4ivL5cPuYYMHOeN62bV+uZoua9l5HE/vWz/zrb7uGP/iXNWHOh7eKwZmpcuaBbMao50w8fPXDIUOfnpzJVphel55AyuLdI1SwXhjx9QkHEg2bVzYO28nrdmo6R/5QK3KSqKG5JLTNG+2v0S7/IispFUILwwf9EHmH3LXXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N3GT3MVn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93FBAC4CED1;
-	Wed, 19 Feb 2025 17:06:42 +0000 (UTC)
+	s=arc-20240116; t=1739985312; c=relaxed/simple;
+	bh=mRoWMMoPAjJCc94ss0qgV2jbbINkYbrJhhtx2fnTvg8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tQY4Wgs1m5lb0ZPBiggHSqVGpGmbJJyoLKjFQqJn9Nzra/ScVNEc7yg9LqFC9MwH68HKzV9B1LtlLSy8IWcKD0seqWp2GHQEqakTMHEiOtf9uoUdtXM/HqIoDdesjLfvkv7p48kLWb6aSe5nwyad3x77Ex9dq/hmEL/KlK4sCPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h5KWwB+b; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F35B0C4CED1;
+	Wed, 19 Feb 2025 17:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739984802;
-	bh=MyfLEvfS7yxTS8fAcMru9YtZORPP55M03oOVf1wJwag=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=N3GT3MVnRSqdikNeUBuH8nooDmDSlHq7qhQNbdzQQCBEGY3dgQF0c2xzPbt3cCgiA
-	 lhHU9ac9zww9+54xp2eKqSDGZxs75xiSiOssp9krqAWzxWE+s6Oe9DhqUR77zl4qrc
-	 A6EmmpD2rftmBbwBcwNpj0lgDLE1HXFvJl+Dd28ZnoM1iO2OC5HGl973pPhUaPIZlq
-	 0hmYPkmqrNwb1egOEbiaDPZ2azBpMG8b2a49onzyMIiRwc2pDpqLzb8M1DYWorRpPR
-	 b9JuBolf8uORmuCE3CnN2fH5FMWgUs0XAJCEvfHt/da38pNyBNJQOXY5+pBaG2Q7VS
-	 SkQqm5nFNM+jw==
-Date: Wed, 19 Feb 2025 11:06:40 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Naveen Kumar P <naveenkumar.parna@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernelnewbies <kernelnewbies@kernelnewbies.org>,
-	linux-acpi@vger.kernel.org
-Subject: Re: PCI: hotplug_event: PCIe PLDA Device BAR Reset
-Message-ID: <20250219170640.GA219612@bhelgaas>
+	s=k20201202; t=1739985311;
+	bh=mRoWMMoPAjJCc94ss0qgV2jbbINkYbrJhhtx2fnTvg8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=h5KWwB+bSK3lgaZkLDE+y+YiUT1r+ii/waCnxUNzWRXoTjMLvOb86UPV+PDopKR0u
+	 1smovYG3kIqAYGGJvvyMq4ene+BcF8r9AdsxksjwbnIMUL0t6Avh2E8nVGtDebPhHC
+	 W6QF2+Msbt8xRgiMOudDPeu0ZLz5kwSn7x1f3hWRKfZWxtCPRkxK7HtygG3nefW7Bn
+	 KSMpddxyDfkR7k+SdYl7xeBhcW18YoNdEksiR6Vv6THwDfzIPtlFK5kMKbshCS4rrt
+	 cAxF7nKHwpIfbJfBfR2iplRPan4YAOMqV6J9gjmkbblm+2ng5YTb2tHwXxLO4p944w
+	 jTzr8QgPbiujA==
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Niklas Cassel <cassel@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: endpoint: Improve reference in pci_epc_bar_size_to_rebar_cap() comment
+Date: Wed, 19 Feb 2025 18:14:55 +0100
+Message-ID: <20250219171454.2903059-2-cassel@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMciSVU4vv7=WjVUhuP3PJHdpnYqrgMPCmz-HnijEbhyxk54eQ@mail.gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1019; i=cassel@kernel.org; h=from:subject; bh=mRoWMMoPAjJCc94ss0qgV2jbbINkYbrJhhtx2fnTvg8=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNK3CfbNDvO9oZbjP68hwdaj8nrzsnspcm/OSXd7uu3Qd P50Jn11RykLgxgXg6yYIovvD5f9xd3uU44r3rGBmcPKBDKEgYtTACbSbMLIcKcq8KOLX5XWPp3d djzltVZP7n9j9dT+ciHRt2Jbnt3Cv4wMX45MV2yZyblTUueC+Pl/N6ccOqg5jydK47xh9XmD28v OsgEA
+X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
+Content-Transfer-Encoding: 8bit
 
-[+cc linux-acpi]
+Improve the reference pci_epc_bar_size_to_rebar_cap() comment to include
+a specific PCIe spec version, and a specific section in that PCIe spec.
 
-On Wed, Feb 19, 2025 at 05:52:47PM +0530, Naveen Kumar P wrote:
-> Hi all,
-> 
-> I am writing to seek assistance with an issue we are experiencing with
-> a PCIe device (PLDA Device 5555) connected through PCI Express Root
-> Port 1 to the host bridge.
-> 
-> We have observed that after booting the system, the Base Address
-> Register (BAR0) memory of this device gets reset to 0x0 after
-> approximately one hour or more (the timing is inconsistent). This was
-> verified using the lspci output and the setpci -s 01:00.0
-> BASE_ADDRESS_0 command.
-> 
-> To diagnose the issue, we checked the dmesg log, but it did not
-> provide any relevant information. I then enabled dynamic debugging for
-> the PCI subsystem (drivers/pci/*) and noticed the following messages
-> related ACPI hotplug in the dmesg log:
-> 
-> [    0.465144] pci 0000:01:00.0: reg 0x10: [mem 0xb0400000-0xb07fffff]
-> ...
-> [ 6710.000355] ACPI: \_SB_.PCI0.RP01: acpiphp_glue: Bus check in hotplug_event()
-> [ 7916.250868] perf: interrupt took too long (4072 > 3601), lowering
-> kernel.perf_event_max_sample_rate to 49000
-> [ 7984.719647] perf: interrupt took too long (5378 > 5090), lowering
-> kernel.perf_event_max_sample_rate to 37000
-> [11051.409115] ACPI: \_SB_.PCI0.RP01: acpiphp_glue: Bus check in hotplug_event()
-> [11755.388727] ACPI: \_SB_.PCI0.RP01: acpiphp_glue: Bus check in hotplug_event()
-> [12223.885715] ACPI: \_SB_.PCI0.RP01: acpiphp_glue: Bus check in hotplug_event()
-> [14303.465636] ACPI: \_SB_.PCI0.RP01: acpiphp_glue: Bus check in hotplug_event()
-> After these messages appear, reading the device BAR memory results in
-> 0x0 instead of the expected value.
-> 
-> I would like to understand the following:
-> 
-> 1. What could be causing these hotplug_event debug messages?
+Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+Feel free to squash with original commit.
 
-This is an ACPI Notify event.  Basically the platform is telling us to
-re-enumerate the hierarchy below RP01 because a device might have been
-added or removed.
+ drivers/pci/endpoint/pci-epc-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Unfortunately the only real information we get is the ACPI device
-(RP01) and the notification value (ACPI_NOTIFY_BUS_CHECK).
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 5d6aef956b13..88cb426d3aec 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -649,7 +649,7 @@ EXPORT_SYMBOL_GPL(pci_epc_set_bar);
+ int pci_epc_bar_size_to_rebar_cap(size_t size, u32 *cap)
+ {
+ 	/*
+-	 * According to PCIe base spec, min size for a resizable BAR is 1 MB,
++	 * As per PCIe r6.0, sec 7.8.6.2, min size for a resizable BAR is 1 MB,
+ 	 * thus disallow a requested BAR size smaller than 1 MB.
+ 	 * Disallow a requested BAR size larger than 128 TB.
+ 	 */
+-- 
+2.48.1
 
-You could instrument acpiphp_check_bridge() to see what path we take.
-The main paths look like enable_slot() or disable_slot(), but those
-both include a pr_debug() than you apparently don't see.
-
-A remove followed by add would definitely reset the device, including
-its BARs.  But you would normally see some messages related to
-enumerating a new device.
-
-If this doesn't help, try to reproduce the problem with a recent
-kernel, e.g., v6.13, and post the complete dmesg log.
-
-> 2. Why does this result in the BAR memory being reset?
-> 3. How can we resolve this issue?
-> 
-> I have verified that the issue occurs even without loading the driver
-> for the PLDA Device 5555, so it does not appear to be related to the
-> device driver.
-> 
-> Any help or guidance on debugging this issue would be greatly appreciated.
-> 
-> Thank you for your assistance.
-> 
-> Best regards,
-> Naveen
 
