@@ -1,77 +1,166 @@
-Return-Path: <linux-pci+bounces-21818-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21819-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96229A3C67A
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:46:15 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5A29A3C694
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:48:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F237F7A2A8A
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 17:45:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BC6A37A74F7
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 17:46:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CC4D2147E0;
-	Wed, 19 Feb 2025 17:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGopIMVq"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D24221AF0D3;
+	Wed, 19 Feb 2025 17:47:05 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D99126BFA;
-	Wed, 19 Feb 2025 17:46:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81EF214A72
+	for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 17:47:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739987161; cv=none; b=KcDB5LBd2GBk5Ze/qRPb4q3Y3BojuOIJwKfiW17LgtEHHClP0lqByXVWcLR//PF/sHrRaM0DP6mhtI4iUNcoCBf+cOfPW7NsB8Dkria5KNUY6uwNhRKenynAHzDPwG3qRBgo+stmX0BydsXSu00A7+wdnlPoavV4yc8TSiReWHU=
+	t=1739987225; cv=none; b=JLboCm9Y2I7t9vzZQAn4HbTtAXnI7Blsjj93DUTuMzle2BP3uIoq6VJak3cJkng0O2iN+OxubD//67zUJT9Oi0AOuvwWxnp0ha28seKZJkJoz1ZGFu2xU9UZ1j/vLRZqB8DGy2pQZrykRj8VAPQnqFMP4SOsPdVsGWcqCynxZ0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739987161; c=relaxed/simple;
-	bh=mHRhEBvpD1bsnQdjjXq4vxjKV6dJIAdVYqioCYQWdyU=;
+	s=arc-20240116; t=1739987225; c=relaxed/simple;
+	bh=FxEwo0UkbwgWI96qWj2xTu7tj6tBXc9BUxE13dg5w7I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SSluttai/npMnGDHi8INjq2JFjpEQc0SQElBVYZTOo1pMr3zgO7BMlLoWSh5aeY4gLxEyf5bMBaHpFs8lFpQ/aydtMGZT0k0JhIFPAIlkiGCIyiaT5zdmm81aQ8M5DgNjTrHFSBWgMv4ld2PD6PV67bQkVv+3MDbxuCgDz5/Ez4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGopIMVq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 527FAC4CEDD;
-	Wed, 19 Feb 2025 17:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739987160;
-	bh=mHRhEBvpD1bsnQdjjXq4vxjKV6dJIAdVYqioCYQWdyU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SGopIMVqS5Hk9p5JoJ2VnAeelIeuwL0T5ZZZ+OkyawwkgMyV41CXKh2RHOcjkEZU7
-	 9BD1Lq2lA73TEJgzm/8g/CEZcJkSk1uhnujkiek4N1+8QmXiAH3xS4HIX8DPF+Isoa
-	 ofNFjOWLWRTH7lomxG+p2mXde8A9Y3njeyMneknlj0yQW9lvOlP7ov/9czYG1938nA
-	 2uDHy2yCZ+WODYErVWjnx7FyPgB1rG52ztSKzHZM3XzYmgF2eQbv/azEgQI10REXd/
-	 RA3xe+lXrFbD1eOxSJ69byBA34/rR1Blb9oVS6BHJKBR/e3083/uQVVZ2Yk/eGV/fd
-	 mZfnZP+r2Xqeg==
-Date: Wed, 19 Feb 2025 18:45:55 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: jingoohan1@gmail.com, shradha.t@samsung.com,
-	manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	Frank.Li@nxp.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rockswang7@gmail.com
-Subject: Re: [v3] PCI: dwc: Add the debugfs property to provide the LTSSM
- status of the PCIe link
-Message-ID: <Z7YY0-oaK_WZwx17@ryzen>
-References: <20250214144618.176028-1-18255117159@163.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZXfCKoceH7+geG/iSwVdMg531v0cB1kHtsGHOIvxHNbY9brevpYDuPbmdwU7VI5/+1TVRlSD7N9CCMcmzO+hYNJGCE+k3sPSPMLC6FHGx9FKzNFmEk4d59gLNWoZIV/kaFjCh/vmJNNks7tvA1kiU9z+z3rg08NwOTFOeVVyOnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A01BC4CED1;
+	Wed, 19 Feb 2025 17:46:58 +0000 (UTC)
+Date: Wed, 19 Feb 2025 23:16:54 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: William McVicker <willmcvicker@google.com>
+Cc: Johan Hovold <johan@kernel.org>, Ajay Agarwal <ajayagarwal@google.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>,
+	Doug Zobel <zobel@google.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
+	Joao.Pinto@synopsys.com, kernel-team@android.com
+Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
+Message-ID: <20250219174654.wnrepxgovbyvx34e@thinkpad>
+References: <ZdTikV__wg67dtn5@google.com>
+ <20240228172951.GB21858@thinkpad>
+ <Zeha9dCwyXH7C35j@google.com>
+ <20240310135140.GF3390@thinkpad>
+ <Z68JlygEqQBSDWPA@google.com>
+ <Z68KYxSniCxdMMAg@hovoldconsulting.com>
+ <20250214094255.jmfpkmzwqn5facsy@thinkpad>
+ <Z68UpU0nofdUWddW@google.com>
+ <20250214133919.vnf3kccxwzjgcgim@thinkpad>
+ <Z6-Npgtxzc3O_JYQ@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250214144618.176028-1-18255117159@163.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z6-Npgtxzc3O_JYQ@google.com>
 
-On Fri, Feb 14, 2025 at 10:46:18PM +0800, Hans Zhang wrote:
-> Add the debugfs property to provide a view of the current link's LTSSM
-> status from the root port device.
+On Fri, Feb 14, 2025 at 10:38:30AM -0800, William McVicker wrote:
+> Hi Mani and Johan,
 > 
->   /sys/kernel/debug/dwc_pcie_<dev>/ltssm_status
+> On 02/14/2025, Manivannan Sadhasivam wrote:
+> > On Fri, Feb 14, 2025 at 03:32:13PM +0530, Ajay Agarwal wrote:
+> > > On Fri, Feb 14, 2025 at 03:12:55PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Fri, Feb 14, 2025 at 10:18:27AM +0100, Johan Hovold wrote:
+> > > > > On Fri, Feb 14, 2025 at 02:45:03PM +0530, Ajay Agarwal wrote:
+> > > > > 
+> > > > > > Restarting this discussion for skipping the 1 sec of wait time if a
+> > > > > > certain platform does not necessarily wish or expect to bring the link
+> > > > > > up during probe time. I discussed with William and we think that a
+> > > > > > module parameter can be added which if true, would lead to the skipping
+> > > > > > of the wait time. By default, this parameter would be false, thereby
+> > > > > > ensuring that the current behaviour to wait for the link is maintained.
+> > > > > > 
+> > > > > > Please let me know if this is worth exploring.
+> > > > > 
+> > > > > No, module parameters are a thing of the past (except possibly in vendor
+> > > > > kernels). The default behaviour should just work.
+> > > > > 
+> > > > 
+> > > > +1
+> > > > 
+> > > > Btw, you need to come up with a valid argument for not enabling the link during
+> > > The argument for the link to not come up during probe is simply that the
+> > > product does not need the link to be up during probe. The requirement is
+> > > that the PCIe RC SW structures be prepared for link-up later, when there
+> > > is a trigger from the userspace or the vendor kernel driver.
+> > > 
+> > 
+> > This is the problem. You are fixing the behavior of the controller driver to
+> > a single product line and this is not going to work if the same controller is
+> > used in a different product. Instead you should fix the userspace.
+> > 
 > 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
+> Do you have an alternative suggestion on how to fix this in userspace without
+> a module parameter?
 
-FWIW:
-Tested-by: Niklas Cassel <cassel@kernel.org>
+For that you need to explain the requirement clearly. Why does the userspace
+need to trigger the kernel?
+
+> I'd argue that module parameters are very much still used
+> in the upstream kernel to allow the userspace platform (Android in this case)
+> to control driver behavior at module load time. Here are some recent examples
+> I found on lore:
+> 
+
+These are not going to help. Greg himself has said in many threads that module
+params are dead. It just makes the code messy. These are still used for some
+exceptional cases though.
+
+> https://lore.kernel.org/all/20250213142412.516309668@linuxfoundation.org/
+> https://lore.kernel.org/all/20250213180317.3205285-1-coltonlewis@google.com/
+> 
+> By default (without any module parameter set by userspace), the driver would
+> behave as it does today and spin for 1s on probe waiting for the link to come
+> up. That will work for both Android and other Linux distros. We are only
+> proposing the parameter to allow userspace to optimize boot time by skipping
+> the link up wait time on probe when the userspace knows how to properly handle
+> this.
+> 
+> <snip>
+> 
+> > Same with DWC controllers as well, probe doesn't fail even if the link did not
+> > come up. Previously you were trying to avoid the delay while waiting for the
+> > link up during probe (for which I also asked you to probe the controller driver
+> > asynchronously to mitigate the delay). Is this the same case still?
+> 
+> Async probing may work, but that is just hiding the problem we are trying to
+> address -- unnecessarily spinning for 1s on probe. If userspace can handle
+> bringing up the link later, then IMO it's a valid argument to allow the driver
+> to skip the 1s delay.
+> 
+
+Again, you need to present us a full picture here and not provide a hint. How
+does the userspace bring up the link? Why the kernel has to depend on it?
+
+> > 
+> > And what makes me nervous is the fact that you are trying to upstream a change
+> > for your downstream driver, which is a big no-go.
+> 
+> As you may know, we (Google and Linaro) are actively upstreaming Pixel 6
+> drivers and will be adding support for the gs101 PCIe driver in the near
+> future. So this isn't just for a downstream driver running Android.
+> 
+
+But this patch is being proposed for more than 6 months (~1year?) without any
+evidence of the controller driver in question. With GKI, who knows which vendor
+driver is going to be a module.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
