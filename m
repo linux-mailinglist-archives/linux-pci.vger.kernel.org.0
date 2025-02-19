@@ -1,166 +1,126 @@
-Return-Path: <linux-pci+bounces-21819-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21820-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5A29A3C694
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:48:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4D9DA3C6A7
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 18:50:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BC6A37A74F7
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 17:46:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B30317A430
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Feb 2025 17:49:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D24221AF0D3;
-	Wed, 19 Feb 2025 17:47:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55D63126BFA;
+	Wed, 19 Feb 2025 17:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJEjH+5r"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81EF214A72
-	for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 17:47:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E4F192580
+	for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 17:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739987225; cv=none; b=JLboCm9Y2I7t9vzZQAn4HbTtAXnI7Blsjj93DUTuMzle2BP3uIoq6VJak3cJkng0O2iN+OxubD//67zUJT9Oi0AOuvwWxnp0ha28seKZJkJoz1ZGFu2xU9UZ1j/vLRZqB8DGy2pQZrykRj8VAPQnqFMP4SOsPdVsGWcqCynxZ0k=
+	t=1739987370; cv=none; b=k2mJQHUnFu/SNLuhXB2p/UVirAxe0p7hfUn1ikdX0Jzvb+BUWRXu4As/BtKWOUKRMYi+8LiFS2DSYba8ogxk850KriklXIPXnfTdxXx08MO2pX8cNAiQonXM69vb2moNnyabr9WwNzrwKO/kgvqEsCrmK6UsK6iRgbUzWNpWQio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739987225; c=relaxed/simple;
-	bh=FxEwo0UkbwgWI96qWj2xTu7tj6tBXc9BUxE13dg5w7I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZXfCKoceH7+geG/iSwVdMg531v0cB1kHtsGHOIvxHNbY9brevpYDuPbmdwU7VI5/+1TVRlSD7N9CCMcmzO+hYNJGCE+k3sPSPMLC6FHGx9FKzNFmEk4d59gLNWoZIV/kaFjCh/vmJNNks7tvA1kiU9z+z3rg08NwOTFOeVVyOnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A01BC4CED1;
-	Wed, 19 Feb 2025 17:46:58 +0000 (UTC)
-Date: Wed, 19 Feb 2025 23:16:54 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: William McVicker <willmcvicker@google.com>
-Cc: Johan Hovold <johan@kernel.org>, Ajay Agarwal <ajayagarwal@google.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jon Hunter <jonathanh@nvidia.com>,
+	s=arc-20240116; t=1739987370; c=relaxed/simple;
+	bh=P8Nnwwa1SauVAgIv1aZOpywLjjiAcMxdV3wj4p42fDc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=uwsDh9jDba9e3H7gZ+bUWSwyJ48jviT7DGydADi11miJWbIxWXbrXwb92JBsPYv4oEiqcLkO8bvRGDyjOslEtnIObJKkfgqEZR9OUDUil5HnqT7dniTUfKBv7NcUzOuolBrXvCLMWUqnpMto3IERtQZM5PG0r18ot3KJOLmHvqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJEjH+5r; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E51AAC4CED1;
+	Wed, 19 Feb 2025 17:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739987370;
+	bh=P8Nnwwa1SauVAgIv1aZOpywLjjiAcMxdV3wj4p42fDc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZJEjH+5r/CXKwix0312XLpAEbQvo7TYfoNISpXf5MOx3/XUncviU6X4JPyedbeeuU
+	 G5fNCJJr6foB4YebycZcKLT7a9dAhi8J1iDaY0RDX+8nPtjBENT6BgLpJwOw5XxH6w
+	 usB/uGrPkG71D92icdkhwVcRb3DCLZ/acu1J6RRu5gyDzYp1Y6RmvwOc1s/o2R0fbf
+	 A15p9giNTZ7fzzVSIYpDRLEIjdzCN+g+A+nWzMmvnoBgu6p81RmtdmV1A61nTwyYAD
+	 YsBYLYfV8LHAIJovr809ANjBmkQ9NessAHnGdSyj0Qm74Bi8Uk3poHsARNzS/ketdd
+	 bjbt0yerL5YGQ==
+Date: Wed, 19 Feb 2025 11:49:27 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Manu Gautam <manugautam@google.com>,
-	Doug Zobel <zobel@google.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
-	Joao.Pinto@synopsys.com, kernel-team@android.com
-Subject: Re: [PATCH v5] PCI: dwc: Wait for link up only if link is started
-Message-ID: <20250219174654.wnrepxgovbyvx34e@thinkpad>
-References: <ZdTikV__wg67dtn5@google.com>
- <20240228172951.GB21858@thinkpad>
- <Zeha9dCwyXH7C35j@google.com>
- <20240310135140.GF3390@thinkpad>
- <Z68JlygEqQBSDWPA@google.com>
- <Z68KYxSniCxdMMAg@hovoldconsulting.com>
- <20250214094255.jmfpkmzwqn5facsy@thinkpad>
- <Z68UpU0nofdUWddW@google.com>
- <20250214133919.vnf3kccxwzjgcgim@thinkpad>
- <Z6-Npgtxzc3O_JYQ@google.com>
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Udit Kumar <u-kumar1@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 2/7] PCI: endpoint: Add pci_epc_bar_size_to_rebar_cap()
+Message-ID: <20250219174927.GA224883@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z6-Npgtxzc3O_JYQ@google.com>
+In-Reply-To: <Z7YTukXh-Y3_HQsb@ryzen>
 
-On Fri, Feb 14, 2025 at 10:38:30AM -0800, William McVicker wrote:
-> Hi Mani and Johan,
-> 
-> On 02/14/2025, Manivannan Sadhasivam wrote:
-> > On Fri, Feb 14, 2025 at 03:32:13PM +0530, Ajay Agarwal wrote:
-> > > On Fri, Feb 14, 2025 at 03:12:55PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Fri, Feb 14, 2025 at 10:18:27AM +0100, Johan Hovold wrote:
-> > > > > On Fri, Feb 14, 2025 at 02:45:03PM +0530, Ajay Agarwal wrote:
-> > > > > 
-> > > > > > Restarting this discussion for skipping the 1 sec of wait time if a
-> > > > > > certain platform does not necessarily wish or expect to bring the link
-> > > > > > up during probe time. I discussed with William and we think that a
-> > > > > > module parameter can be added which if true, would lead to the skipping
-> > > > > > of the wait time. By default, this parameter would be false, thereby
-> > > > > > ensuring that the current behaviour to wait for the link is maintained.
-> > > > > > 
-> > > > > > Please let me know if this is worth exploring.
-> > > > > 
-> > > > > No, module parameters are a thing of the past (except possibly in vendor
-> > > > > kernels). The default behaviour should just work.
-> > > > > 
-> > > > 
-> > > > +1
-> > > > 
-> > > > Btw, you need to come up with a valid argument for not enabling the link during
-> > > The argument for the link to not come up during probe is simply that the
-> > > product does not need the link to be up during probe. The requirement is
-> > > that the PCIe RC SW structures be prepared for link-up later, when there
-> > > is a trigger from the userspace or the vendor kernel driver.
-> > > 
+On Wed, Feb 19, 2025 at 06:24:10PM +0100, Niklas Cassel wrote:
+> On Tue, Feb 18, 2025 at 10:48:04AM -0600, Bjorn Helgaas wrote:
+> > On Fri, Jan 31, 2025 at 07:29:51PM +0100, Niklas Cassel wrote:
+> > > Add a helper function to convert a size to the representation used by the
+> > > Resizable BAR Capability Register.
 > > 
-> > This is the problem. You are fixing the behavior of the controller driver to
-> > a single product line and this is not going to work if the same controller is
-> > used in a different product. Instead you should fix the userspace.
+> > > +/**
+> > > + * pci_epc_bar_size_to_rebar_cap() - convert a size to the representation used
+> > > + *				     by the Resizable BAR Capability Register
+> > > + * @size: the size to convert
+> > > + * @cap: where to store the result
+> > > + *
+> > > + * Returns 0 on success and a negative error code in case of error.
+> > > + */
+> > > +int pci_epc_bar_size_to_rebar_cap(size_t size, u32 *cap)
+> > > +{
+> > > +	/*
+> > > +	 * According to PCIe base spec, min size for a resizable BAR is 1 MB,
+> > > +	 * thus disallow a requested BAR size smaller than 1 MB.
+> > > +	 * Disallow a requested BAR size larger than 128 TB.
+> > > +	 */
+> > > +	if (size < SZ_1M || (u64)size > (SZ_128G * 1024))
+> > > +		return -EINVAL;
+> > > +
+> > > +	*cap = ilog2(size) - ilog2(SZ_1M);
+> > > +
+> > > +	/* Sizes in REBAR_CAP start at BIT(4). */
+> > > +	*cap = BIT(*cap + 4);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(pci_epc_bar_size_to_rebar_cap);
 > > 
+> > This doesn't seem specific to EPC.  It looks basically similar to
+> > pci_rebar_bytes_to_size().  Can we consolidate anything there?
 > 
-> Do you have an alternative suggestion on how to fix this in userspace without
-> a module parameter?
-
-For that you need to explain the requirement clearly. Why does the userspace
-need to trigger the kernel?
-
-> I'd argue that module parameters are very much still used
-> in the upstream kernel to allow the userspace platform (Android in this case)
-> to control driver behavior at module load time. Here are some recent examples
-> I found on lore:
+> This function is to convert a size to
+> "Resizable BAR Capability Register", which includes one or more supported
+> BAR sizes.
 > 
-
-These are not going to help. Greg himself has said in many threads that module
-params are dead. It just makes the code messy. These are still used for some
-exceptional cases though.
-
-> https://lore.kernel.org/all/20250213142412.516309668@linuxfoundation.org/
-> https://lore.kernel.org/all/20250213180317.3205285-1-coltonlewis@google.com/
+> This register should only ever by written by a PCI endpoint function,
+> so I think its current home in drivers/pci/endpoint/ is correct.
 > 
-> By default (without any module parameter set by userspace), the driver would
-> behave as it does today and spin for 1s on probe waiting for the link to come
-> up. That will work for both Android and other Linux distros. We are only
-> proposing the parameter to allow userspace to optimize boot time by skipping
-> the link up wait time on probe when the userspace knows how to properly handle
-> this.
+> pci_rebar_bytes_to_size() is used to convert a size to
+> "Resizable BAR Control Register", specifically the field
+> "BAR Size".
 > 
-> <snip>
-> 
-> > Same with DWC controllers as well, probe doesn't fail even if the link did not
-> > come up. Previously you were trying to avoid the delay while waiting for the
-> > link up during probe (for which I also asked you to probe the controller driver
-> > asynchronously to mitigate the delay). Is this the same case still?
-> 
-> Async probing may work, but that is just hiding the problem we are trying to
-> address -- unnecessarily spinning for 1s on probe. If userspace can handle
-> bringing up the link later, then IMO it's a valid argument to allow the driver
-> to skip the 1s delay.
-> 
+> This "BAR Size" field in the "Resizable BAR Control Register" can be
+> written by the host side (or endpoint side), to select one of the
+> supported bar sizes. So I think it makes sense for
+> pci_rebar_bytes_to_size() to live in pci.h.
 
-Again, you need to present us a full picture here and not provide a hint. How
-does the userspace bring up the link? Why the kernel has to depend on it?
+Thanks, I agree.
 
-> > 
-> > And what makes me nervous is the fact that you are trying to upstream a change
-> > for your downstream driver, which is a big no-go.
-> 
-> As you may know, we (Google and Linaro) are actively upstreaming Pixel 6
-> drivers and will be adding support for the gs101 PCIe driver in the near
-> future. So this isn't just for a downstream driver running Android.
-> 
+It looks like pci_epc_bar_size_to_rebar_cap() is only called once per
+BAR.  Does that mean an endpoint driver can only set a single
+supported size for a Resizable BAR in the Capability register?
 
-But this patch is being proposed for more than 6 months (~1year?) without any
-evidence of the controller driver in question. With GKI, who knows which vendor
-driver is going to be a module.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Bjorn
 
