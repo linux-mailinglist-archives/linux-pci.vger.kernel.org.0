@@ -1,176 +1,162 @@
-Return-Path: <linux-pci+bounces-21857-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21858-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF131A3CE29
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 01:36:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 87A30A3CE4E
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 01:57:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A22963A7BCC
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 00:36:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5305B3A735F
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 00:57:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74C4723A0;
-	Thu, 20 Feb 2025 00:36:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32471135A53;
+	Thu, 20 Feb 2025 00:57:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="itPpvXjZ"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="e8WDMlVf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903F7208A9
-	for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 00:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C01433C0
+	for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 00:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740011782; cv=none; b=Orhxhe92FmlSdeagXnK9fbdeHL8iuj6/UkCxwiv1Y3Q2FvBgsmxjDFgKnNf7CTpLyHx39wS2UsMNjM3VPDRaq9fi0PTnEpejYBgGwyr/xXXPWn4eaeOkcDYkvOuxdcjIKQlmC8Z/dGRlD0W4s+MGkO032MoQAEs/5VKlPyrX4iA=
+	t=1740013052; cv=none; b=eBflO+Vd6x3b9SEXm1uM8jYWnC1SWgGtMe9lSokK4y7nq+QUskUhX1VwNmy90HkOToZRKUSeE5h3uYZGd00H2x8YeoJjb4c6ysCzL8GSVMtVfk+tXsMSvuJ1Na9M+K/gIQpImpj1l+kyw5h0t7ffxiJQqrG+xpLkRJ6OLZJMpQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740011782; c=relaxed/simple;
-	bh=oaSI0NUEJCZCXIQZdXJ7fidDW9/thPouA7fMXtLKqig=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=cKjHOS7zlxL0GxuNxGeDGkpGybcPaFqYR0Tw48Vm/dVG6uvlelc809kMQLIbYYcXUVF+DSbpW0Y6e2fjOb0Nq6rssIGsP1u49cvgaaFJHe4CzbvQaJInVY/aGzlrzANJmnXgq2FduAnOgRNHAOLJ/qG5+VMpL1NTexOpKuqItuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=itPpvXjZ; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740011781; x=1771547781;
-  h=date:from:to:cc:subject:message-id;
-  bh=oaSI0NUEJCZCXIQZdXJ7fidDW9/thPouA7fMXtLKqig=;
-  b=itPpvXjZti1kI6uaAYdeUxtKC/UWpmujGxRytLLlI3cmUMz2PjmFiYc+
-   wlPk+xzMaE0wjNT2kH4A3/JBFfHsSQmwAONKIS+CKJ0THppR4MecAzfCy
-   7f6N/3q1DPv/OUsKW/XP5Im5lWM2NCqOaNFeg3nwSQ+TLMbs9Kxm3WOgC
-   GnIQm6CbT5IuiMw8AATlzjVPfzoD3A7Wn4o9Ifis3QuI62n4vWyEYQF1/
-   xtpdx8shK1a19eqBBpNKf/t9mf2xQdhFZrUOjv+XOYu96DMLZUoveFXGx
-   4pwRF1H+udN8oTpBU9ECMfyh75lgjtl6Sk7f3zPR1FWIZDhs2SmWwhrV4
-   w==;
-X-CSE-ConnectionGUID: RnOSMCOcRRGrr4sLDTYzyg==
-X-CSE-MsgGUID: 3jAnnXHgQUCfaTRQcPrvSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="40790518"
-X-IronPort-AV: E=Sophos;i="6.13,300,1732608000"; 
-   d="scan'208";a="40790518"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 16:36:20 -0800
-X-CSE-ConnectionGUID: av4yfrLYQeqqB3OY7ZhHeQ==
-X-CSE-MsgGUID: Od123BP7SLOBJ2rakiuFIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,300,1732608000"; 
-   d="scan'208";a="115420077"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 19 Feb 2025 16:36:19 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tkuY4-0003gj-2q;
-	Thu, 20 Feb 2025 00:36:16 +0000
-Date: Thu, 20 Feb 2025 08:35:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:aspm] BUILD SUCCESS
- 99372590aeab0ac2d12c6ad5fe1a0bd31f5daaa3
-Message-ID: <202502200852.nBgwKtks-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1740013052; c=relaxed/simple;
+	bh=Lnj8ZPF5lrE7Xc/uMpcIj9FkYaJnkbOF/02TZqJAndk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lFouicNriPYfCuNab9zfHis7MGLQ48z9D/zCeDe9YOIAN63WJ1GRUokCoMKisMZEUs5iZwQzqwmKfWMaX/CpU1sCaVa6vNxkPY4c0H2CTcy5/LU03P+GJL+5QbLTzqE7s0s5DNGAaWruDwpEZhpvaQfvzASz9huE+AG84F+CN00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=e8WDMlVf; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-471963ae31bso4382991cf.3
+        for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 16:57:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1740013049; x=1740617849; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0/Q3pmbQgFaUMEz//cVYqBy+kD1niHA/UXy9NuQBpQc=;
+        b=e8WDMlVfE5yxeWllC+GQsVY5Fcurb8PVVRLHcsL72GNWikAIAyXRdKLROdZjblWNlR
+         wrcGOp99vmw0hE+MAEjtnkHQwpXYmsG6WMuRR/9L1MwFX9F0HitATK7ux72o08XVDR7h
+         +l51hpxLMbptyGFfy6ln9NGior+w4ObgMcmDP88d60O8P2ByBv29QfgB7+Ay/bFR1Ydt
+         P7bXM6RQcCwotY/6a1V55ZbmllEGtjRzC/I3pW3tzBFkh2xrha9uH2o1BbWRLjnGCQoJ
+         YPxbnuMBnQoSM2qL4qGcRCYX6moS7UTTgzvshw6St5sKIr8Yw7CcxO197shj5vSY5xq0
+         q3BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740013049; x=1740617849;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0/Q3pmbQgFaUMEz//cVYqBy+kD1niHA/UXy9NuQBpQc=;
+        b=hZ1RO6fzHTuMLcMOWYz6FecARlyuHhGc3FArNCkTya/sKYp5l6Th6e3UB8w4XAYDux
+         pX8y4/POiXHlItjWzbcBKqo9CpqghyKppartfgp9SYNTPvuaFkIZCrK6rngqiqKWwDrw
+         Ru3fRhAl6CKFGfWJNQ9ZTQMChyAUVhMzRpH5qESUVG7OOnJzimK6Smv5Xk3Szxcw4KVq
+         vHMObRPrZS/abjo2tKqAjC311nxOhin4ddXPtOCtAnjWkEz0lifUSELqpLfi+2odIfBM
+         hFA68CilfNQu/YFdLozU/dy/M2bIp4skUEABHX7F9mIBDYH8LfLNdAgZhIlOw0wolOIa
+         b1Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCXpQ5QkpUUgfgFS1JxdS2tV+YcPd1uMeVufzW4zoGPTTdUQJqJ8WjU9qS6tnlZ+4H6MsfjIza2iwgE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVFhP6JyRlpE358eSpWWYLhc2UZTQkTJ38tFf+C1g53hhGgNve
+	sb082LGrVO0sWVuuF2GgKztTZBXIModlM1YfAHN71mxWLU6CaRXSulI5roVNIb0=
+X-Gm-Gg: ASbGnctCckJ68tjcHsZmmPFfl5Aiej+5luL+WMSyuQ52A/8XRubUV9H8HlFmEEDe65f
+	0aTGIkTHT3yCktSkwZGFisXoYj7MN3Ong5FrQwrG7QgfJQkFSvt71+vZrJhXkKBvqhLDMI/w/oY
+	uy1E2o2yBwFWpsyDHMkaSdT0lsZNpYHwPJj8eZ7RbXaKmVeWHGuoRDvGVxqnErthgEBjBa4G9xi
+	UYVre0gJTO7WoMjgW5PNT973MM7y9WOKeYK5oxP/kNK4uI1NI5Pae4/sf/OYaKAob5SJmQNI/RM
+	3fDOlRrNM4vRuOF1KV66C/NuQYz/h6DWr3PhGxjTniVniXNH7TtuzhDZRqJqUGpM
+X-Google-Smtp-Source: AGHT+IG5zCh9CoeLQY7rC+mk5ewFMnBFHyg7FBmH5U0ScrNRvZkI+aTZATrHIvB820rTi8JmR7A9wg==
+X-Received: by 2002:a05:622a:1a02:b0:471:a2c7:b6be with SMTP id d75a77b69052e-471dbea0a25mr253348721cf.45.1740013049013;
+        Wed, 19 Feb 2025 16:57:29 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471f3f6e90bsm36101381cf.79.2025.02.19.16.57.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 16:57:28 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tkusZ-00000000D45-0QWL;
+	Wed, 19 Feb 2025 20:57:27 -0400
+Date: Wed, 19 Feb 2025 20:57:27 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Michael Roth <michael.roth@amd.com>
+Cc: Alexey Kardashevskiy <aik@amd.com>, x86@kernel.org, kvm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Christoph Hellwig <hch@lst.de>, Nikunj A Dadhania <nikunj@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Steve Sistare <steven.sistare@oracle.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Dionna Glaze <dionnaglaze@google.com>, Yi Liu <yi.l.liu@intel.com>,
+	iommu@lists.linux.dev, linux-coco@lists.linux.dev,
+	Zhi Wang <zhiw@nvidia.com>, AXu Yilun <yilun.xu@linux.intel.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+Subject: Re: [RFC PATCH v2 12/22] iommufd: Allow mapping from guest_memfd
+Message-ID: <20250220005727.GP3696814@ziepe.ca>
+References: <20250218111017.491719-1-aik@amd.com>
+ <20250218111017.491719-13-aik@amd.com>
+ <20250218141634.GI3696814@ziepe.ca>
+ <340d8dba-1b09-4875-8604-cd9f66ca1407@amd.com>
+ <20250218235105.GK3696814@ziepe.ca>
+ <06b850ab-5321-4134-9b24-a83aaab704bf@amd.com>
+ <20250219133516.GL3696814@ziepe.ca>
+ <20250219202324.uq2kq27kmpmptbwx@amd.com>
+ <20250219203708.GO3696814@ziepe.ca>
+ <20250219213037.ku2wi7oyd5kxtwiv@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250219213037.ku2wi7oyd5kxtwiv@amd.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git aspm
-branch HEAD: 99372590aeab0ac2d12c6ad5fe1a0bd31f5daaa3  PCI/ASPM: fix link state exit during switch upstream function removal.
+On Wed, Feb 19, 2025 at 03:30:37PM -0600, Michael Roth wrote:
+> I think the documentation only mentioned 1G specifically since that's
+> the next level up in host/nested page table mappings, and that more
+> generally anything mapping at a higher granularity than 2MB would be
+> broken down into individual checks on each 2MB range within. But it's
+> quite possible things are handled differently for IOMMU so definitely
+> worth confirming.
 
-elapsed time: 1454m
+Hmm, well, I'd very much like it if we are all on the same page as to
+why the new kernel parameters were needed. Joerg was definitely seeing
+testing failures without them.
 
-configs tested: 83
-configs skipped: 1
+IMHO we should not require parameters like that, I expect the kernel
+to fix this stuff on its own.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> But regardless, we'll still end up dealing with 4K RMP entries since
+> we'll need to split 2MB RMP entries in response to private->conversions
+> that aren't 2MB aligned/sized.
 
-tested configs:
-alpha                            allnoconfig    gcc-14.2.0
-alpha                           allyesconfig    gcc-14.2.0
-arc                             allmodconfig    gcc-13.2.0
-arc                              allnoconfig    gcc-13.2.0
-arc                             allyesconfig    gcc-13.2.0
-arc                  randconfig-001-20250219    gcc-13.2.0
-arc                  randconfig-002-20250219    gcc-13.2.0
-arm                             allmodconfig    gcc-14.2.0
-arm                              allnoconfig    clang-17
-arm                             allyesconfig    gcc-14.2.0
-arm                  randconfig-001-20250219    gcc-14.2.0
-arm                  randconfig-002-20250219    clang-17
-arm                  randconfig-003-20250219    clang-15
-arm                  randconfig-004-20250219    gcc-14.2.0
-arm64                           allmodconfig    clang-18
-arm64                randconfig-001-20250219    clang-21
-arm64                randconfig-002-20250219    gcc-14.2.0
-arm64                randconfig-003-20250219    gcc-14.2.0
-arm64                randconfig-004-20250219    gcc-14.2.0
-csky                 randconfig-001-20250219    gcc-14.2.0
-csky                 randconfig-002-20250219    gcc-14.2.0
-hexagon                         allmodconfig    clang-21
-hexagon                         allyesconfig    clang-18
-hexagon              randconfig-001-20250219    clang-14
-hexagon              randconfig-002-20250219    clang-21
-i386                            allmodconfig    gcc-12
-i386                             allnoconfig    gcc-12
-i386                            allyesconfig    gcc-12
-i386       buildonly-randconfig-001-20250219    clang-19
-i386       buildonly-randconfig-002-20250219    clang-19
-i386       buildonly-randconfig-003-20250219    gcc-12
-i386       buildonly-randconfig-004-20250219    clang-19
-i386       buildonly-randconfig-005-20250219    clang-19
-i386       buildonly-randconfig-006-20250219    gcc-12
-i386                               defconfig    clang-19
-loongarch            randconfig-001-20250219    gcc-14.2.0
-loongarch            randconfig-002-20250219    gcc-14.2.0
-nios2                randconfig-001-20250219    gcc-14.2.0
-nios2                randconfig-002-20250219    gcc-14.2.0
-openrisc                         allnoconfig    gcc-14.2.0
-parisc                           allnoconfig    gcc-14.2.0
-parisc               randconfig-001-20250219    gcc-14.2.0
-parisc               randconfig-002-20250219    gcc-14.2.0
-powerpc                          allnoconfig    gcc-14.2.0
-powerpc              randconfig-001-20250219    clang-15
-powerpc              randconfig-002-20250219    clang-17
-powerpc              randconfig-003-20250219    gcc-14.2.0
-powerpc64            randconfig-001-20250219    gcc-14.2.0
-powerpc64            randconfig-002-20250219    gcc-14.2.0
-powerpc64            randconfig-003-20250219    gcc-14.2.0
-riscv                            allnoconfig    gcc-14.2.0
-riscv                randconfig-001-20250219    clang-21
-riscv                randconfig-002-20250219    gcc-14.2.0
-s390                            allmodconfig    clang-19
-s390                             allnoconfig    clang-21
-s390                            allyesconfig    gcc-14.2.0
-s390                 randconfig-001-20250219    clang-18
-s390                 randconfig-002-20250219    clang-21
-sh                              allmodconfig    gcc-14.2.0
-sh                              allyesconfig    gcc-14.2.0
-sh                   randconfig-001-20250219    gcc-14.2.0
-sh                   randconfig-002-20250219    gcc-14.2.0
-sparc                           allmodconfig    gcc-14.2.0
-sparc                randconfig-001-20250219    gcc-14.2.0
-sparc                randconfig-002-20250219    gcc-14.2.0
-sparc64              randconfig-001-20250219    gcc-14.2.0
-sparc64              randconfig-002-20250219    gcc-14.2.0
-um                              allmodconfig    clang-21
-um                               allnoconfig    clang-18
-um                              allyesconfig    gcc-12
-um                   randconfig-001-20250219    clang-21
-um                   randconfig-002-20250219    clang-21
-x86_64                           allnoconfig    clang-19
-x86_64                          allyesconfig    clang-19
-x86_64     buildonly-randconfig-001-20250219    gcc-12
-x86_64     buildonly-randconfig-002-20250219    clang-19
-x86_64     buildonly-randconfig-003-20250219    gcc-12
-x86_64     buildonly-randconfig-004-20250219    clang-19
-x86_64     buildonly-randconfig-005-20250219    gcc-12
-x86_64     buildonly-randconfig-006-20250219    clang-19
-x86_64                             defconfig    gcc-11
-xtensa               randconfig-001-20250219    gcc-14.2.0
-xtensa               randconfig-002-20250219    gcc-14.2.0
+:( What is the point of even allowing < 2MP private/shared conversion?
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> > Then the HW will not see IOPTEs that exceed the shared/private
+> > granularity of the VM.
+> 
+> That sounds very interesting. It would allow us to use larger IOMMU
+> mappings even for guest_memfd as it exists today, while still supporting
+> shared memory discard and avoiding the additional host memory usage
+> mentioned above. Are there patches available publicly?
+
+https://patch.msgid.link/r/0-v1-01fa10580981+1d-iommu_pt_jgg@nvidia.com
+
+I'm getting quite close to having something non-RFC that just does AMD
+and the bare minimum. I will add you two to the CC
+
+Jason
 
