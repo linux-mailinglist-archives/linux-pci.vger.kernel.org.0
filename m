@@ -1,156 +1,213 @@
-Return-Path: <linux-pci+bounces-21920-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21921-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53F9BA3E286
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 18:31:09 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFA49A3E2A0
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 18:36:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23708162B05
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 17:31:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 44F3F7A9086
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 17:32:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 382F8213248;
-	Thu, 20 Feb 2025 17:30:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4185D212B0B;
+	Thu, 20 Feb 2025 17:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MzPKDhfF"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YBA/LN7t"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9732116E1
-	for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 17:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BAD20DD47
+	for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 17:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740072621; cv=none; b=Umazm26EHS9FS1BF3NEcfOoJBYOj/Cd/ct1lFVoRBGdPzfplArF5Xh/vXYtYp/bAoFoajQ154BKiGU5J0y9PyayiSXsAAsWd3hfWbgWKCVWPI5klabHnG4dqCnk3bIltmZ0TEGLQd/lQBMvWpSHgwG538KculoySonpDMo0r2cI=
+	t=1740072801; cv=none; b=U8knH33BldPQ9yS3cukc31BO/7NzUGLgMJrp4+RP596IMcEaMt6Ii28bjKgFHMNA0tch5DpPVmpbQQ4pQAEfMy8FAz7RE3VrcaWCVMRx8o718WwJ18pXyoPViLFp8Mb+o8fBzgJP5yPeeodna32zciQAuBtd6PlJ98lTarYRmK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740072621; c=relaxed/simple;
-	bh=Cr+YfiHUjEM91VeNCc/IQ4E67yLsjVF91rajsF1SabQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BTwFIW+4dMLZb63vcasSPR+x5JX8Nk66wnQUeKxStzkhaIzf7TzVksjb13jlaoWQ1f/4UBSuXM+XYAWnSEtphBQOn6VM+M+23SX1LBgJmtVAuz971Oy2V2r734ZqzFnO/UcUCIQllV1VEYPd30D1vkpGBlMyviki0MmHhv3UHsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=MzPKDhfF; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2a8690dcb35so311584fac.3
-        for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 09:30:19 -0800 (PST)
+	s=arc-20240116; t=1740072801; c=relaxed/simple;
+	bh=tdSgk07Qmyb1E0a1lw0F1X8xB3gcZzChTJbUZHLvlvw=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CXNi/96+G+l9ph3tQjTPwQKXIE6SsQajmc3fSYCrZygFhZp++AwszbMxiU/rb/ahpADF4jQmodUPVmpyZQDkSwtuPgqA8C5pPyws6ImWSBWBwYZ7VwzBSp2PHwQYSImTJcgY/jf+W+mlRBUSvX8jkXRgoWZENLf5Ta1YYlccTnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YBA/LN7t; arc=none smtp.client-ip=209.85.208.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5dee1626093so4362934a12.1
+        for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 09:33:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1740072618; x=1740677418; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=P53/KIPJfrzEGuva0GsD1NlBE3MhvRVPB9M6JxDtYlQ=;
-        b=MzPKDhfFhy2MqC6DjfEKwhS5OCuYxxB+zdQ9b6nbbrhezog1bckDantj/hZJJD9Ze2
-         23/1A3U/1sweFPR08FeXw1U7QJAcCI0l2v39uJWkXqlzyN4ySN/w8uLyMN4SmXm1VCgx
-         7I0qjt3Nx2ssoTprWrE6NZJ9WIJqHiOol3II0=
+        d=suse.com; s=google; t=1740072797; x=1740677597; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ANYY81S4UUbSzxGp9vX0hw/u/obOtXq2bTCgGH3coGw=;
+        b=YBA/LN7thNd0kfJi6YUgXpWSohTH4hfKCGstG7P6rVOIvoqYVImMOkWF2SLD/TvS3l
+         zpzriDHW07QsPXQXaeYTV7dArcZpAMR00SnpouK21pHa8IZMfcHCKN9aIW0tYLBti9nL
+         8TcxgOH9SH9ZtwiVdF78otXhfJo0Db4W2ZMF41U/afSvTQIYgGrNe3dk6luNCA2iE42X
+         G0IfBQ4yS/WJwvG6cnMYDSRA4b7cl4AVk0fLBiedZQkYQdjIaBUZE6rSUso+xS9LIAf9
+         tllmocprm5GBV2KAAwnWvpRF5cqADPVnBL/l7qrNdktdMSYVjojg4vzhoU0OCcwZLthF
+         3HOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740072618; x=1740677418;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1740072797; x=1740677597;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=P53/KIPJfrzEGuva0GsD1NlBE3MhvRVPB9M6JxDtYlQ=;
-        b=W/9BjovgV+CQ35gxGMCZWFi162ucQffIpi1o7CCsFQgjNxBYA7ZwbB36058GdAN6f5
-         z83OtSIccdDvKUkk+yC2VgiCJ+U64XY39OkGj9IYizCfqvf23vKF+HV8zsWbRa3AiJwm
-         sPIjjGb6W3gCLJm01UOyzJLgPxyRPji3+h7TJyH3+8Up9a84sOJP8xpqy0mN5nWl/k4n
-         cqqyKBKVrhaXXEqa4L84m487lcJfVxYCmq0Wlbw1pYGT57c59Daoj5ExD02b1HfJ+YmP
-         t8kDzks10yMSCYRd6rOkcXMQ0gnZUfD3U9kvKhGnYvNLH+6A/ACPA+NNTIKCwvOkQmAD
-         r0ng==
-X-Forwarded-Encrypted: i=1; AJvYcCW8duFB7fbyCiYgk6hwgYizQXAOlZtBAv8WQAQkN4sZSlswJxitR2mn3czkVJBD/ptASZN+udUq388=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3pzquxja2MtZFPsoc5N4EhPqt0uBAHQI5sw8r3vWEpeJ7pHdA
-	HeeiV65ma/THF/PsVPdXRSuB/BEcLV1DmC29aJ2KNMvLWxRWRGF8E7vSYVxlpA==
-X-Gm-Gg: ASbGncsd7g8keMNkrKP7CshIs3HIenfoKWN0/AbVQTnxtgXEYZ3+ja6YM+1sNxAfjQp
-	G+MwJQSGzVDGGBXwlsCDmOYahC5o9pAho1QnlbmeF18BeTbYgoqtCPxC/Rt4gqzfCkO+/E6ewyQ
-	nzuG/6aMgccbF1/1k5gZ8379xwcEhWqHJ6BS/+ElWqQKj/dd2OVukOQzRyF21rPrCBx44zJHNIE
-	SLuLJtei4R3dTmSidqYc2EZoC3UtPYF9miBIgeCIpBozTqnOtd4hEafXUDH2UasOsVH4LB568F+
-	ej5tnp/s/rBWJCwOIZpAXoz5XHNtgk+DgEI2uHI1PfFoVW0tlIpLLek/2vREOGFcD8htoijFXSZ
-	I2EH1
-X-Google-Smtp-Source: AGHT+IHw53AD66TKeGeMiB8+rYPW86zzfv0+S/8Z29ElnOO82punMyMQt7RDXRZ5XmCphUXfk9aEGw==
-X-Received: by 2002:a05:6870:8a2b:b0:29e:3c14:2bb0 with SMTP id 586e51a60fabf-2bc99d41a60mr18203220fac.30.1740072618592;
-        Thu, 20 Feb 2025 09:30:18 -0800 (PST)
-Received: from [10.171.122.29] (wsip-98-189-219-228.oc.oc.cox.net. [98.189.219.228])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b95481ab73sm6402536fac.8.2025.02.20.09.30.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 09:30:17 -0800 (PST)
-Message-ID: <213fd5f9-405d-403c-8ebb-a2b371f0ab22@broadcom.com>
-Date: Thu, 20 Feb 2025 09:30:15 -0800
+        bh=ANYY81S4UUbSzxGp9vX0hw/u/obOtXq2bTCgGH3coGw=;
+        b=FHy1R3zM9s6aSuxL4tO2LjCrDwt7kzS34z02C07rijrZ7Nf/6a+887W5wRQn3NUYag
+         N33yTc9ovhdlZTldTp+SxLdrsc9EAIgc3i/VgEDD3dd7yUFu6F2HEKv9rKNhCUmw7WZi
+         0F6rLf8KuK/GAzzdISj7RsnO8PImG4Iz268XCqfGgg4EOstvpjb37Ne0beyn8u955j2g
+         Fs0ThzHspWyWgdZWYFTy5NIhwsDO1ORTALvjiSmKmsE8jwLGTM71ho0sIXxwIrvuknIH
+         Ju2KVBeFnpFz0VoSS0BtHMuDkT0o8qifoduSlzCCEop/O9cE6JbO4w7JynVRqdhLZqPU
+         i93w==
+X-Forwarded-Encrypted: i=1; AJvYcCUK0kcydPp1QwBPkSkKgpUaPihi94RdZl6uiPzDG0qhpsN74563tKbUShyaKMj6QbelJhlF0dZFO7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxde0pBCjompgz6Ql0xAIBuZnq5TwSlBxbAOfkqNTgyocBISe5q
+	HfH9+LLW0ZoK7yhiS2RetjdU0nYGeYy3k2chZr3mi4WXGRbqZJ9WinDNczbLbOU=
+X-Gm-Gg: ASbGncs92xuBLWA+2ltSpoypRX+PhwTdEY4UXDQUP4atSlxB57O1x3u5DlyZiPgwbP3
+	N07+LKiia/+HwDEiyub4kBwBzrdZ5AWb+4jBqPCZrJij5VSuYvljxgHyIm8/mUpcTSQN30Juzn8
+	P3dTl5HGmmcm+DZvaxkqlhL+jauITs4I2qUXMweX8iZQSLWJjgTJ6LyuB1mvRlxxNWf67tOCPIg
+	j7Ra18pkhfgbVhLz4rtFH7dEqicl/1vPKNVEoCQO/crLb8sZTOf/04xFK6kWjr4RF5wJOgbrQqF
+	xh2duz5REM89y5wi6dUuQzyxhGYMvnj0KtnrKbVx2qeNKdrS6ul4WASxQy0=
+X-Google-Smtp-Source: AGHT+IFcZuFtypbIC0ocwrn0UjtnE5zIzW4WQOLazDAdOMAwrDA8BDnjnnZ6hgx+i5rr6QtaeBrAFg==
+X-Received: by 2002:a05:6402:524b:b0:5de:50b4:b71f with SMTP id 4fb4d7f45d1cf-5e0a12baa86mr3394933a12.12.1740072797358;
+        Thu, 20 Feb 2025 09:33:17 -0800 (PST)
+Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e076048c05sm5023923a12.35.2025.02.20.09.33.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 09:33:16 -0800 (PST)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Thu, 20 Feb 2025 18:34:21 +0100
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v7 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <Z7dnnW4npJmfOVE0@apocalypse>
+References: <cover.1738963156.git.andrea.porta@suse.com>
+ <d1362766e3e966f78591129de918046a4b892c18.1738963156.git.andrea.porta@suse.com>
+ <87525350-b432-40b3-927c-60cd74228ea4@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/8] PCI: brcmstb: Fix potential premature regulator
- disabling
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250214173944.47506-1-james.quinlan@broadcom.com>
- <20250214173944.47506-6-james.quinlan@broadcom.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250214173944.47506-6-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87525350-b432-40b3-927c-60cd74228ea4@gmx.net>
 
+Hi Stefan,
 
-
-On 2/14/2025 9:39 AM, Jim Quinlan wrote:
-> Our system for enabling and disabling regulators is designed to work only
-> on the port driver below the root complex.  The conditions to discriminate
-> for this case should be the same when we are adding or removing the bus.
-> Without this change the regulators may be disabled prematurely when a bus
-> further down the tree is removed.
+On 15:21 Sat 08 Feb     , Stefan Wahren wrote:
+> Hi Andrea,
 > 
-> Fixes: 9e6be018b263 ("PCI: brcmstb: Enable child bus device regulators from DT")
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> Am 07.02.25 um 22:31 schrieb Andrea della Porta:
+> > The RaspberryPi RP1 is a PCI multi function device containing
+> > peripherals ranging from Ethernet to USB controller, I2C, SPI
+> > and others.
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+...
 
+> > +static int rp1_irq_set_type(struct irq_data *irqd, unsigned int type)
+> > +{
+> > +	struct rp1_dev *rp1 = irqd->domain->host_data;
+> > +	unsigned int hwirq = (unsigned int)irqd->hwirq;
+> > +
+> > +	switch (type) {
+> > +	case IRQ_TYPE_LEVEL_HIGH:
+> > +		dev_dbg(&rp1->pdev->dev, "MSIX IACK EN for irq %d\n", hwirq);
+> This looks a little bit inconsistent. Only this type has a debug
+> message. So either we drop this or add at least a message for
+
+I think that this is indeed asymmetric. That warning says
+that the 'special' IACK management is engaged for level triggered
+interrupt, which is mandatory in order to avoid missing further
+interrupts without the performance loss of busy-polling for 
+active interrupts. This is explained in par. 6.2 of:
+
+https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
+
+The point is that we're not stating the type of the interrupt
+(edge/level triggered), but we warn that we're enabling a mechanism
+useful for one type only (level triggered).
+
+> IRQ_TYPE_EDGE_RISING, too. Btw the format specifier looks wrong
+> (unsigned int vs %d).
+
+Ack.
+
+> > +		msix_cfg_set(rp1, hwirq, MSIX_CFG_IACK_EN);
+> > +		rp1->level_triggered_irq[hwirq] = true;
+> > +	break;
+> > +	case IRQ_TYPE_EDGE_RISING:
+> > +		msix_cfg_clr(rp1, hwirq, MSIX_CFG_IACK_EN);
+> > +		rp1->level_triggered_irq[hwirq] = false;
+> > +		break;
+> > +	default:
+> > +		return -EINVAL;
+> It would be nice to document why only IRQ_TYPE_LEVEL_HIGH and
+> IRQ_TYPE_EDGE_RISING are supported. In case it's a software limitation,
+> this function would be a good place. In case this is a hardware
+> limitation this should be in the binding.
+
+All ints are level-triggered. I guess I should add a short comment in
+the bindings.
+
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct irq_chip rp1_irq_chip = {
+> > +	.name		= "rp1_irq_chip",
+> > +	.irq_mask	= rp1_mask_irq,
+> > +	.irq_unmask	= rp1_unmask_irq,
+> > +	.irq_set_type	= rp1_irq_set_type,
+> > +};
+
+...
+
+> > +		irq_set_chip_and_handler(irq, &rp1_irq_chip, handle_level_irq);
+> > +		irq_set_probe(irq);
+> > +		irq_set_chained_handler_and_data(pci_irq_vector(pdev, i),
+> > +						 rp1_chained_handle_irq, rp1);
+> > +	}
+> > +
+> > +	err = of_overlay_fdt_apply(dtbo_start, dtbo_size, &rp1->ovcs_id, rp1_node);
+> > +	if (err)
+> > +		goto err_unregister_interrupts;
+> > +
+> > +	err = of_platform_default_populate(rp1_node, NULL, dev);
+> > +	if (err)
+> > +		goto err_unload_overlay;
+> I think in this case it's worth to add a suitable dev_err() here.
+
+Ack.
+
+Many thanks,
+Andrea
+
+> 
+> Thanks
 
