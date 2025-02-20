@@ -1,55 +1,71 @@
-Return-Path: <linux-pci+bounces-21899-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21900-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93E82A3DA47
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 13:43:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED337A3DA64
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 13:49:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B50F5189FB38
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 12:43:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3A013A3F09
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 12:48:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85CB41F3FD7;
-	Thu, 20 Feb 2025 12:42:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BADF1F4169;
+	Thu, 20 Feb 2025 12:48:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/5Iyl2A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhH3Rxw/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEA1286298;
-	Thu, 20 Feb 2025 12:42:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BF32862BD;
+	Thu, 20 Feb 2025 12:48:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740055375; cv=none; b=uBtK8YHHCZKAYAHMx70vod/fYUplRQzPKh1Sp9N+8hb4f6D9y4Qy4s/hmoBtV+Ejfs6FGlDiucx8/OHUY/SESx+B/+icm5ywYaZ1p5QXSyxFOIc4H0pop2iEvLR4mC5diAmFUU0a0QANGNkN2TEgsHG0puI8G1dCXYEOgC7ChZk=
+	t=1740055712; cv=none; b=gHk0N0/PJMM6Spb1pJwQ7y1LwGYRrKf//nAZdpZHfV4L5iELf5L7wd8lsUKOWnU4D6MmlkH54pxE7oFSBCye7t2kBjGrodl/oO1IwPBfKFIhaO7px2rMIX7bCm6r1Sx+sCVmxQwaX2+Yd/u7Tp9GSxmSca/b87PFOs0H8nPiTT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740055375; c=relaxed/simple;
-	bh=RVZ/swUs318iSPWUVj9+byY1sTALGlfS4yGzHO5zGEY=;
+	s=arc-20240116; t=1740055712; c=relaxed/simple;
+	bh=1Iv3ATubl6AG/lSG1TPOh5GEc+mnunYnUNognONLHrM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XFRBLrx1z/q8OizLY/eG6eGBmrAlfywliUzcGdwQ9jEIZkTMkdRaMHQWUnkcRvAvmZEsyEXvR1KkdUqYqDmP153s5M1fDxuk21b3hQ8Qo7RYlMtlHWZvZMTHcNfT4hRECXeAXWA6SPTGkHqw2gsRab2rmTfs23hiv8jZMHWrNk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/5Iyl2A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A97C4CED6;
-	Thu, 20 Feb 2025 12:42:53 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=fDbvlA/Jhqg/b8gRMEoTrL3oTYbgsRjfMZE/YO3nb8CejGVbFWT4h8ifkPTH+/CJ1KaVQMEceDysCs09nXK6TgevjGpCh8SqgHjJcE0DWUTZJNaiDwzYrEjp3IVUh6t96GSc9Mgoglod+QzPOUyfWY8/63rebM00fN/e1Iyz8Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhH3Rxw/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C882DC4CED1;
+	Thu, 20 Feb 2025 12:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740055374;
-	bh=RVZ/swUs318iSPWUVj9+byY1sTALGlfS4yGzHO5zGEY=;
+	s=k20201202; t=1740055711;
+	bh=1Iv3ATubl6AG/lSG1TPOh5GEc+mnunYnUNognONLHrM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W/5Iyl2A8LrY2JUM0IzIQPtoJ4yKX40TTq/3WN9psph4YCrW5Q3J8Eam2+D7L7MwZ
-	 PnXhOanXHE2SEmQ/auErLnmPpXIJH1Gnl01cVp2IOSUdrioRNlb26J56L2VHQy8zVJ
-	 xsWy6p6hh9tqBqRNOc7sGl7BESkIIn+T8U8NGC4kGmXoZP7T8c/aZWmQ2wAngH7tsq
-	 TfQNZC5abXf3hI45pxg3Yvuk5cJ2Bv4KXTFwAqWNj15zt3agjKqxWXkGV20GIXw1gK
-	 Ta3Hjp1PFsa6OITZ6+ZcL7rvi/Lw3oQbRFYQgFWMSfI+MIhMcClUGKzZKGu3XRTNPf
-	 Wdga0gXIWjfTA==
-Date: Thu, 20 Feb 2025 13:42:51 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
-Cc: helgaas@kernel.org, bhelgaas@google.com, christian.koenig@amd.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: Update Resizable BAR Capability Register fields
-Message-ID: <Z7cjS7iuX655O7b3@ryzen>
-References: <20250219183424.GA226683@bhelgaas>
- <20250220013034.318848-1-daizhiyuan@phytium.com.cn>
+	b=XhH3Rxw/fU4NMM8JUKPDYre9d9LQaru2HtlbuSSUNzkHB8eWhqMM23vtegnTWn+BS
+	 9+H0GOfdzn1LNx9IHcWfvcpB8EXNSp57Achx+q1U7ozbfXzho3FO9ENmdtK+fnEJTx
+	 1mX2B9KcxOTwRBNfDJoEWHPpCPDk48cyZC7xwNx3D4HZ/eDzhk1UYs1ByD6cWBCggg
+	 PbJi1s5B2/FkYeMMfisRgyehbN8fd3in3TvHNeTh17NIjIy8rndGPwyK8hEYOJ4woC
+	 z5Pq6b+6BoM66BA9VpnFOLzal49GAHK/nFhBZx9kerNsCt2/b4psBlXL8nvsynNOoP
+	 upH4tKmvy4K+A==
+Date: Thu, 20 Feb 2025 14:48:27 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Robin Murphy <robin.murphy@arm.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
+Message-ID: <20250220124827.GR53094@unreal>
+References: <cover.1738765879.git.leonro@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,68 +74,70 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250220013034.318848-1-daizhiyuan@phytium.com.cn>
+In-Reply-To: <cover.1738765879.git.leonro@nvidia.com>
 
-On Thu, Feb 20, 2025 at 09:30:34AM +0800, Zhiyuan Dai wrote:
-> PCI Express Base Spec r6.0 defines BAR size up to 8 EB (2^63 bytes),
-> but supporting anything bigger than 128TB requires changes to pci_rebar_get_possible_sizes()
-> to read the additional Capability bits from the Control register.
+On Wed, Feb 05, 2025 at 04:40:20PM +0200, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
 > 
-> If 8EB support is required, callers will need to be updated to handle u64 instead of u32.
-> For now, support is limited to 128TB, and support for sizes greater than 128TB can be
-> deferred to a later time.
+> Changelog:
+> v7:
+>  * Rebased to v6.14-rc1
 
-Did you run ./scripts/checkpatch.pl on this?
+<...>
 
-I'm guessing that you will see:
-Prefer a maximum 75 chars per line (possible unwrapped commit description?)
+> Christoph Hellwig (6):
+>   PCI/P2PDMA: Refactor the p2pdma mapping helpers
+>   dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
+>   iommu: generalize the batched sync after map interface
+>   iommu/dma: Factor out a iommu_dma_map_swiotlb helper
+>   dma-mapping: add a dma_need_unmap helper
+>   docs: core-api: document the IOVA-based API
+> 
+> Leon Romanovsky (11):
+>   iommu: add kernel-doc for iommu_unmap and iommu_unmap_fast
+>   dma-mapping: Provide an interface to allow allocate IOVA
+>   dma-mapping: Implement link/unlink ranges API
+>   mm/hmm: let users to tag specific PFN with DMA mapped bit
+>   mm/hmm: provide generic DMA managing logic
+>   RDMA/umem: Store ODP access mask information in PFN
+>   RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
+>     linkage
+>   RDMA/umem: Separate implicit ODP initialization from explicit ODP
+>   vfio/mlx5: Explicitly use number of pages instead of allocated length
+>   vfio/mlx5: Rewrite create mkey flow to allow better code reuse
+>   vfio/mlx5: Enable the DMA link API
+> 
+>  Documentation/core-api/dma-api.rst   |  70 ++++
+>  drivers/infiniband/core/umem_odp.c   | 250 +++++---------
+>  drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
+>  drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
+>  drivers/infiniband/hw/mlx5/umr.c     |  12 +-
+>  drivers/iommu/dma-iommu.c            | 468 +++++++++++++++++++++++----
+>  drivers/iommu/iommu.c                |  84 ++---
+>  drivers/pci/p2pdma.c                 |  38 +--
+>  drivers/vfio/pci/mlx5/cmd.c          | 375 +++++++++++----------
+>  drivers/vfio/pci/mlx5/cmd.h          |  35 +-
+>  drivers/vfio/pci/mlx5/main.c         |  87 +++--
+>  include/linux/dma-map-ops.h          |  54 ----
+>  include/linux/dma-mapping.h          |  85 +++++
+>  include/linux/hmm-dma.h              |  33 ++
+>  include/linux/hmm.h                  |  21 ++
+>  include/linux/iommu.h                |   4 +
+>  include/linux/pci-p2pdma.h           |  84 +++++
+>  include/rdma/ib_umem_odp.h           |  25 +-
+>  kernel/dma/direct.c                  |  44 +--
+>  kernel/dma/mapping.c                 |  18 ++
+>  mm/hmm.c                             | 264 +++++++++++++--
+>  21 files changed, 1435 insertions(+), 693 deletions(-)
+>  create mode 100644 include/linux/hmm-dma.h
 
-With that fixed:
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+Kind reminder.
+
+Thanks
 
 > 
-> Signed-off-by: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
-> ---
->  drivers/pci/pci.c             | 4 ++--
->  include/uapi/linux/pci_regs.h | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 661f98c6c63a..77b9ceefb4e1 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3752,7 +3752,7 @@ static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
->   * @bar: BAR to query
->   *
->   * Get the possible sizes of a resizable BAR as bitmask defined in the spec
-> - * (bit 0=1MB, bit 19=512GB). Returns 0 if BAR isn't resizable.
-> + * (bit 0=1MB, bit 31=128TB). Returns 0 if BAR isn't resizable.
->   */
->  u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
->  {
-> @@ -3800,7 +3800,7 @@ int pci_rebar_get_current_size(struct pci_dev *pdev, int bar)
->   * pci_rebar_set_size - set a new size for a BAR
->   * @pdev: PCI device
->   * @bar: BAR to set size to
-> - * @size: new size as defined in the spec (0=1MB, 19=512GB)
-> + * @size: new size as defined in the spec (0=1MB, 31=128TB)
->   *
->   * Set the new size of a BAR as defined in the spec.
->   * Returns zero if resizing was successful, error code otherwise.
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 1601c7ed5fab..ce99d4f34ce5 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1013,7 +1013,7 @@
->  
->  /* Resizable BARs */
->  #define PCI_REBAR_CAP		4	/* capability register */
-> -#define  PCI_REBAR_CAP_SIZES		0x00FFFFF0  /* supported BAR sizes */
-> +#define  PCI_REBAR_CAP_SIZES		0xFFFFFFF0  /* supported BAR sizes */
->  #define PCI_REBAR_CTRL		8	/* control register */
->  #define  PCI_REBAR_CTRL_BAR_IDX		0x00000007  /* BAR index */
->  #define  PCI_REBAR_CTRL_NBAR_MASK	0x000000E0  /* # of resizable BARs */
 > -- 
-> 2.43.0
+> 2.48.1
+> 
 > 
 
