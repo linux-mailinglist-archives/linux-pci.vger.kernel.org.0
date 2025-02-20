@@ -1,404 +1,235 @@
-Return-Path: <linux-pci+bounces-21870-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21874-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 171C1A3D148
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 07:17:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4B17A3D21E
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 08:23:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA72E3B23D2
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 06:17:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07DFD189541F
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 07:23:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A34761B4254;
-	Thu, 20 Feb 2025 06:17:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1E011E9B3F;
+	Thu, 20 Feb 2025 07:22:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W82X0e/q"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="f2P2McsZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B423C130E58
-	for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 06:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A745B1E9B3C
+	for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 07:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740032244; cv=none; b=ChI/8iMH2NuMpTes3TnKFePxhoMCFWFYJ5kcPLWFxevODeCUaYd/KtIPrCUBYhpTA8OD1fdlBCRjKW6lNLU+pW2A1tqUjjEWdxcpNM9EjJYiCtJqwY7rTajIeVSYTLpBWkJUBTXaIRumWoK/ASf0kn8DCDYPB7YUPylojnokXdA=
+	t=1740036155; cv=none; b=lxtSdziZqDGDmLLR6+8dRBZ+POrqS7lWPu+XcXg4bgG1oLuczzQrOlleYz9Sdptgiimz0g4Jeq9k7G+FAH9QViAY0jlWYOfH1VR840a0phOUxcL3eb6BqGNev9sTeA0r0IRQdVJc1usdQVDVyFvw5GHDfRNCjtZH5FC2G2x8zFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740032244; c=relaxed/simple;
-	bh=loAGvE1LogVZow+OeMmNWjVUuuN1XZNsVA/EPoAAjWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dmT+La3PFhpUtAYaCzP4I3/vMknME1iZE/7Ef3B9ZHZTm5ZmSOKZb2KoxRXb/uNPg9Sdxt5J+/mNLe6HHZsMomhc8ZmjLQ71z6KfPoX/6L7wdPiZL5eGjPi3+ERpcG+LAmmS2IZ+aBxab8L6QsFA7aa3M2rK3KJdZikP5rVgc7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W82X0e/q; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2fa8ada6662so1144046a91.1
-        for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 22:17:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740032242; x=1740637042; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gJ+u5CFaxNoI8PCqD+CDfdqmiUgZuHbBRfRyiTK8C64=;
-        b=W82X0e/qvRGvk6cDvqlczyyDLKlOJUBTIpYOCaapKz7uc7S3wOszGx7ClLrPOTQ81V
-         7mBiqW5+0fbVvok1UYYRsRTnTirdPruF7z3TDPXC8cFXxl9hq7Wd6ewTlXCX2HYS6+l2
-         VtfWFmsmKRwFzgaJib4+KBL0eoojehXmax0kjzTKUnaOx5nQk2Jeu2SUEOLhbq6o3eKA
-         ejZplqarFVfyl2d+y1qikBhhADWHPh4gqoL4ZPrlSy3l3XVoTovjeg3Ned4hmiCXNroc
-         dvS5fNZtMoHtZjZSccykIh7lw4G1kWGqEzRskrL7Ed/szM7uzAk8GjuBZkPQCJXdEc3R
-         0onQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740032242; x=1740637042;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gJ+u5CFaxNoI8PCqD+CDfdqmiUgZuHbBRfRyiTK8C64=;
-        b=so0yhzjnOxyypfnFc/O9syYGw5AfY6TaXEOL3hwHK2lJ3UWD6blOzMoQK0LnNiJ+9N
-         3MMNGTKnRkjxHtWihRsjVYxKLzJGgVjHDrIQi4FzrSouubFtoUcmuXaYiAWancZpmqSP
-         6VjkkCqLmoo7Ef09kLqPv3WyFKAYdkjnGxa8EuqTC50IuhsEZX4KSugfbEL3x+E6Me1V
-         mG3yyjntalozBNLe0Edk17rzHGPEr01rOLdAAFtiPQnoMZ5JqcprcLs7P9Ohj9NowxGL
-         eR2EvF9dC/IhgY1pHMEhIYNOkgCqxhzjOemEc+oo2bwCfJ1rn36qEzWPjP9wQ31Zhalb
-         seMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXsC1nK/K2wfWcxsg5/QIKPIP4hv8RzradlWVmeMIvqyaycVyer3M0iq0BVyXCYO9RqdTOVPU4xnNY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeC+Y7mtZZ5gNXWbdRCJVeM1V9J0FLnmidCWXz0su6BYz7nMLA
-	vqDmIQ7qoYfTt6pNGgI/U8SOBdzbtOh/kjxZ0Zl1QHB7eC02v9cXABtpuwexVw==
-X-Gm-Gg: ASbGncsg/Vu+8tBN5lY2fHWQT2gT8ST+IjQZMfdKb9RX+ZhBQyW78tl33Mt7ipABfD8
-	y2wJrrnrIRJ0ZL5GrOz+TaRSeglbVtF81Gj+AmgNOAXGeOwkH/FvpwwnqybAhidW5I+tfBy/Nmf
-	ioMDz3jA9qpRX8v4Nakwk0RzPIgjvmVAYTBXc9cMKLK3WpNAS1SaughdeJ/s4OLnrEg9OfcKmNo
-	TM/9QrnDfGY9+UI0nCdBDPI0bMS3W9vXdMQi/nvjinneReyMUbUah8vOc4SEcy07G7jn8wb9/KM
-	aMZbs/I5txL+esspcyYEdqjR1w==
-X-Google-Smtp-Source: AGHT+IFoXSLUnVw+J6T/mfE/SAmkl8aSxZJChVH8oTXgrNJbmBGohVtcI8iJzgZMuZJVTQ36qlZCkw==
-X-Received: by 2002:a17:90b:1b4b:b0:2ee:b26c:10a0 with SMTP id 98e67ed59e1d1-2fc410404b0mr34389488a91.24.1740032241944;
-        Wed, 19 Feb 2025 22:17:21 -0800 (PST)
-Received: from thinkpad ([120.60.70.244])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf999b602sm15182492a91.35.2025.02.19.22.17.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 22:17:21 -0800 (PST)
-Date: Thu, 20 Feb 2025 11:47:14 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	Jonathan.Cameron@Huawei.com, fan.ni@samsung.com,
-	nifan.cxl@gmail.com, a.manzanares@samsung.com,
-	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
-	quic_nitegupt@quicinc.com, quic_krichai@quicinc.com,
-	gost.dev@samsung.com
-Subject: Re: [PATCH v6 4/4] Add debugfs based statistical counter support in
- DWC
-Message-ID: <20250220061714.kbadyamh4euqub6g@thinkpad>
-References: <20250214105007.97582-1-shradha.t@samsung.com>
- <CGME20250214105352epcas5p17fa94017786a363f4381c9b11ae43e24@epcas5p1.samsung.com>
- <20250214105007.97582-5-shradha.t@samsung.com>
+	s=arc-20240116; t=1740036155; c=relaxed/simple;
+	bh=RdupzPmikV/P65nVhhGwKWRWthUC+iidk838vqEzQ84=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=mPuGJw1Q74jXxT2ECSGGI0G2B4HC0/NWcb9oBXM4u015mHDIXH9F+EyW3s3wDsVHaiZt0IiMXZUWEgogm6rn93xKXy7EtmaYN8Oz3I4MtCaNCp2G1nc0Vhpv1jZ+QNY7ZIATcW9YPTRQb6VsGixAWAUjHzS6lx1/O0oAB0rOpEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=f2P2McsZ; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250220072231epoutp027cd3153e666c7674bbdd0cf3ae7cee61~l2ak5nH6L0745907459epoutp02f
+	for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 07:22:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250220072231epoutp027cd3153e666c7674bbdd0cf3ae7cee61~l2ak5nH6L0745907459epoutp02f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1740036151;
+	bh=RdupzPmikV/P65nVhhGwKWRWthUC+iidk838vqEzQ84=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=f2P2McsZ+A9f+D/jhcNNnz8Xtj3NgVgB8/tqX5s84qEfpREN/XAkcAGxbKATZmpkd
+	 KrPrakSh4bffOfBKwl/ZcksLMbW9cbG2nHmb/xgeQYRUWKaMq+1zfKy1Ol5PVOftBo
+	 ZelX9jVNpAQnnBWwH7FJQN30m3EHlY5qbj0uZBmo=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20250220072231epcas5p392bca22d09fed6b3b4da7a65131ba69b~l2akbD6MB1872018720epcas5p3P;
+	Thu, 20 Feb 2025 07:22:31 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.174]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4Yz4Td3GmHz4x9QQ; Thu, 20 Feb
+	2025 07:22:29 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	61.08.19710.538D6B76; Thu, 20 Feb 2025 16:22:29 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250220060153epcas5p4f401dbb501378149ed3ef8f162c228a9~l1UKvso6a1980019800epcas5p4M;
+	Thu, 20 Feb 2025 06:01:53 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250220060153epsmtrp1167c9903277def94d25e9725d9b4615d~l1UKu7kPm3242832428epsmtrp16;
+	Thu, 20 Feb 2025 06:01:53 +0000 (GMT)
+X-AuditID: b6c32a44-36bdd70000004cfe-f3-67b6d835ab96
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	4D.C7.18949.155C6B76; Thu, 20 Feb 2025 15:01:53 +0900 (KST)
+Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250220060151epsmtip2bf3316cff94a9f18d49ac2d7e01b95ef~l1UIrTjn80534005340epsmtip2S;
+	Thu, 20 Feb 2025 06:01:51 +0000 (GMT)
+From: "Shradha Todi" <shradha.t@samsung.com>
+To: <manivannan.sadhasivam@linaro.org>, "'Shuai Xue'"
+	<xueshuai@linux.alibaba.com>, "'Jing Zhang'" <renyu.zj@linux.alibaba.com>,
+	"'Will Deacon'" <will@kernel.org>, "'Mark Rutland'" <mark.rutland@arm.com>,
+	"'Jingoo Han'" <jingoohan1@gmail.com>, "'Bjorn Helgaas'"
+	<bhelgaas@google.com>, "'Lorenzo Pieralisi'" <lpieralisi@kernel.org>,
+	=?UTF-8?Q?'Krzysztof_Wilczy=C5=84ski'?= <kw@linux.com>, "'Rob Herring'"
+	<robh@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-arm-msm@vger.kernel.org>
+In-Reply-To: <20250218-pcie-qcom-ptm-v1-1-16d7e480d73e@linaro.org>
+Subject: RE: [PATCH 1/4] perf/dwc_pcie: Move common DWC struct definitions
+ to 'pcie-dwc.h'
+Date: Thu, 20 Feb 2025 11:31:49 +0530
+Message-ID: <02d901db835c$f0710450$d1530cf0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250214105007.97582-5-shradha.t@samsung.com>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQI3arGx4qNz+c5jkBcOUS0/Rx6ChQIRRsQWAieNK+yydh1aoA==
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCJsWRmVeSWpSXmKPExsWy7bCmhq7pjW3pBn3/xS2WNGVYrPgyk92i
+	oec3q8Wmx9dYLSbuP8tucXnXHDaLs/OOs1lc2bqOxaLlTwuLxd2WTlaLpdcvMlksbH7JaPF/
+	zw52i5Y7phbvf25mc+D3WDNvDaPHzll32T0WbCr12LSqk83jzrU9bB47H1p6PLkynclj85J6
+	j8+b5AI4o7JtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0y
+	c4CuV1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUmBToFSfmFpfmpevlpZZYGRoY
+	GJkCFSZkZ/x+uZ2l4LRJxeUt29kbGD8adTFyckgImEi8ad7B1MXIxSEksJtR4vnuU1DOJ0aJ
+	llm3WSCcb4wSZw6cZIdp2XnvGFTVXkaJv9OuMIMkhAReMEpcea0CYrMJ6Eg8ufKHGaRIRGAj
+	s8T5Y8fZQBxmgQ2MEp8/nmUFqeIUcJKY2v2ODcQWFoiROD3jE9gkFgFViRNvLoGt4xWwlLjy
+	dTMjhC0ocXLmExYQm1lAW2LZwtfMECcpSPx8ugxspgjQzBdrdkDViEsc/dkDdoWEwBMOibbW
+	bSwQDS4SOzfPYoOwhSVeHd8C9ZuUxMv+Nig7XWLl5hlQC3Ikvm1ewgRh20scuDIHaA4H0AJN
+	ifW79CHCshJTT61jgtjLJ9H7+wlUOa/EjnkwtrLEl797oE6QlJh37DLrBEalWUhem4XktVlI
+	XpiFsG0BI8sqRsnUguLc9NRk0wLDvNRyeJQn5+duYgQnby2XHYw35v/TO8TIxMF4iFGCg1lJ
+	hLetfku6EG9KYmVValF+fFFpTmrxIUZTYHhPZJYSTc4H5o+8knhDE0sDEzMzMxNLYzNDJXHe
+	5p0t6UIC6YklqdmpqQWpRTB9TBycUg1Mx6U0v10zYRH/toDHUum1jU9/+dzgnSr7I8oaOv9o
+	+WQuWrh7u+WEV8duyy3bdmxC5s2WW0XqDN5zlM6td5Wae906bcW71tzg7oPb3ojncl5uUpa/
+	cy2B/Z+hjmZ6lAbDHM4jsUmGHy+IygSVH1LZqL8760rBvFDDjIOtk21+hcwQi0q7vGxL4bPX
+	x/bwLlf+pfL5yMp9Zmwr/DgYA6Qyb52rCzjxPft9yrOIjRtkDa3CF7uuO7qdQ9xLI7/kY/Q1
+	Bo/FMrf3F32uqO+1+3RWSe1z2+xeod1bOX5km0tJXHz4wHnG7rwZS3Z8XH9m2dWO3zNTFkc/
+	nuHJ/uVNIcuKfS6LjW/W7Xe/aFuRLHn6pRJLcUaioRZzUXEiACK7ckdnBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsWy7bCSvG7g0W3pBhM2iVgsacqwWPFlJrtF
+	Q89vVotNj6+xWkzcf5bd4vKuOWwWZ+cdZ7O4snUdi0XLnxYWi7stnawWS69fZLJY2PyS0eL/
+	nh3sFi13TC3e/9zM5sDvsWbeGkaPnbPusnss2FTqsWlVJ5vHnWt72Dx2PrT0eHJlOpPH5iX1
+	Hp83yQVwRnHZpKTmZJalFunbJXBl7N/wnLlgvWpF/7N/rA2MF+S6GDk5JARMJHbeO8YEYgsJ
+	7GaUWN2sARGXlPh8cR0ThC0ssfLfc/YuRi6gmmeMEptapjCDJNgEdCSeXPkDZosIbGeWOPnN
+	B6SIWWALo8S2OZeZITpOMkr8evmADaSKU8BJYmr3OyCbg0NYIEpi6g5vkDCLgKrEiTeX2EFs
+	XgFLiStfNzNC2IISJ2c+YQGxmQW0JXoftjLC2MsWvmaGuE5B4ufTZawQRzhJvFizA6peXOLo
+	zx7mCYzCs5CMmoVk1Cwko2YhaVnAyLKKUTK1oDg3PbfYsMAoL7Vcrzgxt7g0L10vOT93EyM4
+	erW0djDuWfVB7xAjEwfjIUYJDmYlEd62+i3pQrwpiZVVqUX58UWlOanFhxilOViUxHm/ve5N
+	ERJITyxJzU5NLUgtgskycXBKNTCZKhzaqRm/q0YyxmODf+627kuOohNWL3b1vVPhcv2QSMGu
+	R0pOEwqmXiqQ/zXvimznG+WgwGffXJM81qzxnLjnZ5sWo/Ky0g1GWltud/8oUGcLer0gUfH2
+	Y/Vkj/g5c3cWS0qu5q8I25HB8/zExYje49e31HUUp+UtWJZuGJu8InyhNcdEoS2h0k8lejas
+	X9GXYOMoNt38AsPa3/2nmpRnpHkc3sQs3z7j4Lkg2Qb2Kbl2T/7sW+3BsWmxOvfUG8cWSm5U
+	5I7Y8DKuRHluhaWQRzFD9s+rCTpMZo2xzHwl6mVvj/u0/6+aKdHb4xJywT8sosHKPtJ1hv4C
+	PwXWTDEOjajn01123jBep/nvmBJLcUaioRZzUXEiAHQICo9NAwAA
+X-CMS-MailID: 20250220060153epcas5p4f401dbb501378149ed3ef8f162c228a9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250218143703epcas5p2c0b9a60d17e030f7d3ce37c00c9b56ca
+References: <20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org>
+	<CGME20250218143703epcas5p2c0b9a60d17e030f7d3ce37c00c9b56ca@epcas5p2.samsung.com>
+	<20250218-pcie-qcom-ptm-v1-1-16d7e480d73e@linaro.org>
 
-On Fri, Feb 14, 2025 at 04:20:07PM +0530, Shradha Todi wrote:
-> Add support to provide statistical counter interface to userspace. This set
-> of debug registers are part of the RASDES feature present in DesignWare
-> PCIe controllers.
-> 
-> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> ---
->  Documentation/ABI/testing/debugfs-dwc-pcie    |  61 +++++
->  .../controller/dwc/pcie-designware-debugfs.c  | 229 +++++++++++++++++-
->  2 files changed, 289 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/ABI/testing/debugfs-dwc-pcie b/Documentation/ABI/testing/debugfs-dwc-pcie
-> index 9eae0ab1dbea..01aa9d3a00c6 100644
-> --- a/Documentation/ABI/testing/debugfs-dwc-pcie
-> +++ b/Documentation/ABI/testing/debugfs-dwc-pcie
-> @@ -81,3 +81,64 @@ Description:	rasdes_err_inj is the directory which can be used to inject errors
->  
->  			<count>
->  				Number of errors to be injected
-> +
-> +What:		/sys/kernel/debug/dwc_pcie_<dev>/rasdes_event_counters/<event>/counter_enable
-> +Date:		Feburary 2025
-> +Contact:	Shradha Todi <shradha.t@samsung.com>
-> +Description:	rasdes_event_counters is the directory which can be used to collect
-> +		statistical data about the number of times a certain event has occurred
-> +		in the controller. The list of possible events are:
-> +
-> +		1) EBUF Overflow
-> +		2) EBUF Underrun
-> +		3) Decode Error
-> +		4) Running Disparity Error
-> +		5) SKP OS Parity Error
-> +		6) SYNC Header Error
-> +		7) Rx Valid De-assertion
-> +		8) CTL SKP OS Parity Error
-> +		9) 1st Retimer Parity Error
-> +		10) 2nd Retimer Parity Error
-> +		11) Margin CRC and Parity Error
-> +		12) Detect EI Infer
-> +		13) Receiver Error
-> +		14) RX Recovery Req
-> +		15) N_FTS Timeout
-> +		16) Framing Error
-> +		17) Deskew Error
-> +		18) Framing Error In L0
-> +		19) Deskew Uncompleted Error
-> +		20) Bad TLP
-> +		21) LCRC Error
-> +		22) Bad DLLP
-> +		23) Replay Number Rollover
-> +		24) Replay Timeout
-> +		25) Rx Nak DLLP
-> +		26) Tx Nak DLLP
-> +		27) Retry TLP
-> +		28) FC Timeout
-> +		29) Poisoned TLP
-> +		30) ECRC Error
-> +		31) Unsupported Request
-> +		32) Completer Abort
-> +		33) Completion Timeout
-> +		34) EBUF SKP Add
-> +		35) EBUF SKP Del
-> +
-> +		counter_enable is RW. Write 1 to enable the event counter and write 0 to
 
-Please use (RW) pattern at the start as you did for other attributes.
 
-> +		disable the event counter. Read will return whether the counter is currently
-> +		enabled	or disabled. Counter is disabled by default.
-> +
-> +What:		/sys/kernel/debug/dwc_pcie_<dev>/rasdes_event_counters/<event>/counter_value
-> +Date:		Feburary 2025
-> +Contact:	Shradha Todi <shradha.t@samsung.com>
-> +Description:	(RO) Read will return the current value of the event counter. To reset the counter,
-> +		counter should be disabled and enabled back using the 'counter_enable' attribute.
-> +
-> +What:		/sys/kernel/debug/dwc_pcie_<dev>/rasdes_event_counters/<event>/lane_select
-> +Date:		Feburary 2025
-> +Contact:	Shradha Todi <shradha.t@samsung.com>
-> +Description:	(RW) Some lanes in the event list are lane specific events. These include
-> +		events 1) - 11) and 34) - 35).
-> +		Write lane number for which counter needs to be enabled/disabled/dumped.
-> +		Read will return the current selected lane number. Lane0 is selected by default.
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> index dfb0840390d3..2087185a1968 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-> @@ -31,6 +31,17 @@
->  
->  #define ERR_INJ_ENABLE_REG		0x30
->  
-> +#define RAS_DES_EVENT_COUNTER_DATA_REG	0xc
-> +
-> +#define RAS_DES_EVENT_COUNTER_CTRL_REG	0x8
-> +#define EVENT_COUNTER_GROUP_SELECT	GENMASK(27, 24)
-> +#define EVENT_COUNTER_EVENT_SELECT	GENMASK(23, 16)
-> +#define EVENT_COUNTER_LANE_SELECT	GENMASK(11, 8)
-> +#define EVENT_COUNTER_STATUS		BIT(7)
-> +#define EVENT_COUNTER_ENABLE		GENMASK(4, 2)
-> +#define PER_EVENT_ON			0x3
-> +#define PER_EVENT_OFF			0x1
-> +
->  #define DWC_DEBUGFS_BUF_MAX		128
->  
->  struct dwc_pcie_vsec_id {
-> @@ -135,6 +146,61 @@ static const u32 err_inj_type_mask[] = {
->  	EINJ5_TYPE,
->  };
->  
-> +/**
-> + * struct dwc_pcie_event_counter - Store details about each event counter supported in DWC RASDES
-> + * @name: Name of the error counter
-> + * @group_no: Group number that the event belongs to. Value ranges from 0 - 4
-> + * @event_no: Event number of the particular event. Value ranges from -
-> + *		Group 0: 0 - 10
-> + *		Group 1: 5 - 13
-> + *		Group 2: 0 - 7
-> + *		Group 3: 0 - 5
-> + *		Group 4: 0 - 1
-> + */
-> +struct dwc_pcie_event_counter {
-> +	const char *name;
-> +	u32 group_no;
-> +	u32 event_no;
-> +};
-> +
-> +static const struct dwc_pcie_event_counter event_list[] = {
-> +	{"ebuf_overflow", 0x0, 0x0},
-> +	{"ebuf_underrun", 0x0, 0x1},
-> +	{"decode_err", 0x0, 0x2},
-> +	{"running_disparity_err", 0x0, 0x3},
-> +	{"skp_os_parity_err", 0x0, 0x4},
-> +	{"sync_header_err", 0x0, 0x5},
-> +	{"rx_valid_deassertion", 0x0, 0x6},
-> +	{"ctl_skp_os_parity_err", 0x0, 0x7},
-> +	{"retimer_parity_err_1st", 0x0, 0x8},
-> +	{"retimer_parity_err_2nd", 0x0, 0x9},
-> +	{"margin_crc_parity_err", 0x0, 0xA},
-> +	{"detect_ei_infer", 0x1, 0x5},
-> +	{"receiver_err", 0x1, 0x6},
-> +	{"rx_recovery_req", 0x1, 0x7},
-> +	{"n_fts_timeout", 0x1, 0x8},
-> +	{"framing_err", 0x1, 0x9},
-> +	{"deskew_err", 0x1, 0xa},
-> +	{"framing_err_in_l0", 0x1, 0xc},
-> +	{"deskew_uncompleted_err", 0x1, 0xd},
-> +	{"bad_tlp", 0x2, 0x0},
-> +	{"lcrc_err", 0x2, 0x1},
-> +	{"bad_dllp", 0x2, 0x2},
-> +	{"replay_num_rollover", 0x2, 0x3},
-> +	{"replay_timeout", 0x2, 0x4},
-> +	{"rx_nak_dllp", 0x2, 0x5},
-> +	{"tx_nak_dllp", 0x2, 0x6},
-> +	{"retry_tlp", 0x2, 0x7},
-> +	{"fc_timeout", 0x3, 0x0},
-> +	{"poisoned_tlp", 0x3, 0x1},
-> +	{"ecrc_error", 0x3, 0x2},
-> +	{"unsupported_request", 0x3, 0x3},
-> +	{"completer_abort", 0x3, 0x4},
-> +	{"completion_timeout", 0x3, 0x5},
-> +	{"ebuf_skp_add", 0x4, 0x0},
-> +	{"ebuf_skp_del", 0x4, 0x1},
-> +};
-> +
->  static ssize_t lane_detect_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
->  {
->  	struct dw_pcie *pci = file->private_data;
-> @@ -252,6 +318,127 @@ static ssize_t err_inj_write(struct file *file, const char __user *buf, size_t c
->  	return count;
->  }
->  
-> +static void set_event_number(struct dwc_pcie_rasdes_priv *pdata, struct dw_pcie *pci,
-> +			     struct dwc_pcie_rasdes_info *rinfo)
-> +{
-> +	u32 val;
-> +
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
-> +	val &= ~EVENT_COUNTER_ENABLE;
-> +	val &= ~(EVENT_COUNTER_GROUP_SELECT | EVENT_COUNTER_EVENT_SELECT);
-> +	val |= FIELD_PREP(EVENT_COUNTER_GROUP_SELECT, event_list[pdata->idx].group_no);
-> +	val |= FIELD_PREP(EVENT_COUNTER_EVENT_SELECT, event_list[pdata->idx].event_no);
-> +	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG, val);
-> +}
-> +
-> +static ssize_t counter_enable_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-> +{
-> +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> +	struct dw_pcie *pci = pdata->pci;
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +	char debugfs_buf[DWC_DEBUGFS_BUF_MAX];
-> +	ssize_t off = 0;
-> +	u32 val;
-> +
-> +	mutex_lock(&rinfo->reg_lock);
-> +	set_event_number(pdata, pci, rinfo);
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
-> +	mutex_unlock(&rinfo->reg_lock);
-> +	val = FIELD_GET(EVENT_COUNTER_STATUS, val);
-> +	if (val)
-> +		off += scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX - off, "Counter Enabled\n");
-
-Here also, adding 'off' doesn't make sense.
-
-> +	else
-> +		off += scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX - off, "Counter Disabled\n");
-> +
-> +	return simple_read_from_buffer(buf, count, ppos, debugfs_buf, off);
-> +}
-> +
-> +static ssize_t counter_enable_write(struct file *file, const char __user *buf,
-> +				    size_t count, loff_t *ppos)
-> +{
-> +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> +	struct dw_pcie *pci = pdata->pci;
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +	u32 val, enable;
-> +
-> +	val = kstrtou32_from_user(buf, count, 0, &enable);
-> +	if (val)
-> +		return val;
-> +
-> +	mutex_lock(&rinfo->reg_lock);
-> +	set_event_number(pdata, pci, rinfo);
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
-> +	if (enable)
-> +		val |= FIELD_PREP(EVENT_COUNTER_ENABLE, PER_EVENT_ON);
-> +	else
-> +		val |= FIELD_PREP(EVENT_COUNTER_ENABLE, PER_EVENT_OFF);
-> +
-> +	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG, val);
-> +	mutex_unlock(&rinfo->reg_lock);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t counter_lane_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-> +{
-> +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> +	struct dw_pcie *pci = pdata->pci;
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +	char debugfs_buf[DWC_DEBUGFS_BUF_MAX];
-> +	ssize_t off = 0;
-> +	u32 val;
-> +
-> +	mutex_lock(&rinfo->reg_lock);
-> +	set_event_number(pdata, pci, rinfo);
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
-> +	mutex_unlock(&rinfo->reg_lock);
-> +	val = FIELD_GET(EVENT_COUNTER_LANE_SELECT, val);
-> +	off += scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX - off, "Lane: %d\n", val);
-
-Same here.
-
-> +
-> +	return simple_read_from_buffer(buf, count, ppos, debugfs_buf, off);
-> +}
-> +
-> +static ssize_t counter_lane_write(struct file *file, const char __user *buf,
-> +				  size_t count, loff_t *ppos)
-> +{
-> +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> +	struct dw_pcie *pci = pdata->pci;
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +	u32 val, lane;
-> +
-> +	val = kstrtou32_from_user(buf, count, 0, &lane);
-> +	if (val)
-> +		return val;
-> +
-> +	mutex_lock(&rinfo->reg_lock);
-> +	set_event_number(pdata, pci, rinfo);
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
-> +	val &= ~(EVENT_COUNTER_LANE_SELECT);
-> +	val |= FIELD_PREP(EVENT_COUNTER_LANE_SELECT, lane);
-> +	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG, val);
-> +	mutex_unlock(&rinfo->reg_lock);
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t counter_value_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-> +{
-> +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> +	struct dw_pcie *pci = pdata->pci;
-> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> +	char debugfs_buf[DWC_DEBUGFS_BUF_MAX];
-> +	ssize_t off = 0;
-> +	u32 val;
-> +
-> +	mutex_lock(&rinfo->reg_lock);
-> +	set_event_number(pdata, pci, rinfo);
-> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_DATA_REG);
-> +	mutex_unlock(&rinfo->reg_lock);
-> +	off += scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX - off, "Counter value: %d\n", val);
-
-Here also.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+> -----Original Message-----
+> From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.l=
+inaro.org=40kernel.org>
+> Sent: 18 February 2025 20:07
+> To: Shuai Xue <xueshuai=40linux.alibaba.com>; Jing Zhang <renyu.zj=40linu=
+x.alibaba.com>; Will Deacon <will=40kernel.org>; Mark Rutland
+> <mark.rutland=40arm.com>; Jingoo Han <jingoohan1=40gmail.com>; Bjorn Helg=
+aas <bhelgaas=40google.com>; Lorenzo Pieralisi
+> <lpieralisi=40kernel.org>; Krzysztof Wilczy=C5=84ski=20<kw=40linux.com>;=
+=20Rob=20Herring=20<robh=40kernel.org>=0D=0A>=20Cc:=20Shradha=20Todi=20<shr=
+adha.t=40samsung.com>;=20linux-kernel=40vger.kernel.org;=20linux-arm-kernel=
+=40lists.infradead.org;=20linux-perf-=0D=0A>=20users=40vger.kernel.org;=20l=
+inux-pci=40vger.kernel.org;=20linux-arm-msm=40vger.kernel.org;=20Manivannan=
+=20Sadhasivam=0D=0A>=20<manivannan.sadhasivam=40linaro.org>=0D=0A>=20Subjec=
+t:=20=5BPATCH=201/4=5D=20perf/dwc_pcie:=20Move=20common=20DWC=20struct=20de=
+finitions=20to=20'pcie-dwc.h'=0D=0A>=20=0D=0A>=20From:=20Manivannan=20Sadha=
+sivam=20<manivannan.sadhasivam=40linaro.org>=0D=0A>=20=0D=0A>=20Since=20the=
+se=20are=20common=20to=20all=20Desginware=20PCIe=20IPs,=20move=20them=20to=
+=20a=20new=20header,=20'pcie-dwc.h'=20so=20that=20other=20drivers=20could=
+=20make=20use=20of=0D=0A>=20them.=0D=0A>=20=0D=0A>=20Signed-off-by:=20Maniv=
+annan=20Sadhasivam=20<manivannan.sadhasivam=40linaro.org>=0D=0A>=20---=0D=
+=0A>=20=20MAINTAINERS=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=7C=
+=20=201=20+=0D=0A>=20=20drivers/perf/dwc_pcie_pmu.c=20=7C=2023=20++--------=
+-------------=0D=0A>=20=20include/linux/pcie-dwc.h=20=20=20=20=7C=2034=20++=
+++++++++++++++++++++++++++++++++=0D=0A>=20=203=20files=20changed,=2037=20in=
+sertions(+),=2021=20deletions(-)=0D=0A>=20=0D=0A>=20diff=20--git=20a/MAINTA=
+INERS=20b/MAINTAINERS=0D=0A>=20index=20896a307fa065..b4d09d52a750=20100644=
+=0D=0A>=20---=20a/MAINTAINERS=0D=0A>=20+++=20b/MAINTAINERS=0D=0A>=20=40=40=
+=20-18123,6=20+18123,7=20=40=40=20S:=09Maintained=0D=0A>=20=20F:=09Document=
+ation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml=0D=0A>=20=20F:=09Documen=
+tation/devicetree/bindings/pci/snps,dw-pcie.yaml=0D=0A>=20=20F:=09drivers/p=
+ci/controller/dwc/*designware*=0D=0A>=20+F:=09include/linux/pcie-dwc.h=0D=
+=0A>=20=0D=0A>=20=20PCI=20DRIVER=20FOR=20TI=20DRA7XX/J721E=0D=0A>=20=20M:=
+=09Vignesh=20Raghavendra=20<vigneshr=40ti.com>=0D=0A>=20diff=20--git=20a/dr=
+ivers/perf/dwc_pcie_pmu.c=20b/drivers/perf/dwc_pcie_pmu.c=20index=20cccecae=
+9823f..05b37ea7cf16=20100644=0D=0A>=20---=20a/drivers/perf/dwc_pcie_pmu.c=
+=0D=0A>=20+++=20b/drivers/perf/dwc_pcie_pmu.c=0D=0A>=20=40=40=20-13,6=20+13=
+,7=20=40=40=0D=0A>=20=20=23include=20<linux/errno.h>=0D=0A>=20=20=23include=
+=20<linux/kernel.h>=0D=0A>=20=20=23include=20<linux/list.h>=0D=0A>=20+=23in=
+clude=20<linux/pcie-dwc.h>=0D=0A>=20=20=23include=20<linux/perf_event.h>=0D=
+=0A>=20=20=23include=20<linux/pci.h>=0D=0A>=20=20=23include=20<linux/platfo=
+rm_device.h>=0D=0A>=20=40=40=20-99,26=20+100,6=20=40=40=20struct=20dwc_pcie=
+_dev_info=20=7B=0D=0A>=20=20=09struct=20list_head=20dev_node;=0D=0A>=20=20=
+=7D;=0D=0A>=20=0D=0A>=20-struct=20dwc_pcie_pmu_vsec_id=20=7B=0D=0A>=20-=09u=
+16=20vendor_id;=0D=0A>=20-=09u16=20vsec_id;=0D=0A>=20-=09u8=20vsec_rev;=0D=
+=0A>=20-=7D;=0D=0A>=20-=0D=0A>=20-/*=0D=0A>=20-=20*=20VSEC=20IDs=20are=20al=
+located=20by=20the=20vendor,=20so=20a=20given=20ID=20may=20mean=20different=
+=0D=0A>=20-=20*=20things=20to=20different=20vendors.=20=20See=20PCIe=20r6.0=
+,=20sec=207.9.5.2.=0D=0A>=20-=20*/=0D=0A>=20-static=20const=20struct=20dwc_=
+pcie_pmu_vsec_id=20dwc_pcie_pmu_vsec_ids=5B=5D=20=3D=20=7B=0D=0A>=20-=09=7B=
+=20.vendor_id=20=3D=20PCI_VENDOR_ID_ALIBABA,=0D=0A>=20-=09=20=20.vsec_id=20=
+=3D=200x02,=20.vsec_rev=20=3D=200x4=20=7D,=0D=0A>=20-=09=7B=20.vendor_id=20=
+=3D=20PCI_VENDOR_ID_AMPERE,=0D=0A>=20-=09=20=20.vsec_id=20=3D=200x02,=20.vs=
+ec_rev=20=3D=200x4=20=7D,=0D=0A>=20-=09=7B=20.vendor_id=20=3D=20PCI_VENDOR_=
+ID_QCOM,=0D=0A>=20-=09=20=20.vsec_id=20=3D=200x02,=20.vsec_rev=20=3D=200x4=
+=20=7D,=0D=0A>=20-=09=7B=7D=20/*=20terminator=20*/=0D=0A>=20-=7D;=0D=0A>=20=
+-=0D=0A>=20=20static=20ssize_t=20cpumask_show(struct=20device=20*dev,=0D=0A=
+>=20=20=09=09=09=09=09=20struct=20device_attribute=20*attr,=0D=0A>=20=20=09=
+=09=09=09=09=20char=20*buf)=0D=0A>=20=40=40=20-529,7=20+510,7=20=40=40=20st=
+atic=20void=20dwc_pcie_unregister_pmu(void=20*data)=0D=0A>=20=0D=0A>=20=20s=
+tatic=20u16=20dwc_pcie_des_cap(struct=20pci_dev=20*pdev)=20=20=7B=0D=0A>=20=
+-=09const=20struct=20dwc_pcie_pmu_vsec_id=20*vid;=0D=0A>=20+=09const=20stru=
+ct=20dwc_pcie_vsec_id=20*vid;=0D=0A>=20=20=09u16=20vsec;=0D=0A>=20=20=09u32=
+=20val;=0D=0A>=20=0D=0A>=20diff=20--git=20a/include/linux/pcie-dwc.h=20b/in=
+clude/linux/pcie-dwc.h=20new=20file=20mode=20100644=20index=20000000000000.=
+.261ae11d75a4=0D=0A>=20---=20/dev/null=0D=0A>=20+++=20b/include/linux/pcie-=
+dwc.h=0D=0A>=20=40=40=20-0,0=20+1,34=20=40=40=0D=0A>=20+/*=20SPDX-License-I=
+dentifier:=20GPL-2.0=20*/=0D=0A>=20+/*=0D=0A>=20+=20*=20Copyright=20(C)=202=
+021-2023=20Alibaba=20Inc.=0D=0A>=20+=20*=0D=0A>=20+=20*=20Copyright=202025=
+=20Linaro=20Ltd.=0D=0A>=20+=20*=20Author:=20Manivannan=20Sadhasivam=20<mani=
+vannan.sadhasivam=40linaro.org>=0D=0A>=20+=20*/=0D=0A>=20+=0D=0A>=20+=23ifn=
+def=20LINUX_PCIE_DWC_H=0D=0A>=20+=23define=20LINUX_PCIE_DWC_H=0D=0A>=20+=0D=
+=0A>=20+=23include=20<linux/pci_ids.h>=0D=0A>=20+=0D=0A>=20+struct=20dwc_pc=
+ie_vsec_id=20=7B=0D=0A>=20+=09u16=20vendor_id;=0D=0A>=20+=09u16=20vsec_id;=
+=0D=0A>=20+=09u8=20vsec_rev;=0D=0A>=20+=7D;=0D=0A>=20+=0D=0A>=20+/*=0D=0A>=
+=20+=20*=20VSEC=20IDs=20are=20allocated=20by=20the=20vendor,=20so=20a=20giv=
+en=20ID=20may=20mean=0D=0A>=20+different=0D=0A>=20+=20*=20things=20to=20dif=
+ferent=20vendors.=20=20See=20PCIe=20r6.0,=20sec=207.9.5.2.=0D=0A>=20+=20*/=
+=0D=0A>=20+static=20const=20struct=20dwc_pcie_vsec_id=20dwc_pcie_pmu_vsec_i=
+ds=5B=5D=20=3D=20=7B=0D=0A=0D=0ARename=20this=20to=20dwc_pcie_rasdes_vsec_i=
+ds?=20pmu=20was=20perf=20file=20specific=20but=20technically=20the=20vsec=
+=20is=20rasdes.=0D=0A=0D=0A>=20+=09=7B=20.vendor_id=20=3D=20PCI_VENDOR_ID_A=
+LIBABA,=0D=0A>=20+=09=20=20.vsec_id=20=3D=200x02,=20.vsec_rev=20=3D=200x4=
+=20=7D,=0D=0A>=20+=09=7B=20.vendor_id=20=3D=20PCI_VENDOR_ID_AMPERE,=0D=0A>=
+=20+=09=20=20.vsec_id=20=3D=200x02,=20.vsec_rev=20=3D=200x4=20=7D,=0D=0A>=
+=20+=09=7B=20.vendor_id=20=3D=20PCI_VENDOR_ID_QCOM,=0D=0A>=20+=09=20=20.vse=
+c_id=20=3D=200x02,=20.vsec_rev=20=3D=200x4=20=7D,=0D=0A>=20+=09=7B=7D=20/*=
+=20terminator=20*/=0D=0A>=20+=7D;=0D=0A>=20+=0D=0A>=20+=23endif=20/*=20LINU=
+X_PCIE_DWC_H=20*/=0D=0A>=20=0D=0A>=20--=0D=0A>=202.25.1=0D=0A>=20=0D=0A=0D=
+=0A=0D=0A
 
