@@ -1,325 +1,155 @@
-Return-Path: <linux-pci+bounces-21915-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21916-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87AC7A3E234
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 18:21:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E494A3E273
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 18:29:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C16E16DA8C
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 17:19:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A03E1889CC7
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 17:28:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB8E2F852;
-	Thu, 20 Feb 2025 17:19:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A011A20485B;
+	Thu, 20 Feb 2025 17:27:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Mo7fg0Zd"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="a3PnPuqK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55595156885
-	for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 17:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1098C20CCE6
+	for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 17:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740071995; cv=none; b=udagJBVTJPv0rSbJUCOUsr5mz8LQXzdgWvchFtvHid7qbYxxZz5p1wSIUS2weVdnvha+jIyiYDAA9PigNF4lWaVSlGqVBjpn/XbxDwfOsKpr2jiCZbb7NGF0PRGDjETpMs4YNr89a0eOUu+KlMbOVPH/326tmztbf/QDDcLgVpo=
+	t=1740072471; cv=none; b=qMzj6z62YyFAGXO7TTMd4jMZavnOZsvKpAjA6TNXF0lGCJZzuycs4/aQG7QARFzlVXI/iMkv+1sZRSV4BKf61y29if7Lj/sCDorYT6jClRDB/hVDT1Q/nxlnSZf92PSh2FFuQctjXUgbW3QyGebf/o4/IQQ7bZmKZTBow4NYKg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740071995; c=relaxed/simple;
-	bh=wHpTEubI2khX23N3hbzesh0W4Nr5ERdcdAJECH9gUjw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yv8cAx+WZdrioMO4vEm+DpTDCHA9Mbz7aFJZC+563gdXvnSZ67ho94zB47qYYINJJ6mhRfgsBy8KqxjsiICR4MjvOiytL4/I/eSi3p2QVq5qCGYjX5IUaJrNliLl5t43xXqj/BiwMrBc+r8kenE3YInOm8QjjHaVN0i8ObE7oDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Mo7fg0Zd; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e0505275b7so1836260a12.3
-        for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 09:19:52 -0800 (PST)
+	s=arc-20240116; t=1740072471; c=relaxed/simple;
+	bh=kzUcMPp4dBCS1FLhx6ZGyYMvLWLu3JJebAI2k+Ouqug=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TeOEbNPle6RbOV3aWBA4fELBmcPft5wUJa5zVycNrza9+Ja+KmvZrTYoZ03zhrckZpwt++TIPfhAGZU8l/uXhUOKQfmSEPuCevQB/3mOERmpSAktY+P4TKTu3AhW0tOs7ebwHzaJpqkhx1LeRRarw3dnejSyYDuuBCeTDbtLTU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=a3PnPuqK; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5fd0adce179so529601eaf.2
+        for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 09:27:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1740071991; x=1740676791; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MPZerQPnM8TdIpEWmUTlPs508hpImW7bIHM5wPNO+wc=;
-        b=Mo7fg0ZdyP6Uup760jYAa3GIQZJYAhnZjgZXWdjgqq9I6e10USVdSWyu1IKJCPykLc
-         /w2EL9MsZdarBClT2AgPpgo25Ag3W9ZmPFWsb3mXIjYHY3CoNFJKxSBdfe+ExfesmNr9
-         VEA3fcd/Ek0hWkX/luRhAkd9DSmNUvcaP1OJwC0/acYkTI+cRO9KaQxR1EBJiXbtsEv2
-         90SV1sLvrV0w5edHoxywpPQuCkpXJ9bekokBXHhEOOVKUwmh4u0yq92qGd9QBdbMr+XI
-         QFmi214BJzkS9RZcZCeVncCVJPuKE1QkVVlVTzGKjCPN8nnoKfXdmk7WjS+lC9ln0fdi
-         DULQ==
+        d=broadcom.com; s=google; t=1740072469; x=1740677269; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=/u13R5KOWq3pv04QD3KJlgVCEhSKv3/X70G4FsiRMMU=;
+        b=a3PnPuqKouoepVKUsTNvt7IiOmNyRjTnS3vGcaizYIXVCvRj7l/Ait2ALFf56iMhWv
+         kHG+haDrNs+yqIBi5CgJrbafTHHabU8UOk8tWCt3qynID2XvzZ8TJO1Gdob7+l+/F4lW
+         z2ovXPH5P+ojAgQ+qVrMY2Pj6L2YBJ8AY6k9E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740071991; x=1740676791;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1740072469; x=1740677269;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MPZerQPnM8TdIpEWmUTlPs508hpImW7bIHM5wPNO+wc=;
-        b=LoVuNzyJQ/cqB6Ivwdx7kfxTlM3VAor4WX2VMtXBBwVJtAosPKg+BhRXaG+0H5nrpO
-         UNbROOtA4dEqMqOtI7QVkE0XRqav1jHRZNWN450YEZj1Eyrs+lKpOhNgADWZnqqoWQAQ
-         ooRMgV1Xikf7VdoFps2qQsw0qx7tuTz2Zng9gh2GOWaaDYTdzXO/dCSiFeCXJzK/fdHB
-         2c0Y+WNsAyye/4B9+8cZmf9QX+zJelk5T5Hm3r/4gicDNPHkD50DnRjhU/ViPFa9JvV+
-         T1AY5qa+PcTEUtbB8/n8/T/aKpg1+wBe0dw+ArM2NAoQAAv8E3alDxiFbd1Pb2yy/F6q
-         dZHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOV3RbwEd6/VbAJ4zv7zuXPFKFsp7a1OxSXuwWdL0rQLt/NdKUuZIl5636BFFUkc8XxDaI3eY2QnQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytCH9cKBxo2iWCuAcfI66E+xHCoOia7TmWoaVQeveMBH9qFND/
-	OeKIAATV/i5tgd1xS+d9G68KOu/ZsRR+hwwPPDRLSKEmPWxa/5aFR7ztj4QXWpM=
-X-Gm-Gg: ASbGncu9fwebrCldgkK/VT7FqKhr48kpubg/jYSp7EzlKwzUT3JV/3ifkyO0JB9L3DF
-	vMqaRpLWx1/ng+peTXroMlp9N2vULzTe1X4A8vZ4kd1tShcLj1rDcaAhMvC94NHnHg4wKTtwjtB
-	X/sIWR/zwcLxxScLfZGwlsRKYmB8NwVV0Brs1QtG5MGBrzU8eEz8BJQAfgN34ej+dPrhWSU9kIC
-	3bvL2Qe2NkOMK+sBRs1HM8AEDCkzuHQ/jvdCO3+14tH3LdlVLvyUjQEDgdNd4mme+/uGX/9f6OP
-	oC35R/oUib3eDmxQnmuMrzIB4SYlP3igvYetbKSlUv59faunKMD8p6Pc49Y=
-X-Google-Smtp-Source: AGHT+IHWDM5v5Bb9ov4BBEUlzQ3ZQRxMJhj7b+2LTELKPttlDQENJhZRr+MIBUS3293eAO/wNa8PsA==
-X-Received: by 2002:a17:907:6095:b0:ab7:bac4:b321 with SMTP id a640c23a62f3a-abc09aacbb4mr14530366b.29.1740071990587;
-        Thu, 20 Feb 2025 09:19:50 -0800 (PST)
-Received: from localhost (host-79-41-239-37.retail.telecomitalia.it. [79.41.239.37])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb3d276290sm1176404866b.178.2025.02.20.09.19.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 09:19:50 -0800 (PST)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Thu, 20 Feb 2025 18:20:54 +0100
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v7 05/11] clk: rp1: Add support for clocks provided by RP1
-Message-ID: <Z7dkdu4J7uvug7wP@apocalypse>
-References: <cover.1738963156.git.andrea.porta@suse.com>
- <4da2f1106ea6b239eba9c117bf6c129fbdb3ee87.1738963156.git.andrea.porta@suse.com>
- <0ef80d00-7213-47c8-9876-1d32011d8d3d@gmx.net>
+        bh=/u13R5KOWq3pv04QD3KJlgVCEhSKv3/X70G4FsiRMMU=;
+        b=BPy9pg0C8ls3KMzpXWOrB2fF1Z5VwttlPZAJvVy4pVA9mFQ94VPxbgm9ENo8ox0gMY
+         3P1l9JQL/0444AUCQyk6A27mPyqhGZy/iInT/C/vgKYbiVkBjSP5p0Y2T5gcTLw3owPb
+         MjjIF29xmEID4XwBXNMN0r3z2no1Su88sl2D9ZqDWTbMtaV7DxKJRCxjYNO/WMljJeee
+         p/WUZj7Dqyr4Nfeop9l3WiIczdThve6EwExCLA/drPeslI/ruN9xDQoWzOwB7uDX7EW8
+         lo8/HbDz+XE3SbaVHNP5NsidcN+wNFV46zTklEebmwDF/d3pQqzg5y2sMp2cbcdSzQHu
+         0f6g==
+X-Forwarded-Encrypted: i=1; AJvYcCXzVxxOoWt2auHtchgAOPt+0KzEFlOMoRgIZSjA/h9TNvyI3xKlfozfVoT2GJP3xM/zPaKbLPHg3Ac=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3V1njuLQKrDaSvbOLTWVawVM7XK09mc+pMYO69xmjTslIZLvL
+	Z+diJukg8r+9ioIaAqWyeJK/RDQrK+U6ZGLojBjP5DqC0oG0CdzZ6f85H38oRg==
+X-Gm-Gg: ASbGncstHHrsHkinOAqwH3PYVFDOStD4TRLhaBpsvu6+IeeKqunns0t87CzoCTJ7Xfk
+	6kcC1oYZM30KVMSEX5MkpRv6hD06v4G8Us36ds6jkzEGhHqmm+RPXQQbVI/SWdsl+5u6OjFxKch
+	9UMzbxPQCyXniPNQzoIYRD1Tw3JaPTXQeWAkKxpVqnVE7MBWh2aQpzdSYSU6i3msRM8tYs+cN8y
+	miAOMueAbinFFb4dLX2Io5ZjbmZoqCsX4Q1R79QXygEwPMsQrvvIXb6zY0HcmkWJv7gBlNnM4Sa
+	IBTH3SVpt+5x4t8Gzu6FvQvheeO32tU1sqyvQVxb4ko6tf6cuguJIpK4DrrSaBfKEHU/5ueiNJd
+	0QSBn
+X-Google-Smtp-Source: AGHT+IFpe+7WNEMHf/e1K6RN6XXnxM2f+u9ir5hEJr+L2Qg9sOoP7MoRY9KKhkttJDVKbKrszFf5hA==
+X-Received: by 2002:a05:6870:6129:b0:296:9c08:51a3 with SMTP id 586e51a60fabf-2bd1052586fmr6219961fac.39.1740072469073;
+        Thu, 20 Feb 2025 09:27:49 -0800 (PST)
+Received: from [10.171.122.29] (wsip-98-189-219-228.oc.oc.cox.net. [98.189.219.228])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2b9548b8b8asm6393725fac.21.2025.02.20.09.27.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 09:27:48 -0800 (PST)
+Message-ID: <3e2eef77-2aaa-4140-9e91-59173445c929@broadcom.com>
+Date: Thu, 20 Feb 2025 09:27:43 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0ef80d00-7213-47c8-9876-1d32011d8d3d@gmx.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/8] PCI: brcmstb: Set gen limitation before link, not
+ after
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Andrew Murray <amurray@thegoodpenguin.co.uk>,
+ Jeremy Linton <jeremy.linton@arm.com>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250214173944.47506-1-james.quinlan@broadcom.com>
+ <20250214173944.47506-2-james.quinlan@broadcom.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250214173944.47506-2-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Stefan,
 
-On 15:58 Sat 08 Feb     , Stefan Wahren wrote:
-> Hi Andrea,
+
+On 2/14/2025 9:39 AM, Jim Quinlan wrote:
+> When the user elects to limit the PCIe generation via the appropriate DT
+> property, apply the settings before the PCIe link-up, not after.
 > 
-> Am 07.02.25 um 22:31 schrieb Andrea della Porta:
-> > RaspberryPi RP1 is an MFD providing, among other peripherals, several
-> > clock generators and PLLs that drives the sub-peripherals.
-> > Add the driver to support the clock providers.
-> > 
-> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> Fixes: c0452137034bda8f686dd9a2e167949bfffd6776 ("PCI: brcmstb: Add Broadcom STB PCIe host controller driver")
 
-...
+Looks like this commit ID should be shortened to 12 digits. Other than that:
 
-> > +
-> > +#define MAX_CLK_PARENTS			16
-> > +
-> > +/*
-> > + * Secondary PLL channel output divider table.
-> > + * Divider values range from 8 to 19.
-> > + * Invalid values default to 19
-> Maybe it's worth to add a short define for this invalid value?
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
-Ack.
-
-> > + */
-> > +static const struct clk_div_table pll_sec_div_table[] = {
-> > +	{ 0x00, 19 },
-> > +	{ 0x01, 19 },
-> > +	{ 0x02, 19 },
-> > +
-
-...
-
-> > +	regmap_read(clockman->regmap, reg, &val);
-> > +
-> > +	return val;
-> > +}
-> > +
-> > +static int rp1_pll_core_is_on(struct clk_hw *hw)
-> > +{
-> > +	struct rp1_clk_desc *pll_core = container_of(hw, struct rp1_clk_desc, hw);
-> > +	struct rp1_clockman *clockman = pll_core->clockman;
-> > +	const struct rp1_pll_core_data *data = pll_core->data;
-> > +
-> Please drop this empty line
-
-Ack.
-
-> > +	u32 pwr = clockman_read(clockman, data->pwr_reg);
-> > +
-> > +	return (pwr & PLL_PWR_PD) || (pwr & PLL_PWR_POSTDIVPD);
-> > +}
-> > +
-> > +static int rp1_pll_core_on(struct clk_hw *hw)
-> > +{
-> > +	struct rp1_clk_desc *pll_core = container_of(hw, struct rp1_clk_desc, hw);
-> > +	struct rp1_clockman *clockman = pll_core->clockman;
-> > +	const struct rp1_pll_core_data *data = pll_core->data;
-> > +
-> ditto
-
-Ack.
-
-> > +	u32 fbdiv_frac, val;
-> > +	int ret;
-> > +
-> > +	spin_lock(&clockman->regs_lock);
-
-...
-
-> > +static int rp1_pll_ph_on(struct clk_hw *hw)
-> > +{
-> > +	struct rp1_clk_desc *pll_ph = container_of(hw, struct rp1_clk_desc, hw);
-> > +	struct rp1_clockman *clockman = pll_ph->clockman;
-> > +	const struct rp1_pll_ph_data *data = pll_ph->data;
-> > +	u32 ph_reg;
-> > +
-> > +	/* TODO: ensure pri/sec is enabled! */
-> Please extend this TODO. Primary/secondary of what
-
-I think the orginal comment is misleading. It seems to be related
-to the fact that phase shifted clocks should have their parent enabled
-before setting them up. Pri here shuold be the only phased clock, while
-Sec is not and depends directly on a core clock, so I'll change that
-comment entirely.
-
-> > +	spin_lock(&clockman->regs_lock);
-> > +	ph_reg = clockman_read(clockman, data->ph_reg);
-> > +	ph_reg |= data->phase << PLL_PH_PHASE_SHIFT;
-> > +	ph_reg |= PLL_PH_EN;
-> > +	clockman_write(clockman, data->ph_reg, ph_reg);
-> > +	spin_unlock(&clockman->regs_lock);
-> > +
-> > +	return 0;
-> > +}
-
-...
-
-> > +static unsigned long rp1_clock_recalc_rate(struct clk_hw *hw,
-> > +					   unsigned long parent_rate)
-> > +{
-> > +	struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-> > +	struct rp1_clockman *clockman = clock->clockman;
-> > +	const struct rp1_clock_data *data = clock->data;
-> > +	u64 calc_rate;
-> > +	u64 div;
-> > +
-> Please drop empty line
-
-Ack.
-
-> > +	u32 frac;
-> > +
-> > +	div = clockman_read(clockman, data->div_int_reg);
-> > +	frac = (data->div_frac_reg != 0) ?
-> > +		clockman_read(clockman, data->div_frac_reg) : 0;
-> > +
-> > +	/* If the integer portion of the divider is 0, treat it as 2^16 */
-> > +	if (!div)
-> > +		div = 1 << 16;
-> > +
-> > +	div = (div << CLK_DIV_FRAC_BITS) | (frac >> (32 - CLK_DIV_FRAC_BITS));
-> > +
-> > +	calc_rate = (u64)parent_rate << CLK_DIV_FRAC_BITS;
-> > +	calc_rate = div64_u64(calc_rate, div);
-> > +
-> > +	return calc_rate;
-> > +}
-
-...
-
-> > +		ctrl |= (AUX_SEL << CLK_CTRL_SRC_SHIFT) & data->clk_src_mask;
-> > +	} else {
-> > +		ctrl &= ~data->clk_src_mask;
-> > +		ctrl |= (index << CLK_CTRL_SRC_SHIFT) & data->clk_src_mask;
-> > +	}
-> > +
-> > +	clockman_write(clockman, data->ctrl_reg, ctrl);
-> > +	spin_unlock(&clockman->regs_lock);
-> > +
-> > +	sel = rp1_clock_get_parent(hw);
-> > +	WARN(sel != index, "(%s): Parent index req %u returned back %u\n",
-> > +	     clk_hw_get_name(hw), index, sel);
-> I don't think such an important clock callback should emit WARN(),
-> because this might cause a message flood.
-> 
-> So i think either a WARN_ONCE() or dev_warn_once() might be better.
-
-Ack.
-
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int rp1_clock_set_rate_and_parent(struct clk_hw *hw,
-> > +					 unsigned long rate,
-> > +					 unsigned long parent_rate,
-> > +					 u8 parent)
-> > +{
-> > +	struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-> > +	struct rp1_clockman *clockman = clock->clockman;
-> > +	const struct rp1_clock_data *data = clock->data;
-> > +	u32 div = rp1_clock_choose_div(rate, parent_rate, data);
-> > +
-> > +	WARN(rate > 4000000000ll, "rate is -ve (%d)\n", (int)rate);
-> This looks suspicious. Is this is a limit? Except of this, casting to
-> int is wrong.
-
-I think that's not an hard limit, the original intent was probably
-to filter some clock rates resulting from functions that can return
-a (negative) error code.
-Since clock->data->max_freq contains the maximum frequency achievable,
-I'll turn that WARN into a proper one that check for that limit.
-
-> 
-> In case this is not possible please make it a WARN_ONCE() or dev_warn_once()
-> > +
-> > +	if (WARN(!div,
-> > +		 "clk divider calculated as 0! (%s, rate %ld, parent rate %ld)\n",
-> > +		 clk_hw_get_name(hw), rate, parent_rate))
-> > +		div = 1 << CLK_DIV_FRAC_BITS;
-> Same here
-
-Ack.
-
-Many thanks,
-Andrea
-
-> > +
-> > +	spin_lock(&clockman->regs_lock);
-> > +
-> > +	clockman_write(clockman, data->div_int_reg, div >> CLK_DIV_FRAC_BITS);
-> > +	if (data->div_frac_reg)
-> > +		clockman_write(clockman, data->div_frac_reg, div << (32 - CLK_DIV_FRAC_BITS));
-> > +
-> > +	spin_unlock(&clockman->regs_lock);
-> > +
-> > +	if (parent != 0xff)
-> > +		rp1_clock_set_parent(hw, parent);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > 
 
