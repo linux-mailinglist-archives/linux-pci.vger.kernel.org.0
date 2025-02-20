@@ -1,243 +1,172 @@
-Return-Path: <linux-pci+bounces-21933-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21934-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 592F1A3E7A1
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 23:40:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C181A3E7EA
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 00:00:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3015A7AB754
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 22:39:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 829CB3B993A
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 22:59:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C719D2641F8;
-	Thu, 20 Feb 2025 22:39:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60608265CAC;
+	Thu, 20 Feb 2025 22:59:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gObFMExE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2iTOlc8"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2C52641E3;
-	Thu, 20 Feb 2025 22:39:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2529B265635;
+	Thu, 20 Feb 2025 22:59:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740091198; cv=none; b=BfsMMUZc3EtntGSH7koxJlSbkOWfl62NDgdC5TUGaEQ9s6vAZ1K33iWAtOuhca+h/7pRJwTMdU6DZ3DncyLn++GkFeUk/IBpytH/JwMW51QQRlysHv7prx885NOYj+I89+G6A4eYY9jSnUvW/yko7/NBdx8sp/HzoLDVIgMc2L4=
+	t=1740092391; cv=none; b=vF0WY+obiBFt8/jbk8JzU2ysDYuYCdUgP3kNLhVC7BRAXh2JWAPg0et/1uzib1KNRape8FJO3jRrU5Zd8QpPY2uw8v88RsK1QwKtOn1LRh1X7fMTcFICFfV2WIr40GTsjuErPrJzeZiNnOWIO4LUl59p1qDtTb4zTmJVELZbHbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740091198; c=relaxed/simple;
-	bh=p1o9tsd4MJKpv+j9LivH9jaM7Ei2Uell1wpGa2aaLFc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ckjENPc7+PFRaT9XU4F04V/bLDFO+oRkEg+HApLQOxmBZaYz/M088BHqKXKWHIkcoAsBJIuCzsrPsAu2pkeT4IQ6VhGyWaoduLOQrzQwYITgVFPsK4qjItbpb2g3OSOM87SwXXHn69BIoBdzJrYzc34/ialhTZDUNITKCl8VN4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gObFMExE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 916D7C4CED1;
-	Thu, 20 Feb 2025 22:39:56 +0000 (UTC)
+	s=arc-20240116; t=1740092391; c=relaxed/simple;
+	bh=3S+TCq9Fx8ACf/yVx79pjGFNRic4JKbeNZIjQEJfLqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=KW/ffsdjhzX2+cZo993Tgwf/wR0R8wE8/xVg7vK0MLfyVSQ27qju5OtiqvgCddWAn5R++FD7ALhj2ERC9Wx12yngxGVIVsyRK0N0+yDZY1ufUFIVelg3r9ZvuIA3KdSpDVP6Mrvse5u7MMLKLDeqvhod/Nr0iCExaUxgNGc6ELc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2iTOlc8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 732FAC4CED1;
+	Thu, 20 Feb 2025 22:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740091197;
-	bh=p1o9tsd4MJKpv+j9LivH9jaM7Ei2Uell1wpGa2aaLFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gObFMExEl5qdklvlvzVjuB8ZpB4OKMBuTGEWsmjPOLYv00dcOyrDIcIIQAomN34Qd
-	 hKH6JZrkgQq7zEkBbhYapGDtiYyY0lHKVNoXsKP5Tr5Q1oHtQsZMgKHPWTEJDf7ZQv
-	 PeOzR1giqrDEDlanmtoe1Wyj2NjjEpcULYoSTQ7RJQFsxKRw8O9IGhXJ29F2v5vsGc
-	 9KuazZpl6KfofKziuSKIpk9s8eaJ3Oskpq56FyYQZlOpMSRLL9h6gGtBK8GDBHygKu
-	 XfISsSXGB2jIJFzog/sPeYQkcTy1QA7vzji+7JPQwIpTnz1SQo3PdG3BkpSlzRoecy
-	 a+Bnrt0wUYw5g==
-Date: Thu, 20 Feb 2025 23:39:54 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/2] PCI: mediatek-gen3: Configure PBUS_CSR registers
- for EN7581 SoC
-Message-ID: <Z7evOgTgCK_IL2i9@lore-desk>
-References: <20250202-en7581-pcie-pbus-csr-v2-0-65dcb201c9a9@kernel.org>
- <20250202-en7581-pcie-pbus-csr-v2-2-65dcb201c9a9@kernel.org>
- <20250219182650.gxzlbl6ovgbacmkm@thinkpad>
- <Z7ePW/Y9vajLjPdr@lizhi-Precision-Tower-5810>
+	s=k20201202; t=1740092390;
+	bh=3S+TCq9Fx8ACf/yVx79pjGFNRic4JKbeNZIjQEJfLqA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=g2iTOlc8adtYCkf1+qhUD/uYV0fpGwPYOjAx3hyOYjjGrVwAPYZpWFgZzgS4Q3FSa
+	 dzIs3ecCv/1IA1mMkKHHWdabeEd1R5DX6SVwuccVrUthK0+g8ZPaIKlcKfNEp96dG4
+	 imUaah3p4TyAFFBVrXjcgw+PgzpeYJzxByDFj5WczTSIkNKqHu6qQt3ycYeMkz2gem
+	 whsD4yTnIEqCOs/I+n2QC0UqwH79Q38cerLhdjfWzHygvx66OYzBlwB2hi0fGTDGd2
+	 Pyq+uq6IWv7Qm/NJFlFswkyfKY7N8ImT90T6ackUhRZtVDKq9d2ZfMpbG8JOiHN5Gx
+	 RpHVIbfPVxS9g==
+Date: Thu, 20 Feb 2025 16:59:48 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-pci@vger.kernel.org,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Ryo Takakura <ryotkkr98@gmail.com>, bhelgaas@google.com,
+	jonathan.derrick@linux.dev, kw@linux.com, lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org, nirmal.patel@linux.intel.com,
+	robh@kernel.org, rostedt@goodmis.org, kbusch@kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH v4] PCI: vmd: Make vmd_dev::cfg_lock a raw_spinlock_t.
+Message-ID: <20250220225948.GA318342@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l8/woIF9RLKv3zSp"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z7ePW/Y9vajLjPdr@lizhi-Precision-Tower-5810>
+In-Reply-To: <20250218080830.ufw3IgyX@linutronix.de>
 
+On Tue, Feb 18, 2025 at 09:08:30AM +0100, Sebastian Andrzej Siewior wrote:
+> From: Ryo Takakura <ryotkkr98@gmail.com>
+> 
+> The access to the PCI config space via pci_ops::read and pci_ops::write
+> is a low-level hardware access. The functions can be accessed with
+> disabled interrupts even on PREEMPT_RT. The pci_lock has been made a
+> raw_spinlock_t for this purpose. A spinlock_t becomes a sleeping lock on
+> PREEMPT_RT can not be acquired with disabled interrupts.
 
---l8/woIF9RLKv3zSp
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think this is missing a word or two and should say:
 
-> On Wed, Feb 19, 2025 at 11:56:50PM +0530, Manivannan Sadhasivam wrote:
-> > On Sun, Feb 02, 2025 at 08:34:24PM +0100, Lorenzo Bianconi wrote:
-> > > Configure PBus base address and address mask to allow the hw
-> > > to detect if a given address is on PCIE0, PCIE1 or PCIE2.
-> > >
-> > > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> >
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> >
-> > - Mani
-> >
-> > > ---
-> > >  drivers/pci/controller/pcie-mediatek-gen3.c | 30 +++++++++++++++++++=
-+++++++++-
-> > >  1 file changed, 29 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pc=
-i/controller/pcie-mediatek-gen3.c
-> > > index aa24ac9aaecc749b53cfc4faf6399913d20cdbf2..9c2a592cae959de8fbe9c=
-a5c5c2253f8eadf2c76 100644
-> > > --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> > > @@ -15,6 +15,7 @@
-> > >  #include <linux/irqchip/chained_irq.h>
-> > >  #include <linux/irqdomain.h>
-> > >  #include <linux/kernel.h>
-> > > +#include <linux/mfd/syscon.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/msi.h>
-> > >  #include <linux/of_device.h>
-> > > @@ -24,6 +25,7 @@
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/pm_domain.h>
-> > >  #include <linux/pm_runtime.h>
-> > > +#include <linux/regmap.h>
-> > >  #include <linux/reset.h>
-> > >
-> > >  #include "../pci.h"
-> > > @@ -127,6 +129,13 @@
-> > >
-> > >  #define PCIE_MTK_RESET_TIME_US		10
-> > >
-> > > +#define PCIE_EN7581_PBUS_ADDR(_n)	(0x00 + ((_n) << 3))
-> > > +#define PCIE_EN7581_PBUS_ADDR_MASK(_n)	(0x04 + ((_n) << 3))
-> > > +#define PCIE_EN7581_PBUS_BASE_ADDR(_n)	\
-> > > +	((_n) =3D=3D 2 ? 0x28000000 :	\
-> > > +	 (_n) =3D=3D 1 ? 0x24000000 : 0x20000000)
->=20
-> look like these data should be in dts ?
->=20
-> > > +#define PCIE_EN7581_PBUS_BASE_ADDR_MASK	GENMASK(31, 26)
-> > > +
-> > >  /* Time in ms needed to complete PCIe reset on EN7581 SoC */
-> > >  #define PCIE_EN7581_RESET_TIME_MS	100
-> > >
-> > > @@ -931,7 +940,8 @@ static int mtk_pcie_parse_port(struct mtk_gen3_pc=
-ie *pcie)
-> > >  static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
-> > >  {
-> > >  	struct device *dev =3D pcie->dev;
-> > > -	int err;
-> > > +	struct regmap *map;
-> > > +	int err, slot;
-> > >  	u32 val;
-> > >
-> > >  	/*
-> > > @@ -945,6 +955,24 @@ static int mtk_pcie_en7581_power_up(struct mtk_g=
-en3_pcie *pcie)
-> > >  	/* Wait for the time needed to complete the reset lines assert. */
-> > >  	msleep(PCIE_EN7581_RESET_TIME_MS);
-> > >
-> > > +	map =3D syscon_regmap_lookup_by_phandle(dev->of_node,
-> > > +					      "mediatek,pbus-csr");
-> > > +	if (IS_ERR(map))
-> > > +		return PTR_ERR(map);
-> > > +
-> > > +	/*
-> > > +	 * Configure PBus base address and address mask to allow the
-> > > +	 * hw to detect if a given address is on PCIE0, PCIE1 or PCIE2.
-> > > +	 */
-> > > +	slot =3D of_get_pci_domain_nr(dev->of_node);
->=20
-> I am not sure if too much abuse domain_id here.
->=20
-> > > +	if (slot < 0)
-> > > +		return slot;
-> > > +
-> > > +	regmap_write(map, PCIE_EN7581_PBUS_ADDR(slot),
-> > > +		     PCIE_EN7581_PBUS_BASE_ADDR(slot));
-> > > +	regmap_write(map, PCIE_EN7581_PBUS_ADDR_MASK(slot),
-> > > +		     PCIE_EN7581_PBUS_BASE_ADDR_MASK);
->=20
-> look like
-> 	syscon
-> 	{
-> 		csr1 : csr1 =3D
-> 		{
-> 			reg =3D <0x20000000, >; //or other property
-> 		}
->=20
-> 		csr2: csr2 =3D
-> 		{
-> 			....
-> 		}
-> 	}
->=20
-> 	pcie1 {
-> 		mediatek,pbus-csr =3D <&csr1>;
-> 	}
->=20
-> 	pcie2 {
->                 mediatek,pbus-csr =3D <&csr2>;
->         }
->=20
-> 	...
->=20
-> Or
-> 	pcie1 {
->                 mediatek,pbus-csr =3D <&csr1 0x20000000>;
->         }
-> 	...
->=20
-> 	you can use syscon_regmap_lookup_by_phandle_args() to get address.
-> Frank
+  A spinlock_t becomes a sleeping lock on PREEMPT_RT, so it cannot be
+  acquired with disabled interrupts.
 
-ack, thx for the pointer. I will fix in v3.
+pci_ops.read() is called while holding the non-sleepable
+raw_spinlock_t pci_lock, so pci_ops.read() must also be non-sleepable.
 
-Regards,
-Lorenzo
+It's not really relevant that "pci_ops.read() can be called with
+disabled interrupts even on PREEMPT_RT".  It can *always* be called
+with interrupts disabled.
 
->=20
->=20
-> > > +
-> > >  	/*
-> > >  	 * Unlike the other MediaTek Gen3 controllers, the Airoha EN7581
-> > >  	 * requires PHY initialization and power-on before PHY reset deasse=
-rt.
-> > >
-> > > --
-> > > 2.48.1
-> > >
-> >
-> > --
-> > =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=
-=A9=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=
-=AE=E0=AF=8D
-
---l8/woIF9RLKv3zSp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ7evOgAKCRA6cBh0uS2t
-rMtVAQDt7OKvwzSWH4diA2tOPVBk9hZhWEwF4ifot/vwEVB59AD8CJkJDxC/ETkp
-7PzGTuXjh57IZJMnuAyy//jgFLBZfgo=
-=lyct
------END PGP SIGNATURE-----
-
---l8/woIF9RLKv3zSp--
+> The vmd_dev::cfg_lock is accessed in the same context as the pci_lock.
+> 
+> Make vmd_dev::cfg_lock a raw_spinlock_t.
+> 
+> [bigeasy: Reword commit message.]
+> 
+> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+> Tested-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+> Acked-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+> Changes since v3 https://lore.kernel.org/all/20241219014549.24427-1-ryotkkr98@gmail.com/
+> - Repost with updated changelog.
+> 
+> Changes since v2 https://lore.kernel.org/lkml/20241218115951.83062-1-ryotkkr98@gmail.com/
+> - In case if CONFIG_PCI_LOCKLESS_CONFIG is set, vmd_pci_read/write()
+>   still neeed cfg_lock for their serialization. So instead of removing
+>   it, convert it to raw spinlock.
+> 
+> v1: https://lore.kernel.org/lkml/20241215141321.383144-1-ryotkkr98@gmail.com/
+> 
+>  drivers/pci/controller/vmd.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 9d9596947350f..94ceec50a2b94 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -125,7 +125,7 @@ struct vmd_irq_list {
+>  struct vmd_dev {
+>  	struct pci_dev		*dev;
+>  
+> -	spinlock_t		cfg_lock;
+> +	raw_spinlock_t		cfg_lock;
+>  	void __iomem		*cfgbar;
+>  
+>  	int msix_count;
+> @@ -391,7 +391,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
+>  	if (!addr)
+>  		return -EFAULT;
+>  
+> -	spin_lock_irqsave(&vmd->cfg_lock, flags);
+> +	raw_spin_lock_irqsave(&vmd->cfg_lock, flags);
+>  	switch (len) {
+>  	case 1:
+>  		*value = readb(addr);
+> @@ -406,7 +406,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
+>  		ret = -EINVAL;
+>  		break;
+>  	}
+> -	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
+> +	raw_spin_unlock_irqrestore(&vmd->cfg_lock, flags);
+>  	return ret;
+>  }
+>  
+> @@ -426,7 +426,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
+>  	if (!addr)
+>  		return -EFAULT;
+>  
+> -	spin_lock_irqsave(&vmd->cfg_lock, flags);
+> +	raw_spin_lock_irqsave(&vmd->cfg_lock, flags);
+>  	switch (len) {
+>  	case 1:
+>  		writeb(value, addr);
+> @@ -444,7 +444,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
+>  		ret = -EINVAL;
+>  		break;
+>  	}
+> -	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
+> +	raw_spin_unlock_irqrestore(&vmd->cfg_lock, flags);
+>  	return ret;
+>  }
+>  
+> @@ -1009,7 +1009,7 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  	if (features & VMD_FEAT_OFFSET_FIRST_VECTOR)
+>  		vmd->first_vec = 1;
+>  
+> -	spin_lock_init(&vmd->cfg_lock);
+> +	raw_spin_lock_init(&vmd->cfg_lock);
+>  	pci_set_drvdata(dev, vmd);
+>  	err = vmd_enable_domain(vmd, features);
+>  	if (err)
+> -- 
+> 2.47.2
+> 
 
