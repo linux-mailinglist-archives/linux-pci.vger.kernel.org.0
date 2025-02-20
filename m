@@ -1,162 +1,118 @@
-Return-Path: <linux-pci+bounces-21858-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21859-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87A30A3CE4E
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 01:57:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 160FAA3CEA6
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 02:26:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5305B3A735F
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 00:57:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92A6C7A61B1
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 01:25:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32471135A53;
-	Thu, 20 Feb 2025 00:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="e8WDMlVf"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9AD041C7F;
+	Thu, 20 Feb 2025 01:26:04 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C01433C0
-	for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 00:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8027B3C0C;
+	Thu, 20 Feb 2025 01:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740013052; cv=none; b=eBflO+Vd6x3b9SEXm1uM8jYWnC1SWgGtMe9lSokK4y7nq+QUskUhX1VwNmy90HkOToZRKUSeE5h3uYZGd00H2x8YeoJjb4c6ysCzL8GSVMtVfk+tXsMSvuJ1Na9M+K/gIQpImpj1l+kyw5h0t7ffxiJQqrG+xpLkRJ6OLZJMpQs=
+	t=1740014764; cv=none; b=tHI1G/R5FqSK9+LCkiEardBa3pJ+XKKFEnPi/SC7k4aPlKP1Q7mUVAf9bBpbDMOT0r97hhJOWJJC22ffxA43r7RWwCgGl8lJkaq19Ltnks0PUslwFhTPEc1upeTzTMSoIaSTVU1TOwn7zdHwLz5d9r0NAE9YoP1/QVfYit73Vlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740013052; c=relaxed/simple;
-	bh=Lnj8ZPF5lrE7Xc/uMpcIj9FkYaJnkbOF/02TZqJAndk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lFouicNriPYfCuNab9zfHis7MGLQ48z9D/zCeDe9YOIAN63WJ1GRUokCoMKisMZEUs5iZwQzqwmKfWMaX/CpU1sCaVa6vNxkPY4c0H2CTcy5/LU03P+GJL+5QbLTzqE7s0s5DNGAaWruDwpEZhpvaQfvzASz9huE+AG84F+CN00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=e8WDMlVf; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-471963ae31bso4382991cf.3
-        for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 16:57:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1740013049; x=1740617849; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0/Q3pmbQgFaUMEz//cVYqBy+kD1niHA/UXy9NuQBpQc=;
-        b=e8WDMlVfE5yxeWllC+GQsVY5Fcurb8PVVRLHcsL72GNWikAIAyXRdKLROdZjblWNlR
-         wrcGOp99vmw0hE+MAEjtnkHQwpXYmsG6WMuRR/9L1MwFX9F0HitATK7ux72o08XVDR7h
-         +l51hpxLMbptyGFfy6ln9NGior+w4ObgMcmDP88d60O8P2ByBv29QfgB7+Ay/bFR1Ydt
-         P7bXM6RQcCwotY/6a1V55ZbmllEGtjRzC/I3pW3tzBFkh2xrha9uH2o1BbWRLjnGCQoJ
-         YPxbnuMBnQoSM2qL4qGcRCYX6moS7UTTgzvshw6St5sKIr8Yw7CcxO197shj5vSY5xq0
-         q3BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740013049; x=1740617849;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0/Q3pmbQgFaUMEz//cVYqBy+kD1niHA/UXy9NuQBpQc=;
-        b=hZ1RO6fzHTuMLcMOWYz6FecARlyuHhGc3FArNCkTya/sKYp5l6Th6e3UB8w4XAYDux
-         pX8y4/POiXHlItjWzbcBKqo9CpqghyKppartfgp9SYNTPvuaFkIZCrK6rngqiqKWwDrw
-         Ru3fRhAl6CKFGfWJNQ9ZTQMChyAUVhMzRpH5qESUVG7OOnJzimK6Smv5Xk3Szxcw4KVq
-         vHMObRPrZS/abjo2tKqAjC311nxOhin4ddXPtOCtAnjWkEz0lifUSELqpLfi+2odIfBM
-         hFA68CilfNQu/YFdLozU/dy/M2bIp4skUEABHX7F9mIBDYH8LfLNdAgZhIlOw0wolOIa
-         b1Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCXpQ5QkpUUgfgFS1JxdS2tV+YcPd1uMeVufzW4zoGPTTdUQJqJ8WjU9qS6tnlZ+4H6MsfjIza2iwgE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVFhP6JyRlpE358eSpWWYLhc2UZTQkTJ38tFf+C1g53hhGgNve
-	sb082LGrVO0sWVuuF2GgKztTZBXIModlM1YfAHN71mxWLU6CaRXSulI5roVNIb0=
-X-Gm-Gg: ASbGnctCckJ68tjcHsZmmPFfl5Aiej+5luL+WMSyuQ52A/8XRubUV9H8HlFmEEDe65f
-	0aTGIkTHT3yCktSkwZGFisXoYj7MN3Ong5FrQwrG7QgfJQkFSvt71+vZrJhXkKBvqhLDMI/w/oY
-	uy1E2o2yBwFWpsyDHMkaSdT0lsZNpYHwPJj8eZ7RbXaKmVeWHGuoRDvGVxqnErthgEBjBa4G9xi
-	UYVre0gJTO7WoMjgW5PNT973MM7y9WOKeYK5oxP/kNK4uI1NI5Pae4/sf/OYaKAob5SJmQNI/RM
-	3fDOlRrNM4vRuOF1KV66C/NuQYz/h6DWr3PhGxjTniVniXNH7TtuzhDZRqJqUGpM
-X-Google-Smtp-Source: AGHT+IG5zCh9CoeLQY7rC+mk5ewFMnBFHyg7FBmH5U0ScrNRvZkI+aTZATrHIvB820rTi8JmR7A9wg==
-X-Received: by 2002:a05:622a:1a02:b0:471:a2c7:b6be with SMTP id d75a77b69052e-471dbea0a25mr253348721cf.45.1740013049013;
-        Wed, 19 Feb 2025 16:57:29 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471f3f6e90bsm36101381cf.79.2025.02.19.16.57.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 16:57:28 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tkusZ-00000000D45-0QWL;
-	Wed, 19 Feb 2025 20:57:27 -0400
-Date: Wed, 19 Feb 2025 20:57:27 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Michael Roth <michael.roth@amd.com>
-Cc: Alexey Kardashevskiy <aik@amd.com>, x86@kernel.org, kvm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Christoph Hellwig <hch@lst.de>, Nikunj A Dadhania <nikunj@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>,
-	Joao Martins <joao.m.martins@oracle.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Steve Sistare <steven.sistare@oracle.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Dionna Glaze <dionnaglaze@google.com>, Yi Liu <yi.l.liu@intel.com>,
-	iommu@lists.linux.dev, linux-coco@lists.linux.dev,
-	Zhi Wang <zhiw@nvidia.com>, AXu Yilun <yilun.xu@linux.intel.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-Subject: Re: [RFC PATCH v2 12/22] iommufd: Allow mapping from guest_memfd
-Message-ID: <20250220005727.GP3696814@ziepe.ca>
-References: <20250218111017.491719-1-aik@amd.com>
- <20250218111017.491719-13-aik@amd.com>
- <20250218141634.GI3696814@ziepe.ca>
- <340d8dba-1b09-4875-8604-cd9f66ca1407@amd.com>
- <20250218235105.GK3696814@ziepe.ca>
- <06b850ab-5321-4134-9b24-a83aaab704bf@amd.com>
- <20250219133516.GL3696814@ziepe.ca>
- <20250219202324.uq2kq27kmpmptbwx@amd.com>
- <20250219203708.GO3696814@ziepe.ca>
- <20250219213037.ku2wi7oyd5kxtwiv@amd.com>
+	s=arc-20240116; t=1740014764; c=relaxed/simple;
+	bh=CFHteqH5JuzuGRt5uAjjg7LwLdewMSv/qJaGd/TIRWE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HEVpwLNYFL0Q64LBI1Yuv41f78GzYz6SJgHxXNjBekW55SuQqyK+UeS7j24gAmZaSlPRXfYh+93ZkSmdI3RrDEkwarPHv4dpDhqDzh4iZasUvbTsc1seFcYuMwhhXwYXbl9J/7t7PVdL4M6OsGp+UtWoFSskpj6Q5RzBNEtEVT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwAHl8mihLZnrikWBA--.45269S2;
+	Thu, 20 Feb 2025 09:25:54 +0800 (CST)
+Received: from localhost.localdomain (unknown [219.142.137.151])
+	by mail (Coremail) with SMTP id AQAAfwA3PIichLZnsMMsAA--.23595S2;
+	Thu, 20 Feb 2025 09:25:52 +0800 (CST)
+From: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
+To: helgaas@kernel.org
+Cc: bhelgaas@google.com,
+	christian.koenig@amd.com,
+	daizhiyuan@phytium.com.cn,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v3] PCI: Update Resizable BAR Capability Register fields
+Date: Thu, 20 Feb 2025 09:25:46 +0800
+Message-ID: <20250220012546.318577-1-daizhiyuan@phytium.com.cn>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250219183424.GA226683@bhelgaas>
+References: <20250219183424.GA226683@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219213037.ku2wi7oyd5kxtwiv@amd.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAfwA3PIichLZnsMMsAA--.23595S2
+X-CM-SenderInfo: hgdl6xpl1xt0o6sk53xlxphulrpou0/
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=daizhiyuan
+	@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoW7ArWkArWDGF1kWw48Gr47XFb_yoW8try3pr
+	4DCa97Kr4rKFW29w4kZ3W0yw45K39rZFyrCrWI93sruFnIk3Z2qF4UKay5tasrJrs7ZF45
+	tFyqq345ur98XaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-On Wed, Feb 19, 2025 at 03:30:37PM -0600, Michael Roth wrote:
-> I think the documentation only mentioned 1G specifically since that's
-> the next level up in host/nested page table mappings, and that more
-> generally anything mapping at a higher granularity than 2MB would be
-> broken down into individual checks on each 2MB range within. But it's
-> quite possible things are handled differently for IOMMU so definitely
-> worth confirming.
+PCI Express Base Spec r6.0 defines BAR size up to 8 EB (2^63 bytes),
+but supporting anything bigger than 128TB requires changes to pci_rebar_get_possible_sizes()
+to read the additional Capability bits from the Control register.
 
-Hmm, well, I'd very much like it if we are all on the same page as to
-why the new kernel parameters were needed. Joerg was definitely seeing
-testing failures without them.
+If 8EB support is required, callers will need to be updated to handle u64 instead of u32.
+For now, support is limited to 128TB, and support for sizes greater than 128TB can be
+deferred to a later time.
 
-IMHO we should not require parameters like that, I expect the kernel
-to fix this stuff on its own.
+Signed-off-by: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
+---
+ drivers/pci/pci.c             | 4 ++--
+ include/uapi/linux/pci_regs.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-> But regardless, we'll still end up dealing with 4K RMP entries since
-> we'll need to split 2MB RMP entries in response to private->conversions
-> that aren't 2MB aligned/sized.
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 661f98c6c63a..77b9ceefb4e1 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3752,7 +3752,7 @@ static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
+  * @bar: BAR to query
+  *
+  * Get the possible sizes of a resizable BAR as bitmask defined in the spec
+- * (bit 0=1MB, bit 19=512GB). Returns 0 if BAR isn't resizable.
++ * (bit 0=1MB, bit 31=128TB). Returns 0 if BAR isn't resizable.
+  */
+ u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
+ {
+@@ -3800,7 +3800,7 @@ int pci_rebar_get_current_size(struct pci_dev *pdev, int bar)
+  * pci_rebar_set_size - set a new size for a BAR
+  * @pdev: PCI device
+  * @bar: BAR to set size to
+- * @size: new size as defined in the spec (0=1MB, 19=512GB)
++ * @size: new size as defined in the spec (0=1MB, 31=128TB)
+  *
+  * Set the new size of a BAR as defined in the spec.
+  * Returns zero if resizing was successful, error code otherwise.
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 1601c7ed5fab..ce99d4f34ce5 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -1013,7 +1013,7 @@
+ 
+ /* Resizable BARs */
+ #define PCI_REBAR_CAP		4	/* capability register */
+-#define  PCI_REBAR_CAP_SIZES		0x00FFFFF0  /* supported BAR sizes */
++#define  PCI_REBAR_CAP_SIZES		0xFFFFFFF0  /* supported BAR sizes */
+ #define PCI_REBAR_CTRL		8	/* control register */
+ #define  PCI_REBAR_CTRL_BAR_IDX		0x00000007  /* BAR index */
+ #define  PCI_REBAR_CTRL_NBAR_MASK	0x000000E0  /* # of resizable BARs */
+-- 
+2.43.0
 
-:( What is the point of even allowing < 2MP private/shared conversion?
-
-> > Then the HW will not see IOPTEs that exceed the shared/private
-> > granularity of the VM.
-> 
-> That sounds very interesting. It would allow us to use larger IOMMU
-> mappings even for guest_memfd as it exists today, while still supporting
-> shared memory discard and avoiding the additional host memory usage
-> mentioned above. Are there patches available publicly?
-
-https://patch.msgid.link/r/0-v1-01fa10580981+1d-iommu_pt_jgg@nvidia.com
-
-I'm getting quite close to having something non-RFC that just does AMD
-and the bare minimum. I will add you two to the CC
-
-Jason
 
