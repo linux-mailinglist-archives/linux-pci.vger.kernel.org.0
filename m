@@ -1,143 +1,135 @@
-Return-Path: <linux-pci+bounces-21900-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21901-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED337A3DA64
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 13:49:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75995A3DC24
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 15:10:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3A013A3F09
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 12:48:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 662801884B5E
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 14:08:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BADF1F4169;
-	Thu, 20 Feb 2025 12:48:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB31E1C3C07;
+	Thu, 20 Feb 2025 14:08:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhH3Rxw/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AzAojyyt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BF32862BD;
-	Thu, 20 Feb 2025 12:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9BB1C32FF
+	for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 14:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740055712; cv=none; b=gHk0N0/PJMM6Spb1pJwQ7y1LwGYRrKf//nAZdpZHfV4L5iELf5L7wd8lsUKOWnU4D6MmlkH54pxE7oFSBCye7t2kBjGrodl/oO1IwPBfKFIhaO7px2rMIX7bCm6r1Sx+sCVmxQwaX2+Yd/u7Tp9GSxmSca/b87PFOs0H8nPiTT0=
+	t=1740060517; cv=none; b=SowguxohJDSwYZVeJArRUQHwMBtDMIb6T+l7h6Lt9d7Vh/UjQYExTMN0WfJVkYvJYzst8Y2IugZMZIG7WQ1bpLrYtR3k9pHPphTe80jYrmSLPTH7V83t/QTgnqwOFh33jduQeSkVHbnpkfUDtsdmmm1U0x9RAV1qXX8GQFXY8Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740055712; c=relaxed/simple;
-	bh=1Iv3ATubl6AG/lSG1TPOh5GEc+mnunYnUNognONLHrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fDbvlA/Jhqg/b8gRMEoTrL3oTYbgsRjfMZE/YO3nb8CejGVbFWT4h8ifkPTH+/CJ1KaVQMEceDysCs09nXK6TgevjGpCh8SqgHjJcE0DWUTZJNaiDwzYrEjp3IVUh6t96GSc9Mgoglod+QzPOUyfWY8/63rebM00fN/e1Iyz8Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhH3Rxw/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C882DC4CED1;
-	Thu, 20 Feb 2025 12:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740055711;
-	bh=1Iv3ATubl6AG/lSG1TPOh5GEc+mnunYnUNognONLHrM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XhH3Rxw/fU4NMM8JUKPDYre9d9LQaru2HtlbuSSUNzkHB8eWhqMM23vtegnTWn+BS
-	 9+H0GOfdzn1LNx9IHcWfvcpB8EXNSp57Achx+q1U7ozbfXzho3FO9ENmdtK+fnEJTx
-	 1mX2B9KcxOTwRBNfDJoEWHPpCPDk48cyZC7xwNx3D4HZ/eDzhk1UYs1ByD6cWBCggg
-	 PbJi1s5B2/FkYeMMfisRgyehbN8fd3in3TvHNeTh17NIjIy8rndGPwyK8hEYOJ4woC
-	 z5Pq6b+6BoM66BA9VpnFOLzal49GAHK/nFhBZx9kerNsCt2/b4psBlXL8nvsynNOoP
-	 upH4tKmvy4K+A==
-Date: Thu, 20 Feb 2025 14:48:27 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Robin Murphy <robin.murphy@arm.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
-Message-ID: <20250220124827.GR53094@unreal>
-References: <cover.1738765879.git.leonro@nvidia.com>
+	s=arc-20240116; t=1740060517; c=relaxed/simple;
+	bh=uMcFCvRyFYAfxSRpb4IHMbXiD751NApuC6Luyf2voJ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dZBbpMUlu4JzX8FHNon/DCajB4MX7e9g7EVD1eNWZyza74VCqwGCrqZscHEm+p8bhg5q/sH2O0KKI3VUcO1/1iV9pivRXYwbEYFfJQYkxCK+fb33iERonq4fsr2qnKJ6eeZ+jIlhawD2D1swKwhoN6sF7rUnUNQ//EvyugD4zsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AzAojyyt; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-220ea8ed64eso2253285ad.1
+        for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 06:08:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740060515; x=1740665315; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OjmM5gbTC9mvcMhJU+L68piC1eRyu7CQvSJe9PX9cWs=;
+        b=AzAojyytbyZYveiTh+82UzKkbso7X33LQvPc3Fv8e7UQjkBdOjQP+TwE8fscLRZqF9
+         +Y0NfFUp+4cKJnkxq8VljUjB6NGVmcI/uP4KQicUd6JoGixgG0/N54vJIX3eO919JUur
+         nCeynczYZ30WDzJCRa+iIiugcL6BXOyFL3ha4b4aRyZj6zHPmzpmXfD4ZmRd6pzgmnah
+         McBzMaoqsdpVOzDNvtps59k0sr+KF5hyVtRV4QhNqdOWn3eJphkdhfhGecbRqnI2DADU
+         neauDVGfRSCuVezFNUNyzw6IH+w0Y5P8xqb2Cbv0gOmtHUkB2HwBHB/E2IxNyZL/QjO3
+         N5NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740060515; x=1740665315;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OjmM5gbTC9mvcMhJU+L68piC1eRyu7CQvSJe9PX9cWs=;
+        b=D3lle5zFSGFdEdV/9PLyCvqVzFkNfSxkLRxJiCq5zDcXTeEW9rFTuz/1YAKfXdLCnV
+         T6ZK44FWeNpnIszSfLvV43008yg2JlAL2xaNXRNb5WggAeHMzCsbL9jpbm4QnkTTJPY0
+         pEaBHTyChh9P8Xmec5shcjuog5PeYi8RRS9rCA1uaHmIpi8yH4zTEDaYYsari1TAzPMr
+         VPdqqmvcueA1XRpaYrzzk5UWUU/UY9pjQ0LhEVtr32ZLPB5He6UevYf96P5gwrnkegAn
+         JM3V+Cnc1oTHwk5pdD1pJQCbfOcC7rakRsBrHMsas+YfhTCGEG8ZohqKDbM5Ud0Gkmcp
+         CHPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUMsQGhlWI61uzTjFtwzk+NdQo35Tci4StHbyCk4I/v/bt2G/mC57vUcLK65jYpRdyuMs0I67+BAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBKrv4dvVG0+y8OtJCpNU5nTPDtAtZogAUwGnl0o4xOpMPH2zN
+	1lKMXfk0M6hHZSDLpQzFFxwgLKLZ5NgMA0YkSZKxGhSDJFNczbvrB6omT9bTx4Iz3nujoXWvk3+
+	1VaTzeOX9KPqEEz/0Hy1bvKL2RpE=
+X-Gm-Gg: ASbGncs/5nxct/pdNBJwYbWKgCMHV4EX3Le3kXsxcFm6lse6soDrDlB8Qvu5Z3+X9Va
+	d+oRB8ZQwccTrOtXg+uMrvk+KVeZSjfE+UoSf+0KExe3p+g8j5ASMzaVCxv+z2zFvGImNm+NZ
+X-Google-Smtp-Source: AGHT+IGkQAqVX+MDRMILw0YtR9i6iMI9KuYyxccf6C9LXlRgIPcyWd9dbDjU2gBO1tA4wBcbe8Rl1yWltmTLHYcUx4A=
+X-Received: by 2002:a17:903:32c7:b0:21f:3e2d:7d43 with SMTP id
+ d9443c01a7336-221040b48d5mr130525715ad.13.1740060514034; Thu, 20 Feb 2025
+ 06:08:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1738765879.git.leonro@nvidia.com>
+References: <20250217151053.420882-1-alexander.deucher@amd.com>
+In-Reply-To: <20250217151053.420882-1-alexander.deucher@amd.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Thu, 20 Feb 2025 09:08:22 -0500
+X-Gm-Features: AWEUYZmH7n-J4pdID-Gbt_Ubv5ZtjOVDv1UbvJ66j9xAALjB-6p7CCfjQGwrQc4
+Message-ID: <CADnq5_P_oZ808SbHf3Vpga8x+c=WopRpBWUuL2=KpuXwh6cUPg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: fix Sapphire PCI rebar quirk
+To: Alex Deucher <alexander.deucher@amd.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, 
+	amd-gfx@lists.freedesktop.org, Mario.Limonciello@amd.com, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Nirmoy Das <nirmoy.aiemd@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 05, 2025 at 04:40:20PM +0200, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
-> 
-> Changelog:
-> v7:
->  * Rebased to v6.14-rc1
+Dropping this patch.  Will work around this in the driver.
 
-<...>
+Alex
 
-> Christoph Hellwig (6):
->   PCI/P2PDMA: Refactor the p2pdma mapping helpers
->   dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
->   iommu: generalize the batched sync after map interface
->   iommu/dma: Factor out a iommu_dma_map_swiotlb helper
->   dma-mapping: add a dma_need_unmap helper
->   docs: core-api: document the IOVA-based API
-> 
-> Leon Romanovsky (11):
->   iommu: add kernel-doc for iommu_unmap and iommu_unmap_fast
->   dma-mapping: Provide an interface to allow allocate IOVA
->   dma-mapping: Implement link/unlink ranges API
->   mm/hmm: let users to tag specific PFN with DMA mapped bit
->   mm/hmm: provide generic DMA managing logic
->   RDMA/umem: Store ODP access mask information in PFN
->   RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
->     linkage
->   RDMA/umem: Separate implicit ODP initialization from explicit ODP
->   vfio/mlx5: Explicitly use number of pages instead of allocated length
->   vfio/mlx5: Rewrite create mkey flow to allow better code reuse
->   vfio/mlx5: Enable the DMA link API
-> 
->  Documentation/core-api/dma-api.rst   |  70 ++++
->  drivers/infiniband/core/umem_odp.c   | 250 +++++---------
->  drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
->  drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
->  drivers/infiniband/hw/mlx5/umr.c     |  12 +-
->  drivers/iommu/dma-iommu.c            | 468 +++++++++++++++++++++++----
->  drivers/iommu/iommu.c                |  84 ++---
->  drivers/pci/p2pdma.c                 |  38 +--
->  drivers/vfio/pci/mlx5/cmd.c          | 375 +++++++++++----------
->  drivers/vfio/pci/mlx5/cmd.h          |  35 +-
->  drivers/vfio/pci/mlx5/main.c         |  87 +++--
->  include/linux/dma-map-ops.h          |  54 ----
->  include/linux/dma-mapping.h          |  85 +++++
->  include/linux/hmm-dma.h              |  33 ++
->  include/linux/hmm.h                  |  21 ++
->  include/linux/iommu.h                |   4 +
->  include/linux/pci-p2pdma.h           |  84 +++++
->  include/rdma/ib_umem_odp.h           |  25 +-
->  kernel/dma/direct.c                  |  44 +--
->  kernel/dma/mapping.c                 |  18 ++
->  mm/hmm.c                             | 264 +++++++++++++--
->  21 files changed, 1435 insertions(+), 693 deletions(-)
->  create mode 100644 include/linux/hmm-dma.h
-
-Kind reminder.
-
-Thanks
-
-> 
-> -- 
+On Mon, Feb 17, 2025 at 10:48=E2=80=AFAM Alex Deucher <alexander.deucher@am=
+d.com> wrote:
+>
+> There was a quirk added to add a workaround for a Sapphire
+> RX 5600 XT Pulse.  However, the quirk only checks the vendor
+> ids and not the subsystem ids.  The quirk really should
+> have checked the subsystem vendor and device ids as now
+> this quirk gets applied to all RX 5600 and it seems to
+> cause problems on some Dell laptops.  Add a subsystem vendor
+> id check to limit the quirk to Sapphire boards.
+>
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/1707
+> Fixes: 907830b0fc9e ("PCI: Add a REBAR size quirk for Sapphire RX 5600 XT=
+ Pulse")
+> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Nirmoy Das <nirmoy.aiemd@gmail.com>
+> ---
+>  drivers/pci/pci.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 225a6cd2e9ca3..dec917636974e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3766,6 +3766,7 @@ u32 pci_rebar_get_possible_sizes(struct pci_dev *pd=
+ev, int bar)
+>
+>         /* Sapphire RX 5600 XT Pulse has an invalid cap dword for BAR 0 *=
+/
+>         if (pdev->vendor =3D=3D PCI_VENDOR_ID_ATI && pdev->device =3D=3D =
+0x731f &&
+> +           pdev->subsystem_vendor =3D=3D 0x1da2 &&
+>             bar =3D=3D 0 && cap =3D=3D 0x700)
+>                 return 0x3f00;
+>
+> --
 > 2.48.1
-> 
-> 
+>
 
