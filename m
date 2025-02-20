@@ -1,361 +1,424 @@
-Return-Path: <linux-pci+bounces-21868-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21869-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C03B0A3D05D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 05:19:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D886CA3D11E
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 07:07:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9329F1779A4
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 04:19:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD83A18917BE
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 06:07:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D066B1DF992;
-	Thu, 20 Feb 2025 04:19:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A0981D5175;
+	Thu, 20 Feb 2025 06:07:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gnjy0MwI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D54e+EWL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2063.outbound.protection.outlook.com [40.107.92.63])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36571DEFFC
-	for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 04:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740025191; cv=fail; b=UMfwEE+kBrmOSBuY1q1UkdFgJTQaNQVkT1KrVit9vzCdUJ7+ek67DweHe/uf2T74/kcCjD0WXPreKNzgzlmDFBCG5IWnNS5/lcBVIYZAu2vYwofWPTBZfPIsbRwgwgNn2wX0/CaXniMBzQW9lnWiGnMvOSj059h6TkHXwN1YA8c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740025191; c=relaxed/simple;
-	bh=0F9Fz6Iv5IXSBaG+Wczpe9l/k3iJvNCkZ4rSctwSvg4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ageGgHBhr5WhQrcROr72HX+KjEMxpYJkuM/4iI0dm0MQSMeF32k1G/kRBdzyXJSF/wAjhdSFfMoQ8XIHNL0Ge/BQ1ypc/D2D2tM3wYGfkNQvmYiIfGn0Bu42TIfWuFpmJkt+BfIMLD42jiZafGeY4lW97+nt53CVbz6Lq5XxNmw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gnjy0MwI; arc=fail smtp.client-ip=40.107.92.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AfH1a5rE4pDCjjNUViDIzYo18uOVRp41+J3ut+xfHJhcyY+GpE7gqGCIGB6DCaPa3M7KXWAD5viRmvx/rkQiucZryCcDtWrD6NOQR/5gp6S4Qz1Vp4/p6oV1cwnJV4+BhqUOGwJj6e7f1LhNPHWyTyOk8R984SBgHdckd8Pm8n9B9REW8p3Vfd7Hm3kgkuSeMSfuXscQExLcUGEm6g+ROcz+lUXBoTklWtcJC2KHsbTCISfnippEHPtEbkKGWgWdTqLCggZCW+6bwO8q+1PY7MGy+QndRP4AbCBAban1Vr5udUGaH2m5kOyjX0lhWu7v38ItcyWAmVIKPE6a9fo+eg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zEQ1ujIi79LqyqJ6kw36dlrsmB+G+0mqSc8DevuTQBY=;
- b=xo/4QKX/OK+0MjXNmLmC3oOFIbqYssA+WDZ+FTVyJh58Us33HmJOxPbnWsQp6GNHEaDf3yj38keQGY98nUaD4xEz5kvagClr4edX3tZy8OoZAyIRgzTlfLIdOYoBQOwqwVeZec2x+ELa+rUKXIQuqqfeUx1/0B4oofxj3CClOL5qmiV+F4uLw/ZTvhiUTaOgHUNROGL3GMfL8velAouu06cidGGC1xDBOitpv8EY17Md2njayPKlEjNtp/mNGrYT60cKurxSeob0v8L2VFTP7tOZlSMIwgf3C73noMDVRM+UR3Mb4rjsX0n19mylmZMr/matJtbMH8FBVZSICwO/vQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zEQ1ujIi79LqyqJ6kw36dlrsmB+G+0mqSc8DevuTQBY=;
- b=gnjy0MwIHMd0LdSHl5V51mt/S2etAEN6dacLRTwcH2eJEc4JtUKTFBwNst7p8XitNZHGHhsBpzQj8qXuxrPh4bkUnL3R5mBRCBrJPkmJwB7iM7G3hEG5TqCuZHcbpfw7o04MnU2/yq8Yko+VTK8Qkr0+0EPqwbkODVrTuSvtuYs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by CH0PR12MB8579.namprd12.prod.outlook.com (2603:10b6:610:182::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Thu, 20 Feb
- 2025 04:19:47 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::53fb:bf76:727f:d00f%5]) with mapi id 15.20.8445.016; Thu, 20 Feb 2025
- 04:19:47 +0000
-Message-ID: <56d0c785-2094-49f1-8dd2-be28eae3c758@amd.com>
-Date: Thu, 20 Feb 2025 15:19:40 +1100
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 08/11] PCI/IDE: Add IDE establishment helpers
-Content-Language: en-US
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
- Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
- Samuel Ortiz <sameo@rivosinc.com>, linux-pci@vger.kernel.org,
- gregkh@linuxfoundation.org
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
- <173343744264.1074769.10935494914881159519.stgit@dwillia2-xfh.jf.intel.com>
- <9f151a74-cc5c-4a7c-8304-1714159e4b2c@amd.com>
- <6d50f215-93c4-49a5-9ee2-f9775b740f92@amd.com>
- <Z32H2Tzd1UHCQEt5@yilunxu-OptiPlex-7050>
- <d71dd5c5-4c20-4e8e-abaa-fe2cdea4f3b2@amd.com>
- <Z4A/g5Yyu4Whncuu@yilunxu-OptiPlex-7050>
-From: Alexey Kardashevskiy <aik@amd.com>
-In-Reply-To: <Z4A/g5Yyu4Whncuu@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ME3PR01CA0011.ausprd01.prod.outlook.com
- (2603:10c6:220:19e::13) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CF01BE86E
+	for <linux-pci@vger.kernel.org>; Thu, 20 Feb 2025 06:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740031623; cv=none; b=bRYTaN0Wlk7g6/GW+Q4j9SLHAKl2G98QHRS5U1LCMoPXNKVwb3qONuboHAEkfluyGco1VmsebPR2JZ6Oa2otPa4fm4072PS5jkDEVjzAYgnZYVOh8A6mYkXmiOSnoLckQI37OJKFm+zzkxulVcsgUbE2n6zNpsn6Q0CQH4gjVUA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740031623; c=relaxed/simple;
+	bh=Vp7S5aMZRDaxlLaB+xF04clldlJwFwjrvZun2TKdfrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jlAZDSchrFAPey52mfHKkZLTr/7TQgUUvwqmSZx0fadFyjMTj2ZcHLT7yg+ii2WrpQBCVZlAA4mVILRjIyhB6RQFlhTbSV02AamdIOFdN83w1HgjxLCCuox5913YitzBQaGD8xCJhv4IkUVK7eIrPszVC/Ey6Zq7EZtJ21OVyQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D54e+EWL; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-21c2f1b610dso14151445ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 19 Feb 2025 22:07:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740031621; x=1740636421; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=O/X2ikjCAl1i7RsE9nBl+7NV4Kv1B2h8vdTq8JIddNw=;
+        b=D54e+EWLCbVGWMsoWeQqZoCb8XHSHzQX+i2PEaPxJvjlIWHlTYiVQ5WrLNBAb91DQu
+         uHuEhhn1QnzcCRUksxGEAGf+2JL3dV6/kdIZBlGgQg4Bfplogtuc5wH66FNEc1f8iEQ+
+         7eJEtREFwfy+V7wN+B6UJxbBgFQ3hcSGIs012i4e11ovxqO0v2ixh8+qPJPxA6a2u50s
+         2qBmuWNeIAQXi2snMC+FHmCJTAWvZATaYLbjNlNrxplv5JTGwezBhGhdaDUl6lj8lbn0
+         FmT/5TL9pzt2cXafVCuut7PsZo2nlZlLhAWGcrAhRNAAJ2SiMW3oyPu4YPw52ZR0/6VT
+         vLmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740031621; x=1740636421;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O/X2ikjCAl1i7RsE9nBl+7NV4Kv1B2h8vdTq8JIddNw=;
+        b=DE0ED/R8LG3aqjRm2R7BL8HvSW0MEztUSiXaDN1y8NwaG2WnQSi/PSUuW+ZsNh9Nqk
+         fF/8p/Qb6Dx6GIJCr+Vlh46MgjIiBQncJQmCQ6th2Rz8MHUPtXfoJU2+S750TsR17OU7
+         wo3AcSgirNK0/aZy3SNn38iiWYUPEC0JPvZouDYpN2X4md+ytCcE6oKBBEM1Fob9yrLK
+         kueX0ToyJpHcU0+jpw2J6HPXwrDoiiWmmDSyfIfAlEB004MUTHQpR9kP5dh4I6P4/HGc
+         ZG/NwJQJoTme2BhsadEMktlgG9orVpzOUT3cVovwbtEPYpII4t2ksT0ms1Qzt5j0ZCZN
+         B7uw==
+X-Forwarded-Encrypted: i=1; AJvYcCUzFHeO8qEtQMKViXToDgw3sPYnPsrC16Ja+kHf64/tLzyyKN4utwMDsV1VZACldFqpAPC5tN/z8Pw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznOw5/+7wqgKhIEavhzOV/xzcg0lSyXAs55205aroV7pCWjvlE
+	TPuGQlBuAkqTJn8szyn1Qxta2b+W8Z5/L1BQbJpzqTXM9aGb3qgsUl7NPA254A==
+X-Gm-Gg: ASbGncvOozN5/nmbUK2Qr0l0CNqkL/eq5IH+V4VaZ8BOrLR+TnCP/xAQicVkYV70jMT
+	Cg/Gs6rO/XAxe2Kyp/FUWlKr0WSn4/WXe/5vgLxWjwcRt5wpZ7sOW9eo49KML9lB1TG36G+mbv2
+	coV6RlK4cHOFrnzdq/5SEWhh9kpTVS3oTJllX8CXfxJGHmGV0QIBqcQ+tOtMIT967zhMIoL6NKU
+	SFXMHT0KUbMdNfBUFMUHDeEkvzjC5+6QkTzmCrQc9tVUNpmAlLcb+AC617Gd9oht47strRjgYVb
+	roSWvY8whF3LR4k+/jOzgrwlBg==
+X-Google-Smtp-Source: AGHT+IFw7Z785uVCKGSbJY6+y8LFZJ9WfdDWB0seduWV88kZGRwVoXW28Qc/vPpZr3dOY9tilZlsZQ==
+X-Received: by 2002:a05:6a21:1506:b0:1ee:e641:ca8 with SMTP id adf61e73a8af0-1eee6410dc4mr2206274637.20.1740031620635;
+        Wed, 19 Feb 2025 22:07:00 -0800 (PST)
+Received: from thinkpad ([120.60.70.244])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73287ac0ea9sm5725205b3a.152.2025.02.19.22.06.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 22:06:59 -0800 (PST)
+Date: Thu, 20 Feb 2025 11:36:50 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com,
+	Jonathan.Cameron@Huawei.com, fan.ni@samsung.com,
+	nifan.cxl@gmail.com, a.manzanares@samsung.com,
+	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
+	quic_nitegupt@quicinc.com, quic_krichai@quicinc.com,
+	gost.dev@samsung.com
+Subject: Re: [PATCH v6 3/4] Add debugfs based error injection support in DWC
+Message-ID: <20250220060650.sqioighxfputkifs@thinkpad>
+References: <20250214105007.97582-1-shradha.t@samsung.com>
+ <CGME20250214105347epcas5p1205c5925fd239e34b3608ded2c0349c7@epcas5p1.samsung.com>
+ <20250214105007.97582-4-shradha.t@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|CH0PR12MB8579:EE_
-X-MS-Office365-Filtering-Correlation-Id: f42c8688-8acb-43eb-e05a-08dd5165cfaa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QktxZmRIdENjbUpWL1Z3bXV2R2lRUHloeDhlVXlHUEQycXFZdVBxOGx0TFlW?=
- =?utf-8?B?TTl5ZlMwQmhBb3luV3JLcWJGTjZXV1VOT1JTYy9HTmRIeFB6RTlDeUFtaGJU?=
- =?utf-8?B?b0RwNlp6QWNncUhXZXoyN0dhWHorM0U1MHpTR2dtN2Y1MDRlVldtak1UMlNh?=
- =?utf-8?B?enZKaDZZVmNsUzNMMnpEVm5rZUFrREJlMkVJZUZNa3RGWkl5V2l0UXNyeGhh?=
- =?utf-8?B?NWl6enpvTDV3ZjJVcllJNkRhbXJuNHRXeE94dHhzajRzUnNTYlpjeWM1WTFQ?=
- =?utf-8?B?SVVHZzZKdG12blVxY2RLRHVQaVpGUDRTa1Q2SGN2djVmaFpHOUp4dklLT3lN?=
- =?utf-8?B?akd1N05zbHlqYlB0Nk5rZTFZNldHaXBRcXgvMnVSYkRGV2FWVDdXc0RlODdP?=
- =?utf-8?B?dXBzTWkxZzYwdTl2dmdKc0xTZHM2TVlvSXpCb1RSMEFGYXFzempEQjI3WlB3?=
- =?utf-8?B?d2FQU3d2Y2lmRnNqOEM0V1M3YXVpN3pOODI2MkxlcTJXMEJZVFNWUGdTZUhk?=
- =?utf-8?B?ZFRMcG83WTNwZ1BHaHozZVhka0x0VFZrV1VaK25QaUxqS2J1WGx5SmJaTnlR?=
- =?utf-8?B?NDk0RGVUR2twQlVsam9RWHNMdzd3dzVHbVBaRTN1Z1VhdUp4WXo3SHpFdlpx?=
- =?utf-8?B?N005bWxSWFhhVHd6cmZseUZpcFhvaUV3QzV3Sm44cC96azRFQUxvemhLYkQx?=
- =?utf-8?B?TXhQV1c0eFZHY0o4QnlnMVl1YWNPdkhPVDRsTmdCTWFBNXRuTXZVbWlIU0kw?=
- =?utf-8?B?ZlNRZ1JEaERpNGU2TUV6WjNKUUU0ZTZHV0R2L3ZsU1FtNFNKTnJsUE5rRW44?=
- =?utf-8?B?bCtpRkttTTN4UW5KeUtoSi8vSkUrWGhwV2p3dWxVMXQvRkdEb01NcVMzQS9Z?=
- =?utf-8?B?WkVab0g3SWlQbHhEajd4TTE5NE1EbjI1eWF5QUVvVmpZQmhrWERwREJVYTdQ?=
- =?utf-8?B?ZWZIbzAwb08zMkV3WSt0OVBjYnNSMHF0bFlwSFU4VFM1WnhETmgxZmhoWXYw?=
- =?utf-8?B?ZW9ER2h1Znk4TU41M1hjT0NvVlRFNWxyTXBONkd2K0RhRzJyMHZIZ1pVSUdU?=
- =?utf-8?B?MGlVTG5DSHFIb3VyeVZ3MCtQV1dBRXhKOUhRSmsxSW9XUnQwQlJ4OTJENno3?=
- =?utf-8?B?ZWZmSnQyU09lNkk4Y1RQbG1ORmtURVlLdS8xdTNpRlFVeFgrOHlWakNuY3Zk?=
- =?utf-8?B?dllwWVRXbnJqSnUwWWkyMUUrcjJkb1FLbjV6TzRRck8zbFVGQ0hDbno5am0x?=
- =?utf-8?B?dDZBK3Z1ZUZCanJPL2JOVlhjS2lqdktCMlFYR1NiRWN2ekczdlNPZjdwNXpU?=
- =?utf-8?B?RnpaNFBpeFRjN2Fwd0RQZzF6Vk5yMGxtNmdHMXFXQmNxeTZmSHhHZ2xrU1VD?=
- =?utf-8?B?eXNac09wOWRNZGNmZHM5a1BIQkpWbWhocTdITGlzbW5iZWkxWkgzT3pJWTQr?=
- =?utf-8?B?eVc4WTVVOG5OdVBudVRqR3AwRXoxQWREb2ZpQ0dNZ3NuWDJYQW9obkMvYXR5?=
- =?utf-8?B?OGZaMW5ZNEdVdVFkcmpvWWU2RDFRMi9WckZaKzhRMUpNTDVrbEtURUJOSmxi?=
- =?utf-8?B?eStCN0g5aEFEYXBNa2pkazljWkdlZkxWa0E3YURYNVVYVjh5VlFwVXlreXkx?=
- =?utf-8?B?dVZaY2dzUkJtS0krV3NrcGQ2NGVKWnA2TUJtSklma1lySlp4ZTV3UlFKRXIx?=
- =?utf-8?B?RzErbzJXckc0VURac1hyVk9kM3BKYVZKL2VUdlpRNkNUdHNTcDBVVlRZa2RO?=
- =?utf-8?B?WU1BUng1ckEzZHloNmljbzBWbmNISDlIa1paVUp2WnR5Y3VVWTlKNHF2UXFB?=
- =?utf-8?B?Q0grYVVZVUFNV3llTUNMRjdBSFg0TmEvLzJuSCtqbUd3Szlab3o3ZkU3ZGpX?=
- =?utf-8?Q?zpcpXmXecySZc?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bFJMRlZaSDIzQkpGOTB0MS9MY0xuRy9BK1BxbkhXSDd5eUh3K1E5enlBV0Jo?=
- =?utf-8?B?TDcwTSt1elBlMWpwdnhBdXFwQUs0TkorVVFIeFdrMmdKVWxQRGtKVVV5TlZr?=
- =?utf-8?B?Tm5VV0QyTllHTDBmZlNWbDlaRVdLMldOOHIyYW9OQkF0bUVKQkFZQkdnRi80?=
- =?utf-8?B?M25uZlRmemMzaTFUQmh5SHF6QUF1S2RiYXpLOW5ZVzlWTk9hQloxZ2hkYzJN?=
- =?utf-8?B?bjFzSFQwczlmK25sUFNTKy9kYkdQZU0xbktXY1owcUJRdlBySkRobmFXRzF0?=
- =?utf-8?B?YzNJM1RQS2RXVm0yc0JDdnpJWHYwK1huWStOS0F1YVl2VlBPUEljeDkreWpq?=
- =?utf-8?B?KytXYkhMYkwxZWJCaDJBVkRKbHUvekNJWmkzaFpjTGJRYU5pVUVvNFVHQ2NN?=
- =?utf-8?B?QUx2a0ROWW9rdlNvZHJLWllvbWk0NHU0cktUekRYZ2trak96U1BaZ2cvZmpF?=
- =?utf-8?B?eUpqOXo1Z0tveElORVRCaWNEOGFDUTJQLzhRWTF2NkVPaDk4WXBmUHdGQ1hO?=
- =?utf-8?B?UUJ2b2JaUmtvbHZBYk5DVkZ4TXVtd3ZQRk9xdFZOdFN4SmQ2UjFBUE5OWmFF?=
- =?utf-8?B?OFpiNW9KTXkrS3RHc3dnSnp0TmQvaWVIM3dGNU9GclBkSVhrRUtTZENzUUJJ?=
- =?utf-8?B?NUNyU2RjQkJRaU5VbFJPRHhzVTlQL2JFeUVzekpuMVE1dmowS2pmVFNQSXBv?=
- =?utf-8?B?UVlZVnRwcU5lMmxHVmdGK1VDcmtzRitlNnladjVKVXlGbTd4eXlhYjFZOTZ4?=
- =?utf-8?B?QzlBYjNFYlBxWWFSZ0JIOCtONndFZlp0dXVHN1UzY0FiOE1KT0xiTmlWYVBs?=
- =?utf-8?B?MUJXVlQzK3NVVHFrT0Nmc2VmdkU4UStzcWE4NTczUkVlTmo1OHNBSmlxTDMz?=
- =?utf-8?B?TWFZcDVyMllzd3oxN2JxcmNzdzNrRE9TalBPaGZoa2FYUjh5UHlBSmZKNWc1?=
- =?utf-8?B?M00xQ3RLRnZ1ZGxEZFZuREZ2RWhiU1JmSCtBQnA0cFZNZWdOK0dtRDlZVC9n?=
- =?utf-8?B?d24xd2tnbDZUZ3QySnExdkZOSGk4R1BhQnR0anpTWFppZFkvZTFIdGsrSG9p?=
- =?utf-8?B?U05PbjdNbjg1M1lIOEE4cnhFQ2l2dGFrRmZ1VlUraTVJeVh5SGswQ1VBZERp?=
- =?utf-8?B?SzVCR0F6dlVFWVJPejVwMStKTEwwR05RR2NXWWxDT1lhR3ExeG5XUUlVVHBz?=
- =?utf-8?B?OE5zREgvSWtWRVJJbm8wSDUvTm9JQTRJRkJjWG53cmcxSWEzcDVKUmRzWTJL?=
- =?utf-8?B?cERJYW91a3VRY01LemFZZzI2Qm1vQWJrUXBGL1BRMm1xSllZcHpxZnliUk5m?=
- =?utf-8?B?T01udTJ1TTVOOWcyTlp4K3I0RGlMN203ZmNNbUhJVkJkNFBDdEdYeDdORXhB?=
- =?utf-8?B?QnY0L3dIOVQwQ0NEcWVpU2N5TW0yWENXanNTcnJlVzF4VXZmT3dobjBxS1M0?=
- =?utf-8?B?dkdYOEV0QzJsL0VyVkFNUW1ycGcrd2FJWDlGT1NXT281Vm9LZ2hXRVQ0N3Yz?=
- =?utf-8?B?ZDdseXcrb2w2VTFRWnhzcWhUaVRVQWRRcnIvbkZQZEVjUVBGd3Z5TFN5SXJt?=
- =?utf-8?B?N0N5M1VnNUlHcHh2OGc2WWZBVnNFMVFKU0tlam1pdHI1LzRhaml4ZVRvcU82?=
- =?utf-8?B?MlJrUmQ5MitCTEhnenlOL1hjeDZnbmZIY3lPeng3NUw2aEwyWVc4c2x0Uk4z?=
- =?utf-8?B?c0hZZndHUmRWNVEwY3EwQ003SWRCdUU4T0x3LzM2a3hiM3dwWkxBaThYZW9a?=
- =?utf-8?B?M0lkN3NCYmFjSVZsSWJEUmljenhUMGgwbXJOdlNRVUllazlKcXRTZmVGMjN3?=
- =?utf-8?B?UDA0NFhqcjhEeDhrK01YWE55NGxidTRoMFZOMUZRU1dYRU55VHNHS0JQdWk0?=
- =?utf-8?B?Y1hUZ0xQMkwrYmRVQXoydXB5UUFGajJxOVgyaWRsTDNEYVJlbVg1aEVPUEs0?=
- =?utf-8?B?N3I0bk53T0xXZkdJOGV3NmIyTjNGSm0yaDA2a0p1M04yRmRIbVUyRStHTGRr?=
- =?utf-8?B?Q0FIRFBaUTBHUTZ3OXlYaHprOEE1MUE5bTg5TW5Nb3hBeTJ6YWhKdG9SeFEv?=
- =?utf-8?B?eUpSZ25TajZ3Q0lPdU05cytQOHRjNm9RTzBKTDA1RnF0b0k5blNQcjdQMTBa?=
- =?utf-8?Q?LXKQa6Y6/GHtvAKSMBLxC5lbx?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f42c8688-8acb-43eb-e05a-08dd5165cfaa
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 04:19:47.5595
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NlF3Ng4YSE8rGuZj5VWRWjVv5DPT/JXNiK8bhbTaNAaEM4ujoH3DjQW/zL8nWvkl8Iz4wgxmeuz+/tUNRYIr9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8579
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250214105007.97582-4-shradha.t@samsung.com>
 
-
-
-On 10/1/25 08:28, Xu Yilun wrote:
-> On Thu, Jan 09, 2025 at 01:35:58PM +1100, Alexey Kardashevskiy wrote:
->>
->>
->> On 8/1/25 07:00, Xu Yilun wrote:
->>>>>> +static void __pci_ide_stream_setup(struct pci_dev *pdev, struct
->>>>>> pci_ide *ide)
->>>>>> +{
->>>>>> +    int pos;
->>>>>> +    u32 val;
->>>>>> +
->>>>>> +    pos = sel_ide_offset(pdev->sel_ide_cap, ide->stream_id,
->>>>>> +                 pdev->nr_ide_mem);
->>>>>> +
->>>>>> +    val = FIELD_PREP(PCI_IDE_SEL_RID_1_LIMIT_MASK, ide->devid_end);
->>>>>> +    pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_1, val);
->>>>>> +
->>>>>> +    val = FIELD_PREP(PCI_IDE_SEL_RID_2_VALID, 1) |
->>>>>> +          FIELD_PREP(PCI_IDE_SEL_RID_2_BASE_MASK, ide->devid_start) |
->>>>>> +          FIELD_PREP(PCI_IDE_SEL_RID_2_SEG_MASK, ide->domain);
->>>>>> +    pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_2, val);
->>>>>> +
->>>>>> +    for (int i = 0; i < ide->nr_mem; i++) {
->>>>>
->>>>>
->>>>> This needs to test that (pdev->nr_ide_mem >= ide->nr_mem), easy to miss
->>>>> especially when PCI_IDE_SETUP_ROOT_PORT. Thanks,
->>>
->>> Yes, but nr_ide_mem is limited HW resource and may easily smaller than
->>> device memory region number.
->>
->> My rootport does not have any range (instead, it relies on C-bit in MMIO
+On Fri, Feb 14, 2025 at 04:20:06PM +0530, Shradha Todi wrote:
+> Add support to provide error injection interface to userspace. This set
+> of debug registers are part of the RASDES feature present in DesignWare
+> PCIe controllers.
 > 
-> It seems strange, then how the RP decide which stream id to use.
+> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
 
-Oh I thought I replied :-/ The RP gets the stream id from an RMP entry 
-corresponding to the MMIO page.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
+- Mani
 
+> ---
+>  Documentation/ABI/testing/debugfs-dwc-pcie    |  70 ++++++++
+>  .../controller/dwc/pcie-designware-debugfs.c  | 165 +++++++++++++++++-
+>  2 files changed, 233 insertions(+), 2 deletions(-)
 > 
->> access to set T-bit). The device got just one (which is no use here as I
->> understand).
+> diff --git a/Documentation/ABI/testing/debugfs-dwc-pcie b/Documentation/ABI/testing/debugfs-dwc-pcie
+> index e8ed34e988ef..9eae0ab1dbea 100644
+> --- a/Documentation/ABI/testing/debugfs-dwc-pcie
+> +++ b/Documentation/ABI/testing/debugfs-dwc-pcie
+> @@ -11,3 +11,73 @@ Contact:	Shradha Todi <shradha.t@samsung.com>
+>  Description:	(RW) Write the lane number to be checked as valid or invalid. Read
+>  		will return the status of PIPE RXVALID signal of the selected lane.
+>  		The default selected lane is Lane0.
+> +
+> +What:		/sys/kernel/debug/dwc_pcie_<dev>/rasdes_err_inj/<error>
+> +Date:		Feburary 2025
+> +Contact:	Shradha Todi <shradha.t@samsung.com>
+> +Description:	rasdes_err_inj is the directory which can be used to inject errors in the
+> +		system. The possible errors that can be injected are:
+> +
+> +		1) TLP LCRC error injection TX Path - tx_lcrc
+> +		2) 16b CRC error injection of ACK/NAK DLLP - b16_crc_dllp
+> +		3) 16b CRC error injection of Update-FC DLLP - b16_crc_upd_fc
+> +		4) TLP ECRC error injection TX Path - tx_ecrc
+> +		5) TLP's FCRC error injection TX Path - fcrc_tlp
+> +		6) Parity error of TSOS - parity_tsos
+> +		7) Parity error on SKPOS - parity_skpos
+> +		8) LCRC error injection RX Path - rx_lcrc
+> +		9) ECRC error injection RX Path - rx_ecrc
+> +		10) TLPs SEQ# error - tlp_err_seq
+> +		11) DLLPS ACK/NAK SEQ# error - ack_nak_dllp_seq
+> +		12) ACK/NAK DLLPs transmission block - ack_nak_dllp
+> +		13) UpdateFC DLLPs transmission block - upd_fc_dllp
+> +		14) Always transmission for NAK DLLP - nak_dllp
+> +		15) Invert SYNC header - inv_sync_hdr_sym
+> +		16) COM/PAD TS1 order set - com_pad_ts1
+> +		17) COM/PAD TS2 order set - com_pad_ts2
+> +		18) COM/FTS FTS order set - com_fts
+> +		19) COM/IDL E-idle order set - com_idl
+> +		20) END/EDB symbol - end_edb
+> +		21) STP/SDP symbol - stp_sdp
+> +		22) COM/SKP SKP order set - com_skp
+> +		23) Posted TLP Header credit value control - posted_tlp_hdr
+> +		24) Non-Posted TLP Header credit value control - non_post_tlp_hdr
+> +		25) Completion TLP Header credit value control - cmpl_tlp_hdr
+> +		26) Posted TLP Data credit value control - posted_tlp_data
+> +		27) Non-Posted TLP Data credit value control - non_post_tlp_data
+> +		28) Completion TLP Data credit value control - cmpl_tlp_data
+> +		29) Generates duplicate TLPs - duplicate_dllp
+> +		30) Generates Nullified TLPs - nullified_tlp
+> +
+> +		Each of the possible errors are WO attributes. Write to the attribute will
+> +		prepare controller to inject the respective error in the next transmission
+> +		of data. Parameter required to write will change in the following ways:
+> +
+> +		i) Errors 9) - 10) are sequence errors. The write command for these will be
+> +
+> +			echo <count> <diff> > /sys/kernel/debug/dwc_pcie_<dev>/rasdes_err_inj/<error>
+> +
+> +			<count>
+> +				Number of errors to be injected
+> +			<diff>
+> +				The difference to add or subtract from natural sequence number to
+> +				generate sequence error. Range (-4095 : 4095)
+> +
+> +		ii) Errors 23) - 28) are credit value error insertions. Write command:
+> +
+> +			echo <count> <diff> <vc> > /sys/kernel/debug/dwc_pcie_<dev>/rasdes_err_inj/<error>
+> +
+> +			<count>
+> +				Number of errors to be injected
+> +			<diff>
+> +				The difference to add or subtract from UpdateFC credit value.
+> +				Range (-4095 : 4095)
+> +			<vc>
+> +				Target VC number
+> +
+> +		iii) All other errors. Write command:
+> +
+> +			echo <count> > /sys/kernel/debug/dwc_pcie_<dev>/rasdes_err_inj/<error>
+> +
+> +			<count>
+> +				Number of errors to be injected
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> index fe799d36fa7f..dfb0840390d3 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> @@ -17,6 +17,20 @@
+>  #define PIPE_DETECT_LANE		BIT(17)
+>  #define LANE_SELECT			GENMASK(3, 0)
+>  
+> +#define ERR_INJ0_OFF			0x34
+> +#define EINJ_VAL_DIFF			GENMASK(28, 16)
+> +#define EINJ_VC_NUM			GENMASK(14, 12)
+> +#define EINJ_TYPE_SHIFT			8
+> +#define EINJ0_TYPE			GENMASK(11, 8)
+> +#define EINJ1_TYPE			BIT(8)
+> +#define EINJ2_TYPE			GENMASK(9, 8)
+> +#define EINJ3_TYPE			GENMASK(10, 8)
+> +#define EINJ4_TYPE			GENMASK(10, 8)
+> +#define EINJ5_TYPE			BIT(8)
+> +#define EINJ_COUNT			GENMASK(7, 0)
+> +
+> +#define ERR_INJ_ENABLE_REG		0x30
+> +
+>  #define DWC_DEBUGFS_BUF_MAX		128
+>  
+>  struct dwc_pcie_vsec_id {
+> @@ -55,6 +69,72 @@ struct dwc_pcie_rasdes_info {
+>  	struct mutex reg_lock;
+>  };
+>  
+> +/**
+> + * struct dwc_pcie_rasdes_priv - Stores file specific private data information
+> + * @pci: Reference to the dw_pcie structure
+> + * @idx: Index to point to specific file related information in array of structs
+> + *
+> + * All debugfs files will have this struct as its private data.
+> + */
+> +struct dwc_pcie_rasdes_priv {
+> +	struct dw_pcie *pci;
+> +	int idx;
+> +};
+> +
+> +/**
+> + * struct dwc_pcie_err_inj - Store details about each error injection supported by DWC RASDES
+> + * @name: Name of the error that can be injected
+> + * @err_inj_group: Group number to which the error belongs to. Value can range from 0 - 5
+> + * @err_inj_type: Each group can have multiple types of error
+> + */
+> +struct dwc_pcie_err_inj {
+> +	const char *name;
+> +	u32 err_inj_group;
+> +	u32 err_inj_type;
+> +};
+> +
+> +static const struct dwc_pcie_err_inj err_inj_list[] = {
+> +	{"tx_lcrc", 0x0, 0x0},
+> +	{"b16_crc_dllp", 0x0, 0x1},
+> +	{"b16_crc_upd_fc", 0x0, 0x2},
+> +	{"tx_ecrc", 0x0, 0x3},
+> +	{"fcrc_tlp", 0x0, 0x4},
+> +	{"parity_tsos", 0x0, 0x5},
+> +	{"parity_skpos", 0x0, 0x6},
+> +	{"rx_lcrc", 0x0, 0x8},
+> +	{"rx_ecrc", 0x0, 0xb},
+> +	{"tlp_err_seq", 0x1, 0x0},
+> +	{"ack_nak_dllp_seq", 0x1, 0x1},
+> +	{"ack_nak_dllp", 0x2, 0x0},
+> +	{"upd_fc_dllp", 0x2, 0x1},
+> +	{"nak_dllp", 0x2, 0x2},
+> +	{"inv_sync_hdr_sym", 0x3, 0x0},
+> +	{"com_pad_ts1", 0x3, 0x1},
+> +	{"com_pad_ts2", 0x3, 0x2},
+> +	{"com_fts", 0x3, 0x3},
+> +	{"com_idl", 0x3, 0x4},
+> +	{"end_edb", 0x3, 0x5},
+> +	{"stp_sdp", 0x3, 0x6},
+> +	{"com_skp", 0x3, 0x7},
+> +	{"posted_tlp_hdr", 0x4, 0x0},
+> +	{"non_post_tlp_hdr", 0x4, 0x1},
+> +	{"cmpl_tlp_hdr", 0x4, 0x2},
+> +	{"posted_tlp_data", 0x4, 0x4},
+> +	{"non_post_tlp_data", 0x4, 0x5},
+> +	{"cmpl_tlp_data", 0x4, 0x6},
+> +	{"duplicate_dllp", 0x5, 0x0},
+> +	{"nullified_tlp", 0x5, 0x1},
+> +};
+> +
+> +static const u32 err_inj_type_mask[] = {
+> +	EINJ0_TYPE,
+> +	EINJ1_TYPE,
+> +	EINJ2_TYPE,
+> +	EINJ3_TYPE,
+> +	EINJ4_TYPE,
+> +	EINJ5_TYPE,
+> +};
+> +
+>  static ssize_t lane_detect_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
+>  {
+>  	struct dw_pcie *pci = file->private_data;
+> @@ -115,6 +195,63 @@ static ssize_t rx_valid_write(struct file *file, const char __user *buf, size_t
+>  	return lane_detect_write(file, buf, count, ppos);
+>  }
+>  
+> +static ssize_t err_inj_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
+> +{
+> +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
+> +	struct dw_pcie *pci = pdata->pci;
+> +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
+> +	u32 val, counter, vc_num, err_group, type_mask;
+> +	int val_diff = 0;
+> +	char *kern_buf;
+> +
+> +	err_group = err_inj_list[pdata->idx].err_inj_group;
+> +	type_mask = err_inj_type_mask[err_group];
+> +
+> +	kern_buf = memdup_user_nul(buf, count);
+> +	if (IS_ERR(kern_buf))
+> +		return PTR_ERR(kern_buf);
+> +
+> +	if (err_group == 4) {
+> +		val = sscanf(kern_buf, "%u %d %u", &counter, &val_diff, &vc_num);
+> +		if ((val != 3) || (val_diff < -4095 || val_diff > 4095)) {
+> +			kfree(kern_buf);
+> +			return -EINVAL;
+> +		}
+> +	} else if (err_group == 1) {
+> +		val = sscanf(kern_buf, "%u %d", &counter, &val_diff);
+> +		if ((val != 2) || (val_diff < -4095 || val_diff > 4095)) {
+> +			kfree(kern_buf);
+> +			return -EINVAL;
+> +		}
+> +	} else {
+> +		val = kstrtou32(kern_buf, 0, &counter);
+> +		if (val) {
+> +			kfree(kern_buf);
+> +			return val;
+> +		}
+> +	}
+> +
+> +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + ERR_INJ0_OFF + (0x4 * err_group));
+> +	val &= ~(type_mask | EINJ_COUNT);
+> +	val |= ((err_inj_list[pdata->idx].err_inj_type << EINJ_TYPE_SHIFT) & type_mask);
+> +	val |= FIELD_PREP(EINJ_COUNT, counter);
+> +
+> +	if (err_group == 1 || err_group == 4) {
+> +		val &= ~(EINJ_VAL_DIFF);
+> +		val |= FIELD_PREP(EINJ_VAL_DIFF, val_diff);
+> +	}
+> +	if (err_group == 4) {
+> +		val &= ~(EINJ_VC_NUM);
+> +		val |= FIELD_PREP(EINJ_VC_NUM, vc_num);
+> +	}
+> +
+> +	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + ERR_INJ0_OFF + (0x4 * err_group), val);
+> +	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + ERR_INJ_ENABLE_REG, (0x1 << err_group));
+> +
+> +	kfree(kern_buf);
+> +	return count;
+> +}
+> +
+>  #define dwc_debugfs_create(name)			\
+>  debugfs_create_file(#name, 0644, rasdes_debug, pci,	\
+>  			&dbg_ ## name ## _fops)
+> @@ -129,6 +266,11 @@ static const struct file_operations dbg_ ## name ## _fops = {	\
+>  DWC_DEBUGFS_FOPS(lane_detect);
+>  DWC_DEBUGFS_FOPS(rx_valid);
+>  
+> +static const struct file_operations dwc_pcie_err_inj_ops = {
+> +	.open = simple_open,
+> +	.write = err_inj_write,
+> +};
+> +
+>  static void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
+>  {
+>  	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
+> @@ -138,11 +280,12 @@ static void dwc_pcie_rasdes_debugfs_deinit(struct dw_pcie *pci)
+>  
+>  static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
+>  {
+> -	struct dentry *rasdes_debug;
+> +	struct dentry *rasdes_debug, *rasdes_err_inj;
+>  	struct dwc_pcie_rasdes_info *rasdes_info;
+> +	struct dwc_pcie_rasdes_priv *priv_tmp;
+>  	const struct dwc_pcie_vsec_id *vid;
+>  	struct device *dev = pci->dev;
+> -	int ras_cap;
+> +	int ras_cap, i, ret;
+>  
+>  	for (vid = dwc_pcie_vsec_ids; vid->vendor_id; vid++) {
+>  		ras_cap = dw_pcie_find_vsec_capability(pci, vid->vendor_id,
+> @@ -161,6 +304,7 @@ static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
+>  
+>  	/* Create subdirectories for Debug, Error injection, Statistics */
+>  	rasdes_debug = debugfs_create_dir("rasdes_debug", dir);
+> +	rasdes_err_inj = debugfs_create_dir("rasdes_err_inj", dir);
+>  
+>  	mutex_init(&rasdes_info->reg_lock);
+>  	rasdes_info->ras_cap_offset = ras_cap;
+> @@ -170,7 +314,24 @@ static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
+>  	dwc_debugfs_create(lane_detect);
+>  	dwc_debugfs_create(rx_valid);
+>  
+> +	/* Create debugfs files for Error injection subdirectory */
+> +	for (i = 0; i < ARRAY_SIZE(err_inj_list); i++) {
+> +		priv_tmp = devm_kzalloc(dev, sizeof(*priv_tmp), GFP_KERNEL);
+> +		if (!priv_tmp) {
+> +			ret = -ENOMEM;
+> +			goto err_deinit;
+> +		}
+> +
+> +		priv_tmp->idx = i;
+> +		priv_tmp->pci = pci;
+> +		debugfs_create_file(err_inj_list[i].name, 0200, rasdes_err_inj, priv_tmp,
+> +				    &dwc_pcie_err_inj_ops);
+> +	}
+>  	return 0;
+> +
+> +err_deinit:
+> +	dwc_pcie_rasdes_debugfs_deinit(pci);
+> +	return ret;
+>  }
+>  
+>  void dwc_pcie_debugfs_deinit(struct dw_pcie *pci)
+> -- 
+> 2.17.1
 > 
-> I also have no idea from SPEC how to use the IDE register blocks on EP,
-> except stream ENABLE bit.
-> 
-> And no matter how I program the RID/ADDR association registers, it
-> always work...
-> 
-> Call for help.
-
-+1.
-
-
->>
->>
->>> In this case, maybe we have to merge the
->>> memory regions into one big range.
->>
->>>>>
->>>>>
->>>>>
->>>>>> +        val = FIELD_PREP(PCI_IDE_SEL_ADDR_1_VALID, 1) |
->>>>>> +              FIELD_PREP(PCI_IDE_SEL_ADDR_1_BASE_LOW_MASK,
->>>>>> +                 lower_32_bits(ide->mem[i].start) >>
->>>>>> +                     PCI_IDE_SEL_ADDR_1_BASE_LOW_SHIFT) |
->>>>>> +              FIELD_PREP(PCI_IDE_SEL_ADDR_1_LIMIT_LOW_MASK,
->>>>>> +                 lower_32_bits(ide->mem[i].end) >>
->>>>>> +                     PCI_IDE_SEL_ADDR_1_LIMIT_LOW_SHIFT);
->>>>>> +        pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_1(i), val);
->>>>>> +
->>>>>> +        val = upper_32_bits(ide->mem[i].end);
->>>>>> +        pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_2(i), val);
->>>>>> +
->>>>>> +        val = upper_32_bits(ide->mem[i].start);
->>>>>> +        pci_write_config_dword(pdev, pos + PCI_IDE_SEL_ADDR_3(i), val);
->>>>>> +    }
->>>>>> +}
->>>>>> +
->>>>>> +/*
->>>>>> + * Establish IDE stream parameters in @pdev and, optionally, its
->>>>>> root port
->>>>>> + */
->>>>>> +int pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide,
->>>>>> +             enum pci_ide_flags flags)
->>>>>> +{
->>>>>> +    struct pci_host_bridge *hb = pci_find_host_bridge(pdev->bus);
->>>>>> +    struct pci_dev *rp = pcie_find_root_port(pdev);
->>>>>> +    int mem = 0, rc;
->>>>>> +
->>>>>> +    if (ide->stream_id < 0 || ide->stream_id > U8_MAX) {
->>>>>> +        pci_err(pdev, "Setup fail: Invalid stream id: %d\n",
->>>>>> ide->stream_id);
->>>>>> +        return -ENXIO;
->>>>>> +    }
->>>>>> +
->>>>>> +    if (test_and_set_bit_lock(ide->stream_id, hb->ide_stream_ids)) {
->>>>>> +        pci_err(pdev, "Setup fail: Busy stream id: %d\n",
->>>>>> +            ide->stream_id);
->>>>>> +        return -EBUSY;
->>>>>> +    }
->>>>>> +
->>>>>> +    ide->name = kasprintf(GFP_KERNEL, "stream%d:%s", ide->stream_id,
->>>>>> +                  dev_name(&pdev->dev));
->>>>>> +    if (!ide->name) {
->>>>>> +        rc = -ENOMEM;
->>>>>> +        goto err_name;
->>>>>> +    }
->>>>>> +
->>>>>> +    rc = sysfs_create_link(&hb->dev.kobj, &pdev->dev.kobj, ide->name);
->>>>>> +    if (rc)
->>>>>> +        goto err_link;
->>>>>> +
->>>>>> +    for (mem = 0; mem < ide->nr_mem; mem++)
->>>>>> +        if (!__request_region(&hb->ide_stream_res, ide->mem[mem].start,
->>>>>> +                      range_len(&ide->mem[mem]), ide->name,
->>>>>> +                      0)) {
->>>>>> +            pci_err(pdev,
->>>>>> +                "Setup fail: stream%d: address association conflict
->>>>>> [%#llx-%#llx]\n",
->>>>>> +                ide->stream_id, ide->mem[mem].start,
->>>>>> +                ide->mem[mem].end);
->>>>>> +
->>>>>> +            rc = -EBUSY;
->>>>>> +            goto err;
->>>>>> +        }
->>>>>> +
->>>>>> +    __pci_ide_stream_setup(pdev, ide);
->>>>>> +    if (flags & PCI_IDE_SETUP_ROOT_PORT)
->>>>>> +        __pci_ide_stream_setup(rp, ide);
->>>>
->>>> Oh, when we do this, the root port gets the same devid_start/end as the
->>>> device which is not correct, what should be there, the rootport bdfn? Need
->>>
->>> "Indicates the lowest/highest value RID in the range
->>> associated with this Stream ID at the IDE *Partner* Port"
->>>
->>> My understanding is that device should fill the RP bdfn, and the RP
->>> should fill the device bdfn for RID association registers. Same for Addr
->>> association registers.
->>
->> Oh. Yeah, this sounds right. So most of the setup needs to be done on the
->> root port and not on the device (which only needs to enable the stream),
->> which is not what the patch does. Or I got it wrong? Thanks,
-> 
-> I don't get you. This patch does IDE setup for 2 partners:
-> 
-> __pci_ide_stream_setup(pdev, ide);  This is the setup on RP
-> __pci_ide_stream_setup(rp, ide);    This is the setup on device
-
-Nah, it is the oppositve.
-
-> 
-> unless AMD setup IDE by firmware, and didn't set the PCI_IDE_SETUP_ROOT_PORT flag.
-
-The AMD firmware does not access the config space at all, relies on the 
-host os instead. Thanks,
-
-
-> 
-> Thanks,
-> Yilun
-> 
->>
->>>
->>> Thanks,
->>> Yilun
->>>
->>>> to dig that but PCI_IDE_SETUP_ROOT_PORT should detect that it is a root
->>>> port. Thanks,
->>>>
->>
->> -- 
->> Alexey
->>
 
 -- 
-Alexey
-
+மணிவண்ணன் சதாசிவம்
 
