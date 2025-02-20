@@ -1,73 +1,77 @@
-Return-Path: <linux-pci+bounces-21907-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21908-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29733A3DE80
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 16:29:02 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AF41A3DED8
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 16:40:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A8EE6188A92A
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 15:28:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 312357AB2C1
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 15:32:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBE162010E6;
-	Thu, 20 Feb 2025 15:27:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D27F81DE4C4;
+	Thu, 20 Feb 2025 15:33:43 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D17D1FDE35;
-	Thu, 20 Feb 2025 15:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC151D5AA0;
+	Thu, 20 Feb 2025 15:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740065272; cv=none; b=YjhpHGFT8iXxKKyBO+/PtNQHTBc6axyHTR16Q4ZqiYhyR9AhMrKWRq2zr6gjtedGfPY9o3/Zb76+p1bcQo43nxyQEa6qeRFUczOA8bT1Zncd18qcJSkQRVJyMfTpxozv1Jr7PKty1mehgikM/e9eUamugqAEiU/yOkbsSCXC6vU=
+	t=1740065623; cv=none; b=o0G8oQRK9SvkEnnaRll77W6Tc82LkyMGNnHSbjODvj6tr+JhUS36uEdtBYx3UlkHIJx5IjKmoag3UrOlociQrtv0aGh6AckllC/RyWwl+ekU79lO9z5XaImykIBhkRErcghmVwpBNkRkea/hJMuSvA7llYFdrFzC8GkhW+8xWu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740065272; c=relaxed/simple;
-	bh=KGswvkIqG/8FWjEnabCRQkJO73Xpx/BMagFR70RGXgA=;
+	s=arc-20240116; t=1740065623; c=relaxed/simple;
+	bh=sf36f2W8jJ8MdC9oTXglCoDz6cA2telgyEFjOGRHKgc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U+6xVs2Qd0mdLMOYguhQcuKZOfavhKTvyV7r8E2HCStoEMdTvDRlQN/Qz9io+dTShYWIvJkTlbcU42TdP9DVJxq1NBGoAXkac+iGxgkJpk0Y/Z+JnZZ0sDxWgHPS68TIBgUTk4JnJWiLSzhnTlHdQVkzXXx/sASJFCzkfQJ7r8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.54
+	 Content-Type:Content-Disposition:In-Reply-To; b=JVfverfm8nZR4kuqfGdzME3fu/Jtu2Ok7vD6wEfO/ORQrLAAFHDFdfd4xSfOUSRmTKPnjpQz0VWNNZpiubZkqBdLq6ef3ANjYQNyWsB4l1HJ5ELisCWOdWuutnBORKp7Xp9YCyLhTq7q4Fkx98wSo+ybN9cHz4pcgOkbCbRbw+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso1687262a91.1;
-        Thu, 20 Feb 2025 07:27:50 -0800 (PST)
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-220f4dd756eso21640165ad.3;
+        Thu, 20 Feb 2025 07:33:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740065270; x=1740670070;
+        d=1e100.net; s=20230601; t=1740065621; x=1740670421;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lIQfSE0EI2Dxu23jjgqsNc/1C3k/ezRz6dk/fxTscZ0=;
-        b=u/lSzIFOgohRNx83PWSthig0x2uo6K/tl+YL6SlPgGfGxPotondDrWiJGQeY9ta/3i
-         sF82ezjpAT8+DFEAcIngdYkp/YD9zHgEyS35T4AGnz95N7KpzSfqtszohlzYlMoFW3FQ
-         9d2J9cpG9XnHrmuBZutwXiEvp4k8d3ehZWJ9aOgEcdr/7dhv7P35IcXZsPwzu08G+wVZ
-         ZFaF6oD8FO3xB8pN6qMLayN9CnNl71HS6BTJp7VBZlXPN9DN+GeMSaMp4pjbMR8X6Hc0
-         BJltRX39gHJn8MitEXXsqh+woF/8HEw8WpCAY7W1JW/h/o1a8rAKG3Zsv7gq17JopbcO
-         xZNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUP6r8eO3eKmeLef7cFoYAszFPNsY+Qh4QyZru8rjHSqsePcuWAPPS2S2R3BEns4/b270ZnmqoB6MVK@vger.kernel.org, AJvYcCW6r5XVvCtqAdyUYDETPl6PT258LjbMZDRMOGBWlohS2VIqrCkQqNoT0BtTIvnWOeDFTPWL4GSqonNQp8I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygYgIxKkQxZ7WbdvsGmAyaJXcDrpiOOXWa2AXl/1Eq94qEVVmM
-	3v0Qn9k4cmfIMX983tzFj4wzPS9q7NxZkgA80C7XUpB5h0C00uit
-X-Gm-Gg: ASbGnctjmgQrOIGiZWcXUG7zhuvAJHJOxvitdmsGaXMNomkFkT3LHQINsjdJhh1Fx+K
-	JE3QvFsUNSoWzdhMaMNfepOLDPxsSf2OAOFIFNhOj572m2GOeL3vxTF1MJlx7HKXt7pbzWPEOM/
-	ShmiwYOwrLY24DihEMn3ECouiPpMQjnEHBqMZNO2ykLaLrFbMF9bwtdq5QE4rSolRKWTI3Yl2D8
-	iZx2Oxdqoq9tHyq24aLGlNszJVx/jXLxPq1Cc2YHyfoVjZA/uoA1bLvAbODgZOdOQkh54pwpuEb
-	G8JQvxq2aahZJ4AfcK51HE66ba0pWUaynhpCQk4Ukec+oryL+w==
-X-Google-Smtp-Source: AGHT+IHt5km9+jdGncPtkaresa3l6P2z7fy1FiddcxIvpdlML+Jrubp8HBKFMPY+knP4FO8RHlUnUw==
-X-Received: by 2002:a17:90b:3886:b0:2ee:dcf6:1c77 with SMTP id 98e67ed59e1d1-2fcb5a39f3bmr14293908a91.16.1740065270430;
-        Thu, 20 Feb 2025 07:27:50 -0800 (PST)
+        bh=G0lXhDdruk8QUxXL0q8NP6qP4JGCF9C8FeXdpXFohxU=;
+        b=cTM61NfoKQ7pxCN1PAi5GDfxpryLPvdCTVPSe8trtewx59fL+sZ8T6MeDAPU8TJtwP
+         ls2+jquR0b4zNLkPkzJgEWheUSuW77VpWj20whs9pWAIK8ZTgGifAgRvjc4t/vXXCd2l
+         uZyOKoPMxCk81dbTJa+/wE6Hdlj0gGdvgJxkBsbMUrkEn9jUlC5YMdj2FctFykQw7auV
+         7TtEMECHnCIH8lpRq21YiATUuj/1y7m0AmTujFgVQaiX8sYgCUIiknLA4AiRnWb4tv2N
+         +OD7kPjkDg3BV4jik/umrhF5+O21ApQIzg8b04J+yAhXy/lWHaL50sP0s2XCWsauzgmH
+         Oyaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfW2UWARiMH5y2vbUmFl9uSIfqK7WaO8dtPX/TutqH9mhSzW/ZuOkyhBD93appcz6M9hMzXVfhH0FH@vger.kernel.org, AJvYcCVixLBhO3Ha5oQIK5JuCNEnaD3c5W+7YV2iWAXPhltYJn7aM/RnO5s2PCqqApyhEx/quNXesW6oaPf1CfhkwA==@vger.kernel.org, AJvYcCWvpnHNOqYb4QeGFHLerARoqkWKpB5Gm1uewGQYIGl9f8LJ6ICJpwaZ2IE4IKyws3O1cnFmTD6ZDTsIdfC0@vger.kernel.org, AJvYcCXI5iJ8TAiFRelUv7UBXr4HtTcg7GH6vM3jfZlsScQ2+GpRGVcT7recIrTm2bszanz0K2LeaMHxeQsF@vger.kernel.org
+X-Gm-Message-State: AOJu0YzB+rq6OacKeZ2VYZ5DUpqg1q8rF/FXiXHQDnESz7kpHNZRsVhG
+	+EMzUp89TF6NXXgVDsHU/96e8cS09QyxdMQjOvN8L4faajZHqQg/
+X-Gm-Gg: ASbGncuoFLdBJidPvGs9yqxCXa+UY/vo+G9/YCFr3P8j8JEC3c94E+vCkzg3KBA4r2J
+	iWomkkKLR1i3eTJ65hwXvvjGxte0vumdUw2mwwNHCVlBUWrqJBdHWsKvpDkrN64WgRARC/UXMS5
+	tN1p3toEDbtKMR4nMsik9xp5Cj4k72jy7uvbFcr9PdJ3j1uw75s6hmsvwR5lZmw5flPoN5777aY
+	3+HpGoZevpcVWpcMhbtWSHLyHHPZkK+cymM8YyJ62lZSyHjWwMnZKsESxCuvwIJ/oZ2qK20/Fmt
+	b+rMiKjpQf4T6xGGDyHh71V8fu/aTH4d6+1FfvQ+OR6MBxz5Sw==
+X-Google-Smtp-Source: AGHT+IFbyXv/IUOI5OO28alBQP35ioQSMOeP7pKvdALLP7ZoBNdNEI9ro/4JO1qR1JaXYM8PNyI/gw==
+X-Received: by 2002:a17:903:2cb:b0:21f:6cb2:e949 with SMTP id d9443c01a7336-221040d87c9mr358153305ad.52.1740065621580;
+        Thu, 20 Feb 2025 07:33:41 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fbf98b4c52sm15980264a91.4.2025.02.20.07.27.49
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fcb8571586sm1887051a91.0.2025.02.20.07.33.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 07:27:49 -0800 (PST)
-Date: Fri, 21 Feb 2025 00:27:47 +0900
+        Thu, 20 Feb 2025 07:33:40 -0800 (PST)
+Date: Fri, 21 Feb 2025 00:33:37 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: manivannan.sadhasivam@linaro.org, kishon@kernel.org,
-	bhelgaas@google.com, cassel@kernel.org, Frank.Li@nxp.com,
-	dlemoal@kernel.org, fabrice.gasnier@foss.st.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: endpoint: pci-epf-test: Fix double free Oops
-Message-ID: <20250220152747.GA2510987@rocinante>
-References: <20250124123043.96112-1-christian.bruel@foss.st.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
+	andersson@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, stable+noautosel@kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH 2/2] PCI: qcom-ep: Mark BAR0/BAR2 as 64bit BARs and
+ BAR1/BAR3 as RESERVED
+Message-ID: <20250220153337.GB2510987@rocinante>
+References: <20241231130224.38206-1-manivannan.sadhasivam@linaro.org>
+ <20241231130224.38206-3-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -76,30 +80,16 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250124123043.96112-1-christian.bruel@foss.st.com>
+In-Reply-To: <20241231130224.38206-3-manivannan.sadhasivam@linaro.org>
 
 Hello,
 
-> Fixes an oops found while testing the stm32_pcie ep driver with handling
-> of PERST# deassertion:
-> 
-> During EP initialization, pci_epf_test_alloc_space allocates all BARs,
-> which are further freed if epc_set_bar fails (for instance, due to
-> no free inbound window).
-> 
-> However, when pci_epc_set_bar fails, the error path:
->      pci_epc_set_bar -> pci_epf_free_space
-> does not reset epf_test->reg[bar].
-> 
-> Then, if the host reboots, PERST# deassertion restarts the BAR allocation
-> sequence with the same allocation failure (no free inbound window),
-> creating a double free situation since epf_test->reg[bar] was deallocated
-> and is still non-NULL.
-> 
-> Make sure that pci_epf_alloc_space/pci_epf_free_space are symmetric
-> by resetting epf_test->reg[bar] when memory is deallocated.
+> On all Qcom endpoint SoCs, BAR0/BAR2 are 64bit BARs by default and software
+> cannot change the type. So mark the those BARs as 64bit BARs and also mark
+> the successive BAR1/BAR3 as RESERVED BARs so that the EPF drivers cannot
+> use them.
 
-Applied to endpoint, thank you!
+Applied to controller/qcom, thank you!
 
 	Krzysztof
 
