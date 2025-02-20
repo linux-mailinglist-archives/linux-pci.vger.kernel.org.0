@@ -1,38 +1,38 @@
-Return-Path: <linux-pci+bounces-21859-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21860-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 160FAA3CEA6
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 02:26:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81499A3CEB7
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 02:30:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 92A6C7A61B1
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 01:25:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 537273A844C
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Feb 2025 01:30:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9AD041C7F;
-	Thu, 20 Feb 2025 01:26:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACD7A12B73;
+	Thu, 20 Feb 2025 01:30:46 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8027B3C0C;
-	Thu, 20 Feb 2025 01:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ABE510FD;
+	Thu, 20 Feb 2025 01:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740014764; cv=none; b=tHI1G/R5FqSK9+LCkiEardBa3pJ+XKKFEnPi/SC7k4aPlKP1Q7mUVAf9bBpbDMOT0r97hhJOWJJC22ffxA43r7RWwCgGl8lJkaq19Ltnks0PUslwFhTPEc1upeTzTMSoIaSTVU1TOwn7zdHwLz5d9r0NAE9YoP1/QVfYit73Vlg=
+	t=1740015046; cv=none; b=GNGsXGv69VBUHBdGlOFLB8n5qhhil2Se6sW6aJQZd0eB+qvnzPzzAApFks+Byvo96TxeI4AUXV+pQ0c6unJasH3nWuhCqr3ApXtx0Z8KUQH5D3FLRBNick/NJ4NWvTlRxCr9tVcjvqXY0uSYzLbM7IFB7lGbpp6eyDNDZ/14CCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740014764; c=relaxed/simple;
+	s=arc-20240116; t=1740015046; c=relaxed/simple;
 	bh=CFHteqH5JuzuGRt5uAjjg7LwLdewMSv/qJaGd/TIRWE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HEVpwLNYFL0Q64LBI1Yuv41f78GzYz6SJgHxXNjBekW55SuQqyK+UeS7j24gAmZaSlPRXfYh+93ZkSmdI3RrDEkwarPHv4dpDhqDzh4iZasUvbTsc1seFcYuMwhhXwYXbl9J/7t7PVdL4M6OsGp+UtWoFSskpj6Q5RzBNEtEVT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+	 MIME-Version; b=kAb1ln87LXouHyDYKa6BSVq+xSAaOWOcVqgyNc4ru0BoT1EnQPAF2oBj9V24TnzPPtgEIPjx9m3sjotkritYJeOv7YLdBZXiVwiqfzixrEeVLkCWq4k3Udr2Pz22gUlHKYgeol6MyX1BPkP+FADsxUIgUSaCO/ly6JDiH+YHJr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=162.243.164.118
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
 Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwAHl8mihLZnrikWBA--.45269S2;
-	Thu, 20 Feb 2025 09:25:54 +0800 (CST)
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwC3vq69hbZnP1kWBA--.49894S2;
+	Thu, 20 Feb 2025 09:30:38 +0800 (CST)
 Received: from localhost.localdomain (unknown [219.142.137.151])
-	by mail (Coremail) with SMTP id AQAAfwA3PIichLZnsMMsAA--.23595S2;
-	Thu, 20 Feb 2025 09:25:52 +0800 (CST)
+	by mail (Coremail) with SMTP id AQAAfwBHSYW7hbZnaMQsAA--.35S2;
+	Thu, 20 Feb 2025 09:30:36 +0800 (CST)
 From: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
 To: helgaas@kernel.org
 Cc: bhelgaas@google.com,
@@ -41,8 +41,8 @@ Cc: bhelgaas@google.com,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org
 Subject: [PATCH v3] PCI: Update Resizable BAR Capability Register fields
-Date: Thu, 20 Feb 2025 09:25:46 +0800
-Message-ID: <20250220012546.318577-1-daizhiyuan@phytium.com.cn>
+Date: Thu, 20 Feb 2025 09:30:34 +0800
+Message-ID: <20250220013034.318848-1-daizhiyuan@phytium.com.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250219183424.GA226683@bhelgaas>
 References: <20250219183424.GA226683@bhelgaas>
@@ -53,13 +53,13 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwA3PIichLZnsMMsAA--.23595S2
+X-CM-TRANSID:AQAAfwBHSYW7hbZnaMQsAA--.35S2
 X-CM-SenderInfo: hgdl6xpl1xt0o6sk53xlxphulrpou0/
 Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=daizhiyuan
 	@phytium.com.cn;
 X-Coremail-Antispam: 1Uk129KBjvJXoW7ArWkArWDGF1kWw48Gr47XFb_yoW8try3pr
 	4DCa97Kr4rKFW29w4kZ3W0yw45K39rZFyrCrWI93sruFnIk3Z2qF4UKay5tasrJrs7ZF45
-	tFyqq345ur98XaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	tFyqq345ur98XaUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
 	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
 	UUUUU
 
