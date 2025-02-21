@@ -1,255 +1,144 @@
-Return-Path: <linux-pci+bounces-22016-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22017-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3D2DA3FD8B
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 18:32:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AD8DA3FD9B
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 18:39:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 052EB18894A3
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 17:32:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A1981883573
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 17:38:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32D002505B1;
-	Fri, 21 Feb 2025 17:32:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 578422505D6;
+	Fri, 21 Feb 2025 17:38:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcE6nUxw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JnXOP68m"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4390E35955;
-	Fri, 21 Feb 2025 17:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AAF2505C9
+	for <linux-pci@vger.kernel.org>; Fri, 21 Feb 2025 17:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740159167; cv=none; b=GnAxUThcVU3qz90ww6iDAyBLc46FwkkX0Q40k+NFK0ETKAi+JazQQyvKW2hYdgr8vOBXw1H8sAC7G8LmPqV4NBgJ1K79A1vGsIlZJZx5v/FkThmJOrmJTyIgy56RmJxiJxdJWOYl7ePUFs/msbYqYb4OJY+fSDdntKmasY/0ado=
+	t=1740159527; cv=none; b=sZvXgh/GZNHdJplYH1ATrpjDLqdZnYkBLNEevkA20KxMi6o6hvLlmkWBrOfBWlgfpzCdlpDpzuuLFlF8844JJIyHScWfN/Omm8qXw3mnSgZgh11Vm72GeVkv+ThTe5aclvnIsyDV/xQTAhb4XuksjqCNIbsdzSSXdFpxKfPneNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740159167; c=relaxed/simple;
-	bh=ZP/AZtmKekbdVa5h3wfllziVebzm3Pt0LiN8jFoe/t0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GVVp7JzsvnRdUWYPmg9P9XTTsDRI2+/S5hCo87dIAjicFtUKKxxNz2ErWl+TC9FHudNp32TZfRGqihsWukIKFgwwyVLCag8btZVkipFQtHLznT5oBk1w1mYD0ROZWSMA1xj6Qft2DkLJlo3/cwKXaAs+zv5iA6BhowOqV0Z4FUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bcE6nUxw; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30a2594435dso34078941fa.1;
-        Fri, 21 Feb 2025 09:32:44 -0800 (PST)
+	s=arc-20240116; t=1740159527; c=relaxed/simple;
+	bh=qIP63+uFmKIQiAqirrGDSCV5Cld724eX5jwqFNrBJYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S+GsAcSA0WEonHQS/NitPuVWLGGiU++GMzj5M7PadBJQfjMu4ORL87KLDn1jQ7BUawdwndZInVbrT93KslHmj+O0G4ZJyevp1gMGcA28mXLYzbCB3CJGgCMBBMikQ8RCXYdbHn1GmXSBPg3KvL4dAkeYx8kfzXcU05wF/RX56PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JnXOP68m; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-220d601886fso37460725ad.1
+        for <linux-pci@vger.kernel.org>; Fri, 21 Feb 2025 09:38:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740159163; x=1740763963; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jJaML9956P6Qct9n7YoV3xhm6iSp4V2wMSvsIOJXqbc=;
-        b=bcE6nUxwH6eW0OOHJDmFP4Zj5LHwD8oU46+OD9awqFqZOID8LIvURwGCs1UGIlOJI3
-         PWjv0bjxMK7qBidibKtiHplDyD1qMgfc1IaDRiII30d7Uti4g8JH6sslQXyvCR12AonM
-         eEdySvIxRzcd0KafXAQMtBXiOlKfQ1uCVGmaI6LbVrBNO4EV2jW5ppoOe1mgrQbOcbCP
-         sMAhq8l0OXL2CIq5eWNjAU4eaAMM9QjDb2CYEttSrGXhOkpqSMcJd0sLAZVkZqMLYNlI
-         K0/+fpfZj+I0oBIqPcBI4GwrXCll/2+TbWteK2dfJ/7f1dl99RPyX3X9/VoU7iLISJWd
-         cTUw==
+        d=linaro.org; s=google; t=1740159525; x=1740764325; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=FiHwJM8dSlFwqISp7CMjrgy4RPDtS5r3xeIe6eP69ds=;
+        b=JnXOP68mJwIy8eoqtOrm3QcKKM4CqpxOsZP2pXf953zz5R5/qCI3JsVJSCsnXOoMDS
+         PFmmpsCti0W3sVIr0oqe+Dn7q+orK/fX1AY1B08T0quhid02AmB7yvxYBAfNxnlWxN0A
+         olFiZjrD9SLMvSrBDsLbPCfcZJSEl86ZSIaHzjFyCyjekT2Mq+IV5Y97KErZkT/92bTg
+         tqZplnoWq0b+vEBMrkjjXpzWRzaZkDMwinTSihWG5fHBPKZkE8J/SL8dgcrMI8kKFho/
+         xzspW43RtKg3YPIhu/npVhFgvRPplpc7wzIvTzULv04SvIrN9u2XEvBLPf7jqcWuP/pG
+         7uBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740159163; x=1740763963;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jJaML9956P6Qct9n7YoV3xhm6iSp4V2wMSvsIOJXqbc=;
-        b=NUWZ8nNLvTC7Hzv0FKpiqWeV9Bm/DDUsrlcJsnxkkmdaMGt3ZSSsy26hjpGzrpXwhi
-         zkOAigPl4QZ7raX0wg7eRl60Ne6Sf0xoIffCQhxSM8FFT8Eu7UqkmPHyX/nx27WpvRXm
-         h8N9jLSsESv870UswzMaO9yYPgoFhDTM2SLleh/LRIP2qQC3aaKInV47wXY5d2i8UMkG
-         S1kUpPzzm5Omn4DP6oSU0hoe3WTaR7QclPxOq9KrdDvULnubHXMYWOHmmoOUlvb30Ym6
-         mXUwymUZOrqkPxD/scvHchuxZZvi9e9wSvQNAk0xFmJczagcp3CYcO69YjW67sN83HJw
-         nVdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBJgwBlTQiF6ILPzJlzOggZX5HzzIA9j7ne7DHqb37dUekNOmbIamMMwT99+OeCieQ4tTFaD8aGlcjAoFw@vger.kernel.org, AJvYcCV6y7oVx9vd+AotpWnp3j9+7ZOGMjusl0dqHvdy+DJwVWvmML/dAblNvsa6tBO7wD/geAIhlArq40PSoxU8SgY=@vger.kernel.org, AJvYcCXZzbUqRa4UdwEzKDmFwAzDbaZ8sxuyljPVHL5mS40FFRe6h0IAhuQz4x3K9Pi+R1KR5l+cbz40Iqtm@vger.kernel.org, AJvYcCXmVzlQAAyqp6QV8QBhDIew0hBRbCy9Bkbx2aBDT4E5AWTryDLWDwrFg6koLaNHXV4nG8UZ2EpJbJ7QAeEg@vger.kernel.org
-X-Gm-Message-State: AOJu0YxU6PHjgW+wjEm9rLZOSNcwKPj23QbRbJGsikXgs9IZ5o8fd63g
-	bOEF/drkEw10cTuV+GU8gzJd2rhYuU/MprgTxnyiBN5bKxwpHzlr+GR9VPC6XTgPCPVcxR7PJOp
-	zit03K5e3IMCUNtXXNZf+75ZgyKA=
-X-Gm-Gg: ASbGnct8ezAk7rZ9ip3uurpVvqx0NZHoxHfThugK6lWYz4VTlHA3b23tAuezouIyGdD
-	o19tAGzbJKkmXQaINr/T10aKk5CndKOFddSiQ6f/lEzfDX8UGhZH1YrRabkG7zi8RXRkKKEDBBW
-	Qrw48upo7A2TlHKWMR5xQ4/+ttaVvwqyVjITLmFObh3Q==
-X-Google-Smtp-Source: AGHT+IFxT4w66GaPlc3A/wTppIBJfgqA6VUJQjnIKnRHSb865LLrlRfQ3PC+ljynjrcEeQeBBsji2Xh3J+hIuoVgSws=
-X-Received: by 2002:a2e:95cf:0:b0:309:271d:711a with SMTP id
- 38308e7fff4ca-30a5997e02dmr13064501fa.13.1740159163087; Fri, 21 Feb 2025
- 09:32:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740159525; x=1740764325;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FiHwJM8dSlFwqISp7CMjrgy4RPDtS5r3xeIe6eP69ds=;
+        b=m951/3nkDx5Y2jkICARL4cY0RiT6LDKejt75ycYGfHIxHVzMaa2rx9BAeNp+RBexB7
+         Seg0KvmNHPOei6K873ZpCBurG9XhWmKLmazio4yJtUW6OvVwGpNq8rBKEwVG1BapoAKf
+         fHq9alxhuZgnK/cdoyv8pZHrADBN/MTqQ2uazTfArBK41UbYQ8frPYiagiYXoTcY41Mq
+         IlXzU8i0s4iXsulPUcGNTnR0xb36d9lcGTaz7mU79bNZQHcP8clSt0LT4k8RsGpqCNx1
+         0ee740bVqKxiY/Up1lou4Lywg421CqNtcATRA1X2rTW0Z7QiDzjxQ2yOrEqyNZm/shq9
+         wYaw==
+X-Forwarded-Encrypted: i=1; AJvYcCXLdrOWOLQtcUMJnteV0h6yBkEOvPFN6miIIm2BlrsvhH3IbzoFHb9AqcWKMOvbukuquiK/hkHuPv0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4bogItQGupCXmkDZBLVh9cxY93lQod4GU686IogoTRQORaI9s
+	01tlaDJMSbeqb71zS+vsdVQQmGdIotKG+3eneOA2r5U5qwbKqpL037hVt/B9Zg==
+X-Gm-Gg: ASbGnctQ4Kxuqv3cCOky7v+0g0j+2p9m6NpniL3wpnAyQxO/bn6ue7HqTT054uMBVGO
+	ESv+LfKdaLrVuGg60vV6+VUibKp2sUH3p3cIhmbWV4UCP/qDrgUuZEgy4cpznftnlFQt/BwyErU
+	Dm74NvKcltlux6SeDeHchLdWSTNq4rJfD2MMow7uV9qnmGfsOlKBqeSa5oRmO43JSRxEAtsh7SR
+	0oXZ/fXOkt89ZU2RQj+aetUlqsVi5Va/VztX3LIP3Gqqlv3VmVwxpCpnMs6IPwUyzFJNG+tThAn
+	W720yzpHRPcYi6IUPh9ftYr7QKK7PoCp9IQ=
+X-Google-Smtp-Source: AGHT+IFOundMH+uCAPZpiCXJrYcHQOAFx0FBt3tRpEx6h5NQf8ybpnEEcUX3gkiekCR/3GOpiHaQrA==
+X-Received: by 2002:a17:903:2f06:b0:21f:2ded:76ea with SMTP id d9443c01a7336-2219ffa36d9mr64483195ad.36.1740159524826;
+        Fri, 21 Feb 2025 09:38:44 -0800 (PST)
+Received: from thinkpad ([120.60.73.12])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d556fb40sm139273425ad.193.2025.02.21.09.38.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 09:38:44 -0800 (PST)
+Date: Fri, 21 Feb 2025 23:08:40 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v3 3/5] PCI/pwrctrl: Skip scanning for the device further
+ if pwrctrl device is created
+Message-ID: <20250221173840.dc3eocblfklbrklo@thinkpad>
+References: <20250116-pci-pwrctrl-slot-v3-3-827473c8fbf4@linaro.org>
+ <20250220232451.GA319309@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250218-rust-xarray-bindings-v17-0-f3a99196e538@gmail.com>
- <20250218-rust-xarray-bindings-v17-2-f3a99196e538@gmail.com> <Z7imafmrrK0_TO65@pollux>
-In-Reply-To: <Z7imafmrrK0_TO65@pollux>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 21 Feb 2025 12:32:06 -0500
-X-Gm-Features: AWEUYZmPYku9SRhQtPs7zcM_PkSwe-MlLN_XcNfWi4R554FoIu-TSTRLf0mVB_s
-Message-ID: <CAJ-ks9nQhjXYfjr=kPU1RQON83iWkFXrxM7oXzSrSxRVbg_xTg@mail.gmail.com>
-Subject: Re: [PATCH v17 2/3] rust: xarray: Add an abstraction for XArray
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Matthew Wilcox <willy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, "Rob Herring (Arm)" <robh@kernel.org>, 
-	=?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250220232451.GA319309@bhelgaas>
 
-(resending because gmail decided =F0=9F=91=8D is only allowed in HTML)
+On Thu, Feb 20, 2025 at 05:24:51PM -0600, Bjorn Helgaas wrote:
+> On Thu, Jan 16, 2025 at 07:39:13PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > The pwrctrl core will rescan the bus once the device is powered on. So
+> > there is no need to continue scanning for the device further.
+> 
+> > @@ -2487,7 +2487,14 @@ static struct pci_dev *pci_scan_device(struct pci_bus *bus, int devfn)
+> >  	struct pci_dev *dev;
+> >  	u32 l;
+> >  
+> > -	pci_pwrctrl_create_device(bus, devfn);
+> > +	/*
+> > +	 * Create pwrctrl device (if required) for the PCI device to handle the
+> > +	 * power state. If the pwrctrl device is created, then skip scanning
+> > +	 * further as the pwrctrl core will rescan the bus after powering on
+> > +	 * the device.
+> > +	 */
+> > +	if (pci_pwrctrl_create_device(bus, devfn))
+> > +		return NULL;
+> 
+> I assume it's possible for the PCI device to already be powered on
+> even if there's a pwrctrl device for it?
+> 
 
-On Fri, Feb 21, 2025 at 11:14=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
- wrote:
->
-> On Tue, Feb 18, 2025 at 09:37:44AM -0500, Tamir Duberstein wrote:
->
-> [...]
->
-> > +
-> > +impl<T: ForeignOwnable> XArray<T> {
-> > +    /// Creates a new [`XArray`].
-> > +    pub fn new(kind: AllocKind) -> impl PinInit<Self> {
-> > +        let flags =3D match kind {
-> > +            AllocKind::Alloc =3D> bindings::XA_FLAGS_ALLOC,
-> > +            AllocKind::Alloc1 =3D> bindings::XA_FLAGS_ALLOC1,
-> > +        };
-> > +        pin_init!(Self {
-> > +            // SAFETY: `xa` is valid while the closure is called.
-> > +            xa <- Opaque::ffi_init(|xa| unsafe {
-> > +                bindings::xa_init_flags(xa, flags)
-> > +            }),
-> > +            _p: PhantomData,
-> > +        })
->
-> I think this needs an `INVARIANT` comment.
+Yes, if the device was powered on by the bootloader.
 
-=F0=9F=91=8D
+> Does this change the enumeration order in that case?  It sounds like
+> it may delay enumeration of the PCI device until the pwrctrl core
+> rescans the bus?
+> 
 
-> [...]
->
-> > +/// The error returned by [`store`](Guard::store).
-> > +///
-> > +/// Contains the underlying error and the value that was not stored.
-> > +pub struct StoreError<T> {
-> > +    /// The error that occurred.
-> > +    pub error: Error,
-> > +    /// The value that was not stored.
-> > +    pub value: T,
-> > +}
-> > +
-> > +impl<T> From<StoreError<T>> for Error {
-> > +    fn from(value: StoreError<T>) -> Self {
-> > +        let StoreError { error, value: _ } =3D value;
-> > +        error
-> > +    }
->
-> Still think this should just be `value.error`.
->
-> If it is important to especially point out that `value` is dropped, maybe=
- a
-> comment is the better option.
->
-> IMHO, adding additionally code here just throws up questions on why that
-> additional code is needed.
+So previously, while enumerating a PCI device that requires a pwrctrl device
+(indicated by DT), its client driver won't be probed until the pwrctrl driver is
+probed (thanks to devlink). This was required to make sure that there would be
+no race between client drivers and pwrctrl drivers probing parallely.
 
-OK.
+So in that case, there is no reason to enumerate the such devices in the first
+place. That's why this patch is skipping the enumeration for those devices.
 
-> > +}
-> > +
-> > +impl<'a, T: ForeignOwnable> Guard<'a, T> {
-> > +    fn load<F, U>(&self, index: usize, f: F) -> Option<U>
-> > +    where
-> > +        F: FnOnce(NonNull<T::PointedTo>) -> U,
-> > +    {
-> > +        // SAFETY: `self.xa.xa` is always valid by the type invariant.
-> > +        let ptr =3D unsafe { bindings::xa_load(self.xa.xa.get(), index=
-) };
-> > +        let ptr =3D NonNull::new(ptr.cast())?;
-> > +        Some(f(ptr))
-> > +    }
-> > +
-> > +    /// Provides a reference to the element at the given index.
-> > +    pub fn get(&self, index: usize) -> Option<T::Borrowed<'_>> {
-> > +        self.load(index, |ptr| {
-> > +            // SAFETY: `ptr` came from `T::into_foreign`.
-> > +            unsafe { T::borrow(ptr.as_ptr()) }
-> > +        })
-> > +    }
-> > +
-> > +    /// Provides a mutable reference to the element at the given index=
-.
-> > +    pub fn get_mut(&mut self, index: usize) -> Option<T::BorrowedMut<'=
-_>> {
-> > +        self.load(index, |ptr| {
-> > +            // SAFETY: `ptr` came from `T::into_foreign`.
-> > +            unsafe { T::borrow_mut(ptr.as_ptr()) }
-> > +        })
-> > +    }
-> > +
-> > +    /// Removes and returns the element at the given index.
-> > +    pub fn remove(&mut self, index: usize) -> Option<T> {
-> > +        // SAFETY: `self.xa.xa` is always valid by the type invariant.
-> > +        //
-> > +        // SAFETY: The caller holds the lock.
->
-> I think we only want one `SAFETY` section with an enumeration.
+- Mani
 
-=F0=9F=91=8D
-
-> > +        let ptr =3D unsafe { bindings::__xa_erase(self.xa.xa.get(), in=
-dex) }.cast();
-> > +        // SAFETY: `ptr` is either NULL or came from `T::into_foreign`=
-.
-> > +        //
-> > +        // SAFETY: `&mut self` guarantees that the lifetimes of [`T::B=
-orrowed`] and
-> > +        // [`T::BorrowedMut`] borrowed from `self` have ended.
->
-> Same here...
-
-=F0=9F=91=8D
-
-> > +        unsafe { T::try_from_foreign(ptr) }
-> > +    }
-> > +
-> > +    /// Stores an element at the given index.
-> > +    ///
-> > +    /// May drop the lock if needed to allocate memory, and then reacq=
-uire it afterwards.
-> > +    ///
-> > +    /// On success, returns the element which was previously at the gi=
-ven index.
-> > +    ///
-> > +    /// On failure, returns the element which was attempted to be stor=
-ed.
-> > +    pub fn store(
-> > +        &mut self,
-> > +        index: usize,
-> > +        value: T,
-> > +        gfp: alloc::Flags,
-> > +    ) -> Result<Option<T>, StoreError<T>> {
-> > +        build_assert!(
-> > +            mem::align_of::<T::PointedTo>() >=3D 4,
-> > +            "pointers stored in XArray must be 4-byte aligned"
-> > +        );
-> > +        let new =3D value.into_foreign();
-> > +
-> > +        let old =3D {
-> > +            let new =3D new.cast();
-> > +            // SAFETY: `self.xa.xa` is always valid by the type invari=
-ant.
-> > +            //
-> > +            // SAFETY: The caller holds the lock.
->
-> ...and here.
-
-=F0=9F=91=8D
-
-> > +            //
-> > +            // INVARIANT: `new` came from `T::into_foreign`.
-> > +            unsafe { bindings::__xa_store(self.xa.xa.get(), index, new=
-, gfp.as_raw()) }
-> > +        };
+-- 
+மணிவண்ணன் சதாசிவம்
 
