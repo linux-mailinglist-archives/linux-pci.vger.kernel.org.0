@@ -1,139 +1,203 @@
-Return-Path: <linux-pci+bounces-22042-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22043-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 871E2A40276
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 23:13:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D41AA40297
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 23:24:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D249919C426E
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 22:13:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 180171882F82
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 22:23:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBA672512DB;
-	Fri, 21 Feb 2025 22:13:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9DB5204F70;
+	Fri, 21 Feb 2025 22:23:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oJrE1/q/"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqh1IjkR"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE1220127C;
-	Fri, 21 Feb 2025 22:13:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE17D2046B9;
+	Fri, 21 Feb 2025 22:23:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740176012; cv=none; b=YkzRde7p5UhRym/wh9BCQoRazD2XKhbI2RPd8/t5qa7A8oi83mPRiKUav2UPXpGAj2gtIS2DD1IusNpQzLUm/0hL4eOctSOwplxWLTYTb3A2vtL5VkJQ58CINw7J2FDFG1XQCagNIC4NuUDGjMUcZaW98z5ohkDYaDHcgZkTRj0=
+	t=1740176615; cv=none; b=ig2GPo+O/8MbZPZOWxyF17JVKG/YTfaruQCqUB/DSb8L8VngP6LvK2zLhhD6lGhrk5gcGyFnO6B8wn98igtOQrk2rgwwDrNykk+LO2h8jr0PVZpmSWFqjUc9jizijY8vOYEEc4O+/fqHG7Pi9L/BJVzv8RJjA6vkS58i1YA7CvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740176012; c=relaxed/simple;
-	bh=BbE8d/oK1jS2Di+ALxnwvuqfQy6s3esDrDmP52JzzjU=;
+	s=arc-20240116; t=1740176615; c=relaxed/simple;
+	bh=ydTbxNnzF9NHjhJuiLRmY8kGI9DwJQg51taLMTOt+pQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=PqjNetQwvNfHwfFl629A/Q3zl7/u7vEsHmEY6MW91HFy7W2rDTubrPISYc5o2oGysYFP/tFqCx23v5pDJ3eSRRvQKctqscbYQ/gYjV6Hue/e+0nFRHAugGHZK8iitjBAUeKf7fjy9FAxeJ7rDZnuz/TPN/xU4I2ShM/45OSwlvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oJrE1/q/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D089AC4CED6;
-	Fri, 21 Feb 2025 22:13:31 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=fZ5cGSPn/hMp4673aKf4oEfSJqGSWQJjGMVH58Pim0MWlVNDm1EYtLCR2gVhY25A/akv+69oHT1WTWKoDdob8o8m9cz6vpgQQYGx7ZUVaBUn8u2G2G8k9Ve8B273NDQOkijykiUiv5vmhJNxGGa1V7t4jqjArnSR1eEuvCvhJB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqh1IjkR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA53C4CED6;
+	Fri, 21 Feb 2025 22:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740176012;
-	bh=BbE8d/oK1jS2Di+ALxnwvuqfQy6s3esDrDmP52JzzjU=;
+	s=k20201202; t=1740176615;
+	bh=ydTbxNnzF9NHjhJuiLRmY8kGI9DwJQg51taLMTOt+pQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=oJrE1/q/B74dT9qapArjBmpVVo7vOYj7wTgz501vS7EN1Kcg6VFdcPIo+1yTL//OQ
-	 qC6KG+DaZF1xOOaZlVSK4yEctM8JYVOaZ7IYUoeWn7RUKYYRfw9sTKS2DV9AV0NGG9
-	 O+loZPDJ6g1CCwTPpfcXudJzXIeKs8P0T1KoGdOmmR+96EqrXGaAemAavd30GLshMx
-	 3tnUq0hPAyq43ftvGkNm7AeMaFYhaRRgMpC4tyHIX4Un9vPXp3bclzAGIh59KCjnDA
-	 EEaLmMVEVlCwu4vDPlAX6mtsFe/2SuiSXNBQFPENmNmaHk5YaQeC9s8QHeuZ9x93ul
-	 gITNQJ35XTxKA==
-Date: Fri, 21 Feb 2025 16:13:30 -0600
+	b=nqh1IjkR1NMlmWGZV2dvFo8IaKW5UyNM6oJS8o1MsjauOfDwF8we2+QdpY9fUicfY
+	 u4fSgE6eXF57pCpG0akZqQS5paxmuhT4WiYOPOpoJ1hoXmp13eToShcTb4sNkXAFSk
+	 kpji1yFMSNh1VuCw4BbJHhtbUBM+G7jx35npItdEfQ55dSTJrq/KAh4HoUh/mrR9ep
+	 SQIKvhWP04coRSd+2YXAK9fCd6IaBImT9vV/3eHPPabfw2kblC2c8qEU/MzNI5HB5O
+	 4GGNGFwTwENoxoDL21AkjpciFJCLvt5dQSQ9jMmef9O8A6G1Mw67v5ySXQ+XlvXx/U
+	 fZI7QKhBd9Jvg==
+Date: Fri, 21 Feb 2025 16:23:33 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Chen Wang <unicorn_wang@outlook.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Chen Wang <unicornxw@gmail.com>, kw@linux.com,
-	u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu, arnd@arndb.de,
-	bhelgaas@google.com, conor+dt@kernel.org, guoren@kernel.org,
-	inochiama@outlook.com, krzk+dt@kernel.org, lee@kernel.org,
-	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
-	palmer@dabbelt.com, paul.walmsley@sifive.com, pbrobinson@gmail.com,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org,
-	chao.wei@sophgo.com, xiaoguang.xing@sophgo.com,
-	fengchun.li@sophgo.com
-Subject: Re: [PATCH v3 1/5] dt-bindings: pci: Add Sophgo SG2042 PCIe host
-Message-ID: <20250221221330.GA367172@bhelgaas>
+To: Tushar Dave <tdave@nvidia.com>
+Cc: jgg@nvidia.com, corbet@lwn.net, bhelgaas@google.com, paulmck@kernel.org,
+	akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
+	xiongwei.song@windriver.com, vidyas@nvidia.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, vsethi@nvidia.com,
+	sdonthineni@nvidia.com
+Subject: Re: [RESEND PATCH v2] PCI: Fix Extend ACS configurability
+Message-ID: <20250221222333.GA368134@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <PN0PR01MB5662DF3C3D71A274A2E5B9C2FEC72@PN0PR01MB5662.INDPRD01.PROD.OUTLOOK.COM>
+In-Reply-To: <20250207030338.456887-1-tdave@nvidia.com>
 
-[cc->to: Rob]
-
-On Fri, Feb 21, 2025 at 11:29:20AM +0800, Chen Wang wrote:
-> On 2025/2/20 2:22, Bjorn Helgaas wrote:
-> > On Wed, Feb 12, 2025 at 01:54:11PM +0800, Chen Wang wrote:
-> > > On 2025/2/12 12:25, Bjorn Helgaas wrote:
-> > > [......]
-> > > > > pcie_rc1 and pcie_rc2 share registers in cdns_pcie1_ctrl. By using
-> > > > > different "sophgo,core-id" values, they can distinguish and access
-> > > > > the registers they need in cdns_pcie1_ctrl.
-> > > > Where does cdns_pcie1_ctrl fit in this example?  Does that enclose
-> > > > both pcie_rc1 and pcie_rc2?
-> > > cdns_pcie1_ctrl is defined as a syscon node,  which contains registers
-> > > shared by pcie_rc1 and pcie_rc2. In the binding yaml file, I drew a diagram
-> > > to describe the relationship between them, copy here for your quick
-> > > reference:
-> > > 
-> > > +                     +-- Core (Link0) <---> pcie_rc1  +-----------------+
-> > > +                     |                                |                 |
-> > > +      Cadence IP 2 --+                                | cdns_pcie1_ctrl |
-> > > +                     |                                |                 |
-> > > +                     +-- Core (Link1) <---> pcie_rc2  +-----------------+
-> > > 
-> > > The following is an example with cdns_pcie1_ctrl added. For simplicity, I
-> > > deleted pcie_rc0.
-> >
-> > Looks good.  It would be nice if there were some naming similarity or
-> > comment or other hint to connect sophgo,core-id with the syscon node.
-> > 
-> > > pcie_rc1: pcie@7062000000 {
-> > >      compatible = "sophgo,sg2042-pcie-host";
-> > >      ...... // host bride level properties
-> > >      linux,pci-domain = <1>;
-> > >      sophgo,core-id = <0>;
-> > >      sophgo,syscon-pcie-ctrl = <&cdns_pcie1_ctrl>;
-> > >      port {
-> > >          // port level properties
-> > >          vendor-id = <0x1f1c>;
-> > >          device-id = <0x2042>;
-> > >          num-lanes = <2>;
-> > >      };
-> > > };
-> > > 
-> > > pcie_rc2: pcie@7062800000 {
-> > >      compatible = "sophgo,sg2042-pcie-host";
-> > >      ...... // host bride level properties
-> > >      linux,pci-domain = <2>;
-> > >      sophgo,core-id = <1>;
-> > >      sophgo,syscon-pcie-ctrl = <&cdns_pcie1_ctrl>;
-> > >      port {
-> > >          // port level properties
-> > >          vendor-id = <0x1f1c>;
-> > >          device-id = <0x2042>;
-> > >          num-lanes = <2>;
-> > >      }
-> > > 
-> > > };
-> > > 
-> > > cdns_pcie1_ctrl: syscon@7063800000 {
-> > >      compatible = "sophgo,sg2042-pcie-ctrl", "syscon";
-> > >      reg = <0x70 0x63800000 0x0 0x800000>;
-> > > };
+On Thu, Feb 06, 2025 at 07:03:38PM -0800, Tushar Dave wrote:
+> Commit 47c8846a49ba ("PCI: Extend ACS configurability") introduced
+> bugs that fail to configure ACS ctrl to the value specified by the
+> kernel parameter. Essentially there are two bugs.
 > 
-> I find dtb check will report error due to "port" is not a evaulated property
-> for pcie host. Should we add a vendror specific property for this?
+> First, when ACS is configured for multiple PCI devices using
+> 'config_acs' kernel parameter, it results into error "PCI: Can't parse
+> ACS command line parameter". This is due to the bug in code that doesn't
+> preserve the ACS mask instead overwrites the mask with value 0.
 > 
-> Or do you have any example for reference?
+> For example, using 'config_acs' to configure ACS ctrl for multiple BDFs
+> fails:
+> 
+> 	Kernel command line: pci=config_acs=1111011@0020:02:00.0;101xxxx@0039:00:00.0 "dyndbg=file drivers/pci/pci.c +p"
+> 	PCI: Can't parse ACS command line parameter
+> 	pci 0020:02:00.0: ACS mask  = 0x007f
+> 	pci 0020:02:00.0: ACS flags = 0x007b
+> 	pci 0020:02:00.0: Configured ACS to 0x007b
+> 
+> After this fix:
+> 
+> 	Kernel command line: pci=config_acs=1111011@0020:02:00.0;101xxxx@0039:00:00.0 "dyndbg=file drivers/pci/pci.c +p"
+> 	pci 0020:02:00.0: ACS mask  = 0x007f
+> 	pci 0020:02:00.0: ACS flags = 0x007b
+> 	pci 0020:02:00.0: ACS control = 0x005f
+> 	pci 0020:02:00.0: ACS fw_ctrl = 0x0053
+> 	pci 0020:02:00.0: Configured ACS to 0x007b
+> 	pci 0039:00:00.0: ACS mask  = 0x0070
+> 	pci 0039:00:00.0: ACS flags = 0x0050
+> 	pci 0039:00:00.0: ACS control = 0x001d
+> 	pci 0039:00:00.0: ACS fw_ctrl = 0x0000
+> 	pci 0039:00:00.0: Configured ACS to 0x0050
+> 
+> Second bug is in the bit manipulation logic where we copy the bit from
+> the firmware settings when mask bit 0.
+> 
+> For example, 'disable_acs_redir' fails to clear all three ACS P2P redir
+> bits due to the wrong bit fiddling:
+> 
+> 	Kernel command line: pci=disable_acs_redir=0020:02:00.0;0030:02:00.0;0039:00:00.0 "dyndbg=file drivers/pci/pci.c +p"
+> 	pci 0020:02:00.0: ACS mask  = 0x002c
+> 	pci 0020:02:00.0: ACS flags = 0xffd3
+> 	pci 0020:02:00.0: Configured ACS to 0xfffb
+> 	pci 0030:02:00.0: ACS mask  = 0x002c
+> 	pci 0030:02:00.0: ACS flags = 0xffd3
+> 	pci 0030:02:00.0: Configured ACS to 0xffdf
+> 	pci 0039:00:00.0: ACS mask  = 0x002c
+> 	pci 0039:00:00.0: ACS flags = 0xffd3
+> 	pci 0039:00:00.0: Configured ACS to 0xffd3
+> 
+> After this fix:
+> 
+> 	Kernel command line: pci=disable_acs_redir=0020:02:00.0;0030:02:00.0;0039:00:00.0 "dyndbg=file drivers/pci/pci.c +p"
+> 	pci 0020:02:00.0: ACS mask  = 0x002c
+> 	pci 0020:02:00.0: ACS flags = 0xffd3
+> 	pci 0020:02:00.0: ACS control = 0x007f
+> 	pci 0020:02:00.0: ACS fw_ctrl = 0x007b
+> 	pci 0020:02:00.0: Configured ACS to 0x0053
+> 	pci 0030:02:00.0: ACS mask  = 0x002c
+> 	pci 0030:02:00.0: ACS flags = 0xffd3
+> 	pci 0030:02:00.0: ACS control = 0x005f
+> 	pci 0030:02:00.0: ACS fw_ctrl = 0x005f
+> 	pci 0030:02:00.0: Configured ACS to 0x0053
+> 	pci 0039:00:00.0: ACS mask  = 0x002c
+> 	pci 0039:00:00.0: ACS flags = 0xffd3
+> 	pci 0039:00:00.0: ACS control = 0x001d
+> 	pci 0039:00:00.0: ACS fw_ctrl = 0x0000
+> 	pci 0039:00:00.0: Configured ACS to 0x0000
+> 
+> Fixes: 47c8846a49ba ("PCI: Extend ACS configurability")
+> Signed-off-by: Tushar Dave <tdave@nvidia.com>
 
-Sorry, I don't know enough about dtb to answer this.  Maybe Rob?
+Applied to pci/acs for v6.15, thanks!
+
+> ---
+> 
+> changes in v2:
+>  - Addressed review comments by Jason and Bjorn.
+>  - Removed Documentation changes (already taken care by other patch).
+>  - Amended commit description.
+> 
+>  drivers/pci/pci.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 869d204a70a3..c1ab5d50112d 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -954,8 +954,10 @@ struct pci_acs {
+>  };
+>  
+>  static void __pci_config_acs(struct pci_dev *dev, struct pci_acs *caps,
+> -			     const char *p, u16 mask, u16 flags)
+> +			     const char *p, const u16 acs_mask, const u16 acs_flags)
+>  {
+> +	u16 flags = acs_flags;
+> +	u16 mask = acs_mask;
+>  	char *delimit;
+>  	int ret = 0;
+>  
+> @@ -963,7 +965,7 @@ static void __pci_config_acs(struct pci_dev *dev, struct pci_acs *caps,
+>  		return;
+>  
+>  	while (*p) {
+> -		if (!mask) {
+> +		if (!acs_mask) {
+>  			/* Check for ACS flags */
+>  			delimit = strstr(p, "@");
+>  			if (delimit) {
+> @@ -971,6 +973,8 @@ static void __pci_config_acs(struct pci_dev *dev, struct pci_acs *caps,
+>  				u32 shift = 0;
+>  
+>  				end = delimit - p - 1;
+> +				mask = 0;
+> +				flags = 0;
+>  
+>  				while (end > -1) {
+>  					if (*(p + end) == '0') {
+> @@ -1027,10 +1031,13 @@ static void __pci_config_acs(struct pci_dev *dev, struct pci_acs *caps,
+>  
+>  	pci_dbg(dev, "ACS mask  = %#06x\n", mask);
+>  	pci_dbg(dev, "ACS flags = %#06x\n", flags);
+> +	pci_dbg(dev, "ACS control = %#06x\n", caps->ctrl);
+> +	pci_dbg(dev, "ACS fw_ctrl = %#06x\n", caps->fw_ctrl);
+>  
+> -	/* If mask is 0 then we copy the bit from the firmware setting. */
+> -	caps->ctrl = (caps->ctrl & ~mask) | (caps->fw_ctrl & mask);
+> -	caps->ctrl |= flags;
+> +	/* For mask bits that are 0 copy them from the firmware setting
+> +	 * and apply flags for all the mask bits that are 1.
+> +	 */
+> +	caps->ctrl = (caps->fw_ctrl & ~mask) | (flags & mask);
+>  
+>  	pci_info(dev, "Configured ACS to %#06x\n", caps->ctrl);
+>  }
+> -- 
+> 2.34.1
+> 
 
