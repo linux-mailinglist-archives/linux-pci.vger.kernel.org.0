@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-22001-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22002-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2835DA3FB45
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 17:30:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC9B6A3FB52
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 17:32:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B8203BB78A
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 16:23:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C0D13189F285
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 16:26:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D11871ADC6F;
-	Fri, 21 Feb 2025 16:23:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9778C1DDA24;
+	Fri, 21 Feb 2025 16:26:14 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57EAE1AF0B8;
-	Fri, 21 Feb 2025 16:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFAF286298;
+	Fri, 21 Feb 2025 16:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740155005; cv=none; b=pR51n3KQr/3t+eYDPk3J4WiRznPlA1aQ6/HkOIrWuMLdYcwVg5F4HZnfD4IIByB+9khu5kEgo+RRDtR/7+gDfQVuelFDAP9ARdgurvnNnt17egOySZitNtHFDkf2LQQoAQQGg0xSPyKvxLDOLqey1vWBJpmqTSTfbEP7S15hr7M=
+	t=1740155174; cv=none; b=udzCEzVyVegajumeLqqOn6qNNo1YI9cLcrsnI24/EvJUaXMRZtYHyRs45VZABDPDKxBmhugfqKqx3tKjdRMFDXnovh+SVv1hOGbkOtsjX+xdh+/1WEc7eKcdJt1APx2JhyDwbPUBXgRkR15HuUFNGH47ChP1/Y378yamCpG2E9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740155005; c=relaxed/simple;
-	bh=h/T2p8PhwABwt31/Iqz8HRPa+7IdK39YSrNwY6k1pe8=;
+	s=arc-20240116; t=1740155174; c=relaxed/simple;
+	bh=bwyfdE/FLFiMluP9iNmNaFqs+Q/d+RJXSoF40a55j+s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hd4gC7wSXcHfLMjPjIDuidSVaAfQCvqg+RJ0pceT27Zgs83Q5hZfs1fK/5Qkx/Amzi72M76g+/vSYh2/s/y5EmANZqwRHyB6ybEkpus5W9zHO1Hqi4Tl8n3reRedyXRWPMc25cj8GpKquttMidZ4W1KB32OiSiF5fAkM53PkSms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=QwMitHGIar4y6iLL09lAkF/AXMeElU0p/Kq9hijlsqY39IKXlz5PZPBJLyG2FaGjLGjEVu+xdGvldjORDUf+Z94URMMAmL7vEEJuEfQOQgcgaZO9i/HKV6TTgR4Hb/9XSG0yC6I1yVjOhDQIMStiDfF3AHZzQmZEV8XWThX612U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-220e83d65e5so45523135ad.1;
-        Fri, 21 Feb 2025 08:23:24 -0800 (PST)
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2f44353649aso3581357a91.0;
+        Fri, 21 Feb 2025 08:26:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740155003; x=1740759803;
+        d=1e100.net; s=20230601; t=1740155172; x=1740759972;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ITi5eWVIokI8NX7Dfs1unagdyttshAyr98E6hiT7dVo=;
-        b=Q+vJJ4/QaGzDcn48c1gv6VjuYSauT68Oz3s7oTiivJr4/7ZZ/K8Y/9//+Dv8ZocKu0
-         Cgp1gfLnEyAwr0UZX8NJpu5m+N6+f/MlWLo8BeciaCKSuAZffuJDfzhAQ0g7OGJNv+9U
-         Xak60klM+s1uVJlesX55wXxWlcl7qKT6B0x/s+ynNJay+KQWb3HI89k+jdc5Gi0NmxIz
-         xmcbZwjTlcPBYmfVXRgKDoYOtf/mQMaA+b/Lxu2dK47HwkRixwjFqITJdeIUP5AWl6Io
-         ujIBM/JlHKd5PrBkC0HJ0mk1YKWj17ehM+A6o0VlbSAbr7+yyGgysdVYI92Wp99D3cPS
-         AwNg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHwQN+25RiuU/m9AWtYY7/aHh97lHp5hEgDC9NGf/mzSx7pIj3VyeGz+M+FdKR15w2+S0N3DM/oWO302Dz@vger.kernel.org, AJvYcCWAkKl80FUybPJvMbb2buI4m+7JrZ8L0LaMvPi0D4KV6XKPiqDcEwc+EwL4Zhs9qHI6/yqdsphnn8FJ@vger.kernel.org, AJvYcCXLpVHOlSjBVp6UZtXT58+IposncQ5IlP6AGvhs9NukkuqJmf8Gg8JCffrgH64JRkpaG24QrdwDLJhZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9O96DSu9pI1smYMP2Xey2VaZEFbP+AjI6V/e+1wcUXqq58Oqx
-	a+YpZcmpY57O3JS4ope8UWTqiBETW6OnFJhI7HXlLdXL11UsAPPu
-X-Gm-Gg: ASbGncv5JzJNxftHtUl/r4U+KU4z5KPM8JOcCh0L84YsRiqAvkgj8OH/ko3VZX0IM4y
-	8Q3aL2Vcrm0geCAw1/9z1taeuuxh0NSVnWtKQ/Kf+sdq5BqSc59B5cxBgAYxrLleGS6qN7uJHeS
-	4aXZB8l9mYEj/B1opJv+s3pfRO2TfuA7JTdzTMVTlXO0Kgu97gSeY217z/yXuCgtgIv+at8hTEV
-	C5SC+jVT8QY9BbU9lX8GWDUERPtG7iDCLfh4Kg/HaZASE2hpjn190IiVbInzhkg4AxCl+RWD6CI
-	d4GIUDO0V88nXazxCNm3aiqRQMBKMdC961l3qS5imJ22jnVynJrI2nV2zNGN
-X-Google-Smtp-Source: AGHT+IH6382mgQ/qs604OZFx5389HScCACYI476oB/HnFj1e8TkJWM8SG7lXAnABvg5u4OW6bEYXTA==
-X-Received: by 2002:a17:903:32c2:b0:220:d078:eb28 with SMTP id d9443c01a7336-2219fff356dmr48806535ad.48.1740155003489;
-        Fri, 21 Feb 2025 08:23:23 -0800 (PST)
+        bh=4z6O4IkxuL3soFsgl5HuaRJCPykEjaleOKC87F2y/io=;
+        b=bG1E2z1FNaXtkyfWPOOtXrTxmemFk/yMIElbCv9Xsy5e01K3qFoZcljyuAm5GU+fwr
+         k8nMF259Ulfu5/jvqKpwTCufutI2w1kKdmyGqw86K9KW0RAWiUuvOCB0c4iGS9VtkYd3
+         fy9CdyQkSTzvwh+jvpM3bY4GBlJCqndNOnmGlzk0BRlm6FQBqJIUVaSlNozUOqTKumYh
+         pPIsLdzwmrU6UGzNjx2e4xHBIMZI2SMcE+5ekwJj5EvOycDBQAZYm3koqSXb0TqdbgPt
+         URRAdlKI5LHhO8eHJEju2m1YfpmqGOWmdfN3jBk49vDMmGUwCFV0arJe3gDJTlsfXAKc
+         Mc2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVCCRnzB3Sm4kvPYLB8LEBc7b+kqA9Ut6cj9tHiF5iPSPgl0x4Ssf8bmb+EGGldlcozW4S4EvXCsKgm@vger.kernel.org, AJvYcCVfnoOipcHyOz8FexjvvBu7OAPcMC/HQBXGjanAS+wwG88k5Ej0XbAKpVUmiSqW7yCQN5cvHn913PeZ@vger.kernel.org, AJvYcCXBTN69GD7XJtVN1cpmQeuRgToZ5PWdALIRbVeEzUEJiQYZ9U6nlBpxjxypEv2W7KU++Ap9eAJ/YjgdUnse@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzXcGpnp0pfMGr8lIOzPnSH/NW/9RX4DfKfvmwQMOzp8uOdlpz
+	cTNS8pByX7ZpNVguLMTjotXFIjsAwTvgdp1UdXL6ZcErIL63BNTE
+X-Gm-Gg: ASbGncvDKX79cucMlG2btMJ2XTTWxbZzCb/E2xC+O3ZJ9uqdVVsrmXDD2Xim51yEkkT
+	GocRq/4KKLQFDCKfJ9qE6bYT1MOAB8oxkITzvXEKFJ+neY7DQWdXvgGQ1aMIWdGCiCJ3LvZxLcF
+	lcmcfZCQvtNvB/jSCNiosZ/w3KrCwutoIF6Gb/IlXlU1/7eU+pLyeRCV02wKdjbn4y4+dOn4jlP
+	yztyYwScOzRCWbgAvfVNl14LXEMJ3FyUvagfVaj3t2dnvic6DCJ2fJwr8jHzYwYFTVCAOUH3OGT
+	oW+5SveJVTQPMuK96wQVQzyA61WxFacLzKARSP4gjo8rB0bvMl/10gbx9j8X
+X-Google-Smtp-Source: AGHT+IG50X4zqXhTHhqI02RRZLr0tYQJLiTV1L9LZNvdYSx6bY2d/dTV4UtvP0Y/8m772MSFX/Z4OA==
+X-Received: by 2002:a17:90b:2241:b0:2fa:228d:5af2 with SMTP id 98e67ed59e1d1-2fce78b778cmr6540511a91.15.1740155172321;
+        Fri, 21 Feb 2025 08:26:12 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-220d556e169sm139087635ad.192.2025.02.21.08.23.22
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fceb02df46sm1603022a91.9.2025.02.21.08.26.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 08:23:22 -0800 (PST)
-Date: Sat, 22 Feb 2025 01:23:21 +0900
+        Fri, 21 Feb 2025 08:26:11 -0800 (PST)
+Date: Sat, 22 Feb 2025 01:26:09 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
 	linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
 	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
@@ -79,11 +79,12 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Dave Stevenson <dave.stevenson@raspberrypi.com>
 Subject: Re: [PATCH v5 -next 03/11] irqchip: Add Broadcom bcm2712 MSI-X
  interrupt controller
-Message-ID: <20250221162321.GC3753638@rocinante>
+Message-ID: <20250221162609.GD3753638@rocinante>
 References: <20250120130119.671119-1-svarbanov@suse.de>
  <20250120130119.671119-4-svarbanov@suse.de>
  <87bjvs86w8.ffs@tglx>
  <b1009877-6749-4bb1-95b9-ae976bef591c@broadcom.com>
+ <320db9bc-3610-4336-a691-a8926cdb7e24@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -92,23 +93,21 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b1009877-6749-4bb1-95b9-ae976bef591c@broadcom.com>
+In-Reply-To: <320db9bc-3610-4336-a691-a8926cdb7e24@suse.de>
 
 Hello,
 
 [...]
-> > As this is a new controller and required for the actual PCI muck, I
-> > think the best way is to take it through the PCI tree, unless someone
-> > wants me to pick the whole lot up.
+> >> As this is a new controller and required for the actual PCI muck, I
+> >> think the best way is to take it through the PCI tree, unless someone
+> >> wants me to pick the whole lot up.
+> > 
+> > Agreed, the PCI maintainers should take patches 1 through 9 inclusive,
 > 
-> Agreed, the PCI maintainers should take patches 1 through 9 inclusive, and I
-> will take patches 10-11 through the Broadcom ARM SoC tree, Bjorn, KW, does
-> that work?
+> Just small correction, patch 09/11 [1] has a new v2 at [2]. And I think
+> PCI maintainer have to take v2.
 
-No problem.
-
-As such, when applying, I took all the patches from #1 through #8 and
-dropped #9 as it has been superseded.
+No problem.  I dropped #9 when applying.  Thank you!
 
 	Krzysztof
 
