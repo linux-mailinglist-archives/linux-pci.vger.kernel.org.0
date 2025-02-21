@@ -1,218 +1,189 @@
-Return-Path: <linux-pci+bounces-21979-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21980-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D1EEA3F397
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 13:00:07 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C3D6A3F3EB
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 13:12:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7B4DB7A6FCF
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 11:59:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A802F17A25B
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 12:09:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA3C209F4B;
-	Fri, 21 Feb 2025 11:59:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C15A114A62B;
+	Fri, 21 Feb 2025 12:08:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="jYrENAaX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LU1sQ3bB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m49194.qiye.163.com (mail-m49194.qiye.163.com [45.254.49.194])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9077F209F41;
-	Fri, 21 Feb 2025 11:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359A82B9AA
+	for <linux-pci@vger.kernel.org>; Fri, 21 Feb 2025 12:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740139198; cv=none; b=QdReJAqEk0PYE7CI5KkSGmVcKCR6FKV8/zhkVLqwFCGMJXcclbAWxgqS8/xiFE+4Z6glmTT0xYx6dUxBypKbRH766zEowRl1U6keG1aAUIzR4kMACFpxPzQtu573wapoDaccpSrmMgqDlqlFg+SsXkIpNG2lJcuJxtg6CWrK2mg=
+	t=1740139698; cv=none; b=mRRn4qozY5+4DONzlKhpjnYCo5LIZxNBEKyo3r2bB0ZIiMJY9zjYbKOcMdFMeskGTdERiCI9itFd3TshwtbsxtqSk9hnmv4HXtuHoNczV8vTpQAFvi+j93eigyc1G5Sv+V4du+bEirpWBAGrgno8vbj6WEEM7FBIQyNS9aqE+XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740139198; c=relaxed/simple;
-	bh=H66Br++P4bPNEqs39+jUcQdRgRuy2vL3PhuQWk8G2s0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uhTUNT6sGvY0R2Fdh4M4ZgypO9bJlPUeUb3eNT3+UAmRd6l8s9UrjBYcAM5pqP4a6XxaaEQcJ5UfWukfxdQV/lG5fiPswkzEu5Z5t3892bm8YuF2pssMJ11qdL4jYyHOA5gLhlcjXL3piuFc72ZEhEqLNQGfUgomARY29dKg7zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=jYrENAaX; arc=none smtp.client-ip=45.254.49.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id bca250ba;
-	Fri, 21 Feb 2025 18:44:13 +0800 (GMT+08:00)
-From: Kever Yang <kever.yang@rock-chips.com>
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Simon Xue <xxm@rock-chips.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [RFC PATCH v6 1/2] dt-bindings: PCI: dw: rockchip: Add rk3576 support
-Date: Fri, 21 Feb 2025 18:43:56 +0800
-Message-Id: <20250221104357.1514128-2-kever.yang@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250221104357.1514128-1-kever.yang@rock-chips.com>
-References: <20250221104357.1514128-1-kever.yang@rock-chips.com>
+	s=arc-20240116; t=1740139698; c=relaxed/simple;
+	bh=InIcS/pWXeFbNoZZu2Fn3ZI18HiUZuiEi1BD7pYEiFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=S0rA0bahxakw2lo9b4OVX+Avf3Nb8Hs3NwqF4Jq8hy95hj/K9bnaTZ+R0lTxkOD/vcRpF2MAcunG8zfwz50CStV53BZzXXTen3K+aCr4jFC6pSFtcMeR0vvVTtB8Cb+pIwihjJ6qCfGXFXwBn5LhPERHugLPK8C0hlfm1eS5N8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LU1sQ3bB; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740139697; x=1771675697;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=InIcS/pWXeFbNoZZu2Fn3ZI18HiUZuiEi1BD7pYEiFo=;
+  b=LU1sQ3bBFQrKWIQ2/lyZ1oSYtihLdhQrE1ZyyfBJWI/3JQHJrFp2/VXi
+   btrKYv/sGPgn01GPvzOqWcUDupwF00lXO+fdegZeHbdw0fOALh+n9NvUJ
+   e5wEkyQgAObID+SRt+lXdG3KBtZBbUlG/YRffrI0eRwmxKNr3UT6JqOqE
+   8WeDublc221vsWF8YHxHI9Y8eXvohG7LZ8VcQYX1edEoW/NStcjZzo5J/
+   NtHggI0sDPSgcm7XvkTWEOsOhFBsKi2VcxDFqpkcn+YUnt5nD1LPjGXDC
+   6m3IGDtfsG68Rjo6NMCqtPZo4PZksIE2cRYBQVIO9Inyf3IonpGMwQTK1
+   A==;
+X-CSE-ConnectionGUID: O6J/EFWuSpiSY+v/qdGCmw==
+X-CSE-MsgGUID: TcuGhuj2T3qV9zT7UDrdAA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="43790360"
+X-IronPort-AV: E=Sophos;i="6.13,304,1732608000"; 
+   d="scan'208";a="43790360"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 04:08:17 -0800
+X-CSE-ConnectionGUID: 8VbTjeIOSjOztStU4TVeVw==
+X-CSE-MsgGUID: UT2OOpt0R7qKGqYBYOH/HA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,304,1732608000"; 
+   d="scan'208";a="138571084"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa002.fm.intel.com with ESMTP; 21 Feb 2025 04:08:15 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tlRpF-0005U7-2i;
+	Fri, 21 Feb 2025 12:08:13 +0000
+Date: Fri, 21 Feb 2025 20:07:37 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:selftests] BUILD SUCCESS
+ 70c31d9abb98137f86bc8d593863ae6127ea04ec
+Message-ID: <202502212031.5fyMQkY9-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUNJGVZOGBpMT0kfTB0dTx5WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a95281b9ed103afkunmbca250ba
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OCo6GCo6DzIUThk4Nww5GEsv
-	CzNPFFFVSlVKTE9LSkhPTU5OS05LVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFIQ09MNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=jYrENAaXI/q/GIYW7Yvgf9InsIiCz3Ei7bvBTGdYQC5O1XfNu9hGFbX+muAKo75/tBxSNhttlMqTzQtWvEuqNGZpO25JxMr64u78X0cF7CZQ7iqT0P4tcqq2OGqCzTBSJMsSNiTZp9K1Y3/HO3Px5GnfYh+DCOr+A/BK5421A5k=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=ukC/diYj/SOkXqmZAXU5Lp6DcD2S1bRVcWV6nw0f+Ro=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
 
-rk3576 is using dwc controller, with msi interrupt directly to gic instead
-of to gic its, so
-- no its support is required and the 'msi-map' is not need anymore,
-- a new 'msi' interrupt is needed.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git selftests
+branch HEAD: 70c31d9abb98137f86bc8d593863ae6127ea04ec  tools/Makefile: Remove pci target
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
----
+elapsed time: 1453m
 
-Changes in v6:
-- Fix make dt_binding_check and make CHECK_DTBS=y
+configs tested: 94
+configs skipped: 2
 
-Changes in v5:
-- Add constraints per device for interrupt-names due to the interrupt is
-different from rk3588.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Changes in v4:
-- Fix wrong indentation in dt_binding_check report by Rob
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250220    gcc-13.2.0
+arc                   randconfig-002-20250220    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                   randconfig-001-20250220    gcc-14.2.0
+arm                   randconfig-002-20250220    gcc-14.2.0
+arm                   randconfig-003-20250220    gcc-14.2.0
+arm                   randconfig-004-20250220    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250220    gcc-14.2.0
+arm64                 randconfig-002-20250220    gcc-14.2.0
+arm64                 randconfig-003-20250220    clang-21
+arm64                 randconfig-004-20250220    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250220    gcc-14.2.0
+csky                  randconfig-002-20250220    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250220    clang-21
+hexagon               randconfig-002-20250220    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250220    gcc-12
+i386        buildonly-randconfig-002-20250220    gcc-12
+i386        buildonly-randconfig-003-20250220    gcc-12
+i386        buildonly-randconfig-004-20250220    clang-19
+i386        buildonly-randconfig-005-20250220    clang-19
+i386        buildonly-randconfig-006-20250220    clang-19
+i386                                defconfig    clang-19
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250220    gcc-14.2.0
+loongarch             randconfig-002-20250220    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250220    gcc-14.2.0
+nios2                 randconfig-002-20250220    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250220    gcc-14.2.0
+parisc                randconfig-002-20250220    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc               randconfig-001-20250220    gcc-14.2.0
+powerpc               randconfig-002-20250220    clang-16
+powerpc               randconfig-003-20250220    clang-21
+powerpc64             randconfig-001-20250220    clang-16
+powerpc64             randconfig-002-20250220    clang-18
+powerpc64             randconfig-003-20250220    gcc-14.2.0
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250220    gcc-14.2.0
+riscv                 randconfig-002-20250220    clang-21
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250220    clang-19
+s390                  randconfig-002-20250220    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250220    gcc-14.2.0
+sh                    randconfig-002-20250220    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                 randconfig-001-20250220    gcc-14.2.0
+sparc                 randconfig-002-20250220    gcc-14.2.0
+sparc64               randconfig-001-20250220    gcc-14.2.0
+sparc64               randconfig-002-20250220    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250220    gcc-12
+um                    randconfig-002-20250220    gcc-12
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250220    gcc-12
+x86_64      buildonly-randconfig-002-20250220    gcc-12
+x86_64      buildonly-randconfig-003-20250220    gcc-12
+x86_64      buildonly-randconfig-004-20250220    gcc-12
+x86_64      buildonly-randconfig-005-20250220    gcc-12
+x86_64      buildonly-randconfig-006-20250220    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                randconfig-001-20250220    gcc-14.2.0
+xtensa                randconfig-002-20250220    gcc-14.2.0
 
-Changes in v3:
-- Fix dtb check broken on rk3588
-- Update commit message
-
-Changes in v2:
-- remove required 'msi-map'
-- add interrupt name 'msi'
-
- .../bindings/pci/rockchip-dw-pcie-common.yaml | 59 +++++++++++++++----
- .../bindings/pci/rockchip-dw-pcie.yaml        |  4 +-
- 2 files changed, 50 insertions(+), 13 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
-index cc9adfc7611c..069eb267c0bb 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
-@@ -64,6 +64,10 @@ properties:
-           interrupts - aer_rc_err, aer_rc_err_msi, rx_cpl_timeout,
-           tx_cpl_timeout, cor_err_sent, nf_err_sent, f_err_sent, cor_err_rx,
-           nf_err_rx, f_err_rx, radm_qoverflow
-+      - description:
-+          Combinded MSI line interrupt, which is to support MSI interrupts
-+          output to GIC controller via GIC SPI interrupt instead of GIC its
-+          interrupt.
-       - description:
-           eDMA write channel 0 interrupt
-       - description:
-@@ -75,16 +79,6 @@ properties:
- 
-   interrupt-names:
-     minItems: 5
--    items:
--      - const: sys
--      - const: pmc
--      - const: msg
--      - const: legacy
--      - const: err
--      - const: dma0
--      - const: dma1
--      - const: dma2
--      - const: dma3
- 
-   num-lanes: true
- 
-@@ -123,4 +117,49 @@ required:
- 
- additionalProperties: true
- 
-+anyOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - rockchip,rk3568-pcie
-+              - rockchip,rk3588-pcie
-+              - rockchip,rk3588-pcie-ep
-+    then:
-+      properties:
-+        interrupt-names:
-+          minItems: 5
-+          type: array
-+          items:
-+            - const: sys
-+            - const: pmc
-+            - const: msg
-+            - const: legacy
-+            - const: err
-+            - const: dma0
-+            - const: dma1
-+            - const: dma2
-+            - const: dma3
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - rockchip,rk3576-pcie
-+    then:
-+      properties:
-+        interrupt-names:
-+          type: array
-+          items:
-+            - const: sys
-+            - const: pmc
-+            - const: msg
-+            - const: legacy
-+            - const: err
-+            - const: msi
-+          minItems: 6
-+          maxItems: 6
-+
- ...
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-index 550d8a684af3..9a464731fa4a 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-@@ -26,6 +26,7 @@ properties:
-       - const: rockchip,rk3568-pcie
-       - items:
-           - enum:
-+              - rockchip,rk3576-pcie
-               - rockchip,rk3588-pcie
-           - const: rockchip,rk3568-pcie
- 
-@@ -71,9 +72,6 @@ properties:
- 
-   vpcie3v3-supply: true
- 
--required:
--  - msi-map
--
- unevaluatedProperties: false
- 
- examples:
--- 
-2.25.1
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
