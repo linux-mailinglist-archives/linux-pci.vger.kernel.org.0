@@ -1,69 +1,87 @@
-Return-Path: <linux-pci+bounces-21997-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21998-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD519A3FB3C
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 17:28:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EF3B2A3FB67
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 17:35:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28559706976
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 16:19:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD43D865372
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 16:20:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ED3E21019A;
-	Fri, 21 Feb 2025 16:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sPClOD6z"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC0701F2C5F;
+	Fri, 21 Feb 2025 16:16:49 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2CC1EE00F;
-	Fri, 21 Feb 2025 16:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD081E1C36;
+	Fri, 21 Feb 2025 16:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740154481; cv=none; b=eYryS5jpvYOBEP6AxQwiFAu2WsQnDpVdDjtIKbIng9FVv7YVl8XeyDTF91sUha54Z/AUrQmUmahlBEuKic1XcHRVK8ws5HbmR114BHzw2HK6mANTPHlj4lEtWgEFW0UlvDVd1Xpqe7vmTp6BuF+FJeuCJ8tdRangEy0GWKRRVqM=
+	t=1740154609; cv=none; b=mUg4DmpKpW6+A85qhfSNuCpD7+7uY10HyJk9Lq0howhJI803o3nWQDvDlu3s3lxieBY2SOkHH67F7FWSADsJIcuCrI9M5dNM0BbnoWxXmXmQEYVqV7j3DoixgNIvgEL76yv3Z3nWMgPeMla1CpLZ73WKeCNklW5laYXCPwbxt3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740154481; c=relaxed/simple;
-	bh=q/yMBMdwqNmNiSClnWPOPMejBody9Qva2/76W4HT7EI=;
+	s=arc-20240116; t=1740154609; c=relaxed/simple;
+	bh=62BjU1wiNs+I6ByCG2YQUuxnFrCx1qtKkdARbuTJls4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i39yRuu/2sGjyLPDZSdTYfEc2mGAnxgmZR4RMJ3322/ulFxf4kYwM7fC9Kj0wntiL5mS7rysVhZh8NT7yHuJZVUp4cttM9reQ5RQqub325WRQH51dGX+MOp0ObB/JpY9QzpFJEHG8ueMTcxDwG5d5DBds5UjsbJLUezeeT8mxF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sPClOD6z; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ED0FC4CED6;
-	Fri, 21 Feb 2025 16:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740154480;
-	bh=q/yMBMdwqNmNiSClnWPOPMejBody9Qva2/76W4HT7EI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sPClOD6zeSze3Efb3J7FdxYeonBw/ZPIgJsjIkgV/e8eDMdzEc4gLeah+T0vHXcl+
-	 M96IEfW7tqQceZEVh9LNpj/pE0B4hwgriUUGyDv9HVHWONOmPJ4P56FubkG4Mg6PVg
-	 9NUPDfgFh81BmgQFtQoAveLI7nG9ikSClsCYWgMnD6sE2ka2ZAWghoB084lQ6Urjzi
-	 v+1YeIXwt/dGaXAochvXBu1lpAtqvVWgOXD6JY1eM/vuCHMVvGxwfv5MGMTTxO8NXu
-	 LGfcorQH+vkjtbrshSiBKxXTwjAlxWoOXbJcJuNBKd0MPlOv5TFBDEudpsoTJB5CAQ
-	 5IvxCe+VkI/Dw==
-Date: Fri, 21 Feb 2025 17:14:33 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Matthew Wilcox <willy@infradead.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=D/QTlQWZVBlS6V0DB5/miIRS3YvrQLg3/MrTzU4R9vgIVKI7pyF41W8OkkEIpIdwmJyvWwX1Dj5QftHRbwZMzhxXtsV2gd1boJDhMYBp9zil1M0Tq8JaUtSYp/ph5QEkH4AC229Rw5yKwCxf5xqedokniDKG6RTi8TYv0XT03vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2fc1c80cdc8so3784328a91.2;
+        Fri, 21 Feb 2025 08:16:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740154607; x=1740759407;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dtzdmLHWgF7iyekmReF4eZfVX/GiXF6V9kKExFtIjGQ=;
+        b=Tq3AqJ+T0xkzas9AkCLCOZctX4qBM1tTg1ISxc2ZxRXH8RGbmV58HHc6gXOOZv74mS
+         gslnacapKOx2+XhK+om/SURVI+uDUZ8esb116hNCmpG12qHIHMx+LNt6VeKSAwi5L4Hd
+         BFC45H3+MpDgT0gcwitnNCJ5MDxSy80GrVS1VxH4wsvNYFa67KqxOYOYVjO3ktPv90mB
+         xXTiGG30Du3kOvh4IyFqUoLgpuyCEuGCqU0pWFcbZwcprSe1jTi0/KLvQTcv9jX3g7Aq
+         mcvev3vTIlr8RaDoZ3VNS6HXmfM8jvY3Vq/cUiC+vHeE4i9TePkxeHsVhLFf5dVnPIou
+         /Rlw==
+X-Forwarded-Encrypted: i=1; AJvYcCW21XvV7esrVKwLo6HCQ4ytCHmaLuNRLTO1bwWD84CN9NDOZw1JyRi4QaUaQSlTaxldws45PSJWVR/z@vger.kernel.org, AJvYcCWCvFWjr4gi/21BfNucbThU2LGtkOCtDCenNgi33csh/5RV9ovDafoV0HnG8nEuFKMU4GmmaIENv8iNqCF4@vger.kernel.org, AJvYcCX4qIKaHk2fAccbqAKbLzZWLPCG4u1Og/uMIJZ04mUytdDC0AKQLgJ8gmSP/GnQS61l3HLfa093sQLY@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzSNnXZEk45zd6udajaDUvXAALrhv6lESkWlJ4l+3jkQQvEUMf
+	Z6BGBRR3aHtd6z/fjXjLedlD4Y628iWKO1/OgAR0WG1txUK1Nq32
+X-Gm-Gg: ASbGncu+gJg+dhu4aeuW+QtyFs64fCb6EZmobL42W1ZiuNqabWGcowHeD12J60zXtPp
+	I0Mn9jDnbzNhapKCtKlski/4IKQuOg0N3Fq34RORq0W49tUgvXE4xGOyLncEiyMhncKMMcxAlDJ
+	u7/Q39Gfz1FglIdwSEXlDWZeBRYYpcARj9rCapIjOhlOlZ+o5r0MPOe5/uOiBF5wUScjInXgsFf
+	j44GffrUlMrnQdqYZt8Qz5mr7KCZr6KdMiF7SCI4bJyK5HP0iENp3RItCkeuvp7KwM8YfxKq7GO
+	iSDIuIE3m6j1mTmw6YKWG7DTE8Uk/p+zWpccqsPVseGEemsESwk/4Jc4wOzx
+X-Google-Smtp-Source: AGHT+IEDUawQ7p9G7A8dpF66pDVzseghqUjomgJNjmCvXMcR3CS02dZrBRorlwXIR837s2Xy/Uu6aw==
+X-Received: by 2002:a17:90b:5292:b0:2ee:7c65:ae8e with SMTP id 98e67ed59e1d1-2fce77a638fmr6700136a91.11.1740154607259;
+        Fri, 21 Feb 2025 08:16:47 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fceb05f715sm1586207a91.24.2025.02.21.08.16.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 08:16:46 -0800 (PST)
+Date: Sat, 22 Feb 2025 01:16:44 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Stanimir Varbanov <svarbanov@suse.de>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
-	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v17 2/3] rust: xarray: Add an abstraction for XArray
-Message-ID: <Z7imafmrrK0_TO65@pollux>
-References: <20250218-rust-xarray-bindings-v17-0-f3a99196e538@gmail.com>
- <20250218-rust-xarray-bindings-v17-2-f3a99196e538@gmail.com>
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Jonathan Bell <jonathan@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v5 -next 06/11] PCI: brcmstb: Add bcm2712 support
+Message-ID: <20250221161644.GA3753638@rocinante>
+References: <20250120130119.671119-7-svarbanov@suse.de>
+ <20250212180237.GA85622@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,179 +90,19 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250218-rust-xarray-bindings-v17-2-f3a99196e538@gmail.com>
+In-Reply-To: <20250212180237.GA85622@bhelgaas>
 
-On Tue, Feb 18, 2025 at 09:37:44AM -0500, Tamir Duberstein wrote:
-> +/// An array which efficiently maps sparse integer indices to owned objects.
-> +///
-> +/// This is similar to a [`crate::alloc::kvec::Vec<Option<T>>`], but more efficient when there are
-> +/// holes in the index space, and can be efficiently grown.
-> +///
-> +/// # Invariants
-> +///
-> +/// `self.xa` is always an initialized and valid [`bindings::xarray`] whose entries are either
-> +/// `XA_ZERO_ENTRY` or came from `T::into_foreign`.
-> +///
-> +/// # Examples
-> +///
-> +/// ```rust
-> +/// use kernel::alloc::KBox;
-> +/// use kernel::xarray::{AllocKind, XArray};
-> +///
-> +/// let xa = KBox::pin_init(XArray::new(AllocKind::Alloc1), GFP_KERNEL)?;
-> +///
-> +/// let dead = KBox::new(0xdead, GFP_KERNEL)?;
-> +/// let beef = KBox::new(0xbeef, GFP_KERNEL)?;
-> +///
-> +/// let mut guard = xa.lock();
-> +///
-> +/// assert_eq!(guard.get(0), None);
-> +///
-> +/// assert_eq!(guard.store(0, dead, GFP_KERNEL)?.as_deref(), None);
-> +/// assert_eq!(guard.get(0).copied(), Some(0xdead));
-> +///
-> +/// *guard.get_mut(0).unwrap() = 0xffff;
-> +/// assert_eq!(guard.get(0).copied(), Some(0xffff));
-> +///
-> +/// assert_eq!(guard.store(0, beef, GFP_KERNEL)?.as_deref().copied(), Some(0xffff));
-> +/// assert_eq!(guard.get(0).copied(), Some(0xbeef));
-> +///
-> +/// guard.remove(0);
-> +/// assert_eq!(guard.get(0), None);
-> +///
-> +/// # Ok::<(), Error>(())
-> +/// ```
-> +#[pin_data(PinnedDrop)]
-> +pub struct XArray<T: ForeignOwnable> {
-> +    #[pin]
-> +    xa: Opaque<bindings::xarray>,
-> +    _p: PhantomData<T>,
-> +}
-> +
+Hello,
 
-[...]
+> > Add bare minimum amount of changes in order to support PCIe RC hardware
+> > IP found on RPi5. The PCIe controller on bcm2712 is based on bcm7712 and
+> > as such it inherits register offsets, perst, bridge_reset ops and inbound
+> > windows count.
+> 
+> Add blank line between paragraphs.  We can fix when merging if you
+> don't repost for other reasons.
 
-> +
-> +impl<T: ForeignOwnable> XArray<T> {
-> +    /// Creates a new [`XArray`].
-> +    pub fn new(kind: AllocKind) -> impl PinInit<Self> {
-> +        let flags = match kind {
-> +            AllocKind::Alloc => bindings::XA_FLAGS_ALLOC,
-> +            AllocKind::Alloc1 => bindings::XA_FLAGS_ALLOC1,
-> +        };
-> +        pin_init!(Self {
-> +            // SAFETY: `xa` is valid while the closure is called.
-> +            xa <- Opaque::ffi_init(|xa| unsafe {
-> +                bindings::xa_init_flags(xa, flags)
-> +            }),
-> +            _p: PhantomData,
-> +        })
+Updated directly on the branch.  Thank you!
 
-I think this needs an `INVARIANT` comment.
-
-[...]
-
-> +/// The error returned by [`store`](Guard::store).
-> +///
-> +/// Contains the underlying error and the value that was not stored.
-> +pub struct StoreError<T> {
-> +    /// The error that occurred.
-> +    pub error: Error,
-> +    /// The value that was not stored.
-> +    pub value: T,
-> +}
-> +
-> +impl<T> From<StoreError<T>> for Error {
-> +    fn from(value: StoreError<T>) -> Self {
-> +        let StoreError { error, value: _ } = value;
-> +        error
-> +    }
-
-Still think this should just be `value.error`.
-
-If it is important to especially point out that `value` is dropped, maybe a
-comment is the better option.
-
-IMHO, adding additionally code here just throws up questions on why that
-additional code is needed.
-
-> +}
-> +
-> +impl<'a, T: ForeignOwnable> Guard<'a, T> {
-> +    fn load<F, U>(&self, index: usize, f: F) -> Option<U>
-> +    where
-> +        F: FnOnce(NonNull<T::PointedTo>) -> U,
-> +    {
-> +        // SAFETY: `self.xa.xa` is always valid by the type invariant.
-> +        let ptr = unsafe { bindings::xa_load(self.xa.xa.get(), index) };
-> +        let ptr = NonNull::new(ptr.cast())?;
-> +        Some(f(ptr))
-> +    }
-> +
-> +    /// Provides a reference to the element at the given index.
-> +    pub fn get(&self, index: usize) -> Option<T::Borrowed<'_>> {
-> +        self.load(index, |ptr| {
-> +            // SAFETY: `ptr` came from `T::into_foreign`.
-> +            unsafe { T::borrow(ptr.as_ptr()) }
-> +        })
-> +    }
-> +
-> +    /// Provides a mutable reference to the element at the given index.
-> +    pub fn get_mut(&mut self, index: usize) -> Option<T::BorrowedMut<'_>> {
-> +        self.load(index, |ptr| {
-> +            // SAFETY: `ptr` came from `T::into_foreign`.
-> +            unsafe { T::borrow_mut(ptr.as_ptr()) }
-> +        })
-> +    }
-> +
-> +    /// Removes and returns the element at the given index.
-> +    pub fn remove(&mut self, index: usize) -> Option<T> {
-> +        // SAFETY: `self.xa.xa` is always valid by the type invariant.
-> +        //
-> +        // SAFETY: The caller holds the lock.
-
-I think we only want one `SAFETY` section with an enumeration.
-
-> +        let ptr = unsafe { bindings::__xa_erase(self.xa.xa.get(), index) }.cast();
-> +        // SAFETY: `ptr` is either NULL or came from `T::into_foreign`.
-> +        //
-> +        // SAFETY: `&mut self` guarantees that the lifetimes of [`T::Borrowed`] and
-> +        // [`T::BorrowedMut`] borrowed from `self` have ended.
-
-Same here...
-
-> +        unsafe { T::try_from_foreign(ptr) }
-> +    }
-> +
-> +    /// Stores an element at the given index.
-> +    ///
-> +    /// May drop the lock if needed to allocate memory, and then reacquire it afterwards.
-> +    ///
-> +    /// On success, returns the element which was previously at the given index.
-> +    ///
-> +    /// On failure, returns the element which was attempted to be stored.
-> +    pub fn store(
-> +        &mut self,
-> +        index: usize,
-> +        value: T,
-> +        gfp: alloc::Flags,
-> +    ) -> Result<Option<T>, StoreError<T>> {
-> +        build_assert!(
-> +            mem::align_of::<T::PointedTo>() >= 4,
-> +            "pointers stored in XArray must be 4-byte aligned"
-> +        );
-> +        let new = value.into_foreign();
-> +
-> +        let old = {
-> +            let new = new.cast();
-> +            // SAFETY: `self.xa.xa` is always valid by the type invariant.
-> +            //
-> +            // SAFETY: The caller holds the lock.
-
-...and here.
-
-> +            //
-> +            // INVARIANT: `new` came from `T::into_foreign`.
-> +            unsafe { bindings::__xa_store(self.xa.xa.get(), index, new, gfp.as_raw()) }
-> +        };
+	Krzysztof
 
