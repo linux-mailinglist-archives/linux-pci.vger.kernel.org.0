@@ -1,203 +1,169 @@
-Return-Path: <linux-pci+bounces-21986-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21987-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73DBBA3F979
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 16:54:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B7F6A3F997
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 16:57:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9CE0E700563
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 15:47:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 73AC4860F99
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 15:52:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 814731EC011;
-	Fri, 21 Feb 2025 15:47:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25B341E00B4;
+	Fri, 21 Feb 2025 15:52:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mU9uQ4ai"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WokrI6x8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580691E7C32;
-	Fri, 21 Feb 2025 15:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2959D1DB366
+	for <linux-pci@vger.kernel.org>; Fri, 21 Feb 2025 15:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740152833; cv=none; b=Ph5wgrKSuxKOZTFNWrFExYbPu4t7yOhTS4+AGpfvzAXTGh+7tSD29TXtEDRZSQcw3lUdBGoXADVDv2rZPrehbyxNHz7GqEg1hBwqK0tuV2QBaXBrFMOHzvum4oh0T0tL6GRAjjovDkVdbscTp9WES7rJaVJkmGLuSNwuVhJTWcY=
+	t=1740153128; cv=none; b=K9c1CwhvJr/NI62Pu204jEEKvX2tC9diPquDwZiRdrD3qKFvWhfGDPQt3D5db/J9AfsNgDd1kmoLIqLMfQfePgjJxJM+lghSxcielkFRdjdIBXy6hGh/hShNSK+vqlGH+0zVJh34hHaEMHcNzsSdS9t8gimrJVQJNTqZP3IYrjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740152833; c=relaxed/simple;
-	bh=y6HZBp5IZErsqQhRRqqpRusCBCjDfw+6YZnfCtXjn24=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tqpzGD7B9i+DaRcC2/AUe3QAYyTcD5ZDZqDbXPHmC5oD9Mnu7fUSM3qfXXgLbkwQvPVZNLi5c1cAy30W0FIAK1hklzh4HuI5J5MWLtF944B01OlInnNK3A5BxJL3XEJ+wSL7H79ge+sYkfz2xfysUiVF1cowI6jRx+As1wR5As8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mU9uQ4ai; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 395FEC4CEEE;
-	Fri, 21 Feb 2025 15:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740152833;
-	bh=y6HZBp5IZErsqQhRRqqpRusCBCjDfw+6YZnfCtXjn24=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mU9uQ4aipt1ag5WgcRMfguszw5xNkqZQzLyc40JqQzs09rJQSSlxX+x55KCQ3SQUm
-	 NSbzgGUi/2xEcCUR4+Qj1rTMXZTTgKM9AlwvgdD8nvLg1cb/6YBMglQWjn5UoIe3ak
-	 mVN+VgahczaICQHzaenJ9PzG5tBKIOsP56hqJK7HRDw6d/pEVmJjMoSXxjozGGO3Mj
-	 PFqaLrrAwJB0AgufyzIR7buE1mv1rzYNCyZfPE/C2Gy8MxTrKvYWBBiP60o1b/oit8
-	 ZInw5zbamh/3ZUJEnwXBkpbiWdBHwRYxN2RzKoXMJVpzLndHiSJdFmJDn9Kp2gEbfB
-	 TwLaZh1t1x0SQ==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e04f87584dso3429862a12.3;
-        Fri, 21 Feb 2025 07:47:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVEjQ56WRhSRnogbW+/PwBJGEXfGuKFMuVWETDMNlAn+7FqgF0nShC1T1Dd3cKal+NV0ucdcT3dxMQ3@vger.kernel.org, AJvYcCVZ6CDgRO7+tWR7RDPIBZNLTgEPBss+9ng8l3OPh8r4xy0mcA2LtDS2x6A4gMxJx8E56lR1Ot/BsJqC@vger.kernel.org, AJvYcCXyZ36agHy3CdMizqHClBigVLZsnvS2OVDNRK+obEdJyFvOWIwR3aHLVLIANtqxQ/niPeIWqtjM+W8UhsW7@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYQfTXXtm5wUIgagPt15SOCoVF/GU5hx4GEUpuxlyxNsDB+yY/
-	8XSIK77NMovL93iGI/4XQVjhDlMw23za35maaNlWi23RxzV1eGAqQqOtw3BOz7lAn/mGj4H61nn
-	vEofJs0rcGhXSelpVW3SI0Ym6Dw==
-X-Google-Smtp-Source: AGHT+IF0g/yHvcofIIL954DMlkDlEmWXVXGkukpcot5YEPAzhsfMkB158M7I4VZhd8DMtE74KtzluzLOEm1DWmTBiQI=
-X-Received: by 2002:a17:907:94c1:b0:ab7:86af:9e19 with SMTP id
- a640c23a62f3a-abc09c264bemr370009366b.43.1740152831402; Fri, 21 Feb 2025
- 07:47:11 -0800 (PST)
+	s=arc-20240116; t=1740153128; c=relaxed/simple;
+	bh=JahFK35Qr0Io9347nU+Txx7gAacIFQAoJak3GUjm8gE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YqIEQ7BFWCgvOHNykEtM8C8RjSKd0Wk3fztfYo7wrKeARlMTTa2G/9Yugfl3DiVOLI55UNp6hK/WFY/Xuif5f6a2YnmN2kvVDZfeSTBjf0urWfAqqv+8q+FZkmYlxi52OnULcaedVXYbttXpXxaOnxL5r/AQ0779gZUkKD4k5sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WokrI6x8; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54524740032so2360142e87.3
+        for <linux-pci@vger.kernel.org>; Fri, 21 Feb 2025 07:52:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740153124; x=1740757924; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ZtA6gER0t3smsGWjpoDMnkV2uURH+P/8hvhROLXvN8=;
+        b=WokrI6x8tZsFN10C8M9gENzzx3oh3JnWF/JCR3Zy6WmBjprZFB14PwIDWbTtzAdX1l
+         ZdYeoGK+qy0EMKrAGlHL6BXFJMne37IBx2OfRSqp3+0J7lL2biokYoQDnOfMtRZxWLE3
+         UIN0vEJthwzgl6W/A97ETISA/v8A26ORTqphvkLrgyvJaGlvQiLtrPDPy4GS0urYYZ3q
+         69ZBOz21fe7j4piWKqdcg8wWEmPmv4tu01jQeiyM/6+V2vsO4q0uHLPu96/mn+GCVOFk
+         o1z4In0voLnT1b0HEFuckdR4jxRlMzsxII/qYAyv9zOZjSAanBlBs+QuxbxEHYci7iJl
+         JPtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740153124; x=1740757924;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2ZtA6gER0t3smsGWjpoDMnkV2uURH+P/8hvhROLXvN8=;
+        b=Ok3Z4gqROE+AD5ks+vuW/B6SKYk4iSQARDDQSW+jH+5tDXmF3IYM43ITZDNfPYkqVw
+         SbpUmWyjPQAG8pFg60vR5P60WxHmFSulooK+ucTNlswAxyMcRc8JrvW/rSRogNgpvU7i
+         FfE2FVDuyjjJ00eUjUvD4Ve8j3FNBXRp/XIqvT9kFWp8IiLzcSqqTHrlCXgmOW46j2/z
+         k1C0pi3j0YOYdGwx/iKQSEdtJMC/XHQ7hdekY4Kz6fI+DQtgEAXfZBu89ptlpYM3l7Ne
+         ar1FxoScEflqUNaKAcPGs6RS49f3akS4PhlqAg3u7qqw+N8ju404Q1mhr1SrcwgYsMuV
+         TnyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWafDNp1f0AOqx2iaIJ2g8nFH5EFPBRncOW/wuFx7hdiiNfis5XyIgFmC5gxKK1XzRNJsSuoMOqu1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMa3v5Ur+DamboialT8QxeIu8+Jl+aOmbzOm981g1oL32wAGkC
+	uhX5EDMJmGLzssCGUVZQkqJtBm/cX7XxklJXXILxaCyNb2vc9ICiET1NY+vyspc=
+X-Gm-Gg: ASbGncuQZ3yBeLtKfAWE3863cD1Ta/uVY40IF+SRLioFAhY7JflJmfsCkoJdx5JIfeR
+	Xdub/gM3R6BQAUSDmX9QSJ4INz7jtv+AVeZzntf6Y/Pd7lF2ifxUC+wY8V+0C6k5kYYcMixNvVQ
+	nLYtcWp0C/oCzX6yy9xyxUMMs/AToHq1U9pZ/9f4s9iZrjHk/bG3k0dS5yaql238OO/ibNAUKXS
+	BQ82IYjZ+z2sbzXxj/BcTnvSj8UwgyYZr4DRJNxiiPckXGVo8iq040slXBK21R3EKT38JuxBil5
+	YJTwxPsHqxzRHqSdI+OAvtV1prRheMc4CTN5pIIlAkBV8IMmN6M3B9qlCrvVMnZPSN0nQg==
+X-Google-Smtp-Source: AGHT+IH24nj/+JcB3IdIVoSNCh56OHj1lA8DaTNMuTacAa8nbrWyfCud7p9RZVdo/FpZKbuFg1GvZA==
+X-Received: by 2002:a05:6512:6cd:b0:545:cc5:be90 with SMTP id 2adb3069b0e04-54838f5b069mr1508800e87.35.1740153124193;
+        Fri, 21 Feb 2025 07:52:04 -0800 (PST)
+Received: from [127.0.1.1] (2001-14ba-a0c3-3a00--782.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::782])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54816a55851sm287643e87.27.2025.02.21.07.52.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 07:52:03 -0800 (PST)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH v3 0/8] PCI: qcom-ep: add support for using the EP on
+ SAR2130P and SM8450
+Date: Fri, 21 Feb 2025 17:51:58 +0200
+Message-Id: <20250221-sar2130p-pci-v3-0-61a0fdfb75b4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io>
- <20250211-pcie-t6-v1-7-b60e6d2501bb@rosenzweig.io> <CAL_JsqJ-sYsy-11_UiEKrKok49-a-VJUvm3vBGbpu9vY3TKLUw@mail.gmail.com>
- <86r041sozm.wl-maz@kernel.org>
-In-Reply-To: <86r041sozm.wl-maz@kernel.org>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 21 Feb 2025 09:47:00 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+g=ntTQ5rs9V0pB9U=Jq3Rf0C0akmdJD60GTQTGPeAGQ@mail.gmail.com>
-X-Gm-Features: AWEUYZkwVXJTJgh2rhG9YfDMZLZs4UScOtrjjxKujc0SvxNBHjDM1fIb2WzLu5M
-Message-ID: <CAL_Jsq+g=ntTQ5rs9V0pB9U=Jq3Rf0C0akmdJD60GTQTGPeAGQ@mail.gmail.com>
-Subject: Re: [PATCH 7/7] PCI: apple: Add T602x PCIe support
-To: Marc Zyngier <maz@kernel.org>
-Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Hector Martin <marcan@marcan.st>, 
-	Sven Peter <sven@svenpeter.dev>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Mark Kettenis <kettenis@openbsd.org>, 
-	Stan Skowronek <stan@corellium.com>, asahi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAB6huGcC/13MQQ6CMBCF4auQrq2ZDmDBlfcwLkoZYBJDm9Y0G
+ sLdLayU5XvJ/y0iUmCK4losIlDiyG7OozwVwk5mHklyn7dAwEqB0jKagKoEL71l2UBvqKzNRVM
+ jcuIDDfzeufsj74njy4XPrie1vRtUAx6hpCTItuoQyGowqro9eTbBnV0YxSYl/KlRHWrMtbWNr
+ lsYho66v3pd1y/TdxnB5wAAAA==
+X-Change-ID: 20241017-sar2130p-pci-80dae35a67e8
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Mrinmay Sarkar <quic_msarkar@quicinc.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1997;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=JahFK35Qr0Io9347nU+Txx7gAacIFQAoJak3GUjm8gE=;
+ b=owEBbQKS/ZANAwAKARTbcu2+gGW4AcsmYgBnuKEfg9XRcaDauK2KK12W62KTWukdFCVlmoefv
+ kSDMvE8QzSJAjMEAAEKAB0WIQRdB85SOKWMgfgVe+4U23LtvoBluAUCZ7ihHwAKCRAU23LtvoBl
+ uDXjD/0aZ67KX/EaGS0bBaOPZQlG7Bv6xwpHwPggPuT8tq5ghFcWqw5wMLnjXSp9vXHNxXQtikQ
+ jAwXoZ/LpI9MttQfxwL3Sn57iayMqc3tdSNLFPpVJHdHK1UX/ytwFd+RGIcjqaR/x14k7QdmEsu
+ eF07m8gvYzKPugGpZoYReovIunZTRrvXWcmyMN/kLchijxK++U2K5988hXieWORxieLBR3/oZ6F
+ INuXFa6gc9HdkQ2I2yddSAZRaHN/eiOmI+C/+pRsJBLvJq7EM5ih9PYJ4+ZyfMF/7TYRiQUnXuO
+ 0tWagzgpVDwtQK4AbkRxY68PfdOJBStWKo0P5yzHbhdRgYhkVYcEX5k6xRWwvZYmI6RPU3Tci8C
+ 17HY29j6EkrjL+mmKAjG29JjlrzomGpLYWznIXYXk2eKHsIfSGQugOIo2TssTLfJsxIXXorkOJV
+ 80aYMeYQmAYaiefMWFFmppguCJ+QbjwPr/LyluNwLoXLsSqd1w8vCxnkdsowYCqgBnZLevhWj6V
+ sQ+hF/QuQpbPqCB5HDtzKSByA8647b46I4k3unaTW8MEqiMaB3Vv7EiAwX76EcAHWUE5406J2CP
+ gRpnO9fTTN89TRO9lZYY+ddUQIkTjhJfg2zBu9XwVq6rYppYI9eKgZ/ueFxS8FXeasEKuk3N8PE
+ O+qL8I0Mz2XD6Bw==
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-On Thu, Feb 13, 2025 at 12:01=E2=80=AFPM Marc Zyngier <maz@kernel.org> wrot=
-e:
->
-> On Thu, 13 Feb 2025 17:56:19 +0000,
-> Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Tue, Feb 11, 2025 at 1:54=E2=80=AFPM Alyssa Rosenzweig <alyssa@rosen=
-zweig.io> wrote:
-> > >
-> > > From: Hector Martin <marcan@marcan.st>
-> > >
-> > > This version of the hardware moved around a bunch of registers, so we
-> > > drop the old compatible for these and introduce register offset
-> > > structures to handle the differences.
-> > >
-> > > Signed-off-by: Hector Martin <marcan@marcan.st>
-> > > Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> > > ---
-> > >  drivers/pci/controller/pcie-apple.c | 125 ++++++++++++++++++++++++++=
-++++------
-> > >  1 file changed, 105 insertions(+), 20 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/contro=
-ller/pcie-apple.c
-> > > index 7f4839fb0a5b15a9ca87337f53c14a1ce08301fc..7c598334427cb56ca0668=
-90ac61143ae1d3ed744 100644
-> > > --- a/drivers/pci/controller/pcie-apple.c
-> > > +++ b/drivers/pci/controller/pcie-apple.c
-> > > @@ -26,6 +26,7 @@
-> > >  #include <linux/list.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/msi.h>
-> > > +#include <linux/of_device.h>
-> >
-> > Drivers should not need this...
-> >
-> > > +const struct reg_info t602x_hw =3D {
-> > > +       .phy_lane_ctl =3D 0,
-> > > +       .port_msiaddr =3D PORT_T602X_MSIADDR,
-> > > +       .port_msiaddr_hi =3D PORT_T602X_MSIADDR_HI,
-> > > +       .port_refclk =3D 0,
-> > > +       .port_perst =3D PORT_T602X_PERST,
-> > > +       .port_rid2sid =3D PORT_T602X_RID2SID,
-> > > +       .port_msimap =3D PORT_T602X_MSIMAP,
-> > > +       .max_rid2sid =3D 512, /* 16 on t602x, guess for autodetect on=
- future HW */
-> > > +       .max_msimap =3D 512, /* 96 on t602x, guess for autodetect on =
-future HW */
-> > > +};
-> > > +
-> > > +static const struct of_device_id apple_pcie_of_match_hw[] =3D {
-> > > +       { .compatible =3D "apple,t6020-pcie", .data =3D &t602x_hw },
-> > > +       { .compatible =3D "apple,pcie", .data =3D &t8103_hw },
-> > > +       { }
-> > > +};
-> >
-> > You should not have 2 match tables.
-> >
-> > > @@ -750,13 +828,19 @@ static int apple_pcie_init(struct pci_config_wi=
-ndow *cfg)
-> > >         struct platform_device *platform =3D to_platform_device(dev);
-> > >         struct device_node *of_port;
-> > >         struct apple_pcie *pcie;
-> > > +       const struct of_device_id *match;
-> > >         int ret;
-> > >
-> > > +       match =3D of_match_device(apple_pcie_of_match_hw, dev);
-> > > +       if (!match)
-> > > +               return -ENODEV;
-> > > +
-> > >         pcie =3D devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> > >         if (!pcie)
-> > >                 return -ENOMEM;
-> > >
-> > >         pcie->dev =3D dev;
-> > > +       pcie->hw =3D match->data;
-> > >
-> > >         mutex_init(&pcie->lock);
-> > >
-> > > @@ -795,6 +879,7 @@ static const struct pci_ecam_ops apple_pcie_cfg_e=
-cam_ops =3D {
-> > >  };
-> > >
-> > >  static const struct of_device_id apple_pcie_of_match[] =3D {
-> > > +       { .compatible =3D "apple,t6020-pcie", .data =3D &apple_pcie_c=
-fg_ecam_ops },
-> > >         { .compatible =3D "apple,pcie", .data =3D &apple_pcie_cfg_eca=
-m_ops },
-> > >         { }
-> >
-> > You are going to need to merge the data to 1 struct.
-> >
-> > And then use (of_)?device_get_match_data() in probe().
->
-> No, that will break the driver. This isn't a standalone driver, but
-> only an ECAM shim (as you can tell from the actual probe function).
+Update the incomplete SM8450 support and bring in SAR2130P support for
+the PCIe1 controller to be used in EP mode.
 
-Yes, I'm aware of that issue. The self-contained solution is just:
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+Changes in v3:
+- Rephrased commit messages, adding notes regarding ABI breaks
+  (Krzysztof)
+- Added missing minTems (Krzysztof)
+- Reworked schema, merging reg/-names and interrupts/-names to a single
+  conditional clause.
+- Added dma-coherent to the list of allowed properties.
+- Link to v2: https://lore.kernel.org/r/20250221-sar2130p-pci-v2-0-cc87590ffbeb@linaro.org
 
-struct apple_match_data {
-  const struct pci_ecam_ops ops;
-  const struct reg_info info;
-};
+Changes in v2:
+- Rephrase IOMMU commit message to stop mentioning eDMA (Mani)
+- Explain why it is impossible to use fallback compatibles (Mani)
+- Reformat names to vertical lists (Konrad)
+- Use ACTIVE_ONLY for cpu-pcie interconnect (Konrad)
+- Use tags for sm8450 interconnects (Konrad)
+- Link to v1: https://lore.kernel.org/r/20250217-sar2130p-pci-v1-0-94b20ec70a14@linaro.org
 
-That works for pci_host_common_probe and apple_pcie_init. You don't
-actually have to match again, but just cast the ops pointer. Yeah, no
-type checking, but that already happens with of_match_table data.
-Another solution is you could have 2 .init() hooks.
+---
+Dmitry Baryshkov (8):
+      dt-bindings: PCI: qcom-ep: describe optional dma-coherent property
+      dt-bindings: PCI: qcom-ep: describe optional IOMMU
+      dt-bindings: PCI: qcom-ep: enable DMA for SM8450
+      dt-bindings: PCI: qcom-ep: consolidate DMA vs non-DMA usecases
+      dt-bindings: PCI: qcom-ep: add SAR2130P compatible
+      PCI: dwc: pcie-qcom-ep: enable EP support for SAR2130P
+      arm64: dts: qcom: sar2130p: add PCIe EP device nodes
+      arm64: dts: qcom: sm8450: add PCIe EP device nodes
 
-The somewhat more invasive solution is to define a struct with
-pci_ecam_ops and a void pointer for extra data for ECAM match data.
-Last time I looked at this, I think I needed something like this to
-share more of the ECAM code with host drivers needing more setup.
-There's a few cases of host controllers that have an ECAM space, but
-still need a full driver.
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 100 +++++++++++++++------
+ arch/arm64/boot/dts/qcom/sar2130p.dtsi             |  61 +++++++++++++
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               |  62 +++++++++++++
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          |   1 +
+ 4 files changed, 198 insertions(+), 26 deletions(-)
+---
+base-commit: 6b063ae40049a93bc662cb0c1653a691424b11a1
+change-id: 20241017-sar2130p-pci-80dae35a67e8
 
-The bottom line is drivers shouldn't be including of_device.h because
-it's for bus implementations. I've worked to remove a bunch, but
-there's still a bunch left. Please don't add more.
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Rob
 
