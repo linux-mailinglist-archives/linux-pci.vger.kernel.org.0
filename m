@@ -1,124 +1,250 @@
-Return-Path: <linux-pci+bounces-21996-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21997-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F758A3FA04
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 17:05:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AD519A3FB3C
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 17:28:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F91A8637C7
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 15:57:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28559706976
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 16:19:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2D3F1F3FC6;
-	Fri, 21 Feb 2025 15:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ED3E21019A;
+	Fri, 21 Feb 2025 16:14:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="frCVHTpj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sPClOD6z"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7B01DE4D5;
-	Fri, 21 Feb 2025 15:53:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2CC1EE00F;
+	Fri, 21 Feb 2025 16:14:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740153238; cv=none; b=oM7PhGQfL/4ax9i+1fNueHCWeoU4svv4dqdsrdwVwDaHnIcJ8o7wKgOLdCO70dlxYZ2sunie+w9PZQuAaLHdrXgYMtwoB8Wyzy5LI/b9+BBMANwmsx+bjPLp4uzlx9Lxf5WpWQxwhvukiWLBz4Fz0ogk6bKtadYh6sydOQaJDzU=
+	t=1740154481; cv=none; b=eYryS5jpvYOBEP6AxQwiFAu2WsQnDpVdDjtIKbIng9FVv7YVl8XeyDTF91sUha54Z/AUrQmUmahlBEuKic1XcHRVK8ws5HbmR114BHzw2HK6mANTPHlj4lEtWgEFW0UlvDVd1Xpqe7vmTp6BuF+FJeuCJ8tdRangEy0GWKRRVqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740153238; c=relaxed/simple;
-	bh=PE0mUF1LBVVFVnCNM9w16uhviJ1kUZEN7P9yj/uxKuE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gtmU9SHBDeNcRE7epEiNoFiPe8KhGBmHJBouMsCBhHkg+S7hs3M35DamhSgcel2fUKq5JVXN9xyh3tYE+fwSAh1vodAiEVVBBhMrI6xPIVztYuOfqfHJN6BrmqcdaqwlYN2qZ5m1QdTFVyEXH3b0+bsEvWzBUUodvp8RkJOkoeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=frCVHTpj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 106DDC4CED6;
-	Fri, 21 Feb 2025 15:53:54 +0000 (UTC)
+	s=arc-20240116; t=1740154481; c=relaxed/simple;
+	bh=q/yMBMdwqNmNiSClnWPOPMejBody9Qva2/76W4HT7EI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i39yRuu/2sGjyLPDZSdTYfEc2mGAnxgmZR4RMJ3322/ulFxf4kYwM7fC9Kj0wntiL5mS7rysVhZh8NT7yHuJZVUp4cttM9reQ5RQqub325WRQH51dGX+MOp0ObB/JpY9QzpFJEHG8ueMTcxDwG5d5DBds5UjsbJLUezeeT8mxF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sPClOD6z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ED0FC4CED6;
+	Fri, 21 Feb 2025 16:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740153238;
-	bh=PE0mUF1LBVVFVnCNM9w16uhviJ1kUZEN7P9yj/uxKuE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=frCVHTpj23uJeJovj8cgXfHA5bIObJ2tSBfABOIJDKzPYNWgf/3OACabEqrHAAH17
-	 sRyUVQbUZgA6wDff9xtSf7/HDK8v9tQGt01BDl+IDy6qZqk3qIrrHA7Y5u8Ylp215V
-	 Kw1CZFR+Hl83AIdU7zzphxAXoePJd7NYP58BsgoFzvRcSwhf7qUpiaDZO8pF+BDU4R
-	 fDUlI+ETMleS5y5r1Lm7R5b+9o2lgW0Xf1utO2aODFIyQLz4qmVBFy0X3leqwS4nrA
-	 ST715VXNReZhQieHhLqchSCY3jKwpdiGl93MNDtPfP7aID2vY3VFMcAbK1dHOTi555
-	 iqg152qm8Tvjg==
-X-Mailer: emacs 29.4 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Dan Williams <dan.j.williams@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	Samuel Ortiz <sameo@rivosinc.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>, linux-pci@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Subject: Re: [PATCH 08/11] PCI/IDE: Add IDE establishment helpers
-In-Reply-To: <67b6a3fa7ffb4_2d2c2947f@dwillia2-xfh.jf.intel.com.notmuch>
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
- <173343744264.1074769.10935494914881159519.stgit@dwillia2-xfh.jf.intel.com>
- <yq5ay10oz0kz.fsf@kernel.org> <yq5av7vsyzre.fsf@kernel.org>
- <67b6a3fa7ffb4_2d2c2947f@dwillia2-xfh.jf.intel.com.notmuch>
-Date: Fri, 21 Feb 2025 21:23:50 +0530
-Message-ID: <yq5aa5afway9.fsf@kernel.org>
+	s=k20201202; t=1740154480;
+	bh=q/yMBMdwqNmNiSClnWPOPMejBody9Qva2/76W4HT7EI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sPClOD6zeSze3Efb3J7FdxYeonBw/ZPIgJsjIkgV/e8eDMdzEc4gLeah+T0vHXcl+
+	 M96IEfW7tqQceZEVh9LNpj/pE0B4hwgriUUGyDv9HVHWONOmPJ4P56FubkG4Mg6PVg
+	 9NUPDfgFh81BmgQFtQoAveLI7nG9ikSClsCYWgMnD6sE2ka2ZAWghoB084lQ6Urjzi
+	 v+1YeIXwt/dGaXAochvXBu1lpAtqvVWgOXD6JY1eM/vuCHMVvGxwfv5MGMTTxO8NXu
+	 LGfcorQH+vkjtbrshSiBKxXTwjAlxWoOXbJcJuNBKd0MPlOv5TFBDEudpsoTJB5CAQ
+	 5IvxCe+VkI/Dw==
+Date: Fri, 21 Feb 2025 17:14:33 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Matthew Wilcox <willy@infradead.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	"Rob Herring (Arm)" <robh@kernel.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v17 2/3] rust: xarray: Add an abstraction for XArray
+Message-ID: <Z7imafmrrK0_TO65@pollux>
+References: <20250218-rust-xarray-bindings-v17-0-f3a99196e538@gmail.com>
+ <20250218-rust-xarray-bindings-v17-2-f3a99196e538@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218-rust-xarray-bindings-v17-2-f3a99196e538@gmail.com>
 
-Dan Williams <dan.j.williams@intel.com> writes:
+On Tue, Feb 18, 2025 at 09:37:44AM -0500, Tamir Duberstein wrote:
+> +/// An array which efficiently maps sparse integer indices to owned objects.
+> +///
+> +/// This is similar to a [`crate::alloc::kvec::Vec<Option<T>>`], but more efficient when there are
+> +/// holes in the index space, and can be efficiently grown.
+> +///
+> +/// # Invariants
+> +///
+> +/// `self.xa` is always an initialized and valid [`bindings::xarray`] whose entries are either
+> +/// `XA_ZERO_ENTRY` or came from `T::into_foreign`.
+> +///
+> +/// # Examples
+> +///
+> +/// ```rust
+> +/// use kernel::alloc::KBox;
+> +/// use kernel::xarray::{AllocKind, XArray};
+> +///
+> +/// let xa = KBox::pin_init(XArray::new(AllocKind::Alloc1), GFP_KERNEL)?;
+> +///
+> +/// let dead = KBox::new(0xdead, GFP_KERNEL)?;
+> +/// let beef = KBox::new(0xbeef, GFP_KERNEL)?;
+> +///
+> +/// let mut guard = xa.lock();
+> +///
+> +/// assert_eq!(guard.get(0), None);
+> +///
+> +/// assert_eq!(guard.store(0, dead, GFP_KERNEL)?.as_deref(), None);
+> +/// assert_eq!(guard.get(0).copied(), Some(0xdead));
+> +///
+> +/// *guard.get_mut(0).unwrap() = 0xffff;
+> +/// assert_eq!(guard.get(0).copied(), Some(0xffff));
+> +///
+> +/// assert_eq!(guard.store(0, beef, GFP_KERNEL)?.as_deref().copied(), Some(0xffff));
+> +/// assert_eq!(guard.get(0).copied(), Some(0xbeef));
+> +///
+> +/// guard.remove(0);
+> +/// assert_eq!(guard.get(0), None);
+> +///
+> +/// # Ok::<(), Error>(())
+> +/// ```
+> +#[pin_data(PinnedDrop)]
+> +pub struct XArray<T: ForeignOwnable> {
+> +    #[pin]
+> +    xa: Opaque<bindings::xarray>,
+> +    _p: PhantomData<T>,
+> +}
+> +
 
-> Aneesh Kumar K.V wrote:
-> [..]
->>
->> Also wondering should the stream id be unique at the rootport level? ie
->> for a config like below
->>
->> # pwd
->> /sys/devices/platform/40000000.pci/pci0000:00
->> # ls
->> 0000:00:01.0              available_secure_streams  power
->> 0000:00:02.0              pci_bus                   uevent
->> # lspci
->> 00:01.0 PCI bridge: ARM Device 0def
->> 00:02.0 PCI bridge: ARM Device 0def
->> 01:00.0 Unassigned class [ff00]: ARM Device ff80
->> 02:00.0 SATA controller: Device 0abc:aced (rev 01)
->> #
->> # lspci -t
->> -[0000:00]-+-01.0-[01]----00.0
->>            \-02.0-[02]----00.0
->> #
->>
->>
->> I should be able to use the same stream id to program both the rootports?
->
-> For all the IDE capable platforms I know of the stream id allocation
-> pool is segmented per host-bridge. Do you have a use case where root
-> ports that share a host-bridge each have access to a distinct pool of
-> IDE stream ids?
+[...]
 
-I am using FVP simulator for my development. Hence no real device. The spec=
- states:
-"
-All IDE TLPs must be associated with an IDE Stream, identified via an IDE S=
-tream ID.
-=E2=97=A6 Software must assign IDE Stream IDs such that two Partner Ports u=
-se the same value for a given IDE
-Stream.
-=E2=97=A6 Software must assign IDE Stream IDs such that every enabled IDE S=
-tream associated with a given
-terminal Port is assigned a unique Stream ID value at that Port
-=E2=97=A6 It is permitted for a platform to further restrict the assignment=
- of Stream IDs.
-"
+> +
+> +impl<T: ForeignOwnable> XArray<T> {
+> +    /// Creates a new [`XArray`].
+> +    pub fn new(kind: AllocKind) -> impl PinInit<Self> {
+> +        let flags = match kind {
+> +            AllocKind::Alloc => bindings::XA_FLAGS_ALLOC,
+> +            AllocKind::Alloc1 => bindings::XA_FLAGS_ALLOC1,
+> +        };
+> +        pin_init!(Self {
+> +            // SAFETY: `xa` is valid while the closure is called.
+> +            xa <- Opaque::ffi_init(|xa| unsafe {
+> +                bindings::xa_init_flags(xa, flags)
+> +            }),
+> +            _p: PhantomData,
+> +        })
 
-If I understand correctly, the stream ID allocation pool per host bridge
-qualifies as an additional platform restriction? If so, why is Linux
-enforcing it? Wouldn=E2=80=99t it be more appropriate for the platform code=
- to
-handle this instead?
+I think this needs an `INVARIANT` comment.
 
--aneesh
+[...]
+
+> +/// The error returned by [`store`](Guard::store).
+> +///
+> +/// Contains the underlying error and the value that was not stored.
+> +pub struct StoreError<T> {
+> +    /// The error that occurred.
+> +    pub error: Error,
+> +    /// The value that was not stored.
+> +    pub value: T,
+> +}
+> +
+> +impl<T> From<StoreError<T>> for Error {
+> +    fn from(value: StoreError<T>) -> Self {
+> +        let StoreError { error, value: _ } = value;
+> +        error
+> +    }
+
+Still think this should just be `value.error`.
+
+If it is important to especially point out that `value` is dropped, maybe a
+comment is the better option.
+
+IMHO, adding additionally code here just throws up questions on why that
+additional code is needed.
+
+> +}
+> +
+> +impl<'a, T: ForeignOwnable> Guard<'a, T> {
+> +    fn load<F, U>(&self, index: usize, f: F) -> Option<U>
+> +    where
+> +        F: FnOnce(NonNull<T::PointedTo>) -> U,
+> +    {
+> +        // SAFETY: `self.xa.xa` is always valid by the type invariant.
+> +        let ptr = unsafe { bindings::xa_load(self.xa.xa.get(), index) };
+> +        let ptr = NonNull::new(ptr.cast())?;
+> +        Some(f(ptr))
+> +    }
+> +
+> +    /// Provides a reference to the element at the given index.
+> +    pub fn get(&self, index: usize) -> Option<T::Borrowed<'_>> {
+> +        self.load(index, |ptr| {
+> +            // SAFETY: `ptr` came from `T::into_foreign`.
+> +            unsafe { T::borrow(ptr.as_ptr()) }
+> +        })
+> +    }
+> +
+> +    /// Provides a mutable reference to the element at the given index.
+> +    pub fn get_mut(&mut self, index: usize) -> Option<T::BorrowedMut<'_>> {
+> +        self.load(index, |ptr| {
+> +            // SAFETY: `ptr` came from `T::into_foreign`.
+> +            unsafe { T::borrow_mut(ptr.as_ptr()) }
+> +        })
+> +    }
+> +
+> +    /// Removes and returns the element at the given index.
+> +    pub fn remove(&mut self, index: usize) -> Option<T> {
+> +        // SAFETY: `self.xa.xa` is always valid by the type invariant.
+> +        //
+> +        // SAFETY: The caller holds the lock.
+
+I think we only want one `SAFETY` section with an enumeration.
+
+> +        let ptr = unsafe { bindings::__xa_erase(self.xa.xa.get(), index) }.cast();
+> +        // SAFETY: `ptr` is either NULL or came from `T::into_foreign`.
+> +        //
+> +        // SAFETY: `&mut self` guarantees that the lifetimes of [`T::Borrowed`] and
+> +        // [`T::BorrowedMut`] borrowed from `self` have ended.
+
+Same here...
+
+> +        unsafe { T::try_from_foreign(ptr) }
+> +    }
+> +
+> +    /// Stores an element at the given index.
+> +    ///
+> +    /// May drop the lock if needed to allocate memory, and then reacquire it afterwards.
+> +    ///
+> +    /// On success, returns the element which was previously at the given index.
+> +    ///
+> +    /// On failure, returns the element which was attempted to be stored.
+> +    pub fn store(
+> +        &mut self,
+> +        index: usize,
+> +        value: T,
+> +        gfp: alloc::Flags,
+> +    ) -> Result<Option<T>, StoreError<T>> {
+> +        build_assert!(
+> +            mem::align_of::<T::PointedTo>() >= 4,
+> +            "pointers stored in XArray must be 4-byte aligned"
+> +        );
+> +        let new = value.into_foreign();
+> +
+> +        let old = {
+> +            let new = new.cast();
+> +            // SAFETY: `self.xa.xa` is always valid by the type invariant.
+> +            //
+> +            // SAFETY: The caller holds the lock.
+
+...and here.
+
+> +            //
+> +            // INVARIANT: `new` came from `T::into_foreign`.
+> +            unsafe { bindings::__xa_store(self.xa.xa.get(), index, new, gfp.as_raw()) }
+> +        };
 
