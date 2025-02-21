@@ -1,89 +1,73 @@
-Return-Path: <linux-pci+bounces-22006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8CABA3FC03
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 17:50:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E135AA3FCB4
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 18:04:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E91117A5DB4
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 16:49:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 44E2D19C5F93
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 16:59:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEED721129A;
-	Fri, 21 Feb 2025 16:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7B9F21764B;
+	Fri, 21 Feb 2025 16:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GUUb7T72"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4558C2101AD;
-	Fri, 21 Feb 2025 16:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A20228C9E
+	for <linux-pci@vger.kernel.org>; Fri, 21 Feb 2025 16:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740156640; cv=none; b=oFG5PTixBN5OCDmzzgmnQ00URov+SD3fHu83fDIrukD40+CNJTpsM93JvAR9HCyUGYJnPN/ws5n391PoKfEshYoiVk2MZkgLaKW20a8h7cvja3LEErg5mUOXT6zmBlagR2L6yuFQV94deAjB3IPT4OfTp239PknOt0D/Yhx8X2U=
+	t=1740157095; cv=none; b=mUNPTcp8J3sBp5TeM6y4H+QGa+bLDEP4DI7WTSdMI5Ua3PwM1gcyMUuJGVvWHw7uJ5qhV2F6xnK//5l0lthjR/oOzDQjC1UWWn01HdAznZVZoydzd83E8vOnViJPF5IYhocb/vksB/E/8+KyXya5/f7S3u90ADbck/3fQ5ELVd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740156640; c=relaxed/simple;
-	bh=8Qa4ZK+UPeBMoFRXK0NogERaRJ8srvnRZA+a9P6JX1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fKwKlY2k6kE1Fu6pJvcyFhOyzY977SHATvSrUGAV7qYrE/h+FXrKdbgSTmROTJPFJueUeiQhJ8q1tm1+fgpixXAr0jA46RMCFUaT7hmMeQTAIzo4qUKrgPIiCvJx4QzXvCpB9LQAfz/41MtHZ5VxVO0HOdueZIhTelAR10UY16k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2211cd4463cso48463085ad.2;
-        Fri, 21 Feb 2025 08:50:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740156638; x=1740761438;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TRTsnqJOcW9dv6K1o7IPoOwJKef7SDuchvpYt2J5j+s=;
-        b=E4viJ3KWz2zHbonOAnaKzvdvBSAaiZd/IlksyBYKZPDW6izuwVcwy9+0PPc9F36vQI
-         DBG8FNTIwSR68uokr0RvU7ymbTXy+wwJ2esvGvZVWCsJRlX4iV5nAeo350FU9znd7yNo
-         xzGgVx8BwuzuvtfxURstN/yyZukJLeK1iRukbDSAz1bJkXv0oEWqPl37oR41mwo4/J18
-         ebUQhi7TLnbUKCZhblJgHzEG4Mb/ept255NegpsPU8OJC2q5u1dY9BhhPGcHjaLAG0Ft
-         gdyY8YgvjEU+SMrvI84jfrQTa+xRXrt0Z9sxsQ+W32sCS44j0o2KR+muntOi9DOsDZ8s
-         rhCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOMejDYToas9CDDF7Dj0D4CXgriD8PxiaDyrQEzJnVeP7aiTuxsoxjzN9wjOX1zmI2nL+30QSoZtYy@vger.kernel.org, AJvYcCUvwGyQDrHRi0d57sOya2c+4BKbExVoYgXnac1R0VG/w78XzkZHBin/E/5b5z7b9wRRceszkW6wQqKt@vger.kernel.org, AJvYcCV1lnXXq5/p3Y7dBPFJ4VskhwsaSsixE+ZCWiogiI5zEj9aV/xSgDU8Bu0zsoMH4sWE0NTg92ej9csIJv8T@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxk8dN+Sm5MUdXWsZo29DbOwNneJXV+nHNdnGD8W2PmooF3yEHc
-	nGJweYD4DSmHgMNT500M4yRHiKP34XlXCfL6qfnW0A5T5MUQEcet
-X-Gm-Gg: ASbGncvK2alTRYxFu7Qd2PqlSA3pVaYTEEY1nvhgo15BZ6ZcQ+Wu/uBIDWV5mR37Uj2
-	aN4l6fgDgWkx9TAmZH6IAMhdqi9DKhbnklAeDqQafd2iam705SEY2BVy9PnE4KgJharGvQK6gCP
-	Jmn+88f6trrfrqBeB17Y44mZ73VIaQsY5vdto3ruB3nwCtpbX3GMIufaRbjoim85q5aLWoPdjmP
-	c32UpN7c1r2XkLDqBZfEcZKPmZ8q2ZSV+15ZrAjGVWCDRaFRLu5bl+ZkoL5DIB3Z9NSY2NtvyiA
-	nwbr2YYFiCZ7E71KHUME/kXfdE5NB68bRJauaXpf3tIvRdlc4P2H72+mktB6
-X-Google-Smtp-Source: AGHT+IFBRf1rTI77c48n4yI4p8/OZKA2ivHDEkKmOMpEqskAZG83w/3TIK2ogD7dfLzN3Nx/aKujfw==
-X-Received: by 2002:a05:6a20:8426:b0:1ee:ab62:c37 with SMTP id adf61e73a8af0-1eef3c88ae2mr6789123637.11.1740156637946;
-        Fri, 21 Feb 2025 08:50:37 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-add21f2149fsm12375099a12.1.2025.02.21.08.50.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 08:50:37 -0800 (PST)
-Date: Sat, 22 Feb 2025 01:50:35 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Stanimir Varbanov <svarbanov@suse.de>
-Cc: Jim Quinlan <jim2101024@gmail.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Phil Elwell <phil@raspberrypi.com>,
-	Jonathan Bell <jonathan@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>
-Subject: Re: [PATCH v5 -next 04/11] PCI: brcmstb: Reuse config structure
-Message-ID: <20250221165035.GA3992086@rocinante>
-References: <20250120130119.671119-1-svarbanov@suse.de>
- <20250120130119.671119-5-svarbanov@suse.de>
- <CANCKTBsm6o9yaSenj-wft+n0uX-HNRjpJjkZaQcn4t474fXtow@mail.gmail.com>
- <CANCKTBuMOk9ASfPydcKHQgaQF4p7m7ryYezcLPdBEM2ao3LY3g@mail.gmail.com>
- <a2f6ab00-7b51-483e-ad10-0ea7ef9bfd90@suse.de>
+	s=arc-20240116; t=1740157095; c=relaxed/simple;
+	bh=SUuRFJhkC7+IHmgqscahYqWbTBEwLB0f4oD/P7gseYo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jkJiSXN6bSjufTDTqBMRZN6ysDmlFrL70J4sCbFMLZC4DfDKRf+KfoQLgGCPfS199pqafG1Maw7a3DOWTa4Wtuh4G0G74AF9xdODXJKCj6ZfI907PANspwO4utqrkaXSbX1Ghg63/4d5kuxYbR2KQVrhUlpyeNZ7dOnXBkpkmx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GUUb7T72; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740157094; x=1771693094;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=SUuRFJhkC7+IHmgqscahYqWbTBEwLB0f4oD/P7gseYo=;
+  b=GUUb7T72aCgbbij8DYoExRMeqGtkN5TBMzurS5PPKnMmVfEicUur1ggl
+   dhoo9cjj9do+8SpYCO+8gmAC+NhoEC1yQrQWniC/TW9f5v+vWcb+xBBgP
+   8Sh5SQkda1yjyVhWQU3HxzeQA2xT4in1F9RT5FJ39DjqmC3PVnRIpSWvr
+   m8e2f+Wun+O/DAlr0+zYKzUFqAdf6T0lpD9xQhe4enSVP8gs6W2tmSeWO
+   +VZIPC7TgIVmX7WfbWza9iRgH0BVoogTSiWylTRDQ3rNW+F9IAC4rTqn+
+   Vgy5nyRHGsfiTFBWlyc0A2fs++BlMeTUASY8RG3E9wgEwNEMeFdkz7iNg
+   Q==;
+X-CSE-ConnectionGUID: nVf9UEJqRG6rwe2m7+Wa9g==
+X-CSE-MsgGUID: J1fyUFssTPOn789tEy4uXw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52412442"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="52412442"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 08:58:13 -0800
+X-CSE-ConnectionGUID: q0tBXWEDTgCGstGDzAPpsA==
+X-CSE-MsgGUID: bgumM1NQSPiFMpA4knD4Nw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115923255"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 21 Feb 2025 08:58:12 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tlWLp-0005mC-2K;
+	Fri, 21 Feb 2025 16:58:09 +0000
+Date: Sat, 22 Feb 2025 00:57:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/brcmstb] BUILD SUCCESS
+ da93733d1f8da45e764e429952f88e0a46c55ecb
+Message-ID: <202502220021.xcqvhuK4-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -91,44 +75,91 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a2f6ab00-7b51-483e-ad10-0ea7ef9bfd90@suse.de>
 
-Hello,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/brcmstb
+branch HEAD: da93733d1f8da45e764e429952f88e0a46c55ecb  PCI: brcmstb: Fix missing of_node_put() in brcm_pcie_probe()
 
-> > Sorry for the late notice but I get a compilation error on this commit:
-> > 
-> > drivers/pci/controller/pcie-brcmstb.c: In function 'brcm_pcie_turn_off':
-> > drivers/pci/controller/pcie-brcmstb.c:1492:14: error: 'struct
-> > brcm_pcie' has no member named 'bridge_sw_init_set'; did you mean
-> > 'bridge_reset'?
-> >   ret = pcie->bridge_sw_init_set(pcie, 1);
-> >               ^~~~~~~~~~~~~~~~~~
-> >               bridge_reset
-> > make[5]: *** [scripts/Makefile.build:194:
-> > drivers/pci/controller/pcie-brcmstb.o] Error 1
-> > 
-> > It appears to be fixed with the subsequent commit "PCI: brcmstb: Add
-> > bcm2712 support".
-> > 
-> > Can you please look into this and see if you get the same results?
-> 
-> Ah, it is my fault. Thanks for spotting this. This must have happened
-> when moving this patch earlier in the series.
+elapsed time: 1454m
 
-No worries.  Things happen.  We can fix everything. :)
+configs tested: 70
+configs skipped: 1
 
-> Krzystof,
-> 
-> I could send a new version of the series or the other option could be to
-> rework those two patches in controller/brcmstb?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Happy to modify things on the branch directly.  But if it's easier to send
-a new version, then feel free.  Either approach would work. :)
+tested configs:
+alpha                           allyesconfig    gcc-14.2.0
+arc                             allmodconfig    gcc-13.2.0
+arc                             allyesconfig    gcc-13.2.0
+arc                  randconfig-001-20250221    gcc-13.2.0
+arc                  randconfig-002-20250221    gcc-13.2.0
+arm                             allmodconfig    gcc-14.2.0
+arm                             allyesconfig    gcc-14.2.0
+arm                  randconfig-001-20250221    gcc-14.2.0
+arm                  randconfig-002-20250221    clang-19
+arm                  randconfig-003-20250221    gcc-14.2.0
+arm                  randconfig-004-20250221    clang-21
+arm64                           allmodconfig    clang-18
+arm64                randconfig-001-20250221    clang-15
+arm64                randconfig-002-20250221    clang-21
+arm64                randconfig-003-20250221    clang-21
+arm64                randconfig-004-20250221    gcc-14.2.0
+csky                 randconfig-001-20250221    gcc-14.2.0
+csky                 randconfig-002-20250221    gcc-14.2.0
+hexagon                         allmodconfig    clang-21
+hexagon                         allyesconfig    clang-18
+hexagon              randconfig-001-20250221    clang-21
+hexagon              randconfig-002-20250221    clang-21
+i386                             allnoconfig    gcc-12
+i386       buildonly-randconfig-001-20250221    gcc-12
+i386       buildonly-randconfig-002-20250221    gcc-12
+i386       buildonly-randconfig-003-20250221    gcc-12
+i386       buildonly-randconfig-004-20250221    gcc-12
+i386       buildonly-randconfig-005-20250221    clang-19
+i386       buildonly-randconfig-006-20250221    clang-19
+loongarch            randconfig-001-20250221    gcc-14.2.0
+loongarch            randconfig-002-20250221    gcc-14.2.0
+nios2                randconfig-001-20250221    gcc-14.2.0
+nios2                randconfig-002-20250221    gcc-14.2.0
+parisc               randconfig-001-20250221    gcc-14.2.0
+parisc               randconfig-002-20250221    gcc-14.2.0
+powerpc              randconfig-001-20250221    clang-21
+powerpc              randconfig-002-20250221    clang-21
+powerpc              randconfig-003-20250221    clang-17
+powerpc64            randconfig-001-20250221    clang-21
+powerpc64            randconfig-002-20250221    clang-21
+powerpc64            randconfig-003-20250221    clang-19
+riscv                randconfig-001-20250221    clang-21
+riscv                randconfig-002-20250221    clang-21
+s390                            allmodconfig    clang-19
+s390                            allyesconfig    gcc-14.2.0
+s390                 randconfig-001-20250221    gcc-14.2.0
+s390                 randconfig-002-20250221    gcc-14.2.0
+sh                              allmodconfig    gcc-14.2.0
+sh                              allyesconfig    gcc-14.2.0
+sh                   randconfig-001-20250221    gcc-14.2.0
+sh                   randconfig-002-20250221    gcc-14.2.0
+sparc                           allmodconfig    gcc-14.2.0
+sparc                randconfig-001-20250221    gcc-14.2.0
+sparc                randconfig-002-20250221    gcc-14.2.0
+sparc64              randconfig-001-20250221    gcc-14.2.0
+sparc64              randconfig-002-20250221    gcc-14.2.0
+um                              allmodconfig    clang-21
+um                              allyesconfig    gcc-12
+um                   randconfig-001-20250221    gcc-12
+um                   randconfig-002-20250221    gcc-12
+x86_64                           allnoconfig    clang-19
+x86_64     buildonly-randconfig-001-20250221    gcc-12
+x86_64     buildonly-randconfig-002-20250221    clang-19
+x86_64     buildonly-randconfig-003-20250221    clang-19
+x86_64     buildonly-randconfig-004-20250221    clang-19
+x86_64     buildonly-randconfig-005-20250221    clang-19
+x86_64     buildonly-randconfig-006-20250221    clang-19
+x86_64                             defconfig    gcc-11
+xtensa               randconfig-001-20250221    gcc-14.2.0
+xtensa               randconfig-002-20250221    gcc-14.2.0
 
-> I will post later the fixes here if you choose the second option.
-
-Thank you, sir, for a prompt reply!  Appreciated.
-
-	Krzysztof
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
