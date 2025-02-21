@@ -1,53 +1,53 @@
-Return-Path: <linux-pci+bounces-22046-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22047-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F088A402C4
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 23:35:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB626A402E9
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 23:40:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 582077A4CC7
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 22:34:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EBD73189A44C
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 22:41:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A0FB1D63C4;
-	Fri, 21 Feb 2025 22:35:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45ECB204C10;
+	Fri, 21 Feb 2025 22:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7RKwM0A"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOCagVCe"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22158A944;
-	Fri, 21 Feb 2025 22:35:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E759202F87;
+	Fri, 21 Feb 2025 22:40:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740177346; cv=none; b=rE5jr+zIusYnpBBy7EVMzIIySfomlH+qlPYxjC4mGsHzte3EgcbzVgOanDpLZh5DNI9S5disx5n8QqwUCDKNpxSC2Na1gLZ8Ci1qp9WsncU6y9f/rxETTQ7N09yNmkT/sP7FyD2iwy+MiO6DC1EwGW3JklS+z7UK3R7hHVBxzuk=
+	t=1740177650; cv=none; b=jyOeR/1BFLD26DaPS/TzY4Aqw2MURS2S7Dqgzpyrod+yJOY/YJM/JOP+iWcpSC6TG67x1/6e3QHTUTO/lqPeAhLe2NYnCslMM0Kn3VzElOs4xHyBv5Bhyx9xBxOneqWMIPWjNnOVj2SSvWQLbD9jRSoR2URmf5wQhHv8RTCkLKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740177346; c=relaxed/simple;
-	bh=1mcOLXlU0AURcF3mVdaMpvgweL+7TaLkhfpP3sVJGDo=;
+	s=arc-20240116; t=1740177650; c=relaxed/simple;
+	bh=OIpk/rEXseFwQw9BD/Do6j/VJPOnb7oyxoh1ovAtC8c=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=IHy+lqXR9j5nZ1Ca4pvmDMNOS/YWS0vkCLtPoH0bgPsSbvJpKTnyPVVkbwmeaU/ddPSokPoUccOlxykipOnjbx7vs7/UuxC81EpQEhOGOJnKXDv25/rsFQuiaNomK+x7tpDlJiEbx9Iem0tKURgP8A/KZZ1wBw2vXWdN+wNi7yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7RKwM0A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70D77C4CED6;
-	Fri, 21 Feb 2025 22:35:44 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=YiItE7oXF/oQnn2Hy//IN3meg9EYQc/D32oXfgFNNQAGuebymYOaGrqJRHnNJIcS5ZVCAoh/Eiqo/v/VOIUqfOur83N8sco2ga07ZiY4+z0Ifh5xhPIQLSPXU3LJqQAZKUdfcQBAhreexusIPXJhMGJAofbTuhyMIaqDknR8+MM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOCagVCe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72E50C4CED6;
+	Fri, 21 Feb 2025 22:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740177344;
-	bh=1mcOLXlU0AURcF3mVdaMpvgweL+7TaLkhfpP3sVJGDo=;
+	s=k20201202; t=1740177649;
+	bh=OIpk/rEXseFwQw9BD/Do6j/VJPOnb7oyxoh1ovAtC8c=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=m7RKwM0ASUxKpxyVu/J7f3x8uj/pqRE+UJ9zGsZRBw5bBPyWEfxDbA8aUrXyYfTNK
-	 2nuYZsWibqoI3PgRsQvnEOgEovUdwhdsfE9k/Bye9MVsCu/NI2JtEu76zcYnr1P3ze
-	 +ytqld9ewvBAFsBwXW3NOmFr9DjiKtA/c9t6SEK+2v/uw6i6Ic63Pj3+rrlMiiTSzp
-	 6zSqe5GsPc4PBnn2pQESjpm0H8A+URs0WYGTXSOXHgvHc/SzSewe02412iEQXtaltV
-	 p35X4NSjbauf+f5V+tr2CxsdBWdf7MGFRBgymQCCyZJrBA4ORo14/UMMFE8yYCdAUw
-	 rC2XGd5pF+fuQ==
-Date: Fri, 21 Feb 2025 16:35:43 -0600
+	b=nOCagVCercFSJwhvUySJcRJcTQBb1dAyo9dDzPjqGLbguTqqLjdIg1u0aUVK0hoBT
+	 LFG/pFDmAwyhOswNwBqGHrALe1RmaaZmUN1/UkoSvhN4ipUMF/EIhk5ISQLdglJmSS
+	 lpQc+O9MgjWsyaLy2/c0hnBTuAJVxxvaylrZfp/75e6myT7zA52EcWfV6Ns4tJc1n1
+	 8KAoLdbKWdCMt9AylQqYciT9JGvGM5zFcEoNJ/fjZX5SCKuq/pdlRGIMJwqoCQE93P
+	 NZYs1obbKyfzRdQzgtWz7VTWbkIbe9MVVYBEObq0/dvG/eAFdeJHyqRMcHy8Pif708
+	 fJn+qBYDYPrBQ==
+Date: Fri, 21 Feb 2025 16:40:48 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
-Cc: bhelgaas@google.com, christian.koenig@amd.com,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: Update Resizable BAR Capability Register fields
-Message-ID: <20250221223543.GA369205@bhelgaas>
+To: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+Cc: christophe.jaillet@wanadoo.fr, bhelgaas@google.com, scott@spiteful.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] PCI: cpci: remove unused fields
+Message-ID: <20250221224048.GA369678@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -56,62 +56,87 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250220012546.318577-1-daizhiyuan@phytium.com.cn>
+In-Reply-To: <20250217185638.398925-1-trintaeoitogc@gmail.com>
 
-On Thu, Feb 20, 2025 at 09:25:46AM +0800, Zhiyuan Dai wrote:
-> PCI Express Base Spec r6.0 defines BAR size up to 8 EB (2^63 bytes),
-> but supporting anything bigger than 128TB requires changes to pci_rebar_get_possible_sizes()
-> to read the additional Capability bits from the Control register.
+On Mon, Feb 17, 2025 at 03:56:38PM -0300, Guilherme Giacomo Simoes wrote:
+> The `get_power()` and `set_power()` function pointers in the
+> `cpci_hp_controller ops` struct were declared but never implemented by
+> any driver. To improve code readability and reduce resource usage,
+> remove this pointers.
 > 
-> If 8EB support is required, callers will need to be updated to handle u64 instead of u32.
-> For now, support is limited to 128TB, and support for sizes greater than 128TB can be
-> deferred to a later time.
+> Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+
+Applied to pci/hotplug for v6.15, thanks!
+
+> --- 
+> v2 changes
 > 
-> Signed-off-by: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
-
-Applied to pci/resource for v6.15, thanks!
-
+> - Remove uneccessary SLOT_ENABLE constant
+> - Remove uneccessary flags fields
 > ---
->  drivers/pci/pci.c             | 4 ++--
->  include/uapi/linux/pci_regs.h | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
+>  drivers/pci/hotplug/cpci_hotplug.h      |  2 --
+>  drivers/pci/hotplug/cpci_hotplug_core.c | 17 ++---------------
+>  2 files changed, 2 insertions(+), 17 deletions(-)
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 661f98c6c63a..77b9ceefb4e1 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3752,7 +3752,7 @@ static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
->   * @bar: BAR to query
->   *
->   * Get the possible sizes of a resizable BAR as bitmask defined in the spec
-> - * (bit 0=1MB, bit 19=512GB). Returns 0 if BAR isn't resizable.
-> + * (bit 0=1MB, bit 31=128TB). Returns 0 if BAR isn't resizable.
->   */
->  u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
->  {
-> @@ -3800,7 +3800,7 @@ int pci_rebar_get_current_size(struct pci_dev *pdev, int bar)
->   * pci_rebar_set_size - set a new size for a BAR
->   * @pdev: PCI device
->   * @bar: BAR to set size to
-> - * @size: new size as defined in the spec (0=1MB, 19=512GB)
-> + * @size: new size as defined in the spec (0=1MB, 31=128TB)
->   *
->   * Set the new size of a BAR as defined in the spec.
->   * Returns zero if resizing was successful, error code otherwise.
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 1601c7ed5fab..ce99d4f34ce5 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1013,7 +1013,7 @@
+> diff --git a/drivers/pci/hotplug/cpci_hotplug.h b/drivers/pci/hotplug/cpci_hotplug.h
+> index 03fa39ab0c88..a31d6b62f523 100644
+> --- a/drivers/pci/hotplug/cpci_hotplug.h
+> +++ b/drivers/pci/hotplug/cpci_hotplug.h
+> @@ -44,8 +44,6 @@ struct cpci_hp_controller_ops {
+>  	int (*enable_irq)(void);
+>  	int (*disable_irq)(void);
+>  	int (*check_irq)(void *dev_id);
+> -	u8  (*get_power)(struct slot *slot);
+> -	int (*set_power)(struct slot *slot, int value);
+>  };
 >  
->  /* Resizable BARs */
->  #define PCI_REBAR_CAP		4	/* capability register */
-> -#define  PCI_REBAR_CAP_SIZES		0x00FFFFF0  /* supported BAR sizes */
-> +#define  PCI_REBAR_CAP_SIZES		0xFFFFFFF0  /* supported BAR sizes */
->  #define PCI_REBAR_CTRL		8	/* control register */
->  #define  PCI_REBAR_CTRL_BAR_IDX		0x00000007  /* BAR index */
->  #define  PCI_REBAR_CTRL_NBAR_MASK	0x000000E0  /* # of resizable BARs */
+>  struct cpci_hp_controller {
+> diff --git a/drivers/pci/hotplug/cpci_hotplug_core.c b/drivers/pci/hotplug/cpci_hotplug_core.c
+> index d0559d2faf50..dd93e53ea7c2 100644
+> --- a/drivers/pci/hotplug/cpci_hotplug_core.c
+> +++ b/drivers/pci/hotplug/cpci_hotplug_core.c
+> @@ -71,13 +71,10 @@ static int
+>  enable_slot(struct hotplug_slot *hotplug_slot)
+>  {
+>  	struct slot *slot = to_slot(hotplug_slot);
+> -	int retval = 0;
+>  
+>  	dbg("%s - physical_slot = %s", __func__, slot_name(slot));
+>  
+> -	if (controller->ops->set_power)
+> -		retval = controller->ops->set_power(slot, 1);
+> -	return retval;
+> +	return 0;
+>  }
+>  
+>  static int
+> @@ -109,12 +106,6 @@ disable_slot(struct hotplug_slot *hotplug_slot)
+>  	}
+>  	cpci_led_on(slot);
+>  
+> -	if (controller->ops->set_power) {
+> -		retval = controller->ops->set_power(slot, 0);
+> -		if (retval)
+> -			goto disable_error;
+> -	}
+> -
+>  	slot->adapter_status = 0;
+>  
+>  	if (slot->extracting) {
+> @@ -129,11 +120,7 @@ disable_slot(struct hotplug_slot *hotplug_slot)
+>  static u8
+>  cpci_get_power_status(struct slot *slot)
+>  {
+> -	u8 power = 1;
+> -
+> -	if (controller->ops->get_power)
+> -		power = controller->ops->get_power(slot);
+> -	return power;
+> +	return 1;
+>  }
+>  
+>  static int
 > -- 
-> 2.43.0
+> 2.34.1
 > 
 
