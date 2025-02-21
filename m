@@ -1,292 +1,255 @@
-Return-Path: <linux-pci+bounces-22015-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22016-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBAB0A3FD74
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 18:29:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3D2DA3FD8B
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 18:32:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 47EA73BE3FC
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 17:23:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 052EB18894A3
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 17:32:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97DA62500C0;
-	Fri, 21 Feb 2025 17:23:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32D002505B1;
+	Fri, 21 Feb 2025 17:32:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ewkQ1nnX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcE6nUxw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA3E2505CE
-	for <linux-pci@vger.kernel.org>; Fri, 21 Feb 2025 17:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4390E35955;
+	Fri, 21 Feb 2025 17:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740158609; cv=none; b=fZvzsWgSTPahq8n2fmqX50yNI5qyCCIlBno4v4aid+b48ib+v4jKx+yAaHzQlMuD4XUPsSgWPYbhoU5cQicNFRCm5yrSQ1wFj5pgzFwounjOSlUk4j37ZrtYOW94Q0cwR4NeFt2ElDNGhqpSHwVJv6chljPWKEigpjQrdJoU/hI=
+	t=1740159167; cv=none; b=GnAxUThcVU3qz90ww6iDAyBLc46FwkkX0Q40k+NFK0ETKAi+JazQQyvKW2hYdgr8vOBXw1H8sAC7G8LmPqV4NBgJ1K79A1vGsIlZJZx5v/FkThmJOrmJTyIgy56RmJxiJxdJWOYl7ePUFs/msbYqYb4OJY+fSDdntKmasY/0ado=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740158609; c=relaxed/simple;
-	bh=432o3LdSfGr+97dz21dol2E2CpCbQLWX6ldZdo4avtw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sPV+Wh5Y/EJCNqPTv1yijzuTtbHClQcsuoHsQ423pIuP9M2vIk+EfMmPueylZ/vCEEnqDgS334fJY/i5s3cyKcaQM8fl5NM7TVk4K5Uo7CFOwymNbmpYnkIm8s6ROMFYSXE8JPTereZK7BrC1ImuHpBtyMAlSz0brPs6FP4DIk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ewkQ1nnX; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-220ec47991aso33566415ad.1
-        for <linux-pci@vger.kernel.org>; Fri, 21 Feb 2025 09:23:27 -0800 (PST)
+	s=arc-20240116; t=1740159167; c=relaxed/simple;
+	bh=ZP/AZtmKekbdVa5h3wfllziVebzm3Pt0LiN8jFoe/t0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GVVp7JzsvnRdUWYPmg9P9XTTsDRI2+/S5hCo87dIAjicFtUKKxxNz2ErWl+TC9FHudNp32TZfRGqihsWukIKFgwwyVLCag8btZVkipFQtHLznT5oBk1w1mYD0ROZWSMA1xj6Qft2DkLJlo3/cwKXaAs+zv5iA6BhowOqV0Z4FUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bcE6nUxw; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30a2594435dso34078941fa.1;
+        Fri, 21 Feb 2025 09:32:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740158607; x=1740763407; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1740159163; x=1740763963; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H4hJLC9ezjmzckiqXS2j2AvB+5mvndIMa9rBZc/aOjo=;
-        b=ewkQ1nnXlyFvB5zHIFJ3t2AhzjOOJD7JfijAw1ZaYFA9RbjwVBT/Bq5dX6GfP+oZ17
-         KmHWDOXfxzY3RZbpyvC6948sd54K9LPznvGYUazLVujEtSWiZX4i3pnwGw+TdsqzCgI3
-         yoOirIIsWGUUGm3X4s+qL7VA9DITv4ArA6DKuUkjdH18nObD7ZErc18Pm6EWVAIWpMS9
-         zsrKOqxJQvqKXSS/n/uEPsGtHPrrBnjJ8hsMy7DV9VJPI/X6OoOyeVM1no2kIidX55nV
-         EeQEyFPrPL4gDqlT+Tz/ncXO6+hMp7uEiyQ+BPar4jTZw2D+/8rBTJvCXhz/Nwy98De5
-         ZOzA==
+        bh=jJaML9956P6Qct9n7YoV3xhm6iSp4V2wMSvsIOJXqbc=;
+        b=bcE6nUxwH6eW0OOHJDmFP4Zj5LHwD8oU46+OD9awqFqZOID8LIvURwGCs1UGIlOJI3
+         PWjv0bjxMK7qBidibKtiHplDyD1qMgfc1IaDRiII30d7Uti4g8JH6sslQXyvCR12AonM
+         eEdySvIxRzcd0KafXAQMtBXiOlKfQ1uCVGmaI6LbVrBNO4EV2jW5ppoOe1mgrQbOcbCP
+         sMAhq8l0OXL2CIq5eWNjAU4eaAMM9QjDb2CYEttSrGXhOkpqSMcJd0sLAZVkZqMLYNlI
+         K0/+fpfZj+I0oBIqPcBI4GwrXCll/2+TbWteK2dfJ/7f1dl99RPyX3X9/VoU7iLISJWd
+         cTUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740158607; x=1740763407;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1740159163; x=1740763963;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=H4hJLC9ezjmzckiqXS2j2AvB+5mvndIMa9rBZc/aOjo=;
-        b=JLCnyr+lmVei3/6DmgiiXCBNP6lDWbzkgNTjKZq0IEIJpKEmbW/NRUkrVtHpiBVLCb
-         TLz9R9Camh7WgxSIvlhzdMUxkD4wOCmX052iap10lmw+HT4M6iakyygK/LG1gc3BFeLL
-         t45EMprj5FudVe5aY8sRK5C0oW4tgH4CiY9TH//a8UW5Sc1P1WrERfKmpk7UEECWJkvr
-         ELURc1G7WzW05j7XfMbKsXF670TIIh8bmVSWh4ec0SDAd6rmJc2U3bapUT+o4XYc/xSL
-         eRu4kRjGBpxeXxiuARd7/+k8uut6tMR6SK75hm/VI9NZQflXuOkBDlMoN41PnAYtylVD
-         yEog==
-X-Gm-Message-State: AOJu0YwZLxGkGWFObX1onuDmpkXcmvzAWieB7rIf7rNH3ybWlKwNcQR2
-	DkyqsdAN4QQa5cF3YqRSiGgmx2dfiPOZjGXBqlD9GC824deM2JkjnycoRBuH1A==
-X-Gm-Gg: ASbGncuFPqSOHc6qCtiVpVaBClT+odDLP3+Ehv9umWVe/N7btKbjb/9Dsz64evyo1Nn
-	zsQdKXgVjcfJxcZhyAFXKeICnWcD0q1b3yDp0i+KGCyUv7d0BliG0DP9rM2lw2wGbeVrQY8EEqp
-	4ewRA3nvlQ8lHc9FENKgDEj42wOa0o91jelqJwF9zofNcZRKDtfNBW9chhF2TcR44TPAqWjPHWx
-	8kVZuPSU070R2evu4lkTijzqKXKTM386rH8cE0nXG0sIOKKzXtX0IsQXzPvslKejgR/sqxpFt83
-	qLuNFOfBjBDDSLzzPL/rPapss6hgaIVspwrBCFtga46/6SH9ABsL
-X-Google-Smtp-Source: AGHT+IFFxw0nkRkM5smllKdWbGW6yYHFF8V3927Y2RR95VX56SRlzaDxW8xBfx5wbngEvMWxjPsqAA==
-X-Received: by 2002:a17:903:2349:b0:220:ec62:7dc8 with SMTP id d9443c01a7336-2219ff28ef8mr66227175ad.2.1740158605605;
-        Fri, 21 Feb 2025 09:23:25 -0800 (PST)
-Received: from localhost.localdomain ([120.60.73.12])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545c814sm141243405ad.148.2025.02.21.09.23.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 09:23:25 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dingwei@marvell.com,
-	cassel@kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 2/2] PCI: qcom: Add support for retraining the link due to link down event
-Date: Fri, 21 Feb 2025 22:53:09 +0530
-Message-Id: <20250221172309.120009-3-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250221172309.120009-1-manivannan.sadhasivam@linaro.org>
-References: <20250221172309.120009-1-manivannan.sadhasivam@linaro.org>
+        bh=jJaML9956P6Qct9n7YoV3xhm6iSp4V2wMSvsIOJXqbc=;
+        b=NUWZ8nNLvTC7Hzv0FKpiqWeV9Bm/DDUsrlcJsnxkkmdaMGt3ZSSsy26hjpGzrpXwhi
+         zkOAigPl4QZ7raX0wg7eRl60Ne6Sf0xoIffCQhxSM8FFT8Eu7UqkmPHyX/nx27WpvRXm
+         h8N9jLSsESv870UswzMaO9yYPgoFhDTM2SLleh/LRIP2qQC3aaKInV47wXY5d2i8UMkG
+         S1kUpPzzm5Omn4DP6oSU0hoe3WTaR7QclPxOq9KrdDvULnubHXMYWOHmmoOUlvb30Ym6
+         mXUwymUZOrqkPxD/scvHchuxZZvi9e9wSvQNAk0xFmJczagcp3CYcO69YjW67sN83HJw
+         nVdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBJgwBlTQiF6ILPzJlzOggZX5HzzIA9j7ne7DHqb37dUekNOmbIamMMwT99+OeCieQ4tTFaD8aGlcjAoFw@vger.kernel.org, AJvYcCV6y7oVx9vd+AotpWnp3j9+7ZOGMjusl0dqHvdy+DJwVWvmML/dAblNvsa6tBO7wD/geAIhlArq40PSoxU8SgY=@vger.kernel.org, AJvYcCXZzbUqRa4UdwEzKDmFwAzDbaZ8sxuyljPVHL5mS40FFRe6h0IAhuQz4x3K9Pi+R1KR5l+cbz40Iqtm@vger.kernel.org, AJvYcCXmVzlQAAyqp6QV8QBhDIew0hBRbCy9Bkbx2aBDT4E5AWTryDLWDwrFg6koLaNHXV4nG8UZ2EpJbJ7QAeEg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU6PHjgW+wjEm9rLZOSNcwKPj23QbRbJGsikXgs9IZ5o8fd63g
+	bOEF/drkEw10cTuV+GU8gzJd2rhYuU/MprgTxnyiBN5bKxwpHzlr+GR9VPC6XTgPCPVcxR7PJOp
+	zit03K5e3IMCUNtXXNZf+75ZgyKA=
+X-Gm-Gg: ASbGnct8ezAk7rZ9ip3uurpVvqx0NZHoxHfThugK6lWYz4VTlHA3b23tAuezouIyGdD
+	o19tAGzbJKkmXQaINr/T10aKk5CndKOFddSiQ6f/lEzfDX8UGhZH1YrRabkG7zi8RXRkKKEDBBW
+	Qrw48upo7A2TlHKWMR5xQ4/+ttaVvwqyVjITLmFObh3Q==
+X-Google-Smtp-Source: AGHT+IFxT4w66GaPlc3A/wTppIBJfgqA6VUJQjnIKnRHSb865LLrlRfQ3PC+ljynjrcEeQeBBsji2Xh3J+hIuoVgSws=
+X-Received: by 2002:a2e:95cf:0:b0:309:271d:711a with SMTP id
+ 38308e7fff4ca-30a5997e02dmr13064501fa.13.1740159163087; Fri, 21 Feb 2025
+ 09:32:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250218-rust-xarray-bindings-v17-0-f3a99196e538@gmail.com>
+ <20250218-rust-xarray-bindings-v17-2-f3a99196e538@gmail.com> <Z7imafmrrK0_TO65@pollux>
+In-Reply-To: <Z7imafmrrK0_TO65@pollux>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Fri, 21 Feb 2025 12:32:06 -0500
+X-Gm-Features: AWEUYZmPYku9SRhQtPs7zcM_PkSwe-MlLN_XcNfWi4R554FoIu-TSTRLf0mVB_s
+Message-ID: <CAJ-ks9nQhjXYfjr=kPU1RQON83iWkFXrxM7oXzSrSxRVbg_xTg@mail.gmail.com>
+Subject: Re: [PATCH v17 2/3] rust: xarray: Add an abstraction for XArray
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Matthew Wilcox <willy@infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, "Rob Herring (Arm)" <robh@kernel.org>, 
+	=?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
+	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The PCIe link can go down under circumstances such as the device removed
-from the bus, reset condition, etc... When that happens, the link needs to
-be retrained back to make it operational again. Currently, the driver is
-not handling the link down event, due to which the users have to restart
-the machine to make PCIe link operational again. So fix it by detecting the
-link down event and adding support to retraining the link.
+(resending because gmail decided =F0=9F=91=8D is only allowed in HTML)
 
-Since the Qcom PCIe controllers report the link down event through the
-'global' IRQ, enable the link down event by setting PARF_INT_ALL_LINK_DOWN
-bit in PARF_INT_ALL_MASK register.
+On Fri, Feb 21, 2025 at 11:14=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
+ wrote:
+>
+> On Tue, Feb 18, 2025 at 09:37:44AM -0500, Tamir Duberstein wrote:
+>
+> [...]
+>
+> > +
+> > +impl<T: ForeignOwnable> XArray<T> {
+> > +    /// Creates a new [`XArray`].
+> > +    pub fn new(kind: AllocKind) -> impl PinInit<Self> {
+> > +        let flags =3D match kind {
+> > +            AllocKind::Alloc =3D> bindings::XA_FLAGS_ALLOC,
+> > +            AllocKind::Alloc1 =3D> bindings::XA_FLAGS_ALLOC1,
+> > +        };
+> > +        pin_init!(Self {
+> > +            // SAFETY: `xa` is valid while the closure is called.
+> > +            xa <- Opaque::ffi_init(|xa| unsafe {
+> > +                bindings::xa_init_flags(xa, flags)
+> > +            }),
+> > +            _p: PhantomData,
+> > +        })
+>
+> I think this needs an `INVARIANT` comment.
 
-Then in the case of the event, call pci_host_bridge_handle_link_down() API
-in the handler to let the PCI core handle the link down condition.
+=F0=9F=91=8D
 
-The API will internally call, 'pci_ops::retrain_link()' callback to retrain
-the link in a platform specific way. So implement the callback to retrain
-the link by first resetting the PCIe core, followed by reinitializing the
-resources and then finally starting the link again. The PCI core will
-finally rescan the bus to enumerate the devices.
+> [...]
+>
+> > +/// The error returned by [`store`](Guard::store).
+> > +///
+> > +/// Contains the underlying error and the value that was not stored.
+> > +pub struct StoreError<T> {
+> > +    /// The error that occurred.
+> > +    pub error: Error,
+> > +    /// The value that was not stored.
+> > +    pub value: T,
+> > +}
+> > +
+> > +impl<T> From<StoreError<T>> for Error {
+> > +    fn from(value: StoreError<T>) -> Self {
+> > +        let StoreError { error, value: _ } =3D value;
+> > +        error
+> > +    }
+>
+> Still think this should just be `value.error`.
+>
+> If it is important to especially point out that `value` is dropped, maybe=
+ a
+> comment is the better option.
+>
+> IMHO, adding additionally code here just throws up questions on why that
+> additional code is needed.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pcie-qcom.c | 90 +++++++++++++++++++++++++-
- 1 file changed, 88 insertions(+), 2 deletions(-)
+OK.
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index e4d3366ead1f..ebc58e88161e 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -55,6 +55,7 @@
- #define PARF_INT_ALL_STATUS			0x224
- #define PARF_INT_ALL_CLEAR			0x228
- #define PARF_INT_ALL_MASK			0x22c
-+#define PARF_STATUS				0x230
- #define PARF_SID_OFFSET				0x234
- #define PARF_BDF_TRANSLATE_CFG			0x24c
- #define PARF_DBI_BASE_ADDR_V2			0x350
-@@ -130,8 +131,11 @@
- 
- /* PARF_LTSSM register fields */
- #define LTSSM_EN				BIT(8)
-+#define SW_CLEAR_FLUSH_MODE			BIT(10)
-+#define FLUSH_MODE				BIT(11)
- 
- /* PARF_INT_ALL_{STATUS/CLEAR/MASK} register fields */
-+#define PARF_INT_ALL_LINK_DOWN			BIT(1)
- #define PARF_INT_ALL_LINK_UP			BIT(13)
- #define PARF_INT_MSI_DEV_0_7			GENMASK(30, 23)
- 
-@@ -145,6 +149,9 @@
- /* PARF_BDF_TO_SID_CFG fields */
- #define BDF_TO_SID_BYPASS			BIT(0)
- 
-+/* PARF_STATUS fields */
-+#define FLUSH_COMPLETED				BIT(8)
-+
- /* ELBI_SYS_CTRL register fields */
- #define ELBI_SYS_CTRL_LT_ENABLE			BIT(0)
- 
-@@ -169,6 +176,7 @@
- 						PCIE_CAP_SLOT_POWER_LIMIT_SCALE)
- 
- #define PERST_DELAY_US				1000
-+#define FLUSH_TIMEOUT_US			100
- 
- #define QCOM_PCIE_CRC8_POLYNOMIAL		(BIT(2) | BIT(1) | BIT(0))
- 
-@@ -239,6 +247,7 @@ union qcom_pcie_resources {
- };
- 
- struct qcom_pcie;
-+static struct pci_ops qcom_pcie_bridge_ops;
- 
- struct qcom_pcie_ops {
- 	int (*get_resources)(struct qcom_pcie *pcie);
-@@ -274,6 +283,7 @@ struct qcom_pcie {
- 	struct icc_path *icc_cpu;
- 	const struct qcom_pcie_cfg *cfg;
- 	struct dentry *debugfs;
-+	int global_irq;
- 	bool suspended;
- 	bool use_pm_opp;
- };
-@@ -1263,6 +1273,8 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
- 			goto err_assert_reset;
- 	}
- 
-+	pp->bridge->ops = &qcom_pcie_bridge_ops;
-+
- 	return 0;
- 
- err_assert_reset:
-@@ -1300,6 +1312,75 @@ static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
- 	.post_init	= qcom_pcie_host_post_init,
- };
- 
-+static int qcom_pcie_retrain_link(struct pci_bus *bus)
-+{
-+	struct dw_pcie_rp *pp = bus->sysdata;
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-+	struct device *dev = pcie->pci->dev;
-+	u32 val;
-+	int ret;
-+
-+	/* Wait for the pending transactions to be completed */
-+	ret = readl_relaxed_poll_timeout(pcie->parf + PARF_STATUS, val,
-+					 val & FLUSH_COMPLETED, 10,
-+					 FLUSH_TIMEOUT_US);
-+	if (ret) {
-+		dev_err(dev, "Flush completion failed: %d\n", ret);
-+		goto err_host_deinit;
-+	}
-+
-+	/* Clear the FLUSH_MODE to allow the core to be reset */
-+	val = readl(pcie->parf + PARF_LTSSM);
-+	val |= SW_CLEAR_FLUSH_MODE;
-+	writel(val, pcie->parf + PARF_LTSSM);
-+
-+	/* Wait for the FLUSH_MODE to clear */
-+	ret = readl_relaxed_poll_timeout(pcie->parf + PARF_LTSSM, val,
-+					 !(val & FLUSH_MODE), 10,
-+					 FLUSH_TIMEOUT_US);
-+	if (ret) {
-+		dev_err(dev, "Flush mode clear failed: %d\n", ret);
-+		goto err_host_deinit;
-+	}
-+
-+	qcom_pcie_host_deinit(pp);
-+
-+	ret = qcom_pcie_host_init(pp);
-+	if (ret) {
-+		dev_err(dev, "Host init failed\n");
-+		return ret;
-+	}
-+
-+	ret = dw_pcie_setup_rc(pp);
-+	if (ret)
-+		goto err_host_deinit;
-+
-+	/*
-+	 * Re-enable global IRQ events as the PARF_INT_ALL_MASK register is
-+	 * non-sticky.
-+	 */
-+	if (pcie->global_irq)
-+		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_ALL_LINK_DOWN |
-+			       PARF_INT_MSI_DEV_0_7, pcie->parf + PARF_INT_ALL_MASK);
-+
-+	qcom_pcie_start_link(pci);
-+
-+	return 0;
-+
-+err_host_deinit:
-+	qcom_pcie_host_deinit(pp);
-+
-+	return ret;
-+}
-+
-+static struct pci_ops qcom_pcie_bridge_ops = {
-+	.map_bus = dw_pcie_own_conf_map_bus,
-+	.read = pci_generic_config_read,
-+	.write = pci_generic_config_write,
-+	.retrain_link = qcom_pcie_retrain_link,
-+};
-+
- /* Qcom IP rev.: 2.1.0	Synopsys IP rev.: 4.01a */
- static const struct qcom_pcie_ops ops_2_1_0 = {
- 	.get_resources = qcom_pcie_get_resources_2_1_0,
-@@ -1571,6 +1652,9 @@ static irqreturn_t qcom_pcie_global_irq_thread(int irq, void *data)
- 		pci_unlock_rescan_remove();
- 
- 		qcom_pcie_icc_opp_update(pcie);
-+	} else if (FIELD_GET(PARF_INT_ALL_LINK_DOWN, status)) {
-+		dev_dbg(dev, "Received Link down event\n");
-+		pci_host_bridge_handle_link_down(pp->bridge);
- 	} else {
- 		dev_WARN_ONCE(dev, 1, "Received unknown event. INT_STATUS: 0x%08x\n",
- 			      status);
-@@ -1732,8 +1816,10 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 			goto err_host_deinit;
- 		}
- 
--		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_MSI_DEV_0_7,
--			       pcie->parf + PARF_INT_ALL_MASK);
-+		writel_relaxed(PARF_INT_ALL_LINK_UP | PARF_INT_ALL_LINK_DOWN |
-+			       PARF_INT_MSI_DEV_0_7, pcie->parf + PARF_INT_ALL_MASK);
-+
-+		pcie->global_irq = irq;
- 	}
- 
- 	qcom_pcie_icc_opp_update(pcie);
--- 
-2.25.1
+> > +}
+> > +
+> > +impl<'a, T: ForeignOwnable> Guard<'a, T> {
+> > +    fn load<F, U>(&self, index: usize, f: F) -> Option<U>
+> > +    where
+> > +        F: FnOnce(NonNull<T::PointedTo>) -> U,
+> > +    {
+> > +        // SAFETY: `self.xa.xa` is always valid by the type invariant.
+> > +        let ptr =3D unsafe { bindings::xa_load(self.xa.xa.get(), index=
+) };
+> > +        let ptr =3D NonNull::new(ptr.cast())?;
+> > +        Some(f(ptr))
+> > +    }
+> > +
+> > +    /// Provides a reference to the element at the given index.
+> > +    pub fn get(&self, index: usize) -> Option<T::Borrowed<'_>> {
+> > +        self.load(index, |ptr| {
+> > +            // SAFETY: `ptr` came from `T::into_foreign`.
+> > +            unsafe { T::borrow(ptr.as_ptr()) }
+> > +        })
+> > +    }
+> > +
+> > +    /// Provides a mutable reference to the element at the given index=
+.
+> > +    pub fn get_mut(&mut self, index: usize) -> Option<T::BorrowedMut<'=
+_>> {
+> > +        self.load(index, |ptr| {
+> > +            // SAFETY: `ptr` came from `T::into_foreign`.
+> > +            unsafe { T::borrow_mut(ptr.as_ptr()) }
+> > +        })
+> > +    }
+> > +
+> > +    /// Removes and returns the element at the given index.
+> > +    pub fn remove(&mut self, index: usize) -> Option<T> {
+> > +        // SAFETY: `self.xa.xa` is always valid by the type invariant.
+> > +        //
+> > +        // SAFETY: The caller holds the lock.
+>
+> I think we only want one `SAFETY` section with an enumeration.
 
+=F0=9F=91=8D
+
+> > +        let ptr =3D unsafe { bindings::__xa_erase(self.xa.xa.get(), in=
+dex) }.cast();
+> > +        // SAFETY: `ptr` is either NULL or came from `T::into_foreign`=
+.
+> > +        //
+> > +        // SAFETY: `&mut self` guarantees that the lifetimes of [`T::B=
+orrowed`] and
+> > +        // [`T::BorrowedMut`] borrowed from `self` have ended.
+>
+> Same here...
+
+=F0=9F=91=8D
+
+> > +        unsafe { T::try_from_foreign(ptr) }
+> > +    }
+> > +
+> > +    /// Stores an element at the given index.
+> > +    ///
+> > +    /// May drop the lock if needed to allocate memory, and then reacq=
+uire it afterwards.
+> > +    ///
+> > +    /// On success, returns the element which was previously at the gi=
+ven index.
+> > +    ///
+> > +    /// On failure, returns the element which was attempted to be stor=
+ed.
+> > +    pub fn store(
+> > +        &mut self,
+> > +        index: usize,
+> > +        value: T,
+> > +        gfp: alloc::Flags,
+> > +    ) -> Result<Option<T>, StoreError<T>> {
+> > +        build_assert!(
+> > +            mem::align_of::<T::PointedTo>() >=3D 4,
+> > +            "pointers stored in XArray must be 4-byte aligned"
+> > +        );
+> > +        let new =3D value.into_foreign();
+> > +
+> > +        let old =3D {
+> > +            let new =3D new.cast();
+> > +            // SAFETY: `self.xa.xa` is always valid by the type invari=
+ant.
+> > +            //
+> > +            // SAFETY: The caller holds the lock.
+>
+> ...and here.
+
+=F0=9F=91=8D
+
+> > +            //
+> > +            // INVARIANT: `new` came from `T::into_foreign`.
+> > +            unsafe { bindings::__xa_store(self.xa.xa.get(), index, new=
+, gfp.as_raw()) }
+> > +        };
 
