@@ -1,81 +1,81 @@
-Return-Path: <linux-pci+bounces-21974-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21975-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72B6EA3F135
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 11:00:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36A93A3F134
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 11:00:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DBC181884182
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 09:59:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 254EA3AB7BA
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 10:00:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6B4D2046BF;
-	Fri, 21 Feb 2025 09:58:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A01B201246;
+	Fri, 21 Feb 2025 10:00:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uWWD6gwR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wifdL6lk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F88E204694
-	for <linux-pci@vger.kernel.org>; Fri, 21 Feb 2025 09:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3584204694
+	for <linux-pci@vger.kernel.org>; Fri, 21 Feb 2025 10:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740131938; cv=none; b=RFKRd9A/WdPWg8pR3uF3MYhylPfEtZaLcyr9NyqKb9Y33GO2jGBxDyvj+KOJjW9nqF3w8j93e4qcwbEImvWVHFNwEMQFWpE1YKDiCkethKeVdJ6mINNyhpp3ancAu3kQrttlVRdXbuqYBfi6NAf02Gsrudpf984D/Q328p35n/U=
+	t=1740132007; cv=none; b=DNxyushnEDP+73Pylc846VD9wHgJluUV1rqbhlcp+kS0TtZckVkJiWpSmQrLgfI5hSYdw9MD9XxCNe6D97f9yRsnBYExRtoGPn1TQbbLT5RPssIoGsgzc6i1o9QKFXiYpyBu+z/d6MozrzAWJp1rDKGbD1Opsv3XKIcw65envm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740131938; c=relaxed/simple;
-	bh=YuIlQ4FSUsykqva7/KDtYayb9cKWI6zL2uqU0oUIP/8=;
+	s=arc-20240116; t=1740132007; c=relaxed/simple;
+	bh=+bqvsqplc0ix2nD9cIkceoFFGaEb8J9OFFWRXYVz0Z4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FPjoDsywPhTgTqSfKwwwRGrHM2AqtNndUpy9PGsOGbvrq1oaihbUvkiz5Ld7x2IPPcC/BNBGFxuzg7FVfIkuu2XcZ6Q2Rw/WPeyZf692TMyc6Sq5/gBZAzHWuOLzKMYuLkyKxWQD+qYKzzTdSFQQmsIPyPCSrx6KZyD8fBgQVaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uWWD6gwR; arc=none smtp.client-ip=209.85.208.53
+	 In-Reply-To:Content-Type; b=Hfg40ue+JM2hlitWRLyu1opnQfS2V7feepPID/b/ocoYzJ8wOAF8KKUVr3sWfy8cvxPjLgQvxugqy+2NRD1V+PhoxB9FlsHqSHepHJvgjzIliXgp59v32xuVk6J6JDU6RVN4oZXmvUJITi49ju5qH8Cj75FvSXKCrfz2OkdRBmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wifdL6lk; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5dbf5fb2c39so261703a12.2
-        for <linux-pci@vger.kernel.org>; Fri, 21 Feb 2025 01:58:56 -0800 (PST)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5debb4aef2eso280397a12.3
+        for <linux-pci@vger.kernel.org>; Fri, 21 Feb 2025 02:00:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740131935; x=1740736735; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1740132003; x=1740736803; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=X5NaHo5EGXrMjeHk5dfs1UJQGgTL4oMCcK6u4bUWk1o=;
-        b=uWWD6gwRQo8D8KQtAx0IZJQv3vXfElgAZV9cDzxqk6a1FSniCJnxUGbxcNGThy0e/O
-         PovGzTsmtUO60WzP2QkzpBU8jiZMnpJlkZwcQxO65EoQpRFLuIHWTLYeOW/zbKn5/R0J
-         VmIOrJvGSJ3aM743ldD8OHkoXyHn/98B6hwV1ESCJ4nwIRi3OukUHaf/t7aETk3rhIZD
-         7qyy55N8EcJPIdBwrTZpHf/0kzaJrF7O1P+O8feQP9nW85YXpJ0ygM+RdZtADDfFsLq4
-         APZTnBm277Nvh2qWdfKrdAVn8ao/qSeq44qPgwdex21nBf7ha1U71tIbBBDABjN4ALZQ
-         PmdQ==
+        bh=xJWFyO2a6/QdicebMQYJMnjza8WWQ4TTI6mk3gJi0oU=;
+        b=wifdL6lkRK/LeJodFdSkKFeuDB0brsATVxeMKwM4Un6H8k68oRGoizt1gYEh+Bjqm2
+         DvOxVNU0a2liSFEwlvkNp1PWLICLNGHEkJupED8tzfk7SJAl8+IpYuWL50evOMNsAaZn
+         WlbcxKPeSpCUWsYPjAt/CLTTsKm/P1nZGY4RnmDfpOgeN3hEbUnARAR3nlJYgycYUGi0
+         AvPqoJxovMHysyd5oHbP3N26EeOP0BXKYFFWIJwHwcUxyA9dHIxNH/g6O76EnCmuibfM
+         SeQVXFHjWFDOLl2Qc5mSZNjyBVTkKf7z+06M1yMigzlZ7wI5F8YBHnFLLcT1yePlmkp2
+         XYYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740131935; x=1740736735;
+        d=1e100.net; s=20230601; t=1740132003; x=1740736803;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=X5NaHo5EGXrMjeHk5dfs1UJQGgTL4oMCcK6u4bUWk1o=;
-        b=eaEz/cogLhcvPLjBsXDGfPKhg0U2Yg2PrIbXFr9JsV2x43YpINr+rjWnmHC5nLcKqT
-         q652bv0sI39HAHxtXO/xkqPJ98FIZHshT2oMENyc+Dhz7cJ91a0yreJBAJJIWeB8K6Me
-         demUl+fpzXb/KCqv+Xyt8nPvoVh2TDy6sAkYbDb2UKNqE+vIe8ZSfV2mi7sZWzDEgoJe
-         LRy4L6In/DDpB+e14/19TGPdGPkWrWx+4tzdQErik8O2f2PpaCe6Ok5Uv8AUK7JOjeIz
-         YqLOOqaPDWHKmDJXSGNBIwtiJj59vVAhAjLoeSmS7Ecodoj3D9OMQF2CyLxs5JAHr1V0
-         oZww==
-X-Forwarded-Encrypted: i=1; AJvYcCVKDbghT6pG/LpepM0kA0HmicZlXqedZ95kYdttUhbY/KLi7RpGuxINcSyoyDkQnrXIqQQMY1E9WYw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1quZByBpy9wlzVe2UCIO2X79iSuUWb8QK23vr1ytVBX4R9MYq
-	gYRys+3hPxLW2oA2CcRk3yJQJVPuKxfKs3hVXH9lZhMhRLpGNhVWSNiJIdByGrg=
-X-Gm-Gg: ASbGncuEKh7t01t3yhEBNpA73wvDJmnCmraBZnNfRbqUyIdqxMlODUiTnUDqYSyxuJs
-	z/9UgN0uybjQAaSQ9OU8Ef7/pL5Hm9GOj8Ffea1LOHUIdVZGXPZkrKTnZEeLFHGsx34Utzc+L9G
-	o0s2Mj3xWESUTwCaMn/2YCmszjP1qO1CsIo5dxq64AuP2ti6XA7K0SOtV2g7dAV9yy87oNQ2eGq
-	ocK+gs8ay2/R7cNGf7lGgUgoqEZX570VvEej2gt53e4Cpwtl59tYj3tEeSs2CEyrFigX0dluH5r
-	XqboxclUCh2Cr3a0lN3P6WknKDUJybXj2tBW7OedNzRb9WMhaEkmRMRx6FoRTXdmNazE67OWCKG
-	Cn1EP
-X-Google-Smtp-Source: AGHT+IH/jPcEXsTcUEO3S5ZRJCoxgr23gJr0jVwm7pPoLBr4B+Q02zJNZ+yi3eFr45tSAzoMtmobCQ==
-X-Received: by 2002:a05:6402:5215:b0:5dc:7fbe:72f1 with SMTP id 4fb4d7f45d1cf-5e0b70c37b1mr796416a12.2.1740131935317;
-        Fri, 21 Feb 2025 01:58:55 -0800 (PST)
+        bh=xJWFyO2a6/QdicebMQYJMnjza8WWQ4TTI6mk3gJi0oU=;
+        b=XgJworvMSidqyE4nbr85BC2SHwjNGhamVVpkCKCFGivv1yTlb4cPi8VaVOdC8xnPU1
+         hhO9ePPDngMZOJHOTUr+ZaDst93blPTf8sxrrzzUDOlfjyB32TzZB200PUKjN3ZsX0U+
+         l1thdUc4CqaMiQfnse2k2g6URyqfUH4Cxv8UNJhiF59RPfLN0E6xcbIpQlXR4+p6KeV+
+         PlnMHX0XzHM9jJ1Q02U+68ZYnGdkjkyVBur5IYJw81jyiabbKIX0Ub2YT+a5khq+SErV
+         5TdjS0nnFCMIs2YdF5nQwGjnUqZkTZUnVADtTFhAMBZEnzwIwjbdlY46E708KPX3dooo
+         ecQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPmaUtMBHRSOSiKpPlLuzqg9FXRMkw9SMJATXpXzC0EY7SGB16yIo9hVNURWrMWYlHPANzbajUTkg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCn92gSMTZexN8DvOiYhtf/WEJPigwrHWxTitHUKhgP22AKXOw
+	RIzcJ774nAzqnKjY9++XqDHGe4LvL0AeAIRlSEROd0UuKa61ruDg2ckWIBcXUbc=
+X-Gm-Gg: ASbGncvkiq48tBvE1DtP4UGLFvXFTuuIwf/iQih80w4pIm8wKEl3qu8f69ylwszd7sl
+	mNNGJCswNC6HOf2lzXwW+FwsqeoQcuE/NEHqotakHPxzqASwRUdaSeRNwr5cRqY1xavdxB0A/Hd
+	8JPHSadnaKu1IUuWuKQhDiUWPqRsNScAfo9xux8pCOh9HVFiLLFkUIJkKdCToXFvRxnDFCvYt2c
+	HiA2lVa6uE3gNZGi7bx3npd2AGgN5zlm9TeHGtfG57te2lvlCsMZZol6nckBEdxhrwyW5LLrX4u
+	4bml7kwCtF7r1L5F4YDKA+OSWYHolzWSWouNMTI1CDHQEheDHASrJEpLGJ7GEz5A4TPcAXFu0Wt
+	hagMD
+X-Google-Smtp-Source: AGHT+IH7qiTw3apgnrhqU/bLzLhb/NQ5sAnmLAR2GEvnO67FFYvNkxIa/eQDBY1qL2i6u2CP7HcXwg==
+X-Received: by 2002:a05:6402:27cf:b0:5e0:8275:e9dd with SMTP id 4fb4d7f45d1cf-5e0b7252e4fmr745151a12.10.1740132003314;
+        Fri, 21 Feb 2025 02:00:03 -0800 (PST)
 Received: from [192.168.0.18] (78-11-220-99.static.ip.netia.com.pl. [78.11.220.99])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece286861sm13221502a12.67.2025.02.21.01.58.53
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1c4687sm13513289a12.22.2025.02.21.01.59.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2025 01:58:54 -0800 (PST)
-Message-ID: <54d61a13-3198-4bcf-a771-523c905d0740@linaro.org>
-Date: Fri, 21 Feb 2025 10:58:53 +0100
+        Fri, 21 Feb 2025 02:00:01 -0800 (PST)
+Message-ID: <4f95cce5-53b2-4eb9-be28-6136eb89dcaa@linaro.org>
+Date: Fri, 21 Feb 2025 10:59:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -83,7 +83,7 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] dt-bindings: PCI: qcom-ep: enable DMA for SM8450
+Subject: Re: [PATCH v2 3/6] dt-bindings: PCI: qcom-ep: add SAR2130P compatible
 To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
  Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -97,7 +97,7 @@ Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
  linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250221-sar2130p-pci-v2-0-cc87590ffbeb@linaro.org>
- <20250221-sar2130p-pci-v2-2-cc87590ffbeb@linaro.org>
+ <20250221-sar2130p-pci-v2-3-cc87590ffbeb@linaro.org>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -144,36 +144,77 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20250221-sar2130p-pci-v2-2-cc87590ffbeb@linaro.org>
+In-Reply-To: <20250221-sar2130p-pci-v2-3-cc87590ffbeb@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 21/02/2025 04:06, Dmitry Baryshkov wrote:
-> Qualcomm SM8450 platform can (and should) be using DMA for the PCIe EP
-> transfers. Extend the MMIO regions and interrupts in order to acommodate
-> for the DMA resources. Upstream DT doesn't provide support for the EP
-> mode of the PCIe controller, so while this is an ABI break, it doesn't
-> break any of the supported platforms.
-> 
-> Fixes: 63e445b746aa ("dt-bindings: PCI: qcom-ep: Add support for SM8450 SoC")
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> index 800accdf5947e7178ad80f0759cf53111be1a814..460191fc4ff1b64206bce89e15ce38e59c112ba6 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> @@ -173,9 +173,9 @@ allOf:
->      then:
+>    qcom,perst-regs:
+>      description: Reference to a syscon representing TCSR followed by the two
+> @@ -129,6 +130,45 @@ required:
+>  
+>  allOf:
+>    - $ref: pci-ep.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,sar2130p-pcie-ep
+> +    then:
+> +      properties:
+> +        reg:
+
+
+minItems: 7
+
+> +          maxItems: 7
+> +        reg-names:
+
+
+minItems: 7
+
+
+> +          maxItems: 7
+> +        clocks:
+> +          items:
+> +            - description: PCIe Auxiliary clock
+> +            - description: PCIe CFG AHB clock
+> +            - description: PCIe Master AXI clock
+> +            - description: PCIe Slave AXI clock
+> +            - description: PCIe Slave Q2A AXI clock
+> +            - description: PCIe DDRSS SF TBU clock
+> +            - description: PCIe AGGRE NOC AXI clock
+> +            - description: PCIe CFG NOC AXI clock
+> +            - description: PCIe QMIP AHB clock
+> +        clock-names:
+> +          items:
+> +            - const: aux
+> +            - const: cfg
+> +            - const: bus_master
+> +            - const: bus_slave
+> +            - const: slave_q2a
+> +            - const: ddrss_sf_tbu
+> +            - const: aggre_noc_axi
+> +            - const: cnoc_sf_axi
+> +            - const: qmip_pcie_ahb
+> +        interrupts:
+
+
+minItems: 3
+
+> +          maxItems: 3
+> +        interrupt-names:
+
+
+minItems: 3
+
+> +          maxItems: 3
+> +
+>    - if:
 >        properties:
->          reg:
-> -          maxItems: 6
-
-You need minItems here and in all other places (also interrupts).
-
+>          compatible:
+> 
 
 
 Best regards,
