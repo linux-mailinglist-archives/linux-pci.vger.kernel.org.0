@@ -1,106 +1,74 @@
-Return-Path: <linux-pci+bounces-21950-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-21951-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 614F0A3EA2F
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 02:38:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0BF8A3EAB3
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 03:20:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 834F67AC04A
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 01:37:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8FE007A1DB8
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 02:19:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96A606088F;
-	Fri, 21 Feb 2025 01:38:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C287181728;
+	Fri, 21 Feb 2025 02:20:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XaB4Yys+"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="TEHV+1+V"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABCD81ADC6F;
-	Fri, 21 Feb 2025 01:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B683453AC;
+	Fri, 21 Feb 2025 02:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740101905; cv=none; b=BLvQYQZlc5/Lp5JNR2t9MqlvRmBt7/Kvfl20SBf9w7eo1x4QeJ8B+UGlq6espbdv9n2USWc1XJlD0Y/biZuDvqXsVctdQLx8I+GVkSMMbHEVSxvOoazUv27Hg3OYlI7x4YCwhcfX4TX3FKvASFz8dn1dp4+zY4riNMUTPsh0r38=
+	t=1740104427; cv=none; b=dKFyjdW/kuKBfM7cAGI8yNhYzpsub0IgdO7yZUvVHnRJUv/eWDyfzmmuAGtfIt88TxiZVVY4MRlqCOB/gXGS0IE1Zg6xEUPvmgX0owS6hLW3nFz7f+spazDTEzyFfed/2iIUqC4JuTVh6m6gISo6iZh/npQqIRfsPQHF0K0vVm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740101905; c=relaxed/simple;
-	bh=ltbm23oskEpOUHMQkDTqCc3ApposMpWkG+lxW/1271w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GLDC94lmFnJaAti39hEO98qaE0kpYJMkmQxkMvHhBjMZhtfipcqbTeid2BVLj6bBKn5cKGwx4iQquMqWx8hvOZ+X8bionMJwZ8m/2Je0qoalZxqCQoSemp4NKzzXfi74OxDd9h5Q3uVZOS0nbNnIrTi02O9kRbjUlSWqyEv2/Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XaB4Yys+; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e41e18137bso12988076d6.1;
-        Thu, 20 Feb 2025 17:38:23 -0800 (PST)
+	s=arc-20240116; t=1740104427; c=relaxed/simple;
+	bh=lCA4hhYmOv5gYMao8xUMteua/5701IKNUWSeDJMLAkA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qn4xUDl8N4XbUFuEH9bzHLPcAt4bf40D7g4EC+u0OfkVXwZFyKGnCTQepSgdgNV6/gbx2y44NcMP7eVicrqdfypNdIPIBRXAqK9Qm82DVIHxzrgYFDodYvdxEg/hJCpFZwVEMVsO6BwkngIIRmwJtB/Lg8v5rR0OxA1n+Ym7lMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=TEHV+1+V; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740101902; x=1740706702; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qp1IP5+HElNmeU+NJ4GhzwMTUSG29HHyxLtNo1Dkjg8=;
-        b=XaB4Yys+3ocMvmJH6v78NXln1uWP1aagBHHsRWC7NseWCGjLAhwaMaZra0hI+KjI4S
-         Gtd5YAoGb38JFCYZPHOAIx+lJV9bNMQzTr7KerjGNVLHTjSkkb7oSdRifuDPB7KXwnCm
-         pDOMf5cQYmfHy1IPizOvpmLjo3DTeyesugfEbFksEw04ibz+Aj4pFlNrKBgaa3GOJhaH
-         noN88bACeY692+QK250dNy//Z7JMDdu9bAfSVQGaSzoPBpZlk6bS+N9N5dDE34DX+o/c
-         rliZqln/5v4LEapds4VdGzWNsYfvU2sr/Py6GhHoB5ZjQgjN2GUpW+8Ew4e3JwAu8yTf
-         wgTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740101902; x=1740706702;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qp1IP5+HElNmeU+NJ4GhzwMTUSG29HHyxLtNo1Dkjg8=;
-        b=cQIZux88IIzxTjhapX5j2hGdDKnC7rg/pK7saGRrkRhyr7GTHGIFLnhthWzV+7lRlI
-         +O2ifo0cfV8cs3tLq+GomQVGnsuH/Es7HnnsnERnR7UBrJt2Azr9QS/J2+QkTIXZQJiv
-         MhrzQGE0x7hMWNab8b7pjYbdxhC+EAMgdVlfwb6yzU7XLeYqhCi+luV3hff2U/WH3ciI
-         hJg/Pbk1LK72OdhKU/ribdcyp4fRHFaoKrrYNT6EYVaBpdgUyrLtMNEgoqwQyqD2u7AF
-         Frh0lerAEHHrQ9afUPeGy4WhDNPHvAJiuF72Uczwkp+xNPDwULjoNBgnvR+MQ5M54cgx
-         j+ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCU3RrfJZdYwOeYzICGQei9VJYiVcfEIef6LUAb9mEQrHh0JjkQJrSy0clqwLhQGar2foXq6JmIhlvR0@vger.kernel.org, AJvYcCUV4d1Ffi/dZ9eHmQtTRNhjZQxkKez/vaef80xZB/ezby2BXZ3TuO1MLX/9Ba1fnyPpW6HKmQL/OKdNbNbS@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0tWW6Bb9kcdgjRCzwsAZLaK0Lp9EPCQA4kXhVm+p14eIa4VED
-	WK9g32IVa6mMHSWsgZcwUSovDhMpar0q/B2oSwPSalVfKEXPnezT
-X-Gm-Gg: ASbGncspTQ1MruDlvRRxnGf2qYsNzOZDQH7WwJEzT4QeRGj4eDVnDlv2ELxBQ0qCl4Y
-	b3tigz8NCuQuwq51EJujf5IPCYmqhTw/uv1kCz5+tdAy9AXYXZR7HTTS8T2+BbPX53hqGYgYIUx
-	n81zd5eLbV8D1UQNxFCBKJSWLJnP511AKxbG+uMM+EJkhKeaEdKigKirerszARuQG5jSEU4DojD
-	BGb6OAdIm3VON7EnmmNv7QK/bOSUqT6a1pz7H8VWi1ox/qtqmz66QIIf21Q7U18OMd48vYeS76g
-	9A==
-X-Google-Smtp-Source: AGHT+IEAbGRWnSOKgLJXuNq9xwDRMgvjuDpj3BpstTmUkHKTNT/40wstmq+MDG9u4VdjZS+bniOt2w==
-X-Received: by 2002:a05:6214:d65:b0:6e4:2f90:a9ca with SMTP id 6a1803df08f44-6e6b0036108mr15298496d6.3.1740101902516;
-        Thu, 20 Feb 2025 17:38:22 -0800 (PST)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e65d785ce5sm91783986d6.41.2025.02.20.17.38.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 17:38:22 -0800 (PST)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Niklas Cassel <cassel@kernel.org>,
-	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
-Cc: linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH 2/2] PCI: sophgo-dwc: Add Sophgo SG2044 PCIe driver
-Date: Fri, 21 Feb 2025 09:37:56 +0800
-Message-ID: <20250221013758.370936-3-inochiama@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250221013758.370936-1-inochiama@gmail.com>
-References: <20250221013758.370936-1-inochiama@gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1740104425; x=1771640425;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=FZ6R8bvQH0PzNlUlEuECVUoHo8jt+Wqy6pW+mnsbG+s=;
+  b=TEHV+1+VHNU3TzlL+5p7+5FQnigkx7Y7VpbSLH4Gi7jIsY8lLwsiXzBb
+   dvlSGxLSOJb5VL/0vDKzQGwzb8v3k3GTCHiEy3/fg+XN76FiFfYxdFRrW
+   j1uklLeTjmpNIQ5TgFImtY6TTgc5yTxWvl3l6EMSPFs5nXYG0kTrbsTYO
+   k=;
+X-IronPort-AV: E=Sophos;i="6.13,303,1732579200"; 
+   d="scan'208";a="474046324"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 02:20:21 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.7.35:64636]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.7.176:2525] with esmtp (Farcaster)
+ id 621287b5-5e73-44d7-8138-65357e4436d2; Fri, 21 Feb 2025 02:20:21 +0000 (UTC)
+X-Farcaster-Flow-ID: 621287b5-5e73-44d7-8138-65357e4436d2
+Received: from EX19D003ANC003.ant.amazon.com (10.37.240.197) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Fri, 21 Feb 2025 02:20:20 +0000
+Received: from b0be8375a521.amazon.com (10.37.244.7) by
+ EX19D003ANC003.ant.amazon.com (10.37.240.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 21 Feb 2025 02:20:17 +0000
+From: Kohei Enju <enjuk@amazon.com>
+To: <helgaas@kernel.org>
+CC: <alex.williamson@redhat.com>, <bhelgaas@google.com>,
+	<ckoenig.leichtzumerken@gmail.com>, <ilpo.jarvinen@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<takamitz@amazon.co.jp>, <kuniyu@amazon.com>, <kohei.enju@gmail.com>
+Subject: Re: [PATCH v2 1/2] PCI: Avoid pointless capability searches
+Date: Fri, 21 Feb 2025 11:20:08 +0900
+Message-ID: <20250221022008.69533-1-enjuk@amazon.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250215000301.175097-2-helgaas@kernel.org>
+References: <20250215000301.175097-2-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -108,339 +76,170 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D040UWA004.ant.amazon.com (10.13.139.93) To
+ EX19D003ANC003.ant.amazon.com (10.37.240.197)
 
-Add support for DesignWare-based PCIe controller in SG2044 SoC.
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Many of the save/restore functions in the pci_save_state() and
+> pci_restore_state() paths depend on both a PCI capability of the device and
+> a pci_cap_saved_state structure to hold the configuration data, and they
+> skip the operation if either is missing.
+> 
+> Look for the pci_cap_saved_state first so if we don't have one, we can skip
+> searching for the device capability, which requires several slow config
+> space accesses.
+> 
+> Remove some error messages if the pci_cap_saved_state is not found so we
+> don't complain about having no saved state for a capability the device
+> doesn't have.  We have already warned in pci_allocate_cap_save_buffers() if
+> the capability is present but we were unable to allocate a buffer.
+> 
+> Other than the message change, no functional change intended.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/pci.c       | 27 ++++++++++++++-------------
+>  drivers/pci/pcie/aspm.c | 15 ++++++++-------
+>  2 files changed, 22 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 869d204a70a3..503376bf7e75 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1686,10 +1686,8 @@ static int pci_save_pcie_state(struct pci_dev *dev)
+>  		return 0;
+>  
+>  	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
+> -	if (!save_state) {
+> -		pci_err(dev, "buffer not found in %s\n", __func__);
+> +	if (!save_state)
+>  		return -ENOMEM;
+> -	}
+>  
+>  	cap = (u16 *)&save_state->cap.data[0];
+>  	pcie_capability_read_word(dev, PCI_EXP_DEVCTL, &cap[i++]);
+> @@ -1742,19 +1740,17 @@ static void pci_restore_pcie_state(struct pci_dev *dev)
+>  
+>  static int pci_save_pcix_state(struct pci_dev *dev)
+>  {
+> -	int pos;
+>  	struct pci_cap_saved_state *save_state;
+> +	u8 pos;
+> +
+> +	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
+> +	if (!save_state)
+> +		return -ENOMEM;
+>  
+>  	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
+>  	if (!pos)
+>  		return 0;
+>  
+> -	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
+> -	if (!save_state) {
+> -		pci_err(dev, "buffer not found in %s\n", __func__);
+> -		return -ENOMEM;
+> -	}
 
-Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
----
- drivers/pci/controller/dwc/Kconfig          |  10 +
- drivers/pci/controller/dwc/Makefile         |   1 +
- drivers/pci/controller/dwc/pcie-dw-sophgo.c | 282 ++++++++++++++++++++
- 3 files changed, 293 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-dw-sophgo.c
+When devices don't have PCI_CAP_ID_PCIX, this change in order appears to 
+cause a functional change.
+Since probe functions of some drivers (e.g. Intel e1000) rely on the return 
+value, I think they fail after that change in this situation.
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index b6d6778b0698..202014acf260 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -341,6 +341,16 @@ config PCIE_ROCKCHIP_DW_EP
- 	  Enables support for the DesignWare PCIe controller in the
- 	  Rockchip SoC (except RK3399) to work in endpoint mode.
- 
-+config PCIE_SOPHGO_DW
-+	bool "SOPHGO DesignWare PCIe controller"
-+	depends on ARCH_SOPHGO || COMPILE_TEST
-+	depends on PCI_MSI
-+	depends on OF
-+	select PCIE_DW_HOST
-+	help
-+	  Enables support for the DesignWare PCIe controller in the
-+	  SOPHGO SoC.
-+
- config PCI_EXYNOS
- 	tristate "Samsung Exynos PCIe controller"
- 	depends on ARCH_EXYNOS || COMPILE_TEST
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index a8308d9ea986..193150056dd3 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_PCIE_QCOM_EP) += pcie-qcom-ep.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
- obj-$(CONFIG_PCIE_ROCKCHIP_DW) += pcie-dw-rockchip.o
-+obj-$(CONFIG_PCIE_SOPHGO_DW) += pcie-dw-sophgo.o
- obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
- obj-$(CONFIG_PCIE_KEEMBAY) += pcie-keembay.o
- obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
-diff --git a/drivers/pci/controller/dwc/pcie-dw-sophgo.c b/drivers/pci/controller/dwc/pcie-dw-sophgo.c
-new file mode 100644
-index 000000000000..a4ca4f1e26e0
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-dw-sophgo.c
-@@ -0,0 +1,282 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCIe host controller driver for Sophgo SoCs.
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/phy/phy.h>
-+#include <linux/property.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#include "pcie-designware.h"
-+
-+#define to_sophgo_pcie(x)		dev_get_drvdata((x)->dev)
-+
-+#define PCIE_INT_SIGNAL			0xc48
-+#define PCIE_INT_EN			0xca0
-+
-+#define PCIE_SIGNAL_INTX_SHIFT		5
-+
-+#define PCIE_INT_EN_INTX_SHIFT		1
-+#define PCIE_INT_EN_INT_SII		BIT(0)
-+#define PCIE_INT_EN_INT_INTA		BIT(1)
-+#define PCIE_INT_EN_INT_INTB		BIT(2)
-+#define PCIE_INT_EN_INT_INTC		BIT(3)
-+#define PCIE_INT_EN_INT_INTD		BIT(4)
-+#define PCIE_INT_EN_INT_MSI		BIT(5)
-+
-+struct sophgo_pcie {
-+	struct dw_pcie pci;
-+	void __iomem *app_base;
-+	struct clk_bulk_data *clks;
-+	unsigned int clk_cnt;
-+	struct reset_control *rst;
-+	struct irq_domain *irq_domain;
-+};
-+
-+static int sophgo_pcie_readl_app(struct sophgo_pcie *sophgo, u32 reg)
-+{
-+	return readl_relaxed(sophgo->app_base + reg);
-+}
-+
-+static void sophgo_pcie_writel_app(struct sophgo_pcie *sophgo, u32 val, u32 reg)
-+{
-+	writel_relaxed(val, sophgo->app_base + reg);
-+}
-+
-+static void sophgo_pcie_intx_handler(struct irq_desc *desc)
-+{
-+	struct dw_pcie_rp *pp = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	unsigned long hwirq = PCIE_SIGNAL_INTX_SHIFT;
-+	unsigned long reg;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	reg = sophgo_pcie_readl_app(sophgo, PCIE_INT_SIGNAL);
-+
-+	for_each_set_bit_from(hwirq, &reg, PCI_NUM_INTX + PCIE_SIGNAL_INTX_SHIFT)
-+		generic_handle_domain_irq(sophgo->irq_domain,
-+					  hwirq - PCIE_SIGNAL_INTX_SHIFT);
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static void sophgo_intx_mask(struct irq_data *d)
-+{
-+	struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(d);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	unsigned long flags;
-+	u32 val;
-+
-+	raw_spin_lock_irqsave(&pp->lock, flags);
-+
-+	val = sophgo_pcie_readl_app(sophgo, PCIE_INT_EN);
-+	val &= ~BIT(d->hwirq + PCIE_INT_EN_INTX_SHIFT);
-+	sophgo_pcie_writel_app(sophgo, val, PCIE_INT_EN);
-+
-+	raw_spin_unlock_irqrestore(&pp->lock, flags);
-+};
-+
-+static void sophgo_intx_unmask(struct irq_data *d)
-+{
-+	struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(d);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	unsigned long flags;
-+	u32 val;
-+
-+	raw_spin_lock_irqsave(&pp->lock, flags);
-+
-+	val = sophgo_pcie_readl_app(sophgo, PCIE_INT_EN);
-+	val |= BIT(d->hwirq + PCIE_INT_EN_INTX_SHIFT);
-+	sophgo_pcie_writel_app(sophgo, val, PCIE_INT_EN);
-+
-+	raw_spin_unlock_irqrestore(&pp->lock, flags);
-+};
-+
-+static void sophgo_intx_eoi(struct irq_data *d)
-+{
-+}
-+
-+static struct irq_chip sophgo_intx_irq_chip = {
-+	.name			= "INTx",
-+	.irq_mask		= sophgo_intx_mask,
-+	.irq_unmask		= sophgo_intx_unmask,
-+	.irq_eoi		= sophgo_intx_eoi,
-+};
-+
-+static int sophgo_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-+				irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_and_handler(irq, &sophgo_intx_irq_chip, handle_fasteoi_irq);
-+	irq_set_chip_data(irq, domain->host_data);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops intx_domain_ops = {
-+	.map = sophgo_pcie_intx_map,
-+};
-+
-+static int sophgo_pcie_init_irq_domain(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	struct device *dev = sophgo->pci.dev;
-+	struct fwnode_handle *intc;
-+	int irq;
-+
-+	intc = device_get_named_child_node(dev, "interrupt-controller");
-+	if (!intc) {
-+		dev_err(dev, "missing child interrupt-controller node\n");
-+		return -ENODEV;
-+	}
-+
-+	irq = fwnode_irq_get(intc, 0);
-+	if (irq < 0) {
-+		dev_err(dev, "failed to get INTx irq number\n");
-+		fwnode_handle_put(intc);
-+		return irq;
-+	}
-+
-+	sophgo->irq_domain = irq_domain_create_linear(intc, PCI_NUM_INTX,
-+						      &intx_domain_ops, sophgo);
-+	fwnode_handle_put(intc);
-+	if (!sophgo->irq_domain) {
-+		dev_err(dev, "failed to get a INTx irq domain\n");
-+		return -EINVAL;
-+	}
-+
-+	return irq;
-+}
-+
-+static void sophgo_pcie_msi_enable(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	unsigned long flags;
-+	u32 val;
-+
-+	raw_spin_lock_irqsave(&pp->lock, flags);
-+
-+	val = sophgo_pcie_readl_app(sophgo, PCIE_INT_EN);
-+	val |= PCIE_INT_EN_INT_MSI;
-+	sophgo_pcie_writel_app(sophgo, val, PCIE_INT_EN);
-+
-+	raw_spin_unlock_irqrestore(&pp->lock, flags);
-+}
-+
-+static int sophgo_pcie_host_init(struct dw_pcie_rp *pp)
-+{
-+	int irq;
-+
-+	irq = sophgo_pcie_init_irq_domain(pp);
-+	if (irq < 0)
-+		return irq;
-+
-+	irq_set_chained_handler_and_data(irq, sophgo_pcie_intx_handler,
-+					 pp);
-+
-+	sophgo_pcie_msi_enable(pp);
-+
-+	return 0;
-+}
-+
-+static const struct dw_pcie_host_ops sophgo_pcie_host_ops = {
-+	.init = sophgo_pcie_host_init,
-+};
-+
-+static int sophgo_pcie_clk_init(struct sophgo_pcie *sophgo)
-+{
-+	struct device *dev = sophgo->pci.dev;
-+	int ret;
-+
-+	ret = devm_clk_bulk_get_all_enabled(dev, &sophgo->clks);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "failed to get clocks\n");
-+
-+	sophgo->clk_cnt = ret;
-+
-+	return 0;
-+}
-+
-+static int sophgo_pcie_resource_get(struct platform_device *pdev,
-+				    struct sophgo_pcie *sophgo)
-+{
-+	sophgo->app_base = devm_platform_ioremap_resource_byname(pdev, "app");
-+	if (IS_ERR(sophgo->app_base))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(sophgo->app_base),
-+				     "failed to map app registers\n");
-+
-+	return 0;
-+}
-+
-+static int sophgo_pcie_configure_rc(struct sophgo_pcie *sophgo)
-+{
-+	struct dw_pcie_rp *pp;
-+
-+	pp = &sophgo->pci.pp;
-+	pp->ops = &sophgo_pcie_host_ops;
-+
-+	return dw_pcie_host_init(pp);
-+}
-+
-+static int sophgo_pcie_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sophgo_pcie *sophgo;
-+	int ret;
-+
-+	sophgo = devm_kzalloc(dev, sizeof(*sophgo), GFP_KERNEL);
-+	if (!sophgo)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, sophgo);
-+
-+	sophgo->pci.dev = dev;
-+
-+	ret = sophgo_pcie_resource_get(pdev, sophgo);
-+	if (ret)
-+		return ret;
-+
-+	ret = sophgo_pcie_clk_init(sophgo);
-+	if (ret)
-+		return ret;
-+
-+	return sophgo_pcie_configure_rc(sophgo);
-+}
-+
-+static const struct of_device_id sophgo_pcie_of_match[] = {
-+	{ .compatible = "sophgo,sg2044-pcie" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sophgo_pcie_acpi_match);
-+
-+static const struct acpi_device_id sophgo_pcie_acpi_match[] = {
-+	{ "SOPHO000", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, sophgo_pcie_acpi_match);
-+
-+static struct platform_driver sophgo_pcie_driver = {
-+	.driver = {
-+		.name = "sophgo-dw-pcie",
-+		.of_match_table = sophgo_pcie_of_match,
-+		.acpi_match_table = sophgo_pcie_acpi_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = sophgo_pcie_probe,
-+};
-+builtin_platform_driver(sophgo_pcie_driver);
--- 
-2.48.1
+Actually in my QEMU VM, e1000 driver failed to probe the device due to 
+-ENOMEM from pci_save_pcix_state().
+```
+[root@localhost ~]# dmesg | grep e1000
+[    0.400303] [      T1] e1000: Intel(R) PRO/1000 Network Driver
+[    0.400805] [      T1] e1000: Copyright (c) 1999-2006 Intel Corporation.
+[    0.710970] [      T1] e1000 0000:00:03.0: probe with driver e1000 failed with error -12
 
+[root@localhost ~]# lspci -nnvs 00:03.0
+00:03.0 Ethernet controller [0200]: Intel Corporation 82540EM Gigabit Ethernet Controller [8086:100e] (rev 03)
+        Subsystem: Red Hat, Inc. QEMU Virtual Machine [1af4:1100]
+        Flags: fast devsel, IRQ 11
+        Memory at febc0000 (32-bit, non-prefetchable) [size=128K]
+        I/O ports at c000 [size=64]
+        Expansion ROM at feb80000 [disabled] [size=256K]
+lspci: Unable to load libkmod resources: error -2
+```
+
+Regarding pci_save_vc_state(), I found that similar comments were provided in 
+this context:
+https://lore.kernel.org/all/7dbb0d8b-3708-60ba-ee9e-78aa48bee160@linux.intel.com/
+
+However, the same type of order change is still left in 
+pci_save_pcix_state().
+
+> -
+>  	pci_read_config_word(dev, pos + PCI_X_CMD,
+>  			     (u16 *)save_state->cap.data);
+>  
+> @@ -1763,14 +1759,19 @@ static int pci_save_pcix_state(struct pci_dev *dev)
+>  
+>  static void pci_restore_pcix_state(struct pci_dev *dev)
+>  {
+> -	int i = 0, pos;
+>  	struct pci_cap_saved_state *save_state;
+> +	u8 pos;
+> +	int i = 0;
+>  	u16 *cap;
+>  
+>  	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
+> -	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
+> -	if (!save_state || !pos)
+> +	if (!save_state)
+>  		return;
+> +
+> +	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
+> +	if (!pos)
+> +		return;
+> +
+>  	cap = (u16 *)&save_state->cap.data[0];
+>  
+>  	pci_write_config_word(dev, pos + PCI_X_CMD, cap[i++]);
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index e0bc90597dca..007e4a082e6f 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -35,16 +35,14 @@ void pci_save_ltr_state(struct pci_dev *dev)
+>  	if (!pci_is_pcie(dev))
+>  		return;
+>  
+> +	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
+> +	if (!save_state)
+> +		return;
+> +
+>  	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
+>  	if (!ltr)
+>  		return;
+>  
+> -	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
+> -	if (!save_state) {
+> -		pci_err(dev, "no suspend buffer for LTR; ASPM issues possible after resume\n");
+> -		return;
+> -	}
+> -
+>  	/* Some broken devices only support dword access to LTR */
+>  	cap = &save_state->cap.data[0];
+>  	pci_read_config_dword(dev, ltr + PCI_LTR_MAX_SNOOP_LAT, cap);
+> @@ -57,8 +55,11 @@ void pci_restore_ltr_state(struct pci_dev *dev)
+>  	u32 *cap;
+>  
+>  	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_LTR);
+> +	if (!save_state)
+> +		return;
+> +
+>  	ltr = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_LTR);
+> -	if (!save_state || !ltr)
+> +	if (!ltr)
+>  		return;
+>  
+>  	/* Some broken devices only support dword access to LTR */
+> -- 
+> 2.34.1
+
+Regards,
+Kohei
 
