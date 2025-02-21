@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-22038-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22039-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E6F6A4020E
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 22:34:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B8F6A4022D
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 22:40:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BC463170A04
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 21:33:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C3A519E05B1
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Feb 2025 21:40:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0C5F20896C;
-	Fri, 21 Feb 2025 21:33:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9255253B7A;
+	Fri, 21 Feb 2025 21:40:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pI+OqPw3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lrqIfVBf"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE5C1BC09A;
-	Fri, 21 Feb 2025 21:33:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDD62505A0;
+	Fri, 21 Feb 2025 21:40:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740173593; cv=none; b=EqnhmrFZumEP1WzFC65BevlTIW9LwuEXjA1+XrmbxAOoB164gM0CR1tSbTdknwuiOtabmdjkx1dJBg216vj1v1a1I/eUZQGQCvWx5YrLJ+CAKpbSq3+E2ZZ4kTsy7SOMZI2jdEr8dOxtPBdzvl4CTPgh1QKPtfxDLDsFQNtZ+ro=
+	t=1740174037; cv=none; b=eijrba0XzDcw/LwM83ZcfHcQJYcd2x2GeQbThIyFRfkZW+FVp6a5lYyciuMj3/SgiiTQLBCTFq1N8C+NVJT2cloVMOvsup9UmDC+dHoC6uRT70+vg7Tyq5Zc/DnXjdcFOX8nR9KH6sjj74nDw5TDwTKDpLKTnhSq827m0+vTeb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740173593; c=relaxed/simple;
-	bh=YguojFeZQ1Lx0oD73VLf2qvbtWuaYfQHYVhFNJxGqcc=;
+	s=arc-20240116; t=1740174037; c=relaxed/simple;
+	bh=9fvV1HXHQezyHbGraYC4O5PEEvTUXe//QLm/vAzf9a0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=V2TFy3hn91uAArvnYQHuFHYDXOaRdUToupKSjPz55C3Wiyeiuwzo6Kz+IR8S7bkOzpDyTrLR98ezZLynN7FT/YGJdtM3y4Xkuj4OzUUGuI3r88bGVjle+F2D8/yJ00drtMbLUymWoWwPaymqKWIaoGZkFCt+eyM4/efY9dqgLLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pI+OqPw3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF8B4C4CED6;
-	Fri, 21 Feb 2025 21:33:12 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=RhkFHM9/sY8xWg1nlCkWdr5euHFk1AXl2xeL7xdEYHYweNXJpfmHBmXMgt/R6Ckj/537ZnI5goenzw7xK4//EFBnDoIapTvfjkgZ6TIltCluMHe+A0mSCYiJoD0y773wGFC5beMtD6Io9XipwOIbiJAuCTvsQVSyRTijrzHFJ5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lrqIfVBf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3CE8C4CED6;
+	Fri, 21 Feb 2025 21:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740173593;
-	bh=YguojFeZQ1Lx0oD73VLf2qvbtWuaYfQHYVhFNJxGqcc=;
+	s=k20201202; t=1740174037;
+	bh=9fvV1HXHQezyHbGraYC4O5PEEvTUXe//QLm/vAzf9a0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=pI+OqPw3S1f4uPK/qsVZPlTlFkJWoXXV7COQC0U7sscNezGrsRxoHQ7/xOeYHDSev
-	 Ypy/37X2kBbp8bKR0BpV/ndXbZBx4msKzDlYpvA/spRVQvSl7M8QkclZuW5CbNxIsT
-	 fx4Xoe43a7Eg41JFcEXylnOFiG9MAojydrpN8PIAnbRmPBC1rlagN3UaI4VTNIBMp6
-	 bzQKQhU/o9jw8wTKTlYBf7PgQScsDlbsfd29giuk+Nklsj2dHc63joYmTUXUMkzeZJ
-	 WaKcwOS/8GOzvUSQYXRYDGv4r7SZB3pnHLj0xPbOC+cqft1mVBhEBaj7MJyrjJk4eB
-	 6d0fuZiT53IKw==
-Date: Fri, 21 Feb 2025 15:33:11 -0600
+	b=lrqIfVBfJONAREehMa52UNOot1th/3/B4a+NqS7b7TbT6xuGaqMSF+ZmHZCxPviuV
+	 7Um77DfVykXYaoZq8gRPEqdq/uKufY0jYKWnHxvED2bVEbD4s25RcmVlRRNsBZsNCC
+	 43fLjUiyeYIEAJm45P3gmC/obYuYwjvlhj5Xuv6Idpv/IByGD34GihwIyyNA9McwKI
+	 vS4FhoFMR5QivgpnLAcIAnYl9KyMhH1EdIuu+jctszitd/I+xKFQyXh+tNsH8boub6
+	 ucH21pL8TXW0/zv6SD+iZfBIWvyEmZQ1oZhVNsrDY4dCjtnS0c6rPkBbH75GrCDmGn
+	 NJnrEjFyAjvdw==
+Date: Fri, 21 Feb 2025 15:40:35 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Stanimir Varbanov <svarbanov@suse.de>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
@@ -61,9 +61,9 @@ Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
 	Phil Elwell <phil@raspberrypi.com>,
 	Jonathan Bell <jonathan@raspberrypi.com>,
 	Dave Stevenson <dave.stevenson@raspberrypi.com>
-Subject: Re: [PATCH v5 -next 07/11] PCI: brcmstb: Adjust PHY PLL setup to use
- a 54MHz input refclk
-Message-ID: <20250221213311.GA362736@bhelgaas>
+Subject: Re: [PATCH v5 -next 08/11] PCI: brcmstb: Adding a softdep to MIP
+ MSI-X driver
+Message-ID: <20250221214035.GA362971@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,27 +72,37 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250120130119.671119-8-svarbanov@suse.de>
+In-Reply-To: <20250120130119.671119-9-svarbanov@suse.de>
 
-On Mon, Jan 20, 2025 at 03:01:15PM +0200, Stanimir Varbanov wrote:
-> The default input reference clock for the PHY PLL is 100Mhz, except for
-> some devices where it is 54Mhz like bcm2712C1 and bcm2712D0.
+On Mon, Jan 20, 2025 at 03:01:16PM +0200, Stanimir Varbanov wrote:
+> In case brcmstb PCIe driver and MIP MSI-X interrupt controller
+> drivers are built as modules there could be a race in probing.
+> To avoid this add a softdep to MIP driver to guarantee that MIP
+> driver will be load first.
+
+Maybe this one too?  Should this be moved to after the irq_bcm2712_mip
+driver is added, but before brcmstb will claim bcm2712?  I just want
+to avoid bisection problems when possible, and it sounds like if we
+lose the race, interrupts might not work as expected?
 > 
-> To implement this adjustments introduce a new .post_setup op in
-> pcie_cfg_data and call it at the end of brcm_pcie_setup function.
+> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+> ---
+> v4 -> v5:
+>  - New patch in the series.
 > 
-> The bcm2712 .post_setup callback implements the required MDIO writes that
-> switch the PLL refclk and also change PHY PM clock period.
+>  drivers/pci/controller/pcie-brcmstb.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Without this RPi5 PCIex1 is unable to enumerate endpoint devices on
-> the expansion connector.
-
-This makes it sound like this patch should be reordered before "[PATCH
-v5 -next 06/11] PCI: brcmstb: Add bcm2712 support".
-
-We don't really want a driver to claim a bcm2712 controller before
-it's able to enumerate devices, because that would break bisection
-through this.
-
-Bjorn
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 03396a9d97be..744fe1a4cf9c 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -1997,3 +1997,4 @@ module_platform_driver(brcm_pcie_driver);
+>  MODULE_LICENSE("GPL");
+>  MODULE_DESCRIPTION("Broadcom STB PCIe RC driver");
+>  MODULE_AUTHOR("Broadcom");
+> +MODULE_SOFTDEP("pre: irq_bcm2712_mip");
+> -- 
+> 2.47.0
+> 
 
