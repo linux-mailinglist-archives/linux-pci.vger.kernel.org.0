@@ -1,85 +1,78 @@
-Return-Path: <linux-pci+bounces-22072-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22073-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ACB45A405FB
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Feb 2025 08:09:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E67EA40619
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Feb 2025 08:38:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD93B168515
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Feb 2025 07:08:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0D4F700F43
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Feb 2025 07:38:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 398D61F2BB5;
-	Sat, 22 Feb 2025 07:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SqwunMRA"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4E191DC9B0;
+	Sat, 22 Feb 2025 07:38:34 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E19E1EF0B2;
-	Sat, 22 Feb 2025 07:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63DA978F4E
+	for <linux-pci@vger.kernel.org>; Sat, 22 Feb 2025 07:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740208103; cv=none; b=D46bgdr8e0CQnwyd4M+25Bj0PADjBa6qZylAdOozDNvNWR+gTnrLgFWGsKaO0ZxPbQK62tV+lDX2q6CmgELONKVqCi0xOFgTtV3javWHi1CVU0d+PDTKLaocb3DKQ6jP0Tjxk9q7cZB9wwr2z/S4OJe5hi7nkjM2+7Z5dzkC0tI=
+	t=1740209914; cv=none; b=fkTNyc/jvaNwG1fZnilMZUT2zBmp+DNawtOdvoTQfHVNaCTWKA4id7/jL/Zrfa+G/CzpTiuoieq8WJV4NUW02Zd5P9lLHhA/Z1EkqMkFfqG1BOLJ6apRtGfW3ckeKhFxtLWu2FTrZpzxhdbtLOeDb/8td2g6hSjwV8UYTRjArks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740208103; c=relaxed/simple;
-	bh=fsY5t112Q8WM/mdH96kIkcjOJgGQNS0f/svA6RtETtk=;
+	s=arc-20240116; t=1740209914; c=relaxed/simple;
+	bh=qu91disMdwxq3Nu1GPR/Q+BYrNxfC0ooqZ66KPz3qVU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rJEd1bWfPWHg/2jljRYZlwMYaWmwVGIf2roe0xv/OUehTSsDkk0Uudt+LyXkurePTitSIjPREM+d+j/Ae6+F1KUYPvdOIbE/iz4ZXzGscAb+3rU8iWINYCiYCNxMXXEl8e0bKQdJU7ZUgbxNfRA40O1XQEN4SglOdoWMlZpcjhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SqwunMRA; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740208101; x=1771744101;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fsY5t112Q8WM/mdH96kIkcjOJgGQNS0f/svA6RtETtk=;
-  b=SqwunMRAQM6s901/4UrngrC+CIJxFiwUoW8Tx9xLz9DbeKRNNxL4Ejb5
-   GAsvuuuCR4IA2HvS25bhy6YD8W9SOP0vvh0WGt3300rqx2jkPafe4aDrw
-   ifMzOTlXUizxUBi+Zz3HzVIviUFx7iDC91yNE0IAB+IvhfYjdQGE9J6rl
-   /fwj4HPJJQI6RlDDeeW8xFWOT5My+3F24eNhiCJwvmTeSFNO1G+f5uowr
-   LhDxfo+tUCYf7fWMbCZteigrs0BXt+zWTJl32kOqZCEElu0e+PtETz0eE
-   s7w87LCw343jzN6oG10W4TQ3/ecD311Xq83PmzbiZBt8hX+3CMHJxQOai
-   w==;
-X-CSE-ConnectionGUID: d1v5ws1gStWRgWk1+e+Cog==
-X-CSE-MsgGUID: hAdDTQWDRfqiNDBptn/cHQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="66400784"
-X-IronPort-AV: E=Sophos;i="6.13,307,1732608000"; 
-   d="scan'208";a="66400784"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 23:08:20 -0800
-X-CSE-ConnectionGUID: ac7/Se+NRD+BbfAHzKfzKA==
-X-CSE-MsgGUID: gfp972L3RJKUyasanhGhfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,307,1732608000"; 
-   d="scan'208";a="115763826"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 21 Feb 2025 23:08:16 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tljcR-0006Mh-12;
-	Sat, 22 Feb 2025 07:08:12 +0000
-Date: Sat, 22 Feb 2025 15:08:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Srirangan Madhavan <smadhavan@nvidia.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Zhi Wang <zhiw@nvidia.com>, Vishal Aslot <vaslot@nvidia.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	linux-cxl@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] cxl: add support for cxl reset
-Message-ID: <202502221438.j0UgOryU-lkp@intel.com>
-References: <20250221043906.1593189-3-smadhavan@nvidia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gNRJjL9T8spjjp0GDEHWCmMtP+zfDHsEgvamgZtlJnGEVRy1CRtRGRBp/+LntXjAJ52ERoBRGHhR/ea0MxfROOk6kF5D0KcGYdPEXZz86oA+fg3P5lFAPP1cwS2OaSfkpLuZM2zT/M9LTwx3RYoR4krSBp5ODG+ND+KsO4mwDs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2fc6272259cso4726191a91.0
+        for <linux-pci@vger.kernel.org>; Fri, 21 Feb 2025 23:38:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740209912; x=1740814712;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iQ0UFW2pdjOoWqROlGDZphwMQ2EIio94ZLPWcsQImvI=;
+        b=DjFE8TVAvMMe99/51Tj2FMHjR7/eMK+ghY+yLbVbQoS4ylNcCJKyyZ3JHOIUDBD6iP
+         CoB6yt3g2tAlqmREdeB/J/jOXEfT43TKqgf+uKLpuLAeitrdQd0Kj0rKGbNfPZQRl3tI
+         8WGT2iq8D8l36H3S8xPjbSG9W/FUnkZxluYPXnfzVvgk8fZ69dH5cJAeSXtEf6S88TbO
+         ZfNtJZLJQFoKNvKgWADVdXbbdZtyKySGrBl7AcW5s65gxFQTJhmf5c48zErCBIfdYUqt
+         u5GdZWa9GI+mLhXuq2JD4mf74lG7i0suMthWMdmtbC+WE9+UcUw7sT99muqY6hL+Hjc+
+         zcFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXdPJVqOgl267DlUgBQpVV2acnEdETibqRpu9aRj2S1/bClu9JZYfNpGj237LeAfZS0rn81+EBzcLI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHON8e+4v/JVl4ReIsKtmrekzCKs55vR8lZtD7CyHwo6hpwQxt
+	gZfROFwMzGxPZZSsIFXwzF6s0qho+9Tmn6i7Yx9s2pojmJUhcNtz
+X-Gm-Gg: ASbGncsfdGV6r61R1P730fHZ6BKg16bcTD5hwPDJgQqRHAwh2QUaFPvUD+mTGjdgc5q
+	Lm9XsIAJUJAbiDegBXPVmwEYg7dTmEwCFvwS7dvwpJ6D72Orz6Vo0b8akmk4i6XHcftt9ox1K2l
+	g4mB/ov8DEDKd6RIQ8CTvOBGQTrEazfjxfF16yl/zCGzBOmsiWgM6XFlzZOuwG/6Er98hPwAULm
+	K+rUobM9CasqyART3/H4eDGL8opIUkPyMXN9KQura8KdZBFuAVGoIST+hQrFoDBGC9rdaKc+vzp
+	sI/se6Z2ll6XRGA+dtP69NSmq/S+ZyjLMP8ouCiIbzt/697uaLtA+tXcdUkI
+X-Google-Smtp-Source: AGHT+IFThR433LcObShHk7gSPjGjLSI8AWlZ6U2G2AIgjEbAQv5VuI5xA/i3kLqSjTt2eyUi9Bp6Sg==
+X-Received: by 2002:a05:6a00:22d6:b0:730:94e5:1ea2 with SMTP id d2e1a72fcca58-73426c8d91bmr9220237b3a.4.1740209912568;
+        Fri, 21 Feb 2025 23:38:32 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73242568acesm17390081b3a.56.2025.02.21.23.38.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 23:38:31 -0800 (PST)
+Date: Sat, 22 Feb 2025 16:38:29 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 2/2] PCI: dw-rockchip: hide broken ATS capability
+Message-ID: <20250222073829.GA1158377@rocinante>
+References: <20250221202646.395252-3-cassel@kernel.org>
+ <20250221202646.395252-4-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -88,85 +81,56 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250221043906.1593189-3-smadhavan@nvidia.com>
+In-Reply-To: <20250221202646.395252-4-cassel@kernel.org>
 
-Hi Srirangan,
+Hello,
 
-kernel test robot noticed the following build warnings:
+> + * ATS does not work on rk3588 when running in EP mode.
 
-[auto build test WARNING on next-20250220]
-[cannot apply to pci/next pci/for-linus linus/master v6.14-rc3 v6.14-rc2 v6.14-rc1 v6.14-rc3]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Would it be OK if we started to style "rk3588" as "RK3588", unless the
+lower-case is preferred?  I had a look at Rockchip's own datasheet, and the
+product code names seem to be styled with upper-case.  That said, I am not
+a Rockchip expert.  Just curious for the sake of consistency.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Srirangan-Madhavan/cxl-de-duplicate-cxl-DVSEC-reg-defines/20250221-124043
-base:   next-20250220
-patch link:    https://lore.kernel.org/r/20250221043906.1593189-3-smadhavan%40nvidia.com
-patch subject: [PATCH v2 2/2] cxl: add support for cxl reset
-config: arm64-randconfig-003-20250222 (https://download.01.org/0day-ci/archive/20250222/202502221438.j0UgOryU-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250222/202502221438.j0UgOryU-lkp@intel.com/reproduce)
+> +static void rockchip_pcie_ep_hide_broken_ats_cap_rk3588(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct device *dev = pci->dev;
+> +	unsigned int spcie_cap_offset, next_cap_offset;
+> +	u32 spcie_cap_header, next_cap_header;
+> +
+> +	/* only hide the ATS cap for rk3588 running in EP mode */
+> +	if (!of_device_is_compatible(dev->of_node, "rockchip,rk3588-pcie-ep"))
+> +		return;
+> +
+> +	spcie_cap_offset = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_SECPCI);
+> +	if (!spcie_cap_offset)
+> +		return;
+> +
+> +	spcie_cap_header = dw_pcie_readl_dbi(pci, spcie_cap_offset);
+> +	next_cap_offset = PCI_EXT_CAP_NEXT(spcie_cap_header);
+> +
+> +	next_cap_header = dw_pcie_readl_dbi(pci, next_cap_offset);
+> +	if (PCI_EXT_CAP_ID(next_cap_header) != PCI_EXT_CAP_ID_ATS)
+> +		return;
+> +
+> +	/* clear next ptr */
+> +	spcie_cap_header &= ~GENMASK(31, 20);
+> +
+> +	/* set next ptr to next ptr of ATS_CAP */
+> +	spcie_cap_header |= next_cap_header & GENMASK(31, 20);
+> +
+> +	dw_pcie_dbi_ro_wr_en(pci);
+> +	dw_pcie_writel_dbi(pci, spcie_cap_offset, spcie_cap_header);
+> +	dw_pcie_dbi_ro_wr_dis(pci);
+> +}
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502221438.j0UgOryU-lkp@intel.com/
+To keep things consistent, it would be nice to capitalise sentences in code
+comments, and end them with a full-stop where appropriate (e.g., longer
+sentences, etc.).  That said, this is something I can after applying, to
+save you the hassle of sending another versions.
 
-All warnings (new ones prefixed by >>):
+Thank you!
 
->> drivers/pci/pci.c:5258:10: warning: & has lower precedence than ==; == will be evaluated first [-Wparentheses]
-    5258 |         if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/pci.c:5258:10: note: place parentheses around the '==' expression to silence this warning
-    5258 |         if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
-         |                 ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/pci/pci.c:5258:10: note: place parentheses around the & expression to evaluate it first
-    5258 |         if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
-         |             ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   1 warning generated.
-
-
-vim +5258 drivers/pci/pci.c
-
-  5235	
-  5236	/**
-  5237	 * cxl_reset - initiate a cxl reset
-  5238	 * @dev: device to reset
-  5239	 * @probe: if true, return 0 if device can be reset this way
-  5240	 *
-  5241	 * Initiate a cxl reset on @dev.
-  5242	 */
-  5243	static int cxl_reset(struct pci_dev *dev, bool probe)
-  5244	{
-  5245		u16 dvsec, reg;
-  5246		int rc;
-  5247	
-  5248		dvsec = pci_find_dvsec_capability(dev, PCI_VENDOR_ID_CXL,
-  5249						  CXL_DVSEC_PCIE_DEVICE);
-  5250		if (!dvsec)
-  5251			return -ENOTTY;
-  5252	
-  5253		/* Check if CXL Reset is supported. */
-  5254		rc = pci_read_config_word(dev, dvsec + CXL_DVSEC_CAP_OFFSET, &reg);
-  5255		if (rc)
-  5256			return -ENOTTY;
-  5257	
-> 5258		if (reg & CXL_DVSEC_CXL_RST_CAPABLE == 0)
-  5259			return -ENOTTY;
-  5260	
-  5261		if (probe)
-  5262			return 0;
-  5263	
-  5264		rc = cxl_reset_prepare(dev, dvsec);
-  5265		if (rc)
-  5266			return rc;
-  5267	
-  5268		return cxl_reset_init(dev, dvsec);
-  5269	}
-  5270	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+	Krzysztof
 
