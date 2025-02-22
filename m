@@ -1,254 +1,300 @@
-Return-Path: <linux-pci+bounces-22063-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22064-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B3D1A4045E
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Feb 2025 01:45:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E31AA40460
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Feb 2025 01:45:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C25DA7073EB
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Feb 2025 00:43:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6272707830
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Feb 2025 00:44:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C8253597D;
-	Sat, 22 Feb 2025 00:43:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E42255588F;
+	Sat, 22 Feb 2025 00:44:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gB/H+pLo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MiNGo1xG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D88753365
-	for <linux-pci@vger.kernel.org>; Sat, 22 Feb 2025 00:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740185018; cv=fail; b=IMttiQ8NYc+o6qv4bRWiniCGcHfx2Cy8jJhNEUqx6G4+dRA815HI5uL/MyqpT3WmZSdZEDd/yTyI7TYoca56+pUtCT/IYHFaykzy6heRf+lfZjlK9TpKkH6ibkdlNK9kGHHwgfU5JqQeH6TEJomt74tBZap9/OuZM1dsT41oN/E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740185018; c=relaxed/simple;
-	bh=ZR+F/Pna/dUYBWnbsn6a5UU94D/pqz3emiQeGMONCu0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=X2XhM6IokuGnU+gqnnA2sVacHgPXnhkPjz0kCChDHDggjT+qIcgr71Z8VfZgj2ulrGCLUcWiqqLB7hoSzoxB2BDFgpsKs8Ca2ZKofTe+oLCqlIkAhBxAi88HZjvZ4KepoKHA4ExBZzNqPeQIyA05FuGCY/AUEkdmYPVpceAolg4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gB/H+pLo; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740185015; x=1771721015;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=ZR+F/Pna/dUYBWnbsn6a5UU94D/pqz3emiQeGMONCu0=;
-  b=gB/H+pLoGzKlg5FfkCjk4zZunXvH+7SRuFAxN0gEuuuLxHP+i4hHbTqq
-   eZeYTS8PkDB5VIxrrgkEGufYI85phs86z8+uai0dk0pZIxJH0QdpE4+5b
-   FsPMAxEyGgHz76gIDIPtSfUiUP8s91ZGEDTVKvHevLXQaCj3ug1Bc9Z7K
-   9ljwgJRb0Ci86LYubccEBtNQ1OA4C7q9lCxXXryuzUUWCyKsWi7q//d7M
-   RPeOzzNH8rPcoxMxXnCPzXqAr+zmxDoihl5WKU/suv+bitadJUPbrcKtc
-   Z4MGvW+yaFqH5p/r0+/DQWOBEGsRIKGVH8w1mzu/uMSS72ms7oldt0RSg
-   g==;
-X-CSE-ConnectionGUID: bvzJ1I41TOuw/qcDzmBmng==
-X-CSE-MsgGUID: 5OcU6V+kRQyiP26MnRempw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="43847146"
-X-IronPort-AV: E=Sophos;i="6.13,306,1732608000"; 
-   d="scan'208";a="43847146"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 16:43:34 -0800
-X-CSE-ConnectionGUID: mrzWnLtaR/y+wmbD2Us5IA==
-X-CSE-MsgGUID: 0t0hsyW2S/W5OhWu+H5rfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116014962"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 Feb 2025 16:43:34 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 21 Feb 2025 16:43:33 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 21 Feb 2025 16:43:33 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 21 Feb 2025 16:43:32 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sd/k8l/QuRh0j06tN8RtdHfAZJKYqDiD4HZmZKTrgO1Xi3hKJsYgc+nO2pvbCfRGZ38z4218T3vmF3fx8DO6Gxat17rgmPzt46fEPgCklqJKf4mGe8zCa4TBk2tYSAAzJlqcT9Ym0WPffaYSaz0eaPHUh3p3FuXpXgxBiFs+HE7vx3CQwalrLeMP62u0x9n8jgeUAdzgHgAiK1EVCPn3VD/xL9Bx/+884KX0tz+HePdSsxZObY7eThK91FdPAekh1rN/LO9o66CZ5E9m+6iPpEu59RNGrgzbg9Cp+qTgGzWh0Kk9j2sUkx17uZGBP4K4Ge0sL8dPQr0K1ATC+d7ZBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FXurGAH72Bj/tzOaEU4334pq57wOR8FjP2/S66MBYdE=;
- b=K4o2KfTNet9xCKIaqj0R8SZqi0fCfCGFLLMJ5IaHQZLSWjhFBufceJZgsPlyxHY51a6IXtG4rL+G3ISBtHdLA0yLJwBnYgrQOj8Bg7u4HvL4n5doL//6xl2ZDjsWMbuRYUGnhrHJcV5SI/8ueVnZOuU1GRmAcX+NVKvLj2YrL1l14c5IOkTRqVRDzG72CxitbkAoA1Brn1IK2vSoKZ8dAAOlFI1O47xfVvW4VOenC5nhBXblOQmrdRwwIngoXaw1fkkqmETLnmKvBhO02ShcUwOwvZOszXMHRxbGrx5p/RA3Sj/atj2la+jFHQqqtHObRuiEbhnUdPjX1oW9rqdNvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ0PR11MB5023.namprd11.prod.outlook.com (2603:10b6:a03:2de::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.17; Sat, 22 Feb
- 2025 00:42:48 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8466.015; Sat, 22 Feb 2025
- 00:42:48 +0000
-Date: Fri, 21 Feb 2025 16:42:46 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Xu Yilun <yilun.xu@linux.intel.com>, Aneesh Kumar K.V
-	<aneesh.kumar@kernel.org>
-CC: Dan Williams <dan.j.williams@intel.com>, <linux-coco@lists.linux.dev>,
-	Alexey Kardashevskiy <aik@amd.com>, <linux-pci@vger.kernel.org>,
-	<gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 04/11] PCI/IDE: Selective Stream IDE enumeration
-Message-ID: <67b91d86a48aa_1c530f29431@dwillia2-xfh.jf.intel.com.notmuch>
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
- <173343741936.1074769.17093052628585780785.stgit@dwillia2-xfh.jf.intel.com>
- <yq5a34iw1bg6.fsf@kernel.org>
- <Z1qDgGLhw2xSk9T9@yilunxu-OptiPlex-7050>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Z1qDgGLhw2xSk9T9@yilunxu-OptiPlex-7050>
-X-ClientProxiedBy: MW2PR16CA0038.namprd16.prod.outlook.com
- (2603:10b6:907:1::15) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2827D4F218;
+	Sat, 22 Feb 2025 00:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740185046; cv=none; b=N7MaCeVDNL5m5JCXparcjAZvzmiBhIbms/zSdAjWYdcEzCtzWv+7YCd+Ks4d4NmKgGOxQJosIRm+puRnYoXCkKyb7hUYps8vRkE9EHZmu8WDw4Mp7plrIFJ2Y/Gap3HkLe0POZlZ/8+q3qX0PM5Wj5XuBpuMAV7RNShX+r44dxY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740185046; c=relaxed/simple;
+	bh=rVIkEHAtGYkLu2/McHlDwK6UU1jTxU5sHLOBbtEgOcA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K+nEv0sQZU5/7aVbepCZSXiSmbS6yodaCq+qLuAo3C65u4nrw2c3wn5nNqT58Ml8omhybJFDrtyzlHlfHMRK4dpBnB0Fz2s+GwzR/xvOhcd+7lVgKT2iVRdYbttpqO4sw+RbUWGaAn8yKgZpMNr2DXqX21Ku1r0IuYuRr8e84HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MiNGo1xG; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c0818add57so278321685a.3;
+        Fri, 21 Feb 2025 16:44:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740185044; x=1740789844; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0mfYiMV8kidUXmGLYF/BaWuuheQWf14kVQL8yo9io9o=;
+        b=MiNGo1xGrOm5yGnRjX+SIWdDC1Hkg+VhVqaNgCjjGyX6oDSWBsteOtz0ObMIUxkWza
+         PRZ5QR9gXMP7YQcEtkKs5V3OPE91AyeKMTpL60OgYyOlYSY113TOF/4PFFjPBPmkoiLm
+         kDqlVlEmuvNIYlI4ykoHD5G2HWIc9MF5YKJODaLcAOR2rNBVM1CvGvE/rTe4kx9VIl2W
+         qRtiahxxDad5ZQ2/GCFseMT0aFI4hN8C14uANH7phKmBfhlp6JSPB5kt9JJoUg5UArfi
+         rbVMIzbzx+DIwW59ChQrwsiSl/iOwanNKMB3GhZ3JB1ojyLPb2TsnERJnBhxosssIjpq
+         QpVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740185044; x=1740789844;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0mfYiMV8kidUXmGLYF/BaWuuheQWf14kVQL8yo9io9o=;
+        b=eWxwCndAg6vzwHeb7msdtveAU4JplTNQLFSVG5arjgAQ/gwfLY/sD0dlGyFLRBlP0M
+         Yt/RsKxaWXlKX7ipSCOq/CNx62s8HTmL738mdkCJ0Y+KZkPLvJIrlETvDn4KXK7Ohc8h
+         LN8r5x/9t3Ld9jG6xcTipl82VyQ9JXpQWyqmmZmnfX3YtH+aZDOB3HEfYPtmxO5QqA4Z
+         Y2600QGdmqXVNXRyLif7SypmQHykUoC9pf5CJMERnUwvCIaFHZC6dAcJggM2gc/i2XiT
+         mM5fiZkrM77yNHuKyr4Ts4QL6grG5lzDHOAIwL6PCdMthFxDyR2LH8oUWm3WBBYr88nm
+         yDpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMJZA1IIwKxWpW2Q/kfCny1VOuIV/nzt7+A5OMtaZIWZslJMrsfvrjnBHfPJ8o6c0cM1MGWmv2nke6@vger.kernel.org, AJvYcCUsKPoeOT5kwHHcP5x8QCAV6cv8+TrBmlGp5uha8vzpgSDSBtDUoxgWQHIu0zkdtR3KrOrbO/jV8ulr@vger.kernel.org, AJvYcCUuk93UqWHBuw6IRpE0AXnNe68wKjC4hFZYhjVFUcToCUpZtT2Gx6VtBCSOOS081NK5EUyuwRVOguYFIQ9z@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6n1qdpyCmvtxn1DS2EvRaPBUk/ZX7A0aVP7QYYDigUf7E8hrt
+	1oeMv2eXm2G47+K8o7T0JMhWPYYWa7GAu2ZmHTk8CmGUKs4BhQ/7
+X-Gm-Gg: ASbGnct4LsVTr/KCV5bYWNsPCsFTizsjy/qu7TBxdUgOYdgTRGXF6975D+0uO4MYx0V
+	5rSnbYf+daOtowHk3xMtejN1V2K8GqNvtygktYoEJnBDezEvA2zIithBZAWMigaeodMuP5qxz/G
+	C5VbpkaPZzFd82wJ2zIRtTCsT+kyGPKj4SQWtdBuG3kUZaSJxHAyzHPPtw36IgNfzkCpXem962n
+	Jtd7Ct/+IsMJiL2dh0Zma53062Dh5ZQtkQ52P11Q2EShZLeEGFka1hz8dUmjjwxzbIk5NVlRv12
+	OA==
+X-Google-Smtp-Source: AGHT+IFzV+P0z5pv+ZCpM8NN+jOatwS5dJ8bp2X5/A+AMv3Hu8hpM6OiyB0lB2UVj8l8h5auvYUeaw==
+X-Received: by 2002:a05:620a:801b:b0:7c0:c42a:7078 with SMTP id af79cd13be357-7c0cf96d0f1mr710092885a.52.1740185043862;
+        Fri, 21 Feb 2025 16:44:03 -0800 (PST)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c096443dc4sm721179685a.60.2025.02.21.16.44.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 16:44:02 -0800 (PST)
+Date: Sat, 22 Feb 2025 08:43:46 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>, 
+	Inochi Amaoto <inochiama@gmail.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Niklas Cassel <cassel@kernel.org>, 
+	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 2/2] PCI: sophgo-dwc: Add Sophgo SG2044 PCIe driver
+Message-ID: <fanm6m6fx6cqwalhdvrxmjzsluiyptbvrwbi5ufwbqmxsf62xl@lntprhkjv6tm>
+References: <20250221013758.370936-3-inochiama@gmail.com>
+ <20250221234958.GA372914@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB5023:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1b35d08b-7681-45e0-1042-08dd52d9d4ac
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?AuWpEXJwWa/KUfVhFjosYBL/K2fDHJxSSC8rDEI6UId9dUqUWjnTkcG877fq?=
- =?us-ascii?Q?3qPfCot+YJnWAurmyx8mfF87c8DjaZUOHDS078+szMoMkyGbPDg12OuJ3Y/O?=
- =?us-ascii?Q?ZbrHsp+yPaE8Ty6U0UleiCN8evZsnZCbrTZrcrgR42JlkHNXTNj3fm/f1X1i?=
- =?us-ascii?Q?y452S8bRxYPDXOmzmEcWWVaxnCDr9GBG1GrZL31tIW4LzY1Byxa05vBeNq1e?=
- =?us-ascii?Q?LP6BUClzM0Pomo5QzW0K5xbBuaRXnAY2l2VtzEzJlR5S3yudMQYnRrBLjDf+?=
- =?us-ascii?Q?3vjK6R9GekNk6wRnz+qVHTVDVH/dHuNWNcDXyvF9BS3VUFhVHmhvu8IyHMV5?=
- =?us-ascii?Q?flOgX0TyF+d9+8M5msQZJQp6wWsw8PbTLfMnAw/xHLjbE3Af1s/iDSGXoRvV?=
- =?us-ascii?Q?J0SwLA+jBRZ4FdtcUCdr0SysQpLEQnZftkBEDYR2gduUZbteqLllVd93ysLC?=
- =?us-ascii?Q?u++c89FYuoeXKy3zbmLWTQAfacXy9vJWMzixUEPLWqPDjnNGSa07V48caC2/?=
- =?us-ascii?Q?UY+uWMgmhsTmAKY0AoN21p863YNjVwWlCSlFV75qWbBI5zdt6x89dyouw1cw?=
- =?us-ascii?Q?pb/Dlu2cTgUyNAaPCaYJzrr+HlGQp/ONiWLUunB+iGh6jMXm9K9mZOHkA8MQ?=
- =?us-ascii?Q?LvCWjy7Oe9hGrOTj36hyZS6jOW/GqBB7YLggUL5EbGR9Fa+1XYj7Y60Fzv0N?=
- =?us-ascii?Q?X5QXqiw1QniOxH0/Ng+XJXx7HQ7CCHGoLsuNc/ztGKOS5qlDb3ZolPERcZz5?=
- =?us-ascii?Q?IB9a0MO4oVZicI7Mg78sASXkz4gtRwAOfaRCo83rCXWi0lJDX97/2hklwRIH?=
- =?us-ascii?Q?H75IVrfnHXDe2Giz8yAegWP+PMyRs9z2MCCaJxFL1Qt/nwUgU7qENOk8X0ho?=
- =?us-ascii?Q?4J16aSDbaTUF5hqjbsbk4DqfvH5TArlRW9vPrRkjGmzSsLf/q9PFEb5bwAmf?=
- =?us-ascii?Q?0Ak4DUSz3MmKtxLRRVZ/A41SH3O2XOYnfZhU+CIL7ibpC7jpvD26oOWu/cTK?=
- =?us-ascii?Q?YB3VwwNNRqnxtsTn9EaIfqQa8ier2GNtzdjsvac5u2Zyes7HF4u6su4qJkLG?=
- =?us-ascii?Q?qtRDSf0OnonjauxQ958m2KuXI+AaTIrENZ6NHsN/IsftppMETrj0nkRc39wp?=
- =?us-ascii?Q?CDNJ+HJjDglqlnshSVKdTHArpUyU4yzqGn8A+uckXRRFRWrhjB52lZtf5HnO?=
- =?us-ascii?Q?Qpjrgfl7rWGZAZ5p/ln2uBk+Q9knt5M5uETxssL+AFeMOFWmYDhbg0iBIFUR?=
- =?us-ascii?Q?KHf5YALvm4+60+8f14W2y/61gAs46i9JP84WBxklSF4wiH6frBMLo2L6UE4z?=
- =?us-ascii?Q?2Jwjt45CyGXbctEtpWv9O3FD3eY+KZnYp95rtRkDOLVJNlt04P8fVT4z7tw9?=
- =?us-ascii?Q?6TUI+WpdkLKqOBG8DyRrOETmWE3N?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?eCQQbpDHdj9rb3EMuMLLilB41SuA1JtmYKOhVd5TV3UpC8UAeOSczioCQQvO?=
- =?us-ascii?Q?jxzdrL2wEIWULC8ObG1EWqqiCD3smc4GXQw5fucX5qGo88ZAQkUpRXuNV/Sf?=
- =?us-ascii?Q?M89cwIfXikHu9HbdjwMq3rQSGBfTlvXzAqM5J+e/k+IFLdatnvcguOfHcd0K?=
- =?us-ascii?Q?AZ86eUOVnZm42w+olvovcq2YCrMrukP2Gaq7wEnibXJZMrT6WorLftfupQtZ?=
- =?us-ascii?Q?b0CeiPZrp2KF6kDA+g7ntQPbw8wIN4CeoPLP9R66g7DszAGEdybw6Bg30+l0?=
- =?us-ascii?Q?0fWWfr5eWGpTPwb1myk1HUjUPAl9/MbMGPythT/3P+5X5zcl6NsrxyDN4owA?=
- =?us-ascii?Q?9WmX53dTMqfUaJ1mhmgYrWi2e/q/vuU9gx3ba5F8/BQ4NtCc5lT4eNfSdHwa?=
- =?us-ascii?Q?10gPy5BqNHlYLaLyGNorbxNOVOczsG4IUcbCHCqlA0/QUZ03SQZMkKv4fsmF?=
- =?us-ascii?Q?VQRjxKnXG5Q0wpSMIj20u5zkSauKH85qsESc7og4eiOkMHxejFT5/KtaNSt9?=
- =?us-ascii?Q?ThPGbLAUfEE+S/d5Urk44zgXf7X7hkRC8lQo4h/8hu9jKlduVXMEuKtysS5I?=
- =?us-ascii?Q?UcRXZ9XtfR9lK8M3MFJVIkGjyBZkDM13q+G1QdjXIyCgMliyD8fuUQZUIuiR?=
- =?us-ascii?Q?QubgI8rNWbcUmbfw1DuxBlRwFaQUUI/8J7pxVx1vvaTamywYUoJiksynknjY?=
- =?us-ascii?Q?SYttkWFCTdU4BdBdTfPOViMWwQYyTYr0/Z2F8JQh0IByQQZINXrxLVHeZoaT?=
- =?us-ascii?Q?lfIdqflbwgmoYpJBRTRmurwGOMFCMHtfXcU5OC8i5Otf+7gdkJOB4DwamiUn?=
- =?us-ascii?Q?2AxDxvzLkTILprIJE/h2CPyKDvfT0Rac1GZsZakU0n7WpjW0GrfVJmFJGnYd?=
- =?us-ascii?Q?MBR6FDviHTyLlQkgFBEDkfhrtVciEz/uCx85t4XiCgVmr0XO/JpmJ0fpIxAZ?=
- =?us-ascii?Q?YDzorbqR+nmuWzJNOXPSo0zUFQSiFRq4uJBVZ0/gYQsfZg60r2RKznGfMs5Z?=
- =?us-ascii?Q?Zg7IYahagVX9ZFrxlnFkBHDi7/en3CePhdmgE/4TENDFQ1166QfGbF4aIjxT?=
- =?us-ascii?Q?trr6rPBjY3RjgrHECsmNNzONgtzQNu+02hPysyEr4LhppddYhVKXcLU42zYK?=
- =?us-ascii?Q?Hy80g5YqMdoIQQXQUHGyfWrtzCA0jwDcsEFXK92OiraE/ZZQzX1hDedZ9IIU?=
- =?us-ascii?Q?SZlBsYQoJWaz2Vpk+qRyaPg69nEERZckTk53GksfAO7lQ/tdc7+X0CKmLLH2?=
- =?us-ascii?Q?OFM0E7W4VhYpW9VxWrCGpBezZCQ+lU2lo6OEIc7s2fSFTdrMRJfP76eFSJjX?=
- =?us-ascii?Q?v3VNE1X8vpt3MN5THiyH9ECICbEejiT2jOf/KDCJtWUuhJF/jnmb3Ed64C/n?=
- =?us-ascii?Q?G3irrKT/tzMWYEJzM+/7qbYdP4LczvDOvxYIrNYQsh+18aNMDA1USytdOLdD?=
- =?us-ascii?Q?7wYp0Uc0OMoqMBUC20Q3D1nk237PDf8Qxg3y+ajJJO96VF7gmvwDu0/QE9p+?=
- =?us-ascii?Q?xHZBgzZ3Rsf/mlHDUTsbhygoUGieelu/vOCLvaX+IKYRwSOopF2eluX6Nzgf?=
- =?us-ascii?Q?LQ5PnKe4AZvLypviQ8yr18lmqjJDJQZWcI3iXNaZXcc5Ovtsq0owY64nKTxE?=
- =?us-ascii?Q?JA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b35d08b-7681-45e0-1042-08dd52d9d4ac
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2025 00:42:48.6921
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mhz0FYe7Db5ledRm2mflO8OFzGAOrFCUCw5116e+Df6qF+ApkVvtrEx5NwJpp3LtznliYpottP2I2h3LfFg8/WdEN0V889zIgziRvixHXbQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5023
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221234958.GA372914@bhelgaas>
 
-Xu Yilun wrote:
-> On Tue, Dec 10, 2024 at 08:38:57AM +0530, Aneesh Kumar K.V wrote:
-> > 
-> > Hi Dan,
-> > 
-> > > +#define  PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(x)	(((x) >> 16) & 0xff) /* Selective IDE Streams */
-> > 
-> > Should this be
-> > 
-> > #define  PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(x)	((((x) >> 16) & 0xff) + 1) /* Selective IDE Streams */
+On Fri, Feb 21, 2025 at 05:49:58PM -0600, Bjorn Helgaas wrote:
+> On Fri, Feb 21, 2025 at 09:37:56AM +0800, Inochi Amaoto wrote:
+> > Add support for DesignWare-based PCIe controller in SG2044 SoC.
 > 
-> Is it better keep the literal SPEC definition here in pci_reg.h? And ...
+> > @@ -341,6 +341,16 @@ config PCIE_ROCKCHIP_DW_EP
+> >  	  Enables support for the DesignWare PCIe controller in the
+> >  	  Rockchip SoC (except RK3399) to work in endpoint mode.
+> >  
+> > +config PCIE_SOPHGO_DW
+> > +	bool "SOPHGO DesignWare PCIe controller"
 > 
-> > 
-> > We do loop as below in ide.c
-> > 
-> > 	for (int i = 0; i < PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(val); i++) {
+> What's the canonical styling of "SOPHGO"?  I see "Sophgo" in the
+> subject line and in Chen Wang's SG2042 series.  Pick the official
+> styling and use it consistently.
 > 
-> for (int i = 0; i < PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(val) + 1; i++) {
 
-I think we should follow what you said in the last patch and just define
-the mask that gets to the raw field and then put the fixup code in ide.c
+This is my mistake. It should be "Sophgo", I will change it.
 
-Folded in this:
+> Reorder this so the menuconfig menu items remain alphabetically
+> sorted.
+> 
 
-diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-index 6667a61ba01a..eea126ce7ae0 100644
---- a/drivers/pci/ide.c
-+++ b/drivers/pci/ide.c
-@@ -14,8 +14,8 @@ static int sel_ide_offset(u16 cap, int stream_id, int nr_ide_mem)
- 
- void pci_ide_init(struct pci_dev *pdev)
- {
-+       int nr_ide_mem = 0, nr_streams;
-        u16 ide_cap, sel_ide_cap;
--       int nr_ide_mem = 0;
-        u32 val = 0;
- 
-        if (!pci_is_pcie(pdev))
-@@ -47,7 +47,8 @@ void pci_ide_init(struct pci_dev *pdev)
-        else
-                sel_ide_cap = ide_cap + PCI_IDE_LINK_STREAM;
- 
--       for (int i = 0; i < PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(val); i++) {
-+       nr_streams = FIELD_GET(PCI_IDE_CAP_SELECTIVE_STREAMS_NUM_MASK, val) + 1;
-+       for (int i = 0; i < nr_streams; i++) {
-                if (i == 0) {
-                        pci_read_config_dword(pdev, sel_ide_cap, &val);
-                        nr_ide_mem = PCI_IDE_SEL_CAP_ASSOC_NUM(val);
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 7b8ef694a9ef..17aef7646b8d 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -1226,8 +1226,7 @@
- #define  PCI_IDE_CAP_ALG(x)            (((x) >> 8) & 0x1f) /* Supported Algorithms */
- #define  PCI_IDE_CAP_ALG_AES_GCM_256   0    /* AES-GCM 256 key size, 96b MAC */
- #define  PCI_IDE_CAP_LINK_TC_NUM(x)    (((x) >> 13) & 0x7) /* Link IDE TCs */
--#define  PCI_IDE_CAP_SELECTIVE_STREAMS_NUM(x) ((((x) >> 16) & 0xff) + 1) /* Selective IDE Streams */
--#define  PCI_IDE_CAP_SELECTIVE_STREAMS_MASK    0xff0000
-+#define  PCI_IDE_CAP_SELECTIVE_STREAMS_NUM_MASK        0xff0000 /* Supported Selective IDE Streams */
- #define  PCI_IDE_CAP_TEE_LIMITED       0x1000000 /* TEE-Limited Stream Supported */
- #define PCI_IDE_CTL                    0x8
- #define  PCI_IDE_CTL_FLOWTHROUGH_IDE   0x4     /* Flow-Through IDE Stream Enabled */
+I think this order is applied to the entry title in menuconfig,
+and is not the config key? If so, I will change it.
+
+> > +	depends on ARCH_SOPHGO || COMPILE_TEST
+> > +	depends on PCI_MSI
+> > +	depends on OF
+> > +	select PCIE_DW_HOST
+> > +	help
+> > +	  Enables support for the DesignWare PCIe controller in the
+> > +	  SOPHGO SoC.
+> > +
+> >  config PCI_EXYNOS
+> >  	tristate "Samsung Exynos PCIe controller"
+> >  	depends on ARCH_EXYNOS || COMPILE_TEST
+> 
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * PCIe host controller driver for Sophgo SoCs.
+> 
+> Looks too generic, since Chen Wang's series says Sophgo SG2042 SoC is
+> Cadence-based, so this driver apparently doesn't cover all Sophgo
+> SoCs.
+> 
+
+OK, I will change the description to point it only cover
+the controller based on the DesignWare core.
+
+> > + *
+> 
+> Spurious blank line.
+> 
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/gpio/consumer.h>
+> > +#include <linux/irqchip/chained_irq.h>
+> > +#include <linux/irqdomain.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/module.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/property.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/reset.h>
+> > +
+> > +#include "pcie-designware.h"
+> > +
+> > +#define to_sophgo_pcie(x)		dev_get_drvdata((x)->dev)
+> > +
+> > +#define PCIE_INT_SIGNAL			0xc48
+> > +#define PCIE_INT_EN			0xca0
+> > +
+> > +#define PCIE_SIGNAL_INTX_SHIFT		5
+> > +#define PCIE_INT_EN_INTX_SHIFT		1
+> 
+> Define masks with GENMASK() and get rid of the _SHIFT #defines.
+> 
+> > +#define PCIE_INT_EN_INT_SII		BIT(0)
+> > +#define PCIE_INT_EN_INT_INTA		BIT(1)
+> > +#define PCIE_INT_EN_INT_INTB		BIT(2)
+> > +#define PCIE_INT_EN_INT_INTC		BIT(3)
+> > +#define PCIE_INT_EN_INT_INTD		BIT(4)
+> 
+> These are unused, drop them.
+> 
+> > +#define PCIE_INT_EN_INT_MSI		BIT(5)
+> > +
+> > +struct sophgo_pcie {
+> > +	struct dw_pcie pci;
+> > +	void __iomem *app_base;
+> > +	struct clk_bulk_data *clks;
+> > +	unsigned int clk_cnt;
+> > +	struct reset_control *rst;
+> > +	struct irq_domain *irq_domain;
+> 
+> Indent the member names to align vertically as most other drivers do.
+> 
+> > +};
+> > +
+> > +static int sophgo_pcie_readl_app(struct sophgo_pcie *sophgo, u32 reg)
+> > +{
+> > +	return readl_relaxed(sophgo->app_base + reg);
+> > +}
+> > +
+> > +static void sophgo_pcie_writel_app(struct sophgo_pcie *sophgo, u32 val, u32 reg)
+> > +{
+> > +	writel_relaxed(val, sophgo->app_base + reg);
+> > +}
+> > +
+> > +static void sophgo_pcie_intx_handler(struct irq_desc *desc)
+> > +{
+> > +	struct dw_pcie_rp *pp = irq_desc_get_handler_data(desc);
+> > +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
+> > +	unsigned long hwirq = PCIE_SIGNAL_INTX_SHIFT;
+> > +	unsigned long reg;
+> > +
+> > +	chained_irq_enter(chip, desc);
+> > +
+> > +	reg = sophgo_pcie_readl_app(sophgo, PCIE_INT_SIGNAL);
+> > +
+> > +	for_each_set_bit_from(hwirq, &reg, PCI_NUM_INTX + PCIE_SIGNAL_INTX_SHIFT)
+> 
+> Use FIELD_GET() here and iterate through PCI_NUM_INTX.  Then you don't
+> need for_each_set_bit_from() and shouldn't need PCIE_SIGNAL_INTX_SHIFT
+> here and below.
+> 
+
+OK, I will change it
+
+> > +		generic_handle_domain_irq(sophgo->irq_domain,
+> > +					  hwirq - PCIE_SIGNAL_INTX_SHIFT);
+> > +
+> > +	chained_irq_exit(chip, desc);
+> > +}
+> > +
+> > +static void sophgo_intx_mask(struct irq_data *d)
+> > +{
+> > +	struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(d);
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
+> > +	unsigned long flags;
+> > +	u32 val;
+> > +
+> > +	raw_spin_lock_irqsave(&pp->lock, flags);
+> > +
+> > +	val = sophgo_pcie_readl_app(sophgo, PCIE_INT_EN);
+> > +	val &= ~BIT(d->hwirq + PCIE_INT_EN_INTX_SHIFT);
+> 
+> FIELD_PREP().
+> 
+> > +	sophgo_pcie_writel_app(sophgo, val, PCIE_INT_EN);
+> > +
+> > +	raw_spin_unlock_irqrestore(&pp->lock, flags);
+> > +};
+> > +
+> > +static void sophgo_intx_unmask(struct irq_data *d)
+> > +{
+> > +	struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(d);
+> > +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> > +	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
+> > +	unsigned long flags;
+> > +	u32 val;
+> > +
+> > +	raw_spin_lock_irqsave(&pp->lock, flags);
+> > +
+> > +	val = sophgo_pcie_readl_app(sophgo, PCIE_INT_EN);
+> > +	val |= BIT(d->hwirq + PCIE_INT_EN_INTX_SHIFT);
+> 
+> Ditto.
+> 
+> > +	sophgo_pcie_writel_app(sophgo, val, PCIE_INT_EN);
+> > +
+> > +	raw_spin_unlock_irqrestore(&pp->lock, flags);
+> > +};
+> > +
+> > +static void sophgo_intx_eoi(struct irq_data *d)
+> > +{
+> > +}
+> > +
+> > +static struct irq_chip sophgo_intx_irq_chip = {
+> > +	.name			= "INTx",
+> > +	.irq_mask		= sophgo_intx_mask,
+> > +	.irq_unmask		= sophgo_intx_unmask,
+> > +	.irq_eoi		= sophgo_intx_eoi,
+> 
+> Name these ending with the irq_chip field names, e.g.,
+> sophgo_intx_irq_mask(), to make them easier to find with grep.
+> 
+> Bjorn
+
+Thanks, I will take all the comments and improve the driver.
+
+Regards,
+Inochi
 
