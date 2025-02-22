@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-22110-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22111-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F33CA40A57
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Feb 2025 17:51:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D6E0A40A5E
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Feb 2025 17:54:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 35226189E0FF
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Feb 2025 16:51:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D8BD1785C8
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Feb 2025 16:53:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE61F1F0E44;
-	Sat, 22 Feb 2025 16:51:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 897A1207A35;
+	Sat, 22 Feb 2025 16:53:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h7agYjCX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UyyOOHxz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A42F3D984
-	for <linux-pci@vger.kernel.org>; Sat, 22 Feb 2025 16:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95401C84D4
+	for <linux-pci@vger.kernel.org>; Sat, 22 Feb 2025 16:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740243096; cv=none; b=Kar6NASEu6S7HzCpFoOMr8nHM2A75ixFbQyUCQU51StmOqE34SwWsAD7JIxENMSL1FO69kGfsWGYrphjK0eFDBJCuPog3iwX/4GSt+FuEAYbwrQ96QtJWVRW7AUqEwPJHht4rPRJt0O9m9nMtF9jZjgkW6AtGcAQRLYtwZWlYlU=
+	t=1740243228; cv=none; b=c2mUcIDJjdfgfTixivZCJItVBqDQX5kDbEdl403w6jMYPyv1WtgDIjaoO3UpRdiawjpJvOzUpPhFFmfUBEsr+53ZORxC895KvOrBATYEGNpSSglMj/1Q4YmuLZuwZGcPr+ABQHeQluZQBlnBtOc+7fLJcSMK3+hfL7EiB27CQcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740243096; c=relaxed/simple;
-	bh=w0LmQz49aT/pe7eaUqi7mMgp1KIC2QgVZzGW5zZxAmE=;
+	s=arc-20240116; t=1740243228; c=relaxed/simple;
+	bh=oBv+tlg9GiYsoONeeRdW7AslFMIO5QJEVmpgDjwJmc4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FIHYFmCb/VTzsn0rUuIe3TtLi2lUFhr2MrIk5cLZFfJoDjYNwNRg7JdYy9GoP1D63o116h2yPIfPLWx0njoPprFgc57PcxESmQdOsks+hXWl8u+jpyw69h8cfgn+k8DW0hnUMJIPaBmzhevlTyZqft48VQ/BnRuRczKGaYLlufE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h7agYjCX; arc=none smtp.client-ip=209.85.216.50
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZrQbi73p9Ci22P5muZjeGhSQHdsQwRHk8tLYmvRYSOWUVm0/xl2Rb+okBoUVxAwYsIJQiHSdRwS+3IRVqw+E+TRyXoeIpei8+pHkSFrZEztKIQyDx4cWOL2Sfq6mEw15MKiKq/4D2iUZGLJ6oUEesFn+99GuKhJT6hIXHN6kMws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UyyOOHxz; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fa5af6d743so4965042a91.3
-        for <linux-pci@vger.kernel.org>; Sat, 22 Feb 2025 08:51:35 -0800 (PST)
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2211cd4463cso61858275ad.2
+        for <linux-pci@vger.kernel.org>; Sat, 22 Feb 2025 08:53:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740243095; x=1740847895; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1740243225; x=1740848025; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=sOUENYnzvt8ZQH4Hyb/QTR5W7roK5/nHLc7Zp4LFoQ0=;
-        b=h7agYjCXoIz8r84QFAZ7cja5o9kqRXB9nEiVT7ToJrgO8AybkWuhKBU3kJniROwKfd
-         b3h7XehRi/+IeU/BpBdb85YJwycA7qWUxeluZMIufofHkZbQPR6TViFO1J2WXNHp47M4
-         rtDZ36ASNJ46Ytl/4vaYfz7S6IfB8tsLUihO36UakhHNNHE41kmxhYgRo5AAAmxcv0sC
-         J5/hCv+73e5zoknCT6eOcBlDBhS5M15kKGAW9cnHwU+1DsGUrc6xquXqrNQoK3aGF6T5
-         8b2WXnNkP9AerjzwpjXtXyOzhf4qtD7KmdJLJPSZbjnMXWqxtgdvCQUGfTn5Jwljujg/
-         iYhQ==
+        bh=8ivNrLGUA+/d37ElkamWeFCb8ka1YsgzGOwciXXog6g=;
+        b=UyyOOHxz3PA+F2yMtF5ehomgFVZVva5SWra1KnHuI+pzH2HaOwjWAjMyaQluWSvP43
+         /kbxb3xTZWaaIh+tFZnjj0vQfHTCgDY8Co+gXcky4H7jiNvIKJW53gXku+i3Bd9MPYv7
+         3WpueyvIggC9y4g+LPHPjNVbC9BxqSlJZgBAn5RbtI0JBqH7fT3x5qLUNBWGgNbWTW5w
+         J0nrE0u7NYInfcy5bRzTiEI0krtD9hVzQ67AD//JQqFOaiICARfTnxwaOQO8+mJQvadB
+         kGUDBtZjvFXy9GKBFMyust7Iv8/n9gqqB3LOOhamFb7dzV/19Yw8ZvGjGQSXNDMkRvbJ
+         gxPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740243095; x=1740847895;
+        d=1e100.net; s=20230601; t=1740243225; x=1740848025;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sOUENYnzvt8ZQH4Hyb/QTR5W7roK5/nHLc7Zp4LFoQ0=;
-        b=q7XZh00NftfZpyYd58eJNJL1MsD6ZL1CTJDMYUjsz6tChfZ6aaGNIeEYj3d89esl6O
-         UkS98iw8dNUVQnN4Jca+/txbG5QhHCtd3Uxx5X79yY6zIxP3hTo/lO+Rwb9cVpiSSYdl
-         X3O6Tola+E7a8LPjLgGm6hdgvUquXW+hqIg3B2AuZXWC6EYqg5uZX8xzzUH2QbMGowgE
-         MoTlK9mAR3PEq6fhDOk75YrFDD6Y78X5U0yJAhmVUbbxkB+W7H68l+DHN9T4T06+haap
-         NVwH3XlcnBnn47KyB8p0ykAYZGNafsPTUoTdi4s2LNmBA4zCX1/N4bCTPtFhLtgAqZPv
-         FIxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWbGZ2gNXeClI0MRfDEKF2kiOKKmtUDHJg5LP5At63qbCVE+nPbNFPdoNnz0wv9nRLtgyu4gFTWfa4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHTL10aB71bLWmE35GbNjrrt38vRrl2eX8k1UBd7LzICuE1nJA
-	ynxLKU/EZMiC9GnR6qWQq+X2KTDDxvi69tdALrHovfkEO0cFDHoceEpJOtJ8MA==
-X-Gm-Gg: ASbGncs2rIWqg6iYqsWnamjMUC2nzjvNC/kRhWna8f2lzsOJFWcFfGyNmX2INn/tT9T
-	7k20sKluMvphvxOvdhwArKOZWFEzDlzGvCPDPz5aDE2xgTYlrAJd4NZ8pHuODO9Ns3QbvsLqjte
-	rtWqCr5CfwEPoMbi6bT9brMCsdl2FaQDQEZz+TFXHmgwny3mDh3Z06nhEWBAZ6gc2yAE+4IQiAK
-	c4/KGzvgPH1Vbs5wtdoucv8FYLANIib9XhulDsTPxHIoy4LkDi+RJf+R6iD9KXHUfgKXSq1PFK3
-	EyJR+dXapc9DFwRlu794TMvT1kKKMDplVXWi5w==
-X-Google-Smtp-Source: AGHT+IHJoDxHiXuse7PDv45xfuzLtsqgGLpJ0OEKAFEDkIQnRP5KJLDYqtkpTUaVZ1UEGlR/auVcng==
-X-Received: by 2002:a17:90b:1dcb:b0:2f8:4a3f:dd2d with SMTP id 98e67ed59e1d1-2fce78d1b51mr13034417a91.15.1740243094733;
-        Sat, 22 Feb 2025 08:51:34 -0800 (PST)
+        bh=8ivNrLGUA+/d37ElkamWeFCb8ka1YsgzGOwciXXog6g=;
+        b=MMPlEIH4ckrfTgARV/viP/IQPLwsaK1AmyNcnlHlaC+3RGz0bEADv0mwnhpDLh8R6Y
+         05qo5ejALuL0fKIXuXHyumZSgL5Wv5W6pfDmwuVDfz41+xOH3iUS1wOSsc0HpxmoDyVd
+         b7mUvdBP5s5JT++7Ks/oLPKda5QggOhe9kcuWG8wvoua7ynzK1YKyUDAIkix47Xd5o5t
+         s8515WWZgiAVn95V2FlyiFupBGRPuFYXGylfPepcqefIfitXyH2dBfzTm68kDKq8+CIi
+         KTs2KQB0PeC2440rN/ODS46Gj8QHSyORksPcpqbgJLFdj1CKzTBWRTeVenx1Ve44wf1n
+         Xkkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWiEkNbbvDT5rAC2r+cjQpECWZoMKJZOFiMTEFKI1sTFv8PqdJWdqBf7gbYt02ouBCiqOPvqzAm51A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9pruBn4VyKVk3qnD1kUUZWzBIMSmIXi72/1L3XrWdOZPu6bBB
+	2osSmGzHjUqvVW0fHqmeS7X53NxcaQ80cByer6Ddz3HOxx1QA8qJeDR6qMjCrg==
+X-Gm-Gg: ASbGncu3oP9wHKY+d2UQ5LOXJpbQhiHjWVD/9SXaJbpOq0jGVHvo8j8SU2STxpZZZ9y
+	Hh3i1PWfJbIsgpdHXaSXxIZ04PgKzk/TWfP5LtrgJcCC1b/uchhrF9Bw37F1Z/IA9lqnl/8C2EJ
+	3UfNnp/MKLo4XiOc6/OiZvik4GR8ABTG6PnOMd8wsi6G3zmZe4bvdl2whAsPcRW6jxC+fTUiqsf
+	kNh6fvNTUNROk5fjiN02zZLG3DV+PoQNt7e4A5NOBmjMAoXszg8xRzucjUTZyfAmDH0xQunpwet
+	+Jr5jLtpdHMMMXhNEQnfiIsvwfCKuE7pw4ekKg==
+X-Google-Smtp-Source: AGHT+IE7FLZPo+Ma+N1F3NmGoxoA/bCHud1Y21Z8/QxeoATe5u21D1vdPBAkZwGc/+Tc08xFw55W9g==
+X-Received: by 2002:a17:903:41c8:b0:21c:fb6:7c3c with SMTP id d9443c01a7336-2219ff56500mr123579655ad.17.1740243224960;
+        Sat, 22 Feb 2025 08:53:44 -0800 (PST)
 Received: from thinkpad ([120.60.135.149])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fceb04c697sm3437710a91.19.2025.02.22.08.51.30
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d556d6d2sm151661135ad.177.2025.02.22.08.53.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2025 08:51:34 -0800 (PST)
-Date: Sat, 22 Feb 2025 22:21:28 +0530
+        Sat, 22 Feb 2025 08:53:44 -0800 (PST)
+Date: Sat, 22 Feb 2025 22:23:38 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -87,11 +87,10 @@ Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 7/8] arm64: dts: qcom: sar2130p: add PCIe EP device
- nodes
-Message-ID: <20250222165128.55ly42qw2id4pucv@thinkpad>
+Subject: Re: [PATCH v3 8/8] arm64: dts: qcom: sm8450: add PCIe EP device nodes
+Message-ID: <20250222165338.oox3d63ven2kokez@thinkpad>
 References: <20250221-sar2130p-pci-v3-0-61a0fdfb75b4@linaro.org>
- <20250221-sar2130p-pci-v3-7-61a0fdfb75b4@linaro.org>
+ <20250221-sar2130p-pci-v3-8-61a0fdfb75b4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -101,10 +100,10 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250221-sar2130p-pci-v3-7-61a0fdfb75b4@linaro.org>
+In-Reply-To: <20250221-sar2130p-pci-v3-8-61a0fdfb75b4@linaro.org>
 
-On Fri, Feb 21, 2025 at 05:52:05PM +0200, Dmitry Baryshkov wrote:
-> On the Qualcomm AR2 Gen1 platform the second PCIe host can be used
+On Fri, Feb 21, 2025 at 05:52:06PM +0200, Dmitry Baryshkov wrote:
+> On the Qualcomm SM8450 platform the second PCIe host can be used
 > either as an RC or as an EP device. Add device node for the PCIe EP.
 > 
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
@@ -114,26 +113,26 @@ Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 - Mani
 
 > ---
->  arch/arm64/boot/dts/qcom/sar2130p.dtsi | 61 ++++++++++++++++++++++++++++++++++
->  1 file changed, 61 insertions(+)
+>  arch/arm64/boot/dts/qcom/sm8450.dtsi | 62 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sar2130p.dtsi b/arch/arm64/boot/dts/qcom/sar2130p.dtsi
-> index dd832e6816be85817fd1ecc853f8d4c800826bc4..b45e9e2ae0357bd0c7d719eaf4fc1faa1cf913f2 100644
-> --- a/arch/arm64/boot/dts/qcom/sar2130p.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sar2130p.dtsi
-> @@ -1474,6 +1474,67 @@ pcie@0 {
+> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> index 9c809fc5fa45a98ff5441a0b6809931588897243..3783930d63a73158addc44d00d9da2efa0986a25 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> @@ -2262,6 +2262,68 @@ pcie@0 {
 >  			};
 >  		};
 >  
 > +		pcie1_ep: pcie-ep@1c08000 {
-> +			compatible = "qcom,sar2130p-pcie-ep";
+> +			compatible = "qcom,sm8450-pcie-ep";
 > +			reg = <0x0 0x01c08000 0x0 0x3000>,
 > +			      <0x0 0x40000000 0x0 0xf1d>,
 > +			      <0x0 0x40000f20 0x0 0xa8>,
 > +			      <0x0 0x40001000 0x0 0x1000>,
 > +			      <0x0 0x40200000 0x0 0x1000000>,
 > +			      <0x0 0x01c0b000 0x0 0x1000>,
-> +			      <0x0 0x40002000 0x0 0x2000>;
+> +			      <0x0 0x40002000 0x0 0x1000>;
 > +			reg-names = "parf",
 > +				    "dbi",
 > +				    "elbi",
@@ -147,23 +146,21 @@ Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > +				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
 > +				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
 > +				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>,
-> +				 <&gcc GCC_DDRSS_PCIE_SF_CLK>,
-> +				 <&gcc GCC_AGGRE_NOC_PCIE_1_AXI_CLK>,
-> +				 <&gcc GCC_CFG_NOC_PCIE_ANOC_AHB_CLK>,
-> +				 <&gcc GCC_QMIP_PCIE_AHB_CLK>;
+> +				 <&rpmhcc RPMH_CXO_CLK>,
+> +				 <&gcc GCC_DDRSS_PCIE_SF_TBU_CLK>,
+> +				 <&gcc GCC_AGGRE_NOC_PCIE_1_AXI_CLK>;
 > +			clock-names = "aux",
 > +				      "cfg",
 > +				      "bus_master",
 > +				      "bus_slave",
 > +				      "slave_q2a",
+> +				      "ref",
 > +				      "ddrss_sf_tbu",
-> +				      "aggre_noc_axi",
-> +				      "cnoc_sf_axi",
-> +				      "qmip_pcie_ahb";
+> +				      "aggre_noc_axi";
 > +
 > +			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>,
 > +				     <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
+> +				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
 > +			interrupt-names = "global",
 > +					  "doorbell",
 > +					  "dma";
@@ -174,21 +171,24 @@ Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > +					 &config_noc SLAVE_PCIE_1 QCOM_ICC_TAG_ACTIVE_ONLY>;
 > +			interconnect-names = "pcie-mem",
 > +					     "cpu-pcie";
-> +			iommus = <&apps_smmu 0x1e00 0x1>;
+> +
+> +			iommus = <&apps_smmu 0x1c80 0x7f>;
 > +			resets = <&gcc GCC_PCIE_1_BCR>;
 > +			reset-names = "core";
 > +			power-domains = <&gcc PCIE_1_GDSC>;
 > +			phys = <&pcie1_phy>;
 > +			phy-names = "pciephy";
-> +
 > +			num-lanes = <2>;
+> +
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pcie1_default_state>;
 > +
 > +			status = "disabled";
 > +		};
 > +
 >  		pcie1_phy: phy@1c0e000 {
->  			compatible = "qcom,sar2130p-qmp-gen3x2-pcie-phy";
->  			reg = <0x0 0x01c0e000 0x0 0x2000>;
+>  			compatible = "qcom,sm8450-qmp-gen4x2-pcie-phy";
+>  			reg = <0 0x01c0e000 0 0x2000>;
 > 
 > -- 
 > 2.39.5
