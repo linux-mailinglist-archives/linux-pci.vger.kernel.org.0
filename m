@@ -1,128 +1,311 @@
-Return-Path: <linux-pci+bounces-22131-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22132-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C18D8A40F20
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Feb 2025 14:39:35 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6C5DA40F3C
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Feb 2025 15:19:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 36D101892A23
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Feb 2025 13:39:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 817CE7A581F
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Feb 2025 14:18:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4361D206F2E;
-	Sun, 23 Feb 2025 13:39:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D37F820A5D5;
+	Sun, 23 Feb 2025 14:19:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SEmd8SjX"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="AGl6xubp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE731E480;
-	Sun, 23 Feb 2025 13:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08D3A207675;
+	Sun, 23 Feb 2025 14:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740317971; cv=none; b=pErEExO5HDW9o5itdWzdJb+RY4N2Jjny4CywqxZwxVhfdAQ4enWnU2EXWLYGJD2wF9dcdziPZVEVVDqit4WSnipthCEWQ5kwPwNOAdiakv7FT4vClJmd/3jp5H0DQx5qtXt8LDZiIPlG3AfxDYptODqF+N8HOmUF+pdWJ+mnPa4=
+	t=1740320359; cv=none; b=WcPC93F57bIKmE86Kd+rieXqQU0CxCqy/5F0jjXuZPj7PVkcT4cwCUqquYyU1wR1e6ZOgXp/R2Sdra7bYvB8TF3CiKzSRxOXOdK1pqQHARkfdXlKY6c5qJoMReX3ku6uMV7jH8kyDTu2pyc/N8WBONGUA+egDny8j/C9aPzQ1ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740317971; c=relaxed/simple;
-	bh=VYHAAbUCUiGYFAjtyjDhjex55dizi9CWqp4qfEujigE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CFUou9/o91LjgM8c00ms/o+cBYxIiQDU3CjZ0UXqM5/8IL95eqWpLriskrgCz2XRWffVtAnR9n+5FCksyQJhEWFdUJrdpx9lUYKyFWzg2YZHV8Rl4w+iGH6zIBGVyL12pOAdDpk1ACByzVwWftZz2vwzOXlDASgq8egOihLNcBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SEmd8SjX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 847C3C4CEDD;
-	Sun, 23 Feb 2025 13:39:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740317970;
-	bh=VYHAAbUCUiGYFAjtyjDhjex55dizi9CWqp4qfEujigE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SEmd8SjXchvYTXVG5atKw3xbjW2JO9AMH5ttIiw9mLwE6biRdEUFCrohtDDXFK9Vx
-	 ds4iJbPcOuDT+4z0DP4fZHkZOpXQYLavo5thpJ2/BOpXfkHOScg0R4YAXuKszdvh8R
-	 TAduUGcDDNMtHzy4ZOTYSU3YFuB25on7Ho9rUXGiiHYVmvILEkmL7QGVBU2SS8Bte+
-	 Ah8UFr4MrzET2ns/pTHERSxJ7sQha7I1cSu6IBAbnT2sSND86o18wSUypcIcV6p+a9
-	 k8H17kVJtKplzHYusTyMDcZ7p9gVq4QN+sJRaXdaJRd92LDokt92gIU9NuNDQaVqDY
-	 OmibVSyXn+bbQ==
-Date: Sun, 23 Feb 2025 14:39:28 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: mediatek-gen3: Add
- mediatek,pbus-csr phandle array property
-Message-ID: <Z7slEJgCQMqp_I6p@lore-desk>
-References: <20250222-en7581-pcie-pbus-csr-v3-0-e0cca1f4d394@kernel.org>
- <20250222-en7581-pcie-pbus-csr-v3-1-e0cca1f4d394@kernel.org>
- <20250223-hulking-goldfish-of-symmetry-cbfed4@krzk-bin>
+	s=arc-20240116; t=1740320359; c=relaxed/simple;
+	bh=kNKBDuIesTBaWDrZ1NvmJmMdqeLV9g4WjMA+rQ8sRK0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dOB7WHianQ5vbJV9/t9YGd0GQ/6zPE2ketQhMMyUa1EVamhC9bOqOaEYj9DLt3X1U/c1zfcBnFP2yMLH+wykz0b/BR8sblrqPzeXps9eQ6Kc5ZDazm94r5SmuF7C5fu/sbpZoSGyxdpgvDvjnwYrw7tIH8r+2WFI0LltVEx4I7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=AGl6xubp; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=SMVQm
+	XxKMe0hlDoTLh2BasHIi8/EVJ8OxJWjuErZy2c=; b=AGl6xubptnDDxWWdbhP1h
+	DbfV8ftRo1pJPeR0VOw4u7NgVbAuzNPJ07IGF8XMFZSRoNsJNkjT65eKVPM/OEEV
+	iZaZJZf6/Rwh8t89LkCLujDaHbn6k6rQjRLT76mMJ6sArFu7u+T/NOO94BJYxJi4
+	yJWZIv9CrpGgzAgj7kybK4=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wA37z1LLrtnze69OA--.39119S2;
+	Sun, 23 Feb 2025 22:18:51 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: jingoohan1@gmail.com,
+	shradha.t@samsung.com
+Cc: manivannan.sadhasivam@linaro.org,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	Frank.Li@nxp.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rockswang7@gmail.com,
+	Hans Zhang <18255117159@163.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: [v5] PCI: dwc: Add the debugfs property to provide the LTSSM status of the PCIe link
+Date: Sun, 23 Feb 2025 22:18:48 +0800
+Message-Id: <20250223141848.231232-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="LboHElsNia9vOOZK"
-Content-Disposition: inline
-In-Reply-To: <20250223-hulking-goldfish-of-symmetry-cbfed4@krzk-bin>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wA37z1LLrtnze69OA--.39119S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWfGr47ur1fAFyUuryfZr1UZFb_yoWkJr4fpa
+	yrAFWFyF42vr1aya13G3W8ZF45Kan3AF1q9wsrC3yxXa4Iy3WDWrs5tw4jkr97Jr47Gr13
+	Jw13AF1kGr18J3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zK9akbUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiDxH8o2e7Jr1-hgAAs-
 
+Add the debugfs property to provide a view of the current link's LTSSM
+status from the root port device.
 
---LboHElsNia9vOOZK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  /sys/kernel/debug/dwc_pcie_<dev>/ltssm_status
 
-> On Sat, Feb 22, 2025 at 11:43:44AM +0100, Lorenzo Bianconi wrote:
-> > Introduce the mediatek,pbus-csr property for the pbus-csr syscon node
-> > available on EN7581 SoC. The airoha pbus-csr block provides a configura=
-tion
-> > interface for the PBUS controller used to detect if a given address is
-> > accessible on PCIe controller.
-> >=20
-> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > ---
-> >  .../devicetree/bindings/pci/mediatek-pcie-gen3.yaml     | 17 +++++++++=
-++++++++
-> >  1 file changed, 17 insertions(+)
-> >=20
->=20
-> You got review tag, so if you decided to skip it, this should be
-> mentioned why.
->=20
->=20
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Hans Zhang <18255117159@163.com>
+Tested-by: Niklas Cassel <cassel@kernel.org>
+---
+Changes since v4:
+https://lore.kernel.org/linux-pci/20250222143335.221168-1-18255117159@163.com/
 
-Since I modified the patch with respect to the previous version, I was thin=
-king
-you want to review it again before applying the Reviewed-by tag. Added it n=
-ow.
+- Change the return value of function dw_ltssm_sts_string from char *
+  to const char *.
+- Modify the Description of the Document.
 
-Regards,
-Lorenzo
+Changes since v3:
+https://lore.kernel.org/linux-pci/20250214144618.176028-1-18255117159@163.com/
 
->=20
-> Best regards,
-> Krzysztof
->=20
+- My v4 patch is updated to the latest based on Shradha's v7 patch.
+- Submissions based on the following v7 patches:
+https://patchwork.kernel.org/project/linux-pci/patch/20250221131548.59616-2-shradha.t@samsung.com/
+https://patchwork.kernel.org/project/linux-pci/patch/20250221131548.59616-3-shradha.t@samsung.com/
+https://patchwork.kernel.org/project/linux-pci/patch/20250221131548.59616-4-shradha.t@samsung.com/
+https://patchwork.kernel.org/project/linux-pci/patch/20250221131548.59616-5-shradha.t@samsung.com/
+https://patchwork.kernel.org/project/linux-pci/patch/20250221131548.59616-6-shradha.t@samsung.com/
 
---LboHElsNia9vOOZK
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes since v2:
+https://lore.kernel.org/linux-pci/20250206151343.26779-1-18255117159@163.com/
 
------BEGIN PGP SIGNATURE-----
+- Git pulls the latest code and fixes conflicts.
+- Do not place into sysfs node as recommended by maintainer. Shradha-based patch
+  is put into debugfs.
+- Submissions based on the following v6 patches:
+https://patchwork.kernel.org/project/linux-pci/patch/20250214105007.97582-2-shradha.t@samsung.com/
+https://patchwork.kernel.org/project/linux-pci/patch/20250214105007.97582-3-shradha.t@samsung.com/
+https://patchwork.kernel.org/project/linux-pci/patch/20250214105007.97582-4-shradha.t@samsung.com/
+https://patchwork.kernel.org/project/linux-pci/patch/20250214105007.97582-5-shradha.t@samsung.com/
 
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ7slEAAKCRA6cBh0uS2t
-rPy9AQCgBZ/Fs6+vlGg02YKCLsxEfSZgokp+F0deZxshMw9y8AEAwEhLv/Dps1LX
-LD5v1+vVobF58lYLVJoLkG/UfUOe7QA=
-=W+YN
------END PGP SIGNATURE-----
+Changes since v1:
+https://lore.kernel.org/linux-pci/20250123071326.1810751-1-18255117159@163.com/
 
---LboHElsNia9vOOZK--
+- Do not place into sysfs node as recommended by maintainer. Shradha-based patch
+  is put into debugfs.
+- Submissions based on the following v5 patches:
+https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-2-shradha.t@samsung.com/
+https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-3-shradha.t@samsung.com/
+https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-4-shradha.t@samsung.com/
+https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-5-shradha.t@samsung.com/
+---
+ Documentation/ABI/testing/debugfs-dwc-pcie    |  5 ++
+ .../controller/dwc/pcie-designware-debugfs.c  | 29 +++++++++++
+ .../pci/controller/dwc/pcie-designware-host.c | 50 +++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h  | 33 ++++++++++++
+ 4 files changed, 117 insertions(+)
+
+diff --git a/Documentation/ABI/testing/debugfs-dwc-pcie b/Documentation/ABI/testing/debugfs-dwc-pcie
+index 650a89b0511e..8245261506bc 100644
+--- a/Documentation/ABI/testing/debugfs-dwc-pcie
++++ b/Documentation/ABI/testing/debugfs-dwc-pcie
+@@ -142,3 +142,8 @@ Description:	(RW) Some lanes in the event list are lane specific events. These i
+ 		events 1) - 11) and 34) - 35).
+ 		Write lane number for which counter needs to be enabled/disabled/dumped.
+ 		Read will return the current selected lane number. Lane0 is selected by default.
++
++What:		/sys/kernel/debug/dwc_pcie_<dev>/ltssm_status
++Date:		February 2025
++Contact:	Hans Zhang <18255117159@163.com>
++Description:	(RO) Read will return the current PCIe LTSSM state in both string and raw value.
+diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+index dca1e9999113..39487bd184e1 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
++++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+@@ -533,6 +533,33 @@ static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
+ 	return ret;
+ }
+ 
++static int dwc_pcie_ltssm_status_show(struct seq_file *s, void *v)
++{
++	struct dw_pcie *pci = s->private;
++	enum dw_pcie_ltssm val;
++
++	val = dw_pcie_get_ltssm(pci);
++	seq_printf(s, "%s (0x%02x)\n", dw_ltssm_sts_string(val), val);
++
++	return 0;
++}
++
++static int dwc_pcie_ltssm_status_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, dwc_pcie_ltssm_status_show, inode->i_private);
++}
++
++static const struct file_operations dwc_pcie_ltssm_status_ops = {
++	.open = dwc_pcie_ltssm_status_open,
++	.read = seq_read,
++};
++
++static void dwc_pcie_ltssm_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
++{
++	debugfs_create_file("ltssm_status", 0444, dir, pci,
++			    &dwc_pcie_ltssm_status_ops);
++}
++
+ void dwc_pcie_debugfs_deinit(struct dw_pcie *pci)
+ {
+ 	dwc_pcie_rasdes_debugfs_deinit(pci);
+@@ -560,5 +587,7 @@ int dwc_pcie_debugfs_init(struct dw_pcie *pci)
+ 	if (ret)
+ 		dev_dbg(dev, "RASDES debugfs init failed\n");
+ 
++	dwc_pcie_ltssm_debugfs_init(pci, dir);
++
+ 	return 0;
+ }
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 2081e8c72d12..cbe9cdbde79f 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -418,6 +418,56 @@ static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
+ 	}
+ }
+ 
++const char *dw_ltssm_sts_string(enum dw_pcie_ltssm ltssm)
++{
++	const char *str;
++
++	switch (ltssm) {
++#define DW_PCIE_LTSSM_NAME(n) case n: str = #n; break
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_QUIET);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_ACT);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_ACTIVE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_COMPLIANCE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_CONFIG);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_PRE_DETECT_QUIET);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_WAIT);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LINKWD_START);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LINKWD_ACEPT);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LANENUM_WAI);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LANENUM_ACEPT);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_COMPLETE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_IDLE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_LOCK);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_SPEED);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_RCVRCFG);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_IDLE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L0);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L0S);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L123_SEND_EIDLE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L1_IDLE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L2_IDLE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L2_WAKE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DISABLED_ENTRY);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DISABLED_IDLE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DISABLED);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_ENTRY);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_ACTIVE);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_EXIT);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_EXIT_TIMEOUT);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_HOT_RESET_ENTRY);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_HOT_RESET);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ0);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ1);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ2);
++	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ3);
++	default:
++		str = "DW_PCIE_LTSSM_UNKNOWN";
++		break;
++	}
++
++	return str + strlen("DW_PCIE_LTSSM_");
++}
++
+ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 7f9807d4e5de..00c32fa1b151 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -330,9 +330,40 @@ enum dw_pcie_ltssm {
+ 	/* Need to align with PCIE_PORT_DEBUG0 bits 0:5 */
+ 	DW_PCIE_LTSSM_DETECT_QUIET = 0x0,
+ 	DW_PCIE_LTSSM_DETECT_ACT = 0x1,
++	DW_PCIE_LTSSM_POLL_ACTIVE = 0x2,
++	DW_PCIE_LTSSM_POLL_COMPLIANCE = 0x3,
++	DW_PCIE_LTSSM_POLL_CONFIG = 0x4,
++	DW_PCIE_LTSSM_PRE_DETECT_QUIET = 0x5,
+ 	DW_PCIE_LTSSM_DETECT_WAIT = 0x6,
++	DW_PCIE_LTSSM_CFG_LINKWD_START = 0x7,
++	DW_PCIE_LTSSM_CFG_LINKWD_ACEPT = 0x8,
++	DW_PCIE_LTSSM_CFG_LANENUM_WAI = 0x9,
++	DW_PCIE_LTSSM_CFG_LANENUM_ACEPT = 0xa,
++	DW_PCIE_LTSSM_CFG_COMPLETE = 0xb,
++	DW_PCIE_LTSSM_CFG_IDLE = 0xc,
++	DW_PCIE_LTSSM_RCVRY_LOCK = 0xd,
++	DW_PCIE_LTSSM_RCVRY_SPEED = 0xe,
++	DW_PCIE_LTSSM_RCVRY_RCVRCFG = 0xf,
++	DW_PCIE_LTSSM_RCVRY_IDLE = 0x10,
+ 	DW_PCIE_LTSSM_L0 = 0x11,
++	DW_PCIE_LTSSM_L0S = 0x12,
++	DW_PCIE_LTSSM_L123_SEND_EIDLE = 0x13,
++	DW_PCIE_LTSSM_L1_IDLE = 0x14,
+ 	DW_PCIE_LTSSM_L2_IDLE = 0x15,
++	DW_PCIE_LTSSM_L2_WAKE = 0x16,
++	DW_PCIE_LTSSM_DISABLED_ENTRY = 0x17,
++	DW_PCIE_LTSSM_DISABLED_IDLE = 0x18,
++	DW_PCIE_LTSSM_DISABLED = 0x19,
++	DW_PCIE_LTSSM_LPBK_ENTRY = 0x1a,
++	DW_PCIE_LTSSM_LPBK_ACTIVE = 0x1b,
++	DW_PCIE_LTSSM_LPBK_EXIT = 0x1c,
++	DW_PCIE_LTSSM_LPBK_EXIT_TIMEOUT = 0x1d,
++	DW_PCIE_LTSSM_HOT_RESET_ENTRY = 0x1e,
++	DW_PCIE_LTSSM_HOT_RESET = 0x1f,
++	DW_PCIE_LTSSM_RCVRY_EQ0 = 0x20,
++	DW_PCIE_LTSSM_RCVRY_EQ1 = 0x21,
++	DW_PCIE_LTSSM_RCVRY_EQ2 = 0x22,
++	DW_PCIE_LTSSM_RCVRY_EQ3 = 0x23,
+ 
+ 	DW_PCIE_LTSSM_UNKNOWN = 0xFFFFFFFF,
+ };
+@@ -683,6 +714,8 @@ static inline enum dw_pcie_ltssm dw_pcie_get_ltssm(struct dw_pcie *pci)
+ 	return (enum dw_pcie_ltssm)FIELD_GET(PORT_LOGIC_LTSSM_STATE_MASK, val);
+ }
+ 
++const char *dw_ltssm_sts_string(enum dw_pcie_ltssm ltssm);
++
+ #ifdef CONFIG_PCIE_DW_HOST
+ int dw_pcie_suspend_noirq(struct dw_pcie *pci);
+ int dw_pcie_resume_noirq(struct dw_pcie *pci);
+
+base-commit: ff202c5028a195c07b16e1a2fbb8ca6b7ba11a1c
+prerequisite-patch-id: c153d1c334b19796f686e3a143e0e4ad0c22f373
+prerequisite-patch-id: 871aa1f094627d0e0cb4c89bea577e901bbc7b6a
+prerequisite-patch-id: 54b27bf41a444283be102709e2f8a7d1fdac456a
+prerequisite-patch-id: 95d8a6c78c32f2ea79ad967c134c881f9f3e0931
+prerequisite-patch-id: 751ccbe84a18d85c2beeec19f2d1d429569960d2
+-- 
+2.25.1
+
 
