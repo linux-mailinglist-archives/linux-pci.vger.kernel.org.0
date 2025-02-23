@@ -1,131 +1,312 @@
-Return-Path: <linux-pci+bounces-22123-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22124-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDFFCA40D72
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Feb 2025 09:49:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0A20A40D7A
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Feb 2025 09:51:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9399B189B77B
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Feb 2025 08:48:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D812A189A381
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Feb 2025 08:51:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC8562F3B;
-	Sun, 23 Feb 2025 08:48:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F18A61FCD0C;
+	Sun, 23 Feb 2025 08:51:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oa1RRCeT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VMH8nzdU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153011FF7DE
-	for <linux-pci@vger.kernel.org>; Sun, 23 Feb 2025 08:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12C81FC7CE
+	for <linux-pci@vger.kernel.org>; Sun, 23 Feb 2025 08:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740300521; cv=none; b=lhVPaarsqhW73nuiIKKyNvY1lgfSdf3/HzBpyC2LUO69QCuP48lYXTy3ZbToXYXbW/x/UY8JQ6GhPhWgmB6cDgQ+UPymAJirze/Vd3pfL0wlgsWfoySdLUgq8+ZFZ2ezoLnIHz3F0Urw3RxnSI8IeiZU4Dehs5Yz+QmTxvj/dME=
+	t=1740300698; cv=none; b=GyhiG5Af6zUo792PWMgQSb+9oMUj1zXqD8WgC4dbuHp/JqpP8Boebldua2VsB2z+GXixWtmVDS/Jiu5orRkMmfeSShfe0CTePihBrQ9ZzdOUx2XM4GenZYxMyY5C1kkI3eNDEenJ+byJyMoWr7py3sY1ZIFBZinGDIp+saFkr+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740300521; c=relaxed/simple;
-	bh=+7919dOQBB3+WgCkCin1yQ23DH3tjM2O4NIeDEogr9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DBgfqCgIPZTLWczPBxvJGiuu5W6qTouG+JD0WB5qVip4POpNDUZKEcVtlJJcKa668uu8deGNVFv5lJfLmu5UXEIhy1oPJhbYTRThZ6FnMk72W7rYKhuC7TauwTc1AEczVrmxLChIqb9llA2YForAS3iH6qWi4jjuy9RFqcoZRDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Oa1RRCeT; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2f9b9c0088fso5932898a91.0
-        for <linux-pci@vger.kernel.org>; Sun, 23 Feb 2025 00:48:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740300519; x=1740905319; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HLG/P3HTzRFYQapMafxrub71Ti6CdsNnJQqCNZ/cZgE=;
-        b=Oa1RRCeTxcredr6ZUWzmlrXUrOIjr2Jem2fs+UR8ILBiOekN3MsUIYbTUuMNx/p69n
-         UijK5OyJiHVjIxdpWmB6rJfaI14lKkcW2nPoE2rOy5DBzOgDI8sjM9+uenGUC2H4wWde
-         KpaOHfyP2yqCDql1cENVv00DMCOAQx/iwz41PBRPTl9jctLOcEE3TgYy4p3zMKThLU32
-         p6PKWK0wXVFxdRiuBmLGv02p2usevjSM9fKEpjU05J2m1kbXzoYstO+Fq2VsScYx9WF+
-         WcQrPjnun1ksznAHNwdxVI1w08sWnguJXORpC1jxfn1CwDAClsOQruYcTPEVuHkTLIBZ
-         4dFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740300519; x=1740905319;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HLG/P3HTzRFYQapMafxrub71Ti6CdsNnJQqCNZ/cZgE=;
-        b=r9mgEAHEtPnoKEv9WToJufv3WZ4qdgWjgDstrcoaSG3VKHeSEqY6fwbknMuanUDpe3
-         3unHewzAPdhYNb+RrY+Jc1GX4R8qkcZbzeztO3qhJ5HAG2APg+AtyAfvCaBoaql4OqOB
-         s4TtZxAKf9lKca+oMVmoJYMeDd2twybKKmbaB5SMkgPj31XP6P347+Szw2AGaSCAOjH1
-         eecUwfLI+hhp+2jrSqOzfq7PnJXlS6lf7JJS67PtD3Dx0csh0P496uhJs3mRfRc7P9lg
-         ctBhUEAIRjeevXnD4Jj4W0RoFROymABS9yHRb/3W94fz4EA9XpS3sGmedv4mIQ/g0J37
-         9i7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUV1ON6VVhQFEqVrSFX8SzwKVlULc7Ud5bSvjouHcWdubxEWGqzJEwgwNOrE0QWNbLpwuprn1JWaFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzH6/Za5RK4D07p1GjmXgic41TULNavV0ODdk2jFEL5f/z+5aw
-	2pLBLOykF5Fwxyej8x/sd1MYbI6EqfU9AjWjvNpwM5zdUMrmiSMknb4WbHpxzw==
-X-Gm-Gg: ASbGnctaRMtfd9u3EaPtZVFeoEyVayEAdljm5oo9iF41JAV+kAn4BE56uFNOfvSPA4u
-	xUtfEoY+Jcl09wOtaKs47IXp3DQ4qJdShcRGvdVnoY/DTRQ5Pej+9wLI/iwKEd7UGwUcuOeglBL
-	ReABgk+pVBFGSMbdI6GbiUI5O8pqR2yU3NbZwE3RlcovFIF9T1qj/VLMRb2Zt513ufrAl4EAxZP
-	xymieputAjKFWyj9l3YZyzUFfurevoJgwnPhkhDzcV9R6of6lfyQTgQz6dZmpfXb4nX8iG5Cfog
-	gglTKHVwc5cUQDSOfGN21wCStjVbkShR7Zy3zeM=
-X-Google-Smtp-Source: AGHT+IH0QRS5i9KETlG0jB7271dzRb/nop2A5bMYeO5KDf0OX2iwJSjXN/fAmn1BxWyAb/yXgomY4g==
-X-Received: by 2002:a17:90b:52cf:b0:2fa:6793:e860 with SMTP id 98e67ed59e1d1-2fccbfbc738mr24120841a91.0.1740300519252;
-        Sun, 23 Feb 2025 00:48:39 -0800 (PST)
-Received: from thinkpad ([220.158.156.216])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fceb10fab1sm4240658a91.32.2025.02.23.00.48.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2025 00:48:38 -0800 (PST)
-Date: Sun, 23 Feb 2025 14:18:33 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Mrinmay Sarkar <quic_msarkar@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/8] PCI: dwc: pcie-qcom-ep: enable EP support for
- SAR2130P
-Message-ID: <20250223084833.xdckixxfezlwovgw@thinkpad>
-References: <20250221-sar2130p-pci-v3-0-61a0fdfb75b4@linaro.org>
- <20250221-sar2130p-pci-v3-6-61a0fdfb75b4@linaro.org>
- <20250222165038.eyausqiccrivkv5t@thinkpad>
- <48B09581-F4AA-4196-8445-1E02041915AF@linaro.org>
+	s=arc-20240116; t=1740300698; c=relaxed/simple;
+	bh=vR4zBBxGkT0B06lkSNkMJmdXWx+YQRf8sNlkQ8bblsg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SEeyAkgfb7YpEZrQo4O6PpBR7vW69Knsw+xdE32p/r+GLWVZcoBsp9tavNsZliO/tZ+OE5UNlkQ7i+FN6N/Nn/+SASkNuK8y3PGGxFxYp9F2gCSj4nlCd9jMLfEHwkP0a2Y08VP1CLf1hMCsxc9s+tZGFTiFtOGl3L025SAGZ9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VMH8nzdU; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740300697; x=1771836697;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=vR4zBBxGkT0B06lkSNkMJmdXWx+YQRf8sNlkQ8bblsg=;
+  b=VMH8nzdUi4QDm7b11wvMRtAGRtFd+2ej9Ob+LorFUwUAn2gdBuIzThYT
+   3+IRkCUzJY8WsHxwhVE5wGp8ypAagCFH2QmBJlnwOEHUxorB4YfkUtk+K
+   EdnsFJLPTXDHwvewYqHufhag4gDtzjYvCMJejJRAQh15BQ5PFojqWCAsS
+   5wgMMrCG2Mj7BGyfAmSciwSvKJMJ6gM9oOQi4eHMKHi4+CSTsaNDkFi2V
+   P9wOhrpIPcdwgN+WIL6IXPpKrm/yaso2Czs80FY+RUfOjijDVe8Dju3Ch
+   06Q028Ui9tnFZyyBaCRKaVoaihNoI+DbGjLkO/e0AVzKJ/fI2mFgXz0ZM
+   A==;
+X-CSE-ConnectionGUID: x7v3+/NbROydoyxJ2YQtxQ==
+X-CSE-MsgGUID: AAE+zjvfT7irTRQEFKSINg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11353"; a="51284691"
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="51284691"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 00:51:36 -0800
+X-CSE-ConnectionGUID: kkf1OLHkRfm78e5zGBj6gA==
+X-CSE-MsgGUID: eoH5LFNWQzG9e7Sf+vGi2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="115741266"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa006.jf.intel.com with ESMTP; 23 Feb 2025 00:51:35 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tm7i0-0007E3-23;
+	Sun, 23 Feb 2025 08:51:32 +0000
+Date: Sun, 23 Feb 2025 16:51:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:dt-bindings] BUILD SUCCESS
+ 396ecc1626d45496e283fe139afd0ed89b9f02cd
+Message-ID: <202502231654.hRj5IynI-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <48B09581-F4AA-4196-8445-1E02041915AF@linaro.org>
+Content-Type: text/plain; charset=us-ascii
 
-On Sat, Feb 22, 2025 at 08:06:02PM +0200, Dmitry Baryshkov wrote:
-> On 22 February 2025 18:50:38 EET, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
-> >On Fri, Feb 21, 2025 at 05:52:04PM +0200, Dmitry Baryshkov wrote:
-> >> Enable PCIe endpoint support for the Qualcomm SAR2130P platform. It is
-> >> impossible to use fallback compatible to any other platform since
-> >> SAR2130P uses slightly different set of clocks.
-> >> 
-> >
-> >Still, why do you want the compatible to be added to the driver? It shall be
-> >defined in the binding with the respective clock difference. Driver should just
-> >work with the fallback compatible.
-> 
-> Well, per my understanding (or according  to my feeling) different set of clocks means that they are not completely compatible. An Ack from DT maintainers supports this.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
+branch HEAD: 396ecc1626d45496e283fe139afd0ed89b9f02cd  dt-bindings: PCI: Convert fsl,mpc83xx-pcie to YAML
 
-Hmm. Thinking more, I tend to agree. Let's be as it is.
+Unverified Warning (likely false positive, kindly check if interested):
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+    arch/arm64/boot/dts/qcom/ipq9574-rdp418.dtb: pci@28000000: reg-names:0: 'parf' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp418.dtb: pci@28000000: reg-names:1: 'dbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp418.dtb: pci@28000000: reg-names:2: 'elbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp418.dtb: pci@28000000: reg-names:3: 'atu' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp418.dtb: pcie@10000000: reg-names:0: 'parf' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp418.dtb: pcie@10000000: reg-names:1: 'dbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp418.dtb: pcie@10000000: reg-names:2: 'elbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp418.dtb: pcie@10000000: reg-names:3: 'atu' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp433.dtb: pci@28000000: reg-names:0: 'parf' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp433.dtb: pci@28000000: reg-names:1: 'dbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp433.dtb: pci@28000000: reg-names:2: 'elbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp433.dtb: pci@28000000: reg-names:3: 'atu' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp433.dtb: pcie@10000000: reg-names:0: 'parf' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp433.dtb: pcie@10000000: reg-names:1: 'dbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp433.dtb: pcie@10000000: reg-names:2: 'elbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp433.dtb: pcie@10000000: reg-names:3: 'atu' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: pci@28000000: reg-names:0: 'parf' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: pci@28000000: reg-names:1: 'dbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: pci@28000000: reg-names:2: 'elbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: pci@28000000: reg-names:3: 'atu' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: pcie@10000000: reg-names:0: 'parf' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: pcie@10000000: reg-names:1: 'dbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: pcie@10000000: reg-names:2: 'elbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: pcie@10000000: reg-names:3: 'atu' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp453.dtb: pci@28000000: reg-names:0: 'parf' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp453.dtb: pci@28000000: reg-names:1: 'dbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp453.dtb: pci@28000000: reg-names:2: 'elbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp453.dtb: pci@28000000: reg-names:3: 'atu' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp453.dtb: pcie@10000000: reg-names:0: 'parf' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp453.dtb: pcie@10000000: reg-names:1: 'dbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp453.dtb: pcie@10000000: reg-names:2: 'elbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp453.dtb: pcie@10000000: reg-names:3: 'atu' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp454.dtb: pci@28000000: reg-names:0: 'parf' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp454.dtb: pci@28000000: reg-names:1: 'dbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp454.dtb: pci@28000000: reg-names:2: 'elbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp454.dtb: pci@28000000: reg-names:3: 'atu' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp454.dtb: pcie@10000000: reg-names:0: 'parf' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp454.dtb: pcie@10000000: reg-names:1: 'dbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp454.dtb: pcie@10000000: reg-names:2: 'elbi' was expected
+    arch/arm64/boot/dts/qcom/ipq9574-rdp454.dtb: pcie@10000000: reg-names:3: 'atu' was expected
 
-- Mani
+Warning ids grouped by kconfigs:
 
--- 
-மணிவண்ணன் சதாசிவம்
+recent_errors
+|-- arm64-randconfig-051-20250222
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp418.dtb:pci:reg-names:atu-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp418.dtb:pci:reg-names:elbi-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp418.dtb:pci:reg-names:parf-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp418.dtb:pcie:reg-names:atu-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp418.dtb:pcie:reg-names:dbi-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp418.dtb:pcie:reg-names:parf-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp433.dtb:pci:reg-names:elbi-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp433.dtb:pcie:reg-names:elbi-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp433.dtb:pcie:reg-names:parf-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp449.dtb:pci:reg-names:dbi-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp449.dtb:pcie:reg-names:atu-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp449.dtb:pcie:reg-names:dbi-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp449.dtb:pcie:reg-names:parf-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp453.dtb:pci:reg-names:elbi-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp453.dtb:pcie:reg-names:atu-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp453.dtb:pcie:reg-names:elbi-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp453.dtb:pcie:reg-names:parf-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp454.dtb:pci:reg-names:dbi-was-expected
+|   |-- arch-arm64-boot-dts-qcom-ipq9574-rdp454.dtb:pci:reg-names:parf-was-expected
+|   `-- arch-arm64-boot-dts-qcom-ipq9574-rdp454.dtb:pcie:reg-names:dbi-was-expected
+`-- arm64-randconfig-052-20250222
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp418.dtb:pci:reg-names:dbi-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp418.dtb:pcie:reg-names:elbi-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp433.dtb:pci:reg-names:atu-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp433.dtb:pci:reg-names:dbi-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp433.dtb:pci:reg-names:parf-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp433.dtb:pcie:reg-names:atu-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp433.dtb:pcie:reg-names:dbi-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp449.dtb:pci:reg-names:atu-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp449.dtb:pci:reg-names:elbi-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp449.dtb:pci:reg-names:parf-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp449.dtb:pcie:reg-names:elbi-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp453.dtb:pci:reg-names:atu-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp453.dtb:pci:reg-names:dbi-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp453.dtb:pci:reg-names:parf-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp453.dtb:pcie:reg-names:dbi-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp454.dtb:pci:reg-names:atu-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp454.dtb:pci:reg-names:elbi-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp454.dtb:pcie:reg-names:atu-was-expected
+    |-- arch-arm64-boot-dts-qcom-ipq9574-rdp454.dtb:pcie:reg-names:elbi-was-expected
+    `-- arch-arm64-boot-dts-qcom-ipq9574-rdp454.dtb:pcie:reg-names:parf-was-expected
+
+elapsed time: 1451m
+
+configs tested: 128
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                          axs103_defconfig    gcc-13.2.0
+arc                                 defconfig    gcc-13.2.0
+arc                   randconfig-001-20250222    gcc-13.2.0
+arc                   randconfig-002-20250222    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                          ep93xx_defconfig    clang-21
+arm                            hisi_defconfig    gcc-14.2.0
+arm                         nhk8815_defconfig    clang-21
+arm                   randconfig-001-20250222    gcc-14.2.0
+arm                   randconfig-002-20250222    gcc-14.2.0
+arm                   randconfig-003-20250222    clang-16
+arm                   randconfig-004-20250222    gcc-14.2.0
+arm                         wpcm450_defconfig    gcc-14.2.0
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250222    gcc-14.2.0
+arm64                 randconfig-002-20250222    clang-21
+arm64                 randconfig-003-20250222    clang-18
+arm64                 randconfig-004-20250222    clang-21
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250222    gcc-14.2.0
+csky                  randconfig-002-20250222    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250222    clang-17
+hexagon               randconfig-002-20250222    clang-19
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250222    clang-19
+i386        buildonly-randconfig-002-20250222    gcc-12
+i386        buildonly-randconfig-003-20250222    gcc-12
+i386        buildonly-randconfig-004-20250222    clang-19
+i386        buildonly-randconfig-005-20250222    gcc-12
+i386        buildonly-randconfig-006-20250222    clang-19
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250222    gcc-14.2.0
+loongarch             randconfig-002-20250222    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                       bvme6000_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                           ci20_defconfig    clang-19
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250222    gcc-14.2.0
+nios2                 randconfig-002-20250222    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+openrisc                 simple_smp_defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250222    gcc-14.2.0
+parisc                randconfig-002-20250222    gcc-14.2.0
+parisc64                         alldefconfig    gcc-14.1.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                        cell_defconfig    gcc-14.2.0
+powerpc               mpc834x_itxgp_defconfig    clang-18
+powerpc               randconfig-001-20250222    gcc-14.2.0
+powerpc               randconfig-002-20250222    gcc-14.2.0
+powerpc               randconfig-003-20250222    gcc-14.2.0
+powerpc64             randconfig-001-20250222    gcc-14.2.0
+powerpc64             randconfig-002-20250222    clang-16
+powerpc64             randconfig-003-20250222    clang-18
+riscv                             allnoconfig    gcc-14.2.0
+riscv                               defconfig    clang-19
+riscv                 randconfig-001-20250222    clang-21
+riscv                 randconfig-002-20250222    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250222    gcc-14.2.0
+s390                  randconfig-002-20250222    clang-15
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                             espt_defconfig    gcc-14.2.0
+sh                          lboxre2_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250222    gcc-14.2.0
+sh                    randconfig-002-20250222    gcc-14.2.0
+sh                           se7619_defconfig    gcc-14.2.0
+sh                  sh7785lcr_32bit_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250222    gcc-14.2.0
+sparc                 randconfig-002-20250222    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250222    gcc-14.2.0
+sparc64               randconfig-002-20250222    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250222    gcc-12
+um                    randconfig-002-20250222    gcc-12
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250222    clang-19
+x86_64      buildonly-randconfig-002-20250222    gcc-12
+x86_64      buildonly-randconfig-003-20250222    gcc-12
+x86_64      buildonly-randconfig-004-20250222    clang-19
+x86_64      buildonly-randconfig-005-20250222    clang-19
+x86_64      buildonly-randconfig-006-20250222    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250222    gcc-14.2.0
+xtensa                randconfig-002-20250222    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
