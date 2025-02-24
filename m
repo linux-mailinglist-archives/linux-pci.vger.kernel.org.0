@@ -1,131 +1,159 @@
-Return-Path: <linux-pci+bounces-22165-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22166-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C908A416BA
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 08:57:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DE4BA416D1
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 09:01:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 83CBC1702C0
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 07:57:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9FA593B02FB
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 08:01:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15F5E24061F;
-	Mon, 24 Feb 2025 07:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9124C24168C;
+	Mon, 24 Feb 2025 08:01:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uEawLfnH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CPBqIrxD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D728A1898ED;
-	Mon, 24 Feb 2025 07:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF291E5B94
+	for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2025 08:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740383862; cv=none; b=dJJJr1PmOxlbooRdFXRbMnFreN+TewV0nvYaDryGySl1QgKPAgGuFOmYBEgHV+rzXrX6FwPkJIM7X3MYnFGbR96kclUp4h7239F8QiIoPL/uTpE8Y4cQxW9OEmtpCvZru6L4vekHPbBCOIqGQb4OC3EbvMrRVJHQe2miViewoIQ=
+	t=1740384096; cv=none; b=UBNbkv9sJ+ixQWvtscqDwIphgmPFiNj8McsdVSCafWti+Hy7SmNfiq3Pncr9yHaWqexTSkzTa18KZRyWmc8uKuAIAUA9Nxb4pE2hSwRcswNxZU20gpmpvN8MPRDDMp+GqCBbamt+7uhK6HFjdKNqrGRG0uodIgelKK7tQzd/i+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740383862; c=relaxed/simple;
-	bh=xjtGRKkld7/ydj8yliJQ0o5T5/qlMxtKbXMn/fRvbdw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G+IM9oIO/YXP5KOOAdZEisoH+iowSJiFrEMmgNGZy0EsV1sFCiVM+rB9zOhIoIMHgcZWHz0Gy2CdqXKFTSo4qV4C/r4iDfqYW4tKC6b5Z4nEtWbJ7pSEOmcyquc1UN35kko3E1PCX75QLT0YYBGb86oyI3JZUCVF3cuWzqogtIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uEawLfnH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0160DC4CEE6;
-	Mon, 24 Feb 2025 07:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740383861;
-	bh=xjtGRKkld7/ydj8yliJQ0o5T5/qlMxtKbXMn/fRvbdw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uEawLfnHWtC9vzMuDjqURQev/lEDQIVftTnCLObR0yBsCjRPjpNszlY3/vpy4Zctw
-	 g4MDCTzV0AZ/r4/cpNhLIZ6eAD7yy4TNXLsWGaV4RjI117LM8mT1wHJfY3o9jtQGfR
-	 x+nVwWhH7n/fP/1q5hD/KfFSPWXr2lkcE97PPmB0Cg/gIQAyMZU32SJEczytd3xZ4O
-	 kk2FyKl/TNErloYF5HGf29Gm8qAKcVyX3IAPWSLdN4rACcfajdhlhTVp+ysELAaGMX
-	 JqUI3fg1YtvMpA3GqiqbRm3XlxNmlZ/faq/XTn3wqT13LpgkBY9Ix6p67A9LWkMpM6
-	 DBHY9WwCIR8rg==
-Message-ID: <144202cc-057c-4a7d-852a-27e979284dd2@kernel.org>
-Date: Mon, 24 Feb 2025 08:57:34 +0100
+	s=arc-20240116; t=1740384096; c=relaxed/simple;
+	bh=c7+qy8I4aVajDJ7q8pwae9rTcGIOOfIbB3vrS74dFQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gWUsDOvKral65LTJkRQRF/eDxP6vfT4LmehlUpb115AcDoWEXeimlr013b5yEXheH9iZXfNNGojRPcqU+MUeN9YBycpeCJA4JJvTZVKgkdkH0ov1wahVoHjiYH+o+M6bwp2BVar8wtSEbXl1GAvzUYKQmksr2YMXWop2o9VRruE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CPBqIrxD; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fc1f410186so8630738a91.0
+        for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2025 00:01:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740384094; x=1740988894; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qbCbRKBT7nYUMZ7e71egOL9DxulLD66sFDSiePK/h4s=;
+        b=CPBqIrxDDRvxk/gnvGMM2UoxAvge/U4ZAbYL+4Wtnm9jPfjZfah1+C4adPJ8sz0LCy
+         cLBxz++t3S4pb5aVyL2hAuB4GpNfeRTXHb2JGNypCPaNr7w34sGBD9qrTxgnZuav2aTQ
+         dh5TGbl3iiiNo5jgw/dU6ucS97SK0h+/Y1TXolwTHmukYCx5sBLzDzp8lM3qG+UUCeMR
+         oINiLU/EDluP5CW1dGX0BYDLqA4EuvFPTYRWDRe39fcGTyagMr+zY1oO5EIJzWToTDQb
+         MZ9eXVW8WhnONuckSok59pXfl149VBTFXMAr/TIPS3+aXcFnDJLrEOMRIkDuSeoO7G72
+         g4Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740384094; x=1740988894;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qbCbRKBT7nYUMZ7e71egOL9DxulLD66sFDSiePK/h4s=;
+        b=MsaQ57K0dDa3SdMZhnKwfkJK2QOPSfa44tEFhl85rhWUaFeYVWzYPwuOzNl4ZZZQo5
+         e45lyeKym7SpI4x6IZIUp2RdYyK9NtewT+J8VyklHH0x4r/Ggw0U095AigdjMjfzzvkt
+         9dexsNZb9sKeDzFHeWPGMgAp7b2+q68xpL9QPvTQbHQv+rwdTPOIg+FlFzOWTrzAaez1
+         YfpmHZ+lCK92oE+r7xpUCp7k8/csRHRJKM0mg0bBvhI0+VvFMDzL12YnMYq4vN0GLnCh
+         G22DfSCUlDW1PmhvR4rdD4zsjvDcRiQWSaIXm5+gVz2pmR82fphxDOT6xXN06AMT/P89
+         CzaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEUBPH2lUVnzz2U40pvcjvTCkW8eY13JMJMldYthXlfm3iI7cUY0TigafyXzAMdibEHWcwuF94jgk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8Zz+o9KR5OfYmsjuoduhKV3rXFd9hnoNcKqFiEMNVuM0ruhSC
+	+sgPMOBi1fQuF/1r145jIe0SYTvB4wcnqrnqTyytmFDylUrJjlqVGBpBE78MXA==
+X-Gm-Gg: ASbGncvH0YR3qOfvWALc+aXcapW8JMiSw1sjcBQA2nnxLj3d2g8a3bAObmZIvq90Hm8
+	dcAnPpjF+UKWFABbPsJoa7MnxBHrANo7fU7Scr6RF6m0WC4NjOY82mq4tj38G0KQYmTm5XvPsyG
+	ASiG//Mw8HVWWC9Vi7WQcj4QQmUWG8Im8C1GyPkRpFQhOdYmEtS3Kyj+ovPy05oFKesybky703E
+	YGGCquj0akOQuP8nfQEHKgU0t4gWlleC0OZRrU1zBH+5m7o5niIC3ErGAg7YJtvjVHfXObYJ9AD
+	loyoRVMPOj+28zo9dnNj/uQ7mflL+Tuwz1uZ
+X-Google-Smtp-Source: AGHT+IFSJRHQaoas4hBith0wVUqSgTYRtfPMiQmQRzahw7+ResAWhqCfmrXX0fr8xkSBMMUEpNn5Tg==
+X-Received: by 2002:a17:90b:350e:b0:2fa:2133:bc87 with SMTP id 98e67ed59e1d1-2fccc1172demr27937034a91.6.1740384094186;
+        Mon, 24 Feb 2025 00:01:34 -0800 (PST)
+Received: from thinkpad ([36.255.17.162])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fceb09f7fesm5736053a91.43.2025.02.24.00.01.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 00:01:33 -0800 (PST)
+Date: Mon, 24 Feb 2025 13:31:29 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Kevin Xie <kevin.xie@starfivetech.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Minda Chen <minda.chen@starfivetech.com>,
+	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
+ IRQ handling
+Message-ID: <20250224080129.zm7fvxermgeyycav@thinkpad>
+References: <20250208140110.2389-1-linux.amoon@gmail.com>
+ <20250210174400.b63bhmtkuqhktb57@thinkpad>
+ <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
+ <20250214060935.cgnc436upawnfzn6@thinkpad>
+ <CANAwSgTWa9gwpPhVCYzJM5BL5wUkpB4eyDtX+Vs3SX3a9541wA@mail.gmail.com>
+ <CANAwSgRvT-Mqj3XPrME6oKhYmnCUZLnwHfFHmSL=PK+xVLHAqw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>, bhelgaas@google.com,
- lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, michal.simek@amd.com,
- bharat.kumar.gogada@amd.com, jingoohan1@gmail.com
-References: <20250224073117.767210-1-thippeswamy.havalige@amd.com>
- <20250224073117.767210-4-thippeswamy.havalige@amd.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250224073117.767210-4-thippeswamy.havalige@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANAwSgRvT-Mqj3XPrME6oKhYmnCUZLnwHfFHmSL=PK+xVLHAqw@mail.gmail.com>
 
-On 24/02/2025 08:31, Thippeswamy Havalige wrote:
-> Add support for AMD MDB (Multimedia DMA Bridge) IP core as Root Port.
-> 
-> The Versal2 devices include MDB Module. The integrated block for MDB along
-> with the integrated bridge can function as PCIe Root Port controller at
-> Gen5 32-Gb/s operation per lane.
-> 
-> Bridge supports error and legacy interrupts and are handled using platform
-> specific interrupt line in Versal2.
-> 
-> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes:
-> | https://lore.kernel.org/oe-kbuild-all/202502191741.xrVmEAG4-lkp@intel.
-> | com/
-Tags never start with | and are not wrapped. But anyway, robot did not
-report this patch. Drop these.
+On Thu, Feb 20, 2025 at 03:53:31PM +0530, Anand Moon wrote:
 
-Best regards,
-Krzysztof
+[...]
+
+> Following the change fix this warning in a kernel memory leak.
+> Would you happen to have any comments on these changes?
+> 
+> diff --git a/drivers/pci/controller/plda/pcie-plda-host.c
+> b/drivers/pci/controller/plda/pcie-plda-host.c
+> index 4153214ca410..5a72a5a33074 100644
+> --- a/drivers/pci/controller/plda/pcie-plda-host.c
+> +++ b/drivers/pci/controller/plda/pcie-plda-host.c
+> @@ -280,11 +280,6 @@ static u32 plda_get_events(struct plda_pcie_rp *port)
+>         return events;
+>  }
+> 
+> -static irqreturn_t plda_event_handler(int irq, void *dev_id)
+> -{
+> -       return IRQ_HANDLED;
+> -}
+> -
+>  static void plda_handle_event(struct irq_desc *desc)
+>  {
+>         struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
+> @@ -454,13 +449,10 @@ int plda_init_interrupts(struct platform_device *pdev,
+> 
+>                 if (event->request_event_irq)
+>                         ret = event->request_event_irq(port, event_irq, i);
+> -               else
+> -                       ret = devm_request_irq(dev, event_irq,
+> -                                              plda_event_handler,
+> -                                              0, NULL, port);
+
+This change is not related to the memleak. But I'd like to have it in a separate
+patch since this code is absolutely not required, rather pointless.
+
+> 
+>                 if (ret) {
+>                         dev_err(dev, "failed to request IRQ %d\n", event_irq);
+> +                       irq_dispose_mapping(event_irq);
+
+So the issue overall is that the 'devm_request_irq' fails on your platform
+because the interrupts are not defined in DT and then the IRQ is not disposed in
+the error path?
+
+In that case, none of the error paths below for_each_set_bit() loop is disposing
+the IRQs. Also, calling 'irq_dispose_mapping()' only once is not going to
+dispose all mappings that were created before in the loop.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
