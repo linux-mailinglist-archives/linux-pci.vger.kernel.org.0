@@ -1,156 +1,182 @@
-Return-Path: <linux-pci+bounces-22212-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22213-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D60E9A423DD
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 15:49:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA646A425D1
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 16:14:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E2E3A18918E1
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 14:43:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 28F573B0223
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 15:00:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E18861C6FE5;
-	Mon, 24 Feb 2025 14:42:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D552714D28C;
+	Mon, 24 Feb 2025 15:00:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjd90I9/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eImADhw7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09E938DD8;
-	Mon, 24 Feb 2025 14:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D161282F0;
+	Mon, 24 Feb 2025 15:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740408122; cv=none; b=XCHQBJGvGZIwf+UFHt43LCJ8KRkHcnsc/dgWP71k5bVRki79A9HlocCy7FzTY82l00GzBoj3SKc/B3aID1SlLWpEGwaRkAWB6v3iCEmYGRWcILj+rY/2Zgs6R9MIQV6DyBYYhUhFNx4YVXrZhX0JlWz1c2F4/fm9XWLZ5z6ROWQ=
+	t=1740409213; cv=none; b=TydejOLRhrfW2swnZNLapkfBr1O3K1PAR6LNOR/sxVyJMQSX2bF5PEUs/5goXj4zSTamRr0b7GBE55/QWl8Y2NF35Fq+b91NB9FMvD7jsb0NOoVITqLKjsndXinpzPNUCFLXKyOjdIqq+iheZy/vAODXl+0xff4iRVYi1c+nUUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740408122; c=relaxed/simple;
-	bh=C82abNrH3ZcypYfQQ4nCqd4+THVXdsD+JjQgHjKZk+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OhuqB8hsvGuW5vnSuGnhmiGaDxKUDUW6zYqhQunm+kmxam1rWKHQj1RomWRKy7C6sZ41mjo+g9zovMsxMbIy04lM9hSpRiodepUdpudb7ey6aFm7IHXffyaZ1GN5YPQsuIFi5NthLE4UwKetr6RY4TLDeluGlwNdmjkfQzI9vHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjd90I9/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DB43C4CEE8;
-	Mon, 24 Feb 2025 14:41:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740408122;
-	bh=C82abNrH3ZcypYfQQ4nCqd4+THVXdsD+JjQgHjKZk+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cjd90I9/+wL8z2KK+BOjI9NRv5U8HB+KR3n65ZXqDM5qGx/Rcsy5rrXI7JtVb7r0h
-	 Fhmn7H6CtBCqBolOyRpzoZobWV1lZj+0zS2y+eULpllbYd6k5wXtCLI2h5iZIm0yKE
-	 PijRg7ZpUCUnO1n2jhb0kpWI4Y4ScVWaNMPw+yBvlFLuCWNWdmPIkmWHeRBxKijDG6
-	 +Tdi7Wyjt6k0JhhQUSd66kOsW2EMb7PUwZONeY9bos6MJXjrfZCC4LRbMXmMOmCHlX
-	 +38k9pEld41DUDfDsJSXwvTDRDzgIufun8/DHpJ9kwTizCji6zV+RG/F4mcqe3kVMG
-	 a3ofzWT4ovxQw==
-Date: Mon, 24 Feb 2025 20:11:55 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Kevin Xie <kevin.xie@starfivetech.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Minda Chen <minda.chen@starfivetech.com>,
-	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
- IRQ handling
-Message-ID: <20250224144155.omzrmls7hpjqw6yl@thinkpad>
-References: <20250208140110.2389-1-linux.amoon@gmail.com>
- <20250210174400.b63bhmtkuqhktb57@thinkpad>
- <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
- <20250214060935.cgnc436upawnfzn6@thinkpad>
- <CANAwSgTWa9gwpPhVCYzJM5BL5wUkpB4eyDtX+Vs3SX3a9541wA@mail.gmail.com>
- <CANAwSgRvT-Mqj3XPrME6oKhYmnCUZLnwHfFHmSL=PK+xVLHAqw@mail.gmail.com>
- <20250224080129.zm7fvxermgeyycav@thinkpad>
- <CANAwSgTsp19ri5SYYtD+VOYgBLYg5UqvGRrtNTXOWw7umxGCQg@mail.gmail.com>
- <20250224115452.micfqctwjkt6gwrs@thinkpad>
- <CANAwSgSdEr0X0F1AFAUfJoEjT1a63nj5Ar-ZfmehfhnE0=v+CA@mail.gmail.com>
+	s=arc-20240116; t=1740409213; c=relaxed/simple;
+	bh=Q2sCY+UOVqT5oQg+ce4z7pL1L23zo2lBGkRIUVaef0M=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=V84FDgO9bjh1cQbOGWvc15alvMlJtZjtG9gYmAdGhGYLszq/zppV1RGPqbDHW+83YHa2T72ABZweT/1TziB3V4A4vPzZ+ph4gzRMma/vMrYb2Ur9To0uLGN5uqA7d9rW35tMo7CgVYl5j6/7CBnFTtYrQRti01frt30JilEb6gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eImADhw7; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740409212; x=1771945212;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Q2sCY+UOVqT5oQg+ce4z7pL1L23zo2lBGkRIUVaef0M=;
+  b=eImADhw7yYaA65hErspMQ8w2UxhJRDipvEK8++23uhYQKFnGsU0ZiRy0
+   l1cmDhu/HsCSfysEK8y15fmHGEG2XCuTCVvA8zaXIITbW5PiQXj2lqDOD
+   sppSVXBXLjehdKG/73prEyKcDLtkGP6dVCj7V9ZBq930QtFPkFu8B7OAU
+   1Qz9+VrFZLWa0vKUSVpUr+zSwn5Kx30BXUin38xb/JZ2+50S0c8Ijaj5R
+   bXJESYFxqILFvuj8d9uzOVjrSJywIibeeXN3w6Gm/+51ULSKrS/aPECse
+   7m5OA2cSNy+LeL3FfFP+xlzkrAKwttV55nHjBMZmFM4iHYX7DNaaROcNb
+   w==;
+X-CSE-ConnectionGUID: IaSlxWLISGe5s1cX+pjoSQ==
+X-CSE-MsgGUID: c/iyyiExTge8On/qb5fhHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="41044333"
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="41044333"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:00:11 -0800
+X-CSE-ConnectionGUID: wiX6Aj1QQm+vGu/wnLyCMQ==
+X-CSE-MsgGUID: RMIyOFcUQkid03ws0vvPYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="116707650"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.233])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:00:06 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 24 Feb 2025 17:00:03 +0200 (EET)
+To: Feng Tang <feng.tang@linux.alibaba.com>
+cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Liguang Zhang <zhangliguang@linux.alibaba.com>, 
+    Guanghui Feng <guanghuifeng@linux.alibaba.com>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, 
+    Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/4] PCI/portdrv: Add necessary wait for disabling
+ hotplug events
+In-Reply-To: <20250224034500.23024-3-feng.tang@linux.alibaba.com>
+Message-ID: <abb50795-df83-511a-8850-cdf30f187935@linux.intel.com>
+References: <20250224034500.23024-1-feng.tang@linux.alibaba.com> <20250224034500.23024-3-feng.tang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANAwSgSdEr0X0F1AFAUfJoEjT1a63nj5Ar-ZfmehfhnE0=v+CA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Feb 24, 2025 at 07:33:37PM +0530, Anand Moon wrote:
-> Hi Manivannan
+On Mon, 24 Feb 2025, Feng Tang wrote:
+
+> There was problem reported by firmware developers that they received
+> two PCIe hotplug commands in very short intervals on an ARM server,
+> which doesn't comply with PCIe spec, and broke their state machine and
+> work flow. According to PCIe 6.1 spec, section 6.7.3.2, software needs
+> to wait at least 1 second for the command-complete event, before
+> resending the command or sending a new command.
 > 
-> On Mon, 24 Feb 2025 at 17:24, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Mon, Feb 24, 2025 at 03:38:29PM +0530, Anand Moon wrote:
-> > > Hi Manivannan
-> > >
-> > > On Mon, 24 Feb 2025 at 13:31, Manivannan Sadhasivam
-> > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > >
-> > > > On Thu, Feb 20, 2025 at 03:53:31PM +0530, Anand Moon wrote:
-> > > >
-> > > > [...]
-> > > >
-> > > > > Following the change fix this warning in a kernel memory leak.
-> > > > > Would you happen to have any comments on these changes?
-> > > > >
-> > > > > diff --git a/drivers/pci/controller/plda/pcie-plda-host.c
-> > > > > b/drivers/pci/controller/plda/pcie-plda-host.c
-> > > > > index 4153214ca410..5a72a5a33074 100644
-> > > > > --- a/drivers/pci/controller/plda/pcie-plda-host.c
-> > > > > +++ b/drivers/pci/controller/plda/pcie-plda-host.c
-> > > > > @@ -280,11 +280,6 @@ static u32 plda_get_events(struct plda_pcie_rp *port)
-> > > > >         return events;
-> > > > >  }
-> > > > >
-> > > > > -static irqreturn_t plda_event_handler(int irq, void *dev_id)
-> > > > > -{
-> > > > > -       return IRQ_HANDLED;
-> > > > > -}
-> > > > > -
-> > > > >  static void plda_handle_event(struct irq_desc *desc)
-> > > > >  {
-> > > > >         struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
-> > > > > @@ -454,13 +449,10 @@ int plda_init_interrupts(struct platform_device *pdev,
-> > > > >
-> > > > >                 if (event->request_event_irq)
-> > > > >                         ret = event->request_event_irq(port, event_irq, i);
-> > > > > -               else
-> > > > > -                       ret = devm_request_irq(dev, event_irq,
-> > > > > -                                              plda_event_handler,
-> > > > > -                                              0, NULL, port);
-> > > >
-> > > > This change is not related to the memleak. But I'd like to have it in a separate
-> > > > patch since this code is absolutely not required, rather pointless.
-> > > >
-> > > Yes, remove these changes to fix the memory leak issue I observed.
-> > >
-> >
-> > Sorry, I don't get you. This specific code change of removing 'devm_request_irq'
-> > is not supposed to fix memleak.
-> >
-> > If you are seeing the memleak getting fixed because of it, then something is
-> > wrong with the irq implementation. You need to figure it out.
+> In the failure case, the first PCIe hotplug command firmware received
+> is from get_port_device_capability(), which sends command to disable
+> PCIe hotplug interrupts without waiting for its completion, and the
+> second command comes from pcie_enable_notification() of pciehp driver,
+> which enables hotplug interrupts again.
 > 
-> Declaring request_event_irq in the host controller facilitates the
-> creation of a dedicated IRQ event handler.
-> In its absence, a dummy devm_request_irq was employed, but this
-> resulted in unhandled IRQs and subsequent memory leaks.
+> Fix it by adding the necessary wait to comply with PCIe spec.
+> 
+> Fixes: 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port services during port initialization")
+> Originally-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+> ---
+>  drivers/pci/pci.h          |  2 ++
+>  drivers/pci/pcie/portdrv.c | 19 +++++++++++++++++--
+>  2 files changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 4c94a589de4a..a1138ebc2689 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -760,6 +760,7 @@ static inline void pcie_ecrc_get_policy(char *str) { }
+>  void pcie_reset_lbms_count(struct pci_dev *port);
+>  int pcie_lbms_count(struct pci_dev *port, unsigned long *val);
+>  int pcie_poll_sltctl_cmd(struct pci_dev *dev, int timeout_ms);
+> +void pcie_disable_hp_interrupts_early(struct pci_dev *dev);
+>  #else
+>  static inline void pcie_reset_lbms_count(struct pci_dev *port) {}
+>  static inline int pcie_lbms_count(struct pci_dev *port, unsigned long *val)
+> @@ -770,6 +771,7 @@ static inline int pcie_poll_sltctl_cmd(struct pci_dev *dev, int timeout_ms)
+>  {
+>  	return 0;
+>  }
+> +static inline void pcie_disable_hp_interrupts_early(struct pci_dev *dev) {}
+>  #endif
+>  
+>  struct pci_dev_reset_methods {
+> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+> index bb00ba45ee51..ca4f21dff486 100644
+> --- a/drivers/pci/pcie/portdrv.c
+> +++ b/drivers/pci/pcie/portdrv.c
+> @@ -230,6 +230,22 @@ int pcie_poll_sltctl_cmd(struct pci_dev *dev, int timeout_ms)
+>  	return  ret;
+>  }
+>  
+> +void pcie_disable_hp_interrupts_early(struct pci_dev *dev)
+> +{
+> +	u16 slot_ctrl = 0;
 
-What do you mean by 'unhandled IRQs'? There is a dummy IRQ handler invoked to
-handle these IRQs. Even your starfive_event_handler() that you proposed was
-doing the same thing.
+Unnecessary initialization
 
-> Eliminating the dummy code eliminated the memory leak logs.
+> +
+> +	pcie_capability_read_word(dev, PCI_EXP_SLTCTL, &slot_ctrl);
+> +	/* Bail out early if it is already disabled */
+> +	if (!(slot_ctrl & (PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE)))
+> +		return;
+> +
+> +	pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> +		  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
 
-Sorry, this is not a valid justification. But as I said before, the change
-itself (removing the dummy irq handler and related code) looks good to me as I
-see no need for that. But I cannot accept it as a fix for the memleak.
+Align to (. You might need to put the bits to own lines.
 
-- Mani
+> +
+> +	if (pcie_poll_sltctl_cmd(dev, 1000))
+> +		pci_info(dev, "Timeout on disabling PCIe hot-plug interrupt\n");
+> +}
+> +
+>  /**
+>   * get_port_device_capability - discover capabilities of a PCI Express port
+>   * @dev: PCI Express port to examine
+> @@ -255,8 +271,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  		 * Disable hot-plug interrupts in case they have been enabled
+>  		 * by the BIOS and the hot-plug service driver is not loaded.
+>  		 */
+> -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> +		pcie_disable_hp_interrupts_early(dev);
+
+Doesn't calling this here delay setup for all portdrv services, not just 
+hotplug? And the delay can be relatively long.
+
+>  	}
+>  
+>  #ifdef CONFIG_PCIEAER
+> 
 
 -- 
-மணிவண்ணன் சதாசிவம்
+ i.
+
 
