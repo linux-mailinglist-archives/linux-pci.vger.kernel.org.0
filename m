@@ -1,178 +1,155 @@
-Return-Path: <linux-pci+bounces-22167-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22169-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19179A416E5
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 09:07:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A560A4174A
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 09:26:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5B4E17065B
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 08:07:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 62F3316A07A
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 08:26:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D3E1241689;
-	Mon, 24 Feb 2025 08:06:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9320778F37;
+	Mon, 24 Feb 2025 08:26:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BJRF8M03"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMrSs3GZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D06D1D90DF
-	for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2025 08:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681FA1EB3E;
+	Mon, 24 Feb 2025 08:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740384414; cv=none; b=VRz/wNj8Lx2h4x4PhYTts0SCgJepMCbEDAwoKO1MwQO/QRQ8E1LyCg0lQGoPkQF1zqlnRShpnRPgJPIxRYndXQlEfvUAE6K2uodP3+2zaCTtH7iM9MIbOqRFjB4N7zLmMTF+pNZUEiyYXx8khvgt/sPHLG+bwdqWpJr09ISh5Dk=
+	t=1740385599; cv=none; b=boh38F6flFjsHOCEXSSf3mjerH+CW1R1V6Qo3BrzsTOQW2Bt3tSKi2pjr7XsFhUq6M7Q6zqI+fnNfzeARX01N5S8E4U78qajcZH5C3ccTPoYKKDW/Usz0A6PtYle/xT2WuuUBBTMK6rdgFPpz4M+0Dv+llElk33yKGSamk4K2Hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740384414; c=relaxed/simple;
-	bh=rX0kr9FoxMFMj5Li+t2NvDWyaIZeQGbAJTkHmyg8qjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EevY7dEYbyC1WQ/OBhKOpC/pc5BgZv1hHpTEM/UAQjyoBAf3QIpXSNtVXf52WA3LFBYRrePzeZiJn9UnYYEb0+E7Kirn7hYdLEuP3T7X7ttkSt6zXubqcFqiqslB4p2wgGzMEEUd9pZE/bE1T+EUrwcGhLEoefdYgPTi31a4PfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BJRF8M03; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-220ecbdb4c2so110897835ad.3
-        for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2025 00:06:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740384411; x=1740989211; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8q33JjqIID2gxUPanrFtnNDEQuq+2F7BIt1N3kOUDpQ=;
-        b=BJRF8M03GsVSZ4MjbTBRmIVkLPw+RhoikPAaCEG/9E7eAvyMuS8bz9cxn/pUqwwGRq
-         c4vuehZDfIKkFn7PdkLqvAo2uIwf/0GsmFbGqp2YzuSLWdp1GG6H35Oebc05llo4GmgX
-         fEVtd8x27ehPJKZzuL1IXio3uCWrZdAwwc4Qd5uDMHfpyZwm6z4iR2WNXAAUQAGmXlSu
-         C/oZLqN5sueRX5ju5zuP39Jwi+dGawEWt2yBzTu55kUo+gApt8IjQRly3iBA3diAWUY1
-         QX/gL+GXAotip2XRMa7tmjJchXZ6vTeuiDeiHr0+HqzQ8qNDEFow0VPc9WzD4GFIaYeC
-         CsrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740384411; x=1740989211;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8q33JjqIID2gxUPanrFtnNDEQuq+2F7BIt1N3kOUDpQ=;
-        b=oHXbQutumq76W7XK6Pm8kf9hYvFTiWMkDwwTG5wIHcd/bhE1sVVHTBDM1BVgNpMsWg
-         AQ9n3Nzp7qP5eerjViougDyNBK2OFfbYnsGAqhe218ekLYq1NmKF7ruWrFlpSQ+sMI4B
-         gxNAxK3Fw+w6ZQkwBkkBOSPvHfRD1DWtGchdr81TjpU0Rlgn34e7duY0KeXGz6fhW7Kx
-         mIHRbimUaiSqoOw0lK2pUmHrYbvbjSwiW6EvHm5WfNFIQy92Kup1041xrdaoN56PK9TV
-         a55BFRyWzUvzVIg3JV0pBbs2wuCw/IC4nrzdBeI+Eff/kJPDsx9/P5gA1z0Dt8uwJ2WU
-         UB0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU7NvqxIDHWodjPYhNvAiFuxY43MsxqjnbPDmzd9Ud4OGiNNfNCrTa4xlrpK3knPg3M+O50dilDaXQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkzZZRZs7jPwbEMHCxY/CU7CVfNeMXedl8PaOHQwRv1RtMYuUn
-	oH+vNQx8B71D8G3IUFqtaVy25Gi0KdJXsSGtEw7cGMcvzuD8qsifMwPQRJx12g==
-X-Gm-Gg: ASbGnctJaRyp+LBNmi3SyeS9/+/rwWbhiPClD/AfSjalR4dbwBmy+fAYGmuMkwje7MN
-	RHJt1cUQAtGKSJ+ROdCiHWT/z0k54jsMIknVHDt6RwgKfXXSbXizpnXtyR/l7I6c998vqcXtPpL
-	VyvHHGKv7sVa6r9QnndseKwJF1rlMV4Q3FlzZ1NO/jZp9gxE6HDUJMwQ2kxPlwycx3H/W6/NW0X
-	z6B1/D76PfLjQFmpwTMvm5RxfM26FagRdHJ+4xLWqpeSanYnmNzJZCurhDNRW4KNCeqx00znfL1
-	q/wFybAaiJubUSMaZqnuvgoYpLilGGCQfk8V
-X-Google-Smtp-Source: AGHT+IET6pCBDcr0viuI6ieEFwCQCFyPovYrU/eJqP+MyvqJc2aeSgcyD79kTf8ygnfu6RR2t6/OwA==
-X-Received: by 2002:a17:902:e88d:b0:21d:dfae:300b with SMTP id d9443c01a7336-221a0ec46ffmr204596825ad.10.1740384410819;
-        Mon, 24 Feb 2025 00:06:50 -0800 (PST)
-Received: from thinkpad ([36.255.17.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5596115sm175105635ad.258.2025.02.24.00.06.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 00:06:50 -0800 (PST)
-Date: Mon, 24 Feb 2025 13:36:44 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, michal.simek@amd.com,
-	bharat.kumar.gogada@amd.com
-Subject: Re: [PATCH v4 2/2] PCI: xilinx-cpm: Add support for Versal Net
- CPM5NC Root Port controller
-Message-ID: <20250224080644.ldgltonirrtfzrgp@thinkpad>
-References: <20250224074143.767442-1-thippeswamy.havalige@amd.com>
- <20250224074143.767442-3-thippeswamy.havalige@amd.com>
+	s=arc-20240116; t=1740385599; c=relaxed/simple;
+	bh=A6eYd0ZNJiH0U96rIxU40Zocx4BmkNKzj1tkXN/ULnU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XRV7f4YV4mm4hovcoQldRT+U+PwrM0ndMx56OAKN4HT6MLNIcsJ+MIkMjh0BnX2YCc/aQAPZCJ/a2/N2zteE4RSr8zvdh2QdcXk74COZTUBUEvONKeu2bOajWDJGD0+YvdVY9M+OFoa8WrDHJoUw7/QheEv4espYEnGkjvuv408=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMrSs3GZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC565C4CED6;
+	Mon, 24 Feb 2025 08:26:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740385598;
+	bh=A6eYd0ZNJiH0U96rIxU40Zocx4BmkNKzj1tkXN/ULnU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TMrSs3GZpY9XHemkM67oFcNS/QKTxMttd+UqCcEEVNmMEtrCr8VlYRbwv0VaIvPN5
+	 +5YBXQTgnPjoY3p2XQ28oEiBnNdUdkxm3LWmBkIruKuDWjslTQDs/AlK4ejTXtGz5f
+	 D8/F74VcH3v58qB2X3U/0KeJPr4uZe8uWltiqnOV5UBIKOFtZ2LGkmDZ/9mXCm7q8Y
+	 UwmeXQmhwSKxXhDmR4E21EZOR0MgEjCjku09ShTmN2qfsufPz8/6+SXO5vTnqXEW+l
+	 W+HW6N5BikTllpMAoJ87bHgHv0gaUl9ulKs7GyL9wtBeHNbvNyVatu1i1Qd8zgCn/z
+	 dW9iHbeCIr0dg==
+Message-ID: <79809c37-84d4-42d6-ab93-9a9d29c687bf@kernel.org>
+Date: Mon, 24 Feb 2025 09:26:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250224074143.767442-3-thippeswamy.havalige@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: mediatek-gen3: Add
+ mediatek,pbus-csr phandle array property
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Ryder Lee <ryder.lee@mediatek.com>,
+ Jianjun Wang <jianjun.wang@mediatek.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+References: <20250222-en7581-pcie-pbus-csr-v3-0-e0cca1f4d394@kernel.org>
+ <20250222-en7581-pcie-pbus-csr-v3-1-e0cca1f4d394@kernel.org>
+ <20250223-hulking-goldfish-of-symmetry-cbfed4@krzk-bin>
+ <Z7slEJgCQMqp_I6p@lore-desk>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Z7slEJgCQMqp_I6p@lore-desk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 24, 2025 at 01:11:43PM +0530, Thippeswamy Havalige wrote:
-> The Versal Net ACAP (Adaptive Compute Acceleration Platform) devices
-> incorporate the Coherency and PCIe Gen5 Module, specifically the
-> Next-Generation Compact Module (CPM5NC).
+On 23/02/2025 14:39, Lorenzo Bianconi wrote:
+>> On Sat, Feb 22, 2025 at 11:43:44AM +0100, Lorenzo Bianconi wrote:
+>>> Introduce the mediatek,pbus-csr property for the pbus-csr syscon node
+>>> available on EN7581 SoC. The airoha pbus-csr block provides a configuration
+>>> interface for the PBUS controller used to detect if a given address is
+>>> accessible on PCIe controller.
+>>>
+>>> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+>>> ---
+>>>  .../devicetree/bindings/pci/mediatek-pcie-gen3.yaml     | 17 +++++++++++++++++
+>>>  1 file changed, 17 insertions(+)
+>>>
+>>
+>> You got review tag, so if you decided to skip it, this should be
+>> mentioned why.
+>>
+>>
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> The integrated CPM5NC block, along with the built-in bridge, can function
-> as a PCIe Root Port & supports the PCIe Gen5 protocol with data transfer
-> rates of up to 32 GT/s, capable of supporting up to a x16 lane-width
-> configuration.
-> 
-> Bridge errors are managed using a specific interrupt line designed for
-> CPM5N. INTx interrupt support is not available.
-> 
-> Currently in this commit platform specific Bridge errors support is not
-> added.
-> 
-> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> Since I modified the patch with respect to the previous version, I was thinking
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+I know
 
-One comment below which is not related to *this* patch, but should be fixed
-separately (ideally before this patch).
+> you want to review it again before applying the Reviewed-by tag. Added it now.
+That was not my comment. I commented that you must explicitly say that
+you dropped someone's tag.
 
-> ---
-> Changes in v2:
-> - Update commit message.
-> Changes in v3:
-> - Address review comments.
-> ---
->  drivers/pci/controller/pcie-xilinx-cpm.c | 40 +++++++++++++++++-------
->  1 file changed, 29 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-> index 81e8bfae53d0..a0815c5010d9 100644
-> --- a/drivers/pci/controller/pcie-xilinx-cpm.c
-> +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-> @@ -84,6 +84,7 @@ enum xilinx_cpm_version {
->  	CPM,
->  	CPM5,
->  	CPM5_HOST1,
-> +	CPM5NC_HOST,
->  };
->  
->  /**
-> @@ -478,6 +479,9 @@ static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
->  {
->  	const struct xilinx_cpm_variant *variant = port->variant;
->  
-> +	if (variant->version != CPM5NC_HOST)
-> +		return;
-> +
->  	if (cpm_pcie_link_up(port))
->  		dev_info(port->dev, "PCIe Link is UP\n");
->  	else
-> @@ -578,16 +582,18 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
->  
->  	port->dev = dev;
->  
-> -	err = xilinx_cpm_pcie_init_irq_domain(port);
-> -	if (err)
-> -		return err;
-> +	port->variant = of_device_get_match_data(dev);
-> +
-> +	if (port->variant->version != CPM5NC_HOST) {
-> +		err = xilinx_cpm_pcie_init_irq_domain(port);
-> +		if (err)
-> +			return err;
-> +	}
->  
->  	bus = resource_list_first_type(&bridge->windows, IORESOURCE_BUS);
->  	if (!bus)
->  		return -ENODEV;
+And docs clearly ask for that:
 
-Here, xilinx_cpm_free_irq_domains() should be called in the error path.
+"Usually removal of someone's Tested-by or Reviewed-by tags should be
+mentioned in the patch changelog (after the '---' separator)."
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Best regards,
+Krzysztof
 
