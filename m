@@ -1,191 +1,190 @@
-Return-Path: <linux-pci+bounces-22187-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22188-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65580A41A66
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 11:12:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15162A41C13
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 12:06:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8AFBF3A588C
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 10:08:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C4E3188722E
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 11:05:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58A00245037;
-	Mon, 24 Feb 2025 10:08:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 983D5255E57;
+	Mon, 24 Feb 2025 11:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3eNsTRc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CL4ZQn1R"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88993197A8B;
-	Mon, 24 Feb 2025 10:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062FC2566EF
+	for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2025 11:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740391730; cv=none; b=Ab38uH/ANJ/fxM76Iq1ZO2IJnG/JnV7PuEca8ntAzfrGd3mSfFv+a/8uUzNAOTcASK5btGqLck1UvRJLWQ0mNyREfj2m+9RB8/Flmyt5O/L5lrdr8KmPVlJaf3WvyWe2f2/H7J2IuvEdYXVWp4t7B3tMyIO4yzJFl0bHHYC0hFY=
+	t=1740395065; cv=none; b=GteKGYVhAtQQ0Zmjel53NBX8pUuI6IKiGkRixdamCAlTM8gjyxzjTYpITqLMpTyj64nsU+yTG7Wct8npLF8PfVQ7eojXKxMQ8bFk1dpxLct+220jENYYmn88vCy4atSzw/abymbalKR5/EEDRnyT3KzqbDo9tBpwcgPc7pEN0QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740391730; c=relaxed/simple;
-	bh=KoNPKyz/l+4PIEHUeghyq2QWuFg/jPzqOguImorm1vQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tM0/dAsq2Id4vAqunzEu+u/00NuJ90Iu3m1btQA6v0TG4mVvWVBuutLW+kPKheDmodaf/hMntd5HCQdztUVxXdG65Cbqsi4OO9ZgY4xQaQ/hqxkVNlobyPP1vrraKPDm25lKN/2sSktgXz4L+4xp+LDbIrERmQrJMznU1AU/BG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B3eNsTRc; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5ded1395213so7055161a12.2;
-        Mon, 24 Feb 2025 02:08:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740391727; x=1740996527; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zSl7SVpv3ZdvG/pUATCrI0YoKzpq2HEPnlV8gsZDiUw=;
-        b=B3eNsTRciFqe1EW3pdnTrgt9mwmLcG615A7nfUw5HDEtJgK0GwIRhMGGCCN5ROsYri
-         WDPiTqrq4YcY6SoBjfESmTuZ+QdZstIkcXs6PjAduOWd3mnTobLFcv/PR8qKHmese2L6
-         4TSyFZ/HYGhT7Vqxg4/2pCrKnCFNhfnIwRNsaeQdRAiodmB933fEl75ibL+tCGRC/O+/
-         5TJdhfkDmOS9wiA/r2nJy6vV7ENqNayQfD0+xxFExrIo0Myk4nv2Im8gapameCNtjBBL
-         8LyIshEhzp8Fw6WgDWbodzNwuHVljSvrEEatKjrxNjqmAaizd9e+W94RlVY55kUuGKGZ
-         v99w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740391727; x=1740996527;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zSl7SVpv3ZdvG/pUATCrI0YoKzpq2HEPnlV8gsZDiUw=;
-        b=cTx2Dp+dHjYXt5hLcM6hST5vpWU6ovD8x/8Ypg25A2B9IP0qW53Tt1cGvEyyJdvjo9
-         bTm8v1JTJCVekGrOnX0X1mrbUXo53RozM3A311SLjsAsRGL/gdBEXRqeKnzFxfi3j7wM
-         fose9PGb6gBf9KGSVCZB8W2qQBd2Cp/MmCkNmSriU0AZqnlwMQwG2ZKg6X5AWdkht/2U
-         8G5ljtJu8E98Y5X3HJf1IC657mJKcX/AOg8k+b8XE/imyxCSza5ttB59IYLFHgfhfMm5
-         3srw0I26k3XlzCzh0QJqtULq1UPnWNowB1xQ7rBqrMslSCgchXJ+tDlrbcKOxRuZRzph
-         Be0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVOwBCDVpR6Txu63IfLnSJ7gs3+ZK+aOJ2FmDk2P4ifWik7Jp7qKFfzixGtkQzt3DAMB/kiFqEwUc9K@vger.kernel.org, AJvYcCW+zhhMRgafaXsWg+HG9n/iDgPty+ktA8hlF7b39ml2dI1MOf/5PrPOAGIFTrzkmQ3F380QzdBQod4HUuE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0zy67Rj6wYse8kLnJqsQzpcyUUQycD8Yvsnisv/zr/Is9eYb/
-	AVmCKlfyGGOSSLns6cPMLkbMryFRm9ka+u4p8CN20OzbTvToeiW+I4dfUax8Rnhibnk3GF0Si64
-	HXe7XrZvpN0tMS9gnt3vESoUCF7Y=
-X-Gm-Gg: ASbGncvtuENx9y04S5j1/W0MVrXqCSpeFc1j4TT3w9/D70tlJazECFy7cjSpX+lDWie
-	qXVghuoLYQFCMM87CaPC0luBm17DDTdUcg1XRqHyWIEioURc8ljlBO0pI8FdcEDNigMA653VknU
-	ZJY+RX4XA=
-X-Google-Smtp-Source: AGHT+IGeDWpiwwWJWla3HaW7oM4L55n5TbZipzYlv7EfnvAMgjVEH+suSkVYAEe20cor22O/gSx4hsRxasu9gYyNXgg=
-X-Received: by 2002:a17:907:1ca0:b0:ab7:bcf1:264 with SMTP id
- a640c23a62f3a-abc099b81bfmr1376082066b.5.1740391726541; Mon, 24 Feb 2025
- 02:08:46 -0800 (PST)
+	s=arc-20240116; t=1740395065; c=relaxed/simple;
+	bh=XnrWYFKLdcBwHlb3JP9w96Sdf1jponZtSCVf/ck+LnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vGRdGEaTm68YD40W/30ZHcTuRFAEGxPS8JNHJk3fydyhuVCffYj8aKtAcp0HYBXE9ncU+uayclvGRhoneXhL/z/MRJc058W6PvossVBb4xC5NOi6svzTFtemu9YQF6EzthayjL7DEZlrUxP8tyT9hLSh5dvjNPtFdKpYcG2Hauc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CL4ZQn1R; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740395064; x=1771931064;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XnrWYFKLdcBwHlb3JP9w96Sdf1jponZtSCVf/ck+LnA=;
+  b=CL4ZQn1RUU3j4aKZiVaG+ZfGHNiW0GhEIYvoOZ5hgLO3clL0WaNzZXDg
+   dZ3Wk2CHf0C2tMA6/XxJmcC2G3rjqiYsXJKlnJANSL2MDMQRglzngf3Z3
+   XaYCFp9dpqaSxYvSvCiHlWcVRgPnl4UF7ndNIvL6rRts65mGRWzOsT3iX
+   8W8TC0lb+8+Hstwc+8VikNpKrgNEOZOfuiY2vLW81NLCHPT9mVhYiLpGo
+   v6wSB2JIOTPdDuT1sQNDcLlRzU2xilnq6R5ONAi1EXQG26cUFsf6ukkNV
+   ttHyTGbqSqo352e++WYkzllBhGgMBKqhxT9PVs9ob0ZqNevpYkzDH2vT7
+   w==;
+X-CSE-ConnectionGUID: 6gKwkz1LTFSmisOfvuaPjQ==
+X-CSE-MsgGUID: MK2TTWMZSBq4Z3mH/xKbKw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11354"; a="41282921"
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="41282921"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 03:04:23 -0800
+X-CSE-ConnectionGUID: X/Du1pqRS4SICKnvC7mIMg==
+X-CSE-MsgGUID: ZWBarRrkQg+Ge2QpJoLDLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="120152385"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa003.fm.intel.com with ESMTP; 24 Feb 2025 03:04:22 -0800
+Date: Mon, 24 Feb 2025 19:02:37 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: linux-coco@lists.linux.dev, Lukas Wunner <lukas@wunner.de>,
+	Samuel Ortiz <sameo@rivosinc.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Subject: Re: [PATCH 05/11] PCI/TSM: Authenticate devices via platform TSM
+Message-ID: <Z7xRzVrR0t6ap3+y@yilunxu-OptiPlex-7050>
+References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
+ <173343742510.1074769.16552514658771224955.stgit@dwillia2-xfh.jf.intel.com>
+ <Z1qx2nAHbZN72Ljf@yilunxu-OptiPlex-7050>
+ <67b9252c8cac0_1c530f29484@dwillia2-xfh.jf.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208140110.2389-1-linux.amoon@gmail.com> <20250210174400.b63bhmtkuqhktb57@thinkpad>
- <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
- <20250214060935.cgnc436upawnfzn6@thinkpad> <CANAwSgTWa9gwpPhVCYzJM5BL5wUkpB4eyDtX+Vs3SX3a9541wA@mail.gmail.com>
- <CANAwSgRvT-Mqj3XPrME6oKhYmnCUZLnwHfFHmSL=PK+xVLHAqw@mail.gmail.com> <20250224080129.zm7fvxermgeyycav@thinkpad>
-In-Reply-To: <20250224080129.zm7fvxermgeyycav@thinkpad>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Mon, 24 Feb 2025 15:38:29 +0530
-X-Gm-Features: AWEUYZn-GahK4UXEV5TeUPLgW8tudIzB_lnSgUjj_ww7YjayCEXug59G2a6ICB8
-Message-ID: <CANAwSgTsp19ri5SYYtD+VOYgBLYg5UqvGRrtNTXOWw7umxGCQg@mail.gmail.com>
-Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
- IRQ handling
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Kevin Xie <kevin.xie@starfivetech.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Minda Chen <minda.chen@starfivetech.com>, 
-	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67b9252c8cac0_1c530f29484@dwillia2-xfh.jf.intel.com.notmuch>
 
-Hi Manivannan
+On Fri, Feb 21, 2025 at 05:15:24PM -0800, Dan Williams wrote:
+> Xu Yilun wrote:
+> > > +static int pci_tsm_disconnect(struct pci_dev *pdev)
+> > > +{
+> > > +	struct pci_tsm *pci_tsm = pdev->tsm;
+> > > +
+> > > +	lockdep_assert_held(&pci_tsm_rwsem);
+> > > +	if_not_guard(mutex_intr, &pci_tsm->lock)
+> > > +		return -EINTR;
+> > > +
+> > > +	if (pci_tsm->state < PCI_TSM_CONNECT)
+> > > +		return 0;
+> > > +	if (pci_tsm->state < PCI_TSM_INIT)
+> > > +		return -ENXIO;
+> > 
+> > Check PCI_TSM_INIT first, or this condition will never hit.
+> > 
+> >   if (pci_tsm->state < PCI_TSM_INIT)
+> > 	return -ENXIO;
+> >   if (pci_tsm->state < PCI_TSM_CONNECT)
+> > 	return 0;
+> > 
+> > I suggest the same sequence for pci_tsm_connect().
+> 
+> Good catch, fixed.
+> 
+> [..]
+> > > +
+> > > +static void __pci_tsm_init(struct pci_dev *pdev)
+> > > +{
+> > > +	bool tee_cap;
+> > > +
+> > > +	if (!is_physical_endpoint(pdev))
+> > > +		return;
+> > 
+> > This Filters out virtual functions, just because not ready for support,
+> > is it?
+> 
+> Do you see a need for PCI core to notify the TSM driver about the
+> arrival of VF devices?
 
-On Mon, 24 Feb 2025 at 13:31, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Thu, Feb 20, 2025 at 03:53:31PM +0530, Anand Moon wrote:
->
-> [...]
->
-> > Following the change fix this warning in a kernel memory leak.
-> > Would you happen to have any comments on these changes?
-> >
-> > diff --git a/drivers/pci/controller/plda/pcie-plda-host.c
-> > b/drivers/pci/controller/plda/pcie-plda-host.c
-> > index 4153214ca410..5a72a5a33074 100644
-> > --- a/drivers/pci/controller/plda/pcie-plda-host.c
-> > +++ b/drivers/pci/controller/plda/pcie-plda-host.c
-> > @@ -280,11 +280,6 @@ static u32 plda_get_events(struct plda_pcie_rp *po=
-rt)
-> >         return events;
-> >  }
-> >
-> > -static irqreturn_t plda_event_handler(int irq, void *dev_id)
-> > -{
-> > -       return IRQ_HANDLED;
-> > -}
-> > -
-> >  static void plda_handle_event(struct irq_desc *desc)
-> >  {
-> >         struct plda_pcie_rp *port =3D irq_desc_get_handler_data(desc);
-> > @@ -454,13 +449,10 @@ int plda_init_interrupts(struct platform_device *=
-pdev,
-> >
-> >                 if (event->request_event_irq)
-> >                         ret =3D event->request_event_irq(port, event_ir=
-q, i);
-> > -               else
-> > -                       ret =3D devm_request_irq(dev, event_irq,
-> > -                                              plda_event_handler,
-> > -                                              0, NULL, port);
->
-> This change is not related to the memleak. But I'd like to have it in a s=
-eparate
-> patch since this code is absolutely not required, rather pointless.
->
-Yes, remove these changes to fix the memory leak issue I observed.
+I think yes.
 
-> >
-> >                 if (ret) {
-> >                         dev_err(dev, "failed to request IRQ %d\n", even=
-t_irq);
-> > +                       irq_dispose_mapping(event_irq);
->
-> So the issue overall is that the 'devm_request_irq' fails on your platfor=
-m
-> because the interrupts are not defined in DT and then the IRQ is not disp=
-osed in
-> the error path?
->
-On microchip PCIe driver utilizes interrupt resources from its
-"bridge" and "cntrl"
-components, accessed via ioremap, to handle hardware events.
-These resources are absent in the StarFive PCIe controller.
+> 
+> My expectation is that a VF TDI communicates with the TSM driver
+> relative to its PF.
 
-While the StarFive JH-7110 datasheet [1] indicates support for PME, MSI, an=
-d INT
-messages and specific implementation details for leveraging these interrupt=
-s are
-unavailable.
+It is possible, but the PF TSM still need to manage the TDI context for
+all it's VFs, like:
 
-As per StarFive JH-7110 Datasheet PCI support [1]
-1 Power Management Event (PME message) =E2=97=A6
-2  MSI (up to 32) and INT message support
+struct pci_tdi;
 
-[1] https://doc-en.rvspace.org/JH7110/PDF/JH7110I_DS.pdf
+struct pci_tsm {
+	...
+	struct pci_dsm *dsm;
+	struct xarray tdi_xa; // struct pci_tdi array
+};
 
-> In that case, none of the error paths below for_each_set_bit() loop is di=
-sposing
-> the IRQs. Also, calling 'irq_dispose_mapping()' only once is not going to
-> dispose all mappings that were created before in the loop.
 
-I was looking at how the IRQ error path will clean up IRQ in case of failur=
-e
-hence, I added this in case of failure to unmap IRQ events,
-I will drop this if not required.
->
-> - Mani
->
-Thanks
--Anand
-> --
-> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+An alternative is we allow VFs has their own pci_tsm, and store their
+own tdi contexts in it.
+
+struct pci_tsm {
+	...
+	struct pci_dsm *dsm; // point to PF's dsm.
+	struct pci_tdi *tdi;
+};
+
+I perfer the later cause we don't have to seach for TDI context
+everytime we have a pdev for VF and do tsm operations on it.
+
+> 
+> > > +
+> > > +	tee_cap = pdev->devcap & PCI_EXP_DEVCAP_TEE;
+> > > +
+> > > +	if (!(pdev->ide_cap || tee_cap))
+> > > +		return;
+> > > +
+> > > +	lockdep_assert_held_write(&pci_tsm_rwsem);
+> > > +	if (!tsm_ops)
+> > > +		return;
+> > > +
+> > > +	struct pci_tsm *pci_tsm __free(kfree) = kzalloc(sizeof(*pci_tsm), GFP_KERNEL);
+> > > +	if (!pci_tsm)
+> > > +		return;
+> > > +
+> > > +	/*
+> > > +	 * If a physical device has any security capabilities it may be
+> > > +	 * a candidate to connect with the platform TSM
+> > > +	 */
+> > > +	struct pci_dsm *dsm __free(dsm_remove) = tsm_ops->probe(pdev);
+> > 
+> > IIUC, pdev->tsm should be for every pci function (physical or virtual),
+> > pdev->tsm->dsm should be only for physical functions, is it?
+> 
+> Per above I was only expecting physical function, but the bind flow
+> might introduce the need for per function (phyiscal or virtual) TDI
+> context. I expect that is separate from the PF pdev->tsm context.
+
+Could we embed TDI context in PF's pdev->tsm AND VF's pdev->tsm? From
+TDISP spec, TSM covers TDI management so I think it is proper
+struct pci_tsm contains TDI context.
+
+Thanks,
+Yilun
 
