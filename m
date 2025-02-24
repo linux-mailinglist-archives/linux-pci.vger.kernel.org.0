@@ -1,118 +1,346 @@
-Return-Path: <linux-pci+bounces-22141-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22142-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C342CA41454
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 04:50:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EC92A414C6
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 06:34:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 278713B16D7
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 03:50:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6E8C016E7E7
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 05:34:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C274415696E;
-	Mon, 24 Feb 2025 03:50:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40FE14A1D;
+	Mon, 24 Feb 2025 05:34:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dlStPqtj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tQsv+qk0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12B21A0739;
-	Mon, 24 Feb 2025 03:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579E07FBA2
+	for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2025 05:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740369030; cv=none; b=fqrBBSxQkpkAmv7KiQ0K4nbNwIf5DxYK6Q9U+Q1FOmKlTYNnKJ1bqtp2dzxji+uXKBpHe8X748vVEUIhmM16OlHKy5D5853gshEc+v0UUiqHJwI1knhzitA7JTGr84UdLRxIxFrIo7SD3p2ptZY343EOBRFMaRq2HtqW6Ee27/A=
+	t=1740375278; cv=none; b=PbHKQ4HZCJZ7YfkFWuZvoPbDXOshQRU5STeOaoNtfOuYVEAWRHtJXeGpePW3Dncff82l21HNAsquGkmEBfankKnEyKxBY/5ShF8GvCAG8BkkI9i4tAM8qNJy23P9vSpb3m5d9il14Q0GNUc1BkvieALu2BvuHRe8+TtL/RKp4Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740369030; c=relaxed/simple;
-	bh=LgkDryLjvEZr6bXpKPqMRGIdv3/PyW9iQTas3G5G60M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q3TBIEf7oRmNCAD1lOjzyQPHOoUdo5WTA59nPyIQg+ct9R6nAWcmXMlu6TDu31/hvio4WlLlIx2hacVKv4cqLczPku/JnF9sf3jYYlPTBBlerJrUnNDMSzN5uT6AXjQkCcIZK5kGdoy9Vbiw+5SwVrq20mkqiwjigLJWCFeTF9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dlStPqtj; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740369024; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=JWdHXTM9C/dfJCHXa70ZhO8Ss2I8+1cp0VWtCNbkVn0=;
-	b=dlStPqtjlvWvD9ScvLHz6ay6b/s4XS90EovacqcAvpu/+dHmC+m0lerTOKm9Bo1bTUtJKGXrdrTipBkrh/QUQHLi2OGRobtU/h+FULfU1YtyfaSKC3CiaYAKay7iRN80ns6Lptmy2AYrUhFYq7fy0s6SZ5zc+6v5RT09/6Qe6mI=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WQ1rZgc_1740368704 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 24 Feb 2025 11:45:05 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Liguang Zhang <zhangliguang@linux.alibaba.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>,
-	rafael@kernel.org
-Cc: Markus Elfring <Markus.Elfring@web.de>,
-	lkp@intel.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Feng Tang <feng.tang@linux.alibaba.com>
-Subject: [PATCH v3 4/4] PCI: Disable PCIe hotplug interrupts early when msi is disabled
-Date: Mon, 24 Feb 2025 11:45:00 +0800
-Message-Id: <20250224034500.23024-5-feng.tang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
-References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
+	s=arc-20240116; t=1740375278; c=relaxed/simple;
+	bh=jBaqHGDAg8bBa+vShvnVRxtbiqFKz1i46zbQ79fBeFA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=artRyn5jsFcQPkbcRh3NiUfT4pJv4ZdRqy4Jhg/U2UF+BwBPZ8PYGYTnD4sVCnoWh+SJ7SzRF4k/Ds3WHqPqbO4rEHEbTbDE0mUSx8u+xT29y1jA0NunPbk/gkWlz3nwWZHx6ZW5FtiXmORunZsKypkSQ0tpTdAK+ottY4SCH1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tQsv+qk0; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fbfa8c73a6so8049740a91.2
+        for <linux-pci@vger.kernel.org>; Sun, 23 Feb 2025 21:34:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740375275; x=1740980075; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=43ga30Eg/2LYLuOZ6SqxZh5pp6MB94AP6T17p8FlCUE=;
+        b=tQsv+qk0kfx/rWpyqlC/LE0qKTHgLcOktPg8wBhXKD81cAZlMJRtcnGjdkPX5D3+6J
+         l9dd0YedK7vdEjUuOrzqPmwFuhYHHSO2nbh7Oy77IwOC9Q4YquKESibEsUxc/aqbQHNu
+         y0IXIvEnpZXmtnciU9bZXoMkomA5Z83Ok/twMpZzi+sn48xvrEu9Y1nFz4dQTZtmnD7H
+         FC/Wqi5UVMoP2zBlo+eLpy6LaxFvE+0puf/+HvGpE0Fhpy5aTxoaaIqImv/9gqK8s/ZR
+         gWxI96UU+guNBe5TBd2WPk7jzraRtiZUCtnkhQHCItw67eNe38Jn3Rc7B5g33XORhGPc
+         GP2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740375275; x=1740980075;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=43ga30Eg/2LYLuOZ6SqxZh5pp6MB94AP6T17p8FlCUE=;
+        b=MNEAkFx+W44eZtRBiTeHvD1e8jMXkG1I5mI9PEeU5YqZ127GfsVLtqrWtPu7kboESH
+         kPTs8if2gzdPAaYdK5BgetXYFDzCdjc/8j5cr1btq4tVGs8t2znpLxniZq3q36rT9Ane
+         dN3W1RABjUjTtOxGE3k5lU2taNxvXWPR0EckWMK0e5dqEqLadlqR+LkWBh59JOGRFGCq
+         hpFzMalJ0ovT8JWqTuIQ+mGF/LY1C99GyJnnMXGVdyMMPdwE6mf8GNAu82cqiR6FzWzb
+         lvAk2OmtG1ZiJamE4/JBJUsq1M0AoDMSJvoyuK4dJMrdUoIeF6GZdMVhJIohBn0hYcLF
+         FzUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWiQrF1k6/1PxhRC3V6A1DA1QIejfU9XS5gDIYQ3aFVSft7kypSsHgWaM8SlrwGSDThHrpkjI9VShY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztDoP5BQORciUg2Kzat2K5xemapdGt4i4ZTlguKO/HoiGH1+Pw
+	Pd0fFkKG+M07oVFIRMoDFI4n6y3GTqHNITIjxUsdMPCfoe3nBcicdExg+KPfSg==
+X-Gm-Gg: ASbGnctvahUpZvxcy1V3j2x8iIjwjbfjWOXFr9Q7Vl84LUoxjwMV1Ib7rz2mr2I2sCd
+	JE5KKA5Y8IMlECCLazF+O0ugbQWcH2mTpIpxO3MaZqQzgKZAcC8oja/SwzeQhLZWcWe6PpTJQLs
+	1O3SLKbVaBLEXdmFfTwKsseBxuH7NAUx/AdQVIs1xWoavntJBDR0fqBbuJo35ZlHHyKCjOcdSUd
+	W5zAZchYhK5OdrsCUbQRGOOOKqhMD2I63ED816nHd6wkRsEHRvQezUgXJjLD7GGw4/cNiT7EcC+
+	p/hqIQa05ufXmKWPzHEXUJGMhXUlpY/FvpWE
+X-Google-Smtp-Source: AGHT+IHE6fFDvFlmYFh4rC73io7Q24A/SjSS++QJyraNtZS3IyyuDX4jUVbXtZQ+X01dxsQcPdKfhQ==
+X-Received: by 2002:a17:90b:1806:b0:2fa:ba3:5451 with SMTP id 98e67ed59e1d1-2fce87468f3mr19833570a91.35.1740375275469;
+        Sun, 23 Feb 2025 21:34:35 -0800 (PST)
+Received: from thinkpad ([36.255.17.162])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fceae32c24sm5511291a91.0.2025.02.23.21.34.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2025 21:34:34 -0800 (PST)
+Date: Mon, 24 Feb 2025 11:04:28 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: jingoohan1@gmail.com, shradha.t@samsung.com, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	Frank.Li@nxp.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rockswang7@gmail.com,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [v5] PCI: dwc: Add the debugfs property to provide the LTSSM
+ status of the PCIe link
+Message-ID: <20250224053428.m6w63a64u5lzm47t@thinkpad>
+References: <20250223141848.231232-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250223141848.231232-1-18255117159@163.com>
 
-There was an irq storm bug when testing "pci=nomsi" case, and the root
-cause is: 'nomsi' will disable MSI and let devices and root ports use
-legacy INTX interrupt, and likely make several devices/ports share one
-interrupt. In the failure case, BIOS doesn't disable the PCIe hotplug
-interrupts, and the command-complete interrupt was actually asserted.
+On Sun, Feb 23, 2025 at 10:18:48PM +0800, Hans Zhang wrote:
+> Add the debugfs property to provide a view of the current link's LTSSM
+> status from the root port device.
+> 
+>   /sys/kernel/debug/dwc_pcie_<dev>/ltssm_status
+> 
+> Signed-off-by: Hans Zhang <18255117159@163.com>
 
-So the timeline is:
-1. pciehp's CCIE/HPIE enabled and command-complete interrupts asserted
-2. the interrupt is shared by PCIe root port and nvme/nic device
-3. nvme/nic driver's probe function enables the interrupt line
-4. pciehp driver is loaded later or never loaded
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-And the "nobody cared irq storm" happens between 3 and 4. This is not
-an issue for normal MSI case, as each interrupt is controlled by its own
-driver. When the driver is not loaded, the interrupt won't get fired
-to kernel even if it is physically asserted.
+- Mani
 
-So disable the PCIe hotplug CCIE/HPIE interrupt in early boot phase when
-MSI is not enabled.
+> Tested-by: Niklas Cassel <cassel@kernel.org>
+> ---
+> Changes since v4:
+> https://lore.kernel.org/linux-pci/20250222143335.221168-1-18255117159@163.com/
+> 
+> - Change the return value of function dw_ltssm_sts_string from char *
+>   to const char *.
+> - Modify the Description of the Document.
+> 
+> Changes since v3:
+> https://lore.kernel.org/linux-pci/20250214144618.176028-1-18255117159@163.com/
+> 
+> - My v4 patch is updated to the latest based on Shradha's v7 patch.
+> - Submissions based on the following v7 patches:
+> https://patchwork.kernel.org/project/linux-pci/patch/20250221131548.59616-2-shradha.t@samsung.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/20250221131548.59616-3-shradha.t@samsung.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/20250221131548.59616-4-shradha.t@samsung.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/20250221131548.59616-5-shradha.t@samsung.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/20250221131548.59616-6-shradha.t@samsung.com/
+> 
+> Changes since v2:
+> https://lore.kernel.org/linux-pci/20250206151343.26779-1-18255117159@163.com/
+> 
+> - Git pulls the latest code and fixes conflicts.
+> - Do not place into sysfs node as recommended by maintainer. Shradha-based patch
+>   is put into debugfs.
+> - Submissions based on the following v6 patches:
+> https://patchwork.kernel.org/project/linux-pci/patch/20250214105007.97582-2-shradha.t@samsung.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/20250214105007.97582-3-shradha.t@samsung.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/20250214105007.97582-4-shradha.t@samsung.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/20250214105007.97582-5-shradha.t@samsung.com/
+> 
+> Changes since v1:
+> https://lore.kernel.org/linux-pci/20250123071326.1810751-1-18255117159@163.com/
+> 
+> - Do not place into sysfs node as recommended by maintainer. Shradha-based patch
+>   is put into debugfs.
+> - Submissions based on the following v5 patches:
+> https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-2-shradha.t@samsung.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-3-shradha.t@samsung.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-4-shradha.t@samsung.com/
+> https://patchwork.kernel.org/project/linux-pci/patch/20250121111421.35437-5-shradha.t@samsung.com/
+> ---
+>  Documentation/ABI/testing/debugfs-dwc-pcie    |  5 ++
+>  .../controller/dwc/pcie-designware-debugfs.c  | 29 +++++++++++
+>  .../pci/controller/dwc/pcie-designware-host.c | 50 +++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h  | 33 ++++++++++++
+>  4 files changed, 117 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/debugfs-dwc-pcie b/Documentation/ABI/testing/debugfs-dwc-pcie
+> index 650a89b0511e..8245261506bc 100644
+> --- a/Documentation/ABI/testing/debugfs-dwc-pcie
+> +++ b/Documentation/ABI/testing/debugfs-dwc-pcie
+> @@ -142,3 +142,8 @@ Description:	(RW) Some lanes in the event list are lane specific events. These i
+>  		events 1) - 11) and 34) - 35).
+>  		Write lane number for which counter needs to be enabled/disabled/dumped.
+>  		Read will return the current selected lane number. Lane0 is selected by default.
+> +
+> +What:		/sys/kernel/debug/dwc_pcie_<dev>/ltssm_status
+> +Date:		February 2025
+> +Contact:	Hans Zhang <18255117159@163.com>
+> +Description:	(RO) Read will return the current PCIe LTSSM state in both string and raw value.
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> index dca1e9999113..39487bd184e1 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> @@ -533,6 +533,33 @@ static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
+>  	return ret;
+>  }
+>  
+> +static int dwc_pcie_ltssm_status_show(struct seq_file *s, void *v)
+> +{
+> +	struct dw_pcie *pci = s->private;
+> +	enum dw_pcie_ltssm val;
+> +
+> +	val = dw_pcie_get_ltssm(pci);
+> +	seq_printf(s, "%s (0x%02x)\n", dw_ltssm_sts_string(val), val);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dwc_pcie_ltssm_status_open(struct inode *inode, struct file *file)
+> +{
+> +	return single_open(file, dwc_pcie_ltssm_status_show, inode->i_private);
+> +}
+> +
+> +static const struct file_operations dwc_pcie_ltssm_status_ops = {
+> +	.open = dwc_pcie_ltssm_status_open,
+> +	.read = seq_read,
+> +};
+> +
+> +static void dwc_pcie_ltssm_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
+> +{
+> +	debugfs_create_file("ltssm_status", 0444, dir, pci,
+> +			    &dwc_pcie_ltssm_status_ops);
+> +}
+> +
+>  void dwc_pcie_debugfs_deinit(struct dw_pcie *pci)
+>  {
+>  	dwc_pcie_rasdes_debugfs_deinit(pci);
+> @@ -560,5 +587,7 @@ int dwc_pcie_debugfs_init(struct dw_pcie *pci)
+>  	if (ret)
+>  		dev_dbg(dev, "RASDES debugfs init failed\n");
+>  
+> +	dwc_pcie_ltssm_debugfs_init(pci, dir);
+> +
+>  	return 0;
+>  }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 2081e8c72d12..cbe9cdbde79f 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -418,6 +418,56 @@ static void dw_pcie_host_request_msg_tlp_res(struct dw_pcie_rp *pp)
+>  	}
+>  }
+>  
+> +const char *dw_ltssm_sts_string(enum dw_pcie_ltssm ltssm)
+> +{
+> +	const char *str;
+> +
+> +	switch (ltssm) {
+> +#define DW_PCIE_LTSSM_NAME(n) case n: str = #n; break
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_QUIET);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_ACT);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_ACTIVE);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_COMPLIANCE);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_POLL_CONFIG);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_PRE_DETECT_QUIET);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DETECT_WAIT);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LINKWD_START);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LINKWD_ACEPT);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LANENUM_WAI);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_LANENUM_ACEPT);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_COMPLETE);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_CFG_IDLE);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_LOCK);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_SPEED);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_RCVRCFG);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_IDLE);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L0);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L0S);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L123_SEND_EIDLE);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L1_IDLE);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L2_IDLE);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_L2_WAKE);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DISABLED_ENTRY);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DISABLED_IDLE);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_DISABLED);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_ENTRY);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_ACTIVE);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_EXIT);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_LPBK_EXIT_TIMEOUT);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_HOT_RESET_ENTRY);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_HOT_RESET);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ0);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ1);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ2);
+> +	DW_PCIE_LTSSM_NAME(DW_PCIE_LTSSM_RCVRY_EQ3);
+> +	default:
+> +		str = "DW_PCIE_LTSSM_UNKNOWN";
+> +		break;
+> +	}
+> +
+> +	return str + strlen("DW_PCIE_LTSSM_");
+> +}
+> +
+>  int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 7f9807d4e5de..00c32fa1b151 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -330,9 +330,40 @@ enum dw_pcie_ltssm {
+>  	/* Need to align with PCIE_PORT_DEBUG0 bits 0:5 */
+>  	DW_PCIE_LTSSM_DETECT_QUIET = 0x0,
+>  	DW_PCIE_LTSSM_DETECT_ACT = 0x1,
+> +	DW_PCIE_LTSSM_POLL_ACTIVE = 0x2,
+> +	DW_PCIE_LTSSM_POLL_COMPLIANCE = 0x3,
+> +	DW_PCIE_LTSSM_POLL_CONFIG = 0x4,
+> +	DW_PCIE_LTSSM_PRE_DETECT_QUIET = 0x5,
+>  	DW_PCIE_LTSSM_DETECT_WAIT = 0x6,
+> +	DW_PCIE_LTSSM_CFG_LINKWD_START = 0x7,
+> +	DW_PCIE_LTSSM_CFG_LINKWD_ACEPT = 0x8,
+> +	DW_PCIE_LTSSM_CFG_LANENUM_WAI = 0x9,
+> +	DW_PCIE_LTSSM_CFG_LANENUM_ACEPT = 0xa,
+> +	DW_PCIE_LTSSM_CFG_COMPLETE = 0xb,
+> +	DW_PCIE_LTSSM_CFG_IDLE = 0xc,
+> +	DW_PCIE_LTSSM_RCVRY_LOCK = 0xd,
+> +	DW_PCIE_LTSSM_RCVRY_SPEED = 0xe,
+> +	DW_PCIE_LTSSM_RCVRY_RCVRCFG = 0xf,
+> +	DW_PCIE_LTSSM_RCVRY_IDLE = 0x10,
+>  	DW_PCIE_LTSSM_L0 = 0x11,
+> +	DW_PCIE_LTSSM_L0S = 0x12,
+> +	DW_PCIE_LTSSM_L123_SEND_EIDLE = 0x13,
+> +	DW_PCIE_LTSSM_L1_IDLE = 0x14,
+>  	DW_PCIE_LTSSM_L2_IDLE = 0x15,
+> +	DW_PCIE_LTSSM_L2_WAKE = 0x16,
+> +	DW_PCIE_LTSSM_DISABLED_ENTRY = 0x17,
+> +	DW_PCIE_LTSSM_DISABLED_IDLE = 0x18,
+> +	DW_PCIE_LTSSM_DISABLED = 0x19,
+> +	DW_PCIE_LTSSM_LPBK_ENTRY = 0x1a,
+> +	DW_PCIE_LTSSM_LPBK_ACTIVE = 0x1b,
+> +	DW_PCIE_LTSSM_LPBK_EXIT = 0x1c,
+> +	DW_PCIE_LTSSM_LPBK_EXIT_TIMEOUT = 0x1d,
+> +	DW_PCIE_LTSSM_HOT_RESET_ENTRY = 0x1e,
+> +	DW_PCIE_LTSSM_HOT_RESET = 0x1f,
+> +	DW_PCIE_LTSSM_RCVRY_EQ0 = 0x20,
+> +	DW_PCIE_LTSSM_RCVRY_EQ1 = 0x21,
+> +	DW_PCIE_LTSSM_RCVRY_EQ2 = 0x22,
+> +	DW_PCIE_LTSSM_RCVRY_EQ3 = 0x23,
+>  
+>  	DW_PCIE_LTSSM_UNKNOWN = 0xFFFFFFFF,
+>  };
+> @@ -683,6 +714,8 @@ static inline enum dw_pcie_ltssm dw_pcie_get_ltssm(struct dw_pcie *pci)
+>  	return (enum dw_pcie_ltssm)FIELD_GET(PORT_LOGIC_LTSSM_STATE_MASK, val);
+>  }
+>  
+> +const char *dw_ltssm_sts_string(enum dw_pcie_ltssm ltssm);
+> +
+>  #ifdef CONFIG_PCIE_DW_HOST
+>  int dw_pcie_suspend_noirq(struct dw_pcie *pci);
+>  int dw_pcie_resume_noirq(struct dw_pcie *pci);
+> 
+> base-commit: ff202c5028a195c07b16e1a2fbb8ca6b7ba11a1c
+> prerequisite-patch-id: c153d1c334b19796f686e3a143e0e4ad0c22f373
+> prerequisite-patch-id: 871aa1f094627d0e0cb4c89bea577e901bbc7b6a
+> prerequisite-patch-id: 54b27bf41a444283be102709e2f8a7d1fdac456a
+> prerequisite-patch-id: 95d8a6c78c32f2ea79ad967c134c881f9f3e0931
+> prerequisite-patch-id: 751ccbe84a18d85c2beeec19f2d1d429569960d2
+> -- 
+> 2.25.1
+> 
 
-Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
----
- drivers/pci/probe.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 246744d8d268..ffea7851366a 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1665,6 +1665,15 @@ void set_pcie_hotplug_bridge(struct pci_dev *pdev)
- 	pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP, &reg32);
- 	if (reg32 & PCI_EXP_SLTCAP_HPC)
- 		pdev->is_hotplug_bridge = 1;
-+
-+	/*
-+	 * When MSI is disabled, root port will use legacy INTX, and likely
-+	 * share INTX interrupt line with other devices like NIC/NVME. There
-+	 * was real world issue that the CCIE IRQ is asserted afer boot, but
-+	 * will not be handled well and cause IRQ storm. So disable it early.
-+	 */
-+	if (!pci_msi_enabled())
-+		pcie_disable_hp_interrupts_early(pdev);
- }
- 
- static void set_pcie_thunderbolt(struct pci_dev *dev)
 -- 
-2.43.5
-
+மணிவண்ணன் சதாசிவம்
 
