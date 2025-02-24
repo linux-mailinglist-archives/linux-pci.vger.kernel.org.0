@@ -1,220 +1,131 @@
-Return-Path: <linux-pci+bounces-22168-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22165-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12B53A4173C
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 09:25:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C908A416BA
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 08:57:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 629A7188E1A1
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 08:25:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 83CBC1702C0
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 07:57:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FF7F185B72;
-	Mon, 24 Feb 2025 08:25:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15F5E24061F;
+	Mon, 24 Feb 2025 07:57:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="SmWlMBhK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uEawLfnH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m1973175.qiye.163.com (mail-m1973175.qiye.163.com [220.197.31.75])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C678515DBA3;
-	Mon, 24 Feb 2025 08:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D728A1898ED;
+	Mon, 24 Feb 2025 07:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740385509; cv=none; b=rzn+AqcPMXv2qS9dkGOB4P5Sc5bLT8Df4hPk8/NC2UqzIcry7YKO7lV84FL2glHO4MoYEmE9n1dBcV4eMBWo6MGLCJRUp4+WpY/S86oWfwjx4wxu2BIIAvW0verQF+PNjoxLQrins8C/Vw6zUFBPsBI14JvfdXj7kQkrvtS7DwI=
+	t=1740383862; cv=none; b=dJJJr1PmOxlbooRdFXRbMnFreN+TewV0nvYaDryGySl1QgKPAgGuFOmYBEgHV+rzXrX6FwPkJIM7X3MYnFGbR96kclUp4h7239F8QiIoPL/uTpE8Y4cQxW9OEmtpCvZru6L4vekHPbBCOIqGQb4OC3EbvMrRVJHQe2miViewoIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740385509; c=relaxed/simple;
-	bh=n+1AbUHyIqz3GkfRI23KPRjvlGBixKKQiJNQhqZ77HI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iybk7/sqJiIXAWRUUZYxkQJv2RMxb/4rxaJGZTdvjV9Wi56pUFX9jOIN8LM8PGscZuICUKeoKArvTIu1C4hsQy0n85mxySQNQaS00Y6Z85Hx/JIYGgedPF6s6QnDrnmKF+oOqBOKxBNpW4JV8Pwod1zpbVZ+nYI9mG+PdYymTM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=SmWlMBhK; arc=none smtp.client-ip=220.197.31.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from localhost.localdomain (unknown [103.29.142.67])
-	by smtp.qiye.163.com (Hmail) with ESMTP id bfc40046;
-	Mon, 24 Feb 2025 15:49:32 +0800 (GMT+08:00)
-From: Kever Yang <kever.yang@rock-chips.com>
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Simon Xue <xxm@rock-chips.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v6 1/2] dt-bindings: PCI: dw: rockchip: Add rk3576 support
-Date: Mon, 24 Feb 2025 15:49:27 +0800
-Message-Id: <20250224074928.2005744-1-kever.yang@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1740383862; c=relaxed/simple;
+	bh=xjtGRKkld7/ydj8yliJQ0o5T5/qlMxtKbXMn/fRvbdw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G+IM9oIO/YXP5KOOAdZEisoH+iowSJiFrEMmgNGZy0EsV1sFCiVM+rB9zOhIoIMHgcZWHz0Gy2CdqXKFTSo4qV4C/r4iDfqYW4tKC6b5Z4nEtWbJ7pSEOmcyquc1UN35kko3E1PCX75QLT0YYBGb86oyI3JZUCVF3cuWzqogtIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uEawLfnH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0160DC4CEE6;
+	Mon, 24 Feb 2025 07:57:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740383861;
+	bh=xjtGRKkld7/ydj8yliJQ0o5T5/qlMxtKbXMn/fRvbdw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uEawLfnHWtC9vzMuDjqURQev/lEDQIVftTnCLObR0yBsCjRPjpNszlY3/vpy4Zctw
+	 g4MDCTzV0AZ/r4/cpNhLIZ6eAD7yy4TNXLsWGaV4RjI117LM8mT1wHJfY3o9jtQGfR
+	 x+nVwWhH7n/fP/1q5hD/KfFSPWXr2lkcE97PPmB0Cg/gIQAyMZU32SJEczytd3xZ4O
+	 kk2FyKl/TNErloYF5HGf29Gm8qAKcVyX3IAPWSLdN4rACcfajdhlhTVp+ysELAaGMX
+	 JqUI3fg1YtvMpA3GqiqbRm3XlxNmlZ/faq/XTn3wqT13LpgkBY9Ix6p67A9LWkMpM6
+	 DBHY9WwCIR8rg==
+Message-ID: <144202cc-057c-4a7d-852a-27e979284dd2@kernel.org>
+Date: Mon, 24 Feb 2025 08:57:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDHRgaVk9ISB9JGBlOSU0eHVYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKS0hVSUJVSk9JVU1MWVdZFhoPEhUdFFlBWU9LSFVKS0lCQ0NMVUpLS1
-	VLWQY+
-X-HM-Tid: 0a9536eec49e03afkunmbfc40046
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6ORQ6MBw*LzIRShMuSEsNDQwY
-	GUgKCjxVSlVKTE9LSENISExPTExNVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQU9JS0M3Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=SmWlMBhKcNySNTWiQ22qRydMuZBe3cbNVFwMfg4e5b/Q73gR4I+7UgoAuL/d7SQrYEnkSHIbghyNqRXrRiGcXewg1lvGUBuJggXKKU9GqwzzM823kzCRxuSZK8vmNw2KqlfEHKbyuQ//L4qZj7APZAzRZYk3vh77kimgUxXo2UQ=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=gZcFfe/3Ec2Froj8QkKmzTvvnm/edhrxyAVxPgLiWlo=;
-	h=date:mime-version:subject:message-id:from;
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>, bhelgaas@google.com,
+ lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, michal.simek@amd.com,
+ bharat.kumar.gogada@amd.com, jingoohan1@gmail.com
+References: <20250224073117.767210-1-thippeswamy.havalige@amd.com>
+ <20250224073117.767210-4-thippeswamy.havalige@amd.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250224073117.767210-4-thippeswamy.havalige@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-rk3576 is using DWC PCIe controller, with msi interrupt directly to GIC
-instead of using GIC ITS, so
-- no ITS support is required and the 'msi-map' is not required,
-- a new 'msi' interrupt is needed.
+On 24/02/2025 08:31, Thippeswamy Havalige wrote:
+> Add support for AMD MDB (Multimedia DMA Bridge) IP core as Root Port.
+> 
+> The Versal2 devices include MDB Module. The integrated block for MDB along
+> with the integrated bridge can function as PCIe Root Port controller at
+> Gen5 32-Gb/s operation per lane.
+> 
+> Bridge supports error and legacy interrupts and are handled using platform
+> specific interrupt line in Versal2.
+> 
+> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes:
+> | https://lore.kernel.org/oe-kbuild-all/202502191741.xrVmEAG4-lkp@intel.
+> | com/
+Tags never start with | and are not wrapped. But anyway, robot did not
+report this patch. Drop these.
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
-
-Changes in v6:
-- Fix make dt_binding_check and make CHECK_DTBS=y
-
-Changes in v5:
-- Add constraints per device for interrupt-names due to the interrupt is
-different from rk3588.
-
-Changes in v4:
-- Fix wrong indentation in dt_binding_check report by Rob
-
-Changes in v3:
-- Fix dtb check broken on rk3588
-- Update commit message
-
-Changes in v2:
-- remove required 'msi-map'
-- add interrupt name 'msi'
-
- .../bindings/pci/rockchip-dw-pcie-common.yaml | 41 ++++++++++++++++++-
- .../bindings/pci/rockchip-dw-pcie.yaml        | 19 ++++++---
- 2 files changed, 52 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
-index cc9adfc7611c..e1ca8e2f35fe 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
-@@ -65,7 +65,11 @@ properties:
-           tx_cpl_timeout, cor_err_sent, nf_err_sent, f_err_sent, cor_err_rx,
-           nf_err_rx, f_err_rx, radm_qoverflow
-       - description:
--          eDMA write channel 0 interrupt
-+          If the matching interrupt name is "msi", then this is the combinded
-+          MSI line interrupt, which is to support MSI interrupts output to GIC
-+          controller via GIC SPI interrupt instead of GIC its interrupt.
-+          If the matching interrupt name is "dma0", then this is the eDMA write
-+          channel 0 interrupt.
-       - description:
-           eDMA write channel 1 interrupt
-       - description:
-@@ -81,7 +85,9 @@ properties:
-       - const: msg
-       - const: legacy
-       - const: err
--      - const: dma0
-+      - enum:
-+          - msi
-+          - dma0
-       - const: dma1
-       - const: dma2
-       - const: dma3
-@@ -123,4 +129,35 @@ required:
- 
- additionalProperties: true
- 
-+anyOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: rockchip,rk3576-pcie
-+    then:
-+      properties:
-+        interrupt-names:
-+          items:
-+            - const: sys
-+            - const: pmc
-+            - const: msg
-+            - const: legacy
-+            - const: err
-+            - const: msi
-+    else:
-+      properties:
-+        interrupt-names:
-+          minItems: 5
-+          items:
-+            - const: sys
-+            - const: pmc
-+            - const: msg
-+            - const: legacy
-+            - const: err
-+            - const: dma0
-+            - const: dma1
-+            - const: dma2
-+            - const: dma3
-+
- ...
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-index 550d8a684af3..d727502ed822 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-@@ -16,16 +16,13 @@ description: |+
-   PCIe IP and thus inherits all the common properties defined in
-   snps,dw-pcie.yaml.
- 
--allOf:
--  - $ref: /schemas/pci/snps,dw-pcie.yaml#
--  - $ref: /schemas/pci/rockchip-dw-pcie-common.yaml#
--
- properties:
-   compatible:
-     oneOf:
-       - const: rockchip,rk3568-pcie
-       - items:
-           - enum:
-+              - rockchip,rk3576-pcie
-               - rockchip,rk3588-pcie
-           - const: rockchip,rk3568-pcie
- 
-@@ -71,8 +68,18 @@ properties:
- 
-   vpcie3v3-supply: true
- 
--required:
--  - msi-map
-+allOf:
-+  - $ref: /schemas/pci/snps,dw-pcie.yaml#
-+  - $ref: /schemas/pci/rockchip-dw-pcie-common.yaml#
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            contains:
-+              const: rockchip,rk3576-pcie
-+    then:
-+      required:
-+        - msi-map
- 
- unevaluatedProperties: false
- 
--- 
-2.25.1
-
+Best regards,
+Krzysztof
 
