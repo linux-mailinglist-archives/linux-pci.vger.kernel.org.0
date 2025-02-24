@@ -1,272 +1,134 @@
-Return-Path: <linux-pci+bounces-22270-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22271-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 185D3A430BF
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 00:24:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39245A43110
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 00:41:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 015E919C1415
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 23:24:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04CB1189F202
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 23:39:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A19620C006;
-	Mon, 24 Feb 2025 23:22:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0266420B1F3;
+	Mon, 24 Feb 2025 23:39:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="A67uPgO/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYqV/Fnl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 873C420B80F;
-	Mon, 24 Feb 2025 23:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BD120764E;
+	Mon, 24 Feb 2025 23:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740439342; cv=none; b=qyzUqnKRRVK5WvNiUTDxn0ARwU6LHJUsWCcnwkIOWjXGVva0KpTGGx3KinFeWcEnQTVSJlx5cYu2KXMqWbQ2yp4AbcSqZdcFB1+E1Pmdm6G0wgFwkDaB6zqc7a+JGXvcsbUQaM9+wXCauhOxhRQrhKS37x8t1LLinIzXHx31RrA=
+	t=1740440375; cv=none; b=E54TsxEmxuxuSzP35t8PUBIVPNF80zWBJuDyWGBghD5uCJRVNx+a+Xgl6sMSZ6qsLYYjOrM8nPByLSsri0tNoM03M1dpslBjXjtGTBYUdX694IHrwzT9oeFMV4JTq4GQXmWEm5KBkgb+oBEC4cUXjbC723+AU0SvvVXaB5Z4GXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740439342; c=relaxed/simple;
-	bh=X29q3izbSircPWPMW3fCexEv9C/gusI/5fSDjPCSsF0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=dRuBOi2sUPk9McpjYLnzXNYWXz/4ccsJvQmPSA7Eh1AUW0EqC8bufIxco7ZrDC/KSapbE32ooFq5cNeCjz7LwE3AXzfh6C5tUy9MlgUSPy2AwaIYjm1dArf8p/FUbPuaOC+BMgTKptHgHwB7kMIKcC8H5hNLoK9Cvikw7lDOCkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=A67uPgO/; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A89DB203CDE5;
-	Mon, 24 Feb 2025 15:22:19 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A89DB203CDE5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740439339;
-	bh=PGCg6n2Q6WZLrimz+DtE8iD6q+LYJzZzjnV1WXJIGMU=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=A67uPgO/+1Vash+VgNUVaceBsg/GexArtBCVuHxE8ACpVzrz2pN98+Xcn6Tv24C9f
-	 Ksrr6XADjWe9pi9xFXy/83nYiZhMNz2DH0BEiPr4KgD7WAl80TTo69rmmi5IhDvZrK
-	 FcuHnJztFWfI3aKDOM/9KD7bnAJWekyXirTS3SBU=
-Message-ID: <14a199d8-1cf3-49bc-8e0d-92d9c8407b4f@linux.microsoft.com>
-Date: Mon, 24 Feb 2025 15:22:19 -0800
+	s=arc-20240116; t=1740440375; c=relaxed/simple;
+	bh=H/fdp/lgu3P0d5FbePVHc4hZ2QR1bTnY+ap8F4xxnTg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jiZmLR3M+vPl+LLdAKW0SCln1ZjT7toV4uWKQzNHgEVUoQh/0/GeajB3XAnN8QgPaHCRWaS2goAH8zPS6gJVL0Dozxugw7V0yoB7MjqcmaLYQyMuIQPlx5gL+Qcz9k5zhFzWV1R6j2k0mXcJnZT8nSkvSbSmjAh9uRAYhbwdzKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QYqV/Fnl; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c08f9d0ef3so313040785a.2;
+        Mon, 24 Feb 2025 15:39:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740440373; x=1741045173; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=I28BvW8sYtCIJpp5k7EPbcyeOkG6IabIbB4ctmQvitg=;
+        b=QYqV/FnlF6wRmuqUBjc7G0d3RMsYFXcyNCDJbfjy/cVE0Wb6PJTMdeAbUwt768N0Lj
+         yWLOsfHr7F1ahy5seuw+y/qi7lUbm9JFbG/e0BslmJ87TIh76xLbv1VCJj71q/wvC8sT
+         78mC1fTkpOBTQJqpncgBIh4DSQjtmpcvwZ0TEYFzLh7hzhu2gKXAEeZIp8k9InEt1Zue
+         iEO1/a8GX38xZ4l57BHL+1GL9+e6sTSX2XwlGjV+NgmEhw2uU6z5LTV65lOlXzlSpZ9Z
+         6/ZIgjLZKWybd1whc/thl86bpNOuIolQC8F5f9eMG9IMB1wHcvNTdVBak1NJcbcS7ETd
+         LKKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740440373; x=1741045173;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I28BvW8sYtCIJpp5k7EPbcyeOkG6IabIbB4ctmQvitg=;
+        b=tbX4DowWRn5BOUoEtv+sCOtAt8qwMADnHP5XNvVap0vskIfxGyswI5XPDCvB0MVKIo
+         9VUZRMQKIvgS5T/uvAQjzfbg4RIcIqDekWoCx4gwZBxyw1wmwshF3042kKMLq63ubofp
+         XBZjqfwIhNSJ268V7lE6BvAD7ldLF6xit8kHYfAS6/uxYDh7CpJ4t1+Py/eF9Oe74LYQ
+         w3bzoF9LZBrRXPZpxL5Imh/3T7kt4monpMUSVlsMykd1hprWf3kouEzhtCa7cXJT1ubi
+         7/i0ADwW07jsBhZ2LLaUyNVCX4jlkSY831OUEJCJUv0eqgM+4DoaXPiffkpS/coZjkt5
+         gEmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUp/Ym4/yL7oyvkqFSC3Vg0/WuQrDB3ypl5l3whjiE4igmMOHGjQ1Gdl2BA/rbJS5tmIt3RDWZwWc7s@vger.kernel.org, AJvYcCVaECsvMCadTnnMwCDncxFI74U5jgzQvDp87G+KbqMJN1C6ti+kY7dSR1/Diy1XC7TEWENnCQw68QYU@vger.kernel.org, AJvYcCWyPo5N2Eh5kLll881SXbcOnh+LSAWpT2kX/gBOTAQS4nbCmJTGpXoZRuAqU6xBKo0jajAFPMcgkCg5HffM@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6fhYbxsROlU75LUN2hApDZKuu5iOarudIl9QJNIMW7y4QATr6
+	CiwIJVpUqe5wdTfXrH5hir1ay45FdKHXe2rsdA5kDGBG33NE5GwY
+X-Gm-Gg: ASbGncs7rslTv6AXl4vrU3izeKX9D0nFZCYhW3WI59WnE4VXx9V8D61f+K3MM3Q0sVY
+	wiP9zyhxOGTVw01tfxyfdF73ZwuNfUEeA7gB1Xn1DayXgJPMp9Su//Fib83ivmi1TpakBbBb3wK
+	dQMG6MngTZkRiOA+acw6F96apB5taZxIhCwU293mlW+7LEgAfmHIMfE6tSNZg5VA6l957+h62kI
+	gDScbg6KSz5I4H3L7k2YllOgWzMIxuBqCSjp29u2RdYHcioFOX4F/JQ1rt81Fa8WizEf6aUodE5
+	aQ==
+X-Google-Smtp-Source: AGHT+IFwSiY82sk1UHPy1sh4TaxDRFtt/bKpmiKYsLl62LaJzeIFLc36bW8vjGEj+Z6l8tQnP1hrSg==
+X-Received: by 2002:a05:620a:600b:b0:7c0:b368:5d78 with SMTP id af79cd13be357-7c0ceeea4e1mr2231799485a.9.1740440373095;
+        Mon, 24 Feb 2025 15:39:33 -0800 (PST)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c23c299259sm35457385a.14.2025.02.24.15.39.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 15:39:32 -0800 (PST)
+Date: Tue, 25 Feb 2025 07:39:13 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Bjorn Helgaas <helgaas@kernel.org>, 
+	Inochi Amaoto <inochiama@gmail.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Niklas Cassel <cassel@kernel.org>, 
+	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 2/2] PCI: sophgo-dwc: Add Sophgo SG2044 PCIe driver
+Message-ID: <jq55rzcvcp6bxfk3klkomr3gtzqgkwqb2qpjnfndymomaac6ry@5jmzq6vlpu2u>
+References: <fanm6m6fx6cqwalhdvrxmjzsluiyptbvrwbi5ufwbqmxsf62xl@lntprhkjv6tm>
+ <20250224194725.GA473475@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v4 1/6] arm64: hyperv: Use SMCCC to detect
- hypervisor presence
-From: Roman Kisel <romank@linux.microsoft.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com,
- bhelgaas@google.com, Borislav Petkov <bp@alien8.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
- <conor+dt@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
- Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- "H. Peter Anvin" <hpa@zytor.com>, krzk+dt@kernel.org,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Ingo Molnar <mingo@redhat.com>, Rob Herring <robh@kernel.org>,
- ssengar@linux.microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
- Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>,
- devicetree@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
-References: <20250212014321.1108840-1-romank@linux.microsoft.com>
- <20250212014321.1108840-2-romank@linux.microsoft.com>
- <1b14e3de-4d3e-420c-819c-31ffb2d448bd@app.fastmail.com>
- <593c22ca-6544-423d-84ee-7a06c6b8b5b9@linux.microsoft.com>
- <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
- <6e4685fe-68e9-43bd-96c5-b871edb1b971@linux.microsoft.com>
-Content-Language: en-US
-In-Reply-To: <6e4685fe-68e9-43bd-96c5-b871edb1b971@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224194725.GA473475@bhelgaas>
 
-Hi Arnd,
+On Mon, Feb 24, 2025 at 01:47:25PM -0600, Bjorn Helgaas wrote:
+> On Sat, Feb 22, 2025 at 08:43:46AM +0800, Inochi Amaoto wrote:
+> > On Fri, Feb 21, 2025 at 05:49:58PM -0600, Bjorn Helgaas wrote:
+> > > On Fri, Feb 21, 2025 at 09:37:56AM +0800, Inochi Amaoto wrote:
+> > > > Add support for DesignWare-based PCIe controller in SG2044 SoC.
+> > > 
+> > > > @@ -341,6 +341,16 @@ config PCIE_ROCKCHIP_DW_EP
+> > > >  	  Enables support for the DesignWare PCIe controller in the
+> > > >  	  Rockchip SoC (except RK3399) to work in endpoint mode.
+> > > >  
+> > > > +config PCIE_SOPHGO_DW
+> > > > +	bool "SOPHGO DesignWare PCIe controller"
+> > > 
+> > > What's the canonical styling of "SOPHGO"?  I see "Sophgo" in the
+> > > subject line and in Chen Wang's SG2042 series.  Pick the official
+> > > styling and use it consistently.
+> > 
+> > This is my mistake. It should be "Sophgo", I will change it.
+> > 
+> > > Reorder this so the menuconfig menu items remain alphabetically
+> > > sorted.
+> > 
+> > I think this order is applied to the entry title in menuconfig,
+> > and is not the config key? If so, I will change it.
+> 
+> It's the title shown by menuconfig, i.e., "SOPHGO DesignWare PCIe
+> controller" here.
 
-[...]
+Thanks, I will reorder it.
 
->> I would suggest moving the UUID values into a variable next
->> to the caller like
->>
->> #define ARM_SMCCC_VENDOR_HYP_UID_KVM \
->>      UUID_INIT(0x28b46fb6, 0x2ec5, 0x11e9, 0xa9, 0xca, 0x4b, 0x56, 
->> 0x4d, 0x00, 0x3a, 0x74)
->>
->> and then just pass that into arm_smccc_hyp_present(). (please
->> double-check the endianess of the definition here, I probably
->> got it wrong myself).
-
-I worked out a variation [1] of the change that you said looked good.
-
-Here, there is a helper macro for creating uuid_t's when checking
-for the hypervisor running via SMCCC to avoid using the bare UUID_INIT. 
-Valiadted with KVM/arm64 and Hyper-V/arm64. Do you think this is a
-better approach than converting by hand?
-
-If that looks too heavy, maybe could leave out converting the expected
-register values to UUID, and pass the expected register values to
-arm_smccc_hyp_present directly. That way, instead of
-
-bool arm_smccc_hyp_present(const uuid_t *hyp_uuid);
-
-we'd have
-
-bool arm_smccc_hyp_present(u32 reg0, u32 reg1, u32 reg2, u32 reg2);
-
-
-Please let me know what you think!
-
-[1]
----
-  arch/arm64/hyperv/mshyperv.c       | 16 +++++---------
-  drivers/firmware/smccc/kvm_guest.c | 13 +++++------
-  drivers/firmware/smccc/smccc.c     | 19 ++++++++++++++++
-  include/linux/arm-smccc.h          | 35 ++++++++++++++++++++++++++++++
-  4 files changed, 64 insertions(+), 19 deletions(-)
-
-diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-index 16e721d8e5df..b8468bd65ec0 100644
---- a/arch/arm64/hyperv/mshyperv.c
-+++ b/arch/arm64/hyperv/mshyperv.c
-@@ -43,18 +43,12 @@ static bool hyperv_detect_via_acpi(void)
-
-  static bool hyperv_detect_via_smccc(void)
-  {
--	struct arm_smccc_res res = {};
-+	uuid_t hyperv_uuid = HYP_UUID_INIT(ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_0,
-+		ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_1,
-+		ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_2,
-+		ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_3);
-
--	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
--		return false;
--	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
--	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
--		return false;
--
--	return res.a0 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_0 &&
--		res.a1 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_1 &&
--		res.a2 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_2 &&
--		res.a3 == ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_3;
-+	return arm_smccc_hyp_present(&hyperv_uuid);
-  }
-
-  static int __init hyperv_init(void)
-diff --git a/drivers/firmware/smccc/kvm_guest.c 
-b/drivers/firmware/smccc/kvm_guest.c
-index f3319be20b36..48c3622b2aa6 100644
---- a/drivers/firmware/smccc/kvm_guest.c
-+++ b/drivers/firmware/smccc/kvm_guest.c
-@@ -14,17 +14,14 @@ static DECLARE_BITMAP(__kvm_arm_hyp_services, 
-ARM_SMCCC_KVM_NUM_FUNCS) __ro_afte
-
-  void __init kvm_init_hyp_services(void)
-  {
-+	uuid_t kvm_uuid = HYP_UUID_INIT(ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_0,
-+		ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_1,
-+		ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_2,
-+		ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_3);
-  	struct arm_smccc_res res;
-  	u32 val[4];
-
--	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
--		return;
--
--	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
--	if (res.a0 != ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_0 ||
--	    res.a1 != ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_1 ||
--	    res.a2 != ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_2 ||
--	    res.a3 != ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_3)
-+	if (!arm_smccc_hyp_present(&kvm_uuid))
-  		return;
-
-  	memset(&res, 0, sizeof(res));
-diff --git a/drivers/firmware/smccc/smccc.c b/drivers/firmware/smccc/smccc.c
-index a74600d9f2d7..0943abb3f4c9 100644
---- a/drivers/firmware/smccc/smccc.c
-+++ b/drivers/firmware/smccc/smccc.c
-@@ -67,6 +67,25 @@ s32 arm_smccc_get_soc_id_revision(void)
-  }
-  EXPORT_SYMBOL_GPL(arm_smccc_get_soc_id_revision);
-
-+bool arm_smccc_hyp_present(const uuid_t *hyp_uuid)
-+{
-+	struct arm_smccc_res res = {};
-+
-+	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
-+		return false;
-+	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
-+	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
-+		return false;
-+
-+	return ({
-+		const uuid_t uuid = HYP_UUID_INIT(res.a0, res.a1, res.a2, res.a3);
-+		const bool present = uuid_equal(&uuid, hyp_uuid);
-+
-+		present;
-+	});
-+}
-+EXPORT_SYMBOL_GPL(arm_smccc_hyp_present);
-+
-  static int __init smccc_devices_init(void)
-  {
-  	struct platform_device *pdev;
-diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-index 67f6fdf2e7cd..60be36254364 100644
---- a/include/linux/arm-smccc.h
-+++ b/include/linux/arm-smccc.h
-@@ -7,6 +7,11 @@
-
-  #include <linux/args.h>
-  #include <linux/init.h>
-+
-+#ifndef __ASSEMBLER__
-+#include <linux/uuid.h>
-+#endif
-+
-  #include <uapi/linux/const.h>
-
-  /*
-@@ -333,6 +338,36 @@ s32 arm_smccc_get_soc_id_version(void);
-   */
-  s32 arm_smccc_get_soc_id_revision(void);
-
-+#ifndef __ASSEMBLER__
-+
-+/**
-+ * arm_smccc_hyp_present(const uuid_t *hyp_uuid)
-+ *
-+ * Returns `true` if the hypervisor advertises its presence via SMCCC.
-+ *
-+ * When the function returns `false`, the caller shall not assume that
-+ * there is no hypervisor running. Instead, the caller must fall back to
-+ * other approaches if any are available.
-+ */
-+bool arm_smccc_hyp_present(const uuid_t *hyp_uuid);
-+
-+#define HYP_UUID_INIT(r0, r1, r2, r3) \
-+	UUID_INIT( \
-+		cpu_to_le32(lower_32_bits(r0)), \
-+		cpu_to_le32(lower_32_bits(r1)) & 0xffff, \
-+		cpu_to_le32(lower_32_bits(r1)) >> 16, \
-+		cpu_to_le32(lower_32_bits(r2)) & 0xff, \
-+		(cpu_to_le32(lower_32_bits(r2)) >> 8) & 0xff, \
-+		(cpu_to_le32(lower_32_bits(r2)) >> 16) & 0xff, \
-+		(cpu_to_le32(lower_32_bits(r2)) >> 24) & 0xff, \
-+		cpu_to_le32(lower_32_bits(r3)) & 0xff, \
-+		(cpu_to_le32(lower_32_bits(r3)) >> 8) & 0xff, \
-+		(cpu_to_le32(lower_32_bits(r3)) >> 16) & 0xff, \
-+		(cpu_to_le32(lower_32_bits(r3)) >> 24) & 0xff \
-+	)
-+
-+#endif /* !__ASSEMBLER__ */
-+
-  /**
-   * struct arm_smccc_res - Result from SMC/HVC call
-   * @a0-a3 result values from registers 0 to 3
-
-
--- 
-Thank you,
-Roman
-
+Regards,
+Inochi
 
