@@ -1,59 +1,82 @@
-Return-Path: <linux-pci+bounces-22249-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22250-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 509A1A42B31
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 19:25:09 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2FCEA42B99
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 19:36:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8177E188C629
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 18:22:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 47D4D7A1BF7
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 18:35:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9082B2661B7;
-	Mon, 24 Feb 2025 18:20:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69BBA26618C;
+	Mon, 24 Feb 2025 18:36:25 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8689A264F93;
-	Mon, 24 Feb 2025 18:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B099B1C5F27;
+	Mon, 24 Feb 2025 18:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740421219; cv=none; b=sNTQI3AqiBRUfkljMvx8i35a5HLkMg10dZAlhY/gB7fy4F9DnZB/CW1sPY/kaBGuFxNp3xToINvki7YEm6ec2dkqxYhnowBcjqL8J1aovNVuJ856GxBUh/jX9P1l2Dgfesizb4F1fOnTNk69ritpsTogol7jgEFnGpiv4g6NrcE=
+	t=1740422185; cv=none; b=oXVfi5VrpO06NP4Guq3fc22xZZ242+yXkkAWzKg0vbukLxe+f67xOPJC4cGHV09cMf+3K5BpfHR8w9F3HgaHmY7sH+t7BP5gEseLjhEjBdj57FsV1SRjNlvLpuOP1jgMNcwz+87jvIBZP3KEFn4n852Kb7y4MCt6nzS+dQn5v4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740421219; c=relaxed/simple;
-	bh=49xXBc1ycQecRqINlj/S10WDVEpHaLb95IwbBpWVPn0=;
+	s=arc-20240116; t=1740422185; c=relaxed/simple;
+	bh=gwd0kHHM6yEt5vGNuet2cFmwY7fgQBCNxAjsE9uoDxw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ngR8V5Kt1eaP/VWNsrbDS6RKgjX8hT6w1yD8clN7JfAblSQ0PD4vKSyLac5FHcx6jnRt2BvD2/KhOd80ja5hJq4LfKM1J16WjUQ+ZfFGBmed+cqypAwOmrNGclEA7BOGQPeQeHK2ym/ZJC8jdHViZUwdz11y1JJq4ikXjRmyfbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 3013E3000222C;
-	Mon, 24 Feb 2025 19:12:11 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 099015F7D2D; Mon, 24 Feb 2025 19:12:11 +0100 (CET)
-Date: Mon, 24 Feb 2025 19:12:11 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Feng Tang <feng.tang@linux.alibaba.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Liguang Zhang <zhangliguang@linux.alibaba.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>, rafael@kernel.org,
-	Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] PCI/portdrv: Add necessary wait for disabling
- hotplug events
-Message-ID: <Z7y2e-EJLijQsp8D@wunner.de>
-References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
- <20250224034500.23024-3-feng.tang@linux.alibaba.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=g1VocN7UZF++z4yc22VPNLouSncjHE0SXXB0TnVB/hjJ+rvFWW6NNvPGxs0toSF3pTJB7OxzLothfaxhBqc+CFHy7lhGoPHrZDaSDBjAZj9BuqRzFa1Hiqwz6TR3df8mdSXE+ID1rr567qX8QjgEKItyQPu2W7BlDJL51ZFdO0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-220ecbdb4c2so16674285ad.3;
+        Mon, 24 Feb 2025 10:36:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740422183; x=1741026983;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C+iuRvEJQMhX8pBK/9EUfHF9HLzVHhSe33fGhQO8PJQ=;
+        b=bE4zPcWmJKboizyPkonldfAlJtWQotrjBapq9SzkCWRhH1UXmoW4t4JUakvSwWERaD
+         a8fqYFEUaW17INJdL/DhYHwRq63R4Tn5guv4vz85DQrD+Rbm4PABVpR1UWMXNW8iqsC7
+         v/+6cqkDnEOSierDGd2h4p26nzuTiBL5vit20PTNYoc5bmzKw8E9bn8usvvtpRFAFsPr
+         +mokK3TkELVgYG3xPqVN7HTuKOOCtShoA6mUAqlGEzx1RLfLgc72zdOyDtfUjBGI5DmF
+         ui2+AH1o2dLqRmVJPczNROshvGPPZoyqHmpLwjlQuhHKHPXXTz18ymYl6qShBihwwZ1O
+         z7VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyzEwC02Yo9uCQWr9dklBTIYKuC5gebWpKiP4lClNQ4mi/2mxlIZ5lmXgzytH2pLrkj9nyUVq2yL0h@vger.kernel.org, AJvYcCXQ8FSPBvBBLSXe2DUzTo97dHWN1/Y4aPWUTZTVHCjlJ162RYU4uacDo50umBQp8o8k8HGtRdTSxRjfhWq0wg==@vger.kernel.org, AJvYcCXYa7qHfQwxIYmMKnFN4mlEVOHddHDpJ4rQjfAk0LGGQcpFXjfyzM0na2dHu5FsreHkjjCzdAQWyOAURwcw@vger.kernel.org, AJvYcCXtZhSFwM5ONMqV81xXa7ZYAQdLYA15yUQMOwBDlSnr8WeuLGL4iozDmncz6a7m2c3N9Lg2ONnbEQuJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzw0v7jj9wVu4VI2jfOY23bHQGOsbFEb08t1/HJIWG9mrFL2goq
+	GNEP3AV/EjNLd4cKdkDjKYu7fGrRms7eR5/8ONZdOG1P004GEROK
+X-Gm-Gg: ASbGncuoINBuyGA0in9irvLUESmVS/bN/vkYzO8VAZYkM4qXRdWwExjFbE5r0QTrMAr
+	QS9eCjON2b1AgR9Bl8QhbjNylFYuVdTqlpWuNwvPfOBqAAFdBtHuz3UJ7oDSKEXOYH5snJ/du4P
+	uy0VfCho9f1wEhsMAkcByIIyCIOhnH+pq6wAtEyCxviAxWAJkdH8IlRybFlYKRcv2HvvTgT04bW
+	qwVm/a81su5LaOr/8v4B34jeQ1PLsUqoEic9G27a26gJcfk8Cf2IXvfknmSxwK5RHeBv/nZkO2b
+	muYtp4IvjCtK7KhPfqJI1vfziTYf8cbPeCcRBK/aTBYZTnG7xDJQGB4/6nEC
+X-Google-Smtp-Source: AGHT+IEplwsgnmJ40zGdd/jX9QmYaLpnH8VA9Jb9MgTmdt+M/WwD/lXDTq1aQNf0I+xwkJjllFIPBg==
+X-Received: by 2002:a17:902:d485:b0:221:87a2:ff9c with SMTP id d9443c01a7336-221a11ab572mr213110675ad.52.1740422182715;
+        Mon, 24 Feb 2025 10:36:22 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-220d5349226sm184951505ad.24.2025.02.24.10.36.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 10:36:22 -0800 (PST)
+Date: Tue, 25 Feb 2025 03:36:20 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/8] PCI: qcom-ep: add support for using the EP on
+ SAR2130P and SM8450
+Message-ID: <20250224183620.GA2064156@rocinante>
+References: <20250221-sar2130p-pci-v3-0-61a0fdfb75b4@linaro.org>
+ <20250222143657.GA3735810@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,42 +85,14 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250224034500.23024-3-feng.tang@linux.alibaba.com>
+In-Reply-To: <20250222143657.GA3735810@rocinante>
 
-On Mon, Feb 24, 2025 at 11:44:58AM +0800, Feng Tang wrote:
-> @@ -255,8 +271,7 @@ static int get_port_device_capability(struct pci_dev *dev)
->  		 * Disable hot-plug interrupts in case they have been enabled
->  		 * by the BIOS and the hot-plug service driver is not loaded.
->  		 */
-> -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
-> +		pcie_disable_hp_interrupts_early(dev);
->  	}
+> > Update the incomplete SM8450 support and bring in SAR2130P support for
+> > the PCIe1 controller to be used in EP mode.
+> 
+> Applied to controller/qcom, thank you!
 
-Moving the Slot Control code from pciehp to portdrv (as is done in
-patch 1 of this series) is hackish.  It should be avoided if at all
-possible.
+I updated the branch with "Reviewed-by" tags from Mani.
 
-As I've already said before...
-
-https://lore.kernel.org/all/Z6HYuBDP6uvE1Sf4@wunner.de/
-
-...it seems clearing those interrupts is only necessary
-in the CONFIG_HOTPLUG_PCI_PCIE=n case.  And in that case,
-there is no second Slot Control write, so there is no delay
-to be observed.
-
-Hence the proper solution is to make the clearing of the
-interrupts conditional on: !IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE)
-
-You keep sending new versions of these patches that do not
-incorporate the feedback I provided in the above-linked e-mail.
-
-Please re-read that e-mail and verify if the solution that
-I proposed solves the problem.  That solution does not
-require moving the Slot Control code from pciehp to portdrv.
-
-Thanks,
-
-Lukas
+	Krzysztof
 
