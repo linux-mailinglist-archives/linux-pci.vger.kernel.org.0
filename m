@@ -1,98 +1,106 @@
-Return-Path: <linux-pci+bounces-22250-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22251-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2FCEA42B99
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 19:36:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5014A42BA6
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 19:37:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 47D4D7A1BF7
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 18:35:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A567188AC8F
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 18:37:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69BBA26618C;
-	Mon, 24 Feb 2025 18:36:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32483266194;
+	Mon, 24 Feb 2025 18:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="jgnoQ/tH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B099B1C5F27;
-	Mon, 24 Feb 2025 18:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3314E8828;
+	Mon, 24 Feb 2025 18:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740422185; cv=none; b=oXVfi5VrpO06NP4Guq3fc22xZZ242+yXkkAWzKg0vbukLxe+f67xOPJC4cGHV09cMf+3K5BpfHR8w9F3HgaHmY7sH+t7BP5gEseLjhEjBdj57FsV1SRjNlvLpuOP1jgMNcwz+87jvIBZP3KEFn4n852Kb7y4MCt6nzS+dQn5v4A=
+	t=1740422216; cv=none; b=PB2anSOqyfZOS1zSWWpN4ltYoW/mBeauD1wsx5FP8OQclyrdr5JyzaM4YWo3VRvuYtfRBufG7ctaJJAYTuG6l6P5Y7dQQXrIPWb9wSf+ewp4/iLMVtBuTMCGc5OfVTbwTOSVuw3prItPMoE6NKBnyf5Bj137Hh0o5tk36HkGweQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740422185; c=relaxed/simple;
-	bh=gwd0kHHM6yEt5vGNuet2cFmwY7fgQBCNxAjsE9uoDxw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g1VocN7UZF++z4yc22VPNLouSncjHE0SXXB0TnVB/hjJ+rvFWW6NNvPGxs0toSF3pTJB7OxzLothfaxhBqc+CFHy7lhGoPHrZDaSDBjAZj9BuqRzFa1Hiqwz6TR3df8mdSXE+ID1rr567qX8QjgEKItyQPu2W7BlDJL51ZFdO0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-220ecbdb4c2so16674285ad.3;
-        Mon, 24 Feb 2025 10:36:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740422183; x=1741026983;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C+iuRvEJQMhX8pBK/9EUfHF9HLzVHhSe33fGhQO8PJQ=;
-        b=bE4zPcWmJKboizyPkonldfAlJtWQotrjBapq9SzkCWRhH1UXmoW4t4JUakvSwWERaD
-         a8fqYFEUaW17INJdL/DhYHwRq63R4Tn5guv4vz85DQrD+Rbm4PABVpR1UWMXNW8iqsC7
-         v/+6cqkDnEOSierDGd2h4p26nzuTiBL5vit20PTNYoc5bmzKw8E9bn8usvvtpRFAFsPr
-         +mokK3TkELVgYG3xPqVN7HTuKOOCtShoA6mUAqlGEzx1RLfLgc72zdOyDtfUjBGI5DmF
-         ui2+AH1o2dLqRmVJPczNROshvGPPZoyqHmpLwjlQuhHKHPXXTz18ymYl6qShBihwwZ1O
-         z7VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyzEwC02Yo9uCQWr9dklBTIYKuC5gebWpKiP4lClNQ4mi/2mxlIZ5lmXgzytH2pLrkj9nyUVq2yL0h@vger.kernel.org, AJvYcCXQ8FSPBvBBLSXe2DUzTo97dHWN1/Y4aPWUTZTVHCjlJ162RYU4uacDo50umBQp8o8k8HGtRdTSxRjfhWq0wg==@vger.kernel.org, AJvYcCXYa7qHfQwxIYmMKnFN4mlEVOHddHDpJ4rQjfAk0LGGQcpFXjfyzM0na2dHu5FsreHkjjCzdAQWyOAURwcw@vger.kernel.org, AJvYcCXtZhSFwM5ONMqV81xXa7ZYAQdLYA15yUQMOwBDlSnr8WeuLGL4iozDmncz6a7m2c3N9Lg2ONnbEQuJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzw0v7jj9wVu4VI2jfOY23bHQGOsbFEb08t1/HJIWG9mrFL2goq
-	GNEP3AV/EjNLd4cKdkDjKYu7fGrRms7eR5/8ONZdOG1P004GEROK
-X-Gm-Gg: ASbGncuoINBuyGA0in9irvLUESmVS/bN/vkYzO8VAZYkM4qXRdWwExjFbE5r0QTrMAr
-	QS9eCjON2b1AgR9Bl8QhbjNylFYuVdTqlpWuNwvPfOBqAAFdBtHuz3UJ7oDSKEXOYH5snJ/du4P
-	uy0VfCho9f1wEhsMAkcByIIyCIOhnH+pq6wAtEyCxviAxWAJkdH8IlRybFlYKRcv2HvvTgT04bW
-	qwVm/a81su5LaOr/8v4B34jeQ1PLsUqoEic9G27a26gJcfk8Cf2IXvfknmSxwK5RHeBv/nZkO2b
-	muYtp4IvjCtK7KhPfqJI1vfziTYf8cbPeCcRBK/aTBYZTnG7xDJQGB4/6nEC
-X-Google-Smtp-Source: AGHT+IEplwsgnmJ40zGdd/jX9QmYaLpnH8VA9Jb9MgTmdt+M/WwD/lXDTq1aQNf0I+xwkJjllFIPBg==
-X-Received: by 2002:a17:902:d485:b0:221:87a2:ff9c with SMTP id d9443c01a7336-221a11ab572mr213110675ad.52.1740422182715;
-        Mon, 24 Feb 2025 10:36:22 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-220d5349226sm184951505ad.24.2025.02.24.10.36.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 10:36:22 -0800 (PST)
-Date: Tue, 25 Feb 2025 03:36:20 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Mrinmay Sarkar <quic_msarkar@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/8] PCI: qcom-ep: add support for using the EP on
- SAR2130P and SM8450
-Message-ID: <20250224183620.GA2064156@rocinante>
-References: <20250221-sar2130p-pci-v3-0-61a0fdfb75b4@linaro.org>
- <20250222143657.GA3735810@rocinante>
+	s=arc-20240116; t=1740422216; c=relaxed/simple;
+	bh=Vl6urr6HQFsUbyaJvMwo6I4XeN66kqeEoBFOmL22k9E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=p4qxbAjX2HECLrHboXkaAlL6ZmePfzH9ydbYG6ZeMvixTTCRZa02oIBBpk9kPEyV8/RQ50GTWIXboHRy1S9AOt4FJUloa80bWChxQIGuX6xxMa9131O9rJAo4pbHNLFRDYGOuAkgiGFUq40FkSbW1rFatBmjcPlaz2XApSNpkG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=jgnoQ/tH; arc=none smtp.client-ip=49.12.72.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
+From: Fiona Behrens <me@kloenk.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
+	t=1740422207; bh=DOBfBGdX7ZZpM/xley3bGLMroG6LxxKexfb2wwpHXiI=;
+	h=From:Date:Subject:To:Cc;
+	b=jgnoQ/tH7GHyoYuDPZaTRXuib9NV/QbG//1IdFGsG81vY8iDXvu47JMDLxXD/9HGO
+	 AQhUrrJuz+mP0mVH3zvl0uZZdH9n6x8XFlLsr6ZrWq1h5Uivr0pV2EW68moEUvyufr
+	 35qhXr0YUVDWnwFhveVuLl5nd3G0D4a1EsvMK++E=
+Date: Mon, 24 Feb 2025 19:36:43 +0100
+Subject: [PATCH] rust: io: fix devres test with new io accessor functions
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250222143657.GA3735810@rocinante>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250224-rust-iowrite-read8-fix-v1-1-c6abee346897@kloenk.dev>
+X-B4-Tracking: v=1; b=H4sIADq8vGcC/02MSw7CMAwFr1J5jUWJiPhcBbFw0gf1JkFOWipVv
+ TuBFbs3T5pZqcAUha7dSoZZi+bU4LDrKI6SnmAdGpPrne+dO7JNpbLmt2kFG2Q480MX9s5LjAF
+ yOXlq8svQ7l/4dm8cpICDSYrjNzeYzjCO2bD/25ywVNq2D8Vs+SCXAAAA
+X-Change-ID: 20250224-rust-iowrite-read8-fix-525accbea975
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, Fiona Behrens <me@kloenk.dev>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=849; i=me@kloenk.dev;
+ h=from:subject:message-id; bh=Vl6urr6HQFsUbyaJvMwo6I4XeN66kqeEoBFOmL22k9E=;
+ b=owJ4nJvAy8zAJdbGuXyr5NPHToyn1ZIY0vfssfkR3/pp+aGXNc9WpWTlVWtk1/r57XXZlrr79
+ rKYA0r1tjkdpSwMYlwMsmKKLFu87t//kbksy/7+3W6YOaxMIEMYuDgFYCLcoQx/xZZaTqyOORL9
+ oS5LpqFky4GEjUfeyMb6i6wpkY4RzhX2YPgrqr27+eCph7ce+alOmvNpv+DUv/7PrXxvyDsn1Zz
+ 3/HiYFQAJHE6a
+X-Developer-Key: i=me@kloenk.dev; a=openpgp;
+ fpr=B44ADFDFF869A66A3FDFDD8B8609A7B519E5E342
 
-> > Update the incomplete SM8450 support and bring in SAR2130P support for
-> > the PCIe1 controller to be used in EP mode.
-> 
-> Applied to controller/qcom, thank you!
+Fix doctest of `Devres` which still used `writeb` instead of `write8`.
 
-I updated the branch with "Reviewed-by" tags from Mani.
+Fixes: 354fd6e86fac ("rust: io: rename `io::Io` accessors")
+Signed-off-by: Fiona Behrens <me@kloenk.dev>
+---
+ rust/kernel/devres.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	Krzysztof
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+index 942376f6f3af..ddb1ce4a78d9 100644
+--- a/rust/kernel/devres.rs
++++ b/rust/kernel/devres.rs
+@@ -92,7 +92,7 @@ struct DevresInner<T> {
+ /// let devres = Devres::new(&dev, iomem, GFP_KERNEL)?;
+ ///
+ /// let res = devres.try_access().ok_or(ENXIO)?;
+-/// res.writel(0x42, 0x0);
++/// res.write8(0x42, 0x0);
+ /// # Ok(())
+ /// # }
+ /// ```
+
+---
+base-commit: 354fd6e86fac60b7c1ce2e6c83d4e6bf8af95f59
+change-id: 20250224-rust-iowrite-read8-fix-525accbea975
+
+Best regards,
+-- 
+Fiona Behrens <me@kloenk.dev>
+
 
