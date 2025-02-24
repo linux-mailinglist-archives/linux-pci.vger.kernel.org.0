@@ -1,97 +1,95 @@
-Return-Path: <linux-pci+bounces-22144-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22145-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E83D3A414F0
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 06:52:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E1AEA41553
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 07:28:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 457AE188995B
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 05:52:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 489F63B3D85
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 06:27:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BB351CBE8C;
-	Mon, 24 Feb 2025 05:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9C01CBEAA;
+	Mon, 24 Feb 2025 06:28:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RPOCCvHC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qoUD2t7f"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CFC1C8635
-	for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2025 05:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921A81CD21C
+	for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2025 06:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740376344; cv=none; b=dzGuMcmT5k98e63Wku4Xv9XDYTfd2EX6eI6aekbN7G7g7ZbfQeEZ6KFW2KN1mPa/p1kex0cGIyzNLHcEBcQmNwmbXTsOcT8nxISX8ge4e8XS61W0IyLO1tpcJQx/tcaiKsvFyWwLGcAq1o/8kDpmhOh1JaCuqfsoAoFHIg4fYA0=
+	t=1740378483; cv=none; b=LdQVqml6sKqLzb2mC4ctFsTA1zjnnWhsdil5dS32sVfn1wJ46AYzYW4AcUd2tjqmIZnmJouyBUOD9NbHXuXhj4CZjSsAJ+GisNPNDNwCFfbuoYSIu5FsEHJg3jHcz1uV6unqRU2W49zmu0OjW1KjEuuIOW0G5tGPl0NyPSeadu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740376344; c=relaxed/simple;
-	bh=z/ovU3nCV1OoHF37nW8XJ/TI/72Wl3CaicUIDjd0OOo=;
+	s=arc-20240116; t=1740378483; c=relaxed/simple;
+	bh=JBxYgWAZ28Kv42kvm7igFIx+vD9+GBBjiVu1EhW0iBg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ikvh2nHPEA2Eyd5N0cW9Bg3OzEDyJZx7ggCXvrm16cc2o4/7c+h7/9facx/UMvzwFwiR2Kxqhh1begL1fWjkicBpq5MKZl/c4T4Gt02R7EwY2AbXvPryKQ+BteqnUgkXaaMDcvE7y5/9OwfGTN5cry00vV8EhkBa25PEXNJpEI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RPOCCvHC; arc=none smtp.client-ip=209.85.214.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=k5Ya72fzXpWAibJWd/VZa+SuxgOWaaNa5WwMpoqFxf8TSuLw9JcsFm8RLqWFhXCEEnnlho77GuOad6DzAGWeV7oCihUMmgGLqqSTxl/P18eb5fT1n26G6Qcp4B3mBut5PWLZea5fxX3MRyfIsWiVaCQfd752V6ZRCA4NpqHjbMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qoUD2t7f; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22113560c57so79462615ad.2
-        for <linux-pci@vger.kernel.org>; Sun, 23 Feb 2025 21:52:22 -0800 (PST)
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22101839807so84620125ad.3
+        for <linux-pci@vger.kernel.org>; Sun, 23 Feb 2025 22:28:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740376342; x=1740981142; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1740378480; x=1740983280; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=KMGZVixZMsM1QUrt21MIcd+lH0Pr9ebQZcDM8qRaS2Y=;
-        b=RPOCCvHCvS2gauU7yf5nrMWOdOrz+REHjFTwRd3bGwxMLZVUUZFEYuBuN9baXRxa8v
-         lwOYNyxG1KRk+StIJxXPYAWMs4V2yNmDfBy/wXFhKNnS51RzbzyB+UstaZQMbZ0cOG9c
-         MlUPu/f181b8TFs3ZS2qUFEy54Ts88g1OW3WfpJCVRh/CdiIOCaQoXh1DMBDxp7fZU7a
-         xlnQv7gnqUxsVk7YfTk+G068fW9Mp3Cgyo28IHtDguutxcT4HgjUxTt8y23FFknX7+1A
-         ku3AW5CthssYXH4w3ELu5hQVF4QpoJniiMrxi7W9Gjz+SeZ0ORKY1CouWtAzluZFbGvB
-         Q5NA==
+        bh=PETCcKuB37T/wvrGB8m2s5znMowGvGlKoqhimbx768Q=;
+        b=qoUD2t7fYY9xKe3RPR9q6Kmpq7u0/QGHeQAMiMXrljVDBuY/dcYtkY1OcMPcOSl2+E
+         3aqt0gZtZcjZfVEjGxkWILxFyT4brbEzDIftrgP6KoFdD/COnFSTKe+WyZgF6+OHyHz6
+         XQEh+8X7ztmafaIvsFJTMzoiXi5B5cXRXWIPJFtcKcBzS7xlxcbi4kQkNvgc/+ibic3t
+         Q59qpFmZAnR+zvKgLKnhMKi+jDdsis7tc15IE4fBVX5S340lbDcRdJ82O0Vnzz0mc0TS
+         7dl1SBCcsBgeojwDoHxqIclFTpo3jQRkP2WWzZzH/MRpfdpg+O5iQ2LTju7KpCx5Y/GM
+         jqkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740376342; x=1740981142;
+        d=1e100.net; s=20230601; t=1740378480; x=1740983280;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KMGZVixZMsM1QUrt21MIcd+lH0Pr9ebQZcDM8qRaS2Y=;
-        b=g+KAS9Ww3orGlPna0Sag7xQOPcg+NQYqSx2pLinJ64je2zKWshYOeYEHdviaZBj670
-         w0z/5alBZn1nv24d8F5HEbGC0h2bOuLwOaAAhwF9Ky7a3Pgv6G4fpaPvdlVsAdBxLo1N
-         laiI5ude32/aHJXuAAUNVBl/equxobfQ5R6rSoJvOa1SK9dAxXpiFTWbBParjCuwfmTc
-         OUztGj3DdrEYcnZXfDt0/7lmkdCfnuORkm2nHKFk9mMnm6WHbsCs7nQsyWtC2NiFqL6Q
-         5XDvQN80UX9hqQdtD4sSn8TyrGDuwSw9nOldr88kzT7/is/zXc6CtozeA8XrsMlieAPl
-         okAA==
-X-Forwarded-Encrypted: i=1; AJvYcCWG6dQEFH39LIU9uCn48k13wC8laAEBZDeojSOHQwRa/1Zqe5VPcOwxkKstnY5RzWtEqhXKgijoSgc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVrwqVlmII6Cp+BTwuj+3M5cVoE1kW8ezrPNSDwTU4xyJX/y0x
-	2XEiKkc0ZsbyC59LR21oHz1J33q5JOoEXrSOO6Opyu89F901ulbe57UcR+5XMg==
-X-Gm-Gg: ASbGnctYvAPufLFLSAVzQ3gdEXDT9CRo47iAI263lyPc4Ew9EMncfowv8R4GblpikK0
-	CrKZoq13zd1LV/b1rlJ8MmYPynODc7T97vunjhH+FSPBiTDvcaPIuQWk/NZGw3Nl6/YG9RX9Aq+
-	1jKmj0O+Yvl6DEWYpkMxnCzLxg8v2aCcj7eFZ7huPLssvjaD1vbNMLCt80/A7u+UgPZoVFrojkT
-	oPKKvN4Z4jdV4U3RrzwLmpp4fKddQza9pvRNuk7ayH7wEYfsWkcCNw9MyLUm8GloI2tQzMWa11W
-	F0iwzdVz10JY6AnbwzRq6azy9lun6ks6fgE+
-X-Google-Smtp-Source: AGHT+IE2ru4PtjCsPp2tarf/l/cdfK16EG3Qcx2wKj6eAZLOtqSbVpSz/KOi9yvw/uq2s9+oluXICA==
-X-Received: by 2002:a05:6a20:9186:b0:1ee:d8c8:4b7f with SMTP id adf61e73a8af0-1eef530072dmr19652797637.25.1740376341985;
-        Sun, 23 Feb 2025 21:52:21 -0800 (PST)
+        bh=PETCcKuB37T/wvrGB8m2s5znMowGvGlKoqhimbx768Q=;
+        b=VOCghthy7ZnZhqZf2H4eveVjagM81//DNlt40Oki0v0IubdzsYAcumH5BUK2mKrF9B
+         73nzz4nq9BTp0Yvy71o82DIS92tuEjI9i3bP7Aj/1/F9vUesrKF06ecftbZ9ij787WqA
+         TLVXuiCyAaMPc9cy5JbHGREkM5+Yns1V08SayV3uA+CSmBIYWioWRvEOQ03sFgAJ99pm
+         e03wgPfcF31P7eqPG69+PDARLMcsKJOWB6RICGa3hf5ZyIIIb+RbFUqnWJzgmZRIRa1s
+         YHRXR1jgYOvP5E6EY9+vp71HhrHosd7uBf63Veao9anJeEFrMs0uEH2i1Et7ZEnuzOt9
+         b5dg==
+X-Forwarded-Encrypted: i=1; AJvYcCVR2rT5AZra33B1tK4I9mekLj36mJIY6T/nE7qK27sNz4Cj/ZtyC+QbABQSqK4VW7lYv+9gdksRUVE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywdr0c66YQiLwyrvPJSa3ngTrDPn1JwXXGjKjBkhEMnxSs+LOsW
+	ygLa2N02r5JSa80oggVLco92JN+o6X2kAcnS4pTlrVJKfJvffQoHx1nACmmnkQ==
+X-Gm-Gg: ASbGncs0b8AdwVS6CCHt49qrsb6WHbieLHUeqsKapNnTzj80vfDLSUUENBipXHxAKbz
+	lIkGs98ga/RpPt5QipL7YLD+i1DY548CmG6T0EWRzm8p/bl8e0dAINHFSOojkiIm/sNned0Wk0O
+	1MVdXaQj4i0HHOWalTrjjTvMwLqHkmE7NOLxJYlkW3Je3zu3MRAywnNKdhVCuyvsEVmijQW2fl2
+	3bdIQN5azjT1u8+oa+MVnnx4C421kFxd1GGbE2GsG/X+T1q1T45+KMNNEiQRaF+eIDMi5E5TGVs
+	6hJNDd6sYcGscVSppVOvcWBQibT4KbIe6tmZ
+X-Google-Smtp-Source: AGHT+IH1vvCmbqlYXXcs0TtiIJdkasozODilOIXoG9XWVanlEyl8M/uGy74MbXPTQ47Drg6++WedGA==
+X-Received: by 2002:a17:903:18e:b0:220:c178:b3e with SMTP id d9443c01a7336-2219ff50bf0mr205208335ad.16.1740378479832;
+        Sun, 23 Feb 2025 22:27:59 -0800 (PST)
 Received: from thinkpad ([36.255.17.162])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-adb5870cba6sm18479524a12.42.2025.02.23.21.52.17
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7326a52f865sm15679226b3a.80.2025.02.23.22.27.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2025 21:52:21 -0800 (PST)
-Date: Mon, 24 Feb 2025 11:22:16 +0530
+        Sun, 23 Feb 2025 22:27:59 -0800 (PST)
+Date: Mon, 24 Feb 2025 11:57:50 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v3 2/2] PCI: mediatek-gen3: Configure PBUS_CSR registers
- for EN7581 SoC
-Message-ID: <20250224055216.o23dzwimrghbr2ow@thinkpad>
-References: <20250222-en7581-pcie-pbus-csr-v3-0-e0cca1f4d394@kernel.org>
- <20250222-en7581-pcie-pbus-csr-v3-2-e0cca1f4d394@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>
+Cc: Chen Wang <unicorn_wang@outlook.com>, Rob Herring <robh+dt@kernel.org>,
+	Chen Wang <unicornxw@gmail.com>, kw@linux.com,
+	u.kleine-koenig@baylibre.com, aou@eecs.berkeley.edu, arnd@arndb.de,
+	bhelgaas@google.com, conor+dt@kernel.org, guoren@kernel.org,
+	inochiama@outlook.com, krzk+dt@kernel.org, lee@kernel.org,
+	lpieralisi@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
+	pbrobinson@gmail.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-riscv@lists.infradead.org, chao.wei@sophgo.com,
+	xiaoguang.xing@sophgo.com, fengchun.li@sophgo.com
+Subject: Re: [PATCH v3 1/5] dt-bindings: pci: Add Sophgo SG2042 PCIe host
+Message-ID: <20250224062750.nqgugglenzp76z3d@thinkpad>
+References: <PN0PR01MB5662DF3C3D71A274A2E5B9C2FEC72@PN0PR01MB5662.INDPRD01.PROD.OUTLOOK.COM>
+ <20250221221330.GA367172@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -101,92 +99,83 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250222-en7581-pcie-pbus-csr-v3-2-e0cca1f4d394@kernel.org>
+In-Reply-To: <20250221221330.GA367172@bhelgaas>
 
-On Sat, Feb 22, 2025 at 11:43:45AM +0100, Lorenzo Bianconi wrote:
-> Configure PBus base address and address mask to allow the hw
-> to detect if a given address is accessible on PCIe controller.
+On Fri, Feb 21, 2025 at 04:13:30PM -0600, Bjorn Helgaas wrote:
+> [cc->to: Rob]
 > 
-> Fixes: f6ab898356dd ("PCI: mediatek-gen3: Add Airoha EN7581 support")
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
->  drivers/pci/controller/pcie-mediatek-gen3.c | 34 ++++++++++++++++++++++++++++-
->  1 file changed, 33 insertions(+), 1 deletion(-)
+> On Fri, Feb 21, 2025 at 11:29:20AM +0800, Chen Wang wrote:
+> > On 2025/2/20 2:22, Bjorn Helgaas wrote:
+> > > On Wed, Feb 12, 2025 at 01:54:11PM +0800, Chen Wang wrote:
+> > > > On 2025/2/12 12:25, Bjorn Helgaas wrote:
+> > > > [......]
+> > > > > > pcie_rc1 and pcie_rc2 share registers in cdns_pcie1_ctrl. By using
+> > > > > > different "sophgo,core-id" values, they can distinguish and access
+> > > > > > the registers they need in cdns_pcie1_ctrl.
+> > > > > Where does cdns_pcie1_ctrl fit in this example?  Does that enclose
+> > > > > both pcie_rc1 and pcie_rc2?
+> > > > cdns_pcie1_ctrl is defined as a syscon node,  which contains registers
+> > > > shared by pcie_rc1 and pcie_rc2. In the binding yaml file, I drew a diagram
+> > > > to describe the relationship between them, copy here for your quick
+> > > > reference:
+> > > > 
+> > > > +                     +-- Core (Link0) <---> pcie_rc1  +-----------------+
+> > > > +                     |                                |                 |
+> > > > +      Cadence IP 2 --+                                | cdns_pcie1_ctrl |
+> > > > +                     |                                |                 |
+> > > > +                     +-- Core (Link1) <---> pcie_rc2  +-----------------+
+> > > > 
+> > > > The following is an example with cdns_pcie1_ctrl added. For simplicity, I
+> > > > deleted pcie_rc0.
+> > >
+> > > Looks good.  It would be nice if there were some naming similarity or
+> > > comment or other hint to connect sophgo,core-id with the syscon node.
+> > > 
+> > > > pcie_rc1: pcie@7062000000 {
+> > > >      compatible = "sophgo,sg2042-pcie-host";
+> > > >      ...... // host bride level properties
+> > > >      linux,pci-domain = <1>;
+> > > >      sophgo,core-id = <0>;
+> > > >      sophgo,syscon-pcie-ctrl = <&cdns_pcie1_ctrl>;
+> > > >      port {
+> > > >          // port level properties
+> > > >          vendor-id = <0x1f1c>;
+> > > >          device-id = <0x2042>;
+> > > >          num-lanes = <2>;
+> > > >      };
+> > > > };
+> > > > 
+> > > > pcie_rc2: pcie@7062800000 {
+> > > >      compatible = "sophgo,sg2042-pcie-host";
+> > > >      ...... // host bride level properties
+> > > >      linux,pci-domain = <2>;
+> > > >      sophgo,core-id = <1>;
+> > > >      sophgo,syscon-pcie-ctrl = <&cdns_pcie1_ctrl>;
+> > > >      port {
+> > > >          // port level properties
+> > > >          vendor-id = <0x1f1c>;
+> > > >          device-id = <0x2042>;
+> > > >          num-lanes = <2>;
+> > > >      }
+> > > > 
+> > > > };
+> > > > 
+> > > > cdns_pcie1_ctrl: syscon@7063800000 {
+> > > >      compatible = "sophgo,sg2042-pcie-ctrl", "syscon";
+> > > >      reg = <0x70 0x63800000 0x0 0x800000>;
+> > > > };
+> > 
+> > I find dtb check will report error due to "port" is not a evaulated property
+> > for pcie host. Should we add a vendror specific property for this?
+> > 
+> > Or do you have any example for reference?
 > 
-> diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-> index 0f64e76e2111468e6a453889ead7fbc75804faf7..51103b7624c09ca957c22a25536dc9da25428e48 100644
-> --- a/drivers/pci/controller/pcie-mediatek-gen3.c
-> +++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-> @@ -15,6 +15,7 @@
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/irqdomain.h>
->  #include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
->  #include <linux/module.h>
->  #include <linux/msi.h>
->  #include <linux/of_device.h>
-> @@ -24,6 +25,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pm_domain.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
->  #include <linux/reset.h>
->  
->  #include "../pci.h"
-> @@ -930,9 +932,13 @@ static int mtk_pcie_parse_port(struct mtk_gen3_pcie *pcie)
->  
->  static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
->  {
-> +	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
->  	struct device *dev = pcie->dev;
-> +	struct resource_entry *entry;
-> +	u32 val, args[2], size, mask;
-> +	struct regmap *pbus_regmap;
-> +	resource_size_t addr;
->  	int err;
-> -	u32 val;
->  
->  	/*
->  	 * The controller may have been left out of reset by the bootloader
-> @@ -944,6 +950,32 @@ static int mtk_pcie_en7581_power_up(struct mtk_gen3_pcie *pcie)
->  	/* Wait for the time needed to complete the reset lines assert. */
->  	msleep(PCIE_EN7581_RESET_TIME_MS);
->  
-> +	/*
-> +	 * Configure PBus base address and base address mask to allow the
-> +	 * hw to detect if a given address is accessible on PCIe controller.
-> +	 */
-> +	pbus_regmap = syscon_regmap_lookup_by_phandle_args(dev->of_node,
-> +							   "mediatek,pbus-csr",
-> +							   ARRAY_SIZE(args),
-> +							   args);
-> +	if (IS_ERR(pbus_regmap))
-> +		return PTR_ERR(pbus_regmap);
-> +
-> +	entry = resource_list_first_type(&host->windows, IORESOURCE_MEM);
-> +	if (!entry)
-> +		return -EINVAL;
 
--ENODEV or -ENOMEM
+'port' is not a valid node name. It should be 'pcie' and should have the unit
+address corresponding to the bridge BDF. Please refer DT nodes of other
+platforms:
 
-> +
-> +	addr = entry->res->start - entry->offset;
-> +	err = regmap_write(pbus_regmap, args[0], lower_32_bits(addr));
-> +	if (err)
-
-MMIO write is not supposed to fail.
-
-> +		return err;
-> +
-> +	size = lower_32_bits(resource_size(entry->res));
-> +	mask = size ? GENMASK(31, __fls(size)) : 0;
-
-Size of MEM region could be 0?
-
-> +	err = regmap_write(pbus_regmap, args[1], mask);
-> +	if (err)
-
-MMIO write is not supposed to fail.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sm8450.dtsi#n2071
 
 - Mani
 
