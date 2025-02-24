@@ -1,239 +1,149 @@
-Return-Path: <linux-pci+bounces-22243-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22244-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A106A4285B
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 17:53:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 897C2A42911
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 18:14:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A11343A7537
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 16:50:26 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 296871888955
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 17:08:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAEA6263C72;
-	Mon, 24 Feb 2025 16:50:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1712260A5B;
+	Mon, 24 Feb 2025 17:08:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WW61np/K"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eubje9Yl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26132627F2;
-	Mon, 24 Feb 2025 16:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91326244195;
+	Mon, 24 Feb 2025 17:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740415835; cv=none; b=dq4N0tgOnM+vN04IypkhEGJ9OJwzxYsW78UxPxE8kyP3pMWQz0yv39AxxkvigEvsEDoAn77D2gY/ecqdGyOSea+3NvH2b6cuWVdeuM9JFmQApT/GIi7DrIhJ8ITxnL4n+Dj5Cmr8L/+JID3LfpOwT7CZzE1G+siOx/eVvFZFZt0=
+	t=1740416913; cv=none; b=BR0jajcUQ5GB9tjtIyOIuEJtchc/bbYLtdR8TTXlwaZYmbmeBjVIi+NS257bbwK48Lrf/4MgbchxB/kZS1kDgPHFqiyqPTboWloHs9zgO/uhDQ1/iKSmap5AsWlMdQe9GZT5/LkJyRxoS9f3PHBmsGsF7ZKbi2/D4fZuArmEEK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740415835; c=relaxed/simple;
-	bh=vMWP1X1cnE+Dg2jsB5PyLd3fB7XjQNnO/YdhAylQXkI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Az5yV7Y6zh0KGvXJCwvgNYd8Hs6bm2yOlr8yFnsGJ6msWpCZ0D6mumjhCpLK/Ifbh0Gy6vLumzNwkvsxMwG1572nB39enkbCWRAm/ceYAjm2mO4CRh2+caXknzHfeieQ+rYnF6f12M6UuE3Z8BqRqJSUULIQe2I94ZPBFtPGokA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WW61np/K; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740415834; x=1771951834;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vMWP1X1cnE+Dg2jsB5PyLd3fB7XjQNnO/YdhAylQXkI=;
-  b=WW61np/K/CpDvCJxgLALmKliNLC9XlDTzcJuho26yUA8ofkrCPgUOea2
-   dDmqgwQGv8v6nvbcfmFIFAXAc+wSjIPtBg2PhLpbtqSYtghzL9FfaNo6e
-   8tjFpYyTTtRT7Ropcy6ZvKuQNdxssmR6Xy6NANsK6DMTrSwr36l5cpPTU
-   aHfa/0Xxu2373rtuP7Q6KlxxxVtxnv4zIoEoDU/b+MfK5hFHlFvuVfejG
-   cvZcz/SuHvXICkF4t2F1YMj5VLYYhVDkkNluu6Cm8Ua2bcaZPgWEX7HWN
-   DcOJyS4IMzrx8MNDoJbq8DuYDT1tITlGJLNSZsQC+9t89N9dhToTYYtvh
-   g==;
-X-CSE-ConnectionGUID: iPLwvbiWSTyb+B6DPdySmQ==
-X-CSE-MsgGUID: mYeUAt4rTBKnWOTIsYcynw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="41063227"
-X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
-   d="scan'208";a="41063227"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 08:50:34 -0800
-X-CSE-ConnectionGUID: CILdZhPZQgaBWolf7fwafg==
-X-CSE-MsgGUID: YETGrKstSGKRhD+szY1Yyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
-   d="scan'208";a="121032469"
-Received: from anshuma1-desk.iind.intel.com ([10.190.239.112])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 08:50:30 -0800
-From: Anshuman Gupta <anshuman.gupta@intel.com>
-To: intel-xe@lists.freedesktop.org,
-	linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Cc: rafael@kernel.org,
-	lenb@kernel.org,
-	bhelgaas@google.com,
-	ilpo.jarvinen@linux.intel.com,
-	lucas.demarchi@intel.com,
-	rodrigo.vivi@intel.com,
-	badal.nilawar@intel.com,
-	kam.nasim@intel.com,
-	Anshuman Gupta <anshuman.gupta@intel.com>
-Subject: [RFC 6/6] drm/xe/vrsr: Enable VRSR
-Date: Mon, 24 Feb 2025 22:18:49 +0530
-Message-Id: <20250224164849.3746751-7-anshuman.gupta@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250224164849.3746751-1-anshuman.gupta@intel.com>
-References: <20250224164849.3746751-1-anshuman.gupta@intel.com>
+	s=arc-20240116; t=1740416913; c=relaxed/simple;
+	bh=I5InXa5iPxIUg/XL60LjkpRPCQ4Lls7ukDWRdePp2vA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Au7EuIKxQTbjL7wVCnxhpkH/tS+rye2Rd9P0+DJFOMJk2bxVCcGSeM0mSoeBlE1E+beRTFpJ9tVWcy+1QPXB2RJC9eiqed9286MGIea/RvvthDy1nZv6Wy2R0ABviDzT1pDIm+QTLDrjEPsN5VYi0BGH9slSCGQOHwrJh3nKXuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eubje9Yl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7EA5C4CED6;
+	Mon, 24 Feb 2025 17:08:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740416913;
+	bh=I5InXa5iPxIUg/XL60LjkpRPCQ4Lls7ukDWRdePp2vA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eubje9YlzJi0bBqI0AJSqLsQzrWoa05DCF4dgQBTG67+gfFKVSE6L+hh0/t4ZwX+w
+	 rnVqn/tMyeSMSBJwS9FEuM7TaD2jxfme7QAgZvFBJO15SathlzjfJGvKPymY9/iSWY
+	 XLcJlIPqc9Y2GYkObgbSNBWu5Wpff8xnVxjdKOzue5JmJDWG/Agwp9RbJfT7zC60v8
+	 jeYEZze2FbDMF+Of/JG5USwIcNmOZCLhtJrkiG13XUrQdF/xePJhxFUq7CSfkIXRrE
+	 X9x8ZpRa90FZlDRgpQqN2k4w+b/RGXWvg9PMxKohOc0yEPuAfykOvnwvAHyicbye/5
+	 gwpDw0eztSzVA==
+Date: Mon, 24 Feb 2025 18:08:26 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, manivannan.sadhasivam@linaro.org,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com,
+	Jonathan.Cameron@huawei.com, fan.ni@samsung.com,
+	nifan.cxl@gmail.com, a.manzanares@samsung.com,
+	pankaj.dubey@samsung.com, 18255117159@163.com,
+	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	will@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH v7 0/5] Add support for debugfs based RAS DES feature in
+ PCIe DW
+Message-ID: <Z7yniizCTdBvUBI0@ryzen>
+References: <CGME20250221132011epcas5p4dea1e9ae5c09afaabcd1822f3a7d15c5@epcas5p4.samsung.com>
+ <20250221131548.59616-1-shradha.t@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221131548.59616-1-shradha.t@samsung.com>
 
-Enabling VRSR in runtime suspend and also in System wide suspend.
-Also fix couple of typo in xe_pm.c.
+Hello Shradha,
 
-Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
-Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
----
- drivers/gpu/drm/xe/xe_pci.c |  4 +--
- drivers/gpu/drm/xe/xe_pm.c  | 49 +++++++++++++++++++++++++++----------
- 2 files changed, 38 insertions(+), 15 deletions(-)
+On Fri, Feb 21, 2025 at 06:45:43PM +0530, Shradha Todi wrote:
+> DesignWare controller provides a vendor specific extended capability
+> called RASDES as an IP feature. This extended capability  provides
+> hardware information like:
+>  - Debug registers to know the state of the link or controller. 
+>  - Error injection mechanisms to inject various PCIe errors including
+>    sequence number, CRC
+>  - Statistical counters to know how many times a particular event
+>    occurred
+> 
+> However, in Linux we do not have any generic or custom support to be
+> able to use this feature in an efficient manner. This is the reason we
+> are proposing this framework. Debug and bring up time of high-speed IPs
+> are highly dependent on costlier hardware analyzers and this solution
+> will in some ways help to reduce the HW analyzer usage.
+> 
+> The debugfs entries can be used to get information about underlying
+> hardware and can be shared with user space. Separate debugfs entries has
+> been created to cater to all the DES hooks provided by the controller.
+> The debugfs entries interacts with the RASDES registers in the required
+> sequence and provides the meaningful data to the user. This eases the
+> effort to understand and use the register information for debugging.
+> 
+> This series creates a generic debugfs framework for DesignWare PCIe
+> controllers where other debug features apart from RASDES can also be
+> added as and when required.
+> 
+> v7:
+>     - Moved the patches to make finding VSEC IDs common from Mani's patchset [1]
+>       into this series to remove dependancy as discussed
+>     - Addressed style related change requests from v6
 
-diff --git a/drivers/gpu/drm/xe/xe_pci.c b/drivers/gpu/drm/xe/xe_pci.c
-index 70b697fde5b9..55b42b3a10d2 100644
---- a/drivers/gpu/drm/xe/xe_pci.c
-+++ b/drivers/gpu/drm/xe/xe_pci.c
-@@ -967,7 +967,7 @@ static int xe_pci_suspend(struct device *dev)
- 
- 	/*
- 	 * Enabling D3Cold is needed for S2Idle/S0ix.
--	 * It is save to allow here since xe_pm_suspend has evicted
-+	 * It is safe to allow here since xe_pm_suspend has evicted
- 	 * the local memory and the direct complete optimization is disabled.
- 	 */
- 	d3cold_toggle(pdev, D3COLD_ENABLE);
-@@ -983,7 +983,7 @@ static int xe_pci_resume(struct device *dev)
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	int err;
- 
--	/* Give back the D3Cold decision to the runtime P M*/
-+	/* Give back the D3Cold decision to the runtime PM */
- 	d3cold_toggle(pdev, D3COLD_DISABLE);
- 
- 	err = pci_set_power_state(pdev, PCI_D0);
-diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
-index 6d28aedcb062..5c96f8629a87 100644
---- a/drivers/gpu/drm/xe/xe_pm.c
-+++ b/drivers/gpu/drm/xe/xe_pm.c
-@@ -232,10 +232,12 @@ int xe_pm_suspend(struct xe_device *xe)
- 
- 	xe_display_pm_suspend(xe);
- 
--	/* FIXME: Super racey... */
--	err = xe_bo_evict_all(xe);
--	if (err)
--		goto err_pxp;
-+	if (xe->d3cold.allowed == XE_D3COLD_OFF) {
-+		/* FIXME: Super racey... */
-+		err = xe_bo_evict_all(xe);
-+		if (err)
-+			goto err_pxp;
-+	}
- 
- 	for_each_gt(gt, xe, id) {
- 		err = xe_gt_suspend(gt);
-@@ -247,6 +249,12 @@ int xe_pm_suspend(struct xe_device *xe)
- 
- 	xe_display_pm_suspend_late(xe);
- 
-+	if (xe->d3cold.allowed == XE_D3COLD_VRSR) {
-+		err = xe_pm_enable_vrsr(xe, true);
-+			if (err)
-+				goto err_display;
-+	}
-+
- 	drm_dbg(&xe->drm, "Device suspended\n");
- 	return 0;
- 
-@@ -288,9 +296,11 @@ int xe_pm_resume(struct xe_device *xe)
- 	 * This only restores pinned memory which is the memory required for the
- 	 * GT(s) to resume.
- 	 */
--	err = xe_bo_restore_kernel(xe);
--	if (err)
--		goto err;
-+	if (xe->d3cold.allowed == XE_D3COLD_OFF) {
-+		err = xe_bo_restore_kernel(xe);
-+		if (err)
-+			goto err;
-+	}
- 
- 	xe_irq_resume(xe);
- 
-@@ -299,9 +309,11 @@ int xe_pm_resume(struct xe_device *xe)
- 
- 	xe_display_pm_resume(xe);
- 
--	err = xe_bo_restore_user(xe);
--	if (err)
--		goto err;
-+	if (xe->d3cold.allowed == XE_D3COLD_OFF) {
-+		err = xe_bo_restore_user(xe);
-+		if (err)
-+			goto err;
-+	}
- 
- 	xe_pxp_pm_resume(xe->pxp);
- 
-@@ -543,7 +555,7 @@ int xe_pm_runtime_suspend(struct xe_device *xe)
- 
- 	xe_display_pm_runtime_suspend(xe);
- 
--	if (xe->d3cold.allowed) {
-+	if (xe->d3cold.allowed == XE_D3COLD_OFF) {
- 		err = xe_bo_evict_all(xe);
- 		if (err)
- 			goto out_resume;
-@@ -559,6 +571,14 @@ int xe_pm_runtime_suspend(struct xe_device *xe)
- 
- 	xe_display_pm_runtime_suspend_late(xe);
- 
-+	if (xe->d3cold.allowed == XE_D3COLD_VRSR) {
-+		err = xe_pm_enable_vrsr(xe, true);
-+			if (err) {
-+				drm_err(&xe->drm, "Failed to enable VRSR: %d\n", err);
-+				goto out_resume;
-+			}
-+	}
-+
- 	xe_rpm_lockmap_release(xe);
- 	xe_pm_write_callback_task(xe, NULL);
- 	return 0;
-@@ -590,7 +610,7 @@ int xe_pm_runtime_resume(struct xe_device *xe)
- 
- 	xe_rpm_lockmap_acquire(xe);
- 
--	if (xe->d3cold.allowed) {
-+	if (xe->d3cold.allowed == XE_D3COLD_OFF) {
- 		err = xe_pcode_ready(xe, true);
- 		if (err)
- 			goto out;
-@@ -606,6 +626,9 @@ int xe_pm_runtime_resume(struct xe_device *xe)
- 			goto out;
- 	}
- 
-+	if (xe->d3cold.allowed == XE_D3COLD_VRSR)
-+		xe_display_pm_resume_early(xe);
-+
- 	xe_irq_resume(xe);
- 
- 	for_each_gt(gt, xe, id)
-@@ -613,7 +636,7 @@ int xe_pm_runtime_resume(struct xe_device *xe)
- 
- 	xe_display_pm_runtime_resume(xe);
- 
--	if (xe->d3cold.allowed) {
-+	if (xe->d3cold.allowed == XE_D3COLD_OFF) {
- 		err = xe_bo_restore_user(xe);
- 		if (err)
- 			goto out;
--- 
-2.34.1
+I tested this series, and one thing that I noticed:
+
+# for f in /sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/*/counter_enable; do echo 1 > $f; done
+
+# grep "" /sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/*/* | grep Disabled
+/sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/ctl_skp_os_parity_err/counter_enable:Counter Disabled
+/sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/deskew_uncompleted_err/counter_enable:Counter Disabled
+/sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/framing_err_in_l0/counter_enable:Counter Disabled
+/sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/margin_crc_parity_err/counter_enable:Counter Disabled
+/sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/retimer_parity_err_1st/counter_enable:Counter Disabled
+/sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/retimer_parity_err_2nd/counter_enable:Counter Disabled
+
+that there are some events that cannot be enabled when testing on my platform,
+rk3588, perhaps this is because my version of the DWC IP does not have these
+events.
+
+(Because all the other events can be enabled successfully:
+# grep "" /sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/*/* | grep Enabled | wc -l
+29
+)
+
+
+So the question is, how do we want to handle that?
+
+E.g. counter_enable_write() could theoretically read back the
+dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
+register after doing the
+ww_pcie_writel_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG, val);
+
+to actually check if it could enable the event.
+
+If counter_enable_write() could not enable the specific event, should it
+perhaps return a failure to user space?
+
+Or, do we want to keep the current behavior of just letting counter_enable_write()
+return success, even for events that are not supported by the specific DWC PCIe
+implementation?
+
+
+Kind regards,
+Niklas
+
 
 
