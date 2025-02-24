@@ -1,134 +1,112 @@
-Return-Path: <linux-pci+bounces-22261-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22262-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35294A42D19
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 20:54:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BE85A42D49
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 21:03:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2B362178B41
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 19:54:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9227F3AA42E
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 20:02:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 196C61FCCFA;
-	Mon, 24 Feb 2025 19:54:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC4F5155CB3;
+	Mon, 24 Feb 2025 20:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpglDdjU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ntCgV/Fj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C871A5B8B;
-	Mon, 24 Feb 2025 19:54:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1642571A8;
+	Mon, 24 Feb 2025 20:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740426866; cv=none; b=UJyIdS7tTFCQ4PmlCcgaBo6bB1qI/23kC50frpNpLJ0C01byyzIf/tQSSeAyDiTw5LLB8u21sQGOWba6p38TQ4bKqm6DQoG/brop3Z1BhS9uyTP/Ebwb3h+S11llS8kqS6unYfaahUsRBgEoU89767i62zhRmBBmOf3dqVT8gZ4=
+	t=1740427383; cv=none; b=nr2lxqyZZFMh28/3wa5PtC0GHmULVJcbb1X4a2BbiPnazUmrg9+oY6Z+naCHSuOEwXqkFmyz8iuc1YbLzgPnQAEenYHLgzU4p4Nk2s+6wwN6q29BPsxBmgPz+Uf3oLEf9XaC8RvJq2OeYzL7qurACDnAOSz9ZwNz+mdauMZLckY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740426866; c=relaxed/simple;
-	bh=eqo9h/PAZIFf5dMdH1i9KPDuTNmee9ed3YQZ/4tZnaY=;
+	s=arc-20240116; t=1740427383; c=relaxed/simple;
+	bh=+Wgzs5V7WqoWJII1yMuFCzRJM9tIcRQS6YUTom0Ieko=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=lUS5jhql8AwYzz8RNnK8HQ+6kuWx8EkDMmcSUR6koke6x9xsdcVNKStzxBkgeIOyAGoe3lvxwZMAvIO5sD2XMxfMmNVCp53cG8rRwL7DxVtC0B6ZKGSZs/xy7ShDsPuvACPChKFZzlpoNWxgmwP3UA7OqmJeSI/uwbgkJE6vQ6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpglDdjU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA40C4CED6;
-	Mon, 24 Feb 2025 19:54:25 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=R5x4zLkp/Iyo+ISbWtTlv4j9jPz3KfipfzqPfFiWMFBrMBJ8a8uwN0AyvK3ew9oIMpaTn7P+TrweSXa7NLJeWsvEgAncA6M5G6yT1sNBj4ztUDP65f2h7MIOJrvQ3v8zLqi+2O7nbdK2NbU25+XtfmIvQDymCw3G7LzdboCQbng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ntCgV/Fj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02257C4CED6;
+	Mon, 24 Feb 2025 20:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740426865;
-	bh=eqo9h/PAZIFf5dMdH1i9KPDuTNmee9ed3YQZ/4tZnaY=;
+	s=k20201202; t=1740427383;
+	bh=+Wgzs5V7WqoWJII1yMuFCzRJM9tIcRQS6YUTom0Ieko=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=cpglDdjU1KMY82rxuH8gT0zRoyKc2n6kTkm4p5aWOIjwBB9C+4g0BTTXUfU6lTvX9
-	 sJy+i/PsStFGOxxqxdmxOyOTdtxE8jd0INf4I6XWYP6hs21zmKRR1lL9z08MiNVza7
-	 wipiYzFN9H1yQLjdXFqSG3oLbcu5PtdNqccPC69oAlC0kkjK5vZSj4QtVuHTjzWc5Z
-	 CX3RBOaSXlmCcuLNhj4xcuNpZiSABVcq2A/elCjGyYu+puvSFDJ1X3f0x5HVKVVzTt
-	 718WO/Me3Xn2STtbtb3mcg6V3E2VpiQkLIfKEpN2tpb7AaqMzOMYXpli8YjNm0OkvJ
-	 4CzmON7cRxb3w==
-Date: Mon, 24 Feb 2025 13:54:23 -0600
+	b=ntCgV/FjGaG1emKU+Urx0iHvHUKwJgx4PVa5uqLWI+jgbUFZ6VTkWxjj7LaUItdNS
+	 0mWZ2XFhpjzH4S9U1i0l7moB36bcdaaspVVYVQN7dYXgEgUBwSMinEXzpg5hcC4yIz
+	 UJm3laZrQD1Ov0rVnjAATtdbNGJR+2sjsbZZbH/oPlhEr70ZuZsQHtqyKcBppSSoxz
+	 8p3i1a9kD7TQSZUql0uRG3t+wnWXsMfvqdCOH/CnnVBo/pRNcMLVSCJhp+nGbjHUKH
+	 2HhQWE840jW1pE1U4dNXbt9NHKI+tNgtKQlmlF11iq9QjaMd6j1xM80Ukz/ItEcNRF
+	 p+pQAB9/8amIQ==
+Date: Mon, 24 Feb 2025 14:03:01 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Naveen Kumar P <naveenkumar.parna@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernelnewbies <kernelnewbies@kernelnewbies.org>,
-	linux-acpi@vger.kernel.org
-Subject: Re: PCI: hotplug_event: PCIe PLDA Device BAR Reset
-Message-ID: <20250224195423.GA473540@bhelgaas>
+To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
+	jingoohan1@gmail.com
+Subject: Re: [PATCH v14 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+Message-ID: <20250224200301.GA465730@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMciSVVV9tHH1M2bOnwqCJCQ8OjNFGjuQB7R-fY7JHHD5tQHoA@mail.gmail.com>
+In-Reply-To: <20250224073117.767210-4-thippeswamy.havalige@amd.com>
 
-On Tue, Feb 25, 2025 at 12:29:00AM +0530, Naveen Kumar P wrote:
-> On Mon, Feb 24, 2025 at 11:03 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Mon, Feb 24, 2025 at 05:45:35PM +0530, Naveen Kumar P wrote:
-> > > On Wed, Feb 19, 2025 at 10:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Wed, Feb 19, 2025 at 05:52:47PM +0530, Naveen Kumar P wrote:
-> > > > > Hi all,
-> > > > >
-> > > > > I am writing to seek assistance with an issue we are experiencing with
-> > > > > a PCIe device (PLDA Device 5555) connected through PCI Express Root
-> > > > > Port 1 to the host bridge.
-> > > > >
-> > > > > We have observed that after booting the system, the Base Address
-> > > > > Register (BAR0) memory of this device gets reset to 0x0 after
-> > > > > approximately one hour or more (the timing is inconsistent). This was
-> > > > > verified using the lspci output and the setpci -s 01:00.0
-> > > > > BASE_ADDRESS_0 command.
-
-> ...
-> I booted with the pcie_aspm=off kernel parameter, which means that
-> PCIe Active State Power Management (ASPM) is disabled. Given this
-> context, should I consider removing this setting to see if it affects
-> the occurrence of the Bus Check notifications and the BAR0 reset
-> issue?
-
-Doesn't seem likely to be related.  Once configured, ASPM operates
-without any software intervention.  But note that "pcie_aspm=off"
-means the kernel doesn't touch ASPM configuration at all, and any
-configuration done by firmware remains in effect.
-
-You can tell whether ASPM has been enabled by firmware with "sudo
-lspci -vv" before the problem occurs.
-
-> > > During the ACPI_NOTIFY_BUS_CHECK event, the lspci output initially
-> > > showed all FF's, and then the next run of the same command showed
-> > > BASE_ADDRESS_0 reset to zero:
-> > > $ sudo lspci -xxx -s 01:00.0 | grep "10:"
-> > > 10: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> >
-> > Looks like the device isn't responding at all here.  Could happen if
-> > the device is reset or powered down.
->
-> From the kernel driver or user space tools, is it possible to
-> determine whether the device has been reset or powered down?  Are
-> there any power management settings or configurations that could be
-> causing the device to reset or power down unexpectedly?
-
-Not really.  By "powered down", I meant D3cold, where the main power
-is removed.  Config space is readable in all other power states.
-
-> > What is this device?  What driver is bound to it?  I don't see
-> > anything in dmesg that identifies a driver.
->
-> The PCIe device in question is a Xilinx FPGA endpoint, which is
-> flashed with RTL code to expose several host interfaces to the system
-> via the PCIe link.
+On Mon, Feb 24, 2025 at 01:01:17PM +0530, Thippeswamy Havalige wrote:
+> Add support for AMD MDB (Multimedia DMA Bridge) IP core as Root Port.
 > 
-> We have an out-of-tree driver for this device, but to eliminate the
-> driver's role in this issue, I renamed the driver to prevent it from
-> loading automatically after rebooting the machine. Despite not using
-> the driver, the issue still occurred.
+> The Versal2 devices include MDB Module. The integrated block for MDB along
+> with the integrated bridge can function as PCIe Root Port controller at
+> Gen5 32-Gb/s operation per lane.
+> 
+> Bridge supports error and legacy interrupts and are handled using platform
+> specific interrupt line in Versal2.
 
-Oh, right, I forgot that you mentioned this before.
+s/legacy/INTx/ (I assume that's what you mean here)
 
-> > You're seeing the problem on v5.4 (Nov 2019), which is much newer than
-> > v4.4 (Jan 2016).  But v5.4 is still really too old to spend a lot of
-> > time on unless the problem still happens on a current kernel.
+> +config PCIE_AMD_MDB
+> +	bool "AMD MDB Versal2 PCIe Host controller"
+> +	depends on OF || COMPILE_TEST
+> +	depends on PCI && PCI_MSI
+> +	select PCIE_DW_HOST
+> +	help
+> +	  Say Y here if you want to enable PCIe controller support on AMD
+> +	  Versal2 SoCs. The AMD MDB Versal2 PCIe controller is based on
+> +	  DesignWare IP and therefore the driver re-uses the Designware core
+> +	  functions to implement the driver.
 
-This part is important.  We don't want to spend a lot of time
-debugging an issue that may have already been fixed upstream.
+s/Designware/DesignWare/
 
-Bjorn
+> +static void amd_mdb_intx_irq_unmask(struct irq_data *data)
+> +{
+> +	struct amd_mdb_pcie *pcie = irq_data_get_irq_chip_data(data);
+> +	struct dw_pcie *pci = &pcie->pci;
+> +	struct dw_pcie_rp *port = &pci->pp;
+> +	unsigned long flags;
+> +	u32 val;
+> +
+> +	raw_spin_lock_irqsave(&port->lock, flags);
+> +	val = FIELD_PREP(AMD_MDB_TLP_PCIE_INTX_MASK,
+> +			 AMD_MDB_PCIE_INTR_INTX_ASSERT(data->hwirq));
+> +
+> +	/*
+> +	 * Writing '1' to a bit in AMD_MDB_TLP_IR_ENABLE_MISC enables that interrupt.
+> +	 * Writing '0' has no effect.
+
+Wrap to fit in 80 columns like the rest of the file.
+
+> +	 */
+> +	pcie_write(pcie, val, AMD_MDB_TLP_IR_ENABLE_MISC);
+> +	raw_spin_unlock_irqrestore(&port->lock, flags);
+> +}
 
