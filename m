@@ -1,117 +1,156 @@
-Return-Path: <linux-pci+bounces-22211-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22212-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A29AA422FC
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 15:27:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D60E9A423DD
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 15:49:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A82553B8A81
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 14:18:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E2E3A18918E1
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 14:43:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6D21664C6;
-	Mon, 24 Feb 2025 14:19:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E18861C6FE5;
+	Mon, 24 Feb 2025 14:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjd90I9/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3589A13A244
-	for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2025 14:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09E938DD8;
+	Mon, 24 Feb 2025 14:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740406742; cv=none; b=odmTJa9LoVDTn3wa7o7TIdDW0DuVN2BBWUraCuuWX4Xn+V5oXCsJJf27L1mgzKGtoPG6FoQPncxjdj6iD82pg0Qv/L4TuYc0IojlW6jEH8k/pqnIdR2pJfMhLBh7jhFGka4XrAnXx8UxwRa73NuQe4TVC7FCST+xw1JW4z41aGs=
+	t=1740408122; cv=none; b=XCHQBJGvGZIwf+UFHt43LCJ8KRkHcnsc/dgWP71k5bVRki79A9HlocCy7FzTY82l00GzBoj3SKc/B3aID1SlLWpEGwaRkAWB6v3iCEmYGRWcILj+rY/2Zgs6R9MIQV6DyBYYhUhFNx4YVXrZhX0JlWz1c2F4/fm9XWLZ5z6ROWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740406742; c=relaxed/simple;
-	bh=c4nVqMhhVoz1igDNdFeQ4SYsLRXrG1UYgzQn+YCP5iM=;
+	s=arc-20240116; t=1740408122; c=relaxed/simple;
+	bh=C82abNrH3ZcypYfQQ4nCqd4+THVXdsD+JjQgHjKZk+8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cgVln7HQPlkbPgb/D0+1soLjPyopdl7pNmWlzvKl2cOI9X4xP+4Us2lYZGJldrlkVOU9qd+5p3id6H+Mm0z1hMZMwHw3uAVpDW4WetiEZF2MKe1kl2tJEh5N8qqHYsbh8aNQUvCb0JYuuJZ+r1wjD+VY1ewwvTuA0aN9EqXdsXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-222e8d07dc6so16620655ad.1
-        for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2025 06:19:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740406740; x=1741011540;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rQq55i9sPiHAagM17ICTCVjXUcSmU6FsFp44CyEwhoY=;
-        b=UxPxM4DPQv4ckw0nWgXaYJgoVNFfug26735PRrtMz8fXMJenWfNRzqsO/xeszhuDR3
-         /lXW58X4YtA4Hg/GiKJkr9subd15wTnkAEaGwEdyBtsBdDhoiEUZ83JZUCj8rZb866iM
-         ZYv52PC1+Hh2eL/gyTNRCcsOsIbG1cDrspnKSD1hL4XqbPEamhQ36hOBXkE9FA2mAv4B
-         D+ORMz3y3J2bWcrmMxd7A7/PDZCK9VItakgUzko45pBcGGnICYvluM6B6mImMYq6j7GS
-         BdKb8/ROA95j3271vAzRD1goCelNqifhB8urBH9+MZ3EDAdbsmaihzu5mNZ4X9NcoIXY
-         8Ulw==
-X-Forwarded-Encrypted: i=1; AJvYcCWH7SeklW+gqzk49A+gV4g53TBCisHJVp8s2vEPuZDGfRA1YRkMcr+8CUG/rEdkDNL2Ay9BFXx7VGM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxuok6Q4wIV7f9CwlF5rLadJZsKJ/GJPniw4XjC36gqF2coEtiD
-	b4QG6UytIy+IB9X0YD2tDKw8Q9OnttJ4Q/YCCHJPBafvnGgQJyhfrORjtvtXd+0=
-X-Gm-Gg: ASbGnctWi78qp7K40W6jcU9S34AIsDgUc3K8LW/sz4yw2wd7FDdX6zC6wF1YfiVer4W
-	4yAc+kAwIE5HPAFcS38WXkcNq92dGe51MGWFjRjq5dU5tgxr8/GBBMBD/5juDYRr5FsYwEDUfsl
-	hC4O88c5++qU89UMI+UTeguulHyf7u/7ka2no2ibedlB9oR4aLXKO49hGNNPQ8eXxdzqlDCdOWG
-	t2itusg+eFSN8BXLD0fiJVqWupoSWA13bF67ZzTPVFgkau6cM2PTa9vnZFZrfkD12Q+YaFnbg02
-	sxEgwehQXlYE7/M8MHRkUWEmUsAhP1Hb17p2aU3Z2wYTLBA6KQ/6Nxfarq+F
-X-Google-Smtp-Source: AGHT+IEArhAzVGpSC5/pwMA8672aG8JuHulEEM/yIdtoSC6FajaFQZpNsOz5Nyb51qV69zSmstlAhA==
-X-Received: by 2002:a17:902:d4cf:b0:21f:6546:9adc with SMTP id d9443c01a7336-2218c3f4333mr288752845ad.13.1740406740281;
-        Mon, 24 Feb 2025 06:19:00 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-220d5586075sm178543045ad.228.2025.02.24.06.18.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 06:18:59 -0800 (PST)
-Date: Mon, 24 Feb 2025 23:18:58 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Niklas Cassel <cassel@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=OhuqB8hsvGuW5vnSuGnhmiGaDxKUDUW6zYqhQunm+kmxam1rWKHQj1RomWRKy7C6sZ41mjo+g9zovMsxMbIy04lM9hSpRiodepUdpudb7ey6aFm7IHXffyaZ1GN5YPQsuIFi5NthLE4UwKetr6RY4TLDeluGlwNdmjkfQzI9vHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjd90I9/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DB43C4CEE8;
+	Mon, 24 Feb 2025 14:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740408122;
+	bh=C82abNrH3ZcypYfQQ4nCqd4+THVXdsD+JjQgHjKZk+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cjd90I9/+wL8z2KK+BOjI9NRv5U8HB+KR3n65ZXqDM5qGx/Rcsy5rrXI7JtVb7r0h
+	 Fhmn7H6CtBCqBolOyRpzoZobWV1lZj+0zS2y+eULpllbYd6k5wXtCLI2h5iZIm0yKE
+	 PijRg7ZpUCUnO1n2jhb0kpWI4Y4ScVWaNMPw+yBvlFLuCWNWdmPIkmWHeRBxKijDG6
+	 +Tdi7Wyjt6k0JhhQUSd66kOsW2EMb7PUwZONeY9bos6MJXjrfZCC4LRbMXmMOmCHlX
+	 +38k9pEld41DUDfDsJSXwvTDRDzgIufun8/DHpJ9kwTizCji6zV+RG/F4mcqe3kVMG
+	 a3ofzWT4ovxQw==
+Date: Mon, 24 Feb 2025 20:11:55 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Simon Xue <xxm@rock-chips.com>,
-	Wenrui Li <wenrui.li@rock-chips.com>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 2/2] PCI: dw-rockchip: hide broken ATS capability
-Message-ID: <20250224141858.GB76745@rocinante>
-References: <20250221202646.395252-4-cassel@kernel.org>
- <20250222000029.GA373377@bhelgaas>
+	Conor Dooley <conor.dooley@microchip.com>,
+	Minda Chen <minda.chen@starfivetech.com>,
+	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
+ IRQ handling
+Message-ID: <20250224144155.omzrmls7hpjqw6yl@thinkpad>
+References: <20250208140110.2389-1-linux.amoon@gmail.com>
+ <20250210174400.b63bhmtkuqhktb57@thinkpad>
+ <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
+ <20250214060935.cgnc436upawnfzn6@thinkpad>
+ <CANAwSgTWa9gwpPhVCYzJM5BL5wUkpB4eyDtX+Vs3SX3a9541wA@mail.gmail.com>
+ <CANAwSgRvT-Mqj3XPrME6oKhYmnCUZLnwHfFHmSL=PK+xVLHAqw@mail.gmail.com>
+ <20250224080129.zm7fvxermgeyycav@thinkpad>
+ <CANAwSgTsp19ri5SYYtD+VOYgBLYg5UqvGRrtNTXOWw7umxGCQg@mail.gmail.com>
+ <20250224115452.micfqctwjkt6gwrs@thinkpad>
+ <CANAwSgSdEr0X0F1AFAUfJoEjT1a63nj5Ar-ZfmehfhnE0=v+CA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250222000029.GA373377@bhelgaas>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANAwSgSdEr0X0F1AFAUfJoEjT1a63nj5Ar-ZfmehfhnE0=v+CA@mail.gmail.com>
 
-Hello,
-
-[...]
-> Can you include something here about what the issue is?  Based on the
-> subject line and the patch, I assume something is wrong with the ATS
-> Capability?  I guess this is some kind of rk3588 defect, right?
+On Mon, Feb 24, 2025 at 07:33:37PM +0530, Anand Moon wrote:
+> Hi Manivannan
 > 
-> > Usually, to handle these issues, we add a quirk for the PCI vendor and
-> > device ID in drivers/pci/quirks.c with quirk_no_ats(). That is because
-> > we cannot usually modify the capabilities on the EP side.
-> > 
-> > In this case, we can modify the capabilties on the EP side. Thus, hide the
-> > broken ATS capability on rk3588 when running in EP mode. That way,
-> > we don't need any quirk on the host side, and we see no errors on the host
-> > side, and we can run pci_endpoint_test successfully, with the IOMMU
-> > enabled on the host side.
+> On Mon, 24 Feb 2025 at 17:24, Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> >
+> > On Mon, Feb 24, 2025 at 03:38:29PM +0530, Anand Moon wrote:
+> > > Hi Manivannan
+> > >
+> > > On Mon, 24 Feb 2025 at 13:31, Manivannan Sadhasivam
+> > > <manivannan.sadhasivam@linaro.org> wrote:
+> > > >
+> > > > On Thu, Feb 20, 2025 at 03:53:31PM +0530, Anand Moon wrote:
+> > > >
+> > > > [...]
+> > > >
+> > > > > Following the change fix this warning in a kernel memory leak.
+> > > > > Would you happen to have any comments on these changes?
+> > > > >
+> > > > > diff --git a/drivers/pci/controller/plda/pcie-plda-host.c
+> > > > > b/drivers/pci/controller/plda/pcie-plda-host.c
+> > > > > index 4153214ca410..5a72a5a33074 100644
+> > > > > --- a/drivers/pci/controller/plda/pcie-plda-host.c
+> > > > > +++ b/drivers/pci/controller/plda/pcie-plda-host.c
+> > > > > @@ -280,11 +280,6 @@ static u32 plda_get_events(struct plda_pcie_rp *port)
+> > > > >         return events;
+> > > > >  }
+> > > > >
+> > > > > -static irqreturn_t plda_event_handler(int irq, void *dev_id)
+> > > > > -{
+> > > > > -       return IRQ_HANDLED;
+> > > > > -}
+> > > > > -
+> > > > >  static void plda_handle_event(struct irq_desc *desc)
+> > > > >  {
+> > > > >         struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
+> > > > > @@ -454,13 +449,10 @@ int plda_init_interrupts(struct platform_device *pdev,
+> > > > >
+> > > > >                 if (event->request_event_irq)
+> > > > >                         ret = event->request_event_irq(port, event_irq, i);
+> > > > > -               else
+> > > > > -                       ret = devm_request_irq(dev, event_irq,
+> > > > > -                                              plda_event_handler,
+> > > > > -                                              0, NULL, port);
+> > > >
+> > > > This change is not related to the memleak. But I'd like to have it in a separate
+> > > > patch since this code is absolutely not required, rather pointless.
+> > > >
+> > > Yes, remove these changes to fix the memory leak issue I observed.
+> > >
+> >
+> > Sorry, I don't get you. This specific code change of removing 'devm_request_irq'
+> > is not supposed to fix memleak.
+> >
+> > If you are seeing the memleak getting fixed because of it, then something is
+> > wrong with the irq implementation. You need to figure it out.
+> 
+> Declaring request_event_irq in the host controller facilitates the
+> creation of a dedicated IRQ event handler.
+> In its absence, a dummy devm_request_irq was employed, but this
+> resulted in unhandled IRQs and subsequent memory leaks.
 
-Rockchip folks, anything to add about this issue?  Perhaps there is an
-erratum about this?  Any code reviews?  Anything?
+What do you mean by 'unhandled IRQs'? There is a dummy IRQ handler invoked to
+handle these IRQs. Even your starfive_event_handler() that you proposed was
+doing the same thing.
 
-Western Digital folks are doing you a lot of favour with all the upstream
-work they do maintaining drivers for your platforms.  But it would be nice
-if Rockchip took some ownership.  I have seen none recently.  No reviews,
-not even an Acked-by, nothing.  A bit of a letdown, if you ask me.
+> Eliminating the dummy code eliminated the memory leak logs.
 
-Thank you!
+Sorry, this is not a valid justification. But as I said before, the change
+itself (removing the dummy irq handler and related code) looks good to me as I
+see no need for that. But I cannot accept it as a fix for the memleak.
 
-	Krzysztof
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
