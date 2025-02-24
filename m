@@ -1,153 +1,225 @@
-Return-Path: <linux-pci+bounces-22216-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22217-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48FE3A425B1
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 16:12:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86B30A4260B
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 16:20:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9F72E7A5286
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 15:08:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B08093A4811
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 15:13:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81E527F7FC;
-	Mon, 24 Feb 2025 15:09:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DED9A13D52B;
+	Mon, 24 Feb 2025 15:13:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n1SBL4Bk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fRepr2/9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3F814A627
-	for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2025 15:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6902155744;
+	Mon, 24 Feb 2025 15:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740409754; cv=none; b=AaQuRISue3r6kqW2OGIxrAAWp1f8MQu64+OmHWIk8sVVltHuBR3kfwoopidF52G7Jp7h1DbLGra+1oyiEGQIBacv45AC9S38u3S4Chbw1wG5f9yzP9g5vmHw3VRriNQSnxxxc28GizO7myLK6Ybn0oWUmDw0b28Gw3rMs8hlsMY=
+	t=1740410003; cv=none; b=M6UvEvvhCuQoX2vn1OgmTyhArxnAdl2vko2UXmUGTqBs3ozLAfZNLSNU0dlpSxjO2THwjPIy8kKq8Bw3Rl38hPKCtGyK3MXv1Lo5L1CGoqlAf3O1VWisZ2z9m4BapcAatO2bPDQor8bTAadfTdmGtzymxCDQALl+dnZDHbZ0o74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740409754; c=relaxed/simple;
-	bh=teA/QyB9G8gXwhLH3zP+xGQ54exGKVu3YN7D2G56rSs=;
+	s=arc-20240116; t=1740410003; c=relaxed/simple;
+	bh=2lrEW7fKEmytUQvaxt5sAnJstfJfZLbLMW6ThOmSUk8=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=mBG9QhAjeHBqr0tiHF97v7XJiwkdYnyZ01S7p5mJNP6jiEfIHAOqO6Eggg93ZKS+MhqN7N/oyAe/xfXwKllzY6fMKC2u5tHUvCzMwZLMPgJrozd/ztCXulTPJvxvlZODbvDwxI88UYtC+MQuPd1g5assY3du/Vd9fj+kFEp6pkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n1SBL4Bk; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=f+xQvaYn6uQqFlxHlbN0Jis3E8x+4VegziZfSuR/HXYL6QWx0LJHNi0Hih4fKqHjblqwe96IQQ0ab1CIAJOIB3gEJeD5rEV4XmwMgd2CIS3e4M+Hze/g8fUsexYa69tyPaXU0wGQJzMXO6B93uaQRJ9H/sm7frYasOaTOjI4gP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fRepr2/9; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740409753; x=1771945753;
+  t=1740410002; x=1771946002;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version:content-id;
-  bh=teA/QyB9G8gXwhLH3zP+xGQ54exGKVu3YN7D2G56rSs=;
-  b=n1SBL4Bk+1IjYCBCW2wGyob6c24OzXtGuIJE2WzI4gwQu6jLbii6CXMq
-   dzttQKqlZFUk+Nlj0eQ1+aG87xEwFbRjDUSx4qq5sN9RX6I2wn1Y4d01O
-   Z8zap4s9E4RBkbgAPiv5TZBedBm1WCeFkYdb/P8V0hRaqYStcNYvvxvZz
-   cnZdZGYdkJJqLTF4D2OjTTiR1ghkLPrsSJOOn/1QvU2lf7xv4nTIH0HeV
-   /fm/LHHTLWD9zW3XQSE5kJU2Oc8xzQjJomEVJQTX5q0WcxhCBH4q/TCjJ
-   RDsWqPhHz2bBcdNtVEGCZuA2zXgsBcX5anYid7MCspV3rhm+zwZBv0qjB
+  bh=2lrEW7fKEmytUQvaxt5sAnJstfJfZLbLMW6ThOmSUk8=;
+  b=fRepr2/9RTsLHbngs2Zv375gehrrxhbuGpbihSOxyW3mHFXrODf4Rgao
+   aZwkAIWGtGY2aIw3/Jn31bjnjwdLyCNTRd3DByn8UAITzh7k+pGM6A9MY
+   by4BWen3Asn4MlkjKurexbEF90BGf1RP6q4pnNVl+DCbfGbdbXUN3oK3D
+   b99JX0Xwbf08Oec1utsATtMdnsh0+p9Hc8XjtUrzKs9UxpUvsKuT/64gc
+   GjbODRQgJr3sAwKoCmfiTJ95+P+3ORCjoxegD4aVl8zler49xVfNz1g8o
+   HIvCZilKWQq0gNRMlMBjuAl40Jr2QFYSG/PfATzwHrAIQ6Nyrm39CV8T8
    g==;
-X-CSE-ConnectionGUID: p0iYI2dSSg2+bxKpTOoTEw==
-X-CSE-MsgGUID: /3kQ1glfShugdawOq22w2Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="41046137"
+X-CSE-ConnectionGUID: p4B+WI95TVCy2pC0XbMmOg==
+X-CSE-MsgGUID: E/6sfLOtSK20VJTuCd9QBw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="40355702"
 X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="41046137"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:09:12 -0800
-X-CSE-ConnectionGUID: 506Ri49zShGuvjXlY0xy0g==
-X-CSE-MsgGUID: cLlFKEdmTUW4vfWeDUcPCQ==
+   d="scan'208";a="40355702"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:13:21 -0800
+X-CSE-ConnectionGUID: cFU1qciwRDWRkjmaulCmqw==
+X-CSE-MsgGUID: BfGO7GmVScO9JONOLc49pA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="116063257"
+   d="scan'208";a="116591599"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.233])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:09:09 -0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:13:18 -0800
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 24 Feb 2025 17:09:05 +0200 (EET)
-To: Dan Williams <dan.j.williams@intel.com>
-cc: Bjorn Helgaas <helgaas@kernel.org>, linux-coco@lists.linux.dev, 
-    Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>, 
-    Samuel Ortiz <sameo@rivosinc.com>, Alexey Kardashevskiy <aik@amd.com>, 
-    Xu Yilun <yilun.xu@linux.intel.com>, linux-pci@vger.kernel.org, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 07/11] PCI: Add PCIe Device 3 Extended Capability
- enumeration
-In-Reply-To: <67b9172eb5eca_2d2c294b4@dwillia2-xfh.jf.intel.com.notmuch>
-Message-ID: <83d1985d-a843-1d9f-840d-226f68de7d1f@linux.intel.com>
-References: <20241210192140.GA3079633@bhelgaas> <c7fce545-e369-0dba-fbbe-3d90b67e5cfb@linux.intel.com> <67b9172eb5eca_2d2c294b4@dwillia2-xfh.jf.intel.com.notmuch>
+Date: Mon, 24 Feb 2025 17:13:15 +0200 (EET)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Bjorn Helgaas <bhelgaas@google.com>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Joel Mathew Thomas <proxy0@tutamail.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI/bwctrl: Disable PCIe BW controller during
+ reset
+In-Reply-To: <Z7RL7ZXZ_vDUbncw@wunner.de>
+Message-ID: <14797a5a-6ded-bf8f-aa0c-128668ba608f@linux.intel.com>
+References: <20250217165258.3811-1-ilpo.jarvinen@linux.intel.com> <Z7RL7ZXZ_vDUbncw@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-555201434-1740397993=:933"
-Content-ID: <d216cc3e-054c-7388-1d0b-e5c64f0265d3@linux.intel.com>
+Content-Type: multipart/mixed; BOUNDARY="8323328-1975770050-1740389518=:933"
+Content-ID: <7ae1b7e7-ce77-7678-8389-feec435e7b8d@linux.intel.com>
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-555201434-1740397993=:933
+--8323328-1975770050-1740389518=:933
 Content-Type: text/plain; CHARSET=ISO-8859-15
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <10884278-66bf-981b-6832-b3420b9f1bdd@linux.intel.com>
+Content-ID: <433e8960-e79b-20de-9bc1-33e4c29a413c@linux.intel.com>
 
-On Fri, 21 Feb 2025, Dan Williams wrote:
-> Ilpo J=E4rvinen wrote:
-> > On Tue, 10 Dec 2024, Bjorn Helgaas wrote:
+On Tue, 18 Feb 2025, Lukas Wunner wrote:
+
+> On Mon, Feb 17, 2025 at 06:52:58PM +0200, Ilpo J=E4rvinen wrote:
+> > PCIe BW controller enables BW notifications for Downstream Ports by
+> > setting Link Bandwidth Management Interrupt Enable (LBMIE) and Link
+> > Autonomous Bandwidth Interrupt Enable (LABIE) (PCIe Spec. r6.2 sec.
+> > 7.5.3.7).
 > >=20
-> > > On Thu, Dec 05, 2024 at 02:23:56PM -0800, Dan Williams wrote:
-> > > > PCIe 6.2 Section 7.7.9 Device 3 Extended Capability Structure,
-> > > > enumerates new link capabilities and status added for Gen 6 devices=
-=2E One
-> > > > of the link details enumerated in that register block is the "Segme=
-nt
-> > > > Captured" status in the Device Status 3 register. That status is
-> > > > relevant for enabling IDE (Integrity & Data Encryption) whereby
-> > > > Selective IDE streams can be limited to a given requester id range
-> > > > within a given segment.
-> > >=20
-> > > s/requester id/Requester ID/ to match spec usage
-> > >=20
-> > > > +++ b/include/uapi/linux/pci_regs.h
-> > > > @@ -749,6 +749,7 @@
-> > > >  #define PCI_EXT_CAP_ID_NPEM=090x29=09/* Native PCIe Enclosure Mana=
-gement */
-> > > >  #define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/=
-s */
-> > > >  #define PCI_EXT_CAP_ID_DOE=090x2E=09/* Data Object Exchange */
-> > > > +#define PCI_EXT_CAP_ID_DEV3=090x2F=09/* Device 3 Capability/Contro=
-l/Status */
-> > >=20
-> > > It doesn't look like lspci knows about this; is there something in
-> > > progress to add that?
-> > >=20
-> > > https://git.kernel.org/pub/scm/utils/pciutils/pciutils.git/tree/lib/h=
-eader.h?id=3Dv3.13.0#n257
-> >=20
-> > Hi,
-> >=20
-> > I've two patches lying around that add a few Flit mode related fields=
-=20
-> > and Dev3 into lspci, although the latter patch doesn't exactly have all=
-=20
-> > the fields from Dev3 but at least it would be a good start for many=20
-> > things.
-> >=20
-> > I think I'll just post them as is and see where it goes.
+> > It was discovered that performing a reset can lead to the device
+> > underneath the Downstream Port becoming unavailable if BW notifications
+> > are left enabled throughout the reset sequence (at least LBMIE was
+> > found to cause an issue).
 >=20
-> Oh, good to hear (the dangers of replying to patch feedback in response
-> order unfortunately means I missed this in my earlier reply). Please
-> copy me on those patches so I can keep track of that discussion.
+> What kind of reset?  FLR?  SBR?  This needs to be specified in the
+> commit message so that the reader isn't forced to sift through a
+> bugzilla with dozens of comments and attachments.
 
-Hi Dan,
+Heh, I never really tried to figure out it because the reset disable=20
+patch was just a stab into the dark style patch. To my surprise, it ended=
+=20
+up working (after the initial confusion was resolved) and I just started=20
+to prepare this patch from that knowledge.
 
-I've seemingly Cc'ed you back then:
+Logs do mention this:
 
-https://lore.kernel.org/linux-pci/20241211134840.3375-1-ilpo.jarvinen@linux=
-=2Eintel.com/
+[   21.560206] pcieport 0000:00:01.1: unlocked secondary bus reset via: pci=
+ehp_reset_slot+0x98/0x140
 
-(Np of not noticing, we do get way too much email to pick up everything.)
+=2E..so it seems to be SBR.
 
-=2E..There has been no discussion about it though.
+> The commit message should also mention the type of affected device
+> (Nvidia GPU AD107M [GeForce RTX 4050 Max-Q / Mobile]).  The Root Port
+> above is an AMD one, that may be relevant as well.
+
+Okay.
+
+> > While the PCIe Specifications do not indicate BW notifications could no=
+t
+> > be kept enabled during resets, the PCIe Link state during an
+> > intentional reset is not of large interest. Thus, disable BW controller
+> > for the bridge while reset is performed and re-enable it after the
+> > reset has completed to workaround the problems some devices encounter
+> > if BW notifications are left on throughout the reset sequence.
+>=20
+> This approach won't work if the reset is performed without software
+> intervention.  E.g. if a DPC event occurs, the device likewise undergoes
+> a reset but there is no prior system software involvement.  Software only
+> becomes involved *after* the reset has occurred.
+>=20
+> I think it needs to be tested if that same issue occurs with DPC.
+> It's easy to simulate DPC by setting the Software Trigger bit:
+>=20
+> setpci -s 00:01.1 ECAP_DPC+6.w=3D40:40
+>=20
+> If the issue does occur with DPC then this fix isn't sufficient.
+
+Looking into lspci logs, I don't see DPC capability being there for=20
+00:01.1?!
+
+> > Keep a counter for the disable/enable because MFD will execute
+> > pci_dev_save_and_disable() and pci_dev_restore() back to back for
+> > sibling devices:
+> >=20
+> > [   50.139010] vfio-pci 0000:01:00.0: resetting
+> > [   50.139053] vfio-pci 0000:01:00.1: resetting
+> > [   50.141126] pcieport 0000:00:01.1: PME: Spurious native interrupt!
+> > [   50.141133] pcieport 0000:00:01.1: PME: Spurious native interrupt!
+> > [   50.441466] vfio-pci 0000:01:00.0: reset done
+> > [   50.501534] vfio-pci 0000:01:00.1: reset done
+>=20
+> So why are you citing the PME messages here?  Are they relevant?
+> Do they not occur when the bandwidth controller is disabled?
+> If they do not, they may provide a clue what's going on.
+> But that's not clear from the commit message.
+
+They do occur also when BW controller is disabled for the duration of=20
+reset. What I don't currently have at hand is a comparable log from era=20
+prior to any BW controller commits (from 6.12). The one currently in=20
+bugzilla has the out-of-tree module loaded.
+
+PME and BW notifications do share the interrupt so I'd not entirely=20
+discount their relevance though, and one of my theories (never mentioned=20
+anywhere until now) was that the extra interrupts that come due to BW=20
+notifications somehow manage to confuse PME driver. But I never found=20
+anything to that effect.
+
+I can remove the PME lines though.
+
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -5166,6 +5167,9 @@ static void pci_dev_save_and_disable(struct pci_d=
+ev *dev)
+> >  =09 */
+> >  =09pci_set_power_state(dev, PCI_D0);
+> > =20
+> > +=09if (bridge)
+> > +=09=09pcie_bwnotif_disable(bridge);
+> > +
+> >  =09pci_save_state(dev);
+>=20
+> Instead of putting this in the PCI core, amend pcie_portdrv_err_handler
+> with ->reset_prepare and ->reset_done callbacks which call down to all
+> the port service drivers, then amend bwctrl.c to disable/enable
+> interrupts in these callbacks.
+
+Will it work? I mean if the port itself is not reset (0000:00:01.1 in this=
+=20
+case), do these callbacks get called for it?
+
+> > +=09port->link_bwctrl->disable_count--;
+> > +=09if (!port->link_bwctrl->disable_count) {
+> > +=09=09__pcie_bwnotif_enable(port);
+> > +=09=09pci_dbg(port, "BW notifications enabled\n");
+> > +=09}
+> > +=09WARN_ON_ONCE(port->link_bwctrl->disable_count < 0);
+>=20
+> So why do you need to count this?  IIUC you get two consecutive
+> disable and two consecutive enable events.
+>=20
+> If the interrupts are already disabled, just do nothing.
+> Same for enablement.  Any reason this simpler approach
+> doesn't work?
+
+If enabling on restore of the first dev, BW notifications would get=20
+enabled before the last of the devices has been restored. While it might=20
+work, the test patch, after all, did work without this complexity, IMO it=
+=20
+seems unwise to create such a racy pattern.
+
+For disable side, I think it would be possible to always disable=20
+unconditionally.
 
 --=20
  i.
---8323328-555201434-1740397993=:933--
+--8323328-1975770050-1740389518=:933--
 
