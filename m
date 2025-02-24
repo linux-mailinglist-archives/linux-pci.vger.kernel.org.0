@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-22258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22259-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC4BBA42CEA
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 20:44:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A188FA42CF5
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 20:46:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC5AA3ACB8F
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 19:43:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A8CF1895EA5
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 19:45:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8268B204F8B;
-	Mon, 24 Feb 2025 19:43:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E13F18DF73;
+	Mon, 24 Feb 2025 19:45:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKf6E7Gc"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ov+bMOl0"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DBF1F3D45;
-	Mon, 24 Feb 2025 19:43:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2506733F3;
+	Mon, 24 Feb 2025 19:45:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740426187; cv=none; b=MNuuVExiU9+L/OSBabVVFJzvKUJT6u3L8TJOSa1f5jtoffc+k1IMo6cBRLEEr3YhHk1iFaJxEYEVDxUrKNECcJnJHmxteywjchIPl2TnTRyj/CJ+xsVWm02uQenoXrjZKCLG9S2ltwtt2Q9soC3P9s9s2aAOPwjG4m4teNb8xa0=
+	t=1740426330; cv=none; b=FMvb3/oOuZoZwEW/X18tGVtwfjwQ/LfgucMG16o5jNkiy9lCjD02TWTsP0UOm9/4bIhiwI0TmwAEi5FHhHSNOcr+8KFvNBtL7oE1EBuM9L2qnHvKkm7hxvRPMwK/6EputbXRhMmWeLsTFJZUSyLz/GC0naoKVfrjzY8ekCZ5NOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740426187; c=relaxed/simple;
-	bh=f90Hn38Tq9+2tN/TZJiAHQjfIgYjPB9Pf+J4MmnEJAQ=;
+	s=arc-20240116; t=1740426330; c=relaxed/simple;
+	bh=JZFToUnXRujE/zLYVFFxQ0fhnbMm0Dkyva7rE6Afx2A=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=LtWc73/vBMZy9Cu5PG9WMKPvx9FnI9kimo21H5poqnRwMpnyS8YPhS9gAdqJn5k8jjgvtlhH6Eh0WrkZXWDzavtU/Nd2+Ey2XVuK5wtCNLGPrOr+oAxh6Y0iacE7G9kSorn6OTz5hD8cb3QfCNSsac2UxqBPcuVa9LBGEj+SKE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKf6E7Gc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CE26C4CED6;
-	Mon, 24 Feb 2025 19:43:06 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=m7gvNYuIoD3oSNuji+elu5LWoxZa+ae5YYMXBj3uP0SslgCPPIUKd/ocyqTaMRtb1uILb2N8yDQsca460U4BLvc6GbEQ6P54XHv3Q4XDaFglcY+Hu7DzwtbnQvfdOQtEhb11PHaIRievrhlxsuwUPpOIxgwkyA0oteB8OwWFRpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ov+bMOl0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58E50C4CED6;
+	Mon, 24 Feb 2025 19:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740426186;
-	bh=f90Hn38Tq9+2tN/TZJiAHQjfIgYjPB9Pf+J4MmnEJAQ=;
+	s=k20201202; t=1740426329;
+	bh=JZFToUnXRujE/zLYVFFxQ0fhnbMm0Dkyva7rE6Afx2A=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=XKf6E7GccM3hW6b/BnVduyU/8Lnlqf5+P98RjmurB6N8mNrfcSW/kygI0ugFw5wyr
-	 Gyl7NSMZUhPHXiRoLo2zH0EBhk3JOsGvqELr3G5RRfDCPrqkB2B7BCwe+QdyH49cGd
-	 WgUuTR51bWtIu6uEqG5DgHDAAeYQcSHGZq6I6ESLn6pkiyjQieaWxqE/1T+QUolfa+
-	 HJnHSbpJw9k7OY0O2zIpOaekdh3A1uXDg7TmPaoc4EoiLnFstayIIy0SvM8eocz6M5
-	 iUrRR8riKvVHujEXfl1etp6pksw9WozrGUiZn8sQsxu+SJ/HoVmBPk/AKsaMyciywO
-	 4vcwITQmGLfHg==
-Date: Mon, 24 Feb 2025 13:43:05 -0600
+	b=Ov+bMOl0qigOWU42d6K3/BThBfIxk0gYUsJYtwCMK6qwLWik4ebMh15zhxzujBZtp
+	 sL7XnnRUFMKrz5sPDDrg89tZr5g7wRff4qM7s3fNFg7u/APDYjIueJObCIp73xSNCi
+	 mqN/R+2RYq5KPYc9YubmVdWC6Rt2aUye+R7+r23nR9dp1ehtLvg7dokCpGYE9NE3YV
+	 R+DYS+urEDd/vyNQ/cF5XYjfKNZVCqp4aHDJ8zmEIOvWOcxapKdMYZHmQWSj6uQBQV
+	 W6DdVyOs4a0cNHdWJB2krCZ5pQ4tbJoRiv5rJjrEUSk1cnAooMoU3q8Okb068DNHxI
+	 wInHsHMvV067g==
+Date: Mon, 24 Feb 2025 13:45:28 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Anshuman Gupta <anshuman.gupta@intel.com>
 Cc: intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org,
@@ -49,8 +49,8 @@ Cc: intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org,
 	bhelgaas@google.com, ilpo.jarvinen@linux.intel.com,
 	lucas.demarchi@intel.com, rodrigo.vivi@intel.com,
 	badal.nilawar@intel.com, kam.nasim@intel.com
-Subject: Re: [RFC 3/6] drm/xe/vrsr: Apis to init and enable VRSR feature
-Message-ID: <20250224194305.GA473249@bhelgaas>
+Subject: Re: [RFC 5/6] drm/xe/pm: D3Cold target state
+Message-ID: <20250224194528.GA473335@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,19 +59,17 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250224164849.3746751-4-anshuman.gupta@intel.com>
+In-Reply-To: <20250224164849.3746751-6-anshuman.gupta@intel.com>
 
-s/Apis/APIs/ in subject to match common usage and use below.
+Could the subject line say something about what this patch does?
 
-Also perhaps s/Detect vrsr/Detect VRSR/ in previous patch subject to
-match this one.
+On Mon, Feb 24, 2025 at 10:18:48PM +0530, Anshuman Gupta wrote:
+> Trade-off D3Cold target state based upon current vram usages.
+> if vram usages is greater then vram_d3cold_threshold and GPU
+> has display connected then target D3Cold state is D3Cold-VRSR
+> otherwise target state is D3COLD-Off.
 
-On Mon, Feb 24, 2025 at 10:18:46PM +0530, Anshuman Gupta wrote:
-> From: Badal Nilawar <badal.nilawar@intel.com>
-> 
-> APIs to enable and initialize VRSR feature.
+s/if vram usages/If vram usage/ (capitalize sentence and fix "usages")
 
-I always think it's nice when the commit log includes the actual names
-of the APIs being added so we don't have to grub that out of the
-patch.
+I dunno what "D3Cold-VRSR" means.  I suppose GPU folks do.
 
