@@ -1,48 +1,56 @@
-Return-Path: <linux-pci+bounces-22182-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22183-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFB3AA41968
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 10:44:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CEF3A41977
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 10:47:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A6BCD166241
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 09:44:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0F89E188C2CD
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Feb 2025 09:48:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D514245007;
-	Mon, 24 Feb 2025 09:44:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 596FA1B041E;
+	Mon, 24 Feb 2025 09:47:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OuOiII+P"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="pRolsdAZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F78802;
-	Mon, 24 Feb 2025 09:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A8919068E;
+	Mon, 24 Feb 2025 09:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740390266; cv=none; b=C5jzUMKyRBNNd8XDxGIyCwOLo2aUlAmnD+9Kaakgj6NOfx4nsdYEuGijk/WC1eVIEZ/5FOHycZ8zSaTou10rCkqntAZ2fk2qEQDfO7Ub86UFq60Bq0+OHm9Zd8gzKlTUichauud1kPEGAxP7uX64xH6lUo2+TMeH4dL3knDR4/Y=
+	t=1740390470; cv=none; b=GC7AM89iNNCSk23zUo+I31v9JikP1v3wxm7zm656uVYp3DyvZlC39dUuf1h7jzyJkwgQnIGz6+7pO617MKZLYbGDzApa9g0xG0akkST5Atrr6Zk7Qxexb5JFZ4gf4gD4oBEUrEp1PATjHY8rWyWqqB9zarAXXXqm26RMPDJWPIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740390266; c=relaxed/simple;
-	bh=ifibO1zkLeGq0eA8wnCWCI+ESCrio96iC90ZCyr6foI=;
+	s=arc-20240116; t=1740390470; c=relaxed/simple;
+	bh=9BaNaagw/ZNHIHZIGWJapW+0C1OmfI1aZs/907nTjNo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HZv+trsOBSpAQGQS6ZB2hMNeQR+fExIdcp5wx0qgRGlffBdHM/WFePig1joTP6NRP1h7xet/NSA9wiytrv1RJ6qxsZq8tws7Rn+Q0I7jtE3aS6YT261XsnY1R9Gp6pryMEahuoSb6sgBjKfwCuaCgBSe5/bHoHD8DT6fruwI67g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OuOiII+P; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6361CC4CED6;
-	Mon, 24 Feb 2025 09:44:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740390265;
-	bh=ifibO1zkLeGq0eA8wnCWCI+ESCrio96iC90ZCyr6foI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OuOiII+P+/r4xVupnknX3eR5CKKhg3ub7B2nfA2uB0u8ZHmaGqZGiAhnYqWkluqNG
-	 p+Ib3q46YAB5JM59JSmuvUdIu6b6NDxS/E7lo2Ouj5mDy6bzvIKSWNwUVrn4vsXjNt
-	 o/5c/XeqBmJvuj7twNKBfLtBg546V2h3sOAdS58esvLtdhMA2o0Y4f+uKVRi+MUi5g
-	 ZEmu49yaKfRPXT7kiuyyr3r8Nd8f1VylnMnmwcoSffMDJ5QX2TJqJpP6FrvhPrA/Au
-	 w3X1xtqBr1R84VLeH5uhYv8lhIvkom/XGEMXNjCGbMczKyv0l4uleTaK0JBJ5xbTlu
-	 iQ0hIRe8gVORg==
-Message-ID: <ef7db81a-5f7a-4a5e-b3d5-d8580a6484b6@kernel.org>
-Date: Mon, 24 Feb 2025 10:44:19 +0100
+	 In-Reply-To:Content-Type; b=ab8caUYDeJ63Xer9RWTFppKnp9VRgo4taLgF0wdIcNXkFaGO6djd3WZSt9oOxDqreEo1QF0WkBPYWo7pRp/0LjsECXLhBP0Zu+gN3rcrxjOs3tYEM0ti84Kg3OFSTpQK8ne9Nm/W4+OIN9+2/OkBF/J8pxhz61aTMd823PZNFFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=pRolsdAZ; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1740390425; x=1740995225; i=markus.elfring@web.de;
+	bh=hRH62ND8UNosmEYDdA1QCyNtBT0pt/8MXaWtWO0/8yo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=pRolsdAZtwJZeVqEjidyxnkbVNPR0yCWUAof4/2eRrmAmHCgY9a3Kb/FAqH/0GhV
+	 29JbxmharSUhUVrGajDbebQvoLUYL08oED4DvqAF7UsJ2kfRwatBc6Le04/pyaIY6
+	 Ndk1fplkZCwARWb2rk49RY8S4rTe5wuA2hmJUxLk6z5/E6EMrcS39VIWDqIeD+7O9
+	 QRlv6dfpcSm5E6vkCyJg3DZoRgGsx67zIQ448HcwWVAknVmK+drj9eBRc+nlQHFSy
+	 ROFlXOu8Gsm/gQfktflMLESJiQFs1eVWHfj9mas6vSqT0FbTxoyaE5lv7hCDBQ2cd
+	 fUtCo9lexU2FSNTrew==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.93.37]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MjgSv-1t3JPW2Sol-00aAzV; Mon, 24
+ Feb 2025 10:47:05 +0100
+Message-ID: <1f41fd8f-c811-4995-8e94-bf824a9c7f06@web.de>
+Date: Mon, 24 Feb 2025 10:47:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,87 +58,57 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/2] dt-bindings: PCI: dw: rockchip: Add rk3576 support
-To: Kever Yang <kever.yang@rock-chips.com>, heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Simon Xue <xxm@rock-chips.com>, Conor Dooley <conor+dt@kernel.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
- <kw@linux.com>, linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Shawn Lin <shawn.lin@rock-chips.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- linux-arm-kernel@lists.infradead.org
-References: <20250224074928.2005744-1-kever.yang@rock-chips.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250224074928.2005744-1-kever.yang@rock-chips.com>
+Subject: Re: [PATCH v3 3/4] PCI/portdrv: Loose the condition check for
+ disabling hotplug interrupts
+To: Feng Tang <feng.tang@linux.alibaba.com>, linux-pci@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Guanghui Feng <guanghuifeng@linux.alibaba.com>,
+ Liguang Zhang <zhangliguang@linux.alibaba.com>,
+ Lukas Wunner <lukas@wunner.de>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: lkp@intel.com, LKML <linux-kernel@vger.kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
+ <20250224034500.23024-4-feng.tang@linux.alibaba.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250224034500.23024-4-feng.tang@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rAmKrLzRoKv0QW82kY5YP48J2FZ9xjMoF4dS8F8J6OCIHCFi9nQ
+ iA/8IYAbw6665tiQzwvP7xvt+mlZXHnp7bq2iB5DXCApbAufzn8u1CIh2b4n8T9/p6wIJZ1
+ 1qHWGt426tiYy3hE/8cMO1WpGoV0fDhW8LmM4/ZQTmP0QYEJ4Ad3vKZXPyJY5p4/qTwgKWy
+ I8aF0uaGIfBWE3J7f1h2Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:RB8wIQCsvK4=;uAWktxSLvqGqVrzfdO0UNZ5eShN
+ bJm2d9lneXflGtEeiBILtTnj6KteeA+5bLPC9x0ybfxHrA1fBqU1RUVNw/dEH//EhYXTYePVM
+ fZ+jdt2e8LqOSZhdXXBJOSct78oxdq7OOqn33XLGTVhITAu/CpCJ4nICcMM5IbP1odguRei8z
+ rBmuKjUkDOcB8BNLD3GWHuwDE29RYEo0ULac83G5+ZRPCNNc693Pw519S5oqcDmp0XFoZfSas
+ JAzk02zeEtksJCwcIM+3i1oGxSIeTEnkLu8egdDTqfdn5XhSEyQ+iZvC0ZMD2JLRlu7Qcvc5T
+ CiKTBNNvfY/Zivfr7sqOjLfDhZWpBIL/Xa4eaDX2b/T5ImWfhcLbZVydqC52jZORMD3R72c1U
+ Vuh0t1oGv8sU3A+DOXZ35aLvgOKgnVUlooXoUizHqieY7wvqbURoS0mkbvZyFaOqH02qgaq69
+ 9X8AHzirSKcuCWIrirOH1bwURLj52cTSLw8loMALjsacjbGyT9XttZSGPkST1XlVwqLdIIxbr
+ vZRYP7pla0kVsin92MhnHu08bix19oUVDs7ms5bBUoBIaSNiCtP4mP56T5DPS8zVdP7+mDpMK
+ /Pv/8bTt/dL+729wjJtJvMra2P3ltQsgsmFAKUQU9FwVKBpe3rU1qbtnje6ggGvlNduJVTgnr
+ WACKXf/QP2kvg27lzjlYoRqNHKxWmbqLLttyu2FIYjHwIbQrREqTIS/6y4CEZCsUHH6r37Y8k
+ 7DGlyJqpTwxf3b6drEFnztSFq9VOcfGGVLm/fk8ApLXdNJdyDsmvJ2F5GA9Mr/f34XpXm5SUx
+ qEeKux1GLhfwhsrLh2uujWQxCc+vuZqsveCFq/4hoWZrYJBqvDqeVS9KVbo2rnclO0+UG28/O
+ xlBTd7v5SRJgHg4PcyLjN91UV5Ruc3Un44sbqQe8GzR/uJtTeEGZLVWWEnRaqpROuuHcwf+hm
+ NNiPYem2fGpN+qV0o8O4QgZD6xAWEJfQPcRTmagoahnGbCPdDFcMAARP7a8A7nlMatvVIGEDv
+ vJhRYOtOBBVhCgrj3rbo9sOgAUQ+6psVMxEsaQxGfb/LCU59YTSWGkG1/XUEopLL2ujlHVHDp
+ AuGMPyRHFHHCtyvP2dss1aG+UqXq9KSMl6wkgtB/J4Z9jIgtL8Mw6/rvLS2LSoVp3sMDB/AXE
+ np+xNOeXq60V3TJ5cU/TXgkZtapc3XrM41Gl84azcvZTBLzrrIvjTZ3TCIsbUWnVfQJQjyKT7
+ IGMXNhotm5VL821i7Z0mHh2nQrZHMa+mnoTI1Q88n1ne2h0IBFrCKK6WgEWl+th8cErpdvS5C
+ q4ybFivUCYfKoiUTFTowt7lcMf31DipGmv8xEWscuhNbKgIuEH6+1ly8TQc9wDgeN46Egc2Rb
+ KdQ4N2/b81M5pWqDIGrGQa4NV2VotDvfMZ2ZUtSZjo67wEG3gbchXH/9GlGY8LyXM//2DRZr3
+ pncQXqbj9+CLfZFDt7qEE6lnHuy4=
 
-On 24/02/2025 08:49, Kever Yang wrote:
-> rk3576 is using DWC PCIe controller, with msi interrupt directly to GIC
-> instead of using GIC ITS, so
-> - no ITS support is required and the 'msi-map' is not required,
-> - a new 'msi' interrupt is needed.
-> 
-> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
-> 
-> Changes in v6:
-> - Fix make dt_binding_check and make CHECK_DTBS=y
+=E2=80=A6
+> remove the depency over them.
 
+             dependency?
 
-Now I see you already sent v6 and you already received review.
-
-Implement previous review and respond to it.
-
-Best regards,
-Krzysztof
+Regards,
+Markus
 
