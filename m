@@ -1,199 +1,114 @@
-Return-Path: <linux-pci+bounces-22291-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22292-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 773BAA43610
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 08:25:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDEE7A436E8
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 09:04:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E0C29174A5C
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 07:25:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0F877189C5A4
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 08:04:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C3552566F1;
-	Tue, 25 Feb 2025 07:25:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CDB42153E6;
+	Tue, 25 Feb 2025 08:04:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Crrc19jd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="whzV6Y3h"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0L7W7NN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF3C18A6BA;
-	Tue, 25 Feb 2025 07:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D16175D5D;
+	Tue, 25 Feb 2025 08:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740468328; cv=none; b=O5JCTTjWdKWNbjjb/LY89quHyuUCs6EfCqhCo+9ykpUvUahoPjuU9OaLml3DlDwffiWt51CHPNHHCQG8Ekxo+QMr+cLJ8CrfdbnY2Owjg5q8rH5zMUEThaDCreNzGHpZm51jqFdzBgNtDhpjOgy3vYFVMEld2vAG2PxIqLYQHB8=
+	t=1740470650; cv=none; b=EufdBOZ6crsRVqDfDjTBpGMT/hdE0aNCVWKtzN4ZLiUNH+LkyI+oT+zQJz+8edaYrMDun8FPiEq0H7hAoY5rQUYQTRO8FhWVRbiUWqCrLJXZ3S69Wq3uD2uZhmVQnZN5uHRL8/AtsCM19n0h5tSjwotnPG8Jn/NyWdP721+fdxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740468328; c=relaxed/simple;
-	bh=jBWBE67xp0aA/g9uYHMJWanv7CTWes7h1prFsPBs1Oo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=h3eEbhQnKgXHBITh5Oa5zSQYSwyPH9K1fFGF7mpTwwJCxwP3vJLAe71+7o1rCCq6xJRVhCkBwfWkI3YLBXHM86+4kJIL3K5rUBZqCi2zl/7HG7WMr5BluxuDdXSs4AyNV7XSmqTsUrjFp9fu61rqgMqGCWO9LId7vi8uHZGvXFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Crrc19jd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=whzV6Y3h; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.stl.internal (Postfix) with ESMTP id 72696114016E;
-	Tue, 25 Feb 2025 02:25:23 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-11.internal (MEProxy); Tue, 25 Feb 2025 02:25:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1740468323;
-	 x=1740554723; bh=iNyMNq0Sztwv4vKDhGfFbMXIy/g1nHUCGUIykQmuxWc=; b=
-	Crrc19jdVh7/XBZAtR/NMXS4XDxP15gWTLHCfBDvQS676Lg8rynDp3eHsGxkQzOL
-	NA6+6MAjUiLoPQmu2RiInQC2bPTzaEHZhxFhtAxG2nKrgD7yJhCiJ8Mt9IiufWsV
-	fPYYYk3p5Lcd5wsAIlI2JQk1MLZqu4oPDJasJheax161IJ46K91fFfPtJDj5SbM9
-	T0hntAh8i6J0zAFYKwdj1gkrvLFe4deGMjOv2P5WVvP4N4BSrELOBLc708mfUPHI
-	43UjhAa34yyhwVHf7ypmWXQX7TAxCgyOweBC5H7/+C7Gg2vuf7hs7iJekp2//I2n
-	Jvica6vniO0L8eUGctctwg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740468323; x=
-	1740554723; bh=iNyMNq0Sztwv4vKDhGfFbMXIy/g1nHUCGUIykQmuxWc=; b=w
-	hzV6Y3hj5gWp/iDMqIx98JPoZOcwRLI9d1i8zlOU/RAUy+7IN5uPMPBjab2NCQyd
-	LMkj8W6q1/gHgLHDo98I6REoWQ/IUlycP4gdzmxqrs5rcWd4rE0QTrqe/Qq7ipcR
-	1TukjGbHToX6OBLGcTfynSUtg3pNqUrMJsH86ZMon4tgVd+2U1H1kYo2UhyvUMtK
-	CQVql3lLJY9IZSvDdmpfF/B6UYL6tVYb1VwSb36/JmunHby+rrqYNWFvnfPklsV9
-	W3GQb+SCgqfTcQp6qF5/y02gx4enLl5etsFLUDfQEOKg7vDo/I3wk5qWMiRSnz2E
-	A1qzcH81WGbVu17pqlUyw==
-X-ME-Sender: <xms:YnC9Z5OsvGdCkLa8wabjaJTLcmVWPy5Wdd2Ke6lK7Dgz_iTRXyrtyw>
-    <xme:YnC9Z7-o24c8cmpv9z2zXbEtBtMS6U1bIeklSCOAeb2rH1Aw6X5r2okyM9s4a7b1D
-    i42G82D6MsV7ZDpwpI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekuddtlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddv
-    geejvdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeef
-    tddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghpsegrlhhivghnkedruggvpd
-    hrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtphht
-    thhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheptghonhhorh
-    doughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopehlphhivghrrghlihhsiheskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifvghirdhl
-    ihhusehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorh
-    hg
-X-ME-Proxy: <xmx:YnC9Z4TLllvXzTwlowYa5Jl6FRZHwh6ru6z9sep9rQhEYu4E3BZ9YQ>
-    <xmx:YnC9Z1uroNTLiTE5A1YAFBUh0k6-cPSW_lmVz7j_174A7gOMX1F-pA>
-    <xmx:YnC9Zxd8hAA5ROl-8MVUO9kMTxx065-aCcG2Kcv_6QaygErRfoifPA>
-    <xmx:YnC9Zx0cABgPWS_vwgD1TtiRl_Bgj3jIOVHMSFv_zLyLLtjt_krAXw>
-    <xmx:Y3C9Z3G9Q7Jowr_Z_hgrXH8Sz7iSue9CIWALq-YXJHQQDGYgj76VkLzo>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 16C1B2220072; Tue, 25 Feb 2025 02:25:21 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1740470650; c=relaxed/simple;
+	bh=Q/hlg5DJCs52keNQavSLTdyq9yKobf8eiX9XyuPCwnU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iLLy3tizHdEruYfxQjK1JSGZxkExSs1RXKSvqtw/vPzTh7I7LRykInD3aavb45RSOnkCEmlk9Kg4Lk2Z5BTEoHSpm/xDBeUP1r2YxoSpYr3vXCOqxEx7HdKONlkIjrsFaOGDvUaZSoK0Zdy4uqTZN72sae3QjajqE7YzdcQSjYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0L7W7NN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 476AAC4CEDD;
+	Tue, 25 Feb 2025 08:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740470649;
+	bh=Q/hlg5DJCs52keNQavSLTdyq9yKobf8eiX9XyuPCwnU=;
+	h=From:Subject:Date:To:Cc:From;
+	b=u0L7W7NN+Gcdq5skWKb/rmQjvQQxRAgXuBHzglJePGY9PCA5LDnb41LfRExJaoVx8
+	 dDGqHtKBy3V5+Av0GAgJneNKWAJCtcfk3toOtx0aizsgzGLostLVRoFf3BP3i8UpGp
+	 8UupDTXWBiu/Mol0DvAYsrbs6QtrZPjf/vVWeo0qIKwezteMQIbGhi2al8ajpAYRIx
+	 tDv8m1F5qMT9MNvTqRMVqbmS39GUEcHajfL+5jqmqN946b72qpxwYICwAS47IzExpZ
+	 z7zwhjh7bi4SLTLnGhU3PPEmyfgfLvHJRZgj/jeRU7c9oqHKhocl1uNiSTpUkzqSLp
+	 sxSH5NKJAPl9w==
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: [PATCH v4 0/2] PCI: mediatek-gen3: Set PBUS_CSR regs for Airoha
+ EN7581 SoC.
+Date: Tue, 25 Feb 2025 09:04:05 +0100
+Message-Id: <20250225-en7581-pcie-pbus-csr-v4-0-24324382424a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 25 Feb 2025 08:24:51 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Roman Kisel" <romank@linux.microsoft.com>
-Cc: benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com,
- bhelgaas@google.com, "Borislav Petkov" <bp@alien8.de>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "Dexuan Cui" <decui@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>,
- "H. Peter Anvin" <hpa@zytor.com>, krzk+dt@kernel.org,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
- "Ingo Molnar" <mingo@redhat.com>, "Rob Herring" <robh@kernel.org>,
- ssengar@linux.microsoft.com, "Thomas Gleixner" <tglx@linutronix.de>,
- "Wei Liu" <wei.liu@kernel.org>, "Will Deacon" <will@kernel.org>,
- devicetree@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
-Message-Id: <55b65ba6-4abe-478c-a173-4622c30ddd7b@app.fastmail.com>
-In-Reply-To: <14a199d8-1cf3-49bc-8e0d-92d9c8407b4f@linux.microsoft.com>
-References: <20250212014321.1108840-1-romank@linux.microsoft.com>
- <20250212014321.1108840-2-romank@linux.microsoft.com>
- <1b14e3de-4d3e-420c-819c-31ffb2d448bd@app.fastmail.com>
- <593c22ca-6544-423d-84ee-7a06c6b8b5b9@linux.microsoft.com>
- <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
- <6e4685fe-68e9-43bd-96c5-b871edb1b971@linux.microsoft.com>
- <14a199d8-1cf3-49bc-8e0d-92d9c8407b4f@linux.microsoft.com>
-Subject: Re: [PATCH hyperv-next v4 1/6] arm64: hyperv: Use SMCCC to detect hypervisor
- presence
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHZ5vWcC/3XNTQrCMBCG4auUrB1J86ONK+8hLtrppA1KWhINS
+ undTQuCgi7fgXm+iUUKjiI7FBMLlFx0g8+hNgXDvvYdgWtzM8GF5oKXQH6vqxJGdARjc4+AMYA
+ 1qGxVIelGsvw6BrLusbKnc+7exdsQnutKEsv1DYrfYBLAYadbbPImmtocLxQ8XbdD6NgiJvmhi
+ H+KzApxxLq0qpVGfSnzPL8AyRLbgP8AAAA=
+X-Change-ID: 20250201-en7581-pcie-pbus-csr-f9c4f88ce5b3
+To: Ryder Lee <ryder.lee@mediatek.com>, 
+ Jianjun Wang <jianjun.wang@mediatek.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
 
-On Tue, Feb 25, 2025, at 00:22, Roman Kisel wrote:
-> Hi Arnd,
->
-> [...]
->
->>> I would suggest moving the UUID values into a variable next
->>> to the caller like
->>>
->>> #define ARM_SMCCC_VENDOR_HYP_UID_KVM \
->>> =C2=A0=C2=A0=C2=A0=C2=A0 UUID_INIT(0x28b46fb6, 0x2ec5, 0x11e9, 0xa9,=
- 0xca, 0x4b, 0x56,=20
->>> 0x4d, 0x00, 0x3a, 0x74)
->>>
->>> and then just pass that into arm_smccc_hyp_present(). (please
->>> double-check the endianess of the definition here, I probably
->>> got it wrong myself).
->
-> I worked out a variation [1] of the change that you said looked good.
->
-> Here, there is a helper macro for creating uuid_t's when checking
-> for the hypervisor running via SMCCC to avoid using the bare UUID_INIT=
-.=20
-> Valiadted with KVM/arm64 and Hyper-V/arm64. Do you think this is a
-> better approach than converting by hand?
->
-> If that looks too heavy, maybe could leave out converting the expected
-> register values to UUID, and pass the expected register values to
-> arm_smccc_hyp_present directly. That way, instead of
->
-> bool arm_smccc_hyp_present(const uuid_t *hyp_uuid);
->
-> we'd have
->
-> bool arm_smccc_hyp_present(u32 reg0, u32 reg1, u32 reg2, u32 reg2);
->
->
-> Please let me know what you think!
+Configure PBus base address and base address mask to allow the hw
+to detect if a given address is accessible on the PCIe controller.
+Introduce mediatek,pbus-csr phandle array property.
 
-The patch looks correct to me, but I agree it's a little silly
-to convert register values into uuid format on both sides.
+Changes in v4:
+- Remove check on resource size
+- Remove checks on regmap_write()
+- Link to v3: https://lore.kernel.org/r/20250222-en7581-pcie-pbus-csr-v3-0-e0cca1f4d394@kernel.org
 
->   static bool hyperv_detect_via_smccc(void)
->   {
-> -	struct arm_smccc_res res =3D {};
-> +	uuid_t hyperv_uuid =3D HYP_UUID_INIT(ARM_SMCCC_VENDOR_HYP_UID_HYPERV=
-_REG_0,
-> +		ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_1,
-> +		ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_2,
-> +		ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_3);
+Changes in v3:
+- Get base address and base address mask from range property
+- Define mediatek,pbus-csr as phandle array
+- Link to v2: https://lore.kernel.org/r/20250202-en7581-pcie-pbus-csr-v2-0-65dcb201c9a9@kernel.org
 
-If you want to declare a uuid here, I think you should remove the
-ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_{0,1,2,3} macros and just
-have UUID in normal UUID_INIT() notation as we do for
-other UUIDs.
+Changes in v2:
+- Introduce mediatek,pbus-csr phandle property
+- Drop patch 1/2 in v1
+- Do not hard-code compatible sting in the driver and use phandle
+  instead
 
-If you want to keep the four 32-bit values and pass them into
-arm_smccc_hyp_present() directly, I think that is also fine,
-but in that case, I would try to avoid calling it a UUID.
+---
+Lorenzo Bianconi (2):
+      dt-bindings: PCI: mediatek-gen3: Add mediatek,pbus-csr phandle array property
+      PCI: mediatek-gen3: Configure PBUS_CSR registers for EN7581 SoC
 
-How are the kvm and hyperv values specified originally?
-From the SMCCC document it seems like they are meant to be
-UUIDs, so I would expect them to be in canonical form rather
-than the smccc return values, but I could not find a document
-for them.
+ .../bindings/pci/mediatek-pcie-gen3.yaml           | 17 +++++++++++++
+ drivers/pci/controller/pcie-mediatek-gen3.c        | 28 +++++++++++++++++++++-
+ 2 files changed, 44 insertions(+), 1 deletion(-)
+---
+base-commit: b6d7bb0d3bd74b491e2e6fd59c4d5110d06fd63b
+change-id: 20250201-en7581-pcie-pbus-csr-f9c4f88ce5b3
 
-     Arnd
+Best regards,
+-- 
+Lorenzo Bianconi <lorenzo@kernel.org>
+
 
