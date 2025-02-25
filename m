@@ -1,188 +1,124 @@
-Return-Path: <linux-pci+bounces-22373-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22374-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 364D2A448DA
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 18:50:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D208A448DF
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 18:50:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B46C618844FC
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 17:50:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F0F8188600F
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 17:50:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE92A199FB0;
-	Tue, 25 Feb 2025 17:49:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCC8619882F;
+	Tue, 25 Feb 2025 17:50:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bOarUqym"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBu8XFIc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87BF14F9C4;
-	Tue, 25 Feb 2025 17:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AE818E34A;
+	Tue, 25 Feb 2025 17:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740505799; cv=none; b=B6HF0L077PkJmXge5iSE9YPFbGQVz5gqzm98iRPLa4MCJUu2klF5bbwqQlJY/5/5AVbyDkQxQJ+bFfOW6+NcpcqtbHNN6/S5vK0HVcwN2Gd3wQNd9ihaZcVdIV1PFaYDXpemWjp9WPkISvc6+kDaYG7oycAtO2MlwiVapZnyLBQ=
+	t=1740505846; cv=none; b=KIYgvyUjA6S9Leu5/nsarZhpi7Fo0lnYRGXhPBXT3/W3mzrCt8l18MLndUib87B2ySsYDWei6NzRlThZJtJrpt3TTBvExSyElmic88hqo1zLwUT75/vYJy/b7HAd9POj14FuO1+USdiICuZ+0v4u88ABwu8GNxRqBHi71VL2hhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740505799; c=relaxed/simple;
-	bh=yp8FvEbU2bkxdNPh8CTALxDMZZtdWdeBwJwKmOBjdRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hc9C29Wa+dcMd1yDEA/DPTKPW3eY78CyUDZaXea62F97nRaUuub/XEuXUNixSAYXe95Xm7/fjoZZGAKleaeTmgnXIFx5vwN2kmYhzjEPsRu+MQrAKcn62eVHS9AgkGyM1ft5qkvgFZL5knThHj3YO7j9GxBL0CWFCWDSpqHkiBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bOarUqym; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740505798; x=1772041798;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=yp8FvEbU2bkxdNPh8CTALxDMZZtdWdeBwJwKmOBjdRo=;
-  b=bOarUqymiFclnIw7X/WQ1woWaTdxB75m/ZKjpGdZWwJobKxoIvnQ+Xej
-   +qJyVcs+c6NLlDpwmz/npJpekqBLUBghlp8wy/yY1+iJIOSMmnEs+Wp6n
-   WYLL9o+VeUGIs4O3WW7bPlqB3mI9TWvkNfb9GAm1rkmzXJiPehI681HDz
-   nWcWp58PiZtu1RmLWF/rx7nL1SWef2NdQbnjcmUFWulgrm47MIjL0JElD
-   vymyGYNAHzx9u89swWMf7cJlWK0P9djjFJQJ9HWNzWcWTtULl/LhkeXB9
-   8ZnBAF9ouwQqQwABxXxoI6rspAkypkEpqQcsZTqAr9lqUDFj9xNtCaIW5
-   A==;
-X-CSE-ConnectionGUID: A1gNqUnIRiufN0Wv1qZgNQ==
-X-CSE-MsgGUID: 3dwDGoJyS3+ZmO9yjBDzSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="58861521"
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="58861521"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 09:49:57 -0800
-X-CSE-ConnectionGUID: pb8Zky/LTD68433e/PhUcw==
-X-CSE-MsgGUID: mkFDnFFuR0mMzQxEpPTMGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="121703245"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
-  by orviesa005.jf.intel.com with SMTP; 25 Feb 2025 09:49:52 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 25 Feb 2025 19:49:51 +0200
-Date: Tue, 25 Feb 2025 19:49:51 +0200
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: Anshuman Gupta <anshuman.gupta@intel.com>
-Cc: intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, rafael@kernel.org, lenb@kernel.org,
-	bhelgaas@google.com, ilpo.jarvinen@linux.intel.com,
-	lucas.demarchi@intel.com, rodrigo.vivi@intel.com,
-	badal.nilawar@intel.com, kam.nasim@intel.com
-Subject: Re: [RFC 5/6] drm/xe/pm: D3Cold target state
-Message-ID: <Z74Cv8EneHF1frww@intel.com>
-References: <20250224164849.3746751-1-anshuman.gupta@intel.com>
- <20250224164849.3746751-6-anshuman.gupta@intel.com>
+	s=arc-20240116; t=1740505846; c=relaxed/simple;
+	bh=O7jDYX7iRfrB1UVmAe+E/vNwrykYgFudqrrJuLaSk8Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=gJpw9DOis9q8HV4pdNJeEOjyov2qZU0Hy6+whGLXBPfq9x0Uua5WutyTRnuRj3HlkWAgsTeFZPK0K5Na4SxqUgqsquA4CVulCSHEoJsGbBVINvW+8nFK9rdbtCjTDN8ZT84xLbUVV4ZJ25w8TVqgHCaMrTtlsmxd6C+7wkssKqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBu8XFIc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECE98C4CEDD;
+	Tue, 25 Feb 2025 17:50:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740505846;
+	bh=O7jDYX7iRfrB1UVmAe+E/vNwrykYgFudqrrJuLaSk8Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=fBu8XFIcBwXzPCuLucy0C2svFoYEU7W3Qe5lu2eqGEffvvnNv0C0iCPp8VORRutU3
+	 5uyHQFGoNTYDjQkY4fY31ezuZEtnFIihih/DII6i2X52enZ7LkErjBNUKOpLMy8u7p
+	 BBNv7jZ5EEcnVdWHgvufYa0XyFu+HBSQxbPrGkqH7boD0AFZOtAi4aty6G02iNg0fv
+	 WNnftdTe3QrC/vx7KxIjB5UaGeorD5QutGt+yqSlrfYUQHZueIRyA8p+KBtjzxix9T
+	 WvBbJVXxSJS7G2onhV18w40avekUuD0Z1KNoWMH9wx8OakVnqoHyk2c4SVpzeNV7Ye
+	 CMl9laZL1JrSQ==
+Date: Tue, 25 Feb 2025 11:50:44 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frediano Ziglio <frediano.ziglio@cloud.com>
+Cc: xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] xen: Add support for XenServer 6.1 platform device
+Message-ID: <20250225175044.GA511149@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250224164849.3746751-6-anshuman.gupta@intel.com>
-X-Patchwork-Hint: comment
+In-Reply-To: <20250225140400.23992-1-frediano.ziglio@cloud.com>
 
-On Mon, Feb 24, 2025 at 10:18:48PM +0530, Anshuman Gupta wrote:
-> Trade-off D3Cold target state based upon current vram usages.
-> if vram usages is greater then vram_d3cold_threshold and GPU
-> has display connected 
+On Tue, Feb 25, 2025 at 02:03:53PM +0000, Frediano Ziglio wrote:
+> On XenServer on Windows machine a platform device with ID 2 instead of
+> 1 is used.
+> This device is mainly identical to device 1 but due to some Windows
+> update behaviour it was decided to use a device with a different ID.
+> This causes compatibility issues with Linux which expects, if Xen
+> is detected, to find a Xen platform device (5853:0001) otherwise code
+> will crash due to some missing initialization (specifically grant
+> tables).
+> The device 2 is presented by Xapi adding device specification to
+> Qemu command line.
 
-Why would anyone care about displays being connected or not?
+Add blank lines between paragraphs.
 
-> then target D3Cold state is D3Cold-VRSR
-> otherwise target state is D3COLD-Off.
-> 
-> Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
+A crash seems unfortunate.  And it sounds like a user mistake, e.g., a
+typo in the Qemu device specification, could also cause a crash?
+
+If the crash is distinctive, a hint here like a dmesg line or two
+might help users.
+
+> Signed-off-by: Frediano Ziglio <frediano.ziglio@cloud.com>
 > ---
->  drivers/gpu/drm/xe/display/xe_display.c | 22 ++++++++++++++++++++++
->  drivers/gpu/drm/xe/display/xe_display.h |  1 +
->  drivers/gpu/drm/xe/xe_pm.c              | 12 ++++++++++++
->  3 files changed, 35 insertions(+)
+>  drivers/xen/platform-pci.c | 2 ++
+>  include/linux/pci_ids.h    | 1 +
+>  2 files changed, 3 insertions(+)
 > 
-> diff --git a/drivers/gpu/drm/xe/display/xe_display.c b/drivers/gpu/drm/xe/display/xe_display.c
-> index 02a413a07382..140a43d6b1b6 100644
-> --- a/drivers/gpu/drm/xe/display/xe_display.c
-> +++ b/drivers/gpu/drm/xe/display/xe_display.c
-> @@ -548,3 +548,25 @@ int xe_display_probe(struct xe_device *xe)
->  	unset_display_features(xe);
->  	return 0;
->  }
-> +
-> +bool xe_display_connected(struct xe_device *xe)
-> +{
-> +	struct drm_connector *list_connector;
-> +	struct drm_connector_list_iter iter;
-> +	bool ret = false;
-> +
-> +	mutex_lock(&xe->drm.mode_config.mutex);
-> +	drm_connector_list_iter_begin(&xe->drm, &iter);
-> +
-> +	drm_for_each_connector_iter(list_connector, &iter) {
-> +		if (list_connector->status == connector_status_connected) {
-> +			ret = true;
-> +			break;
-> +		}
-> +	}
-> +
-> +	drm_connector_list_iter_end(&iter);
-> +	mutex_unlock(&xe->drm.mode_config.mutex);
-> +
-> +	return ret;
-> +}
-> diff --git a/drivers/gpu/drm/xe/display/xe_display.h b/drivers/gpu/drm/xe/display/xe_display.h
-> index 685dc74402fb..c6bc54323084 100644
-> --- a/drivers/gpu/drm/xe/display/xe_display.h
-> +++ b/drivers/gpu/drm/xe/display/xe_display.h
-> @@ -40,6 +40,7 @@ void xe_display_pm_resume(struct xe_device *xe);
->  void xe_display_pm_runtime_suspend(struct xe_device *xe);
->  void xe_display_pm_runtime_suspend_late(struct xe_device *xe);
->  void xe_display_pm_runtime_resume(struct xe_device *xe);
-> +bool xe_display_connected(struct xe_device *xe);
+> diff --git a/drivers/xen/platform-pci.c b/drivers/xen/platform-pci.c
+> index 544d3f9010b9..9cefc7d6bcba 100644
+> --- a/drivers/xen/platform-pci.c
+> +++ b/drivers/xen/platform-pci.c
+> @@ -174,6 +174,8 @@ static int platform_pci_probe(struct pci_dev *pdev,
+>  static const struct pci_device_id platform_pci_tbl[] = {
+>  	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM,
+>  		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
+> +	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM_XS61,
+> +		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
+>  	{0,}
+>  };
 >  
->  #else
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 1a2594a38199..e4791fd97ee0 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -3241,6 +3241,7 @@
 >  
-> diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
-> index 81e67b5693dc..6d28aedcb062 100644
-> --- a/drivers/gpu/drm/xe/xe_pm.c
-> +++ b/drivers/gpu/drm/xe/xe_pm.c
-> @@ -198,6 +198,14 @@ static void xe_rpm_lockmap_release(const struct xe_device *xe)
->  			 &xe_pm_runtime_d3cold_map);
->  }
->  
-> +static void xe_pm_suspend_prepare(struct xe_device *xe)
-> +{
-> +	if (pm_suspend_target_state == PM_SUSPEND_TO_IDLE)
-> +		xe_pm_d3cold_allowed_toggle(xe);
-> +	else
-> +		xe->d3cold.allowed = XE_D3COLD_OFF;
-> +}
-> +
->  /**
->   * xe_pm_suspend - Helper for System suspend, i.e. S0->S3 / S0->S2idle
->   * @xe: xe device instance
-> @@ -213,6 +221,8 @@ int xe_pm_suspend(struct xe_device *xe)
->  	drm_dbg(&xe->drm, "Suspending device\n");
->  	trace_xe_pm_suspend(xe, __builtin_return_address(0));
->  
-> +	xe_pm_suspend_prepare(xe);
-> +
->  	err = xe_pxp_pm_suspend(xe->pxp);
->  	if (err)
->  		goto err;
-> @@ -875,6 +885,8 @@ void xe_pm_d3cold_allowed_toggle(struct xe_device *xe)
->  
->  	if (total_vram_used_mb < xe->d3cold.vram_threshold)
->  		xe->d3cold.allowed = XE_D3COLD_OFF;
-> +	else if (xe->d3cold.vrsr_capable && xe_display_connected(xe))
-> +		xe->d3cold.allowed = XE_D3COLD_VRSR;
->  	else
->  		xe->d3cold.allowed = XE_D3HOT;
+>  #define PCI_VENDOR_ID_XEN		0x5853
+>  #define PCI_DEVICE_ID_XEN_PLATFORM	0x0001
+> +#define PCI_DEVICE_ID_XEN_PLATFORM_XS61	0x0002
+
+If this is the only place PCI_DEVICE_ID_XEN_PLATFORM_XS61 is used, we
+would put this in platform-pci.c, per the pci_ids.h comment:
+
+ *      Do not add new entries to this file unless the definitions
+ *      are shared between multiple drivers.
+
+>  #define PCI_VENDOR_ID_OCZ		0x1b85
 >  
 > -- 
-> 2.34.1
-
--- 
-Ville Syrjälä
-Intel
+> 2.48.1
+> 
 
