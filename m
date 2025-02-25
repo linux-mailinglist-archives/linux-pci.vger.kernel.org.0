@@ -1,73 +1,68 @@
-Return-Path: <linux-pci+bounces-22357-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22358-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E32FDA44743
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 18:03:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C26F1A4474A
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 18:04:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 25EB17AED36
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 16:53:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 523F03A712F
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 16:57:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D27DC192D86;
-	Tue, 25 Feb 2025 16:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B373433A0;
+	Tue, 25 Feb 2025 16:57:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UNXPYH2q"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SkMW0v+i"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4A0192B75
-	for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 16:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFBE21ABC4;
+	Tue, 25 Feb 2025 16:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740502244; cv=none; b=KggDxdws9JcMISfL6DBiCqWYr9goJOXn8dOAVZKFFRcP6d0yx2vEmCxJlILc6VcaoP+P9s9pRHR4kYrPzAaxD0HtWUT6uxxwLUDUDZ5Ud0XaqkKmlJ+Q9qcLIMKLbm5p8IQNJ7QKoeMwq4V3lELMhP+wSDYnXuil09xDJIobD1E=
+	t=1740502672; cv=none; b=AWRMq7MsnYKhaekt+U1Pls1X7hhUBvto1osx0/JUQ90DTipWeeiiNkqk9H5PHGaHdbXXhsYTcbDwiaFO2To2XKgKJZCipin3K5ws5Q6kp7QvqONBxoY8l48/PT9Jr7LU/MXeZsbJNqAklJwGywASb21oZtvS/tcQa547TaQPpN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740502244; c=relaxed/simple;
-	bh=93YRs9oXTJGWSG//+MSuYb+o43flW0SPpXWPbsu3W1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Znzf6EwgPsUSkn62nG3HTrGIN+SXqxd8K+dU2fEZpN66V8iGzZAd7IV1uAKk6ubLowG0gZ+fsYZoB/3GfMIeBfvHFYBNthROKbxPTfrcG4jV9ypZiv3Mh1eE5Q2aGmtAFcScQZLsAPjIl1Qki1Ja5RZlwdCeJTtoggu2VseEE4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UNXPYH2q; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740502243; x=1772038243;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=93YRs9oXTJGWSG//+MSuYb+o43flW0SPpXWPbsu3W1k=;
-  b=UNXPYH2qhF+vFNBXsOyOnxaS5cXcGnkWMhoY/MtjSAeRdy68r/Xg0wGH
-   i3Ay7XcyyknjcxEck6wNYPhli/iIb7VW1mF/gqoWKL/DnRkFEjiUOlmuN
-   LNU9nBGT0Ksv2/fd9IbRvmKpp0AZQmXDFOAmo6mY/F5V0Z3ndJ9qfLaCy
-   Pv38KtCFPnpcmx2wBL0fpJJQnzIxMn2uNcT6qywrBdLYqKviUNCh2Qjai
-   XdrrBOPtDgLjaNv//id+Qv5vQ9ECDfx0ajPIqrdN2UNlo+qHQndglPmnL
-   Idq2nzo53vvFokdHCeo3t8ECSGlaIhfuEe5nmGrk08SgSms018Hm4Ry5T
-   w==;
-X-CSE-ConnectionGUID: Yh1DYcXvT82nsnUwkO+09Q==
-X-CSE-MsgGUID: BlKzk6UxSeOaQsItFQlHRA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41197865"
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="41197865"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 08:50:42 -0800
-X-CSE-ConnectionGUID: CViOYyNNQSGr7PF6AywnJg==
-X-CSE-MsgGUID: 6HDC36HTSauVhivdVOcZ/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147337388"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 25 Feb 2025 08:50:41 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tmy8L-000AVJ-2w;
-	Tue, 25 Feb 2025 16:50:21 +0000
-Date: Wed, 26 Feb 2025 00:49:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/qcom] BUILD SUCCESS
- 42c812d07088777a3439e51bd1461d215151150e
-Message-ID: <202502260012.0jBCQVTe-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1740502672; c=relaxed/simple;
+	bh=qadF+V0pCnFQNycLz+FvUseJRs1YmaEo0AdSamAZ7zg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KxmgXXy3yIrjnXVmpOZ9Qxc/MBswewwXIgYpdIq/5vOFQgq38CsizEdhbHctWhydRfkLHjal65fLVualib7rtF8aIMjCkUqsZIbrcF3tsAP8DNbxn03UggHGxUXR0urceGVXmFoNH+CaK/ew0h7SYnj2vey39CgKK7lQknysd1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SkMW0v+i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0296CC4CEDD;
+	Tue, 25 Feb 2025 16:57:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740502671;
+	bh=qadF+V0pCnFQNycLz+FvUseJRs1YmaEo0AdSamAZ7zg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SkMW0v+iW9ctHfiu3Qcq3SQLpY+OEbUio/MjSX4deqcR6Bpb87ooZrB7Y68V22dxG
+	 dZWzG9Zwfh6lhxscJsRHGaoivs+A6QRXF1cJYH3uolKkA1X3dhc97KkH0RdAuAAgTc
+	 DxRVBFCGdY4IxaAYv6LVoFpU2r7Xr8KxMoaT44tXGbW/GPJAV016sGnFxWZDmLHBpw
+	 jyedUAZIzFE2Dm4We9hmaY5F02LucYFBFcwgXSHxhEPF1rdk4CY2bmoXE/aSrq5a4t
+	 vvis4/fewAytbGhaOO9fIAxwmvRbs4RGxRhglxoUay349tnmAzfIEEkhbCK1ZrQG9l
+	 mkUTAPEtDa75g==
+Date: Tue, 25 Feb 2025 18:57:46 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>,
+	Aditya Prabhune <aprabhune@nvidia.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Arun Easi <aeasi@marvell.com>, Jonathan Chocron <jonnyc@amazon.com>,
+	Bert Kenward <bkenward@solarflare.com>,
+	Matt Carlson <mcarlson@broadcom.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Jean Delvare <jdelvare@suse.de>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Stephen Hemminger <stephen@networkplumber.org>
+Subject: Re: [PATCH v4] PCI/sysfs: Change read permissions for VPD attributes
+Message-ID: <20250225165746.GH53094@unreal>
+References: <c93a253b24701513dbeeb307cb2b9e3afd4c74b5.1737271118.git.leon@kernel.org>
+ <20250225160542.GA507421@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,106 +70,138 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225160542.GA507421@bhelgaas>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom
-branch HEAD: 42c812d07088777a3439e51bd1461d215151150e  PCI: qcom-ep: Enable EP mode support for SAR2130P
+On Tue, Feb 25, 2025 at 10:05:42AM -0600, Bjorn Helgaas wrote:
+> On Sun, Jan 19, 2025 at 09:27:54AM +0200, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> > 
+> > The Vital Product Data (VPD) attribute is not readable by regular
+> > user without root permissions. Such restriction is not needed at
+> > all for Mellanox devices, as data presented in that VPD is not
+> > sensitive and access to the HW is safe and well tested.
+> > 
+> > This change changes the permissions of the VPD attribute to be accessible
+> > for read by all users for Mellanox devices, while write continue to be
+> > restricted to root only.
+> > 
+> > The main use case is to remove need to have root/setuid permissions
+> > while using monitoring library [1].
+> 
+> As far as I can tell, this is basically a device identification
+> problem, which would be better handled by the Vendor, Device, and
+> Revision IDs.  If that would solve the problem, it would also make
+> standard unprivileged lspci output more specific.
 
-elapsed time: 1280m
+Yes, unfortunately these devices have same IDs as "regular" NICs and the
+difference in some FW configuration.
 
-configs tested: 85
-configs skipped: 2
+> 
+> VPD has never been user readable, so I assume you have some existing
+> method for device identification?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+We always read VPD by using "sudo ..." command, until one of our customers
+requested to provide a way to run monitoring library without any root access.
+It runs on hypervisor and being non-root there is super important for them.
 
-tested configs:
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250225    gcc-13.2.0
-arc                   randconfig-002-20250225    gcc-13.2.0
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250225    gcc-14.2.0
-arm                   randconfig-002-20250225    gcc-14.2.0
-arm                   randconfig-003-20250225    gcc-14.2.0
-arm                   randconfig-004-20250225    clang-15
-arm64                            allmodconfig    clang-18
-arm64                 randconfig-001-20250225    clang-19
-arm64                 randconfig-002-20250225    clang-17
-arm64                 randconfig-003-20250225    clang-15
-arm64                 randconfig-004-20250225    clang-21
-csky                  randconfig-001-20250225    gcc-14.2.0
-csky                  randconfig-002-20250225    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250225    clang-21
-hexagon               randconfig-002-20250225    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250225    clang-19
-i386        buildonly-randconfig-002-20250225    gcc-11
-i386        buildonly-randconfig-003-20250225    clang-19
-i386        buildonly-randconfig-004-20250225    clang-19
-i386        buildonly-randconfig-005-20250225    gcc-12
-i386        buildonly-randconfig-006-20250225    clang-19
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch             randconfig-001-20250225    gcc-14.2.0
-loongarch             randconfig-002-20250225    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-nios2                 randconfig-001-20250225    gcc-14.2.0
-nios2                 randconfig-002-20250225    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250225    gcc-14.2.0
-parisc                randconfig-002-20250225    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc               randconfig-001-20250225    gcc-14.2.0
-powerpc               randconfig-002-20250225    clang-19
-powerpc               randconfig-003-20250225    clang-21
-powerpc64             randconfig-001-20250225    gcc-14.2.0
-powerpc64             randconfig-002-20250225    gcc-14.2.0
-powerpc64             randconfig-003-20250225    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                            allyesconfig    clang-21
-riscv                 randconfig-001-20250225    clang-15
-riscv                 randconfig-002-20250225    clang-21
-s390                             allmodconfig    clang-19
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250225    clang-15
-s390                  randconfig-002-20250225    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250225    gcc-14.2.0
-sh                    randconfig-002-20250225    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                 randconfig-001-20250225    gcc-14.2.0
-sparc                 randconfig-002-20250225    gcc-14.2.0
-sparc64               randconfig-001-20250225    gcc-14.2.0
-sparc64               randconfig-002-20250225    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250225    clang-21
-um                    randconfig-002-20250225    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250225    gcc-12
-x86_64      buildonly-randconfig-002-20250225    clang-19
-x86_64      buildonly-randconfig-003-20250225    clang-19
-x86_64      buildonly-randconfig-004-20250225    gcc-11
-x86_64      buildonly-randconfig-005-20250225    gcc-12
-x86_64      buildonly-randconfig-006-20250225    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                randconfig-001-20250225    gcc-14.2.0
-xtensa                randconfig-002-20250225    gcc-14.2.0
+> 
+> Other concerns raised in previous threads include:
+> 
+>   - Potential for sensitive information in VPD, similar to dmesg and
+>     dmidecode
+> 
+>   - Kernel complexity of reading VPD (mutex, address/data registers)
+> 
+>   - Performance and potential denial of service as a consequence of
+>     mutex and hardware interaction
+> 
+>   - Missing EEPROMs or defective or incompletely-installed firmware
+>     breaking VPD read
+> 
+>   - Broken devices that crash when VPD is read
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+This patch allows non-root read for Mellanox (NICs) devices only and
+such access is going to be used only once during library initiation
+flow. So nothing from above is applicable in our case.
+
+In general case, all devices in the world were accessed at least once
+with "sudo lspci ....", during their bringup, installation, daily use
+e.t.c. Broken devices are filtered by kernel and have limited access
+to VPD.
+
+So if it is broken, it will be broken with sudo too.
+
+> 
+>   - Potential for issues with future Mellanox devices, even though all
+>     current ones work fine
+
+It is not different from any other feature. MLNX devices exist for more
+than 25 years already and we never exposed anything sensitive through VPD.
+
+I'm confident that we have no plans to change this policy in the future
+either.
+
+> 
+> This is basically similar to mmapping a device BAR, for which we also
+> require root.
+
+It is kernel controlled exposure, through well defined sysfs file and
+in-kernel API for very specific PCI section. Device BAR is much more
+than that.
+
+Thanks
+
+> 
+> > [leonro@vm ~]$ lspci |grep nox
+> > 00:09.0 Ethernet controller: Mellanox Technologies MT2910 Family [ConnectX-7]
+> > 
+> > Before:
+> > [leonro@vm ~]$ ls -al /sys/bus/pci/devices/0000:00:09.0/vpd
+> > -rw------- 1 root root 0 Nov 13 12:30 /sys/bus/pci/devices/0000:00:09.0/vpd
+> > After:
+> > [leonro@vm ~]$ ls -al /sys/bus/pci/devices/0000:00:09.0/vpd
+> > -rw-r--r-- 1 root root 0 Nov 13 12:30 /sys/bus/pci/devices/0000:00:09.0/vpd
+> > 
+> > [1] https://developer.nvidia.com/management-library-nvml
+> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> > ---
+> > Changelog:
+> > v4:
+> >  * Change comment to the variant suggested by Stephen
+> > v3: https://lore.kernel.org/all/18f36b3cbe2b7e67eed876337f8ba85afbc12e73.1733227737.git.leon@kernel.org
+> >  * Used | to change file attributes
+> >  * Remove WARN_ON
+> > v2: https://lore.kernel.org/all/61a0fa74461c15edfae76222522fa445c28bec34.1731502431.git.leon@kernel.org
+> >  * Another implementation to make sure that user is presented with
+> >    correct permissions without need for driver intervention.
+> > v1: https://lore.kernel.org/all/cover.1731005223.git.leonro@nvidia.com
+> >  * Changed implementation from open-read-to-everyone to be opt-in
+> >  * Removed stable and Fixes tags, as it seems like feature now.
+> > v0: https://lore.kernel.org/all/65791906154e3e5ea12ea49127cf7c707325ca56.1730102428.git.leonro@nvidia.com/
+> > ---
+> >  drivers/pci/vpd.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> > index a469bcbc0da7..c873ab47526b 100644
+> > --- a/drivers/pci/vpd.c
+> > +++ b/drivers/pci/vpd.c
+> > @@ -332,6 +332,13 @@ static umode_t vpd_attr_is_visible(struct kobject *kobj,
+> >  	if (!pdev->vpd.cap)
+> >  		return 0;
+> >  
+> > +	/*
+> > +	 * On Mellanox devices reading VPD is safe for unprivileged users,
+> > +	 * so just add needed bits to allow read.
+> > +	 */
+> > +	if (unlikely(pdev->vendor == PCI_VENDOR_ID_MELLANOX))
+> > +		return a->attr.mode | 0044;
+> > +
+> >  	return a->attr.mode;
+> >  }
+> >  
+> > -- 
+> > 2.47.1
+> > 
 
