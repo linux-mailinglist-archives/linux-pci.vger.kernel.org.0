@@ -1,207 +1,199 @@
-Return-Path: <linux-pci+bounces-22290-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22291-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9412A43607
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 08:19:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 773BAA43610
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 08:25:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D9413B727B
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 07:19:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E0C29174A5C
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 07:25:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC3672566F1;
-	Tue, 25 Feb 2025 07:19:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C3552566F1;
+	Tue, 25 Feb 2025 07:25:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D7jgw7T8"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Crrc19jd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="whzV6Y3h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1791124EF96
-	for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 07:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF3C18A6BA;
+	Tue, 25 Feb 2025 07:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740467981; cv=none; b=J1BjFB4K4J7FxzzFKZMe4XgrWXkWx4wiTPGuqJmCNKUwvffv9QhbTPJbopiXGLczzl29ZJL/gf28iZYn9vUt5w8ZHIRshqVSBTN8dGbWpH3sZ6nwfgYjkcaUcPDgtFk6iA+86lPqklkwVRiE4vorAEcuS1543n12EiyCa85ABsk=
+	t=1740468328; cv=none; b=O5JCTTjWdKWNbjjb/LY89quHyuUCs6EfCqhCo+9ykpUvUahoPjuU9OaLml3DlDwffiWt51CHPNHHCQG8Ekxo+QMr+cLJ8CrfdbnY2Owjg5q8rH5zMUEThaDCreNzGHpZm51jqFdzBgNtDhpjOgy3vYFVMEld2vAG2PxIqLYQHB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740467981; c=relaxed/simple;
-	bh=dS+PWUcfJ3XaqI1dCSZhmyUY1Ks/Z7nsCJpe9zNAhDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jFR2dsIpebhbWVpSuCFkXl1TFckf5eS7R4hQXMz0OUd2h+7iN1l0TpKS5d6fatI9EfCMMZabiqryOEmT2IE9DqLIWPPoYkhTLy5iICU3xbLaLPOCnHTPnkAh9n407w0Woobp/z3v38q9Cjy9ZtfCVboRRhOeQ/Ko4Mht4CgOXeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D7jgw7T8; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740467980; x=1772003980;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dS+PWUcfJ3XaqI1dCSZhmyUY1Ks/Z7nsCJpe9zNAhDo=;
-  b=D7jgw7T8K5pcvNzz/6aQ7T4dUH+sQ8P7usfo3ZHWqAOZDe3KY0KEOOGw
-   Xk3wIgspg+qfp0x52wG1YHatfn2fbnEsdwRoX4qt32A6CaFbV+PbTItd4
-   UHoBH5nD0Q4BX6MUCEg9jvM9ndZtQWbR74kb3XdZnYzfqGEMLe8oqKila
-   DrQX1i0kS3OrFNpW0qVQ6VtmWjt6tfznbUJNDNaxdjNzwIlMgjalzZtUK
-   shQwli2x6mkTlu56wpicH2iiaTbfFPf8A8gq4huWt/HnFwiQyU5os1YGi
-   UXaOgTUIxH1dA5y1beuShx/CnLMzYPsC6OPcbCNoztpycB7sSZgsK8muq
-   g==;
-X-CSE-ConnectionGUID: qwssI+MsQB2fu4XFjZyJNQ==
-X-CSE-MsgGUID: 9zRygzZ0QYWosTD8q57Zyg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="40445932"
-X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
-   d="scan'208";a="40445932"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 23:19:34 -0800
-X-CSE-ConnectionGUID: L/xnZHyYSQeqTYrocEb5Hw==
-X-CSE-MsgGUID: XKMIU+zPQhOPc1CzX6RDzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
-   d="scan'208";a="116932055"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa009.fm.intel.com with ESMTP; 24 Feb 2025 23:19:32 -0800
-Date: Tue, 25 Feb 2025 15:17:45 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
-	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Subject: Re: [PATCH 05/11] PCI/TSM: Authenticate devices via platform TSM
-Message-ID: <Z71umSkkyV0rAC25@yilunxu-OptiPlex-7050>
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
- <173343742510.1074769.16552514658771224955.stgit@dwillia2-xfh.jf.intel.com>
- <efc5ba59-964d-4988-a412-47f5297fedd3@amd.com>
- <yq5aeczrww9j.fsf@kernel.org>
+	s=arc-20240116; t=1740468328; c=relaxed/simple;
+	bh=jBWBE67xp0aA/g9uYHMJWanv7CTWes7h1prFsPBs1Oo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=h3eEbhQnKgXHBITh5Oa5zSQYSwyPH9K1fFGF7mpTwwJCxwP3vJLAe71+7o1rCCq6xJRVhCkBwfWkI3YLBXHM86+4kJIL3K5rUBZqCi2zl/7HG7WMr5BluxuDdXSs4AyNV7XSmqTsUrjFp9fu61rqgMqGCWO9LId7vi8uHZGvXFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Crrc19jd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=whzV6Y3h; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.stl.internal (Postfix) with ESMTP id 72696114016E;
+	Tue, 25 Feb 2025 02:25:23 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-11.internal (MEProxy); Tue, 25 Feb 2025 02:25:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1740468323;
+	 x=1740554723; bh=iNyMNq0Sztwv4vKDhGfFbMXIy/g1nHUCGUIykQmuxWc=; b=
+	Crrc19jdVh7/XBZAtR/NMXS4XDxP15gWTLHCfBDvQS676Lg8rynDp3eHsGxkQzOL
+	NA6+6MAjUiLoPQmu2RiInQC2bPTzaEHZhxFhtAxG2nKrgD7yJhCiJ8Mt9IiufWsV
+	fPYYYk3p5Lcd5wsAIlI2JQk1MLZqu4oPDJasJheax161IJ46K91fFfPtJDj5SbM9
+	T0hntAh8i6J0zAFYKwdj1gkrvLFe4deGMjOv2P5WVvP4N4BSrELOBLc708mfUPHI
+	43UjhAa34yyhwVHf7ypmWXQX7TAxCgyOweBC5H7/+C7Gg2vuf7hs7iJekp2//I2n
+	Jvica6vniO0L8eUGctctwg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740468323; x=
+	1740554723; bh=iNyMNq0Sztwv4vKDhGfFbMXIy/g1nHUCGUIykQmuxWc=; b=w
+	hzV6Y3hj5gWp/iDMqIx98JPoZOcwRLI9d1i8zlOU/RAUy+7IN5uPMPBjab2NCQyd
+	LMkj8W6q1/gHgLHDo98I6REoWQ/IUlycP4gdzmxqrs5rcWd4rE0QTrqe/Qq7ipcR
+	1TukjGbHToX6OBLGcTfynSUtg3pNqUrMJsH86ZMon4tgVd+2U1H1kYo2UhyvUMtK
+	CQVql3lLJY9IZSvDdmpfF/B6UYL6tVYb1VwSb36/JmunHby+rrqYNWFvnfPklsV9
+	W3GQb+SCgqfTcQp6qF5/y02gx4enLl5etsFLUDfQEOKg7vDo/I3wk5qWMiRSnz2E
+	A1qzcH81WGbVu17pqlUyw==
+X-ME-Sender: <xms:YnC9Z5OsvGdCkLa8wabjaJTLcmVWPy5Wdd2Ke6lK7Dgz_iTRXyrtyw>
+    <xme:YnC9Z7-o24c8cmpv9z2zXbEtBtMS6U1bIeklSCOAeb2rH1Aw6X5r2okyM9s4a7b1D
+    i42G82D6MsV7ZDpwpI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekuddtlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
+    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddv
+    geejvdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeef
+    tddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghpsegrlhhivghnkedruggvpd
+    hrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtphht
+    thhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheptghonhhorh
+    doughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehlphhivghrrghlihhsiheskhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifvghirdhl
+    ihhusehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorh
+    hg
+X-ME-Proxy: <xmx:YnC9Z4TLllvXzTwlowYa5Jl6FRZHwh6ru6z9sep9rQhEYu4E3BZ9YQ>
+    <xmx:YnC9Z1uroNTLiTE5A1YAFBUh0k6-cPSW_lmVz7j_174A7gOMX1F-pA>
+    <xmx:YnC9Zxd8hAA5ROl-8MVUO9kMTxx065-aCcG2Kcv_6QaygErRfoifPA>
+    <xmx:YnC9Zx0cABgPWS_vwgD1TtiRl_Bgj3jIOVHMSFv_zLyLLtjt_krAXw>
+    <xmx:Y3C9Z3G9Q7Jowr_Z_hgrXH8Sz7iSue9CIWALq-YXJHQQDGYgj76VkLzo>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 16C1B2220072; Tue, 25 Feb 2025 02:25:21 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq5aeczrww9j.fsf@kernel.org>
+Date: Tue, 25 Feb 2025 08:24:51 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Roman Kisel" <romank@linux.microsoft.com>
+Cc: benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com,
+ bhelgaas@google.com, "Borislav Petkov" <bp@alien8.de>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "Dexuan Cui" <decui@microsoft.com>,
+ "Haiyang Zhang" <haiyangz@microsoft.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, krzk+dt@kernel.org,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
+ "Ingo Molnar" <mingo@redhat.com>, "Rob Herring" <robh@kernel.org>,
+ ssengar@linux.microsoft.com, "Thomas Gleixner" <tglx@linutronix.de>,
+ "Wei Liu" <wei.liu@kernel.org>, "Will Deacon" <will@kernel.org>,
+ devicetree@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
+Message-Id: <55b65ba6-4abe-478c-a173-4622c30ddd7b@app.fastmail.com>
+In-Reply-To: <14a199d8-1cf3-49bc-8e0d-92d9c8407b4f@linux.microsoft.com>
+References: <20250212014321.1108840-1-romank@linux.microsoft.com>
+ <20250212014321.1108840-2-romank@linux.microsoft.com>
+ <1b14e3de-4d3e-420c-819c-31ffb2d448bd@app.fastmail.com>
+ <593c22ca-6544-423d-84ee-7a06c6b8b5b9@linux.microsoft.com>
+ <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
+ <6e4685fe-68e9-43bd-96c5-b871edb1b971@linux.microsoft.com>
+ <14a199d8-1cf3-49bc-8e0d-92d9c8407b4f@linux.microsoft.com>
+Subject: Re: [PATCH hyperv-next v4 1/6] arm64: hyperv: Use SMCCC to detect hypervisor
+ presence
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 21, 2025 at 01:43:28PM +0530, Aneesh Kumar K.V wrote:
-> Alexey Kardashevskiy <aik@amd.com> writes:
-> 
-> ....
-> 
-> >
-> > I am trying to wrap my head around your tsm. here is what I got in my tree:
-> > https://github.com/aik/linux/blob/tsm/include/linux/tsm.h
-> >
-> > Shortly:
-> >
-> > drivers/virt/coco/tsm.ko does sysfs (including "connect" and "bind" to 
-> > control and "certs"/"report" to attest) and implements tsm_dev/tsm_tdi, 
-> > it does not know pci_dev;
-> >
-> > drivers/pci/tsm-pci.ko creates/destroys tsm_dev/tsm_dev using tsm.ko;
-> >
-> > drivers/crypto/ccp/ccp.ko (the PSP guy) registers:
-> > - tsm_subsys in tsm.ko (which does "connect" and "bind" and
-> > - tsm_bus_subsys in tsm-pci.ko (which does "spdm_forward")
-> > ccp.ko knows about pci_dev and whatever else comes in the future, and 
-> > ccp.ko's "connect" implementation calls the IDE library (I am adopting 
-> > yours now, with some tweaks).
-> >
-> > tsm-dev and tsm-tdi embed struct dev each and are added as children to 
-> > PCI devices: no hide/show attrs, no additional TSM pointer in struct 
-> > device or pci_dev, looks like:
-> >
-> > aik@sc ~> ls  /sys/bus/pci/devices/0000:e1:04.0/tsm-tdi/tdi:0000:e1:04.0/
-> > device  power  subsystem  tsm_report  tsm_report_user  tsm_tdi_bind 
-> > tsm_tdi_status  tsm_tdi_status_user  uevent
-> >
-> > aik@sc ~> ls  /sys/bus/pci/devices/0000:e1:04.0/tsm_dev/
-> > device  power  subsystem  tsm_certs  tsm_cert_slot  tsm_certs_user 
-> > tsm_dev_connect  tsm_dev_status  tsm_meas  tsm_meas_user  uevent
-> >
-> > aik@sc ~> ls /sys/class/tsm/tsm0/
-> > device  power  stream0:0000:e1:00.0  subsystem  uevent
-> >
-> > aik@sc ~> ls /sys/class/tsm-dev/
-> > tdev:0000:c0:01.1  tdev:0000:e0:01.1  tdev:0000:e1:00.0
-> >
-> > aik@sc ~> ls /sys/class/tsm-tdi/
-> > tdi:0000:c0:01.1  tdi:0000:e0:01.1  tdi:0000:e1:00.0  tdi:0000:e1:04.0 
-> > tdi:0000:e1:04.1  tdi:0000:e1:04.2  tdi:0000:e1:04.3
-> >
-> >
-> > SPDM forwarding seems a bus-agnostic concept, "connect" is a PCI thing 
-> > but pci_dev is only needed for DOE/IDE.
-> >
-> > Or is separating struct pci_dev from struct device not worth it and most 
-> > of it should go to tsm-pci.ko? Then what is left for tsm.ko? Thanks,
-> >
-> 
-> For the Arm CCA DA, I have structured the flow as follows. I am
-> currently refining my changes to prepare them for posting. I am using
-> tsm-core in both the host and guest. There is no bind interface at the
-> sysfs level; instead, it is managed via the KVM ioctl
-> 
-> Host:
-> step 1.
-> echo ${DEVICE} > /sys/bus/pci/devices/${DEVICE}/driver/unbind
-> echo vfio-pci > /sys/bus/pci/devices/${DEVICE}/driver_override
-> echo ${DEVICE} > /sys/bus/pci/drivers_probe
-> 
-> step 2.
-> echo 1 > /sys/bus/pci/devices/$DEVICE/tsm/connect
-> 
-> step 3.
-> using VMM to make the new KVM_SET_DEVICE_ATTR ioctl
-> 
-> +		dev_num = vfio_devices[i].dev_hdr.dev_num;
-> +		/* kvmtool only do 0 domain, 0 bus and 0 function devices. */
-> +		guest_bdf = (0ULL << 32) | (0 << 16) | dev_num << 11 | (0 << 8);
-> +
-> +		struct kvm_vfio_tsm_bind param = {
-> +			.guest_rid = guest_bdf,
-> +			.devfd = vfio_devices[i].fd,
-> +		};
-> +		struct kvm_device_attr attr = {
-> +			.group = KVM_DEV_VFIO_DEVICE,
-> +			.attr = KVM_DEV_VFIO_DEVICE_TDI_BIND,
-> +			.addr = (__u64)&param,
-> +		};
-> +
-> +		if (ioctl(kvm_vfio_device, KVM_SET_DEVICE_ATTR, &attr)) {
-> +			pr_err("Failed KVM_SET_DEVICE_ATTR for KVM_DEV_VFIO_DEVICE");
-> +			return -ENODEV;
-> +		}
-> +
+On Tue, Feb 25, 2025, at 00:22, Roman Kisel wrote:
+> Hi Arnd,
+>
+> [...]
+>
+>>> I would suggest moving the UUID values into a variable next
+>>> to the caller like
+>>>
+>>> #define ARM_SMCCC_VENDOR_HYP_UID_KVM \
+>>> =C2=A0=C2=A0=C2=A0=C2=A0 UUID_INIT(0x28b46fb6, 0x2ec5, 0x11e9, 0xa9,=
+ 0xca, 0x4b, 0x56,=20
+>>> 0x4d, 0x00, 0x3a, 0x74)
+>>>
+>>> and then just pass that into arm_smccc_hyp_present(). (please
+>>> double-check the endianess of the definition here, I probably
+>>> got it wrong myself).
+>
+> I worked out a variation [1] of the change that you said looked good.
+>
+> Here, there is a helper macro for creating uuid_t's when checking
+> for the hypervisor running via SMCCC to avoid using the bare UUID_INIT=
+.=20
+> Valiadted with KVM/arm64 and Hyper-V/arm64. Do you think this is a
+> better approach than converting by hand?
+>
+> If that looks too heavy, maybe could leave out converting the expected
+> register values to UUID, and pass the expected register values to
+> arm_smccc_hyp_present directly. That way, instead of
+>
+> bool arm_smccc_hyp_present(const uuid_t *hyp_uuid);
+>
+> we'd have
+>
+> bool arm_smccc_hyp_present(u32 reg0, u32 reg1, u32 reg2, u32 reg2);
+>
+>
+> Please let me know what you think!
 
-I think bind (which brings device to a LOCKED state, no MMIO, no DMA)
-cannot be a driver agnostic behavior. So I think it should be a VFIO
-ioctl.
+The patch looks correct to me, but I agree it's a little silly
+to convert register values into uuid format on both sides.
 
-> 
-> Now in the guest we follow the below steps
-> 
-> step 1:
-> echo ${DEVICE} > /sys/bus/pci/devices/${DEVICE}/driver/unbind
-> 
-> step 2: Move the device to TDISP LOCK state
-> echo 1 > /sys/bus/pci/devices/0000:00:00.0/tsm/connect
-> echo 3 > /sys/bus/pci/devices/0000:00:00.0/tsm/connect
+>   static bool hyperv_detect_via_smccc(void)
+>   {
+> -	struct arm_smccc_res res =3D {};
+> +	uuid_t hyperv_uuid =3D HYP_UUID_INIT(ARM_SMCCC_VENDOR_HYP_UID_HYPERV=
+_REG_0,
+> +		ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_1,
+> +		ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_2,
+> +		ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_3);
 
-Reuse the 'connect' interface? I think it conceptually brings chaos. Is
-it better we create a new interface?
+If you want to declare a uuid here, I think you should remove the
+ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_{0,1,2,3} macros and just
+have UUID in normal UUID_INIT() notation as we do for
+other UUIDs.
 
-> 
-> step 3: Moves the device to TDISP RUN state
-> echo 4 > /sys/bus/pci/devices/0000:00:00.0/tsm/connect
+If you want to keep the four 32-bit values and pass them into
+arm_smccc_hyp_present() directly, I think that is also fine,
+but in that case, I would try to avoid calling it a UUID.
 
-Could you elaborate what '1'/'3'/'4' stand for?
+How are the kvm and hyperv values specified originally?
+From the SMCCC document it seems like they are meant to be
+UUIDs, so I would expect them to be in canonical form rather
+than the smccc return values, but I could not find a document
+for them.
 
-Thanks,
-Yilun
-
-> 
-> step 4: Load the driver again.
-> echo ${DEVICE} > /sys/bus/pci/drivers_probe
-> 
-> 
+     Arnd
 
