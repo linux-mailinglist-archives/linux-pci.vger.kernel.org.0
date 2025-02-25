@@ -1,61 +1,95 @@
-Return-Path: <linux-pci+bounces-22295-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22296-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 180FBA43781
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 09:23:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E66DAA4379F
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 09:30:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 071B11898BF2
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 08:23:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18297173D8C
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 08:28:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF2452627E7;
-	Tue, 25 Feb 2025 08:18:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAEAC25E47D;
+	Tue, 25 Feb 2025 08:28:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="M7aN0UOp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HYLm3EZe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2692D25EFBA;
-	Tue, 25 Feb 2025 08:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A6F152196
+	for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 08:28:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740471529; cv=none; b=YUUriX0rNq3A4CpbUYOvM9L9emsA4crMx0WglVfFyoPJj0rAR5diQaf7wpAW7KnoP4qER/a3TOIbx2sgPm7XIQsGAATcC0XJot4MzuegJMKg4ZxCx+uJlQD+G6UCk5Hh6LX3WJcpI0TMx5eXZYpqzv5B1VoqePgyaTZzX3tcZS4=
+	t=1740472124; cv=none; b=jdH9nJqa44dgpDRHMepN3Dhzy2K35BrDVD8HFVLBE3GvJc1W20xOVyJQW4QBVm+XTwI9dS9N16KWDufN6tOQhkm7bvGnVpdACIvWDwmWaZvxaTiVI/ctKeRUu2B030Bj7dZNvfslHEWvmjSGoTPDvet/n78iXtEwyg8P8WWZWt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740471529; c=relaxed/simple;
-	bh=aAEij0s3AFK49t2u7VbLu49lBeb4N8gA0Qn/alK+8pg=;
+	s=arc-20240116; t=1740472124; c=relaxed/simple;
+	bh=ZBu2O8F+O0lq76BGmqBcGCD16yBaXXF7E8cefYSt1yQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WFnPMUEGVh3cjmnSWSsUkPZmqjqItSgAIM2EamOct5rZoJf6pDbVbOKj35dDR0IqhsQQivoao95LPIyOczzaaOgq/lV5TR7fc5HsMwUqMdryTR9LjPn7S4A+IB60tqka4WyTuMeMrd1DdA2if59A12hRx2iSo9xdI/DchuELyXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=M7aN0UOp; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740471518; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=I1uXO/DS+IQ3WG9a33egswv7VHDYKVeFvkKUZfgvUwk=;
-	b=M7aN0UOp5zPBfVqznrL89htm/RxetNnybl2xPmm0PtD5jTd+YM2KEJWs1qN69JIrELaY0AnYLfU4A72p51oJRySJKlQqUlYm9MjL2KVWNyZPK51YNz08PvCTmW4Fq37kHFUOvwkwITp0sEeXbLt8I0W3w43bGg6kM6+3Ht0+HgU=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WQDqRf9_1740471517 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 25 Feb 2025 16:18:37 +0800
-Date: Tue, 25 Feb 2025 16:18:36 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Liguang Zhang <zhangliguang@linux.alibaba.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/4] PCI: portdrv: pciehp: Move PCIe hotplug command
- waiting logic to port driver
-Message-ID: <Z7183Dbg5QbgQj10@U-2FWC9VHC-2323.local>
-References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
- <20250224034500.23024-2-feng.tang@linux.alibaba.com>
- <f0f8f376-9f9c-16ce-9683-f09e088bdc22@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=uF9nzkOoMBAOMgGN+hMC2PZx5l8CKuetygM0kAgALutIw10Tnu1tmv0Kyl2QIygMu0f3Q6HdTefNZ32k3zqR3cv6z1bLdUPqCrWNkJwQPiXieYYmP18XZmYRi8smn28vqpWzCE1Pkyu5dHt5DnL3YaQ/uyg5vffHhxOJsYJEYDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HYLm3EZe; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-220c8f38febso111824945ad.2
+        for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 00:28:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740472122; x=1741076922; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SQhuTT3keTFG3C8+wYIEtpMC3dYXL5RKzFQ+SXkD8fQ=;
+        b=HYLm3EZeD/MmeUVxZ7CioUtHLoI7BIEWTtNXhk2bCFMFdHX2CebG5hVKO4zwQ+YsyF
+         C5i+aj1XyFKPTxInqu2MZxsFRvPJ7lKWqi8iEGuKAdbwfS2rTupRcJc1d9iwHQGjThwx
+         idLvDzpjlCopdG82NljaHYquIwY/cW3S2d2ngu62sB/BPpZ0Ca0Ckk3Fx9bqTRCjPGpX
+         nH000uWxiAPjoQqbUOZBIDA5+AalAV0I7djcbWDMPgzOozR37qU0mjcIEEwGZaB5fvJa
+         BGhFEupvedjUmdLOT0LJJyM7XfHyd3BZ3/u+IL1AGac/Qjav5AJ5FqkGvYdaQHoOtMvj
+         HlzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740472122; x=1741076922;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SQhuTT3keTFG3C8+wYIEtpMC3dYXL5RKzFQ+SXkD8fQ=;
+        b=r29/VKagS+NrQSoi6NZmxFgp51Hi5K7s9kFLeqUiwqH9//25k9bwLs1oxL1WPXbb9e
+         rju+SqUKdGeCE/M+O5jRqBdSfnd2oC25/Mz1XGLSPe1WvDBy5TnZvrmuez+PGlKYp/Wg
+         8ZGhzwDfMxfX556Bf8YmslhUz079ZkPHc66HrHexDpE9tS12eqCinGWW0OPgdvu/ww03
+         O8dz6F6Nsg8UFpi/WIH4Dtd37n8LdySueCzk0iR8glQSgESaaK/JmfwsjF78eUK1ZMrh
+         w2vvl6GYZ5uaEIzziuslBMfFrVLtUMKUmTDYbIh0ftKxKn2KrcoIJFsNVuXXh8FK7h/Q
+         5oJw==
+X-Forwarded-Encrypted: i=1; AJvYcCWK7CTgtEFd1dEmd/miWGdQ7PZ1+jjhz/7PXFR0rlKYcYe406mTRt/uP7bxs+kmO821hvByxBtOzjo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXgpvfRptyfcnb7oF3FQWKwEnIImWCjFFMFnI7svnJwLmX1PKn
+	h/Nuswh4o8pSwOwA3XSZwgXP+eYMbAlGCvNgFW+e8OjlGy6KPcRRKPxMzcTwEA==
+X-Gm-Gg: ASbGncsz+y30hcgjzZ22ULo9vD9+G7PC3LGewfkv3vTjEBiZ72sgLwUk2T80lz/BFz4
+	OElT7H/Jbyz6ZNulYJ3CAT/1ypqCJhAFqyaKmGsSG8lX/tKSOP9N6frGUUtNrIGyWI75XHA9LzD
+	OyMW+Tgm4Z6J/sHXKMW+IBMDsuwvWIf5k5J9LP92MJswKdTucdguivW1L8420ka7wJGi5jzrxrA
+	M6rtoDuUL42XzvhTB2QL0Msl8iuveTa46LVcIwpWmtSK8yExzZGfDmConChxDcT2UWe35aDaBJ7
+	W7F2sI035cSapanxPcfVuxi8zsJnTtrfuK8z
+X-Google-Smtp-Source: AGHT+IHEpwYAv8u3qb59FV+xDfGctwCas/kzce4Z4IGvei21yGE+B1pj/P69NtHMGX6VmXsFeRHsJg==
+X-Received: by 2002:a17:903:1c1:b0:216:3466:7414 with SMTP id d9443c01a7336-221a0025b25mr313420375ad.44.1740472122399;
+        Tue, 25 Feb 2025 00:28:42 -0800 (PST)
+Received: from thinkpad ([36.255.17.214])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a0b7790sm8728625ad.254.2025.02.25.00.28.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 00:28:41 -0800 (PST)
+Date: Tue, 25 Feb 2025 13:58:35 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	jingoohan1@gmail.com, Jonathan.Cameron@huawei.com,
+	fan.ni@samsung.com, nifan.cxl@gmail.com, a.manzanares@samsung.com,
+	pankaj.dubey@samsung.com, 18255117159@163.com,
+	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	will@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH v7 0/5] Add support for debugfs based RAS DES feature in
+ PCIe DW
+Message-ID: <20250225082835.dl4yleybs3emyboq@thinkpad>
+References: <CGME20250221132011epcas5p4dea1e9ae5c09afaabcd1822f3a7d15c5@epcas5p4.samsung.com>
+ <20250221131548.59616-1-shradha.t@samsung.com>
+ <Z7yniizCTdBvUBI0@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,113 +99,86 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f0f8f376-9f9c-16ce-9683-f09e088bdc22@linux.intel.com>
+In-Reply-To: <Z7yniizCTdBvUBI0@ryzen>
 
-Hi Ilpo,
-
-On Mon, Feb 24, 2025 at 05:06:26PM +0200, Ilpo Järvinen wrote:
-> On Mon, 24 Feb 2025, Feng Tang wrote:
+On Mon, Feb 24, 2025 at 06:08:26PM +0100, Niklas Cassel wrote:
+> Hello Shradha,
 > 
-> > According to PCIe spec, after sending a hotplug command, software should
-> > wait some time for the command completion. Currently the waiting logic
-> 
-> Where is it in the spec, please put a more precise reference.
-
-Will do, if the patch is kept.
-> 
-> > is implemented in pciehp driver, as the same logic will be reused by
-> > PCIe port driver, move it to port driver, which complies with the logic
-> > of CONFIG_HOTPLUG_PCI_PCIE depending on CONFIG_PCIEPORTBUS.
+> On Fri, Feb 21, 2025 at 06:45:43PM +0530, Shradha Todi wrote:
+> > DesignWare controller provides a vendor specific extended capability
+> > called RASDES as an IP feature. This extended capability  provides
+> > hardware information like:
+> >  - Debug registers to know the state of the link or controller. 
+> >  - Error injection mechanisms to inject various PCIe errors including
+> >    sequence number, CRC
+> >  - Statistical counters to know how many times a particular event
+> >    occurred
 > > 
-> > Also convert the loop wait logic to helper read_poll_timeout() as
-> > suggested by Sathyanarayanan Kuppuswamy.
-> 
-> You could express the second part of this with a tag:
-> 
-> Suggested-by: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com> # Use to read_poll_timeout()
-
-Thanks for the suggestion!
-
-> 
-> > Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
-> > ---
-> >  drivers/pci/hotplug/pciehp_hpc.c | 38 ++++++++------------------------
-> >  drivers/pci/pci.h                |  5 +++++
-> >  drivers/pci/pcie/portdrv.c       | 25 +++++++++++++++++++++
-> >  3 files changed, 39 insertions(+), 29 deletions(-)
-[...]
-
-> >  
-> > +/* Return 0 on command completed on time, otherwise return -ETIMEOUT */
-> 
-> Since you're making this visible outside of the file, please document this 
-> properly using a kerneldoc compliant comment.
-
-OK.
-
-> 
-> > +int pcie_poll_sltctl_cmd(struct pci_dev *dev, int timeout_ms)
-> > +{
-> > +	u16 slot_status = 0;
-> > +	u32 slot_cap;
-> > +	int ret = 0;
-> 
-> Unnecessary initialization.
-
-The initialization is actually used below.
-> 
-> > +	int __maybe_unused ret1;
-> > +
-> > +	/* Don't wait if the command complete event is not well supported */
-> > +	pcie_capability_read_dword(dev, PCI_EXP_SLTCAP, &slot_cap);
-> > +	if (!(slot_cap & PCI_EXP_SLTCAP_HPC) || slot_cap & PCI_EXP_SLTCAP_NCCS)
-> > +		return ret;
-
-Used here to return early if the event is not supported.
-
-> > +
-> > +	ret = read_poll_timeout(pcie_capability_read_word, ret1,
-> > +				(slot_status & PCI_EXP_SLTSTA_CC), 10000,
-> > +				timeout_ms * 1000, true, dev, PCI_EXP_SLTSTA,
-> 
-> Replace:
->         10000 -> 10 * USEC_PER_MSEC
->         timeout_ms * 1000 -> USEC_PER_SEC (the variable can be dropped)
-> 
-> Please also check you have linux/units.h included for those defines.
-
-Will use the macros, which are indeed self-describing. 
-
-If you are referring 'timeout_ms', I don't think it can be dropped as
-it is needed in the logic of pcie_poll_cmd().
-
-> > +				&slot_status);
-> > +	if (!ret)
-> 
-> Use the normal error handling logic by reversing the condition.
-> 
-> > +		pcie_capability_write_word(dev, PCI_EXP_SLTSTA,
-> > +						PCI_EXP_SLTSTA_CC);
-> > +
-> > +	return  ret;
-> 
-> Remove extra space but this will become return 0; once the error handling 
-> is done with the usual pattern.
-
-This is not error handling, but rather "normal" and "expected", that
-the command-completed bit is set and will be cleared here.
-
-Thanks,
-Feng
-
-> 
-> > +}
-> > +
-> >  /**
-> >   * get_port_device_capability - discover capabilities of a PCI Express port
-> >   * @dev: PCI Express port to examine
+> > However, in Linux we do not have any generic or custom support to be
+> > able to use this feature in an efficient manner. This is the reason we
+> > are proposing this framework. Debug and bring up time of high-speed IPs
+> > are highly dependent on costlier hardware analyzers and this solution
+> > will in some ways help to reduce the HW analyzer usage.
 > > 
+> > The debugfs entries can be used to get information about underlying
+> > hardware and can be shared with user space. Separate debugfs entries has
+> > been created to cater to all the DES hooks provided by the controller.
+> > The debugfs entries interacts with the RASDES registers in the required
+> > sequence and provides the meaningful data to the user. This eases the
+> > effort to understand and use the register information for debugging.
+> > 
+> > This series creates a generic debugfs framework for DesignWare PCIe
+> > controllers where other debug features apart from RASDES can also be
+> > added as and when required.
+> > 
+> > v7:
+> >     - Moved the patches to make finding VSEC IDs common from Mani's patchset [1]
+> >       into this series to remove dependancy as discussed
+> >     - Addressed style related change requests from v6
 > 
-> -- 
->  i.
+> I tested this series, and one thing that I noticed:
+> 
+> # for f in /sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/*/counter_enable; do echo 1 > $f; done
+> 
+> # grep "" /sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/*/* | grep Disabled
+> /sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/ctl_skp_os_parity_err/counter_enable:Counter Disabled
+> /sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/deskew_uncompleted_err/counter_enable:Counter Disabled
+> /sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/framing_err_in_l0/counter_enable:Counter Disabled
+> /sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/margin_crc_parity_err/counter_enable:Counter Disabled
+> /sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/retimer_parity_err_1st/counter_enable:Counter Disabled
+> /sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/retimer_parity_err_2nd/counter_enable:Counter Disabled
+> 
+> that there are some events that cannot be enabled when testing on my platform,
+> rk3588, perhaps this is because my version of the DWC IP does not have these
+> events.
+> 
+> (Because all the other events can be enabled successfully:
+> # grep "" /sys/kernel/debug/dwc_pcie_a40000000.pcie/rasdes_event_counter/*/* | grep Enabled | wc -l
+> 29
+> )
+> 
+> 
+> So the question is, how do we want to handle that?
+>
+
+This is a really good question.
+ 
+> E.g. counter_enable_write() could theoretically read back the
+> dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG);
+> register after doing the
+> ww_pcie_writel_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG, val);
+> 
+> to actually check if it could enable the event.
+> 
+> If counter_enable_write() could not enable the specific event, should it
+> perhaps return a failure to user space?
+> 
+
+Yes, it would be appropriate to return -EOPNOTSUPP in that case. But I'd like to
+merge this series asap. So this patch can come on top of this series.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
