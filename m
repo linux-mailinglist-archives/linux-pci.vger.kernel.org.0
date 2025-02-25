@@ -1,129 +1,144 @@
-Return-Path: <linux-pci+bounces-22325-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22326-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9FD1A43D14
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 12:13:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A878BA43D1B
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 12:14:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6898D7A3CC2
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 11:07:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 46026188A4CD
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 11:14:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17150267B66;
-	Tue, 25 Feb 2025 11:04:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 461BF207A11;
+	Tue, 25 Feb 2025 11:13:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A1UR7qNU"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="mWeGPYYq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Cl16CYMr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6630264F9D;
-	Tue, 25 Feb 2025 11:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2386A3DBB6;
+	Tue, 25 Feb 2025 11:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740481485; cv=none; b=lKlUHNW4EGbAOILzzS13NPAM4gOP0H4mHT3w4QOnWklZd8TJhd5N+0TGO8b31L4UtFYG7y+XdtU8WeMxSKD6LAFSUvjQRKt7euZnEqsMrmXJpdQ+98Md9CC1Cp6wUzO4jYTPVFkEIPtAmLddSQ4odEqr2R8dIny1K3C5aYRRaz0=
+	t=1740482036; cv=none; b=J6Nnzj2CAPnEdk6CaitUoBJHwlSWzDfwmndNrtOWFeQPjFqaxxYT6iH4TQ9We31ROR1JDvx7oI2JjyStNYvzmyRwE3bJXPZlOoXp4Giku8qXm8JypQMEIZf5TnsesMuQf8x438nBK4JyqJmmy3AcHtXyJiVxgIinLyRXygHhey0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740481485; c=relaxed/simple;
-	bh=yG++BUr1pNW36WEJ6xY32Zg5CTCOUnmylM4FpVv0kMQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B24Qxb+deaOrk5zTL29EbeGtmBzxCCtDkWDx8uhjsQwX2eJSpjt5m1ZIZ//JC3vJMPyUvETrxv/XiIlJd3kYY6EZP7So0jZgTrK0VKxkpdd2/89Ia7HACWcaBAltYrw4YQ2d2F4dxp7jclpsD9+RaaxsDDFLTsxjeGYERfWWvY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A1UR7qNU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA153C4CEDD;
-	Tue, 25 Feb 2025 11:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740481484;
-	bh=yG++BUr1pNW36WEJ6xY32Zg5CTCOUnmylM4FpVv0kMQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A1UR7qNUbDGRyiD1BhKsH5VWnThtZcFC0d27b9VJeHmkHZxNCdC6Ckq8KDmabuyhu
-	 L5g08E7PlSDrM54pDhgvaMHfZ09mqWSNccGhPVlc9rG+G/Pzxtbn4U0v4PjUpe8Ppj
-	 gF+fG5gJ5z3rnDfLDakSHIpRa9mnNEkPEQP9c5XPXefnzdLkCzk2k+0hN5ht3Ps6ym
-	 E5Z6gu8sEAqI6Xfpe/EdrXaSR14kPDAYqZAWoFcVIhFfC25WFfRJQpfuAH5JueBd98
-	 ayRBqiZirbr4/LPy8PqGdeSdPtSxZVfcrjBNBto088z/zUVFJm5w8ANmqTbw/CyUD8
-	 lZJP6AlKfBcqA==
-Date: Tue, 25 Feb 2025 12:04:35 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alistair Popple <apopple@nvidia.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com,
-	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net,
-	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
-	robh@kernel.org, daniel.almeida@collabora.com, saravanak@google.com,
-	dirk.behme@de.bosch.com, j@jannau.net, fabien.parent@linaro.org,
-	chrisi.schrefl@gmail.com, paulmck@kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	rcu@vger.kernel.org
-Subject: Re: [PATCH v7 07/16] rust: add `io::{Io, IoRaw}` base types
-Message-ID: <Z72jw3TYJHm7N242@pollux>
-References: <20241219170425.12036-1-dakr@kernel.org>
- <20241219170425.12036-8-dakr@kernel.org>
- <g63h5f3zowy375yutftautqhurflahq3o5nmujbr274c5d7u7u@j5cbqi5aba6k>
- <CANiq72=gZhG8MOCqPi8F0yp3WR1oW77V+MXdLP=RK_R2Jzg-cw@mail.gmail.com>
- <wnzq3vlgawjdchjck7nzwlzmm5qbmactwlhtj44ak7s7kefphd@m7emgjnmnkjn>
+	s=arc-20240116; t=1740482036; c=relaxed/simple;
+	bh=8OZuyHpvsUVbfiGFhXm25KHhZEJBKdeeXHeNu3ALA4Y=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=R6i4mbzpQFSryjOpB1KPEVWX02WEzCEv+QqDrFwRh4JRm63yjG/DIqTpqYmjI/QBDnHeF4Px7CGrsQHnT40KIY04eHf0Zc7kWYHanE6nFl6jOwtqEIW8tjdolhtwrIDbdiJipduDrvZmLMr+Qgo626ftdTgyKMzGQXQzksdUJm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=mWeGPYYq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Cl16CYMr; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id AD0E425401A7;
+	Tue, 25 Feb 2025 06:13:52 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-11.internal (MEProxy); Tue, 25 Feb 2025 06:13:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1740482032;
+	 x=1740568432; bh=8OZuyHpvsUVbfiGFhXm25KHhZEJBKdeeXHeNu3ALA4Y=; b=
+	mWeGPYYq0c+Voz1qnm2FhSsI7U8mrjHqAzAu62vmmyoS3DhDjhlDjb423TXNpojS
+	N+8DfUEFJhpnrI71lzRaO23Ivf2oR5SUdxx4NMCeF/vlULuNWGtB21mY8iowjNqP
+	2Pk9d47gwynUlIvZHnj/7P1ZMb6kAXhFuIBHw9vNCX/rOxrFOHG0FTFqpOwv4C8y
+	xAeoaKR/7xtERIEuQOZnF2jzEZ6j5PV5xlv0trWawbxmbq7yOoObJuuOcRB8x1ap
+	/d0zBKo7V0nfIecD8TdHqqw94IQqzOS3AdHSYRXAH5NN0/HTTCP2ovf343qNLq8a
+	dYVlkT9KC2rfgUwoLozJaA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740482032; x=
+	1740568432; bh=8OZuyHpvsUVbfiGFhXm25KHhZEJBKdeeXHeNu3ALA4Y=; b=C
+	l16CYMr3RfZCBZOPoHsg/fUIr0ytp7z4P+FMV7mbRiPIhK9UyfFU8679PxtgYbu+
+	JdLwX1H9KzDbGQj5POLFfp0/4PE197XkeTqm5aCyeZzHR/VTu5Q6957bL/nOxjbG
+	dGc0AbPUMFbsuCKUwSVhxUONUtFbPiIIe2hZXA4dCAQ9t/JjevvaKqRDjrXpJHes
+	kJkSNHiE9SXDfLgz+nvzr4gRqfGEW7XGUkXMjwpc9a6wA8fBdDNZYFc+jL1gDpep
+	xCkwMq2y6RTNk0P/lTIGdDW2onT8qCbT30YZIrODmKzh8/75DclN6twj0cuiuP8x
+	bCDWp0tjaHFxz0hRK4fvg==
+X-ME-Sender: <xms:8KW9Z5PunitMNPM4PYDZJczPgIO4hiJFlvvX16mJX078TOlX2zRL9A>
+    <xme:8KW9Z7_CfQ7qGFN8kK3yeh0Orn9fOKe0JFJmHdPle3cfUNV4F6PitYd9zV_l9MO2n
+    kjHK2oYMqqffKNlML8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekudehhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
+    fedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghhvghlghgrrghssehgohhogh
+    hlvgdrtghomhdprhgtphhtthhopegtrghsshgvlheskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtohepkhhishhhohhnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlphhivghrrg
+    hlihhsiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhuhgrhheskhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtohepmhgrnhhivhgrnhhnrghnrdhsrgguhhgrshhivhgrmheslh
+    hinhgrrhhordhorhhgpdhrtghpthhtohepkhifsehlihhnuhigrdgtohhmpdhrtghpthht
+    ohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoh
+    ephhgrhigrshhhihdrkhhunhhihhhikhhosehsohgtihhonhgvgihtrdgtohhm
+X-ME-Proxy: <xmx:8KW9Z4Td90mKZqTBkvmK8xHIWtnOQo0wAPE6FgKUia1urs-w9AY8cQ>
+    <xmx:8KW9Z1tVISLlzuXTNCAY8cZpzL1027zd185fK7i-g7dlXcoNayuUiQ>
+    <xmx:8KW9ZxfeCFEvPWeUaRk2r8xDyRw_v1_mKLqZEPbjgfsJJW9tFVBW8w>
+    <xmx:8KW9Zx3WaahY2phJachF8QGZ2TQx5wc7Uz3QI2Czt-twEQ_p0FYoiw>
+    <xmx:8KW9Z_3_BcgusIHbm1RyJLyshHGnvdPXZxQndvKDNB5ePz0nTP8pc-gA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2BE2E2220072; Tue, 25 Feb 2025 06:13:52 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <wnzq3vlgawjdchjck7nzwlzmm5qbmactwlhtj44ak7s7kefphd@m7emgjnmnkjn>
+Date: Tue, 25 Feb 2025 12:13:31 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Kunihiko Hayashi" <hayashi.kunihiko@socionext.com>,
+ "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "Kishon Vijay Abraham I" <kishon@kernel.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ "Gustavo Pimentel" <gustavo.pimentel@synopsys.com>,
+ "Bjorn Helgaas" <bhelgaas@google.com>, shuah <shuah@kernel.org>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, "Niklas Cassel" <cassel@kernel.org>
+Message-Id: <87857a72-eca0-4919-8e1d-ff04b9047d82@app.fastmail.com>
+In-Reply-To: <20250225110252.28866-6-hayashi.kunihiko@socionext.com>
+References: <20250225110252.28866-1-hayashi.kunihiko@socionext.com>
+ <20250225110252.28866-6-hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH v4 5/6] misc: pci_endpoint_test: Remove global 'irq_type' and
+ 'no_msi'
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 25, 2025 at 04:50:05PM +1100, Alistair Popple wrote:
-> Kind of, but given the current state of build_assert's and the impossiblity of
-> debugging them should we avoid adding them until they can be fixed?
+On Tue, Feb 25, 2025, at 12:02, Kunihiko Hayashi wrote:
+> The global variable "irq_type" preserves the current value of
+> ioctl(GET_IRQTYPE).
+>
+> However, all tests that use interrupts first call ioctl(SET_IRQTYPE)
+> to set test->irq_type, then write the value of test->irq_type into the
+> register pointed by test_reg_bar, and request the interrupt to the
+> endpoint. The endpoint function driver, pci-epf-test, refers to the
+> register, and determine which type of interrupt to raise.
+>
+> The global variable "irq_type" is never used in the actual test,
+> so remove the variable and replace it with test->irq_type.
+>
+> And also for the same reason, the variable "no_msi" can be removed.
+>
+> Initially, test->irq_type has IRQ_TYPE_UNDEFINED, and the
+> ioctl(GET_IRQTYPE) before calling ioctl(SET_IRQTYPE) will return an error.
+>
+> Suggested-by: Niklas Cassel <cassel@kernel.org>
+> Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-If you build the module as built-in the linker gives you some more hints, but
-I agree it's still not great.
+Nice catch, always good to remove global variables with too generic names.
 
-I think build_assert() is not widely used yet and, until the situation improves,
-we could also keep a list of common pitfalls if that helps?
-
-> Unless the code absolutely cannot compile without them I think it would be
-> better to turn them into runtime errors that can at least hint at what might
-> have gone wrong. For example I think a run-time check would have been much more
-> appropriate and easy to debug here, rather than having to bisect my changes.
-
-No, especially for I/O the whole purpose of the non-try APIs is to ensure that
-boundary checks happen at compile time.
-
-> I was hoping I could suggest CONFIG_RUST_BUILD_ASSERT_ALLOW be made default yes,
-> but testing with that also didn't yeild great results - it creates a backtrace
-> but that doesn't seem to point anywhere terribly close to where the bad access
-> was, I'm guessing maybe due to inlining and other optimisations - or is
-> decode_stacktrace.sh not the right tool for this job?
-
-I was about to suggest CONFIG_RUST_BUILD_ASSERT_ALLOW=y to you, since this will
-make the kernel panic when hitting a build_assert().
-
-I gave this a quick try with [1] in qemu and it lead to the following hint,
-right before the oops:
-
-[    0.957932] rust_kernel: panicked at /home/danilo/projects/linux/nova/nova-next/rust/kernel/io.rs:216:9:
-
-Seeing this immediately tells me that I'm trying to do out of bound I/O accesses
-in my driver, which indeed doesn't tell me the exact line (in case things are
-inlined too much to gather it from the backtrace of the oops), but it should be
-good enough, no?
-
-[1]
-
-diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
-index 1fb6e44f3395..2ff3af11d711 100644
---- a/samples/rust/rust_driver_pci.rs
-+++ b/samples/rust/rust_driver_pci.rs
-@@ -13,7 +13,7 @@ impl Regs {
-     const OFFSET: usize = 0x4;
-     const DATA: usize = 0x8;
-     const COUNT: usize = 0xC;
--    const END: usize = 0x10;
-+    const END: usize = 0x2;
- }
-
- type Bar0 = pci::Bar<{ Regs::END }>;
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
