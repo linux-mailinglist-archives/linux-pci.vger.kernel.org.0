@@ -1,193 +1,114 @@
-Return-Path: <linux-pci+bounces-22371-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22359-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A6E3A448E2
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 18:51:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 096EFA447DF
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 18:22:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1EB01661BA
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 17:46:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 453D9883BCD
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 17:15:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C1B1195B1A;
-	Tue, 25 Feb 2025 17:46:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43518204F77;
+	Tue, 25 Feb 2025 17:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DL0GYxMp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [176.9.242.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077BC19CC0E
-	for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 17:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22421DF98F
+	for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 17:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740505595; cv=none; b=hgGeNMTrxLT6NO7soSDqdP0+mtMXDdYW6rnsSyp5KfT8ADtGWKc+F40tcx1tyrofnuj2Mdf/4SUEklirbRhuD3/+i+9jJabji0h5r+jkn9FcwzohI9IqnOMh+kDdr2fcMttYLNTEnL+akORwNcfdhOoVIg2jjXDnFlbzkp9FW6c=
+	t=1740503571; cv=none; b=PSbaxyo2NIv4Q+GPLpvN8U90Kzr8wjjABX9OBb3oTIQASKkzIeKdfr/p1Hu6cRhcLesbzKJN9lfhdGzvaSH2RQ+Fg1YWHG9IIORDi76fwdBQ/pJmVt8IUFykXHOmBcAU/2QObOGNl9XGr86+76HrNE/fQ7+/Kj7+8uv3gZJSxCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740505595; c=relaxed/simple;
-	bh=6sxmmC+NKV3hbVTFUXekqgf7FUdZiF2I4RpriziH2AM=;
-	h=Message-ID:In-Reply-To:References:From:Date:Subject:To:Cc; b=HlrDVX/MHdnw/QoiyJCke7Ep+KQo1Bn5uha4Ooi63pKZqxuRosVAkTzblTlBBxZiHPI7vqG2ByUBDwwOoJR3vQ8sCmue/ed+EDncVKydKN7pQc5hcEx8Iw+Mzx62hVorL73bkhTOY79fUyi+tcdmMzBjzzdrWVps09eQP+PQLF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=176.9.242.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by mailout3.hostsharing.net (Postfix) with ESMTPS id 3CE27101E69A4;
-	Tue, 25 Feb 2025 18:46:31 +0100 (CET)
-Received: from localhost (unknown [89.246.108.87])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by h08.hostsharing.net (Postfix) with ESMTPSA id E6FC56018C39;
-	Tue, 25 Feb 2025 18:46:30 +0100 (CET)
-X-Mailbox-Line: From c207f03cfe32ae9002d9b453001a1dd63d9ab3fb Mon Sep 17 00:00:00 2001
-Message-ID: <c207f03cfe32ae9002d9b453001a1dd63d9ab3fb.1740501868.git.lukas@wunner.de>
-In-Reply-To: <cover.1740501868.git.lukas@wunner.de>
-References: <cover.1740501868.git.lukas@wunner.de>
-From: Lukas Wunner <lukas@wunner.de>
-Date: Tue, 25 Feb 2025 18:06:05 +0100
-Subject: [PATCH 5/5] PCI: hotplug: Inline pci_hp_{create,remove}_module_link()
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
+	s=arc-20240116; t=1740503571; c=relaxed/simple;
+	bh=solmisJfOwq7tSo+vQhMg46du8qP0Mm5gMU1KVww0NI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CqaHo0omd4Z2Sb+CGHzfT418kAkih1LGLV+gMb9/TWGcM/+Apgz9Dx2mxMtMu4dd4wVOlcXhYO3HX4IEYFaE37pNIJWMAqF797ofQsiz4hGYByJrDCJNACTeZc58+NBEEKrXn4KEHgrrcO4DSJRwp5EoRB4+mhg69zwyIzMXPts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DL0GYxMp; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2211acda7f6so133301015ad.3
+        for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 09:12:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740503569; x=1741108369; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9jG0W9H5EHgY60+XGt77vkeLnWA8gkbVQ9cdgHwuEC4=;
+        b=DL0GYxMpYglS0lhWClMZUGd6/PdKyx+WD1rk6Tv0FBVSU3YyysYRMh1Qe/DkRWTfRj
+         vW1WE7lf+746zeXLyKws+xqtj6Px9kg2Y/Ij70iiaQkMwBh16tc6JEiTtN2ZPZSdW9fW
+         z/wsNALWMHfgrraBwtO56qAdhzXX7TKXl/jg5twhwQvwZTw4XNbRlxpdJLqR6U1kIFKZ
+         0eDw3zjEhw+psATGHZUZ022Wg2GUTH2Ww6lwlaKeOdKew7E1Ug/uamqU5WPq9RBt5vMX
+         5Zof/sH5KlrlqOyEJ/db4Vyg4qLsnbhXC+ea1Ax+dOM1xxG4HngabVOoP3fSYlwzUc/j
+         B1hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740503569; x=1741108369;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9jG0W9H5EHgY60+XGt77vkeLnWA8gkbVQ9cdgHwuEC4=;
+        b=OIWpuOSQx0GAlJ7L/8s+PaOLn1TQwTt3NfbURP6GHY59AvQQOCvDbrLK+DqjRm17+b
+         Kv5kKDdmid6CEdl8ESwLfkidshn/SwwdYNULO7fUSyfaD4LKWsVw5DbjobO4HOqk24FB
+         oS3QL1/W5+jE9VxIcVnGtayiNVrzIJ7JaWvZ8pLzXs9CfwfpC6q05JEqKJSe/c/phvp3
+         2BPQFtfi6frXeJ8r/MFc4trjF8qb7reW0Z7v+0YaHY6kJo+CctJiZzz9CSPKHqNmYYEY
+         2aFPzhGlSmLahasbEBrmdiL7K246frazPREey8Z2pQrMHMI6hbzvdemEoTiq1R4sPkM5
+         wxmg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvklIsJY7broI1DljsO+kVRBD6y7cpqBQY2obgySg3Xa6N9QrLivbAfD9rpvOxJmG7nemlVBQln4A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/rJbmDykqYSKkZ8O+UCOwYOG2G2XMTozjPozaXoZRlbLZh8bX
+	gkkisZXUlMP5P3c+tbtIaQUHSEpdegtKGlyk78mPE37gJQS6mVVRC49vyXuO0g==
+X-Gm-Gg: ASbGncu+NXOGHL5yMhnitn/NfAEmTReMwjG2BqDSMg8hxedOPIw7sWJBb9xjWteTBQD
+	Hh+UTARYnFFrfQ0ghaJ4J6x2LlEbSPAFHroY3rHoUcCfH+PcHrOrdH64DoEQagNSkaTZ0So2fuk
+	sIgd7DmY8sXHbMqtMQyS+RyzYvI/FawVDWdqM3rMU/9Hu6bYecdJHFbre+328AyaVSb0WGrGr2z
+	81jUSZLDXpqIlTt68DbMDnp20KiE54aLogHsdmfz5rGEWwQvPwIDNxjgct4tWcKj62wSlopZ1Rh
+	3X72AmsdJhRu7ch1iUmc85fKQXsyLdTJNM5s32EoHjgDhHfWfKd3iw==
+X-Google-Smtp-Source: AGHT+IHjmQd2iyEjNZ5iWvHuuhwXr+ROlu+iTqFwv0oDwguUc9oGY/92+rxd8sOUv0ftc2AvvJk1eg==
+X-Received: by 2002:a17:902:e892:b0:220:e63c:5b08 with SMTP id d9443c01a7336-223200853e2mr3925605ad.11.1740503568871;
+        Tue, 25 Feb 2025 09:12:48 -0800 (PST)
+Received: from localhost.localdomain ([120.60.68.212])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a095f40sm16844925ad.144.2025.02.25.09.12.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 09:12:48 -0800 (PST)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: jingoohan1@gmail.com,
+	lpieralisi@kernel.org,
+	kw@linux.com
+Cc: robh@kernel.org,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shradha.t@samsung.com,
+	cassel@kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/2] PCI: dwc-debugfs: Couple of fixes
+Date: Tue, 25 Feb 2025 22:42:37 +0530
+Message-Id: <20250225171239.19574-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-For no apparent reason, the pci_hp_{create,remove}_module_link() helpers
-live in slot.c, even though they're only called from two functions in
-pci_hotplug_core.c.
+Hi,
 
-Inline the helpers to reduce code size and number of exported symbols.
+This series has a couple of fixes for the recently merged debugfs patches.
+This series is rebased on top of pci/controller/dwc branch.
 
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
- drivers/pci/hotplug/pci_hotplug_core.c | 14 +++++++--
- drivers/pci/slot.c                     | 42 --------------------------
- include/linux/pci.h                    |  5 ---
- 3 files changed, 11 insertions(+), 50 deletions(-)
+- Mani
 
-diff --git a/drivers/pci/hotplug/pci_hotplug_core.c b/drivers/pci/hotplug/pci_hotplug_core.c
-index a992bf51af98..d30f1316c98e 100644
---- a/drivers/pci/hotplug/pci_hotplug_core.c
-+++ b/drivers/pci/hotplug/pci_hotplug_core.c
-@@ -245,10 +245,18 @@ static bool has_test_file(struct hotplug_slot *slot)
- 
- static int fs_add_slot(struct hotplug_slot *slot, struct pci_slot *pci_slot)
- {
-+	struct kobject *kobj;
- 	int retval = 0;
- 
- 	/* Create symbolic link to the hotplug driver module */
--	pci_hp_create_module_link(pci_slot);
-+	kobj = kset_find_obj(module_kset, slot->mod_name);
-+	if (kobj) {
-+		retval = sysfs_create_link(&pci_slot->kobj, kobj, "module");
-+		if (retval)
-+			dev_err(&pci_slot->bus->dev,
-+				"Error creating sysfs link (%d)\n", retval);
-+		kobject_put(kobj);
-+	}
- 
- 	if (has_power_file(slot)) {
- 		retval = sysfs_create_file(&pci_slot->kobj,
-@@ -302,7 +310,7 @@ static int fs_add_slot(struct hotplug_slot *slot, struct pci_slot *pci_slot)
- 	if (has_power_file(slot))
- 		sysfs_remove_file(&pci_slot->kobj, &hotplug_slot_attr_power.attr);
- exit_power:
--	pci_hp_remove_module_link(pci_slot);
-+	sysfs_remove_link(&pci_slot->kobj, "module");
- exit:
- 	return retval;
- }
-@@ -326,7 +334,7 @@ static void fs_remove_slot(struct hotplug_slot *slot, struct pci_slot *pci_slot)
- 	if (has_test_file(slot))
- 		sysfs_remove_file(&pci_slot->kobj, &hotplug_slot_attr_test.attr);
- 
--	pci_hp_remove_module_link(pci_slot);
-+	sysfs_remove_link(&pci_slot->kobj, "module");
- }
- 
- /**
-diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-index dd6e80b7db09..50fb3eb595fe 100644
---- a/drivers/pci/slot.c
-+++ b/drivers/pci/slot.c
-@@ -7,7 +7,6 @@
- 
- #include <linux/kobject.h>
- #include <linux/slab.h>
--#include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/err.h>
- #include "pci.h"
-@@ -325,47 +324,6 @@ void pci_destroy_slot(struct pci_slot *slot)
- }
- EXPORT_SYMBOL_GPL(pci_destroy_slot);
- 
--#if defined(CONFIG_HOTPLUG_PCI) || defined(CONFIG_HOTPLUG_PCI_MODULE)
--#include <linux/pci_hotplug.h>
--/**
-- * pci_hp_create_module_link - create symbolic link to hotplug driver module
-- * @pci_slot: struct pci_slot
-- *
-- * Helper function for pci_hotplug_core.c to create symbolic link to
-- * the hotplug driver module.
-- */
--void pci_hp_create_module_link(struct pci_slot *pci_slot)
--{
--	struct hotplug_slot *slot = pci_slot->hotplug;
--	struct kobject *kobj = NULL;
--	int ret;
--
--	kobj = kset_find_obj(module_kset, slot->mod_name);
--	if (!kobj)
--		return;
--	ret = sysfs_create_link(&pci_slot->kobj, kobj, "module");
--	if (ret)
--		dev_err(&pci_slot->bus->dev, "Error creating sysfs link (%d)\n",
--			ret);
--	kobject_put(kobj);
--}
--EXPORT_SYMBOL_GPL(pci_hp_create_module_link);
--
--/**
-- * pci_hp_remove_module_link - remove symbolic link to the hotplug driver
-- * 	module.
-- * @pci_slot: struct pci_slot
-- *
-- * Helper function for pci_hotplug_core.c to remove symbolic link to
-- * the hotplug driver module.
-- */
--void pci_hp_remove_module_link(struct pci_slot *pci_slot)
--{
--	sysfs_remove_link(&pci_slot->kobj, "module");
--}
--EXPORT_SYMBOL_GPL(pci_hp_remove_module_link);
--#endif
--
- static int pci_slot_init(void)
- {
- 	struct kset *pci_bus_kset;
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 47b31ad724fa..a0f5c8fcd9c7 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2447,11 +2447,6 @@ static inline resource_size_t pci_iov_resource_size(struct pci_dev *dev, int res
- static inline void pci_vf_drivers_autoprobe(struct pci_dev *dev, bool probe) { }
- #endif
- 
--#if defined(CONFIG_HOTPLUG_PCI) || defined(CONFIG_HOTPLUG_PCI_MODULE)
--void pci_hp_create_module_link(struct pci_slot *pci_slot);
--void pci_hp_remove_module_link(struct pci_slot *pci_slot);
--#endif
--
- /**
-  * pci_pcie_cap - get the saved PCIe capability offset
-  * @dev: PCI device
+Manivannan Sadhasivam (2):
+  PCI: dwc-debugfs: Perform deinit only when the debugfs is initialized
+  PCI: dwc-debugfs: Return -EOPNOTSUPP if an event counter is not
+    supported
+
+ .../controller/dwc/pcie-designware-debugfs.c   | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
 -- 
-2.43.0
+2.25.1
 
 
