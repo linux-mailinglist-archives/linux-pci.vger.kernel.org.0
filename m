@@ -1,189 +1,149 @@
-Return-Path: <linux-pci+bounces-22341-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22342-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E914EA4408B
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 14:20:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E9E1A440A7
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 14:25:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EBF85166518
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 13:16:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0643417B287
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 13:21:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C1772690D7;
-	Tue, 25 Feb 2025 13:16:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBBF12690FF;
+	Tue, 25 Feb 2025 13:21:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Me/tWsXB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyvo4K+0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADF120B213;
-	Tue, 25 Feb 2025 13:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C272690CE;
+	Tue, 25 Feb 2025 13:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740489378; cv=none; b=D2OMI++Cu/RH+OYlr8SWx5TfuecyttCBvGRNqlHGagTuypSSqIg2EgcNTvOFZLurNs4QV8FARkhI5/npX2GYXKb6UHUbkdsltNvaBKy1k2ZE7/jUcyLPhliLRNKhhrGwqLagHkjgRw1oeWZRh1bZrGu5V75+bgtk2Qqy+q5x4zE=
+	t=1740489669; cv=none; b=gevfCSvAIQepCqw8gKsptrRvYYnJ3beDQ79CRfwg+blC110pssSTxI8UguppTIY4qkiI7Osg+uMY2VW9ToNOs06KZFAm6W1E2wA+GD0YKBpjkv/gPlbe1CC0hcwx4Dqv8a93TT03+gp8KPWsH0/Jv4fSPfFNz8fGPlZTL/Z3X0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740489378; c=relaxed/simple;
-	bh=xebKsClSpiGJgFYUEhLrX3k3fPwdXQfBamfK8FLRr8Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R01WcO19zV9pUwHC1MdG029y/fHGCxN3kI+om55klK8dzLBKaikz59KASwEJKICtX/K2QI6K7dTSj/Lh0MiY7T+2izTBsr1zVYh4pF8+PU//+cBRfYN/XKeP/rkVM5S2XAKtWPQNzPK6I6GuA4qCeRccjmiMtQfsXQIdLSku9rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Me/tWsXB; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5461cb12e39so5390785e87.2;
-        Tue, 25 Feb 2025 05:16:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740489375; x=1741094175; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0yhzYhqcZ0u+9Qey41WN8C1X1Cv3m1W92EYrnC/bc1E=;
-        b=Me/tWsXBJ9t3xUGjK4KJ+LrD8fZQihLUBfwxI65xUh0xQZOIWECtJpfwkWgvpxuCJL
-         7tOJ9l39Ax+iqSPj8VT1UJZ7vLYurdwd29vcKzMTR9CepdVE7TGLgAMw8vsoLmln0tAJ
-         x+HKr2bCUAKyTgpb82NyHc5q9WYwB+hO6GYf2BwFZS3KmEc7N9sNhlQcjfmjH6JRJuid
-         ETco3K2DqYMgVeB6dekGxQlvpPtjOo5tBcyWgCVtZPPsdG2us0WGsap09/fKTic6/nw+
-         gMCYupFDVu5I9UrzNa++AooLRvULUf8+nc5E9FLQLYXsrkDyglDHd9kEhUIsytKMAQdh
-         ILHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740489375; x=1741094175;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0yhzYhqcZ0u+9Qey41WN8C1X1Cv3m1W92EYrnC/bc1E=;
-        b=m9mlcX/KfBek9Zi8Ai8PCU6mRQ5bNXhWRhGeBXJEMLohfMRQIIy791tIHvfKbcm3g2
-         /bLs/FPIQaXM1DfIkK8/b2NMJUsqKBNEll/8dxN9t54keAYlOa1J7JH2vJd180/Gylpn
-         bbEYRdzDRSnabUYGyha3w5r3XW4ExRpUsk9iBTwlyjNtT8Z9mL52fjXW8upp/zMCPe7H
-         WCLHP5E8qPI/kSPg8qkZJRyZfPvy8s53pg/k4O70DXAd+L5WbWUgBFRe2MbsmRS49Vjx
-         5337UHoRRsxamX998qAFkSfjN9tApZyXbE5OSWiP1cfpRw/WaV5n8JoL1iqfXToiKFVC
-         Oyjw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBZwGKy0LyLDWqGPmvWs6EhnKFtDlpjwjwrduPRBjWwkx91hDcfyyTa3Co74qMCbqHR7i0ARvoPbGcTtQ6@vger.kernel.org, AJvYcCV+73yKjGuLf6ROo5NlD6Hb0kwgyQcQilurW+4ybubha4ZVAEHJdBUuRD7h6qRMnPhLRKaj/7jP9vsC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYu0eS8rsE98/t4P+/iDYcprcFox15ypG89/w/amRwbW40L9ve
-	P3rrg+omOPHZF2xFpXBQn2LKvGgk3LGqhk7aSDrQMtWdPm8aGtIlteCX78I/vGdRkncTBXtOtDp
-	45jpTTC1FDqddyg9EbKcEw36okg==
-X-Gm-Gg: ASbGncs9NtlWKPjbcTakxcd5ks78KVz/kFdkkARIWUhsb5/TwSs5Oi9cpLBokMcUVP4
-	6ExAQfWzqk+D0iC06iSiBfAFup6Aq/2XMfO3VpAOVJJHB62Nlvm6bIGtGpc55fZOnmjb1NGrKcF
-	KQlzbTJUQ=
-X-Google-Smtp-Source: AGHT+IHZD37TRQdeOLKhUhrNZM5rGVP80rGFnhiNLLy62hwtki8xxWAer67VvhIKFDb2Fj6lIFpjYt/ZBIDtcPG2Dw8=
-X-Received: by 2002:a05:6512:6ce:b0:545:441:52d2 with SMTP id
- 2adb3069b0e04-54838ef4c73mr7761428e87.23.1740489374516; Tue, 25 Feb 2025
- 05:16:14 -0800 (PST)
+	s=arc-20240116; t=1740489669; c=relaxed/simple;
+	bh=YBtG5QOwEDieH48lep8w3BRVpKrmnVGl1VevQg/5VQg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qEK9QB555CG3SKZB9gXuJ/M3/JIg8hDWt/mspwhTRPtjpDLw/dH1K5FaisNeLv9ETz9hFF12RVm1ev5uC92BHo79UwrFFs4kSa7PCIJrN2p+EJn6LBiLcpt4szkic0baKbU60u84a4es8+f2GwqR6s/sygwAle68+wiP5W+gjV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eyvo4K+0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCAEEC4CEDD;
+	Tue, 25 Feb 2025 13:21:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740489669;
+	bh=YBtG5QOwEDieH48lep8w3BRVpKrmnVGl1VevQg/5VQg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eyvo4K+0AQOzIQx6vWj2zwJL8Ag2g/n/9MhK0Ytuc4ThGwiy9190mR3RxLbB0nelg
+	 BcUMfoqgeQLur/sBJJTRSnFNTCHacSVTbnp0+wcpyiOidA5WHlQW+OHZBS3ivzJA2B
+	 bR58OIrt2rNaBgmxwKOwxXV/Fs1MoPYjHbVd+mIYKMdz+PwFGZGPnZGu+W0WQuqdvV
+	 6Evcy5obrbbCSGPbbzDvJ+8lxWL+udGofhLvFiu9OQDiv31OFjUft/GENt6btkKiVs
+	 gyKMM9nj4hQ2HU07E3toyly5YOC5YkIhckakb/fZYu8dQ1oP8kR31Sh3Y59R4b5N4i
+	 Ap7SjP8x6PQuA==
+Message-ID: <1615a273-7a6f-4773-8c43-681e22ef661e@kernel.org>
+Date: Tue, 25 Feb 2025 14:21:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMciSVVV9tHH1M2bOnwqCJCQ8OjNFGjuQB7R-fY7JHHD5tQHoA@mail.gmail.com>
- <20250224195423.GA473540@bhelgaas>
-In-Reply-To: <20250224195423.GA473540@bhelgaas>
-From: Naveen Kumar P <naveenkumar.parna@gmail.com>
-Date: Tue, 25 Feb 2025 18:46:02 +0530
-X-Gm-Features: AQ5f1Jpa03K69kEgEFPOkIOv7GmmUMgdCFEj1cGoDijTqSNxJvZtameW7_EW_ok
-Message-ID: <CAMciSVX3X=DxLU0tfj4rG5WPaS5BCUDcMp2MYWBitT0ecEH+ig@mail.gmail.com>
-Subject: Re: PCI: hotplug_event: PCIe PLDA Device BAR Reset
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernelnewbies <kernelnewbies@kernelnewbies.org>, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/2] dt-bindings: PCI: dw: rockchip: Add rk3576 support
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Simon Xue <xxm@rock-chips.com>, Conor Dooley <conor+dt@kernel.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>, linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Shawn Lin <shawn.lin@rock-chips.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ linux-arm-kernel@lists.infradead.org
+References: <20250224074928.2005744-1-kever.yang@rock-chips.com>
+ <20250224-gifted-piculet-of-amplitude-a91ecd@krzk-bin>
+ <478b8972-07b9-483b-a3ef-bdea10c4e4cc@rock-chips.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <478b8972-07b9-483b-a3ef-bdea10c4e4cc@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 25, 2025 at 1:24=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Tue, Feb 25, 2025 at 12:29:00AM +0530, Naveen Kumar P wrote:
-> > On Mon, Feb 24, 2025 at 11:03=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.=
-org> wrote:
-> > > On Mon, Feb 24, 2025 at 05:45:35PM +0530, Naveen Kumar P wrote:
-> > > > On Wed, Feb 19, 2025 at 10:36=E2=80=AFPM Bjorn Helgaas <helgaas@ker=
-nel.org> wrote:
-> > > > > On Wed, Feb 19, 2025 at 05:52:47PM +0530, Naveen Kumar P wrote:
-> > > > > > Hi all,
-> > > > > >
-> > > > > > I am writing to seek assistance with an issue we are experienci=
-ng with
-> > > > > > a PCIe device (PLDA Device 5555) connected through PCI Express =
-Root
-> > > > > > Port 1 to the host bridge.
-> > > > > >
-> > > > > > We have observed that after booting the system, the Base Addres=
-s
-> > > > > > Register (BAR0) memory of this device gets reset to 0x0 after
-> > > > > > approximately one hour or more (the timing is inconsistent). Th=
-is was
-> > > > > > verified using the lspci output and the setpci -s 01:00.0
-> > > > > > BASE_ADDRESS_0 command.
->
-> > ...
-> > I booted with the pcie_aspm=3Doff kernel parameter, which means that
-> > PCIe Active State Power Management (ASPM) is disabled. Given this
-> > context, should I consider removing this setting to see if it affects
-> > the occurrence of the Bus Check notifications and the BAR0 reset
-> > issue?
->
-> Doesn't seem likely to be related.  Once configured, ASPM operates
-> without any software intervention.  But note that "pcie_aspm=3Doff"
-> means the kernel doesn't touch ASPM configuration at all, and any
-> configuration done by firmware remains in effect.
->
-> You can tell whether ASPM has been enabled by firmware with "sudo
-> lspci -vv" before the problem occurs.
->
-> > > > During the ACPI_NOTIFY_BUS_CHECK event, the lspci output initially
-> > > > showed all FF's, and then the next run of the same command showed
-> > > > BASE_ADDRESS_0 reset to zero:
-> > > > $ sudo lspci -xxx -s 01:00.0 | grep "10:"
-> > > > 10: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > >
-> > > Looks like the device isn't responding at all here.  Could happen if
-> > > the device is reset or powered down.
-> >
-> > From the kernel driver or user space tools, is it possible to
-> > determine whether the device has been reset or powered down?  Are
-> > there any power management settings or configurations that could be
-> > causing the device to reset or power down unexpectedly?
->
-> Not really.  By "powered down", I meant D3cold, where the main power
-> is removed.  Config space is readable in all other power states.
->
-> > > What is this device?  What driver is bound to it?  I don't see
-> > > anything in dmesg that identifies a driver.
-> >
-> > The PCIe device in question is a Xilinx FPGA endpoint, which is
-> > flashed with RTL code to expose several host interfaces to the system
-> > via the PCIe link.
-> >
-> > We have an out-of-tree driver for this device, but to eliminate the
-> > driver's role in this issue, I renamed the driver to prevent it from
-> > loading automatically after rebooting the machine. Despite not using
-> > the driver, the issue still occurred.
->
-> Oh, right, I forgot that you mentioned this before.
->
-> > > You're seeing the problem on v5.4 (Nov 2019), which is much newer tha=
-n
-> > > v4.4 (Jan 2016).  But v5.4 is still really too old to spend a lot of
-> > > time on unless the problem still happens on a current kernel.
->
-> This part is important.  We don't want to spend a lot of time
-> debugging an issue that may have already been fixed upstream.
-Sure, I started building the 6.13 kernel and will post more
-information if I notice the issue on the 6.13 kernel.
+On 25/02/2025 09:38, Kever Yang wrote:
+>>>   
+>>>   additionalProperties: true
+>>>   
+>>> +anyOf:
+>> There is never syntax like that. Where did you find it (so we can fix
+>> it)?
 
-Regarding the CommClk- (Common Clock Configuration) bit, it indicates
-whether the common clock configuration is enabled or disabled. When it
-is set to CommClk-, it means that the common clock configuration is
-disabled.
 
-LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
-        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+... therefore please use existing code as examples instead of coming
+with entirely new syntax.
 
-For my device, I noticed that the common clock configuration is
-disabled. Could this be causing the BAR reset issue?
+>>
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: rockchip,rk3576-pcie
+>> This does not belong to common schema, but to device specific. I don't
+>> see this compatible in this common schema at all.
+> 
+> The common schema covers rockchip-dw-pcie.yaml and rockchip-dw-pcie-ep.yaml,
+> 
+> so I though I should add the if condition here.
 
-How is the CommClk bit determined(to set or clear)? and is it okay to
-enable this bit after booting the kernel?
 
->
-> Bjorn
+You do not have compatibles here so you cannot add here code depending
+on compatibles.
+
+Best regards,
+Krzysztof
 
