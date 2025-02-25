@@ -1,157 +1,156 @@
-Return-Path: <linux-pci+bounces-22384-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22385-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4686A44DDB
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 21:42:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A338CA44DE4
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 21:43:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6F93D7AEB8B
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 20:35:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4B191170B3F
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 20:38:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DECB520E70C;
-	Tue, 25 Feb 2025 20:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 662A019E7ED;
+	Tue, 25 Feb 2025 20:38:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1o+YzKQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGrtdVth"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8571448E3;
-	Tue, 25 Feb 2025 20:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FF313B5B6;
+	Tue, 25 Feb 2025 20:38:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740515726; cv=none; b=sAopNrkMYS+SNcrEPCtupiUD23TLIGfeUxN0Qtk3GR1TqzsT+YQqOpgP9eJQgxpyLqtkLpg4lYn9E60I64Jj3ywtd0aXHdjENd1foqXP5ZTzpBWjhGWqi8u7xu89/kbV5JVH4pmcpCYpM94wVfIZ4T2N3h5/Iv04U15JgciLcw0=
+	t=1740515901; cv=none; b=ZZB7hSU6yfl29DQsAwC06IMJOrVkOo+yBPVUC5LIT7eZDhaXaYu1hbAReln0Zx3Nz1557z8FV72qiS1vR3Y9BsrAYexcpo0R3e0mMU7MwCUVOnJ5m/ySUBSEp40pB170VaK84epsfrvaDgnN4oTYb/6QfJpsPJH1BAbozoJ4Vz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740515726; c=relaxed/simple;
-	bh=7Wg1p0f2ypkxnC0TFBuDHULqBARMpNOuEl5fgz8O5K4=;
+	s=arc-20240116; t=1740515901; c=relaxed/simple;
+	bh=J2rkB2PHUhOcdIxRiQMlCkNw1+TaIn4gTsxuIvAhsoo=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=OKkkLlMrIiTBLy2y30CoeHBqDTIjkPSOumJE9yiUVQkGPbFtIu/pZnlXTns8oLTN4+SsOGU/41F7c2KNjpPnC08YXs2R1uwnej0LEuamYL3DAljoG9S3+uL1dszuCx5Z3B3Aar5jvvfJW5qBPIKvkeVeEf1A9yK9le/TxF5nxdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1o+YzKQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4012C4CEDD;
-	Tue, 25 Feb 2025 20:35:25 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=MNF9zy/xMWOTDn+ivTdSw3hW4Bek0JvoZgu9TR6nFl8qI/npKLMT7VvwnD3jDZnb+eMHpCIXGFrw8JQqDAx3mnXUrz9ey3GIUvjJqpSRvMsacpvgTEJ7NSGh7jTKuWi7VHOa/tYC6Wr4beu7FLIbqIhtvY4HJ9qkroDgr/gsBQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGrtdVth; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8051FC4CEDD;
+	Tue, 25 Feb 2025 20:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740515726;
-	bh=7Wg1p0f2ypkxnC0TFBuDHULqBARMpNOuEl5fgz8O5K4=;
+	s=k20201202; t=1740515900;
+	bh=J2rkB2PHUhOcdIxRiQMlCkNw1+TaIn4gTsxuIvAhsoo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=u1o+YzKQTjiHFa378K9/JNzh8aDmB6+8eSlzj2e0oqKfk3HNpjqojfcknEQf7dasY
-	 03hMuuQtgsENKquMorrWqUGoeNDbnhT8OWNv2SkWWLV2eGDqCJKtwkf01YgUUcP3em
-	 0vF1gkPM7D3w3aowShgQuXbYAygbru0he6FEP1lpDrHz9VHeTVcmNxKMqIdyJgFqm4
-	 XCKGzWr5q/xPyIjix/RGoEOSV0Bbd2ZAqusDGXt9sZ/henPtK7X/J0rhcR9MmW6NaV
-	 yjkjWzQ+We+5C2wMW9aH5ZtmatdkVY+qCKe3UQk5io0s0ECF90mFWsoYbS4vjIrMLR
-	 29Dh1G9eqw+eQ==
-Date: Tue, 25 Feb 2025 14:35:24 -0600
+	b=GGrtdVthoxLVMlEI/fF8VwHYL/Yw7TMYgSCbDxAM7dUxLvnktgJFAcBNpBxvOZZ/M
+	 bIN9kq4blyIwTx+m3XVuXnGOh3iMLQ5IkK+eRCNVL4J8OzpzHnDzywLlyWYKZAj+R8
+	 zvcP75LCQUidbJaQ0wvtMu1m1KIMalzVJhmHhLP86DyoMpQBwlidgtTPjBbWXT0tFG
+	 ivY846gbSAMcjYa9OuBLh3DDZ0/yX/XM6Xx8s5IvVWidW1yL3t/7CSB1hhWPep73+x
+	 JO/N/J6XjENKEgwNDFm18UNX2mzY6Ylo2cPOcJAb3Luo+O/QIXqqki64UDBINWUGoN
+	 hU6tkRHgi5qMQ==
+Date: Tue, 25 Feb 2025 14:38:18 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Alexandra Winter <wintera@linux.ibm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Gerd Bayer <gbayer@linux.ibm.com>,
-	Matthew Rosato <mjrosato@linux.ibm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Thorsten Winkler <twinkler@linux.ibm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Julian Ruess <julianr@linux.ibm.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 0/3] vfio/pci: s390: Fix issues preventing
- VFIO_PCI_MMAP=y for s390 and enable it
-Message-ID: <20250225203524.GA516498@bhelgaas>
+To: Naveen Kumar P <naveenkumar.parna@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernelnewbies <kernelnewbies@kernelnewbies.org>,
+	linux-acpi@vger.kernel.org
+Subject: Re: PCI: hotplug_event: PCIe PLDA Device BAR Reset
+Message-ID: <20250225203818.GA516645@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7bcd6de5f40b2ee6d4d6758e3d2473172bd9b990.camel@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMciSVX3X=DxLU0tfj4rG5WPaS5BCUDcMp2MYWBitT0ecEH+ig@mail.gmail.com>
 
-On Tue, Feb 25, 2025 at 09:59:13AM +0100, Niklas Schnelle wrote:
-> On Mon, 2025-02-24 at 14:53 -0600, Bjorn Helgaas wrote:
-> > On Fri, Feb 14, 2025 at 02:10:51PM +0100, Niklas Schnelle wrote:
-> > > With the introduction of memory I/O (MIO) instructions enbaled in commit
-> > > 71ba41c9b1d9 ("s390/pci: provide support for MIO instructions") s390
-> > > gained support for direct user-space access to mapped PCI resources.
-> > > Even without those however user-space can access mapped PCI resources
-> > > via the s390 specific MMIO syscalls. There is thus nothing fundamentally
-> > > preventing s390 from supporting VFIO_PCI_MMAP, allowing user-space
-> > > drivers to access PCI resources without going through the pread()
-> > > interface. To actually enable VFIO_PCI_MMAP a few issues need fixing
-> > > however.
-> > > 
-> > > Firstly the s390 MMIO syscalls do not cause a page fault when
-> > > follow_pte() fails due to the page not being present. This breaks
-> > > vfio-pci's mmap() handling which lazily maps on first access.
-> > > 
-> > > Secondly on s390 there is a virtual PCI device called ISM which has
-> > > a few oddities. For one it claims to have a 256 TiB PCI BAR (not a typo)
-> > > which leads to any attempt to mmap() it fail with the following message:
-> > > 
-> > >     vmap allocation for size 281474976714752 failed: use vmalloc=<size> to increase size
-> > > 
-> > > Even if one tried to map this BAR only partially the mapping would not
-> > > be usable on systems with MIO support enabled. So just block mapping
-> > > BARs which don't fit between IOREMAP_START and IOREMAP_END. Solve this
-> > > by keeping the vfio-pci mmap() blocking behavior around for this
-> > > specific device via a PCI quirk and new pdev->non_mappable_bars
-> > > flag.
-> > > 
-> > > As noted by Alex Williamson With mmap() enabled in vfio-pci it makes
-> > > sense to also enable HAVE_PCI_MMAP with the same restriction for pdev->
-> > > non_mappable_bars. So this is added in patch 3 and I tested this with
-> > > another small test program.
-> > > 
-> > > Note:
-> > > For your convenience the code is also available in the tagged
-> > > b4/vfio_pci_mmap branch on my git.kernel.org site below:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/
-> > > 
-> > > Thanks,
-> > > Niklas
-> > > 
-> > > Link: https://lore.kernel.org/all/c5ba134a1d4f4465b5956027e6a4ea6f6beff969.camel@linux.ibm.com/
-> > > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> > > ---
-> > > Changes in v6:
-> > > - Add a patch to also enable PCI resource mmap() via sysfs and proc
-> > >   exlcluding pdev->non_mappable_bars devices (Alex Williamson)
-> > > - Added Acks
-> > > - Link to v5: https://lore.kernel.org/r/20250212-vfio_pci_mmap-v5-0-633ca5e056da@linux.ibm.com
-> > 
-> > I think the series would be more readable if patch 2/3 included all
-> > the core changes (adding pci_dev.non_mappable_bars, the 3/3
-> > pci-sysfs.c and proc.c changes to test it, and I suppose the similar
-> > vfio_pci_core.c change), and we moved all the s390 content from 2/3 to
-> > 3/3.
+On Tue, Feb 25, 2025 at 06:46:02PM +0530, Naveen Kumar P wrote:
+> On Tue, Feb 25, 2025 at 1:24 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Tue, Feb 25, 2025 at 12:29:00AM +0530, Naveen Kumar P wrote:
+> > > On Mon, Feb 24, 2025 at 11:03 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Mon, Feb 24, 2025 at 05:45:35PM +0530, Naveen Kumar P wrote:
+> > > > > On Wed, Feb 19, 2025 at 10:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > On Wed, Feb 19, 2025 at 05:52:47PM +0530, Naveen Kumar P wrote:
+> > > > > > > Hi all,
+> > > > > > >
+> > > > > > > I am writing to seek assistance with an issue we are experiencing with
+> > > > > > > a PCIe device (PLDA Device 5555) connected through PCI Express Root
+> > > > > > > Port 1 to the host bridge.
+> > > > > > >
+> > > > > > > We have observed that after booting the system, the Base Address
+> > > > > > > Register (BAR0) memory of this device gets reset to 0x0 after
+> > > > > > > approximately one hour or more (the timing is inconsistent). This was
+> > > > > > > verified using the lspci output and the setpci -s 01:00.0
+> > > > > > > BASE_ADDRESS_0 command.
+> >
+> > > ...
+> > > I booted with the pcie_aspm=off kernel parameter, which means that
+> > > PCIe Active State Power Management (ASPM) is disabled. Given this
+> > > context, should I consider removing this setting to see if it affects
+> > > the occurrence of the Bus Check notifications and the BAR0 reset
+> > > issue?
+> >
+> > Doesn't seem likely to be related.  Once configured, ASPM operates
+> > without any software intervention.  But note that "pcie_aspm=off"
+> > means the kernel doesn't touch ASPM configuration at all, and any
+> > configuration done by firmware remains in effect.
+> >
+> > You can tell whether ASPM has been enabled by firmware with "sudo
+> > lspci -vv" before the problem occurs.
+> >
+> > > > > During the ACPI_NOTIFY_BUS_CHECK event, the lspci output initially
+> > > > > showed all FF's, and then the next run of the same command showed
+> > > > > BASE_ADDRESS_0 reset to zero:
+> > > > > $ sudo lspci -xxx -s 01:00.0 | grep "10:"
+> > > > > 10: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > > >
+> > > > Looks like the device isn't responding at all here.  Could happen if
+> > > > the device is reset or powered down.
+> > >
+> > > From the kernel driver or user space tools, is it possible to
+> > > determine whether the device has been reset or powered down?  Are
+> > > there any power management settings or configurations that could be
+> > > causing the device to reset or power down unexpectedly?
+> >
+> > Not really.  By "powered down", I meant D3cold, where the main power
+> > is removed.  Config space is readable in all other power states.
+> >
+> > > > What is this device?  What driver is bound to it?  I don't see
+> > > > anything in dmesg that identifies a driver.
+> > >
+> > > The PCIe device in question is a Xilinx FPGA endpoint, which is
+> > > flashed with RTL code to expose several host interfaces to the system
+> > > via the PCIe link.
+> > >
+> > > We have an out-of-tree driver for this device, but to eliminate the
+> > > driver's role in this issue, I renamed the driver to prevent it from
+> > > loading automatically after rebooting the machine. Despite not using
+> > > the driver, the issue still occurred.
+> >
+> > Oh, right, I forgot that you mentioned this before.
+> >
+> > > > You're seeing the problem on v5.4 (Nov 2019), which is much newer than
+> > > > v4.4 (Jan 2016).  But v5.4 is still really too old to spend a lot of
+> > > > time on unless the problem still happens on a current kernel.
+> >
+> > This part is important.  We don't want to spend a lot of time
+> > debugging an issue that may have already been fixed upstream.
+>
+> Sure, I started building the 6.13 kernel and will post more
+> information if I notice the issue on the 6.13 kernel.
 > 
-> Maybe we could do the following:
+> Regarding the CommClk- (Common Clock Configuration) bit, it indicates
+> whether the common clock configuration is enabled or disabled. When it
+> is set to CommClk-, it means that the common clock configuration is
+> disabled.
 > 
-> 1/3: As is
+> LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+>         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
 > 
-> 2/3: Introduces pdev->non_mappable_bars and the checks in vfio and
-> proc.c/pci-sysfs.c. To make the flag handle the vfio case with
-> VFIO_PCI_MMAP gone, a one-line change in s390 will set pdev-
-> >non_mappable_bars = 1 for all PCI devices.
+> For my device, I noticed that the common clock configuration is
+> disabled. Could this be causing the BAR reset issue?
 
-What if you moved the vfio_pci_core.c change to patch 3?  Then I think
-patch 2 would do nothing at all (since there's nothing that sets
-non_mappable_bars), and all the s390 stuff would be in patch 3?
+Not to my knowledge.
 
-Not sure if that's possible, but I think it's a little confusing to
-have the s390 changes split across patch 2 and 3.
+> How is the CommClk bit determined(to set or clear)? and is it okay to
+> enable this bit after booting the kernel?
 
-> 3/3: Changes setting pdev->non_mappable_bars = 1 in s390 to only the
-> ISM device using the quirk handling and adds HAVE_PCI_MMAP.
-> 
-> Thanks,
-> Niklas
+It is somewhere in drivers/pci/pcie/aspm.c, i.e.,
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/aspm.c?id=v6.13#n383
 
