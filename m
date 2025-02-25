@@ -1,183 +1,207 @@
-Return-Path: <linux-pci+bounces-22289-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22290-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3CE9A434D3
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 06:51:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9412A43607
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 08:19:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 042217A5645
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 05:50:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D9413B727B
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 07:19:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DC70254856;
-	Tue, 25 Feb 2025 05:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC3672566F1;
+	Tue, 25 Feb 2025 07:19:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="NfPhTd+4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D7jgw7T8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC87C1527B4;
-	Tue, 25 Feb 2025 05:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1791124EF96
+	for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 07:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740462692; cv=none; b=TsAsCJZoeFVco/S7dnWgV4I4skEfgeVinVThe6yF2NrK+6c3jBM8mMYHfhhV5+tmdvh9904j4dBn3cYOU7ypI4ONuvKhCDy0GU9o63kxqnPLYFdiiJinn3CzOW6s8BqvNi4ogRZfb+P7Bknl7eUGja6LaQ/u7wObVpAPDVkS0Mk=
+	t=1740467981; cv=none; b=J1BjFB4K4J7FxzzFKZMe4XgrWXkWx4wiTPGuqJmCNKUwvffv9QhbTPJbopiXGLczzl29ZJL/gf28iZYn9vUt5w8ZHIRshqVSBTN8dGbWpH3sZ6nwfgYjkcaUcPDgtFk6iA+86lPqklkwVRiE4vorAEcuS1543n12EiyCa85ABsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740462692; c=relaxed/simple;
-	bh=uSeNCFcf9l+vWtdG/0tKAMg223d8tkTSUki3qIrQlxA=;
+	s=arc-20240116; t=1740467981; c=relaxed/simple;
+	bh=dS+PWUcfJ3XaqI1dCSZhmyUY1Ks/Z7nsCJpe9zNAhDo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LGw35dUBsse0kMUiBs6SyCARYCz9Axw/yTSjeQRlocFEmC05YDwnyrfQSAOz42jTM8qWqDbv2oNumzwn8Ad/gDWCuoUEPWQHG9p2NcCiJzboys04YfurQEgbpss+l+01oQTNJAHqiGMZCFlgYI5vDKhXdEoS0/YgpRaq4CwqzU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=NfPhTd+4; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740462677; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=0r00Uji6tpD1hBuVL7S7gy2Eu/d/pslK9pXro2M2coM=;
-	b=NfPhTd+4Rn3OfJez/IGJX8a32L/+AouDT9jXbZed3dRg2YUL8DsDDbSbsRTiL/gCMZ+hmasq/MO0LV2bzX7/1lcJVc1IxDVnZz5Xq3+re3y4r7e+Hag03OTOAM/ieJU+sf+/pVq2O4JVvN8/4rbkT4O0McYbZ1al9Vg26Hvh4w0=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WQDSZrT_1740462675 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 25 Feb 2025 13:51:16 +0800
-Date: Tue, 25 Feb 2025 13:51:15 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Liguang Zhang <zhangliguang@linux.alibaba.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/4] PCI/portdrv: Add necessary wait for disabling
- hotplug events
-Message-ID: <Z71aU3ZOQf2xGHp_@U-2FWC9VHC-2323.local>
-References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
- <20250224034500.23024-3-feng.tang@linux.alibaba.com>
- <abb50795-df83-511a-8850-cdf30f187935@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jFR2dsIpebhbWVpSuCFkXl1TFckf5eS7R4hQXMz0OUd2h+7iN1l0TpKS5d6fatI9EfCMMZabiqryOEmT2IE9DqLIWPPoYkhTLy5iICU3xbLaLPOCnHTPnkAh9n407w0Woobp/z3v38q9Cjy9ZtfCVboRRhOeQ/Ko4Mht4CgOXeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D7jgw7T8; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740467980; x=1772003980;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dS+PWUcfJ3XaqI1dCSZhmyUY1Ks/Z7nsCJpe9zNAhDo=;
+  b=D7jgw7T8K5pcvNzz/6aQ7T4dUH+sQ8P7usfo3ZHWqAOZDe3KY0KEOOGw
+   Xk3wIgspg+qfp0x52wG1YHatfn2fbnEsdwRoX4qt32A6CaFbV+PbTItd4
+   UHoBH5nD0Q4BX6MUCEg9jvM9ndZtQWbR74kb3XdZnYzfqGEMLe8oqKila
+   DrQX1i0kS3OrFNpW0qVQ6VtmWjt6tfznbUJNDNaxdjNzwIlMgjalzZtUK
+   shQwli2x6mkTlu56wpicH2iiaTbfFPf8A8gq4huWt/HnFwiQyU5os1YGi
+   UXaOgTUIxH1dA5y1beuShx/CnLMzYPsC6OPcbCNoztpycB7sSZgsK8muq
+   g==;
+X-CSE-ConnectionGUID: qwssI+MsQB2fu4XFjZyJNQ==
+X-CSE-MsgGUID: 9zRygzZ0QYWosTD8q57Zyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="40445932"
+X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
+   d="scan'208";a="40445932"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 23:19:34 -0800
+X-CSE-ConnectionGUID: L/xnZHyYSQeqTYrocEb5Hw==
+X-CSE-MsgGUID: XKMIU+zPQhOPc1CzX6RDzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
+   d="scan'208";a="116932055"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa009.fm.intel.com with ESMTP; 24 Feb 2025 23:19:32 -0800
+Date: Tue, 25 Feb 2025 15:17:45 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: Alexey Kardashevskiy <aik@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Subject: Re: [PATCH 05/11] PCI/TSM: Authenticate devices via platform TSM
+Message-ID: <Z71umSkkyV0rAC25@yilunxu-OptiPlex-7050>
+References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
+ <173343742510.1074769.16552514658771224955.stgit@dwillia2-xfh.jf.intel.com>
+ <efc5ba59-964d-4988-a412-47f5297fedd3@amd.com>
+ <yq5aeczrww9j.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <abb50795-df83-511a-8850-cdf30f187935@linux.intel.com>
+In-Reply-To: <yq5aeczrww9j.fsf@kernel.org>
 
-Hi Ilpo, 
-
-On Mon, Feb 24, 2025 at 05:00:03PM +0200, Ilpo Järvinen wrote:
-> On Mon, 24 Feb 2025, Feng Tang wrote:
+On Fri, Feb 21, 2025 at 01:43:28PM +0530, Aneesh Kumar K.V wrote:
+> Alexey Kardashevskiy <aik@amd.com> writes:
 > 
-> > There was problem reported by firmware developers that they received
-> > two PCIe hotplug commands in very short intervals on an ARM server,
-> > which doesn't comply with PCIe spec, and broke their state machine and
-> > work flow. According to PCIe 6.1 spec, section 6.7.3.2, software needs
-> > to wait at least 1 second for the command-complete event, before
-> > resending the command or sending a new command.
-> > 
-> > In the failure case, the first PCIe hotplug command firmware received
-> > is from get_port_device_capability(), which sends command to disable
-> > PCIe hotplug interrupts without waiting for its completion, and the
-> > second command comes from pcie_enable_notification() of pciehp driver,
-> > which enables hotplug interrupts again.
-> > 
-> > Fix it by adding the necessary wait to comply with PCIe spec.
-> > 
-> > Fixes: 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port services during port initialization")
-> > Originally-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
-> > Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
-> > ---
-> >  drivers/pci/pci.h          |  2 ++
-> >  drivers/pci/pcie/portdrv.c | 19 +++++++++++++++++--
-> >  2 files changed, 19 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index 4c94a589de4a..a1138ebc2689 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -760,6 +760,7 @@ static inline void pcie_ecrc_get_policy(char *str) { }
-> >  void pcie_reset_lbms_count(struct pci_dev *port);
-> >  int pcie_lbms_count(struct pci_dev *port, unsigned long *val);
-> >  int pcie_poll_sltctl_cmd(struct pci_dev *dev, int timeout_ms);
-> > +void pcie_disable_hp_interrupts_early(struct pci_dev *dev);
-> >  #else
-> >  static inline void pcie_reset_lbms_count(struct pci_dev *port) {}
-> >  static inline int pcie_lbms_count(struct pci_dev *port, unsigned long *val)
-> > @@ -770,6 +771,7 @@ static inline int pcie_poll_sltctl_cmd(struct pci_dev *dev, int timeout_ms)
-> >  {
-> >  	return 0;
-> >  }
-> > +static inline void pcie_disable_hp_interrupts_early(struct pci_dev *dev) {}
-> >  #endif
-> >  
-> >  struct pci_dev_reset_methods {
-> > diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> > index bb00ba45ee51..ca4f21dff486 100644
-> > --- a/drivers/pci/pcie/portdrv.c
-> > +++ b/drivers/pci/pcie/portdrv.c
-> > @@ -230,6 +230,22 @@ int pcie_poll_sltctl_cmd(struct pci_dev *dev, int timeout_ms)
-> >  	return  ret;
-> >  }
-> >  
-> > +void pcie_disable_hp_interrupts_early(struct pci_dev *dev)
-> > +{
-> > +	u16 slot_ctrl = 0;
+> ....
 > 
-> Unnecessary initialization
- 
-The reason I put it to 0 is, very unlikely, the pcie_capability_read_word()
-might fail, and 0 can avoid the early return.
-
-> > +
-> > +	pcie_capability_read_word(dev, PCI_EXP_SLTCTL, &slot_ctrl);
-> > +	/* Bail out early if it is already disabled */
-> > +	if (!(slot_ctrl & (PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE)))
-> > +		return;
-> > +
-> > +	pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> > +		  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> >
+> > I am trying to wrap my head around your tsm. here is what I got in my tree:
+> > https://github.com/aik/linux/blob/tsm/include/linux/tsm.h
+> >
+> > Shortly:
+> >
+> > drivers/virt/coco/tsm.ko does sysfs (including "connect" and "bind" to 
+> > control and "certs"/"report" to attest) and implements tsm_dev/tsm_tdi, 
+> > it does not know pci_dev;
+> >
+> > drivers/pci/tsm-pci.ko creates/destroys tsm_dev/tsm_dev using tsm.ko;
+> >
+> > drivers/crypto/ccp/ccp.ko (the PSP guy) registers:
+> > - tsm_subsys in tsm.ko (which does "connect" and "bind" and
+> > - tsm_bus_subsys in tsm-pci.ko (which does "spdm_forward")
+> > ccp.ko knows about pci_dev and whatever else comes in the future, and 
+> > ccp.ko's "connect" implementation calls the IDE library (I am adopting 
+> > yours now, with some tweaks).
+> >
+> > tsm-dev and tsm-tdi embed struct dev each and are added as children to 
+> > PCI devices: no hide/show attrs, no additional TSM pointer in struct 
+> > device or pci_dev, looks like:
+> >
+> > aik@sc ~> ls  /sys/bus/pci/devices/0000:e1:04.0/tsm-tdi/tdi:0000:e1:04.0/
+> > device  power  subsystem  tsm_report  tsm_report_user  tsm_tdi_bind 
+> > tsm_tdi_status  tsm_tdi_status_user  uevent
+> >
+> > aik@sc ~> ls  /sys/bus/pci/devices/0000:e1:04.0/tsm_dev/
+> > device  power  subsystem  tsm_certs  tsm_cert_slot  tsm_certs_user 
+> > tsm_dev_connect  tsm_dev_status  tsm_meas  tsm_meas_user  uevent
+> >
+> > aik@sc ~> ls /sys/class/tsm/tsm0/
+> > device  power  stream0:0000:e1:00.0  subsystem  uevent
+> >
+> > aik@sc ~> ls /sys/class/tsm-dev/
+> > tdev:0000:c0:01.1  tdev:0000:e0:01.1  tdev:0000:e1:00.0
+> >
+> > aik@sc ~> ls /sys/class/tsm-tdi/
+> > tdi:0000:c0:01.1  tdi:0000:e0:01.1  tdi:0000:e1:00.0  tdi:0000:e1:04.0 
+> > tdi:0000:e1:04.1  tdi:0000:e1:04.2  tdi:0000:e1:04.3
+> >
+> >
+> > SPDM forwarding seems a bus-agnostic concept, "connect" is a PCI thing 
+> > but pci_dev is only needed for DOE/IDE.
+> >
+> > Or is separating struct pci_dev from struct device not worth it and most 
+> > of it should go to tsm-pci.ko? Then what is left for tsm.ko? Thanks,
+> >
 > 
-> Align to (. You might need to put the bits to own lines.
-
-OK.
-
-> > +
-> > +	if (pcie_poll_sltctl_cmd(dev, 1000))
-> > +		pci_info(dev, "Timeout on disabling PCIe hot-plug interrupt\n");
-> > +}
-> > +
-> >  /**
-> >   * get_port_device_capability - discover capabilities of a PCI Express port
-> >   * @dev: PCI Express port to examine
-> > @@ -255,8 +271,7 @@ static int get_port_device_capability(struct pci_dev *dev)
-> >  		 * Disable hot-plug interrupts in case they have been enabled
-> >  		 * by the BIOS and the hot-plug service driver is not loaded.
-> >  		 */
-> > -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> > -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
-> > +		pcie_disable_hp_interrupts_early(dev);
+> For the Arm CCA DA, I have structured the flow as follows. I am
+> currently refining my changes to prepare them for posting. I am using
+> tsm-core in both the host and guest. There is no bind interface at the
+> sysfs level; instead, it is managed via the KVM ioctl
 > 
-> Doesn't calling this here delay setup for all portdrv services, not just 
-> hotplug? And the delay can be relatively long.
+> Host:
+> step 1.
+> echo ${DEVICE} > /sys/bus/pci/devices/${DEVICE}/driver/unbind
+> echo vfio-pci > /sys/bus/pci/devices/${DEVICE}/driver_override
+> echo ${DEVICE} > /sys/bus/pci/drivers_probe
+> 
+> step 2.
+> echo 1 > /sys/bus/pci/devices/$DEVICE/tsm/connect
+> 
+> step 3.
+> using VMM to make the new KVM_SET_DEVICE_ATTR ioctl
+> 
+> +		dev_num = vfio_devices[i].dev_hdr.dev_num;
+> +		/* kvmtool only do 0 domain, 0 bus and 0 function devices. */
+> +		guest_bdf = (0ULL << 32) | (0 << 16) | dev_num << 11 | (0 << 8);
+> +
+> +		struct kvm_vfio_tsm_bind param = {
+> +			.guest_rid = guest_bdf,
+> +			.devfd = vfio_devices[i].fd,
+> +		};
+> +		struct kvm_device_attr attr = {
+> +			.group = KVM_DEV_VFIO_DEVICE,
+> +			.attr = KVM_DEV_VFIO_DEVICE_TDI_BIND,
+> +			.addr = (__u64)&param,
+> +		};
+> +
+> +		if (ioctl(kvm_vfio_device, KVM_SET_DEVICE_ATTR, &attr)) {
+> +			pr_err("Failed KVM_SET_DEVICE_ATTR for KVM_DEV_VFIO_DEVICE");
+> +			return -ENODEV;
+> +		}
+> +
 
-I don't quite follow, physically there is only one root port, the code
-from commit 2bd50dd800b5 just does it once. Also the 1 second is just the
-maxim waiting time, the wait will end once the command completed event
-bit is set. The exact time depends on platform (x86 and ARM) and the
-firmeware implementation, and it is much smaller than 1 second AFAIK.
+I think bind (which brings device to a LOCKED state, no MMIO, no DMA)
+cannot be a driver agnostic behavior. So I think it should be a VFIO
+ioctl.
+
+> 
+> Now in the guest we follow the below steps
+> 
+> step 1:
+> echo ${DEVICE} > /sys/bus/pci/devices/${DEVICE}/driver/unbind
+> 
+> step 2: Move the device to TDISP LOCK state
+> echo 1 > /sys/bus/pci/devices/0000:00:00.0/tsm/connect
+> echo 3 > /sys/bus/pci/devices/0000:00:00.0/tsm/connect
+
+Reuse the 'connect' interface? I think it conceptually brings chaos. Is
+it better we create a new interface?
+
+> 
+> step 3: Moves the device to TDISP RUN state
+> echo 4 > /sys/bus/pci/devices/0000:00:00.0/tsm/connect
+
+Could you elaborate what '1'/'3'/'4' stand for?
 
 Thanks,
-Feng
+Yilun
 
-> >  	}
-> >  
-> >  #ifdef CONFIG_PCIEAER
-> > 
 > 
-> -- 
->  i.
+> step 4: Load the driver again.
+> echo ${DEVICE} > /sys/bus/pci/drivers_probe
+> 
+> 
 
