@@ -1,243 +1,232 @@
-Return-Path: <linux-pci+bounces-22287-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22288-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90CF0A43464
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 06:03:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA42BA434CF
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 06:50:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 78A9E16E569
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 05:03:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B6573B4977
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 05:50:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47DC02E62B;
-	Tue, 25 Feb 2025 05:03:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E5B21527B4;
+	Tue, 25 Feb 2025 05:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ugijntmd"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="MWMy7NN9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2085.outbound.protection.outlook.com [40.107.93.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773442AF03
-	for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 05:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740459816; cv=none; b=dVuQ4yB3OJ3dBaNwsMv4FITkJUboBpEkqpF9WzrVkp7Gdrvw4NJwrp4Gxg9MMSklhlgPgzBHJGZcJVxhGUdXYRqcWTGdhrGReT1ES8a3VApAgD4R7oPOIAcJPqRyGl02tAtACgQy5ltYxKbcegoRdV03BrJ1I4BhcXt6SyKz4RM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740459816; c=relaxed/simple;
-	bh=6TBDSITFsa572MD7kAdvsBhnCHwcnQhcfb5mdfIhSzs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HhcJgCYdy3mseXdHvBtoKNWpt74o6tZd9QBq5VVXiGE/UX7Q8K8ws5/Y92tsjIn3lVtvSpnDYEI33jLzSEVZ/4Jbo/TlsoeO5SJPn+gcbGm+GoCA0fM+N3CANdv1IVtEy51WO6jJm1XWpUAxkwLJbyK6/4zCcVSYu7nRQS31OUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ugijntmd; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740459814; x=1771995814;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6TBDSITFsa572MD7kAdvsBhnCHwcnQhcfb5mdfIhSzs=;
-  b=Ugijntmdvga5dIMIzibQW8eIm9DapowazbyJal9Hql6PGOmA9zPUekVC
-   bIPRErQri18TVB4KVn5LBRSl2gsPoROqHT4PCH0oX8kEDOVLIrtA62M4g
-   erU1JshDDztlSMdwxbJXO5JrXH9BYfshTaZIymZ2RFRgqT8FWN7BtdG9f
-   /XzxzccY8gFkXXX0wrdDnDz+wOQH8AlXLwEccynErVf1zMp28ibhMbeYn
-   UkBDI2rMiG9KYCIclAKi+uGLm8BEaP2cIBju3Rdf64/eVSs2qUAXsuQTh
-   c0NLm3wsyxSvblqiCfJlDdV5SSZZgwRlYfX0mw1wxxwa4/A1uXEIcqrMD
-   A==;
-X-CSE-ConnectionGUID: 9EBXdeqgRJ6HqRuLV+Mr3w==
-X-CSE-MsgGUID: JXV1xWtJRIKl6puEpEH/VA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="40486130"
-X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
-   d="scan'208";a="40486130"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 21:03:34 -0800
-X-CSE-ConnectionGUID: i9v8ynNwQuqqFxO71LACgQ==
-X-CSE-MsgGUID: f5KUjnDxRh+M1xk0S43cUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
-   d="scan'208";a="121252149"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa004.jf.intel.com with ESMTP; 24 Feb 2025 21:03:31 -0800
-Date: Tue, 25 Feb 2025 13:01:44 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Alexey Kardashevskiy <aik@amd.com>, linux-coco@lists.linux.dev,
-	Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	Samuel Ortiz <sameo@rivosinc.com>, linux-pci@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Subject: Re: [PATCH 08/11] PCI/IDE: Add IDE establishment helpers
-Message-ID: <Z71OuHh8nTfZgYUA@yilunxu-OptiPlex-7050>
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
- <173343744264.1074769.10935494914881159519.stgit@dwillia2-xfh.jf.intel.com>
- <9f151a74-cc5c-4a7c-8304-1714159e4b2c@amd.com>
- <67bcd5743382a_1c530f29417@dwillia2-xfh.jf.intel.com.notmuch>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A13036124;
+	Tue, 25 Feb 2025 05:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740462615; cv=fail; b=AUAYhQM+g/gIfh+uar8aeHF1Ki6dm9qWk8N8bGQufhrc7pmBWJ2cUZ+lu25z41eppZTCZTd8+kS2CTgadtprRByueSDz/DZy3+F5cI9hMTbz9+rXqUxayXMa9rKVs1mD2H2CV2sWn+qlQkAsHaU2clYPsQavF9e3oyQJpXzdcvU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740462615; c=relaxed/simple;
+	bh=De9HflAEHxMDdFHLBnxanByIo3+poRQLcGt8Pm7AZe8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=npAIFpfV03lohoBZ1O7tpqgPMSfglnbTP7wZfp7EK4ySTd9Wgvx8Y+XGuXie9bFLgBCJ4GnGYeLeK9d3scEz0j33lGZ7suVtJntsCG0wCEKacGItTVGiJJXMtFsqaOYcoZ8r3y3voPJ1ZKokhjYizKwfnUHL1CONuTUolR16Nvs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=MWMy7NN9; arc=fail smtp.client-ip=40.107.93.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DEJIfG+xGiorMtcotkXmPMx1USePDIcqT5xlM8qe9sX9GQEr/Htu6RQDNcMclMA/VjSk0/S4LkkrhBmnMAYvoArll5UwYC5CYvJc/52zGl+OPzzdqScZawrjSC+rKN1Je/z4/JpyoLgSNZzJ4L57VWRHTyheACHlABJCABErfSLGPS+f6FKeQdZ4vO5v3hkxL8YXnfAhBIjsXnioUGSeg93Rocs1GRKIXynAB6HLpBwGkKb4do4uMYBlgMVFENDp1TaejoJouTp81Ddkm6aMxKUrdbpK34Td57cxlmoLLh/tEhEo/H5/FtoXyPAJFITQBQZhoWSA6GSkpFVJgqrwcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fplV91QASSm99aHRnQEj8sdb8Ms1z7g9mZJRNTp8oLQ=;
+ b=whTG4+UEuA9fw5Cejj5lJ0UVDBKpZS6/5YPwHeZBbun02nAlqxfb356m59+/GvHFs6f1PG9GcY97/6dgDbpYcdJEa90vB/hxjYT5Yzsu9xzKhIn+VluK9vkwnxtu9Kv9/HfBGzVKk95p/hK7pwxAphLgFAotFCclNgods760qpMqsKPhaVvznxAUs2RBdj1iJKznQoQvJYEwxO5vsmWVMS/gEmxGFyVGnZjCDnTUTKITqcrUGy3fIP6Rv9U2Vux8kxOq/ANIj9MLBJcPmd8WS4woyFkcT0q9TUSN8qmQOi/eTDpOSu69Xl6Ny1XpMEJveQfPFtLxxyRInZt6l4cqEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fplV91QASSm99aHRnQEj8sdb8Ms1z7g9mZJRNTp8oLQ=;
+ b=MWMy7NN9zVfi9jjxuKglEddLpTGOvnSHfj9ICkEqbLx/clnZPNoJnG1C+GRUbH4dwpc/bH5jO6oB67gISmJ9RV3gUruok129mo9neCVuMX3ESTYINWCmmDN07NbAg2H4DJdnaXr6RPzPWoP3auhJLa8zq615qG/CXVu/bjTT36Roo+qc3HdPUfPPZKwXK0fWesNQRmWQofGeCMkLYpbJc+jmwwNSp968usuJwAcZ/VtJREpeeqsHVEuWFEwT5sw4WJhctjNLIkfYJKutDA/ec52ZDjB+l3ENr/1bczAOBJ1YLqe1vOT8VUlqO7/4Pykfk46eroXr5ES9CxCgKiUNcg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY8PR12MB7705.namprd12.prod.outlook.com (2603:10b6:930:84::9)
+ by PH7PR12MB5952.namprd12.prod.outlook.com (2603:10b6:510:1db::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Tue, 25 Feb
+ 2025 05:50:10 +0000
+Received: from CY8PR12MB7705.namprd12.prod.outlook.com
+ ([fe80::4b06:5351:3db4:95f6]) by CY8PR12MB7705.namprd12.prod.outlook.com
+ ([fe80::4b06:5351:3db4:95f6%6]) with mapi id 15.20.8466.016; Tue, 25 Feb 2025
+ 05:50:10 +0000
+Date: Tue, 25 Feb 2025 16:50:05 +1100
+From: Alistair Popple <apopple@nvidia.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org, 
+	rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	benno.lossin@proton.me, tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com, 
+	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net, 
+	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com, robh@kernel.org, 
+	daniel.almeida@collabora.com, saravanak@google.com, dirk.behme@de.bosch.com, j@jannau.net, 
+	fabien.parent@linaro.org, chrisi.schrefl@gmail.com, paulmck@kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, rcu@vger.kernel.org
+Subject: Re: [PATCH v7 07/16] rust: add `io::{Io, IoRaw}` base types
+Message-ID: <wnzq3vlgawjdchjck7nzwlzmm5qbmactwlhtj44ak7s7kefphd@m7emgjnmnkjn>
+References: <20241219170425.12036-1-dakr@kernel.org>
+ <20241219170425.12036-8-dakr@kernel.org>
+ <g63h5f3zowy375yutftautqhurflahq3o5nmujbr274c5d7u7u@j5cbqi5aba6k>
+ <CANiq72=gZhG8MOCqPi8F0yp3WR1oW77V+MXdLP=RK_R2Jzg-cw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72=gZhG8MOCqPi8F0yp3WR1oW77V+MXdLP=RK_R2Jzg-cw@mail.gmail.com>
+X-ClientProxiedBy: SY5P300CA0019.AUSP300.PROD.OUTLOOK.COM
+ (2603:10c6:10:1ff::11) To CY8PR12MB7705.namprd12.prod.outlook.com
+ (2603:10b6:930:84::9)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67bcd5743382a_1c530f29417@dwillia2-xfh.jf.intel.com.notmuch>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY8PR12MB7705:EE_|PH7PR12MB5952:EE_
+X-MS-Office365-Filtering-Correlation-Id: e34f3c03-e034-4347-1c5a-08dd556043e4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NGJFcE9LcFoxZ2NOR1dJcWFiMlZNNjJaS1FrZTJkNXBsa2drUHY2TDFTWHln?=
+ =?utf-8?B?c1I3eUI4SjVoTVJDTmtXN0w5N2xaYjVYVTlzaGVTZi93K0xOd0cvd0JoS1c2?=
+ =?utf-8?B?NTdKVU1OZ01jcTZiQjRHRFREaHVKNkZFaXRKNXZMN3g3WXRUeFZWdFlTcXdZ?=
+ =?utf-8?B?NG1wa3piOWc1SStUMnFTRE1RS1N5anJjTVhIcjNKbnBJS2RTQitMbzZPa1pz?=
+ =?utf-8?B?OFM3RWJpNUducUNFT3lIbU5jSzZWU243RVN5ZVkzeUppUnRWeWNZazVRaFFH?=
+ =?utf-8?B?b1dROGZHZ0ViT0gyRDR4YkQvdUVQa1o1REZIQ081dTFIUG1BYitlQS9FbU1R?=
+ =?utf-8?B?QktGN0UraWF5TFpObDMvQXdWbWlySnEvZnY4OHZ4WTV5bnNUTndvSnVHOWZu?=
+ =?utf-8?B?N1BUMEhYOFhhRDRIL0lSTUlhYzJqT2FLZ3VPbmVlQjg2dHNQUElza0s3emRq?=
+ =?utf-8?B?cStLMmk3YTlCcktScDlhbWpncXJWazBQTUxSU3MxakQwZWhrckdpeGRLcjBP?=
+ =?utf-8?B?NDQvZjA4WVRJOXIrNFVWdVVwazRnZ2lIMCsybzFxZHNnWDR2c2ppWmJqRlY4?=
+ =?utf-8?B?ajBWQ2U3eTFrRkRZZGhORm5XMTNBRzVZZzZmaVNvSlpidTBRQkxwZThoTTAy?=
+ =?utf-8?B?WnF3MUhZclc4ZkIzaWJPMlQxU1UvdURSN2xUOExIb0wzTTlRRGkvNTR5OG9N?=
+ =?utf-8?B?M1JucG5kRGRTU1lsN2xmT2VZem9rYVdvSm1QZ2VZeExuYjVib29oKzJZeXZ0?=
+ =?utf-8?B?aEl0Sk5WWXBYQ2Z4ODYvM3V3OG1iMHNjZlJIKzJrV2FXdFc5b0xjeGdIV013?=
+ =?utf-8?B?WFZMK0VsTWg4WmljdCtQR08rZEVqT0xBSU9GUmMrSnZqL3ZVRGpOTUVZbUdV?=
+ =?utf-8?B?ZkRhdWhBNmlsNUQwdmVrbThNZzlBMURxOFFxY0wwbVYyT2FyNnk0cjNXVFpp?=
+ =?utf-8?B?Q1B5RSttU0V3cTBKYTJlUUdaT1U5MVhtUC93SmRYZ25MZ2VPMU4va09aaVBI?=
+ =?utf-8?B?UWZnb3lMeWhpc1gvSHcyOXhKR01Yb1NyZTM2ZkxEZFV0VUl2cHdhL09lMzBB?=
+ =?utf-8?B?LzdXUHEyKzNDRmpXL1QxLzIvTm15Y0VHTUpkQ1ladm02UDJkZmFFcFI5NVdS?=
+ =?utf-8?B?amxRN0NrNmIyNGdrQ1VzNnNmd0FvOXZ6K0ljY1pKbngwUlIwajFWdzVkeElK?=
+ =?utf-8?B?aHQrV014K0ZNV2x2WlVYOVZiTU84SmdKNDNLUXlCQ0J4TGNzalRkSnEwKzFp?=
+ =?utf-8?B?amZuUTd4aDBmWXduN0dyTURIUW1oTGxwRElvMmRjenNVWGNmUzZnbXZ0a2hp?=
+ =?utf-8?B?YkM3YVpmeGxPdFNrM09rbWJzaHJENUd4dXhQNnFzbjYrWUhsV0RrTWZ5SGZz?=
+ =?utf-8?B?eDk2L09OYWhrM1AyYWFHdi9xenU3N3VlYlFZdnQ5WUc1eENVL3VreDFNalJp?=
+ =?utf-8?B?bmFVeFBpYVZSRVRWb2VDOUx0TVJGTmZOUmZrelNJa3EwSzNNME5MK3VRaVA1?=
+ =?utf-8?B?ZFNCRUlDZUlVNXZVSUdZTUdHSk1xR29NOUdYakNPR2IyWjd0VlNFdlJ5SDhG?=
+ =?utf-8?B?Vm9EVEZDTzJqR2RQQmU4UlczeGZtd01pOTJsMURNOHBuOEJpQ0t3UHU0ZDlT?=
+ =?utf-8?B?TFdIckR0V2ZhdzIzNnNSN1FYWkxveHhudTh0WHVpaVVDMytTZVFJb1N2amdY?=
+ =?utf-8?B?clV6b3RlYjQ2TDJHWm9xTUFZQU5oQmxQVXYxSXdTcTlqaVhGUXB5SzlFeTlz?=
+ =?utf-8?B?YlVyZXZ3cFc2MmMydks4VWlrMDN0MU1qOENRaWxBaUJSVDRJSHJLUHlmSzAr?=
+ =?utf-8?B?MHo0dm5UYzA1YlRQc012UEVpSE1mRFZRRGZmNnFPVlJPNnBjOGhvOER2QWdN?=
+ =?utf-8?Q?usWJJu2wtMkzA?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR12MB7705.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MUpuWWxhOG8weUxndUNMOUNuSndCc2NHRkdpZ1ZRNFU3a0pJSDYydmhyVXZy?=
+ =?utf-8?B?bGVlOHJrK2hjL1dQb1lWNFA3b0o2c1lCRFVETXUvRDNwL21WcFRIdVp6bldh?=
+ =?utf-8?B?eGplVHpOa2VYV050Ty94YVIvUkdOTnMvOXZvS01WRk9DbmxEUG43cWloUWt2?=
+ =?utf-8?B?YnE0R2U4QjRjdmRqYXRqZzlnc2NvY3JMb2RmZGFYSW1IbUozcWE1dVdUQ1F1?=
+ =?utf-8?B?VWVaM3lHamJXSm0zMFhGaGsrNXZHU2FydCtMRXFHcENiVDR6enkxNXp5K0Yv?=
+ =?utf-8?B?NDl1STdPTjVnb2F5VllKaVdSUEp4bUlVZUlqeDgxOTcwWkR4YlQzYjIwNmhC?=
+ =?utf-8?B?N0RKVnNFeVM3bURlNFNqcDNEeHFYYStUSklyYmdLS3VLaFNCODVzdXBMSUJa?=
+ =?utf-8?B?aHVabnFkS20vbUQ2VlBXU08rYmVLdmxGNXhiRnhpbHo1QjdhYkNvSzl4cWUz?=
+ =?utf-8?B?NUZnZFFodzhKTC9vR3NMK0dtRlBtU1Q5cndDS0pYVE1OVTRsT0pHQkFvOUFH?=
+ =?utf-8?B?cDVlK0ZrU3BFUWx4TEtwcWx4Z2xDZjNkdHUrVVdHazZwMzRaZ05kOGpKMXdj?=
+ =?utf-8?B?a0NJKy9hZWUyamw4NEpCbFpQUVUveW1pQy9taC9kd1N0V0VsTXAyRTZCZWph?=
+ =?utf-8?B?V2NmQzByaVVyTlJBdnRnblhqQ1ZCdEd0cStqZzFrMTNJeUdzQ0VPNmgxVzMw?=
+ =?utf-8?B?ZnJXSklYMlNPcU5LQm5URWI4UDFTZzNvNWpSYzgrYnRBUUEvOVpOaUowRnUv?=
+ =?utf-8?B?ZU1jM1hRdEh5V05RZlU3RmlhWFZjSFFvcmhOblh0S3Zlekd3bTlQd0lOdUFm?=
+ =?utf-8?B?UkZLbm9Pb2k3YkR0NDZ2U0llU1p0RnNlTGN6SG1ZakMzVzZHeGJkK1RFVGs5?=
+ =?utf-8?B?L3pzUnROZXBEeU1jVGRSaS9tVzR2MWhKdFdrUlVycGFVOTV6REdxRjU4ZUJk?=
+ =?utf-8?B?azZEUGxnUG56MnhXQklSTTFWZSs2TjVtUDFDSnFlaDQvSko3TzMrYkNacnZT?=
+ =?utf-8?B?V2RrcFRrdHc4YktVd1ZFNW10SnBKbmN3OE43WVFiaUk4T052OFlZVzE2Unl1?=
+ =?utf-8?B?aVNmSXVFR2JUSCs1eUozK0xac3pmV05Lai8vN1M3aHBhWUV6UC9Dc2NxS2w4?=
+ =?utf-8?B?TVlHVUgxNFlzNFlkTXI4bDFaaGptTk4rc0NQZk82emhGc2RPZkczMGlwNkdB?=
+ =?utf-8?B?U0licEJNZkxaa1RHcmk0Vk9CK2VzUmlOZ1hkZjhjc3d0NDZPWjZhaHYzOWVx?=
+ =?utf-8?B?OGd6cklOekpJekt1WHUwZEp0QWx4QW1zdHFFZ1g1REU5cndYaEpONytUY3Bl?=
+ =?utf-8?B?SjdOWU1iS2txa2ZBZjNNa0c3TERtZGV1YkVYNGlQZ3R0UmpiZXY0TFkwc0Fv?=
+ =?utf-8?B?L2QzUEVvZXAxWG9mazFnS2paaVdRTml2bFphMjFrTmpVZlhnZVFRcytTcWZC?=
+ =?utf-8?B?aDgwRVB6a3hRK0M3YW5aNlJ0M0JNYUhsamM0eC9sYlJUUUJqa3NkeVJ3ZldQ?=
+ =?utf-8?B?ay9DT2d0Sm96STE5bUpuM2o5bG5RelFmbGkzS0R1R1hNcG0vRDZlOVFqYU83?=
+ =?utf-8?B?dEVQRFVDYUhTd1o0aGNvSmJSZXpKMFRpdEovWmt1SlVqaUM5Q0xucXNuUWZC?=
+ =?utf-8?B?UnZUbndnUUhybnBQRUVQYXhVMHFDL3NKZTh4Wm5SSmsrSFE0Z2xPU3FPSWtT?=
+ =?utf-8?B?ZGJTVVdpY2tYUldGQklRVk9xaWRTSU1aM1UyNmovUDMrTlFCQlc4bmtIVmpo?=
+ =?utf-8?B?NTM5UUM4anovL1AvTmJGV2Fzb1phNUhzUmpRenk0SWN5SGRJejAwTDZTc0cz?=
+ =?utf-8?B?eC9BNm9kbkhKaEVNdVhCbGdLZ0FWa1pzcXBsZ0FxYXRRVXJoUVdrOFNFTFg5?=
+ =?utf-8?B?Zno3bTVCUmZmVmVWV3M1RVpId2dVa0lHay9yUVlDc3E1YXdJeUE5TDJOSFdB?=
+ =?utf-8?B?MzlqSENaUnNlWDVMSHRwUXRVbG5FaksydVc2eGZoOCtrb0liZEtMck9iUENV?=
+ =?utf-8?B?NDVxRUFncDdtTDZIbk9LRlR2T1lZVm1nOFNwU0FKNEwyQ29LOXBlbXpDSTlm?=
+ =?utf-8?B?MzJrNWg1VnljTGYrOEJwUW9ESk4wL0RuRDFwajZiQVlZdmlrRVBYajJXTVFl?=
+ =?utf-8?Q?FzdPQMBjkF/1X47olyq3JvWJ4?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e34f3c03-e034-4347-1c5a-08dd556043e4
+X-MS-Exchange-CrossTenant-AuthSource: CY8PR12MB7705.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 05:50:10.2315
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +wJlgULlBT0Y/2KvEFNWtiSZiEJKCVP4Gx75ripgzyXhrSFtWfmQqza/fEf+UuTIkqtwJH0wslvw4GF6xSDgzQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5952
 
-On Mon, Feb 24, 2025 at 12:24:20PM -0800, Dan Williams wrote:
-> Alexey Kardashevskiy wrote:
-> > 
-> > 
-> > On 6/12/24 09:24, Dan Williams wrote:
-> > > There are two components to establishing an encrypted link, provisioning
-> > > the stream in config-space, and programming the keys into the link layer
-> > > via the IDE_KM (key management) protocol. These helpers enable the
-> > > former, and are in support of TSM coordinated IDE_KM. When / if native
-> > > IDE establishment arrives it will share this same config-space
-> > > provisioning flow, but for now IDE_KM, in any form, is saved for a
-> > > follow-on change.
-> > > 
-> > > With the TSM implementations of SEV-TIO and TDX Connect in mind this
-> > > abstracts small differences in those implementations. For example, TDX
-> > > Connect handles Root Port registers updates while SEV-TIO expects System
-> > > Software to update the Root Port registers. This is the rationale for
-> > > the PCI_IDE_SETUP_ROOT_PORT flag.
-> > > 
-> > > The other design detail for TSM-coordinated IDE establishment is that
-> > > the TSM manages allocation of stream-ids, this is why the stream_id is
-> > > passed in to pci_ide_stream_setup().
-> > > 
-> > > The flow is:
-> > > 
-> > > pci_ide_stream_probe()
-> > >    Gather stream settings (devid and address filters)
-> > > pci_ide_stream_setup()
-> > >    Program the stream settings into the endpoint, and optionally Root Port)
-> > > pci_ide_enable_stream()
-> > >    Run the stream after IDE_KM
-> > > 
-> > > In support of system administrators auditing where platform IDE stream
-> > > resources are being spent, the allocated stream is reflected as a
-> > > symlink from the host-bridge to the endpoint.
-> > > 
-> > > Thanks to Wu Hao for a draft implementation of this infrastructure.
-> > > 
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: Lukas Wunner <lukas@wunner.de>
-> > > Cc: Samuel Ortiz <sameo@rivosinc.com>
-> > > Co-developed-by: Alexey Kardashevskiy <aik@amd.com>
-> > > Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
-> > > Co-developed-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > ---
-> > >   .../ABI/testing/sysfs-devices-pci-host-bridge      |   28 +++
-> > >   drivers/pci/ide.c                                  |  192 ++++++++++++++++++++
-> > >   drivers/pci/pci.h                                  |    4
-> > >   drivers/pci/probe.c                                |    1
-> > >   include/linux/pci-ide.h                            |   33 +++
-> > >   include/linux/pci.h                                |    4
-> > >   6 files changed, 262 insertions(+)
-> > >   create mode 100644 Documentation/ABI/testing/sysfs-devices-pci-host-bridge
-> > >   create mode 100644 include/linux/pci-ide.h
-> > > 
-> [..]
-> > > diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-> > > index a0c09d9e0b75..c37f35f0d2c0 100644
-> > > --- a/drivers/pci/ide.c
-> > > +++ b/drivers/pci/ide.c
-> [..]
-> > > +static void __pci_ide_stream_setup(struct pci_dev *pdev, struct pci_ide *ide)
-> > > +{
-> > > +	int pos;
-> > > +	u32 val;
-> > > +
-> > > +	pos = sel_ide_offset(pdev->sel_ide_cap, ide->stream_id,
-> > > +			     pdev->nr_ide_mem);
-> > > +
-> > > +	val = FIELD_PREP(PCI_IDE_SEL_RID_1_LIMIT_MASK, ide->devid_end);
-> > > +	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_1, val);
-> > > +
-> > > +	val = FIELD_PREP(PCI_IDE_SEL_RID_2_VALID, 1) |
-> > > +	      FIELD_PREP(PCI_IDE_SEL_RID_2_BASE_MASK, ide->devid_start) |
-> > > +	      FIELD_PREP(PCI_IDE_SEL_RID_2_SEG_MASK, ide->domain);
-> > > +	pci_write_config_dword(pdev, pos + PCI_IDE_SEL_RID_2, val);
-> > > +
-> > > +	for (int i = 0; i < ide->nr_mem; i++) {
-> > 
-> > 
-> > This needs to test that (pdev->nr_ide_mem >= ide->nr_mem), easy to miss 
-> > especially when PCI_IDE_SETUP_ROOT_PORT. Thanks,
+On Fri, Feb 21, 2025 at 04:58:59AM +0100, Miguel Ojeda wrote:
+> Hi Alistair,
 > 
-> Good catch.
+> On Fri, Feb 21, 2025 at 2:20 AM Alistair Popple <apopple@nvidia.com> wrote:
+> >
+> > Is this a known issue or limitation? Or is this a bug/rough edge that still
+> > needs fixing? Or alternatively am I just doing something wrong? Would appreciate
+> > any insights as figuring out what I'd done wrong here was a bit of a rough
+> > introduction!
 > 
-> I think the more appropriate place to enforce this is in
-> pci_ide_stream_probe() with something like the below... unless I am
-> mistaken and address association settings do not need to be identical
-> between endpoint and Root Port?
+> Yeah, it is a result of our `build_assert!` machinery:
 > 
-> @@ -99,9 +99,13 @@ void pci_init_host_bridge_ide(struct pci_host_bridge *hb)
->   */
->  void pci_ide_stream_probe(struct pci_dev *pdev, struct pci_ide *ide)
->  {
-> +       struct pci_dev *rp = pcie_find_root_port(pdev);
->         int num_vf = pci_num_vf(pdev);
->  
-> -       *ide = (struct pci_ide) { .stream_id = -1 };
-> +       *ide = (struct pci_ide) {
-> +               .stream_id = -1,
-> +               .nr_mem = min(pdev->nr_ide_mem, rp->nr_ide_mem),
+>     https://rust.docs.kernel.org/kernel/macro.build_assert.html
+> 
+> which works by producing a build (link) error rather than the usual
+> compiler error and thus the bad error message.
+> 
+> `build_assert!` is really the biggest hammer we have to assert
+> something is true at build time, since it may rely on the optimizer.
+> For instance, if `static_assert!` is usable in that context, it should
+> be instead of `build_assert!`.
+> 
+> Ideally we would have a way to get the message propagated somehow,
+> because it is indeed confusing.
 
-No, addr associations don't have to be identical.
+Are there any proposals or ideas for how we could do that?
 
-Now we should fill EP's mem ranges to RP's addr association registers,
-so Aik's idea is to check if RP's pdev->nr_ide_mem >= EP's nr_mem.
+> I hope that helps.
 
-EP's nr_mem calculation is complicated,
+Kind of, but given the current state of build_assert's and the impossiblity of
+debugging them should we avoid adding them until they can be fixed?
 
-	ep_nr_mem = pci_resource_number(PF_pdev, IORESOURCE_MEM) +
-		    pci_resource_number(VF1_pdev, IORESOURCE_MEM) +
-		    pci_resource_number(VF2_pdev, IORESOURCE_MEM) +
-		    ...;
+Unless the code absolutely cannot compile without them I think it would be
+better to turn them into runtime errors that can at least hint at what might
+have gone wrong. For example I think a run-time check would have been much more
+appropriate and easy to debug here, rather than having to bisect my changes.
 
-It is easily rp->nr_ide_mem < ep_mr_mem, so I don't think check and
-fail is a good way, we have to merge ranges. Maybe merging to 1 range
-is a simplest solution:
+I was hoping I could suggest CONFIG_RUST_BUILD_ASSERT_ALLOW be made default yes,
+but testing with that also didn't yeild great results - it creates a backtrace
+but that doesn't seem to point anywhere terribly close to where the bad access
+was, I'm guessing maybe due to inlining and other optimisations - or is
+decode_stacktrace.sh not the right tool for this job?
 
-	if (rp->nr_ide_mem < ep_nr_mem) {
-		ide->nr_mem = 1;
-		/* merge ep ranges and fill ide->mem[0] */
+Thanks.
 
-	} else {
-		ide->nr_mem = ep_nr_mem;
-		/* copy ep ranges to ide->mem[] */
-	}
+ - Alistair
 
-A further requirement is, firmware may not agree to use all RP's address
-asociation blocks, e.g. Intel TDX Module just use one block. So maybe
-add an input parameter:
-
-void pci_ide_stream_probe(struct pci_dev *pdev, int max_ide_nr_mem, struct pci_ide *ide)
-{
-	int nr_ide_mem = min(rp->nr_ide_mem, max_ide_nr_mem);
-
-	int ep_nr_mem = calc_ep_nr_mem(pdev);
-
-	if (nr_ide_mem < ep_nr_mem) {
-		ide->nr_mem = 1;
-		/* merge ep ranges and fill ide->mem[0] */
-        } else {
-		ide->nr_mem = ep_nr_mem;
-		/* copy ep ranges to ide->mem[] */
-        }
-}
-
-
-BTW: I'm not sure how to fill EP's addr association register, for now I
-just skip it and works. Maybe my device doesn't care about them at all.
-
-Thanks,
-Yilun
-
-> +       };
->  
->         /* PCIe Requester ID == Linux "devid" */
->         ide->rid_start = pci_dev_id(pdev);
+> Cheers,
+> Miguel
 
