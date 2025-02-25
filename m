@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-22334-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22335-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E104BA43E32
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 12:50:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB8AFA43E5C
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 12:55:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 15FEA7A593C
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 11:48:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34DBD3A113F
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 11:52:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCA0E1E7C0A;
-	Tue, 25 Feb 2025 11:49:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E047A267B87;
+	Tue, 25 Feb 2025 11:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ImpAUPrm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fhhx23vt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FD0267F50
-	for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 11:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D362D2673B8
+	for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 11:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740484174; cv=none; b=ALWkoUOba6LD+xp82QeVJeyhcagoXN7ui8muOqMS1JJQXkcFkuWf8KQQm1gcvWT+F0B8Px/7KaO57Y1sim2Za2wWUwGGzIJqFP78ZW54NodrqX6z1uQUBaonOQINDoXkQbbf/0jQYLmmhnRD+vcuGEcroY0Trp+6YEszz97V0ps=
+	t=1740484329; cv=none; b=XFK/P84K4HPc8ijYwwQW+PJexxaRmtdcHNWMSCaT9V2D97oHA8aBjiHtk2qUUs8tw6Fo/Dn9G5CmXqBR2vEmqLqimZlid7pAjmvhrohw+bJcHnHBj4rrUiQaD8wqgSQpL6wnB4xiOPBhdbn+8IR+HmLm/nacQTA3NuNVS1Hq1AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740484174; c=relaxed/simple;
-	bh=5JyTXm1C7TLfUgdWh6JUEGg5OiPQQfcMcYocIRYLAuE=;
+	s=arc-20240116; t=1740484329; c=relaxed/simple;
+	bh=06Py7aJp14BHUIJAvzvlfHnZrSajm4jMw3RXc7l2ukA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hLwDQD5OcIOgw6Br1bX0ieitXo5jCPr3vt51h+M8zGUjw2BGu7Q1ZG3OcV9aOjOkdIzWKPQeith9+PWlvRk6NajJTINnzQt6oUg5ewTYX2Fmm437PnmHw6jNbpe3ZbSALlUkmd7Crc1VWpaHrxL4exS1va9Wc+3UXlVNWMeeX8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ImpAUPrm; arc=none smtp.client-ip=209.85.208.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZD7KNnxcrtibn6R1Td949XpGK8kkzT2ktlui1nzWjh3f5EdY8p5WLIfm8pf4IgZI9UsNgz3HbyQXp4qtcf4iKlZepUmM/yUBvAGr+A6ejWBU67QF6+WqqeSO9B0s+GlP8sp+7uvXX+8PSSxa/oO0BOKQNU3Tln9hsGqpLmPX9mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fhhx23vt; arc=none smtp.client-ip=209.85.167.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30930b0b420so48020111fa.2
-        for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 03:49:32 -0800 (PST)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5439a6179a7so6119479e87.1
+        for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 03:52:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740484171; x=1741088971; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1740484326; x=1741089126; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MRXJ0sgeLLR+ArObNCkDui7AFges8ho1M4llXnQe6m4=;
-        b=ImpAUPrmsWUb1ne2XcVYI8rBDVEJb7qDjcbHHwrUMkUTNRKuQnlsk4ZNoIxDA0xO1o
-         +7lWbHX+mdW/cvh0QILVapSB+U/ohTSpQN2duJg+WF6tcHTdCNXjkQxA2PM8T1kn7PFj
-         rGoEkz64rzjJLpBGUqOFe78xKCpYz6znel/x5dg1Q3ZgKI6P39Vos/8gOZjueMm9zHVf
-         nO70vueDz/1MPrpwdNQk0wkQdV7xPa8qzVTRYg71Nhq9IJhqRaB7IiFowsuVw7xBTD+Q
-         DOAkJuBR5zYliSogJHK72wcToDGu6kztLqac8viideanAtSX4xiB+wjv/sa6ODLttaMd
-         EW0w==
+        bh=3wS9tak0NaNpAhLlFW6uyty61j0I79uv4Vz/GWJtmTk=;
+        b=Fhhx23vtDyhPWmr52coCHVGH3HTuXpIT+JMJoX+OyQ5JSQIqiLiGO5Ix+5otyrU9c4
+         R7kUTZ3HMznaOxWFuV3TUSXLHi8T5YVAm8mLz4aVEAwcapnLwZySY9wTbmHc3M8gZXAL
+         qnA/S4uFMWTii4KQayzWa0BXkVOzkx+ACKFJUyOR8fxUqvRU0VhrghE32Jod1YlL/MI2
+         BAXG4wssYVUL2DetcQ0eVbnU2XhdW3kzWywWEiB3nVr2AyEnM699J8s8PNhdrHbPCjBa
+         4LHAQZbHPrq12e1AdKRGqNUXmh+OXUCIn0MnoMzpS3V435udP07OXuhL4D0L1NegVeKA
+         DH+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740484171; x=1741088971;
+        d=1e100.net; s=20230601; t=1740484326; x=1741089126;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MRXJ0sgeLLR+ArObNCkDui7AFges8ho1M4llXnQe6m4=;
-        b=DYr0nBzZhtr0qGoXeolLC3bSo95r6EJrxHKAK4pyzJo7v5BbQXRUIkKXQhrtVq1u1G
-         ilq9bBqCKTMrlUG4hio82+Dneh1K6AV+5Q3vQ5UfblKsfp/TgBeMFNxDw7/qMFc1Ty0i
-         WqTNAcbRzR+c0z9DgPwGUcjuoLmEZ1yE8HtW6E0qABRB8Y8FNnDTcespnJNYRSVU4j1z
-         l+iRUqWIE3+cvu39RkrY9pVsaQDQrDe7inVEJFNBs3j37rPcDbKSNeYy8QHLXpuru18C
-         A2UI5FmuQHzBnzNe0NrwM6qXPOWFtGVAbgbapFIt+OasKK7tfIVM8ZkOhLT2ZvpbZx0C
-         DYAg==
-X-Forwarded-Encrypted: i=1; AJvYcCVs+pxoNXLmNnpvQica3Bi8jG++Omd6je9XjfPJG1hDYJ6UlvKsqhukZA/BjSR76+Cv8FvKTmhfJes=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOYx1BtbwwhE/KPICYm89XeRaPVIMdH+BnE64eYmhPN+WRHUiW
-	tGjmVphBgGtN1Jq2GJYTA2G8ycLHMGdxUo2jwqnHLa3qOAOM0RQRq3Kmsr557Tc=
-X-Gm-Gg: ASbGncurfVLD0Vg0wbuACprW17DexB2G/0lpbUfdTImEciieXYOdpp4ilNIKhnpy3Qy
-	XuxnoiyWk4w3IQ7o+/L2YFYJifjO3J++3KP9bER+3e6+yqtIOMxB14DhsDV0uSjOj4Mk/OjCvXT
-	OrHx9PEfdpekvFPyV3IcbDeDXACiB+rJFTxQS1Cj6KzvkvJS9kfhDGgT2EpWr3L6v8AQ2OQqEU/
-	1vt47BeRxCxRRakRvTrKb5K74EEkgm0lpIAqOvQ0478C++MNy1SzKTj1T5bzcNAKbG54J+wvsFx
-	k7JOd4YsExSQBYih4DGyUK7Ux6NhPSipdAkS41AIAuDagnyoSyVQKBK6/L0cLx1kKV1L7D6AbJQ
-	sbHpYtA==
-X-Google-Smtp-Source: AGHT+IFyPF+05j6PQr+C+0URjfCkkwkHxs7RWK4V64HpQyr1wOWt4SpVijtFSG3Diuo6wjyM5MQDBw==
-X-Received: by 2002:a19:8c4e:0:b0:549:38eb:d68b with SMTP id 2adb3069b0e04-54938ebdad6mr193636e87.33.1740484170953;
-        Tue, 25 Feb 2025 03:49:30 -0800 (PST)
+        bh=3wS9tak0NaNpAhLlFW6uyty61j0I79uv4Vz/GWJtmTk=;
+        b=kimOA0wmH9V9Yr1epxEQ0JCcJvIVMXj251TnuAQzEsGBuAwhb/2S2KaRv+FA0x+NCz
+         c7tukYWvm9cxQqShNUeobLVUBJODntG0doTUTz0qbobQzQRa+j48i2zGtWlLtO22u9Lz
+         yP7VAdDm9JquwShZhDtVJFcRela9AfiIOHhABvmvLf57IAcIn6ChTcE3sQZd4mwLXonv
+         AVAkMmsYctQ+vU8p3iQ4SBCXgW9sxX52VJou6zDIeZamYU3J3UPbDj5Ty4zHpVop0myP
+         s/q+CpmNfgcDjdXJtf75YYgRzX7PY3FJ8pzcV+MX0L2MZYP754xGuIAoEaM0z61RzQC8
+         zX9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWXUVzkz1NpGS0N1Nk+FY+Mpb+QjTMafnQkZO5VNFv83ihNAdN/PtIIzSx0Zy7W6GsGdI7Fky7TrzM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVIwPqNSzBdF36ldoH7Oa9HeqvRY2uwPr38U4M8hF2TSdOdVip
+	QXpNQU15CxEdhTmwCpWWzW194EhDcAbVgPERx3AOArQjnjgwPRKIpIvCT11+Gpw=
+X-Gm-Gg: ASbGnctuCFv7U2tKFmU8GzfnHQwJ0saC0QLORmmlUmNxdz9pQp7aBJZHjtBnyVYuC/0
+	eFnZF8pMy5fbhgTZiSTx/O6UoTQXvyMOz7QnRHMqkYPfX0nITmWd3sbdJV6eod2lad8Z4A5Uo0O
+	BqFQ+wyiToe9PsdxoN55sX9sAvYsHrVYoq3ertmBVDHGrC2oRHGIrwelA2OLNc/+8HFvhzs357h
+	yGqt/X5NWJfrWei+uGbQG5qK84zHDKdRUNnS0nJoeT3cVGG20laWvUIow+RrEDMkVcg5/bDWR+k
+	W/fbQ/4/+9EgqAOVPQheRxLt27BPpVyt+Kr4UV3KDwiiP5BtHnZ/keXRpaptbGpVaFJ60tYlM34
+	eqQ8hlw==
+X-Google-Smtp-Source: AGHT+IHaCOYYY1hFZ2o6pI3+gD73kquLWGQBBvEHfmt0Roiv69QaC0Cnq2VStk0d5J4mPbpT0ertdw==
+X-Received: by 2002:a05:6512:e88:b0:545:457:e588 with SMTP id 2adb3069b0e04-54838c5e762mr6148340e87.10.1740484325931;
+        Tue, 25 Feb 2025 03:52:05 -0800 (PST)
 Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514b97a9sm155591e87.70.2025.02.25.03.49.30
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514fa1d7sm151829e87.238.2025.02.25.03.52.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 03:49:30 -0800 (PST)
-Date: Tue, 25 Feb 2025 13:49:28 +0200
+        Tue, 25 Feb 2025 03:52:04 -0800 (PST)
+Date: Tue, 25 Feb 2025 13:52:02 +0200
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -84,11 +84,11 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com, 
 	amitk@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com
-Subject: Re: [PATCH v4 02/10] arm64: dts: qcom: qcs6490-rb3gen2: Add TC956x
- PCIe switch node
-Message-ID: <ciqgmfi4wkvqpvaf4zsqn3k2nrllsaglbx7ve3g2nbecoj35d6@okgcsvfx27z5>
+Subject: Re: [PATCH v4 10/10] arm64: dts: qcom: sc7280: Add 'global'
+ interrupt to the PCIe RC nodes
+Message-ID: <kkqydwutpaxzj6beqbdkmjanpzvvloqc3csm4ze2phoibmvmoy@asxc2ffipkgj>
 References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
- <20250225-qps615_v4_1-v4-2-e08633a7bdf8@oss.qualcomm.com>
+ <20250225-qps615_v4_1-v4-10-e08633a7bdf8@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,112 +97,22 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250225-qps615_v4_1-v4-2-e08633a7bdf8@oss.qualcomm.com>
+In-Reply-To: <20250225-qps615_v4_1-v4-10-e08633a7bdf8@oss.qualcomm.com>
 
-On Tue, Feb 25, 2025 at 03:03:59PM +0530, Krishna Chaitanya Chundru wrote:
-> Add a node for the TC956x PCIe switch, which has three downstream ports.
-> Two embedded Ethernet devices are present on one of the downstream ports.
+On Tue, Feb 25, 2025 at 03:04:07PM +0530, Krishna Chaitanya Chundru wrote:
+> Qcom PCIe RC controllers are capable of generating 'global' SPI interrupt
+> to the host CPUs. This interrupt can be used by the device driver to
+> identify events such as PCIe link specific events, safety events, etc...
 > 
-> Power to the TC956x is supplied through two LDO regulators, controlled by
-> two GPIOs, which are added as fixed regulators. Configure the TC956x
-> through I2C.
+> Hence, add it to the PCIe RC node along with the existing MSI interrupts.
 > 
 > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 116 +++++++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sc7280.dtsi         |   2 +-
->  2 files changed, 117 insertions(+), 1 deletion(-)
+>  arch/arm64/boot/dts/qcom/sc7280.dtsi | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> index 7a36c90ad4ec..13dbb24a3179 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> @@ -218,6 +218,31 @@ vph_pwr: vph-pwr-regulator {
->  		regulator-min-microvolt = <3700000>;
->  		regulator-max-microvolt = <3700000>;
->  	};
-> +
-> +	vdd_ntn_0p9: regulator-vdd-ntn-0p9 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDD_NTN_0P9";
-> +		gpio = <&pm8350c_gpios 2 GPIO_ACTIVE_HIGH>;
-> +		regulator-min-microvolt = <899400>;
-> +		regulator-max-microvolt = <899400>;
-> +		enable-active-high;
-> +		pinctrl-0 = <&ntn_0p9_en>;
-> +		pinctrl-names = "default";
-> +		regulator-enable-ramp-delay = <4300>;
-> +	};
-> +
-> +	vdd_ntn_1p8: regulator-vdd-ntn-1p8 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDD_NTN_1P8";
-> +		gpio = <&pm8350c_gpios 3 GPIO_ACTIVE_HIGH>;
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		enable-active-high;
-> +		pinctrl-0 = <&ntn_1p8_en>;
-> +		pinctrl-names = "default";
-> +		regulator-enable-ramp-delay = <10000>;
-> +	};
-> +
->  };
->  
->  &apps_rsc {
-> @@ -735,6 +760,75 @@ &pcie1_phy {
->  	status = "okay";
->  };
->  
-> +&pcie1_port {
-> +	pcie@0,0 {
-> +		compatible = "pci1179,0623", "pciclass,0604";
-> +		reg = <0x10000 0x0 0x0 0x0 0x0>;
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +
-> +		device_type = "pci";
-> +		ranges;
-> +		bus-range = <0x2 0xff>;
-> +
-> +		vddc-supply = <&vdd_ntn_0p9>;
-> +		vdd18-supply = <&vdd_ntn_1p8>;
-> +		vdd09-supply = <&vdd_ntn_0p9>;
-> +		vddio1-supply = <&vdd_ntn_1p8>;
-> +		vddio2-supply = <&vdd_ntn_1p8>;
-> +		vddio18-supply = <&vdd_ntn_1p8>;
-> +
-> +		i2c-parent = <&i2c0 0x77>;
-> +
-> +		reset-gpios = <&pm8350c_gpios 1 GPIO_ACTIVE_LOW>;
-> +
-> +		pcie@1,0 {
 
-PCIe bus can be autodetected. Is there a reason for describing all the
-ports and a full topology? If so, it should be stated in the commit
-message.
-
-> +			reg = <0x20800 0x0 0x0 0x0 0x0>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +
-> +			device_type = "pci";
-> +			ranges;
-> +			bus-range = <0x3 0xff>;
-> +		};
-> +
-> +		pcie@2,0 {
-> +			reg = <0x21000 0x0 0x0 0x0 0x0>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +
-> +			device_type = "pci";
-> +			ranges;
-> +			bus-range = <0x4 0xff>;
-> +		};
-> +
-> +		pcie@3,0 {
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 -- 
 With best wishes
