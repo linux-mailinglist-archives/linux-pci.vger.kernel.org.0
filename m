@@ -1,75 +1,77 @@
-Return-Path: <linux-pci+bounces-22359-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22360-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 096EFA447DF
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 18:22:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA9B1A447C4
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 18:19:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 453D9883BCD
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 17:15:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D837416A61D
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 17:16:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43518204F77;
-	Tue, 25 Feb 2025 17:12:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E28220C470;
+	Tue, 25 Feb 2025 17:12:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DL0GYxMp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g3mbytdo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22421DF98F
-	for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 17:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD2F199EB0
+	for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 17:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740503571; cv=none; b=PSbaxyo2NIv4Q+GPLpvN8U90Kzr8wjjABX9OBb3oTIQASKkzIeKdfr/p1Hu6cRhcLesbzKJN9lfhdGzvaSH2RQ+Fg1YWHG9IIORDi76fwdBQ/pJmVt8IUFykXHOmBcAU/2QObOGNl9XGr86+76HrNE/fQ7+/Kj7+8uv3gZJSxCk=
+	t=1740503574; cv=none; b=qFUnhJ8fcYl46vBzzvafpgwKGXdfViJ1wzk0pM4VSieSRK8m0f0o2S9P1AEYKa5Y5LoZIKwR+QZR+nZY4Ql/8thYD06zXQDPDOaK5FrXd24NCseB1nQk7/eIr2AvQgPQ+tTTsfLi0iPsQ5u2lUSaxg3n6sK+/5yDIJEloFZqZB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740503571; c=relaxed/simple;
-	bh=solmisJfOwq7tSo+vQhMg46du8qP0Mm5gMU1KVww0NI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CqaHo0omd4Z2Sb+CGHzfT418kAkih1LGLV+gMb9/TWGcM/+Apgz9Dx2mxMtMu4dd4wVOlcXhYO3HX4IEYFaE37pNIJWMAqF797ofQsiz4hGYByJrDCJNACTeZc58+NBEEKrXn4KEHgrrcO4DSJRwp5EoRB4+mhg69zwyIzMXPts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DL0GYxMp; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1740503574; c=relaxed/simple;
+	bh=FnUacC9VqqRTi29gXJo7HKIQwygyqPBosmqqmN5z+pw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UjNJlC/lzHk31TFD/jy3Z0wLQBcv23Ka1cthq0FexUWG/HGuwwud0Iqn8Npbt8p1t7N7Eubkj3OS7Vgs47DN4eosqnYjHlcTKxlFE4FOhc8qIFqFIKMSl+S4EWKssZBFEq4vSA5VCcMZIOnIeBufhI40pEhDYFdokrbSP3oQUpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g3mbytdo; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2211acda7f6so133301015ad.3
-        for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 09:12:49 -0800 (PST)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-221050f3f00so134444785ad.2
+        for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 09:12:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740503569; x=1741108369; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9jG0W9H5EHgY60+XGt77vkeLnWA8gkbVQ9cdgHwuEC4=;
-        b=DL0GYxMpYglS0lhWClMZUGd6/PdKyx+WD1rk6Tv0FBVSU3YyysYRMh1Qe/DkRWTfRj
-         vW1WE7lf+746zeXLyKws+xqtj6Px9kg2Y/Ij70iiaQkMwBh16tc6JEiTtN2ZPZSdW9fW
-         z/wsNALWMHfgrraBwtO56qAdhzXX7TKXl/jg5twhwQvwZTw4XNbRlxpdJLqR6U1kIFKZ
-         0eDw3zjEhw+psATGHZUZ022Wg2GUTH2Ww6lwlaKeOdKew7E1Ug/uamqU5WPq9RBt5vMX
-         5Zof/sH5KlrlqOyEJ/db4Vyg4qLsnbhXC+ea1Ax+dOM1xxG4HngabVOoP3fSYlwzUc/j
-         B1hw==
+        d=linaro.org; s=google; t=1740503572; x=1741108372; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a5lxY7B542/PLdEoJyDDrjtx4yD4vXFk48rEXnqEjwQ=;
+        b=g3mbytdoVZEX7ZA7zKRirvzIYoazIPF7Ip+vVmtGRxCRnTiPnJKPfKMnV4qaQUJQPV
+         igsbUbOq1xu7s4+tHbCV/rH+hc4M8oDeofNvzJEEeAJcHJwclG6kCXG9vNnK3sHU4hpu
+         lXCktHOOimAkRtZOR6OlZgxu1Oh30uf2s1R+Z61XcMDy1Y18VN0bTjeZbceiuwpPcHJ6
+         v6jniiZ8HjYT+6/dIMcfK/bmYEwzjajxtvyTA2jCmfXJKcTCv3v9YCrWhaGwK5WvDIFr
+         8n1q1IngxQ7Q01OKGnpp6B5UNe0M9/rXLQ6NZKBA/idXKYgJwlQFXSmysAnjWx4C7FCN
+         8t/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740503569; x=1741108369;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9jG0W9H5EHgY60+XGt77vkeLnWA8gkbVQ9cdgHwuEC4=;
-        b=OIWpuOSQx0GAlJ7L/8s+PaOLn1TQwTt3NfbURP6GHY59AvQQOCvDbrLK+DqjRm17+b
-         Kv5kKDdmid6CEdl8ESwLfkidshn/SwwdYNULO7fUSyfaD4LKWsVw5DbjobO4HOqk24FB
-         oS3QL1/W5+jE9VxIcVnGtayiNVrzIJ7JaWvZ8pLzXs9CfwfpC6q05JEqKJSe/c/phvp3
-         2BPQFtfi6frXeJ8r/MFc4trjF8qb7reW0Z7v+0YaHY6kJo+CctJiZzz9CSPKHqNmYYEY
-         2aFPzhGlSmLahasbEBrmdiL7K246frazPREey8Z2pQrMHMI6hbzvdemEoTiq1R4sPkM5
-         wxmg==
-X-Forwarded-Encrypted: i=1; AJvYcCWvklIsJY7broI1DljsO+kVRBD6y7cpqBQY2obgySg3Xa6N9QrLivbAfD9rpvOxJmG7nemlVBQln4A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/rJbmDykqYSKkZ8O+UCOwYOG2G2XMTozjPozaXoZRlbLZh8bX
-	gkkisZXUlMP5P3c+tbtIaQUHSEpdegtKGlyk78mPE37gJQS6mVVRC49vyXuO0g==
-X-Gm-Gg: ASbGncu+NXOGHL5yMhnitn/NfAEmTReMwjG2BqDSMg8hxedOPIw7sWJBb9xjWteTBQD
-	Hh+UTARYnFFrfQ0ghaJ4J6x2LlEbSPAFHroY3rHoUcCfH+PcHrOrdH64DoEQagNSkaTZ0So2fuk
-	sIgd7DmY8sXHbMqtMQyS+RyzYvI/FawVDWdqM3rMU/9Hu6bYecdJHFbre+328AyaVSb0WGrGr2z
-	81jUSZLDXpqIlTt68DbMDnp20KiE54aLogHsdmfz5rGEWwQvPwIDNxjgct4tWcKj62wSlopZ1Rh
-	3X72AmsdJhRu7ch1iUmc85fKQXsyLdTJNM5s32EoHjgDhHfWfKd3iw==
-X-Google-Smtp-Source: AGHT+IHjmQd2iyEjNZ5iWvHuuhwXr+ROlu+iTqFwv0oDwguUc9oGY/92+rxd8sOUv0ftc2AvvJk1eg==
-X-Received: by 2002:a17:902:e892:b0:220:e63c:5b08 with SMTP id d9443c01a7336-223200853e2mr3925605ad.11.1740503568871;
-        Tue, 25 Feb 2025 09:12:48 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740503572; x=1741108372;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a5lxY7B542/PLdEoJyDDrjtx4yD4vXFk48rEXnqEjwQ=;
+        b=T2TiCXuf3iLt6VEbohEKxfA47nfEBFYSZRO+7kUH/n/l5hgKGxXLgKVLj6T61DLsA/
+         YNsKkHH/NgQiDo9KT6QYBRZRbeaBLh35r3ikau2+SWuKuaJj5+ssYQ8z26HakoC73CW/
+         rGIc1JeaS2gnAi+wkvgb7xT2Bm8l36nSUYGQsUYKqbN4Vo4O5PfngvhrXSE/aJvh4NPB
+         BW27gO41yuVkLsgyQXbGUTlt9UCLG4AR8xrzxMhhhDRtrP86Obh1P+KDRUMcwevyteDj
+         4DjiLWSv3uituduX/EzgzvY0C6BJ5TVFusIpc4HBtzv2eISqLb53yuk78XSHT9RdCD/O
+         s9Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCWuC7DaKfCND+3ukiLwRDGgSX8s/kuS51OUkTfrKKTt/YyErMcs0Jef//d2WBVThGcOktN1v8Zyea8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRIEecRPYikWihmtQNULBRKQCrpvjkG3yNpY1DnhxUrHJPZijw
+	h1mRiDfYbplVD8maXRfszlG3jH2FGbP5Nza/VqXBBkMakozC5wWTNRe14zy4EA==
+X-Gm-Gg: ASbGncvaU3JzDBEbFZaJJVvRn8VdCF/BiQnv3x9RfBJItMYr/ti/iBqtrf62vqLBuvl
+	208FJ8KSOKhQik52rRyMka05lqknXzNbxt04wVAwov2u7QpvdO78bH27rZED1IW+HfKtcklZOX2
+	iPMb1mtAiGYCO59kjP8mD3+BSS5GfTrQAMYTJCaYyaWaRzq1JBLFK30MsJyI8iEh3va0r6iWJOZ
+	P1L0PHFxNz+BeawNxer0EC6uCv8L4sDPg28gLf0ADevjGUaJL1CJQGhSxJThF0ulY20Mxg1ND4c
+	Sq+IJJd6LNCpfj0NbQaQSJEd+N4lSTi3FzjASeF/ITwGFgt1gDvTjA==
+X-Google-Smtp-Source: AGHT+IFw71b3OYVPNe+t05CidalajI1SiIlNZ2RN6zsNLW4GExT54+gYQjXEbzLSFC9QbDLlJoqFIQ==
+X-Received: by 2002:a17:903:2344:b0:215:b75f:a18d with SMTP id d9443c01a7336-22307b4554dmr67545865ad.11.1740503572170;
+        Tue, 25 Feb 2025 09:12:52 -0800 (PST)
 Received: from localhost.localdomain ([120.60.68.212])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a095f40sm16844925ad.144.2025.02.25.09.12.45
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a095f40sm16844925ad.144.2025.02.25.09.12.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 09:12:48 -0800 (PST)
+        Tue, 25 Feb 2025 09:12:51 -0800 (PST)
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: jingoohan1@gmail.com,
 	lpieralisi@kernel.org,
@@ -81,10 +83,12 @@ Cc: robh@kernel.org,
 	shradha.t@samsung.com,
 	cassel@kernel.org,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 0/2] PCI: dwc-debugfs: Couple of fixes
-Date: Tue, 25 Feb 2025 22:42:37 +0530
-Message-Id: <20250225171239.19574-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 1/2] PCI: dwc-debugfs: Perform deinit only when the debugfs is initialized
+Date: Tue, 25 Feb 2025 22:42:38 +0530
+Message-Id: <20250225171239.19574-2-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250225171239.19574-1-manivannan.sadhasivam@linaro.org>
+References: <20250225171239.19574-1-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -93,21 +97,39 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Some endpoint controller drivers like pcie-qcom-ep, pcie-tegra194 call
+dw_pcie_ep_cleanup() to cleanup the resources at the start of the PERST#
+deassert (due to refclk dependency). By that time, debugfs won't be
+registered, leading to NULL pointer dereference:
 
-This series has a couple of fixes for the recently merged debugfs patches.
-This series is rebased on top of pci/controller/dwc branch.
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+Call trace:
+dwc_pcie_debugfs_deinit+0x18/0x38 (P)
+dw_pcie_ep_cleanup+0x2c/0x50
+qcom_pcie_ep_perst_irq_thread+0x278/0x5e8
 
-- Mani
+So perform deinit only when the debugfs is initialized.
 
-Manivannan Sadhasivam (2):
-  PCI: dwc-debugfs: Perform deinit only when the debugfs is initialized
-  PCI: dwc-debugfs: Return -EOPNOTSUPP if an event counter is not
-    supported
+Fixes: 24c117c60658 ("PCI: dwc: Add debugfs based Silicon Debug support for DWC")
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-designware-debugfs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- .../controller/dwc/pcie-designware-debugfs.c   | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
+diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+index dca1e9999113..9ff4d45e80f1 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
++++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
+@@ -535,6 +535,9 @@ static int dwc_pcie_rasdes_debugfs_init(struct dw_pcie *pci, struct dentry *dir)
+ 
+ void dwc_pcie_debugfs_deinit(struct dw_pcie *pci)
+ {
++	if (!pci->debugfs)
++		return;
++
+ 	dwc_pcie_rasdes_debugfs_deinit(pci);
+ 	debugfs_remove_recursive(pci->debugfs->debug_dir);
+ }
 -- 
 2.25.1
 
