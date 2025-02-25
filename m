@@ -1,61 +1,94 @@
-Return-Path: <linux-pci+bounces-22280-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22281-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 643DCA4335F
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 04:07:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F341BA43384
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 04:19:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0EBD3B0EC7
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 03:06:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 097173A79EE
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Feb 2025 03:19:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C68B13632B;
-	Tue, 25 Feb 2025 03:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F33A13632B;
+	Tue, 25 Feb 2025 03:19:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="W9LLfq+5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GEsheRDi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB17BE49;
-	Tue, 25 Feb 2025 03:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64174C6E
+	for <linux-pci@vger.kernel.org>; Tue, 25 Feb 2025 03:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740452821; cv=none; b=E7U4b2fMV18m6y3HrwC2RzzSjsmVN+7pSYqjYBzie37Kg7v+rv8yGFNAnZ2tfe8wKH6+FAsFvm3TUJnH3Y4R1r28UhVQVXCdrKf0Dcd5qYr10o80+NUOc+yxtyX5intHPh6hmAC5sFrnFsEXLbxDHjNkGBgy2wDeulkZcMHmMu4=
+	t=1740453547; cv=none; b=WoCk/TxPcLQvFyWmlvAMh0cvGLEXp7ag6cNoX84pJsbYZPSPokJBxV84G9q67BQ7aRPxlvixGDr0v936zEBYjewKgMnKh/bknjQaewRYAuc5SmP1nlKbHnjNRKdVUwkHtjfg/g8w0ZKfm+jSxg1b94/aydKdTllG05IQEXSzesI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740452821; c=relaxed/simple;
-	bh=lHEAxf5ZJA2azxyY/oKi7P/y8H4bZ4x9CyA6kaJAiGI=;
+	s=arc-20240116; t=1740453547; c=relaxed/simple;
+	bh=LXriQkLQBqACs+UUX231RySTgvUDN3sB/8WC0n+zxv8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jr40HIE5HuAMl6JPKX5xDxXBrjZy/B5h8WiFHjZlbUDxI+/AnymMhKH3LVaDaaTyPNPnvotACP71NdKM4NdfBv1SH1oM9hzwOIIzI/jr8gFIxAx3Ab4qV+rrEZdHJADSYh9PfjK3Q/N2TlzETaDHfz03qzK0k4rLcw0oRPcvdQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=W9LLfq+5; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740452811; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=tPFJL3Zgq99hh+p83jK5GeOO9zW89CPdsTMm5GrF2Dc=;
-	b=W9LLfq+5/W5AmwotnDp4n7Hmd1wB85LE/53Y4iwvDbL7jm+Qotk/8ErUdR6troUsfDNMcJzCqTESOxKRIL4xBWDLa/+XcDdRzVG8+fRKCKFn1s+XxOpEfGrwae3hbjHUgPMcIE/MEfmNaWZxC2w0xntQkltvGdBRXmsq//vuXQk=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WQD2tsl_1740452810 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 25 Feb 2025 11:06:51 +0800
-Date: Tue, 25 Feb 2025 11:06:50 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Lukas Wunner <lukas@wunner.de>, rafael@kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Liguang Zhang <zhangliguang@linux.alibaba.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>, rafael@kernel.org,
-	Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] PCI/portdrv: Add necessary wait for disabling
- hotplug events
-Message-ID: <Z70zyhZe6OrxNNT3@U-2FWC9VHC-2323.local>
-References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
- <20250224034500.23024-3-feng.tang@linux.alibaba.com>
- <Z7y2e-EJLijQsp8D@wunner.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=nUQXD1zR8lKc7dJ9uGzxuiUygW3cvyLb6Nww1RPHAOqx8XZ87Qnkw0CaVT+EPQTW2L5TSJjbkxeitfiql3UBvmiej+nYu0/F6Zf3l7MLfeITzoIKDHtLd9gcKIxhuT05qye3vvQAMnCQ6mYM7fTKOJfBE/+2gUZ76NeZ9LU6+wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GEsheRDi; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30762598511so46716991fa.0
+        for <linux-pci@vger.kernel.org>; Mon, 24 Feb 2025 19:19:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740453544; x=1741058344; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3wJvzg+EU3gQmUwHBxZTu/YhhwWOTXDIc1qEOHLA1GI=;
+        b=GEsheRDiKvTW5UGY5oMdD4j3cHWZmnuGXfH0WdpEUui9ziA7gXLoxUQJtoVct3cby0
+         r8xpUtzNXHibZj039vrElDkLfM0vHoyBnw4+MvoPDUTcV+wTNn+1ti+BEZQ4zcVsQwYM
+         XT1+/UnwHj3o36ll6REL9yjd9yZooS8M/JKNSdsKXOlR7pXxllBy3FFruBDurBgYvv9x
+         G5UQO1CuFTVLBHm94X1PmI70SWEWsKYimpp190r0sDci5NbmXnynD6Y+2S54goFOB4oy
+         6wVhRr+h0V3A9CxpfYS7d6euFBwRULhXghSMdwtI/5ERQ05utH/CaRNGT24af5VBPz99
+         +8CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740453544; x=1741058344;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3wJvzg+EU3gQmUwHBxZTu/YhhwWOTXDIc1qEOHLA1GI=;
+        b=J0Gtcnj8BgRAlxKMPPvWMPkWhqY8UTBt6oY6Lok3bSBOETM8536llBbhfTWPweGrUx
+         U6FVOpB+Xs8g+yPw09ajXzUv5oIV173cZr4dt/wtvLYmnuTGPBzlYkZjs5cIn8m4PoV/
+         rei15I05RSYfC9/Q0RAA253ovuQuZoBCztdFf495PBcpBNW07S941zQbK9Hahv+Z2Yf4
+         PMtn3RnlXaIehCE4NP6AZKfHU5EFJ4kQtsHYTHAwi92YQpqjFNBnoM+7qd1om241DccD
+         QHTSTF2NIryC/PTDwB2T4xZhtPRAn5zo/CdGoA90j4Tw/cf1FhVHsxZeGfH3xot8oQ7i
+         PF9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXGtOXEcB/IjxG1vuxPxKazkkOHkQy/OCyIsGZQpWLZ6gTVWtHPxDuP6caGwgf3SUa/jrc9wJNeZY4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxp3Agag5tEfDolH1e2F1zbERO9RloAJYWxkqii/NY6oqK9+Mav
+	8MolhZ6HNukggtIy5Fb9P+cbfe/AnFSD80eVz4etgFVqDz1wgScyBYwJE2Ef060=
+X-Gm-Gg: ASbGncsXglo0bQgsh8HXaPqNnZ/rG8UL64yLvJuGX1Sk8SSZSl8zH9QZd8VefiDZkAs
+	RsG2cR72vVGRPPNzW+VTqhzRLvdA8OC6tt7giMnbPRM+gIrlP7qKKBFavXZLyhBmN48d5b05oVe
+	rQSEyP0TOdy4aqXDCTBC6iUvMOzZURuGB4/vhMQgDlq1Wsp18RXOJab5kQsWWO8bwWgADoggsE0
+	ziLc8dHbZeYDHnqhUUwkoIpi8vPaLn18d0gulBhQ4fyD5KTFhQK+yGHP24p7v1BH7z1MP1G6bhT
+	t2iW03HrE60M66jSttRvlHaCZtzZL66fALv+FcLhPD5ILC39KcbbVDvkHBcU1dWa2DurqlImEn5
+	ds1MlbQ==
+X-Google-Smtp-Source: AGHT+IEZniH1FzhhvKaVQCy4ZQVmyCCKtfOu45L/HvpfS/1QY1oCFaF/I7jKonrJjG/ygY3iYBxiKg==
+X-Received: by 2002:a2e:8891:0:b0:308:f84b:6b34 with SMTP id 38308e7fff4ca-30a80c41a74mr5593791fa.20.1740453543984;
+        Mon, 24 Feb 2025 19:19:03 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a819f48e2sm971371fa.48.2025.02.24.19.19.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 19:19:02 -0800 (PST)
+Date: Tue, 25 Feb 2025 05:19:00 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Mrinmay Sarkar <quic_msarkar@quicinc.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/8] PCI: qcom-ep: add support for using the EP on
+ SAR2130P and SM8450
+Message-ID: <au4nvnszoqx6mof6aqejcbq2viosqfzb6pj3lf2t5nzogsywqf@u4rrx5kgulm6>
+References: <20250221-sar2130p-pci-v3-0-61a0fdfb75b4@linaro.org>
+ <20250222143657.GA3735810@rocinante>
+ <20250224183620.GA2064156@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -64,83 +97,20 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z7y2e-EJLijQsp8D@wunner.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250224183620.GA2064156@rocinante>
 
-Hi Lukas,
-
-On Mon, Feb 24, 2025 at 07:12:11PM +0100, Lukas Wunner wrote:
-> On Mon, Feb 24, 2025 at 11:44:58AM +0800, Feng Tang wrote:
-> > @@ -255,8 +271,7 @@ static int get_port_device_capability(struct pci_dev *dev)
-> >  		 * Disable hot-plug interrupts in case they have been enabled
-> >  		 * by the BIOS and the hot-plug service driver is not loaded.
-> >  		 */
-> > -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> > -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
-> > +		pcie_disable_hp_interrupts_early(dev);
-> >  	}
+On Tue, Feb 25, 2025 at 03:36:20AM +0900, Krzysztof Wilczyński wrote:
+> > > Update the incomplete SM8450 support and bring in SAR2130P support for
+> > > the PCIe1 controller to be used in EP mode.
+> > 
+> > Applied to controller/qcom, thank you!
 > 
-> Moving the Slot Control code from pciehp to portdrv (as is done in
-> patch 1 of this series) is hackish.  It should be avoided if at all
-> possible.
+> I updated the branch with "Reviewed-by" tags from Mani.
 
-I tried to remove the code duplication of 2 waiting function, according
-to Bjorn's comment in https://lore.kernel.org/lkml/20250218223354.GA196886@bhelgaas/.
-Maybe I didn't git it right. Any suggestion?
+Thanks!
 
-> 
-> As I've already said before...
-> 
-> https://lore.kernel.org/all/Z6HYuBDP6uvE1Sf4@wunner.de/
-> 
-> ...it seems clearing those interrupts is only necessary
-> in the CONFIG_HOTPLUG_PCI_PCIE=n case.  And in that case,
-> there is no second Slot Control write, so there is no delay
-> to be observed.
-> 
-> Hence the proper solution is to make the clearing of the
-> interrupts conditional on: !IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE)
-> 
-> You keep sending new versions of these patches that do not
-> incorporate the feedback I provided in the above-linked e-mail.
-> 
-> Please re-read that e-mail and verify if the solution that
-> I proposed solves the problem.  That solution does not
-> require moving the Slot Control code from pciehp to portdrv.
-
-There might be some misunderstaning here :), I responded in
-https://lore.kernel.org/lkml/Z6LRAozZm1UfgjqT@U-2FWC9VHC-2323.local/
-that your suggestion could solve our issue.
-
-And the reason I didn't take it is I was afraid that it might hurt
-the problem what commit 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port
-services during port initialization") tried to solve.
-
-As you mentioned, the comment for 2bd50dd800b5 is "a bit confusing",
-and I tried to guess in my previous reply: 
-"
-I'm not sure what problem this piece of code try to avoid, maybe
-something simliar to the irq storm isseu as mentioned in the 2/2 patch?
-The code comments could be about the small time window between this
-point and the loading of pciehp driver, which will request_irq and
-enable hotplug interrupt again.
-"
-
-The code comment from 2bd50dd800b5 is:
-
-	/*
-	 * Disable hot-plug interrupts in case they have been
-	 * enabled by the BIOS and the hot-plug service driver
-	 * is not loaded.
-	 */
-
-The "is not loaded" has 2 possible meanings:
-1. the pciehp driver is not loaded yet at this point inside
-   get_port_device_capability(), and will be loaded later
-2. the pciehp will never be loaded, i.e. CONFIG_HOTPLUG_PCI_PCIE=n 
-
-If it's case 2, your suggestion can solve it nicely, but for case 1,
-we may have to keep the interrupt disabling.
-
-Thanks,
-Feng
+-- 
+With best wishes
+Dmitry
 
