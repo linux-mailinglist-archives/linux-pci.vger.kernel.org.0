@@ -1,114 +1,92 @@
-Return-Path: <linux-pci+bounces-22410-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22411-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47F20A456BA
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 08:32:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5BA2A456DE
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 08:44:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63F163A42EB
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 07:32:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 00119188BF23
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 07:43:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 219FF267711;
-	Wed, 26 Feb 2025 07:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iZnSOWrc"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1313026B095;
+	Wed, 26 Feb 2025 07:43:46 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2052158DD4;
-	Wed, 26 Feb 2025 07:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20ED149C6F;
+	Wed, 26 Feb 2025 07:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740555166; cv=none; b=I461/mGzz8t4A0fS0+nteazJqitF0bD1lYyfor/FiuU4FMv7SNafmZ05+MIz/Io/YlAiwmYwZpgS9NbdaYXQ+Dj2cE1ORXpd8UofLF8C7dxrBBxWHtHWAXfWngAquO2uOXwNhubwDHFhMhjruwJLVuMmmpPd1QzXidEthJxSRzs=
+	t=1740555826; cv=none; b=u9cfZ9MnNhqhecbIIGWW61djoP5gGS43lGwSLYkxRai5FVyTFIrx+emtrP8aL46t/dC9Zky9u5j7vVHN9k1rSh2GT721L8T4DdqloQnmqATkm+b3USwDGAXr0fCxHs//abhNta/5OCa44IieGjHzhMfYROUD/4Mydb+5XqJ5F9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740555166; c=relaxed/simple;
-	bh=i3yBUJwWR2nHLbnkwSKlJvBidp8N1zKCYReFcAUDAhk=;
+	s=arc-20240116; t=1740555826; c=relaxed/simple;
+	bh=scxrKuJXfFYSlw1bcePOaW0ZjBmcKSa/3S5MyD8iHig=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fk0DqwQR2aZxH/d+WfweiMLq4PeoPhqMjo4vhysWa63/JusyADlyGPLsxyF1jVenqqPMUNEYu1nsx+10H8DSra9QEbl0IoMiw6+1yOE9X+pJ5G2v54Dzq6ffwWdSgKAiDaz56/FiAGQKQW4CTBBgfJlYHHQicijg6PQY4ngV/qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iZnSOWrc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B8B4C4CED6;
-	Wed, 26 Feb 2025 07:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740555165;
-	bh=i3yBUJwWR2nHLbnkwSKlJvBidp8N1zKCYReFcAUDAhk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iZnSOWrc0534guOCFWF3FoGRqYV1GlyUmFrwgIbROiK9rLsd0ayqM1xEdlPXMAqSh
-	 HniEWuVBoyAGumLibd0DuSPosEoXMpfbgMy5KQxi7KDzAaqyN7eVmKBodgCv20Pfty
-	 gdLuTRnR34nSWCaiNJBkLSN8KuYktv5wvP0hSbGe2LV3C2BtSo+3RMmciVN7cCGvW6
-	 Od9ERN5yet2XqQOuCGRz4VZdEeL8bYVo0jKNJ5cmbRL5Pw65Yd1umqkbUNW2x0v5kc
-	 bbzqTcI9mp+unBHvd6ZBQnKcCT2KUKZtCHo0IHiTjWTkGsYQR1rOz20OFb7YRgkf/u
-	 xSI/Z6WfjK0IA==
-Date: Wed, 26 Feb 2025 08:32:42 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	chaitanya chundru <quic_krichai@quicinc.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
-	Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com, 
-	amitk@kernel.org, dmitry.baryshkov@linaro.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	jorge.ramirez@oss.qualcomm.com
-Subject: Re: [PATCH v4 09/10] dt-bindings: PCI: qcom,pcie-sc7280: Add
- 'global' interrupt
-Message-ID: <20250226-enlightened-chachalaca-of-artistry-2de5ea@krzk-bin>
-References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
- <20250225-qps615_v4_1-v4-9-e08633a7bdf8@oss.qualcomm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XwWtm5cOdVRYMka+rxprNov8lLuFDcNdg+rXcuv4DZkJXA46gBhPbYgdkrv5jMblVEFKAhvSZsvzh9YTKSO0J6+QACfJ+YEn1aH9ioDhuizVtmnwz+7irvcG89WSST6BOLJmeCzbULOQ7E5LiLZ0CHLoOAvzikccrxoy/xdt8SI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2f42992f608so10057996a91.0;
+        Tue, 25 Feb 2025 23:43:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740555824; x=1741160624;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OMO2b2eSfKsMmX2B/oW7p9k0e/YoAhoRkCSVATWEApo=;
+        b=C512V0riY8hjl8uEscWQycxPNOnzVaKG7jKyOLKPFLNSwZjWsyO+ir6x+sN1RxTH69
+         qpnilsYLMdCBlJKq/7lw1XKDMOoFpWzVp6W/yTtiZUwvivpD4ogZpC8rFVN1j0O8FulE
+         z3/Dj2KoT9JX9bv30Vzg4oJtvnZUTK4fh6kMXbFDyrNSs+9UxhGA5OZaa5H6oX+ERMJf
+         jEKwErSShlSzz2TnzJhamZeC5KsTN1yP/edGZ+nQqJXYofDiexcNGgYjnJ8LDCLVGS2j
+         nl6oUo8xVi784SGlZZFiONpco2xwo/L7OLOHdEUL92d8qJde5u+SaR5urb4nMPh3mIpL
+         i2hA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+LpPd2qM1LovPB8A4Nn3rdRboilVo/rYc5g5W/aUNfqfnwvz/W4vbwhLn0uObHMdRVL1cANS5VGcj@vger.kernel.org, AJvYcCWWTUSUzAeZxiG4xCuj595wRT9fqPF4B+9uoVUTnJoci6GwJs8sDa+U45NVQm8JrlYuwwPrcNSrHiTQukk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBuheEpVRf07lNyQcMftJ9iNrMhbH3aQUtVsexueOPsc3OSEVi
+	otiQETy/E4niTqV3NttktQIrKjw9kgFAB644xfmELylqF3vyqVRu
+X-Gm-Gg: ASbGnct2iIwYE6ROrcuEyF+YC1rl0sIOjln7M91Kb7zhK4q8b2T1DNlCaTjb1qmwBCK
+	ZnZPzq90okN0fSIk+HU13S8XOefF4VgVpbz3N0b1yVQvB5wdoLPPXvuUQ3Ri9HYLd9sXpS1SHu9
+	0Wd8k3Q0pYwv1WK949ime+d5g80TbPLgmTE8/rtpQZxcEL86rzCMImZ2DRwqkIZNxO6w7JrVGuu
+	U615A7uX3Deb8zAZ3wR81oXYvCVI4B873LUWTQeZJuPOtZzfAQr7nr4xFdkp5NPKokam8o2UYMH
+	bqfWowAcGFCv/scbsxN5Ho1GWk373QozGpJVmKt/MUb3RWKXPIRqBywcJ0QJ
+X-Google-Smtp-Source: AGHT+IH8o9O/IRRChjpv68CsTUGAik/f6Buv/524angsu2gHqq2fx+IXXYNWpA9gZ7rmaD2ixTTocA==
+X-Received: by 2002:a17:90b:4ecf:b0:2ee:f19b:86e5 with SMTP id 98e67ed59e1d1-2fe68ada443mr11754041a91.14.1740555822464;
+        Tue, 25 Feb 2025 23:43:42 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fe825e9504sm900029a91.31.2025.02.25.23.43.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 23:43:41 -0800 (PST)
+Date: Wed, 26 Feb 2025 16:43:39 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Hans Zhang <18255117159@163.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	jingoohan1@gmail.com, lpieralisi@kernel.org, robh@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, shradha.t@samsung.com,
+	cassel@kernel.org
+Subject: Re: [PATCH 0/2] PCI: dwc-debugfs: Couple of fixes
+Message-ID: <20250226074339.GE951736@rocinante>
+References: <20250225171239.19574-1-manivannan.sadhasivam@linaro.org>
+ <e25e5d68-7fb7-4157-825c-eb973f7e1321@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250225-qps615_v4_1-v4-9-e08633a7bdf8@oss.qualcomm.com>
+In-Reply-To: <e25e5d68-7fb7-4157-825c-eb973f7e1321@163.com>
 
-On Tue, Feb 25, 2025 at 03:04:06PM +0530, Krishna Chaitanya Chundru wrote:
-> Qcom PCIe RC controllers are capable of generating 'global' SPI interrupt
-> to the host CPU. This interrupt can be used by the device driver to handle
-> PCIe link specific events such as Link up and Link down, which give the
-> driver a chance to start bus enumeration on its own when link is up and
-> initiate link training if link goes to a bad state. The PCIe driver can
-> still work without this interrupt but it will provide a nice user
-> experience when device gets plugged and removed.
+Hello,
+
+> Can you submit after this patch? Otherwise, will my patch conflict?
 > 
-> Hence, document it in the binding along with the existing MSI interrupts.
-> Global interrupt is parsed as optional in driver, so adding it in bindings
-> will not break the ABI.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
-> index 76cb9fbfd476..7ae09ba8da60 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
-> @@ -54,7 +54,7 @@ properties:
->  
->    interrupts:
->      minItems: 8
-> -    maxItems: 8
-> +    maxItems: 9
->  
->    interrupt-names:
->      items:
-> @@ -66,6 +66,7 @@ properties:
->        - const: msi5
->        - const: msi6
->        - const: msi7
-> +      - const: global
+> https://patchwork.kernel.org/project/linux-pci/patch/20250223141848.231232-1-18255117159@163.com/
 
-Either context is missing or these are not synced with interrupts.
+No worries.  We can resolve conflicts while applying. :)
 
-Best regards,
-Krzysztof
-
+	Krzysztof
 
