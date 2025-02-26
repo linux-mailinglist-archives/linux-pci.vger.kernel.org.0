@@ -1,157 +1,118 @@
-Return-Path: <linux-pci+bounces-22439-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22440-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8604A46070
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 14:12:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A8067A46104
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 14:37:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 60D577A3F68
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 13:11:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B68E23AEAB6
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 13:37:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4C0921B9C1;
-	Wed, 26 Feb 2025 13:12:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF90218CC10;
+	Wed, 26 Feb 2025 13:37:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gmth0zxt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K3HOIt5R"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B5021D3DA
-	for <linux-pci@vger.kernel.org>; Wed, 26 Feb 2025 13:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE72154C00;
+	Wed, 26 Feb 2025 13:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740575526; cv=none; b=WMtcCbhpcc78I9x4JOmCgl8qehsodyZdcIpuYeB7bsNtpyDW9fd8XLB5Q1d20em7SBKiIQljYV4BB1dPT9lrXunWKQouuDdABiRP/GI7JLZSivXR6CEqDw+FY/NFpSk3u3Erm7HV7GFtQj2af0M4Wl8ALvf+PntILkg9x6BWALo=
+	t=1740577072; cv=none; b=d95t1cVLdMDYOgf07b07eYO6GUqqrHoRIqPrniN7RFAKYTkMmKwgXsdDo6lMWgthuxDDq6bFhxJrC6WS0Z++BPw8m5xvU2Et6WUV9wMnTUaCyIGOivt5WY1DM+9vbXznlGSc8sueBpnx5o9nVm8aAPCCcBA6W9pDDWD4Uy3DOTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740575526; c=relaxed/simple;
-	bh=UcN+Yc8/BXf/BDVbG/QiIbLhSfNGYB+VDmHOpxILJEU=;
+	s=arc-20240116; t=1740577072; c=relaxed/simple;
+	bh=e7ksaBgVZM/n3+KRkzsb8JIum6nQW0z0INzIBzxLwFM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FKrkVN+UWjyv1fM5r98sIYRG+wowCsoR5c2fdT9Q0ALi7I83MYmJPtOM63goIP1z/6QrVqnZkX/YmLhYuA6bGsWmy8NLqtkzEvTAfOfWPsbh6tYRvols2pZUA2n+BCqmuf7ciMCaHvTrbSiMpwi9h7kanok0mMviVI0Ad9xtZA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=gmth0zxt; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4721bfdb565so90674671cf.1
-        for <linux-pci@vger.kernel.org>; Wed, 26 Feb 2025 05:12:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1740575524; x=1741180324; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m6Xk4LHq+vuxMrWb9QEhIjcrWUMHuvgAEq1BuTfNkWI=;
-        b=gmth0zxtEmjcsNxhBouoEvOu6qEY7rYm3pbfVqVxZNY4Ii5Y7msKJbC1NsvZynHU5R
-         Pj8JH1hsT/VZ2W77VKd3PwwUxgWVNV/ip6dmtM4btdxUBO3oIxNTQYrQcaZ9RQ85KLc2
-         ekFyj+uNmcQnZu1aTxpm36sszGsbpiDSaWzqFYDeT7VD++qMH8/w9/dkASEjWY8vR0s8
-         UWGf52ZsR1ROQS6uqAfFwSnR0OdudCeR0Gb06DOGGTrrLWZJvA8QZ2hMSnY0Dou/yEAZ
-         MKOSXAI6ZxkjfOxw2RoK2mO/BwnFfQiepLvqACzK3aUibTLaW3EZarLFBvvn7sqhaX+z
-         s1Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740575524; x=1741180324;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m6Xk4LHq+vuxMrWb9QEhIjcrWUMHuvgAEq1BuTfNkWI=;
-        b=s4xkow0d+xmOWJnFhyiFP+vF8ieZADK0IPDNLX8eLKOJT1oxd1HePL9BcFPrMpMnEC
-         WYHfna7aIcpzLdm7FNft18CesunqoX/DMgdCBr08B8iYyXPfz9aAAu8d/q3RolWTGyTf
-         4MyIBmg46t/xZm459zKWmUXxL0w1HTh7rKC1dsJij+fgbY6G/J1WifBocb/LnHJrbmfP
-         x9KIhRGt0ByUjSOtJozdga7rsOPs3C1okNLYnAai992WSDBviMGuYbDrOsJ/BYYGdpIQ
-         wT1sNs7/LkEFsdDzfiVwf+MoYtVeazu35AsHLdxpucEVr6YS8kWaHs3gg9FOjD7zyksz
-         Tcgg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5LVUMhm2emTIZDgvNniAH+8awlfdVIkdKEtTKyUYBWLAUtQ7wCH85U5ex5MQZc4ofuhyllpXYi3U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfcoSeSPncv6meSghFQzqq75O9uRkS1eLBrjQbaL5hvfjB8e2f
-	DT7uIUYAXoqMtDF0iPayJYsXL3pHVkIrOYH3e/6tFMEQmqepObS1wxqzIhsN3OA=
-X-Gm-Gg: ASbGncs+pg8Bl6NKqHvKruCOR5kDVYzm+XAfj3wqEYWTeYjoMcvQIB1dwxK7ql1Q9Je
-	LmQDrnpeezZ/OOGvXSJlphmEHGFN6a1eBTWQnc7lPw0R0bVTueXvTaaJX28bL/GBO9zStPb32Md
-	iD88Dq9YJlxinpOfhbD0TCC9qdn2LtzK09Kt0oRyMSqwRx2Lq+ncb5jL4KXzsmvtCITIwvs3eTs
-	g5K4E4wC7Vs7vSlg0hBwc60FeV22EKBkuchYKJgQi2/yDJGYzK/OzG/HdBiYl/GfGG3zC5enb+N
-	47ke7Q4v4wkHzo+Ap0KA3rP/Up16Zh+xD1YwezvIKoUrDMAOY4sBl7MxBEX2aWtURpROYJlL1fo
-	=
-X-Google-Smtp-Source: AGHT+IEEfwlXAvWZ2xNGVxvzUGP6nDfT13h++oyNBWTrRPp0M1zvh40QuIYqQQDMaC1/myckxEJxtw==
-X-Received: by 2002:a05:622a:13ce:b0:471:f619:db45 with SMTP id d75a77b69052e-4737725caa7mr88331981cf.42.1740575523795;
-        Wed, 26 Feb 2025 05:12:03 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47377e21fcdsm23423041cf.39.2025.02.26.05.12.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 05:12:02 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tnHCk-000000007O6-0KPx;
-	Wed, 26 Feb 2025 09:12:02 -0400
-Date: Wed, 26 Feb 2025 09:12:02 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: Alexey Kardashevskiy <aik@amd.com>, x86@kernel.org, kvm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Christoph Hellwig <hch@lst.de>, Nikunj A Dadhania <nikunj@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>,
-	Joao Martins <joao.m.martins@oracle.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Steve Sistare <steven.sistare@oracle.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Dionna Glaze <dionnaglaze@google.com>, Yi Liu <yi.l.liu@intel.com>,
-	iommu@lists.linux.dev, linux-coco@lists.linux.dev,
-	Zhi Wang <zhiw@nvidia.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-Subject: Re: [RFC PATCH v2 14/22] iommufd: Add TIO calls
-Message-ID: <20250226131202.GH5011@ziepe.ca>
-References: <20250218111017.491719-1-aik@amd.com>
- <20250218111017.491719-15-aik@amd.com>
- <Z72GmixR6NkzXAl7@yilunxu-OptiPlex-7050>
- <2fe6b3c6-3eed-424d-87f0-34c4e7e1c906@amd.com>
- <Z77xrqLtJfB84dJF@yilunxu-OptiPlex-7050>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iq+x3Wh6u2yb28Umw9HWibwAFiNBzkyMTvMApfDsXkmDGKpmKpQ5qXT0vLgvdxG/bqf6VJ5/BiLNwGtaqLUdSpg46z2FQ5eDptkUiLEotxtLEeMpNMR2684BvnSe6jmfRSI/9ey6I7H8to4dF3+RjBfjPo3ePHrLCGQ5r0/caGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K3HOIt5R; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740577071; x=1772113071;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=e7ksaBgVZM/n3+KRkzsb8JIum6nQW0z0INzIBzxLwFM=;
+  b=K3HOIt5RZrR7peYJP6soUi12hpykDgW356qIcWqNrsm7xvLMivQ3clsG
+   phWPb5Bl5++MZwN/FdAcJkJ+BeJZNjgrQZRRnPmSO157Iq40atwTHIpFD
+   PEJD1LaXXN5L2yQIYcUyJ8Wcydw0TdZJcRbrR2cYfIcB8bBUFK4fLeZ49
+   Sj101DbpPREG52ySgUKkHuOhDtB9MqynwIYoF3xhO0+gL481XfUm/f0BN
+   OvIB1Mza5oI853x0eiw1j4W4rHYjhRYYaGcwdeV6N+cnmlZfRIJfTVa1G
+   w7SRs8UCZSL3WPc/1P1nQDyl2D9UZlhOfVrOqjM51a1jB4zUHaTkoZVNl
+   Q==;
+X-CSE-ConnectionGUID: +yER9GoXQGW1vfyyPSzhCg==
+X-CSE-MsgGUID: gJvLnvBCTru/OvotLTY/Yg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="52811469"
+X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
+   d="scan'208";a="52811469"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:37:51 -0800
+X-CSE-ConnectionGUID: eQSqF4AvSzmI9Z1mI7/vVQ==
+X-CSE-MsgGUID: 4th0tnM9TamQqQ7t3N9YMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
+   d="scan'208";a="116488206"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa009.jf.intel.com with ESMTP; 26 Feb 2025 05:37:49 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 425DF2FB; Wed, 26 Feb 2025 15:37:47 +0200 (EET)
+Date: Wed, 26 Feb 2025 15:37:47 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: brgl@bgdev.pl, Paul Menzel <pmenzel@molgen.mpg.de>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	linux-pci@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Linux logs new warning `gpio gpiochip0:
+ gpiochip_add_data_with_key: get_direction failed: -22`
+Message-ID: <Z78ZK8Sh0cOhMEsH@black.fi.intel.com>
+References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
+ <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
+ <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
+ <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
+ <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de>
+ <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
+ <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z77xrqLtJfB84dJF@yilunxu-OptiPlex-7050>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Feb 26, 2025 at 06:49:18PM +0800, Xu Yilun wrote:
-
-> E.g. I don't think VFIO driver would expect its MMIO access suddenly
-> failed without knowing what happened.
-
-What do people expect to happen here anyhow? Do you still intend to
-mmap any of the MMIO into the hypervisor? No, right? It is all locked
-down?
-
-So perhaps the answer is that the VFIO side has to put the device into
-CC mode which disables MMAP/etc, then the viommu/vdevice iommufd
-object can control it.
-
-> Back to your concern, I don't think it is a problem. From your patch,
-> vIOMMU doesn't know the guest BDFn by nature, it is just the user
-> stores the id in vdevice via iommufd_vdevice_alloc_ioctl(). A proper
-> VFIO API could also do this work.
-
-We don't want duplication though. If the viommu/vdevice/vbdf are owned
-and lifecycle controlled by iommufd then the operations against them
-must go through iommufd and through it's locking regime.
+On Tue, Feb 25, 2025 at 10:25:00PM +0100, Linus Walleij wrote:
+> On Mon, Feb 24, 2025 at 9:51 AM <brgl@bgdev.pl> wrote:
 > 
-> The implementation is basically no difference from:
+> > In any case: Linus: what should be our policy here? There are some pinctrl
+> > drivers which return EINVAL if the pin in question is not in GPIO mode. I don't
+> > think this is an error. Returning errors should be reserved for read failures
+> > and so on. Are you fine with changing the logic here to explicitly default to
+> > INPUT as until recently all errors would be interpreted as such anyway?
 > 
-> +       vdev = container_of(iommufd_get_object(ucmd->ictx, cmd->vdevice_id,
-> +                                              IOMMUFD_OBJ_VDEVICE),
-> 
-> The real concern is the device owner, VFIO, should initiate the bind.
+> Oh hm I guess. There was no defined semantic until now anyway. Maybe
+> Andy has something to say about it though, it's very much his pin controller.
 
-There is a big different, the above has correct locking, the other
-does not :)
+Driver is doing correct things. If you want to be pedantic, we need to return
+all possible pin states (which are currently absent from GPIO get_direction()
+perspective) and even though it's not possible to tell from the pin muxer
+p.o.v. If function is I2C, it's open-drain, if some other, it may be completely
+different, but pin muxer might only guesstimate the state of the particular
+function is and I do not think guesstimation is a right approach.
 
-Jason
+We may use the specific error code, though. and document that semantics.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
