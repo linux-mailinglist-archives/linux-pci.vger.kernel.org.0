@@ -1,197 +1,129 @@
-Return-Path: <linux-pci+bounces-22449-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22450-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E07CA465F4
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 17:04:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D9C6A466F9
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 17:48:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 766124275A3
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 15:51:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EB38F441778
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 16:29:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A5492206BF;
-	Wed, 26 Feb 2025 15:49:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC162221DAA;
+	Wed, 26 Feb 2025 16:29:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="BXgM6QBV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpQYUG5O"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from l2mail1.panix.com (l2mail1.panix.com [166.84.1.75])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B221721CC6D;
-	Wed, 26 Feb 2025 15:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E9B22156D;
+	Wed, 26 Feb 2025 16:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740584993; cv=none; b=CM2IZxBS5VddB+uziutYGVC9hEpohKYrzdhp1cwO5yKA9VC6a2SB2StmqRgDYeBdM54vJZCTfvntfoBzR5dXZajjxiSdOKbnR25sWLy9l7uPKeWefLPvD/O0gNKmtIFrlV/wZQCTa3xMtl75KFid1ShFgWWf35omAfMyn3yHkfg=
+	t=1740587387; cv=none; b=jlohUgZZgIPlVjS092Fo1IF6xpdPEPOPDCSpWvw/Aqa9yib+MLCT0tK+xAFVUhqu6af9W5+IUOKOK59qEzoBBoDe/V/ayhkvrqB49NJpPwFQ1VXUlaSiWkwIKqsWqKTGiF1uAFmYMHXwPin30GzOZnWQrLzA0QACcP7baWexhQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740584993; c=relaxed/simple;
-	bh=Vj5uE4ESzohsxDwURRoN/xqYlLO93wlxFGqvOeU2v0Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YfjR3AllY26UMVzIVCgbwGbLgQiXJpxjvD7J8SezWhnbku6vNfhz/eaxgO80mmXdwr+/oblG/WrFkle+wrKYWvkDp8FxQNSbhTZBojDYfMsQ0O6xhcuiekK1Jny4O6dKy43p3IL6uCuCgLGB+lRRaHfu95GzqqIxSKx939y+RK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=BXgM6QBV; arc=none smtp.client-ip=166.84.1.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (1024 bits) server-digest SHA256)
-	(No client certificate requested)
-	by l2mail1.panix.com (Postfix) with ESMTPS id 4Z2z3S3y1QzDSH;
-	Wed, 26 Feb 2025 10:31:48 -0500 (EST)
-Received: from [172.16.225.207] (unknown [47.154.181.182])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4Z2z3H0zQqz56g5;
-	Wed, 26 Feb 2025 10:31:39 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1740583900; bh=Vj5uE4ESzohsxDwURRoN/xqYlLO93wlxFGqvOeU2v0Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=BXgM6QBVMxwP3HtMLYG4ARsarO/GAmA/r+WnIFR2oNA23NwVHsnuLEh0L+6KLiHzR
-	 zvPLpInkIjwPGTmJI4/IzrWXf4g53/MAVosroZNl6NJj6Ktt0L8HDYhAfCTyifKOC6
-	 BeQOfik9xOSbLC6e4zLTnMNqzX/kh4I44VOrwn4k=
-Message-ID: <7b472880-32d0-4783-b9d2-3d4230403975@panix.com>
-Date: Wed, 26 Feb 2025 07:31:37 -0800
+	s=arc-20240116; t=1740587387; c=relaxed/simple;
+	bh=pY1PMMO1kQlJnU8fk1/fsbfXs23WgViBrJEo3FA87H4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QXxcpZORSvbis0OMOX/8j0pbchnshFltWgWxrjGFLwXbBD8RKdi+3Y/0f57h4FfFZ7aH4PIPTs4i6zJlNgMZVIaAM5fRSIBW1AfBY1C6l6A769ZDIECTGnBNxIjwkz5V3V+gJAaCkzHwiyI9QCnkVqAt1sQVovcz6txovSfYVKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpQYUG5O; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AC07C4CED6;
+	Wed, 26 Feb 2025 16:29:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740587387;
+	bh=pY1PMMO1kQlJnU8fk1/fsbfXs23WgViBrJEo3FA87H4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NpQYUG5OusJW/BeCsiZT2MR67N4+Vr9DOLUdhLRPLWVV1hQ4OA2zKuoiDco/8aGmK
+	 T4YvmjXKaRf/EiW/z2lMYhu7LpZJ5UMTZJHi8lzRN09Ko0NGCgGc4D9jSBThgbStCe
+	 rvwGSGI6upZyxdrusAb37j+BAdgEjV8BLYI7at1xMvxyhXUWlTKOY0AbgngxX7hVwV
+	 Ui6iXVAYewRGI/nkMK2l40z33MXL1vvcNhRjqCUdfu4RMosJVIIqUIqB4qMAroDREv
+	 snBUgRqPqgJDVmVJlqwNj56i8tqaIn9AISb/VI/qLnpn4AQoXmTor58t1aqVyU4O9W
+	 opr/I1QbWuZxA==
+Date: Wed, 26 Feb 2025 10:29:43 -0600
+From: Bjorn Andersson <andersson@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, chaitanya chundru <quic_krichai@quicinc.com>, 
+	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+	Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com, 
+	amitk@kernel.org, dmitry.baryshkov@linaro.org, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	jorge.ramirez@oss.qualcomm.com
+Subject: Re: [PATCH v4 09/10] dt-bindings: PCI: qcom,pcie-sc7280: Add
+ 'global' interrupt
+Message-ID: <t34rurxh5cb7hwzvt6ps3fgw4kh4ddwcieukskxxz5mo3pegst@jkapxm6izq7p>
+References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
+ <20250225-qps615_v4_1-v4-9-e08633a7bdf8@oss.qualcomm.com>
+ <20250226-enlightened-chachalaca-of-artistry-2de5ea@krzk-bin>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
- Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com,
- Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- =?UTF-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
- Andreas Noever <andreas.noever@gmail.com>,
- Michael Jamet <michael.jamet@intel.com>, Lukas Wunner <lukas@wunner.de>,
- Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org,
- Kenneth Crudup <kenny@panix.com>
-References: <20250210210502.GA15655@bhelgaas>
- <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
- <20250211055722.GW3713119@black.fi.intel.com>
- <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
- <20250213135911.GG3713119@black.fi.intel.com>
- <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
- <20250214162948.GJ3713119@black.fi.intel.com>
- <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
- <20250226084404.GM3713119@black.fi.intel.com>
-Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <20250226084404.GM3713119@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226-enlightened-chachalaca-of-artistry-2de5ea@krzk-bin>
 
+On Wed, Feb 26, 2025 at 08:32:42AM +0100, Krzysztof Kozlowski wrote:
+> On Tue, Feb 25, 2025 at 03:04:06PM +0530, Krishna Chaitanya Chundru wrote:
+> > Qcom PCIe RC controllers are capable of generating 'global' SPI interrupt
+> > to the host CPU. This interrupt can be used by the device driver to handle
+> > PCIe link specific events such as Link up and Link down, which give the
+> > driver a chance to start bus enumeration on its own when link is up and
+> > initiate link training if link goes to a bad state. The PCIe driver can
+> > still work without this interrupt but it will provide a nice user
+> > experience when device gets plugged and removed.
+> > 
+> > Hence, document it in the binding along with the existing MSI interrupts.
+> > Global interrupt is parsed as optional in driver, so adding it in bindings
+> > will not break the ABI.
+> > 
+> > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > ---
+> >  Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+> > index 76cb9fbfd476..7ae09ba8da60 100644
+> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+> > @@ -54,7 +54,7 @@ properties:
+> >  
+> >    interrupts:
+> >      minItems: 8
+> > -    maxItems: 8
+> > +    maxItems: 9
+> >  
+> >    interrupt-names:
+> >      items:
+> > @@ -66,6 +66,7 @@ properties:
+> >        - const: msi5
+> >        - const: msi6
+> >        - const: msi7
+> > +      - const: global
+> 
+> Either context is missing or these are not synced with interrupts.
+> 
 
-Trying to do a "control" test before I try out your bisected commit, and 
-Lukas' changes, but of course now I can't get it to fail (I'm on Linus' 
-master as of this morning (b5799106b4).
+I think the patch context ("properties") is confusing here, but it looks
+to me that these are in sync: interrupts is defined to have 8 items, and
+interrupt-names is a list of msi0 through msi7.
 
-I'm using my portable USB4 dock (Plugable TBT4-HUB3C) this time (vs. my 
-CalDigit 4 dock) but the same ASMedia USB4-to-NVMe adapter as always; in 
-any case everything is PCIe so it shouldn't matter.
+@Krishna, these two last patches (adding the global interrupt) doesn't
+seem strongly connected to the switch patches. So, if Krzysztof agrees
+with above assessment, please submit them separately (i.e. a new series,
+2 patches, v5).
 
-I don't normally use "tbauth" (I think that's all done for me via the 
-"boltctl" suite) but I grabbed and built the GIT and ran it anyway, for 
-good measure.
+Regards,
+Bjorn
 
-I'll keep you updated, I'll be at my CalDigit dock soon enough if I 
-can't get any failures this morning.
-
--K
-
-On 2/26/25 00:44, Mika Westerberg wrote:
-> Hi Kenneth,
+> Best regards,
+> Krzysztof
 > 
-> On Fri, Feb 14, 2025 at 09:39:33AM -0800, Kenneth Crudup wrote:
->>
->> This is excellent news that you were able to reproduce it- I'd figured this
->> regression would have been caught already (as I do remember this working
->> before) and was worried it may have been specific to a particular piece of
->> hardware (or software setup) on my system.
->>
->> I'll see what I can dig up on my end, but as I'm not expert in these
->> subsystems I may not be able to diagnose anything until your return.
-> 
-> [Back now]
-> 
-> My git bisect ended up to this commit:
-> 
->    9d573d19547b ("PCI: pciehp: Detect device replacement during system sleep")
-> 
-> Adding Lukas who is the expert.
-> 
-> My steps to reproduce on Intel Meteor Lake based reference system are:
-> 
-> 1. Boot the system up, nothing connected.
-> 2. Once up, connect Thunderbolt 4 dock and Thunderbolt 3 NVMe in a chain:
-> 
->    [Meteor Lake host] <--> [TB 4 dock] <--> [TB 3 NVMe]
-> 
-> 3. Authorize PCIe tunnels (whatever your distro provides, my buildroot just
->      has the debugging tools so running 'tbauth -r 301')
-> 
-> 4. Check that the PCIe topology matches the expected (lspci)
-> 
-> 5. Enter s2idle:
-> 
->    # rtcwake -s 30 -mmem
-> 
-> 6. Once it is suspended, unplug the cable between the host and the dock.
-> 
-> 7. Wait for the resume to happen.
-> 
-> Expectation: The system wakes up fine, notices that the TB and PCIe devices
-> are gone, stays responsive and usable.
-> 
-> Actual result: Resume never completes.
-> 
-> I added "no_console_suspend" to the command line and the did sysrq-w to
-> get list of blocked tasks. I've attached it just in case it is needed.
-> 
-> If I revert the above commit the issue is gone. Now I'm not sure if this is
-> exactly the same issue that you are seeing but nevertheless this is kind of
-> normal use case so definitely something we should get fixed.
-> 
-> Lukas, if you need any more information let me know. I can reproduce this
-> easily.
-> 
->> I also saw some DRM/connected fixes posted to Linus' master so maybe one of
->> them corrects this new display-crash issue (I'm not home on my big monitor
->> to be able to test yet).
->>
->> -Kenny
->>
->> On 2/14/25 08:29, Mika Westerberg wrote:
->>> Hi,
->>>
->>> On Thu, Feb 13, 2025 at 11:19:35AM -0800, Kenneth Crudup wrote:
->>>>
->>>> On 2/13/25 05:59, Mika Westerberg wrote:
->>>>
->>>>> Hi,
->>>>
->>>> As Murphy's would have it, now my crashes are display-driver related (this
->>>> is Xe, but I've also seen it with i915).
->>>>
->>>> Attached here just for the heck of it, but I'll be better testing the NVMe
->>>> enclosure-related failures this weekend. Stay tuned!
->>>
->>> Okay, I checked quickly and no TB related crash there but I was actually
->>> able to reproduce hang when I unplug the device chain during suspend. I did
->>> not yet have time to look into it deeper. I'm sure this has been working
->>> fine in the past as we tested all kinds of topologies including similar to
->>> this.
->>>
->>> I will be out next week for vacation but will continue after that if the
->>> problem is not alraedy solved ;-)
->>>
->>
->> -- 
->> Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange County
->> CA
-
--- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
-
 
