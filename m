@@ -1,115 +1,113 @@
-Return-Path: <linux-pci+bounces-22468-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22469-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59D3CA46E48
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 23:13:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE61AA46EEA
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 00:00:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A6FE16DA70
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 22:13:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 914A8188BA88
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 23:00:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 880F626F47B;
-	Wed, 26 Feb 2025 22:12:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C67F25E831;
+	Wed, 26 Feb 2025 22:59:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XZcLE6rH"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="c/O4t9/L"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560AC26F465;
-	Wed, 26 Feb 2025 22:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFE0725E800;
+	Wed, 26 Feb 2025 22:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740607979; cv=none; b=jJg7b7VnOnoyIpuWEuWztFLgN7zV+s/zlmH0gtkM8rbZHqVxiYic6vZuUS/r/XZpypktuARIG+FFWBwkXw6ooAALWq6kDoyNN2bGddpESXeDkX/yW6PGS0ddPYd+QyPW3gpjrsCCeL0eErKD+xlpZ4zn5JgHgSMPJYiZTnoXPL4=
+	t=1740610796; cv=none; b=JICPmw3o4KvvlWHQ4gY3s2z7P8r77sIb9ktnGdAqpct9tdWHRu3i7ZzwdegbCe+i21PxTgHZlcWQ9fHQ2v98aOi7ZckQp2K8QOe85xmksQDFqmU0GrmhfpWe2SA1ID6nzoZTTiNiFNSP5ZOkgmo9z1HmxHg/0J6aRZguPdy3jsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740607979; c=relaxed/simple;
-	bh=AyITmA8rf9pMLh099tYprgLtyEciAbbLGdntk9qGI60=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=h8QEmOvaAmbLEzQygHjkw1aHKdYZPQfEX7tHAcnZXpJdDK39gpIUPZwSEDqftmLXra95L+b+OkfatCu+BgKOJ8H0Cs17BF3j9uN1d3CxiCk6UuDlAczWJUDhzIQozHpI5fkaqYLXPKDyBZXf1ZpxklRLIad1vnf4QyOcx1cE+uM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XZcLE6rH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EE78C4CEE9;
-	Wed, 26 Feb 2025 22:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740607978;
-	bh=AyITmA8rf9pMLh099tYprgLtyEciAbbLGdntk9qGI60=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=XZcLE6rH24Lom8DmUNZKENo7PwJQ/pixzYhyTfDgEUaSLt+KSpFefYJseuhnvDYCy
-	 Aa5pU4gq4QnOm/axD6ArmqMt2q7Z0QX0q8hHNL33dwPYjd7lwjEIRa6YEuxYfyA3Fn
-	 2B6TJZCkme4O/PvBFj/dqtnBT1/DnNWu+W+4JF/0bP7n9dgAnx75ahOCohlyPSN3GE
-	 tRSmZgqr2ck6WEIjWdeGaK7DuM0UpbvZPBhr+eGWqma//YwgDCVwN+H6ZRMzO4QwAu
-	 cBsdfD2VVtBLRAl1gZVhkAmyj2Q8dbH5xQCIsRRFGo1EKoPF8WCwmxfSKH/6ONomr5
-	 Eak0Yc1WgWIYg==
-Date: Wed, 26 Feb 2025 16:12:54 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v7 2/4] PCI: of: Add API to retrieve equalization presets
- from device tree
-Message-ID: <20250226221254.GA561689@bhelgaas>
+	s=arc-20240116; t=1740610796; c=relaxed/simple;
+	bh=QohsatoNAoe0TQFSqGvJl126DEabaHO6T2dlFIpaGVU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XQ2+gCdSrtSqpH9/fnILMSWKzbW1vE6QhAC+KtIkkOF74dvsSWf/W9NCYM9UfVdomwsuL381ATtLCK7gwDJiY7QKJur8m0Yt2WrGX/QvxCR0ns9w2Q4axydHr4RPjAVswkATzbMpaRCoOJzyRVuXjSzlDrDfiXM4zuS0GVVKCjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=c/O4t9/L; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D198E2109CE5;
+	Wed, 26 Feb 2025 14:59:53 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D198E2109CE5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740610794;
+	bh=OCE0WBdUPXGKc2haUGWEgiDBQXQQk3jIxxuUZ6s5eCw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=c/O4t9/L8wDTZCI7cWXrk7oCLDPo5hzYnkRpLJUhJCs1cwcfjcc4tvyHn62imt4Vb
+	 3mbEAmnAyuD8SydWTRmSFSmJxJbOnkCU2GgMjCNN8wUtkc/QwMHYunFF0p6m+68t4G
+	 uVB1l5q7E+9pXofJm3HPkQD6YwINC0ds8MciIFg4=
+Message-ID: <f6115867-281d-4c97-87d2-3698e6474b7a@linux.microsoft.com>
+Date: Wed, 26 Feb 2025 14:59:53 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225-preset_v6-v7-2-a593f3ef3951@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] x86/hyperv: Fix output argument to hypercall that
+ changes page visibility
+To: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, bhelgaas@google.com, arnd@arndb.de
+Cc: x86@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org
+References: <20250226200612.2062-1-mhklinux@outlook.com>
+ <20250226200612.2062-2-mhklinux@outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <20250226200612.2062-2-mhklinux@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 25, 2025 at 05:15:05PM +0530, Krishna Chaitanya Chundru wrote:
-> PCIe equalization presets are predefined settings used to optimize
-> signal integrity by compensating for signal loss and distortion in
-> high-speed data transmission.
+On 2/26/2025 12:06 PM, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
 > 
-> As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
-> of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
-> configure lane equalization presets for each lane to enhance the PCIe
-> link reliability. Each preset value represents a different combination
-> of pre-shoot and de-emphasis values. For each data rate, different
-> registers are defined: for 8.0 GT/s, registers are defined in section
-> 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
-> an extra receiver preset hint, requiring 16 bits per lane, while the
-> remaining data rates use 8 bits per lane.
+> The hypercall in hv_mark_gpa_visibility() is invoked with an input
+> argument and an output argument. The output argument ostensibly returns
+> the number of pages that were processed. But in fact, the hypercall does
+> not provide any output, so the output argument is spurious.
 > 
-> Based on the number of lanes and the supported data rate, this function
-> reads the device tree property and stores in the presets structure.
+> The spurious argument is harmless because Hyper-V ignores it, but in the
+> interest of correctness and to avoid the potential for future problems,
+> remove it.
+> 
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+> I have not provided a "Fixes:" tag because the error causes no impact.
+> There's no value in backporting the fix.
+> 
+>  arch/x86/hyperv/ivm.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+> index dd68d9ad9b22..ec7880271cf9 100644
+> --- a/arch/x86/hyperv/ivm.c
+> +++ b/arch/x86/hyperv/ivm.c
+> @@ -464,7 +464,6 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
+>  			   enum hv_mem_host_visibility visibility)
+>  {
+>  	struct hv_gpa_range_for_visibility *input;
+> -	u16 pages_processed;
+>  	u64 hv_status;
+>  	unsigned long flags;
+>  
+> @@ -493,7 +492,7 @@ static int hv_mark_gpa_visibility(u16 count, const u64 pfn[],
+>  	memcpy((void *)input->gpa_page_list, pfn, count * sizeof(*pfn));
+>  	hv_status = hv_do_rep_hypercall(
+>  			HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY, count,
+> -			0, input, &pages_processed);
+> +			0, input, NULL);
+>  	local_irq_restore(flags);
+>  
+>  	if (hv_result_success(hv_status))
 
-Can you mention the function name here somewhere so we don't have to
-dig it out of the patch?  If you put it in the subject, the function
-name is descriptive enough that you hardly need anything more, e.g.,
-
-  PCI: of: Add of_pci_get_equalization_presets() API
-
-> + * of_pci_get_equalization_presets - Parses the "eq-presets-Ngts" property.
-> + *
-> + * @dev: Device containing the properties.
-> + * @presets: Pointer to store the parsed data.
-> + * @num_lanes: Maximum number of lanes supported.
-> + *
-> + * If the property is present read and store the data in the preset structure
-> + * else assign default value 0xff to indicate property is not present.
-> + *
-> + * Return: 0 if the property is not available or successfully parsed; errno otherwise.
-
-Wrap to fit in 80 columns like the rest of the file.
-
-> + */
-> +int of_pci_get_equalization_presets(struct device *dev,
-> +				    struct pci_eq_presets *presets,
-> +				    int num_lanes)
-> +{
+Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
