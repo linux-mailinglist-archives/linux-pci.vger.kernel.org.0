@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-22409-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22410-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 869B8A456B0
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 08:30:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 47F20A456BA
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 08:32:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D1E43A2648
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 07:30:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63F163A42EB
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 07:32:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BF3A267F48;
-	Wed, 26 Feb 2025 07:30:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 219FF267711;
+	Wed, 26 Feb 2025 07:32:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="orMVkifx"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iZnSOWrc"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0801F1624EA;
-	Wed, 26 Feb 2025 07:30:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2052158DD4;
+	Wed, 26 Feb 2025 07:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740555021; cv=none; b=QgwZf+p+ruMDSI4XvhPZGK9k30CF0H3EN3AKvzH1lCA02CuBQGE6QABZ5GtQzXWTvVvt5Vq1szE+Y9P4Q31G+M4zTHcAGysqOc+w7fi+ibGRIzuzW2EvOp+IJMH4ZXQQM6EJ2sL0wl4lyWfl0hROC/AQqB7XCCz0t9GP4JHtRhg=
+	t=1740555166; cv=none; b=I461/mGzz8t4A0fS0+nteazJqitF0bD1lYyfor/FiuU4FMv7SNafmZ05+MIz/Io/YlAiwmYwZpgS9NbdaYXQ+Dj2cE1ORXpd8UofLF8C7dxrBBxWHtHWAXfWngAquO2uOXwNhubwDHFhMhjruwJLVuMmmpPd1QzXidEthJxSRzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740555021; c=relaxed/simple;
-	bh=wtnd1/XXRkP1lzyc+LlUNzBBy4X9q2wxr2JDxp6SR3M=;
+	s=arc-20240116; t=1740555166; c=relaxed/simple;
+	bh=i3yBUJwWR2nHLbnkwSKlJvBidp8N1zKCYReFcAUDAhk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lpnQ+PgCL/Rq8OrxIlSojSdCSmGbi0ikhtF/KO/cFveRwbQw45ZwixmCKkr+ugx8HGfrGr5DiGM9vmBpGC8A735sPm+0IpbRD064s0cZFJLHjviNoS00561D9H0DMRqFJTTAPvcbCVggjwuhlnpAgzGmQOfVXTz3GSPd/MBu8cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=orMVkifx; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2CC4C4CED6;
-	Wed, 26 Feb 2025 07:30:19 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fk0DqwQR2aZxH/d+WfweiMLq4PeoPhqMjo4vhysWa63/JusyADlyGPLsxyF1jVenqqPMUNEYu1nsx+10H8DSra9QEbl0IoMiw6+1yOE9X+pJ5G2v54Dzq6ffwWdSgKAiDaz56/FiAGQKQW4CTBBgfJlYHHQicijg6PQY4ngV/qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iZnSOWrc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B8B4C4CED6;
+	Wed, 26 Feb 2025 07:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740555020;
-	bh=wtnd1/XXRkP1lzyc+LlUNzBBy4X9q2wxr2JDxp6SR3M=;
+	s=k20201202; t=1740555165;
+	bh=i3yBUJwWR2nHLbnkwSKlJvBidp8N1zKCYReFcAUDAhk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=orMVkifxynbHqu5sHKtW4cb/uJTJfB7a44IAbaj3ZXQkCAeosHqkkMqPZrOhEvrR+
-	 NGnFdEzDXi08kkIcuvGdCZTLLE9ESStU0eAjM2QYxq42ofWpeYxSJs/xExW1EHwhYH
-	 a3PwBkVulfHLqLAU/GZolDNNO3uYJCnQfoqZgjOU9SUphNnM2zlfCKKSyirz/rr+SD
-	 NRXZ2WHbZQAMb4Ao9hbgsr9Onxs9nuTh2NP8dKw+IiSJb+fERUnsCvAYW4nIzfUHCw
-	 d5IIP2FIAdEPHlChDxxz9AbUQEcDnDBQq6Dj02YDrYfdriUc4Y9xCFjXgaRLfNEiE+
-	 JPOVNjOgvTocA==
-Date: Wed, 26 Feb 2025 08:30:17 +0100
+	b=iZnSOWrc0534guOCFWF3FoGRqYV1GlyUmFrwgIbROiK9rLsd0ayqM1xEdlPXMAqSh
+	 HniEWuVBoyAGumLibd0DuSPosEoXMpfbgMy5KQxi7KDzAaqyN7eVmKBodgCv20Pfty
+	 gdLuTRnR34nSWCaiNJBkLSN8KuYktv5wvP0hSbGe2LV3C2BtSo+3RMmciVN7cCGvW6
+	 Od9ERN5yet2XqQOuCGRz4VZdEeL8bYVo0jKNJ5cmbRL5Pw65Yd1umqkbUNW2x0v5kc
+	 bbzqTcI9mp+unBHvd6ZBQnKcCT2KUKZtCHo0IHiTjWTkGsYQR1rOz20OFb7YRgkf/u
+	 xSI/Z6WfjK0IA==
+Date: Wed, 26 Feb 2025 08:32:42 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, 
@@ -54,11 +54,11 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	amitk@kernel.org, dmitry.baryshkov@linaro.org, linux-pci@vger.kernel.org, 
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
 	jorge.ramirez@oss.qualcomm.com
-Subject: Re: [PATCH v4 01/10] dt-bindings: PCI: Add binding for Toshiba
- TC956x PCIe switch
-Message-ID: <20250226-eager-urchin-of-performance-b71ae4@krzk-bin>
+Subject: Re: [PATCH v4 09/10] dt-bindings: PCI: qcom,pcie-sc7280: Add
+ 'global' interrupt
+Message-ID: <20250226-enlightened-chachalaca-of-artistry-2de5ea@krzk-bin>
 References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
- <20250225-qps615_v4_1-v4-1-e08633a7bdf8@oss.qualcomm.com>
+ <20250225-qps615_v4_1-v4-9-e08633a7bdf8@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -67,153 +67,46 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250225-qps615_v4_1-v4-1-e08633a7bdf8@oss.qualcomm.com>
+In-Reply-To: <20250225-qps615_v4_1-v4-9-e08633a7bdf8@oss.qualcomm.com>
 
-On Tue, Feb 25, 2025 at 03:03:58PM +0530, Krishna Chaitanya Chundru wrote:
-> From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+On Tue, Feb 25, 2025 at 03:04:06PM +0530, Krishna Chaitanya Chundru wrote:
+> Qcom PCIe RC controllers are capable of generating 'global' SPI interrupt
+> to the host CPU. This interrupt can be used by the device driver to handle
+> PCIe link specific events such as Link up and Link down, which give the
+> driver a chance to start bus enumeration on its own when link is up and
+> initiate link training if link goes to a bad state. The PCIe driver can
+> still work without this interrupt but it will provide a nice user
+> experience when device gets plugged and removed.
 > 
-> Add a device tree binding for the Toshiba TC956x PCIe switch, which
-> provides an Ethernet MAC integrated to the 3rd downstream port and two
-> downstream PCIe ports.
+> Hence, document it in the binding along with the existing MSI interrupts.
+> Global interrupt is parsed as optional in driver, so adding it in bindings
+> will not break the ABI.
 > 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-
-Drop, file was named entirely different. I see other changes, altough
-comparing with b4 is impossible.
-
-Why b4 does not work for this patch?
-
-  b4 diff '20250225-qps615_v4_1-v4-1-e08633a7bdf8@oss.qualcomm.com'
-  Checking for older revisions
-  Grabbing search results from lore.kernel.org
-  Nothing matching that query.
-
-Looks like you use b4 but decide to not use b4 changesets/versions. Why
-making it difficult for reviewers and for yourself?
-
-
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 > ---
->  .../devicetree/bindings/pci/toshiba,tc956x.yaml    | 178 +++++++++++++++++++++
->  1 file changed, 178 insertions(+)
+>  Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/toshiba,tc956x.yaml b/Documentation/devicetree/bindings/pci/toshiba,tc956x.yaml
-> new file mode 100644
-> index 000000000000..ffed23004f0d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/toshiba,tc956x.yaml
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+> index 76cb9fbfd476..7ae09ba8da60 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+> @@ -54,7 +54,7 @@ properties:
+>  
+>    interrupts:
+>      minItems: 8
+> -    maxItems: 8
+> +    maxItems: 9
+>  
+>    interrupt-names:
+>      items:
+> @@ -66,6 +66,7 @@ properties:
+>        - const: msi5
+>        - const: msi6
+>        - const: msi7
+> +      - const: global
 
-What is "x" here? Wildcard?
-
-> @@ -0,0 +1,178 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/toshiba,tc956x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Toshiba TC956x PCIe switch
-> +
-> +maintainers:
-> +  - Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> +
-> +description: |
-> +  Toshiba TC956x PCIe switch has one upstream and three downstream
-
-TC9560? Which one are you using here?
-
-> +  ports. The 3rd downstream port has integrated endpoint device of
-> +  Ethernet MAC. Other two downstream ports are supposed to connect
-> +  to external device.
-> +
-> +  The TC956x PCIe switch can be configured through I2C interface before
-> +  PCIe link is established to change FTS, ASPM related entry delays,
-> +  tx amplitude etc for better power efficiency and functionality.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - "pci1179,0623"
-
-Why quotes?
-
-> +      - const: pciclass,0604
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  i2c-parent:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description:
-> +      A phandle to the parent I2C node and the slave address of the device
-> +      used to do configure tc956x to change FTS, tx amplitude etc.
-> +    items:
-> +      - description: Phandle to the I2C controller node
-> +      - description: I2C slave address
-> +
-> +  vdd18-supply: true
-> +
-> +  vdd09-supply: true
-> +
-> +  vddc-supply: true
-> +
-> +  vddio1-supply: true
-> +
-> +  vddio2-supply: true
-> +
-> +  vddio18-supply: true
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description:
-> +      GPIO controlling the RESX# pin.
-> +
-> +allOf:
-> +  - $ref: "#/$defs/tc956x-node"
-> +
-> +patternProperties:
-> +  "^pcie@[1-3],0$":
-> +    description:
-> +      child nodes describing the internal downstream ports
-> +      the tc956x switch.
-> +    type: object
-> +    $ref: "#/$defs/tc956x-node"
-> +    unevaluatedProperties: false
-> +
-> +$defs:
-> +  tc956x-node:
-> +    type: object
-> +
-> +    properties:
-> +      tc956x,tx-amplitude-microvolt:
-
-You already got comments on this.
-
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-
-Never tested.
-
-
-> +        description:
-> +          Change Tx Margin setting for low power consumption.
-> +
-> +      tc956x,no-dfe-support:
-
-There is no such vendor prefix and you already got exactly the same
-comment at v3. How did you resolve that comment?
-
-> +        type: boolean
-> +        description:
-> +          Disable DFE (Decision Feedback Equalizer), which mitigates
-> +          intersymbol interference and some reflections caused by impedance mismatches.
-> +
-> +    allOf:
-> +      - $ref: /schemas/pci/pci-pci-bridge.yaml#
-> +
-> +unevaluatedProperties: false
-
-Keep order as in example-schema.
+Either context is missing or these are not synced with interrupts.
 
 Best regards,
 Krzysztof
