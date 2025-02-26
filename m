@@ -1,123 +1,159 @@
-Return-Path: <linux-pci+bounces-22441-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22442-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96213A4613A
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 14:47:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C522A46172
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 14:58:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A90683AAB3D
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 13:46:55 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 165F217B545
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 13:58:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CC9C1DC9BA;
-	Wed, 26 Feb 2025 13:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30B18221577;
+	Wed, 26 Feb 2025 13:57:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c6tBQvtx"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="bPuQKdaa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="2p6aK+cl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76025DDCD;
-	Wed, 26 Feb 2025 13:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3EE2206B3;
+	Wed, 26 Feb 2025 13:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740577621; cv=none; b=pgpHuKCwUaczhQUmXYoZxtuBeV24rHRROPwr5yT0B7o3Qg858iAAOAtC9PaqB4dZm3Chv1CVmB9+rMuaX4rNcGjclwp9Lucfmypox49cEZjYlp+9ArCfGs5tlI3Q2SUB6TjHt2TVbXGOU9PoeopjIjooFVnDQGxBqDdG99rZHvw=
+	t=1740578269; cv=none; b=r3nGw7D7OVML3YM26NHj+pOYKAwv8cbwbwlFQ7T6C5zoWFtqcD7aeMbaoHlny5R3VXn1k+sYnEMuL9/YYeQTS/H/DdZYJgLQDO6S7spBdxOmTv8dZI4J14CHU0u1PMjrCi+z9ctkiuw2puVteiC32NhczRJ4JjaJWleW9KnhaxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740577621; c=relaxed/simple;
-	bh=ghYoPmkesmE/DQEdj+zyBDgNwpAW1ZQ1GHICBwEW7hM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Za0y/mrBzLQonv3WYbyOOaOIp2I9dm9jaK1o3eOLZW6QaovK9SGVuFd71R0rgl2OYkX/SCLOVaF6EtEm3KZuJ8ilSBYE+o/JtCx1Q/SyGoEM/eXZBKWFErvhFE6LXk56u4YPP6FeJEGUaEYs2+PNhHcGcnae9RUnzBor5emo0SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c6tBQvtx; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740577620; x=1772113620;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ghYoPmkesmE/DQEdj+zyBDgNwpAW1ZQ1GHICBwEW7hM=;
-  b=c6tBQvtxjF+rPWD2A6yrjdGvEnGkJfmb3XgudjbDDxtMLet63RAL98ws
-   CsUwKE2hjZLK1i6ECKVwLCojQ+DR+FNxPsTqUckfg8RhaNsJsXBDnAsTD
-   9cHbak6mAD2NCE8nVsjobp1/gBhW67QE9QbRWsm7W2Tv+x3sByqnDPx1c
-   K4RNhb3tHogI8GVi7M6Ze7fP5b52nRPEt1BLhNiEzLh4LIXaz7ZlSgUDS
-   ZWggx4/pjwekb8QIkqvjusCyLNiC/zD76KLsw+GnfpCdwKl0QLNevQR+e
-   UHA9L9wxy77Iwd9+oXexQyCEz0yrHshE6V9VQ+/c2Q2ZQHXu1aXVP8FIX
-   A==;
-X-CSE-ConnectionGUID: 11BQ+e1eQdW4LNLPAmDH6g==
-X-CSE-MsgGUID: XaSWX9BTS7a0+n6hHMm+3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="58840480"
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="58840480"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:47:00 -0800
-X-CSE-ConnectionGUID: 4yKCyGZwSImGOCOMBTV8JQ==
-X-CSE-MsgGUID: c3S/ek64QHmxAkSq+S5Idg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="116895285"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 26 Feb 2025 05:46:57 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 61B7E2FB; Wed, 26 Feb 2025 15:46:56 +0200 (EET)
-Date: Wed, 26 Feb 2025 15:46:56 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: brgl@bgdev.pl, Paul Menzel <pmenzel@molgen.mpg.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	linux-pci@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Linux logs new warning `gpio gpiochip0:
- gpiochip_add_data_with_key: get_direction failed: -22`
-Message-ID: <Z78bUPN7kdSnbIjW@black.fi.intel.com>
-References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
- <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
- <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
- <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
- <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de>
- <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
- <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
- <Z78ZK8Sh0cOhMEsH@black.fi.intel.com>
+	s=arc-20240116; t=1740578269; c=relaxed/simple;
+	bh=6JvcNFx82rB512YBjhx8YLiZH3NuPw+ATigJCfDcCBU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=MbymlWRgVyLv5GWcPdxdyz1zfNiyfUJFohdlg7Oo9PSfzXvNppHx3bI+O95IEfr3dMLjnoRE7wcXAQlixifLS5m2Uquev6o1NYFzTZ0Xuu8MaZbFzIVIEBre6tOqQ5ovxmrMZvf6CEpP34Ty/kIyJa5Brdw8lvTTifWjduKdX9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=bPuQKdaa; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=2p6aK+cl; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.stl.internal (Postfix) with ESMTP id 7B639114014E;
+	Wed, 26 Feb 2025 08:57:45 -0500 (EST)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-11.internal (MEProxy); Wed, 26 Feb 2025 08:57:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1740578265;
+	 x=1740664665; bh=tZXytPiubmxqPIS8uOUahYJafTAcorBGJm/Sc4uY4DM=; b=
+	bPuQKdaamYG6X7c/5heRAnYVR/n2WZ7jUfo+l69evzOhlDVujNWHITYgXwsS56jd
+	9c8wjcoZUFFXkRbqFKjzCqNn1zL17DGGMfg/RClEJh/UIm6zW921ozhV3LSrvWNS
+	Fk8EYeB2URFSgX268hc24t7BHJhh6K/JylEbZvuDw4pF4uijwomW2pVmVaUSq3ve
+	V/KPZgKTg0ntp0L0NIwKqlaJDDY3rCbfQXSM6ZtELPhF5zdAI5vTq97TA+F0lzI+
+	eIkxHEVeMP80AQdMfvnj/6U9x46wFxawG4fEs2h2t9bCNetTIB/ZBcfcgA3JvlGZ
+	QbgbW4TF89dMP2t6T0hQKw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740578265; x=
+	1740664665; bh=tZXytPiubmxqPIS8uOUahYJafTAcorBGJm/Sc4uY4DM=; b=2
+	p6aK+clTQqinvRokGkoHOeAee7Ch/BcjiIgvYptz7ndme10+I7qdFx71/QpqYB+l
+	dkOjvzxZYJCrhg3PJ7+4OiqfD2YQjARnjHim9UBKXfNnHCLVwHDU4+01vy//Bqp8
+	LweavQ6jEHFaJCfKQ3Lg/fNuo/b/sdF4xwADT77nY7R5UefknIRwPHytDnqXEiDU
+	EYABC2C/u/uGN5NKiGWWm+gvQdSjugqYEhyMcoL0ix2c3S8bVZcc2y8hU5/8O4i1
+	2U5vpXZu7jOdSfCm5nh6F7Xj3McUMNpfsHAvKu+x4D7eqkbYDzWEZQ4fe2J+2FoU
+	iZ/GaS+SGDehHCOSTSnNg==
+X-ME-Sender: <xms:2B2_Z1NcLAU-ocoX2xOcC9doPyQMM3SzO-PZ0i4O0har6bE_x4wHmw>
+    <xme:2B2_Z3_9T20zc6f9v3gcS7Kty6-a1TxmrFM2q37e5uXIA_Hx9r09_Mm7BRyDhvqi_
+    _nJ-mxRoMsDEyt1_AE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgeejiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
+    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
+    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeef
+    tddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghpsegrlhhivghnkedruggvpd
+    hrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtphht
+    thhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheptghonhhorh
+    doughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehlphhivghrrghlihhsiheskhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifvghirdhl
+    ihhusehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorh
+    hg
+X-ME-Proxy: <xmx:2B2_Z0RhQzPCtPcX6rnHEdjOg46NTqG6e_kTNaFU-IVZMBqB6pFrcA>
+    <xmx:2B2_ZxvupkTidtC7S2F9HnrLl5IlU8tGgVOtQPtM1TAcmjBJMC2VfQ>
+    <xmx:2B2_Z9dnJ1xpQw-EStIG715rto0DeXe3SvYUODF7_HQNMR3EWyhxwQ>
+    <xmx:2B2_Z938LFEianfpCf7BbxOUaqE57XrdfvncdzqRzXROWA9LXO4Ixg>
+    <xmx:2R2_ZzHMsUfh9E43ZZvmvsw-qTD_hFBFCxx1blsqPSVrLbygxzPLoM2e>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A74052220072; Wed, 26 Feb 2025 08:57:44 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z78ZK8Sh0cOhMEsH@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Date: Wed, 26 Feb 2025 14:57:24 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Roman Kisel" <romank@linux.microsoft.com>
+Cc: benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com,
+ bhelgaas@google.com, "Borislav Petkov" <bp@alien8.de>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "Dexuan Cui" <decui@microsoft.com>,
+ "Haiyang Zhang" <haiyangz@microsoft.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, krzk+dt@kernel.org,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
+ "Ingo Molnar" <mingo@redhat.com>, "Rob Herring" <robh@kernel.org>,
+ ssengar@linux.microsoft.com, "Thomas Gleixner" <tglx@linutronix.de>,
+ "Wei Liu" <wei.liu@kernel.org>, "Will Deacon" <will@kernel.org>,
+ devicetree@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
+Message-Id: <fe0221bb-b309-4e4b-a098-f6a246ac1f60@app.fastmail.com>
+In-Reply-To: <a96f9469-a22e-43e7-825d-f67ef550898f@linux.microsoft.com>
+References: <20250212014321.1108840-1-romank@linux.microsoft.com>
+ <20250212014321.1108840-2-romank@linux.microsoft.com>
+ <1b14e3de-4d3e-420c-819c-31ffb2d448bd@app.fastmail.com>
+ <593c22ca-6544-423d-84ee-7a06c6b8b5b9@linux.microsoft.com>
+ <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
+ <6e4685fe-68e9-43bd-96c5-b871edb1b971@linux.microsoft.com>
+ <14a199d8-1cf3-49bc-8e0d-92d9c8407b4f@linux.microsoft.com>
+ <55b65ba6-4abe-478c-a173-4622c30ddd7b@app.fastmail.com>
+ <a96f9469-a22e-43e7-825d-f67ef550898f@linux.microsoft.com>
+Subject: Re: [PATCH hyperv-next v4 1/6] arm64: hyperv: Use SMCCC to detect hypervisor
+ presence
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 26, 2025 at 03:37:47PM +0200, Andy Shevchenko wrote:
-> On Tue, Feb 25, 2025 at 10:25:00PM +0100, Linus Walleij wrote:
-> > On Mon, Feb 24, 2025 at 9:51 AM <brgl@bgdev.pl> wrote:
-> > 
-> > > In any case: Linus: what should be our policy here? There are some pinctrl
-> > > drivers which return EINVAL if the pin in question is not in GPIO mode. I don't
-> > > think this is an error. Returning errors should be reserved for read failures
-> > > and so on. Are you fine with changing the logic here to explicitly default to
-> > > INPUT as until recently all errors would be interpreted as such anyway?
-> > 
-> > Oh hm I guess. There was no defined semantic until now anyway. Maybe
-> > Andy has something to say about it though, it's very much his pin controller.
-> 
-> Driver is doing correct things. If you want to be pedantic, we need to return
-> all possible pin states (which are currently absent from GPIO get_direction()
-> perspective) and even though it's not possible to tell from the pin muxer
-> p.o.v. If function is I2C, it's open-drain, if some other, it may be completely
-> different, but pin muxer might only guesstimate the state of the particular
-> function is and I do not think guesstimation is a right approach.
-> 
-> We may use the specific error code, though. and document that semantics.
+On Tue, Feb 25, 2025, at 23:25, Roman Kisel wrote:
+> On 2/24/2025 11:24 PM, Arnd Bergmann wrote:
+>> On Tue, Feb 25, 2025, at 00:22, Roman Kisel wrote:
+>>> Hi Arnd,
+>>
+>> If you want to declare a uuid here, I think you should remove the
+>> ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_{0,1,2,3} macros and just
+>> have UUID in normal UUID_INIT() notation as we do for
+>> other UUIDs.
+>
+> I'd gladly stick to that provided I have your support of touching
+> KVM's code! As the SMCCC document states, there shall be an UUID,
+> and in the kernel, there would be
+>
+> #define ARM_SMCCC_VENDOR_KVM_UID UUID_INIT(.......)
+> #define ARM_SMCCC_VENDOR_HYP_UID UUID_INIT(.......)
+>
+> Hence, the ARM_SMCCC_VENDOR_HYP_UID_*_REG_{0,1,2,3} can be removed as
+> you're suggesting.
 
-Brief looking at the error descriptions and the practical use the best (and
-unique enough) choice may be EBADSLT.
+Yes, I think that's the best way forward, as it improves
+the existing KVM code and all future functions like it.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+    Arnd
 
