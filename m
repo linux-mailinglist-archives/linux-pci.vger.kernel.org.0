@@ -1,46 +1,68 @@
-Return-Path: <linux-pci+bounces-22416-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22417-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EDA6A459AD
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 10:13:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8313AA459D4
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 10:20:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B33A7177D1D
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 09:12:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F58A189007A
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 09:20:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C15A226CF3;
-	Wed, 26 Feb 2025 09:10:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21AB8224222;
+	Wed, 26 Feb 2025 09:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KdZk546r"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C3B22423B;
-	Wed, 26 Feb 2025 09:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543D21E5B85;
+	Wed, 26 Feb 2025 09:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740561055; cv=none; b=tLgGlTWabYzmnmhSuhfaJBH76S0gagv5wRmi6405HEMexOKiAOLGXrGTa8zgws6EkCZps/4PbW+q3OkbxJfhOoaut5woCtpplExWbpUcLjgu8Yq7hPe+rHFM2DzOW5Tz4e7NGy9n2jMvmq1kU7blJIwHVndTyYI71Ob3BuMdAQs=
+	t=1740561606; cv=none; b=OGSixK4hGGyvnOniUMeSmuQm2Cs0osGGet/irGyTSFIjf3vt2MhVH6T1UDTQfBDUK6XpI4ErtpzX5dGpBjhJAeezc4mxgd7LuZqqdyMyPAryetZY4L0vYpcO0XSTUqaKzlBBx0ZEbQCH5Mm1NKFMU2rSBGZO/26+g22pzq6sHTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740561055; c=relaxed/simple;
-	bh=rcMqlFYxtJSC7BnsHuZqlms/0j16JvJJLK/QKfFC4VU=;
+	s=arc-20240116; t=1740561606; c=relaxed/simple;
+	bh=24vtFRKNjBqptcl97/HocSl/lK2e+Ib0xTWtLuTQxVI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qSeyyLmr9to6nP3ML2d0W4e/tCsD/PSWiO5n+RL5am0CHBf8dHYBw9hZ4TkCJEp7MbtPEnH8jsnoY9jfItLKFe7407QuavIw1beFvd7svkSFhMekTPbvqZ0vDJLrqEOWrpVishHtFLbfx7OHV0ZHpfEgYI760IG+I35o4xOhGzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 3D7E82800C7D0;
-	Wed, 26 Feb 2025 10:10:43 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 3780ECC668; Wed, 26 Feb 2025 10:10:43 +0100 (CET)
-Date: Wed, 26 Feb 2025 10:10:43 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bPMSqWC5wDTcM2bpDl7cc+OruKzo00S4rAuY7Mq5wKFRXJoJ+2Criupv00XGI2ZLPgTluYAUmYfECUOzscLz1RdlWlA2Po3dv6wVkIetR0THFbJjGorkbCmRzhCdvkOdwL20mZIbKNDGUrloMAPoNTSUDVu9Exl/HS+/E3xXLRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KdZk546r; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740561604; x=1772097604;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=24vtFRKNjBqptcl97/HocSl/lK2e+Ib0xTWtLuTQxVI=;
+  b=KdZk546rRQPnBrxh49mIU9RfsvMCSFbfunvVhyQEg0UknS0M3DJEX57V
+   4eblprwFnZqQdMJJJyRfEQm/SVZPxuX+rMOL4ulpPVLhGx47IG+IRQzsg
+   Jl4NU93udNXxdfmlxG21RhTZfdHmxKDAwCQUjWAI6CJX/QkAT/cRik2YZ
+   +K9GnmewrpLZTI1VPd6PkgxvIKK+cYht7BD+q63uHTLBqoimVCkSOKM5N
+   r00UTO6b15whfr8vFfpgQ4PM3VSngK5EpluQZ9jA1upOv6+OKhvTROgbr
+   rhYDPkn6Br0744yYaYcEfH/UAf/76Xvlv+ZGz3q/krJS0dIe72F2+SuiH
+   w==;
+X-CSE-ConnectionGUID: UWEhTeHsQgGDNqs8hk03GQ==
+X-CSE-MsgGUID: Oc9c+kroR2GG4ZWiBHrCcg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="52034580"
+X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
+   d="scan'208";a="52034580"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 01:20:03 -0800
+X-CSE-ConnectionGUID: wKK8ga4UTGSDhn9l/jSoAA==
+X-CSE-MsgGUID: PdOqyUDORV+syCxYFE6Ncw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
+   d="scan'208";a="121580275"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 26 Feb 2025 01:20:00 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 6183B1FF; Wed, 26 Feb 2025 11:19:58 +0200 (EET)
+Date: Wed, 26 Feb 2025 11:19:58 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>
 Cc: Kenneth Crudup <kenny@panix.com>, Bjorn Helgaas <helgaas@kernel.org>,
 	ilpo.jarvinen@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
 	Jian-Hong Pan <jhp@endlessos.org>, linux-pci@vger.kernel.org,
@@ -51,7 +73,7 @@ Cc: Kenneth Crudup <kenny@panix.com>, Bjorn Helgaas <helgaas@kernel.org>,
 	Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
 Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
  Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
-Message-ID: <Z77ak-4YsdAKXbHr@wunner.de>
+Message-ID: <20250226091958.GN3713119@black.fi.intel.com>
 References: <20250210210502.GA15655@bhelgaas>
  <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
  <20250211055722.GW3713119@black.fi.intel.com>
@@ -61,36 +83,39 @@ References: <20250210210502.GA15655@bhelgaas>
  <20250214162948.GJ3713119@black.fi.intel.com>
  <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
  <20250226084404.GM3713119@black.fi.intel.com>
+ <Z77ak-4YsdAKXbHr@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250226084404.GM3713119@black.fi.intel.com>
+In-Reply-To: <Z77ak-4YsdAKXbHr@wunner.de>
 
-On Wed, Feb 26, 2025 at 10:44:04AM +0200, Mika Westerberg wrote:
->   [Meteor Lake host] <--> [TB 4 dock] <--> [TB 3 NVMe]
-[...]
-> I added "no_console_suspend" to the command line and the did sysrq-w to
-> get list of blocked tasks. I've attached it just in case it is needed.
-[...]
+On Wed, Feb 26, 2025 at 10:10:43AM +0100, Lukas Wunner wrote:
+> On Wed, Feb 26, 2025 at 10:44:04AM +0200, Mika Westerberg wrote:
+> >   [Meteor Lake host] <--> [TB 4 dock] <--> [TB 3 NVMe]
+> [...]
+> > I added "no_console_suspend" to the command line and the did sysrq-w to
+> > get list of blocked tasks. I've attached it just in case it is needed.
+> [...]
+> 
+> This looks like the deadlock we've had for years when hot-removing
+> nested hotplug ports.
+> 
+> If you attach only a single device to the host, I guess the issue
+> does not occur, right?
 
-This looks like the deadlock we've had for years when hot-removing
-nested hotplug ports.
+Yes.
 
-If you attach only a single device to the host, I guess the issue
-does not occur, right?
+> Previous attempts to fix this:
+> 
+> https://lore.kernel.org/all/4c882e25194ba8282b78fe963fec8faae7cf23eb.1529173804.git.lukas@wunner.de/
+> 
+> https://lore.kernel.org/all/20240612181625.3604512-1-kbusch@meta.com/
 
-Previous attempts to fix this:
-
-https://lore.kernel.org/all/4c882e25194ba8282b78fe963fec8faae7cf23eb.1529173804.git.lukas@wunner.de/
-
-https://lore.kernel.org/all/20240612181625.3604512-1-kbusch@meta.com/
-
-Thanks,
-
-Lukas
+Well, it does not happen if I revert the commit so isn't that a
+regresssion?
 
