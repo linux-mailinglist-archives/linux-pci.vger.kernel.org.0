@@ -1,115 +1,91 @@
-Return-Path: <linux-pci+bounces-22394-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22395-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD10FA451BD
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 01:50:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CA5DA45230
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 02:31:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EAEFB3A61D4
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 00:50:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95F8C3B14CA
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 01:31:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E233D145B27;
-	Wed, 26 Feb 2025 00:50:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF2C018C33B;
+	Wed, 26 Feb 2025 01:31:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lnKzWKzq"
+	dkim=pass (2048-bit key) header.d=llnl.gov header.i=@llnl.gov header.b="tXsfftl/";
+	dkim=pass (1024-bit key) header.d=doellnl.onmicrosoft.com header.i=@doellnl.onmicrosoft.com header.b="a5WxW4ow"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx0e-00379502.gpphosted.com (mx0e-00379502.gpphosted.com [67.231.147.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA821494C9
-	for <linux-pci@vger.kernel.org>; Wed, 26 Feb 2025 00:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908F918A92D;
+	Wed, 26 Feb 2025 01:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.147.129
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740531040; cv=fail; b=himXB7qhJdLZb5GFRcBi2pFGXbzu4FpTtVyetStKDYW23x+xCXFjHIy63oKpSUis4GgpMJCcj6bcrzXunY8Y3k4tuB/fPTJU/WM8yIdlxV1uYLKT6b8FATyFRtwinbXiVqJ7yZcj5AkO+CDtN7LFN+F/rZppAMkQ6eeza5kK4Sg=
+	t=1740533504; cv=fail; b=TWgzKmrofJ9iXnb5pymmoAYDWaLVW44LPW5Cb8+5513aiE9zSsPdpbMP0DCLr5hYU/+rdYukFwO2F3wtDZnD6tX4TTlQzpvO+M/wuCa1O7tS1b11AGeVP52Nxvl6c0RLYnbyQCeqI2hVzzoq/L+qo9iTIB2ucnEJr3T+viL64CY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740531040; c=relaxed/simple;
-	bh=hjTsVg2wL4ir9guKEkZxSq1AP7RYjgtBthvBtGSRJKI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=lRLCh9FgKaFs0QEtfcRW7Eh3lJsVrU1pXQCpqpEHkEhg8XEAlQwJYifQodwxHzKTQJGVQcBkyY3QlfXvPR3Mi0W8tI0sj/XBtP72ziAj4dU5FSx87XVzmQXJY0HPqteQLZroYcesNFcqqTm1zx9zhVbH+lJDEit5jnLitFiqFag=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lnKzWKzq; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740531039; x=1772067039;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=hjTsVg2wL4ir9guKEkZxSq1AP7RYjgtBthvBtGSRJKI=;
-  b=lnKzWKzqXfyygShhP8wmrnUvkENCuuws8ryf8Me+rLR93264t4W0dWpq
-   U/pzkg5qW8MPdFRoSUBgbbEPetbZCvwwkJOrNSvLM+w5Vi24JX3vQ+Qjq
-   l29u+S1bH/IBi8uD78+WOnKwWGCwrauc8tD2BcmAB2l9tX6m0Dy2eJ/oF
-   0ehnzXtewi2vlcTx2hA0Qvygquksb4LN5HnohSm7hNfFvmnyZS/LKitWe
-   4OKCKwtFFemKye2B6agwSjuRZkgIJPsqEhtDzIu77rlmLQkTNNwpDLnw8
-   ZEWE7NZ1Ytoo6+uu4I26XKXZdp0xceNIGU0/DhhLC44XZEIyO5u86nc4Z
-   Q==;
-X-CSE-ConnectionGUID: P671ccQQRdagBkbMoUX9ew==
-X-CSE-MsgGUID: 4/BW3Df4Th20qeJeei9JMA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="51575685"
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="51575685"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 16:50:39 -0800
-X-CSE-ConnectionGUID: Ic98PcqrQzeHh0Sms7GJwA==
-X-CSE-MsgGUID: nrM9x2IETX+lQXYkkZ55xQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="116356143"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 16:50:38 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Tue, 25 Feb 2025 16:50:35 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Tue, 25 Feb 2025 16:50:35 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.174)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 25 Feb 2025 16:50:35 -0800
+	s=arc-20240116; t=1740533504; c=relaxed/simple;
+	bh=HDnVwrIjHPUSuSjsVOtXJcK2aUV4NEY0qEO2Xs6wNpw=;
+	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=ejxugIyGlFB1eLY7M1i2HDZtsWbznUx0I0yFRIVJrSWDusqR70taI/sXurV02tGmNvN7O4PH9r1Ge22v/y6qBR7UB9PU78bllbUY3XsZHX0BymkwqrWO5+MVQYdKu7D65ijUFId6rYmZeaYGUyBJJ/Xjvye484h8CLI3ycUXLiU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=llnl.gov; spf=pass smtp.mailfrom=llnl.gov; dkim=pass (2048-bit key) header.d=llnl.gov header.i=@llnl.gov header.b=tXsfftl/; dkim=pass (1024-bit key) header.d=doellnl.onmicrosoft.com header.i=@doellnl.onmicrosoft.com header.b=a5WxW4ow; arc=fail smtp.client-ip=67.231.147.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=llnl.gov
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=llnl.gov
+Received: from pps.filterd (m0218361.ppops.net [127.0.0.1])
+	by mx0f-00379502.gpphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PMaFnG000608;
+	Tue, 25 Feb 2025 17:13:57 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=llnl.gov; h=message-id : date :
+ from : subject : to : cc : content-type : content-transfer-encoding :
+ mime-version; s=02022021-podllnl;
+ bh=N4cSfufwV4qBx3t22Qm/g5UbMIwMmSj+Tw80HhRsLFo=;
+ b=tXsfftl/RIv76jMPImNG5Nqjosy85HCFzn0T/vs8UoNHorPLjIQLYr9eJzGyk+MmGVOw
+ 6fMyR+OCMzZ4+2a+z/xPhzT0pgiJg/wQvPNsQPow5heTocjSrfnRojtBpHd7ZV6Ry549
+ xKldIrJWxsQwxbNovo2k1qADnjB+u7wkIwkREM760igyA02npXVRdcOcPKlEijy4SWCK
+ Nb1AcNsG1FjJU+xsb5V1aACghXc1sr7IsHBAYUGP8EQho4LC2JIxGf1tLGPEWaf5IQwx
+ LjNpjMtEWA1INXorkbDB1K/4sZDd8uFu8vbpdYWFA6tr1PPm32xK+IJ0Mb6WPD5MEHwm OA== 
+Received: from by5pr09cu001.outbound.protection.outlook.com (mail-westusazlp17011008.outbound.protection.outlook.com [40.93.1.8])
+	by mx0f-00379502.gpphosted.com (PPS) with ESMTPS id 451psy09n0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 17:13:57 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sHkX7A4lGKr5LRRasd2Y1j6RSQbXzBOjJHb20NXLJ0wAo1XIcE03Uhbx60WJgSJyXzw0hyKi3vKTroHvGoE877TssltEwZg+ajKrktQcsre+52Hs9q6a1mqiy8d8UUBIIxpFxp3lGb1RMT2j3CEtHCpj1dfqL0cFfcATRUrrOlMBIoLN/KYDpmWCVcEbFe041ry/ftGHhS5k4GpR4QKw6vfoMts9P965qOARScSDDqUO1E0W/mZKRdOowi2NwX/Fh/TltKzMbREQF+vtgsepK8OnuJDYuPq5NitAoTsisNYkbWQYfKNaKJmD010nimrnYi3NSTGcwZH2YPvlot/G1w==
+ b=VCwvNQt0t1L/XbznrlXW4+x8mx54imNJsfEU4aapnHG9qPygl0Q1JIffGzUf36ExKRPfPTCIqyUXJZGft8n6fBJWBhPeZMufwz+5YRa2eFr6Qqf1lVK/fsD+cNxA6siFXVaNcVYuHYns3gl2RBMH+K/2+qucno2BXDPeiq97zeUWP/qEODeg8VzujizIdwToOxSfDZn6ug8+VyQOu9e0yLcUuvAjVNjbTQGHbg0YaRkZenxrmqoq5X4fjZHyyABCz9fyvVXNn+Fg2MXZEnyOKNCNHlVd6GtI1Y1E05XIYD29FmLrlCOfRrpO4VNSgK0Corbp5PlB6+4Q6Yomba7VTg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PP+QNnh+L7L3H5KECZYjA4hUPdU127ZD378Wsyozhxc=;
- b=GKc3A5itMkJbPs+L7g3n1iqLEcHQjXsk9yypLQjDofPHB2hwdGqpG+GY72eOhux2LLh2OjN3com16pl7TWZBzLsaWd7Q1GqgHVCrcFznzssmtQru116WgnOnOtYvjve+omEniLJth+nYHdpSL8z48K+9rSk5jgJWZARo9P4y6Of1uwlDS0Ba3VSUCTuEgN7W8jAs5lTzzRxBH4UyIqJO7f2B2cHsVRQrAnaRpKTHK9J9UOENhtjsucIu4dJjPo1pZnbCJUcSwVRudytpld73qNsc6F+CzVuFpD7cMLnjjt/Kt6dCSrqrhIUlCwl9/bT3UXi8ZFQxuyBflR0lpcLO5Q==
+ bh=N4cSfufwV4qBx3t22Qm/g5UbMIwMmSj+Tw80HhRsLFo=;
+ b=Yj4g7YJ+vM7F/gHNR/4hU4pKW9gMyW609/A7tGWNAfc/XwXDoPTvqCAWaQsOTCsBRw/vZ2f+JZ0lBMKaYHbLwmrnmIXoNckwBaTt4Dju8BC+kICycVfKcvcBhWEIPLWvbpVEMaRBmJ4TkEzs1LU1LfqVRgEoMfoPGxqTx84OsinDDzH390ZGP4IXK0FSM1rmVqU0jGdfjW//WyMWqOyeyP05kASARVYSgCatzGAKM2XR5wG9RthMZrf+hwnkCJAmn4Sg7ETvYNK2JpJJWjxUQAO/y+cY9DK/VXz0kine966Oe9DpJGiWYT002Y8P1+cmdGDZUCAHqTbm/AWkI8xBnQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DS0PR11MB8665.namprd11.prod.outlook.com (2603:10b6:8:1b8::6) with
+ smtp.mailfrom=llnl.gov; dmarc=pass action=none header.from=llnl.gov;
+ dkim=pass header.d=llnl.gov; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=doellnl.onmicrosoft.com; s=selector1-doellnl-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N4cSfufwV4qBx3t22Qm/g5UbMIwMmSj+Tw80HhRsLFo=;
+ b=a5WxW4owW9f8SldfEeaRh23onJcLIjvqtU/TS2L2GfbPA7nNK71/G7rhB+ZldOQYR/uy0iNgSBolv950tJj7ZfyzUE5+aOIyWTCiGTOoddsL492NnpKLP1vNokSgvB/jRnAwJoKA7LHA0ss1w9PJMFSNJbFSXm/3Gals3rH7+7U=
+Received: from PH0PR09MB8844.namprd09.prod.outlook.com (2603:10b6:510:2f::13)
+ by MW4PR09MB10168.namprd09.prod.outlook.com (2603:10b6:303:1f0::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Wed, 26 Feb
- 2025 00:50:19 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8489.018; Wed, 26 Feb 2025
- 00:50:19 +0000
-Date: Tue, 25 Feb 2025 16:50:15 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: <linux-coco@lists.linux.dev>, Lukas Wunner <lukas@wunner.de>, Samuel Ortiz
-	<sameo@rivosinc.com>, Alexey Kardashevskiy <aik@amd.com>, Bjorn Helgaas
-	<bhelgaas@google.com>, Xu Yilun <yilun.xu@linux.intel.com>,
-	<linux-pci@vger.kernel.org>, <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 05/11] PCI/TSM: Authenticate devices via platform TSM
-Message-ID: <67be65478bb3e_1a77294e8@dwillia2-xfh.jf.intel.com.notmuch>
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
- <173343742510.1074769.16552514658771224955.stgit@dwillia2-xfh.jf.intel.com>
- <20250130114554.0000033d@huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250130114554.0000033d@huawei.com>
-X-ClientProxiedBy: MW4PR03CA0102.namprd03.prod.outlook.com
- (2603:10b6:303:b7::17) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Wed, 26 Feb
+ 2025 01:13:55 +0000
+Received: from PH0PR09MB8844.namprd09.prod.outlook.com
+ ([fe80::df94:6f59:a4b4:3320]) by PH0PR09MB8844.namprd09.prod.outlook.com
+ ([fe80::df94:6f59:a4b4:3320%7]) with mapi id 15.20.8466.020; Wed, 26 Feb 2025
+ 01:13:55 +0000
+Message-ID: <2e31f750-5ff1-45e9-bf68-47530a957596@llnl.gov>
+Date: Tue, 25 Feb 2025 17:13:53 -0800
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Tony Hutter <hutter2@llnl.gov>
+Subject: [PATCH v3] PCI: Introduce Cray ClusterStor E1000 NVMe slot LED driver
+To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+        mariusz.tkaczyk@linux.intel.com, minyard@acm.org
+Cc: linux-pci@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR21CA0028.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::38) To PH0PR09MB8844.namprd09.prod.outlook.com
+ (2603:10b6:510:2f::13)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -117,254 +93,945 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB8665:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5f5d0475-eb5c-4773-0f7e-08dd55ff8aac
+X-MS-TrafficTypeDiagnostic: PH0PR09MB8844:EE_|MW4PR09MB10168:EE_
+X-MS-Office365-Filtering-Correlation-Id: db83df7a-355f-4b44-be2f-08dd5602d6ce
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: EbfSWBBK+VvhpBlVBiPSvB0PtjiOAKdEmjJOoFqRPIbO5+ozp9NtsEeBzSmkC4czn1ICXckuiE8wSjEgRY9ZceDvUtsksPCz+nMdvyEPG4W7xG+U99BDhjLTsi9fpVnC4qRIKhRDCY8Sc8i/98gkHu3l7MGyWIlXMLyJEQSayPz22OVKy17Jp6Sts2/wGaZIf15KGFyT9gBgMkAfSndelgtpPPJBFXCizaM9Dny+zqZv2ex9rY8Jk/Vg31q4NMs09qTOVKBlCH2zTrJv8Do0aUBD3mfA1CXGQIDexjQyzmrU24cSR6fJzfmkz86SHXb2aBMhr/9Ykt/pY4RDcxB37E+4uBcag96dCskE/rQDXbiVQAs/F2wuSeR1+4nJSXHEEwPQeMVfvdzQM7DGIuTwCsD01FQPE2X5RdN/ikVXrKUmU3wqJyHIwrzBrkkc5bpqi+1ar2hkj56SDfxmZQv9T/EcdVoAFREtQRtesX780lW+xcU8B5nbpZwzckTs3ltE+fmpESOopjwklz8X+JvTIm7a8Wn9yxZcRq0ot7EYDbcPjte/4bOTPuOj2Axv/hnewrT0xKpBG1DC2dradcjRlfGgMkKFBx9LPf5epO+mJ7M=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UmRDOUUzb01kdkFsdExUdUpVemRjRHRwMWg5SlN5RmJuREF1cnArRHZLRGtr?=
+ =?utf-8?B?OHhHRmxMYzJNdU5oRkRqWDc0dWlqalM1Tm5qQjNvK1R4OXBpQjBncEd4bHRU?=
+ =?utf-8?B?bHBjMWFkdWpkZWhHa01LTEVwTFFhNDlmMmUyV0ppVmk3a0I1VkR4bGdDekh4?=
+ =?utf-8?B?WDlUSTFYSElyMWFSTGlQN0ZycVUxZThxQ040S3llbEhicTVEYjY4UVlrOTBp?=
+ =?utf-8?B?MmZvdTRibWsrdmpjUXp4ZStUbjBXV3hjbERvUVhaNFphYmFTaFdiVSsxaFhP?=
+ =?utf-8?B?WmZqMWFnNHdXcW54V3AyZDUxcm5URCtsNHhwOXIyZXZYNzJaR0pocy9aTmZ5?=
+ =?utf-8?B?SGRMdjFuaXNyWkl4MlllQjBmQktVdVF4UjJtVGV5ckp6YWtTaU05czNyVGMv?=
+ =?utf-8?B?TzVnQW1uZ0ZQQUN2TnhaMlZqSTBrVXZOVmNJNExSTUU5NkdoOW5SVitrTXR2?=
+ =?utf-8?B?UCtickkzU2dzcWozQVJZQzlUeG1jc2R3VmR6Z3NHQ3VBaWIwNXF2SmFKREpo?=
+ =?utf-8?B?N04yWDlQS1E4eEJvUVVBTGhiYTRGOGU5VDVSckdGR2w1K3o4Q0lOVUZxMkc4?=
+ =?utf-8?B?L3VBbk5hYStqNk9HRTFLMU1OazVoMVFla0RXcFJkQUJJZG50Q1hVKzVTTVcx?=
+ =?utf-8?B?bndCV203QmNjWDdScFJqdlJ3NjI1OENmRkY3ajgwaWtmdm1CcmM4R1dhK0Fu?=
+ =?utf-8?B?MndKSGp1WHBGcjQ4MDMrdVNPaElncUdwbWVYZmJ4WTRwVXkrcDBLU0FSQXEw?=
+ =?utf-8?B?YVFPSEttN2tGbXJoQTI2WDk3dHNhRkxGL2psQk02TFl6OVhGRjNQbDc0QXpJ?=
+ =?utf-8?B?dmV2S2txS3VuQllQZHdIRHlpeEdYQ1lxZ0ZxdU5vU0xxaWEvdWFYaTJUZEpN?=
+ =?utf-8?B?b2NrZmxKM3NUcVoyYTR6eHBnK1BlVDFhWHdyY1VDNHMyeW5CZnhkRVJIL21a?=
+ =?utf-8?B?eU80WXF4MkVCL1d4cXQ1TWU3NndEcTFsZmhmRktnTE1BV0FnSlp5VVhKRENW?=
+ =?utf-8?B?N2VaTlN0RUppZ3BjR1FkTk0yTVZYWXZEREliR3p0ZnB0bGF1QkN2eVNUWG5Y?=
+ =?utf-8?B?bGxNbitwd3hnc3JMeUdTQ1BaZlN5TWpjaEpoekpPL3dYRVhDUkNNanB3WjBt?=
+ =?utf-8?B?Y1VTRk9QSFF6Uno2TjZ6dE5RQkJsVTFldXJBTDJSeGxxcUpidTNsL2lqNkU3?=
+ =?utf-8?B?eURTNHVtNHRadlBPRU5PeGFjdGtySjRUOHYveTE1d2VUcEt1MWVaUFY5UkVj?=
+ =?utf-8?B?akk0ZTk2K25qeW9vdEllSzdweTFSWGJ1Vk9DaEQ0UGUyVzY5azRnZlBhNjY4?=
+ =?utf-8?B?WDhCcExsYnpiNWhXTmZPUVdXZEtWR2k3Um9SbzJGQTdXQldlUHB6YUkzUmV6?=
+ =?utf-8?B?aVhMM0dzd0w1LzBHUVJSSTRRZGxwa2h6SHdKaEpwUSthREc4T0Y2c1ROWmcw?=
+ =?utf-8?B?dU9mdUtCZ0VvOUYvWGptc0lKRGlNNE5maGdFU0hVb01yUUNURy9OMEg4VEpm?=
+ =?utf-8?B?bzBYSTMyU214aGpUODI1YlhFSVBXN2tBVUhrTjM3MWRTRUE4L1UzSkUzRkxT?=
+ =?utf-8?B?NkhTNnl6bXNjVnozcE1rNGFITHVyaXdwM1FnL3VhUEdGN1Z6bXcwY1JCdzRG?=
+ =?utf-8?B?ZHpGSWg1TTB0eGg2d1pZQlNuVzIyclRJbzhKa2graWFZeThoMzgzbktQOVp2?=
+ =?utf-8?B?QUNBaWJ1S2VIT3d1RmErWHNPTnVQamZJZVFSdjJOT2VzLzBUQkRTTDdQTUhF?=
+ =?utf-8?B?V1hxYVMycUc0MEdObU52NDcvYmdoMzNLNmVyVUlzc0VpUG1FNTJMT29qMk1o?=
+ =?utf-8?B?dUVCNGtuWUREMGRUVUhlUHM0cVRqbXM3OEpKZ29UcWtWeDVmdmNPNy92b01Y?=
+ =?utf-8?Q?2Y1/WzIvrpaJW?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR09MB8844.namprd09.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?E40sTK57dilvV4RoYguMwCn+8PdPdRBY6ZonpyUJqIJDx3TKFjSoQ3bqhZec?=
- =?us-ascii?Q?p/sb8xraVLpXhZeMyS9R/Zbxv8gXGN0Ks/dmbiJHAQ+j2BIHXlaq+shnMliT?=
- =?us-ascii?Q?bZody5YS/iZ3C0ckgwpBNnPPqrWvRyjAD66NgtOdMFFTZhuG/Ml6D/137LLF?=
- =?us-ascii?Q?2VnSEgQ9Tf2c2/eCmm9c8+j5njQdkaA+7+wu94RS9wLiMsPy3PHbz7E/vdx7?=
- =?us-ascii?Q?LXUG03s76uM76VWIHCgHUXJqGi3Ylfen/Q1ViJegg1YYRW7zJYATvUqkfM2s?=
- =?us-ascii?Q?2hGUT9AqS8qRrnPYEsTXd/iTp35pe8hpfQq8AC14NsDWRkJi+GIAZL9aLLtu?=
- =?us-ascii?Q?SsaVZafLZs7U5VqI64atbdXkovMvmZPB2kziKKQoIJ1wvWSEcjNeVRSie7ty?=
- =?us-ascii?Q?qthlDNaYN7Yj16yBKarDqX9/yfyeATlVwVM7WAPxL+LgrK3nQIotf70+i0tI?=
- =?us-ascii?Q?QlMpkTiWK46VvBiXiCaAzH8AS2YXcYSYw+cCOxdky3wHVH2Zv4eZo+ijMSq7?=
- =?us-ascii?Q?XW6aXsIxMyttMuhxxDb2FxNlRnH6PpKi5ORnDTt8I9SAqxJNHG4jwjfBgebG?=
- =?us-ascii?Q?x4+k94aPPV4DcM9YQAMvyHRoRl6aa1A4pfEIGWcUCEmgLG/SVDIYUKEhrMH3?=
- =?us-ascii?Q?RTPxun26gtMXWSovLBTv9vzatdEdr6dzM9b1q/97Lz3q4/ewxM+qnuWqewoZ?=
- =?us-ascii?Q?a0QK1LofkWW5Z+SmLV2MhSeNUxJN7qRLKq+Dx/xuPreDgzJB1VG/k96DHN2O?=
- =?us-ascii?Q?M42DvQETzBCXBJDMBGFZuj67lp3E7TizDjWRRVFxcVPZrkoaMmlMFZGAp2yC?=
- =?us-ascii?Q?ycFxyLZqHbGHj+RJzx46cbie0yNPDfb2MiM02v5rRZjj1T9zlJ1GSlW6stum?=
- =?us-ascii?Q?h9+7ZAhS4PrAY1hUB/fpumWlH9CXUsoestFXrQVudY/NbtXON8hfQhro2AMb?=
- =?us-ascii?Q?V7ptGFzPE+ngv/9YkBli2sECeupuxkyMAWT4C5CUVhe0cc2hktdnbQSwBYSz?=
- =?us-ascii?Q?rPoV7rFKwDnmDmzaRolHibHIVOZ75OvC9W8Kx7bMjZPLL2zSaipRh/Q0LP+m?=
- =?us-ascii?Q?lIokXYpO+/L3EZA4WCFQIvCr2IafYGbAzbNJWGD28C/jHcntBnMKKRE6Fate?=
- =?us-ascii?Q?B+DTLdWYHeKNNFONc+dhB8F2M77LGtKLptMgtDTewwM4E7n0dPdvLErW5lIl?=
- =?us-ascii?Q?0PT8sULeAcUoMyU5585JhtIm+XO5sgE2op2Gjfac6XPGAqsbcsqTEJu2PlUW?=
- =?us-ascii?Q?MqhOI8sdNvsRrrvtWLQzYLRe2HqtbYGlZ3TcIcmEtAQ8DdF/x38NVWt8HSsY?=
- =?us-ascii?Q?jGS7KFKGSO1cJa3OZ1UOwikXwukEKBxVD4u40O7nw7qW2OJnSfnWshBZvCIT?=
- =?us-ascii?Q?rOEuLmqgKYAgYFFfoULIM4/g5QJbvn2T72ZLLJ8wvT1ybQpJmUsv8rSo9dKc?=
- =?us-ascii?Q?CVLT+uxwScHbp7lzXRyadfzU5bAvYbVVr01R2iC3UsbjjeL+P/xv3yt/FZir?=
- =?us-ascii?Q?a79Hb3lX0zMTE8Iu5KPa5JE0ycmjMhNxM1xPy3lEcLEbgMVt1NXop/31VSPj?=
- =?us-ascii?Q?CxUvhAdgtsyL7jBG2FF50ANEC5UDC43R0RAp28tTciIhAltLUP12HRagY6M9?=
- =?us-ascii?Q?7g=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f5d0475-eb5c-4773-0f7e-08dd55ff8aac
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WFY0NUdtNjcvK09hbEVwa1ByckVxTWlRNkkvUERGWmdPRVRnRjZIOHNYT1R0?=
+ =?utf-8?B?a2tnYUIwU1h1cXA3eG8rbjRQMXhvMGVUYXUzamdOVHZhTTl6d0dFZFJGL0Zz?=
+ =?utf-8?B?V3JjT0l2bXNIOW1tZDF6Mnc5c2YvN0RBbm1nQjBpVUJFTzZ4MGMrenBqeEFE?=
+ =?utf-8?B?MHBGcnVKc2kzL1FDdnBzMHZCYmMvZkthRnd3WHFGdXg3blM1YTNxbktNaHBa?=
+ =?utf-8?B?RGRVVVljRXYxcFJVSTBJUDRqeGQ5WW1IVHh4ekx1TDR6VGVxRjVnQXk2d3lk?=
+ =?utf-8?B?UVFEbGRYTmcvWXNkdGsrYVh1SzJ3MlNlcGpBNmt0MzJCL3dQRDgyekt5ZVVS?=
+ =?utf-8?B?aDFuK3A3b25wdTVQMVIwVmpUbTRqTWlKNDUxYkdYU1JZc0laVFpKZm1uSllJ?=
+ =?utf-8?B?MVVxNzFUUVZHV2NwbHFzN3BMZjYybUFHNVl3NnBjRVR4QXJ2MWVkNU5TRGJZ?=
+ =?utf-8?B?WTdyS1BhTDFKaGdLWEtCSi85TnhkNjI1MHdydk1YbXpMY1liWEdGR1pWbE9U?=
+ =?utf-8?B?Wnc1NkZ2azBTd2FJSHR4M1dad2tJTjJUZWRZdmhCQVlUL2lvQlhzYTlyTW16?=
+ =?utf-8?B?YXA3bmNtcmJGK3NYZ21JZEp5NjZwTTVaQWJnRWtVVGpKMW45R0VHUmxhMElt?=
+ =?utf-8?B?ZG5qbCt4UWVlZmE1L2YvQUdOZmlWbjBMcFRMK3FnaXRja3ZZb09SMURIdjQ4?=
+ =?utf-8?B?T052clllZjc3WWEyZ3hEWlJLaURnZGg1eUtBZTR4aFpLMWJiQkJBd1N5YW8x?=
+ =?utf-8?B?cTRSVlQvRTNtTWRWQm0zRWVLcVBBRjFNNGNKUVFuY1BIaXNMSHZIZmRKYU8z?=
+ =?utf-8?B?bkpEejF4THUrUkZvSHBUeFdGRjlTRXRxWUZHOVlES3oyQ1FGY1FvT2xiL3c1?=
+ =?utf-8?B?QjlUcUhjY2NYM2ZqY0MyNFN5ejh0SXMzclJOR21uSFlmdElLUUkraFZkZHNQ?=
+ =?utf-8?B?eTFDbXFla2tPNVdYaWRsTVhiY2NiMEY2QzlwSGhCZTJJeW5sckxScjkvL3FI?=
+ =?utf-8?B?RXdmcVBMTk4zNFNUWldaRTl2bHgrcll6QW9oUHA0bmxTanBEVzA0NmgxejlZ?=
+ =?utf-8?B?ZHllcnJRZHYwajJrYzFTTzc1bnlsd1RQZ05rajExSHZPcW5IVkdjZ2RXRlJ3?=
+ =?utf-8?B?YXVpeXdUYW5senJXdVg1ZUFNMEhkU0RWdnFRRmxtc0pranFHNXh3SHVZRE0w?=
+ =?utf-8?B?Y1NwOUVpV0hSY01DQUcyWVBIOEx1Uzk0U09JeUI0eDlYWTNmU0ZQRmpyZ3ZU?=
+ =?utf-8?B?QnVCZjZVd01Zdnc5RWFIazc1d3pMWk4vWlZ2cms2QkRMbkZOUTdOd3RybmVF?=
+ =?utf-8?B?cXhTL3I1Y2ZQT3dDQkFLQlRJQlV5T21hd00vSklpSWhYcHRYMDNQby9vdWp0?=
+ =?utf-8?B?OCtNNVFrdXpEaGs0ZFZtbEx0dVJvdEhoUDZlaXhTaXNyemQrdXArNHdTU0pM?=
+ =?utf-8?B?VHR6STdRZXBoQlU5elQrSndrYjJUMVRnNk5VWEhEbGxZQURoWmVXUDlFMEpI?=
+ =?utf-8?B?bXJRMmdxT2ZhdVAzeUtJZ3NobUs5VlRwMDd6TzNNY2JwME51VDRvRUNrT1Iv?=
+ =?utf-8?B?dmNXTTl0aW1yblFNNVRsM1hlcXZZV1JqY3BvZlFQODd6NlgyR2JBK3I1ZjRR?=
+ =?utf-8?B?WFA4RzFWcW1ZSEkra2JiNmN3YzJRS0E3WjRDOU92c293UDViWkV1M3N5Z2ZF?=
+ =?utf-8?B?Y1NzMDBldFAyQlFhc2VQYVdqODQxL2FWY3VVS3RhZzRBbktDUVZMeFFib1JU?=
+ =?utf-8?B?R1JGamszZUVXM3hObjZCWHFkWHdoZWZ3cHBNMmNBRHEwNTV4NFJvbVRZbDY5?=
+ =?utf-8?B?K21QTWVEdVhneUtiaWVJWE1Jc2l2bXQrdzh0Rmd6L0NxRkxJS0F6Q254NTdv?=
+ =?utf-8?B?Qm40akFtcTg1K2hTalhCOStJSjU4cWRIY0Q4RER5T2cxWjhKb3ZkTE1xTmQx?=
+ =?utf-8?B?bnNQOWxZU3NrNHVtM3NiY1dKUUhnNUVwWjMvVmlDMngzbTk3L1RYTDhXTG5N?=
+ =?utf-8?B?Q3dKcS9pY0lNLzcvVElLU09ZTGJ0Mks1MVhiRHhBOU4rU3RjK09oNkNJa1k5?=
+ =?utf-8?B?ZDcwbitmcSt2V3JCTHFiTWI4RlpUazhYRzZyMStHNVpFS3UvQ2hQNW9PcWMz?=
+ =?utf-8?Q?j6UlhGa+icFiQfmKHRUsEt6Y6?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	ghKzM4yd7wM7OpK5Vtg025OKl5rl8YxnfuvEdGRygslQbDE7R168c2EkHaU9gCzMC/E7m/GYJUrHCv0Qn6HOd5lelPG/DSeku/3vFcan0VmUMfV+nQYKf/rmmpa188mvRLPoCYpmIZYIPdFcIuNhvBFoQsKk4G+blwWPDPKWBZ32Wd32GOHyvcxjmR5kXlT2DCMYHgE36qCpOXj8DqPM4KmwcUla2H6h36vuhmM6EgYYmz4JSUUJrg3nVRNZDKc4jOwFrgGOzVNF8z/u735jzZVN48cSNDYVhJJpYDaoOaG+PulLYxdYCGzwBDFUdML8TQtAS4xi9w63oWguxyCBDxszJkpSOZrU6qTFqVrRJ7/QU1FR7Se+aqFA+XgVxiIoyq13KyiVwHIc3XBIh5tgMYj5dxpDvuYrLmZsIfPrLf+c+mwyzXNIV8o5vyRxHVAP/oUOzLVlewaJY6UfBVfUmXDNFpKfmNItaChJiuPWiQ54GSs7K85vbNAfUY+9h4Kj7Cu5FdfE4rXdUVvsPvW4SahhlQhbOepqbE6HVWWkqp/BO19dQTJPQsU6dd/dKRiuf21j4KJQI/2UhntSe2EGduFq8Z/zKLhFpRvDxqhTPIyhLai/1FJPq4eJzU/xikW+GL6KAr/k7xOC8JR4IIU7SA==
+X-OriginatorOrg: llnl.gov
+X-MS-Exchange-CrossTenant-Network-Message-Id: db83df7a-355f-4b44-be2f-08dd5602d6ce
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR09MB8844.namprd09.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 00:50:19.0339
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 01:13:55.3102
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PH17EVAlTUZKFu70hRceVK1fVRp6rIz0Nw1xydaDh9xgI95Mi1xB/dpTIr8AnOG9vFobSRfKjC1QCKR6knUKryM4Tn0eckj4byWoIRcbfd8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8665
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Id: a722dec9-ae4e-4ae3-9d75-fd66e2680a63
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR09MB10168
+X-Proofpoint-GUID: HyKIfVabaRtyc-ODGHVPpfw3J1fja4zF
+X-Proofpoint-ORIG-GUID: HyKIfVabaRtyc-ODGHVPpfw3J1fja4zF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_08,2025-02-25_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
+ mlxlogscore=999 impostorscore=0 adultscore=0 phishscore=0 bulkscore=0
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502100000 definitions=main-2502260007
 
-Jonathan Cameron wrote:
-> On Thu, 05 Dec 2024 14:23:45 -0800
-> Dan Williams <dan.j.williams@intel.com> wrote:
-> 
-> > The PCIe 6.1 specification, section 11, introduces the Trusted Execution
-> > Environment (TEE) Device Interface Security Protocol (TDISP).  This
-> > interface definition builds upon Component Measurement and
-> > Authentication (CMA), and link Integrity and Data Encryption (IDE). It
-> > adds support for assigning devices (PCI physical or virtual function) to
-> > a confidential VM such that the assigned device is enabled to access
-> > guest private memory protected by technologies like Intel TDX, AMD
-> > SEV-SNP, RISCV COVE, or ARM CCA.
-> > 
-> > The "TSM" (TEE Security Manager) is a concept in the TDISP specification
-> > of an agent that mediates between a "DSM" (Device Security Manager) and
-> > system software in both a VMM and a confidential VM. A VMM uses TSM ABIs
-> > to setup link security and assign devices. A confidential VM uses TSM
-> > ABIs to transition an assigned device into the TDISP "RUN" state and
-> > validate its configuration. From a Linux perspective the TSM abstracts
-> > many of the details of TDISP, IDE, and CMA. Some of those details leak
-> > through at times, but for the most part TDISP is an internal
-> > implementation detail of the TSM.
-> > 
-> > CONFIG_PCI_TSM adds an "authenticated" attribute and "tsm/" subdirectory
-> > to pci-sysfs. The work in progress CONFIG_PCI_CMA (software
-> > kernel-native PCI authentication) that can depend on a local to the PCI
-> > core implementation, CONFIG_PCI_TSM needs to be prepared for late
-> > loading of the platform TSM driver. 
-> 
-> I don't follow the previous sentence. Perhaps consider a rewrite?
+Add driver to control the NVMe slot LEDs on the Cray ClusterStor E1000.
+The driver provides hotplug attention status callbacks for the 24 NVMe
+slots on the E1000.  This allows users to access the E1000's locate and
+fault LEDs via the normal /sys/bus/pci/slots/<slot>/attention sysfs
+entries.  This driver uses IPMI to communicate with the E1000 controller
+to toggle the LEDs.
 
-I will just drop it for now as the entanglements with native PCI CMA are
-not relevant in this changelog especially as is not clear which series
-will land first.
+Signed-off-by: Tony Hutter <hutter2@llnl.gov>
+---
+Changes in v3:
+ - Add 'attention' values in Documentation/ABI/testing/sysfs-bus-pci.
+ - Remove ACPI_PCI_SLOT dependency.
+ - Cleanup craye1k_do_message() error checking.
+ - Skip unneeded memcpy() on failure in __craye1k_do_command().
+ - Merge craye1k_do_command_and_netfn() code into craye1k_do_command().
+ - Make craye1k_is_primary() return boolean.
+ - Return negative error code on failure in craye1k_set_primary().
 
-The rewrite would have been:
+Changes in v2:
+ - Integrated E1000 code into the pciehp driver as an built-in
+   extention rather than as a standalone module.
+ - Moved debug tunables and counters to debugfs.
+ - Removed forward declarations.
+ - Kept the /sys/bus/pci/slots/<slot>/attention interface rather
+   than using NPEM/_DSM or led_classdev as suggested.  The "attention"
+   interface is more beneficial for our site, since it allows us to
+   control the NVMe slot LEDs agnostically across different enclosure
+   vendors and kernel versions using the same scripts.  It is also
+   nice to use the same /sys/bus/pci/slots/<slot>/ sysfs directory for
+   both slot LED toggling ("attention") and slot power control
+   ("power").
+---
+ Documentation/ABI/testing/sysfs-bus-pci |  21 +
+ MAINTAINERS                             |   5 +
+ drivers/pci/hotplug/Kconfig             |  10 +
+ drivers/pci/hotplug/Makefile            |   3 +
+ drivers/pci/hotplug/pciehp.h            |   7 +
+ drivers/pci/hotplug/pciehp_core.c       |  12 +
+ drivers/pci/hotplug/pciehp_craye1k.c    | 659 ++++++++++++++++++++++++
+ 7 files changed, 717 insertions(+)
+ create mode 100644 drivers/pci/hotplug/pciehp_craye1k.c
 
---
-CONFIG_PCI_TSM adds an "authenticated" attribute and "tsm/" subdirectory
-to pci-sysfs. If native authentication is enabled then the existing
-"authenticated" attribute is replaced. The presence of the "tsm/"
-directory indicates what device authentication method is in effect.
---
+diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
+index 5da6a14dc326..1b83c43a548c 100644
+--- a/Documentation/ABI/testing/sysfs-bus-pci
++++ b/Documentation/ABI/testing/sysfs-bus-pci
+@@ -231,6 +231,27 @@ Description:
+ 		    - scXX contains the device subclass;
+ 		    - iXX contains the device class programming interface.
+ 
++What:		/sys/bus/pci/slots/.../attention
++Date:		February 2025
++Contact:	linux-pci@vger.kernel.org
++Description:
++		The attention attribute is used to read or write the attention
++		status for an enclosure slot.  This is often used to set the
++		slot LED value on a NVMe storage enclosure.
++
++		Common values:
++		0 = OFF
++		1 = ON
++		2 = blink (ampere, ibmphp, pciehp, rpaphp, shpchp)
++
++		Using the pciehp_craye1k extensions:
++		0 = fault LED OFF, locate LED OFF
++		1 = fault LED ON,  locate LED OFF
++		2 = fault LED OFF, locate LED ON
++		3 = fault LED ON,  locate LED ON
++
++		Other values are no-op, OFF, or ON depending on the driver.
++
+ What:		/sys/bus/pci/slots/.../module
+ Date:		June 2009
+ Contact:	linux-pci@vger.kernel.org
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 25c86f47353d..a33920820c62 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6122,6 +6122,11 @@ S:	Maintained
+ F:	Documentation/filesystems/cramfs.rst
+ F:	fs/cramfs/
+ 
++CRAY CLUSTERSTOR E1000 NVME SLOT LED DRIVER EXTENSIONS
++M:	Tony Hutter <hutter2@llnl.gov>
++S:	Maintained
++F:	drivers/pci/hotplug/pciehp_craye1k.c
++
+ CRC LIBRARY
+ M:	Eric Biggers <ebiggers@kernel.org>
+ R:	Ard Biesheuvel <ardb@kernel.org>
+diff --git a/drivers/pci/hotplug/Kconfig b/drivers/pci/hotplug/Kconfig
+index 123c4c7c2ab5..75c77cec0b21 100644
+--- a/drivers/pci/hotplug/Kconfig
++++ b/drivers/pci/hotplug/Kconfig
+@@ -183,4 +183,14 @@ config HOTPLUG_PCI_S390
+ 
+ 	  When in doubt, say Y.
+ 
++config HOTPLUG_PCI_PCIE_CRAY_E1000
++	bool "PCIe Hotplug extensions for Cray ClusterStor E1000"
++	depends on HOTPLUG_PCI_PCIE && IPMI_HANDLER=y
++	help
++	  Say Y here if you have a Cray ClusterStor E1000 and want to control
++	  your NVMe slot LEDs.  Without this driver is it not possible
++	  to control the fault and locate LEDs on the E1000's 24 NVMe slots.
++
++	  When in doubt, say N.
++
+ endif # HOTPLUG_PCI
+diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
+index 40aaf31fe338..82a1f0592d0a 100644
+--- a/drivers/pci/hotplug/Makefile
++++ b/drivers/pci/hotplug/Makefile
+@@ -66,6 +66,9 @@ pciehp-objs		:=	pciehp_core.o	\
+ 				pciehp_ctrl.o	\
+ 				pciehp_pci.o	\
+ 				pciehp_hpc.o
++ifdef CONFIG_HOTPLUG_PCI_PCIE_CRAY_E1000
++pciehp-objs		+=	pciehp_craye1k.o
++endif
+ 
+ shpchp-objs		:=	shpchp_core.o	\
+ 				shpchp_ctrl.o	\
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index 273dd8c66f4e..ea68ae041547 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -198,6 +198,13 @@ int pciehp_get_raw_indicator_status(struct hotplug_slot *h_slot, u8 *status);
+ 
+ int pciehp_slot_reset(struct pcie_device *dev);
+ 
++#ifdef CONFIG_HOTPLUG_PCI_PCIE_CRAY_E1000
++int craye1k_get_attention_status(struct hotplug_slot *hotplug_slot, u8 *status);
++int craye1k_set_attention_status(struct hotplug_slot *hotplug_slot, u8 status);
++bool is_craye1k_slot(struct controller *ctrl);
++int craye1k_init(void);
++#endif
++
+ static inline const char *slot_name(struct controller *ctrl)
+ {
+ 	return hotplug_slot_name(&ctrl->hotplug_slot);
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index ff458e692fed..9a7a7b320810 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -73,6 +73,13 @@ static int init_slot(struct controller *ctrl)
+ 		ops->get_attention_status = pciehp_get_raw_indicator_status;
+ 		ops->set_attention_status = pciehp_set_raw_indicator_status;
+ 	}
++#ifdef CONFIG_HOTPLUG_PCI_PCIE_CRAY_E1000
++	if (is_craye1k_slot(ctrl)) {
++		/* slots 1-24 on Cray E1000s are controlled differently */
++		ops->get_attention_status = craye1k_get_attention_status;
++		ops->set_attention_status = craye1k_set_attention_status;
++	}
++#endif
+ 
+ 	/* register this slot with the hotplug pci core */
+ 	ctrl->hotplug_slot.ops = ops;
+@@ -404,6 +411,11 @@ int __init pcie_hp_init(void)
+ 	pr_debug("pcie_port_service_register = %d\n", retval);
+ 	if (retval)
+ 		pr_debug("Failure to register service\n");
++#ifdef CONFIG_HOTPLUG_PCI_PCIE_CRAY_E1000
++	retval = craye1k_init();
++	if (retval)
++		pr_debug("Failure to register Cray E1000 extensions");
++#endif
+ 
+ 	return retval;
+ }
+diff --git a/drivers/pci/hotplug/pciehp_craye1k.c b/drivers/pci/hotplug/pciehp_craye1k.c
+new file mode 100644
+index 000000000000..844b36882316
+--- /dev/null
++++ b/drivers/pci/hotplug/pciehp_craye1k.c
+@@ -0,0 +1,659 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2022-2024 Lawrence Livermore National Security, LLC
++ */
++/*
++ * Cray ClusterStor E1000 hotplug slot LED driver extensions
++ *
++ * This driver controls the NVMe slot LEDs on the Cray ClusterStore E1000.
++ * It provides hotplug attention status callbacks for the 24 NVMe slots on
++ * the E1000.  This allows users to access the E1000's locate and fault
++ * LEDs via the normal /sys/bus/pci/slots/<slot>/attention sysfs entries.
++ * This driver uses IPMI to communicate with the E1000 controller to toggle
++ * the LEDs.
++ *
++ * This driver is based off of ibmpex.c
++ */
++
++#include <linux/debugfs.h>
++#include <linux/delay.h>
++#include <linux/errno.h>
++#include <linux/dmi.h>
++#include <linux/ipmi.h>
++#include <linux/ipmi_smi.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/pci_hotplug.h>
++#include <linux/random.h>
++#include "pciehp.h"
++
++/* Cray E1000 commands */
++#define CRAYE1K_CMD_NETFN       0x3c
++#define CRAYE1K_CMD_PRIMARY     0x33
++#define CRAYE1K_CMD_FAULT_LED   0x39
++#define CRAYE1K_CMD_LOCATE_LED  0x22
++
++/* Subcommands */
++#define CRAYE1K_GET_LED		0x0
++#define CRAYE1K_SET_LED		0x1
++#define CRAYE1K_SET_PRIMARY		0x1
++
++/*
++ * Milliseconds to wait after get/set LED command.  200ms value found though
++ * experimentation
++ */
++#define	CRAYE1K_POST_CMD_WAIT_MS	200
++
++struct craye1k {
++	struct device *dev;   /* BMC device */
++	struct mutex lock;
++	struct completion read_complete;
++	struct ipmi_addr address;
++	struct ipmi_user *user;
++	int iface;
++
++	long tx_msg_id;
++	struct kernel_ipmi_msg tx_msg;
++	unsigned char tx_msg_data[IPMI_MAX_MSG_LENGTH];
++	unsigned char rx_msg_data[IPMI_MAX_MSG_LENGTH];
++	unsigned long rx_msg_len;
++	unsigned char rx_result;	/* IPMI completion code */
++
++	/* Parent dir for all our debugfs entries */
++	struct dentry *parent;
++
++	/* debugfs stats */
++	u64 check_primary;
++	u64 check_primary_failed;
++	u64 was_already_primary;
++	u64 was_not_already_primary;
++	u64 set_primary;
++	u64 set_initial_primary_failed;
++	u64 set_primary_failed;
++	u64 set_led_locate_failed;
++	u64 set_led_fault_failed;
++	u64 set_led_readback_failed;
++	u64 set_led_failed;
++	u64 get_led_failed;
++	u64 completion_timeout;
++	u64 wrong_msgid;
++	u64 request_failed;
++
++	/* debugfs configuration options */
++
++	/* Print info on spurious IPMI messages */
++	bool print_errors;
++
++	/* Retries for kernel IPMI layer */
++	u32 ipmi_retries;
++
++	/* Timeout in ms for IPMI (0 = use IPMI default_retry_ms) */
++	u32 ipmi_timeout_ms;
++
++	/* Timeout in ms to wait for E1000 message completion */
++	u32 completion_timeout_ms;
++};
++
++/*
++ * Make our craye1k a global so get/set_attention_status() can access it.
++ * This is safe since there's only one node controller on the board, and so it's
++ * impossible to instantiate more than one craye1k.
++ */
++static struct craye1k *craye1k_global;
++
++/* Return parent dir dentry */
++static struct dentry *
++craye1k_debugfs_init(struct craye1k *craye1k)
++{
++	umode_t mode = 0644;
++	struct dentry *parent = debugfs_create_dir("pciehp_craye1k", NULL);
++
++	if (!parent)
++		return NULL;
++
++	debugfs_create_x64("check_primary", mode, parent,
++			   &craye1k->check_primary);
++	debugfs_create_x64("check_primary_failed", mode, parent,
++			   &craye1k->check_primary_failed);
++	debugfs_create_x64("was_already_primary", mode, parent,
++			   &craye1k->was_already_primary);
++	debugfs_create_x64("was_not_already_primary", mode, parent,
++			   &craye1k->was_not_already_primary);
++	debugfs_create_x64("set_primary", mode, parent,
++			   &craye1k->set_primary);
++	debugfs_create_x64("set_initial_primary_failed", mode, parent,
++			   &craye1k->set_initial_primary_failed);
++	debugfs_create_x64("set_primary_failed", mode, parent,
++			   &craye1k->set_primary_failed);
++	debugfs_create_x64("set_led_locate_failed", mode, parent,
++			   &craye1k->set_led_locate_failed);
++	debugfs_create_x64("set_led_fault_failed", mode, parent,
++			   &craye1k->set_led_fault_failed);
++	debugfs_create_x64("set_led_readback_failed", mode, parent,
++			   &craye1k->set_led_readback_failed);
++	debugfs_create_x64("set_led_failed", mode, parent,
++			   &craye1k->set_led_failed);
++	debugfs_create_x64("get_led_failed", mode, parent,
++			   &craye1k->get_led_failed);
++	debugfs_create_x64("completion_timeout", mode, parent,
++			   &craye1k->completion_timeout);
++	debugfs_create_x64("wrong_msgid", mode, parent,
++			   &craye1k->wrong_msgid);
++	debugfs_create_x64("request_failed", mode, parent,
++			   &craye1k->request_failed);
++
++	debugfs_create_x32("ipmi_retries", mode, parent,
++			   &craye1k->ipmi_retries);
++	debugfs_create_x32("ipmi_timeout_ms", mode, parent,
++			   &craye1k->ipmi_timeout_ms);
++	debugfs_create_x32("completion_timeout_ms", mode, parent,
++			   &craye1k->completion_timeout_ms);
++	debugfs_create_bool("print_errors", mode, parent,
++			    &craye1k->print_errors);
++
++	return parent;
++}
++
++/*
++ * craye1k_msg_handler() - IPMI message response handler
++ */
++static void craye1k_msg_handler(struct ipmi_recv_msg *msg, void *user_msg_data)
++{
++	struct craye1k *craye1k = user_msg_data;
++
++	if (msg->msgid != craye1k->tx_msg_id) {
++		craye1k->wrong_msgid++;
++		if (craye1k->print_errors) {
++			dev_warn_ratelimited(craye1k->dev, "rx msgid %d != %d",
++					     (int)msg->msgid,
++					     (int)craye1k->tx_msg_id);
++		}
++		ipmi_free_recv_msg(msg);
++		return;
++	}
++
++	/* Set rx_result to the IPMI completion code */
++	if (msg->msg.data_len > 0)
++		craye1k->rx_result = msg->msg.data[0];
++	else
++		craye1k->rx_result = IPMI_UNKNOWN_ERR_COMPLETION_CODE;
++
++	if (msg->msg.data_len > 1) {
++		/* Exclude completion code from data bytes */
++		craye1k->rx_msg_len = msg->msg.data_len - 1;
++		memcpy(craye1k->rx_msg_data, msg->msg.data + 1,
++		       craye1k->rx_msg_len);
++	} else {
++		craye1k->rx_msg_len = 0;
++	}
++
++	ipmi_free_recv_msg(msg);
++
++	complete(&craye1k->read_complete);
++}
++
++static const struct ipmi_user_hndl craye1k_user_hndl = {
++	.ipmi_recv_hndl = craye1k_msg_handler
++};
++
++static void craye1k_new_smi(int iface, struct device *dev)
++{
++	int rc;
++	struct craye1k *craye1k;
++
++	/* There's only one node controller so driver data should not be set */
++	WARN_ON(craye1k_global);
++
++	craye1k = kzalloc(sizeof(*craye1k), GFP_KERNEL);
++	if (!craye1k)
++		return;
++
++	craye1k->address.addr_type = IPMI_SYSTEM_INTERFACE_ADDR_TYPE;
++	craye1k->address.channel = IPMI_BMC_CHANNEL;
++	craye1k->iface = iface;
++	craye1k->dev = dev;
++	craye1k->tx_msg.data = craye1k->tx_msg_data;
++	craye1k->ipmi_retries = 4;
++	craye1k->ipmi_timeout_ms = 500;
++	craye1k->completion_timeout_ms = 300;
++
++	init_completion(&craye1k->read_complete);
++	mutex_init(&craye1k->lock);
++
++	dev_set_drvdata(dev, craye1k);
++
++	rc = ipmi_create_user(craye1k->iface, &craye1k_user_hndl, craye1k,
++			      &craye1k->user);
++	if (rc < 0) {
++		dev_err_ratelimited(dev,
++				    "Unable to register IPMI user, iface %d\n",
++				    craye1k->iface);
++		kfree(craye1k);
++		dev_set_drvdata(dev, NULL);
++		return;
++	}
++
++	craye1k_global = craye1k;
++
++	craye1k->parent = craye1k_debugfs_init(craye1k);
++	if (!craye1k->parent)
++		dev_warn_ratelimited(dev, "Cannot create debugfs");
++
++	dev_info_ratelimited(dev,
++			     "Cray ClusterStor E1000 slot LEDs registered");
++}
++
++static void craye1k_smi_gone(int iface)
++{
++	pr_warn("craye1k: Got unexpected smi_gone, iface=%d", iface);
++}
++
++static struct ipmi_smi_watcher craye1k_smi_watcher = {
++	.owner = THIS_MODULE,
++	.new_smi = craye1k_new_smi,
++	.smi_gone = craye1k_smi_gone
++};
++
++/*
++ * craye1k_send_message() - Send the message already setup in 'craye1k'
++ *
++ * Context: craye1k->lock is already held.
++ * Return: 0 on success, non-zero on error.
++ */
++static int craye1k_send_message(struct craye1k *craye1k)
++{
++	int rc;
++
++	rc = ipmi_validate_addr(&craye1k->address, sizeof(craye1k->address));
++	if (rc) {
++		dev_err_ratelimited(craye1k->dev, "validate_addr() = %d\n", rc);
++		return rc;
++	}
++
++	craye1k->tx_msg_id++;
++
++	rc = ipmi_request_settime(craye1k->user, &craye1k->address,
++				  craye1k->tx_msg_id, &craye1k->tx_msg, craye1k,
++				  0, craye1k->ipmi_retries,
++				  craye1k->ipmi_timeout_ms);
++
++	if (rc) {
++		craye1k->request_failed++;
++		return rc;
++	}
++
++	return 0;
++}
++
++/*
++ * craye1k_do_message() - Send the message in 'craye1k' and wait for a response
++ *
++ * Context: craye1k->lock is already held.
++ * Return: 0 on success, non-zero on error.
++ */
++static int craye1k_do_message(struct craye1k *craye1k)
++{
++	int rc;
++	struct completion *read_complete = &craye1k->read_complete;
++	unsigned long tout = msecs_to_jiffies(craye1k->completion_timeout_ms);
++
++	rc = craye1k_send_message(craye1k);
++	if (rc)
++		return rc;
++
++	rc = wait_for_completion_killable_timeout(read_complete, tout);
++	if (rc == 0) {
++		/* timed out */
++		craye1k->completion_timeout++;
++		return -ETIME;
++	}
++
++	return 0;
++}
++
++/*
++ * __craye1k_do_command() - Do an IPMI command
++ *
++ * Send a command with optional data bytes, and read back response bytes.
++ * Context: craye1k->lock is already held.
++ * Returns: 0 on success, non-zero on error.
++ */
++static int __craye1k_do_command(struct craye1k *craye1k, u8 netfn, u8 cmd,
++				u8 *send_data, u8 send_data_len, u8 *recv_data,
++				u8 recv_data_len)
++{
++	int rc;
++
++	craye1k->tx_msg.netfn = netfn;
++	craye1k->tx_msg.cmd = cmd;
++
++	if (send_data) {
++		memcpy(&craye1k->tx_msg_data[0], send_data, send_data_len);
++		craye1k->tx_msg.data_len = send_data_len;
++	} else {
++		craye1k->tx_msg_data[0] = 0;
++		craye1k->tx_msg.data_len = 0;
++	}
++
++	rc = craye1k_do_message(craye1k);
++	if (rc == 0)
++		memcpy(recv_data, craye1k->rx_msg_data, recv_data_len);
++
++	return rc;
++}
++
++/*
++ * craye1k_do_command() - Do a Cray E1000 specific IPMI command.
++ * @cmd: Cray E1000 specific command
++ * @send_data:  Data to send after the command
++ * @send_data_len: Data length
++ *
++ * Context: craye1k->lock is already held.
++ * Returns: the last byte from the response or 0 if response had no response
++ * data bytes, else -1 on error.
++ */
++static int craye1k_do_command(struct craye1k *craye1k, u8 cmd, u8 *send_data,
++			      u8 send_data_len)
++{
++	int rc;
++
++	rc = __craye1k_do_command(craye1k, CRAYE1K_CMD_NETFN, cmd, send_data,
++				  send_data_len, NULL, 0);
++	if (rc != 0) {
++		/* Error attempting command */
++		return -1;
++	}
++
++	if (craye1k->tx_msg.data_len == 0)
++		return 0;
++
++	/* Return last received byte value */
++	return craye1k->rx_msg_data[craye1k->rx_msg_len - 1];
++}
++
++/*
++ * __craye1k_set_primary() - Tell the BMC we want to be the primary server
++ *
++ * An E1000 board has two physical servers on it.  In order to set a slot
++ * NVMe LED, this server needs to first tell the BMC that it's the primary
++ * server.
++ *
++ * Returns: 0 on success, non-zero on error.
++ */
++static int __craye1k_set_primary(struct craye1k *craye1k)
++{
++	u8 bytes[2] = {CRAYE1K_SET_PRIMARY, 1};	/* set primary to 1 */
++
++	craye1k->set_primary++;
++	return craye1k_do_command(craye1k, CRAYE1K_CMD_PRIMARY, bytes, 2);
++}
++
++/*
++ * craye1k_is_primary() - Are we the primary server?
++ *
++ * Returns: true if we are the primary server, false otherwise.
++ */
++static bool craye1k_is_primary(struct craye1k *craye1k)
++{
++	u8 byte = 0;
++	int rc;
++
++	/* Response byte is 0x1 on success */
++	rc = craye1k_do_command(craye1k, CRAYE1K_CMD_PRIMARY, &byte, 1);
++	craye1k->check_primary++;
++	if (rc == 0x1)
++		return true;   /* success */
++
++	craye1k->check_primary_failed++;
++	return false;   /* We are not the primary server node */
++}
++
++/*
++ * craye1k_set_primary() - Attempt to set ourselves as the primary server
++ *
++ * Returns: 0 on success, -1 otherwise.
++ */
++static int craye1k_set_primary(struct craye1k *craye1k)
++{
++	int tries = 10;
++
++	if (craye1k_is_primary(craye1k)) {
++		craye1k->was_already_primary++;
++		return 0;
++	}
++	craye1k->was_not_already_primary++;
++
++	/* delay found through experimentation */
++	msleep(300);
++
++	if (__craye1k_set_primary(craye1k) != 0) {
++		craye1k->set_initial_primary_failed++;
++		return -1;	/* error */
++	}
++
++	/*
++	 * It can take 2 to 3 seconds after setting primary for the controller
++	 * to report that it is the primary.
++	 */
++	while (tries--) {
++		msleep(500);
++		if (craye1k_is_primary(craye1k))
++			break;
++	}
++
++	if (tries == 0) {
++		craye1k->set_primary_failed++;
++		return -1;	/* never reported that it's primary */
++	}
++
++	/* Wait for primary switch to finish */
++	msleep(1500);
++
++	return 0;
++}
++
++/*
++ * craye1k_get_slot_led() - Get slot LED value
++ * @slot: Slot number (1-24)
++ * @is_locate_led: 0 = get fault LED value, 1 = get locate LED value
++ *
++ * Returns: slot value on success, -1 on failure.
++ */
++static int craye1k_get_slot_led(struct craye1k *craye1k, unsigned char slot,
++				bool is_locate_led)
++{
++	u8 bytes[2];
++	u8 cmd;
++
++	bytes[0] = CRAYE1K_GET_LED;
++	bytes[1] = slot;
++
++	cmd = is_locate_led ? CRAYE1K_CMD_LOCATE_LED : CRAYE1K_CMD_FAULT_LED;
++
++	return craye1k_do_command(craye1k, cmd, bytes, 2);
++}
++
++/*
++ * craye1k_set_slot_led() - Attempt to set the locate/fault LED to a value
++ * @slot: Slot number (1-24)
++ * @is_locate_led: 0 = use fault LED, 1 = use locate LED
++ * @value: Value to set (0 or 1)
++ *
++ * Check the LED value after calling this function to ensure it has been set
++ * properly.
++ *
++ * Returns: 0 on success, non-zero on failure.
++ */
++static int craye1k_set_slot_led(struct craye1k *craye1k, unsigned char slot,
++				unsigned char is_locate_led,
++				unsigned char value)
++{
++	u8 bytes[3];
++	u8 cmd;
++
++	bytes[0] = CRAYE1K_SET_LED;
++	bytes[1] = slot;
++	bytes[2] = value;
++
++	cmd = is_locate_led ? CRAYE1K_CMD_LOCATE_LED : CRAYE1K_CMD_FAULT_LED;
++
++	return craye1k_do_command(craye1k, cmd, bytes, 3);
++}
++
++static int __craye1k_get_attention_status(struct hotplug_slot *hotplug_slot,
++					  u8 *status, bool set_primary)
++{
++	unsigned char slot;
++	int locate, fault;
++	struct craye1k *craye1k;
++
++	craye1k = craye1k_global;
++	slot = PSN(to_ctrl(hotplug_slot));
++
++	if (set_primary) {
++		if (craye1k_set_primary(craye1k) != 0) {
++			craye1k->get_led_failed++;
++			return -EIO;
++		}
++	}
++
++	locate = craye1k_get_slot_led(craye1k, slot, true);
++	if (locate == -1) {
++		craye1k->get_led_failed++;
++		return -EINVAL;
++	}
++	msleep(CRAYE1K_POST_CMD_WAIT_MS);
++
++	fault = craye1k_get_slot_led(craye1k, slot, false);
++	if (fault == -1) {
++		craye1k->get_led_failed++;
++		return -EINVAL;
++	}
++	msleep(CRAYE1K_POST_CMD_WAIT_MS);
++
++	*status = locate << 1 | fault;
++
++	return 0;
++}
++
++int craye1k_get_attention_status(struct hotplug_slot *hotplug_slot,
++				 u8 *status)
++{
++	int rc;
++	struct craye1k *craye1k;
++
++	craye1k = craye1k_global;
++
++	if (mutex_lock_interruptible(&craye1k->lock) != 0)
++		return -EINTR;
++
++	rc =  __craye1k_get_attention_status(hotplug_slot, status, true);
++
++	mutex_unlock(&craye1k->lock);
++	return rc;
++}
++
++int craye1k_set_attention_status(struct hotplug_slot *hotplug_slot,
++				 u8 status)
++{
++	unsigned char slot;
++	int tries = 4;
++	int rc;
++	u8 new_status;
++	struct craye1k *craye1k;
++	bool locate, fault;
++
++	craye1k = craye1k_global;
++
++	slot = PSN(to_ctrl(hotplug_slot));
++
++	if (mutex_lock_interruptible(&craye1k->lock) != 0)
++		return -EINTR;
++
++	/* Retry to ensure all LEDs are set */
++	while (tries--) {
++		/*
++		 * The node must first set itself to be the primary node before
++		 * setting the slot LEDs (each board has two nodes, or
++		 * "servers" as they're called by the manufacturer).  This can
++		 * lead to contention if both nodes are trying to set the LEDs
++		 * at the same time.
++		 */
++		rc = craye1k_set_primary(craye1k);
++		if (rc != 0) {
++			/* Could not set as primary node.  Just retry again. */
++			continue;
++		}
++
++		/* Write value twice to increase success rate */
++		locate = (status & 0x2) >> 1;
++		craye1k_set_slot_led(craye1k, slot, 1, locate);
++		if (craye1k_set_slot_led(craye1k, slot, 1, locate) != 0) {
++			craye1k->set_led_locate_failed++;
++			continue;	/* fail, retry */
++		}
++
++		msleep(CRAYE1K_POST_CMD_WAIT_MS);
++
++		fault = status & 0x1;
++		craye1k_set_slot_led(craye1k, slot, 0, fault);
++		if (craye1k_set_slot_led(craye1k, slot, 0, fault) != 0) {
++			craye1k->set_led_fault_failed++;
++			continue;	/* fail, retry */
++		}
++
++		msleep(CRAYE1K_POST_CMD_WAIT_MS);
++
++		rc = __craye1k_get_attention_status(hotplug_slot, &new_status,
++						    false);
++
++		msleep(CRAYE1K_POST_CMD_WAIT_MS);
++
++		if (rc == 0 && new_status == status)
++			break;	/* success */
++
++		craye1k->set_led_readback_failed++;
++
++		/*
++		 * At this point we weren't successful in setting the LED and
++		 * need to try again.
++		 *
++		 * Do a random back-off to reduce contention with other server
++		 * node in the unlikely case that both server nodes are trying to
++		 * trying to set a LED at the same time.
++		 *
++		 * The 500ms minimum in the back-off reduced the chance of this
++		 * whole retry loop failing from 1 in 700 to none in 10000.
++		 */
++		msleep(500 + (get_random_long() % 500));
++	}
++	mutex_unlock(&craye1k->lock);
++	if (tries == 0) {
++		craye1k->set_led_failed++;
++		return -EIO;
++	}
++
++	return 0;
++}
++
++static bool is_craye1k_board(void)
++{
++	return dmi_match(DMI_PRODUCT_NAME, "VSSEP1EC");
++}
++
++bool is_craye1k_slot(struct controller *ctrl)
++{
++	return (PSN(ctrl) >= 1 && PSN(ctrl) <= 24 && is_craye1k_board());
++}
++
++int craye1k_init(void)
++{
++	if (!is_craye1k_board())
++		return 0;
++
++	return ipmi_smi_watcher_register(&craye1k_smi_watcher);
++}
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Tony Hutter <hutter2@llnl.gov>");
++MODULE_DESCRIPTION("Cray E1000 NVMe Slot LED driver");
+-- 
+2.43.5
 
-> 
-> > Consider that the TSM driver may
-> > itself be a PCI driver. Userspace can watch /sys/class/tsm/tsm0/uevent
-> > to know when the PCI core has TSM services enabled.
-> > 
-> > The common verbs that the low-level TSM drivers implement are defined by
-> > 'struct pci_tsm_ops'. For now only 'connect' and 'disconnect' are
-> > defined for secure session and IDE establishment. The 'probe' and
-> > 'remove' operations setup per-device context representing the device's
-> > security manager (DSM). Note that there is only one DSM expected per
-> > physical PCI function, and that coordinates a variable number of
-> > assignable interfaces to CVMs.
-> > 
-> > The locking allows for multiple devices to be executing commands
-> > simultaneously, one outstanding command per-device and an rwsem flushes
-> > all in-flight commands when a TSM low-level driver/device is removed.
-> > 
-> > Thanks to Wu Hao for his work on an early draft of this support.
-> > 
-> > Cc: Lukas Wunner <lukas@wunner.de>
-> > Cc: Samuel Ortiz <sameo@rivosinc.com>
-> > Cc: Alexey Kardashevskiy <aik@amd.com>
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Co-developed-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> A few minor things inline.
-> 
-> Jonathan
-[..]
-> > diff --git a/drivers/pci/tsm.c b/drivers/pci/tsm.c
-> > new file mode 100644
-> > index 000000000000..04e9257a6e41
-> > --- /dev/null
-> > +++ b/drivers/pci/tsm.c
-> > @@ -0,0 +1,293 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * TEE Security Manager for the TEE Device Interface Security Protocol
-> > + * (TDISP, PCIe r6.1 sec 11)
-> > + *
-> > + * Copyright(c) 2024 Intel Corporation. All rights reserved.
-> > + */
-> > +
-> > +#define dev_fmt(fmt) "TSM: " fmt
-> > +
-> > +#include <linux/pci.h>
-> > +#include <linux/pci-doe.h>
-> > +#include <linux/sysfs.h>
-> > +#include <linux/xarray.h>
-> > +#include <linux/pci-tsm.h>
-> > +#include <linux/bitfield.h>
-> 
-> Odd header ordering.  Anything consistent is fine by me but
-> this just feels random.
 
-Grouped the PCI ones together and X-mas-treed it.
-
-> > +#include "pci.h"
-> > +
-> > +/*
-> > + * Provide a read/write lock against the init / exit of pdev tsm
-> > + * capabilities and arrival/departure of a tsm instance
-> > + */
-> > +static DECLARE_RWSEM(pci_tsm_rwsem);
-> > +static const struct pci_tsm_ops *tsm_ops;
-> > +
-> > +/* supplemental attributes to surface when pci_tsm_attr_group is active */
-> > +static const struct attribute_group *pci_tsm_owner_attr_group;
-> > +
-> > +static int pci_tsm_disconnect(struct pci_dev *pdev)
-> > +{
-> > +	struct pci_tsm *pci_tsm = pdev->tsm;
-> > +
-> > +	lockdep_assert_held(&pci_tsm_rwsem)
-> > +	if_not_guard(mutex_intr, &pci_tsm->lock)
-> 
-> Sadly that got dropped.
-
-RIP.
-
-> 
-> > +		return -EINTR;
-> > +
-> > +	if (pci_tsm->state < PCI_TSM_CONNECT)
-> > +		return 0;
-> > +	if (pci_tsm->state < PCI_TSM_INIT)
-> > +		return -ENXIO;
-> > +
-> > +	tsm_ops->disconnect(pdev);
-> > +	pci_tsm->state = PCI_TSM_INIT;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> 
-> > +static struct attribute *pci_tsm_attrs[] = {
-> > +	&dev_attr_connect.attr,
-> > +	NULL,
-> 
-> Trivia but no comma given it's a terminator and nothing will
-> ever come after it.
-
-Ok.
-
-> 
-> 
-> > +};
-> > +
-> > +const struct attribute_group pci_tsm_attr_group = {
-> > +	.name = "tsm",
-> > +	.attrs = pci_tsm_attrs,
-> > +	.is_visible = SYSFS_GROUP_VISIBLE(pci_tsm),
-> > +};
-> > +
-> > +static ssize_t authenticated_show(struct device *dev,
-> > +				  struct device_attribute *attr, char *buf)
-> > +{
-> > +	/*
-> > +	 * When device authentication is TSM owned, 'authenticated' is
-> > +	 * identical to the connect state.
-> > +	 */
-> > +	return connect_show(dev, attr, buf);
-> > +}
-> > +static DEVICE_ATTR_RO(authenticated);
-> > +
-> > +static struct attribute *pci_tsm_auth_attrs[] = {
-> > +	&dev_attr_authenticated.attr,
-> > +	NULL,
-> no comma
-
-Ok.
-
-> 
-> > +};
-> 
-> 
-> > +void pci_tsm_destroy(struct pci_dev *pdev)
-> > +{
-> > +	guard(rwsem_write)(&pci_tsm_rwsem);
-> > +	__pci_tsm_destroy(pdev);
-> > +}
-> > +
-> > +void pci_tsm_unregister(const struct pci_tsm_ops *ops)
-> 
-> I'd try to name things so it is clearer when a function
-> is about the TSM coming and going vs a particular PCI
-> device coming and going after the TSM is loaded.
-
-I will add "core" to the ones that are registering ops from the TSM core
-to the PCI core.
-
-> At least that's what I'm assuming is the difference between
-> pci_tsm_unregister() tsm going vs
-> pci_tsm_destroy() particular PCI device driver being unbound
-> (which I don't think gets called, so maybe drop for now?)
-
-pci_destroy_dev() calls it.
 
