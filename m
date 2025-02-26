@@ -1,103 +1,138 @@
-Return-Path: <linux-pci+bounces-22465-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22466-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 69968A46DFC
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 22:59:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 048C8A46E2A
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 23:07:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 25A567A7BB2
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 21:57:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 528033AF42B
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 22:06:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 938BD265CBD;
-	Wed, 26 Feb 2025 21:58:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89D9126B2D3;
+	Wed, 26 Feb 2025 22:06:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TEtlYjj1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1fPqfqK"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF7523A9AE
-	for <linux-pci@vger.kernel.org>; Wed, 26 Feb 2025 21:58:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC2926B08D;
+	Wed, 26 Feb 2025 22:06:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740607124; cv=none; b=iwrArTaI5Mqd2LnymitAHFqzPJLJ8+Rbsgj0fueT+OJ8add6VH0WCoIFy+B6K3bJoVnODkhjW5YnNyfshaW8OuGIOuNTQWvIhHk0A9cAS25kcaX9MUZUJVOwZLYGdgjubHoCVBYqPbfole66eu9ZPgM8MN+lOdf+vpfV/yx/jVk=
+	t=1740607619; cv=none; b=Ujk8pJciuCU6iqOPffWroE2jFNfBGTsENJ54BCwWm+3O6NgJDi83V6ab4MQmm8kRPumaYZi6ha6ae/EQZd9/rBvArjNSRvYSnU6Y132WyNBNnL3bXssL27M3f6qyyWFDD0SbPnIhimZyc8LyUW/76HN57X0/0NSdjztqmVSE/UM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740607124; c=relaxed/simple;
-	bh=dGVQwofA2mF3rCKefgJ6shQpUqK/R0gqUE4OsUCwJis=;
+	s=arc-20240116; t=1740607619; c=relaxed/simple;
+	bh=YB0RjGNoksbKbFFqGOioUkcV8GHAMiCICWPvfuOYWT0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=g8sP4hQUclqv9pDTHfaSkO6g9HCJrkjRJjv/iwrxrwzMIA4GSy6fixdojbrPV8eZ+p8JtJRsK3Rb0uIGBB7yvRQwOnmjwnuCL/y/v2Aa70ofppUbNqzbXNCiQ3MrHxsqN6kkSbrXIcDAb+k6v2jguUFH7VTWSn7r41ENS0CseDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TEtlYjj1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB06EC4CED6;
-	Wed, 26 Feb 2025 21:58:43 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=Iae2IQmHHbHMIkkWjcIb+Qv1+fz2Dyl3GsvMKEShWuUkqgzOiYYraKPIWcsPtHdS8H7IrmWJQl7ZHMoDkn8NppC9QZF19D432e2qaYpENOE4czKSt11aJify3o022+MpJ59ZKwftJO1b6L9Dekl1FZWa8Hfokxi8mdz4utigCkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1fPqfqK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0236C4CED6;
+	Wed, 26 Feb 2025 22:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740607123;
-	bh=dGVQwofA2mF3rCKefgJ6shQpUqK/R0gqUE4OsUCwJis=;
+	s=k20201202; t=1740607618;
+	bh=YB0RjGNoksbKbFFqGOioUkcV8GHAMiCICWPvfuOYWT0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TEtlYjj1OZQCmUcSCvOaivbTUHKz9geYajadS3yxe94LJMVyvSHSFEC1feWpPa4HY
-	 cOwxr4QLepMbzplAFtAY+uXikfJdJ/lXWJWotY+dZuX4MQ8OCByj/F8s/97X9NXoS8
-	 sohIG5ahZiceFKwaXSqoXKzAcFVOJtiGyjneMrRmrtsYfiSbPTQC5qegBuQl90+989
-	 b09DTsBapvTxLrBMhKFF/mslrn9GUOpyYLp7QyhbyEJKEgtkgQuo8Qe+Ax5oC+5TQK
-	 pUN7AS0hq9OptVcuWPTLIvqF4D2CVwuaBDt7FLwKoa+YI1rzWQnTJ0z7PVrdJwZT4H
-	 dy+BXWrIMTDiQ==
-Date: Wed, 26 Feb 2025 15:58:42 -0600
+	b=i1fPqfqKA+Kac68vYf7CO3u0NVTGK5sMY0dArhm5aEVrBNG3EEoqXDE82a4yqx4lt
+	 G7rRHBw6EfpnS82Qjn9Gr3WfKlKdaYWQRiKIFZ+7SiR3SUVENRFAVwgLT86MyFIAZp
+	 R1OvbUxomRKq+eypZuLMfRHm0+MIp/ytjOJX6MipnMngbXKQ26WYJ58lPoV5WXgjxB
+	 H1bspIfl0FqQet5FVS3mKjTi82HVJBD2R0SJbU6jmwbcd+D7rqB/n2y2U8CckUj8YJ
+	 mB1H6gOSRm9CL25D5BZ2Y4X/lfxESWxrLYCTevRRrXsDL+TcIRbxLTRrgLL3XT0SCg
+	 kOofrYRQq7iGg==
+Date: Wed, 26 Feb 2025 16:06:53 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Borah, Chaitanya Kumar" <chaitanya.kumar.borah@intel.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"Kurmi, Suresh Kumar" <suresh.kumar.kurmi@intel.com>,
-	"Saarinen, Jani" <jani.saarinen@intel.com>
-Subject: Re: Regression on linux-next (next-20250221)
-Message-ID: <20250226215842.GA560520@bhelgaas>
+To: Sai Krishna Musham <sai.krishna.musham@amd.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
+	thippeswamy.havalige@amd.com
+Subject: Re: [PATCH v2 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST#
+ signal
+Message-ID: <20250226220653.GA561472@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SJ1PR11MB6129B4B298158496F8BD36B0B9C22@SJ1PR11MB6129.namprd11.prod.outlook.com>
+In-Reply-To: <20250226124358.88227-3-sai.krishna.musham@amd.com>
 
-On Wed, Feb 26, 2025 at 07:36:19PM +0000, Borah, Chaitanya Kumar wrote:
-> Hello Bjorn,
+On Wed, Feb 26, 2025 at 06:13:58PM +0530, Sai Krishna Musham wrote:
+> Add GPIO-based control for the PCIe Root Port PERST# signal.
 > 
-> Hope you are doing well. I am Chaitanya from the linux graphics team in Intel.
+> According to section 2.2 of the PCIe Electromechanical Specification
+> (Revision 6.0), PERST# signal has to be deasserted after a delay of
+> 100 ms (TPVPERL) to ensure proper reset sequencing during PCIe
+> initialization.
 > 
-> This mail is regarding a regression we are seeing in our CI runs[1] on linux-next repository.
+> Adapt to use the GPIO framework and make reset optional to keep DTB
+> backward compatibility.
 > 
-> Since the version next-20250221 [2], we are seeing that some of the machines in our CI are unable to connect through ssh (and therefore unable to participate).
-> Looking at the logs we see this.
+> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
+> ---
+> This patch depends on the following patch series.
+> https://lore.kernel.org/all/20250217072713.635643-3-thippeswamy.havalige@amd.com/
 > 
-> `````````````````````````````````````````````````````````````````````````````````
-> [    5.838496] e1000e: Intel(R) PRO/1000 Network Driver
-> [    5.838515] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
-> [    5.838737] e1000e 0000:01:00.0: Disabling ASPM  L1
-> [    5.840055] e1000e 0000:01:00.0: probe with driver e1000e failed with error -12
-> `````````````````````````````````````````````````````````````````````````````````
-> After bisecting the tree, the following patch [3] seems to be the first "bad"
-> commit
+> Changes for v2:
+> - Make the request GPIO optional.
+> - Correct the reset sequence as per PERST#
+> - Update commit message
+> ---
+>  drivers/pci/controller/pcie-xilinx-cpm.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 > 
-> `````````````````````````````````````````````````````````````````````````````````````````````````````````
-> commit 7d90d8d2bb1bfff8b33acbb6f815cba6f5250fad
-> Author: Bjorn Helgaas mailto:bhelgaas@google.com
-> Date:   Fri Feb 14 18:03:00 2025 -0600
-> 
->     PCI: Avoid pointless capability searches
-> 
->     Many of the save/restore functions in the pci_save_state() and
->     pci_restore_state() paths depend on both a PCI capability of the device and
->     a pci_cap_saved_state structure to hold the configuration data, and they
->     skip the operation if either is missing.
-> `````````````````````````````````````````````````````````````````````````````````````````````````````````
-> 
-> We verified that if we revert the patch the issue is not seen.
+> diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
+> index 81e8bfae53d0..aa0c61d30049 100644
+> --- a/drivers/pci/controller/pcie-xilinx-cpm.c
+> +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
+> @@ -6,6 +6,8 @@
+>   */
+>  
+>  #include <linux/bitfield.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irq.h>
+>  #include <linux/irqchip.h>
+> @@ -568,8 +570,29 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct pci_host_bridge *bridge;
+>  	struct resource_entry *bus;
+> +	struct gpio_desc *reset_gpio;
+>  	int err;
+>  
+> +	/* Request the GPIO for PCIe reset signal */
+> +	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(reset_gpio)) {
+> +		dev_err(dev, "Failed to request reset GPIO\n");
+> +		return PTR_ERR(reset_gpio);
+> +	}
+> +
+> +	/* Assert the reset signal */
+> +	gpiod_set_value(reset_gpio, 1);
+> +
+> +	/*
+> +	 * As per section 2.2 of the PCI Express Card Electromechanical
+> +	 * Specification (Revision 6.0), the deassertion of the PERST# signal
+> +	 * should be delayed by 100 ms (TPVPERL).
+> +	 */
+> +	msleep(100);
 
-Sorry about this; this patch was dropped in next-20250224
+Use PCIE_T_PVPERL_MS.  The comment at that #define is probably enough.
 
-Bjorn
+> +	/* Deassert the reset signal */
+> +	gpiod_set_value(reset_gpio, 0);
+> +
+>  	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
+>  	if (!bridge)
+>  		return -ENODEV;
+> -- 
+> 2.44.1
+> 
 
