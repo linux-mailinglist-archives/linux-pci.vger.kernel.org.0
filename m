@@ -1,76 +1,84 @@
-Return-Path: <linux-pci+bounces-22446-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22447-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4FBEA46326
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 15:39:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0205A463D3
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 15:55:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4231B3B4A67
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 14:38:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A31CB179F1B
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 14:55:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9F9022157A;
-	Wed, 26 Feb 2025 14:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A3ED221DAE;
+	Wed, 26 Feb 2025 14:55:43 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F98B21D3DA
-	for <linux-pci@vger.kernel.org>; Wed, 26 Feb 2025 14:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBCD221736;
+	Wed, 26 Feb 2025 14:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580695; cv=none; b=aP8X+zlKLOWB/CwAmOedFBFZg4kgxDLwKkDNXSGdk32ZOdx6zs7BOb78QYHrzy87yTa4EE5cntMYTX8h1iMJKb7E7SRylD578RVYjHOGaWJzrykslmbI2r3jVg1fwemLAoe6BOa0BYxhW68KAjlRgjYN86Sxko5wa4W3NuGN3R4=
+	t=1740581743; cv=none; b=uFA0dKg94Wr79ecC6Zr0JEo0ZFuLwfmVvpymObJAaNL7P/iPI1kDEnAPmf+9jlsxt1y8HTa6QGRyfNDysu25D28cSsuYWzQGSj3LNekN8ZajkNK4CDxJSHuul2EZj0rxI00D4urOjbim9RisRvTOuZZhSi5xcenWa7q7gdphK7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740580695; c=relaxed/simple;
-	bh=N7Ol210Sbch4pxmyeaNswvosyfErCldP9On3gJUokE0=;
+	s=arc-20240116; t=1740581743; c=relaxed/simple;
+	bh=kqe+6WP8zwuAM8lStwswFPaBIe7m1+DTxkz3F6unuCo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sg48fZHqckWY3TXLuWWzWzlCcmsBJeJSgt6vb+1owcq7FweB4jephdcyoCbFo3s2dSMiDK5XD5UJSbJsmeXe2qmsimBL9fScTgruwwjPlr/ezuyh5WXv51helad8thXpiuIGq0yiqjKHKVSOO6nwE8b3sAi5Hyk6iKp0z9vCcTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=YVAL1NGPYylcy51VEB0Id9udYiAqgpY79q1XJtsCbpCmMJpx1rkWfxSsIHGeOxp55+vYIJfbAedaWAxeOhCjbW8zMexaR7J9U6MqCDBseSAeNZ408jjewx89dpHqIIPjR3goJqRWulg0EdhctlTWIb8Ip3DKvdGRibhVAYkMmN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-220c8f38febso145195675ad.2
-        for <linux-pci@vger.kernel.org>; Wed, 26 Feb 2025 06:38:13 -0800 (PST)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2233622fdffso13127965ad.2;
+        Wed, 26 Feb 2025 06:55:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740580693; x=1741185493;
+        d=1e100.net; s=20230601; t=1740581741; x=1741186541;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZP5XsYkjBATp/MflxZ9Tkpm5N2IqpXbz5quKiUtkI0c=;
-        b=ErmHbp9MY1YUGPapUlMobFIFlTHqQExph0ekkkZiLZJP+qr3yZr8JELBm1kqbXx3k8
-         dDvqDgpmmmbac3AITdH7l/UiO39wQIre6eiaiDSNfzKyo6MJE65B7kdKQRIGaRhVArm0
-         jlpsfiBeArWiG8r2URKxiz1G4e3Q6Jg5CjwXd6vokLCHm/LGRq0jzpk7xkDdfWlY8xOO
-         6SBdPvWnXaZkgipQdQf2wJeiRmBwPFQN/fLZBjucW8TuWrov/azG9gVDRBbLGD6jXlxv
-         flkBVgdm92Q7hdqLGh+tphzJpU+71/jWz4tZMeviTTCZThKMVn4NBNDDw462AQVtM78k
-         CT/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWflYsqCx/qANZpyViAfp/g74pSBZ8RS6UeIoUNIOXn1UnboW9mbrIgzV3QMgmbOxvQRKxtKXcBslQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR9YK8fSSMQ4KKef18hEWwFYG5++J23or7avz3xwF0mhRdea/i
-	RtvgFvk/JLpOV7Ikdrj/BhxzUUxb/hdhc1ayKXVBimmvhLoBdpT5
-X-Gm-Gg: ASbGncuGIqBHhljMbEuzVLp0XnvXqv5VLnIQh5u/53cCbpzuo+WLHUnRqbqXO8xFjdr
-	0NfTcusEFr0KYK/AISsmuGThxG0drgtnDZa0qkRvNsWcFy6LF0huF4LbF4kOJCj01w0L61p5U9n
-	fANQQfm7YDdPy03xX76VLH+dngzD7fnhDD5GoXYDMr/tR5YJ09G70TP2IUt4s0Xsoe5WxpOz8BQ
-	S3sDp3Jhu6/PdtQek2uQMZddxIpXRSXXjqgukK8K8TEqp98uVrAqjU4QVXBh/b3lmTX2EFU7Cnz
-	c/tvA6YAZJXO7mVC+8dru1lcUocN2I4cOZVV1F0VwuZiG/z/xx+e2ftDQ8s/
-X-Google-Smtp-Source: AGHT+IGnXzD26/xqRmQTb2lsShO2tuqLHzjt2G/8QC2NoOh3UENI/h5w23EAO1KJwYLlCLAu2jv+TQ==
-X-Received: by 2002:a17:902:e54e:b0:220:d256:d133 with SMTP id d9443c01a7336-2219ff9e7f3mr391065875ad.14.1740580693169;
-        Wed, 26 Feb 2025 06:38:13 -0800 (PST)
+        bh=Qygdnn8/rGb3p7MtdeT/GcR8Vsv7irPMGDAbFAo9qWg=;
+        b=wVftFEvIU+SPPR6OVdvlIjsuOXVDDNHiB1panqSR5eoC0X7EZoU+xCbVxPIReZSJeX
+         iNq7b1s1HpSYNd+wWli1YwP/Jp+AF3a0gqp+AA9QNHZIfBc6+Db1jKeWnl9Fu8ulTwLd
+         WR/u76D2J4M9MI7NuK1g0ZcB7upRB0EeWSA8bvD/qyKw1qO/hUG8zmI0/vI2rjgvo378
+         1xfaHtLo+cVBJjkJjhITNAPH+YPfScQiRGnuFkSvx2TaoushX+vIdw08oozhmH6CDA84
+         mcwdggTSy4wZUaKoyXWRUbyxsZPzlHg2f723u9mGSjGboxoKd6GimJqnmDLc0JApQru0
+         SHTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUhsQVsfQaoOQ5ZeT2yIYfQebBpSlvHOjbRVizV9SwatrBShSTF97nLO5ngUUm181z/A39raEpTplXJ@vger.kernel.org, AJvYcCWtRCCqNVcWIk4BVRrjOJaKzHG4LIM+x3A61jwRnIPanTdVxs1zc7vEQe8YztBZANCAvOeNcfXUFbBqynz8@vger.kernel.org, AJvYcCX7nSJrNm9watK4L3sW8nx05SY/3VRHretviFD1z6KvbVSo9sn1WUnmfaG1r/ehnv0MNAt+imTqn0Yn@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHc8n76jQSr2mDOmUy538+GAVgiU0p9bWR/0ftK2nyXVPpSJ+P
+	t9zG63SHZHIoTD7zdbOJh90PBE+scmrATAIpGPgzqW/ue/yrbFzs
+X-Gm-Gg: ASbGncv+XdAcMVItF7hYESmikrG2SF7EjabTdxtZfeSuHS3jBXg94QALBt0tJKNgIs5
+	+n5DtEmCEisH78XjIeSuob9aUUdSpWLcAvQpaCk/kbrtsP3CJD5XZDucexfq0bk5nnYdsxRimo/
+	C6Yju+WJYxJwgcuRYRnirbHULH/vDRmW0TeOJvewWlHHIST+wCFDCoEbYho8PQ3YaT1HfSNpyYX
+	yCT/GIRIpRJe/XtVNVR3cYMbibEpMjBu19a4p7y1K1aCdUB8WTMukMcGiSIKqXjZyc0l3YapOU4
+	8ReerGQxr69miNRycsgj/IsvfGxDdUFKzxZlH+/veGAFyEjPohgUb1QpbKsD
+X-Google-Smtp-Source: AGHT+IHpReDZSPPm6VjjIZPy7MkI2n87DOyqv+KvtWFP7LuZsR9/Xzl8+SaiWZs9PmK6WFRJ4senxw==
+X-Received: by 2002:a05:6a00:1709:b0:732:2967:400 with SMTP id d2e1a72fcca58-7347910977emr12444159b3a.12.1740581741225;
+        Wed, 26 Feb 2025 06:55:41 -0800 (PST)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2230a01fcacsm32916285ad.95.2025.02.26.06.38.12
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7347a6f761fsm3544593b3a.47.2025.02.26.06.55.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 06:38:12 -0800 (PST)
-Date: Wed, 26 Feb 2025 23:38:10 +0900
+        Wed, 26 Feb 2025 06:55:40 -0800 (PST)
+Date: Wed, 26 Feb 2025 23:55:39 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Niklas Cassel <cassel@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: dwc: ep: Remove superfluous function
- dw_pcie_ep_find_ext_capability()
-Message-ID: <20250226143810.GB3546651@rocinante>
-References: <20250221202646.395252-3-cassel@kernel.org>
- <20250222155002.lnig57ku6treeznz@thinkpad>
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Frank Li <Frank.li@nxp.com>,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux@ew.tq-group.com
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: fsl,imx6q-pcie: Add optional DMA
+ interrupt
+Message-ID: <20250226145539.GA3691935@rocinante>
+References: <20250225102726.654070-1-alexander.stein@ew.tq-group.com>
+ <20250225102726.654070-2-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,14 +87,13 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250222155002.lnig57ku6treeznz@thinkpad>
+In-Reply-To: <20250225102726.654070-2-alexander.stein@ew.tq-group.com>
 
 Hello,
 
-> > Remove the superfluous function dw_pcie_ep_find_ext_capability(), as it is
-> > virtually identical to dw_pcie_find_ext_capability().
+> i.MX8QM and i.MX8QXP/DXP have an additional interrupt for DMA.
 
-Applied to endpoint, thank you!
+Applied to dt-bindings, thank you!
 
 	Krzysztof
 
