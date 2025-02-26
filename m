@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-22461-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22462-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2CD30A46D2D
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 22:13:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65356A46D33
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 22:14:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 330B63A658E
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 21:13:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B7F551887CDC
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Feb 2025 21:14:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31D70258CEA;
-	Wed, 26 Feb 2025 21:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9C9525A656;
+	Wed, 26 Feb 2025 21:14:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="FcAHGQWH"
+	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="ZqghOfAq"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1979D2586CD;
-	Wed, 26 Feb 2025 21:13:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF89D21CC54;
+	Wed, 26 Feb 2025 21:14:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740604407; cv=none; b=hvbQLKpZf5Qk8Rr8vcjTEN+3oZkM/9EiQ+N4Gl9WVYH5EqGjNe9P1LfCeRLXd+pUHQ81tegJy03upQ3bl8+Vag+u7qfJIIfj1yLXey3R0bkDdQxuadKE650McnfgfoQDN/VVsIynRsJb76IzEPeqpFoFL1xWZNWKxYXQeVyd+kQ=
+	t=1740604477; cv=none; b=UVg+fSFLkNyFQOP3cK1ctUp6W6VOfk5GTd9tr15mJBJRMYJhEtnQtQccBN8GcNORSVtRu5ferBaqjzjUxhXQJvNgGzbNBe0wZRyz9Jyn3HBTQy7rmUM6EFFrD42wgQ46b0/3tc6GG/10brHH8xuDXZqaMkpe9tDRymmiwq85KZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740604407; c=relaxed/simple;
-	bh=E/dJ5Y8bdjQYw6GSaDq5ATC1vAkUsCnMT24XUYEUe58=;
+	s=arc-20240116; t=1740604477; c=relaxed/simple;
+	bh=XcLEjNFPOoLRIwImSrjAbC/QV0oZJMWCJiJfGnQ9RQY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r+4rHq+3Gk8+OJsFvDgHot6aPCqW2K6gLe8YRJxAvsNJqvJDrHTPl/+QPsTIwD0JmC1SqjIiRpwBJIBEUQ+ojWwFGg7mSRxSACoVpagrV3LlTd8KMaVSUaLqOGww4AV5XC/PQ5vanzkNc76fZfWyDTci1b8WP1NvTt/FQwvwz1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=FcAHGQWH; arc=none smtp.client-ip=166.84.1.89
+	 In-Reply-To:Content-Type; b=HmbWVNgeq3gQtnvXAFlAc0JRLRMJPHZWzu+SEOPeAgh0T0Pc33CWo8SY0ZjNLTVYwpjR/qp4t01LJkAfkBlSN0r4BhwVTgN+ViQ3KpHfeTjqaR53QH0bmvANgERM64zlw3FQILvAetYx0U9tBrCvtc7E40qsc7zw+vXRVKIWJ20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=ZqghOfAq; arc=none smtp.client-ip=166.84.1.89
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
 Received: from [10.50.4.36] (45-31-46-51.lightspeed.sndgca.sbcglobal.net [45.31.46.51])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4Z36dZ4mptz4LNC;
-	Wed, 26 Feb 2025 16:13:22 -0500 (EST)
+	by mailbackend.panix.com (Postfix) with ESMTPSA id 4Z36fx3233z4KrM;
+	Wed, 26 Feb 2025 16:14:33 -0500 (EST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1740604403; bh=E/dJ5Y8bdjQYw6GSaDq5ATC1vAkUsCnMT24XUYEUe58=;
+	t=1740604474; bh=XcLEjNFPOoLRIwImSrjAbC/QV0oZJMWCJiJfGnQ9RQY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=FcAHGQWHKjqkf1gEBknZTkBriUmj4/KselbymUNOXdbCUMbFQpsUyIt1KAXSDRCiA
-	 jRx6wWobWlxMQgrHammlMVBUD+67ka69vBG4yIUi0ivc4wLUmRU/3LE2tg9pZ4VTtS
-	 dWGKXGGE1rCibfFCVUNRSYVSi6D/ZLmJxLkAjoGI=
-Message-ID: <a984f2c9-43c9-4c27-b346-a8654901c7f2@panix.com>
-Date: Wed, 26 Feb 2025 13:13:21 -0800
+	b=ZqghOfAqRbEIhg3c3Ioc2TNh5inQD/y+OFOdgxVLZsc8iE3R1sVwO2ZRi/vXiSOqd
+	 2NmKjYClWrOaMBjUrLwm9UXEH6hpeUjXCrS8UwlIFBNYncx+7+mstum067/TmwdAMi
+	 WeC6LZ3K2qiesn0sRHBRXBbRuB9FIgjNJeJTrogk=
+Message-ID: <b6eff06e-1a8c-48c3-b536-39b567015d0c@panix.com>
+Date: Wed, 26 Feb 2025 13:14:32 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,23 +75,20 @@ In-Reply-To: <20250226084404.GM3713119@black.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Trying to do a "control" test before I try out your bisected commit, and
-Lukas' changes, but of course now I can't get it to fail (I'm on Linus'
-master as of this morning (b5799106b4).
+OK, just did a resume after suspended (for an hour, which somehow seems 
+to matter) while my CalDigit dock was attached with the ASMedia NVMe 
+adaptor at suspend, but both disconnected on resume, and I am indeed 
+locked up.
 
-I'm using my portable USB4 dock (Plugable TBT4-HUB3C) this time (vs. my
-CalDigit 4 dock) but the same ASMedia USB4-to-NVMe adapter as always; in
-any case everything is PCIe so it shouldn't matter.
+I can attached the "pstore" report if necessary.
 
-I don't normally use "tbauth" (I think that's all done for me via the
-"boltctl" suite) but I grabbed and built the GIT and ran it anyway, for
-good measure.
+Unfortunately I won't be able to get back to the CalDigit until Saturday 
+afternoon California time.
 
-I'll keep you updated, I'll be at my CalDigit dock soon enough if I
-can't get any failures this morning.
+I'll be trying all the reverts/commits listed herein and at least check 
+for regressions in other cases, though.
 
--K
-
+-Kenny
 
 On 2/26/25 00:44, Mika Westerberg wrote:
 > Hi Kenneth,
