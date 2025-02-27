@@ -1,234 +1,360 @@
-Return-Path: <linux-pci+bounces-22573-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22574-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EC1CA4836C
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 16:46:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AAD0A4837B
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 16:49:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C3183BB2AF
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 15:44:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C555A173663
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 15:48:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A46626BDBD;
-	Thu, 27 Feb 2025 15:44:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B610518DB35;
+	Thu, 27 Feb 2025 15:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mWZ76uTC"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="bhB7HFJJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D15526D5AE
-	for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 15:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F1418D63A;
+	Thu, 27 Feb 2025 15:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740671060; cv=none; b=kiSwfKSzwVaZDmx91Hq3WM3w6GxCAr658Vu7XeYX90TPvlcQCFsOucg+PFblbKCHmlz326Q/hKNkjNs48GsQywBECS61mipDOIx+ZSnEt7v5qx0dvTXEpil/6QDZbhJYn+gj1zcQNmZ70mSW6qTo3Y+7+QCIQPOzDKnSEqoeXnk=
+	t=1740671332; cv=none; b=JHKqMdbu1xl8Ns/Tj5Yii3my1ry44Lib9FTQ2M/Hac2J4hSlqB+sgw4/Chy3HCC279wNuCIYxg6d4J0/PX6ST1dKgguPrO2xDeKQ2GLwDZ9LuczwjuhzoWOoIkLJcwDg7cb9yjwyHtnVoT6Jjrzitr6+HWEMRQB8VA0X1s4YMz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740671060; c=relaxed/simple;
-	bh=10V2qsgxKg5gzwyRV98qHpL+WXAwRTVPKUyf2Lim47I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=nFlXjYm0j+BycoeKJ4fqUHiJXRRHHY5Scl/SxjBvpzORbN3vzVOaz+t9256kRf0Vypv0tjW2uz9/3JZ301L+/z47K+498XBGofyfJ8GTf8vHhn9rkUCxcwVPGMy86nmguc98csl5eYk14v3fN9n3eAjszDyjbRBRyUP7g8HpHZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mWZ76uTC; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740671059; x=1772207059;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=10V2qsgxKg5gzwyRV98qHpL+WXAwRTVPKUyf2Lim47I=;
-  b=mWZ76uTCiBAnuKp3lWLDXXAe1oN8Twa5mXXCxg1SOknh+/Auvw3aMP/x
-   KiUHCfIZsbsqnM9t/YMOqwMqWyiMeOM6+0cjHyqLnjJWV1Ynj5UUTCSJy
-   fwclfVNLEGzWq9p251FJaS6KRM+gtgsrpcAk3TcxDcLKN8me7Bovqc6aY
-   69myF/jzWI5A2gwqteT+lZqBLcUPZKJRLkRyyhf1wLCiKRrWERKxknCSd
-   Iz4YzJn81FKcqWq1yOd+TWwqSn916CI5D4n57jC8HCSD3meeZ9cV7z2ip
-   jRsF4E22QxzhJEOr5925tNNlMCs1qU5fSK/Y5vIOiH/iZiFTNjEJYTVR0
-   g==;
-X-CSE-ConnectionGUID: QeufYtSBRxObxcGvCf8YvA==
-X-CSE-MsgGUID: bqfyf874QvKv6ObXw9k0dA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41486281"
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="41486281"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 07:44:18 -0800
-X-CSE-ConnectionGUID: osC57fLxT6Swb6HoLyrN9A==
-X-CSE-MsgGUID: sbqE0RxTTU2O2fsgrHaMUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116933225"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 27 Feb 2025 07:44:17 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tng3a-000Dbi-0m;
-	Thu, 27 Feb 2025 15:44:14 +0000
-Date: Thu, 27 Feb 2025 23:43:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:dt-bindings] BUILD SUCCESS
- 1d9e7ac210060044cb4cdbed283d8cbeca50ff8d
-Message-ID: <202502272309.VylRE2u6-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1740671332; c=relaxed/simple;
+	bh=0wcPQPb2fNJUO+Eb0zzXVRSq1giqQ/8OloyEuJ66EuU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e5A6g+OKUkJnpr4xiqTrHGTP1bE/2t49E9vOiKvnO/in/rSMby56zAkuFL7FhBvZd0F22UtMAoVUY4cY1qb0Mjooeott98NT+4H4o80A8Smi2DlnpcI2pbxvu9gRCFpcJndItqPbTz5jpDRndeuLAuuPhq25pCQJf4SsOHjx24E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=bhB7HFJJ; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C698740E0202;
+	Thu, 27 Feb 2025 15:48:47 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id BNABbrUU7UVH; Thu, 27 Feb 2025 15:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740671322; bh=RfLqHPbgshcEvdoRTouaG0WtklGb1Cpk3e2N6dqyufI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bhB7HFJJTzYFiNtEQ7Ry4AOSt+vubFQzRFpl8pLH6lPdQY/vQZbECcxmJVRXwDmP+
+	 Ty0v2D0PZSVvAiKSlknFOnYeY6hmAdymwquUcvE8s+lnlKzU5oN6xiCKrGigmQHZlA
+	 HUKlzBCh2DSBLhqseypFt3nfP87QHViv09pPRZ9cStHVwu9Ra7yxH0iUukeCynPVfu
+	 pE0hWYT3MCM8WDmTZNIZ0pGVkm0lIbvDE+kkqcjQyVp3Q+8NOl6yqga2XySI3G2d8d
+	 Hk0iNfyWnrbHCnkOEWfR5Zo7Jgk0tbkq6z34pfF5c6TYjT3xUD+aZKxjk+XKGlnJtS
+	 F507b++2ioSacDGZCMftapo8KZpR9qMEs8SaaLG+bm2KBuqO1tJBr9kHV3xAJXLhGU
+	 MjN69DOjsUWpB369Cg+waI3WeAJbXZLnmOjtn1OwfrU9zgtbmwJmAv++V62xOSjkWu
+	 FzpO1lFiY2aGpM9CKQt/N1KqdBR7XbmF7R6/Qwrp3Oaz6e+cJUIMKND2uwUfkzvWgx
+	 F8mCAiny/KwMv+psAH0hvJIKcvgFo+z4ic3PdzQtIdB8K8LZy49D2Qdu5hBzdb22m7
+	 dL77myrMRKlvcfeXqdmanb+iCtPV1R+CJeNIDaG59kRGo9BR0uzrxrPQOuxkN0HhFH
+	 7ihXLCSdSnOlQm3BClQguJvM=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EBBA240E01A3;
+	Thu, 27 Feb 2025 15:48:06 +0000 (UTC)
+Date: Thu, 27 Feb 2025 16:48:00 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: x86@kernel.org, kvm@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Christoph Hellwig <hch@lst.de>, Nikunj A Dadhania <nikunj@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Steve Sistare <steven.sistare@oracle.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Dionna Glaze <dionnaglaze@google.com>, Yi Liu <yi.l.liu@intel.com>,
+	iommu@lists.linux.dev, linux-coco@lists.linux.dev,
+	Zhi Wang <zhiw@nvidia.com>, AXu Yilun <yilun.xu@linux.intel.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+Subject: Re: [RFC PATCH v2 00/22] TSM: Secure VFIO, TDISP, SEV TIO
+Message-ID: <20250227154800.GBZ8CJMCH9wIptw1jd@fat_crate.local>
+References: <20250218111017.491719-1-aik@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250218111017.491719-1-aik@amd.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git dt-bindings
-branch HEAD: 1d9e7ac210060044cb4cdbed283d8cbeca50ff8d  dt-bindings: PCI: fsl,imx6q-pcie: Add optional DMA interrupt
+FWIW,
 
-elapsed time: 1444m
+I really appreciate this mail which explains to unenlightened people like me
+what this is all about.
 
-configs tested: 139
-configs skipped: 3
+Especially the Acronyms, Flow, Specs pointers etc. I wish I could see this
+type of writeups in all patchsets' 0th messages, leading in the reader into
+the topic while not expecting the latter to actually *know* all those things
+because, d0h, it is obvious. You can read my mind, right? :-)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+So thanks for taking the time - it is very helpful!
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    clang-21
-alpha                               defconfig    gcc-14.2.0
-arc                              alldefconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                   randconfig-001-20250227    clang-17
-arc                   randconfig-001-20250227    gcc-13.2.0
-arc                   randconfig-002-20250227    clang-17
-arc                   randconfig-002-20250227    gcc-13.2.0
-arm                               allnoconfig    gcc-14.2.0
-arm                   randconfig-001-20250227    clang-17
-arm                   randconfig-001-20250227    gcc-14.2.0
-arm                   randconfig-002-20250227    clang-17
-arm                   randconfig-003-20250227    clang-17
-arm                   randconfig-003-20250227    gcc-14.2.0
-arm                   randconfig-004-20250227    clang-17
-arm                   randconfig-004-20250227    clang-21
-arm                         socfpga_defconfig    gcc-14.2.0
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250227    clang-17
-arm64                 randconfig-001-20250227    gcc-14.2.0
-arm64                 randconfig-002-20250227    clang-17
-arm64                 randconfig-002-20250227    clang-19
-arm64                 randconfig-003-20250227    clang-17
-arm64                 randconfig-003-20250227    gcc-14.2.0
-arm64                 randconfig-004-20250227    clang-17
-arm64                 randconfig-004-20250227    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250227    gcc-14.2.0
-csky                  randconfig-002-20250227    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250227    clang-14
-hexagon               randconfig-001-20250227    gcc-14.2.0
-hexagon               randconfig-002-20250227    clang-16
-hexagon               randconfig-002-20250227    gcc-14.2.0
-i386        buildonly-randconfig-001-20250227    gcc-12
-i386        buildonly-randconfig-002-20250227    gcc-11
-i386        buildonly-randconfig-002-20250227    gcc-12
-i386        buildonly-randconfig-003-20250227    clang-19
-i386        buildonly-randconfig-003-20250227    gcc-12
-i386        buildonly-randconfig-004-20250227    gcc-12
-i386        buildonly-randconfig-005-20250227    gcc-11
-i386        buildonly-randconfig-005-20250227    gcc-12
-i386        buildonly-randconfig-006-20250227    clang-19
-i386        buildonly-randconfig-006-20250227    gcc-12
-i386                  randconfig-001-20250227    clang-19
-i386                  randconfig-002-20250227    clang-19
-i386                  randconfig-003-20250227    clang-19
-i386                  randconfig-004-20250227    clang-19
-i386                  randconfig-005-20250227    clang-19
-i386                  randconfig-006-20250227    clang-19
-i386                  randconfig-007-20250227    clang-19
-i386                  randconfig-011-20250227    gcc-12
-i386                  randconfig-012-20250227    gcc-12
-i386                  randconfig-013-20250227    gcc-12
-i386                  randconfig-014-20250227    gcc-12
-i386                  randconfig-015-20250227    gcc-12
-i386                  randconfig-016-20250227    gcc-12
-i386                  randconfig-017-20250227    gcc-12
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250227    gcc-14.2.0
-loongarch             randconfig-002-20250227    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                          eyeq5_defconfig    gcc-14.2.0
-mips                       rbtx49xx_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250227    gcc-14.2.0
-nios2                 randconfig-002-20250227    gcc-14.2.0
-openrisc                          allnoconfig    clang-15
-parisc                            allnoconfig    clang-15
-parisc                randconfig-001-20250227    gcc-14.2.0
-parisc                randconfig-002-20250227    gcc-14.2.0
-powerpc                           allnoconfig    clang-15
-powerpc               randconfig-001-20250227    clang-19
-powerpc               randconfig-001-20250227    gcc-14.2.0
-powerpc               randconfig-002-20250227    gcc-14.2.0
-powerpc               randconfig-003-20250227    clang-19
-powerpc               randconfig-003-20250227    gcc-14.2.0
-powerpc64             randconfig-001-20250227    clang-17
-powerpc64             randconfig-001-20250227    gcc-14.2.0
-powerpc64             randconfig-002-20250227    clang-21
-powerpc64             randconfig-002-20250227    gcc-14.2.0
-powerpc64             randconfig-003-20250227    gcc-14.2.0
-riscv                             allnoconfig    clang-15
-riscv                 randconfig-001-20250227    gcc-14.2.0
-riscv                 randconfig-002-20250227    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250227    clang-18
-s390                  randconfig-001-20250227    gcc-14.2.0
-s390                  randconfig-002-20250227    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250227    gcc-14.2.0
-sh                    randconfig-002-20250227    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250227    gcc-14.2.0
-sparc                 randconfig-002-20250227    gcc-14.2.0
-sparc64               randconfig-001-20250227    gcc-14.2.0
-sparc64               randconfig-002-20250227    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-15
-um                               allyesconfig    clang-21
-um                    randconfig-001-20250227    clang-17
-um                    randconfig-001-20250227    gcc-14.2.0
-um                    randconfig-002-20250227    gcc-12
-um                    randconfig-002-20250227    gcc-14.2.0
-x86_64      buildonly-randconfig-001-20250227    clang-19
-x86_64      buildonly-randconfig-002-20250227    clang-19
-x86_64      buildonly-randconfig-003-20250227    clang-19
-x86_64      buildonly-randconfig-003-20250227    gcc-12
-x86_64      buildonly-randconfig-004-20250227    clang-19
-x86_64      buildonly-randconfig-004-20250227    gcc-12
-x86_64      buildonly-randconfig-005-20250227    clang-19
-x86_64      buildonly-randconfig-006-20250227    clang-19
-x86_64      buildonly-randconfig-006-20250227    gcc-12
-x86_64                                  kexec    clang-19
-x86_64                randconfig-001-20250227    gcc-12
-x86_64                randconfig-002-20250227    gcc-12
-x86_64                randconfig-003-20250227    gcc-12
-x86_64                randconfig-004-20250227    gcc-12
-x86_64                randconfig-005-20250227    gcc-12
-x86_64                randconfig-006-20250227    gcc-12
-x86_64                randconfig-007-20250227    gcc-12
-x86_64                randconfig-008-20250227    gcc-12
-x86_64                               rhel-9.4    clang-19
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                  nommu_kc705_defconfig    gcc-14.2.0
-xtensa                randconfig-001-20250227    gcc-14.2.0
-xtensa                randconfig-002-20250227    gcc-14.2.0
+On Tue, Feb 18, 2025 at 10:09:47PM +1100, Alexey Kardashevskiy wrote:
+> Here are some patches to enable SEV-TIO on AMD Turin. It's been a while
+> and got quiet and I kept fixing my tree and wondering if I am going in
+> the right direction.
+> 
+> SEV-TIO allow a guest to establish trust in a device that supports TEE
+> Device Interface Security Protocol (TDISP, defined in PCIe r6.0+) and
+> then interact with the device via private memory.
+> 
+> These include both guest and host support. QEMU also requires changes.
+> This is more to show what it takes on AMD EPYC to pass through TDISP
+> devices, hence "RFC".
+> 
+> Components affected:
+> KVM
+> IOMMUFD
+> CCP (AMD)
+> SEV-GUEST (AMD)
+> 
+> New components:
+> PCI IDE
+> PCI TSM
+> VIRT CoCo TSM
+> VIRT CoCo TSM-HOST
+> VIRT CoCo TSM-GUEST
+> 
+> 
+> This is based on a merge of Lukas'es CMA and 1 week old upstream + some of Dan's patches:
+> 
+> https://github.com/aik/linux/tree/tsm
+> https://github.com/aik/qemu/tree/tsm
+> 
+> Not using "[PATCH 03/11] coco/tsm: Introduce a class device for TEE Security Managers"
+> yet as may be (may be) my approach makes sense too. Tried to stick to the terminology.
+> I have done some changes on top of that, these are on github, not posting here as
+> I expect those to be addressed in that thread:
+> https://lore.kernel.org/linux-coco/173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com/T/
+> 
+> 
+> SEV TIO spec:
+> https://www.amd.com/content/dam/amd/en/documents/epyc-technical-docs/specifications/58271_0_70.pdf
+> Whitepaper:
+> https://www.amd.com/content/dam/amd/en/documents/epyc-business-docs/white-papers/sev-tio-whitepaper.pdf
+> 
+> 
+> Acronyms:
+> 
+> TEE - Trusted Execution Environments, a concept of managing trust between the host
+> 	and devices
+> TSM - TEE Security Manager (TSM), an entity which ensures security on the host
+> PSP - AMD platform secure processor (also "ASP", "AMD-SP"), acts as TSM on AMD.
+> SEV TIO - the TIO protocol implemented by the PSP and used by the host
+> GHCB - guest/host communication block - a protocol for guest-to-host communication
+> 	via a shared page
+> TDISP - TEE Device Interface Security Protocol (PCIe).
+> 
+> 
+> Flow:
+> 
+> - Boot host OS, load CCP and PCI TSM (they will load TSM-HOST too)
+> - PCI TSM creates sysfs nodes in "coco/tsm: Add tsm and tsm-host modules" for all TDISP-capable devices
+> - Enable IDE via "echo 0 > /sys/bus/pci/devices/0000:e1:00.0/tsm-dev/tdev:0000:e1:00.0/tsm_dev_connect"
+> - Examine certificates/measurements/status via sysfs
+> 
+> - run an SNP VM _without_ VFIO PCI device, wait till it is booted
+> - hotplug a TDISP-capable PCI function, IOMMUFD must be used (not a VFIO container)
+> - QEMU pins all guest memory via IOMMUFD map-from-fd ioctl()
+> - the VM detects a TDISP-capable device, creates sysfs nodes in "coco/tsm: Add tsm-guest module"
+> - the VM loads the device driver which goes as usual till enabling bus master (for convinience)
+> - TSM-GUEST modules listens for bus master event (hacked in "pci: Add BUS_NOTIFY_PCI_BUS_MASTER event")
+> - TSM-GUEST requests TDI ("trusted PCI VF") info, traps into QEMU
+> - QEMU binds the VF to the Coco VM in the secure fw (AMD PSP) via IOMMUFD ioctl
+> - QEMU reads certificates/measurements/interface report from the hosts sysfs and writes to the guest memory
+> - the guest receives all the data, examines it (not in this series though)
+> - the guest enables secure DMA and MMIO by calling GHCB which traps into QEMU
+> - QEMU calls IOMMUFD ioctl to enable secure DMA and MMIO
+> - the guest can now stop sharing memory for DMA (and expect DMA to encrypted memory to work) and
+> start accessing validated MMIO with Cbit set.
+> 
+> 
+> 
+> Assumptions
+> 
+> This requires hotpligging into the VM vs passing the device via the command line as
+> VFIO maps all guest memory as the device init step which is too soon as
+> SNP LAUNCH UPDATE happens later and will fail if VFIO maps private memory before that.
+> 
+> This requires the BME hack as MMIO and BusMaster enable bits cannot be 0 after MMIO
+> validation is done and there are moments in the guest OS booting process when this
+> appens.
+> 
+> SVSM could help addressing these (not implemented).
+> 
+> QEMU advertises TEE-IO capability to the VM. An additional x-tio flag is added to
+> vfio-pci.
+> 
+> Trying to avoid the device driver modification as much as possible at
+> the moment as my test devices already exist in non-TDISP form and need to work without
+> modification. Arguably this may not be always the case.
+> 
+> 
+> TODOs
+> 
+> Deal with PCI reset. Hot unplug+plug? Power states too.
+> Actually collaborate with CMA.
+> Other tons of things.
+> 
+> 
+> The previous conversation is here:
+> https://lore.kernel.org/r/20240823132137.336874-1-aik@amd.com
+> 
+> 
+> Changes:
+> v2:
+> * redid the whole thing pretty much
+> * RMPUPDATE API for QEMU
+> * switched to IOMMUFD
+> * mapping guest memory via IOMMUFD map-from-fd
+> * marking resouces as validated
+> * more modules
+> * moved tons to the userspace (QEMU), such as TDI bind and GHCB guest requests
+> 
+> 
+> Sean, get_maintainer.pl produced more than 100 emails for the entire
+> patchset, should I have posted them all anyway?
+> 
+> Please comment. Thanks.
+> 
+> 
+> 
+> Alexey Kardashevskiy (22):
+>   pci/doe: Define protocol types and make those public
+>   PCI/IDE: Fixes to make it work on AMD SNP-SEV
+>   PCI/IDE: Init IDs on all IDE streams beforehand
+>   iommu/amd: Report SEV-TIO support
+>   crypto: ccp: Enable SEV-TIO feature in the PSP when supported
+>   KVM: X86: Define tsm_get_vmid
+>   coco/tsm: Add tsm and tsm-host modules
+>   pci/tsm: Add PCI driver for TSM
+>   crypto/ccp: Implement SEV TIO firmware interface
+>   KVM: SVM: Add uAPI to change RMP for MMIO
+>   KVM: SEV: Add TIO VMGEXIT
+>   iommufd: Allow mapping from guest_memfd
+>   iommufd: amd-iommu: Add vdevice support
+>   iommufd: Add TIO calls
+>   KVM: X86: Handle private MMIO as shared
+>   coco/tsm: Add tsm-guest module
+>   resource: Mark encrypted MMIO resource on validation
+>   coco/sev-guest: Implement the guest support for SEV TIO
+>   RFC: pci: Add BUS_NOTIFY_PCI_BUS_MASTER event
+>   sev-guest: Stop changing encrypted page state for TDISP devices
+>   pci: Allow encrypted MMIO mapping via sysfs
+>   pci: Define pci_iomap_range_encrypted
+> 
+>  drivers/crypto/ccp/Makefile                 |   13 +
+>  drivers/pci/Makefile                        |    3 +
+>  drivers/virt/coco/Makefile                  |    2 +
+>  drivers/virt/coco/guest/Makefile            |    3 +
+>  drivers/virt/coco/host/Makefile             |    6 +
+>  drivers/virt/coco/sev-guest/Makefile        |    2 +-
+>  arch/x86/include/asm/kvm-x86-ops.h          |    1 +
+>  arch/x86/include/asm/kvm_host.h             |    2 +
+>  arch/x86/include/asm/sev.h                  |   31 +
+>  arch/x86/include/uapi/asm/kvm.h             |   11 +
+>  arch/x86/include/uapi/asm/svm.h             |    2 +
+>  drivers/crypto/ccp/sev-dev-tio.h            |  111 ++
+>  drivers/crypto/ccp/sev-dev.h                |   19 +
+>  drivers/iommu/amd/amd_iommu_types.h         |    3 +
+>  drivers/iommu/iommufd/iommufd_private.h     |    3 +
+>  include/asm-generic/pci_iomap.h             |    4 +
+>  include/linux/amd-iommu.h                   |    2 +
+>  include/linux/device.h                      |    4 +
+>  include/linux/device/bus.h                  |    3 +
+>  include/linux/dma-direct.h                  |    8 +
+>  include/linux/ioport.h                      |    2 +
+>  include/linux/kvm_host.h                    |    2 +
+>  include/linux/pci-doe.h                     |    4 +
+>  include/linux/pci-ide.h                     |   19 +-
+>  include/linux/pci.h                         |    2 +-
+>  include/linux/psp-sev.h                     |   61 +-
+>  include/linux/swiotlb.h                     |    8 +
+>  include/linux/tsm.h                         |  315 ++++
+>  include/uapi/linux/iommufd.h                |   26 +
+>  include/uapi/linux/kvm.h                    |   24 +
+>  include/uapi/linux/pci_regs.h               |    5 +-
+>  include/uapi/linux/psp-sev.h                |    6 +-
+>  include/uapi/linux/sev-guest.h              |   39 +
+>  arch/x86/coco/sev/core.c                    |   19 +-
+>  arch/x86/kvm/mmu/mmu.c                      |    6 +-
+>  arch/x86/kvm/svm/sev.c                      |  205 +++
+>  arch/x86/kvm/svm/svm.c                      |   12 +
+>  arch/x86/mm/ioremap.c                       |    2 +
+>  arch/x86/mm/mem_encrypt.c                   |    6 +
+>  arch/x86/virt/svm/sev.c                     |   34 +-
+>  drivers/crypto/ccp/sev-dev-tio.c            | 1664 ++++++++++++++++++++
+>  drivers/crypto/ccp/sev-dev-tsm.c            |  709 +++++++++
+>  drivers/crypto/ccp/sev-dev.c                |   94 +-
+>  drivers/iommu/amd/init.c                    |    9 +
+>  drivers/iommu/amd/iommu.c                   |   60 +-
+>  drivers/iommu/iommufd/main.c                |    6 +
+>  drivers/iommu/iommufd/pages.c               |   88 +-
+>  drivers/iommu/iommufd/viommu.c              |  112 ++
+>  drivers/pci/doe.c                           |    2 -
+>  drivers/pci/ide.c                           |  103 +-
+>  drivers/pci/iomap.c                         |   24 +
+>  drivers/pci/mmap.c                          |   11 +-
+>  drivers/pci/pci-sysfs.c                     |   27 +-
+>  drivers/pci/pci.c                           |    3 +
+>  drivers/pci/proc.c                          |    2 +-
+>  drivers/pci/tsm.c                           |  233 +++
+>  drivers/virt/coco/guest/tsm-guest.c         |  326 ++++
+>  drivers/virt/coco/host/tsm-host.c           |  551 +++++++
+>  drivers/virt/coco/sev-guest/sev_guest.c     |   10 +
+>  drivers/virt/coco/sev-guest/sev_guest_tio.c |  738 +++++++++
+>  drivers/virt/coco/tsm.c                     |  638 ++++++++
+>  kernel/resource.c                           |   48 +
+>  virt/kvm/kvm_main.c                         |    6 +
+>  Documentation/virt/coco/tsm.rst             |  132 ++
+>  drivers/crypto/ccp/Kconfig                  |    2 +
+>  drivers/pci/Kconfig                         |   15 +
+>  drivers/virt/coco/Kconfig                   |   14 +
+>  drivers/virt/coco/guest/Kconfig             |    3 +
+>  drivers/virt/coco/host/Kconfig              |    6 +
+>  drivers/virt/coco/sev-guest/Kconfig         |    1 +
+>  70 files changed, 6614 insertions(+), 53 deletions(-)
+>  create mode 100644 drivers/virt/coco/host/Makefile
+>  create mode 100644 drivers/crypto/ccp/sev-dev-tio.h
+>  create mode 100644 drivers/crypto/ccp/sev-dev-tio.c
+>  create mode 100644 drivers/crypto/ccp/sev-dev-tsm.c
+>  create mode 100644 drivers/pci/tsm.c
+>  create mode 100644 drivers/virt/coco/guest/tsm-guest.c
+>  create mode 100644 drivers/virt/coco/host/tsm-host.c
+>  create mode 100644 drivers/virt/coco/sev-guest/sev_guest_tio.c
+>  create mode 100644 drivers/virt/coco/tsm.c
+>  create mode 100644 Documentation/virt/coco/tsm.rst
+>  create mode 100644 drivers/virt/coco/host/Kconfig
+> 
+> -- 
+> 2.47.1
+> 
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
