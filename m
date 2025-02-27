@@ -1,170 +1,165 @@
-Return-Path: <linux-pci+bounces-22513-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22514-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44B0FA473FB
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 05:11:57 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6ED54A47462
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 05:25:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E3BF17A2CBB
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 04:10:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 58AF77A281C
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 04:24:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CB711C84AD;
-	Thu, 27 Feb 2025 04:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D4A1D63CD;
+	Thu, 27 Feb 2025 04:25:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AR5b7VId"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4qryMEoF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2059.outbound.protection.outlook.com [40.107.95.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB671922D4
-	for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 04:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740629512; cv=none; b=lEFe6SZQBmK8dKhb2GY1cAjE1xg4i+wOswbfOvPhXHrPN6SBBeQvrnNqcwLNOCtTPzg9HRAfo2xokIUPPH9T/VWtIvvrH17HjRHgn0I6qUEDGT0BtUqwPthP0cxNnGKzkMNns1AOQVZaNzDjkzaPm8Q/GNZbVbGWLvW7qk3iFaU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740629512; c=relaxed/simple;
-	bh=5vRVGr82CGiZh2Cbzj7pVxhSTU8sAZM5XF2eIwvjp+M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WyXt2u4sUDGyEgeS3GVHmWAxOzvIj6euTY2FnASgKeeLO86z2iy9sSa3xDtOZVpA+MKoVrpFdBEXXp2s1PtXmLiHDne6xWN6ZhXZjwkKGP7xYTWYU+UrNeUw7skX4Mu866qId97P5z3caynKQeaheXcGbDaRuXQjohtMg6OJg9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AR5b7VId; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QJTPiV000821
-	for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 04:11:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FSAQvsYR3iMFmPabg5DWf8ziRODUsEKRzX7L+bsEUbE=; b=AR5b7VIdGtyIxdIO
-	XDWqh9b7PfITf0ErrUajHIGBZdCP8V2Bbqolk9ju1NQwt7g4ZTzmqnbsuAXl7Bbs
-	v8Ozs3ZToV2PMga0T3uFFJsr+uDDzEty6BG1Hzn34uS0zui/Ag2uLlvOxAxmBFzt
-	BOdrvPeSW0ypR1FW5Wr9nNWq4VNe0IE0t52zPZRnjmWe+RQZok2nKwTq+Z/LEsSr
-	JEWNroukeRz2iL6CycYLUJ9omVapte/XPS8c8OMcMg+m4YV9hxq1gdnwpsHlffnc
-	hKbGNF7kr8KD0DZVe8bPD3DcbwGC8TJ+azLWLF93f/Nfw7eMcbU+UmgXRLCKzyEF
-	BVvOMg==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451pu9c7w5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 04:11:49 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2fe8fa38f6eso1202033a91.2
-        for <linux-pci@vger.kernel.org>; Wed, 26 Feb 2025 20:11:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740629509; x=1741234309;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FSAQvsYR3iMFmPabg5DWf8ziRODUsEKRzX7L+bsEUbE=;
-        b=mlqsJ9LQ9Xz7SdwUE3SnbKd9Wydqx5OFj4AHUcoc/9ryNw+a/IlVX/pvO8wuJ8V7iP
-         rQFCAJQhGsZfbymj/ru4Ij3bGnwL+lzWb302hP8KVPgnaNk3yFABJE5uheIJ4WBWA27u
-         cdI+2MJIRPxoNmeOjVDQxlzj//Ed+CuxxrUnwsxOnBZ1LE9ivzr5AkUG7mM49tGtVAsD
-         MEe//zq/5lesTcwwv03QJFmI/ujiPn3y/Jc+Fcu1GKsqOtRcBYOj6zXgzO8G7VhJHo5w
-         MKMVsBIyW2T43QGSHSF47xg77pswGndCNOQyKTteaFfZ050p9NYPhZeZjjH1p/ApUbmI
-         7k/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUQBljkZkzP1NqWzYFKquklBTeyXUJCoNMRviTZ5RYf2qxX46SwPo8FeztWTZhxCncp/ZTDTJhWtzU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOUil/8B2rNppXQkV/5PYhavVeQNsRUArdX2PAxc6iDQUmwNu9
-	kX+rnzjDFQgdZHKkz8JvWVQL7xvh4nu81Kt/8Ztl4W1PE+BP5Q/uh02nJNb2hWnjdOWS5ZRfjI+
-	bmhFYlKei0WiJebuWowufsVZ/C5EnYPdGApUUFiiMht4/YoHSrQ4L700Wks4=
-X-Gm-Gg: ASbGncvN1jvYX9P3Ec5qTYrfAAwFdPNKJ4QUtRjBIMPcZryfnK3FBarkknIfE78AWL0
-	8NmoaBtyTaBiL5svwh2LjK41GRWvdcgp8yWo513MzqqrC93cacLwGQPXf8UVFCbI7McVtNGhOaI
-	TCVitc+1SRYKs3o7jaBO0dXs1XxBZdnxLqloC59Ly0w8wnIfey1kT1Vdj8GT21lYYVmZmpo287x
-	iGFAA6+LAoLKbZCF20pj24c3BXmUQIWnWxHy8V5//qPDMfM5lNjEhPeJckj9YjR24WXf8Y55AyL
-	T43VLSi4Ji8pkNgAd/iTLNgcp3hN9wkgzBKGoXYZ4FnE
-X-Received: by 2002:a05:6a21:32a8:b0:1ee:c598:7a90 with SMTP id adf61e73a8af0-1f0fc99bf90mr16869078637.39.1740629508934;
-        Wed, 26 Feb 2025 20:11:48 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFRIX3IkvZiOUdHKEbb1/zqOV6uSSXIJDZqwMP6rxtAvZaceoDHFXvQadYXggDDykHwRSrVbA==
-X-Received: by 2002:a05:6a21:32a8:b0:1ee:c598:7a90 with SMTP id adf61e73a8af0-1f0fc99bf90mr16869027637.39.1740629508534;
-        Wed, 26 Feb 2025 20:11:48 -0800 (PST)
-Received: from [10.92.199.34] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-734a003eb65sm458168b3a.149.2025.02.26.20.11.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 20:11:48 -0800 (PST)
-Message-ID: <0dffeb3b-63b3-266e-d1e9-b8adda7cc0ec@oss.qualcomm.com>
-Date: Thu, 27 Feb 2025 09:41:41 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D692B17A58F;
+	Thu, 27 Feb 2025 04:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740630334; cv=fail; b=N06JdgHa9QFUKzaBNkV+9BsXaOG4dZPifeP5AGFXerdw+gOEXN5sFH6sZOsKPC5QqFnm7ko0ZLhM1UiXaSBzY2zE7etNsC4NR2qZWqZigTsMUgsy5uRCnwQgCW0zZV58mjzCv86MRCPzj4qNtqHEyKyxZjnxjwDBOWWx/JlakLU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740630334; c=relaxed/simple;
+	bh=X1d5umld7C9emHSfVv2nZusPtOrcBUfUPO1RDgP9DO4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dwnde9MnjyvMe69Ht5l0LNP+HBMFxDUwFC10JMiCHD8pFfyWGLHn1nB3ouUfHtaK01GquBkOuPgF+Ubfo8XHTEoVYY1AoiMaPlYP3dKcc/nyxz3yUZBrruMwZXKWc6ykw2l31CrXPZV2zE7MuKVJqs5iM2DQQXc9tUve1Ye8xL0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4qryMEoF; arc=fail smtp.client-ip=40.107.95.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WAYfnu0fNMKaT7pIRnS2/9+QD5TkmzwG7g/COeFFu0VCAmw1XDL/SsYz3HyQOfc2WQN+ky/mo1ixUI1kMOuMk5daAlzOldPV1z6hnM9BxggOHiUQznxUjaCCPztAgXRTUKGDPY5R6SVoBzZcla5Oo5qHPP9fHoWJABezHtaSwE6o+CRta9yPnGrrbFlLSwaukMmCWdwUS5bJDeOwcaWo6/OWkCsxxGKtmDBGmAHJa9hpLzNCpDl8GN/+xxIMXU2MYp+jrr5GUV7XMJds1b7qogmuauEBHLMUuTEZw6RZAF0ZOGUulrj1f19CmPw0UKa9mQgX0kpbTRiBoVqfvUIDKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dAPXE3V3VNUP8Btc3olfEe4ktxVe5gM/ueBIkxdX2YI=;
+ b=Sr2WfyHL9iwrIISMlKsptTX6ccgrP6fvxU4ug/zx3aLbvXnqZ8wGE6e8CTpQfFE8c+7niAmoq/9v9vmxLgijSZR8dkt+B0ulxe/xwzYl5GEz4nDYmgMZZm9VdOaej/LtBkqbYUEKg4+AqGt7rC7KwJj/4mb2sun/a6/sJpl3GZUhHWf7/08FMxStketY/ziSEaOsebWop63rOLctzU9fafWLl4Lo1gEsNvcOvbUh+cgDfGTSWTDvs28yXOWPzQiiBOeGZRXL2OB1yEdrfKCG/5p7yof/C0ztzhwOGs80YITHygM+5ProMWO6BfnBNMhzXCuofzRW7z16WfhhJS/PNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dAPXE3V3VNUP8Btc3olfEe4ktxVe5gM/ueBIkxdX2YI=;
+ b=4qryMEoFmzNSPlFHE7s0KsPdeD1UFdmOYnoSZVI6J+GpsaAt85A8orHRQPyNMRsQGtfI/UW9uhyLdNKD3r+JZD/fdW/lXpGBjh7GLK1A4RSYudHXo4ZWvhgo8kL8uKV7eftNL21dh1SBRhgEOGhGCFlgvof6h98pXsnaUI/9oas=
+Received: from CH0P223CA0026.NAMP223.PROD.OUTLOOK.COM (2603:10b6:610:116::27)
+ by DM3PR12MB9433.namprd12.prod.outlook.com (2603:10b6:0:47::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.24; Thu, 27 Feb
+ 2025 04:25:30 +0000
+Received: from CH1PEPF0000AD7F.namprd04.prod.outlook.com
+ (2603:10b6:610:116:cafe::d5) by CH0P223CA0026.outlook.office365.com
+ (2603:10b6:610:116::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.18 via Frontend Transport; Thu,
+ 27 Feb 2025 04:25:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CH1PEPF0000AD7F.mail.protection.outlook.com (10.167.244.88) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Thu, 27 Feb 2025 04:25:30 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
+ 2025 22:25:29 -0600
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
+ 2025 22:25:29 -0600
+Received: from xhdlc210316.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Wed, 26 Feb 2025 22:25:03 -0600
+From: Sai Krishna Musham <sai.krishna.musham@amd.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <cassel@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
+	<bharat.kumar.gogada@amd.com>, <thippeswamy.havalige@amd.com>,
+	<sai.krishna.musham@amd.com>
+Subject: [PATCH v3 0/2] Add support for PCIe RP PERST#
+Date: Thu, 27 Feb 2025 09:54:52 +0530
+Message-ID: <20250227042454.907182-1-sai.krishna.musham@amd.com>
+X-Mailer: git-send-email 2.44.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 00/10] PCI: Enable Power and configure the TC956x PCIe
- switch
-Content-Language: en-US
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        chaitanya chundru <quic_krichai@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com,
-        amitk@kernel.org, dmitry.baryshkov@linaro.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        jorge.ramirez@oss.qualcomm.com,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
- <20250227035737.q7qlexdcieubbphx@thinkpad>
- <20250227035924.p43tpbtjmqszdww6@thinkpad>
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <20250227035924.p43tpbtjmqszdww6@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 4v3YGAvzt8jZp2CN27oA-ZAbQ7Q_5L7Y
-X-Proofpoint-ORIG-GUID: 4v3YGAvzt8jZp2CN27oA-ZAbQ7Q_5L7Y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-27_02,2025-02-26_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 adultscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=836 malwarescore=0 suspectscore=0 clxscore=1015
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502270029
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB05.amd.com: sai.krishna.musham@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7F:EE_|DM3PR12MB9433:EE_
+X-MS-Office365-Filtering-Correlation-Id: 441b6fa8-a83d-4955-128c-08dd56e6c4e0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?LMHYIvBLA/WScamILhvZCHzfGetEtoS3zzLnLEhuWYzGrTa/QRAGwTfWGpW9?=
+ =?us-ascii?Q?oWEDHnHvxcEH8TpyCsuEWgX4CQyq+UFyGQCZ4twloQH6os5XSV3a5/N6HIk6?=
+ =?us-ascii?Q?7qrtvMkhFAzTl/thIgAv2Gq6Z554IiPnYMv5yUf0pN5LmSu+WGywKNd1b+he?=
+ =?us-ascii?Q?eOKQAf7oj6eZCTnlyMHyLc+w/Z18TAfopcc8ieAJZJOz9l/rnEEH3UrS4ne3?=
+ =?us-ascii?Q?RK2GP2mUNB/eNcZe00gy+bqFfB9ohBeis2LV1RFoMuDiT5nquvCYT0rAcgdI?=
+ =?us-ascii?Q?6t55sVkJBypu4nK3uZjP32dpi1DKdpp2QeJjGr+B3RHjbGIla2Ba17ZmqB7y?=
+ =?us-ascii?Q?dk9NpXlr9qRazgEVu+rAzLFyBa39ft8WG7P+JmW2W8hTt5eNog6ot1RNY8Ri?=
+ =?us-ascii?Q?0b7Zh5HKPvZDfPTMAFqilaYbWfQlzPgWWiL5s4NTdSJjuCUQbdCpSGF81uKq?=
+ =?us-ascii?Q?CoaEO9jXRkYfrMhgQICeNDbQ/4gimOg7LyM12U3cF4Lw68PerAjbk2PxCJr1?=
+ =?us-ascii?Q?55dZ687O+1oZv6z60gIvDaFlQxA7A0eIVUAcKmZpUUCVxLGhq4QsVVCNxQE+?=
+ =?us-ascii?Q?txfIg+xU0HnUN47T2q3/Q8tJRK7UMiEW+ntlYAaPChWcYB4qp0Zw10v/J+UL?=
+ =?us-ascii?Q?VmjaXEdW2kp5z8mWbs2M/fON1U7kBHtbkeioShTAXmX24TqZ0BO8yl+tj88i?=
+ =?us-ascii?Q?mlnzBDxfTJYliXetr3KjIm371aQ9IC2dTlKMan4XhzFOiDCflAGN1yL/vN4e?=
+ =?us-ascii?Q?3i/RLtSLv5Mwu7TFrsP83iakcoQPIIi1snBCB3IT+qIgOtZSCjMxmjJSODIp?=
+ =?us-ascii?Q?ln17nVIn8OOGMROF2v0rSNGohC+yS6bplhGnIrhzRHTS8BRjZFj4to/iOxZU?=
+ =?us-ascii?Q?Ch4eBZ5cQVKo2rBJEddFxhB7yC4w3Atoxsczq+FmthrNo4hG2H2hbIKLUiAR?=
+ =?us-ascii?Q?uIT+po6XfH7Nb8E4nPo+ups6yl1DwIYCHTFTijo7W4JABh0vilfVa6bzUI9H?=
+ =?us-ascii?Q?+T97twBc2qH4w9sHpJzN4Ph7hQqHoEv5ygcZhCNfCyjLrTisAdbRC+M5kKw0?=
+ =?us-ascii?Q?VskB1pqLc1aSYWAUq50XEsbR0JaOywFJwIHuRaiLsJ7f5HDefF5kBzdA51fb?=
+ =?us-ascii?Q?qAF4TTrHMfZV4SRbO5XVJmUjacZbyt6v1No9Zpi8ZRAXKxdHBOrh/QQguDCp?=
+ =?us-ascii?Q?JAooOT54MVd0k1aOTPJTQVuPXNLSSCc+x07vBg7t6H1COqGGWJgXt4c/4DkS?=
+ =?us-ascii?Q?aVpurWxVl6evw0hR7Pcz+rUvUOpaWnxrpsqKKM47AC+aGhZNQ336y4SpLOva?=
+ =?us-ascii?Q?sEVmvVkNiUebBI0GUzqmHCyxQKvwNcCBUnxQRitsm0Ub5Rs2SryZFjbCuf/P?=
+ =?us-ascii?Q?k2UPoePbT6ECMYCzfG43n0h/qXYCDVx7wlQux6eHcfM8wMJ1GlUMb85OcjeD?=
+ =?us-ascii?Q?psIcB6WULo3aAh94H9tqNHEXnzz4u779Qn9dNM2Sk1vORildWLHMF42Nna4K?=
+ =?us-ascii?Q?4YSM78k8xKUPGXM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 04:25:30.1495
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 441b6fa8-a83d-4955-128c-08dd56e6c4e0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD7F.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9433
 
+Add support for PCIe Root Port PERST# signal.
 
+Add `reset-gpios` property to the Versal CPM PCIe controller binding.
 
-On 2/27/2025 9:29 AM, Manivannan Sadhasivam wrote:
-> On Thu, Feb 27, 2025 at 09:27:47AM +0530, Manivannan Sadhasivam wrote:
->> On Tue, Feb 25, 2025 at 03:03:57PM +0530, Krishna Chaitanya Chundru wrote:
->>> TC956x is the PCIe switch which has one upstream and three downstream
->>> ports. To one of the downstream ports ethernet MAC is connected as endpoint
->>> device. Other two downstream ports are supposed to connect to external
->>> device. One Host can connect to TC956x by upstream port.
->>>
->>> TC956x switch power is controlled by the GPIO's. After powering on
->>> the switch will immediately participate in the link training. if the
->>> host is also ready by that time PCIe link will established.
->>>
->>> The TC956x needs to configured certain parameters like de-emphasis,
->>> disable unused port etc before link is established.
->>>
->>> As the controller starts link training before the probe of pwrctl driver,
->>> the PCIe link may come up as soon as we power on the switch. Due to this
->>> configuring the switch itself through i2c will not have any effect as
->>> this configuration needs to done before link training. To avoid this
->>> introduce two functions in pci_ops to start_link() & stop_link() which
->>> will disable the link training if the PCIe link is not up yet.
->>>
->>> Enable global IRQ for PCIe controller so that recan can happen when
->>> link was up through global IRQ.
->>>   
->>
->> Move these patches to a separate series.
->>
-> 
-> Or you can just drop them. I have a series that adds global IRQ to most of the
-> SoCs and sc7280 is one of them.
-> 
-> - Mani
-fine for me, I will drop.
+Sai Krishna Musham (2):
+  dt-bindings: PCI: xilinx-cpm: Add reset-gpios for PCIe RP PERST#
+  PCI: xilinx-cpm: Add support for PCIe RP PERST# signal
 
-- Krishna Chaitanya.
-> 
+ .../bindings/pci/xilinx-versal-cpm.yaml        |  7 +++++++
+ drivers/pci/controller/pcie-xilinx-cpm.c       | 18 ++++++++++++++++++
+ 2 files changed, 25 insertions(+)
+
+-- 
+2.44.1
+
 
