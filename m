@@ -1,80 +1,77 @@
-Return-Path: <linux-pci+bounces-22571-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22572-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99DE7A482F1
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 16:30:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE286A4835D
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 16:44:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 344207A4DF8
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 15:29:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EC27A1895048
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 15:43:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E670026B2D5;
-	Thu, 27 Feb 2025 15:29:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EF8D26E16E;
+	Thu, 27 Feb 2025 15:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LEK0yOKI"
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="ZL8PgwrU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296F626B2B2
-	for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 15:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C2E26B2C5
+	for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 15:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740670195; cv=none; b=JlVY8q5QHG86/jkjOr70+cbQsVg1CoCivB9zGpZgMULLTMvdouVZrfBeNLG57vFVv0a9sOU9uckPL6CiVjnXEWQEgm+sgKo78poZN+vlzY/VOgcj1UpDR22k0kNaONGeaQ8F4n8/gmpfzcZ98OGcLrRErVYn9+xQrtRb70dP0os=
+	t=1740670920; cv=none; b=GSFPYGYU2fhUlnIJ2WMmtwNnuJYjwwD/XO8F++e3+87Qp5K/mPpbHkxj1077bYChAFkrPNmmTOlEqBers90mbNmTFVjmxSI441ZlYunjkOjKMj8YwRyIbxjkAkSDtC96jbq7GQu+uH1sHHm2iR/EVON6KZQhmCRQMW49mMKu+AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740670195; c=relaxed/simple;
-	bh=Or2S1BxI2J4T6rUeUCechS9x46+OBNBRa9Xv5USJ24g=;
+	s=arc-20240116; t=1740670920; c=relaxed/simple;
+	bh=EsIoeL+Tp9eZjv9IjlFq7L6k4Aq9mEVxPN8U3C6mnUM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FZXot7uzBPN5ZCZEhdBAzYCDzrmAECZaxk1xgTBMfPM1Hoj+cY1iX8n2PzAv75N+GrGVpS8JoMUztgiI1EPcp9vZp33DYD2Ymzrh2eK3Me7B/77+r9tI+5msMD+NxnSNSW/YAK+T62BsmTASHQSwldCFkORAA0QxjYinRP0/tjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LEK0yOKI; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-388cae9eb9fso612977f8f.3
-        for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 07:29:52 -0800 (PST)
+	 In-Reply-To:Content-Type; b=sIXzX9IAunogi8dId2Qt22OFYyoENLzf7fo9YfFEHTazA3EOlc41QRSlIMuLCbIFMBpSlWw2SdiEukSEvug1lv6bpDi4EgugQPRR1TIqgiI7mFuMFznf8H9RVSPxgpTwJiwHhFe1GOtItOg/8MkA1vg07wOt141+JA0+owHW4sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=ZL8PgwrU; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-439a331d981so10520455e9.3
+        for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 07:41:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1740670191; x=1741274991; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Or2S1BxI2J4T6rUeUCechS9x46+OBNBRa9Xv5USJ24g=;
-        b=LEK0yOKIkCwSLsXXkIFW+HjOgDZQeWesQvemmm/laikGa9AbONoTopsUdnbMSRIgD6
-         +a39V0xzunxcBPbEDB2dBB86l5wmAEn5YVKIwmbECpMZ62Wa0Qqwp3FtDA58+lR5z7a5
-         E/B7D8054A8luguftYCBM4Y0rMtAqN9L4qC53Axk3FRgaMEOAKlkrEcGpwX/Vc79tQhT
-         TbkQrOWLqmpoQD+pw7bERWoN9Dz7jdN//HrC4BZLpOJdNt1hM+/GaCMaUmZxnzJUcNn/
-         foZPco6fnbpGCB8PFxD0lng6/4V6Dd/7isnpB+t77n1TCCmRH9NvEyNDelBeup8tmFtw
-         dAYA==
+        d=citrix.com; s=google; t=1740670916; x=1741275716; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=OMQZlKirdFQ93tCHKH2Zyfc9AsOqnh62+vTF47YL1ww=;
+        b=ZL8PgwrUVpCUZc0MZWEzlO99E+AT0WcsFbkKbwJOit5kwq5D3uHnWSbDZsRgtCzezi
+         drU6SZPnGujvdNvjAGKcdmWiVk8f2VXj1pA79eaggCsw6JiLzAhA9ug0XHWS1zqOZ/aA
+         gtQ5UBcrCxEOxK/pzzZ5cfZDt+/ov48KWHH2o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740670191; x=1741274991;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Or2S1BxI2J4T6rUeUCechS9x46+OBNBRa9Xv5USJ24g=;
-        b=ED9AqS5Yn8SVjzv8KSdlQfcdTDqQ9jXrGP8hEr5wK+BQygaAFfxKrshvizdEtzDdbr
-         w8ScyhoIrqmKilSNI1YhRIMtxuB+h1ZCBor7CF+GEXwZXIzQ7wK3ENLW8Iv8HBjrJhNO
-         pDF632ktvJpthy2hs+tdQ3WaL8cgfrjxl3VKxRCIK+4wdUEw6UVylj+knsBhIiMHwcaH
-         fXWdGcjlk+g0rYWamR2tJ2IrM5yY8iMtFo+68fli08Rn2I9VC/JydCUcaj+KO2gmuw8i
-         lyJVZhWRiibGd22cRa4i87T0UbLI79ETx6tBq+bnlp1KaCT/cVS/At8XcyoZa1iquKyC
-         bUPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoP1QK8c8QaJiL/KCl2XQSTVCcWT7Mni4rgAml5FBUuXpnE5mDCkaiw6x6gVPXh7VKxq27xkkXB5A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKQmV/8A5aHz3kjNAk9GVeGG7liP/OQFOuUjEZfg9CPGTO2AB9
-	Socc6vMJqbOdyCr+++kxddLXgwVJegF8hp5kS5IYbzxaqKy0xp+1Bqf2eFrxyh4=
-X-Gm-Gg: ASbGncsRHWxgYNlsx3ym9xhYEFrl6MPDpEXCBnHdcew70fAl17oLB3fV/LIDpmTM2lq
-	77iaEixQ9/yARZ8o7N1Atf5KovqK2kOd/QjvFLrGGzYC1i6sPBrFyPNIMUz21Wptx787dB26F6Q
-	TZB4qDz1jWb66N/WmO4ylVYuOmgDhrcmHhUKzXq7vceegr1TMU//sJnDTxSch6xy3NbLDPKNN8N
-	gYa2YXZKTBx4MbuJXTsuUXmpVpCtV0QZePeUzyJC8irGjt8yIrOWsnQFUvTeglOxUclQs7l8b+V
-	BxjH2Lo0IAGe9I0W8jWIbUayakR6vnoCHSjpp/yaiAKUSze9DknA/WWKdNNXWGSett6fXvIfN01
-	jq2JYygS6VHdq/iEjwfjKfoio8h+HER2hfwM0XPEFAp4Wyeuj
-X-Google-Smtp-Source: AGHT+IGH10U3HyZQcpCiisEuijVuw2MOgcBfgz1zzdVm0lxcjFU8PN77WNGtsIcXGRFK59YQ6Qwlog==
-X-Received: by 2002:a05:6000:4026:b0:38d:e3e2:27e5 with SMTP id ffacd0b85a97d-390cc5f5cc8mr9793609f8f.5.1740670191455;
-        Thu, 27 Feb 2025 07:29:51 -0800 (PST)
-Received: from ?IPV6:2003:e5:8714:500:2aea:6ec9:1d88:c1ef? (p200300e5871405002aea6ec91d88c1ef.dip0.t-ipconnect.de. [2003:e5:8714:500:2aea:6ec9:1d88:c1ef])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba5710ebsm61247035e9.26.2025.02.27.07.29.50
+        d=1e100.net; s=20230601; t=1740670916; x=1741275716;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OMQZlKirdFQ93tCHKH2Zyfc9AsOqnh62+vTF47YL1ww=;
+        b=Yrqe33BBCtdhLm+Pxqmj8SRijIO8Clt/QOzGcSwyqO6AHC34ZYrY2IlIYQtzICAYIR
+         13FQU6O9QpNJZUsM5k6aMk7deJN67LK6S+csB55JTvdOvk+qsnjLoVdsC/htJJwhKhAC
+         I/uflsf666O7HBTYmGVfpa5Jba6ZVfPGd0kRf6NnhCjV8Om9NMPe3f2+RgvjU48XWSQL
+         uhfg/FPYJQTlfGdMVJhLT0dkI07vkaXzJHbh79+4y4bJHoMkcsAR0amQahIsjcbNNOUu
+         Wk19m0SYds0n8o2JZlft49SgNU07MHZyyiyT7S0gBloJ6YPsd6axAGuvAP65qV0pzYmx
+         zmxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUX8hL46nt5YFJNmt8lFqvhSWX2Rn8yC4eskldVTdVCY5mt5kajI+7dM9lOAYyVG9doMNVxYXOA6U4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRng/3Vwe+XxZCt4ibKhgxDErVtOk9CdvNuTQfz5ifDeY3K0Ro
+	di0vA4AgxenKzqtZCa7i6B8pYSWmwqcdnV6eXiG7LOaOyFxOiCPkx6hyMhuGczQ=
+X-Gm-Gg: ASbGnctn2Ot6T0Xm5/3Bm8h7qwBsvnZBjBhmqhLj4nkmSmy7uCQnnlmWjkBW1Ub4qDL
+	Uib1YX75rehU0bmzIgxE6CTi8I2+JNt1ZVGMqG8oQMVHxA+AuzkHjRwWhiNy7awAdZ1byxxZibm
+	I9XHWPTon06hSwcJ5fbstByJjGPxITh1egwdMxYuI85MRK/+YS5g3UDQuzT+uNod5+1oGUuVxBG
+	rcM3DDjpQG1No+ZHdxgBCe7dU2yLbEgsEmQubTvqtd8sEv/Bph+kqAtCT8Erekk6HluslNmjVS+
+	rZuMJxqmfxnhdh20XcOz3YaBe4yEsEOPu12KEcPjEcaDMkVG6yliG3Z1MaoQ4zu08A==
+X-Google-Smtp-Source: AGHT+IEJtqX9D/EnATB3q8S7eg05lIwQjKQrkt4DszCUkwtBWX6WO6DqHDmYAHrCmh4AyuEGwQfYcw==
+X-Received: by 2002:a05:600c:4ec8:b0:439:7c0b:13f6 with SMTP id 5b1f17b1804b1-43ab9048304mr70380465e9.31.1740670915890;
+        Thu, 27 Feb 2025 07:41:55 -0800 (PST)
+Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485db6csm2411745f8f.91.2025.02.27.07.41.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2025 07:29:51 -0800 (PST)
-Message-ID: <03c90be4-7546-42cf-be5d-3fd6bcf20849@suse.com>
-Date: Thu, 27 Feb 2025 16:29:50 +0100
+        Thu, 27 Feb 2025 07:41:55 -0800 (PST)
+Message-ID: <a14c6897-075c-4b2c-8906-75eb96d5c430@citrix.com>
+Date: Thu, 27 Feb 2025 15:41:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,172 +83,96 @@ Subject: Re: [PATCH v2] xen: Add support for XenServer 6.1 platform device
 To: Frediano Ziglio <frediano.ziglio@cloud.com>,
  xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
  linux-pci@vger.kernel.org
-Cc: Stefano Stabellini <sstabellini@kernel.org>,
+Cc: Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
  Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
  Bjorn Helgaas <bhelgaas@google.com>
 References: <20250225140400.23992-1-frediano.ziglio@cloud.com>
  <20250227145016.25350-1-frediano.ziglio@cloud.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ xsFNBFLhNn8BEADVhE+Hb8i0GV6mihnnr/uiQQdPF8kUoFzCOPXkf7jQ5sLYeJa0cQi6Penp
+ VtiFYznTairnVsN5J+ujSTIb+OlMSJUWV4opS7WVNnxHbFTPYZVQ3erv7NKc2iVizCRZ2Kxn
+ srM1oPXWRic8BIAdYOKOloF2300SL/bIpeD+x7h3w9B/qez7nOin5NzkxgFoaUeIal12pXSR
+ Q354FKFoy6Vh96gc4VRqte3jw8mPuJQpfws+Pb+swvSf/i1q1+1I4jsRQQh2m6OTADHIqg2E
+ ofTYAEh7R5HfPx0EXoEDMdRjOeKn8+vvkAwhviWXTHlG3R1QkbE5M/oywnZ83udJmi+lxjJ5
+ YhQ5IzomvJ16H0Bq+TLyVLO/VRksp1VR9HxCzItLNCS8PdpYYz5TC204ViycobYU65WMpzWe
+ LFAGn8jSS25XIpqv0Y9k87dLbctKKA14Ifw2kq5OIVu2FuX+3i446JOa2vpCI9GcjCzi3oHV
+ e00bzYiHMIl0FICrNJU0Kjho8pdo0m2uxkn6SYEpogAy9pnatUlO+erL4LqFUO7GXSdBRbw5
+ gNt25XTLdSFuZtMxkY3tq8MFss5QnjhehCVPEpE6y9ZjI4XB8ad1G4oBHVGK5LMsvg22PfMJ
+ ISWFSHoF/B5+lHkCKWkFxZ0gZn33ju5n6/FOdEx4B8cMJt+cWwARAQABzSlBbmRyZXcgQ29v
+ cGVyIDxhbmRyZXcuY29vcGVyM0BjaXRyaXguY29tPsLBegQTAQgAJAIbAwULCQgHAwUVCgkI
+ CwUWAgMBAAIeAQIXgAUCWKD95wIZAQAKCRBlw/kGpdefoHbdD/9AIoR3k6fKl+RFiFpyAhvO
+ 59ttDFI7nIAnlYngev2XUR3acFElJATHSDO0ju+hqWqAb8kVijXLops0gOfqt3VPZq9cuHlh
+ IMDquatGLzAadfFx2eQYIYT+FYuMoPZy/aTUazmJIDVxP7L383grjIkn+7tAv+qeDfE+txL4
+ SAm1UHNvmdfgL2/lcmL3xRh7sub3nJilM93RWX1Pe5LBSDXO45uzCGEdst6uSlzYR/MEr+5Z
+ JQQ32JV64zwvf/aKaagSQSQMYNX9JFgfZ3TKWC1KJQbX5ssoX/5hNLqxMcZV3TN7kU8I3kjK
+ mPec9+1nECOjjJSO/h4P0sBZyIUGfguwzhEeGf4sMCuSEM4xjCnwiBwftR17sr0spYcOpqET
+ ZGcAmyYcNjy6CYadNCnfR40vhhWuCfNCBzWnUW0lFoo12wb0YnzoOLjvfD6OL3JjIUJNOmJy
+ RCsJ5IA/Iz33RhSVRmROu+TztwuThClw63g7+hoyewv7BemKyuU6FTVhjjW+XUWmS/FzknSi
+ dAG+insr0746cTPpSkGl3KAXeWDGJzve7/SBBfyznWCMGaf8E2P1oOdIZRxHgWj0zNr1+ooF
+ /PzgLPiCI4OMUttTlEKChgbUTQ+5o0P080JojqfXwbPAyumbaYcQNiH1/xYbJdOFSiBv9rpt
+ TQTBLzDKXok86M7BTQRS4TZ/ARAAkgqudHsp+hd82UVkvgnlqZjzz2vyrYfz7bkPtXaGb9H4
+ Rfo7mQsEQavEBdWWjbga6eMnDqtu+FC+qeTGYebToxEyp2lKDSoAsvt8w82tIlP/EbmRbDVn
+ 7bhjBlfRcFjVYw8uVDPptT0TV47vpoCVkTwcyb6OltJrvg/QzV9f07DJswuda1JH3/qvYu0p
+ vjPnYvCq4NsqY2XSdAJ02HrdYPFtNyPEntu1n1KK+gJrstjtw7KsZ4ygXYrsm/oCBiVW/OgU
+ g/XIlGErkrxe4vQvJyVwg6YH653YTX5hLLUEL1NS4TCo47RP+wi6y+TnuAL36UtK/uFyEuPy
+ wwrDVcC4cIFhYSfsO0BumEI65yu7a8aHbGfq2lW251UcoU48Z27ZUUZd2Dr6O/n8poQHbaTd
+ 6bJJSjzGGHZVbRP9UQ3lkmkmc0+XCHmj5WhwNNYjgbbmML7y0fsJT5RgvefAIFfHBg7fTY/i
+ kBEimoUsTEQz+N4hbKwo1hULfVxDJStE4sbPhjbsPCrlXf6W9CxSyQ0qmZ2bXsLQYRj2xqd1
+ bpA+1o1j2N4/au1R/uSiUFjewJdT/LX1EklKDcQwpk06Af/N7VZtSfEJeRV04unbsKVXWZAk
+ uAJyDDKN99ziC0Wz5kcPyVD1HNf8bgaqGDzrv3TfYjwqayRFcMf7xJaL9xXedMcAEQEAAcLB
+ XwQYAQgACQUCUuE2fwIbDAAKCRBlw/kGpdefoG4XEACD1Qf/er8EA7g23HMxYWd3FXHThrVQ
+ HgiGdk5Yh632vjOm9L4sd/GCEACVQKjsu98e8o3ysitFlznEns5EAAXEbITrgKWXDDUWGYxd
+ pnjj2u+GkVdsOAGk0kxczX6s+VRBhpbBI2PWnOsRJgU2n10PZ3mZD4Xu9kU2IXYmuW+e5KCA
+ vTArRUdCrAtIa1k01sPipPPw6dfxx2e5asy21YOytzxuWFfJTGnVxZZSCyLUO83sh6OZhJkk
+ b9rxL9wPmpN/t2IPaEKoAc0FTQZS36wAMOXkBh24PQ9gaLJvfPKpNzGD8XWR5HHF0NLIJhgg
+ 4ZlEXQ2fVp3XrtocHqhu4UZR4koCijgB8sB7Tb0GCpwK+C4UePdFLfhKyRdSXuvY3AHJd4CP
+ 4JzW0Bzq/WXY3XMOzUTYApGQpnUpdOmuQSfpV9MQO+/jo7r6yPbxT7CwRS5dcQPzUiuHLK9i
+ nvjREdh84qycnx0/6dDroYhp0DFv4udxuAvt1h4wGwTPRQZerSm4xaYegEFusyhbZrI0U9tJ
+ B8WrhBLXDiYlyJT6zOV2yZFuW47VrLsjYnHwn27hmxTC/7tvG3euCklmkn9Sl9IAKFu29RSo
+ d5bD8kMSCYsTqtTfT6W4A3qHGvIDta3ptLYpIAOD2sY3GYq2nf3Bbzx81wZK14JdDDHUX2Rs
+ 6+ahAA==
 In-Reply-To: <20250227145016.25350-1-frediano.ziglio@cloud.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------yA7AouVOlM5ktrrfJTheyd6D"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------yA7AouVOlM5ktrrfJTheyd6D
-Content-Type: multipart/mixed; boundary="------------8ZEcR8NSrsXN84ey7Sr6gk1B";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Frediano Ziglio <frediano.ziglio@cloud.com>,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-Cc: Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- Bjorn Helgaas <bhelgaas@google.com>
-Message-ID: <03c90be4-7546-42cf-be5d-3fd6bcf20849@suse.com>
-Subject: Re: [PATCH v2] xen: Add support for XenServer 6.1 platform device
-References: <20250225140400.23992-1-frediano.ziglio@cloud.com>
- <20250227145016.25350-1-frediano.ziglio@cloud.com>
-In-Reply-To: <20250227145016.25350-1-frediano.ziglio@cloud.com>
+On 27/02/2025 2:50 pm, Frediano Ziglio wrote:
+> On XenServer on Windows machine a platform device with ID 2 instead of
+> 1 is used.
+>
+> This device is mainly identical to device 1 but due to some Windows
+> update behaviour it was decided to use a device with a different ID.
+>
+> This causes compatibility issues with Linux which expects, if Xen
+> is detected, to find a Xen platform device (5853:0001) otherwise code
+> will crash due to some missing initialization (specifically grant
+> tables). Specifically from dmesg
+>
+>     RIP: 0010:gnttab_expand+0x29/0x210
+>     Code: 90 0f 1f 44 00 00 55 31 d2 48 89 e5 41 57 41 56 41 55 41 89 fd
+>           41 54 53 48 83 ec 10 48 8b 05 7e 9a 49 02 44 8b 35 a7 9a 49 02
+>           <8b> 48 04 8d 44 39 ff f7 f1 45 8d 24 06 89 c3 e8 43 fe ff ff
+>           44 39
+>     RSP: 0000:ffffba34c01fbc88 EFLAGS: 00010086
+>     ...
+>
+> The device 2 is presented by Xapi adding device specification to
+> Qemu command line.
+>
+> Signed-off-by: Frediano Ziglio <frediano.ziglio@cloud.com>
 
---------------8ZEcR8NSrsXN84ey7Sr6gk1B
-Content-Type: multipart/mixed; boundary="------------i3L8E5rkH9J0WAm0l6tsHHi4"
+I'm split about this.  It's just papering over the bugs that exist
+elsewhere in the Xen initialisation code.
 
---------------i3L8E5rkH9J0WAm0l6tsHHi4
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+But, if we're going to take this approach, then 0xc000 needs adding too,
+which is the other device ID you might find when trying to boot Linux in
+a VM configured using a Windows template.
 
-T24gMjcuMDIuMjUgMTU6NTAsIEZyZWRpYW5vIFppZ2xpbyB3cm90ZToNCj4gT24gWGVuU2Vy
-dmVyIG9uIFdpbmRvd3MgbWFjaGluZSBhIHBsYXRmb3JtIGRldmljZSB3aXRoIElEIDIgaW5z
-dGVhZCBvZg0KPiAxIGlzIHVzZWQuDQo+IA0KPiBUaGlzIGRldmljZSBpcyBtYWlubHkgaWRl
-bnRpY2FsIHRvIGRldmljZSAxIGJ1dCBkdWUgdG8gc29tZSBXaW5kb3dzDQo+IHVwZGF0ZSBi
-ZWhhdmlvdXIgaXQgd2FzIGRlY2lkZWQgdG8gdXNlIGEgZGV2aWNlIHdpdGggYSBkaWZmZXJl
-bnQgSUQuDQo+IA0KPiBUaGlzIGNhdXNlcyBjb21wYXRpYmlsaXR5IGlzc3VlcyB3aXRoIExp
-bnV4IHdoaWNoIGV4cGVjdHMsIGlmIFhlbg0KPiBpcyBkZXRlY3RlZCwgdG8gZmluZCBhIFhl
-biBwbGF0Zm9ybSBkZXZpY2UgKDU4NTM6MDAwMSkgb3RoZXJ3aXNlIGNvZGUNCj4gd2lsbCBj
-cmFzaCBkdWUgdG8gc29tZSBtaXNzaW5nIGluaXRpYWxpemF0aW9uIChzcGVjaWZpY2FsbHkg
-Z3JhbnQNCj4gdGFibGVzKS4gU3BlY2lmaWNhbGx5IGZyb20gZG1lc2cNCj4gDQo+ICAgICAg
-UklQOiAwMDEwOmdudHRhYl9leHBhbmQrMHgyOS8weDIxMA0KPiAgICAgIENvZGU6IDkwIDBm
-IDFmIDQ0IDAwIDAwIDU1IDMxIGQyIDQ4IDg5IGU1IDQxIDU3IDQxIDU2IDQxIDU1IDQxIDg5
-IGZkDQo+ICAgICAgICAgICAgNDEgNTQgNTMgNDggODMgZWMgMTAgNDggOGIgMDUgN2UgOWEg
-NDkgMDIgNDQgOGIgMzUgYTcgOWEgNDkgMDINCj4gICAgICAgICAgICA8OGI+IDQ4IDA0IDhk
-IDQ0IDM5IGZmIGY3IGYxIDQ1IDhkIDI0IDA2IDg5IGMzIGU4IDQzIGZlIGZmIGZmDQo+ICAg
-ICAgICAgICAgNDQgMzkNCj4gICAgICBSU1A6IDAwMDA6ZmZmZmJhMzRjMDFmYmM4OCBFRkxB
-R1M6IDAwMDEwMDg2DQo+ICAgICAgLi4uDQo+IA0KPiBUaGUgZGV2aWNlIDIgaXMgcHJlc2Vu
-dGVkIGJ5IFhhcGkgYWRkaW5nIGRldmljZSBzcGVjaWZpY2F0aW9uIHRvDQo+IFFlbXUgY29t
-bWFuZCBsaW5lLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRnJlZGlhbm8gWmlnbGlvIDxmcmVk
-aWFuby56aWdsaW9AY2xvdWQuY29tPg0KDQpBY2tlZC1ieTogSnVlcmdlbiBHcm9zcyA8amdy
-b3NzQHN1c2UuY29tPg0KDQoNCkp1ZXJnZW4NCg==
---------------i3L8E5rkH9J0WAm0l6tsHHi4
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Bjorn: to answer a prior question of yours, all 3 of these devices are
+identical, and exist in production for political reasons (bindings in
+Windows Updates) rather than technical reasons.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjri
-oyspZKOBycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2
-kaV2KL9650I1SJvedYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i
-1TXkH09XSSI8mEQ/ouNcMvIJNwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/B
-BLUVbDa4+gmzDC9ezlZkTZG2t14zWPvxXP3FAp2pkW0xqG7/377qptDmrk42GlSK
-N4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEBAAHNHEp1ZXJnZW4gR3Jvc3Mg
-PGpnQHBmdXBmLm5ldD7CwHkEEwECACMFAlOMcBYCGwMHCwkIBwMCAQYVCAIJCgsE
-FgIDAQIeAQIXgAAKCRCw3p3WKL8TL0KdB/93FcIZ3GCNwFU0u3EjNbNjmXBKDY4F
-UGNQH2lvWAUy+dnyThpwdtF/jQ6j9RwE8VP0+NXcYpGJDWlNb9/JmYqLiX2Q3Tye
-vpB0CA3dbBQp0OW0fgCetToGIQrg0MbD1C/sEOv8Mr4NAfbauXjZlvTj30H2jO0u
-+6WGM6nHwbh2l5O8ZiHkH32iaSTfN7Eu5RnNVUJbvoPHZ8SlM4KWm8rG+lIkGurq
-qu5gu8q8ZMKdsdGC4bBxdQKDKHEFExLJK/nRPFmAuGlId1E3fe10v5QL+qHI3EIP
-tyfE7i9Hz6rVwi7lWKgh7pe0ZvatAudZ+JNIlBKptb64FaiIOAWDCx1SzR9KdWVy
-Z2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+wsB5BBMBAgAjBQJTjHCvAhsDBwsJ
-CAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey/HmQf/RtI7kv5A2PS4
-RF7HoZhPVPogNVbC4YA6lW7DrWf0teC0RR3MzXfy6pJ+7KLgkqMlrAbN/8Dvjoz7
-8X+5vhH/rDLa9BuZQlhFmvcGtCF8eR0T1v0nC/nuAFVGy+67q2DH8As3KPu0344T
-BDpAvr2uYM4tSqxK4DURx5INz4ZZ0WNFHcqsfvlGJALDeE0LhITTd9jLzdDad1pQ
-SToCnLl6SBJZjDOX9QQcyUigZFtCXFst4dlsvddrxyqT1f17+2cFSdu7+ynLmXBK
-7abQ3rwJY8SbRO2iRulogc5vr/RLMMlscDAiDkaFQWLoqHHOdfO9rURssHNN8WkM
-nQfvUewRz80hSnVlcmdlbiBHcm9zcyA8amdyb3NzQG5vdmVsbC5jb20+wsB5BBMB
-AgAjBQJTjHDXAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/
-Ey8PUQf/ehmgCI9jB9hlgexLvgOtf7PJnFOXgMLdBQgBlVPO3/D9R8LtF9DBAFPN
-hlrsfIG/SqICoRCqUcJ96Pn3P7UUinFG/I0ECGF4EvTE1jnDkfJZr6jrbjgyoZHi
-w/4BNwSTL9rWASyLgqlA8u1mf+c2yUwcGhgkRAd1gOwungxcwzwqgljf0N51N5Jf
-VRHRtyfwq/ge+YEkDGcTU6Y0sPOuj4Dyfm8fJzdfHNQsWq3PnczLVELStJNdapwP
-OoE+lotufe3AM2vAEYJ9rTz3Cki4JFUsgLkHFqGZarrPGi1eyQcXeluldO3m91NK
-/1xMI3/+8jbO0tsn1tqSEUGIJi7ox80eSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1
-c2UuZGU+wsB5BBMBAgAjBQJTjHDrAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgEC
-F4AACgkQsN6d1ii/Ey+LhQf9GL45eU5vOowA2u5N3g3OZUEBmDHVVbqMtzwlmNC4
-k9Kx39r5s2vcFl4tXqW7g9/ViXYuiDXb0RfUpZiIUW89siKrkzmQ5dM7wRqzgJpJ
-wK8Bn2MIxAKArekWpiCKvBOB/Cc+3EXE78XdlxLyOi/NrmSGRIov0karw2RzMNOu
-5D+jLRZQd1Sv27AR+IP3I8U4aqnhLpwhK7MEy9oCILlgZ1QZe49kpcumcZKORmzB
-TNh30FVKK1EvmV2xAKDoaEOgQB4iFQLhJCdP1I5aSgM5IVFdn7v5YgEYuJYx37Io
-N1EblHI//x/e2AaIHpzK5h88NEawQsaNRpNSrcfbFmAg987ATQRTjHAWAQgAyzH6
-AOODMBjgfWE9VeCgsrwH3exNAU32gLq2xvjpWnHIs98ndPUDpnoxWQugJ6MpMncr
-0xSwFmHEgnSEjK/PAjppgmyc57BwKII3sV4on+gDVFJR6Y8ZRwgnBC5mVM6JjQ5x
-Dk8WRXljExRfUX9pNhdE5eBOZJrDRoLUmmjDtKzWaDhIg/+1Hzz93X4fCQkNVbVF
-LELU9bMaLPBG/x5q4iYZ2k2ex6d47YE1ZFdMm6YBYMOljGkZKwYde5ldM9mo45mm
-we0icXKLkpEdIXKTZeKDO+Hdv1aqFuAcccTg9RXDQjmwhC3yEmrmcfl0+rPghO0I
-v3OOImwTEe4co3c1mwARAQABwsBfBBgBAgAJBQJTjHAWAhsMAAoJELDendYovxMv
-Q/gH/1ha96vm4P/L+bQpJwrZ/dneZcmEwTbe8YFsw2V/Buv6Z4Mysln3nQK5ZadD
-534CF7TDVft7fC4tU4PONxF5D+/tvgkPfDAfF77zy2AH1vJzQ1fOU8lYFpZXTXIH
-b+559UqvIB8AdgR3SAJGHHt4RKA0F7f5ipYBBrC6cyXJyyoprT10EMvU8VGiwXvT
-yJz3fjoYsdFzpWPlJEBRMedCot60g5dmbdrZ5DWClAr0yau47zpWj3enf1tLWaqc
-suylWsviuGjKGw7KHQd3bxALOknAp4dN3QwBYCKuZ7AddY9yjynVaD5X7nF9nO5B
-jR/i1DG86lem3iBDXzXsZDn8R3/CwO0EGAEIACAWIQSFEmdy6PYElKXQl/ew3p3W
-KL8TLwUCWt3w0AIbAgCBCRCw3p3WKL8TL3YgBBkWCAAdFiEEUy2wekH2OPMeOLge
-gFxhu0/YY74FAlrd8NAACgkQgFxhu0/YY75NiwD/fQf/RXpyv9ZX4n8UJrKDq422
-bcwkujisT6jix2mOOwYBAKiip9+mAD6W5NPXdhk1XraECcIspcf2ff5kCAlG0DIN
-aTUH/RIwNWzXDG58yQoLdD/UPcFgi8GWtNUp0Fhc/GeBxGipXYnvuWxwS+Qs1Qay
-7/Nbal/v4/eZZaWs8wl2VtrHTS96/IF6q2o0qMey0dq2AxnZbQIULiEndgR625EF
-RFg+IbO4ldSkB3trsF2ypYLij4ZObm2casLIP7iB8NKmQ5PndL8Y07TtiQ+Sb/wn
-g4GgV+BJoKdDWLPCAlCMilwbZ88Ijb+HF/aipc9hsqvW/hnXC2GajJSAY3Qs9Mib
-4Hm91jzbAjmp7243pQ4bJMfYHemFFBRaoLC7ayqQjcsttN2ufINlqLFPZPR/i3IX
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
-
---------------i3L8E5rkH9J0WAm0l6tsHHi4--
-
---------------8ZEcR8NSrsXN84ey7Sr6gk1B--
-
---------------yA7AouVOlM5ktrrfJTheyd6D
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmfAhO4FAwAAAAAACgkQsN6d1ii/Ey9f
-5wf9HV/lZMWX0xsB+MafliORx3rBgJOGFut1zjcx0JFDHLfg2rLT6VmFPvhFd4ECcqxXFQ3Yv5pQ
-PQUn9KLbsRY3QUlmp/GcHVZHyhlaDlTKwud/CcEAeVQWATqD4bWDtNeUWnffrJEJDxV/hX8geYaR
-cvIAP83Bl51liDw8DIzLoxvFBS6OUSN5Y2jhc5cDP5XGH40QKJxHDMDKm3XMcimjRhpsnpTCPiZA
-b/ev9kOM0FLVV5quTrreH10kCRy5i4cHMRp51awwEp4BRhf215699BfqBt/ZQFg1nl4bkRlcY1eu
-pzTukrc5dNF5VwsnhQ7qeEPrbwnk+gPVAlvqOv1Z3Q==
-=X8qy
------END PGP SIGNATURE-----
-
---------------yA7AouVOlM5ktrrfJTheyd6D--
+~Andrew
 
