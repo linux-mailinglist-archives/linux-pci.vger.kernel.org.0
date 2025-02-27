@@ -1,146 +1,191 @@
-Return-Path: <linux-pci+bounces-22569-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22570-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BB3EA4823D
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 16:00:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8000FA4821D
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 15:54:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5041617DABF
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 14:50:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71BCC3A646F
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 14:54:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57F7425D1F4;
-	Thu, 27 Feb 2025 14:50:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 417AA25E464;
+	Thu, 27 Feb 2025 14:54:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloud.com header.i=@cloud.com header.b="kxuWw/FV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rJKktULN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB9D25C71E
-	for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 14:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2AE25DD19
+	for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 14:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740667831; cv=none; b=UWQFRCXGbff24SQoZTs/gQHfsr+Vqhx9WFQOHjpE0jimHrv8b2/2hhFzZ/80BNURZIeoiD/YiTLH6moxEav34LDSeCiqq+9w+u616BGkbVtEb9yle0mVo2RLqakO8ZZGi7ioPivRKp/QSM9n+1nTbFpipw9ZyM32rVMkMeEaKTk=
+	t=1740668092; cv=none; b=qkQE3Ompn8p5GjEQ9mk6HttSjsDkXEWas99GdlZ5kfFdZT0qn1/wgKLHAdEzFkrAno19lUawa3g0CE/6zxQMoVQz5LHZGm2OI9uY6KXw8wRprPDg2XsNzaPuAtfqRiDyV7+omDUIIy55H/L1HSuST5RkxdkYXrZMGNgDSIC3M3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740667831; c=relaxed/simple;
-	bh=xKewhvd61D34B7/4mI+vcI04M2ezWfrHW8vP8EGROvI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PM/ZcDLamcJKVoqAqv5UecHx2Hg6xsUtGkHF4xZd75CeBA442rdh4FrqoFhEy6pE5ws5hHISEm+dpGHUiuTRRc8Tr5IEO4kwT/9imXljuUmhdTV8yZT6tEfWne0y3sgp/KXZ7MoHJLasos1arR70NNFwFmFRoUTK8DDUb42+2Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloud.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=cloud.com header.i=@cloud.com header.b=kxuWw/FV; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e058ca6806so1486457a12.3
-        for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 06:50:29 -0800 (PST)
+	s=arc-20240116; t=1740668092; c=relaxed/simple;
+	bh=KboGCxx7OgmWNnz4unI5atpIG8j1s+NhJgz2Wlu5UaY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EXN2Pfpi2nwauQx5jhnX3IKJ2tSy2PyB0fwQYMksVsx3q3qnHe6Iun/0VbOzKvP5D4cJe8uC6JwxOreRCDdeAqZ9FcJE4daaEf673Os3KPzWPDoa666YA+sGOA7HUucDHJV2E2zSgZD/k3GxevNhcmBMdvSr5QyzEnPMv3ROQBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rJKktULN; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54605bfcc72so2507851e87.0
+        for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 06:54:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.com; s=cloud; t=1740667828; x=1741272628; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DL7GQVjUzjLg9lk8430dC5QosMySgAdQwlmn75yWWQY=;
-        b=kxuWw/FVYEmROqj0tTxz/1a+8VKWaZsPX54cqhdTCArS21r2M2TNTQF9tQRRq88wQh
-         GJPMY9ajQ8SnqJwo03yn+pXW3gGkorjfgGKOeX6WMDTs6mlP0FcGuXGm14QdhbSFSxW3
-         AvwEnTDcc6mIktKGUGvi4qPH7TbxozgSaVTDo=
+        d=linaro.org; s=google; t=1740668088; x=1741272888; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sCMeltnZVSG7sz0LhzAVQweBa8yRnjaqRK41n2Tk0AM=;
+        b=rJKktULNRwmz5XhYh7Ao7P2IEkXIaqACQ8BjfV+6U2+0ipde90bPpyfp2DHYol3aEw
+         W/TcIzf9uZm4a9eW2uNIjX5BkP6/jvWigBzk/UIbEp5VKhoPH6tvgTdR7qXtPoDwbmaJ
+         L86Uml4QaHSqiT7mAp5nXR2PkzLt1lvEOseWmTQ0UyfATE3LZPgGmTZPLq8c84JesUZL
+         geqA4k3TdvE7EL7w2hZD78722+idldzwyqQRlPF9RsccMc+oFFFTFkE74S0MMHJ0HR0U
+         N4dcM1I1aPha080jaZAOsZtziHr7uGY4sDk521TnuVR01IkKTl27dxbrg217v9+XEt5T
+         SDRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740667828; x=1741272628;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DL7GQVjUzjLg9lk8430dC5QosMySgAdQwlmn75yWWQY=;
-        b=c9CYsAkSCI1Czz9O2ySbpMqeIm4xtfIukE8PRCVExdJwmVAxoxO6P5zoMTSeHj2fRg
-         IB1fJx5J3zletZrkNbMoGgk1wTg7CI0h4Av8jNVXv2D6PbgwcZudjFp11Jf+1SHqWG5H
-         BSfNvbYRGvbo9sF9nu3pTXl7GwCwxddzo57QoFIJSDu9SVARv0bTaEve4UpDt0Epyy5+
-         WLWvycPOSO5Xc6R2u42dhGKUm8JvOYQV1UeeDx5O5IAk2jFunChaTH52JZqHYur1L5CG
-         De4LTrBTW37FHe3nlh6PiQMdL0a+DhC7sn/1B51YRWT12O/8anQbjcyQevI69RMvh0Jh
-         xCuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsZwruSAmBpLGyVJCAnBgkk1cepidhWBucSEsyNHwVXV7pKegJmTyhKBimtpqzuIUL1oXuWKr4rzQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbyWqFe0qVZpTike4ezFHKju1AFDoczB/KfPn5mgTwdoXFj5Zi
-	Rln4hm9AjJpjMuCr1Iwsr/E6k+25e+ondjNEke7M2qU0fxD6FIcDJwK3oNZVHao=
-X-Gm-Gg: ASbGncs5et0WYphiElK4OoaAblW+D2zYunRq2K7pDiHXb5Vj0AyuzwGizttbjxK+Be4
-	MWd+T6UDwJU69PnszH29+rCWKj36Vrcv61/GIIP9eEKa5Ed5dqF+gSCejviRlHA0qbJG8EH6sYX
-	yUsR94VorNa6iWdnUr5KhUXNpT+c4py8iBy6mgrHvib8sV4fthaaLXLAwiKzfavaybAUvxthWf1
-	HXBs0c8p+IdxI3UDMeG4nwdbYt+u0ldEROzG4J4artVK0fGuS35U2dhHAbPpFCeYqhvW66gLuJO
-	0jV2Mc2YY/r/3TIgXHs6mpOYz1iaC0uGBQl1lvvGqFwgVLgLt3I8hLWlxMg6ZIFkHQ==
-X-Google-Smtp-Source: AGHT+IGRvMe2rXEL5ocoy5Zl+QpTBISfmDkxZx112r9QomOkAyIB+XxUpSAYrFRY61XCOHlRKjn34w==
-X-Received: by 2002:a05:6402:430f:b0:5e0:4710:5f47 with SMTP id 4fb4d7f45d1cf-5e0b7243e16mr27359409a12.23.1740667827673;
-        Thu, 27 Feb 2025 06:50:27 -0800 (PST)
-Received: from fziglio-xenia-fedora.eng.citrite.net ([185.25.67.249])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3fb5927sm1169710a12.53.2025.02.27.06.50.26
+        d=1e100.net; s=20230601; t=1740668088; x=1741272888;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sCMeltnZVSG7sz0LhzAVQweBa8yRnjaqRK41n2Tk0AM=;
+        b=WDt+4+R/C2od1ySPWUyqM480I+NLWHDwScOUels47OfaHsm+qpwtpBIXCnesvuXI15
+         5SDrfdXtILgiVaZNH+vxnTsse9QQw2+NgNHxY4WAT98xeHLuUXQMh3ri/tkSeOWqiJof
+         nZuWRolO3w34WGwhOcoCoNs1ZA0O0wMirGjpgLl/FBlU/+BuQ6s5Ir1rYWqIF2Zpdyg4
+         CCO8q3EIFLdtCnYpD0D61XYnGXJ/mgTJhGqjGhoZFUo0bxmWgMTRPPjFVUGla+uMzh8N
+         H0gFiBAsywkTL09aK5a5Snh+Gb7sUSj6MFRV5G4HP2JQq5HJFvxqe5+RzbxsrX70z3SI
+         A02Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUFR3K7w1OFbS1LnAi2ihs7UxXRzdljW30CtQPMhGkf1ztQ99Xrk2WTfGqDXuWYrpXeEh7S+5ww/1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3z0SAcjtOLOO9nK0aT2kW9OJTp+8Kb59HCdWFeD9bevELIvna
+	IC/76hyXw4qiaGM1kGbjvtQEllRPr06MFjTx76FFNo0m2AY12GL9zhuwyl8DLVo=
+X-Gm-Gg: ASbGncvqD68/3IN+cQH3ODwaNJX2lPsuh/Iwj3P+Xg7cLDvwsGaXmTLe4HNvjeEKn8V
+	gGU3dBiOO7GgALU16PZtZ3U+y9Jr8SuqPEVVfuUutCiWrBFGa/uFDtM2KndqnbRpPwZsXR99T/J
+	44La5GY285lW6iuyJwngQaSil253xPOmT+czIAYD9omCuCUgxt0XFy0BKm2oEBSjke9dw0HXoIH
+	HlMEomlm1EaEILOLZ53BymQONxC9w0AKM+xbcYQxg7gKSfLah59Epr9TYGmnatZ2+UuUyoUe58W
+	TB5gZ7Cl5RgTS+4oiLHmmB23/0xFYybBeMoYN+UQtijxW89g3mbVMS8K31RiIXzdUhEExB1PpvX
+	MpXNPNg==
+X-Google-Smtp-Source: AGHT+IF94UxahrgvKnqbDIyQP2SoOHuqTWRLMtDqEw4LEuHBKdFhk7jgfYz2acmAzH6fUFJ672CotA==
+X-Received: by 2002:a05:6512:308c:b0:545:4f00:f92a with SMTP id 2adb3069b0e04-5494332104amr1421507e87.20.1740668088335;
+        Thu, 27 Feb 2025 06:54:48 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549441741d4sm184217e87.33.2025.02.27.06.54.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 06:50:26 -0800 (PST)
-From: Frediano Ziglio <frediano.ziglio@cloud.com>
-To: xen-devel@lists.xenproject.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Cc: Frediano Ziglio <frediano.ziglio@cloud.com>,
-	"Juergen Gross" <jgross@suse.com>,
-	"Stefano Stabellini" <sstabellini@kernel.org>,
-	"Oleksandr Tyshchenko" <oleksandr_tyshchenko@epam.com>,
-	"Bjorn Helgaas" <bhelgaas@google.com>
-Subject: [PATCH v2] xen: Add support for XenServer 6.1 platform device
-Date: Thu, 27 Feb 2025 14:50:15 +0000
-Message-ID: <20250227145016.25350-1-frediano.ziglio@cloud.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250225140400.23992-1-frediano.ziglio@cloud.com>
-References: <20250225140400.23992-1-frediano.ziglio@cloud.com>
+        Thu, 27 Feb 2025 06:54:47 -0800 (PST)
+Date: Thu, 27 Feb 2025 16:54:45 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: manivannan.sadhasivam@linaro.org
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/23] arm64: dts: qcom: Add 'global' IRQ to supported
+ SoCs
+Message-ID: <26ohpisuitzaghsxbbyjgb2rbhrubu4ipt7zopyuakxbgyqi7i@xa3tjwlwwjoq>
+References: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
 
-On XenServer on Windows machine a platform device with ID 2 instead of
-1 is used.
+On Thu, Feb 27, 2025 at 07:10:42PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> Hi,
+> 
+> This series adds the Qualcomm specific 'global' IRQ to the supported SoCs.
+> This IRQ is used to receive the PCIe controller and link specific events
+> such as Link Up/Down, MSI, PTM etc... in the driver. Support for this IRQ
+> was already added to the pcie-qcom driver. So enabling this IRQ would allow
+> the driver to enumerate the endpoint device and also retrain the link when
+> the device is removed [1] without user intervention.
+> 
+> This series also adds missing MSI SPI IRQ to some of the SoCs.
+> 
+> Testing
+> =======
+> 
+> This series was tested on Qualcomm RB5 board based on SM8250 SoC and
+> Qualcomm Ride MX board based on SA8775p SoC.
+> 
+> NOTE
+> ====
+> 
+> I've left a few SoCs in the tree like QCS404, SC8280XP due to lack of
+> documentation. Those will be added later.
 
-This device is mainly identical to device 1 but due to some Windows
-update behaviour it was decided to use a device with a different ID.
+Also IPQ9574. For the series:
 
-This causes compatibility issues with Linux which expects, if Xen
-is detected, to find a Xen platform device (5853:0001) otherwise code
-will crash due to some missing initialization (specifically grant
-tables). Specifically from dmesg
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-    RIP: 0010:gnttab_expand+0x29/0x210
-    Code: 90 0f 1f 44 00 00 55 31 d2 48 89 e5 41 57 41 56 41 55 41 89 fd
-          41 54 53 48 83 ec 10 48 8b 05 7e 9a 49 02 44 8b 35 a7 9a 49 02
-          <8b> 48 04 8d 44 39 ff f7 f1 45 8d 24 06 89 c3 e8 43 fe ff ff
-          44 39
-    RSP: 0000:ffffba34c01fbc88 EFLAGS: 00010086
-    ...
+> 
+> [1] https://lore.kernel.org/linux-pci/20250221172309.120009-1-manivannan.sadhasivam@linaro.org/
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> Manivannan Sadhasivam (23):
+>       dt-bindings: PCI: qcom,pcie-sm8150: Add 'global' interrupt
+>       arm64: dts: qcom: sm8150: Add 'global' PCIe interrupt
+>       dt-bindings: PCI: qcom,pcie-sm8250: Add 'global' interrupt
+>       arm64: dts: qcom: sm8250: Add 'global' PCIe interrupt
+>       dt-bindings: PCI: qcom,pcie-sm8350: Add 'global' interrupt
+>       arm64: dts: qcom: sm8350: Add 'global' PCIe interrupt
+>       dt-bindings: PCI: qcom,pcie-sa8775p: Add 'global' interrupt
+>       arm64: dts: qcom: sa8775p: Add 'global' PCIe interrupt
+>       dt-bindings: PCI: qcom,pcie-sc7280: Add 'global' interrupt
+>       arm64: dts: qcom: sc7280: Add 'global' PCIe interrupt
+>       dt-bindings: PCI: qcom: Add 'global' interrupt for SDM845 SoC
+>       arm64: dts: qcom: sdm845: Add missing MSI and 'global' IRQs
+>       arm64: dts: qcom: msm8996: Add missing MSI SPI interrupts
+>       dt-bindings: PCI: qcom: Allow MSM8998 to use 8 MSI and one 'global' interrupt
+>       arm64: dts: qcom: msm8998: Add missing MSI and 'global' IRQs
+>       dt-bindings: PCI: qcom: Allow IPQ8074 to use 8 MSI and one 'global' interrupt
+>       arm64: dts: qcom: ipq8074: Add missing MSI and 'global' IRQs
+>       dt-bindings: PCI: qcom: Allow IPQ6018 to use 8 MSI and one 'global' interrupt
+>       arm64: dts: qcom: ipq6018: Add missing MSI and 'global' IRQs
+>       dt-bindings: PCI: qcom,pcie-sc8180x: Add 'global' interrupt
+>       arm64: dts: qcom: sc8180x: Add 'global' PCIe interrupt
+>       arm64: dts: qcom: sar2130p: Add 'global' PCIe interrupt
+>       arm64: dts: qcom: x1e80100: Add missing 'global' PCIe interrupt
+> 
+>  .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml | 10 ++--
+>  .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  |  9 ++--
+>  .../devicetree/bindings/pci/qcom,pcie-sc8180x.yaml | 10 ++--
+>  .../devicetree/bindings/pci/qcom,pcie-sm8150.yaml  |  9 ++--
+>  .../devicetree/bindings/pci/qcom,pcie-sm8250.yaml  |  9 ++--
+>  .../devicetree/bindings/pci/qcom,pcie-sm8350.yaml  |  9 ++--
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         | 14 ++++--
+>  arch/arm64/boot/dts/qcom/ipq6018.dtsi              | 20 +++++++-
+>  arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 40 ++++++++++++++--
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi              | 54 +++++++++++++++++++---
+>  arch/arm64/boot/dts/qcom/msm8998.dtsi              | 20 +++++++-
+>  arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 28 ++++++++---
+>  arch/arm64/boot/dts/qcom/sar2130p.dtsi             | 12 +++--
+>  arch/arm64/boot/dts/qcom/sc7280.dtsi               | 14 ++++--
+>  arch/arm64/boot/dts/qcom/sc8180x.dtsi              | 24 ++++++----
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi               | 40 ++++++++++++++--
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi               | 12 +++--
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi               | 18 +++++---
+>  arch/arm64/boot/dts/qcom/sm8350.dtsi               | 12 +++--
+>  arch/arm64/boot/dts/qcom/x1e80100.dtsi             | 18 +++++---
+>  20 files changed, 300 insertions(+), 82 deletions(-)
+> ---
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> change-id: 20250227-pcie-global-irq-dd1cd5688d71
+> 
+> Best regards,
+> -- 
+> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> 
 
-The device 2 is presented by Xapi adding device specification to
-Qemu command line.
-
-Signed-off-by: Frediano Ziglio <frediano.ziglio@cloud.com>
----
- drivers/xen/platform-pci.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/xen/platform-pci.c b/drivers/xen/platform-pci.c
-index 544d3f9010b9..1db82da56db6 100644
---- a/drivers/xen/platform-pci.c
-+++ b/drivers/xen/platform-pci.c
-@@ -26,6 +26,8 @@
- 
- #define DRV_NAME    "xen-platform-pci"
- 
-+#define PCI_DEVICE_ID_XEN_PLATFORM_XS61	0x0002
-+
- static unsigned long platform_mmio;
- static unsigned long platform_mmio_alloc;
- static unsigned long platform_mmiolen;
-@@ -174,6 +176,8 @@ static int platform_pci_probe(struct pci_dev *pdev,
- static const struct pci_device_id platform_pci_tbl[] = {
- 	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
-+	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM_XS61,
-+		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
- 	{0,}
- };
- 
 -- 
-2.48.1
+With best wishes
+Dmitry
 
