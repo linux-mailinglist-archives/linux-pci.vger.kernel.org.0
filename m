@@ -1,154 +1,113 @@
-Return-Path: <linux-pci+bounces-22580-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22581-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB96BA4855A
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 17:41:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DD96AA4857C
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 17:45:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 553E03A6180
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 16:39:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D312B3A61B2
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 16:45:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFAA51B21B5;
-	Thu, 27 Feb 2025 16:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A05661B3943;
+	Thu, 27 Feb 2025 16:45:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="akOV67KC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="krErGciP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9F51B3955
-	for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 16:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CD41A9B5B;
+	Thu, 27 Feb 2025 16:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740674385; cv=none; b=aY9EutrXbj4sehfBKY+9PlYPwnyC13/zk2G18abw+E/+JLFCw1m7hdVw38bOMwIHkV/osjbNIqz2TMMusAViY5SRf0L0bLgZH0al5nef7BfxzFwGGFlRoTHYgNlbglA2okGmMoN24N9IK8CjN7AhNlJ8amnmXZ/JVY0vGw1rg2c=
+	t=1740674718; cv=none; b=Jt1X5dHDgLXR73z+QpL+8RRW33D5fA5NaLPp47z89AoMhaskdr6LYRTXExYCHpK5ZtFnbmcV/lFPOJlt9N0GYKsDulvmtqYX/QK5jXUKtTF0zszfQkXH4mPcbUI+8AsGUqOgLis26DPboDiw30MdwEeiXMRqtkSaT7smzxHzbC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740674385; c=relaxed/simple;
-	bh=tSvgh1gnqbBUp+pOKDxBFcFMzDCL9KkB2ZMAPDvL6t8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fiQwbMQxOLfVRNDDgJY9hUyKpkw0VU72tFSU6Oo8tUOk8e6atI5sDiPD4rZWI+V1Ix/64BHWMOS7HYnMJ9eZtlow5n/vK04uS1BLw5ZEOsE7cxVpCJ/2G8JhTVBqV7HISJtsWwHKBvpWCDbi/sd2SR2NQFBmsPfgwM9UhwVTjFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=akOV67KC; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-220e83d65e5so22472235ad.1
-        for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 08:39:44 -0800 (PST)
+	s=arc-20240116; t=1740674718; c=relaxed/simple;
+	bh=M8C2M3u5TpN9OWynuAlfv55NDdAKyqvphIMJSxWFvvI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ubXCsqBdvQ66ohSPaQQCWemjb914sZTZNLtrmcZtT0DIoIMLZ8qeX7Xx1mCHYALvezhkJ10zUUsjgsyHrNtsyOI2+nQXdxyYjPyrI3i62luQsP7aiBOKuKZJXQOByYRK3Zaj4K4Huxnop4skvOiVnLo0sO8CJ7Dz4mx1ipcE7SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=krErGciP; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2fe9596a582so295362a91.3;
+        Thu, 27 Feb 2025 08:45:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740674384; x=1741279184; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lU6TulGrlmG4KlNsYp6ILx7vjJst+VSlmCV1XTMvdnI=;
-        b=akOV67KC498bmbxXh+TmewYAFKeIfyYliAugaB81lXztzx6/8tY98G0vQVpOIUaImu
-         g+gEkuw94+nwFPYrlze6GVClPda1VH9iVP749luV5mrOYLdeQZfyB2jSU6K2b1Pb1YKC
-         G1uE7wvL56YE1tpSHIEPp5bdfK3zOPrubvdXBM57APGbFySkzb00CRZ8xkweJ7+etFE1
-         zwzNU69ewuH2JWuh9rL3iQEzJJ+qKPvze/ONhUplzwTTKP53E362JMdO5y8q2PHW51v/
-         gBCxhphDWZdz1KJYRLYQygP57LBR95sIUEgssFQC50YqwvVscJWE5wvaWUYEhLde0X2p
-         qE5w==
+        d=gmail.com; s=20230601; t=1740674715; x=1741279515; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mL8RbLthQVpACiQn3Yhjr26jWaUe8dDUSmw2OaqrSW8=;
+        b=krErGciPQqL/gI9h92JxvwvI9QDa0OizhgNQCRBHIb9l7dkNKb3G3HQcQGi6AOANJu
+         Fs3EdldU4mZBEddp5FEJYp+udDZL0nxrNrWyUT3WRZb6EQPcbxsaoxMZ8Fy2QE+2qP6q
+         ogr2+Pv1jd+T41VbU4EzOUbC8DUTgroGQm9hK8RVQU92rCEOR2rn1U5ZxOkL7tKcIRLb
+         mOnegb97xkdjM09sfwzeSesBXs3VyGS8z0D2JC80GD8LWFHGrYPvfOZFkw5VGbcDdG4T
+         nUq2L3fzA1dve4rrc6kwHMupt15b/He1n4u2phul9h5z+dQSiddBFDpWXcvCA0q0fQca
+         nqIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740674384; x=1741279184;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lU6TulGrlmG4KlNsYp6ILx7vjJst+VSlmCV1XTMvdnI=;
-        b=KpFUZrRi72uP63RE9lCYWu0Pwc3Aom/8g9eB2MOem0/Io6ROvsdbNQwdyTbKH//HV5
-         feeIrNhj9ok3MyX9N//nXFcU2LZ2LqmuDzPB74+y43H5KyiLXSoUVNmC26Dqzpe1WPE8
-         3LjDG9GHhbRa6rhFrmfWk5rJ8KphPv+VHWJOy30stOLJn8PtCTaYNKtAkpEhyLKgt3hh
-         g95HRewiAyxQG8afEyjr1t2DyjHJdPMn+JbMe370YDeqk1yg+mhgu1egwJN+Oky/JGkj
-         ncWSBKuc7c4ufar4vAhD4VW/GWuW5eFEjw7JjCxl32RxLbHkv57lLJmqELb594WEK3Mo
-         QRCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWvm9HuYuIwj6S/LYHH4NRzJLO1DxpzeBgm8lMu7rxCIAOQTp7R4s9zwNYuuIKO6tcCnvdf6v5NIyM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzu0UGcS7xdwKKBTgRMsCF3P07Wyexad+TWnH3IS7yFw9Y4i+A
-	w06FoZZqBMaqgq3I9Q4Xf1PnAehRIkUSoPOMT3NUC6PMBQs/592N6KB5huhqA25tz6wdaFSgHKY
-	=
-X-Gm-Gg: ASbGncsb53RDo0TwQ4bMrDBW9wGv2SRwcXhR19/7NSvQwUPtX0OF/bFzZ0p2sbVKibX
-	/KdXtB+gW8l1iWzPkJqfrFK84tJshsM+qeb9FXha/3+6U/hUe4usOCcpHwClNh8jLKtiwSRoAQF
-	H8NK+OR65gDmeLMv5/iaJI0lXhN0ZxT0DYmFyqc20hH/3GXyfeMKLKw14cX8IQR2dzi5Ew55pRh
-	6p6PnVn77+Lth2X+pT1zviw1nED/2ku1xoeQjeEzA6g2PO/hjn5Z2c3JCbMT5z8+Hv6fZiIqOrF
-	PXprj8/R7b5tUXThQNY62pzeuaKjXvC8LJmX
-X-Google-Smtp-Source: AGHT+IGjVr6y7dk/NnaehBxWXZ5Z15rh1gbNg00OEsuqQ8qkTGeQI6wsgYKPU0Nh3/UelzRQKc/AYg==
-X-Received: by 2002:a17:902:ea0b:b0:220:f91a:4650 with SMTP id d9443c01a7336-22320081109mr134100515ad.19.1740674383644;
-        Thu, 27 Feb 2025 08:39:43 -0800 (PST)
-Received: from thinkpad ([120.60.51.181])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223505293ddsm16787555ad.229.2025.02.27.08.39.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 08:39:43 -0800 (PST)
-Date: Thu, 27 Feb 2025 22:09:37 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: tglx@linutronix.de, kw@linux.com, kwilczynski@kernel.org,
-	bhelgaas@google.com, cassel@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] genirq/msi: Add the address and data that show MSI/MSIX
-Message-ID: <20250227163937.wv4hsucatyandde3@thinkpad>
-References: <20250227162821.253020-1-18255117159@163.com>
+        d=1e100.net; s=20230601; t=1740674715; x=1741279515;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mL8RbLthQVpACiQn3Yhjr26jWaUe8dDUSmw2OaqrSW8=;
+        b=e5nJJVu37td70Jgwe2DPKKAeLDa+EiRkteZxSI2p6yI2OJbl2kInD8IaN6dHpub2uU
+         A2Q/jStGQnyOAjOayd1ep5BukD1FdSeXPl4ccEUlwHtToaSt+HnM4pt7clcus4v8fk4l
+         /nLoV7EfE00MVglCXm6NB2A9TrT9pu/QVFFC8hoINVqm0fdkrdkBtzuaVImlw4hYLC6U
+         ZPW42MrjF9V0nuZEXwXAXzMZr9mhouLbisp24JKCasPVJ4HEOQguHWR+eeV7WM6OjJin
+         fAZ/4OYKQDX+m4uHXi2i7l2h6QvKOd8LhnpHxDaedL22DjY3sxML4ynYiRQjOr2AdkTZ
+         odoA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSaD7VV1ZUtLm3Tpl3tWgeFuJuBDXE7L29H+5Hx0sRNYLsOV3UPc4gozqTX/StYTeMxwJi7LeT5pfafanVNy8=@vger.kernel.org, AJvYcCWyCV+gqxbhEXmidbOHqJhaE9+HB5QDyLbOBNqTJdSY1hshIrE2IVuXgYMm4qrl/kXanzOFcFQLf3Jk@vger.kernel.org, AJvYcCXKL7kfOqruiyYA8VWUvKyFdL8jdw39OP8IiZIvPXU8ExARhWDv/S2eKVX3JENsZNXC39FaidlQsR0=@vger.kernel.org, AJvYcCXrDPAG/lPZtg8KaHjcel+hDoZtLvBf2OSaKJU66oA2ciwBHKjv52WCwNPWk4rNp9Kl5Se0CD09wOWj6+3R@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7LKEwdJUMgKfGjuRvLu0lO+ckBqWHhWPV7gul7vxin/0CkoSI
+	5AowVYIrGSyDASHJjISOug35M+bOOHYHWH0N055/oMJJt5yN3jCGKjsKMPqPlgwpBeWa1k18Ztf
+	FHAmEHEaQ8fbb4o9uqtCAjqUYU+P1MTohoBQ=
+X-Gm-Gg: ASbGncssw6u7iG5zu0i39I5EXVt1A++BrDAsx98FhcsVRNV4L6HKaUh48eGz7geY0Ve
+	ddd/fb5qZMj86AuHn8Xdd9B6FLhmqzAw3AX5b1+VTh7ww3Vtv6McUTY5Vg0HQ/UoyPQHCw8wdqt
+	emuU59QVo=
+X-Google-Smtp-Source: AGHT+IGlS9m7htkmiS4ofu5OERP5ZjqcFVa2Gfyhnm/qwGvf7/Ub7WKRRohsNEWZXPH5rSMRgwJpZDHpgeq/nlTIpm0=
+X-Received: by 2002:a17:90b:a11:b0:2fe:8e19:bcd7 with SMTP id
+ 98e67ed59e1d1-2fe8e19c0c0mr3595573a91.5.1740674715406; Thu, 27 Feb 2025
+ 08:45:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250227162821.253020-1-18255117159@163.com>
+References: <20250227030952.2319050-1-alistair@alistair23.me>
+ <20250227030952.2319050-10-alistair@alistair23.me> <2025022717-dictate-cortex-5c05@gregkh>
+ <CAH5fLgiQAdZMUEBsWS0v1M4xX+1Y5mzE3nBHduzzk+rG0ueskg@mail.gmail.com> <2025022752-pureblood-renovator-84a8@gregkh>
+In-Reply-To: <2025022752-pureblood-renovator-84a8@gregkh>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 27 Feb 2025 17:45:02 +0100
+X-Gm-Features: AQ5f1JpM3A5OMa6-YEc-JtVXDMdKZH9wLjWXNO1hTS7CpAspMy6Fu_BwL4bcJa0
+Message-ID: <CANiq72kS8=1R-0yoGP5wwNT2XKSwofjfvXMk2qLZkO9z_QQzXg@mail.gmail.com>
+Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are authenticated
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Alice Ryhl <aliceryhl@google.com>, Alistair Francis <alistair@alistair23.me>, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, lukas@wunner.de, 
+	linux-pci@vger.kernel.org, bhelgaas@google.com, Jonathan.Cameron@huawei.com, 
+	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org, 
+	boqun.feng@gmail.com, bjorn3_gh@protonmail.com, wilfred.mallawa@wdc.com, 
+	ojeda@kernel.org, alistair23@gmail.com, a.hindborg@kernel.org, 
+	tmgross@umich.edu, gary@garyguo.net, alex.gaynor@gmail.com, 
+	benno.lossin@proton.me, Alistair Francis <alistair.francis@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 28, 2025 at 12:28:21AM +0800, Hans Zhang wrote:
-> Add to view the addresses and data stored in the MSI capability or the
-> addresses and data stored in the MSIX vector table.
-> 
-> e.g.
-> root@root:/sys/bus/pci/devices/<dev>/msi_irqs# ls
-> 86  87  88  89
-> root@root:/sys/bus/pci/devices/<dev>/msi_irqs# cat *
-> msix
->  address_hi: 0x00000000
->  address_lo: 0x0e060040
->  msg_data: 0x00000000
-> msix
->  address_hi: 0x00000000
->  address_lo: 0x0e060040
->  msg_data: 0x00000001
-> msix
->  address_hi: 0x00000000
->  address_lo: 0x0e060040
->  msg_data: 0x00000002
-> msix
->  address_hi: 0x00000000
->  address_lo: 0x0e060040
->  msg_data: 0x00000003
-> 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
->  kernel/irq/msi.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-> index 396a067a8a56..a37a3e535fb8 100644
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -503,8 +503,18 @@ static ssize_t msi_mode_show(struct device *dev, struct device_attribute *attr,
->  {
->  	/* MSI vs. MSIX is per device not per interrupt */
->  	bool is_msix = dev_is_pci(dev) ? to_pci_dev(dev)->msix_enabled : false;
-> +	struct msi_desc *desc;
-> +	u32 irq;
-> +
-> +	if (kstrtoint(attr->attr.name, 10, &irq) < 0)
-> +		return 0;
->  
-> -	return sysfs_emit(buf, "%s\n", is_msix ? "msix" : "msi");
-> +	desc = irq_get_msi_desc(irq);
-> +	return sysfs_emit(
-> +		buf,
-> +		"%s\n address_hi: 0x%08x\n address_lo: 0x%08x\n msg_data: 0x%08x\n",
-> +		is_msix ? "msix" : "msi", desc->msg.address_hi,
-> +		desc->msg.address_lo, desc->msg.data);
+On Thu, Feb 27, 2025 at 1:01=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> Sorry, you are right, it does, and of course it happens (otherwise how
+> would bindings work), but for small functions like this, how is the C
+> code kept in sync with the rust side?  Where is the .h file that C
+> should include?
 
-Sysfs is an ABI. You cannot change the semantics of an attribute.
+What you were probably remembering is that it still needs to be
+justified, i.e. we don't want to generally/freely start replacing
+"individual functions" and doing FFI both ways everywhere, i.e. the
+goal is to build safe abstractions wherever possible.
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Cheers,
+Miguel
 
