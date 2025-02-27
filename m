@@ -1,92 +1,110 @@
-Return-Path: <linux-pci+bounces-22516-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22517-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCE5FA47467
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 05:26:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B342A47482
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 05:34:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5DC5D18870ED
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 04:26:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42E3E1657FB
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 04:34:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA7EC1D63CD;
-	Thu, 27 Feb 2025 04:26:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AC1217A5A4;
+	Thu, 27 Feb 2025 04:34:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UEpVKR/7"
+	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="ROSlxnOJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EaJvNtK4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2067.outbound.protection.outlook.com [40.107.237.67])
+Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B921A38E3;
-	Thu, 27 Feb 2025 04:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740630371; cv=fail; b=DSzVzYS6z/wqYOhDH3aHcPCdsSwjLx4xGyN5DFdEIylo/+NyWl1pSx4qY5112z3nfoMEdCd6VEdbUk2M7STvABpUVFevqlcsr7B1j8pJPvLRSOWY4dQKUn5K4mnZMA92pIjg4WIuwo2iL5bjesH1FfkotXFJLXJhAJ9wCLh7EiU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740630371; c=relaxed/simple;
-	bh=1QxNH2hHzCn+98tPlBhKUlkpWvjhO6MBMNs5hyZ5r2Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KGbW99JcgWYPCTVvSY92WU2kIlZIz5P14D6xdkjpty9ShUYX6jrn7J0vNrTqrZTOxxVwbAqMFxqpGTmvUuCF0orrwFYBRf4ybbMiqlvxxD1UsH6yXHtxkuIdIRKpUfH+dyqzqsUKOQINFdH9s+J0LEu8uP7X/nq2U60yfhFv+2g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UEpVKR/7; arc=fail smtp.client-ip=40.107.237.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qu8V7O7DO+c+LpEr3RCq2EJna3OF5dd0ZEg8cxa6E3TuFMwYE7Q1gfTV7ooJXKuHL7QTFKkzSRBHBWCL9V3vNHtM4NyRqRAwhtRRho6As4zjif+/lmD+kwWyUkL0G6aU9LlxAuCTUXWjSp07ihh33ki3O40pIpLWfIAAUmvganrGrCX9wUJeBvtmKvV1v6uWd9fLj+cfPqxltIZqAaqQvqSJ/xZpwgkIi+aXOaopWKmJ7mnBwnZyg4m24BGPWx6tsca9u46DnPCSqcrRJoeB0IjQG8JAHJZX0jgmeLGItBeZJ3QqFoO2PUd8kzq079xzYtQmE9WSrEiJ5Wm13But/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hIX0B9koQD5BnOZeIeeQUrLHR+zWKRrPwdiPtSmXdvI=;
- b=gA08EN9tWbkp6q81rQPXx/WVPKsT+bnC7/Rx922GBvWVqsosmuaJ433bkszk8F/FMq5QEqpgkJxX96D8E1tsiWqCTNtYzxI5GH2jSdOyxoa/bgjMgcyXmBNEzB2TPKi1rUUNT+xUr4/tB+JiU/5ZDh3RJN0CILGqAKxLny9geK4ZCtSn7Er5wQLsYuUWh81jAPDA/xdc9YEz1wH0MAR5VAacf5L/ybLdfRm4Oy7ganh4ERuJDX57IqLCLXx3RKiEK0RmAW1kjLojvI7org47XkgDXn8ZvBGRJcSMdnx1yCbR6+s7FAZsLd0h60BRASrIoiVYxYI2nzy5sWQiDPTiAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hIX0B9koQD5BnOZeIeeQUrLHR+zWKRrPwdiPtSmXdvI=;
- b=UEpVKR/7GdNbEh3SZEynjXneF3EhtmjiOmWnYeOKm6+RA0GumQykaQG7MTsoxXBV3CgfIQ0Vnlv8bc0n8LcIKirmsVv+XaoG4sfoCRvIrngPqiZm9ktZQ685pLaR1SoQlKkYnyf4jtpDHyri5K4hUWaTV/olWZbJwhPs2PNHcRo=
-Received: from DM6PR07CA0048.namprd07.prod.outlook.com (2603:10b6:5:74::25) by
- PH7PR12MB6812.namprd12.prod.outlook.com (2603:10b6:510:1b6::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Thu, 27 Feb
- 2025 04:26:05 +0000
-Received: from CY4PEPF0000EE38.namprd03.prod.outlook.com
- (2603:10b6:5:74:cafe::1a) by DM6PR07CA0048.outlook.office365.com
- (2603:10b6:5:74::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.18 via Frontend Transport; Thu,
- 27 Feb 2025 04:26:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EE38.mail.protection.outlook.com (10.167.242.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8489.16 via Frontend Transport; Thu, 27 Feb 2025 04:26:04 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 22:26:03 -0600
-Received: from xhdlc210316.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 26 Feb 2025 22:25:33 -0600
-From: Sai Krishna Musham <sai.krishna.musham@amd.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <cassel@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
-	<bharat.kumar.gogada@amd.com>, <thippeswamy.havalige@amd.com>,
-	<sai.krishna.musham@amd.com>
-Subject: [PATCH v3 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST# signal
-Date: Thu, 27 Feb 2025 09:54:54 +0530
-Message-ID: <20250227042454.907182-3-sai.krishna.musham@amd.com>
-X-Mailer: git-send-email 2.44.1
-In-Reply-To: <20250227042454.907182-1-sai.krishna.musham@amd.com>
-References: <20250227042454.907182-1-sai.krishna.musham@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B1C28F3;
+	Thu, 27 Feb 2025 04:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740630860; cv=none; b=RM+wrUlUtA9LIsWKZLVi50VTwFMOcrNsvccBD9qE3go1Lc7e/W2zIy6renHRZK2KqipfNgnWbkAti2Hd7PuskO6QMWtjLPhk5z3bksXrRTAx8Q1xmHbRIVVft/fbGWEDtsSBRSIf7KB66DCzSEwMPWvDYVawqRsZzceBx/nXRNA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740630860; c=relaxed/simple;
+	bh=+MtIwxydvxgofa6JYOGsHBJxr5soQtNztqvhVko4FFM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BwfAwgOqwCyhkzq+e3N0pQvgmixndFBjsv2/0IocoVImdJazrEAOfwDBhy9FWHdBEiU3B/ONxHEBt2HjQPLXGLYKpUKwVsxu/F6K+K/qjPNqGvixUg8IXi7KBK3s1OoNcnfp6Hgf4EWALETLOm1xpf1WZG7HvsNN9zk31BOZVGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=ROSlxnOJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=EaJvNtK4; arc=none smtp.client-ip=202.12.124.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alistair23.me
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 88CFB2540213;
+	Wed, 26 Feb 2025 23:34:16 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Wed, 26 Feb 2025 23:34:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
+	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
+	:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to; s=fm1; t=1740630856; x=1740717256; bh=sKUCIn6qQH
+	Nri4RbB2Jma8/fBIr55FJhTkS6CHOoafQ=; b=ROSlxnOJl0U6RtVbmnVnFJeZcM
+	98ba+v78uLlGcsorqAbIoA5iDoOzNxqGv9T5brvJAG413iyDfxfj32tYfh6ufEbc
+	POA14TPcKS9PZH8GHVGCHi2LBPmbeDEKgBYN4zx+oO0uHei+YO4kwcGeQu9a3Yj7
+	71aVk00yKK/KTQWND2jXN8RD5MP5p1VnBzfb46MYeq2hsL618P+WewF4JwA/jwuY
+	oxmR+FAEzfTPHSGOWqcf/DNkoLBUCEyDPD7QakubZulDbwKj/21hibVYufg/2Mgz
+	LjuX/loJVj24gpyUMRFCKtyo480X6JuhrS2cqBOa0MzooolF6fQKK/8smgDA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1740630856; x=1740717256; bh=sKUCIn6qQHNri4RbB2Jma8/fBIr55FJhTkS
+	6CHOoafQ=; b=EaJvNtK48M3lrneMRe38tidhFBduywJLmZJSHl2qQevdi7L9v80
+	piLZbcA4orxArGRHZgaUlA4kyAyoadQkhPoyIOsmOkAAMHdwj/G/s7kt8FoymryO
+	H2PtHPko1QVGKxYh4lXirSKfvKTz3iuHrKc3qEFTmRzjIzRfl0EYwKg5lHYfSHN1
+	yVMiY4LHoyHUemb1RmzJR0wjt73UUQpd5W0LOdH+Nokai5RMMmMjt8t2JJymW7rb
+	4ggI27blszoG3NN3SSXsQQ6g935Fz1JZjrrgGGztZL7pDEZh7p6Y0SsgskcAcLXK
+	8u06dvHorj5PUVlfMtjyOZSOkNgBVJ91F+w==
+X-ME-Sender: <xms:R-u_Z5_TVlolvBL_2CbAJ5dlm4wh3bLwANfuoVReL6Tv5uWsaLeLpA>
+    <xme:R-u_Z9sQo7mtGAsu1wvxlYKGsyGEbgcFgPZ8CfhLgb6OQs2XIrK9ahv9OYC34J4HB
+    bqt4__7X6bBe0-DnOY>
+X-ME-Received: <xmr:R-u_Z3BH1_ZD82C_pnDgKT0iwyUejsh3lKb4YKX_J8mLgsQP0zX5aPi5bNgZB8P_nz8dGSZ_anM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekieehvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvve
+    fufffkofgggfestdekredtredttdenucfhrhhomheptehlihhsthgrihhrucfhrhgrnhgt
+    ihhsuceorghlihhsthgrihhrsegrlhhishhtrghirhdvfedrmhgvqeenucggtffrrghtth
+    gvrhhnpeegheejueehgeekjeffjeehhfejieelfeduudfhgeetieegueehvdeftefhgffh
+    tdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlh
+    hishhtrghirhesrghlihhsthgrihhrvdefrdhmvgdpnhgspghrtghpthhtohepudegpdhm
+    ohguvgepshhmthhpohhuthdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrd
+    gtohhmpdhrtghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehjohhnrghthhgrnhdrtggrmhgvrhhonheshhhurgifvghirdgtoh
+    hmpdhrtghpthhtoheplhhukhgrshesfihunhhnvghrrdguvgdprhgtphhtthhopegrlhgv
+    gidrfihilhhlihgrmhhsohhnsehrvgguhhgrthdrtghomhdprhgtphhtthhopegthhhrih
+    hsthhirghnrdhkohgvnhhighesrghmugdrtghomhdprhgtphhtthhopehktghhsehnvhhi
+    ughirgdrtghomhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtih
+    honhdrohhrghdprhgtphhtthhopehlohhgrghnghesuggvlhhtrghtvggvrdgtohhm
+X-ME-Proxy: <xmx:R-u_Z9d2-8OMUbF592-z1MzaBrMxC7Wzd2ysPgPRaGBskgZrXBUalw>
+    <xmx:R-u_Z-OHTptSdPNqV-RxGqAllJLQZ05-ZLMDjoSZjdO4skAi3HIA8A>
+    <xmx:R-u_Z_lpsE4AkvuhsonIIftV3bNwuoaw2s8StUScn21ZEgY3eu5MCQ>
+    <xmx:R-u_Z4tmfBIGfgCcbeC2kFn-9uWy2hPEHKP9cMs8Aj3K2jHUIEKmjQ>
+    <xmx:SOu_Z1l6kDxhsujyD0cLNPmuu6n9Vr8DyDQzGlWazeCHgGCoWM6Y_bSd>
+Feedback-ID: ifd214418:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 26 Feb 2025 23:34:11 -0500 (EST)
+From: Alistair Francis <alistair@alistair23.me>
+To: bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	Jonathan.Cameron@huawei.com,
+	lukas@wunner.de
+Cc: alex.williamson@redhat.com,
+	christian.koenig@amd.com,
+	kch@nvidia.com,
+	gregkh@linuxfoundation.org,
+	logang@deltatee.com,
+	linux-kernel@vger.kernel.org,
+	alistair23@gmail.com,
+	chaitanyak@nvidia.com,
+	rdunlap@infradead.org,
+	Alistair Francis <alistair@alistair23.me>
+Subject: [PATCH v16 1/4] PCI/DOE: Rename DOE protocol to feature
+Date: Thu, 27 Feb 2025 14:34:00 +1000
+Message-ID: <20250227043404.2452562-1-alistair@alistair23.me>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -94,123 +112,312 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: sai.krishna.musham@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE38:EE_|PH7PR12MB6812:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0890e63f-51c1-4982-57db-08dd56e6d96c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|7416014|376014|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BzdMcuy3PSUQxKdy6MRsJc8Qg540g5YIAWfApvqofAPcNjaQTfV+cjw6DhIc?=
- =?us-ascii?Q?K06dkt7S1SVpPsRgIFJRM4lB12cD0FrqJSViUnMaiSBNMhkfBXso8zWwXxoj?=
- =?us-ascii?Q?xdC7y/h2mG9V58mNfa6EFFyEH+ATE+nkxpsOcUJxlkkklLi5yzoHOg3Yxox8?=
- =?us-ascii?Q?uqOpG8lEBRjz+vZfXflLPzKrT1+cLfV5hC1LDTkKbYj7/PejP+8GXmB1Op0r?=
- =?us-ascii?Q?zRBo9Q0eBPV4MOFtdq7KYy7/VtrK2Wxh4drwkMFjh+JWPuvNjg+Z0R+QNtAG?=
- =?us-ascii?Q?phmdh0IJP23HmrJ8PA9seOY6uPZ6Ahhu3eWfRrXz7787SZ4HwVabMBY5Z004?=
- =?us-ascii?Q?UPsIfLexcHV2/FMJdu2LWlkVIB32DTsyp9Ybax+F66mvlvpw39o3o1tjh+q3?=
- =?us-ascii?Q?MGBYyUE0NMfv4Z1a4yfcAx4/tCOnJDRTcS6GSZgZA2mGRmdFSFKZdN8RgmYu?=
- =?us-ascii?Q?NDByRMsgLGYS44ukqhlHmpRg7k+dsERaApWspTs5V+fMdKa6yDia0kwaK/Bx?=
- =?us-ascii?Q?FuL7lqAq2CXaszck5ToiBWgGiqzQjc+7r5idiO7JCsETLngCzyON5RKDmw3k?=
- =?us-ascii?Q?XCH4RZWCYt3YGb3Pwn4+Ych/NzVTnF4lYBWhar7Smb9zXmhA85Yanf71KnB1?=
- =?us-ascii?Q?lRYcb9jDcMasmEbEUvN0fjM4GRsgyRX7/mMpx1CL8nHIgcQJzQdfDrB28MdY?=
- =?us-ascii?Q?Jiu+X8slkBHb4O7vkC/WuhRPnTdURo483q7SY8KVKj4X3WAFRFy5VUweudHk?=
- =?us-ascii?Q?dMUa2ByF3fomO82hqg1vBbMCjOqynYWqz2T0Iius3iIO4aqPd46PvusvQDj1?=
- =?us-ascii?Q?oxzjsI2A0VdQ982yHnMOXyqA9Fz8JTr3bEqrr0LneLkNMEP1hezAtsbXqy7Q?=
- =?us-ascii?Q?17OgUmt0Qdk16QedEyl8+JT0chuwgRavrauRzOuXIr+jyTlPDcdV2J9LlgLa?=
- =?us-ascii?Q?/itIWTJ2SU8w/4/D85Hs3K2eaSxpD01puw9br5wbjTXTCyd/RdUJS5LeaVjj?=
- =?us-ascii?Q?7Sq5za/98yCzH7regzDTsc8nfOm74xswEzfmAmdAYZfND7OAxKnnEMlnHZjb?=
- =?us-ascii?Q?FS3ePY+z0kejOGQZiDY3xtYasTG8kG3jXmpg9kXangjaqSIkh4kmLQrtUPuD?=
- =?us-ascii?Q?6trTSS+iahriOislhO7jNMMNEw0OhlV3+E+or4UBZalGqhS/ekdGLbg/FAVw?=
- =?us-ascii?Q?nuuwzcLwy3sbN/EVrcn7sHKx3s8cqRHbPKfr0e0vq1k+9MiuIAJWUPyI51t+?=
- =?us-ascii?Q?unoI1xJkv0DAugM6ueHayZSD7QFpBJ1biL9pVj0TXsuwjqjVDs8Dcio1lrOA?=
- =?us-ascii?Q?L2g+8EBzPY6nxhbLKlPCz/kdwHp4p1CqKdaB1ap8XTa+DfHZfJuYdKbugG6w?=
- =?us-ascii?Q?T5Tulj43/XPLJrOaNtIsAiWa9zwxk9lvXn41vtbRS4qq++Ar+jqktc3bvnzm?=
- =?us-ascii?Q?sj86ExduexuFwqVzUrjcTK5ifTU8oNIlqr0iyjugNOCO8rKy72FtDb7MeKXF?=
- =?us-ascii?Q?494OljUsFgftctA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(376014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 04:26:04.4982
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0890e63f-51c1-4982-57db-08dd56e6d96c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE38.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6812
 
-Add GPIO-based control for the PCIe Root Port PERST# signal.
+DOE r1.1 replaced all occurrences of "protocol" with the term "feature"
+or "Data Object Type".
 
-According to section 2.2 of the PCIe Electromechanical Specification
-(Revision 6.0), PERST# signal has to be deasserted after a delay of
-100 ms (T_PVPERL) to ensure proper reset sequencing during PCIe
-initialization.
+PCIe r6.1 (which was published July 24) incorporated that change.
 
-Adapt to use the GPIO framework and make reset optional to keep DTB
-backward compatibility.
+Rename the existing terms protocol with feature.
 
-Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
+Signed-off-by: Alistair Francis <alistair@alistair23.me>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
 ---
-This patch depends on the following patch series.
-https://lore.kernel.org/all/20250217072713.635643-3-thippeswamy.havalige@amd.com/
+v16:
+ - No changes
+v15:
+ - No changes
+v14:
+ - No changes
+v13:
+ - No changes
+v12:
+ - No changes
+v11:
+ - No changes
+v10:
+ - Split original patch into two
+v9:
+ - Rename two more DOE macros
+v8:
+ - Rename prot to feat as well
+v7:
+ - Initial patch
 
-Changes for v3:
-- Use PCIE_T_PVPERL_MS define.
+ drivers/pci/doe.c | 88 +++++++++++++++++++++++------------------------
+ 1 file changed, 44 insertions(+), 44 deletions(-)
 
-Changes for v2:
-- Make the request GPIO optional.
-- Correct the reset sequence as per PERST#
-- Update commit message
----
- drivers/pci/controller/pcie-xilinx-cpm.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-index 81e8bfae53d0..558f1d602802 100644
---- a/drivers/pci/controller/pcie-xilinx-cpm.c
-+++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-@@ -6,6 +6,8 @@
+diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+index 7bd7892c5222..2f36262e76f8 100644
+--- a/drivers/pci/doe.c
++++ b/drivers/pci/doe.c
+@@ -22,7 +22,7 @@
+ 
+ #include "pci.h"
+ 
+-#define PCI_DOE_PROTOCOL_DISCOVERY 0
++#define PCI_DOE_FEATURE_DISCOVERY 0
+ 
+ /* Timeout of 1 second from 6.30.2 Operation, PCI Spec r6.0 */
+ #define PCI_DOE_TIMEOUT HZ
+@@ -43,7 +43,7 @@
+  *
+  * @pdev: PCI device this mailbox belongs to
+  * @cap_offset: Capability offset
+- * @prots: Array of protocols supported (encoded as long values)
++ * @feats: Array of features supported (encoded as long values)
+  * @wq: Wait queue for work item
+  * @work_queue: Queue of pci_doe_work items
+  * @flags: Bit array of PCI_DOE_FLAG_* flags
+@@ -51,14 +51,14 @@
+ struct pci_doe_mb {
+ 	struct pci_dev *pdev;
+ 	u16 cap_offset;
+-	struct xarray prots;
++	struct xarray feats;
+ 
+ 	wait_queue_head_t wq;
+ 	struct workqueue_struct *work_queue;
+ 	unsigned long flags;
+ };
+ 
+-struct pci_doe_protocol {
++struct pci_doe_feature {
+ 	u16 vid;
+ 	u8 type;
+ };
+@@ -66,7 +66,7 @@ struct pci_doe_protocol {
+ /**
+  * struct pci_doe_task - represents a single query/response
+  *
+- * @prot: DOE Protocol
++ * @feat: DOE Feature
+  * @request_pl: The request payload
+  * @request_pl_sz: Size of the request payload (bytes)
+  * @response_pl: The response payload
+@@ -78,7 +78,7 @@ struct pci_doe_protocol {
+  * @doe_mb: Used internally by the mailbox
   */
+ struct pci_doe_task {
+-	struct pci_doe_protocol prot;
++	struct pci_doe_feature feat;
+ 	const __le32 *request_pl;
+ 	size_t request_pl_sz;
+ 	__le32 *response_pl;
+@@ -183,8 +183,8 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
+ 		length = 0;
  
- #include <linux/bitfield.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqchip.h>
-@@ -568,8 +570,24 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct pci_host_bridge *bridge;
- 	struct resource_entry *bus;
-+	struct gpio_desc *reset_gpio;
- 	int err;
+ 	/* Write DOE Header */
+-	val = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_VID, task->prot.vid) |
+-		FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, task->prot.type);
++	val = FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_VID, task->feat.vid) |
++		FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, task->feat.type);
+ 	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE, val);
+ 	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
+ 			       FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH,
+@@ -229,12 +229,12 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
+ 	int i = 0;
+ 	u32 val;
  
-+	/* Request the GPIO for PCIe reset signal */
-+	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(reset_gpio)) {
-+		dev_err(dev, "Failed to request reset GPIO\n");
-+		return PTR_ERR(reset_gpio);
-+	}
-+
-+	/* Assert the reset signal */
-+	gpiod_set_value(reset_gpio, 1);
-+
-+	msleep(PCIE_T_PVPERL_MS);
-+
-+	/* Deassert the reset signal */
-+	gpiod_set_value(reset_gpio, 0);
-+
- 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*port));
- 	if (!bridge)
- 		return -ENODEV;
+-	/* Read the first dword to get the protocol */
++	/* Read the first dword to get the feature */
+ 	pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
+-	if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != task->prot.vid) ||
+-	    (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != task->prot.type)) {
+-		dev_err_ratelimited(&pdev->dev, "[%x] expected [VID, Protocol] = [%04x, %02x], got [%04x, %02x]\n",
+-				    doe_mb->cap_offset, task->prot.vid, task->prot.type,
++	if ((FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val) != task->feat.vid) ||
++	    (FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val) != task->feat.type)) {
++		dev_err_ratelimited(&pdev->dev, "[%x] expected [VID, Feature] = [%04x, %02x], got [%04x, %02x]\n",
++				    doe_mb->cap_offset, task->feat.vid, task->feat.type,
+ 				    FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_VID, val),
+ 				    FIELD_GET(PCI_DOE_DATA_OBJECT_HEADER_1_TYPE, val));
+ 		return -EIO;
+@@ -396,7 +396,7 @@ static void pci_doe_task_complete(struct pci_doe_task *task)
+ }
+ 
+ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u16 *vid,
+-			     u8 *protocol)
++			     u8 *feature)
+ {
+ 	u32 request_pl = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
+ 				    *index) |
+@@ -407,7 +407,7 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u1
+ 	u32 response_pl;
+ 	int rc;
+ 
+-	rc = pci_doe(doe_mb, PCI_VENDOR_ID_PCI_SIG, PCI_DOE_PROTOCOL_DISCOVERY,
++	rc = pci_doe(doe_mb, PCI_VENDOR_ID_PCI_SIG, PCI_DOE_FEATURE_DISCOVERY,
+ 		     &request_pl_le, sizeof(request_pl_le),
+ 		     &response_pl_le, sizeof(response_pl_le));
+ 	if (rc < 0)
+@@ -418,7 +418,7 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u1
+ 
+ 	response_pl = le32_to_cpu(response_pl_le);
+ 	*vid = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID, response_pl);
+-	*protocol = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL,
++	*feature = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_PROTOCOL,
+ 			      response_pl);
+ 	*index = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_NEXT_INDEX,
+ 			   response_pl);
+@@ -426,12 +426,12 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 capver, u8 *index, u1
+ 	return 0;
+ }
+ 
+-static void *pci_doe_xa_prot_entry(u16 vid, u8 prot)
++static void *pci_doe_xa_feat_entry(u16 vid, u8 prot)
+ {
+ 	return xa_mk_value((vid << 8) | prot);
+ }
+ 
+-static int pci_doe_cache_protocols(struct pci_doe_mb *doe_mb)
++static int pci_doe_cache_features(struct pci_doe_mb *doe_mb)
+ {
+ 	u8 index = 0;
+ 	u8 xa_idx = 0;
+@@ -450,11 +450,11 @@ static int pci_doe_cache_protocols(struct pci_doe_mb *doe_mb)
+ 			return rc;
+ 
+ 		pci_dbg(doe_mb->pdev,
+-			"[%x] Found protocol %d vid: %x prot: %x\n",
++			"[%x] Found feature %d vid: %x prot: %x\n",
+ 			doe_mb->cap_offset, xa_idx, vid, prot);
+ 
+-		rc = xa_insert(&doe_mb->prots, xa_idx++,
+-			       pci_doe_xa_prot_entry(vid, prot), GFP_KERNEL);
++		rc = xa_insert(&doe_mb->feats, xa_idx++,
++			       pci_doe_xa_feat_entry(vid, prot), GFP_KERNEL);
+ 		if (rc)
+ 			return rc;
+ 	} while (index);
+@@ -478,7 +478,7 @@ static void pci_doe_cancel_tasks(struct pci_doe_mb *doe_mb)
+  * @pdev: PCI device to create the DOE mailbox for
+  * @cap_offset: Offset of the DOE mailbox
+  *
+- * Create a single mailbox object to manage the mailbox protocol at the
++ * Create a single mailbox object to manage the mailbox feature at the
+  * cap_offset specified.
+  *
+  * RETURNS: created mailbox object on success
+@@ -497,7 +497,7 @@ static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+ 	doe_mb->pdev = pdev;
+ 	doe_mb->cap_offset = cap_offset;
+ 	init_waitqueue_head(&doe_mb->wq);
+-	xa_init(&doe_mb->prots);
++	xa_init(&doe_mb->feats);
+ 
+ 	doe_mb->work_queue = alloc_ordered_workqueue("%s %s DOE [%x]", 0,
+ 						dev_bus_name(&pdev->dev),
+@@ -520,11 +520,11 @@ static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+ 
+ 	/*
+ 	 * The state machine and the mailbox should be in sync now;
+-	 * Use the mailbox to query protocols.
++	 * Use the mailbox to query features.
+ 	 */
+-	rc = pci_doe_cache_protocols(doe_mb);
++	rc = pci_doe_cache_features(doe_mb);
+ 	if (rc) {
+-		pci_err(pdev, "[%x] failed to cache protocols : %d\n",
++		pci_err(pdev, "[%x] failed to cache features : %d\n",
+ 			doe_mb->cap_offset, rc);
+ 		goto err_cancel;
+ 	}
+@@ -533,7 +533,7 @@ static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+ 
+ err_cancel:
+ 	pci_doe_cancel_tasks(doe_mb);
+-	xa_destroy(&doe_mb->prots);
++	xa_destroy(&doe_mb->feats);
+ err_destroy_wq:
+ 	destroy_workqueue(doe_mb->work_queue);
+ err_free:
+@@ -551,31 +551,31 @@ static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
+ static void pci_doe_destroy_mb(struct pci_doe_mb *doe_mb)
+ {
+ 	pci_doe_cancel_tasks(doe_mb);
+-	xa_destroy(&doe_mb->prots);
++	xa_destroy(&doe_mb->feats);
+ 	destroy_workqueue(doe_mb->work_queue);
+ 	kfree(doe_mb);
+ }
+ 
+ /**
+- * pci_doe_supports_prot() - Return if the DOE instance supports the given
+- *			     protocol
++ * pci_doe_supports_feat() - Return if the DOE instance supports the given
++ *			     feature
+  * @doe_mb: DOE mailbox capability to query
+- * @vid: Protocol Vendor ID
+- * @type: Protocol type
++ * @vid: Feature Vendor ID
++ * @type: Feature type
+  *
+- * RETURNS: True if the DOE mailbox supports the protocol specified
++ * RETURNS: True if the DOE mailbox supports the feature specified
+  */
+-static bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
++static bool pci_doe_supports_feat(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
+ {
+ 	unsigned long index;
+ 	void *entry;
+ 
+-	/* The discovery protocol must always be supported */
+-	if (vid == PCI_VENDOR_ID_PCI_SIG && type == PCI_DOE_PROTOCOL_DISCOVERY)
++	/* The discovery feature must always be supported */
++	if (vid == PCI_VENDOR_ID_PCI_SIG && type == PCI_DOE_FEATURE_DISCOVERY)
+ 		return true;
+ 
+-	xa_for_each(&doe_mb->prots, index, entry)
+-		if (entry == pci_doe_xa_prot_entry(vid, type))
++	xa_for_each(&doe_mb->feats, index, entry)
++		if (entry == pci_doe_xa_feat_entry(vid, type))
+ 			return true;
+ 
+ 	return false;
+@@ -603,7 +603,7 @@ static bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type)
+ static int pci_doe_submit_task(struct pci_doe_mb *doe_mb,
+ 			       struct pci_doe_task *task)
+ {
+-	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
++	if (!pci_doe_supports_feat(doe_mb, task->feat.vid, task->feat.type))
+ 		return -EINVAL;
+ 
+ 	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags))
+@@ -649,8 +649,8 @@ int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
+ {
+ 	DECLARE_COMPLETION_ONSTACK(c);
+ 	struct pci_doe_task task = {
+-		.prot.vid = vendor,
+-		.prot.type = type,
++		.feat.vid = vendor,
++		.feat.type = type,
+ 		.request_pl = request,
+ 		.request_pl_sz = request_sz,
+ 		.response_pl = response,
+@@ -675,9 +675,9 @@ EXPORT_SYMBOL_GPL(pci_doe);
+  *
+  * @pdev: PCI device
+  * @vendor: Vendor ID
+- * @type: Data Object Type
++ * @prot: Data Object Type
+  *
+- * Find first DOE mailbox of a PCI device which supports the given protocol.
++ * Find first DOE mailbox of a PCI device which supports the given feature.
+  *
+  * RETURNS: Pointer to the DOE mailbox or NULL if none was found.
+  */
+@@ -688,7 +688,7 @@ struct pci_doe_mb *pci_find_doe_mailbox(struct pci_dev *pdev, u16 vendor,
+ 	unsigned long index;
+ 
+ 	xa_for_each(&pdev->doe_mbs, index, doe_mb)
+-		if (pci_doe_supports_prot(doe_mb, vendor, type))
++		if (pci_doe_supports_feat(doe_mb, vendor, type))
+ 			return doe_mb;
+ 
+ 	return NULL;
 -- 
-2.44.1
+2.48.1
 
 
