@@ -1,118 +1,138 @@
-Return-Path: <linux-pci+bounces-22583-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22584-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D41C3A485CC
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 17:54:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DF8BA485CF
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 17:55:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DED6D1760F7
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 16:47:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A67C618874BF
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 16:50:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACF811B3943;
-	Thu, 27 Feb 2025 16:47:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D033C1CAA67;
+	Thu, 27 Feb 2025 16:50:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0Ec7Nbc"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="eje/hodl"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4816D14EC5B;
-	Thu, 27 Feb 2025 16:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C3C11AF0C2;
+	Thu, 27 Feb 2025 16:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740674835; cv=none; b=ZOcZBtFmhElx3XeCN39HSBWNpbvq7zZw+CzWTNsAnqV2ieaLGc25N2aaCKmj8zKsRLg6kFBsRPX/rRncLfE/hSZD/7NOswIyDaeIOkj0vv8gNpEKKfIJuWi/5KReZMnEI9HgCVL66GsxcgJ/MhXpRmu+z8wmGxLFFFnToY28oA0=
+	t=1740675026; cv=none; b=Ry6kMjheMkgWl99WML+u+de1vYjkxiTuQbe0tGtRAI125wbToHFv5tyM5FDxKbZDvDYuM5vaf56+hDu40OEoZGSmewl6j14BVJ/+CzdxC6z8g3ZaUwIc7iVovCXDq02dzMEtzQZZ2lbixg9DCo7E+D/TjPZCdealrG0Zv9BVsIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740674835; c=relaxed/simple;
-	bh=PkXZ8moBOc6RsNmidcc+UGjDgfkiuoVB1RmC6o21XW8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PMe8l1xNbE1F5vsWM54+a+thwRrR2Cf0tARhJz0ceQ/doZg0Xfe2cBqypx1A8g9KDOlsK8+4yrVN21ucDDGRmBtYTAsONMW/RzvAlP7w4ExZJMcMjHj8ciKwMc9BdhKmWEEuKPNlvieDwHO5ufOiITFXoHE+TzeMYKTx1zvMczw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C0Ec7Nbc; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2fe99d5f1e8so300550a91.1;
-        Thu, 27 Feb 2025 08:47:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740674833; x=1741279633; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F9jSky1hj2tIhqu9jP7zhhU7JSzIy8xPtEaJx9bRobQ=;
-        b=C0Ec7NbcfHFmwRcEPUFc9KUQ0Fw12Nux7MFlkw9/9cgcRBfgQUV4nTCOIFqhrAVS0+
-         HEmct8sd+spL5dcK5avwtvH4f1Ekb6FIysBplLM65d98XAqY9Eb9c0NeTwOmAbFCO2Ar
-         sDwWZou5xEei4+WJKd9j3+wyFXP4BGjjH4tyUk/t4BFwyph3S5KsDkc6BblmEnVkB1zJ
-         yMK3gx/gfN6Lfb+3ewPt29P3a575v207POGbko9sWNqk9UBLpWyLHLswErBYsu81VgXZ
-         xoj4FYLXGSGep7IP4+4Wk5b2hMfb1Hr/CPqa6NIiwJXKpTU4+wX3gP8UHW/SCvwBElhe
-         tvdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740674833; x=1741279633;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F9jSky1hj2tIhqu9jP7zhhU7JSzIy8xPtEaJx9bRobQ=;
-        b=AoCWNRGnTH6CEeP0caDN6WbhdAaELAb+krgJejoavnZGTpOEe6P3THtJuhnUc1L/1T
-         ckdzmZD/3o6/khjz0NEaCtA3mVok+cFWbNLQBpclUrGNdwbPXNnzdAwHrgMnsBTkAfP8
-         9uY3NglFiAHkRZKSbsT5LCWpidhiZcRYjaO9Vv66t3UTMKH4xVM4iOoUjoYN+U01/Rsr
-         Ngz4CeL9kUcgSTVivFfdyOEx0Ln1xJUbzr4e0Bzu6MXvXtnzSJeA2zU/VYFLygLzMXp+
-         JEvXQg5n5PnkdUek5CQD2blAxqaQGdgxa4Skqdcb09/5pHnIXHEbIIXN4MzoZYI0/uCV
-         ABDw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9dkNLDVbpjkB+Z43evi4b4N7TQqkIOIoIyr997yKSfxFTl8yQIERscxwAjcX6BhpNISkuSjI0JWYPWrNL@vger.kernel.org, AJvYcCUA3AhAQJAzB61T7dNPSa8EiOYm++ZjNJ6e5CPwc0dLeqI2UaXeG8W4F0SVljsmoCZUU4+t+xVObko=@vger.kernel.org, AJvYcCUE0b2aKbmX2Bv9Pr02XDRVkBxxcsv6xzP+WqJ4yksDRU6evOdqOmnKZ7eBfy8mAHA4Cgzn2A3QsHfrzZ+t258=@vger.kernel.org, AJvYcCVoD5qJ8R3+5negMPajYhVtw2LsrF0l2lPZtdc9gCWwIloRXKxZxd3f2MRlbtfocfWTHbgnZEOctwVi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0hqH5sSlJvpVp8netDag9U6zhtA+laXTGY+EeGgd+lqGEdeQt
-	lLBNq9LivdpVnfSidgwS0GoqzPxK7jErHbz4G/XtaRmrcYaBOs62yvm+gqBPEQfD9CkwBahichS
-	th+NeiqB2nd9BVYy1bvXCJ/RREy4=
-X-Gm-Gg: ASbGnctyS5CQlD+d58+XwZgdFyPy+jWUhMR1bHpPvUD8ip6UMIUxsM2DJVAOk54uH94
-	E/JcziBOUCsx8AWiYexXJJqamZybkjisL9T5cf3GCJdjBv8vRSSH1uPmUx6pyMOcXcfUHF/J1tK
-	mgWpEIu9U=
-X-Google-Smtp-Source: AGHT+IFajF7dRCPy5k5DPrcc95sWKa3zdcOgFu+u7rZcCg6jcEy1yjm1f49y8tftlSkNgxdbYDUEmJTmwUABm1pFvmQ=
-X-Received: by 2002:a17:90b:4a03:b0:2fe:b1b7:788 with SMTP id
- 98e67ed59e1d1-2feb1b707f8mr1033941a91.3.1740674833558; Thu, 27 Feb 2025
- 08:47:13 -0800 (PST)
+	s=arc-20240116; t=1740675026; c=relaxed/simple;
+	bh=mR62XuSfzXZJNdY09zTjqiMM76glY7ee8nEqkeAlZk8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h0KdPWh0MMGKVp0SXPRIi1ppsYbKqq/8+kWsTeVtj8H/ntiSK/ZIxifTVX+arUU4bhP9PVwohtXmUBRI6PKENwT7dyQC31lidtLYtOqvAdZK97zyf8V5N8+VcqFIZ3+uHzg0u12oY58cYeKzxd/S7aTvSJNePiN6ZGQ1HmKhwd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=eje/hodl; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=b3eACf/NqGtuvY52aeXEePolnc9Kdlg09f0o15Y4tjU=;
+	b=eje/hodl5/f2qU348Ki4VDTJLF9l5RW4r/Dk00KH+FuwONGIutWdhChZt1kEnt
+	Bfds/XDUEYtbcz63G/i25odB7Z6SxwF6C3Kv+vnlBZTWx/8u3+B042G+ow6LrR5s
+	jktDqHBfuavtKxPxh+favHFKi+nFmCbvHK1qSEXU00w+g=
+Received: from [192.168.71.45] (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgDHI+yil8Bn2SvOBA--.51118S2;
+	Fri, 28 Feb 2025 00:49:38 +0800 (CST)
+Message-ID: <f6e44f34-8800-421c-ba2c-755c10a6840e@163.com>
+Date: Fri, 28 Feb 2025 00:49:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227030952.2319050-1-alistair@alistair23.me>
- <20250227030952.2319050-10-alistair@alistair23.me> <2025022717-dictate-cortex-5c05@gregkh>
- <CAH5fLgiQAdZMUEBsWS0v1M4xX+1Y5mzE3nBHduzzk+rG0ueskg@mail.gmail.com>
- <2025022752-pureblood-renovator-84a8@gregkh> <CAH5fLghbScOTBnLLRDMdhE4RBhaPfhaqPr=Xivh8VL09wd5XGQ@mail.gmail.com>
- <2025022741-handwoven-game-df08@gregkh>
-In-Reply-To: <2025022741-handwoven-game-df08@gregkh>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 27 Feb 2025 17:47:01 +0100
-X-Gm-Features: AQ5f1JrXLnDZJJpbXLybXz3GUfi862adk1qwXJKlDFQtb9StNutkKGNXSf57pXs
-Message-ID: <CANiq72n4UFUraYeHa6ar3=F61C_UxEJ1rq92aOF_hH9rtjN+Dg@mail.gmail.com>
-Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are authenticated
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, Alistair Francis <alistair@alistair23.me>, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, lukas@wunner.de, 
-	linux-pci@vger.kernel.org, bhelgaas@google.com, Jonathan.Cameron@huawei.com, 
-	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org, 
-	boqun.feng@gmail.com, bjorn3_gh@protonmail.com, wilfred.mallawa@wdc.com, 
-	ojeda@kernel.org, alistair23@gmail.com, a.hindborg@kernel.org, 
-	tmgross@umich.edu, gary@garyguo.net, alex.gaynor@gmail.com, 
-	benno.lossin@proton.me, Alistair Francis <alistair.francis@wdc.com>, 
-	=?UTF-8?Q?Emilio_Cobos_=C3=81lvarez?= <emilio@crisal.io>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] genirq/msi: Add the address and data that show MSI/MSIX
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: tglx@linutronix.de, kw@linux.com, kwilczynski@kernel.org,
+ bhelgaas@google.com, cassel@kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250227162821.253020-1-18255117159@163.com>
+ <20250227163937.wv4hsucatyandde3@thinkpad>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250227163937.wv4hsucatyandde3@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PygvCgDHI+yil8Bn2SvOBA--.51118S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Zr4Utw4fWFy8KryDKr1Dtrb_yoW8uFy7pr
+	yDJF43Kr48Jr1UAwsrWF47Wr15Xrs0vayxJrykG34Skwn8Wwn2yF1DKa1fGa4aqr4ruw1j
+	v3Wqvw47Kwn8CaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U9ID7UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwcBo2fAkCC0WwAAsG
 
-On Thu, Feb 27, 2025 at 3:04=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> As this seems like it's going to be a longer-term issue, has anyone
-> thought of how it's going to be handled?  Build time errors when
-> functions change is the key here, no one remembers to manually verify
-> each caller to verify the variables are correct anymore, that would be a
-> big step backwards.
 
-I can look into it, after other build system things are done.
 
-I talked to Emilio some months ago about this and he told me Firefox
-solves the problem both ways, so we may be able to do something
-similar.
+On 2025/2/28 00:39, Manivannan Sadhasivam wrote:
+> On Fri, Feb 28, 2025 at 12:28:21AM +0800, Hans Zhang wrote:
+>> Add to view the addresses and data stored in the MSI capability or the
+>> addresses and data stored in the MSIX vector table.
+>>
+>> e.g.
+>> root@root:/sys/bus/pci/devices/<dev>/msi_irqs# ls
+>> 86  87  88  89
+>> root@root:/sys/bus/pci/devices/<dev>/msi_irqs# cat *
+>> msix
+>>   address_hi: 0x00000000
+>>   address_lo: 0x0e060040
+>>   msg_data: 0x00000000
+>> msix
+>>   address_hi: 0x00000000
+>>   address_lo: 0x0e060040
+>>   msg_data: 0x00000001
+>> msix
+>>   address_hi: 0x00000000
+>>   address_lo: 0x0e060040
+>>   msg_data: 0x00000002
+>> msix
+>>   address_hi: 0x00000000
+>>   address_lo: 0x0e060040
+>>   msg_data: 0x00000003
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>>   kernel/irq/msi.c | 12 +++++++++++-
+>>   1 file changed, 11 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+>> index 396a067a8a56..a37a3e535fb8 100644
+>> --- a/kernel/irq/msi.c
+>> +++ b/kernel/irq/msi.c
+>> @@ -503,8 +503,18 @@ static ssize_t msi_mode_show(struct device *dev, struct device_attribute *attr,
+>>   {
+>>   	/* MSI vs. MSIX is per device not per interrupt */
+>>   	bool is_msix = dev_is_pci(dev) ? to_pci_dev(dev)->msix_enabled : false;
+>> +	struct msi_desc *desc;
+>> +	u32 irq;
+>> +
+>> +	if (kstrtoint(attr->attr.name, 10, &irq) < 0)
+>> +		return 0;
+>>   
+>> -	return sysfs_emit(buf, "%s\n", is_msix ? "msix" : "msi");
+>> +	desc = irq_get_msi_desc(irq);
+>> +	return sysfs_emit(
+>> +		buf,
+>> +		"%s\n address_hi: 0x%08x\n address_lo: 0x%08x\n msg_data: 0x%08x\n",
+>> +		is_msix ? "msix" : "msi", desc->msg.address_hi,
+>> +		desc->msg.address_lo, desc->msg.data);
+> 
+> Sysfs is an ABI. You cannot change the semantics of an attribute.
+> 
 
-Cheers,
-Miguel
+Thanks Mani for the tip.
+
+If I want to implement similar functionality, where should I add it? 
+Since this sysfs node is the only one that displays the MSI/MSIX 
+interrupt number, I don't know where to implement similar debug 
+functionality at this time. Do you have any suggestions? Or it shouldn't 
+have a similar function.
+
+Best regards
+Hans
+
 
