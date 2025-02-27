@@ -1,111 +1,238 @@
-Return-Path: <linux-pci+bounces-22566-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22567-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CF9FA48011
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 14:56:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3975DA48037
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 15:00:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F39881889D6A
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 13:56:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1D4543ADEF6
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 13:58:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0C7C22F397;
-	Thu, 27 Feb 2025 13:55:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50FF61E5210;
+	Thu, 27 Feb 2025 13:57:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0hX1kzl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Id8+Gld8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7329442C0B;
-	Thu, 27 Feb 2025 13:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27729270047;
+	Thu, 27 Feb 2025 13:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740664545; cv=none; b=ou3P/zujlo0co6wVlGDhViVmZfaf3QJwp12ENoePD6Ct8X24cVDnDX4sNVRJdYfwT+j56LUzeWm531/1GJ/Tvb2IEy5hYVNVaK472ruN+EUnut9ZuolzfmFRwRaZlFYre502WZ6Huy7gVuceoUyU26AHHbN3M6ONaRwkwnLG5N4=
+	t=1740664650; cv=none; b=tprnNVC3R3gu0EJX9Fqwd6eECi7i+JC/7RMIRxeTvaKeVaS4RgayHi90POuPA5uiUQ5ScYGtJSGBQo/UKpMNflWEswt7mizW4MATWlmAaQXERyyETypTGdWnGapFbVpgyvfPIvj9EZTGcIP1MsS4L6cSS8fezw8Kcx8haJWXXXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740664545; c=relaxed/simple;
-	bh=w5PrfAMbovUyS2QcIh8YSYSUSXSpcWOiTR0ekujNaVI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=XNOJLieU1+FP+/L4Jnx8zSFlNzjrIr873x7YgYAbapduYsAARmnU8NJ3ITydQSfAdPjgRatEXDkr/Z+OLJNojv5fUHVeqg5xlUIy2OdSpQcmjW0myBc28FpheOXWRlGfQd8IT4PGAG/1foYIdR4ARpW0cFlXbrh3x8ZkVjMLleM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e0hX1kzl; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3f3ffe06107so544144b6e.2;
-        Thu, 27 Feb 2025 05:55:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740664543; x=1741269343; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OT7lACv6pRY581pDMHaH4afYtbO0tkAIV0SUe++9Fbc=;
-        b=e0hX1kzlFnwJTsoBHVuOdsuVwHG5wc14P9gRc+uTMk09kuoGpojTf59X/2GbwzSrhO
-         HGGpcgjC/zQZdThBqkYh6hFFA6NDGQWW4mGTS63kNkfv8/OHMqZypY2rmRnLDyeRTkqt
-         l1gR3u0/7edY9HyjTockrv7faGZLaiHql73aZWK5votnIPluqXh4pHSWxHb2Dcy0fJd8
-         QgPepMOouom5g0QsbQungTS6zfGwhBeiKs0VV4QbTsfx4cL0BMPb4IwQa7vlcpm7V2l8
-         NC8/0BOVvq/QzTLj3UcibqxmXrt8qKXvNDvFEA+wQ/KgFuJHuBrHOw0xjG7o4VsHFM8L
-         95zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740664543; x=1741269343;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OT7lACv6pRY581pDMHaH4afYtbO0tkAIV0SUe++9Fbc=;
-        b=DAy7g95veKmUKgu7kwx8Ku2LE4cPA7ADnYXOJ5ZirUEFHTDTK3FQKT94MDkAQh1Woy
-         v7z/K3CD1auP1+7fVSzKTS/v3+8MToyB/g8nNbfc84JJtM0s7jRsZtsMLBCIKPWP9uZH
-         x1nUcVpWQuzZBcZIRQnGmlBZRD38BPN0d2W25C4st4pxNKIBgEcMmp1ACVwm2ZiKexUj
-         JJXpgVRj+my6qeTEjJiUYm3fQFy4sGpluqyb+dzpUEyBwFvdz7pPENlKU/u6i1wL9O1A
-         syF8KBgZ5CiBV/VTsyzxDiN3b5UUqnKm8+368feVMrlUw+fERMt1IlVJHvwwblFCvOXU
-         BjRw==
-X-Forwarded-Encrypted: i=1; AJvYcCW17C3oV2fX9nQd8ma0JJ5saZLVwIgkuwpanbXY9Nh5Y8QWM818E0l9ZeKvpndnnHTofVRtD4Zn+h1n@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzceyjogx8tKMmvMdisGXRu9hjgIpz+IaaR1yMA8/cvRAyzq+6Z
-	5G0HbXx97wP3Cj4h7fVGQiHbFr8sUy2jAFPrCVQcSZ93y/IYT0T+5zRCQ29woF/iOPjY7XHnYxl
-	YE8W7IQXorbg5DI+foNT7zVUXAsEHBDJR
-X-Gm-Gg: ASbGnctV6cDJcc88Ubw8UGpvoyKauAmWNZPN/h1lsqagRca1renOlYyhLC/xX5KnHXq
-	VpdD+RKMXpCX9cU3p55z3SnVqrns/0i5GWtUCqvWzM+DtvWoX6Nrc1XWgNts1z5tmDcElTSTb5N
-	FkRgun1yGapw==
-X-Google-Smtp-Source: AGHT+IGAF+jqOIA63oG2XffgQF4AapKinr+0usIKi6jAeHtmbHO8o+QwlaLBANygf/4aAxP+v7gE5qpfJajcUdBYq+I=
-X-Received: by 2002:a05:6808:3c95:b0:3f3:b4f9:88df with SMTP id
- 5614622812f47-3f4246a0d5cmr15595459b6e.3.1740664543203; Thu, 27 Feb 2025
- 05:55:43 -0800 (PST)
+	s=arc-20240116; t=1740664650; c=relaxed/simple;
+	bh=nVOQTG+1AjyPHbVpv+mJt48NO8vRQ6pRUwN9R5/RxAk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NmW3bB5ZS9F7Xdk/NeMAWGjlYzKNOeahsgj6EiZPMYZg9A09zj4gF3CVllPcEtW04Z6ux1Djwmm6yTEFhySezwS6Pq3flxQ3r7voybUuEXrpXCLQbov0q24OCcU4UcKZD/5j0xMU8kYBXXKCto36b9YHTlVi++nd4aVmbAWUPHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Id8+Gld8; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E83EFC4CEDD;
+	Thu, 27 Feb 2025 13:57:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740664649;
+	bh=nVOQTG+1AjyPHbVpv+mJt48NO8vRQ6pRUwN9R5/RxAk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Id8+Gld8p0AgGJ304FQvSuKf1AHG4L03TVgI03uIaMSKXlEVlZIfl22eTibsPVIhn
+	 z5PkmUiKs4Nt3mHhrb9fEOn2UOXQ6LH+rzy/FPNBdDgDuEpl49AI32MqWKZQ/fxT2D
+	 JUQFQJj4yajzP3hM+HfrLZSubMBxYGuzCeH1+nxaeaAvycwFJ04WporrZIf0Sl8SdC
+	 8+155v+VfqiztVoQicl2NpPcxuWT6uT0LH/Rzvo0y0sQzPnVsByf+7XMTYciZf0a2n
+	 mM7Roz+NIamyrNVhJQF/4+2SonZdBsAvrh0eP8fOU2YYmHe7c8h525RTNSDY/pgCwC
+	 vy4RAJ8swAH+g==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Alexey Kardashevskiy <aik@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Subject: Re: [PATCH 05/11] PCI/TSM: Authenticate devices via platform TSM
+In-Reply-To: <Z8AHtcYgz2JukdfM@yilunxu-OptiPlex-7050>
+References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
+ <173343742510.1074769.16552514658771224955.stgit@dwillia2-xfh.jf.intel.com>
+ <efc5ba59-964d-4988-a412-47f5297fedd3@amd.com>
+ <yq5aeczrww9j.fsf@kernel.org> <Z71umSkkyV0rAC25@yilunxu-OptiPlex-7050>
+ <yq5a4j0gc3fp.fsf@kernel.org> <Z8AHtcYgz2JukdfM@yilunxu-OptiPlex-7050>
+Date: Thu, 27 Feb 2025 19:27:22 +0530
+Message-ID: <yq5aa5a78p8d.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Muni Sekhar <munisekharrms@gmail.com>
-Date: Thu, 27 Feb 2025 19:25:32 +0530
-X-Gm-Features: AQ5f1JqZqEz44uEHmPt8PWANB9y187aZ1esA5hLZJhdx60rNPy2ku4Lq6_zYjKQ
-Message-ID: <CAHhAz+gUOK4Bn5ijO0H1b5=EtvD5W4GpOTtjP0--yVToNpkEDA@mail.gmail.com>
-Subject: pci: acpi: Query on ACPI Device Tree Representation and Enumeration
- for Xilinx FPGA PCIe Endpoint functions
-To: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	kernelnewbies <kernelnewbies@kernelnewbies.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-Hi all,
+Xu Yilun <yilun.xu@linux.intel.com> writes:
 
-I am currently working on a project involving a Xilinx FPGA connected
-to an x86 CPU via a PCIe root port. The Xilinx FPGA functions as a
-PCIe endpoint with single function capability and is programmed to
-emulate the Soundwire Master controller. It can be dynamically
-reprogrammed to emulate other interfaces as needed. Essentially, the
-FPGA emulates an interface and connects to the CPU via the PCIe bus.
+> On Wed, Feb 26, 2025 at 05:40:02PM +0530, Aneesh Kumar K.V wrote:
+>> Xu Yilun <yilun.xu@linux.intel.com> writes:
+>> 
+>> > On Fri, Feb 21, 2025 at 01:43:28PM +0530, Aneesh Kumar K.V wrote:
+>> >> Alexey Kardashevskiy <aik@amd.com> writes:
+>> >> 
+>> >> ....
+>> >> 
+>> >> >
+>> >> > I am trying to wrap my head around your tsm. here is what I got in my tree:
+>> >> > https://github.com/aik/linux/blob/tsm/include/linux/tsm.h
+>> >> >
+>> >> > Shortly:
+>> >> >
+>> >> > drivers/virt/coco/tsm.ko does sysfs (including "connect" and "bind" to 
+>> >> > control and "certs"/"report" to attest) and implements tsm_dev/tsm_tdi, 
+>> >> > it does not know pci_dev;
+>> >> >
+>> >> > drivers/pci/tsm-pci.ko creates/destroys tsm_dev/tsm_dev using tsm.ko;
+>> >> >
+>> >> > drivers/crypto/ccp/ccp.ko (the PSP guy) registers:
+>> >> > - tsm_subsys in tsm.ko (which does "connect" and "bind" and
+>> >> > - tsm_bus_subsys in tsm-pci.ko (which does "spdm_forward")
+>> >> > ccp.ko knows about pci_dev and whatever else comes in the future, and 
+>> >> > ccp.ko's "connect" implementation calls the IDE library (I am adopting 
+>> >> > yours now, with some tweaks).
+>> >> >
+>> >> > tsm-dev and tsm-tdi embed struct dev each and are added as children to 
+>> >> > PCI devices: no hide/show attrs, no additional TSM pointer in struct 
+>> >> > device or pci_dev, looks like:
+>> >> >
+>> >> > aik@sc ~> ls  /sys/bus/pci/devices/0000:e1:04.0/tsm-tdi/tdi:0000:e1:04.0/
+>> >> > device  power  subsystem  tsm_report  tsm_report_user  tsm_tdi_bind 
+>> >> > tsm_tdi_status  tsm_tdi_status_user  uevent
+>> >> >
+>> >> > aik@sc ~> ls  /sys/bus/pci/devices/0000:e1:04.0/tsm_dev/
+>> >> > device  power  subsystem  tsm_certs  tsm_cert_slot  tsm_certs_user 
+>> >> > tsm_dev_connect  tsm_dev_status  tsm_meas  tsm_meas_user  uevent
+>> >> >
+>> >> > aik@sc ~> ls /sys/class/tsm/tsm0/
+>> >> > device  power  stream0:0000:e1:00.0  subsystem  uevent
+>> >> >
+>> >> > aik@sc ~> ls /sys/class/tsm-dev/
+>> >> > tdev:0000:c0:01.1  tdev:0000:e0:01.1  tdev:0000:e1:00.0
+>> >> >
+>> >> > aik@sc ~> ls /sys/class/tsm-tdi/
+>> >> > tdi:0000:c0:01.1  tdi:0000:e0:01.1  tdi:0000:e1:00.0  tdi:0000:e1:04.0 
+>> >> > tdi:0000:e1:04.1  tdi:0000:e1:04.2  tdi:0000:e1:04.3
+>> >> >
+>> >> >
+>> >> > SPDM forwarding seems a bus-agnostic concept, "connect" is a PCI thing 
+>> >> > but pci_dev is only needed for DOE/IDE.
+>> >> >
+>> >> > Or is separating struct pci_dev from struct device not worth it and most 
+>> >> > of it should go to tsm-pci.ko? Then what is left for tsm.ko? Thanks,
+>> >> >
+>> >> 
+>> >> For the Arm CCA DA, I have structured the flow as follows. I am
+>> >> currently refining my changes to prepare them for posting. I am using
+>> >> tsm-core in both the host and guest. There is no bind interface at the
+>> >> sysfs level; instead, it is managed via the KVM ioctl
+>> >> 
+>> >> Host:
+>> >> step 1.
+>> >> echo ${DEVICE} > /sys/bus/pci/devices/${DEVICE}/driver/unbind
+>> >> echo vfio-pci > /sys/bus/pci/devices/${DEVICE}/driver_override
+>> >> echo ${DEVICE} > /sys/bus/pci/drivers_probe
+>> >> 
+>> >> step 2.
+>> >> echo 1 > /sys/bus/pci/devices/$DEVICE/tsm/connect
+>> >> 
+>> >> step 3.
+>> >> using VMM to make the new KVM_SET_DEVICE_ATTR ioctl
+>> >> 
+>> >> +		dev_num = vfio_devices[i].dev_hdr.dev_num;
+>> >> +		/* kvmtool only do 0 domain, 0 bus and 0 function devices. */
+>> >> +		guest_bdf = (0ULL << 32) | (0 << 16) | dev_num << 11 | (0 << 8);
+>> >> +
+>> >> +		struct kvm_vfio_tsm_bind param = {
+>> >> +			.guest_rid = guest_bdf,
+>> >> +			.devfd = vfio_devices[i].fd,
+>> >> +		};
+>> >> +		struct kvm_device_attr attr = {
+>> >> +			.group = KVM_DEV_VFIO_DEVICE,
+>> >> +			.attr = KVM_DEV_VFIO_DEVICE_TDI_BIND,
+>> >> +			.addr = (__u64)&param,
+>> >> +		};
+>> >> +
+>> >> +		if (ioctl(kvm_vfio_device, KVM_SET_DEVICE_ATTR, &attr)) {
+>> >> +			pr_err("Failed KVM_SET_DEVICE_ATTR for KVM_DEV_VFIO_DEVICE");
+>> >> +			return -ENODEV;
+>> >> +		}
+>> >> +
+>> >
+>> > I think bind (which brings device to a LOCKED state, no MMIO, no DMA)
+>> > cannot be a driver agnostic behavior. So I think it should be a VFIO
+>> > ioctl.
+>> >
+>> 
+>> For the current CCA implementation bind is equivalent to VDEV_CREATE
+>> which doesn't mark the device LOCKED. Marking the device LOCKED is
+>> driven by the guest as shown in the steps below.
+>
+> Could you elaborate why vdev create & LOCK can't be done at the same
+> time, when guest requests "lock"? Intel TDX also requires firmware calls
+> like tdi_create(alloc metadata) & tdi_bind(do LOCK), but I don't see
+> there is need to break them out in different phases.
+>
 
-Given this setup, the BIOS does not have prior knowledge of the
-function implemented in the Xilinx FPGA PCIe endpoint. I have a couple
-of questions regarding this configuration:
+Yes, that is possible and might be what I will end up doing. Right now
+I have kept the interface flexible enough as I am writing these changes.
+Device can possibly be presented in locked state to the guest.
 
-Is it possible to define an ACPI Device Tree representation for this
-type of hardware setup?
-Can we achieve ACPI-based device enumeration with this configuration?
+>
+>> 
+>> 
+>> >> 
+>> >> Now in the guest we follow the below steps
+>> >> 
+>> >> step 1:
+>> >> echo ${DEVICE} > /sys/bus/pci/devices/${DEVICE}/driver/unbind
+>> >> 
+>> >> step 2: Move the device to TDISP LOCK state
+>> >> echo 1 > /sys/bus/pci/devices/0000:00:00.0/tsm/connect
+>> >> echo 3 > /sys/bus/pci/devices/0000:00:00.0/tsm/connect
+>> >
+>> > Reuse the 'connect' interface? I think it conceptually brings chaos. Is
+>> > it better we create a new interface?
+>> >
+>> 
+>> I was looking at converting these numbers to strings.
+>> "1" -> connect
+>
+> What does "connect" do in guest?
+>
 
-I would greatly appreciate any guidance or references to documentation
-that could help us achieve this.
+Nothing much for now. I added that to keep it consistent with host
+workflow. That is device transition from PCI_TSM_INIT -> PCI_TSM_CONNECT
+-> PCI_TSM_BOUND -> PCI_TSM_LOCK -> PCI_TSM_RUN.
 
-Thank you for your time and assistance.
+Relevant part of the TSM backend in guest
+
+static int cca_tsm_connect(struct pci_dev *pdev, int new_state)
+{
+	unsigned long ret;
+	int connect_state;
+	struct pci_tsm *pci_tsm = pdev->tsm;
+
+	connect_state = pci_tsm->state;
+	switch (new_state) {
+	case PCI_TSM_CONNECT:
+		pci_tsm->state = PCI_TSM_CONNECT;
+		break;
+	case PCI_TSM_LOCKED:
+		if (connect_state != PCI_TSM_CONNECT)
+			return -EINVAL;
+
+		ret = rsi_device_lock(pdev);
+		if (ret) {
+			pci_err(pdev, "failed to lock the device (%lu)\n", ret);
+			return -EIO;
+		}
+		pci_tsm->state = PCI_TSM_LOCKED;
+		break;
 
 
--- 
-Thanks,
-Sekhar
+-aneesh
 
