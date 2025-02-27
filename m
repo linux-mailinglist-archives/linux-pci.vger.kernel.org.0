@@ -1,131 +1,121 @@
-Return-Path: <linux-pci+bounces-22535-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22536-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F3CAA47C15
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 12:25:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B969A47C31
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 12:28:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 231333A3E61
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 11:24:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6A483A3285
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 11:28:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F6AA225761;
-	Thu, 27 Feb 2025 11:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 088BEEEBB;
+	Thu, 27 Feb 2025 11:28:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="OIGdv/oj"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Im31ySNg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m155110.qiye.163.com (mail-m155110.qiye.163.com [101.71.155.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E2F215F45;
-	Thu, 27 Feb 2025 11:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.110
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 085832288E3
+	for <linux-pci@vger.kernel.org>; Thu, 27 Feb 2025 11:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740655482; cv=none; b=IyOpOOlGBryIy9kwnBuNAfOh/jHQQdwYNcDhua0lt+FPutqjniBphZyBEYxT2Q73sWv55Fr16yhF8xWUC1OdnasPO9bFhvjmmDzNrvJlwjQrFsw83OFp6xuqY12k4Nlx2HaSq99/6HAklH9KtiLzT5aMsZedh/8hXQE/91Ldikw=
+	t=1740655718; cv=none; b=MxWMTPOAHME1fcJn2L2JsZEdTk42LIcN73Gz5WQ9kiYwUEo902G3dU7jP47SYdLS3ZxeK5I/1dMUOIgX+WiotbLDfapJ3bTg6sOQCxDYpjNKgQm6P3/YkLm4PFsfcVBpIygSPXHEwKawo7LOrgsUQYpD/TOD0p4ZVtakRzZ3li0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740655482; c=relaxed/simple;
-	bh=DD7zYgu4Kti1fkUmflbroxB2ogPWjoiC4JlhvhPr+ys=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AhgMzItw2Cp5Gmw/76VLTGTMShKbihEOMZW4eUW/FTl1309ZSKHn27hVhVaCI4sIoU/elw+kq+IaHnaqOR/Y8HyT7T55z8pTk1J+JWM8DVhLnWVjskRmHU6lT5XrL1Cv+JcHEfGb8KM/Dh0eO7zdNp3GOqIlHW5weZm8G098wKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=OIGdv/oj; arc=none smtp.client-ip=101.71.155.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id c65f97c8;
-	Thu, 27 Feb 2025 19:19:21 +0800 (GMT+08:00)
-From: Kever Yang <kever.yang@rock-chips.com>
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Simon Xue <xxm@rock-chips.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 01/15] dt-bindings: PCI: dwc: rockchip: Add rk3562 support
-Date: Thu, 27 Feb 2025 19:18:59 +0800
-Message-Id: <20250227111913.2344207-2-kever.yang@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250227111913.2344207-1-kever.yang@rock-chips.com>
-References: <20250227111913.2344207-1-kever.yang@rock-chips.com>
+	s=arc-20240116; t=1740655718; c=relaxed/simple;
+	bh=hgOUu+hwfPUwrE8bf6Cn+W3DtZIUgNbom/7FIvUh/WE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mFgoYFJl2EZ74a18LKeTjBQ9Ljs5u6ppvBKAFgW7zECwId9JLJcrTaMO4aaZq4CKk+74l+W2lDCXc7M19DpjJZA/NNTeBcOKlIM6+cG02k+bD/c9gFNviiEjAV1JBscoXboSvlEUdixm5CQU58oO3nmZbdcwI4sCLTP4/s3yBCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Im31ySNg; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=aMYpwAV9uQZP+b5vW/oY9Ei+f0+Zf16jcX4P6SaKGF8=;
+	b=Im31ySNgLPYkWU/wuRqo/HP1Lhhj1ojh94WfqbTnWo43ksHY/mndFaV170nRkb
+	9OFB4Z0yMct3CVujWDXgZ1PVT4MwhUuoYmhgRxO7UDGdU8Y0hAKqImckAF6byDKQ
+	n6MbOtpMOOOt7pO8k4bkW+Cyg6Cn3a8pcim34/IZimwbQ=
+Received: from [192.168.34.52] (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wC3_0Y7TMBn6N8wOg--.3582S2;
+	Thu, 27 Feb 2025 19:27:56 +0800 (CST)
+Message-ID: <38057c44-dee4-4acc-aa3f-01e9616fca6a@163.com>
+Date: Thu, 27 Feb 2025 19:27:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [pci:controller/dwc 6/8]
+ drivers/pci/controller/dwc/pcie-designware-debugfs.c:561:undefined reference
+ to `dw_ltssm_sts_string'
+To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
+ linux-pci@vger.kernel.org,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+References: <202502270336.4xpaTVPE-lkp@intel.com>
+ <ef04f32a-593f-437d-8465-1634c12567ae@163.com>
+ <20250227104353.GA961034@rocinante>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250227104353.GA961034@rocinante>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGk5KT1YaShhCTBpOTEofTB5WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a954721efb403afkunmc65f97c8
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MFE6PCo4TzIXMw0SEkwMHkoY
-	AiwwCyxVSlVKTE9LTU5OSk1JQ05LVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKTktLNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=OIGdv/ojTp7MJl1BAr7LjG4Z/nf+7P2XerwncGNwK/5TZxKKMeTLCfglQknD0FijyGmyrN4sP0577pRh8SeGDYvIYHoS1SkvkoL9VhG/QqqoZAPRmKp18OIypqITL9J3rShgCUsMJrPfkRwTvVFmKYNfiR62iGJk/lk30XwkH3c=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=dtE/yQzTKTSTRJnHoa013KVsjd6UVbm1wGhrzOmi5Hg=;
-	h=date:mime-version:subject:message-id:from;
+X-CM-TRANSID:_____wC3_0Y7TMBn6N8wOg--.3582S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJr4UZFWrJr4kXF15XFWDArb_yoW8Gw1Dpa
+	y0ya18AFW8tw4SyayIvrsY9F1ftanrJr17WrZ8Gr1UurW2vFZ7GFn5tr43GFy7Xr1vkw4j
+	ya18ZF15ta1qyaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRNeOXUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxUBo2fAPGGB4wABs1
 
-rk3562 is using the same dwc controller as rk3576.
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
----
 
-Changes in v3:
-- Rebase the change base on rk3576 pcie patches
+On 2025/2/27 18:43, Krzysztof Wilczyński wrote:
+> Hello,
+> 
+>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc
+>>> head:   b9d6619b0c3ef6ac25764ff29b08e8c1953ea83f
+>>> commit: d4dc748566221bfdd0345c282ec82d3eee457f39 [6/8] PCI: dwc: Add debugfs property to provide LTSSM status of the PCIe link
+>>> config: sparc64-randconfig-001-20250227 (https://download.01.org/0day-ci/archive/20250227/202502270336.4xpaTVPE-lkp@intel.com/config)
+> [...]
+>> sparc64-randconfig-001-20250227:
+>>
+>> #
+>> # DesignWare-based PCIe controllers
+>> #
+>> CONFIG_PCIE_DW=y
+>> CONFIG_PCIE_DW_DEBUGFS=y
+>> CONFIG_PCIE_DW_EP=y
+>>
+>>
+>> Since this config is not configured with CONFIG_PCIE_DW_HOST, and the
+>> dw_ltssm_sts_string function is in the pci-designware-host.c, the following
+>> compilation error occurs.
+> 
+> No worries.  Thank you for having a look!
+> 
+>> Can you help move the dw_ltssm_sts_string function to pci-designware.c or
+>> pci-designware-debugfs.c?
+> 
+> Have a look at the following:
+> 
+>    https://web.git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/dwc&id=02001ce4ff42bd85be3ed8b4a0a2580156f032a0
+> 
+> And let me know if this is OK with you.
 
-Changes in v2: None
+I couldn't agree more. Thank you very much Krzysztof.
 
- .../devicetree/bindings/pci/rockchip-dw-pcie.yaml        | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Best regards
+Hans
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-index 4764a0173ae4..6c6d828ce964 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-@@ -22,6 +22,7 @@ properties:
-       - const: rockchip,rk3568-pcie
-       - items:
-           - enum:
-+              - rockchip,rk3562-pcie
-               - rockchip,rk3576-pcie
-               - rockchip,rk3588-pcie
-           - const: rockchip,rk3568-pcie
-@@ -76,7 +77,9 @@ allOf:
-         properties:
-           compatible:
-             contains:
--              const: rockchip,rk3576-pcie
-+              enum:
-+                - rockchip,rk3562-pcie
-+                - rockchip,rk3576-pcie
-     then:
-       required:
-         - msi-map
-@@ -85,7 +88,9 @@ allOf:
-       properties:
-         compatible:
-           contains:
--            const: rockchip,rk3576-pcie
-+            enum:
-+              - rockchip,rk3562-pcie
-+              - rockchip,rk3576-pcie
-     then:
-       properties:
-         interrupts:
--- 
-2.25.1
+>   
+>> Or should I resubmit v6 patch?
+> 
+> No, need.  Thank you anyway, though.
+> 
+> 	Krzysztof
+
+
 
 
