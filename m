@@ -1,70 +1,70 @@
-Return-Path: <linux-pci+bounces-22502-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22503-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D008A47370
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 04:14:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1149A47374
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 04:15:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A5DF03B66D9
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 03:14:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 053B417216A
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Feb 2025 03:14:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3BAE1D63E5;
-	Thu, 27 Feb 2025 03:12:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F18981A841B;
+	Thu, 27 Feb 2025 03:12:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="UaS0wvJl";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GTFukQij"
+	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="kpGZ1x4P";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jpMwrTHk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DBF1A5BBC;
-	Thu, 27 Feb 2025 03:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9B81B0409;
+	Thu, 27 Feb 2025 03:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740625922; cv=none; b=pncyGwpP9/3IDrkN24wp+hrGgasre468uHF1MTk84/v7hBQ7qgsuN4ifRucEpLERCOOGAUk4CPObZdxptp/EQwOSmBOLQtTinxJCPAvXPQW7COYk6RXLBb7pO1z3CJGmdD4ZgCsPrSqhe6NTVCxWXzCvFIlkekzZeB1gmMAiOII=
+	t=1740625929; cv=none; b=ltdiyBBvLalg8gJgMnUyd4BAq+5OuDvnbpARE5MQL8UUtiaJLFXVXBpL4dA3CiCI7G2/4BYJyih/PvNzBLdla0RaouNLMeJsL2e39o+p+PuqN9440gCxh6TT+6JZFW1jTXdEnCnBmQfqtO1oLh0p24WK+DW0CkZ4aI9LvgJplJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740625922; c=relaxed/simple;
-	bh=GTfEGM6C7u682dS5iVaYCUXbIIFqCwwWGzke2ksc1JM=;
+	s=arc-20240116; t=1740625929; c=relaxed/simple;
+	bh=U/g3eQTMR1Nrt00+4SlWpupeJ4a45LyJy/RDOh1OZSQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X99njipnyrhuLdDRR2/OB8DuF1JxKUfJ8ivVb0ZtETYpJpD9AhK4u90JVBEV1c+SnCboSdRcS/NV7coj7w5Xp1L8SHkTDFEtRGtFhLSTI+oVEUV8R333WXhy121v9bTvQkAbzdc0hkmoP4PhgLw8qU7SdZPHe/QZuBi/7YsOJTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=UaS0wvJl; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GTFukQij; arc=none smtp.client-ip=202.12.124.148
+	 MIME-Version; b=CdRPxMvHrH0JMXOAvBeRE3dmbg6v+vxvXv/cFP6ZPeqkuoGnMAVjSF19rmjPVjaLy4ulXJx+lL9xeYZkTZW+diqghP+mURWX6O+i7TaCL24JZDcrGkKJy02rDJ2kL8cJjLQqD0WBd0oTbrvU6tVSOTV7ewQxb6au68UO2cwy8jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=kpGZ1x4P; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jpMwrTHk; arc=none smtp.client-ip=202.12.124.156
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alistair23.me
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id 4B0CE11401A7;
-	Wed, 26 Feb 2025 22:12:00 -0500 (EST)
+Received: from phl-compute-13.internal (phl-compute-13.phl.internal [10.202.2.53])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 13D1F25400E5;
+	Wed, 26 Feb 2025 22:12:07 -0500 (EST)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Wed, 26 Feb 2025 22:12:00 -0500
+  by phl-compute-13.internal (MEProxy); Wed, 26 Feb 2025 22:12:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
 	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
 	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1740625920; x=
-	1740712320; bh=//SgTkBvq5QqRs/XyLf61Um2H+GXIpwL4t51TxO5nWw=; b=U
-	aS0wvJljS6vQ5FcdZRmy7w+rC7Exz1qOHi/BcLJih3i+2O5XhPV13DzCFR9zplsQ
-	TSKuLmepM4wMT8hG6Hd5T7NjxSsbpDgbHQcGcWjmdFvJqpkfu9Mc4eDXutI0jgTh
-	kKCArts+Ljju77Wf+ec72PBqZuoOzc2ju4imc3Ost0dAGAOJtAahwieEjRorMF7l
-	OqWxYzxxd0D0PriiDR77dR09aqaKsTznU6uuK83hzHv44j7Kvw4T8Y2A6DIfitA9
-	szuDogbavCI33WnYsr9tepaedDk5Zj3AoQkIfeCADnlk5ARh+pyir7xj0Vw7fjV+
-	48LIlb6EYPoG4EF4PWxsw==
+	:reply-to:subject:subject:to:to; s=fm1; t=1740625926; x=
+	1740712326; bh=ETaO0MKiUxQhhDGFr/kw3wzQd9hq+z6Q0USbIeJj8PY=; b=k
+	pGZ1x4PP2rYlQIPgW9ynZ9ACly5u4HrHbEYIV/n+15G4nHaikHzg9pjJsfUhQ/yK
+	eNWIN8+W2C4wQO2ao6JbG+tVlO9zSCzXvPs7J1XJz3BvNdse//Gxt/gjzkF3XuDC
+	JAlPCYwBvKLQBtHVOnUlNBRBixCqJ6QvV8erojAaunTemvGF73Q8NzT5N/4zJe8z
+	7IJBldmPNvGrRiOl3zGx1ZSZ1ub7dFKZf7JlRz6jC9JMbefZe4+uPV9lNS1npLDt
+	HLR/s2lmsj87mxWIvusYntiDR7u9A6FtVSwjtGBq4OYbFgLq8srhSQJXIZY9krNI
+	ZVrOqE4Xd42hxvoIo4zXw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1740625920; x=1740712320; bh=/
-	/SgTkBvq5QqRs/XyLf61Um2H+GXIpwL4t51TxO5nWw=; b=GTFukQijs0Mh3VztB
-	qD2z709nTVT3RCDpJVzqo3IyIMjETX5Zn72wLJolmSlfxuggY4cKMpAPVvC5gN5j
-	et3kJL1BUmNVRnvfjxyS1jIRvKYEZ13k5q+LHRjtw+pQlo03+DKyY0/mEodbTOW6
-	uve0QyCZ5RipXIKkM0e1EIYfW+oXbEulvV5wgkMoeKpB/kKsMwvcLLZhfCexEqbY
-	VlgPLigVnWuo3uwFVbCmgz/jtX46ZsH5re/hIjQP80qbWPoBcS+EQQiOyMRLBbT1
-	T0EejzXVU4oaeclYrb+TvCVzPP9Xn/pwoXiDjJAEp5j4oeo99qkZAhHIwxy4ZQnx
-	qGDCg==
-X-ME-Sender: <xms:_9e_Z-sObvW9nW-_d7vfIUCByKFP-DEs02BhT8-YpY4vVPmCV8DQ-Q>
-    <xme:_9e_ZzeY3TPYKBMo-5THXVF20K3zM-mbep5a4M5U8jc6j2ul9dO5IViA0OYIjum2e
-    Mh60otpe_ovrdP4HKk>
-X-ME-Received: <xmr:_9e_Z5yRLyiXLSsGdOBHW0aHWzJ86M4tRb9tLfCMyshr-QWanNGMKTJCTInetBWNtguifjRPYco>
+	:x-me-sender:x-sasl-enc; s=fm1; t=1740625926; x=1740712326; bh=E
+	TaO0MKiUxQhhDGFr/kw3wzQd9hq+z6Q0USbIeJj8PY=; b=jpMwrTHkEfnfYgv76
+	NkeffH3wc9afCMStkrPHdgcqgA0oZBYMjPC6Bn7pNAVE3ir6+OHbSOKfgfvHsFmy
+	NA+lN69Ys7y7tVsl7+9tTRnpSOBZ5GEee2axp+tv669e7TZ32rR/RuKrYGcf+ZZU
+	bOpyQWOylmiCMwFaZdLO2WTsPkXANHzwdTa/W+fl8wU6FVRc7xyHhmqJV4/Cy8CJ
+	PwMBhFqrnLaJtOw9rOmTlvd9rb3myfiVQv6DSg+xJII1MI89JnSPo5dYho6914Mw
+	CgrPBmvMEF4u2/XxY3pBZNVdWd8vNxUUYfBgFj3pAc5HzdKwbwErjzsSgALuX5Hg
+	S9rYg==
+X-ME-Sender: <xms:Bti_ZyZsa8owbuEw424Q4GhF_Nt1MjI6_gjMlBM2Sg9et_lYYPvPfA>
+    <xme:Bti_Z1ZM5aGqXZIAunjLz93iBNovltWhsZsF0EatoMRs4oyWqD6wSvPRcL2S-lzlQ
+    2I0mv3if7yhi7WQDQ0>
+X-ME-Received: <xmr:Bti_Z88c39tUA97JVJ6WlnxHyB5u_tO4gsSohbt-374J6YOtaZQD3HzFQWZZpTe-OrV97o6Mjbg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekieefiecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
     uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecuogfuohhrthgvugftvg
@@ -83,14 +83,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekieefiecutefuodetgg
     drkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgu
     rghtihhonhdrohhrghdprhgtphhtthhopegsohhquhhnrdhfvghnghesghhmrghilhdrtg
     homh
-X-ME-Proxy: <xmx:ANi_Z5OTxqF0c-wcqLyZL7c2PA9T5vo7rH6wKDdNMgBqN_Gt-I94YA>
-    <xmx:ANi_Z--r6gt0_jdvnMf378XfkB6WUNSNJdpPw1VFjDbauYCWMz2jJA>
-    <xmx:ANi_ZxWLniwKBeq7Id1KBu9N2se1bOWBSeVoSeb7UJa3VWhnq0T7kQ>
-    <xmx:ANi_Z3enb1BrdR3I4afn2PHZNUusDgdleTiVYfjT2H3WgVDrqNk41A>
-    <xmx:ANi_ZxcE2hvkGOdXxMODE_GdPRXtHMtmfS6CzZxi8GO59_PE1Pwrb_sx>
+X-ME-Proxy: <xmx:Bti_Z0qqmGdx5PyF6bnBGDApy_wDUWU1kOY-1xETLUmHmWsZ7K7LSw>
+    <xmx:Bti_Z9rBeqmKx4C6NFxys9Ur3WsBtCRgx8O1bnLTibvtS3ca4Xr56g>
+    <xmx:Bti_ZyQCTbUlyzirECZqU2DOEcGWc__U_VYX7IhEd8o2vMxBN2yD-w>
+    <xmx:Bti_Z9rSgwX-qd3h4nYEpzK89zeJi7b2UCubKGzlZ5LLxpZZOCATTQ>
+    <xmx:Bti_Z5rP_zEtI0FyAq3LJFiWeHa8AJ28B8m7uTpzWmLf4YQc8nk-1dLy>
 Feedback-ID: ifd214418:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 26 Feb 2025 22:11:54 -0500 (EST)
+ 26 Feb 2025 22:12:01 -0500 (EST)
 From: Alistair Francis <alistair@alistair23.me>
 To: linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -112,9 +112,9 @@ Cc: boqun.feng@gmail.com,
 	alex.gaynor@gmail.com,
 	benno.lossin@proton.me,
 	Alistair Francis <alistair@alistair23.me>
-Subject: [RFC v2 16/20] KEYS: Load keyring and certificates early in boot
-Date: Thu, 27 Feb 2025 13:09:48 +1000
-Message-ID: <20250227030952.2319050-17-alistair@alistair23.me>
+Subject: [RFC v2 17/20] PCI/CMA: Support built in X.509 certificates
+Date: Thu, 27 Feb 2025 13:09:49 +1000
+Message-ID: <20250227030952.2319050-18-alistair@alistair23.me>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250227030952.2319050-1-alistair@alistair23.me>
 References: <20250227030952.2319050-1-alistair@alistair23.me>
@@ -126,45 +126,73 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Work is ongoing to support PCIe device attestation and authentication.
-As part of this a PCIe device will provide a certificate chain via the
-SPDM protocol to the kernel.
-
-Linux should verify the chain before enabling the device, which means we
-need the certificate store ready before arch initilisation (where PCIe
-init happens). Move the certificate and keyring init to postcore to
-ensure it's loaded before PCIe devices.
-
-This allows us to verify the certificate chain provided by a PCIe device
-via SPDM before we enable it.
+Support building the X.509 certificates into the CMA certificate store.
+This allows certificates to be built into the kernel which can be used
+to authenticate PCIe devices via SPDM.
 
 Signed-off-by: Alistair Francis <alistair@alistair23.me>
 ---
- certs/system_keyring.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/cma.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/certs/system_keyring.c b/certs/system_keyring.c
-index 9de610bf1f4b..f3d8ea4f70b4 100644
---- a/certs/system_keyring.c
-+++ b/certs/system_keyring.c
-@@ -260,7 +260,7 @@ static __init int system_trusted_keyring_init(void)
+diff --git a/drivers/pci/cma.c b/drivers/pci/cma.c
+index 59558714f143..381d8f32a5a7 100644
+--- a/drivers/pci/cma.c
++++ b/drivers/pci/cma.c
+@@ -24,6 +24,10 @@
+ /* Keyring that userspace can poke certs into */
+ static struct key *pci_cma_keyring;
+ 
++extern __initconst const u8 system_certificate_list[];
++extern __initconst const unsigned long system_certificate_list_size;
++extern __initconst const unsigned long module_cert_size;
++
  /*
-  * Must be initialised before we try and load the keys into the keyring.
-  */
--device_initcall(system_trusted_keyring_init);
-+postcore_initcall(system_trusted_keyring_init);
- 
- __init int load_module_cert(struct key *keyring)
- {
-@@ -293,7 +293,7 @@ static __init int load_system_certificate_list(void)
- 
- 	return x509_load_certificate_list(p, size, builtin_trusted_keys);
+  * The spdm_requester.c library calls pci_cma_validate() to check requirements
+  * for Leaf Certificates per PCIe r6.1 sec 6.31.3.
+@@ -222,8 +226,31 @@ void pci_cma_destroy(struct pci_dev *pdev)
+ 	spdm_destroy(pdev->spdm_state);
  }
--late_initcall(load_system_certificate_list);
-+postcore_initcall(load_system_certificate_list);
  
- #ifdef CONFIG_SYSTEM_DATA_VERIFICATION
++/*
++ * Load the compiled-in list of X.509 certificates.
++ */
++static int load_system_certificate_list(void)
++{
++	const u8 *p;
++	unsigned long size;
++
++	pr_notice("Loading compiled-in X.509 certificates for CMA\n");
++
++#ifdef CONFIG_MODULE_SIG
++	p = system_certificate_list;
++	size = system_certificate_list_size;
++#else
++	p = system_certificate_list + module_cert_size;
++	size = system_certificate_list_size - module_cert_size;
++#endif
++
++	return x509_load_certificate_list(p, size, pci_cma_keyring);
++}
++
+ __init static int pci_cma_keyring_init(void)
+ {
++	int rc;
++
+ 	pci_cma_keyring = keyring_alloc(".cma", KUIDT_INIT(0), KGIDT_INIT(0),
+ 					current_cred(),
+ 					(KEY_POS_ALL & ~KEY_POS_SETATTR) |
+@@ -236,6 +263,10 @@ __init static int pci_cma_keyring_init(void)
+ 		return PTR_ERR(pci_cma_keyring);
+ 	}
  
++	rc = load_system_certificate_list();
++	if (rc)
++		return rc;
++
+ 	return 0;
+ }
+ arch_initcall(pci_cma_keyring_init);
 -- 
 2.48.1
 
