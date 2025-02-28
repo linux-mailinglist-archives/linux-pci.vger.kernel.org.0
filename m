@@ -1,181 +1,253 @@
-Return-Path: <linux-pci+bounces-22643-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22644-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E2B4A49C67
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 15:50:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E3B1A49D2A
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 16:20:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E55AA7A30F0
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 14:49:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92A40188EE2B
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 15:20:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17CE226FDBE;
-	Fri, 28 Feb 2025 14:49:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A77827FE99;
+	Fri, 28 Feb 2025 15:17:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CPw65C+N"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="B2N2dgOK"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74FDF26E94D;
-	Fri, 28 Feb 2025 14:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87D79276053;
+	Fri, 28 Feb 2025 15:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740754198; cv=none; b=O2qIqLt82YxvYBaWK8CcPdu9Vn3TyD69E2jhTJB+mGuJOX6c4qvL9BVfTD9MN1tAtX2Gr1mPWIrub6aw+Ni/ZhvFqgTtufZpPBG7IGXPU8aF2CXuJs6SGtx/sQWSJjXO+tTzp7KZaS4tSJETxPdQAvWjHgNMPkxnMb5eLexlqpI=
+	t=1740755874; cv=none; b=hpuJ6YpYZJlxzpBa5PDSkXBlsAGv3cpDZZ2f0BX0x5XWYOXFkbEOALvCK31Qbn46a+AtVZGSAhiXKgS31LcL2PSHL+cdVAgqb2hU9FXEcHaoKauUEOdRyxpnlZmtBmOBiIwDcgeqnxtN/M1iSdgd9uyMWm3R+gX+/tFaM/eMNnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740754198; c=relaxed/simple;
-	bh=3T7vsRWKLTCraBlCKVdrwE+VFUJiIKlGyZVgIMWmYQc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=chs4L3p4XYuG4wA908UxcNZ4FvWLEDHwgyBhzdLJkZdn/Kk+JaPFcxXklftig9/nOz0orTS7m/Bgk7IKuoxgFq5Zz4Tsm1txQtHiBAqbdYDJkQ4AyIPRG5K7jt2d1c0HLhh2vMkqo4VGcNGUjxg1HZzW6Nv8sR1Q+ODyqzOT3yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CPw65C+N; arc=none smtp.client-ip=209.85.161.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5fe87fd0a47so544064eaf.2;
-        Fri, 28 Feb 2025 06:49:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740754195; x=1741358995; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W+mNGsx9k8BYOvf5M//YOrV9w6h6DAZxVOm7B77umBY=;
-        b=CPw65C+NpB21IfZCS65/psgAhkdbrJk2ouwfGDYz/YpVf3eOacO9pyIWEN0ynG84+f
-         kq6/KBB3VYgzk9u1Ol3JL/UpWGGFlnDUHlsk6SvM8aTF7zVqrKH3u/aAaunQCTnbgb5r
-         38Hlgwmd1S32xVQRBPkT15rgHQLx4Dgx8/jKUw92UtxvMBKHd1z8ARuz++foGNCfGVBH
-         MXfrC/u03qjyYH7vDHkO+2ihP7KkMgx/7AIn+KfNnH2OI5y1Gy7qYcS4hpAtNLUYjEW4
-         viUO7rEPuDgmAC1u4YI+h71i8f8lsasHmroigDS9yvvhws8oyCVhdiMAsAzADDtq67QT
-         jEQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740754195; x=1741358995;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W+mNGsx9k8BYOvf5M//YOrV9w6h6DAZxVOm7B77umBY=;
-        b=UUGskEHSh2WzZZuvf8ELQmO8k9fUtQgcZupO+VYC7+dAVtixYzPGmagZjc1VCzEFSq
-         HKVmVoi3KOo3uaUGUCrMRceAL8oy+ZN1NIylkCwNUYtxhHBalI9SKYmm0vme4BOjafBO
-         jlpG7O2FwUS+oIZVlvs6TE5qSl0OKvWO0iP6a4cj4k6WR10osxM6Zg9qi9gSc0g35Obd
-         hIVq2LVaF2hng+Jd+bWa3W4Ip8WONKyiVnAp6i4zfoD3rupIqyb7/KXTNNYwr9P7qECb
-         stXnXH7TYq5n59THaTpkn8Ug3QpJPb7W9iCbs/VUqOGsL6FTGaGzdMMbTZHz99bihBn4
-         IKKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUX9MFrKCVfri9SZl/dOrC6hrs42oakaDozR2l4GAqMmsaK2Jf2d8dER5k4vLH9p1iOFPn5XMmmF0QNPyEH@vger.kernel.org, AJvYcCXHGn89MH3J2jrMebf/BCVW9i8JAICkyw7pWFNvhAoAIoq0MEiZOO31hmEImp0ilazjxReHSQ4RsJhA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0nNemzSBEV46QgWj26lVq3C8sqfpRvqBSPH/rlzQz5092Pyai
-	Gn/3hnD6m/qRXPUllf3VJ/z8Eu4Pexxr9HkYGJXNl9kCvnhtGJmy/dap21uBd+DlNznOkINQaWC
-	MovhpXS9Gx2cS4jL7BPJ6LSrqDL0aIjt3
-X-Gm-Gg: ASbGncvmP1xqcPhqc8q9OO89xqRk8SsLtj/Gq5/leiE5ptQgNf5FIJxX+swsjX1uVW9
-	k6u5pYZpyw8uS59QO5CVKgzgr1veVhyRcXu3GTdyuXvpU7TF7KTcnBXor453aRpthWtJpPEOECG
-	1c4FF23VE2ag==
-X-Google-Smtp-Source: AGHT+IGEnn60FcFR2pIf9E54P2sohtprC377BVbB7Z7tsIFGGCYKkuRziZyDPnIqAPk50ASdDx5e1aUTt4oe+31fYYM=
-X-Received: by 2002:a05:6808:178a:b0:3f5:50d4:1a96 with SMTP id
- 5614622812f47-3f5584f7017mr2196729b6e.8.1740754195412; Fri, 28 Feb 2025
- 06:49:55 -0800 (PST)
+	s=arc-20240116; t=1740755874; c=relaxed/simple;
+	bh=WPiUtcc+3Sz9TyjKgkcNcHzdNvarF61z9AUAee6Io3w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Al7aL4Vjik5CL9d8/KNr4F7EpObQAWdO+V273C5IgyoimgLsXA9f8Xv2d9d39wG3d1iMAvxsmwuE0Ye4GkfeLjQ+q44QHSmwLpIi4SqVaStOxQPRHFnDt6zl2+6G1CHmDTfuVUy8HXA1I3f3gYrfIGARg11oSiNDBjtC9+BTGFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=B2N2dgOK; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=ke9plzHJpbxXmh429WRCDIs7VEMNLqn0BCmKB+edWVg=;
+	b=B2N2dgOK9ZeuzBXD/SpImrA9OBFty97QaswiJMkqJy4I6B3zdqD3q+WqwP3lXJ
+	yavAleJEbZswyBX2qWuckXQPlpzCeOtzrW8B7o+65X6VYPp2J/uqJjgPDi2QIflg
+	ter997rcE9B//v1n9WvFThUA8c3gy5y/TAf4vQux6Ba74=
+Received: from [192.168.71.45] (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDXfzRt08FncMCRPQ--.4226S2;
+	Fri, 28 Feb 2025 23:17:02 +0800 (CST)
+Message-ID: <86d23e69-e6e5-476b-9582-28352852ea94@163.com>
+Date: Fri, 28 Feb 2025 23:17:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHhAz+gUOK4Bn5ijO0H1b5=EtvD5W4GpOTtjP0--yVToNpkEDA@mail.gmail.com>
- <20250227160448.GA597390@bhelgaas>
-In-Reply-To: <20250227160448.GA597390@bhelgaas>
-From: Muni Sekhar <munisekharrms@gmail.com>
-Date: Fri, 28 Feb 2025 20:19:44 +0530
-X-Gm-Features: AQ5f1Jp462UoXhMky_kstQZ6GOcRVkNoC8pJcv6-U-HmRm3ooIzaLNMXGvx1wRM
-Message-ID: <CAHhAz+j46nus_rGJ72rZ86UyzL+AM_HBCivjpZEx3T0thOxqAQ@mail.gmail.com>
-Subject: Re: pci: acpi: Query on ACPI Device Tree Representation and
- Enumeration for Xilinx FPGA PCIe Endpoint functions
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Feb 27, 2025 at 9:34=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Thu, Feb 27, 2025 at 07:25:32PM +0530, Muni Sekhar wrote:
-> > Hi all,
-> >
-> > I am currently working on a project involving a Xilinx FPGA connected
-> > to an x86 CPU via a PCIe root port. The Xilinx FPGA functions as a
-> > PCIe endpoint with single function capability and is programmed to
-> > emulate the Soundwire Master controller. It can be dynamically
-> > reprogrammed to emulate other interfaces as needed. Essentially, the
-> > FPGA emulates an interface and connects to the CPU via the PCIe bus.
-> >
-> > Given this setup, the BIOS does not have prior knowledge of the
-> > function implemented in the Xilinx FPGA PCIe endpoint. I have a couple
-> > of questions regarding this configuration:
-> >
-> > Is it possible to define an ACPI Device Tree representation for this
-> > type of hardware setup?
-> > Can we achieve ACPI-based device enumeration with this configuration?
->
-> If the FPGA is programmed before BIOS enumerates PCI devices, the FPGA
-> would look just like any other PCI device, and BIOS would be able to
-> read the Vendor ID and Device ID and would be able to size and program
-> the BARs.
-Yes, the FPGA is programmed with this Soundwire IP before the BIOS
-enumerates PCI devices.
-We need to port the Soundwire driver
-(https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/drivers/soundwire/qcom.c)
- to the x86 platform.
-
-Since x86 platforms typically do not use device trees, and the
-Soundwire IP is implemented in the FPGA, how can we emulate device
-tree functionality or use a different mechanism to pass hardware
-configuration to the driver? Specifically, how can we handle the
-following API calls on an x86 platform?
-
-   ret =3D of_property_read_u32(np, "qcom,din-ports", &val);
-   ret =3D of_property_read_u32(np, "qcom,dout-ports", &val);
-   ret =3D of_property_read_u8_array(np, "qcom,ports-offset1", off1, nports=
-);
-
-static const struct of_device_id qcom_swrm_of_match[] =3D {
-{ .compatible =3D "qcom,soundwire-v1.3.0", .data =3D &swrm_v1_3_data },
-{ .compatible =3D "qcom,soundwire-v1.5.1", .data =3D &swrm_v1_5_data },
-{ .compatible =3D "qcom,soundwire-v1.6.0", .data =3D &swrm_v1_6_data },
-{ .compatible =3D "qcom,soundwire-v1.7.0", .data =3D &swrm_v1_5_data },
-{ .compatible =3D "qcom,soundwire-v2.0.0", .data =3D &swrm_v2_0_data },
-{/* sentinel */},
-};
-
-Basically, how can we define ACPI tables for functions implemented in
-an FPGA that connects to the system via PCI?
-
-
->
-> So I assume the FPGA is not programmed before BIOS enumeration, the
-> FPGA doesn't respond at all when BIOS or Linux reads the Vendor ID,
-> and you want to program the FPGA later and make Linux enumerate to
-> find it.
->
-> From Linux's point of view, this is basically a hot-add of a PCI
-> device.  If the Root Port supports hotplug and you have pciehp enabled
-> (CONFIG_HOTPLUG_PCI_PCIE=3Dy) and if the FPGA comes out of reset and
-> brings up the PCIe link after being programmed, it all might "just
-> work."  You can also force a complete re-enumeration by writing a
-> non-zero value to /sys/bus/pci/rescan.
->
-> I'm not sure why you would need ACPI or a device tree to be involved.
-> ACPI and device tree are ways to tell the OS about devices that do not
-> have a native enumeration protocol.  PCI devices (like the programmed
-> FPGA) do support native enumeration, so generally we don't need ACPI
-> or device tree descriptions of them.  PCI host bridges have a
-> CPU-specific bus on the upstream side and a PCI bus on the downstream
-> side, so they are not themselves PCI devices, and we do need ACPI or
-> device tree descriptions for them.
->
-> If you have something that doesn't work like you expect, can you post
-> a complete dmesg log and any user commands you're using to program the
-> FPGA?
->
-> Bjorn
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] genirq/msi: Add the address and data that show MSI/MSIX
+To: Thomas Gleixner <tglx@linutronix.de>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: kw@linux.com, kwilczynski@kernel.org, bhelgaas@google.com,
+ cassel@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250227162821.253020-1-18255117159@163.com>
+ <20250227163937.wv4hsucatyandde3@thinkpad> <877c5be0no.ffs@tglx>
+ <251ce5c0-8c10-4b29-9ffb-592e908187fd@163.com> <874j0ee2ds.ffs@tglx>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <874j0ee2ds.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wDXfzRt08FncMCRPQ--.4226S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXry5uF1UurykZF4DGF4DJwb_yoWrCFy3pF
+	y5KF47Gr4xJF1jqw4xWa1DX34Yva4qy3WUt3srtr1fArWkX34kKFyIgFW29FyYyr10qr1j
+	y3WUXasYqrW5AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U9eOJUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxECo2fBxZJ8AQABsy
 
 
 
---
-Thanks,
-Sekhar
+On 2025/2/28 19:26, Thomas Gleixner wrote:
+> On Fri, Feb 28 2025 at 17:04, Hans Zhang wrote:
+>> Is the following patch OK?
+> 
+> No.
+> 
+>>    static void
+>>    irq_debug_show_chip(struct seq_file *m, struct irq_data *data, int ind)
+>>    {
+>> @@ -178,6 +199,7 @@ static int irq_debug_show(struct seq_file *m, void *p)
+>>           seq_printf(m, "node:     %d\n", irq_data_get_node(data));
+>>           irq_debug_show_masks(m, desc);
+>>           irq_debug_show_data(m, data, 0);
+>> +       irq_debug_show_msi_msix(m, data, 0);
+>>           raw_spin_unlock_irq(&desc->lock);
+>>           return 0;
+>>    }
+> 
+> This is just violating the layering and I told you what to do:
+> 
+>      "implement a debug_show() callback in the MSI core code and assign
+>       it to domain ops::debug_show() on domain creation, if it does not
+>       provide its own callback."
+> 
+> If you don't understand what I tell you, then please ask instead of
+> going off and hacking up something completely different.
+> 
+> Here is another hint:
+> 
+>       Look at msi_domain_ops_default and at msi_domain_update_dom_ops()
+> 
+> If you still have questions, feel free to ask.
+> 
+
+
+Hi Thomas(tglx),
+
+I'm very sorry that I didn't understand what you meant at the beginning. 
+Thank you very much for your patient guidance.
+
+Now, how about this patch? If you agree, I will resubmit the next version.
+
+Best regards
+Hans
+
+
+patch:
+
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index 396a067a8a56..98771a0b7d70 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -756,12 +756,33 @@ static int msi_domain_translate(struct irq_domain 
+*domain, struct irq_fwspec *fw
+         return info->ops->msi_translate(domain, fwspec, hwirq, type);
+  }
+
++static void msi_domain_debug_show(struct seq_file *m, struct irq_domain *d,
++                                 struct irq_data *irqd, int ind)
++{
++       struct msi_desc *desc;
++       bool is_msix;
++
++       desc = irq_get_msi_desc(irqd->irq);
++       if (!desc)
++               return;
++
++       is_msix = desc->pci.msi_attrib.is_msix;
++       seq_printf(m, "%*s%s:", ind, "", is_msix ? "msix" : "msi");
++       seq_printf(m, "\n%*saddress_hi: 0x%08x", ind + 1, "",
++                  desc->msg.address_hi);
++       seq_printf(m, "\n%*saddress_lo: 0x%08x", ind + 1, "",
++                  desc->msg.address_lo);
++       seq_printf(m, "\n%*smsg_data:   0x%08x\n", ind + 1, "",
++                  desc->msg.data);
++}
++
+  static const struct irq_domain_ops msi_domain_ops = {
+         .alloc          = msi_domain_alloc,
+         .free           = msi_domain_free,
+         .activate       = msi_domain_activate,
+         .deactivate     = msi_domain_deactivate,
+         .translate      = msi_domain_translate,
++       .debug_show     = msi_domain_debug_show,
+  };
+
+  static irq_hw_number_t msi_domain_ops_get_hwirq(struct msi_domain_info 
+*info,
+
+
+
+e.g.
+
+root@root:/sys/kernel/debug/irq/irqs# cat /proc/interrupts | grep ITS
+  85:          0          0          0          0          0          0 
+         0          0          0          0          0          0 
+ITS-MSI 75497472 Edge      PCIe PME, aerdrv
+  86:          0         30          0          0          0          0 
+         0          0          0          0          0          0 
+ITS-MSI 76021760 Edge      nvme0q0
+  87:        287          0          0          0          0          0 
+         0          0          0          0          0          0 
+ITS-MSI 76021761 Edge      nvme0q1
+  88:          0        265          0          0          0          0 
+         0          0          0          0          0          0 
+ITS-MSI 76021762 Edge      nvme0q2
+  89:          0          0        177          0          0          0 
+         0          0          0          0          0          0 
+ITS-MSI 76021763 Edge      nvme0q3
+  90:          0          0          0         76          0          0 
+         0          0          0          0          0          0 
+ITS-MSI 76021764 Edge      nvme0q4
+  91:          0          0          0          0        161          0 
+         0          0          0          0          0          0 
+ITS-MSI 76021765 Edge      nvme0q5
+  92:          0          0          0          0          0        991 
+         0          0          0          0          0          0 
+ITS-MSI 76021766 Edge      nvme0q6
+  93:          0          0          0          0          0          0 
+       194          0          0          0          0          0 
+ITS-MSI 76021767 Edge      nvme0q7
+  94:          0          0          0          0          0          0 
+         0         94          0          0          0          0 
+ITS-MSI 76021768 Edge      nvme0q8
+  95:          0          0          0          0          0          0 
+         0          0        148          0          0          0 
+ITS-MSI 76021769 Edge      nvme0q9
+  96:          0          0          0          0          0          0 
+         0          0          0        261          0          0 
+ITS-MSI 76021770 Edge      nvme0q10
+  97:          0          0          0          0          0          0 
+         0          0          0          0        127          0 
+ITS-MSI 76021771 Edge      nvme0q11
+  98:          0          0          0          0          0          0 
+         0          0          0          0          0        317 
+ITS-MSI 76021772 Edge      nvme0q12
+root@root:/sys/kernel/debug/irq/irqs#
+root@root:/sys/kernel/debug/irq/irqs# cat 87
+handler:  handle_fasteoi_irq
+device:   0000:91:00.0
+status:   0x00000000
+istate:   0x00004000
+ddepth:   0
+wdepth:   0
+dstate:   0x31600200
+             IRQD_ACTIVATED
+             IRQD_IRQ_STARTED
+             IRQD_SINGLE_TARGET
+             IRQD_AFFINITY_MANAGED
+             IRQD_AFFINITY_ON_ACTIVATE
+             IRQD_HANDLE_ENFORCE_IRQCTX
+node:     0
+affinity: 0
+effectiv: 0
+domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-3
+  hwirq:   0x4880001
+  chip:    ITS-MSI
+   flags:   0x20
+              IRQCHIP_ONESHOT_SAFE
+  msix:
+   address_hi: 0x00000000
+   address_lo: 0x0e060040
+   msg_data:   0x00000001
+  parent:
+     domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-5
+      hwirq:   0x2002
+      chip:    ITS
+       flags:   0x0
+      parent:
+         domain:  :soc@0:interrupt-controller@0e001000-1
+          hwirq:   0x2002
+          chip:    GICv3
+           flags:   0x15
+                      IRQCHIP_SET_TYPE_MASKED
+                      IRQCHIP_MASK_ON_SUSPEND
+                      IRQCHIP_SKIP_SET_WAKE
+
+
+
+
+
 
