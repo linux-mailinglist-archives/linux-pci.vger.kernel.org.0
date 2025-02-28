@@ -1,70 +1,64 @@
-Return-Path: <linux-pci+bounces-22616-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22617-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91062A491D5
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 08:00:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E615A491FE
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 08:14:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D29518930DA
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 07:01:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 21D2116F53E
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 07:14:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61B341BD9DB;
-	Fri, 28 Feb 2025 07:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EqoTNJSL"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A9321C5F2F;
+	Fri, 28 Feb 2025 07:14:16 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A7F748F;
-	Fri, 28 Feb 2025 07:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCDA1C5496;
+	Fri, 28 Feb 2025 07:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740726049; cv=none; b=TGnqwIhhAnhm1kLIb114h1oCCnVzoRH4/iXLKIzr2KZI3MMCsdYmH5T+HsZTX3hlGEB0DP6xU6kQqPZGvTCEhzTIQEuT2c6nw+JZvGgM+Aa5GZrxjOIR0mtq0dFnrzaqX+pu3ayFXmmE1GS3HgYo0b2WPQ9UH8Y7BDnkBRGJWR4=
+	t=1740726856; cv=none; b=NlwlTWKSKa22Iq6n3UvB0Z7/E/hxMLX8i0OHvDLjCdypFfbbDBI/PNzwVLZRt3rVkSwFQGEp2y6s5BmkJoO42Tx0gM5/6R7jeJ5hA3nWvZ5TjuLAYp4phQcXRt1+kaQ+uPEvZiR436yqeJDLhM4yMjK4llfaFD1ya/OyQZXIsug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740726049; c=relaxed/simple;
-	bh=dQNvjTamf5GlF20dGkFjAAXv0agz86HZnKYfFngHYPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=A1ZDvLimzoOvkUuccsNF5/atdH5K33i9pReJtc8QuuPPZ2SqVmjb2q5+BKd2D/2X0KbVYxmY93z3ihjdnVG+O4EMAsiPEnx0iicmE4vIc+/pl5vVTBk0CrobAw3Y9baRLd/AwjBw+sDo3bXRFHNgLjWDEajLS+ZjRkXhtwAgm+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EqoTNJSL; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740726047; x=1772262047;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=dQNvjTamf5GlF20dGkFjAAXv0agz86HZnKYfFngHYPo=;
-  b=EqoTNJSLWy2DwNog8MzK3gHeLsDA4O+YZySv6E+3UHgrMOYDYcFtiCsJ
-   OcLItND1pCnNABkpA8Qb2oa2l4CYEBrqthw94dgFQDJoMuikFphApUCzk
-   TY3/vTimWMpoz6wA1vr5cew+j3szQup38gYZFnW6AhhNHG6LNfMKNTyQW
-   6g5UNCxPSWakTd9T1jv4sKy4+Ui36iE2Ag7qK2PNbUWOxDxjoFZ1ptnQ4
-   wqvB9qqncj6Tg8i3l16XA3+0q9SByMw7OVKDiU6b1pppCyxK3IaNZ1cit
-   h3tcD6a+OGJv2koLKCDEZb5SCKSeADxNmRjGQws7iI42R0TktHVxRfb0s
-   Q==;
-X-CSE-ConnectionGUID: YCTBF+w9RgGHKg8ie20m8A==
-X-CSE-MsgGUID: 9jgPL5+cT+2gi1h8a4c+HQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="53036905"
-X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
-   d="scan'208";a="53036905"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 23:00:46 -0800
-X-CSE-ConnectionGUID: lSsC+kxQS5yrBN4jxgVlyA==
-X-CSE-MsgGUID: 24pGiSQJShutApx1DNI7tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
-   d="scan'208";a="117227717"
-Received: from ly-workstation.sh.intel.com (HELO ly-workstation) ([10.239.161.23])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 23:00:45 -0800
-Date: Fri, 28 Feb 2025 15:00:59 +0800
-From: Yi Lai <yi1.lai@intel.com>
-To: ilpo.jarvinen@linux.intel.com, shuah@kernel.org, bhelgaas@google.com,
-	Jonathan.Cameron@huawei.com, linux-pci@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: yi1.lai@intel.com
-Subject: [PATCH] selftests/pcie_bwctrl: Add "set_pcie_speed.sh" to TEST_PROGS
-Message-ID: <Z8FfK8rN30lKzvVV@ly-workstation>
+	s=arc-20240116; t=1740726856; c=relaxed/simple;
+	bh=StuzEqVA/KF2H1BBO4p86yNKqTmdpTRhdbvVEeXDUNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SQ/wdvvh0Lh5+BA/TuXKEs+gRyXXX+DOZgO7ee/oIVBCJC3x0OzCAb+k2s2ZQ1iHNPE9W7YdTQ1A3Ir9gHWBnrJ261QnTiVLzTaJX5Jk1CqvXg01GDY3tSUUKPQcoZlnIrTVyn6D7wW/EmGkU6pPgR79OdP4aWrq1CNR7xen4p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 975BD280237A3;
+	Fri, 28 Feb 2025 08:14:04 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 7EFEE6501C4; Fri, 28 Feb 2025 08:14:04 +0100 (CET)
+Date: Fri, 28 Feb 2025 08:14:04 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Feng Tang <feng.tang@linux.alibaba.com>
+Cc: rafael@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Liguang Zhang <zhangliguang@linux.alibaba.com>,
+	Guanghui Feng <guanghuifeng@linux.alibaba.com>,
+	Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] PCI/portdrv: Add necessary wait for disabling
+ hotplug events
+Message-ID: <Z8FiPOgKFTt8T0ym@wunner.de>
+References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
+ <20250224034500.23024-3-feng.tang@linux.alibaba.com>
+ <Z7y2e-EJLijQsp8D@wunner.de>
+ <Z70zyhZe6OrxNNT3@U-2FWC9VHC-2323.local>
+ <Z71Ap7kpV4rfhFDU@wunner.de>
+ <Z71KHDbgrPFaoPO7@U-2FWC9VHC-2323.local>
+ <Z8FXyVyMyAe4_bI3@U-2FWC9VHC-2323.local>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,32 +67,48 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <Z8FXyVyMyAe4_bI3@U-2FWC9VHC-2323.local>
 
-The test shell script "set_pcie_speed.sh" is not installed in
-INSTALL_PATH. Attempting to execute set_pcie_cooling_state.sh shows
-warning:
+On Fri, Feb 28, 2025 at 02:29:29PM +0800, Feng Tang wrote:
+> On Tue, Feb 25, 2025 at 12:42:04PM +0800, Feng Tang wrote:
+> > > > There might be some misunderstaning here :), I responded in
+> > > > https://lore.kernel.org/lkml/Z6LRAozZm1UfgjqT@U-2FWC9VHC-2323.local/
+> > > > that your suggestion could solve our issue.
+> > > 
+> > > Well, could you test it please?
+> > 
+> We just tried the patch on the hardware and initial 5.10 kernel, and
+> the problem cannot be reproduced, as the first PCIe hotplug command
+> of disabling CCIE and HPIE was not issued.
 
-"
-./set_pcie_cooling_state.sh: line 119: ./set_pcie_speed.sh: No such file or directory
-"
+Good!
 
-Add "set_pcie_speed.sh" to TEST_PROGS.
+> Should I post a new version patch with your suggestion?
 
-Fixes: 838f12c3d551 ("selftests/pcie_bwctrl: Create selftests")
-Signed-off-by: Yi Lai  <yi1.lai@intel.com>
----
- tools/testing/selftests/pcie_bwctrl/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, please.
 
-diff --git a/tools/testing/selftests/pcie_bwctrl/Makefile b/tools/testing/selftests/pcie_bwctrl/Makefile
-index 3e84e26341d1..48ec048f47af 100644
---- a/tools/testing/selftests/pcie_bwctrl/Makefile
-+++ b/tools/testing/selftests/pcie_bwctrl/Makefile
-@@ -1,2 +1,2 @@
--TEST_PROGS = set_pcie_cooling_state.sh
-+TEST_PROGS = set_pcie_cooling_state.sh set_pcie_speed.sh
- include ../lib.mk
--- 
-2.39.2
+> Also I would like to separate this patch from the patch dealing the
+> nomsi irq storm issue. How do you think?
 
+Makes sense to me.
+
+The problem with the nomsi irq storm is really that if the platform
+(i.e. BIOS) doesn't grant OSPM control of hotplug, OSPM (i.e. the kernel)
+cannot modify hotplug registers because the assumption is that the
+platform controls them.  If the platform doesn't actually handle
+hotplug, but keeps the interrupts enabled, that's basically a bug
+of the specific platform.
+
+I think the kernel community's stance in such situations is that the
+BIOS vendor should provide an update with a fix.  In some cases
+that's not posible because the product is no longer supported,
+or the vendor doesn't care about Linux issues because it only
+supports Windows or macOS.  In those cases, we deal with these
+problems with a quirk.  E.g. on x86 we often use a DMI quirk to
+recognize affected hardware and the quirk would then disable the
+hotplug interrupts.
+
+Thanks,
+
+Lukas
 
