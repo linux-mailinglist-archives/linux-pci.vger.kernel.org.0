@@ -1,160 +1,119 @@
-Return-Path: <linux-pci+bounces-22657-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22658-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F5D7A4A0BC
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 18:45:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80D8DA4A139
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 19:14:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 497371893820
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 17:45:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9790171825
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 18:14:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A07CA1F4CB9;
-	Fri, 28 Feb 2025 17:45:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3F3B27002E;
+	Fri, 28 Feb 2025 18:14:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ccuDFX6u"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AWCN2H5B";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uE72Ymnp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3471BCA1C;
-	Fri, 28 Feb 2025 17:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299BE1F09B8;
+	Fri, 28 Feb 2025 18:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740764711; cv=none; b=pQaiYZmyWJewYEixkJzCJLCOgWT8nmAMbvnCNpKRFnazYXVgPRYsOiTXxB30bH1Df1KXFxyHDJebUAvIJsqnIhyhzy7aSqvkgwOeOpB366EAehyIugGltulIyXT4MkDtn9Z1RuqK8Xok0PHBSG6qwGEMppjSvNqtDz2XK8I7BnY=
+	t=1740766449; cv=none; b=pbCbn55Rod8pzULP1EeUZbEXWBPwwzQYf/f2dGNGHeTunk2j4YBh2Q46UPJzwWEcG19W7eua+v1c4CTN4xzJfMBvWptpXIUsNx2sGRqSQ5jKqrKsIqjqVd4hrDvIHt3lvOCEFYv1l3FNnPowNaQ4Z1LyAI/C9AKqfvuLYj8Vx0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740764711; c=relaxed/simple;
-	bh=Be8JiKViprG/35y62i+pD4AsM5Tw5jHNYjVl9cJ8hQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Es/bKITqQ/SGDPRg3A7UZ5YUE5/Ymawx/b+Q+IgeVaHhwwm9tgtYkIgUJJuCceeh07pWzHRVH0Xp+nQdUJf/yIZ6JYEq5O5QBaRqeuKokK8na89+gYGQPFkOuWrJ33lrM0HLhZ0+nItseRNk47yJPR9+SVrl6i4M/oV9EQkveBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ccuDFX6u; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FA7C4CED6;
-	Fri, 28 Feb 2025 17:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740764710;
-	bh=Be8JiKViprG/35y62i+pD4AsM5Tw5jHNYjVl9cJ8hQw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ccuDFX6uhWkU3S1yoYepRdColv2hjj9HHXWE+B2YBjayx48qKdPtW3q8ADzXPwmkr
-	 G4mGeaE82Wner95FHb6YpDJy84gcbmKhZ8UrqHYR2RduGSwxElFnCjzPpD7tWPyDRd
-	 UojHVsJhDFH7Nm2sqwR5aeboQuOf8I3wEslOFk8N388I1R56sHe6QUsImMApiqHSIJ
-	 oZZdiW2e2OQvOrDqjfcVH4DqB/4HBguvtkMiYPdW21yG8Ge/mhxlEMHyZJkLhhtNo6
-	 V8GOmYmBk3y6/1Ha1YhLb2xGyoqxZ4v8zrBf/jTcE9eatm/ytMj6HvFFfUVzK0620K
-	 z4HO3yx3sn9Xw==
-Date: Fri, 28 Feb 2025 11:45:09 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Hsin-Yi Wang <hsinyi@chromium.org>,
-	linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com,
-	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-	lukas@wunner.de,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v5] PCI: Allow PCI bridges to go to D3Hot on all
- Devicetree based platforms
-Message-ID: <20250228174509.GA58365@bhelgaas>
+	s=arc-20240116; t=1740766449; c=relaxed/simple;
+	bh=ApjbMI3UMXaK0HDqUbTtI+NmigJsdTp/AtQknzdwLpE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=eX35TURXFgGHRmUMZA71SX+JwVYE9pNimGx8M9GMOPTfL4xJ2R1g1aa0FlHrK43VeJNW2mOtmQkf86S4bkucMaS7DPYC574KjiHdS3widniemsJvsHKDuMgQEOnWOm4KA8iZ6NhwPgGsqRBL23icfaQQ/pmiWTi+P3i1YKmTdNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AWCN2H5B; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uE72Ymnp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740766444;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mJuRTH6j6N6i1eKbv8dqltSVcO11PyKBNmf/v8AxwZk=;
+	b=AWCN2H5BcIxD93kLNrlnyFcDZn9ctGkxwZrEbM+7Jnkeo8NrOyyqGzrPh5Gs8MuqS2c8Ug
+	poUW1QutUTbP+XC9FNNDzswpAgt0oOWOHg6BjXp0aa3Ez71FORsAWEx83cqvpk3Bz0LRXC
+	Zmj1vml9Of8drnDq904St7X0v5Whi5pOGcXZyYB7bMfwwOX/tK0BfyPCvryI01K9Xtu4Ps
+	I/bd372YHYXSFjq1x1G1sSSPddQqIOsPW7I1KOCFjcgbVX8/oQXmlkyYW7ZRhl3md98zjH
+	0H2TJmIMmlLFAZQoe8GXGdW3wrgxtZ+k2k1yl0NlAHC5h0/yh9nh+wcpTy+rnw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740766444;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mJuRTH6j6N6i1eKbv8dqltSVcO11PyKBNmf/v8AxwZk=;
+	b=uE72YmnpiQ9JhYDH1VmzL5/RPkXR1Ld39wjJtdAzvA6HhtaBTpwDHVKXYJjOfRuvd3/6sf
+	IJtFJUFSeZzwlKCA==
+To: Hans Zhang <18255117159@163.com>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>
+Cc: kw@linux.com, kwilczynski@kernel.org, bhelgaas@google.com,
+ cassel@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] genirq/msi: Add the address and data that show MSI/MSIX
+In-Reply-To: <86d23e69-e6e5-476b-9582-28352852ea94@163.com>
+References: <20250227162821.253020-1-18255117159@163.com>
+ <20250227163937.wv4hsucatyandde3@thinkpad> <877c5be0no.ffs@tglx>
+ <251ce5c0-8c10-4b29-9ffb-592e908187fd@163.com> <874j0ee2ds.ffs@tglx>
+ <86d23e69-e6e5-476b-9582-28352852ea94@163.com>
+Date: Fri, 28 Feb 2025 19:14:04 +0100
+Message-ID: <87v7suc4yb.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241126151711.v5.1.Id0a0e78ab0421b6bce51c4b0b87e6aebdfc69ec7@changeid>
+Content-Type: text/plain
 
-On Tue, Nov 26, 2024 at 03:17:11PM -0800, Brian Norris wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Unlike ACPI based platforms, there are no known issues with D3Hot for
-> the PCI bridges in Device Tree based platforms. 
+On Fri, Feb 28 2025 at 23:17, Hans Zhang wrote:
+> I'm very sorry that I didn't understand what you meant at the
+> beginning.
 
-Can we elaborate on this a little bit?  Referring to "known issues
-with ACPI-based platforms" depends on a lot of domain-specific history
-that most readers (including me) don't know.
+No problem.
 
-I don't think "ACPI-based" or "devicetree-based" are good
-justifications for changing the behavior because they don't identify
-any specific reasons.  It's like saying "we can enable this feature
-because the platform spec is written in French."
-
-> Past discussions (Link [1]) determined the restrictions around D3
-> should be relaxed for all Device Tree systems. 
-
-This is far too generic a statement for me to sign up to, especially
-since "all Device Tree systems" doesn't say anything at all about how
-any particular hardware works or what behavior we're relying on.
-
-We need to say something about what D3hot means (i.e., only message
-and type 0 config requests accepted) and that we know anything below
-the bridge is inaccessible in D3hot and why that's OK.  E.g., maybe we
-only care about wakeup requests and we know those still work with the
-bridge in D3hot because XYZ.
-
-> So let's allow the PCI bridges to go to D3Hot during runtime.
-> 
-> To match devm_pci_alloc_host_bridge() -> devm_of_pci_bridge_init(), we
-> look at the host bridge's parent when determining whether this is a
-> Device Tree based platform. Not all bridges have their own node, but the
-> parent (controller) should.
-> 
-> Link: https://lore.kernel.org/linux-pci/20240227225442.GA249898@bhelgaas/ [1]
-> Link: https://lore.kernel.org/linux-pci/20240828210705.GA37859@bhelgaas/ [2]
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> [Brian: look at host bridge's parent, not bridge node; rewrite
-> description]
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
-> Based on prior work by Manivannan Sadhasivam that was part of a bigger
-> series that stalled:
-> 
-> [PATCH v5 4/4] PCI: Allow PCI bridges to go to D3Hot on all Devicetree based platforms
-> https://lore.kernel.org/linux-pci/20240802-pci-bridge-d3-v5-4-2426dd9e8e27@linaro.org/
-> 
-> I'm resubmitting this single patch, since it's useful and seemingly had
-> agreement. I massaged it a bit to relax some restrictions on how the
-> Device Tree should look.
-> 
-> Changes in v5:
-> - Pulled out of the larger series, as there were more controversial
->   changes in there, while this one had agreement (Link [2]).
-> - Rewritten with a relaxed set of rules, because the above patch
->   required us to modify many device trees to add bridge nodes.
-> 
->  drivers/pci/pci.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e278861684bc..5d898f5ea155 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3018,6 +3018,8 @@ static const struct dmi_system_id bridge_d3_blacklist[] = {
->   */
->  bool pci_bridge_d3_possible(struct pci_dev *bridge)
->  {
-> +	struct pci_host_bridge *host_bridge;
+>
+> +static void msi_domain_debug_show(struct seq_file *m, struct irq_domain *d,
+> +                                 struct irq_data *irqd, int ind)
+> +{
+> +       struct msi_desc *desc;
+> +       bool is_msix;
 > +
->  	if (!pci_is_pcie(bridge))
->  		return false;
->  
-> @@ -3038,6 +3040,15 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
->  		if (pci_bridge_d3_force)
->  			return true;
->  
-> +		/*
-> +		 * Allow D3 for all Device Tree based systems. We assume a host
-> +		 * bridge's parent will have a device node, even if this bridge
-> +		 * may not have its own.
-> +		 */
-> +		host_bridge = pci_find_host_bridge(bridge->bus);
-> +		if (dev_of_node(host_bridge->dev.parent))
-> +			return true;
+> +       desc = irq_get_msi_desc(irqd->irq);
+> +       if (!desc)
+> +               return;
 > +
->  		/* Even the oldest 2010 Thunderbolt controller supports D3. */
->  		if (bridge->is_thunderbolt)
->  			return true;
-> -- 
-> 2.47.0.338
-> 
+> +       is_msix = desc->pci.msi_attrib.is_msix;
+> +       seq_printf(m, "%*s%s:", ind, "", is_msix ? "msix" : "msi");
+> +       seq_printf(m, "\n%*saddress_hi: 0x%08x", ind + 1, "",
+> +                  desc->msg.address_hi);
+
+No need for these line breaks. You have 100 characters available.
+
+> +       seq_printf(m, "\n%*saddress_lo: 0x%08x", ind + 1, "",
+> +                  desc->msg.address_lo);
+> +       seq_printf(m, "\n%*smsg_data:   0x%08x\n", ind + 1, "",
+> +                  desc->msg.data);
+> +}
+> +
+>   static const struct irq_domain_ops msi_domain_ops = {
+>          .alloc          = msi_domain_alloc,
+>          .free           = msi_domain_free,
+>          .activate       = msi_domain_activate,
+>          .deactivate     = msi_domain_deactivate,
+>          .translate      = msi_domain_translate,
+> +       .debug_show     = msi_domain_debug_show,
+>   };
+
+Looks about right.
+
+Thanks,
+
+        tglx
 
