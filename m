@@ -1,153 +1,172 @@
-Return-Path: <linux-pci+bounces-22635-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22636-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E9B9A497C0
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 11:49:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66878A497DE
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 11:55:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1E7933BC799
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 10:49:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B6C0D173E8A
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 10:55:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E580C25D218;
-	Fri, 28 Feb 2025 10:49:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 269341B4250;
+	Fri, 28 Feb 2025 10:54:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YmYLxoiz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AaeUMhxE"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485D31B4250;
-	Fri, 28 Feb 2025 10:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D28D260A42
+	for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2025 10:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740739771; cv=none; b=VAKR9FJwdAc6FkSDyKQV3oCKjrAphw/ZU3WQ2WUOU/edqmW5Tk68YivnEIrBRFWUSJRgdf1Nyn4ePOqHa00gT5P37nRHTXUE6c77dyObwOWjwdgaeNq9vHhOyk3oZV3gVzpu5Iss1elkFqo0+/P1PlTchbIj2fljgHdQmWeMjYw=
+	t=1740740085; cv=none; b=r4TsirL1/a99Efcs4LgNqbIULNgT2gAqoluJnOHpfcUh73F2bPXvfup0/JBz2jhvUGJ11L3yOTA93oAQqxqEaDYOomK7OnESBSaIoIGNZSqAtbJZgANSeGjLeVaFfuoVeNMR6mfXCaI91iuMHPKS4xVeHSnKAdZHsQ6OQPiSy3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740739771; c=relaxed/simple;
-	bh=6Gf+WSPrlbTAJ/XWPWj3WRZAIjUVfEvP8NxsUg6aEE0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hnHnWqsOJZOxGhoO6JKsjO3e4SqDgFYRhVl5/xCspu6+CH41RUG6bYNVFvQsbXmMwd2Npb5+80+ceqtl3qY2qAWHFNpsF6+0wXQMwmgDw0efK1KDMwr87EvME2vZRpyG2CvE5FvcJypESEYZKX6JRGer/uUAiUCx04Geyc1nxa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YmYLxoiz; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740740085; c=relaxed/simple;
+	bh=H2slJtFmQHmtjLQ0+/qo3prvx6ubNgchrixcfJcM2Qw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ugsbwYYId1dcqTZk7Ttau8/vDnqH17P2UGUeIemil+crepdEOCl3STdT9XhIhgNZvNkcMYzk6ZMoAomZei4QD056vK3u0nNyMsgKUxmcHD7OQhU7Q+UDzepcqujSH3jLGOpt5N2gPqQBTDU4K36BY1DEQgOZLEFhVowsJjVIbcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AaeUMhxE; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740739771; x=1772275771;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6Gf+WSPrlbTAJ/XWPWj3WRZAIjUVfEvP8NxsUg6aEE0=;
-  b=YmYLxoizPvtxsDJzK+zC19+1+4rJjdwoPXoUgYR1dyeGLMn5J8shh5ZD
-   0PAJrHx0a37EdXXeHDd2cyqb36kaCTo2/wguOXb2cxkOeCsITjXJnmZml
-   HaFDf8xYnPiLSxc7K4MoaFS48gbpgWFof+pHbwXmFh1KVZ8Ggl+wEcBZ6
-   YKXlqxCp+j9QT+GCxuBwbchNV1c686VZFRWXq8iWK5SDJIIxaYyfa8Ky/
-   E3bBThkbYojRqDTMbatVq9w6tJ6B1c3b0FNRFuRLU/F3/kgpIYSXcpXmH
-   cFODrbCLhCcRnvIuRhtjze7sLcVyaYRQlQWtqYorxiIkwP/RSOgoMhvcX
-   g==;
-X-CSE-ConnectionGUID: hBcgigImTXq7dPYiYH211w==
-X-CSE-MsgGUID: Dn5Nj/t0TCiWRfnXz4rqjA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="52299045"
+  t=1740740083; x=1772276083;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=H2slJtFmQHmtjLQ0+/qo3prvx6ubNgchrixcfJcM2Qw=;
+  b=AaeUMhxECIHpbJdOPie8m20reBYjIHOAKS4RCYUucaO/zUlmGcBxl1PR
+   u/syBHQ7pvW8IOv0+ETUup3MecAjh6FQNiHMF3H6CPwJJ1993m3hKpK3d
+   NZDtMsgoZQuHLfCplW9aPB6y00kATAWk0Sxm3vqSEKwWPPyTb4WeP7b6f
+   h9KH3c5iLcT1GP7zFKstpDKbwBpuygQoH5uBSQ2deo33gpWguuDgiDP2m
+   HTgsBvsCb++AvmzE0MSd+UPCjau4ned92+vtbmiRRqdikCY1MHJeD8SeK
+   LEO4NVhOdZ4AJTEwBd3wFtBRlKJaieFLnFyYXP6sIqv/CqY2aQZlELp6s
+   w==;
+X-CSE-ConnectionGUID: XuvAawnKQ2aMSin4Z7OZmg==
+X-CSE-MsgGUID: ga+gwSkaT4e7Fyib1bF6bA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41514358"
 X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
-   d="scan'208";a="52299045"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 02:49:30 -0800
-X-CSE-ConnectionGUID: HiJu018vS+iwtbxZmJFI0w==
-X-CSE-MsgGUID: H9o4/NGjRDq4QGER7HElmQ==
+   d="scan'208";a="41514358"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 02:54:41 -0800
+X-CSE-ConnectionGUID: M2LAkHHTSISd71xL/pSPMQ==
+X-CSE-MsgGUID: b5o6XYdNQNClrb7usDCExA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
-   d="scan'208";a="121913710"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 28 Feb 2025 02:49:26 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 9DF31297; Fri, 28 Feb 2025 12:49:25 +0200 (EET)
-Date: Fri, 28 Feb 2025 12:49:25 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Kenneth Crudup <kenny@panix.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jian-Hong Pan <jhp@endlessos.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?utf-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
-	Andreas Noever <andreas.noever@gmail.com>,
-	Michael Jamet <michael.jamet@intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
-Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
- Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
-Message-ID: <20250228104925.GO3713119@black.fi.intel.com>
-References: <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
- <20250211055722.GW3713119@black.fi.intel.com>
- <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
- <20250213135911.GG3713119@black.fi.intel.com>
- <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
- <20250214162948.GJ3713119@black.fi.intel.com>
- <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
- <20250226084404.GM3713119@black.fi.intel.com>
- <b6eff06e-1a8c-48c3-b536-39b567015d0c@panix.com>
- <5c131927-87c1-4e21-90f8-8e3a34cd6dbf@panix.com>
+   d="scan'208";a="122439431"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 28 Feb 2025 02:54:39 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tny0r-000Em6-20;
+	Fri, 28 Feb 2025 10:54:37 +0000
+Date: Fri, 28 Feb 2025 18:53:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/dwc] BUILD SUCCESS
+ ffc475939e97133b640dc09ecc7f8909a2e3088a
+Message-ID: <202502281841.DnNGmazS-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5c131927-87c1-4e21-90f8-8e3a34cd6dbf@panix.com>
+Content-Type: text/plain; charset=us-ascii
 
-Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc
+branch HEAD: ffc475939e97133b640dc09ecc7f8909a2e3088a  PCI: dwc: Add Rockchip to the RAS DES allowed vendor list
 
-On Thu, Feb 27, 2025 at 09:46:07AM -0800, Kenneth Crudup wrote:
-> So I think, the failure mode may be related in some part to DP/Tunneling,
-> too- I finally got another lockup (this time, after a hibernate, which I
-> guess is some of the same facility) but what was different about this time
-> where I couldn't reproduce the lockups (and what happens when I use my
-> CalDigit dock) was I had an external USB-C monitor connected when I resumed,
-> and when I'm home (where I sometimes forget to remove the NVMe USB4 adaptor)
-> I always have my monitor connected to the dock.
+elapsed time: 1460m
 
-It would be good to stick with a "proven" use-case so that the steps are
-always the same. This may involve several issues in various parts of the
-kernel and we need to track them one by one. If you change the steps in the
-middle then we may end up finding completely different issues and it is not
-helping the debugging effort.
+configs tested: 77
+configs skipped: 1
 
-The steps at the moment would be simply this:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-1. Boot the system up, nothing connected.
-2. Connect Thunderbolt dock and make sure UI authorizes it.
-3. Connect Thunderbolt NVMe to the Thunderbolt dock and make sure UI authorizes it.
-4. Verify that the devices behind PCIe tunnels are visible and functional (lspci for example)
-5. Suspend the laptop by closing lid.
-6. Unplug the dock (and the NVMe).
-7. Resume the laptop by opening the lid.
+tested configs:
+alpha                           allyesconfig    gcc-14.2.0
+arc                             allmodconfig    gcc-13.2.0
+arc                             allyesconfig    gcc-13.2.0
+arc                  randconfig-001-20250227    gcc-13.2.0
+arc                  randconfig-002-20250227    gcc-13.2.0
+arm                             allmodconfig    gcc-14.2.0
+arm                  randconfig-001-20250227    gcc-14.2.0
+arm                  randconfig-002-20250227    clang-17
+arm                  randconfig-003-20250227    gcc-14.2.0
+arm                  randconfig-004-20250227    clang-21
+arm64                randconfig-001-20250227    gcc-14.2.0
+arm64                randconfig-002-20250227    clang-19
+arm64                randconfig-003-20250227    gcc-14.2.0
+arm64                randconfig-004-20250227    gcc-14.2.0
+csky                 randconfig-001-20250227    gcc-14.2.0
+csky                 randconfig-002-20250227    gcc-14.2.0
+hexagon                         allmodconfig    clang-21
+hexagon                         allyesconfig    clang-18
+hexagon              randconfig-001-20250227    clang-14
+hexagon              randconfig-002-20250227    clang-16
+i386                             allnoconfig    gcc-12
+i386       buildonly-randconfig-001-20250227    gcc-12
+i386       buildonly-randconfig-002-20250227    gcc-11
+i386       buildonly-randconfig-003-20250227    clang-19
+i386       buildonly-randconfig-004-20250227    gcc-12
+i386       buildonly-randconfig-005-20250227    gcc-11
+i386       buildonly-randconfig-006-20250227    clang-19
+loongarch            randconfig-001-20250227    gcc-14.2.0
+loongarch            randconfig-002-20250227    gcc-14.2.0
+nios2                randconfig-001-20250227    gcc-14.2.0
+nios2                randconfig-002-20250227    gcc-14.2.0
+openrisc                         allnoconfig    gcc-14.2.0
+openrisc                        allyesconfig    gcc-14.2.0
+parisc                          allmodconfig    gcc-14.2.0
+parisc                           allnoconfig    gcc-14.2.0
+parisc                          allyesconfig    gcc-14.2.0
+parisc               randconfig-001-20250227    gcc-14.2.0
+parisc               randconfig-002-20250227    gcc-14.2.0
+powerpc                          allnoconfig    gcc-14.2.0
+powerpc              randconfig-001-20250227    clang-19
+powerpc              randconfig-002-20250227    gcc-14.2.0
+powerpc              randconfig-003-20250227    clang-19
+powerpc64            randconfig-001-20250227    clang-17
+powerpc64            randconfig-002-20250227    clang-21
+powerpc64            randconfig-003-20250227    gcc-14.2.0
+riscv                            allnoconfig    gcc-14.2.0
+riscv                randconfig-001-20250227    gcc-14.2.0
+riscv                randconfig-002-20250227    gcc-14.2.0
+s390                            allmodconfig    clang-19
+s390                             allnoconfig    clang-15
+s390                            allyesconfig    gcc-14.2.0
+s390                 randconfig-001-20250227    clang-18
+s390                 randconfig-002-20250227    gcc-14.2.0
+sh                              allmodconfig    gcc-14.2.0
+sh                              allyesconfig    gcc-14.2.0
+sh                   randconfig-001-20250227    gcc-14.2.0
+sh                   randconfig-002-20250227    gcc-14.2.0
+sparc                           allmodconfig    gcc-14.2.0
+sparc                randconfig-001-20250227    gcc-14.2.0
+sparc                randconfig-002-20250227    gcc-14.2.0
+sparc64              randconfig-001-20250227    gcc-14.2.0
+sparc64              randconfig-002-20250227    gcc-14.2.0
+um                              allmodconfig    clang-21
+um                               allnoconfig    clang-18
+um                              allyesconfig    gcc-12
+um                   randconfig-001-20250227    clang-17
+um                   randconfig-002-20250227    gcc-12
+x86_64                           allnoconfig    clang-19
+x86_64     buildonly-randconfig-001-20250227    clang-19
+x86_64     buildonly-randconfig-002-20250227    clang-19
+x86_64     buildonly-randconfig-003-20250227    gcc-12
+x86_64     buildonly-randconfig-004-20250227    gcc-12
+x86_64     buildonly-randconfig-005-20250227    clang-19
+x86_64     buildonly-randconfig-006-20250227    gcc-12
+x86_64                             defconfig    gcc-11
+xtensa               randconfig-001-20250227    gcc-14.2.0
+xtensa               randconfig-002-20250227    gcc-14.2.0
 
-Expectation: The system resumes just fine, finds the devices gone and stays functional.
-Actual result: The system does not resume properly, seems to crash and burn the screen
-	       is black.
-
-Please correct me if I got something wrong. This is essentially that you go
-from work to home, unplugging the dock and then resuming it at home.
-
-The other thing is that in the pstore I see these:
-
-thunderbolt 0000:00:0d.2: 0:5: __tb_path_deactivate_hop(): 401
-
-but there is no such log in the mainline. If you have done some local
-changes I suggest to drop all them to make sure we are looking at the same
-source code.
-
-> See attached dump log. I'm using the (somewhat still experimental) Xe
-> display driver, but I've seen this same lockup happen with i915.
-
-Please also keep using tha same graphics driver.
-
-> In any case, I've now reverted 9d573d19, and when I get back to my CalDigit
-> I can try instrumenting the code paths in the commit and see exactly where
-> we're locking up.
-
-No need to add any changes. Just try with the revert and see if that at
-least makes the system resume properly. If it does then there could be
-other issues but then you can take full dmesg and send to us instead of
-those pstore snippets.
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
