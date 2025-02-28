@@ -1,202 +1,336 @@
-Return-Path: <linux-pci+bounces-22654-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22655-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 717A8A49FE8
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 18:10:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06689A4A010
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 18:16:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ABAFF1693CB
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 17:09:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A51C189620E
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 17:16:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28D7A28629B;
-	Fri, 28 Feb 2025 17:08:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C271BBBD7;
+	Fri, 28 Feb 2025 17:16:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Q0QL3S07"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="buujXPhZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013069.outbound.protection.outlook.com [52.101.67.69])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA99C281358;
-	Fri, 28 Feb 2025 17:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740762481; cv=fail; b=qVHMt9JFXYLAxPB3C3qvhCjh8KtCOZIkxFrqmoOSmkmIIJQ2jDihkNev39OJHSmcJrkaXapMsZctuk9ZI/V4Eujz7mmexRZHFWxFGP8k3F5c55vra11NZiLxLnfzDZgfn/xAI9aN1WxHkvKfiCbf2whzbTSwcWmmClBrr0fGF6U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740762481; c=relaxed/simple;
-	bh=iEuvskA5NAVhaSdGhvvkEnpufuEGUWvJbf5MtiSyOEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=tX8JNsWYYxJqsLeRS4lGuJEzzRJcEv4S5+zpwQnjQhO+YxPlPLK8pwiLB5L8tsQuOYR+Osnxvv2MX1ENIQMGF9FNf4qb2iV0eSj5pppL1WdUYwpzHgXSx38Gm4vGqcErzdgB50CU1Pu/lT5ujjqKX1eAslxhjL3OESmUWQQ9ZSw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Q0QL3S07; arc=fail smtp.client-ip=52.101.67.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u8TH6bdX605b7AFqoNOFPUFtX3/VEOaZKvt5tFtXD7ltfHNoZlUAZ/sNF4kjGRHhs6Yhq+Jy3LqnIclBsDqqWOgHRR8k4arPSx6S/wixGVH5KHuZhI8xast/CmI5V/d/qbtBp5ldv7TVFYnfqNd3z1qhUITWynStUG+cwgdvK0fb7n3wrWtEYAz/ChEcvG+S7JEFZAiJPxsvuDJf2dx0ibXx3Zj9mQnWNk/UHOAx1IZ0Q4RTFM5gbOu8+IR5BREae9C+JKqbc397/iAb/D/FfYltkUuyjQmnUF7nLO/cWSHkC0SIZwyB1nfWzdlXBIOemjYITLQHjrNsvr+03yfRkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9azf/yJgzBeFm/Uzg6q67IEQEdWBzlyagDfRYHshJeA=;
- b=HoKs/Vgf5GT57P8VEA3zeMohbZws2wyhPfMeZPm4uSBjzAypLwGPDozoM5agvhagVS3m9cMVUy9hVnxeoZPzTZtNiW+tYiIS1HjEXdWUU819NKfLHOSGL/pa6DikqnBtqgyO8VKbut7dAwo3j41+Xa32kUbWqRowmSSyCfqmF1eKjVjeJup/46nUgRx/1qyn2iFKpjpFL4n8OG3RxG/YSS+k7MY+pxpwCps9ehdskuLlEbORpOb/gdUU//UqOVdIl7B+TXrLS+WSxoThDbTMUuJwp4p8cWgDfcp6bTXZDWMNod2Q1izpv6a3WX1X0KUVpILdZi4+x6XZnI+6OHq/ig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9azf/yJgzBeFm/Uzg6q67IEQEdWBzlyagDfRYHshJeA=;
- b=Q0QL3S07E28JURU0RFECgmtagR/t8JtvPuSFEmk5NPv2pgqz0YkiLzUZVuE4VasB8N1F1tD9V4URscQnLIhYqvj3fKFchXIGkQrRWPQ573lXrGj7MaQQFv6cb0lu3ntsMP0y8Z4mkeSUi7BMbGu+vuc65WwEGVaXrVziawwz8xKIa3R3IaXr8YSbWJtPiPtRU10d44rDcupMQChRm76Gw2Lazw7MPsaeOfpUmGVikRDC3F9mSB91qh/4uUM0ZIGoS0PynULjfTjkAP1dnNSnY5WQUp6O7EC3jfmw2mnWzUfh8w6ISuDr8oOcrhYJ/362/1g3eFCpiDBuP2cOpQVOmg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DU4PR04MB10531.eurprd04.prod.outlook.com (2603:10a6:10:55a::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Fri, 28 Feb
- 2025 17:07:55 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8489.019; Fri, 28 Feb 2025
- 17:07:55 +0000
-Date: Fri, 28 Feb 2025 12:07:43 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Anup Patel <apatel@ventanamicro.com>, Marc Zyngier <maz@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Shuah Khan <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org,
-	jdmason@kudzu.us, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, imx@lists.linux.dev,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v15 00/15] PCI: EP: Add RC-to-EP doorbell with platform
- MSI controller
-Message-ID: <Z8HtX05shTGRA4xd@lizhi-Precision-Tower-5810>
-References: <20250211-ep-msi-v15-0-bcacc1f2b1a9@nxp.com>
- <Z7eKBsxrmthtElpz@lizhi-Precision-Tower-5810>
- <87r03sgxf2.ffs@tglx>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r03sgxf2.ffs@tglx>
-X-ClientProxiedBy: BYAPR01CA0044.prod.exchangelabs.com (2603:10b6:a03:94::21)
- To PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFF21AA1C9;
+	Fri, 28 Feb 2025 17:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740762963; cv=none; b=Sdnd3XmzsR6HEGL6IMemc4LIwT638JwqeM7wqvasuuX9xl+VOWIpizNXaVSVgiVUqhXtrPMoG6PZ1ZyQ7S6X5lZhSfr4Z57zi9gO1ypxA3RasCrVtamwsvPQPxB7M3vVM6CJjOiWMyIDfEx98XW5JJJP9evnqlpf/3U+Sg1oLko=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740762963; c=relaxed/simple;
+	bh=0Q9H58yp3XWSWHdgM52K+7/QB9btyyN4SYA4AmNzFOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=hOj3IJombCyzigh8dIM7IaUvQYjKkCDuJc/bB8teb0JEbkZxHa1EJ55hSb37nbu5F8nQ5BENz/TsswKVfIzrW98Bh6OyXcQOr85C8d1hGIblmzYAq8Aio2Jx44ROAGdlWSVkrgVeqcPnBAgCuu+RIrubtOCFuMWBFMAnkhtGddg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=buujXPhZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EC47C4CED6;
+	Fri, 28 Feb 2025 17:16:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740762962;
+	bh=0Q9H58yp3XWSWHdgM52K+7/QB9btyyN4SYA4AmNzFOY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=buujXPhZoz6fXqKLhfghswDJYlXPsZmyNqxwZck8vE6PnKC4OOphLcxjToTZWssFI
+	 oRUOuq/KEIhW7URPjVEbdeWMjalaS4GUDlEiaojnEbS1gWTWi/jERXfedFwS0f2nyt
+	 svreQQvX6JP/dTGWOhDjA+AMFJsFeaTDMPWPt2c5+KpmvEgDmo6ZzAa0ttR22UD7pn
+	 XL7iHmv3WPr3kZ56oyGK6HUAPEoGBh38Sig9lG13U7nN96tpsduFWtgLOTmFtn4jOj
+	 PuEVrxzzWOcOjiNElxJ2J69OUvpLm3PQDxSj27K2bpRKVlX8zb8SBLrrc4SgbWtNwv
+	 2ynBKKM3m6xnA==
+Date: Fri, 28 Feb 2025 11:16:01 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Weiwen Hu <huweiwen@linux.alibaba.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH] ACPI/PCI: deduplicate concurrent eject notify
+Message-ID: <20250228171601.GA23123@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU4PR04MB10531:EE_
-X-MS-Office365-Filtering-Correlation-Id: bfaf0767-4b4e-4b71-2d40-08dd581a71a3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|7416014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?PPgzkbdjeM33xg2iPijQLsAyOSJNSOEljB+RkJHmjtbrB3nzG+njGK3tY+YR?=
- =?us-ascii?Q?uXY5PWVy/OS/bHS/ZLkNIXR01dZ8tJuOrhDzN/Anr5/6M+q8YmvJLJPnNbmc?=
- =?us-ascii?Q?5ubtZkkWhGIXga8HLBO1xB7ORjdEjd0UX0Ig/fXV8r3oIiW2BLR1a3LJPhdZ?=
- =?us-ascii?Q?gkROtvBd1sYMFR3JS7wgCeaAoivucsjtKjegNcCzH5QrvjBfAE9s4/3CYZDr?=
- =?us-ascii?Q?Jwdwzvw+534l7xnrPJTxIPZJuVk8lcdvtCzi66jk7Xl0xtD5JctcHT5vGXbH?=
- =?us-ascii?Q?VFgHHRsNg/qQ2RUfeZCWEVaBnsy2JSqUuz6NVKDTVPOAYX0lkQ4Lem3yijAd?=
- =?us-ascii?Q?XMDumNvanTxK37zHsWYJe9jJBjzWSg3FOch/Na+wtfoU85W0TBbx1vgYxTPq?=
- =?us-ascii?Q?OTESwgNxC1ASi0FSJgdxI+CSjAmB0/itdoJp8Pzr6ZiLzk6bGjJhXrzdCbeh?=
- =?us-ascii?Q?CkRs4hBwjPrtcNYvnsYKh/5l1MLL8VJNDI+elyeg8P82YHFEA9ElsEpaGwwU?=
- =?us-ascii?Q?HgQNX39e1btVlhalId4ipxszz4+MfOp+CjtihxyWc4lPzrQrHw+P+awV1UZ/?=
- =?us-ascii?Q?ONu9pKTb+KGx9IkV+M+sUIS9tv9QQphmuNt9bYAPOGkVlJcd9JXywNlZp+Te?=
- =?us-ascii?Q?jVHNrK2iUWWO4EWGEqwYlUjoPdJxFuyLU+ZEaq5fm5jz3PfKVrk61R8aznPd?=
- =?us-ascii?Q?WU3DscL5zvWFHgB971vZ131dcccUsyC1//ctb+xnE8WyVQ6V8q0z186lK8+w?=
- =?us-ascii?Q?MSKI6EoPfSC8TS5r1t+lrvXD9l0eR5FWv4lzWoxz4tOFfySxdqIPYz+RuepZ?=
- =?us-ascii?Q?rv643U3juGUE2R/mR0EBhaRX86jTD4bYd+rsdUQmIzoLcSbuY/+adbNDemK3?=
- =?us-ascii?Q?1uq1TD27chOwqK6VHlXGHy4rM+CqSIeM87ioOZVEtZq1275sBue1E8BH9upQ?=
- =?us-ascii?Q?x0ZTbWzxdJDOQSryuVspphPM8E6Vw2JKFIPYyUxRc2xmyZjsA5N2QRTL4MoG?=
- =?us-ascii?Q?GEQ5iKmILNJVKSTyhTKcuvYxgXPMJSIC2X0D8Aks2mm+Wy7U3bcBHFP0zRvG?=
- =?us-ascii?Q?KiMFBm8p6W/Dm2GZ8GsKrjHJwHoTS05+aLTbEKEuA0jb9QRQqgLalUemV4FF?=
- =?us-ascii?Q?lBbwhYF3z5Ft5glWSs1fy2SS3hUQRoHFLZrmZrrtEAMVE9Rs0ZJgP4Q4mfDg?=
- =?us-ascii?Q?2MwU+ZAu1adrRAEyTCoR1l7pZv5GLEzpEvOjGUtCH39DEoWhi2duMr4soURY?=
- =?us-ascii?Q?xJNk9/ry1FbZCIKFhP2vtntAzCTDnEDFKYQo2N7FOQehQ+3frrjCPzGznZbq?=
- =?us-ascii?Q?U8i+k+egqTa6NsfIb5BNkJNDYhbR3lX0tvkvLDhqrB3GrZaQBsEbH2KEBqav?=
- =?us-ascii?Q?ZOrISzpRW4xR0fFpf0+s8XJqy0vtIsewopRrbj98ugVGRTSCIWYoZCA9mCnK?=
- =?us-ascii?Q?86K5rVUPX0wPnEBg2+Pawl4dctSJb7lu?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(7416014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ASW/G482Udr6qfNSyJNhaMQ7ExBvorwMTCQqXdkL4aRQyzB5FrWPFBsnNrHT?=
- =?us-ascii?Q?GS58U9iHIjyNmjcsvmKrcNmjHd9xPI70A4hOOYwsaheD1REI4/4IGks/jggc?=
- =?us-ascii?Q?OOpNRBqjGLkKqK/GrOsIIOgAqfG68/WkxUY1H6wr40USQ9s7NDrKTM1GIHlH?=
- =?us-ascii?Q?F3f0nNmCEpXhCV0o6LT+1onZxEe7fVor+UnFVyCpQ+5LYwayKr0IwkHYdZKB?=
- =?us-ascii?Q?sGQK8W4ibGTpCXuki8R/DLaEjsO3YhGvj1GbE7MTNJ+g/uoFtS+zPhSLXs0j?=
- =?us-ascii?Q?wY22qIRGPENP3Jd3xF2kkmLbskeMHlbBhK1ddpGlReJ+XD29aQTy9VvFOZNA?=
- =?us-ascii?Q?Ljv16wODd23vJjAzKz0abOrsN7iQybpbdLS93UYiMZl0eYYHwB+5rdkcZurq?=
- =?us-ascii?Q?do2M4A46wfW3hopPinyswqXfk6oWGfnF3j3nyPJ2Dp0LuSDc+KUaCDAYscNI?=
- =?us-ascii?Q?cf/w4dEH557btuIV/VS0CPcTY6+i0aY++6FIAyDa7KAXgsh/JWJmKGzQVRzA?=
- =?us-ascii?Q?5i2p5d8PKl9rmp2zs0kZhe36LSCQhuv7RUoCSlnno+Var3k1WNu3H0Cs6r17?=
- =?us-ascii?Q?X+l0JZm+DUNMJToHpXDCvqvlfHcVZL/6zI4MPHeM73gPH2dpLMY66sDhpw6a?=
- =?us-ascii?Q?7/JzFhX9FFcyIbxOfWJiobfjG9n8lQ8RINl3amQvmye5Fkddjf0kvpsa4B7R?=
- =?us-ascii?Q?7z/yXou1dc+l60bOA7vQfwKK1usK0c/CoRfCeFZ7I7Hyg/bWrz75snFCyZjY?=
- =?us-ascii?Q?Q1jeadzCJlTbOoki6J1cTTNU/b8+Pt6wpnBRCDG8soB/MAaBc86V6l2XVLVQ?=
- =?us-ascii?Q?SDw8jyI0r1V9krQQI5NAXuiDNmocFNE2qVV3CGYpjIRKav7EPedw2UTDr6Fk?=
- =?us-ascii?Q?0+DZLfX6V67fu1yi5drr5cbOr3Txe+UYryZ705rp/tCgjRP/f1yeiFV3X6KM?=
- =?us-ascii?Q?SB0tK0BmNz7NWsBZVConLXk3Y15e4t3+Bgu2QxNMiU9mJ6P8hhZasdLDGXVF?=
- =?us-ascii?Q?E07/NZJOxV54GMZYrXee5mOBHOFwiHomUXFUfRp4qms08JXyDF35LYawPz63?=
- =?us-ascii?Q?Nij73bj6XNHFQNOdhmhvwZetvt2gmXkQ+1YHb++j7oM9ypyoCJP1v3e/EQ36?=
- =?us-ascii?Q?4dpXfaFeAWspNQkiDrr+sAQTzgOtHw8b6IL7jzsNTtqthD1jUbStxd/Xn+7p?=
- =?us-ascii?Q?7PDkRwU2hebQ942XvLt926hRObb3g++6glVlb5uIxgXzB1xIdGh2NzjvrZHV?=
- =?us-ascii?Q?lMjWmHf98c+m027pF2OZG0i3ok7FXQm31+G7vHggVW3AwgcpY9un58MobCLW?=
- =?us-ascii?Q?vTqsTpqdpAj4sZKj2gEiYA1lmG8MLRCRFwUqlHm3NNF1k4L9grRf5uc6uNbr?=
- =?us-ascii?Q?kRtXYtd0Jd2xSwOsbEv7jWPbke+1uM3JNcaPfNj//IIqxB5ZPACS+skkzTjl?=
- =?us-ascii?Q?Fm8MXfCHM0BNUyUzCVEPELDbhdu2PgujXiUXr/p1V+rBzvTDIll8nEprPVDU?=
- =?us-ascii?Q?DOu5QdmWnCWKrkPPSp3xNMRvVKAP3uzS5TeJ9K146vrrvpJr+Kuc8DK3vX1i?=
- =?us-ascii?Q?gSoZjH/5+vN/1TpFKqWVs1IxJJOWY78uTCOOx05/?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfaf0767-4b4e-4b71-2d40-08dd581a71a3
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 17:07:55.6772
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VkKOekWPuBS9BjXXC+wZCcAbLb1WBkDROBR5tIIUokcOSdtZl5Au708VZYnTqD/sZd2+eSxTncwyqby1/IagfA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10531
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224070036.65573-1-huweiwen@linux.alibaba.com>
 
-On Thu, Feb 20, 2025 at 09:42:57PM +0100, Thomas Gleixner wrote:
-> On Thu, Feb 20 2025 at 15:01, Frank Li wrote:
-> > On Tue, Feb 11, 2025 at 02:21:53PM -0500, Frank Li wrote:
-> >
-> > Thomas Gleixner and Marc Zyngier:
-> >
-> > 	Do you have any comments about irq/msi part?
->
-> I'm not having objections, but this needs to be acked by Marc as he had
-> pretty strong opinions on the overall approach.
+On Mon, Feb 24, 2025 at 03:00:34PM +0800, Weiwen Hu wrote:
+> Ignore the eject notification when the previous ejection is still in
+> progress to prevent multiple _EJ0 invocations when the ejection completes.
+> 
+> The first _EJ0 informs the platform to actually eject the device and frees
+> the slot for other devices. So the subsequent _EJ0 may accidentally eject
+> the new device that is just plugged into this slot. We need to avoid this.
+> 
+> For each acpi_device, this patch introduces a new field `ejecting`, which
+> is set before enqueuing the `kacpi_hotplug_wq` and reset before invoking
+> _EJ0.  Every notifications we received before invoking _EJ0 is targeted to
+> the old device. This ensures we don't miss any notifications for newly
+> plugged device.  And a new flag `should_dedup_eject` allows each driver to
+> implement this feature gradually. A driver should set this flag on
+> initialization if it will reset `ejecting`.
 
-Marc Zyngier:
+Which drivers do you have in mind when you say "each driver can
+implement this feature gradually"?  You set should_dedup_eject in
+acpiphp, so I guess you mean other ACPI hotplug drivers?  I see
+acpi_hotplug_context mentioned in libata-acpi.c, surface3-wmi.c; maybe
+those are the only other current ones?
 
-	Do you have any concern about irq/msi part? Is it clean enough to
-answer what your conern at previous version?
+> This fix is not perfect. If we receive an eject notification just after
+> resetting `ejecting` but before _EJ0, we will still invoke _EJ0 twice.
+> However this seems to be the best solution available, and it strictly
+> improves the current situation.
+> 
+> Another potential fix is to add an `ejected` flag to each device and not
+> invoke _EJ0 for already ejected devices. However, this approach risks
+> losing synchronization with the platform if something else goes wrong,
+> potentially preventing the device from being ejected permanently.  And we
+> need to check with bus driver to make sure the device is really ejected
+> successfully. But this check is still racy. So we cannot ensure no extra
+> _EJ0 invocations either.
 
-	How can we move forward? This help PCI EP side avoid software
-polling status.
+I see the problem.  Thanks for the detailed explanation and details
+about reproducing it and the trace.
 
-Frank
+I'm not sure whether the platform should reissue the Bus Check
+notification based on the fact that the OS hasn't invoked _EJ0 in some
+arbitrary time.  That seems a little bit presumptuous because, for
+example, the platform can't know how long it will take to write out
+the dirty page cache.  The racyness of the workaround seems
+troublesome to me.
 
->
-> Thanks,
->
->         tglx
+But this is all really an ACPI issue, not a PCI issue, so I'd like to
+defer to the ACPI experts here.
+
+> Signed-off-by: Weiwen Hu <huweiwen@linux.alibaba.com>
+> ---
+>  drivers/acpi/osl.c                 |  6 ++++++
+>  drivers/pci/hotplug/acpiphp_glue.c | 15 +++++++++++----
+>  include/acpi/acpi_bus.h            |  4 +++-
+>  3 files changed, 20 insertions(+), 5 deletions(-)
+> 
+> We observed that umount can take extremely long time if there is a lot of
+> dirty page cache.  umount will take the s_umount semaphore, which will
+> block the ejecting process:
+> 
+> 	__schedule+0x1e0/0x630
+> 	? kernfs_put.part.0+0xd4/0x1a0
+> 	schedule+0x46/0xb0
+> 	rwsem_down_read_slowpath+0x16b/0x490
+> 	__get_super.part.0+0xc1/0xe0
+> 	fsync_bdev+0x11/0x60
+> 	invalidate_partition+0x5c/0xa0
+> 	del_gendisk+0x103/0x2e0
+> 	virtblk_remove+0x27/0xa0
+> 	virtio_dev_remove+0x36/0x90
+> 	__device_release_driver+0x172/0x260
+> 	device_release_driver+0x24/0x30
+> 	bus_remove_device+0xf6/0x170
+> 	device_del+0x19b/0x450
+> 	device_unregister+0x16/0x60
+> 	unregister_virtio_device+0x11/0x20
+> 	virtio_pci_remove+0x31/0x60
+> 	pci_device_remove+0x38/0xa0
+> 	__device_release_driver+0x172/0x260
+> 	device_release_driver+0x24/0x30
+> 	pci_stop_bus_device+0x6c/0x90
+> 	pci_stop_and_remove_bus_device+0xe/0x20
+> 	disable_slot+0x49/0x90
+> 	acpiphp_disable_and_eject_slot+0x15/0x90
+> 
+> While OS is not invoking _EJ0 timely, the user (or hypervisor) may retry by
+> issuing another notification, which will be queued in kacpi_hotplug_wq.
+> After the umount is finally done, the _EJ0 will be invoked.  Then, if there
+> are devices pending attach, the hypervisor may choose to attach it
+> immediately to the same slot.  The new device can be ejected by the queued
+> ejecting process unintentionally.
+> 
+> On Alibaba Cloud, we re-issue the notification around every 10s if the OS
+> does not respond.  (BTW, do you think platform is allowed to re-issue
+> the notification on timeout?)
+> We can easily reproduce this issue on Alibaba Cloud ECS:
+> 
+> 	WRITE_SIZE=2300M  # tune this value so that the umount takes 20s
+> 	# replace these disk serial numbers
+> 	DISK_DETACH=bp142xxxxxxxxxxxxxxx  # pre-formatted
+> 	DISK_ATTACH=bp109xxxxxxxxxxxxxxx  # any
+> 	# start from these two disks detached
+> 
+> 	INSTANCE_ID=$(curl -sS http://100.100.100.200/latest/meta-data/instance-id)
+> 	echo "instance id: $INSTANCE_ID"
+> 	DISK_PATH=/dev/disk/by-id/nvme-Alibaba_Cloud_Elastic_Block_Storage_
+> 
+> 	echo "attaching disk d-$DISK_DETACH"
+> 	aliyun ecs AttachDisk --DiskId "d-$DISK_DETACH" --InstanceId "$INSTANCE_ID"
+> 
+> 	sleep 2
+> 	mkdir -p /mnt/slow
+> 	mount "$DISK_PATH$DISK_DETACH" /mnt/slow
+> 	echo "mounted d-$DISK_DETACH to /mnt/slow"
+> 
+> 	rm -f /mnt/slow/zero
+> 	echo "populating dirty cache"
+> 	head -c $WRITE_SIZE /dev/zero > /mnt/slow/zero;
+> 
+> 	echo umounting
+> 	(
+> 		umount /mnt/slow
+> 		echo umounted
+> 	)&
+> 
+> 	sleep 2
+> 	echo "detaching disk d-$DISK_DETACH"
+> 	aliyun ecs DetachDisk --DiskId "d-$DISK_DETACH" --InstanceId "$INSTANCE_ID"
+> 
+> 	sleep 10
+> 	echo "attaching disk d-$DISK_ATTACH"
+> 	aliyun ecs AttachDisk --DiskId "d-$DISK_ATTACH" --InstanceId "$INSTANCE_ID"
+> 
+> 	sleep 7
+> 	wait
+> 	for _ in {1..10}; do
+> 		sleep 1
+> 		if [ -e "$DISK_PATH$DISK_ATTACH" ]; then
+> 			echo "disk d-$DISK_ATTACH attached, issue not reproduced"
+> 			exit 0
+> 		fi
+> 		echo "disk d-$DISK_ATTACH not found yet"
+> 	done
+> 
+> 	echo "issue reproduced"
+> 	exit 1
+> 
+> And here is the trace we got from `perf trace` while running the above script on an unpatched kernel:
+> 
+> 	[starting detach]
+> 	 48202.244 kworker/0:0-ev/5 probe:acpi_ev_queue_notify_request(__probe_ip: -1452149680, notify_value: 3)
+> 	 48202.314 kworker/0:0-ev/5 probe:acpi_hotplug_schedule(__probe_ip: -1452297040, src: 3)
+> 	 48203.690 kworker/u8:0-e/1946 probe:acpi_device_hotplug(__probe_ip: -1452251424, src: 3)
+> 	[blocked, retrying detach]
+> 	 58023.813 kworker/0:0-ev/5 probe:acpi_ev_queue_notify_request(__probe_ip: -1452149680, notify_value: 3)
+> 	 58023.881 kworker/0:0-ev/5 probe:acpi_hotplug_schedule(__probe_ip: -1452297040, src: 3)
+> 	[detach done]
+> 	 62834.048 kworker/u8:0-e/1946 probe:acpi_evaluate_ej0(__probe_ip: -1452291632)
+> 	[another device attaching]
+> 	 62954.686 kworker/0:0-ev/5 probe:acpi_ev_queue_notify_request(__probe_ip: -1452149680, notify_value: 1)
+> 	 62954.828 kworker/0:0-ev/5 probe:acpi_hotplug_schedule(__probe_ip: -1452297040, src: 1)
+> 	 63042.506 kworker/u8:0-e/1946 probe:acpi_device_hotplug(__probe_ip: -1452251424, src: 3)
+> 	[the new device is ejected unintentionally]
+> 	 63042.520 kworker/u8:0-e/1946 probe:acpi_evaluate_ej0(__probe_ip: -1452291632)
+> 	[the actual attach task, scanned the bus but got nothing]
+> 	 63266.555 kworker/u8:0-e/1946 probe:acpi_device_hotplug(__probe_ip: -1452251424, src: 1)
+> 
+> With this patch, the acpi_hotplug_schedule at 58023.881 will be skipped to
+> suppress the acpi_evaluate_ej0 at 63042.520.
+> 
+> diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+> index 5ff343096ece..f041c4db10f7 100644
+> --- a/drivers/acpi/osl.c
+> +++ b/drivers/acpi/osl.c
+> @@ -1193,6 +1193,12 @@ acpi_status acpi_hotplug_schedule(struct acpi_device *adev, u32 src)
+>  {
+>  	struct acpi_hp_work *hpw;
+>  
+> +	if (src == ACPI_NOTIFY_EJECT_REQUEST && adev->flags.should_dedup_eject
+> +			&& atomic_xchg(&adev->hp->ejecting, 1)) {
+> +		put_device(&adev->dev);
+> +		return AE_OK;
+> +	}
+> +
+>  	acpi_handle_debug(adev->handle,
+>  			  "Scheduling hotplug event %u for deferred handling\n",
+>  			   src);
+> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
+> index 5b1f271c6034..3c50f2af1584 100644
+> --- a/drivers/pci/hotplug/acpiphp_glue.c
+> +++ b/drivers/pci/hotplug/acpiphp_glue.c
+> @@ -68,6 +68,7 @@ static struct acpiphp_context *acpiphp_init_context(struct acpi_device *adev)
+>  	context->hp.notify = acpiphp_hotplug_notify;
+>  	context->hp.fixup = acpiphp_post_dock_fixup;
+>  	acpi_set_hp_context(adev, &context->hp);
+> +	adev->flags.should_dedup_eject = true;
+>  	return context;
+>  }
+>  
+> @@ -778,7 +779,8 @@ void acpiphp_check_host_bridge(struct acpi_device *adev)
+>  	}
+>  }
+>  
+> -static int acpiphp_disable_and_eject_slot(struct acpiphp_slot *slot);
+> +static int
+> +acpiphp_disable_and_eject_slot(struct acpi_hotplug_context *hp, struct acpiphp_slot *slot);
+>  
+>  static void hotplug_event(u32 type, struct acpiphp_context *context)
+>  {
+> @@ -825,7 +827,7 @@ static void hotplug_event(u32 type, struct acpiphp_context *context)
+>  	case ACPI_NOTIFY_EJECT_REQUEST:
+>  		/* request device eject */
+>  		acpi_handle_debug(handle, "Eject request in %s()\n", __func__);
+> -		acpiphp_disable_and_eject_slot(slot);
+> +		acpiphp_disable_and_eject_slot(&context->hp, slot);
+>  		break;
+>  	}
+>  
+> @@ -999,9 +1001,11 @@ int acpiphp_enable_slot(struct acpiphp_slot *slot)
+>  
+>  /**
+>   * acpiphp_disable_and_eject_slot - power off and eject slot
+> + * @hp: the context that received eject notification, can be NULL
+>   * @slot: ACPI PHP slot
+>   */
+> -static int acpiphp_disable_and_eject_slot(struct acpiphp_slot *slot)
+> +static int
+> +acpiphp_disable_and_eject_slot(struct acpi_hotplug_context *hp, struct acpiphp_slot *slot)
+>  {
+>  	struct acpiphp_func *func;
+>  
+> @@ -1011,6 +1015,9 @@ static int acpiphp_disable_and_eject_slot(struct acpiphp_slot *slot)
+>  	/* unconfigure all functions */
+>  	disable_slot(slot);
+>  
+> +	if (hp)
+> +		atomic_set(&hp->ejecting, 0);
+> +
+>  	list_for_each_entry(func, &slot->funcs, sibling)
+>  		if (func->flags & FUNC_HAS_EJ0) {
+>  			acpi_handle handle = func_to_handle(func);
+> @@ -1034,7 +1041,7 @@ int acpiphp_disable_slot(struct acpiphp_slot *slot)
+>  	 */
+>  	acpi_scan_lock_acquire();
+>  	pci_lock_rescan_remove();
+> -	ret = acpiphp_disable_and_eject_slot(slot);
+> +	ret = acpiphp_disable_and_eject_slot(NULL, slot);
+>  	pci_unlock_rescan_remove();
+>  	acpi_scan_lock_release();
+>  	return ret;
+> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> index aad1a95e6863..870c1ffe47c9 100644
+> --- a/include/acpi/acpi_bus.h
+> +++ b/include/acpi/acpi_bus.h
+> @@ -151,6 +151,7 @@ typedef void (*acpi_hp_fixup) (struct acpi_device *);
+>  
+>  struct acpi_hotplug_context {
+>  	struct acpi_device *self;
+> +	atomic_t ejecting;
+>  	acpi_hp_notify notify;
+>  	acpi_hp_uevent uevent;
+>  	acpi_hp_fixup fixup;
+> @@ -215,7 +216,8 @@ struct acpi_device_flags {
+>  	u32 cca_seen:1;
+>  	u32 enumeration_by_parent:1;
+>  	u32 honor_deps:1;
+> -	u32 reserved:18;
+> +	u32 should_dedup_eject:1;
+> +	u32 reserved:17;
+>  };
+>  
+>  /* File System */
+> -- 
+> 2.48.1
+> 
 
