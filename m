@@ -1,286 +1,276 @@
-Return-Path: <linux-pci+bounces-22608-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22609-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E490AA48E0E
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 02:41:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8663A48E94
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 03:26:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AD85D7A62E9
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 01:40:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ACA7D3B76CA
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 02:26:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EF3235963;
-	Fri, 28 Feb 2025 01:41:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EF3A126C02;
+	Fri, 28 Feb 2025 02:26:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="T7pRl/DJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OTEml8XO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480FE276D11;
-	Fri, 28 Feb 2025 01:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740706864; cv=none; b=PBcZiW8ydf1Dj/idS40O4aePRiQLjxyThbUEyMGWN9qXwgw/Q4d5LV5BG+1X1x5xqfK2oJyD6uOgIJlKy/kQJTohnIc977biy/07t4mC7ccLg4RVMVrUHuSWMfgBWIa8BBRvNsw5jah3oybXnzNVBa5wr3HqYiCzeqbTirSy2QA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740706864; c=relaxed/simple;
-	bh=7Ao72ZSN+JGWeghAFVfYDlkSLS7LdTHxr30TmAU4vkE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Llm/sjm8Mfn86U2t+Ia2snHWt0UWzAPYdO+SvabRRTbRSoLJttnFwzi7LPmyYdJu5SkIckVwy+9KPc8Vpg7snIvLu/xD7x8A4nadFGctk0ON1DUMNXqNqwRl6fYH95K3IiXXgMhWeBtyuCieO8K20vUl5XsL5riXYksKbt1cTyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=T7pRl/DJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F866C4CEDD;
-	Fri, 28 Feb 2025 01:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740706863;
-	bh=7Ao72ZSN+JGWeghAFVfYDlkSLS7LdTHxr30TmAU4vkE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T7pRl/DJsxzZ+ib93e1hwB+ZcGmQj5mXqTI0GIxi5+XlzEApYSXVY23640qOhXeGY
-	 rq0Qj+AMH41PDhmGEVOpmEF45FppD7OSb6Xrcc7BIvb7G9A6sn+9onL4JbeZ7vfSF+
-	 y8L8HwlNFWbr48lq+OW8NbT/jKdWKvfa67N4RSXM=
-Date: Thu, 27 Feb 2025 17:39:53 -0800
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Alistair Francis <alistair@alistair23.me>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org,
-	boqun.feng@gmail.com, bjorn3_gh@protonmail.com,
-	wilfred.mallawa@wdc.com, aliceryhl@google.com, ojeda@kernel.org,
-	alistair23@gmail.com, a.hindborg@kernel.org, tmgross@umich.edu,
-	gary@garyguo.net, alex.gaynor@gmail.com, benno.lossin@proton.me,
-	Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are
- authenticated
-Message-ID: <2025022748-flock-verbalize-b66a@gregkh>
-References: <20250227030952.2319050-1-alistair@alistair23.me>
- <20250227030952.2319050-10-alistair@alistair23.me>
- <2025022717-dictate-cortex-5c05@gregkh>
- <Z8DqZlE5ccujbJ80@wunner.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96481276D33
+	for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2025 02:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740709601; cv=fail; b=PPpq0C+2WeuuU1werNK/YPZFgOsoRuRFRLlzj1Vo8sU7V6+pFF/aJqSfAu7gPuJP0VhjG0HMeZ9QBF9Uqo8fgOSm6DtsigVKGdCfENsQtzM0F1v98fVqF79h6vNffBL7mfqr95qrCM926OfmPazYWBYD6iQ/ynJwHOflFZyYTpA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740709601; c=relaxed/simple;
+	bh=929sPizp6ddrLG375o89yYVsOQfUOoNjDbPYzHvvKys=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=dTfYr0+ppxJk0hBbYGVtBx2FpN+Su8xwiEjTkaJOn2Bv/920iUry6a434leOabiGvhh+Mp5yYRTEzgjMnlLu4QigV4WmJDP0wqD7ZY6qw9h/tqIXwzrAh4ytl66nh9kQRPa9jxxjlar+g7Xss+VFap4aJZl7A7PWjxDAujyYPJo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OTEml8XO; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740709598; x=1772245598;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=929sPizp6ddrLG375o89yYVsOQfUOoNjDbPYzHvvKys=;
+  b=OTEml8XOPFr5wgNrzTn3gYX9V4FXZ/oh45/xZYwz+DYJzvUpzh9Cy9Gw
+   MtGzhWY2E8ELPuqh4ZqqR/u4u5TKjjV8/57EfC6gwg7d8RazyoQWzLNBA
+   N9W51zzKbQT1YczFnaDwJZIqbk9zksaPO1tflH3RZ8k86DLoLU8BYYmLB
+   chPbCzFM7u6Rh/zjmQ3ObwKune6PJiGlxaAp+RXhY+75w+cZY5xbOdv0Q
+   KVPpaBRlujGdsqTpVcy9Yvp+mlVTF9VPv+SYLCHoK3LCQ2hq3eVvTgNoR
+   PMBCeVnKjWEAETa9ui1fJnslqTifHUnCelQ67+Ai5BAnxOBtN5A9svlfh
+   w==;
+X-CSE-ConnectionGUID: TCi7IXyHTo+An9kry/8jpw==
+X-CSE-MsgGUID: wduds6BNQy+/8knpanLcBg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41330953"
+X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
+   d="scan'208";a="41330953"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 18:26:38 -0800
+X-CSE-ConnectionGUID: 1n/gHrDnR/O3Vuap+qT+DA==
+X-CSE-MsgGUID: W2ZQDfhMSxazoHyRG7IGeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="154385995"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Feb 2025 18:26:38 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 27 Feb 2025 18:26:37 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Thu, 27 Feb 2025 18:26:37 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 27 Feb 2025 18:26:36 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z4nPOupDp9KO3jEo8/yOnMpaSADtyKPIy78wqrtWtfGMN02hIQMlfHydgG3mv/wzALcJnDWkz6hWnj/9rMgx+Vq6q4Qa8vV1DcHK3zvCuNQZipRPCguWNtux72PpcBwc37fasUvbT7kU334R4+YmncP7fKIj3xqFYVnLMu8uqzysP1CibLzkInj/vcCCDasVhiGoKkK3c9EslCq8GF5WnkMUNcao7xP3AcTbA0lke+EysbqEgKcRaY3U3HgSbysBgbBj3HOttuILfAn9XZ4Gt/ABQUjJ9sqH39J6clodEQPik8EU4XcVvvAB1IDis0AHlWg7OQDoYpF5m0b7cQyU7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wn1lslcsj+2n7SDO+9VoRIw6jN2QpOzhwQh+L/uwWsw=;
+ b=e6Ix97o2kf/CaMdXWlLtHP2E+qeTy+Ijbs3WzCPJvINLjQRwyWEhE3kw2KsWkUC3KayC/I8nQccnu5K2z6BsYm+YmkMLhH6LwyqJN7UTmChvyXL3/f07VnUUIN67rJYzC7OqDxf+tJNvhWWS5dG0ioSWbe4QPO7DJFCNHIsOqn7I7iGZ8rCOM2vqK7ouqw1n0UqZUnSdC9lbkFTLevCdlO4EVOdWr1mhEuraHwfnyWQOjOW9TG5aX2/rQL3JY0aqdEM+KgMJdA1L0pXOIe/csAY9U3fRv9vfbYj74N91dbycg4aMCMIH/TyvIOik9CR3D1wwK5hd5G8aeP119sYdGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH0PR11MB4903.namprd11.prod.outlook.com (2603:10b6:510:36::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Fri, 28 Feb
+ 2025 02:26:29 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8489.018; Fri, 28 Feb 2025
+ 02:26:29 +0000
+Date: Thu, 27 Feb 2025 18:26:27 -0800
+From: Dan Williams <dan.j.williams@intel.com>
+To: Alexey Kardashevskiy <aik@amd.com>, Dan Williams
+	<dan.j.williams@intel.com>, Xu Yilun <yilun.xu@linux.intel.com>
+CC: <linux-coco@lists.linux.dev>, Bjorn Helgaas <bhelgaas@google.com>, "Lukas
+ Wunner" <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
+	<linux-pci@vger.kernel.org>, <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 08/11] PCI/IDE: Add IDE establishment helpers
+Message-ID: <67c11ed38ff8_1a7729458@dwillia2-xfh.jf.intel.com.notmuch>
+References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
+ <173343744264.1074769.10935494914881159519.stgit@dwillia2-xfh.jf.intel.com>
+ <9f151a74-cc5c-4a7c-8304-1714159e4b2c@amd.com>
+ <6d50f215-93c4-49a5-9ee2-f9775b740f92@amd.com>
+ <Z32H2Tzd1UHCQEt5@yilunxu-OptiPlex-7050>
+ <d71dd5c5-4c20-4e8e-abaa-fe2cdea4f3b2@amd.com>
+ <Z4A/g5Yyu4Whncuu@yilunxu-OptiPlex-7050>
+ <a11c82c3-b5fb-48d9-8c95-047ac4503dc6@amd.com>
+ <67bd098f4dcd1_1a7729449@dwillia2-xfh.jf.intel.com.notmuch>
+ <cf2f615d-2a28-45ec-8bb9-563c2a5bde73@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cf2f615d-2a28-45ec-8bb9-563c2a5bde73@amd.com>
+X-ClientProxiedBy: MW4PR03CA0220.namprd03.prod.outlook.com
+ (2603:10b6:303:b9::15) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8DqZlE5ccujbJ80@wunner.de>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB4903:EE_
+X-MS-Office365-Filtering-Correlation-Id: d49353c9-fcd0-40ee-7836-08dd579f4ede
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?BXTRrxGwGr8iRsyJvUX3Lqo/yUmu2z/QSexg0SN1y+dTN4JgM3Kk7cB5YKaA?=
+ =?us-ascii?Q?vCsRpGPlrc0DH0H1STARbAAQc0AmpDG4V4/KwbAj3GsUmzaBdWjUN+BcK3cX?=
+ =?us-ascii?Q?O3whZ6Ss3OAEwvVMHBkasMLsy/PajaSSlytlMtaevpNNvX9KjqHPyd6HJra5?=
+ =?us-ascii?Q?YTkp8NCK1aistRGzV6ymQeSwZiPYHKfVakeFf9NNYjJHvuPliMltg50R7/a0?=
+ =?us-ascii?Q?0NFwljVbVEF6so6QZfvdeTk2RtGA8s8lAIjYyfb5YrfNE1DR7lRzYXIF/2QW?=
+ =?us-ascii?Q?mITNavE2SRp0gOqJeaGxfmcARhKLJ0nVT4T9fyw8M8MNDkY14kApD7jB/j2B?=
+ =?us-ascii?Q?O5o1SLlz23+c0p6dqNUScCOfWHAcNOt/oRAB83A4n0TxFw/4DdbBE6Gq0/3D?=
+ =?us-ascii?Q?cWlyI07ctN3o6vQqj7yk9W3zzLJcr4PRBVweQJSwn5W59EwgdaWD89qcSymG?=
+ =?us-ascii?Q?7TEZTb17ySIoHBaNWz+Rw5a76BHTQX3rkP8CVK13NLVafPf/55/o4cHd6MF7?=
+ =?us-ascii?Q?qcVbx7jd3dDPAI8073O43wbYkrEf7L2PFTuwPKn9m+TgWAjThuJRfbEreTA1?=
+ =?us-ascii?Q?5+IdewA1BHOJ38h0dv6oEO/BYEZQVnm+hE1ixjrMI3JzguZ6Vz8TAoBu4ApZ?=
+ =?us-ascii?Q?0xz9y3uFBmTlpBoesUJVMIbxZ1kKs3pLGhAenm5FNNvJvyjBU/Iyn4LHixsa?=
+ =?us-ascii?Q?fmlqakjHtEl1aBmJJICCLDNXHgxBtLeSjed3COONYrsv/F1J0bOBtZQf6h5v?=
+ =?us-ascii?Q?1Uz+LiACUnqDe0p6hEYN4mSfR3W0a90/vzH5ZPBO9xJN85obDsSjrw2PW6/t?=
+ =?us-ascii?Q?X1B40d570wxTs4m4eSwG/xBl1jYaPFGDiR/2mIs94MPsIVSuATRVJ9xMQdaQ?=
+ =?us-ascii?Q?Io4+zk8xejRIkdnBk2zcw6baZWX2/+JXYfuDR9P8T0JhUvcGtXa3Ls4mu/tE?=
+ =?us-ascii?Q?anE2UfU4iAD/yscI40jY0/sRo24LUkQ2ntW8/pNisVndWB6T2P3B+jCFUMih?=
+ =?us-ascii?Q?XJrFMkPq/WQg4GVZ7WRhSYZReiEMYV+rsBEYG26qlWqP9Fahf5gulCIaU9/X?=
+ =?us-ascii?Q?karbLwNqaDz/o3vuwmeaSFWlZ3VGRJ7J1jE2/XfphRbfim49o5Tpk+HDPO5I?=
+ =?us-ascii?Q?PZNTOilRz72wGJH2aEF7am9SodxOY2ZHz98vT5B5r1nDA7vhGKHwUbswFg/+?=
+ =?us-ascii?Q?pYe4FVnfRUu08njEXkJCDZrbPip6AdKHD3T1lgrq9qGMk0JEULbIseWWKgTn?=
+ =?us-ascii?Q?ENslYmCPBHktxybVCTk4Q2ZHguziQYWPTtV+6XILk90lSJ94KBxPNWvK/Cl8?=
+ =?us-ascii?Q?vE+cczGVt+TMjxvtTJDsqUVwPfYx7myuxrzkU7eDLZqQhw=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?D4LSPSq1sQdQomiovchUxZevZGx9ilFaqKQxb/D5gznjWtxQ+WUv3WVdEFm+?=
+ =?us-ascii?Q?M3G4G+Fz6nBvLEX9+nZBKZD/z0k0eo72PgzCcMU1wfychE4jewpkC49AKZf1?=
+ =?us-ascii?Q?7lseduOUBZzfWNj69pX2NWan8eKiGTeAIddJaue+WBlL9qc2P7sZFK2QMJof?=
+ =?us-ascii?Q?L7viteWt8ylXhPYxGT4NeORBHeSIEyOBCAXH+ricbz9QhrafbY5IgB4KEmLh?=
+ =?us-ascii?Q?Bl4gJAHV98QSgnTHUhjd8yiZM9bvps2NiWvagZnwj8cX9QTd9eEkc6WPdb3g?=
+ =?us-ascii?Q?VzyhOItClKjL1FpWifIB1IMXNCd60e0SMuVKPY4qNH7ysNW2TcKd0dXeiWff?=
+ =?us-ascii?Q?qlGkmEIBdakOjfxs2fzrjvBDoA27QI47femBS23WVmtC4FVeZgpK3D0qmfpN?=
+ =?us-ascii?Q?JQuQdOw1QRnn/a8LxqOzqJftJrlgK+n6RE9CiTz0040xNqAY1x00TMH9qX1H?=
+ =?us-ascii?Q?6g6Zuiv4SMBrFJeI17KO/W3dZQF9w3L4z+yqBRoEIXOay+INiwvZf1t1/aCi?=
+ =?us-ascii?Q?8x+opDlIdsQmeDcqjS7YmLnPjvvQvhKuN9YC51iVf59eOFkqbswSlvmJxyri?=
+ =?us-ascii?Q?u72i4bT6Ds2V/YlX/e6/0dbZugR9WRUKVe3GplVW8UhxCtJ/aX+XFYObyoKO?=
+ =?us-ascii?Q?vaSMeL9aYnCE+aXWeyOXkUmPmz2HtsIkGeXiX9Cv7f3GpQH+6P1sB5lM6OrS?=
+ =?us-ascii?Q?5q7+I2gZAbjtAq9fiM36NM2eFcrHVR3LLOrtukFsbtA7C+rU5hpiA+iJm9+x?=
+ =?us-ascii?Q?HRB0kwHGRIOPLNIx5GyGVE8hT4CnFD+u31099ZUMy8goYpqxWHGjLBTspmDE?=
+ =?us-ascii?Q?iZEDz8E2od7vrICvfZWd6EUK5LvLopLrdu/X+J4saWQeiGNocZck8zl/Y0Hj?=
+ =?us-ascii?Q?kibUF9L22Y3Y5Xh4MXk6T6Zkc+JwUaLlOf3mKvnmzPdiklTXXivKuOaUqIOK?=
+ =?us-ascii?Q?ta6tB+sq/H3Wj9Ce2s0WeeOdJob6vxqVvfyolt4AWO3MnhPQb6ZtUnlkTs2w?=
+ =?us-ascii?Q?EaLIuc/vTKY0gKmibO5RaCKrTBc0VmVGcZjR8ZzkSM5Xb1mfNxABLRrZvduv?=
+ =?us-ascii?Q?OJy3N11hVZQy/ieMQiQg1RHfSQydI6QGCnSHvqNNQ4lGXnaQZ5stX+dxyPpa?=
+ =?us-ascii?Q?5ONfARUY9jkUKgYuRGthyR5O9HfQVyb1klrsH/+0dJECf2BTOuEuX2UXYvEs?=
+ =?us-ascii?Q?6SbOMEQiP6mzzEaswa6o8byU5CtfNfHtqYEC6R3rLR2j7qVswPbz3PMAEEEV?=
+ =?us-ascii?Q?/Ja5/1+q4AtF7Al3gDK1oQYw/YsDNwq/VQ2+Twu5WucPyBrSJrDxYrwj6ZhY?=
+ =?us-ascii?Q?YKxEiJEsE873RAAhQl3pgDyNi7Jmd23oiyHU7Sc5htH+NBmdwmFxwwxWcAAS?=
+ =?us-ascii?Q?mPRZq9C/JCG0tV4bL0JuWkU7ms8wGV08CwN1HoIkH4hYSOMLbIxGbVVjxd0Q?=
+ =?us-ascii?Q?2JTmh9xRriA8L3c69u6WTsJ+Rtf3teZhRAQW+gEEhmzJURyr1Ia+wjJ9JBPk?=
+ =?us-ascii?Q?k2x9Y3IdUCe1K28T7ZPL+JtQNU4wvAZuldQKd9EdHz2lD24oLJikOsnM+SQ5?=
+ =?us-ascii?Q?jXGQ+PY3nS/h4MWTewpPnpPRHPQ3mLLLx9tXkDjKSZaZQHWulpDreaK+o/SX?=
+ =?us-ascii?Q?yA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d49353c9-fcd0-40ee-7836-08dd579f4ede
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 02:26:29.2784
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4Od1AmUYhVo4gqGke/ofdF4lGP6yYYlqXgD1IPIIOrTlYrLS6iMP7Y6yW0K/HeT2B6g0CyOkc9gaSBTNd5f52cKo85OPa2CXfWSnI4pfkAE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4903
+X-OriginatorOrg: intel.com
 
-On Thu, Feb 27, 2025 at 11:42:46PM +0100, Lukas Wunner wrote:
-> On Thu, Feb 27, 2025 at 03:16:40AM -0800, Greg KH wrote:
-> > On Thu, Feb 27, 2025 at 01:09:41PM +1000, Alistair Francis wrote:
-> > > The PCI core has just been amended to authenticate CMA-capable devices
-> > > on enumeration and store the result in an "authenticated" bit in struct
-> > > pci_dev->spdm_state.
-> > > 
-> > > Expose the bit to user space through an eponymous sysfs attribute.
-> > > 
-> > > Allow user space to trigger reauthentication (e.g. after it has updated
-> > > the CMA keyring) by writing to the sysfs attribute.
-> > > 
-> > > Implement the attribute in the SPDM library so that other bus types
-> > > besides PCI may take advantage of it.  They just need to add
-> > > spdm_attr_group to the attribute groups of their devices and amend the
-> > > dev_to_spdm_state() helper which retrieves the spdm_state for a given
-> > > device.
-> > > 
-> > > The helper may return an ERR_PTR if it couldn't be determined whether
-> > > SPDM is supported by the device.  The sysfs attribute is visible in that
-> > > case but returns an error on access.  This prevents downgrade attacks
-> > > where an attacker disturbs memory allocation or DOE communication
-> > > in order to create the appearance that SPDM is unsupported.
+Alexey Kardashevskiy wrote:
+[..]
+> >> And it just leaves link streams unconfigured. So I have to work around
+> >> my device by writing unique numbers to all streams (link + selective)
+> >> I am not using. Meh.
 > > 
-> > I don't like this "if it's present we still don't know if the device
-> > supports this", as that is not normally the "sysfs way" here.  Why must
-> > it be present in those situations?
+> > This sounds like a device-quirk where it is not waiting for an enable
+> > event to associate the key with a given stream index. One could imagine
+> > this is either a pervasive problem and TSMs will start considering
+> > Stream ID 0 as burned for compatibilitiy reasons. Or, this device is
+> > just exhibiting a pre-production quirk that Linux does not need to
+> > react, yet.
 > 
-> That's explained above.
+> The hw people call it "the device needs to have an errata" (for which we 
+> will later have a quirk?).
 
-Not really, you just say "downgrade attacks", which is not something
-that we need to worry about, right?  If so, I think this bit is the
-least of our worries.
+It would be great if by the time this device hit production that problem
+could be fixed, but hey, errata happens.
 
-> Unfortunately there is no (signed) bit in Config Space which tells us
-> whether authentication is supported by a PCI device.  Rather, it is
-> necessary to exchange several messages with the device through a
-> DOE mailbox in config space to determine that.  I'm worried that an
-> attacker deliberately "glitches" those DOE exchanges and thus creates
-> the appearance that the device does not support authentication.
-
-That's a hardware glitch, and if that happens, then it will show a 0 and
-that's the same as not being present at all, right?  Otherwise you just
-pound on the file to try to see if the glitch was not real?  That's not
-going to go over well.
-
-> Let's say the user's policy is to trust legacy devices which do not
-> support authentication, but require authentication for newer NVMe drives
-> from a certain vendor.  An attacker may manipulate an authentication-capable
-> NVMe drive from that vendor, whereupon it will fail authentication.
-> But the attacker can trick the user into trusting the device by glitching
-> the DOE exchanges.
-
-Again, are we now claiming that Linux needs to support "hardware
-glitching"?  Is that required somewhere?  I think if the DOE exchanges
-fail, we just trust the device as we have to trust something, right?
-
-> Of course, this is an abnormal situation that users won't encounter
-> unless they're being attacked.  Normally the attribute is only present
-> if authentication is supported.
+> > Can you say whether this problem is going to escape your test bench into
+> > something mainline Linux needs to worry about?
 > 
-> I disagree with your assessment that we have bigger problems.
-> For security protocols like this we have to be very careful
-> to prevent trivial circumvention.  We cannot just shrug this off
-> as unimportant.
+> Likely going to escape, unless the PCIe spec says specifically that this 
+> is a bug. Hence 
 
-hardware glitching is not trivial.  Let's only worry about that if the
-hardware people somehow require it, and if so, we can push back and say
-"stop making us fix your broken designs" :)
+Linux has a role to play here in influencing what is acceptable in
+advance of the specification catching up to provide an implementation
+clarification.
 
-> The "authenticated" attribute tells user space whether the device
-> is authenticated.  User space needs to handle errors anyway when
-> reading the attribute.  Users will get an error if authentication
-> support could not be determined.  Simple.
+> https://github.com/aik/linux/commit/745ee4e151bcc8e3b6db8281af445ab498e87a70
 
-No, if it's not determined, it shouldn't be present.
+I would not expect the core to have a "Some devices insist on streamid
+to be unique even for not enabled streams" path that gets inflicted on
+everything unless it is clear that this bug is not not limited to this
+one device.
 
-> > What is going to happen to suddenly
-> > allow it to come back to be "alive" and working while the device is
-> > still present in the system?
-> 
-> The device needs to be re-enumerated by the PCI core to retry
-> determining its authentication capability.  That's why the
-> sysfs documentation says the user may exercise the "remove"
-> and "rescan" attributes to retry authentication.
+Also, I expect the workaround needs to be re-applied at every Stream
+establishment event especially to support TSM implementations that
+allocate the Stream ID. I.e. it is presumptuous for the core to assume
+that it can pick Stream IDs at pci_ide_init() time.
 
-But how does it know that?  remove and recan is a huge sledgehammer, and
-an amazing one if it even works on most hardware.  Don't make it part of
-any normal process please.
+It would be great if Linux could just say "the maximum number of
+potential Stream IDs is 255 (instead of 256). All TSM implementations
+must allocate starting at 1". Then this conflict never exists for the
+default Stream ID 0 case. That is, if this problem is widespread.
 
-> > I'd prefer it to be "if the file is there, this is supported by the
-> > device.  If the file is not there, it is not supported", as that makes
-> > things so much simpler for userspace (i.e. you don't want userspace to
-> > have to both test if the file is there AND read all entries just to see
-> > if the kernel knows what is going on or not.)
-> 
-> Huh?  Read all entries?  The attribute contains only 0 or 1!
-> 
-> Or you'll get an error reading it.
+Otherwise, at pci_ide_stream_setup() time I expect that the core would
+need to do something gross like check the incoming Stream ID and walk
+all idle streams to make sure they are not aliasing that ID.
 
-It's the error, don't do that.  If an error is going to happen, then
-don't have the file there.  That's the way sysfs works, it's not a
-"let's add all possible files and then make userspace open them all and
-see if an error happens to determine what really is present for this
-device" model.  It's a "if a file is there, that attribute is there and
-we can read it".
-
-> > > Alternatively, authentication success might be signaled to user space
-> > > through a uevent, whereupon it may bind a (blacklisted) driver.
+> >> And then what are we doing to do when we start adding link streams? I
+> >> suggest decoupling pci_ide::stream_id from stream_id in sel_ide_offset()
+> >> (which is more like selective_stream_index) from the start.
 > > 
-> > How will that happen?
-> 
-> The SPDM library can be amended to signal a uevent when authentication
-> succeeds or fails and user space can then act on it.  I imagine systemd
-> or some other daemon might listen to such events and do interesting things,
-> such as binding a driver once authentication succeeds.
-
-That's a new user/kernel api and should be designed ONLY if you actually
-need it and have a user.  Otherwise let's just wait for later for that.
-
-> Maybe you have better ideas.  Be constructive!  Make suggestions!
-
-Again, have the file there only if this is something that the hardware
-supports.  Don't fail a read just because the hardware does not seem to
-support it, but it might sometime in the future if you just happen to
-unplug/plug it back in.
-
-> > > +		This prevents downgrade attacks where an attacker consumes
-> > > +		memory or disturbs communication in order to create the
-> > > +		appearance that a device does not support authentication.
+> > Setting aside that I agree with you that Stream index be separated from
+> > from Stream ID, what would motivate Linux to consider setting up Link
+> > Stream IDE?
 > > 
-> > If an attacker can consume kernel memory to cause this to happen you
-> > have bigger problems.  That's not the kernel's issue here at all.
-> > 
-> > And "disable communication" means "we just don't support it as the
-> > device doesn't say it does", so again, why does that matter?
+> > One of the operational criticisms of Link IDE is that it requires adding
+> > more points of failure into the TCB where a compromised switch can snoop
+> > traffic. It also adds more Keys and their associated maintainenace
+> > overhead. So, before we start planning ahead for Link IDE and Selective
+> > Stream IDE to co-exist in the implementation, I think we need a clear
+> > use case that demonstrates Link IDE is going to graduate from the
+> > specification into practical deployments.
 > 
-> Reacting to potential attacks sure is the kernel's business.
+> Probably for things like CXL which connect directly to the soc? I do not 
+> really know, I only touch link streams because of that only device which 
+> is like to see the light of the day though.
 
-Reacting to real, software attacks is the kernel's business.  Reacting
-to possible hardware issues that are just theoretical is not.
+CXL TSP is a wholly separate operation model and it expects that CXL
+devices, and more specifically CXL memory, are inside the TCB before the
+OS boots. So there is no current need for Linux to consider Link IDE for
+CXL.
 
-> > > +		The reason why authentication support could not be determined
-> > > +		is apparent from "dmesg".  To re-probe authentication support
-> > > +		of PCI devices, exercise the "remove" and "rescan" attributes.
-> > 
-> > Don't make userspace parse kernel logs for this type of thing.  And
-> > asking userspace to rely on remove and recan is a mess, either show it
-> > works or not.
+> > We can always cross that sophistication bridge later.
 > 
-> I'd say looking in dmesg to determine whether the user is being attacked
-> is perfectly fine, as is requiring the user to explicitly act on a
-> potential attack.
-> 
-> 
-> > > --- a/drivers/pci/cma.c
-> > > +++ b/drivers/pci/cma.c
-> > > @@ -171,8 +171,10 @@ void pci_cma_init(struct pci_dev *pdev)
-> > >  {
-> > >  	struct pci_doe_mb *doe;
-> > >  
-> > > -	if (IS_ERR(pci_cma_keyring))
-> > > +	if (IS_ERR(pci_cma_keyring)) {
-> > > +		pdev->spdm_state = ERR_PTR(-ENOTTY);
-> > 
-> > Why ENOTTY?
-> 
-> We use -ENOTTY as return value for unsupported reset methods in the
-> PCI core, see e.g. pcie_reset_flr(), pcie_af_flr(), pci_pm_reset(),
-> pci_parent_bus_reset(), pci_reset_hotplug_slot(), ...
-> 
-> We also use -ENOTTY in pci_bridge_wait_for_secondary_bus() and
-> pci_dev_wait().
-> 
-> It was used here to be consistent with those existing occurrences
-> in the PCI core.
-> 
-> If you'd prefer something else, please make a suggestion.
+> Today SEV-TIO does not do link streams at all so I am with you :) Thanks,
 
-Ah, didn't realize that was a pci thing, ok, nevermind.
-
-> > > +static ssize_t authenticated_store(struct device *dev,
-> > > +				   struct device_attribute *attr,
-> > > +				   const char *buf, size_t count)
-> > > +{
-> > > +	void *spdm_state = dev_to_spdm_state(dev);
-> > > +	int rc;
-> > > +
-> > > +	if (IS_ERR_OR_NULL(spdm_state))
-> > > +		return PTR_ERR(spdm_state);
-> > > +
-> > > +	if (sysfs_streq(buf, "re")) {
-> > 
-> > I don't like sysfs files that when reading show a binary, but require a
-> > "magic string" to be written to them to have them do something else.
-> > that way lies madness.  What would you do if each sysfs file had a
-> > custom language that you had to look up for each one?  Be consistant
-> > here.  But again, I don't think you need a store function at all, either
-> > the device supports this, or it doesn't.
-> 
-> I'm not sure if you've even read the ABI documentation in full.
-> 
-> The store method is needed to reauthenticate the device,
-> e.g. after a new trusted root certificate was added to the
-> kernel's .cma keyring.
-
-Why not have a different file called "reauthentication" that only allows
-a write to it of a 1/Y/y to do the reauthentication.  sysfs is a "one
-file per thing" interface, not a "parse a command and do something but
-when read from return a different value" interface.
-
-Let's keep it dirt simple please.
-
-thanks,
-
-greg k-h
+Sounds good.
 
