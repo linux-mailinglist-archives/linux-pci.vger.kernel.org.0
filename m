@@ -1,155 +1,167 @@
-Return-Path: <linux-pci+bounces-22661-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22662-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7446AA4A28B
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 20:18:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12067A4A329
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 20:55:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B03443AAE57
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 19:18:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3633C189BE04
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 19:55:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 265DB192580;
-	Fri, 28 Feb 2025 19:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kfp0CF1d"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C8F327CCEC;
+	Fri, 28 Feb 2025 19:54:20 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A445277030
-	for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2025 19:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBF2A27CCE4;
+	Fri, 28 Feb 2025 19:54:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740770289; cv=none; b=LxzjUwm6bKsZuedpBRqx1UvqRQMRCHn7zybXIcBN2q2TJPWW4nO6LtaofDtV2aWfJIOQVRQUdoDd+kbuu4yJ8cMQ7czB8vkG8EbFgRNKCcWNWoPQLB1zIuBQRHj+7ZnEAL5PEwQbCUV6Zdt4nTWBvzB6/LT2y/BIKENknTSmKPw=
+	t=1740772460; cv=none; b=bTh0z0Us2A43lhUHFqOb8gmOd/umFsk/1qK8giDQkAE41HecBz7jt290zVaw2LVHO6BhWFxsFOfdIDb9eL0KYfumIuNwPC/9MEKmTqPM1zqR1C7wsSjgFolg+Zi4XqJZUpl9IdFZczfdDvz4eCidVOSMIVokV99Z4xB8sAo67o8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740770289; c=relaxed/simple;
-	bh=4YBngPD2vySJi0vz+QpQF6avG/K3oJHoPsyqdR8azp4=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=UWywZpltlMt7uVnYucPZrl3ot7+iX8wezl67lqEvvz5eBfW/Qwyr4ntwLNF9INdTpo9jB1w47CNv0u2D7nDnU4BwBYgyckpxK19NYjgkFPnAlSDKpuHS+jMOSnx5wJH0fW2WgLGLUzaSGteVsZ7U36mGJXYfCgttnir0ABS+xHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kfp0CF1d; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740770287; x=1772306287;
-  h=date:from:to:cc:subject:message-id;
-  bh=4YBngPD2vySJi0vz+QpQF6avG/K3oJHoPsyqdR8azp4=;
-  b=Kfp0CF1d/txBxi51IQ1LaNFcyV0e4q5Wu96IPquvCueJTDKHlFAgZucD
-   TXHSSyinHdQ1Z3uRtjDLYEkQTx4C8BSYCKHdZNEID5BcBmpXHhDafDc0P
-   Tap4yO+1rmJjg0nYVpqxJiaHYlVLS6zRmXMH2v2+D4yb6MFfeFXPpSCZb
-   KJvbCfeoTr/yLs8SeMQNQkOGi8AP/xAou+SAB9uMEp+slhGHnenACVu84
-   Jmq2iGD6j0Li4rjK+Zc+YRaq8ARbifKib8cZz8HO1KjJrrElU4kQs8Mcw
-   iuwUpmwJf0stzbn9rhrACX3V6bXUvrWi6KpZN58rd7y1crvkLrkDp13Z3
-   Q==;
-X-CSE-ConnectionGUID: TyJq5/4XRpGhAGPTD/YNiA==
-X-CSE-MsgGUID: 691RwvaMRYWI8Hgk5Ek9yg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="52353268"
-X-IronPort-AV: E=Sophos;i="6.13,323,1732608000"; 
-   d="scan'208";a="52353268"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 11:18:06 -0800
-X-CSE-ConnectionGUID: j8ziJN7HQWKXFr03ebHlQA==
-X-CSE-MsgGUID: x1K97OSdQpa/9N4G7pUiCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="148327773"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 28 Feb 2025 11:18:05 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1to5s3-000FOc-1w;
-	Fri, 28 Feb 2025 19:18:03 +0000
-Date: Sat, 01 Mar 2025 03:17:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:devtree-create] BUILD SUCCESS
- 8306ae4beff45d379f6635d0951b7de323cbb5e0
-Message-ID: <202503010342.e7Zym1gi-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1740772460; c=relaxed/simple;
+	bh=4GkfnwNsKbq/mr/Mi22ZRxvnkRGN0lE29AmS6GLzr1M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CYkmiscU+rREnarNSDMsqQ/T2WS9+lBP/0A5XHgNuMyv4UZrorpRqTRpsHyZa3kABXgKOEpomrHXyhhU0RoiwmUFfA7lI8Zl/DDcOIcvfyaFnunZFlVlWz+h+UXoCNExg4brBPpnaJn/qpxE5GGR2Z4/1YEe/VDhKHHE9b8smP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DD0F150C;
+	Fri, 28 Feb 2025 11:54:32 -0800 (PST)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53B2F3F7D8;
+	Fri, 28 Feb 2025 11:54:13 -0800 (PST)
+Message-ID: <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
+Date: Fri, 28 Feb 2025 19:54:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
+To: Leon Romanovsky <leon@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+ Keith Busch <kbusch@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas <yishaih@nvidia.com>,
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+ Kevin Tian <kevin.tian@intel.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+ iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+ linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+ Randy Dunlap <rdunlap@infradead.org>
+References: <cover.1738765879.git.leonro@nvidia.com>
+ <20250220124827.GR53094@unreal>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250220124827.GR53094@unreal>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git devtree-create
-branch HEAD: 8306ae4beff45d379f6635d0951b7de323cbb5e0  PCI: of: Create device-tree PCI host bridge node
+On 20/02/2025 12:48 pm, Leon Romanovsky wrote:
+> On Wed, Feb 05, 2025 at 04:40:20PM +0200, Leon Romanovsky wrote:
+>> From: Leon Romanovsky <leonro@nvidia.com>
+>>
+>> Changelog:
+>> v7:
+>>   * Rebased to v6.14-rc1
+> 
+> <...>
+> 
+>> Christoph Hellwig (6):
+>>    PCI/P2PDMA: Refactor the p2pdma mapping helpers
+>>    dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
+>>    iommu: generalize the batched sync after map interface
+>>    iommu/dma: Factor out a iommu_dma_map_swiotlb helper
+>>    dma-mapping: add a dma_need_unmap helper
+>>    docs: core-api: document the IOVA-based API
+>>
+>> Leon Romanovsky (11):
+>>    iommu: add kernel-doc for iommu_unmap and iommu_unmap_fast
+>>    dma-mapping: Provide an interface to allow allocate IOVA
+>>    dma-mapping: Implement link/unlink ranges API
+>>    mm/hmm: let users to tag specific PFN with DMA mapped bit
+>>    mm/hmm: provide generic DMA managing logic
+>>    RDMA/umem: Store ODP access mask information in PFN
+>>    RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
+>>      linkage
+>>    RDMA/umem: Separate implicit ODP initialization from explicit ODP
+>>    vfio/mlx5: Explicitly use number of pages instead of allocated length
+>>    vfio/mlx5: Rewrite create mkey flow to allow better code reuse
+>>    vfio/mlx5: Enable the DMA link API
+>>
+>>   Documentation/core-api/dma-api.rst   |  70 ++++
+>   drivers/infiniband/core/umem_odp.c   | 250 +++++---------
+>>   drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
+>>   drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
+>>   drivers/infiniband/hw/mlx5/umr.c     |  12 +-
+>>   drivers/iommu/dma-iommu.c            | 468 +++++++++++++++++++++++----
+>>   drivers/iommu/iommu.c                |  84 ++---
+>>   drivers/pci/p2pdma.c                 |  38 +--
+>>   drivers/vfio/pci/mlx5/cmd.c          | 375 +++++++++++----------
+>>   drivers/vfio/pci/mlx5/cmd.h          |  35 +-
+>>   drivers/vfio/pci/mlx5/main.c         |  87 +++--
+>>   include/linux/dma-map-ops.h          |  54 ----
+>>   include/linux/dma-mapping.h          |  85 +++++
+>>   include/linux/hmm-dma.h              |  33 ++
+>>   include/linux/hmm.h                  |  21 ++
+>>   include/linux/iommu.h                |   4 +
+>>   include/linux/pci-p2pdma.h           |  84 +++++
+>>   include/rdma/ib_umem_odp.h           |  25 +-
+>>   kernel/dma/direct.c                  |  44 +--
+>>   kernel/dma/mapping.c                 |  18 ++
+>>   mm/hmm.c                             | 264 +++++++++++++--
+>>   21 files changed, 1435 insertions(+), 693 deletions(-)
+>>   create mode 100644 include/linux/hmm-dma.h
+> 
+> Kind reminder.
 
-elapsed time: 1474m
+...that you've simply reposted the same thing again? Without doing 
+anything to address the bugs, inconsistencies, fundamental design flaws 
+in claiming to be something it cannot possibly be, the egregious abuse 
+of DMA_ATTR_SKIP_CPU_SYNC proudly highlighting how unfit-for-purpose the 
+most basic part of the whole idea is, nor *still* the complete lack of 
+any demonstrable justification of how callers who supposedly can't use 
+the IOMMU API actually benefit from adding all the complexity of using 
+the IOMMU API in a hat but also still the streaming DMA API as well?
 
-configs tested: 62
-configs skipped: 1
+Yeah, consider me reminded.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                           allyesconfig    gcc-14.2.0
-arc                  randconfig-001-20250228    gcc-13.2.0
-arc                  randconfig-002-20250228    gcc-13.2.0
-arm                  randconfig-001-20250228    clang-21
-arm                  randconfig-002-20250228    gcc-14.2.0
-arm                  randconfig-003-20250228    gcc-14.2.0
-arm                  randconfig-004-20250228    gcc-14.2.0
-arm64                randconfig-001-20250228    gcc-14.2.0
-arm64                randconfig-002-20250228    clang-21
-arm64                randconfig-003-20250228    clang-16
-arm64                randconfig-004-20250228    gcc-14.2.0
-csky                 randconfig-001-20250228    gcc-14.2.0
-csky                 randconfig-002-20250228    gcc-14.2.0
-hexagon                         allmodconfig    clang-21
-hexagon                         allyesconfig    clang-18
-hexagon              randconfig-001-20250228    clang-19
-hexagon              randconfig-002-20250228    clang-21
-i386       buildonly-randconfig-001-20250228    clang-19
-i386       buildonly-randconfig-002-20250228    clang-19
-i386       buildonly-randconfig-003-20250228    gcc-12
-i386       buildonly-randconfig-004-20250228    clang-19
-i386       buildonly-randconfig-005-20250228    clang-19
-i386       buildonly-randconfig-006-20250228    clang-19
-loongarch            randconfig-001-20250228    gcc-14.2.0
-loongarch            randconfig-002-20250228    gcc-14.2.0
-nios2                randconfig-001-20250228    gcc-14.2.0
-nios2                randconfig-002-20250228    gcc-14.2.0
-parisc               randconfig-001-20250228    gcc-14.2.0
-parisc               randconfig-002-20250228    gcc-14.2.0
-powerpc              randconfig-001-20250228    gcc-14.2.0
-powerpc              randconfig-002-20250228    clang-16
-powerpc              randconfig-003-20250228    clang-18
-powerpc64            randconfig-001-20250228    clang-16
-powerpc64            randconfig-002-20250228    clang-18
-powerpc64            randconfig-003-20250228    gcc-14.2.0
-riscv                randconfig-001-20250228    gcc-14.2.0
-riscv                randconfig-002-20250228    gcc-14.2.0
-s390                            allmodconfig    clang-19
-s390                            allyesconfig    gcc-14.2.0
-s390                 randconfig-001-20250228    gcc-14.2.0
-s390                 randconfig-002-20250228    clang-17
-sh                              allmodconfig    gcc-14.2.0
-sh                              allyesconfig    gcc-14.2.0
-sh                   randconfig-001-20250228    gcc-14.2.0
-sh                   randconfig-002-20250228    gcc-14.2.0
-sparc                           allmodconfig    gcc-14.2.0
-sparc                randconfig-001-20250228    gcc-14.2.0
-sparc                randconfig-002-20250228    gcc-14.2.0
-sparc64              randconfig-001-20250228    gcc-14.2.0
-sparc64              randconfig-002-20250228    gcc-14.2.0
-um                              allmodconfig    clang-21
-um                              allyesconfig    gcc-12
-um                   randconfig-001-20250228    clang-21
-um                   randconfig-002-20250228    clang-21
-x86_64     buildonly-randconfig-001-20250228    clang-19
-x86_64     buildonly-randconfig-002-20250228    clang-19
-x86_64     buildonly-randconfig-003-20250228    gcc-12
-x86_64     buildonly-randconfig-004-20250228    clang-19
-x86_64     buildonly-randconfig-005-20250228    gcc-12
-x86_64     buildonly-randconfig-006-20250228    gcc-12
-xtensa               randconfig-001-20250228    gcc-14.2.0
-xtensa               randconfig-002-20250228    gcc-14.2.0
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+In case I need to make it any more explicit, NAK to this not-generic 
+not-DMA-mapping API, until you can come up with either something which 
+*can* actually work in any kind of vaguely generic manner as claimed, or 
+instead settle on a reasonable special-case solution for justifiable 
+special cases. Bikeshedding and rebasing through half a dozen versions, 
+while ignoring fundamental issues I've been pointing out from the very 
+beginning, has not somehow magically made this series mature and 
+acceptable to merge.
+
+Honestly, given certain other scenarios we may also end up having to 
+deal with, if by the time everything broken is taken away, it were to 
+end up stripped all the way back to something well-reasoned like:
+
+"Some drivers want more control of their DMA buffer layout than the 
+general-purpose IOVA allocator is able to provide though the DMA mapping 
+APIs, but also would rather not have to deal with managing an entire 
+IOMMU domain and address space, making MSIs work, etc. Expose 
+iommu_dma_alloc_iova() and some trivial IOMMU API wrappers to allow 
+drivers of coherent devices to claim regions of the default domain 
+wherein they can manage their own mappings directly."
+
+...I wouldn't necessarily disagree.
+
+Thanks,
+Robin.
 
