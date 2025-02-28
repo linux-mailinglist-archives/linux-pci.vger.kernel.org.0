@@ -1,81 +1,62 @@
-Return-Path: <linux-pci+bounces-22607-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22608-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38564A48DF0
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 02:28:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E490AA48E0E
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 02:41:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 386B1164691
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 01:28:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AD85D7A62E9
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 01:40:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7844022301;
-	Fri, 28 Feb 2025 01:28:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EF3235963;
+	Fri, 28 Feb 2025 01:41:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EMUzBTtl"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="T7pRl/DJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8717C33F9
-	for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2025 01:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480FE276D11;
+	Fri, 28 Feb 2025 01:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740706088; cv=none; b=lR0/nHDFIQsKiIqJIwXEUFsHKwcqZUiugqwmwjRNrzHr7068wHskXyIgfQferl0FICRZf/M3Q1jS1o6QiqNF7qtLZJ2fKYQvHPK5MpEB/zcod6exp4oD4b8N3AJ9nrNtoqDmxdShmNg+5fsHMbYzqmnsbm7fybHw7VFpN3OaYHs=
+	t=1740706864; cv=none; b=PBcZiW8ydf1Dj/idS40O4aePRiQLjxyThbUEyMGWN9qXwgw/Q4d5LV5BG+1X1x5xqfK2oJyD6uOgIJlKy/kQJTohnIc977biy/07t4mC7ccLg4RVMVrUHuSWMfgBWIa8BBRvNsw5jah3oybXnzNVBa5wr3HqYiCzeqbTirSy2QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740706088; c=relaxed/simple;
-	bh=vCl+dtgAfJBQl5JIKaTvHYjl3fvAOLPHmi5FXyCX0eo=;
+	s=arc-20240116; t=1740706864; c=relaxed/simple;
+	bh=7Ao72ZSN+JGWeghAFVfYDlkSLS7LdTHxr30TmAU4vkE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IH1i+XOT+mfG/jsDu0QZsyBXNOMfm/w12V75mqHZ67qifoYIDUHJRUSe1H1ZkcW3+CZgrnWDOoQod/gT818jGn+dwa8E6gBIN0eRP6TPQ+IOCYrPcf2K3a0Tomhwo55gtDAR+SWHi0VB6cOT6IfB8YbhZoY+mdmYWwkO2FL4iSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EMUzBTtl; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740706086; x=1772242086;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vCl+dtgAfJBQl5JIKaTvHYjl3fvAOLPHmi5FXyCX0eo=;
-  b=EMUzBTtlakx//kbpgEUNSrOq89c1DCBB9RG+NIBl8zx3V8AD9rabuc5r
-   tUmcGIYqXMLo8VxIdemwQrQ7dZ7wqDuAeXTiAgw49/yVIa/mF9mYK2ku/
-   3XvjhKPzvNwdNOnVrRm50sT28R0JaEHPqpAVTqMG033mL90iD0TSLjpZ0
-   A+/1/RlabEzlPmU83u5XjMnFZOnIaGELUNC8FEweV6J8c+YbFqLzdUpP0
-   p8XpmgQ7gUXKDP3WzCPe/okLUIaJpXhkO2gNwQzg42N48NVByw1gFZpWQ
-   +lipHjLWJdlYDn6PM3TMmHn86UrZewuKtjhqhGKQc3QqsehpOOWCCjxrk
-   g==;
-X-CSE-ConnectionGUID: 3YafSc3ZSIer/QEv44RiFQ==
-X-CSE-MsgGUID: 2hEzPT4zSAacr1In1F03vg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41750554"
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="41750554"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 17:28:05 -0800
-X-CSE-ConnectionGUID: 46Q48IfhR/CC87Pbg+6t3A==
-X-CSE-MsgGUID: Zpv11XQ7TCmMuCiP6DRpmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="116963004"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa009.jf.intel.com with ESMTP; 27 Feb 2025 17:28:03 -0800
-Date: Fri, 28 Feb 2025 09:26:08 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
-	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Subject: Re: [PATCH 05/11] PCI/TSM: Authenticate devices via platform TSM
-Message-ID: <Z8EQsFiVAxtWfulx@yilunxu-OptiPlex-7050>
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
- <173343742510.1074769.16552514658771224955.stgit@dwillia2-xfh.jf.intel.com>
- <efc5ba59-964d-4988-a412-47f5297fedd3@amd.com>
- <yq5aeczrww9j.fsf@kernel.org>
- <Z71umSkkyV0rAC25@yilunxu-OptiPlex-7050>
- <yq5a4j0gc3fp.fsf@kernel.org>
- <Z8AHtcYgz2JukdfM@yilunxu-OptiPlex-7050>
- <yq5aa5a78p8d.fsf@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Llm/sjm8Mfn86U2t+Ia2snHWt0UWzAPYdO+SvabRRTbRSoLJttnFwzi7LPmyYdJu5SkIckVwy+9KPc8Vpg7snIvLu/xD7x8A4nadFGctk0ON1DUMNXqNqwRl6fYH95K3IiXXgMhWeBtyuCieO8K20vUl5XsL5riXYksKbt1cTyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=T7pRl/DJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F866C4CEDD;
+	Fri, 28 Feb 2025 01:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740706863;
+	bh=7Ao72ZSN+JGWeghAFVfYDlkSLS7LdTHxr30TmAU4vkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T7pRl/DJsxzZ+ib93e1hwB+ZcGmQj5mXqTI0GIxi5+XlzEApYSXVY23640qOhXeGY
+	 rq0Qj+AMH41PDhmGEVOpmEF45FppD7OSb6Xrcc7BIvb7G9A6sn+9onL4JbeZ7vfSF+
+	 y8L8HwlNFWbr48lq+OW8NbT/jKdWKvfa67N4RSXM=
+Date: Thu, 27 Feb 2025 17:39:53 -0800
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Alistair Francis <alistair@alistair23.me>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org,
+	boqun.feng@gmail.com, bjorn3_gh@protonmail.com,
+	wilfred.mallawa@wdc.com, aliceryhl@google.com, ojeda@kernel.org,
+	alistair23@gmail.com, a.hindborg@kernel.org, tmgross@umich.edu,
+	gary@garyguo.net, alex.gaynor@gmail.com, benno.lossin@proton.me,
+	Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are
+ authenticated
+Message-ID: <2025022748-flock-verbalize-b66a@gregkh>
+References: <20250227030952.2319050-1-alistair@alistair23.me>
+ <20250227030952.2319050-10-alistair@alistair23.me>
+ <2025022717-dictate-cortex-5c05@gregkh>
+ <Z8DqZlE5ccujbJ80@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -84,135 +65,222 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <yq5aa5a78p8d.fsf@kernel.org>
+In-Reply-To: <Z8DqZlE5ccujbJ80@wunner.de>
 
-On Thu, Feb 27, 2025 at 07:27:22PM +0530, Aneesh Kumar K.V wrote:
-> Xu Yilun <yilun.xu@linux.intel.com> writes:
+On Thu, Feb 27, 2025 at 11:42:46PM +0100, Lukas Wunner wrote:
+> On Thu, Feb 27, 2025 at 03:16:40AM -0800, Greg KH wrote:
+> > On Thu, Feb 27, 2025 at 01:09:41PM +1000, Alistair Francis wrote:
+> > > The PCI core has just been amended to authenticate CMA-capable devices
+> > > on enumeration and store the result in an "authenticated" bit in struct
+> > > pci_dev->spdm_state.
+> > > 
+> > > Expose the bit to user space through an eponymous sysfs attribute.
+> > > 
+> > > Allow user space to trigger reauthentication (e.g. after it has updated
+> > > the CMA keyring) by writing to the sysfs attribute.
+> > > 
+> > > Implement the attribute in the SPDM library so that other bus types
+> > > besides PCI may take advantage of it.  They just need to add
+> > > spdm_attr_group to the attribute groups of their devices and amend the
+> > > dev_to_spdm_state() helper which retrieves the spdm_state for a given
+> > > device.
+> > > 
+> > > The helper may return an ERR_PTR if it couldn't be determined whether
+> > > SPDM is supported by the device.  The sysfs attribute is visible in that
+> > > case but returns an error on access.  This prevents downgrade attacks
+> > > where an attacker disturbs memory allocation or DOE communication
+> > > in order to create the appearance that SPDM is unsupported.
+> > 
+> > I don't like this "if it's present we still don't know if the device
+> > supports this", as that is not normally the "sysfs way" here.  Why must
+> > it be present in those situations?
 > 
-> > On Wed, Feb 26, 2025 at 05:40:02PM +0530, Aneesh Kumar K.V wrote:
-> >> Xu Yilun <yilun.xu@linux.intel.com> writes:
-> >> 
-> >> > On Fri, Feb 21, 2025 at 01:43:28PM +0530, Aneesh Kumar K.V wrote:
-> >> >> Alexey Kardashevskiy <aik@amd.com> writes:
-> >> >> 
-> >> >> ....
-> >> >> 
-> >> >> >
-> >> >> > I am trying to wrap my head around your tsm. here is what I got in my tree:
-> >> >> > https://github.com/aik/linux/blob/tsm/include/linux/tsm.h
-> >> >> >
-> >> >> > Shortly:
-> >> >> >
-> >> >> > drivers/virt/coco/tsm.ko does sysfs (including "connect" and "bind" to 
-> >> >> > control and "certs"/"report" to attest) and implements tsm_dev/tsm_tdi, 
-> >> >> > it does not know pci_dev;
-> >> >> >
-> >> >> > drivers/pci/tsm-pci.ko creates/destroys tsm_dev/tsm_dev using tsm.ko;
-> >> >> >
-> >> >> > drivers/crypto/ccp/ccp.ko (the PSP guy) registers:
-> >> >> > - tsm_subsys in tsm.ko (which does "connect" and "bind" and
-> >> >> > - tsm_bus_subsys in tsm-pci.ko (which does "spdm_forward")
-> >> >> > ccp.ko knows about pci_dev and whatever else comes in the future, and 
-> >> >> > ccp.ko's "connect" implementation calls the IDE library (I am adopting 
-> >> >> > yours now, with some tweaks).
-> >> >> >
-> >> >> > tsm-dev and tsm-tdi embed struct dev each and are added as children to 
-> >> >> > PCI devices: no hide/show attrs, no additional TSM pointer in struct 
-> >> >> > device or pci_dev, looks like:
-> >> >> >
-> >> >> > aik@sc ~> ls  /sys/bus/pci/devices/0000:e1:04.0/tsm-tdi/tdi:0000:e1:04.0/
-> >> >> > device  power  subsystem  tsm_report  tsm_report_user  tsm_tdi_bind 
-> >> >> > tsm_tdi_status  tsm_tdi_status_user  uevent
-> >> >> >
-> >> >> > aik@sc ~> ls  /sys/bus/pci/devices/0000:e1:04.0/tsm_dev/
-> >> >> > device  power  subsystem  tsm_certs  tsm_cert_slot  tsm_certs_user 
-> >> >> > tsm_dev_connect  tsm_dev_status  tsm_meas  tsm_meas_user  uevent
-> >> >> >
-> >> >> > aik@sc ~> ls /sys/class/tsm/tsm0/
-> >> >> > device  power  stream0:0000:e1:00.0  subsystem  uevent
-> >> >> >
-> >> >> > aik@sc ~> ls /sys/class/tsm-dev/
-> >> >> > tdev:0000:c0:01.1  tdev:0000:e0:01.1  tdev:0000:e1:00.0
-> >> >> >
-> >> >> > aik@sc ~> ls /sys/class/tsm-tdi/
-> >> >> > tdi:0000:c0:01.1  tdi:0000:e0:01.1  tdi:0000:e1:00.0  tdi:0000:e1:04.0 
-> >> >> > tdi:0000:e1:04.1  tdi:0000:e1:04.2  tdi:0000:e1:04.3
-> >> >> >
-> >> >> >
-> >> >> > SPDM forwarding seems a bus-agnostic concept, "connect" is a PCI thing 
-> >> >> > but pci_dev is only needed for DOE/IDE.
-> >> >> >
-> >> >> > Or is separating struct pci_dev from struct device not worth it and most 
-> >> >> > of it should go to tsm-pci.ko? Then what is left for tsm.ko? Thanks,
-> >> >> >
-> >> >> 
-> >> >> For the Arm CCA DA, I have structured the flow as follows. I am
-> >> >> currently refining my changes to prepare them for posting. I am using
-> >> >> tsm-core in both the host and guest. There is no bind interface at the
-> >> >> sysfs level; instead, it is managed via the KVM ioctl
-> >> >> 
-> >> >> Host:
-> >> >> step 1.
-> >> >> echo ${DEVICE} > /sys/bus/pci/devices/${DEVICE}/driver/unbind
-> >> >> echo vfio-pci > /sys/bus/pci/devices/${DEVICE}/driver_override
-> >> >> echo ${DEVICE} > /sys/bus/pci/drivers_probe
-> >> >> 
-> >> >> step 2.
-> >> >> echo 1 > /sys/bus/pci/devices/$DEVICE/tsm/connect
-> >> >> 
-> >> >> step 3.
-> >> >> using VMM to make the new KVM_SET_DEVICE_ATTR ioctl
-> >> >> 
-> >> >> +		dev_num = vfio_devices[i].dev_hdr.dev_num;
-> >> >> +		/* kvmtool only do 0 domain, 0 bus and 0 function devices. */
-> >> >> +		guest_bdf = (0ULL << 32) | (0 << 16) | dev_num << 11 | (0 << 8);
-> >> >> +
-> >> >> +		struct kvm_vfio_tsm_bind param = {
-> >> >> +			.guest_rid = guest_bdf,
-> >> >> +			.devfd = vfio_devices[i].fd,
-> >> >> +		};
-> >> >> +		struct kvm_device_attr attr = {
-> >> >> +			.group = KVM_DEV_VFIO_DEVICE,
-> >> >> +			.attr = KVM_DEV_VFIO_DEVICE_TDI_BIND,
-> >> >> +			.addr = (__u64)&param,
-> >> >> +		};
-> >> >> +
-> >> >> +		if (ioctl(kvm_vfio_device, KVM_SET_DEVICE_ATTR, &attr)) {
-> >> >> +			pr_err("Failed KVM_SET_DEVICE_ATTR for KVM_DEV_VFIO_DEVICE");
-> >> >> +			return -ENODEV;
-> >> >> +		}
-> >> >> +
-> >> >
-> >> > I think bind (which brings device to a LOCKED state, no MMIO, no DMA)
-> >> > cannot be a driver agnostic behavior. So I think it should be a VFIO
-> >> > ioctl.
-> >> >
-> >> 
-> >> For the current CCA implementation bind is equivalent to VDEV_CREATE
-> >> which doesn't mark the device LOCKED. Marking the device LOCKED is
-> >> driven by the guest as shown in the steps below.
-> >
-> > Could you elaborate why vdev create & LOCK can't be done at the same
-> > time, when guest requests "lock"? Intel TDX also requires firmware calls
-> > like tdi_create(alloc metadata) & tdi_bind(do LOCK), but I don't see
-> > there is need to break them out in different phases.
-> >
+> That's explained above.
+
+Not really, you just say "downgrade attacks", which is not something
+that we need to worry about, right?  If so, I think this bit is the
+least of our worries.
+
+> Unfortunately there is no (signed) bit in Config Space which tells us
+> whether authentication is supported by a PCI device.  Rather, it is
+> necessary to exchange several messages with the device through a
+> DOE mailbox in config space to determine that.  I'm worried that an
+> attacker deliberately "glitches" those DOE exchanges and thus creates
+> the appearance that the device does not support authentication.
+
+That's a hardware glitch, and if that happens, then it will show a 0 and
+that's the same as not being present at all, right?  Otherwise you just
+pound on the file to try to see if the glitch was not real?  That's not
+going to go over well.
+
+> Let's say the user's policy is to trust legacy devices which do not
+> support authentication, but require authentication for newer NVMe drives
+> from a certain vendor.  An attacker may manipulate an authentication-capable
+> NVMe drive from that vendor, whereupon it will fail authentication.
+> But the attacker can trick the user into trusting the device by glitching
+> the DOE exchanges.
+
+Again, are we now claiming that Linux needs to support "hardware
+glitching"?  Is that required somewhere?  I think if the DOE exchanges
+fail, we just trust the device as we have to trust something, right?
+
+> Of course, this is an abnormal situation that users won't encounter
+> unless they're being attacked.  Normally the attribute is only present
+> if authentication is supported.
 > 
-> Yes, that is possible and might be what I will end up doing. Right now
-> I have kept the interface flexible enough as I am writing these changes.
+> I disagree with your assessment that we have bigger problems.
+> For security protocols like this we have to be very careful
+> to prevent trivial circumvention.  We cannot just shrug this off
+> as unimportant.
 
-Good to know that, thanks.
+hardware glitching is not trivial.  Let's only worry about that if the
+hardware people somehow require it, and if so, we can push back and say
+"stop making us fix your broken designs" :)
 
-> Device can possibly be presented in locked state to the guest.
+> The "authenticated" attribute tells user space whether the device
+> is authenticated.  User space needs to handle errors anyway when
+> reading the attribute.  Users will get an error if authentication
+> support could not be determined.  Simple.
 
-This is also what I did before. But finally I dropped (or pending) this
-"early binding" support. There are several reset operations during VM
-setup and booting, especially the ones in bios. They breaks LOCK state
-and I have to make VFIO suppress the reset, or reset & recover, but that
-seems not worth the effort.
+No, if it's not determined, it shouldn't be present.
 
-May wanna know how you see this problem.
+> > What is going to happen to suddenly
+> > allow it to come back to be "alive" and working while the device is
+> > still present in the system?
+> 
+> The device needs to be re-enumerated by the PCI core to retry
+> determining its authentication capability.  That's why the
+> sysfs documentation says the user may exercise the "remove"
+> and "rescan" attributes to retry authentication.
 
-Thanks,
-Yilun
+But how does it know that?  remove and recan is a huge sledgehammer, and
+an amazing one if it even works on most hardware.  Don't make it part of
+any normal process please.
+
+> > I'd prefer it to be "if the file is there, this is supported by the
+> > device.  If the file is not there, it is not supported", as that makes
+> > things so much simpler for userspace (i.e. you don't want userspace to
+> > have to both test if the file is there AND read all entries just to see
+> > if the kernel knows what is going on or not.)
+> 
+> Huh?  Read all entries?  The attribute contains only 0 or 1!
+> 
+> Or you'll get an error reading it.
+
+It's the error, don't do that.  If an error is going to happen, then
+don't have the file there.  That's the way sysfs works, it's not a
+"let's add all possible files and then make userspace open them all and
+see if an error happens to determine what really is present for this
+device" model.  It's a "if a file is there, that attribute is there and
+we can read it".
+
+> > > Alternatively, authentication success might be signaled to user space
+> > > through a uevent, whereupon it may bind a (blacklisted) driver.
+> > 
+> > How will that happen?
+> 
+> The SPDM library can be amended to signal a uevent when authentication
+> succeeds or fails and user space can then act on it.  I imagine systemd
+> or some other daemon might listen to such events and do interesting things,
+> such as binding a driver once authentication succeeds.
+
+That's a new user/kernel api and should be designed ONLY if you actually
+need it and have a user.  Otherwise let's just wait for later for that.
+
+> Maybe you have better ideas.  Be constructive!  Make suggestions!
+
+Again, have the file there only if this is something that the hardware
+supports.  Don't fail a read just because the hardware does not seem to
+support it, but it might sometime in the future if you just happen to
+unplug/plug it back in.
+
+> > > +		This prevents downgrade attacks where an attacker consumes
+> > > +		memory or disturbs communication in order to create the
+> > > +		appearance that a device does not support authentication.
+> > 
+> > If an attacker can consume kernel memory to cause this to happen you
+> > have bigger problems.  That's not the kernel's issue here at all.
+> > 
+> > And "disable communication" means "we just don't support it as the
+> > device doesn't say it does", so again, why does that matter?
+> 
+> Reacting to potential attacks sure is the kernel's business.
+
+Reacting to real, software attacks is the kernel's business.  Reacting
+to possible hardware issues that are just theoretical is not.
+
+> > > +		The reason why authentication support could not be determined
+> > > +		is apparent from "dmesg".  To re-probe authentication support
+> > > +		of PCI devices, exercise the "remove" and "rescan" attributes.
+> > 
+> > Don't make userspace parse kernel logs for this type of thing.  And
+> > asking userspace to rely on remove and recan is a mess, either show it
+> > works or not.
+> 
+> I'd say looking in dmesg to determine whether the user is being attacked
+> is perfectly fine, as is requiring the user to explicitly act on a
+> potential attack.
+> 
+> 
+> > > --- a/drivers/pci/cma.c
+> > > +++ b/drivers/pci/cma.c
+> > > @@ -171,8 +171,10 @@ void pci_cma_init(struct pci_dev *pdev)
+> > >  {
+> > >  	struct pci_doe_mb *doe;
+> > >  
+> > > -	if (IS_ERR(pci_cma_keyring))
+> > > +	if (IS_ERR(pci_cma_keyring)) {
+> > > +		pdev->spdm_state = ERR_PTR(-ENOTTY);
+> > 
+> > Why ENOTTY?
+> 
+> We use -ENOTTY as return value for unsupported reset methods in the
+> PCI core, see e.g. pcie_reset_flr(), pcie_af_flr(), pci_pm_reset(),
+> pci_parent_bus_reset(), pci_reset_hotplug_slot(), ...
+> 
+> We also use -ENOTTY in pci_bridge_wait_for_secondary_bus() and
+> pci_dev_wait().
+> 
+> It was used here to be consistent with those existing occurrences
+> in the PCI core.
+> 
+> If you'd prefer something else, please make a suggestion.
+
+Ah, didn't realize that was a pci thing, ok, nevermind.
+
+> > > +static ssize_t authenticated_store(struct device *dev,
+> > > +				   struct device_attribute *attr,
+> > > +				   const char *buf, size_t count)
+> > > +{
+> > > +	void *spdm_state = dev_to_spdm_state(dev);
+> > > +	int rc;
+> > > +
+> > > +	if (IS_ERR_OR_NULL(spdm_state))
+> > > +		return PTR_ERR(spdm_state);
+> > > +
+> > > +	if (sysfs_streq(buf, "re")) {
+> > 
+> > I don't like sysfs files that when reading show a binary, but require a
+> > "magic string" to be written to them to have them do something else.
+> > that way lies madness.  What would you do if each sysfs file had a
+> > custom language that you had to look up for each one?  Be consistant
+> > here.  But again, I don't think you need a store function at all, either
+> > the device supports this, or it doesn't.
+> 
+> I'm not sure if you've even read the ABI documentation in full.
+> 
+> The store method is needed to reauthenticate the device,
+> e.g. after a new trusted root certificate was added to the
+> kernel's .cma keyring.
+
+Why not have a different file called "reauthentication" that only allows
+a write to it of a 1/Y/y to do the reauthentication.  sysfs is a "one
+file per thing" interface, not a "parse a command and do something but
+when read from return a different value" interface.
+
+Let's keep it dirt simple please.
+
+thanks,
+
+greg k-h
 
