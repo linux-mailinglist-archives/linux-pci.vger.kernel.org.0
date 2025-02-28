@@ -1,336 +1,138 @@
-Return-Path: <linux-pci+bounces-22655-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22656-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06689A4A010
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 18:16:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87AD8A4A037
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 18:23:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A51C189620E
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 17:16:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E96553AE786
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 17:23:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C271BBBD7;
-	Fri, 28 Feb 2025 17:16:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 215911F4C98;
+	Fri, 28 Feb 2025 17:23:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="buujXPhZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qI4+5GWu"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFF21AA1C9;
-	Fri, 28 Feb 2025 17:16:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C641F4C83;
+	Fri, 28 Feb 2025 17:23:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740762963; cv=none; b=Sdnd3XmzsR6HEGL6IMemc4LIwT638JwqeM7wqvasuuX9xl+VOWIpizNXaVSVgiVUqhXtrPMoG6PZ1ZyQ7S6X5lZhSfr4Z57zi9gO1ypxA3RasCrVtamwsvPQPxB7M3vVM6CJjOiWMyIDfEx98XW5JJJP9evnqlpf/3U+Sg1oLko=
+	t=1740763402; cv=none; b=ImJEFfZCVYPO/CKi+t7NzifHHToGjnDBaJm8y6uD/NMq+i1MYCub0BVKhWzCkRnnIt/0VCaNW1QAWuFMQ9JQEXG8MJoLyvHMlzFlwM7ll1YbNWB6+q7zDuvpbqxK55eoQC/Rn0cwaADhrmvdBlzSBewq7Y1VQ2TTeLfBLEtFEJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740762963; c=relaxed/simple;
-	bh=0Q9H58yp3XWSWHdgM52K+7/QB9btyyN4SYA4AmNzFOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=hOj3IJombCyzigh8dIM7IaUvQYjKkCDuJc/bB8teb0JEbkZxHa1EJ55hSb37nbu5F8nQ5BENz/TsswKVfIzrW98Bh6OyXcQOr85C8d1hGIblmzYAq8Aio2Jx44ROAGdlWSVkrgVeqcPnBAgCuu+RIrubtOCFuMWBFMAnkhtGddg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=buujXPhZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EC47C4CED6;
-	Fri, 28 Feb 2025 17:16:02 +0000 (UTC)
+	s=arc-20240116; t=1740763402; c=relaxed/simple;
+	bh=kpa5gUq601xY2LLqyDkp+ULt9YfNAfqA5DJnA1T2tiI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E80ss6GaMNFGbP+2uTZ8cyaPQpS9WxkWRqgjlbmb3yj4ShhSkE9oOPEDD9XnnEX1U7z5QrYnkVFd6Gm/C82MptNPprb58yASthjesRrZqPvqp9Y/53LXeA48DW7sS52DXhJ8wJnynL/HiV/1uVT5TAsaPdgYLAB17Ap4l36q6Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qI4+5GWu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0163C4CEE2;
+	Fri, 28 Feb 2025 17:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740762962;
-	bh=0Q9H58yp3XWSWHdgM52K+7/QB9btyyN4SYA4AmNzFOY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=buujXPhZoz6fXqKLhfghswDJYlXPsZmyNqxwZck8vE6PnKC4OOphLcxjToTZWssFI
-	 oRUOuq/KEIhW7URPjVEbdeWMjalaS4GUDlEiaojnEbS1gWTWi/jERXfedFwS0f2nyt
-	 svreQQvX6JP/dTGWOhDjA+AMFJsFeaTDMPWPt2c5+KpmvEgDmo6ZzAa0ttR22UD7pn
-	 XL7iHmv3WPr3kZ56oyGK6HUAPEoGBh38Sig9lG13U7nN96tpsduFWtgLOTmFtn4jOj
-	 PuEVrxzzWOcOjiNElxJ2J69OUvpLm3PQDxSj27K2bpRKVlX8zb8SBLrrc4SgbWtNwv
-	 2ynBKKM3m6xnA==
-Date: Fri, 28 Feb 2025 11:16:01 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Weiwen Hu <huweiwen@linux.alibaba.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] ACPI/PCI: deduplicate concurrent eject notify
-Message-ID: <20250228171601.GA23123@bhelgaas>
+	s=k20201202; t=1740763401;
+	bh=kpa5gUq601xY2LLqyDkp+ULt9YfNAfqA5DJnA1T2tiI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qI4+5GWu3Wl6VXYHL4b3Ve6TMGej7QVi3Gue5LFr1UrE0smNW9exm5xZmGc5P1H7M
+	 IcPoEhQ7oP2NiOIYjqTII48zvHmppdJY/JvBeWUglKBAWO+b7M5CeSa69+W9lMhP7y
+	 K88IrRDlpBjDiQkcdeMtk05EK4xijZ+Y30glFh82APDAw8MvBOoXTyBU6YZG3rJ843
+	 rxCFHfOZB36Sd1kCXxuZ7j7OWmIH+ZJuC319gGGcR0Ci0q64IDDEn9oRBI4eK0xSS1
+	 j40o6g1LKTK1yKF1xKCIMJccoPo1gHDp2vqkkD2GZjsy8sQRMIjaD7YJasRe9RTbDn
+	 g7X6bzxXphj2A==
+Date: Fri, 28 Feb 2025 22:53:17 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Muni Sekhar <munisekharrms@gmail.com>, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Sanyog Kale <sanyog.r.kale@intel.com>, linux-sound@vger.kernel.org
+Subject: Re: pci: acpi: Query on ACPI Device Tree Representation and
+ Enumeration for Xilinx FPGA PCIe Endpoint functions
+Message-ID: <Z8HxBQbLzgV5NDYA@vaman>
+References: <CAHhAz+j46nus_rGJ72rZ86UyzL+AM_HBCivjpZEx3T0thOxqAQ@mail.gmail.com>
+ <20250228163219.GA54330@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250224070036.65573-1-huweiwen@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250228163219.GA54330@bhelgaas>
 
-On Mon, Feb 24, 2025 at 03:00:34PM +0800, Weiwen Hu wrote:
-> Ignore the eject notification when the previous ejection is still in
-> progress to prevent multiple _EJ0 invocations when the ejection completes.
+On 28-02-25, 10:32, Bjorn Helgaas wrote:
+> [+cc SoundWire folks]
 > 
-> The first _EJ0 informs the platform to actually eject the device and frees
-> the slot for other devices. So the subsequent _EJ0 may accidentally eject
-> the new device that is just plugged into this slot. We need to avoid this.
+> On Fri, Feb 28, 2025 at 08:19:44PM +0530, Muni Sekhar wrote:
+> > On Thu, Feb 27, 2025 at 9:34 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Thu, Feb 27, 2025 at 07:25:32PM +0530, Muni Sekhar wrote:
+> > > > I am currently working on a project involving a Xilinx FPGA connected
+> > > > to an x86 CPU via a PCIe root port. The Xilinx FPGA functions as a
+> > > > PCIe endpoint with single function capability and is programmed to
+> > > > emulate the Soundwire Master controller. It can be dynamically
+> > > > reprogrammed to emulate other interfaces as needed. Essentially, the
+> > > > FPGA emulates an interface and connects to the CPU via the PCIe bus.
+> > > >
+> > > > Given this setup, the BIOS does not have prior knowledge of the
+> > > > function implemented in the Xilinx FPGA PCIe endpoint. I have a couple
+> > > > of questions regarding this configuration:
+> > > >
+> > > > Is it possible to define an ACPI Device Tree representation for this
+> > > > type of hardware setup?
+> > > > Can we achieve ACPI-based device enumeration with this configuration?
+> > >
+> > > If the FPGA is programmed before BIOS enumerates PCI devices, the FPGA
+> > > would look just like any other PCI device, and BIOS would be able to
+> > > read the Vendor ID and Device ID and would be able to size and program
+> > > the BARs.
+> >
+> > Yes, the FPGA is programmed with this Soundwire IP before the BIOS
+> > enumerates PCI devices.
+> > We need to port the Soundwire driver
+> > (https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/soundwire/qcom.c)
+> >  to the x86 platform.
+> > 
+> > Since x86 platforms typically do not use device trees, and the
+> > Soundwire IP is implemented in the FPGA, how can we emulate device
+> > tree functionality or use a different mechanism to pass hardware
+> > configuration to the driver? Specifically, how can we handle the
+> > following API calls on an x86 platform?
+> > 
+> >    ret = of_property_read_u32(np, "qcom,din-ports", &val);
+> >    ret = of_property_read_u32(np, "qcom,dout-ports", &val);
+> >    ret = of_property_read_u8_array(np, "qcom,ports-offset1", off1, nports);
+> > 
+> > static const struct of_device_id qcom_swrm_of_match[] = {
+> > { .compatible = "qcom,soundwire-v1.3.0", .data = &swrm_v1_3_data },
+> > { .compatible = "qcom,soundwire-v1.5.1", .data = &swrm_v1_5_data },
+> > { .compatible = "qcom,soundwire-v1.6.0", .data = &swrm_v1_6_data },
+> > { .compatible = "qcom,soundwire-v1.7.0", .data = &swrm_v1_5_data },
+> > { .compatible = "qcom,soundwire-v2.0.0", .data = &swrm_v2_0_data },
+> > {/* sentinel */},
+> > };
+> > 
+> > Basically, how can we define ACPI tables for functions implemented in
+> > an FPGA that connects to the system via PCI?
 > 
-> For each acpi_device, this patch introduces a new field `ejecting`, which
-> is set before enqueuing the `kacpi_hotplug_wq` and reset before invoking
-> _EJ0.  Every notifications we received before invoking _EJ0 is targeted to
-> the old device. This ensures we don't miss any notifications for newly
-> plugged device.  And a new flag `should_dedup_eject` allows each driver to
-> implement this feature gradually. A driver should set this flag on
-> initialization if it will reset `ejecting`.
+> Seems like a generic problem for PCI sound devices, and I don't know
+> how drivers deal with it.  It looks like all the SoundWire drivers
+> are platform drivers (not PCI drivers), so there's nothing there to
+> look at.
+> 
+> Maybe the sound folks have ideas.
 
-Which drivers do you have in mind when you say "each driver can
-implement this feature gradually"?  You set should_dedup_eject in
-acpiphp, so I guess you mean other ACPI hotplug drivers?  I see
-acpi_hotplug_context mentioned in libata-acpi.c, surface3-wmi.c; maybe
-those are the only other current ones?
+X86-Intel devices are PCI devices but then they are compound devices
+with DSP and SoundWire links. Please check the DisCo spec for SoundWire,
+that already defines the ACPI tables and properties which both Intel and
+AMD drivers already use
 
-> This fix is not perfect. If we receive an eject notification just after
-> resetting `ejecting` but before _EJ0, we will still invoke _EJ0 twice.
-> However this seems to be the best solution available, and it strictly
-> improves the current situation.
-> 
-> Another potential fix is to add an `ejected` flag to each device and not
-> invoke _EJ0 for already ejected devices. However, this approach risks
-> losing synchronization with the platform if something else goes wrong,
-> potentially preventing the device from being ejected permanently.  And we
-> need to check with bus driver to make sure the device is really ejected
-> successfully. But this check is still racy. So we cannot ensure no extra
-> _EJ0 invocations either.
+That should be your start point...
 
-I see the problem.  Thanks for the detailed explanation and details
-about reproducing it and the trace.
-
-I'm not sure whether the platform should reissue the Bus Check
-notification based on the fact that the OS hasn't invoked _EJ0 in some
-arbitrary time.  That seems a little bit presumptuous because, for
-example, the platform can't know how long it will take to write out
-the dirty page cache.  The racyness of the workaround seems
-troublesome to me.
-
-But this is all really an ACPI issue, not a PCI issue, so I'd like to
-defer to the ACPI experts here.
-
-> Signed-off-by: Weiwen Hu <huweiwen@linux.alibaba.com>
-> ---
->  drivers/acpi/osl.c                 |  6 ++++++
->  drivers/pci/hotplug/acpiphp_glue.c | 15 +++++++++++----
->  include/acpi/acpi_bus.h            |  4 +++-
->  3 files changed, 20 insertions(+), 5 deletions(-)
-> 
-> We observed that umount can take extremely long time if there is a lot of
-> dirty page cache.  umount will take the s_umount semaphore, which will
-> block the ejecting process:
-> 
-> 	__schedule+0x1e0/0x630
-> 	? kernfs_put.part.0+0xd4/0x1a0
-> 	schedule+0x46/0xb0
-> 	rwsem_down_read_slowpath+0x16b/0x490
-> 	__get_super.part.0+0xc1/0xe0
-> 	fsync_bdev+0x11/0x60
-> 	invalidate_partition+0x5c/0xa0
-> 	del_gendisk+0x103/0x2e0
-> 	virtblk_remove+0x27/0xa0
-> 	virtio_dev_remove+0x36/0x90
-> 	__device_release_driver+0x172/0x260
-> 	device_release_driver+0x24/0x30
-> 	bus_remove_device+0xf6/0x170
-> 	device_del+0x19b/0x450
-> 	device_unregister+0x16/0x60
-> 	unregister_virtio_device+0x11/0x20
-> 	virtio_pci_remove+0x31/0x60
-> 	pci_device_remove+0x38/0xa0
-> 	__device_release_driver+0x172/0x260
-> 	device_release_driver+0x24/0x30
-> 	pci_stop_bus_device+0x6c/0x90
-> 	pci_stop_and_remove_bus_device+0xe/0x20
-> 	disable_slot+0x49/0x90
-> 	acpiphp_disable_and_eject_slot+0x15/0x90
-> 
-> While OS is not invoking _EJ0 timely, the user (or hypervisor) may retry by
-> issuing another notification, which will be queued in kacpi_hotplug_wq.
-> After the umount is finally done, the _EJ0 will be invoked.  Then, if there
-> are devices pending attach, the hypervisor may choose to attach it
-> immediately to the same slot.  The new device can be ejected by the queued
-> ejecting process unintentionally.
-> 
-> On Alibaba Cloud, we re-issue the notification around every 10s if the OS
-> does not respond.  (BTW, do you think platform is allowed to re-issue
-> the notification on timeout?)
-> We can easily reproduce this issue on Alibaba Cloud ECS:
-> 
-> 	WRITE_SIZE=2300M  # tune this value so that the umount takes 20s
-> 	# replace these disk serial numbers
-> 	DISK_DETACH=bp142xxxxxxxxxxxxxxx  # pre-formatted
-> 	DISK_ATTACH=bp109xxxxxxxxxxxxxxx  # any
-> 	# start from these two disks detached
-> 
-> 	INSTANCE_ID=$(curl -sS http://100.100.100.200/latest/meta-data/instance-id)
-> 	echo "instance id: $INSTANCE_ID"
-> 	DISK_PATH=/dev/disk/by-id/nvme-Alibaba_Cloud_Elastic_Block_Storage_
-> 
-> 	echo "attaching disk d-$DISK_DETACH"
-> 	aliyun ecs AttachDisk --DiskId "d-$DISK_DETACH" --InstanceId "$INSTANCE_ID"
-> 
-> 	sleep 2
-> 	mkdir -p /mnt/slow
-> 	mount "$DISK_PATH$DISK_DETACH" /mnt/slow
-> 	echo "mounted d-$DISK_DETACH to /mnt/slow"
-> 
-> 	rm -f /mnt/slow/zero
-> 	echo "populating dirty cache"
-> 	head -c $WRITE_SIZE /dev/zero > /mnt/slow/zero;
-> 
-> 	echo umounting
-> 	(
-> 		umount /mnt/slow
-> 		echo umounted
-> 	)&
-> 
-> 	sleep 2
-> 	echo "detaching disk d-$DISK_DETACH"
-> 	aliyun ecs DetachDisk --DiskId "d-$DISK_DETACH" --InstanceId "$INSTANCE_ID"
-> 
-> 	sleep 10
-> 	echo "attaching disk d-$DISK_ATTACH"
-> 	aliyun ecs AttachDisk --DiskId "d-$DISK_ATTACH" --InstanceId "$INSTANCE_ID"
-> 
-> 	sleep 7
-> 	wait
-> 	for _ in {1..10}; do
-> 		sleep 1
-> 		if [ -e "$DISK_PATH$DISK_ATTACH" ]; then
-> 			echo "disk d-$DISK_ATTACH attached, issue not reproduced"
-> 			exit 0
-> 		fi
-> 		echo "disk d-$DISK_ATTACH not found yet"
-> 	done
-> 
-> 	echo "issue reproduced"
-> 	exit 1
-> 
-> And here is the trace we got from `perf trace` while running the above script on an unpatched kernel:
-> 
-> 	[starting detach]
-> 	 48202.244 kworker/0:0-ev/5 probe:acpi_ev_queue_notify_request(__probe_ip: -1452149680, notify_value: 3)
-> 	 48202.314 kworker/0:0-ev/5 probe:acpi_hotplug_schedule(__probe_ip: -1452297040, src: 3)
-> 	 48203.690 kworker/u8:0-e/1946 probe:acpi_device_hotplug(__probe_ip: -1452251424, src: 3)
-> 	[blocked, retrying detach]
-> 	 58023.813 kworker/0:0-ev/5 probe:acpi_ev_queue_notify_request(__probe_ip: -1452149680, notify_value: 3)
-> 	 58023.881 kworker/0:0-ev/5 probe:acpi_hotplug_schedule(__probe_ip: -1452297040, src: 3)
-> 	[detach done]
-> 	 62834.048 kworker/u8:0-e/1946 probe:acpi_evaluate_ej0(__probe_ip: -1452291632)
-> 	[another device attaching]
-> 	 62954.686 kworker/0:0-ev/5 probe:acpi_ev_queue_notify_request(__probe_ip: -1452149680, notify_value: 1)
-> 	 62954.828 kworker/0:0-ev/5 probe:acpi_hotplug_schedule(__probe_ip: -1452297040, src: 1)
-> 	 63042.506 kworker/u8:0-e/1946 probe:acpi_device_hotplug(__probe_ip: -1452251424, src: 3)
-> 	[the new device is ejected unintentionally]
-> 	 63042.520 kworker/u8:0-e/1946 probe:acpi_evaluate_ej0(__probe_ip: -1452291632)
-> 	[the actual attach task, scanned the bus but got nothing]
-> 	 63266.555 kworker/u8:0-e/1946 probe:acpi_device_hotplug(__probe_ip: -1452251424, src: 1)
-> 
-> With this patch, the acpi_hotplug_schedule at 58023.881 will be skipped to
-> suppress the acpi_evaluate_ej0 at 63042.520.
-> 
-> diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-> index 5ff343096ece..f041c4db10f7 100644
-> --- a/drivers/acpi/osl.c
-> +++ b/drivers/acpi/osl.c
-> @@ -1193,6 +1193,12 @@ acpi_status acpi_hotplug_schedule(struct acpi_device *adev, u32 src)
->  {
->  	struct acpi_hp_work *hpw;
->  
-> +	if (src == ACPI_NOTIFY_EJECT_REQUEST && adev->flags.should_dedup_eject
-> +			&& atomic_xchg(&adev->hp->ejecting, 1)) {
-> +		put_device(&adev->dev);
-> +		return AE_OK;
-> +	}
-> +
->  	acpi_handle_debug(adev->handle,
->  			  "Scheduling hotplug event %u for deferred handling\n",
->  			   src);
-> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
-> index 5b1f271c6034..3c50f2af1584 100644
-> --- a/drivers/pci/hotplug/acpiphp_glue.c
-> +++ b/drivers/pci/hotplug/acpiphp_glue.c
-> @@ -68,6 +68,7 @@ static struct acpiphp_context *acpiphp_init_context(struct acpi_device *adev)
->  	context->hp.notify = acpiphp_hotplug_notify;
->  	context->hp.fixup = acpiphp_post_dock_fixup;
->  	acpi_set_hp_context(adev, &context->hp);
-> +	adev->flags.should_dedup_eject = true;
->  	return context;
->  }
->  
-> @@ -778,7 +779,8 @@ void acpiphp_check_host_bridge(struct acpi_device *adev)
->  	}
->  }
->  
-> -static int acpiphp_disable_and_eject_slot(struct acpiphp_slot *slot);
-> +static int
-> +acpiphp_disable_and_eject_slot(struct acpi_hotplug_context *hp, struct acpiphp_slot *slot);
->  
->  static void hotplug_event(u32 type, struct acpiphp_context *context)
->  {
-> @@ -825,7 +827,7 @@ static void hotplug_event(u32 type, struct acpiphp_context *context)
->  	case ACPI_NOTIFY_EJECT_REQUEST:
->  		/* request device eject */
->  		acpi_handle_debug(handle, "Eject request in %s()\n", __func__);
-> -		acpiphp_disable_and_eject_slot(slot);
-> +		acpiphp_disable_and_eject_slot(&context->hp, slot);
->  		break;
->  	}
->  
-> @@ -999,9 +1001,11 @@ int acpiphp_enable_slot(struct acpiphp_slot *slot)
->  
->  /**
->   * acpiphp_disable_and_eject_slot - power off and eject slot
-> + * @hp: the context that received eject notification, can be NULL
->   * @slot: ACPI PHP slot
->   */
-> -static int acpiphp_disable_and_eject_slot(struct acpiphp_slot *slot)
-> +static int
-> +acpiphp_disable_and_eject_slot(struct acpi_hotplug_context *hp, struct acpiphp_slot *slot)
->  {
->  	struct acpiphp_func *func;
->  
-> @@ -1011,6 +1015,9 @@ static int acpiphp_disable_and_eject_slot(struct acpiphp_slot *slot)
->  	/* unconfigure all functions */
->  	disable_slot(slot);
->  
-> +	if (hp)
-> +		atomic_set(&hp->ejecting, 0);
-> +
->  	list_for_each_entry(func, &slot->funcs, sibling)
->  		if (func->flags & FUNC_HAS_EJ0) {
->  			acpi_handle handle = func_to_handle(func);
-> @@ -1034,7 +1041,7 @@ int acpiphp_disable_slot(struct acpiphp_slot *slot)
->  	 */
->  	acpi_scan_lock_acquire();
->  	pci_lock_rescan_remove();
-> -	ret = acpiphp_disable_and_eject_slot(slot);
-> +	ret = acpiphp_disable_and_eject_slot(NULL, slot);
->  	pci_unlock_rescan_remove();
->  	acpi_scan_lock_release();
->  	return ret;
-> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> index aad1a95e6863..870c1ffe47c9 100644
-> --- a/include/acpi/acpi_bus.h
-> +++ b/include/acpi/acpi_bus.h
-> @@ -151,6 +151,7 @@ typedef void (*acpi_hp_fixup) (struct acpi_device *);
->  
->  struct acpi_hotplug_context {
->  	struct acpi_device *self;
-> +	atomic_t ejecting;
->  	acpi_hp_notify notify;
->  	acpi_hp_uevent uevent;
->  	acpi_hp_fixup fixup;
-> @@ -215,7 +216,8 @@ struct acpi_device_flags {
->  	u32 cca_seen:1;
->  	u32 enumeration_by_parent:1;
->  	u32 honor_deps:1;
-> -	u32 reserved:18;
-> +	u32 should_dedup_eject:1;
-> +	u32 reserved:17;
->  };
->  
->  /* File System */
-> -- 
-> 2.48.1
-> 
+-- 
+~Vinod
 
