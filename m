@@ -1,138 +1,160 @@
-Return-Path: <linux-pci+bounces-22656-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22657-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87AD8A4A037
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 18:23:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F5D7A4A0BC
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 18:45:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E96553AE786
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 17:23:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 497371893820
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 17:45:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 215911F4C98;
-	Fri, 28 Feb 2025 17:23:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A07CA1F4CB9;
+	Fri, 28 Feb 2025 17:45:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qI4+5GWu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ccuDFX6u"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C641F4C83;
-	Fri, 28 Feb 2025 17:23:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3471BCA1C;
+	Fri, 28 Feb 2025 17:45:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740763402; cv=none; b=ImJEFfZCVYPO/CKi+t7NzifHHToGjnDBaJm8y6uD/NMq+i1MYCub0BVKhWzCkRnnIt/0VCaNW1QAWuFMQ9JQEXG8MJoLyvHMlzFlwM7ll1YbNWB6+q7zDuvpbqxK55eoQC/Rn0cwaADhrmvdBlzSBewq7Y1VQ2TTeLfBLEtFEJA=
+	t=1740764711; cv=none; b=pQaiYZmyWJewYEixkJzCJLCOgWT8nmAMbvnCNpKRFnazYXVgPRYsOiTXxB30bH1Df1KXFxyHDJebUAvIJsqnIhyhzy7aSqvkgwOeOpB366EAehyIugGltulIyXT4MkDtn9Z1RuqK8Xok0PHBSG6qwGEMppjSvNqtDz2XK8I7BnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740763402; c=relaxed/simple;
-	bh=kpa5gUq601xY2LLqyDkp+ULt9YfNAfqA5DJnA1T2tiI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E80ss6GaMNFGbP+2uTZ8cyaPQpS9WxkWRqgjlbmb3yj4ShhSkE9oOPEDD9XnnEX1U7z5QrYnkVFd6Gm/C82MptNPprb58yASthjesRrZqPvqp9Y/53LXeA48DW7sS52DXhJ8wJnynL/HiV/1uVT5TAsaPdgYLAB17Ap4l36q6Ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qI4+5GWu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0163C4CEE2;
-	Fri, 28 Feb 2025 17:23:20 +0000 (UTC)
+	s=arc-20240116; t=1740764711; c=relaxed/simple;
+	bh=Be8JiKViprG/35y62i+pD4AsM5Tw5jHNYjVl9cJ8hQw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Es/bKITqQ/SGDPRg3A7UZ5YUE5/Ymawx/b+Q+IgeVaHhwwm9tgtYkIgUJJuCceeh07pWzHRVH0Xp+nQdUJf/yIZ6JYEq5O5QBaRqeuKokK8na89+gYGQPFkOuWrJ33lrM0HLhZ0+nItseRNk47yJPR9+SVrl6i4M/oV9EQkveBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ccuDFX6u; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FA7C4CED6;
+	Fri, 28 Feb 2025 17:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740763401;
-	bh=kpa5gUq601xY2LLqyDkp+ULt9YfNAfqA5DJnA1T2tiI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qI4+5GWu3Wl6VXYHL4b3Ve6TMGej7QVi3Gue5LFr1UrE0smNW9exm5xZmGc5P1H7M
-	 IcPoEhQ7oP2NiOIYjqTII48zvHmppdJY/JvBeWUglKBAWO+b7M5CeSa69+W9lMhP7y
-	 K88IrRDlpBjDiQkcdeMtk05EK4xijZ+Y30glFh82APDAw8MvBOoXTyBU6YZG3rJ843
-	 rxCFHfOZB36Sd1kCXxuZ7j7OWmIH+ZJuC319gGGcR0Ci0q64IDDEn9oRBI4eK0xSS1
-	 j40o6g1LKTK1yKF1xKCIMJccoPo1gHDp2vqkkD2GZjsy8sQRMIjaD7YJasRe9RTbDn
-	 g7X6bzxXphj2A==
-Date: Fri, 28 Feb 2025 22:53:17 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Muni Sekhar <munisekharrms@gmail.com>, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Sanyog Kale <sanyog.r.kale@intel.com>, linux-sound@vger.kernel.org
-Subject: Re: pci: acpi: Query on ACPI Device Tree Representation and
- Enumeration for Xilinx FPGA PCIe Endpoint functions
-Message-ID: <Z8HxBQbLzgV5NDYA@vaman>
-References: <CAHhAz+j46nus_rGJ72rZ86UyzL+AM_HBCivjpZEx3T0thOxqAQ@mail.gmail.com>
- <20250228163219.GA54330@bhelgaas>
+	s=k20201202; t=1740764710;
+	bh=Be8JiKViprG/35y62i+pD4AsM5Tw5jHNYjVl9cJ8hQw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ccuDFX6uhWkU3S1yoYepRdColv2hjj9HHXWE+B2YBjayx48qKdPtW3q8ADzXPwmkr
+	 G4mGeaE82Wner95FHb6YpDJy84gcbmKhZ8UrqHYR2RduGSwxElFnCjzPpD7tWPyDRd
+	 UojHVsJhDFH7Nm2sqwR5aeboQuOf8I3wEslOFk8N388I1R56sHe6QUsImMApiqHSIJ
+	 oZZdiW2e2OQvOrDqjfcVH4DqB/4HBguvtkMiYPdW21yG8Ge/mhxlEMHyZJkLhhtNo6
+	 V8GOmYmBk3y6/1Ha1YhLb2xGyoqxZ4v8zrBf/jTcE9eatm/ytMj6HvFFfUVzK0620K
+	 z4HO3yx3sn9Xw==
+Date: Fri, 28 Feb 2025 11:45:09 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Hsin-Yi Wang <hsinyi@chromium.org>,
+	linux-kernel@vger.kernel.org, mika.westerberg@linux.intel.com,
+	linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+	lukas@wunner.de,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v5] PCI: Allow PCI bridges to go to D3Hot on all
+ Devicetree based platforms
+Message-ID: <20250228174509.GA58365@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250228163219.GA54330@bhelgaas>
+In-Reply-To: <20241126151711.v5.1.Id0a0e78ab0421b6bce51c4b0b87e6aebdfc69ec7@changeid>
 
-On 28-02-25, 10:32, Bjorn Helgaas wrote:
-> [+cc SoundWire folks]
+On Tue, Nov 26, 2024 at 03:17:11PM -0800, Brian Norris wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> On Fri, Feb 28, 2025 at 08:19:44PM +0530, Muni Sekhar wrote:
-> > On Thu, Feb 27, 2025 at 9:34 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Thu, Feb 27, 2025 at 07:25:32PM +0530, Muni Sekhar wrote:
-> > > > I am currently working on a project involving a Xilinx FPGA connected
-> > > > to an x86 CPU via a PCIe root port. The Xilinx FPGA functions as a
-> > > > PCIe endpoint with single function capability and is programmed to
-> > > > emulate the Soundwire Master controller. It can be dynamically
-> > > > reprogrammed to emulate other interfaces as needed. Essentially, the
-> > > > FPGA emulates an interface and connects to the CPU via the PCIe bus.
-> > > >
-> > > > Given this setup, the BIOS does not have prior knowledge of the
-> > > > function implemented in the Xilinx FPGA PCIe endpoint. I have a couple
-> > > > of questions regarding this configuration:
-> > > >
-> > > > Is it possible to define an ACPI Device Tree representation for this
-> > > > type of hardware setup?
-> > > > Can we achieve ACPI-based device enumeration with this configuration?
-> > >
-> > > If the FPGA is programmed before BIOS enumerates PCI devices, the FPGA
-> > > would look just like any other PCI device, and BIOS would be able to
-> > > read the Vendor ID and Device ID and would be able to size and program
-> > > the BARs.
-> >
-> > Yes, the FPGA is programmed with this Soundwire IP before the BIOS
-> > enumerates PCI devices.
-> > We need to port the Soundwire driver
-> > (https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/soundwire/qcom.c)
-> >  to the x86 platform.
-> > 
-> > Since x86 platforms typically do not use device trees, and the
-> > Soundwire IP is implemented in the FPGA, how can we emulate device
-> > tree functionality or use a different mechanism to pass hardware
-> > configuration to the driver? Specifically, how can we handle the
-> > following API calls on an x86 platform?
-> > 
-> >    ret = of_property_read_u32(np, "qcom,din-ports", &val);
-> >    ret = of_property_read_u32(np, "qcom,dout-ports", &val);
-> >    ret = of_property_read_u8_array(np, "qcom,ports-offset1", off1, nports);
-> > 
-> > static const struct of_device_id qcom_swrm_of_match[] = {
-> > { .compatible = "qcom,soundwire-v1.3.0", .data = &swrm_v1_3_data },
-> > { .compatible = "qcom,soundwire-v1.5.1", .data = &swrm_v1_5_data },
-> > { .compatible = "qcom,soundwire-v1.6.0", .data = &swrm_v1_6_data },
-> > { .compatible = "qcom,soundwire-v1.7.0", .data = &swrm_v1_5_data },
-> > { .compatible = "qcom,soundwire-v2.0.0", .data = &swrm_v2_0_data },
-> > {/* sentinel */},
-> > };
-> > 
-> > Basically, how can we define ACPI tables for functions implemented in
-> > an FPGA that connects to the system via PCI?
+> Unlike ACPI based platforms, there are no known issues with D3Hot for
+> the PCI bridges in Device Tree based platforms. 
+
+Can we elaborate on this a little bit?  Referring to "known issues
+with ACPI-based platforms" depends on a lot of domain-specific history
+that most readers (including me) don't know.
+
+I don't think "ACPI-based" or "devicetree-based" are good
+justifications for changing the behavior because they don't identify
+any specific reasons.  It's like saying "we can enable this feature
+because the platform spec is written in French."
+
+> Past discussions (Link [1]) determined the restrictions around D3
+> should be relaxed for all Device Tree systems. 
+
+This is far too generic a statement for me to sign up to, especially
+since "all Device Tree systems" doesn't say anything at all about how
+any particular hardware works or what behavior we're relying on.
+
+We need to say something about what D3hot means (i.e., only message
+and type 0 config requests accepted) and that we know anything below
+the bridge is inaccessible in D3hot and why that's OK.  E.g., maybe we
+only care about wakeup requests and we know those still work with the
+bridge in D3hot because XYZ.
+
+> So let's allow the PCI bridges to go to D3Hot during runtime.
 > 
-> Seems like a generic problem for PCI sound devices, and I don't know
-> how drivers deal with it.  It looks like all the SoundWire drivers
-> are platform drivers (not PCI drivers), so there's nothing there to
-> look at.
+> To match devm_pci_alloc_host_bridge() -> devm_of_pci_bridge_init(), we
+> look at the host bridge's parent when determining whether this is a
+> Device Tree based platform. Not all bridges have their own node, but the
+> parent (controller) should.
 > 
-> Maybe the sound folks have ideas.
-
-X86-Intel devices are PCI devices but then they are compound devices
-with DSP and SoundWire links. Please check the DisCo spec for SoundWire,
-that already defines the ACPI tables and properties which both Intel and
-AMD drivers already use
-
-That should be your start point...
-
--- 
-~Vinod
+> Link: https://lore.kernel.org/linux-pci/20240227225442.GA249898@bhelgaas/ [1]
+> Link: https://lore.kernel.org/linux-pci/20240828210705.GA37859@bhelgaas/ [2]
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> [Brian: look at host bridge's parent, not bridge node; rewrite
+> description]
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> ---
+> Based on prior work by Manivannan Sadhasivam that was part of a bigger
+> series that stalled:
+> 
+> [PATCH v5 4/4] PCI: Allow PCI bridges to go to D3Hot on all Devicetree based platforms
+> https://lore.kernel.org/linux-pci/20240802-pci-bridge-d3-v5-4-2426dd9e8e27@linaro.org/
+> 
+> I'm resubmitting this single patch, since it's useful and seemingly had
+> agreement. I massaged it a bit to relax some restrictions on how the
+> Device Tree should look.
+> 
+> Changes in v5:
+> - Pulled out of the larger series, as there were more controversial
+>   changes in there, while this one had agreement (Link [2]).
+> - Rewritten with a relaxed set of rules, because the above patch
+>   required us to modify many device trees to add bridge nodes.
+> 
+>  drivers/pci/pci.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e278861684bc..5d898f5ea155 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3018,6 +3018,8 @@ static const struct dmi_system_id bridge_d3_blacklist[] = {
+>   */
+>  bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>  {
+> +	struct pci_host_bridge *host_bridge;
+> +
+>  	if (!pci_is_pcie(bridge))
+>  		return false;
+>  
+> @@ -3038,6 +3040,15 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>  		if (pci_bridge_d3_force)
+>  			return true;
+>  
+> +		/*
+> +		 * Allow D3 for all Device Tree based systems. We assume a host
+> +		 * bridge's parent will have a device node, even if this bridge
+> +		 * may not have its own.
+> +		 */
+> +		host_bridge = pci_find_host_bridge(bridge->bus);
+> +		if (dev_of_node(host_bridge->dev.parent))
+> +			return true;
+> +
+>  		/* Even the oldest 2010 Thunderbolt controller supports D3. */
+>  		if (bridge->is_thunderbolt)
+>  			return true;
+> -- 
+> 2.47.0.338
+> 
 
