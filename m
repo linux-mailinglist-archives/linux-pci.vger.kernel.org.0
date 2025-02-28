@@ -1,45 +1,45 @@
-Return-Path: <linux-pci+bounces-22621-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22622-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79A45A49448
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 10:01:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7759FA4945F
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 10:05:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A4BD318943A9
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 09:01:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 20DDC18874AE
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 09:05:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5742E1E8321;
-	Fri, 28 Feb 2025 09:01:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 745FB1BE23E;
+	Fri, 28 Feb 2025 09:05:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Rm3YVtzh"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ikfT6RAO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7535255E3B;
-	Fri, 28 Feb 2025 09:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D1B11A3158;
+	Fri, 28 Feb 2025 09:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740733268; cv=none; b=sSUZ1c5WUmjubU6ErvI9PLXEI1WJEzpuJC425TTgJbrns9/AkMVhL+nDb7sBZqQySzwLxQxOAJFjs4HjpO1ggX/ZS3IyVpEkPgUxYQLbMQleHfTimr8souz9Pg2kQ9VgaGuwyNC5eUUrLGGV770+Zr6QYZeQD7LLpdFYb6f39+w=
+	t=1740733525; cv=none; b=ukvKgahgyMpCCrtovBoN0/vedY4RyUpJunjtYaRYsK3ozVAUlU5p/w/ka+S0qknpEUeEH2+s0WLBZYpvLVFX6Y+NCEpoRKLhP3u5/TWryPfcIQlubOgM5m70O3RsPIynSJ1xizEMiRCtu2zyns3L/PcHmS8ZPnC+Ndju1I8m6gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740733268; c=relaxed/simple;
-	bh=zKrcIFrclyOGfQUXyUn6MaoJojyv/MvCl+HCcUqvmOY=;
+	s=arc-20240116; t=1740733525; c=relaxed/simple;
+	bh=ZvuoGKETIKuqrexGW8SWwG8bQ1czS38AO8zWebfhBU0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qP1ES611qfMys9TMmLlyGiqXJ11sbfjGzIXW4ob5O3LY1/qy3km5m1KlAoVW2WEBSYb58rKt9F8AAsJ4CfEX99ORQvbje3FJIk+DIu5ISzkcJLw3LWe0izIKIrTikV2VLvT8ragqA3vOVxeprjYHB/b8HBvx72BYLeFNp0f7Iqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Rm3YVtzh; arc=none smtp.client-ip=117.135.210.3
+	 In-Reply-To:Content-Type; b=XXGW4XOU8CZ6BefPOwwmMyp4UgjGw2w+Tbzr7UkjEVi9Ccyu3Jt7GaWdMiW5Ov5PHEc6Hq8I4TJnGBQJgGjjViGIrSnsDoeY6P4AFzOidFjOLiUnCfwJeomC5LmVLnLOXV0craNhghLqmWHr0s2wRCIYBQyFvz7MW7Qoub+DW2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ikfT6RAO; arc=none smtp.client-ip=117.135.210.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
 	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=22YFTJcKm8NjTIDk8c5vro1lpPOD/KWOFdJohyC6a9k=;
-	b=Rm3YVtzht+DE7sclvNWjM+I8N6j9ytKj4I3S1NZ7iSlrND5y+z8t/ovM+oyYqC
-	3eMl5BS2qOw9hGgck05VOsfdg+jfRTW6woXfJu9QrQ3+VXWyg/AwCcTcXhlPMR/S
-	qqXc6CYs4UWP/tTNWGyzc9bKDDdyxOSnuiYKqtqaL8JR0=
+	Content-Type; bh=nNdk8J4H0DGZo/AJqzuSIUDj2qvadjIR23mnD0+nTyw=;
+	b=ikfT6RAOEWarYrABl77wrDMFDpkaDJiqeOmRk5vjn8ujOspOjpkgiJzEywroGb
+	/bVKQMoAbo3OEBsaQbNXUUhOaJRMzPhy+LZtLpWTD2jiW7cvbHZoQlS44gppdc8Z
+	bfw4JKwsrOIbxCTSz6j6XQDuPcoMDTNEMHMBhulKkMrNY=
 Received: from [192.168.34.52] (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAH+C0me8Fnbdn5PA--.9176S2;
-	Fri, 28 Feb 2025 17:00:24 +0800 (CST)
-Message-ID: <d3bfa9c9-bf72-4ddc-bed3-1fe9ef88d518@163.com>
-Date: Fri, 28 Feb 2025 17:00:22 +0800
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgDnMPYpfMFnEqAaJQ--.1908S2;
+	Fri, 28 Feb 2025 17:04:43 +0800 (CST)
+Message-ID: <251ce5c0-8c10-4b29-9ffb-592e908187fd@163.com>
+Date: Fri, 28 Feb 2025 17:04:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -48,57 +48,309 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] genirq/msi: Add the address and data that show MSI/MSIX
-To: Frank Li <Frank.li@nxp.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- tglx@linutronix.de, kw@linux.com, kwilczynski@kernel.org,
- bhelgaas@google.com, cassel@kernel.org, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: kw@linux.com, kwilczynski@kernel.org, bhelgaas@google.com,
+ cassel@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250227162821.253020-1-18255117159@163.com>
- <20250227163937.wv4hsucatyandde3@thinkpad>
- <f6e44f34-8800-421c-ba2c-755c10a6840e@163.com>
- <Z8Co4ZnqObpnEbg7@lizhi-Precision-Tower-5810>
+ <20250227163937.wv4hsucatyandde3@thinkpad> <877c5be0no.ffs@tglx>
 Content-Language: en-US
 From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <Z8Co4ZnqObpnEbg7@lizhi-Precision-Tower-5810>
+In-Reply-To: <877c5be0no.ffs@tglx>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wAH+C0me8Fnbdn5PA--.9176S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7GF4UZF4xur43JrW8urW3Wrg_yoWfKFXE9r
-	ykKF1xWr4jkrySqw4aywsIgFZ8W3sFvr18Z3y3Xr9Fqr98tanrAwnakr97Ka4rGrW2yFn0
-	kr4Sg34DJr9F9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjJKs5UUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwMCo2fBdUClLAAAs3
+X-CM-TRANSID:PSgvCgDnMPYpfMFnEqAaJQ--.1908S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3GryfAFyUAr18Jr4UKF43trb_yoWxCF18pF
+	yUKF47Cr48JFyYywsrGa17ur9rXFWqvF4qy39Fy3yIy3yaqw1vgFyfZas7GFy5trsrZ3s5
+	t3WUXa40qrs3AaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Um2NNUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx4Co2fBdUDKGQAAsw
 
 
 
-On 2025/2/28 02:03, Frank Li wrote:
-> On Fri, Feb 28, 2025 at 12:49:38AM +0800, Hans Zhang wrote:
->> Thanks Mani for the tip.
+On 2025/2/28 01:51, Thomas Gleixner wrote:
+> On Thu, Feb 27 2025 at 22:09, Manivannan Sadhasivam wrote:
+>> On Fri, Feb 28, 2025 at 12:28:21AM +0800, Hans Zhang wrote:
+>>> +	return sysfs_emit(
+>>> +		buf,
+>>> +		"%s\n address_hi: 0x%08x\n address_lo: 0x%08x\n msg_data: 0x%08x\n",
+>>> +		is_msix ? "msix" : "msi", desc->msg.address_hi,
+>>> +		desc->msg.address_lo, desc->msg.data);
 >>
->> If I want to implement similar functionality, where should I add it? Since
->> this sysfs node is the only one that displays the MSI/MSIX interrupt number,
->> I don't know where to implement similar debug functionality at this time. Do
->> you have any suggestions? Or it shouldn't have a similar function.
+>> Sysfs is an ABI. You cannot change the semantics of an attribute.
 > 
-> I think it is useful feature to help debug. Generally only one property
-> for one sys file.
+> Correct. Aside of that this is debug information and has no business in
+> sysfs.
 > 
-> A possible create 3 files under
-> 
-> /sys/kernel/irq/26/
-> 	address_hi, address_lo, msg_data.
-> 
-> cat address_hi, only show 0x00000000. ... ABI doc need update also.
-> 
-> Thomas(tglx) may provide better suggestions.
+> The obvious place to expose this is via the existing debugfs irq/*
+> mechanism. All it requires is to implement a debug_show() callback in
+> the MSI core code and assign it to domain ops::debug_show() on domain
+> creation, if it does not provide its own callback.
 
-Thank you very much for Frank's opinion and agreeing with my idea. I 
-also think this is a good debug method.
+Hi Thomas(tglx),
 
-I will reply to Thomas(tglx) later, and then please review whether the 
-patch I provided is OK?
+Is the following patch OK? Please give me some advice. Thank you very much.
 
 Best regards
 Hans
+
+
+patch:
+
+diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
+index ca142b9a4db3..447fa24520f4 100644
+--- a/kernel/irq/debugfs.c
++++ b/kernel/irq/debugfs.c
+@@ -3,6 +3,7 @@
+
+  #include <linux/irqdomain.h>
+  #include <linux/irq.h>
++#include <linux/msi.h>
+  #include <linux/uaccess.h>
+
+  #include "internals.h"
+@@ -56,6 +57,26 @@ static const struct irq_bit_descr irqchip_flags[] = {
+         BIT_MASK_DESCR(IRQCHIP_MOVE_DEFERRED),
+  };
+
++static void irq_debug_show_msi_msix(struct seq_file *m, struct irq_data 
+*data,
++                                   int ind)
++{
++       struct msi_desc *desc;
++       bool is_msix;
++
++       desc = irq_get_msi_desc(data->irq);
++       if (!desc)
++               return;
++
++       is_msix = desc->pci.msi_attrib.is_msix;
++       seq_printf(m, "%*s%s:", ind, "", is_msix ? "msix" : "msi");
++       seq_printf(m, "\n%*saddress_hi: 0x%08x", ind + 1, "",
++               desc->msg.address_hi);
++       seq_printf(m, "\n%*saddress_lo: 0x%08x", ind + 1, "",
++               desc->msg.address_lo);
++       seq_printf(m, "\n%*smsg_data: 0x%08x\n", ind + 1, "",
++               desc->msg.data);
++}
++
+  static void
+  irq_debug_show_chip(struct seq_file *m, struct irq_data *data, int ind)
+  {
+@@ -178,6 +199,7 @@ static int irq_debug_show(struct seq_file *m, void *p)
+         seq_printf(m, "node:     %d\n", irq_data_get_node(data));
+         irq_debug_show_masks(m, desc);
+         irq_debug_show_data(m, data, 0);
++       irq_debug_show_msi_msix(m, data, 0);
+         raw_spin_unlock_irq(&desc->lock);
+         return 0;
+  }
+
+
+
+
+e.g.
+root@root:/sys/kernel/debug/irq/irqs# cat /proc/interrupts | grep ITS
+  85:          0          0          0          0          0          0 
+         0          0          0          0          0          0 
+ITS-MSI 75497472 Edge      PCIe PME, aerdrv
+  86:          0         30          0          0          0          0 
+         0          0          0          0          0          0 
+ITS-MSI 76021760 Edge      nvme0q0
+  87:        682          0          0          0          0          0 
+         0          0          0          0          0          0 
+ITS-MSI 76021761 Edge      nvme0q1
+  88:          0        400          0          0          0          0 
+         0          0          0          0          0          0 
+ITS-MSI 76021762 Edge      nvme0q2
+  89:          0          0        246          0          0          0 
+         0          0          0          0          0          0 
+ITS-MSI 76021763 Edge      nvme0q3
+  90:          0          0          0        141          0          0 
+         0          0          0          0          0          0 
+ITS-MSI 76021764 Edge      nvme0q4
+  91:          0          0          0          0        177          0 
+         0          0          0          0          0          0 
+ITS-MSI 76021765 Edge      nvme0q5
+  92:          0          0          0          0          0        173 
+         0          0          0          0          0          0 
+ITS-MSI 76021766 Edge      nvme0q6
+  93:          0          0          0          0          0          0 
+       374          0          0          0          0          0 
+ITS-MSI 76021767 Edge      nvme0q7
+  94:          0          0          0          0          0          0 
+         0         62          0          0          0          0 
+ITS-MSI 76021768 Edge      nvme0q8
+  95:          0          0          0          0          0          0 
+         0          0        137          0          0          0 
+ITS-MSI 76021769 Edge      nvme0q9
+  96:          0          0          0          0          0          0 
+         0          0          0        177          0          0 
+ITS-MSI 76021770 Edge      nvme0q10
+  97:          0          0          0          0          0          0 
+         0          0          0          0        403          0 
+ITS-MSI 76021771 Edge      nvme0q11
+  98:          0          0          0          0          0          0 
+         0          0          0          0          0        246 
+ITS-MSI 76021772 Edge      nvme0q12
+root@root:/sys/kernel/debug/irq/irqs# cat 86
+handler:  handle_fasteoi_irq
+device:   0000:91:00.0
+status:   0x00000000
+istate:   0x00004000
+ddepth:   0
+wdepth:   0
+dstate:   0x31401200
+             IRQD_ACTIVATED
+             IRQD_IRQ_STARTED
+             IRQD_SINGLE_TARGET
+             IRQD_AFFINITY_SET
+             IRQD_AFFINITY_ON_ACTIVATE
+             IRQD_HANDLE_ENFORCE_IRQCTX
+node:     0
+affinity: 6
+effectiv: 6
+domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-3
+  hwirq:   0x4880000
+  chip:    ITS-MSI
+   flags:   0x20
+              IRQCHIP_ONESHOT_SAFE
+  parent:
+     domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-5
+      hwirq:   0x2001
+      chip:    ITS
+       flags:   0x0
+      parent:
+         domain:  :soc@0:interrupt-controller@0e001000-1
+          hwirq:   0x2001
+          chip:    GICv3
+           flags:   0x15
+                      IRQCHIP_SET_TYPE_MASKED
+                      IRQCHIP_MASK_ON_SUSPEND
+                      IRQCHIP_SKIP_SET_WAKE
+msix:
+  address_hi: 0x00000000
+  address_lo: 0x0e060040
+  msg_data: 0x00000000
+root@root:/sys/kernel/debug/irq/irqs# cat 87
+handler:  handle_fasteoi_irq
+device:   0000:91:00.0
+status:   0x00000000
+istate:   0x00004000
+ddepth:   0
+wdepth:   0
+dstate:   0x31600200
+             IRQD_ACTIVATED
+             IRQD_IRQ_STARTED
+             IRQD_SINGLE_TARGET
+             IRQD_AFFINITY_MANAGED
+             IRQD_AFFINITY_ON_ACTIVATE
+             IRQD_HANDLE_ENFORCE_IRQCTX
+node:     0
+affinity: 0
+effectiv: 0
+domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-3
+  hwirq:   0x4880001
+  chip:    ITS-MSI
+   flags:   0x20
+              IRQCHIP_ONESHOT_SAFE
+  parent:
+     domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-5
+      hwirq:   0x2002
+      chip:    ITS
+       flags:   0x0
+      parent:
+         domain:  :soc@0:interrupt-controller@0e001000-1
+          hwirq:   0x2002
+          chip:    GICv3
+           flags:   0x15
+                      IRQCHIP_SET_TYPE_MASKED
+                      IRQCHIP_MASK_ON_SUSPEND
+                      IRQCHIP_SKIP_SET_WAKE
+msix:
+  address_hi: 0x00000000
+  address_lo: 0x0e060040
+  msg_data: 0x00000001
+root@root:/sys/kernel/debug/irq/irqs#
+root@root:/sys/kernel/debug/irq/irqs# cat 88
+handler:  handle_fasteoi_irq
+device:   0000:91:00.0
+status:   0x00000000
+istate:   0x00004000
+ddepth:   0
+wdepth:   0
+dstate:   0x31600200
+             IRQD_ACTIVATED
+             IRQD_IRQ_STARTED
+             IRQD_SINGLE_TARGET
+             IRQD_AFFINITY_MANAGED
+             IRQD_AFFINITY_ON_ACTIVATE
+             IRQD_HANDLE_ENFORCE_IRQCTX
+node:     0
+affinity: 1
+effectiv: 1
+domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-3
+  hwirq:   0x4880002
+  chip:    ITS-MSI
+   flags:   0x20
+              IRQCHIP_ONESHOT_SAFE
+  parent:
+     domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-5
+      hwirq:   0x2003
+      chip:    ITS
+       flags:   0x0
+      parent:
+         domain:  :soc@0:interrupt-controller@0e001000-1
+          hwirq:   0x2003
+          chip:    GICv3
+           flags:   0x15
+                      IRQCHIP_SET_TYPE_MASKED
+                      IRQCHIP_MASK_ON_SUSPEND
+                      IRQCHIP_SKIP_SET_WAKE
+msix:
+  address_hi: 0x00000000
+  address_lo: 0x0e060040
+  msg_data: 0x00000002
+root@root:/sys/kernel/debug/irq/irqs# cat 89
+handler:  handle_fasteoi_irq
+device:   0000:91:00.0
+status:   0x00000000
+istate:   0x00004000
+ddepth:   0
+wdepth:   0
+dstate:   0x31600200
+             IRQD_ACTIVATED
+             IRQD_IRQ_STARTED
+             IRQD_SINGLE_TARGET
+             IRQD_AFFINITY_MANAGED
+             IRQD_AFFINITY_ON_ACTIVATE
+             IRQD_HANDLE_ENFORCE_IRQCTX
+node:     0
+affinity: 2
+effectiv: 2
+domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-3
+  hwirq:   0x4880003
+  chip:    ITS-MSI
+   flags:   0x20
+              IRQCHIP_ONESHOT_SAFE
+  parent:
+     domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-5
+      hwirq:   0x2004
+      chip:    ITS
+       flags:   0x0
+      parent:
+         domain:  :soc@0:interrupt-controller@0e001000-1
+          hwirq:   0x2004
+          chip:    GICv3
+           flags:   0x15
+                      IRQCHIP_SET_TYPE_MASKED
+                      IRQCHIP_MASK_ON_SUSPEND
+                      IRQCHIP_SKIP_SET_WAKE
+msix:
+  address_hi: 0x00000000
+  address_lo: 0x0e060040
+  msg_data: 0x00000003
+
+
 
 
