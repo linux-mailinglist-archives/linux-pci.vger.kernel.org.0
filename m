@@ -1,261 +1,220 @@
-Return-Path: <linux-pci+bounces-22629-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22630-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81318A49584
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 10:42:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 750B3A495CE
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 10:49:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 308171883444
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 09:42:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BA32516AD2A
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 09:49:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77B5E2580DE;
-	Fri, 28 Feb 2025 09:41:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85ED52580CE;
+	Fri, 28 Feb 2025 09:48:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z9V64Wxw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5BVHmjY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B12257453
-	for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2025 09:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BACB25744D;
+	Fri, 28 Feb 2025 09:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740735696; cv=none; b=LYzPotgdinWgoQxihOO04NWiraRKJ2F8m33Xk/UejJtlJBORkGZZmm9XYa95ftLRb8oiVxwmY+GH3lPZTxcGImOtRB2fLXzJgRtTexUlGlGXOjLAqTUFc/XhJMdbYxdGqRxEC4WfhlRMfHngROrrEGzj9kH4H6UlDxw8PVbQB7w=
+	t=1740736138; cv=none; b=NtzeNr8H7qOXzegkJVALTHsTvs7SiH5WGrNkjlgBDQyponXUuO9Leqw+aA76+Cva5ZmQJdY91fxEb3cSYkXejANADlG/kw5BsZoxYd5+5Ys4S1Iet1X6fAkKKeTPSCZhdNr7dfohNxhdYNYaJyLln8Rx859e/eWfHJRYCdQxLAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740735696; c=relaxed/simple;
-	bh=C3CXwGP4pl/Oi5exvrJFsIGEN9hT+m73R0spxjZAhVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B6+PJHSSrqZtu5IJPLj73G34UsOZTTiZn2Xqs9+ZlFxkOfGl/cXlDZVh/QRN5PfMMDIRuSKQudCyR6dWf7t8/vRrUtGqrYv3hRtep+4czEgmqNCnKnNKzdSds8U9yFUvsm0rlZx1ltb97qfdSBKDatfTe+Jk0x8PeSUxmdVpy6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z9V64Wxw; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740735694; x=1772271694;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C3CXwGP4pl/Oi5exvrJFsIGEN9hT+m73R0spxjZAhVQ=;
-  b=Z9V64WxwNBZ0fQiBk2hmITHootz/VCE/TtVMuDdgpMk7LaFp1oJb1bX5
-   ryEv7AzNF5ieIoS8xmzHlW6NzTNjFFevBMjX38sv6+2gZUMdTZz5APSAT
-   pF5/UBYZ+tExNX8cgVezzXuNsMeEaoyunYXVbDTaDzCaygvlQkR1WUgTj
-   J66ytksXHmDIznVtmu/68MF7mcAQfJNKNROLOX52UDbCFah+CGiK7y9As
-   LbdKKS1E+T4HK4opgwbkVWIGA9erliPiE4UlvFrd0pSNddG8Pdf5qcgcr
-   JldC6hJtJKDHSywmG3zrPhxy4WYPxPhBVYOG2gF7Ru6aZAqGPRwXhm2+L
-   A==;
-X-CSE-ConnectionGUID: A+9NuhcvTZipAzVEvWw3AA==
-X-CSE-MsgGUID: KdjrZ5ERQm2/oj+Ul195cA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41910303"
-X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
-   d="scan'208";a="41910303"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 01:41:33 -0800
-X-CSE-ConnectionGUID: WTnXgPaCTI+IcSCwv3r+RA==
-X-CSE-MsgGUID: LR9NkcDlS6aFQhUWBzAlsw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
-   d="scan'208";a="122233454"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa003.jf.intel.com with ESMTP; 28 Feb 2025 01:41:27 -0800
-Date: Fri, 28 Feb 2025 17:39:31 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-coco@lists.linux.dev, Lukas Wunner <lukas@wunner.de>,
-	Samuel Ortiz <sameo@rivosinc.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
+	s=arc-20240116; t=1740736138; c=relaxed/simple;
+	bh=GpLEJTEeRlt9jJz1/IO39HWv8+hV4PlRV+AmeNj+5CE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZYqXnJ8YL/vfdW8ryhUluWelONdVUsq9WSVXuGTCGwdrrWcOGuY1REIE8HFnRvSPFra3XruV6eJd7Y7UBp80e3Hy+dXS/4dptri9nv/JfD8QwvrG6LL6QMJW8BcNjaEhsGEnydHMzPKr3HXJ9jRZj0Vmx/mB4oj7KE7f3cQ1SV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5BVHmjY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C2F9C4CED6;
+	Fri, 28 Feb 2025 09:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740736137;
+	bh=GpLEJTEeRlt9jJz1/IO39HWv8+hV4PlRV+AmeNj+5CE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=K5BVHmjY/pAKlqhTLI87VLB8Mzql+KtrYAoObw1ZwiQoDbBbfvPQWNWqnEr4qTVma
+	 yjAXlTImqk9bx2gnP9vC6dL4BGJTpnuIZ1UjNxLvfCnhPXlbMJNVJr5eCpBLFbsZZ9
+	 X5TJnE8d3mx5raSrKV8ysc4LFo2GHBXP02ANK+m9atzos8f+oaNcKEbbZ0hzMmbNO9
+	 geEXR6zDC8pDQl12LrQB4lvdvmVXrHTC1Y+tEKhRs3XGOH95hSMjWywqeUhJj6JP0A
+	 ALfP+65ubvbdV7BrYD4KsMTmnGXpSdFLTuYnZMFUlAzNqo1wPy1cPMLmoKiDYU49PL
+	 fGABkXv4TB3Lg==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Alexey Kardashevskiy <aik@amd.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
+	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
 	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
 	gregkh@linuxfoundation.org
 Subject: Re: [PATCH 05/11] PCI/TSM: Authenticate devices via platform TSM
-Message-ID: <Z8GEU3be8HTCZmNY@yilunxu-OptiPlex-7050>
+In-Reply-To: <Z8EQsFiVAxtWfulx@yilunxu-OptiPlex-7050>
 References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
  <173343742510.1074769.16552514658771224955.stgit@dwillia2-xfh.jf.intel.com>
- <Z1qx2nAHbZN72Ljf@yilunxu-OptiPlex-7050>
- <67b9252c8cac0_1c530f29484@dwillia2-xfh.jf.intel.com.notmuch>
- <Z7xRzVrR0t6ap3+y@yilunxu-OptiPlex-7050>
- <67c1001e8ae57_1a772941@dwillia2-xfh.jf.intel.com.notmuch>
+ <efc5ba59-964d-4988-a412-47f5297fedd3@amd.com>
+ <yq5aeczrww9j.fsf@kernel.org> <Z71umSkkyV0rAC25@yilunxu-OptiPlex-7050>
+ <yq5a4j0gc3fp.fsf@kernel.org> <Z8AHtcYgz2JukdfM@yilunxu-OptiPlex-7050>
+ <yq5aa5a78p8d.fsf@kernel.org> <Z8EQsFiVAxtWfulx@yilunxu-OptiPlex-7050>
+Date: Fri, 28 Feb 2025 15:18:51 +0530
+Message-ID: <yq5a4j0e8kn0.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67c1001e8ae57_1a772941@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain
 
-On Thu, Feb 27, 2025 at 04:15:26PM -0800, Dan Williams wrote:
-> Xu Yilun wrote:
-> > On Fri, Feb 21, 2025 at 05:15:24PM -0800, Dan Williams wrote:
-> > > Xu Yilun wrote:
-> > > > > +static int pci_tsm_disconnect(struct pci_dev *pdev)
-> > > > > +{
-> > > > > +	struct pci_tsm *pci_tsm = pdev->tsm;
-> > > > > +
-> > > > > +	lockdep_assert_held(&pci_tsm_rwsem);
-> > > > > +	if_not_guard(mutex_intr, &pci_tsm->lock)
-> > > > > +		return -EINTR;
-> > > > > +
-> > > > > +	if (pci_tsm->state < PCI_TSM_CONNECT)
-> > > > > +		return 0;
-> > > > > +	if (pci_tsm->state < PCI_TSM_INIT)
-> > > > > +		return -ENXIO;
-> > > > 
-> > > > Check PCI_TSM_INIT first, or this condition will never hit.
-> > > > 
-> > > >   if (pci_tsm->state < PCI_TSM_INIT)
-> > > > 	return -ENXIO;
-> > > >   if (pci_tsm->state < PCI_TSM_CONNECT)
-> > > > 	return 0;
-> > > > 
-> > > > I suggest the same sequence for pci_tsm_connect().
-> > > 
-> > > Good catch, fixed.
-> > > 
-> > > [..]
-> > > > > +
-> > > > > +static void __pci_tsm_init(struct pci_dev *pdev)
-> > > > > +{
-> > > > > +	bool tee_cap;
-> > > > > +
-> > > > > +	if (!is_physical_endpoint(pdev))
-> > > > > +		return;
-> > > > 
-> > > > This Filters out virtual functions, just because not ready for support,
-> > > > is it?
-> > > 
-> > > Do you see a need for PCI core to notify the TSM driver about the
-> > > arrival of VF devices?
-> > 
-> > I think yes.
-> > 
-> > > 
-> > > My expectation is that a VF TDI communicates with the TSM driver
-> > > relative to its PF.
-> > 
-> > It is possible, but the PF TSM still need to manage the TDI context for
-> > all it's VFs, like:
-> > 
-> > struct pci_tdi;
-> > 
-> > struct pci_tsm {
-> > 	...
-> > 	struct pci_dsm *dsm;
-> > 	struct xarray tdi_xa; // struct pci_tdi array
-> > };
-> > 
-> > 
-> > An alternative is we allow VFs has their own pci_tsm, and store their
-> > own tdi contexts in it.
-> > 
-> > struct pci_tsm {
-> > 	...
-> > 	struct pci_dsm *dsm; // point to PF's dsm.
-> > 	struct pci_tdi *tdi;
-> > };
-> > 
-> > I perfer the later cause we don't have to seach for TDI context
-> > everytime we have a pdev for VF and do tsm operations on it.
-> 
-> I do think it makes sense to have one ->tsm pointer from a PCI device to
-> represent any possible TSM context, but I do not think it makes sense
-> for that context to always contain members that are only relevant to PF
-> Function 0.
-> So, here is an updated proposal:
-> 
-> /**
->  * struct pci_tsm - Core TSM context for a given PCIe endpoint
->  * @pdev: indicates the type of pci_tsm object
->  *
->  * This structure is wrapped by a low level TSM driver and returned by
->  * tsm_ops.probe(), it is freed by tsm_ops.remove(). Depending on
->  * whether @pdev is physical function 0, another physical function, or a
->  * virtual function determines the pci_tsm object type. E.g. see 'struct
->  * pci_tsm_pf0'.
->  */
-> struct pci_tsm {
->         struct pci_dev *pdev;
-> };
-> 
-> /**
->  * struct pci_tsm_pf0 - Physical Function 0 TDISP context
->  * @state: reflect device initialized, connected, or bound
->  * @lock: protect @state vs pci_tsm_ops invocation
->  * @doe_mb: PCIe Data Object Exchange mailbox
->  */
-> struct pci_tsm_pf0 {
->         enum pci_tsm_state state;
->         struct mutex lock;
+Xu Yilun <yilun.xu@linux.intel.com> writes:
 
-I think the scope of the lock should expand to pci_tsm_ops::bind(), we
-need to ensure the TDI bind won't race with its PF0's (dis)connect.
+> On Thu, Feb 27, 2025 at 07:27:22PM +0530, Aneesh Kumar K.V wrote:
+>> Xu Yilun <yilun.xu@linux.intel.com> writes:
+>>
+>> > On Wed, Feb 26, 2025 at 05:40:02PM +0530, Aneesh Kumar K.V wrote:
+>> >> Xu Yilun <yilun.xu@linux.intel.com> writes:
+>> >>
+>> >> > On Fri, Feb 21, 2025 at 01:43:28PM +0530, Aneesh Kumar K.V wrote:
+>> >> >> Alexey Kardashevskiy <aik@amd.com> writes:
+>> >> >>
+>> >> >> ....
+>> >> >>
+>> >> >> >
+>> >> >> > I am trying to wrap my head around your tsm. here is what I got in my tree:
+>> >> >> > https://github.com/aik/linux/blob/tsm/include/linux/tsm.h
+>> >> >> >
+>> >> >> > Shortly:
+>> >> >> >
+>> >> >> > drivers/virt/coco/tsm.ko does sysfs (including "connect" and "bind" to
+>> >> >> > control and "certs"/"report" to attest) and implements tsm_dev/tsm_tdi,
+>> >> >> > it does not know pci_dev;
+>> >> >> >
+>> >> >> > drivers/pci/tsm-pci.ko creates/destroys tsm_dev/tsm_dev using tsm.ko;
+>> >> >> >
+>> >> >> > drivers/crypto/ccp/ccp.ko (the PSP guy) registers:
+>> >> >> > - tsm_subsys in tsm.ko (which does "connect" and "bind" and
+>> >> >> > - tsm_bus_subsys in tsm-pci.ko (which does "spdm_forward")
+>> >> >> > ccp.ko knows about pci_dev and whatever else comes in the future, and
+>> >> >> > ccp.ko's "connect" implementation calls the IDE library (I am adopting
+>> >> >> > yours now, with some tweaks).
+>> >> >> >
+>> >> >> > tsm-dev and tsm-tdi embed struct dev each and are added as children to
+>> >> >> > PCI devices: no hide/show attrs, no additional TSM pointer in struct
+>> >> >> > device or pci_dev, looks like:
+>> >> >> >
+>> >> >> > aik@sc ~> ls  /sys/bus/pci/devices/0000:e1:04.0/tsm-tdi/tdi:0000:e1:04.0/
+>> >> >> > device  power  subsystem  tsm_report  tsm_report_user  tsm_tdi_bind
+>> >> >> > tsm_tdi_status  tsm_tdi_status_user  uevent
+>> >> >> >
+>> >> >> > aik@sc ~> ls  /sys/bus/pci/devices/0000:e1:04.0/tsm_dev/
+>> >> >> > device  power  subsystem  tsm_certs  tsm_cert_slot  tsm_certs_user
+>> >> >> > tsm_dev_connect  tsm_dev_status  tsm_meas  tsm_meas_user  uevent
+>> >> >> >
+>> >> >> > aik@sc ~> ls /sys/class/tsm/tsm0/
+>> >> >> > device  power  stream0:0000:e1:00.0  subsystem  uevent
+>> >> >> >
+>> >> >> > aik@sc ~> ls /sys/class/tsm-dev/
+>> >> >> > tdev:0000:c0:01.1  tdev:0000:e0:01.1  tdev:0000:e1:00.0
+>> >> >> >
+>> >> >> > aik@sc ~> ls /sys/class/tsm-tdi/
+>> >> >> > tdi:0000:c0:01.1  tdi:0000:e0:01.1  tdi:0000:e1:00.0  tdi:0000:e1:04.0
+>> >> >> > tdi:0000:e1:04.1  tdi:0000:e1:04.2  tdi:0000:e1:04.3
+>> >> >> >
+>> >> >> >
+>> >> >> > SPDM forwarding seems a bus-agnostic concept, "connect" is a PCI thing
+>> >> >> > but pci_dev is only needed for DOE/IDE.
+>> >> >> >
+>> >> >> > Or is separating struct pci_dev from struct device not worth it and most
+>> >> >> > of it should go to tsm-pci.ko? Then what is left for tsm.ko? Thanks,
+>> >> >> >
+>> >> >>
+>> >> >> For the Arm CCA DA, I have structured the flow as follows. I am
+>> >> >> currently refining my changes to prepare them for posting. I am using
+>> >> >> tsm-core in both the host and guest. There is no bind interface at the
+>> >> >> sysfs level; instead, it is managed via the KVM ioctl
+>> >> >>
+>> >> >> Host:
+>> >> >> step 1.
+>> >> >> echo ${DEVICE} > /sys/bus/pci/devices/${DEVICE}/driver/unbind
+>> >> >> echo vfio-pci > /sys/bus/pci/devices/${DEVICE}/driver_override
+>> >> >> echo ${DEVICE} > /sys/bus/pci/drivers_probe
+>> >> >>
+>> >> >> step 2.
+>> >> >> echo 1 > /sys/bus/pci/devices/$DEVICE/tsm/connect
+>> >> >>
+>> >> >> step 3.
+>> >> >> using VMM to make the new KVM_SET_DEVICE_ATTR ioctl
+>> >> >>
+>> >> >> +		dev_num = vfio_devices[i].dev_hdr.dev_num;
+>> >> >> +		/* kvmtool only do 0 domain, 0 bus and 0 function devices. */
+>> >> >> +		guest_bdf = (0ULL << 32) | (0 << 16) | dev_num << 11 | (0 << 8);
+>> >> >> +
+>> >> >> +		struct kvm_vfio_tsm_bind param = {
+>> >> >> +			.guest_rid = guest_bdf,
+>> >> >> +			.devfd = vfio_devices[i].fd,
+>> >> >> +		};
+>> >> >> +		struct kvm_device_attr attr = {
+>> >> >> +			.group = KVM_DEV_VFIO_DEVICE,
+>> >> >> +			.attr = KVM_DEV_VFIO_DEVICE_TDI_BIND,
+>> >> >> +			.addr = (__u64)&param,
+>> >> >> +		};
+>> >> >> +
+>> >> >> +		if (ioctl(kvm_vfio_device, KVM_SET_DEVICE_ATTR, &attr)) {
+>> >> >> +			pr_err("Failed KVM_SET_DEVICE_ATTR for KVM_DEV_VFIO_DEVICE");
+>> >> >> +			return -ENODEV;
+>> >> >> +		}
+>> >> >> +
+>> >> >
+>> >> > I think bind (which brings device to a LOCKED state, no MMIO, no DMA)
+>> >> > cannot be a driver agnostic behavior. So I think it should be a VFIO
+>> >> > ioctl.
+>> >> >
+>> >>
+>> >> For the current CCA implementation bind is equivalent to VDEV_CREATE
+>> >> which doesn't mark the device LOCKED. Marking the device LOCKED is
+>> >> driven by the guest as shown in the steps below.
+>> >
+>> > Could you elaborate why vdev create & LOCK can't be done at the same
+>> > time, when guest requests "lock"? Intel TDX also requires firmware calls
+>> > like tdi_create(alloc metadata) & tdi_bind(do LOCK), but I don't see
+>> > there is need to break them out in different phases.
+>> >
+>>
+>> Yes, that is possible and might be what I will end up doing. Right now
+>> I have kept the interface flexible enough as I am writing these changes.
+>
+> Good to know that, thanks.
+>
+>> Device can possibly be presented in locked state to the guest.
+>
+> This is also what I did before. But finally I dropped (or pending) this
+> "early binding" support. There are several reset operations during VM
+> setup and booting, especially the ones in bios. They breaks LOCK state
+> and I have to make VFIO suppress the reset, or reset & recover, but that
+> seems not worth the effort.
+>
+> May wanna know how you see this problem.
 
-  struct pci_tsm {
-	struct pci_dev *pdev;
-	struct pci_tdi *tdi;
-  };
+Currently, my approach involves a split vdev_create and a TDISP lock, which is
+why I haven't encountered the issue mentioned above. The current changes
+implement vdev_create via the VMM, while the guest makes an RSI call to
+switch the device to the locked state.
 
-  struct pci_tdi {
-	struct pci_tsm_pf0 *tsm_pf0;
-	...
-  };
+I chose to separate vdev_create and TDISP lock into two distinct steps
+to simplify the process and better align it with the RMM spec [1].
 
-  int pci_tdi_lock(struct pci_tdi *tdi)
-  {
-	mutex_lock(&tdi->tsm_pf0->lock);
-  }
+I noticed that SEV-TIO performs a KVM_EXIT_VMGEXIT, which carries out a
+similar operation unless it has already been handled during VM startup.
+From your reply above, I understand there was a proposal to combine
+VDEV_CREATE and TDISP_LOCK. However, you also mentioned that if we
+present the device in a locked state to a VM early in the boot process,
+we might unintentionally break the TDISP lock state.
 
-Thanks,
-Yilun
+I will look up the previous discussions to better understand the
+rationale behind combining vdev_create and lock.
 
->         struct pci_doe_mb *doe_mb;
->         struct pci_tsm tsm;
-> };
-> 
-> This arrangement lets the core 'struct pci_tsm' object hold
-> common-to-all device-type details like a 'struct pci_tdi' pointer. For
-> physical function0 devices the core does:
-> 
->    container_of(pdev->tsm, struct pci_tsm_pf0, tsm)
-> 
-> ...to get to those exclusive details.
-> 
-> > > > > +
-> > > > > +	tee_cap = pdev->devcap & PCI_EXP_DEVCAP_TEE;
-> > > > > +
-> > > > > +	if (!(pdev->ide_cap || tee_cap))
-> > > > > +		return;
-> > > > > +
-> > > > > +	lockdep_assert_held_write(&pci_tsm_rwsem);
-> > > > > +	if (!tsm_ops)
-> > > > > +		return;
-> > > > > +
-> > > > > +	struct pci_tsm *pci_tsm __free(kfree) = kzalloc(sizeof(*pci_tsm), GFP_KERNEL);
-> > > > > +	if (!pci_tsm)
-> > > > > +		return;
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * If a physical device has any security capabilities it may be
-> > > > > +	 * a candidate to connect with the platform TSM
-> > > > > +	 */
-> > > > > +	struct pci_dsm *dsm __free(dsm_remove) = tsm_ops->probe(pdev);
-> > > > 
-> > > > IIUC, pdev->tsm should be for every pci function (physical or virtual),
-> > > > pdev->tsm->dsm should be only for physical functions, is it?
-> > > 
-> > > Per above I was only expecting physical function, but the bind flow
-> > > might introduce the need for per function (phyiscal or virtual) TDI
-> > > context. I expect that is separate from the PF pdev->tsm context.
-> > 
-> > Could we embed TDI context in PF's pdev->tsm AND VF's pdev->tsm? From
-> > TDISP spec, TSM covers TDI management so I think it is proper
-> > struct pci_tsm contains TDI context.
-> 
-> Yes, makes sense. I will work on moving the physical function0 data
-> out-of-line from the core 'struct pci_tsm' definition.
-> 
-> So, 'struct pci_tdi' is common to 'struct pci_tsm' since any PCI
-> function can become a TDI. If VFs or non-function0 functions need
-> addtional context we could create a 'struct pci_tsm_vf' or similar for
-> that data.
+[1] https://developer.arm.com/-/cdn-downloads/permalink/Architectures/Armv9/DEN0137_1.1-alp12.zip
+
+-aneesh
 
