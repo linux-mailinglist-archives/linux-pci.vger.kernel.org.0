@@ -1,142 +1,104 @@
-Return-Path: <linux-pci+bounces-22678-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22679-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A822FA4A5B2
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 23:12:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EA74A4A5E5
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 23:27:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B75EC16C79B
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 22:12:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 66DE77AA403
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 22:26:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C75731DE2CD;
-	Fri, 28 Feb 2025 22:12:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FB571DFE39;
+	Fri, 28 Feb 2025 22:25:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="TyCXX+0Y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i7Aeixyo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9071A254C;
-	Fri, 28 Feb 2025 22:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6051DED45
+	for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2025 22:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740780721; cv=none; b=mzUFPcgwg3oOj2hhlnXDkBzUsAtv96ouWqZuH7FGYjAztNQ2ww6r55MzUGgtBp8LVNA4mckGL1/rvqSiCJFvy/AFMM6l8Icq0y5uxao98Msix5DDHRzUJfY053PVFnDAbQwRJU7i0at0NAnGvc0ANYRYX+sj4npEgK0XcNLMseQ=
+	t=1740781540; cv=none; b=rPExKZ+2rD2kfNMhxT0OHxP0wj1xIKmhsPf5hNdEq/cEMSmpbFcnB0yOATi14sM8s5Cgevar4My5DYw25m/jyfs5KHl+690KRcO5yH1I+g0Vq3fAC97TKka+ilQBr46hS1ISQDgemWya1H4aJ37B0fUnj8RjS311ZwBTOsSqzzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740780721; c=relaxed/simple;
-	bh=n0RDSDT7lrDfgY2gY0Jx1+2UsomVL7pe4VNMSvttegY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pCygiEf+cF+0lcBYaLrpC0A3kl3XHISBARAaqepMmzSBbxFHd0xhMF8oIJldMFt/zBo6uPw46cXHjSe7ubo9bj/uka+KaOJcXQVlEqAodLaHxFZK3k/mHWsH+5Rf5CQprgZkIkQXjn4LWd7GHd4zPdPSlY9IbtayRheicCtxbbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=TyCXX+0Y; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=VZfcm07W8RwEaBy9lSmqnHo6WL11ba796zrsT4TrXJI=; b=TyCXX+0Y4INx6O+beYAL/qfnpw
-	xrOw0ZkMweR/I6PkMC5d1ncuABaxrCMZo/JxoY7hyf68suXi20D9bp/o5Jog748TyIWhA5xTtfdhJ
-	N/9WXodyRsorIeLIQ9+zLGNTYFHVsdtiPcbsloZD0vCvQINbv/s67+lmDR7NQnuJUO/+ETU16Om6R
-	1HlG2XdFsLUUWvKRrskWKV9dYBOCOtVuiwOaOjEGed51G+ukhAj1rBpT5OxC8+BgQa35paN0TGDQr
-	4hOOmhezcDXfbRRCWzsWXdkF0cebcaY93q/VeB5g6WxSIRp5W7DnHlnEvuEUKFlAL6zEGHxplPFXS
-	kAZzc4mQ==;
-Received: from i53875b47.versanet.de ([83.135.91.71] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1to8Zk-00040X-Sb; Fri, 28 Feb 2025 23:11:20 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: Kever Yang <kever.yang@rock-chips.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	linux-rockchip@lists.infradead.org,
-	Simon Xue <xxm@rock-chips.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	linux-usb@vger.kernel.org,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Frank Wang <frank.wang@rock-chips.com>,
-	Jamie Iles <jamie@jamieiles.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Johan Jonker <jbx6244@gmail.com>,
-	David Airlie <airlied@gmail.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-i2c@vger.kernel.org,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Elaine Zhang <zhangqing@rock-chips.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Finley Xiao <finley.xiao@rock-chips.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	FUKAUMI Naoki <naoki@radxa.com>,
-	linux-pwm@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-serial@vger.kernel.org,
-	Michael Riesch <michael.riesch@wolfvision.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	ulf.hansson@linaro.org,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	devicetree@vger.kernel.org,
-	Diederik de Haas <didi.debian@cknow.org>,
-	linux-watchdog@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Shresth Prasad <shresthprasad7@gmail.com>,
-	Tim Lunn <tim@feathertop.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Subject: Re: (subset) [PATCH v3 00/15] rockchip: Add rk3562 SoC and evb support
-Date: Fri, 28 Feb 2025 23:10:48 +0100
-Message-ID: <174078063579.504376.4763347846550378295.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250227111913.2344207-1-kever.yang@rock-chips.com>
-References: <20250227111913.2344207-1-kever.yang@rock-chips.com>
+	s=arc-20240116; t=1740781540; c=relaxed/simple;
+	bh=6MyRzpv3WUm1MPCB+Plboa+7+KfzA3UsfgRa6Aorjhw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hxNfQ2XOcRRA6xlK0AROTDxZ8z7vCtTBAq0Xnj+CewZXY8f5CLwQHUSHifYZXQB9Pl9sLJ8O+uhHjVFBhz3yHyHURnG+gmSK/BzXKJKdbJR+6rMq0Vfk7w/x6MyKv0QYcGXdoVklZIo3+MSBDj5/qLSO4/N3ZIwCwUlcS6+BOk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i7Aeixyo; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so509200966b.3
+        for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2025 14:25:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740781537; x=1741386337; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6MyRzpv3WUm1MPCB+Plboa+7+KfzA3UsfgRa6Aorjhw=;
+        b=i7AeixyokQUT16YX7NSQZaowIqy+811EoyFnnsp/GgrnwXxEdluP/zuJlsQ6myu/+W
+         bg7gKmtfk9JUHaKMIe2AYzYstfPfToKLjDBlQT1xJK+Lzu2XBZemjb4vyElDmC4EMeQa
+         P4XO+k10usovhwL9o+rRisR/TF2WghxJxsBRnRNdSVJHrR+bJXqbGMzbiIqfs3NwHr1z
+         Q3N6g2f3kY4Yeujfwmmh6AdzS+EfBydj86EWoLfFsMNE5daZf1wb1vSIcbdwazuxPJPm
+         3Zlt3JjAV7IpCzAwzigPj2tmsV6pEC76TYVw4Pns6/fdjISxhbsr6k3ium39hh0BekDl
+         liTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740781537; x=1741386337;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6MyRzpv3WUm1MPCB+Plboa+7+KfzA3UsfgRa6Aorjhw=;
+        b=Lea2sC3CdHiEjyMq62UAEBeJwueWmx5sMjyYrRoo2ThVSpedn9avfNlVSEz/dC+/RL
+         5rq72ECAt379PK6nTYcK30Zt8heJBwgJ+G+1GVh0ZwA0s47xsj2kfvDu4sD2K7rC8Syn
+         XEe6BVnT1+9Jr7IzFHPDMjcaifLm/UAUvmHlJfFxgF2MWzPREcEbz1IKUZ7p8SmYERqK
+         1ljkxoU58+uU4tyg2+Zl8HG+8z9FTaHvlKPAIwekHQ1kBhINRb9flABJDpJNGluNEEH2
+         EiGa3wANVkj5jOcck2p1yjwSfYdhkyPEha3DS4vFneye7jqbFc509CcvfA2vdnG6osEY
+         xIJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXtEsgFctkj8geTeuLFUzFekFbQGRBaBSVecyLN80RQ4IVBMPpSkIbzR7p7/HOIGu6NxdD5fWQUhM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg+r/7mWIPVcLzcZzoVvIaXBxspcqndkp+TBFWsa5nJ74AyWJ3
+	NIcC7OV2Zt+r8dT5RNVXAHCVjeanEUJnQxKv0/aCbZp+kN98G9H0NUg1EJJRksyEjUiLh0O/SMw
+	s0wzVhBWK40qbqHae/x2spBCilInCpeH9DLx2
+X-Gm-Gg: ASbGnctZvn7Bu6dgw2ju8bt9myJbFVBE5R4s9NcYhOyU/FCcqeTAM+XoGf+MXk+OG6/
+	QUxYB7OiHRYbwST6zrckaoIgN2+46bv5upw90ZQYevfpYUDGGF6cXBLqHji8M/FfkGzLiEdbUP1
+	uCVHWyMmPTbXPm5dE3ch+n/RotK6IzdofhaFJC
+X-Google-Smtp-Source: AGHT+IGn7tbcEiVrjYMp9XP7Z0UbCgWg+AYN5trakpUsxNhCBhw3jQG1RgS0X3mqJW7K41ymLsrWSknOSjOuWkZLAZU=
+X-Received: by 2002:a17:907:3545:b0:abf:44b1:22e4 with SMTP id
+ a640c23a62f3a-abf44b12416mr221035866b.11.1740781535677; Fri, 28 Feb 2025
+ 14:25:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250214023543.992372-1-pandoh@google.com> <20250214023543.992372-3-pandoh@google.com>
+ <8e94ccbf-497b-4097-87a5-761cbc7c205d@oracle.com> <CAMC_AXVgYegnfc-vyKuxZS-Ck=aCJ95=HqdYNraVv99kXxw1QA@mail.gmail.com>
+ <bbfc780c-115c-43d4-af33-935b447f6081@oracle.com>
+In-Reply-To: <bbfc780c-115c-43d4-af33-935b447f6081@oracle.com>
+From: Jon Pan-Doh <pandoh@google.com>
+Date: Fri, 28 Feb 2025 14:25:24 -0800
+X-Gm-Features: AQ5f1JocPTbruv3SQbDNzYYBqX6Sdmn9xZya4PNLgNlSG_RHdlOOENkCXstGrQg
+Message-ID: <CAMC_AXXne8aLsQpvQfSWWJDxx9MzRQC0-dGs-a+9vkARzRUGmQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/8] PCI/AER: Use the same log level for all messages
+To: Karolina Stolarek <karolina.stolarek@oracle.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller <ben.fuller@oracle.com>, 
+	Drew Walton <drewwalton@microsoft.com>, Anil Agrawal <anilagrawal@meta.com>, 
+	Tony Luck <tony.luck@intel.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Feb 24, 2025 at 3:27=E2=80=AFAM Karolina Stolarek
+<karolina.stolarek@oracle.com> wrote:
+> Right, that's probably I'm using checkpatch with a "strict" parameter.
 
-On Thu, 27 Feb 2025 19:18:58 +0800, Kever Yang wrote:
-> This patch set adds rk3562 SoC and its evb support.
-> 
-> I have split out patches need driver change for different subsystem.
-> And all the modules with dt-binding document update in this patch set
-> do not need any driver change. I put them together to make it clear we
-> have a new SoC and board to use the new compatible. Please pick up the
-> patch for your subsystem, or please let me know if the patch has to
-> send separate.
-> 
-> [...]
+Ah. I see the formatting issues now. Will fix it in v3.
 
-Applied, thanks!
-
-[05/15] dt-bindings: gpu: Add rockchip,rk3562-mali compatible
-        commit: 049e7ac203d51fdc3a739f5f28906788e8eeea03
-
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+Thanks,
+Jon
 
