@@ -1,135 +1,153 @@
-Return-Path: <linux-pci+bounces-22634-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22635-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0922DA4971B
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 11:23:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E9B9A497C0
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 11:49:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 01F2A1883901
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 10:22:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1E7933BC799
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 10:49:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B143925B68B;
-	Fri, 28 Feb 2025 10:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E580C25D218;
+	Fri, 28 Feb 2025 10:49:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ywooo/Qw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YmYLxoiz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37492157A55;
-	Fri, 28 Feb 2025 10:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485D31B4250;
+	Fri, 28 Feb 2025 10:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740738167; cv=none; b=nj2NjRajig+LWIRJBDiiTXxUurDi16H8d9tUc3btSspnC7mn90orfNvTwSsVxojct+Nb9Dbcw1d1vzAeV0V6QVfvcRjFv/SC59s2+Xh8oyyJhryQwcCWSLbXfSFmddhxA1n8jptagTbTUh/oWX5MYLuNXhU4+PN8JD89L/zbS64=
+	t=1740739771; cv=none; b=VAKR9FJwdAc6FkSDyKQV3oCKjrAphw/ZU3WQ2WUOU/edqmW5Tk68YivnEIrBRFWUSJRgdf1Nyn4ePOqHa00gT5P37nRHTXUE6c77dyObwOWjwdgaeNq9vHhOyk3oZV3gVzpu5Iss1elkFqo0+/P1PlTchbIj2fljgHdQmWeMjYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740738167; c=relaxed/simple;
-	bh=zQMkQAtj6vzSQBpImtNQZFAAzOJ67Rs10PHBe6Pdo/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aOkC60npJ5IfJlSZEHokHYP1EJpm9RJY4UOK7P+xZLE0HASWvOGvUibYd+ZhI7thT+Ul4N6RXOIdOTbjuGLa3fWRpppXc6NrphmHKPjxOWxdMy+aCW2LMGl0MPAmu1O9iN3AgqWYnSVDP93FH7uoPYFW2YDcUGTPGP4PTushF98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ywooo/Qw; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2fe9596a582so475770a91.3;
-        Fri, 28 Feb 2025 02:22:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740738165; x=1741342965; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zQMkQAtj6vzSQBpImtNQZFAAzOJ67Rs10PHBe6Pdo/Y=;
-        b=Ywooo/QwziEi+rLbWHW9j2XP2SValmUxDlR7gsMikRgjHSH9StwxTZiTmiJjlfK+gm
-         lkLeS2RUVA61KPIacQHjx90ozvovkmc0XaPwejjYAum8RKvDQhIS881gpE/gojJWUHcc
-         EJeQYhITGlcB0o/Zh45jBuNVHd3JMR54TzmxkC9t6dzOL+0Xx2mU/fyFa+qU4+8stK9a
-         KwiKqJzQGoP2leFGamqDMChXojWMCF1QdghuHo8BXauxi2IHhcJ53heLwL3CCJ1ooQSs
-         xe+CKy4GkcyUrXPIatgY+tgh3xxVZlL3vVKjTpb9yZpdxfrnAop4AftuYs+mVYWz+h/5
-         v4cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740738165; x=1741342965;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zQMkQAtj6vzSQBpImtNQZFAAzOJ67Rs10PHBe6Pdo/Y=;
-        b=MgyZJEnjyMUws1Vnb9jBHuQ7D9GNCNRoREBGRcosIPoTZjF+cHvaG+eM5yF2zSCUTe
-         Qket5+ZSr/hLCd6xcJm03U0Bqb0No36T7BjugosuRQSNRwv5Dn+3DV5SmASbj67NVzp2
-         UBQOoMEVL0YiiM1l4sOgSnAa1Y8AtOQaJw7w7f4vPsKMBiUEgRZwLGUjtgffruVThIPM
-         YbFg67yE3/lbvtnRvvKEnQQMa1La0ICMDUSv+NL6ZLbSh1uiN//EZWYjkIW9hvrvLKAx
-         V/geGtMqeVN1X4QvrbB4nZRLEFXnyPKwJxxTtLHteSbNEfhWRpAVkTEehxClVyu4Ms9Q
-         PGzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVBprYe94Q92qwjGOlHjqeqrZ0IQSVDrhBsis7UjW/peDyMv/bBpTJx+jW130xxZfKYh/92@vger.kernel.org, AJvYcCVknXTQo1o0ApWkS9DZxLAGjtnoP2uiBxNgn7aOcRHc+78g+69CDlxQu+0FLJ1Czm2hOdMLIZS8Kkn6@vger.kernel.org, AJvYcCVqXCiTn/k0u0WIU7+d1FCGFW8ZKDLeRmF78poN4Harj+D4elI0POChb9OQvHip28UawabMCC64y+EY@vger.kernel.org, AJvYcCXGDYvro+L6qve4bFWLo/c1AxPTpvg/s4EtwU0qiECHISDN/LXEWaHpmL5pD6o4uA+RU4ifcXiShVXXu+Yswjw=@vger.kernel.org, AJvYcCXwLdAVn9et3qhMT7lFzIE0G0fECMQoszgkNaTi7bgAFVe7t/VKsKazKuU3so7+88MJp7Os3K8B43N/RYfh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyxn71jxs6OzWagodT/liUt0NKeXPyeLxvjcqUukOAiWWlI8NhJ
-	PhpfnqBa5NjaiWA4jiYJt4G7omtcqN4O4xzCgpECUqCJBicst95KANQuABjxgu1IDnO51UDhqWO
-	YQ262G3afKeSo+0WD5pGuYjwv3U8=
-X-Gm-Gg: ASbGncspADguRiiL2x091JegG+aIzErRLi+HnJXbTS9PpS6R5rRf2s8datufvISkr+s
-	+OM+TX1jQkKde/HLM3QcDZNMMfO4SFE8dGZKAvBOgWod5M2Dv832mqZ0c9axKTe77vi3b1U0lRj
-	P9mYVg9bc=
-X-Google-Smtp-Source: AGHT+IHIittGCPQby1z/CAAucXt5JFtqaN9s/CywTLEe2k/+dixEbEMthbGRpWklymixZ1tzV0vdjHdcEd+cYidEN04=
-X-Received: by 2002:a17:90b:1a91:b0:2fe:a747:935a with SMTP id
- 98e67ed59e1d1-2febabc3f2amr1758599a91.4.1740738165504; Fri, 28 Feb 2025
- 02:22:45 -0800 (PST)
+	s=arc-20240116; t=1740739771; c=relaxed/simple;
+	bh=6Gf+WSPrlbTAJ/XWPWj3WRZAIjUVfEvP8NxsUg6aEE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hnHnWqsOJZOxGhoO6JKsjO3e4SqDgFYRhVl5/xCspu6+CH41RUG6bYNVFvQsbXmMwd2Npb5+80+ceqtl3qY2qAWHFNpsF6+0wXQMwmgDw0efK1KDMwr87EvME2vZRpyG2CvE5FvcJypESEYZKX6JRGer/uUAiUCx04Geyc1nxa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YmYLxoiz; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740739771; x=1772275771;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6Gf+WSPrlbTAJ/XWPWj3WRZAIjUVfEvP8NxsUg6aEE0=;
+  b=YmYLxoizPvtxsDJzK+zC19+1+4rJjdwoPXoUgYR1dyeGLMn5J8shh5ZD
+   0PAJrHx0a37EdXXeHDd2cyqb36kaCTo2/wguOXb2cxkOeCsITjXJnmZml
+   HaFDf8xYnPiLSxc7K4MoaFS48gbpgWFof+pHbwXmFh1KVZ8Ggl+wEcBZ6
+   YKXlqxCp+j9QT+GCxuBwbchNV1c686VZFRWXq8iWK5SDJIIxaYyfa8Ky/
+   E3bBThkbYojRqDTMbatVq9w6tJ6B1c3b0FNRFuRLU/F3/kgpIYSXcpXmH
+   cFODrbCLhCcRnvIuRhtjze7sLcVyaYRQlQWtqYorxiIkwP/RSOgoMhvcX
+   g==;
+X-CSE-ConnectionGUID: hBcgigImTXq7dPYiYH211w==
+X-CSE-MsgGUID: Dn5Nj/t0TCiWRfnXz4rqjA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="52299045"
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="52299045"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 02:49:30 -0800
+X-CSE-ConnectionGUID: HiJu018vS+iwtbxZmJFI0w==
+X-CSE-MsgGUID: H9o4/NGjRDq4QGER7HElmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="121913710"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 28 Feb 2025 02:49:26 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 9DF31297; Fri, 28 Feb 2025 12:49:25 +0200 (EET)
+Date: Fri, 28 Feb 2025 12:49:25 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Kenneth Crudup <kenny@panix.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jian-Hong Pan <jhp@endlessos.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?utf-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Michael Jamet <michael.jamet@intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
+Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
+ Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
+Message-ID: <20250228104925.GO3713119@black.fi.intel.com>
+References: <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
+ <20250211055722.GW3713119@black.fi.intel.com>
+ <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
+ <20250213135911.GG3713119@black.fi.intel.com>
+ <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
+ <20250214162948.GJ3713119@black.fi.intel.com>
+ <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
+ <20250226084404.GM3713119@black.fi.intel.com>
+ <b6eff06e-1a8c-48c3-b536-39b567015d0c@panix.com>
+ <5c131927-87c1-4e21-90f8-8e3a34cd6dbf@panix.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241219170425.12036-1-dakr@kernel.org> <20241219170425.12036-8-dakr@kernel.org>
- <g63h5f3zowy375yutftautqhurflahq3o5nmujbr274c5d7u7u@j5cbqi5aba6k>
- <CANiq72=gZhG8MOCqPi8F0yp3WR1oW77V+MXdLP=RK_R2Jzg-cw@mail.gmail.com>
- <wnzq3vlgawjdchjck7nzwlzmm5qbmactwlhtj44ak7s7kefphd@m7emgjnmnkjn>
- <Z72jw3TYJHm7N242@pollux> <nlngenb6udempavyevw62qvdzuo7jr4m5mt4fwvznza347vicl@ynn4c5lojoub>
- <Z8A4E_AyDlSUT5Bq@pollux> <w2udn7qfzcvncghilcwaz4qc6rv2si3dqpjcs2wrbvits3b44k@parw3mnusbuf>
-In-Reply-To: <w2udn7qfzcvncghilcwaz4qc6rv2si3dqpjcs2wrbvits3b44k@parw3mnusbuf>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 28 Feb 2025 11:22:33 +0100
-X-Gm-Features: AQ5f1JoBAMoLfZEmHB4LoCW7CaOXRtnCBfVtt6Z6is_lk4ig8YbV9oYSmUL7ugI
-Message-ID: <CANiq72myNPVD=1jHzFxryvnBuwqdw7-PDbPsQ+FdpCjeYtVzig@mail.gmail.com>
-Subject: Re: [PATCH v7 07/16] rust: add `io::{Io, IoRaw}` base types
-To: Alistair Popple <apopple@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org, rafael@kernel.org, 
-	bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, tmgross@umich.edu, a.hindborg@samsung.com, 
-	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com, 
-	lina@asahilina.net, pstanner@redhat.com, ajanulgu@redhat.com, 
-	lyude@redhat.com, robh@kernel.org, daniel.almeida@collabora.com, 
-	saravanak@google.com, dirk.behme@de.bosch.com, j@jannau.net, 
-	fabien.parent@linaro.org, chrisi.schrefl@gmail.com, paulmck@kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, rcu@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5c131927-87c1-4e21-90f8-8e3a34cd6dbf@panix.com>
 
-On Fri, Feb 28, 2025 at 6:29=E2=80=AFAM Alistair Popple <apopple@nvidia.com=
-> wrote:
->
-> I'm not sure I agree it works perfectly fine. Developer ergonomics are
-> an important aspect of any build environment, and I'd argue the ergonomic
-> limitation for (2) means it is at least somewhat broken and needs fixing.
->
-> Anyway thanks for your time and detailed explainations, I really just sta=
-rted
-> this thread as I think reducing friction for existing kernel developers t=
-o start
-> looking at Rust in the kernel is important.
+Hi,
 
-+1, it is indeed very, very important.
+On Thu, Feb 27, 2025 at 09:46:07AM -0800, Kenneth Crudup wrote:
+> So I think, the failure mode may be related in some part to DP/Tunneling,
+> too- I finally got another lockup (this time, after a hibernate, which I
+> guess is some of the same facility) but what was different about this time
+> where I couldn't reproduce the lockups (and what happens when I use my
+> CalDigit dock) was I had an external USB-C monitor connected when I resumed,
+> and when I'm home (where I sometimes forget to remove the NVMe USB4 adaptor)
+> I always have my monitor connected to the dock.
 
-But, just to clarify, we have been caring about ergonomics and
-reducing friction for kernel developers since the very beginning,
-including asking upstream Rust for features and so on when applicable.
+It would be good to stick with a "proven" use-case so that the steps are
+always the same. This may involve several issues in various parts of the
+kernel and we need to track them one by one. If you change the steps in the
+middle then we may end up finding completely different issues and it is not
+helping the debugging effort.
 
-In general, it has been a factor in most topics we have discussed in
-the team since 2020, not just for source code or debugging features,
-but also docs, KUnit, and so on.
+The steps at the moment would be simply this:
 
-That is why we would like to improve it and why we have it in our
-upstream Rust wishlist and so on. In other words, it is not that we do
-not see the issue!
+1. Boot the system up, nothing connected.
+2. Connect Thunderbolt dock and make sure UI authorizes it.
+3. Connect Thunderbolt NVMe to the Thunderbolt dock and make sure UI authorizes it.
+4. Verify that the devices behind PCIe tunnels are visible and functional (lspci for example)
+5. Suspend the laptop by closing lid.
+6. Unplug the dock (and the NVMe).
+7. Resume the laptop by opening the lid.
 
-I hope that clarifies.
+Expectation: The system resumes just fine, finds the devices gone and stays functional.
+Actual result: The system does not resume properly, seems to crash and burn the screen
+	       is black.
 
-Cheers,
-Miguel
+Please correct me if I got something wrong. This is essentially that you go
+from work to home, unplugging the dock and then resuming it at home.
+
+The other thing is that in the pstore I see these:
+
+thunderbolt 0000:00:0d.2: 0:5: __tb_path_deactivate_hop(): 401
+
+but there is no such log in the mainline. If you have done some local
+changes I suggest to drop all them to make sure we are looking at the same
+source code.
+
+> See attached dump log. I'm using the (somewhat still experimental) Xe
+> display driver, but I've seen this same lockup happen with i915.
+
+Please also keep using tha same graphics driver.
+
+> In any case, I've now reverted 9d573d19, and when I get back to my CalDigit
+> I can try instrumenting the code paths in the commit and see exactly where
+> we're locking up.
+
+No need to add any changes. Just try with the revert and see if that at
+least makes the system resume properly. If it does then there could be
+other issues but then you can take full dmesg and send to us instead of
+those pstore snippets.
 
