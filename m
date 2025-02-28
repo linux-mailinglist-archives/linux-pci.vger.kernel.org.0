@@ -1,173 +1,213 @@
-Return-Path: <linux-pci+bounces-22614-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22615-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 936C3A49195
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 07:30:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB478A4919C
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 07:34:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 291E43ACE4A
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 06:30:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 831BC18838F9
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 06:34:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CE4C1C4A3D;
-	Fri, 28 Feb 2025 06:29:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAFCB23DE;
+	Fri, 28 Feb 2025 06:34:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="YKUVPqLo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKaQRJM/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD7C1C1F05;
-	Fri, 28 Feb 2025 06:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217811AF0CB;
+	Fri, 28 Feb 2025 06:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740724185; cv=none; b=Toq6d1mpC5u31MIhn/0AjuHAqieQWm4GWIHmqk9fbgnZ7BMssfYfy3nocH6jcXmQbXl3QZpS2+8TvUgAs9Xv1QEtsXHT4p1bk+9IHH/LCAmQiuRYVGcAXlfNJ5lE1q5kyz/8SMItVJAHyyTB0W+6gXrIE5CQ7iF9MCKl50lN7+A=
+	t=1740724466; cv=none; b=UR9SXvF4C1x8YWGQ8DHZEagwLOzt31P28WRxuXjfulaVgFLL8isc34VIBd5q+nKaWyt3pO6AstHE1Y1JE2a3/IXj/yB65SIZC65+Z8Zdfzpqb1TCrPRjUkHPSsbS2mTVgPG8Y7rkenc3TX9iCQF+bGk55eKaYXJNvNlr0DZJL5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740724185; c=relaxed/simple;
-	bh=RbC4xfF6h61NbHPK5qi+JyBTdX+MGZZT6MCYbiS3ZDQ=;
+	s=arc-20240116; t=1740724466; c=relaxed/simple;
+	bh=rzVgtvY1SM56HqPtFVnZDRtqos6uI14mQmNqWNQKwKg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ipFz3YmdLw4SeUz9KA5+LrE7ghPBQ2bccPmXX6VlrinMttN0wRykKB064hpSeT84GzIw2JXg0KBo1phdPrjYdf2lxhUlsbgLjTjLyR1G8Hu62y9NiWkGCJ2NCYvCVSiSTK4BlXEIVGvwgE69cBVuunQyli8q08oI7Q75Lf8VRGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=YKUVPqLo; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740724171; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=P/gHqdTH6OvF6sFxyThANlSajf5KaqwskiX012+vXJw=;
-	b=YKUVPqLoiYr9s1nN/ZxQKjI0qA1DfnrkOTh8xlbyb68EpsWv3yzobZr0fPaHWASDdMR/LM8b08r26wwFH4CJX/K9BVglC1ye9WqWa2t8VFpL79Sa9ARFyWgTSDya0mkdjTJL/qiDL+kiEI8oOqTtG5r80T6f4WhkukGXcEwynog=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WQOmTnc_1740724170 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 28 Feb 2025 14:29:31 +0800
-Date: Fri, 28 Feb 2025 14:29:29 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Lukas Wunner <lukas@wunner.de>, rafael@kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Liguang Zhang <zhangliguang@linux.alibaba.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>,
-	Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] PCI/portdrv: Add necessary wait for disabling
- hotplug events
-Message-ID: <Z8FXyVyMyAe4_bI3@U-2FWC9VHC-2323.local>
-References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
- <20250224034500.23024-3-feng.tang@linux.alibaba.com>
- <Z7y2e-EJLijQsp8D@wunner.de>
- <Z70zyhZe6OrxNNT3@U-2FWC9VHC-2323.local>
- <Z71Ap7kpV4rfhFDU@wunner.de>
- <Z71KHDbgrPFaoPO7@U-2FWC9VHC-2323.local>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UEq2uUyvmS32soTXQmh8eiBO/dMlxVg/8a8pHVUeuurKraXBMygmzHxMNrt/SXR17fKqiGz01PyLDq6bC6TAiRHrIwMw/Hh/45Chi9FgLFKUbQdBKz1B1vyN+CwAuOC+kTXOVTkxh1NiobsK3S9xofBgowwu8rLCHfoKcfLafbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WKaQRJM/; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e895fd83d3so12578606d6.3;
+        Thu, 27 Feb 2025 22:34:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740724463; x=1741329263; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IyxvtTDvP2i08pzEmArBnEwNU9XeUSRwTgWHm1HVVpw=;
+        b=WKaQRJM/OPYwCT1WTykaL2W94szVg7ZtbGY6GNtiE40ggTJ+EyfUD5A9sAxifZBHIY
+         17aCFbOWfXqvG5hWwJWFOUtzwlEGPJMeoghZHRhqjao/hckU4MFzOB8e8hsv05I3VhFh
+         UbZ0hI3yTqYINFvNOJ9jFjcm/f5Xn87ZRj9kgbPjprSngpdf0mJdbG5jYFBL33Lxfelj
+         f0Yn/i5niRy3Axpfe0OYOjb1wuqWAZY98f+YWudeLbO0Jtk2PR7GUTW2cwmRliNnJVCd
+         yEbYocdv4dualPOlN4UFUlOAKy1lzs4Eo9bLMVl/Y+i7q7DKLUAymCPRD5/O1Gxi3MOe
+         JStg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740724463; x=1741329263;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IyxvtTDvP2i08pzEmArBnEwNU9XeUSRwTgWHm1HVVpw=;
+        b=CGj0TVW9Fr59Mzy2UsFt+Q62dCUEZtfcjzmjPeJgYEkCjWbavQ1hL2lhZKirpce9A+
+         x9SHhb5hM7sy/oGr4pwVQzdol39zu0Cz6H056pcKTeU9czcmlb1rkJQzBGI+Bs4QYEMm
+         ciQMtfXnLFVC+ZoGzrwNFEWpfwuBUgf3dx27956X3BICyJVRMI2szDWJp97dqabecl2D
+         qUQCrj5uAddaN4iGU8uf5HrW6pQyLCpjHm8PcOBHlM9qhJXwO5uMPOVnndZZGyiV6kgH
+         jU4aomIO+ALZ4MOIWiekrDGy6PEXkAufDp/MDR44aIQCxFgrVmAs3N1zBGY8lcdFZ5fv
+         1KiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/nJep+6z+Hv4UwT0kMg52GM/PW7oSpGIERkSbJXflpdantwzivncNJgRO6a7zllkGqKlcNUSZTovG@vger.kernel.org, AJvYcCVM+BPGwbBQE7NmamocCaBqUA4e5ha7sZt2uxXzCAJTL15flQQFASnN4LbjbQmLJiE+7Lw+5qEiFMkgesbe@vger.kernel.org, AJvYcCWlikvS8Bx9VAu3SN1rpS/lusYwxfQZYWzUXSIQu2odViWk1HNdsk6Jl1qldpEWBIQVCCoT0uBGohyA@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu0ARtaIGsEfEbWWEr5b+T4EfJrPhSucf7S22/aCyCZhb7ZHHD
+	7ZTABiaUpbdR2kFIphahZq/S28WpOs/sGw5ot/tTTNsAbqqTQrya
+X-Gm-Gg: ASbGncuKObwC1apgW8BgbbJbrHF2D3Rt3nxUL1JoHKBWvLzkMJJe3O+8x5/MGv6Y59H
+	fjK/cHp7ig3RNVXHde5oBdNPAMxwL745dqj2t8ilvA748SE/PEIVPzpU/HjUqPGJsIlLL0b3PiL
+	Xqv2IHqzxU9mVymsU5+H5XgHsFHBeUdYwHJMNxADHMsZonXfnYIdW9p8VQolN+77VoPcEi+kNE3
+	u0GeY4wnvY2Enw5rJwGMwJY0pe+GoakCsvEBSqLIajJL/7DyDeMYkulGgkgJk6ec3sbKV+0lWnT
+	Qw==
+X-Google-Smtp-Source: AGHT+IGISZX5hCGeBtad2Mh3HcBYPIE/9ril4UARwLS+NFYZNru7HfBxGLbthbXqB8fmJUSStrU7og==
+X-Received: by 2002:a05:6214:2687:b0:6d8:b115:76a6 with SMTP id 6a1803df08f44-6e8a0ad8ff5mr42554456d6.0.1740724462935;
+        Thu, 27 Feb 2025 22:34:22 -0800 (PST)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47472409ac2sm21028501cf.58.2025.02.27.22.34.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 22:34:22 -0800 (PST)
+Date: Fri, 28 Feb 2025 14:34:00 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Conor Dooley <conor@kernel.org>, Inochi Amaoto <inochiama@gmail.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Niklas Cassel <cassel@kernel.org>, 
+	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pci: Add Sophgo SG2044 PCIe host
+Message-ID: <ynefy5x672dlhctjzyhkitxoihuucxxki3xqvpimwpcedpfl2u@lmklah5egof4>
+References: <20250221013758.370936-1-inochiama@gmail.com>
+ <20250221013758.370936-2-inochiama@gmail.com>
+ <20250221-cavalier-cramp-6235d4348013@spud>
+ <2egxw3r63cbsygpwqaltp4jjlkuwoh4rkwpgv4haj4sgz5sked@vkotadyk4g6y>
+ <20250224-enable-progress-e3a47fdb625c@spud>
+ <7ht3djv7zgrbkcvmdg6tp62nmxytlxzhaprsuvyeshyojhochn@ignvymxb3vfa>
+ <20250225-lapel-unhappy-9e7978e270e4@spud>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z71KHDbgrPFaoPO7@U-2FWC9VHC-2323.local>
+In-Reply-To: <20250225-lapel-unhappy-9e7978e270e4@spud>
 
-On Tue, Feb 25, 2025 at 12:42:04PM +0800, Feng Tang wrote:
- 
-> > 
-> > > There might be some misunderstaning here :), I responded in
-> > > https://lore.kernel.org/lkml/Z6LRAozZm1UfgjqT@U-2FWC9VHC-2323.local/
-> > > that your suggestion could solve our issue.
-> > 
-> > Well, could you test it please?
-> 
-> I don't have the hardware right now, will try to get from firmware
-> developers. But from code logic, your suggestion can surely solve the
-> issue unless I still miss something. From bug report (also commit log),
-> the first PCIe hotplug command issued is here, and the second command
-> comes from pciehp driver. In our kernel config, CONFIG_HOTPLUG_PCI_PCIE=y,
-> so the first command won't happen, and all following commands come
-> from pciehp driver, which setup its own waiting for command logic.
-> 
-
-Hi Lucas,
-
-We just tried the patch on the hardware and initial 5.10 kernel, and
-the problem cannot be reproduced, as the first PCIe hotplug command
-of disabling CCIE and HPIE was not issued. 
-
-Should I post a new version patch with your suggestion? You analysis
-in previous sounded sane to me. Also for the original context, if the
-BIOS has enabled the hotplug interrupt, it has been there since OS
-boot for quite some time, this solution just affects a very small
-time window from here to the loading of pciehp driver.  
-
-Also I would like to separate this patch from the patch dealing the
-nomsi irq storm issue. How do you think?
-
-Thanks,
-Feng
-
+On Tue, Feb 25, 2025 at 11:35:23PM +0000, Conor Dooley wrote:
+> On Tue, Feb 25, 2025 at 07:48:59AM +0800, Inochi Amaoto wrote:
+> > On Mon, Feb 24, 2025 at 06:54:51PM +0000, Conor Dooley wrote:
+> > > On Sat, Feb 22, 2025 at 08:34:10AM +0800, Inochi Amaoto wrote:
+> > > > On Fri, Feb 21, 2025 at 05:01:41PM +0000, Conor Dooley wrote:
+> > > > > On Fri, Feb 21, 2025 at 09:37:55AM +0800, Inochi Amaoto wrote:
+> > > > > > The pcie controller on the SG2044 is designware based with
+> > > > > > custom app registers.
+> > > > > > 
+> > > > > > Add binding document for SG2044 PCIe host controller.
+> > > > > > 
+> > > > > > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> > > > > > ---
+> > > > > >  .../bindings/pci/sophgo,sg2044-pcie.yaml      | 125 ++++++++++++++++++
+> > > > > >  1 file changed, 125 insertions(+)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/pci/sophgo,sg2044-pcie.yaml
+> > > > > > 
+> > > > > > diff --git a/Documentation/devicetree/bindings/pci/sophgo,sg2044-pcie.yaml b/Documentation/devicetree/bindings/pci/sophgo,sg2044-pcie.yaml
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..040dabe905e0
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/pci/sophgo,sg2044-pcie.yaml
+> > > > > > @@ -0,0 +1,125 @@
+> > > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > > > +%YAML 1.2
+> > > > > > +---
+> > > > > > +$id: http://devicetree.org/schemas/pci/sophgo,sg2044-pcie.yaml#
+> > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > +
+> > > > > > +title: DesignWare based PCIe Root Complex controller on Sophgo SoCs
+> > > > > > +
+> > > > > > +maintainers:
+> > > > > > +  - Inochi Amaoto <inochiama@gmail.com>
+> > > > > > +
+> > > > > > +description: |+
+> > > > > > +  SG2044 SoC PCIe Root Complex controller is based on the Synopsys DesignWare
+> > > > > > +  PCIe IP and thus inherits all the common properties defined in
+> > > > > > +  snps,dw-pcie.yaml.
+> > > > > > +
+> > > > > > +allOf:
+> > > > > > +  - $ref: /schemas/pci/pci-host-bridge.yaml#
+> > > > > > +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+> > > > > > +
+> > > > > > +properties:
+> > > > > > +  compatible:
+> > > > > > +    const: sophgo,sg2044-pcie
+> > > > > > +
+> > > > > > +  reg:
+> > > > > > +    items:
+> > > > > > +      - description: Data Bus Interface (DBI) registers
+> > > > > > +      - description: iATU registers
+> > > > > > +      - description: Config registers
+> > > > > > +      - description: Sophgo designed configuration registers
+> > > > > > +
+> > > > > > +  reg-names:
+> > > > > > +    items:
+> > > > > > +      - const: dbi
+> > > > > > +      - const: atu
+> > > > > > +      - const: config
+> > > > > > +      - const: app
+> > > > > > +
+> > > > > > +  clocks:
+> > > > > > +    items:
+> > > > > > +      - description: core clk
+> > > > > > +
+> > > > > > +  clock-names:
+> > > > > > +    items:
+> > > > > > +      - const: core
+> > > > > > +
+> > > > > > +  dma-coherent: true
+> > > > > 
+> > > > > Why's this here? RISC-V is dma-coherent by default, with dma-noncoherent
+> > > > > used to indicate systems/devices that are not.
+> > > > 
+> > > > The PCIe is dma coherent, but the SoC itself is marked as
+> > > > dma-noncoherent.
 > > > 
-> > > The code comment from 2bd50dd800b5 is:
+> > > By "the SoC itself", do you mean that the bus that this device is on is
+> > > marked as dma-noncoherent? 
+> > 
+> > Yeah, I was told only PCIe device on SG2044 is dma coherent.
+> > The others are not.
+> > 
+> > > IMO, that should not be done if there are devices on it that are coherent.
 > > > 
-> > > 	/*
-> > > 	 * Disable hot-plug interrupts in case they have been
-> > > 	 * enabled by the BIOS and the hot-plug service driver
-> > > 	 * is not loaded.
-> > > 	 */
-> > > 
-> > > The "is not loaded" has 2 possible meanings:
-> > > 1. the pciehp driver is not loaded yet at this point inside
-> > >    get_port_device_capability(), and will be loaded later
-> > > 2. the pciehp will never be loaded, i.e. CONFIG_HOTPLUG_PCI_PCIE=n 
-> > > 
-> > > If it's case 2, your suggestion can solve it nicely, but for case 1,
-> > > we may have to keep the interrupt disabling.
 > > 
-> > The pciehp driver cannot be bound to the PCIe port when
-> > get_port_device_capability() is running.  Because at that point,
-> > portdrv is still figuring out which capabilities the port has and
-> > it will subsequently instantiate the port service devices to which
-> > the drivers (such as pciehp) will bind.
->  
-> Yes, the time window between here and the following initialization of
-> pciehp service driver is very small, and your suggestion sounds quite
-> safe to me.
+> > It is OK for me. But I wonder how to handle the non coherent device
+> > in DT? Just Mark the bus coherent and mark all devices except the
+> > PCIe device non coherent?
 > 
-> > So in that sense, case 1 cannot be what the code comment is
-> > referring to.
-> 
-> Hi Rafel,
-> 
-> Could you help to confirm this?
-> 
-> > 
-> > My point is that if CONFIG_HOTPLUG_PCI_PCIE=y, there may indeed be
-> > another write to the Slot Control register before the command written
-> > by portdrv has been completed.  Because pciehp will write to the
-> > register on probe.  But in this case, there shouldn't be a need for
-> > portdrv to quiesce the interrupt because pciehp will do that anyway
-> > shortly afterwards.
-> > 
-> > And in the CONFIG_HOTPLUG_PCI_PCIE=n case, pciehp will not quiesce
-> > the interrupt, so portdrv has to do that.  I believe that's what
-> > the code comment is referring to.  It should be safe to just write
-> > to the Slot Control register without waiting for the command to
-> > complete because there shouldn't be another Slot Control write
-> > afterwards (not by pciehp anyway).
-> > 
-> > If making the Slot Control write in portdrv conditional on
-> > CONFIG_HOTPLUG_PCI_PCIE=n does unexpectedly *not* solve the issue,
-> > please try to find out where the second Slot Control write is
-> > coming from.  E.g. you could amend pcie_capability_write_word()
-> > with something like:
-> > 
-> > 	if (pos == PCI_EXP_SLTCTL) {
-> > 		pci_info(dev, "Writing %04hx SltCtl\n", val);
-> > 		dump_stack();
-> > 	}
-> 
-> Thanks for the suggestion, and we added similar debug to figure
-> out them.
-> 
-> Thanks,
-> Feng
+> Don't mark the bus anything (default is coherent) and mark the devices.
+
+I think this is OK for me.
+
+> That said, Is the PCIe controller actually on the same bus as the
+> other devices? (Not talking about the same DT node, the actual bus
+> in the device)
+
+It share the same bus with other device, but on a different
+master interface.
+
+Regards,
+Inochi
+
+
+
+
 
