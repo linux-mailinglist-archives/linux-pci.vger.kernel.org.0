@@ -1,158 +1,127 @@
-Return-Path: <linux-pci+bounces-22651-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22652-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00123A49E45
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 17:04:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88107A49EE3
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 17:33:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 003F0172F7A
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 16:04:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5380116B9F0
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 16:33:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C97B3271284;
-	Fri, 28 Feb 2025 16:04:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CE5227FE9A;
+	Fri, 28 Feb 2025 16:32:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="QvwzTtHG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FpDetBCS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA5018CBFE;
-	Fri, 28 Feb 2025 16:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB8D271818;
+	Fri, 28 Feb 2025 16:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740758680; cv=none; b=QWIvvSWHehW6AWUqMqs2OShXfMdZsulYjlzXwHtYLsbUrIT+NEVeuuGVuMygYFGB0h508HjbxrWpYB+UG8d+MlBd68nxeqGlnRYWhsB4n5n0Df7gId3ph2UNiMml75/o6zoJ1Ki3SSQNfwi4G4+CcCC0Ku9Xt/kexZa1r3ORNAg=
+	t=1740760341; cv=none; b=CRpOXc49msb7kZO28/8L6vU71NGWXKD86R2Xx+P/jEw9BfWGm/QdTjDydVOaaviUXM8FRsSRSolBKkuu4nHgjFkWgWXFrwdYE9lVtQf3dYucpBDx+/E/oxMDUic9IXR6H7vNAjO7y6eej0hrK14dO2oBrhHXgCiKXkkuswxbB28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740758680; c=relaxed/simple;
-	bh=woTai9LiAziQ+4jY6qec3hdV9cbf93oJqaAR5gjFPqw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KVObQFeL2ZETxxxUJ9kTtBl+/3moKtr9Ura1c1VIPohqOzXLV47UQOqSO0Zr8dO8B2b0mil5o3LT7KH5hmZnKRtvSjWc23nKX7lXMXZXT9dXwl09hMOFJWMXbgLyjlMYaZwVmgze2Hn0PUrw0O/jHX1IirAutJFi3a/ey5zXyS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=QvwzTtHG; arc=none smtp.client-ip=166.84.1.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
-Received: from [192.168.8.249] (unknown [107.127.24.18])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4Z4ChL495wz4Rv0;
-	Fri, 28 Feb 2025 11:04:34 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1740758677; bh=woTai9LiAziQ+4jY6qec3hdV9cbf93oJqaAR5gjFPqw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=QvwzTtHGOEVAexRJ1Mrk/8nLcObzquf286sNDx9DDjw7oo35hNGCIcPUJy2r+GJbd
-	 uQfqDaN/ycfU1SJRk6VsFnnfRsoHOT6cZfMc3bSrMpKqC5lpyoi37pIwBSG3lAGprU
-	 t116CDPstv1XE3F3SQQjGtcAaX0T6hQlenoglSnA=
-Message-ID: <1f214d95-61c0-4be9-8b19-5aef76631c0e@panix.com>
-Date: Fri, 28 Feb 2025 08:04:32 -0800
+	s=arc-20240116; t=1740760341; c=relaxed/simple;
+	bh=naU5NcTyc/mk/u2vWARR4qABxP0SYCsR8XPzuhcXIqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=rfTCLR0RU/PevXxlQm4P22ooybW95NXSx3hHiqE7QkSnNuVkQ1sHx1NSFyxbgd9u/wWmucRldT+Gn0w13dRh8LuQat7jIR1JgDRTkPTuO1Dz0nrpz6xpgEP4ggZp82U5mPBPWoNSHL+z7h0HOWHNDG5tiX8iw/5wvmftW8she34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FpDetBCS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1E2AC4CED6;
+	Fri, 28 Feb 2025 16:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740760340;
+	bh=naU5NcTyc/mk/u2vWARR4qABxP0SYCsR8XPzuhcXIqY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FpDetBCSWlgBGYHmAWsX4bv9+6pykViHpztrT9L1JYjeU3X9vHu6CnxAb8/rNlZz5
+	 uy+YeWzp8yVumQidC26CsgCnE3548jkJtzNMhmeWgfvdaVyVJplORBp3crJXQdqHdw
+	 Rz+66HRBsjvAa1q/yryzfaAwPGme+RTEAVCgjoSi+p9Y36s8hGra/REouAYQ77UJiZ
+	 mFBa0noorypX9k+GbmhYHvVAiNjRL9qz6F6tyv1RmW931vVthfC+cs0ZEw4KLAIVBf
+	 gCozJs12v1nuz6hYZ0dZ9mvuNonVlaBmiZb7x5Z+FT1RsLEJzBQI5ukPGImylQRKIK
+	 fOYmFS4uZoxJg==
+Date: Fri, 28 Feb 2025 10:32:19 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Muni Sekhar <munisekharrms@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Sanyog Kale <sanyog.r.kale@intel.com>, linux-sound@vger.kernel.org
+Subject: Re: pci: acpi: Query on ACPI Device Tree Representation and
+ Enumeration for Xilinx FPGA PCIe Endpoint functions
+Message-ID: <20250228163219.GA54330@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
- Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
-To: Mika Westerberg <mika.westerberg@linux.intel.com>,
- Kenneth Crudup <kenny@panix.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com,
- Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- =?UTF-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
- Andreas Noever <andreas.noever@gmail.com>,
- Michael Jamet <michael.jamet@intel.com>, Lukas Wunner <lukas@wunner.de>,
- Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
-References: <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
- <20250211055722.GW3713119@black.fi.intel.com>
- <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
- <20250213135911.GG3713119@black.fi.intel.com>
- <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
- <20250214162948.GJ3713119@black.fi.intel.com>
- <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
- <20250226084404.GM3713119@black.fi.intel.com>
- <b6eff06e-1a8c-48c3-b536-39b567015d0c@panix.com>
- <5c131927-87c1-4e21-90f8-8e3a34cd6dbf@panix.com>
- <20250228104925.GO3713119@black.fi.intel.com>
-Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <20250228104925.GO3713119@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHhAz+j46nus_rGJ72rZ86UyzL+AM_HBCivjpZEx3T0thOxqAQ@mail.gmail.com>
 
+[+cc SoundWire folks]
 
-I'm still several hundred miles from the consistently-reproducible 
-hardware for another couple of days yet, so I've been logging the other 
-failures as they happen.
+On Fri, Feb 28, 2025 at 08:19:44PM +0530, Muni Sekhar wrote:
+> On Thu, Feb 27, 2025 at 9:34 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Thu, Feb 27, 2025 at 07:25:32PM +0530, Muni Sekhar wrote:
+> > > I am currently working on a project involving a Xilinx FPGA connected
+> > > to an x86 CPU via a PCIe root port. The Xilinx FPGA functions as a
+> > > PCIe endpoint with single function capability and is programmed to
+> > > emulate the Soundwire Master controller. It can be dynamically
+> > > reprogrammed to emulate other interfaces as needed. Essentially, the
+> > > FPGA emulates an interface and connects to the CPU via the PCIe bus.
+> > >
+> > > Given this setup, the BIOS does not have prior knowledge of the
+> > > function implemented in the Xilinx FPGA PCIe endpoint. I have a couple
+> > > of questions regarding this configuration:
+> > >
+> > > Is it possible to define an ACPI Device Tree representation for this
+> > > type of hardware setup?
+> > > Can we achieve ACPI-based device enumeration with this configuration?
+> >
+> > If the FPGA is programmed before BIOS enumerates PCI devices, the FPGA
+> > would look just like any other PCI device, and BIOS would be able to
+> > read the Vendor ID and Device ID and would be able to size and program
+> > the BARs.
+>
+> Yes, the FPGA is programmed with this Soundwire IP before the BIOS
+> enumerates PCI devices.
+> We need to port the Soundwire driver
+> (https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/soundwire/qcom.c)
+>  to the x86 platform.
+> 
+> Since x86 platforms typically do not use device trees, and the
+> Soundwire IP is implemented in the FPGA, how can we emulate device
+> tree functionality or use a different mechanism to pass hardware
+> configuration to the driver? Specifically, how can we handle the
+> following API calls on an x86 platform?
+> 
+>    ret = of_property_read_u32(np, "qcom,din-ports", &val);
+>    ret = of_property_read_u32(np, "qcom,dout-ports", &val);
+>    ret = of_property_read_u8_array(np, "qcom,ports-offset1", off1, nports);
+> 
+> static const struct of_device_id qcom_swrm_of_match[] = {
+> { .compatible = "qcom,soundwire-v1.3.0", .data = &swrm_v1_3_data },
+> { .compatible = "qcom,soundwire-v1.5.1", .data = &swrm_v1_5_data },
+> { .compatible = "qcom,soundwire-v1.6.0", .data = &swrm_v1_6_data },
+> { .compatible = "qcom,soundwire-v1.7.0", .data = &swrm_v1_5_data },
+> { .compatible = "qcom,soundwire-v2.0.0", .data = &swrm_v2_0_data },
+> {/* sentinel */},
+> };
+> 
+> Basically, how can we define ACPI tables for functions implemented in
+> an FPGA that connects to the system via PCI?
 
-Don't worry about the printk()s WRT to the code; a couple of weeks ago 
-I'd seen an NPE on resume in __tb_path_deactivate_hop so threw in a 
-bunch of tb_port_info(port, "%s(): %d\n", __func__, __LINE__); so I 
-could get an idea of where the crash was.
+Seems like a generic problem for PCI sound devices, and I don't know
+how drivers deal with it.  It looks like all the SoundWire drivers
+are platform drivers (not PCI drivers), so there's nothing there to
+look at.
 
-I'll have more info Sunday with the original kernel, one with the 
-revert, and with some of Lukas' proposed(? not sure if they made it in 
-there) changes from his previous E-mail.
+Maybe the sound folks have ideas.
 
--K
-
-On 2/28/25 02:49, Mika Westerberg wrote:
-> Hi,
-> 
-> On Thu, Feb 27, 2025 at 09:46:07AM -0800, Kenneth Crudup wrote:
->> So I think, the failure mode may be related in some part to DP/Tunneling,
->> too- I finally got another lockup (this time, after a hibernate, which I
->> guess is some of the same facility) but what was different about this time
->> where I couldn't reproduce the lockups (and what happens when I use my
->> CalDigit dock) was I had an external USB-C monitor connected when I resumed,
->> and when I'm home (where I sometimes forget to remove the NVMe USB4 adaptor)
->> I always have my monitor connected to the dock.
-> 
-> It would be good to stick with a "proven" use-case so that the steps are
-> always the same. This may involve several issues in various parts of the
-> kernel and we need to track them one by one. If you change the steps in the
-> middle then we may end up finding completely different issues and it is not
-> helping the debugging effort.
-> 
-> The steps at the moment would be simply this:
-> 
-> 1. Boot the system up, nothing connected.
-> 2. Connect Thunderbolt dock and make sure UI authorizes it.
-> 3. Connect Thunderbolt NVMe to the Thunderbolt dock and make sure UI authorizes it.
-> 4. Verify that the devices behind PCIe tunnels are visible and functional (lspci for example)
-> 5. Suspend the laptop by closing lid.
-> 6. Unplug the dock (and the NVMe).
-> 7. Resume the laptop by opening the lid.
-> 
-> Expectation: The system resumes just fine, finds the devices gone and stays functional.
-> Actual result: The system does not resume properly, seems to crash and burn the screen
-> 	       is black.
-> 
-> Please correct me if I got something wrong. This is essentially that you go
-> from work to home, unplugging the dock and then resuming it at home.
-> 
-> The other thing is that in the pstore I see these:
-> 
-> thunderbolt 0000:00:0d.2: 0:5: __tb_path_deactivate_hop(): 401
-> 
-> but there is no such log in the mainline. If you have done some local
-> changes I suggest to drop all them to make sure we are looking at the same
-> source code.
-> 
->> See attached dump log. I'm using the (somewhat still experimental) Xe
->> display driver, but I've seen this same lockup happen with i915.
-> 
-> Please also keep using tha same graphics driver.
-> 
->> In any case, I've now reverted 9d573d19, and when I get back to my CalDigit
->> I can try instrumenting the code paths in the commit and see exactly where
->> we're locking up.
-> 
-> No need to add any changes. Just try with the revert and see if that at
-> least makes the system resume properly. If it does then there could be
-> other issues but then you can take full dmesg and send to us instead of
-> those pstore snippets.
-> 
-
--- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
-
+Bjorn
 
