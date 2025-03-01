@@ -1,331 +1,245 @@
-Return-Path: <linux-pci+bounces-22703-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22704-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06A97A4AC76
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 16:01:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34CDEA4AD31
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 19:01:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 17A6F3B4CCE
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 15:01:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0E04D1709FD
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 18:01:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D2F21D5CC1;
-	Sat,  1 Mar 2025 15:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qg+ZWlAO"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 433E81E0DE8;
+	Sat,  1 Mar 2025 18:01:51 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6D533E1;
-	Sat,  1 Mar 2025 15:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2570A8BF8;
+	Sat,  1 Mar 2025 18:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740841293; cv=none; b=of283wWCvNjfaeEsXquccmGpNOwfD2i5U9EW9JHOW6o8wgH1Zg96Iu4Z2wDKD/fV4DokE/uRuRbQQlvEo30Qge/YGffGuf7bd4BPJahfhfr7zQxtJ5b/fSllaWHUYGWCrpZrs9P6fKaHbgz55m/QDfdVLUnhvwD7ud0Y7ek5D5M=
+	t=1740852111; cv=none; b=Tbc+7cbQXv4+NmmjlU5lZhfvsOU1vdf+3GPRqCyGG4DqCWKFlzdAReIXhcSefckVsMwaKu8x8YnYc3WtdCQFS8qs1ljFpejsePly1J6uDP0YmoIAzGRlCoNwRqVp7S3hrUiOvFHHpX7VzFABNfjum9wlY8ZpErq9wIWKbvIgRAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740841293; c=relaxed/simple;
-	bh=Q5jvdblVehq0RdjrHDo6V09Q7mjaeGtU1ZwRyVm2Ou8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zc8wHZUcNGLn+UjI6VGWFi55kO7u4Um2Z8PmeNYz78noQKVyqyDen6aUfZ9tS7mMPNyM4rHiXATCd23UhjFzA9yOJ2D9EKJz47QjxR27IBKQBe1yDllDXk1GHUQoGpzTM0uw7J5ijP6rzHTmjUqxs7Qq+ryV1PrYoqm7rLcO5tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qg+ZWlAO; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-390f5556579so666937f8f.1;
-        Sat, 01 Mar 2025 07:01:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740841290; x=1741446090; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=zruMCqCIAH702liaPak4OKHfNTD0n8xmzIbwsUHEDVY=;
-        b=Qg+ZWlAORMaLQyTqvmLWSYODkzQ1JSmghOhFeo9JfGftM2v0xSOz+oAvdoZmtga5oi
-         ZHvAWOK54lw5QSJXGjY8z3SQ4A7ldPsHx1kcAscsL3hxeQVMGBmiJN8p281aoW11cRHr
-         DTbg1uO5ubA3Ohsn5S8e4r9lsVN0CFPZsxJeMoCc/EOgWK2Vuv1+tQxTNt0OF+uy/l8a
-         Ael1Q4deezmKVD1p26mPgjJC81UMsetCFZ0iNuHL5noaC4ebfTcd46ZpCxsRZBWUZhfe
-         xSQtVys0o0KpdLd9mJJY7e8YVV2AvSdvulNc/IWvkFw5B68CmveCV/aceYIxgFehXvWK
-         FdSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740841290; x=1741446090;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zruMCqCIAH702liaPak4OKHfNTD0n8xmzIbwsUHEDVY=;
-        b=TJzLuzgVuIQa/zmkZZThseuQo/APId3WL19BY5/kMFZZIk8DyIZjXxlU2GCxiYk2L2
-         ht5zhr9gz1GoYDBiFpvwrzvsY6n1OkuoAptPCNa8KGUMN3gRpaQoxn3jb7uiBaBj+w+z
-         dkyxerG/zHAunKu8B/PTKpndMEJmBALOk0cJQp2H9N6Wf9RKvzkFP15tGGZTUByRKVmm
-         ZOKAZa8IyfLDMsVMD/WYXisaeDfWKebtFg/IV+OPLtWRQBNHKRsWMtmpEXoGoIn/i3dF
-         Y3ONy8zU2+ukYvEBwAaVPxuN46nAEaaO/1vb8SvahinorkZ64vtGdRA60/0gmdqyq1Pp
-         wA0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVv9TjVDeSYqw6lq1SiciCyuvq9ykL/FxX0qTrTtby+lkwKc/3W2QCI4TbW8Ydcy4VY8u+bosdg5H3qaeY=@vger.kernel.org, AJvYcCWiOMWK11qXeetPakeksT7e6QYNwPp3tehsn/Z/Ukka237Yvv7kKoBjAplywImiNDwwD7YF9qhyJdNv@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvaoV6G3NrtvE9G/2cP9NJxajWgThzd+F0myZG4KsQA3sncSCW
-	ov566jaz5WHjtmWBmuTZa63tNqddjj6vv1N6nM/pOBt/xNaEMiC3
-X-Gm-Gg: ASbGnctCrEv/9bttOGK3u1Y/PeR5OdtiRaU5+UAcY875zGc4S2juN+xq7Wkw0YOAXpg
-	GiPi13QfBfXhvm9QHrGnMUcCnvPMqfAIJW5u016ijxrut3zPEkXqHI6ScDCJFucXjryin38JSC3
-	x9sNT7UprD0qqqaDaLmi2tWUxoEU050W81onr5VZdf2uA2WHj9fiJ/5O6xfOYzm+O/BzyyHyWq9
-	qNUZ/dUPvLDHvUoVFClLosWGw9BBcPQeUYTNK+UNvpL542LScIavKU9Ri72CfuI6drJkwOOLo/h
-	iXQreQQa0v0tQuC8LQHal2y9eBJ5XlZuaDoM8LsKtzMi5H3TVfNrj48FzuKvHmESvjhuDG8ZDTq
-	a6NKpbd3tEz6t7GALNaAVbAKB5O7tuk9X2RLW3OWwzILr5s0lTwct8ye4nT8m6hd2HOEFQlior6
-	p9o0szIjkGHoG1eXxKWCNwAC3xpAsn3vo=
-X-Google-Smtp-Source: AGHT+IGNt+rcUXXDE2/tSfoeosjfXFmq0hNxVqQmghrCvjV5b5hPC+hZwkVkwDNJVUDNXRC+9bNXPA==
-X-Received: by 2002:a5d:47c2:0:b0:390:e59d:fae9 with SMTP id ffacd0b85a97d-390ec7d2dd4mr5718403f8f.27.1740841289363;
-        Sat, 01 Mar 2025 07:01:29 -0800 (PST)
-Received: from ?IPV6:2a02:3100:a9db:600:159b:603:111e:5ffd? (dynamic-2a02-3100-a9db-0600-159b-0603-111e-5ffd.310.pool.telefonica.de. [2a02:3100:a9db:600:159b:603:111e:5ffd])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-390e47a72d5sm8720211f8f.31.2025.03.01.07.01.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Mar 2025 07:01:28 -0800 (PST)
-Message-ID: <3854b3b6-365c-459e-ae97-ba88c804599e@gmail.com>
-Date: Sat, 1 Mar 2025 16:02:33 +0100
+	s=arc-20240116; t=1740852111; c=relaxed/simple;
+	bh=klqCN48Ny/H3BoJ3S0qc0BU0Owh8CJ6llnu/vJfC6BI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S9o8FeIGVgcSpcJWlXIJZJCAS9kuxGYt9nmQxxWGpu9engGSYC+iGhRhBQAF46IQXE6mDqzcN2IOb/0zqOX8DS+fsngSjCoXynw5fcQoknlECpJsQBhbiaA4TdJ8eng+tvMgr1ss79tIm3JqKR3hYp6J65Xy/1IKobMfeMM5FZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 4A030280C374E;
+	Sat,  1 Mar 2025 19:01:39 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 347955E0BCC; Sat,  1 Mar 2025 19:01:39 +0100 (CET)
+Date: Sat, 1 Mar 2025 19:01:39 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Alistair Francis <alistair@alistair23.me>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org,
+	boqun.feng@gmail.com, bjorn3_gh@protonmail.com,
+	wilfred.mallawa@wdc.com, aliceryhl@google.com, ojeda@kernel.org,
+	alistair23@gmail.com, a.hindborg@kernel.org, tmgross@umich.edu,
+	gary@garyguo.net, alex.gaynor@gmail.com, benno.lossin@proton.me,
+	Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are
+ authenticated
+Message-ID: <Z8NLgxmDbcC9_C3F@wunner.de>
+References: <20250227030952.2319050-1-alistair@alistair23.me>
+ <20250227030952.2319050-10-alistair@alistair23.me>
+ <2025022717-dictate-cortex-5c05@gregkh>
+ <Z8DqZlE5ccujbJ80@wunner.de>
+ <2025022748-flock-verbalize-b66a@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 2/3] r8169: enable
- RTL8168H/RTL8168EP/RTL8168FP/RTL8125/RTL8126 LTR support
-To: Hau <hau@realtek.com>, nic_swsd <nic_swsd@realtek.com>,
- "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
- "davem@davemloft.net" <davem@davemloft.net>,
- "edumazet@google.com" <edumazet@google.com>,
- "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
- <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20250221071828.12323-439-nic_swsd@realtek.com>
- <20250221071828.12323-441-nic_swsd@realtek.com>
- <36d6094d-cc7c-4965-92ce-a271165a400a@gmail.com>
- <1544e50b9e4c4ee6a6d8ba6a777c2f07@realtek.com>
-Content-Language: en-US
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Autocrypt: addr=hkallweit1@gmail.com; keydata=
- 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
-In-Reply-To: <1544e50b9e4c4ee6a6d8ba6a777c2f07@realtek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025022748-flock-verbalize-b66a@gregkh>
 
-On 24.02.2025 17:33, Hau wrote:
->>
->> External mail : This email originated from outside the organization. Do not
->> reply, click links, or open attachments unless you recognize the sender and
->> know the content is safe.
->>
->>
->>
->> On 21.02.2025 08:18, ChunHao Lin wrote:
->>> This patch will enable RTL8168H/RTL8168EP/RTL8168FP/RTL8125/RTL8126
->>> LTR support on the platforms that have tested with LTR enabled.
->>>
->>
->> Where in the code is the check whether platform has been tested with LTR?
->>
-> LTR is for L1,2. But L1 will be disabled when rtl_aspm_is_safe() return false. So LTR needs rtl_aspm_is_safe()
-> to return true.
+On Thu, Feb 27, 2025 at 05:39:53PM -0800, Greg KH wrote:
+> On Thu, Feb 27, 2025 at 11:42:46PM +0100, Lukas Wunner wrote:
+> > On Thu, Feb 27, 2025 at 03:16:40AM -0800, Greg KH wrote:
+> > > I don't like this "if it's present we still don't know if the device
+> > > supports this", as that is not normally the "sysfs way" here.  Why must
+> > > it be present in those situations?
+> > 
+> > That's explained above.
 > 
->>> Signed-off-by: ChunHao Lin <hau@realtek.com>
->>> ---
->>>  drivers/net/ethernet/realtek/r8169_main.c | 108
->>> ++++++++++++++++++++++
->>>  1 file changed, 108 insertions(+)
->>>
->>> diff --git a/drivers/net/ethernet/realtek/r8169_main.c
->>> b/drivers/net/ethernet/realtek/r8169_main.c
->>> index 731302361989..9953eaa01c9d 100644
->>> --- a/drivers/net/ethernet/realtek/r8169_main.c
->>> +++ b/drivers/net/ethernet/realtek/r8169_main.c
->>> @@ -2955,6 +2955,111 @@ static void rtl_disable_exit_l1(struct
->> rtl8169_private *tp)
->>>       }
->>>  }
->>>
->>> +static void rtl_set_ltr_latency(struct rtl8169_private *tp) {
->>> +     switch (tp->mac_version) {
->>> +     case RTL_GIGA_MAC_VER_70:
->>> +     case RTL_GIGA_MAC_VER_71:
->>> +             r8168_mac_ocp_write(tp, 0xcdd0, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdd2, 0x8c09);
->>> +             r8168_mac_ocp_write(tp, 0xcdd8, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdd4, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdda, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdd6, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcddc, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcde8, 0x887a);
->>> +             r8168_mac_ocp_write(tp, 0xcdea, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdec, 0x8c09);
->>> +             r8168_mac_ocp_write(tp, 0xcdee, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdf0, 0x8a62);
->>> +             r8168_mac_ocp_write(tp, 0xcdf2, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdf4, 0x883e);
->>> +             r8168_mac_ocp_write(tp, 0xcdf6, 0x9003);
->>> +             break;
->>> +     case RTL_GIGA_MAC_VER_61 ... RTL_GIGA_MAC_VER_66:
->>> +             r8168_mac_ocp_write(tp, 0xcdd0, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdd2, 0x889c);
->>> +             r8168_mac_ocp_write(tp, 0xcdd8, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdd4, 0x8c30);
->>> +             r8168_mac_ocp_write(tp, 0xcdda, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdd6, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcddc, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcde8, 0x883e);
->>> +             r8168_mac_ocp_write(tp, 0xcdea, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdec, 0x889c);
->>> +             r8168_mac_ocp_write(tp, 0xcdee, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdf0, 0x8C09);
->>> +             r8168_mac_ocp_write(tp, 0xcdf2, 0x9003);
->>> +             break;
->>> +     case RTL_GIGA_MAC_VER_46 ... RTL_GIGA_MAC_VER_53:
->>> +             r8168_mac_ocp_write(tp, 0xcdd8, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdda, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcddc, 0x9003);
->>> +             r8168_mac_ocp_write(tp, 0xcdd2, 0x883c);
->>> +             r8168_mac_ocp_write(tp, 0xcdd4, 0x8c12);
->>> +             r8168_mac_ocp_write(tp, 0xcdd6, 0x9003);
->>> +             break;
->>> +     default:
->>> +             break;
->>> +     }
->>> +}
->>> +
->>> +static void rtl_reset_pci_ltr(struct rtl8169_private *tp) {
->>> +     struct pci_dev *pdev = tp->pci_dev;
->>> +     u16 cap;
->>> +
->>> +     pcie_capability_read_word(pdev, PCI_EXP_DEVCTL2, &cap);
->>> +     if (cap & PCI_EXP_DEVCTL2_LTR_EN) {
->>> +             pcie_capability_clear_word(pdev, PCI_EXP_DEVCTL2,
->>> +                                        PCI_EXP_DEVCTL2_LTR_EN);
->>> +             pcie_capability_set_word(pdev, PCI_EXP_DEVCTL2,
->>> +                                      PCI_EXP_DEVCTL2_LTR_EN);
->>
->> I'd prefer that only PCI core deals with these registers (functions like
->> pci_configure_ltr()). Any specific reason for this reset? Is it something which
->> could be applicable for other devices too, so that the PCI core should be
->> extended?
->>
-> It is for specific platform. On that platform driver needs to do this to let LTR works.
-> 
->> +Bjorn and PCI list, to get an opinion from the PCI folks.
->>
->>> +     }
->>> +}
->>> +
->>> +static void rtl_enable_ltr(struct rtl8169_private *tp) {
->>> +     switch (tp->mac_version) {
->>> +     case RTL_GIGA_MAC_VER_61 ... RTL_GIGA_MAC_VER_71:
->>> +             r8168_mac_ocp_modify(tp, 0xe034, 0x0000, 0xc000);
->>> +             r8168_mac_ocp_modify(tp, 0xe0a2, 0x0000, BIT(0));
->>> +             r8168_mac_ocp_modify(tp, 0xe032, 0x0000, BIT(14));
->>> +             break;
->>> +     case RTL_GIGA_MAC_VER_46 ... RTL_GIGA_MAC_VER_48:
->>> +     case RTL_GIGA_MAC_VER_52 ... RTL_GIGA_MAC_VER_53:
->>> +             r8168_mac_ocp_modify(tp, 0xe0a2, 0x0000, BIT(0));
->>> +             RTL_W8(tp, 0xb6, RTL_R8(tp, 0xb6) | BIT(0));
->>> +             fallthrough;
->>> +     case RTL_GIGA_MAC_VER_51:
->>> +             r8168_mac_ocp_modify(tp, 0xe034, 0x0000, 0xc000);
->>> +             r8168_mac_ocp_write(tp, 0xe02c, 0x1880);
->>> +             r8168_mac_ocp_write(tp, 0xe02e, 0x4880);
->>> +             break;
->>> +     default:
->>> +             return;
->>> +     }
->>> +
->>> +     rtl_set_ltr_latency(tp);
->>> +
->>> +     /* chip can trigger LTR */
->>> +     r8168_mac_ocp_modify(tp, 0xe032, 0x0003, BIT(0));
->>> +
->>> +     /* reset LTR to notify host */
->>> +     rtl_reset_pci_ltr(tp);
->>> +}
->>> +
->>> +static void rtl_disable_ltr(struct rtl8169_private *tp) {
->>> +     switch (tp->mac_version) {
->>> +     case RTL_GIGA_MAC_VER_46 ... RTL_GIGA_MAC_VER_71:
->>> +             r8168_mac_ocp_modify(tp, 0xe032, 0x0003, 0);
->>> +             break;
->>> +     default:
->>> +             break;
->>> +     }
->>> +}
->>> +
->>>  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp,
->>> bool enable)  {
->>>       u8 val8;
->>> @@ -2971,6 +3076,8 @@ static void rtl_hw_aspm_clkreq_enable(struct
->> rtl8169_private *tp, bool enable)
->>>                   tp->mac_version == RTL_GIGA_MAC_VER_43)
->>>                       return;
->>>
->>> +             rtl_enable_ltr(tp);
->>> +
->>>               rtl_mod_config5(tp, 0, ASPM_en);
->>>               switch (tp->mac_version) {
->>>               case RTL_GIGA_MAC_VER_70:
->>> @@ -4821,6 +4928,7 @@ static void rtl8169_down(struct rtl8169_private
->>> *tp)
->>>
->>>       rtl8169_cleanup(tp);
->>>       rtl_disable_exit_l1(tp);
->>> +     rtl_disable_ltr(tp);
->>
->> Any specific reason why LTR isn't configured just once, on driver load?
->>
-> It is for device compatibility, I will check internally to see if we can remove it.
-> 
-Thanks. Complementing what I wrote before:
-I would understand that reconfiguring LTR may be needed after a hw reset, when chip
-"forgets" settings. But is there a reason to disable the internal LTR config?
-IOW: What could happen if we omit rtl_disable_ltr()?
+> Not really, you just say "downgrade attacks", which is not something
+> that we need to worry about, right?
 
-> 
->>>       rtl_prepare_power_down(tp);
->>>
->>>       if (tp->dash_type != RTL_DASH_NONE)
-> 
+A downgrade attack means duping the victim into believing that only
+a weaker security mode is supported.  E.g. only sha1, but not sha256.
 
+In this context, downgrade attack means duping the kernel or user
+into believing that SPDM authentication is unsupported, even though it is.
+
+https://en.wikipedia.org/wiki/Downgrade_attack
+
+That's definitely something we need to be aware of and guard against,
+otherwise what's the point of authenticating in the first place.
+
+
+> > Unfortunately there is no (signed) bit in Config Space which tells us
+> > whether authentication is supported by a PCI device.  Rather, it is
+> > necessary to exchange several messages with the device through a
+> > DOE mailbox in config space to determine that.  I'm worried that an
+> > attacker deliberately "glitches" those DOE exchanges and thus creates
+> > the appearance that the device does not support authentication.
+> 
+> That's a hardware glitch, and if that happens, then it will show a 0 and
+> that's the same as not being present at all, right?
+
+No, the "authenticated" attribute is not present in sysfs if authentication
+is unsupported.
+
+The downgrade attack protection comprises exposing the attribute if it
+could not be determined whether authentication is supported or not,
+and returning an error (ENOTTY) on read or write.
+
+User space applications need to check anyway whether read() or write()
+failed for some reason.  E.g. if the device is hot-removed concurrently,
+the read() system call returns ENODEV.  So returning ENOTTY is just
+another error that can occur on access to the attribute.
+
+The idea is that user space typically wants to check whether the attribute
+contains "1", signifying that the device was authenticated successfully.
+Hence a return value of "0" or any error code signifies that the device
+is not authenticated.
+
+And if user space wants to check whether authentication is supported at all,
+it checks for presence of the sysfs attribute.  Hence exposing the attribute
+if support could not be determined is a safety net to not mislead user space
+that the device does not support authentication.
+
+For PCIe, glitching the hardware (the electric signals exchanged with
+the device) is indeed one way to disrupt the DOE and SPDM exchanges.
+
+However the SPDM protocol has not only been adopted by PCIe, but also
+other buses, in particular SCSI and ATA.  And in those cases, glitching
+the SPDM exchanges may be a pure software thing.  (Think iSCSI communication
+with storage devices in a remote rack or data center.)
+
+Damien Le Moal has explicitly requested that the user space ABI for SPDM
+is consistent across buses.  So the downgrade attack protection can be
+taken advantage of by those other buses as well.
+
+
+> > Let's say the user's policy is to trust legacy devices which do not
+> > support authentication, but require authentication for newer NVMe drives
+> > from a certain vendor.  An attacker may manipulate an authentication-capable
+> > NVMe drive from that vendor, whereupon it will fail authentication.
+> > But the attacker can trick the user into trusting the device by glitching
+> > the DOE exchanges.
+> 
+> Again, are we now claiming that Linux needs to support "hardware
+> glitching"?  Is that required somewhere?
+
+Required?  It's simply prudent to protect users from being duped into
+thinking the device doesn't support authentication.
+
+
+> I think if the DOE exchanges
+> fail, we just trust the device as we have to trust something, right?
+
+If the DOE exchanges fail, something fishy is going on.
+Why should we hide that fact from the user?
+
+
+> > The device needs to be re-enumerated by the PCI core to retry
+> > determining its authentication capability.  That's why the
+> > sysfs documentation says the user may exercise the "remove"
+> > and "rescan" attributes to retry authentication.
+> 
+> But how does it know that?
+
+Because reads and writes to the attribute return ENOTTY.
+
+> remove and recan is a huge sledgehammer, and
+> an amazing one if it even works on most hardware.  Don't make it part of
+> any normal process please.
+
+It's not a normal process.  It's manual recovery in case of a
+potential attack.  The user can also choose to unplug the device
+or reboot the machine.  That's arguably a bigger sledgehammer.
+
+
+> It's the error, don't do that.  If an error is going to happen, then
+> don't have the file there.  That's the way sysfs works, it's not a
+> "let's add all possible files and then make userspace open them all and
+> see if an error happens to determine what really is present for this
+> device" model.  It's a "if a file is there, that attribute is there and
+> we can read it".
+
+The point is that if the file isn't there even though the device might
+support authentication, we're creating a false and dangerous illusion.
+This is different from other attributes which don't have that quality.
+
+
+> > > > Alternatively, authentication success might be signaled to user space
+> > > > through a uevent, whereupon it may bind a (blacklisted) driver.
+> > > 
+> > > How will that happen?
+> > 
+> > The SPDM library can be amended to signal a uevent when authentication
+> > succeeds or fails and user space can then act on it.  I imagine systemd
+> > or some other daemon might listen to such events and do interesting things,
+> > such as binding a driver once authentication succeeds.
+> 
+> That's a new user/kernel api and should be designed ONLY if you actually
+> need it and have a user.  Otherwise let's just wait for later for that.
+
+Of course.  Again, the commit message makes suggestions for future
+extensions to justify the change.  Those are just ideas.  Whether
+and how they are implemented remains to be seen.  Signaling a uevent
+on authentication success or failure seems like an obvious idea,
+hence I included it in the commit message.
+
+I fear if I don't include those ideas in the commit message, someone
+will come along and ask "why do you need this at all?", thus putting
+into question the whole set of authentication patches.
+
+
+> > > If an attacker can consume kernel memory to cause this to happen you
+> > > have bigger problems.  That's not the kernel's issue here at all.
+> > > 
+> > > And "disable communication" means "we just don't support it as the
+> > > device doesn't say it does", so again, why does that matter?
+> > 
+> > Reacting to potential attacks sure is the kernel's business.
+> 
+> Reacting to real, software attacks is the kernel's business.  Reacting
+> to possible hardware issues that are just theoretical is not.
+
+We have fundamental disagreement whether certain attacks need to be taken
+seriously.  Which reminds me of...
+
+   "the final topic on the agenda was the corporate attempt at
+    security consciousness raising; a shouting match ensued,
+    in the course of which several and various reputations
+    were sullied, certain paranoid reactions were taken less
+    than seriously, and no great meeting of the minds was met."
+
+   [minutes of the uucp-lovers interest group, 20 April 1983,
+    from "A Quarter Century of UNIX" (1994) page 113]
+    https://wiki.tuhs.org/lib/exe/fetch.php?media=publications:qcu.pdf
+
+Looks like we're just upholding the time honored tradition of
+UNIX security disagreements!
+
+Thanks,
+
+Lukas
 
