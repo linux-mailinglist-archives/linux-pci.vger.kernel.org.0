@@ -1,149 +1,107 @@
-Return-Path: <linux-pci+bounces-22693-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22694-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A2CB9A4A995
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 08:52:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33060A4AA8F
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 12:10:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8194D189A70E
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 07:52:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 514581896F42
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 11:10:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BE1A1C5D5C;
-	Sat,  1 Mar 2025 07:52:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6F0F1D8DE4;
+	Sat,  1 Mar 2025 11:10:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hU/aXJFb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RqcJd/cY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E91E1C57B2
-	for <linux-pci@vger.kernel.org>; Sat,  1 Mar 2025 07:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739FD1A5B97;
+	Sat,  1 Mar 2025 11:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740815559; cv=none; b=G553DsbXZORHBW+y0AuQGT943Q9dlcS4psfNEytR1DNHK46HYdo047kNfpJvHk1u3cKfAuHOch+S7smWZUDO3qf3F63WKHqsnULhGW18B6F/q0Uf+WoCpwFwsfUdlmsp2jVBNFC/ETf7HHmzlKCnWR/2/91hHzLacMHHlfGdDbM=
+	t=1740827441; cv=none; b=nJ0DAY7Z/b6WE/q8k7mPvc9MWPy/HMJ8M7dfF8/qJrVk61Q5hTQG9F5/fa7eZaho9HY8Cm17MJyKnu5jOnOTGuISuPbTVrYYikPplufwJsw80eEwOt8TJrLIseVUw3984xTEsdK+Tu1FvWRVcDXF2SWcjNnSyfRVom9+/T0/qkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740815559; c=relaxed/simple;
-	bh=YrCg9Q1reqKYec70+ZAloj7cM6t8AfCJPMkafKM/5+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bEf/E3osNKtTnkY1jnfhei+V7f47OscgZGRn38xR3OUgZJBu9CmPtYDknNDoPk9gCbSXXm7CtyeT11Ct0iWgZn3JbF3WL1ucwQ+p7WBL2VLxXpIVXYDtj3PLyHkIcmvjI9+IBJIOxwi/R53cgN3k5bOuPKJB9ihsUa7dcupfrDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hU/aXJFb; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740815558; x=1772351558;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YrCg9Q1reqKYec70+ZAloj7cM6t8AfCJPMkafKM/5+c=;
-  b=hU/aXJFbmqUjtR79Rrj/dAZrB2r0TJJ8bH0/1ccHPlE7D1EDxJzUX6u4
-   ZpKQjeROHSXpFJNrjYFXZ2T+nLIMcADJgTGLp5po+gugYCHuSRpf21xoK
-   R4LycLLS3uyR/Ui/mu4qMM0t5YigiVJzQ6gOfd+tg3ZrMnhw7IuubP6WV
-   ABf+YMkSzIbEZ6NP8tggZlAl3ehMhfiGLdARUoDMFXT09LIqHRF3NEB06
-   HHOF6IGUfipSUXsPfxSY00b7piL7ImEEQbLYSvP5BGqozECJUMv4M7iau
-   VHAvz4UJ8+/kCTZx9oAI52/9GiIJsEUC5SVdWhzsInQNTV9OdRghyFGB9
-   w==;
-X-CSE-ConnectionGUID: QSFibbUNRx21fT57odWOJw==
-X-CSE-MsgGUID: Pj0qZ3sdQCq8+y+lNsYp1A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="41871500"
-X-IronPort-AV: E=Sophos;i="6.13,324,1732608000"; 
-   d="scan'208";a="41871500"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 23:52:37 -0800
-X-CSE-ConnectionGUID: rxxZ4Dy7SNCzHZjmHtIkTQ==
-X-CSE-MsgGUID: 62Lm16AxQKGoBUZ0jBkzfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,324,1732608000"; 
-   d="scan'208";a="117721122"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa008.fm.intel.com with ESMTP; 28 Feb 2025 23:52:34 -0800
-Date: Sat, 1 Mar 2025 15:50:35 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Alexey Kardashevskiy <aik@amd.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
-	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Subject: Re: [PATCH 05/11] PCI/TSM: Authenticate devices via platform TSM
-Message-ID: <Z8K8S+yeXToetCaT@yilunxu-OptiPlex-7050>
-References: <173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com>
- <173343742510.1074769.16552514658771224955.stgit@dwillia2-xfh.jf.intel.com>
- <efc5ba59-964d-4988-a412-47f5297fedd3@amd.com>
- <yq5aeczrww9j.fsf@kernel.org>
- <Z71umSkkyV0rAC25@yilunxu-OptiPlex-7050>
- <yq5a4j0gc3fp.fsf@kernel.org>
- <Z8AHtcYgz2JukdfM@yilunxu-OptiPlex-7050>
- <yq5aa5a78p8d.fsf@kernel.org>
- <Z8EQsFiVAxtWfulx@yilunxu-OptiPlex-7050>
- <yq5a4j0e8kn0.fsf@kernel.org>
+	s=arc-20240116; t=1740827441; c=relaxed/simple;
+	bh=nNqG0GMewRObnyRAAVI9p6JFUYawaXI8WiP+ukd2A5o=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EwQutLlUhC5d/bIRepbzwDQYS+4msRVN867eRnRlViBd+OY9aQPmzqR2VSzWatfPnFC12zbhhl6UbREKZWEGndqOcV03jvtHFuLvMDJF8GA9ucjEUq2sNZPsshLXe2qHZ61++XYt3xKWpF6aaXADog1LOtlJ90K82fwhGvj4qL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RqcJd/cY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2E79C4CEDD;
+	Sat,  1 Mar 2025 11:10:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740827439;
+	bh=nNqG0GMewRObnyRAAVI9p6JFUYawaXI8WiP+ukd2A5o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RqcJd/cYGKltRT9h6KNka1heUSDbeIOA2o7SOUY8yXx1mXGc/buNEIQrzp8usT0R5
+	 oIIAoVNh0/DFsFRbxtgmVt5jIleViLUgMrXRnxLJeOPdu0Fhv6ZiVvg6T7/6vJBl6D
+	 QxEbxiEZeQC53aFcFH2ROVff6XP2uhKcZDO8GUBU/ndaT3+ZdKFvuOGWcf/+NkyIIM
+	 yOr4n7pLdKhjqdyyCBiHm4Pwpm650y90r0D/I6bYgRHAWjMSE7fV7tOKEP39Rb2RnM
+	 WyhQnNBNMTsQdpIlcwxbUoMhjZzG440kCGXu7d/ZX6w82326HJnqQ9NbHvq+EG7t9k
+	 ZI7SN1pmRobeA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1toKjt-009LKs-1e;
+	Sat, 01 Mar 2025 11:10:37 +0000
+Date: Sat, 01 Mar 2025 11:10:35 +0000
+Message-ID: <86plj1ovkk.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,	"Rafael J. Wysocki"
+ <rafael@kernel.org>,	Thomas Gleixner <tglx@linutronix.de>,	Anup Patel
+ <apatel@ventanamicro.com>,	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,	Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kw@linux.com>,	Bjorn Helgaas <bhelgaas@google.com>,	Arnd Bergmann
+ <arnd@arndb.de>,	Shuah Khan <shuah@kernel.org>,	Richard Zhu
+ <hongxing.zhu@nxp.com>,	Lucas Stach <l.stach@pengutronix.de>,	Lorenzo
+ Pieralisi <lpieralisi@kernel.org>,	Rob Herring <robh@kernel.org>,	Shawn Guo
+ <shawnguo@kernel.org>,	Sascha Hauer <s.hauer@pengutronix.de>,	Pengutronix
+ Kernel Team <kernel@pengutronix.de>,	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,	Conor Dooley
+ <conor+dt@kernel.org>,	Niklas Cassel <cassel@kernel.org>,
+	dlemoal@kernel.org,	jdmason@kudzu.us,	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,	linux-pci@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,	imx@lists.linux.dev,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v15 02/15] irqdomain: Add IRQ_DOMAIN_FLAG_MSI_IMMUTABLE and irq_domain_is_msi_immutable()
+In-Reply-To: <20250211-ep-msi-v15-2-bcacc1f2b1a9@nxp.com>
+References: <20250211-ep-msi-v15-0-bcacc1f2b1a9@nxp.com>
+	<20250211-ep-msi-v15-2-bcacc1f2b1a9@nxp.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq5a4j0e8kn0.fsf@kernel.org>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: Frank.Li@nxp.com, kishon@kernel.org, rafael@kernel.org, tglx@linutronix.de, apatel@ventanamicro.com, gregkh@linuxfoundation.org, dakr@kernel.org, manivannan.sadhasivam@linaro.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de, shuah@kernel.org, hongxing.zhu@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org, cassel@kernel.org, dlemoal@kernel.org, jdmason@kudzu.us, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org, imx@lists.linux.dev, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-> >> >> For the current CCA implementation bind is equivalent to VDEV_CREATE
-> >> >> which doesn't mark the device LOCKED. Marking the device LOCKED is
-> >> >> driven by the guest as shown in the steps below.
-> >> >
-> >> > Could you elaborate why vdev create & LOCK can't be done at the same
-> >> > time, when guest requests "lock"? Intel TDX also requires firmware calls
-> >> > like tdi_create(alloc metadata) & tdi_bind(do LOCK), but I don't see
-> >> > there is need to break them out in different phases.
-> >> >
-> >>
-> >> Yes, that is possible and might be what I will end up doing. Right now
-> >> I have kept the interface flexible enough as I am writing these changes.
-> >
-> > Good to know that, thanks.
-> >
-> >> Device can possibly be presented in locked state to the guest.
-> >
-> > This is also what I did before. But finally I dropped (or pending) this
-> > "early binding" support. There are several reset operations during VM
-> > setup and booting, especially the ones in bios. They breaks LOCK state
-> > and I have to make VFIO suppress the reset, or reset & recover, but that
-> > seems not worth the effort.
-> >
-> > May wanna know how you see this problem.
+On Tue, 11 Feb 2025 19:21:55 +0000,
+Frank Li <Frank.Li@nxp.com> wrote:
 > 
-> Currently, my approach involves a split vdev_create and a TDISP lock, which is
-> why I haven't encountered the issue mentioned above. The current changes
-> implement vdev_create via the VMM, while the guest makes an RSI call to
-> switch the device to the locked state.
+> Add the flag IRQ_DOMAIN_FLAG_MSI_IMMUTABLE and the API function
+> irq_domain_is_msi_immutable() to check if the MSI controller retains an
+> immutable address/data pair during irq_set_affinity().
 > 
-> I chose to separate vdev_create and TDISP lock into two distinct steps
-> to simplify the process and better align it with the RMM spec [1].
-> 
-> I noticed that SEV-TIO performs a KVM_EXIT_VMGEXIT, which carries out a
-> similar operation unless it has already been handled during VM startup.
-> From your reply above, I understand there was a proposal to combine
-> VDEV_CREATE and TDISP_LOCK. However, you also mentioned that if we
-> present the device in a locked state to a VM early in the boot process,
-> we might unintentionally break the TDISP lock state.
+> Ensure compatibility with MSI users like PCIe Endpoint Doorbell, which
+> require the address/data pair to remain unchanged after setup. Use this
+> function to verify if the MSI controller is immutable.
 
-That doesn't break the proposal to combine VDEV CREATE & LOCK. We end up
-make VMM do nothing about Secure at VM boot, just normal shared passthrough.
-VMM does VDEV create & LOCK in a batch when guest asks for bind (or lock
-or connect, or whatever verb).
+Why is that a requirement? Why should a driver even care?
 
-I think if any device specific thing must be done *between* VDEV CREATE
-and LOCK, then they must be separated. But I haven't found yet.
+	M.
 
-Thanks,
-Yilun
-
-> 
-> I will look up the previous discussions to better understand the
-> rationale behind combining vdev_create and lock.
-> 
-> [1] https://developer.arm.com/-/cdn-downloads/permalink/Architectures/Armv9/DEN0137_1.1-alp12.zip
-> 
-> -aneesh
+-- 
+Without deviation from the norm, progress is not possible.
 
