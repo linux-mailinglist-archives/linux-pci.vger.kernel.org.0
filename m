@@ -1,140 +1,155 @@
-Return-Path: <linux-pci+bounces-22686-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22687-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 913A9A4A690
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 00:17:30 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E353CA4A6D4
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 01:03:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3984B1891963
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Feb 2025 23:17:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 79BF27ABB8F
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 00:02:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 630B75A4D5;
-	Fri, 28 Feb 2025 23:17:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFA651361;
+	Sat,  1 Mar 2025 00:03:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AytWf/0U"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PnIHfOmI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB5723F37F
-	for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2025 23:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0486801
+	for <linux-pci@vger.kernel.org>; Sat,  1 Mar 2025 00:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740784644; cv=none; b=Aigd3fGWATE9CrEcELwR7PYN++FK2V9RuVIA6jWAkIn3re6u4+IX4oTSaLp0rCEr/Gkf7U/mVIrNWg8Osn/wY8aW9mdyAZdSxJYOA55tJcXABLx+ah0iXlrx/U8hDoSPhHEq06Fce5UuqoPkUSvmpepa6BxlT2xJ1oY896AwsPg=
+	t=1740787399; cv=none; b=Y4wFZv1pYqSfK412RJPjDL59DPdYsV3xR2zwVBficnuyOxOcSvtIxVnJPE8bmP+SdJB2rX5MKpbGZOiI6c0UhHafHggBg6jeePVxPxNmr1NYp5KcAdzWid5b8L5OqV9XgWVutW7WOUSDNYZnvDF+z2B9jIiOe2h1t90yMS8lfZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740784644; c=relaxed/simple;
-	bh=t47HH5vbAejdpTH4e9/pvJ2j6sBjisTsa05WYp91M5Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=NxCgOLbmVIV51awG/WiuhExlCXZ57tj54hR7Ui4lKuqHwPMtJi53MKDz5DruPqoFgmWqEHbWPBRzHoZbWyfGQciKdlWuDxg5ms0c00UIQ5xtGkpkugL4lqYDrJEhag5Mt/y4H0Ij5oUWW3KBhaZSL3osHnspvZccvxful/6GgMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AytWf/0U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C54EC4CED6;
-	Fri, 28 Feb 2025 23:17:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740784643;
-	bh=t47HH5vbAejdpTH4e9/pvJ2j6sBjisTsa05WYp91M5Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=AytWf/0Ue3MeBOQ6MvWXBt8f8ClzIPaOK+LLXfcmoiNI+OSFD6nMTW4YO7S0YJmT3
-	 E3Z5E/Zy1qhnasYa34GnPncwYFHe/FsYFvhs9r3zGV1+KpPNCkFvhPiaobzZPHq5c2
-	 yaS0JZofX5HZp2o8WeoOIuuPmI4nHLkHg3ltBRaCgDtJcSMfCfyNCtvwOQBB9AWg0P
-	 dsYkyUBkDzXsSWfiHcJ2jKHk8JmIewWGcDbcztH+mDbASjxwDkMz74aAXR1HkcaMiZ
-	 6gU6Dn2A0uNk+9xL8l+Ly2PL026lQced5fjGxlIdukXjH6f+fHpwumCzyjcNvRxqwq
-	 NT5yDPX2WU+JQ==
-Date: Fri, 28 Feb 2025 17:17:17 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "Wannes Bouwen (Nokia)" <wannes.bouwen@nokia.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: Subject: [PATCH 1/1] PCI: of: avoid warning for 4 GiB
- non-prefetchable
-Message-ID: <20250228231717.GA79086@bhelgaas>
+	s=arc-20240116; t=1740787399; c=relaxed/simple;
+	bh=BkxI0H/lbiBjvJeY9NroUKiuCTuNkrAt+v4GYiEP1Xg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=sOMIaiIyXhfgyG+TJF57B2yrO9yRbHXjeQwF7mJH3n9N/DrixsfyXuAJooS3osxxleu4/9ZfpVIzOVr29/1V22q+Zr6lmVMgkoCb8+mBHKbizauufJc3FcqPUhIOsVyZnyR8nPOFF2PMYIdtPb9j5QGELKDlpKzx0EOZBfIx+m8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PnIHfOmI; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740787398; x=1772323398;
+  h=date:from:to:cc:subject:message-id;
+  bh=BkxI0H/lbiBjvJeY9NroUKiuCTuNkrAt+v4GYiEP1Xg=;
+  b=PnIHfOmIWqj4HyC1sR+HNFkUJp0T3kXYMXEziMyyVJc8kGYQ14m2MkbJ
+   DtgJVWqKZSk31+6yJ4y1zZQ7VKwYcj78ZWG6fCjBl2YxfRi78kY+QKCka
+   PCPMIzb29mQvILJ41CgrasE/4Re0LBJm5piYv0v16w/9LcT1uVt6/yFW6
+   iH1bj+5uKdQGDj5H80HG5rKiqlPtN/C5ielPo0/yViYlrLjCbD8JTeBOE
+   zt/hPJO0/QQQwNrXII8Pyal4a8RGDyDYuqBmZNpoUZ883yHThZw3qtWYw
+   khm5XPbuPzg1iD2OsKmgKdXIoY9vwcE4FZc/CYPAXF6TUK3jfYItSrK8z
+   w==;
+X-CSE-ConnectionGUID: ul4hK8FMRUGah0ACLj/BQg==
+X-CSE-MsgGUID: w13HdWTnRtGIJkp1lUesbw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="64188811"
+X-IronPort-AV: E=Sophos;i="6.13,323,1732608000"; 
+   d="scan'208";a="64188811"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 16:03:17 -0800
+X-CSE-ConnectionGUID: dg/uIFrNTmKM+8npovQytQ==
+X-CSE-MsgGUID: n0ngp+OKQy+LW8/CIXHQcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,323,1732608000"; 
+   d="scan'208";a="117462652"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa007.fm.intel.com with ESMTP; 28 Feb 2025 16:03:17 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1toAJR-000FeU-1x;
+	Sat, 01 Mar 2025 00:02:39 +0000
+Date: Sat, 01 Mar 2025 08:02:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:enumeration] BUILD SUCCESS
+ e5d287b410fe5f330943f0a87838b931b4391bec
+Message-ID: <202503010820.et49ynan-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqLzic6b_Bnwf9EOJvsb-HjXnu46czqGntwZyh6M4jZ9pA@mail.gmail.com>
 
-On Fri, Feb 28, 2025 at 05:01:51PM -0600, Rob Herring wrote:
-> On Fri, Feb 28, 2025 at 12:27 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Thu, Nov 14, 2024 at 02:05:08PM +0000, Wannes Bouwen (Nokia) wrote:
-> > > Subject: [PATCH 1/1] PCI: of: avoid warning for 4 GiB non-prefetchable
-> > > windows.
-> > >
-> > > According to the PCIe spec, non-prefetchable memory supports only 32-bit
-> > > BAR registers and are hence limited to 4 GiB. In the kernel there is a
-> > > check that prints a warning if a non-prefetchable resource exceeds the
-> > > 32-bit limit.
-> > >
-> > > This check however prints a warning when a 4 GiB window on the host
-> > > bridge is used. This is perfectly possible according to the PCIe spec,
-> > > so in my opinion the warning is a bit too strict. This changeset
-> > > subtracts 1 from the resource_size to avoid printing a warning in the
-> > > case of a 4 GiB non-prefetchable window.
-> > >
-> > > Signed-off-by: Wannes Bouwen <wannes.bouwen@nokia.com>
-> > > ---
-> > >  drivers/pci/of.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > > index dacea3fc5128..ccbb1f1c2212 100644
-> > > --- a/drivers/pci/of.c
-> > > +++ b/drivers/pci/of.c
-> > > @@ -622,7 +622,7 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
-> > >             res_valid |= !(res->flags & IORESOURCE_PREFETCH);
-> > >
-> > >             if (!(res->flags & IORESOURCE_PREFETCH))
-> > > -               if (upper_32_bits(resource_size(res)))
-> > > +               if (upper_32_bits(resource_size(res) - 1))
-> > >                     dev_warn(dev, "Memory resource size exceeds max for 32 bits\n");
-> >
-> > I guess this relies on the fact that BARs must be a power of two in
-> > size, right?  So anything where the upper 32 bits of the size are
-> > non-zero is either 0x1_0000_0000 (4GiB window that we shouldn't warn
-> > about), or 0x2_0000_0000 or bigger (where we *do* want to warn about
-> > it).
-> >
-> > But it looks like this is used for host bridge resources, which are
-> > windows, not BARs, so they don't have to be a power of two size.  A
-> > window of size 0x1_8000_0000 is perfectly legal and would fit the
-> > criteria for this warning, but this patch would turn off the warning.
-> 
-> 0x1_8000_0000 - 1 = 0x1_7fff_ffff
-> 
-> So that would still work. Maybe you read it as the subtract being
-> after upper_32_bits()?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
+branch HEAD: e5d287b410fe5f330943f0a87838b931b4391bec  PCI: Fix reference leak in pci_alloc_child_bus()
 
-Right, sorry.  I guess a better example would be something like this:
+elapsed time: 1466m
 
-  [mem 0x2000_0000-0x21ff_ffff] -> [pci 0x0_ff00_0000-0x1_00ff_ffff]
+configs tested: 62
+configs skipped: 1
 
-where the size is only 0x0200_0000, so we wouldn't warn about it, but
-half of the window is above 4G on PCI.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> > I don't really understand this warning in the first place, though.  It
-> > was added by fede8526cc48 ("PCI: of: Warn if non-prefetchable memory
-> > aperture size is > 32-bit").  But I think the real issue would be
-> > related to the highest address, not the size.  For example, an
-> > aperture of 0x0_c000_0000 - 0x1_4000_0000 is only 0x8000_0000 in size,
-> > but the upper half of it it would be invalid for non-prefetchable
-> > 32-bit BARs.
-> 
-> Are we talking CPU addresses or PCI addresses? For CPU addresses, it
-> would be perfectly fine to be above 4G as long as PCI addresses are
-> below 4G, right?
+tested configs:
+alpha                           allyesconfig    gcc-14.2.0
+arc                  randconfig-001-20250228    gcc-13.2.0
+arc                  randconfig-002-20250228    gcc-13.2.0
+arm                  randconfig-001-20250228    clang-21
+arm                  randconfig-002-20250228    gcc-14.2.0
+arm                  randconfig-003-20250228    gcc-14.2.0
+arm                  randconfig-004-20250228    gcc-14.2.0
+arm64                randconfig-001-20250228    gcc-14.2.0
+arm64                randconfig-002-20250228    clang-21
+arm64                randconfig-003-20250228    clang-16
+arm64                randconfig-004-20250228    gcc-14.2.0
+csky                 randconfig-001-20250228    gcc-14.2.0
+csky                 randconfig-002-20250228    gcc-14.2.0
+hexagon                         allmodconfig    clang-21
+hexagon                         allyesconfig    clang-18
+hexagon              randconfig-001-20250228    clang-19
+hexagon              randconfig-002-20250228    clang-21
+i386       buildonly-randconfig-001-20250228    clang-19
+i386       buildonly-randconfig-002-20250228    clang-19
+i386       buildonly-randconfig-003-20250228    gcc-12
+i386       buildonly-randconfig-004-20250228    clang-19
+i386       buildonly-randconfig-005-20250228    clang-19
+i386       buildonly-randconfig-006-20250228    clang-19
+loongarch            randconfig-001-20250228    gcc-14.2.0
+loongarch            randconfig-002-20250228    gcc-14.2.0
+nios2                randconfig-001-20250228    gcc-14.2.0
+nios2                randconfig-002-20250228    gcc-14.2.0
+parisc               randconfig-001-20250228    gcc-14.2.0
+parisc               randconfig-002-20250228    gcc-14.2.0
+powerpc              randconfig-001-20250228    gcc-14.2.0
+powerpc              randconfig-002-20250228    clang-16
+powerpc              randconfig-003-20250228    clang-18
+powerpc64            randconfig-001-20250228    clang-16
+powerpc64            randconfig-002-20250228    clang-18
+powerpc64            randconfig-003-20250228    gcc-14.2.0
+riscv                randconfig-001-20250228    gcc-14.2.0
+riscv                randconfig-002-20250228    gcc-14.2.0
+s390                            allmodconfig    clang-19
+s390                            allyesconfig    gcc-14.2.0
+s390                 randconfig-001-20250228    gcc-14.2.0
+s390                 randconfig-002-20250228    clang-17
+sh                              allmodconfig    gcc-14.2.0
+sh                              allyesconfig    gcc-14.2.0
+sh                   randconfig-001-20250228    gcc-14.2.0
+sh                   randconfig-002-20250228    gcc-14.2.0
+sparc                           allmodconfig    gcc-14.2.0
+sparc                randconfig-001-20250228    gcc-14.2.0
+sparc                randconfig-002-20250228    gcc-14.2.0
+sparc64              randconfig-001-20250228    gcc-14.2.0
+sparc64              randconfig-002-20250228    gcc-14.2.0
+um                              allmodconfig    clang-21
+um                              allyesconfig    gcc-12
+um                   randconfig-001-20250228    clang-21
+um                   randconfig-002-20250228    clang-21
+x86_64     buildonly-randconfig-001-20250228    clang-19
+x86_64     buildonly-randconfig-002-20250228    clang-19
+x86_64     buildonly-randconfig-003-20250228    gcc-12
+x86_64     buildonly-randconfig-004-20250228    clang-19
+x86_64     buildonly-randconfig-005-20250228    gcc-12
+x86_64     buildonly-randconfig-006-20250228    gcc-12
+xtensa               randconfig-001-20250228    gcc-14.2.0
+xtensa               randconfig-002-20250228    gcc-14.2.0
 
-Yes, CPU addresses can be above 4G; all that matters for this is the
-PCI address.
-
-I think what's important is the largest PCI address in the window, not
-the size.
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
