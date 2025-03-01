@@ -1,173 +1,173 @@
-Return-Path: <linux-pci+bounces-22689-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22690-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CC1BA4A70D
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 01:37:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18379A4A84F
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 04:33:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4ECB03AA8A6
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 00:37:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CBF66189B89A
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Mar 2025 03:34:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13FDDA926;
-	Sat,  1 Mar 2025 00:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Z8vaSmji"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94CE515D5B6;
+	Sat,  1 Mar 2025 03:33:52 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out28-98.mail.aliyun.com (out28-98.mail.aliyun.com [115.124.28.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 599D6101DE
-	for <linux-pci@vger.kernel.org>; Sat,  1 Mar 2025 00:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDB12CA8;
+	Sat,  1 Mar 2025 03:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740789435; cv=none; b=FrcZZnHfTzn8sEAUk83IbdSH0iHZAHjN/M4qAODM3POLGnJZaVaoEZLf5Hq9Zxv3xZKp/EiSMN8XsRKbE7sd9YrDxx7eAzanV1+issmrCC546eir5suw7sag3qtzBTPhtnNrA92tBsiEw60CLEHUNyiitdi5RDd89KS4qcUVcvU=
+	t=1740800032; cv=none; b=i8jHQIBVqzbrMRfivFon7mY2Gz2sw0vReKs+6sIYF8TcsI0qo9ajipRxvmpT4JdxQ/EuUVY1oilhqr4DafrRS39fnBwQ0NDdvHNKb0rwxs9gI8RqBI16IcNf7n5xzPMGtbFKdgOBv++SFdgwl/pHdHx8lfMPz8V06BxVuFTqbZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740789435; c=relaxed/simple;
-	bh=KWp+JkEQ384C2ZZM2vnmvijKALezyZ2yoZO4XWGrnII=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aNF+nkkJx0bg7mlSZNgZ8cGrRwlJFanu0g8rHMJiJ4AvBNElC6F7TbG2yGJKcBuv5I6UJaQfIPIWq6aC9pgdlqF/NwSxvqnfygUCATBCM8h4HDWZSFR9myiWBZK+mH4J6RV4Y8QqkpIL+eUDYm7Uj5DjAeXkKX8gc262x2EzIwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=Z8vaSmji; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c0a4b030f2so348832685a.0
-        for <linux-pci@vger.kernel.org>; Fri, 28 Feb 2025 16:37:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1740789432; x=1741394232; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Td3ECwr3BYX3Fk7gFnUV4jIGzq67kra6+CNEYMgu4U=;
-        b=Z8vaSmjiEs+nPorZdfUrAjkI1nEevckyK9Dh0B6Eq0ipato35eeCQa5LdGx3pwfRj0
-         oHw5Z/HV64Z6ebo2cDFx2aJiu+12an0VTAwKlta62BwuP1Xt/rXOogyne1kCkwFon4fD
-         OdyRkws1GJPN8HkEAc4rUylqjiKZts2fNC/Pnc9Aa6PUvYEWOcR8YxOg5nZ+roDZFuVg
-         HkkWbUSMKmhusUHsKo1fLm3AGkT8mgStDoqea3zdc8aM0Nuj29X9MTfH0lHAjFLCE0Hx
-         6uAKoPwQJoAjVepzI4fhcsqRsXYRTZDS6wZ8haCsLuYDzxWUe1ufMnTZlLPqmQ2LmJzD
-         /l3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740789432; x=1741394232;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9Td3ECwr3BYX3Fk7gFnUV4jIGzq67kra6+CNEYMgu4U=;
-        b=aZAFBZcsrU3ZP9KCUp5FwibcL5tJbmCuBSu3lms0tQUpuvd0gJVzCwHwqT23s9gL8P
-         HFeLojmZ3nrlLXPeq7xpHMu7VBwKfGWD3aMCYy9cuVix0C0+VoTKTm/TLZ2VodHDWkb3
-         Z4tKBTHhnTOWmNmEriTmbklSS0BoC3Tq3LQQMzbxY+K6MI5P0ZPT4z0VzOm+LbdGX7OM
-         jN0V7oQ0nXTp+bcu/VmemcSnUnIm4/Fbz4BTt7vsg0zK+azogc1eawy4WmMnmrKDARFS
-         QUK7IkxKpGrXsmdj3aYQ+1F454ZFC/2RlG5zq+e9PanDbKRuI5qCOfeKSGIQpAkEST7L
-         dl0g==
-X-Forwarded-Encrypted: i=1; AJvYcCV1zUMwHTcIhWkpjTOpy/MY/5jvfweKoSYmr+7aYDmbS2sXjMqgFznm8Ww+uNadbCQzn76HXRiKzwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2NLVvaj0j4Go65uCCRBjrsrBm4IIF7sF3mlSnU6ii+N3k6lwF
-	PzzovIK1V29ZMaql/ImUy99la/YkeTSW7dPFGx+pyd/0Q+01WPXgarVFSkSGCK0=
-X-Gm-Gg: ASbGncsVIg8wbZjyRKwz/cZaJL21iu2MMz0OBfkc8euwvEw8z9LNwYv+i7DaelqHoIz
-	T1MYw3VpcIV6KKjRIMZcqUqibI3QL4RG3Jm3tDuu7Ly63DtGWlcEyRM82+cnWI2PGXIZ9m9pXTo
-	ayF8j2aEZ38LuiH8nX99mlzbW/f0djJlCvOh6NXwRV7lBIxznk8IeZ2lMz8ggiFLcrI9RBm822V
-	9ItIAUZ/OVBmw43t6DB/byoMjlXjd1VU5keQuFWrmpqDPpCOmi0femALvamTOyPSL0vmTbmaK1e
-	ojbuh981ifv7Pu9JldAdcwasXf6ceJzVHsnqXbmO5s8Wbqaw5ebEC5ZCeU3gBHIVL5D0ebHafuW
-	Koj4lRrWPcnTO+i4uqA==
-X-Google-Smtp-Source: AGHT+IFOn/ksSHuws3wokBJvJa6/sj/LoYkAsoS+wBwh3GzDwSM7WHVrzGwS02MkZWU6Ex8ojjGm5Q==
-X-Received: by 2002:a05:620a:4051:b0:7c0:9ac5:7f9e with SMTP id af79cd13be357-7c39c6691eamr774480385a.50.1740789432305;
-        Fri, 28 Feb 2025 16:37:12 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c378dac6d3sm310478485a.97.2025.02.28.16.37.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 16:37:11 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1toAqt-00000000VRk-15Wo;
-	Fri, 28 Feb 2025 20:37:11 -0400
-Date: Fri, 28 Feb 2025 20:37:11 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: Alexey Kardashevskiy <aik@amd.com>, x86@kernel.org, kvm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Christoph Hellwig <hch@lst.de>, Nikunj A Dadhania <nikunj@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>,
-	Joao Martins <joao.m.martins@oracle.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Steve Sistare <steven.sistare@oracle.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Dionna Glaze <dionnaglaze@google.com>, Yi Liu <yi.l.liu@intel.com>,
-	iommu@lists.linux.dev, linux-coco@lists.linux.dev,
-	Zhi Wang <zhiw@nvidia.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-Subject: Re: [RFC PATCH v2 14/22] iommufd: Add TIO calls
-Message-ID: <20250301003711.GR5011@ziepe.ca>
-References: <20250218111017.491719-1-aik@amd.com>
- <20250218111017.491719-15-aik@amd.com>
- <Z72GmixR6NkzXAl7@yilunxu-OptiPlex-7050>
- <2fe6b3c6-3eed-424d-87f0-34c4e7e1c906@amd.com>
- <Z77xrqLtJfB84dJF@yilunxu-OptiPlex-7050>
- <20250226131202.GH5011@ziepe.ca>
- <Z7/jFhlsBrbrloia@yilunxu-OptiPlex-7050>
+	s=arc-20240116; t=1740800032; c=relaxed/simple;
+	bh=iK2AfIKSUL8nmfJkunk9Xi1ujvLSDFVFQFMT7ZKBPTQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mynap91s4Lc5HGfUddmeJs0etcUSSIxWxHl+eZOn9bEQJ6xDhkZj4ysbvFVUbfsQLpYfNfqv+FF+M725Z8lnOm4pIMURY/FpCawA2g9NGh4wF/VKZrffWVGnECpZBh03EGMD0Agbgn6fFQScC5B1AUy2S6wT9jGWsfUPC5J6akA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com; spf=pass smtp.mailfrom=ttyinfo.com; arc=none smtp.client-ip=115.124.28.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ttyinfo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ttyinfo.com
+Received: from tzl..(mailfrom:zhoushengqing@ttyinfo.com fp:SMTPD_---.bgf2kBq_1740799702 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Sat, 01 Mar 2025 11:28:22 +0800
+From: Zhou Shengqing <zhoushengqing@ttyinfo.com>
+To: helgaas@kernel.org
+Cc: bhelgaas@google.com,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	rafael@kernel.org,
+	zhoushengqing@ttyinfo.com
+Subject: Re: Re: [PATCHv4] PCI/ACPI: _DSM PRESERVE_BOOT_CONFIG function rev id doesn't match with spec
+Date: Sat,  1 Mar 2025 03:28:22 +0000
+Message-Id: <20250301032822.17486-1-zhoushengqing@ttyinfo.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250227184053.GA609152@bhelgaas>
+References: <20250227184053.GA609152@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7/jFhlsBrbrloia@yilunxu-OptiPlex-7050>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 27, 2025 at 11:59:18AM +0800, Xu Yilun wrote:
-> On Wed, Feb 26, 2025 at 09:12:02AM -0400, Jason Gunthorpe wrote:
-> > On Wed, Feb 26, 2025 at 06:49:18PM +0800, Xu Yilun wrote:
+On Thu, Feb 27, 2025 at 6:40 PM Bjorn Helgaas wrote:
+> On Mon, Dec 16, 2024 at 05:27:51AM +0000, Zhou Shengqing wrote:
+> > Per PCI Firmware Specification Revision 3.3 Table 4-7 _DSM Definitions
+> > for PCI. Preserve PCI Boot Configuration Initial Revision ID changed to 2.
+> > But the code remains unchanged, still 1.
 > > 
-> > > E.g. I don't think VFIO driver would expect its MMIO access suddenly
-> > > failed without knowing what happened.
-> > 
-> > What do people expect to happen here anyhow? Do you still intend to
-> > mmap any of the MMIO into the hypervisor? No, right? It is all locked
+> > v4:Initialize *obj to NULL.
+> > v3:try revision id 1 first, then try revision id 2.
+> > v2:add Fixes tag.
 > 
-> Not expecting mmap the MMIO, but I switched to another way. VFIO doesn't
-> disallow mmap until bind, and if there is mmap on bind, bind failed.
-> That's my understanding of your comments.
-
-That seems reasonable
-
-> Another concern is about dma-buf importer (e.g. KVM) mapping the MMIO.
-> Recall we are working on the VFIO dma-buf solution, on bind/unbind the
-> MMIO accessibility is being changed and importers should be notified to
-> remove their mapping beforehand, and rebuild later if possible.
-> An immediate requirement for Intel TDX is, KVM should remove secure EPT
-> mapping for MMIO before unbind.
-
-dmabuf can do that..
-
-> > > The implementation is basically no difference from:
-> > > 
-> > > +       vdev = container_of(iommufd_get_object(ucmd->ictx, cmd->vdevice_id,
-> > > +                                              IOMMUFD_OBJ_VDEVICE),
-> > > 
-> > > The real concern is the device owner, VFIO, should initiate the bind.
-> > 
-> > There is a big different, the above has correct locking, the other
-> > does not :)
+> Thanks for working on this issue.
 > 
-> Could you elaborate more on that? Any locking problem if we implement
-> bind/unbind outside iommufd. Thanks in advance.
+>   - Thanks for the revision history.  For future posts, put it below
+>     the "---" line so it's in the email but not part of the commit log.
+> 
+>   - I think there's a leak in pci_acpi_preserve_config() because it
+>     doesn't free "obj" before it returns true.  If you agree, add a
+>     preparatory patch to fix this.
+> 
+>   - Add a preparatory patch to return false early in
+>     pci_acpi_preserve_config() if !ACPI_HANDLE(&host_bridge->dev) so
+>     the body of the function is unindented, similar to what
+>     acpi_pci_add_bus() does.
+> 
+>   - Add another preparatory patch that adds acpi_check_dsm() of the
+>     desired function/rev ID for DSM_PCI_PRESERVE_BOOT_CONFIG,
+>     DSM_PCI_POWER_ON_RESET_DELAY, DSM_PCI_DEVICE_READINESS_DURATIONS.
+>     Move the "Evaluate PCI Boot Configuration" comment above the
+>     acpi_check_dsm() since it applies to the whole function, not just
+>     the rev 1 code in this patch.
+> 
+>   - Rework this patch so it only adds acpi_check_dsm() and
+>     acpi_evaluate_dsm_typed() for rev 2.
 
-You will be unable to access any information iommufd has in the viommu
-and vdevice objects. So you will not be able to pass a viommu ID or
-vBDF to the secure world unless you enter through an iommufd path, and
-use iommufd_get_object() to obtain the required locks.
- 
-I don't know what the API signatures are for all three platforms to
-tell if this is a problem or not.
+Could you please explain this in more detail? Do you mean we don't need to
+consider rev 1 anymore?
 
-Jason
+> 
+>   - Throughout, wrap code and comments to fit in 80 columns because
+>     that's the convention for the rest of the file.
+> 
+>   - You can use "BIT(DSM_PCI_PRESERVE_BOOT_CONFIG)" and similar
+>     instead of "1ULL << DSM_PCI_PRESERVE_BOOT_CONFIG" when calling
+>     acpi_check_dsm().
+> 
+>   - Add a [0/n] cover letter when posting the series.  Each patch
+>     should be a response to the cover letter.  "git format-patch" and
+>     "git send-email" will do that for you automatically.
+> 
+> > Fixes: 9d7d5db8e78e ("PCI: Move PRESERVE_BOOT_CONFIG _DSM evaluation to pci_register_host_bridge()")
+> > 
+> > Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
+> > ---
+> >  drivers/pci/pci-acpi.c | 42 ++++++++++++++++++++++++++++++++----------
+> >  1 file changed, 32 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> > index af370628e583..f805cd134019 100644
+> > --- a/drivers/pci/pci-acpi.c
+> > +++ b/drivers/pci/pci-acpi.c
+> > @@ -123,19 +123,41 @@ phys_addr_t acpi_pci_root_get_mcfg_addr(acpi_handle handle)
+> >  bool pci_acpi_preserve_config(struct pci_host_bridge *host_bridge)
+> >  {
+> >  	if (ACPI_HANDLE(&host_bridge->dev)) {
+> > -		union acpi_object *obj;
+> > +		union acpi_object *obj = NULL;
+> >  
+> >  		/*
+> > -		 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
+> > -		 * exists and returns 0, we must preserve any PCI resource
+> > -		 * assignments made by firmware for this host bridge.
+> > +		 * Per PCI Firmware r3.2, released Jan 26, 2015,
+> > +		 * DSM_PCI_PRESERVE_BOOT_CONFIG Revision ID is 1.
+> > +		 * But PCI Firmware r3.3, released Jan 20, 2021,
+> > +		 * changed sec 4.6.5 to say
+> > +		 * "lowest valid Revision ID value: 2". So try revision 1
+> > +		 * first for old platform, then try revision 2.
+> >  		 */
+> > -		obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev),
+> > -					      &pci_acpi_dsm_guid,
+> > -					      1, DSM_PCI_PRESERVE_BOOT_CONFIG,
+> > -					      NULL, ACPI_TYPE_INTEGER);
+> > -		if (obj && obj->integer.value == 0)
+> > -			return true;
+> > +		if (acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev), &pci_acpi_dsm_guid, 1,
+> > +				   1ULL << DSM_PCI_PRESERVE_BOOT_CONFIG)) {
+> > +			/*
+> > +			 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
+> > +			 * exists and returns 0, we must preserve any PCI resource
+> > +			 * assignments made by firmware for this host bridge.
+> > +			 */
+> > +			obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev),
+> > +						      &pci_acpi_dsm_guid,
+> > +						      1, DSM_PCI_PRESERVE_BOOT_CONFIG,
+> > +						      NULL, ACPI_TYPE_INTEGER);
+> > +			if (obj && obj->integer.value == 0)
+> > +				return true;
+> > +		}
+> > +
+> > +		if (acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev), &pci_acpi_dsm_guid, 2,
+> > +				   1ULL << DSM_PCI_PRESERVE_BOOT_CONFIG)) {
+> > +			obj = acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev),
+> > +						      &pci_acpi_dsm_guid,
+> > +						      2, DSM_PCI_PRESERVE_BOOT_CONFIG,
+> > +						      NULL, ACPI_TYPE_INTEGER);
+> > +			if (obj && obj->integer.value == 0)
+> > +				return true;
+> > +		}
+> > +
+> >  		ACPI_FREE(obj);
+> >  	}
+> >  
+> > -- 
+> > 2.39.2
+> >
 
