@@ -1,201 +1,183 @@
-Return-Path: <linux-pci+bounces-22714-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22715-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92D57A4B0BF
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Mar 2025 09:57:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEC0FA4B0C5
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Mar 2025 10:01:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F2CF188F016
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Mar 2025 08:57:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93E463A9D4C
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Mar 2025 09:01:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24FFA1D86DC;
-	Sun,  2 Mar 2025 08:57:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8575515624B;
+	Sun,  2 Mar 2025 09:01:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VIKIdi1E"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GypIFtvj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="alBn7Xau"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58A617C210;
-	Sun,  2 Mar 2025 08:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32D5FC0E;
+	Sun,  2 Mar 2025 09:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740905844; cv=none; b=m44ToQ2/ddzymfWQdbaIBiwRgBFFHkfdvW4h4ERaIKRoGZ4TvnqwbyASsDJX2khupsoCKz/reaUT9t60ZXAEslNwKfc4mfQaNZDUhRkNa6jXojl6QCK7wQeWOb7JJvFw5ZfncCy9QvPJsL6IrpCta0pJjldq8+b+HrUuMt8BMqg=
+	t=1740906067; cv=none; b=Q906tMTYjM3Ns1lWwhRSnlUqTi8JKQK3GZCnkC3mRpN1TFAbX5sfowk7fQ7zADBqgVmrfzKa0MR4L6AMVSPxvU4z9jM9AODV/bWtbZWsignGRyiRBSDwHb24xkDTz/1d5L5xLBT/ctJvnuprZ3UgD0o2cRdPUhw1kkOX7+A4KEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740905844; c=relaxed/simple;
-	bh=u5JYFc4YftUMjJJM2wJNEZXoeeEaIau6bF605R+aFwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uBzh94VV7ioyzF+YEDVe4++gotdDZ49NtDiFO0owvFr4LdKv2s+QibHsJr3SXyRl4A5vsC0PYq7nZMKimiytoAb365VYnNIhtW3+3rvn+bNkW/K1+oJ3iKkRE+bM6RbZuXysmKP8gSIwZ+FYqZkxa41121V7CUA5KLEurYdKSWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VIKIdi1E; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32951C4CED6;
-	Sun,  2 Mar 2025 08:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740905843;
-	bh=u5JYFc4YftUMjJJM2wJNEZXoeeEaIau6bF605R+aFwg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VIKIdi1EyC1UF4BWzoLUJbZam9xi3uIK8W2N0PXVxO6mVZsqAHqX/xxGb1scyaHEb
-	 Jp8clkrcxHrLhb2bU1QlavJlNpJd/KtAXX7/s5yvLUUmPN8CfsYXGL42t5a+o/O4wi
-	 0VzuN4CKCaDCzG12nSOaOB4jkb0xwB+UNDZ3Ga0HUbq0XAqYcoAr8JdqbDYMrx+tPz
-	 wchzD8xI24OSxORMajnIN+2Zoa5pBcq9cYDfrsPgQdfp6sURJVLMe/XxAsI7bvkMsr
-	 j8cUMPfH6Wcd8Llmu7zszAl9ExyG3CIQB78hRJLX5eUze8LYO5s4HGkUJ/KP3WbywR
-	 /YJ3Sdkx9KSoA==
-Date: Sun, 2 Mar 2025 10:57:17 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
-Message-ID: <20250302085717.GO53094@unreal>
-References: <cover.1738765879.git.leonro@nvidia.com>
- <20250220124827.GR53094@unreal>
- <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
+	s=arc-20240116; t=1740906067; c=relaxed/simple;
+	bh=C6tq+Dlkj8fuLHJjs2IpPWa9ylx/Xwa5aOmduQBT0QI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=g+UhO0SFcpyyWr55WyPDNHuBguWZeePcf+pUK/AgDUHB+GOlMNtztT9Eb6CMnfZb8AyfAwWG5gHGIGyhKPLGmr6WmTVO+9L6BXWiqWUh9v5lxx0qamddbfSKsHGjbz3JdWBKZCsQ4GMgJ9wQk8flpkI7m+bZXGoqpSvzQLCrVSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GypIFtvj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=alBn7Xau; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740906062;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AQYzc6zsy7BVJfHkAaJxgxJ42ZnaVDHORnyS6oWMR/k=;
+	b=GypIFtvj3hxRXzg7f8uxJTd52Tn5hUkbAILZHWdGc2vHbWpaw6NpWWfSbgWnE8quXPII6/
+	gooHMVln+coU69y9knIULoUTv3E8LdXyRbm87xVjfl+GDduSXt+L3ZNTSRnNmN47EqhQZV
+	mskF0OYBAW7FkMeXlOpq6nluBUIHI7FSBpdTFU2omB0xE/HWoCb1rLNKrlyqUzjCbqBjew
+	yTkTTWsqB9z7khIWAv2tTPWK7NCSzWzCHANdWLG3Ve9pMxLjgSV1XYDrtSCtgErWGkosW3
+	4I9MwwglCLo6jaPxEmAADvaWXZsnO2wU3j6/VGVRJQoZcsYtVpAk9zCtu7I2gw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740906062;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AQYzc6zsy7BVJfHkAaJxgxJ42ZnaVDHORnyS6oWMR/k=;
+	b=alBn7XauSzoChXOicRdwxPVSOUm7GhEbHyOG/HgPcSK7ruhmsetRdi9lXLNO1ttKxBOIB7
+	M25JGqeVZFo1WtCA==
+To: Hans Zhang <18255117159@163.com>
+Cc: manivannan.sadhasivam@linaro.org, kw@linux.com, kwilczynski@kernel.org,
+ bhelgaas@google.com, Frank.Li@nxp.com, cassel@kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Zhang
+ <18255117159@163.com>
+Subject: Re: [v2] genirq/msi: Add the address and data that show MSI/MSIX
+In-Reply-To: <20250301123953.291675-1-18255117159@163.com>
+References: <20250301123953.291675-1-18255117159@163.com>
+Date: Sun, 02 Mar 2025 10:01:02 +0100
+Message-ID: <87plizdcxd.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
+Content-Type: text/plain
 
-On Fri, Feb 28, 2025 at 07:54:11PM +0000, Robin Murphy wrote:
-> On 20/02/2025 12:48 pm, Leon Romanovsky wrote:
-> > On Wed, Feb 05, 2025 at 04:40:20PM +0200, Leon Romanovsky wrote:
-> > > From: Leon Romanovsky <leonro@nvidia.com>
-> > > 
-> > > Changelog:
-> > > v7:
-> > >   * Rebased to v6.14-rc1
-> > 
-> > <...>
-> > 
-> > > Christoph Hellwig (6):
-> > >    PCI/P2PDMA: Refactor the p2pdma mapping helpers
-> > >    dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
-> > >    iommu: generalize the batched sync after map interface
-> > >    iommu/dma: Factor out a iommu_dma_map_swiotlb helper
-> > >    dma-mapping: add a dma_need_unmap helper
-> > >    docs: core-api: document the IOVA-based API
-> > > 
-> > > Leon Romanovsky (11):
-> > >    iommu: add kernel-doc for iommu_unmap and iommu_unmap_fast
-> > >    dma-mapping: Provide an interface to allow allocate IOVA
-> > >    dma-mapping: Implement link/unlink ranges API
-> > >    mm/hmm: let users to tag specific PFN with DMA mapped bit
-> > >    mm/hmm: provide generic DMA managing logic
-> > >    RDMA/umem: Store ODP access mask information in PFN
-> > >    RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
-> > >      linkage
-> > >    RDMA/umem: Separate implicit ODP initialization from explicit ODP
-> > >    vfio/mlx5: Explicitly use number of pages instead of allocated length
-> > >    vfio/mlx5: Rewrite create mkey flow to allow better code reuse
-> > >    vfio/mlx5: Enable the DMA link API
-> > > 
-> > >   Documentation/core-api/dma-api.rst   |  70 ++++
-> >   drivers/infiniband/core/umem_odp.c   | 250 +++++---------
-> > >   drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
-> > >   drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
-> > >   drivers/infiniband/hw/mlx5/umr.c     |  12 +-
-> > >   drivers/iommu/dma-iommu.c            | 468 +++++++++++++++++++++++----
-> > >   drivers/iommu/iommu.c                |  84 ++---
-> > >   drivers/pci/p2pdma.c                 |  38 +--
-> > >   drivers/vfio/pci/mlx5/cmd.c          | 375 +++++++++++----------
-> > >   drivers/vfio/pci/mlx5/cmd.h          |  35 +-
-> > >   drivers/vfio/pci/mlx5/main.c         |  87 +++--
-> > >   include/linux/dma-map-ops.h          |  54 ----
-> > >   include/linux/dma-mapping.h          |  85 +++++
-> > >   include/linux/hmm-dma.h              |  33 ++
-> > >   include/linux/hmm.h                  |  21 ++
-> > >   include/linux/iommu.h                |   4 +
-> > >   include/linux/pci-p2pdma.h           |  84 +++++
-> > >   include/rdma/ib_umem_odp.h           |  25 +-
-> > >   kernel/dma/direct.c                  |  44 +--
-> > >   kernel/dma/mapping.c                 |  18 ++
-> > >   mm/hmm.c                             | 264 +++++++++++++--
-> > >   21 files changed, 1435 insertions(+), 693 deletions(-)
-> > >   create mode 100644 include/linux/hmm-dma.h
-> > 
-> > Kind reminder.
-> 
-> ...that you've simply reposted the same thing again? Without doing anything
-> to address the bugs, inconsistencies, fundamental design flaws in claiming
-> to be something it cannot possibly be, the egregious abuse of
-> DMA_ATTR_SKIP_CPU_SYNC proudly highlighting how unfit-for-purpose the most
-> basic part of the whole idea is, nor *still* the complete lack of any
-> demonstrable justification of how callers who supposedly can't use the IOMMU
-> API actually benefit from adding all the complexity of using the IOMMU API
-> in a hat but also still the streaming DMA API as well?
+Hans!
 
-Can you please provide concrete list of "the bugs, inconsistencies, fundamental
-design flaws", so we can address/fix them?
+On Sat, Mar 01 2025 at 20:39, Hans Zhang wrote:
+> The debug_show() callback function is implemented in the MSI core code.
+> And assign it to the domain ops::debug_show() creation.
+>
+> cat /sys/kernel/debug/irq/irqs/msi_irq_num, the address and data stored
+> in the MSI capability or the address and data stored in the MSIX vector
+> table will be displayed.
 
-We are in v7 now and out of all postings you replied to v1 and v5 only with
-followups from three of us (Christoph, Jason and me).
+So this explains what the patch is doing and what the output is. But it
+fails to explain the _why_. Documentation gives proper guidance:
 
-> 
-> Yeah, consider me reminded.
+ https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#changelog
+ https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-changes
 
-Silence means agreement.
+> e.g.
+> root@root:/sys/kernel/debug/irq/irqs# cat /proc/interrupts | grep ITS
+>  85:          0          0          0          0          0          0          0          0          0          0          0          0   ITS-MSI 75497472 Edge      PCIe PME, aerdrv
+>  86:          0         30          0          0          0          0          0          0          0          0          0          0   ITS-MSI 76021760 Edge      nvme0q0
+>  87:        287          0          0          0          0          0          0          0          0          0          0          0   ITS-MSI 76021761 Edge      nvme0q1
+>  88:          0        265          0          0          0          0          0          0          0          0          0          0   ITS-MSI 76021762 Edge      nvme0q2
+>  89:          0          0        177          0          0          0          0          0          0          0          0          0   ITS-MSI 76021763 Edge      nvme0q3
+>  90:          0          0          0         76          0          0          0          0          0          0          0          0   ITS-MSI 76021764 Edge      nvme0q4
+>  91:          0          0          0          0        161          0          0          0          0          0          0          0   ITS-MSI 76021765 Edge      nvme0q5
+>  92:          0          0          0          0          0        991          0          0          0          0          0          0   ITS-MSI 76021766 Edge      nvme0q6
+>  93:          0          0          0          0          0          0        194          0          0          0          0          0   ITS-MSI 76021767 Edge      nvme0q7
+>  94:          0          0          0          0          0          0          0         94          0          0          0          0   ITS-MSI 76021768 Edge      nvme0q8
+>  95:          0          0          0          0          0          0          0          0        148          0          0          0   ITS-MSI 76021769 Edge      nvme0q9
+>  96:          0          0          0          0          0          0          0          0          0        261          0          0   ITS-MSI 76021770 Edge      nvme0q10
+>  97:          0          0          0          0          0          0          0          0          0          0        127          0   ITS-MSI 76021771 Edge      nvme0q11
+>  98:          0          0          0          0          0          0          0          0          0          0          0        317   ITS-MSI 76021772 Edge      nvme0q12
 
-> 
-> In case I need to make it any more explicit, NAK to this not-generic
-> not-DMA-mapping API, until you can come up with either something which *can*
-> actually work in any kind of vaguely generic manner as claimed, or instead
-> settle on a reasonable special-case solution for justifiable special cases.
-> Bikeshedding and rebasing through half a dozen versions, while ignoring
-> fundamental issues I've been pointing out from the very beginning, has not
-> somehow magically made this series mature and acceptable to merge.
+How is this relevant to describe the patch?
 
-You never responded to Christoph's answers, so please try your best and
-be professional, write down the list of things you want to see handled
-in next version and it will be done. It is impossible to guess what you
-want if you are not saying it clearly.
+> root@root:/sys/kernel/debug/irq/irqs#
+> root@root:/sys/kernel/debug/irq/irqs# cat 87
+> handler:  handle_fasteoi_irq
+> device:   0000:91:00.0
+> status:   0x00000000
+> istate:   0x00004000
+> ddepth:   0
+> wdepth:   0
+> dstate:   0x31600200
+>             IRQD_ACTIVATED
+>             IRQD_IRQ_STARTED
+>             IRQD_SINGLE_TARGET
+>             IRQD_AFFINITY_MANAGED
+>             IRQD_AFFINITY_ON_ACTIVATE
+>             IRQD_HANDLE_ENFORCE_IRQCTX
+> node:     0
+> affinity: 0
+> effectiv: 0
+> domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-3
+>  hwirq:   0x4880001
+>  chip:    ITS-MSI
 
-The main issue which we are trying to solve "abuse of SG lists for
-things without struct page", is not going to disappear by itself.
+This output is from a pre 6.11 kernel...
 
-> 
-> Honestly, given certain other scenarios we may also end up having to deal
-> with, if by the time everything broken is taken away, it were to end up
-> stripped all the way back to something well-reasoned like:
-> 
-> "Some drivers want more control of their DMA buffer layout than the
-> general-purpose IOVA allocator is able to provide though the DMA mapping
-> APIs, but also would rather not have to deal with managing an entire IOMMU
-> domain and address space, making MSIs work, etc. Expose
-> iommu_dma_alloc_iova() and some trivial IOMMU API wrappers to allow drivers
-> of coherent devices to claim regions of the default domain wherein they can
-> manage their own mappings directly."
-> 
-> ...I wouldn't necessarily disagree.
+>   flags:   0x20
+>              IRQCHIP_ONESHOT_SAFE
+>  msix:
+>   address_hi: 0x00000000
+>   address_lo: 0x0e060040
+>   msg_data:   0x00000001
 
-Something like that was done in first RFC version, but the overall
-feeling was that it is layer violation with unclear path to support
-swiotlb for NVMe.
+For demonstration it's enough to stop here, no?
+  
+> +static void msi_domain_debug_show(struct seq_file *m, struct irq_domain *d,
+> +				  struct irq_data *irqd, int ind)
+> +{
+> +	struct msi_desc *desc;
+> +	bool is_msix;
+> +
+> +	desc = irq_get_msi_desc(irqd->irq);
 
-Thanks
+Move this up to the declaration.
 
-> 
-> Thanks,
-> Robin.
+> +	if (!desc)
+> +		return;
+> +
+> +	is_msix = desc->pci.msi_attrib.is_msix;
+
+That's not valid for non PCI MSI interrupts.
+
+This function is used for all types of MSI interrupts. So for non PCI
+MSI interrupts this will output random garbage. Just print the address
+and be done with it. The MSI variant is visible from the chip name on
+current kernels. It's either ITS-PCI-MSI or ITS-PCI-MSIX and not
+ITS-MSI.
+
+> +	seq_printf(m, "%*s%s:", ind, "", is_msix ? "msix" : "msi");
+> +	seq_printf(m, "\n%*saddress_hi: 0x%08x", ind + 1, "", desc->msg.address_hi);
+> +	seq_printf(m, "\n%*saddress_lo: 0x%08x", ind + 1, "", desc->msg.address_lo);
+> +	seq_printf(m, "\n%*smsg_data:   0x%08x\n", ind + 1, "", desc->msg.data);
+> +}
+> +
+>  static const struct irq_domain_ops msi_domain_ops = {
+>  	.alloc		= msi_domain_alloc,
+>  	.free		= msi_domain_free,
+>  	.activate	= msi_domain_activate,
+>  	.deactivate	= msi_domain_deactivate,
+>  	.translate	= msi_domain_translate,
+> +	.debug_show     = msi_domain_debug_show,
+
+This does not build when CONFIG_GENERIC_IRQ_DEBUGFS=n.
+
+Thanks,
+
+        tglx
 
