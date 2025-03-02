@@ -1,159 +1,206 @@
-Return-Path: <linux-pci+bounces-22711-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22712-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F22D0A4AEA3
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Mar 2025 02:12:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FC94A4AEAF
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Mar 2025 03:04:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1756C16F180
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Mar 2025 01:12:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E40216C910
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Mar 2025 02:04:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00B09219ED;
-	Sun,  2 Mar 2025 01:12:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BC1817591;
+	Sun,  2 Mar 2025 02:04:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FqPBaaIR"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="NAMSCCGL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A51FC0E;
-	Sun,  2 Mar 2025 01:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 487255258;
+	Sun,  2 Mar 2025 02:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740877959; cv=none; b=Wlo1B9lC9VftAckh3IHokALjvBx+XZ1hUd5sJiQpwB+eo+92qN5eK+LO6LtKoY2DE5sMh7mBHm33ybNEA9XfK4Sj4k21G5fTdD/xQKu1SSF7u1AOBM44ZXAPXreR88rFYqQjFNatdwZ+rvItQHXfKsuqUVDgd3iO8G0bFAlUy/A=
+	t=1740881059; cv=none; b=WGs+omir1v1StK075utBG4mzi65aMzDGlT3A7MoF49y2ccDvPUKqvGqE6ndRuVGn6wqD0xgHuAMROeUVohnvKzCi4+/4exqzmX0lPY2OeGsBny7OWpP0EckaAGzZtU4zE5cplIBYv2kyhSdjHjtt0lYVR4VxE43Kpp3/XxpfOmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740877959; c=relaxed/simple;
-	bh=aVx2loBUNf2ComRdrhJLPSjK5wr4/lMc9xmmvBjHxu8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fJSUoj00JVf7fD/29Pr7XdmyaDe6U2mFO3j73wK2+5NTcPXN2FOAEN9Pugy9U4xWdJeVBXOLp5hJPGS6inuSOlg+geQFu7+tt0pS1oUBT9zJ1cT6k2n7C/UmOCWmKqq+msHyVO03POijw6hj/1D5BmhexD3xaEPcAO+BXkVbqOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FqPBaaIR; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740877959; x=1772413959;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aVx2loBUNf2ComRdrhJLPSjK5wr4/lMc9xmmvBjHxu8=;
-  b=FqPBaaIRFM4Mf4HJ5rNZZ7GyVA/8bZK8uTt68R6vkhHTn6K+s+hCpKtf
-   IB8ugEM1AYY4TW+WdIyb6mEZgnQdMm9efFo6ez0fKigCcT/a/jnl6QovO
-   V6VngWjciVMOt2Zpk/wUzLWw1nVUXKcccj0Z9SOSj+PKnMugYUzwjPCuL
-   5gwTHX24sYHlUW1t8UVWdb9XLB/T1C1JLYe4yw/JH2P1bx1NroY1fWaVe
-   0I4tecmGro2+AIy1z6ajOoerS7Xu3gX7Uz8gqMegrb66isBgTnIjMFcXb
-   XFwyEQ/+PtMsLv3mSUjt2Kc/xpYBlugyOT/JaDVhmumkuGPUIy0XfAEZE
-   w==;
-X-CSE-ConnectionGUID: vv2jnehXTz64ML85BIqncA==
-X-CSE-MsgGUID: IzMvZwl3Sea8DY7OCmzCPw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11360"; a="41475833"
-X-IronPort-AV: E=Sophos;i="6.13,326,1732608000"; 
-   d="scan'208";a="41475833"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2025 17:12:36 -0800
-X-CSE-ConnectionGUID: XExDBhaWRxmaGYPy4JIckQ==
-X-CSE-MsgGUID: TnSuplBQSOSxUV1wBVnj6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,326,1732608000"; 
-   d="scan'208";a="122278013"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 01 Mar 2025 17:12:33 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1toXsc-000GvE-1z;
-	Sun, 02 Mar 2025 01:12:30 +0000
-Date: Sun, 2 Mar 2025 09:12:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans Zhang <18255117159@163.com>, tglx@linutronix.de
-Cc: oe-kbuild-all@lists.linux.dev, manivannan.sadhasivam@linaro.org,
-	kw@linux.com, kwilczynski@kernel.org, bhelgaas@google.com,
-	Frank.Li@nxp.com, cassel@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Hans Zhang <18255117159@163.com>
-Subject: Re: [v2] genirq/msi: Add the address and data that show MSI/MSIX
-Message-ID: <202503020807.c3MhmbJh-lkp@intel.com>
-References: <20250301123953.291675-1-18255117159@163.com>
+	s=arc-20240116; t=1740881059; c=relaxed/simple;
+	bh=0yXndCNsH9f8oLn41DENZOR0XdWB4ODrrFcC83BClxs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sPBFUbVIGQ9VbFK934ZSPjSLZq5bZzUTj3MwbKNqe1SQrbJG4gM9wJHWlfU6WcRBpA7rEi7M6YAsd10JxYEfGkLWbwC2ivJ4P/R7ROlZl/C1YPeB0yric9RU7QQauMp9bs4wogFGJJDr/FKtGiYVFSLCUSnTYAxJaQ46561O+zM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=NAMSCCGL; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=qGexB
+	0WEdkqPFWppHBpKIuAC5rAO6YhYQJoJifpTg3M=; b=NAMSCCGLBS+iQS0h/L5p8
+	yh31KYj9CNVFM8Pg6GvlKt75Vhe9tszmWiANKkhNAGgvlyME8zDq7SR8wkpkBOtT
+	nM/wSUI4k5HaGO1Xq3f9hyC5zgFPvATyikPkUX1IOh/0Rn5PrJVUOL5ZrqXBq2VQ
+	ctHPE7k7sVYrmnSLhbGd4s=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wBnAhRyvMNnh3tBPw--.17630S2;
+	Sun, 02 Mar 2025 10:03:31 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: tglx@linutronix.de
+Cc: manivannan.sadhasivam@linaro.org,
+	kw@linux.com,
+	kwilczynski@kernel.org,
+	bhelgaas@google.com,
+	Frank.Li@nxp.com,
+	cassel@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [v3] genirq/msi: Add the address and data that show MSI/MSIX
+Date: Sun,  2 Mar 2025 10:03:28 +0800
+Message-Id: <20250302020328.296523-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250301123953.291675-1-18255117159@163.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBnAhRyvMNnh3tBPw--.17630S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJF45Ww4rAFyfKw47Ar43ZFb_yoWruF4DpF
+	WjkF47Gr4xJr17tw47G3W7u345ta4qvF12y3srtw1fArZ0qw1kKFyvga12gr1ayF1jgw1F
+	ya4UXa4kKrW5AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0p_0eHDUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiugEEo2fDtxFlRwAAs8
 
-Hi Hans,
+The debug_show() callback function is implemented in the MSI core code.
+And assign it to the domain ops::debug_show() creation.
 
-kernel test robot noticed the following build errors:
+cat /sys/kernel/debug/irq/irqs/msi_irq_num, the address and data stored
+in the MSI capability or the address and data stored in the MSIX vector
+table will be displayed.
 
-[auto build test ERROR on 76544811c850a1f4c055aa182b513b7a843868ea]
+e.g.
+root@root:/sys/kernel/debug/irq/irqs# cat /proc/interrupts | grep ITS
+ 85:          0          0          0          0          0          0          0          0          0          0          0          0   ITS-MSI 75497472 Edge      PCIe PME, aerdrv
+ 86:          0         30          0          0          0          0          0          0          0          0          0          0   ITS-MSI 76021760 Edge      nvme0q0
+ 87:        287          0          0          0          0          0          0          0          0          0          0          0   ITS-MSI 76021761 Edge      nvme0q1
+ 88:          0        265          0          0          0          0          0          0          0          0          0          0   ITS-MSI 76021762 Edge      nvme0q2
+ 89:          0          0        177          0          0          0          0          0          0          0          0          0   ITS-MSI 76021763 Edge      nvme0q3
+ 90:          0          0          0         76          0          0          0          0          0          0          0          0   ITS-MSI 76021764 Edge      nvme0q4
+ 91:          0          0          0          0        161          0          0          0          0          0          0          0   ITS-MSI 76021765 Edge      nvme0q5
+ 92:          0          0          0          0          0        991          0          0          0          0          0          0   ITS-MSI 76021766 Edge      nvme0q6
+ 93:          0          0          0          0          0          0        194          0          0          0          0          0   ITS-MSI 76021767 Edge      nvme0q7
+ 94:          0          0          0          0          0          0          0         94          0          0          0          0   ITS-MSI 76021768 Edge      nvme0q8
+ 95:          0          0          0          0          0          0          0          0        148          0          0          0   ITS-MSI 76021769 Edge      nvme0q9
+ 96:          0          0          0          0          0          0          0          0          0        261          0          0   ITS-MSI 76021770 Edge      nvme0q10
+ 97:          0          0          0          0          0          0          0          0          0          0        127          0   ITS-MSI 76021771 Edge      nvme0q11
+ 98:          0          0          0          0          0          0          0          0          0          0          0        317   ITS-MSI 76021772 Edge      nvme0q12
+root@root:/sys/kernel/debug/irq/irqs#
+root@root:/sys/kernel/debug/irq/irqs# cat 87
+handler:  handle_fasteoi_irq
+device:   0000:91:00.0
+status:   0x00000000
+istate:   0x00004000
+ddepth:   0
+wdepth:   0
+dstate:   0x31600200
+            IRQD_ACTIVATED
+            IRQD_IRQ_STARTED
+            IRQD_SINGLE_TARGET
+            IRQD_AFFINITY_MANAGED
+            IRQD_AFFINITY_ON_ACTIVATE
+            IRQD_HANDLE_ENFORCE_IRQCTX
+node:     0
+affinity: 0
+effectiv: 0
+domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-3
+ hwirq:   0x4880001
+ chip:    ITS-MSI
+  flags:   0x20
+             IRQCHIP_ONESHOT_SAFE
+ msix:
+  address_hi: 0x00000000
+  address_lo: 0x0e060040
+  msg_data:   0x00000001
+ parent:
+    domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-5
+     hwirq:   0x2002
+     chip:    ITS
+      flags:   0x0
+     parent:
+        domain:  :soc@0:interrupt-controller@0e001000-1
+         hwirq:   0x2002
+         chip:    GICv3
+          flags:   0x15
+                     IRQCHIP_SET_TYPE_MASKED
+                     IRQCHIP_MASK_ON_SUSPEND
+                     IRQCHIP_SKIP_SET_WAKE
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/genirq-msi-Add-the-address-and-data-that-show-MSI-MSIX/20250301-204332
-base:   76544811c850a1f4c055aa182b513b7a843868ea
-patch link:    https://lore.kernel.org/r/20250301123953.291675-1-18255117159%40163.com
-patch subject: [v2] genirq/msi: Add the address and data that show MSI/MSIX
-config: x86_64-buildonly-randconfig-003-20250302 (https://download.01.org/0day-ci/archive/20250302/202503020807.c3MhmbJh-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250302/202503020807.c3MhmbJh-lkp@intel.com/reproduce)
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202503020812.PKZf7JBa-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202503020807.c3MhmbJh-lkp@intel.com/
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+Changes since v2:
+https://lore.kernel.org/linux-pci/20250301123953.291675-1-18255117159@163.com/
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503020807.c3MhmbJh-lkp@intel.com/
+- Fix implicit declaration of function 'seq_printf'.
+- Fix 'const struct irq_domain_ops' has no member named 'debug_show'.
 
-All errors (new ones prefixed by >>):
+Changes since v1:
+https://lore.kernel.org/linux-pci/20250227162821.253020-1-18255117159@163.com/
 
-   kernel/irq/msi.c: In function 'msi_domain_debug_show':
->> kernel/irq/msi.c:770:9: error: implicit declaration of function 'seq_printf'; did you mean 'bstr_printf'? [-Werror=implicit-function-declaration]
-     770 |         seq_printf(m, "%*s%s:", ind, "", is_msix ? "msix" : "msi");
-         |         ^~~~~~~~~~
-         |         bstr_printf
-   kernel/irq/msi.c: At top level:
->> kernel/irq/msi.c:782:10: error: 'const struct irq_domain_ops' has no member named 'debug_show'
-     782 |         .debug_show     = msi_domain_debug_show,
-         |          ^~~~~~~~~~
->> kernel/irq/msi.c:782:27: error: positional initialization of field in 'struct' declared with 'designated_init' attribute [-Werror=designated-init]
-     782 |         .debug_show     = msi_domain_debug_show,
-         |                           ^~~~~~~~~~~~~~~~~~~~~
-   kernel/irq/msi.c:782:27: note: (near initialization for 'msi_domain_ops')
-   kernel/irq/msi.c:782:27: error: initialization of 'int (*)(struct irq_domain *, unsigned int,  unsigned int,  void *)' from incompatible pointer type 'void (*)(struct seq_file *, struct irq_domain *, struct irq_data *, int)' [-Werror=incompatible-pointer-types]
-   kernel/irq/msi.c:782:27: note: (near initialization for 'msi_domain_ops.alloc')
-   kernel/irq/msi.c:782:27: warning: initialized field overwritten [-Woverride-init]
-   kernel/irq/msi.c:782:27: note: (near initialization for 'msi_domain_ops.alloc')
-   cc1: some warnings being treated as errors
+- According to Thomas(tglx), the debug_show() callback should be added
+  to the MSI core code.
+---
+ kernel/irq/msi.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index 396a067a8a56..b1c7fd3b8243 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -15,6 +15,7 @@
+ #include <linux/mutex.h>
+ #include <linux/pci.h>
+ #include <linux/slab.h>
++#include <linux/seq_file.h>
+ #include <linux/sysfs.h>
+ #include <linux/types.h>
+ #include <linux/xarray.h>
+@@ -756,12 +757,34 @@ static int msi_domain_translate(struct irq_domain *domain, struct irq_fwspec *fw
+ 	return info->ops->msi_translate(domain, fwspec, hwirq, type);
+ }
+ 
++#ifdef CONFIG_GENERIC_IRQ_DEBUGFS
++static void msi_domain_debug_show(struct seq_file *m, struct irq_domain *d,
++				  struct irq_data *irqd, int ind)
++{
++	struct msi_desc *desc;
++	bool is_msix;
++
++	desc = irq_get_msi_desc(irqd->irq);
++	if (!desc)
++		return;
++
++	is_msix = desc->pci.msi_attrib.is_msix;
++	seq_printf(m, "%*s%s:", ind, "", is_msix ? "msix" : "msi");
++	seq_printf(m, "\n%*saddress_hi: 0x%08x", ind + 1, "", desc->msg.address_hi);
++	seq_printf(m, "\n%*saddress_lo: 0x%08x", ind + 1, "", desc->msg.address_lo);
++	seq_printf(m, "\n%*smsg_data:   0x%08x\n", ind + 1, "", desc->msg.data);
++}
++#endif
++
+ static const struct irq_domain_ops msi_domain_ops = {
+ 	.alloc		= msi_domain_alloc,
+ 	.free		= msi_domain_free,
+ 	.activate	= msi_domain_activate,
+ 	.deactivate	= msi_domain_deactivate,
+ 	.translate	= msi_domain_translate,
++#ifdef CONFIG_GENERIC_IRQ_DEBUGFS
++	.debug_show     = msi_domain_debug_show,
++#endif
+ };
+ 
+ static irq_hw_number_t msi_domain_ops_get_hwirq(struct msi_domain_info *info,
 
-vim +770 kernel/irq/msi.c
-
-   758	
-   759	static void msi_domain_debug_show(struct seq_file *m, struct irq_domain *d,
-   760					  struct irq_data *irqd, int ind)
-   761	{
-   762		struct msi_desc *desc;
-   763		bool is_msix;
-   764	
-   765		desc = irq_get_msi_desc(irqd->irq);
-   766		if (!desc)
-   767			return;
-   768	
-   769		is_msix = desc->pci.msi_attrib.is_msix;
- > 770		seq_printf(m, "%*s%s:", ind, "", is_msix ? "msix" : "msi");
-   771		seq_printf(m, "\n%*saddress_hi: 0x%08x", ind + 1, "", desc->msg.address_hi);
-   772		seq_printf(m, "\n%*saddress_lo: 0x%08x", ind + 1, "", desc->msg.address_lo);
-   773		seq_printf(m, "\n%*smsg_data:   0x%08x\n", ind + 1, "", desc->msg.data);
-   774	}
-   775	
-   776	static const struct irq_domain_ops msi_domain_ops = {
-   777		.alloc		= msi_domain_alloc,
-   778		.free		= msi_domain_free,
-   779		.activate	= msi_domain_activate,
-   780		.deactivate	= msi_domain_deactivate,
-   781		.translate	= msi_domain_translate,
- > 782		.debug_show     = msi_domain_debug_show,
-   783	};
-   784	
-
+base-commit: 76544811c850a1f4c055aa182b513b7a843868ea
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
 
