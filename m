@@ -1,110 +1,103 @@
-Return-Path: <linux-pci+bounces-22859-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22868-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0AB0A4E3D5
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 16:41:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id ADDB4A4E5C8
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 17:26:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 02C50881C91
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 15:34:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DBD403A40CD
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 16:14:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCA91265CA0;
-	Tue,  4 Mar 2025 15:22:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D97A285405;
+	Tue,  4 Mar 2025 15:53:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OiLY0/kh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="BiUE35rv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from beeline1.cc.itu.edu.tr (beeline1.cc.itu.edu.tr [160.75.25.115])
+Received: from beeline3.cc.itu.edu.tr (beeline3.cc.itu.edu.tr [160.75.25.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0D527CCFD
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 15:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=160.75.25.115
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2ADD28541E
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 15:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.117
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741101761; cv=pass; b=lg0N6aekxVcPqE/tSJJaBmTlZaWdCV9a0CnQGEcwEELmm5c7wol8IH1JFkFgQgB8MUIAUu0+0rnXeAo85g7g0wJKdhRsTcsFADCdqJhmk5t1q8hL6iSI+MEGExK4D1SXB115/nASaJReO/UEuoB7Gc4vOY84w4juQiiwxmwzzX0=
+	t=1741103591; cv=fail; b=mmdueI3e7eLKjxvE58R/sjXz/V5Ne7o+w9qejhZuVbyxkfhlgbbRO/FXBhTGfe7ngVvSZEQIRcdJOxIVQe+ValEfHvU/aDogA7g5lg0eRV6/m6ipuZgW5HQiC8Y/15l0WtVK6g8wgB2eC/O0+BpSJVduEbnmMRPJmYOvPT5oeYo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741101761; c=relaxed/simple;
-	bh=gRNBoJF05jernBUeq/KfMWGP1a+nFz+D5JahRaAph9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NJRIsPI8IEBZ1WdDpFo0UzjqT6VxIdZm/WPuy9MPCxeN1/WsAfyl3WOuFL2GdGKDUlCh/5+2u+Y6ngBveMEJJtDh+jeNBt2IO1kxmMtb6BGc4lqjfVe8MppdOz8EZgm7gRH7dYs4uzxFwnzAuGhSRHDBQVMYWsA7fafjpJlf9qM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OiLY0/kh; arc=none smtp.client-ip=10.30.226.201; arc=pass smtp.client-ip=160.75.25.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	s=arc-20240116; t=1741103591; c=relaxed/simple;
+	bh=R+rL1rMSl+Mj5hgNZeOvm1ty1+wrolZBgvMtTJv71Ok=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qn/FMGQR8L7RM/ubb9ik60GlJDfrwRMWzxYMbnrL7Gaxik/c0dNJg3nmRFgrDOeRxKT8Og/VitarY2xzwmTmQlCbe3B0mzRrRuTbdGsn3q1nh5AJyDg18+wP6jsvINpzu6zkhxd6p7/ik/JQoTkhclbYxNV/LOb0yDqZBZwDLOs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=163.com; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=BiUE35rv reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; arc=fail smtp.client-ip=160.75.25.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
 Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by beeline1.cc.itu.edu.tr (Postfix) with ESMTPS id 626C540D053B
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 18:22:38 +0300 (+03)
+	by beeline3.cc.itu.edu.tr (Postfix) with ESMTPS id E8A1440CEC94
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 18:53:07 +0300 (+03)
 X-Envelope-From: <root@cc.itu.edu.tr>
-Authentication-Results: lesvatest1.cc.itu.edu.tr;
-	dkim=pass (2048-bit key, unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OiLY0/kh
 Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
-	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6fX124rLzG0BB
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 18:20:49 +0300 (+03)
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6gCY6vxbzG1bq
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 18:51:37 +0300 (+03)
 Received: by le1 (Postfix, from userid 0)
-	id F29814273B; Tue,  4 Mar 2025 18:20:38 +0300 (+03)
+	id 4D28542722; Tue,  4 Mar 2025 18:51:21 +0300 (+03)
 Authentication-Results: lesva1.cc.itu.edu.tr;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OiLY0/kh
-X-Envelope-From: <linux-kernel+bounces-541586-bozkiru=itu.edu.tr@vger.kernel.org>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b=BiUE35rv
+X-Envelope-From: <linux-kernel+bounces-541676-bozkiru=itu.edu.tr@vger.kernel.org>
 Authentication-Results: lesva2.cc.itu.edu.tr;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OiLY0/kh
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b=BiUE35rv
 Received: from fgw1.itu.edu.tr (fgw1.itu.edu.tr [160.75.25.103])
-	by le2 (Postfix) with ESMTP id 683DB4268E
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 14:32:48 +0300 (+03)
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by fgw1.itu.edu.tr (Postfix) with SMTP id 44A96305F789
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 14:32:48 +0300 (+03)
+	by le2 (Postfix) with ESMTP id 998C6423C8
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 15:11:18 +0300 (+03)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by fgw1.itu.edu.tr (Postfix) with SMTP id 4E2F0305F789
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 15:11:18 +0300 (+03)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C71311889904
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 11:32:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7853116CF97
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 12:11:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 889C61FBE8F;
-	Mon,  3 Mar 2025 11:32:23 +0000 (UTC)
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5BF71F8BA5;
-	Mon,  3 Mar 2025 11:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D0DB20E704;
+	Mon,  3 Mar 2025 12:11:06 +0000 (UTC)
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6C041F542A;
+	Mon,  3 Mar 2025 12:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741001540; cv=none; b=Y3+2VBT1f8ZLzNmlfOC/x/LpSzO2057bTKp0xacGMGkD0QZOEbcyhzBBWxkU8O/WKGupdffszByUr1sbfZpeAmA4Y0nH2N/58NMIkPBTAQEbXxPxISCynYjsepN9R9dAvCKefM9oVIC6o1QfoOsLrvCh5Vr1aDEomMLyLeUHnXA=
+	t=1741003863; cv=none; b=jJNJECSQlKAsksUGVSpbKByD61CC+0fV0Y3K3YACwoVuPJkDu9sqlYlIAdmfdQ9e9eai37yp1DUvk43VQZZn6/DB+DZ7UBbhOYjYBJrSD4U6UEhgN75mKzvJRyhEIFCTZa2AsH7NL1eUU05RCQu/pDSg0Crd8f5SrTyGrFe9am0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741001540; c=relaxed/simple;
-	bh=gRNBoJF05jernBUeq/KfMWGP1a+nFz+D5JahRaAph9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l8w1GBI3Oc4J4dLWMHlZKx2SWrX/XNHW4QCHHky+yqX4RjAYnTk5JsnZucdXBlUMzd4YSMHI/vggN5D2BnnZF1krkoWmMsAdyTRJV8Dk/Cv0JsUHDTTuXEpKaH1z/YCelwGrDiVbdWzD1o4Wr2Q894AuAwa8x4JDROX4a0l+0fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OiLY0/kh; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33938C4CED6;
-	Mon,  3 Mar 2025 11:32:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741001540;
-	bh=gRNBoJF05jernBUeq/KfMWGP1a+nFz+D5JahRaAph9Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OiLY0/khaL2Ip+oy4IwfXwqO5ikHaoL5ZsUfOE/5XvmQ2y9IP8FjKVfIDmm96eC0a
-	 yfHpmEO43PSH/mrpd3d+aD8AKA+fVWOytuM1HR3QpBSVPGiSAaTAHU+xB6rwXrrsIs
-	 Jk48sJ+GKUTnBXA+FIsT4qEu57+TNJTThg3TR/NuANLQUppAKfwZcjAQmwDN45DC1H
-	 2IYn3GxuHjW09NnOyZLxKWqEjd2ERGSZMz0NeE2yMOQLSE0F2rwjgHQPIHD38C2pPT
-	 uBuqq+mbBeqV3FnACtw/hUBSrf7ETH2df81Ryvt+lJVXPgMLTcDbFOSRndCcxinyOv
-	 XE/n4UbPMPHfg==
-Date: Mon, 3 Mar 2025 12:32:08 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Rostyslav Khudolii <ros@qtec.com>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>, Borislav Petkov <bp@alien8.de>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org, "bhelgaas@google.com" <bhelgaas@google.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>
-Subject: Re: PCI IO ECS access is no longer possible for AMD family 17h
-Message-ID: <Z8WTON2K77Q567Kg@gmail.com>
-References: <CAJDH93s25fD+iaPJ1By=HFOs_M4Hc8LawPDy3n_-VFy04X4N5w@mail.gmail.com>
- <20241219112125.GAZ2QBteug3I1Sb46q@fat_crate.local>
- <20241219164408.GA1454146@yaz-khff2.amd.com>
- <CAJDH93vm0buJn5vZEz9k9GRC3Kr6H7=0MSJpFtdpy_dSsUMDCQ@mail.gmail.com>
- <Z78uOaPESGXWN46M@gmail.com>
- <CAJDH93uE+foFfRAXVJ48-PYvEUsbpEu_-BVoG-5HsDG66yY7AQ@mail.gmail.com>
+	s=arc-20240116; t=1741003863; c=relaxed/simple;
+	bh=b7aImQFO+vv4AEKqKZKWMgzQwLwslHy4AIvR8oe7et8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oGROunNhUDgVHUXnHm1GpMJvMlweXNxzweyTB/iMTjlY0A5IT7FV5yhZooSXZ1oXqN65iFt5bRsnA9lDlUu+lJKuBclt2PQxBsazahNzIOsYvRCrumMEmhopXV9Cy5t9dvdCCQjYhsbiSkoKKJdlWBnmowEg+8/fGoOrVyQ2d0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BiUE35rv; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=xGRwi
+	//d5mFSgNiOHp/4i7d4yZJCrVYLvCULn3+cKsg=; b=BiUE35rvVON2Dk1gnLPCS
+	Kfr3GJYbaGs4bh4Hk2QuuSdzwq7QOt8kwhzX1x9G1TfK5utYuyo5DRcoeGb+iJrA
+	Ox/4SjEK6woFve2fGRhNkzUS62ypj1aqoWaYWe+044LS4Kc6Q1mQZI+t8NYj2VoJ
+	Gwdh+kt+aUVORXHDAOlSrc=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wAH3eEinMVni5QpPQ--.16783S2;
+	Mon, 03 Mar 2025 20:10:12 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: tglx@linutronix.de
+Cc: manivannan.sadhasivam@linaro.org,
+	kw@linux.com,
+	kwilczynski@kernel.org,
+	bhelgaas@google.com,
+	Frank.Li@nxp.com,
+	cassel@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [v4] genirq/msi: Add the address and data that show MSI/MSIX
+Date: Mon,  3 Mar 2025 20:10:08 +0800
+Message-Id: <20250303121008.309265-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -112,86 +105,36 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJDH93uE+foFfRAXVJ48-PYvEUsbpEu_-BVoG-5HsDG66yY7AQ@mail.gmail.com>
+X-CM-TRANSID:_____wAH3eEinMVni5QpPQ--.16783S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJF45Ww1fKrWDtryDZF43ZFb_yoW5KrWkpF
+	Z0kF47Wr43Jr1UWa1xC3W7u345Ka95tF4Uu3s3uw1fArWDKryvyF1vgFW29FyayFyUKw1U
+	A3ZFgF1DuFyDAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zE1CJDUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwwFo2fFm0wbuQAAsy
+Content-Transfer-Encoding: quoted-printable
 X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
-X-ITU-Libra-ESVA-ID: 4Z6fX124rLzG0BB
+X-ITU-Libra-ESVA-ID: 4Z6gCY6vxbzG1bq
 X-ITU-Libra-ESVA: No virus found
 X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
-X-ITU-Libra-ESVA-Watermark: 1741706455.1975@qgvP9UVPK84NU0FOtPbOpQ
+X-ITU-Libra-ESVA-Watermark: 1741708308.25067@oFjLcqZrd9fwy/elJ96GYw
 X-ITU-MailScanner-SpamCheck: not spam
 
+The debug_show() callback function is implemented in the MSI core code.
+And assign it to the domain ops::debug_show() creation.
 
-* Rostyslav Khudolii <ros@qtec.com> wrote:
+When debugging MSI-related hardware issues (e.g., interrupt delivery
+failures), developers currently need to either:
+1. Recompile kernel with dynamic debug for tracing msi_desc.
+2. Manually read device registers through low-level tools.
 
-> Hi,
-> 
-> > Rostyslav, I would like to ask you, do you have patches / updates for
-> > enabling the EnableCf8ExtCfg bit for AMD 17h+ family? I could try to
-> > adjust my lspci changes for new machines.
-> 
-> Pali, sorry for the late reply. Do I understand correctly, that even
-> though you have access to the ECS via
-> the MMCFG you still want the legacy (direct IO) to work for the
-> debugging purposes? I can prepare a
-> simple patch that will allow you to do so if that's the case.
-> 
-> >
-> > So what is the practical impact here? Do things start breaking
-> > unexpectedly if CONFIG_ACPI_MCFG and CONFIG_PCI_MMCONFIG are disabled?
-> > Then I'd suggest fixing that in the Kconfig space, either by adding a
-> > dependency on ACPI_MCFG && PCI_MMCONFIG, or by selecting those
-> > must-have pieces of infrastructure.
-> >
-> 
-> Ingo, thank you for the reply.
-> 
-> The way I understand the access to the PCI ECS (via raw_pci_ext_ops)
-> works, is the following:
-> 1. If CONFIG_ACPI_MCFG or CONFIG_PCI_MMCONFIG are enabled - set the
-> raw_pci_ext_ops to use
->     MMCFG to access ECS. See pci_mmcfg_early_init() / pci_mmcfg_late_init();
-> 2. If CONFIG_ACPI_MCFG and CONFIG_PCI_MMCONFIG are disabled - set the
-> raw_pci_ext_ops to use
->     the 'direct' access to ECS. See pci_direct_init(). The direct
-> access is conditional on the PCI_HAS_IO_ECS
->     flag being set.
-> 
-> On AMD, the kernel enables the ECS IO access via the
-> amd_bus_cpu_online() and pci_enable_pci_io_ecs().
-> Except those functions have no desired effect on the AMD 17h+ family
-> because the register (EnableCf8ExtCfg),
-> they access, has been moved. What is important though, is that the
-> PCI_HAS_IO_ECS flag is set unconditionally.
-> See pci_io_ecs_init() in amd_bus.c
-> 
-> Therefore I was wondering whether we should add support for the 17h+
-> family in those functions to have
-> the direct access work for those families as well.
+Both approaches become challenging in production environments where
+dynamic debugging is often disabled.
 
-Yeah, I think so, but I'm really just guessing:
+This patch proposes to expose MSI address_hi/address_lo and msg_data in
+`/sys/kernel/debug/irq/irqs/<msi_irq_num>`. These fields are critical to:
+- Verify if MSI configuration matches hardware programming
+- Diagnose interrupt routing errors (e.g., mismatched destination ID)
+- Validate remapping behavior in virtualized environments
 
-> Regarding your suggestion to address this in the Kconfig space - I'm 
-> not quite sure I follow, since right now the kernel will use 
-> raw_pci_ext_ops whenever access beyond the first 256 bytes is 
-> requested. Say we want to make that conditional on CONFIG_ACPI_MCFG 
-> and CONFIG_PCI_MMCONFIG, does it also mean then we want to drop 
-> support for the 'direct' PCI IO ECS access altogether?
-
-I thought that enabling CONFIG_ACPI_MCFG would solve the problem, and 
-other architectures are selecting it pretty broadly:
-
- arch/arm64/Kconfig:     select ACPI_MCFG if (ACPI && PCI)
- arch/loongarch/Kconfig: select ACPI_MCFG if ACPI
- arch/riscv/Kconfig:     select ACPI_MCFG if (ACPI && PCI)
-
-While x86 allows it to be user-configured, which may result in 
-misconfiguration, given that PCI_HAS_IO_ECS is being followed 
-unconditionally if a platform provides it?
-
-Thanks,
-
-	Ingo
-
+The information is already maintained in msi_desc and irq_data structures=
 
