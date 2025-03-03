@@ -1,119 +1,117 @@
-Return-Path: <linux-pci+bounces-22870-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22861-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF853A4E66C
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 17:42:47 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1B39A4E3D7
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 16:41:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6C101B40906
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 16:31:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0492A7AA5C6
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 15:40:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB00020DD4C;
-	Tue,  4 Mar 2025 16:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 257F1261578;
+	Tue,  4 Mar 2025 15:27:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b="Fe4MPNMk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BlXvatPq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from beeline3.cc.itu.edu.tr (beeline3.cc.itu.edu.tr [160.75.25.117])
+Received: from beeline2.cc.itu.edu.tr (beeline2.cc.itu.edu.tr [160.75.25.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E7D25F99E
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 16:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=160.75.25.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9474A25525E
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 15:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=160.75.25.116
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741104576; cv=pass; b=uoN1YUF2X5D3c3j6a1amgmQ76O2DVrx9A1JFl6cj88+NEhZ/fJyj6dY207uKR4RvoDzB9kxLjnjrqW/iy7J8xnKc+puSwApyIuOTr90q65vlaa3mdrBRvvuC2hYFLHi8x67ROKDqyz6Cud8O7xznd6TADUPDFAt6juwnXeOWL5s=
+	t=1741102027; cv=fail; b=B/jgzTCgevhljOLXvuDRVbogLHYaSp7WxPq7ByJvUmz6sampDHKUFrPvXu9qVkubLdXHF7YFzIEnp9YLVcCM+99yMZccpWlhAManTjSQciky+FXbGGKsVBgLgdel4iuqt7dIzKvSMRezu71zKtX5IKEyvtSsTkhhGJTDbCDtdBg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741104576; c=relaxed/simple;
-	bh=pv7JhxNl2I28whP9+adbwP3IvdPyCk6EghnFcKHSLq8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RuwwIpBLlf1QKZyMfL0LereX/3ApjW3aksrjOQE7qFSNJKT7TWJNBi/v0lIBTm53Iqsuw/0Yw3LxHHWNUkdctV7Wo7TFPfSBkA4Aymds00e6TXi80VZmRWFCsHIJ6LU1Phmm38MCfhEotODqMU1XfluWKrOqB5xocEfEAEr+loY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=Fe4MPNMk; arc=none smtp.client-ip=209.85.222.46; dmarc=pass (p=reject dis=none) header.from=qtec.com; spf=pass smtp.mailfrom=qtec.com; arc=pass smtp.client-ip=160.75.25.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com
+	s=arc-20240116; t=1741102027; c=relaxed/simple;
+	bh=sN4YSNfJeXwI6mPGqMCpZpwXwEjPNNbxYaAxaMDv8MA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TvXtcjWLyjvEn7xMxz9i4QF1JzZe04ytUwPmlg7tRS2PUu2jcur3HhawombrQM9DFiJDnRhaqosPDAo065U2dOxlKCOXnS1bhAtn/rijDrldRSye4wBm5BOVFshurzI9h5uWAADBuZqmO8/BxNJzrJ+3/XOFW8fg4imqttV/8m8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=bootlin.com; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=fail (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BlXvatPq reason="signature verification failed"; arc=none smtp.client-ip=217.70.183.193; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; arc=fail smtp.client-ip=160.75.25.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
-Received: from lesvatest1.cc.itu.edu.tr (unknown [10.146.128.1])
+Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by beeline3.cc.itu.edu.tr (Postfix) with ESMTPS id A2CF440CECAA
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 19:09:32 +0300 (+03)
+	by beeline2.cc.itu.edu.tr (Postfix) with ESMTPS id E98AB40D1ECC
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 18:27:03 +0300 (+03)
 X-Envelope-From: <root@cc.itu.edu.tr>
 Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
-	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6gZq2gnzzG1H9
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 19:08:19 +0300 (+03)
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6fcl1mDyzG0Kn
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 18:24:55 +0300 (+03)
 Received: by le1 (Postfix, from userid 0)
-	id 9CF5A4272B; Tue,  4 Mar 2025 19:08:05 +0300 (+03)
+	id 8B1544274C; Tue,  4 Mar 2025 18:24:47 +0300 (+03)
 Authentication-Results: lesva1.cc.itu.edu.tr;
-	dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=Fe4MPNMk
-X-Envelope-From: <linux-kernel+bounces-541263-bozkiru=itu.edu.tr@vger.kernel.org>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BlXvatPq
+X-Envelope-From: <linux-kernel+bounces-541291-bozkiru=itu.edu.tr@vger.kernel.org>
 Authentication-Results: lesva2.cc.itu.edu.tr;
-	dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=Fe4MPNMk
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BlXvatPq
 Received: from fgw2.itu.edu.tr (fgw2.itu.edu.tr [160.75.25.104])
-	by le2 (Postfix) with ESMTP id B548E42465
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 12:21:54 +0300 (+03)
+	by le2 (Postfix) with ESMTP id 6F153432D3
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 12:43:20 +0300 (+03)
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by fgw2.itu.edu.tr (Postfix) with SMTP id 91D4C2DCDE
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 12:21:54 +0300 (+03)
+	by fgw2.itu.edu.tr (Postfix) with SMTP id 4C6392DCDE
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 12:43:20 +0300 (+03)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 82A8F1891BE2
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 09:22:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 236381892A78
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 09:43:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79DD21F0E5A;
-	Mon,  3 Mar 2025 09:21:42 +0000 (UTC)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2F911F1517;
+	Mon,  3 Mar 2025 09:43:06 +0000 (UTC)
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FDC1487F4
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 09:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B151CDFCA;
+	Mon,  3 Mar 2025 09:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740993699; cv=none; b=V/cQepjUEyOUj1llPf4HhT6QixTzMYhOP3kmVSOIQPKc4OB6qCegmXm4vWWYduZkxpS1Cejqsape5chD/fNz6+FxQBJuHzkNQbboopSnzIdcxSGr8gdpD4WcQQI3Wr9Jo7C1rzPCEHPMTMpM+UJhlo1V6kGf9Ej9Drn3TnBtwHY=
+	t=1740994983; cv=none; b=ubD85LpSwCDvu/aZez4O2pkwLHip2qBe1IOapu6YdoYkHZanbEwERTcSa1KjVQGvsYcbMNu9Qu5ac9EPxanHE+i7yy1LFMaXtdG96wHnP98baKmcOjzEH9AuLrbIjCzsik1zzfrygeO6uqjNuwCbMMfTMmGCRK4ceVg5ivRyRk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740993699; c=relaxed/simple;
-	bh=pv7JhxNl2I28whP9+adbwP3IvdPyCk6EghnFcKHSLq8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Caku+a+fHRra6BLTMwYdd/L7/PVQquun7iRyx3jvNSsFuh8K4A7Hyn1ys2ddS2K0X2qFPgY+GIyQ31GkmDWnpVTAv2dxliWaj2rnbNxAz/k1i/zP1Pu3kJ5mfeqan+ochP3fnbVYTvetru60024Y0gbfah9sxzb40AIZ39aq54E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com; spf=pass smtp.mailfrom=qtec.com; dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=Fe4MPNMk; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtec.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-8671441a730so1619958241.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 01:21:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=qtec.com; s=google; t=1740993696; x=1741598496; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nAeXWNkuPZBt1nYKfkioC0KxXx+i2L54nyTk7vpYv0Y=;
-        b=Fe4MPNMk65VWMwDTVoVbm44SCgEeM0RqEDsMk9XX7DwXL3BNTC0rlTaBBpXCpq5RI6
-         Ly0SKdi+ioooUzBJ2TRNB440+biEwvdcK7EDbY2aMJNu2l4MfVLamte1Uq+HRxA0QBgJ
-         dS7oE9TIXHmLGp+l/54eku17Rqe0n5h6hKFUBqvVmyYjSsuhPKZs5QG/UATUDsgN4EJK
-         S+wG072fuZQ9/dChJsYluPWVr2QRCHISBtNavf0tji5dO9eQGIcztn9ctFY07bCTQgQP
-         iNeOzx97L87ISFbwTrbEHPjDWXbdRXipL58GXMPnzuOn91svCU6WD1vZ3fBRhDYe5UaJ
-         uE9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740993696; x=1741598496;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nAeXWNkuPZBt1nYKfkioC0KxXx+i2L54nyTk7vpYv0Y=;
-        b=oUVqNlzu01D7w7chL3wtIsfoWEs16yAD2CsGmF9MBQX3R69JaTLFwDoN2tFbWSKvlA
-         twlRlBG6dlh1qmsegK6iSE9khyhRJvWGVZ7Q5ynFd/TsWgxiD6rZULsMggVPigXFnT0Z
-         4oguuqp7+l1XMnVSKtrrIE+DW9eZcLu89myC5bb+BLaVGXatKYVXARqTiZ/KD9EC9q0g
-         c791uPzxrDDEeKeRAXmcPOMwf/8H6NR9iC8I7r07xEOqsX3IBEZCu547Gndyeg8eb325
-         HGj6BkufkZdjyFTP+IoZZ8AUvN3HknYj39oQifLWFmKGaVzi8b87J23bnEpmLD0tCDo/
-         txfg==
-X-Forwarded-Encrypted: i=1; AJvYcCXfcD8NQ52QxTW/gYEMx8jv5HfJsXmUU0vvbKVHfreHq8VAPEfcC2TYDVvdT7t2S/NNW/vI+oSJWl+rzkU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoSf1jUtdvn1xn1NqTkJwd2c7s8er1yTfHarqcyE100Gt8WIaG
-	EOLSufPvDTc3y0XnogQGJKqFkjJmYpLvMiytMg+TGncXc4CNwC6mVTMSzWW5DhrUtJVlCWwAXpW
-	OZpP5cDf4jeglfN7Ou8VivBXEZEwQmWx8Nq9DYg==
-X-Gm-Gg: ASbGncuaapOVDAfO6cL+ipFNPYd2NwobMZxSxoj5S8SVK3rYGkJPXyT7CnNCePSDlXv
-	2ZmdgbNWsB9tchZ3jzVMtPyddo5KGnk4t0rsk6Alqwm+B1+EaCa3bjZbTjktoec+2i0Cw7Elwdl
-	ILPLsooZfNhz4onoF7fMB146v+
-X-Google-Smtp-Source: AGHT+IFZbG2eyoSsPmw+ur7eqkya0lr99VJq5r7PqD3pp3CraBkFznVj3MvpZxxCJ8G8DlJOSQmNVFqoW7d+QViHpa8=
-X-Received: by 2002:a05:6102:3f89:b0:4bb:f1f0:1b34 with SMTP id
- ada2fe7eead31-4c044857a38mr8417315137.2.1740993696264; Mon, 03 Mar 2025
- 01:21:36 -0800 (PST)
+	s=arc-20240116; t=1740994983; c=relaxed/simple;
+	bh=Ef92XLEjUubEUguFoFaEsSiJbp2zpAJ3HBgHzHTie0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SHG6U1JJwnmoY1tYTwF/0bsQgNVuCxNpceZ98u8ilW0Liyk9EcjCQqINiObK+46GjCM7XjKc915pXYaUOP/kth8qeSXg5sxxN2QFT+xIXF9FeObePn3t6hFRnwIv8XgQOmzsvSi6fXWoltvHUfN/LxqbyflYSvl6oOzvuRUwUow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BlXvatPq; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E476243308;
+	Mon,  3 Mar 2025 09:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740994979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aohfSAJAihchV7qkXkrdXJ9Pj4eAK1H+KH7QBBsTIk4=;
+	b=BlXvatPqxMPRvd6/D9QDvMcM6PIzd/xRBddwsU+RNRT9dt5gXyksu4odKthtnWZQjSJ6as
+	Ff7dBmKLfYCeECddGoIWPHB21IjSLaYhHMn0nlzxtRfZte7X/8IP2LnLCr7YShrA3vFXsU
+	+1KkfK2HOIT75WA3ct9BGp2vzauUUJZYQkDhPrVCc8BA8zhDVWYWDu6AtkalQWq2EoIlCu
+	pufyw2tRBwZbBklZ4LGgaaSKfYpxf6UJJXti9H66EZyJ268bAk8HESRbjPN5Xj6mFwzGSG
+	Q7Pp67li5M1vQXb8btIPoFEsF2Wt6sYts8fdmoDCt1NLX7Y6/QFcgWcp3mv9Pg==
+Date: Mon, 3 Mar 2025 10:42:56 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Rob Herring
+ <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v8 2/5] PCI: of: Use device_{add,remove}_of_node() to
+ attach of_node to existing device
+Message-ID: <20250303104256.48329d89@bootlin.com>
+In-Reply-To: <20250228205855.GA67436@bhelgaas>
+References: <20250224141356.36325-3-herve.codina@bootlin.com>
+	<20250228205855.GA67436@bhelgaas>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -121,81 +119,62 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJDH93s25fD+iaPJ1By=HFOs_M4Hc8LawPDy3n_-VFy04X4N5w@mail.gmail.com>
- <20241219112125.GAZ2QBteug3I1Sb46q@fat_crate.local> <20241219164408.GA1454146@yaz-khff2.amd.com>
- <CAJDH93vm0buJn5vZEz9k9GRC3Kr6H7=0MSJpFtdpy_dSsUMDCQ@mail.gmail.com> <Z78uOaPESGXWN46M@gmail.com>
-In-Reply-To: <Z78uOaPESGXWN46M@gmail.com>
-From: Rostyslav Khudolii <ros@qtec.com>
-Date: Mon, 3 Mar 2025 10:21:25 +0100
-X-Gm-Features: AQ5f1Jo0EX3pEM_GVM8NTI1LcFTTbxuaz98gbzh7kKRC0tNKU0-DotXfKkWTSrk
-Message-ID: <CAJDH93uE+foFfRAXVJ48-PYvEUsbpEu_-BVoG-5HsDG66yY7AQ@mail.gmail.com>
-Subject: Re: PCI IO ECS access is no longer possible for AMD family 17h
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>, Borislav Petkov <bp@alien8.de>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelkeejlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeviefffeegiedtleelieeghfejleeuueevkeevteegffehledtkeegudeigffgvdenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohephhgvlhhgrggrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrghrrghvrghnrghksehgohhog
+ hhlvgdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhiiihhihdrhhhouhesrghmugdrtghomh
+X-GND-Sasl: herve.codina@bootlin.com
+Content-Transfer-Encoding: quoted-printable
 X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
-X-ITU-Libra-ESVA-ID: 4Z6gZq2gnzzG1H9
+X-ITU-Libra-ESVA-ID: 4Z6fcl1mDyzG0Kn
 X-ITU-Libra-ESVA: No virus found
 X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
-X-ITU-Libra-ESVA-Watermark: 1741709307.64416@I9Etc2rXNNThJyUsST9Afg
+X-ITU-Libra-ESVA-Watermark: 1741706718.48275@BJPeJlMx4ObtIQJeCz3v/g
 X-ITU-MailScanner-SpamCheck: not spam
 
-Hi,
+On Fri, 28 Feb 2025 14:58:55 -0600
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> Rostyslav, I would like to ask you, do you have patches / updates for
-> enabling the EnableCf8ExtCfg bit for AMD 17h+ family? I could try to
-> adjust my lspci changes for new machines.
+> On Mon, Feb 24, 2025 at 03:13:52PM +0100, Herve Codina wrote:
+> > The commit 407d1a51921e ("PCI: Create device tree node for bridge")
+> > creates of_node for PCI devices. The newly created of_node is attache=
+d
+> > to an existing device. This is done setting directly pdev->dev.of_nod=
+e
+> > in the code.
+> >=20
+> > Even if pdev->dev.of_node cannot be previously set, this doesn't hand=
+le
+> > the fwnode field of the struct device. Indeed, this field needs to be
+> > set if it hasn't already been set.
+> >=20
+> > device_{add,remove}_of_node() have been introduced to handle this cas=
+e. =20
+>=20
+> I guess another way to say this is:
+>=20
+>   - If dev->of_node has already been set, it is an error and we want
+>     to do nothing.  The error is impossible in this case because
+>     of_pci_make_dev_node() returns early if dev->of_node has been set.
+>=20
+>   - Otherwise, we want to set dev->of_node (just as we previously
+>     did), and
+>=20
+>   - if dev->fwnode has not been set, we want to set that too.
+>=20
+> So the whole point of this is to set dev->fwnode, which we didn't do
+> before.  But has np->fwnode been set to anything?  Maybe it's buried
+> somewhere inside of_changeset_create_node(), but I didn't see it.
 
-Pali, sorry for the late reply. Do I understand correctly, that even
-though you have access to the ECS via
-the MMCFG you still want the legacy (direct IO) to work for the
-debugging purposes? I can prepare a
-simple patch that will allow you to do so if that's the case.
+np->fwnode can be set by ACPI. We are at the frontier between ACPI and
+device-tree.
 
->
-> So what is the practical impact here? Do things start breaking
-> unexpectedly if CONFIG_ACPI_MCFG and CONFIG_PCI_MMCONFIG are disabled?
-> Then I'd suggest fixing that in the Kconfig space, either by adding a
-> dependency on ACPI_MCFG && PCI_MMCONFIG, or by selecting those
-> must-have pieces of infrastructure.
->
-
-Ingo, thank you for the reply.
-
-The way I understand the access to the PCI ECS (via raw_pci_ext_ops)
-works, is the following:
-1. If CONFIG_ACPI_MCFG or CONFIG_PCI_MMCONFIG are enabled - set the
-raw_pci_ext_ops to use
-    MMCFG to access ECS. See pci_mmcfg_early_init() / pci_mmcfg_late_init();
-2. If CONFIG_ACPI_MCFG and CONFIG_PCI_MMCONFIG are disabled - set the
-raw_pci_ext_ops to use
-    the 'direct' access to ECS. See pci_direct_init(). The direct
-access is conditional on the PCI_HAS_IO_ECS
-    flag being set.
-
-On AMD, the kernel enables the ECS IO access via the
-amd_bus_cpu_online() and pci_enable_pci_io_ecs().
-Except those functions have no desired effect on the AMD 17h+ family
-because the register (EnableCf8ExtCfg),
-they access, has been moved. What is important though, is that the
-PCI_HAS_IO_ECS flag is set unconditionally.
-See pci_io_ecs_init() in amd_bus.c
-
-Therefore I was wondering whether we should add support for the 17h+
-family in those functions to have
-the direct access work for those families as well.
-
-Regarding your suggestion to address this in the Kconfig space - I'm
-not quite sure I follow, since right now the kernel
-will use raw_pci_ext_ops whenever access beyond the first 256 bytes is
-requested. Say we want to make that
-conditional on CONFIG_ACPI_MCFG and CONFIG_PCI_MMCONFIG, does it also
-mean then we want to drop support
-for the 'direct' PCI IO ECS access altogether?
+The ofnode is created and filled from an already existing device. This
+device can be created from information provided by the ACPI world.
+In that case, np->fwnode is set to and ACPI fwnode.
 
 Best regards,
-Rostyslav
+Herv=C3=A9
 
 
