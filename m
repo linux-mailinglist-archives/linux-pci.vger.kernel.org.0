@@ -1,82 +1,67 @@
-Return-Path: <linux-pci+bounces-22783-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22784-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A9AAA4CC3C
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 20:52:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BBC0A4CC57
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 21:00:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A4A44174709
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 19:52:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13B213A70D3
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 20:00:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DE322356A7;
-	Mon,  3 Mar 2025 19:51:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 011982010F6;
+	Mon,  3 Mar 2025 20:00:40 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A705F1FFC60;
-	Mon,  3 Mar 2025 19:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9059D3BBD8;
+	Mon,  3 Mar 2025 20:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741031514; cv=none; b=nWJrYu08cfxLEOJ7WSP4ZYLsUM+pX+tYkSBhWwOU/Ue9uTm0NZu8V97KLNSR0WyUmhChjBsNGwggQeuBO3CXgN+1Eylxj+USfq1B+4ngEsmBPTks+9gJ4i3oAb742uQ1+2Qzwm2blDCw86I8QlAT3Sx3i20hNpqdqY2IF3sAs90=
+	t=1741032039; cv=none; b=iMEYImQmWOl8r0uhG67Yqk4LjjZzCkKn/e3rQ/nJqi7mfoVmHmn+38lwpeM3pwgnq17M9DhoHfWPMrN9MlmgSJ6bU9TT2K3DQ4X2f97KG7ihX83erOOcSlT47/fgunZ6QBw0jDrCn/yd+O5zGy9zXcWXDARM64RRXELITl72lhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741031514; c=relaxed/simple;
-	bh=rS4tGKwmmJxA0t9e576pQhZJ6lWPHUT5n/rffY7QZyM=;
+	s=arc-20240116; t=1741032039; c=relaxed/simple;
+	bh=fuKfx+52mOKNtlZjc5ULPHxnRDn1ChhMsm0q83VOu28=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fPpjUG3EpLiwPRuJYy6r/FvZ//Hx5u4QKBDnSCluvYZ30WP4e8kFd27BUNw9/l8KPe5oh8HEn5BRp3U/QCktvhs1iPGm+KvCcwM2xqSNg3ChxPQrdwn7l8/VVRJxa79L7YQjAx2jb5NeHLHoR6u5deVQMch7MMmPXLPhUl9XOaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22334203781so92984545ad.0;
-        Mon, 03 Mar 2025 11:51:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741031512; x=1741636312;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k2CKI4zBybc+xDXiR4bNdoML7mcL6qio7NNqVOxcVnU=;
-        b=YBY6uSrroRnFDto9V3jZItZB8Cl/DpFUSIUNJ1HwKeJBAjcAoyfp5k1S0zMScn7z7T
-         B7fMXiv8pmUuIYadAvO2henoaFOFQct9cbUUUxDotyKwVuQoU/hqr5R2esRrSqkLvQSn
-         fXpT76UbxFgziwAdfIDpkchgyFFmQfbfn9Bmino/VGXEPQnG/TbrbIp3KniRG3x4CWgE
-         enH831orz1GAyxecxBbox5OmftKsNCGVMVVB0tpdgt6vPE4enGnbvtaiI2qqU7Jy4RkC
-         /e1tn/LENEdLprmGYQvkF8MjNUF/4wx+JToBvIqXdpeEZ+/YMYQO6ayVFOvksNsPi0AA
-         dvQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRepblAPwVg9JuMG3almlZKVLOpiIKDg1yAtqxz/9OUms9mzZO2fBuWrpB+XC/zEb+wx29DNYJWag=@vger.kernel.org, AJvYcCXb/ie4xuvTuLBBGAgJMvtyqEg7W7WPwsadZ0g0Jeu2NGUS/FjFC5WvMCc14NXMwFIKhhdnorMAKkqoSuBymadHrg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxx2xHjq5VU568agwTiymo98P0OFq1VRf27QV+BQ8fzOMoFRl7F
-	2YezwuUIdUZvd9qFnrID9IHKygwui0s/S/wpjRhb5hCKq+7MpaYIhamJqEz46rk=
-X-Gm-Gg: ASbGnctmRKRHbyspxchzjT7VYF9PWX7X8wDswexSnZZVLPrtLkGU/Rk2tLIoZHHd2Ij
-	mP6r/sqnN6rlFti9VE102s5ar/i1BvMV5TUF/jqdAC9Tcp30u8dAgsJI55eBz6tEUNzM99uKXP2
-	qVXUKUZq1sJArkIJijqLA/6Vc0oXRgmmzXJPBM+PkUlI9DPZ2W1q3p3slaVyJHM1BpWSleWZ6RP
-	yWEa3L3UBYj7GiHLyNOG9ktMD849OOs9ALR176K5Vy5FGNQXPeJHOlLl9jrMROqslUPUmZ0VrOG
-	j1hoTr4gDHQ1JQ01sJUYJxsjhY6iAUyAt2LwYNoyjWjljUspFGaMmASxLE4MyHKburqr/0D8Gx2
-	FQiY=
-X-Google-Smtp-Source: AGHT+IH+EFbEps/Env/viwecJzf7dRRJVQvIfNTlMDSlf181d0a4uYVPYlR1DNAdfEAQSeUvTmrcqA==
-X-Received: by 2002:a05:6a00:4b10:b0:736:47d3:b2f2 with SMTP id d2e1a72fcca58-7366e6414a5mr863083b3a.12.1741031511942;
-        Mon, 03 Mar 2025 11:51:51 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-734a00255d8sm9272490b3a.88.2025.03.03.11.51.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 11:51:51 -0800 (PST)
-Date: Tue, 4 Mar 2025 04:51:49 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	jingoohan1@gmail.com, Jonathan.Cameron@huawei.com,
-	fan.ni@samsung.com, nifan.cxl@gmail.com, a.manzanares@samsung.com,
-	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
-	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
-	will@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v7 0/5] Add support for debugfs based RAS DES feature in
- PCIe DW
-Message-ID: <20250303195149.GA1814481@rocinante>
-References: <CGME20250221132011epcas5p4dea1e9ae5c09afaabcd1822f3a7d15c5@epcas5p4.samsung.com>
- <20250221131548.59616-1-shradha.t@samsung.com>
- <20250225143001.GA1556729@rocinante>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mTx1YnzX673k7x0VcIi0GlK1d5jKju+O+iOcccJYOT3CJEi1VgGdXvFOAqlkhdGgsKM/V9JTV0pC8qsNGELA8rfj5KBvLkyz11wSzmyLKS/VYMsVvyAhyTwA+6oyO5BpGOc360qGe7Wt/atd12rKiAzkUHAnzJFiO1MyJjeWz2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 8016230015867;
+	Mon,  3 Mar 2025 21:00:28 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 6792D4A3B; Mon,  3 Mar 2025 21:00:28 +0100 (CET)
+Date: Mon, 3 Mar 2025 21:00:28 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Kenneth Crudup <kenny@panix.com>, Bjorn Helgaas <helgaas@kernel.org>,
+	ilpo.jarvinen@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
+	Jian-Hong Pan <jhp@endlessos.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nikl??vs Ko??es??ikovs <pinkflames.linux@gmail.com>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Michael Jamet <michael.jamet@intel.com>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
+Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
+ Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
+Message-ID: <Z8YKXC1IXYXctQrZ@wunner.de>
+References: <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
+ <20250211055722.GW3713119@black.fi.intel.com>
+ <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
+ <20250213135911.GG3713119@black.fi.intel.com>
+ <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
+ <20250214162948.GJ3713119@black.fi.intel.com>
+ <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
+ <20250226084404.GM3713119@black.fi.intel.com>
+ <Z77ak-4YsdAKXbHr@wunner.de>
+ <20250226091958.GN3713119@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -85,16 +70,74 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250225143001.GA1556729@rocinante>
+In-Reply-To: <20250226091958.GN3713119@black.fi.intel.com>
 
-Hello,
+On Wed, Feb 26, 2025 at 11:19:58AM +0200, Mika Westerberg wrote:
+> On Wed, Feb 26, 2025 at 10:10:43AM +0100, Lukas Wunner wrote:
+> > On Wed, Feb 26, 2025 at 10:44:04AM +0200, Mika Westerberg wrote:
+> > >   [Meteor Lake host] <--> [TB 4 dock] <--> [TB 3 NVMe]
+> > [...]
+> > > I added "no_console_suspend" to the command line and the did sysrq-w to
+> > > get list of blocked tasks. I've attached it just in case it is needed.
+> > 
+> > This looks like the deadlock we've had for years when hot-removing
+> > nested hotplug ports.
+> > 
+> > If you attach only a single device to the host, I guess the issue
+> > does not occur, right?
+> 
+> Yes.
+> 
+> > Previous attempts to fix this:
+> > 
+> > https://lore.kernel.org/all/4c882e25194ba8282b78fe963fec8faae7cf23eb.1529173804.git.lukas@wunner.de/
+> > 
+> > https://lore.kernel.org/all/20240612181625.3604512-1-kbusch@meta.com/
+> 
+> Well, it does not happen if I revert the commit so isn't that a
+> regresssion?
 
-[...]
-> Applied to controller/dwc, thank you!
+Does the below fix the issue?
 
-Updated the current branch with a few missing "Reviewed-by" tags from Fan Ni.
+-- >8 --
 
-Thank you!
-
-	Krzysztof
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index ff458e6..b0b4d46 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -287,24 +287,26 @@ static int pciehp_suspend(struct pcie_device *dev)
+ static bool pciehp_device_replaced(struct controller *ctrl)
+ {
+ 	struct pci_dev *pdev __free(pci_dev_put);
++	u64 dsn;
+ 	u32 reg;
+ 
+ 	pdev = pci_get_slot(ctrl->pcie->port->subordinate, PCI_DEVFN(0, 0));
+ 	if (!pdev)
+-		return true;
++		return false;
+ 
+-	if (pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) ||
+-	    reg != (pdev->vendor | (pdev->device << 16)) ||
+-	    pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) ||
+-	    reg != (pdev->revision | (pdev->class << 8)))
++	if ((pci_read_config_dword(pdev, PCI_VENDOR_ID, &reg) == 0 &&
++	     reg != (pdev->vendor | (pdev->device << 16))) ||
++	    (pci_read_config_dword(pdev, PCI_CLASS_REVISION, &reg) == 0 &&
++	     reg != (pdev->revision | (pdev->class << 8))))
+ 		return true;
+ 
+ 	if (pdev->hdr_type == PCI_HEADER_TYPE_NORMAL &&
+-	    (pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &reg) ||
+-	     reg != (pdev->subsystem_vendor | (pdev->subsystem_device << 16))))
++	    pci_read_config_dword(pdev, PCI_SUBSYSTEM_VENDOR_ID, &reg) == 0 &&
++	    reg != (pdev->subsystem_vendor | (pdev->subsystem_device << 16)))
+ 		return true;
+ 
+-	if (pci_get_dsn(pdev) != ctrl->dsn)
++	dsn = pci_get_dsn(pdev);
++	if ((dsn || ctrl->dsn) && dsn != ctrl->dsn)
+ 		return true;
+ 
+ 	return false;
 
