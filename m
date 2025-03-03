@@ -1,136 +1,124 @@
-Return-Path: <linux-pci+bounces-22872-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22848-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDB2CA4E695
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 17:46:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3A5AA4E243
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 16:05:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0111042101A
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 16:34:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2D3C421C4C
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 14:57:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50DCF280A3C;
-	Tue,  4 Mar 2025 16:13:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD7F525FA0D;
+	Tue,  4 Mar 2025 14:54:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="T6qLtJnb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QLa0LQQp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from beeline2.cc.itu.edu.tr (beeline2.cc.itu.edu.tr [160.75.25.116])
+Received: from beeline1.cc.itu.edu.tr (beeline1.cc.itu.edu.tr [160.75.25.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF8E280A26
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 16:13:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=160.75.25.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34DFA27D76A
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 14:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=160.75.25.115
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741104808; cv=pass; b=fxLRZnn6QgsME/2CoVWgqf+3QvecdU2yP6yV2o6I4qPCAQWmG7qFMFEcY8s2SFJFbtCUQra7gxiwQ8P2McwEXhqm/mzp/w9su7USeJuQ/w40jwh2PEph+FUjX02Wtx0H/bjMrkaL6UFVEEmK8dZSsNbeiiwHQpCm6pgY8qSaNxc=
+	t=1741100099; cv=pass; b=XbjZeEVJdwMk9SfW1lkIiDsozuKpv2JQxfNgraJ7/M62qjWe+j1M0AYtB1ZAKjUBwtKJgmAGOv11Sirw7Awip5JhbP3hivOfR+Q0DQThgjirBBtMoAgtkoyIAt0Jnanl+k1tSZVOLJ7R6rf7+FgXYVuUcPeV57WG5+RwKEV1VTQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741104808; c=relaxed/simple;
-	bh=oNannqQPiN20GZ+BHfvaroWwQhuHDZI4eMqVKF/YwNo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H4FTZpkxzXLsIN/kOHlchUT3Dm5leKX45UKxPvkJc6LBB+CYb930N4IKgErfhA2ypo5pZR8mZyfahQRdWiEkyv2aFZQWVh4LRdT/tV4miK5tUyJxQtgAHsj+879q3lxO5duJLwcNV/MD6E0Yxh85Mex+lTtS0PCvOEjnUaBZVTM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=T6qLtJnb; arc=none smtp.client-ip=205.220.168.131; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; arc=pass smtp.client-ip=160.75.25.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+	s=arc-20240116; t=1741100099; c=relaxed/simple;
+	bh=VIYv7jOirceEsOX7KnRIYeYd32+TAY98cre+XbP4POE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=omg5Yv9BUscODiLxqIpguQwHVIdUEab2gS4wyYaO+cFA58VC26OqretDR9q6Qp5RofuAZ2ee5HKB1NdqiYKfyeLx47o4otOcktoNpmzWga8l5stf93mJBzeJ3Yp2eAzj9hE8k+Hkmbro5gPqcElpXWQGMteqAN4eXW45pgtOZJI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QLa0LQQp; arc=none smtp.client-ip=192.198.163.15; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; arc=pass smtp.client-ip=160.75.25.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
 Received: from lesvatest1.cc.itu.edu.tr (lesvatest1.cc.itu.edu.tr [10.146.128.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by beeline2.cc.itu.edu.tr (Postfix) with ESMTPS id EA94040CECE0
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 19:13:24 +0300 (+03)
+	by beeline1.cc.itu.edu.tr (Postfix) with ESMTPS id 7FD7C40D4DFB
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 17:54:56 +0300 (+03)
 X-Envelope-From: <root@cc.itu.edu.tr>
 Authentication-Results: lesvatest1.cc.itu.edu.tr;
-	dkim=pass (2048-bit key, unprotected) header.d=qualcomm.com header.i=@qualcomm.com header.a=rsa-sha256 header.s=qcppdkim1 header.b=T6qLtJnb
+	dkim=pass (2048-bit key, unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=QLa0LQQp
 Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
-	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6g7B32MtzG1WK
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 18:47:50 +0300 (+03)
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6dwL1KFpzFxlq
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 17:53:22 +0300 (+03)
 Received: by le1 (Postfix, from userid 0)
-	id EC5E742728; Tue,  4 Mar 2025 18:47:42 +0300 (+03)
+	id 7137041898; Tue,  4 Mar 2025 17:53:20 +0300 (+03)
 Authentication-Results: lesva1.cc.itu.edu.tr;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=T6qLtJnb
-X-Envelope-From: <linux-kernel+bounces-541362-bozkiru=itu.edu.tr@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QLa0LQQp
+X-Envelope-From: <linux-kernel+bounces-541425-bozkiru=itu.edu.tr@vger.kernel.org>
 Authentication-Results: lesva2.cc.itu.edu.tr;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=T6qLtJnb
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QLa0LQQp
 Received: from fgw2.itu.edu.tr (fgw2.itu.edu.tr [160.75.25.104])
-	by le2 (Postfix) with ESMTP id 93F0C431CB
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:25:01 +0300 (+03)
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by fgw2.itu.edu.tr (Postfix) with SMTP id 282862DCE0
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:25:00 +0300 (+03)
+	by le2 (Postfix) with ESMTP id 3CBDD42F3B
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:47:52 +0300 (+03)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by fgw2.itu.edu.tr (Postfix) with SMTP id E57722DCE0
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 13:47:51 +0300 (+03)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E694C3A762E
-	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 10:24:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C25081716B8
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 10:47:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D574C1F12EC;
-	Mon,  3 Mar 2025 10:24:47 +0000 (UTC)
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9547A1F3FEB;
+	Mon,  3 Mar 2025 10:44:39 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628B91F0E50
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 10:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002A21F3D30;
+	Mon,  3 Mar 2025 10:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740997484; cv=none; b=seov4qU7gebbeqheKr+cRLRF1Hm04I7aYAMZThnfafRRlKpd/OZa8RWYrmrzNCoHlGyLc9JNIJWXUChqndNiu1AgA7vO+AkVGd4GMcUcc7VZS9wCZmEJCEniNv3L8ufd4Qqa16KTYAgQsZqVbm7wP9PQsjiUqLNZYo4JXVc+QCg=
+	t=1740998676; cv=none; b=t+I66HMT6sc1WxHegxE+LeZ0n6f0yMvVrqKCzDeH0j3kf+K+ays+1o083SOhKOwOWiqj0QOaU34wMCB7XZSPuFDzd1+MCDA2hQXdOCWdskAX7MgbDGLZsxlD4JAHcjgs3r6tLGBqDTSLDXffZXhKKnDUPz0MH+66M7xD+91G+I8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740997484; c=relaxed/simple;
-	bh=oNannqQPiN20GZ+BHfvaroWwQhuHDZI4eMqVKF/YwNo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=urRmfbxD6MJl6de0OHjfvKweIkiM0w6pzs73q/mosgofom7C97TtrVFsjNr07NI9hjUeJmzNcQJckcOGvGZmd6hGoDFFBle9Ni5+yCvu/zQeOmg0eAnGzzKGJbjMGho5NAeFC2PGb9ZwmMgau3YRDda1WUDUtc1W6K1iGfiIigg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=T6qLtJnb; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 522NTtni009143
-	for <linux-kernel@vger.kernel.org>; Mon, 3 Mar 2025 10:24:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Q5ahGViu7mWHfBE/U6LabXy74q9ltD+IEs/cbzuNlcM=; b=T6qLtJnbfCJhPlGv
-	EkgU3kDNr6HKJCP4M5wBdVg4Yz9ZTmUqZ0yBItZAkrZkn98XAwouH7ZtlikkwPax
-	GCEsRJMvhKRfmxzdDMLRpRtZdlXQJtUq7tOSgn2Ejld8dmcykaR8N/uLUEAdpleI
-	fA39wVaq0nKIFHyWEtozFD12JNHxyGL4ynZzBk+nJrwrHrhPxAd4JFyPzo737jPW
-	aAYFnQobvcEUXmhIOIoW35JMaT/Xn1/XJN5FsPvfPl09s829Dj4OwZjZcNGb7WpX
-	vGiP0g9lMLw10YL+aC4Y87M5cre5/k3doIseW2/UDl4wc3dA6Z7PvvdikSL8SpJo
-	8Vu/9Q==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 453t994esf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 10:24:42 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2fec3e38b60so4892278a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 02:24:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740997482; x=1741602282;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q5ahGViu7mWHfBE/U6LabXy74q9ltD+IEs/cbzuNlcM=;
-        b=q/YfnDd+GHKWSkEugfE5Sm3EIAx9U6SKkNGeiyVNBvPQeiHqc7kthLs1gGXVOhAz/R
-         v76NBpg254O+4aBt1I1TD3XTRs/r+0uIAriD7AuIc7VkCh60JXbKKGnvFJeMnpgMB4NX
-         8Zqd0CUbgwRgETJc/WS+7lLyNlGRiiZ5GVqh4jFuAUKLmKDmaTJeBPxGd5Lrbodc+qve
-         rwT4VAJwAUV914yN4JFehJxT+4IcF3HyqwlpU8nd9LBu2FCwokb6yl3RhuVvVRrdK8qV
-         Su1oorreE6jmKimjUoYcwoTQBSaJI6yu9h7S6n7B7zRsmt8Ir8EvCTftAWrwEKlmIFiP
-         DkAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFc+fSITqHnyodQCFNbQMQ8pbcY41wHFzGTMyMZHLX72iBLX3Z3Yj+MQYAtMnIJSwEz6h7Wni913dI0NY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxURTj4yCe1HyUtMWk1AJy2e5x2TNRJvwaXh8LuhKYRev4R370O
-	4fjEYV5cc8FlFCjLPJUj6jQlbK091sSf3yrJntXk8fvt3iNqivuKtAZn6HraJQW/Di5DaclYvG2
-	JB8h3IDOf++YdGiq3X1Qc82t5DsMUCNdxtLwNm30LKZlN2Ug9eID4QaDFQMGOoAQ=
-X-Gm-Gg: ASbGncuNtyk6Cz1Mkbxrb78o5fZIZypOrsh8dsOt1PSp2hO16xcRjhSzrapQxOPPjyW
-	UN7uEnU2opAqqqX7gmTL4lu+zHLqgnVG1F1qi6DbsjHiSQ/vJ5k4e4hmCcCrbDchferDp6kJh3c
-	8UGHJhJb7nLI8wuP7Je8R0mnNAi2Y8QZsBq/rjZA/qZ8KfCPKGdDs6UNjQIaXBX6U5Zs/+WyJNK
-	99YoT3M7NxzUeMfdh1Iu94vepiXlxEDyZ4wIq8UuubPE1pD5KRRl00skLpVIazMKqGx5fLkxLo5
-	LkSmisL4K2reNw0yLPWdbqITDbXTNbmBOoT3qizfo6FQkpSlvlCiEYMYt4U=
-X-Received: by 2002:a17:90b:4988:b0:2ee:a76a:830 with SMTP id 98e67ed59e1d1-2febabcb0c7mr21393582a91.24.1740997481660;
-        Mon, 03 Mar 2025 02:24:41 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEALCniW+g8dNGDdCDI6uEm0eVuwQCKj33EnrSZUUlmNAZ/nXpTsx/74bSfs7XoeJdEM7XvHg==
-X-Received: by 2002:a17:90b:4988:b0:2ee:a76a:830 with SMTP id 98e67ed59e1d1-2febabcb0c7mr21393547a91.24.1740997481289;
-        Mon, 03 Mar 2025 02:24:41 -0800 (PST)
-Received: from [192.168.1.35] ([117.236.245.126])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223505293ddsm73795215ad.229.2025.03.03.02.24.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 02:24:40 -0800 (PST)
-Message-ID: <8c416213-8f46-40b0-aa04-a2a89d5dd0a3@oss.qualcomm.com>
-Date: Mon, 3 Mar 2025 15:54:37 +0530
+	s=arc-20240116; t=1740998676; c=relaxed/simple;
+	bh=VIYv7jOirceEsOX7KnRIYeYd32+TAY98cre+XbP4POE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=CZJRJIj/T/u7jhGuccHx50zgbA+VY6HncpTW6PdDfOvy9R1dqFoUYZYIpII+AXYljsRJOHD8dJUW/Uo6llFRmbQ6t1wZHpyFkhnvbc09xdaBV1WuCDVjky5GdnzqTx5ObhpgsJM+K9ndtTZptSVhJag4MEK3/YZpkgytKje5vpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QLa0LQQp; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740998675; x=1772534675;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=VIYv7jOirceEsOX7KnRIYeYd32+TAY98cre+XbP4POE=;
+  b=QLa0LQQpxK96/v+/4rz6+RcWY+qzNsj7mX7GKvp9eB841z997yxgm8+O
+   c52AgKs6oHFB3HXfl2duH4SdmkYeY4LpQb1S6hY4I4WhQScx1MhfYfeNc
+   Rb5d25gyend3lXV1yRZc2DvUryHi7Ut5l71Hv7aa0J2pzB9eR5tLHUmXm
+   yV0piWVNNQ9+etgCVo4rvGxxsBhtWwn92KN193jbDLCaYWhhcgItx5PXW
+   OEqOeqClEQ4lOyruy5HkdQ4/52R+NHkfZJSdbkWLoT1eAje82GgVZhO/l
+   F9OWrW5JnDuZQfWgLDFOmPP5eXr/MCMmZUyDwCfUgOEy0GlTcZCNAw1xy
+   Q==;
+X-CSE-ConnectionGUID: FH8EeKtqTwmQ4vQnMVNnng==
+X-CSE-MsgGUID: Yq7/lWpOQvi1blQsgxsKqA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="41989334"
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="41989334"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 02:44:33 -0800
+X-CSE-ConnectionGUID: 2/cLllESQp2mo305RhzW9g==
+X-CSE-MsgGUID: LrJbmPnzQteH3dtF0gSE7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
+   d="scan'208";a="117963436"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.14])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 02:44:30 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 3 Mar 2025 12:44:26 +0200 (EET)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Bjorn Helgaas <bhelgaas@google.com>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Joel Mathew Thomas <proxy0@tutamail.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI/bwctrl: Disable PCIe BW controller during
+ reset
+In-Reply-To: <Z8F1z-gyXJDyR6d0@wunner.de>
+Message-ID: <f8a99fca-62fc-4503-a553-597d87341674@linux.intel.com>
+References: <20250217165258.3811-1-ilpo.jarvinen@linux.intel.com> <Z7RL7ZXZ_vDUbncw@wunner.de> <14797a5a-6ded-bf8f-aa0c-128668ba608f@linux.intel.com> <Z7_4nMod6jWd-Bi1@wunner.de> <Z8F1z-gyXJDyR6d0@wunner.de>
 Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -138,58 +126,104 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 17/23] arm64: dts: qcom: ipq8074: Add missing MSI and
- 'global' IRQs
-Content-Language: en-US
-To: manivannan.sadhasivam@linaro.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org
-Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
- <20250227-pcie-global-irq-v1-17-2b70a7819d1e@linaro.org>
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-In-Reply-To: <20250227-pcie-global-irq-v1-17-2b70a7819d1e@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: EtZBDHae6-dH55vpYb6qDMBQV527iyTs
-X-Proofpoint-GUID: EtZBDHae6-dH55vpYb6qDMBQV527iyTs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-03_04,2025-03-03_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=575
- mlxscore=0 lowpriorityscore=0 suspectscore=0 priorityscore=1501
- clxscore=1015 spamscore=0 adultscore=0 impostorscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503030080
+Content-Type: text/plain; charset=US-ASCII
 X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
-X-ITU-Libra-ESVA-ID: 4Z6g7B32MtzG1WK
+X-ITU-Libra-ESVA-ID: 4Z6dwL1KFpzFxlq
 X-ITU-Libra-ESVA: No virus found
 X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
-X-ITU-Libra-ESVA-Watermark: 1741708132.79894@vzzsMVaK8p2vYCeP6uq9Ag
+X-ITU-Libra-ESVA-Watermark: 1741704809.99582@2oHiu5jPkfKCIhFked0cCg
 X-ITU-MailScanner-SpamCheck: not spam
 
+On Fri, 28 Feb 2025, Lukas Wunner wrote:
 
-On 2/27/2025 7:10 PM, Manivannan Sadhasivam via B4 Relay wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> On Thu, Feb 27, 2025 at 06:31:08AM +0100, Lukas Wunner wrote:
+> > pcie_bwnotif_irq() accesses the Link Status register without
+> > acquiring a runtime PM reference on the PCIe port.  This feels
+> > wrong and may also contribute to the issue reported here.
+> > Acquiring a runtime PM ref may sleep, so I think you need to
+> > change the driver to use a threaded IRQ handler.
 > 
-> IPQ8074 has 8 MSI SPI interrupts and one 'global' interrupt.
+> I've realized we've had a discussion before why a threaded IRQ handler
+> doesn't make sense...
+
+Yes.
+ 
+> https://lore.kernel.org/all/Z35qJ3H_8u5LQDJ6@wunner.de/
+>
+> ...but I'm still worried that a Downstream Port in a nested-switch
+> configuration may be runtime suspended while the hardirq handler
+> is running.  Is there anything preventing that from happening?
+
+I don't think there is.
+
+> To access config space of a port, it's sufficient if its upstream
+> bridge is runtime active (i.e. in PCI D0).
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->   arch/arm64/boot/dts/qcom/ipq8074.dtsi | 40 +++++++++++++++++++++++++++++++----
->   1 file changed, 36 insertions(+), 4 deletions(-)
+> So basically the below is what I have in mind.  This assumes that
+> the upstream bridge is still in D0 when the interrupt handler runs
+> because in atomic context we can't wait for it to be runtime resumed.
+> Seems like a fair assumption to me but what do I know...
+
+bwctrl doesn't even want to resume the port in the irqhandler. If the port
+is suspended, why would it have LBMS/LABS, and we disabled notifications 
+anyway in suspend handler anyway so we're not even expecting them to come 
+during a period of suspend (which does not mean there couldn't be 
+interrupts due to other sources).
+
+So there should be no problem in not calling resume for it.
+
+> -- >8 --
+> 
+> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+> index 0a5e7efbce2c..fea8f7412266 100644
+> --- a/drivers/pci/pcie/bwctrl.c
+> +++ b/drivers/pci/pcie/bwctrl.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/pci.h>
+>  #include <linux/pci-bwctrl.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/rwsem.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+> @@ -235,9 +236,13 @@ static irqreturn_t pcie_bwnotif_irq(int irq, void *context)
+>  	struct pcie_device *srv = context;
+>  	struct pcie_bwctrl_data *data = srv->port->link_bwctrl;
+>  	struct pci_dev *port = srv->port;
+> +	struct device *parent __free(pm_runtime_put) = port->dev.parent;
+>  	u16 link_status, events;
+>  	int ret;
+>  
+> +	if (parent)
+> +		pm_runtime_get_noresume(parent);
+> +
+
+Should this then check if its suspended and return early if it is 
+suspended?
+
+pm_runtime_suspended() has some caveats in the kerneldoc though so I'm a 
+bit unsure if it can be called safely here, probably not.
+
+>  	ret = pcie_capability_read_word(port, PCI_EXP_LNKSTA, &link_status);
+>  	if (ret != PCIBIOS_SUCCESSFUL)
+>  		return IRQ_NONE;
+> diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
+> index d39dc863f612..038228de773d 100644
+> --- a/include/linux/pm_runtime.h
+> +++ b/include/linux/pm_runtime.h
+> @@ -448,6 +448,8 @@ static inline int pm_runtime_put(struct device *dev)
+>  	return __pm_runtime_idle(dev, RPM_GET_PUT | RPM_ASYNC);
+>  }
+>  
+> +DEFINE_FREE(pm_runtime_put, struct device *, if (_T) pm_runtime_put(_T))
+> +
+>  /**
+>   * __pm_runtime_put_autosuspend - Drop device usage counter and queue autosuspend if 0.
+>   * @dev: Target device.
 > 
 
-Reviewed-by: Kathiravan Thirumoorthy 
-<kathiravan.thirumoorthy@oss.qualcomm.com>
+-- 
+ i.
+
 
 
