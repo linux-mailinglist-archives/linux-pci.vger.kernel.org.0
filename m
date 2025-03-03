@@ -1,226 +1,189 @@
-Return-Path: <linux-pci+bounces-22731-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22732-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92D28A4B72B
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 05:34:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3E44A4B799
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 06:35:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DCF583ADAC8
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 04:34:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0F89D16CF72
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 05:35:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB99C1552EB;
-	Mon,  3 Mar 2025 04:34:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B24F1DCB24;
+	Mon,  3 Mar 2025 05:35:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nCnBb+Q6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dqzVwvQM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D3413D8B1;
-	Mon,  3 Mar 2025 04:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600658635C;
+	Mon,  3 Mar 2025 05:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740976454; cv=none; b=sgw5hIugkrvqkAN2FOKNIQJaPD/U1PuuSPPWt3GQhM7J2KNo0w7Z4K0z2tAV5DJG82RF8uiovntZepkhvbBdJFSpqWEmJNde7M6fXWKlHAuheZNHqdn4MAAoKXgrD49uSU56BHO20D8+foUvPduRvOoZIaRrmO3iP6l7GRHUAkU=
+	t=1740980100; cv=none; b=nn5EVYStP4eQFrhrhQhcEy13qsDQBdK17PBQ8TaFcrc8CIpnq0ySGGSmb/qQdQuAhk7ZpAwyzJjuJ2H2hvaXN3JG0dz3UaPbC3nup2VLdYw9vF+0QwrF4hEJCnDD27wjJvZjALp77hjmQG21s0DnnwaSSe92incjThgFZFJ0upo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740976454; c=relaxed/simple;
-	bh=Cfhu4+EFgL7/rbjrHwPakoXx6h9aDrjyMs+AGTtg7rk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ABkcUzQMakjsKQKS866FhqbboPB8DIwTtt+Y9Re6DG8+cRi1OFzU6NEm7HGygGRm6SOn+YZfcez97t4J/jYcaXwEYHwSlJrifKgUN63Puo+AkHKngV3QxWSvhq3ykv9fmxrNLXOrVA/FkmqPV30Za919B3P7oIRdxYyqV23o4i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nCnBb+Q6; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740976441; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=gFgZL4SK+vTz1A6HMCuB3ry9mqMa97WAbrHPo05jn3k=;
-	b=nCnBb+Q6xDb+yp4wPYQ5L8ZxhbS9og1BDlaCJiuaZotQAPIVGEpgVMhZ9XO2TP18TmRxmdsGT23InevpB3J7fqph0eMHxuoPp+jF7Nz0yPFXWiM1BDrf5zn4kKDY77dPIotYhEfBF1dZzy76rF7NPEMS1MFes1f8E0mtDUSceXE=
-Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQYHNkC_1740976439 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 03 Mar 2025 12:34:00 +0800
-Message-ID: <1dea64ef-3c9f-4bff-820f-34d8f3a6a1d4@linux.alibaba.com>
-Date: Mon, 3 Mar 2025 12:33:59 +0800
+	s=arc-20240116; t=1740980100; c=relaxed/simple;
+	bh=hD6xzP3FpFewH9I665wRKi/LE9Ov9GLuAPFoz3tFtBo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KraR2gLMV8PV1LbFyZkr2yKr4tQbIiwbcMn4APrYZNcqmTjL87J630oBUUhcEz1vXW8y0nyvJ9k6BDVpDrwUuzyXymP7Q/z0991USx1lyrBFSKmqZfzJWuHlnR8mvakQ1WDO7EXABvVQ2kN/Zm6pgVTtNIuJDewspPF7kAkaZvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dqzVwvQM; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740980100; x=1772516100;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hD6xzP3FpFewH9I665wRKi/LE9Ov9GLuAPFoz3tFtBo=;
+  b=dqzVwvQMVEaBYLAiIyDrTH5mmjTlFFLLhGUp08JyFIyzPnB5AZlarXUe
+   Ng7761e37Ln2bmPINWx9mpE7tJ39EeVy2lrSms/YgKsU3arWTjcXZsJM9
+   KYh7XSSUlBrGgk6/4tmT/xgQdSYbJ0hoOmP3ekZFVb1bNhDyXCOOSMCYm
+   eu8xnbA2EZjrQFavAWd2D6LuLoF43uZqw8hsmbydMOVou9GNdBR7/uNV7
+   Rdqf1DFj7kUlodfDm8lb/YWICXNdVgqQcd0LNTLb2QCs+XUKTgSJdIt9P
+   xDWBEacXwWBfCkXIebAvVrSJGWLuQm4PDJezTdS0EWS1Z79Iz0Su6eumE
+   g==;
+X-CSE-ConnectionGUID: kX6/eKeBRI6DJF684CsS2w==
+X-CSE-MsgGUID: AmT8OIObQ4C1I37c3firDg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="64301592"
+X-IronPort-AV: E=Sophos;i="6.13,328,1732608000"; 
+   d="scan'208";a="64301592"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2025 21:34:59 -0800
+X-CSE-ConnectionGUID: 0DG/Qx3+S8OpHKZszWb+pg==
+X-CSE-MsgGUID: kxKYVUmhSwaPW7RpjZz9WQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,328,1732608000"; 
+   d="scan'208";a="122499750"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa005.fm.intel.com with ESMTP; 02 Mar 2025 21:34:51 -0800
+Date: Mon, 3 Mar 2025 13:32:47 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Alexey Kardashevskiy <aik@amd.com>, x86@kernel.org, kvm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Christoph Hellwig <hch@lst.de>, Nikunj A Dadhania <nikunj@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Steve Sistare <steven.sistare@oracle.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Dionna Glaze <dionnaglaze@google.com>, Yi Liu <yi.l.liu@intel.com>,
+	iommu@lists.linux.dev, linux-coco@lists.linux.dev,
+	Zhi Wang <zhiw@nvidia.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+Subject: Re: [RFC PATCH v2 14/22] iommufd: Add TIO calls
+Message-ID: <Z8U+/0IYyn7XX3ao@yilunxu-OptiPlex-7050>
+References: <20250218111017.491719-1-aik@amd.com>
+ <20250218111017.491719-15-aik@amd.com>
+ <Z72GmixR6NkzXAl7@yilunxu-OptiPlex-7050>
+ <2fe6b3c6-3eed-424d-87f0-34c4e7e1c906@amd.com>
+ <Z77xrqLtJfB84dJF@yilunxu-OptiPlex-7050>
+ <20250226131202.GH5011@ziepe.ca>
+ <Z7/jFhlsBrbrloia@yilunxu-OptiPlex-7050>
+ <20250301003711.GR5011@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] PCI/AER: Report fatal errors of RCiEP and EP if
- link recoverd
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org
-Cc: mahesh@linux.ibm.com, oohall@gmail.com, Jonathan.Cameron@huawei.com,
- terry.bowman@amd.com, tianruidong@linux.alibaba.com
-References: <20250217024218.1681-1-xueshuai@linux.alibaba.com>
- <20250217024218.1681-4-xueshuai@linux.alibaba.com>
- <8a833aaf-53aa-4e56-a560-2b84a6e9c28c@linux.intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <8a833aaf-53aa-4e56-a560-2b84a6e9c28c@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250301003711.GR5011@ziepe.ca>
 
+On Fri, Feb 28, 2025 at 08:37:11PM -0400, Jason Gunthorpe wrote:
+> On Thu, Feb 27, 2025 at 11:59:18AM +0800, Xu Yilun wrote:
+> > On Wed, Feb 26, 2025 at 09:12:02AM -0400, Jason Gunthorpe wrote:
+> > > On Wed, Feb 26, 2025 at 06:49:18PM +0800, Xu Yilun wrote:
+> > > 
+> > > > E.g. I don't think VFIO driver would expect its MMIO access suddenly
+> > > > failed without knowing what happened.
+> > > 
+> > > What do people expect to happen here anyhow? Do you still intend to
+> > > mmap any of the MMIO into the hypervisor? No, right? It is all locked
+> > 
+> > Not expecting mmap the MMIO, but I switched to another way. VFIO doesn't
+> > disallow mmap until bind, and if there is mmap on bind, bind failed.
+> > That's my understanding of your comments.
+> 
+> That seems reasonable
+> 
+> > Another concern is about dma-buf importer (e.g. KVM) mapping the MMIO.
+> > Recall we are working on the VFIO dma-buf solution, on bind/unbind the
+> > MMIO accessibility is being changed and importers should be notified to
+> > remove their mapping beforehand, and rebuild later if possible.
+> > An immediate requirement for Intel TDX is, KVM should remove secure EPT
+> > mapping for MMIO before unbind.
+> 
+> dmabuf can do that..
 
+Yes, dmabuf can do that via notify. dmabuf is implemented in VFIO,
+so iommufd/vdevice couldn't operate on dmabuf and send the notify.
 
-在 2025/3/3 11:43, Sathyanarayanan Kuppuswamy 写道:
 > 
-> On 2/16/25 6:42 PM, Shuai Xue wrote:
->> The AER driver has historically avoided reading the configuration space of
->> an endpoint or RCiEP that reported a fatal error, considering the link to
->> that device unreliable. Consequently, when a fatal error occurs, the AER
->> and DPC drivers do not report specific error types, resulting in logs like:
->>
->>    pcieport 0000:30:03.0: EDR: EDR event received
->>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
->>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
->>    pcieport 0000:30:03.0: AER: broadcast error_detected message
->>    nvme nvme0: frozen state error detected, reset controller
->>    nvme 0000:34:00.0: ready 0ms after DPC
->>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
->>
->> AER status registers are sticky and Write-1-to-clear. If the link recovered
->> after hot reset, we can still safely access AER status of the error device.
->> In such case, report fatal errors which helps to figure out the error root
->> case.
->>
->> After this patch, the logs like:
->>
->>    pcieport 0000:30:03.0: EDR: EDR event received
->>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
->>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
->>    pcieport 0000:30:03.0: AER: broadcast error_detected message
->>    nvme nvme0: frozen state error detected, reset controller
->>    pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
->>    nvme 0000:34:00.0: ready 0ms after DPC
->>    nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
->>    nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
->>    nvme 0000:34:00.0:    [ 4] DLP                    (First)
->>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+> > > > The implementation is basically no difference from:
+> > > > 
+> > > > +       vdev = container_of(iommufd_get_object(ucmd->ictx, cmd->vdevice_id,
+> > > > +                                              IOMMUFD_OBJ_VDEVICE),
+> > > > 
+> > > > The real concern is the device owner, VFIO, should initiate the bind.
+> > > 
+> > > There is a big different, the above has correct locking, the other
+> > > does not :)
+> > 
+> > Could you elaborate more on that? Any locking problem if we implement
+> > bind/unbind outside iommufd. Thanks in advance.
 > 
-> IMO, above info about device error details is more of a debug info. Since the
-> main use of this info use to understand more details about the recovered
-> DPC error. So I think is better to print with debug tag. Lets see what others
-> think.
-> 
-> Code wise, looks fine to me.
+> You will be unable to access any information iommufd has in the viommu
+> and vdevice objects. So you will not be able to pass a viommu ID or
+> vBDF to the secure world unless you enter through an iommufd path, and
+> use iommufd_get_object() to obtain the required locks.
+>  
+> I don't know what the API signatures are for all three platforms to
+> tell if this is a problem or not.
 
-thanks, looking forward to more feedback.
-> 
-> 
-> 
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> ---
->>   drivers/pci/pci.h      |  3 ++-
->>   drivers/pci/pcie/aer.c | 11 +++++++----
->>   drivers/pci/pcie/dpc.c |  2 +-
->>   drivers/pci/pcie/err.c |  9 +++++++++
->>   4 files changed, 19 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index 870d2fbd6ff2..e852fa58b250 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -549,7 +549,8 @@ struct aer_err_info {
->>       struct pcie_tlp_log tlp;    /* TLP Header */
->>   };
->> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
->> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
->> +                  bool link_healthy);
->>   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
->>   int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index 508474e17183..bfb67db074f0 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -1197,12 +1197,14 @@ EXPORT_SYMBOL_GPL(aer_recover_queue);
->>    * aer_get_device_error_info - read error status from dev and store it to info
->>    * @dev: pointer to the device expected to have a error record
->>    * @info: pointer to structure to store the error record
->> + * @link_healthy: link is healthy or not
->>    *
->>    * Return 1 on success, 0 on error.
->>    *
->>    * Note that @info is reused among all error devices. Clear fields properly.
->>    */
->> -int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->> +int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info,
->> +                  bool link_healthy)
->>   {
->>       int type = pci_pcie_type(dev);
->>       int aer = dev->aer_cap;
->> @@ -1226,7 +1228,8 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->>       } else if (type == PCI_EXP_TYPE_ROOT_PORT ||
->>              type == PCI_EXP_TYPE_RC_EC ||
->>              type == PCI_EXP_TYPE_DOWNSTREAM ||
->> -           info->severity == AER_NONFATAL) {
->> +           info->severity == AER_NONFATAL ||
->> +           (info->severity == AER_FATAL && link_healthy)) {
->>           /* Link is still healthy for IO reads */
->>           pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
->> @@ -1258,11 +1261,11 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
->>       /* Report all before handle them, not to lost records by reset etc. */
->>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
->> -        if (aer_get_device_error_info(e_info->dev[i], e_info))
->> +        if (aer_get_device_error_info(e_info->dev[i], e_info, false))
->>               aer_print_error(e_info->dev[i], e_info);
->>       }
->>       for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
->> -        if (aer_get_device_error_info(e_info->dev[i], e_info))
->> +        if (aer_get_device_error_info(e_info->dev[i], e_info, false))
->>               handle_error_source(e_info->dev[i], e_info);
->>       }
->>   }
->> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
->> index ea3ea989afa7..2d3dd831b755 100644
->> --- a/drivers/pci/pcie/dpc.c
->> +++ b/drivers/pci/pcie/dpc.c
->> @@ -303,7 +303,7 @@ struct pci_dev *dpc_process_error(struct pci_dev *pdev)
->>           dpc_process_rp_pio_error(pdev);
->>       else if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
->>            dpc_get_aer_uncorrect_severity(pdev, &info) &&
->> -         aer_get_device_error_info(pdev, &info)) {
->> +         aer_get_device_error_info(pdev, &info, false)) {
->>           aer_print_error(pdev, &info);
->>           pci_aer_clear_nonfatal_status(pdev);
->>           pci_aer_clear_fatal_status(pdev);
->> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->> index 31090770fffc..462577b8d75a 100644
->> --- a/drivers/pci/pcie/err.c
->> +++ b/drivers/pci/pcie/err.c
->> @@ -196,6 +196,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>       struct pci_dev *bridge;
->>       pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->>       struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
->> +    struct aer_err_info info;
->>       /*
->>        * If the error was detected by a Root Port, Downstream Port, RCEC,
->> @@ -223,6 +224,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>               pci_warn(bridge, "subordinate device reset failed\n");
->>               goto failed;
->>           }
->> +
->> +        info.severity = AER_FATAL;
->> +        /* Link recovered, report fatal errors of RCiEP or EP */
->> +        if ((type == PCI_EXP_TYPE_ENDPOINT ||
->> +             type == PCI_EXP_TYPE_RC_END) &&
->> +            aer_get_device_error_info(dev, &info, true))
->> +            aer_print_error(dev, &info);
->>       } else {
->>           pci_walk_bridge(bridge, report_normal_detected, &status);
->>       }
->> @@ -259,6 +267,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>       if (host->native_aer || pcie_ports_native) {
->>           pcie_clear_device_status(dev);
->>           pci_aer_clear_nonfatal_status(dev);
->> +        pci_aer_clear_fatal_status(dev);
-> 
-> Add some info about above change in the commit log.
+Seems not a problem for Intel TDX. Basically secure DMA settings for TDX
+is just to build the secure IOMMUPT, only need host BDF. Also secure
+device setting needs no secure DMA info.
 
-Will do.
+All these settings cannot really take function until guest verifies them
+and does TDISP start. Guest verification does not (should not) need host
+awareness.
 
-Thanks.
-Shuai
+Our solution is, separate the secure DMA setting and secure device setting
+in different components, iommufd & vfio.
+
+Guest require bind:
+  - ioctl(iommufd, IOMMU_VIOMMU_ALLOC, {.type = IOMMU_VIOMMU_TYPE_KVM_VALID,
+					.kvm_fd = kvm_fd,
+					.out_viommu_id = &viommu_id});
+  - ioctl(iommufd, IOMMU_HWPT_ALLOC, {.flag = IOMMU_HWPT_ALLOC_TRUSTED,
+				      .pt_id = viommu_id,
+				      .out_hwpt_id = &hwpt_id});
+  - ioctl(vfio_fd, VFIO_DEVICE_ATTACH_IOMMUFD_PT, {.pt_id = hwpt_id})
+    - do secure DMA setting in Intel iommu driver.
+
+  - ioctl(vfio_fd, VFIO_DEVICE_TSM_BIND, ...)
+    - do bind in Intel TSM driver.
+
+Thanks,
+Yilun
+
+> 
+> Jason
 
