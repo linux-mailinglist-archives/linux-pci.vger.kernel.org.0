@@ -1,105 +1,134 @@
-Return-Path: <linux-pci+bounces-22724-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22725-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12C2AA4B41C
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Mar 2025 19:35:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEB61A4B5F2
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 03:04:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A1D9D3AE620
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Mar 2025 18:35:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D641B16527C
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 02:03:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD8AD1EB185;
-	Sun,  2 Mar 2025 18:35:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A2EA73451;
+	Mon,  3 Mar 2025 02:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nhPlIaTN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8FD192B84;
-	Sun,  2 Mar 2025 18:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A670A11CA9;
+	Mon,  3 Mar 2025 02:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740940515; cv=none; b=I5IuiBhKcf1MpgDnOrjkVjb51tsK6QMDlZ+m0Akefvl6RQ74zvnVkGybYn7iPRxZaXZiR+iEXMAIvuqIuNxnvbtZFP7ZQvzK17X+tsPBm0we6M1ue9gpvXRgj0OzZAbqo8+xSwqOjyrbxn55/c+fLlIbZDKgAQBCy3fUsF1wc88=
+	t=1740967435; cv=none; b=IoJctNJPktW5Kvb1H1+mIGDPIfaX5yopVHOfv7QRgXMtMYytYxFZnYYeN85+2NTcZVgLnlT1bL5ktGIw4WAicNUHyIPKGIRbBSILVyVHo7INOU9EmrNs1/Y3Q2AnvAXd0rVmJySuAe3+USgbfOnuvGfUhgp4PIi779GeLJQcdj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740940515; c=relaxed/simple;
-	bh=l7d0QPHN7b0W2j7m6Dh4f5tT9UCp/3+opsCpaQ/6RcQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JUuui/SE2wMHF8ggAAmk6m42ZIt/82kJtGBfmO6ClrV0MCgz6vBsh0QbZEzBCYsvkOMGB1sQs2fkH6o2nUmpZhH+NhDwXaSj4BdTvwFZODHO5Opj6VdPFDsk2xv7EAfYq6MvtK2mTg1mWjmBEgE/QRn5xGsBlmqccADk3R3XVwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2239f8646f6so10749715ad.2;
-        Sun, 02 Mar 2025 10:35:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740940513; x=1741545313;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4qrJarovt3JRo1+J2xc9vBIGut4SqnHN/YV1pZmTFs4=;
-        b=lK++hNYTVvgtNIc2JRogvF1odwPZMAKefIpMW6oTHlcpKnV+kCD5znEor3xWXGwArK
-         cPI5pxQGzs0F0vSFfJ13tbyAFil2KQoMiYp9MHGCOFuIcM0v3P9cKOOllQYNpHDBVMlw
-         /2nslFM2/DQdXr80OvKAPKC8jhehOpq0GKg6LHCxULEvEoN0y3xHxtS6QhQaAHScfBTl
-         fRavw4bfIqzrJZc0Bbl3O/Xu3TGOONv1egVtITXTZqT4vBMQ2argyOBHlyRXaFwNuF3L
-         sqdtVEjjUF8+eZWJkIXIYfbRAFr1ENUiC4dfJ+3W/20ArMmfil4WqPScpwW1UNyH2UR2
-         PEog==
-X-Forwarded-Encrypted: i=1; AJvYcCXqq676QVeQRJdlaryBcQ5xRbBg6QAQCxv09ekTrwBXGbPr9EC5jfBs08/xWTVTyoHkQY77A9TvVZaA@vger.kernel.org, AJvYcCXsutvRS6UB7IQhyrxv1ZufKjppN/3i9w5qxf11tJX3VY8WaftVKISdDwwci1nWL5QTesvHpvAYUo4o86mh@vger.kernel.org, AJvYcCXzz2dTs3GO7r2BZ/bHJtXrFy3Q+2dT4Y8BjKKXNOSo7hJiBk5cCtaMA0L4cNul0YNcPnhwc7yek3p6@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZs8fVFFGCANCmCS+P4VJBagDcmrsv2Iz8U0YgbFFY6iQYERQ7
-	TVsd1Rp6W7sZtjcSZvtuROJu4U4dEQ+3OmF0mdSwl8NSJdY5j564
-X-Gm-Gg: ASbGncuTxr1iZHdIh/G3vmG5koHbpWq38T4DuBN4UMcmrIEToR2l/cBE77DAdHnxBxE
-	ptdZPaz7puszy/3U/19regqf8UsV22X7SBUZXZkrbs10b0uu3lHAp8nnMrlwVbsko5IJ7kUQLUy
-	Dp+ZMJMOGaIWRpVmqO80kKhXaof1AYQcWzqFsC8WpBLz7lkceXd8HARDuCsisELXsgHTeXru5ZV
-	g6aSnvZPT2Zf3MtSQVn3E8grizm8i4KthfDyJ10JJgAUEuDMAZlEPz5kHgfno874Hk1UPIVTr9l
-	j56OhGTpZeVmkndfJMlLByKQ0wwZym4Ek2teSxUKmEantPDSGfSDtWBuk0vp08mQaeTd/u+yC+p
-	vuFs=
-X-Google-Smtp-Source: AGHT+IGoynSMPy+RMsWdESjFujJFalxEFNEELF6K6YTs5uQHfejUEC8hC2gbL9gbP247vvHeUXSXsA==
-X-Received: by 2002:a17:90b:3b8e:b0:2fa:228d:5b03 with SMTP id 98e67ed59e1d1-2febab7a2e4mr14947794a91.19.1740940513656;
-        Sun, 02 Mar 2025 10:35:13 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fea698ff95sm7297319a91.43.2025.03.02.10.35.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Mar 2025 10:35:12 -0800 (PST)
-Date: Mon, 3 Mar 2025 03:35:10 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-	bhelgaas@google.com, lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
-	jingoohan1@gmail.com
-Subject: Re: [PATCH v15 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
-Message-ID: <20250302183510.GC3374376@rocinante>
-References: <20250228093351.923615-4-thippeswamy.havalige@amd.com>
- <20250228163721.GA56317@bhelgaas>
+	s=arc-20240116; t=1740967435; c=relaxed/simple;
+	bh=SEl1Hhf8NGcojuiMYmabQEzaNG0PSXe4Q1cOqkei6w0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S0bGOsMWRrjkdJOMnh0UpioslXNMe54jAskyOj0kwHtADD/BcYwcmYPBHWtcud1JTCrdPXNZg5m9181/CfKuVHhEQU3I4w1C/zexVT+liJHgedsuf5h6pDWHPC+sjDqOKJv015DKks5HmDlB13JUodrvRrquHDLNydi5MpVXRLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nhPlIaTN; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740967423; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=ovJU3Q9h8hU/G3fkOoZ1jgiNl8W2k7s8Lwa5u8Ka3Hk=;
+	b=nhPlIaTNEI+rXbuTfVUF4mR3ko8wjzygstZJ6gFuYi68VLE0t8TmMQxJux7BHfMSlKWfQQ//jJYPcYhH2AH6nxk2jyQQ5iIojPCUZb2qs0E7z3ZuFhw80amd8koiSwDbK/S4fa1S+PfNhsb7K+SSUP4BAlvhvdC9viwGi7eyGy4=
+Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQWfcKP_1740967421 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 03 Mar 2025 10:03:42 +0800
+Message-ID: <8c7b0cbf-fc93-4d97-b388-bfd0f13e404b@linux.alibaba.com>
+Date: Mon, 3 Mar 2025 10:03:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250228163721.GA56317@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/3] PCI/AER: Report fatal errors of RCiEP and EP if
+ link recoverd
+To: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org,
+ sathyanarayanan.kuppuswamy@linux.intel.com
+Cc: mahesh@linux.ibm.com, oohall@gmail.com, Jonathan.Cameron@huawei.com,
+ terry.bowman@amd.com, tianruidong@linux.alibaba.com
+References: <20250217024218.1681-1-xueshuai@linux.alibaba.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250217024218.1681-1-xueshuai@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello,
 
-[...]
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes:
-> > | https://lore.kernel.org/oe-kbuild-all/202502191741.xrVmEAG4-lkp@intel.
-> > | com/
+
+在 2025/2/17 10:42, Shuai Xue 写道:
+> changes since v3:
+> - squash patch 1 and 2 into one patch per Sathyanarayanan
+> - add comments note for dpc_process_error per Sathyanarayanan
+> - pick up Reviewed-by tag from Sathyanarayanan
 > 
-> Drop these reported-by: and closes: tags.
+> changes since v2:
+> - moving the "err_port" rename to a separate patch per Sathyanarayanan
+> - rewrite comments of dpc_process_error per Sathyanarayanan
+> - remove NULL initialization for err_dev per Sathyanarayanan
 > 
-> Krzysztof K. already said this:
-> https://lore.kernel.org/r/144202cc-057c-4a7d-852a-27e979284dd2@kernel.org
+> changes since v1:
+> - rewrite commit log per Bjorn
+> - refactor aer_get_device_error_info to reduce duplication per Keith
+> - fix to avoid reporting fatal errors twice for root and downstream ports per Keith
 > 
-> Don't repost the series just for this.  If there are no other
-> comments, we can remove this when merging it.
+> The AER driver has historically avoided reading the configuration space of an
+> endpoint or RCiEP that reported a fatal error, considering the link to that
+> device unreliable. Consequently, when a fatal error occurs, the AER and DPC
+> drivers do not report specific error types, resulting in logs like:
+> 
+>     pcieport 0000:30:03.0: EDR: EDR event received
+>     pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>     pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>     pcieport 0000:30:03.0: AER: broadcast error_detected message
+>     nvme nvme0: frozen state error detected, reset controller
+>     nvme 0000:34:00.0: ready 0ms after DPC
+>     pcieport 0000:30:03.0: AER: broadcast slot_reset message
+> 
+> AER status registers are sticky and Write-1-to-clear. If the link recovered
+> after hot reset, we can still safely access AER status of the error device.
+> In such case, report fatal errors which helps to figure out the error root
+> case.
+> 
+> After this patch set, the logs like:
+> 
+>     pcieport 0000:30:03.0: EDR: EDR event received
+>     pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>     pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>     pcieport 0000:30:03.0: AER: broadcast error_detected message
+>     nvme nvme0: frozen state error detected, reset controller
+>     pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
+>     nvme 0000:34:00.0: ready 0ms after DPC
+>     nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
+>     nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
+>     nvme 0000:34:00.0:    [ 4] DLP                    (First)
+>     pcieport 0000:30:03.0: AER: broadcast slot_reset message
+> 
+> Shuai Xue (3):
+>    PCI/DPC: Clarify naming for error port in DPC Handling
+>    PCI/DPC: Run recovery on device that detected the error
+>    PCI/AER: Report fatal errors of RCiEP and EP if link recoverd
+> 
+>   drivers/pci/pci.h      |  5 +++--
+>   drivers/pci/pcie/aer.c | 11 +++++++----
+>   drivers/pci/pcie/dpc.c | 34 +++++++++++++++++++++++++++-------
+>   drivers/pci/pcie/edr.c | 35 ++++++++++++++++++-----------------
+>   drivers/pci/pcie/err.c |  9 +++++++++
+>   5 files changed, 64 insertions(+), 30 deletions(-)
+> 
 
-I removed these when applying.  Thank you!
 
-	Krzysztof
+Hi, All,
+
+Gentle ping.
+
+Thanks.
+Shuai
 
