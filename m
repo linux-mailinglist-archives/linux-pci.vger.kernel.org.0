@@ -1,176 +1,175 @@
-Return-Path: <linux-pci+bounces-22760-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22761-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C868A4C027
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 13:20:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D9ADCA4C325
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 15:17:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C89216FDFE
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 12:20:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F378F16B655
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 14:17:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D76F20FAB5;
-	Mon,  3 Mar 2025 12:20:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8090F2AE69;
+	Mon,  3 Mar 2025 14:16:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b="Sk+UKf2H"
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="KtfmI3zq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0741E9B32
-	for <linux-pci@vger.kernel.org>; Mon,  3 Mar 2025 12:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54A578F40
+	for <linux-pci@vger.kernel.org>; Mon,  3 Mar 2025 14:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741004435; cv=none; b=YHMSsnkfi6WfRj2bQseBaaN9JDVDal+oGH4E7PcFpqA3tYVc8OTGwTbZemTbcyT4PsBMPaVORrnABmPmpPXqLx/UHrvndUFm0nYLQqxgg057EPkrQ4g4itsC+nvcnJtE2Y3lAGBR8mac9Pav/dsXesI0wREq/AUZaOWmHjq0pRE=
+	t=1741011407; cv=none; b=ElPm4oxp7fOPx8GQoYw9kIcVXuLpt2STHQ0nZuJE0gycpcD/3jrck2jc3+ean9vWHH5nW1JS7wpb9m6s6dDPJNee8Q/EhXrH8V7eUiZf+0uF9ZkKcMP4FNoP2Ktx57kjaIfKE1LZ+HpqBZf6BU/6hPwayzwU5RZ2DtBkI2bp1wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741004435; c=relaxed/simple;
-	bh=4vaNmrECdpuE+nItquTFFAmKXEmFwMLgvHiXIQ29GAA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PRrkk9mdideu3yiAbwAG2KViXtzkxCIU/BiJ6DpBQeW15wCt4Bs+d2NxhMiRER9wE9ooaP7rOQvpnTTDKPsCQrA+aWby2HTFoUGrLSSfjpD91Nru63Urx0TKpAcC3JfXrJAuW/nSCGEJ9s56SPg8GBziq+dl7PyJZpf7zlDoD7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com; spf=pass smtp.mailfrom=qtec.com; dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=Sk+UKf2H; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtec.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-52384afabdeso1128891e0c.3
-        for <linux-pci@vger.kernel.org>; Mon, 03 Mar 2025 04:20:32 -0800 (PST)
+	s=arc-20240116; t=1741011407; c=relaxed/simple;
+	bh=FP1QKBFPUcrMI2AawgU0YCWUvxa2VeGB+6LbEEtYqOI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H1IZGUs6Ioxd7xNpTDXfTWULoDSAjZ0wXbSikzqty+35SrbFkP1p2xs2rrkFlhHh1nDleNLNe3J/7oNFDLNZTO2KzZ8UHxAmWZCjIzXt2aEycCQi+357aDNTdMww811g3kNePd2Gn3rTb4xhQiGYNPD4MDdNEeA6n6Ne+Ka/kXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=KtfmI3zq; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2235c5818a3so46090375ad.1
+        for <linux-pci@vger.kernel.org>; Mon, 03 Mar 2025 06:16:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=qtec.com; s=google; t=1741004432; x=1741609232; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8qiGCJuTjOW1WL+AlkLJto17ISROJENZ2Hmeb3N2a/0=;
-        b=Sk+UKf2HRVMVk4jI/KiPQDdz0hTp3jopj92eaMCSOl1d7JNnRfD7W86ZYkOhya4ZH7
-         nEL1JYE4DWZWXKJjr3ZiR3/CY/4BbFQQJt04rFAj2M87Ez7mxS6uf8+I14El9fDLj+Pf
-         da7Xu9e83LO3DmC8KT9lZ57pVf2gp5pHFTgLgNTrgR37wjgAk9sWA44EpGc9wGYivxJ/
-         xEkngTI2KaRNvUcB/CpaIymXRE53ugeGVxirFe8qYh+zeY0stgvBI2dJPTj74NB2IVC8
-         TEJHHFlK0ff1BOmOWlixlV210WO72ixclfLDF04zvt+GfYsMXujrjtsTThr06Gst5DWv
-         68kQ==
+        d=citrix.com; s=google; t=1741011405; x=1741616205; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mHyQ1S6OcoiWu2NIhoviRiSzrc0wSkcr90Nm+vU00/w=;
+        b=KtfmI3zqTNLJ3v/qawt1jcLBBHfz2zziJzXUR7IwLKbNQF2TBGZ4WWXGJuGnnV3YOO
+         VpO9XWiZjTaYp3pQJPyJaeYTOrKMMWeX7NtmiiP6e01GnZH98EHNPA8USZSfN/RF3EVc
+         D63TQv2m+fHtG2IbrvZxzd+RTKf/KVXqlT1CY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741004432; x=1741609232;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8qiGCJuTjOW1WL+AlkLJto17ISROJENZ2Hmeb3N2a/0=;
-        b=Xf6KzOyyXqAALNlLHHvY2WVCd+OpKYkuUr/Ns76F5OidFgmh3u4l50KPIuaqWqcytz
-         QLr8SZD646BM4eZtovrDYZteQE0d15gdObmViexl7Pnbk5F8+EBNqYeg9QycL3MBVNrU
-         YMAmgJF3L1l2uBWPNbuj7l7c3TY3ALIhmsEInuZJh4l6RcCMnKODTtlxhvbVNyNsVGR1
-         JYAGXTkgOKcRNWo7SiLZtKXcWpELcI3BiaakU0PjMlNtJD1C0U33qUM7D6vCAlk6gLcv
-         Xkh/os6rxQqjcbcsO+CXGiFwAVY5MlalZ1Ep9u4yb0w5uxVixdpurN0vr+ahAe7R4/Ou
-         quAw==
-X-Forwarded-Encrypted: i=1; AJvYcCXl0Ru+dXZ9OJ95SQxcdnXf7ZuZ/QgWXMDhWhnxnFFUDx/he3TsRxAVNIL8A2s14ZDvoJOsWBbmJmQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiYBYd001S+83nZXa0NTcjLlh8lIY0PjY69nuA/1oigyp3xc5J
-	+uESkEcWFGF9FrkQfIoMVWKDzZddnbvHwS8oP9riAYoxxHO6UGbgvJOs2JpBjQUWdjuu12nuKzk
-	zEflHeljvauuAr1nL1oGVorfBAYlicYdXCWgS9VXpHaBzQ/Zjpmg=
-X-Gm-Gg: ASbGncvfAYJI/+eNVO+j+qwm6mEj+zBhis27lLHptbZ050+O2o/nWmMWYHkUpBCHucz
-	6lCFMXGLCptlJx8WZMXmWjG4dlJ8on4jEjmVxDBu/83k9B2Uin3kcFA6+9uXIb9hQxPLmCfSjfn
-	38Df+NjkSf6H+GbUZbWrulQSpP
-X-Google-Smtp-Source: AGHT+IEC/vHh7lhfByiJpQpHoysjvMszoqK4nnU6aR9Ze8Weud8WLm71QreZaPK3lTFkwbV0/OLzz6Z5Z5PrNOquPWw=
-X-Received: by 2002:a05:6122:3410:b0:520:3d87:5cdb with SMTP id
- 71dfb90a1353d-5235bd4a0c4mr7056166e0c.9.1741004431724; Mon, 03 Mar 2025
- 04:20:31 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741011405; x=1741616205;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mHyQ1S6OcoiWu2NIhoviRiSzrc0wSkcr90Nm+vU00/w=;
+        b=FfmxCQbCfMddFpNcZdSRqXADvHOwhVT8A9uTrg6C8vxG+FqQTUqKzEaOGL1fX4CwzB
+         Kn4aIWSItgKARTNkn5P5Ts/hSjGdFfQGUN98KDfOdS1NnzFUIZgPi/U3UPiSOv+O+uZU
+         uSiYsKGncWPjOj4PyyU/ChhmGGUVBIE4O7pK5tETT5qKUV5rrfC7cKQUkcfx4FSCxYMF
+         Oxr+rBVJ+DHml6CmyUFhuMlVrYyzHh0MjfIj8odOAsigbiQYHSA3RtYhX+vRNrPwKKYg
+         BjUx236u5FrfOQapquEyTX7sDlQiiGk/+ri8IzSDz+UOLZMxpLtcHUCtOdx3OiGP/a6A
+         P6rA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBlTaMXPAghhKZRHYoPWbvyd7oNNgQiq699wQZZx58aIoatupo888c/17T0rfyFDx6x/eyvs7rx/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxW19+7hr9KMLJqETRNJG+GZ+ttBYaECbq5wjF9MHXvYuHBZLwL
+	MHVQy4O4hnPMKJr7LoRrPCWDgUST3a6tii1d5yTE39UZ4dfx51MPJYJSXJl5LQU=
+X-Gm-Gg: ASbGnctRj4+JEA/RuRp+5ULYnbswZmGuKNwt+r5XIO0MHU0MXpAB/2l4SnT7WSQROoh
+	LHmsIV/XD3QtOxQAfDD5hAs5AygjBq3GB+efiiUL0YsNDTYzFrJT6bEUIMvsJ1RHQ8h5UcA63Qw
+	fcK07UuL7QimKB2vxkYud4Ot1EPzWNDIn/BgUbs6JgMg6m/PF3dwrRU2zQXZsK0F8rqNb+asr8v
+	XEZc5zZ+ECHfHZb744Br0pLrBeOUhFw/wqbb5g5pvo6GgoPq927gvMN/RkYvCKDlNpKq3QWqprC
+	tgC9PzYq4YLQXZn/76LJuBsg24qB4xtrRR7Q+h/RMb2fFC16kg==
+X-Google-Smtp-Source: AGHT+IGoLI4X4aCiq6Qh2tqDp2VFm/jy5ZG2qcvCISc/6H3iGzMjb0RkAikmZjUbfxoQpMD0LN0TIw==
+X-Received: by 2002:a05:6a00:ccc:b0:736:48d1:57f7 with SMTP id d2e1a72fcca58-73648d159c8mr7714064b3a.7.1741011405046;
+        Mon, 03 Mar 2025 06:16:45 -0800 (PST)
+Received: from localhost ([84.78.159.3])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7364ef011c1sm2591656b3a.111.2025.03.03.06.16.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 06:16:44 -0800 (PST)
+Date: Mon, 3 Mar 2025 15:16:39 +0100
+From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To: Nirmal Patel <nirmal.patel@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+	linux-pci@vger.kernel.org,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 2/3] PCI: vmd: Disable MSI remapping bypass under Xen
+Message-ID: <Z8W5x73El3aUOs5i@macbook.local>
+References: <20250219092059.90850-1-roger.pau@citrix.com>
+ <20250219092059.90850-3-roger.pau@citrix.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJDH93s25fD+iaPJ1By=HFOs_M4Hc8LawPDy3n_-VFy04X4N5w@mail.gmail.com>
- <20241219112125.GAZ2QBteug3I1Sb46q@fat_crate.local> <20241219164408.GA1454146@yaz-khff2.amd.com>
- <CAJDH93vm0buJn5vZEz9k9GRC3Kr6H7=0MSJpFtdpy_dSsUMDCQ@mail.gmail.com>
- <Z78uOaPESGXWN46M@gmail.com> <CAJDH93uE+foFfRAXVJ48-PYvEUsbpEu_-BVoG-5HsDG66yY7AQ@mail.gmail.com>
- <Z8WTON2K77Q567Kg@gmail.com>
-In-Reply-To: <Z8WTON2K77Q567Kg@gmail.com>
-From: Rostyslav Khudolii <ros@qtec.com>
-Date: Mon, 3 Mar 2025 13:20:21 +0100
-X-Gm-Features: AQ5f1Jqj87LmMek2lwxlwKr_Zx7BUcuB-tXvcLY_zqrnI1St3EnzrPSCENn2zG8
-Message-ID: <CAJDH93vwqiiNgiUQrw0kqDkHvaUNUcrOfHJW7PGezDHSOb-5Hg@mail.gmail.com>
-Subject: Re: PCI IO ECS access is no longer possible for AMD family 17h
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Yazen Ghannam <yazen.ghannam@amd.com>, Borislav Petkov <bp@alien8.de>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250219092059.90850-3-roger.pau@citrix.com>
 
-* Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Rostyslav Khudolii <ros@qtec.com> wrote:
->
-> > Hi,
-> >
-> > > Rostyslav, I would like to ask you, do you have patches / updates for
-> > > enabling the EnableCf8ExtCfg bit for AMD 17h+ family? I could try to
-> > > adjust my lspci changes for new machines.
-> >
-> > Pali, sorry for the late reply. Do I understand correctly, that even
-> > though you have access to the ECS via
-> > the MMCFG you still want the legacy (direct IO) to work for the
-> > debugging purposes? I can prepare a
-> > simple patch that will allow you to do so if that's the case.
-> >
-> > >
-> > > So what is the practical impact here? Do things start breaking
-> > > unexpectedly if CONFIG_ACPI_MCFG and CONFIG_PCI_MMCONFIG are disabled?
-> > > Then I'd suggest fixing that in the Kconfig space, either by adding a
-> > > dependency on ACPI_MCFG && PCI_MMCONFIG, or by selecting those
-> > > must-have pieces of infrastructure.
-> > >
-> >
-> > Ingo, thank you for the reply.
-> >
-> > The way I understand the access to the PCI ECS (via raw_pci_ext_ops)
-> > works, is the following:
-> > 1. If CONFIG_ACPI_MCFG or CONFIG_PCI_MMCONFIG are enabled - set the
-> > raw_pci_ext_ops to use
-> >     MMCFG to access ECS. See pci_mmcfg_early_init() / pci_mmcfg_late_init();
-> > 2. If CONFIG_ACPI_MCFG and CONFIG_PCI_MMCONFIG are disabled - set the
-> > raw_pci_ext_ops to use
-> >     the 'direct' access to ECS. See pci_direct_init(). The direct
-> > access is conditional on the PCI_HAS_IO_ECS
-> >     flag being set.
-> >
-> > On AMD, the kernel enables the ECS IO access via the
-> > amd_bus_cpu_online() and pci_enable_pci_io_ecs().
-> > Except those functions have no desired effect on the AMD 17h+ family
-> > because the register (EnableCf8ExtCfg),
-> > they access, has been moved. What is important though, is that the
-> > PCI_HAS_IO_ECS flag is set unconditionally.
-> > See pci_io_ecs_init() in amd_bus.c
-> >
-> > Therefore I was wondering whether we should add support for the 17h+
-> > family in those functions to have
-> > the direct access work for those families as well.
->
-> Yeah, I think so, but I'm really just guessing:
->
-> > Regarding your suggestion to address this in the Kconfig space - I'm
-> > not quite sure I follow, since right now the kernel will use
-> > raw_pci_ext_ops whenever access beyond the first 256 bytes is
-> > requested. Say we want to make that conditional on CONFIG_ACPI_MCFG
-> > and CONFIG_PCI_MMCONFIG, does it also mean then we want to drop
-> > support for the 'direct' PCI IO ECS access altogether?
->
-> I thought that enabling CONFIG_ACPI_MCFG would solve the problem, and
-> other architectures are selecting it pretty broadly:
->
->  arch/arm64/Kconfig:     select ACPI_MCFG if (ACPI && PCI)
->  arch/loongarch/Kconfig: select ACPI_MCFG if ACPI
->  arch/riscv/Kconfig:     select ACPI_MCFG if (ACPI && PCI)
->
-> While x86 allows it to be user-configured, which may result in
-> misconfiguration, given that PCI_HAS_IO_ECS is being followed
-> unconditionally if a platform provides it?
->
-> Thanks,
->
->         Ingo
+Hello Nirmal,
 
-So it seems that the config option that needs to be enabled is
-CONFIG_PCI_MMCONFIG.
-The MCFG kernel support depends on it (aka not compiled when disabled).
-With that said - the IO ECS question remains. Do we want to support it
-for AMD 17h+ or
-it's not required anymore?
+Can I please get an Ack or a request for changes on the patch below
+for the VMD controller code?
 
-Regards,
-Rostyslav
+Thanks, Roger.
+
+On Wed, Feb 19, 2025 at 10:20:56AM +0100, Roger Pau Monne wrote:
+> MSI remapping bypass (directly configuring MSI entries for devices on the
+> VMD bus) won't work under Xen, as Xen is not aware of devices in such bus,
+> and hence cannot configure the entries using the pIRQ interface in the PV
+> case, and in the PVH case traps won't be setup for MSI entries for such
+> devices.
+> 
+> Until Xen is aware of devices in the VMD bus prevent the
+> VMD_FEAT_CAN_BYPASS_MSI_REMAP capability from being used when running as
+> any kind of Xen guest.
+> 
+> The MSI remapping bypass is an optional feature of VMD bridges, and hence
+> when running under Xen it will be masked and devices will be forced to
+> redirect its interrupts from the VMD bridge.  That mode of operation must
+> always be supported by VMD bridges and works when Xen is not aware of
+> devices behind the VMD bridge.
+> 
+> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+> ---
+> Changes since v2:
+>  - Adjust patch subject.
+>  - Adjust code comment.
+> 
+> Changes since v1:
+>  - Add xen header.
+>  - Expand comment.
+> ---
+>  drivers/pci/controller/vmd.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 9d9596947350..e619accca49d 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -17,6 +17,8 @@
+>  #include <linux/rculist.h>
+>  #include <linux/rcupdate.h>
+>  
+> +#include <xen/xen.h>
+> +
+>  #include <asm/irqdomain.h>
+>  
+>  #define VMD_CFGBAR	0
+> @@ -970,6 +972,24 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  	struct vmd_dev *vmd;
+>  	int err;
+>  
+> +	if (xen_domain()) {
+> +		/*
+> +		 * Xen doesn't have knowledge about devices in the VMD bus
+> +		 * because the config space of devices behind the VMD bridge is
+> +		 * not known to Xen, and hence Xen cannot discover or configure
+> +		 * them in any way.
+> +		 *
+> +		 * Bypass of MSI remapping won't work in that case as direct
+> +		 * write by Linux to the MSI entries won't result in functional
+> +		 * interrupts, as Xen is the entity that manages the host
+> +		 * interrupt controller and must configure interrupts.  However
+> +		 * multiplexing of interrupts by the VMD bridge will work under
+> +		 * Xen, so force the usage of that mode which must always be
+> +		 * supported by VMD bridges.
+> +		 */
+> +		features &= ~VMD_FEAT_CAN_BYPASS_MSI_REMAP;
+> +	}
+> +
+>  	if (resource_size(&dev->resource[VMD_CFGBAR]) < (1 << 20))
+>  		return -ENOMEM;
+>  
+> -- 
+> 2.46.0
+> 
 
