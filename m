@@ -1,98 +1,120 @@
-Return-Path: <linux-pci+bounces-22789-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22790-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB0F1A4CD1B
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 21:57:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD9A2A4CD21
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 22:02:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC2EB3AC6D5
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 20:57:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0009418953CC
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 21:02:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DA4823717E;
-	Mon,  3 Mar 2025 20:57:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EC481E7C20;
+	Mon,  3 Mar 2025 21:02:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="ekIOcJeh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eiVmv4Zd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB16215041;
-	Mon,  3 Mar 2025 20:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3500817CA1B;
+	Mon,  3 Mar 2025 21:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741035428; cv=none; b=Po1UvbL/IzzrM/qdhgQHAA3uUCSoKgtk7PNg6d6vBaDyBJnq89wvHLRATgMBUAJaSnNmxLdCCja5yMw3mxvp42F/zA4oqkaF8aVfuMFcTPgX8M+JponcNKVk7FxJUPwDnDApgEiJAPf57bnKxZEdiatv1ADsdJa8wsCo9SJaInI=
+	t=1741035741; cv=none; b=Tg9j8S4CvpSb68mTZ8jneEvQh2x+ZS/i1uoqLLIbng06satzJpeYeNItHjx0vEjzX5TAe1dRfPdm+h0RYuudr6cxvruly6LXQhj6I35FUDNqQf4garV+EXEVNr/uA3FNYXt65RSVv/ghEt+niWDMoGf4vsY3gIHCxAsdVxQvuZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741035428; c=relaxed/simple;
-	bh=LkpixxwH6q6MHKb7xRRxpFfYub1ipaUt6GP6QhkgSrM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J0pKVQ5sVs/i2kJP+OnS9lCKgBA247BBGzKSYomDrQf2Qkb6KuwkPWYDYICkoKZnkfwCWlrsOwVRPLgfTrQM74DFZdZuy6gAOdMRCvt00lUrLLGsPXYwVDwV5QMhsd2Td3LgBFYruOvWsqx3KpaMlZhCAL72KUYCmx8+JY9YACc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=ekIOcJeh; arc=none smtp.client-ip=166.84.1.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
-Received: from [192.168.126.122] (ip72-219-82-239.oc.oc.cox.net [72.219.82.239])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4Z6B2R25V4z4MR5;
-	Mon,  3 Mar 2025 15:57:03 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1741035424; bh=LkpixxwH6q6MHKb7xRRxpFfYub1ipaUt6GP6QhkgSrM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ekIOcJeh9Ssoc58bfP6BAuJI++uyeUDXpV4vuBSDEoCk2flD2+mfNgFrNFOWVQbf/
-	 +R4upKBgfknLtEOmDcdt2dTHAh8ZfYdD/bYRgToNuHIFvJqXQO7p+tQlkh0jLSn+fT
-	 xo8uS+sRefvvy/FB8GSMtH1DO3pGNfG4/GsF2wac=
-Message-ID: <244806e5-f8f9-4fad-a4aa-bf031c84748e@panix.com>
-Date: Mon, 3 Mar 2025 12:57:01 -0800
+	s=arc-20240116; t=1741035741; c=relaxed/simple;
+	bh=/dvqDPy/gu2wN4BIq6RQWbjM3nOGum0OPt/YKSg58gk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I/rSGRMjjadx34zQ2BUkuyio/Jw+cspBMwblJywnaRQn+BPhvP1Hw78ZMxGMFypf0ixZhj0qcgefeWoHOQoQL4u3xqyO4UeZfMXnDeoguyFfv+HxH3RolOizxZA7t3zuCrm2qFC3MFNHWy4g60l2SfIgUD88tFJpvCLlpPOCO/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eiVmv4Zd; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90C81C4CED6;
+	Mon,  3 Mar 2025 21:02:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741035740;
+	bh=/dvqDPy/gu2wN4BIq6RQWbjM3nOGum0OPt/YKSg58gk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eiVmv4Zd0boJl887h60rSn7npsrveGehKZnnl4tbi6Q83ZfMXBr+nwBmkxWleZ2MX
+	 vD53zrS+kOrrVg3/U8s5Z9ezuyu2nTMBArpUm0didRVzTvDIT/zs7J5V4VXYxo6ja1
+	 2mWZ35FsYakZ3w/1LX6vKcfufxmVKpgqB4272Gbbhdav5LT/65yy/HL84Yov9rt9ID
+	 hK8hJ+13MAodCqubtP/HhsRWk+eSnOizuhpLzrYsQ8D/cLjUxbXodwgPvL8QQYTWV9
+	 KLj32uMU9NYo9dIldGQrqHpD8nTqrdYiplcJhCXmDh9OFax20Z5ic2L3YsNTh1KIDV
+	 6hwOcBiBozYqA==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: linux-pci@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Duc Dang <ducdang@google.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] PCI: Enable Configuration RRS SV early
+Date: Mon,  3 Mar 2025 15:02:17 -0600
+Message-Id: <20250303210217.199504-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
- Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
-To: Lukas Wunner <lukas@wunner.de>,
- Mika Westerberg <mika.westerberg@linux.intel.com>, Me <kenny@panix.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com,
- Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Nikl??vs Ko??es??ikovs <pinkflames.linux@gmail.com>,
- Andreas Noever <andreas.noever@gmail.com>,
- Michael Jamet <michael.jamet@intel.com>,
- Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
-References: <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
- <20250211055722.GW3713119@black.fi.intel.com>
- <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
- <20250213135911.GG3713119@black.fi.intel.com>
- <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
- <20250214162948.GJ3713119@black.fi.intel.com>
- <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
- <20250226084404.GM3713119@black.fi.intel.com> <Z77ak-4YsdAKXbHr@wunner.de>
- <20250226091958.GN3713119@black.fi.intel.com> <Z8YKXC1IXYXctQrZ@wunner.de>
-Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <Z8YKXC1IXYXctQrZ@wunner.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Bjorn Helgaas <bhelgaas@google.com>
 
+Following a reset, a Function may respond to Config Requests with Request
+Retry Status (RRS) Completion Status to indicate that it is temporarily
+unable to process the Request, but will be able to process the Request in
+the future (PCIe r6.0, sec 2.3.1).
 
-On 3/3/25 12:00, Lukas Wunner wrote:
+If the Configuration RRS Software Visibility feature is enabled and a Root
+Complex receives RRS for a config read of the Vendor ID, the Root Complex
+completes the Request to the host by returning PCI_VENDOR_ID_PCI_SIG,
+0x0001 (sec 2.3.2).
 
-> Does the below fix the issue?
+The Config RRS SV feature applies only to Root Ports and is not directly
+related to pci_scan_bridge_extend().  Move the RRS SV enable to
+set_pcie_port_type() where we handle other PCIe-specific configuration.
 
-So far, so good! But, part of why it was so hard for me to bisect to the 
-Subject: commit was 'cause it didn't always OOPS; but I'll continue to 
-test on the most-likely failure mode (CalDigit TS4 to TB NVMe adaptor 
-connected at suspend, then nothing (or USB-C dock) on resume).
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ drivers/pci/probe.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-But if this does indeed fix it, this will make TWO crash bugs on resume 
-squashed in less than 12 hours- gotta love Open Source Software!
-
--Kenny
-
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index b6536ed599c3..0b013b196d00 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1373,8 +1373,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 	pci_write_config_word(dev, PCI_BRIDGE_CONTROL,
+ 			      bctl & ~PCI_BRIDGE_CTL_MASTER_ABORT);
+ 
+-	pci_enable_rrs_sv(dev);
+-
+ 	if ((secondary || subordinate) && !pcibios_assign_all_busses() &&
+ 	    !is_cardbus && !broken) {
+ 		unsigned int cmax, buses;
+@@ -1615,6 +1613,11 @@ void set_pcie_port_type(struct pci_dev *pdev)
+ 	pdev->pcie_cap = pos;
+ 	pci_read_config_word(pdev, pos + PCI_EXP_FLAGS, &reg16);
+ 	pdev->pcie_flags_reg = reg16;
++
++	type = pci_pcie_type(pdev);
++	if (type == PCI_EXP_TYPE_ROOT_PORT)
++		pci_enable_rrs_sv(pdev);
++
+ 	pci_read_config_dword(pdev, pos + PCI_EXP_DEVCAP, &pdev->devcap);
+ 	pdev->pcie_mpss = FIELD_GET(PCI_EXP_DEVCAP_PAYLOAD, pdev->devcap);
+ 
+@@ -1631,7 +1634,6 @@ void set_pcie_port_type(struct pci_dev *pdev)
+ 	 * correctly so detect impossible configurations here and correct
+ 	 * the port type accordingly.
+ 	 */
+-	type = pci_pcie_type(pdev);
+ 	if (type == PCI_EXP_TYPE_DOWNSTREAM) {
+ 		/*
+ 		 * If pdev claims to be downstream port but the parent
 -- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
+2.34.1
 
 
