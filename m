@@ -1,193 +1,146 @@
-Return-Path: <linux-pci+bounces-22740-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22741-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7788CA4BA65
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 10:10:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BB93A4BAAF
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 10:21:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B20473ADFBC
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 09:10:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AFDBE1891051
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 09:21:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0844A1EB1BC;
-	Mon,  3 Mar 2025 09:10:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BADE41F0E2B;
+	Mon,  3 Mar 2025 09:21:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JLzljCnw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PxMuCUMC"
+	dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b="Fe4MPNMk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF731DF721;
-	Mon,  3 Mar 2025 09:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4222E630
+	for <linux-pci@vger.kernel.org>; Mon,  3 Mar 2025 09:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740993008; cv=none; b=LLZfdwpkemJ918eqVzvbXj8W3uQWrui8AlVUMCcF76bkqOqX64KKaa8DF3/lzo/INAhBDTFzRDIRccybAJ9reAj9o9F0uiAWaTsvkNIMtOP//DuCe3+OMxAQkCnBIQ9bu82YPO5IDGJmTydjGk7IkO7Nxx8p9QZ3kF9FM566Ojo=
+	t=1740993699; cv=none; b=Y4gJXN1bsgOghvY5SdrmsdVcAxSI/XCNMs0Bg1J8jsT9vHGD5TbMk4mlElgyrsCpjzNoWDaicHevs5hJY1nU81JArHExtvngfsiTZ60Xr2rs0Ipu2hYTAMzypvxtFOosdM29BduqJsGF8hv3orrRdxO7tzJc5jugLSSxmAHv5rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740993008; c=relaxed/simple;
-	bh=hvQ6UFF0fy3Al/0FUWACovqLUwi5Ps7fWWttcnrP6Lc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LOQr8A2B9BYaCBA0cKJ/EqYxGtZSVH7CGnhGNDviP9dSYhyhYCg02vn/PZ+DVp8ThX8cARJi+bemYy0cDX8xJTn8vULSVPdFwJ+b2+RghIh8HMhF8igZmn/yislnHfkNyVHq6otMDMZ7JoX5cJV7aOJJPM0CHuDjx3/PzjuUQhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JLzljCnw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PxMuCUMC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740993004;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3zjA7Lr/BJ7h7palXzLxMwb3DKcN2jgvvKLiPovQPSk=;
-	b=JLzljCnwpBiZdWy7aKV0gJtiAebsYfhH7hqGmcnRkFVzIbB53tJ9kvSZ9ytWe2mcz7v2yM
-	eJuUznXBqDhLkYuOfaxDS32ylNBuBMX7cAOj3ltMD+Yvwin0/UhqyD+D//3oNrcRgHeYMb
-	/2rUbt4qBb1Uhhiq7BwbbtBbqxaRwUmDQ14OBdZSnewGvh5piWV+qMDFEpfv/x5iPju4Gu
-	MkfqtBNML+xZb40YNhn+eBBxFtaXmimgneifIE795R4Kf89v6ZQctdw4+YnSb1quH8LrYb
-	7rLaGgKebMrWWuhQFuSV4DSiL+wPfI6CaavAFsbh6E8w/8rz1Fiuf4oj0go6fQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740993004;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3zjA7Lr/BJ7h7palXzLxMwb3DKcN2jgvvKLiPovQPSk=;
-	b=PxMuCUMCr/753YDqzSM+x13d7WXAYVecjosp5zzCHkaux3Fe5L0ue1k2juUUvCxBrBBcbM
-	BIY/EtA+pPJj76Bg==
-To: Daniel Tsai <danielsftsai@google.com>, Jingoo Han
- <jingoohan1@gmail.com>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy?=
- =?utf-8?Q?=C5=84ski?=
- <kw@linux.com>, Rob Herring <robh@kernel.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Andrew Chant <achant@google.com>, Brian Norris
- <briannorris@google.com>, Sajid Dalvi <sdalvi@google.com>, Mark Cheng
- <markcheng@google.com>, Ben Cheng <bccheng@google.com>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Tsai Sung-Fu
- <danielsftsai@google.com>
-Subject: Re: [PATCH] PCI: dwc: Chain the set IRQ affinity request back to
- the parent
-In-Reply-To: <20250303070501.2740392-1-danielsftsai@google.com>
-References: <20250303070501.2740392-1-danielsftsai@google.com>
-Date: Mon, 03 Mar 2025 10:10:04 +0100
-Message-ID: <87a5a2cwer.ffs@tglx>
+	s=arc-20240116; t=1740993699; c=relaxed/simple;
+	bh=pv7JhxNl2I28whP9+adbwP3IvdPyCk6EghnFcKHSLq8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Caku+a+fHRra6BLTMwYdd/L7/PVQquun7iRyx3jvNSsFuh8K4A7Hyn1ys2ddS2K0X2qFPgY+GIyQ31GkmDWnpVTAv2dxliWaj2rnbNxAz/k1i/zP1Pu3kJ5mfeqan+ochP3fnbVYTvetru60024Y0gbfah9sxzb40AIZ39aq54E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com; spf=pass smtp.mailfrom=qtec.com; dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=Fe4MPNMk; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtec.com
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-8671441a730so1619959241.0
+        for <linux-pci@vger.kernel.org>; Mon, 03 Mar 2025 01:21:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=qtec.com; s=google; t=1740993696; x=1741598496; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nAeXWNkuPZBt1nYKfkioC0KxXx+i2L54nyTk7vpYv0Y=;
+        b=Fe4MPNMk65VWMwDTVoVbm44SCgEeM0RqEDsMk9XX7DwXL3BNTC0rlTaBBpXCpq5RI6
+         Ly0SKdi+ioooUzBJ2TRNB440+biEwvdcK7EDbY2aMJNu2l4MfVLamte1Uq+HRxA0QBgJ
+         dS7oE9TIXHmLGp+l/54eku17Rqe0n5h6hKFUBqvVmyYjSsuhPKZs5QG/UATUDsgN4EJK
+         S+wG072fuZQ9/dChJsYluPWVr2QRCHISBtNavf0tji5dO9eQGIcztn9ctFY07bCTQgQP
+         iNeOzx97L87ISFbwTrbEHPjDWXbdRXipL58GXMPnzuOn91svCU6WD1vZ3fBRhDYe5UaJ
+         uE9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740993696; x=1741598496;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nAeXWNkuPZBt1nYKfkioC0KxXx+i2L54nyTk7vpYv0Y=;
+        b=e/5i/SbcoR/padiE426n2j42Ma8lytYUQfGEJA6c0DguPNJ+4loKfF0fJKcJNxqA3T
+         NbU/qr0UqR2XqaXLJXa6T/N3zdQgCsSpBIt0Cj4E5JUAzHk++oo05U1Li9Ejvc/WPvCJ
+         Nmf6Vy7NZ4gt3BJaiu8jdv8X3W8P/4XEgPRaSx9IQqt72+l5LYwPvqZCflQub8ZOedEl
+         c/XFQyI2odsEXT/BaaBqE4/LNAlNG2nisfry5tXkv/yzcFYMiDppGQ41b5LshXMHbGNj
+         v0N2hYIrfl5YyQN8A/9EulVk9oNZs7NUfCeKj40ci4LjxPH0F3p1iUU97EUQ0LvDA5QQ
+         PQaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5ZzpgmFYePnxvEK4AyAZPPwtrx/kWZlRwcAY9xZar/zlF4GwgWWpcGGyqqnZTNXu9bkx+9xw1O2w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVX77/IjGLzHwJqu6+T7yHYVirMHfsOO8Ob6wDPAnNU0nUGhBH
+	QC6+NpnWKk9zIhnvq7gP6PPoX04T1eAZcDuhLiW/KbWjdKa/DHj7Mro+XDRHNUxKWFi8Ve2x5EI
+	gQIDLhqt1wtOmucoqwbHRVXsf80zlKDN8H4/bPg==
+X-Gm-Gg: ASbGnct/3Jb0aDJ7wJcaydchhkYpiJCqUfeNz0E5Tabxum8IclE/MmX5oDAUTB2+DVh
+	2FhhTsFj/hGrJOwKlMkoYmI4Rx774UJyr2j15iHN7kZ7jt6wDFQSIy4kCElJW92COY7G+ZNIi0W
+	IFqApSf7EF6D+rmTkpFH9A3OCU
+X-Google-Smtp-Source: AGHT+IFZbG2eyoSsPmw+ur7eqkya0lr99VJq5r7PqD3pp3CraBkFznVj3MvpZxxCJ8G8DlJOSQmNVFqoW7d+QViHpa8=
+X-Received: by 2002:a05:6102:3f89:b0:4bb:f1f0:1b34 with SMTP id
+ ada2fe7eead31-4c044857a38mr8417315137.2.1740993696264; Mon, 03 Mar 2025
+ 01:21:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CAJDH93s25fD+iaPJ1By=HFOs_M4Hc8LawPDy3n_-VFy04X4N5w@mail.gmail.com>
+ <20241219112125.GAZ2QBteug3I1Sb46q@fat_crate.local> <20241219164408.GA1454146@yaz-khff2.amd.com>
+ <CAJDH93vm0buJn5vZEz9k9GRC3Kr6H7=0MSJpFtdpy_dSsUMDCQ@mail.gmail.com> <Z78uOaPESGXWN46M@gmail.com>
+In-Reply-To: <Z78uOaPESGXWN46M@gmail.com>
+From: Rostyslav Khudolii <ros@qtec.com>
+Date: Mon, 3 Mar 2025 10:21:25 +0100
+X-Gm-Features: AQ5f1Jo0EX3pEM_GVM8NTI1LcFTTbxuaz98gbzh7kKRC0tNKU0-DotXfKkWTSrk
+Message-ID: <CAJDH93uE+foFfRAXVJ48-PYvEUsbpEu_-BVoG-5HsDG66yY7AQ@mail.gmail.com>
+Subject: Re: PCI IO ECS access is no longer possible for AMD family 17h
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>, Borislav Petkov <bp@alien8.de>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, 
+	"bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 03 2025 at 07:05, Daniel Tsai wrote:
-> +/*
-> + * The algo here honor if there is any intersection of mask of
-> + * the existing MSI vectors and the requesting MSI vector. So we
-> + * could handle both narrow (1 bit set mask) and wide (0xffff...)
-> + * cases, return -EINVAL and reject the request if the result of
-> + * cpumask is empty, otherwise return 0 and have the calculated
-> + * result on the mask_to_check to pass down to the irq_chip.
-> + */
-> +static int dw_pci_check_mask_compatibility(struct dw_pcie_rp *pp,
-> +					   unsigned long ctrl,
-> +					   unsigned long hwirq_to_check,
-> +					   struct cpumask *mask_to_check)
-> +{
-> +	unsigned long end, hwirq;
-> +	const struct cpumask *mask;
-> +	unsigned int virq;
-> +
-> +	hwirq = ctrl * MAX_MSI_IRQS_PER_CTRL;
-> +	end = hwirq + MAX_MSI_IRQS_PER_CTRL;
-> +	for_each_set_bit_from(hwirq, pp->msi_irq_in_use, end) {
-> +		if (hwirq == hwirq_to_check)
-> +			continue;
-> +		virq = irq_find_mapping(pp->irq_domain, hwirq);
-> +		if (!virq)
-> +			continue;
-> +		mask = irq_get_affinity_mask(virq);
+Hi,
 
-What protects @mask against a concurrent modification?
+> Rostyslav, I would like to ask you, do you have patches / updates for
+> enabling the EnableCf8ExtCfg bit for AMD 17h+ family? I could try to
+> adjust my lspci changes for new machines.
 
-> +		if (!cpumask_and(mask_to_check, mask, mask_to_check))
-> +			return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void dw_pci_update_effective_affinity(struct dw_pcie_rp *pp,
-> +					     unsigned long ctrl,
-> +					     const struct cpumask *effective_mask,
-> +					     unsigned long hwirq_to_check)
-> +{
-> +	struct irq_desc *desc_downstream;
-> +	unsigned int virq_downstream;
-> +	unsigned long end, hwirq;
-> +
-> +	/*
-> +	 * Update all the irq_data's effective mask
-> +	 * bind to this MSI controller, so the correct
-> +	 * affinity would reflect on
-> +	 * /proc/irq/XXX/effective_affinity
-> +	 */
-> +	hwirq = ctrl * MAX_MSI_IRQS_PER_CTRL;
-> +	end = hwirq + MAX_MSI_IRQS_PER_CTRL;
-> +	for_each_set_bit_from(hwirq, pp->msi_irq_in_use, end) {
-> +		virq_downstream = irq_find_mapping(pp->irq_domain, hwirq);
-> +		if (!virq_downstream)
-> +			continue;
-> +		desc_downstream = irq_to_desc(virq_downstream);
-> +		irq_data_update_effective_affinity(&desc_downstream->irq_data,
-> +						   effective_mask);
+Pali, sorry for the late reply. Do I understand correctly, that even
+though you have access to the ECS via
+the MMCFG you still want the legacy (direct IO) to work for the
+debugging purposes? I can prepare a
+simple patch that will allow you to do so if that's the case.
 
-Same here.
+>
+> So what is the practical impact here? Do things start breaking
+> unexpectedly if CONFIG_ACPI_MCFG and CONFIG_PCI_MMCONFIG are disabled?
+> Then I'd suggest fixing that in the Kconfig space, either by adding a
+> dependency on ACPI_MCFG && PCI_MMCONFIG, or by selecting those
+> must-have pieces of infrastructure.
+>
 
-> +	}
-> +}
-> +
-> +static int dw_pci_msi_set_affinity(struct irq_data *d,
-> +				   const struct cpumask *mask, bool force)
-> +{
-> +	struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(d);
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	int ret;
-> +	int virq_parent;
-> +	unsigned long hwirq = d->hwirq;
-> +	unsigned long flags, ctrl;
-> +	struct irq_desc *desc_parent;
-> +	const struct cpumask *effective_mask;
-> +	cpumask_var_t mask_result;
-> +
-> +	ctrl = hwirq / MAX_MSI_IRQS_PER_CTRL;
-> +	if (!alloc_cpumask_var(&mask_result, GFP_ATOMIC))
-> +		return -ENOMEM;
+Ingo, thank you for the reply.
 
-This does not work on a RT enabled kernel. Allocations with a raw spin
-lock held are not possible.
+The way I understand the access to the PCI ECS (via raw_pci_ext_ops)
+works, is the following:
+1. If CONFIG_ACPI_MCFG or CONFIG_PCI_MMCONFIG are enabled - set the
+raw_pci_ext_ops to use
+    MMCFG to access ECS. See pci_mmcfg_early_init() / pci_mmcfg_late_init();
+2. If CONFIG_ACPI_MCFG and CONFIG_PCI_MMCONFIG are disabled - set the
+raw_pci_ext_ops to use
+    the 'direct' access to ECS. See pci_direct_init(). The direct
+access is conditional on the PCI_HAS_IO_ECS
+    flag being set.
 
-> +	/*
-> +	 * Loop through all possible MSI vector to check if the
-> +	 * requested one is compatible with all of them
-> +	 */
-> +	raw_spin_lock_irqsave(&pp->lock, flags);
-> +	cpumask_copy(mask_result, mask);
-> +	ret = dw_pci_check_mask_compatibility(pp, ctrl, hwirq, mask_result);
-> +	if (ret) {
-> +		dev_dbg(pci->dev, "Incompatible mask, request %*pbl, irq num %u\n",
-> +			cpumask_pr_args(mask), d->irq);
-> +		goto unlock;
-> +	}
-> +
-> +	dev_dbg(pci->dev, "Final mask, request %*pbl, irq num %u\n",
-> +		cpumask_pr_args(mask_result), d->irq);
-> +
-> +	virq_parent = pp->msi_irq[ctrl];
-> +	desc_parent = irq_to_desc(virq_parent);
-> +	ret = desc_parent->irq_data.chip->irq_set_affinity(&desc_parent->irq_data,
-> +							   mask_result, force);
+On AMD, the kernel enables the ECS IO access via the
+amd_bus_cpu_online() and pci_enable_pci_io_ecs().
+Except those functions have no desired effect on the AMD 17h+ family
+because the register (EnableCf8ExtCfg),
+they access, has been moved. What is important though, is that the
+PCI_HAS_IO_ECS flag is set unconditionally.
+See pci_io_ecs_init() in amd_bus.c
 
-Again. Completely unserialized.
+Therefore I was wondering whether we should add support for the 17h+
+family in those functions to have
+the direct access work for those families as well.
 
-Thanks,
+Regarding your suggestion to address this in the Kconfig space - I'm
+not quite sure I follow, since right now the kernel
+will use raw_pci_ext_ops whenever access beyond the first 256 bytes is
+requested. Say we want to make that
+conditional on CONFIG_ACPI_MCFG and CONFIG_PCI_MMCONFIG, does it also
+mean then we want to drop support
+for the 'direct' PCI IO ECS access altogether?
 
-        tglx
+Best regards,
+Rostyslav
 
