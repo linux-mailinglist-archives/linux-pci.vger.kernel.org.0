@@ -1,155 +1,201 @@
-Return-Path: <linux-pci+bounces-22847-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22870-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F268A4E228
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 16:02:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF853A4E66C
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 17:42:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF07B188ACBD
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 14:56:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6C101B40906
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 16:31:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C9DD27C15F;
-	Tue,  4 Mar 2025 14:54:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB00020DD4C;
+	Tue,  4 Mar 2025 16:09:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fQ4Vsen9"
+	dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b="Fe4MPNMk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from beeline3.cc.itu.edu.tr (beeline3.cc.itu.edu.tr [160.75.25.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E7D25F99E
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 16:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=160.75.25.117
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741104576; cv=pass; b=uoN1YUF2X5D3c3j6a1amgmQ76O2DVrx9A1JFl6cj88+NEhZ/fJyj6dY207uKR4RvoDzB9kxLjnjrqW/iy7J8xnKc+puSwApyIuOTr90q65vlaa3mdrBRvvuC2hYFLHi8x67ROKDqyz6Cud8O7xznd6TADUPDFAt6juwnXeOWL5s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741104576; c=relaxed/simple;
+	bh=pv7JhxNl2I28whP9+adbwP3IvdPyCk6EghnFcKHSLq8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RuwwIpBLlf1QKZyMfL0LereX/3ApjW3aksrjOQE7qFSNJKT7TWJNBi/v0lIBTm53Iqsuw/0Yw3LxHHWNUkdctV7Wo7TFPfSBkA4Aymds00e6TXi80VZmRWFCsHIJ6LU1Phmm38MCfhEotODqMU1XfluWKrOqB5xocEfEAEr+loY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com; spf=none smtp.mailfrom=cc.itu.edu.tr; dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=Fe4MPNMk; arc=none smtp.client-ip=209.85.222.46; dmarc=pass (p=reject dis=none) header.from=qtec.com; spf=pass smtp.mailfrom=qtec.com; arc=pass smtp.client-ip=160.75.25.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cc.itu.edu.tr
+Received: from lesvatest1.cc.itu.edu.tr (unknown [10.146.128.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by beeline3.cc.itu.edu.tr (Postfix) with ESMTPS id A2CF440CECAA
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 19:09:32 +0300 (+03)
+X-Envelope-From: <root@cc.itu.edu.tr>
+Received: from lesva1.cc.itu.edu.tr (unknown [160.75.70.79])
+	by lesvatest1.cc.itu.edu.tr (Postfix) with ESMTP id 4Z6gZq2gnzzG1H9
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 19:08:19 +0300 (+03)
+Received: by le1 (Postfix, from userid 0)
+	id 9CF5A4272B; Tue,  4 Mar 2025 19:08:05 +0300 (+03)
+Authentication-Results: lesva1.cc.itu.edu.tr;
+	dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=Fe4MPNMk
+X-Envelope-From: <linux-kernel+bounces-541263-bozkiru=itu.edu.tr@vger.kernel.org>
+Authentication-Results: lesva2.cc.itu.edu.tr;
+	dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=Fe4MPNMk
+Received: from fgw2.itu.edu.tr (fgw2.itu.edu.tr [160.75.25.104])
+	by le2 (Postfix) with ESMTP id B548E42465
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 12:21:54 +0300 (+03)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by fgw2.itu.edu.tr (Postfix) with SMTP id 91D4C2DCDE
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 12:21:54 +0300 (+03)
+Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 82A8F1891BE2
+	for <bozkiru@itu.edu.tr>; Mon,  3 Mar 2025 09:22:01 +0000 (UTC)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79DD21F0E5A;
+	Mon,  3 Mar 2025 09:21:42 +0000 (UTC)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6338F20A5EB
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 14:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FDC1487F4
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 09:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741100074; cv=none; b=rS4VLRPUOl8Lx4Ihn69O6KJ40gNJTvIP3HXn9uQpcdbTdf+ICM5MwKVyWERzQtsMgXVh6aPHcviaKqLiV8Sr/qqZHjvpezDYZb/x3OmrydjCpDOUXvyxfy4A1XxSQKHn1Dsvu33pbumwM5areJk+nK4WYYA2WjphVqEFOsixxHk=
+	t=1740993699; cv=none; b=V/cQepjUEyOUj1llPf4HhT6QixTzMYhOP3kmVSOIQPKc4OB6qCegmXm4vWWYduZkxpS1Cejqsape5chD/fNz6+FxQBJuHzkNQbboopSnzIdcxSGr8gdpD4WcQQI3Wr9Jo7C1rzPCEHPMTMpM+UJhlo1V6kGf9Ej9Drn3TnBtwHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741100074; c=relaxed/simple;
-	bh=UBoe1XShmX3P7j6hT5643LUFLy9aSuTJBPLFULrG/7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q3/3BM+XOg4/GN8dPwbEgkbOuTcagTeqIPRi1Y13vvSAzfkajWgwG/Wr0dQEuIjSMNxyZ1Wn/V2GobtwAJDIWGKmv8tv+tZS3wYh8VXrp86edFpT2PdKG0hjYAXWjUxl+FdM6GgKq1z/OgHxgLRRhz2C4CGByUhKX8Q0ZxHhfc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fQ4Vsen9; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22334203781so108492535ad.0
-        for <linux-pci@vger.kernel.org>; Tue, 04 Mar 2025 06:54:33 -0800 (PST)
+	s=arc-20240116; t=1740993699; c=relaxed/simple;
+	bh=pv7JhxNl2I28whP9+adbwP3IvdPyCk6EghnFcKHSLq8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Caku+a+fHRra6BLTMwYdd/L7/PVQquun7iRyx3jvNSsFuh8K4A7Hyn1ys2ddS2K0X2qFPgY+GIyQ31GkmDWnpVTAv2dxliWaj2rnbNxAz/k1i/zP1Pu3kJ5mfeqan+ochP3fnbVYTvetru60024Y0gbfah9sxzb40AIZ39aq54E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com; spf=pass smtp.mailfrom=qtec.com; dkim=pass (2048-bit key) header.d=qtec.com header.i=@qtec.com header.b=Fe4MPNMk; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=qtec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qtec.com
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-8671441a730so1619958241.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 01:21:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741100073; x=1741704873; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fX1Owrn1AszAewAaO9ydb9Cq7XmK0rDK8G2P8SgcArg=;
-        b=fQ4Vsen9CieS3KnKkbPLZE2g9yixxVuCKJTLtEffihSIU2bRS0EmMhhEwLKMnaNJXe
-         5m4b2b8kYsFNeXWE0Crszoix4nQDaTTDyER9otBRhDfN9qX846Xhc+1OHskKjJ9fStfN
-         eBDQFrQ1X2ioYOC9tCP6Tv5LySeLJl2ATnhW+tp7nK3VniKcfmS5FdgnhcPUxTrZV1BK
-         nLyUvPtjT6jrLrjlBzBgRSDfBbT++SAXjfBl0AoSFW15NnvrI0+X95aQPqZ41QFyvwCX
-         YSGKYsZmPNZpDLpk/3C74zIT+jRWt8MBJBnCxxGomSbd9OXn4Yee+bMtNnGuszQEawCm
-         YFDw==
+        d=qtec.com; s=google; t=1740993696; x=1741598496; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nAeXWNkuPZBt1nYKfkioC0KxXx+i2L54nyTk7vpYv0Y=;
+        b=Fe4MPNMk65VWMwDTVoVbm44SCgEeM0RqEDsMk9XX7DwXL3BNTC0rlTaBBpXCpq5RI6
+         Ly0SKdi+ioooUzBJ2TRNB440+biEwvdcK7EDbY2aMJNu2l4MfVLamte1Uq+HRxA0QBgJ
+         dS7oE9TIXHmLGp+l/54eku17Rqe0n5h6hKFUBqvVmyYjSsuhPKZs5QG/UATUDsgN4EJK
+         S+wG072fuZQ9/dChJsYluPWVr2QRCHISBtNavf0tji5dO9eQGIcztn9ctFY07bCTQgQP
+         iNeOzx97L87ISFbwTrbEHPjDWXbdRXipL58GXMPnzuOn91svCU6WD1vZ3fBRhDYe5UaJ
+         uE9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741100073; x=1741704873;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fX1Owrn1AszAewAaO9ydb9Cq7XmK0rDK8G2P8SgcArg=;
-        b=b28txCeEjyc2pJegjM0pHn4msQTbxJFdSzHHwwtb/PfwpUnqPBeOIAxLTf3BRneKZC
-         GRlA58yu3KprlFpn1St7bgI+l/LCe7wds7vMJVmIbpslQTq6rmYyvf7gWHfJbo7HptuY
-         4fDwha04Kg7fJKWeUksaJowrvCL30uFljQUqxVqsoZ0+NIlJ3wfcXpc47IjRVQvVxD7F
-         nInmrJkw89UQWzIZOk60R2aGGpzZhijF+Ri6Kfe2NEWMYibC3taNf6QanApDmzL+crfN
-         tAMlQswEFmv6LdUM9CylPKspbMClheCIU2R9kPb+sjsUswR4vEh0Wgx3rv5W0Q+Jyi9J
-         CJdg==
-X-Gm-Message-State: AOJu0Yx147wcifOEB2++uDhM4I7ch6ywGK54OmmX1vaqZa4vbBoV35p0
-	MJHwTakjvq/raUBO1HzachlrCm/hMwLwFFmsQSOUxsPJHLephdlw2LH1ehMlvw==
-X-Gm-Gg: ASbGncuBDwWi7bKvlBUBhCoZLXQZzCPKNJ1/txrEVjJ4OScAenKa07yuKvWYOgYq1vn
-	Y2kMUzW9i3aamEDFCNSKunWf5MGhzz6U4Rxf3/nM6yL+ZhkFIgIYbUer39s4t0rZBSUEcu9ORO9
-	wM8Se9SyGj5nDw0iXVcN/8Ug5sf2j5/BxpmbgrajWdkUlCwtIG2AMmCwBbctw08e68OlTo9daq0
-	oIEoCnLC19MrIXUpP2m5wfKINcwlYLfE5N++D3fykR0vlgh4jBsB8/CUnuAXdKDJo/xGgfIthoh
-	CrwwlAnGUAaAlEcd7naKV7ptJDTtwhwaGYJHX2nffObVWoyIJqEh5dc=
-X-Google-Smtp-Source: AGHT+IFOAFZRsvKQ5dtlmg9hihcEFbJufYkzxSZoZRlfkF27sYRSEvn0Q3zH2r9qpC5gI/Bx2ZfWFw==
-X-Received: by 2002:a17:903:2447:b0:215:a2f4:d4ab with SMTP id d9443c01a7336-223d9137f1bmr50389425ad.7.1741100072628;
-        Tue, 04 Mar 2025 06:54:32 -0800 (PST)
-Received: from thinkpad ([120.60.51.199])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223852162bcsm58948015ad.8.2025.03.04.06.54.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 06:54:31 -0800 (PST)
-Date: Tue, 4 Mar 2025 20:24:25 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Stanimir Varbanov <svarbanov@suse.de>,
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Andrew Murray <amurray@thegoodpenguin.co.uk>,
-	Jeremy Linton <jeremy.linton@arm.com>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/8] PCI: brcmstb: Write to internal register to
- change link cap
-Message-ID: <20250304145425.rayj5zowyxp7s4se@thinkpad>
-References: <20250214173944.47506-1-james.quinlan@broadcom.com>
- <20250214173944.47506-3-james.quinlan@broadcom.com>
+        d=1e100.net; s=20230601; t=1740993696; x=1741598496;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nAeXWNkuPZBt1nYKfkioC0KxXx+i2L54nyTk7vpYv0Y=;
+        b=oUVqNlzu01D7w7chL3wtIsfoWEs16yAD2CsGmF9MBQX3R69JaTLFwDoN2tFbWSKvlA
+         twlRlBG6dlh1qmsegK6iSE9khyhRJvWGVZ7Q5ynFd/TsWgxiD6rZULsMggVPigXFnT0Z
+         4oguuqp7+l1XMnVSKtrrIE+DW9eZcLu89myC5bb+BLaVGXatKYVXARqTiZ/KD9EC9q0g
+         c791uPzxrDDEeKeRAXmcPOMwf/8H6NR9iC8I7r07xEOqsX3IBEZCu547Gndyeg8eb325
+         HGj6BkufkZdjyFTP+IoZZ8AUvN3HknYj39oQifLWFmKGaVzi8b87J23bnEpmLD0tCDo/
+         txfg==
+X-Forwarded-Encrypted: i=1; AJvYcCXfcD8NQ52QxTW/gYEMx8jv5HfJsXmUU0vvbKVHfreHq8VAPEfcC2TYDVvdT7t2S/NNW/vI+oSJWl+rzkU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoSf1jUtdvn1xn1NqTkJwd2c7s8er1yTfHarqcyE100Gt8WIaG
+	EOLSufPvDTc3y0XnogQGJKqFkjJmYpLvMiytMg+TGncXc4CNwC6mVTMSzWW5DhrUtJVlCWwAXpW
+	OZpP5cDf4jeglfN7Ou8VivBXEZEwQmWx8Nq9DYg==
+X-Gm-Gg: ASbGncuaapOVDAfO6cL+ipFNPYd2NwobMZxSxoj5S8SVK3rYGkJPXyT7CnNCePSDlXv
+	2ZmdgbNWsB9tchZ3jzVMtPyddo5KGnk4t0rsk6Alqwm+B1+EaCa3bjZbTjktoec+2i0Cw7Elwdl
+	ILPLsooZfNhz4onoF7fMB146v+
+X-Google-Smtp-Source: AGHT+IFZbG2eyoSsPmw+ur7eqkya0lr99VJq5r7PqD3pp3CraBkFznVj3MvpZxxCJ8G8DlJOSQmNVFqoW7d+QViHpa8=
+X-Received: by 2002:a05:6102:3f89:b0:4bb:f1f0:1b34 with SMTP id
+ ada2fe7eead31-4c044857a38mr8417315137.2.1740993696264; Mon, 03 Mar 2025
+ 01:21:36 -0800 (PST)
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250214173944.47506-3-james.quinlan@broadcom.com>
+References: <CAJDH93s25fD+iaPJ1By=HFOs_M4Hc8LawPDy3n_-VFy04X4N5w@mail.gmail.com>
+ <20241219112125.GAZ2QBteug3I1Sb46q@fat_crate.local> <20241219164408.GA1454146@yaz-khff2.amd.com>
+ <CAJDH93vm0buJn5vZEz9k9GRC3Kr6H7=0MSJpFtdpy_dSsUMDCQ@mail.gmail.com> <Z78uOaPESGXWN46M@gmail.com>
+In-Reply-To: <Z78uOaPESGXWN46M@gmail.com>
+From: Rostyslav Khudolii <ros@qtec.com>
+Date: Mon, 3 Mar 2025 10:21:25 +0100
+X-Gm-Features: AQ5f1Jo0EX3pEM_GVM8NTI1LcFTTbxuaz98gbzh7kKRC0tNKU0-DotXfKkWTSrk
+Message-ID: <CAJDH93uE+foFfRAXVJ48-PYvEUsbpEu_-BVoG-5HsDG66yY7AQ@mail.gmail.com>
+Subject: Re: PCI IO ECS access is no longer possible for AMD family 17h
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>, Borislav Petkov <bp@alien8.de>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, 
+	"bhelgaas@google.com" <bhelgaas@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-ITU-Libra-ESVA-Information: Please contact Istanbul Teknik Universitesi for more information
+X-ITU-Libra-ESVA-ID: 4Z6gZq2gnzzG1H9
+X-ITU-Libra-ESVA: No virus found
+X-ITU-Libra-ESVA-From: root@cc.itu.edu.tr
+X-ITU-Libra-ESVA-Watermark: 1741709307.64416@I9Etc2rXNNThJyUsST9Afg
+X-ITU-MailScanner-SpamCheck: not spam
 
-On Fri, Feb 14, 2025 at 12:39:30PM -0500, Jim Quinlan wrote:
-> The driver was mistakenly writing to a RO config-space register
-> (PCI_EXP_LNKCAP).  Although harmless in this case, the proper destination
-> is an internal RW register that is reflected by PCI_EXP_LNKCAP.
-> 
+Hi,
 
-You mean to say that writing to RO register doesn't cause any issue, but what
-about the link capability not getting updated? It is a bug nevertheless.
+> Rostyslav, I would like to ask you, do you have patches / updates for
+> enabling the EnableCf8ExtCfg bit for AMD 17h+ family? I could try to
+> adjust my lspci changes for new machines.
 
-> Fixes: c0452137034bda8f686dd9a2e167949bfffd6776 ("PCI: brcmstb: Add Broadcom STB PCIe host controller driver")
-> 
+Pali, sorry for the late reply. Do I understand correctly, that even
+though you have access to the ECS via
+the MMCFG you still want the legacy (direct IO) to work for the
+debugging purposes? I can prepare a
+simple patch that will allow you to do so if that's the case.
 
-Same comment as previous patch.
+>
+> So what is the practical impact here? Do things start breaking
+> unexpectedly if CONFIG_ACPI_MCFG and CONFIG_PCI_MMCONFIG are disabled?
+> Then I'd suggest fixing that in the Kconfig space, either by adding a
+> dependency on ACPI_MCFG && PCI_MMCONFIG, or by selecting those
+> must-have pieces of infrastructure.
+>
 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+Ingo, thank you for the reply.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+The way I understand the access to the PCI ECS (via raw_pci_ext_ops)
+works, is the following:
+1. If CONFIG_ACPI_MCFG or CONFIG_PCI_MMCONFIG are enabled - set the
+raw_pci_ext_ops to use
+    MMCFG to access ECS. See pci_mmcfg_early_init() / pci_mmcfg_late_init();
+2. If CONFIG_ACPI_MCFG and CONFIG_PCI_MMCONFIG are disabled - set the
+raw_pci_ext_ops to use
+    the 'direct' access to ECS. See pci_direct_init(). The direct
+access is conditional on the PCI_HAS_IO_ECS
+    flag being set.
 
-- Mani
+On AMD, the kernel enables the ECS IO access via the
+amd_bus_cpu_online() and pci_enable_pci_io_ecs().
+Except those functions have no desired effect on the AMD 17h+ family
+because the register (EnableCf8ExtCfg),
+they access, has been moved. What is important though, is that the
+PCI_HAS_IO_ECS flag is set unconditionally.
+See pci_io_ecs_init() in amd_bus.c
 
-> ---
->  drivers/pci/controller/pcie-brcmstb.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-> index 64a7511e66a8..98542e74aa16 100644
-> --- a/drivers/pci/controller/pcie-brcmstb.c
-> +++ b/drivers/pci/controller/pcie-brcmstb.c
-> @@ -413,10 +413,10 @@ static int brcm_pcie_set_ssc(struct brcm_pcie *pcie)
->  static void brcm_pcie_set_gen(struct brcm_pcie *pcie, int gen)
->  {
->  	u16 lnkctl2 = readw(pcie->base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCTL2);
-> -	u32 lnkcap = readl(pcie->base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCAP);
-> +	u32 lnkcap = readl(pcie->base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
->  
->  	lnkcap = (lnkcap & ~PCI_EXP_LNKCAP_SLS) | gen;
-> -	writel(lnkcap, pcie->base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCAP);
-> +	writel(lnkcap, pcie->base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
->  
->  	lnkctl2 = (lnkctl2 & ~0xf) | gen;
->  	writew(lnkctl2, pcie->base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCTL2);
-> -- 
-> 2.43.0
-> 
+Therefore I was wondering whether we should add support for the 17h+
+family in those functions to have
+the direct access work for those families as well.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Regarding your suggestion to address this in the Kconfig space - I'm
+not quite sure I follow, since right now the kernel
+will use raw_pci_ext_ops whenever access beyond the first 256 bytes is
+requested. Say we want to make that
+conditional on CONFIG_ACPI_MCFG and CONFIG_PCI_MMCONFIG, does it also
+mean then we want to drop support
+for the 'direct' PCI IO ECS access altogether?
+
+Best regards,
+Rostyslav
+
 
