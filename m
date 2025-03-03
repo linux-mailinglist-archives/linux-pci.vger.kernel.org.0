@@ -1,192 +1,137 @@
-Return-Path: <linux-pci+bounces-22748-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22749-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9BD2A4BBC0
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 11:14:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63654A4BBF5
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 11:23:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C0D3A16A7EC
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 10:14:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5E06A164ECE
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 10:23:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6818B1F1525;
-	Mon,  3 Mar 2025 10:14:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7DA51F30A9;
+	Mon,  3 Mar 2025 10:23:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f6vZzUqh"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VNt3uvV1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F55F1F09A8;
-	Mon,  3 Mar 2025 10:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD6F1F193D
+	for <linux-pci@vger.kernel.org>; Mon,  3 Mar 2025 10:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740996876; cv=none; b=shj9cSNfOKojfWZZpuRES79xGaspJmxtPV4yXn+MQhpjtIOgJtS925W9UCqqy1KbEEQ4ZdJqYCEGr3nVS7sOqTUyQd6qO8upv0zNyGAk4RmiHSjeGzXqYo7qheW7wUhyxeB4h35ZSq4TPFZBdq/eMsAf2dIjBK70Ep9yOC5O/cI=
+	t=1740997391; cv=none; b=e6TKoemOqU3eS+g+zncOFYKX2SDsYrs/iYbi/SHXSlX5+TR8csgJNvr5zF9+p4x0pLxYE24XD2AqczMWdT4OZqfbRN6LEpW8aCOBtQ740ae7pWYO7cYCyCFL6wZUyOb5HfL8jfoqy7SpUXoOJiMh3vS/zMKLa0Q+JFQpNb17sYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740996876; c=relaxed/simple;
-	bh=lkZaj9uqtTh8hEsign5KZMtVATzuW4IX9LDEg7WlQWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S5sQpECTgmTB2lnvBsdBiaKMHNnAmZmMPuoO26fXklqYQMfopyXoMTdMCZgKM3a1AiE/taXo5dCMwyP5+fP3Q5ngEfUefrI9SbBan8H/gOxTT1NIUzQ9RPeEIXRcB2mWaOBbOqRfUsMeHGZo+QFLlLLPmZFTG7hoC8bhYoQr8vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f6vZzUqh; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740996874; x=1772532874;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lkZaj9uqtTh8hEsign5KZMtVATzuW4IX9LDEg7WlQWE=;
-  b=f6vZzUqhvn8Q9mUsGGQs52rRurvElNYa5/oOwguuAKpOlNFMeqmPyFSQ
-   JELl+zkdLwMYy3+SNXqKvQWqZtOdbsp1SHlx36qfP878eQxKUM6CwIwb6
-   NOqmWDYxTY0KPOnEkrwiF5zjqmtkhJtDp5AHOaclQ/HZIOqNh9QbHRZK9
-   ypBBpITgVzlXnn3fgYiQS2rS4CtAoyesCG3WU1MDVrS3IVJ6IZX63bSLz
-   87gfwYMgXX6oldWmdqw8+xpWcTAuALFSbjsMWXx4kXsZ0lrYg/sE3DOFk
-   G6JEeW9nUdyx7EKrCBSD4f6ABp+26BfE5l3SWsZxNEbg5rYUk/jrmE3xE
-   A==;
-X-CSE-ConnectionGUID: 6KiSZ6QFQHSaS2HjJkgD/A==
-X-CSE-MsgGUID: QTxfqPWNTXatSf/wYSXiCA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11361"; a="52843611"
-X-IronPort-AV: E=Sophos;i="6.13,329,1732608000"; 
-   d="scan'208";a="52843611"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 02:14:34 -0800
-X-CSE-ConnectionGUID: rN1sCiqRSv29QdX9eoTyaQ==
-X-CSE-MsgGUID: cKOWUCSWQhyHb6DQ5Z4cBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117818554"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 03 Mar 2025 02:14:30 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tp2od-000IKV-2v;
-	Mon, 03 Mar 2025 10:14:27 +0000
-Date: Mon, 3 Mar 2025 18:13:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Daniel Tsai <danielsftsai@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Andrew Chant <achant@google.com>,
-	Brian Norris <briannorris@google.com>,
-	Sajid Dalvi <sdalvi@google.com>, Mark Cheng <markcheng@google.com>,
-	Ben Cheng <bccheng@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tsai Sung-Fu <danielsftsai@google.com>
-Subject: Re: [PATCH] PCI: dwc: Chain the set IRQ affinity request back to the
- parent
-Message-ID: <202503031759.oiGkE9fl-lkp@intel.com>
-References: <20250303070501.2740392-1-danielsftsai@google.com>
+	s=arc-20240116; t=1740997391; c=relaxed/simple;
+	bh=45N3CTCQyFNYATVodSXBAL+a94s2+Sf5PekV0GfAnzk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rNOI8gvz38VyuZ9RiPA1gtCzKBA29Ma8BovzZ0aicaDcY571X6ljq0/kKFgbnyutE2vFa0wPXchhIrYWB4Pn+ylfAZN9LAVP27NVc0weMWMI+EsaDy7xtnt8i7jnBwuPUMBcZ0w6fD8Q+loEGFgtKWAOOlgA2JFGPhN5XG0mcw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VNt3uvV1; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52300fmi001154
+	for <linux-pci@vger.kernel.org>; Mon, 3 Mar 2025 10:23:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GKhAMHMv9Qj1+aCKv/F3rYQfkqyHFXlh7B6Upy8lJ2c=; b=VNt3uvV1VYM+zOhx
+	a4GpvWlv3sWQkm9TJqOKwNqZ21pPhTc+0p2ybbNPcXQqSWPwMR/N1SUM6kBK5C+W
+	4wsvzev9/nqhbmeRPRnkpdCtTmw8yIs36ATAe3oO1VTqXZ8TdZhEY0IqLV8fyshG
+	Tm6Ko65Qls5jIOuy7M3HhgPzJd2N6On87zDsizwEggbGu9AtqPKTq0jfIl5RSCdJ
+	9QCEWRvj8s+sSdeHpTPkiRK6qWorTEqHe0A9NOn6KaAC06BtdmRON4P335xXO4Z8
+	bE0Sqb6S564E88peQ3qg3HO6uyMQ3ymjW/Jw5cuFpK8JRcIhcHGupaCavVDG+8lD
+	IJ3XGw==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 453tascktr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 03 Mar 2025 10:23:08 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-223878ae339so24503815ad.0
+        for <linux-pci@vger.kernel.org>; Mon, 03 Mar 2025 02:23:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740997387; x=1741602187;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GKhAMHMv9Qj1+aCKv/F3rYQfkqyHFXlh7B6Upy8lJ2c=;
+        b=NtRUuvMvgNDlzsRSQX5mJTOG6mSCs+yZt7qxXS4ifV1RqfcbHq53mWGU3EtU8lUguu
+         CkrU7EYwX3Q1fC6haSgqCB3k7rU8/z7uimq2dKNFizNPubpF6KBQj9jnli1XVVE8CkSm
+         O0d+NYXaIbqlmw9CBd10EBi9g6lN6AZn5O4HsSwdkIsBkFLE1xt6v+SChJ5T5LvoiSe6
+         QYWBHTQT37f/7D5P7sNsJAaffKvsQJXQQMWfTcBKftce9gwjM4JiwUS+I4d4Y+GpwNWv
+         Vrhd/+DaNfuCHb1KhyfKtdO5NeqxpqujNrVG4rfcz8s6Hf4m5DCo2fPuCeR4hrDgfdqf
+         owSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZaYYLixoDWH0DxRMn9C6MbHFt90aoCi3yRW7ANsCgG2smEhzPC1baEfTlIN7VNs5p03ynqca+SNM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKgurrnSarGw1oGx4X9HaoOBNylPW1ohbgRaoCDbL3KCBlRP4G
+	1+pMjj2brZihdHkj5kYsdjOyVrZT1HK+S7EUNocvmimy/sxXgVcWI2DEkQCUlibLKduFH9rpFjB
+	ECY3sxlC+ey1DzmaRhZcawuPfSfgA0POnTImgCdLmPGuwKNRzrYEr/HjFy3zK2dJn2/W+9A==
+X-Gm-Gg: ASbGncsQ7J5iiWFw3URIJhuWED+xn//218hH4njVew0qDv1HEWPm7Ktf/vYY21TBdon
+	2eCjVjTwzw5rKBv/soLA5QcKD42vF9IY04yyzqtGhunqy0Sjls9RIQGv1eEltShbQagsHct+ikK
+	MmbE5DnYbj5dOEGu/3Psds5FfUZVVteRK7bjCKrpP/y8PFXKqNaixFyoRDvXX2QMk5ImDLbRc+R
+	fktBa3Sz/xkqgM6zuNGJwRknDBsIaGXnUpBXyVrUfI9dP4qCpIwXx+usmPQ98MlHZhUbL2DpVw+
+	jYXMtAJ5tn3J/Im2EIpD37pEc74rhb1O8T5i2CkzCdSh2s7x+jWFQLDw/cA=
+X-Received: by 2002:a17:902:e54b:b0:21f:7880:8472 with SMTP id d9443c01a7336-2236924fa13mr206373545ad.35.1740997386637;
+        Mon, 03 Mar 2025 02:23:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEzewlI+MdkavpK5IxUd9OuTeDDFG7whKIl5HH92YgygrrZJJ+26+G+Xae6Q3us5qqTy1cWBA==
+X-Received: by 2002:a17:902:e54b:b0:21f:7880:8472 with SMTP id d9443c01a7336-2236924fa13mr206373175ad.35.1740997386280;
+        Mon, 03 Mar 2025 02:23:06 -0800 (PST)
+Received: from [192.168.1.35] ([117.236.245.126])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223505293ddsm73795215ad.229.2025.03.03.02.23.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Mar 2025 02:23:05 -0800 (PST)
+Message-ID: <8dda7af4-b318-4e39-b79d-738b6084feb3@oss.qualcomm.com>
+Date: Mon, 3 Mar 2025 15:53:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303070501.2740392-1-danielsftsai@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 19/23] arm64: dts: qcom: ipq6018: Add missing MSI and
+ 'global' IRQs
+To: manivannan.sadhasivam@linaro.org,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
+ <20250227-pcie-global-irq-v1-19-2b70a7819d1e@linaro.org>
+Content-Language: en-US
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+In-Reply-To: <20250227-pcie-global-irq-v1-19-2b70a7819d1e@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: QM7WJ_eZEaUcMt5mJF_TiUGJltOxyciM
+X-Proofpoint-ORIG-GUID: QM7WJ_eZEaUcMt5mJF_TiUGJltOxyciM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-03_04,2025-03-03_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=601 spamscore=0 phishscore=0 mlxscore=0 priorityscore=1501
+ bulkscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0 adultscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2503030080
 
-Hi Daniel,
+On 2/27/2025 7:11 PM, Manivannan Sadhasivam via B4 Relay wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>
+> IPQ6018 has 8 MSI SPI interrupts and one 'global' interrupt.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>   arch/arm64/boot/dts/qcom/ipq6018.dtsi | 20 ++++++++++++++++++--
+>   1 file changed, 18 insertions(+), 2 deletions(-)
 
-kernel test robot noticed the following build errors:
+Reviewed-by: Kathiravan Thirumoorthy 
+<kathiravan.thirumoorthy@oss.qualcomm.com>
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus mani-mhi/mhi-next linus/master v6.14-rc5 next-20250228]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Daniel-Tsai/PCI-dwc-Chain-the-set-IRQ-affinity-request-back-to-the-parent/20250303-150704
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250303070501.2740392-1-danielsftsai%40google.com
-patch subject: [PATCH] PCI: dwc: Chain the set IRQ affinity request back to the parent
-config: sparc64-randconfig-002-20250303 (https://download.01.org/0day-ci/archive/20250303/202503031759.oiGkE9fl-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250303/202503031759.oiGkE9fl-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503031759.oiGkE9fl-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/pci/controller/dwc/pcie-designware-host.c: In function 'dw_pci_msi_set_affinity':
->> drivers/pci/controller/dwc/pcie-designware-host.c:223:58: error: 'struct irq_common_data' has no member named 'affinity'
-     223 |                 cpumask_copy(desc_parent->irq_common_data.affinity, mask);
-         |                                                          ^
-
-
-vim +223 drivers/pci/controller/dwc/pcie-designware-host.c
-
-   178	
-   179	static int dw_pci_msi_set_affinity(struct irq_data *d,
-   180					   const struct cpumask *mask, bool force)
-   181	{
-   182		struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(d);
-   183		struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-   184		int ret;
-   185		int virq_parent;
-   186		unsigned long hwirq = d->hwirq;
-   187		unsigned long flags, ctrl;
-   188		struct irq_desc *desc_parent;
-   189		const struct cpumask *effective_mask;
-   190		cpumask_var_t mask_result;
-   191	
-   192		ctrl = hwirq / MAX_MSI_IRQS_PER_CTRL;
-   193		if (!alloc_cpumask_var(&mask_result, GFP_ATOMIC))
-   194			return -ENOMEM;
-   195	
-   196		/*
-   197		 * Loop through all possible MSI vector to check if the
-   198		 * requested one is compatible with all of them
-   199		 */
-   200		raw_spin_lock_irqsave(&pp->lock, flags);
-   201		cpumask_copy(mask_result, mask);
-   202		ret = dw_pci_check_mask_compatibility(pp, ctrl, hwirq, mask_result);
-   203		if (ret) {
-   204			dev_dbg(pci->dev, "Incompatible mask, request %*pbl, irq num %u\n",
-   205				cpumask_pr_args(mask), d->irq);
-   206			goto unlock;
-   207		}
-   208	
-   209		dev_dbg(pci->dev, "Final mask, request %*pbl, irq num %u\n",
-   210			cpumask_pr_args(mask_result), d->irq);
-   211	
-   212		virq_parent = pp->msi_irq[ctrl];
-   213		desc_parent = irq_to_desc(virq_parent);
-   214		ret = desc_parent->irq_data.chip->irq_set_affinity(&desc_parent->irq_data,
-   215								   mask_result, force);
-   216	
-   217		if (ret < 0)
-   218			goto unlock;
-   219	
-   220		switch (ret) {
-   221		case IRQ_SET_MASK_OK:
-   222		case IRQ_SET_MASK_OK_DONE:
- > 223			cpumask_copy(desc_parent->irq_common_data.affinity, mask);
-   224			fallthrough;
-   225		case IRQ_SET_MASK_OK_NOCOPY:
-   226			break;
-   227		}
-   228	
-   229		effective_mask = irq_data_get_effective_affinity_mask(&desc_parent->irq_data);
-   230		dw_pci_update_effective_affinity(pp, ctrl, effective_mask, hwirq);
-   231	
-   232	unlock:
-   233		free_cpumask_var(mask_result);
-   234		raw_spin_unlock_irqrestore(&pp->lock, flags);
-   235		return ret < 0 ? ret : IRQ_SET_MASK_OK_NOCOPY;
-   236	}
-   237	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
