@@ -1,215 +1,239 @@
-Return-Path: <linux-pci+bounces-22769-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22770-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A45B6A4C942
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 18:23:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FBABA4C956
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 18:26:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3F4F1884D05
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 17:18:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A777717692C
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 17:19:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED76321CFFF;
-	Mon,  3 Mar 2025 17:02:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E88C2288F9;
+	Mon,  3 Mar 2025 17:04:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="MJugn+Cj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sfihcvk/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013004.outbound.protection.outlook.com [52.101.67.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D842C214A7F;
-	Mon,  3 Mar 2025 17:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.4
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741021335; cv=fail; b=YNAIc5saj3gxpUo1BHSJEQTihmZLwimAHUCaJhLdYd85TavaSVOeKNSQb6VtCEoOtqPV8r9zXNuR1uHUbtvE0pNm8ASub/IwiOGCBUXy2xOUlBmv2tueLbSVAmZ7xR2LKIyBdqTkNQczeBJ7lWrtB0SwIAmjYYxGDR+sE1Ct6No=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741021335; c=relaxed/simple;
-	bh=xEevRscg2+BJVnLTuSOpzr0SQezERrqhexc9nAQjfTM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=gQx7b7zMST0w3OBqMnfKE29bzbsl2yejLkq2hFmGvrye2l0BEsB2of8iLL0OVPfOzedxyqURAbNN8ZOmAvMrY4rAhLQLY/kESFrh90Q+vxpwdRQTkxZLYwbF7W/kfTl61SDBKKt0LIcLpLNiy509p26WpMmyQ8i0wycI2aUnqzs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=MJugn+Cj; arc=fail smtp.client-ip=52.101.67.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jhFwIvydVdT9yspwdS5VulKdwS5bzev8VVx7EMXwm28g13ATxVPv6okSgsTqNvHHmIruQ1VINkiiEDDhELJLedVCZ9zvx8ZtZ6SINrf9C0p8Hv9+TcjJ1szXCo2m3EBuzAjVxmXuAFWZdqK1HD5H8gBKa/HgSTdQGKdW+mhw4zPuOUW6Bsb6wi6JZbWQQ9HAgRx1B8KutzDMFtQt+svub/BAbTFYNTWDlXTQ+JJ/+tnz0689wNb/Qr3o2ppMGPA4em7Agl9ggTctbO+W92QqBX2Jbr6bmILUZJNSsmEJYz0Dogu2t5F2XQoMjBHTHhjMl1L7dgjr5KyBjAX8IcOwtw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mSZ8Nij9Yn/j6LkC5iT4+Fg9imcYLwhsRLDRaTlquRw=;
- b=r4uVUaBthvjV0TXYUX3R0ZNucZ1juEeTyPXObJd8k+V3F7DhMa4QVM86yT6o5e4maI9kotsgeWDTPZSSgl7l8E1YhLswVK0z8yvG+8j09aIsXfZek72Y8ITr/ac/vp1TOVwZiNWphMFK9QSB/Q0oI6M2PgmzfBEYFXuAEE5gCVB3tbGcmhrgybVhnA6bEeX+PVZBovn37jEQ6i3HCtyYGx0Jda2SzuodA9NkwUcCNSeYabmOlHV/BdTYAerdG9zR8RCdDU+IV27LWqyVG36s2PmfcPllB+6g9/3F+DtveclrLzYcKg5D2j6iG1y+ghCaqr4J0euhas7st6sQvk6otg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mSZ8Nij9Yn/j6LkC5iT4+Fg9imcYLwhsRLDRaTlquRw=;
- b=MJugn+CjmNTIyN4cmpgyAcKNUZbqUAjtGbM/7GaWZofXhsTwyFtcPXNRlhhs/Znu509L0IRZWdyExyLmCINrDmC6wnHcznGrPFjguLIl+vVS8opgnaRuVkr9F4bVTmnoSpwMvLYArBBbmv+qa88WM8BR+Jftg2Zsy4BCie9rvJlPlj0dy1sQZZrAhKc+q9Hj4Fqvme9EWfMIFdADA7CqAyBoB/b6F4zy8CqgtOMgZdPBjkPacQhnRQXc5He35ZRTMm4CEFujR1e5p5time3gRLHlOqbzE6JtAzOieu5ayD7MeZnmoauObicLWalp4d8X1ApSwvbY+YE4YiapQjWzvw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DBAPR04MB7208.eurprd04.prod.outlook.com (2603:10a6:10:1a8::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.29; Mon, 3 Mar
- 2025 17:02:08 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%5]) with mapi id 15.20.8489.019; Mon, 3 Mar 2025
- 17:02:07 +0000
-Date: Mon, 3 Mar 2025 12:01:56 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F62226527;
+	Mon,  3 Mar 2025 17:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741021475; cv=none; b=ZOFLUz43dKYP26YNXp5XQcErcYxjbacZfTnDnvCRX4nQlCHDYoE/3aiDoAHyOzp5xjXWHznLyQe02saIi0r2fvERN2jaQkD4sJE+fxaxcizZkgEuwdRjOAwjuqtBWeKQaQpmtH4mbdLS95t+jiKTwEUKjwhUg7Z4ioZszD6ayHs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741021475; c=relaxed/simple;
+	bh=1PbP9JweNnhfY323ds2ckVbVYshiUaX4U6QLjLl33Yc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cafVwTj4QZsEbrrjRCcAbHF2Sltj+IC7Dd9PQfV3jxmR9iJ1uIkavSdm/Cu23CPmi2lZ6eKAC1+pwycxv5WHUBKj8YtCl01pxZL3jfbleg2v3O4cdVSqd6hO/7sGzaHlEXg8+KN0t5mbntxtqYtrGZ8U5esGDLG0bWajknoH+IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sfihcvk/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79619C4CED6;
+	Mon,  3 Mar 2025 17:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741021474;
+	bh=1PbP9JweNnhfY323ds2ckVbVYshiUaX4U6QLjLl33Yc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sfihcvk/eEVOMebl2S4GJlQP/B1tYig4rr4JHdfBBNkvCXsWL1/OORGhVnAmXLWGV
+	 1UTJPSKDNzhyOOH1eHnKTrvff/ZHNokoDNNyJhBynUiBqeDU6nuRf7c2OQKEGoK2VJ
+	 +HZ9etlplxwbUskdChu0SWU/WqcIoaqSED47Colvr4pQXuWHWXza/7BBXyY2gcl/dk
+	 IBf0gVwkfhlVzvGkeEbhX9AR4YO7eBYZYfttPiTVM2xpTSe9/U6RxbXsw71HaZ2nNx
+	 83RyGxQ5w4JFtwAkrYFQA60bkuXoAIvPMfmctCA49wTh+Qh45gqVoow2JGBnWezY3p
+	 Vp79ivh97R9/g==
+Date: Mon, 3 Mar 2025 17:04:28 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	Shuah Khan <shuah@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>, dlemoal@kernel.org,
-	jdmason@kudzu.us, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, imx@lists.linux.dev,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v15 02/15] irqdomain: Add IRQ_DOMAIN_FLAG_MSI_IMMUTABLE
- and irq_domain_is_msi_immutable()
-Message-ID: <Z8XghE/VUrggdN7V@lizhi-Precision-Tower-5810>
-References: <20250211-ep-msi-v15-0-bcacc1f2b1a9@nxp.com>
- <20250211-ep-msi-v15-2-bcacc1f2b1a9@nxp.com>
- <86plj1ovkk.wl-maz@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86plj1ovkk.wl-maz@kernel.org>
-X-ClientProxiedBy: PH2PEPF0000385C.namprd17.prod.outlook.com
- (2603:10b6:518:1::6a) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	Chen Wang <unicorn_wang@outlook.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Niklas Cassel <cassel@kernel.org>,
+	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pci: Add Sophgo SG2044 PCIe host
+Message-ID: <20250303-aground-snitch-40d6dfe95238@spud>
+References: <20250221013758.370936-1-inochiama@gmail.com>
+ <20250221013758.370936-2-inochiama@gmail.com>
+ <20250221-cavalier-cramp-6235d4348013@spud>
+ <2egxw3r63cbsygpwqaltp4jjlkuwoh4rkwpgv4haj4sgz5sked@vkotadyk4g6y>
+ <20250224-enable-progress-e3a47fdb625c@spud>
+ <7ht3djv7zgrbkcvmdg6tp62nmxytlxzhaprsuvyeshyojhochn@ignvymxb3vfa>
+ <20250225-lapel-unhappy-9e7978e270e4@spud>
+ <ynefy5x672dlhctjzyhkitxoihuucxxki3xqvpimwpcedpfl2u@lmklah5egof4>
+ <pbj22qvat76t74nppabekvyncc4ptt6wede4q6wfygbrzcj3ag@ruvt26eqiybu>
+ <je4falvfemkemlvdfzdmgc7jx2gz6grpbmo6hwtpedjm7xi2gk@jr4frv3tn3l5>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBAPR04MB7208:EE_
-X-MS-Office365-Filtering-Correlation-Id: b05955af-0949-4b4c-2a21-08dd5a752173
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|376014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QJLwg3RZmxbzM3EzNpw7VrFIchIIWhCJxB7ZivKX+yhEypSVmwQs6PxuEavl?=
- =?us-ascii?Q?CC85TTsUMoKRtuA+xpFEijkszw4unbIDzH24qRdjsUIWIRpZ41Hw10XFxuIk?=
- =?us-ascii?Q?dBmoZ+W+ReB+s0VQ3pIaloE8gN+yX/D1dLAqSkLS0fuXN0UYXnK9z8xDB4Y1?=
- =?us-ascii?Q?lbql5xu42QI4yt7lhrI03RuSs3hV1Ovu2F2R1DGVefpb+bd55vwmHGP5cPJ4?=
- =?us-ascii?Q?uDK6XWmTkimRS8FlZWo0ZmQT8Sw3fBbi6ARXv+lbCNOwmOuPZEY3Tt8NmVNJ?=
- =?us-ascii?Q?7RoywjjMsOMVsy3L08RGSJj7uyl+C2zAy+2gXcSSOZfd57TJbNer2a1ztNKo?=
- =?us-ascii?Q?B5xCt7TjeRg/MxUxWu3KJT8RJWIbNx9Y60FLeY9wFXtH3NAc92YB+b3wE7MR?=
- =?us-ascii?Q?TrbVwsItBz+9WxoKT4qLu3SR41dhNCv9KpoGy2426JmDXeRZmP86z/j3GXPn?=
- =?us-ascii?Q?SJqpy01JqjDltWRoZjzWJU5w2eeDRjQmfXbbWbucXpPDJDBrgSoqEfAOS3x0?=
- =?us-ascii?Q?cAIH7gSjvMUGOUKLNXPK4mUjpeieHooeCvlkdahNZgpjyRxgmmzLqyrV745w?=
- =?us-ascii?Q?D/UJ4x9q0UJ/JhFLM7AH5nAqyC+A3QuQYRWxy9yKLl5ypjeR2I3m7kuTxSs0?=
- =?us-ascii?Q?vJb29dmshazMjDBoNGlRDEWBEllRm9Jy5icTMETQZ08pcn3Zb0MwWsz1wUdd?=
- =?us-ascii?Q?Y6QfZNvOJzCdqhH8xtDjNIcmOsHxlHoscE7PyVY7m4wzfYCizt8z9NX2Lzb1?=
- =?us-ascii?Q?JUXdOttX+zdGPjjtrJulY0OTEykyD1+RDb10OHW16cNq1aQxNlBOPrKlLNGZ?=
- =?us-ascii?Q?bMmRj0xn1iA+1BbLhT5aSIV2gQ2lfhdK42pd/ZL3dFHKwBQVdxb0SnpkErOB?=
- =?us-ascii?Q?0jVJrgvAOfY+F04IZlw5DylhXxFMDfKgq72cXwCzKYVp+m0XiLaG6FbWL+EZ?=
- =?us-ascii?Q?iMLz8F7KYEDDwyD5VwO0VYkEe4z7Mt9nyshS7oYtapOUvkDtE/fYya8Gr6mI?=
- =?us-ascii?Q?/hyhgQS092d25pWle6/+5A+BG3Jb1R4YwQ+Qk9gXirqknew5f3PwFwj03ncN?=
- =?us-ascii?Q?JchGhsfTSFgxBLpPLamQWhcmr/U60692RUtNioda48+n3wYeTvMPmXrl7KX4?=
- =?us-ascii?Q?23yzHHpkvlSujhMekv5PpPLLudX3QRip79ClYiYt6AKXg7U1bCoO6txpQ9ki?=
- =?us-ascii?Q?o6EWNsnUSTdfIFKRa5Ikq0ham3nDZPopRmAEYz0Zu6gWfENHH1rsMGa+kidS?=
- =?us-ascii?Q?7pPgBRB50lwOG3o01QIS99mA6msF9YyPw8y6pUxY2z9Y8eRo2VpSDdzY5DV9?=
- =?us-ascii?Q?Ql/jmyU7AtfBhKz/r7Ci6FLZeeLgpVdscgIfFNpBEFxU3qjoDNk2/08iyGEQ?=
- =?us-ascii?Q?PDODw2Demrlgph0P9y+IhJFNPou0y8EX27lxqgd8GNR+zbvQNW2lycCDAIrh?=
- =?us-ascii?Q?iOuqU0oKTn08YRfpBiuQ2eNY1+SVMsXA?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?2ZOoVcyCKrTC34UmNSo4KIh7wbOLsxrxA56cVVlm2mk1yau+XhY2gtIr+OqQ?=
- =?us-ascii?Q?KZu65M290ANhVYhjbEbF8nQ6aIg/X7dfsP5L7ol8MFbTdwBxiRJnYX313Js6?=
- =?us-ascii?Q?2svIY995RYDq65AYvIpol4m+TJFaE2I2ccWZ38fTIgOOrkbXAHBNByMUHBHB?=
- =?us-ascii?Q?Gv0muadALLPrMoK2iShn8FRPVoe8E13XUfD4avkQ2XqbucZQZ2vqS8YyqB9G?=
- =?us-ascii?Q?FoMbryepvm3WbITXV861N0hNDbxkKjeO/X6zdbi5Cv0JEIZMEUqGbcpxbNoF?=
- =?us-ascii?Q?vbZCplX12Z10B361DAB0yyfnKCf49G1WE96oDHewQaub/PtB7C3B6FICD4gY?=
- =?us-ascii?Q?GfEgKYRBjxJkUKdTlRWj+IbYOwM25iZkTmpJMv4SsmSC6uvq9pPTgXR1gLoi?=
- =?us-ascii?Q?ZmB/1iX7qL/YlpPuKIM1kM16r7awbg8tTsIvuvF2ryOZoEs/c7C6tJI3Csy0?=
- =?us-ascii?Q?znt3CtBkeAXaTohhcVv9MkaT5uLnmRS4ST83QOV11XYhWpgnvsB23PNABZkk?=
- =?us-ascii?Q?uQlVnhdiybKeEJGLnX8dfyceDHKkCuB85eKydL2b1XlmMb+Ua87wZ1e+kFCI?=
- =?us-ascii?Q?szALxmK9SzEN/TKAGmIpmrs9pXxxoV2ZzadnJhc+HcoyfM8UhyZha1L26b/a?=
- =?us-ascii?Q?HsX3g4pe7Ivia+JjCETetV7ytwSQUQOXQZJKx9R2lH7TBFPE6sTM6hf7cudz?=
- =?us-ascii?Q?G0djXKLyKa4JvKStuCRRt+c1MXSz0F+3mFs6jjbrhNBQ/NKu5aepZvWGblgX?=
- =?us-ascii?Q?OZACZIADRQLhbK8lIJ1HZLv5rLYY8Eibfy268dsExdio4r3mZwOIJv3zJIRr?=
- =?us-ascii?Q?4uEQoKjLiPyjFRCUuUm1rCeb6KNj56bjP06pvHgbhPeYBmYhQoYt8oYmnZDB?=
- =?us-ascii?Q?+Y0sL0IzuZXolLIeit4UfxDJzlA/da4O1drjprv/T8OkTQxISXUvViyWozd8?=
- =?us-ascii?Q?gPWHS/9gHWq1bUSzocKeMMGqeMSD3lZwyyDhS2Y6au68EqlfXaUoJys+s075?=
- =?us-ascii?Q?n1nNXwakRg9P4CxtOvrdMFSYJds8em7wb0Y7JlOrGjEZlStXE9LcYgbQAEV0?=
- =?us-ascii?Q?7LLlIGLvDm1Wb9Q0CsNwrepoxCTnTFYXtiU9YRKNyLR/tr6QpsuzQapW+9X9?=
- =?us-ascii?Q?K/DejBc1HQE1YHnvFhg4JLlHnstgdrsA0ASL0RAso3ed6Sno7f6VK8M3hh81?=
- =?us-ascii?Q?mMbNRtOqS+4jfAjLEm0UmBuKWHjByI85U2KS9YXQuEOB60lbMUNeT1iuDr4R?=
- =?us-ascii?Q?WVA07D4PcKThFWeuTW0kbo72OoSoGuJDqb1Z3PBQN7KPzbiJJrdcJ6FEGHTy?=
- =?us-ascii?Q?uEiYvsC6pyX2HV0tXB2Z7rfhV5DMLJOLgrcQWItZmgnQLgI2Zt0hsON4QW3d?=
- =?us-ascii?Q?P6PoMh+L7Y76PUv0OKzO2HeTzZemRwq4AzF35dnsQehSUN8Mm5NwoV7/52t6?=
- =?us-ascii?Q?507PqVfErl1X4DdBYdVsAH62EELdOZ2+Bz+I5Rl72DVPqiQFVNgLmjNyNFja?=
- =?us-ascii?Q?GBP0NlT3b/F9PGpZ+PbYvW3c6TWI/pjgvoPkfr7zmeje70PN5sDwRe03kiDk?=
- =?us-ascii?Q?+DwtMWCHRxGOqrQAr1dsUuB1jDTbOBPr4lcwq2AM?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b05955af-0949-4b4c-2a21-08dd5a752173
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2025 17:02:07.6549
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ccr2rX1yV7qX0kkXRXtwG0wgUyC2JkVXb5I7bkHQxhs05K+Mob2nWCh8+Dkn6f1Cmh85nENTjYMZiHWjg46SXA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7208
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="iy8VECc0OPgXD57M"
+Content-Disposition: inline
+In-Reply-To: <je4falvfemkemlvdfzdmgc7jx2gz6grpbmo6hwtpedjm7xi2gk@jr4frv3tn3l5>
 
-On Sat, Mar 01, 2025 at 11:10:35AM +0000, Marc Zyngier wrote:
-> On Tue, 11 Feb 2025 19:21:55 +0000,
-> Frank Li <Frank.Li@nxp.com> wrote:
-> >
-> > Add the flag IRQ_DOMAIN_FLAG_MSI_IMMUTABLE and the API function
-> > irq_domain_is_msi_immutable() to check if the MSI controller retains an
-> > immutable address/data pair during irq_set_affinity().
-> >
-> > Ensure compatibility with MSI users like PCIe Endpoint Doorbell, which
-> > require the address/data pair to remain unchanged after setup. Use this
-> > function to verify if the MSI controller is immutable.
->
-> Why is that a requirement? Why should a driver even care?
 
-At v9, there were detail discussion about this
-https://lore.kernel.org/all/87v7w0s9a8.ffs@tglx/
+--iy8VECc0OPgXD57M
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-let me summary:
+On Fri, Feb 28, 2025 at 05:20:28PM +0800, Inochi Amaoto wrote:
+> On Fri, Feb 28, 2025 at 04:46:22PM +0800, Inochi Amaoto wrote:
+> > On Fri, Feb 28, 2025 at 02:34:00PM +0800, Inochi Amaoto wrote:
+> > > On Tue, Feb 25, 2025 at 11:35:23PM +0000, Conor Dooley wrote:
+> > > > On Tue, Feb 25, 2025 at 07:48:59AM +0800, Inochi Amaoto wrote:
+> > > > > On Mon, Feb 24, 2025 at 06:54:51PM +0000, Conor Dooley wrote:
+> > > > > > On Sat, Feb 22, 2025 at 08:34:10AM +0800, Inochi Amaoto wrote:
+> > > > > > > On Fri, Feb 21, 2025 at 05:01:41PM +0000, Conor Dooley wrote:
+> > > > > > > > On Fri, Feb 21, 2025 at 09:37:55AM +0800, Inochi Amaoto wro=
+te:
+> > > > > > > > > The pcie controller on the SG2044 is designware based with
+> > > > > > > > > custom app registers.
+> > > > > > > > >=20
+> > > > > > > > > Add binding document for SG2044 PCIe host controller.
+> > > > > > > > >=20
+> > > > > > > > > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> > > > > > > > > ---
+> > > > > > > > >  .../bindings/pci/sophgo,sg2044-pcie.yaml      | 125 ++++=
+++++++++++++++
+> > > > > > > > >  1 file changed, 125 insertions(+)
+> > > > > > > > >  create mode 100644 Documentation/devicetree/bindings/pci=
+/sophgo,sg2044-pcie.yaml
+> > > > > > > > >=20
+> > > > > > > > > diff --git a/Documentation/devicetree/bindings/pci/sophgo=
+,sg2044-pcie.yaml b/Documentation/devicetree/bindings/pci/sophgo,sg2044-pci=
+e.yaml
+> > > > > > > > > new file mode 100644
+> > > > > > > > > index 000000000000..040dabe905e0
+> > > > > > > > > --- /dev/null
+> > > > > > > > > +++ b/Documentation/devicetree/bindings/pci/sophgo,sg2044=
+-pcie.yaml
+> > > > > > > > > @@ -0,0 +1,125 @@
+> > > > > > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > > > > > > +%YAML 1.2
+> > > > > > > > > +---
+> > > > > > > > > +$id: http://devicetree.org/schemas/pci/sophgo,sg2044-pci=
+e.yaml#
+> > > > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > > > > +
+> > > > > > > > > +title: DesignWare based PCIe Root Complex controller on =
+Sophgo SoCs
+> > > > > > > > > +
+> > > > > > > > > +maintainers:
+> > > > > > > > > +  - Inochi Amaoto <inochiama@gmail.com>
+> > > > > > > > > +
+> > > > > > > > > +description: |+
+> > > > > > > > > +  SG2044 SoC PCIe Root Complex controller is based on th=
+e Synopsys DesignWare
+> > > > > > > > > +  PCIe IP and thus inherits all the common properties de=
+fined in
+> > > > > > > > > +  snps,dw-pcie.yaml.
+> > > > > > > > > +
+> > > > > > > > > +allOf:
+> > > > > > > > > +  - $ref: /schemas/pci/pci-host-bridge.yaml#
+> > > > > > > > > +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+> > > > > > > > > +
+> > > > > > > > > +properties:
+> > > > > > > > > +  compatible:
+> > > > > > > > > +    const: sophgo,sg2044-pcie
+> > > > > > > > > +
+> > > > > > > > > +  reg:
+> > > > > > > > > +    items:
+> > > > > > > > > +      - description: Data Bus Interface (DBI) registers
+> > > > > > > > > +      - description: iATU registers
+> > > > > > > > > +      - description: Config registers
+> > > > > > > > > +      - description: Sophgo designed configuration regis=
+ters
+> > > > > > > > > +
+> > > > > > > > > +  reg-names:
+> > > > > > > > > +    items:
+> > > > > > > > > +      - const: dbi
+> > > > > > > > > +      - const: atu
+> > > > > > > > > +      - const: config
+> > > > > > > > > +      - const: app
+> > > > > > > > > +
+> > > > > > > > > +  clocks:
+> > > > > > > > > +    items:
+> > > > > > > > > +      - description: core clk
+> > > > > > > > > +
+> > > > > > > > > +  clock-names:
+> > > > > > > > > +    items:
+> > > > > > > > > +      - const: core
+> > > > > > > > > +
+> > > > > > > > > +  dma-coherent: true
+> > > > > > > >=20
+> > > > > > > > Why's this here? RISC-V is dma-coherent by default, with dm=
+a-noncoherent
+> > > > > > > > used to indicate systems/devices that are not.
+> > > > > > >=20
+> > > > > > > The PCIe is dma coherent, but the SoC itself is marked as
+> > > > > > > dma-noncoherent.
+> > > > > >=20
+> > > > > > By "the SoC itself", do you mean that the bus that this device =
+is on is
+> > > > > > marked as dma-noncoherent?=20
+> > > > >=20
+> > > > > Yeah, I was told only PCIe device on SG2044 is dma coherent.
+> > > > > The others are not.
+> > > > >=20
+> > > > > > IMO, that should not be done if there are devices on it that ar=
+e coherent.
+> > > > > >=20
+> > > > >=20
+> > > > > It is OK for me. But I wonder how to handle the non coherent devi=
+ce
+> > > > > in DT? Just Mark the bus coherent and mark all devices except the
+> > > > > PCIe device non coherent?
+> > > >=20
+> > > > Don't mark the bus anything (default is coherent) and mark the devi=
+ces.
+> > >=20
+> > > I think this is OK for me.
+> > >=20
+> >=20
+> > In technical, I wonder a better way to "handle dma-noncoherent".
+> > In the binding check, all devices with this property complains=20
+> >=20
+> > "Unevaluated properties are not allowed ('dma-noncoherent' was unexpect=
+ed)"
+> >=20
+>=20
+> > It is a pain as at least 10 devices' binding need to be modified.
+> > So I wonder whether there is a way to simplify this.
+> >=20
+>=20
+> Ignore this, I misunderstood the dma device. it seems like=20
+> only dmac and eth needs it.
 
-Host driver workflow like:
+Nah, not gonna ignore it ;) You do make a valid point about it being
+painful, but given you mention a different master for the pci device,
+having two different soc@<foo> nodes sounds like it might make sense.
+One marked dma-noncoherent w/ the existing devices and one that is
+unmarked (since that's default) to represent the master than pci is on?
 
-1. read address/data from shared memory (PC bar<n>)
-2. write data to address to trigger doorbell.
+--iy8VECc0OPgXD57M
+Content-Type: application/pgp-signature; name="signature.asc"
 
-1 and 2 is not atomic. So EP side may call set_affinity function during 1
-and 2, address/data may be changed in some MSI provider, so 2 write to
-previous address/data pair, which may not existed or map to other place and
-cause write to unexpected place.
+-----BEGIN PGP SIGNATURE-----
 
-Frank
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ8XhHAAKCRB4tDGHoIJi
+0iEOAQDHZ4vcXR1XFxlZa5wZOaYlkyWg7C1a+pAsr9m1gQmy7wD/RXNdGcCfafWf
+/S3g0f02l1q/FIz0KqPemwNYalIihwg=
+=Dt3i
+-----END PGP SIGNATURE-----
 
->
-> 	M.
->
-> --
-> Without deviation from the norm, progress is not possible.
+--iy8VECc0OPgXD57M--
 
