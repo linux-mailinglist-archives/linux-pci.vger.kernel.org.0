@@ -1,153 +1,98 @@
-Return-Path: <linux-pci+bounces-22788-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22789-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B8EBA4CCED
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 21:50:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB0F1A4CD1B
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 21:57:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 97C4A1895378
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 20:50:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC2EB3AC6D5
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 20:57:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE1D61F099D;
-	Mon,  3 Mar 2025 20:50:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DA4823717E;
+	Mon,  3 Mar 2025 20:57:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UUKLuSTz"
+	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="ekIOcJeh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE6711CA9;
-	Mon,  3 Mar 2025 20:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB16215041;
+	Mon,  3 Mar 2025 20:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741035047; cv=none; b=uClUfcaltGVy77w9kzaIDTVrEyqufbhf+A6L33mt6531IeT+/W44Dy1dWmJn7LwOSefvdxpIdB5wCsEhssJsESkUNoGrA4yTVD5dDDIKJYs6yDnqmpxs7R0X6JYqBPTLZ98YAW3SN200hfzi2vBACFa3OKzYQPI/wzuwoBs4ips=
+	t=1741035428; cv=none; b=Po1UvbL/IzzrM/qdhgQHAA3uUCSoKgtk7PNg6d6vBaDyBJnq89wvHLRATgMBUAJaSnNmxLdCCja5yMw3mxvp42F/zA4oqkaF8aVfuMFcTPgX8M+JponcNKVk7FxJUPwDnDApgEiJAPf57bnKxZEdiatv1ADsdJa8wsCo9SJaInI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741035047; c=relaxed/simple;
-	bh=RKvL1Q2g46VN5bp/cUMDFTi+QQZE6l5UR/9YqkN1B50=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hCgrQzbphZiHBmrUfXqvRyKduJjrZ5oWZ8APeqhrOV+jC6e1FJFF3xFyW7c+JF7gzlvKKVD8oegIES6RuSMaCeuB8oATZRrr1McHPbrhpsK5bauo7PdRsufI1m237iiv+lS0wmqW0RpPhiw6Ks6b7fNimJtykZnVHjcReFbiCO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UUKLuSTz; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2fea795bafeso7532274a91.1;
-        Mon, 03 Mar 2025 12:50:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741035045; x=1741639845; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=DeBNmmMi2sz0NauGtZCPku7As8wMc8IwVYWILITKobE=;
-        b=UUKLuSTzB+yQXVDASBAezzb7Nbxsslxhp2XhuWiT6wIsTVrQ001m3bdVvt0mydJ7m8
-         RbMKSINGdWTSE1WhD7Lb6nTQEIs+J62oDTt7skaG14gJaQwF1ucSyZyaJ/dvympJNjI8
-         v6vQK9zMmbI2m6w9l3CC4V6p+s6jImVlmqRD2e7UCl1imPe5NfvZlvE8BDTovvfmh7Nw
-         Rn/6Rhi42nrLhy+w1UAs14ykxxTX9ACXMwJj8O+N5jZ2XwB5VLoH1AP+CAgussx0wpvZ
-         LC+FT9Jo6zpGgT+dQ0nV2n5e5jXuxgqk3PLZDsas8A9Ld0R3Due4lB7nqwwj6sRsTpEh
-         sWFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741035045; x=1741639845;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DeBNmmMi2sz0NauGtZCPku7As8wMc8IwVYWILITKobE=;
-        b=tRdPB1ScwY4dypDWWu+HWGZqbsrV6LneXA+67Id2Hk9h9+Eq/A3KO7DZyqp64ImZVh
-         GnW0uzOEHDI5Fc5AsyI/DsMxNtQjwUFoLqYADLmSovMF0W3RAhUF0GiaoqxHMkS/FIg7
-         mwfthfO7TdtjMi4VRUMnm9hlpwl+s4DcCSaRJIOjJzthn/jmPTHIJg7Ke1eIzdj+pJYe
-         AFaWHiy5IXSih5oOXYeok9Sbvqe1p4bScOnrD3HII5LvPJUPKQEyR4nHkTqntUlkU7HS
-         9p9JMil++9Ds2L/PFygyZ7eB2blzNY2pPN8Wk/nYWsBHLP6JO8ckxwKNPxL0cFqEqWoJ
-         jPsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0qIFpA7id/mUB52wAesH04IYqI4AmBDtyjIqbZcqdZYCBjfigl9F5U10+oUrjvFu5JpPeXaIP9IkW@vger.kernel.org, AJvYcCVy8WLRN69i5sksGHpk/ER/SZykfrAuCBHNHtg8H0cqTArjt1fAubmMG8bGVMD5pKPPt30NLoqNzAbsdYveoa2XPg==@vger.kernel.org, AJvYcCW1uBRW76YX0erlyb6dEdg4cJ7hrp0aMhuX7l4ZqkRYLZWalFITHu2vV20Scnp79UDLzCmBJcszZxf9BlI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXHrfd9ypfQKcrdFiXzRK6YnXvHIc/2Twtlfy/nYfSJ9M2Wook
-	1/bbQWCTCHiYzjwNLtprZF/QZucs12C3nJ//pWN/yb+AjSw93eoe
-X-Gm-Gg: ASbGncs4pJGLhBbVWgJz+UUuW+b56HApoFEvVLO04wesSwIXD+Pn99OW33bobmDwhuB
-	D3wFNedaBgokHbnEg/1PnyuQRxGDF7i+cPo5ghXMOUAi33sc/4b+TY0RBdCt023DhvB/dppuawI
-	7aLFWgto3EZrcJUzuYimNRZrE9lRvSPQIqoNPLIP4Q8fiEUaWl54W3dFreQhCQA92My4uwimSXQ
-	uTmmghDJ7XPOrsFKX6850TLHCFO5uHg0wU0kt72b3zYIcTAsLE6NYT22xSeQnu+7dgO7QAme3+m
-	wLYtSxjSrjm8ig6n6MBp5WmvmPKH7dwSTR3d6nEy
-X-Google-Smtp-Source: AGHT+IGh1THqn567WjqVqxs2mA94q92PxAVet1ueAXS1LUHZPvR/E7EsrK6tGQWCWBCacVWMkBiPLw==
-X-Received: by 2002:a17:90b:2e0f:b0:2fa:2252:f436 with SMTP id 98e67ed59e1d1-2ff33b88525mr982923a91.3.1741035045487;
-        Mon, 03 Mar 2025 12:50:45 -0800 (PST)
-Received: from debian ([2607:fb90:37e1:4bed:f057:b35a:e3e2:4c5f])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223504c603bsm82393025ad.121.2025.03.03.12.50.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 12:50:44 -0800 (PST)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Mon, 3 Mar 2025 12:50:40 -0800
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Fan Ni <nifan.cxl@gmail.com>, Shradha Todi <shradha.t@samsung.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	jingoohan1@gmail.com, Jonathan.Cameron@huawei.com,
-	a.manzanares@samsung.com, pankaj.dubey@samsung.com,
-	cassel@kernel.org, 18255117159@163.com, xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com, will@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v7 3/5] Add debugfs based silicon debug support in DWC
-Message-ID: <Z8YWILtSbQnvVqbF@debian>
-References: <20250221131548.59616-1-shradha.t@samsung.com>
- <CGME20250221132035epcas5p47221a5198df9bf86020abcefdfded789@epcas5p4.samsung.com>
- <20250221131548.59616-4-shradha.t@samsung.com>
- <Z8XrYxP_pZr6tFU8@debian>
- <20250303194647.GC1552306@rocinante>
+	s=arc-20240116; t=1741035428; c=relaxed/simple;
+	bh=LkpixxwH6q6MHKb7xRRxpFfYub1ipaUt6GP6QhkgSrM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J0pKVQ5sVs/i2kJP+OnS9lCKgBA247BBGzKSYomDrQf2Qkb6KuwkPWYDYICkoKZnkfwCWlrsOwVRPLgfTrQM74DFZdZuy6gAOdMRCvt00lUrLLGsPXYwVDwV5QMhsd2Td3LgBFYruOvWsqx3KpaMlZhCAL72KUYCmx8+JY9YACc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=ekIOcJeh; arc=none smtp.client-ip=166.84.1.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
+Received: from [192.168.126.122] (ip72-219-82-239.oc.oc.cox.net [72.219.82.239])
+	by mailbackend.panix.com (Postfix) with ESMTPSA id 4Z6B2R25V4z4MR5;
+	Mon,  3 Mar 2025 15:57:03 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
+	t=1741035424; bh=LkpixxwH6q6MHKb7xRRxpFfYub1ipaUt6GP6QhkgSrM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=ekIOcJeh9Ssoc58bfP6BAuJI++uyeUDXpV4vuBSDEoCk2flD2+mfNgFrNFOWVQbf/
+	 +R4upKBgfknLtEOmDcdt2dTHAh8ZfYdD/bYRgToNuHIFvJqXQO7p+tQlkh0jLSn+fT
+	 xo8uS+sRefvvy/FB8GSMtH1DO3pGNfG4/GsF2wac=
+Message-ID: <244806e5-f8f9-4fad-a4aa-bf031c84748e@panix.com>
+Date: Mon, 3 Mar 2025 12:57:01 -0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250303194647.GC1552306@rocinante>
+User-Agent: Mozilla Thunderbird
+Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
+ Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
+To: Lukas Wunner <lukas@wunner.de>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>, Me <kenny@panix.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com,
+ Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Nikl??vs Ko??es??ikovs <pinkflames.linux@gmail.com>,
+ Andreas Noever <andreas.noever@gmail.com>,
+ Michael Jamet <michael.jamet@intel.com>,
+ Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
+References: <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
+ <20250211055722.GW3713119@black.fi.intel.com>
+ <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
+ <20250213135911.GG3713119@black.fi.intel.com>
+ <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
+ <20250214162948.GJ3713119@black.fi.intel.com>
+ <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
+ <20250226084404.GM3713119@black.fi.intel.com> <Z77ak-4YsdAKXbHr@wunner.de>
+ <20250226091958.GN3713119@black.fi.intel.com> <Z8YKXC1IXYXctQrZ@wunner.de>
+Content-Language: en-US
+From: Kenneth Crudup <kenny@panix.com>
+In-Reply-To: <Z8YKXC1IXYXctQrZ@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 04, 2025 at 04:46:47AM +0900, Krzysztof Wilczyński wrote:
-> Hello,
-> 
-> [...]
-> > > +int dwc_pcie_debugfs_init(struct dw_pcie *pci)
-> > > +{
-> > > +	char dirname[DWC_DEBUGFS_BUF_MAX];
-> > > +	struct device *dev = pci->dev;
-> > > +	struct debugfs_info *debugfs;
-> > > +	struct dentry *dir;
-> > > +	int ret;
-> > > +
-> > > +	/* Create main directory for each platform driver */
-> > > +	snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
-> > > +	dir = debugfs_create_dir(dirname, NULL);
-> > > +	debugfs = devm_kzalloc(dev, sizeof(*debugfs), GFP_KERNEL);
-> > > +	if (!debugfs)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	debugfs->debug_dir = dir;
-> > > +	pci->debugfs = debugfs;
-> > > +	ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
-> > > +	if (ret)
-> > > +		dev_dbg(dev, "RASDES debugfs init failed\n");
-> > 
-> > What will happen if ret != 0? still return 0? 
-> 
-> Given that callers of dwc_pcie_debugfs_init() check for errors,
-> this probably should correctly bubble up any failure coming from
-> dwc_pcie_rasdes_debugfs_init().
-> 
-> I made updates to the code directly on the current branch, have a look:
-> 
->   https://web.git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/dwc&id=1ff54f4cbaed9ec6994844967c36cf7ada4cbe5e
-> 
-> Let me know if this is OK with you.
 
-It looks good to me.
 
-Feel free to add,
-Reviewed-by: Fan Ni <fan.ni@samsung.com>
+On 3/3/25 12:00, Lukas Wunner wrote:
 
-Fan
-> 
-> Good catch, thank you!
-> 
-> 	Krzysztof
+> Does the below fix the issue?
+
+So far, so good! But, part of why it was so hard for me to bisect to the 
+Subject: commit was 'cause it didn't always OOPS; but I'll continue to 
+test on the most-likely failure mode (CalDigit TS4 to TB NVMe adaptor 
+connected at suspend, then nothing (or USB-C dock) on resume).
+
+But if this does indeed fix it, this will make TWO crash bugs on resume 
+squashed in less than 12 hours- gotta love Open Source Software!
+
+-Kenny
+
+-- 
+Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
+County CA
+
 
