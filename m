@@ -1,59 +1,57 @@
-Return-Path: <linux-pci+bounces-22765-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22766-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D42BA4C501
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 16:28:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D023DA4C5C9
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 16:54:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 76218161332
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 15:26:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F24943A9414
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Mar 2025 15:53:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 660D822ACEE;
-	Mon,  3 Mar 2025 15:23:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FE612144A7;
+	Mon,  3 Mar 2025 15:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="itNRtysU"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E1E22ACDF;
-	Mon,  3 Mar 2025 15:23:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9001F4166
+	for <linux-pci@vger.kernel.org>; Mon,  3 Mar 2025 15:53:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741015408; cv=none; b=ZWTKm25nRUtuufW8W/awbcgdsQouQ9U3IaWQcZDIN/gRqogJ3u6Qr/1bT5ahLt9GpNVhYCeFd6s6jDRcWyd7dJqrYHkZLrEzg3Zq8PAq+MpE3mIljyUdEvuPJT60ikqvgDFgzxYtvxDeWK9gTfSiPULQOGJ3Rsc+/njhmzRZmQQ=
+	t=1741017235; cv=none; b=my8AmUZdJ4S+m/Xl0neVuHHCLAIR1w6kOx1g0WrAdFM3vJ4gnzubF13j4XwzuNGgDmSO+ahILQHNK3alMRNbmLSo7s3G4Gi5HwCf2Ypco+3RL9QekWLtX5+RTh3GHRWmFK6XWVpiyN38Xdw5N7VFXmce6hvt+muqND+D4ldF/40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741015408; c=relaxed/simple;
-	bh=x5ZHe8cKEP3sixIJgobVE8Ykce9dwCRJsbW2wPTTBm8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pZ0kV7OfnKQ7sYlo0/z0kl54QFrlFgpBep8gTftaMWZAKxvdXaIne8D/+oh/L7VSy77fK6FQj/lNSgT37oWUl+A8IgiwA67kztfp05xUC7Ui1aJtLHekU3x4I3Sf9nbEEtv7OBylMAPZTxYbVUVEX8XRLAnOMt3UA4J7S3tIw+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A7B6C4CEEB;
-	Mon,  3 Mar 2025 15:23:24 +0000 (UTC)
-Date: Mon, 3 Mar 2025 20:53:19 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Kevin Xie <kevin.xie@starfivetech.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Minda Chen <minda.chen@starfivetech.com>,
-	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
- IRQ handling
-Message-ID: <20250303152319.ejtt4vhlxkkzfx7h@thinkpad>
-References: <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
- <20250214060935.cgnc436upawnfzn6@thinkpad>
- <CANAwSgTWa9gwpPhVCYzJM5BL5wUkpB4eyDtX+Vs3SX3a9541wA@mail.gmail.com>
- <CANAwSgRvT-Mqj3XPrME6oKhYmnCUZLnwHfFHmSL=PK+xVLHAqw@mail.gmail.com>
- <20250224080129.zm7fvxermgeyycav@thinkpad>
- <CANAwSgTsp19ri5SYYtD+VOYgBLYg5UqvGRrtNTXOWw7umxGCQg@mail.gmail.com>
- <20250224115452.micfqctwjkt6gwrs@thinkpad>
- <CANAwSgSdEr0X0F1AFAUfJoEjT1a63nj5Ar-ZfmehfhnE0=v+CA@mail.gmail.com>
- <20250224144155.omzrmls7hpjqw6yl@thinkpad>
- <CANAwSgQFET-vWoOSSMFWs3LZeQMaP+VgU6o2_1Rro6NmGXQbVQ@mail.gmail.com>
+	s=arc-20240116; t=1741017235; c=relaxed/simple;
+	bh=Dzz2PSdxS1JmBxak+dRA6PFhClOX/mFNKjSZtHnI/+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=r1hQnA8ZMi/+mV99mFRr5OQxosQtKQ3Y8jvEk6XCf2Bw1M4KQMgJqa9AnE/YQ9IdFAcjeeqpff5sL4DmUIUU+VW0Ty3j/F9keuZkS99zti9zUh35pY8Lj6+Mt8Ipt5DVRcFIBqfPkRKqK0e9pmkTz3XgFQrIi/rk4zVsM1QDS58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=itNRtysU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EE49C4CED6;
+	Mon,  3 Mar 2025 15:53:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741017234;
+	bh=Dzz2PSdxS1JmBxak+dRA6PFhClOX/mFNKjSZtHnI/+8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=itNRtysU2inf18E4+c1/rwe1YAcd2i9B2YnGnTFlCIGhLiyNZd3shu43rwX5D8psk
+	 rfcmK8S7BL/TxFHajlyz7KY22CyqzJtlOA1vw689Q5NoirM40C5XFQy1Rh60+Q5O1t
+	 pQNcpEqz0dmuYBIWIF50zHzrvrOVNH+iGHAXlc1IuDmT2uNw3rp3BZ0hpDoat1i7qL
+	 rJeD/Uiw2s13Oofsb0Iv73C8Md1XA21ABbxwRj8vDqhmnQFRJvxOlaJMzsd8M/UYx4
+	 anQJYU3ihjM0oGYA24QyClDFiVigyoIx0h4vWdvwdMWW8mNpnLMHUu0ah87ufEd060
+	 nzQEBufJ+ftYg==
+Date: Mon, 3 Mar 2025 09:53:53 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Wannes Bouwen (Nokia)" <wannes.bouwen@nokia.com>
+Cc: Rob Herring <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	Vidya Sagar <vidyas@nvidia.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: Subject: [PATCH 1/1] PCI: of: avoid warning for 4 GiB
+ non-prefetchable
+Message-ID: <20250303155353.GA167309@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,145 +61,104 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANAwSgQFET-vWoOSSMFWs3LZeQMaP+VgU6o2_1Rro6NmGXQbVQ@mail.gmail.com>
+In-Reply-To: <PA4PR07MB8838D3064B113BA7925ED5BAFDC92@PA4PR07MB8838.eurprd07.prod.outlook.com>
 
-On Mon, Feb 24, 2025 at 09:37:14PM +0530, Anand Moon wrote:
-> Hi Manivannan,
-> 
-> On Mon, 24 Feb 2025 at 20:12, Manivannan Sadhasivam <mani@kernel.org> wrote:
-> >
-> > On Mon, Feb 24, 2025 at 07:33:37PM +0530, Anand Moon wrote:
-> > > Hi Manivannan
-> > >
-> > > On Mon, 24 Feb 2025 at 17:24, Manivannan Sadhasivam
-> > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > >
-> > > > On Mon, Feb 24, 2025 at 03:38:29PM +0530, Anand Moon wrote:
-> > > > > Hi Manivannan
+On Mon, Mar 03, 2025 at 10:35:41AM +0000, Wannes Bouwen (Nokia) wrote:
+> > On Fri, Feb 28, 2025 at 05:01:51PM -0600, Rob Herring wrote:
+> > > On Fri, Feb 28, 2025 at 12:27 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Thu, Nov 14, 2024 at 02:05:08PM +0000, Wannes Bouwen (Nokia)
+> > wrote:
+> > > > > Subject: [PATCH 1/1] PCI: of: avoid warning for 4 GiB
+> > > > > non-prefetchable windows.
 > > > > >
-> > > > > On Mon, 24 Feb 2025 at 13:31, Manivannan Sadhasivam
-> > > > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > > > >
-> > > > > > On Thu, Feb 20, 2025 at 03:53:31PM +0530, Anand Moon wrote:
-> > > > > >
-> > > > > > [...]
-> > > > > >
-> > > > > > > Following the change fix this warning in a kernel memory leak.
-> > > > > > > Would you happen to have any comments on these changes?
-> > > > > > >
-> > > > > > > diff --git a/drivers/pci/controller/plda/pcie-plda-host.c
-> > > > > > > b/drivers/pci/controller/plda/pcie-plda-host.c
-> > > > > > > index 4153214ca410..5a72a5a33074 100644
-> > > > > > > --- a/drivers/pci/controller/plda/pcie-plda-host.c
-> > > > > > > +++ b/drivers/pci/controller/plda/pcie-plda-host.c
-> > > > > > > @@ -280,11 +280,6 @@ static u32 plda_get_events(struct plda_pcie_rp *port)
-> > > > > > >         return events;
-> > > > > > >  }
-> > > > > > >
-> > > > > > > -static irqreturn_t plda_event_handler(int irq, void *dev_id)
-> > > > > > > -{
-> > > > > > > -       return IRQ_HANDLED;
-> > > > > > > -}
-> > > > > > > -
-> > > > > > >  static void plda_handle_event(struct irq_desc *desc)
-> > > > > > >  {
-> > > > > > >         struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
-> > > > > > > @@ -454,13 +449,10 @@ int plda_init_interrupts(struct platform_device *pdev,
-> > > > > > >
-> > > > > > >                 if (event->request_event_irq)
-> > > > > > >                         ret = event->request_event_irq(port, event_irq, i);
-> > > > > > > -               else
-> > > > > > > -                       ret = devm_request_irq(dev, event_irq,
-> > > > > > > -                                              plda_event_handler,
-> > > > > > > -                                              0, NULL, port);
-> > > > > >
-> > > > > > This change is not related to the memleak. But I'd like to have it in a separate
-> > > > > > patch since this code is absolutely not required, rather pointless.
-> > > > > >
-> > > > > Yes, remove these changes to fix the memory leak issue I observed.
+> > > > > According to the PCIe spec, non-prefetchable memory supports only
+> > > > > 32-bit BAR registers and are hence limited to 4 GiB. In the kernel
+> > > > > there is a check that prints a warning if a non-prefetchable
+> > > > > resource exceeds the 32-bit limit.
 > > > > >
+> > > > > This check however prints a warning when a 4 GiB window on the
+> > > > > host bridge is used. This is perfectly possible according to the
+> > > > > PCIe spec, so in my opinion the warning is a bit too strict. This
+> > > > > changeset subtracts 1 from the resource_size to avoid printing a
+> > > > > warning in the case of a 4 GiB non-prefetchable window.
+> > > > >
+> > > > > Signed-off-by: Wannes Bouwen <wannes.bouwen@nokia.com>
+> > > > > ---
+> > > > >  drivers/pci/of.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c index
+> > > > > dacea3fc5128..ccbb1f1c2212 100644
+> > > > > --- a/drivers/pci/of.c
+> > > > > +++ b/drivers/pci/of.c
+> > > > > @@ -622,7 +622,7 @@ static int pci_parse_request_of_pci_ranges(struct
+> > device *dev,
+> > > > >             res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+> > > > >
+> > > > >             if (!(res->flags & IORESOURCE_PREFETCH))
+> > > > > -               if (upper_32_bits(resource_size(res)))
+> > > > > +               if (upper_32_bits(resource_size(res) - 1))
+> > > > >                     dev_warn(dev, "Memory resource size exceeds
+> > > > > max for 32 bits\n");
 > > > >
-> > > > Sorry, I don't get you. This specific code change of removing 'devm_request_irq'
-> > > > is not supposed to fix memleak.
+> > > > I guess this relies on the fact that BARs must be a power of two in
+> > > > size, right?  So anything where the upper 32 bits of the size are
+> > > > non-zero is either 0x1_0000_0000 (4GiB window that we shouldn't warn
+> > > > about), or 0x2_0000_0000 or bigger (where we *do* want to warn about
+> > > > it).
 > > > >
-> > > > If you are seeing the memleak getting fixed because of it, then something is
-> > > > wrong with the irq implementation. You need to figure it out.
+> > > > But it looks like this is used for host bridge resources, which are
+> > > > windows, not BARs, so they don't have to be a power of two size.  A
+> > > > window of size 0x1_8000_0000 is perfectly legal and would fit the
+> > > > criteria for this warning, but this patch would turn off the warning.
 > > >
-> > > Declaring request_event_irq in the host controller facilitates the
-> > > creation of a dedicated IRQ event handler.
-> > > In its absence, a dummy devm_request_irq was employed, but this
-> > > resulted in unhandled IRQs and subsequent memory leaks.
-> >
-> > What do you mean by 'unhandled IRQs'? There is a dummy IRQ handler invoked to
-> > handle these IRQs. Even your starfive_event_handler() that you proposed was
-> > doing the same thing.
-> >
-> Yes, but my solution was to work around
+> > > 0x1_8000_0000 - 1 = 0x1_7fff_ffff
+> > >
+> > > So that would still work. Maybe you read it as the subtract being
+> > > after upper_32_bits()?
+> > 
+> > Right, sorry.  I guess a better example would be something like this:
+> > 
+> >   [mem 0x2000_0000-0x21ff_ffff] -> [pci 0x0_ff00_0000-0x1_00ff_ffff]
+> > 
+> > where the size is only 0x0200_0000, so we wouldn't warn about it,
+> > but half of the window is above 4G on PCI.
+> > 
+> > > > I don't really understand this warning in the first place,
+> > > > though.  It was added by fede8526cc48 ("PCI: of: Warn if
+> > > > non-prefetchable memory aperture size is > 32-bit").  But I
+> > > > think the real issue would be related to the highest address,
+> > > > not the size.  For example, an aperture of 0x0_c000_0000 -
+> > > > 0x1_4000_0000 is only 0x8000_0000 in size, but the upper half
+> > > > of it it would be invalid for non-prefetchable 32-bit BARs.
+> > >
+> > > Are we talking CPU addresses or PCI addresses? For CPU
+> > > addresses, it would be perfectly fine to be above 4G as long as
+> > > PCI addresses are below 4G, right?
+> > 
+> > Yes, CPU addresses can be above 4G; all that matters for this is
+> > the PCI address.
+> > 
+> > I think what's important is the largest PCI address in the window,
+> > not the size.
 > 
+> I agree. The check is I believe in place to make sure the host
+> bridge non-prefetchable window does not exceed the 4 GiB boundary.
+> This is not possible due to the register map of PCIe configuration
+> space type 1 (register 0x20). I guess the check would be more
+> correct if we just check the end address of the resource instead of
+> the size? Something like this?
+> 
+> @@ -622,7 +622,7 @@ static int pci_parse_request_of_pci_ranges(struct device *dev,
+>             res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+> 
+>             if (!(res->flags & IORESOURCE_PREFETCH))
+> -               if (upper_32_bits(resource_size(res)))
+> +               if (upper_32_bits(res->end))
 
-Which is what I'm trying to avoid....
+res->end is a CPU address.  All that matters here is the PCI address,
+which is different.
 
-> > > Eliminating the dummy code eliminated the memory leak logs.
-> >
-> From the code, we are creating a mapping of the IRQ event
-> 
->      for_each_set_bit(i, &port->events_bitmap, port->num_events) {
->                 event_irq = irq_create_mapping(port->event_domain, i);
->                 if (!event_irq) {
->                         dev_err(dev, "failed to map hwirq %d\n", i);
->                         return -ENXIO;
->                 }
-> 
->                 if (event->request_event_irq)
->                         ret = event->request_event_irq(port,
-> event_irq, i);   <---
->                 else
->                         ret = devm_request_irq(dev, event_irq,
->                                                plda_event_handler,
->                                                0, NULL, port);
-> 
->                 if (ret) {
->                         dev_err(dev, "failed to request IRQ %d\n", event_irq);
->                         return ret;
->                 }
->         }
-> 
-> in the microchip PCIe host we are requesting those IRQ events mapping.
-> 
-> static int mc_request_event_irq(struct plda_pcie_rp *plda, int event_irq,
->                                 int event)
-> {
->         return devm_request_irq(plda->dev, event_irq, mc_event_handler,
->                                 0, event_cause[event].sym, plda);
-> }
-> 
-> static const struct plda_event_ops mc_event_ops = {
->         .get_events = mc_get_events,
-> };
-> 
-> static const struct plda_event mc_event = {
->         .request_event_irq = mc_request_event_irq,
->         .intx_event        = EVENT_LOCAL_PM_MSI_INT_INTX,
->         .msi_event         = EVENT_LOCAL_PM_MSI_INT_MSI,
-> };
-> 
-> > Sorry, this is not a valid justification. But as I said before, the change
-> > itself (removing the dummy irq handler and related code) looks good to me as I
-> > see no need for that. But I cannot accept it as a fix for the memleak.
-> 
-> The StarFive PCIe host lacks the necessary hardware event mapping.
-> Consequently, the system attempts to handle dummy events, resulting
-> in observed log messages.
-> 
-> The issue is likely due to devm_request_irq being called with a NULL devname,
-> preventing proper IRQ mapping.
-> 
-
-Then please fix the offending devm_request_irq() call. Do not workaround the
-issue.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+You would need pcibios_resource_to_bus() on res, and look at the
+region.end it returns.
 
