@@ -1,325 +1,239 @@
-Return-Path: <linux-pci+bounces-22878-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22879-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49973A4EA6A
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 19:04:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 93576A4E9F8
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 18:52:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 289063A8FA3
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 17:16:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24DF68C7E1F
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 17:17:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52AEB27CB05;
-	Tue,  4 Mar 2025 16:54:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9969261586;
+	Tue,  4 Mar 2025 16:55:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lGYrpdMJ"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KaPZv1kQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A1227CB02
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 16:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9CF27C855
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 16:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741107269; cv=none; b=PnKAwtkokMSalkponqWJ8JvAlhUQqWS1ugkFJWzaSomL5WvUdeJpSLmhmQENPrKlbTFoI77AM8bPe2KfYCMyKg1qNhXye2/wr6HZnmhSSN8srVLotgn9ZNPcYjONA1rZX3KnjsK5hs5Wx+sKu5m05YLBKDFpqQ/4twxfPM9223I=
+	t=1741107321; cv=none; b=VJLNo4nlWwtmgqyibVaqVFIdSFzBjuKmwZZ+/yxY2VqWrj10ltoRYF8LZCbHkG139CpvFMj1OKzQvDXb2pPOG3NtG7nbcv5l+y4iWDcuo4LKo5UaQjvmuhnzr2YQBa4k4zvj8elFz5XRZL3mQEuuc1F3egvw5N07yp3AhGTFMps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741107269; c=relaxed/simple;
-	bh=mflvDm5CCoEO1kM4NrZwtQwgISFWNYzT/28M5WqwOHU=;
+	s=arc-20240116; t=1741107321; c=relaxed/simple;
+	bh=uYxmYTu0qZbfAw1QuhwOyTO2Sjh9prbSGe0MMbuBsNQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bx+NWu8Dvxdj/gcEl+EQQae2nUimprfeNR7ZVcfj23IHA/xSBt+q2ZJIKtxfcCDq+e2+navFtNV9cepU0VxcJp+DRmDL6nFejCQZOFJIpItrlZsPx/1xV7QCFNzo8Uoc2WMwxohhcvcDHZ1fnsowf5lBu6Aa+2Mi8Jb+jKNgNnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lGYrpdMJ; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-abf5f4e82caso562813966b.1
-        for <linux-pci@vger.kernel.org>; Tue, 04 Mar 2025 08:54:26 -0800 (PST)
+	 To:Cc:Content-Type; b=N3Trp2xbrAnF0j3MRelXgfzKgO/xHHvlwwaCbQshXGbJ761D42Q3W1WThefU1aXZQWWhFyFSt/rIzryxN3P9vlQz23T96d2HWv7mw5A7WdfRSKxH64hBugeGKkO2Cps8GgI0dM+e1JOqimdEM25R9kM8pUwqjpFzqvGLpFlRTas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=KaPZv1kQ; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3061513d353so59723221fa.2
+        for <linux-pci@vger.kernel.org>; Tue, 04 Mar 2025 08:55:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741107265; x=1741712065; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XIhVGSITLybLgTOxWrQha+46AWSDUUvcqlpePGEsi40=;
-        b=lGYrpdMJ5rtwSF03km1gbmW+bnNF+C0UdlGUg3+/mBsR9b3O/nruwYvoeM5LWn+JHp
-         ARYWAan4MlbSLKf3LRydhNV3tm+CBNHGPltpayqaba9L/HsedL9/RYOSLBXtn/jKdHMi
-         DWOMKv17+cRN2vjZmAZ9us6AIR/jFppgtRUs8BmEi2TjQ/yOIFlGSijEE+yNWarC0Fsf
-         Z3sJFezQA37OfE/DzQx+EhcQ3Lhs+73JZzOz/nuZAlPdMifYheadVDR5beb5TupMBG+b
-         elLokywkF7K3ILpazARn9XHB67BySCR4J+yHEK+h5zRRs9B4smv6KuaZh7iUZaVKnqiK
-         S2vA==
+        d=broadcom.com; s=google; t=1741107318; x=1741712118; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xlVWZfehwYUReSrUEOFZO4tTWLR59sF1BtCAq0+zjPs=;
+        b=KaPZv1kQEZ9+eBq1P2YptXDBcYhW7BOjMy4pAMhqT8pMAxfpVAS4rMHPT0WWEn8jSi
+         j848/oz0E9Wdvj/tOXVAWW930VMh2L35WiRa+X/7ifF3U6L/0yFTcjU1HMznsahnSMFR
+         YdstkdQA4ek472lB1pjSpbfpqHlPGSxtRfL5s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741107265; x=1741712065;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XIhVGSITLybLgTOxWrQha+46AWSDUUvcqlpePGEsi40=;
-        b=cZqCr7UT8u/2PEa98dc99Ymxbiab6usgTfn666tbENl4oSPAY1WIs3m/5TtqtSbud/
-         Qo92KVzOYv2xHpLw2qjoFJpAw3l5ItWwSRNk6pGTXI0L5sitySikDcbyx1/l6Zdray2H
-         jgPJOX6c8uOv/dYRFuboUOfuCUDZuLkZxxCVfHkbmWLUquavNXTujbyOs1oSk78jPjue
-         KBMQDlvbnyYBLAx/pEK4nsjADvMARlgK+qbJZ9pB6oZLxWypPu7qCMIDsIDMNyYs6x5d
-         aXq3skO0SiwQ4e6LKjgkaKaEES0cGAmAuG9xHW72nv9BrLuaXpeX+gFHpkT5/B4gjZ0Q
-         DMYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzKDEim6itsEkvHRLdmbGtGW4YIli22ePqhwDapUwvCSl/QfgnD0o++r/eErjwoNHK8tBWLppXQlg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+oACQQNvgvL3yRzV2ImYNwEDJnzm5qK5gmITvZUlwz/bW4zGa
-	no28Ub1kpye5xovp2noStCYah9/TlTUnXqq877CVahlzqmgfJynCIs4Wb3ffYBjYzKGkSj6btU/
-	ehCDecL1OVRH4svUYNbxyYGIJ+2cxVXUO0YPn
-X-Gm-Gg: ASbGnct5szLrZ9PpiBk60QUOcLFTgmU4KcmcefkBGt4jt3xZezzMJAe27nkUgmSfsIE
-	T9paDnJlZBYTfi8S9SnkbNrMAipupOxe7JEs7LbrbBDFkzuokz24Ni7CMQIsGeLMmTalEUaFrXf
-	jHuJfKPLmJ6Sahbe4LJxC5mmYN2Q==
-X-Google-Smtp-Source: AGHT+IH4BsByHGIDhJT+4KAbhFRZ8zvGq1nUqTK6tr3SYbqdyi9SrpFq7jDMnOcDs1ZKLVQeco/+yCMLBmboQN1c06Y=
-X-Received: by 2002:a17:906:6a28:b0:abf:749f:f719 with SMTP id
- a640c23a62f3a-abf749ffc45mr986308166b.7.1741107264954; Tue, 04 Mar 2025
- 08:54:24 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741107318; x=1741712118;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xlVWZfehwYUReSrUEOFZO4tTWLR59sF1BtCAq0+zjPs=;
+        b=l9BZLw/D68X/Z5ANTfrVm/3lxxYviKzbE8TIju6zOmToIZnAhPglz3SNNFyKYOkTPH
+         MdN1NI0sC7nIvark0xCFCMIPXaLg6dsz3eQqQfy5epcDcqnXjCd5g7oFNFRzE9TIKut1
+         fAKTREHqvzWNfplaws3TwtTAdTEDeo1NyEZFwLTfnzNIIhgiUdpXQJZeUBZZTo8Zaf3h
+         zcmOKhb+C8Y4cAfpF9GdFG1R6I2jRtvoartGDL2uFv/FTDj4bi8SlDFZqMpOHM5wEigi
+         1xdsRMJ4NItGHWDoFmV+xaYrobM1JG/nWiOBtmrNBEeUWkEBKh8NCN2/08NekWlGeRgr
+         SrsA==
+X-Gm-Message-State: AOJu0YwZ4J5X8lBNsMSQDjOCtq63ylHYel9glBGWjZDN2BwAnaRkSayj
+	uWn7sXn6VbWOdw8MfLoMK/Fia47z9KJiDJG9eM6KmXBHCFE6uc9A4Sw2q1wkYUfhT6Us5FQHSCx
+	R2KZdiVPx3tkdTrDNhKsNus2gwVGkc+5iNmZI
+X-Gm-Gg: ASbGnctMFseYXuZri3iS3fmWLyAoAT5gR/76FL+dJJYe3iFWrW6Aq0R6N5SCEEYpHiT
+	QmIj+2t0Y3yk6xvYk+ffoZvdoBJt+UFe4ba9YWXD3/u1Yi+CUf3MEfTaJ8eKfGMrVuqx4GQQiw6
+	SFte8aiJI0VpVY1ZgRCsPQgPyMcPw=
+X-Google-Smtp-Source: AGHT+IEj5EuIkkLR3p5XHutEEYOGiJzfrMN9mslesGfwKxJk+rI//EBn+9BguGTl9qMVnRM4QrpMw22DdpC2pC55WPg=
+X-Received: by 2002:a2e:9152:0:b0:30b:9813:aff0 with SMTP id
+ 38308e7fff4ca-30b9813b5e3mr68229631fa.22.1741107317773; Tue, 04 Mar 2025
+ 08:55:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <174107245357.1288555.10863541957822891561.stgit@dwillia2-xfh.jf.intel.com>
- <174107250696.1288555.15924775074966673629.stgit@dwillia2-xfh.jf.intel.com>
-In-Reply-To: <174107250696.1288555.15924775074966673629.stgit@dwillia2-xfh.jf.intel.com>
-From: Dionna Amalie Glaze <dionnaglaze@google.com>
-Date: Tue, 4 Mar 2025 08:54:13 -0800
-X-Gm-Features: AQ5f1JoIzhSVC5xRyq6WAPULbDHdQj1sisohKcfFr1dTA3B31WBfv9mIH38fmYc
-Message-ID: <CAAH4kHZS+wOrP-R22bnFRPY10jZw7swxmAsPXegpBjuVvJxe1Q@mail.gmail.com>
-Subject: Re: [PATCH v2 09/11] PCI/IDE: Report available IDE streams
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-coco@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>, Alexey Kardashevskiy <aik@amd.com>, 
-	Xu Yilun <yilun.xu@linux.intel.com>, gregkh@linuxfoundation.org, 
-	linux-pci@vger.kernel.org
+References: <20250214173944.47506-1-james.quinlan@broadcom.com>
+ <20250214173944.47506-5-james.quinlan@broadcom.com> <20250304150313.ey4fky35bu6dbtxd@thinkpad>
+In-Reply-To: <20250304150313.ey4fky35bu6dbtxd@thinkpad>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Tue, 4 Mar 2025 11:55:05 -0500
+X-Gm-Features: AQ5f1Jq8fJUipCYQBNvDKIVth8yEQymR0FmK0BHKGG0A8ppDlN4MHVllCsDFZME
+Message-ID: <CA+-6iNyuQskVNjAuX1QcLTPetbfhogGYUTOA01QwNw9YcwAdNQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] PCI: brcmstb: Fix error path upon call of regulator_bulk_get()
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>, 
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="00000000000037df9d062f87235f"
+
+--00000000000037df9d062f87235f
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 3, 2025 at 11:20=E2=80=AFPM Dan Williams <dan.j.williams@intel.=
-com> wrote:
+On Tue, Mar 4, 2025 at 10:03=E2=80=AFAM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 >
-> The limited number of link-encryption (IDE) streams that a given set of
-> host bridges supports is a platform specific detail. Provide
-> pci_ide_init_nr_streams() as a generic facility for either platform TSM
-> drivers, or PCI core native IDE, to report the number available streams.
-> After invoking pci_ide_init_nr_streams() an "available_secure_streams"
-> attribute appears in PCI host bridge sysfs to convey that count.
+> On Fri, Feb 14, 2025 at 12:39:32PM -0500, Jim Quinlan wrote:
+> > If regulator_bulk_get() returns an error, no regulators are created and=
+ we
+> > need to set their number to zero.  If we do not do this and the PCIe
+> > link-up fails, regulator_bulk_free() will be invoked and effect a panic=
+.
+> >
+> > Also print out the error value, as we cannot return an error upwards as
+> > Linux will WARN on an error from add_bus().
+> >
+> > Fixes: 9e6be018b263 ("PCI: brcmstb: Enable child bus device regulators =
+from DT")
+> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > ---
+> >  drivers/pci/controller/pcie-brcmstb.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/contro=
+ller/pcie-brcmstb.c
+> > index e0b20f58c604..56b49d3cae19 100644
+> > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > @@ -1416,7 +1416,8 @@ static int brcm_pcie_add_bus(struct pci_bus *bus)
+> >
+> >               ret =3D regulator_bulk_get(dev, sr->num_supplies, sr->sup=
+plies);
+> >               if (ret) {
+> > -                     dev_info(dev, "No regulators for downstream devic=
+e\n");
+> > +                     dev_info(dev, "Did not get regulators; err=3D%d\n=
+", ret);
 >
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Cc: Samuel Ortiz <sameo@rivosinc.com>
-> Cc: Alexey Kardashevskiy <aik@amd.com>
-> Cc: Xu Yilun <yilun.xu@linux.intel.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  .../ABI/testing/sysfs-devices-pci-host-bridge      |   12 ++++
->  drivers/pci/ide.c                                  |   58 ++++++++++++++=
-++++++
->  drivers/pci/pci.h                                  |    3 +
->  drivers/pci/probe.c                                |   12 ++++
->  include/linux/pci.h                                |    8 +++
->  5 files changed, 92 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-devices-pci-host-bridge b/Do=
-cumentation/ABI/testing/sysfs-devices-pci-host-bridge
-> index 51dc9eed9353..4624469e56d4 100644
-> --- a/Documentation/ABI/testing/sysfs-devices-pci-host-bridge
-> +++ b/Documentation/ABI/testing/sysfs-devices-pci-host-bridge
-> @@ -20,6 +20,7 @@ What:         pciDDDD:BB/streamH.R.E:DDDD:BB:DD:F
->  Date:          December, 2024
->  Contact:       linux-pci@vger.kernel.org
->  Description:
-> +<<<<<<< current
+> Why is this dev_info() instead of dev_err()?
 
-Drop?
-
->                 (RO) When a platform has established a secure connection,=
- PCIe
->                 IDE, between two Partner Ports, this symlink appears. The
->                 primary function is to account the stream slot / resource=
-s
-> @@ -30,3 +31,14 @@ Description:
->                 assigned Selective IDE Stream Register Block in the Root =
-Port
->                 and Endpoint, and H represents a platform specific pool o=
-f
->                 stream resources shared by the Root Ports in a host bridg=
-e.
-> +
-> +What:          pciDDDD:BB/available_secure_streams
-> +Date:          December, 2024
-> +Contact:       linux-pci@vger.kernel.org
-> +Description:
-> +               (RO) When a host bridge has Root Ports that support PCIe =
-IDE
-> +               (link encryption and integrity protection) there may be a
-> +               limited number of streams that can be used for establishi=
-ng new
-> +               secure links. This attribute decrements upon secure link =
-setup,
-> +               and increments upon secure link teardown. The in-use stre=
-am
-> +               count is determined by counting stream symlinks.
-
-Please describe the expected form metavariables DDDD and BB will take.
-
-> diff --git a/drivers/pci/ide.c b/drivers/pci/ide.c
-> index b2091f6260e6..0c72985e6a65 100644
-> --- a/drivers/pci/ide.c
-> +++ b/drivers/pci/ide.c
-> @@ -439,3 +439,61 @@ void pci_ide_stream_disable(struct pci_dev *pdev, st=
-ruct pci_ide *ide)
->         pci_write_config_dword(pdev, pos + PCI_IDE_SEL_CTL, 0);
->  }
->  EXPORT_SYMBOL_GPL(pci_ide_stream_disable);
-> +
-> +static ssize_t available_secure_streams_show(struct device *dev,
-> +                                            struct device_attribute *att=
-r,
-> +                                            char *buf)
-> +{
-> +       struct pci_host_bridge *hb =3D to_pci_host_bridge(dev);
-> +       int avail;
-> +
-> +       if (hb->nr_ide_streams < 0)
-> +               return -ENXIO;
-> +
-> +       avail =3D hb->nr_ide_streams -
-> +               bitmap_weight(hb->ide_stream_map, hb->nr_ide_streams);
-> +       return sysfs_emit(buf, "%d\n", avail);
-> +}
-> +static DEVICE_ATTR_RO(available_secure_streams);
-> +
-> +static struct attribute *pci_ide_attrs[] =3D {
-> +       &dev_attr_available_secure_streams.attr,
-> +       NULL,
-> +};
-> +
-> +static umode_t pci_ide_attr_visible(struct kobject *kobj, struct attribu=
-te *a, int n)
-> +{
-> +       struct device *dev =3D kobj_to_dev(kobj);
-> +       struct pci_host_bridge *hb =3D to_pci_host_bridge(dev);
-> +
-> +       if (a =3D=3D &dev_attr_available_secure_streams.attr)
-> +               if (hb->nr_ide_streams < 0)
-> +                       return 0;
-> +
-> +       return a->mode;
-> +}
-> +
-> +struct attribute_group pci_ide_attr_group =3D {
-> +       .attrs =3D pci_ide_attrs,
-> +       .is_visible =3D pci_ide_attr_visible,
-> +};
-> +
-> +/**
-> + * pci_init_nr_ide_streams() - size the pool of IDE Stream resources
-
-/size/sets the size of/
-
-> + * @hb: host bridge boundary for the stream pool
-> + * @nr: number of streams
-> + *
-> + * Enable IDE Stream establishment by setting the number of stream
-> + * resources available at the host bridge. Platform init code must set
-> + * this before the first pci_ide_stream_alloc() call.
-
-Is failing to call this a caught error by pci_ide_stream_alloc?
-
-> + *
-> + * The "PCI_IDE" symbol namespace is required because this is typically
-> + * a detail that is settled in early PCI init, i.e. only an expert or
-> + * test module should consume this export.
-
-Perhaps start with "Expert use only"?
-
-> + */
-> +void pci_ide_init_nr_streams(struct pci_host_bridge *hb, int nr)
-> +{
-> +       hb->nr_ide_streams =3D nr;
-> +       sysfs_update_group(&hb->dev.kobj, &pci_ide_attr_group);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(pci_ide_init_nr_streams, "PCI_IDE");
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index b38bdd91e742..6c050eb9a91b 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -458,8 +458,11 @@ static inline void pci_npem_remove(struct pci_dev *d=
-ev) { }
+I will change this.
 >
->  #ifdef CONFIG_PCI_IDE
->  void pci_ide_init(struct pci_dev *dev);
-> +extern struct attribute_group pci_ide_attr_group;
-> +#define PCI_IDE_ATTR_GROUP (&pci_ide_attr_group)
->  #else
->  static inline void pci_ide_init(struct pci_dev *dev) { }
-> +#define PCI_IDE_ATTR_GROUP NULL
->  #endif
+> > +                     pcie->sr =3D NULL;
 >
->  #ifdef CONFIG_PCI_TSM
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index e1c915629864..a383cc32c84b 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -633,6 +633,16 @@ static void pci_release_host_bridge_dev(struct devic=
-e *dev)
->         kfree(bridge);
->  }
->
-> +static const struct attribute_group *pci_host_bridge_groups[] =3D {
-> +       PCI_IDE_ATTR_GROUP,
-> +       NULL,
-> +};
-> +
-> +static const struct device_type pci_host_bridge_type =3D {
-> +       .groups =3D pci_host_bridge_groups,
-> +       .release =3D pci_release_host_bridge_dev,
-> +};
-> +
->  static void pci_init_host_bridge(struct pci_host_bridge *bridge)
->  {
->         INIT_LIST_HEAD(&bridge->windows);
-> @@ -652,6 +662,7 @@ static void pci_init_host_bridge(struct pci_host_brid=
-ge *bridge)
->         bridge->native_dpc =3D 1;
->         bridge->domain_nr =3D PCI_DOMAIN_NR_NOT_SET;
->         bridge->native_cxl_error =3D 1;
-> +       bridge->dev.type =3D &pci_host_bridge_type;
->
->         device_initialize(&bridge->dev);
->  }
-> @@ -665,7 +676,6 @@ struct pci_host_bridge *pci_alloc_host_bridge(size_t =
-priv)
->                 return NULL;
->
->         pci_init_host_bridge(bridge);
-> -       bridge->dev.release =3D pci_release_host_bridge_dev;
->
->         return bridge;
->  }
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 0f9d6aece346..c2f18f31f7a7 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -660,6 +660,14 @@ void pci_set_host_bridge_release(struct pci_host_bri=
-dge *bridge,
->                                  void (*release_fn)(struct pci_host_bridg=
-e *),
->                                  void *release_data);
->
-> +#ifdef CONFIG_PCI_IDE
-> +void pci_ide_init_nr_streams(struct pci_host_bridge *hb, int nr);
-> +#else
-> +static inline void pci_ide_init_nr_streams(struct pci_host_bridge *hb, i=
-nt nr)
-> +{
-> +}
-> +#endif
-> +
->  int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge);
->
->  #define PCI_REGION_FLAG_MASK   0x0fU   /* These bits of resource flags t=
-ell us the PCI region flags */
->
->
+> Why can't you set 'pcie->sr' after successfull regulator_bulk_get()?
 
+Not sure I understand -- it is already set before a  successful
+regulator_bulk_get() call.
+I set it to NULL after an unsuccessful result so the structure will
+not be passed to subsequent calls.
 
---=20
--Dionna Glaze, PhD, CISSP, CCSP (she/her)
+Regards,
+Jim Quinlan
+Broadcom STB/CM
+
+>
+> - Mani
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
+
+--00000000000037df9d062f87235f
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
+AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCC7nKRUWgwm5u7jgSVsNe42W/o4SfT4
+dmYI0uvoOBQciDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTAz
+MDQxNjU1MThaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
+AgEwDQYJKoZIhvcNAQEBBQAEggEAWF4w7XhSV5a1Ey5qeLnFvn10uTDSjX+7SmS0vrjJt8f62fjb
+XN22wQ6OpmeQpkKa9hq5lZ6BXmah0MLRyWX0soErqjKohiolTFZfvELjAzgFqs0r5/MJIn6c+8Hf
+fR04+/y9jkWzuPqLH9SJusOL7uUjLT67Jseod0a/4nFuDttl1JjdJY8eEMFP18CJSGKT0Wa+y5Dk
+gIEsdZYhuXkiUJ9qrQhXUfdF2POJ5459gpEQ6pYH4CDemrdjhHmTGg9qtwcF5g+IvRoTKYd/e/TN
+LE0+6YSCvvwi3OZVU6zZ8g4yKEN4Kjl8QpyNAi32JEo1YnLPisriNjH62/PqHIPSSg==
+--00000000000037df9d062f87235f--
 
