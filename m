@@ -1,70 +1,72 @@
-Return-Path: <linux-pci+bounces-22820-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22821-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A11C9A4D4A5
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 08:19:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1C9FA4D4B9
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 08:20:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB338175028
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 07:18:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 11E5E3B0A41
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 07:18:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDD991FC0FC;
-	Tue,  4 Mar 2025 07:15:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30AC31FC7CA;
+	Tue,  4 Mar 2025 07:15:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SxP1ebBC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i2LiSHOV"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A2D1FC7E1
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 07:15:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE841D88B4
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 07:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741072515; cv=none; b=GD6HtzKJTZlzCz85EoNcliaCN3lrNq6H9sui1sFaU5m0ze9TS4GKqwFLgrIyfi90TQBnSettDNcTYXZtCnKhGqiEX3l28DGuF0Q4HO1stT9q9FjA3Uavc5andbF0NbC5S0xaRTavmP7KAx2EA7p5mBN2ibDnNRwMQ67SdPy93rw=
+	t=1741072520; cv=none; b=ReH0oaIDZ9zyT8NARMLFMHtyZAKMn0KbFm7F/PGiPp0Acb0MMLOs0Zjyt7hU/Qwa6aR9Qt2Ak1nVcZl8cChbD5mYYuWddEFpUipvyohfFmgCk4Ncu0Mutz/vJQQaexz8yMFTCKwm8HXVDY8/DfU7jEYU+4eXD7QrcwKxY8dSrjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741072515; c=relaxed/simple;
-	bh=0nYOb9rBvOvDZ52Sipawfg+Z04xq3rRSZfGlPmWMwLY=;
+	s=arc-20240116; t=1741072520; c=relaxed/simple;
+	bh=FXjZ31r+HctdlgoJ7qDKW2CKWvFsSSritfdTM7tD5Nk=;
 	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cKwgyJwHIPpBdoEzhOz6H/N9o/A0pkt50aqtA0Z2OcFdOK81wNep7aigoTNPugQu6kvkTwbFrGmd4UwK9U9CkImc/u/ufj7HAEKx3DXngo8i+Q4AJuEAVwfxSJbpKRuJO8xSohSoX6gvabPWbJvk7Q1PRDhzs4fuBEIxx+mPLYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SxP1ebBC; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=PrDIW6NHto3vGtYmrd1N8msshYg0zDrPfcgIK83GQSxYD+sgmMzZapbZaZ3Jzpayo4EymClUiyELQvmgwGmOdiQDYVj2QkM9YaA+FLFsoLb7LrI5z05hNlAuQ21C8/1zXctkzxQ/9lZbVpcQSCa2jw3Q/y0S4WVJ6pS0fXQsmeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i2LiSHOV; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741072513; x=1772608513;
+  t=1741072519; x=1772608519;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=0nYOb9rBvOvDZ52Sipawfg+Z04xq3rRSZfGlPmWMwLY=;
-  b=SxP1ebBCi1e4MvA+Bw6kSwdZiCUhW+b9pdr0XBFQei0ad8E5+ns6FQx4
-   VB1QwMWNMmoVr9vIBHTGuvr7Ygi/lH7gA1DWXw+VzycchX8rZtAFWYmvX
-   IJsqH1vimL+icnMWE0Wx/NP9y3eJGRG7OLCwv2IP/Il9xE3Gx6wcxqySX
-   qDIZJqmcgNpD69urVThl3UY/2+yTQxg3/ceCwFOu0LS/nOyWcguw/IYJb
-   gf6R+wBB0MfDPlmwr+0Ylpqo0kTZUs0Ok3RdSF+OLCDzUKoV3kaV/2m8S
-   6chGlrdkAtzXft74UQKUvVOwGACJsMKtYs0fXcZfuk7JUDXjb9etVGfHE
-   A==;
-X-CSE-ConnectionGUID: I2pdkfR9R5aK43eiSHZxMw==
-X-CSE-MsgGUID: Ur8+rEwcTNOmtAVTD9Jevg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="52181347"
+  bh=FXjZ31r+HctdlgoJ7qDKW2CKWvFsSSritfdTM7tD5Nk=;
+  b=i2LiSHOVAoXFhTKEZif8+fRWMqVKJt8QAMc/+yH8Qcx9ffJc4aKt7BEp
+   lX8/tTHkpvcXobQieXBfXH/btmwD11edmT0oykiuKRHQ87ELfhjrP7Iki
+   H50FH2YxcJagZNe1DXboCXDjZChYG+sam+3bnxfzGqJoUhtLxUW1FVrKs
+   qpIbXXXlLhbTylgqhEbemfqEPdby3vsOtCK61Byfv4XJ53/Dl1dw9802c
+   mVzaJpN7G71d84esVmgSkjCSEYQZOSG5VfpLo+uEFw19a2yWFexFgW8r3
+   KOu6yNkmBgDSy3vfy41azdjMizJwH0buZpeihk5vNjYst7vemKnE23nDr
+   w==;
+X-CSE-ConnectionGUID: RhwGtJ2OSIuNTE3ATcdJYw==
+X-CSE-MsgGUID: 1AuolIM/TkGIJmjpKdu0lQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="52181353"
 X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
-   d="scan'208";a="52181347"
+   d="scan'208";a="52181353"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 23:15:13 -0800
-X-CSE-ConnectionGUID: DDQclEn9SBeCcZ+we2Pk8g==
-X-CSE-MsgGUID: +YYI8haNTBO0MxMRunKzwA==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 23:15:19 -0800
+X-CSE-ConnectionGUID: 86zNqVLhT0K5qN7cWXARXQ==
+X-CSE-MsgGUID: fhAaXa5DTLutFzWKIIBzTQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="123497947"
+   d="scan'208";a="123497962"
 Received: from inaky-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.109.47])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 23:15:13 -0800
-Subject: [PATCH v2 10/11] PCI/TSM: Report active IDE streams
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 23:15:18 -0800
+Subject: [PATCH v2 11/11] samples/devsec: Add sample IDE establishment
 From: Dan Williams <dan.j.williams@intel.com>
 To: linux-coco@lists.linux.dev
-Cc: aik@amd.com, gregkh@linuxfoundation.org, linux-pci@vger.kernel.org,
- aik@amd.com, lukas@wunner.de
-Date: Mon, 03 Mar 2025 23:15:12 -0800
-Message-ID: <174107251246.1288555.2482012187220793117.stgit@dwillia2-xfh.jf.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+ Samuel Ortiz <sameo@rivosinc.com>, Alexey Kardashevskiy <aik@amd.com>,
+ Xu Yilun <yilun.xu@linux.intel.com>, gregkh@linuxfoundation.org,
+ linux-pci@vger.kernel.org, aik@amd.com, lukas@wunner.de
+Date: Mon, 03 Mar 2025 23:15:17 -0800
+Message-ID: <174107251788.1288555.15627462362017774594.stgit@dwillia2-xfh.jf.intel.com>
 In-Reply-To: <174107245357.1288555.10863541957822891561.stgit@dwillia2-xfh.jf.intel.com>
 References: <174107245357.1288555.10863541957822891561.stgit@dwillia2-xfh.jf.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -77,90 +79,156 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-Given that the platform TSM owns IDE Stream ID allocation, report the
-active streams via the TSM class device. Establish a symlink from the
-class device to the PCI endpoint device consuming the stream, named by
-the Stream ID.
+Exercise common setup and teardown flows for a sample platform TSM
+driver that implements the TSM 'connect' and 'disconnect' flows.
 
+This is both a template for platform specific implementations and a
+simple integration test for the PCI core infrastructure + ABI.
+
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Samuel Ortiz <sameo@rivosinc.com>
+Cc: Alexey Kardashevskiy <aik@amd.com>
+Cc: Xu Yilun <yilun.xu@linux.intel.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- Documentation/ABI/testing/sysfs-class-tsm |   10 ++++++++++
- drivers/virt/coco/host/tsm-core.c         |   17 +++++++++++++++++
- include/linux/tsm.h                       |    4 ++++
- 3 files changed, 31 insertions(+)
+ samples/devsec/bus.c |    6 ++++
+ samples/devsec/tsm.c |   73 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 78 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-tsm b/Documentation/ABI/testing/sysfs-class-tsm
-index 7503f04a9eb9..75ee2b9bc555 100644
---- a/Documentation/ABI/testing/sysfs-class-tsm
-+++ b/Documentation/ABI/testing/sysfs-class-tsm
-@@ -8,3 +8,13 @@ Description:
- 		signals when the PCI layer is able to support establishment of
- 		link encryption and other device-security features coordinated
- 		through the platform tsm.
+diff --git a/samples/devsec/bus.c b/samples/devsec/bus.c
+index 69117db10897..b78c04b21eb9 100644
+--- a/samples/devsec/bus.c
++++ b/samples/devsec/bus.c
+@@ -15,6 +15,7 @@
+ 
+ #define NR_DEVSEC_BUSES 1
+ #define NR_DEVSEC_ROOT_PORTS 1
++#define NR_PLATFORM_STREAMS 4
+ #define NR_PORT_STREAMS 1
+ #define NR_ADDR_ASSOC 1
+ #define NR_DEVSEC_DEVS 1
+@@ -589,6 +590,7 @@ static int __init devsec_bus_probe(struct platform_device *pdev)
+ 	struct devsec *devsec;
+ 	struct pci_sysdata *sd;
+ 	u64 mmio_size = SZ_64G;
++	struct pci_host_bridge *hb;
+ 	struct device *dev = &pdev->dev;
+ 	u64 mmio_start = iomem_resource.end + 1 - SZ_64G;
+ 
+@@ -649,6 +651,9 @@ static int __init devsec_bus_probe(struct platform_device *pdev)
+ 	if (rc)
+ 		return rc;
+ 
++	hb = pci_find_host_bridge(devsec->bus);
++	pci_ide_init_nr_streams(hb, NR_PLATFORM_STREAMS);
 +
-+What:		/sys/class/tsm/tsm0/streamN:DDDD:BB:DD:F
-+Date:		December, 2024
-+Contact:	linux-pci@vger.kernel.org
-+Description:
-+		(RO) When a host bridge has established a secure connection via
-+		the platform TSM, symlink appears. The primary function of this
-+		is have a system global review of TSM resource consumption
-+		across host bridges. The link points to the endpoint PCI device
-+		at domain:DDDD bus:BB device:DD function:F.
-diff --git a/drivers/virt/coco/host/tsm-core.c b/drivers/virt/coco/host/tsm-core.c
-index 51146f226a64..bd9e09b07412 100644
---- a/drivers/virt/coco/host/tsm-core.c
-+++ b/drivers/virt/coco/host/tsm-core.c
-@@ -2,13 +2,16 @@
- /* Copyright(c) 2024 Intel Corporation. All rights reserved. */
+ 	pci_scan_child_bus(devsec->bus);
  
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+#define dev_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 	return 0;
+@@ -688,5 +693,6 @@ static void __exit devsec_bus_exit(void)
+ }
+ module_exit(devsec_bus_exit);
  
- #include <linux/tsm.h>
-+#include <linux/pci.h>
- #include <linux/rwsem.h>
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/cleanup.h>
++MODULE_IMPORT_NS("PCI_IDE");
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("Device Security Sample Infrastructure: TDISP Device Emulation");
+diff --git a/samples/devsec/tsm.c b/samples/devsec/tsm.c
+index 7698df2b4e29..9c033662c1b4 100644
+--- a/samples/devsec/tsm.c
++++ b/samples/devsec/tsm.c
+@@ -4,6 +4,7 @@
+ #define dev_fmt(fmt) "devsec: " fmt
+ #include <linux/platform_device.h>
  #include <linux/pci-tsm.h>
 +#include <linux/pci-ide.h>
- 
- static DECLARE_RWSEM(tsm_core_rwsem);
- static struct class *tsm_class;
-@@ -99,6 +102,20 @@ void tsm_unregister(struct tsm_core_dev *core)
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/tsm.h>
+@@ -50,13 +51,83 @@ static void devsec_tsm_pci_remove(struct pci_tsm *tsm)
+ 	kfree(devsec_tsm);
  }
- EXPORT_SYMBOL_GPL(tsm_unregister);
  
-+/* must be invoked between tsm_register / tsm_unregister */
-+int tsm_ide_stream_register(struct pci_dev *pdev, struct pci_ide *ide)
-+{
-+	return sysfs_create_link(&tsm_core->dev.kobj, &pdev->dev.kobj,
-+				 ide->name);
-+}
-+EXPORT_SYMBOL_GPL(tsm_ide_stream_register);
++/* protected by tsm_ops lock */
++static DECLARE_BITMAP(devsec_stream_ids, NR_TSM_STREAMS);
++static struct pci_ide *devsec_streams[NR_TSM_STREAMS];
 +
-+void tsm_ide_stream_unregister(struct pci_ide *ide)
-+{
-+	sysfs_remove_link(&tsm_core->dev.kobj, ide->name);
-+}
-+EXPORT_SYMBOL_GPL(tsm_ide_stream_unregister);
-+
- static void tsm_release(struct device *dev)
+ static int devsec_tsm_connect(struct pci_dev *pdev)
  {
- 	struct tsm_core_dev *core = container_of(dev, typeof(*core), dev);
-diff --git a/include/linux/tsm.h b/include/linux/tsm.h
-index 59d3848404e1..915c4c8b061b 100644
---- a/include/linux/tsm.h
-+++ b/include/linux/tsm.h
-@@ -116,4 +116,8 @@ struct tsm_core_dev *tsm_register(struct device *parent,
- 				  const struct attribute_group **groups,
- 				  const struct pci_tsm_ops *ops);
- void tsm_unregister(struct tsm_core_dev *tsm_core);
-+struct pci_dev;
-+struct pci_ide;
-+int tsm_ide_stream_register(struct pci_dev *pdev, struct pci_ide *ide);
-+void tsm_ide_stream_unregister(struct pci_ide *ide);
- #endif /* __TSM_H */
+-	return -ENXIO;
++	struct pci_dev *rp = pcie_find_root_port(pdev);
++	struct pci_ide *ide;
++	int rc, stream_id;
++
++	stream_id =
++		find_first_zero_bit(devsec_stream_ids, NR_TSM_STREAMS);
++	if (stream_id == NR_TSM_STREAMS)
++		return -EBUSY;
++	set_bit(stream_id, devsec_stream_ids);
++
++	ide = pci_ide_stream_alloc(pdev);
++	if (!ide) {
++		rc = -ENOMEM;
++		goto err_stream_alloc;
++	}
++
++	ide->stream_id = stream_id;
++	rc = pci_ide_stream_register(ide);
++	if (rc)
++		goto err_stream;
++
++	pci_ide_stream_setup(pdev, ide);
++	pci_ide_stream_setup(rp, ide);
++
++	rc = tsm_ide_stream_register(pdev, ide);
++	if (rc)
++		goto err_tsm;
++
++	/*
++	 * Model a TSM that handled enabling the stream at
++	 * tsm_ide_stream_register() time
++	 */
++	pci_ide_stream_enable(pdev, ide);
++	devsec_streams[stream_id] = ide;
++
++	return 0;
++
++err_tsm:
++	pci_ide_stream_teardown(rp, ide);
++	pci_ide_stream_teardown(pdev, ide);
++	pci_ide_stream_unregister(ide);
++err_stream:
++	pci_ide_stream_free(ide);
++err_stream_alloc:
++	clear_bit(stream_id, devsec_stream_ids);
++
++	return rc;
+ }
+ 
+ static void devsec_tsm_disconnect(struct pci_dev *pdev)
+ {
++	struct pci_dev *rp = pcie_find_root_port(pdev);
++	struct pci_ide *ide;
++	int i;
++
++	for_each_set_bit(i, devsec_stream_ids, NR_TSM_STREAMS)
++		if (devsec_streams[i]->pdev == pdev)
++			break;
++
++	if (i >= NR_TSM_STREAMS)
++		return;
++
++	ide = devsec_streams[i];
++	devsec_streams[i] = NULL;
++	pci_ide_stream_disable(pdev, ide);
++	tsm_ide_stream_unregister(ide);
++	pci_ide_stream_teardown(rp, ide);
++	pci_ide_stream_teardown(pdev, ide);
++	pci_ide_stream_unregister(ide);
++	pci_ide_stream_free(ide);
++	clear_bit(i, devsec_stream_ids);
+ }
+ 
+ static const struct pci_tsm_ops devsec_pci_ops = {
 
 
