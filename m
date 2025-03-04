@@ -1,56 +1,83 @@
-Return-Path: <linux-pci+bounces-22864-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22865-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24EF1A4E580
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 17:20:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5ACCA4E498
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 17:00:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7524A8859D8
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 15:50:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 193F819C5DC1
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 15:51:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75A127CCDF;
-	Tue,  4 Mar 2025 15:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XARYIuYr"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1005C27EC60;
+	Tue,  4 Mar 2025 15:35:15 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B733927CCD5;
-	Tue,  4 Mar 2025 15:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923A127E1C9;
+	Tue,  4 Mar 2025 15:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741102472; cv=none; b=XxfxMgWSNc4KYhio+RgndxOSsiZ+4xfww7m2FejtlHvXGkfRAxDx9SH9BKMDirMnmMjOKnMHmrM0tbpor11bbNhMXPIElVyBcMWRZDrioMvyPCVoX1IX1PDQWR37PHlL6iBylZSU6re0OL+alQCU97TOltBTVxeJZ9jCRJsOVkc=
+	t=1741102515; cv=none; b=VdhF7VANgOcNm1IE09+GagKVLETM4V9Iiv/LLWd5OJXTl9Z0JLMhqPBa1U+NI2uKTaPU5+l2GPY5UedmC73MzPSqPOR/ZACpiJds/QzCdZGDS08VcMrraJKD8/TRTT6uOq29SrrcLDLY3+qVhu+qlUD1j124ppfi5dDuNU+tHkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741102472; c=relaxed/simple;
-	bh=H0Nu6AdoApme9k39syzCONUq4pJUthJi+iBb+eyJkVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=YbZLWaTxmNS3oRDm76RGLU3mHMWCmwiRh4C5VFx8axXgX5DG1mPigYGckaKbgikGC3WGr6bfLQMuWuihcVzFvlPpg6gNJsniHIt4BpIuDVs8hdOiWo/AMkoATHVcTLuHuQmc4z04hP2/kyivUb26tjqMCH07G4pkI0/6vE84MVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XARYIuYr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 240DAC4CEE5;
-	Tue,  4 Mar 2025 15:34:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741102472;
-	bh=H0Nu6AdoApme9k39syzCONUq4pJUthJi+iBb+eyJkVw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=XARYIuYrlWgJj9dDrgvYD8z5gwOWHAfuk0TYWmZ4rk6MywSTNvvaw/Qw52GRiuEiq
-	 834Mjaxz8P8Zw2d+EPgnWHySwkrmhRAS+yIokkz8FLXvg+tZ4CY/t2V0Fxxw68E5TH
-	 RaK0NTPszIwgnLNaoc+OtrGataycbcmOu9A9bseptM77Ryq0g4EBc/Ii/RqGx0IG+b
-	 jKb1uzgeAJZiTOMMCkfwQTHh8QPp3fpabbVxXmm4eccGza7kldl7+szXRSkcgXl6di
-	 B4p3VxTXGHvxOVOgGX3oPEWCzcTbZezWWVzMFWnfGdgRjYl0N5Kaa3irUwvQVtNpsH
-	 4yziXr8n8LJlA==
-Date: Tue, 4 Mar 2025 09:34:30 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-pci@vger.kernel.org,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Christian =?utf-8?B?S8O2bmln?= <ckoenig.leichtzumerken@gmail.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 1/2] PCI: Avoid pointless capability searches
-Message-ID: <20250304153430.GA227597@bhelgaas>
+	s=arc-20240116; t=1741102515; c=relaxed/simple;
+	bh=25lxY0rRFzscOEISUUTmtF8cqJFNHESfhXic2drv9Xc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AEg+wG2W38UCTL+mu+fOEjaSGQ8ovUwyW5lgjwszS6qpAJGNwCKqnrbveKJiTT08KqBXtGJ0c1x9QGZTcz336Uojgu9IFjVQgeZsUXBLRMxM/eX6Ngsj9CL1KGfj3MVsPIQ7rdPGhZUi3wiYcoF2M88Je6AQP2DfrRsjuvDoPos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2239c066347so52775695ad.2;
+        Tue, 04 Mar 2025 07:35:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741102513; x=1741707313;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aPksOpIsWmD4LD84U/zyiEQF/6uAhUOVlj8rScJ6yGY=;
+        b=MxGyosFLpa+q5WnPDwFlu4Mf6J9WfI7gwf3+SXdVXWTHgxhc0K/Aj3Mtk6MEYfmIEY
+         NoYNeLTQRgWfoRwUft8/APav2coBkND7dVLVCW/rTUmMSkd+lKvOP5lRD0L8R/1/F9RG
+         jB/pl3LdnjuC8cOfR9/TK7NWVZMRQ61axRPoCzTmyfqYaa7MzDcmVOI1mBCEndjy9nwu
+         bOXmxpsIJhk8GMjxNHTK5WsOrp4RxKLeZZzpdRFXXyZjUNBpoKKJBljfRw43YamNcRR8
+         Xp0lNSMZSoHN7EzP21yriMLbH5usK0moyF9Glh/TPlb+LXvYQD1AlCV2i338UJnNLFLc
+         xFrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvYJ3B8hNRltxWwsO3VsvSPaz52Ib4OD2yFL8jMtsZUkbaohq9OGvESHKuLC+rzDi3U9Ha3ZKdDcFX@vger.kernel.org, AJvYcCVrWbv9WA0VHbbPcMIETCv/j0lnlIKDTu2nMK9QXfjekRjmrE39mFqHQ7bakk0EQC+xdVNxRksKmCcurtZqGjpSZw==@vger.kernel.org, AJvYcCWGAHG0brgQy2RWjwyZKFM6jMz3S9WQiCFKPvwfXmoZsRhfc4DK4dX0+vYNYX4W66SGG9sHmH1c4f0UKYE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKpyGxowldE8IXSTmiMEI1hFT0hONAZOx814UZXJ9zE1EwMaxI
+	RxhZtzx3izJ4GTLGWlJn7vp3KA/o/iMw+pvRUTsJTbt06ygWs0IM
+X-Gm-Gg: ASbGncsaveqgrrwsTrqHStgY4xFjR/gYGlrHfL0VUoRZczjEU1791rPVQA5h0xVbnJp
+	bv+qUcqfDfcbk8r9k2SskNRlWRXFVvAF74mz/SNEyGoo02DuDpIB6bi3p9PD6L/QBtVLrLrTfWW
+	z/9+XlDRcD01Hzc2WUhPHDTXabKzOU5XHbFSIZfC6IHEL338+ofzPRtm28+5ohKJjkdoiJ+ckYi
+	ZRkr5iBpbOkZE8iD37YrmxjMB/62j+T/WX+HwVur1WjEPubjl+w+kBIBPvbEwOdaK9R+IVup96A
+	5p6NY9rIxZ0+NZeb62Qnyt/mTzaobuIq6V6zckGx/WFCYH0AWNmfbXyo8IiQsihw9sAE2T0mHYF
+	9FuA=
+X-Google-Smtp-Source: AGHT+IHqM19CmKxrc3+/5zghLWm7z3K7HlW9tJVgM1xGFI0z5/AxnNorz6ln5aNsioCk4N/uTqY9lA==
+X-Received: by 2002:a17:902:eccc:b0:215:6489:cfb8 with SMTP id d9443c01a7336-22368f6365emr341829405ad.10.1741102512747;
+        Tue, 04 Mar 2025 07:35:12 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2235053e41asm96451805ad.255.2025.03.04.07.35.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 07:35:12 -0800 (PST)
+Date: Wed, 5 Mar 2025 00:35:09 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+	Jonathan.Cameron@huawei.com, fan.ni@samsung.com,
+	nifan.cxl@gmail.com, a.manzanares@samsung.com,
+	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
+	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	will@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH v7 4/5] Add debugfs based error injection support in DWC
+Message-ID: <20250304153509.GA2310180@rocinante>
+References: <20250221131548.59616-1-shradha.t@samsung.com>
+ <CGME20250221132039epcas5p31913eab0acec1eb5e7874897a084c725@epcas5p3.samsung.com>
+ <20250221131548.59616-5-shradha.t@samsung.com>
+ <20250303095200.GB1065658@rocinante>
+ <20250304152952.pal66goo2dwegevh@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -59,81 +86,24 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202503042124.7627f722-lkp@intel.com>
+In-Reply-To: <20250304152952.pal66goo2dwegevh@thinkpad>
 
-On Tue, Mar 04, 2025 at 10:12:48PM +0800, kernel test robot wrote:
-> kernel test robot noticed "last_state.booting" on:
-> 
-> commit: c8a9382e172ac80bc96820b3ec758e35cdc05c06 ("[PATCH v2 1/2] PCI: Avoid pointless capability searches")
-> url: https://github.com/intel-lab-lkp/linux/commits/Bjorn-Helgaas/PCI-Avoid-pointless-capability-searches/20250215-080525
-> base: https://git.kernel.org/cgit/linux/kernel/git/pci/pci.git next
-> patch link: https://lore.kernel.org/all/20250215000301.175097-2-helgaas@kernel.org/
-> patch subject: [PATCH v2 1/2] PCI: Avoid pointless capability searches
+Hello,
 
-This patch was dropped in next-20250224.
+[....]
+> > > +		29) Generates duplicate TLPs - duplicate_dllp
+> > > +		30) Generates Nullified TLPs - nullified_tlp
+> > 
+> > Would the above field called "duplicate_dllp" for duplicate TLPs be
+> > a potential typo?  Perhaps this should be called "duplicate_tlp"?
+> > 
+> 
+> Looks like a typo. As per Synopsys documentation, there is only 'duplicate TLP'
+> field.
+> 
+> Good catch!
 
-> in testcase: xfstests
-> version: xfstests-x86_64-8467552f-1_20241215
-> with following parameters:
-> 
-> 	disk: 4HDD
-> 	fs: ext2
-> 	test: generic-holetest
-> 
-> 
-> 
-> config: x86_64-rhel-9.4-func
-> compiler: gcc-12
-> test machine: 4 threads Intel(R) Core(TM) i5-6500 CPU @ 3.20GHz (Skylake) with 32G memory
-> 
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
-> 
-> 
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202503042124.7627f722-lkp@intel.com
-> 
-> 
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20250304/202503042124.7627f722-lkp@intel.com
-> 
-> 
-> 
-> [   62.784123][  T284] LKP: waiting for network...
-> [   62.784128][  T284] 
-> [   63.218408][  T284] ls /sys/class/net
-> [   63.218417][  T284] 
-> [   63.224484][  T284] lo
-> [   63.224490][  T284] 
-> [   64.076175][    T1] watchdog: watchdog0: watchdog did not stop!
-> [   64.157917][    T1] watchdog: watchdog0: watchdog did not stop!
-> [   64.196710][    T1] sd 1:0:0:0: [sdb] Synchronizing SCSI cache
-> [   64.202659][    T1] sd 0:0:0:0: [sda] Synchronizing SCSI cache
-> [   64.969888][    T1] pcieport 0000:00:01.0: VC0 negotiation stuck pending
-> [   64.977342][    T1] ACPI: PM: Preparing to enter system sleep state S5
-> [   64.986446][    T1] kvm: exiting hardware virtualization
-> reboot: Restarting system
-> 
-> 
-> there is no more useful information, seems our test machine just reboot here.
-> this is not observed on the parent commit, c71f7bbc5d794, which chosen as the
-> base by bot.
-> 
-> * a234e07a63859 (linux-review/Bjorn-Helgaas/PCI-Avoid-pointless-capability-searches/20250215-080525) PCI: Cache offset of Resizable BAR capability
-> * c8a9382e172ac PCI: Avoid pointless capability searches
-> *   c71f7bbc5d794 Merge branch 'pci/endpoint'
-> 
-> c71f7bbc5d794984 c8a9382e172ac80bc96820b3ec7
-> ---------------- ---------------------------
->        fail:runs  %reproduction    fail:runs
->            |             |             |
->            :6          100%           6:6     last_state.booting
-> 
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-> 
+Updated.  Thank you!
+
+	Krzysztof
 
