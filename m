@@ -1,172 +1,132 @@
-Return-Path: <linux-pci+bounces-22838-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22839-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFD11A4DF57
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 14:33:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E0A2A4DFAB
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 14:50:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 255613B4068
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 13:33:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 41E2B1899461
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 13:50:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 454C02045B8;
-	Tue,  4 Mar 2025 13:33:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D302868B;
+	Tue,  4 Mar 2025 13:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EhDlBARi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P33avndS"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFB72045AE
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 13:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEA82045AD
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 13:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741095200; cv=none; b=cD2/8vJkRY0MPuufmBEUe9RDpSOIkJk2fFcWYAnp2hJuxdxtNRcUAo3fqPdiz5goYb2Tz2iB8oZaDTw62n/myz1fNz4LprF4YAYbzxAOXPJ2b380qOHvbXTRC/AA3zN6nYGZ+XFtyjZs0asmAKdWduSDiKoeKyAYhJf+rtmQHsk=
+	t=1741096203; cv=none; b=QM+eBvF1aXTfAeGW4fVi2Oqdo7+eWV/ZgzquJg6t+b2Utkq/34BziS0Hkcg1UN80Rv5MgPUMpKISoAFWYA9+6jwdaMEiSJSJa3eFXiDVwYiOXeaMQcpozaj1M88geFUOlZoG8I5ax9I51ZqwSOSvGLjownfKORQtKvyJp/zRsno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741095200; c=relaxed/simple;
-	bh=JvIzTzx9bNAT9dTkwz9wJO3WMvtIvRTqt7LZsstIXms=;
+	s=arc-20240116; t=1741096203; c=relaxed/simple;
+	bh=5V2n4Ol/YIaFL/sIsn93eGOv7WmD2P0SaXmJke6dwPw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=avlgZkF8HHZgfWOMPQ4+FfbIp+NcSVsfTSkZ1pbE8ORYgTr+GI0+J+yePyRiVLZ7wjwUEiU2r+mGNCP9shFuyPZil466YTOE6QEdufJkCTSficXKFLls1+8wABNXcatNMu4rUy/YBL5DxtsLC+EaIGz1OuEtZh7s5LC9I2QK8a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EhDlBARi; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2238d965199so48562615ad.2
-        for <linux-pci@vger.kernel.org>; Tue, 04 Mar 2025 05:33:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741095198; x=1741699998; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3qLR77tna3KlWSQd6zNZ6y+8asGhaaD5n37dc3k5ZDg=;
-        b=EhDlBARiHZ7sm0Scekwrzd7PCPAckZYK2uMArP5GJ5LDbvaKu+vHHeSdvouYnbxgVN
-         DnsXWYWEVTqLwX37Ye94z/q3Upd5KMG+KKsmtupPdRWCwxYES1gEHf7wPkC4M6+4BX6U
-         hlxiZT10bW0/tZAQm85snsGchINv7BX/yuwpOA8pQQp68QiZjYMHKuVgQr19EAu43eHQ
-         7VMss69M1MPOc5rEwPK3gZ/U3EXjvms/br5SprLKiQbCtjz2O3tr/o6kyw9hmbgen9vb
-         6rYyiIuRqOHUb1pFvjIkXgg5KmTdJPdq9beCIc/SuypLIVHqGzZpXtnk6ukwJYRIynQ9
-         +LSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741095198; x=1741699998;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3qLR77tna3KlWSQd6zNZ6y+8asGhaaD5n37dc3k5ZDg=;
-        b=fAEFWVC6AIFVc+5t8e7e2a5Lb4HNw95n3vP3m4v7KF008De1Htevcmv3ujILshFpKK
-         HnUfvZlIbXjS7ggPSUmTSN5arO2dpa+PitpjNGN6T6dt2Uew6inB7GUQCp8fyC6GKsP0
-         9vxJXa/vxHc8Z7iWVGgPkgdpBuzVc3NPzoarj0wKnZnp/3avDQtT0eUczObzFyJJU3Gu
-         12dK3MGii9JHa1XDi/vUq6oK/t0XEA07waFWNs2bq4KnygXITlTK7Ppmzu8L4boFx4rW
-         sEmHy6xxWgMoGL+qTMoNhPSGGM6VywmdeTX7OeWQ83K+Mf+OBsFi5c6+BWTJQrEuSL7Q
-         /wwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX3FRwofe7dR+NRUsq4lwVYRE1AP8BRAnMSXp3L6quTIy1uU+Sj0OpFXESltxMbqANzO1P6Hx/KSIM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzx9e3b6d48haDfAF49OZAyHQLjzN2CiTe5xii2M3NxsqqUh56F
-	EFUkOR4QjkgtG/gi1qVyHElyiHG7zaTlNe3PgAParwVwrRpD4c/pW1XON+t+yw==
-X-Gm-Gg: ASbGnctDTD3VjR4TXq73wgIfrLZ4W8ewSk8+BYJC0mQ9a6qVO+JNN7sAop/2suoPHaG
-	8sQxyUlUWKruR/6PyLdmz3CwGpGdBGt4fj9euPJJs9dq6GbXj/76QdysPBPvE9eUFn0vB0kgYNu
-	0Uj7Z9/Z3wdpDOnKzJUORE6fDXpjpoIE2YlbpCOpmO2phhbK09aW+rV1Hp+qHjOQ1x3/hqYaRPD
-	DvCdDS2XmLkccjHBm+sxDpiFlrJh8Aysn0oL/fXW0j2mPisP/emeRQdfMuqic1vz0/s37Um+xV9
-	J3peXjAnFqsDAHe8tN/TjQ6FeTiITXEJlP7iAKQ8ye1LKX+r7zQnE0k=
-X-Google-Smtp-Source: AGHT+IHF6tXmS5YA0nVLt+px5dErJnwlnsN7HgkRQHD9Cn5z48DU2q6k2zrG7Enx21WGbLqujcN0nQ==
-X-Received: by 2002:a17:903:2b0b:b0:223:2aab:462c with SMTP id d9443c01a7336-22368fbe99bmr265499305ad.15.1741095197919;
-        Tue, 04 Mar 2025 05:33:17 -0800 (PST)
-Received: from thinkpad ([120.60.51.199])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223501f9dacsm95662135ad.83.2025.03.04.05.33.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 05:33:17 -0800 (PST)
-Date: Tue, 4 Mar 2025 19:03:12 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Sai Krishna Musham <sai.krishna.musham@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	cassel@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
-	thippeswamy.havalige@amd.com
-Subject: Re: [PATCH v3 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST#
- signal
-Message-ID: <20250304133312.hmn54f77pmg27tuo@thinkpad>
-References: <20250227042454.907182-1-sai.krishna.musham@amd.com>
- <20250227042454.907182-3-sai.krishna.musham@amd.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ic5Lrkz0yyl3hvESK6hN6jfBO3+0sDAmGeEjVLv8UFBm8zMT6tWQ4EpbV5qst8+bn0BdLnVHXHIFjfG11/RAFDo9+gxDPvoZAzSCacl6/j+HyODzSa70P31KtvDf2lGn/q3KZwMtnz0azvTmsbzYyNRTKK0aacCo0QKkpjpvLKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P33avndS; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741096201; x=1772632201;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5V2n4Ol/YIaFL/sIsn93eGOv7WmD2P0SaXmJke6dwPw=;
+  b=P33avndSnf4QQTCxtJ4/rQvEBY1MkrDn3ZRjZLSuPT2ejupU1qmnnQ+7
+   TpEmyCHnK0QirJ5uhnip13SpiGkDZ8RV/e0dgsqn4TrVhPuGTjmfeDqUe
+   ldXcBPFfoVlaGhGCi9b2ozHx1dpNpFWOHTCucqqs5hZOINtBR4DhgBbC2
+   80AgsoJQA2KNl4Olv4Unw0xv1CRsah648YWu9oGwxn3X6c/0Z50hQR/MP
+   7t+QicEU2rr5Xqb8E0TFSV3eBLb+kb63mZ6Izb1chNsTvlglNzBgKtb6O
+   mRpSSRT7U/HrJy5smsezxNyEwiVm6Rk0ORx+mf927NTB5NM2TyVQOxL2d
+   w==;
+X-CSE-ConnectionGUID: o1jLNQ2pTwe1AoXnTWyD7A==
+X-CSE-MsgGUID: tWHcT1wDQJGxjL52ptZRPQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="29601817"
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="29601817"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 05:50:00 -0800
+X-CSE-ConnectionGUID: NQv5HN7TQtKaJ9A2l20c7g==
+X-CSE-MsgGUID: CZMr/zzmRdmHoTwZxAX8RQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
+   d="scan'208";a="123317663"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 04 Mar 2025 05:49:58 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tpSeh-000JpW-14;
+	Tue, 04 Mar 2025 13:49:55 +0000
+Date: Tue, 4 Mar 2025 21:49:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev
+Cc: oe-kbuild-all@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	Xu Yilun <yilun.xu@linux.intel.com>, gregkh@linuxfoundation.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 09/11] PCI/IDE: Report available IDE streams
+Message-ID: <202503042126.FUEGx8dD-lkp@intel.com>
+References: <174107250696.1288555.15924775074966673629.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250227042454.907182-3-sai.krishna.musham@amd.com>
+In-Reply-To: <174107250696.1288555.15924775074966673629.stgit@dwillia2-xfh.jf.intel.com>
 
-On Thu, Feb 27, 2025 at 09:54:54AM +0530, Sai Krishna Musham wrote:
-> Add GPIO-based control for the PCIe Root Port PERST# signal.
-> 
-> According to section 2.2 of the PCIe Electromechanical Specification
-> (Revision 6.0), PERST# signal has to be deasserted after a delay of
-> 100 ms (T_PVPERL) to ensure proper reset sequencing during PCIe
-> initialization.
-> 
-> Adapt to use the GPIO framework and make reset optional to keep DTB
-> backward compatibility.
-> 
-> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
-> ---
-> This patch depends on the following patch series.
-> https://lore.kernel.org/all/20250217072713.635643-3-thippeswamy.havalige@amd.com/
-> 
-> Changes for v3:
-> - Use PCIE_T_PVPERL_MS define.
-> 
-> Changes for v2:
-> - Make the request GPIO optional.
-> - Correct the reset sequence as per PERST#
-> - Update commit message
-> ---
->  drivers/pci/controller/pcie-xilinx-cpm.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-> index 81e8bfae53d0..558f1d602802 100644
-> --- a/drivers/pci/controller/pcie-xilinx-cpm.c
-> +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-> @@ -6,6 +6,8 @@
->   */
->  
->  #include <linux/bitfield.h>
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/irqchip.h>
-> @@ -568,8 +570,24 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	struct pci_host_bridge *bridge;
->  	struct resource_entry *bus;
-> +	struct gpio_desc *reset_gpio;
->  	int err;
->  
-> +	/* Request the GPIO for PCIe reset signal */
-> +	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(reset_gpio)) {
-> +		dev_err(dev, "Failed to request reset GPIO\n");
-> +		return PTR_ERR(reset_gpio);
-> +	}
-> +
-> +	/* Assert the reset signal */
-> +	gpiod_set_value(reset_gpio, 1);
-> +
-> +	msleep(PCIE_T_PVPERL_MS);
-> +
-> +	/* Deassert the reset signal */
-> +	gpiod_set_value(reset_gpio, 0);
-> +
+Hi Dan,
 
-You should deassert the PERST# only after the power and refclk are stable. Even
-though this driver is not initializing any resources, it makes sense to move the
-assert + deassert logic at the very end of xilinx_cpm_pcie_init_port() as this
-function sounds like the once initializing the PCIe port.
+kernel test robot noticed the following build warnings:
 
-- Mani
+[auto build test WARNING on 7eb172143d5508b4da468ed59ee857c6e5e01da6]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Williams/configfs-tsm-Namespace-TSM-report-symbols/20250304-152958
+base:   7eb172143d5508b4da468ed59ee857c6e5e01da6
+patch link:    https://lore.kernel.org/r/174107250696.1288555.15924775074966673629.stgit%40dwillia2-xfh.jf.intel.com
+patch subject: [PATCH v2 09/11] PCI/IDE: Report available IDE streams
+config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20250304/202503042126.FUEGx8dD-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250304/202503042126.FUEGx8dD-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503042126.FUEGx8dD-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pci/ide.c:495: warning: expecting prototype for pci_init_nr_ide_streams(). Prototype was for pci_ide_init_nr_streams() instead
+
+
+vim +495 drivers/pci/ide.c
+
+   480	
+   481	/**
+   482	 * pci_init_nr_ide_streams() - size the pool of IDE Stream resources
+   483	 * @hb: host bridge boundary for the stream pool
+   484	 * @nr: number of streams
+   485	 *
+   486	 * Enable IDE Stream establishment by setting the number of stream
+   487	 * resources available at the host bridge. Platform init code must set
+   488	 * this before the first pci_ide_stream_alloc() call.
+   489	 *
+   490	 * The "PCI_IDE" symbol namespace is required because this is typically
+   491	 * a detail that is settled in early PCI init, i.e. only an expert or
+   492	 * test module should consume this export.
+   493	 */
+   494	void pci_ide_init_nr_streams(struct pci_host_bridge *hb, int nr)
+ > 495	{
 
 -- 
-மணிவண்ணன் சதாசிவம்
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
