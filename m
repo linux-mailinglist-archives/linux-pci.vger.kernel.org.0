@@ -1,195 +1,260 @@
-Return-Path: <linux-pci+bounces-22884-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22886-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE30AA4E97E
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 18:42:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B454A4EC21
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 19:43:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4EC5B18855DA
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 17:38:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB9AD3BCB28
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 17:47:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DC5C2980AC;
-	Tue,  4 Mar 2025 17:12:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BD2C259C91;
+	Tue,  4 Mar 2025 17:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K9wFxLbn"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MkFE/c7V"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBEE27FE79
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 17:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAD8255241
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 17:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741108326; cv=none; b=QcRasdq2E2DwXwu821k6ZPC41zXqipthw4jYh8Rf2eiaDv7BKR5kiHqYnug4G6sQgvtJPvGMs3b8awGum1IRbhqId/UfAHPLswywqFUKZ1X92gNRWmML81IYBy3payll5lIVHCuAkB9U5IIHyGKLvGN3uyK7qPO4cTC3MLfm2eE=
+	t=1741109115; cv=none; b=m1MMAr0UISij8g9tNL2BFJEF8oiTxION6IpgRwic1vVHcAguw1fM+1piOUp9f9k9eOs+Yr8nweI4hRaa0oXmKypdvsMTFA69z3pmdBk3fnJjAu7Gzbn+DBJosiHKfkXPPJd4SWOw96HRWRHHaDJ/pJuoe5q2NE+qQr68WhC8YII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741108326; c=relaxed/simple;
-	bh=qUPNYhbM7EM4tXTnq0Udx6d1pN2xoKCqq336L8Pjv1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L7pJb8rA4UjA+mHf7aM4rHrxlx6We+nrSDJA8RkfRqXM21JPrBJ5cY3re5CMuHLzs6p1IxFBcMqp2zWNNaeOE9NzYYKs/Ff2WXIho+g239n2NsF5lmeZkmuYZNsVJCu2g5nh5DP4Us2QDECarbQi170sabIMA+hZ2qRMR3vNeiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K9wFxLbn; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso9533780a91.1
-        for <linux-pci@vger.kernel.org>; Tue, 04 Mar 2025 09:12:04 -0800 (PST)
+	s=arc-20240116; t=1741109115; c=relaxed/simple;
+	bh=JGYdl97dkm2FPmV1iUDVHImp9fHo4tLOMeIYAEawtKw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PaTrIDva0JyYa30EGnZEojzljcwbujhyTDxu3VI4cAhJpoMhcRhwqIiS5y3+FNPcsazV59U+yyC3Uvi6dSyX3sULDtyzFhAN8UAnxD4PG6mPXzrnjs0f25iQbXN4NC1hhRM3cPQAgI+g7GtS1i7YrL8wRtgWLh8c5APaBkQfRfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=MkFE/c7V; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5495888f12eso4023005e87.0
+        for <linux-pci@vger.kernel.org>; Tue, 04 Mar 2025 09:25:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741108324; x=1741713124; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cKWAtQRLCp0qz4UwlvN+WFU+keHMUnNOhmFv6iaIYQU=;
-        b=K9wFxLbn1cb+SuQFCyRUKGLDXcCQ+0FK12TRKX27v0hZroWk9jBp2q6INElk40XNTR
-         nPeca/AidNdKKjyqJPcrmrfWF2VWVczG6L5PI1KuN91+bv4mXU0gveq0Q2hNKsBflS6O
-         psm8zvi1727i0x+9AF+oZCYgOOMlMnH6yl03utPaK50+bN8KC9Ty8HQdTm0hrQGaNUYH
-         w6LExT31IDynMont9PjMax7iJdhL2t7y/Gg4hqS2gYM4gsAWskFnRZtgXr9O03BZ9BiL
-         y5cWpOV4NRYlKygcgyWIdfOPB+Zr27HZycZTnvxRAkARE64clrpg0xSs+s2s7YjVZB5X
-         Af1A==
+        d=broadcom.com; s=google; t=1741109111; x=1741713911; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IzPjR4KmHvJVO9mzVe/L3C8pbqYI1CqR28fDWvBjx18=;
+        b=MkFE/c7VRTFxNuIknITT+A5TebLQVHyNYO4k27v+t3Oti6/sNFssPNyMu4InMbnCTp
+         P135U63Xh5P/BPE2HQ8rM7lSEbtkHoujDb604aVPkZmH2DK0aYqp/HEONDXSo1ww1XL5
+         7ilTJD0pcvZ96e7DwRgCYrg0ni6TXyunp/Xq8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741108324; x=1741713124;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cKWAtQRLCp0qz4UwlvN+WFU+keHMUnNOhmFv6iaIYQU=;
-        b=sVfzrb50gHFeEiVN9vOYQ+otKGBU1fsYF6uABrjJeJ4Jyab+XzwBEg2aMRMTI6nXrC
-         m36w3p9He1JIdduNlnnzZN6F4pa0KAzSrDMW11EriaTd3IN3BVlHpA7NvNp2WNf0INIt
-         3LKEicSR1CBRtnxcH7yPsFTXxca+cUH7h+MMYUkyiWEH21VLDxmAuT0TGSpUO/dcSkBF
-         Y/q/Q8T+Qoq2Vk6rmsgtHuXUB/gQrb6cQDksZVPeXSD8elC8krmNARBfpqKg8OrgXiHU
-         4i+poQ4spLsLkP9cD9Ge7Aq6Y5aJwwrEwdtjzALc2l+p2YzBQeF2nz4fgaxhamb49ZmK
-         XsPg==
-X-Forwarded-Encrypted: i=1; AJvYcCXk4oJLemfey1rQ3DqIDdePJWvu1iIelTUdz5WsT+erPjHxYUEPqa5oSbIZZyGjf9LbIgRcezXsyNw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8lTW0g1YzvIjUXTO7zwKrdLMxsDiBM/FtxP2oWuKhfP6X6AWP
-	42C1k3nqZ0h6bNKiRIP7QU8J1urPQTroJNyGcBj8O0mZrGc1UE0u3HA36NEfZw==
-X-Gm-Gg: ASbGncuaRtmUNcjbnkof+oR/nsPDa3RfUMbjBAzXw0k6B4bzSWdlK4nmNneJYrJ5Jwt
-	Q9y1fJK9cocdm91pLWoGfiJLcOOkefKQN4P/kuu3qtllXdBA+7P6CymDnKgiOxa00WLkU54RjeM
-	8iWjROuAgYtVRSUSz+XiV8l9AolYTpMpGQ83bqSXW7mJp0GMs1ViqqJug8E0iowdv/Z8OXpas65
-	6e+2m3f23FK99nghv1iLwAZRvZaMm+76RMNZild7KLV9IL2z4xaKPZz1HDZTPa7PS02fGFVaPBI
-	rffmlP6/tOFK6QTsy99CsQvFb958t4FyBolfBHDoVxMjx4FDhsplp0M=
-X-Google-Smtp-Source: AGHT+IHAxbyCgHNleOV6pyn/ykxc9Lgl0VZqS9TI0AHJNMb4FhegCiAgjJqpVwILV7hlEejAmOZObw==
-X-Received: by 2002:a17:90b:1c09:b0:2f2:3efd:96da with SMTP id 98e67ed59e1d1-2ff497a01bbmr70685a91.24.1741108323433;
-        Tue, 04 Mar 2025 09:12:03 -0800 (PST)
-Received: from thinkpad ([120.60.51.199])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fea6753137sm11340607a91.6.2025.03.04.09.11.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 09:12:02 -0800 (PST)
-Date: Tue, 4 Mar 2025 22:41:54 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Fan Ni <nifan.cxl@gmail.com>,
-	Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	Jonathan.Cameron@huawei.com, a.manzanares@samsung.com,
-	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
-	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
-	will@kernel.org, mark.rutland@arm.com,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v7 3/5] Add debugfs based silicon debug support in DWC
-Message-ID: <20250304171154.njoygsvfd567pb66@thinkpad>
-References: <20250221131548.59616-1-shradha.t@samsung.com>
- <CGME20250221132035epcas5p47221a5198df9bf86020abcefdfded789@epcas5p4.samsung.com>
- <20250221131548.59616-4-shradha.t@samsung.com>
- <Z8XrYxP_pZr6tFU8@debian>
- <20250303194647.GC1552306@rocinante>
- <CAMuHMdWens9ZZrjNH1Bd2AN3PJEP1KSUGdiJcBCt0uPGH_GiiA@mail.gmail.com>
- <20250304154638.GB2310180@rocinante>
+        d=1e100.net; s=20230601; t=1741109111; x=1741713911;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IzPjR4KmHvJVO9mzVe/L3C8pbqYI1CqR28fDWvBjx18=;
+        b=bCGOOhLFNqpBNp0NJssKnyfeZgwFUdoEUKYsc4R4JtAhk7Yo5NoxeWOf/HcTyFk7vP
+         19Hxk0h+lWwc7LNlTxlmK5JXIf33qD0upsRlnIRwQK5E9zrBGjzSeK0UwY2P+v2v4Ju5
+         cPCyfuKOQtoKa1KJ+Wh0iTcM5HwTxx438o5NcHN15aqOCA3IJeyoyMq7ztrgecEF6rGA
+         3DRaycqNTcr3YHCNzNPK6h3MvC1sAbLRXeRDVOG/d/Be3lOCN02iVAobU+8EL+ik53Q6
+         mSy7NYV/MPdLBRTO9erpiQHVw5ooqPA/S2YKtm3m2pFaCWTpm8V7e0uD8J7Mte8424fX
+         poHQ==
+X-Gm-Message-State: AOJu0Yz5zilaX3xnXwNXNkQnhP89SbHMsrRNuRFmNg9SJDT/iRgsVYoT
+	n9s+AumKhOpQeZzwaiVckDvNywpNTPLqBZKs1a+JPyvwgngvyBAXEbQ2n21dTxDLbv08+XwklB7
+	rVIGGt0cPdJPrTkgfYd99WjYZkpf1UDC+FUxR
+X-Gm-Gg: ASbGncurqSoE+Y+T2e63iyViRPrcwIUqnhUX2H6mtKPavnTOG0OrbA3WJPec2sc2UjL
+	dDu3dHSqKo8Rmeeclq4MsyJwcfI1fFrY7ScHLVv8U3hCiUaV3mFEgaxqjn/gaZihQlSSXpQ9YBn
+	VmiS0hGp5/VkYF2Wn8QyrVx0HmyaY=
+X-Google-Smtp-Source: AGHT+IHsXGlr+1E/+5BzQmeRR7IpTcLSgxQ+r4Ccm6upVbIWhIAZpB3bUqteQEopWRt4HtOJcUxQR7iLrjViszzXQnE=
+X-Received: by 2002:a05:6512:2316:b0:549:7c13:e88a with SMTP id
+ 2adb3069b0e04-5497c13ea56mr366290e87.17.1741109109796; Tue, 04 Mar 2025
+ 09:25:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250304154638.GB2310180@rocinante>
+References: <20250214173944.47506-1-james.quinlan@broadcom.com>
+ <20250214173944.47506-5-james.quinlan@broadcom.com> <20250304150313.ey4fky35bu6dbtxd@thinkpad>
+ <CA+-6iNyuQskVNjAuX1QcLTPetbfhogGYUTOA01QwNw9YcwAdNQ@mail.gmail.com> <20250304170735.x25c65azfpd7xmwv@thinkpad>
+In-Reply-To: <20250304170735.x25c65azfpd7xmwv@thinkpad>
+From: Jim Quinlan <james.quinlan@broadcom.com>
+Date: Tue, 4 Mar 2025 12:24:56 -0500
+X-Gm-Features: AQ5f1Jplo14sKp5BRKKXE4a87OhIgFKmP5-uSsM-M5QKmKCvFukbn2xkEIPrYzA
+Message-ID: <CA+-6iNzvqnZB=7kRqUm5ie6245AM5ObeVmMNQ_S4AtMLD0jKQw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] PCI: brcmstb: Fix error path upon call of regulator_bulk_get()
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>, 
+	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
+	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000001dc439062f878e28"
 
-On Wed, Mar 05, 2025 at 12:46:38AM +0900, Krzysztof Wilczyński wrote:
-> Hello,
-> 
-> > This patch is now commit 1ff54f4cbaed9ec6 ("PCI: dwc: Add debugfs
-> > based Silicon Debug support for DWC") in pci/next (next-20250304).
-> > 
-> > On Mon, 3 Mar 2025 at 20:47, Krzysztof Wilczyński <kw@linux.com> wrote:
-> > > [...]
-> > > > > +int dwc_pcie_debugfs_init(struct dw_pcie *pci)
-> > > > > +{
-> > > > > +   char dirname[DWC_DEBUGFS_BUF_MAX];
-> > > > > +   struct device *dev = pci->dev;
-> > > > > +   struct debugfs_info *debugfs;
-> > > > > +   struct dentry *dir;
-> > > > > +   int ret;
-> > > > > +
-> > > > > +   /* Create main directory for each platform driver */
-> > > > > +   snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
-> > > > > +   dir = debugfs_create_dir(dirname, NULL);
-> > > > > +   debugfs = devm_kzalloc(dev, sizeof(*debugfs), GFP_KERNEL);
-> > > > > +   if (!debugfs)
-> > > > > +           return -ENOMEM;
-> > > > > +
-> > > > > +   debugfs->debug_dir = dir;
-> > > > > +   pci->debugfs = debugfs;
-> > > > > +   ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
-> > > > > +   if (ret)
-> > > > > +           dev_dbg(dev, "RASDES debugfs init failed\n");
-> > > >
-> > > > What will happen if ret != 0? still return 0?
-> > 
-> > And that is exactly what happens on Gray Hawk Single with R-Car
-> > V4M: dw_pcie_find_rasdes_capability() returns NULL, causing
-> > dwc_pcie_rasdes_debugfs_init() to return -ENODEV.
-> 
-> Thank you for testing and for catching this issue.  Much appreciated.
-> 
-> > > Given that callers of dwc_pcie_debugfs_init() check for errors,
-> > 
-> > Debugfs issues should never be propagated upstream!
-> 
-> Makes complete sense.  Sorry for breaking things here!
-> 
-> > > this probably should correctly bubble up any failure coming from
-> > > dwc_pcie_rasdes_debugfs_init().
+--0000000000001dc439062f878e28
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Mar 4, 2025 at 12:07=E2=80=AFPM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Tue, Mar 04, 2025 at 11:55:05AM -0500, Jim Quinlan wrote:
+> > On Tue, Mar 4, 2025 at 10:03=E2=80=AFAM Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org> wrote:
 > > >
-> > > I made updates to the code directly on the current branch, have a look:
-> > 
-> > So while applying, you changed this like:
-> > 
-> >             ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
-> >     -       if (ret)
-> >     -               dev_dbg(dev, "RASDES debugfs init failed\n");
-> >     +       if (ret) {
-> >     +               dev_err(dev, "failed to initialize RAS DES debugfs\n");
-> >     +               return ret;
-> >     +       }
-> > 
-> >             return 0;
-> > 
-> > Hence this is now a fatal error, causing the probe to fail.
-> 
-> I removed the changed, and also move the log level to be a warning, per:
-> 
->   https://web.git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/dwc&id=c6759a967e69aba16aef0d92f43e527b112e98a5
-> 
-> Would this be acceptable here?
-> 
-> Mani, would this be acceptable to you, too?  Given that you posted the
-> following recently:
-> 
->   https://lore.kernel.org/linux-pci/20250303200055.GA1881771@rocinante/T/#mab9cbd5834390d259afea056eee9a73d8c3b435f
-> 
-> That said, perhaps moving the log level to a debug would be better served here.
-> 
+> > > On Fri, Feb 14, 2025 at 12:39:32PM -0500, Jim Quinlan wrote:
+> > > > If regulator_bulk_get() returns an error, no regulators are created=
+ and we
+> > > > need to set their number to zero.  If we do not do this and the PCI=
+e
+> > > > link-up fails, regulator_bulk_free() will be invoked and effect a p=
+anic.
+> > > >
+> > > > Also print out the error value, as we cannot return an error upward=
+s as
+> > > > Linux will WARN on an error from add_bus().
+> > > >
+> > > > Fixes: 9e6be018b263 ("PCI: brcmstb: Enable child bus device regulat=
+ors from DT")
+> > > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> > > > ---
+> > > >  drivers/pci/controller/pcie-brcmstb.c | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/co=
+ntroller/pcie-brcmstb.c
+> > > > index e0b20f58c604..56b49d3cae19 100644
+> > > > --- a/drivers/pci/controller/pcie-brcmstb.c
+> > > > +++ b/drivers/pci/controller/pcie-brcmstb.c
+> > > > @@ -1416,7 +1416,8 @@ static int brcm_pcie_add_bus(struct pci_bus *=
+bus)
+> > > >
+> > > >               ret =3D regulator_bulk_get(dev, sr->num_supplies, sr-=
+>supplies);
+> > > >               if (ret) {
+> > > > -                     dev_info(dev, "No regulators for downstream d=
+evice\n");
+> > > > +                     dev_info(dev, "Did not get regulators; err=3D=
+%d\n", ret);
+> > >
+> > > Why is this dev_info() instead of dev_err()?
+> >
+> > I will change this.
+> > >
+> > > > +                     pcie->sr =3D NULL;
+> > >
+> > > Why can't you set 'pcie->sr' after successfull regulator_bulk_get()?
+> >
+> > Not sure I understand -- it is already set before a  successful
+> > regulator_bulk_get() call.
+>
+> Didn't I say 'after'?
 
-Even though debugfs_init() failure is not supposed to fail the probe(),
-dwc_pcie_rasdes_debugfs_init() has a devm_kzalloc() and propagating that
-failure would be canolically correct IMO.
+Sorry, I misinterpreted your question.  I can change it but it would
+just be churn because a new commit is going to refactor this function.
+However,
+I can set  pcie->num_regulators "after" in the new commit.
 
-So I would still opt to have my version + your previous one.
+Regards,
+Jim Quinlan
+Broadcom STB/CM
 
-- Mani
+>
+> > I set it to NULL after an unsuccessful result so the structure will
+> > not be passed to subsequent calls.
+> >
+>
+> If you set the pointer after a successful regulator_bulk_get(), you do no=
+t need
+> to set it to NULL for a failure.
+>
+> - Mani
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
 
--- 
-மணிவண்ணன் சதாசிவம்
+--0000000000001dc439062f878e28
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
+uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
+BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
+VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
+z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
+b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
++R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
+AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
+75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
+AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
+AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
+MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCBl//oahUIywMH6EWVak/qqS20gjYCI
+HWenNv1aKKLPxTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTAz
+MDQxNzI1MTFaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
+AgEwDQYJKoZIhvcNAQEBBQAEggEAnoeZwicR4oe8eeP0erXB4Uz15xHyjsk+mX0q3LfYh5m0l0f1
+vRHSBMp+0qWpfryn48jA9i0Mt8V3oyYwESKaIvv5x7bHKAuWhxwa5ZZnloyWNkuU0BGpQc9Do5vC
+w83d9Sv7LSaeb2PvRUcaN6b/oWKbYpou1FxiN/ezVLibqxFCjDQUpBme3fgcHFtHtOsEbR03yYDh
+ge5O48LyhW6yfjbcotJtI3WpUoqj4sD+eCCtE8WVzAn5E6Dc8ZArCCw+E+hLtywRgARnNT4WOm1X
+inwVTNaTCaOAl+6Jjq+xIoUhZU+ZgWTiYP13m60Ly9CHdh38Rs9PpGpOd/de7SepVw==
+--0000000000001dc439062f878e28--
 
