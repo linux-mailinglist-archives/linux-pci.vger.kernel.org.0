@@ -1,132 +1,229 @@
-Return-Path: <linux-pci+bounces-22839-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22840-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E0A2A4DFAB
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 14:50:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B8E5A4DFB9
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 14:51:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 41E2B1899461
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 13:50:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12C7B3B38DC
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 13:51:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D302868B;
-	Tue,  4 Mar 2025 13:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B01B32046BD;
+	Tue,  4 Mar 2025 13:51:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P33avndS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R5kgj4H/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEA82045AD
-	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 13:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE8E2046B0;
+	Tue,  4 Mar 2025 13:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741096203; cv=none; b=QM+eBvF1aXTfAeGW4fVi2Oqdo7+eWV/ZgzquJg6t+b2Utkq/34BziS0Hkcg1UN80Rv5MgPUMpKISoAFWYA9+6jwdaMEiSJSJa3eFXiDVwYiOXeaMQcpozaj1M88geFUOlZoG8I5ax9I51ZqwSOSvGLjownfKORQtKvyJp/zRsno=
+	t=1741096278; cv=none; b=cx7MR0LRjgekYCsNctkZ7KZ/n5Rbpcp96N7/5Toc6Bv65ZDq2sW81l6P9f+vlMJlKIU3+w6QQsidPglsOIQLpnx7MezODCwy6/O4eekgM1cU37IHEQn9Q8fnIbVUa4Xk6AzHsmdrD5yBCuOpzRi8ujbFm768pmNXfJ5j9TE1nLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741096203; c=relaxed/simple;
-	bh=5V2n4Ol/YIaFL/sIsn93eGOv7WmD2P0SaXmJke6dwPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ic5Lrkz0yyl3hvESK6hN6jfBO3+0sDAmGeEjVLv8UFBm8zMT6tWQ4EpbV5qst8+bn0BdLnVHXHIFjfG11/RAFDo9+gxDPvoZAzSCacl6/j+HyODzSa70P31KtvDf2lGn/q3KZwMtnz0azvTmsbzYyNRTKK0aacCo0QKkpjpvLKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P33avndS; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1741096278; c=relaxed/simple;
+	bh=gAVOKnxuAXipq7wqreAj7N7ZvPmdB9OEU/wbN3apFMk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Aec0Ves1v1H/7krfO7oC72M1MFnX00HIDTmisi+xEaas84PoyjL332UIBR1w/O8astR9g7FmtDi8Kc60xXLj8SrZYKmitvvnJHhhJrS/duNg2PfOEOXEEMjSLudpVtped7WMrz9p3SyeVtboOPPuFwcnfkKsIBsa/XPi1k5l72E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R5kgj4H/; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741096201; x=1772632201;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5V2n4Ol/YIaFL/sIsn93eGOv7WmD2P0SaXmJke6dwPw=;
-  b=P33avndSnf4QQTCxtJ4/rQvEBY1MkrDn3ZRjZLSuPT2ejupU1qmnnQ+7
-   TpEmyCHnK0QirJ5uhnip13SpiGkDZ8RV/e0dgsqn4TrVhPuGTjmfeDqUe
-   ldXcBPFfoVlaGhGCi9b2ozHx1dpNpFWOHTCucqqs5hZOINtBR4DhgBbC2
-   80AgsoJQA2KNl4Olv4Unw0xv1CRsah648YWu9oGwxn3X6c/0Z50hQR/MP
-   7t+QicEU2rr5Xqb8E0TFSV3eBLb+kb63mZ6Izb1chNsTvlglNzBgKtb6O
-   mRpSSRT7U/HrJy5smsezxNyEwiVm6Rk0ORx+mf927NTB5NM2TyVQOxL2d
-   w==;
-X-CSE-ConnectionGUID: o1jLNQ2pTwe1AoXnTWyD7A==
-X-CSE-MsgGUID: tWHcT1wDQJGxjL52ptZRPQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="29601817"
+  t=1741096277; x=1772632277;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gAVOKnxuAXipq7wqreAj7N7ZvPmdB9OEU/wbN3apFMk=;
+  b=R5kgj4H/XcXrV/Z8IxXZQFo48m60XuIv74BOOLvqRpcGTjuB/UfbPrwa
+   ZHY9tnsq7o0LHCHTNXmsZr5Df90cQi+xornyfXUC/2ND+K7N6KYg1dRty
+   aXQtjPEjfAed7zrF2MnlZQm9FKPH1OkGV7rvglmJXs9Gzz0AikhIbiwYb
+   Q3Hu3ZpRLWqHp+BzaXT0ppjmPitQQ8MVUYp4BcWKAThXFXrvEh/O9/Tz4
+   PmSRTnzX8W+chMlSV9DcZf6ty5l2VT14W6hN/iUtQFTo0I+w40jA4uKwx
+   R0hjs6npRPudsXLM17bsETy6vzFEQc27xsuZU9KhWvjUjVNOY4w7rJoKb
+   A==;
+X-CSE-ConnectionGUID: oF7t/7YKSvWFH8BRfFuncg==
+X-CSE-MsgGUID: g1zXP3OzQ4uINHKUIoO1vA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41260835"
 X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="29601817"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 05:50:00 -0800
-X-CSE-ConnectionGUID: NQv5HN7TQtKaJ9A2l20c7g==
-X-CSE-MsgGUID: CZMr/zzmRdmHoTwZxAX8RQ==
+   d="scan'208";a="41260835"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 05:51:16 -0800
+X-CSE-ConnectionGUID: Ip2M1FLJSISDCQ4PkwytEQ==
+X-CSE-MsgGUID: kUfPb+B8ReqGr4n8n8+Vkw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="123317663"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 04 Mar 2025 05:49:58 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tpSeh-000JpW-14;
-	Tue, 04 Mar 2025 13:49:55 +0000
-Date: Tue, 4 Mar 2025 21:49:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev
-Cc: oe-kbuild-all@lists.linux.dev, Bjorn Helgaas <helgaas@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>, Samuel Ortiz <sameo@rivosinc.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Xu Yilun <yilun.xu@linux.intel.com>, gregkh@linuxfoundation.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 09/11] PCI/IDE: Report available IDE streams
-Message-ID: <202503042126.FUEGx8dD-lkp@intel.com>
-References: <174107250696.1288555.15924775074966673629.stgit@dwillia2-xfh.jf.intel.com>
+   d="scan'208";a="118388115"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.220])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 05:51:14 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [RFC PATCH 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
+Date: Tue,  4 Mar 2025 15:51:08 +0200
+Message-Id: <20250304135108.2599-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174107250696.1288555.15924775074966673629.stgit@dwillia2-xfh.jf.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Dan,
+Disallow Extended Tags and Max Read Request Size (MRRS) larger than
+128B for devices under Xeon 6 Root Ports if the Root Port is bifurcated
+to x2. Also, 10-Bit Tag Requester should be disallowed for device
+underneath these Root Ports but there is currently no 10-Bit Tag
+support in the kernel.
 
-kernel test robot noticed the following build warnings:
+The normal path that writes MRRS is through
+pcie_bus_configure_settings() -> pcie_bus_configure_set() ->
+pcie_write_mrrs() and contains a few early returns that are based on
+the value of pcie_bus_config. Overriding such checks with the host
+bridge flag check on each level seems messy. Thus, simply ensure MRRS
+is always written in pci_configure_device() if a device requiring the
+quirk is detected.
 
-[auto build test WARNING on 7eb172143d5508b4da468ed59ee857c6e5e01da6]
+Link: https://cdrdv2.intel.com/v1/dl/getContent/837176
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Williams/configfs-tsm-Namespace-TSM-report-symbols/20250304-152958
-base:   7eb172143d5508b4da468ed59ee857c6e5e01da6
-patch link:    https://lore.kernel.org/r/174107250696.1288555.15924775074966673629.stgit%40dwillia2-xfh.jf.intel.com
-patch subject: [PATCH v2 09/11] PCI/IDE: Report available IDE streams
-config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20250304/202503042126.FUEGx8dD-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250304/202503042126.FUEGx8dD-lkp@intel.com/reproduce)
+The normal path that writes MRRS is somewhat convoluted so I ensure MRRS
+gets written in a more direct way, I'm not sure if that's the best
+approach. Thus sending this as RFC.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503042126.FUEGx8dD-lkp@intel.com/
+ drivers/pci/pci.c    | 15 ++++++++-------
+ drivers/pci/probe.c  |  8 +++++++-
+ drivers/pci/quirks.c | 27 +++++++++++++++++++++++++++
+ include/linux/pci.h  |  1 +
+ 4 files changed, 43 insertions(+), 8 deletions(-)
 
-All warnings (new ones prefixed by >>):
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 869d204a70a3..81ddad81ccb8 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5913,7 +5913,7 @@ EXPORT_SYMBOL(pcie_get_readrq);
+ int pcie_set_readrq(struct pci_dev *dev, int rq)
+ {
+ 	u16 v;
+-	int ret;
++	int ret, max_mrrs = 4096;
+ 	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+ 
+ 	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
+@@ -5933,13 +5933,14 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+ 
+ 	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+ 
+-	if (bridge->no_inc_mrrs) {
+-		int max_mrrs = pcie_get_readrq(dev);
++	if (bridge->no_inc_mrrs)
++		max_mrrs = pcie_get_readrq(dev);
++	if (bridge->only_128b_mrrs)
++		max_mrrs = 128;
+ 
+-		if (rq > max_mrrs) {
+-			pci_info(dev, "can't set Max_Read_Request_Size to %d; max is %d\n", rq, max_mrrs);
+-			return -EINVAL;
+-		}
++	if (rq > max_mrrs) {
++		pci_info(dev, "can't set Max_Read_Request_Size to %d; max is %d\n", rq, max_mrrs);
++		return -EINVAL;
+ 	}
+ 
+ 	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index b6536ed599c3..ceaa34b0525b 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2342,7 +2342,11 @@ static void pci_configure_serr(struct pci_dev *dev)
+ 
+ static void pci_configure_device(struct pci_dev *dev)
+ {
++	struct pci_host_bridge *host_bridge = pci_find_host_bridge(dev->bus);
++
+ 	pci_configure_mps(dev);
++	if (host_bridge && host_bridge->only_128b_mrrs)
++		pcie_set_readrq(dev, 128);
+ 	pci_configure_extended_tags(dev, NULL);
+ 	pci_configure_relaxed_ordering(dev);
+ 	pci_configure_ltr(dev);
+@@ -2851,13 +2855,15 @@ static void pcie_write_mps(struct pci_dev *dev, int mps)
+ 
+ static void pcie_write_mrrs(struct pci_dev *dev)
+ {
++	struct pci_host_bridge *host_bridge = pci_find_host_bridge(dev->bus);
+ 	int rc, mrrs;
+ 
+ 	/*
+ 	 * In the "safe" case, do not configure the MRRS.  There appear to be
+ 	 * issues with setting MRRS to 0 on a number of devices.
+ 	 */
+-	if (pcie_bus_config != PCIE_BUS_PERFORMANCE)
++	if (pcie_bus_config != PCIE_BUS_PERFORMANCE &&
++	    (!host_bridge || !host_bridge->only_128b_mrrs))
+ 		return;
+ 
+ 	/*
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index b84ff7bade82..987cd94028e1 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5564,6 +5564,33 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0144, quirk_no_ext_tags);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0420, quirk_no_ext_tags);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
+ 
++static void quirk_pcie2x_no_tags_no_mrrs(struct pci_dev *pdev)
++{
++	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
++	u32 linkcap;
++
++	if (!bridge)
++		return;
++
++	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &linkcap);
++	if (FIELD_GET(PCI_EXP_LNKCAP_MLW, linkcap) != 0x2)
++		return;
++
++	bridge->no_ext_tags = 1;
++	bridge->only_128b_mrrs = 1;
++	pci_info(pdev, "Disabling Extended Tags and forcing MRRS to 128B (performance reasons due to 2x PCIe link)\n");
++}
++
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db0, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db1, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db2, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db3, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db6, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db7, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db8, quirk_pcie2x_no_tags_no_mrrs);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db9, quirk_pcie2x_no_tags_no_mrrs);
++
++
+ #ifdef CONFIG_PCI_ATS
+ static void quirk_no_ats(struct pci_dev *pdev)
+ {
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 47b31ad724fa..def29c8c0f84 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -601,6 +601,7 @@ struct pci_host_bridge {
+ 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
+ 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
+ 	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
++	unsigned int	only_128b_mrrs:1;	/* Only 128B MRRS */
+ 	unsigned int	native_aer:1;		/* OS may use PCIe AER */
+ 	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
+ 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
 
->> drivers/pci/ide.c:495: warning: expecting prototype for pci_init_nr_ide_streams(). Prototype was for pci_ide_init_nr_streams() instead
-
-
-vim +495 drivers/pci/ide.c
-
-   480	
-   481	/**
-   482	 * pci_init_nr_ide_streams() - size the pool of IDE Stream resources
-   483	 * @hb: host bridge boundary for the stream pool
-   484	 * @nr: number of streams
-   485	 *
-   486	 * Enable IDE Stream establishment by setting the number of stream
-   487	 * resources available at the host bridge. Platform init code must set
-   488	 * this before the first pci_ide_stream_alloc() call.
-   489	 *
-   490	 * The "PCI_IDE" symbol namespace is required because this is typically
-   491	 * a detail that is settled in early PCI init, i.e. only an expert or
-   492	 * test module should consume this export.
-   493	 */
-   494	void pci_ide_init_nr_streams(struct pci_host_bridge *hb, int nr)
- > 495	{
-
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.5
+
 
