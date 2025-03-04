@@ -1,205 +1,225 @@
-Return-Path: <linux-pci+bounces-22909-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22910-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36A44A4EEFE
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 22:02:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B743A4EF3E
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 22:14:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DAE9C7A3A27
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 21:01:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 577123A526E
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 21:14:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A24341FBEB4;
-	Tue,  4 Mar 2025 21:02:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81DA7260384;
+	Tue,  4 Mar 2025 21:14:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Fo8li3UT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WxeaMso+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2053.outbound.protection.outlook.com [40.107.21.53])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C1A1F7076;
-	Tue,  4 Mar 2025 21:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741122149; cv=fail; b=M5DNokjbevYaMIN/GHm1hq/CILBHM0uUg54StZDgmuqRoq4YsNnVPLi2zpWwFGz3btNuyXkEXe+keiq2HXxHyEA2z8uAIxCcZG1QEBWbCEwdALXmTMxs57jansWPDsCmPeKNLiJZasJw7bOBcph7CVoMFJZK9UpONr3feUqKJT4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741122149; c=relaxed/simple;
-	bh=Xb4VRbdcGudHrkfbEbzo6fkxUvJh0UNTOXYAk64YdRc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=C+nujkQ1k4VtCMlwbFBpDoe/KSd0mKW+WhSIJvxKfATKV81aDXSZTcFGXdOEL7iyHbX6/+xYRkEEGDRVYbe1v+sIzLrng4ZyiRqvkD3c2xunHFTGyRupb7TB0oMHOB/AjindC2olTZgM1qkpntyJIq3CamdrAvun/PpeEZvofpg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Fo8li3UT; arc=fail smtp.client-ip=40.107.21.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TvTXZTTdgT4jEQYTEisbwfrRPVUvKf5SCg8KCps1Xy/KvvwYvl4gBwz3BrOaAXhwvhFbNJqXhr+tXgxZDF/6CZXGvidDHCfKu2yqC99sHJpYoDIxD+Hvwa92fESX28KUp+6ytwOeyPD567UoQSyZmY+UOtq8NhQEX1TIFoao+08WmZFClISVgi9knQ/l39U0J48UWtPftZNeKlohbc/7EVJpxUjYft8W+i6Eq+NrqPNgDOL9TrygRBygGcWwgUAygNrZzCrxujPA0nqOizQ8RNxpFaUHMwIODqjc4RobgULMsp7KPO8/xZAmWGFmtJRf0kHZ3xPDUJ2KGpSYcKE2Mw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DAXKOXwSQvIIpErMAIiWvMJkaIRZ6Jv7zVS4pIREqQ8=;
- b=BIdvL866sTMNA9aZd4nZt4CpCgSSxNttRXC+YpO/wp8v/x3tEEv2D1K/W5rEIiOPF0VJdg73W8oxhlJRTJa1LoZ1VCUJ9rQSCUcFv6i6TbotU9wB9E2TgGtP0z1OMckB/8/rG/j79xzcQvez398qAofovlNcWGFgVJey1hJg488L5f2uizw/OPyUUhP6VlJV3Nuq//16rxsxfQkFSvFt6cOLsXlbH5OvFATuLrOxH8uc2xFLlUHh5ZyCzhbnzqml01dX4ziKuYZ6YdjH6GyNb1SW+saIFMXj3Zj2BuJnXJ82UklXmX0DeBmKqjNfyr5OSOan6jfo63qahAsoFSE2Jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DAXKOXwSQvIIpErMAIiWvMJkaIRZ6Jv7zVS4pIREqQ8=;
- b=Fo8li3UTCRkE+qPKiMp5t1N6waExrWp8m1vRqLPbtFlXEMqYQIeLFkOKFZR1op96LHR073ljwzMASBs5phM0M5aqqut44hps8x4xOgfsF8Ih23IiyGZpTuCqRzJnOZax2j2BDf0pCgWlcd8B9kd7gFcKRQB+8FwH+hSiBXhE3iYILPcDcvK/cY310WSIbn8afALs2ODdiDAq4MipsKdETwUkPwz34eCNhOWXDufiU7xeTvCzT9fwbaBTD0K8diLX1mHviEFJaA8a8dYaoBgXGgngvYpCj/Fq7XubzCk+0HzsaKiG1f+YO33uiPBy49Vdh2arr6V59fTFE8iw4OBINw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by PA1PR04MB11058.eurprd04.prod.outlook.com (2603:10a6:102:489::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.29; Tue, 4 Mar
- 2025 21:02:24 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.8489.025; Tue, 4 Mar 2025
- 21:02:24 +0000
-Date: Tue, 4 Mar 2025 16:02:11 -0500
-From: Frank Li <Frank.li@nxp.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Jesper Nilsson <jesper.nilsson@axis.com>,
-	Lars Persson <lars.persson@axis.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@axis.com,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH RFC NOT TESTED 2/2] PCI: artpec6: Use
- use_parent_dt_ranges and clean up artpec6_pcie_cpu_addr_fixup()
-Message-ID: <Z8dqU4BGa2aZ2L81@lizhi-Precision-Tower-5810>
-References: <Z8dem5gBf3xLxSIT@lizhi-Precision-Tower-5810>
- <20250304203146.GA256660@bhelgaas>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304203146.GA256660@bhelgaas>
-X-ClientProxiedBy: BY1P220CA0004.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:59d::15) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B751FDA9D;
+	Tue,  4 Mar 2025 21:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741122870; cv=none; b=aGYzoL+WpdTaYtB+EfNbqFHoWTA74lwGLkicis3vHPV5GGZ8x87DYAlNRJa2i8gIYWDVJEGXmrg3XpOBAfKdaLS9JT867CclXvxwVrY0zAcetZU0IuCvw0ku1tuXCAJDiFeauOoICSXXKo6RcpGQTV16qnJ8+pZQz46FvW9bGRw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741122870; c=relaxed/simple;
+	bh=9+zCNKmwNKnjGxDu60SDej4Qy7w6cwAgW7GjsjzZzO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=l5JB8IcxBUAbG5c0jzFv1pqBKn3KrSg4Ujcd1+IWkjMTDdgz7BMILU7+2CDBEhyvXBUYWCQ+Wv+BvQRygNurzNQ6ygh7LqQTLqe8xMM2WT1SiO8naHry6k+siidrXIYXVyEPfwBDjFESDqBTdnwLtkPH3MT7Hy3qtf2t29ttq5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WxeaMso+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 976D2C4CEE5;
+	Tue,  4 Mar 2025 21:14:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741122869;
+	bh=9+zCNKmwNKnjGxDu60SDej4Qy7w6cwAgW7GjsjzZzO4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=WxeaMso+2o3FdrfLYBd13Y4/EhpLSq1MnT1cgAa/pvHzCnXNHWNEA4x+Uk2tc1A3s
+	 oNYwospfrQ6/jrr8KN40IfQa9/nd0OXF1rNq6askJ/MjYfD4Vw93gz5A/MN18Ef4Hq
+	 2homxCLZu+5UmthqT77SGhYvhc7VLruEFdgTAMBC/DhawAGVz8e2tuYX9sNANYN6cc
+	 aBJyn6AK5Jxe7wRWcH+4zOzeextzHkiYD3UTihxBa9t762eUn/txBoxU/y5nJp9iJG
+	 r9M+dux+AxqM1Ooos59NYw55Bk95Ascw168aaTBYRtrMr0YogbBS/j40R2VRqSulZz
+	 B7dDQ6VEzFw3Q==
+Date: Tue, 4 Mar 2025 15:14:28 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [RFC PATCH 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
+Message-ID: <20250304211428.GA258044@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|PA1PR04MB11058:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12194072-97b2-4d3a-2f04-08dd5b5fdd02
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|376014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?G00EhQDu+I+NzJitLHPsMtz5O0r/LcJZUY01dcp1WSkd5Du3ntnCsmugltFW?=
- =?us-ascii?Q?dybmub5p37Rb/P78+78feyHd3wBeMTr0poTZHFqjOwhWXry8A8MHRJl9hmnE?=
- =?us-ascii?Q?y8OXDJ/yNevnQ71iYJzpwYmvKRHiEB6IJls4ClRJdGYvJrNMPBQa3SidBWgg?=
- =?us-ascii?Q?bigBpSfBV3Zm3fybipPERksDMhvA6FNV9kzJvQMqOsAOBrffozxSy6oD1jac?=
- =?us-ascii?Q?Pumf0y+AlbzpKOW9f1m4KiEFaU1vhGnG50VySVr5mrUKU+3CcCYHFajRI5Dc?=
- =?us-ascii?Q?TmKt/PzSrZbzl7e8bS/V4ysl3vT9Thr3cegcrkID4R6aPkvgraQL6CaCEn8T?=
- =?us-ascii?Q?InKPwaFEuuNf+zx6R2pBohqEjV4uTu0jRfXnIa4xXiCBIaSBXNq5pIAiP2OW?=
- =?us-ascii?Q?4n1uxx14EeW56batqi9BaX1QiexiwXrGNwPg8vJd30jUybJPkXwM2vexqwsN?=
- =?us-ascii?Q?nRUIN2otcfrGD8Uk/P/fcmlsCtt2p1QO5S6zFnvjQOgbJCqKVnMsTVxe0F+d?=
- =?us-ascii?Q?OjDVByYx3VVHl1Er/9FVkS2JK2TtXxpA+Ypw3tbHV5EjHZxoZGZIU04Hvmlq?=
- =?us-ascii?Q?w5j91H09ysnvrW3gXG2CIlZaxLCjXUQntZogvtfKGwSXdj5JI6J09Z4gqTEX?=
- =?us-ascii?Q?NMWrVuA1N4ivWbXvset2difa/rhKoMm8Z5/S5TH2cYEDTVyvqN5NWrnyL1C/?=
- =?us-ascii?Q?7pus17vRyqwlvZZQaetJfWpTCCOgCxt/nvKdhdAoaHfnK2soEnByPtig/yNN?=
- =?us-ascii?Q?MFdk3TFA0VjHohJXP8ac3X6syzEh6RRSc/ezMp1YXN8xYM6KBu0MR5EtXcTc?=
- =?us-ascii?Q?7AGgZwKz0QwKH2zIn5FQdjgY5s3KAFCOK9/jgqdbvcOqtm10RJpWVMqghHB2?=
- =?us-ascii?Q?BXU2ze1c/u8gY93pX/cn+oBytNH2CH4Qc8UxtBa/qtWUkh7v1aJK4MQnc7XQ?=
- =?us-ascii?Q?4is9Qq5hpjEq8C+nJ7yfKqjzY8N05roBWt7AHL5fM++mn8OJ7ldD4Mni40lM?=
- =?us-ascii?Q?+pfYECDqhzthBzP8XWjO7M54zJBXtzsVs7n/4Z+bc7G/iL72mXkPUelxnHYV?=
- =?us-ascii?Q?2jMlZ/ra1ruJHH4hh1XXmP02ZNDHg4qvF7STs8Z99aohg2Gon8BQj4qOf1NJ?=
- =?us-ascii?Q?AOxWbwvlKLqgERNR6RjbymLp+k1Z+VxS1XBTddDd/qbQMmFAXqTB7c2LCSGL?=
- =?us-ascii?Q?4JktAIMlEGvYAMQvQeCG8DiONcQlvoBM2AcZUfsAkzt59ZcLU2+yDHuu9q4H?=
- =?us-ascii?Q?Z+Fv9s2/q5Q57x+5JMHIbHKh+y3QX/DW3nlopsMY3QzK7n8szb2QAfRG1lzC?=
- =?us-ascii?Q?u6M31njPNuZrBQ2NrqH+cUMCFq47r03ssCi6jFdJFXcBLP2p4kBRBeVJEAnu?=
- =?us-ascii?Q?Fx8B7UhygP+Z4Ly7Mir4tgjiXY3kU4qOzRegIMcsgVk74jpj7Xf3cKJP2GCf?=
- =?us-ascii?Q?zhioebJnBomvPxklRmbygYqug2yrg4bK?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Rncbthbdx45BoMNz7bqOv4FpvTJS11Q4yKSQadKUraWEcuU3CUGt8XDVltKe?=
- =?us-ascii?Q?A7p0erpoTt65EfrzPmfikFmgaR6Nb+Rim5KoU9zS8/iP1BQOCRDhKkAs4zEA?=
- =?us-ascii?Q?M+evHrSyhRsqCatnE5/QdMEnN4zkc9u7O+hebPWY/4Ui6BXBJg8D+fyqVMXL?=
- =?us-ascii?Q?Px7ZoDGWyVZFT0ewfle59SgMZVPXcoDz7uEWNNUpXzPaZtqeqo0fFbLGj7cu?=
- =?us-ascii?Q?r0S1KicLu8vYUT07TlhpNnxJ2JEZ1MvRL+qfK3YYZBLmg2zNIiQOYU6CD2v5?=
- =?us-ascii?Q?Aa3+603WOcKmw88tlOSS4u3s+Nj20PW4+8ZH9ERRIrYekOhVls36qrkl+cUA?=
- =?us-ascii?Q?13qck7sWLWRNfYSg5SqPuaRPd74s5xYQJ0zR8kGCJtYZ+Xs/YcfVww/9E0y1?=
- =?us-ascii?Q?OID6SkYUXd1TnKenH9MM2qfDDQasfTCYRGL2RSsWy7qPuAZsq9SG+8rg7HP9?=
- =?us-ascii?Q?rF0B5W1HMWAYf56+2G9QvHYIvHElAA6eW/A/Kk/4BCUfDgL+Fw5bhIg4TF04?=
- =?us-ascii?Q?Ra15p4ksfatUWxrGm13RFnbkf/4hw+xqvR+WwkmOQQr76w3cnqIIbzVAvX65?=
- =?us-ascii?Q?9lrB8DJCFlz82cunk9VpDqu5iDHfFxvOMl7hh1ImhLcK77cZ8mwJZWSG9Sbg?=
- =?us-ascii?Q?8iMz/wUgrG2hXy4dqOFsARvBSR3ygVlsu2ZqF1js82nLpEu2ktlUYxVm7etK?=
- =?us-ascii?Q?OJeW2nG3Pn1fkS/6uR70v4XJpTzoovZ9dojhE5l1G+waYT9n9qxEhRaIy2QJ?=
- =?us-ascii?Q?wUDmDbmg4LZ+fyBVr276DA02LMdazJTLA0kPdY5dWNK0BEwZ3jgxa9iuIgOq?=
- =?us-ascii?Q?EYioZUbj8rCraISEBfxiiDKnyiCodmzzQyieO36Ynidpzn3mCGbDNg5Pw90C?=
- =?us-ascii?Q?OZR930Z8ybc+IVGXeXeV3f1LeI1CPuV8vnexAqpY5VCnMX36cEKIDnpx+fFd?=
- =?us-ascii?Q?Iln7tgX8gyE7fBVoI70RnVZ+xI5keBSB4eh3rDwzfPLGQh2arUv9igb9AUkL?=
- =?us-ascii?Q?tPL3rVLb9sXij3xHQeEAKkTrlfK/C5p/tsjL76s2kbzlRjWwc8eunoJqg01v?=
- =?us-ascii?Q?uqYc9iCTxMqBDLQRZVLU6vOyvNqH29NYntLZbE4z7+gzw+1zITqIMbH9PMA6?=
- =?us-ascii?Q?XOLyeb2xQFTfJ6JPt7NQpaO8mhclkxV8uiaqlyHHMAOqN/Oxo0CIFgCJ7TFF?=
- =?us-ascii?Q?X55OyjK/eoxvbhfhw/xx/bSb+fTDMI+/Iy+oS7jDlq4V/l7cAcAS765K0KlW?=
- =?us-ascii?Q?2ZZ7XoGYDXADG5EQ+vUBBACEOvVDM6BJ4ikDVDmb6AlXpWviq4zpecoazBnq?=
- =?us-ascii?Q?txE8OI8psxH59arW/CWeSRhKjIg/D2cztcodR+B1SkiJWBYGHcdaeTZwWW8u?=
- =?us-ascii?Q?mnkam9ZASF4z4AP5ILcXTxLlZ2cT34gbqND/z6mMaYP7p5J5xgCxft6l2Ru0?=
- =?us-ascii?Q?nk/pg8nAhBzWttFTiHxfwfXOx5nyEfEdjF5zIj1OLSH8itFfBF/gl5kxgsHG?=
- =?us-ascii?Q?H7v1o+V2xAMzRYzE/hnA6V9dDnVwcCLldmKYrqmhMzOvndvo16LoWg9WbYNd?=
- =?us-ascii?Q?6pXS5kkmxh3ftL6+0OL8mZjt9Ya+rgIEnea2Pj1d?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12194072-97b2-4d3a-2f04-08dd5b5fdd02
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 21:02:24.5659
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WQ1Pds50mGLNfi24/hd7x/ZPwr2wAh8rhbxeV9zbWtUd8GbOsemA+ANwu95MFhvEMMLtBqUPJWg+/89xPDzrwQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB11058
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250304135108.2599-1-ilpo.jarvinen@linux.intel.com>
 
-On Tue, Mar 04, 2025 at 02:31:46PM -0600, Bjorn Helgaas wrote:
-> On Tue, Mar 04, 2025 at 03:12:11PM -0500, Frank Li wrote:
-> > On Tue, Mar 04, 2025 at 01:08:16PM -0600, Bjorn Helgaas wrote:
-> > > On Tue, Mar 04, 2025 at 12:49:36PM -0500, Frank Li wrote:
-> > > > Remove artpec6_pcie_cpu_addr_fixup() as the DT bus fabric should provide correct
-> > > > address translation. Set use_parent_dt_ranges to allow the DWC core driver to
-> > > > fetch address translation from the device tree.
-> > >
-> > > Shouldn't we be able to detect platforms where DT doesn't describe the
-> > > translation correctly?  E.g., by running .cpu_addr_fixup() on a
-> > > res.start value and comparing the result to the parent_bus_addr()?
-> > > Then we could complain about it if they don't match.
-> >
-> > Can't detect because:
-> >
-> > There are case, driver have not provide .cpu_addr_fixup, but dts still be
-> > wrong. such as
-> >
-> > bus@10000000
-> > {
-> > 	ranges = <0xdeaddead 0x1000000 size>;
-> > 	pci@90000000 {
-> >
-> > 		reg = <...>, <0xdeaddead>;
-> > 		reg-names = <...>, <config>;
-> > 	}
-> >
-> > };
-> >
-> > above dts can work with current driver, but parent bus address 0xdeaddead
-> > is totally fake address. We can't detect this case because no
-> > .cpu_addr_fixup() at all.
->
-> If there's no .cpu_addr_fixup(), primary-side ATU addresses must be
-> identical to CPU addresses.  If the DT parent bus address is
-> different, can't we assume the DT is broken?
+On Tue, Mar 04, 2025 at 03:51:08PM +0200, Ilpo Järvinen wrote:
+> Disallow Extended Tags and Max Read Request Size (MRRS) larger than
+> 128B for devices under Xeon 6 Root Ports if the Root Port is bifurcated
+> to x2. Also, 10-Bit Tag Requester should be disallowed for device
+> underneath these Root Ports but there is currently no 10-Bit Tag
+> support in the kernel.
+> 
+> The normal path that writes MRRS is through
+> pcie_bus_configure_settings() -> pcie_bus_configure_set() ->
+> pcie_write_mrrs() and contains a few early returns that are based on
+> the value of pcie_bus_config. Overriding such checks with the host
+> bridge flag check on each level seems messy. Thus, simply ensure MRRS
+> is always written in pci_configure_device() if a device requiring the
+> quirk is detected.
 
-I think so.
+This is kind of weird.  It's apparently not an erratum in the sense
+that something doesn't *work*, just something for "optimized PCIe
+performance"?
 
-Frank
+What are we supposed to do with this?  Add similar quirks for every
+random PCI controller?  Scratching my head about what this means for
+the future.
+
+What bad things happen if we *don't* do this?  Is this something we
+could/should rely on BIOS to configure for us?
+
+> Link: https://cdrdv2.intel.com/v1/dl/getContent/837176
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> ---
+> 
+> The normal path that writes MRRS is somewhat convoluted so I ensure MRRS
+> gets written in a more direct way, I'm not sure if that's the best
+> approach. Thus sending this as RFC.
+> 
+>  drivers/pci/pci.c    | 15 ++++++++-------
+>  drivers/pci/probe.c  |  8 +++++++-
+>  drivers/pci/quirks.c | 27 +++++++++++++++++++++++++++
+>  include/linux/pci.h  |  1 +
+>  4 files changed, 43 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 869d204a70a3..81ddad81ccb8 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5913,7 +5913,7 @@ EXPORT_SYMBOL(pcie_get_readrq);
+>  int pcie_set_readrq(struct pci_dev *dev, int rq)
+>  {
+>  	u16 v;
+> -	int ret;
+> +	int ret, max_mrrs = 4096;
+>  	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+>  
+>  	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
+> @@ -5933,13 +5933,14 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+>  
+>  	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
+>  
+> -	if (bridge->no_inc_mrrs) {
+> -		int max_mrrs = pcie_get_readrq(dev);
+> +	if (bridge->no_inc_mrrs)
+> +		max_mrrs = pcie_get_readrq(dev);
+> +	if (bridge->only_128b_mrrs)
+> +		max_mrrs = 128;
+>  
+> -		if (rq > max_mrrs) {
+> -			pci_info(dev, "can't set Max_Read_Request_Size to %d; max is %d\n", rq, max_mrrs);
+> -			return -EINVAL;
+> -		}
+> +	if (rq > max_mrrs) {
+> +		pci_info(dev, "can't set Max_Read_Request_Size to %d; max is %d\n", rq, max_mrrs);
+> +		return -EINVAL;
+>  	}
+>  
+>  	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index b6536ed599c3..ceaa34b0525b 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2342,7 +2342,11 @@ static void pci_configure_serr(struct pci_dev *dev)
+>  
+>  static void pci_configure_device(struct pci_dev *dev)
+>  {
+> +	struct pci_host_bridge *host_bridge = pci_find_host_bridge(dev->bus);
+> +
+>  	pci_configure_mps(dev);
+> +	if (host_bridge && host_bridge->only_128b_mrrs)
+> +		pcie_set_readrq(dev, 128);
+>  	pci_configure_extended_tags(dev, NULL);
+>  	pci_configure_relaxed_ordering(dev);
+>  	pci_configure_ltr(dev);
+> @@ -2851,13 +2855,15 @@ static void pcie_write_mps(struct pci_dev *dev, int mps)
+>  
+>  static void pcie_write_mrrs(struct pci_dev *dev)
+>  {
+> +	struct pci_host_bridge *host_bridge = pci_find_host_bridge(dev->bus);
+>  	int rc, mrrs;
+>  
+>  	/*
+>  	 * In the "safe" case, do not configure the MRRS.  There appear to be
+>  	 * issues with setting MRRS to 0 on a number of devices.
+>  	 */
+> -	if (pcie_bus_config != PCIE_BUS_PERFORMANCE)
+> +	if (pcie_bus_config != PCIE_BUS_PERFORMANCE &&
+> +	    (!host_bridge || !host_bridge->only_128b_mrrs))
+>  		return;
+>  
+>  	/*
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index b84ff7bade82..987cd94028e1 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5564,6 +5564,33 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0144, quirk_no_ext_tags);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0420, quirk_no_ext_tags);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
+>  
+> +static void quirk_pcie2x_no_tags_no_mrrs(struct pci_dev *pdev)
+> +{
+> +	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
+> +	u32 linkcap;
+> +
+> +	if (!bridge)
+> +		return;
+> +
+> +	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &linkcap);
+> +	if (FIELD_GET(PCI_EXP_LNKCAP_MLW, linkcap) != 0x2)
+> +		return;
+> +
+> +	bridge->no_ext_tags = 1;
+> +	bridge->only_128b_mrrs = 1;
+> +	pci_info(pdev, "Disabling Extended Tags and forcing MRRS to 128B (performance reasons due to 2x PCIe link)\n");
+> +}
+> +
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db0, quirk_pcie2x_no_tags_no_mrrs);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db1, quirk_pcie2x_no_tags_no_mrrs);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db2, quirk_pcie2x_no_tags_no_mrrs);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db3, quirk_pcie2x_no_tags_no_mrrs);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db6, quirk_pcie2x_no_tags_no_mrrs);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db7, quirk_pcie2x_no_tags_no_mrrs);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db8, quirk_pcie2x_no_tags_no_mrrs);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db9, quirk_pcie2x_no_tags_no_mrrs);
+> +
+> +
+>  #ifdef CONFIG_PCI_ATS
+>  static void quirk_no_ats(struct pci_dev *pdev)
+>  {
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 47b31ad724fa..def29c8c0f84 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -601,6 +601,7 @@ struct pci_host_bridge {
+>  	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
+>  	unsigned int	no_ext_tags:1;		/* No Extended Tags */
+>  	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
+> +	unsigned int	only_128b_mrrs:1;	/* Only 128B MRRS */
+>  	unsigned int	native_aer:1;		/* OS may use PCIe AER */
+>  	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
+>  	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
+> 
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> -- 
+> 2.39.5
+> 
 
