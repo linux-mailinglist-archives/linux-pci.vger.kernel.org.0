@@ -1,434 +1,340 @@
-Return-Path: <linux-pci+bounces-22809-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22810-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDD27A4D4A1
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 08:19:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E55D2A4D49C
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 08:18:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B48A1889637
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 07:17:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1D190165A19
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 07:18:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39E301FA14E;
-	Tue,  4 Mar 2025 07:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CF401F75A9;
+	Tue,  4 Mar 2025 07:14:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DkbHXXJ4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kdau4J4r"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C81A1F9AB1;
-	Tue,  4 Mar 2025 07:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1EE91FBC8A
+	for <linux-pci@vger.kernel.org>; Tue,  4 Mar 2025 07:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741072407; cv=none; b=noZo7W6xmeQXY+BLVfMUpwv/QkkRxJO5WcTQ3NbeZCbA40iNfnfNomi6G0XmRvPyP8zly8spLuNbukp76PQ5Uac3shsbIdCv+9U9xPH+HOzkOY2qisoELimRE27598R6+FdVtGSWKEbU6wUVF8EUYfTsHdqoOdY0GgtpyXwoQ+c=
+	t=1741072458; cv=none; b=swR0alpjBOAIWgK7J+O2VS8Px7ma4XxstNxGVKnYNYRPKPVOL+tkzQHrP91o+eGgQ+mY/ahwaj+eKRXj3IQIzxBdxU+CkruB7QSqcKEuXrS9qkxZcN1i4NYHK0cFnD2uqRZQpTENQ55X9wltUWCerx2U70prsU63nWv9+gQD7d4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741072407; c=relaxed/simple;
-	bh=kbGFW3DXNmNaI/LJicjMxyiKRsoi7BY1jdzzyDoctOo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QK3deLljQlmm74lUruekiC6m/8r4PCd7iOcpL4EoWmOSG3hUYm2k5nEUzCm924c9UrHyXs8mg9BCwXMB06hZOHOYXVXlqJXJ9qn/DjY5yJgK6UwkaHY/zZnpdbFEljagp1+wHRrUHPaAdgXAW3aIDdm0+UXjCipxyMweGSccQsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DkbHXXJ4; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-46fa764aac2so45883131cf.1;
-        Mon, 03 Mar 2025 23:13:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741072404; x=1741677204; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rrdQz9Cgs/e9JZOqG5wHg9flLJAY+0kITfj7PWOImhU=;
-        b=DkbHXXJ4jVbMBFFQxElG3nVKFKMOmMvPtpixJlGuEfaGyNDN+Oae/urisrKlnglDjL
-         hfNxirn7Z4aq71xGtQeGmybQtiY6n6OPzZT3JdJvqUo7hzReDoz/1VTy5NcbWjg6qRnm
-         xXx96zDABditL6siAfhsOBhC6AHlREpwpYMUSQ70EVVwmRD32lW5MhRk/IUSq5E11mSU
-         vgAsZMv2aLzsiVka3wCH5f+IMN8cluaJOJkxFwPwv7WmKYnAKOX+dfGpDST8a1gddG9F
-         ln70PHVvHGOL4QFZg++xDwA5k+nKQcXUHHgk2EQkgCiPt0dO+hv704fPrU48yUzuQHWt
-         eKVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741072404; x=1741677204;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rrdQz9Cgs/e9JZOqG5wHg9flLJAY+0kITfj7PWOImhU=;
-        b=rbmpT1vb299HxJyvfvELkKznLYARLCbcNGunMDC3XUY8S3AbrZW2xOuweaextidzFZ
-         rVNULaY6Gdjbf6OegwOBMBURf0bLSH/rotdUtFxVPzXzCK/NjGIem5j9xeBB6Ld3qVWr
-         2n+lYg5vdScRWpOiKMg2h4RRpzAlL8uTwsFD4JVV7rt83peLvBmWEcwORTd4XFxC4L20
-         g3CjORRFWX19MMZrXnvWSFuvpuM9/KREdAeklVoKQuSEd8Pa6VYU68uP1MZ8kSfB1IZO
-         xT2sb2PSBuLMF/JkvqJ7SAE96mYPm0ToPEZ79X7C+NjYxWKD0/WBAGDvMf5Uwo9cFchx
-         RdfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5sMjuY3gqzFtYEQL+B/1sDiwlfm1qmryBeTPxLiB29igX/x6/JdG3a70y1W2rsfm9cFdct4B5M/aw@vger.kernel.org, AJvYcCXxzo2gmyaXDBBXVUTHYgFHHbEayPEd2rp3Qj+3gmP2YK1E15VQYRRx2AcVOdwPh/dqGbFlkeAr/saOgz5u@vger.kernel.org
-X-Gm-Message-State: AOJu0YzztRucyqB2bSVU491zj0CIM15jCXLNif0Y87RW3SecHb0/pLga
-	/lLEktuJlm3odk6tXjIxaL/o0PzCYUDi1s2gU0XxApcbq6FBaI+l
-X-Gm-Gg: ASbGncuZ3dg+tcquqeGKBISp3FJG1X/hEknVEKIlgBgEAMPwFj6c9Yohf9hicMl4DmJ
-	D+sDexeAzhHCFvuCoRJtCWvW5EXc24B9y+TRvGabZ0A+6SJePpDK3frx2DLSipAonruX6qVzh6O
-	mrUaJvjtcFDwsdCsTFnsUfqenyKCJ3jXjdvAj9CtYjcqjbkcGCDbwZPhF7spitEl/kjWjOPB7fi
-	KlMLV/8KS7VwIUGr1Yt0i6HFbdzCYURL+7BEpQdV8NtwaMH1NkJzRpvsJVziJWowGqps0y9fcXg
-	3arooONruI1HJGbsQftD
-X-Google-Smtp-Source: AGHT+IEyqWPUhMGvruobgDMmuMPk0gKDbAAIQMmUTsNb1WXjMm/eOtaru71S38A51PS4dUF/LL7KkQ==
-X-Received: by 2002:a05:622a:352:b0:475:42d:ea0a with SMTP id d75a77b69052e-475042debfbmr320181cf.38.1741072403930;
-        Mon, 03 Mar 2025 23:13:23 -0800 (PST)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47500cef956sm3231951cf.54.2025.03.03.23.13.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Mar 2025 23:13:23 -0800 (PST)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>,
-	Niklas Cassel <cassel@kernel.org>
-Cc: linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH 2/2] PCI: sophgo-dwc: Add Sophgo SG2044 PCIe driver
-Date: Tue,  4 Mar 2025 15:12:38 +0800
-Message-ID: <20250304071239.352486-3-inochiama@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250304071239.352486-1-inochiama@gmail.com>
-References: <20250304071239.352486-1-inochiama@gmail.com>
+	s=arc-20240116; t=1741072458; c=relaxed/simple;
+	bh=2P/ln9lrhKSlXuf6pNo4cqYdV2q/s4L0PRH305lE+H4=;
+	h=Subject:From:To:Cc:Date:Message-ID:MIME-Version:Content-Type; b=E9vf6FWIwksF2U/Pf6yKn+zbHjKTxo/unj6d5RRENkGhItpKVk44tALph/8COItYs8pLiWL9MUh4Gv+9OdA9b7PEDUZY6vGwMS5Jg5CZTkV1yYq8cUgZFOTiM+eiM/Apsz5RZV2vK2sM7kHt1Fw0wtmja/v7uBpeLgujgvJTK9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kdau4J4r; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741072457; x=1772608457;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2P/ln9lrhKSlXuf6pNo4cqYdV2q/s4L0PRH305lE+H4=;
+  b=kdau4J4rtypume6waqkY9DgncE529QwVteQb/Hb0KoqjISlB1QOE3h23
+   kblAM0MgxJ4qlMxKg4rj25waf2ob8Je4i7mhY3/o0snIztf6S/OAf8KL6
+   rPwMJV8foyXO6Aw3UIlkPQRa71mcTi1lHPhEx70Boj2rvofACmDEOm4Jy
+   rSGil7Edoa3ZWPXAVsm/8a0nhO2IfS9DV0C70j8vBkN7j3QncgojCrH9E
+   CeDTZTHU69PGD4Knu5WBcGi7hsnXQDXj3NZ9SUhj5coPQpLut0TI6D8va
+   Fc+lmilAYJeEoKo6OLD7t1WEjGPoOVBhg5PY9w3hCNUSHzI2XOQU+FNNr
+   w==;
+X-CSE-ConnectionGUID: Vh4o+t6CRmGuq8sH1llWAg==
+X-CSE-MsgGUID: Tpn8jgQKRp+tYdAYvK6Q5g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11362"; a="41224006"
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="41224006"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 23:14:15 -0800
+X-CSE-ConnectionGUID: pjHCIlK8R+OvdWytjYcmEg==
+X-CSE-MsgGUID: x1escmBoSSal0Mq4eL4N3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,331,1732608000"; 
+   d="scan'208";a="118078470"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO dwillia2-xfh.jf.intel.com) ([10.125.109.47])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 23:14:14 -0800
+Subject: [PATCH v2 00/11] PCI/TSM: Core infrastructure for PCI device
+ security (TDISP)
+From: Dan Williams <dan.j.williams@intel.com>
+To: linux-coco@lists.linux.dev
+Cc: Isaku Yamahata <isaku.yamahata@intel.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, Lukas Wunner <lukas@wunner.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Xu Yilun <yilun.xu@linux.intel.com>,
+ Wu Hao <hao.wu@intel.com>, Samuel Ortiz <sameo@rivosinc.com>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Sami Mujawar <sami.mujawar@arm.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Steven Price <steven.price@arm.com>, Xiaoyao Li <xiaoyao.li@intel.com>,
+ Yilun Xu <yilun.xu@intel.com>, Alexey Kardashevskiy <aik@amd.com>,
+ John Allen <john.allen@amd.com>,
+ Ilpo =?utf-8?b?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+ gregkh@linuxfoundation.org, linux-pci@vger.kernel.org, aik@amd.com,
+ lukas@wunner.de
+Date: Mon, 03 Mar 2025 23:14:14 -0800
+Message-ID: <174107245357.1288555.10863541957822891561.stgit@dwillia2-xfh.jf.intel.com>
+User-Agent: StGit/0.18-3-g996c
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Add support for DesignWare-based PCIe controller in SG2044 SoC.
+Changes since v1 [1]:
+ - [configfs-tsm: Namespace TSM report symbols]
+   - collect tags
+ - [coco/guest: Move shared guest CC infrastructure to drivers/virt/coco/guest/]
+   - collect tags
+ - [coco/tsm: Introduce a core device for TEE Security Managers]
+   - Rename 'tsm_subsys' => 'tsm_core_dev' (Jonathan)
+ - [PCI/IDE: Enumerate Selective Stream IDE capabilities]
+   - Fix the reference PCIe 6.2 specification chapter to 7.9.26 (Bjoen)
+   - Treat all specification terms as proper nouns, like "Stream ID" (Bjorn)
+   - Rename PCI_IDE_LINK_STREAM to PCI_IDE_LINK_STREAM_0 to indicate
+     first of a series (Jonathan)
+   - Stop saving sel_ide_cap in pci_dev as it is not a capability block
+     (Jonathan)
+   - Add support for the "Configuration cycles over Selective Stream"
+     mechanism (Alexey, Jonathan)
+   - Cache the number of Link Stream register blocks in pci_dev to save
+     IDE capability re-reads
+   - Clarify 'from Endpoint to Root Port' comment in pci_ide_init()
+     (Jonathan)
+   - Fix "Number of Selective IDE Streams Supported" 1-based field
+     interpretation (Aneesh, Yilun, Jonathan)
+   - Switch all register mask definitions to use __GENMASK() to fix
+     bugs, cleanup readability, and support usage of FIELD_{PREP,GET}()
+     in ide.c (Alexey, Jonathan, Yilun, Aneesh)
+ - [PCI/TSM: Authenticate devices via platform TSM]
+   - Line wrap documentation, and fixup fidelity to specification
+     terminology (Bjorn)
+   - Prepare for calling tsm_ops->probe() for Physical Functions beyond
+     0 and Virtual Functions, introduce 'struct pci_tsm_pf0' as the
+     object to wrap 'struct pci_tsm' in the Physical Function 0 case.
+     Call tsm_ops->probe() and tsm_ops->remove() for all functions on a
+     device if Physical Function 0 sets pdev->tsm. (Yilun, Aneesh)
+   - Drop the complicated 'struct pci_dsm' scheme (Alexey)
+   - Fix tsm->state validation, 'init before connect' (Yilun)
+   - Move on from if_not_guard(), but not onto the whitespace column
+     pressure of scoped_cond_guard() (Jonathan)
+   - Rename pci_tsm_register() pci_tsm_core_register() to disambiguate
+     from device init in pci_tsm_init() (Jonathan)
+ - [samples/devsec: Introduce a PCI device-security bus + endpoint sample]
+   - Fix CONFIG_VIRT_DRIVERS=n compilation dependency (0day Kbuild Robot)
+   - Switch from a single devm action to remove emulated devices and
+     ports to a per-device / per-port scheme (Jonathan)
+   - Fix "Number of Selective IDE Streams Supported"
+   - Use devm_gen_pool_create() (Jonathan)
+ - [PCI: Add PCIe Device 3 Extended Capability enumeration]
+ - [PCI/IDE: Add IDE establishment helpers]
+   - Drop PCI_IDE_SETUP_ROOT_PORT and its related complications. Push
+     Root Port programming responsibility to leaf drivers. (Alexey,
+     Jonathan, Bjorn)
+   - Clarify that some TSM technologies do not allow system-software to
+     allocate the Stream ID (Aneesh)
+   - Fundamentally rework the API to stop tying the Stream ID to the
+     Endpoint register block index, the Root Port register block index,
+     and the platform stream slot. Add pci_ide_strem_alloc() to grab
+     those resources and clarify that Stream IDs only need to be unique
+     within a Partner Port pairing. The 'struct pci_ide' object is
+     updated accordingly to carry all the Partner Port details. (Alexey,
+     Jonathan, Aneesh)
+   - Add kernel-doc commentary for all exported APIs (Bjorn)
+   - Miscellaneous specific terminology fixups and pci.h comment
+     cleanups (Bjorn)
+   - Drop address association setup for now given the questions around
+     its value (Alexey, Yilun)
+   - Switch from "devid" to "RID" to match specification language, add a
+     comment to address the discrepancy in Linux terms vs PCIe spec
+     terms (Bjorn)
+   - Setup RID association registers relative to which RIDs are seen at
+     either Partner Port (Yilun, Alexey)
+ - [PCI/IDE: Report available IDE streams]
+   - Rename pci_set_nr_ide_streams() to pci_ide_init_nr_streams() to
+     clarify why this one symbols is in the "PCI_IDE" symbol namespace
+     since PCI init code is typically built-in. (Alexey)
+   - Fix missing quotes in usage of EXPORT_SYMBOL_NS_GPL() and
+     MODULE_IMPORT() (Alexey)
+ - [PCI/TSM: Report active IDE streams]
+   - Documentation fixups (Bjorn)
+   - Rename tsm_register_ide_stream() to tsm_ide_stream_register() for
+     naming consistency
+   - Reflect that the format of the stream link changed from:
+     pciDDDD:BB/streamN:DDDD:BB:DD:F
+     ...to:
+     pciDDDD:BB/streamH.R.E:DDDD:BB:DD:F
+ - [samples/devsec: Add sample IDE establishment]
+   - Mirror the devsec_tsm_disconnect() sequence in the
+     devsec_tsm_connect() error unwind path (Jonathan)
+   - Other miscellaneous symmetry on error unwind fixups (Jonathan)
 
-Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+[1]: http://lore.kernel.org/173343739517.1074769.13134786548545925484.stgit@dwillia2-xfh.jf.intel.com
+
 ---
- drivers/pci/controller/dwc/Kconfig          |  10 +
- drivers/pci/controller/dwc/Makefile         |   1 +
- drivers/pci/controller/dwc/pcie-dw-sophgo.c | 270 ++++++++++++++++++++
- 3 files changed, 281 insertions(+)
- create mode 100644 drivers/pci/controller/dwc/pcie-dw-sophgo.c
+Towards devsec-next:
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index b6d6778b0698..004c384e25ad 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -381,6 +381,16 @@ config PCIE_UNIPHIER_EP
- 	  Say Y here if you want PCIe endpoint controller support on
- 	  UniPhier SoCs. This driver supports Pro5 SoC.
- 
-+config PCIE_SOPHGO_DW
-+	bool "Sophgo DesignWare PCIe controller"
-+	depends on ARCH_SOPHGO || COMPILE_TEST
-+	depends on PCI_MSI
-+	depends on OF
-+	select PCIE_DW_HOST
-+	help
-+	  Enables support for the DesignWare PCIe controller in the
-+	  Sophgo SoC.
-+
- config PCIE_SPEAR13XX
- 	bool "STMicroelectronics SPEAr PCIe controller"
- 	depends on ARCH_SPEAR13XX || COMPILE_TEST
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index a8308d9ea986..193150056dd3 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_PCIE_QCOM_EP) += pcie-qcom-ep.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
- obj-$(CONFIG_PCIE_ROCKCHIP_DW) += pcie-dw-rockchip.o
-+obj-$(CONFIG_PCIE_SOPHGO_DW) += pcie-dw-sophgo.o
- obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
- obj-$(CONFIG_PCIE_KEEMBAY) += pcie-keembay.o
- obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
-diff --git a/drivers/pci/controller/dwc/pcie-dw-sophgo.c b/drivers/pci/controller/dwc/pcie-dw-sophgo.c
-new file mode 100644
-index 000000000000..3ed7cfe0b361
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-dw-sophgo.c
-@@ -0,0 +1,270 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Sophgo DesignWare based PCIe host controller driver
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/module.h>
-+#include <linux/property.h>
-+#include <linux/platform_device.h>
-+
-+#include "pcie-designware.h"
-+
-+#define to_sophgo_pcie(x)		dev_get_drvdata((x)->dev)
-+
-+#define PCIE_INT_SIGNAL			0xc48
-+#define PCIE_INT_EN			0xca0
-+
-+#define PCIE_INT_SIGNAL_INTX		GENMASK(8, 5)
-+
-+#define PCIE_INT_EN_INTX		GENMASK(4, 1)
-+#define PCIE_INT_EN_INT_MSI		BIT(5)
-+
-+struct sophgo_pcie {
-+	struct dw_pcie		pci;
-+	void __iomem		*app_base;
-+	struct clk_bulk_data	*clks;
-+	unsigned int		clk_cnt;
-+	struct irq_domain	*irq_domain;
-+};
-+
-+static int sophgo_pcie_readl_app(struct sophgo_pcie *sophgo, u32 reg)
-+{
-+	return readl_relaxed(sophgo->app_base + reg);
-+}
-+
-+static void sophgo_pcie_writel_app(struct sophgo_pcie *sophgo, u32 val, u32 reg)
-+{
-+	writel_relaxed(val, sophgo->app_base + reg);
-+}
-+
-+static void sophgo_pcie_intx_handler(struct irq_desc *desc)
-+{
-+	struct dw_pcie_rp *pp = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	unsigned long hwirq, reg;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	reg = sophgo_pcie_readl_app(sophgo, PCIE_INT_SIGNAL);
-+	reg = FIELD_GET(PCIE_INT_SIGNAL_INTX, reg);
-+
-+	for_each_set_bit(hwirq, &reg, PCI_NUM_INTX)
-+		generic_handle_domain_irq(sophgo->irq_domain, hwirq);
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static void sophgo_intx_irq_mask(struct irq_data *d)
-+{
-+	struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(d);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	unsigned long flags;
-+	u32 val;
-+
-+	raw_spin_lock_irqsave(&pp->lock, flags);
-+
-+	val = sophgo_pcie_readl_app(sophgo, PCIE_INT_EN);
-+	val &= ~FIELD_PREP(PCIE_INT_EN_INTX, BIT(d->hwirq));
-+	sophgo_pcie_writel_app(sophgo, val, PCIE_INT_EN);
-+
-+	raw_spin_unlock_irqrestore(&pp->lock, flags);
-+};
-+
-+static void sophgo_intx_irq_unmask(struct irq_data *d)
-+{
-+	struct dw_pcie_rp *pp = irq_data_get_irq_chip_data(d);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	unsigned long flags;
-+	u32 val;
-+
-+	raw_spin_lock_irqsave(&pp->lock, flags);
-+
-+	val = sophgo_pcie_readl_app(sophgo, PCIE_INT_EN);
-+	val |= FIELD_PREP(PCIE_INT_EN_INTX, BIT(d->hwirq));
-+	sophgo_pcie_writel_app(sophgo, val, PCIE_INT_EN);
-+
-+	raw_spin_unlock_irqrestore(&pp->lock, flags);
-+};
-+
-+static void sophgo_intx_irq_eoi(struct irq_data *d)
-+{
-+}
-+
-+static struct irq_chip sophgo_intx_irq_chip = {
-+	.name			= "INTx",
-+	.irq_mask		= sophgo_intx_irq_mask,
-+	.irq_unmask		= sophgo_intx_irq_unmask,
-+	.irq_eoi		= sophgo_intx_irq_eoi,
-+};
-+
-+static int sophgo_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-+				irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_and_handler(irq, &sophgo_intx_irq_chip, handle_fasteoi_irq);
-+	irq_set_chip_data(irq, domain->host_data);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops intx_domain_ops = {
-+	.map = sophgo_pcie_intx_map,
-+};
-+
-+static int sophgo_pcie_init_irq_domain(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	struct device *dev = sophgo->pci.dev;
-+	struct fwnode_handle *intc;
-+	int irq;
-+
-+	intc = device_get_named_child_node(dev, "interrupt-controller");
-+	if (!intc) {
-+		dev_err(dev, "missing child interrupt-controller node\n");
-+		return -ENODEV;
-+	}
-+
-+	irq = fwnode_irq_get(intc, 0);
-+	if (irq < 0) {
-+		dev_err(dev, "failed to get INTx irq number\n");
-+		fwnode_handle_put(intc);
-+		return irq;
-+	}
-+
-+	sophgo->irq_domain = irq_domain_create_linear(intc, PCI_NUM_INTX,
-+						      &intx_domain_ops, sophgo);
-+	fwnode_handle_put(intc);
-+	if (!sophgo->irq_domain) {
-+		dev_err(dev, "failed to get a INTx irq domain\n");
-+		return -EINVAL;
-+	}
-+
-+	return irq;
-+}
-+
-+static void sophgo_pcie_msi_enable(struct dw_pcie_rp *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct sophgo_pcie *sophgo = to_sophgo_pcie(pci);
-+	unsigned long flags;
-+	u32 val;
-+
-+	raw_spin_lock_irqsave(&pp->lock, flags);
-+
-+	val = sophgo_pcie_readl_app(sophgo, PCIE_INT_EN);
-+	val |= PCIE_INT_EN_INT_MSI;
-+	sophgo_pcie_writel_app(sophgo, val, PCIE_INT_EN);
-+
-+	raw_spin_unlock_irqrestore(&pp->lock, flags);
-+}
-+
-+static int sophgo_pcie_host_init(struct dw_pcie_rp *pp)
-+{
-+	int irq;
-+
-+	irq = sophgo_pcie_init_irq_domain(pp);
-+	if (irq < 0)
-+		return irq;
-+
-+	irq_set_chained_handler_and_data(irq, sophgo_pcie_intx_handler,
-+					 pp);
-+
-+	sophgo_pcie_msi_enable(pp);
-+
-+	return 0;
-+}
-+
-+static const struct dw_pcie_host_ops sophgo_pcie_host_ops = {
-+	.init = sophgo_pcie_host_init,
-+};
-+
-+static int sophgo_pcie_clk_init(struct sophgo_pcie *sophgo)
-+{
-+	struct device *dev = sophgo->pci.dev;
-+	int ret;
-+
-+	ret = devm_clk_bulk_get_all_enabled(dev, &sophgo->clks);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "failed to get clocks\n");
-+
-+	sophgo->clk_cnt = ret;
-+
-+	return 0;
-+}
-+
-+static int sophgo_pcie_resource_get(struct platform_device *pdev,
-+				    struct sophgo_pcie *sophgo)
-+{
-+	sophgo->app_base = devm_platform_ioremap_resource_byname(pdev, "app");
-+	if (IS_ERR(sophgo->app_base))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(sophgo->app_base),
-+				     "failed to map app registers\n");
-+
-+	return 0;
-+}
-+
-+static int sophgo_pcie_configure_rc(struct sophgo_pcie *sophgo)
-+{
-+	struct dw_pcie_rp *pp;
-+
-+	pp = &sophgo->pci.pp;
-+	pp->ops = &sophgo_pcie_host_ops;
-+
-+	return dw_pcie_host_init(pp);
-+}
-+
-+static int sophgo_pcie_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sophgo_pcie *sophgo;
-+	int ret;
-+
-+	sophgo = devm_kzalloc(dev, sizeof(*sophgo), GFP_KERNEL);
-+	if (!sophgo)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, sophgo);
-+
-+	sophgo->pci.dev = dev;
-+
-+	ret = sophgo_pcie_resource_get(pdev, sophgo);
-+	if (ret)
-+		return ret;
-+
-+	ret = sophgo_pcie_clk_init(sophgo);
-+	if (ret)
-+		return ret;
-+
-+	return sophgo_pcie_configure_rc(sophgo);
-+}
-+
-+static const struct of_device_id sophgo_pcie_of_match[] = {
-+	{ .compatible = "sophgo,sg2044-pcie" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sophgo_pcie_acpi_match);
-+
-+static const struct acpi_device_id sophgo_pcie_acpi_match[] = {
-+	{ "SOPHO000", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, sophgo_pcie_acpi_match);
-+
-+static struct platform_driver sophgo_pcie_driver = {
-+	.driver = {
-+		.name = "sophgo-dw-pcie",
-+		.of_match_table = sophgo_pcie_of_match,
-+		.acpi_match_table = sophgo_pcie_acpi_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = sophgo_pcie_probe,
-+};
-+builtin_platform_driver(sophgo_pcie_driver);
--- 
-2.48.1
+As evidenced by a full page of change notes from v1 to v2 there is
+multi-party interest in this core infrastructure, and more importantly,
+many small details to negotiate. That number of details to negotiate
+only increases with the follow-on "device bind" flows and the
+interactions across VFIO, IOMMUFD and KVM.
 
+I expect it will continue to be the case that the mainline ingestion
+rate of all this infrastructure results in several more cycles before
+mainline ships a complete solution for one or more vendors. In the
+meantime, I am looking to run a devsec-next integration tree for kernel
+and QEMU. That is, a supplemental staging tree to enable end-to-end
+testing while proposals make their way upstream. For now, consider
+sending a branch and I will aim to do periodic octopus merges of
+submitted branches on top of a kvm-coco-queue + devsec-core baseline.
+
+The main motivation for a "devsec-next" tree, as I mentioned to some in
+the hallway track at Plumbers, is to wrangle private hacks and
+workarounds in vendor trees to coalesce if not mature.  An example of
+multiple vendors solving the same problem in different ways in their
+vendor trees is: [2] vs [3]. Note that devsec-next is not intended to
+replace vendor trees, and instead reflect the snapshot state of
+cross-vendor consensus before topics are ready for linux-next /
+mainline.
+
+I will send out more details as a follow up.
+
+[2]: https://github.com/aik/qemu/commit/5256c41f
+[3]: http://lore.kernel.org/20250217081833.21568-1-chenyi.qiang@intel.com
+
+---
+Original Cover letter:
+
+Trusted execution environment (TEE) Device Interface Security Protocol
+(TDISP) is a chapter name in the PCI specification. It describes an
+alphabet soup of mechanisms, SPDM, CMA, IDE, TSM/DSM, that system
+software uses to establish trust in a device and assign it to a
+confidential virtual machine (CVM). It is protocol for dynamically
+extending the trusted computing boundary (TCB) of a CVM with a PCI
+device interface that can issue DMA to CVM private memory.
+   
+The acronym soup problem is enhanced by every major platform vendor
+having distinct TEE Security Manager (TSM) API implementations /
+capabilities, and to a lesser extent, every potential endpoint Device
+Security Manager (DSM) having its own idiosyncratic behaviors around
+TDISP state transitions. 
+     
+Despite all that opportunity for differentiation, there is a significant
+portion of the implementation that is cross-vendor common. However, it
+is difficult to develop, debate, test and settle all those pieces absent
+a low level TSM driver implementation to pull it all together.
+   
+The proposal is incrementally develop the shared infrastructure on top
+of a sample TSM driver implementation to enable clean vendor agnostic
+discussions about the commons. "samples/devsec/" is meant to be: just
+enough emulation to exercise all the core infrastructure, a reference
+implementation, and a simple unit test. The sample also enables
+coordination with the native PCI device security effort [4].
+   
+The devsec_tsm driver already yielding benefits as it drove many of
+the fixes and enhancements of this patch-kit relative to the last RFC
+[1]. Future development would either reuse established devsec_tsm paths,
+or extend the sample alongside the vendor-specific implementation.
+     
+This first batch is just enough infrastructure for IDE (link Integrity
+and Data Encryption) establishment via TSM APIs. It is based on a review
+and curation of the IDE establishment flows from the SEV-TIO RFC [5] and
+a work-in-progress TDX Connect RFC (see the Co-developed-by and thanks
+yous in the changelogs for where code was copied).
+
+It deliberately avoids SPDM details and does not touch upon the "bind"
+flows, or guest-side flows, simply to allow for upstream digestion of
+all the assumptions and tradeoffs for the "simple" IDE establishment
+baseline.
+
+Note that devsec_tsm is for near term staging of vendor TSM
+implementations. The expectation is that every piece of new core
+infrastructure that devsec_tsm consumes must also have a vendor TSM
+driver consumer within 1 to 2 kernel development cycles.
+
+The full series is available via devsec/tsm.git [6].
+
+[4]: http://lore.kernel.org/cover.1719771133.git.lukas@wunner.de
+[5]: http://lore.kernel.org/20240823132137.336874-1-aik@amd.com
+[6]: https://git.kernel.org/pub/scm/linux/kernel/git/devsec/tsm.git/log/?h=devsec-20250303
+
+---
+
+Dan Williams (11):
+      configfs-tsm: Namespace TSM report symbols
+      coco/guest: Move shared guest CC infrastructure to drivers/virt/coco/guest/
+      coco/tsm: Introduce a core device for TEE Security Managers
+      PCI/IDE: Enumerate Selective Stream IDE capabilities
+      PCI/TSM: Authenticate devices via platform TSM
+      samples/devsec: Introduce a PCI device-security bus + endpoint sample
+      PCI: Add PCIe Device 3 Extended Capability enumeration
+      PCI/IDE: Add IDE establishment helpers
+      PCI/IDE: Report available IDE streams
+      PCI/TSM: Report active IDE streams
+      samples/devsec: Add sample IDE establishment
+
+
+ Documentation/ABI/testing/configfs-tsm-report      |    0 
+ Documentation/ABI/testing/sysfs-bus-pci            |   45 +
+ Documentation/ABI/testing/sysfs-class-tsm          |   20 +
+ .../ABI/testing/sysfs-devices-pci-host-bridge      |   44 +
+ MAINTAINERS                                        |   10 
+ drivers/pci/Kconfig                                |   37 +
+ drivers/pci/Makefile                               |    2 
+ drivers/pci/ide.c                                  |  499 ++++++++++++++
+ drivers/pci/pci-sysfs.c                            |    4 
+ drivers/pci/pci.h                                  |   19 +
+ drivers/pci/probe.c                                |   26 +
+ drivers/pci/remove.c                               |    3 
+ drivers/pci/tsm.c                                  |  377 +++++++++++
+ drivers/virt/coco/Kconfig                          |    8 
+ drivers/virt/coco/Makefile                         |    3 
+ drivers/virt/coco/arm-cca-guest/arm-cca-guest.c    |    8 
+ drivers/virt/coco/guest/Kconfig                    |    7 
+ drivers/virt/coco/guest/Makefile                   |    3 
+ drivers/virt/coco/guest/report.c                   |   32 -
+ drivers/virt/coco/host/Kconfig                     |    6 
+ drivers/virt/coco/host/Makefile                    |    6 
+ drivers/virt/coco/host/tsm-core.c                  |  144 ++++
+ drivers/virt/coco/sev-guest/sev-guest.c            |   12 
+ drivers/virt/coco/tdx-guest/tdx-guest.c            |    8 
+ include/linux/pci-ide.h                            |   60 ++
+ include/linux/pci-tsm.h                            |  135 ++++
+ include/linux/pci.h                                |   25 +
+ include/linux/tsm.h                                |   33 +
+ include/uapi/linux/pci_regs.h                      |   89 +++
+ samples/Kconfig                                    |   16 
+ samples/Makefile                                   |    1 
+ samples/devsec/Makefile                            |   10 
+ samples/devsec/bus.c                               |  698 ++++++++++++++++++++
+ samples/devsec/common.c                            |   26 +
+ samples/devsec/devsec.h                            |    7 
+ samples/devsec/tsm.c                               |  192 ++++++
+ 36 files changed, 2564 insertions(+), 51 deletions(-)
+ rename Documentation/ABI/testing/{configfs-tsm => configfs-tsm-report} (100%)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-tsm
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-pci-host-bridge
+ create mode 100644 drivers/pci/ide.c
+ create mode 100644 drivers/pci/tsm.c
+ create mode 100644 drivers/virt/coco/guest/Kconfig
+ create mode 100644 drivers/virt/coco/guest/Makefile
+ rename drivers/virt/coco/{tsm.c => guest/report.c} (93%)
+ create mode 100644 drivers/virt/coco/host/Kconfig
+ create mode 100644 drivers/virt/coco/host/Makefile
+ create mode 100644 drivers/virt/coco/host/tsm-core.c
+ create mode 100644 include/linux/pci-ide.h
+ create mode 100644 include/linux/pci-tsm.h
+ create mode 100644 samples/devsec/Makefile
+ create mode 100644 samples/devsec/bus.c
+ create mode 100644 samples/devsec/common.c
+ create mode 100644 samples/devsec/devsec.h
+ create mode 100644 samples/devsec/tsm.c
+
+base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
 
