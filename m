@@ -1,60 +1,56 @@
-Return-Path: <linux-pci+bounces-22919-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22920-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 140BCA4F14C
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 00:17:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 566F1A4F162
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 00:22:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B8B23A5BE5
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 23:17:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C4A6188A9C2
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 23:22:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B807625F99E;
-	Tue,  4 Mar 2025 23:17:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B85525DD1C;
+	Tue,  4 Mar 2025 23:22:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HtitfG8p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gDzGSlEt"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE1B1FF60A;
-	Tue,  4 Mar 2025 23:17:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526E81FBCB6;
+	Tue,  4 Mar 2025 23:22:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741130246; cv=none; b=Biot6pbzwozvl635W3uNv/Nw9uZAG2QPNcCGJmeqfv5VIUVw7lAeOMXL//DYkW7E8Ebz3Q6HYRSrWgg4JvuxPkjP9KETwtqQ5Sp46qmfC3flDmCNyKcK28261/0RBz/qm8K3itn7z2+NrViZTb6Mntt2fNdXQ2y/anm243bGwOA=
+	t=1741130552; cv=none; b=rmclfgk6RHu9BNFvr3xlb6ux6AXNsggVsPL/mxiRiPETKp37O0a7J9vSpizOvwgaccmhqFzL8db3oXef+0iDr6YwPxp3RDdZkf8457H25pXluwYhwqt7Mtgx8kUHtGpzpSyQ9Hmg9y02abJ3fZLTN4tHJcO2ynuhXBiAOhzyHK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741130246; c=relaxed/simple;
-	bh=Sr1bLjjVFJ5rjXiKSVLBrFS4W9IbS+9kJcL3dTiWIpY=;
+	s=arc-20240116; t=1741130552; c=relaxed/simple;
+	bh=iiljtkG5DqNiUtL+acfsxJ6Pgz3aTmOCDfPZ887+nAo=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=PqHtf8PAIy99hSMkhkTRMP+pYX43XMADNwWflHahsenYEWCSinkQTLKDhntCeRl/fkDTs93tCt/oPf4vNnD1hLAuoY7/bDEwdu255sO5Jlz90qZslvGzWhL9Ig0O+0WyK+ODDrkBZJ5KJn5RBvvfaldfrBiCN6LvtqeHRcqP0ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HtitfG8p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6F85C4CEE5;
-	Tue,  4 Mar 2025 23:17:25 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=oVxvfSroENFdc83sv+zKFkb5+/fJ3re/0yDW/oLU+jY9Neb7NhutpVtKRg7L3BIbGK3Y/TOZHBxjzeVTztU4CfMWEHeBSZq3kh3iiM8Fr5zKN4PJZVqheKEWwt1IK2CnSfTyeiApE0GFhAlhdotaZIvQpJO9hewF2FDWEh8erCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gDzGSlEt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86C02C4CEE9;
+	Tue,  4 Mar 2025 23:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741130246;
-	bh=Sr1bLjjVFJ5rjXiKSVLBrFS4W9IbS+9kJcL3dTiWIpY=;
+	s=k20201202; t=1741130551;
+	bh=iiljtkG5DqNiUtL+acfsxJ6Pgz3aTmOCDfPZ887+nAo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=HtitfG8pgqKjTpCNLN3u5v2kbXSaL41aGvDLRxQa7o9uh7NUBb3Im0iB//ar8jZ2g
-	 sBYHUPWPepptg8pbztvDH2CH7wErv8xHRERbb13uBze7HuJ66Bvf2PsMNcuF1Wm74j
-	 exfAeUJPSW5t3X7kyfljFves9PxYqVi7yHzBL26iJXmlvNLUw7n7ASnGruO5mWyZ+1
-	 gYC3gt/1A2SvWTg+JZVhryff0cDZOI/GTHMPYxDUjVWY0eCwh2VDH4EEdM17RNHbTv
-	 ii5f3kx07bV+J4yduo9R3Pq3LSnScfR6mARFw0WYC/SDglyx6sWxK2ZmKJSeLBaHp6
-	 mwCDAdOw4gL2A==
-Date: Tue, 4 Mar 2025 17:17:24 -0600
+	b=gDzGSlEtb1YmIF4xksZ5KICBIE6jiYVJbX5zLBu6WeXSOzYETPbtl7pBlJT94TlJp
+	 98429J1ufEerB9D5zlpi6FyT613n+XxiYpuLllRSd6Jc/Fs3vfixEBUwYjWesBxY9l
+	 a8K/h4srMoPKUHE9zTyXl8ONAwuSY8OSQAC0Jh4COIA+1fe9FAyJfmIwAcBvTux2cM
+	 t8d271Al1ktDKdM37p0xzAi2nHQW6mnONPflu+pwknzHC8p2CFcPRyN45RMbwDrxz7
+	 uEeead0R9x5Cn7B8qN/mT3rCK2rHn1d/hHI82+wJb4MyIJEfLchmiyu7N5SKM/LKqF
+	 9p3hjY0T3KyUA==
+Date: Tue, 4 Mar 2025 17:22:30 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Feng Tang <feng.tang@linux.alibaba.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Liguang Zhang <zhangliguang@linux.alibaba.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>, rafael@kernel.org,
-	Markus Elfring <Markus.Elfring@web.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] PCI/portdrv: Only disable hotplug interrupts early
- when needed.
-Message-ID: <20250304231724.GA264454@bhelgaas>
+To: Bijie Xu <bijie.xu@corigine.com>
+Cc: oohall@gmail.com, mahesh@linux.ibm.com, bhelgaas@google.com,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>
+Subject: Re: [PATCH] PCI/AER: Add kernel.aer_print_skip_mask to control aer
+ log
+Message-ID: <20250304232230.GA264709@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,94 +59,84 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250303023630.78397-1-feng.tang@linux.alibaba.com>
+In-Reply-To: <20250108075703.410961-1-bijie.xu@corigine.com>
 
-On Mon, Mar 03, 2025 at 10:36:30AM +0800, Feng Tang wrote:
-> There was problem reported by firmware developers that they received
-> two PCIe hotplug commands in very short intervals on an ARM server,
-> which doesn't comply with PCIe spec, and broke their state machine and
-> work flow. According to PCIe 6.1 spec, section 6.7.3.2, software needs
-> to wait at least 1 second for the command-complete event, before
-> resending the command or sending a new command.
-> 
-> In the failure case, the first PCIe hotplug command firmware received
-> is from get_port_device_capability(), which sends command to disable
-> PCIe hotplug interrupts without waiting for its completion, and the
-> second command comes from pcie_enable_notification() of pciehp driver,
-> which enables hotplug interrupts again.
-> 
-> One solution is to add the necessary delay after the first command [1],
-> while Lukas proposed an optimization that if the pciehp driver will be
-> loaded soon and handle the interrupts, then the hotplug and the wait
-> are not needed and can be saved, for every root port.
-> 
-> So fix it by only disabling the hotplug interrupts when pciehp driver
-> is not enabled.
-> 
-> [1]. https://lore.kernel.org/lkml/20250224034500.23024-1-feng.tang@linux.alibaba.com/t/#u
-> 
-> Fixes: 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port services during port initialization")
-> Suggested-by: Lukas Wunner <lukas@wunner.de>
-> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+[+cc Jon, Karolina]
 
-Applied to pci/hotplug for v6.15, thanks!
+On Wed, Jan 08, 2025 at 03:57:03PM +0800, Bijie Xu wrote:
+> Sometimes certain PCIE devices installed on some servers occasionally
+> produce large number of AER correctable error logs, which is quite
+> annoying. Add this sysctl parameter kernel.aer_print_skip_mask to
+> skip printing AER errors of certain severity.
+> 
+> The AER severity can be 0(NONFATAL), 1(FATAL), 2(CORRECTABLE). The 3
+> low bits of the mask are used to skip these 3 severities. Set bit 0
+> can skip printing NONFATAL AER errors, and set bit 1 can skip printing
+> FATAL AER errors, set bit 2 can skip printing CORRECTABLE AER errors.
+> And multiple bits can be set to skip multiple severities.
 
+This is definitely annoying, actually MORE than annoying in some
+cases.
+
+I'm hoping the correctable error rate-limiting work can reduce the
+annoyance to an tolerable level:
+
+  https://lore.kernel.org/r/20250214023543.992372-1-pandoh@google.com
+
+Can you take a look at this and see if it's going the right direction
+for you, or if it needs extensions to do what you need?
+
+> Signed-off-by: Bijie Xu <bijie.xu@corigine.com>
 > ---
-> Changelog:
+>  drivers/pci/pcie/aer.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 > 
->   since v3:
->     * Separate this patch from patches dealing with irq storm in nomsi case
->     * Take Lukas's suggestion (Lukas Wunner)  
-> 
->   since v2:
->     * Add patch 0001, which move the waiting logic of pcie_poll_cmd from pciehp
->       driver to PCIe port driver for code reuse (Bjorn Helgaas)
->     * Separate Lucas' suggestion out as patch 0003 (Bjorn and Sathyanarayanan)  
->     * Avoid hotplug command waiting for HW without command-complete
->       event support (Bjorn Helgaas)
->     * Fix spell issue in commit log (Bjorn and Markus)
->     * Add cover-letter for whole patchset (Markus Elfring)
->     * Handle a set-but-unused build warning (0Day lkp bot)
-> 
->   since v1:
->     * Add the Originally-by for Liguang for patch 0002. The issue was found on
->       a 5.10 kernel, then 6.6. I was initially given a 5.10 kernel tar ball
->       without git info to debug the issue, and made the patch. Thanks to Guanghui
->       who recently pointed me to tree https://gitee.com/anolis/cloud-kernel which
->       show the wait logic in 5.10 was originally from Liguang, and never hit
->       mainline.
->     * Make the irq disabling not dependent on wthether pciehp service driver
->       will be loaded (Lukas Wunner) 
->     * Use read_poll_timeout() API to simply the waiting logic (Sathyanarayanan
->       Kuppuswamy)
->     * Fix wrong email address (Markus Elfring)
->     * Add logic to skip irq disabling if it is already disabled.
-> 
-> 
->  drivers/pci/pcie/portdrv.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> index 02e73099bad0..e8318fd5f6ed 100644
-> --- a/drivers/pci/pcie/portdrv.c
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -228,10 +228,12 @@ static int get_port_device_capability(struct pci_dev *dev)
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 80c5ba8d8296..b46973526bcf 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -698,6 +698,7 @@ static void __aer_print_error(struct pci_dev *dev,
+>  	pci_dev_aer_stats_incr(dev, info);
+>  }
 >  
->  		/*
->  		 * Disable hot-plug interrupts in case they have been enabled
-> -		 * by the BIOS and the hot-plug service driver is not loaded.
-> +		 * by the BIOS and the hot-plug service driver won't be loaded
-> +		 * to handle them.
->  		 */
-> -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
-> +		if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
-> +			pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> +				PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> +unsigned int aer_print_skip_mask __read_mostly;
+>  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+>  	int layer, agent;
+> @@ -710,6 +711,9 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>  		goto out;
 >  	}
 >  
->  #ifdef CONFIG_PCIEAER
+> +	if ((1 << info->severity) & aer_print_skip_mask)
+> +		goto out;
+> +
+>  	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
+>  	agent = AER_GET_AGENT(info->severity, info->status);
+>  
+> @@ -1596,3 +1600,22 @@ int __init pcie_aer_init(void)
+>  		return -ENXIO;
+>  	return pcie_port_service_register(&aerdriver);
+>  }
+> +
+> +static const struct ctl_table aer_print_skip_mask_sysctls[] = {
+> +	{
+> +		.procname       = "aer_print_skip_mask",
+> +		.data           = &aer_print_skip_mask,
+> +		.maxlen         = sizeof(unsigned int),
+> +		.mode           = 0644,
+> +		.proc_handler   = &proc_douintvec,
+> +	},
+> +	{}
+> +};
+> +
+> +static int __init aer_print_skip_mask_sysctl_init(void)
+> +{
+> +	register_sysctl_init("kernel", aer_print_skip_mask_sysctls);
+> +	return 0;
+> +}
+> +
+> +late_initcall(aer_print_skip_mask_sysctl_init);
 > -- 
-> 2.43.5
+> 2.25.1
 > 
 
