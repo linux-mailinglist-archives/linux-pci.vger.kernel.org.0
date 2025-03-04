@@ -1,229 +1,264 @@
-Return-Path: <linux-pci+bounces-22840-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22841-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B8E5A4DFB9
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 14:51:55 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6291DA4E067
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 15:15:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 12C7B3B38DC
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 13:51:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 120AF1660E2
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 14:13:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B01B32046BD;
-	Tue,  4 Mar 2025 13:51:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF4A9204C2C;
+	Tue,  4 Mar 2025 14:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R5kgj4H/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YktOHWf6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE8E2046B0;
-	Tue,  4 Mar 2025 13:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741096278; cv=none; b=cx7MR0LRjgekYCsNctkZ7KZ/n5Rbpcp96N7/5Toc6Bv65ZDq2sW81l6P9f+vlMJlKIU3+w6QQsidPglsOIQLpnx7MezODCwy6/O4eekgM1cU37IHEQn9Q8fnIbVUa4Xk6AzHsmdrD5yBCuOpzRi8ujbFm768pmNXfJ5j9TE1nLE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741096278; c=relaxed/simple;
-	bh=gAVOKnxuAXipq7wqreAj7N7ZvPmdB9OEU/wbN3apFMk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Aec0Ves1v1H/7krfO7oC72M1MFnX00HIDTmisi+xEaas84PoyjL332UIBR1w/O8astR9g7FmtDi8Kc60xXLj8SrZYKmitvvnJHhhJrS/duNg2PfOEOXEEMjSLudpVtped7WMrz9p3SyeVtboOPPuFwcnfkKsIBsa/XPi1k5l72E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R5kgj4H/; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C684204C1A;
+	Tue,  4 Mar 2025 14:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741097605; cv=fail; b=sSa2yNQ/JWj1eho+gI72AFXDrOOEpRGDcol+cwvTQa03JEUv493tghV3PPqk/yBdg5aEftMf4BXKKAits/c2A0T7JElJagIu0RUELhXUSgP9RH3EP+Gkdtn4YwBdlWbUhMkkPGsQ2irpC6KwFBRz8F9IzoTsKR2hzO16xXJHGzQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741097605; c=relaxed/simple;
+	bh=gH6ma6kjwrCwPK9mtXlJXctp/p22Ntg0nL1LT16U9Ps=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=DQi5JsT2iDcTgn+aBOq4faIKN6vsyVDnFnG+rsKkwvEx766Lm+Hj3A5hSzrNwFzI2jMrTPzUUd9cHSHCNK1gGnXvzosb9RtCCmu9ZPHcpIe6iN+t4n1SHmGJ+M0j2BNiCz4j3Co0prHgoObaiIW51nP8EEcbbVMmVIFZgk1ZD1g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YktOHWf6; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741096277; x=1772632277;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gAVOKnxuAXipq7wqreAj7N7ZvPmdB9OEU/wbN3apFMk=;
-  b=R5kgj4H/XcXrV/Z8IxXZQFo48m60XuIv74BOOLvqRpcGTjuB/UfbPrwa
-   ZHY9tnsq7o0LHCHTNXmsZr5Df90cQi+xornyfXUC/2ND+K7N6KYg1dRty
-   aXQtjPEjfAed7zrF2MnlZQm9FKPH1OkGV7rvglmJXs9Gzz0AikhIbiwYb
-   Q3Hu3ZpRLWqHp+BzaXT0ppjmPitQQ8MVUYp4BcWKAThXFXrvEh/O9/Tz4
-   PmSRTnzX8W+chMlSV9DcZf6ty5l2VT14W6hN/iUtQFTo0I+w40jA4uKwx
-   R0hjs6npRPudsXLM17bsETy6vzFEQc27xsuZU9KhWvjUjVNOY4w7rJoKb
-   A==;
-X-CSE-ConnectionGUID: oF7t/7YKSvWFH8BRfFuncg==
-X-CSE-MsgGUID: g1zXP3OzQ4uINHKUIoO1vA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41260835"
+  t=1741097604; x=1772633604;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   mime-version;
+  bh=gH6ma6kjwrCwPK9mtXlJXctp/p22Ntg0nL1LT16U9Ps=;
+  b=YktOHWf6oF2SQm3gvp6rIgT6ksYBUh3o604qivGo6SlgoKmGGNgZS7o9
+   IfqHoeU8rTPeBGYwytKykK5kaWFDyj9+bhHhIMt7n8kBTp2qnZhBsSFSX
+   a3SrTAKphqEW8lVnZ2YFZjRj9ieeLZODnu6snFzqt9lwXJ6MKywFwqX0K
+   5ENP+S3Z72ZjmOuM5knT4bk5Qa8nsNU50nnVmvsjGDMkgFIwlNSrnir5R
+   /Z4tuX/LnOhsUHi9PW1gYJtJGr0jLNfKZ9EZRdKKwmKHvLAjT2icOidGS
+   wUjaX3dlmwbC3FprX6CWu5aYrQHsyeR8d8UlCi2URzZQbA8ZaECT2jAk2
+   Q==;
+X-CSE-ConnectionGUID: U4buRPJdSwGsMH5AV8TEIA==
+X-CSE-MsgGUID: AsX/ZfRyThOtH5WBzZE5ZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="29604702"
 X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="41260835"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 05:51:16 -0800
-X-CSE-ConnectionGUID: Ip2M1FLJSISDCQ4PkwytEQ==
-X-CSE-MsgGUID: kUfPb+B8ReqGr4n8n8+Vkw==
+   d="scan'208";a="29604702"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 06:13:23 -0800
+X-CSE-ConnectionGUID: z29VIbqTS+uNM/gQg/YGpw==
+X-CSE-MsgGUID: Nnhx4zE0Sl2137ZNcrNUIQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,220,1736841600"; 
-   d="scan'208";a="118388115"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.220])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 05:51:14 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [RFC PATCH 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
-Date: Tue,  4 Mar 2025 15:51:08 +0200
-Message-Id: <20250304135108.2599-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="155573375"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2025 06:13:24 -0800
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 4 Mar 2025 06:13:22 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 4 Mar 2025 06:13:22 -0800
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.46) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 4 Mar 2025 06:13:20 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LQ7dH5Ref9Zrhi6fdIGMcD3Rv24MDn3IxxP9/xO+DmI+ALzEstGX0tmOgNM9KpY/ThK9XbgZz42gonBIOQYF380XMwSrrMzMwlCMGAT6j/GkeVM92Q149Ec2zd+T/Snmk1aWkzoqAySX55m+jHvTNdrNVXu/UMJ0FwV+65Nb0xXfkFo6zN4qfBeU9XHIYN1JbuccP12OWw0AKaDFOGmSXVr0zLyFUswNb07f/Kn80y0kRO4jRh9EvgfHuh0xd6g+qTMRY4bvhF8Ahr/aOfpcoV7K/76eOJwEX+T609851gh49DMWJOw9riTS7e2TPKw3yLu1pskhFCLk8+jfiKt8cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=q2AVQ3GtMc9SO7/qWkg8fTgQbPvZfGselQ2W+pPSJik=;
+ b=v2jxeI59me7+CKe7tZwcDx3N36y2HwHVyLGms9aXP7PAUyBBj2GvU7kG2ZXLTM4c78bm07sLbD5GD6XX6wnYyY+ZwgqheaKtIlplDFr+C4soodIF4khN3ahYcVlwh0O2QPOtG3h2DVfqQeRRlODCDwkjnVuy4xln0C4+fIA4S3zd1RZB3jp5d+C9JwpvpHYEsMXIQawr4EbTlD9HTpEUB1bfHboeljlUXkTIdftDOyTcYoRSR+K6pNTy1VqsJqX794JJgIytdoW8jroQ9E3N6YyLwctUhsw2By7PAbYd8k7XbEbfMu7gdVhgAu1Vo9RcmThtXYPUx65AEUAXDXgTOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by SA1PR11MB6781.namprd11.prod.outlook.com (2603:10b6:806:25d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.27; Tue, 4 Mar
+ 2025 14:12:58 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%4]) with mapi id 15.20.8511.015; Tue, 4 Mar 2025
+ 14:12:58 +0000
+Date: Tue, 4 Mar 2025 22:12:48 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-pci@vger.kernel.org>,
+	Alex Williamson <alex.williamson@redhat.com>, Christian
+ =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>, Ilpo
+ =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	<oliver.sang@intel.com>
+Subject: Re: [PATCH v2 1/2] PCI: Avoid pointless capability searches
+Message-ID: <202503042124.7627f722-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250215000301.175097-2-helgaas@kernel.org>
+X-ClientProxiedBy: SI2PR04CA0015.apcprd04.prod.outlook.com
+ (2603:1096:4:197::21) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|SA1PR11MB6781:EE_
+X-MS-Office365-Filtering-Correlation-Id: ba68c748-d274-498f-5990-08dd5b26aa8c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?fnZqqfaSkJKC9iRO+bASDQLXGzVhCM+PDE+pFLA8Xa7T7/tu6vIWbYIR2b4n?=
+ =?us-ascii?Q?HgrHk1+/wyUnWZE+TzuX0Zku/z2U5wy5gcWjAVYyKiK4CtyY2C2OGYdn8Kwm?=
+ =?us-ascii?Q?aqkld6OxqOMGf4E9FCIAPddBGSue/bwFcMZ0FGnRLM1uO0qGQrnsDFc+gbko?=
+ =?us-ascii?Q?yPBkrvZLJ6Y0s7nGRhTUXFpai36coxHPcBMo4HhEEqQ1aN7aTTXjizy1uOD4?=
+ =?us-ascii?Q?n1/fW9JbCvjXxO5bDQ06vQjTfttfIZy7YVBPB5oyx+00Ww8fsm43dBKnDquw?=
+ =?us-ascii?Q?pAVehbXPp9P9bwodSZhi4ToDSC4QPB88YRlyxKyYFKb3tn7idi1b/Fdvygg5?=
+ =?us-ascii?Q?Eu63wF2pCT0WIK6ybVSGRQ65R6mUTJW9lyPb5GenX7F8QJInNu+WTREJMo82?=
+ =?us-ascii?Q?8kHNnHrMR+k0HnZrOUAsWWEd+hbFn6BByRDstCg9aSInehHjPlVr1O3CJZlG?=
+ =?us-ascii?Q?kk4n6I8HrzP4itIWcUtzBZ400eChUgOM97YC/d+fr3ZVHGoOeqgUZKeL/2kX?=
+ =?us-ascii?Q?plFT7WV9Ru5ThO2vt1pzv6hDZnTikn6VBYP80bIliRYvIzQNCBWqA9KxcC4m?=
+ =?us-ascii?Q?m2/BIEMP3ZaAp6/X/MCl/n5mihDkoavpEK6IUR2apNpXh2xHngITbXsLP4Yz?=
+ =?us-ascii?Q?WyC7EIrjXsdzDEEBLCsb+5UK3YiKMf5RLdIoOHhRcfaCxBeK4vIFiefDFpaj?=
+ =?us-ascii?Q?AxJjA81JtDcjOxBHxpb1GaINflkRJ64zABTt8fz1SxA0ogSwqcYnyhdHUO3n?=
+ =?us-ascii?Q?KqzvXnnrS/tqtMST3WTrhPj7bJLCc6t2CnutpQH13ntnmBN6fYzqfzg+FkM2?=
+ =?us-ascii?Q?SwBvw7pMgdOtILc98NPHaFKVZ5j8t2JlZ+TNYKVpvwSdG7QQZCh2ETkvUBw7?=
+ =?us-ascii?Q?oqzqcHIFo3C0jAi4qKM/JChw/Mch121bl1IAgNczdXc0aPEuOANcHiueb4Mu?=
+ =?us-ascii?Q?f601q6Zjgahy8CEgJdTxW/Fub4upgiNAhcCv5qh5xISfUdZV/2otWem5iBap?=
+ =?us-ascii?Q?m9QaqqO1m4d0F5Nz9L/xweALqwyqP79NrImfmMoHvt4yWXZ5jIzio1x6QBXV?=
+ =?us-ascii?Q?i+jzjnqUvY+VoQALrU48GYdHFh76EXtTKdzTMUiq0jTHyMlGbYPt/UZ9yufw?=
+ =?us-ascii?Q?aR+jIiZmajDbLvkJ1AZenXIKRxRyaQnEwTcUJOop9ju45KyUpA29zuf8NVjW?=
+ =?us-ascii?Q?wLbXbqVxIj1XoaOHyz++NilA6wCXXLmUkJ5H9x5Pva+QoWiZH+reF/1xnydS?=
+ =?us-ascii?Q?ksYsZY9PPsSDSNodZg4YuIWcowotr9t94izawSwQopXJ58OgP2RSpYXKjDrH?=
+ =?us-ascii?Q?nUs/yfp1xVANgBM7yJpApMBaYM6We3uhDqOqyQg9Kc2oAg=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Xpk4ED037SVEiZ+BuR7pq+FYZ2tDOH9Z5dK3hFceEw9+TUWyjxlIXdNMKqhY?=
+ =?us-ascii?Q?FwKZQmGLEdwPI0+IC2YODjNfOAIbTXHdiLZhm1h5LZQFwtAHwiZyuF3hRewg?=
+ =?us-ascii?Q?dLgE83sUsApj1SaKmLNCK5U8vaKwxU3W4406y3RAsZMvV8QWipi0AZMroda2?=
+ =?us-ascii?Q?Pgusb9vq61WqDzGU29TsDn2qWPfUTqZLkGdFzIVixjrgEElkOW/GHWCA8gEQ?=
+ =?us-ascii?Q?WkczSj4RyoQldZ+JQ4WYBjEX4No6ejJ4+2UfSKPF0Nk8OhSSbdsKva7nXxGh?=
+ =?us-ascii?Q?6i0mOiEm4UpUpfojBaP0nSzQ3jcQmz/dMDnr/UNg4AKwMwQHEXAtIV9jbVtn?=
+ =?us-ascii?Q?vH3Ijgmkg+89ugQ2ibzcQ66nCYJDwiOXo2uobeYJCF8ZQDLPl925kLJBBVbc?=
+ =?us-ascii?Q?FI9BcK79LNd08FcXGxdhtn6Ya5DY2PTAaub/32a9buQ3bFvV0r+H8dSFUf82?=
+ =?us-ascii?Q?uTOCdZLhJ8fW3QRdODp79ohaLZGZU31CbJKqUvGj7VjSEYyXBiH/sQYUPRHv?=
+ =?us-ascii?Q?6du2WIbO7vnGcoWT7OQAj8k33NJDMvgbsY+JkxmKYFjjC1KwyTAGQTXcHEU4?=
+ =?us-ascii?Q?m4Ej2bXONEhl+xaGYlAiRvM3ihqQBMULY86j1UKYcuUoCYUAKsfxmMkwA4+V?=
+ =?us-ascii?Q?LohpjAO9xbFjvHgntg5WKeJN3qTb18G8E5pc/WRrvgnuEwcPs1rxoo5SeVGT?=
+ =?us-ascii?Q?2WXarIMysm0cG51WJMhUZwQAM+5e+3AmoLBOfmbSOSBBYG5eTWUHLykWHkZa?=
+ =?us-ascii?Q?RWDLaPVwD8EqtlW9nQ9TboHj/qqApN18D72nvclXXmvpN7jsTPFXpcNim1fS?=
+ =?us-ascii?Q?Gs6QjGW4fr70obam9+0Rty8Y3ubwTTD4GFb9T95nOpVlplZdhTIY/iQCgjHl?=
+ =?us-ascii?Q?GL3Trrft7xNfEXyb91NAtgRqXmLODV22zFYnibxxobIml2XGLWIHOkU4WBfZ?=
+ =?us-ascii?Q?tcqVpwlm+8qlFgVXGUPS7Vvp3707hRQQ58vQnGQDavYtJwTuh6Fz5lKIJAOH?=
+ =?us-ascii?Q?kn6f+670MZAXfMPvVMpePRKcSiS2Uaj6pDfbb1MXbQX/u0s3fDixthYEhdtc?=
+ =?us-ascii?Q?6nC9zNtdNoWecZMJPF1QB8cmDupxHwJMhBDZqW8L/eqDffF/EkOdpL9nd2yL?=
+ =?us-ascii?Q?KHEWhczPIS1jKqvAlWQYJvfEx7lNIIqdeBgrwBpxX/0o35m837gDJHp9/qzx?=
+ =?us-ascii?Q?9Ry2IaVl9MC40qOCJpJOYxmS9zpDrUqB0Tm4Tzum+fnGyhSZrECAfmNBLwZe?=
+ =?us-ascii?Q?9caISFCLCAvovK+S3E17KcLOobdGF2d0ediAA7q2Cl0ajqxBARciU7OukmIj?=
+ =?us-ascii?Q?Zx3vj6/VP9iThpbc99+ieAvaysog4i1x2tSAuQHFAMvJvHymk+gtRkbD2Lcr?=
+ =?us-ascii?Q?XYJ+ZmfxKNZUZ24v9pDLvv12WIFKAH3elATwxr0vHTvkjuSeMpF2HwD2kkNK?=
+ =?us-ascii?Q?HywhMuXMbuQnUktpDSp34j73XLUsMlDe6cjWSVWHxX5vEJaSMcvH8MCMWCBr?=
+ =?us-ascii?Q?7Ne+Wk8vPENwfsiuixxvIETx13ZF3rc5cgLNFIlx9VoIEBWiONOPqcYx9ZHr?=
+ =?us-ascii?Q?uhlzE22XjNAPG8QPsVrcuyZA+VPpzYeiUq9R7TRgkgD7OmuF/aBmCpHdEroc?=
+ =?us-ascii?Q?qg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba68c748-d274-498f-5990-08dd5b26aa8c
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2025 14:12:58.6191
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ViAIKxzkMSQD6gMGdKYMDSdlTfLFrAjn8RuLiH8FpkDRr1oVJbay6mAcwyqSDXTPQYEVwfqH12d8SoSOPVSp1g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6781
+X-OriginatorOrg: intel.com
 
-Disallow Extended Tags and Max Read Request Size (MRRS) larger than
-128B for devices under Xeon 6 Root Ports if the Root Port is bifurcated
-to x2. Also, 10-Bit Tag Requester should be disallowed for device
-underneath these Root Ports but there is currently no 10-Bit Tag
-support in the kernel.
 
-The normal path that writes MRRS is through
-pcie_bus_configure_settings() -> pcie_bus_configure_set() ->
-pcie_write_mrrs() and contains a few early returns that are based on
-the value of pcie_bus_config. Overriding such checks with the host
-bridge flag check on each level seems messy. Thus, simply ensure MRRS
-is always written in pci_configure_device() if a device requiring the
-quirk is detected.
 
-Link: https://cdrdv2.intel.com/v1/dl/getContent/837176
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
+Hello,
 
-The normal path that writes MRRS is somewhat convoluted so I ensure MRRS
-gets written in a more direct way, I'm not sure if that's the best
-approach. Thus sending this as RFC.
+kernel test robot noticed "last_state.booting" on:
 
- drivers/pci/pci.c    | 15 ++++++++-------
- drivers/pci/probe.c  |  8 +++++++-
- drivers/pci/quirks.c | 27 +++++++++++++++++++++++++++
- include/linux/pci.h  |  1 +
- 4 files changed, 43 insertions(+), 8 deletions(-)
+commit: c8a9382e172ac80bc96820b3ec758e35cdc05c06 ("[PATCH v2 1/2] PCI: Avoid pointless capability searches")
+url: https://github.com/intel-lab-lkp/linux/commits/Bjorn-Helgaas/PCI-Avoid-pointless-capability-searches/20250215-080525
+base: https://git.kernel.org/cgit/linux/kernel/git/pci/pci.git next
+patch link: https://lore.kernel.org/all/20250215000301.175097-2-helgaas@kernel.org/
+patch subject: [PATCH v2 1/2] PCI: Avoid pointless capability searches
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 869d204a70a3..81ddad81ccb8 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5913,7 +5913,7 @@ EXPORT_SYMBOL(pcie_get_readrq);
- int pcie_set_readrq(struct pci_dev *dev, int rq)
- {
- 	u16 v;
--	int ret;
-+	int ret, max_mrrs = 4096;
- 	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
- 
- 	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
-@@ -5933,13 +5933,14 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
- 
- 	v = FIELD_PREP(PCI_EXP_DEVCTL_READRQ, ffs(rq) - 8);
- 
--	if (bridge->no_inc_mrrs) {
--		int max_mrrs = pcie_get_readrq(dev);
-+	if (bridge->no_inc_mrrs)
-+		max_mrrs = pcie_get_readrq(dev);
-+	if (bridge->only_128b_mrrs)
-+		max_mrrs = 128;
- 
--		if (rq > max_mrrs) {
--			pci_info(dev, "can't set Max_Read_Request_Size to %d; max is %d\n", rq, max_mrrs);
--			return -EINVAL;
--		}
-+	if (rq > max_mrrs) {
-+		pci_info(dev, "can't set Max_Read_Request_Size to %d; max is %d\n", rq, max_mrrs);
-+		return -EINVAL;
- 	}
- 
- 	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b6536ed599c3..ceaa34b0525b 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2342,7 +2342,11 @@ static void pci_configure_serr(struct pci_dev *dev)
- 
- static void pci_configure_device(struct pci_dev *dev)
- {
-+	struct pci_host_bridge *host_bridge = pci_find_host_bridge(dev->bus);
-+
- 	pci_configure_mps(dev);
-+	if (host_bridge && host_bridge->only_128b_mrrs)
-+		pcie_set_readrq(dev, 128);
- 	pci_configure_extended_tags(dev, NULL);
- 	pci_configure_relaxed_ordering(dev);
- 	pci_configure_ltr(dev);
-@@ -2851,13 +2855,15 @@ static void pcie_write_mps(struct pci_dev *dev, int mps)
- 
- static void pcie_write_mrrs(struct pci_dev *dev)
- {
-+	struct pci_host_bridge *host_bridge = pci_find_host_bridge(dev->bus);
- 	int rc, mrrs;
- 
- 	/*
- 	 * In the "safe" case, do not configure the MRRS.  There appear to be
- 	 * issues with setting MRRS to 0 on a number of devices.
- 	 */
--	if (pcie_bus_config != PCIE_BUS_PERFORMANCE)
-+	if (pcie_bus_config != PCIE_BUS_PERFORMANCE &&
-+	    (!host_bridge || !host_bridge->only_128b_mrrs))
- 		return;
- 
- 	/*
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index b84ff7bade82..987cd94028e1 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5564,6 +5564,33 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0144, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0420, quirk_no_ext_tags);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
- 
-+static void quirk_pcie2x_no_tags_no_mrrs(struct pci_dev *pdev)
-+{
-+	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
-+	u32 linkcap;
-+
-+	if (!bridge)
-+		return;
-+
-+	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &linkcap);
-+	if (FIELD_GET(PCI_EXP_LNKCAP_MLW, linkcap) != 0x2)
-+		return;
-+
-+	bridge->no_ext_tags = 1;
-+	bridge->only_128b_mrrs = 1;
-+	pci_info(pdev, "Disabling Extended Tags and forcing MRRS to 128B (performance reasons due to 2x PCIe link)\n");
-+}
-+
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db0, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db1, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db2, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db3, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db6, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db7, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db8, quirk_pcie2x_no_tags_no_mrrs);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0db9, quirk_pcie2x_no_tags_no_mrrs);
-+
-+
- #ifdef CONFIG_PCI_ATS
- static void quirk_no_ats(struct pci_dev *pdev)
- {
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 47b31ad724fa..def29c8c0f84 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -601,6 +601,7 @@ struct pci_host_bridge {
- 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
- 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
- 	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
-+	unsigned int	only_128b_mrrs:1;	/* Only 128B MRRS */
- 	unsigned int	native_aer:1;		/* OS may use PCIe AER */
- 	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
- 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
+in testcase: xfstests
+version: xfstests-x86_64-8467552f-1_20241215
+with following parameters:
 
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+	disk: 4HDD
+	fs: ext2
+	test: generic-holetest
+
+
+
+config: x86_64-rhel-9.4-func
+compiler: gcc-12
+test machine: 4 threads Intel(R) Core(TM) i5-6500 CPU @ 3.20GHz (Skylake) with 32G memory
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202503042124.7627f722-lkp@intel.com
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20250304/202503042124.7627f722-lkp@intel.com
+
+
+
+[   62.784123][  T284] LKP: waiting for network...
+[   62.784128][  T284] 
+[   63.218408][  T284] ls /sys/class/net
+[   63.218417][  T284] 
+[   63.224484][  T284] lo
+[   63.224490][  T284] 
+[   64.076175][    T1] watchdog: watchdog0: watchdog did not stop!
+[   64.157917][    T1] watchdog: watchdog0: watchdog did not stop!
+[   64.196710][    T1] sd 1:0:0:0: [sdb] Synchronizing SCSI cache
+[   64.202659][    T1] sd 0:0:0:0: [sda] Synchronizing SCSI cache
+[   64.969888][    T1] pcieport 0000:00:01.0: VC0 negotiation stuck pending
+[   64.977342][    T1] ACPI: PM: Preparing to enter system sleep state S5
+[   64.986446][    T1] kvm: exiting hardware virtualization
+reboot: Restarting system
+
+
+there is no more useful information, seems our test machine just reboot here.
+this is not observed on the parent commit, c71f7bbc5d794, which chosen as the
+base by bot.
+
+* a234e07a63859 (linux-review/Bjorn-Helgaas/PCI-Avoid-pointless-capability-searches/20250215-080525) PCI: Cache offset of Resizable BAR capability
+* c8a9382e172ac PCI: Avoid pointless capability searches
+*   c71f7bbc5d794 Merge branch 'pci/endpoint'
+
+c71f7bbc5d794984 c8a9382e172ac80bc96820b3ec7
+---------------- ---------------------------
+       fail:runs  %reproduction    fail:runs
+           |             |             |
+           :6          100%           6:6     last_state.booting
+
+
 -- 
-2.39.5
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
 
