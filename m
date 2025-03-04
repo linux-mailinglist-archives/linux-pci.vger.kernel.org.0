@@ -1,70 +1,70 @@
-Return-Path: <linux-pci+bounces-22846-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22849-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7731EA4E253
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 16:07:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 019C9A4E25A
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 16:07:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 22FE217DFAD
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 14:56:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 415B7188870E
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Mar 2025 15:00:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0517427C141;
-	Tue,  4 Mar 2025 14:54:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E86127C142;
+	Tue,  4 Mar 2025 14:57:19 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B787378F39;
-	Tue,  4 Mar 2025 14:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE60627935A;
+	Tue,  4 Mar 2025 14:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741100073; cv=none; b=EuAPInipnRK0RZyk4tNReVxQEj5deh2Z7aWXEM08mSz+x+msT86YK+GNEd80gsLp13ciK+6MM9yq1v0F6GuwJs2qlPzgMMbR8QeNOvJp4Z8EMxiYmsGJwXd1/iqmAr8yC3gyQzcAJySimttrxv126l2C5LOCGz6ug1+fMIhSFsk=
+	t=1741100238; cv=none; b=AAkSOj/RUyXq6IB7XCU9R/UuT9/ryh4hy/wLT6B2wekLcmbZg7H5DgKLL/qQI0m6BLPqqJX5cVguJeNZr+wN+2zvsioCwpVo32Z8oQE4+iYYUlzl5vRK2g1N0zpvjv+04dXpslTm2g+4j4jzxrrc3kVnMRyaanfYz168gNrjsmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741100073; c=relaxed/simple;
-	bh=sVEyCtEGAOXazpVA2ds1qgcN+T0Oqk82q0Ztht3CXw0=;
+	s=arc-20240116; t=1741100238; c=relaxed/simple;
+	bh=x1CoI5BgFiS3Owp5p1mD+l1Q9+YlbNW4fVkZBG1ygbI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kakRb4tozD+R4lUj6pRbH+cBnb9TAxgOp13ctYpCy4Vf8QKQQgqUSU32jzmZi7klU8yvywZPFKORzIMCyInOR2AdmDehsza4jgtAC9BAwKK+Kbmig87FvZPrYby3X4QJefY/Djk0GWrmVgxa7CUhPmnc+N6ExWIW7cQxVQF/qns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.45
+	 To:Cc:Content-Type; b=l/UysQV4P5Nwe4x4y18B9CNcW1cOhKapwkbGAsxituHaeYtTOtEs0RjFpu0xHPszo/v1bmxbQ/s4+zYBqxv25qR66xDRQUzPMR7izlayl6cpIc+edYWzZlaRfgIU7leAmMixcYhAwjmnFRrxuhtXLTuyvPJ72Dwri4sQHpQtuNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86b7185d653so1010116241.0;
-        Tue, 04 Mar 2025 06:54:31 -0800 (PST)
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-8670fd79990so2174947241.3;
+        Tue, 04 Mar 2025 06:57:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741100069; x=1741704869;
+        d=1e100.net; s=20230601; t=1741100234; x=1741705034;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fpoi690aUnKUgZbv3KZKnYeAytIZyP2VWb9kHfjEXMw=;
-        b=OYQopbxqNBoCr7D7GpdVuMNfjt6FgEIYSFU4Xu8U0ZCAR69kbNRSqZgN20d/z7u+JN
-         DKowDpSX8wOHgMH691Azf3gbnNLgUGu9DFq3OmkoUXEnwuZ7HQM9HQiZoSb4jp4lYfH+
-         ojbRN0yicpR9Wm1WCMhG8UdY1sZExUTUWj6a7vsjredfyVjNS1AGhkHSrmGZ1+bnYS5w
-         MTQyOxA+v166Al97ofm02Ka7DmQGjoO627iy6JEXClF90JG2T7W4MSOV9UaLov+41ZPP
-         R1kjP/iLuZ1bFQBMAM4k8JljZdfGY9Tq5xB2UMswTpWj5acfc1GLFtY+EfB6MMgT8rM9
-         k0TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCIXRLGa8CSGR40FREC62epBVhEn/IkWCCfzmX1JlYjUbiiKIKowwMAJhy54B/vPmIfeOcoMPuNKAj@vger.kernel.org, AJvYcCVfQc2shXZdj5YmaInrZXAz3IhN05joKlX64PEm18aUKP0ZGMFg01uYhbotiHZGEbTYh8XyO8yDunzYPKFcWZzOfA==@vger.kernel.org, AJvYcCXn3gRSgPQ4aa/0ZkMx8cTE5wiKWO31023gRqFntIQLNOPfCb/GyZDCaY8NmWuDgJWcrfNruGomY8csbZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFAmIRoZtLev2RdY5m2mM4S4xdvc12W2RhYlwtxT75ooqwvU83
-	f5+EGmlTBs2+56pJunOM5e4jTZDv1zjGLVC3OO/FZU7MJ0IpFFQOvEtaCR/4
-X-Gm-Gg: ASbGncsn88Zz+t6LsPVtyESWFIoR7NPu4nARoTxPCBEKIQk3QAd9uBX/2LggyAoS99P
-	u+tHzwbC0LsuPZHTdTZXOPuMy1Rz/jAfxOqL5Hzsed8OhNzy1JkhZ7Hq9JL2wCxQ5kliS38OOuQ
-	kWDXofZZuhBXYsJiRFwTmnhfPILlNDPqsUZoG3DU9xUFem1Of/sHtsLV9v4eROVq3L4HgtkqIiK
-	888HCEPZS82qdSwbWWCvw1FSDdpweB+m9pFEPCFNrnQP6pDQcUZrFPe8qAWrsleC/ImAwkavQXV
-	uV5R8srBXh1RQpwkOZPXghhfpE6qU76YC+Qdr1oj2JPPn49j2zftG8HMeUekPdaUVBDNBbUx6p3
-	6rnW6j7U=
-X-Google-Smtp-Source: AGHT+IFoEN2r9PD3tRNXvn/TNdb+XIZlXcc57x+b2pgw7O9q6aBtHJRcsftY7LcRCguPcZbzifvppw==
-X-Received: by 2002:a05:6102:3f4f:b0:4bb:4c52:6730 with SMTP id ada2fe7eead31-4c04490eb5cmr11583572137.12.1741100069314;
-        Tue, 04 Mar 2025 06:54:29 -0800 (PST)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c16ba4f676sm2013591137.21.2025.03.04.06.54.28
+        bh=cnx0gcUzGjGC6Jmsd1CoV+gv4tw/ToY0SgPfV1Ikf3c=;
+        b=bo4gx59NtGFcyB3XsAtkLhwkURZ/JIn1S1lJ2RZe24WNDPTS3RfTwkA8OYktvgmOqI
+         VbMXYSAjwRIjoSM4WKy/J3ANU/14Kvyg4Yz4oVzPlMpi99oMFGgFlof7OpA85XjlrZ1v
+         XaYnpFIuGUW8l8Mn7vpsa3Ueq9KphEACv/32p31l3D0xZUiYC1hRutBzkS41tQR3jyhW
+         P3TiJ01CsPyyJVopdFGpGdiPY4Gtefi7SEsmG8oNeT2AN3y++A4OdpIeCX5G1kGgVRs8
+         sywZwOXRwt8SMQ+giYvZe1ur1XegRscRvBLOOX10YkUfLI6TKHylam+h0y/KhJIP04w8
+         X5hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFFJo9yOZTO61uy/1x58+zqCTscJUreJ/EPBh3UD35ACfNzIYshGZ1bFast/uE3y5vRJEE3btUlikU3i0=@vger.kernel.org, AJvYcCUJFIdznuWB/As86r4/P6GZiRfCFK9NpZZUpQjioV+IlEUhFHSo47E3bQ7Gqr/R89kKo7yQo/MQfWXX@vger.kernel.org, AJvYcCWFaJM9hUqBKzFvkH7fyA5PAHcgkDfgaoHzhb9/kfAcN1UOjP5bURWOUiuSI/GX0Mylyh3a8FsvFwCVMoNPZKANeQ==@vger.kernel.org, AJvYcCXvyvdi1z0eAvg8IWMmqDi6bDjf9dkjtkM9zPkApc2fb5bOYHksMkyW2Pj6cIJxAd7R188XlOPJYhgfCNqKkGogdcM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAkxID0NhasrsCmQkUTAkMdlaIMo6BIUNo/Mh73Y2VBeafxDCU
+	fz98cxDPwhN6/Bih/ulvKR8580fcHRv5FJCh+4dymVANaOKcrjHyvvxHpN26
+X-Gm-Gg: ASbGnctOrPcmLNaXN/tjI7hu19GDV4m6u2hb93ft9QPDRgUNgq1FuqbwQHSPTk8CwR/
+	BF9kEuoBMjU7Tqu0M8xqMsh2C2v5107MSy+90uRw1k/sLd78w2zsP3JctkeeXt+28ZhmqsXSD/B
+	KUVdIsmZtt32uA7QYJDtyDy0EjdUhDKTfnY+NTYxH/uWHuGP1W8B0sjhn3MkAxCK9pDUFORzr3B
+	JIef7jUqUwmx6uggdL6ZfZJQy5jdPbrz8y2KKiIdS8DKID2SUf3voRo5xnd/NIUah7JxQh6oOVT
+	4B1Yf5b9Lzh2TAFiznMuMTzthuPdfcv8ccARASfe7beBI99EAJ7lo9cZ0r+Q+wTKAiojU84ml2v
+	Ymn9hFo0=
+X-Google-Smtp-Source: AGHT+IEvgn6ehT30BZbeKFHQWWEjO2KSYu1Wgtk15cF0fx7ifrHdaALThSfwaugd/Uj+xUfo2dgZzQ==
+X-Received: by 2002:a05:6102:3346:b0:4bb:e14a:944b with SMTP id ada2fe7eead31-4c044ee23d6mr10543904137.20.1741100234161;
+        Tue, 04 Mar 2025 06:57:14 -0800 (PST)
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c16ba4f676sm2014309137.21.2025.03.04.06.57.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 06:54:29 -0800 (PST)
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-86b2b14303fso2345214241.2;
-        Tue, 04 Mar 2025 06:54:28 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVOU6rr6VEwGBzS40rnugao0IP5ZG0RpUsWOiA+g3mTfCV13n00Dzgq9b2AGmj5vlCDYRtnasO9O/FNP4o=@vger.kernel.org, AJvYcCXCGlduA+gcX6YlMyPCPLKBQSxVSlcxwA8vVelNVFwBUee2HJuzT3R/Vb8YStFGst/xlRGxCR7bWsYK@vger.kernel.org, AJvYcCXMFs7p5D5eSt68nkQk+CSViVRKgExOC5fZUj+dlazH99Sv5MDYx3pTgAsO9+/T3aKTi/Qb4JD46d72ofsj/JV/RA==@vger.kernel.org
-X-Received: by 2002:a05:6102:3ecc:b0:4bb:5d61:127e with SMTP id
- ada2fe7eead31-4c044d4ab20mr10413122137.25.1741100068657; Tue, 04 Mar 2025
- 06:54:28 -0800 (PST)
+        Tue, 04 Mar 2025 06:57:13 -0800 (PST)
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86b2e0a227fso2391229241.2;
+        Tue, 04 Mar 2025 06:57:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVStgJU6BIZpmcddXV2OLPQBDS5X8OhTDvLzFuU7ru81ldXn9ImzW6HsjmF1rnzEFNlOnSsBU2ASwasthA=@vger.kernel.org, AJvYcCWCfsiq4VujOiusWTfeIpfqrqMfM2OnRRyDKq3uPqfOf5qHq8S5104uH/P1uzoyL/fSdC3uUr6o2m4zG/rpZOwdpg==@vger.kernel.org, AJvYcCWlxk+GsN0ZW2+w4ndfcSYOsRKcVY42uONxci0ivl2kbzfcXPR4Nf5XaBNNTgpD53rg8Z8rH9jtclHP@vger.kernel.org, AJvYcCXoPX2gBY6QX2hBHUr11XhFBBk/jjfCoOwSkwEL9THCrXlRTa91EB17A++PuP5A5zyXjfRumIxiZKIvipwjVSPINAM=@vger.kernel.org
+X-Received: by 2002:a05:6102:3346:b0:4bb:e14a:944b with SMTP id
+ ada2fe7eead31-4c044ee23d6mr10543879137.20.1741100233150; Tue, 04 Mar 2025
+ 06:57:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,10 +75,10 @@ References: <20250221131548.59616-1-shradha.t@samsung.com> <CGME20250221132035ep
  <20250221131548.59616-4-shradha.t@samsung.com> <Z8XrYxP_pZr6tFU8@debian> <20250303194647.GC1552306@rocinante>
 In-Reply-To: <20250303194647.GC1552306@rocinante>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 4 Mar 2025 15:54:16 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWuCJAd-mCpCoseThureCKnnep4T-Z0h1_WJ1BOf2ZeDg@mail.gmail.com>
-X-Gm-Features: AQ5f1JoqtMy8hoZL8-viYrcUOUZmi4FtvLdHdpQ6zdyS-NBLZrj7ILd0QVxTKVI
-Message-ID: <CAMuHMdWuCJAd-mCpCoseThureCKnnep4T-Z0h1_WJ1BOf2ZeDg@mail.gmail.com>
+Date: Tue, 4 Mar 2025 15:57:01 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWens9ZZrjNH1Bd2AN3PJEP1KSUGdiJcBCt0uPGH_GiiA@mail.gmail.com>
+X-Gm-Features: AQ5f1JqCho8yfOlMgARNkOLJkO3vQy-dmfB5AhRkVmxo4nrVO_CH507OBRi_NRQ
+Message-ID: <CAMuHMdWens9ZZrjNH1Bd2AN3PJEP1KSUGdiJcBCt0uPGH_GiiA@mail.gmail.com>
 Subject: Re: [PATCH v7 3/5] Add debugfs based silicon debug support in DWC
 To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
 Cc: Fan Ni <nifan.cxl@gmail.com>, Shradha Todi <shradha.t@samsung.com>, 
@@ -90,11 +90,13 @@ Cc: Fan Ni <nifan.cxl@gmail.com>, Shradha Todi <shradha.t@samsung.com>,
 	18255117159@163.com, xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com, 
 	will@kernel.org, mark.rutland@arm.com, 
 	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.or>
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hi Krzysztof,
+
+(CC corrected)
 
 This patch is now commit 1ff54f4cbaed9ec6 ("PCI: dwc: Add debugfs
 based Silicon Debug support for DWC") in pci/next (next-20250304).
@@ -211,8 +213,8 @@ address 0000000000000004
     user pgtable: 4k pages, 48-bit VAs, pgdp=3D0000000483b53000
     [0000000000000004] pgd=3D0000000000000000, p4d=3D0000000000000000
     Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-    CPU: 3 UID: 0 PID: 707 Comm: lspci Tainted: G        W
-6.14.0-rc1-arm64-renesas-00134-g12c8c1363538 #2884
+    CPU: 3 UID: 0 PID: 707 Comm: lspci Tainted: G
+W6.14.0-rc1-arm64-renesas-00134-g12c8c1363538 #2884
     Tainted: [W]=3DWARN
     Hardware name: Renesas Gray Hawk Single board based on r8a779h0 (DT)
     pstate: 204000c5 (nzCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
