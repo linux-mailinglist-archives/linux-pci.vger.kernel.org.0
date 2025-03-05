@@ -1,113 +1,93 @@
-Return-Path: <linux-pci+bounces-22955-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22956-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59CAAA4F851
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 08:54:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19930A4F86F
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 09:08:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0FE63A6BAD
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 07:54:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 616563A57A6
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 08:07:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E5CF1F153A;
-	Wed,  5 Mar 2025 07:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TGT1bbZP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7000E1624CF;
+	Wed,  5 Mar 2025 08:07:55 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355591EC00B;
-	Wed,  5 Mar 2025 07:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13FE2E3360;
+	Wed,  5 Mar 2025 08:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741161252; cv=none; b=bEIicvs+bUMdnpWBtFWFFzl6t+yaCfn355NQquDmDRYgurbzj0D11rNGIKWHdQVanGQHEg+EKJMySjBZYn4PEKwz8sx1Kh4F4ePWzml2BCzVo5kdTd0YSYYUUR+0jtQLQIw8cz3nxqSCjYAkKe/ZsRBDNW/k22A2brhAdVwilrs=
+	t=1741162075; cv=none; b=dVM4HdJtxbNBM1JPBHxt/FKUBsyhqatoYSs+gGx5JdswQMrmlzXsee1UiO5tUp6ijdrMNPM5ywo/HHCPc+AgWn18pp0FKb/h9ZRT23v+j4p6rVt3WpjVpcZQx/2TbqfedGgNsIRnlF22fotm1oPAE2VRUEKekzoaT14BHxWd2Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741161252; c=relaxed/simple;
-	bh=W8jDnO3VInSEaJW68j1TJXMhPIXhOgkbyfJZWVPYzRQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AUaN3qa8nlLOL6Mtv44+vhwNe5/2UtjOK+ML/jxHgszkOKdR4jSRARGPONT88pj9FbSqEs8WTmff6SvsqQl9RjdVQFyKVdg1EdZh3QmjGwkmbzkl/roL6IViwXYaK/+rZUqau04rVCBICUfNvwyAOI/3kE1ioiDLke3ly/TH2Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TGT1bbZP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B7BEC4CEE2;
-	Wed,  5 Mar 2025 07:54:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741161251;
-	bh=W8jDnO3VInSEaJW68j1TJXMhPIXhOgkbyfJZWVPYzRQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TGT1bbZPCOE6/L8mIjhYWh+l3lZEiXqBuy4dgW3gV6zhATo5JR8PnWWchLQrpYRze
-	 tH0oIH4onCgnW0Sr235a4bktbHeXrGIIrcYzUfMWzxYwsEC1JKFjSQwstbLdjQ2SZz
-	 0+B1Nop/bNNMG+sgtzYb2r1apeiWBOtQVKkNEE/U9S4VcHXC7ifwIs2cUJqm9y6FL7
-	 BoHj3gbNfkDKIDfDdJfXtSgH/kwvaAjYkSdUFT0vPbMeVeUX3D9C6CEJdZQ9xa0LEv
-	 jfC0Ex04KIBxGiV9Q51YhZhtccdbHFFEtRTQHilVlesFUd3iUMXK839Id+dbtIGDOM
-	 TD1e8qH2vaezg==
-From: Philipp Stanner <phasta@kernel.org>
-To: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Philipp Stanner <phasta@kernel.org>
-Subject: [PATCH] PCI: Follow-up fix for BAR hardening
-Date: Wed,  5 Mar 2025 08:53:55 +0100
-Message-ID: <20250305075354.118331-2-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1741162075; c=relaxed/simple;
+	bh=apu10s+fJZ911Ijxj7kIStbMqlzymKqe1ad5pAatUoU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T6itUcaGNQg6h7VpJvVfrYTqS/z4acJKp2iBEZPmATo8Wbl8KLD5tX4tKIRGE+iPOkVPKejLlfgVv7s18poiU7vyjMxvCyeYhhPAR85fRkurA18Qve42iSvLgbrw84YSpjim8DTSDugsMODIlWMEjxzh3e9DN/jNbii4G21q2Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-223594b3c6dso112415535ad.2;
+        Wed, 05 Mar 2025 00:07:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741162072; x=1741766872;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qsivklTW2AXV/DvWE4vPkKDoYBnAOF+SydcaTbdXRsE=;
+        b=aJfX8Im4FMb7dmc5MonxPneWDTvYW/cvMMw/QWhgg4v068kw51IhuKcOV2hrKeCMFg
+         a9KkeuUsMAsQhtupKofBSf3dFmyZPjVgROKX6Rc1Nq+trR/4fksbzz0Xor2dugqiNeSv
+         xa9IHykvjTF1aRqFg6yHYas3JTwyNGSeer2xZe8TSbJNVk19DGBzWB7LUO0r1SUKRBED
+         dJO9XjkcaGgzEPI+jsuOrT4JJEOm72ZgTyvCI3KCGTUT2zV3Po40T89dY3qfyxdNcTIN
+         7rsZzmIczWG/4bllxobX7ES3EbAOcL56LWmQFWsl1Ht+YWBahXr3zEEnITfYIR0AzEKm
+         Ywag==
+X-Forwarded-Encrypted: i=1; AJvYcCWmUL8kbMgOSRqw0G2Ca0sVcNSkvUFKDl43wJz3pNgqydomMzEmGKMg//kiZaA/RCmPcipwsJtc9dJD@vger.kernel.org, AJvYcCWyIYKkJ8T2I9Ske/X4YDVd3llF4e7sSGtNbTv6zaMWZQ1DnaubfClasE8YPFhHBA/JrEZ9FCkV4iw632Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfV+wZMNDIe6lU7WrJhNi5VCIhuQeDkBJMWgHtzcpdVnpTPuqY
+	GSSc1BgmOlau6J2DNMbp/CssI70GcejFAnUO2SqwkTjFVpuV6P+mr6wU3Md6EQw=
+X-Gm-Gg: ASbGncuXniJFNuLR1i6k3iUHnAfLPFp7fQdJEAsASsZZmEi13vJy8NY/3SwXgTDn4oO
+	mQ+FQtYyEPPd5QAkQpMoy0OF+27eYg7tAji2UIrDEv/N79lb8Aro1XfnOTgjFpWQwf/6c2pQgZm
+	jonY4Sf6n6JPAiUfcaSQoIJGgVDD+CEUGYrXthnFq592Pg7xpfJXTW0jPgcrHHaGkCMd9Tq6rBe
+	Y01FP3UAALWi+WO/55z1Y3Dkf6b5iW1+cN79FmjHyMzPh4XL5NZ6SsHCSsuNAgJ3TapsNTdLWdm
+	DLGeb8yCI6jdjKe9Cp/qbX5v/V2cavTksJkZ4pQj6TZA5hAi0ieX0m6hvkNIVZLLkzrykV/aTQO
+	W8MU=
+X-Google-Smtp-Source: AGHT+IEGVdmdmbudgucIJ5Oa63AI2sZEMBdwoKYYxzedpSNOed5sO7wx/obuA734VhDurdZMT4+6fQ==
+X-Received: by 2002:a05:6a00:3d14:b0:732:2484:e0ce with SMTP id d2e1a72fcca58-73682c89e09mr3232937b3a.17.1741162071997;
+        Wed, 05 Mar 2025 00:07:51 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73590058fbcsm10092225b3a.13.2025.03.05.00.07.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 00:07:51 -0800 (PST)
+Date: Wed, 5 Mar 2025 17:07:49 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Philipp Stanner <phasta@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Follow-up fix for BAR hardening
+Message-ID: <20250305080749.GE847772@rocinante>
+References: <20250305075354.118331-2-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305075354.118331-2-phasta@kernel.org>
 
-Fixes a bug where variables were used before being initialized.
+Hello,
 
-To be squashed into commit "PCI: Check BAR index for validity"
+> Fixes a bug where variables were used before being initialized.
+> 
+> To be squashed into commit "PCI: Check BAR index for validity"
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
-Fix for this already applied patch:
-https://lore.kernel.org/all/20250304143112.104190-2-phasta@kernel.org/
----
- drivers/pci/iomap.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Squashed against the existing code on the branch.  Have a look:
 
-diff --git a/drivers/pci/iomap.c b/drivers/pci/iomap.c
-index 0cab82cbcc99..fe706ed946df 100644
---- a/drivers/pci/iomap.c
-+++ b/drivers/pci/iomap.c
-@@ -40,13 +40,14 @@ void __iomem *pci_iomap_range(struct pci_dev *dev,
- 
- 	if (!pci_bar_index_is_valid(bar))
- 		return NULL;
--	if (len <= offset || !start)
--		return NULL;
- 
- 	start = pci_resource_start(dev, bar);
- 	len = pci_resource_len(dev, bar);
- 	flags = pci_resource_flags(dev, bar);
- 
-+	if (len <= offset || !start)
-+		return NULL;
-+
- 	len -= offset;
- 	start += offset;
- 	if (maxlen && len > maxlen)
-@@ -90,13 +91,13 @@ void __iomem *pci_iomap_wc_range(struct pci_dev *dev,
- 
- 	if (!pci_bar_index_is_valid(bar))
- 		return NULL;
--	if (len <= offset || !start)
--		return NULL;
- 
- 	start = pci_resource_start(dev, bar);
- 	len = pci_resource_len(dev, bar);
- 	flags = pci_resource_flags(dev, bar);
- 
-+	if (len <= offset || !start)
-+		return NULL;
- 	if (flags & IORESOURCE_IO)
- 		return NULL;
- 
--- 
-2.48.1
+  https://web.git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=devres&id=ba10e5011d05f20bd71d3f765fd3a77f7577ff34
 
+Thank you!
+
+	Krzysztof
 
