@@ -1,181 +1,261 @@
-Return-Path: <linux-pci+bounces-22932-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22933-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08294A4F60B
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 05:26:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDDA3A4F62E
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 05:44:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EAA46188B686
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 04:26:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35C123AA5DC
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 04:44:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5FF71AAA1D;
-	Wed,  5 Mar 2025 04:26:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7E951C6FF6;
+	Wed,  5 Mar 2025 04:44:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZZ5iXXn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GxUYCV07"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2D019258E;
-	Wed,  5 Mar 2025 04:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149DB1A239B;
+	Wed,  5 Mar 2025 04:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741148772; cv=none; b=AlHfL9xlAxyPecP9mIltsp7KyahAwQpvSE7gyrD/So8bEO9gk35I/f9hAW7WL9WnOZIm0C9ldHJVtIfDHLEIis4hTtLD991GjHH62vZRn83W4Av6ns6OrdvMkpki7N1exOwQtDhszkzJNIwZgbYou78ag/37pA13KGG56uEauVo=
+	t=1741149865; cv=none; b=an/64m+uC/5bUKmGngKasvLr9D0Q+YTNYyU1xlgyIbZZ/iu1KZK3ILz88oXjzb1ZOVDTooGVLj+snx2OoxWLE5jmey8K24LnzO1054mhRpb5LIxU3Z+PAxQfg59YUFX9qOzG15KHlP0UU6dhZStxxQ538PYhs9PN2vKVuv5AL54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741148772; c=relaxed/simple;
-	bh=Ma9rbC5Lm1hcZ0TRRXqeaYpaIEccVc7d1Sur+2dI6bA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XvIxKhxEGJMx2NFysXiQe8V5L8LasOke40ic2bNZPRk+H1rl8KLX1nEazUIH2yJO+VBiYE/TQ3zccYGnOKcCEJM77t92BBqr8Vo9V0oFZE0xPt+b6qQjYqua1cfdeF/M7NYbDD+kbq8DAuBxmDpTYO6Ovq/SVvrmIad8kdXlzOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BZZ5iXXn; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1741149865; c=relaxed/simple;
+	bh=k+9U2djrv68YK/Qykvrhireqd6WhG9M7AdjIxhGTFFE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lwVoeloX1UsMNbLQrKnd7CLqvV4238R14vdjbhyfIAqvwIHFrMksyWu09K5t+F+qctbej60NggmUMhVbfVNzCTNw86DRsj6+fU4iXWId6ib7YRcDKDlUoKWa2i+2dWjNUhrMSPbyOLoDj0f9DT7iFKIpQsKDd2eNG4IwBublkm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GxUYCV07; arc=none smtp.client-ip=209.85.222.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2232b12cd36so87521765ad.0;
-        Tue, 04 Mar 2025 20:26:10 -0800 (PST)
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c2303a56d6so693685385a.3;
+        Tue, 04 Mar 2025 20:44:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741148770; x=1741753570; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lDbPu0GoIrMl1ekfCD/PMILNRbV5SLzILd3Nw6UHcyw=;
-        b=BZZ5iXXnZkls8MGlK7mGB0Vi/yERJ2Uzd4k/d9yW5GwfiSpsFny1oFxvV3wHSlbviH
-         +7exKVdMrxGmUi44mU2VEY7IOBItWyB62PtcttjSLGFDl3k1J8wZQeC+kWu0cooEG3Wm
-         4E6xUeSU2O++VkFIrURU9cPTz328Is9WLEpErRk28mv0m3NeqMHhgTO3ALXhxZBHBN+E
-         /pEo0f36HPsv1YBxEBlOLpmPdoRY8G0TlH92EmTo9WHW72apzBsPR39b/IlgyVSYbI/w
-         KzZeyIBxx18VASYFBkfH9F08lMsvSh68vUzpR+uexE/ZWFL1mBWn/M2WZQrq9m65pwao
-         SQ1w==
+        d=gmail.com; s=20230601; t=1741149863; x=1741754663; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hhrXpKwS144c42p98nTp/KcoHaTZ8dOPbT6iHsDq2Ao=;
+        b=GxUYCV07VS1oBjQIl1RjWW9KqCOgOGpS8oXGK7hO6jifcRis+0BLbuPUvMQS/oYP/K
+         dJKLqYFgSz3gYCYkkVPBSKe8IrkRE9sB0i4mq6w2KqM+o0fHGPnOaP2/dzBhBxFi41BX
+         sUy0cFNXbEu2oJaJBZ0bKx7YsAIkEGDh+LdPlrCkNbFqS3aDPGm+OHI6MLndmrfzFd9w
+         cDKdMEBk8dziYgJYb9M9wT+7NWpOCq7CyckLkbCqHLiDh5sy+36A44KVzZ5ECxEh5Vt3
+         COC3E4rIT9wC04k3Rf7Hpimz3uKHwnTlhAE3RItSCi3v/tU0WDer0jZghfb9fHzcOtcP
+         4ceQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741148770; x=1741753570;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lDbPu0GoIrMl1ekfCD/PMILNRbV5SLzILd3Nw6UHcyw=;
-        b=I3t9u8B7WJ865plYyZTuxLDOy3G4wtmZjqCC1/MLQv/DqYsqm+ftspFB+jaqEcr831
-         zipaSibBmXLvYFUoAiEg3l63vTSWGsBkG3nMww+PfOeXiSq0oRt+EzRtXsexbm27skZ8
-         YvykqSwTQMoWxq7fpWFSu+LlBfPEZENY2M/W3Z4OFBf5vdhTxEMMHgqApWryMD8EHbXY
-         a58n2qvxZbUhBWOUpPFsD5D5QcH+wn4ZC2rTRCzYQ29mkhlOIVtWhQTXoBe8wFIoZgSQ
-         bfyEVARvBqZwIJkQR7cHu1efG5P8lWUw4RUNQLVo15BnMa0lySwgYxUDcAlXdHsLtJKA
-         Q31g==
-X-Forwarded-Encrypted: i=1; AJvYcCXBKsNwWNI5//Gq6hUoBsFTUShhckCR3FLbjwstgfTw8G0m6oIRuJOgGruuLNcX1Lo45cAD9HRv+9Bt6+Y=@vger.kernel.org, AJvYcCXh5prK6wAUZcBfIyzMeVmhDWdlbWcWU2VcymUNaHy8SW29AD6UDX6kwDrxiOfXGrdNAONM5pPw0yehjHtzYhB3JA==@vger.kernel.org, AJvYcCXnfk+OTmOGsJYUCCl3iKWXiBlDlLJQcVuA7zzss3U5pE27QQPiwBRwzKCYbGT6qKQVpm39GUhdKopj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ+TU1jxbU1MSr/6KjZSfRKfLWMT/XOn+XOt87MO2AuWZSfhqj
-	3kQTzTZxcKkgpYwNr0bPaGLogKJkaFRqrHfG+Qye70ZQPEFddL8w
-X-Gm-Gg: ASbGncvn0gs9unvM5E3GI7EgzB+4duXNkpEUsxtVjNd/vXUuK+UFRuLDG/MYc8qRMjT
-	qHwlKW0FhuX+dDoeOQKPDjgDbZq8oKtW+zuwsxLT7mNSZSTsTAQvtR2sH56NvlZjgfG8e6VCplx
-	cPgN7YIudAyMbRWG8w0UGy1O3XgL8MGxWtsUf/QUAVl62MEgfUQxQXoNY6r7h+Uqr8Uqop53cZ+
-	ttK83CSex3uI9e8tMhJxRozb7XipWgnJ6Dbim4hqUDZb70UfvqgXjDWruvOWkkH67ZlRPdgsOBz
-	3ahjSpuFIUL5lUb0ehno49wfwCsB4uYlyZ1iUA==
-X-Google-Smtp-Source: AGHT+IE5O1ZVuOwmp//oQrwhNgSp7QZxuUhf3G7FCkClB32cJAQnuuVkN/3c86LEBjvOfGY+rzBunA==
-X-Received: by 2002:a05:6a00:23c4:b0:736:3f4d:4d49 with SMTP id d2e1a72fcca58-73682b8b965mr2481120b3a.8.1741148770219;
-        Tue, 04 Mar 2025 20:26:10 -0800 (PST)
-Received: from debian ([2601:646:8f03:9fee:cf74:c30d:9ff:fbc6])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736560f5e6esm5099715b3a.104.2025.03.04.20.26.04
+        d=1e100.net; s=20230601; t=1741149863; x=1741754663;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hhrXpKwS144c42p98nTp/KcoHaTZ8dOPbT6iHsDq2Ao=;
+        b=auzLgAHbNRuhrLiwlS2Ot14qrSxSUaHHLND4FP86rP/pV/voLoFnCRjFwrQrsU+uLQ
+         sNPl8H/Ab09GkI4WyGfmFKeA3+dvwcYbrf8OH/c9HvKD3M9OVTdk/YOA20+NN4ngyK1F
+         /tNKL85RDF5WeKoO6pga70AZ/CRZvllgqZoOIFSAw5LNgEiVV4VGHjdYYYG4HMdHgNEn
+         R4FNwOWmebFYwGl7V6U9UgTp8wE2FmszNmLGnnLh4hHQAhO7lO23SNuSOdygRbaDYJGu
+         IKTUKsIWNbX18kt5r6TQ0T5vx04GoPopdw9J+9H1DF2aKr0b/E9dqdu9DLkeDP3KS/uN
+         qrww==
+X-Forwarded-Encrypted: i=1; AJvYcCWQjpBSLW1aSE758hPm4WgWbFzOYRJUu+OvBNtGOrdY6uODVHokdzD+5rs6czlm71RKqGKhoHLzekBu@vger.kernel.org, AJvYcCWYY5/rxmE/xvQv2P2o4m7VQ/rkLK6eHfaDcNsHcFhfYgsTpzTRaPYi7ZLcIU/Mis0cnE7VInWMEfysFo7G@vger.kernel.org, AJvYcCXH1utxKGzl1TV0r1BKn8Q4j2S7LXwRjnKq1Rphg37fSOuIO7KuBD86MHQf9zgoDadwMF00Hky8PbPU@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtYzzu7khR0CH/4QQujr9KL+QUB9pFRkpdaLB+rxbf63quHH0V
+	rOP9njCk7DdUVXnJfh4GtI9M/hslKbBu143W9jiQWUhzRDqV3qeB
+X-Gm-Gg: ASbGnct5Mr+DNkSHYQsbU/Eh3OicLpPrCFmYEEAOL1CJ7hpmC7l6Xv0dBFU1MEeJ7GO
+	vRKyMeLq8Ia7p7rNoRE+uAvbmOV6orGKhzba/NGgX8J+jRJaL7553fONfPFFoa00yYTKOHEntrG
+	cv9Y3kl8Jj3SP6pekEdEyMBuNRYtWFmM8+LTF1LopT3GyIoQ25Pnam+Dsqt1aUDXp3zrYjGaIsn
+	FvzOMBoyOwbWr4LNqV3ZeDQk0+GIBHDRcAh92M83dMSMx9bRdbgPedobI5bDJXy6trHGao45X9y
+	MMfMXUAMuPMHRG8BCKB+
+X-Google-Smtp-Source: AGHT+IH+vwPw5d9BtFzBzxswU9NO4u9DM/L9MRuhwAnolL31OGQxHT7JUwcb3wef6b2uE612tHPZkQ==
+X-Received: by 2002:a05:620a:688f:b0:7c0:abe0:ce64 with SMTP id af79cd13be357-7c3d8e46593mr335671185a.9.1741149862764;
+        Tue, 04 Mar 2025 20:44:22 -0800 (PST)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c3be1f0c05sm354577285a.102.2025.03.04.20.44.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 20:26:09 -0800 (PST)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Tue, 4 Mar 2025 20:26:01 -0800
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: 'Fan Ni' <nifan.cxl@gmail.com>,
-	'Krzysztof =?utf-8?Q?Wilczy=C5=84ski'?= <kw@linux.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-	lpieralisi@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	jingoohan1@gmail.com, Jonathan.Cameron@huawei.com,
-	a.manzanares@samsung.com, pankaj.dubey@samsung.com,
-	cassel@kernel.org, 18255117159@163.com, xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com, will@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v7 5/5] Add debugfs based statistical counter support in
- DWC
-Message-ID: <Z8fSWcR_aXyxmFEZ@debian>
-References: <20250221131548.59616-1-shradha.t@samsung.com>
- <CGME20250221132043epcas5p27fde98558b13b3311cdc467e8f246380@epcas5p2.samsung.com>
- <20250221131548.59616-6-shradha.t@samsung.com>
- <Z8XuuNb6TRevUlHH@debian>
- <20250303194228.GB1552306@rocinante>
- <Z8YZEALV71PUkXpF@debian>
- <061401db8d28$5f0a4b40$1d1ee1c0$@samsung.com>
+        Tue, 04 Mar 2025 20:44:21 -0800 (PST)
+Date: Wed, 5 Mar 2025 12:43:54 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Conor Dooley <conor@kernel.org>, Inochi Amaoto <inochiama@gmail.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Niklas Cassel <cassel@kernel.org>, 
+	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pci: Add Sophgo SG2044 PCIe host
+Message-ID: <ktnqf4s4hw2o6x6ir4n5hsrvbxri5cxgjyofrl76by6fwazda3@4ejw2k7k2ush>
+References: <20250221013758.370936-2-inochiama@gmail.com>
+ <20250221-cavalier-cramp-6235d4348013@spud>
+ <2egxw3r63cbsygpwqaltp4jjlkuwoh4rkwpgv4haj4sgz5sked@vkotadyk4g6y>
+ <20250224-enable-progress-e3a47fdb625c@spud>
+ <7ht3djv7zgrbkcvmdg6tp62nmxytlxzhaprsuvyeshyojhochn@ignvymxb3vfa>
+ <20250225-lapel-unhappy-9e7978e270e4@spud>
+ <ynefy5x672dlhctjzyhkitxoihuucxxki3xqvpimwpcedpfl2u@lmklah5egof4>
+ <pbj22qvat76t74nppabekvyncc4ptt6wede4q6wfygbrzcj3ag@ruvt26eqiybu>
+ <je4falvfemkemlvdfzdmgc7jx2gz6grpbmo6hwtpedjm7xi2gk@jr4frv3tn3l5>
+ <20250303-aground-snitch-40d6dfe95238@spud>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <061401db8d28$5f0a4b40$1d1ee1c0$@samsung.com>
+In-Reply-To: <20250303-aground-snitch-40d6dfe95238@spud>
 
-On Tue, Mar 04, 2025 at 10:40:43PM +0530, Shradha Todi wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Fan Ni <nifan.cxl@gmail.com>
-> > Sent: 04 March 2025 02:33
-> > To: Krzysztof Wilczyński <kw@linux.com>
-> > Cc: Fan Ni <nifan.cxl@gmail.com>; Shradha Todi <shradha.t@samsung.com>; linux-kernel@vger.kernel.org; linux-
-> > pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-perf-users@vger.kernel.org; manivannan.sadhasivam@linaro.org;
-> > lpieralisi@kernel.org; robh@kernel.org; bhelgaas@google.com; jingoohan1@gmail.com; Jonathan.Cameron@huawei.com;
-> > a.manzanares@samsung.com; pankaj.dubey@samsung.com; cassel@kernel.org; 18255117159@163.com;
-> > xueshuai@linux.alibaba.com; renyu.zj@linux.alibaba.com; will@kernel.org; mark.rutland@arm.com
-> > Subject: Re: [PATCH v7 5/5] Add debugfs based statistical counter support in DWC
+On Mon, Mar 03, 2025 at 05:04:28PM +0000, Conor Dooley wrote:
+> On Fri, Feb 28, 2025 at 05:20:28PM +0800, Inochi Amaoto wrote:
+> > On Fri, Feb 28, 2025 at 04:46:22PM +0800, Inochi Amaoto wrote:
+> > > On Fri, Feb 28, 2025 at 02:34:00PM +0800, Inochi Amaoto wrote:
+> > > > On Tue, Feb 25, 2025 at 11:35:23PM +0000, Conor Dooley wrote:
+> > > > > On Tue, Feb 25, 2025 at 07:48:59AM +0800, Inochi Amaoto wrote:
+> > > > > > On Mon, Feb 24, 2025 at 06:54:51PM +0000, Conor Dooley wrote:
+> > > > > > > On Sat, Feb 22, 2025 at 08:34:10AM +0800, Inochi Amaoto wrote:
+> > > > > > > > On Fri, Feb 21, 2025 at 05:01:41PM +0000, Conor Dooley wrote:
+> > > > > > > > > On Fri, Feb 21, 2025 at 09:37:55AM +0800, Inochi Amaoto wrote:
+> > > > > > > > > > The pcie controller on the SG2044 is designware based with
+> > > > > > > > > > custom app registers.
+> > > > > > > > > > 
+> > > > > > > > > > Add binding document for SG2044 PCIe host controller.
+> > > > > > > > > > 
+> > > > > > > > > > Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> > > > > > > > > > ---
+> > > > > > > > > >  .../bindings/pci/sophgo,sg2044-pcie.yaml      | 125 ++++++++++++++++++
+> > > > > > > > > >  1 file changed, 125 insertions(+)
+> > > > > > > > > >  create mode 100644 Documentation/devicetree/bindings/pci/sophgo,sg2044-pcie.yaml
+> > > > > > > > > > 
+> > > > > > > > > > diff --git a/Documentation/devicetree/bindings/pci/sophgo,sg2044-pcie.yaml b/Documentation/devicetree/bindings/pci/sophgo,sg2044-pcie.yaml
+> > > > > > > > > > new file mode 100644
+> > > > > > > > > > index 000000000000..040dabe905e0
+> > > > > > > > > > --- /dev/null
+> > > > > > > > > > +++ b/Documentation/devicetree/bindings/pci/sophgo,sg2044-pcie.yaml
+> > > > > > > > > > @@ -0,0 +1,125 @@
+> > > > > > > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > > > > > > > +%YAML 1.2
+> > > > > > > > > > +---
+> > > > > > > > > > +$id: http://devicetree.org/schemas/pci/sophgo,sg2044-pcie.yaml#
+> > > > > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > > > > > +
+> > > > > > > > > > +title: DesignWare based PCIe Root Complex controller on Sophgo SoCs
+> > > > > > > > > > +
+> > > > > > > > > > +maintainers:
+> > > > > > > > > > +  - Inochi Amaoto <inochiama@gmail.com>
+> > > > > > > > > > +
+> > > > > > > > > > +description: |+
+> > > > > > > > > > +  SG2044 SoC PCIe Root Complex controller is based on the Synopsys DesignWare
+> > > > > > > > > > +  PCIe IP and thus inherits all the common properties defined in
+> > > > > > > > > > +  snps,dw-pcie.yaml.
+> > > > > > > > > > +
+> > > > > > > > > > +allOf:
+> > > > > > > > > > +  - $ref: /schemas/pci/pci-host-bridge.yaml#
+> > > > > > > > > > +  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+> > > > > > > > > > +
+> > > > > > > > > > +properties:
+> > > > > > > > > > +  compatible:
+> > > > > > > > > > +    const: sophgo,sg2044-pcie
+> > > > > > > > > > +
+> > > > > > > > > > +  reg:
+> > > > > > > > > > +    items:
+> > > > > > > > > > +      - description: Data Bus Interface (DBI) registers
+> > > > > > > > > > +      - description: iATU registers
+> > > > > > > > > > +      - description: Config registers
+> > > > > > > > > > +      - description: Sophgo designed configuration registers
+> > > > > > > > > > +
+> > > > > > > > > > +  reg-names:
+> > > > > > > > > > +    items:
+> > > > > > > > > > +      - const: dbi
+> > > > > > > > > > +      - const: atu
+> > > > > > > > > > +      - const: config
+> > > > > > > > > > +      - const: app
+> > > > > > > > > > +
+> > > > > > > > > > +  clocks:
+> > > > > > > > > > +    items:
+> > > > > > > > > > +      - description: core clk
+> > > > > > > > > > +
+> > > > > > > > > > +  clock-names:
+> > > > > > > > > > +    items:
+> > > > > > > > > > +      - const: core
+> > > > > > > > > > +
+> > > > > > > > > > +  dma-coherent: true
+> > > > > > > > > 
+> > > > > > > > > Why's this here? RISC-V is dma-coherent by default, with dma-noncoherent
+> > > > > > > > > used to indicate systems/devices that are not.
+> > > > > > > > 
+> > > > > > > > The PCIe is dma coherent, but the SoC itself is marked as
+> > > > > > > > dma-noncoherent.
+> > > > > > > 
+> > > > > > > By "the SoC itself", do you mean that the bus that this device is on is
+> > > > > > > marked as dma-noncoherent? 
+> > > > > > 
+> > > > > > Yeah, I was told only PCIe device on SG2044 is dma coherent.
+> > > > > > The others are not.
+> > > > > > 
+> > > > > > > IMO, that should not be done if there are devices on it that are coherent.
+> > > > > > > 
+> > > > > > 
+> > > > > > It is OK for me. But I wonder how to handle the non coherent device
+> > > > > > in DT? Just Mark the bus coherent and mark all devices except the
+> > > > > > PCIe device non coherent?
+> > > > > 
+> > > > > Don't mark the bus anything (default is coherent) and mark the devices.
+> > > > 
+> > > > I think this is OK for me.
+> > > > 
+> > > 
+> > > In technical, I wonder a better way to "handle dma-noncoherent".
+> > > In the binding check, all devices with this property complains 
+> > > 
+> > > "Unevaluated properties are not allowed ('dma-noncoherent' was unexpected)"
+> > > 
 > > 
-> > On Tue, Mar 04, 2025 at 04:42:28AM +0900, Krzysztof Wilczyński wrote:
-> > > Hello,
-> > >
-> > > [...]
-> > > > > +static ssize_t counter_value_read(struct file *file, char __user
-> > > > > +*buf, size_t count, loff_t *ppos) {
-> > > > > +	struct dwc_pcie_rasdes_priv *pdata = file->private_data;
-> > > > > +	struct dw_pcie *pci = pdata->pci;
-> > > > > +	struct dwc_pcie_rasdes_info *rinfo = pci->debugfs->rasdes_info;
-> > > > > +	char debugfs_buf[DWC_DEBUGFS_BUF_MAX];
-> > > > > +	ssize_t pos;
-> > > > > +	u32 val;
-> > > > > +
-> > > > > +	mutex_lock(&rinfo->reg_event_lock);
-> > > > > +	set_event_number(pdata, pci, rinfo);
-> > > > > +	val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_DATA_REG);
-> > > > > +	mutex_unlock(&rinfo->reg_event_lock);
-> > > > > +	pos = scnprintf(debugfs_buf, DWC_DEBUGFS_BUF_MAX, "Counter
-> > > > > +value: %d\n", val);
-> > > > > +
-> > > > > +	return simple_read_from_buffer(buf, count, ppos, debugfs_buf,
-> > > > > +pos); }
-> > > >
-> > > > Do we need to check whether the counter is enabled or not for the
-> > > > event before retrieving the counter value?
-> > >
-> > > I believe, we have a patch that aims to address, have a look at:
-> > >
-> > >
-> > > https://lore.kernel.org/linux-pci/20250225171239.19574-1-manivannan.sa
-> > > dhasivam@linaro.org
+> > > It is a pain as at least 10 devices' binding need to be modified.
+> > > So I wonder whether there is a way to simplify this.
+> > > 
 > > 
-> > Maybe I missed something, that seems to fix counter_enable_read(), but here is to retrieve counter value.
-> > How dw_pcie_readl_dbi() can return something like "Counter Disabled"?
-> > 
-> > Fan
+> > Ignore this, I misunderstood the dma device. it seems like 
+> > only dmac and eth needs it.
 > 
-> Hey Fan,
-> So the counter value will show 0 in case it is disabled so there will not be any issues as per say. We could add the
-> check here but I feel I have already exposed the functionality to check if a counter is enabled or disabled, (by reading the
-> counter_enable debugfs entry) so this could be handled in user space to only read the counter if it's enabled.
-Ok. 
-Returning 0 when the counter is disabled makes sense to me.
+> Nah, not gonna ignore it ;) You do make a valid point about it being
+> painful, but given you mention a different master for the pci device,
+> having two different soc@<foo> nodes sounds like it might make sense.
+> One marked dma-noncoherent w/ the existing devices and one that is
+> unmarked (since that's default) to represent the master than pci is on?
 
-Just some thought.
+Hi, Conor,
 
-It seems natural to me if we make "counter_value" only visiable to
-users when the counter is enabled. 
+After some testing. It has some new problems. As the pcie
+register area and ranges mapping are not isolated. It is a
+disaster to figure the right mapping. If writing this with
+soc ranges, the thing may look like the following:
 
-Fan
-> 
-> > >
-> > > Thank you!
-> > >
-> > > 	Krzysztof
-> 
-> 
+/* this is for pcie */
+soc@6c00000000 {
+		 /* pcie ip register area */
+	ranges = <0x6c 0x00000000 0x6c 0x00000000 0x0  0xc0000000>,
+		 /* pcie vendor registes area and other mapping */
+		 <0x40 0x00000000 0x40 0x00000000 0x28 0x00000000>,
+		 /* for 32 bit memory */
+		 <0x0  0x00000000 0x0  0x00000000 0x0  0x70000000>;
+};
+
+/* this is for others */
+soc@6800000000 {
+		 /* clint and some peripherals */
+	ranges = <0x68 0x00000000 0x68 0x00000000 0x4  0x0000000>,
+		 /* other peripherals */
+		 <0x6d 0x00000000 0x6d 0x00000000 0x13 0x00000040>,
+		 /* this one is for the external msi controller */
+		 <0x0  0x7ee00000 0x0  0x7ee00000 0x0  0x00000040>;
+	dma-noncoherent;
+};
+
+It is complete a mess. I think it is more clear to just make the
+dmac and eth device as noncoherent, and use one soc bus for all.
+Do you have any suggestions on it?
+
+Regards,
+Inochi
 
