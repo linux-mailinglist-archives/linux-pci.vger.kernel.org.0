@@ -1,174 +1,111 @@
-Return-Path: <linux-pci+bounces-22997-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22998-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 546A7A506A9
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 18:45:39 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DF3BA506C1
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 18:49:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C2C618913D7
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 17:45:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2A3A47A2349
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 17:48:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 171701AAE2E;
-	Wed,  5 Mar 2025 17:45:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92AE6198A0D;
+	Wed,  5 Mar 2025 17:49:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eT9nZkJv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMNp8BNR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E9B250BFB
-	for <linux-pci@vger.kernel.org>; Wed,  5 Mar 2025 17:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3CEA95C;
+	Wed,  5 Mar 2025 17:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741196727; cv=none; b=pphtZSpRv4uvGNYFCU+zFqY9/sk1QoZkdZ3C4oVUFxM81eBsiwuWPjpQ43pTb/eW3DJJiptadxrvktihqvmN4Ev0KIP3QTfs13Gd+v7lALjVg0qdBYkqfhb/vf6ZtHCOzRsa9rOarl3ASj6SLQ6SD5mFmvnRd8tI4+7+yFtPXUs=
+	t=1741196973; cv=none; b=kKtiMTFgYwQ5aQyj2OsVxKeySkFVltzmmsHK7Ays+CzLbWidXCPe+PelHZVWgw4f2Pp0GOq8dcUbzPEnXO4sUweDo5C2f/Pj2p1tlu8J04XZmRYaPGGqJjl+MC1rNbsSo6++ipzYX2P3/OAt3YRcbCCoS7SaYO435WN9wYK3/O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741196727; c=relaxed/simple;
-	bh=gliMo/9tMO3KypkJrzZ9UXZ62/SKLWSE+bNzDynbWU0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=s35+uxe2fiP6iYr1z37OMKs18WPFxU7LyHU0HfLzRIGpT/Kjz39mmU06+vp5dfQJRPOLV5AnuQgSGTCB7t8wpS2SVX25d2mf5I9eQgIGMOXjvdNerb/5q+Yz0iLv+WlX44NGmedfeipaDLRE9Vq+wZPBBI+rSF0lvELxV6KclpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eT9nZkJv; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741196725; x=1772732725;
-  h=date:from:to:cc:subject:message-id;
-  bh=gliMo/9tMO3KypkJrzZ9UXZ62/SKLWSE+bNzDynbWU0=;
-  b=eT9nZkJvNIe9BgCadEFsjra/kCjQ8wQ/QGMSpSbElcY46AsCAJUqMGki
-   fuY4PaZRvEsOjVApWG1PbEhW9BsmNrFe0KNwkVPkWx9LWaVUg7WlCnB5k
-   yWBz0ehmfJR6JR2z8Sxeq+Nnk4ZFwLA6f8iBoShprRNJljdZ9N2inOne3
-   nOvK9FlGHvOILvL0W7FsmWh93EQb5N8GygTZV7F+ozqMCj5TPILdrxfNw
-   Fb4BYgYra9W+9mS3Go/TtmTM4mUoa0V5xFYWKO1sIQ8GYiR2k+lSefUdP
-   6Kvg5xVzSysBPPSNDQXW7SmZS2txxRl3gCo8I30CUqSgZXesci3LN6Z+U
-   A==;
-X-CSE-ConnectionGUID: IQNeXlJHQM6UKAqupUk79A==
-X-CSE-MsgGUID: qpZCGGgcQJSSfHoGk9BLdg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42313798"
-X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
-   d="scan'208";a="42313798"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 09:45:16 -0800
-X-CSE-ConnectionGUID: BJyyMLhqQsOroaW6INIMZA==
-X-CSE-MsgGUID: Qflp47kGSt+JIHUSCEbmNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
-   d="scan'208";a="118930401"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 05 Mar 2025 09:45:05 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tpsnk-000LLo-2H;
-	Wed, 05 Mar 2025 17:45:00 +0000
-Date: Thu, 06 Mar 2025 01:44:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:misc] BUILD SUCCESS
- e76c86997bcfd27438835d31bd5306976021fe14
-Message-ID: <202503060147.3lIXX1WC-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1741196973; c=relaxed/simple;
+	bh=y6VDarEa69IP9AO/jDl/jnWlZ5owUB+loKEniZ9wFi4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=YHHGciAF2kB0ylRZ6FFoHekJJq1N+P0WgDj0JAh40pQWvPyAX/Sy+TkVLE+JN10Yh6U7rSpUsggRdG60gfeaEwgu7EPphvy9axKwLU3AUsghLcX/f0mW5bCYJO7FKq6/vhr1X3BleYV75wwsFZjZCbSbgbi3rwROwl58+GkhFlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMNp8BNR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B511CC4CED1;
+	Wed,  5 Mar 2025 17:49:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741196972;
+	bh=y6VDarEa69IP9AO/jDl/jnWlZ5owUB+loKEniZ9wFi4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=fMNp8BNRUPit57f1u4QJFEANzKOPLWArJZzWfQTg7XsghQj88Xkg9jAHcvyYTGAlN
+	 QRjb4ZZomQZkvxfzkCO8xfIAub1QzpYCTK5AkdEN88WIatNF/ybKLtPBmhv7+hLpGV
+	 HfBs4TsNoRFcspSwp3xNA35BEyCag9yL9Kk0IWw1AGbvV4YP2hwQuaizClZID7CxT6
+	 HJC8+NtTCPAGVxrUip4Eq8+xHCQOq+1QsfUwpLK0yRTwL/pAS/7xfVINycp03vdVlv
+	 M2tOncj0SfaZVRS9TuGK9BK2Mme52IGWoNlw5tANSB1XDarxQUr/muwkVT7P6K4xt1
+	 OT0gi7Hw6VJyw==
+Date: Wed, 5 Mar 2025 11:49:31 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: hans.zhang@cixtech.com
+Cc: bhelgaas@google.com, cix-kernel-upstream@cixtech.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Chen <peter.chen@cixtech.com>
+Subject: Re: [PATCH] PCI: pci_ids: Add Cixtech P1 Platforms vendor and device
+ ID
+Message-ID: <20250305174931.GA304679@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250305063018.415616-1-hans.zhang@cixtech.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
-branch HEAD: e76c86997bcfd27438835d31bd5306976021fe14  PCI: Fix typos
+On Wed, Mar 05, 2025 at 02:30:18PM +0800, hans.zhang@cixtech.com wrote:
+> From: Hans Zhang <hans.zhang@cixtech.com>
+> 
+> Add Cixtech P1 (internal name sky1) as a vendor and device ID for PCI
+> devices so we can use the macro for future drivers.
 
-elapsed time: 1444m
+See note at top of file:
 
-configs tested: 81
-configs skipped: 2
+   *      Please keep sorted by numeric Vendor ID and Device ID.
+   *
+   *      Do not add new entries to this file unless the definitions
+   *      are shared between multiple drivers.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Include this patch in a series that shows multiple drivers using it
+and mention those drivers in the commit log.
 
-tested configs:
-alpha                            allnoconfig    gcc-14.2.0
-alpha                           allyesconfig    gcc-14.2.0
-arc                             allmodconfig    gcc-13.2.0
-arc                              allnoconfig    gcc-13.2.0
-arc                             allyesconfig    gcc-13.2.0
-arc                  randconfig-001-20250305    gcc-13.2.0
-arc                  randconfig-002-20250305    gcc-13.2.0
-arm                             allmodconfig    gcc-14.2.0
-arm                              allnoconfig    clang-17
-arm                             allyesconfig    gcc-14.2.0
-arm                  randconfig-001-20250305    gcc-14.2.0
-arm                  randconfig-002-20250305    clang-19
-arm                  randconfig-003-20250305    gcc-14.2.0
-arm                  randconfig-004-20250305    gcc-14.2.0
-arm64                            allnoconfig    gcc-14.2.0
-arm64                randconfig-001-20250305    clang-15
-arm64                randconfig-002-20250305    gcc-14.2.0
-arm64                randconfig-003-20250305    clang-21
-arm64                randconfig-004-20250305    gcc-14.2.0
-csky                             allnoconfig    gcc-14.2.0
-csky                 randconfig-001-20250305    gcc-14.2.0
-csky                 randconfig-002-20250305    gcc-14.2.0
-hexagon                         allmodconfig    clang-21
-hexagon                          allnoconfig    clang-21
-hexagon                         allyesconfig    clang-18
-hexagon              randconfig-001-20250305    clang-21
-hexagon              randconfig-002-20250305    clang-18
-i386       buildonly-randconfig-001-20250305    clang-19
-i386       buildonly-randconfig-002-20250305    clang-19
-i386       buildonly-randconfig-003-20250305    clang-19
-i386       buildonly-randconfig-004-20250305    clang-19
-i386       buildonly-randconfig-005-20250305    clang-19
-i386       buildonly-randconfig-006-20250305    gcc-12
-loongarch                        allnoconfig    gcc-14.2.0
-loongarch            randconfig-001-20250305    gcc-14.2.0
-loongarch            randconfig-002-20250305    gcc-14.2.0
-nios2                randconfig-001-20250305    gcc-14.2.0
-nios2                randconfig-002-20250305    gcc-14.2.0
-openrisc                         allnoconfig    gcc-14.2.0
-parisc                           allnoconfig    gcc-14.2.0
-parisc               randconfig-001-20250305    gcc-14.2.0
-parisc               randconfig-002-20250305    gcc-14.2.0
-powerpc                          allnoconfig    gcc-14.2.0
-powerpc              randconfig-001-20250305    clang-17
-powerpc              randconfig-002-20250305    gcc-14.2.0
-powerpc              randconfig-003-20250305    gcc-14.2.0
-powerpc64            randconfig-001-20250305    clang-19
-powerpc64            randconfig-002-20250305    clang-17
-powerpc64            randconfig-003-20250305    clang-19
-riscv                            allnoconfig    gcc-14.2.0
-riscv                randconfig-001-20250305    clang-19
-riscv                randconfig-002-20250305    gcc-14.2.0
-s390                            allmodconfig    clang-19
-s390                             allnoconfig    clang-15
-s390                            allyesconfig    gcc-14.2.0
-s390                 randconfig-001-20250305    gcc-14.2.0
-s390                 randconfig-002-20250305    gcc-14.2.0
-sh                              allmodconfig    gcc-14.2.0
-sh                              allyesconfig    gcc-14.2.0
-sh                   randconfig-001-20250305    gcc-14.2.0
-sh                   randconfig-002-20250305    gcc-14.2.0
-sparc                           allmodconfig    gcc-14.2.0
-sparc                randconfig-001-20250305    gcc-14.2.0
-sparc                randconfig-002-20250305    gcc-14.2.0
-sparc64              randconfig-001-20250305    gcc-14.2.0
-sparc64              randconfig-002-20250305    gcc-14.2.0
-um                              allmodconfig    clang-21
-um                               allnoconfig    clang-18
-um                              allyesconfig    gcc-12
-um                   randconfig-001-20250305    clang-19
-um                   randconfig-002-20250305    gcc-12
-x86_64                           allnoconfig    clang-19
-x86_64     buildonly-randconfig-001-20250305    clang-19
-x86_64     buildonly-randconfig-002-20250305    gcc-12
-x86_64     buildonly-randconfig-003-20250305    clang-19
-x86_64     buildonly-randconfig-004-20250305    gcc-12
-x86_64     buildonly-randconfig-005-20250305    clang-19
-x86_64     buildonly-randconfig-006-20250305    clang-19
-x86_64                             defconfig    gcc-11
-xtensa               randconfig-001-20250305    gcc-14.2.0
-xtensa               randconfig-002-20250305    gcc-14.2.0
+Update the subject line to match the existing style (use "git log
+--oneline include/linux/pci_ids.h"):
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  PCI: Add Cix Technology Vendor and Device ID
+
+> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
+> ---
+>  include/linux/pci_ids.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 1a2594a38199..531b34c1181a 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -200,6 +200,9 @@
+>  #define PCI_DEVICE_ID_COMPAQ_THUNDER	0xf130
+>  #define PCI_DEVICE_ID_COMPAQ_NETFLEX3B	0xf150
+>  
+> +#define PCI_VENDOR_ID_CIX               0x1f6c
+> +#define PCI_DEVICE_ID_CIX_SKY1          0x0001
+
+This is not sorted by Vendor ID.
+
+>  #define PCI_VENDOR_ID_NCR		0x1000
+>  #define PCI_VENDOR_ID_LSI_LOGIC		0x1000
+>  #define PCI_DEVICE_ID_NCR_53C810	0x0001
+> 
+> base-commit: 99fa936e8e4f117d62f229003c9799686f74cebc
+> -- 
+> 2.47.1
+> 
 
