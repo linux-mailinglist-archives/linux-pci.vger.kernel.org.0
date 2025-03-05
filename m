@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-22991-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22992-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7474BA5059E
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 17:50:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 55573A505AA
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 17:51:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38D48188611A
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 16:48:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8797218882B7
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 16:50:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA98219E7D1;
-	Wed,  5 Mar 2025 16:47:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4253A19DFA5;
+	Wed,  5 Mar 2025 16:49:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwKyc4iG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2blZTR6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FCC151992;
-	Wed,  5 Mar 2025 16:47:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131CD151992;
+	Wed,  5 Mar 2025 16:49:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741193251; cv=none; b=gzMKKS0MF9VWAiQMn5ArRjR0vKM0AKT6Dxq0uRqeT+L5rM08GMiibMH8QjdN7Um9uc3W9BjrzgDfsA5DuvIULX41Bj2vuFD8g6RTR6S2YXcqbr9xlM18yo0Ld95Bs8wBGuq8mnzkwH2VFUG1xBM5ac8jPjWCXy8myuVy945xTEo=
+	t=1741193389; cv=none; b=jsvNxn4nnV8fhm9p19V1aDIMi+Q8j09InhEcUUC/1EhdslOop2gvHvakXLXQtvHh3bI5WISwdA8hs12e28db0Fcosm6Ql6EBJehDK8kSPeItH9iiRSqyU50RpxQjU3WJNODCknZ3EyXRTieUDhf+fmPrM1PnCNwLnsjTbL2cLcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741193251; c=relaxed/simple;
-	bh=FVJPWoDeq4yoPcniFg6Kb7tfVkR3gpEbRqN0N/KxiTQ=;
+	s=arc-20240116; t=1741193389; c=relaxed/simple;
+	bh=ezVD29ebK/gLrkeskIDVGIAKaNZstsuD2KgXpnp8K/8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=riCdjZje1vguBatfH+p3/R3MH2nkZVKaLQlWQFptRGhwSs/uAxd5sDiaxLU10xjJjOAkFqN6PkcK4Hi4krwn6mcnSxbW9UIC04rSi5sh0gJ+UrFcriweiaPS2WQhL/UF5aaUauoet+DxBm3LZ6Qy6+KQE3fB6VEgRfu1VRCWOwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwKyc4iG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 503E6C4CED1;
-	Wed,  5 Mar 2025 16:47:24 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=cVNh4EfX4cg3MZJdPEABI+MxIywh+6Y3Ym1swg3T0pg53vIzXTs3FKa2srjYaYoqufpQdPqGipxKqqXdZ39bV4Omm6ZChoK6bbG2XDWReP/4uOa39M7ePB4MXZKzoKpPRLsGv9J2NMbmnbLm/V0P7KFQB0J/JJbg1Ljb0+DLsDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q2blZTR6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EF86C4CED1;
+	Wed,  5 Mar 2025 16:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741193251;
-	bh=FVJPWoDeq4yoPcniFg6Kb7tfVkR3gpEbRqN0N/KxiTQ=;
+	s=k20201202; t=1741193388;
+	bh=ezVD29ebK/gLrkeskIDVGIAKaNZstsuD2KgXpnp8K/8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lwKyc4iGceXUQFa+aEJKbz7AwCTxCGiyJhie1W7FTYe09DktSjv0DxTDhX0xK2rLj
-	 IunfijjltiFwFmFBBFK4YqsIoNPOaAk1xWH8oGgNFJR8Zh/1cboCoXf69BUuMvqYHO
-	 32r3xG0ypJoGNcyZ2te46UqBN9EEyWNtprDZPsZceqM+xlXb9nPBtyUlXf5OWsH7y3
-	 ZO/3/SP/TVK/E/vZ3XbK3cj8l9Y16CZ15rBKn2zqGr/U2fGfDUqqnfk2A8B5d6wOaG
-	 0boRlrYj2uQorEm2dx7PKuTtFLR+sQ0yziqIfDRAyN/XaJRdmWlOsj63i4flFbU3Qr
-	 PsHLb5M2saP7w==
-Message-ID: <db186c37-e8f3-4a7d-8024-48832b1208f6@kernel.org>
-Date: Wed, 5 Mar 2025 17:47:21 +0100
+	b=Q2blZTR6y6QKXp4re6ZMBFENgFDVrLsk6PgeqeUHdahCG+YDtLjNiz55C14UyuXPK
+	 MNMGfa55ex5gJlobJq0UwjYjlMLEm9BCOiADXp/P8PsmA6KY4hKv/Dfk5yO/mZ4MtG
+	 cJbn0ger5/+uhPU6AZs9A/GRoqdVMiuC5uBvNY/Wq3NtqFCZ9zgGKnusUcJWpBGiCv
+	 c5omF6nxCp/Zcx0FGtrBrkqXqHBBAT5NfEuG2yysMWV3J6p+XQmqkXzDW1wd+6WPyk
+	 B8XMuBb2upx0AjDm70vIDfuz7JTS0LFziNL8EnGy9KUQmjSuvIO7Ya4s7KG2NLOM7T
+	 qBjt06pP1p7uQ==
+Message-ID: <b28b1778-8996-48a5-901e-807a1b820999@kernel.org>
+Date: Wed, 5 Mar 2025 17:49:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,9 +61,10 @@ To: George Moussalem <george.moussalem@outlook.com>,
  p.zabel@pengutronix.de, quic_nsekar@quicinc.com, robh@kernel.org,
  robimarko@gmail.com, vkoul@kernel.org
 Cc: quic_srichara@quicinc.com
-References: <DS7PR19MB8883BC190797BECAA78EC50F9DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
-Content-Language: en-US
+References: <20250305134239.2236590-1-george.moussalem@outlook.com>
+ <DS7PR19MB8883B5F3CC99C0F943BEE9DE9DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -107,12 +108,15 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <DS7PR19MB8883BC190797BECAA78EC50F9DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
+In-Reply-To: <DS7PR19MB8883B5F3CC99C0F943BEE9DE9DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 05/03/2025 14:41, George Moussalem wrote:
 > From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+
+Not correct From. Cover letter should be written by you.
+
 > 
 > This patch series adds the relevant phy and controller
 > DT configurations for enabling PCI gen2 support
@@ -122,9 +126,19 @@ On 05/03/2025 14:41, George Moussalem wrote:
 > Last patch series (v2) submitted dates back to August 27, 2024.
 > As I've worked to add IPQ5018 platform support in OpenWrt, I'm
 > continuing the efforts to add Linux kernel support.
+> 
+> v3:
+>   *) Depends on: https://patchwork.kernel.org/project/linux-arm-msm/cover/20250220094251.230936-1-quic_varada@quicinc.com/
 
-Why is this changelog separate? We talked about this 5 revisions ago and
-you keep doing the same mistakes.
+
+Wasn't this applied, so why is it still a dependency?
+
+
+
+>   *) Added 8 MSI SPI and 1 global interrupts (Thanks Mani for confirming)
+
+Who did it? This v3 or other v3? Which v3 is this one here?
+
 
 Best regards,
 Krzysztof
