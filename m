@@ -1,152 +1,179 @@
-Return-Path: <linux-pci+bounces-23007-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23008-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20D9AA50A05
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 19:29:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB5F2A50AD7
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 20:06:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D174E3AB4B2
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 18:29:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B6B33175BD3
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 19:05:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E8A825332F;
-	Wed,  5 Mar 2025 18:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D74F016426;
+	Wed,  5 Mar 2025 19:03:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ntXUTPGQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G0HsdyNg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A892528E2
-	for <linux-pci@vger.kernel.org>; Wed,  5 Mar 2025 18:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177341A317E
+	for <linux-pci@vger.kernel.org>; Wed,  5 Mar 2025 19:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741199344; cv=none; b=D/Ay6lkKBTdpSx2PE1e1ws5hjahWd02d8qr756mepLI3+h+mZHyj/j+qOwoBFJL+2FgoGvZBg/bqO6K/PcvVUwVJLTkvxzmUNkJyAUoenJSHZW74IAISuxlqbW3SDsTEn6f7gqaEg2alFOPmvdLwGxdPDytMbSlkh5U3Rbr7J/c=
+	t=1741201439; cv=none; b=LRnp2hS9XOGv8sg/olinj8I6blqnQF648f998cUCDzBpR5+8r/e5hJUYp+pVlQayzcwR7PZFyKq9xyKKXuhh4z1nyqyeF4vhVRFO5P7bHWcsL7kdCn91GIAaIMLqqF0/sgbRmbsgJH78HUErXiRign44xQ8lXafaFfe5zbmVQSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741199344; c=relaxed/simple;
-	bh=m+xkMwoySrd0uSVjVDdxdBcJZDoeadqoxer/R/dsQu8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rEttIyGR3fpjXCNOPLS6UAmoXDW8leY11mykgeEdx9rnjFKWNhdmW7FukOiTBbtEhuFBsbLfO3fo4ch1YPW+ZVgiGE08iafE1d2GMOKdfqBq5kMqnMZW4e9jhKWf0RtYQMBgvAh4Omf5tBfR0yLSPmHDIYRDj4xmx6KkJ+8HQ2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=ntXUTPGQ; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c3d1664ed5so256632885a.2
-        for <linux-pci@vger.kernel.org>; Wed, 05 Mar 2025 10:29:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1741199340; x=1741804140; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qytsi8AsRvyusqMe3jOhTvgsVPTM08UZ5Jj8wi8LUdo=;
-        b=ntXUTPGQ2OhCeIeDBZigmR2lhyh7Dwx091quvr3fUKRKbY1a5Vq1kr7PX3zyQLHRfr
-         DJRIRxj5MP8M0rOZ4cbG/9+kD6nzREFD66/T37MceNneQ+iTqDkHv4rs6H3XRtU3WQ1/
-         ZfL0BkSN3DK3JkdfTwjjW2SE9DoGicAW6tBdDJODmUf2JwMr44z+rt0m4bM3D3U+t4tF
-         3Gx5tDZimGE8rUazvfqFzzY7Ftu5ALorY1zO1eD4gipqmgvTQGeNyekJgCw5A4k3HXyE
-         zLsswuVuz6l6t3ukQIkdnjjaGCiAP+JfCD0E+l1T8HwgNA1khJvL49/Fx4mLalOR13nm
-         MfNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741199340; x=1741804140;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qytsi8AsRvyusqMe3jOhTvgsVPTM08UZ5Jj8wi8LUdo=;
-        b=YdW/HHzUVdDCNBVHYBKx4McXUJLxZgIFC8xPT0z29W1/gCL/3SSQemIlWecuU05xni
-         G+NyBb2LCRfaElQF9zs0BeQ7Wz1Wcwv6ISY0HkcHUocJ/vpXeXfVs3jcnJZYpobxf4DX
-         Bjky1iRgcE0TcKyFQ4I+C3Ugiu10wxGBN/lvhrjaEvC6EGc/Wlx2DaDr/zoyH06tPfYZ
-         +PcFXUkHTikDfT3OiOFZ6NOXzO8wHNffms2rIUSvruLf9mQjzPig8tYciCXjNCS+59QB
-         zWovKL1nuUT7IBf6HmEetTbdZCG4wNy0P8dafWhyqpVbz1MXbbER4ciu0NId/hGqm4fx
-         abCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVY8y0mP6nqQnYSOgQNFajIGr2jsfHJ5wTAGneiAKTwtOVI84ixeW1IpQl2OO4hk9sfYzIv4EzD/hE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeWD0xCQ5PNODfYAI9Tv6jk9Di3oMO7MuvODeBxdaXuO6g+Pkg
-	aaY5Txt3SoSQjACbaZ5b0YH+jLUdCeBZKwmhw+YD6ZhztWbtveW5mWCarzeYTkw=
-X-Gm-Gg: ASbGncvfiKUOB8razAz41Bf3AU6PDgmwIHCeazUs0ynstwEHbooNh/vrJhFlTOT+Thp
-	Osgn9/hIT9s842rj6xwDzgWFhRc2h9JftVYETu8ERdNqXjNfAWCQBObuTeLCe4xMP02HSwAbFIt
-	dsh2Mx9CE3S3epvurODbWAkTVJr87DQ3Pz31t0TpCsQ0Bni2KmLbXXSzOTciuJ/xLVuA4mrWsE9
-	VEhL3f/L83oGNdY1/L+V1Wve47mglafXwcXCD+L/vfKLpJtgZV0bcN+qkq+nXu/ov7lRm20SeWZ
-	EOPkGpzs+rKw+vYECFU=
-X-Google-Smtp-Source: AGHT+IFWMmT9cW2Ut5DYuDUpvyIFOmmiZcEpt4WPetA8yQdQkDPqbKkYQiVXDZwiZSFr/BdwTkrEVw==
-X-Received: by 2002:a05:620a:8806:b0:7c3:bcb2:f440 with SMTP id af79cd13be357-7c3d8e703f8mr618694385a.33.1741199340112;
-        Wed, 05 Mar 2025 10:29:00 -0800 (PST)
-Received: from ziepe.ca ([130.41.10.206])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-474e90b8853sm44121231cf.65.2025.03.05.10.28.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 10:28:59 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tptUI-00000001UBj-3ss3;
-	Wed, 05 Mar 2025 14:28:58 -0400
-Date: Wed, 5 Mar 2025 14:28:58 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Stuart Yoder <stuyoder@gmail.com>,
-	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Charan Teja Kalla <quic_charante@quicinc.com>
-Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
- path
-Message-ID: <20250305182858.GK5011@ziepe.ca>
-References: <cover.1740753261.git.robin.murphy@arm.com>
- <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+	s=arc-20240116; t=1741201439; c=relaxed/simple;
+	bh=dTTS61CT0hoesJp0cgKaIN+rDVuJeuIZqps4QJ/49cs=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=LcULNnUifRrXySZtj5XFcpiBa0f4ruOecaCsrHRUKPgB2EW4rUecncyX537/KP0FFdZD5zWjyv+PZZSETC9fcTfPsATVWNeycVvzxcO9uhIMswHuAIGErWQn4EevZDab7mS1f3o0ncOSEaKDv7dbTYq4o4+C1NhlVGWd+MBAnO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G0HsdyNg; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741201438; x=1772737438;
+  h=date:from:to:cc:subject:message-id;
+  bh=dTTS61CT0hoesJp0cgKaIN+rDVuJeuIZqps4QJ/49cs=;
+  b=G0HsdyNgJRiZjNTbDuCJCfHKLfzb1wrH4FyTKh4hiDjErxCi4BiOZxk1
+   15qIEVXNl053ug8OX5qVacLs8ZikT9qpechjA9VJ0Z1AWBLLDI4+U92eo
+   w3ANCrRSTrTP+OE15eqlrJQ1VORJqdhIf7pGglZW3Zc2bQwZY9MM9kWPd
+   XZj50SGkqj9JAxGd1A3c89+IDoWX5EQxNmZS9TUjf0Q4z5p1E+StyOsdY
+   I7TRT0SzrtAiJiAvlfZLh5hGwdg4fKICDFpmfg4gGbbvd4WKprhOUS2Qz
+   OtcwTnvyMcrryVLX5GxfUIR47TyObTYS+JBVDMp+GhmzVVO0MGRZb1LtV
+   w==;
+X-CSE-ConnectionGUID: AbSbd2IlTWiLGz+gbp2qLA==
+X-CSE-MsgGUID: 4PmKYqK9SpqejSXgvGpmPQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="53592926"
+X-IronPort-AV: E=Sophos;i="6.14,224,1736841600"; 
+   d="scan'208";a="53592926"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 11:03:57 -0800
+X-CSE-ConnectionGUID: Yfde/io+R3KaAAzFXsMJzw==
+X-CSE-MsgGUID: 7ctP1tpkSgaIrG9Y28VTzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="123982296"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa005.jf.intel.com with ESMTP; 05 Mar 2025 11:03:56 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tpu25-000M4M-2z;
+	Wed, 05 Mar 2025 19:03:53 +0000
+Date: Thu, 06 Mar 2025 03:03:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ 2cade109daca05a7dd25547a57e8350d94dc133d
+Message-ID: <202503060337.qTHNiYjJ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
 
-On Fri, Feb 28, 2025 at 03:46:33PM +0000, Robin Murphy wrote:
-> +	if (!dev->driver && dev->bus->dma_configure) {
-> +		mutex_unlock(&iommu_probe_device_lock);
-> +		dev->bus->dma_configure(dev);
-> +		mutex_lock(&iommu_probe_device_lock);
-> +	}
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 2cade109daca05a7dd25547a57e8350d94dc133d  Merge branch 'pci/misc'
 
-I think it would be very nice to get rid of the lock/unlock.. It makes
-me nervous that we continue on assuming dev->iommu was freshly
-allocated..
+elapsed time: 1450m
 
- setup the dev->iommu partially, then drop the lock.
+configs tested: 86
+configs skipped: 1
 
-There is only one other caller in:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-static int really_probe(struct device *dev, const struct device_driver *drv)
-{
-	if (dev->bus->dma_configure) {
-		ret = dev->bus->dma_configure(dev);
-		if (ret)
-			goto pinctrl_bind_failed;
-	}
+tested configs:
+alpha                            allnoconfig    gcc-14.2.0
+alpha                           allyesconfig    gcc-14.2.0
+arc                              allnoconfig    gcc-13.2.0
+arc                  randconfig-001-20250305    gcc-13.2.0
+arc                  randconfig-002-20250305    gcc-13.2.0
+arm                              allnoconfig    clang-17
+arm                  randconfig-001-20250305    gcc-14.2.0
+arm                  randconfig-002-20250305    clang-19
+arm                  randconfig-003-20250305    gcc-14.2.0
+arm                  randconfig-004-20250305    gcc-14.2.0
+arm64                            allnoconfig    gcc-14.2.0
+arm64                randconfig-001-20250305    clang-15
+arm64                randconfig-002-20250305    gcc-14.2.0
+arm64                randconfig-003-20250305    clang-21
+arm64                randconfig-004-20250305    gcc-14.2.0
+csky                             allnoconfig    gcc-14.2.0
+csky                 randconfig-001-20250305    gcc-14.2.0
+csky                 randconfig-002-20250305    gcc-14.2.0
+hexagon                         allmodconfig    clang-21
+hexagon                          allnoconfig    clang-21
+hexagon                         allyesconfig    clang-18
+hexagon              randconfig-001-20250305    clang-21
+hexagon              randconfig-002-20250305    clang-18
+i386                            allmodconfig    gcc-12
+i386                             allnoconfig    gcc-12
+i386       buildonly-randconfig-001-20250305    clang-19
+i386       buildonly-randconfig-002-20250305    clang-19
+i386       buildonly-randconfig-003-20250305    clang-19
+i386       buildonly-randconfig-004-20250305    clang-19
+i386       buildonly-randconfig-005-20250305    clang-19
+i386       buildonly-randconfig-006-20250305    gcc-12
+i386                               defconfig    clang-19
+loongarch                        allnoconfig    gcc-14.2.0
+loongarch            randconfig-001-20250305    gcc-14.2.0
+loongarch            randconfig-002-20250305    gcc-14.2.0
+m68k                             allnoconfig    gcc-14.2.0
+mips                             allnoconfig    gcc-14.2.0
+nios2                            allnoconfig    gcc-14.2.0
+nios2                randconfig-001-20250305    gcc-14.2.0
+nios2                randconfig-002-20250305    gcc-14.2.0
+openrisc                         allnoconfig    gcc-14.2.0
+parisc                           allnoconfig    gcc-14.2.0
+parisc               randconfig-001-20250305    gcc-14.2.0
+parisc               randconfig-002-20250305    gcc-14.2.0
+powerpc                          allnoconfig    gcc-14.2.0
+powerpc              randconfig-001-20250305    clang-17
+powerpc              randconfig-002-20250305    gcc-14.2.0
+powerpc              randconfig-003-20250305    gcc-14.2.0
+powerpc64            randconfig-001-20250305    clang-19
+powerpc64            randconfig-002-20250305    clang-17
+powerpc64            randconfig-003-20250305    clang-19
+riscv                            allnoconfig    gcc-14.2.0
+riscv                randconfig-001-20250305    clang-19
+riscv                randconfig-002-20250305    gcc-14.2.0
+s390                            allmodconfig    clang-19
+s390                             allnoconfig    clang-15
+s390                            allyesconfig    gcc-14.2.0
+s390                 randconfig-001-20250305    gcc-14.2.0
+s390                 randconfig-002-20250305    gcc-14.2.0
+sh                              allmodconfig    gcc-14.2.0
+sh                               allnoconfig    gcc-14.2.0
+sh                              allyesconfig    gcc-14.2.0
+sh                   randconfig-001-20250305    gcc-14.2.0
+sh                   randconfig-002-20250305    gcc-14.2.0
+sparc                           allmodconfig    gcc-14.2.0
+sparc                            allnoconfig    gcc-14.2.0
+sparc                randconfig-001-20250305    gcc-14.2.0
+sparc                randconfig-002-20250305    gcc-14.2.0
+sparc64              randconfig-001-20250305    gcc-14.2.0
+sparc64              randconfig-002-20250305    gcc-14.2.0
+um                              allmodconfig    clang-21
+um                               allnoconfig    clang-18
+um                              allyesconfig    gcc-12
+um                   randconfig-001-20250305    clang-19
+um                   randconfig-002-20250305    gcc-12
+x86_64                           allnoconfig    clang-19
+x86_64     buildonly-randconfig-001-20250305    clang-19
+x86_64     buildonly-randconfig-002-20250305    gcc-12
+x86_64     buildonly-randconfig-003-20250305    clang-19
+x86_64     buildonly-randconfig-004-20250305    gcc-12
+x86_64     buildonly-randconfig-005-20250305    clang-19
+x86_64     buildonly-randconfig-006-20250305    clang-19
+x86_64                             defconfig    gcc-11
+xtensa                           allnoconfig    gcc-14.2.0
+xtensa               randconfig-001-20250305    gcc-14.2.0
+xtensa               randconfig-002-20250305    gcc-14.2.0
 
-Is it feasible to make it so the caller has to hold the
-iommu_probe_device_lock prior to calling the op?
-
-That would require moving the locking inside of_dma_configure to less
-inside, and using a new iommu_probe_device() wrapper.
-
-However, if you plan to turn this inside out soonish then it would not
-be worth the bother.
-
-Anyhow:
-
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-
-Jason
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
