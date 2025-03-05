@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-22939-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22940-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7110A4F6B9
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 06:55:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 681CEA4F6BC
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 06:57:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE4AF188C4C4
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 05:55:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AB2523A4B11
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 05:56:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 994F8193062;
-	Wed,  5 Mar 2025 05:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C84E1C84D2;
+	Wed,  5 Mar 2025 05:57:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iUFKTHkb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JH6Q06A5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1533043AB7
-	for <linux-pci@vger.kernel.org>; Wed,  5 Mar 2025 05:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627D343AB7
+	for <linux-pci@vger.kernel.org>; Wed,  5 Mar 2025 05:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741154113; cv=none; b=B3lrhcdI45fO4onq8mJBzeqOy3Swt/j97Jpg/o2AS/uQeZgm9s/nv/vnaNKfeTCmT911Rk+FgGX/0vso6gL75DPzc0jn6zAbUKuf/J/vmTwTl8JvfQKLBP7GREGAPcksTuKDqP0xs7TrcYpFpRIv2ueCB6bC/0fFi1RyH/runZY=
+	t=1741154220; cv=none; b=ivFknDlYDvjsRhNGx7h0h+vPV+GaAimMXR15Ux2TtM8tGKE6p5amR7dssl6UgPaomS5J2PsGlCK9pEPjJbvmmxtU8ht0XHOWNzukApF6UmMO38uN5yffK/1BXF5nddJFgigPWGAg1gFTKSANX0D0UrCbCf6rbODU3gBRJ5GrT5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741154113; c=relaxed/simple;
-	bh=jhyDVfzF3fePkuuEUFB8b1huYwGrDTDmV4O2DfoRYKE=;
+	s=arc-20240116; t=1741154220; c=relaxed/simple;
+	bh=fW/jbIQNXSYYqK/w6NmTym1KiUXx1H3FP7WT6YmNrxk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=my3rkBsqQD1daNKdEacoyYzPPo9P0uFUyTrxojNU9LXubnf+SrpB2XZrkHpU6kUwzIlnuBM9nQt2On+c/MfP3rBjuDvwbuwwsEBbWySyA3Rt/QRMr9WQkCY3kqeCnduXEP+XiaEmHcPuMlc+IyyFjORIi1FkzoV1vLN1VzSwhrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iUFKTHkb; arc=none smtp.client-ip=209.85.214.169
+	 Content-Type:Content-Disposition:In-Reply-To; b=D1+V934vqPiPsduk6bgSsuPoUkTqegtmJe5HPXI7z6I7grMNHS8pNaDB/JsKB+0xVfjucH+4YPmObLzTFLdEjFz3UuCJ3REgfl6B4b6wmGLeR81cImYeikgH1jJ9MKBcRMXUOVsDJg8cW4bJLEgab7uP0gSQaxIZ72Uw+f6egFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JH6Q06A5; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2232b12cd36so88266705ad.0
-        for <linux-pci@vger.kernel.org>; Tue, 04 Mar 2025 21:55:11 -0800 (PST)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2234daaf269so106037125ad.3
+        for <linux-pci@vger.kernel.org>; Tue, 04 Mar 2025 21:56:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741154111; x=1741758911; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741154218; x=1741759018; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=cs+uBL5lexAJy5uw3bAY6Q6CeCsOrLPFCtzaP1jN1Y0=;
-        b=iUFKTHkbj89NX/+3NTYVENOnaYvrccthB6fen33Oj9q49hbR87TYUyAP6fHM5ZDZYm
-         LzWvRMoCk/SGNM5NRhCPO61KDB2wgkOqsBwYvfQjY3IeQhLUnX+K0iMUyitGa1r9L7B4
-         AazMSmTBeoiL3619bICBlhExOZ+VZ/oLDU80MKtvjjG2Wl2If9tQ8xj3A7jRLXPRcux8
-         F1vd+byxrwj5h/obXj1XAn7lbnnoI53FEqKHibB81R2Q6zrOAcIB3RHl9vvkRTsc0yjC
-         e6p5Suy2e0+1jwF/ujwrU7D1Z2ihV0uHXGFTNDj4IWzhQYsjvMz0H48Bgr9SpOiX5pOR
-         D5iA==
+        bh=dHA0DOY3hAWEg8KCvRNowrsam0LGHjfqUZhaOer0dx8=;
+        b=JH6Q06A5xlVyCSxaGHO5J3paUEm7wmoAewiTtEFX92zs2NqawB460dYnih09NMObYD
+         TP9hZiv3cNSYmbS9Iis8U0do3xiGjXeOEPPPd2ECan9Pp9BOb0XkKDlGSpmopXh4ZYQI
+         EFKJ7VISJHqYocTWsp9BV3nMwWAcAQlypKCoSttMppBQvRtx1BMlRV40TW/OhuQdiWAr
+         svfWY+nw5pG/nh4tiCB/NN3Weyz8BCAKRd+eCtCpRnamkL+VIVd615YkvwqJwEiZx034
+         ItZFgr7bJJk3pXv4b24ss4uspzcq8DrWcyzMQxQ4kP0jcv6rl/JnWYIWA7AefvUDQSTu
+         WdnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741154111; x=1741758911;
+        d=1e100.net; s=20230601; t=1741154218; x=1741759018;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cs+uBL5lexAJy5uw3bAY6Q6CeCsOrLPFCtzaP1jN1Y0=;
-        b=jETf2Y8haeLgfgjtF58mdYbMYxcwAa0HKQqIqbFhy6B/BjgLjiT7EvfTWl2S3fz8pH
-         P9AM2FLKnVdCZJy8B7SwqcJ8H34zWAQkJwg61wZsAE+RFRj/2BMVE8S7Ut+M7675wq0C
-         Yp+Xf9GJgFxzBRv2urDdyaSMAxNhofBfHMLecah5liLtSOoG7CNLmZgg3uspfMMxGxM1
-         FO5njdQJ4GMI2DAH5jHCoA59di6GknN5ha1i2klxjVYUc2aZ7F7+6vtcW7Aob5jrutOt
-         NcwjtATavdDp0Uuw2ProFLdzqznV4FSBDgz6pDhRFMZEAxM4bWvvTfplyhgHFmovJMg9
-         7PGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVevu2N83n9co2ZG/cmqgIijxXirQPrwOdREORrN9tA0e9nKAxD/t9m257DFhF/A7qV5CApicbjEos=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy63eSF3XmhEDfhB8fdoHXrJtsEnDH9oM8Oj3opABpgICvluycr
-	Ibm+V1U6WP8Y7/G0ayL9vrN+8eF7HDXdRCC9ywwCrXobR7HnbSLOM1wiSb+I3w==
-X-Gm-Gg: ASbGnctWR/JmZCMWlyMF3cqzpg12dBvd3sxME2Hl3wedsHD/JL4Vj3+/FMR/x+XorkI
-	yhwStRCMdbftam7AkdSIkdjOpx1BGjQo9iPWnEJfyNz6t+86J54hbZdjI3zFhbPiztW5N2GHfvy
-	9MvnjpWrszNVH6zDz6tmGZ2cP0wtbwRTXcOHWvyXTzXLkegYkI1cQq7kQkOXg58q9pbl4j0ezaV
-	ZdsoUw2xXhzVPzAAa2ZBUyg9bvMyWT3/Qm3ESWX0E6kks+yp6ZIliHWQD0CXexNSpoAUv01dlcA
-	smoxTXKSvmalI9CQLx4MSCyrMbpknstdaZR9cR+lQsijTLGF7ZGvredh
-X-Google-Smtp-Source: AGHT+IFq93IgDq2NTS911OxQs3gUelURGw5jEY7f0Yo4F+PheNyBVEsvS4YWtx2x3YVnK1l/6zk8IQ==
-X-Received: by 2002:a17:90a:d644:b0:2fe:b9be:216 with SMTP id 98e67ed59e1d1-2ff4981f6e7mr2926770a91.31.1741154111247;
-        Tue, 04 Mar 2025 21:55:11 -0800 (PST)
+        bh=dHA0DOY3hAWEg8KCvRNowrsam0LGHjfqUZhaOer0dx8=;
+        b=bLA+q3S+/3KrZbrUzFBvPx671FMaLs7UCnmKOBzf4gEq6BxX9N8zKaJW6p4JSsC90H
+         tPkjsvzi4xBlOMIkxqZbloaP+9cEe58FODWMFMmb2yfgTcgWO5IpN/HwPuzo3psRvXLQ
+         iA2VE12ewEC6eYDSY46KVRIK3LG56snSOHJrL0LCupMUaklHagGO/JbNezzfDNBBNCAf
+         gw8/qh67NZU53MXjb7Dg0jKTeRFdm1efnsSDaQNKSexO3RXZAYDt6/3E8bCDAcU2U/F/
+         UfTV0EK490liqCGUouhxuOmiNCxMEeiLoaW7wb/71Kv9ZmwvnWL4ftlp5c4yHRq+rQqB
+         4c1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV3GPNo3MFOte1qvdJlTBpLoyHDKRCL/GIYQqzhC6qOgW+FGQ0ZsfIQq33FBvKlyWmILzBNeqGeoTs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK32ddQLtHAuHQY1Kptk5piZwxIBGBu+GQg2n8AyP1PgU8o9Fs
+	17YlDM842al/2VHKvAivabjx/AI7ljWx+SvY/xPtqakJgUdCH2JMCQqkn/g6LA==
+X-Gm-Gg: ASbGncsHK7Jpx8d0JLtEw9iMihT3x1NlMw7Aycw0qurxumSg9L/uZ01mjy2yIjxfZKG
+	vF7A6ZSyl3RJ1R0enN+QQrBb0tanp7vzfXCQOpUwxTbpmq1v3U3uUeq4rybDZoX6qhOVCp/bGKZ
+	CATkfflROHYT0dwZ9RWOViGsFvgUBq7vM55uQB/9JpJ79/3mpkXXOOLgWLXrD9zakYF8bBHgUcD
+	LDNFp5j40TnI18s/BRBgnwL5oH+SMOLqTyfiMpzkkN+A6Wh/EASg3t1Zwmt7TbYM0rqfJwSkqlH
+	oHmVB9BCxIYxrOqVPB2TJkrFr/aZ5O6fd3mWqYIaoWXcoYDuExTfMkkC
+X-Google-Smtp-Source: AGHT+IHG45yD79tJ8beGaoE+7dGOgFm5YbZIbczT5s5FglE8ZFnQoBYsfJdjuvCMzBJe+dheJDUpFQ==
+X-Received: by 2002:a17:902:e80b:b0:220:c143:90a0 with SMTP id d9443c01a7336-223f1ca4f90mr34270705ad.24.1741154218681;
+        Tue, 04 Mar 2025 21:56:58 -0800 (PST)
 Received: from thinkpad ([120.60.140.239])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ff4e81d5d4sm452123a91.40.2025.03.04.21.55.06
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2235050ceb0sm105865155ad.203.2025.03.04.21.56.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 21:55:10 -0800 (PST)
-Date: Wed, 5 Mar 2025 11:25:03 +0530
+        Tue, 04 Mar 2025 21:56:58 -0800 (PST)
+Date: Wed, 5 Mar 2025 11:26:51 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Zhang Zekun <zhangzekun11@huawei.com>
 Cc: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com,
@@ -83,11 +83,11 @@ Cc: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com,
 	angelogioacchino.delregno@collabora.com, matthias.bgg@gmail.com,
 	alyssa@rosenzweig.io, maz@kernel.org, thierry.reding@gmail.com,
 	Jonathan.Cameron@Huawei.com
-Subject: Re: [PATCH v3 3/6] PCI: mediatek: Use helper function
+Subject: Re: [PATCH v3 4/6] PCI: mt7621: Use helper function
  for_each_available_child_of_node_scoped()
-Message-ID: <20250305055503.qbcouvc7zwxesx32@thinkpad>
+Message-ID: <20250305055651.ul6k5qaxakpy3b22@thinkpad>
 References: <20240831040413.126417-1-zhangzekun11@huawei.com>
- <20240831040413.126417-4-zhangzekun11@huawei.com>
+ <20240831040413.126417-5-zhangzekun11@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,9 +97,9 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240831040413.126417-4-zhangzekun11@huawei.com>
+In-Reply-To: <20240831040413.126417-5-zhangzekun11@huawei.com>
 
-On Sat, Aug 31, 2024 at 12:04:10PM +0800, Zhang Zekun wrote:
+On Sat, Aug 31, 2024 at 12:04:11PM +0800, Zhang Zekun wrote:
 > for_each_available_child_of_node_scoped() provides a scope-based cleanup
 > functionality to put the device_node automatically, and we don't need to
 > call of_node_put() directly.  Let's simplify the code a bit with the use
@@ -111,59 +111,56 @@ Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
 
+> Reviewed-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
-> v2:
-> - Use dev_err_probe() to simplify code.
-> - Fix spelling error in commit message.
+> v3: Fix spelling error in commit message.
 > 
->  drivers/pci/controller/pcie-mediatek.c | 15 +++++----------
+> v2: Use dev_perr_probe to simplify code.
+> 
+>  drivers/pci/controller/pcie-mt7621.c | 15 +++++----------
 >  1 file changed, 5 insertions(+), 10 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index 9be3cebd862e..0457b9d0ad8b 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -1042,24 +1042,22 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
->  static int mtk_pcie_setup(struct mtk_pcie *pcie)
+> diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
+> index 9b4754a45515..354d401428f0 100644
+> --- a/drivers/pci/controller/pcie-mt7621.c
+> +++ b/drivers/pci/controller/pcie-mt7621.c
+> @@ -258,30 +258,25 @@ static int mt7621_pcie_parse_dt(struct mt7621_pcie *pcie)
 >  {
 >  	struct device *dev = pcie->dev;
+>  	struct platform_device *pdev = to_platform_device(dev);
 > -	struct device_node *node = dev->of_node, *child;
 > +	struct device_node *node = dev->of_node;
->  	struct mtk_pcie_port *port, *tmp;
->  	int err, slot;
+>  	int err;
 >  
->  	slot = of_get_pci_domain_nr(dev->of_node);
->  	if (slot < 0) {
-> -		for_each_available_child_of_node(node, child) {
-> +		for_each_available_child_of_node_scoped(node, child) {
->  			err = of_pci_get_devfn(child);
-> -			if (err < 0) {
-> -				dev_err(dev, "failed to get devfn: %d\n", err);
-> -				goto error_put_node;
-> -			}
-> +			if (err < 0)
-> +				return dev_err_probe(dev, err, "failed to get devfn\n");
+>  	pcie->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(pcie->base))
+>  		return PTR_ERR(pcie->base);
 >  
->  			slot = PCI_SLOT(err);
+> -	for_each_available_child_of_node(node, child) {
+> +	for_each_available_child_of_node_scoped(node, child) {
+>  		int slot;
 >  
->  			err = mtk_pcie_parse_port(pcie, child, slot);
->  			if (err)
-> -				goto error_put_node;
-> +				return err;
->  		}
->  	} else {
->  		err = mtk_pcie_parse_port(pcie, node, slot);
-> @@ -1080,9 +1078,6 @@ static int mtk_pcie_setup(struct mtk_pcie *pcie)
->  		mtk_pcie_subsys_powerdown(pcie);
+>  		err = of_pci_get_devfn(child);
+> -		if (err < 0) {
+> -			of_node_put(child);
+> -			dev_err(dev, "failed to parse devfn: %d\n", err);
+> -			return err;
+> -		}
+> +		if (err < 0)
+> +			return dev_err_probe(dev, err, "failed to parse devfn\n");
+>  
+>  		slot = PCI_SLOT(err);
+>  
+>  		err = mt7621_pcie_parse_port(pcie, child, slot);
+> -		if (err) {
+> -			of_node_put(child);
+> +		if (err)
+>  			return err;
+> -		}
+>  	}
 >  
 >  	return 0;
-> -error_put_node:
-> -	of_node_put(child);
-> -	return err;
->  }
->  
->  static int mtk_pcie_probe(struct platform_device *pdev)
 > -- 
 > 2.17.1
 > 
