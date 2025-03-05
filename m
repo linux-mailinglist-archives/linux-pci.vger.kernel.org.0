@@ -1,79 +1,64 @@
-Return-Path: <linux-pci+bounces-22961-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22962-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F8DFA4FD91
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 12:26:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01967A4FD93
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 12:26:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9AE3A1886469
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 11:26:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 32B3616C9C7
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 11:26:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96546230BD9;
-	Wed,  5 Mar 2025 11:25:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11C0C233702;
+	Wed,  5 Mar 2025 11:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGoccU1V"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B45D226D05
-	for <linux-pci@vger.kernel.org>; Wed,  5 Mar 2025 11:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91DE21421B;
+	Wed,  5 Mar 2025 11:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741173957; cv=none; b=CQUIRhaA7NTw8D83VxFphF2ZxaToOYT0X1Xhy0AHMYSo37CX40ahtCS79LJyfEXluC9m0YhT/SBYtYOgHKEkBzbXd848tRCM1UHR8Ugrt2uQlEGmsNqWZJBBJxCg2DZLQ0czIyuQxzq7sIC9M8JHZSOy8z+qabHq22ljczfUvD4=
+	t=1741173995; cv=none; b=bWFNv37LHnk2ASSBJvJmXtjLir/bzBSSJAZyMSejQZKq3dz0j7TcDng2snx2h4tMP9nFGgAeYDCQKxtTzLyDyWL1QRo9IPdzL/zSvnrR42veNIiwgxaabmKgCJxA1Z5fr+tHEhJNCYXSsvJCO2wOj6zbSpeF9yQ52zS1z0FgMDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741173957; c=relaxed/simple;
-	bh=dGA5wr12QHsoFi8cZt6zfWDA4X3zOybeuZsXoBtj1hQ=;
+	s=arc-20240116; t=1741173995; c=relaxed/simple;
+	bh=N2D7fb7XnQKLDnYzb9yCDaUeFSMSXdmS3deL4PhIENI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mswjRGrgMLNdTyfsUc5UGMpngBh/0hb6xIKLHKEicEeXJBRIXLcRYq+v1Zkvl6TIuhPAJ2LSxapz0gN5OmEV1XrUO1orpt/biNxp59P6I8I5VIuGhoYM/EIlEAGOB0RGANGwY2B/kLKkCogWkFGz1wVBZFlwZ9eSABa83qeYFYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2235908a30aso118793245ad.3
-        for <linux-pci@vger.kernel.org>; Wed, 05 Mar 2025 03:25:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741173955; x=1741778755;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N/+btQZ2ibvWZ2PrDyemX/Cak0sdAy4xGkgjSA38rnA=;
-        b=aJYi1ZgiP9PTmhQ9S1XattV0uBHu0eSjsW/fdPitOAZmtD+x3ATcefCIumjyLKRsXa
-         8DGp+xo+sdMGgyTqjz2e30bRhYBnx0aQexLO16UeIBQLloGd405RFfUbd8FtngJwtH6l
-         Da2V/06H4ewB2aft/c3BJ+mBuuxlPnyfKbGGzDcqpyipdORsPmydE9TDdXyi1dKegGRp
-         BFShBKv4gJs7xP88bh1qc/u4r0GZCkZqwq5b4fJCf0TTePi2qX5xkkl/katrsHchWWe4
-         pJPKeiItjvzG1KpcywAz6pyTrJONea9+RwkQVyOg2XXeLUtvLXIgN1n9aF+wSUiY2mgH
-         p2WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVDUQIewAqBupcOHVkPY6Adw3GuDDmas0KLjQCo2wu4x4n9maVtE6+LymIyLfuSFm7QT2n/LMdOxBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyqX2YMCy9aQ9X73TmSnAPe3zOa6Ti3Y2XkGW5aBELZcz2Flpo
-	JOfKL1NpL/pKowXZYOB8aQkKM7tk9PbKX1rtd6P7Ot03Oij7uyuF
-X-Gm-Gg: ASbGnctbRX2EZ0CNx47jJYp4zFnf9UeF8fXDpL+NQEFZnUmm1FHdpdxnZFQBuM7N2Sw
-	XBzhZ8JHbQIDqlf3eg77U+qs+2SRcntrvpn3wHvc/gDmvVhsXm2z1oTN7ccdE0hp/kYpm3mi6Vu
-	WzgWB85YcDdGOE0ht+dLBD/+9akggn3jNWQ89c1YRi+RPH79Nd+HNRBgsU3puY9mN13exqDQomr
-	XvE/tnD3g+lJDChOEichWNxNgSZVcR2pCYk8dwxU4Lc1sjEORv5Ruk9+GICpoIS4Jsxo80yugq/
-	z8QGZZEQwx0CNz2vWD/dE7/eNMEJrun5yj4OACETwRBTV35Ea4y2uMuDZk+napBouJbPvaDPpoN
-	xdrs=
-X-Google-Smtp-Source: AGHT+IETo55c6yEP6iG0j+lAkUONpWoPpzpq7kWHLgIoNN5Of9N+1KvutjFJp1sKgk2bFTD+NYYIhw==
-X-Received: by 2002:a17:902:cec1:b0:215:5625:885b with SMTP id d9443c01a7336-223f1d20336mr43522675ad.52.1741173955364;
-        Wed, 05 Mar 2025 03:25:55 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-223501d29d6sm111280725ad.24.2025.03.05.03.25.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 03:25:54 -0800 (PST)
-Date: Wed, 5 Mar 2025 20:25:53 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Zhang Zekun <zhangzekun11@huawei.com>
-Cc: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com,
-	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-	ryder.lee@mediatek.com, jianjun.wang@mediatek.com,
-	sergio.paracuellos@gmail.com,
-	angelogioacchino.delregno@collabora.com, matthias.bgg@gmail.com,
-	alyssa@rosenzweig.io, maz@kernel.org, thierry.reding@gmail.com,
-	Jonathan.Cameron@huawei.com
-Subject: Re: [PATCH v3 0/6] Simplify code with _scoped() helper functions
-Message-ID: <20250305112553.GG847772@rocinante>
-References: <20240831040413.126417-1-zhangzekun11@huawei.com>
- <20250302183205.GA3374376@rocinante>
+	 Content-Type:Content-Disposition:In-Reply-To; b=TN5IlecRtH/2EbhCD5HfuQABPXVNUGwQZfyjYdexnQTHg+RkZwwwUwpDCToyU7Ap/t9GvHztv7RXdZ4b/8oe0A+fryrt2vUFhbfde8fwOiizKAVxzj9ENAYVqkXSGdje/L5bgUIgiZZehzP9fpLme5Ok74xlrCUet9eAjLxGcaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGoccU1V; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E288C4CEE2;
+	Wed,  5 Mar 2025 11:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741173994;
+	bh=N2D7fb7XnQKLDnYzb9yCDaUeFSMSXdmS3deL4PhIENI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pGoccU1VQiZFN3hoWaH7wqy6OBANcCJ9AVT5ejpgyfRG45UYx0sLM7aQQuaLKgNFD
+	 g2T6TRUequOiCfz1Jf7M4yPuRBhMOQ1xFCoKk6XvsxSp86Cc7Y1eavfSU9IUiVJrrf
+	 r9/QsvISEwwSyFsPBPOT/hKLIsVFiyEC8kp21o32WI2VPZddh2TNmq31chQGdmxmJj
+	 /J5hal4bhZWYm2s+k7PY15togb4AfnJCDXil0yqfuP5EKU8RaA/FfgGvpSZxZZPr0z
+	 ZdGgAawHnDWxgzrpcQSTUuiOhLd73/djk0/M+Mivfq3/5cZG+TkcSMehTKxM5gMsq6
+	 lXsC9rCoAFSiA==
+Date: Wed, 5 Mar 2025 12:26:28 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Jesper Nilsson <jesper.nilsson@axis.com>,
+	Lars Persson <lars.persson@axis.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@axis.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH RFC NOT TESTED 0/2] PCI: artpec6: Try to clean up
+ artpec6_pcie_cpu_addr_fixup()
+Message-ID: <Z8g05CdN4BmlfxHR@ryzen>
+References: <20250304-axis-v1-0-ed475ab3a3ed@nxp.com>
+ <Z8gxdWaU1N71pyj-@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -82,14 +67,66 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250302183205.GA3374376@rocinante>
+In-Reply-To: <Z8gxdWaU1N71pyj-@ryzen>
 
-> > Use _scoped() functions to iterate through the child node, and we don't
-> > need to call of_node_put() manually. This can simplify the code a bit.
+On Wed, Mar 05, 2025 at 12:18:56PM +0100, Niklas Cassel wrote:
+> Hello Frank, all,
 > 
-> Applied to scoped-cleanup, thank you!
+> On Tue, Mar 04, 2025 at 12:49:34PM -0500, Frank Li wrote:
+> > This patches basic on
+> > https://lore.kernel.org/imx/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com/
+> > 
+> > I have not hardware to test and there are not axis,artpec7-pcie in kernel
+> > tree.
+> 
+> If you do a simple:
+> $ git grep artpec7
+> 
+> You will see that there are just two drivers that support this SoC:
+> drivers/pci/controller/dwc/pcie-artpec6.c
+> drivers/crypto/axis/artpec6_crypto.c
+> and their matching DT bindings:
+> Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
+> Documentation/devicetree/bindings/crypto/artpec6-crypto.txt
+> 
+> I think that at some point in the there was an intent to upstream support
+> for the ARTPEC-7 SoC, but now many years later, that hasn't happened,
+> as there is not even a artpec7 dtsi.
+> 
+> I think the nicest thing to the community is to drop artpec7 support from
+> these two drivers, and deprecate the artpec7 compatibles in the DT bindings,
+> as it is obviously making your life harder when trying to do improvements.
+> 
+> 
+> > 
+> > Look for driver owner, who help test this and start move forward to remove
+> > cpu_addr_fixup() work.
+> 
+> While I'm the original author of this PCIe driver, I do no longer have
+> access to the hardware and documentation, so I cannot test.
+> 
+> For anyone interested in the cleanup Frank is doing, see:
+> https://lore.kernel.org/linux-pci/Z8d96Qbggv117LlO@lizhi-Precision-Tower-5810/T/#m0ff14edaf871293ba16acd85e7942adacb603c6c
+> 
+> Looking at your cover-letter for the series above,
+> creating a simple-bus with:
+> ranges = <0x0 0xc0000000 0x20000000>
+> 
+> and handling that in PCIe DWC common code does look nicer compared to
+> having a .cpu_addr_fixup() callback in each PCIe DWC glue driver.
+> 
+> Hopefully someone with access to the hardware can test your series +
+> this RFC.
 
-Updated with "Reviewed-by" tags Mani offered recently.
+Oh, and you should probably send a similar RFC for:
+drivers/pci/controller/dwc/pci-dra7xx.c
+drivers/pci/controller/dwc/pcie-intel-gw.c
+drivers/pci/controller/dwc/pcie-visconti.c
 
-	Krzysztof
+which all make use of the .cpu_addr_fixup() callback.
+(IIRC dra7xx was the first driver that introduced this callback.)
+
+
+Kind regards,
+Niklas
 
