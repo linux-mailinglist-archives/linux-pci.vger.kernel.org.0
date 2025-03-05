@@ -1,57 +1,76 @@
-Return-Path: <linux-pci+bounces-23018-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23019-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E328A50E73
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 23:20:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 764BEA50E8D
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 23:25:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A771116BFCB
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 22:20:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A6C8016672C
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 22:25:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35316266565;
-	Wed,  5 Mar 2025 22:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uvx3hYwq"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B415266576;
+	Wed,  5 Mar 2025 22:25:35 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066DB2586C3;
-	Wed,  5 Mar 2025 22:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F53225A338;
+	Wed,  5 Mar 2025 22:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741213219; cv=none; b=fGfScRJkqQvWZlwi6CPnsX5u/B3nAQxUPL4DaQSPnqCfXmBHNRfKO2uEffk4ZXbRAUxVzhSzDCXa+Fc0Mo0RSrz4FWt/uX0G1kZGuJsoYXZ9MKcb8cWUGePR3UXFeaG0k6nr6Ulm9XgauGE0oPecIpjXYB8PQCKE6abBzV0XRNM=
+	t=1741213535; cv=none; b=p3ziV2YT/fNu4q9Fo7yjfnDdf55z9u8/xW1XkncDv9i8CatvyZ8CN137uF8a5rhtNOlgAE1JhktEyvCHTKudHciwIMuuBdaSlDZjMvMEc0RveCVSOv4YpIJ8vc6FWFdXK7JZwPh9utt3Ui3vnGjWQvrnj2OjLwNDdBNOngsilfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741213219; c=relaxed/simple;
-	bh=9Vd3NTCGG6rS4oIOqn+qZLQzZjw8AOh8blq9HS/31Pk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=TNjOMIjC2oQuNWpqSA3gLUKtzWYlUWidxxSWJUr+R2EqipfbQ/h/DSOyURJ0ajmJTgB86ynfuz63Ia9DN6vaoZnv7ut9mdX23LuWgq/PgMLpG3hjBCr1663mh36X9M+hUzqz5bDd/1Ctm3c0HQ4QINFm9265l4l1LVoY5eXLO2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uvx3hYwq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8DE3C4CED1;
-	Wed,  5 Mar 2025 22:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741213218;
-	bh=9Vd3NTCGG6rS4oIOqn+qZLQzZjw8AOh8blq9HS/31Pk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=uvx3hYwq0hayfCBHEqvi0Iwc3QIe/dEAiwkM80O8sW72vN0IhEDXgLpkQA1L7fXGg
-	 9aVNqPh/AFDO/Agc3YHs58DTMxC5davA3bxAWN7s57A512AedS3rayx97Na1rP3KAq
-	 ex7zDoV7i6cGJbNsuz1HN1dqZe0SnmaWxFyJeaVfmjMhKBRTMgW5KvLpADWtNH4rqL
-	 7yfViBzT13i6mXjwYNwBzOvzBBYofZRllNDaY3+3sz/1ZW8FmvT/yGsLyi6EjMgG6n
-	 QWbRI5hDCbBW8qGlfFjbhs4iIzfG4CYr8atyeGTHMBKMnMqwGxx/Z8TZ6T/fzmc2Js
-	 B0dhiHPqSTIoQ==
-Date: Wed, 5 Mar 2025 16:20:16 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: hans.zhang@cixtech.com
-Cc: bhelgaas@google.com, cix-kernel-upstream@cixtech.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Chen <peter.chen@cixtech.com>, ChunHao Lin <hau@realtek.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, nic_swsd@realtek.com,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add PCI quirk to disable L0s ASPM state for RTL8125
- 2.5GbE Controller
-Message-ID: <20250305222016.GA316198@bhelgaas>
+	s=arc-20240116; t=1741213535; c=relaxed/simple;
+	bh=6VfPRCXY3JratcLwTZFKOWWpWV+HzQxt4hfgb6sELC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Id8Z04YltXMgFVDvMgd82XTqtou2567dRbixq8xJ3PAjT/O29yvvnFglsu0PYkdzouozfrMCAlEACr5rxvwH8OzuZ0hadyTModPHEmvGtFNfV5AgvEYCi3COaxWtH9OXXj5PsNe7sQHfjIKbbd+Nwlc/UWYCq5AReYqqQ28GQDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22403cbb47fso16506685ad.0;
+        Wed, 05 Mar 2025 14:25:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741213533; x=1741818333;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wxKgW2a8rEuZQeYt6Dm1ggMAWy0PXmzN5s3VXqV3WZ0=;
+        b=BRIUCrCZmRw8Dcu/3gjpJzPrH6xfHDJoG2MFaoDBLR+5OhlUj0sSiZLbUN+sLdTWnC
+         NKFF46ekAoL/Jv7xneMM4DwX5TQlYIjXRy9vcn7EVa9YR7rVeM7UksBSa1QFsH+hb9vI
+         qqGfUUg6ueWDUIUaWDeqMbZUuq0E0NKgBAmplgoJWTOh0tnnqAgNeJb7LpjzSHsRRYKv
+         /b+G6C7lNsDtPzEl082NFfb04hnUKAPqVG4WYi4V8Y61CKuvisOd7xm7t8mdRTEL9tZX
+         deOTmaPaZK7ejpuwQN3iVycZTVaG9Nb2BwHeG4KlJD1RqxrE00sOMQfADSQPmUTAtb/B
+         MiZw==
+X-Forwarded-Encrypted: i=1; AJvYcCUN6Ew344IjuNBU38xt1MZcK7/D8a1vZu8MDnb0KCOA2fESBi7+XH5ALRGnnyJNh6J7Qv+wnYjDkdUcNv/S@vger.kernel.org, AJvYcCUZbpiKCoFdSeQ0DoqOMzMsWaNJxDupHAJyhytHTVO0YicB/MpmbO4rCBAlPcJjFClfQ2tVIy3u2wE0@vger.kernel.org, AJvYcCVju2U0Ay6Tqp3WXF634BtSU0/5cYDGb6A9hiZirgTI8i460AxBpT+kTGQJxAOGPf1Lw17HV2mp65uB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwptFw2H1J126vD32mVctEa3Ktbk6A80dFRzzE2+4wXYxe4WW8m
+	1EiaZzrPdgugYzaEpOJE1VKc7sm1cZS/wuU+X+ZY2C+mF/CVjiHR
+X-Gm-Gg: ASbGncsPcq38ljm5fdfiz3BqP9t6KRJzvmo7O7gz3MrBoZbItHWRaSfsETejn/GrpNh
+	eqxs2GAynLmoB78qbOjHPRUxOQwdGB/cb9nDa3DAlMXKt3fXJKq77rvUYuC8BUO+1+EUEbOeBu5
+	W9FGqZrZfNY9M2VUZFBkIMiuZwGuYAhK9pgFLXo66bP9bn/mpBmE950tMOLrpzC3ruB84HJxeUV
+	h5kLUvjWfqCqU69/aQrGN+q/ReAdaKCAwQTPZu7y6vFtdyLXCxoDYAAxmPQNLi7KTKs5Z3jFkcn
+	xaoG9n1oapOQQbZxoscA4yfaTAtbIQrGOMeFbWOwoEqrtfHWP/hPhaNP/LrpnpAHfZWHREAnEpd
+	VhM4=
+X-Google-Smtp-Source: AGHT+IGIsSe6CocLiCdTHiQm6Ag7dRdDMzQRCJMxpJd0bJlXQYYHDjiQpKwsMWDKpj/taTSEaiJ+Wg==
+X-Received: by 2002:a17:902:da91:b0:21f:8453:7484 with SMTP id d9443c01a7336-223f1c98290mr77284165ad.30.1741213532724;
+        Wed, 05 Mar 2025 14:25:32 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22380bca104sm82923215ad.79.2025.03.05.14.25.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 14:25:32 -0800 (PST)
+Date: Thu, 6 Mar 2025 07:25:29 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Cc: lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
+	robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org,
+	conor+dt@kernel.org, joyce.ooi@intel.com, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	matthew.gerlach@altera.com, peter.colberg@altera.com
+Subject: Re: [PATCH v8 0/2] Add PCIe Root Port support for Agilex family of
+ chips
+Message-ID: <20250305222529.GM847772@rocinante>
+References: <20250221170452.875419-1-matthew.gerlach@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,74 +79,13 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250305063035.415717-1-hans.zhang@cixtech.com>
+In-Reply-To: <20250221170452.875419-1-matthew.gerlach@linux.intel.com>
 
-[+cc r8169 maintainers, since upstream r8169 claims device 0x8125]
+Hello,
 
-On Wed, Mar 05, 2025 at 02:30:35PM +0800, hans.zhang@cixtech.com wrote:
-> From: Hans Zhang <hans.zhang@cixtech.com>
-> 
-> This patch is intended to disable L0s ASPM link state for RTL8125 2.5GbE
-> Controller due to the fact that it is possible to corrupt TX data when
-> coming back out of L0s on some systems. This quirk uses the ASPM api to
-> prevent the ASPM subsystem from re-enabling the L0s state.
+> This patch set adds PCIe Root Port support for the Agilex family of FPGA chips.
 
-Sounds like this should be a documented erratum.  Realtek folks?  Or
-maybe an erratum on the other end of the link, which looks like a CIX
-Root Port:
+Applied to controller/altera, thank you!
 
-  https://admin.pci-ids.ucw.cz/read/PC/1f6c/0001
-
-If it's a CIX Root Port defect, it could affect devices other than
-RTL8125.
-
-> And it causes the following AER errors:
->   pcieport 0003:30:00.0: AER: Multiple Corrected error received: 0003:31:00.0
->   pcieport 0003:30:00.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Transmitter ID)
->   pcieport 0003:30:00.0:   device [1f6c:0001] error status/mask=00001000/0000e000
->   pcieport 0003:30:00.0:    [12] Timeout
->   r8125 0003:31:00.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Transmitter ID)
->   r8125 0003:31:00.0:   device [10ec:8125] error status/mask=00001000/0000e000
->   r8125 0003:31:00.0:    [12] Timeout
->   r8125 0003:31:00.0: AER:   Error of this Agent is reported first
-
-Looks like a driver name of "r8125", but I don't see that upstream.
-Is this an out-of-tree driver?
-
-> And the RTL8125 website does not say that it supports L0s. It only supports
-> L1 and L1ss.
-> 
-> RTL8125 website: https://www.realtek.com/Product/Index?id=3962
-
-I don't think it matters what the web site says.  Apparently the
-device advertises L0s support via Link Capabilities.
-
-> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
-> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
-> ---
->  drivers/pci/quirks.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 82b21e34c545..5f69bb5ee3ff 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -2514,6 +2514,12 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f1, quirk_disable_aspm_l0s);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
->  
-> +/*
-> + * The RTL8125 may experience data corruption issues when transitioning out
-> + * of L0S. To prevent this we need to disable L0S on the PCIe link.
-> + */
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REALTEK, 0x8125, quirk_disable_aspm_l0s);
-> +
->  static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
->  {
->  	pci_info(dev, "Disabling ASPM L0s/L1\n");
-> 
-> base-commit: 99fa936e8e4f117d62f229003c9799686f74cebc
-> -- 
-> 2.47.1
-> 
+	Krzysztof
 
