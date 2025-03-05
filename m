@@ -1,101 +1,93 @@
-Return-Path: <linux-pci+bounces-22936-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22937-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FD89A4F6AE
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 06:47:50 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF047A4F6B2
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 06:49:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EEE6D3A8798
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 05:47:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0165A188BD16
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 05:49:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C304192D97;
-	Wed,  5 Mar 2025 05:47:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBB2E18D65A;
+	Wed,  5 Mar 2025 05:49:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a5Sh+WOP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XSmjaEUb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D7578F33
-	for <linux-pci@vger.kernel.org>; Wed,  5 Mar 2025 05:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CB119408C
+	for <linux-pci@vger.kernel.org>; Wed,  5 Mar 2025 05:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741153659; cv=none; b=jzUfK0XvwM08NONGUUROMTbgc69WK47dMzk8PAI27WygXtaRzXNgUdn3rRxt5Th72huWo9rMZl2vTc6aCEbSgRxfcp8WGo/RE23a4fGsg5HQpjMaRwLIIDihv5BUdD9/lXB0EYCfQ31vQ9CURwTDoThmzmNTkdcHkIq5SfZ3kgc=
+	t=1741153765; cv=none; b=c9U9cM5KFR+sZ9b/1InY4DsTWWaYOQAKFB1WG1/FBeuuf7RJAOUIGWNt6ZxG7SCkY31iMybOOxw1LYucVOAIdRZ8BsiBbwmUOGZvbXI2J31NRYcVOKxqq/uNCvuBNenRWe9WsYJhC46rGOSD17Ra13dh4tyoFD5nPoRCrQJBJ0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741153659; c=relaxed/simple;
-	bh=LMYEcYBxEqpemNoYGJZ/7fpKaSDbz0bQKj+HYIDlv8E=;
+	s=arc-20240116; t=1741153765; c=relaxed/simple;
+	bh=XdkaGt5verB2RLlpnNVHxGMAg8I4AivwwrSdYtdiWc4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C4NY/kvXxvRJIztEgDOXIkGriPgUoO6oo31Ir4GZRkneVE2PIAoyN1RHTsW+UYmVvL1BK4xZBF27tzSGA09QVSMqj1J4GnpwvZjQDU6/PD30hI9/ET51msD+sZi91bM/CEyzh59gnxU73XklmyGrFOAfG67zrObt0tPoWEP31UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a5Sh+WOP; arc=none smtp.client-ip=209.85.214.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=LAdB9ZjILmEdK/XYfBysy7Fmtjhy2x+Jh5jxkSOuwlddRiceR+h6EnSSIwVhIJq2N+QkHsbAbeFdAgBLXiNF5KQ97KSP5A/DxPIvK4sSy5lmXg6oCNRdvo32Q+VHE+26DxXwkPrurBBWHaoEPhEoecoK69AYsUtveTlwCOgZZH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XSmjaEUb; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2239f8646f6so66470455ad.2
-        for <linux-pci@vger.kernel.org>; Tue, 04 Mar 2025 21:47:37 -0800 (PST)
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22374f56453so119559175ad.0
+        for <linux-pci@vger.kernel.org>; Tue, 04 Mar 2025 21:49:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741153657; x=1741758457; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741153763; x=1741758563; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=yQ8sGclz9ZW30bcpmgdyWwKiT4qk2MxCGSmtAY4+/ro=;
-        b=a5Sh+WOPrCGxtbhoGnLa8XXMoxMEJNUlPuvsIFEn0Wu375KYYdWTMEeeO/FIBAWntX
-         /Fl0v9aiA9xmaKjKsrR9ODpMNagL7Tw9mKw4wWk36YsHqM5OThb+bjTbEOfLNHZw8H7e
-         eBcLdGvbWDTLVLc7G15NXjozSHC2anVCrlOYFhAlT4he5EpEwzhcK+jHUsH9cvOe62Uq
-         6xEc/QA54jquOt5AJFME2taruDnsNRHhacegzMsxdi388A+HInuU0dLTeRBYyiEfbkPO
-         Egwq4ImFL6G+gj4wPn68j4gJvSPTwWrdCY3bnZYyjMvK8/zLVFZKT9lV3bpjvquK4/6S
-         SsCg==
+        bh=fnHvI2i9VwERHY3Ce4P1n2c99QtG1cl9blWSKXyJzBc=;
+        b=XSmjaEUblIo/0g1fO1RYGQ5jBcEhFVhQUOUFmGeDgqk8ex/ihQqjeRPzM6eY8tie5z
+         0UkPXyEzxFisrJw+Aqg6ymqXcvROwZA7ZgVbYr1/5DM1FC8UbILVA/ABJRf238wp9KmA
+         VHgCMJMrHJaaRaibB0GyQA3b90i8ptQTEcWoZUmMgE6vD/kg+Ge4/MLiZzgUb7PgnnhL
+         sf0wxKXuknVRneWAyG09V29OO4j8mdD//9jN5ZBHmnu4efU6mn42q3iX1LoNSB2gBeSY
+         JroRe1ENC1Ul2n6drLM3J4uimvvIEVigKz1MIzcf3NF6bIuUOzz94UPE2U8SePYCzeMq
+         p8gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741153657; x=1741758457;
+        d=1e100.net; s=20230601; t=1741153763; x=1741758563;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yQ8sGclz9ZW30bcpmgdyWwKiT4qk2MxCGSmtAY4+/ro=;
-        b=acfhxEmhIV6hLGKu1XuETtuck7CN1gE7I4yK5UUoQ4ru1G/6PUpKZ4D5tA/B1EbWRr
-         2Lwn7kfJh0afQ4zMoB0DJHH9OMMdChKPRANgf4a20M3+x/sOP6codqT89AdwB109yfck
-         KoqhKQNosYEJVyvudDc3Nm2XC8I/UFxb2EhBKvviXJ5xiwlg41M8PJD4+kA3HeyxuvKX
-         db4fnkLnRrolMnDlyTu/OxaOwQELHoZ7Q5bvqQJNySZP35thcNWOrjQyhE397uXwQIIC
-         mck4ssRvNTqioXttuPUGSI1I5rqPYlpWUdvIs5AgZFjtxKGScvyCtDjtbhEKoyvhfKct
-         aTOw==
-X-Gm-Message-State: AOJu0Yxo2eiVJ72bbTUNTUuIfMGfNLcvVlPm4m3MMF5RkbY+99eYd+QW
-	SlFQkpohEPqT9NVpM+tiLgAEKYjzhFpIeqq5DYW/20jRB1A5TOV3WV2umxNvNA==
-X-Gm-Gg: ASbGnctjn2FpMEdqwZyNGemfP9aLtiTtcoA43NkcRRw23gqoD4g8X5JmD0/SEqV7hJp
-	tYRQObeRZVaVhBU9NIxZQppfpZhfj4IYkKTXzfl87TZP75I/TI171vL+64STnIGIyZR8CrKFxfh
-	mXQ3UuXrtvpEF8v/ERDlnTfOZ/xm05sRPa3rmQXc1EhUV2Jvv27BGEVAaH07X51QQUQw/T3cDtc
-	CIYbudBpibr6d56RVtUttxW29i231ai/+sX5q3TXhYBv2WrsY15xkO4QNzniIoCUj6yFlcLJW0q
-	K+oY/texqImdyVeu3fxTOfmdjUHsP/KzUka1snP0m7MtQ3GjJM1/gF4N
-X-Google-Smtp-Source: AGHT+IHcOjK0aDg9zZYU8dTY0bxPLw4b7XQZ/EjSujAaUgk6k2jHDc4GWuzqjv6glvZdXk8q7TEpjA==
-X-Received: by 2002:a05:6a00:3016:b0:736:5ee3:64d5 with SMTP id d2e1a72fcca58-73682cda1admr3217540b3a.23.1741153656990;
-        Tue, 04 Mar 2025 21:47:36 -0800 (PST)
+        bh=fnHvI2i9VwERHY3Ce4P1n2c99QtG1cl9blWSKXyJzBc=;
+        b=uQV7vWRKlbFC5R1qLxzpczcIxAJQiF4vVK0EHomG4uGZNydAs/Ktkw5AEu2wIx4gLL
+         BtzOJ2dQ3m8FWEbznqFjbfJBbFjXH7XwaI3Zl/2wej49OTIRE2p530tRWsIVIHRK9Rwr
+         +Ve9eQWvsUHXz0bGG+Oh5YFlqi4jzRzliFo5g4WNmy65Cf+kjhntck0smLwsmcRioACL
+         A+e7p3HZA8Pm/XKnBc8hQWJjUhOiaJNwRnvM1mw/kuV5HMxIiYUwRuAME2CsDhOUj37F
+         VTMmQmM9py8pHArZxTezWlcH3RNtSlyOzo0W87+RIxxgteEyKLAdWBuyIEt6eG7w82Uy
+         V/iQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUs3eEP1tiRkuSDHIbBb1fzWFyokyvy166g8OLk8+wqRgy9SQBlroYT1VgiyEmDWDoymLqS3v3DbbM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLyDV12Dg4B8jJy9uM61QB2LmpD7nDWzv+qzLXFaMHjaVbkF+a
+	PJLvnjog5mx8GyQb7qkkpdMaOS5fDEdxAFvHVAuwuUzqdLpdb3/SvMtpC3KmTA==
+X-Gm-Gg: ASbGnctLUF9EWQMh219kGuztFjegLQg9ZbREKokNdJaZ3OP6XjzmruEHTC2aNat37RF
+	MS3kgJ6/vymlQ8BJP4i+C4ji2sCdKub5u6W6QCvM7+jDvkIIgiEvEjZRWn1V3+lv55PrudCmmvT
+	Em5DiD359LYyUDQDpEshuAWfd0w+obGajtasekOz8xM8u9URVieBmX/ThgAYvlG2hEgbBOZKhmR
+	RNTNenuDKRSfoSUh43GciH3g03RM2JZJjcQBsXz4EMeB1rz8eKlGN99EpYA8KGS1Tiwr+WFZl1f
+	5KHnQQsGBXIBRQkjqlmbsTImIASto7I5ga49jpOqxQh/O4UJZ0Yw3UAB
+X-Google-Smtp-Source: AGHT+IHJGMrxC7Nj7WORCYWfmaz8C+Gr8wA+9ahEWEcgzzO8BBxox+YTb6gg9h50STG9f+NGsU61Lg==
+X-Received: by 2002:a05:6a21:33a9:b0:1f3:19ec:8228 with SMTP id adf61e73a8af0-1f34945a1dfmr3762293637.6.1741153763462;
+        Tue, 04 Mar 2025 21:49:23 -0800 (PST)
 Received: from thinkpad ([120.60.140.239])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73637081ba7sm7772462b3a.112.2025.03.04.21.47.32
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af226f76437sm6990529a12.10.2025.03.04.21.49.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 21:47:36 -0800 (PST)
-Date: Wed, 5 Mar 2025 11:17:29 +0530
+        Tue, 04 Mar 2025 21:49:22 -0800 (PST)
+Date: Wed, 5 Mar 2025 11:19:15 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Jim Quinlan <james.quinlan@broadcom.com>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Stanimir Varbanov <svarbanov@suse.de>,
-	bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 6/8] PCI: brcmstb: Use same constant table for config
- space access
-Message-ID: <20250305054729.5jkxen5vahoxvlrr@thinkpad>
-References: <20250214173944.47506-1-james.quinlan@broadcom.com>
- <20250214173944.47506-7-james.quinlan@broadcom.com>
- <20250304150838.23ca5qbhm4yrpa3h@thinkpad>
- <CA+-6iNzOWU1qLfmSiThdYXX0v5RkbUYtf52yk6KXm6yDDNRUnw@mail.gmail.com>
- <20250304165808.t46fh6fwpardheup@thinkpad>
- <CA+-6iNw2i=4KVr+VYOxacWpP7Pw0E5mDwKY1i9_6V_hjxu9neQ@mail.gmail.com>
+To: Zhang Zekun <zhangzekun11@huawei.com>
+Cc: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	ryder.lee@mediatek.com, jianjun.wang@mediatek.com,
+	sergio.paracuellos@gmail.com,
+	angelogioacchino.delregno@collabora.com, matthias.bgg@gmail.com,
+	alyssa@rosenzweig.io, maz@kernel.org, thierry.reding@gmail.com,
+	Jonathan.Cameron@Huawei.com
+Subject: Re: [PATCH v3 1/6] PCI: kirin: Use helper function
+ for_each_available_child_of_node_scoped()
+Message-ID: <20250305054915.3o4m6zo3ittkmbho@thinkpad>
+References: <20240831040413.126417-1-zhangzekun11@huawei.com>
+ <20240831040413.126417-2-zhangzekun11@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -105,66 +97,64 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+-6iNw2i=4KVr+VYOxacWpP7Pw0E5mDwKY1i9_6V_hjxu9neQ@mail.gmail.com>
+In-Reply-To: <20240831040413.126417-2-zhangzekun11@huawei.com>
 
-On Tue, Mar 04, 2025 at 12:37:26PM -0500, Jim Quinlan wrote:
-> On Tue, Mar 4, 2025 at 11:58 AM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Tue, Mar 04, 2025 at 11:37:14AM -0500, Jim Quinlan wrote:
-> > > On Tue, Mar 4, 2025 at 10:08 AM Manivannan Sadhasivam
-> > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > >
-> > > > On Fri, Feb 14, 2025 at 12:39:34PM -0500, Jim Quinlan wrote:
-> > > > > The constants EXT_CFG_DATA and EXT_CFG_INDEX vary by SOC. One of the
-> > > > > map_bus methods used these constants, the other used different constants.
-> > > > > Fortunately there was no problem because the SoCs that used the latter
-> > > > > map_bus method all had the same register constants.
-> > > > >
-> > > > > Remove the redundant constants and adjust the code to use them.  In
-> > > > > addition, update EXT_CFG_DATA to use the 4k-page based config space access
-> > > > > system, which is what the second map_bus method was already using.
-> > > > >
-> > > >
-> > > > What is the effect of this change? Why is it required? Sounds like it got
-> > > > sneaked in.
-> > >
-> > > Hello,
-> > > There is no functional difference with this commit -- the code will
-> > > behave the same.  A previous commit set up the "EXT_CFG_DATA" and
-> > > "EXT_CFG_INDEX" constants in the offset table but one of the map_bus()
-> > > methods did not use them, instead it relied on old generic #define
-> > > constants.  This commit uses them and gets rid of the old #defines.
-> > >
-> >
-> > My comment was about the change that modified the offset of EXT_CFG_DATA. This
-> > was not justified properly.
+On Sat, Aug 31, 2024 at 12:04:08PM +0800, Zhang Zekun wrote:
+> for_each_available_child_of_node_scoped() provides a scope-based cleanup
+> functionality to put the device_node automatically, and we don't need to
+> call of_node_put() directly.  Let's simplify the code a bit with the use
+> of these functions.
 > 
-> Okay, got it.  You are referring to (for example)
-> -      [EXT_CFG_DATA]          = 0x9004,
-> +       [EXT_CFG_DATA]          = 0x8000,
-> 
-> We have two ways of accessing the config space: (1) by writing a full
-> index and reading a  designated register (0x9004) and (2) by writing
-> the index and then reading from a 4k register region (0x8000 +
-> offset).  We previously used (1).  An update was made to use (2) but
-> instead of updating EXT_CFG_DATA from 0x9004 to 0x8000,
-> PCIE_EXT_CFG_DATA (0x8000) was used by the code of one of the map_bus
-> methods.
-> 
-> This commit changes the code in the offending map_bus method to use
-> the offset table for (2) and updates the offset table EXT_CFG_DATA to
-> its proper value.
-> 
+> Signed-off-by: Zhang Zekun <zhangzekun11@huawei.com>
 
-Ok, this clarifies.
-
-> If you want me to expand the commit message with the above text I can do that.
-> 
-
-No need. Krzysztof should be able to ammend the commit message for you.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
+
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+> v2:
+> Fix spelling error in commit message.
+> 
+>  drivers/pci/controller/dwc/pcie-kirin.c | 10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-kirin.c b/drivers/pci/controller/dwc/pcie-kirin.c
+> index 0a29136491b8..e9bda1746ca5 100644
+> --- a/drivers/pci/controller/dwc/pcie-kirin.c
+> +++ b/drivers/pci/controller/dwc/pcie-kirin.c
+> @@ -452,7 +452,7 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+>  				    struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> -	struct device_node *child, *node = dev->of_node;
+> +	struct device_node *node = dev->of_node;
+>  	void __iomem *apb_base;
+>  	int ret;
+>  
+> @@ -477,17 +477,13 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+>  		return ret;
+>  
+>  	/* Parse OF children */
+> -	for_each_available_child_of_node(node, child) {
+> +	for_each_available_child_of_node_scoped(node, child) {
+>  		ret = kirin_pcie_parse_port(kirin_pcie, pdev, child);
+>  		if (ret)
+> -			goto put_node;
+> +			return ret;
+>  	}
+>  
+>  	return 0;
+> -
+> -put_node:
+> -	of_node_put(child);
+> -	return ret;
+>  }
+>  
+>  static void kirin_pcie_sideband_dbi_w_mode(struct kirin_pcie *kirin_pcie,
+> -- 
+> 2.17.1
+> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
