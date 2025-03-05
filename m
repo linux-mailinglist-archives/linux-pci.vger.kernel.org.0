@@ -1,70 +1,87 @@
-Return-Path: <linux-pci+bounces-22977-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22978-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 705B5A50304
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 16:01:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A28ACA50310
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 16:03:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 481913A8CEF
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 14:58:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5044B3A78B5
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 15:00:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BFC924E4A0;
-	Wed,  5 Mar 2025 14:58:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B693424EF99;
+	Wed,  5 Mar 2025 15:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nSnB5a7A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z4XQwnFr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DA4221F29;
-	Wed,  5 Mar 2025 14:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D4A24EF66
+	for <linux-pci@vger.kernel.org>; Wed,  5 Mar 2025 15:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186726; cv=none; b=YIe6wAdsxdiYZGO+TaBnJvbH8VZzr6GR0ixnJfj1yCW0lsw8x5hcn+UaDQExPn/rvy9jb9nBN3zwf/bG3biW7msijH8YoWMYRw7pXgn3TJM+lVHSP0GL9rsNvrX/DIMtdyuwFHk0ap2hhOEGRIWIEqLcIUbEHCYlLk/yu07tR1c=
+	t=1741186815; cv=none; b=nCKIW/rWI3+yacGjLsQiLp3qX74c/m+qps8LJMzBBI1FJXBvn3bsud+W0Ogb7yQU2bWeGdt95OvIAr0bmg74pLFajgnPJSht3ugKLOCuEiFl0Ft1mq59BdRBmnd9hc8kWshx6rY1lBGe3Nz0aAkRq5bb5thllryOPGeJBzW0wAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186726; c=relaxed/simple;
-	bh=Nd9LKiZdEmzhIpVHrWH7DXwsIOp8YfTpIO06tWiWmHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MoL7u9YUsjKZh/GP9nUPbgP2dedHBM9nvoy3ZP4FbLp+51nDHTi2HPOKAeTj7uzILCdfbNsm1K/qpjlntZnn+uyCFM9gQzwItzMp9AVvKOxuhY7qCBXz/g8LgWzoBhElmCtrUVJ4F0WpTF4k/nGgx7Nnhs/8NkXRVBFZP3HQw1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nSnB5a7A; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7628C4CEE2;
-	Wed,  5 Mar 2025 14:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741186726;
-	bh=Nd9LKiZdEmzhIpVHrWH7DXwsIOp8YfTpIO06tWiWmHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nSnB5a7AcB+xE7+u6TalfWP85FtxWwaylB6xPoIplMqdiTBP5ZOMMmqvc8E4wosHA
-	 8ijS4ytl6En+13X78HQSl/HJqXufHgffaj7l8hD2mjkuyPVOUyqEpm0FwxBgTW0xys
-	 ghH1Ieuh74LfpqozvOOEnw5SikVo1bImN0RHc13jzMbNyFykNu3s7Hqw9v77F/FTKO
-	 lQUIc6LfCGQww7GNw6t3wh11xSyOWHjn25wcwQEyCVpVENrHjl+EomA2XSzCsCWMH6
-	 FV1lA1LYhKEhyxe0ay7REq0olIL3TBP2Ag1Pc6d9wINlTUvBdOy3tQyfh2nGywAej3
-	 exxiYwuTqtlhQ==
-Date: Wed, 5 Mar 2025 16:58:41 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>,
+	s=arc-20240116; t=1741186815; c=relaxed/simple;
+	bh=Q8DJ8fiTmNjeP/+2ks1wRurrJfcRDgtOToR7IsclVLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=NhSgjzEWQg8TPFijoYFTeXiENHGtmoE7xyYOpIhApYrIY6jsyoLeVfjyjUzLFNcJcwZJrDF8NRgrhbN9a1WIQyO8s5B+AQS2IpGsVzQ+zo/wCc+AsjVcjX2y6mvIhZvvpQTsl1X3NF7s7/oHAIbBh97iK9owsKlaEKcEitG+jUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z4XQwnFr; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-390e6ac844fso6159434f8f.3
+        for <linux-pci@vger.kernel.org>; Wed, 05 Mar 2025 07:00:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741186811; x=1741791611; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bXn+R30pfqAeO+ripC6gzbXJrYwc26V6TE4Knds++Rc=;
+        b=Z4XQwnFrXlxKwgfpMtsWoubHNjl00O57875c1XTaww2fGik1DcTZoywAX7je1NLgAC
+         WOPcwwKvMA6AVMesw7kZqb7SGR2mzfkQqaWRaVEVCpsWwrkJgUvcWqydEqOIDP4HsRKK
+         0wDVjHjlqxtADqXOWjLWRAcfiPnPQ3q6be/iGqNvN2tbM3TzFAwGYNWkKZi0qnV0UYVl
+         sixFDr6cYoh8c4D9XvyMALvvml/Z5Uy5t1PvsFqxbRDUbQbUmeaXbXODTOFDmhzeedgh
+         kxSgBvzMWDQ5BAv3zFOI1GLUQkaiVE8kilaP6nIr7CcZwtjZ08Ayi0HfaJYumXmcrRmU
+         2Ojw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741186811; x=1741791611;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bXn+R30pfqAeO+ripC6gzbXJrYwc26V6TE4Knds++Rc=;
+        b=Ol8QgCuWoEiUPuo8mb8m5J65TWWWinhDorV8edopZOxtdgpb2xaoM5KAfe9DZAz4KF
+         mbrqLug2Yow3EVt2h55EaURxke+OnbD9EgnJfjUPwUCrxZ8rVqnQvciemUxbNwEuNdUd
+         yiIpWPzyVLueHWNGCzZSn2V4i6F97ZyQpjUuaXnXgkpvbfM8kQTQAhLFypuSM5CbY6EO
+         3M7Bt+N2acn4zBdZKeKPFoIab40aiOkVEbGegTrkickfEaNbjc0bnaBnLi2f1GSbTCND
+         yy7WYQhBL2Qa5ZtR6DXaStDoFxTlKDKy6BxQh1D/DGaz/nB1CJf0VTlWxvUaqLi6VJEG
+         k2hg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCVtsAmjM1wi+QmRIcpHevejkkoLewXAUBuQWwgoAIXmQHv4c9GrcS/aDCbatJBbCIOwZ7qZwrrHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG5j8HzQERNMq5+JBwha2MYH8x8cY9DQFSisQ+SRpJetZIcQZp
+	Cwl+hC2hqoLn0N3ltAlwhpoFIdO7pzd74yxDNxC2TuFVghm54BhmPad2IVXhgPw=
+X-Gm-Gg: ASbGncvRUpu2WiXd1ZK8DgtlPKjHWX4o17ttpSNs8S0jV1eXByyxTe2CDNCf4WFOdBA
+	0FdJTC90jLm23CAwdMPBY/mAvpSKmF4blQrzEUZvS9BejWNSmu9lOfCQuYCgA5fgTJiyVvEabX7
+	1B/zyf8rtVT1Sy2ij1Z06bWa+xY5s6+S4DRoG9VVrSsvamGetbvNVzAuwxCqEnjWXHwhued8mYw
+	L6YLD1B7sKlQBqMeqI47pmHezZEsBzCLV6KnfSJUYDpEnihjWVaqm0mdQypvj8JQIYxclU3gxGd
+	DD4Lff27b3hwKhGpUqajzWevqChb6QFMS0lGYcAk1slpD4kxYA==
+X-Google-Smtp-Source: AGHT+IHwAOMpL/YkvcIgyvX6we6SxWByrXnH2O7kDqMIwc9Mimc1XxnvaS/gUDf6T/jHttMfPf7cPQ==
+X-Received: by 2002:a5d:59a5:0:b0:390:ea4b:ea9 with SMTP id ffacd0b85a97d-3911f7b7459mr3110045f8f.39.1741186810870;
+        Wed, 05 Mar 2025 07:00:10 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e47b6cd8sm20988561f8f.44.2025.03.05.07.00.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 07:00:10 -0800 (PST)
+Date: Wed, 5 Mar 2025 18:00:07 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>,
-	Aditya Prabhune <aprabhune@nvidia.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Arun Easi <aeasi@marvell.com>, Jonathan Chocron <jonnyc@amazon.com>,
-	Bert Kenward <bkenward@solarflare.com>,
-	Matt Carlson <mcarlson@broadcom.com>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	Jean Delvare <jdelvare@suse.de>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	Jakub Kicinski <kuba@kernel.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Stephen Hemminger <stephen@networkplumber.org>
-Subject: Re: [PATCH v4] PCI/sysfs: Change read permissions for VPD attributes
-Message-ID: <20250305145841.GL1955273@unreal>
-References: <e9943382-8d53-4e28-b600-066ef470f889@app.fastmail.com>
- <20250303211755.GA200634@bhelgaas>
- <20250304074512.GC1955273@unreal>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Vidya Sagar <vidyas@nvidia.com>, Frank Li <Frank.Li@nxp.com>,
+	Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] PCI: dwc: ep: Return -ENOMEM for allocation failures
+Message-ID: <36dcb6fc-f292-4dd5-bd45-a8c6f9dc3df7@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -73,34 +90,30 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250304074512.GC1955273@unreal>
+X-Mailer: git-send-email haha only kidding
 
-On Tue, Mar 04, 2025 at 09:45:12AM +0200, Leon Romanovsky wrote:
-> On Mon, Mar 03, 2025 at 03:17:55PM -0600, Bjorn Helgaas wrote:
-> > On Tue, Feb 25, 2025 at 10:05:49PM +0200, Leon Romanovsky wrote:
-> > > On Tue, Feb 25, 2025, at 20:59, Andrew Lunn wrote:
-> > > >> Chmod solution is something that I thought, but for now I'm looking
-> > > >> for the out of the box solution. Chmod still require from
-> > > >> administrator to run scripts with root permissions.
-> > > >
-> > > > It is more likely to be a udev rule. 
-> > > 
-> > > Udev rule is one of the ways to run such script.
-> > > 
-> > > > systemd already has lots of examples:
-> > > >
-> > > > /lib/udev/rules.d/50-udev-default.rules:KERNEL=="rfkill", MODE="0664"
-> > 
-> > Where are we at with this?  Is a udev rule a feasible solution?
-> 
-> We asked customer if this can work for him and still didn't get answer.
-> I don't know if they have systemd/udev in their hypervisors.
+If the bitmap allocations fail then dw_pcie_ep_init_registers() currently
+returns success.  Return -ENOMEM instead.
 
-We still didn't get any update, so let's drop this patch for now.
+Fixes: 869bc5253406 ("PCI: dwc: ep: Fix DBI access failure for drivers requiring refclk from host")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 20f2436c7091..1b873d486b2d 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -908,6 +908,7 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = -ENOMEM;
+ 	if (!ep->ib_window_map) {
+ 		ep->ib_window_map = devm_bitmap_zalloc(dev, pci->num_ib_windows,
+ 						       GFP_KERNEL);
+-- 
+2.47.2
 
-> 
-> Thanks
-> 
 
