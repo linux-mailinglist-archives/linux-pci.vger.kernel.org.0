@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-22941-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22942-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 505B8A4F6BD
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 06:57:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1E60A4F6C9
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 06:59:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E28716F0D8
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 05:57:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0036E3A68F7
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 05:59:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 467511D2F42;
-	Wed,  5 Mar 2025 05:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A1A81CBEAA;
+	Wed,  5 Mar 2025 05:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YowY+Wsx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="grmVl+xa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B584C43AB7
-	for <linux-pci@vger.kernel.org>; Wed,  5 Mar 2025 05:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFCB193436
+	for <linux-pci@vger.kernel.org>; Wed,  5 Mar 2025 05:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741154262; cv=none; b=HyCLT0e5dRg6oAxoMHr6Db0UuX6GFVNyiomegvDHDq8OJhgIb2QeN0vUq8Xa0QwZAahUQipPKDAESvhBkl/A/aA63Bp0hP3Bf82XUjMVHitWoOuzcqZynmRNIY9M9mTOdQIbh6Or9Q5bvdLXlgjKIIgC6RzBlg3JX1qTVwz/DiY=
+	t=1741154359; cv=none; b=j37OQ2/AqpSxEqOlosSBlMB24IcdqR6Bv322T9cdoGfHPFMafNORMZplXKWkiS4YTNKIxOfChGawAEvTCktgdTKokOmKNKZHix0X9mtagkkw/pdt4g+gxUAnC4e3dI1vTrSKPQgDjCGN0x+4TkabUBZPOIovY4EzD/qA6A18mhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741154262; c=relaxed/simple;
-	bh=hFeYMdWnSHtiWE5MQ5BSTvT73z2i7ZQZW1B6NLx7FPM=;
+	s=arc-20240116; t=1741154359; c=relaxed/simple;
+	bh=7rLixmlIIXqk8+K9coKKUsSCgpN57KNLFA4aYhVOSkM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PMUDMzVF/sHrgCpIRGSJ8bXPeCqa/ill+/hcgP+eCYCzObCYqqGfCpAK8kqgrWRdev/ZrnLGzgmI35hrZoF4Y7IGbFPltNbeKl4/4BXr/9NGCL3k6PHABZukBR4TIkvT6PPtMlBQRN3BWjgrzEw0XmKn+ci9IzUVtfWhX6IjYZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YowY+Wsx; arc=none smtp.client-ip=209.85.214.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cr5Jx86gWatmt14NDoObtYoNeHHLgx7mgNLoNH3LYdRs0yh+MRukMkpOSEe2a89joVkgkOLzW+z8PPfsRw2t7xoEhFeGvg1OO5bZ6h0wH9yJnkMrOPy8LgmLSQaUDk91NmG+TMmgf8UcvplbXrlC4ZWNwG292G6mzBwhnglw3bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=grmVl+xa; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2239aa5da08so56516525ad.3
-        for <linux-pci@vger.kernel.org>; Tue, 04 Mar 2025 21:57:40 -0800 (PST)
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2234e5347e2so130580745ad.1
+        for <linux-pci@vger.kernel.org>; Tue, 04 Mar 2025 21:59:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741154260; x=1741759060; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741154355; x=1741759155; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=DOwzzYJQOdG0WI0rLxpfa0qjcc3zCe9/VPVDSgNZPbU=;
-        b=YowY+WsxvqcH2KIG9pNMII/jTlgDdpCFtC7qTH02cIripdu1L0V3814baLEGv101QH
-         m2O3TwwjO4gyYsQWm6DLBMDuLZe1bQirKrPlE2hkClvRi+vJOxipoH8YnJGBvE0D7JVt
-         DND8njYbOSuAiNrZs3/DCsq54Y/F9KSZZkLcJaMMtluGBvBNt7nuYgG5dB8fRzp6LJ8D
-         3WQNb9PHbeE1+EQgsxBjmlMgwKmZuIRZebfB1ZY1Teq76rqY/UaH+yu7C4aJ4Zv4yclp
-         74G/8Rdmyb1I4BBM8CwBzfOHwdRFQX69+O4z/qP8tm8kq/qqZcHRi9SFxsTKrwVOUcik
-         730A==
+        bh=plRmfwScFOt47OIZ2jjZ3EgjKALlcE07TkgC4+reH1M=;
+        b=grmVl+xahdJpM9PiduDO8CbnO8FGSNxpRCHNpdGXhKF1PUBgvIqSo3YDurHirLOoYo
+         NSUrZ2p25JZaE4AVMNZitWA8ZvDGLRPUpS6yxwQGInnNzP17yHHbMPz1b1+7pbnoZL9T
+         4oUAgWCwQZL1eBby2478EfO482Zgmq/Aqr/ZyTyRlHq+4oDvFOr5hqE0LkHJOmNq4VWK
+         96dkTWuQ0BL2bL2OgXUfO23mIEHT4i0lxjJfkonpwUBfjeLdifk1jTySvP0AMbfnRQfI
+         XrkZeeFvWiNvlsna04PGcKCftoj/nEVSAEoRi7XXkpV50qqQM92WYB5VZ7yWjHMTPa9W
+         Id6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741154260; x=1741759060;
+        d=1e100.net; s=20230601; t=1741154355; x=1741759155;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DOwzzYJQOdG0WI0rLxpfa0qjcc3zCe9/VPVDSgNZPbU=;
-        b=pZkQ8VA7nK2F/mV/DbmBbwhVbx19To0Hx40dL7VqCVeB/wiim3kLrhePyOpvhVEQc0
-         FK99D7OR9Y+0lBzGmE5GIQt/jyRoyA0EIJio+Y3qSQJBOmfUBEEWeQTgZbXQOPq6FPo/
-         Hvru09qhy0dkdpnxrxnUvrYpiJKpwnUFTfe+A2U4PNAolf2ywLiIy6PZIKSQz3wMkuf6
-         28hw0JiITaR1x++5vouje3TlTjZuQ9O7Ta9PnUM3ny7S4Rn94aYpugNspSpCwIKVVt8g
-         Q+rs/3PY9kXi/G4XipjOXdzWJEoOm0hI1V5hAQnuhmMWQlvRAHjjxQDglhFPn+9G31aB
-         lSCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZaBaZW7iPvpneNMzQttn/B/z3ZzpEpExCaCb/qvm0vUNs+s511UChdwOh/HYJxWS/spsCaSPOQvg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytSawoYqGn4mdcWtGhoRi1G+h9GevdnNqLQgcj19zpzqcXpXpV
-	J908XuKDjB7KSWjMf0LuYb/PU1tqDhPZb1ELeHReVOmVw7LQwnTzPAdYE/U+lg==
-X-Gm-Gg: ASbGncvRtrHJqVlUbxcp27slsBzfxTudVkq6ifthsPzKG0n/cTl7W1ovolDbOIJ/oYF
-	BDjdebiz3HaPV0uR15IRWtHmJp4XbUM/L9gi6U11W7HV33BSvlLF+Xa/eR4crpREqFlIZylyoG/
-	PAy6CJoQpzstLMLSH6g+3V5d6VCJM4VnIoQI7AnICR51X+sUitaEWczJpIa76acnLgK6RtQFtuo
-	neItG67+76LdIzxApv62KceD4LkGmC0+IztZR+gDAJQ6rY0qoHp1ZueV6PA0LXT+XXBrjqQnOy/
-	nyQKjQGbNXqoGrmj91fNsuKb5oZhtvtlGYifckQ3H/py+TxBmV77Ga0Z
-X-Google-Smtp-Source: AGHT+IHJ+E7cxLp3UL1E2lM9yka+FDKJffqchLvQqu50BLnEcbW5jPX5uSliRc3msTubI0hA63bDNA==
-X-Received: by 2002:a05:6a00:cc7:b0:736:5725:59b4 with SMTP id d2e1a72fcca58-73682b5a0b6mr3190684b3a.3.1741154259844;
-        Tue, 04 Mar 2025 21:57:39 -0800 (PST)
+        bh=plRmfwScFOt47OIZ2jjZ3EgjKALlcE07TkgC4+reH1M=;
+        b=PBxs+sjcm47DOi+VtcPC9idQKVHdNOSkN5U+3+d1rhgW9WFVzMlpeeCrdw6U2mKr4q
+         LHQlm5PslwqiD+Sbl9o0o1p6vJQkkNSRLqmha34RcEcxWsUrbAaIv/7HNiGupMUqjVko
+         SKpJRFa5beV8yx2XsO10cMTuCP6V1TPqHAZs2b92Dr4l4npcucyxFk/GJdw9tnISGZlL
+         ZNVXQH9yNQnBdo7hjAILjQMCY2BOymShcOwUozO/p9XFtu46aactHTIuSu4emELz1yN2
+         LaPCe43gfLFRFClu6AbQ7X8Rz+8HuhTWW5CAFCdaYlFVBifZfhc9TykhKgj4mKYknsdv
+         Ftgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjjbyIPqfW+SbCLmM204SsuEoh70xNCgPP97d9XpqjtqpG85tGh3zuq/IeZGELbH8cNMP2sspHtWk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo8ajic5y8IqUuvkhqhtmBmP6RdDd4rANoRbLAzpM3Gp117uJJ
+	TiwrrdoMZw04pmACDr2SSLZzTjwhYxmoOQ7l0lVzuOadrsrOIE88hDmS9XCF8g==
+X-Gm-Gg: ASbGncvwylGolE35/aUH+owEz4oaL4GX0LuxSQsp2z5/ymv2Eh/U9gFCaa+/jQWVRu3
+	Ai+Z842kzmu6uYTH0B1hNfpW5gOxJyigWScbjFiToCaHBNpIXCLb6Q1YO2snpytCPisIWBc4Cgb
+	6jPfu03G12jcDGDry34JX13ReY/k9EbFxjItsEGTzK+hliaOH/pAdqM1LHpUBqfEW83D8Fx4Zkf
+	3/iDTX6lItdHvPC6vhxa3vdiqd9HDht7yyM776Pw4F1JJLBfNm25INQNyWZUoBOxT81acweo+r0
+	kYCgN624lASVl69dXlzhjSwyFICxvrxlOJtCItPIuOdEqzuwDBjahAB6
+X-Google-Smtp-Source: AGHT+IHMCm1PvM4QtZ7O+C2jxAVodi0fiTMSuB9DDj7hvd24re/QfUJopOYHFxAIt5QpzCXVvX9B6g==
+X-Received: by 2002:a17:902:ea10:b0:223:5ca1:3b0b with SMTP id d9443c01a7336-223f1cf326fmr36648005ad.40.1741154355016;
+        Tue, 04 Mar 2025 21:59:15 -0800 (PST)
 Received: from thinkpad ([120.60.140.239])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-736290957f1sm9578841b3a.67.2025.03.04.21.57.35
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2235053b0cfsm105287545ad.254.2025.03.04.21.59.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Mar 2025 21:57:39 -0800 (PST)
-Date: Wed, 5 Mar 2025 11:27:32 +0530
+        Tue, 04 Mar 2025 21:59:14 -0800 (PST)
+Date: Wed, 5 Mar 2025 11:29:08 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To: Zhang Zekun <zhangzekun11@huawei.com>
 Cc: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com,
@@ -83,11 +83,11 @@ Cc: songxiaowei@hisilicon.com, wangbinghui@hisilicon.com,
 	angelogioacchino.delregno@collabora.com, matthias.bgg@gmail.com,
 	alyssa@rosenzweig.io, maz@kernel.org, thierry.reding@gmail.com,
 	Jonathan.Cameron@Huawei.com
-Subject: Re: [PATCH v3 5/6] PCI: apple: Use helper function
+Subject: Re: [PATCH v3 6/6] PCI: tegra: Use helper function
  for_each_child_of_node_scoped()
-Message-ID: <20250305055732.l72uqohsdq5x57xm@thinkpad>
+Message-ID: <20250305055908.c4rcvzcqbijuiqc3@thinkpad>
 References: <20240831040413.126417-1-zhangzekun11@huawei.com>
- <20240831040413.126417-6-zhangzekun11@huawei.com>
+ <20240831040413.126417-7-zhangzekun11@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -97,13 +97,13 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240831040413.126417-6-zhangzekun11@huawei.com>
+In-Reply-To: <20240831040413.126417-7-zhangzekun11@huawei.com>
 
-On Sat, Aug 31, 2024 at 12:04:12PM +0800, Zhang Zekun wrote:
+On Sat, Aug 31, 2024 at 12:04:13PM +0800, Zhang Zekun wrote:
 > for_each_child_of_node_scoped() provides a scope-based cleanup
 > functionality to put the device_node automatically, and we don't need to
-> call of_node_put() directly.  Let's simplify the code a bit with the
-> use of these functions.
+> call of_node_put() directly.  Let's simplify the code a bit with the use
+> of these functions.
 > 
 > Signed-off-by: Zhang Zekun <zhangzekun11@huawei.com>
 
@@ -113,36 +113,164 @@ Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
-> v2: Fix spelling error in commit message.
+> v2:
+> - Use dev_err_probe() to simplify code.
+> - Fix spelling error in commit message.
 > 
->  drivers/pci/controller/pcie-apple.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> v3: Wrap the line which is too long.
 > 
-> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> index fefab2758a06..f1bd20a64b67 100644
-> --- a/drivers/pci/controller/pcie-apple.c
-> +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -764,7 +764,6 @@ static int apple_pcie_init(struct pci_config_window *cfg)
+>  drivers/pci/controller/pci-tegra.c | 80 +++++++++++-------------------
+>  1 file changed, 28 insertions(+), 52 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index d7517c3976e7..d2f29b87ffa5 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -2106,47 +2106,39 @@ static int tegra_pcie_get_regulators(struct tegra_pcie *pcie, u32 lane_mask)
+>  static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
 >  {
->  	struct device *dev = cfg->parent;
->  	struct platform_device *platform = to_platform_device(dev);
-> -	struct device_node *of_port;
->  	struct apple_pcie *pcie;
->  	int ret;
+>  	struct device *dev = pcie->dev;
+> -	struct device_node *np = dev->of_node, *port;
+> +	struct device_node *np = dev->of_node;
+>  	const struct tegra_pcie_soc *soc = pcie->soc;
+>  	u32 lanes = 0, mask = 0;
+>  	unsigned int lane = 0;
+>  	int err;
 >  
-> @@ -787,11 +786,10 @@ static int apple_pcie_init(struct pci_config_window *cfg)
->  	if (ret)
->  		return ret;
+>  	/* parse root ports */
+> -	for_each_child_of_node(np, port) {
+> +	for_each_child_of_node_scoped(np, port) {
+>  		struct tegra_pcie_port *rp;
+>  		unsigned int index;
+>  		u32 value;
+>  		char *label;
 >  
-> -	for_each_child_of_node(dev->of_node, of_port) {
-> +	for_each_child_of_node_scoped(dev->of_node, of_port) {
->  		ret = apple_pcie_setup_port(pcie, of_port);
->  		if (ret) {
->  			dev_err(pcie->dev, "Port %pOF setup fail: %d\n", of_port, ret);
-> -			of_node_put(of_port);
->  			return ret;
+>  		err = of_pci_get_devfn(port);
+> -		if (err < 0) {
+> -			dev_err(dev, "failed to parse address: %d\n", err);
+> -			goto err_node_put;
+> -		}
+> +		if (err < 0)
+> +			return dev_err_probe(dev, err, "failed to parse address\n");
+>  
+>  		index = PCI_SLOT(err);
+>  
+> -		if (index < 1 || index > soc->num_ports) {
+> -			dev_err(dev, "invalid port number: %d\n", index);
+> -			err = -EINVAL;
+> -			goto err_node_put;
+> -		}
+> +		if (index < 1 || index > soc->num_ports)
+> +			return dev_err_probe(dev, -EINVAL,
+> +					     "invalid port number: %d\n", index);
+>  
+>  		index--;
+>  
+>  		err = of_property_read_u32(port, "nvidia,num-lanes", &value);
+> -		if (err < 0) {
+> -			dev_err(dev, "failed to parse # of lanes: %d\n",
+> -				err);
+> -			goto err_node_put;
+> -		}
+> +		if (err < 0)
+> +			return dev_err_probe(dev, err,
+> +					     "failed to parse # of lanes\n");
+>  
+> -		if (value > 16) {
+> -			dev_err(dev, "invalid # of lanes: %u\n", value);
+> -			err = -EINVAL;
+> -			goto err_node_put;
+> -		}
+> +		if (value > 16)
+> +			return dev_err_probe(dev, -EINVAL,
+> +					     "invalid # of lanes: %u\n", value);
+>  
+>  		lanes |= value << (index << 3);
+>  
+> @@ -2159,16 +2151,12 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+>  		lane += value;
+>  
+>  		rp = devm_kzalloc(dev, sizeof(*rp), GFP_KERNEL);
+> -		if (!rp) {
+> -			err = -ENOMEM;
+> -			goto err_node_put;
+> -		}
+> +		if (!rp)
+> +			return -ENOMEM;
+>  
+>  		err = of_address_to_resource(port, 0, &rp->regs);
+> -		if (err < 0) {
+> -			dev_err(dev, "failed to parse address: %d\n", err);
+> -			goto err_node_put;
+> -		}
+> +		if (err < 0)
+> +			return dev_err_probe(dev, err, "failed to parse address\n");
+>  
+>  		INIT_LIST_HEAD(&rp->list);
+>  		rp->index = index;
+> @@ -2177,16 +2165,12 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+>  		rp->np = port;
+>  
+>  		rp->base = devm_pci_remap_cfg_resource(dev, &rp->regs);
+> -		if (IS_ERR(rp->base)) {
+> -			err = PTR_ERR(rp->base);
+> -			goto err_node_put;
+> -		}
+> +		if (IS_ERR(rp->base))
+> +			return PTR_ERR(rp->base);
+>  
+>  		label = devm_kasprintf(dev, GFP_KERNEL, "pex-reset-%u", index);
+> -		if (!label) {
+> -			err = -ENOMEM;
+> -			goto err_node_put;
+> -		}
+> +		if (!label)
+> +			return -ENOMEM;
+>  
+>  		/*
+>  		 * Returns -ENOENT if reset-gpios property is not populated
+> @@ -2199,34 +2183,26 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+>  						       GPIOD_OUT_LOW,
+>  						       label);
+>  		if (IS_ERR(rp->reset_gpio)) {
+> -			if (PTR_ERR(rp->reset_gpio) == -ENOENT) {
+> +			if (PTR_ERR(rp->reset_gpio) == -ENOENT)
+>  				rp->reset_gpio = NULL;
+> -			} else {
+> -				dev_err(dev, "failed to get reset GPIO: %ld\n",
+> -					PTR_ERR(rp->reset_gpio));
+> -				err = PTR_ERR(rp->reset_gpio);
+> -				goto err_node_put;
+> -			}
+> +			else
+> +				return dev_err_probe(dev, PTR_ERR(rp->reset_gpio),
+> +						     "failed to get reset GPIO\n");
 >  		}
+>  
+>  		list_add_tail(&rp->list, &pcie->ports);
 >  	}
+>  
+>  	err = tegra_pcie_get_xbar_config(pcie, lanes, &pcie->xbar_config);
+> -	if (err < 0) {
+> -		dev_err(dev, "invalid lane configuration\n");
+> -		return err;
+> -	}
+> +	if (err < 0)
+> +		return dev_err_probe(dev, err,
+> +				     "invalid lane configuration\n");
+>  
+>  	err = tegra_pcie_get_regulators(pcie, mask);
+>  	if (err < 0)
+>  		return err;
+>  
+>  	return 0;
+> -
+> -err_node_put:
+> -	of_node_put(port);
+> -	return err;
+>  }
+>  
+>  /*
 > -- 
 > 2.17.1
 > 
