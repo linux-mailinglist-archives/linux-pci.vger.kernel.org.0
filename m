@@ -1,159 +1,174 @@
-Return-Path: <linux-pci+bounces-22996-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22997-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 022F0A50687
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 18:38:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 546A7A506A9
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 18:45:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5ABB3A7729
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 17:38:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C2C618913D7
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 17:45:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E2FE22257F;
-	Wed,  5 Mar 2025 17:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 171701AAE2E;
+	Wed,  5 Mar 2025 17:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TV3flwBU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eT9nZkJv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9F81957E4;
-	Wed,  5 Mar 2025 17:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E9B250BFB
+	for <linux-pci@vger.kernel.org>; Wed,  5 Mar 2025 17:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741196308; cv=none; b=phtqB1s79B2bE4A09sLigSPxYO39gKSBNxV7biwjEdBZhZQ0JCzdFLy7l0j8P8irNuKzge2qVCyRQwwexExZg9cjE1Qv7D1QCyhj1eQ+10D718aT9bBMHu3F1pI/ugTWrCPGHPlMMLESquV6RJU9cSrjKSSULy4I7Ne6wuM3Xrs=
+	t=1741196727; cv=none; b=pphtZSpRv4uvGNYFCU+zFqY9/sk1QoZkdZ3C4oVUFxM81eBsiwuWPjpQ43pTb/eW3DJJiptadxrvktihqvmN4Ev0KIP3QTfs13Gd+v7lALjVg0qdBYkqfhb/vf6ZtHCOzRsa9rOarl3ASj6SLQ6SD5mFmvnRd8tI4+7+yFtPXUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741196308; c=relaxed/simple;
-	bh=ijeMNbdG6/t/MFEhbiYg7NxdfQyaCwL0KeoeZZihREw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tHrEvKlb228smlQ92OXil3HgWWRFK44eontkbughOoXJfGJBPHMgomgXlOEls+nNLyWBWPn9i+0zEywIG/KyQL133uq8mNZyGb2wbdqZhJqD8Ue2KabQf1r0BnVD5BEMR49dbd2xxUa1Ar5jpfPx0hCwd3KDg90JzxBwQ/Xg8m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TV3flwBU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 906A8C4CED1;
-	Wed,  5 Mar 2025 17:38:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741196307;
-	bh=ijeMNbdG6/t/MFEhbiYg7NxdfQyaCwL0KeoeZZihREw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=TV3flwBUO/G0FQf09lT08iTdwkyHwQLxOvyCqIuBuMonT1GOwm0cUoemhaPTTHeix
-	 h+8jch8k0QjY3uKAtLRojI7MG+hBjyNZ702wCXv2vaLEbYNJVD0++H/MhU33skYvp3
-	 7quINAI0nSkLMZ6a32qOQKcn+Faf0eFW03TjGB52SmUHh/l+w0PQgL7Q5H489hEgZy
-	 AL0uN49J4r0jqbO9L/62YHpoW6QE1Gzqo3Ifnxki16OdKKp78RkRCluQYYiioTTVqS
-	 T7gISCH9FLq5trvXbfXhw+9xoxwOGynufWk1wMnppCXeDJmuuJncKkgnHJODMYbjna
-	 NOYdAqxliI+Jg==
-Date: Wed, 5 Mar 2025 11:38:26 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Fan Ni <nifan.cxl@gmail.com>, Shradha Todi <shradha.t@samsung.com>,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
-	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	Jonathan.Cameron@huawei.com, a.manzanares@samsung.com,
-	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
-	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
-	will@kernel.org, mark.rutland@arm.com,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v7 3/5] Add debugfs based silicon debug support in DWC
-Message-ID: <20250305173826.GA303920@bhelgaas>
+	s=arc-20240116; t=1741196727; c=relaxed/simple;
+	bh=gliMo/9tMO3KypkJrzZ9UXZ62/SKLWSE+bNzDynbWU0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=s35+uxe2fiP6iYr1z37OMKs18WPFxU7LyHU0HfLzRIGpT/Kjz39mmU06+vp5dfQJRPOLV5AnuQgSGTCB7t8wpS2SVX25d2mf5I9eQgIGMOXjvdNerb/5q+Yz0iLv+WlX44NGmedfeipaDLRE9Vq+wZPBBI+rSF0lvELxV6KclpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eT9nZkJv; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741196725; x=1772732725;
+  h=date:from:to:cc:subject:message-id;
+  bh=gliMo/9tMO3KypkJrzZ9UXZ62/SKLWSE+bNzDynbWU0=;
+  b=eT9nZkJvNIe9BgCadEFsjra/kCjQ8wQ/QGMSpSbElcY46AsCAJUqMGki
+   fuY4PaZRvEsOjVApWG1PbEhW9BsmNrFe0KNwkVPkWx9LWaVUg7WlCnB5k
+   yWBz0ehmfJR6JR2z8Sxeq+Nnk4ZFwLA6f8iBoShprRNJljdZ9N2inOne3
+   nOvK9FlGHvOILvL0W7FsmWh93EQb5N8GygTZV7F+ozqMCj5TPILdrxfNw
+   Fb4BYgYra9W+9mS3Go/TtmTM4mUoa0V5xFYWKO1sIQ8GYiR2k+lSefUdP
+   6Kvg5xVzSysBPPSNDQXW7SmZS2txxRl3gCo8I30CUqSgZXesci3LN6Z+U
+   A==;
+X-CSE-ConnectionGUID: IQNeXlJHQM6UKAqupUk79A==
+X-CSE-MsgGUID: qpZCGGgcQJSSfHoGk9BLdg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42313798"
+X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
+   d="scan'208";a="42313798"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 09:45:16 -0800
+X-CSE-ConnectionGUID: BJyyMLhqQsOroaW6INIMZA==
+X-CSE-MsgGUID: Qflp47kGSt+JIHUSCEbmNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,223,1736841600"; 
+   d="scan'208";a="118930401"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 05 Mar 2025 09:45:05 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tpsnk-000LLo-2H;
+	Wed, 05 Mar 2025 17:45:00 +0000
+Date: Thu, 06 Mar 2025 01:44:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:misc] BUILD SUCCESS
+ e76c86997bcfd27438835d31bd5306976021fe14
+Message-ID: <202503060147.3lIXX1WC-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250304171154.njoygsvfd567pb66@thinkpad>
 
-On Tue, Mar 04, 2025 at 10:41:54PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Mar 05, 2025 at 12:46:38AM +0900, Krzysztof Wilczyński wrote:
-> > > On Mon, 3 Mar 2025 at 20:47, Krzysztof Wilczyński <kw@linux.com> wrote:
-> > > > [...]
-> > > > > > +int dwc_pcie_debugfs_init(struct dw_pcie *pci)
-> > > > > > +{
-> > > > > > +   char dirname[DWC_DEBUGFS_BUF_MAX];
-> > > > > > +   struct device *dev = pci->dev;
-> > > > > > +   struct debugfs_info *debugfs;
-> > > > > > +   struct dentry *dir;
-> > > > > > +   int ret;
-> > > > > > +
-> > > > > > +   /* Create main directory for each platform driver */
-> > > > > > +   snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
-> > > > > > +   dir = debugfs_create_dir(dirname, NULL);
-> > > > > > +   debugfs = devm_kzalloc(dev, sizeof(*debugfs), GFP_KERNEL);
-> > > > > > +   if (!debugfs)
-> > > > > > +           return -ENOMEM;
-> > > > > > +
-> > > > > > +   debugfs->debug_dir = dir;
-> > > > > > +   pci->debugfs = debugfs;
-> > > > > > +   ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
-> > > > > > +   if (ret)
-> > > > > > +           dev_dbg(dev, "RASDES debugfs init failed\n");
-> > > > >
-> > > > > What will happen if ret != 0? still return 0?
-> > > 
-> > > And that is exactly what happens on Gray Hawk Single with R-Car
-> > > V4M: dw_pcie_find_rasdes_capability() returns NULL, causing
-> > > dwc_pcie_rasdes_debugfs_init() to return -ENODEV.
-> > > 
-> > > Debugfs issues should never be propagated upstream!
-> ...
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
+branch HEAD: e76c86997bcfd27438835d31bd5306976021fe14  PCI: Fix typos
 
-> > > So while applying, you changed this like:
-> > > 
-> > >             ret = dwc_pcie_rasdes_debugfs_init(pci, dir);
-> > >     -       if (ret)
-> > >     -               dev_dbg(dev, "RASDES debugfs init failed\n");
-> > >     +       if (ret) {
-> > >     +               dev_err(dev, "failed to initialize RAS DES debugfs\n");
-> > >     +               return ret;
-> > >     +       }
-> > > 
-> > >             return 0;
-> > > 
-> > > Hence this is now a fatal error, causing the probe to fail.
+elapsed time: 1444m
 
-> Even though debugfs_init() failure is not supposed to fail the probe(),
-> dwc_pcie_rasdes_debugfs_init() has a devm_kzalloc() and propagating that
-> failure would be canolically correct IMO.
+configs tested: 81
+configs skipped: 2
 
-I'm not sure about this.  What's the requirement to propagate
-devm_kzalloc() failures?  I think devres will free any allocs that
-were successful regardless.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-IIUC, we resolved the Gray Hawk Single issue by changing
-dwc_pcie_rasdes_debugfs_init() to return success without doing
-anything when there's no RAS DES Capability.
+tested configs:
+alpha                            allnoconfig    gcc-14.2.0
+alpha                           allyesconfig    gcc-14.2.0
+arc                             allmodconfig    gcc-13.2.0
+arc                              allnoconfig    gcc-13.2.0
+arc                             allyesconfig    gcc-13.2.0
+arc                  randconfig-001-20250305    gcc-13.2.0
+arc                  randconfig-002-20250305    gcc-13.2.0
+arm                             allmodconfig    gcc-14.2.0
+arm                              allnoconfig    clang-17
+arm                             allyesconfig    gcc-14.2.0
+arm                  randconfig-001-20250305    gcc-14.2.0
+arm                  randconfig-002-20250305    clang-19
+arm                  randconfig-003-20250305    gcc-14.2.0
+arm                  randconfig-004-20250305    gcc-14.2.0
+arm64                            allnoconfig    gcc-14.2.0
+arm64                randconfig-001-20250305    clang-15
+arm64                randconfig-002-20250305    gcc-14.2.0
+arm64                randconfig-003-20250305    clang-21
+arm64                randconfig-004-20250305    gcc-14.2.0
+csky                             allnoconfig    gcc-14.2.0
+csky                 randconfig-001-20250305    gcc-14.2.0
+csky                 randconfig-002-20250305    gcc-14.2.0
+hexagon                         allmodconfig    clang-21
+hexagon                          allnoconfig    clang-21
+hexagon                         allyesconfig    clang-18
+hexagon              randconfig-001-20250305    clang-21
+hexagon              randconfig-002-20250305    clang-18
+i386       buildonly-randconfig-001-20250305    clang-19
+i386       buildonly-randconfig-002-20250305    clang-19
+i386       buildonly-randconfig-003-20250305    clang-19
+i386       buildonly-randconfig-004-20250305    clang-19
+i386       buildonly-randconfig-005-20250305    clang-19
+i386       buildonly-randconfig-006-20250305    gcc-12
+loongarch                        allnoconfig    gcc-14.2.0
+loongarch            randconfig-001-20250305    gcc-14.2.0
+loongarch            randconfig-002-20250305    gcc-14.2.0
+nios2                randconfig-001-20250305    gcc-14.2.0
+nios2                randconfig-002-20250305    gcc-14.2.0
+openrisc                         allnoconfig    gcc-14.2.0
+parisc                           allnoconfig    gcc-14.2.0
+parisc               randconfig-001-20250305    gcc-14.2.0
+parisc               randconfig-002-20250305    gcc-14.2.0
+powerpc                          allnoconfig    gcc-14.2.0
+powerpc              randconfig-001-20250305    clang-17
+powerpc              randconfig-002-20250305    gcc-14.2.0
+powerpc              randconfig-003-20250305    gcc-14.2.0
+powerpc64            randconfig-001-20250305    clang-19
+powerpc64            randconfig-002-20250305    clang-17
+powerpc64            randconfig-003-20250305    clang-19
+riscv                            allnoconfig    gcc-14.2.0
+riscv                randconfig-001-20250305    clang-19
+riscv                randconfig-002-20250305    gcc-14.2.0
+s390                            allmodconfig    clang-19
+s390                             allnoconfig    clang-15
+s390                            allyesconfig    gcc-14.2.0
+s390                 randconfig-001-20250305    gcc-14.2.0
+s390                 randconfig-002-20250305    gcc-14.2.0
+sh                              allmodconfig    gcc-14.2.0
+sh                              allyesconfig    gcc-14.2.0
+sh                   randconfig-001-20250305    gcc-14.2.0
+sh                   randconfig-002-20250305    gcc-14.2.0
+sparc                           allmodconfig    gcc-14.2.0
+sparc                randconfig-001-20250305    gcc-14.2.0
+sparc                randconfig-002-20250305    gcc-14.2.0
+sparc64              randconfig-001-20250305    gcc-14.2.0
+sparc64              randconfig-002-20250305    gcc-14.2.0
+um                              allmodconfig    clang-21
+um                               allnoconfig    clang-18
+um                              allyesconfig    gcc-12
+um                   randconfig-001-20250305    clang-19
+um                   randconfig-002-20250305    gcc-12
+x86_64                           allnoconfig    clang-19
+x86_64     buildonly-randconfig-001-20250305    clang-19
+x86_64     buildonly-randconfig-002-20250305    gcc-12
+x86_64     buildonly-randconfig-003-20250305    clang-19
+x86_64     buildonly-randconfig-004-20250305    gcc-12
+x86_64     buildonly-randconfig-005-20250305    clang-19
+x86_64     buildonly-randconfig-006-20250305    clang-19
+x86_64                             defconfig    gcc-11
+xtensa               randconfig-001-20250305    gcc-14.2.0
+xtensa               randconfig-002-20250305    gcc-14.2.0
 
-But dwc_pcie_debugfs_init() can still return failure, and that still
-causes dw_pcie_ep_init_registers() to fail, which breaks the "don't
-propagate debugfs issues upstream" rule:
-
-  int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
-  {
-          ...
-          ret = dwc_pcie_debugfs_init(pci);
-          if (ret)
-                  goto err_remove_edma;
-
-          return 0;
-
-  err_remove_edma:
-          dw_pcie_edma_remove(pci);
-
-          return ret;
-  }
-
-We can say that kzalloc() failure should "never" happen, and therefore
-it's OK to fail the driver probe if it happens, but that doesn't seem
-like a strong argument for breaking the "don't propagate debugfs
-issues" rule.  And someday there may be other kinds of failures from
-dwc_pcie_debugfs_init().
-
-Bjorn
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
