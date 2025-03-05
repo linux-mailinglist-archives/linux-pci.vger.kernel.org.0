@@ -1,158 +1,93 @@
-Return-Path: <linux-pci+bounces-22953-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-22954-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E009A4F83E
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 08:49:07 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AB71A4F84A
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 08:53:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C623D3A6754
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 07:48:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58DE918887CB
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Mar 2025 07:53:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50DD71EF0B4;
-	Wed,  5 Mar 2025 07:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hzz1qEpJ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E98601DA617;
+	Wed,  5 Mar 2025 07:53:06 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2067E78F24;
-	Wed,  5 Mar 2025 07:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759EF17555;
+	Wed,  5 Mar 2025 07:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741160930; cv=none; b=G20iCxnf2Z8sp9GFTaAkVEe1Jhh5VlL1wjFNIqY039RKnScP9Bylimqlk7eGKqNlImbA5P/UikapoPhOXPDXimGjb20lEHHBPlZzVNapf6+hLqUWLyhYoL4n2HS1qG1K/wQFmFHSgDThHL5ZcCCmkTshaA3Dp0037uS4pWBmX7A=
+	t=1741161186; cv=none; b=mTWzXMtNYXANNa7FjnlMvq8TSYfYbZteojrRm1jG2mai+SLJJ4HNy3jQuMvIa+vYm8Y6NxrcPFlwCwI1BjhJ/NIahOe7b2o/oQPFueActPewQZfQuZWdVkKObX2etk6DdHe7YRSHOjgUfUnpzoEbg5CP2mqq0ESZ2bQ8CpsUoUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741160930; c=relaxed/simple;
-	bh=OUCqZ6jMMZxBf9sqcmDm9unaPoc0Cv7q8uEblBwG+q0=;
+	s=arc-20240116; t=1741161186; c=relaxed/simple;
+	bh=Sq/v/OM/1qS45H4g0YlraJb50W42tf5JVWHwZD4MlSQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LHOIdx93znecOKCBu/pFRCiuBbCGSEZlcAzN8FIirrSoP5BompCZztI2vrFqklOhBHUtF3Npy8Wn+wDXispmbZ0r/aDzW+/coZlIyU9NlVrMTpVEL7dmFg/WB0C9o6y3SYTP89Q7NNOfJCfOCQ4kzwDFm2ogpldymFsDNxvVs+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hzz1qEpJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 037BDC4CEE2;
-	Wed,  5 Mar 2025 07:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741160929;
-	bh=OUCqZ6jMMZxBf9sqcmDm9unaPoc0Cv7q8uEblBwG+q0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hzz1qEpJvAZIrMHA8YdBhYwQcClYq9e1oLRPfh7ueEqokk+eWiYidSDPkcIrrYipN
-	 pKTwIh9AcpeILhk2kIaMXgr39B9b953rmYZAzw9nmKzzdHgCchOauJ0HrCB0T7zN+8
-	 46liGS3NnWAbqu+d22MFm7NEDp0k6FWYWm24TYQa8n1O0cxTi5MEUPHOCXdloGQxXB
-	 MXimGPjGz/eGcxpkdNI0xy8gK76DX+jMGuMDDnO23Xk0Dd0ic36lti1ADfk8kNBGpz
-	 pdR5sdFCvhxq388VfA7tLI/Cy7TzDHN50GlVkPXxhlDcvlbSbIpyPt1bfZR+oCHbyo
-	 QejNR0w3xVXYQ==
-Date: Wed, 5 Mar 2025 13:18:38 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	chaitanya chundru <quic_krichai@quicinc.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com,
-	amitk@kernel.org, dmitry.baryshkov@linaro.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v4 09/10] dt-bindings: PCI: qcom,pcie-sc7280: Add
- 'global' interrupt
-Message-ID: <20250305074838.yjhvpqrm4xrzta2y@thinkpad>
-References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
- <20250225-qps615_v4_1-v4-9-e08633a7bdf8@oss.qualcomm.com>
- <20250226-enlightened-chachalaca-of-artistry-2de5ea@krzk-bin>
- <t34rurxh5cb7hwzvt6ps3fgw4kh4ddwcieukskxxz5mo3pegst@jkapxm6izq7p>
- <Z8f++i4MFku8ODKf@trex>
+	 Content-Type:Content-Disposition:In-Reply-To; b=OvOIqVtA9VK5BzKJnwOaO9LpgypWIGwat94q9xRdztFXXOGdoZnGBRZ+k8ZLgAYB3fyf4VeQX0ukNw/pQeJ0MH46u3vDlHvMar6sqSjnvaDWPk4TQifHecBx7VgfBxWIuqbeLopzajTxSZoWzYDL25JQPBbZkp0/t0VyGqtQlrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2239aa5da08so57775275ad.3;
+        Tue, 04 Mar 2025 23:53:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741161185; x=1741765985;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QUsr/iCnKd/GZUSiPP0qg3YZq8O3ABD8811wmqc6RIE=;
+        b=KbVG2M9Rz+DMzGUsAtv5UvxiHokzg70Y+2JMuNOoP8ZUT9ZYbspFot/HtkQqdaMjVv
+         5UwWQQSx/HiZFGLJknyXMRfJfZWhKDFe9BPpX9aUuqbbzsawnpQbNgQ+knMIsq5RtKLg
+         uGOndaxoK5sjO+hIQrPEaPhxShGuNohpo2WC16DFn+DaTCiQI/Ez/2LVR8yK/zDm6aa3
+         O3VB82TMTfkkYcRoq3rphjVJIHRETwXVQVcK0Plm2np0qq8eczVLoh2IZIZgyTfob77e
+         ZyWbvHQviJrDqKaWeVF5dU7blZrzbbM2bU7Gus3RK2fagQ/wTE7pL+VK7eJU1OjJJQ6o
+         eKWg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpnlwk7VPzNhZ5zwYBi2z51kQQ/QwMnCtOxaozNxBzeFNu5B0sXpTQBj1SdPg7T+/6sDjYASwLTfPx9ns=@vger.kernel.org, AJvYcCW0BKaQqVqJOs/j0VLuL3MoSP38tw89GweM9gyOwtsRHuD5R2LPf8LjLyA2FAHSHePAJhtLvYujBQQs@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbVtiEIaALTITAcbydJRrbyE7Ze8OapcAii5W4R6npkUbUMFVk
+	3ucEriv40tc1XVHKnvISU1+6XbEnpCAM5UQMKEOrdMtw7RL5CAc3
+X-Gm-Gg: ASbGncvtjG47ToUQ/CARWyU8+IB+NqK0RjpEaxO0HzXok3eCC3/4sfEN3n5lvwLGkrI
+	U/9tDSKSEbpPpQABQaISI5PAI687qPukhwAxn5Z6JfoSxbeV2Jg/Tdhv7mKXDIpiey+pVTRnDNv
+	1bWorLXuZ+apGqbtpXH5wZbO97U5iJ8b0oGmctdFpqCPHG2R1MLUF5siOWa8FQfsfW6AgzxU8sR
+	JXSuR4aAQcHpGK5b8bXW1drHMJGmaUgth2LmvKmEgsHCXEsYGVcx3MT+DBgylukvWShtLAlOzyV
+	LHndRDie2zNmLzvtniiHoysSYmxueUpShjv3gqE4BKbWYpLzNlftuOyt29S1IKwWf64QCI6pHEj
+	CaEc=
+X-Google-Smtp-Source: AGHT+IGc/QGITU1VyyG2bR8BE8zXWKg2nLipJcMYsipV+Ey8nHltBSogWbamh50FAZrr7Q2bpkYmww==
+X-Received: by 2002:a17:903:1987:b0:21f:85d0:828 with SMTP id d9443c01a7336-223f1d6cd19mr34190085ad.41.1741161184651;
+        Tue, 04 Mar 2025 23:53:04 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-223501fd276sm107054275ad.104.2025.03.04.23.53.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 23:53:04 -0800 (PST)
+Date: Wed, 5 Mar 2025 16:53:02 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Charles Han <hanchunchao@inspur.com>
+Cc: ryder.lee@mediatek.com, jianjun.wang@mediatek.com,
+	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
+	robh@kernel.org, bhelgaas@google.com, matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com, linux-pci@vger.kernel.org,
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: mediatek-gen3: fix inconsistent indenting warning
+Message-ID: <20250305075302.GD847772@rocinante>
+References: <20250305070022.4668-1-hanchunchao@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z8f++i4MFku8ODKf@trex>
+In-Reply-To: <20250305070022.4668-1-hanchunchao@inspur.com>
 
-On Wed, Mar 05, 2025 at 08:36:26AM +0100, Jorge Ramirez wrote:
-> On 26/02/25 10:29:43, Bjorn Andersson wrote:
-> > On Wed, Feb 26, 2025 at 08:32:42AM +0100, Krzysztof Kozlowski wrote:
-> > > On Tue, Feb 25, 2025 at 03:04:06PM +0530, Krishna Chaitanya Chundru wrote:
-> > > > Qcom PCIe RC controllers are capable of generating 'global' SPI interrupt
-> > > > to the host CPU. This interrupt can be used by the device driver to handle
-> > > > PCIe link specific events such as Link up and Link down, which give the
-> > > > driver a chance to start bus enumeration on its own when link is up and
-> > > > initiate link training if link goes to a bad state. The PCIe driver can
-> > > > still work without this interrupt but it will provide a nice user
-> > > > experience when device gets plugged and removed.
-> > > > 
-> > > > Hence, document it in the binding along with the existing MSI interrupts.
-> > > > Global interrupt is parsed as optional in driver, so adding it in bindings
-> > > > will not break the ABI.
-> > > > 
-> > > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml | 8 +++++---
-> > > >  1 file changed, 5 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
-> > > > index 76cb9fbfd476..7ae09ba8da60 100644
-> > > > --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
-> > > > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
-> > > > @@ -54,7 +54,7 @@ properties:
-> > > >  
-> > > >    interrupts:
-> > > >      minItems: 8
-> > > > -    maxItems: 8
-> > > > +    maxItems: 9
-> > > >  
-> > > >    interrupt-names:
-> > > >      items:
-> > > > @@ -66,6 +66,7 @@ properties:
-> > > >        - const: msi5
-> > > >        - const: msi6
-> > > >        - const: msi7
-> > > > +      - const: global
-> > > 
-> > > Either context is missing or these are not synced with interrupts.
-> > > 
-> > 
-> > I think the patch context ("properties") is confusing here, but it looks
-> > to me that these are in sync: interrupts is defined to have 8 items, and
-> > interrupt-names is a list of msi0 through msi7.
-> > 
-> > @Krishna, these two last patches (adding the global interrupt) doesn't
-> > seem strongly connected to the switch patches. So, if Krzysztof agrees
-> > with above assessment, please submit them separately (i.e. a new series,
-> > 2 patches, v5).
-> 
-> um, but without these two patches, the functionality is broken requiring
-> users to manually rescan the pci bus (ie, via sysfs) to see what is
-> behind the bridge.
-> 
+Hello,
 
-It is not *broken* actually. The series is for enabling the PCIe switch and the
-'global' IRQ is a host behavior. So technically both are not dependent on each
-other.
+> Fix below inconsistent indenting smatch warning.
+> smatch warnings:
+> drivers/pci/controller/pcie-mediatek-gen3.c:922 mtk_pcie_parse_port() warn: inconsistent indenting
 
-> shouldnt the set include all the necessary patches? 
-> 
+Applied to controller/mediatek, thank you!
 
-FWIW, I have submitted a series that adds the IRQ for most of the arm64
-platforms:
-https://lore.kernel.org/linux-arm-msm/20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org/
-
-There is a possibility that the above series could get merged before this one.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+	Krzysztof
 
