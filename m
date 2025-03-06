@@ -1,157 +1,144 @@
-Return-Path: <linux-pci+bounces-23049-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23050-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 669E9A549B8
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 12:42:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B2E21A54A0B
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 12:51:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A4F113B36DC
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 11:39:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61E473B2290
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 11:50:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA2E120E338;
-	Thu,  6 Mar 2025 11:34:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1502D20C463;
+	Thu,  6 Mar 2025 11:49:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JBNNqyMr"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FP8MOTlt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107D620E021;
-	Thu,  6 Mar 2025 11:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB44F20C02E;
+	Thu,  6 Mar 2025 11:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741260866; cv=none; b=dH8D6C03ivWV8wmiYCHlrPz4jQa/MzdNUFfP6a0ughA8+2we/h+JP6NEfa+h4tDdq00/CqL/VwR5np8awT22HBWocwU8YWzywE7bul1NZTgbG3yu8GpvY0vsh8fpO40ti68S7cH1GZVREN6Ir8YsCvr9tUGQwLeZ1pAGmKoxUtE=
+	t=1741261773; cv=none; b=EZPpgxuWGFCQ9+ePkqPJUaf6HH2puDclzzd32jy6yFs99oG8PjiTNmBnehW23vObnXq1wMtoYxDtoWIPf/ES+lub/ED7B5IhX0Env2zrdfFNZ2aaZdY1YxUMyJdggfjFuHWUJyktOcSN694bStZ3zc/+5C9uLlCJfvp0wUJy+ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741260866; c=relaxed/simple;
-	bh=sG9UqVSN67qctiywEj88yXs3h5wabdhNRlgIG3e9WeI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lx5qiY6ikNfkutkB2x2h7VMdAYld7U+Kw9UDMfaTjpvahj6J+MDvh73ElLkEU92waSjaaTigGs3cx+D9l0P/Kdq3WE/1Xr4iC0y7Py44MsKN98qr4ZJV/Uv7AmzhqqfvMBqdynYGPSvmJqu8fdq0/t4eS6U3mjfT2kE7jLfLHUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JBNNqyMr; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741260865; x=1772796865;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=sG9UqVSN67qctiywEj88yXs3h5wabdhNRlgIG3e9WeI=;
-  b=JBNNqyMr4Li9IFAmmLbU2znl3jkTWLLGTejx6ygDQ677MSHnNgECSWnW
-   SwP9iWwx78cDc0cAOCkgEa/0Cov3M0jcAq33qF7LylPCkYM8eTGRyGuTz
-   7dDFeQchTWxXKFcFhCJ97FY4fNUN/vWovOxCz4zEpG7g8JCvxbUqjzrbJ
-   1JbmTX1oMNRmQuRBI0DvhK0Ts7iWXa5FvAXgkW7xVNWbylrLrY0rd16fL
-   lw7x+BqV3U/x+9qcfwkSzNpJbDQPYZBRKlcUoFOHgqLckuH1Gg22IjXeb
-   1maquPLlnP02DF7yyg6jnCzaBzlVYVsN4j2IWKr1AhAkK82AuFX4Cm835
-   w==;
-X-CSE-ConnectionGUID: 53oe671iT3ysn2BZ6evXTA==
-X-CSE-MsgGUID: LwOt74MjRrOMj1f7GF8bAQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="42289303"
-X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
-   d="scan'208";a="42289303"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 03:34:25 -0800
-X-CSE-ConnectionGUID: WmSX0OoPQ2uhP7cxqsbrvQ==
-X-CSE-MsgGUID: fzj9xWb8R5yPAObiGKbHqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="118909936"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.218])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 03:34:22 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 6 Mar 2025 13:34:19 +0200 (EET)
-To: Zhiyuan Dai <daizhiyuan@phytium.com.cn>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    bhelgaas@google.com
-cc: cassel@kernel.org, christian.koenig@amd.com, helgaas@kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: Update Resizable BAR Capability Register
- fields
-In-Reply-To: <20250221010951.361570-1-daizhiyuan@phytium.com.cn>
-Message-ID: <3a6952a9-c80b-bbff-fb38-18c61722bdda@linux.intel.com>
-References: <Z7cjS7iuX655O7b3@ryzen> <20250221010951.361570-1-daizhiyuan@phytium.com.cn>
+	s=arc-20240116; t=1741261773; c=relaxed/simple;
+	bh=mV0euh285v75kNmGgabf/yMOj5wCPrSi9H0U89iCxAc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=LhodUZBiF1R38vIEOO3fdGVkOnutj8IhzMtbjpDml2uK3X1XhWkdKxoTRjR2l6hjRDT3vugLalcgzqULFjBnPYeb7FJ3ZVFvD9TYymULLI8a9gNFJGbTGpmV8STyYcFrWptN661ty14ROEw3gVyp1O15QVguWUw30+CZ4yL02Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FP8MOTlt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FEFBC4CEE0;
+	Thu,  6 Mar 2025 11:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741261771;
+	bh=mV0euh285v75kNmGgabf/yMOj5wCPrSi9H0U89iCxAc=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=FP8MOTltSChGzSWIIP/TRET8MsI3JgKJcfGqXFtVG+9sX/lg5J+A5MBLnUca0wyOF
+	 yBklM6TJ7SSMB1RS46d1FhV71Oezo3T0f5vPVXyzyRNnRfw12AfPXnEZThNHWrqpAp
+	 gbFsepCzt2aQYj6RUFXdioySZTZFRq6AicEr0bLYoFyjUPVvxRrCH7zPJDfv92hteF
+	 7UsZC/D7tbGU31NbF4YcMtXKTTXAvgDoEich/m1PjY717TeSCeKtqUjhMr7YXNR58s
+	 ielWYvCIvWjNGewbSwd+ciWevhff9SIPUdP7IcNR8gklB03BIHOON4t6Dz4Rf6MEN9
+	 QU5QJij+D6u1Q==
+Message-ID: <b3d7374e-b144-4b0a-96f8-0538f9cd1a39@kernel.org>
+Date: Thu, 6 Mar 2025 12:49:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-187422919-1741260772=:937"
-Content-ID: <b5e14376-2b7d-df7e-27a7-89e2a6851abe@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 4/7] arm64: dts: qcom: ipq9574: Reorder reg and
+ reg-names
+To: Varadarajan Narayanan <quic_varada@quicinc.com>, bhelgaas@google.com,
+ lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
+ kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
+ p.zabel@pengutronix.de, quic_nsekar@quicinc.com,
+ dmitry.baryshkov@linaro.org, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+References: <20250220094251.230936-1-quic_varada@quicinc.com>
+ <20250220094251.230936-5-quic_varada@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250220094251.230936-5-quic_varada@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 20/02/2025 10:42, Varadarajan Narayanan wrote:
+> The 'reg' & 'reg-names' constraints used in the bindings and dtsi are
+> different resulting in dt_bindings_check errors. Re-order the reg entries,
 
---8323328-187422919-1741260772=:937
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <4b31e008-0bf0-6ed3-4bae-be34a76b8f5c@linux.intel.com>
+Why?
 
-On Fri, 21 Feb 2025, Zhiyuan Dai wrote:
+> fix the node names and move the nodes to maintain sort order to address the
 
-> PCI Express Base Spec r6.0 defines BAR size up to 8 EB (2^63 bytes),
-> but supporting anything bigger than 128TB requires changes to=20
-> pci_rebar_get_possible_sizes() to read the additional Capability bits=20
-> from the Control register.
->=20
-> If 8EB support is required, callers will need to be updated to handle u64=
-=20
-> instead of u32. For now, support is limited to 128TB, and support for=20
-> sizes greater than 128TB can be deferred to a later time.
->=20
-> Signed-off-by: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
-> Reviewed-by: Christian K=F6nig <christian.koenig@amd.com>
-> Reviewed-by: Niklas Cassel <cassel@kernel.org>
-> ---
->  drivers/pci/pci.c             | 4 ++--
->  include/uapi/linux/pci_regs.h | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 661f98c6c63a..77b9ceefb4e1 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3752,7 +3752,7 @@ static int pci_rebar_find_pos(struct pci_dev *pdev,=
- int bar)
->   * @bar: BAR to query
->   *
->   * Get the possible sizes of a resizable BAR as bitmask defined in the s=
-pec
-> - * (bit 0=3D1MB, bit 19=3D512GB). Returns 0 if BAR isn't resizable.
-> + * (bit 0=3D1MB, bit 31=3D128TB). Returns 0 if BAR isn't resizable.
->   */
->  u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
->  {
-> @@ -3800,7 +3800,7 @@ int pci_rebar_get_current_size(struct pci_dev *pdev=
-, int bar)
->   * pci_rebar_set_size - set a new size for a BAR
->   * @pdev: PCI device
->   * @bar: BAR to set size to
-> - * @size: new size as defined in the spec (0=3D1MB, 19=3D512GB)
-> + * @size: new size as defined in the spec (0=3D1MB, 31=3D128TB)
->   *
->   * Set the new size of a BAR as defined in the spec.
->   * Returns zero if resizing was successful, error code otherwise.
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.=
-h
-> index 1601c7ed5fab..ce99d4f34ce5 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1013,7 +1013,7 @@
-> =20
->  /* Resizable BARs */
->  #define PCI_REBAR_CAP=09=094=09/* capability register */
-> -#define  PCI_REBAR_CAP_SIZES=09=090x00FFFFF0  /* supported BAR sizes */
-> +#define  PCI_REBAR_CAP_SIZES=09=090xFFFFFFF0  /* supported BAR sizes */
->  #define PCI_REBAR_CTRL=09=098=09/* control register */
->  #define  PCI_REBAR_CTRL_BAR_IDX=09=090x00000007  /* BAR index */
->  #define  PCI_REBAR_CTRL_NBAR_MASK=090x000000E0  /* # of resizable BARs *=
-/
+Fixing (how?) node name looks like separate problem.
 
-pbus_size_mem() can only handle up to 8TB so its aligns array should be=20
-enlarged as well to support sizes up to 128TB.
 
---=20
- i.
---8323328-187422919-1741260772=:937--
+> following errors/warnings.
+> 
+> 	arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: pcie@20000000: reg-names:0: 'parf' was expected
+
+So this was added back in 2024 and never tested?
+
+> 	arch/arm64/boot/dts/qcom/ipq9574.dtsi:1045.24-1127.5: Warning (simple_bus_reg): /soc@0/pcie@20000000: simple-bus unit address format error, expected "88000"
+> 
+> Move the nodes to maintain sort order w.r.t address.
+> 
+
+I don't understand this commit msg and huge diff does not help. It's
+very difficult to spot the actual changes and since Qualcomm was never
+testing this in the past, I do not believe it is being tested now.
+
+Clearly explain what is the problem - *each of them*.
+
+Best regards,
+Krzysztof
 
