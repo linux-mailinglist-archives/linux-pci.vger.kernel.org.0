@@ -1,183 +1,196 @@
-Return-Path: <linux-pci+bounces-23034-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23035-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04C07A54180
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 05:02:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A97B9A54312
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 07:49:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35F283ABB43
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 04:02:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DBA001893E36
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 06:50:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 623451917CD;
-	Thu,  6 Mar 2025 04:02:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB1971A238E;
+	Thu,  6 Mar 2025 06:49:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qUcvTTC+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l8cJypSN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD67710E4
-	for <linux-pci@vger.kernel.org>; Thu,  6 Mar 2025 04:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D7619C556;
+	Thu,  6 Mar 2025 06:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741233761; cv=none; b=nlo8Rbq4GkguX/Xi70LU/irtImF+xabW5L8V2HYVm1PewLdhCVWlodshaBiW96mpXm1gmPIMuOpFsKoH76LCZUc8FC4qzVqvbVC8IK57LTxdNb6su5Xg+nTn8RWxiyBL/4bjfXYFm6ywazRI+9xVfmp5M7NDRyxaIRldY3L+NFk=
+	t=1741243787; cv=none; b=JjAsez+ZEfT62mXQeI4W9UnPdfvw/7it1QFaVmI978TKRWU4p/W2cQ/+duZhRaQy58ms3McI09zrbZFR0ANwncJxP///mCIDADD30r9McFTK/Uif1QZKP5Pp0N3ucAqhhPv0SJ7sxJRWAGF13+Xz45nxpU6XeSFiZXE9az+V5AU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741233761; c=relaxed/simple;
-	bh=Yz1TyZtoyOO+yp3SF0XFsZRQSomWzxQO3JYSPKoWncU=;
+	s=arc-20240116; t=1741243787; c=relaxed/simple;
+	bh=nihPbFWpYPqsBosZAhoIw4NpSVYZ7ujfvelE5cg2qlQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LBtwI2qNvb28ftngWEHegjICUvPmHGb/3m3D0Jq9kyagHBxS1a0/+pi2fjEaBP7Kt55AOlFS7X5NNI9Oar2bZe30wlGspwwvN+b9A77sETGAjDUadW21R+le6C0aBOtAx6aku//YXmW6HNkoHDl7C5VOuUTbaTcWZmA+BgxPSg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qUcvTTC+; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2240b4de12bso4051935ad.2
-        for <linux-pci@vger.kernel.org>; Wed, 05 Mar 2025 20:02:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741233759; x=1741838559; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Lw/Ilrya6j097GwWNVWOLhnadgHKgXHG+cTCcShhr4s=;
-        b=qUcvTTC+5YNsFtGf1k9h8cwW12WCs0x3yzyND01DT0FxDJo5s/HDmKocPs594cPJWb
-         rqDudAFee7DXcpWYmJB419kjL7NchSJGG4zNNp71eug/pTcAwnG1X7W6xT911teSCrg7
-         Tr4dkqJ+Znq2AQNZio2ObuUkXc8F6nUK8nIp9kUh7c277RmLYRqrqhoaheKKWJPzGRzs
-         clRFccfCBwmsm/PEwSEnLOsLyZetSHQfwWlnlbK8J2fX6c7r2JKmAeYGRpZa9ecrm6tl
-         Z2PiybWDU7Ud5pVCSwBpNlzG5s8RrwUZvodGNL0gGBtrF4i74Sx2xGsKRt8I14pEbzBM
-         9RwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741233759; x=1741838559;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lw/Ilrya6j097GwWNVWOLhnadgHKgXHG+cTCcShhr4s=;
-        b=oomlyfyI/x3fvNTvcXVaNdWtaqnVyUNefmwyZaS/zCKgI7n8tZPZ8X0Zixc4jzOUqL
-         Q3IykqSMLOVtbDpsVbe7WCzC+lxhHuTCq0wxBJK1GRizDeiJEgIYuy7WtUJOsJasx30m
-         1CgvMhV3zKKxD36MMpEAmtr5XDeX5AyE8H7Y9qTwGo7FaLyGJra3NMDZj0cA0PjiILUS
-         DcERBp1eM/64r3gBmdqt+0iXOHfdg0rjyCC7HFizpi16Qx5ehdXHJWuZ+X6WTkytWMLI
-         sB2Bhncusk+K51nOwDqEgc34PdbuF9Ns4sWUoqGv30wCJVpHt6oUA/sciRe2BunPk3Al
-         ECTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXiFrzZyYKfupcEWdMC/8Q8NnxOEbBy8V3aihDnQYPwEG5O0Vq0CQwzXH3Ck8L4iHP7J+MyQoMreec=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzn5RrW5qmrxqU5QaqfeWgGN35Sbv9BaCxgdjVzXEmumedCdc8K
-	YuI4SbNemVRx4djQ0hWoBNexVzw+l4qhvZf3qAtslJA8XkRixybV9+l1cgbj1g==
-X-Gm-Gg: ASbGnctJmRkELs3QVi2qjIutPuTnvirk3r2lFqxObMQz7CTyxI3WWb8/hshz3DCxWc/
-	571VsyI8oAoxxV4t9Xf2CxQMxyVREGyK4QCBOWRF8FF8/HoZe/DrZAVKzCsO1LXTsZnM/3UHDS0
-	RnBtSMi6HgNt+igy1+ER3KZVyZeMmbzgRr24RRtdRadRkEB2K6hl7SzoP5J+d5CF3/lebIxyIdw
-	sxR/PNpx1KRfMp9iJIOD+St4yBKdATMjzVvncDZkMYzyKodJS9xXkGXfL6w6OnAA046mOkSCMEA
-	XcOU82cX7EuxtM9GOD1alW5w1thCSMSepiQ3KSkk4IsT46IkVtDeRVk=
-X-Google-Smtp-Source: AGHT+IG58paYn+J+qgT5QJO3fC3chvu880+fbbmJM8uArZCejhZm8gCUKnLMrFc6lv742T5le2yV+w==
-X-Received: by 2002:a05:6a00:c8f:b0:736:6b94:146d with SMTP id d2e1a72fcca58-73682d101e2mr9298228b3a.20.1741233758652;
-        Wed, 05 Mar 2025 20:02:38 -0800 (PST)
-Received: from thinkpad ([120.56.193.59])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af281096763sm252836a12.30.2025.03.05.20.02.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 20:02:38 -0800 (PST)
-Date: Thu, 6 Mar 2025 09:32:32 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=lSK/mmRjUfX+psHW+FPPQ9FW/ppqceTvMRA79uGjWAhiQOl4R2QawoWzztRkayvdk2xDCCszLFDw/zuA3T4JKSNMq+5TluIYgGpUXy9wUXgEsnpZS77oibaB9zEo1lutLEew56vub1lCpGj92ZcTDaCfishNqmEReebvloXSavE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l8cJypSN; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741243786; x=1772779786;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nihPbFWpYPqsBosZAhoIw4NpSVYZ7ujfvelE5cg2qlQ=;
+  b=l8cJypSNKs+Tt3tSJtZPaE1YYYsmzOBytiKizccEkjQFmDJHR/rjR9SL
+   71G4THNnbki4NNOPFeHrJW5UAjNwbSC53xOhvIaHeTcKdhwgTbTHGHYnD
+   JQs3IMrVqcDB4TVDr51aKKLSgdR8BeZ1vAbLKL3E1YXXlAmHIbcLTkHMN
+   Z6aVq3pr/UpzhYnJsbieCcAuknUNmPARYLjCLVy9XAzHL24OrP0Re7OdJ
+   4u3b62gbTbqutW7A1r8O65HGaMZh47gUX16DaHSCK+x4QNuFvdMfzNYeS
+   I09Piene9hR96XNdARYyTLqxcqubMici7vMo6r5HZ95NFa4asf6lUQ41E
+   A==;
+X-CSE-ConnectionGUID: iJDp6BPvS+qJyim822jdFw==
+X-CSE-MsgGUID: 3arLx5d1RYWyHY1EScb8Rw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="41488707"
+X-IronPort-AV: E=Sophos;i="6.14,225,1736841600"; 
+   d="scan'208";a="41488707"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2025 22:49:45 -0800
+X-CSE-ConnectionGUID: 0YQ+ToHsQFqTfy8LYBXmaA==
+X-CSE-MsgGUID: eXWNYvDpQmebOFbpoNF84w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,225,1736841600"; 
+   d="scan'208";a="123948108"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa004.jf.intel.com with ESMTP; 05 Mar 2025 22:49:37 -0800
+Date: Thu, 6 Mar 2025 14:47:23 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Alexey Kardashevskiy <aik@amd.com>, x86@kernel.org, kvm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
 	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v7 4/4] PCI: dwc: Add support for configuring lane
- equalization presets
-Message-ID: <20250306040232.rkvxirmeropy44mu@thinkpad>
-References: <20250225-preset_v6-v7-0-a593f3ef3951@oss.qualcomm.com>
- <20250225-preset_v6-v7-4-a593f3ef3951@oss.qualcomm.com>
+	Dan Williams <dan.j.williams@intel.com>,
+	Christoph Hellwig <hch@lst.de>, Nikunj A Dadhania <nikunj@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Steve Sistare <steven.sistare@oracle.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Dionna Glaze <dionnaglaze@google.com>, Yi Liu <yi.l.liu@intel.com>,
+	iommu@lists.linux.dev, linux-coco@lists.linux.dev,
+	Zhi Wang <zhiw@nvidia.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+Subject: Re: [RFC PATCH v2 14/22] iommufd: Add TIO calls
+Message-ID: <Z8lE+5OpqZc746mT@yilunxu-OptiPlex-7050>
+References: <20250218111017.491719-1-aik@amd.com>
+ <20250218111017.491719-15-aik@amd.com>
+ <Z72GmixR6NkzXAl7@yilunxu-OptiPlex-7050>
+ <2fe6b3c6-3eed-424d-87f0-34c4e7e1c906@amd.com>
+ <Z77xrqLtJfB84dJF@yilunxu-OptiPlex-7050>
+ <20250226131202.GH5011@ziepe.ca>
+ <Z7/jFhlsBrbrloia@yilunxu-OptiPlex-7050>
+ <20250301003711.GR5011@ziepe.ca>
+ <Z8U+/0IYyn7XX3ao@yilunxu-OptiPlex-7050>
+ <20250305192842.GE354403@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250225-preset_v6-v7-4-a593f3ef3951@oss.qualcomm.com>
+In-Reply-To: <20250305192842.GE354403@ziepe.ca>
 
-On Tue, Feb 25, 2025 at 05:15:07PM +0530, Krishna Chaitanya Chundru wrote:
-> PCIe equalization presets are predefined settings used to optimize
-> signal integrity by compensating for signal loss and distortion in
-> high-speed data transmission.
+On Wed, Mar 05, 2025 at 03:28:42PM -0400, Jason Gunthorpe wrote:
+> On Mon, Mar 03, 2025 at 01:32:47PM +0800, Xu Yilun wrote:
+> > All these settings cannot really take function until guest verifies them
+> > and does TDISP start. Guest verification does not (should not) need host
+> > awareness.
+> > 
+> > Our solution is, separate the secure DMA setting and secure device setting
+> > in different components, iommufd & vfio.
+> > 
+> > Guest require bind:
+> >   - ioctl(iommufd, IOMMU_VIOMMU_ALLOC, {.type = IOMMU_VIOMMU_TYPE_KVM_VALID,
+> > 					.kvm_fd = kvm_fd,
+> > 					.out_viommu_id = &viommu_id});
+> >   - ioctl(iommufd, IOMMU_HWPT_ALLOC, {.flag = IOMMU_HWPT_ALLOC_TRUSTED,
+> > 				      .pt_id = viommu_id,
+> > 				      .out_hwpt_id = &hwpt_id});
+> >   - ioctl(vfio_fd, VFIO_DEVICE_ATTACH_IOMMUFD_PT, {.pt_id = hwpt_id})
+> >     - do secure DMA setting in Intel iommu driver.
+> > 
+> >   - ioctl(vfio_fd, VFIO_DEVICE_TSM_BIND, ...)
+> >     - do bind in Intel TSM driver.
 > 
-> Based upon the number of lanes and the data rate supported, write
-> the preset data read from the device tree in to the lane equalization
-> control registers.
+> Except what do command do you issue to the secure world for TSM_BIND
+> and what are it's argument? Again you can't include the vBDF or vIOMMU
+> ID here.
+
+Bind for TDX doesn't require vBDF or vIOMMU ID. The seamcall is like:
+
+u64 tdh_devif_create(u64 stream_id,     // IDE stream ID, PF0 stuff
+                     u64 devif_id,      // TDI ID, it is the host BDF
+                     u64 tdr_pa,        // TDX VM core metadate page, TDX Connect uses it as CoCo-VM ID
+                     u64 devifcs_pa)    // metadate page provide to firmware
+
+While for AMD:
+        ...
+        b.guest_device_id = guest_rid;  //TDI ID, it is the vBDF
+        b.gctx_paddr = gctx_paddr;      //AMDs CoCo-VM ID
+
+        ret = sev_tio_do_cmd(SEV_CMD_TIO_TDI_BIND, &b, ...
+
+
+Neither of them use vIOMMU ID or any IOMMU info, so the only concern is
+vBDF.
+
+Basically from host POV the two interfaces does the same thing, connect
+the CoCo-VM ID with the TDI ID, for which Intel uses host BDF while AMD
+uses vBDF. But AMD firmware cannot know anything meaningful about the
+vBDF, it is just a magic number to index TDI metadata.
+
+So I don't think we have to introduce vBDF concept in kernel. AMD uses
+QEMU created vBDF as TDI ID, that's fine, QEMU should ensure the
+validity of the vBDF.
+
 > 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 66 +++++++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.h      |  3 ++
->  include/uapi/linux/pci_regs.h                     |  3 ++
->  3 files changed, 72 insertions(+)
+> vfio also can't validate that the hwpt is in the right state when it
+> executes this function.
+
+Not sure if VFIO has to validate, or is there a requirement that
+secure DMA should be in right state before bind. TDX doesn't require
+this, and I didn't see the requirement in SEV-TIO spec. I.e. the
+bind firmware calls don't check DMA state.
+
+In my opinion, TDI bind means put device in LOCKED state and related
+metadate management in firmware. After bind the DMA cannot work. It
+is the guest's resposibility to validate everything (including DMA)
+is in the right state, then issues RUN, then DMA works. I.e. guest tsm
+calls check DMA state.  That's why I think Secure DMA configuration
+on host could be in a separated flow from bind.
+
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index dd56cc02f4ef..ea596119de92 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -507,6 +507,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  	if (pci->num_lanes < 1)
->  		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
->  
-> +	ret = of_pci_get_equalization_presets(dev, &pp->presets, pci->num_lanes);
-> +	if (ret)
-> +		goto err_free_msi;
-> +
->  	/*
->  	 * Allocate the resource for MSG TLP before programming the iATU
->  	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
-> @@ -808,6 +812,67 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->  	return 0;
->  }
->  
-> +static void dw_pcie_program_presets(struct dw_pcie_rp *pp, enum pci_bus_speed speed)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	u8 lane_eq_offset, lane_reg_size, cap_id;
-> +	u8 *presets;
-> +	u32 cap;
-> +	int i;
-> +
-> +	if (speed == PCIE_SPEED_8_0GT) {
-> +		presets = (u8 *)pp->presets.eq_presets_8gts;
-> +		lane_eq_offset =  PCI_SECPCI_LE_CTRL;
-> +		cap_id = PCI_EXT_CAP_ID_SECPCI;
-> +		/* For data rate of 8 GT/S each lane equalization control is 16bits wide*/
-> +		lane_reg_size = 0x2;
-> +	} else if (speed == PCIE_SPEED_16_0GT) {
-> +		presets = pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS];
-> +		lane_eq_offset = PCI_PL_16GT_LE_CTRL;
-> +		cap_id = PCI_EXT_CAP_ID_PL_16GT;
-> +		lane_reg_size = 0x1;
-> +	} else {
-> +		dev_WARN_ONCE(pci->dev, 1, "Not supported data rate %s\n",
-> +			      pci_speed_string(speed));
+> You could also issue the TSM bind against the idev on the iommufd
+> side..
 
-No, this is not what I asked for. You should warn only when there is atleast one
-of the preset properties are specified in DT. But I think that would complicate
-the code. So let's just trust DT here and add the warning later if needed.
+But I cannot figure out how idev could ensure no mmap on VFIO, and how
+idev could call dma_buf_move_notify.
 
-> +		return;
-> +	}
-> +
-> +	if (presets[0] == PCI_EQ_RESV) {
-> +		dev_WARN_ONCE(pci->dev, 1,
-> +			      "Lane equalization preset properties are missing for %s\n",
-> +			      pci_speed_string(speed));
+Thanks,
+Yilun
 
-Same here. This is going to trigger warning on all DWC platforms. Please remove
-it.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+> 
+> Part of my problem here is I don't see anyone who seems to have read
+> all three specs and is trying to mush them together. Everyone is
+> focused on their own spec. I know there are subtle differences :\
+> 
+> Jason
 
