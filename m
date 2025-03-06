@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-23050-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23051-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2E21A54A0B
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 12:51:33 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA978A54A17
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 12:53:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61E473B2290
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 11:50:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B6DDF169794
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 11:53:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1502D20C463;
-	Thu,  6 Mar 2025 11:49:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1911A205AAF;
+	Thu,  6 Mar 2025 11:53:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FP8MOTlt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZeLkR0hD"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB44F20C02E;
-	Thu,  6 Mar 2025 11:49:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C161EE03B;
+	Thu,  6 Mar 2025 11:53:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741261773; cv=none; b=EZPpgxuWGFCQ9+ePkqPJUaf6HH2puDclzzd32jy6yFs99oG8PjiTNmBnehW23vObnXq1wMtoYxDtoWIPf/ES+lub/ED7B5IhX0Env2zrdfFNZ2aaZdY1YxUMyJdggfjFuHWUJyktOcSN694bStZ3zc/+5C9uLlCJfvp0wUJy+ag=
+	t=1741261982; cv=none; b=LXYjBDJjZKsx8cI/GJYxjiEI5qGuAqc+UmlhUsQt8o2ac2lg5t2cOH+aPuuOz4xVOnCjyYh5HPjZ8MPWbfsNq8WwZlZkW0ImQ2PcxWPV9M4zp3VVy65CmQqfCIE7NWyFbX8/3cpGYMj5FPu572Lsx7gdAaS1w7FqCDP+1gHB7t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741261773; c=relaxed/simple;
-	bh=mV0euh285v75kNmGgabf/yMOj5wCPrSi9H0U89iCxAc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=LhodUZBiF1R38vIEOO3fdGVkOnutj8IhzMtbjpDml2uK3X1XhWkdKxoTRjR2l6hjRDT3vugLalcgzqULFjBnPYeb7FJ3ZVFvD9TYymULLI8a9gNFJGbTGpmV8STyYcFrWptN661ty14ROEw3gVyp1O15QVguWUw30+CZ4yL02Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FP8MOTlt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FEFBC4CEE0;
-	Thu,  6 Mar 2025 11:49:23 +0000 (UTC)
+	s=arc-20240116; t=1741261982; c=relaxed/simple;
+	bh=LQPrmf7uG+8Fr9VtxG+XGKKBjfeYRFi99VmmRd1dpn4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=es9TkiH8ZVF9ITeZTqd/4hJ9QdjkvU8n+cSWr78J7ZJpePoJIjNx+bEpWcpEiSezS3Iy9V8z56y74L7g2gq5NJ8MLQXdYW+cLkldri0ixj6QtGt3D/JaMCUU5ZBFc3CxCfgT96u0ksRbRJL0tlfnd0EGz+RhiUo9lph1eHUa+tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZeLkR0hD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B25C4CEE0;
+	Thu,  6 Mar 2025 11:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741261771;
-	bh=mV0euh285v75kNmGgabf/yMOj5wCPrSi9H0U89iCxAc=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=FP8MOTltSChGzSWIIP/TRET8MsI3JgKJcfGqXFtVG+9sX/lg5J+A5MBLnUca0wyOF
-	 yBklM6TJ7SSMB1RS46d1FhV71Oezo3T0f5vPVXyzyRNnRfw12AfPXnEZThNHWrqpAp
-	 gbFsepCzt2aQYj6RUFXdioySZTZFRq6AicEr0bLYoFyjUPVvxRrCH7zPJDfv92hteF
-	 7UsZC/D7tbGU31NbF4YcMtXKTTXAvgDoEich/m1PjY717TeSCeKtqUjhMr7YXNR58s
-	 ielWYvCIvWjNGewbSwd+ciWevhff9SIPUdP7IcNR8gklB03BIHOON4t6Dz4Rf6MEN9
-	 QU5QJij+D6u1Q==
-Message-ID: <b3d7374e-b144-4b0a-96f8-0538f9cd1a39@kernel.org>
-Date: Thu, 6 Mar 2025 12:49:20 +0100
+	s=k20201202; t=1741261981;
+	bh=LQPrmf7uG+8Fr9VtxG+XGKKBjfeYRFi99VmmRd1dpn4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZeLkR0hDTEkJox75RxKfCiemup8/yVuaOL8oJAy+8gtBrILnM8cp9jMY56H/QoWZ5
+	 6XPaSwlIm8dwhfReLWy4U/YHDcdW6VSN6oqNeTHFMpEr8Rc/v6dT/GweAJfcK+XLC1
+	 fDLH1dzcxVXDsLw4fL92Qzfrt1davPCvbMBV9iuScRefKD10KYHjbb7e02cH3KM6YU
+	 bk7UjK2wEQ6eSd4RygulbSKYhdGXLVUDvJgcQU2CgDKqV4+tFSFOkxbjR8rMe7QD+l
+	 pG2PlXRbyJBeHcOGe3qV/L7/GaWFJRN1x0DdhLe6rnvC/SHL69bCY/o83z8W9q7ZHg
+	 hqEsax7DZ4epg==
+Message-ID: <41b400fe-5e08-42c0-9bc6-a238d25d155a@kernel.org>
+Date: Thu, 6 Mar 2025 12:52:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 4/7] arm64: dts: qcom: ipq9574: Reorder reg and
- reg-names
+Subject: Re: [PATCH v11 3/7] dt-bindings: PCI: qcom: Use sdx55 reg description
+ for ipq9574
 To: Varadarajan Narayanan <quic_varada@quicinc.com>, bhelgaas@google.com,
  lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, vkoul@kernel.org,
@@ -60,8 +60,9 @@ To: Varadarajan Narayanan <quic_varada@quicinc.com>, bhelgaas@google.com,
  dmitry.baryshkov@linaro.org, linux-arm-msm@vger.kernel.org,
  linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 References: <20250220094251.230936-1-quic_varada@quicinc.com>
- <20250220094251.230936-5-quic_varada@quicinc.com>
+ <20250220094251.230936-4-quic_varada@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,37 +108,44 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250220094251.230936-5-quic_varada@quicinc.com>
+In-Reply-To: <20250220094251.230936-4-quic_varada@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 20/02/2025 10:42, Varadarajan Narayanan wrote:
-> The 'reg' & 'reg-names' constraints used in the bindings and dtsi are
-> different resulting in dt_bindings_check errors. Re-order the reg entries,
-
-Why?
-
-> fix the node names and move the nodes to maintain sort order to address the
-
-Fixing (how?) node name looks like separate problem.
-
-
-> following errors/warnings.
+> All DT entries except "reg" is similar between ipq5332 and ipq9574. ipq9574
+> has 5 registers while ipq5332 has 6. MHI is the additional (i.e. sixth
+> entry). Since this matches with the sdx55's "reg" definition which allows
+> for 5 or 6 registers, combine ipq9574 with sdx55.
 > 
-> 	arch/arm64/boot/dts/qcom/ipq9574-rdp449.dtb: pcie@20000000: reg-names:0: 'parf' was expected
-
-So this was added back in 2024 and never tested?
-
-> 	arch/arm64/boot/dts/qcom/ipq9574.dtsi:1045.24-1127.5: Warning (simple_bus_reg): /soc@0/pcie@20000000: simple-bus unit address format error, expected "88000"
+> This change is to prepare ipq9574 to be used as ipq5332's fallback
+> compatible.
 > 
-> Move the nodes to maintain sort order w.r.t address.
+> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Unreviewed.
+
+> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> ---
+> v8: Add 'Reviewed-by: Krzysztof Kozlowski'
+> ---
+>  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> index 7235d6554cfb..4b4927178abc 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -169,7 +169,6 @@ allOf:
+>              enum:
+>                - qcom,pcie-ipq6018
+>                - qcom,pcie-ipq8074-gen3
+> -              - qcom,pcie-ipq9574
 
-I don't understand this commit msg and huge diff does not help. It's
-very difficult to spot the actual changes and since Qualcomm was never
-testing this in the past, I do not believe it is being tested now.
+Why you did not explain that you are going to affect users of DTS?
 
-Clearly explain what is the problem - *each of them*.
+NAK
 
 Best regards,
 Krzysztof
