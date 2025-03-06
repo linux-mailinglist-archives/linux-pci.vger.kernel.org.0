@@ -1,73 +1,86 @@
-Return-Path: <linux-pci+bounces-23046-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23047-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6DD3A544FE
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 09:35:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 72715A545C0
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 10:02:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D19E9165294
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 08:35:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E639164BAA
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 09:02:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8DF719C54C;
-	Thu,  6 Mar 2025 08:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CAlYuz2v"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B6B419D880;
+	Thu,  6 Mar 2025 09:02:40 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2847F20767C
-	for <linux-pci@vger.kernel.org>; Thu,  6 Mar 2025 08:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919171EDA10;
+	Thu,  6 Mar 2025 09:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741250114; cv=none; b=isHlIHcvP0sKPI4flfZh1VxCu8aTzpZhX8a1YuTBjIhPrm4BN1nvrePeu9DtQxH3yDgAdYJqu0SekYHIVH5tyEozGy2uMiOn+f+lPZyXNl39ZizLYs+2wsaJpPyWdgkrXMsCM6knuci/QCDgWWix6TRAyEd6KzU0CQUoIoaVMC0=
+	t=1741251760; cv=none; b=QEN6MsD0vt/SBM6U0hmXqtKhAT0BCN+7h0e2BtylbAXZRc9VVn6mhahOeRuK+MlsAXli+lMsxjCxU4jCCWK6BuFVJ4FObaL1S4kZlxlJAsF3b4+zQovxtCLeCc50LZXLOQonyv3nBY/MI0MvPyvV8CIXfsIVHg4Rk3VQaiLYJdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741250114; c=relaxed/simple;
-	bh=/gW4viwsxacA2auVxdhp3XzRBLE+yJPv2u9GFlJKXnY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=iuCvjJyQgweT9YJQZMLAK2OBfTARv1i22x3kfja1ZhKwprdBVzho+hOarEclxCPESeA1eGNAO3XhKedSm5UQaZj4xjiGYSdrk61pbNrRe9l/XO5CWEzRGsewEK7carkCz0gKtU9Zy+YGonby+YWozw5XDfU6fqiNFWF0GTRWlf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CAlYuz2v; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741250113; x=1772786113;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=/gW4viwsxacA2auVxdhp3XzRBLE+yJPv2u9GFlJKXnY=;
-  b=CAlYuz2v8dxKjozkQeSz8JomRA/J2MeUtVVJgZCb2naC5H1a71fH2ocH
-   RQo1hW3M/fOXzn0t/OJ6dCdK5MPtRnqvuifc/PXRzwewRBI+hO16gdn5I
-   ONwMYB6ANEMFGJNOHwHU5b7ya2NgzpI/PGn/7mmigkLD2uybbc2OeXKYW
-   S87IoPJC+vtH+rdD+zFMwbaeL3lQ+0EuETlk0H2eLoRXJm/tbvFaNIAwO
-   bdUpK7fEJ83u8xubz9UDpI5CQesDSi69LEt448JGgimzga6uQ76zjuwbh
-   gn+4GI4UHUwUIqWfatj74MkRJ/UvKZeHai8R3t9+TZca914v+ynakW7ZO
-   A==;
-X-CSE-ConnectionGUID: Wl2PYUFAST+xii6qW0Fw2g==
-X-CSE-MsgGUID: IiBiiC0PTRyKUc8+VX71rQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11363"; a="52892705"
-X-IronPort-AV: E=Sophos;i="6.14,225,1736841600"; 
-   d="scan'208";a="52892705"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 00:35:12 -0800
-X-CSE-ConnectionGUID: 02IlxsmVSEmwU4JfOfvV1g==
-X-CSE-MsgGUID: ybl6WLmHTD66UB6sB5Y3yw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="123112881"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 06 Mar 2025 00:35:11 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tq6hA-000Mm2-2g;
-	Thu, 06 Mar 2025 08:35:08 +0000
-Date: Thu, 06 Mar 2025 16:34:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:devres] BUILD SUCCESS
- ba10e5011d05f20bd71d3f765fd3a77f7577ff34
-Message-ID: <202503061648.cr9mdsv9-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1741251760; c=relaxed/simple;
+	bh=EmzY32j5rrDzC9R6X90mqEI/cN8KHLb58ft9sgUPtjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ofUhNJX/mQ+8zqs0Gk/TdLKCvvwW7HJd1ONpqG8VXR77bRMIkNje0isVZfjQ3BqA1uyG4hdMnpr/CFsnJPiwEZWtph8Nj8XM5+qafoOOxcGF6lQrXpY0LOqsUmulRtnwSWfq8zRAz0Deq151Ot2TBDOzSkuCenAoRo4OaovwBJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2feb91a25bdso666538a91.1;
+        Thu, 06 Mar 2025 01:02:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741251758; x=1741856558;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=61ZqbVDQw/xvqBk0WBOL0pupyCSc6ErVs2yZMS/tx8g=;
+        b=AQ5FqP6VfPPNcJYnrmq4XpuuJUSq07vOciGMMquxTeXLO4mgsJCK6ir5+QB+BeTBjj
+         hVhTmrFddAm8saH2cuDrlUai4JiXBHZZypqfQ99b9LwGldbkb+lZkTBv7GLWeWpDlvF4
+         F4QeWOGJanJ2KAHJkqGS2fIJT7gRy+wblfYRbxlHb7sbqmV3mUPEXHe//+VhQ3Ccl5ZK
+         kwNhDqfO+tE+cG1q6/MW4apXONeUkF7Iar8VL6vUmW+HdF65KhLNMOCEeIV5QPv8GtFV
+         mHdA/3iVbSNN07pb/GwYidMSiCDSH3o5GQ4QjfELqJ6mOyYwxmhan3FD+0KHJLCCd0b2
+         XHKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUfArC9EKanpeTNI6iMvsdyO4LuiH6gwetQZWZU2Czp08t0Ckuq8WN6qUKaV6vas1+kvvvhkMtQ1IHn@vger.kernel.org, AJvYcCWmRtKSSUCc2x5bHtX8dwGmW4hmRCPPagr3OhcqQuZP2NmvsIFTeYt/9d0q3vxhn+DLQ16UhMizsscvrsJHTzVkLQ==@vger.kernel.org, AJvYcCXlXvaerZWUNODoU3oqOvGajzWhBoa1Oh4vEZ4gu6VmXMm8zC+xyUHQ1n/9O1FemHuvo2oku2A/QVgfipYXJJEr2dk=@vger.kernel.org, AJvYcCXn1k4xkNsbR9W0DaQoUV84Af9S8nryi2Chh9WlY5oOR+XMUcmL261J+cvNrf+hvCj+x286oDqqH69a0zg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaaAvOdf35JnE70AkrYp2A0xtagsau6wH+NsRqPNFlibtRb8JM
+	M5sgLtVophYz8U6dothx+KY2X8lSHJIkkQD2GOy7A+emn0rCj51B
+X-Gm-Gg: ASbGncvZCkaZAC+czwhUqNv0MYc3f2KlDuTbGau0R9FwrMLLof3oN6peGk/aSCoeVKY
+	TkfOoDq9Hdn+IvIGSxIPsWp3gLbSS5lNJzb5OCZRB5us3XnK4OoZYwrMmIZpjNPM8woYqN1prjG
+	PRLHOs+XuCV4gaohM5cuM4FOF3KrHWtlwqo6Ty37DGaPA5CfswVIyjNGHacgueAFxgFGEW4qmy+
+	UDs3MhlSGEvJWeJJC7YK12ZC5eBTaYKs19ANCH6juO5OP5nhw4oYqzBzhzSb9y0OCkGwg6p3Tnm
+	xt1mQTZNTm9kxeofNYJPLlI5+qHvTnmZqGGhpSFzqr5ey2wMGtMXo5NkeNrkEzpTRALL/IWqwbH
+	GNf0=
+X-Google-Smtp-Source: AGHT+IEVObRPs9r9DCgAFKVxTkcg7YE/ev/oTYXjSeBAHqcHwBFpzXUfu6D3RSOSTJvuqgree5Nh5A==
+X-Received: by 2002:a17:90b:4c07:b0:2ff:6ac2:c5a6 with SMTP id 98e67ed59e1d1-2ff6ac2c770mr1605779a91.31.1741251757794;
+        Thu, 06 Mar 2025 01:02:37 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2ff4e75ed7csm2641751a91.3.2025.03.06.01.02.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Mar 2025 01:02:37 -0800 (PST)
+Date: Thu, 6 Mar 2025 18:02:34 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <helgaas@kernel.org>, Fan Ni <nifan.cxl@gmail.com>,
+	Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, lpieralisi@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+	Jonathan.Cameron@huawei.com, a.manzanares@samsung.com,
+	pankaj.dubey@samsung.com, cassel@kernel.org, 18255117159@163.com,
+	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	will@kernel.org, mark.rutland@arm.com,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v7 3/5] Add debugfs based silicon debug support in DWC
+Message-ID: <20250306090234.GA390800@rocinante>
+References: <20250304171154.njoygsvfd567pb66@thinkpad>
+ <20250305173826.GA303920@bhelgaas>
+ <20250305182833.cgrwbrcwzjscxmku@thinkpad>
+ <20250305190955.GK847772@rocinante>
+ <CAMuHMdVRSjkss3gPnocXpfPQ=mEo4AevpaU=fdGvm=kb3RTmcQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -75,136 +88,41 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVRSjkss3gPnocXpfPQ=mEo4AevpaU=fdGvm=kb3RTmcQ@mail.gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git devres
-branch HEAD: ba10e5011d05f20bd71d3f765fd3a77f7577ff34  PCI: Check BAR index for validity
+Hello,
 
-elapsed time: 1459m
+[...]
+> Another issue is that the caller does not handle failures correctly,
+> given (A) the irqdomain WARNING I got, and (B) the half-registered
+> PCI bus, oopsing on "lspci"...
 
-configs tested: 115
-configs skipped: 3
+This is something we will look into.  A more robust DesignWare core is
+something we would definitely want to have.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Sorry about the issues with this...
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250305    gcc-13.2.0
-arc                   randconfig-002-20250305    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                        clps711x_defconfig    clang-19
-arm                   milbeaut_m10v_defconfig    clang-21
-arm                        mvebu_v5_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250305    gcc-14.2.0
-arm                   randconfig-002-20250305    clang-19
-arm                   randconfig-003-20250305    gcc-14.2.0
-arm                   randconfig-004-20250305    gcc-14.2.0
-arm                       spear13xx_defconfig    gcc-14.2.0
-arm                           stm32_defconfig    gcc-14.2.0
-arm                        vexpress_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250305    clang-15
-arm64                 randconfig-002-20250305    gcc-14.2.0
-arm64                 randconfig-003-20250305    clang-21
-arm64                 randconfig-004-20250305    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250305    gcc-14.2.0
-csky                  randconfig-002-20250305    gcc-14.2.0
-hexagon                          alldefconfig    clang-15
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250305    clang-21
-hexagon               randconfig-002-20250305    clang-18
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250305    clang-19
-i386        buildonly-randconfig-002-20250305    clang-19
-i386        buildonly-randconfig-003-20250305    clang-19
-i386        buildonly-randconfig-004-20250305    clang-19
-i386        buildonly-randconfig-005-20250305    clang-19
-i386        buildonly-randconfig-006-20250305    gcc-12
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250305    gcc-14.2.0
-loongarch             randconfig-002-20250305    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                          atari_defconfig    gcc-14.2.0
-m68k                       m5275evb_defconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                           jazz_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250305    gcc-14.2.0
-nios2                 randconfig-002-20250305    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250305    gcc-14.2.0
-parisc                randconfig-002-20250305    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                        icon_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250305    clang-17
-powerpc               randconfig-002-20250305    gcc-14.2.0
-powerpc               randconfig-003-20250305    gcc-14.2.0
-powerpc                         wii_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250305    clang-19
-powerpc64             randconfig-002-20250305    clang-17
-powerpc64             randconfig-003-20250305    clang-19
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250305    clang-19
-riscv                 randconfig-002-20250305    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250305    gcc-14.2.0
-s390                  randconfig-002-20250305    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                     magicpanelr2_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250305    gcc-14.2.0
-sh                    randconfig-002-20250305    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250305    gcc-14.2.0
-sparc                 randconfig-002-20250305    gcc-14.2.0
-sparc64               randconfig-001-20250305    gcc-14.2.0
-sparc64               randconfig-002-20250305    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250305    clang-19
-um                    randconfig-002-20250305    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250305    clang-19
-x86_64      buildonly-randconfig-002-20250305    gcc-12
-x86_64      buildonly-randconfig-003-20250305    clang-19
-x86_64      buildonly-randconfig-004-20250305    gcc-12
-x86_64      buildonly-randconfig-005-20250305    clang-19
-x86_64      buildonly-randconfig-006-20250305    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                           alldefconfig    gcc-14.2.0
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250305    gcc-14.2.0
-xtensa                randconfig-002-20250305    gcc-14.2.0
+[...]
+> > -int dwc_pcie_debugfs_init(struct dw_pcie *pci)
+> > +void dwc_pcie_debugfs_init(struct dw_pcie *pci)
+> >  {
+> >         char dirname[DWC_DEBUGFS_BUF_MAX];
+> >         struct device *dev = pci->dev;
+> > @@ -174,17 +174,15 @@ int dwc_pcie_debugfs_init(struct dw_pcie *pci)
+> >         snprintf(dirname, DWC_DEBUGFS_BUF_MAX, "dwc_pcie_%s", dev_name(dev));
+> >         dir = debugfs_create_dir(dirname, NULL);
+> >         debugfs = devm_kzalloc(dev, sizeof(*debugfs), GFP_KERNEL);
+> > -       if (!debugfs)
+> > -               return -ENOMEM;
+> > +       if (!debugfs) {
+> > +               dev_err(dev, "failed to allocate memory for debugfs\n");
+> 
+> There is no need to print an error message when a memory allocation
+> fails, as the memory allocation core already takes care of that.
+> So please drop the dev_err() call.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Done.  Thank you!
+
+	Krzysztof
 
