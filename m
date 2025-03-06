@@ -1,182 +1,180 @@
-Return-Path: <linux-pci+bounces-23032-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23033-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A23B1A5413B
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 04:32:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CBE0A54155
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 04:45:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BFAB13A47AC
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 03:32:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D1263A9FCB
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 03:45:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B0A9192D9A;
-	Thu,  6 Mar 2025 03:32:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A4F199EB0;
+	Thu,  6 Mar 2025 03:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MrjwQWM0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2101.outbound.protection.outlook.com [40.107.117.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBAD14F98;
-	Thu,  6 Mar 2025 03:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.101
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741231934; cv=fail; b=dxDJiVHoLgijd8C4D5zKfmPOgPnKnChlqpDkyAA0KzAl0UavfSBpXX4i1GyZNlBBdTjS5FTNmeh/kcUuRCI6zR29blKGyy6Sn2BUT+ke00Cqe8pLlN9lZUUishIxj+jlhXMR+7YXqd/lc91037xSIcYReu+5VQCYX3jDEY4MWko=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741231934; c=relaxed/simple;
-	bh=1QvrFgnABa2CQcV9TwcQxwah+V2seX2q9qp++5IasJM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jkx/eCaZv/LT0lw7Sq6LNXheYGv5KChpqtsMGF+MMPJBtLrdyh5ySB8PfUfsArdfeu718WZ5aIE8PfndQVGUJ5vDcAetnZPQnvniiMi57vGb0RvEFFsnwlt+8JADz2U7W4PfpeNLpuAr7KCnAAhoaUqUk1D9nK8WaszOtyBSIvQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.117.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tBU9O1I8AQpHhnmnVgF5Ba10JEQj5Ck5xAZO+xvKbg9o6edgZW5wqK0SAfvD2ywRSVyBHcFFe3PmOStqhlEVPl8BTCt0/p9CxjPAh88AGG8y2ro5tRy7XyfZ4OCOWXQpyRDrl4TTYc5Wx3BS+KTlRJNRvA8uiMdF7N2zPiIoGL9FGq56YZ9nz4ToCYBnkkvXgWgaQQlJmgH0NK+x7pK/NbP9z9oC1SkOwUnylhJk3haQ8PD5M+3P3zv0JL9wMIgMxzOn/r0vaaouqDlrrxJDB99RKEPZ+c5c6JzAQPoHi7Bs/hWIQfrXHfDOP3SFOmdHj80S/f3GP1o5+gv5RtwlfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ilmj3s6mHAk4lM1Cw1WUwxHqCzk96aXZAY98VhH2MIw=;
- b=MREvlg2NaX2/aCOxQBCfupzA2L7s3fkhT7ruwLckChZMwbdT3CfSzeNBilNmH8ICwyJ0YTshHrWMhwesYzBXXhUs445SF1bym1q9YEvqEHi7XlxH+ESaxnwHRPAEB3G2KgMBqkmZrg7ufa8EIFVJMgcVoFH20OP5isBVIjGJiNuczM+/PYey5+T2L42qPgEG5KRQFsK4xcXgSAduERN1LgXekKPhM2q5TGQbfqYAXSOGctI9ynu8UgSuInxE8iz+hOmDCIzdB5uzs6mYUcXQt2rSfHmKpT8avhXIsrN9+rdRAr6dJV+igWFC3qdISTfPgaaNZenw54tDfoDEGvihBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=cixtech.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from PS2PR01CA0012.apcprd01.prod.exchangelabs.com
- (2603:1096:300:2d::24) by JH0PR06MB7149.apcprd06.prod.outlook.com
- (2603:1096:990:8f::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.29; Thu, 6 Mar
- 2025 03:32:06 +0000
-Received: from HK3PEPF0000021D.apcprd03.prod.outlook.com
- (2603:1096:300:2d:cafe::5) by PS2PR01CA0012.outlook.office365.com
- (2603:1096:300:2d::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.19 via Frontend Transport; Thu,
- 6 Mar 2025 03:32:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- HK3PEPF0000021D.mail.protection.outlook.com (10.167.8.39) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8511.15 via Frontend Transport; Thu, 6 Mar 2025 03:32:05 +0000
-Received: from [172.16.64.208] (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 6F8EA4160517;
-	Thu,  6 Mar 2025 11:32:04 +0800 (CST)
-Message-ID: <84a00461-b8fa-48d0-9049-9a34abfe87a3@cixtech.com>
-Date: Thu, 6 Mar 2025 11:32:04 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB2E194A67
+	for <linux-pci@vger.kernel.org>; Thu,  6 Mar 2025 03:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741232708; cv=none; b=H8VwJ+ANWYkgosHgq6hpV8a7llm6HUCsx9jXz5dLaEhm1IO6qLtdZ+7V/axq0wKisTaY/b+Czjvag8cYAzq9BFk/gHpqR6kZNR1xoir+1oia91Ac0nkfOpBUMflLaFPa2R92mYQtpog4NGE22X7DdJbuKTHS6K2+ST7pg2kSZfo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741232708; c=relaxed/simple;
+	bh=s8ihgNf+/lTzOH0KKqwJ/Y6ngXzFB3uo/jmic8WGk6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T7W6s3CVmqXZWx2afp4dc7k5ZhzbJPYRbtXu+wpnO5qPWEqudwx1k1wBRvTe3Mxu2ISUXl/rnYakvDJOe0z1sxU1gofpNH1C7VUqb/WRyb6qRVhI7QxxWDP/pGePpz0jUiDkgfIRU0/GL2uP/WJkbSYapqz/Ktfd9Z3O5A9Ftb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MrjwQWM0; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2239aa5da08so2091175ad.3
+        for <linux-pci@vger.kernel.org>; Wed, 05 Mar 2025 19:45:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741232706; x=1741837506; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RR/3Sh2yGD8FYmZXDeG1gkp5RyyAVqAwHMabcS8vVWU=;
+        b=MrjwQWM0VX3Jkcruam4NVPBR16WsJoRYMa0CjdvL4UYun9QCTk2m4aqQPSRkj1+n2P
+         /knF4wCdb4mOK83r9Fap7jwKcjg+5V/qC0UZsSotPj78tcLSPRQ/e2SxzWdzqnz3YciC
+         lJhC/6+cEErpTC5tI3Cyx4X77zvJn16VB1dxDvnDECDLneeKc9gWwiP8KXNbkEzx07HO
+         i1BZ151IiHp15Kgmig0jY3ms1nXCJuYhfClKv3X5e7tnetOGJgviimem3UWco5JNIq/q
+         xRow5enu1vkgQRboZC2/8yhRipERSf+iy3fLz1FA2U6Guyd0tRFSO4GSeBxjzdOSHs/e
+         7aww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741232706; x=1741837506;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RR/3Sh2yGD8FYmZXDeG1gkp5RyyAVqAwHMabcS8vVWU=;
+        b=qd3AykmMtIVcdGxWnHUWXL2Vk1pV/sXxyQBVndKdXirRn8c4I34IykpntC9Fq5K3L+
+         qypRJIYVhVNPhoqBUCNklaBiCp21q06AkvsgkipPc49M+wYY6gEvBer+ztntx7GF72S1
+         /hrl6xoOgSe4jhm3Y53PGHPu4FHOa6uB4OKdsLFkTQKYE0XSNp/1TgPNvkxgkYnvyrD+
+         SXeX9p5rnoDl4ZbG/BfDzDNnfAZa9bnjxlOGDN57uT4+RiaAe/ZNJ04xHg9JA5Wr3vXb
+         vsjNGQA/Qya06Qw2Xwn2MQungHHEGu8wU0hz28fv4QtIGQBFeYb99A6WGkUAs5hjPCw/
+         BJiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFMptrVIFWn+4NnZlzkIJH5zkeINAI4oxqtkfjrW5OdSILdDSlUgDpvYxHudDR0Wgo1RRjZTPfVvQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+x4wms8DGiLyukBHB8AOQDDHXDOwGlNkm4KQjnxHUSYl0RIK6
+	rYXgRgdyBZ8zloGmXPmfMItJyWwxfkMeN5lhBGgov7Sw+qdKuRKzV8boDhHJFg==
+X-Gm-Gg: ASbGncuC3kWQPgDKXb5S1TR0bo3nHos+9dYxfJnil5NEbm2CeG9fkiPq6FWJvBv0yap
+	exoD4D27aU025DxuoHoKjsNGopCS0Pwb2Z9JrAM/b5829/d34XA22qPazKiRp3PGjLprxY0yI1k
+	BNRgeuwj8saw82O662iizFHgQ+Ha8/jrAkL3tYC2kOR4dY9wbfcU6gIcJgMwyQZPBO7fbwfFsgF
+	9PXt2TbgudZ1W4HMm+1EZIFBhAF2bYhCLorKhG0N6OwNu5/65pei63cs1VPAWwHw0kjS1PUtPdF
+	mtYN/7dabOLxj5Oqh51TGWEzf+eN6G2WyQyxEBvIT+gxSW1OM+0gs4Y=
+X-Google-Smtp-Source: AGHT+IGKJttGqJWItASqbCKDIt2tzUlENZ2HliebcQ18gZfjLIkLG4+OaRrcXjLUk9Kxrd+AX1YZIg==
+X-Received: by 2002:a05:6a00:338d:b0:736:755b:8311 with SMTP id d2e1a72fcca58-73682c89e14mr8508343b3a.16.1741232706353;
+        Wed, 05 Mar 2025 19:45:06 -0800 (PST)
+Received: from thinkpad ([120.56.193.59])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73698206c6dsm243250b3a.9.2025.03.05.19.45.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 19:45:05 -0800 (PST)
+Date: Thu, 6 Mar 2025 09:14:59 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v7 3/4] PCI: dwc: Improve handling of PCIe lane
+ configuration
+Message-ID: <20250306034459.uc4qlnsnxijotplo@thinkpad>
+References: <20250225-preset_v6-v7-0-a593f3ef3951@oss.qualcomm.com>
+ <20250225-preset_v6-v7-3-a593f3ef3951@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Add PCI quirk to disable L0s ASPM state for RTL8125
- 2.5GbE Controller
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, cix-kernel-upstream@cixtech.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- Peter Chen <peter.chen@cixtech.com>, ChunHao Lin <hau@realtek.com>,
- Heiner Kallweit <hkallweit1@gmail.com>, nic_swsd@realtek.com,
- netdev@vger.kernel.org
-References: <20250305222016.GA316198@bhelgaas>
-Content-Language: en-US
-From: "hans.zhang" <hans.zhang@cixtech.com>
-In-Reply-To: <20250305222016.GA316198@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK3PEPF0000021D:EE_|JH0PR06MB7149:EE_
-X-MS-Office365-Filtering-Correlation-Id: c1438f1c-c8e4-438d-a2e2-08dd5c5f77e6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OUdXdUE0d2FEejlaQVhpVDZkU216Yjk2SmdlRnE5TThZdEtLNFJYQTBhWWI2?=
- =?utf-8?B?S3JReVV0T1I2bC9KTFhMMy8xbnNvTDU2UElHaEE0TlVHWW9qNkRCMGhCSml0?=
- =?utf-8?B?N094ckw0ek9ocm51bkRjRHkzQ0ZjdlpaSjJOWkFHVkRwWFR2YW56Y1dLbnlv?=
- =?utf-8?B?V2RQblVBQkxxZ3VHa0RlbzBEUlZxKzVhS2pITVZqQkIvbE5oK2VyMFpHZ3BK?=
- =?utf-8?B?aHlLUVdSR1dpa2ZsZDhGc2dFT0FIYWF5Mm1mZ3RETDRCYUNrZmpsSldJdFBW?=
- =?utf-8?B?b1VhV3RSVVlnMmJ4ZEs0QlpMV0ZEY2MrQlIyTGxUTWcwMFJrY3NIcFpFTnNi?=
- =?utf-8?B?aHdaTnpyRnR6ZkhBbW4rMXRaVzRkOUpaUCtGdXhCcGl3RWoyQjdjdWZtMXZm?=
- =?utf-8?B?emVtYm1sV0hOeHpwK3F0YVpNS2RaenRIcVE0M3VsYUZMUEZKTHV6R1RGSEFP?=
- =?utf-8?B?SUg2MDZDQ0NJbm5jYU4vd21OOTlJeWtKdGtUUEhobG5BRERkUGpRRTN6NU5t?=
- =?utf-8?B?WXhYNnFtcm1RYXJYKy9lK3pacElPMWowVHdNYzVpQWlHV0F6NDB4QTd3V3dr?=
- =?utf-8?B?Ui84Nm1wbmZML2FKVE5MazBTWlVGWktZNFVuSVlKZTA5TXI0c2ZsOFcwZDZl?=
- =?utf-8?B?emRGTVBLOG9ydmo2aUd1SVhqQWZYOGh4eXhzclNQb2ZDaUszNkFVL3VoSVhU?=
- =?utf-8?B?UGlzUG1jdkU1dExjbXJnUy9Nb3k4bUpYM1RhcW52WmNKdVJiSUFVSm0xMmtH?=
- =?utf-8?B?aVJjZ240cTBnV21OQ3NaUUlFRlVlaFNwUm1PK00xYnZNSU5peDFHRVk3MHhU?=
- =?utf-8?B?Yno3MDdvQVdJMTU2ajFvc3pnSlRvMUY0YXVKaTdoWmVFUmQxWm5qSG5Zd3dN?=
- =?utf-8?B?VGthQnlDZlNNS042YUpnRnRTcjk2OWdGT3VBalJJTjQ0am5qVkxqdU93cXFa?=
- =?utf-8?B?Um40WG5Wc0d5RWlNWjY0L0tPVytVTkNab2ppYlVwcFZEYWFPMHdITkhYY1kw?=
- =?utf-8?B?YjFEWDdjanUraDVJWG9lcGtWelc5RUJ5ZG9EUERsUnFKKzBuZm9saDhqQ3F0?=
- =?utf-8?B?ZkoydzRuTTkvY2tTbjJNTjhkQnhrS2NWRTlieE1mMmY5ZWVXbTFRL09tK24v?=
- =?utf-8?B?aHB0Tk5LcnlVdkgzZGIrN3FHQy9OQ2RNcllVTHN3R254amJObEFFTUZoYTR6?=
- =?utf-8?B?b0VRNllmaFFmOEdxN1BWY1RHZ1k5YjJVRXIzeXlhQmNzME9ONHppWHRxbWQ2?=
- =?utf-8?B?RVdTZVpGVitsSDlrRlFjYzl2YXc1b3NrZVN5NGFsQzZXS0E0Y1dLRjNuRlJk?=
- =?utf-8?B?RU51cUw2djlsNFRkWTlIeVVvWFVtWXNQMmZXblBXTG1MVVFqYmZuRWFrYTJZ?=
- =?utf-8?B?b0RGdDhmZ2wxTVFWYmx1VE11cmRRSmhhMXg2cmhLUFZnOW1PN2xOamZvb1BH?=
- =?utf-8?B?a0RvUytFKy9SbnZKLzZsSHVtQkorZmo3TnRoY1RnZ0doY1pkVERpbWtGNU1m?=
- =?utf-8?B?dlhPcGVpUVVnbXhpenQ3UEVBamYrSUZBSEVkcVNrRmV1SjdrY2JQRUtMZ0Yy?=
- =?utf-8?B?V1llYzdERzV1bHRQTSsvS0h1MktlaGRkYTVLZFl5Tzh6SFRyZFo0NGhFdFh1?=
- =?utf-8?B?d0ZuUzN5RE5yUkZYVWZqLzBiaTVYU2hyb2dzUWIvblhPR3FNbkpmajFnK1RI?=
- =?utf-8?B?YVN1dVJNUmxxZTJPaER6bWp1ZFpZZU13SURCOEhEbVJGVmFIMjZ6c0FaTGxF?=
- =?utf-8?B?ZTlxazN1a0ZBb0doYU1vV3ZnRTdkVnk4akRUZUFVcEcyQjhNemNzOVJWZ3BE?=
- =?utf-8?B?Mnluek1SckJ5RVgrQVpMU3p3ZkNPSTFzeEVVejdPQ1piTlU3K1o3aUNOY25S?=
- =?utf-8?B?WkpsSW5xK1haYXhzQVhCT2xNeVhQR1VkUEJDdDBKRW9OZ2FFcFpKZWJUbEdw?=
- =?utf-8?Q?pxVtNJGp8X0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 03:32:05.7386
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1438f1c-c8e4-438d-a2e2-08dd5c5f77e6
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: HK3PEPF0000021D.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB7149
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250225-preset_v6-v7-3-a593f3ef3951@oss.qualcomm.com>
 
-
-
-On 2025/3/6 06:20, Bjorn Helgaas wrote:
-> Sounds like this should be a documented erratum.  Realtek folks?  Or
-> maybe an erratum on the other end of the link, which looks like a CIX
-> Root Port:
+On Tue, Feb 25, 2025 at 05:15:06PM +0530, Krishna Chaitanya Chundru wrote:
+> Currently even if the number of lanes hardware supports is equal to
+> the number lanes provided in the devicetree, the driver is trying to
+> configure again the maximum number of lanes which is not needed.
 > 
->    https://admin.pci-ids.ucw.cz/read/PC/1f6c/0001
+> Update number of lanes only when it is not equal to hardware capability.
+> 
 
-Hi Bjorn,
+'Update max link width only...'
 
+> And also if the num-lanes property is not present in the devicetree
+> update the num_lanes with the maximum hardware supports.
 
-Name: CIX P1 CD8180 PCI Express Root Port
+'...update 'pci->num_lanes' with the hardware supported maximum link width using
+the newly introduced dw_pcie_link_get_max_link_width() API.'
 
-0000:90:00.0 PCI bridge [0604]: Device [1f6c:0001]
-0001:60:00.0 PCI bridge [0604]: Device [1f6c:0001]
-0002:00:00.0 PCI bridge [0604]: Device [1f6c:0001]
-0003:30:00.0 PCI bridge [0604]: Device [1f6c:0001]
+> 
+> Introduce dw_pcie_link_get_max_link_width() to get the maximum lane
+> width the hardware supports.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-host.c |  3 +++
+>  drivers/pci/controller/dwc/pcie-designware.c      | 11 ++++++++++-
+>  drivers/pci/controller/dwc/pcie-designware.h      |  1 +
+>  3 files changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index ffaded8f2df7..dd56cc02f4ef 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -504,6 +504,9 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  
+>  	dw_pcie_iatu_detect(pci);
+>  
+> +	if (pci->num_lanes < 1)
+> +		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
+> +
+>  	/*
+>  	 * Allocate the resource for MSG TLP before programming the iATU
+>  	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 145e7f579072..9fc5916867b6 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -737,12 +737,21 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci)
+>  
+>  }
+>  
+> +int dw_pcie_link_get_max_link_width(struct dw_pcie *pci)
+> +{
+> +	u8 cap = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> +	u32 lnkcap = dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
+> +
+> +	return FIELD_GET(PCI_EXP_LNKCAP_MLW, lnkcap);
+> +}
+> +
+>  static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
+>  {
+> +	int max_lanes = dw_pcie_link_get_max_link_width(pci);
+>  	u32 lnkcap, lwsc, plc;
+>  	u8 cap;
+>  
+> -	if (!num_lanes)
+> +	if (max_lanes == num_lanes)
 
+This gives the assumption that the link width in PCIE_PORT_LINK_CONTROL and
+PCIE_LINK_WIDTH_SPEED_CONTROL registers are same as MLW. Is it really true as
+per the DWC spec?
 
-This URL does not appear right, how should be changed, is it you? Or can 
-you tell me who I should call to change it?
+- Mani
 
-The correct answer is:
-0000:90:00.0 PCI bridge [0604]: Device [1f6c:0001]
-0001:C0:00.0 PCI bridge [0604]: Device [1f6c:0001]
-0002:60:00.0 PCI bridge [0604]: Device [1f6c:0001]
-0003:30:00.0 PCI bridge [0604]: Device [1f6c:0001]
-0004:00:00.0 PCI bridge [0604]: Device [1f6c:0001]
-
-The domain might be random, so whichever controller probes first, it's 
-assigned first. The URL currently shows the BDF with one controller 
-missing. That's the order in which we're going to controller probe.
-
-Best regards,
-Hans
-
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
