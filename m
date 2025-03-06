@@ -1,250 +1,206 @@
-Return-Path: <linux-pci+bounces-23030-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23031-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 678D4A54130
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 04:23:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD00EA54136
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 04:24:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97A9C3AB9F7
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 03:22:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DE4BB3AC0D3
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Mar 2025 03:24:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF3C4195FEC;
-	Thu,  6 Mar 2025 03:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u4FCKJ1a"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB2C91957E2;
+	Thu,  6 Mar 2025 03:24:51 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sg2apc01on2124.outbound.protection.outlook.com [40.107.215.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE6B1362
-	for <linux-pci@vger.kernel.org>; Thu,  6 Mar 2025 03:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741231379; cv=none; b=M4y+E2Er25xZWEVd1yCMfuFBTYrfaoyGdKjknLgIhdMJTADDdeChNLyD50xxQOJnrkm3zE/H9cF1c1tiNxRq3kYTDba5c73pOi/pD59ZPYLBnCIKCXlAM1hsWFODMkroAC7gqnjG3E+tC7gySx9W7E9rwF0B80sgnkspUt5YoKo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741231379; c=relaxed/simple;
-	bh=Ru/CpGpxmay/9MsSLlCOfSZnuKnc/nvpzizPFZJ2vUk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Le3gsEon1sbd1TP9+pyzGQCSM+3QDROCZ4aWWsusODKFjvPrIYjMQhutrmXQ2kcBsAy0GD9CysTlDAI50Jvwaq8c95piiGe97vFTSGhDEX3TE0RADhnD3ygfINscWYbmUFQuOo5tKIsVLkNibqXgY28nYvAqW8nwznAJAo59sTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u4FCKJ1a; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2235908a30aso3336155ad.3
-        for <linux-pci@vger.kernel.org>; Wed, 05 Mar 2025 19:22:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741231377; x=1741836177; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kVRUb8q7uQnpUvlMyzRGCkdnBEaB/99BqJE+CFAT52A=;
-        b=u4FCKJ1a/5FlPi3yxllrioCGopfyEFkRgtOeU7QN7xKS0zFrAgKgX4a6bnOkwgGzp2
-         oX15Otuxr0DnoPNRWe+xLn1+rD9j2xB001WSY4nW0LmaBYuCpKHi9iQFfq/keJLzMqIp
-         ecNqDUR5367BXvap1vc/EDmEEdJsejYCl5O6iMVlV5XeirIw6oD+eE+9OwV3m0axBL6d
-         QQNhcoABnWRddfQnMCNeIXv0oEFUdDPEwlNJFKbas1uOj7vDMIGHxy5LuSevhuHMx68Y
-         aoHpQRdwr7A8rvIz+q5z6Mj01hIApEmopaDk9IPtQuGN2+YN3dROUlo2zqTpYhf2OxsM
-         s19A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741231377; x=1741836177;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kVRUb8q7uQnpUvlMyzRGCkdnBEaB/99BqJE+CFAT52A=;
-        b=JeTIi3iyA0qAKqUwUwz47aMO6/IqnxCn6xWbfDaOnkLpZMda1c99JnLtUJyj+g0I4u
-         2VpAP90ND3/ar6iDdEHBtzfHsGj4vIkzw21bD9jwUmaBzXp4hDDw+8UTLPjP71bizEcP
-         heedPvzoJSUw+pxCw2eaSICKvOnwYE+rcU0WpOkFyobL91ST+SSLDU/BO2DGX4EEUqEV
-         ebViC2QG/tyiWVo6OYDz8sLWsX5DvzYEWa+eMJR/UEWFZ+aKhixc8Ky1uLUZiD5EadTe
-         CLV3M/BqZG1xVHbcbLR+ZaCotL26naB6+Ntn3+dqeWqXqUWqZxdHJIiMdzCs6AfAkJSe
-         lfFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWDRKithQrUiRIn/v57HWkhwEoRhl2cRrw7Yoi8IoK7k0VIhy4UDila2kVaYEMQ2GpWs2NgPeNFK2I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3SK5GiFd2pC58MwuMpRE2E8GRtV2zs8bD/ULsDG7SCQ0GXuih
-	SX/4ugkG5nFDaZ5dHRwprTDht7jVmsNpwJF62fXfjUvxNnsm9zyE+/efQiFaCQ==
-X-Gm-Gg: ASbGncuTcC1CgvyAqby9C0/jfpc48RHXlJcXRD45E0kMf9qf0m1VkOjesaF49CCFIQl
-	9d56HhMPptwDiMGdshX/3ZJD4wBOsi0fHlNW4W3Cw6xzlnjebWj5NRX5wK/iaW0DrwWAvBIH0ME
-	lMcp1DNTHmqfIVsEtDe98DNoiz6IXgLlmtzQ7k4yXamsyliB+sEtTw2+GumizD3mI8y8DZGYnFW
-	PuQeh165lxa9+oPk6Vf8FsNZmgsivL2ydDhm8e4SrVZCZhCNKMWCOPIom/wUmEy4d82oY6Y73DH
-	0QlOjJOPaCzmHvcLK9nclFI8hnYprdER3h/KJLYH6HdvUh4L+DHovdo=
-X-Google-Smtp-Source: AGHT+IFKgh0FiksUVgR3j46APqXiDJlCf1FcFsiDNFfW2pnSFNjsBifU8IM2NHTcJLX+Pjppt76cJA==
-X-Received: by 2002:a17:902:d4c8:b0:220:e5be:29c8 with SMTP id d9443c01a7336-223f1cf56camr94178765ad.32.1741231377300;
-        Wed, 05 Mar 2025 19:22:57 -0800 (PST)
-Received: from thinkpad ([120.56.193.59])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410a9193fsm1689105ad.164.2025.03.05.19.22.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 19:22:56 -0800 (PST)
-Date: Thu, 6 Mar 2025 08:52:50 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v7 2/4] PCI: of: Add API to retrieve equalization presets
- from device tree
-Message-ID: <20250306032250.vzfhznmionz3qkx7@thinkpad>
-References: <20250225-preset_v6-v7-0-a593f3ef3951@oss.qualcomm.com>
- <20250225-preset_v6-v7-2-a593f3ef3951@oss.qualcomm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A27A1917F1;
+	Thu,  6 Mar 2025 03:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741231491; cv=fail; b=Xn3pAjmJgMAEKLcZP3mYdAyYK3YDEkczju968G2NP5nf2zRt0l/sJR5FIKfjHOEtt02VrFvZgmYCswU9ms7pM3RVeEXj8CzPqDgZpYkeKXW/fjfKkJTbWh41LyT2mHBPOFbwhAL6cgYZ3px6ubABqi0DlMYdRp0t2/K0toKmBWU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741231491; c=relaxed/simple;
+	bh=DygZGGTdy2zknfX0SgPBrGFXe84ETEpGyVs8gTOEIh8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OsittlZCGQANrB/ZJpuT8OnG39ry7HUORBDCNMK2O/33+z18P6ln+Ex1021DhOWamzL9tQrYt9Qj69sk8h0AhFGVi8JN7Mwd5NumcWL0CGPkXodWBBuwk0TqBrrYEtq2HieFMhjnA9Anp3szBGcPm9qZbeGpTtfVwenAUqNLXXo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.215.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yrVwBeZ+wRF4KzQV38UMBhtS0fd3Y0s2FlFZByliuZrRnXdzG3TO/cgX/yUypDqu+iIHEphMyZJCehqsU4XOZ0x74z8fqBiafvLlhwEAEisSJbDO6YYQ9BUvA7izq/vBPHwILccMF4i/BICBxSeGhwv5FJQBKWVceBV/6uZX3QcjEs/aHsvoVjOrtTT0Ddwgod9EAWmEmCBZY2S9VQC2IgDSgeoGDnOEofKZjGncx4fG8j8nyx9PlgoaKGLznRi97iXaBzV/aYq+IFprrH59bV6RE/J16j/JruZZ6VNbjt51tWX4Oy486KvpTiLmg554ASLJozbRSJEbpkXUoPxCUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RdlnHfRmCJLkoi7nW3b/ahMquVKTpHk9RVBbgIQQMBg=;
+ b=B4H/heEH7YVSTewvSXkfsDiVGukxo9StSPWCwTa9jDCtNS+HSDw3V2Mqz50tVMT8sAvGDjzN/d4jG0BP2JVnFj9QIUf8v0nVn7xv3olKdOzvBXezveyKE/uHlc5gHhOACD1h8aadV7SYh2UQClrHO3Puj93nmqQbkBsaRuKagMaUh5oX9IiEAI88rX4+9tM/kua6XNP2730mRCdOfcRtQ8wHiXxx9pVsrBgKXHFYiffk+QiuSPZj46/fY+lUhyAIAbPaDI8Pa9VPsryCU3HbGnK8paL0Tk6yTmxiTAR6HdROdcVED2C07Z80BtHYWcs4YVwTMZ2uBUVh1t7RSDfOLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cixtech.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from SI2PR01CA0023.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::17) by SEZPR06MB5046.apcprd06.prod.outlook.com
+ (2603:1096:101:46::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.17; Thu, 6 Mar
+ 2025 03:24:43 +0000
+Received: from SG1PEPF000082E3.apcprd02.prod.outlook.com
+ (2603:1096:4:192:cafe::7a) by SI2PR01CA0023.outlook.office365.com
+ (2603:1096:4:192::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.16 via Frontend Transport; Thu,
+ 6 Mar 2025 03:24:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG1PEPF000082E3.mail.protection.outlook.com (10.167.240.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.15 via Frontend Transport; Thu, 6 Mar 2025 03:24:42 +0000
+Received: from [172.16.64.208] (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 234664160CA0;
+	Thu,  6 Mar 2025 11:24:42 +0800 (CST)
+Message-ID: <2112b1dc-7ac6-4d4b-a9a1-1b57d414aae4@cixtech.com>
+Date: Thu, 6 Mar 2025 11:24:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250225-preset_v6-v7-2-a593f3ef3951@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: pci_ids: Add Cixtech P1 Platforms vendor and device
+ ID
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, cix-kernel-upstream@cixtech.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Peter Chen <peter.chen@cixtech.com>
+References: <20250305174931.GA304679@bhelgaas>
+Content-Language: en-US
+From: "hans.zhang" <hans.zhang@cixtech.com>
+In-Reply-To: <20250305174931.GA304679@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E3:EE_|SEZPR06MB5046:EE_
+X-MS-Office365-Filtering-Correlation-Id: e784a718-2c1b-426e-fd21-08dd5c5e6fd1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cUEwQ2NGeWJXaEJDQWZJTkNoTTYxbld3Ymx1ckd5ZUNZYlEyK3dNYS82NEJi?=
+ =?utf-8?B?blpaUXBtVDlRcUQ4bmZFZUxZVkZPWEJTL21zdkE2QUFweVNjb09OSlIyeWtv?=
+ =?utf-8?B?dUxwUy9pZW1hL0FuR3dKRWRaejRTYVJoMHZWeDg3QStoS1p0MGNwZUZFcFlK?=
+ =?utf-8?B?Ni9SQTJSNU5mV0ZxR3lxNGllUFIvcjk1bDhJQy8vbS9UTlBUQlI4Y01lWFd4?=
+ =?utf-8?B?Y1dmRnAyOVlWUE81L2NSckswNG5RQWI1N2drYS9zV2ltZDZ3aHZoRUcwWGZ2?=
+ =?utf-8?B?d2FzOEdaU2JzT20zWVAzU0ZoT1l6OUYwRXlFNCt4VHI2MzJMaVk3dmt5eXBh?=
+ =?utf-8?B?amVGQys5SktTZ21waUtYSUEwZDV0N0VrdklzTUZEc3cyTmhkSG9vK00raldo?=
+ =?utf-8?B?MUhGQXM1dUhTNDFQbmxQbjVtc2s0UlJPUHpsOHpLYU5qblIreE9FbnhkWVB2?=
+ =?utf-8?B?MklBVWlIV2xqL25xdVhCdXJpMTdNMXJDeXRDSlpVbzNSd3k1VTdxRFpoRXhI?=
+ =?utf-8?B?RUZRZ1FMODJmNGR5K00rSDJRanpjODB5N3l2cFVzNENnYkMxb1NQYkhpV0tO?=
+ =?utf-8?B?MkZDK2V2VlhhU3FOZ0pRQ2VOdDMyQWRHUkJNYVl0SlUwZWFqNHAvNFJ4NEJ2?=
+ =?utf-8?B?VEMyZEJ0NjhadUI5ckJqVVIwNzFnUjltbHZPUFR4VmZVOFZqZTM4cS9qQ1Q4?=
+ =?utf-8?B?UU94M2JSbHNKTTVNQXNJOGxpUi91YXE3Y2d6OUdUS0tCc1JqNmJCbktJMzMx?=
+ =?utf-8?B?M3BIWGlsb2QreE8vbzltNUc3bVFWLzJJaEhSK2FuUkZnN3BFbkVuOUc3Y242?=
+ =?utf-8?B?QjJEMDVLS3dLKzFKT2JTemQ4NWlFb05kRFc4NUZ4Vm0rcjNtM2pUamJSM1c3?=
+ =?utf-8?B?S29ZYUZGMmMzWUZWdlFodjdwanFveEZ1YndGTmhPTi90NTFhamlNNDZXK1F1?=
+ =?utf-8?B?MnVOaGpzZkoyMWxlMUlSMUFqUXg1dmQxZnZJNXEySjNONkQxbDExdGR0V2Ft?=
+ =?utf-8?B?dG1FUXhURDJLaGxvM3VoZWc4dTJCdy9Rbld2R1NRSkNiWGwzTWtuamNjazlF?=
+ =?utf-8?B?ejQ3V3hBR1lKbmRZS1REMkpWN0dFdi9qekN4YUR1K25FM1NRWmk3WTloaXdJ?=
+ =?utf-8?B?SjIycmw0ZGQrSWthdjZNbDZWZ3Q4NWdzVHExR3hkUklDVm9vSjU5cDhwbG4v?=
+ =?utf-8?B?NC9ZTkpKbGJsTjVUOTVlaEtBSSsrdzRXb1BLV2FOUmRzOGlNNDh3L1ZrVE1n?=
+ =?utf-8?B?TFZLTkh3VU9kSkgwNTI4UjZoSy9xR3N6ekM4Y0ZiSkZLMkJNb2Rhb0x6Mitx?=
+ =?utf-8?B?NTVLb0tOaWNtTHFRdlpvaVg5MDgwK1ROZTJ4UDhFTzdlN1lXaFB0cUlFbzJ6?=
+ =?utf-8?B?RU5SUGc3TUxMYVJJa2ZyTktlQkx0Q1pFL0x4QStjeUFxbDlYQ21OekNDYklz?=
+ =?utf-8?B?ZW1PT3VJNEQxVjRNUmJ5Z1A0bkZHQ3N6TGJRRjFGSWM4TEdkeFhSWTRLYVJ6?=
+ =?utf-8?B?ZXJVaEFxUWk1eTJDTEhVOEkwOWZ5NHd4M1pWY2MwYjBiaG8xNHN4dTZGR2xt?=
+ =?utf-8?B?bzgwajNZTzNER0l5SWdZYVdQckZ0NFd5SStPK1p2aFFOUUtQb1lOOEc0MFM1?=
+ =?utf-8?B?VTV6dHN5Y0tnL2hIUTdKYWlhNEpkTDV2Ly9nMnRuMU5KOEtwZTRSREJ2MXRq?=
+ =?utf-8?B?MXBQbG9VSWJsTjEwUTFEWUc5N0p6dEFWOGFGZ2FoUy9NMm9KUG1Pd1c4cWpu?=
+ =?utf-8?B?KzNWNUE3dnJMVldsd1V3RXlXeFYwVmZ3U0FyOUxSSTZsSG9Ycnl5eFovaHZT?=
+ =?utf-8?B?TGt1VHNOcEZJUzFPdnRqQjk3VVEzOHFPT3dQRnFaVXY1cTk1bDNvVGpibjd4?=
+ =?utf-8?B?a1Yyd1pXTVV6YXZzUmxSM2hYMy9oVlY1UlFtTXIvTCtBeXNZT1NOdmFzdG5r?=
+ =?utf-8?B?K1hCelE4bVJjdW5sd3Vod1RLQmdZSDhpdFcwZUc2OUkzUy8rNyt5V3lCUkI1?=
+ =?utf-8?Q?FeMyZU89Q/iJ4ex051DsJR2KslsZDw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 03:24:42.7317
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e784a718-2c1b-426e-fd21-08dd5c5e6fd1
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: SG1PEPF000082E3.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB5046
 
-On Tue, Feb 25, 2025 at 05:15:05PM +0530, Krishna Chaitanya Chundru wrote:
-> PCIe equalization presets are predefined settings used to optimize
-> signal integrity by compensating for signal loss and distortion in
-> high-speed data transmission.
+
+
+On 2025/3/6 01:49, Bjorn Helgaas wrote:
+> EXTERNAL EMAIL
 > 
-> As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
-> of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
-> configure lane equalization presets for each lane to enhance the PCIe
-> link reliability. Each preset value represents a different combination
-> of pre-shoot and de-emphasis values. For each data rate, different
-> registers are defined: for 8.0 GT/s, registers are defined in section
-> 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
-> an extra receiver preset hint, requiring 16 bits per lane, while the
-> remaining data rates use 8 bits per lane.
+> On Wed, Mar 05, 2025 at 02:30:18PM +0800, hans.zhang@cixtech.com wrote:
+>> From: Hans Zhang <hans.zhang@cixtech.com>
+>>
+>> Add Cixtech P1 (internal name sky1) as a vendor and device ID for PCI
+>> devices so we can use the macro for future drivers.
 > 
-> Based on the number of lanes and the supported data rate, this function
-> reads the device tree property and stores in the presets structure.
+> See note at top of file:
 > 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  drivers/pci/of.c  | 43 +++++++++++++++++++++++++++++++++++++++++++
->  drivers/pci/pci.h | 27 ++++++++++++++++++++++++++-
->  2 files changed, 69 insertions(+), 1 deletion(-)
+>     *      Please keep sorted by numeric Vendor ID and Device ID.
+>     *
+>     *      Do not add new entries to this file unless the definitions
+>     *      are shared between multiple drivers.
 > 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 7a806f5c0d20..9ebe7d0e4e0c 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -851,3 +851,46 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
->  	return slot_power_limit_mw;
->  }
->  EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
-> +
-> +/**
-> + * of_pci_get_equalization_presets - Parses the "eq-presets-Ngts" property.
-> + *
-> + * @dev: Device containing the properties.
-> + * @presets: Pointer to store the parsed data.
-> + * @num_lanes: Maximum number of lanes supported.
-> + *
-> + * If the property is present read and store the data in the preset structure
-> + * else assign default value 0xff to indicate property is not present.
+> Include this patch in a series that shows multiple drivers using it
+> and mention those drivers in the commit log.
 
-'If the property is present, read and store the data in the @presets structure.
-Else, assign a default value of PCI_EQ_RESV.'
+OK. I will submit it together and use it in the future when our PCIe 
+controller drives upsteam.
 
-> + *
-> + * Return: 0 if the property is not available or successfully parsed; errno otherwise.
-> + */
-> +int of_pci_get_equalization_presets(struct device *dev,
-> +				    struct pci_eq_presets *presets,
-> +				    int num_lanes)
-> +{
-> +	char name[20];
-> +	int ret;
-> +
-> +	presets->eq_presets_8gts[0] = PCI_EQ_RESV;
-> +	ret = of_property_read_u16_array(dev->of_node, "eq-presets-8gts",
-> +					 presets->eq_presets_8gts, num_lanes);
-> +	if (ret && ret != -EINVAL) {
-> +		dev_err(dev, "Error reading eq-presets-8gts :%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	for (int i = 0; i < EQ_PRESET_TYPE_MAX; i++) {
-> +		presets->eq_presets_Ngts[i][0] = PCI_EQ_RESV;
-> +		snprintf(name, sizeof(name), "eq-presets-%dgts", 8 << (i + 1));
-> +		ret = of_property_read_u8_array(dev->of_node, name,
-> +						presets->eq_presets_Ngts[i],
-> +						num_lanes);
-> +		if (ret && ret != -EINVAL) {
-> +			dev_err(dev, "Error reading %s :%d\n", name, ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(of_pci_get_equalization_presets);
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 01e51db8d285..c8d44b21ef03 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -9,6 +9,8 @@ struct pcie_tlp_log;
->  /* Number of possible devfns: 0.0 to 1f.7 inclusive */
->  #define MAX_NR_DEVFNS 256
->  
-> +#define MAX_NR_LANES 16
-> +
->  #define PCI_FIND_CAP_TTL	48
->  
->  #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
-> @@ -808,6 +810,20 @@ static inline u64 pci_rebar_size_to_bytes(int size)
->  
->  struct device_node;
->  
-> +#define PCI_EQ_RESV	0xff
-> +
-> +enum equalization_preset_type {
+> 
+> Update the subject line to match the existing style (use "git log
+> --oneline include/linux/pci_ids.h"):
+> 
+>    PCI: Add Cix Technology Vendor and Device ID
 
-For the sake of completeness, you should add EQ_PRESET_TYPE_8GTS also. You could
-skip it while reading the of_property_read_u8_array().
+Will change.
 
-> +	EQ_PRESET_TYPE_16GTS,
-> +	EQ_PRESET_TYPE_32GTS,
-> +	EQ_PRESET_TYPE_64GTS,
-> +	EQ_PRESET_TYPE_MAX
-> +};
-> +
-> +struct pci_eq_presets {
-> +	u16 eq_presets_8gts[MAX_NR_LANES];
-> +	u8 eq_presets_Ngts[EQ_PRESET_TYPE_MAX][MAX_NR_LANES];
-> +};
-> +
->  #ifdef CONFIG_OF
->  int of_get_pci_domain_nr(struct device_node *node);
->  int of_pci_get_max_link_speed(struct device_node *node);
-> @@ -822,7 +838,9 @@ void pci_release_bus_of_node(struct pci_bus *bus);
->  
->  int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge);
->  bool of_pci_supply_present(struct device_node *np);
-> -
-> +int of_pci_get_equalization_presets(struct device *dev,
-> +				    struct pci_eq_presets *presets,
-> +				    int num_lanes);
->  #else
->  static inline int
->  of_get_pci_domain_nr(struct device_node *node)
-> @@ -867,6 +885,13 @@ static inline bool of_pci_supply_present(struct device_node *np)
->  {
->  	return false;
->  }
-> +
-> +static inline int of_pci_get_equalization_presets(struct device *dev,
-> +						  struct pci_eq_presets *presets,
-> +						  int num_lanes)
-> +{
+> 
+>> Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+>> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
+>> ---
+>>   include/linux/pci_ids.h | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+>> index 1a2594a38199..531b34c1181a 100644
+>> --- a/include/linux/pci_ids.h
+>> +++ b/include/linux/pci_ids.h
+>> @@ -200,6 +200,9 @@
+>>   #define PCI_DEVICE_ID_COMPAQ_THUNDER 0xf130
+>>   #define PCI_DEVICE_ID_COMPAQ_NETFLEX3B       0xf150
+>>
+>> +#define PCI_VENDOR_ID_CIX               0x1f6c
+>> +#define PCI_DEVICE_ID_CIX_SKY1          0x0001
+> 
+> This is not sorted by Vendor ID.
 
-Don't you need to initialize presets to PCI_EQ_RESV?
+Will change.
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+> 
+>>   #define PCI_VENDOR_ID_NCR            0x1000
+>>   #define PCI_VENDOR_ID_LSI_LOGIC              0x1000
+>>   #define PCI_DEVICE_ID_NCR_53C810     0x0001
+>>
+>> base-commit: 99fa936e8e4f117d62f229003c9799686f74cebc
+>> --
+>> 2.47.1
+>>
 
