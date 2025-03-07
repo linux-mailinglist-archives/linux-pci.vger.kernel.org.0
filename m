@@ -1,126 +1,93 @@
-Return-Path: <linux-pci+bounces-23091-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23092-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE150A5625A
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 09:13:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01DE1A5629D
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 09:35:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C61F189722C
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 08:14:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3C2781714EB
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 08:34:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E71171DC9BA;
-	Fri,  7 Mar 2025 08:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yH7S8w4l"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA5E51B86EF;
+	Fri,  7 Mar 2025 08:34:55 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B5A1B86EF
-	for <linux-pci@vger.kernel.org>; Fri,  7 Mar 2025 08:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2F11A83E8;
+	Fri,  7 Mar 2025 08:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741335216; cv=none; b=rMBMjDI3Alz7nc4kY3pz/Ju0eX5a/GSqiXQu+w0PlPk5TizymTbuJbgIm2pBIeF0/bs9nJBzF4T+v92aN2Np2vVBmSCTWSSJSTNhCrITxCGChXyyNuDvwQ4PIx1/AFJEf0XxM+BazqZF9Dkp8c97uE217i1iR74jB4KaaFXGDKk=
+	t=1741336495; cv=none; b=lglH1y5kWiWwNFNXqJo5rC61y6vxUHjy5gR2sK95DcKVkpfM7drvkllc5HKJoudCAgqv0rrHiFkYZeEAyx7+WUk5o71ik/reAK7AkQZufb/sHQCTB2MkiqSC6hIXVnk8fAiO0HiJKs0pnVQRh9BhEikfT9vDRxnqXY6ONkI71Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741335216; c=relaxed/simple;
-	bh=mNNtsgjvr/yg2dDU2qGg1ag4pOBiq+f/ajn9YgzG3AQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=M8NSKeyum0Y/K6Kk6wxldFmc6+JQ0AILBTI7+CqYUkIQ3OmHO8qoKhyLDbtRQQZOwLlOKj5CYp+GxvApMlgu6z2z0f/ap+TP9ZG9N8Jkf0MqXsrVGJoatjo4n9V1g/SmXY2dd7FR5q/9qIZX1yrVcsLDByqeA5Uz4k7FQpupkfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yH7S8w4l; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43bc526c7c8so2041165e9.3
-        for <linux-pci@vger.kernel.org>; Fri, 07 Mar 2025 00:13:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741335213; x=1741940013; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=12a3NnEfGMI2vuVvciD88yslLap86n9MfZE9qRsezz4=;
-        b=yH7S8w4lVDYb0b579FuP93g8k8kinxWIbiqkN1cGT5OKt3+UA6VIJ7uj5Epbch/ygr
-         wZhMUWu/PUAU4Rv3xaODXKze1uDqkZ6fpaL/+GtF6xljTw1kgoTiUua4CApSA76qtJC+
-         y8UgX6xlFtKdttpjysXvpakyhheOD0r9lwkFz4dWthvXlt4+l8vkmH58sUtWwGOGjLNm
-         MoH2xjC3GSKtfYmF8QYeALPE4KCy3WdGtvQhQOBdNEJ+jw6uJjhjtfd2EaUQoPO95Xrf
-         NQBDTW6ONl/bPUEsaIxyAKj65Gila15quMGmmCmqZeRcBCbcuiHP4rtW1MunUjv4Pl2/
-         sWgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741335213; x=1741940013;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=12a3NnEfGMI2vuVvciD88yslLap86n9MfZE9qRsezz4=;
-        b=NT8y79vWSjM0lo7cEwKD0PEo2Q2B1D76cAWGix3MhTDjUK7quilic4HOYgUc2JJd/1
-         k68skvyUbpQysmf83Bq1Vh5oreb/kOwGV38DfqQrOPMvlE6GUs5kifKoz9+is7aNZdfC
-         QoyeD5yeWnE1aZB4VUcGs+g9PMLhHeXBcw1ihX0r+jpT0r4vmEpOrRFfj1NBJurtk2JV
-         KzoO3wS4xZp0MRonGh0hJPCOwFd3i0chdT2JoinxPWvQHUfk2Rhg6Auza1zzGUZ9Sfqj
-         zMB9Xf8bBFU1/1/OfYkAYTRAi5JkqKjgys6J5fUh1RuvYpeojN3kZCNECgt9zOnMjpWj
-         lgtg==
-X-Forwarded-Encrypted: i=1; AJvYcCU3EsRIkjFKHKcxp+0E+cZ8S6q3fG5IlKuXzT4xJ4SGF5CGaazOwsmDKchV8ExAsPXAcbIB/DZWd0s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5jXmgMzkrB/dKsCxAVHClO6S3L53Xs+MtHlg1FHq4GF0GgLGI
-	9zbcpGECg2OP42k0d8lH8LE1DIpqNg5wodNMJAplcgQgsKDYGXh9VmrDI7sAvsU=
-X-Gm-Gg: ASbGncthJdZTW7F0tGgSI6S2zKR1Stc4DriAbjpeub/D4+aceK89HBzHwd1jvJXWgUs
-	2IrNwYJYK2WcAXyv0MbKPwfgm/LnXAxge0l9uz/4f2WRLZ2AYUnRR8DsRD0TwR3Fk7ZORyQQTGp
-	8eawICtk5sP45PdBoMvkpHXmTa050YGkenSm9TwFoqj2fApnUB94uaxC3h3xwbLQ3/sujC/TdLC
-	qOsH7+MpeJ1cln4df82K4THmrF/b7ksDpNvDOxqjx+4Lnfxyg3HnIcguOQqKjzQIjqSDoKD4ez1
-	O78/iA0rFmS+smjKCkQjZGWwr+XfXXIzlGG92zkg+rgoQ1Z1K3DL0j5hNaU=
-X-Google-Smtp-Source: AGHT+IFQ+WMMvLL1/aaHUI7n7dcR9ePxgtPjRJRbPaHSVEqjJg//u898K3D1y4ZCAvDVaQslPXHcGA==
-X-Received: by 2002:a05:600c:35c9:b0:43b:c844:a4ba with SMTP id 5b1f17b1804b1-43cccdd9b0dmr2917685e9.3.1741335213314;
-        Fri, 07 Mar 2025 00:13:33 -0800 (PST)
-Received: from krzk-bin.. ([178.197.206.225])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0e222dsm4575458f8f.72.2025.03.07.00.13.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 00:13:32 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] dt-bindings: PCI: fsl,layerscape-pcie-ep: Drop unnecessary status from example
-Date: Fri,  7 Mar 2025 09:13:27 +0100
-Message-ID: <20250307081327.35153-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250307081327.35153-1-krzysztof.kozlowski@linaro.org>
-References: <20250307081327.35153-1-krzysztof.kozlowski@linaro.org>
+	s=arc-20240116; t=1741336495; c=relaxed/simple;
+	bh=QKt7S8W8M5/jPz1pe4PXUMPxklGGARlrxMvPPd2OrFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ay4iABwIyG18Xqqjr+CXjm1ef+BZaaBj2h1CHNzg+JACG5SM+HjCzwxsxZT28GTOvXIxtrWaq1gIr8kmCoO5ZAD9g0osfqjcgEDTzDnIz6Nnj7qk8BWbKzM14/zC7bObuPjP3Idwwl2Ndq6YHWLVaSLlXuOKg/bRli8a99LlsWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 35CA03001409A;
+	Fri,  7 Mar 2025 09:34:43 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 2442C2A7F6; Fri,  7 Mar 2025 09:34:43 +0100 (CET)
+Date: Fri, 7 Mar 2025 09:34:43 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [RFC PATCH 1/1] PCI: Add Extended Tag + MRRS quirk for Xeon 6
+Message-ID: <Z8qvo0_tuSbwwyIY@wunner.de>
+References: <20250304135108.2599-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250304135108.2599-1-ilpo.jarvinen@linux.intel.com>
 
-Device nodes in the examples are supposed to be enabled, so the schema
-will be validated against them.  Keeping them disabled hides potential
-errors.
+On Tue, Mar 04, 2025 at 03:51:08PM +0200, Ilpo Järvinen wrote:
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5564,6 +5564,33 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0144, quirk_no_ext_tags);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0420, quirk_no_ext_tags);
+>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SERVERWORKS, 0x0422, quirk_no_ext_tags);
+>  
+> +static void quirk_pcie2x_no_tags_no_mrrs(struct pci_dev *pdev)
+> +{
+> +	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
+> +	u32 linkcap;
+> +
+> +	if (!bridge)
+> +		return;
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml          | 1 -
- 1 file changed, 1 deletion(-)
+I note that in a lot of places where pci_find_host_bridge() is called,
+no NULL pointer check is performed.  So omitting it would appear
+to be safe.
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-index 1fdc899e7292..d78a6d1f7198 100644
---- a/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/fsl,layerscape-pcie-ep.yaml
-@@ -94,7 +94,6 @@ examples:
-         reg-names = "regs", "addr_space";
-         interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* PME interrupt */
-         interrupt-names = "pme";
--        status = "disabled";
-       };
-     };
- ...
--- 
-2.43.0
+The quirk is x86-specific, so compiling it into the kernel on other
+arches creates unnecessary bloat.  Avoid by moving to arch/x86/pci/fixup.c.
 
+There should definitely be a multi-line code comment above the function
+explaining what defect this works around (slower performance apparently),
+and also link to the PDF document.
+
+BTW the PDF document says "Intel Confidential", I'm wondering why this
+has been made public without stripping the confidentiality marker...
+
+Thanks,
+
+Lukas
 
