@@ -1,106 +1,124 @@
-Return-Path: <linux-pci+bounces-23146-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23147-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D287A5723E
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 20:41:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 881D1A57275
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 20:49:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 23D697ABE09
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 19:40:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EFFD41899EB7
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 19:49:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64F6D253330;
-	Fri,  7 Mar 2025 19:41:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1AB91A4F3C;
+	Fri,  7 Mar 2025 19:49:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R4EAmMZQ"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="06TrbF8/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6Ak+vZRz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414ED24DFEF
-	for <linux-pci@vger.kernel.org>; Fri,  7 Mar 2025 19:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23253DDA9;
+	Fri,  7 Mar 2025 19:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741376492; cv=none; b=a/HUjp6jU7SqvgPvN0wnPN4bWmlA3h6a57Xs3vMC+A0EPeMrVBXvNhiDdh8VK9aPnK+V/0ELi6OFkBTb1IRRmC0vLtNOdurDmgkkusCL/bAA4aDYbSfDSwRNrfUn3K6vgFRRip8ETkm3zrn4UwmC8tHN1sgCmLSj9Vc5ExgPsxQ=
+	t=1741376983; cv=none; b=coAWPumdzUmTsdlOnbm7u0bOB5w+lDZkV24yzM55YMsXEj8yDOnqvv8Y7/1D3VqXNvu70TDtWXdJ24zvtI9dyt+gMKoAfpT/Qe1cDX8591r+07K2Ojp5yZITQZVTEjSbVwMmQ+t1lxAoPg5xuFXr0cH5DTi7vq/3Gc+giPA6G6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741376492; c=relaxed/simple;
-	bh=xOC4u6t1ZU43ufUN9LyYGDC5Sn8ns7W/DvgAZTjLIyo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MUm5hVAQYy2TBpAOrCC34cBv/Hn3W5EherplRBj+Ol/qCQf8UdU+pt9L+aLfmHHFi92mQg2hFLftbKY/VQCmPieu7qdukyA6sN3l1mY1le0qOgBypomt9R+9k7HNhQWOZ7GffNKYjoTpiRz/HRrIRFli9fR+pCji/C005qHXSrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R4EAmMZQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83DA2C4CED1;
-	Fri,  7 Mar 2025 19:41:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741376491;
-	bh=xOC4u6t1ZU43ufUN9LyYGDC5Sn8ns7W/DvgAZTjLIyo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=R4EAmMZQoEHl6zqAlx5RDewrBHPSHZhG3eu3t3Qbsn8B8xmKCdtBBQnMpwM/tAlh0
-	 +WMH9Zsci8eB522/qxmTs7ns7pxW1MABsteQGjWs8CBnSqbYstko6IpmkHj7PufMKd
-	 ZrtmImyGSGi9cbWr3JjQRt1EIFSblqjN/iz0LQksEzNEJfT37Dyn1qXfpW9Kuqnb4R
-	 /gyrkcQjtaXiGDKPQOW+sH8SUKPr7vA6D9loAoTUy0dWgqB+OavH0cjk/tGkMmSsFf
-	 9VrL8YcHN8s46ToxtP62eTwhMfuCxq5CgW9z4eCizUJKUMkvVj/I6M0Oe/aG6SOWAg
-	 rtNLyvtwag0pw==
-Date: Fri, 7 Mar 2025 13:41:30 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Karolina Stolarek <karolina.stolarek@oracle.com>
-Cc: Jon Pan-Doh <pandoh@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v2 7/8] PCI/AER: Add AER sysfs attributes for log
- ratelimits
-Message-ID: <20250307194130.GA420442@bhelgaas>
+	s=arc-20240116; t=1741376983; c=relaxed/simple;
+	bh=XHTHCPKvEi03/hWk1CH1ZPSFXqifak4Vq8xVcKAGqBw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DYktgz1wTlkpFzxJogdU1N8DSloZOhsv/KDAxZYtZ28C6FVbPdAEIy9gtvGskH7JpNC+KMxuBFa0JnNPqcKxZIPtz+rUdGwxK2mjNTC4ogLm3d6fPH/JWKbyvpBGP93iMl+B1z8aRoZJSts4sA3Z/Vf9bGmVwdpu+KWhYJblxuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=06TrbF8/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6Ak+vZRz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741376979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sULuRMWtdxzN85HXmKWfAgG3HUOWtKyQSj4jX7okY34=;
+	b=06TrbF8/2othdnL+RlBA0H5GxTkeo0128tSJh0sWi8UW1p/oXCPLGJ9OefiWibvI/fpx1C
+	UJyfH/aO5KcUWYgZIYpCNBM+K7C+4jIDhC7wCiP6KCNyZ68f+ZOxzANnwr7awUS62RA9sH
+	F2gHLFohXrxqQ5CiZ3WuO5xP/o+qelGBy/iVRDVvaSWFybASDRaU6MrRFLCxUKtZdS9LWt
+	GOh+Tx5ny2RWp7IQZzaUI+8GSDamffvtK25tPbRLlj8Z38S+j456851CpaNze4RUfhcr7S
+	pk4Z2Yew50ePPbGU3r2s6Zi1T9epKRk+qCtCmk7Al6KSjRiBljQr0su9xTOkMQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741376979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sULuRMWtdxzN85HXmKWfAgG3HUOWtKyQSj4jX7okY34=;
+	b=6Ak+vZRzOKvj4t9cA7ALqhkIFvEcCCrW7D0F+pIZA4NdbZJAko+KN7q/BsI5fTS5S6s3LH
+	fMTnIrplw5mdC+BA==
+To: Tsai Sung-Fu <danielsftsai@google.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+ <kw@linux.com>, Rob Herring
+ <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Andrew Chant
+ <achant@google.com>, Brian Norris <briannorris@google.com>, Sajid Dalvi
+ <sdalvi@google.com>, Mark Cheng <markcheng@google.com>, Ben Cheng
+ <bccheng@google.com>, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH] PCI: dwc: Chain the set IRQ affinity request back to
+ the parent
+In-Reply-To: <CAK7fddCG6-Q0s-jh5GE7LG+Kf6nON8u9BS4Ame9Xa7VF1=ujiw@mail.gmail.com>
+References: <20250303070501.2740392-1-danielsftsai@google.com>
+ <87a5a2cwer.ffs@tglx>
+ <CAK7fddD4Y5CJ3hKQvppGB2Bof4ibYDX4mBK3N1y8qt-NVoBb7w@mail.gmail.com>
+ <87eczd6scg.ffs@tglx>
+ <CAK7fddAqDPw1CuvBDUsQApbs1ZSE_ruyTAdsp+c4116C0ZjvVw@mail.gmail.com>
+ <878qpi61sk.ffs@tglx>
+ <CAK7fddCG6-Q0s-jh5GE7LG+Kf6nON8u9BS4Ame9Xa7VF1=ujiw@mail.gmail.com>
+Date: Fri, 07 Mar 2025 20:49:38 +0100
+Message-ID: <878qpg4o4t.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <037da68f-791a-4f04-a39c-0fde3dac5704@oracle.com>
+Content-Type: text/plain
 
-On Fri, Mar 07, 2025 at 01:10:33PM +0100, Karolina Stolarek wrote:
-> On 04/03/2025 01:58, Jon Pan-Doh wrote:
-> > On Mon, Mar 3, 2025 at 12:31 AM Karolina Stolarek
-> > <karolina.stolarek@oracle.com> wrote:
-> > > In my opinion, we want them to be separate. We may want to see no logs
-> > > of errors but still have them recorded in rasdaemon, for example.
-> > 
-> > Understood. So the sysfs toggles could be something like:
-> > 
-> > aer/ratelimit_log_enable
-> > aer/ratelimit_irq_enable (with default = off)
-> > 
-> > This assumes that IRQ ratelimiting part is able to be merged.
-> 
-> Sounds good to me
-> 
-> > FYI, the current implementation ratelimits for both logs and trace
-> > events, but increments AER counters. If there's a scenario where you'd
-> > want no logs but have trace events sent, then we may need another
-> > ratelimit and/or roll that into IRQ ratelimiting (to avoid trace
-> > buffer/userspace agent getting inundated with events). Granted, there
-> > is probably a higher tolerance for spam there than in console logs.
-> 
-> Right, I see what you mean. I think we would like to still trace them, at
-> least that's what I got from the conversation I had with Jonathan[1]. It
-> would be good to agree on the final solution here.
+On Fri, Mar 07 2025 at 19:10, Tsai Sung-Fu wrote:
+> Thanks for your detailed explanation and feedback, I am a bit confused about the
+> #4 you mentioned here ->
+>
+>>     4) Affinity of the demultiplex interrupt
+>
+> Are you saying there is a chance to queue this demultiplexing IRQ event
+> to the current running CPU ?
 
-I agree; I don't think we have a need to rate limit trace events.
+The demultiplexing interrupt (currently a chained handler, which is
+hidden from /proc/irq/) stays at the affinity which the kernel decided
+to assign to it at startup. That means it can't be steered to a
+particual CPU and nobody knows to which CPU it is affine. You can only
+guess it from /proc/interrupts by observing where the associated
+demultiplex interrupts are affine to.
 
-If we get inundated by trace events, I suspect the solution will be to
-turn off the interrupt and poll periodically.
+So ideally you want to be able to affine the demultiplexing interrupt
+too. That requires to switch it to a regular interrupt for
+simplicity. We could expose those hidden chained handlers affinity too,
+but that needs some surgery vs. locking etc.
 
-> --------------------------------------------------------------------
-> [1] - https://lore.kernel.org/linux-pci/20241216104424.00000fab@huawei.com/
+> And that's really an approach worth to try, I will work on it.
+
+I've played with this on top of variant of Marc's changes to use MSI
+parent interrupts for such controllers too:
+
+  https://lore.kernel.org/all/20241204124549.607054-1-maz@kernel.org/
+
+A completely untested and largely uncompiled preview is here:
+
+     https://tglx.de/~tglx/patches.tar
+
+The MSI parent parts are in flux. Marc will look at them in the next
+weeks, but I picked them up because it simplifies the whole business a
+lot. If you find bugs in that series, you can keep them :)
+
+Thanks,
+
+        tglx
 
