@@ -1,84 +1,73 @@
-Return-Path: <linux-pci+bounces-23095-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23096-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E59ABA562E1
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 09:47:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9080A5647A
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 11:00:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 221A3188E3DA
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 08:47:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F7B33B05FF
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 09:59:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 383CC1A255C;
-	Fri,  7 Mar 2025 08:46:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 486A620CCCA;
+	Fri,  7 Mar 2025 10:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eOm4uEvI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gFyVmqWe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4BF19E971
-	for <linux-pci@vger.kernel.org>; Fri,  7 Mar 2025 08:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B840A20C47E
+	for <linux-pci@vger.kernel.org>; Fri,  7 Mar 2025 10:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741337217; cv=none; b=DOwcN6uhhfM3zrQNm1U/bm/aX6PBsc0Dpg7d0r5PbMgMJpLqgV8Icl/7dYvnhQcnvYhp3BjUZRePF4YE54w6u14P1VI+Bt+9tVXWV71KPI6hKQ8sf/n5yF04z+kkD9i/+Uhxx1ix3CZXDjr+h6QNO8ecvjKwGFHQJZSi0S7bvjc=
+	t=1741341602; cv=none; b=Pc6sdUkybgf7bBV/BAX4EPIbZZczkGMhJVg6HM3mywX8XCbJY7X8s2BRQrM67vMiX45ycx7kScJ3mrimelsSe1sD7Yp8oEOkN76UDKo343PGItGktxsn6YPgwH0HiQmL3yNMtJGG2eZz1F/rBvrzSsxjRKqcVem84zjNOZj9kcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741337217; c=relaxed/simple;
-	bh=2tCICcAJq3mMEdu4ZDVty00I9VzTBbw0rWKed6g0y1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DVzzQ9l359lS8tCt/32SUhMLrbzNNmrAagj9EuYavpoD7LcvPAZRvAri1CLXdf7V2yqX+Chhgke2Gz8ekLXJTiIJiKvZlV2eRiBM0I57AnIPC0kUE0MjHupx8xZZwp5uJSJDv84p0E9wkxRYxFIDg+h1m4d+zdfiZ31S7g0G15w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eOm4uEvI; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43bbd711eedso12200465e9.3
-        for <linux-pci@vger.kernel.org>; Fri, 07 Mar 2025 00:46:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741337214; x=1741942014; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CURT3euQlvlJ1zWGuJW+d+Z8hIOMnrtr7tJOIL93/Ac=;
-        b=eOm4uEvI8zz2mi7l1F08LqQwGSTneNiE/vhatQFpT8E9tJqTa3rnU+anEXpx6hH+u4
-         gJSsknIRQy9YW4/mlisDichoRvLYAOOYLqqlGTGyE5zeBN4UTE0m+y910WMjQPkOuGcx
-         tSDruNw77Bjtq/1irOHSeWcD5rs7CWvUiAfhINkPfkM4uw/3cDZRj7xvRETgZ7rn2wo+
-         MJn3ul63qEepQLexx/Zmwy/5rwMlvpg8qamZVCPTow0U39FNr7L9fGwzQHzGvHlJtOTd
-         jb13iLfAD9UExdezgrYHiMGNs3knu4hMlMDpmQ5S9wCur9j+dTNO4f8177Jm11s0E30e
-         zqYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741337214; x=1741942014;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CURT3euQlvlJ1zWGuJW+d+Z8hIOMnrtr7tJOIL93/Ac=;
-        b=Jj1tKX10R+KhLuDfQWYMEq8qYQW0CP1qTOFdUiusjkF864szrCbGc75Jp5D4LHIfVT
-         Rs/EA5XBqsMxy4A09Mk/Kdjqg1I59wSD93uZPWuuNf2pPAWh+D7MDyfnTzvoM3uArIJ9
-         cIYYIcf9hDqMCG0ArVhEXMAFdEbYrfy5CjF8q8omvpBNsH18oINp/kvATi6mhxcZdrXp
-         43rgY8pjqVa7e9iI1+etVHMzZ1YCOI3rT1WxiIxTbhcMs18ubumFpRogWS0hXrYbcsXP
-         gSgOViPe9l/09UBNAfKNdloFtdOkt0JqD9qTmRSBuXvrorckYOMCunmV6OrlboO5O/jr
-         JrHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdYBuhf6i+8alktNlzhhsJD+Iw2qRU0MueoBapIwQkJUHeNv/B+N8lTLfgYuoOW+26Vra59AV2KU4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLxNyw6cqDHJPWqLxZYeqVu4AjQdsxAgUtcKGHV+4Qr2Yhsikx
-	GlXu+2CSJb3nErYko6VVlEdl+kcpAa5yAgkZc9GHrIKesXCHk+gy2cgFCCuFcmE=
-X-Gm-Gg: ASbGncs7nzIbHVbFjeyq/lcRVorDkkPU3xzJ+qWaEgv6gUSq+e4oSwFwVhadE83M23a
-	OrXxkN8GLShJyFUnVWruyJuji6c9MInL4N6uujGQnpVm6D4LNOi4iaq9am2fQM0DE0Jm0OPto9/
-	dPcE5jnctIC+qNvLCdvj3daWEqvaf//hEncWBq6plVuzmYWicMVcuYDNLq7MBmkfpMEiuVvZbqb
-	OC1TzxojiexAfifUMFW8/JbOxEWzBb+fuV6IDimUDFpwtFRK5TS24d+RQnAyUytsj9ewlTOq/2P
-	fGTeU88UMoLSnot4QvzxxlFz+WGn+LO6zZl+PJjhJ6lZTktghQ==
-X-Google-Smtp-Source: AGHT+IEi5jnq9tYBMNZz/LbRpDjpN8pjvqYyLgYrE5AUx25gXQmhhihjTg9/axLoWRLHysByHJibOQ==
-X-Received: by 2002:a05:600c:4f91:b0:43b:d14d:8ff2 with SMTP id 5b1f17b1804b1-43c5a635695mr17068445e9.29.1741337213638;
-        Fri, 07 Mar 2025 00:46:53 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3912c102db1sm4643611f8f.95.2025.03.07.00.46.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Mar 2025 00:46:53 -0800 (PST)
-Date: Fri, 7 Mar 2025 11:46:41 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ma Ke <make24@iscas.ac.cn>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] PCI: Fix double free in pci_register_host_bridge()
-Message-ID: <db806a6c-a91b-4e5a-a84b-6b7e01bdac85@stanley.mountain>
-References: <cover.1741336994.git.dan.carpenter@linaro.org>
+	s=arc-20240116; t=1741341602; c=relaxed/simple;
+	bh=k03/IYkDkoF3hLcUC9G2wP9K0tCapRSwq2cMtFtwOpc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=r7o9pMPrWuey81b5BfDlxXFc4qermWJXp1nI4Pf04GfV8aiEktxqos5j5EM/kQp8B3QzPahRYPppimiQZ5fNYeGAV3nOcISq9dEsX8rcJfuDwvCem2Wa0UwCz3hEqgL1uATjg3oqGh5jg2z2YSPXw/rU9TBPw101uXVGY348hfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gFyVmqWe; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741341600; x=1772877600;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=k03/IYkDkoF3hLcUC9G2wP9K0tCapRSwq2cMtFtwOpc=;
+  b=gFyVmqWe/kF1F8pGnbkbVfXqI2RB/7UDreH7AbKzkRepane2+kG4Ea+H
+   Tie2EhjonStA7ySBdJ4QkPiLI6cN/nPlM/4QbptmhC0269y7fgZHWPESY
+   qbx5aAPNDwWAlI3dn2HIMPw04zlwqXV//b2YTG8n6r59Wwv0T9v73+dh8
+   VamtihLT6xYgwGgUVHaDTrcY02ucWqrLvFcbtGhQTtWxG9x477V5EpQDG
+   reO64+DsTBE0OqkcxieXWegk5imulXbd7tKbKLiKGRWY+B5GWNSMp5n7S
+   BDW+Z+3NPq7Dho5kZ2Vi2Hcy/bakh8k2ZfY6UqYo9HGAtf1LdbDUEX8tJ
+   A==;
+X-CSE-ConnectionGUID: MIS4b+BOTEi6MvOjylfD1w==
+X-CSE-MsgGUID: 4hgs5n6URPavI8x9BOElcg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="42417395"
+X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
+   d="scan'208";a="42417395"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2025 02:00:00 -0800
+X-CSE-ConnectionGUID: 7fvnJp7xTrap6kkvnlbiwA==
+X-CSE-MsgGUID: OEI+86jNSP65jg6cyFdJlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="124502690"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa005.jf.intel.com with ESMTP; 07 Mar 2025 01:59:59 -0800
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tqUUn-0000Gr-0K;
+	Fri, 07 Mar 2025 09:59:57 +0000
+Date: Fri, 07 Mar 2025 17:59:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/dwc] BUILD SUCCESS
+ 551d177411e13fb306ed9950bbcb52f10d0b33b0
+Message-ID: <202503071702.n5yWZDCw-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -86,63 +75,81 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1741336994.git.dan.carpenter@linaro.org>
 
-Calling put_device(&bus->dev) will call release_pcibus_dev() which will
-free the bus.  It leads to a use after free when we dereference "bus" in
-the cleanup code and the kfree(bus) is a double free.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc
+branch HEAD: 551d177411e13fb306ed9950bbcb52f10d0b33b0  PCI: dwc: ep: Return -ENOMEM for allocation failures
 
-Fixes: b80b4d4972e6 ("PCI: Fix reference leak in pci_register_host_bridge()")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/pci/probe.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+elapsed time: 1452m
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 819d23ce3565..c13f2c957002 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -957,6 +957,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 	resource_size_t offset, next_offset;
- 	LIST_HEAD(resources);
- 	struct resource *res, *next_res;
-+	bool bus_registered = false;
- 	char addr[64], *fmt;
- 	const char *name;
- 	int err;
-@@ -1020,10 +1021,9 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 	name = dev_name(&bus->dev);
- 
- 	err = device_register(&bus->dev);
--	if (err) {
--		put_device(&bus->dev);
-+	bus_registered = true;
-+	if (err)
- 		goto unregister;
--	}
- 
- 	pcibios_add_bus(bus);
- 
-@@ -1110,12 +1110,15 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- unregister:
- 	put_device(&bridge->dev);
- 	device_del(&bridge->dev);
--
- free:
- #ifdef CONFIG_PCI_DOMAINS_GENERIC
- 	pci_bus_release_domain_nr(parent, bus->domain_nr);
- #endif
--	kfree(bus);
-+	if (bus_registered)
-+		put_device(&bus->dev);
-+	else
-+		kfree(bus);
-+
- 	return err;
- }
- 
--- 
-2.47.2
+configs tested: 60
+configs skipped: 1
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+arc                  randconfig-001-20250306    gcc-13.2.0
+arc                  randconfig-002-20250306    gcc-13.2.0
+arm                  randconfig-001-20250306    gcc-14.2.0
+arm                  randconfig-002-20250306    gcc-14.2.0
+arm                  randconfig-003-20250306    gcc-14.2.0
+arm                  randconfig-004-20250306    clang-18
+arm64                randconfig-001-20250306    gcc-14.2.0
+arm64                randconfig-002-20250306    gcc-14.2.0
+arm64                randconfig-003-20250306    gcc-14.2.0
+arm64                randconfig-004-20250306    gcc-14.2.0
+csky                 randconfig-001-20250307    gcc-14.2.0
+csky                 randconfig-002-20250307    gcc-14.2.0
+hexagon                         allyesconfig    clang-18
+hexagon              randconfig-001-20250307    clang-21
+hexagon              randconfig-002-20250307    clang-21
+i386       buildonly-randconfig-001-20250306    clang-19
+i386       buildonly-randconfig-002-20250306    clang-19
+i386       buildonly-randconfig-003-20250306    clang-19
+i386       buildonly-randconfig-004-20250306    gcc-12
+i386       buildonly-randconfig-005-20250306    gcc-12
+i386       buildonly-randconfig-006-20250306    clang-19
+loongarch            randconfig-001-20250307    gcc-14.2.0
+loongarch            randconfig-002-20250307    gcc-14.2.0
+nios2                randconfig-001-20250307    gcc-14.2.0
+nios2                randconfig-002-20250307    gcc-14.2.0
+parisc               randconfig-001-20250307    gcc-14.2.0
+parisc               randconfig-002-20250307    gcc-14.2.0
+powerpc              randconfig-001-20250307    gcc-14.2.0
+powerpc              randconfig-002-20250307    clang-21
+powerpc              randconfig-003-20250307    clang-19
+powerpc64            randconfig-001-20250307    clang-21
+powerpc64            randconfig-002-20250307    gcc-14.2.0
+powerpc64            randconfig-003-20250307    gcc-14.2.0
+riscv                randconfig-001-20250306    clang-18
+riscv                randconfig-002-20250306    gcc-14.2.0
+s390                            allmodconfig    clang-19
+s390                            allyesconfig    gcc-14.2.0
+s390                 randconfig-001-20250306    gcc-14.2.0
+s390                 randconfig-002-20250306    clang-19
+sh                              allmodconfig    gcc-14.2.0
+sh                              allyesconfig    gcc-14.2.0
+sh                   randconfig-001-20250306    gcc-14.2.0
+sh                   randconfig-002-20250306    gcc-14.2.0
+sparc                           allmodconfig    gcc-14.2.0
+sparc                randconfig-001-20250306    gcc-14.2.0
+sparc                randconfig-002-20250306    gcc-14.2.0
+sparc64              randconfig-001-20250306    gcc-14.2.0
+sparc64              randconfig-002-20250306    gcc-14.2.0
+um                   randconfig-001-20250306    gcc-12
+um                   randconfig-002-20250306    clang-16
+x86_64                           allnoconfig    clang-19
+x86_64     buildonly-randconfig-001-20250306    gcc-11
+x86_64     buildonly-randconfig-002-20250306    clang-19
+x86_64     buildonly-randconfig-003-20250306    clang-19
+x86_64     buildonly-randconfig-004-20250306    clang-19
+x86_64     buildonly-randconfig-005-20250306    clang-19
+x86_64     buildonly-randconfig-006-20250306    gcc-12
+x86_64                             defconfig    gcc-11
+xtensa               randconfig-001-20250306    gcc-14.2.0
+xtensa               randconfig-002-20250306    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
