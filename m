@@ -1,330 +1,190 @@
-Return-Path: <linux-pci+bounces-23082-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23083-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8646A55CE6
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 02:15:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 605B9A55D32
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 02:39:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D2723A97A3
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 01:14:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 571C33B3EC5
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 01:38:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F72741C71;
-	Fri,  7 Mar 2025 01:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hdHVhchq"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E4DD1519BC;
+	Fri,  7 Mar 2025 01:39:02 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from HK2PR02CU002.outbound.protection.outlook.com (mail-eastasiaazon11020107.outbound.protection.outlook.com [52.101.128.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C231547C0
-	for <linux-pci@vger.kernel.org>; Fri,  7 Mar 2025 01:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741310108; cv=none; b=bG6eIjTnvsN7j8bvpKBAdwU8SeeeGpzEofb/y3eDfq5nSg89QQbfNQWGvAIm42ARBo1I+ts0lPYPvweX8pAsUrD2qDQJvEkf97pY1ncivVAg8FoOJD1EIRdpN92hE8l1TPusvctxG9GLqpScT/59bCPF6EPXwYzOG/GRjDOea40=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741310108; c=relaxed/simple;
-	bh=vvJ7Ic1cdp10j+QYggPUF8udL5L6/nFXaIODmUEuCK8=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB366BB5B;
+	Fri,  7 Mar 2025 01:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.128.107
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741311542; cv=fail; b=TiTSEdW+M2bl2uyzc6ktphRUkriFQuhs9LLeK7Nhy0vy7SgonDoAG+wcertPmzFTb3qLXEsJ+ojnp6CACFtScw8J0QepRVe2Aau921/6JiJl/z0zfx/yqynSzYkzRNsaylbjHIPeFKBuHUgpNubKAw49YlUUls7yOWNzpJLEE9c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741311542; c=relaxed/simple;
+	bh=OlgnnvVLSrBdYIMfMPZu9/VSgGBE8hfHNG02grXtGco=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ux0i8w7/j0j+WopFtAALndAby9pL9OfBxhBQSl1yak9IzGGAr13VBcnfNP6kbMJvfWBQXV81g73FERewTmsxKGH+BpNXn9MoHJ8moChi9J1KgyQXWV41IGYLIZ2ZP4yxPZqPUuXMjX00E1aGZUlxggGL71zwzG+eD2kjwBLawYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hdHVhchq; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 526KZFc0013362
-	for <linux-pci@vger.kernel.org>; Fri, 7 Mar 2025 01:15:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	iI2N8CwrDtDkSWx9F00jEAdnM8BhWOIKc87gFJ9bfeo=; b=hdHVhchqrgQR0YxD
-	ynTJJvw1JNayc5WVTjacvlmxl3AbKInDYMOHlrqXmcoFiOmXBV7EYy/2xSVdt9ad
-	Gs5NbgTjJYw2ashycyzv90IyllpzsUaOzPHJYu7j9WbnQnMWBTY5oDijchKuP+7n
-	pu2bhu/4vwe+6KIycjW3Xo6eIeK/mZK+k9jsPKAHitNpOTIFCvETyIEbFHrJduXT
-	OYhR0ItdA0BXtJxC6/4oiQyFEs8Sy7JQvXijx/lJvsCm3OxIvVJKNCE5D16rEmhX
-	rGIWl9IVZTv2tuogkEKPR0nDf4nGrBbGh5uo7Yt5uXR/hNf46T394P8mbksA+FVk
-	8b5dUw==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 457jvdrk0g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 07 Mar 2025 01:15:05 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-22367f4e9b9so23278245ad.0
-        for <linux-pci@vger.kernel.org>; Thu, 06 Mar 2025 17:15:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741310104; x=1741914904;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iI2N8CwrDtDkSWx9F00jEAdnM8BhWOIKc87gFJ9bfeo=;
-        b=oBb9jHRmHJBlyxBWU99Z4mz+toG4lf4zoXgJSD5yvy9s0smFf/ut0N5atn/QsfAJ1u
-         IfHLS7iJWn7p64A3oEw14sITOF+M9QNlgssaM9W19OcdDU2/3K2de/YaLWrXxjhZyIfI
-         TLcGnxnGt+HAr4w/klCsQ7eIaDnYnx8CC1v2E86Kk/yXg1IMLYHH+d+ozmDTaWFr66E8
-         /kBPbHaQS+7tmuHfM0beS+SYxnXUzXOVoWoMMwp6MyU7r3E7lMXmEa1CGBR9hEaftimx
-         /ezlr5l4w9hjjmYdxhDx2F9G8wqQ5ri3TMSd3auyyhCDNNGAUntcrqRuKGXH1JF1K028
-         xX1g==
-X-Forwarded-Encrypted: i=1; AJvYcCXN0KwhWD+kfpOE/H6BRwJMDEi5HS1VHG8LyEjYKtFB3DhZ/+wXZE6RpF99RgAa5Nd8RLguIODoygY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0bv5kUeryWbL2KTrvbFUdhTRTDKBfPUb5SNd86jyUV4CPXF2G
-	5OWVz53nA0lHs9RP3ee8WOQ5Swo/5keSoVhkXn0+I+3uM3CdIlAdmcJ2q1Q6RHvniI1UG73rOr9
-	/wfzDR3hoCJ613rfXR6aBzNzi0Xfh+6DXtQ6aubS45ObeCrD0fsnJAP/dEBc=
-X-Gm-Gg: ASbGncv9Ns6Dk31jdDqOE0LbDUd0MSuUvIuBD5bltjuhtQORWztgwb+8jHM8hbjKqd/
-	kT+5ANVkYISJXfhFUYoquPaHtkDr8uIvTWI4qDEtOClyU+m5iz9+mviYR3YIwdaI2QTdSZuzFxe
-	LR2mqfboldOiHEZtJjsWTCOXB+cPogfB9srxH7CD6J7F0Bc49NwOxs1xgF7exiGKXBs+Y7y4AkK
-	k9A3CAgGS0Y/yqbqnQp+TWkvh/nfwZbP3wIx/tGpeqmiRDU8ntz2q5H25YnHkJ9OYwd6OoccevV
-	Yj+QJaHEJW7dUVD+zEmj835Y6U2XHvjp72zJsxF7G6+vnA==
-X-Received: by 2002:a17:903:19c4:b0:224:26fd:82e5 with SMTP id d9443c01a7336-22428bf6d24mr24269405ad.48.1741310103697;
-        Thu, 06 Mar 2025 17:15:03 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEB9an4W1W2oxG+l8wDfnqtca4twJs2o6LXBR9IbBTKftNlqe6OnXmtOiEMbN1shcv/sX4Edg==
-X-Received: by 2002:a17:903:19c4:b0:224:26fd:82e5 with SMTP id d9443c01a7336-22428bf6d24mr24268945ad.48.1741310103202;
-        Thu, 06 Mar 2025 17:15:03 -0800 (PST)
-Received: from [192.168.29.92] ([49.43.228.40])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af28126e09dsm1882719a12.53.2025.03.06.17.14.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Mar 2025 17:15:02 -0800 (PST)
-Message-ID: <263aa955-943d-5bdf-8eb9-74e90d289fb5@oss.qualcomm.com>
-Date: Fri, 7 Mar 2025 06:44:53 +0530
+	 In-Reply-To:Content-Type; b=W3eqgBwShzMHaQ7SJnZVIbdJKtSWMiFyR7pvr87LMQAG1VxT+YMlD75SYwQIzGkx9N3zU59Bncq7mtthW+fP7gPqSKQu9onaG8nGephFFmCoRMkeO1i/3RfqaTy6fqYtOoikD/fk/cN+2L/ow0MMJjlim5CCtAXVgFyKGFmb7rs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.128.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qGKbCQMhGlGKls5xx+kRW6dLLgnAWyIHvz6ZUQWqg2A2aYo1G/jXLmiYcVjdnZJ+N2hr0ay6+JWxlhM28krlUTY7TKad2eFoNnY+7eirKfy3yaDmbXbslv8OrL2E0jjvlMlI2UjGtxGvjQZaT5mwbNSTy4z9uoz/mDLNNAMFp59ySd5Yz1XCkDNhIHxs6cO9BNV9990h8CUM64dwwOJ01UF60o+PqFtLp8jT0acqPNCWE6TTAO9bUfnLLpRHfavOOYSxgK1JtyQF+ZurBsFACVBFAW3G7rgm8SFj30sf1PNTGhG/PthiUVCrnAuROKrjN2u0NE3JeaGvzcnqmj3Yuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i2Wxt2mnFkmkvbXAz0aLM5OWBdfHQFjCuUkO1Fq67wA=;
+ b=OalU62QD9mqi9IifMr1c6wSnuB4EjVQL+LgZSwzHyr93xBX8YZvDlqWni8c1BEBncXOOoB29SJtU4uN+1I+wjnrefCex4BO1TXUBJxQnTRExhz26sY7L+XLFffjxGJzxcqwLmjyPnQljW+78DVx2cAP+4z8ocNOzJV7+Jabx2QSmUGp/pvofb/xixpESY1H/gMvaSH6Sog4cDdr5luw949kKEj6OoQPZPwTOhUQjdaciMSOGrJXjJDnZ1rOQoVY0mI7S4Ni6udN85djKd+9RZ/IuKI2KEZ+38sbkcNGhTv4O3fv07LXUciNjyQwaj/Op6Rs8+BuebDG9pDf+ywKONQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=cixtech.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from SGBP274CA0022.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::34) by
+ JH0PR06MB7032.apcprd06.prod.outlook.com (2603:1096:990:70::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.17; Fri, 7 Mar 2025 01:38:54 +0000
+Received: from SG1PEPF000082E6.apcprd02.prod.outlook.com
+ (2603:1096:4:b0:cafe::8d) by SGBP274CA0022.outlook.office365.com
+ (2603:1096:4:b0::34) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.19 via Frontend Transport; Fri,
+ 7 Mar 2025 01:38:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG1PEPF000082E6.mail.protection.outlook.com (10.167.240.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.15 via Frontend Transport; Fri, 7 Mar 2025 01:38:53 +0000
+Received: from [172.16.64.208] (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id C8AA24160CA0;
+	Fri,  7 Mar 2025 09:38:52 +0800 (CST)
+Message-ID: <79869ce4-c0d5-4b20-ad79-7b6244602d13@cixtech.com>
+Date: Fri, 7 Mar 2025 09:38:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 4/4] PCI: qcom: Enable ECAM feature
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc: cros-qcom-dts-watchers@chromium.org,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
-        quic_vpernami@quicinc.com, mmareddy@quicinc.com
-References: <20250207-ecam_v4-v4-0-94b5d5ec5017@oss.qualcomm.com>
- <20250207-ecam_v4-v4-4-94b5d5ec5017@oss.qualcomm.com>
- <20250210092240.5b67fsdervb2tvxp@thinkpad>
- <5fc8c993-4993-d930-2687-96fdf95dc1cf@oss.qualcomm.com>
- <20250210094709.lih7lhnwjhmvrk7r@thinkpad>
- <149f513f-a68f-8966-4c3a-ed8c7aafb1ab@quicinc.com>
- <20250305182639.ov6yiqplyaymdbpa@thinkpad>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: Add PCI quirk to disable L0s ASPM state for RTL8125
+ 2.5GbE Controller
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, cix-kernel-upstream@cixtech.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Peter Chen <peter.chen@cixtech.com>, ChunHao Lin <hau@realtek.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, nic_swsd@realtek.com,
+ netdev@vger.kernel.org
+References: <20250306162842.GA344204@bhelgaas>
 Content-Language: en-US
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <20250305182639.ov6yiqplyaymdbpa@thinkpad>
+From: "hans.zhang" <hans.zhang@cixtech.com>
+In-Reply-To: <20250306162842.GA344204@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=W8XCVQWk c=1 sm=1 tr=0 ts=67ca4899 cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=gzHQz5DndFXDghOZWxpFUA==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=mg4TMdeMBWTuOWjfejAA:9 a=QEXdDO2ut3YA:10
- a=uG9DUKGECoFWVXl0Dc02:22
-X-Proofpoint-GUID: t_5OpSJC_IRPY0wGtr-FAcEGSSGOPCgZ
-X-Proofpoint-ORIG-GUID: t_5OpSJC_IRPY0wGtr-FAcEGSSGOPCgZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-07_01,2025-03-06_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- bulkscore=0 suspectscore=0 priorityscore=1501 impostorscore=0
- clxscore=1015 malwarescore=0 spamscore=0 lowpriorityscore=0 adultscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503070006
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E6:EE_|JH0PR06MB7032:EE_
+X-MS-Office365-Filtering-Correlation-Id: ff3c992f-d846-4ea0-bde4-08dd5d18d1bb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Nk9lT2RDblViU1JKdUs2ZUhEM2FJOGltRmZvQXlBMVQ0QVNnbmVFcVM4RTlK?=
+ =?utf-8?B?QkkxNVlxTDh1aWk1QW05ZXdZQUhmZGZXUXRSRGxmVmNLemVTQUJ0TXNHVnpy?=
+ =?utf-8?B?QU83SG9mRjR6dkpmTWY0aDhZSU9uMjk0c3M2Vmg4aDZVR2JhbXYrazlWY016?=
+ =?utf-8?B?UVkwM0lMR29PTUpMTFcxdnNYeVduV2lObmlsdzRBWFVnMnl6bmI2TTZzMnB3?=
+ =?utf-8?B?OFJ3M0lKVmlYS2prdGFMaThYWFdJNDU2U2pUV0dyY2hNbjY3dEhoSTVBTXFi?=
+ =?utf-8?B?akxTeFQ3eEwvdjNzUjZ4UFhJRWlXcFMzTk91ay9odDViSDQxNFFoUjZJQURw?=
+ =?utf-8?B?aS9mL3pZR3pBRGJscmg3WkNQUVVYNWpncTQ1WmlFVzNldU91eWtlaXk3SEtp?=
+ =?utf-8?B?RXFVZHdLS3l3eCtSNTFZYi8wbkNaOTNlaVhjYXB0NFE0dzRqbGN3ejJzb3dP?=
+ =?utf-8?B?OU80V1dpYk1ndGd5ZWdNOStQdTVoeDJwdGdEUDU1YTVlUzNOaFk3anp0ajBN?=
+ =?utf-8?B?S3JwRnVsNkF0L0tscnlhbTZ2TEJ2eHB2NVVJWVRrWEF1eGR0Z3FsenNaM2pJ?=
+ =?utf-8?B?VjdySTB0V015WklMNDIvWEFzeG5COHlXMWFibVpnRjdlbmY2ZEh0VkxwcUM5?=
+ =?utf-8?B?QXBZSnNPbG9LNjRGYStQY0ZjVTM4WTMwbHJKWVRHK3RnbXk0UzRrUzUzQmc2?=
+ =?utf-8?B?dmNYT3hlWnhLclE5MWduNkpBL2NGUmpRZDk2c2lPbmZ2cEtlMDlYT2I3cDkx?=
+ =?utf-8?B?WW5Vc2psV21vVktXeXlpU0gwcEFkWWZhdW15S2YyRkVwS1BhbWlDSVJtVnlE?=
+ =?utf-8?B?NVpNb2s4WnVLMHJjQlYxUkVZMnZYbDNYK29XTjZ1eWQyMTU0VU1OZVNRZjMz?=
+ =?utf-8?B?UTc5M0piZHVoY1M0MitSUDhLTUJZQ24rK3QyaEM2NlBxc2QyV0Ztb1E2Vk5N?=
+ =?utf-8?B?dzdPbURnbEtIV0JaT2ZhWVRvZnJkb0hHNTdDQkZIc01tWkl0WTJyQ1crWFpv?=
+ =?utf-8?B?am5TOWNNdXRwSWpzWXF3bE1kOWFyanl0bU05MVB2RnkxMGI0Rk5aY016NEls?=
+ =?utf-8?B?R2F2QUFjZm1McllZcWVrMVZUdloxMUhWdUdGdEVwemYwYVNGZVVWZnM1SVdk?=
+ =?utf-8?B?VFFFTXlZL2tGRkk3T0JreWlCV0hrcGJFYS9uc3FsdTN4QUlSRzFuS3h4UGJk?=
+ =?utf-8?B?YWQ5ZFFVSmxzRFNvMWd2cGQrZW9rbG8rcnNrdmg2Q0IxK1ZJcjZzZms2aXQ2?=
+ =?utf-8?B?cUhhU0EyWW53bFVIUTZvQ3hjc1ErVlRoL3gvMDBXc0VWYnBCNTF2R3BXbXRW?=
+ =?utf-8?B?UEkvNGR0WVdWT1JuVk03dFRwaEtvNkJjOHczcVlhTFlZY2tlWG03NklFWnJC?=
+ =?utf-8?B?TzZwQ1JwaE9pOURHVExRZDJrdkJGeWNsUFdJWlFlaEloSmdTQzFFOW1lQ05o?=
+ =?utf-8?B?WHRWK2wrMGJEaStDdkRjbTZtUG5wZjFYaFZpUHZPTkZhaVphZlpvMVpFVUEv?=
+ =?utf-8?B?STl3eDhpOVQwRUYxUGN1T3lQWU0yaWlkL3kyZUxZTDhXcGRqSjJENlBlY0lP?=
+ =?utf-8?B?RHlXQXUwdjI2c2xrNmh6VFZMdHcvRFRaVVE1NFVWUXhnUnQwSE5tYnBaQmRD?=
+ =?utf-8?B?bTBhU01ManhKTmtEbU5BdGlObVJkNWRqUHpQYjFrWTNsaXpWRFVpeVppS05i?=
+ =?utf-8?B?dUtKNnBjdzhFbHlGTFJVSmFTTWtWbi9tZjZORGRFOXNvbXdZVCtSR2l0bG5v?=
+ =?utf-8?B?MXdicHUwMHdrRFk4NjZSZEc0MlpYdXo2ZUZOUkszMldVMEdiVmFwVDlXMk9K?=
+ =?utf-8?B?V1ZFTlozY0MyUE95QUl3OG9JSHN0OVlNYU85MTg3U2svL2tmWmZicHN2QkE2?=
+ =?utf-8?B?T1E1Skg4MUdxVnUzNkE0VGlteFhYdTNRN2Jlbm9xY3VPVzN6MGNRM3FreGNy?=
+ =?utf-8?Q?LNQUyKcJXZQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(7053199007);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2025 01:38:53.4099
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff3c992f-d846-4ea0-bde4-08dd5d18d1bb
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: SG1PEPF000082E6.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB7032
 
 
 
-On 3/5/2025 11:56 PM, Manivannan Sadhasivam wrote:
-> On Mon, Feb 10, 2025 at 03:23:43PM +0530, Krishna Chaitanya Chundru wrote:
->>
->>
->> On 2/10/2025 3:17 PM, Manivannan Sadhasivam wrote:
->>> On Mon, Feb 10, 2025 at 03:04:43PM +0530, Krishna Chaitanya Chundru wrote:
->>>>
->>>>
->>>> On 2/10/2025 2:52 PM, Manivannan Sadhasivam wrote:
->>>>> On Fri, Feb 07, 2025 at 04:58:59AM +0530, Krishna Chaitanya Chundru wrote:
->>>>>> The ELBI registers falls after the DBI space, PARF_SLV_DBI_ELBI register
->>>>>> gives us the offset from which ELBI starts. so use this offset and cfg
->>>>>> win to map these regions instead of doing the ioremap again.
->>>>>>
->>>>>> On root bus, we have only the root port. Any access other than that
->>>>>> should not go out of the link and should return all F's. Since the iATU
->>>>>> is configured for the buses which starts after root bus, block the
->>>>>> transactions starting from function 1 of the root bus to the end of
->>>>>> the root bus (i.e from dbi_base + 4kb to dbi_base + 1MB) from going
->>>>>> outside the link through ECAM blocker through PARF registers.
->>>>>>
->>>>>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->>>>>> ---
->>>>>>     drivers/pci/controller/dwc/pcie-qcom.c | 77 ++++++++++++++++++++++++++++++++--
->>>>>>     1 file changed, 73 insertions(+), 4 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->>>>>> index e4d3366ead1f..84297b308e7e 100644
->>>>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->>>>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->>>>>> @@ -52,6 +52,7 @@
->>>>>>     #define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
->>>>>>     #define PARF_Q2A_FLUSH				0x1ac
->>>>>>     #define PARF_LTSSM				0x1b0
->>>>>> +#define PARF_SLV_DBI_ELBI			0x1b4
->>>>>>     #define PARF_INT_ALL_STATUS			0x224
->>>>>>     #define PARF_INT_ALL_CLEAR			0x228
->>>>>>     #define PARF_INT_ALL_MASK			0x22c
->>>>>> @@ -61,6 +62,17 @@
->>>>>>     #define PARF_DBI_BASE_ADDR_V2_HI		0x354
->>>>>>     #define PARF_SLV_ADDR_SPACE_SIZE_V2		0x358
->>>>>>     #define PARF_SLV_ADDR_SPACE_SIZE_V2_HI		0x35c
->>>>>> +#define PARF_BLOCK_SLV_AXI_WR_BASE		0x360
->>>>>> +#define PARF_BLOCK_SLV_AXI_WR_BASE_HI		0x364
->>>>>> +#define PARF_BLOCK_SLV_AXI_WR_LIMIT		0x368
->>>>>> +#define PARF_BLOCK_SLV_AXI_WR_LIMIT_HI		0x36c
->>>>>> +#define PARF_BLOCK_SLV_AXI_RD_BASE		0x370
->>>>>> +#define PARF_BLOCK_SLV_AXI_RD_BASE_HI		0x374
->>>>>> +#define PARF_BLOCK_SLV_AXI_RD_LIMIT		0x378
->>>>>> +#define PARF_BLOCK_SLV_AXI_RD_LIMIT_HI		0x37c
->>>>>> +#define PARF_ECAM_BASE				0x380
->>>>>> +#define PARF_ECAM_BASE_HI			0x384
->>>>>> +
->>>>>>     #define PARF_NO_SNOOP_OVERIDE			0x3d4
->>>>>>     #define PARF_ATU_BASE_ADDR			0x634
->>>>>>     #define PARF_ATU_BASE_ADDR_HI			0x638
->>>>>> @@ -84,6 +96,7 @@
->>>>>>     /* PARF_SYS_CTRL register fields */
->>>>>>     #define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
->>>>>> +#define PCIE_ECAM_BLOCKER_EN			BIT(26)
->>>>>>     #define MST_WAKEUP_EN				BIT(13)
->>>>>>     #define SLV_WAKEUP_EN				BIT(12)
->>>>>>     #define MSTR_ACLK_CGC_DIS			BIT(10)
->>>>>> @@ -294,6 +307,44 @@ static void qcom_ep_reset_deassert(struct qcom_pcie *pcie)
->>>>>>     	usleep_range(PERST_DELAY_US, PERST_DELAY_US + 500);
->>>>>>     }
->>>>>> +static void qcom_pci_config_ecam(struct dw_pcie_rp *pp)
->>>>>> +{
->>>>>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>>>>> +	struct qcom_pcie *pcie = to_qcom_pcie(pci);
->>>>>> +	u64 addr, addr_end;
->>>>>> +	u32 val;
->>>>>> +
->>>>>> +	/* Set the ECAM base */
->>>>>> +	writel_relaxed(lower_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE);
->>>>>> +	writel_relaxed(upper_32_bits(pci->dbi_phys_addr), pcie->parf + PARF_ECAM_BASE_HI);
->>>>>> +
->>>>>> +	/*
->>>>>> +	 * The only device on root bus is the Root Port. Any access other than that
->>>>>> +	 * should not go out of the link and should return all F's. Since the iATU
->>>>>> +	 * is configured for the buses which starts after root bus, block the transactions
->>>>>> +	 * starting from function 1 of the root bus to the end of the root bus (i.e from
->>>>>> +	 * dbi_base + 4kb to dbi_base + 1MB) from going outside the link.
->>>>>> +	 */
->>>>>> +	addr = pci->dbi_phys_addr + SZ_4K;
->>>>>> +	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE);
->>>>>> +	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_WR_BASE_HI);
->>>>>> +
->>>>>> +	writel_relaxed(lower_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE);
->>>>>> +	writel_relaxed(upper_32_bits(addr), pcie->parf + PARF_BLOCK_SLV_AXI_RD_BASE_HI);
->>>>>> +
->>>>>> +	addr_end = pci->dbi_phys_addr + SZ_1M - 1;
->>>>>> +
->>>>>> +	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT);
->>>>>> +	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_WR_LIMIT_HI);
->>>>>> +
->>>>>> +	writel_relaxed(lower_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT);
->>>>>> +	writel_relaxed(upper_32_bits(addr_end), pcie->parf + PARF_BLOCK_SLV_AXI_RD_LIMIT_HI);
->>>>>> +
->>>>>> +	val = readl_relaxed(pcie->parf + PARF_SYS_CTRL);
->>>>>> +	val |= PCIE_ECAM_BLOCKER_EN;
->>>>>> +	writel_relaxed(val, pcie->parf + PARF_SYS_CTRL);
->>>>>> +}
->>>>>> +
->>>>>>     static int qcom_pcie_start_link(struct dw_pcie *pci)
->>>>>>     {
->>>>>>     	struct qcom_pcie *pcie = to_qcom_pcie(pci);
->>>>>> @@ -303,6 +354,9 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
->>>>>>     		qcom_pcie_common_set_16gt_lane_margining(pci);
->>>>>>     	}
->>>>>> +	if (pci->pp.ecam_mode)
->>>>>> +		qcom_pci_config_ecam(&pci->pp);
->>>>>> +
->>>>>>     	/* Enable Link Training state machine */
->>>>>>     	if (pcie->cfg->ops->ltssm_enable)
->>>>>>     		pcie->cfg->ops->ltssm_enable(pcie);
->>>>>> @@ -1233,6 +1287,7 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
->>>>>>     {
->>>>>>     	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>>>>>     	struct qcom_pcie *pcie = to_qcom_pcie(pci);
->>>>>> +	u16 offset;
->>>>>>     	int ret;
->>>>>>     	qcom_ep_reset_assert(pcie);
->>>>>> @@ -1241,6 +1296,11 @@ static int qcom_pcie_host_init(struct dw_pcie_rp *pp)
->>>>>>     	if (ret)
->>>>>>     		return ret;
->>>>>> +	if (pp->ecam_mode) {
->>>>>> +		offset = readl(pcie->parf + PARF_SLV_DBI_ELBI);
->>>>>> +		pcie->elbi = pci->dbi_base + offset;
->>>>>> +	}
->>>>>
->>>>> If you use the existing 'elbi' register offset defined in DT, you can just rely
->>>>> on the DWC core to call dw_pcie_ecam_supported() as I mentioned in my comment in
->>>>> patch 3.
->>>>>    >> +
->>>>>>     	ret = phy_set_mode_ext(pcie->phy, PHY_MODE_PCIE, PHY_MODE_PCIE_RC);
->>>>>>     	if (ret)
->>>>>>     		goto err_deinit;
->>>>>> @@ -1615,6 +1675,13 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->>>>>>     	pci->ops = &dw_pcie_ops;
->>>>>>     	pp = &pci->pp;
->>>>>> +	pp->bridge = devm_pci_alloc_host_bridge(dev, 0);
->>>>>> +	if (!pp->bridge) {
->>>>>> +		ret = -ENOMEM;
->>>>>> +		goto err_pm_runtime_put;
->>>>>> +	}
->>>>>> +
->>>>>
->>>>> This will also go away.
->>>>>
->>>> Hi Mani,
->>>>
->>>> I get your point but the problem is in ECAM mode the DBI address to maximum
->>>> of 256 MB will be ioremap by pci_ecam_create(). If we don't skip
->>>> this ioremap of elbi ioremap in pci_ecam_create because we already
->>>> iormaped elbi which falls in dbi address to 256 MB region( as we can't
->>>> remap same region twice). so we need to skip doing ioremap for elbi
->>>> region.
->>>>
+On 2025/3/7 00:28, Bjorn Helgaas wrote:
+> [Some people who received this message don't often get email from helgaas@kernel.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> EXTERNAL EMAIL
+> 
+> On Thu, Mar 06, 2025 at 11:32:04AM +0800, hans.zhang wrote:
+>> On 2025/3/6 06:20, Bjorn Helgaas wrote:
+>>> Sounds like this should be a documented erratum.  Realtek folks?  Or
+>>> maybe an erratum on the other end of the link, which looks like a CIX
+>>> Root Port:
 >>>
->>> Then obviously, your DT entries are wrong. You cannot define overlapping regions
->>> on purpose. Can't you leave the ELBI region and start the config region?
->>>
->>> - Mani
->> ELBI is part of DBI space(present in the first 4kb of the dbi) we can't
->> relocate ELBI region to different location.
->> can we keep this elbi region as optional and remove elbi from the
->> devicetree and binding?
+>>>     https://admin.pci-ids.ucw.cz/read/PC/1f6c/0001
 >>
+>> Name: CIX P1 CD8180 PCI Express Root Port
+>>
+>> 0000:90:00.0 PCI bridge [0604]: Device [1f6c:0001]
+>> 0001:60:00.0 PCI bridge [0604]: Device [1f6c:0001]
+>> 0002:00:00.0 PCI bridge [0604]: Device [1f6c:0001]
+>> 0003:30:00.0 PCI bridge [0604]: Device [1f6c:0001]
+>>
+>>
+>> This URL does not appear right, how should be changed, is it you? Or can you
+>> tell me who I should call to change it?
+>>
+>> The correct answer is:
+>> 0000:90:00.0 PCI bridge [0604]: Device [1f6c:0001]
+>> 0001:C0:00.0 PCI bridge [0604]: Device [1f6c:0001]
+>> 0002:60:00.0 PCI bridge [0604]: Device [1f6c:0001]
+>> 0003:30:00.0 PCI bridge [0604]: Device [1f6c:0001]
+>> 0004:00:00.0 PCI bridge [0604]: Device [1f6c:0001]
 > 
-> Since ELBI is a DWC generic region, you should move the resource get call to
-> dw_pcie_get_resources(). Also, it is an optional region, so you should open code
-> devm_platform_ioremap_resource_byname() to skip devm_ioremap_resource() if
-> platform_get_resource_byname() returns NULL. DT binding should make sure that
-> the DTS has the region specified if required.
->
-Hi Mani,
-even though elbi is a dwc region the registers in the elbi are specific
-to the vendors. The ELBI register contents in the qcom might not match
-with the other vendors. So we can skip this adding this in 
-dw_pcie_get_resources()
-
-we will try to make it optional only in qcom driver, and remove from the
-dt as suggested.
-
-- Krishna Chaitanya.
-
-> And this should allow you to move the dw_pcie_ecam_supported() call inside DWC
-> core.
+> This part of the web page is just commentary.  In this case it's just
+> an example of what devices might be on some system.  It's not a
+> requirement that all systems have this many devices or devices at
+> these addresses.
 > 
+> The only important parts are the Vendor ID, Device ID, and the name
+> ("CIX P1 CD8180 PCI Express Root Port").  If those are correct, no
+> need to do anything.
 
-> - Mani
-> 
+I see. Thank you very much Bjorn.
+
+Best regards,
+Hans
+
 
