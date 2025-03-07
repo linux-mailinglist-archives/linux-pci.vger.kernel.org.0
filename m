@@ -1,142 +1,159 @@
-Return-Path: <linux-pci+bounces-23087-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23088-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C358BA5601A
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 06:36:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F4C1A56132
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 07:52:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 038A0173E6B
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 05:36:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A813E176F72
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 06:52:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C8104778E;
-	Fri,  7 Mar 2025 05:36:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FA8C1A01B9;
+	Fri,  7 Mar 2025 06:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z4Kfm9ma"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28B137FD;
-	Fri,  7 Mar 2025 05:36:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57E819DFA7;
+	Fri,  7 Mar 2025 06:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741325775; cv=none; b=cz7FV6OtjMZpf6Tmroi2JisTQHjwSWYqaDZtk6UG1zKy9OPgQC/j3T2zTYZAxSJvGm97zQFoSofsqeLLVlma7iL/PmxCxQt8fplhUl0YE3D9w2tBv320Otp0Pv0ZEwxVf8IS/zNn9Ezy/qKzz8Y/1Xse/EuvmJsUtFHoe4PlOTA=
+	t=1741330329; cv=none; b=a45OsXWJytHK2SmAPF8nWxKuszscPtkz/SYmhIlctA6FPMj/LqkozImElRHLed22ceP8eoN2wPdHcCk9yA34ysCSiXccegsaQNDj1I/EmANWNxLJoT2AADCv3LGHxZKb/MxK4AcqPnLqbwjpR/NZMPY+WwLsS9C2zmdckB/iEQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741325775; c=relaxed/simple;
-	bh=s2Dx4Vu71yHd+sm6B6lF32xIUed696vD1bvGK1vrMew=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XyganqzVH0jYsN/k+5bmy6Hj3woMSo87vIefwq272o7eNLUPzzIJaEkhpB4m1O/xpk+uIt5HT4MGQJGg9a+/tqI2yjS8be+wS5WQXEV2StktPRvRkEYNKY5VgEYCtJohO+qyYlFzqQN5kLxVWpTB62vykXZT3CK8+XZKgBDP2CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=162.243.164.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwDXsXm+hcpnK+JmBw--.14747S2;
-	Fri, 07 Mar 2025 13:35:58 +0800 (CST)
-Received: from localhost.localdomain (unknown [219.142.137.151])
-	by mail (Coremail) with SMTP id AQAAfwB3eYW7hcpnId49AA--.2693S2;
-	Fri, 07 Mar 2025 13:35:56 +0800 (CST)
-From: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
-To: ilpo.jarvinen@linux.intel.com
-Cc: bhelgaas@google.com,
-	cassel@kernel.org,
-	christian.koenig@amd.com,
-	daizhiyuan@phytium.com.cn,
-	helgaas@kernel.org,
-	kw@linux.com,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v4] PCI: Update Resizable BAR Capability Register fields
-Date: Fri,  7 Mar 2025 13:35:29 +0800
-Message-ID: <20250307053535.44918-1-daizhiyuan@phytium.com.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <3a6952a9-c80b-bbff-fb38-18c61722bdda@linux.intel.com>
-References: <3a6952a9-c80b-bbff-fb38-18c61722bdda@linux.intel.com>
+	s=arc-20240116; t=1741330329; c=relaxed/simple;
+	bh=0FboRi4T5lRhBpOLmxfTGg8DNG9FS+J/OvKiP4g1uVM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FzRlJLFGhFTksWNeuIl12MmiEP3ZBrB/sZWwwW/cJwFbitPkVAp68lqD3/9jervXGvzb0SBExouqTYRTJDmRwu/39VwISNe0m5cx3uBe1yWItN5XdOaPc2BL5L+XkRF8L+1bauBjdXySbpg7DAsBeDz0qOpAKNmp5Eh9fcPETpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z4Kfm9ma; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741330328; x=1772866328;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0FboRi4T5lRhBpOLmxfTGg8DNG9FS+J/OvKiP4g1uVM=;
+  b=Z4Kfm9makxyVipxRXMcPGI4emlaIPxZqFUh8PAWEzx8OQ+K9DEcmoP6u
+   Ekt2QKkJ8pkNE76WmBG/QM31ah7zfqrGV2JNMvtQB1qwiA8smhUI4CwmC
+   p/y96BkgrGoimVQ1tZtju2INIvV3qx0UcRz6Dlz+X+gUjo98e0xo4JsLn
+   WDcksOu637MJXlwO/XHesSdmaBvsNypVIBTyJiGd9NsSzssQcPDiRFMOR
+   BXKbsjSMmyvvJLzLVS7Z2XVLQim+Idxgg9bqs26/dNvpB4xiUDzXIuFEE
+   VlNcUnGFlNPDnyh5mBSaHABi+Y/7vcGYhEvp97vXbsGIBdt/ZcQMNNrIG
+   A==;
+X-CSE-ConnectionGUID: 7bYbQ2y5Rryz5wQ4o7dKzA==
+X-CSE-MsgGUID: kcLRTQY8TReadBGDPm66Bw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="53769939"
+X-IronPort-AV: E=Sophos;i="6.14,228,1736841600"; 
+   d="scan'208";a="53769939"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 22:52:07 -0800
+X-CSE-ConnectionGUID: fMKAQkc6S7ifR+dbATnnfQ==
+X-CSE-MsgGUID: 7tBYnb24QYOZP5v4PpdyhQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="123425163"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa003.fm.intel.com with ESMTP; 06 Mar 2025 22:52:00 -0800
+Date: Fri, 7 Mar 2025 14:49:44 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Alexey Kardashevskiy <aik@amd.com>, x86@kernel.org, kvm@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Christoph Hellwig <hch@lst.de>, Nikunj A Dadhania <nikunj@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Steve Sistare <steven.sistare@oracle.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Dionna Glaze <dionnaglaze@google.com>, Yi Liu <yi.l.liu@intel.com>,
+	iommu@lists.linux.dev, linux-coco@lists.linux.dev,
+	Zhi Wang <zhiw@nvidia.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+Subject: Re: [RFC PATCH v2 14/22] iommufd: Add TIO calls
+Message-ID: <Z8qXCI6Wwygvwhya@yilunxu-OptiPlex-7050>
+References: <Z72GmixR6NkzXAl7@yilunxu-OptiPlex-7050>
+ <2fe6b3c6-3eed-424d-87f0-34c4e7e1c906@amd.com>
+ <Z77xrqLtJfB84dJF@yilunxu-OptiPlex-7050>
+ <20250226131202.GH5011@ziepe.ca>
+ <Z7/jFhlsBrbrloia@yilunxu-OptiPlex-7050>
+ <20250301003711.GR5011@ziepe.ca>
+ <Z8U+/0IYyn7XX3ao@yilunxu-OptiPlex-7050>
+ <20250305192842.GE354403@ziepe.ca>
+ <Z8lE+5OpqZc746mT@yilunxu-OptiPlex-7050>
+ <20250306182614.GF354403@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwB3eYW7hcpnId49AA--.2693S2
-X-CM-SenderInfo: hgdl6xpl1xt0o6sk53xlxphulrpou0/
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=daizhiyuan
-	@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAFWDXFWxGF1DXF13GFyfJFb_yoW5CFWDpF
-	WDCa97GrWrGFW7uw4kZ3W8CF4Yg39ruFyYkrWxG3s3u3Z0k3Z2qa4DKFW5ta4DJr4DZF4a
-	yrnFy34UuF98JaDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250306182614.GF354403@ziepe.ca>
 
-PCI Express Base Spec r6.0 defines BAR size up to 8 EB (2^63 bytes),
-but supporting anything bigger than 128TB requires changes to
-pci_rebar_get_possible_sizes() to read the additional Capability bits
-from the Control register.
+On Thu, Mar 06, 2025 at 02:26:14PM -0400, Jason Gunthorpe wrote:
+> On Thu, Mar 06, 2025 at 02:47:23PM +0800, Xu Yilun wrote:
+> 
+> > While for AMD:
+> >         ...
+> >         b.guest_device_id = guest_rid;  //TDI ID, it is the vBDF
+> >         b.gctx_paddr = gctx_paddr;      //AMDs CoCo-VM ID
+> > 
+> >         ret = sev_tio_do_cmd(SEV_CMD_TIO_TDI_BIND, &b, ...
+> > 
+> > 
+> > Neither of them use vIOMMU ID or any IOMMU info, so the only concern is
+> > vBDF.
+> 
+> I think that is enough, we should not be putting this in VFIO if it
+> cannot execute it for AMD :\
 
-If 8EB support is required, callers will need to be updated to handle u64
-instead of u32. For now, support is limited to 128TB, and support for
-sizes greater than 128TB can be deferred to a later time.
+OK. With these discussion, my understanding is it can execute for AMD
+but we don't duplicate the effort for vdevice->id.
 
-Expand the alignment array of `pbus_size_mem` to support up to 128TB.
+We can swtich to vdevice and try to solve the rest problems.
 
-Signed-off-by: Zhiyuan Dai <daizhiyuan@phytium.com.cn>
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
----
- drivers/pci/pci.c             | 4 ++--
- drivers/pci/setup-bus.c       | 2 +-
- include/uapi/linux/pci_regs.h | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> > > You could also issue the TSM bind against the idev on the iommufd
+> > > side..
+> > 
+> > But I cannot figure out how idev could ensure no mmap on VFIO, and how
+> > idev could call dma_buf_move_notify.
+> 
+> I suggest you start out this way from the VFIO. Put the device in a CC
+> mode which bans the mmap entirely and pass that CC capable as a flag
+> into iommufd when creating the idev.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 661f98c6c63a..77b9ceefb4e1 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3752,7 +3752,7 @@ static int pci_rebar_find_pos(struct pci_dev *pdev, int bar)
-  * @bar: BAR to query
-  *
-  * Get the possible sizes of a resizable BAR as bitmask defined in the spec
-- * (bit 0=1MB, bit 19=512GB). Returns 0 if BAR isn't resizable.
-+ * (bit 0=1MB, bit 31=128TB). Returns 0 if BAR isn't resizable.
-  */
- u32 pci_rebar_get_possible_sizes(struct pci_dev *pdev, int bar)
- {
-@@ -3800,7 +3800,7 @@ int pci_rebar_get_current_size(struct pci_dev *pdev, int bar)
-  * pci_rebar_set_size - set a new size for a BAR
-  * @pdev: PCI device
-  * @bar: BAR to set size to
-- * @size: new size as defined in the spec (0=1MB, 19=512GB)
-+ * @size: new size as defined in the spec (0=1MB, 31=128TB)
-  *
-  * Set the new size of a BAR as defined in the spec.
-  * Returns zero if resizing was successful, error code otherwise.
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 5e00cecf1f1a..edb64a6b5585 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1059,7 +1059,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- {
- 	struct pci_dev *dev;
- 	resource_size_t min_align, win_align, align, size, size0, size1;
--	resource_size_t aligns[24]; /* Alignments from 1MB to 8TB */
-+	resource_size_t aligns[28]; /* Alignments from 1MB to 128TB */
- 	int order, max_order;
- 	struct resource *b_res = find_bus_resource_of_type(bus,
- 					mask | IORESOURCE_PREFETCH, type);
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 1601c7ed5fab..ce99d4f34ce5 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -1013,7 +1013,7 @@
- 
- /* Resizable BARs */
- #define PCI_REBAR_CAP		4	/* capability register */
--#define  PCI_REBAR_CAP_SIZES		0x00FFFFF0  /* supported BAR sizes */
-+#define  PCI_REBAR_CAP_SIZES		0xFFFFFFF0  /* supported BAR sizes */
- #define PCI_REBAR_CTRL		8	/* control register */
- #define  PCI_REBAR_CTRL_BAR_IDX		0x00000007  /* BAR index */
- #define  PCI_REBAR_CTRL_NBAR_MASK	0x000000E0  /* # of resizable BARs */
--- 
-2.43.0
+IIUC, it basically switches back to my previous implementation for mmap.
 
+https://lore.kernel.org/kvm/20250107142719.179636-9-yilun.xu@linux.intel.com/
+
+I can do that.
+
+Thanks,
+yilun
+
+> 
+> If it really needs to be dyanmic a VFIO feature could change the CC
+> mode and that could call back to iommufd to synchronize if that is
+> allowed.
+> 
+> Jason
 
