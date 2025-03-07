@@ -1,170 +1,159 @@
-Return-Path: <linux-pci+bounces-23176-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23177-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B87EA57640
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Mar 2025 00:39:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61A73A5764F
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Mar 2025 00:41:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 76256177D0B
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 23:39:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A29517792A
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 23:41:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B5F821505E;
-	Fri,  7 Mar 2025 23:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D42C120CCFD;
+	Fri,  7 Mar 2025 23:41:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTVoSv90"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Udfo0dUo"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AEDE21504D;
-	Fri,  7 Mar 2025 23:38:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30191DC99A;
+	Fri,  7 Mar 2025 23:41:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741390685; cv=none; b=egY5HiVNphTWpOFlF6ePHsSyZ8h1f1hlnjLJp29Rb69YFtK6BOyl0VbOvSNqf5tThzk2L4dvacqSm7PhMdonOf46SWMJlneA9og7PeEyRlCnhDVg+YOXmSUu+1tdQsbBr/b7rDLCUmQt3E9bPksnYkciJjd4Zd3C1S0OFvI2ixg=
+	t=1741390893; cv=none; b=EGA+mnxnRiAuhvqzrcZjJzuMpqPKz4FXVUW59ZQlaM4dZhmN5zx16eVYBbjFmVTn43+HaTwON+/gsxUJXI7BtHXJBcP3mjiBM+GU5C7YxXlBKa4KnPYRYblw9Ocay8uJ2vhzsfJADTIJE+awxh4sdZB1hGn578bRtXfiBR0+z0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741390685; c=relaxed/simple;
-	bh=awyxVGLYLrPGk2ph0vC9xWww4UwkrrLl5cXRfJqJlA0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KWXuyJREzcnRtiq624hd5bmR/J+rxp0wzZCg4R0vRBZeLaTpIXLwjFBwJo1hMm4lvco5A4JH7MUtnKV40CNKZGgP4NOOlB65D6pdRpL4Cn3VB7LSHaXlVn2HUzKNG6yAp/cc1Si/Bu2OPWE2w8EfCVyPoM7kc8plG7JvQtPc/Sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTVoSv90; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57CD0C4CEE9;
-	Fri,  7 Mar 2025 23:38:04 +0000 (UTC)
+	s=arc-20240116; t=1741390893; c=relaxed/simple;
+	bh=yyE7KOWWH/DThx7lyaD0ORCMpjEmY7tHAL2lQSTtrxA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=IM6aipUZKLAuy4zEgxcx396r2CjxduBu2oSbXX55/PjNmP0anSiF0rTBgK1YZrbOztayyuP4D1x2qq9gGZfcHgetYklrAkIo6e5SaOykTbS6LC0LteMkejUT0ZUSvrQFAfQ0NJx1e6hM2HOAaQTuv55mEqNTjD4qnlQ+1QuPTaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Udfo0dUo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEE84C4CED1;
+	Fri,  7 Mar 2025 23:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741390684;
-	bh=awyxVGLYLrPGk2ph0vC9xWww4UwkrrLl5cXRfJqJlA0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CTVoSv901qPSH0kq0SRi45h38A2I+kzNId6N7kN8mUDSfb6d97vw8m4klIvm5tqeU
-	 GAAPZ5h8bTAR47cLw04L8I7NjH5O/CDqd25IsGFixaVCi5ZEhO4yXYmreSFZzmYMrK
-	 XaHNENqH+Q/S6PlDJq0DxFh0/6b+0WoOEf2ZXcZhM2du4yDrJASDBW4+8oX8QNwjdN
-	 p54qwFQwhzKPPTNYZw6cjZYMCH1dPSzf3d1OomHr3NmfONYvc+Yfozq1yDf9csiFzw
-	 uL8QR7UnDcubB4ogUeQwavpsm9bsM3+0DxVajnJXq4IXlJIuaAT4Ry1NxjECm27jxA
-	 wcuiivr40Jl9w==
+	s=k20201202; t=1741390893;
+	bh=yyE7KOWWH/DThx7lyaD0ORCMpjEmY7tHAL2lQSTtrxA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Udfo0dUo1NqX33GUbGYVRCfE2XukS0+19Lq8BUfwh5a2MSfyFC0FzoFb+JV12kTeB
+	 N4VIx3dpaVde/6VorEOKIcGmoej71DV/NyP/+9MitDa7Ih1tlnSnI7yhFK503YOAZZ
+	 Nto95q0f4z+O+vPziWEJswiMg4zMIj/PGdjeqlFnNvFKPv/rUILi05vjTQ2d6XyliB
+	 TDfAL1SdOjRUbvF7FkV+O7VnEE6hROtjKiATZWC5xSxk0l15uzGP6xdeonUhFwOqTn
+	 /agcd7Po8MoZzLUptFMYStBJ7uBuzgc8KBHB8zKUiYUJ7k/ACW+cW1khknah3fly8d
+	 BXAI1/rbZExhA==
+Date: Fri, 7 Mar 2025 17:41:31 -0600
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
+To: Frank Li <Frank.li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
 	Jingoo Han <jingoohan1@gmail.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
 	Richard Zhu <hongxing.zhu@nxp.com>,
 	Lucas Stach <l.stach@pengutronix.de>,
 	Shawn Guo <shawnguo@kernel.org>,
 	Sascha Hauer <s.hauer@pengutronix.de>,
 	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4/4] PCI: dwc: Use parent_bus_offset
-Date: Fri,  7 Mar 2025 17:37:44 -0600
-Message-Id: <20250307233744.440476-5-helgaas@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250307233744.440476-1-helgaas@kernel.org>
-References: <20250307233744.440476-1-helgaas@kernel.org>
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v9 3/7] PCI: Add parent_bus_offset to resource_entry
+Message-ID: <20250307234131.GA440690@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8sRl1c//SZXKhB+@lizhi-Precision-Tower-5810>
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Fri, Mar 07, 2025 at 10:32:39AM -0500, Frank Li wrote:
+> On Tue, Mar 04, 2025 at 05:25:45PM -0500, Frank Li wrote:
+> > On Tue, Mar 04, 2025 at 05:11:54PM -0500, Frank Li wrote:
+> > > On Tue, Mar 04, 2025 at 11:50:10AM -0600, Bjorn Helgaas wrote:
+> > > > On Mon, Mar 03, 2025 at 04:57:29PM -0500, Frank Li wrote:
+> > > > > On Wed, Feb 26, 2025 at 06:23:26PM -0600, Bjorn Helgaas wrote:
+> > > > > > On Tue, Jan 28, 2025 at 05:07:36PM -0500, Frank Li wrote:
+> > > > > > > Introduce `parent_bus_offset` in `resource_entry` and a new API,
+> > > > > > > `pci_add_resource_parent_bus_offset()`, to provide necessary information
+> > > > > > > for PCI controllers with address translation units.
+> > > > > > >
+> > > > > > > Typical PCI data flow involves:
+> > > > > > >   CPU (CPU address) -> Bus Fabric (Intermediate address) ->
+> > > > > > >   PCI Controller (PCI bus address) -> PCI Bus.
+> > > > > > >
+> > > > > > > While most bus fabrics preserve address consistency, some modify addresses
+> > > > > > > to intermediate values. The `parent_bus_offset` enables PCI controllers to
+> > > > > > > translate these intermediate addresses correctly to PCI bus addresses.
+> > > > > > >
+> > > > > > > Pave the road to remove hardcoded cpu_addr_fixup() and similar patterns in
+> > > > > > > PCI controller drivers.
+> > > > > > > ...
+> > > > > >
+> > > > > > > +++ b/drivers/pci/of.c
+> > > > > > > @@ -402,7 +402,17 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+> > > > > > >  			res->flags &= ~IORESOURCE_MEM_64;
+> > > > > > >  		}
+> > > > > > >
+> > > > > > > -		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
+> > > > > > > +		/*
+> > > > > > > +		 * IORESOURCE_IO res->start is io space start address.
+> > > > > > > +		 * IORESOURCE_MEM res->start is cpu start address, which is the
+> > > > > > > +		 * same as range.cpu_addr.
+> > > > > > > +		 *
+> > > > > > > +		 * Use (range.cpu_addr - range.parent_bus_addr) to align both
+> > > > > > > +		 * IO and MEM's parent_bus_offset always offset to cpu address.
+> > > > > > > +		 */
+> > > > > > > +
+> > > > > > > +		pci_add_resource_parent_bus_offset(resources, res, res->start - range.pci_addr,
+> > > > > > > +						   range.cpu_addr - range.parent_bus_addr);
+> > > > > >
+> > > > > > I don't know exactly where it needs to go, but I think we can call
+> > > > > > .cpu_addr_fixup() once at startup on the base of the region.  This
+> > > > > > will tell us the offset that applies to the entire region, i.e.,
+> > > > > > parent_bus_offset.
+> > > > > >
+> > > > > > Then we can remove all the .cpu_addr_fixup() calls in
+> > > > > > cdns_pcie_host_init_address_translation(),
+> > > > > > cdns_pcie_set_outbound_region(), and dw_pcie_prog_outbound_atu().
+> > > > > >
+> > > > > > Until we can get rid of all the .cpu_addr_fixup() implementations,
+> > > > > > We'll still have that single call at startup (I guess once for cadence
+> > > > > > and another for designware), but it should simplify the current
+> > > > > > callers quite a bit.
+> > > > >
+> > > > > I don't think it can simple code. cdns_pcie_set_outbound_region() and
+> > > > > dw_pcie_prog_outbound_atu() are called by EP functions, which have not use
+> > > > > "resource" to manage outbound windows.
+> > > >
+> > > > Let's ignore cadence for now.  I don't think we need to solve that
+> > > > until later.
+> > > >
+> > > > dw_pcie_prog_outbound_atu() is called by:
+> > > >
+> > > >   - dw_pcie_other_conf_map_bus(): atu.parent_bus_addr = pp->cfg0_base
+> > > >
+> > > >     I think dw_pcie_host_init() can set pp->cfg0_base with the correct
+> > > >     intermediate address, either via the the of_property_read_reg() or
+> > > >     .cpu_addr_fixup().
+> >
+> > And chicken and egg problem here for artpec6_pcie_cpu_addr_fixup(), which
+> > need cfg0_base. But try to use .cpu_addr_fixup() to get cfg0_base's
+> > intermediate address.
+> 
+> Bjorn:
+> 	Do you have chance to check my reply? some dwc platform driver
+> .cpu_addr_fixup() implement have dependence with old initilize sequency.
 
-We know the parent_bus_offset, either computed from a DT reg property (the
-offset is the CPU physical addr - the 'config' address on the parent bus)
-or from a .cpu_addr_fixup() (which may have used a host bridge window
-offset).
+Yes, I tried to sketch out what I was thinking to make it more
+concrete.  I posted it and sent to you, but just for other readers of
+this thread, it's at:
 
-Apply that parent_bus_offset instead of calling .cpu_addr_fixup() again.
+https://lore.kernel.org/linux-pci/20250307233744.440476-1-helgaas@kernel.org/T/#t
 
-This assumes that all intermediate addresses are at the same offset from
-the CPU physical addresses.
----
- drivers/pci/controller/dwc/pcie-designware-host.c | 12 ++++++------
- drivers/pci/controller/dwc/pcie-designware.c      |  3 ---
- 2 files changed, 6 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index e22f650ada5a..3378f905b3bd 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -670,7 +670,7 @@ static void __iomem *dw_pcie_other_conf_map_bus(struct pci_bus *bus,
- 		type = PCIE_ATU_TYPE_CFG1;
- 
- 	atu.type = type;
--	atu.parent_bus_addr = pp->cfg0_base;
-+	atu.parent_bus_addr = pp->cfg0_base - pp->parent_bus_offset;
- 	atu.pci_addr = busdev;
- 	atu.size = pp->cfg0_size;
- 
-@@ -695,7 +695,7 @@ static int dw_pcie_rd_other_conf(struct pci_bus *bus, unsigned int devfn,
- 
- 	if (pp->cfg0_io_shared) {
- 		atu.type = PCIE_ATU_TYPE_IO;
--		atu.parent_bus_addr = pp->io_base;
-+		atu.parent_bus_addr = pp->io_base - pp->parent_bus_offset;
- 		atu.pci_addr = pp->io_bus_addr;
- 		atu.size = pp->io_size;
- 
-@@ -721,7 +721,7 @@ static int dw_pcie_wr_other_conf(struct pci_bus *bus, unsigned int devfn,
- 
- 	if (pp->cfg0_io_shared) {
- 		atu.type = PCIE_ATU_TYPE_IO;
--		atu.parent_bus_addr = pp->io_base;
-+		atu.parent_bus_addr = pp->io_base - pp->parent_bus_offset;
- 		atu.pci_addr = pp->io_bus_addr;
- 		atu.size = pp->io_size;
- 
-@@ -790,7 +790,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- 
- 		atu.index = i;
- 		atu.type = PCIE_ATU_TYPE_MEM;
--		atu.parent_bus_addr = entry->res->start;
-+		atu.parent_bus_addr = entry->res->start - pp->parent_bus_offset;
- 		atu.pci_addr = entry->res->start - entry->offset;
- 
- 		/* Adjust iATU size if MSG TLP region was allocated before */
-@@ -812,7 +812,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- 		if (pci->num_ob_windows > ++i) {
- 			atu.index = i;
- 			atu.type = PCIE_ATU_TYPE_IO;
--			atu.parent_bus_addr = pp->io_base;
-+			atu.parent_bus_addr = pp->io_base - pp->parent_bus_offset;
- 			atu.pci_addr = pp->io_bus_addr;
- 			atu.size = pp->io_size;
- 
-@@ -956,7 +956,7 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
- 	atu.size = resource_size(pci->pp.msg_res);
- 	atu.index = pci->pp.msg_atu_index;
- 
--	atu.parent_bus_addr = pci->pp.msg_res->start;
-+	atu.parent_bus_addr = pci->pp.msg_res->start - pci->pp.parent_bus_offset;
- 
- 	ret = dw_pcie_prog_outbound_atu(pci, &atu);
- 	if (ret)
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 9d0a5f75effc..640caf4a084f 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -474,9 +474,6 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
- 	u32 retries, val;
- 	u64 limit_addr;
- 
--	if (pci->ops && pci->ops->cpu_addr_fixup)
--		parent_bus_addr = pci->ops->cpu_addr_fixup(pci, parent_bus_addr);
--
- 	limit_addr = parent_bus_addr + atu->size - 1;
- 
- 	if ((limit_addr & ~pci->region_limit) != (parent_bus_addr & ~pci->region_limit) ||
--- 
-2.34.1
-
+Bjorn
 
