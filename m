@@ -1,138 +1,100 @@
-Return-Path: <linux-pci+bounces-23183-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23184-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55674A57B43
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Mar 2025 15:52:53 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4231BA57B4C
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Mar 2025 15:58:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A57F21889CD5
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Mar 2025 14:53:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C1CFC188FDC6
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Mar 2025 14:58:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C8F51DC9A3;
-	Sat,  8 Mar 2025 14:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HC2ekB4x"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D19D1DC19F;
+	Sat,  8 Mar 2025 14:58:07 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EC1140E30
-	for <linux-pci@vger.kernel.org>; Sat,  8 Mar 2025 14:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F96D10F4;
+	Sat,  8 Mar 2025 14:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741445568; cv=none; b=JFN9OyixlxfJFVR/kBM9g8dAmR4RMIv8Md5q6vfFy+mxeyR9bNHUtFYWKt1m4gABagbd+VSw1Mzta6yDfF0yiJctDXBCKnJ2SwQLKpos5lcVk2UsOJT4wFhgyQ7x7+FNZGnUvb+4JQ2FdWZXZdI3KqrE3j42hdsAhCyapWiDAsk=
+	t=1741445887; cv=none; b=Kzqm6gY+TIZ8sJbRVf+udNkgVgPPMm1c8FR0ZgYE64kQKUYezJYbrOgjnnf4N0qBfTGVLHdDqOgcq3Lu9ANhXjgBBAaOwY1nDULHtyelipCQj8Oz0rtMxGIbOOJ2Z5iksZMFpsgwFzmpWRC1KtFbc7JUqTnn3ECl9rl+N09X7oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741445568; c=relaxed/simple;
-	bh=anRYeYF309AXBW25z7R2hL8RDDSJQseUCtoq8QWO5XE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hy65luA5ykdbUMuu/tjcbkTfG+RVDB2LrcuI/80zavJ689tLtVZI86EQVPPNtCdXf+lFUekp7ePasSXbplWs/B2VYFWzV/J2iCWYqs2URxgcYbh+PV+X0eKy+2YwptDmGAHeB8CGEXSLE+DpEHmSZdHccMXIllQs1Kh39bJYInc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HC2ekB4x; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 528DUios005114
-	for <linux-pci@vger.kernel.org>; Sat, 8 Mar 2025 14:52:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FRjkl6YhFHYJ1JWEogAn4n+Snf68kuUomS1wUveNVAI=; b=HC2ekB4xQd1nCpfI
-	Nk+5TaQfbL8FJuh8JC2aGxlx6o8uX8mjA4UBrdT70LdLdO9he953guW6Q+kswF3d
-	DZjB/UW9q8hwE8Kn4pOSq1ZaAbZNNFLTM6bFyBF084Pqh9yYDq+bxFvQyszshd9d
-	8L8u5GbB6NJCkIV+XID4xzMa0iIuEOZcgMoVH00dsDYwLpW5cVfowRSDTmZiAWBc
-	eyKk1M8uBOsJBSwwQ65G+im2TFBwge0m/qBCzeRZ+t7i8ph1Swdjb+pxjKRYu8Vz
-	NcStMfZpXFyzSna07sRSWOxzyCBUyYje1z9azBbpxE4sVqbTMzFlG1YZM749x0wf
-	jF0cIA==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458eyt0qbe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Sat, 08 Mar 2025 14:52:45 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-476718f9369so1320161cf.3
-        for <linux-pci@vger.kernel.org>; Sat, 08 Mar 2025 06:52:45 -0800 (PST)
+	s=arc-20240116; t=1741445887; c=relaxed/simple;
+	bh=hMDlrsxv5N1HhsTBGniC6IAMAhMKkBOp/z2a3zXv6EM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KpHiQbmFwBUN6NoiBxuoy4qVdMEMiMB3W2Rb9ul7ZWFlB3MRny/nIWl3xIEhpxvdhVhXvIQL/VoybQrESkV/TOBvceACAwKi1ZRQC6Xls3jNbrehNrIQypzKK0zx0JcV5ZQikUH3XdhkFnK8qoumFqhi3nZAVzzcg/PtH8m7UEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-223fb0f619dso56208545ad.1;
+        Sat, 08 Mar 2025 06:58:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741445564; x=1742050364;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FRjkl6YhFHYJ1JWEogAn4n+Snf68kuUomS1wUveNVAI=;
-        b=NFEAUkDA3hGDLABFBl4D3fTr3sgsezjKcAPHS8MXuZnRIP+gtj23HgEWJXxE93ynpe
-         7aoAwWsc5RCqtezQ0GgHi9hyCjJKmywMfPNtrw99X8RaPTAVPNfe23gC0+B3d2vH/Qkg
-         hvuEUQ8Mwr0qw0PFSkjMSai0tFc6DN4llHi5SG2LccRrRT+QcBs2yh/2JzE5heyFRRpw
-         C4Zjnrt5aY9AFxPwnWe+tNBykGrqkBRcIYP+J1uH0oDwE8MuyXc7Y4oJ55TPYT1lMTeB
-         tcdAqbOZ0vrOhzUKofhjLf2l3jsqGI+cRYNyJOZRUv923ksry6+Mv746Jvq3woBRjCQ+
-         mmQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdmyE0I08SfppHVHWpjPeOZ3nGn24NffP22h1Mw0qf38iqyuqDpjeLb4EQMjYT9tMrzAaxpzyUDIE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvHCSYICnIRvt4c9rgaWnzJ17AM6WDFceqDT23dZir9JgdGh4u
-	BbECsFUjT+2JKT8UOuJh94kVvqef01JhfnCveyrUGamdg9B0wU5Jh8LRtNwWuLhM7Fc8i0cpVah
-	vckKMc7j9c2jf0ew/GBGW9ZG+DMaS26rkKSh+TVRUrNsB3etpjrgSRtbwbko=
-X-Gm-Gg: ASbGncuN9Q9N7++eNHO8xdWfWeaoKE2h5cyiXq7Aqz0u+ZsW5SWE6YFD9nfFiB/RLqK
-	9DSjQ3X+kuzbqpoi1H6o+9Sn+zCwrAt2ZwHQDEEERsG+oF6DopKcAGLopTI0IUmfDneBXjT2VUe
-	zpVBT9h1EAaQQXP3R1lLKmG37hn13xVWridg8uGpOrX0cW1qVElaACeQOg3MB0JrtD/lTMH0SHw
-	6oHFR/pnn4+zWUye28jVDPCaBk9T16D4lSk0leR+x/C8+603/D/+Te2jFgsVOCIdDEMiEQ/V1+j
-	C2diC6p+wS2c0mywT43Q2OorCRxg0gbiY9fa5fCRJL4fHAoUXAVi87LO7FDfeu7NccD6eA==
-X-Received: by 2002:a05:6214:2502:b0:6e1:8300:54dd with SMTP id 6a1803df08f44-6e908cb83d2mr16970656d6.3.1741445564628;
-        Sat, 08 Mar 2025 06:52:44 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGSj4DtwyIyuqnhiEdd/BEFf5BS8fhU04AWxZPyJhZB2pXyHozhGGkjEGML4zezlWGkfpna8A==
-X-Received: by 2002:a05:6214:2502:b0:6e1:8300:54dd with SMTP id 6a1803df08f44-6e908cb83d2mr16970516d6.3.1741445564301;
-        Sat, 08 Mar 2025 06:52:44 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac2399d1237sm441737066b.164.2025.03.08.06.52.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Mar 2025 06:52:43 -0800 (PST)
-Message-ID: <40eea830-b3b0-4a80-91aa-9acd67e7ab41@oss.qualcomm.com>
-Date: Sat, 8 Mar 2025 15:52:41 +0100
+        d=1e100.net; s=20230601; t=1741445885; x=1742050685;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0KDrEoyP4jGfL5KBLDfRqPR/7suUQU11UZUvsVsBe/g=;
+        b=sm/TZDTnMa4qT12vB26GijVV4xCw3UYjEi/b+AktbgSqYGXhMJf0YhL59c6aAcGAna
+         6Yh3BqOGQsE1wHC0fAl6Y2/cecrl9lqaZzZonyolJlZkoA78UWlBQd0qlbhT2Ke+Wb8a
+         iM4VCLSqz9lN/hKIOaF2QEWGq0mkMcE+SKYarviXt55Ay8aWbAfArC6mcOTAHEjRRJmi
+         yHQtS45Nf5S/RupyTuGbu9Q+tdUyrc7aC2bCUrBNH5RC+YuzkBKH0JmwzChj3RkLsgWR
+         5iHag5fPBHGNYDeFiQXob976pFPk86oILgE/o4lDUz9Bud0IfPHgn0ZtFQArV+0gR7wu
+         QZpA==
+X-Forwarded-Encrypted: i=1; AJvYcCVoKyI+9O3JL7ccvMsbHMGChXWcgBTW118WYfPPfiz0bG+sPpHbfy0R5JhPOs4KwWKxqtXkpzGQD59H7wS9@vger.kernel.org, AJvYcCWnAEfxutFUmlbc2ZpyIEy+RAcHNwMnvLprQ6pHaQj7TNw1yesiRAV2N+ghu6j3qvZScN8QlpHLninZ@vger.kernel.org, AJvYcCXSwEAVOkZvDeQG6EtreupGDRbvaWI5kkPbQ/gJ3ykBTS/HPWrpW8QLRxWY2Rg/HIJpnV0DJsC+UPEc@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjknVm8G6dzjUK3UO92vws76Ckvc8C9IkmpAmCDLw1z2YE7yBb
+	Br/jrqs4k5ngbtfa8JjII4j0IGFXsewk1HeGtH5o0JW58Pueh5Kl
+X-Gm-Gg: ASbGncv0nEtF7YJq5V6X4dD1XUizOaIPGpyJgPav7rw2dT8T81aGjBh0MEvBQEIWuEN
+	Gg3SnxnvsIxskeBxB9xhUUoB9SHmpbK+hdu+iKhzI+aIkcgwZ9JGZwrJEnbV5sol8rx89iPLWaR
+	tV+Wo8ip6mEXISd3OYWDMOXnkX1rgvwb5e1hs9VJoO1H/y3H8AWzAUczQCU9A637WmpZl0nM6Ey
+	UmtJmyM7efR+3qqPP7QSgjI58zInnb7aEyZ83bZflytFdqRTpq0bFFs1zzMp7dyMmKe7cC8Od1G
+	CKaj9Gdi4Bl5N0gHWzQcNuk68IzFRGpUMPj/b7ss/QjRTG9veALmQfNth7lkRAXh6bd4wsEegrD
+	YfQE=
+X-Google-Smtp-Source: AGHT+IFrki4JZBZlTOdD9wNIdmnZOMDK+QF1rINfsxHIZ8KiUTgx72Vi+I+qLYVyzk80DV0WCZDW6g==
+X-Received: by 2002:a05:6a21:6d96:b0:1ee:c7c8:ca4 with SMTP id adf61e73a8af0-1f544c92b65mr15412514637.36.1741445884819;
+        Sat, 08 Mar 2025 06:58:04 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73698514f58sm5236020b3a.133.2025.03.08.06.58.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Mar 2025 06:58:04 -0800 (PST)
+Date: Sat, 8 Mar 2025 23:58:02 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: fsl,layerscape-pcie-ep: Drop
+ deprecated windows
+Message-ID: <20250308145802.GA482803@rocinante>
+References: <20250307081327.35153-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 17/23] arm64: dts: qcom: ipq8074: Add missing MSI and
- 'global' IRQs
-To: manivannan.sadhasivam@linaro.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org
-Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
- <20250227-pcie-global-irq-v1-17-2b70a7819d1e@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250227-pcie-global-irq-v1-17-2b70a7819d1e@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 5MMbxk314JgLDENKKht3eOioJev7hrRe
-X-Authority-Analysis: v=2.4 cv=CupFcm4D c=1 sm=1 tr=0 ts=67cc59bd cx=c_pps a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=x0-Ntm4DP0gVEan9CnAA:9 a=QEXdDO2ut3YA:10
- a=dawVfQjAaf238kedN5IG:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: 5MMbxk314JgLDENKKht3eOioJev7hrRe
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-08_05,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- suspectscore=0 phishscore=0 adultscore=0 impostorscore=0 malwarescore=0
- bulkscore=0 spamscore=0 mlxlogscore=635 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503080112
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250307081327.35153-1-krzysztof.kozlowski@linaro.org>
 
-On 27.02.2025 2:40 PM, Manivannan Sadhasivam via B4 Relay wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Hello,
+
+> The example DTS uses 'num-ib-windows' and 'num-ob-windows' properties
+> but these are not defined in the binding.  Binding also does not
+> reference snps,dw-pcie-common.yaml, probably because it is quite
+> different even though the device is based on Synopsys controller.
 > 
-> IPQ8074 has 8 MSI SPI interrupts and one 'global' interrupt.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
+> The properties are actually deprecated, so simply drop them from the
+> example.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Applied to dt-bindings, thank you!
 
-Konrad
+	Krzysztof
 
