@@ -1,66 +1,81 @@
-Return-Path: <linux-pci+bounces-23177-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23178-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61A73A5764F
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Mar 2025 00:41:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A52F9A579BD
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Mar 2025 11:23:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A29517792A
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Mar 2025 23:41:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C8321897270
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Mar 2025 10:23:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D42C120CCFD;
-	Fri,  7 Mar 2025 23:41:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41B14190470;
+	Sat,  8 Mar 2025 10:23:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Udfo0dUo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aTHsKewT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30191DC99A;
-	Fri,  7 Mar 2025 23:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BAFC133
+	for <linux-pci@vger.kernel.org>; Sat,  8 Mar 2025 10:23:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741390893; cv=none; b=EGA+mnxnRiAuhvqzrcZjJzuMpqPKz4FXVUW59ZQlaM4dZhmN5zx16eVYBbjFmVTn43+HaTwON+/gsxUJXI7BtHXJBcP3mjiBM+GU5C7YxXlBKa4KnPYRYblw9Ocay8uJ2vhzsfJADTIJE+awxh4sdZB1hGn578bRtXfiBR0+z0c=
+	t=1741429417; cv=none; b=KD2Lfq/wOFfdS/hAMhTACCoeuIBNBtgNvesGU5K2+t3FT0OxkkmkMhYDpNwhChy4oB6CaRn5CwxV+Hyqp4HGtuZ1AA1IgG0cbnCzs1lIGh9XS+bRTdcukcjnM7f/MpZbL/s23UhNR/XNoaVeV0LhJdTNMzF1xTkO7O7SDxDMMC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741390893; c=relaxed/simple;
-	bh=yyE7KOWWH/DThx7lyaD0ORCMpjEmY7tHAL2lQSTtrxA=;
+	s=arc-20240116; t=1741429417; c=relaxed/simple;
+	bh=kQdnxo2eQAhesGGQYLkLLnavSig6b3TJRMcAF2Gn9dY=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=IM6aipUZKLAuy4zEgxcx396r2CjxduBu2oSbXX55/PjNmP0anSiF0rTBgK1YZrbOztayyuP4D1x2qq9gGZfcHgetYklrAkIo6e5SaOykTbS6LC0LteMkejUT0ZUSvrQFAfQ0NJx1e6hM2HOAaQTuv55mEqNTjD4qnlQ+1QuPTaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Udfo0dUo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEE84C4CED1;
-	Fri,  7 Mar 2025 23:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741390893;
-	bh=yyE7KOWWH/DThx7lyaD0ORCMpjEmY7tHAL2lQSTtrxA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Udfo0dUo1NqX33GUbGYVRCfE2XukS0+19Lq8BUfwh5a2MSfyFC0FzoFb+JV12kTeB
-	 N4VIx3dpaVde/6VorEOKIcGmoej71DV/NyP/+9MitDa7Ih1tlnSnI7yhFK503YOAZZ
-	 Nto95q0f4z+O+vPziWEJswiMg4zMIj/PGdjeqlFnNvFKPv/rUILi05vjTQ2d6XyliB
-	 TDfAL1SdOjRUbvF7FkV+O7VnEE6hROtjKiATZWC5xSxk0l15uzGP6xdeonUhFwOqTn
-	 /agcd7Po8MoZzLUptFMYStBJ7uBuzgc8KBHB8zKUiYUJ7k/ACW+cW1khknah3fly8d
-	 BXAI1/rbZExhA==
-Date: Fri, 7 Mar 2025 17:41:31 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v9 3/7] PCI: Add parent_bus_offset to resource_entry
-Message-ID: <20250307234131.GA440690@bhelgaas>
+	 Content-Disposition; b=ryRXGrVDVrZM3mUYS5KCVwhL8XaTE63s9xE1904c7CqZNcFEdKm+NamDOPH/w16uoT19wTFqBHcynL2a+5y1lLm6J/ZSF2EmVR+0YnbI4HruZ0UCrpzrFvwrDa5IL4l294Hrv6dIbiUPitjmc9j9QWAzw/Nt8SbMV0YGcUpVME4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aTHsKewT; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43bd03ed604so22794585e9.2
+        for <linux-pci@vger.kernel.org>; Sat, 08 Mar 2025 02:23:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741429413; x=1742034213; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Sb5zpBZeAXxrIZv2sz7E55sdm1vl362JAnmyo0Aw2TM=;
+        b=aTHsKewTAK8MJi5sLtjakOPp28PeGFy5IfQNhRPo3X+76pOzrOyTHjOPfq+7/uM7EZ
+         5EszgkLcwaZSxWWo5/hMxS2+gnJvad6jGWQ2PoxwPYaIW+6uPBhyVOo4Bep6DOvXcLXg
+         L3TAGScI7CVb1zTBok1qxS2KgZla5/QPfpAtTwbAI1R/Qval/1nWalWETAZK60YkUTgI
+         E53694O6+hdJgMguXacgIFK0e8/KnHOu9U3hhoe8OxKGHGqNxZNU23JAQdTEBKXO9rgL
+         gugT60hF5olXwEZsV9fpgHXIlC3ET6JoRItqkm6uHq3Qwgpxp/ETp/68HW+P+jqXuxrE
+         6jBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741429413; x=1742034213;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sb5zpBZeAXxrIZv2sz7E55sdm1vl362JAnmyo0Aw2TM=;
+        b=BLrHw+ywGEqPQrQYy8K5AhSiqa/DAlaRmMbTF/2jq+PqukqE3G+NU366dNwL/2Ig8y
+         4+SLaxDz2zLXzB9/LicnSOfkQ6JYOIz5icfpo/ibb9Ky5v2c/xi06azQGxhXkENx7/od
+         skDjE53OSW0wBdN75Uhyok9qqJ8/qkpl6OCGdPIhtBBS58OR/xFMu8xj1oHKLYuHSY+s
+         iOKAXdp0xMm6BjGrczhiBho0UG/X/TIfWJJ0kGNtHylgZts9tHXG0N8eg2FOHS0N/8vU
+         W6tSUkuRIFoKI/kko/uf3lqzyySvoMIklS6cJ1UpL0Zs429yP6AzDVCNTNjDhotyT3Li
+         pM2w==
+X-Gm-Message-State: AOJu0YwpnsRn4fGASH7Sc6drbCj3Yuekhm66GgUQ+O/UNwzx8VVifeOc
+	Gl10xob7Q9trf1a6pnZvRy7ECgDZfj5cQnHn/l/xVuyZmi/2KpfMVFd87Ghsp7WVZ0o7EdiXT/q
+	0
+X-Gm-Gg: ASbGncuAd+OP/0aP19KEDxebgLw7C2QJ8j4HQ2mw1NEQYzz8EL7phQr0T9oTOMYIICM
+	iySTGyWSPzEZ20YF0bQDLhEJ/43qE3eG2GH7D/dNisj/K8bFZHlm7y5OCCZTjkgZByFDBtJTcIA
+	CIPVwzSldckQnn1J0yTefjXN2BIWHCFk8x+WaSaNddDmABTIb2Fadz70bd6Ds43qdqZ/3mEJLlJ
+	jT+NBMgpGUdAWSu/vg45x5MDN3Tak/nrF6JXPzd1oc1209np45Q/9KEVyu/Aod2VgOFyfau7Xz2
+	M+nesMj7umc1icHQrZHODeGID8/BdNPGj/Lt+IMKMNjs8y99tQ==
+X-Google-Smtp-Source: AGHT+IGias6fvwETskjIBnti4LTUI/Mop7shoYkmXpTe0gsjKO2iXxZCclvqsnwdhZPa9bu3TOt2wA==
+X-Received: by 2002:a05:600c:4f82:b0:43b:ca31:fcfd with SMTP id 5b1f17b1804b1-43c601e18e1mr46639445e9.18.1741429413556;
+        Sat, 08 Mar 2025 02:23:33 -0800 (PST)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3912bfdfcb8sm8483155f8f.33.2025.03.08.02.23.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Mar 2025 02:23:33 -0800 (PST)
+Date: Sat, 8 Mar 2025 13:23:28 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Philipp Stanner <phasta@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [bug report] PCI: Check BAR index for validity
+Message-ID: <9b116a86-d235-4a77-8002-7de0be61e24f@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,91 +84,38 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z8sRl1c//SZXKhB+@lizhi-Precision-Tower-5810>
 
-On Fri, Mar 07, 2025 at 10:32:39AM -0500, Frank Li wrote:
-> On Tue, Mar 04, 2025 at 05:25:45PM -0500, Frank Li wrote:
-> > On Tue, Mar 04, 2025 at 05:11:54PM -0500, Frank Li wrote:
-> > > On Tue, Mar 04, 2025 at 11:50:10AM -0600, Bjorn Helgaas wrote:
-> > > > On Mon, Mar 03, 2025 at 04:57:29PM -0500, Frank Li wrote:
-> > > > > On Wed, Feb 26, 2025 at 06:23:26PM -0600, Bjorn Helgaas wrote:
-> > > > > > On Tue, Jan 28, 2025 at 05:07:36PM -0500, Frank Li wrote:
-> > > > > > > Introduce `parent_bus_offset` in `resource_entry` and a new API,
-> > > > > > > `pci_add_resource_parent_bus_offset()`, to provide necessary information
-> > > > > > > for PCI controllers with address translation units.
-> > > > > > >
-> > > > > > > Typical PCI data flow involves:
-> > > > > > >   CPU (CPU address) -> Bus Fabric (Intermediate address) ->
-> > > > > > >   PCI Controller (PCI bus address) -> PCI Bus.
-> > > > > > >
-> > > > > > > While most bus fabrics preserve address consistency, some modify addresses
-> > > > > > > to intermediate values. The `parent_bus_offset` enables PCI controllers to
-> > > > > > > translate these intermediate addresses correctly to PCI bus addresses.
-> > > > > > >
-> > > > > > > Pave the road to remove hardcoded cpu_addr_fixup() and similar patterns in
-> > > > > > > PCI controller drivers.
-> > > > > > > ...
-> > > > > >
-> > > > > > > +++ b/drivers/pci/of.c
-> > > > > > > @@ -402,7 +402,17 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
-> > > > > > >  			res->flags &= ~IORESOURCE_MEM_64;
-> > > > > > >  		}
-> > > > > > >
-> > > > > > > -		pci_add_resource_offset(resources, res,	res->start - range.pci_addr);
-> > > > > > > +		/*
-> > > > > > > +		 * IORESOURCE_IO res->start is io space start address.
-> > > > > > > +		 * IORESOURCE_MEM res->start is cpu start address, which is the
-> > > > > > > +		 * same as range.cpu_addr.
-> > > > > > > +		 *
-> > > > > > > +		 * Use (range.cpu_addr - range.parent_bus_addr) to align both
-> > > > > > > +		 * IO and MEM's parent_bus_offset always offset to cpu address.
-> > > > > > > +		 */
-> > > > > > > +
-> > > > > > > +		pci_add_resource_parent_bus_offset(resources, res, res->start - range.pci_addr,
-> > > > > > > +						   range.cpu_addr - range.parent_bus_addr);
-> > > > > >
-> > > > > > I don't know exactly where it needs to go, but I think we can call
-> > > > > > .cpu_addr_fixup() once at startup on the base of the region.  This
-> > > > > > will tell us the offset that applies to the entire region, i.e.,
-> > > > > > parent_bus_offset.
-> > > > > >
-> > > > > > Then we can remove all the .cpu_addr_fixup() calls in
-> > > > > > cdns_pcie_host_init_address_translation(),
-> > > > > > cdns_pcie_set_outbound_region(), and dw_pcie_prog_outbound_atu().
-> > > > > >
-> > > > > > Until we can get rid of all the .cpu_addr_fixup() implementations,
-> > > > > > We'll still have that single call at startup (I guess once for cadence
-> > > > > > and another for designware), but it should simplify the current
-> > > > > > callers quite a bit.
-> > > > >
-> > > > > I don't think it can simple code. cdns_pcie_set_outbound_region() and
-> > > > > dw_pcie_prog_outbound_atu() are called by EP functions, which have not use
-> > > > > "resource" to manage outbound windows.
-> > > >
-> > > > Let's ignore cadence for now.  I don't think we need to solve that
-> > > > until later.
-> > > >
-> > > > dw_pcie_prog_outbound_atu() is called by:
-> > > >
-> > > >   - dw_pcie_other_conf_map_bus(): atu.parent_bus_addr = pp->cfg0_base
-> > > >
-> > > >     I think dw_pcie_host_init() can set pp->cfg0_base with the correct
-> > > >     intermediate address, either via the the of_property_read_reg() or
-> > > >     .cpu_addr_fixup().
-> >
-> > And chicken and egg problem here for artpec6_pcie_cpu_addr_fixup(), which
-> > need cfg0_base. But try to use .cpu_addr_fixup() to get cfg0_base's
-> > intermediate address.
-> 
-> Bjorn:
-> 	Do you have chance to check my reply? some dwc platform driver
-> .cpu_addr_fixup() implement have dependence with old initilize sequency.
+Hello Philipp Stanner,
 
-Yes, I tried to sketch out what I was thinking to make it more
-concrete.  I posted it and sent to you, but just for other readers of
-this thread, it's at:
+Commit ba10e5011d05 ("PCI: Check BAR index for validity") from Mar 4,
+2025 (linux-next), leads to the following Smatch static checker
+warning:
 
-https://lore.kernel.org/linux-pci/20250307233744.440476-1-helgaas@kernel.org/T/#t
+	drivers/pci/devres.c:632 pcim_remove_bar_from_legacy_table()
+	error: buffer overflow 'legacy_iomap_table' 6 <= 15
 
-Bjorn
+drivers/pci/devres.c
+    621 static void pcim_remove_bar_from_legacy_table(struct pci_dev *pdev, int bar)
+    622 {
+    623         void __iomem **legacy_iomap_table;
+    624 
+    625         if (!pci_bar_index_is_valid(bar))
+
+This line used to check PCI_STD_NUM_BARS (6) but now it's checking
+PCI_NUM_RESOURCES (15).
+
+    626                 return;
+    627 
+    628         legacy_iomap_table = (void __iomem **)pcim_iomap_table(pdev);
+    629         if (!legacy_iomap_table)
+    630                 return;
+    631 
+--> 632         legacy_iomap_table[bar] = NULL;
+                ^^^^^^^^^^^^^^^^^^^^^^^
+Leading to a buffer overflow.
+
+    633 }
+
+regards,
+dan carpenter
 
