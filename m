@@ -1,172 +1,96 @@
-Return-Path: <linux-pci+bounces-23194-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23195-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47FB0A57E50
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Mar 2025 22:05:57 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F44DA57E63
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Mar 2025 22:07:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 011023B01DF
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Mar 2025 21:05:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 89B8B7A66D1
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Mar 2025 21:06:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DED031A5BBB;
-	Sat,  8 Mar 2025 21:05:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A92F11A08B1;
+	Sat,  8 Mar 2025 21:07:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="PbjaYFSX";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="2k09chLW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxkgdO5V"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from flow-a6-smtp.messagingengine.com (flow-a6-smtp.messagingengine.com [103.168.172.141])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C23919597F;
-	Sat,  8 Mar 2025 21:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E7A19597F
+	for <linux-pci@vger.kernel.org>; Sat,  8 Mar 2025 21:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741467951; cv=none; b=YZAPlbS9Bcpo6hzh+BlGJsUwoWw3VsXbfyPu32YvVI13tnRmWPEVLmtTGU9JJW4WMUc88MYVZDZJzb+L9pNdhzuyO/ag524pKMb91GdBeynegkyecJllRVeIz0lQORbion+/Sh/rDvJ9N+Bb4pi3SnckW+FVU29Ez3QnHVFHg48=
+	t=1741468042; cv=none; b=EvgoJ+lozPFzCVSEunxoDOdD2T4P1HAjuSVL+ctRB3E2anDvZjAEE2QWC+b7eM3i1P8fvxFfMAbFbnWNcbl3ya64XCiN25wgDEoksKpQ4n4UxuYcqdgPov0aFt7Bk3+PjvoCjzhyt8voCC0p9jnlt3X+d4G5kn195/qyco3heqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741467951; c=relaxed/simple;
-	bh=soAQYnXR+lBcoAqzICQ9dhN2P4GRiTJuBPmQemVV+zk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=LYMtKMWOdR2DJEMF4H5CDhTz3uF3ltjYPyoik5SD664abP3b2cxuB0V4qLCc99By6EzN+EuPU2+SXDXBd5SqlEynHrBRO9sEJ4mPSq6qz7QhZdobXV5FNu7P++Hn62NheYsBlk0C7k7zwPsOnu8SxAzxdbteftpFUbwcnpDOmok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=PbjaYFSX; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=2k09chLW; arc=none smtp.client-ip=103.168.172.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailflow.phl.internal (Postfix) with ESMTP id DE8FE2017E6;
-	Sat,  8 Mar 2025 16:05:46 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Sat, 08 Mar 2025 16:05:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1741467946;
-	 x=1741475146; bh=W4poDmOA64pY4uvHZcOCt8hPoavx9e3hXSZvtxdXHKk=; b=
-	PbjaYFSX9IBx2Zrs40HbC9+xW+mfnGRXkjrLnF/lmBTxXHH5vogiHSSOspqIeun1
-	NHfBh6H00r3dQfPeg/5Np/6Z9XnSuH0FKD+DR2HubpiuMGQ/cIlXZj4R8B8ROhDL
-	goKIgFL/GsoFSOene+PO+8yhXJyNpaw+RIaTc2mAtJJGV6CjknGC9TlrbTxPTF9X
-	pWcsaTZU3KhhEbiIyNbOPqhcecuUGjnfGnDJ2dWkoU+YL+V5DIIga1Rn2j0Bl5qL
-	u59YI9TE/OHE24iRU+89XEMwS2VxZLS7RtbtY5u5kVRUVTePTpxwefPCm6nJdU9/
-	et5ORwsXOuqEk213wxjyfw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1741467946; x=
-	1741475146; bh=W4poDmOA64pY4uvHZcOCt8hPoavx9e3hXSZvtxdXHKk=; b=2
-	k09chLWM/lSt9ok/EPaPM1tR7eBje/kIsmlJQe/3mXR56QFqC9W69F7BHwDF0fGM
-	kODKlY76T3e9H8oa0C+vm3AnKrYBg4EHOFO+NeDTv9i2LVhrbDe+4On1enx+SXkf
-	jCuY+jGWCb7dq6bVKRic6ilsWWRffPxqNl3G4H3ZyFTFR5vG3CC93kYg0GtIJREx
-	i7ppS1ZpZObOXtg1acJC8U8r4gnYj7l+dkuLnVJPKp/LgM21hZnVKFd/s3wHJv+C
-	oYUKaTLoubtPOBBZsxqlbvftF3FJJh5RQfjk0WIAx3lkCwrtVye9WojKDgsaWm8w
-	eqXtQNTKoXuDuJ4eq/jTA==
-X-ME-Sender: <xms:KrHMZwqQWf1vmDRRZmKYix9_AvEX71hk9A5-PUg-mMHoqyGuX43GTw>
-    <xme:KrHMZ2psuRMKaam0ybx-JZLEC1a7vUGqphSu1hLVSUR3YOE3xwz-daI2PPjxwEq4X
-    bngyXPelqUm1rvI9Vg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduudegheekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    gedvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
-    dprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghp
-    thhtohepjhhovgihrdhgohhulhihsegrrhhmrdgtohhmpdhrtghpthhtohepmhgrrhhkrd
-    hruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtohepshhuuggvvghprdhhohhllhgr
-    segrrhhmrdgtohhmpdhrtghpthhtohepshhuiihukhhirdhpohhulhhoshgvsegrrhhmrd
-    gtohhmpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphht
-    thhopeihuhiivghnghhhuhhisehhuhgrfigvihdrtghomhdprhgtphhtthhopegtohhnoh
-    hrodgutheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:KrHMZ1O9ctL676w5AHUIxE0SC1uXzVCBMq5d4oaLxLgUSw773mfxVg>
-    <xmx:KrHMZ36aWng3VojtFfg9JWrEIO2NAAnLf-1dP-OHoquiOYe6lO0u_Q>
-    <xmx:KrHMZ_6_zJEf_V0pq87wzL4JG8U2CRExCG9veX074cbH5tYyr-yvvg>
-    <xmx:KrHMZ3iPusvaeexA7SSSlwDrRNP8bOUuPa3aybP_Ilx1k2AiNrnRHA>
-    <xmx:KrHMZxAOYkkYPw5ZnbYA_W8w8hNAHsxDFHKJb1ECP7qxkoZka0El8mlf>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id E676A2220072; Sat,  8 Mar 2025 16:05:45 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1741468042; c=relaxed/simple;
+	bh=8qBfutaco1FKz7HNRS/JT9gTC8Adls3DlayZ6gj0ruk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=VMgzkAACW+ujsAXkBeuP4LdBE6E3HHga1RU8QZQ5XzL5AgAgdl+DTqjz7CxxMx5cutp4g/JSbV2TCGohsiOjxUIjmvM1bw2z38hcY5ATzE9f/Z0u2Gs4EeMfX2EPlxkuXsYDELzxP8mSzOzy+eVN6t4Ow1zsyrWAtB+RBI79sIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxkgdO5V; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3EF0C4CEE0;
+	Sat,  8 Mar 2025 21:07:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741468042;
+	bh=8qBfutaco1FKz7HNRS/JT9gTC8Adls3DlayZ6gj0ruk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DxkgdO5Vxr47M0tbLQGgtcHRiwiTmdmbN1EDZQt8hsYlUuWjdQlEBOudJ3ezuhUHN
+	 FTisRuytMEq7CvD5jIIeLdkusB50hxYowqG1NuLNIIqsCC3akpACnscBtOT8kM01hE
+	 jnppmHZoL4AwQfVqErcfiBoSahPP+l1S1FgxVTkrMNo2QCyBYnWdeCTMot0bwvL8Qz
+	 BjBUqkyPa0lpSccpHvtaGuoie4HsoyY+EIBIYipC7sAZu9nawNaRjSMlc4NEBrxcF7
+	 ljbwcT1yCfX1jEMqXiTRGUhqQLRp7M5Dwxr89tSWcGbKENCFrdy47Vn5K6lkM2vfbo
+	 d+xsXppgeF9Tw==
+Date: Sat, 8 Mar 2025 15:07:20 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Philipp Stanner <phasta@kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [bug report] PCI: Check BAR index for validity
+Message-ID: <20250308210720.GA469242@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sat, 08 Mar 2025 22:05:24 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Roman Kisel" <romank@linux.microsoft.com>, bhelgaas@google.com,
- "Borislav Petkov" <bp@alien8.de>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "Dexuan Cui" <decui@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "Joey Gouly" <joey.gouly@arm.com>,
- krzk+dt@kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>, "Len Brown" <lenb@kernel.org>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
- "Mark Rutland" <mark.rutland@arm.com>, "Marc Zyngier" <maz@kernel.org>,
- "Ingo Molnar" <mingo@redhat.com>,
- "Oliver Upton" <oliver.upton@linux.dev>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- "Rob Herring" <robh@kernel.org>, ssengar@linux.microsoft.com,
- "Sudeep Holla" <sudeep.holla@arm.com>,
- "Suzuki K Poulose" <suzuki.poulose@arm.com>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Wei Liu" <wei.liu@kernel.org>,
- "Will Deacon" <will@kernel.org>, "Zenghui Yu" <yuzenghui@huawei.com>,
- devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
- linux-acpi@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
-Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com
-Message-Id: <e0f81049-688e-4f53-a002-5d246281bf8d@app.fastmail.com>
-In-Reply-To: <20250307220304.247725-4-romank@linux.microsoft.com>
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-4-romank@linux.microsoft.com>
-Subject: Re: [PATCH hyperv-next v5 03/11] Drivers: hv: Enable VTL mode for arm64
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9b116a86-d235-4a77-8002-7de0be61e24f@stanley.mountain>
 
-On Fri, Mar 7, 2025, at 23:02, Roman Kisel wrote:
-> @@ -5,18 +5,20 @@ menu "Microsoft Hyper-V guest support"
->  config HYPERV
->  	tristate "Microsoft Hyper-V client drivers"
->  	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
-> -		|| (ACPI && ARM64 && !CPU_BIG_ENDIAN)
-> +		|| (ARM64 && !CPU_BIG_ENDIAN)
-> +	depends on (ACPI || HYPERV_VTL_MODE)
->  	select PARAVIRT
->  	select X86_HV_CALLBACK_VECTOR if X86
-> -	select OF_EARLY_FLATTREE if OF
->  	help
->  	  Select this option to run Linux as a Hyper-V client operating
->  	  system.
+On Sat, Mar 08, 2025 at 01:23:28PM +0300, Dan Carpenter wrote:
+> Hello Philipp Stanner,
 > 
->  config HYPERV_VTL_MODE
->  	bool "Enable Linux to boot in VTL context"
-> -	depends on X86_64 && HYPERV
-> +	depends on (X86_64 || ARM64)
->  	depends on SMP
-> +	select OF_EARLY_FLATTREE
-> +	select OF
->  	default n
->  	help
+> Commit ba10e5011d05 ("PCI: Check BAR index for validity") from Mar 4,
+> 2025 (linux-next), leads to the following Smatch static checker
+> warning:
+> 
+> 	drivers/pci/devres.c:632 pcim_remove_bar_from_legacy_table()
+> 	error: buffer overflow 'legacy_iomap_table' 6 <= 15
 
-Having the dependency below the top-level Kconfig entry feels a little
-counterintuitive. You could flip that back as it was before by doing
+Thanks, I dropped this patch for now.
 
-      select HYPERV_VTL_MODE if !ACPI
-      depends on ACPI || SMP
-
-in the HYPERV option, leaving the dependency on HYPERV in
-HYPERV_VTL_MODE.
-
-Is OF_EARLY_FLATTREE actually needed on x86?
-
-      Arnd
+> drivers/pci/devres.c
+>     621 static void pcim_remove_bar_from_legacy_table(struct pci_dev *pdev, int bar)
+>     622 {
+>     623         void __iomem **legacy_iomap_table;
+>     624 
+>     625         if (!pci_bar_index_is_valid(bar))
+> 
+> This line used to check PCI_STD_NUM_BARS (6) but now it's checking
+> PCI_NUM_RESOURCES (15).
+> 
+>     626                 return;
+>     627 
+>     628         legacy_iomap_table = (void __iomem **)pcim_iomap_table(pdev);
+>     629         if (!legacy_iomap_table)
+>     630                 return;
+>     631 
+> --> 632         legacy_iomap_table[bar] = NULL;
+>                 ^^^^^^^^^^^^^^^^^^^^^^^
+> Leading to a buffer overflow.
+> 
+>     633 }
+> 
+> regards,
+> dan carpenter
 
