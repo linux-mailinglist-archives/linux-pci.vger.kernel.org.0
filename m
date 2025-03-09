@@ -1,260 +1,150 @@
-Return-Path: <linux-pci+bounces-23259-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23260-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83329A588EC
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Mar 2025 23:58:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9CBCA58920
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 00:11:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EEC01188B3FC
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Mar 2025 22:58:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C6D9F169B33
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Mar 2025 23:11:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D0712206B6;
-	Sun,  9 Mar 2025 22:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E7B71DE880;
+	Sun,  9 Mar 2025 23:11:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eq8dfpLf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KvKPC7u5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA68442A93;
-	Sun,  9 Mar 2025 22:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68D442A93;
+	Sun,  9 Mar 2025 23:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741561093; cv=none; b=hKND+l0DNctUr0bdHxFqjIwaweXj5uP7pasqS+RjyTVG+TJwufKXItshVw2KpW/QyU0EhlstT0C1ftvQgCsuG9Qa5qGGQcn3K2g4foZ7yNQVwjWYSlrjperQqp97c+A5C8UGtWkiOkOj1ULosO1VDHuTOse3PoBFS/gHqxaGaI0=
+	t=1741561872; cv=none; b=rLCaqtp/CChvIc/mfyoJHy2+Fg1tbmpTWm4IW4ncqxXqFhdykBJ7q0QvI1TIQj3QL0NR+yYbdIycICTJXRFzzAFeiLkZQ9TtkPaIZ7iz1v6fHDcF46lqu9m2RYMlooXq+yeMtF6rXY9nhejGhpohCvEmWSIjtkEzec+qN4eiZpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741561093; c=relaxed/simple;
-	bh=wvkUc42hPFWxQzCi87XYn+FmEj0IYv93TWp91k1aAjY=;
+	s=arc-20240116; t=1741561872; c=relaxed/simple;
+	bh=atcNgUQAREeh0fhb4DRMjchCgwjfjadvjS4sJmAd6J4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qUKhyERZLalqbUnn/RVzn9qxwUGob5gXwjjCeKXjnmdgqUVMbF6GRlKl9mV1/3B8ssGNKj+IFS2QPHBnCun3uq/NdCP/jyrZylh4O1unwJAdTYFZMyrorfa8ysRAttjtscI7kVQGjONlXXyxiQ63TeQJ8KPOLamnoMPHvJqtDKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eq8dfpLf; arc=none smtp.client-ip=209.85.221.175
+	 To:Cc:Content-Type; b=LOHPqvodpl8VoDEYKAO6/adckAuus9+JNNzDqNxMG42InZUve3y3P8KVUsqLcWBnXBR1W0pycFVYkNQIuGXtx7UtNGGhU5fgzVPcaQWVi9iHQ9T4HQWmyEtCWiliHxs8Gcs47XdeRnt9A+vgoOpF3a3IUU9tzcbc+nGaPSFqrws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KvKPC7u5; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-523f670ca99so479546e0c.1;
-        Sun, 09 Mar 2025 15:58:11 -0700 (PDT)
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2fec3176ef3so5026275a91.1;
+        Sun, 09 Mar 2025 16:11:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741561090; x=1742165890; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741561870; x=1742166670; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CV2gOKsKlbj4j9gbHkJuaQwCeDFrffbEAAVvwDimsKo=;
-        b=eq8dfpLfkpunLeMA/DWWv46fjl6IevGkBSe20Xik+nLkMXMnpSbhqurnk45qfMqWsM
-         CyyHk74mGLoTTzHD7Pvg7aIZt0H2pXYyzducHnr33FLceK44ZewqlswVeQyKhSA6nvzc
-         7ZLl8PSzsX2RUAwt0BoHUw8w/pRC/t9LzEhjk68yJIvS/ynGJ8pGGsA7PXYYlCJoFW6y
-         C7Y6o68I/kp9Mh4qMG/P3B7CGh32sLeru47WDIXbEdaZ4xiaEa/4lOjAF/14mHkeR4E7
-         bJscFVxPXOZAg3lT4fqWCZ/q+94kj/xTD3IObVXWSlIkve0/IKfAOfQ12Nlm6bakfUX2
-         Mudg==
+        bh=c3shQeLIb87O/RRIaqXwJ5kPUFh1GOsvFtb4du+fw5o=;
+        b=KvKPC7u5awFSZ0H3pwXmxBLl5SSaKv/XStOCQsWuEFzHuKi9ODuz342CoX8TRG64eu
+         cx/T6Uio8RM2+7LNrVNjoauWQQYYS/tD9KEyZ/2eA7/mqTAGNEwLSEYbQq9zmTd+6ZhL
+         KlV1GggLQktT9QxI3xIy8c59v0LyBfmodBDGY4AlKB2ggr4Fah9a525eJL5ppAAS8G+X
+         3hCWMGOEfeLWOjlqp8mF6PwkxK2UdHJ+0ZyGZqkmhps5A3m6HkjohpLH/UXCrqZlR03N
+         0I+UDcoor53iQwdAYxRiIcNIKIxgX91D/9B9ApCsCdgxSQARZt1vP9NL0O5PnKy5RZ0g
+         48GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741561090; x=1742165890;
+        d=1e100.net; s=20230601; t=1741561870; x=1742166670;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CV2gOKsKlbj4j9gbHkJuaQwCeDFrffbEAAVvwDimsKo=;
-        b=pKi/+yWYilNYc7keEN4Ak/3VagLWYIwxW2Hp0xL5hEqjbOxrKoH/mOGvrSETXAvQnL
-         /veZLcNWM3qIzJUgQ29Y/ys/EZohP3Hn25C5IaITAy+B4PDwKcRhVLLQY52jKgDD3uCb
-         9IIwZoG8E84Nm2o0iAj70X32I65avOOJkghIhrgNkMjQC+a9tFm+6zaQvuK7n5SctSt1
-         RrBv5IprfEk6tEmsX621VfVNdCBO4pkatyrYtY84u+0o9YizKoUmv6IcG9ATQpWNE20M
-         Tc/buk+0rUMs7ESqYom4NPjbElXNJ8anBvV1KnaXtNHWp9ZCGWAyMHfV9LVx3tlRnK8I
-         VP1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVUOvdtJ5qk8Od+dFWHFf1nlmzjPkJ2WCWMLlOdaGY6q9xXD54t8UgCwvLG4gKcf+VMzifk46d1mCY=@vger.kernel.org, AJvYcCWTdyW7tCzO9xikadcAHttdLd03Bbo3Om+tXrnLeuJpafWki/1oD5pKfBqwZZNEzaSAwjrzGTFEDfGp8PuV3PM=@vger.kernel.org, AJvYcCXOrucR0xxkkdYc0SA7Rss4jplZt0yAvZ1lFRMlVDJ3/bnZtsYqGUlle6Wqae4nBpADOC1mnQlJp833@vger.kernel.org, AJvYcCXeLSCSf7t6Ie6RQV9++4uWygz+34VG9YF07NaqBOJoQpNh5TQh6OJ10nxI1Qgx4nQNk7SQBS2YyinZJnKJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhYsK8P2L7m1MP4jSA1XxW0GYAKh2Iq6GINJjsklmkiP735SlO
-	uDKgSPiiWi1WI4Ph6pU6DUMGwiistrNVqVUgygAeGaqEUI4QKiyJFb4mpvIzp9/DsxaQG4MAtj6
-	VNh7fhO2fuLDGmwvfSkyp2gidWpw=
-X-Gm-Gg: ASbGncsH2E1pWr1cv/v3l2yQdwaaG2aCoMABQK6r1dap00VkqueGrp0G0QkGGPkYjQ3
-	O1OQpTkbfpvRe7BliTbGoM9GMLTLqTCSIKq78280DzuDO/wqJvKlMAk5Vd2e4mmbXc/97mVq5Cm
-	RHbjBk55aMLQUUxo5QzWnrXLp59eyJ+SpOYYZvnnvBDvvGULKAnUIwb0A=
-X-Google-Smtp-Source: AGHT+IEwOoOMmFUjNxHNrfepI418l5Ifkn4uw4xRbHYTbtlLmbbH2E57rd0IT5s8haY8kJDHDKUPM8o5mbc5p45iZ0A=
-X-Received: by 2002:a05:6122:2011:b0:518:965c:34a with SMTP id
- 71dfb90a1353d-523e40c8aa6mr7396671e0c.2.1741561090461; Sun, 09 Mar 2025
- 15:58:10 -0700 (PDT)
+        bh=c3shQeLIb87O/RRIaqXwJ5kPUFh1GOsvFtb4du+fw5o=;
+        b=vA9YalCziNaaG9u4baqwCoUrJk+aqcRNLsEyWLTF7VCYcN+iAH+D4umgTGJnnTsZPx
+         AKMmHBZNgWTGzgkDeKiGJKQFbPX8vhUhd3B8G6na2/+vGjovb6TiSztSDoASQLdFnXv4
+         USj6ZxnI7JfUZzs0mvCKePTKdhMRu8chK5jtLyVdlUPrWS8GL+f0JiqwgIc7D9LL7PXq
+         R3o8X73AhKlAtRWCHgpziJDQK9aINRX5gSQsHPrN7EMbCAOcQe9hmepOkPr1dkTi7E+C
+         /9/zva5Ku5dchcSxBfzaQ8BoXRJi01+MctLp71sTxOMNOgVt/kHSLTGbhL0AdMhi76rL
+         FKig==
+X-Forwarded-Encrypted: i=1; AJvYcCU2IHo03pC+kJ4grj8mfm00wkaWjhFWPLfxrSEmkncbDcMHK89ZgpEjr95chuDFeTboWHpRYK2fm2pkncc=@vger.kernel.org, AJvYcCWdDRSBYrm0EOKVqRWiz/VFRxonse8ACcejtgaXagQGmPICbGgcq5GiUruA9TvZy3mvVNZtA0yDPrSU@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCAVmDmTyJ7wSgf41NlaCxA3IlJMJCPdPBM7i7gcMkVz4Vb/ym
+	rUvIfqHPjn2s40RgzQag6uw/Vk4eh29FPYGtVckWCVfMLghKrMxS4Um18Ba6Dvn4xDS2iFUSyb1
+	ogbg5xK3/Xx0srPdl/0Lg2ZnSVhM=
+X-Gm-Gg: ASbGncsvdAIHS5Rsumw0KjhgDiYbtquS6rCYBJaoJfsZQRMeg0pI+6rCd+WkkyMGg8R
+	C/iwaDJiKPo52ylp9yiRKpL4xpL5UhL15R5IDoMkhpa6WQVSIgEw1OWa/IT6MoOsQXKhZlcYg/C
+	j9BqjTAI0xIUBrMF3ahLigy9+RACc=
+X-Google-Smtp-Source: AGHT+IFe2StKic7zJ9Jgf5erx9+TI5xxzkr/gT5dQYlAUYkc/bIxUrE7KMGg6WyvNMafLmzlkJP6r+I4HMQcHz/VXCw=
+X-Received: by 2002:a17:90b:2e51:b0:2fe:8282:cb9d with SMTP id
+ 98e67ed59e1d1-2ff7cee9c3fmr17474627a91.28.1741561869860; Sun, 09 Mar 2025
+ 16:11:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227030952.2319050-1-alistair@alistair23.me>
- <20250227030952.2319050-10-alistair@alistair23.me> <2025022717-dictate-cortex-5c05@gregkh>
- <CAH5fLgiQAdZMUEBsWS0v1M4xX+1Y5mzE3nBHduzzk+rG0ueskg@mail.gmail.com>
- <2025022752-pureblood-renovator-84a8@gregkh> <CANiq72kS8=1R-0yoGP5wwNT2XKSwofjfvXMk2qLZkO9z_QQzXg@mail.gmail.com>
- <2025022749-gummy-survivor-c03a@gregkh> <CAKmqyKNei==TWCFASFvBC48g_DsFwncmO=KYH_i9JrpFmeRu+w@mail.gmail.com>
- <67c8abffd2deb_1a7f294d5@dwillia2-xfh.jf.intel.com.notmuch>
- <CAKmqyKORk5n_b2DUDfCVmttE4T+S-LQvcp0NoQD_O7D-csdEvA@mail.gmail.com> <67cb834117c15_24b6429474@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <67cb834117c15_24b6429474@dwillia2-xfh.jf.intel.com.notmuch>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Mon, 10 Mar 2025 08:57:44 +1000
-X-Gm-Features: AQ5f1Jraag0X8uqn6eZ4prR62wfKovqGEuVYhObyXbvcIwNrW--XWB8Ar9rnjL0
-Message-ID: <CAKmqyKMryu=u8KUCYEVBwcbrmND8OFipMMwwDohXZUZg9qOqaQ@mail.gmail.com>
-Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are authenticated
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, 
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Alistair Francis <alistair@alistair23.me>, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, lukas@wunner.de, linux-pci@vger.kernel.org, 
-	bhelgaas@google.com, Jonathan.Cameron@huawei.com, 
-	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org, 
-	boqun.feng@gmail.com, bjorn3_gh@protonmail.com, wilfred.mallawa@wdc.com, 
-	ojeda@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu, gary@garyguo.net, 
-	alex.gaynor@gmail.com, benno.lossin@proton.me, 
-	Alistair Francis <alistair.francis@wdc.com>
+References: <CAEzXK1qtSRVS0TYAwMHTYh=7edO604iRKuXMQNMO_MC+-hunQg@mail.gmail.com>
+ <20250303202127.GA192918@bhelgaas>
+In-Reply-To: <20250303202127.GA192918@bhelgaas>
+From: =?UTF-8?B?THXDrXMgTWVuZGVz?= <luis.p.mendes@gmail.com>
+Date: Sun, 9 Mar 2025 23:10:58 +0000
+X-Gm-Features: AQ5f1JrX_WRbHkZhleekcYsB7cCyzfBQFLDu6wL5tcoddQB-SqXNxBX-sbmbh6U
+Message-ID: <CAEzXK1qwHf5no6B2eCX1U7NGe-BoJYFLTHPkbM=_XpgrMAE2dw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: mvebu: Use devm_request_irq() for registering
+ interrupt handler
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 8, 2025 at 9:38=E2=80=AFAM Dan Williams <dan.j.williams@intel.c=
-om> wrote:
+Sorry for the delay, but last week was a busy work week and I had to
+struggle to package Linux kernel 6.14-rc5 because it fails to
+cross-compile... it tries to use target compiler flags with the host
+compiler. I ended up compiling the kernel in a mvebu armhf machine.
+Also I noticed that some hash algos are failing.
+
+All logs presented were obtained from a SolidRun A388 ClearFog Base,
+if more detailed PCI logs are needed I have the other machine, the
+Armada Duo that has 2 PCIe slots and handles an AMD RX 550 GPU. Just
+let me know.
+
+- Complete dmesg log, booted with "pci=3Dnomsi"  is available here:
+https://pastebin.com/wDj0NGFN
+- Complete output of "sudo lspci -vv" is available here:
+https://pastebin.com/f4yHRhLr
+- Contents of /proc/interrupts is available here: https://pastebin.com/ejDU=
+uhbJ
+- Output of "grep -r . /proc/irq/" is available here:
+https://pastebin.com/4jvFBBhy
+
+Let me know if more information is needed.
+
+On Mon, Mar 3, 2025 at 8:21=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
+rote:
 >
-> Alistair Francis wrote:
-> > On Thu, Mar 6, 2025 at 5:55=E2=80=AFAM Dan Williams <dan.j.williams@int=
-el.com> wrote:
-> > >
-> > > Alistair Francis wrote:
-> > > > On Fri, Feb 28, 2025 at 5:33=E2=80=AFAM Greg KH <gregkh@linuxfounda=
-tion.org> wrote:
-> > > > >
-> > > > > On Thu, Feb 27, 2025 at 05:45:02PM +0100, Miguel Ojeda wrote:
-> > > > > > On Thu, Feb 27, 2025 at 1:01=E2=80=AFPM Greg KH <gregkh@linuxfo=
-undation.org> wrote:
-> > > > > > >
-> > > > > > > Sorry, you are right, it does, and of course it happens (othe=
-rwise how
-> > > > > > > would bindings work), but for small functions like this, how =
-is the C
-> > > > > > > code kept in sync with the rust side?  Where is the .h file t=
-hat C
-> > > > > > > should include?
-> > > >
-> > > > This I can address with something like Alice mentioned earlier to
-> > > > ensure the C and Rust functions stay in sync.
-> > > >
-> > > > > >
-> > > > > > What you were probably remembering is that it still needs to be
-> > > > > > justified, i.e. we don't want to generally/freely start replaci=
-ng
-> > > > > > "individual functions" and doing FFI both ways everywhere, i.e.=
- the
-> > > > > > goal is to build safe abstractions wherever possible.
-> > > > >
-> > > > > Ah, ok, that's what I was remembering.
-> > > > >
-> > > > > Anyway, the "pass a void blob from C into rust" that this patch i=
-s doing
-> > > > > feels really odd to me, and hard to verify it is "safe" at a simp=
-le
-> > > > > glance.
-> > > >
-> > > > I agree, it's a bit odd. Ideally I would like to use a sysfs bindin=
-g,
-> > > > but there isn't one today.
-> > > >
-> > > > I had a quick look and a Rust sysfs binding implementation seems li=
-ke
-> > > > a lot of work, which I wasn't convinced I wanted to invest in for t=
-his
-> > > > series. This is only a single sysfs attribute and I didn't want to
-> > > > slow down this series on a whole sysfs Rust implementation.
-> > > >
-> > > > If this approach isn't ok for now, I will just drop the sysfs chang=
-es
-> > > > from the series so the SPDM implementation doesn't stall on sysfs
-> > > > changes. Then come back to the sysfs attributes in the future.
-> > >
-> > > This highlights a concern I have about what this means for ongoing
-> > > collaboration between this native PCI device-authentication (CMA)
-> > > enabling and the platform TEE Security Manager (TSM) based
-> > > device-security enabling.
-> > >
-> > > First, I think Rust for a security protocol like SPDM makes a lot of
-> > > sense. However, I have also been anticipating overlap between the ABI=
-s
-> > > for conveying security collateral like measurements, transcripts, non=
-ces
-> > > etc between PCI CMA and PCI TSM. I.e. potential opportunities to
-> > > refactor SPDM core helpers for reuse. A language barrier and an ABI
-> > > barrier (missing Rust integrations for sysfs and netlink ABIs that we=
-re
-> > > discussed at Plumbers) limits that potential collaboration.
+> On Sat, Mar 01, 2025 at 07:49:23PM +0000, Lu=C3=ADs Mendes wrote:
+> > ... I would like to offer my help for testing the patches with your
+> > guidance.
 > >
-> > I see your concern, but I'm not sure it's as bad as you think.
-> >
-> > We will need to expose the Rust code to C no matter what. The CMA,
-> > NVMe, SATA and SAS is all C code, so the Rust library will have a nice
-> > C style ABI to allow those subsystems to call the code.
+> > ... In any way, long story short I've read in some threads about
+> > mvebu that PCIe is broken, and I say that it is not, the secret to
+> > have PCIe working is to use a good u-boot bootloader. Many recent
+> > u-boot versions cause the PCIe not to work on boot and I haven't
+> > figured out why yet. In fact my A388 systems are working with the
+> > amdgpu driver and an AMD Polaris, a RX 550 with 4GB VRAM. I have
+> > been succesfully using PCIe with this old u-boot version:
+> > https://github.com/SolidRun/u-boot-armada38x repo and branch
+> > u-boot-2013.01-15t1-clearfog.
 >
-> That indeed alleviates a significant amount of the concern. I.e.
-> multiple planned C users makes it less likely that the needs of yet one
-> more C user, PCI TSM, get buried deep in the Rust implementation.
+> Glad to hear that.  Making this work with more versions of u-boot
+> would be great, and maybe we can make progress on that eventually.
 >
-> > The sysfs issue is mostly because I am trying to write as much of the
-> > sysfs code in Rust, but there aren't bindings yet.
-> >
-> > So if we want to re-use code (such as measurements, transcripts or
-> > nonces) we just need to expose a C style function in Rust which can
-> > then can then be used.
+> For right now, I want to try to make progress on Pali's patches.  I'm
+> pretty much in the dark as far as mvebu and IRQ details, but it might
+> help enlighten me if you could collect these:
 >
-> Makes sense.
+>   - complete dmesg log, booted with "pci=3Dnomsi"
+>   - complete output of "sudo lspci -vv"
+>   - contents of /proc/interrupts
+>   - output of "grep -r . /proc/irq/"
 >
-> > > Now if you told me the C SPDM work will continue and the Rust SPDM
-> > > implementation will follow in behind until this space settles down in=
- a
-> > > year or so, great. I am not sure it works the other way, drop the C
-> >
-> > That was kind of my original plan (see the first RFC), but maintaining
-> > both, with at least one being out of tree, will be a huge pain and
-> > prone to breakage.
-> >
-> > Also I suspect the Rust implementation will struggle to keep up if the
-> > C version is merged (and hence has more people looking at it) compared
-> > to just me working on the Rust code.
+> For now just pick one of your systems, probably the solidrun one since
+> that sounds like one that other folks might have.
 >
-> The practical questions that come to mind are:
->
->    Do we have time?:
->    I.e. How long can we continue to develop both out of tree? Presumably,
->    until the device ecosystem matures, when is that?
-
-I guess that's a difficult question to answer. There are SPDM capable
-devices on the market now ([1] and [2] for example).
-
-While the ecosystem isn't mature, having something upstream makes it a
-lot easier to build and improve on. For example MCTP/I2C/SMBus support
-could be built on top of this series by someone if/when they are
-interested. We are also working on SPDM storage support, which builds
-on this. It is always harder to work with when the code is out of
-tree.
-
-The other big plus of having something upstream is it will encourage
-vendors to test against the kernel implementation. Which might help
-catch buggy devices before they ship.
-
-Note that at the moment the C and Rust implementations are ABI
-compatible and can be easily swapped out.
-
->
->    Are all users served by Rust SPDM?:
-
-That's my hope
-
->    Once the device ecosystem matures can all architectures and
->    distributions get their needs met with a Rust dependency?
-
-That's a good question. I don't have a complete answer. I do think all
-architectures that are interested in SPDM (think servers and PC class)
-support Rust, so that should be ok.
-
-As for distributions, I also think every major distro supports Rust,
-so extending that to the kernel shouldn't be too difficult if it isn't
-already supported today.
-
-The decision is really up to the kernel community if you are ready for
-this. Note that this series can't be merged today as it depends on
-some other patches which aren't yet upstream. So this is still a
-release or two away from being actually mergable.
-
-1: https://www.microchip.com/en-us/tools-resources/reference-designs/ocp-po=
-wer-supply-spdm-solution-demonstration-application
-2: https://docs.nvidia.com/networking/display/nvidiadeviceattestationandcor=
-imbasedreferencemeasurementsharingv20
-
-Alistair
+> Bjorn
 
