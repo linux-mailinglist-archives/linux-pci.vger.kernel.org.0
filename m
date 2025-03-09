@@ -1,133 +1,185 @@
-Return-Path: <linux-pci+bounces-23238-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23239-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CCA8A582DB
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Mar 2025 10:56:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 57F76A582E3
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Mar 2025 11:03:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F3D41188BD9B
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Mar 2025 09:56:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B6B67188CE77
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Mar 2025 10:03:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33BFB195B37;
-	Sun,  9 Mar 2025 09:56:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6BB6189F36;
+	Sun,  9 Mar 2025 10:03:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xsi/ClbD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bp0ag1fN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE32B2D78A;
-	Sun,  9 Mar 2025 09:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A989CEAC7;
+	Sun,  9 Mar 2025 10:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741514189; cv=none; b=BWN9qLg89M+Vuac0pbnzikwmD6Ki5xLU++8cWMnTXUrZ5ghTYqtDNrDvbLgcva64CVfvIjbzoXKDY5edyrCAVJGZ+vgX/Ql9qoc4/POASTgklTtT+/z0zT6nLRY1oZIQxhBPTQBIt+k9+UTGladjVRft+glXJIRjRxvx+PAX8xM=
+	t=1741514591; cv=none; b=gU/3N4HTuNaZKjk2T263JQa45Tv+bzPk125N3KiaY5eC0Phnd14tqiP6kGjIAJLEStNvQy3MJZy/1F9tUVm+I35ybS9xu0VfqX3NIWSvwoq59dJ5/WUkmm7ymbtsT6WeULiWoXee08M9B4Pu46Hb4gE2q28LFl0b/VLgoB18JM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741514189; c=relaxed/simple;
-	bh=huC0iybV3NgoQGgAkddJITpWfu30ofxovlfYYAx92xE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pgEdCYgYmoF8e92jiLzrPPHqRMDJZthz26EtEv/VhFen9XN2db8dfpJxybp0zldS6AGicTrSaniS/ih0Kl7w3DcRoTCx1JHmP8jyXjTJT9q2xCr/snHlBTFGwyxT4PuNnrnTvN49TZiF3DBlBEfTZKlPC6h+rYvkA1nXnYDqr7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xsi/ClbD; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F625C4CEE5;
-	Sun,  9 Mar 2025 09:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1741514188;
-	bh=huC0iybV3NgoQGgAkddJITpWfu30ofxovlfYYAx92xE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xsi/ClbDrXEBsaITnP9UKIlK3u244C6Y6RmWLG83ubwKjrlUfcVncRkb0ub/3eUYX
-	 qKe7KS5fWQryykBLLmXT7v9nafrpXo57B+jsN3SrpG3eVKyjjiIUjfgQxq78V8GwJR
-	 6es/dIuMuBRMWHBMIzf3f2lgVhPTRCqJv+BTwEMY=
-Date: Sun, 9 Mar 2025 10:55:12 +0100
-From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"will@kernel.org" <will@kernel.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
-	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	Aun-Ali Zaidi <admin@kodeit.net>, "paul@mrarm.io" <paul@mrarm.io>,
-	Orlando Chamberlain <orlandoch.dev@gmail.com>
-Subject: Re: [PATCH RFC] staging: Add driver to communicate with the T2
- Security Chip
-Message-ID: <2025030901-deceiver-jolliness-53f5@gregkh>
-References: <1A12CB39-B4FD-4859-9CD7-115314D97C75@live.com>
- <2025030931-tattoo-patriarch-006d@gregkh>
- <PN3PR01MB9597793C256B5A16048ADBFDB8D72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <2025030937-antihero-sandblast-7c87@gregkh>
- <PN3PR01MB9597F037471B133B54BA25BCB8D72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <2025030935-contently-handbrake-9239@gregkh>
- <PN3PR01MB9597F040DD8F5A9B1A65B397B8D72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <2025030909-recoup-unafraid-1df0@gregkh>
- <PN3PR01MB95970E60B250F91CA8E12720B8D72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+	s=arc-20240116; t=1741514591; c=relaxed/simple;
+	bh=5oKZTa9oZWK5vjx5HdfrB037DupWfOSwQFqRy3wd9R4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BFlRtOAwfS/tQ97ymFXUydQDYHkH589afCLtiB9T+6CB2Lxw0jDUIgMw/feq11qR4j1i82hDBzBntrX+fyy//MkzYoi2yCYY9yn0x20QaWeG9JPVnfF7Ga9LApgH1LIIsiwdS2v1gUL5Os4wdbg4YYspjoA3u1UiHJDKjqMZuDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Bp0ag1fN; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 529A2kCA125938
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 9 Mar 2025 05:02:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1741514566;
+	bh=RBQ0j1CLIgtfdzGQYBSpQ8+bS2iuhrNB4K9nQUQx2qU=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=Bp0ag1fNpjkwSDg1f0ypCc7vZGRx513zzzzRjIj4ybMJnLJh/SsnPMtLEa6ni5pnD
+	 kFhW/6AOUmYJWpnDZ/D9YA97cUK4kJoOq+4dc8sFeCPd33S/S+9PjWewYn8sDjPLoR
+	 +RzjUMOZ8clfq8cw2sdxYqc61+sBAnTD+kbDXE3A=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 529A2k3i116259
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sun, 9 Mar 2025 05:02:46 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 9
+ Mar 2025 05:02:45 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sun, 9 Mar 2025 05:02:46 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 529A2i7j102438;
+	Sun, 9 Mar 2025 05:02:45 -0500
+Date: Sun, 9 Mar 2025 15:32:43 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Hans Zhang <18255117159@163.com>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <bwawrzyn@cisco.com>,
+        <thomas.richard@bootlin.com>,
+        <wojciech.jasko-EXT@continental-corporation.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [v2] PCI: cadence: Add configuration space capability search API
+Message-ID: <20250309100243.ihrxe6vfdugzpzsn@uda0492258>
+References: <20250308133903.322216-1-18255117159@163.com>
+ <20250309023839.2cakdpmsbzn6pm7g@uda0492258>
+ <3e6645a8-6de9-4125-8444-fa1a4f526881@163.com>
+ <20250309054835.4ydiq4xpguxtbvkf@uda0492258>
+ <bf9fc865-58b9-45ed-a346-ce82899d838c@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <PN3PR01MB95970E60B250F91CA8E12720B8D72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+In-Reply-To: <bf9fc865-58b9-45ed-a346-ce82899d838c@163.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Sun, Mar 09, 2025 at 09:52:43AM +0000, Aditya Garg wrote:
+On Sun, Mar 09, 2025 at 05:49:09PM +0800, Hans Zhang wrote:
 > 
 > 
-> > On 9 Mar 2025, at 3:21 PM, gregkh@linuxfoundation.org wrote:
+> On 2025/3/9 13:48, Siddharth Vadapalli wrote:
+> > On Sun, Mar 09, 2025 at 11:18:21AM +0800, Hans Zhang wrote:
+> > > 
+> > > 
+> > > On 2025/3/9 10:38, Siddharth Vadapalli wrote:
+> > > > On Sat, Mar 08, 2025 at 09:39:03PM +0800, Hans Zhang wrote:
+> > > > > Add configuration space capability search API using struct cdns_pcie*
+> > > > > pointer.
+> > > > > 
+> > > > > The offset address of capability or extended capability designed by
+> > > > > different SOC design companies may not be the same. Therefore, a flexible
+> > > > > public API is required to find the offset address of a capability or
+> > > > > extended capability in the configuration space.
+> > > > > 
+> > > > > Signed-off-by: Hans Zhang <18255117159@163.com>
+> > > > > ---
+> > > > > Changes since v1:
+> > > > > https://lore.kernel.org/linux-pci/20250123070935.1810110-1-18255117159@163.com
+> > > > > 
+> > > > > - Added calling the new API in PCI-Cadence ep.c.
+> > > > > - Add a commit message reason for adding the API.
+> > > > 
+> > > > In reply to your v1 patch, you have mentioned the following:
+> > > > "Our controller driver currently has no plans for upstream and needs to
+> > > > wait for notification from the boss."
+> > > > at:
+> > > > https://lore.kernel.org/linux-pci/fcfd4827-4d9e-4bcd-b1d0-8f9e349a6be7@163.com/
+> > > > 
+> > > > Since you have posted this patch, does it mean that you will be
+> > > > upstreaming your driver as well? If not, we still end up in the same
+> > > > situation as earlier where the Upstream Linux has APIs to support a
+> > > > Downstream driver.
+> > > > 
+> > > > Bjorn indicated the above already at:
+> > > > https://lore.kernel.org/linux-pci/20250123170831.GA1226684@bhelgaas/
+> > > > and you did agree to do so. But this patch has no reference to the
+> > > > upstream driver series which shall be making use of the APIs in this
+> > > > patch.
+> > > 
+> > > Hi Siddharth,
+> > > 
+> > > 
+> > > Bjorn:
+> > >    If/when you upstream code that needs this interface, include this
+> > >    patch as part of the series.  As Siddharth pointed out, we avoid
+> > >    merging code that has no upstream users.
+> > > 
+> > > 
+> > > Hans: This user is: pcie-cadence-ep.c. I think this is an optimization of
+> > > Cadence common code. I think this is an optimization of Cadence common code.
+> > > Siddharth, what do you think?
 > > 
-> > ﻿On Sun, Mar 09, 2025 at 09:41:29AM +0000, Aditya Garg wrote:
-> >> 
-> >> 
-> >>>> On 9 Mar 2025, at 3:09 PM, gregkh@linuxfoundation.org wrote:
-> >>> 
-> >>> ﻿On Sun, Mar 09, 2025 at 09:28:01AM +0000, Aditya Garg wrote:
-> >>>> 
-> >>>> 
-> >>>>>> On 9 Mar 2025, at 2:46 PM, gregkh@linuxfoundation.org wrote:
-> >>>>> 
-> >>>>> ﻿On Sun, Mar 09, 2025 at 09:03:29AM +0000, Aditya Garg wrote:
-> >>>>>> 
-> >>>>>> 
-> >>>>>>>> On 9 Mar 2025, at 2:24 PM, gregkh@linuxfoundation.org wrote:
-> >>>>>>> 
-> >>>>>>> ﻿On Sun, Mar 09, 2025 at 08:40:31AM +0000, Aditya Garg wrote:
-> >>>>>>>> From: Paul Pawlowski <paul@mrarm.io>
-> >>>>>>>> 
-> >>>>>>>> This patch adds a driver named apple-bce, to add support for the T2
-> >>>>>>>> Security Chip found on certain Macs.
-> >>>>>>>> 
-> >>>>>>>> The driver has 3 main components:
-> >>>>>>>> 
-> >>>>>>>> BCE (Buffer Copy Engine) - this is what the files in the root directory
-> >>>>>>>> are for. This estabilishes a basic communication channel with the T2.
-> >>>>>>>> VHCI and Audio both require this component.
-> >>>>>>> 
-> >>>>>>> So this is a new "bus" type?  Or a platform resource?  Or something
-> >>>>>>> else?
-> >>>>>> 
-> >>>>>> It's a PCI device
-> >>>>> 
-> >>>>> Great, but then is the resources split up into smaller drivers that then
-> >>>>> bind to it?  How does the other devices talk to this?
-> >>>> 
-> >>>> We technically can split up these 3 into separate drivers and put then into their own trees.
-> >>> 
-> >>> That's fine, but you say that the bce code is used by the other drivers,
-> >>> right?  So there is some sort of "tie" between these, and that needs to
-> >>> be properly conveyed in the device tree in sysfs as that will be
-> >>> required for proper resource management.
-> >> 
-> >> Yes there needs to be a tie, basically first establish a communication with the t2 using bce and then the other 2 come into the picture. I did get a basic idea from what the maintainers want, and this will be some work to do. Thanks for your inputs!
-> > 
-> > If there is "communication" then that's a bus in the driver model
-> > scheme, so just use that, right?
+> > This seems to be an extension of the driver rather than an optimization.
+> > At first glance, though it seems like this patch is enabling code-reuse,
+> > it is actually attempting to walk through the config space registers to
+> > identify a capability. Prior to this patch, those offsets were hard-coded,
+> > saving the trouble of having to walk through the capability pointers to
+> > arrive at the capability.
 > 
-> So basically RE the whole driver to see what exactly should be use?
+> Hi Siddharth,
+> 
+> Prior to this patch, I don't think hard-coded is that reasonable. Because
+> the SOC design of each company does not guarantee that the offset of each
+> capability is the same. This parameter can be configured when selecting PCIe
+> configuration options. The current code that just happens to hit the offset
+> address is the same.
 
-I'm sorry, I can not parse this.
+1. You are modifying the driver for the Cadence PCIe Controller IP and
+not the one for your SoC (a.k.a the application/glue/wrapper driver).
+2. The offsets are tied to the Controller IP and not to your SoC. Any
+differences that arise due to IP Integration into your SoC should be
+handled in the Glue driver (the one which you haven't upstreamed yet).
+3. If the offsets in the Controller IP itself have changed, this
+indicates a different IP version which has nothing to do with the SoC
+that you are using.
+
+Please clarify whether you are facing problems with the offsets due to a
+difference in the IP Controller Version, or due to the way in which the IP
+was integrated into your SoC.
+
+> 
+> You can refer to the pci_find_*capability() or dw_pcie_find_*capability API.
+> The meaning of their appearance is the same as what I said, and the design
+> of each company may be different.
+
+These APIs exits since there are multiple users with different Controllers
+(in the case of pci_find_*capability()) or different versions of the
+Controller (in the case of dw_pcie_find_*capability) due to which we cannot
+hard-code offsets. In the case of the Cadence PCIe Controller, I see only
+one user in Upstream Linux at the moment which happens to be the
+"pci-j721e.c" driver. Maybe there are other users, but the offsets seem
+to be compatible with their SoCs in that case.
+
+Regards,
+Siddharth.
 
