@@ -1,126 +1,122 @@
-Return-Path: <linux-pci+bounces-23222-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23223-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FED2A58269
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Mar 2025 09:52:45 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41C6EA58277
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Mar 2025 09:53:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF7C618904AE
-	for <lists+linux-pci@lfdr.de>; Sun,  9 Mar 2025 08:52:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AE0E77A65A5
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Mar 2025 08:52:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C354D1AA1C4;
-	Sun,  9 Mar 2025 08:49:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EE521AA1FE;
+	Sun,  9 Mar 2025 08:51:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="lH1Rx1Jg"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yPLAzDRL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCAF1CCEDB;
-	Sun,  9 Mar 2025 08:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D807819DF99;
+	Sun,  9 Mar 2025 08:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741510165; cv=none; b=SxoZ1dkvru6VAcRB3lR6LbsQF0p0IiRPIJthzla7Gj6fLsDPXX+uBpiZGwKmqQDJw3B0GoWvI5l3L+Z1KuDd2PZshlWnsW86RGSodvtjfl3YtGdtaUItMMYwMrJvQ3Leq3f6dmgXUz4rM0eIa+RMCAxFgNij5o69LKm5e4eIkE4=
+	t=1741510266; cv=none; b=eTghE37/rw6wUE/Jzu7NpsUdFbxADfY3ifP2wpNu3GtYpNCmUO9R6pJxfMNcaJUjSZk+mHkYyNP4fdDwYVrhSRfGYUVOge6qbwfXfihcNhVZSblkxP7rZVnRR9IB8vB/N9yHRYuQguqnMhHN8ZbI168A0IWSWoH1D2tiWaKhpxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741510165; c=relaxed/simple;
-	bh=RUCPboe+6lfJtirH1K8uAhzo6gw3HZr7nmQhzjr3ht8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UPBX9FNaWuQZKIc6Y60WlJu6YnCup6AUgz5t8+PxcAMNYUJUZtOY13epsNCyXvpYuMw3uFfTDSipOff0VSlTgCRkkewrbGeo+PkZmHlI7QWpxHRz0X4q3LghjlGIX1Na2eWegRei1+aKY6lvcNbfAj4vlxVzCM2/zvToQHXEAEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=lH1Rx1Jg; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5298mfTL1148052
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sun, 9 Mar 2025 00:48:43 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5298mfTL1148052
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741510126;
-	bh=ca6GgLdO8OoWtemvLVSBiiNB7z0cTo/JHp6RHQhEHOY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lH1Rx1Jg49E3b2ThwJhHgG4q/p1uvZAjo/cAAOQbQpMox7LeQFufYEl3sVgMeCumJ
-	 E+dvQk2IdFiyQZOvnk9WLsFk9bRHQdxhCOnQq/PJJhg8h7aorfS/i9yZTekQ8dlpLT
-	 cQ7+uZGiXE5IJCZHxcax5mQ0vMN9GPKaGPt3vAXI3IKdzIlxWvE11Ot8tvg2yzOT3c
-	 PK1YVp5nWI0SOY9GpYH8JWwObEX2ll8PWtitBx+CF/p7H2vJA1iqTE3uYe8bAcgN3O
-	 zDJ6KjPMseCKXBhMR5fqZt3QUU1qD3lRZtwlJwZIsIoHZCKCbuuqQY2Xx0JW2+MfOd
-	 ChmCRe1dIl/rw==
-Message-ID: <dfbbffde-d11a-4431-bf14-3377e14ace29@zytor.com>
-Date: Sun, 9 Mar 2025 00:48:39 -0800
+	s=arc-20240116; t=1741510266; c=relaxed/simple;
+	bh=fD/D7P///1cK9p2sXSmjxr9lxXGEV29mR0h4xFfx8GU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g8/C7M6BUV8+RpxKJ21kDBlT7+0KAiTaBtCc4nTPbKzTvuWocdpucyO40xXcE0beB6VykrAJfoskWIJ873RSOncumN08Ji56t4rzLTiGYtQCgBw25Jk2+k/aumQpeKXr0DCYwOCncGf22vjUmIxhi1ejAJBHyZsP/p2snRPtJew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yPLAzDRL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAA90C4CEE5;
+	Sun,  9 Mar 2025 08:51:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1741510265;
+	bh=fD/D7P///1cK9p2sXSmjxr9lxXGEV29mR0h4xFfx8GU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=yPLAzDRLbDuXQoh3rsbotetRZciGmONETc2l1cMwwL9ZP0s/xQqNWH2giBamr1BLB
+	 xa65R4v2jFrPebVpGSis/KeAYsVW9mCbSi7GcPX1w/bmjocgS8u/muVUpKO0NVVxET
+	 9Jb1PkWDm3Q5cVQVvUR+jDcde4w+8JqCBc/11an8=
+Date: Sun, 9 Mar 2025 09:49:49 +0100
+From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"joro@8bytes.org" <joro@8bytes.org>,
+	"will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	Aun-Ali Zaidi <admin@kodeit.net>, "paul@mrarm.io" <paul@mrarm.io>,
+	Orlando Chamberlain <orlandoch.dev@gmail.com>
+Subject: Re: [PATCH RFC] staging: Add driver to communicate with the T2
+ Security Chip
+Message-ID: <2025030939-moonrise-zipfile-97cf@gregkh>
+References: <1A12CB39-B4FD-4859-9CD7-115314D97C75@live.com>
+ <2B62772A-4292-4673-8F86-9D27D7AB4EE6@live.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [patch 10/10] genirq/msi: Rename msi_[un]lock_descs()
-To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
-        ntb@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Wei Huang <wei.huang2@amd.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-References: <20250309083453.900516105@linutronix.de>
- <20250309084110.776899075@linutronix.de>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20250309084110.776899075@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2B62772A-4292-4673-8F86-9D27D7AB4EE6@live.com>
 
-On 3/9/2025 12:41 AM, Thomas Gleixner wrote:
-> Now that all abuse is gone and the legit users are converted to
-> guard(msi_descs_lock), rename the lock functions and document them as
-> internal.
+On Sun, Mar 09, 2025 at 08:44:16AM +0000, Aditya Garg wrote:
 > 
-> No functional chance.
-
-s/chance/change?
-
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > On 9 Mar 2025, at 2:10 PM, Aditya Garg <gargaditya08@live.com> wrote:
+> > 
+> > From: Paul Pawlowski <paul@mrarm.io>
+> > 
+> > This patch adds a driver named apple-bce, to add support for the T2
+> > Security Chip found on certain Macs.
+> > 
+> > The driver has 3 main components:
+> > 
+> > BCE (Buffer Copy Engine) - this is what the files in the root directory
+> > are for. This estabilishes a basic communication channel with the T2.
+> > VHCI and Audio both require this component.
+> > 
+> > VHCI - this is a virtual USB host controller; keyboard, mouse and
+> > other system components are provided by this component (other
+> > drivers use this host controller to provide more functionality).
+> > 
+> > Audio - a driver for the T2 audio interface, currently only audio
+> > output is supported.
+> > 
+> > Currently, suspend and resume for VHCI is broken after a firmware
+> > update in iBridge since macOS Sonoma.
+> > 
+> > Signed-off-by: Paul Pawlowski <paul@mrarm.io>
+> > Signed-off-by: Aditya Garg <gargaditya08@live.com>
+> > 
+> 
+> FWIW, I am aware of the missing maintainers file and still not removed Linux version checks in the driver.
+> 
+> My main purpose of sending this was to know the views of the maintainers about the code quality, and whether this qualifies for staging or not.
+
+I have to ask why do you want this in drivers/staging/ at all?  Why not
+take the day or so to clean up the code to be the proper style and
+handle the needed issues and then submit it to the normal part of the
+kernel?
+
+Putting code in staging actually takes more work to clean it up and get
+it out of there than just doing it all at once out-of-tree.  So we need
+a good reason why it is in here, as well as what the plan is to get it
+out of staging entirely.  So a TODO file in the directory for the driver
+is required here.
+
+Also, as this is at least 3 different drivers, this should be a patch
+series and not all in one if at all possible.
+
+thanks,
+
+greg k-h
 
