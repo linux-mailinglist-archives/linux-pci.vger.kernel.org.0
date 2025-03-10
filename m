@@ -1,101 +1,131 @@
-Return-Path: <linux-pci+bounces-23318-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23319-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A84B6A596A3
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 14:47:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30D3EA596A9
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 14:49:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 51CEA1886EE5
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 13:47:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 60E6B1683D9
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 13:49:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AF722248A8;
-	Mon, 10 Mar 2025 13:47:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0125822ACFB;
+	Mon, 10 Mar 2025 13:49:20 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFB21F956
-	for <linux-pci@vger.kernel.org>; Mon, 10 Mar 2025 13:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B41B22ACD4;
+	Mon, 10 Mar 2025 13:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741614444; cv=none; b=N+LQnxD2JE7PvLoInmDYxMA6J3d7OdRHkT6TqErC6LMAwFc0bmgR94JMBvix46oxRvGtl7wAzOqC0DSLq/vXub8+l/YX/cuuqOE69qX8sWjGUO+PfGmXFMSvYkTHDenehaDP2tLQjqVFBrLPYEAK+aX81uoLhSjPGBG1qsQ0/Hs=
+	t=1741614559; cv=none; b=sihKpmNwreD5MqNjsx/brM9D2kQr6Gw0eoD6PcMOuFXrQMsdJ5BRXQBYuIwgWA9erkqvd4WWFVu0mOxOt2GhPS43LWgU34I94hP+A+kpcLiozP1kmAwNuQuGn6MIYXXTfn02qgKwmYcwjlk5aVYjXoujqLVQm0wBNL2kfjs/GYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741614444; c=relaxed/simple;
-	bh=CZdt5+tfQLk75gkcRI8kr9N6rK1uMhfyIkSfZLv+RBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F8JbwbALx6vMLCEUJj9KqMWag6CtWn5k6oKSBRTT0zCYrOuOK7MVoPO18xhubbdgNrRBjSoubxX1GafHlaREFjvQozX+9x/PzmwO5W4MwhqkfCkS1AI8LWM8mA4eTbzhd24z5+LqL++uGMXjF0AUoIjBZsq03w5OPRa31IfrMv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-223594b3c6dso73959925ad.2
-        for <linux-pci@vger.kernel.org>; Mon, 10 Mar 2025 06:47:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741614442; x=1742219242;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B4k6klsth6WCTEbTNpydY/KbXzS7JbkOSm0KrO5vZic=;
-        b=Mt6j3iJ9jquCt5X1CtU0105dTCYqCb7MSqrf/tVEnRMWFHjyM1pFd//SnJIOAta3VM
-         wxOT3EWyn+YTbkK1lQjPlnccSBjwA31uk6OiDnS4HrTXheK7kxFo3DrQJGJs8TEkvozE
-         h7AnDAKNOTt0aOaZnRnR3z7ZBYDf28/dmoSHxBoD4VAy9hqksD9xE3G+DCMK8ISYHqeb
-         h99hvgJFXDs6Z8yH4QwKQvA3WybJrO9jjKK+OJ7DsqflqqzbN6RnyYxqoGDrIER2mE3/
-         RfLTglF14Rj3E0AvSYzhTEej1MJq89CY1ObwjFBLeVFjzAb5VlmymyvY75KprDincW4A
-         Kl6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV56PLbyhWxwgODe8TeV6wpr44mz4SlIS3wY0/uj6Ys7CAe0DdKoNl6piOIiHs07DgRwdpVzAh5BRE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOnFBcud7aYrPikNnWxVgkFGGDPX/c+v3+PWA7XN396P4GLU8L
-	Q3kAG5vU0kTjVMzTuziZWyh+NVpkK12SXEF37uY2VbtrgtcJahG0
-X-Gm-Gg: ASbGncuqbzHyy+BnU0a12RnsHG6gYrpvVPBMfmPhcsRgvKxsMOvBAIZwfPljgpyizg/
-	qeJhC53AFM6BdtfDjX5gyhLG2UZx+sRpC4f49/tsbjV5KjaKd4lnSRq+lu2jOry2VsqT4InUMtk
-	2qAVJtbtP8ISoU3uUd9WGzRCGD2i9vp4KGCn1KeDOb+0vrPfpWRlkv1orx0KKWs1TnL07UdqxRL
-	KjMCwh3AVNchhX/eM6h6y7Zc+KTVvtPLcM1OMbWG3sAk8bJLJS8OVimvtVcGN52znlILNY7pP+U
-	k6AAdzxdrtcEmGa4u9cxmh07pUa7mPs8GdJU6VPnbPE3DRdFd1H72BU3QtjF8LBzeO5kVPrJ2RY
-	2NrY=
-X-Google-Smtp-Source: AGHT+IFeKHkY5vFQK1mPK5sfdOE87MsnmkyRgXtC0wn8i00IErmRJqzbRnoxbh7nNET4ndTWFLy2jg==
-X-Received: by 2002:a05:6a21:7014:b0:1f5:7ba7:69d3 with SMTP id adf61e73a8af0-1f57ba76cadmr6227372637.15.1741614441762;
-        Mon, 10 Mar 2025 06:47:21 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-af45fbfa6e8sm6053104a12.32.2025.03.10.06.47.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 06:47:21 -0700 (PDT)
-Date: Mon, 10 Mar 2025 22:47:19 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: bhelgaas@google.com, manivannan.sadhasivam@linaro.org,
-	linux-pci@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 0/7] pci_endpoint_test: Add support for
- PCITEST_IRQ_TYPE_AUTO
-Message-ID: <20250310134719.GA3334010@rocinante>
-References: <20250310111016.859445-9-cassel@kernel.org>
+	s=arc-20240116; t=1741614559; c=relaxed/simple;
+	bh=xxjqROJ5NoqPCw4FvlDpsExVDNSnd34Bn+fRqX582rg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PxcGrFAxNT1b+fxbZBk4DQleCbd48EMjUmHMRMdh1GQ3b8f5vavV4tQxk2XDDsqkJnvexxUIDHFdAXBQkWHm76ktDVbiJ9949BRIqp8IqsLrgHSlnInEKbSWJlmYNwU8eSts8gLzEIx5PJBj2geHd8RZer8BJZk4SFFwePl0MFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A86C153B;
+	Mon, 10 Mar 2025 06:49:29 -0700 (PDT)
+Received: from [10.57.39.174] (unknown [10.57.39.174])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 749533F673;
+	Mon, 10 Mar 2025 06:49:15 -0700 (PDT)
+Message-ID: <ef8dcf7a-34ed-4b27-a154-e01bc167d4e6@arm.com>
+Date: Mon, 10 Mar 2025 13:49:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310111016.859445-9-cassel@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] staging: Add driver to communicate with the T2
+ Security Chip
+To: Aditya Garg <gargaditya08@live.com>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "joro@8bytes.org" <joro@8bytes.org>, "will@kernel.org" <will@kernel.org>,
+ "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+Cc: "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ Aun-Ali Zaidi <admin@kodeit.net>, "paul@mrarm.io" <paul@mrarm.io>,
+ Orlando Chamberlain <orlandoch.dev@gmail.com>
+References: <1A12CB39-B4FD-4859-9CD7-115314D97C75@live.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <1A12CB39-B4FD-4859-9CD7-115314D97C75@live.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
-
-> For the PCITEST_WRITE, PCITEST_READ, and PCITEST_COPY test cases,
-> tools/testing/selftests/pci_endpoint/pci_endpoint_test.c unconditionally
-> uses MSIs, even for EPC drivers that do not support MSI.
-> (E.g. an EPC could support only INTx, or only MSI-X.)
+On 2025-03-09 8:40 am, Aditya Garg wrote:
+> From: Paul Pawlowski <paul@mrarm.io>
 > 
-> Thus, improve tools/testing/selftests/pci_endpoint/pci_endpoint_test.c to
-> use any supported IRQ type (by introducing a new IRQ type
-> PCITEST_IRQ_TYPE_AUTO).
+> This patch adds a driver named apple-bce, to add support for the T2
+> Security Chip found on certain Macs.
 > 
-> Note that it is only the PCITEST_WRITE, PCITEST_READ, and PCITEST_COPY test
-> cases that will use this new IRQ type. (PCITEST_MSI, PCITEST_MSIX, and
-> PCITEST_LEGACY_IRQ actually test a specific IRQ type, so these test cases
-> must still use a specific IRQ type.)
+> The driver has 3 main components:
+> 
+> BCE (Buffer Copy Engine) - this is what the files in the root directory
+> are for. This estabilishes a basic communication channel with the T2.
+> VHCI and Audio both require this component.
+> 
+> VHCI - this is a virtual USB host controller; keyboard, mouse and
+> other system components are provided by this component (other
+> drivers use this host controller to provide more functionality).
+> 
+> Audio - a driver for the T2 audio interface, currently only audio
+> output is supported.
+> 
+> Currently, suspend and resume for VHCI is broken after a firmware
+> update in iBridge since macOS Sonoma.
+> 
+> Signed-off-by: Paul Pawlowski <paul@mrarm.io>
+> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+> ---
+> drivers/staging/Kconfig                       |   2 +
+> drivers/staging/Makefile                      |   1 +
+> drivers/staging/apple-bce/Kconfig             |  18 +
+> drivers/staging/apple-bce/Makefile            |  28 +
+> drivers/staging/apple-bce/apple_bce.c         | 448 ++++++++++
+> drivers/staging/apple-bce/apple_bce.h         |  44 +
+> drivers/staging/apple-bce/audio/audio.c       | 714 ++++++++++++++++
+> drivers/staging/apple-bce/audio/audio.h       | 128 +++
+> drivers/staging/apple-bce/audio/description.h |  45 ++
+> drivers/staging/apple-bce/audio/pcm.c         | 311 +++++++
+> drivers/staging/apple-bce/audio/pcm.h         |  19 +
+> drivers/staging/apple-bce/audio/protocol.c    | 350 ++++++++
+> drivers/staging/apple-bce/audio/protocol.h    | 148 ++++
+> .../staging/apple-bce/audio/protocol_bce.c    | 229 ++++++
+> .../staging/apple-bce/audio/protocol_bce.h    |  75 ++
+> drivers/staging/apple-bce/mailbox.c           | 154 ++++
+> drivers/staging/apple-bce/mailbox.h           |  56 ++
+> drivers/staging/apple-bce/queue.c             | 393 +++++++++
+> drivers/staging/apple-bce/queue.h             | 180 +++++
+> drivers/staging/apple-bce/queue_dma.c         | 223 +++++
+> drivers/staging/apple-bce/queue_dma.h         |  53 ++
+> drivers/staging/apple-bce/vhci/command.h      | 207 +++++
+> drivers/staging/apple-bce/vhci/queue.c        | 271 +++++++
+> drivers/staging/apple-bce/vhci/queue.h        |  79 ++
+> drivers/staging/apple-bce/vhci/transfer.c     | 664 +++++++++++++++
+> drivers/staging/apple-bce/vhci/transfer.h     |  76 ++
+> drivers/staging/apple-bce/vhci/vhci.c         | 764 ++++++++++++++++++
+> drivers/staging/apple-bce/vhci/vhci.h         |  55 ++
+> 28 files changed, 5735 insertions(+)
 
-Applied to endpoint-test, thank you!
+I'm slightly puzzled why this was sent to the IOMMU maintainers when it 
+doesn't touch any IOMMU code, nor even contain any reference to the 
+IOMMU API at all...
 
-	Krzysztof
+Since I don't know enough about audio or USB code, all I can really say 
+here is to echo Greg's comment that, judging by that diffstat alone, 
+this probably wants to be at least 3-5 separate patches, adding each 
+functional piece in manageable chunks.
+
+Thanks,
+Robin.
 
