@@ -1,217 +1,210 @@
-Return-Path: <linux-pci+bounces-23264-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23265-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5ACDA58AFE
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 05:00:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AD251A58B83
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 06:07:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 57E633A83E2
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 04:00:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6CF623AA5B4
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 05:07:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A7361B414A;
-	Mon, 10 Mar 2025 04:00:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 010D91B6CF1;
+	Mon, 10 Mar 2025 05:07:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="u76rC6KT"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WV3eFLqs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out199-13.us.a.mail.aliyun.com (out199-13.us.a.mail.aliyun.com [47.90.199.13])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2078.outbound.protection.outlook.com [40.107.95.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3184D199FBA;
-	Mon, 10 Mar 2025 04:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741579218; cv=none; b=BJ4li8xqogvj1hk9pTOSlTNPrajY1FzjdtfDkIUyzEavaB7EFRCjGSW+GSjpJtXhwh95PL9cdhnIwbYXu7Qu3HJ6T1HWHwp6ALRwVGpO7jDph0dhsixz2sFM+QN5rUuJNty8Xb1Ip/2Xe9FqzZXxUxS3pNwZ7Vf9R90bQy9YSGQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741579218; c=relaxed/simple;
-	bh=CROjvy/MKdJ5/RFwYmWjeYXRcyQwv00nYgwEaSCxdpg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MADYnCE1ZegzOuQ3nU3odqBVOGvTuWGRltL5Cf1GpeRDagMnUGCWNbB/coX2MZPOz29FV0sj4s5VLkRby2z9kH0r1eWK2UQgil5pM0bybVzbvWwuF0H7oGnvsapQ8xmxEVaAvXLythurWukTyudTXEkv6VjHAsPewSGPQh2O5b4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=u76rC6KT; arc=none smtp.client-ip=47.90.199.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1741579199; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=uqEuDYBQyu1rVnaZ3FTs3Lz5M58Kfacepcx3ohjxnR0=;
-	b=u76rC6KTa1rpdODYJkH43Wh2UFTvlbMYJneWhhFH8ZfK97tZuVxB+S3xPDU1CO2jS7OZ0fDN/Hwbs/NFmGfJNU2K+KZLZkZPBDAlmhI4Tnpqa0K4lt+7wPyZXxTX4zv3wtCww8KzP2aT/ZnVaMu1biNVgN8nL1nRAxP3S86TYgo=
-Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQym12P_1741579196 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 10 Mar 2025 11:59:57 +0800
-Message-ID: <deb6f0c4-77b8-431e-9b81-555a8344c750@linux.alibaba.com>
-Date: Mon, 10 Mar 2025 11:59:55 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216FB23A0;
+	Mon, 10 Mar 2025 05:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741583262; cv=fail; b=azDEF+Ki6iVVIM3pvlHiTzdVf2C51D0urKO3ej+BcDuiCxcv55dIBWSEdQz7tBmzeMwIYLvCe4exfHmiQelBTlUe4urbk10v0P8cV3BKRyqYyKL0WpCiU4Ucw8sNLp8369Q7L9GTDYFt7NXrtHL9/Atu73ofJWy7J7eZmNh4nHc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741583262; c=relaxed/simple;
+	bh=LEkIHZnvlmKXPCuZp3T/5Ty70dBg9ZGAEvgR9G2LyNo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=jsvk3wyYGbF2KV8YtGAhJgyRS8/qpu+11xiFqj2BFao33USb+YdcJsJ/kJ+XoD3k1KyKM+TvjHzzPyIm2eG6SmrfHLkdPJv5rNO8EuHzfC7GB47nvpcapuUi4k8I6xVYm0NCw+Va7dr0qeCzc/PSzlwOqtK94WfoScmMeNCEdus=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WV3eFLqs; arc=fail smtp.client-ip=40.107.95.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IGrTkJrXzZVSYlYssQK6Nq+hPfmnZei4UzYZnt2bBVq9H+A5lh4mzIx0jT17mpTuPOwNwkgJCoLl7b9zVv3jS/xI2cHKnpM4ZVSNfhkBV5a+bQ6gX2XSw48sW9TDHb4HsMyLWJxW6fa8752ayL24yyQZaluoTT3UsaO4qkB9EgS3EiDofQfYHu2Ts81xpkQpzhQhcVbLZKfAV/jQgQ5UJ4S2a6sLY115fFF3tzNZv8LU7KLLp/BWJzUukkgStK06k+V24iUIvgPsbOaZZNJNQqyhlIU/rrKEiFT9u9pL0j/5p9Sqwyv6ZrDsPJobJyZziOW8SRnycWiUXqQ76zTJ+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=C9PT+RMDenLoBlWQPX08g8ZNZ2oaA3pnm/fM9Ct9NqI=;
+ b=qnhhQ4DYZTCrbrr2knXzQzmvZ6hMVR9RvvKIZ5pFQ/8zO0BK6QwAQjl2rtUniUKMbGHOln/seFuJLp/RFVKdXRKuQGNvDdbLW5TvDGeiLfXOQ1uW4jltNEGRxJmRPYnd0TltYOLWBuDmTI2PQ4tPaTyDsXBjBtV0GrNYGEYNIgi32OCUxIJR8YkY7e+mQYfAFM2IBB0tdE/JaeL5ZQQX1I06NwiYYraGuyFM0vbky51Y3Ux55FDEABwtd3Pn6JRAsgTVpv0sKwSSbLKrmKnyPtWoj/D6qTJ1wZ7Bc9xXoYf/93R4e4y3Xvv3Uk/XXkCe7UehFPjeDPjVzP1U2+z//g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C9PT+RMDenLoBlWQPX08g8ZNZ2oaA3pnm/fM9Ct9NqI=;
+ b=WV3eFLqsDOeekTDly0cuG2a/tmdb5o3YxOr9QWTHUT0l3on07NLnrvHc0YyoIJxTYRNkJjJ3EqKMMbMIqPMocIVUWyst68JcRUrrcvbSEQZeWcYkyshjiQtI4k5eRWuSYDpSu/G8y4PQOSGZrYc1MyUf3LEfyWULUm1Xiv6cASM=
+Received: from SN7PR12MB7201.namprd12.prod.outlook.com (2603:10b6:806:2a8::22)
+ by IA1PR12MB8555.namprd12.prod.outlook.com (2603:10b6:208:44f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.26; Mon, 10 Mar
+ 2025 05:07:37 +0000
+Received: from SN7PR12MB7201.namprd12.prod.outlook.com
+ ([fe80::b25:4657:e9:cbc3]) by SN7PR12MB7201.namprd12.prod.outlook.com
+ ([fe80::b25:4657:e9:cbc3%3]) with mapi id 15.20.8511.025; Mon, 10 Mar 2025
+ 05:07:37 +0000
+From: "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+To: =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "manivannan.sadhasivam@linaro.org"
+	<manivannan.sadhasivam@linaro.org>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Simek, Michal" <michal.simek@amd.com>,
+	"Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>
+Subject: RE: [PATCH v5 0/3] Add support for Versal Net CPM5N Root Port
+ controller
+Thread-Topic: [PATCH v5 0/3] Add support for Versal Net CPM5N Root Port
+ controller
+Thread-Index: AQHbhtPXKa7E7DFDf0uHK+zJj734orNrJEMAgADChvA=
+Date: Mon, 10 Mar 2025 05:07:37 +0000
+Message-ID:
+ <SN7PR12MB72013FC0623E0C20FF1638078BD62@SN7PR12MB7201.namprd12.prod.outlook.com>
+References: <20250224155025.782179-1-thippeswamy.havalige@amd.com>
+ <20250309173032.GA2564088@rocinante>
+In-Reply-To: <20250309173032.GA2564088@rocinante>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=b2cc4bae-96f5-4754-94af-7f0858c10350;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-03-10T05:06:45Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|IA1PR12MB8555:EE_
+x-ms-office365-filtering-correlation-id: 86bc1960-fcb8-4fcc-51a3-08dd5f9179be
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-2?Q?pPtYyQD4z/1KM2DiogvrzQ7H6ojZPxbghuGMFLly3deSG7QuS448wLToOV?=
+ =?iso-8859-2?Q?2V2rbOdGUZ3dN1CgcMoCjq8G9LYPmcBPZi8iyWDrejql1IK3jx6xdczgSD?=
+ =?iso-8859-2?Q?dnTNUONU703v0PmFUi65jUhFbCS2cFu0jglMPDqPJTpeAK2lsRgmKRr0EM?=
+ =?iso-8859-2?Q?k/+q0sezQ+xhFkIRd25H38YjOIRQ+vURjGIQQlDy0fNIezen0MMM+OXbtk?=
+ =?iso-8859-2?Q?pd9pj0yjwKI5WYXJKFjBkidMWhye7sgK+movm7IIj1kBYXv+9ErGq/70rL?=
+ =?iso-8859-2?Q?mnYFsWvhmddeIWALhtGn4can7j3q9e+5sKGOsd9JcYGBXMwRe9AQRoO25m?=
+ =?iso-8859-2?Q?LguJnPcNGvCaQaudVEZBCohdepG9QbIkAeEoH0092wFHzteaYXWk+Zqf6K?=
+ =?iso-8859-2?Q?ljT9tZ52izx4MUg2ei3PPlk1YzXAXWMNWKG6nLWue+AWo8+RJsRxuS766P?=
+ =?iso-8859-2?Q?wlz1TstL9CFiF0J7kDSh2exyOT2mnwSIORrwdbeNjmFMkgSFeE3iTGhFaZ?=
+ =?iso-8859-2?Q?eB3q+Bx15EV1c2h2ax0W/Wqee16UesdnzOPuCO0TQd77IsSyx0Gfz/ixmS?=
+ =?iso-8859-2?Q?Xl3Z72/WJkbKAeoGWHWYid+k9Ek3QURf/djaMfEebmeflkaSTTHl6S4RxG?=
+ =?iso-8859-2?Q?a2SFJy0pUvyV8w+dqpEW+8FN/wNL0Pr/NZaOeyysNPlWXVvgDNDhj+5Wpo?=
+ =?iso-8859-2?Q?kao0km1/2X3Onz4ZoLvn0tso0090CSpBfY0l+Y/VMqbyOa08/2iT/7TXxx?=
+ =?iso-8859-2?Q?iHxlt1nh6/eQQiJbXgggWf7Wb0aWDmkNendQ4EQBV4ut82n4pL1LniGXPq?=
+ =?iso-8859-2?Q?rblN4Uv27PTbn0LVzNcVzOdNA5bh05ZXu2Egh9ob9iPP0f/oEDDCwWnceQ?=
+ =?iso-8859-2?Q?HcFthj0WA6xPNygOQxkbEKTAP0ABWJQD+xhV7LHihQQxGfKqAgMRxOe6Cl?=
+ =?iso-8859-2?Q?qzPLn78ABTP/J1kaaQu9gPT5nN1t18WJR0zsyRfXia7jHIZYCotLGW+Mcm?=
+ =?iso-8859-2?Q?/mBE7MXzd0JCbvZjvKj/7QPRO+ZMfoQMdpMn35dNmaPk/vixw4aDva86Dy?=
+ =?iso-8859-2?Q?Bxut6auAhni0Y+AKURDRUbpmVD6J8zQbRZn1P38XQSOkUmWJ7r5aRUVqO+?=
+ =?iso-8859-2?Q?VOf8Gk5/ITm0FD4I68jB3tdyf2bx7lirQw4Y797P0TMR58tVcCLiCZDSYD?=
+ =?iso-8859-2?Q?igQU/N2hEw99Is8VNnlIwaWrSJoGofYkfXb1jLFgyddu+/pRIgTUqsJvCM?=
+ =?iso-8859-2?Q?WAxo/9doZuhzSt3C87VdtZam0T0p6taIQ98tXEPNsbCdKQr4kXiwciIYb/?=
+ =?iso-8859-2?Q?/ObnJLkrozKLUogvXOBmKLuwdsMNpfRV+/ZaibCqdr8Kok/bnazYpPVM7E?=
+ =?iso-8859-2?Q?QLMS1QLQOpag4Be3R3UEVUl4NEh19jMGBTfeT4WTATQ98I1w6X7tWuDPsS?=
+ =?iso-8859-2?Q?AQ4xwnH4KHsWlSwi+qjfNLcmFwRuf8RA2KoDVYVqsiEvlu8o+/jv10GMDX?=
+ =?iso-8859-2?Q?INF7qgrb3cuMu8ROFy/PxR?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?5NKQAZ6bNakY8PC9g/aSzEXpdFPgmoAjKg2foEVBrYH+kABkdYweHX4ils?=
+ =?iso-8859-2?Q?cj9f4xTiNrkSeGTtMIMxk6yyAas/HzpWikOBujP8+LwpM3Gm4kZQ3NIMXT?=
+ =?iso-8859-2?Q?qtP/rRnKcf02G+Vtlq68DXw9uaBE68VqJUd2arP48PyxXUwT11sYq7pzaX?=
+ =?iso-8859-2?Q?9EoFe+vAV2OvvtGMhhKUs/eK2tMnRRi8lRjq6zkpiXYj+dkdHgJtaZWxBd?=
+ =?iso-8859-2?Q?iJEduX0MhRKlVrPGZPKGAfrUOibpAhel2DGVsW8rKiwjbDo4d+Gs9iIxpe?=
+ =?iso-8859-2?Q?4UelT4OMIcHFhPAJ2voo8Xk+OAXYqvssy/1UVmIAle6YTRmYqR3tIdBKDM?=
+ =?iso-8859-2?Q?+BO8U8uT/emfHl6MMvfOS0U8qTrIFJO/RAGgOOLuCqozq1VmxqA2yzH3uC?=
+ =?iso-8859-2?Q?ctBGm1Yuer7xPSj+BcL4gG9W52DbvfP3gnN3BYZV2mRBqYiAiBuWfEjN5x?=
+ =?iso-8859-2?Q?kvjXVvbqrWCj92AIXsjCRtl6VaLFWtWou2V/nJvDQDJMB+J8ujYwQR1fmS?=
+ =?iso-8859-2?Q?wV1UfOzT96SGcGkRvX52tEfHZ0Rh1sqaGor0KF/IVZh83FLSrnOXNzn1Zr?=
+ =?iso-8859-2?Q?e3xt6fHJay6hYZF9YNT3/r5W0r8KYyqDxlxIndJatkQFWkvYvJ4+3B0SPR?=
+ =?iso-8859-2?Q?V+RLLGJ+rtUC+9RNJlhUMYpDF1gXl7tilka2LIORtOrLnxMtRt0FxTTqgD?=
+ =?iso-8859-2?Q?8P0eJ7W1e70JeKOGklyeUBwhHjvYqo+H445TKYY2hG5mlIBqe/2oHq4UM9?=
+ =?iso-8859-2?Q?P5EYzG17gAkTU9zKGQmxKI+9vF5CGIErc4bBl6gxGrC1Np6I3p64ClTbba?=
+ =?iso-8859-2?Q?+TWC0lPON2rfh5vhMKjaOyUeJK9cXuSfhSxdhdfkwcfP69ips2/SeXpS8S?=
+ =?iso-8859-2?Q?+DMQ4XvNeiDS99sU2Y5SOkKCJi7A0GlJuAzHPaih9f5uCVwV0EivWAlij9?=
+ =?iso-8859-2?Q?0f75YEt2ngEVKq4bFnMby6T1CSRuQvXI5nPYgwsnD8JcDs9JUJZCxfSfFx?=
+ =?iso-8859-2?Q?jhpNkUTQz86hHquhb+B6PgWNN998Btc1bmiiZ4oxN1qijnmbpKOETeLMwI?=
+ =?iso-8859-2?Q?LTf2ap9CGiGcLlyT8NuwrPQFpcQtUpsFeJbew4pkIbDGuIgDvUULCHpjSC?=
+ =?iso-8859-2?Q?1BL6We/bRVIKrdkxc7DQuMN7yO3Rea3M3qQlKoTFIGd33dGW2oiPiZkoRM?=
+ =?iso-8859-2?Q?XkahoK33Nk4TM4rtmZuk2U84CGhzx34403zVEUgi8zuNsHGQlCYEc19ShO?=
+ =?iso-8859-2?Q?p/H0AvTIkKa8VeYakpnMFYLBOH5DAymAcRQbkkOjSZBQq3vvebDk6Q6Ise?=
+ =?iso-8859-2?Q?Eyux+a2aYvvkIZq2oVVIeWfpll4re1OSDYKfo8IBQa7NGiI04VdbMF2YPe?=
+ =?iso-8859-2?Q?x0z9gQxX9hH7BeWtu1lM+MprQ8UK2cbzURmtK9Hfufja+df0oZCmK/8Q2B?=
+ =?iso-8859-2?Q?AGImmS5XEvHzdzi3X+k4M+KkHXFpUdrKnF6d9PnRzhGYN8kwyJ5q8tRnV6?=
+ =?iso-8859-2?Q?HGBgHeroZsfDrlGdN1vaILFyzT7X5aTGMZNGcJ5bcxDR+vw+64c4jRcSQ9?=
+ =?iso-8859-2?Q?6hn4zaywxwjc8B9uQYcxeOQfNhHBj7yJFOWDyZuS7DbO0/P2MZI1oYhHVr?=
+ =?iso-8859-2?Q?bkOo1Adj5R0sY=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-References: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
- <20250113155503.71467082@gandalf.local.home>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250113155503.71467082@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7201.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86bc1960-fcb8-4fcc-51a3-08dd5f9179be
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2025 05:07:37.3658
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: De15zCjsQMblNCRVMZpvXtegzxiEVx1eHmXBIO0WwfbN6qimQTwTTre0KP9UGunJuPdrf9vcup8iklAAJXUceQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8555
 
+[AMD Official Use Only - AMD Internal Distribution Only]
 
+Thank you, Krzysztof for applying patches.
 
-在 2025/1/14 04:55, Steven Rostedt 写道:
-> On Thu,  9 Jan 2025 10:55:43 +0800
-> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
-> 
->> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
->> new file mode 100644
->> index 000000000000..5b60cd7bcffb
->> --- /dev/null
->> +++ b/drivers/pci/hotplug/trace.h
->> @@ -0,0 +1,68 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
->> +#define _TRACE_HW_EVENT_PCI_HP_H
->> +
->> +#include <linux/tracepoint.h>
->> +
->> +#undef TRACE_SYSTEM
->> +#define TRACE_SYSTEM pci
->> +
->> +#define PCI_HOTPLUG_EVENT					\
->> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
->> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
->> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
->> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
-> 
-> Since you are creating these enums in this patch, you can also do a
-> shortcut here too. Instead of doing the define here, move it to
-> include/uapi/linux/pci.h:
-> 
->> +
->> +/* Enums require being exported to userspace, for user tool parsing */
->> +#undef EM
->> +#undef EMe
->> +#define EM(a, b)	TRACE_DEFINE_ENUM(a);
->> +#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
->> +
->> +PCI_HOTPLUG_EVENT
->> +
->> +/*
->> + * Now redefine the EM() and EMe() macros to map the enums to the strings
->> + * that will be printed in the output.
->> + */
->> +#undef EM
->> +#undef EMe
->> +#define EM(a, b)	{a, b},
->> +#define EMe(a, b)	{a, b}
->> +
->> +TRACE_EVENT(pci_hp_event,
->> +
->> +	TP_PROTO(const char *port_name,
->> +		 const char *slot,
->> +		 const int event),
->> +
->> +	TP_ARGS(port_name, slot, event),
->> +
->> +	TP_STRUCT__entry(
->> +		__string(	port_name,	port_name	)
->> +		__string(	slot,		slot		)
->> +		__field(	int,		event	)
->> +	),
->> +
->> +	TP_fast_assign(
->> +		__assign_str(port_name);
->> +		__assign_str(slot);
->> +		__entry->event = event;
->> +	),
->> +
->> +	TP_printk("%s slot:%s, event:%s\n",
->> +		__get_str(port_name),
->> +		__get_str(slot),
->> +		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
->> +	)
->> +);
->> +
->> +#endif /* _TRACE_HW_EVENT_PCI_HP_H */
->> +
->> +#undef TRACE_INCLUDE_PATH
->> +#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
->> +#undef TRACE_INCLUDE_FILE
->> +#define TRACE_INCLUDE_FILE trace
->> +
->> +/* This part must be outside protection */
->> +#include <trace/define_trace.h>
->> diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
->> index a769eefc5139..4f150028965d 100644
->> --- a/include/uapi/linux/pci.h
->> +++ b/include/uapi/linux/pci.h
->> @@ -39,4 +39,11 @@
->>   #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
->>   #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
->>   
->> +enum pci_hotplug_event {
->> +	PCI_HOTPLUG_LINK_UP,
->> +	PCI_HOTPLUG_LINK_DOWN,
->> +	PCI_HOTPLUG_CARD_PRESENT,
->> +	PCI_HOTPLUG_CARD_NOT_PRESENT,
->> +};
-> 
-> Instead of defining the enum as you did above, if you have the define of
-> the enums here, you could do:
-> 
-> #define PCI_HOTPLUG_EVENT					\
-> 	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
-> 	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
-> 	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
-> 	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
-> 
-> #undef EM
-> #undef EMe
-> #define EM(a, b)	a,
-> #define EMe(a, b)	a,
-> 
-> enum pci_hotplug_event {
-> 	PCI_HOTPLUG_EVENT
-> };
-> 
-> Then you only have one place to worry about adding new enums ;-)
+Regards,
+Thippeswamy H
 
-Hi, Steve,
-
-If I move PCI_HOTPLUG_EVENT into one place, `include/upai/linux/pci.h`,
-I need to include:
-
-     #include <linux/tracepoint.h>
-
-Then, kernel build fails with CONFIG_UAPI_HEADER_TEST=y:
-
-$ make -j128
-   DESCEND objtool
-   CALL    scripts/checksyscalls.sh
-   INSTALL libsubcmd_headers
-   HDRTEST usr/include/linux/pci.h
-In file included from <command-line>:32:
-./usr/include/linux/pci.h:22:10: fatal error: linux/tracepoint.h: No such file or directory
-    22 | #include <linux/tracepoint.h>
-       |          ^~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[4]: *** [usr/include/Makefile:85: usr/include/linux/pci.hdrtest] Error 1
-make[3]: *** [scripts/Makefile.build:465: usr/include] Error 2
-make[2]: *** [scripts/Makefile.build:465: usr] Error 2
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/media/nvme/shawn.xs/kernels/linux/Makefile:1994: .] Error 2
-make: *** [Makefile:251: __sub-make] Error 2
-
-Do you have any objections that I reverted to this version v5?
-
-Thanks.
-Shuai
+> -----Original Message-----
+> From: Krzysztof Wilczy=F1ski <kw@linux.com>
+> Sent: Sunday, March 9, 2025 11:01 PM
+> To: Havalige, Thippeswamy <thippeswamy.havalige@amd.com>
+> Cc: bhelgaas@google.com; lpieralisi@kernel.org;
+> manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org;
+> conor+dt@kernel.org; linux-pci@vger.kernel.org; devicetree@vger.kernel.or=
+g;
+> linux-kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>;
+> Gogada, Bharat Kumar <bharat.kumar.gogada@amd.com>
+> Subject: Re: [PATCH v5 0/3] Add support for Versal Net CPM5N Root Port
+> controller
+>
+> Hello,
+>
+> > Add support for Versal Net CPM5NC Root Port controller 0.
+> >
+> > The Versal-Net ACAP devices include CCIX-PCIe Module (CPM). The
+> > integrated block for CPM5NC along with the integrated bridge can
+> > function as PCIe Root Port.
+> >
+> > Bridge error in Versal-Net CPM5NC are handled using Versal-Net CPM5N
+> > specific interrupt line & there is no support for legacy interrupts.
+>
+> Applied to controller/xilinx-cpm, thank you!
+>
+>       Krzysztof
 
