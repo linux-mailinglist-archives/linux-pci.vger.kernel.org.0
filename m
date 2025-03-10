@@ -1,121 +1,92 @@
-Return-Path: <linux-pci+bounces-23386-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23387-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D4C1A5A681
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 22:54:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BAD8A5A686
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 22:58:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0C031891BDF
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 21:54:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B7AEF1737CF
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 21:58:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AB4C1E5201;
-	Mon, 10 Mar 2025 21:54:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="McgzG9DD"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B5624437C;
+	Mon, 10 Mar 2025 21:58:02 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF1B31E1A3B;
-	Mon, 10 Mar 2025 21:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA49936B;
+	Mon, 10 Mar 2025 21:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741643658; cv=none; b=BTlIM4lJcytjoZpP/zMupEw0xx+hXAAclc0r+deDaqS3XBTMgYoFKItTkGZxN3MaX/Z0rFJ1qx37AiIJgV8RWqqN2E+DQsh8ZVrrL1LGeM7B8JBt2FU9nBWvx3EFXE/2vabMpmF6ZiwQDsugI6rR3EU+7sY/D/BPqu3gkctFj5Y=
+	t=1741643882; cv=none; b=HwlFqxZB5zl4x8HULft9dFYmOiCFBzEjga6iM7juErhrYv/k7el5Zfjrbeyl+4OuKfHQ4m+gOvDUOMEiBjbFZTgp24QxWk+QK0MxZPr7Lm8/zBBcsqZsuIRfnruooKjr/cUZgw/j8ma5XlKGAZQNUqyTOAt9+bl4202gSKscQAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741643658; c=relaxed/simple;
-	bh=et/pdKFP+xbz0ie0UenwlW3LyYpkTB1+CTlrZCSRz0E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yu6TRuZbzGkduJvmZTBAomjvAMEobyzE2ZyYkNcaeUKBxgW2QUIcVPm5Chza4QiJvDItDukqIDQy/i5YSwbE2crCNaY4E7XI0CaZZQOun7WmsD1oD/k0PVDfMyOj7rgloaYOSdzM2GYUbrsnSxEVlrkflu6eG2T9UVPOHLGbQvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=McgzG9DD; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 15DAD205492D;
-	Mon, 10 Mar 2025 14:54:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 15DAD205492D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741643656;
-	bh=Q/Uol1uipNTEM+J17AFsSpdT73eLsQ4d8Vvzl/nmsl8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=McgzG9DDr6wUujEwBpMK6suD9qJbrij6gjrcnO6q78gHuFDI4Yr4Tspg3OQhzXnvy
-	 ZBcTeYtfuccZ9RLNcrdoJVs3fmZPUyV/lIGeyh9OJnGPJJ8tlNKBYhrfODMjRGfclv
-	 IMuXMlRQZ/ulJ9+Rs7PP9zZSHIssAH1Tc/M/SXWc=
-Message-ID: <28970d64-40b7-408a-a072-c3449d3de08e@linux.microsoft.com>
-Date: Mon, 10 Mar 2025 14:54:15 -0700
+	s=arc-20240116; t=1741643882; c=relaxed/simple;
+	bh=7MT0cdOUDjuVEspylySZAy3uuOUbr9JOEWUtRBimMaE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LNiye9fZOyzL2+xLtrDby+72WJQetGXQDhRkxhAXDxm2FP1iZq2M3qxMQA/dribJohRm2YPVsQwkKwWcBgxXRr9lM4D+EeCoKngwNKiZahHjNhUFL1rGnTaEbVn6axj01mttLslyAiIdUbTfxTeuLrQ5+Q3cGaBwSKFZ6sW2EQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-223594b3c6dso84976905ad.2;
+        Mon, 10 Mar 2025 14:58:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741643880; x=1742248680;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jZqba3gVX41zqsOhdc28XH+vmCDKWwigOXcxvppEBtM=;
+        b=sgchSa2q9H99I7SuKK4LxRbgQu8xwHwZ3lTBiajys/Wg/yAFA/nkDhp/yt9UdXIWhZ
+         S3Ifz6Sw6KRMS3lVT6bae5poghlMTyHRHiqV7ymMTQDH2Y5UZsHnfSJQldkigvFrBPH8
+         bYoGC5XnkW7+SGfpLLYevCpIDI5nGorDK4XgIOvHk1TWDrkgzj3ldBoGboI7jD4ALHht
+         bSv1bmVfgbGaaNygQL/A3cS+2u66YLt1xx7UhEHlNu4TACYng3wBa+5YPzBdHGT832kf
+         A8prndzLLXumAi2VX3O7u4h+eW1e5PI16tynzjj+MhhGK1prb8yf4JWaVR+7EURlWa7r
+         CdUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVEKkTYqNeYQNbhxdIiL6jbkxbsqEYGWLfOqn0aOvdjbQIz0REDu6WlmAHKEUXnoF7rqpxke+EJNYyP@vger.kernel.org, AJvYcCVKqYUrwQVO/PwLh6T4+1nHO/CzZJLNkuZJ8kIFFsyx9J70mIjWjJQFptVI2Ugg2eiHrFmbHMtQS3Xgbvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVQCTFmCbBYgw7DMutRemszgoEPuXSpJxgd1E+UvqE9lYEqGz/
+	feOfdBlrn1QWLKZCqx7McMtEFouMrvklgzks2FJI0kUfNKHyQxqg
+X-Gm-Gg: ASbGncsoh8/j1Kxn0vG3MLg7Gh00HO937tVqPW77NU9K4tZXb65p42CSQRONKOBT6Ra
+	sgzpgr0vuZ2ILD9nqtizOwdoWq0oGe3ildzEYE8AzHvwbs3TBLyy1HFWrnwBd4XRWG9YeqLYxXN
+	EkfGXDo633WYGUkRDLeBZVHnk1bQjseEprPa57yQt+y65pUAde4UmXwEFiy3cXpLJ/HycC6RJZd
+	d5Bq2/dEc0DZ81NjU0ynox8MBxwX0vjuugIXPxLiXIIR75HYm8OiTVQc7xMxoix6EsP5lbFCk1H
+	t3WnXjJ/4NcYh4oZPDFY0KW2eOHYKS2cnrz7n8ZsVslNRS7Kyp0iP9hB7wD0vw4Mm0LLlZKwQjP
+	3cqM=
+X-Google-Smtp-Source: AGHT+IGyxv4vNjjG7KaJ3iyPdfXj74x7uGlGIgwHhUObVU0+SSpA387sqH72IQVZOID5ZMrgBJYuhQ==
+X-Received: by 2002:a17:902:f94d:b0:223:5a6e:b2c with SMTP id d9443c01a7336-2242889a729mr153897815ad.17.1741643880051;
+        Mon, 10 Mar 2025 14:58:00 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-736cf005d87sm3571543b3a.49.2025.03.10.14.57.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 14:57:59 -0700 (PDT)
+Date: Tue, 11 Mar 2025 06:57:56 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	lpieralisi@kernel.org, l.stach@pengutronix.de, shawnguo@kernel.org,
+	bhelgaas@google.com, s.hauer@pengutronix.de, festevam@gmail.com,
+	linux-pci@vger.kernel.org, imx@nxp.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: Re: [PATCH v1] PCI: imx6: Use devm_clk_bulk_get_all to fetch clocks
+Message-ID: <20250310215756.GC2377483@rocinante>
+References: <20250226025628.1681206-1-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v5 01/11] arm64: kvm, smccc: Introduce and use
- API for detectting hypervisor presence
-To: Michael Kelley <mhklinux@outlook.com>, "arnd@arndb.de" <arnd@arndb.de>,
- "bhelgaas@google.com" <bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "hpa@zytor.com" <hpa@zytor.com>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "kw@linux.com" <kw@linux.com>,
- "kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org"
- <lenb@kernel.org>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>,
- "maz@kernel.org" <maz@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
- "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
- "rafael@kernel.org" <rafael@kernel.org>, "robh@kernel.org"
- <robh@kernel.org>, "ssengar@linux.microsoft.com"
- <ssengar@linux.microsoft.com>, "sudeep.holla@arm.com"
- <sudeep.holla@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
- <will@kernel.org>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-Cc: "apais@microsoft.com" <apais@microsoft.com>,
- "benhill@microsoft.com" <benhill@microsoft.com>,
- "bperkins@microsoft.com" <bperkins@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-2-romank@linux.microsoft.com>
- <BN7PR02MB4148539DEFFF5ABA42AB44D3D4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <BN7PR02MB4148539DEFFF5ABA42AB44D3D4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226025628.1681206-1-hongxing.zhu@nxp.com>
 
+Hello,
 
+> Use devm_clk_bulk_get_all() to simple clock handle codes. No function
+> changes.
 
-On 3/10/2025 2:16 PM, Michael Kelley wrote:
-> From: Roman Kisel <romank@linux.microsoft.com> Sent: Friday, March 7, 2025 2:03 PM
->>
-> 
-> In the Subject line,
-> 
-> s/detectting/detecting/
+Applied to controller/imx6, thank you!
 
-[...]
-
-> s/cenrtal/central/
-> 
-
-My bad, will fix! Thanks for spotting that, I'll be sure to have
-the spellchecker on.
-
--- 
-Thank you,
-Roman
-
+	Krzysztof
 
