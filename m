@@ -1,309 +1,199 @@
-Return-Path: <linux-pci+bounces-23321-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23322-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC1A9A596D3
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 14:58:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8627DA596E3
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 15:00:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3BB5B7A5F5F
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 13:57:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 074CD1889C88
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 14:00:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FB8C22AE76;
-	Mon, 10 Mar 2025 13:58:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38C5822CBF5;
+	Mon, 10 Mar 2025 14:00:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AHY/c072"
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="AEq9ZZlc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011036.outbound.protection.outlook.com [52.103.68.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60575224258
-	for <linux-pci@vger.kernel.org>; Mon, 10 Mar 2025 13:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741615115; cv=none; b=KZqoMxEepByOA7pXzUH5ftCt0YA60KyvoL/of9Ku6hZgZcZtGnaxhRzMIflq2WI3mXggSodLcWVHyU0WIVJXgkat0sU8j/4TcPg12T0pR+dDzCeF2Z7FU4WYQoVkKIWyCNBFCY4AInGQrfezLn5JZ4j1n+6bDm89hj/M8kEjjgM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741615115; c=relaxed/simple;
-	bh=i9GxyKAVB18HnH+g2lVwQvXz5I//zOKa3JmIOEbrK94=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QZbdlbybXxUS2U+RZT2WjPk9+j9w5WTaIloSxJ5yaPXDLN5ePS+qwUXP6qgUXRxwGM1dE8uU2ogjvtzrlWpmsZC8tZhE1Nj/Ys7IDHx2RaRU9Ukr+OfFMolp+D/UiyD+VPOorID/i376XN0nYNgZqTCVaosKQs8bFOQps6/h7XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AHY/c072; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3913cf69784so2234366f8f.1
-        for <linux-pci@vger.kernel.org>; Mon, 10 Mar 2025 06:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1741615112; x=1742219912; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=x6bOGmoklXRtJQxdeWHpYOOfYuKnU0zJof9I6zGwu64=;
-        b=AHY/c072S/rTv5X4B7RzTjFt+WNE6wTGVRHpxbTVLrZCFV122NhUaa1ZGl1h+d3FzJ
-         ravRkaFQp+F0YVLAa+VXB/q5BfrZFE81RLywDtCjHLejTadqpGDN6wajA7Wukj98+rlc
-         Q5f+7l+2x1a++74psGcqjOhZS2FyRYlzK7X/tgDlXL0a3yN8SPzuax81c7QvgeLKezR2
-         NI2tl2hDaLsU/nY0Yoj05y9ueF6fYS30hk+a3vbTxFzXTG1oHUM+rD454QEnSdD+iDt8
-         88yfbRVK7lMVEtvq4wqc32w19TNg3yPHi56qroS2EATt25fKgrgLqjkeJIJlBe67d92r
-         +m3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741615112; x=1742219912;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x6bOGmoklXRtJQxdeWHpYOOfYuKnU0zJof9I6zGwu64=;
-        b=A8gWO7cXvLTuzv4gWC3xItJ8PBPIJ6QiEbyTRw5UmAtsWuEJF/KDESyN9wMuI6fxhA
-         E86eaqR7ORTjUuC8Czbt+7OEM1TSv7vhD6ci+WY1JTNjm/qjm6u7Qv6FDHeQ01xPTPB6
-         7t0+45TAiVMfGF7USmEzreSzfG962xYK9fHTi5UmQMzljLMNcuH8/Vd46L9cM3C2wOcM
-         dFakxI7AFW5wDsQHFDeXTJfpH70fKb8KQUwSGm1S0S87F39jWz5rsEKIjWiMCTjnid5i
-         LWtT7ak43uMChJj8j0+0nRJmYyH388cQqBHVvcFk6DvKgI4VnnjblPLeBX0oNFWv987N
-         IsGg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPiSBQkTYxdmfDBwgkxOaQgGsjAB2RmvB75V7ALN8wNkwK2ms+SLXVfJv2Tr66sGSChIYWxIom78U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz89UPEcukiaGfNx57g0yLlMCe3sTXUi57/pVQAHt0PYc5YByns
-	70gSMv7sZYYobZ2vtN6APz36zgzJgbRE5i/TvWBeD8ADXPB4b2nAvp6EjXpMlCk=
-X-Gm-Gg: ASbGncsRbpNi21bmhWAYt7a6k8cLCh6k0W6YlsUAivQ72jqXFsT6Iib+liAGgRgtYFQ
-	63Cn5VLH+wRVUjoXvpKMXqP6uf0h0d7/1f+ici9euc0ViwjazsYi6I66QN3PSEl9Zp/ffVfxLEQ
-	UV7qqmD5hACHQ0NHt6kxwCBJiVZHbJCSKkhiPRwO0AwDsfOG/4kbDax9AuXw9GGwdDXZhKj1bV1
-	YCs9L8zxWEoeIr+1lqtxaxqJ6ElkJ65TLqFxDekc9R7QXUQ+fT9XQX9etpXCcMiW7V8pg216Sgu
-	5hqaLjAM7aWyBAJV5QGvlS44XDwKAwXhIqYn72p9xfpWU4zW5IKfjFVZXa4H9j2vzF5I9GDoLwR
-	Coa9797z0rC5mYTGwNSuxTg4=
-X-Google-Smtp-Source: AGHT+IGyhk5+VAMcITm5rrq0aJ90sKdh4cQmUoqGgN6Meob+XW4ZpicfvmV1X3pFEScV3weEws3UqA==
-X-Received: by 2002:a05:6000:1fa4:b0:38f:577f:2f6d with SMTP id ffacd0b85a97d-39132d093demr10173742f8f.2.1741615111629;
-        Mon, 10 Mar 2025 06:58:31 -0700 (PDT)
-Received: from localhost (host-87-14-236-98.retail.telecomitalia.it. [87.14.236.98])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac299a025c7sm236754666b.51.2025.03.10.06.58.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Mar 2025 06:58:31 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Mon, 10 Mar 2025 14:59:41 +0100
-To: Phil Elwell <phil@raspberrypi.com>
-Cc: Herve Codina <herve.codina@bootlin.com>,
-	Andrea della Porta <andrea.porta@suse.com>, andrew@lunn.ch,
-	Arnd Bergmann <arnd@arndb.de>,
-	"maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>,
-	bhelgaas@google.com, brgl@bgdev.pl,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Conor Dooley <conor+dt@kernel.org>, derek.kiernan@amd.com,
-	devicetree@vger.kernel.org, dragan.cvetic@amd.com,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, krzk+dt@kernel.org,
-	kw@linux.com, Linus Walleij <linus.walleij@linaro.org>,
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	"open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" <linux-pci@vger.kernel.org>,
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>,
-	lpieralisi@kernel.org, luca.ceresoli@bootlin.com,
-	manivannan.sadhasivam@linaro.org, masahiroy@kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Rob Herring <robh@kernel.org>, saravanak@google.com,
-	Stephen Boyd <sboyd@kernel.org>, thomas.petazzoni@bootlin.com,
-	Stefan Wahren <wahrenst@gmx.net>, Will Deacon <will@kernel.org>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>
-Subject: Re: [PATCH v6 00/10] Add support for RaspberryPi RP1 PCI device
- using a DT overlay
-Message-ID: <Z87wTfChRC5Ruwc0@apocalypse>
-References: <CAMEGJJ3=W8_R0xBvm8r+Q7iExZx8xPBHEWWGAT9ngpGWDSKCaQ@mail.gmail.com>
- <20250213171435.1c2ce376@bootlin.com>
- <CAMEGJJ1++aeE7WWLVVesbujME+r2WicEkK+CQgigRRp2grYf=A@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E0422CBF1;
+	Mon, 10 Mar 2025 14:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.36
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741615209; cv=fail; b=k8/Jgj6OqaWtODwc0vQffRsFNNoxfYkFOA+7U8gyiwZtnGEPKMixagqrPaWr7koct8nHXRA98OoJrVhWuhUBa7KeTgM9B90gesOoy6iATAYMFE1tRym98ErFkN4QmJfBdSHb2SxEd9629SJi+bokNDRDN4tLwhL24TOXhAyqqCQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741615209; c=relaxed/simple;
+	bh=ieBbQje/JzRsj1rhIukgIVoz2dE3IKtKD0QTXHC6IJ4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UDhuG+/3zgpn/yqu7H9ygk6tHATKczTVMt15YTJ96XFZVmuJ3PT2uSSiJPF+dZgO12cw5cZeMV8KmPfG6+97z39pUxDOWb1cIwcZGJZtQ5bqDCoh/mEE1OTA2KrdA3Kjt4u8tSwWvcB+JCbSaxzHJZvl/aJaZauAiJfgnyWpj/Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=AEq9ZZlc; arc=fail smtp.client-ip=52.103.68.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hvzjnv5HUczSPgdqNedFo6aHvki9GxkAI2+DV3QhiVU9jGmIWrStewjCNkuLqu3NWff2PlsF6NBP9YUxFMNcWSulnbcN3tAggksG0jjZAVqu70kQdXFxFLSioDmmy9++Yw0ciPfQep4STUqroE6jZW6zd4q4uWNSHdwEtWw8PlbIiJBzisZkpQ9FQa0z/vPYBzhVGH1wTwKB3UmzqY4L9nU6efd+0iOe1ndOb1B2+BoHxOL9W5A7dEOGXVPSUveiPK5AC1jEpP8qXGQ3dBK4fytjZjXYpZas1e+SWHxaAbysELQyT+Y7LdUNURHlaKSbO3w9ALpP+xeXf1W4mrUcSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ieBbQje/JzRsj1rhIukgIVoz2dE3IKtKD0QTXHC6IJ4=;
+ b=WosWGEpPNNvwFunWXxwCjI+ADBv0h7psHB4JX/qTczD5xz9XGAV5J7ekWISzb4RKQKXkHtRHSNiwT5HqFXcXL4GcmMBAjtqOTARioxhKXVhifJAYUI9/HZ4JNf2CRtT3AZDk2k92ArIrn3+uUY1AGl4svs0+m+0FSCRiQMdigg8S6UM0RC+hOUNuPK4bdpwSLUzOMRbfnQxiXAxEqvtUVKCz3L+6Locu4UMnhBN9UE1MwYit3Cn3YnZN1PM7UUdm+MPcRAynweS6OrOe/VKMYwxGz+PN66e8m0k4iPgr3hkU8L1vb7zD4nFxN88MZR3aazSukWYDSywOf33Cto7zCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ieBbQje/JzRsj1rhIukgIVoz2dE3IKtKD0QTXHC6IJ4=;
+ b=AEq9ZZlcQt7NnPeY36REV9mr3dx1/mHJ4qtU3Cw9EiIi76X800aV7mLArMd45ndFJuY5Hm7C5rVhw0fwbWSLne+16TP9w7O2p6peVW7i7mLtYQigPWEJUhf9g77lOeYbhULz8lOLnz3xI4ri1U99yaq/DAWxkLzoCKukCNVY7dKwNyDx2Eo/r4+5eSAWRNie38r5TM0lLRcW6hfiNqXGK/O+wn2MzC4ur2xasAmzhYTREiGc4jJr9PpMcHVMM+22ySZR+kNsM79v2e8pKn2GcJgyrcseUJNl1tkn6Fg5dlstlItYF2M+nUCoX3yqW6CkDC8ehTxLsO1XAQqzFG8nQA==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN3PR01MB7031.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:ab::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Mon, 10 Mar
+ 2025 14:00:00 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%7]) with mapi id 15.20.8511.025; Mon, 10 Mar 2025
+ 14:00:00 +0000
+From: Aditya Garg <gargaditya08@live.com>
+To: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+CC: Robin Murphy <robin.murphy@arm.com>, "gregkh@linuxfoundation.org"
+	<gregkh@linuxfoundation.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
+	"joro@8bytes.org" <joro@8bytes.org>, "will@kernel.org" <will@kernel.org>,
+	"linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	Aun-Ali Zaidi <admin@kodeit.net>, "paul@mrarm.io" <paul@mrarm.io>, Orlando
+ Chamberlain <orlandoch.dev@gmail.com>
+Subject: Re: [PATCH RFC] staging: Add driver to communicate with the T2
+ Security Chip
+Thread-Topic: [PATCH RFC] staging: Add driver to communicate with the T2
+ Security Chip
+Thread-Index: AQHbkM7rYdRJRFFoLkaQD5PHjXHnmrNsZMuAgAABkgCAAAFwwQ==
+Date: Mon, 10 Mar 2025 13:59:59 +0000
+Message-ID:
+ <PN3PR01MB95970AA2AD456AC15B7AD3C6B8D62@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+References: <1A12CB39-B4FD-4859-9CD7-115314D97C75@live.com>
+ <ef8dcf7a-34ed-4b27-a154-e01bc167d4e6@arm.com>
+ <Z87vKltfijzRtlpL@smile.fi.intel.com>
+In-Reply-To: <Z87vKltfijzRtlpL@smile.fi.intel.com>
+Accept-Language: en-IN, en-US
+Content-Language: en-IN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN3PR01MB9597:EE_|PN3PR01MB7031:EE_
+x-ms-office365-filtering-correlation-id: 3f2cffa8-edd4-44d3-1d50-08dd5fdbd90b
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8062599003|461199028|8060799006|19110799003|15080799006|7092599003|6072599003|10035399004|440099028|3412199025|21061999003|12071999003|102099032;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?UDZuQll5RkRTaUs1N29WQ1N3MWkxcUJqMnkvQUZPbnBJSjlzTkM3LzBDQnEv?=
+ =?utf-8?B?Qlc1R1VHRkljYVd5S0djTGNXd1FIK2tOU3F3YVA5L01QTFZiQlBsVEJCWk5I?=
+ =?utf-8?B?cjlXZk43cGxqak5YUG1UWHE5WlVpZTZEQ0tMM2JnWVEyYlNFRnlCTUFEUTFO?=
+ =?utf-8?B?S3NJZFlUNHpHakhaWGE3UHRMSkx6aWN5VTI1MU1VTStkWFExRW43TUkyL2Iv?=
+ =?utf-8?B?VW5EUVFaQ0JjdEtYWTlUeGFtNDNHaHZGdDU0T3p0SFhmNmVqNVdSTlZJazRU?=
+ =?utf-8?B?OTFYalNmWlR3eDZHWXQ5V2JxZEluZnFNQlQzeHBFakZRRVhUcFBwcXN0NGJR?=
+ =?utf-8?B?L0UxWkw0Zk5vVDdBV2tIdjRTSW9TTFhOVUtNMXFlMkxISSs4U2FiWHZ4UHVX?=
+ =?utf-8?B?Rm12M0RtYTBRbUZKR056a1hxaWxTd0RscDJybmVwYnJTV2dZZlJ4OGdwblZK?=
+ =?utf-8?B?cHNHeHp4SFdOREFJNHZJYlVsQmErOFBNZUd4MVJXOXlWSUk2dHBka09DVHBC?=
+ =?utf-8?B?THVXV3l5MTRWOEpsdzVkN05yTXdtYnJ6SmNseEd0VHJpQWc2b1N6Qno2SDNP?=
+ =?utf-8?B?WDJmd212MCsvZjN3d3RTRFdpNG81c1BNQTlnekE5YmVwUzBLUFJFSUhjOU5N?=
+ =?utf-8?B?Mk5KQ29VNVhsZEp2czFMb2lidDRpcVBTcE9qclF6ZWtTZHJsRzZWekVxNTJo?=
+ =?utf-8?B?QklGL28veDBCM0NmWDBFT3hYQU9Hdm5CUDZQZW9mdzNSd1Y2U3owMTRIWTZr?=
+ =?utf-8?B?eXpDc2NHSEhBNVE0WTdCYkxmOGxxQ1B0WmQwWkl2VkcrTlBFSkYwMUVqZGRC?=
+ =?utf-8?B?a2JDOFU5Z1pjSHAydEF4elBrUnR0bnF4aWdrbUFNdDdORkJVWUNOR090MnZB?=
+ =?utf-8?B?QitvRkZCL1lUdi81WU53dFVVNFk1R01OK3RTdjBQTnFzUjk5d1BqT0xHSXlk?=
+ =?utf-8?B?WkQ2THFna0NjUm1sYkNDalg4b1JsY2ljbEdCd0tsSFpXNWFHUGU5QXI4RkNq?=
+ =?utf-8?B?R3Q4YzEwOEw5emNNU05RNDBwazhoejR4cGlEK2tOT2pRM2tRSDBSSTlsVFBj?=
+ =?utf-8?B?bWtTUjc4bmdBZTI3STYrMDc2SmRuaVIvV3ZTMGcwdWwyZDlJUEIvNDY2MFll?=
+ =?utf-8?B?VFB4S3dNTU4wamVlR1FpUmw1UTVIL3djRS93WFA3VFY1QXVBaDVFZWZaem1w?=
+ =?utf-8?B?aEhMdGxNZVNjYk44emVaR1JoeFZqTmIwdFFlY3FrUldlSXVhQ3Ewb3MwSVhs?=
+ =?utf-8?B?dXJ2YUQxakhhQ0MvT1ZndVo1K3o3d1FJZXF2eWsrOWtweDI1Z2JCYUQxYWlt?=
+ =?utf-8?B?WlE4Wk4yNVdJSDJ4QlZSMnpoc1pBdDZYenlJTEJNSW9uWXU4YW9DWUdBRmFP?=
+ =?utf-8?B?UHlCSUhDNkMvUHhMVzhGakloeEFmaFh5aHZiYndsNCtVMzV6R3lCa2QyWXVl?=
+ =?utf-8?B?SXBsR01RcWFaVHdMUVBTUnRpZFhwaW1uRk1ZTEpaZG5hRDUrS1Y1c0NCK0Fz?=
+ =?utf-8?B?N0FkdzhYc0lSMGZyd00rQWwya055Rk9mOUVoaVAxUWsvQVhsbDJwd3ZHV2dt?=
+ =?utf-8?B?emhXY09sdEVyRlczWjcrVUdMOVIzTmxaRDExTDk0eU1Td1daNjNCemExSExn?=
+ =?utf-8?B?MjE4ZFM3UTlyZUo1a0J0RzhVdVdkSVVLN0dCOUNtTjliYmFKVGphalBFYk51?=
+ =?utf-8?B?cWRKR3JVMlJDUWljRjFnQ0lxV3RobEh1SWZpUDNSeTh0USt3UGFsbXlRPT0=?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?QVIyYThZRnJ1NTh6N3BtaTBvcnQvNERqMjNnd0h0QlF5OFJkRUFaTHZ2d0Ry?=
+ =?utf-8?B?bXB1MU5mWWdDVnlyazl5SHh5THoxUjJmWUlHQTJVc2g3WmdjU0QvUTAwbXF4?=
+ =?utf-8?B?R0VqTWI1Q2xFSU9QYzdQTHEwL1BFazByWjduaDU4TmtRWFIzWkNNenEzSStJ?=
+ =?utf-8?B?OU5KWTEyMHYxVnNLSDEvc1BxMEhVdjZHUHpkVEIwa2Jpb2Flb0lTRGFmY0ZR?=
+ =?utf-8?B?VUkxZXVaS0p3VjQveVlQSkRJWVRTOHloNno1bTh5cDNJSHJyYjY2TVN3TUJP?=
+ =?utf-8?B?WGE4MkRvU0s4blROendLejlUMFhvVHJZYWtjMmZBSlJqY1hiOWxGSUZhU25Q?=
+ =?utf-8?B?dDhpRjBaejU1WkhraHJCZEpUODNJejdNYlpDRzVqdmUyVWxiZEwwVTRnbHNF?=
+ =?utf-8?B?WE5jUmNMMDZLaU1sdVdPb3JnVGY1V2JnOEhYOHFRQjYydFJmaHR0bWNuOEdF?=
+ =?utf-8?B?MDV0SnlMSEp1TEZrWDdncTZ4Qy95YnJ1ZVNBZ1hsL1FieEkwYm5jNnBNWFR0?=
+ =?utf-8?B?aUVSdnpQZTk2UG84MnZzUjBhV20vL2Y1TWZleTZRenRQOUNWYTJsNWQ4Y3Zk?=
+ =?utf-8?B?R0hwcjZWclE1NXlJUnVYMmpEekprdVBERTBjeE96aitNeSsrdmg3d2lGeDhE?=
+ =?utf-8?B?c2FOSXVndmZMOTRkN3QwS3Z2WFAwbXdBY1dWTG1WYkY1QnY3VXJOU1I2am1r?=
+ =?utf-8?B?VEFzVXNRVVpjZGRoVHRUMWVZNVBrQUE5aDVnZkx4TEJXZERhQ3B2OFlDTnNo?=
+ =?utf-8?B?bis5ZzVVWDBmSjVLWHlHZndDN3p5NWw1VTBVcXhOUlhjY0R5QjExeG5kcm5H?=
+ =?utf-8?B?b1ZMV1BKckRoVGhOWkhaTEFnT0xtUFQ4eWRPNmRDOWRIK01rWWx5U1BrVkdN?=
+ =?utf-8?B?Z28zaS9KOUp5cXpEZU1pNUNDTzE0UHpCUGRlQXc0UTlMTHRXQXowbzRJTTVO?=
+ =?utf-8?B?Z1hhcXZUYWZnck9hUFBxUWd1RHRxZGMxMHQzeUNJWWEyajI5S2JneFI1UmdH?=
+ =?utf-8?B?UU1lcmVPd052T1Q3TzVWeXFKNldSVDhsbHpLS0h2TjJ6TzlLY1ZPR1hLaU5w?=
+ =?utf-8?B?OENwL2Z0azJvVjdnVjZGeExOSlUvMFBrcTJ6VjJrbHB4UkpMMFZLZnRmeTdk?=
+ =?utf-8?B?VDE4YzdTQTdiVDVoSVlYVkJmb2pxaUU0MzZ5N3EyNng2aHpIb0Vha0xNRk5B?=
+ =?utf-8?B?eUorYWFLZkdTYWppcjc4SWVOTC9BR3pCUVNHaDZxL0pJTDhGQ0FETnB2MVI5?=
+ =?utf-8?B?UTVyeG44Rjl5bVB1WFM4SjVIZit0bEVldFJEYjA2cXAzK2NmMUNnUk5Xckc3?=
+ =?utf-8?B?VkhjTEI3RUZGajRWTHpZS1BjREpTZUhTKzY5UWtOMnFTdmRkTDlhZTJzb2gy?=
+ =?utf-8?B?WnpyMmVVSXdmWEwzOUNZcllxTlpzTEVscWJWOFk2cThhTkNyQ3hYbDB3VGwz?=
+ =?utf-8?B?WW1LcmZpelJ4Tk5hODI4d1oraUs1QzNpZVUzRGdRVDc2T2IrS2dUV3NwQjZ0?=
+ =?utf-8?B?RDBqbzJlUDVVTDcxM2lIMzdDYWw1dHVQUjl2eDg0WFN0T1o3SnpiREFqa0V3?=
+ =?utf-8?B?VmVUTkJ3NFFVVExmMjliYWZQZ0ExL2g5SFNGZzdXb2Zpd2k1cUJTZUlMWkN2?=
+ =?utf-8?Q?ghyUghyaVZgyoEmQ7Ba2/nOZn8LJh66qVk8aUTpO4Cao=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMEGJJ1++aeE7WWLVVesbujME+r2WicEkK+CQgigRRp2grYf=A@mail.gmail.com>
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f2cffa8-edd4-44d3-1d50-08dd5fdbd90b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2025 13:59:59.9764
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3PR01MB7031
 
-Hi,
-
-On 16:27 Thu 13 Feb     , Phil Elwell wrote:
-> Hi Hervé,
-> 
-> On Thu, 13 Feb 2025 at 16:14, Herve Codina <herve.codina@bootlin.com> wrote:
-> >
-> > Hi Phil,
-> >
-> > On Thu, 13 Feb 2025 15:18:45 +0000
-> > Phil Elwell <phil@raspberrypi.com> wrote:
-> >
-> > > Hi Andrea,
-> > >
-> > > The problem with this approach (loading an overlay from the RP1 PCIe
-> > > driver), and it's one that I have raised with you offline, is that
-> > > (unless anyone can prove otherwise) it becomes impossible to create a
-> > > Pi 5 DTS file which makes use of the RP1's resources. How do you
-> > > declare something as simple as a button wired to an RP1 GPIO, or fan
-> > > connected to a PWM output?
-> >
-> > The driver could be improved in a second step.
-> > For instance, it could load the dtbo from user-space using request_firmare()
-> > instead of loading the embedded dtbo.
-> >
-> > >
-> > > If this is the preferred route to upstream adoption, I would prefer it
-> > > if rp1.dtso could be split in two - an rp1.dtsi similar to what we
-> > > have downstream, and an rp1.dtso that #includes it. In this way we can
-> > > keep the patching and duplication to a minimum.
-> >
-> > Indeed, having a rp1.dtsi avoid duplication but how the rp1.dtso in
-> > the the kernel sources could include user customization (button, fan, ...)
-> > without being modified ?
-> > At least we have to '#include <my_rp1_customizations.dtsi>'.
-> >
-> > Requesting the dtbo from user-space allows to let the user to create
-> > its own dtso without the need to modify the one in kernel sources.
-> >
-> > Does it make sense ?
-> 
-> I think I understand what you are saying, but at this point the RP1
-> overlay would no longer be an RP1 overlay - it would be an
-> RP1-and-everything-connected-to-it overlay, which is inherently
-> board-specific. Which user-space process do you think would be
-> responsible for loading this alternative overlay, choosing carefully
-> based on the platform it is running on? Doesn't that place quite a
-> burden on all the OS maintainers who up to now have just needed a
-> kernel and a bunch of dtb files?
-> 
-> If it is considered essential that the upstream Pi 5 dts file does not
-> include RP1 and its children, then Raspberry Pi are going to have to
-> walk a different path until we've seen how that can work. By splitting
-> rp1.dtso as I suggested, and perhaps providing an alternative helper
-> function that only applies the built-in overlay if the device node
-> doesn't already exist, we get to stay as close to upstream as
-> possible.
-> 
-> Phil
-
-So, the problem is twofold: the first is due to the fact that downstream
-expects the dtb to be fully declared at fw load time (I'll call that
-*monolithic* dtb from now on), the second is about how to represent dependencies
-between board dtb and rp1 overlay which arises only when using overlays instead
-of a monolithic dtb.
-
-The former issue must be solved first in order for the latter to even exists
-(if we don't use overlay, the dependencies are fully exposed in the dtb since
-the beginning), so I'll concentrate on the former for now.
-
-There are 3 possible scenarios to be reconciled:
-
-
-1 - MONOLITHIC DTB
-
-This is the downstream case, where it's advisable to have only one dtb blob
-containing everything (rp1 included) loaded by the fw. In this case the
-resulting devicetree would looks like:
-
-  axi {
-    pcie@120000 {
-      rp1_nexus {
-        pci-ep-bus@1 {
-             ...
-        }
-      }
-    }
-  }
-
-
-2 - RP1 LOADED FROM OVERLAY BY THE FW
-
-In this case the rp1 dt node is loaded from overlay directly by the fw and the 
-resulting devicetree is exactly equal to the monolithic dtb scenario.
-In order for that overlay to be loaded by fw, just add 'dtoverlay=rp1' in
-'config.txt'.
-
-
-3 - RP1 LOADED FROM OVERLAY AT RUNTIME
-
-Here it's the rp1 driver that loads the overlay at runtime, which is the case
-that this patchset originally proposed. The devicetree ends up like this:
-
-  axi {
-    pcie@120000 {
-      pci@0,0 {
-        dev@0,0 {
-          pci-ep-bus@1 {
-               ...
-          }
-        }
-      }
-    }
-  }
-
-and this is exepcially useful to cope with the case in which there's no DT
-natively used, e.g. on ACPI systems.
-
-
-In order for all those 3 mentioned scenatios to work, I propose the following
-inclusion scheme for for the dts files (the arrow points to the includer):
-                   
- 
- rp1-pci.dtso         rp1.dtso
-     ^                    ^
-     |                    |
-rp1-common.dtsi ----> rp1-nexus.dtsi ----> bcm2712-rpi-5-b-MONOLITHIC.dts
-   
-   
-where those dts are defined as follows (omitting the internal properties for
-clarity sake):
-
-
-- rp1-common.dtsi ------- // definition of core rp1 and its peripherals, common
-			  // for all cases
-
-	pci_ep_bus: pci-ep-bus@1 
-	{
-		rp1_clocks { };
-
-		rp1_gpio { };
-
-		rp1_eth { };
-	};
-
-- rp1-pci.dtso ---------- // ovl linked in the rp1 driver code to be loaded at
-			  // runtime from rp1 driver. Only for case 3
-
-	/plugin/;
-	fragment@0 {
-                target-path="";
-                __overlay__ {
-			#include "rp1-common.dtsi"
-		};
-	}
-
-- rp1-nexus.dtsi ------- // adapter to decouple rp1 ranges for non runtime-loaded
-		         // overlay case (i.e. only for case 1 and 2)
-
-	rp1_nexus {
-		ranges = ...
-		
-		 #include "rp1-common.dtsi"
-	};
-
-- rp1.dtso ------------ // overlay to be loaded by fw (case 2)
-
-	/plugin/;
-	&pcie2 {
-		#include "rp1-nexus.dtsi"
-	};
-
-- bcm2712-rpi-5-b-MONOLITHIC.dts --- // monolithic dtb to avoid any overlay use
-				     // (case 1)
-
-	/ {
-		... all rpi5 board dts ...
-		&pcie2 {
-        		#include "rp1-nexus.dtsi"
-		};
-	};
-
-
-with only minimal changes to the rp1 driver code, I can confirm that all those
-scenarios can coexits and are working fine. Before processding with a new patchset
-I'd like to have some thoughts about that, do you think this is a viable approach?
-
-Many thanks,
-Andrea
+DQoNCj4gT24gMTAgTWFyIDIwMjUsIGF0IDc6MjXigK9QTSwgYW5kcml5LnNoZXZjaGVua29AbGlu
+dXguaW50ZWwuY29tIHdyb3RlOg0KPiANCj4g77u/T24gTW9uLCBNYXIgMTAsIDIwMjUgYXQgMDE6
+NDk6MTNQTSArMDAwMCwgUm9iaW4gTXVycGh5IHdyb3RlOg0KPj4+IE9uIDIwMjUtMDMtMDkgODo0
+MCBhbSwgQWRpdHlhIEdhcmcgd3JvdGU6DQo+Pj4gRnJvbTogUGF1bCBQYXdsb3dza2kgPHBhdWxA
+bXJhcm0uaW8+DQo+Pj4gDQo+Pj4gVGhpcyBwYXRjaCBhZGRzIGEgZHJpdmVyIG5hbWVkIGFwcGxl
+LWJjZSwgdG8gYWRkIHN1cHBvcnQgZm9yIHRoZSBUMg0KPj4+IFNlY3VyaXR5IENoaXAgZm91bmQg
+b24gY2VydGFpbiBNYWNzLg0KPj4+IA0KPj4+IFRoZSBkcml2ZXIgaGFzIDMgbWFpbiBjb21wb25l
+bnRzOg0KPj4+IA0KPj4+IEJDRSAoQnVmZmVyIENvcHkgRW5naW5lKSAtIHRoaXMgaXMgd2hhdCB0
+aGUgZmlsZXMgaW4gdGhlIHJvb3QgZGlyZWN0b3J5DQo+Pj4gYXJlIGZvci4gVGhpcyBlc3RhYmls
+aXNoZXMgYSBiYXNpYyBjb21tdW5pY2F0aW9uIGNoYW5uZWwgd2l0aCB0aGUgVDIuDQo+Pj4gVkhD
+SSBhbmQgQXVkaW8gYm90aCByZXF1aXJlIHRoaXMgY29tcG9uZW50Lg0KPj4+IA0KPj4+IFZIQ0kg
+LSB0aGlzIGlzIGEgdmlydHVhbCBVU0IgaG9zdCBjb250cm9sbGVyOyBrZXlib2FyZCwgbW91c2Ug
+YW5kDQo+Pj4gb3RoZXIgc3lzdGVtIGNvbXBvbmVudHMgYXJlIHByb3ZpZGVkIGJ5IHRoaXMgY29t
+cG9uZW50IChvdGhlcg0KPj4+IGRyaXZlcnMgdXNlIHRoaXMgaG9zdCBjb250cm9sbGVyIHRvIHBy
+b3ZpZGUgbW9yZSBmdW5jdGlvbmFsaXR5KS4NCj4+PiANCj4+PiBBdWRpbyAtIGEgZHJpdmVyIGZv
+ciB0aGUgVDIgYXVkaW8gaW50ZXJmYWNlLCBjdXJyZW50bHkgb25seSBhdWRpbw0KPj4+IG91dHB1
+dCBpcyBzdXBwb3J0ZWQuDQo+Pj4gDQo+Pj4gQ3VycmVudGx5LCBzdXNwZW5kIGFuZCByZXN1bWUg
+Zm9yIFZIQ0kgaXMgYnJva2VuIGFmdGVyIGEgZmlybXdhcmUNCj4+PiB1cGRhdGUgaW4gaUJyaWRn
+ZSBzaW5jZSBtYWNPUyBTb25vbWEuDQo+IA0KPj4gSSdtIHNsaWdodGx5IHB1enpsZWQgd2h5IHRo
+aXMgd2FzIHNlbnQgdG8gdGhlIElPTU1VIG1haW50YWluZXJzIHdoZW4gaXQNCj4+IGRvZXNuJ3Qg
+dG91Y2ggYW55IElPTU1VIGNvZGUsIG5vciBldmVuIGNvbnRhaW4gYW55IHJlZmVyZW5jZSB0byB0
+aGUgSU9NTVUNCj4+IEFQSSBhdCBhbGwuLi4NCj4gDQo+IFBlb3BsZSBsaWtlIHRvIHB1dCBhIHJh
+bmRvbSBwZW9wbGUgdG8gYSByYW5kb20gY29udHJpYnV0aW9ucyA6LSkNCj4gDQo+IEFkaXR5YSwg
+eW91IGNhbiB1dGlsaXNlIG15ICJzbWFydCIgc2NyaXB0IFsxXSB0byBzZW5kIHRoZSBzZXJpZXMN
+Cj4gdG8gbW9yZS1vci1sZXNzIHJlbGV2YW50IHBlb3BsZSAoYnV0IGRlZmluaXRlbHkgdG8gdGhl
+IHJpZ2h0IG9uZXMNCj4gwrEgcG90ZW50aWFsbHkgaW50ZXJlc3RlZCwgaXQgaGFzIGEgaGV1cmlz
+dGljcyBpbnNpZGUpLg0KDQpUaGFua3MgYSBsb3QgZm9yIHRoaXMuIEkgdXNlZCBhIGJpdCBBSSB0
+byBnZXQgbWFpbnRhaW5lcnMgZm9yIHRoaXMsIGxvb2tzIGxpa2UgSU9NTVUgZ290IGFkZGVkLiBT
+b3JyeSBmb3IgdGhhdCA6KQ0KPiANCj4gWzFdOiBodHRwczovL2dpdGh1Yi5jb20vYW5keS1zaGV2
+L2hvbWUtYmluLXRvb2xzL2Jsb2IvbWFzdGVyL2dlMm1haW50YWluZXIuc2gNCj4gDQo+IC0tDQo+
+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCj4gDQo+IA0K
 
