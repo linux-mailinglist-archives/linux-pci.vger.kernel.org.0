@@ -1,147 +1,240 @@
-Return-Path: <linux-pci+bounces-23343-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23344-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D11DAA59C17
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 18:09:28 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44B55A59C34
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 18:10:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFC2F3A7FA2
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 17:08:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5639E7A218C
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 17:09:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E61E233D99;
-	Mon, 10 Mar 2025 17:07:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE855233725;
+	Mon, 10 Mar 2025 17:09:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdyI/GPm"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="l1AipWqa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C41233120;
-	Mon, 10 Mar 2025 17:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F71822D79B;
+	Mon, 10 Mar 2025 17:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741626439; cv=none; b=d16d+aHRc3xYNmY1T6DLJ7sLVmjPkik5DaqXfXly0ERrxb884xZ5h7cqWFW69uJrLneTF4mvyyu4MlwbmSfCxBSUF45jr4gRzJQDqm0kCd+e9RO8kWN1AYCtVhH57N9p1kiYmeZh5w0UC1SAxYVkGss4D5imUl65/Ai3Cz1GA6E=
+	t=1741626588; cv=none; b=mVe3aiB928ZEqkhgbpofJRFxq1CRpOGXriWhhhmeCr3QWjLierbTXE/90fAtJ1RswfVN2nVQd3nouBbShTrd+casM/xH6br7b2URCp9kIbKq0CCXNVASSniHtBIF5n1Z2sWmlxEuw4iUDP7Gzcbn/H9CVGXwB6F7iRPFFugU3eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741626439; c=relaxed/simple;
-	bh=qj4pXkKgx8918tBimyMxKHgPf2nAiDmK0GUSPbRonyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=WG8DV2HGaYvR31Dwdi6pXdy6YgYHy3xCUZBZPD9/15uCGVdAf9Wy6Gc3P51JN3PZgdYLOEvzLDaQeCaKdsslJcY0LvGfbA3rKEikp7EwZrhUXtuaX22GZj+aPrI6oZQL3lhZsfRSpIH7BM8Kd76D4sa2xvGvjwiy4J8hDXwLWX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cdyI/GPm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6312AC4CEEB;
-	Mon, 10 Mar 2025 17:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741626438;
-	bh=qj4pXkKgx8918tBimyMxKHgPf2nAiDmK0GUSPbRonyM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=cdyI/GPmP32JlBCOUh06gUEsyfWlnsQdjseBlBJT2r3Du2BTOvOAOqQ2YSpVNCj4t
-	 +RpXafrx3g9RzPN1s8RkML8ybEK4zBJ7Z7i2mgvJ8DG8iRuKKSIWu+TrYv05kP1hwp
-	 QYZPUixvfZ9fGoznSr2LmIQ933XTeXN6Oq+ebXfa1o7ypKGKTJ/aLlaq7AUEYz1BUz
-	 4AmhlFNjtC/5R4gpU6exLDZTvzRdnGU/e6tjV7DiFtoQC60DJTDmtgmEresbpJxHj2
-	 vbKH0/mpgK1L8btKkM/+ZEdyzRzcyhtFUlp8TjafUICY0XdRuH9kyBaCbDXXoka9Vr
-	 F+vkRYsaxS5vw==
-Date: Mon, 10 Mar 2025 12:07:17 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com
-Subject: Re: [PATCH v5 3/3] PCI: xilinx-cpm: Add support for Versal Net
- CPM5NC Root Port controller
-Message-ID: <20250310170717.GA556500@bhelgaas>
+	s=arc-20240116; t=1741626588; c=relaxed/simple;
+	bh=yVNu05pqKMvUkTRfJJGadIbGslAZMjfMrFefbqDKqXM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k2RTmOnBwcjSlPXADnO0iaVp7lmFZjUc084/f1+etIhPO59NTbsbaPHB6QpqHtbnAklvGLGILkl0ic5kSLBJFUEdwe0Swm1XzB78IDI8vXNeggsaN7lL7zTWOxrBmQcugIX2giAshJwE3HEeCY42kWeYidOw2138bjFUreGk5Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=l1AipWqa; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0DA692038F32;
+	Mon, 10 Mar 2025 10:09:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0DA692038F32
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741626586;
+	bh=ZPp0js6+jrg5sVe7XA7ERrTixZv7xjbVVvf7fRlGlAE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=l1AipWqanSYF7uSInl5in5VBJSpUKdzXNs6Z6Cc5jMQikOncxE6pClVlB5vRa3No/
+	 iDoZQTAoQd9hGHqs2vaxzFNRGIT6LEpWYSUp2mlFkdRWAt98W4RXVrPRI1lDqFK6Qv
+	 S3kLzNTctjFEFKHQ9Tw6wh1lVjMxr+HbU/Mq8eew=
+Message-ID: <e3414583-0437-4fc4-b464-1426e5fe9628@linux.microsoft.com>
+Date: Mon, 10 Mar 2025 10:09:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224155025.782179-4-thippeswamy.havalige@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v5 09/11] Drivers: hv: vmbus: Introduce
+ hv_get_vmbus_root_device()
+To: Tianyu Lan <ltykernel@gmail.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, conor+dt@kernel.org, dave.hansen@linux.intel.com,
+ decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
+ joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com,
+ lenb@kernel.org, lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
+ mark.rutland@arm.com, maz@kernel.org, mingo@redhat.com,
+ oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org,
+ ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
+ tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
+ yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
+ apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com
+References: <20250307220304.247725-1-romank@linux.microsoft.com>
+ <20250307220304.247725-10-romank@linux.microsoft.com>
+ <CAMvTesCFZ6sxQp7qqSDjD9idRjVHxh96Sp4betomgFH-OFLZ3Q@mail.gmail.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <CAMvTesCFZ6sxQp7qqSDjD9idRjVHxh96Sp4betomgFH-OFLZ3Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 24, 2025 at 09:20:24PM +0530, Thippeswamy Havalige wrote:
-> The Versal Net ACAP (Adaptive Compute Acceleration Platform) devices
-> incorporate the Coherency and PCIe Gen5 Module, specifically the
-> Next-Generation Compact Module (CPM5NC).
+
+
+On 3/10/2025 6:41 AM, Tianyu Lan wrote:
+> On Sat, Mar 8, 2025 at 6:05 AM Roman Kisel <romank@linux.microsoft.com> wrote:
+>>
+>> The ARM64 PCI code for hyperv needs to know the VMBus root
+>> device, and it is private.
+>>
+>> Provide a function that returns it. Rename it from "hv_dev"
+>> as "hv_dev" as a symbol is very overloaded. No functional
+>> changes.
+>>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
 > 
-> The integrated CPM5NC block, along with the built-in bridge, can function
-> as a PCIe Root Port & supports the PCIe Gen5 protocol with data transfer
-> rates of up to 32 GT/s, capable of supporting up to a x16 lane-width
-> configuration.
+> Why change all device's parent to vmbus_root_device?
 > 
-> Bridge errors are managed using a specific interrupt line designed for
-> CPM5N. INTx interrupt support is not available.
+
+No changes from my account of the code. Please let me know if I am
+misunderstanding the question.
+
+> The ARM64 platform uses the device tree to enumerate vmbus
+> devices..  Can we find the root device via device tree? vmbus
+> code on the x86 use ACPI and it seems to work via ACPI.
 > 
-> Currently in this commit platform specific Bridge errors support is not
-> added.
+> 
 
-> @@ -478,6 +479,9 @@ static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
->  {
->  	const struct xilinx_cpm_variant *variant = port->variant;
->  
-> +	if (variant->version != CPM5NC_HOST)
-> +		return;
+Right, we find it from the DT as shown in the next patch:
 
-You're adding support for CPM5NC_HOST, but this changes the behavior
-for all the NON-CPM5NC_HOST devices, which looks like a typo.
++static struct irq_domain *hv_pci_of_irq_domain_parent(void)
++{
++	struct device_node *parent;
++	struct irq_domain *domain;
++
++	parent = of_irq_find_parent(hv_get_vmbus_root_device()->of_node);
++	domain = NULL;
++	if (parent) {
++		domain = irq_find_host(parent);
++		of_node_put(parent);
++	}
++
++	return domain;
++}
++
 
-Should it be "variant->version == CPM5NC_HOST" instead?
+and later use it for `irq_create_hierarchy()`. Please let me know
+if I missed anything in your question.
 
->  	if (cpm_pcie_link_up(port))
->  		dev_info(port->dev, "PCIe Link is UP\n");
->  	else
-> @@ -578,9 +582,13 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
->  
->  	port->dev = dev;
->  
-> -	err = xilinx_cpm_pcie_init_irq_domain(port);
-> -	if (err)
-> -		return err;
-> +	port->variant = of_device_get_match_data(dev);
-> +
-> +	if (port->variant->version != CPM5NC_HOST) {
-> +		err = xilinx_cpm_pcie_init_irq_domain(port);
+>> ---
+>>   drivers/hv/vmbus_drv.c | 23 +++++++++++++++--------
+>>   include/linux/hyperv.h |  2 ++
+>>   2 files changed, 17 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+>> index c8474b48dcd2..7bfafe702963 100644
+>> --- a/drivers/hv/vmbus_drv.c
+>> +++ b/drivers/hv/vmbus_drv.c
+>> @@ -45,7 +45,8 @@ struct vmbus_dynid {
+>>          struct hv_vmbus_device_id id;
+>>   };
+>>
+>> -static struct device  *hv_dev;
+>> +/* VMBus Root Device */
+>> +static struct device  *vmbus_root_device;
+>>
+>>   static int hyperv_cpuhp_online;
+>>
+>> @@ -80,9 +81,15 @@ static struct resource *fb_mmio;
+>>   static struct resource *hyperv_mmio;
+>>   static DEFINE_MUTEX(hyperv_mmio_lock);
+>>
+>> +struct device *hv_get_vmbus_root_device(void)
+>> +{
+>> +       return vmbus_root_device;
+>> +}
+>> +EXPORT_SYMBOL_GPL(hv_get_vmbus_root_device);
+>> +
+>>   static int vmbus_exists(void)
+>>   {
+>> -       if (hv_dev == NULL)
+>> +       if (vmbus_root_device == NULL)
+>>                  return -ENODEV;
+>>
+>>          return 0;
+>> @@ -861,7 +868,7 @@ static int vmbus_dma_configure(struct device *child_device)
+>>           * On x86/x64 coherence is assumed and these calls have no effect.
+>>           */
+>>          hv_setup_dma_ops(child_device,
+>> -               device_get_dma_attr(hv_dev) == DEV_DMA_COHERENT);
+>> +               device_get_dma_attr(vmbus_root_device) == DEV_DMA_COHERENT);
+>>          return 0;
+>>   }
+>>
+>> @@ -1930,7 +1937,7 @@ int vmbus_device_register(struct hv_device *child_device_obj)
+>>                       &child_device_obj->channel->offermsg.offer.if_instance);
+>>
+>>          child_device_obj->device.bus = &hv_bus;
+>> -       child_device_obj->device.parent = hv_dev;
+>> +       child_device_obj->device.parent = vmbus_root_device;
+>>          child_device_obj->device.release = vmbus_device_release;
+>>
+>>          child_device_obj->device.dma_parms = &child_device_obj->dma_parms;
+>> @@ -2292,7 +2299,7 @@ static int vmbus_acpi_add(struct platform_device *pdev)
+>>          struct acpi_device *ancestor;
+>>          struct acpi_device *device = ACPI_COMPANION(&pdev->dev);
+>>
+>> -       hv_dev = &device->dev;
+>> +       vmbus_root_device = &device->dev;
+>>
+>>          /*
+>>           * Older versions of Hyper-V for ARM64 fail to include the _CCA
+>> @@ -2383,7 +2390,7 @@ static int vmbus_device_add(struct platform_device *pdev)
+>>          struct device_node *np = pdev->dev.of_node;
+>>          int ret;
+>>
+>> -       hv_dev = &pdev->dev;
+>> +       vmbus_root_device = &pdev->dev;
+>>
+>>          ret = of_range_parser_init(&parser, np);
+>>          if (ret)
+>> @@ -2702,7 +2709,7 @@ static int __init hv_acpi_init(void)
+>>          if (ret)
+>>                  return ret;
+>>
+>> -       if (!hv_dev) {
+>> +       if (!vmbus_root_device) {
+>>                  ret = -ENODEV;
+>>                  goto cleanup;
+>>          }
+>> @@ -2733,7 +2740,7 @@ static int __init hv_acpi_init(void)
+>>
+>>   cleanup:
+>>          platform_driver_unregister(&vmbus_platform_driver);
+>> -       hv_dev = NULL;
+>> +       vmbus_root_device = NULL;
+>>          return ret;
+>>   }
+>>
+>> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+>> index 7f4f8d8bdf43..1f0851fde041 100644
+>> --- a/include/linux/hyperv.h
+>> +++ b/include/linux/hyperv.h
+>> @@ -1333,6 +1333,8 @@ static inline void *hv_get_drvdata(struct hv_device *dev)
+>>          return dev_get_drvdata(&dev->device);
+>>   }
+>>
+>> +struct device *hv_get_vmbus_root_device(void);
+>> +
+>>   struct hv_ring_buffer_debug_info {
+>>          u32 current_interrupt_mask;
+>>          u32 current_read_index;
+>> --
+>> 2.43.0
+>>
+>>
+> 
+> 
 
-  xilinx_cpm_pcie_init_port()
-  {
-    if (variant->version != CPM5NC_HOST)
-      return;
-    ...
+-- 
+Thank you,
+Roman
 
-  xilinx_cpm_pcie_probe()
-  {
-    ...
-    if (port->variant->version != CPM5NC_HOST) {
-      err = xilinx_cpm_pcie_init_irq_domain(port);
-    ...
-    xilinx_cpm_pcie_init_port();
-    ...
-    if (port->variant->version != CPM5NC_HOST) {
-      err = xilinx_cpm_setup_irq(port);
-    ...
-  err_host_bridge:
-    if (port->variant->version != CPM5NC_HOST)
-      xilinx_cpm_free_interrupts(port);
-    ...
-  err_free_irq_domains:
-    if (port->variant->version != CPM5NC_HOST)
-      xilinx_cpm_free_irq_domains(port);
-
-Right now one CPM5NC_HOST test is inside xilinx_cpm_pcie_init_port()
-all the others are in xilinx_cpm_pcie_probe().
-
-I think it would be nicer if the tests were inside
-xilinx_cpm_pcie_init_irq_domain(), xilinx_cpm_setup_irq(),
-xilinx_cpm_free_interrupts(), and xilinx_cpm_free_irq_domains() so
-they're all done the same way and they're closer to the actual
-differences instead of cluttering xilinx_cpm_pcie_probe().
-
-Also, this makes it look like CPM5NC_HOST doesn't support any
-interrupts at all.  No INTx, no MSI, no MSI-X.  Is that true?  If so,
-what good is a host controller where interrupts don't work?
-
-Bjorn
 
