@@ -1,79 +1,139 @@
-Return-Path: <linux-pci+bounces-23327-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23329-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DFD2A5981E
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 15:50:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AFB6A5993E
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 16:11:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BDDBF3A5861
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 14:50:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5636416DE11
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 15:11:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A2B222CBD3;
-	Mon, 10 Mar 2025 14:50:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED78C22DF8A;
+	Mon, 10 Mar 2025 15:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UR/FD+r+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249051991CA;
-	Mon, 10 Mar 2025 14:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 153C222D4DC;
+	Mon, 10 Mar 2025 15:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741618248; cv=none; b=gRiHFlvSSbGol3FKzUYGCAXpndHHOQrxAuwBmYF5PqC3qVUsJOoMzrbjVxkYi9fAWhQOmfh3XRqAEydFNeDDS4BVxyMCGnyRXoaYFgdPBylTgNGEV0WGrWdgg9GYaub6DmIpvLmb5ve2vWtO5CRkv6fdbwUz/Y+qupg1bPOnbog=
+	t=1741619474; cv=none; b=atFanMx5pL6+ud/gGzd/RgstUjXBbGgyMjiQCgv5CFC4ih3Fw3Kbl51BpYz6N8WXcXWLzrQh4ShNA7A+imdv7SCYLImxbt1UlecrX/sdlBpO4LcAPYIYxxmTNzly9tA3gXwZsJLtDhnOM4doGC0u9YKzUguX/KPcuOxYqVe65e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741618248; c=relaxed/simple;
-	bh=sJZlHzkYsycOqHKWmwxAlYYEYlLkn+MmH1EaJ4bLWaA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q4FAP2LdK2XapCjuvfpd6abTeT5GM2QayjfObSygnVDEwqje1/SW3jgVDfB5gRSHzQHazoy+rXIdM06I3zBnuMHpmdl5KZn5pfAAamv1kBfT0F3lxNvO4K3k7IafAl6BrWzLFbwmyVbV6o6p54M88fBTrVhdOKnIQ48Ppa2seOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92756C4CEE5;
-	Mon, 10 Mar 2025 14:50:45 +0000 (UTC)
-Date: Mon, 10 Mar 2025 10:50:44 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
- bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v5] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20250310105044.129dc354@gandalf.local.home>
-In-Reply-To: <deb6f0c4-77b8-431e-9b81-555a8344c750@linux.alibaba.com>
-References: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
-	<20250113155503.71467082@gandalf.local.home>
-	<deb6f0c4-77b8-431e-9b81-555a8344c750@linux.alibaba.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741619474; c=relaxed/simple;
+	bh=QMcsbQVKT+fiuPq7AGkPf+0PAMbG6qvWcqcMmQ+Wr0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sfy1RXIV/hoe3cCJDzpI6EGb1Mt14ifGvBvbO+jgf8lec5ai+jBVICDiq0+2wrACSvyWqtZugQc11HsnL3o0OxSqpZJjLBmxTd7PO0EYyQqqXkjxS/fjZPGJKR+chD9ctXFzlOynkFkZatwZAUaQZbbj4jWseoxw3KObU4n+D1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UR/FD+r+; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=RJdV8dINmj0DyHz22Fro0RD9n3L+kRh/ucEwMBwHgpM=;
+	b=UR/FD+r+IyZhYJy7xAFkU4MSoKiS3ogTViwPKaS2CYi2flIrr1M7I/cpImtpEr
+	bEJor8ITunQwdcql9KgAlUXT8StrXUqU+Nh4TpBatwBO47+WsMw7GpIgzgK7yceQ
+	np49Tk/ncox8QaK5kjwWg+8SEFAIdSi7Icrc8e3ikeRqk=
+Received: from [192.168.71.45] (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wDnvyTAAM9nvU1pRw--.5995S2;
+	Mon, 10 Mar 2025 23:09:53 +0800 (CST)
+Message-ID: <9eee0ab5-d870-451d-bf38-41578f487854@163.com>
+Date: Mon, 10 Mar 2025 23:09:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2] PCI: cadence: Add configuration space capability search API
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, bhelgaas@google.com, bwawrzyn@cisco.com,
+ thomas.richard@bootlin.com, wojciech.jasko-EXT@continental-corporation.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250308133903.322216-1-18255117159@163.com>
+ <20250309023839.2cakdpmsbzn6pm7g@uda0492258>
+ <3e6645a8-6de9-4125-8444-fa1a4f526881@163.com>
+ <20250309054835.4ydiq4xpguxtbvkf@uda0492258>
+ <bf9fc865-58b9-45ed-a346-ce82899d838c@163.com>
+ <20250309100243.ihrxe6vfdugzpzsn@uda0492258>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250309100243.ihrxe6vfdugzpzsn@uda0492258>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wDnvyTAAM9nvU1pRw--.5995S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxGF4fAFy8Xr1xZF1UWry5CFg_yoW5AF18pF
+	4Dtryay3WDJa1fZ3s7Ww4vgFyfZ3s7Jw15GF98Kwn5AwsIga42kF4Yyr1rua9rCrZ2qF1j
+	vrW3Xas7CFZ8JaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVMKtUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwsMo2fO+J-xnQAAsJ
 
-On Mon, 10 Mar 2025 11:59:55 +0800
-Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 
-> Hi, Steve,
+
+On 2025/3/9 18:02, Siddharth Vadapalli wrote:
+>> Hi Siddharth,
+>>
+>> Prior to this patch, I don't think hard-coded is that reasonable. Because
+>> the SOC design of each company does not guarantee that the offset of each
+>> capability is the same. This parameter can be configured when selecting PCIe
+>> configuration options. The current code that just happens to hit the offset
+>> address is the same.
 > 
-> If I move PCI_HOTPLUG_EVENT into one place, `include/upai/linux/pci.h`,
-> I need to include:
+> 1. You are modifying the driver for the Cadence PCIe Controller IP and
+> not the one for your SoC (a.k.a the application/glue/wrapper driver).
+> 2. The offsets are tied to the Controller IP and not to your SoC. Any
+> differences that arise due to IP Integration into your SoC should be
+> handled in the Glue driver (the one which you haven't upstreamed yet).
+> 3. If the offsets in the Controller IP itself have changed, this
+> indicates a different IP version which has nothing to do with the SoC
+> that you are using.
 > 
->      #include <linux/tracepoint.h>
+> Please clarify whether you are facing problems with the offsets due to a
+> difference in the IP Controller Version, or due to the way in which the IP
+> was integrated into your SoC.
 > 
-> Then, kernel build fails with CONFIG_UAPI_HEADER_TEST=y:
 
-Just move the enum definitions, not the entire event file.
+Hi Siddharth,
 
-That is, have one place has the PCI_HOTPLUG_EVENT macro, and have both the
-uapi header as well as the tracepoint header include that header.
+I have consulted several PCIe RTL designers in the past two days. They 
+told me that the controller IP of Synopsys or Cadence can be configured 
+with the offset address of the capability. I don't think it has anything 
+to do with SOC, it's just a feature of PCIe controller IP. In 
+particular, the number of extended capability is relatively large. When 
+RTL is generated, one more configuration may cause the offset addresses 
+of extended capability to be different. Therefore, it is unreasonable to 
+assign all the offset addresses in advance.
 
-I guess I need to see the entire change.
+Here, I want to make Cadence PCIe common driver more general. When we 
+keep developing new SoCs, the capability or extended capability offset 
+address may eventually be inconsistent.
 
--- Steve
+Thank you very much Siddharth for discussing this patch with me. I would 
+like to know what other maintainers have to say about this.
+
+>>
+>> You can refer to the pci_find_*capability() or dw_pcie_find_*capability API.
+>> The meaning of their appearance is the same as what I said, and the design
+>> of each company may be different.
+> 
+> These APIs exits since there are multiple users with different Controllers
+> (in the case of pci_find_*capability()) or different versions of the
+> Controller (in the case of dw_pcie_find_*capability) due to which we cannot
+> hard-code offsets. In the case of the Cadence PCIe Controller, I see only
+> one user in Upstream Linux at the moment which happens to be the
+> "pci-j721e.c" driver. Maybe there are other users, but the offsets seem
+> to be compatible with their SoCs in that case.
+
+Yes. Cadence definitely has a lot of customers, and from what I 
+understand, not every customer wants to go upstream on their drive. Most 
+of these customers are just local modifications, probably mimicking the 
+API that the dwc driver already uses. We are, for example.
+
+Best regards,
+Hans
+
+
 
