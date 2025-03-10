@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-23307-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23308-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78F79A59253
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 12:11:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 16508A59254
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 12:11:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B74B616BA58
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 11:11:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 540EC16B44F
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 11:11:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AF71226D12;
-	Mon, 10 Mar 2025 11:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 416C2227567;
+	Mon, 10 Mar 2025 11:10:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="se0j7C0p"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EIbcXKTu"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669BA226CF3
-	for <linux-pci@vger.kernel.org>; Mon, 10 Mar 2025 11:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB64226CF3
+	for <linux-pci@vger.kernel.org>; Mon, 10 Mar 2025 11:10:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741605057; cv=none; b=u6KMhHXZrPuXnxDmhbXxI3gqcwqMkWiJztUcz2hbwLcGrzz7Co8e7C26dRa2nY1KAVN19bWh8zZn8BvYFD5vsiADRjYuxKJFKBVD9WL5ozn70Yhpn/0ZSWdEZZfINmTgPw5FDNY/jRlWzYNWcYThhUdfUEs+wkB9YIzyP8PX4Bs=
+	t=1741605059; cv=none; b=Cgx9SsOnPWW24msLD91KvHMnaIlyaZ2zhSKK8Hu0ANl4RDDficRnSvxH1VikJZFXMzDpXEpd1RLIoEzfsbkVliJ3P2SFrYJwuWeVucBSmOh6mN3LngTa80P/6SJDFlo4dQStGfdRIbxzy3Kw9PD4SBO0BNnDsFbu3AHtH7wSSW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741605057; c=relaxed/simple;
-	bh=juce22VaNhSYxWpsQQ0/fJzfS3VarwxZrVt+ZJyTAFg=;
+	s=arc-20240116; t=1741605059; c=relaxed/simple;
+	bh=QqHlb9amokoslycep2GrTaleec2IM9DCX/kxSCszE8M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BK5qQddNN/gresp2gQlPmEyJsTHVKGnCxw/z8hTRvjM+zwG4doyzY86PlTUidnM5mMV7RU2zYzPIGRagxNTdK8dKalDxii743NWEQ52YXQDLHaj+k+Qc0fC4jmFirHm3OJL5nh3zG2NCrJkebFlQlree8QvHTCWAxBBT4Rs4QiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=se0j7C0p; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F4C8C4CEEE;
-	Mon, 10 Mar 2025 11:10:54 +0000 (UTC)
+	 MIME-Version; b=QP+T1Gh7Xsqksy2iD9tvk/CExrkOgCFK9LEJX1bzEOlLokRvIpIR9pxxTppvALdOfJnO+fF7FztvTgkHcib2S1YHW1bNExTg+4ueMBwu2QnL6lxxQcJ/9ihyMZgqJVJPlEu8qyvxeLi5fEmmiVn0yDp6MCH/UfweoEEKQU5Ioq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EIbcXKTu; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49107C4CEEF;
+	Mon, 10 Mar 2025 11:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741605056;
-	bh=juce22VaNhSYxWpsQQ0/fJzfS3VarwxZrVt+ZJyTAFg=;
+	s=k20201202; t=1741605059;
+	bh=QqHlb9amokoslycep2GrTaleec2IM9DCX/kxSCszE8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=se0j7C0p3YDIEDwgGqphVqYtaGVC/JI1Y8ZJUPjwG6SwBzCxFkKKxZ+byOw+iZBNM
-	 9hjZ9w4vmOmeoyER5wiRFJihAi6exCrwA8nAuO12wvXGs0qee7GuXlGlUY828cjwvS
-	 Uyj527zeWRDfsMt/hK+tlCWBuG3t4u+K5Jwitrsv0WbpJfQtYtYWfCfnztVP+ms2fu
-	 f7eGNjWtUEpBPjPKKNSnjm4hnFA0d9WYEGTf5y8Vz0kC25UVOox/v/uiYK4BLIdBCU
-	 d0riyv1tWLdMNqdRo638AxRCw42okSTRYhg7EbFV/+/F/1nCSf6L2ip4ESCrdRHl5Y
-	 Vtsq18dBiuqKA==
+	b=EIbcXKTuyd8QdqDegRa7wXBLn7NJy8n/ZZe4XlNO16m90E22X6rbg9hLRoFn+6Z4F
+	 XYag2qXQyVFRdmjTzkQkTGRQ7KWF+ougoXexfqSHy4Y/9+O3AAXW3mzDUcwEEwV3bA
+	 Uc8qxvTminmgSBbIKvA1yhnhz/4p+uDiGwdllIM+vSYqqBf4VuK0K80zr/rx0quGFJ
+	 n4G3uid/XCbWwjrLBWO89q+E9zYbH25t6wrj761h1wj9xPFvAJ61sxyFOvQ1jT+2Ww
+	 OhyoPra2q7wPl9UV9rlByq0GhAbEx5A+Rt2ADV0zC7GRJw9rTNSpA1QyVcMtIbGryw
+	 35McLDTt38qIw==
 From: Niklas Cassel <cassel@kernel.org>
 To: bhelgaas@google.com,
 	kw@linux.com,
@@ -49,9 +49,9 @@ Cc: linux-pci@vger.kernel.org,
 	Damien Le Moal <dlemoal@kernel.org>,
 	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH 3/7] selftests: pci_endpoint: Use IRQ_TYPE_* defines from UAPI header
-Date: Mon, 10 Mar 2025 12:10:20 +0100
-Message-ID: <20250310111016.859445-12-cassel@kernel.org>
+Subject: [PATCH 4/7] PCI: endpoint: Add intx_capable to epc_features
+Date: Mon, 10 Mar 2025 12:10:21 +0100
+Message-ID: <20250310111016.859445-13-cassel@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250310111016.859445-9-cassel@kernel.org>
 References: <20250310111016.859445-9-cassel@kernel.org>
@@ -61,93 +61,36 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3125; i=cassel@kernel.org; h=from:subject; bh=juce22VaNhSYxWpsQQ0/fJzfS3VarwxZrVt+ZJyTAFg=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLPnZh3XnI3d7Gs653E1dtKz2aIPo8L7L9iusq9ddFVx fv5M82VO0pZGMS4GGTFFFl8f7jsL+52n3Jc8Y4NzBxWJpAhDFycAjARazOGv6JVXW1dl3cI3tl1 ++tn8xCbs1sEZ/8qn9wYI+Rc4rn5kwMjw6GL1U2HZ+zosUgLmr7J55+v+5M9vTwFETvOyGqvrRT 15AMA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=957; i=cassel@kernel.org; h=from:subject; bh=QqHlb9amokoslycep2GrTaleec2IM9DCX/kxSCszE8M=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLPnZg3Y33jp4K9bX3WnvopvqsSzi/snLH8G//SWM+I6 293nao72VHKwiDGxSArpsji+8Nlf3G3+5TjindsYOawMoEMYeDiFICJCFYyMkxisdI6fn/XEiuF 84m1N0z/GXEanuZuVfw7ZYrpvT1SJVwM/8yiXOabz1NRvpj75smf3rfJy6b1FEpvv/S5efr+G74 ia5gB
 X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
-In order to improve readability, use the IRQ_TYPE_* defines from the UAPI
-header rather than using raw values.
+In struct pci_epc_features, an EPC driver can already specify if they
+support MSI (by setting msi_capable) and MSI-X (by setting msix_capable).
 
-No functional change.
+Thus, for consistency, allow an EPC driver to specify if it supports
+INTx interrupts as well (by setting intx_capable).
+
+Since this struct is zero initialized, EPC drivers that want to claim
+INTx support will need to set intx_capable to true.
 
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- .../selftests/pci_endpoint/pci_endpoint_test.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ include/linux/pci-epc.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-index d05e107d0698..fdf4bc6aa9d2 100644
---- a/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-+++ b/tools/testing/selftests/pci_endpoint/pci_endpoint_test.c
-@@ -99,11 +99,11 @@ TEST_F(pci_ep_basic, LEGACY_IRQ_TEST)
- {
- 	int ret;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 0);
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_INTX);
- 	ASSERT_EQ(0, ret) TH_LOG("Can't set Legacy IRQ type");
- 
- 	pci_ep_ioctl(PCITEST_GET_IRQTYPE, 0);
--	ASSERT_EQ(0, ret) TH_LOG("Can't get Legacy IRQ type");
-+	ASSERT_EQ(PCITEST_IRQ_TYPE_INTX, ret) TH_LOG("Can't get Legacy IRQ type");
- 
- 	pci_ep_ioctl(PCITEST_LEGACY_IRQ, 0);
- 	EXPECT_FALSE(ret) TH_LOG("Test failed for Legacy IRQ");
-@@ -113,11 +113,11 @@ TEST_F(pci_ep_basic, MSI_TEST)
- {
- 	int ret, i;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_MSI);
- 	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
- 
- 	pci_ep_ioctl(PCITEST_GET_IRQTYPE, 0);
--	ASSERT_EQ(1, ret) TH_LOG("Can't get MSI IRQ type");
-+	ASSERT_EQ(PCITEST_IRQ_TYPE_MSI, ret) TH_LOG("Can't get MSI IRQ type");
- 
- 	for (i = 1; i <= 32; i++) {
- 		pci_ep_ioctl(PCITEST_MSI, i);
-@@ -129,11 +129,11 @@ TEST_F(pci_ep_basic, MSIX_TEST)
- {
- 	int ret, i;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 2);
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_MSIX);
- 	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI-X IRQ type");
- 
- 	pci_ep_ioctl(PCITEST_GET_IRQTYPE, 0);
--	ASSERT_EQ(2, ret) TH_LOG("Can't get MSI-X IRQ type");
-+	ASSERT_EQ(PCITEST_IRQ_TYPE_MSIX, ret) TH_LOG("Can't get MSI-X IRQ type");
- 
- 	for (i = 1; i <= 2048; i++) {
- 		pci_ep_ioctl(PCITEST_MSIX, i);
-@@ -181,7 +181,7 @@ TEST_F(pci_ep_data_transfer, READ_TEST)
- 	if (variant->use_dma)
- 		param.flags = PCITEST_FLAGS_USE_DMA;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_MSI);
- 	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
- 
- 	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
-@@ -200,7 +200,7 @@ TEST_F(pci_ep_data_transfer, WRITE_TEST)
- 	if (variant->use_dma)
- 		param.flags = PCITEST_FLAGS_USE_DMA;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_MSI);
- 	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
- 
- 	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
-@@ -219,7 +219,7 @@ TEST_F(pci_ep_data_transfer, COPY_TEST)
- 	if (variant->use_dma)
- 		param.flags = PCITEST_FLAGS_USE_DMA;
- 
--	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
-+	pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_MSI);
- 	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
- 
- 	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index 9970ae73c8df..5872652291cc 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -232,6 +232,7 @@ struct pci_epc_features {
+ 	unsigned int	linkup_notifier : 1;
+ 	unsigned int	msi_capable : 1;
+ 	unsigned int	msix_capable : 1;
++	unsigned int	intx_capable : 1;
+ 	struct	pci_epc_bar_desc bar[PCI_STD_NUM_BARS];
+ 	size_t	align;
+ };
 -- 
 2.48.1
 
