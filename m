@@ -1,216 +1,214 @@
-Return-Path: <linux-pci+bounces-23302-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23303-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F07AA59047
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 10:51:17 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19AAFA590F6
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 11:20:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CD15D16C1DE
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 09:51:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6AD407A52B6
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 10:19:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F38382253E1;
-	Mon, 10 Mar 2025 09:51:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E732721D5A0;
+	Mon, 10 Mar 2025 10:20:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b="HA6TY1pe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DXfLaQQc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2051.outbound.protection.outlook.com [40.107.20.51])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA61224B01
-	for <linux-pci@vger.kernel.org>; Mon, 10 Mar 2025 09:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741600269; cv=fail; b=eO/mQP438u5dtGfyKjzlbbVV23Eb946Y9Fb9kO6Hq0Jz5dUH2aT8S1WdMhsw55mCMiBgHK5JJ4idgzolHpe0ZkkaELBjYExwQSycim1LaHyBTU9g1a68Iv4hVHoeX8G0j4mYjRFcyaGHfyAxs42db+jRj1bPXYH+8hEJnpwxMts=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741600269; c=relaxed/simple;
-	bh=QAljpDuNshRvth4huRTzHCs4uyZrz8FK420MEQNl1R8=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ovXYuDKPlbdCdFEGEXd72TdzfftkEAkcZMs594g++5e6p8ymWFfXFuGVCBiUmBRbWK4dhAmrRvSZaMs00akfbLM9fO1/yBfPnxp0qiRlnzoRG/9XDuEWW0xCqMrw5b4Ps9X2kEpxRv0C7SXnsWCXWXMy6qRR1WylFaTVlJKw85A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com; spf=fail smtp.mailfrom=nokia.com; dkim=pass (2048-bit key) header.d=nokia.com header.i=@nokia.com header.b=HA6TY1pe; arc=fail smtp.client-ip=40.107.20.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nokia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nokia.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Jwu8B7jg47+Sx2HtHG+mSJv/c006mfiNxUSZYT+7oddUbOQbiymaCQbBPwWBpRIKkWddSTq4k6Ux1lE3DlTq9On+5Mgabdve6mf2v6TbqLxeDQNuKuE+ZPHtWF56gmAbRXh2OJJul/00gNcKvczbCkIQMg9hR0Dr/TJ4oelLcUdhZ3u9lMaBMOdCgGxq8vfO9qMSE5G2Yxndy2SYr/NXU0iiXqeSLVno0pqKpqJ6NwZEZWIiDBtuc/10aySz8/vuOLElVoDQrCMWBrY/5taIlXqtcjg4ouuo6jOoSasa5uICywMnnyVVnjojju0vEt6U9MWFPiispfpelq0WVzyN3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2ZZlKHo2ATjduutOg2YMy8LV5Oj47xf6O4yvvqoN4kk=;
- b=ceZpDJsfkjHWEfI/LFpYZH9irZ3LMa7pdgPqzq/onozVUT4C8WyXuWaPBQqk0ThbiieaSbwX2ftwfmJ+1EQul3/lTn5mEZ2tnj/JwAZ+8luBfFoewyW6hM3T/ABp4vPHtsu2FjnXVOaPNnfBujwBt8fYU0DBGObSTXxZxQAfgUjP2Rl3ymB8iLRYnod2oz2d+KmSP0PwS9C9b2LEMYLGeIZcTkRAPOumhkz8sRaW5fkLHV+Ox3OyGwtNMYpr1iUDGFwexNg9L6veyYeTjVF/wRKQojbpnuYOEazU5dklcM5Jo06EfKCLYMgnqtqd3zFHjZCSfAJySzEcRJy6UUOxKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2ZZlKHo2ATjduutOg2YMy8LV5Oj47xf6O4yvvqoN4kk=;
- b=HA6TY1pe5nahrfxKfBhtKuaPRRgksJ+QipOfeJ1FxsMdleelKQOtU1v+jExRzchK7b0aVjSxedpofhCQpautD2TJ4kI5UlJjK3HvO32wIqSdO3fByLyYzAimGWj0cu75qvHYyPU4fMPQhejfIdZG50VCi4susJseLp7tyZ/EWkT60tlJGCzWrefRXl73w+PMwOxPFyEupywZnaKOvTR3/kbD2H99lKsB7YQPQCFjOnEr8JxRVbgMLMrs9cZ2o9Ijo2D6UCsPrasp17Cb1vzlxu8n5KoB/cgPt1uBrzN3wXiyl9N9qEjf4IPmIGf/eJGBtrsYIT6F4zPxMNsW7B7nqg==
-Received: from PA4PR07MB8838.eurprd07.prod.outlook.com (2603:10a6:102:267::14)
- by VI1PR07MB9948.eurprd07.prod.outlook.com (2603:10a6:800:1d5::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.26; Mon, 10 Mar
- 2025 09:51:03 +0000
-Received: from PA4PR07MB8838.eurprd07.prod.outlook.com
- ([fe80::f9bd:132e:f310:90e3]) by PA4PR07MB8838.eurprd07.prod.outlook.com
- ([fe80::f9bd:132e:f310:90e3%3]) with mapi id 15.20.8511.025; Mon, 10 Mar 2025
- 09:51:03 +0000
-From: "Wannes Bouwen (Nokia)" <wannes.bouwen@nokia.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Rob Herring <robh@kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, Vidya Sagar <vidyas@nvidia.com>, Lorenzo
- Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Subject: [v2 PATCH 1/1] PCI: of: avoid warning for 4 GiB
- non-prefetchable windows.
-Thread-Topic: Subject: [v2 PATCH 1/1] PCI: of: avoid warning for 4 GiB
- non-prefetchable windows.
-Thread-Index: AduRobXJsAHUjsNzR1qfymrMhkfNeA==
-Date: Mon, 10 Mar 2025 09:51:03 +0000
-Message-ID:
- <PA4PR07MB8838163AF4B32E0BF74BDFD3FDD62@PA4PR07MB8838.eurprd07.prod.outlook.com>
-Accept-Language: nl-NL, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nokia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PA4PR07MB8838:EE_|VI1PR07MB9948:EE_
-x-ms-office365-filtering-correlation-id: 235fb529-7f1a-4a1d-cf6c-08dd5fb91250
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?CZg9Hxxm43sgeUP9n1cSl8Fz/7LUKp7CUTp3dWS9pK+ltqAVhf4/Vrp8wds7?=
- =?us-ascii?Q?J1dIFLeRG+qRdRXQGaoHeG3T0SCfpTZZVctUBD2fjJVmN6dQ4lOT8iynDyM5?=
- =?us-ascii?Q?nm6u7GFWWDfYVEHOKMmZTOROqmhJhAfI0ehkHJMA+MYu7VOc+FVzJskytoKR?=
- =?us-ascii?Q?DYfkK1Igqu62N2JMb8u/+SfaRV+Q38jP5EpLIyPt0LWT6vCOT+qF6ZxIlsWH?=
- =?us-ascii?Q?b7jf10aqisnZEEEEFexGG5PrKFqGtyTTXdfO+xLY/XNhng313JJfKAOTQyNM?=
- =?us-ascii?Q?ZDWcRY3n/pZI90gENP38/I0u6HEQduc0RMeqHSLTPeOohUCK/kI3829ea+0N?=
- =?us-ascii?Q?YSdyzW82pzre1+2op0K/k1e+nPLupgXLeNyz28nho4ToaizegZZKjIZmXtR3?=
- =?us-ascii?Q?+QJ5oZz8Q3dM7PjP33UilZW1Gk7DXVZHgtRXT2D0WkwEkLRl+Bd3P8HQnuGL?=
- =?us-ascii?Q?LF9CHzclCY0vMZ2VrMUjkiBOsYfrgi8Mrf09UIb4Gdj0cnowRg74q+KaTssG?=
- =?us-ascii?Q?AWtcSI7yElRLoaDaFrq2caDpV6/fvR7ISnqzEfOLYpd2TXDQqtJhi8swKUbE?=
- =?us-ascii?Q?L4R2lC+eJjbinzQKMr3FbhQslTZLWNH1MOyUNXc4iQgpwjArFJd/n7hYQnm0?=
- =?us-ascii?Q?uCciLP7uUl0uNqvqY8vaGIoDFAnn3bBpkJJbpPAzwyMiQcTX4ho1/zIgi04V?=
- =?us-ascii?Q?44c3uHG4GO6hsA9UzokyXlBhuY/CtHoYJX2+W6iDJQqp2N6AFjrJIlPMqCGl?=
- =?us-ascii?Q?cDSFEAtbQjcUuX4YYeH73t9SSLVTFfm4dLvFsPA3gREu/U20w4wQAgqDdDpM?=
- =?us-ascii?Q?Q996mHjn1Idz06Vta5n15dTdjGdYGoCqf6eAIcsgc7Yg0fXt53yeyXMbe6ls?=
- =?us-ascii?Q?W8Y42oNbwvfNV6nixiyHvq2zXj5Xfyb+7kxnQIdQ/Pd7zeoekweQRY9H3ul2?=
- =?us-ascii?Q?KcP+em3NKJFYaOv6bJxa4g2asSv2Xezizwip6LmMuAQaqtgdhXms0DimRQSc?=
- =?us-ascii?Q?HM6RnKP3ZXZTDKDthsykwKYQMH0VHR6SbP4HoF7ocuv8z3DQUbJhzeaJ1OIj?=
- =?us-ascii?Q?/iHMTrtfCgEfgaDKlsR11ciC/JeKFDcXGVNYKkU6Em5znOLvlxi9flLmYRDB?=
- =?us-ascii?Q?g5eZG1H/xF5z4hLT9XA0qIkg1vvB/uZ/aiMpgDx+B4GM2UH4rH2uWRUuSvVF?=
- =?us-ascii?Q?drbMKKPpx5Ws+ojlAnzg+SiseB8XkrTbzl1gRK9GX+dRpFah0b6lki06kss8?=
- =?us-ascii?Q?UUsp3q/qZVKMLN+z673iPxJ/3It42KJrljeSspQI5dwUterA5r9n9V+Xr4Af?=
- =?us-ascii?Q?uBTDkLN/BS/rYlRDsmSnS2LEB+eQLtuuFysdW259LNknSTXf5xqU687CC8QQ?=
- =?us-ascii?Q?XVSIgDYBp+YApHJnz/shXNn/xEPVansg1lxtfKj4H2LR8CjmKymaXk5DJkKh?=
- =?us-ascii?Q?HFoZ6mockfMhJzGUXac/qS1ImLjdWx5J?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR07MB8838.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?ju2VbQWT3e8jm+GcVNpQAB82+FMbq39Zhl+QceAZoQIYwCcBunwCjXrSpfHj?=
- =?us-ascii?Q?dEkn+sfrL0RGxwnXUGlpSw1scn4HnNmcumPyyZyIMgEl4PwOcgs16A0weHEk?=
- =?us-ascii?Q?sMX+N9fwOu+64jjaWfZtBUs92XNzoLo3Qfnk6DaZbbGGpt51eaKWmD0i6V6T?=
- =?us-ascii?Q?z0lQhMRE5pTpJfO3kj8jxdpytxsebKNO75ACQK4CPQGEuVPtXmeN7Qa5AD71?=
- =?us-ascii?Q?p+1gR6dA6w5fGESfx49Q6TxHr8YFyGmbdpp7V1DDob7pfpzexzQ22aiS+eWI?=
- =?us-ascii?Q?t95Mm6JDZEOawbCCZxn4Xy4MVUsx74xIEAdII0PmiL20AHp+S4vvM3GVkabZ?=
- =?us-ascii?Q?UCjdF+beTut1A26+ae/ogJ6oOkjy9iGPAqfyYkuizql2tdTGQoIBObmcxsae?=
- =?us-ascii?Q?5bL+ufOpCHPCQz+uam/WYsAQbMIFm9JePv53+1GgWG/9bDuWj1TWoWReldbs?=
- =?us-ascii?Q?4BoCQ9PjAQMSu5az99x8b86rSuM+3yV2e1Lf3gQKHa1F+3OV4+E1pwLaitt4?=
- =?us-ascii?Q?+MpQ8wO4+L+CpLHwffDgdAaFBnIidcpALUpBn1owPZBBbxs3gVUzYywq7MTt?=
- =?us-ascii?Q?PNxuNOmspQLZ32S3HkHs8/QbNrrRbDG8Ci9Z8VRWw5Anq+3s0aoNbXHsAkT+?=
- =?us-ascii?Q?99uKRLTw4Fz7sAsz9KEXbb/az0zRX4b+s3VAnPLBvZqr9k5NWS5yADxahgrL?=
- =?us-ascii?Q?RR74CgaWWgENk/2h3v1w6N/ucwtSt7gI9/UjRXjYF8MIWq2EtqhXq9gOnGeU?=
- =?us-ascii?Q?cgYOPoV3IPlVfTfUFdTc17QEudkgvhews7gaWXXvb9RbPI9GGnK1fHjltWHS?=
- =?us-ascii?Q?yA4Mw+YytvFxD1jGMWuLfPCgu74RyVrzeVVXQTJGzOt/x7scH0to1RwyOpGu?=
- =?us-ascii?Q?bLXm46qAg2OzWsD0y+gLRC3xnhTOcN8aDHiLM/3LS6gI7NoJZ3Jcco04uEO0?=
- =?us-ascii?Q?y9PY+P9glcu3+CLfGVk+CcenllRRPtS/8yMicMp3dQMnffqyhPpiyQY+VE8J?=
- =?us-ascii?Q?qiyycVihYMEYdvqZXvxYpGsQdFbAfhdq4FE5S+xwceldH+31czVAR3DufFb5?=
- =?us-ascii?Q?9HW4C/jA5IS1b4O/O+wWBr8FrQUYv+oDq8HBR7Tj5NzTWfpg78rLcbe4zTU/?=
- =?us-ascii?Q?Lf0w+mUckybYbgnqqut5r5CL/kL8HWTYf1pNRYAeiryX/wpIdxOkyQxjz2v4?=
- =?us-ascii?Q?PN1SQHG+WOU3JDfkjS3Bcvd6xMhOTWF5/vUMuo3kbnjOKTXP3h/oR6TRBl45?=
- =?us-ascii?Q?rHNoRDievY9w+OHYspc5WXYTcc52xPEeH3BRW1TWzQtkLaOL/oZ2HmG3aqNx?=
- =?us-ascii?Q?7+NhBy3WJO7i21FmcnQF7NZ//rC0sHVHFiImJk5tSv9Jj/vhZoBqBdYnvv8u?=
- =?us-ascii?Q?13WFUyf3mCcmhmjqBnZGJ6Td3EHaMIi5WOg363y6tdDVda+/WDnPnEAovme5?=
- =?us-ascii?Q?cuxXv+fqhqkcNpz+n8PZXQiLxsibb0c+jsRMSOIuBOPbrO5zndRom53yuWQq?=
- =?us-ascii?Q?+NfpCnR7/XU9lPpPaAc44Kh4IZYSWdQuhRoyesVsahPzOWYlr/D0aZKMIlrK?=
- =?us-ascii?Q?6dOwnTQJtVTMmKHi8k2lQkZGeaL2RH/yXUDa9UVn?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0906E226177
+	for <linux-pci@vger.kernel.org>; Mon, 10 Mar 2025 10:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741602025; cv=none; b=LiSV3FR6ct/yq4ebirKjRkiiG2kNLKGNYBObbOypJsUDqcn5kVDImPSUnerr7EDrJOpb/lkCnUOrdNx4q82ROUpxn0FeS99nc8J07Tr/5hc+kW1WqzLLp/CLoivI3IyG/XqCmYBHo9TaK9/Ow5kP1z8nvRl7RqZ47HDxL2ZOtiQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741602025; c=relaxed/simple;
+	bh=vHd85rGDXH23aawg1xw7EexGye66SnSH7O1RoMB7ep4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sgy4h++zaoVgKdFxN9ek2PV88O+BeP59rzobqJtfaPqOymRDmQOZrRHExE0MWCyYn3jULsMfR0t30TlHtoPPvlKP1VeBjFwe+0Fx5Dx2CiHlmQ2ROssWn6zu7PrZhRTmLscy2FnMcp6SWDbALWSMtDEktUVF5Cvg1D+KA8EC3c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DXfLaQQc; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741602024; x=1773138024;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=vHd85rGDXH23aawg1xw7EexGye66SnSH7O1RoMB7ep4=;
+  b=DXfLaQQcz6t4UyYFdr0Tt0ECly6sw7+5qUm0J2E6/qntSTL0feHVHUWG
+   qiP7D+znWtY5QkhMnl64DLm0hKUIutStTQALCCHigr1DKnUD1IydD3RJ7
+   xm6OPlBrx3eLxnrXbppcK3uXMKVMbrJ7wPjqIIMXIwHSQ4FkqllhibkRC
+   gH0k2yUCoG6ITciWGBrT+givzga9ItxzjOSx2iSgCnADFTUw/is+g14GN
+   IavAtMLPWl6xCi2SN/v2TXlwHH4xN1A5D4aiOnKieSvkeyK3zTcVp6Fsh
+   Kvho6e3k1dqQRF1D8uyqVf21E+U+rPpTjoiaN69qxOpWfij4vgNuyOUHb
+   Q==;
+X-CSE-ConnectionGUID: hs7ObXbHSFKBvNrNLCPllA==
+X-CSE-MsgGUID: t6zVh+UbSRWENjNg3Z0soA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11368"; a="53219974"
+X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
+   d="scan'208";a="53219974"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2025 03:20:24 -0700
+X-CSE-ConnectionGUID: DdR5RiCOSnyYyPQVtV+voQ==
+X-CSE-MsgGUID: Rrmyc3NHQCKoZ7Rt09CoIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,235,1736841600"; 
+   d="scan'208";a="150734472"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa002.jf.intel.com with ESMTP; 10 Mar 2025 03:20:23 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1traF9-00045T-35;
+	Mon, 10 Mar 2025 10:20:19 +0000
+Date: Mon, 10 Mar 2025 18:20:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/histb] BUILD SUCCESS
+ d8dba4a635bc94d08bedcd2446034a9c661abb26
+Message-ID: <202503101808.XoViBan1-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR07MB8838.eurprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 235fb529-7f1a-4a1d-cf6c-08dd5fb91250
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2025 09:51:03.7125
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: b7k6kQAN5cLDL/lPyLhYNUKnwZAwiJ61gBck/y4Z+bJlNf7fn3ZmWpv27FUsZpwnCzhYb68MK05fGJejmEdYog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB9948
+Content-Type: text/plain; charset=us-ascii
 
-Subject: [v2 PATCH 1/1] PCI: of: avoid warning for 4 GiB non-prefetchable w=
-indows.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/histb
+branch HEAD: d8dba4a635bc94d08bedcd2446034a9c661abb26  PCI: histb: Fix an error handling path in histb_pcie_probe()
 
-According to the PCIe spec (PCIe r6.3, sec 7.5.1.3.8), non-prefetchable mem=
-ory
-supports only 32-bit host bridge windows (both base address as limit addres=
-s).
+elapsed time: 799m
 
-In the kernel there is a check that prints a warning if a
-non-prefetchable resource's size exceeds the 32-bit limit.
+configs tested: 119
+configs skipped: 3
 
-The check currently checks the size of the resource, while actually the
-check should be done on the PCIe end address of the non-prefetchable
-window.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Move the check to devm_of_pci_get_host_bridge_resources() where the PCIe
-addresses are available and use the end address instead of the size of
-the window to avoid warnings for 4 GiB windows.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                        nsim_700_defconfig    gcc-13.2.0
+arc                   randconfig-001-20250310    gcc-13.2.0
+arc                   randconfig-002-20250310    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                         lpc32xx_defconfig    clang-21
+arm                   randconfig-001-20250310    clang-21
+arm                   randconfig-002-20250310    gcc-14.2.0
+arm                   randconfig-003-20250310    gcc-14.2.0
+arm                   randconfig-004-20250310    clang-21
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250310    clang-19
+arm64                 randconfig-002-20250310    clang-17
+arm64                 randconfig-003-20250310    clang-15
+arm64                 randconfig-004-20250310    clang-17
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250310    gcc-14.2.0
+csky                  randconfig-002-20250310    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250310    clang-21
+hexagon               randconfig-002-20250310    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250310    clang-19
+i386        buildonly-randconfig-002-20250310    clang-19
+i386        buildonly-randconfig-003-20250310    clang-19
+i386        buildonly-randconfig-004-20250310    clang-19
+i386        buildonly-randconfig-005-20250310    clang-19
+i386        buildonly-randconfig-006-20250310    clang-19
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250310    gcc-14.2.0
+loongarch             randconfig-002-20250310    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250310    gcc-14.2.0
+nios2                 randconfig-002-20250310    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250310    gcc-14.2.0
+parisc                randconfig-002-20250310    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                       eiger_defconfig    clang-17
+powerpc                     ksi8560_defconfig    gcc-14.2.0
+powerpc                  mpc866_ads_defconfig    clang-21
+powerpc               randconfig-001-20250310    clang-17
+powerpc               randconfig-002-20250310    clang-21
+powerpc               randconfig-003-20250310    clang-17
+powerpc                     stx_gp3_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250310    gcc-14.2.0
+powerpc64             randconfig-002-20250310    gcc-14.2.0
+powerpc64             randconfig-003-20250310    gcc-14.2.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-21
+riscv                               defconfig    clang-19
+riscv                 randconfig-001-20250310    clang-19
+riscv                 randconfig-002-20250310    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250310    gcc-14.2.0
+s390                  randconfig-002-20250310    clang-18
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                            migor_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250310    gcc-14.2.0
+sh                    randconfig-002-20250310    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250310    gcc-14.2.0
+sparc                 randconfig-002-20250310    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250310    gcc-14.2.0
+sparc64               randconfig-002-20250310    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                    randconfig-001-20250310    gcc-12
+um                    randconfig-002-20250310    clang-17
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250310    gcc-12
+x86_64      buildonly-randconfig-002-20250310    clang-19
+x86_64      buildonly-randconfig-003-20250310    clang-19
+x86_64      buildonly-randconfig-004-20250310    clang-19
+x86_64      buildonly-randconfig-005-20250310    clang-19
+x86_64      buildonly-randconfig-006-20250310    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250310    gcc-14.2.0
+xtensa                randconfig-002-20250310    gcc-14.2.0
 
-Signed-off-by: Wannes Bouwen <wannes.bouwen@nokia.com>
----
- drivers/pci/of.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 7a806f5c0d20..6523b6dabaa7 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -400,6 +400,10 @@ static int devm_of_pci_get_host_bridge_resources(struc=
-t device *dev,
-            *io_base =3D range.cpu_addr;
-        } else if (resource_type(res) =3D=3D IORESOURCE_MEM) {
-            res->flags &=3D ~IORESOURCE_MEM_64;
-+
-+           if (!(res->flags & IORESOURCE_PREFETCH))
-+               if (upper_32_bits(range.pci_addr + range.size - 1))
-+                   dev_warn(dev, "Memory resource size exceeds max for 32 =
-bits\n");
-        }
-=20
-        pci_add_resource_offset(resources, res, res->start - range.pci_addr=
-);
-@@ -619,10 +623,6 @@ static int pci_parse_request_of_pci_ranges(struct devi=
-ce *dev,
-        case IORESOURCE_MEM:
-            res_valid |=3D !(res->flags & IORESOURCE_PREFETCH);
-=20
--           if (!(res->flags & IORESOURCE_PREFETCH))
--               if (upper_32_bits(resource_size(res)))
--                   dev_warn(dev, "Memory resource size exceeds max for 32 =
-bits\n");
--
-            break;
-        }
-    }
---=20
-2.39.3
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
