@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-23325-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23326-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2968A597DA
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 15:39:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BF61A597DE
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 15:39:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F7F43AA8AA
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 14:37:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1C7793A437C
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 14:38:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53FA422FDF0;
-	Mon, 10 Mar 2025 14:36:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 001F522FF29;
+	Mon, 10 Mar 2025 14:36:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tXsAq2m4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gUwSHGS6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205BE22FDE4;
-	Mon, 10 Mar 2025 14:36:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C197422FF20;
+	Mon, 10 Mar 2025 14:36:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741617384; cv=none; b=rkDUWAmeN2mpwWfhws36dZEwhBqhhxcVwdV4n/nsT56c5XFIib8xP7SlIo6f9r4yp1qW2mtCdMaZDGUNwjcDIT6A+1f2Z/0e80KmLKFp+YublokVtzcx6Ldqs3cVEl6ZU3QY1AFHqJUs43vL7ion1enkJ01k0xQxsKAsM9lzZXs=
+	t=1741617385; cv=none; b=czK0vWyAZYYaSNIfpCDU6Ri4VVcj5LgfrzWCAe7bXKzC3uS5rI9gf1gFyOAk9WX1cfoAmxroW+y9BoTylkQ+trwWoQszE5j1dE30Wzm5U35iXVSZNzdKbmaSRbP0kcnPiHw1GMlvMlslz6dBZDVeXyoIt/ZWk5cqh6hJe4PYN8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741617384; c=relaxed/simple;
-	bh=qTGvcryglB5hguNFz8GOHDSknwxL2JXKy7IR8+TS36E=;
+	s=arc-20240116; t=1741617385; c=relaxed/simple;
+	bh=KCX/m4hOiAUSye860YJ/D8DGpqBDZwLlEQYMy1uc+dQ=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=NtZ1AAwPgwkwchdWu+GqwQlSrjUm12PVnx2sgArzKte452vsp/yPbnq5erjXB3N0AfZgFuEUTiLI7tzvCCc+/V5N8hGHFcwV/rqIwAOD+Y8ArgGD9wWf1pSbROqltGYj6p9er2uBFY5/JF5bT21L5vcCSkmOFsTbe7STdrYzo2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tXsAq2m4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF6B8C4CEE5;
-	Mon, 10 Mar 2025 14:36:23 +0000 (UTC)
+	 Message-Id:Subject; b=m4dJwN4nTYmhVp69yBkdX5X9xfFLbz0nE+TOQFqT0WSUKke211Mbp0x7G/IdMfzFnEyhjpgFBFAA8vFvunw+JWfUhpXlpEAy/KMyOW7bkVmuPGxc+rjha7TNzf8v81QEUI47WsXdc3+0dmB46fxIKEgkALzk+7hbAXXEWKKIdT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gUwSHGS6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EE86C4CEE5;
+	Mon, 10 Mar 2025 14:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741617384;
-	bh=qTGvcryglB5hguNFz8GOHDSknwxL2JXKy7IR8+TS36E=;
+	s=k20201202; t=1741617385;
+	bh=KCX/m4hOiAUSye860YJ/D8DGpqBDZwLlEQYMy1uc+dQ=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=tXsAq2m4+e0nG3YwXpAHViPAdZc37DK0jfe6xNfqZZXO6y7iKAUyIce+4aXbfDO4z
-	 qRCymUzGv0Jsda8CZlsYS8NfzTjAP4XvQiiGF3Wcj7y6uxdUH9nCGVKfrAC3/Aeu97
-	 PlqMlfnHo9MwxW+0lP6ocMUYum31MTCMRJHS+OpPLUx7W7+AqaNIMelOlTPC1AdiFD
-	 dzCxkjHybIaZfCQs3H0F/8Vl+N/NqLLOkoSGxtwHXyzh3vxildFqQq/pvKWdVvkzdY
-	 sJ3Pv1FYpovmjk0YAEq0vTYzwin7UfJIrblFi2dvhOe9BQdVmllLyBKGjdKsFFxtGI
-	 WeCDoF1S0gHww==
-Date: Mon, 10 Mar 2025 09:36:22 -0500
+	b=gUwSHGS6T0mtG3D1DyCFQVwcDaoVe4oI2wsUULDJNXDTpz2CrJZPHQ5cN1F3hxOYZ
+	 xrbNM1OAdN3RnA9YilORj7nlpeMBL2AU2QKdBa1cHch75/jQW/YZsvv7inDu3yoQ7X
+	 D5wvJuKNNmN4JkrqljWAqQumcWSEToahN9AwwN/QJgrughvk+CEqEk1AhewuaIYMnh
+	 IRndglSyuDHdv22QpCR4TSAE6PgBsdjGFl0Utzx/FivGRmbtvjS5faU/jWSAk8TF8x
+	 MAz8WSE44M2Rs7OuuwHLujWSzj1mPrxsDkxXqVcfL9d8Qf0mAuIZPNRvgj1Z9C5dk3
+	 t/NYSVfgBzWeg==
+Date: Mon, 10 Mar 2025 09:36:24 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -51,81 +51,63 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: dmitry.baryshkov@linaro.org, linux-pci@vger.kernel.org, 
- konradybcio@kernel.org, manivannan.sadhasivam@linaro.org, 
- quic_qianyu@quicinc.com, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, lpieralisi@kernel.org, conor+dt@kernel.org, 
- linux-arm-msm@vger.kernel.org, krzk+dt@kernel.org, johan+linaro@kernel.org, 
- abel.vesa@linaro.org, neil.armstrong@linaro.org, quic_krichai@quicinc.com, 
- andersson@kernel.org, kishon@kernel.org, vkoul@kernel.org, 
- linux-kernel@vger.kernel.org, kw@linux.com, bhelgaas@google.com
+Cc: kishon@kernel.org, linux-arm-msm@vger.kernel.org, 
+ manivannan.sadhasivam@linaro.org, johan+linaro@kernel.org, 
+ abel.vesa@linaro.org, devicetree@vger.kernel.org, quic_krichai@quicinc.com, 
+ konradybcio@kernel.org, andersson@kernel.org, lpieralisi@kernel.org, 
+ linux-phy@lists.infradead.org, krzk+dt@kernel.org, 
+ dmitry.baryshkov@linaro.org, linux-kernel@vger.kernel.org, kw@linux.com, 
+ vkoul@kernel.org, conor+dt@kernel.org, quic_qianyu@quicinc.com, 
+ bhelgaas@google.com, neil.armstrong@linaro.org, linux-pci@vger.kernel.org
 To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-In-Reply-To: <20250310063103.3924525-1-quic_ziyuzhan@quicinc.com>
-References: <20250310063103.3924525-1-quic_ziyuzhan@quicinc.com>
-Message-Id: <174161712810.4185380.5718325120318406529.robh@kernel.org>
-Subject: Re: [PATCH v4 0/8] pci: qcom: Add QCS8300 PCIe support
+In-Reply-To: <20250310065613.151598-1-quic_ziyuzhan@quicinc.com>
+References: <20250310065613.151598-1-quic_ziyuzhan@quicinc.com>
+Message-Id: <174161712876.4185427.7470237631749580083.robh@kernel.org>
+Subject: Re: [PATCH v3 0/4] pci: qcom: Add QCS615 PCIe support 
 
 
-On Mon, 10 Mar 2025 14:30:55 +0800, Ziyue Zhang wrote:
-> This series adds document, phy, configs support for PCIe in QCS8300.
-> The series depend on the following devicetree.
-> 
-> PCIe SMMU:
-> https://lore.kernel.org/all/20250206-qcs8300-pcie-smmu-v1-1-8eee0e3585bc@quicinc.com/
-> 
-> Have follwing changes:
-> 	- Document the QMP PCIe PHY on the QCS8300 platform.
-> 	- Add dedicated schema for the PCIe controllers found on QCS8300.
-> 	- Add compatible for qcs8300 platform.
-> 	- Add configurations in devicetree for PCIe0, including registers, clocks, interrupts and phy setting sequence.
-> 	- Add configurations in devicetree for PCIe1, including registers, clocks, interrupts and phy setting sequence.
+On Mon, 10 Mar 2025 14:56:09 +0800, Ziyue Zhang wrote:
+> This series adds document, phy, configs support for PCIe in QCS615.
 > 
 > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 > Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
 > ---
-> Changes in v4:
-> - Add received tag
-> - Fixed compile error found by kernel test robot
-> - Link to v3: https://lore.kernel.org/lkml/202412211301.bQO6vXpo-lkp@intel.com/T/#mdd63e5be39acbf879218aef91c87b12d4540e0f7
+> Have following changes:
+> 	- Add a new Document the QCS615 PCIe Controller
+> 	- Add configurations in devicetree for PCIe, including registers, clocks, interrupts and phy setting sequence.
+> 	- Add configurations in devicetree for PCIe, platform related gpios, PMIC regulators, etc.
 > 
 > Changes in v3:
-> - Add received tag(Rob & Dmitry)
-> - Update pcie_phy in gcc node to soc dtsi(Dmitry & Konrad)
-> - remove pcieprot0 node(Konrad & Mani)
-> - Fix format comments(Konrad)
-> - Update base-commit to tag: next-20241213(Bjorn)
-> - Corrected of_device_id.data from 1.9.0 to 1.34.0.
-> - Link to v2: https://lore.kernel.org/all/20241128081056.1361739-1-quic_ziyuzhan@quicinc.com/
+> - Update qcs615 dt-bindings to fit the qcom-soc.yaml (Krzysztof & Dmitry)
+> - Removed the driver patch and using fallback method (Mani)
+> - Update DT format, keep it same with the x1e801000.dtsi (Konrad)
+> - Update DT commit message (Bojor)
+> - Link to v2: https://lore.kernel.org/all/20241122023314.1616353-1-quic_ziyuzhan@quicinc.com/
 > 
 > Changes in v2:
-> - Fix some format comments and match the style in x1e80100(Konrad)
-> - Add global interrupt for PCIe0 and PCIe1(Konrad)
-> - split the soc dtsi and the platform dts into two changes(Konrad)
-> - Link to v1: https://lore.kernel.org/all/20241114095409.2682558-1-quic_ziyuzhan@quicinc.com/
+> - Update commit message for qcs615 phy
+> - Update qcs615 phy, using lowercase hex
+> - Removed redundant function
+> - split the soc dtsi and the platform dts into two changes
+> - Link to v1: https://lore.kernel.org/all/20241118082619.177201-1-quic_ziyuzhan@quicinc.com/
 > 
-> Ziyue Zhang (8):
->   dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the QCS8300 QMP
->     PCIe PHY Gen4 x2
->   phy: qcom-qmp-pcie: add dual lane PHY support for QCS8300
->   dt-bindings: PCI: qcom,pcie-sa8775p: document qcs8300
->   PCI: qcom: Add QCS8300 PCIe support
->   arm64: dts: qcom: qcs8300: enable pcie0
->   arm64: dts: qcom: qcs8300: enable pcie0 interface
->   arm64: dts: qcom: qcs8300: enable pcie1
->   arm64: dts: qcom: qcs8300: enable pcie1 interface
+> Krishna chaitanya chundru (4):
+>   dt-bindings: PCI: qcom: Document the QCS615 PCIe Controller
+>   arm64: dts: qcom: qcs615: enable pcie
+>   arm64: dts: qcom: qcs615-ride: Enable PCIe interface
+>   PCI: qcom: Add support for QCS615 SoC
 > 
->  .../bindings/pci/qcom,pcie-sa8775p.yaml       |   7 +-
->  .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |   2 +
->  arch/arm64/boot/dts/qcom/qcs8300-ride.dts     |  80 +++++
->  arch/arm64/boot/dts/qcom/qcs8300.dtsi         | 289 +++++++++++++++++-
+>  .../bindings/pci/qcom,qcs615-pcie.yaml        | 160 ++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/qcs615.dtsi          | 142 ++++++++++++++++
+>  arch/arm64/boot/dts/qcom/qcs8300-ride.dts     |  40 +++++
 >  drivers/pci/controller/dwc/pcie-qcom.c        |   1 +
->  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      |  89 ++++++
->  6 files changed, 465 insertions(+), 3 deletions(-)
+>  4 files changed, 343 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/qcom,qcs615-pcie.yaml
 > 
 > 
-> base-commit: cd3215bbcb9d4321def93fea6cfad4d5b42b9d1d
+> base-commit: c674aa7c289e51659e40dda0f954886ef7f80042
 > --
-> 2.34.1
+> 2.25.1
 > 
 > 
 > 
@@ -145,21 +127,31 @@ make sure dt-schema is up to date:
   pip3 install dtschema --upgrade
 
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250310063103.3924525-1-quic_ziyuzhan@quicinc.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250310065613.151598-1-quic_ziyuzhan@quicinc.com:
 
-arch/arm64/boot/dts/qcom/qcs8300.dtsi:714.22-847.5: ERROR (phandle_references): /soc@0/pci@1c00000: Reference to non-existent node or label "pcie_smmu"
-  also defined at arch/arm64/boot/dts/qcom/qcs8300-ride.dts:288.8-296.3
-arch/arm64/boot/dts/qcom/qcs8300.dtsi:714.22-847.5: ERROR (phandle_references): /soc@0/pci@1c00000: Reference to non-existent node or label "pcie_smmu"
-  also defined at arch/arm64/boot/dts/qcom/qcs8300-ride.dts:288.8-296.3
-arch/arm64/boot/dts/qcom/qcs8300.dtsi:880.22-966.5: ERROR (phandle_references): /soc@0/pci@1c10000: Reference to non-existent node or label "pcie_smmu"
-  also defined at arch/arm64/boot/dts/qcom/qcs8300-ride.dts:305.8-313.3
-arch/arm64/boot/dts/qcom/qcs8300.dtsi:880.22-966.5: ERROR (phandle_references): /soc@0/pci@1c10000: Reference to non-existent node or label "pcie_smmu"
-  also defined at arch/arm64/boot/dts/qcom/qcs8300-ride.dts:305.8-313.3
-ERROR: Input tree has errors, aborting (use -f to force output)
-make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/qcom/qcs8300-ride.dtb] Error 2
-make[2]: *** [scripts/Makefile.build:461: arch/arm64/boot/dts/qcom] Error 2
+arch/arm64/boot/dts/qcom/qcs615.dtsi:1050.3-1054.33: Warning (interrupt_map): /soc@0/pcie@1c08000:interrupt-map: Cell 12 is not a phandle(0)
+arch/arm64/boot/dts/qcom/qcs615-ride.dtb: pcie@1c08000: compatible: 'oneOf' conditional failed, one must be fixed:
+	['qcom,pcie-sm8550', 'qcom,qcs615-pcie'] is too long
+	'qcom,pcie-sm8550' is not one of ['qcom,sar2130p-pcie', 'qcom,pcie-sm8650']
+	'qcom,pcie-sm8550' was expected
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8550.yaml#
+arch/arm64/boot/dts/qcom/qcs615-ride.dtb: pcie@1c08000: clocks: [[44, 51], [44, 53], [44, 55], [44, 57], [44, 58], [42, 0]] is too short
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8550.yaml#
+arch/arm64/boot/dts/qcom/qcs615-ride.dtb: pcie@1c08000: clock-names: ['aux', 'cfg', 'bus_master', 'bus_slave', 'slave_q2a', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8550.yaml#
+arch/arm64/boot/dts/qcom/qcs615-ride.dtb: pcie@1c08000: clock-names:5: 'ddrss_sf_tbu' was expected
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8550.yaml#
+arch/arm64/boot/dts/qcom/qcs615-ride.dtb: phy@1c0e000: clocks: [[44, 59], [44, 53], [44, 54], [44, 50], [44, 56]] is too short
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+arch/arm64/boot/dts/qcom/qcs615-ride.dtb: phy@1c0e000: clock-names: ['aux', 'cfg_ahb', 'ref', 'refgen', 'pipe'] is too short
+	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
+Error: arch/arm64/boot/dts/qcom/qcs8300-ride.dts:288.1-6 Label or path pcie not found
+Error: arch/arm64/boot/dts/qcom/qcs8300-ride.dts:298.1-10 Label or path pcie_phy not found
+FATAL ERROR: Syntax error parsing input tree
+make[3]: *** [scripts/Makefile.dtbs:131: arch/arm64/boot/dts/qcom/qcs8300-ride.dtb] Error 1
+make[2]: *** [scripts/Makefile.build:465: arch/arm64/boot/dts/qcom] Error 2
 make[2]: Target 'arch/arm64/boot/dts/qcom/qcs8300-ride.dtb' not remade because of errors.
-make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1462: qcom/qcs8300-ride.dtb] Error 2
+make[1]: *** [/home/rob/proj/linux-dt-testing/Makefile:1464: qcom/qcs8300-ride.dtb] Error 2
 make: *** [Makefile:251: __sub-make] Error 2
 make: Target 'qcom/apq8096-ifc6640.dtb' not remade because of errors.
 make: Target 'qcom/msm8916-samsung-j3ltetw.dtb' not remade because of errors.
