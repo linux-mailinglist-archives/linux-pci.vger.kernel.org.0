@@ -1,188 +1,123 @@
-Return-Path: <linux-pci+bounces-23355-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23356-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59360A5A1A7
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 19:07:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF5E9A5A2B5
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 19:23:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D32991893F28
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 18:07:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B09443A6092
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 18:22:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BCD8233D72;
-	Mon, 10 Mar 2025 18:07:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0FF0233D89;
+	Mon, 10 Mar 2025 18:22:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lkfc7WqT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gQj3H104"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CFB7226D17;
-	Mon, 10 Mar 2025 18:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744542309BD;
+	Mon, 10 Mar 2025 18:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741630031; cv=none; b=iP0mHF20f0PBmh4Cpqe8jsilntUMXpKI9VZE4g7+K/zrTZSdPLlnTdDADgwIbhAt565N6iYGYP+vaTfIEoDr7P8fBv/BZ+E/y9KKG1fsFiDIpwX6L56Ia4E76XfkALEfiJkDYQl+NnO1MWQiAy2TRnnuhCX60nfrYAI8/JB1koQ=
+	t=1741630957; cv=none; b=cx/nVWrgoHvcsPSj+f3E2Q/JamrfzSU73wFo9AC93uykyRbhz/ebgUI6S6BX58xRtGDGRRTjwgav35NoQS7OTk/WbfKc+qknrooaEShv4sSViEh9D1wnTFfHX/Rf8mCBPzhJxDWAGvwLdBBc9x9srjq4cuG/7rg3F4p0yFTeMyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741630031; c=relaxed/simple;
-	bh=CA9EMsdy0ESHhNUh8YAZSmW8LOgcKOF7hv3RuqiayFY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VlvvO4KvSwuNI7wmFqDPJu5PoTsb1MlA7Ieqip+74ReoRp72wv4/xmqbCeQExzUtW5reFkNr9wEVWE3bPSJ5pW5GTqWZbdCTCIoUcrE2P/52IOghPZYfV0FhBGbeiDLx5nqRcqCaNwqYh9l409dNH7X+9oiDed+HAVwNLGopZiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lkfc7WqT; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id AEB1B2038F50;
-	Mon, 10 Mar 2025 11:07:08 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AEB1B2038F50
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741630029;
-	bh=E13Z4tIU2QebiQ+fHYjb3GAytcpWMD9ZkrlSMteHVzY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lkfc7WqTTy9o/NtCmsNne2YvNu14qrm7uDsjvvXkQk5sfBSt0aW2JUGCLGbi53VQm
-	 x7EtA7dAZvpUOAdKpa+WyJR+DDJq7wyFqIlErDY/ZzM4lWwuea+zOldXaRC8xhF7xm
-	 s2kAl+3x2CXQIATrHNeR52YStsliYwkkKncXNNUo=
-Message-ID: <ba6b906d-04a2-423d-a527-9ef7ab1dccf2@linux.microsoft.com>
-Date: Mon, 10 Mar 2025 11:07:08 -0700
+	s=arc-20240116; t=1741630957; c=relaxed/simple;
+	bh=fognwa1FjofLcfAc8it2UjirQfh9kt0Vts7CK1wQOWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SuSHq8dWCrVqtIhXtIenUGMd3WE9kHsG9w2adfT4/q4qzXLlZl0OoLl72fLsD/x+3tDAl0ASW68G2WEo/mfZt4SPTNsG/yzmACGiZqC/SYXdKrHPsqaC/eAqvTFp7YyN32bgPL2KCJBjSf1PyJQMtCtNcR4Iw5cipslBG8/GnXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gQj3H104; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04594C4CEED;
+	Mon, 10 Mar 2025 18:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741630957;
+	bh=fognwa1FjofLcfAc8it2UjirQfh9kt0Vts7CK1wQOWQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gQj3H104rYmuBRDm/aE9h6GqMYat86OyiEImVZB3C5K2EqfHOdBAgyHynqaLqCCPZ
+	 MJiENzw1ahYUauN1oiRfPKorP/iAp7zwthft8PfPYh9p5DH7IOOn9wxsElQ1zOw6uT
+	 IZix7when9A1nn/+fEBkdUaopDCYwLWWu0g5kkMuMP380dYBfm/JVsyE8tkys6sJvD
+	 FcPx9hi69XM3DOGpzrAQxInbrDbe3Z2oVL/BOPF0bVIZHnYqynDIzY+GsPJp0sS/gi
+	 6vqRVKM3oX4gqIFO/B8tlcLhitnb1kpVLPl/didma4hYni1iImmurQEPrSCMgS/PBo
+	 uoysoLZxi0t7A==
+Date: Mon, 10 Mar 2025 19:22:33 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-pci@vger.kernel.org,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [pci:endpoint-test 16/18]
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c:316:3: error: field designator
+ 'intx_capable' does not refer to any field in type 'const struct
+ dw_pcie_ep_ops'
+Message-ID: <Z88t6TEjFCHDznmb@ryzen>
+References: <202503110151.vQXf5yof-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v5 07/11] dt-bindings: microsoft,vmbus: Add
- interrupts and DMA coherence
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
- catalin.marinas@arm.com, conor+dt@kernel.org, dave.hansen@linux.intel.com,
- decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
- joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com,
- lenb@kernel.org, lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
- mark.rutland@arm.com, maz@kernel.org, mingo@redhat.com,
- oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org,
- ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
- tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
- yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
- apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-8-romank@linux.microsoft.com>
- <20250310-demonic-ferret-of-judgment-5dbdbf@krzk-bin>
- <c7f9d861-f617-4064-8c98-2ace06e9c25e@linux.microsoft.com>
- <09d4966a-5804-40a4-9c5f-356a954a7704@kernel.org>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <09d4966a-5804-40a4-9c5f-356a954a7704@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202503110151.vQXf5yof-lkp@intel.com>
 
+Hello Krzysztof,
 
-
-On 3/10/2025 10:40 AM, Krzysztof Kozlowski wrote:
-> On 10/03/2025 18:05, Roman Kisel wrote:
->>
->>
->> On 3/10/2025 2:28 AM, Krzysztof Kozlowski wrote:
->>> On Fri, Mar 07, 2025 at 02:02:59PM -0800, Roman Kisel wrote:
->>>> To boot on ARM64, VMBus requires configuring interrupts. Missing
->>>> DMA coherence property is sub-optimal as the VMBus transations are
->>>> cache-coherent.
->>>>
->>>> Add interrupts to be able to boot on ARM64. Add DMA coherence to
->>>> avoid doing extra work on maintaining caches on ARM64.
->>>
->>> How do you add it?
->>>
->>
->> I added properties to the node. Should I fix the description, or I am
->> misunderstanding the question?
+On Tue, Mar 11, 2025 at 02:02:12AM +0800, kernel test robot wrote:
+> Hi Niklas,
 > 
-> I saw interrupts in the schema, but I did not see dma-coherence. I also
-> did not see any DTS patches here, so I don't understand what node you
-> are referring to.
+> FYI, the error/warning was bisected to this commit, please ignore it if it's irrelevant.
 > 
-
-I will refer to talks, example-bindings, writing-schema you've suggested
-to waste your time less. It appears there is some fundamental flaw in my
-understanding of how these YAML files work so much so that I cannot even
-write a commit description that can be understood, for the 5th time in
-the row, sorry about that.
-
->>
->>>>
->>>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->>>> ---
->>>>    .../devicetree/bindings/bus/microsoft,vmbus.yaml          | 8 +++++++-
->>>>    1 file changed, 7 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
->>>> index a8d40c766dcd..3ab7d0116626 100644
->>>> --- a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
->>>> +++ b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
->>>> @@ -28,13 +28,16 @@ properties:
->>>>    required:
->>>>      - compatible
->>>>      - ranges
->>>> +  - interrupts
->>>>      - '#address-cells'
->>>>      - '#size-cells'
->>>>    
->>>> -additionalProperties: false
->>>> +additionalProperties: true
->>>
->>> This is neither explained in commit msg nor correct.
->>>
->>
->> Not explained, as there is no good explanation as described below.
->>
->>> Drop the change. You cannot have device bindings ending with 'true'
->>> here - see talks, example-bindings, writing-schema and whatever resource
->>> is there.
->>>
->>
->> Thanks, I'll put more effort into bringing this into a better form!
->> If you have time, could you comment on the below?
->>
->> The Documentation says
->>
->>     * additionalProperties: true
->>       Rare case, used for schemas implementing common set of properties.
->> Such schemas are supposed to be referenced by other schemas, which then
->> use 'unevaluatedProperties: false'.  Typically bus or common-part schemas.
->>
->> This is a bus so I added that line to the YAML, and I saw it in many
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git endpoint-test
+> head:   d87a0e7ac55245a3f75ca5c646ffdf0cfa36e749
+> commit: da8628c06a7f08cb3402d02040d7a6195949772c [16/18] PCI: dw-rockchip: Endpoint mode cannot raise INTx interrupts
+> config: s390-randconfig-001-20250311 (https://download.01.org/0day-ci/archive/20250311/202503110151.vQXf5yof-lkp@intel.com/config)
+> compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250311/202503110151.vQXf5yof-lkp@intel.com/reproduce)
 > 
-> If this is a bus, then where is schema using it for
-> bus-attached-devices? You cannot have bus without devices.
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202503110151.vQXf5yof-lkp@intel.com/
 > 
-> You *must* fulfill that part:
-> "Such schemas are supposed to be referenced by other schemas, which then"
+> All errors (new ones prefixed by >>):
 > 
-> instead of calling it bus...
+> >> drivers/pci/controller/dwc/pcie-dw-rockchip.c:316:3: error: field designator 'intx_capable' does not refer to any field in type 'const struct dw_pcie_ep_ops'
+>            .intx_capable = false,
+>             ^
+>    drivers/pci/controller/dwc/pcie-dw-rockchip.c:530:33: warning: shift count >= width of type [-Wshift-count-overflow]
+>            dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+>                                           ^~~~~~~~~~~~~~~~
+>    include/linux/dma-mapping.h:73:54: note: expanded from macro 'DMA_BIT_MASK'
+>    #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+>                                                         ^ ~~~
+>    1 warning and 1 error generated.
 > 
-
-It is modeled as a bus in the kernel:
-https://www.kernel.org/doc/html/latest/virt/hyperv/vmbus.html
-
-> Please upstream bindings for the bus devices and extend the example here
-> with these devices.
-
-The set of synthetic devices that reside on the bus isn't fixed, and
-they don't require description neither in ACPI nor in DT as
-the devices negotiate their MMIO regions through the hyperv driver.
-
-Perhaps, it is not as much bus as expected by the YAML files.
-
 > 
-> Or this is not bus (calling something vmpony does not make it a pony).
+> vim +316 drivers/pci/controller/dwc/pcie-dw-rockchip.c
 > 
- > > Best regards,
-> Krzysztof
+>    313	
+>    314	static const struct dw_pcie_ep_ops rockchip_pcie_ep_ops = {
+>    315		.init = rockchip_pcie_ep_init,
+>  > 316		.intx_capable = false,
+>    317		.raise_irq = rockchip_pcie_raise_irq,
+>    318		.get_features = rockchip_pcie_get_features,
+>    319	};
+>    320	
+>
 
--- 
-Thank you,
-Roman
+This is not how the patch that I sent out looked like.
 
+See:
+https://lore.kernel.org/all/20250310111016.859445-14-cassel@kernel.org/
+
+My guess is that you modified it before applying
+(without adding [kwilczynski: ]).
+If you undo your modifications, it should compile :)
+
+
+Kind regards,
+Niklas
 
