@@ -1,191 +1,142 @@
-Return-Path: <linux-pci+bounces-23383-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23384-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B250A5A616
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 22:21:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94199A5A61B
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 22:21:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 116B61894133
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 21:21:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 736C3189440A
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 21:21:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A6DA1DFE11;
-	Mon, 10 Mar 2025 21:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="C1hTxUvP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iyQRqWqS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E007A1E0B66;
+	Mon, 10 Mar 2025 21:21:29 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from flow-b3-smtp.messagingengine.com (flow-b3-smtp.messagingengine.com [202.12.124.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40FD1DD525;
-	Mon, 10 Mar 2025 21:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479C71DE3BA;
+	Mon, 10 Mar 2025 21:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741641670; cv=none; b=Ca8pQYcM3Rcy9U27Gs19Xz7c2Vgff/ACtWj3QI/RUsBDyTRquUNSTtXVsFh+MKeWl/iJHTOe5qTDQjLXuSeAnDcGgtROOre3WS8pehgO2/ZEvt4iBaspsvJ17RRRqO2PfBSRtTseRmdh5+Fl0VLYo8K28RKO5C9NcvEe4ZcwwDI=
+	t=1741641689; cv=none; b=me+BG847rfpfBhbDV14bLBX9ZxnvGwNRXMIOPpaR8AR8BxkM7v33tVo6uEgIOWxCajoZXBHAJZ2pFkZvi2k4/MrXMAbsnhW/LTx4vU5Iin21dVYQuc/KECu2oQmmZVcrpqD3D9gtzv3N5/UdWtTKBZ/7dQR4AmDXj6p0EdbWjDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741641670; c=relaxed/simple;
-	bh=b+pL5tPz/STvzduyR8tAJGIpWCTLY7xMzNfVgLy+oho=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=CXaIAdATkW+xCnbdn6sfgOJg+EBk6pZuCGK0Zm3oaVPKcejZs5FnfP4ySvDQghtfeef7yOhwG+ei9VDX5eyS8PNfRRV8U0jH2dD45m5pw2LBeNZkEaKOvVV/+ZR4qUqbFbnWk8PYRLp+FHLjdlwlPPLW22DRJdj1N/7JhUVQG/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=C1hTxUvP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iyQRqWqS; arc=none smtp.client-ip=202.12.124.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailflow.stl.internal (Postfix) with ESMTP id 939871D41B86;
-	Mon, 10 Mar 2025 17:21:06 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Mon, 10 Mar 2025 17:21:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1741641666;
-	 x=1741648866; bh=E4HKlxVjhIt2MzhfvIo5qMqiVK9k8HOzhVxjjAVbOk0=; b=
-	C1hTxUvPA3Fb5iBKVyaB9S0GfSvuHye+iANMUYbqz2WEwKh+PjF2Ig9bEJQVXL8W
-	kdPPlIgBhaXBR9cfmZ0PE2Am21WLFpDOSC8cX4CRdGVkwDQwLrkIeM5p0hpYbe13
-	dTxmdFfOvUlpJHQMFzsNCj740xYgX3HO88YG9+874W9W3ONJKWU3JnOvcNKUU/4u
-	knNl6Vi+hohsFjz5X2QG4iDQUTaDl2o6gl+/SgTvwh+IxFXmzMQL8wdboNLh14A/
-	aarOTRDHRANpQ7jaacfHOdK2NKw4xhhoPCgcdkDHdrFJ9fRJG33i70Yr/2EzUjdG
-	KxdDzQVgaqrYOM7VHlF73A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1741641666; x=
-	1741648866; bh=E4HKlxVjhIt2MzhfvIo5qMqiVK9k8HOzhVxjjAVbOk0=; b=i
-	yQRqWqSGI6Kt3YUKxrmI/FlE9b26ffQwpxP94u4VFt4R8vOueVcX3AoCZMSsXlsf
-	XL00t5hz0HKoZQiWWgBfXmCi3KczhguDU8kRNtshw4wzTjqLWf4R4c8bJijn8DFl
-	5yAnjsGkIz+NVAjzqe0v8OCUxD15L05INUOiZ6x/J4ac0ZBqVNbvzgRHbmj5t9Ba
-	3j6HgC/97L/dQ3YDHejXKY/xvQz/hLUQihBs2DCB1G8au5Q5PvHhOBLiHxE0gHPx
-	sXxfmR9U/Us8LYPKZcy0PiBDAB8ri/wnT4GnQ5IYNOMthafCCbqTTLAJKEw4GxLS
-	2eWJA70Uin2M61IfU8uCQ==
-X-ME-Sender: <xms:wVfPZ2JStQfl-VXaWTJ_QuMzQ3ObrIeeleBzBmQxfF4Du39ikrBCLg>
-    <xme:wVfPZ-I7hmahTLPWORKx4-GCw39p0HhoYbrARohYV_QOvY1Fl0dBQ8OowZ2_vQTBT
-    5KFklbFDw_9R3vrcUA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduvddtgeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    geefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
-    dprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghp
-    thhtohepjhhovgihrdhgohhulhihsegrrhhmrdgtohhmpdhrtghpthhtohepmhgrrhhkrd
-    hruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtohepshhuuggvvghprdhhohhllhgr
-    segrrhhmrdgtohhmpdhrtghpthhtohepshhuiihukhhirdhpohhulhhoshgvsegrrhhmrd
-    gtohhmpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphht
-    thhopeihuhiivghnghhhuhhisehhuhgrfigvihdrtghomhdprhgtphhtthhopegtohhnoh
-    hrodgutheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:wVfPZ2vjrGidv7HfBCACY-yGDYl3EfwXvQhqp8jKyTCtNAEsgJj2fQ>
-    <xmx:wVfPZ7ZidpufvcbZMZOogXc8KetgC1YVnS_aBECkUMRpwdLI0iDxwg>
-    <xmx:wVfPZ9ZPI552vps1YoMhGOloTLMV3PrxFhTqMlOyR0s_NrkTI0YDFg>
-    <xmx:wVfPZ3De8byh2Bv17Og3Rg_scmCx5lM1v133qfZGoZiEq96RKyOTzg>
-    <xmx:wlfPZ-pxMLQep5aMAHOoE69Tz3LFoYiwRsd_W-SJ689j4Q6-j_dfe3KI>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2BEF92220072; Mon, 10 Mar 2025 17:21:05 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1741641689; c=relaxed/simple;
+	bh=55gYSMCeb2lNFNYGnplbiMul5XobGAuSXz2YriBA5Co=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lm4p6maahm36pvPruZlFSLVx54BbBoM2jW9MQQpDFwmMASVrsf/ujRwiZRFwMnw3v4vE3WELYN+1dNLOejGdG+raj/DlSYQiTOzXrNGxyj01fomdYsSYPxVJitGMM1iqD0QQI7sG9ZyRgo8bXW3vwwVn+jIOMM48MzqZMufDhYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2239c066347so82744765ad.2;
+        Mon, 10 Mar 2025 14:21:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741641687; x=1742246487;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sMtQuAslL24bZk7YWf+WGgK/9+eBDYJFSWGMHnXsle0=;
+        b=TGy+E0WP/edFKpvLnYe+drcvoIZ4ewkgpMfHDhPaoARQijnI4G7gjfD5/cwCArzCNN
+         xeift7UkqaBs5Y79wqUvsFXKaxzyyLW5N4qMbmojV20RJr978+edN4l1dDbZCaWCvsSK
+         QRalE4HDniF+7QoSCL7JJG/2MP8ImgurNJ5UAQEJzxZ1EXZyTnmSY38+WxSS/6QNNl4h
+         l+VOB7MVotq/6ED6d9ZVmORbFAxQDDfxR4J2eYX7HlYHhL/NqVly+GoR8f2IcX10wkda
+         D+QB7LAKdxsHYHxBI+kTeNMi7JiPlTfZ0kIpwS5OcdR1caN8m/EDFFjq9Sou+2fazqB3
+         HCPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUhjC1+GoAl4KjDj5+0ig3Fjt5KnaDgABeC1JnuvyuyBruoYXR1RFVpHlCHBKVimKOVvDvPQ22adIIb@vger.kernel.org, AJvYcCVINCTYNil+6wyRGUiBIDundke3BWHEwHoY272RefAmDS6xGseLZ2dNZD9TPwaFEGnt+EJHCrDIdSYMTX7+@vger.kernel.org, AJvYcCWdklPMMjwD0a+waKBfqhdWZGsQ92BguRUvh9TCHXXi9pgaceA++gmLwPPM4+BpH+UVjfvG9byhen+P@vger.kernel.org, AJvYcCXIB/y0t/Ru65X7QMbue1fPMz3Qe7jEyDyf/pNPh4D6JUuqMuOCCT13fwlOcTGOoaPPt+YBF7HDgNXNxg==@vger.kernel.org, AJvYcCXKagc49jved4a/1qciS8ALIDmanDE92VmkujYamYjnYs4mfdxXhEWjGmNRBp3h4Cs84qtEs3K8gDwv@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsXJtpUDYVNqFZ5OBxt1pqXTSaOCoLuYzQHZcTXGaYk8U2FkdF
+	TqF/UY+qVF/g0Oo9yaqvWkmZ2emcBAX2GLX49CW2pw5KDpO03ZpRtZ+NeZcvz4Y=
+X-Gm-Gg: ASbGncvpncpq3LbJYqEsgM5xd59xxSf0luw8GKouPKbtEaqee8p9o0+j8hbrH4Io1+Q
+	vOPghoivtrkAj5go4/e4pjOxhxT/i2yvUVwjPrBRZ3wvOyvkoC4XwygSPeImBpHfhI0gNeDnE9+
+	t4KwiqBoN21xl4uDEb4oZdToqVPqGvBzbvGp5EqDfvd+LQBBn9YyaZ4UJb9GJoDdYdeMyOX/mtR
+	Z+q+arcMAFbjh1TwASjvggQAqQ2ozu3Hevj+L97rQMM2W9pBCvo/laqohKxrsVwhXSIRcBdKZrt
+	KLQVG5oj6IJuNh+mCEVhjNCVAIRBGcswm5naac65+P7Xlgt0+SNZ5AD/1xd30prip6iLnCd5n6C
+	i28o=
+X-Google-Smtp-Source: AGHT+IHnwh7FGubECk4Ug2ue3ZTg7THVvARHNItmJN6zeeu4Ty1YJPgJTQfB1QWA0ZY2KF85fbkAsA==
+X-Received: by 2002:a17:903:40cb:b0:224:c47:cb7 with SMTP id d9443c01a7336-22428505f24mr254867065ad.0.1741641687444;
+        Mon, 10 Mar 2025 14:21:27 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-224109df232sm83277565ad.41.2025.03.10.14.21.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Mar 2025 14:21:27 -0700 (PDT)
+Date: Tue, 11 Mar 2025 06:21:25 +0900
+From: Krzysztof Wilczynski <kw@linux.com>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v7 03/11] dt-bindings: pci: Add common schema for devices
+ accessible through PCI BARs
+Message-ID: <20250310212125.GB2377483@rocinante>
+References: <cover.1738963156.git.andrea.porta@suse.com>
+ <c0acc51a7210fb30cae7b26f4ad1f0449beed95e.1738963156.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 10 Mar 2025 22:20:41 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Michael Kelley" <mhklinux@outlook.com>,
- "Roman Kisel" <romank@linux.microsoft.com>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "Borislav Petkov" <bp@alien8.de>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "Dexuan Cui" <decui@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "Joey Gouly" <joey.gouly@arm.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>, "Len Brown" <lenb@kernel.org>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
- "Mark Rutland" <mark.rutland@arm.com>, "Marc Zyngier" <maz@kernel.org>,
- "Ingo Molnar" <mingo@redhat.com>,
- "Oliver Upton" <oliver.upton@linux.dev>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- "Rob Herring" <robh@kernel.org>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- "Sudeep Holla" <sudeep.holla@arm.com>,
- "Suzuki K Poulose" <suzuki.poulose@arm.com>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Wei Liu" <wei.liu@kernel.org>,
- "Will Deacon" <will@kernel.org>, "Zenghui Yu" <yuzenghui@huawei.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-Cc: "apais@microsoft.com" <apais@microsoft.com>,
- "benhill@microsoft.com" <benhill@microsoft.com>,
- "bperkins@microsoft.com" <bperkins@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>
-Message-Id: <119cfb59-d68b-4718-b7cb-90cba67827e8@app.fastmail.com>
-In-Reply-To: 
- <BN7PR02MB41488C06B7E42830C700318DD4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-4-romank@linux.microsoft.com>
- <e0f81049-688e-4f53-a002-5d246281bf8d@app.fastmail.com>
- <BN7PR02MB41488C06B7E42830C700318DD4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
-Subject: Re: [PATCH hyperv-next v5 03/11] Drivers: hv: Enable VTL mode for arm64
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c0acc51a7210fb30cae7b26f4ad1f0449beed95e.1738963156.git.andrea.porta@suse.com>
 
-On Mon, Mar 10, 2025, at 22:01, Michael Kelley wrote:
-> From: Arnd Bergmann <arnd@arndb.de> Sent: Saturday, March 8, 2025 1:05 PM
->> >  config HYPERV_VTL_MODE
->> >  	bool "Enable Linux to boot in VTL context"
->> > -	depends on X86_64 && HYPERV
->> > +	depends on (X86_64 || ARM64)
->> >  	depends on SMP
->> > +	select OF_EARLY_FLATTREE
->> > +	select OF
->> >  	default n
->> >  	help
->> 
->> Having the dependency below the top-level Kconfig entry feels a little
->> counterintuitive. You could flip that back as it was before by doing
->> 
->>       select HYPERV_VTL_MODE if !ACPI
->>       depends on ACPI || SMP
->> 
->> in the HYPERV option, leaving the dependency on HYPERV in
->> HYPERV_VTL_MODE.
->
-> I would argue that we don't ever want to implicitly select
-> HYPERV_VTL_MODE because of some other config setting or
-> lack thereof.  VTL mode is enough of a special case that it should
-> only be explicitly selected. If someone omits ACPI, then HYPERV
-> should not be selectable unless HYPERV_VTL_MODE is explicitly
-> selected.
->
-> The last line of the comment for HYPERV_VTL_MODE says
-> "A kernel built with this option must run at VTL2, and will not run
-> as a normal guest."  In other words, don't choose this unless you
-> 100% know that VTL2 is what you want.
+Hello,
 
-It sounds like the latter is the real problem: enabling a feature
-should never prevent something else from working. Can you describe
-what VTL context is and why it requires an exception to a rather
-fundamental rule here? If you build a kernel that runs on every
-single piece of arm64 hardware and every hypervisor, why can't
-you add HYPERV_VTL_MODE to that as an option?
+[...]
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d45c88955072..af2e4652bf3b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -19752,6 +19752,7 @@ RASPBERRY PI RP1 PCI DRIVER
+>  M:	Andrea della Porta <andrea.porta@suse.com>
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+> +F:	Documentation/devicetree/bindings/pci/pci-ep-bus.yaml
+>  F:	Documentation/devicetree/bindings/pinctrl/raspberrypi,rp1-gpio.yaml
+>  F:	include/dt-bindings/clock/rp1.h
+>  F:	include/dt-bindings/misc/rp1.h
 
-      Arnd
+I would be happy to pick this via the PCI tree as per the standard
+operating procedure.  However, the MAINTAINERS changes do not exist
+for us yet, and are added in the first patch of the series, which is
+not ideal.
+
+I can add the missing dependency manually, but that would cause issues
+for linux-next tree, which is also not ideal.
+
+I saw some review feedback, as such, when you are going to be sending
+another version, can you make MAINTAINERS changes to be the last patch,
+perhaps.  Basically, something standalone that perhaps whoever will pick
+the misc patch could also pick and apply at the same time.
+
+Alternatively, someone else picking up the PCI dt-bindings would work, too.
+
+Your thoughts?
+
+Thank you!
+
+	Krzysztof
 
