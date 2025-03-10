@@ -1,67 +1,63 @@
-Return-Path: <linux-pci+bounces-23295-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23296-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 627C9A58FA3
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 10:28:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5730CA58FB6
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 10:32:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EBDA17A48EE
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 09:27:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CCA7C188FDAD
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 09:32:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 903C521D599;
-	Mon, 10 Mar 2025 09:28:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B85C22333B;
+	Mon, 10 Mar 2025 09:31:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="moRUW5ZQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HpR+Y2Lt"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485F82253A7;
-	Mon, 10 Mar 2025 09:28:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B640EAC7;
+	Mon, 10 Mar 2025 09:31:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741598929; cv=none; b=jT9sAHGBtI88I7itggDIKZ6dh/DqlW21K/ebQk1hQKQ+SwSripX9ia6xOgpXgkJNq9FH0qR/zfn1/2ikNdLhumkQt1E9NrOnZGxv76V4RoVlR8PLMvfFVam8yZUpRlsLj7u/6pm/tk/RUa4uo12jKRC1yMBeqZ8kOI0Sdl8sg+k=
+	t=1741599114; cv=none; b=hK9bTIeGCUuqdHoBuSelnnTNshrn97QK1oaHerG3skEQOBRLz00ayRpg0QUrAzitJ0GyopLzEwqgbtET3G7116j1y+4ubL1GcM96RdEJc4jz0QNdeqcClYVTgI/dUIhGP+iZg+MOWdVEnFPPmjQbEi/SEBy9Op1ojJxNzejQf8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741598929; c=relaxed/simple;
-	bh=5mwoTd08jCfdUhN4DoQ/o5bTO+/4KPbpIou7ZLK5CwE=;
+	s=arc-20240116; t=1741599114; c=relaxed/simple;
+	bh=Iz8IZsYghrJMpQWOE7HLH833OewDZeMFRdw2jLto4lY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nzRqZHjxEwhj8LswIctDdtLWV4r6ogvy2p60FQ08raHR6xqCCSpi2RDJbu6nOMrSBBxufMCO6MhhbzJ9Cr8iU5qn3yAhB3K+/Ddzjl76JU96TqmV9kSBG0RtJXWro40nuc9a1esClJaV7BJ8NO83pGEtnBJiblgmcfK6EJ37jPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=moRUW5ZQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3263C4CEE5;
-	Mon, 10 Mar 2025 09:28:47 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=FQtjoMslEQXNShKtK8B0nc6gcTHjrE3tN9lioFwZJZlP7jlf7kz1xjTzLmxTSVoAd/fIYseMOi7IQTpUDWSq7n+/x7Pm9kKhYGdH7c8ycUbd/6gSLVa52y9MveRWi4oO5PnZCxKGQR2sKLejBlMqu4N2K3pgqBMPW7qYoBs1e/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HpR+Y2Lt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E22A3C4CEE5;
+	Mon, 10 Mar 2025 09:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741598928;
-	bh=5mwoTd08jCfdUhN4DoQ/o5bTO+/4KPbpIou7ZLK5CwE=;
+	s=k20201202; t=1741599113;
+	bh=Iz8IZsYghrJMpQWOE7HLH833OewDZeMFRdw2jLto4lY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=moRUW5ZQ40mb3/aIpiaUN9HkU77pvem3k8eDxlSM/9lZUaUKukj4CqhZvUe9L77zC
-	 MN+2vbTMTU3+BLE/2ld0UBhKQS5/ba81SV2HVw+ZA3Yz3md1rj9n1oi/rIFpS0ceFQ
-	 /omVZU4PqA9TWL9LfJuqg6P7RCJQ6/BrSt2q3h2CoPNyi/He613YCzZB27Pff6NEjc
-	 YXtecGZz5NtbHWv7fAKwgV9RUZ+ou62yHAHyS6MQV1nL5vhT4TzAPYYIv5ECh/jAne
-	 /yZ6tNsiGfzxvB4H1/ph9rTQtybZmAJtNlXrF3KTZChZqotBBafZrkqj9bmZ4otaFP
-	 DxO9pUqVWT11A==
-Date: Mon, 10 Mar 2025 10:28:44 +0100
+	b=HpR+Y2LtdYEw57ZtfSRH7/eXAUwpNUKT7IIQzhC2CCz7+9CCZRVVSztv/WLPJMo8B
+	 8aEjM+9OVnnTY6exKNMyVPJcEQ6vUwmdSJVhniOEg5oXwzBGb9hObVLJXrztFttIOw
+	 IiIKSuLnxRVSV11wCWDRnwT1/DkzixqF4bPL1KJWuCFrXd69iLVO0k7qbXx6v4RC9y
+	 H14E7FjjKCdmVgbpW5q7H5kQEni09amJLpCzvpl/CFcEsvMKux/3TB30/tfUS5mpQ8
+	 ZvTaw3Lj68U7shAz1GZlTKh88foRs59CKURuG0+JSNKulqZsz1+jK/Hz1QUfT7Z7hX
+	 H4Ab1Lfo1fQTA==
+Date: Mon, 10 Mar 2025 10:31:49 +0100
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Roman Kisel <romank@linux.microsoft.com>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, 
-	catalin.marinas@arm.com, conor+dt@kernel.org, dave.hansen@linux.intel.com, 
-	decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com, joey.gouly@arm.com, 
-	krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com, lenb@kernel.org, 
-	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, 
-	maz@kernel.org, mingo@redhat.com, oliver.upton@linux.dev, rafael@kernel.org, 
-	robh@kernel.org, ssengar@linux.microsoft.com, sudeep.holla@arm.com, 
-	suzuki.poulose@arm.com, tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org, 
-	yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	x86@kernel.org, apais@microsoft.com, benhill@microsoft.com, 
-	bperkins@microsoft.com, sunilmut@microsoft.com
-Subject: Re: [PATCH hyperv-next v5 07/11] dt-bindings: microsoft,vmbus: Add
- interrupts and DMA coherence
-Message-ID: <20250310-demonic-ferret-of-judgment-5dbdbf@krzk-bin>
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-8-romank@linux.microsoft.com>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: cros-qcom-dts-watchers@chromium.org, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	quic_vbadigan@quicinc.com, quic_mrana@quicinc.com, quic_vpernami@quicinc.com, 
+	mmareddy@quicinc.com
+Subject: Re: [PATCH v5 2/7] dt-bindings: PCI: qcom,pcie-sc7280: Make elbi
+ register as an optional
+Message-ID: <20250310-rainbow-ebony-panda-cd0ad3@krzk-bin>
+References: <20250309-ecam_v4-v5-0-8eff4b59790d@oss.qualcomm.com>
+ <20250309-ecam_v4-v5-2-8eff4b59790d@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -70,44 +66,62 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250307220304.247725-8-romank@linux.microsoft.com>
+In-Reply-To: <20250309-ecam_v4-v5-2-8eff4b59790d@oss.qualcomm.com>
 
-On Fri, Mar 07, 2025 at 02:02:59PM -0800, Roman Kisel wrote:
-> To boot on ARM64, VMBus requires configuring interrupts. Missing
-> DMA coherence property is sub-optimal as the VMBus transations are
-> cache-coherent.
+On Sun, Mar 09, 2025 at 11:15:24AM +0530, Krishna Chaitanya Chundru wrote:
+> ELBI regitsers are optional registers and not been using in this
+
+What does it mean "optional"? Hardware can miss them or they can be
+restricted by firmware? Which board has such issue?
+
+Your commit must explain this.
+
+> platform. Having this register as required is not allowing to enable
+> ECAM feature of the PCIe cleanly. ECAM feature needs to do single
+> remap of entire 256MB which includes DBI and ELBI. Having optional
+> ELBI registers in the devicetree and binding is causing resorce
+> conflicts when enabling ECAM feature.
+
+I don't think it is possible that register in binding causes anything.
+Linux does not parse the binding doc. You are changing bindings based on
+some issues in your drivers.
+
+Fix your drivers.
+
+
 > 
-> Add interrupts to be able to boot on ARM64. Add DMA coherence to
-> avoid doing extra work on maintaining caches on ARM64.
-
-How do you add it?
-
+> So, make ELBI registers as optional one.
 > 
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 > ---
->  .../devicetree/bindings/bus/microsoft,vmbus.yaml          | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> index a8d40c766dcd..3ab7d0116626 100644
-> --- a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> +++ b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
-> @@ -28,13 +28,16 @@ properties:
->  required:
->    - compatible
->    - ranges
-> +  - interrupts
->    - '#address-cells'
->    - '#size-cells'
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+> index 76cb9fbfd476..326059a59b61 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+> @@ -19,17 +19,17 @@ properties:
+>      const: qcom,pcie-sc7280
 >  
-> -additionalProperties: false
-> +additionalProperties: true
+>    reg:
+> -    minItems: 5
+> +    minItems: 4
+>      maxItems: 6
+>  
+>    reg-names:
+> -    minItems: 5
+> +    minItems: 4
+>      items:
+>        - const: parf # Qualcomm specific registers
+>        - const: dbi # DesignWare PCIe registers
+> -      - const: elbi # External local bus interface registers
+>        - const: atu # ATU address space
+>        - const: config # PCIe configuration space
+> +      - const: elbi # External local bus interface registers
 
-This is neither explained in commit msg nor correct.
-
-Drop the change. You cannot have device bindings ending with 'true'
-here - see talks, example-bindings, writing-schema and whatever resource
-is there.
+NAK, ABI break based on issues on drivers. Fix your drivers.
 
 Best regards,
 Krzysztof
