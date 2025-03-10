@@ -1,177 +1,153 @@
-Return-Path: <linux-pci+bounces-23282-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23283-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA711A58D2C
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 08:45:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92D9BA58D84
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 09:02:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1C3197A3938
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 07:44:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 390A4188C4EC
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 08:02:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C849C221F20;
-	Mon, 10 Mar 2025 07:45:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F341A221F08;
+	Mon, 10 Mar 2025 08:01:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ePnHMrmY"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="dIdcJfKZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08453221F24;
-	Mon, 10 Mar 2025 07:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251003D3B3
+	for <linux-pci@vger.kernel.org>; Mon, 10 Mar 2025 08:01:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741592704; cv=none; b=sNfdzBPPzO9L78wbesW65abtuPtzOKNwpMF10K4A8jvYtQSr9/FSoo11hMsHNDkySwvJjs4akxGy9MYRSb6j+Fn4SbVS/vl6ws5qD6m65v2nBGzKP8s/6zS9sr7HHK1h7XX7Y70BylML9lyT/tcbWNUt0hEBfHx5WxpVhEZ4MvY=
+	t=1741593708; cv=none; b=SnnWvhBlIePNCiHulzvGMNEcc4HKAIlyNB6Z20+4I5aS8f2egHEdcTeW3T00RYbn/DWkBcQq3hEX2p5URu8sXj55d/7yTIpCmIJROKChm+N90WiNzhpbwk4KF8fK5XIGWLasxPFTMO9r+/2GvZeFudMkQ/uzzT9MkgUbwu1nJHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741592704; c=relaxed/simple;
-	bh=i1ZR9sGKO7nVQ2pJs+9N75lDoKQYGSjRkjYZ3oqofx0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPDnkGTZfBaDIdP+nBJRvtagKMXeI8ffB0eUnWFgkTYQAmfwMeSGJ+47u0jlxqayx0xOxpuyDJy6Q3nxLDvyKfPck+TkjeeHCxRDg/WxCtpR3S4vJsSUV4w8nGxR8Nk0AJsG0yQ1omLq/srZIutCnAPXVQg5x1cY8Jr3YEWxz9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ePnHMrmY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 529MgpOc026525;
-	Mon, 10 Mar 2025 07:44:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=Kj+FcVSY+eBJxVSNZlJRNzZJ
-	m+ebTIDlOJzCtE3EAtM=; b=ePnHMrmY+dGNZTh/jYCIa6BvA8CPNu+5Tc2CSWC8
-	bM4E54AmLJAXC6pJLjwk9gR9PWiW0tmdWswWPdQnK2x4tqnOMRxeOrtBxiEc2hsw
-	4GJ7ZNK6VEKCfTKs7B+EDj+3IicOlrGmZklG8J+i8oLXev9J09+Ya7b5Tq9ASolB
-	uNZavBoLW4SXlWrfXRQQQw8AX5CgXPAV80DMM/v9Dtsqk6IXsj0o4LTw1XEjKY8e
-	GbJ/awRoxkb0NPasADPfjBPH5kk4Vxe07fZMcHAEwEglpSrQTDjQVKgKQfNo1cLb
-	GcdvHDr9s5QB7yXj4nhOHGEoohpGYUyvd2GZGkRXGIUSQQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 458f2mbwxq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 07:44:47 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52A7ikPs025363
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Mar 2025 07:44:46 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 10 Mar 2025 00:44:09 -0700
-Date: Mon, 10 Mar 2025 13:14:05 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <p.zabel@pengutronix.de>, <quic_nsekar@quicinc.com>,
-        <dmitry.baryshkov@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v11 3/7] dt-bindings: PCI: qcom: Use sdx55 reg
- description for ipq9574
-Message-ID: <Z86YReHsKeF165F6@hu-varada-blr.qualcomm.com>
-References: <20250220094251.230936-1-quic_varada@quicinc.com>
- <20250220094251.230936-4-quic_varada@quicinc.com>
- <41b400fe-5e08-42c0-9bc6-a238d25d155a@kernel.org>
- <33bb1cb2-0c5e-402b-a5c6-9604b1dd8d99@kernel.org>
+	s=arc-20240116; t=1741593708; c=relaxed/simple;
+	bh=nsL6N6ZyCgLBLlVkXC/5HFe7YjtgekPx7xKs92HpaqI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=S0JKi2R+YJDwF1YSnndeOuqnI3vmmZ9RKp7j1gbNShpuj/dMgNnfsGmxQkCcsWWjM//3Ebzh6y337obbNAjMOpxXXE4AbqsyG/7xT8iLLrnG4HVJd6rrG7hncWLP3iKwVHTWNvM0y65nJaS5Z0jsz2mk70JwGU6ycJwVpBq/5H8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=dIdcJfKZ; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4ZB8Lm35n6z9tRp;
+	Mon, 10 Mar 2025 08:54:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1741593296; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sa4ZvGh1lQvg5deuv1neI9pHuNc+BpUrYariqIqgqCo=;
+	b=dIdcJfKZWt7iB3YxsAUQRHWj8jhGGdzuL1xwh4S9CEZ6f+qQ9OiEWhozGO4NkxhfnGuRK2
+	r/0+Lmwqzk9kBZJVWvzniMDH8yA8MgSah4oevWKiKByADQqW7+je8byn+AwGIEDfSTlpx1
+	SrBbIUIWl6yO46B41wKSUZpKszgt3ztTWULbMWF0unqXGSIKkYICtZFaJlrbpum4CvKwxb
+	GeZ7OVBMrxEvQL1uI1ERQOHMljRWk64dshkyV4GTyuXFz2c0Gb8jyR29YF7TUzCPXZj9d5
+	ZhcnnO3ftuktM4xpHwHL57anfSCMriwzF3xRVPoYaYmd5jjaZOaFQKlV4vPJ2Q==
+Message-ID: <809eab4e8563d12d2d1f26195cff32bde05c299d.camel@mailbox.org>
+Subject: Re: [bug report] PCI: Check BAR index for validity
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>
+Cc: Philipp Stanner <phasta@kernel.org>, linux-pci@vger.kernel.org
+Date: Mon, 10 Mar 2025 08:54:54 +0100
+In-Reply-To: <20250308210720.GA469242@bhelgaas>
+References: <20250308210720.GA469242@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <33bb1cb2-0c5e-402b-a5c6-9604b1dd8d99@kernel.org>
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 13Znxcki_patImFqJYtxtGVAtEB8lGJl
-X-Proofpoint-ORIG-GUID: 13Znxcki_patImFqJYtxtGVAtEB8lGJl
-X-Authority-Analysis: v=2.4 cv=ab+bnQot c=1 sm=1 tr=0 ts=67ce986f cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
- a=dj0ERmanKLZXDvYKl08A:9 a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-10_03,2025-03-07_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- mlxscore=0 impostorscore=0 phishscore=0 clxscore=1015 spamscore=0
- adultscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2503100059
+X-MBO-RS-META: bqir4r15aoyfandj91qsoqo7113tbe5j
+X-MBO-RS-ID: b876f486aa6f8fca5c6
 
-On Thu, Mar 06, 2025 at 01:06:13PM +0100, Krzysztof Kozlowski wrote:
-> On 06/03/2025 12:52, Krzysztof Kozlowski wrote:
-> > On 20/02/2025 10:42, Varadarajan Narayanan wrote:
-> >> All DT entries except "reg" is similar between ipq5332 and ipq9574. ipq9574
-> >> has 5 registers while ipq5332 has 6. MHI is the additional (i.e. sixth
-> >> entry). Since this matches with the sdx55's "reg" definition which allows
-> >> for 5 or 6 registers, combine ipq9574 with sdx55.
-> >>
-> >> This change is to prepare ipq9574 to be used as ipq5332's fallback
-> >> compatible.
-> >>
-> >> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> >> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >
-> > Unreviewed.
-> >
-> >> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> >> ---
-> >> v8: Add 'Reviewed-by: Krzysztof Kozlowski'
-> >> ---
-> >>  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> >> index 7235d6554cfb..4b4927178abc 100644
-> >> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> >> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> >> @@ -169,7 +169,6 @@ allOf:
-> >>              enum:
-> >>                - qcom,pcie-ipq6018
-> >>                - qcom,pcie-ipq8074-gen3
-> >> -              - qcom,pcie-ipq9574
-> >
-> > Why you did not explain that you are going to affect users of DTS?
-> >
-> > NAK
+On Sat, 2025-03-08 at 15:07 -0600, Bjorn Helgaas wrote:
+> On Sat, Mar 08, 2025 at 01:23:28PM +0300, Dan Carpenter wrote:
+> > Hello Philipp Stanner,
+> >=20
+> > Commit ba10e5011d05 ("PCI: Check BAR index for validity") from Mar
+> > 4,
+> > 2025 (linux-next), leads to the following Smatch static checker
+> > warning:
+> >=20
+> > 	drivers/pci/devres.c:632
+> > pcim_remove_bar_from_legacy_table()
+> > 	error: buffer overflow 'legacy_iomap_table' 6 <=3D 15
+>=20
+> Thanks, I dropped this patch for now.
+>=20
+> > drivers/pci/devres.c
+> > =C2=A0=C2=A0=C2=A0 621 static void pcim_remove_bar_from_legacy_table(st=
+ruct
+> > pci_dev *pdev, int bar)
+> > =C2=A0=C2=A0=C2=A0 622 {
+> > =C2=A0=C2=A0=C2=A0 623=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+void __iomem **legacy_iomap_table;
+> > =C2=A0=C2=A0=C2=A0 624=20
+> > =C2=A0=C2=A0=C2=A0 625=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+if (!pci_bar_index_is_valid(bar))
+> >=20
+> > This line used to check PCI_STD_NUM_BARS (6) but now it's checking
+> > PCI_NUM_RESOURCES (15).
 
-Sorry for not explicitly calling this out. I thought that would be seen from the
-following DTS related patches.
+What is even going on here. Why are thos different values? Does a PCI
+device now have at most 6, or 15 BARs?
 
-> I did not connect the dots, but I pointed out that you break users and
-> your DTS is wrong:
-> https://lore.kernel.org/all/f7551daa-cce5-47b3-873f-21b9c5026ed2@kernel.org/
->
-> so you should come back with questions to clarify what to do, not keep
-> pushing this incorrect patchset.
->
-> My bad, I should really have zero trust.
+Or is a BAR different from a "resource"?
 
-It looks like it is not possible to have ipq9574 as fallback (for ipq5332)
-without making changes to ipq9574 since the "reg" constraint is different
-between the two. And this in turn would break the ABI w.r.t. ipq9574.
+And why would it be 15? I haven't read the standard, but I would
+suspect it should be 16.
 
-To overcome this, two approaches seem to be availabe
+And which of those two here should be used?
+https://elixir.bootlin.com/linux/v6.14-rc4/source/include/linux/pci.h#L133
 
-	1. Document that ipq9574 is impacted and rework these patches to
-	   minimize the impact as much as possible
+The comment doesn't say *which one* is "preserved for backwards
+compatibility".
 
-		(or)
+So many questions=E2=80=A6
 
-	2. Handle ipq5332 as a separate compatible (without fallback) and reuse
-	   the constraints of sdx55 for "reg" and ipq9574 for the others (like
-	   clock etc.). This approach will also have to revert [1], as it
-	   assumes ipq9574 as fallback.
+But granted, the check is wrong for the devres resource array, and I
+suppose it should be made the same size as pci_dev.resource.
 
-Please advice which of the above would be appropriate. If there is a better 3rd
-alternative please let me know, will align with that approach.
 
-Thanks
-Varada
+> >=20
+> > =C2=A0=C2=A0=C2=A0 626=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+> > =C2=A0=C2=A0=C2=A0 627=20
+> > =C2=A0=C2=A0=C2=A0 628=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+legacy_iomap_table =3D (void __iomem
+> > **)pcim_iomap_table(pdev);
+> > =C2=A0=C2=A0=C2=A0 629=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+if (!legacy_iomap_table)
+> > =C2=A0=C2=A0=C2=A0 630=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
+> > =C2=A0=C2=A0=C2=A0 631=20
+> > --> 632=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 legacy_iomap_ta=
+ble[bar] =3D NULL;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 ^^^^^^^^^^^^^^^^^^^^^^^
+> > Leading to a buffer overflow.
 
-1 - https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/Documentation/devicetree/bindings/pci/qcom,pcie.yaml?id=f67d04b18337249b0faa5cab6223c0bb203f6333
+Leading to a *potential* buffer overflow.
+
+Anyways, thanks for reporting.
+
+P.
+
+
+> >=20
+> > =C2=A0=C2=A0=C2=A0 633 }
+> >=20
+> > regards,
+> > dan carpenter
+
 
