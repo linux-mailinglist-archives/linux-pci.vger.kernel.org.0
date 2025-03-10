@@ -1,88 +1,137 @@
-Return-Path: <linux-pci+bounces-23350-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23351-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04087A59EA2
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 18:32:49 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37C41A59EE3
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 18:35:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 56D463A9A65
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 17:31:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AA8C87A6BBF
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 17:34:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B914D23371B;
-	Mon, 10 Mar 2025 17:31:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C251D23314B;
+	Mon, 10 Mar 2025 17:35:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ul565pyZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+1cZvXlr"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TKhga+c9"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF5723370F;
-	Mon, 10 Mar 2025 17:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4827E1DE89C;
+	Mon, 10 Mar 2025 17:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741627872; cv=none; b=qNTfa9bsJa8DUcOUH7W/ceQVy1NBgThwmf8NPE+sQMthfHRomBCObTkpQ0yD+zPPgpfc86IMgCN2kQynlG0RHauX0K81oUJzwo36kk6cFuCOg+HF+2RGVzztHsPUrWavwoWvV5FmYSxJKmNtqg/L+jRJPbwzn+8RlhaO06v2qnA=
+	t=1741628107; cv=none; b=Q9uOda5Xzf7JVadLcmAHrBRF8YAntdjoY9XvJsopg822dDSDQRQdM3VliqRB5L6ZoU18Cu9ygapgh8UeMPU29C+7HwHGxBg/fDfXL84oQ2JeznZiLdsOGAiRFet+8BPU/ZKKkCKlSM1hv24LIGp0qBkAL3vdLjOaKH3E5Ar66L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741627872; c=relaxed/simple;
-	bh=K5a/n3k2IMqq05srX3keh8AHLyS8gdBd7xrkRpohd/k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=m6VUXn4oKaJjfAvKEYFiELEhZHL0xxGyhMM4wRTOkHPe41KxbmhGvc7qQjEpzxKox9lCyOXQF43O5UuangqmqS8V1rK9qNUIRvu+b3cKrULbzbaEgTFTPctwJcTs9bCk4avnKqKUjuS1ck2ct3xcqMpCJJfUTZNzWztba2bbjtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ul565pyZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+1cZvXlr; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1741627869;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K5a/n3k2IMqq05srX3keh8AHLyS8gdBd7xrkRpohd/k=;
-	b=ul565pyZF89oi4JPI3tSen6XWAClieQ3+K2Jw0ulUf9HsyzlA9tTrswXT1P+mYPUizhFlZ
-	UfFMAsBZuk9tbR+Zx4PuGnwQ7vtqL40FjUsEblDTCwDdSI9iRd1DnOCbVBzd5o83YP6vPZ
-	fyaDNG9XrU+RmIJ6mtn1zC+WwTwVuEj9dH35opr9agmxNva/49B47aXTx2exzj2sfdowEb
-	tAUCvnesb6/+q96pvKa5OaQxsTDU7WgGXu6e1GGThxpHayqYCE+O5Mk+Fb7wxlPTqsLo+T
-	PiQ1MCddzDQht5fvF1dyFxGL+0bv+wHBIcURKLd3nq5v3bOiP8yxY87OjP0KsA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1741627869;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K5a/n3k2IMqq05srX3keh8AHLyS8gdBd7xrkRpohd/k=;
-	b=+1cZvXlrO7xL17nKz0wAoF3KK5YeFS9Q7mzVtMeDAU1hO4zhZyymaYoKjN/77vVzbho1hb
-	zzTSCVhRPHG6TNAg==
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
- Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>, Santosh
- Shilimkar <ssantosh@kernel.org>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
- <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
- ntb@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>,
- linux-pci@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
- <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org, Wei Huang
- <wei.huang2@amd.com>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, "James E.J. Bottomley"
- <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen"
- <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org
-Subject: Re: [patch 00/10] genirq/msi: Spring cleaning
-In-Reply-To: <20250310165146.GA553858@bhelgaas>
-References: <20250310165146.GA553858@bhelgaas>
-Date: Mon, 10 Mar 2025 18:31:08 +0100
-Message-ID: <87r03423oj.ffs@tglx>
+	s=arc-20240116; t=1741628107; c=relaxed/simple;
+	bh=Hq7MojTzFFLgMgx4YbvO4dGDGVR8qIrMvtm/qCi9a/o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QnPGmK/+JGTFazka1m8ehcVlNhF16KCOi4l11svdvxipCE/VWZrdLqcxtG4bA7XQ/3L071Xv3VSbD8ACJugH06YPQwKBElzMCmih+AzqUwG/FRgnrgRRPiRflGjQOevilrqm/6cccIe6QkmoJE1upEoi+G3Pu4anSNNCoiuaB3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TKhga+c9; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 64E3B2038F33;
+	Mon, 10 Mar 2025 10:35:05 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 64E3B2038F33
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741628105;
+	bh=1+ofQwuGVRqhE03VmsYlGEcNUurWgNiie1yoZECtaVQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TKhga+c9cuJgMknPM13jAgQP1DCYNGUPpcl+c1m94c8yVqD62xkfoXvk7bLjOxBY2
+	 Jd/ln5jDO+gGUjD6Z3n3nQwi1hJPN7SvGVn7aNlAeIKOpA9Lr5y1NMvcg21OqMdsUE
+	 Sb7ps3xymomjl6NcnK+v0qVmLnYE/BpYP3OBs4GY=
+Message-ID: <e0dce529-0777-491d-aced-1e9ead31ac17@linux.microsoft.com>
+Date: Mon, 10 Mar 2025 10:35:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v5 03/11] Drivers: hv: Enable VTL mode for
+ arm64
+To: Arnd Bergmann <arnd@arndb.de>, Michael Kelley <mhklinux@outlook.com>
+Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com, bhelgaas@google.com, Borislav Petkov <bp@alien8.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
+ <conor+dt@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Joey Gouly <joey.gouly@arm.com>,
+ krzk+dt@kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Oliver Upton <oliver.upton@linux.dev>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
+ ssengar@linux.microsoft.com, Sudeep Holla <sudeep.holla@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Wei Liu <wei.liu@kernel.org>,
+ Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
+ devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-acpi@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
+References: <20250307220304.247725-1-romank@linux.microsoft.com>
+ <20250307220304.247725-4-romank@linux.microsoft.com>
+ <e0f81049-688e-4f53-a002-5d246281bf8d@app.fastmail.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <e0f81049-688e-4f53-a002-5d246281bf8d@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 10 2025 at 11:51, Bjorn Helgaas wrote:
-> For the drivers/pci/ parts:
->
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->
-> I assume you'll merge this somewhere, let me know if otherwise.
 
-Yes. I intend to get it through tip.
+
+On 3/8/2025 1:05 PM, Arnd Bergmann wrote:
+> On Fri, Mar 7, 2025, at 23:02, Roman Kisel wrote:
+>> @@ -5,18 +5,20 @@ menu "Microsoft Hyper-V guest support"
+>>   config HYPERV
+>>   	tristate "Microsoft Hyper-V client drivers"
+>>   	depends on (X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) \
+>> -		|| (ACPI && ARM64 && !CPU_BIG_ENDIAN)
+>> +		|| (ARM64 && !CPU_BIG_ENDIAN)
+>> +	depends on (ACPI || HYPERV_VTL_MODE)
+>>   	select PARAVIRT
+>>   	select X86_HV_CALLBACK_VECTOR if X86
+>> -	select OF_EARLY_FLATTREE if OF
+>>   	help
+>>   	  Select this option to run Linux as a Hyper-V client operating
+>>   	  system.
+>>
+>>   config HYPERV_VTL_MODE
+>>   	bool "Enable Linux to boot in VTL context"
+>> -	depends on X86_64 && HYPERV
+>> +	depends on (X86_64 || ARM64)
+>>   	depends on SMP
+>> +	select OF_EARLY_FLATTREE
+>> +	select OF
+>>   	default n
+>>   	help
+> 
+> Having the dependency below the top-level Kconfig entry feels a little
+> counterintuitive. You could flip that back as it was before by doing
+> 
+>        select HYPERV_VTL_MODE if !ACPI
+>        depends on ACPI || SMP
+> 
+> in the HYPERV option, leaving the dependency on HYPERV in
+> HYPERV_VTL_MODE.
+> 
+
+I was implementing Michael's suggestion, and might've gone a bit
+overboard, my bad. I'll fix this, thanks a lot for reviewing!
+
+> Is OF_EARLY_FLATTREE actually needed on x86?
+> 
+
+No, it is not needed on x86. It is only needed when VTL mode is used.
+
+>        Arnd
+
+-- 
+Thank you,
+Roman
+
 
