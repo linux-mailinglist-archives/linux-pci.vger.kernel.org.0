@@ -1,60 +1,62 @@
-Return-Path: <linux-pci+bounces-23300-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23301-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48DD2A59032
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 10:49:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1718BA59035
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 10:49:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D51417A4754
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 09:48:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6787C188D7F4
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 09:49:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D83D4225412;
-	Mon, 10 Mar 2025 09:49:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01CBC224B01;
+	Mon, 10 Mar 2025 09:49:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5dYFyxA"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eIfzMIhK"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CD1225408
-	for <linux-pci@vger.kernel.org>; Mon, 10 Mar 2025 09:49:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28912253ED
+	for <linux-pci@vger.kernel.org>; Mon, 10 Mar 2025 09:49:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741600149; cv=none; b=GS4wU0ZZC1eYkQdYkirkqEJ3y6/wW/CvfvLhdh51yUR8v5z/67DmAXVqEqcwUUa2/fH/JOJCc9f2oNAq32vpTzrjz6lH52wnXPtHg+5vJ3uE56Rczri7hcw7MQDOG5bt6bT4iyrHSYkuyPAc0/iliWBnYnBqtJZbw764IfPG80E=
+	t=1741600152; cv=none; b=Vxt/Re5xDI0BHkqp/RqvVZoUUpwjloyQ6GkNvF834wHI8bfCGSS0YymP2KY50AO4ftiN3mQRly6/VLMCNg0wYK+J475xwXyWLRrUBzreMobbO7KwsCehzQh+aqFn7NXCLhyCrPp/yeTWQnP1fAP6wYBb3ktvOPHcL5xT5Jzg5XA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741600149; c=relaxed/simple;
-	bh=QZzcsXxR9LkyaevHXqOUxhdR/SsoGvydUJWITsm58rU=;
+	s=arc-20240116; t=1741600152; c=relaxed/simple;
+	bh=yMoYyGKM6FbagclOTpM00d2Qgsis276wrIoNJyyP4ys=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mIUdXT02RRrWIyv9wv6hGGPRBc6bJCvCALgHuqG5GKoYx00QUanH4a1ZSQetb6fvd+XgRYJqcy4dZJ6KD/5l5tl1AWG7qS0VoW7GSCA5HrVZZhGuVbaBlmsC7ZZz6TN0hsRAoPq80+jq56uttA3bxyy24VaeEHIpsQtAduL13V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5dYFyxA; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1791BC4CEE5;
-	Mon, 10 Mar 2025 09:49:06 +0000 (UTC)
+	 MIME-Version; b=Clm1ypvVziEGm6oLBX87Uc+wzX2mK9+qG1NAAT+zACobEO4oqFHA+OQP2F9y05hdPV/1G5qOfdfUC6IvGJWZlx3F7QJZTJSR92DcklbH2+d1Cp301biAtr+msqCquQz2g0KHuKoOporFro05Pc5uXYkFT44vkRgVo4RUW6Fvkls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eIfzMIhK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD25BC4CEE5;
+	Mon, 10 Mar 2025 09:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741600149;
-	bh=QZzcsXxR9LkyaevHXqOUxhdR/SsoGvydUJWITsm58rU=;
+	s=k20201202; t=1741600152;
+	bh=yMoYyGKM6FbagclOTpM00d2Qgsis276wrIoNJyyP4ys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C5dYFyxABYfJoQuOAaAbk9pFFoC1gzMR46lfYlnQZmGiy3lvFc/9WVxcz8eoy0OGA
-	 or04fgwo8JQ1iMgl2NTu+Ddu6FJZotgoNqStCeI8x2UdYZ/WhmBqiJuegmvleZJTrY
-	 0QnAucsEq/dI0H3CzJosUoAMTrNNupGMvph8J9D5YHIp577c84lYAEMRfMhhoPBx42
-	 pJ3idDGXWMNmCmP8UjT6laBjsiHiRjwFkhx+W5AtZnaf5NbmDdb43a6PjTtogl4osW
-	 xsc6K+6jzwyiCHLUOOAv4FQfBrHW1GqsnD6e4I4VwUZJmbjXMgqrSFoJfSgc5+pBAL
-	 24QqPgWy2vdiw==
+	b=eIfzMIhKDL7LfJT3bKcGj2WL0jUzprjjHhKjEwU2xOEMcAigwlaGpKOFeUNPGdvuD
+	 9ZiBSfhUSDKywYn9NuOPBHSe6dvRBoIl5Z1KWgAnYMbV6zmyN/e1SJaAT1/Wv9SBuF
+	 JyCSulHZAMRJedhmtO7/tSSAt3p7w45ao9gsuJfJL8SmtlASsKlJld371Nia/gfSnv
+	 ZDzPHW/f/4P7d8t380scWsRJTrM22d++II1UYMGZgnfNZ+WTFMIuVzMhSWNc3clSWJ
+	 KzIzAYaOYRxcxVzc4Y8WfsZS0W1S6A/vFCBP2aQjmk+7BLVo68anX1r1Ld50Bq64jw
+	 XpRg0bOf9GvtQ==
 From: Niklas Cassel <cassel@kernel.org>
-To: Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>
 Cc: Shawn Lin <shawn.lin@rock-chips.com>,
 	Damien Le Moal <dlemoal@kernel.org>,
 	Niklas Cassel <cassel@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v3 1/2] PCI: dwc: ep: Add dw_pcie_ep_hide_ext_capability()
-Date: Mon, 10 Mar 2025 10:48:27 +0100
-Message-ID: <20250310094826.842681-5-cassel@kernel.org>
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: [PATCH v3 2/2] PCI: dw-rockchip: Hide broken ATS capability
+Date: Mon, 10 Mar 2025 10:48:28 +0100
+Message-ID: <20250310094826.842681-6-cassel@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250310094826.842681-4-cassel@kernel.org>
 References: <20250310094826.842681-4-cassel@kernel.org>
@@ -64,98 +66,86 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3361; i=cassel@kernel.org; h=from:subject; bh=QZzcsXxR9LkyaevHXqOUxhdR/SsoGvydUJWITsm58rU=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLPbS0QvJYj+VtkS1v+ulvqK7NkCu4tY/mrEu2Skbok5 0x2SGRaRykLgxgXg6yYIovvD5f9xd3uU44r3rGBmcPKBDKEgYtTACayfwfDP1PP7j1Ho6YFnWm/ x7r1bLO32iyZL6sEuVb/W/jxxPa2XRcZGTYZ9j5+kC/R/eSn2EY9PebKU1/rDq2INHroaijc5ZD 6gRcA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3114; i=cassel@kernel.org; h=from:subject; bh=yMoYyGKM6FbagclOTpM00d2Qgsis276wrIoNJyyP4ys=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNLPbS3YwnG/vL2pw7m5dq2mv3Fez26Re1071GUVb2muZ xFYv+1hRykLgxgXg6yYIovvD5f9xd3uU44r3rGBmcPKBDKEgYtTACbSk8nwP84vaFcDb8O6DvuX 6oUFeTZza05pnb5qZhaglGc76+pSb4b/+dZbS5c+8Des59rp2aX77OOWn8tvuXFta+Fdv9Jj0y8 HZgA=
 X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
-Add dw_pcie_ep_hide_ext_capability() which can be used by an endpoint
-controller driver to hide a capability.
+When running the rk3588 in endpoint mode, with an Intel host with IOMMU
+enabled, the host side prints:
 
-This can be useful to hide a capability that is buggy, such that the
-host side does not try to enable the buggy capability.
+  DMAR: VT-d detected Invalidation Time-out Error: SID 0
 
-Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+When running the rk3588 in endpoint mode, with an AMD host with IOMMU
+enabled, the host side prints:
+
+  iommu ivhd0: AMD-Vi: Event logged [IOTLB_INV_TIMEOUT device=63:00.0 address=0x42b5b01a0]
+
+Rockchip has confirmed that the ATS support for rk3588 only works when
+running the PCIe controller in RC mode [0].
+
+Usually, to handle these issues, we add a quirk for the PCI vendor and
+device ID in drivers/pci/quirks.c with quirk_no_ats(). That is because
+we cannot usually modify the capabilities on the EP side.
+
+In this case, we can modify the capabilities on the EP side. Thus, hide the
+broken ATS capability on rk3588 when running in EP mode. That way,
+we don't need any quirk on the host side, and we see no errors on the host
+side, and we can run pci_endpoint_test successfully, with the IOMMU
+enabled on the host side.
+
+[0] https://lore.kernel.org/linux-pci/93cdce39-1ae6-4939-a3fc-db10be7564e5@rock-chips.com/
+
+Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- .../pci/controller/dwc/pcie-designware-ep.c   | 39 +++++++++++++++++++
- drivers/pci/controller/dwc/pcie-designware.h  |  7 ++++
- 2 files changed, 46 insertions(+)
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index a8568808b5e5..9768703a37b6 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -102,6 +102,45 @@ static u8 dw_pcie_ep_find_capability(struct dw_pcie_ep *ep, u8 func_no, u8 cap)
- 	return __dw_pcie_ep_find_next_cap(ep, func_no, next_cap_ptr, cap);
- }
+diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+index 836ea10eafbb..bc4339252a03 100644
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -242,6 +242,32 @@ static const struct dw_pcie_host_ops rockchip_pcie_host_ops = {
+ 	.init = rockchip_pcie_host_init,
+ };
  
-+/**
-+ * dw_pcie_ep_hide_ext_capability - Hide a capability from the linked list
-+ * @pci: DWC PCI device
-+ * @prev_cap: Capability preceding the capability that should be hidden
-+ * @cap: Capability that should be hidden
-+ *
-+ * Return: 0 if success, errno otherwise.
++/*
++ * ATS does not work on rk3588 when running in EP mode.
++ * After a host has enabled ATS on the EP side, it will send an IOTLB
++ * invalidation request to the EP side. The rk3588 will never send a completion
++ * back and eventually the host will print an IOTLB_INV_TIMEOUT error, and the
++ * EP will not be operational. If we hide the ATS cap, things work as expected.
 + */
-+int dw_pcie_ep_hide_ext_capability(struct dw_pcie *pci, u8 prev_cap, u8 cap)
++static void rockchip_pcie_ep_hide_broken_ats_cap_rk3588(struct dw_pcie_ep *ep)
 +{
-+	u16 prev_cap_offset, cap_offset;
-+	u32 prev_cap_header, cap_header;
++	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
++	struct device *dev = pci->dev;
 +
-+	prev_cap_offset = dw_pcie_find_ext_capability(pci, prev_cap);
-+	if (!prev_cap_offset)
-+		return -EINVAL;
++	/* Only hide the ATS cap for rk3588 running in EP mode */
++	if (!of_device_is_compatible(dev->of_node, "rockchip,rk3588-pcie-ep"))
++		return;
 +
-+	prev_cap_header = dw_pcie_readl_dbi(pci, prev_cap_offset);
-+	cap_offset = PCI_EXT_CAP_NEXT(prev_cap_header);
-+	cap_header = dw_pcie_readl_dbi(pci, cap_offset);
-+
-+	/* cap must immediately follow prev_cap. */
-+	if (PCI_EXT_CAP_ID(cap_header) != cap)
-+		return -EINVAL;
-+
-+	/* Clear next ptr. */
-+	prev_cap_header &= ~GENMASK(31, 20);
-+
-+	/* Set next ptr to next ptr of cap. */
-+	prev_cap_header |= cap_header & GENMASK(31, 20);
-+
-+	dw_pcie_dbi_ro_wr_en(pci);
-+	dw_pcie_writel_dbi(pci, prev_cap_offset, prev_cap_header);
-+	dw_pcie_dbi_ro_wr_dis(pci);
-+
-+	return 0;
++	if (dw_pcie_ep_hide_ext_capability(pci, PCI_EXT_CAP_ID_SECPCI,
++					   PCI_EXT_CAP_ID_ATS))
++		dev_err(dev, "failed to hide ATS cap\n");
 +}
-+EXPORT_SYMBOL_GPL(dw_pcie_ep_hide_ext_capability);
 +
- static int dw_pcie_ep_write_header(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 				   struct pci_epf_header *hdr)
++static void rockchip_pcie_ep_pre_init(struct dw_pcie_ep *ep)
++{
++	rockchip_pcie_ep_hide_broken_ats_cap_rk3588(ep);
++}
++
+ static void rockchip_pcie_ep_init(struct dw_pcie_ep *ep)
  {
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index a03b3799fb27..2d1de81d47b6 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -781,6 +781,7 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
- int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8 func_no,
- 				       u16 interrupt_num);
- void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar);
-+int dw_pcie_ep_hide_ext_capability(struct dw_pcie *pci, u8 prev_cap, u8 cap);
- struct dw_pcie_ep_func *
- dw_pcie_ep_get_func_from_ep(struct dw_pcie_ep *ep, u8 func_no);
- #else
-@@ -838,6 +839,12 @@ static inline void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
- {
- }
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+@@ -314,6 +340,7 @@ rockchip_pcie_get_features(struct dw_pcie_ep *ep)
  
-+static inline int dw_pcie_ep_hide_ext_capability(struct dw_pcie *pci,
-+						 u8 prev_cap, u8 cap)
-+{
-+	return 0;
-+}
-+
- static inline struct dw_pcie_ep_func *
- dw_pcie_ep_get_func_from_ep(struct dw_pcie_ep *ep, u8 func_no)
- {
+ static const struct dw_pcie_ep_ops rockchip_pcie_ep_ops = {
+ 	.init = rockchip_pcie_ep_init,
++	.pre_init = rockchip_pcie_ep_pre_init,
+ 	.raise_irq = rockchip_pcie_raise_irq,
+ 	.get_features = rockchip_pcie_get_features,
+ };
 -- 
 2.48.1
 
