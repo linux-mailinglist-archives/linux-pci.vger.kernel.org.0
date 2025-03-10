@@ -1,156 +1,147 @@
-Return-Path: <linux-pci+bounces-23342-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23343-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 691CBA59C09
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 18:08:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D11DAA59C17
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 18:09:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 20473188C7C4
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 17:08:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFC2F3A7FA2
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Mar 2025 17:08:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65448233706;
-	Mon, 10 Mar 2025 17:05:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E61E233D99;
+	Mon, 10 Mar 2025 17:07:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ASdtXEiz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cdyI/GPm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A553C233703;
-	Mon, 10 Mar 2025 17:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C41233120;
+	Mon, 10 Mar 2025 17:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741626359; cv=none; b=ppsWn3bquSi14YMAsXznb6HZI56yM6PEUubKU6y4YtHn6USt0DH+TJ7RWqVETqgCjMvnyW78ZSwjFIu/PjbAv4jFXWfR9TJYTKBbTjQs2r34/uoCuYG3nPHF4+1TZ00LuSSsOASBVWhR2kn9zxDEsqiZPAHdI8+Z1Vb++5fJiRo=
+	t=1741626439; cv=none; b=d16d+aHRc3xYNmY1T6DLJ7sLVmjPkik5DaqXfXly0ERrxb884xZ5h7cqWFW69uJrLneTF4mvyyu4MlwbmSfCxBSUF45jr4gRzJQDqm0kCd+e9RO8kWN1AYCtVhH57N9p1kiYmeZh5w0UC1SAxYVkGss4D5imUl65/Ai3Cz1GA6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741626359; c=relaxed/simple;
-	bh=Yr8aJ2IZDKlLsVdnrX3O2mRmkiDeU1PvYFcf0WrFd84=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=skt0XEv8uxc4Vy8yXkuImlCa17ouhBhe6ARqrIggCN7RliV0ZPwazYQLGobArPgE4TWRcKWtN2rahTzvtv7kG57zEKmmDSNqOSbTYqNsDeSoC2K1g+9yXFG8Eh5T5TMia7miH5obKItQH4J8N5ze9w711kn8FXoDa7ap+J2GrsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ASdtXEiz; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CA8B82038F32;
-	Mon, 10 Mar 2025 10:05:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CA8B82038F32
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741626357;
-	bh=9k2ujwCkxT/pnQt2SpcTPLQF5W45ehk16LpQKOSM9kE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ASdtXEizJBNBlir7Guq6DH/+cVwx7N/FgUmEK+XbPU0pYIqCSwEx1mx/GflRf57tm
-	 MnevelamszmPc2/kut2m5GTFfDoExBbWYXR6coPOMciOGK6Yb1hRgiEuFq0zuoi++a
-	 4wrrUAgnXET7zmFf32p4ObaaELCgZyEhfx4WpkTk=
-Message-ID: <c7f9d861-f617-4064-8c98-2ace06e9c25e@linux.microsoft.com>
-Date: Mon, 10 Mar 2025 10:05:56 -0700
+	s=arc-20240116; t=1741626439; c=relaxed/simple;
+	bh=qj4pXkKgx8918tBimyMxKHgPf2nAiDmK0GUSPbRonyM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=WG8DV2HGaYvR31Dwdi6pXdy6YgYHy3xCUZBZPD9/15uCGVdAf9Wy6Gc3P51JN3PZgdYLOEvzLDaQeCaKdsslJcY0LvGfbA3rKEikp7EwZrhUXtuaX22GZj+aPrI6oZQL3lhZsfRSpIH7BM8Kd76D4sa2xvGvjwiy4J8hDXwLWX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cdyI/GPm; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6312AC4CEEB;
+	Mon, 10 Mar 2025 17:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741626438;
+	bh=qj4pXkKgx8918tBimyMxKHgPf2nAiDmK0GUSPbRonyM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=cdyI/GPmP32JlBCOUh06gUEsyfWlnsQdjseBlBJT2r3Du2BTOvOAOqQ2YSpVNCj4t
+	 +RpXafrx3g9RzPN1s8RkML8ybEK4zBJ7Z7i2mgvJ8DG8iRuKKSIWu+TrYv05kP1hwp
+	 QYZPUixvfZ9fGoznSr2LmIQ933XTeXN6Oq+ebXfa1o7ypKGKTJ/aLlaq7AUEYz1BUz
+	 4AmhlFNjtC/5R4gpU6exLDZTvzRdnGU/e6tjV7DiFtoQC60DJTDmtgmEresbpJxHj2
+	 vbKH0/mpgK1L8btKkM/+ZEdyzRzcyhtFUlp8TjafUICY0XdRuH9kyBaCbDXXoka9Vr
+	 F+vkRYsaxS5vw==
+Date: Mon, 10 Mar 2025 12:07:17 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, bharat.kumar.gogada@amd.com
+Subject: Re: [PATCH v5 3/3] PCI: xilinx-cpm: Add support for Versal Net
+ CPM5NC Root Port controller
+Message-ID: <20250310170717.GA556500@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v5 07/11] dt-bindings: microsoft,vmbus: Add
- interrupts and DMA coherence
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
- catalin.marinas@arm.com, conor+dt@kernel.org, dave.hansen@linux.intel.com,
- decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
- joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com, kys@microsoft.com,
- lenb@kernel.org, lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
- mark.rutland@arm.com, maz@kernel.org, mingo@redhat.com,
- oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org,
- ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
- tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
- yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
- apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-8-romank@linux.microsoft.com>
- <20250310-demonic-ferret-of-judgment-5dbdbf@krzk-bin>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <20250310-demonic-ferret-of-judgment-5dbdbf@krzk-bin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224155025.782179-4-thippeswamy.havalige@amd.com>
 
-
-
-On 3/10/2025 2:28 AM, Krzysztof Kozlowski wrote:
-> On Fri, Mar 07, 2025 at 02:02:59PM -0800, Roman Kisel wrote:
->> To boot on ARM64, VMBus requires configuring interrupts. Missing
->> DMA coherence property is sub-optimal as the VMBus transations are
->> cache-coherent.
->>
->> Add interrupts to be able to boot on ARM64. Add DMA coherence to
->> avoid doing extra work on maintaining caches on ARM64.
+On Mon, Feb 24, 2025 at 09:20:24PM +0530, Thippeswamy Havalige wrote:
+> The Versal Net ACAP (Adaptive Compute Acceleration Platform) devices
+> incorporate the Coherency and PCIe Gen5 Module, specifically the
+> Next-Generation Compact Module (CPM5NC).
 > 
-> How do you add it?
+> The integrated CPM5NC block, along with the built-in bridge, can function
+> as a PCIe Root Port & supports the PCIe Gen5 protocol with data transfer
+> rates of up to 32 GT/s, capable of supporting up to a x16 lane-width
+> configuration.
 > 
-
-I added properties to the node. Should I fix the description, or I am
-misunderstanding the question?
-
->>
->> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->> ---
->>   .../devicetree/bindings/bus/microsoft,vmbus.yaml          | 8 +++++++-
->>   1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
->> index a8d40c766dcd..3ab7d0116626 100644
->> --- a/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
->> +++ b/Documentation/devicetree/bindings/bus/microsoft,vmbus.yaml
->> @@ -28,13 +28,16 @@ properties:
->>   required:
->>     - compatible
->>     - ranges
->> +  - interrupts
->>     - '#address-cells'
->>     - '#size-cells'
->>   
->> -additionalProperties: false
->> +additionalProperties: true
+> Bridge errors are managed using a specific interrupt line designed for
+> CPM5N. INTx interrupt support is not available.
 > 
-> This is neither explained in commit msg nor correct.
-> 
+> Currently in this commit platform specific Bridge errors support is not
+> added.
 
-Not explained, as there is no good explanation as described below.
+> @@ -478,6 +479,9 @@ static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
+>  {
+>  	const struct xilinx_cpm_variant *variant = port->variant;
+>  
+> +	if (variant->version != CPM5NC_HOST)
+> +		return;
 
-> Drop the change. You cannot have device bindings ending with 'true'
-> here - see talks, example-bindings, writing-schema and whatever resource
-> is there.
-> 
+You're adding support for CPM5NC_HOST, but this changes the behavior
+for all the NON-CPM5NC_HOST devices, which looks like a typo.
 
-Thanks, I'll put more effort into bringing this into a better form!
-If you have time, could you comment on the below?
+Should it be "variant->version == CPM5NC_HOST" instead?
 
-The Documentation says
+>  	if (cpm_pcie_link_up(port))
+>  		dev_info(port->dev, "PCIe Link is UP\n");
+>  	else
+> @@ -578,9 +582,13 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
+>  
+>  	port->dev = dev;
+>  
+> -	err = xilinx_cpm_pcie_init_irq_domain(port);
+> -	if (err)
+> -		return err;
+> +	port->variant = of_device_get_match_data(dev);
+> +
+> +	if (port->variant->version != CPM5NC_HOST) {
+> +		err = xilinx_cpm_pcie_init_irq_domain(port);
 
-   * additionalProperties: true
-     Rare case, used for schemas implementing common set of properties.
-Such schemas are supposed to be referenced by other schemas, which then 
-use 'unevaluatedProperties: false'.  Typically bus or common-part schemas.
+  xilinx_cpm_pcie_init_port()
+  {
+    if (variant->version != CPM5NC_HOST)
+      return;
+    ...
 
-This is a bus so I added that line to the YAML, and I saw it in many
-other YAML files. Without that line, there was a warning from the local
-DT validation described in the Documentation about not having pin
-controls which was weird, and adding
+  xilinx_cpm_pcie_probe()
+  {
+    ...
+    if (port->variant->version != CPM5NC_HOST) {
+      err = xilinx_cpm_pcie_init_irq_domain(port);
+    ...
+    xilinx_cpm_pcie_init_port();
+    ...
+    if (port->variant->version != CPM5NC_HOST) {
+      err = xilinx_cpm_setup_irq(port);
+    ...
+  err_host_bridge:
+    if (port->variant->version != CPM5NC_HOST)
+      xilinx_cpm_free_interrupts(port);
+    ...
+  err_free_irq_domains:
+    if (port->variant->version != CPM5NC_HOST)
+      xilinx_cpm_free_irq_domains(port);
 
-"additionalProperties: true"
+Right now one CPM5NC_HOST test is inside xilinx_cpm_pcie_init_port()
+all the others are in xilinx_cpm_pcie_probe().
 
-fixed the warnings (didn't debug much though). As a side note, there was
-a similar warning coming from another YAML during running DT schema
-validation as described in the Documentation so maybe warnings are fine.
+I think it would be nicer if the tests were inside
+xilinx_cpm_pcie_init_irq_domain(), xilinx_cpm_setup_irq(),
+xilinx_cpm_free_interrupts(), and xilinx_cpm_free_irq_domains() so
+they're all done the same way and they're closer to the actual
+differences instead of cluttering xilinx_cpm_pcie_probe().
 
-> Best regards,
-> Krzysztof
-> 
+Also, this makes it look like CPM5NC_HOST doesn't support any
+interrupts at all.  No INTx, no MSI, no MSI-X.  Is that true?  If so,
+what good is a host controller where interrupts don't work?
 
--- 
-Thank you,
-Roman
-
+Bjorn
 
