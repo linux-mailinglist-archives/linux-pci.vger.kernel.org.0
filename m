@@ -1,81 +1,119 @@
-Return-Path: <linux-pci+bounces-23447-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23448-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C591A5CC89
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 18:45:33 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 963F0A5CCA0
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 18:47:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE814179D55
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 17:45:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0FF2179F09
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 17:47:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC92326159F;
-	Tue, 11 Mar 2025 17:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE81E1EBA1E;
+	Tue, 11 Mar 2025 17:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aaj7vdOh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFB21EDA2A;
-	Tue, 11 Mar 2025 17:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F6F1E9B26;
+	Tue, 11 Mar 2025 17:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741715123; cv=none; b=XFUhBF2AxhT7QF3QgrwtbJm3He02UCDYHeDESQdkkyrvRBws31KaCWKpMUahcZhffuPVoys6P056NX9fHkL4gb9LkMKz92tAIo89hxHH8Y/z2ztZQCAMgQehmdLRlWgBLVECrjkwfvQ6wpfgtjk58OpMaovC/odKi1KuLh+TvhM=
+	t=1741715231; cv=none; b=qibQWqG3SJZOxRKjtqYn9gnt/cC1/QF1p7z7VDim5KbEaflhdfjcDI+ViLQShVJnp9Kwg5+2DUfX18jJNVrZUUxT+I0CZuOU2siA0naV35peouA7rF4DgZDhEgC9+OMz0SfiIihGzOwEwnnc54q2zzm525IPzjE6JI+T0xGodbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741715123; c=relaxed/simple;
-	bh=bfkWzUq+yvmb9L/sL1r8Mimsv1uoJJ31qsbzcYKgUXw=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cHR1yj+A15xJTSRx4VVwZ8j2Cwy1JHRtd4mj7F6eAgoDYQPVcSC1NZ5/oFybmlKHstYRDEk3oNw5Jg2JhTXHWGQJcYkxxf7gvp9aF8njG3SEI3shKH0q2nTPIJxxOSBBB9zoDyEnHNIAHWsjnH0e3kcqw/ZHnuL/ij3AA0V7QYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZC1LR2NWWz6HJj9;
-	Wed, 12 Mar 2025 01:42:39 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 57978140442;
-	Wed, 12 Mar 2025 01:45:12 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 11 Mar
- 2025 18:45:11 +0100
-Date: Tue, 11 Mar 2025 17:45:09 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-CC: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>, "Santosh
- Shilimkar" <ssantosh@kernel.org>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
-	<dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
-	<ntb@lists.linux.dev>, Bjorn Helgaas <bhelgaas@google.com>,
-	<linux-pci@vger.kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, <linux-hyperv@vger.kernel.org>, Wei Huang
-	<wei.huang2@amd.com>, Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>, "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
-	<martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>
-Subject: Re: [patch 01/10] genirq/msi: Make a few functions static
-Message-ID: <20250311174509.00001785@huawei.com>
-In-Reply-To: <20250309084110.204054172@linutronix.de>
-References: <20250309083453.900516105@linutronix.de>
-	<20250309084110.204054172@linutronix.de>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1741715231; c=relaxed/simple;
+	bh=dQMNvPwr30uRdcikX37ZIEUV+onSGkBkVN+Ew8Cp57Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=mR8LXQ3l0F6s8UB82ZMijfmG0anj2px44XABgJMVPjPeE7jVTIode9FdwtAT6t01yPUnVBIgSbfbJvyUVM6jHKuIuRq3AVMM348kPQbmuamO8BClovwHmFLZ8tSG6vBI5a1jowvsUW5WBSejG4dAEshyP3ZHsFE2irkh5CIyayo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aaj7vdOh; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741715230; x=1773251230;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=dQMNvPwr30uRdcikX37ZIEUV+onSGkBkVN+Ew8Cp57Y=;
+  b=aaj7vdOhxbMgMUjC4DXlJ2Io4eWKJwOczqzvk5Lk1NLAxr5l2W7wKZtv
+   As/U3P764GZLyDUIi3zevziaIIAeQA0hqLPfW6i0fVOeton7PgEkD2eIZ
+   M0AHakpJeXFHyRIlHdMBpD9/2czBnE6b0QokUOmMR46qjgv5EwpfB0DZY
+   BE+PRbMJWg7n5NVy7FBYAR/SqW3U+gHgiCpC6WOer19cFbURmOFylZ5xO
+   UYcbBWAjBSeVmLv9ACQj77JRs/cTOV71HCxqa2Nb7TVyB8JBeD5LFhVti
+   AgkkBWmI+9YVKMSD9RKhNfTETjvE+EEzjkRTmYaPoqm9WCB+HR5I8zswe
+   A==;
+X-CSE-ConnectionGUID: OTk5xFXbTb2RT2M/i6cfXQ==
+X-CSE-MsgGUID: Vf2UoIuhTMia0OtXYkbafg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="46550713"
+X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
+   d="scan'208";a="46550713"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 10:47:10 -0700
+X-CSE-ConnectionGUID: ePXCid82RJ+Rd9kyerh/cw==
+X-CSE-MsgGUID: ZijMnOdZT+GmXSQoZ4kqBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,239,1736841600"; 
+   d="scan'208";a="124563336"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.251])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 10:47:07 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/4] PCI: Move pci_rescan_bus_bridge_resize() declaration to pci/pci.h
+Date: Tue, 11 Mar 2025 19:46:58 +0200
+Message-Id: <20250311174701.3586-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun,  9 Mar 2025 09:41:42 +0100 (CET)
-Thomas Gleixner <tglx@linutronix.de> wrote:
+pci_rescan_bus_bridge_resize() is only used by code inside PCI
+subsystem. The comment also falsely advertizes it to be for hotplug
+drivers, yet the only caller is from sysfs store function. Move the
+function declaration into pci/pci.h.
 
-> None of these functions are used outside of the MSI core.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/pci.h   | 2 ++
+ include/linux/pci.h | 1 -
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 01e51db8d285..be2f43c9d3b0 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -309,6 +309,8 @@ enum pci_bar_type {
+ struct device *pci_get_host_bridge_device(struct pci_dev *dev);
+ void pci_put_host_bridge_device(struct device *dev);
+ 
++unsigned int pci_rescan_bus_bridge_resize(struct pci_dev *bridge);
++
+ int pci_configure_extended_tags(struct pci_dev *dev, void *ign);
+ bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *pl,
+ 				int rrs_timeout);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 47b31ad724fa..d788acf2686a 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1455,7 +1455,6 @@ void set_pcie_port_type(struct pci_dev *pdev);
+ void set_pcie_hotplug_bridge(struct pci_dev *pdev);
+ 
+ /* Functions for PCI Hotplug drivers to use */
+-unsigned int pci_rescan_bus_bridge_resize(struct pci_dev *bridge);
+ unsigned int pci_rescan_bus(struct pci_bus *bus);
+ void pci_lock_rescan_remove(void);
+ void pci_unlock_rescan_remove(void);
+
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+2.39.5
 
 
