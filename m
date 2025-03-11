@@ -1,38 +1,38 @@
-Return-Path: <linux-pci+bounces-23433-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23434-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58F23A5C42C
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 15:46:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B006A5C42D
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 15:46:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3F5B8170687
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 14:46:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B8911885CEE
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 14:46:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A99E238172;
-	Tue, 11 Mar 2025 14:46:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 186CE257AF7;
+	Tue, 11 Mar 2025 14:46:17 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAE461E4929
-	for <linux-pci@vger.kernel.org>; Tue, 11 Mar 2025 14:46:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DFA225C70D
+	for <linux-pci@vger.kernel.org>; Tue, 11 Mar 2025 14:46:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741704375; cv=none; b=EVHx2MobYiiOcTGddBEqZNcT+StVsUCdziBocPOMhzcvOPUpteVofhbsBmHYtprBwnGJweSQmLnjaNN0vO7u0fYuYP0danGdQA7/RojqbIzRXkeJ/GRvq46DjJd3KhoZnHUEvHgclHJS565U8hpEXkmLEXt+5+swZ8E5eoRffZU=
+	t=1741704377; cv=none; b=Zab5k+Gcy9MDvc2WIy0bE9G2tt2xaFNFBREaA710bGIARRZwdQos1q4osY6UjoYafG02SpYOR4V976bOSX3/U7YB+pAkWlMpCZQigxWOik971glr7nCoNBs2S07kLa6Ho9KxUxYVjpjSV226mrLkJLRNceBEMPh5/cWTJgiGv0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741704375; c=relaxed/simple;
-	bh=79BsNtSAsW7bKNhzjIoMW2jacgh6A6YolnMiKtdpPvk=;
+	s=arc-20240116; t=1741704377; c=relaxed/simple;
+	bh=x//dKC9oGUFGVKaiveq/8PxZA285XCr2A7hIamJNYYs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ANBSfZUdK5kI+U8JQ9f4z9t2fmMrHf9T2yfnxuNegSGFkk3bxTQ3eRmDm+hA/i6lfj045Xr6sQmbuW2K+RaZexDL3P56fSzcLKmEBLxOyckZmVqYs/wMesCESk56o749GSARR0RUlBlj4P8Qke/xPbRhp/BtygAiVyg2xySh92Y=
+	 MIME-Version; b=GpdIQlZB+wkSvY5iadzREoWFodh30+cfyrCiE8oh+GFniy/Amq9Pz3r2ld+vmmK6hl8M/Tw0EVDxgJEcGfbK2Wv7Pou9ZXtpcUTwU7Wv7MfF9t59pl7M37c3BcuOkqEABtaycUSkqRLgUSiO+FHKMs1EBTNaU1B0KxOtD11N9GQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 334F527B5;
-	Tue, 11 Mar 2025 07:46:24 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE5771692;
+	Tue, 11 Mar 2025 07:46:25 -0700 (PDT)
 Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A26F33F694;
-	Tue, 11 Mar 2025 07:46:11 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 597B23F694;
+	Tue, 11 Mar 2025 07:46:13 -0700 (PDT)
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
 To: Dan Williams <dan.j.williams@intel.com>
 Cc: lpieralisi@kernel.org,
@@ -46,9 +46,9 @@ Cc: lpieralisi@kernel.org,
 	yilun.xu@linux.intel.com,
 	linux-pci@vger.kernel.org,
 	Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [RESEND RFC PATCH 2/3] pci: generic-domains: Add helpers to alloc/free dynamic bus numbers
-Date: Tue, 11 Mar 2025 14:46:00 +0000
-Message-ID: <20250311144601.145736-2-suzuki.poulose@arm.com>
+Subject: [RESEND RFC PATCH 3/3] samples: devsec: Add support for PCI_DOMAINS_GENERIC
+Date: Tue, 11 Mar 2025 14:46:01 +0000
+Message-ID: <20250311144601.145736-3-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250311144601.145736-1-suzuki.poulose@arm.com>
 References: <20250311141712.145625-1-suzuki.poulose@arm.com>
@@ -61,70 +61,138 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add helpers to allocate/free useable PCI domain numbers at runtime.
-This will be later used by sample devsec code.
+Allocate/free a domain at runtime for the sample devsec TSM.
 
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/pci/pci.c   | 16 ++++++++++++++--
- include/linux/pci.h |  3 +++
- 2 files changed, 17 insertions(+), 2 deletions(-)
+ samples/Kconfig         |  1 -
+ samples/devsec/bus.c    | 32 +++++++++++++++++++++-----------
+ samples/devsec/common.c |  2 +-
+ samples/devsec/devsec.h |  2 +-
+ 4 files changed, 23 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 869d204a70a3..729bc57e025b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6685,6 +6685,18 @@ static void pci_no_domains(void)
- static DEFINE_IDA(pci_domain_nr_static_ida);
- static DEFINE_IDA(pci_domain_nr_dynamic_ida);
+diff --git a/samples/Kconfig b/samples/Kconfig
+index 6bd64fc54ac1..f23be5088b9e 100644
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@ -308,7 +308,6 @@ config SAMPLE_DEVSEC
+ 	tristate "Build a sample TEE Security Manager with an emulated PCI endpoint"
+ 	depends on PCI
+ 	depends on VIRT_DRIVERS
+-	depends on X86 # TODO: PCI_DOMAINS_GENERIC support
+ 	select PCI_BRIDGE_EMUL
+ 	select PCI_TSM
+ 	select TSM
+diff --git a/samples/devsec/bus.c b/samples/devsec/bus.c
+index b78c04b21eb9..8ec04b3549f0 100644
+--- a/samples/devsec/bus.c
++++ b/samples/devsec/bus.c
+@@ -21,7 +21,7 @@
+ #define NR_DEVSEC_DEVS 1
  
-+int pci_alloc_dynamic_domain(void)
-+{
-+	return ida_alloc(&pci_domain_nr_dynamic_ida, GFP_KERNEL);
-+}
-+EXPORT_SYMBOL_GPL(pci_alloc_dynamic_domain);
-+
-+void pci_free_dynamic_domain(int domain)
-+{
-+	ida_free(&pci_domain_nr_dynamic_ida, domain);
-+}
-+EXPORT_SYMBOL_GPL(pci_free_dynamic_domain);
-+
- static void of_pci_reserve_static_domain_nr(void)
+ struct devsec {
+-	struct pci_sysdata sysdata;
++	int domain;
+ 	struct gen_pool *iomem_pool;
+ 	struct resource resource[2];
+ 	struct pci_bus *bus;
+@@ -70,7 +70,7 @@ struct devsec {
+ 
+ static struct devsec *bus_to_devsec(struct pci_bus *bus)
  {
- 	struct device_node *np;
-@@ -6733,7 +6745,7 @@ static int of_pci_bus_find_domain_nr(struct device *parent)
- 	 * dynamic allocations to prevent assigning them to other DT nodes
- 	 * without static domain.
- 	 */
--	return ida_alloc(&pci_domain_nr_dynamic_ida, GFP_KERNEL);
+-	return container_of(bus->sysdata, struct devsec, sysdata);
++	return container_of(bus->sysdata, struct devsec, domain);
+ }
+ 
+ static int devsec_dev_config_read(struct devsec *devsec, struct pci_bus *bus,
+@@ -309,6 +309,17 @@ static struct pci_ops devsec_ops = {
+ };
+ 
+ /* borrowed from vmd_find_free_domain() */
++#ifdef CONFIG_PCI_GENERIC_DOMAINS
++static int find_free_domain(void)
++{
 +	return pci_alloc_dynamic_domain();
- }
- 
- static void of_pci_bus_release_domain_nr(struct device *parent, int domain_nr)
-@@ -6745,7 +6757,7 @@ static void of_pci_bus_release_domain_nr(struct device *parent, int domain_nr)
- 	if (of_get_pci_domain_nr(parent->of_node) == domain_nr)
- 		ida_free(&pci_domain_nr_static_ida, domain_nr);
- 	else
--		ida_free(&pci_domain_nr_dynamic_ida, domain_nr);
-+		pci_free_dynamic_domain(domain_nr);
- }
- 
- int pci_bus_find_domain_nr(struct pci_bus *bus, struct device *parent)
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index c2f18f31f7a7..c040c1d49632 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1934,6 +1934,9 @@ static inline int acpi_pci_bus_find_domain_nr(struct pci_bus *bus)
- #endif
- int pci_bus_find_domain_nr(struct pci_bus *bus, struct device *parent);
- void pci_bus_release_domain_nr(struct device *parent, int domain_nr);
-+int pci_alloc_dynamic_domain(void);
-+void pci_free_dynamic_domain(int domain);
++}
 +
- #endif
++static int release_domain(int domain)
++{
++	pci_free_dynamic_domain(domain);
++}
++#else
+ static int find_free_domain(void)
+ {
+ 	int domain = 0xffff;
+@@ -318,13 +329,15 @@ static int find_free_domain(void)
+ 		domain = max_t(int, domain, pci_domain_nr(bus));
+ 	return domain + 1;
+ }
+-
++static void release_domain(int domain) {}
++#endif
+ static void destroy_bus(void *data)
+ {
+ 	struct devsec *devsec = data;
  
- /* Some architectures require additional setup to direct VGA traffic */
+ 	pci_stop_root_bus(devsec->bus);
+ 	pci_remove_root_bus(devsec->bus);
++	release_domain(devsec->domain);
+ }
+ 
+ static u32 build_ext_cap_header(u32 id, u32 ver, u32 next)
+@@ -588,7 +601,6 @@ static int __init devsec_bus_probe(struct platform_device *pdev)
+ 	int rc;
+ 	LIST_HEAD(resources);
+ 	struct devsec *devsec;
+-	struct pci_sysdata *sd;
+ 	u64 mmio_size = SZ_64G;
+ 	struct pci_host_bridge *hb;
+ 	struct device *dev = &pdev->dev;
+@@ -633,15 +645,13 @@ static int __init devsec_bus_probe(struct platform_device *pdev)
+ 	};
+ 	pci_add_resource(&resources, &devsec->resource[1]);
+ 
+-	sd = &devsec->sysdata;
+-	devsec_sysdata = sd;
+-	sd->domain = find_free_domain();
+-	if (sd->domain < 0)
+-		return sd->domain;
+-
++	devsec_sysdata = &devsec->domain;
++	devsec->domain = find_free_domain();
++	if (devsec->domain < 0)
++		return devsec->domain;
+ 
+ 	devsec->bus = pci_create_root_bus(dev, 0, &devsec_ops,
+-					  &devsec->sysdata, &resources);
++					  &devsec->domain, &resources);
+ 	if (!devsec->bus) {
+ 		pci_free_resource_list(&resources);
+ 		return -ENOMEM;
+diff --git a/samples/devsec/common.c b/samples/devsec/common.c
+index 9b6f4022f241..4da85b53b6a9 100644
+--- a/samples/devsec/common.c
++++ b/samples/devsec/common.c
+@@ -8,7 +8,7 @@
+  * devsec_bus and devsec_tsm need a common location for this data to
+  * avoid depending on each other. Enables load order testing
+  */
+-struct pci_sysdata *devsec_sysdata;
++void *devsec_sysdata;
+ EXPORT_SYMBOL_GPL(devsec_sysdata);
+ 
+ static int __init common_init(void)
+diff --git a/samples/devsec/devsec.h b/samples/devsec/devsec.h
+index 794a9898ee2d..496020c9cb6d 100644
+--- a/samples/devsec/devsec.h
++++ b/samples/devsec/devsec.h
+@@ -3,5 +3,5 @@
+ 
+ #ifndef __DEVSEC_H__
+ #define __DEVSEC_H__
+-extern struct pci_sysdata *devsec_sysdata;
++extern void *devsec_sysdata;
+ #endif /* __DEVSEC_H__ */
 -- 
 2.43.0
 
