@@ -1,155 +1,180 @@
-Return-Path: <linux-pci+bounces-23413-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23414-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91723A5BCC8
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 10:52:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9586FA5BCD4
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 10:53:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C670817251F
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 09:52:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B5313B3139
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 09:53:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8897322B8A5;
-	Tue, 11 Mar 2025 09:52:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DD0023236A;
+	Tue, 11 Mar 2025 09:52:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gmjr6g88"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jY2/avYr"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53525225776;
-	Tue, 11 Mar 2025 09:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA91230997
+	for <linux-pci@vger.kernel.org>; Tue, 11 Mar 2025 09:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741686756; cv=none; b=bnttCj4c1LgZBeWJ5WOnRksg86VBQtwl9vaslQTdtruqVcKRYI/xnFscF+lQfPKYCaN645dmd3J7SS4L7sxntXIDQQ5PF2om8ZMAvW6aFamKpHSlPK/EcbThHfF45Vedj73nsWF5frUvrIpRR/YqMP5H71xcdBSIt5REV2OhhP0=
+	t=1741686775; cv=none; b=QlwgHmTtVMJ3QVdh0ILO9Q0FyWcJJbgtBDGRRSsOoYTP9l2MLXEhyMwq+bHIryo/HbrSkpujoBbSmA2HEdybaZtsRWfJGtL6i/mjV//2JjwFmrC0MCQLfrkZjkXWlfhWvAFdN0FpjU8D+9xgyY0biVT4GUO0kVUcHIgA5K5vEZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741686756; c=relaxed/simple;
-	bh=pCyBHqU0zoiqSyN755vMT64wjgPcH6oB5zFBzmqyNGk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UKZTDJIDrW+MITqc4GylRCphn4/fE4RDadPGQH0ylE7iJRggpKjYAhB2ycXp2CHYbyJ21ZsyrusJNkKubvwZc6C72lNXz2Uqo3SGbnZxqzIp55KgkBsoT1Kgcfjg29H7rnqfqzaTwqPMxDEqx7QG0op3sY0Jica+qiTtAYcGwv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gmjr6g88; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3188C4CEE9;
-	Tue, 11 Mar 2025 09:52:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741686755;
-	bh=pCyBHqU0zoiqSyN755vMT64wjgPcH6oB5zFBzmqyNGk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Gmjr6g88AKIwS64SeaJXYdnIc1W2nenQ8+vZZksdhsUyHjPTpnTy/6iXxWQVyiKdH
-	 vSjwadeZ5tdywFnU1WxuIoabRHc3EAz1ERtgy6Ps2xg6TTj3sXdLFnt6pOG0P9nW7W
-	 d+TcUZ8yo+OB6bS2NnLOfAfoO07oxsDd1ONw+ldYoNGEJRHk0etxwQXXM3lZ+cFuz/
-	 ya4B0rxaOLIb8S8nP9njodBefi1W3ebKc+HKozOzhMKL5RhmVtNks6SaHqscS6EYrq
-	 fL2ed6jW/1NDBNMLjDuf9Y10H7yFLhjZ+Ckxr1CZpehCgfgaZ2NS4IfsHBaLauWqg3
-	 sv1pTE9nPSb2g==
-Message-ID: <ff074197-8d2c-4f76-a4c1-8d91c8cdd821@kernel.org>
-Date: Tue, 11 Mar 2025 10:52:28 +0100
+	s=arc-20240116; t=1741686775; c=relaxed/simple;
+	bh=PzvnExVeclZawhturdwgP1KyBRl1xCU168Nte/naPwY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lGHSdcSA/2MpLIkXUhLwes3s9XdOmYH9fbzi2ExUf0zpZt7A+L0/wvUbru8w+qrfqmAg4yj+btFVf1+2FsZ3DIgZDFjC4AkBFDs50Ac/lMcLBV/kOyRki8mHcgQ+Bkke/2drgXsceU5Ep7/eP13AnyHNXfGFAUugGHiLGP8xmsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jY2/avYr; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47664364628so29567251cf.1
+        for <linux-pci@vger.kernel.org>; Tue, 11 Mar 2025 02:52:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741686772; x=1742291572; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3URO7f/7RxwhBQJDiiHyGw5v1BW+aVP/nBg49VhnAzo=;
+        b=jY2/avYrV2+mGZ0uXEedestytmhf70IRp43v9lKbtHEu8t9BzRpm81LbuBg+YGsswr
+         mcC50oVNCh1mWYnQoZG8PAERlOXfotLmaS4gzyoz6WcSjKmiw35uyA5J+SpXV9JAb6Qx
+         kDRcIOkRRPmQpyDO1l734j/QF488l2fTzfiUaT2TeuMSLUYxFgxHsR4MNF6pu4ybBScf
+         wCRtmk2utrp6OSoiGorqEeLntgkGTUpSjgGohCWFLITBLU6KDTOKnGOUc2VFnkcGLGmO
+         W1bn8fGiXUObzPnpcWBBXRqKBIXwNRGPpj6ZVwV7D2MkVSsGCcoKBwnovWU4p0jmw5vV
+         JeLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741686772; x=1742291572;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3URO7f/7RxwhBQJDiiHyGw5v1BW+aVP/nBg49VhnAzo=;
+        b=dP+gfAfb3fFUxO3PmlqfTyQZnGvMTrOlinyzT24CKbjo4hWFAkvwWEfS6bdKCUBrXe
+         B3Rv3lMy62zYj18zUulfvILklf2d1/7Dy36ZVPJSKKSFg503/Vakl2F6k/U8pmZaWHUS
+         sZ9MKud2vwDBt1bPCqhTj1plhzWPTXyl4mvBjnes3jbdiFgr9IxsO8DdnF3ky3MooT49
+         EbACJsCIOdHzKMb8oeCwyHWKcvjGT3faJ3EqzHz7S0QnikaKcrnLCz7dXHht/dzQwZXQ
+         biWzcV6pA/ifu6ucYM7PapIX3S7tpTlgc5UC318d8MstYLS0dtN/8SRxD//vBryHamqT
+         z6/A==
+X-Forwarded-Encrypted: i=1; AJvYcCVjhVrv0MV5aESCkG//FisbWInY9m9w5Kki071Msjy/SWbFTVxd+y1ByLw7WuhYuPZwJHL92df9oKw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiQnynysWxQvDBDaH23wrqCkdTwySo/x5knNEY1SEBBZ6qudSE
+	4yrYTYkLGr3Qx0/FYZ2Phb8brHpBuEJA8cFqHW6Gphh3Tnof8/Eg3nl5knsC/uuPSSN6yxo1QHx
+	2bJ5AsiUDIuNhIvatWKWGjsi+X+YUR6h2ZRbV
+X-Gm-Gg: ASbGncsXhdobQ/R1ms1dW4ImsIy1SpPQ6ZNOmgpBDYFiXDFqxmQ/XcXSFwdPRAHftlS
+	1tdcb2SAjW98PM0y4k5I7rOEZXNawGZzZdVxVJczqH8bnPOeITn7x3eHnhV+8Kt6+LA+/wiC50W
+	AjhPmKRZxsqihEmWppud3KaBxr9gHSvgfwQz7aRSbYlA74F73hhXDPxMI=
+X-Google-Smtp-Source: AGHT+IGvkIV7kvsc8sRS2vRdLXLUngDVLR8DR1HhCv157Dg0/gmJMroFmtbmkC938Jg8g6kyBu5GXlldCdH3TAPj8kA=
+X-Received: by 2002:a05:622a:438b:b0:474:e1bd:98bf with SMTP id
+ d75a77b69052e-47699cc4a03mr31370311cf.0.1741686772316; Tue, 11 Mar 2025
+ 02:52:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 3/7] dt-bindings: PCI: qcom: Use sdx55 reg description
- for ipq9574
-To: Varadarajan Narayanan <quic_varada@quicinc.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, vkoul@kernel.org, kishon@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, p.zabel@pengutronix.de,
- quic_nsekar@quicinc.com, dmitry.baryshkov@linaro.org,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org
-References: <20250220094251.230936-1-quic_varada@quicinc.com>
- <20250220094251.230936-4-quic_varada@quicinc.com>
- <41b400fe-5e08-42c0-9bc6-a238d25d155a@kernel.org>
- <33bb1cb2-0c5e-402b-a5c6-9604b1dd8d99@kernel.org>
- <Z86YReHsKeF165F6@hu-varada-blr.qualcomm.com>
- <84456c70-e933-469f-ac7a-7d899f85e777@linaro.org>
- <Z8/Dto1fZWvemiY5@hu-varada-blr.qualcomm.com>
- <01a7918b-dc4b-4ed3-8f74-bc59a9629ce9@kernel.org>
- <Z8/xTotUg+2GN2+G@hu-varada-blr.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <Z8/xTotUg+2GN2+G@hu-varada-blr.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250303070501.2740392-1-danielsftsai@google.com>
+ <87a5a2cwer.ffs@tglx> <CAK7fddD4Y5CJ3hKQvppGB2Bof4ibYDX4mBK3N1y8qt-NVoBb7w@mail.gmail.com>
+ <87eczd6scg.ffs@tglx> <CAK7fddAqDPw1CuvBDUsQApbs1ZSE_ruyTAdsp+c4116C0ZjvVw@mail.gmail.com>
+ <878qpi61sk.ffs@tglx> <CAK7fddCG6-Q0s-jh5GE7LG+Kf6nON8u9BS4Ame9Xa7VF1=ujiw@mail.gmail.com>
+ <878qpg4o4t.ffs@tglx>
+In-Reply-To: <878qpg4o4t.ffs@tglx>
+From: Tsai Sung-Fu <danielsftsai@google.com>
+Date: Tue, 11 Mar 2025 17:52:41 +0800
+X-Gm-Features: AQ5f1Jp7DLsnDP8MQzv4y4td2mrUyuPizgf041_oeGz1yu8HrJHsJfpTaDIVqdk
+Message-ID: <CAK7fddBSJk61h2t73Ly9gxNX22cGAF46kAP+A2T5BU8VKENceQ@mail.gmail.com>
+Subject: Re: [PATCH] PCI: dwc: Chain the set IRQ affinity request back to the parent
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jingoo Han <jingoohan1@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Andrew Chant <achant@google.com>, 
+	Brian Norris <briannorris@google.com>, Sajid Dalvi <sdalvi@google.com>, 
+	Mark Cheng <markcheng@google.com>, Ben Cheng <bccheng@google.com>, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/03/2025 09:16, Varadarajan Narayanan wrote:
->> I don't understand what is duplication of something here.
-> 
-> By duplication, I meant the same set of reg-names (in different order).
-> 
->>> 	if (adding mhi to ipq9574 reg-names != duplication)
->>>
->>> 		/* Keep existing order */
->>>
->>> 		* Append "mhi" to ipq9574
->>
->> ipq9574 does not have mhi, does it?
-> 
-> ipq9574 also has it.
+Running some basic tests with this patch (
+https://tglx.de/~tglx/patches.tar ) applied on my device, at first
+glance, the affinity feature is working.
 
-Current binding says no, so something is missing.
+I didn't run stress test to test the stability, and the Kernel version
+we used is a bit old, so I only applied change in this 2 patches
 
-> 
->> If it has, it should be separate patch with its own explanation of the
->> hardware.
-> 
-> Will discard these patches from the patchset -
-> 
-> 	dt-bindings: PCI: qcom: Use sdx55 reg description for ipq9574 Varadarajan Narayanan
-> 	arm64: dts: qcom: ipq9574: Reorder reg and reg-names Varadarajan Narayanan
-> 
-> Will add mhi for ipq9574 and post the next version. Is that ok?
+-> Subject: genirq: Add interrupt redirection infrastructure
+-> Subject: PCI: dwc: Enable MSI affinity support
 
-Yes.
+And adding if check on irq_chip_redirect_set_affinity() and
+irq_set_redirect_target() to avoid cpumask_first() return nr_cpu_ids
 
-Best regards,
-Krzysztof
+int irq_chip_redirect_set_affinity(struct irq_data *data, const struct
+cpumask *dest, bool force) {
+     ....
+     ....
+     if (target >=3D nr_cpu_ids)
+          target =3D smp_processor_id();
+     irq_data_update_effective_affinity(data, cpumask_of(target));
+}
+
+static void irq_set_redirect_target(struct irq_desc *desc)
+{
+    const struct cpumask *m =3D
+irq_data_get_effective_affinity_mask(&desc->irq_data);
+    unsigned int cpu =3D cpumask_first(m);
+
+    if (cpu >=3D nr_cpu_ids)
+       cpu =3D smp_processor_id();
+
+    WRITE_ONCE(desc->redirect.target_cpu, cpu);
+}
+
+May I ask, would this patch be officially added to the 6.14 kernel ?
+
+Thanks
+
+On Sat, Mar 8, 2025 at 3:49=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de>=
+ wrote:
+>
+> On Fri, Mar 07 2025 at 19:10, Tsai Sung-Fu wrote:
+> > Thanks for your detailed explanation and feedback, I am a bit confused =
+about the
+> > #4 you mentioned here ->
+> >
+> >>     4) Affinity of the demultiplex interrupt
+> >
+> > Are you saying there is a chance to queue this demultiplexing IRQ event
+> > to the current running CPU ?
+>
+> The demultiplexing interrupt (currently a chained handler, which is
+> hidden from /proc/irq/) stays at the affinity which the kernel decided
+> to assign to it at startup. That means it can't be steered to a
+> particual CPU and nobody knows to which CPU it is affine. You can only
+> guess it from /proc/interrupts by observing where the associated
+> demultiplex interrupts are affine to.
+>
+> So ideally you want to be able to affine the demultiplexing interrupt
+> too. That requires to switch it to a regular interrupt for
+> simplicity. We could expose those hidden chained handlers affinity too,
+> but that needs some surgery vs. locking etc.
+>
+> > And that's really an approach worth to try, I will work on it.
+>
+> I've played with this on top of variant of Marc's changes to use MSI
+> parent interrupts for such controllers too:
+>
+>   https://lore.kernel.org/all/20241204124549.607054-1-maz@kernel.org/
+>
+> A completely untested and largely uncompiled preview is here:
+>
+>      https://tglx.de/~tglx/patches.tar
+>
+> The MSI parent parts are in flux. Marc will look at them in the next
+> weeks, but I picked them up because it simplifies the whole business a
+> lot. If you find bugs in that series, you can keep them :)
+>
+> Thanks,
+>
+>         tglx
 
