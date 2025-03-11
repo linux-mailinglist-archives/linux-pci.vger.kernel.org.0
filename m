@@ -1,105 +1,148 @@
-Return-Path: <linux-pci+bounces-23436-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23437-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C52D0A5C455
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 16:00:07 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CC75A5C61C
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 16:21:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5C9F3A7AA9
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 14:59:54 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 807B2166501
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 15:20:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86C6F25DAE8;
-	Tue, 11 Mar 2025 15:00:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B526125EFBB;
+	Tue, 11 Mar 2025 15:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qfqmSQj6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1309B25DAE7;
-	Tue, 11 Mar 2025 15:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870F525EFB3;
+	Tue, 11 Mar 2025 15:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741705205; cv=none; b=AxqrXvNdQQUtuLt+RsmaHwH52ibiy49JNouK89kv6WIv0NmxxbBlJcpdrp94ux/SYXopJSO7uqR6MJH4v12V8Yp+BkuSMRu+HaukDY7QlJKfgMO0krzeJ5O/XQIVl99TSLvU3BNCRbMVPd2UaJRsNGYZAnC/jWqeKXjdk3i1vwg=
+	t=1741706371; cv=none; b=UAdAzMWLcCJlAzF2iwKHxTvrsA5kDQPJbO+CQ877ib7iDVAPwdJtiYem72ZLIwKCryOdjtY77PDJHrDe3256p36vZ1M+WYe9/NFpVgIYq0rEfgQbPhZT577fiTYAfgWR5uUbDD0DKURf9S9ZGue0J5WD8Zdv+iQSjGxsbibClFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741705205; c=relaxed/simple;
-	bh=5PJkwwYfGL4NbJsE8apZ0H1rlDQsfGXPYywEs5a7dgs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hbHDEK9m9Xwq9N4o1+WteyXg+HOz3d5+XFzNA6YdALqtHqdUEP9YuS5/fJ4F3jK94mVmETyxyffrWajjL62M9eihnj5C/vFfxxhv+Csj7oTDXNSHdb3lWyJLBwuXC67ue7OVZGlUoYia0lXS1o1Vnk+EUAZ3to/HjqtU9QuZtyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22401f4d35aso99883015ad.2;
-        Tue, 11 Mar 2025 08:00:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741705203; x=1742310003;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MaJ8SLFG93FwYkFp7sfKg4X+KPodbWjwHYeXqqA9L2w=;
-        b=FFoNtEiwGDLcjBi3pKplT3KGrBuVaYywRABFEKQcnpb/oRicGBtN/F5+BsTM2+AGAq
-         q85c+riylkGI1yoSR0Ut/6CyOXaB9HRSg7ofHzVEgKBluTUcKmNs+7gyX1ZrthlzC2Oi
-         v2Irl/q3OCRcd4Di0tR+hBeOlO2PZ/Zn3PA6JmKuG6QXzg/JQBsM01Kf5q1Ux4ccNveF
-         XcVxwrGd/Q8S1L2xEX11Vx0sL9MEGS06Ss9Ytcow4IqLU3s5uUzqsZWkkRHjILFLzOZ3
-         oOOQu38NnMD/LbJUNQka3FOYy3vzgxBjIx1CBi3/IOSAiEiVSwaNFBATY/F2MeRJzd73
-         h1pA==
-X-Forwarded-Encrypted: i=1; AJvYcCVEzkJi4jGb/FUgw9qK/VUzc++Zi2BqTaNcDlMgUwYX248KH9JLylKi8CA4rSu1Ftix7YyCEwmsbgV8OGA=@vger.kernel.org, AJvYcCXVxUtxs3k3Sa+RwtAIPX4k6yBrAidjy6k4LM14sZqbX+qVGIOa7AVKJVpLz+szIpGtVLe7+iQL@vger.kernel.org, AJvYcCXWZ1zPziW2e5qiyOargm4i33YeTcr951JBAlQal5mEXNrPfGmP9fPcTwU7COzo/KHnMnu1T+riJhj3@vger.kernel.org, AJvYcCXhxjevKAo0yDcAHYyrlmOzl2HAH3dUUrs/iywgT6YZ22SkNYUwBHNQSEkWkP9lb0hHUxcqcJl/3NNNaw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7CxHK8DVigpg8QYCc98TJXpCpmQudIgSBVuzz1jsRThFzZtJt
-	IvD6/Ll2HBPumXyN39oxdQdr8nzsrQmCUCq68uMfXaUMqAS71hK1
-X-Gm-Gg: ASbGncsKcrLvqhLnWVyoJSrU7dG1vBYR5dbjMPt3JiBaM5cngveBfJ7MiEjCdRbEtxN
-	5WiTNt42T7wTsDA88FP7Tql6oVvQ6Ouud43hLqGw6PfQS6LH2ExnxvovvjUPWjewQFnkGeR0/RP
-	sZwtJCQieIu/otZcNTfBW0cy7ecAcCKabZo5IPftdKZadRKGd49JZntfSSxu5ukb1ObYWrxSvLT
-	br050e4JNF5SvXeoleu2uGMXPHZcWGiJkdQyvA/frtnRSQ1v0E1bFif8KXX6ZTH7Q2kDF468mWY
-	0oZwJVTd5euVIN03C6zZeTf1UXBgaQHDPLfcsi3z4MR8kRgqYUkVU0DVYUsONvAi9wvovt/L3Zc
-	LMjt2d/OvOuK7uw==
-X-Google-Smtp-Source: AGHT+IGDF17bVy+X8PD1CLxyryITaYKCJ8HP+TmrU6K1QilfB9RwZjOgz3kvEQi1n6fSoKOwqa28aQ==
-X-Received: by 2002:a05:6a00:cc4:b0:736:5544:7ad7 with SMTP id d2e1a72fcca58-736eb7ffa52mr5264312b3a.14.1741705201877;
-        Tue, 11 Mar 2025 08:00:01 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-736e3f9d4f0sm3313957b3a.145.2025.03.11.08.00.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 08:00:01 -0700 (PDT)
-Date: Wed, 12 Mar 2025 00:00:00 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: lpieralisi@kernel.org, vigneshr@ti.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, rogerq@kernel.org, linux-omap@vger.kernel.org,
-	linux-pci@vger.kernel.org, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	srk@ti.com
-Subject: Re: [PATCH] PCI: j721e: Fix the value of linkdown_irq_regfield for
- J784S4
-Message-ID: <20250311150000.GB1381004@rocinante>
-References: <20250305132018.2260771-1-s-vadapalli@ti.com>
+	s=arc-20240116; t=1741706371; c=relaxed/simple;
+	bh=kEz7CxS008YfwVhh4yUlV3vqB8axwYnYnPqCS7q2/Hc=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=S2xSYzahwIQzLvPZ1K4E/w+qHepH5PN/1o+AYKHGAhv5nVz4X1caOazg+3DSmVQg42MCvrmJmt8IGavRo4emDCArJIWf6PQsK9jsESXCVLPyk96/4RIbtoOskO7I/gv/YAuwD7QL1XpenNFTxtunawGCjT+GoW5/zfYbUl01FKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qfqmSQj6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26528C4CEED;
+	Tue, 11 Mar 2025 15:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741706371;
+	bh=kEz7CxS008YfwVhh4yUlV3vqB8axwYnYnPqCS7q2/Hc=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=qfqmSQj6eyHYXgCkKovEaUCj5JIrjOFNzn2Pvvx8/22cmvpo7DRyJ7Dr50gV6fJ6Y
+	 J4/Rm8N4Xa2hSFPI1MBEfAFRDZtZXaBKjXTfhh9u1ntBl7dSa8umeu5JgGG+zjsWaU
+	 pV6NDoSa2vWwtVJUI6Ew7W2wjKsXIL2p77SGoFaDIblxqUcHGtk62jWN2qC5lUkiuG
+	 pBhsPDVFOcWabgvfeX6z98AkEuaGN/R0Q9ZULlKehy8lsr+rpSS6GOReCWv2sceXQI
+	 MXMQ4ZcuUJkHZJKGmWLS/02XRso4UGyOQKR8ol9EEo2AfPUOc40TULIc6OeG7duKr6
+	 kATP3MtjEWyiw==
+Date: Tue, 11 Mar 2025 10:19:30 -0500
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250305132018.2260771-1-s-vadapalli@ti.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Frank Li <Frank.Li@nxp.com>, devicetree@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org, 
+ linux-arm-kernel@axis.com, linux-kernel@vger.kernel.org, 
+ Lars Persson <lars.persson@axis.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Jesper Nilsson <jesper.nilsson@axis.com>
+In-Reply-To: <Z8huvkENIBxyPKJv@axis.com>
+References: <20250304-axis-v1-0-ed475ab3a3ed@nxp.com>
+ <Z8huvkENIBxyPKJv@axis.com>
+Message-Id: <174170613961.3566466.13045709851799071104.robh@kernel.org>
+Subject: Re: [PATCH RFC NOT TESTED 0/2] PCI: artpec6: Try to clean up
+ artpec6_pcie_cpu_addr_fixup()
 
-Hello,
 
-> Commit under Fixes assigned the value of 'linkdown_irq_regfield' for the
-> J784S4 SoC as 'LINK_DOWN' which corresponds to BIT(1). However, according
-> to the Technical Reference Manual and Register Documentation for the J784S4
-> SoC [0], BIT(1) corresponds to "ENABLE_SYS_EN_PCIE_DPA_1" which is __NOT__
-> the field for the link-state interrupt. Instead, it is BIT(10) of the
-> "PCIE_INTD_ENABLE_REG_SYS_2" register that corresponds to the link-state
-> field named as "ENABLE_SYS_EN_PCIE_LINK_STATE".
+On Wed, 05 Mar 2025 16:33:18 +0100, Jesper Nilsson wrote:
+> Hi Frank,
 > 
-> Hence, set 'linkdown_irq_regfield' to the macro 'J7200_LINK_DOWN' which
-> expands to BIT(10) and was first defined for the J7200 SoC. Other SoCs
-> already reuse this macro since it accurately represents the link-state
-> field in their respective "PCIE_INTD_ENABLE_REG_SYS_2" register.
+> I'm the current maintainer of this driver. As Niklas Cassel wrote in
+> another email, artpec-7 was supposed to be upstreamed, as it is in most
+> parts identical to the artpec-6, but reality got in the way. I don't
+> think there is very much left to support it at the same level as artpec-6,
+> but give me some time to see if the best thing is to drop the artpec-7
+> support as Niklas suggested.
 > 
-> [0]: https://www.ti.com/lit/zip/spruj52
+> Unfortunately, I'm travelling right now and don't have access to any
+> of my boards. I'll perform some testing next week when I'm back and
+> help to clean this up.
+> 
+> Best regards,
+> 
+> /Jesper
+> 
+> 
+> On Tue, Mar 04, 2025 at 12:49:34PM -0500, Frank Li wrote:
+> > This patches basic on
+> > https://lore.kernel.org/imx/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com/
+> >
+> > I have not hardware to test and there are not axis,artpec7-pcie in kernel
+> > tree.
+> >
+> > Look for driver owner, who help test this and start move forward to remove
+> > cpu_addr_fixup() work.
+> >
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> > Frank Li (2):
+> >       ARM: dts: artpec6: Move PCIe nodes under bus@c0000000
+> >       PCI: artpec6: Use use_parent_dt_ranges and clean up artpec6_pcie_cpu_addr_fixup()
+> >
+> >  arch/arm/boot/dts/axis/artpec6.dtsi       | 92 +++++++++++++++++--------------
+> >  drivers/pci/controller/dwc/pcie-artpec6.c | 20 +------
+> >  2 files changed, 52 insertions(+), 60 deletions(-)
+> > ---
+> > base-commit: 1552be4855dacca5ea39b15b1ef0b96c91dbea0d
+> > change-id: 20250304-axis-6d12970976b4
+> >
+> > Best regards,
+> > ---
+> > Frank Li <Frank.Li@nxp.com>
+> 
+> /^JN - Jesper Nilsson
+> --
+>                Jesper Nilsson -- jesper.nilsson@axis.com
+> 
+> 
 
-Applied to controller/j721e, thank you!
 
-	Krzysztof
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/axis/' for Z8huvkENIBxyPKJv@axis.com:
+
+arch/arm/boot/dts/axis/artpec6-devboard.dtb: /bus@c0000000/pcie@f8050000: failed to match any schema with compatible: ['axis,artpec6-pcie', 'snps,dw-pcie']
+arch/arm/boot/dts/axis/artpec6-devboard.dtb: /bus@c0000000/pcie_ep@f8050000: failed to match any schema with compatible: ['axis,artpec6-pcie-ep', 'snps,dw-pcie']
+
+
+
+
+
 
