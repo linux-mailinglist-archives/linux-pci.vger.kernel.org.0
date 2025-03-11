@@ -1,106 +1,85 @@
-Return-Path: <linux-pci+bounces-23398-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23399-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0264CA5B66E
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 03:07:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3FDEA5B6EB
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 03:46:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 15E71171B70
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 02:07:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 52601189569E
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Mar 2025 02:46:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 932ED1E32C3;
-	Tue, 11 Mar 2025 02:07:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44EBC1DE892;
+	Tue, 11 Mar 2025 02:46:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Zhc8taC7"
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="RMCb81w2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D323FD1;
-	Tue, 11 Mar 2025 02:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.14])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3676417741;
+	Tue, 11 Mar 2025 02:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741658826; cv=none; b=QpamHjAlJBEWxCUvi6tFWLOmIux8yoOxdNQ72/HT9bfsKyF6zqysudnB7H258CvX4ATTgF/Ykf6WczRIeQlZD+dFEXIxW/dcW3OaLcmGmOAD9fBLKXitPC4hz1LKjZ7DNz+GiaTCgkFhEpXWoMQOl2PW0BMIVLjHOHNHPMM+S8c=
+	t=1741661195; cv=none; b=LQjVw2zTWhr8gz63ysnprqOw2BEq+NVlfJ1SsdLpdJSoaYaOurvyq6lClCqOJqv4BnjeRffhRJo83Ut5FTxST+86FBsGQPir+MJqzzatjpwzBnohyeiqTRj/NsxTLea/CgAc7/HJ3QZsVUYg6as5DA3uX+7Bxo81o5yzCcLRCFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741658826; c=relaxed/simple;
-	bh=z6jVo03j7ZbrcOq9bBY8qnIpoBkz5o6+15aKdHE31EI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SghBUYtJZEjE9w3T0LVupL0S1ALgolZAGvRu7c1petUwEvIQ8TXiy31RMvQCRjNAovTCxI3cSqEhJ7A6YviiBlDGkcBWsA9pttpUZH+suX3QKNXgya7kw3kxRrgtOhbaCGbA1jxd5jEiWRHyYqKYUZXPxaIKzQtr0DP2jpKKBl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Zhc8taC7; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1741658819; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=BzglBtV+XA2a3PeBuIhCqkESUNYrOmlDABzPylPcK5w=;
-	b=Zhc8taC7P9/Vc4IPGJCdNWp7AvNo3j5UUAusoCH7u5pFUXHvrYF2uZNVIjtbBa+R8JYeGHT4dUVRi110e7pZ4j8iydYjHt0GrsoZLht4UgWBNsnN/ZxC/qS0Kr/Vn6o1eo8EjNXgv9obFmQxMfT7C/GC3+sjqBGlytYh4azfxLs=
-Received: from 30.221.130.118(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WR7LvPK_1741658816 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 11 Mar 2025 10:06:57 +0800
-Message-ID: <47785d3f-3560-4832-b88a-031a80d1fd28@linux.alibaba.com>
-Date: Tue, 11 Mar 2025 10:06:56 +0800
+	s=arc-20240116; t=1741661195; c=relaxed/simple;
+	bh=r5C5UHC/MEvYiNybKnqxQY5J2VLFO/BGtRfgQh/kKSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r1nscenFRQfbtOe2whxY9VdPQqseQQS58EbG1vzu3qq7tNZIxMt+DtDz28Jbf2wmxoU04ddmA03eEdZ2DPg665bNV2VXmkZzbIz995++L7Z3fkhUZqa1nYw3yAWk3fdf7A/fnsE7HDCW5EaOyold2UlME23pK4cjSC5Hnowzy7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=RMCb81w2; arc=none smtp.client-ip=1.95.21.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=HOnuc6V7iZj1VHst/LjUygWq87lYaT/N7rhOGEcupU8=;
+	b=RMCb81w28Z95GMpjzit9coBp5ZegdbVkG1EVgach9vpYzvBpRGVMgsMA8bORSm
+	tVDKkMtP0t5q4tbhb+QnW+z/J0Xx0DtfqcBydniCVqEc4m93HeXjXYsQ1g87Gpdf
+	JQk2FYnhnJ6CaLJhpsas+dMsHTvRbiIUhtCs+qtM8D3SY=
+Received: from dragon (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id M88vCgA3xq+Xo89n92ivAA--.43267S3;
+	Tue, 11 Mar 2025 10:44:41 +0800 (CST)
+Date: Tue, 11 Mar 2025 10:44:39 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Frank Li <Frank.li@nxp.com>,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux@ew.tq-group.com
+Subject: Re: [PATCH 0/3] imx8qxp: PCIe fixes
+Message-ID: <Z8+jl+QWCwStEitG@dragon>
+References: <20250225102726.654070-1-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-References: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
- <20250113155503.71467082@gandalf.local.home>
- <deb6f0c4-77b8-431e-9b81-555a8344c750@linux.alibaba.com>
- <20250310105044.129dc354@gandalf.local.home>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250310105044.129dc354@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225102726.654070-1-alexander.stein@ew.tq-group.com>
+X-CM-TRANSID:M88vCgA3xq+Xo89n92ivAA--.43267S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUV75rUUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiAh4NZWfPWknoJAAAsD
 
+On Tue, Feb 25, 2025 at 11:27:20AM +0100, Alexander Stein wrote:
+> Alexander Stein (3):
+>   dt-bindings: PCI: fsl,imx6q-pcie: Add optional DMA interrupt
+>   arm64: dts: imx8qm-ss-hsio: Wire up DMA IRQ for PCIe
+>   arm64: dts: mba8xx: Remove invalid propert
 
+s/propert/property as Bjorn suggested, then applied both DTS changes.
 
-在 2025/3/10 22:50, Steven Rostedt 写道:
-> On Mon, 10 Mar 2025 11:59:55 +0800
-> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
-> 
->> Hi, Steve,
->>
->> If I move PCI_HOTPLUG_EVENT into one place, `include/upai/linux/pci.h`,
->> I need to include:
->>
->>       #include <linux/tracepoint.h>
->>
->> Then, kernel build fails with CONFIG_UAPI_HEADER_TEST=y:
-> 
-> Just move the enum definitions, not the entire event file.
-> 
-> That is, have one place has the PCI_HOTPLUG_EVENT macro, and have both the
-> uapi header as well as the tracepoint header include that header.
-> 
-> I guess I need to see the entire change.
-> 
+Shawn
 
-Hi, Steven,
-
-IMHO, the problem is that the PCI_HOTPLUG_EVENT macro needs to include
-"linux/tracepoint.h" but it is not allowed in userspace.
-
-The entire change in v6 build fails with CONFIG_UAPI_HEADER_TEST=y:
-
-   https://lore.kernel.org/lkml/202501190108.tRReJA1Z-lkp@intel.com/T/#mae507b91b8b80c386dfa9e63fbbdd45826c2e003
-
-(sorry, I did not see the problem because my local .config do not set
-CONFIG_UAPI_HEADER_TEST)
-
-Thanks
-Shuai
 
