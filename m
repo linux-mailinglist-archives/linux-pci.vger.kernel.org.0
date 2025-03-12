@@ -1,55 +1,59 @@
-Return-Path: <linux-pci+bounces-23474-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23475-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3203EA5D7CB
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 09:06:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F619A5D7CE
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 09:07:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD8F53B68B3
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 08:06:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 20EE3189DBFB
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 08:07:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F051D230277;
-	Wed, 12 Mar 2025 08:06:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 833E6232377;
+	Wed, 12 Mar 2025 08:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="faaq5wd1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lsoMAARq"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C713423024D;
-	Wed, 12 Mar 2025 08:06:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5250A232364;
+	Wed, 12 Mar 2025 08:06:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741766808; cv=none; b=KZVhRzxsMatEms8fDv+IRS9/kIfIMjOEYMbDMFUWb+fVVarCHIgUWVPiOsuE5TcpZO2dLLtotyAK5akLq5VFaIFQWKCO/M7VdoHae9X+chNstMrgCEPg/yJrfqMNbpRo7/BPePLGFuZ7XcI3iWskcwZGi3W61ePIba+vP/qMPG0=
+	t=1741766811; cv=none; b=djv/YAAUKEltQsqORPFOl7ZXywDm4wasL/bp5xXBpDkU3QhH1ZeludPCF/kL7RXzNrD9wSzAsTBNiXRK280ApW6EQ9n72iylRq6lsq057As+R7ux5u96vQ2XNHHwyQPgpNuCPZi/45dhwZBGcrASKq95UCXcB2x79GZMLxeKvpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741766808; c=relaxed/simple;
-	bh=2qYWFd2AX/MDpzQluHIJXRZMEf7QU64v1QrPYF0Aleg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=REjEdPYX0FqytNUisCs15C9qsfVr4nqReZo0GQuJdPEdcGAocLZi+RyoIa03QlSCOVwt2imYytuLtR7Mkc9iyNigU4H0ZIP3wDr3oRHpNsWz1RUPpkltRRrkYzwGGLviPvUxACK8W2XPAoIR6BL2dQIqgu4IsjH5isle4HBuDfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=faaq5wd1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A053C4CEE3;
-	Wed, 12 Mar 2025 08:06:45 +0000 (UTC)
+	s=arc-20240116; t=1741766811; c=relaxed/simple;
+	bh=8/aqzVkQhaCsfezDRLPycVmFSKSk0ZnXQ8yaaEJW60Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pr40HNpu7tIYIBascDd3JZO3G3WdvGK/ENIvIjBUOeC/p5YXyb41flW8IsRKgPjd4NW+jiwc5eb44pXZUQof7SsNzHtquxYQBRdxVIxqv+uovDWpJtxxZ2QuyVDFQZP6E473MFIFqBpvrQ6gMAWhaImIHIg5lIXLXm2fI2Lj5EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lsoMAARq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE246C4CEEA;
+	Wed, 12 Mar 2025 08:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741766808;
-	bh=2qYWFd2AX/MDpzQluHIJXRZMEf7QU64v1QrPYF0Aleg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=faaq5wd1LWhr3FeNtx4FIJvQ7eJLxpJTnZ7gPJy1HX3IidTpawbto0XNePn8N2jgm
-	 lt0ZIyl4zHz03FraSJcFt7fuvcC0klbFNeE1cJej6R4NSqUACE+yTe7xSXpSfN5aKd
-	 ASA4NkzvozTrXjuXA6xi+rPK/ixgj8z8IQJjikuBlAMRN19ObFufGS3Buz/ZYRyX28
-	 hd+lifDDKo1u9DSae6ZDBVOXXHhbpCDQNt4OObW44E5Pzz6jRALZFst9WEm2Rmyard
-	 NWhpj+AsLyYYlRhxBarOhCaOuUo0zWa1T0tlJmGB74ABcNGHX23K6gMWCHd9F1PQG5
-	 P38wVYEMSVMiw==
+	s=k20201202; t=1741766810;
+	bh=8/aqzVkQhaCsfezDRLPycVmFSKSk0ZnXQ8yaaEJW60Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lsoMAARqEI7pAj3h6fSaKPbdTl/tb1+CB5Rv1rlynbU8zn9TODlEvSqbd614Kl9L8
+	 zq8VVaEx/6pRIx7+rorYfooD6ssaZGGqThufVWU0w5prMWDd7YMW66QIHPRLU1Zzsq
+	 y/XYSoXzCF2LAlIGJmeQfINYLI27bu+fejH9vuoIO7Nzb7Zmj5uc7F7MjAW6M5lMR/
+	 GEI+osKsFd4bzTHuhPBBGgOsywD/+5j/yyz24irRqIuDbMwxLJkQyCVw7ujQJGWg9O
+	 Rq+tUqqSpCmqf8meSvc+rmtQkcXyVzlA896gETNvezdxNB4siPMXvWFd/fnbPidhA3
+	 xa6FIaBGFyW3g==
 From: Philipp Stanner <phasta@kernel.org>
 To: =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
 	Bjorn Helgaas <bhelgaas@google.com>
 Cc: linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Philipp Stanner <phasta@kernel.org>
-Subject: [PATCH v3 0/2] Harden PCI resource array indexing
-Date: Wed, 12 Mar 2025 09:06:33 +0100
-Message-ID: <20250312080634.13731-2-phasta@kernel.org>
+	Philipp Stanner <phasta@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH v3 1/2] PCI: Fix wrong length of devres array
+Date: Wed, 12 Mar 2025 09:06:34 +0100
+Message-ID: <20250312080634.13731-3-phasta@kernel.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250312080634.13731-2-phasta@kernel.org>
+References: <20250312080634.13731-2-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -58,26 +62,37 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is a v3, spiritually successing "v1" the original implementation of
-length checking [1], and "v2", the fix squashed in by Krzyzstof [2].
+The array for the iomapping cookie addresses has a length of
+PCI_STD_NUM_BARS. This constant, however, only describes standard BARs;
+while PCI can allow for additional, special BARs.
 
-Changes in v3:
-  - Use PCI_NUM_RESOURCES as the devres array length and provide that as
-    a bugfix to be backported. (Damien)
+The total number of PCI resources is described by constant
+PCI_NUM_RESOURCES, which is also used in, e.g., pci_select_bars().
 
-[1] https://lore.kernel.org/linux-pci/20250304143112.104190-2-phasta@kernel.org/
-[2] https://lore.kernel.org/linux-pci/20250305075354.118331-2-phasta@kernel.org/
+Thus, the devres array has so far been too small.
 
-Philipp Stanner (2):
-  PCI: Fix wrong length of devres array
-  PCI: Check BAR index for validity
+Change the length of the devres array to PCI_NUM_RESOURCES.
 
- drivers/pci/devres.c | 18 +++++++++++++++---
- drivers/pci/iomap.c  | 29 +++++++++++++++++++++--------
- drivers/pci/pci.c    |  6 ++++++
- drivers/pci/pci.h    | 16 ++++++++++++++++
- 4 files changed, 58 insertions(+), 11 deletions(-)
+Cc: <stable@vger.kernel.org>	# v6.11+
+Fixes: bbaff68bf4a4 ("PCI: Add managed partial-BAR request and map infrastructure")
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
+---
+ drivers/pci/devres.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+index 3431a7df3e0d..728ed0c7f70a 100644
+--- a/drivers/pci/devres.c
++++ b/drivers/pci/devres.c
+@@ -40,7 +40,7 @@
+  * Legacy struct storing addresses to whole mapped BARs.
+  */
+ struct pcim_iomap_devres {
+-	void __iomem *table[PCI_STD_NUM_BARS];
++	void __iomem *table[PCI_NUM_RESOURCES];
+ };
+ 
+ /* Used to restore the old INTx state on driver detach. */
 -- 
 2.48.1
 
