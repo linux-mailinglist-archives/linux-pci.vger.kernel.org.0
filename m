@@ -1,59 +1,54 @@
-Return-Path: <linux-pci+bounces-23534-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23535-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4E92A5E58F
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 21:42:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A0C3DA5E592
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 21:44:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A49A11897F53
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 20:43:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D0D2B18955C4
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 20:44:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 708351EE7D9;
-	Wed, 12 Mar 2025 20:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A18E41EEA28;
+	Wed, 12 Mar 2025 20:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="VelFmMpe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkBUjIhL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCBB1EE033;
-	Wed, 12 Mar 2025 20:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4491EB5DD;
+	Wed, 12 Mar 2025 20:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741812169; cv=none; b=hcb9zRiO7q771YVK/mx/frJ6DVHyDVGG2Wb2ynqi6TYX0Mh+uY1bmJROETUCdIoQD3Ole2G4SUTuUmH8J1pH6YrskEma1YgBNrIe4beCOMOzR3k5EgPDx6UV7l3zbPlN2O60Y5FutUfeZX/VZNKr17IPO92fqBoMq8VX+0exH1c=
+	t=1741812242; cv=none; b=ITOFqeShutWA9pq+mxCOjTjMMmYMaI+Wu7Bw3hczMoD1oVwe8wucelZ4zI2f534B0k/VEem0HpnT/4d5Ft2XNbbAmeunHGXZMgr8l0Z9E4VFB742DtTb+J4exEytYjQwixwC83AY/JERgtxxLmjEJ4LTJONYMpxwMqhH2GSrc3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741812169; c=relaxed/simple;
-	bh=NMh8CTxUGVQ0l/gw/OVK0SrJW3sz8Ziz94+4OJ9KoKY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YM9Ujjqx58r+YufCRd457rSsVWfpOjB2UK7W2Kx0rXHgAwnx5Kbmw+RjO8p6cOGICLxUdOd2A1nZANlwEP68FXRzysIBaMKQo/383Hp868ALZwVMpcPv0Z+iRl4P1cBzS+o7P53hDNOlikYkl+HY6l6T3edRZXXffzJZKUC00vY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=VelFmMpe; arc=none smtp.client-ip=185.70.40.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1741812164; x=1742071364;
-	bh=pMyYkR71+rR/3IuQOyjfnVcyWj2u+Jv42qBbxPyFNk0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=VelFmMpeP25sjUu55fJ3fZ/avXxduntwL86jqVLCxygBCN58CDnlUkusQKUHigO9d
-	 DCF+SAwKWkIhg+B+aDAjVeujKhr8J2ryFYG7orE98Bz5dzi19hM1mZeT4xQndGC++7
-	 i9uhZzkd7Wb/eBw78EQIaFdrshvQggx0tKm7YCRgmT81gjpFpt0Mrc3JaUD3MWNsZZ
-	 tfXbetviLzsF64nYStyTJyGszyfDITZqGQphnnR1Wet6PnNnHw1wyuyUJMxTl9ZAwT
-	 2NDASusiGVP233cBxNLD0kgjT5fREUwt4Xch3uNrzyVf2TvZRmXdi+FyR1LHMva0R0
-	 FXNIJ4Cp3En9w==
-Date: Wed, 12 Mar 2025 20:42:39 +0000
-To: Tamir Duberstein <tamird@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
-Message-ID: <D8EKVM1OP7O5.1GCGYWTV5RBTX@proton.me>
-In-Reply-To: <CAJ-ks9mo-H46Wwcu_LOvDy0ncwMR9ii74Fyf3OX-aWNnrZ397g@mail.gmail.com>
-References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com> <20250309-ptr-as-ptr-v2-5-25d60ad922b7@gmail.com> <D8EDP4SMQG2M.3HUNZGX8X0IL7@proton.me> <CAJ-ks9=K06OT6cutUABj2QDHJHJ70719c-eJ=F3n-_bhkYbZ3w@mail.gmail.com> <D8EG9EM9UU0B.2GLHXRU2XROZ3@proton.me> <CAJ-ks9=+3MQb-tp8TAwYvVj=GOFFFVKJxRMprc8YXZHKhqnDrg@mail.gmail.com> <D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me> <CAJ-ks9=zWAuPUM_61EA6i5QkUpwtNtsN8oF_MUerWGn39MRHhw@mail.gmail.com> <D8EJM4CJ4HAN.1PB2YV8DB77V7@proton.me> <CAJ-ks9mo-H46Wwcu_LOvDy0ncwMR9ii74Fyf3OX-aWNnrZ397g@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 899ceb5f8eb0289fe15b927f74e6d074ac1145f5
+	s=arc-20240116; t=1741812242; c=relaxed/simple;
+	bh=fJkqcS+zvjrpK0/H6/7NewYLFk5ccEwBkbPRdgafu20=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=hPp+JnGqxnR4GTYg5IAY9aRs7NkWZa+rJmfivIx/kget5VEzDAa0mC3NLgsROkQd4s0HDDYCvjtUB0/7wNepUIURZIaWv2sIOT0Eowpj+Ka8W3ONiFF+3kOoOQXpk+hKPZU0qf2FqVRUVNIArDsUIxI4Db4SbpMqw1RoDp76IJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkBUjIhL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C753BC4CEDD;
+	Wed, 12 Mar 2025 20:44:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741812242;
+	bh=fJkqcS+zvjrpK0/H6/7NewYLFk5ccEwBkbPRdgafu20=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=jkBUjIhLUDxutkWjozn0EvvIB+SwubMT3F3LOpaylPNwyDnl6bjsxsaaiKtJv4GBo
+	 wEvcjKkVJKCT6FPMs9e4CYGNxBjIBy5uykjm9Nfu6LKfcsbFGFtqDqcEKLsceiAjvZ
+	 Lm0iS6i41yy3iok4Q7Jgr6v1GEkl3v3H9z3RQOHg2eINR0thbipsHHIpec+FBZ2QTj
+	 CBvIBIqwkMPk6a9NynVYGogv4fHZDjLFjLaKUFRZhF8UK3GlbB8GiO6a6hqfZFS/3h
+	 66MZXObHN9I9ex1OVHE+T5ruxvllSmeoh3ftD4yoxfNjZqz3D2D+jOMWbaSlY/NNxw
+	 Sj+G9NhHYHV1w==
+Date: Wed, 12 Mar 2025 15:44:00 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] PCI: Move pci_rescan_bus_bridge_resize() declaration
+ to pci/pci.h
+Message-ID: <20250312204400.GA708146@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,47 +56,53 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250311174701.3586-1-ilpo.jarvinen@linux.intel.com>
 
-On Wed Mar 12, 2025 at 9:07 PM CET, Tamir Duberstein wrote:
-> On Wed, Mar 12, 2025 at 3:43=E2=80=AFPM Benno Lossin <benno.lossin@proton=
-.me> wrote:
->>
->> On Wed Mar 12, 2025 at 8:19 PM CET, Tamir Duberstein wrote:
->> > I tried using the strict provenance lints locally and I think we can't
->> > until we properly bump MSRV due to `clippy::incompatible_msrv`:
->> >
->> > warning: current MSRV (Minimum Supported Rust Version) is `1.78.0` but
->> > this item is stable since `1.84.0`
->> >    --> ../rust/kernel/str.rs:696:22
->> >     |
->> > 696 |             pos: pos.expose_provenance(),
->> >     |                      ^^^^^^^^^^^^^^^^^^^
->> >     |
->> >     =3D help: for further information visit
->> > https://rust-lang.github.io/rust-clippy/master/index.html#incompatible=
-_msrv
->>
->> Oh this is annoying...
->>
->> > This is with `#![feature(strict_provenance)]`. I can file the issue
->> > but I think it's blocked on MSRV >=3D 1.84.0. But maybe you know of a
->> > path forward :)
->>
->> I think we should be able to just `allow(clippy::incompatible_msrv)`,
->> since Miguel & other maintainers will test with 1.78 (or at least are
->> supposed to :).
->
-> Alright, you've sniped me.
+On Tue, Mar 11, 2025 at 07:46:58PM +0200, Ilpo Järvinen wrote:
+> pci_rescan_bus_bridge_resize() is only used by code inside PCI
+> subsystem. The comment also falsely advertizes it to be for hotplug
+> drivers, yet the only caller is from sysfs store function. Move the
+> function declaration into pci/pci.h.
+> 
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-Sorry about that :)
+Applied all four patches to pci/resource for v6.15, thanks, Ilpo!
 
-> This is coming in v3.
-
-Thanks a lot!
-
----
-Cheers,
-Benno
-
+> ---
+>  drivers/pci/pci.h   | 2 ++
+>  include/linux/pci.h | 1 -
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 01e51db8d285..be2f43c9d3b0 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -309,6 +309,8 @@ enum pci_bar_type {
+>  struct device *pci_get_host_bridge_device(struct pci_dev *dev);
+>  void pci_put_host_bridge_device(struct device *dev);
+>  
+> +unsigned int pci_rescan_bus_bridge_resize(struct pci_dev *bridge);
+> +
+>  int pci_configure_extended_tags(struct pci_dev *dev, void *ign);
+>  bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *pl,
+>  				int rrs_timeout);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 47b31ad724fa..d788acf2686a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1455,7 +1455,6 @@ void set_pcie_port_type(struct pci_dev *pdev);
+>  void set_pcie_hotplug_bridge(struct pci_dev *pdev);
+>  
+>  /* Functions for PCI Hotplug drivers to use */
+> -unsigned int pci_rescan_bus_bridge_resize(struct pci_dev *bridge);
+>  unsigned int pci_rescan_bus(struct pci_bus *bus);
+>  void pci_lock_rescan_remove(void);
+>  void pci_unlock_rescan_remove(void);
+> 
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> -- 
+> 2.39.5
+> 
 
