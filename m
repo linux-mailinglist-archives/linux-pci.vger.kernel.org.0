@@ -1,271 +1,156 @@
-Return-Path: <linux-pci+bounces-23488-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23489-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B11DAA5D970
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 10:28:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD7DAA5D9B1
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 10:39:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DDF361897B09
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 09:28:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EBF4616F48E
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 09:39:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53D4923A9B4;
-	Wed, 12 Mar 2025 09:28:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2A4723A9AF;
+	Wed, 12 Mar 2025 09:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ze2jFdmu"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cJTCQbsz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5AB23A9A3
-	for <linux-pci@vger.kernel.org>; Wed, 12 Mar 2025 09:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6078715820C;
+	Wed, 12 Mar 2025 09:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741771722; cv=none; b=YrH/C28K5AKV94JWP0cLA/8uEXn1TL2ZSDi1fGUBsS/K9y9rOc/NShN4qm3SFzyj7NSwOXPHCy3euzMeXc++BhsHEqayKsaT+RGdCC/lyyVde1e9C3CwspLWPfrGng9/R1v6h0dRfn0C5h5XuHvyq28LVBMOkGQHz+D/gkN6sio=
+	t=1741772392; cv=none; b=Sqaj/JzH9ournj+2viVHkI5y3OswCcgkg2FwtDosuDZXH3kh/RvbXObfChghCGgHpb4ybOYtIPtCEwmEf23RrMseE7RPVVzDnHdnrlesp3Q0dD/ris/Riq7NHpjK7KujALOCKEuLvILPLXni0ao12wf7U6Jc4lnz/d3OB49wGEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741771722; c=relaxed/simple;
-	bh=6KAeTydDNQmh9ejxV3lHGEocGPHDZC5ErvVvG5/OBoo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=pqI3yII++CVOGoZM/Ap91JfHiGxFFZQxtX0Xls2+gyzFMlAzWf9fRD8WfaBK7/vywtBe8Hqx5YQMXh7KpJiRwreFhd5LaIxDoVpP+escVM3rbec2iF0aiUKDFH+TK7AyZXij/yrRhvCUBrV9XVWS1DY23pCiRPIuo/F+E4KnX8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Ze2jFdmu; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250312092838euoutp02781f228010f3677d20d1fa0d70596e25~sBCY747rk1303013030euoutp02k
-	for <linux-pci@vger.kernel.org>; Wed, 12 Mar 2025 09:28:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250312092838euoutp02781f228010f3677d20d1fa0d70596e25~sBCY747rk1303013030euoutp02k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1741771718;
-	bh=jM2XikXEr0ikBo0oLtomrsxm7QlhoeG8uKeeSTS19yM=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=Ze2jFdmuO0cLLYqLIJd51/wQzBFKAzxgIHozoFZZoNuFZcFG485swGkdKMqUW/Zvp
-	 cl2zr4/04Ndda/wzPd5iBES/LxTo9/80XTM5/yJ6P9bBGWVcJ9B29HLYT+lSWshREK
-	 7AGTFVkE3KSlN6ONOEzzV8Pi8Yif9QuOagwPNUks=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250312092837eucas1p25b1b9a0eaeeeb28386900bd5799beff7~sBCYkpiud1062910629eucas1p2o;
-	Wed, 12 Mar 2025 09:28:37 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id 6E.F9.20409.5C351D76; Wed, 12
-	Mar 2025 09:28:37 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250312092837eucas1p141720d6a0df85c410f2b2209e4cb4ae1~sBCYE1szl1182811828eucas1p1t;
-	Wed, 12 Mar 2025 09:28:37 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250312092837eusmtrp1bf90383d9f98004fe39bcc48be1d1fe1~sBCYCvohl2987729877eusmtrp1N;
-	Wed, 12 Mar 2025 09:28:37 +0000 (GMT)
-X-AuditID: cbfec7f4-c39fa70000004fb9-67-67d153c532b4
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 8C.F0.19654.5C351D76; Wed, 12
-	Mar 2025 09:28:37 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250312092833eusmtip25e36488a2aac248bc9b654fb690ddc66~sBCVArikT0743107431eusmtip2e;
-	Wed, 12 Mar 2025 09:28:33 +0000 (GMT)
-Message-ID: <d408b1c7-eabf-4a1e-861c-b2ddf8bf9f0e@samsung.com>
-Date: Wed, 12 Mar 2025 10:28:32 +0100
+	s=arc-20240116; t=1741772392; c=relaxed/simple;
+	bh=Zl07tU7+p0PpzqbFzUpsduh+7Da4qFqCRGZ9W6ReZ3c=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XAca6+Hz87Wn5HWCqUDOR4qvg9vkFEj+vmstQJTD6SKdYf61OTYM9F87UfDt4bKHZuLtS2Z2z0yhTk4GqtROyzjzchiqNjiNEGmM8lxZVXy/pFYCMz8GSEFpLetFdn2/dD1LfUxJ8iDEtnv6QZPPQz4lNdHcqLGgKAs2OyB+SSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cJTCQbsz; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52BMHCTq030286;
+	Wed, 12 Mar 2025 09:39:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Bs/d2yOM5HvoJ3Fs/iubFgUi
+	IpZVkkeRuPDobV4RML8=; b=cJTCQbszIqE+5ZPqvW7Rrr12sRHj8DY2cnE45VKh
+	RrGIZ/yUNYsGX69iIatS7laqc67K9qBKLGNZGhshJPBdC4DbVFCtRcBGHF4eFzQJ
+	8FiprT0AZH06+TnvJyJ7eTW59XUZur1EKKIcU0KOfP28EOLJJ3iqdwBCe1uDf7BJ
+	U00K5pu9rMBxcd7/wwLYr4dMNCxaQmHajLrvMXqe271Eh7iHbeFwXaEC3+bkXIt+
+	dRPICHETXUJPektCMRcQvuE4+RSDdM+PLTPUHpyVo5LY1U3hGZYkRmfaSWTMznWg
+	Gx0SUSEEJbRur3+HNh0SuGxdlVezmgP2kgP0A1ypcrbK/w==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45au2qhw07-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 09:39:44 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52C9dgkR020391
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 12 Mar 2025 09:39:43 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 12 Mar 2025 02:39:38 -0700
+Date: Wed, 12 Mar 2025 15:09:34 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <quic_srichara@quicinc.com>,
+        <quic_devipriy@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 1/4] dt-bindings: PCI: qcom: Add MHI registers for
+ IPQ9574
+Message-ID: <Z9FWVh1NinKOsRNq@hu-varada-blr.qualcomm.com>
+References: <20250312084330.873994-1-quic_varada@quicinc.com>
+ <20250312084330.873994-2-quic_varada@quicinc.com>
+ <7b2d7f14-4274-4ff0-87a6-ac3dd649df4e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
-To: Robin Murphy <robin.murphy@arm.com>, Leon Romanovsky <leon@kernel.org>,
-	Christoph Hellwig <hch@lst.de>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>, Will
-	Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>, Keith Busch
-	<kbusch@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe
-	<logang@deltatee.com>, Yishai Hadas <yishaih@nvidia.com>, Shameer Kolothum
-	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, Randy
-	Dunlap <rdunlap@infradead.org>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0xTZxjH97anp6VQdiwobxRH2l2o6KigZO+CdgyNOfpBXbbswz64NeNY
-	CBehpWzMLDYMtHRctEiAgoDaCqNFsIxuVlHbgS0QBsiYchGDKZVLymgHTmGbkx628e33f97/
-	c83LYfLb8c2clIxsSp4hTRPiXMxy93n/210fDsp23l+IRDUtJhw9fVGEI+PDUhzp85KR684Z
-	gL4zdjHQ8iJCVZVOgKorphmosLqVjbT2XwEyeNrZqKY8C51fNjBRx+h2dPG0HkND1hocTZhe
-	sFDdlSk26qt14MhtL8aQvuAlecYrMGRbcLHQ1bnfMPTDcB4L5Y/HoSvl3IRw0mWrZZCmWhMg
-	3cNuQNablWT/xDWMzO/0sMi2xijy8s0ZBjnUpyTNTYU4afZp2aSzcgUj2/SnyOm2KkDeGFHh
-	5OWSMtbR0E+4e5KotJQcSi6WfMZNHnFuybwt/rLQ7mCoQEOkBnA4kNgNB31JGsDl8IlGAN13
-	F1i0WARw5vwyoMXvAHYUexkaEODPaLSq11wNAN6ssmO08ALou9eMrbp4hATeLzH5MzDiTVg8
-	1bEW3wC7q1x+3khEwEejlexVDiH2wzuWc8zVQqFEEYC2oT/9JibRg8PnTw7QHAZHXXX+ojgR
-	AzUeDb7KAUQ8nC/4hU17IuA37dX+QpCwceEDSyWLnns/tBuMaxwCZx3fs2kOh71lRRidcAbA
-	+pVHDFqcBVD1ZBTQrng4/vMyvnozJrENtljFdPh9OLA0yaZPGQwfeDbQQwRDraWCSYd5UH2a
-	T7vfgjrH1f/a2gbuMc8CoW7dXXTr1tStW0f3f996gDWBMEqpSJdRitgM6otohTRdocyQRX9+
-	It0MXv7s3r8diz+ChllvtB0wOMAOIIcpDOUZ9w7I+Lwkae5XlPzEp3JlGqWwgy0cTBjGu3S7
-	QMYnZNJsKpWiMin5v68MTsBmFePjg7uDJLceL73TCqhcgSZ3LKG6YW5raimP79tbJ7IOPhN9
-	HSw0fNsaNBU73xqi8mZH5R3ftz0oueX68eFbG6mTzUWmngZkbntNqy4XRbD7+1KOxM2ee336
-	5A1nwS4ROcuO73Ad3PNXafjAoLUvzM2aCzarX+lWR838NB75kbDp6OTY4WMRIx/scqDCkmvR
-	mRZfzAF9iWfb4USxTLyvbjgywfB4x3sGZ41AkihauhCYmHr9VEp1z8oxmVv4blpvVhzPc8im
-	FVyaP2T7Y6458NmwoF/wVCu52J3onUh/WLcjMKdr2rh10TDQOPZqIRmeuSmrPj9TH7up842y
-	nCM7JztJIaZIlsZEMeUK6T9oYz5PSAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJKsWRmVeSWpSXmKPExsVy+t/xe7pHgy+mGxybwmoxZ/0aNotv/3vY
-	LFbf7WezWNKUYfHkQDujxcrVR5ksfn2xsJg54wSjxezpL5gsOmdvYLeYdOgao8XSt1vZLeZM
-	LbSY8msps8XeW9oWC9uWsFhc3jWHzeLemv+sFvOXPWW3ODvvOJvFs0O9LBZLWoGst3ems1gc
-	/PCE1WLd6/csFtuvNrFatNwxtVg2lctBxuPJwXlMHmvmrWH0eHb1GaPHgk2lHufvbWTxaDny
-	ltVj8wotj8V7XjJ5XD5b6rFpVSebx6ZPk9g9Tsz4zeKxeUm9x4vNMxk9dt9sYPNY3DeZNUAk
-	Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DYPNbKyFRJ384mJTUnsyy1SN8uQS/j5gnp
-	gv36FZ2HjjM1MC5X72Lk5JAQMJFYsauDtYuRi0NIYCmjxIS/p5ghEjISJ6c1sELYwhJ/rnWx
-	QRS9Z5RY++UkO0iCV8BO4nrfGiYQm0VAVaL36V4WiLigxMmZT8BsUQF5ifu3ZoDVCwu4SBzY
-	NpEZZJCIQA+jxLdTrxlBHGaBM2wSl08dZodYcZtR4u6OZ2DtzALiEreezAdbwSZgKNH1FuQO
-	Tg5OAWuJd61X2CFqzCS6tnYxQtjyEs1bZzNPYBSaheSSWUhGzULSMgtJywJGllWMIqmlxbnp
-	ucVGesWJucWleel6yfm5mxiBaWrbsZ9bdjCufPVR7xAjEwfjIUYJDmYlEd7VthfShXhTEiur
-	Uovy44tKc1KLDzGaAoNjIrOUaHI+MFHmlcQbmhmYGpqYWRqYWpoZK4nzsl05nyYkkJ5Ykpqd
-	mlqQWgTTx8TBKdXA5MXweTLfSoUt60qSqyf199psCJmzLOjbt8Dp+7jLF2+ZuEluf1nFmbOd
-	l+qXd9/ft6TgwH4DreD/wnf1z2qZXhOetSktKnbvNVmG5GOnBBm31dzN+6q+VYDH/nXctaXM
-	DRaGhnPUPZ5uLq/ju9p/c8Lyk3EfPjhwBL4XLv7acvXf23j5OaW87x66Vu0X7fJa8Thh2ccZ
-	gsVbGVZfm5p4ViVl+65LbPukf8vc5kivmOKxdG+f8RpZ3sqDYcteLtZunVmxxVM+7JHComdz
-	/OTe5AR/tP1X1fZmt+BTkYmPJr/2fLbOLX6/YIXdFHGLCU2v7nSZ83W9mB+3dPf3mvIjtrN5
-	81IPXWh+2M93O+XnxA4lluKMREMt5qLiRABwmQ+33AMAAA==
-X-CMS-MailID: 20250312092837eucas1p141720d6a0df85c410f2b2209e4cb4ae1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648
-References: <cover.1738765879.git.leonro@nvidia.com>
-	<20250220124827.GR53094@unreal>
-	<CGME20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648@eucas1p2.samsung.com>
-	<1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <7b2d7f14-4274-4ff0-87a6-ac3dd649df4e@kernel.org>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: VLZnR-Gwgi09wzAZYhOChL3XibPlTXpM
+X-Proofpoint-GUID: VLZnR-Gwgi09wzAZYhOChL3XibPlTXpM
+X-Authority-Analysis: v=2.4 cv=TIhFS0la c=1 sm=1 tr=0 ts=67d15660 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=FAg4eJUAi5izC7YpO0UA:9 a=CjuIK1q_8ugA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-12_03,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 mlxlogscore=970 mlxscore=0 clxscore=1015 bulkscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 phishscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503120065
 
-Hi Robin
-
-On 28.02.2025 20:54, Robin Murphy wrote:
-> On 20/02/2025 12:48 pm, Leon Romanovsky wrote:
->> On Wed, Feb 05, 2025 at 04:40:20PM +0200, Leon Romanovsky wrote:
->>> From: Leon Romanovsky <leonro@nvidia.com>
->>>
->>> Changelog:
->>> v7:
->>>   * Rebased to v6.14-rc1
->>
->> <...>
->>
->>> Christoph Hellwig (6):
->>>    PCI/P2PDMA: Refactor the p2pdma mapping helpers
->>>    dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
->>>    iommu: generalize the batched sync after map interface
->>>    iommu/dma: Factor out a iommu_dma_map_swiotlb helper
->>>    dma-mapping: add a dma_need_unmap helper
->>>    docs: core-api: document the IOVA-based API
->>>
->>> Leon Romanovsky (11):
->>>    iommu: add kernel-doc for iommu_unmap and iommu_unmap_fast
->>>    dma-mapping: Provide an interface to allow allocate IOVA
->>>    dma-mapping: Implement link/unlink ranges API
->>>    mm/hmm: let users to tag specific PFN with DMA mapped bit
->>>    mm/hmm: provide generic DMA managing logic
->>>    RDMA/umem: Store ODP access mask information in PFN
->>>    RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
->>>      linkage
->>>    RDMA/umem: Separate implicit ODP initialization from explicit ODP
->>>    vfio/mlx5: Explicitly use number of pages instead of allocated 
->>> length
->>>    vfio/mlx5: Rewrite create mkey flow to allow better code reuse
->>>    vfio/mlx5: Enable the DMA link API
->>>
->>>   Documentation/core-api/dma-api.rst   |  70 ++++
->>   drivers/infiniband/core/umem_odp.c   | 250 +++++---------
->>>   drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
->>>   drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
->>>   drivers/infiniband/hw/mlx5/umr.c     |  12 +-
->>>   drivers/iommu/dma-iommu.c            | 468 
->>> +++++++++++++++++++++++----
->>>   drivers/iommu/iommu.c                |  84 ++---
->>>   drivers/pci/p2pdma.c                 |  38 +--
->>>   drivers/vfio/pci/mlx5/cmd.c          | 375 +++++++++++----------
->>>   drivers/vfio/pci/mlx5/cmd.h          |  35 +-
->>>   drivers/vfio/pci/mlx5/main.c         |  87 +++--
->>>   include/linux/dma-map-ops.h          |  54 ----
->>>   include/linux/dma-mapping.h          |  85 +++++
->>>   include/linux/hmm-dma.h              |  33 ++
->>>   include/linux/hmm.h                  |  21 ++
->>>   include/linux/iommu.h                |   4 +
->>>   include/linux/pci-p2pdma.h           |  84 +++++
->>>   include/rdma/ib_umem_odp.h           |  25 +-
->>>   kernel/dma/direct.c                  |  44 +--
->>>   kernel/dma/mapping.c                 |  18 ++
->>>   mm/hmm.c                             | 264 +++++++++++++--
->>>   21 files changed, 1435 insertions(+), 693 deletions(-)
->>>   create mode 100644 include/linux/hmm-dma.h
->>
->> Kind reminder.
+On Wed, Mar 12, 2025 at 09:46:41AM +0100, Krzysztof Kozlowski wrote:
+> On 12/03/2025 09:43, Varadarajan Narayanan wrote:
+> > Append the MHI register range to IPQ9574.
 >
-> ...that you've simply reposted the same thing again? Without doing 
-> anything to address the bugs, inconsistencies, fundamental design 
-> flaws in claiming to be something it cannot possibly be, the egregious 
-> abuse of DMA_ATTR_SKIP_CPU_SYNC proudly highlighting how 
-> unfit-for-purpose the most basic part of the whole idea is, nor 
-> *still* the complete lack of any demonstrable justification of how 
-> callers who supposedly can't use the IOMMU API actually benefit from 
-> adding all the complexity of using the IOMMU API in a hat but also 
-> still the streaming DMA API as well?
->
-> Yeah, consider me reminded.
->
->
->
-> In case I need to make it any more explicit, NAK to this not-generic 
-> not-DMA-mapping API, until you can come up with either something which 
-> *can* actually work in any kind of vaguely generic manner as claimed, 
-> or instead settle on a reasonable special-case solution for 
-> justifiable special cases. Bikeshedding and rebasing through half a 
-> dozen versions, while ignoring fundamental issues I've been pointing 
-> out from the very beginning, has not somehow magically made this 
-> series mature and acceptable to merge.
->
-> Honestly, given certain other scenarios we may also end up having to 
-> deal with, if by the time everything broken is taken away, it were to 
-> end up stripped all the way back to something well-reasoned like:
->
-> "Some drivers want more control of their DMA buffer layout than the 
-> general-purpose IOVA allocator is able to provide though the DMA 
-> mapping APIs, but also would rather not have to deal with managing an 
-> entire IOMMU domain and address space, making MSIs work, etc. Expose 
-> iommu_dma_alloc_iova() and some trivial IOMMU API wrappers to allow 
-> drivers of coherent devices to claim regions of the default domain 
-> wherein they can manage their own mappings directly."
->
-> ...I wouldn't necessarily disagree.
+> Why?
 
+This is needed for ipq5332 to use ipq9574 as fallback compatible.
 
-Well, this is definitely not a review I've expected. I admit that I 
-wasn't involved in this proposal nor the discussion about it and I 
-wasn't able to devote enough time for keeping myself up to date. Now 
-I've tried to read all the required backlog and I must admit that this 
-was quite demanding.
+> > Fixes: e0662dae178d ("dt-bindings: PCI: qcom: Document the IPQ9574 PCIe controller")
+>
+> What is being fixed here?
 
-If You didn't like this design from the beginning, then please state 
-that early instead of pointing random minor issues in the code. There 
-have been plenty of time to discuss the overall approach if You think it 
-was wrong. What do to now?
+Ok, will remove this.
 
-Removing the need for scatterlists was advertised as the main goal of 
-this new API, but it looks that similar effects can be achieved with 
-just iterating over the pages and calling page-based DMA API directly. 
-Maybe I missed something. I still see some advantages in this DMA API 
-extension, but I would also like to see the clear benefits from 
-introducing it, like perf logs or other benchmark summary.
+> > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> > ---
+> > New patch introduced in this patchset. MHI range was missed in the
+> > initial post
+> > ---
+> >  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > index 8f628939209e..77e66ab8764f 100644
+> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > @@ -175,7 +175,7 @@ allOf:
+> >        properties:
+> >          reg:
+> >            minItems: 5
+> > -          maxItems: 5
+> > +          maxItems: 6
+>
+> Why qcom,pcie-ipq6018 gets mhi? Nothing in commit msg mentions ipq6018.
 
+Didn't mention ipq6018 as I was under the impression that 'minItems: 5' would
+apply for ipq6018.
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+> >          reg-names:
+> >            items:
+> >              - const: dbi # DesignWare PCIe registers
+> > @@ -183,6 +183,7 @@ allOf:
+> >              - const: atu # ATU address space
+> >              - const: parf # Qualcomm specific registers
+> >              - const: config # PCIe configuration space
+> > +            - const: mhi # MHI registers
+>
+> Never tested - you introduce new warnings. AGAIN.
+>
+> Properties xxx and xxx-names must have always the same constraints.
 
+Ok, will add 'minItems: 5' here.
+
+Thanks
+Varada
 
