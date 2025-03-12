@@ -1,155 +1,268 @@
-Return-Path: <linux-pci+bounces-23469-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23470-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61751A5D3E6
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 02:13:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EF2FA5D448
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 03:09:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A445316F7B7
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 01:13:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AEF6B189710A
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 02:09:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39C2A13774D;
-	Wed, 12 Mar 2025 01:13:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB57A142E6F;
+	Wed, 12 Mar 2025 02:08:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dQ5xbV8u"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="U/ss0D21"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011039.outbound.protection.outlook.com [52.103.67.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80ACE5CB8;
-	Wed, 12 Mar 2025 01:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741742029; cv=none; b=q6LncpD+fZ2iDOG2wSeRTAXj9R9IDqSOwUrCkQ4jAZPzhRv4esh3hBP+lcO4Wxp9+/M5X7CnxXjQDJpAW3FvFFWCFwUDDRfGdsJqhEL6//hu7Uj1fXs09QTgbBlciSugeRmp0ArwpJgKC5brYQ73ubh6cBEsVpNOZUDoSzHRPxo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741742029; c=relaxed/simple;
-	bh=+RZZ7dldifWWO9KJpQQJzaN1oqzmUvwKYrniOyXt/Dc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A18X1o3AyxnEKZyZnFay1BSgyBgsk2xxAN6LOKs23nZx3W4xhPoa1dnObn6D10gs9koBEkAXzY06eUtINWJOHXWVQpnKB8YRqtLXoN+dvKw0dFw0+M5izUTUbrx/NjlTJz85YAqmAEjm2zHWmfjxjptUXfNBNqx6Y3VQ2tUi6YE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dQ5xbV8u; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741742028; x=1773278028;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+RZZ7dldifWWO9KJpQQJzaN1oqzmUvwKYrniOyXt/Dc=;
-  b=dQ5xbV8ul0YjycD+MymH6UJ5uHbNo+3HUvSxDhhgyPEDzPLFsP9Ll7H1
-   6HRqJG53EJTiGtfn2ascqjlWdK1aC5tQtC++eVK5KXIZmkQdJk1Or5M7V
-   jHp+hA4inmQQQayIPiZVE/3cqq5GR5YqSdLTOQwrbGI7uJfvWXVROGM5c
-   JSQ0BYiGa+Uad2hfULiTdrPyvPCPVA05p4uZWxptuOywQTn0b8t5E6Hs4
-   iXnHD2SO92ls4bg4jFl6K3PnKJHO/A0M3SRLf7uimH+3DYQLnzoQwmWjT
-   uHnE67gC/87fuYLaVAVaLksn+YGOBZ76NJlIDNVWsxMOJQZwxjhRrK9x8
-   g==;
-X-CSE-ConnectionGUID: w5cLbFRNSz+AyX7A5DoucA==
-X-CSE-MsgGUID: 4w839Y+0T3mgUlwmnRQRwg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11370"; a="42936200"
-X-IronPort-AV: E=Sophos;i="6.14,240,1736841600"; 
-   d="scan'208";a="42936200"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Mar 2025 18:13:47 -0700
-X-CSE-ConnectionGUID: u38PE43hRciZlNtVu9D/dQ==
-X-CSE-MsgGUID: eMPyhx1JRFGVHJBvNOHpgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,240,1736841600"; 
-   d="scan'208";a="151443309"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa001.fm.intel.com with ESMTP; 11 Mar 2025 18:13:39 -0700
-Date: Wed, 12 Mar 2025 09:11:09 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, x86@kernel.org, kvm@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arch@vger.kernel.org, Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>, Joerg Roedel <joro@8bytes.org>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Christoph Hellwig <hch@lst.de>, Nikunj A Dadhania <nikunj@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>,
-	Joao Martins <joao.m.martins@oracle.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Steve Sistare <steven.sistare@oracle.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Dionna Glaze <dionnaglaze@google.com>, Yi Liu <yi.l.liu@intel.com>,
-	iommu@lists.linux.dev, linux-coco@lists.linux.dev,
-	Zhi Wang <zhiw@nvidia.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-Subject: Re: [RFC PATCH v2 14/22] iommufd: Add TIO calls
-Message-ID: <Z9DfLQtmq7GGXlBb@yilunxu-OptiPlex-7050>
-References: <Z72GmixR6NkzXAl7@yilunxu-OptiPlex-7050>
- <2fe6b3c6-3eed-424d-87f0-34c4e7e1c906@amd.com>
- <Z77xrqLtJfB84dJF@yilunxu-OptiPlex-7050>
- <20250226131202.GH5011@ziepe.ca>
- <Z7/jFhlsBrbrloia@yilunxu-OptiPlex-7050>
- <20250301003711.GR5011@ziepe.ca>
- <Z8U+/0IYyn7XX3ao@yilunxu-OptiPlex-7050>
- <20250305192842.GE354403@ziepe.ca>
- <Z8lE+5OpqZc746mT@yilunxu-OptiPlex-7050>
- <c5c31890-14fc-4fab-8cd4-d4dcfdecdd2d@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7295684;
+	Wed, 12 Mar 2025 02:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.39
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741745338; cv=fail; b=D8tpWvlIqqj19KNaDxdsTVSZWUGQ4SK7c9pvwI9BJ7UerImtd1FN2VhdflR/yJJvZoq1bqjeUZ7GR2Wf7eO6pnIZg5k18tklEP31rmDfh07hg5geh+l0uq5GyiOy7/Zt+fWV2lCMvoMkZBO6lDYoxiE48M9LnZXz6Y+obo+dILw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741745338; c=relaxed/simple;
+	bh=KRtCelirQEGiDmV96A4JBeB51TlI0rxAVxUwdZnFI8I=;
+	h=Message-ID:Date:Subject:To:References:Cc:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=bGsvmS1qo1EHLVWEX0hBJdivjoAtBVg7ZqqpqObSLrPH4232lH+s1q1Hhm6whHJLhAuXI3y/3zEJyKFd1zULJkVcn1NQEGYn11WKiYtzIiV88T/VU2qXi9Ywh8fma2fui3D8jnCT2NoIIjrt53tTFXaUnkPPMaoR/5LvOjAipX8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=U/ss0D21; arc=fail smtp.client-ip=52.103.67.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QqdcSJ2uAaqYellS10HmggUZeRrNCS8E00GnoEjn44Z2sJp6vlmIDClRiLcmO5oUR/4CjjVRLmEOnwTLHi2aw72323zXYA3k6bdtbETpEDvjdfewZLVYI2MopOIB25gSrZjmtqdJ2dc8zYDp8TiaxvKONbHlUTeBXfNhK+VDaJ5M35Xs9MhpjHZeEnuMX+i4YUVt2DHTIUiJ5Nr4caYN1vk2ihWuM1OY/Qg/+TedDCoAvfLFke/cjea974ydUrDo47lPWIpVf2rHaNouAatMh305eE9aAljA4lY0zlNsXW86+p9nQv7lo0MRzhlcbJvOHrAWz+u7gHy9USm+kuSWRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tUi0WHHwsjr2PPnmO444d7kxrLVb9LAs2+YO9jXiECU=;
+ b=fEwayxYNDcor0sXMlcCqwaHZRhtJsU+DnjN5l7p8oggQgWruAQOjNJ1QWO14W51cqnrKatofuqrYj9taxqFcvzseSng7mk4ti5a+OPvmoiN+6S9bDt4zkO5wTIXhQ9YAdjfXjQvLN1Q/80nkBC5vCgl6RWq7TK1FESBX/FBNMzLcMPW8oknDektW68pocSPqGzt9fui4jwa424mMMgW3keg8gTTtaPR7Ir6ZLKgKdeZyfVK+wmEN4nutE+9U2QneoE5Vru3Wuy8u69Cw7fbBaF5c/ZYST0SMToQC6swwXINnn/C8rQVqMIZOqREEAwr7fnizc6j4OrB09onP6plc3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tUi0WHHwsjr2PPnmO444d7kxrLVb9LAs2+YO9jXiECU=;
+ b=U/ss0D21WU2efu/Y7m0ly/5ShPzK05yDkkm9VuqaaOWy4te82w5WxqNubfRhv4O4DzrdJFXGLMzVHLWEDCY6RV5+Ek3JJVr2R+16PvTNM2gxxeC1IHvZDf1Y/wQP+WzIh6WNQYXfuF4elPhw/aQ+T5j1mBT7j6NRRrH/1t4gSh8G3TbCTzUflinSbNQNc9CVwYP5zCOWw4li79llmw4Eev+3u7vbH4JB7w6p8pmQjrrK7rSMVF3ON4tVxQ5vyYtJqkuR33x+eARH+W9XXguNQwvbI1tP/2hS+3WP4bl0Yp+HihWPCMIsWOVvRLqVrwCXuonjZTvW3XaoZsstk73duA==
+Received: from PN0PR01MB10393.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:1eb::14) by MAZPR01MB5778.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:65::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.28; Wed, 12 Mar
+ 2025 02:08:49 +0000
+Received: from PN0PR01MB10393.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::1b4f:5587:7637:c5a5]) by PN0PR01MB10393.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::1b4f:5587:7637:c5a5%3]) with mapi id 15.20.8511.026; Wed, 12 Mar 2025
+ 02:08:49 +0000
+Message-ID:
+ <PN0PR01MB10393B57EAC99498561CC30FAFED02@PN0PR01MB10393.INDPRD01.PROD.OUTLOOK.COM>
+Date: Wed, 12 Mar 2025 10:08:43 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: cadence: Fix NULL pointer error for ops
+To: "lpieralisi@kernel.org >> Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+References: <20250304081742.848985-1-unicornxw@gmail.com>
+Cc: Chen Wang <unicornxw@gmail.com>, lpieralisi@kernel.org, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, robh@kernel.org, bhelgaas@google.com,
+ s-vadapalli@ti.com, thomas.richard@bootlin.com, bwawrzyn@cisco.com,
+ wojciech.jasko-EXT@continental-corporation.com, kishon@kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ sophgo@lists.linux.dev
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <20250304081742.848985-1-unicornxw@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TY2PR01CA0018.jpnprd01.prod.outlook.com
+ (2603:1096:404:a::30) To PN0PR01MB10393.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:1eb::14)
+X-Microsoft-Original-Message-ID:
+ <f1e4fd67-32c3-43ce-9dfa-2fcddb3e8c7f@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c5c31890-14fc-4fab-8cd4-d4dcfdecdd2d@amd.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN0PR01MB10393:EE_|MAZPR01MB5778:EE_
+X-MS-Office365-Filtering-Correlation-Id: 98cd3a0a-7063-40b8-b0ea-08dd610ad408
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|8060799006|461199028|7092599003|15080799006|19110799003|6090799003|5072599009|10035399004|440099028|4302099013|3412199025|41001999003|1602099012;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VU8rSzJMVkNvSmJZMmVieUFEdExZWHNNUGRNUjFTTzJaOW5VQUtzendDeG5h?=
+ =?utf-8?B?cG9HMS9ZekFqWDJRNTVpeE9LTG5QWi9lUCtJNDRlRWVJd2NqTUk2SW5USlZ4?=
+ =?utf-8?B?bVh3RlZmK1k0dVFlZUJ3WWxxMEZ4ZlhHOEVvSFdTV09PdkJjUVl3eUxBditk?=
+ =?utf-8?B?cWtNRk9LSlVuaTVqWHZWRDUxZWdkZVJrSXlwamNpMDZIOFF6WXpDaDdOamd0?=
+ =?utf-8?B?T3Z5S1VQbGYzVzlEWGRCUnczMW41LzQyVHJGWW5XSEVqSkVCbWs2VVBOOEdi?=
+ =?utf-8?B?T09ac0FUMDRJaVZDZFB1NlAyZ0VRNlpldldNeUFlaVU1TDJvSU8wUGZ6N3Zl?=
+ =?utf-8?B?NjhNZVFwL2VwMW9GNE1PWVRrL3ljbzdyTTdRcFBmZU8rY1VrNUFJa3JKYUYw?=
+ =?utf-8?B?R1VlUUo4bWVpMFdIOW1WS2JNWHIvNFlBNU9EVW04ZW5hUVVMRGg4ZS9ZRHNH?=
+ =?utf-8?B?NXlqWFkxSXo2YWZZM1orL3c3RGRNVUtDc1hNb1libDBpOTFTQSsxTjFXajEy?=
+ =?utf-8?B?ZVhmdEpyZXN5OFJqR0ZoUHV0bU9sR0NPcXE2d1F2YnE5ZXdlTmduYloyY2NG?=
+ =?utf-8?B?TkZyZ0Ewa2VuZ0RhT0VvVXIwODFMV3FjbzkzUEpJSFo2emwrT29zQUtDTXhV?=
+ =?utf-8?B?VHhDTzVsdlJVSUdsa1VaSnZNNWZVdlcrSXNnMG5wSklSZ2Z4eTFWeFBWRENi?=
+ =?utf-8?B?N2pMZmZPZXREckNGREhEYUk5bTJ5a1RuRkpoblo2QWdtdld1dnZsVmNKMmt2?=
+ =?utf-8?B?UTZKWVpsUFUwNjhjWmZjR2ZYOFJlaVFjUHBIbjNaOWl6NlRtOWhQcEMyVnpK?=
+ =?utf-8?B?V0JVcEc1YkVtejg4WTlzTXZ6SFBsWGJuc1dDTk8zUERqNGZjTnY4ZmNYME9C?=
+ =?utf-8?B?N3YrM1M2L2tLbGNwZFhNazZqMHZuaHVKSTM2YTJDUlZkR1JRam85cmh3WC8x?=
+ =?utf-8?B?SWJIME1oVkdaRlAzc3NENkIyeFZhMzQ4VUJCNU81a2E4Y2FxNkw2VWZRb3VH?=
+ =?utf-8?B?MkkzMWZ4WG5MZjNKVFM2R3grK2ZSQ2JJeXNpeVdNNzZGWjBBV0xFd3czVHdt?=
+ =?utf-8?B?dHAxVkRpTW9lWE1FNTVibzBIZnQrbWV5cDh2UTlQNThONFBDRlRZclNsMjJK?=
+ =?utf-8?B?bEtRUUY3MlV1UUFrcld5cWE5VFRROFdVNjRzVDFxcmhINlJIN1cxclFrQW5O?=
+ =?utf-8?B?OUx3bVVLVGEydk1sMHQzVEwrNXFLVythcSswcTNMUTUrei9TVXRwRFpFbk9M?=
+ =?utf-8?B?QzNTRU81dXFTZGY2UzNybk1VaUhaSm9mMTQ5dEo0ZVF6SVRNTTVxK29hQzdx?=
+ =?utf-8?B?SW43aWtxM0ZtM1NOdFZmV1QxVko4THc0ZFRTQldpTnp0b3JETmJpc0NhV0Vp?=
+ =?utf-8?B?ZmgwSWQrMmlUcXc4NXBBOTQzazdvcmZTd2YrSlNHY1MzN253ZDdHWWFqWFBO?=
+ =?utf-8?B?NDRuTjhYdG80NUs3QUF3cVdRcTV1U0N4VTBiTmwrTjV1Q0REK01vZVZEMVkr?=
+ =?utf-8?B?bDA5dXVPZzJlZXdqbVNZcE9ML0UrNDlYUFBlVk5zM0xteFRxN28yWXFraUtS?=
+ =?utf-8?B?ZDBWNHd2NkJNRlpDck9RbGIyNnpaSWhzLzQwRWdIWUpTb0hNek9kUVlLdjlx?=
+ =?utf-8?B?bExpZHN6K0hTZjdkNDJua25LZzJIbCs4clJhMHB2czlaKzlocWt5Z2I3WGt3?=
+ =?utf-8?B?ZXJEU2F1ZTdNUWs4TU5wOFlhNkNYcmd2a0R6bzhjMTVZR29JUWZUajhrd2Ra?=
+ =?utf-8?Q?tjILq6sAgYmiSLpkbc=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WkdOSk9XcjFubUhjR3hQRHRjOGhEWlFNN0Uyd0tyOUlmeDFCK2NBa0c5RE05?=
+ =?utf-8?B?K1VNdytWOE14YWRLc05pTnJEMnFkRU5ONS96eGZlcC9zcXNzTmJBa3g3R2xI?=
+ =?utf-8?B?ME1lUW5pL0h1SGJSN1pzT2F4Ti9lOTdSa012V0ZkRUpsS0ZTTWJaSWtCWWli?=
+ =?utf-8?B?T3lwMzNKSWo4ZERjcjRsWEJGdVQwMHhzSWtvMlp3aHkvQ04wcXNiVytEVG9m?=
+ =?utf-8?B?U2w5YXQ1M09pL1k1K29MRlI2dThON1dLOHRrc1hOdHFWcEpuSkc5MkFlekty?=
+ =?utf-8?B?eEcvKzB0Q2hXQzZNV0lNbWE3SE5mdTJqVGxjUVVXYk1RZWZEaDU4YmEzZUZm?=
+ =?utf-8?B?emQzeWZ4eGZKYitBS1haTzRXYjF6RUx1cE5hbEE4UERibDdaMEFScjJIUlRh?=
+ =?utf-8?B?ZjJERFRGVlJPVjdyWlFZUXRrTHRqVmFpUkdMZ2xZL0JVaWszK0JkbWtRZEtM?=
+ =?utf-8?B?eVdVT05TQlpsNXVzbytTK21mV2I0OUZ2ZUdJVnVCVnBSZi91cDJGSDVLZXk2?=
+ =?utf-8?B?WXRSTVJ3ZWY0RWdHaWNJTEIwVGZIZ00wVDBVYzBMbjlORkw0bGRyUGVyWUph?=
+ =?utf-8?B?RENoQlhBUTNVMEtRTHZ3SCs0VnNBMmFuV1FuVTFxU2M5bkI2Z2pXTlBpamNT?=
+ =?utf-8?B?dTc1cnluNVBCM0ZhSGZXZWtZVVRnVXp1b2ZOTEE5ak1sMEVtZlVFY285NU5u?=
+ =?utf-8?B?ZFMveXg0ME1JWTZjWDJGdnp1cGRrRDdiQTFHbVdnZXZHdFhsMG5XbEIyRllQ?=
+ =?utf-8?B?aUIvVWE3bGhJMU9Rb1lxY3RtUFdJM25rM3V6bkdQaUFwTkpwWE9vbzFTMWtk?=
+ =?utf-8?B?S3pRYkR1OWVUM2ZvZWJWdU01U0h1N1Npalppa0dOdlNadURqbHM3YW01bVY1?=
+ =?utf-8?B?eTZuMllwZnZXMjZTY0xXeXdRbDRLbGxnOXNsNHlVeUFiRkt2ajVRajRDaVVq?=
+ =?utf-8?B?KzFZNGExeTdBMjc0NVJQMER0YTJRSXEzWFg4dmUyd2U1TW9ETTF4cExCUm1D?=
+ =?utf-8?B?bTJ3U25jd0xPaVlXVW1oRWhWU2lOaUFSeGtoQUNLSVQyTFBMNnhVYk0veTBj?=
+ =?utf-8?B?RS9BU1ZhOVlVcDZiWC9nMlYzZDU2R1Y2dnR6NXlLTHYyMGk4a3Y3YU1reExU?=
+ =?utf-8?B?NnVCUHB2emNNWHZtSkY2T250NkdDL1ovNEdMcy85cnlDemZNa3JEUzZJczZV?=
+ =?utf-8?B?MlB5blpjUEFUVEhpdGRWYS9qZmRwcjhjOHNKVWRubFB2NXc5b1FyNFBsU0dZ?=
+ =?utf-8?B?MExYbEt2ZVV4VWlFMHZ5UlhrUEpVUWhNQ2lCUTBGcFJ4cno1U1BueHh6Szll?=
+ =?utf-8?B?MCtLc0ZjZzc5b1Q1TXUvYlVNS3pNUTZ2elhycnhRQ2dhVVMwaXJjaldOdVdI?=
+ =?utf-8?B?NG9zZWJxa2s4eUNCeXUzaXBLd245bkpydmpQQkVNWWJPY0wzcVlPbFdzZWJs?=
+ =?utf-8?B?TzhzVWlSYkRQVWVJeGlMejdzdXloRXZROXR1L2s5VnJhSHVkVnhSUjhZNVZD?=
+ =?utf-8?B?QnBrYVlhdE0vMlBzUnNCT3pDNGZTZG10YTdXRzlwaCtDYldYdDNYZUtNZVdq?=
+ =?utf-8?B?dmM1ODJJQ1h4bWJPRjcvQTVpVmhuM0NwL09zWmdtd25jRG12cFE5V0ZtWHJo?=
+ =?utf-8?B?K3kxbTk4cUNEYUxrMmRXNm9vVW5hajhpSGYvVlFTbnpyeVRFS1lEYkVLYm9l?=
+ =?utf-8?B?ZHBqNU5NazJkLysrYXJrZ1JpSTMzR1J5RVovZy9XUFk1STJ6RmNtcmQrdU5i?=
+ =?utf-8?Q?iOZqyqHZY/fUYAWL+MPaZOp0kKuIyyjuumj4nSZ?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 98cd3a0a-7063-40b8-b0ea-08dd610ad408
+X-MS-Exchange-CrossTenant-AuthSource: PN0PR01MB10393.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2025 02:08:49.3970
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAZPR01MB5778
 
-On Fri, Mar 07, 2025 at 01:19:11PM +1100, Alexey Kardashevskiy wrote:
-> 
-> 
-> On 6/3/25 17:47, Xu Yilun wrote:
-> > On Wed, Mar 05, 2025 at 03:28:42PM -0400, Jason Gunthorpe wrote:
-> > > On Mon, Mar 03, 2025 at 01:32:47PM +0800, Xu Yilun wrote:
-> > > > All these settings cannot really take function until guest verifies them
-> > > > and does TDISP start. Guest verification does not (should not) need host
-> > > > awareness.
-> > > > 
-> > > > Our solution is, separate the secure DMA setting and secure device setting
-> > > > in different components, iommufd & vfio.
-> > > > 
-> > > > Guest require bind:
-> > > >    - ioctl(iommufd, IOMMU_VIOMMU_ALLOC, {.type = IOMMU_VIOMMU_TYPE_KVM_VALID,
-> > > > 					.kvm_fd = kvm_fd,
-> > > > 					.out_viommu_id = &viommu_id});
-> > > >    - ioctl(iommufd, IOMMU_HWPT_ALLOC, {.flag = IOMMU_HWPT_ALLOC_TRUSTED,
-> > > > 				      .pt_id = viommu_id,
-> > > > 				      .out_hwpt_id = &hwpt_id});
-> > > >    - ioctl(vfio_fd, VFIO_DEVICE_ATTACH_IOMMUFD_PT, {.pt_id = hwpt_id})
-> > > >      - do secure DMA setting in Intel iommu driver.
-> > > > 
-> > > >    - ioctl(vfio_fd, VFIO_DEVICE_TSM_BIND, ...)
-> > > >      - do bind in Intel TSM driver.
-> > > 
-> > > Except what do command do you issue to the secure world for TSM_BIND
-> > > and what are it's argument? Again you can't include the vBDF or vIOMMU
-> > > ID here.
-> > 
-> > Bind for TDX doesn't require vBDF or vIOMMU ID. The seamcall is like:
-> > 
-> > u64 tdh_devif_create(u64 stream_id,     // IDE stream ID, PF0 stuff
-> >                       u64 devif_id,      // TDI ID, it is the host BDF
-> >                       u64 tdr_pa,        // TDX VM core metadate page, TDX Connect uses it as CoCo-VM ID
-> >                       u64 devifcs_pa)    // metadate page provide to firmware
-> 
-> 
-> (offtopic) is there a public spec with this command defined?
+Hello, Bjorn, Lorenzo & Manivannan,
 
-Sorry, there is no public TDX Connect SPEC yet.
+I find your names in MAINTAINERS for PCI controllers, could you please 
+pick this patch for v6.15?
 
-Thanks,
-Yilun
+Or who else should I submit a PR for this patch to?
+
+BTW, Siddharth signed the review for this patch (see [1]). Please add 
+this when submitting, thanks in advance.
+
+Link: 
+https://lore.kernel.org/linux-pci/20250307151949.7rmxl22euubnzzpj@uda0492258/ 
+[1]
+
+Regards,
+
+Chen
+
+On 2025/3/4 16:17, Chen Wang wrote:
+> From: Chen Wang <unicorn_wang@outlook.com>
+>
+> ops of struct cdns_pcie may be NULL, direct use
+> will result in a null pointer error.
+>
+> Add checking of pcie->ops before using it.
+>
+> Fixes: 40d957e6f9eb ("PCI: cadence: Add support to start link and verify link status")
+> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+> ---
+>   drivers/pci/controller/cadence/pcie-cadence-host.c | 2 +-
+>   drivers/pci/controller/cadence/pcie-cadence.c      | 4 ++--
+>   drivers/pci/controller/cadence/pcie-cadence.h      | 6 +++---
+>   3 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 8af95e9da7ce..9b9d7e722ead 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -452,7 +452,7 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+>   	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_PCI_ADDR1(0), addr1);
+>   	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(0), desc1);
+>   
+> -	if (pcie->ops->cpu_addr_fixup)
+> +	if (pcie->ops && pcie->ops->cpu_addr_fixup)
+>   		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
+>   
+>   	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(12) |
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
+> index 204e045aed8c..56c3d6cdd70e 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
+> @@ -90,7 +90,7 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
+>   	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_DESC1(r), desc1);
+>   
+>   	/* Set the CPU address */
+> -	if (pcie->ops->cpu_addr_fixup)
+> +	if (pcie->ops && pcie->ops->cpu_addr_fixup)
+>   		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
+>   
+>   	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(nbits) |
+> @@ -120,7 +120,7 @@ void cdns_pcie_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie,
+>   	}
+>   
+>   	/* Set the CPU address */
+> -	if (pcie->ops->cpu_addr_fixup)
+> +	if (pcie->ops && pcie->ops->cpu_addr_fixup)
+>   		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
+>   
+>   	addr0 = CDNS_PCIE_AT_OB_REGION_CPU_ADDR0_NBITS(17) |
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index f5eeff834ec1..436630d18fe0 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -499,7 +499,7 @@ static inline u32 cdns_pcie_ep_fn_readl(struct cdns_pcie *pcie, u8 fn, u32 reg)
+>   
+>   static inline int cdns_pcie_start_link(struct cdns_pcie *pcie)
+>   {
+> -	if (pcie->ops->start_link)
+> +	if (pcie->ops && pcie->ops->start_link)
+>   		return pcie->ops->start_link(pcie);
+>   
+>   	return 0;
+> @@ -507,13 +507,13 @@ static inline int cdns_pcie_start_link(struct cdns_pcie *pcie)
+>   
+>   static inline void cdns_pcie_stop_link(struct cdns_pcie *pcie)
+>   {
+> -	if (pcie->ops->stop_link)
+> +	if (pcie->ops && pcie->ops->stop_link)
+>   		pcie->ops->stop_link(pcie);
+>   }
+>   
+>   static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
+>   {
+> -	if (pcie->ops->link_up)
+> +	if (pcie->ops && pcie->ops->link_up)
+>   		return pcie->ops->link_up(pcie);
+>   
+>   	return true;
+>
+> base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
 
