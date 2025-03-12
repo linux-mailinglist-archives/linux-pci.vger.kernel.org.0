@@ -1,123 +1,113 @@
-Return-Path: <linux-pci+bounces-23539-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23540-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1077A5E669
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 22:21:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 436C7A5E6A5
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 22:30:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17A3D1897BFA
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 21:21:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 786E97A6183
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 21:29:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B963E1EF096;
-	Wed, 12 Mar 2025 21:21:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D133F1EE017;
+	Wed, 12 Mar 2025 21:30:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="pm3SSAYs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="db7SZWhO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94D161EC00C;
-	Wed, 12 Mar 2025 21:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFB278C9C;
+	Wed, 12 Mar 2025 21:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741814470; cv=none; b=mqNg+Ibf1+Tw3x9kU9X6EXE7PhVy2hn4GXi9IFZuUwAXdqm3qyiRqr89A9p9kSwp91epwOBMXGME1LKBQBWIx1A89Tfug0hXrKENEqoN05SdRkM1VVYfN2rnBq/u3/hDPao8xTzdVr0CXodWq2XLtb3l+KYVQMxubdyf00fqPGA=
+	t=1741815045; cv=none; b=jMvCpGE6IP6i8ghO6okIL+Mv4RaXdiKEg3mjOWoB/+LdqDE8BNf2jgnTt3IT0YgzVp59mGcwa8yGN3srWEgL3kEcjlVXVql04BM8zAXEQGiF4QFDodfm6q7nPvxlJQduLJ5HY/rkP2Xk48IcZkz7PpH8jFQ0URziz6QlkziRpms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741814470; c=relaxed/simple;
-	bh=8lk79mDnF9WAaI75FvC+bpLneGj3wkxAcWyHOCuXSjo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DVexfv4tTndPAZeOpRyvfKJTmGbo2EqBK3lP7F3WSKSWvSzquPlKXny7A1HpPXFC3zK62UFvYJb01AwZamTXmRP6+fMVcQTTShkF7IpVdOF6mHrLKL5dgWPDZk4dcn8WULL0KS7oaROtMuRQcOPNqtmGrWBOqkkgfKpBJag0a2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=pm3SSAYs; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 86B37210B157;
-	Wed, 12 Mar 2025 14:21:07 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 86B37210B157
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1741814467;
-	bh=MgNM2rD8/EOf05M0lP85WV+gCmyNEYHLXXzpOfe5KVE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pm3SSAYshDZ0/J9DAnDCCWIg7IAiMKcF9WebEeevzy98VYIaLbtZxz8W0R4oz5bs3
-	 bx8W1PNJ4LBZ4FkX6cjdoD9OOn1KNZkGtH27nqPcPfkJxVFnXRqfUmYBYdXIJxg7dQ
-	 dkyAwa4NZs8ZWgWM4ZixgLD18JrAFkhBHsI7/1wQ=
-Message-ID: <996deaab-e1d1-4f04-ba31-c0dcab2d5e1d@linux.microsoft.com>
-Date: Wed, 12 Mar 2025 14:21:07 -0700
+	s=arc-20240116; t=1741815045; c=relaxed/simple;
+	bh=LO60XXggN+anABLteCj5yJ/uveuP5Rf8+hxgh8hVLs0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fb1AgegdDQAZ+cbcpfU7OdMX+0Jm4fa9pdtN75abGM/2gB+syWzR/ceagBvneBNMKjfepbYEEPibHDIZgfGBC3UGQOCDKFc4nimJUCXrZ2OFA+9GKjoRUouAhwQ4ze2TGYwmAClTsSgOOkvKWvpEcNxtFNhCjlZ45BA4uwtIAVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=db7SZWhO; arc=none smtp.client-ip=185.70.40.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1741815041; x=1742074241;
+	bh=778zYe9Aon21nmGzdiX6oN8GbRWrDQ7vfoMY5NS12F0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=db7SZWhOzUaLlMzOnZl+tAVoX7Ywpf6RTPMLoaDvI8GIG4p8DrUwaR/a6/Dnreeqp
+	 Nu7j1wKrKLhikHuS/8DeqczefnRuHDH9jvByDQK0OBlScdU/xH/dwFotYy9YjJ+SdI
+	 VX+EXyGto6Ux00AviB5J7HU5riEBB0ASYa1qrADkr64rcloHoLwkAsUCOTixugCBSg
+	 99Gz5RI11wiwzrdeYAG+h9ki6LQ6ya1INqrFCUYV0dVCmbAENvyRJEKTPk1fpZ1xNE
+	 nS4WtSgFpv/MYcelYvI+SD0dnvWoF7pDzZQVnFF6kMq8NclmHvAh9qZtu8iNRITMgl
+	 6OqWA6SEDI/oA==
+Date: Wed, 12 Mar 2025 21:30:33 +0000
+To: Tamir Duberstein <tamird@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
+Message-ID: <D8ELW7X9796K.2ZGJS34LDTHOP@proton.me>
+In-Reply-To: <CAJ-ks9=hAwOGtVv0zh9CcH7XOxjGnizvK1QOMAi8nKStocKr2Q@mail.gmail.com>
+References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com> <D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me> <CAJ-ks9=zWAuPUM_61EA6i5QkUpwtNtsN8oF_MUerWGn39MRHhw@mail.gmail.com> <D8EJM4CJ4HAN.1PB2YV8DB77V7@proton.me> <CAJ-ks9mo-H46Wwcu_LOvDy0ncwMR9ii74Fyf3OX-aWNnrZ397g@mail.gmail.com> <CAJ-ks9kCgATKDE2qAuO3XpQfjVO2jGyq3D4sbUcVKyW6G1vuuQ@mail.gmail.com> <D8EL9QFS1XNT.JBSMRXD4D7GT@proton.me> <CAJ-ks9=TRDg3g=NG7k97P_5jXpZ4K4v0DxrmJFR+uF0-3zJkXw@mail.gmail.com> <CAJ-ks9=hAwOGtVv0zh9CcH7XOxjGnizvK1QOMAi8nKStocKr2Q@mail.gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: f8edbb297efc28dbae0cc848a6fd0bf94b85de3d
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v5 03/11] Drivers: hv: Enable VTL mode for
- arm64
-To: Arnd Bergmann <arnd@arndb.de>, Michael Kelley <mhklinux@outlook.com>,
- "bhelgaas@google.com" <bhelgaas@google.com>, Borislav Petkov <bp@alien8.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
- <conor+dt@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
- Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Joey Gouly <joey.gouly@arm.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Oliver Upton <oliver.upton@linux.dev>,
- "Rafael J . Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- Sudeep Holla <sudeep.holla@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Wei Liu <wei.liu@kernel.org>,
- Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- Linux-Arch <linux-arch@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-Cc: "apais@microsoft.com" <apais@microsoft.com>,
- "benhill@microsoft.com" <benhill@microsoft.com>,
- "bperkins@microsoft.com" <bperkins@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>
-References: <20250307220304.247725-1-romank@linux.microsoft.com>
- <20250307220304.247725-4-romank@linux.microsoft.com>
- <e0f81049-688e-4f53-a002-5d246281bf8d@app.fastmail.com>
- <BN7PR02MB41488C06B7E42830C700318DD4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
- <119cfb59-d68b-4718-b7cb-90cba67827e8@app.fastmail.com>
- <BN7PR02MB4148FC15ADF0E49327262B92D4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
- <caa0d793-3f05-4d7c-88d0-224ec0503cfb@linux.microsoft.com>
- <45171fb1-7533-449f-83d4-066d038c839f@app.fastmail.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <45171fb1-7533-449f-83d4-066d038c839f@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 3/12/2025 1:25 PM, Arnd Bergmann wrote:
-> On Wed, Mar 12, 2025, at 19:33, Roman Kisel wrote:
->> On 3/10/2025 3:18 PM, Michael Kelley wrote:
+On Wed Mar 12, 2025 at 10:10 PM CET, Tamir Duberstein wrote:
+> On Wed, Mar 12, 2025 at 5:04=E2=80=AFPM Tamir Duberstein <tamird@gmail.co=
+m> wrote:
 >>
->> That's a minimal extension, its surprise factor is very low. It has not
->> been seen to cause issues. If no one has strong opinions against that,
->> I'd send that in V6.
+>> On Wed, Mar 12, 2025 at 5:01=E2=80=AFPM Benno Lossin <benno.lossin@proto=
+n.me> wrote:
+>> > Always enable the features, we have `allow(stable_features)` for this
+>> > reason (then you don't have to do this dance with checking if it's
+>> > already stable or not :)
 >>
-> 
-> Works for me. Thanks for your detailed explanations.
-> 
+>> It's not so simple. In rustc < 1.84.0 the lints *and* the strict
+>> provenance APIs are behind `feature(strict_provenance)`. In rustc >=3D
+>> 1.84.0 the lints are behind `feature(strict_provenance_lints)`. So you
+>> need to read the config to learn that you need to enable
+>> `feature(strict_provenance_lints)`.
 
-Thank you for your review very much!
+I see... And `strict_provenance_lints` doesn't exist in <1.84? That's a
+bit of a bummer...
 
->         Arnd
+But I guess we could have this config option (in `init/Kconfig`):
 
--- 
-Thank you,
-Roman
+    config RUSTC_HAS_STRICT_PROVENANCE
+=09    def_bool RUSTC_VERSION >=3D 108400
+
+and then do this in `lib.rs`:
+
+    #![cfg_attr(CONFIG_RUSTC_HAS_STRICT_PROVENANCE, feature(strict_provenan=
+ce_lints))]
+
+> Actually this isn't even the only problem. It seems that
+> `-Astable_features` doesn't affect features enabled on the command
+> line at all:
+>
+> error[E0725]: the feature `strict_provenance` is not in the list of
+> allowed features
+>  --> <crate attribute>:1:9
+>   |
+> 1 | feature(strict_provenance)
+>   |         ^^^^^^^^^^^^^^^^^
+
+That's because you need to append the feature to `rust_allowed_features`
+in `scripts/Makefile.build` (AFAIK).
+
+---
+Cheers,
+Benno
 
 
