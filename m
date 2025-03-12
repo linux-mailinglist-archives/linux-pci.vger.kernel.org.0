@@ -1,95 +1,137 @@
-Return-Path: <linux-pci+bounces-23528-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23529-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 806EAA5E4AB
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 20:43:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E56DA5E506
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 21:08:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 51B4F189F46D
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 19:43:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32A2D3B5344
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 20:08:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BE72258CE6;
-	Wed, 12 Mar 2025 19:43:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 115531EBFF9;
+	Wed, 12 Mar 2025 20:08:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="DxXCHqgd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdvYePad"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8822566DA;
-	Wed, 12 Mar 2025 19:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3814E1ADC6C;
+	Wed, 12 Mar 2025 20:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741808611; cv=none; b=L8HyiIYSd5Pt/6ZqFf6FXGATtXwTtXM5KBxIJn1jM3hj4rbUixlbjrCAsO/T9PQWCcRr8oRE2QO0Bm6A2qNehtiqfPwWNOW0R6x7dD/8WcHadCjJ+sBCdO6RkW1S90jaPM0mxK84cCq4xCbBi6ePBDdBlm8frcLNQVj+Az8hfr0=
+	t=1741810111; cv=none; b=qaDZn6H35dKdbV4Kk1NvYMxsFCm/lb7UjL4NiqIHxbsd/NjkcUFPgrfuo8JzHqfjJQGKZUeqZtALqczpnpM6ZVD91XejhYBIKSaOIWzZJfWOpehYM1SlCw9+wh/j3IlTcYeOSmnX9IHwOFxBaBWKpomNg6sLiYXct2SZbsMPg40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741808611; c=relaxed/simple;
-	bh=MQpsvFjJVmn++42KDeejIYF6zbqUpGV1N2HykXJ9TvA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=olGqBlRP0h0UOEvd4DUfPxv1E8IoIsW/qa4Azz4+fWsSJASO16TMdIOCTpA/hiAyTMllPJjc0hFozICYz0j4Y4Oi1/7bzC1+zghE+liok4PzvZ716/1TitsaqpGKoE+AejK/qpcuyyK1FNx/Bt3WCp3gIGHVB8kZTeyOs+1cLHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=DxXCHqgd; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1741808605; x=1742067805;
-	bh=k2L8+T93x3C/emjGMuwyW/R5I8BeyS+0TxpevstosCY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=DxXCHqgd37hI1t1+mSl0RVRBwA13vQ/XVaB09BZ/O0VCttgrhLU0EjhZZiQkCK+I/
-	 xirIOJ/C5+SaHokD1EEAq/798EGmTZaCDP/VR1350NPEJyWWqg2agQGAFYNisnikAK
-	 pM9X/nXhCDpQzQLkpQKvirBihIDT0xyDlbu3pMqI9N59zX67RsIrN1lLmVuQ2JhfD5
-	 tttJlaqwfmONRscNeiyAYqg3X1dlR/mn1+fT8HAYPfdkmzf8BEuLcsIshVhhMOvVoK
-	 daXB5Xif7XB4RWcKuUs9smRkdiuD3NrsMernT3k90UVinCE/TWl7PwwxHM3UYlCPvY
-	 l68ZcyT+sgJ4w==
-Date: Wed, 12 Mar 2025 19:43:19 +0000
-To: Tamir Duberstein <tamird@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
-Message-ID: <D8EJM4CJ4HAN.1PB2YV8DB77V7@proton.me>
-In-Reply-To: <CAJ-ks9=zWAuPUM_61EA6i5QkUpwtNtsN8oF_MUerWGn39MRHhw@mail.gmail.com>
-References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com> <20250309-ptr-as-ptr-v2-5-25d60ad922b7@gmail.com> <D8EDP4SMQG2M.3HUNZGX8X0IL7@proton.me> <CAJ-ks9=K06OT6cutUABj2QDHJHJ70719c-eJ=F3n-_bhkYbZ3w@mail.gmail.com> <D8EG9EM9UU0B.2GLHXRU2XROZ3@proton.me> <CAJ-ks9=+3MQb-tp8TAwYvVj=GOFFFVKJxRMprc8YXZHKhqnDrg@mail.gmail.com> <D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me> <CAJ-ks9=zWAuPUM_61EA6i5QkUpwtNtsN8oF_MUerWGn39MRHhw@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: bbd40c62717ae5f9397b8b9c9ae87ff25634c232
+	s=arc-20240116; t=1741810111; c=relaxed/simple;
+	bh=lsSBdLdQ4s0iCWd7bcBOXIm07tS0egm9zlqlZry3PRM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IDw63KxLrS0hTzFBQczgIX5mR5qRicQmrkF1HUW2RI6oIUuMxzm0ocFoP5rvX9n3HV0+StvxQQTX79cB9Ei/MUg49JZZVgfdzgOTKBNf3ScDYqtJUxH34KRIsF0hAWVqPlmTWVnMSZmZK4Yr/CWdL2mkcrojMONlLLP2WeoINBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NdvYePad; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-307d1ab59c6so2252531fa.1;
+        Wed, 12 Mar 2025 13:08:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741810108; x=1742414908; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WvWdxAReWH9rJxfH10m5q08BJW+spweZYCe1Q8vBq2o=;
+        b=NdvYePadAx7nACoq9+DTtrzkJALJKuKwsIwjYIEjTguMkJq/pwM/igKOw/GpG8lk69
+         G77Usu8ruXa0Tzkdn3QT2nmS2w4JJabGyzpEGy/RSKB81j5A/gbQAbEGSjh+1zKKdctE
+         L3GslfMieoznRgNkaoFXE5m1/GkiDBgUnEhvykF7uuHHGVmtwjbw/NQ3u8RCZHtnRC7k
+         7k3eEp+Plz/ISWzCJi5G58pY1Mk/9w5t8MwLAfVe2foQ6eKm3E9892AyTisxX4xyWr42
+         7BHfWM3QuwzfIfdorynUtvilpp0ojWrUIBr/RVIYy7WQGcYwQ2PJ9oYaORDQCDR/Lwbk
+         H+kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741810108; x=1742414908;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WvWdxAReWH9rJxfH10m5q08BJW+spweZYCe1Q8vBq2o=;
+        b=SfOwuwp8NQj3d9qG6T99WxGjYBQA/lX9KDSY3UQVmGEyBo7p2VGSx5+H1znKkQXKf1
+         wGt+fVLmn96Qp0hqjbYUyQAH04QwiCCBLrVkkn5vW1sMlyRZvY75QtNFpFKXp5+BLlyu
+         0GnAY5m4nZehdRRmoX+mQdGq28HcTCkCZm0B+7NZaNoSGXSqGmlTbXVg6S6gfj2ecxER
+         W5m89eoQeLLlJXZJJp0aNUb7NSDKtQ2oR+/CDlHuAHqeObzBJLwE4yPFwbbrqzD9ee/+
+         iEboJ7OztMQHlBpgb3kuK6TJSS0ThuaqBLv56BgU2gHTkp7ZFpkbXWDo25+7nBbTeN3E
+         26AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQYX9dTLzSX3+iCJK17IdDFw84haSZbGlL7wyENXg653DdRLO3EMz1uUi0T9n4NbjSMkPd0YFNN+S6@vger.kernel.org, AJvYcCW+ElhV827NgFsZ0JTiv4Zbs2fMYjGqmeEZYAnr14ikx/aJsET4VxMuGZMdbR7uRLFmP4tEN8WECXya@vger.kernel.org, AJvYcCWCzxeiKcQlQHpYI8YNCbjZ7Klf9hTlV+1Oy7HHhp/bKO3vSJB5Ir2LNFGCZSeOqV6kERx+uIs3qtEDv7Ya@vger.kernel.org, AJvYcCX+RmaL852E9Q/J3WRwP1qIc4TYN8YBdFhOGOXsza2TdmTHnCAiSZQTwnSdjWBqOL1O9lVjhOrVOwgjxIk=@vger.kernel.org, AJvYcCXMkzVEV9oXfxyPvY10yb7EZaFVVqHgOSErf2o8l1kT4ttHjo84KkzKIPLnDr5tfkOzkbU805fbMVCqx/AlexM=@vger.kernel.org, AJvYcCXYvfBsrlxCwo50P6i+ENlLcRrNhKJe0l9RecwgAvRoPehOrqw9nKYJbBwNYBEhjiOhkjPtUZz/XYZU8uqu@vger.kernel.org, AJvYcCXi9KHhqjSmiA7FzPWMHMV94Vuo2L2Y3NW8Mn7XdevSyobAveCjaixjAYtGgZEdUwfDymVwyWa7NR2SwJtNdOON@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzbfxa5za/Ygu/wD+A1kMG/S/EMqWcM6Mfkif2t0bqx3fAANWA5
+	NeRZAfpQ3HCQD6mh1UIlLdlBbZzKnbISjDwpihC+qZtoHyNemqZ0yRjQ9QUeuXMSy/b7b6IV8e1
+	EJbqXgdMussi0j3wzNNXlnTjrVwc=
+X-Gm-Gg: ASbGnctfMKUOtLy9S4ZOuHnS3GYA9CAirbORI9rnUHBNhgZQ+11Cvv/FdtJI1CxqKNF
+	gSVZCBHSy9GpYU2FCRNOlnHio4uvWVLnSLMzG7yUOo2CsGbkn6ty9+cq5WPzqluikFQii4MsZT4
+	pIrY7+M285XdLoTR593fkrl3VqqRAQB5Z91cEgAkkAKw==
+X-Google-Smtp-Source: AGHT+IGKy6zn5xgfn8CeCs2iWvvIbfhtT8G8n3Qui6VQS2rPHMF6seq5pQ1f4HajsIodpexn4xjqHKMhzcX7k07A68U=
+X-Received: by 2002:a2e:3517:0:b0:30b:edd8:886 with SMTP id
+ 38308e7fff4ca-30bf451713dmr75313571fa.9.1741810108139; Wed, 12 Mar 2025
+ 13:08:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com>
+ <20250309-ptr-as-ptr-v2-5-25d60ad922b7@gmail.com> <D8EDP4SMQG2M.3HUNZGX8X0IL7@proton.me>
+ <CAJ-ks9=K06OT6cutUABj2QDHJHJ70719c-eJ=F3n-_bhkYbZ3w@mail.gmail.com>
+ <D8EG9EM9UU0B.2GLHXRU2XROZ3@proton.me> <CAJ-ks9=+3MQb-tp8TAwYvVj=GOFFFVKJxRMprc8YXZHKhqnDrg@mail.gmail.com>
+ <D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me> <CAJ-ks9=zWAuPUM_61EA6i5QkUpwtNtsN8oF_MUerWGn39MRHhw@mail.gmail.com>
+ <D8EJM4CJ4HAN.1PB2YV8DB77V7@proton.me>
+In-Reply-To: <D8EJM4CJ4HAN.1PB2YV8DB77V7@proton.me>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 12 Mar 2025 16:07:52 -0400
+X-Gm-Features: AQ5f1JrUv6wKNk7y3ewcr0wVyePELpSL2pI1z4NH7DNLDz50gsWeKT8qdmo6mKQ
+Message-ID: <CAJ-ks9mo-H46Wwcu_LOvDy0ncwMR9ii74Fyf3OX-aWNnrZ397g@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed Mar 12, 2025 at 8:19 PM CET, Tamir Duberstein wrote:
-> I tried using the strict provenance lints locally and I think we can't
-> until we properly bump MSRV due to `clippy::incompatible_msrv`:
+On Wed, Mar 12, 2025 at 3:43=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
 >
-> warning: current MSRV (Minimum Supported Rust Version) is `1.78.0` but
-> this item is stable since `1.84.0`
->    --> ../rust/kernel/str.rs:696:22
->     |
-> 696 |             pos: pos.expose_provenance(),
->     |                      ^^^^^^^^^^^^^^^^^^^
->     |
->     =3D help: for further information visit
-> https://rust-lang.github.io/rust-clippy/master/index.html#incompatible_ms=
-rv
+> On Wed Mar 12, 2025 at 8:19 PM CET, Tamir Duberstein wrote:
+> > I tried using the strict provenance lints locally and I think we can't
+> > until we properly bump MSRV due to `clippy::incompatible_msrv`:
+> >
+> > warning: current MSRV (Minimum Supported Rust Version) is `1.78.0` but
+> > this item is stable since `1.84.0`
+> >    --> ../rust/kernel/str.rs:696:22
+> >     |
+> > 696 |             pos: pos.expose_provenance(),
+> >     |                      ^^^^^^^^^^^^^^^^^^^
+> >     |
+> >     =3D help: for further information visit
+> > https://rust-lang.github.io/rust-clippy/master/index.html#incompatible_=
+msrv
+>
+> Oh this is annoying...
+>
+> > This is with `#![feature(strict_provenance)]`. I can file the issue
+> > but I think it's blocked on MSRV >=3D 1.84.0. But maybe you know of a
+> > path forward :)
+>
+> I think we should be able to just `allow(clippy::incompatible_msrv)`,
+> since Miguel & other maintainers will test with 1.78 (or at least are
+> supposed to :).
 
-Oh this is annoying...
-
-> This is with `#![feature(strict_provenance)]`. I can file the issue
-> but I think it's blocked on MSRV >=3D 1.84.0. But maybe you know of a
-> path forward :)
-
-I think we should be able to just `allow(clippy::incompatible_msrv)`,
-since Miguel & other maintainers will test with 1.78 (or at least are
-supposed to :).
-
----
-Cheers,
-Benno
-
+Alright, you've sniped me. This is coming in v3.
 
