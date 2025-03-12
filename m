@@ -1,307 +1,286 @@
-Return-Path: <linux-pci+bounces-23518-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23519-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B19AFA5E213
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 17:54:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 898D9A5E22E
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 18:05:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E6CDE1670E7
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 16:54:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3063D1897A46
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 17:06:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F14123C8A1;
-	Wed, 12 Mar 2025 16:54:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73B541D63F7;
+	Wed, 12 Mar 2025 17:05:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HAIZyxMc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="b2jziJiR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FC41D5CD4
-	for <linux-pci@vger.kernel.org>; Wed, 12 Mar 2025 16:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02F4282F1;
+	Wed, 12 Mar 2025 17:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741798449; cv=none; b=kQCX0VwpXIxUV/GBpem3cya605zFAFf4kiE3f60NaJP1WpQ09SCESVz9manntgXkc+fHWFDIxxEC7N6Pjn7pz4VroG9OAHdLYmVnH+yHXeVAc5qyl0CLaudLlagC9Tpu/77uxn0wZjSWROaoYwNER1qZvuMkU9TR+zeOu9xplh0=
+	t=1741799153; cv=none; b=STqJ7f6pSVfR/2gXooTzjalv7cvy5YKNV/rhAvC5MEgK9izNTuqUGSimSe1JyAUjqqeKTgisEdXBm1f+nR/8b5zexfwWwpueLMRdsSywlNo0A0r8GO8zS8QvgDpvguDH3EjkeuAykuvMFqrYEZrVKiS18n2te8oFWWq6qcrIkOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741798449; c=relaxed/simple;
-	bh=douH+ApqysdxqD3MsmZU7tDRKiUmEly0kzUNlnfghNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Wg5TmN/y/8++M/Z9IwfieAY6oAIZZ9aOhCJzpdtZb7xp1chiV/8D4Zm4F51bkW3ZezE2zJZG1M2JvvY5TZBpQoLjoa9SzMt+4frvs43DNuTE2MsGS93Wr885MXtsaGUHRLyjRSpE4zf7JQ/FwJaRtR2CBL3yYwU/PK0cbtLp55E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HAIZyxMc; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741798448; x=1773334448;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=douH+ApqysdxqD3MsmZU7tDRKiUmEly0kzUNlnfghNc=;
-  b=HAIZyxMcRu1mfB8XHDwQlgLYDlcrkVRbBmVdw2NF1t5ePn65Apo/wQPE
-   kSzEU2rLjqVUuucllDCzEtv2awYO/zTO0ikStEDUNciGR4tG9BR5JCMXm
-   Ne0Owt5AcE7cdhNgw9jLy+XvOmRN7qCmd56yi43TNL/U0vteFM9j5epLu
-   VUZlJby487lBBVKof7kVdaNRvqqVtEQfkCKVlgQMvI9ICRW+fldzOx3Gz
-   8D7Lm4ZHEEE4Zx0J0WBj0KIDKquPzDrjHHWkeExjnB8r5w5SIawGUmD8T
-   d0/c1ITkIjjVrauJGcFboNgCR4ofUTLlb4kJ3EGj0GmyLgt6XMYwG0yrZ
-   g==;
-X-CSE-ConnectionGUID: W1baJDi5RNysO7rcmORndw==
-X-CSE-MsgGUID: qFtzNfEJRvi6Vd9t1mCqPg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="42764767"
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="42764767"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 09:54:07 -0700
-X-CSE-ConnectionGUID: frmAM9LLSu2f5HthXl+x8Q==
-X-CSE-MsgGUID: sJszgMh6SKqiCGt8qQyi1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
-   d="scan'208";a="151507847"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 12 Mar 2025 09:54:05 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tsPLH-0008kA-0R;
-	Wed, 12 Mar 2025 16:54:03 +0000
-Date: Thu, 13 Mar 2025 00:53:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/j721e] BUILD SUCCESS
- a84700a56d33ab430d96351674b63892b3ab8274
-Message-ID: <202503130019.eGUgRVuo-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1741799153; c=relaxed/simple;
+	bh=AP2DarFxP1kHmbc1UQ9k/cTreCsRImTcUA6mVTmVGkY=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C++DcwqaEl5Z0oUpJPDZ3ehSJO4jjCzvww1oywZ4bQnMZT3bYe4C6KeIuIC6gW9jFpO/6hsJ3UaYS6XzapTsC3xfJNErjfoV/hxkQarxV7DnSFCyt+cDxEpeiRCoo2ueqchlIGQRtbFL5QvQSnAKFU4eCQMcZBxwgQ9wzjDupds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=b2jziJiR; arc=none smtp.client-ip=185.70.40.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1741799147; x=1742058347;
+	bh=H5vl6p6VvHTW8KbGWXzE7B7/l993EE1hKM2A3P0sLhk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=b2jziJiRFsmsGXaAH/pfzEpF6rybEcf/p6HsH/3iuVY6V8RgfKPuIaPsdUqv/kk38
+	 jDaRI6UihnNYvD9eCeTozR9RJm6VOcspVF7Jv3U9v1rrWLyyvpcfbQajG+eAw/pa3+
+	 Qnkxgek2raHEZB6LkzhlfCmAp+aN5AQDN5bwptySMixAf84ZVG6nWirq03aKZDNfRO
+	 +A4MLcTa9PYJd8Whi1yfBdZ6is1iQMDwpkkuKIhIDmz5YHnpT4B+5qs4BHxSccRrkr
+	 TrSccll+fzpnzBOsr/6GIy/APpeqhW+YhhSRzBlglgXWLsVyStn9PTuqzMbg7s/56n
+	 MshHrVkdfD/hA==
+Date: Wed, 12 Mar 2025 17:05:42 +0000
+To: Tamir Duberstein <tamird@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
+Message-ID: <D8EG9EM9UU0B.2GLHXRU2XROZ3@proton.me>
+In-Reply-To: <CAJ-ks9=K06OT6cutUABj2QDHJHJ70719c-eJ=F3n-_bhkYbZ3w@mail.gmail.com>
+References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com> <20250309-ptr-as-ptr-v2-5-25d60ad922b7@gmail.com> <D8EDP4SMQG2M.3HUNZGX8X0IL7@proton.me> <CAJ-ks9=K06OT6cutUABj2QDHJHJ70719c-eJ=F3n-_bhkYbZ3w@mail.gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: e4ddaa38df8cc192110bac9445ef586b5ce36b87
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/j721e
-branch HEAD: a84700a56d33ab430d96351674b63892b3ab8274  PCI: j721e: Fix the value of linkdown_irq_regfield for J784S4
+On Wed Mar 12, 2025 at 4:35 PM CET, Tamir Duberstein wrote:
+> On Wed, Mar 12, 2025 at 11:05=E2=80=AFAM Benno Lossin <benno.lossin@proto=
+n.me> wrote:
+>>
+>> On Sun Mar 9, 2025 at 5:00 PM CET, Tamir Duberstein wrote:
+>> > diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+>> > index 598001157293..20159b7c9293 100644
+>> > --- a/rust/kernel/devres.rs
+>> > +++ b/rust/kernel/devres.rs
+>> > @@ -45,7 +45,7 @@ struct DevresInner<T> {
+>> >  /// # Example
+>> >  ///
+>> >  /// ```no_run
+>> > -/// # use kernel::{bindings, c_str, device::Device, devres::Devres, i=
+o::{Io, IoRaw}};
+>> > +/// # use kernel::{bindings, c_str, device::Device, devres::Devres, f=
+fi::c_void, io::{Io, IoRaw}};
+>> >  /// # use core::ops::Deref;
+>> >  ///
+>> >  /// // See also [`pci::Bar`] for a real example.
+>> > @@ -59,19 +59,19 @@ struct DevresInner<T> {
+>> >  ///     unsafe fn new(paddr: usize) -> Result<Self>{
+>> >  ///         // SAFETY: By the safety requirements of this function [`=
+paddr`, `paddr` + `SIZE`) is
+>> >  ///         // valid for `ioremap`.
+>> > -///         let addr =3D unsafe { bindings::ioremap(paddr as _, SIZE =
+as _) };
+>> > +///         let addr =3D unsafe { bindings::ioremap(paddr as u64, SIZ=
+E) };
+>>
+>> The argument of `ioremap` is defined as `resource_size_t` which
+>> ultimately maps to `u64` on 64 bit systems and `u32` on 32 bit ones. I
+>> don't think that we should have code like this... Is there another
+>> option?
+>>
+>> Maybe Gary knows something here, do we have a type that represents that
+>> better?
+>
+> Ah yeah the problem is that this type is an alias rather than a
+> newtype. How do you feel about `as bindings::phys_addr_t`?
 
-elapsed time: 1453m
+Yeah that's better.
 
-configs tested: 212
-configs skipped: 6
+>> >  ///         if addr.is_null() {
+>> >  ///             return Err(ENOMEM);
+>> >  ///         }
+>> >  ///
+>> > -///         Ok(IoMem(IoRaw::new(addr as _, SIZE)?))
+>> > +///         Ok(IoMem(IoRaw::new(addr as usize, SIZE)?))
+>>
+>> This should be `addr.addr()` (requires `strict_provenance` on Rust 1.83
+>> & before).
+>>
+>> (I am assuming that we're never casting the usize back to a pointer,
+>> since otherwise this change would introduce UB)
+>
+> Yeah, we don't have strict provenance APIs (and we can't introduce
+> them without compiler tooling or bumping MSRV). I'm not sure if we are
+> casting back to a pointer, but either way this change doesn't change
+> the semantics - it is only spelling out the type.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+It's fine to enable the feature, since it's stable in a newer version of
+the compiler.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    clang-21
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    clang-18
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    clang-18
-arc                              allyesconfig    gcc-13.2.0
-arc                          axs103_defconfig    clang-21
-arc                                 defconfig    gcc-14.2.0
-arc                   randconfig-001-20250312    clang-21
-arc                   randconfig-001-20250312    gcc-13.2.0
-arc                   randconfig-002-20250312    clang-21
-arc                   randconfig-002-20250312    gcc-13.2.0
-arm                              allmodconfig    clang-18
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    gcc-14.2.0
-arm                              allyesconfig    clang-18
-arm                              allyesconfig    gcc-14.2.0
-arm                     davinci_all_defconfig    clang-21
-arm                                 defconfig    gcc-14.2.0
-arm                          gemini_defconfig    clang-21
-arm                           h3600_defconfig    clang-21
-arm                         mv78xx0_defconfig    clang-21
-arm                   randconfig-001-20250312    clang-19
-arm                   randconfig-001-20250312    clang-21
-arm                   randconfig-002-20250312    clang-21
-arm                   randconfig-003-20250312    clang-19
-arm                   randconfig-003-20250312    clang-21
-arm                   randconfig-004-20250312    clang-21
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250312    clang-21
-arm64                 randconfig-002-20250312    clang-21
-arm64                 randconfig-002-20250312    gcc-14.2.0
-arm64                 randconfig-003-20250312    clang-21
-arm64                 randconfig-003-20250312    gcc-14.2.0
-arm64                 randconfig-004-20250312    clang-21
-arm64                 randconfig-004-20250312    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250312    gcc-14.2.0
-csky                  randconfig-002-20250312    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    gcc-14.2.0
-hexagon                          allyesconfig    clang-18
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    gcc-14.2.0
-hexagon               randconfig-001-20250312    clang-21
-hexagon               randconfig-001-20250312    gcc-14.2.0
-hexagon               randconfig-002-20250312    clang-21
-hexagon               randconfig-002-20250312    gcc-14.2.0
-i386                             allmodconfig    clang-19
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    clang-19
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    clang-19
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250312    clang-19
-i386        buildonly-randconfig-001-20250312    gcc-12
-i386        buildonly-randconfig-002-20250312    clang-19
-i386        buildonly-randconfig-002-20250312    gcc-12
-i386        buildonly-randconfig-003-20250312    gcc-12
-i386        buildonly-randconfig-004-20250312    gcc-12
-i386        buildonly-randconfig-005-20250312    gcc-12
-i386        buildonly-randconfig-006-20250312    clang-19
-i386        buildonly-randconfig-006-20250312    gcc-12
-i386                                defconfig    clang-19
-i386                  randconfig-001-20250312    clang-19
-i386                  randconfig-002-20250312    clang-19
-i386                  randconfig-003-20250312    clang-19
-i386                  randconfig-004-20250312    clang-19
-i386                  randconfig-005-20250312    clang-19
-i386                  randconfig-006-20250312    clang-19
-i386                  randconfig-007-20250312    clang-19
-i386                  randconfig-011-20250312    gcc-11
-i386                  randconfig-012-20250312    gcc-11
-i386                  randconfig-013-20250312    gcc-11
-i386                  randconfig-014-20250312    gcc-11
-i386                  randconfig-015-20250312    gcc-11
-i386                  randconfig-016-20250312    gcc-11
-i386                  randconfig-017-20250312    gcc-11
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250312    gcc-14.2.0
-loongarch             randconfig-002-20250312    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                         bigsur_defconfig    clang-21
-mips                           ip28_defconfig    gcc-14.2.0
-nios2                         10m50_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250312    gcc-14.2.0
-nios2                 randconfig-002-20250312    gcc-14.2.0
-openrisc                          allnoconfig    clang-15
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    clang-15
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-12
-parisc                randconfig-001-20250312    gcc-14.2.0
-parisc                randconfig-002-20250312    gcc-14.2.0
-parisc64                            defconfig    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    clang-15
-powerpc                          allyesconfig    gcc-14.2.0
-powerpc                        fsp2_defconfig    gcc-14.2.0
-powerpc                      katmai_defconfig    clang-21
-powerpc               randconfig-001-20250312    clang-21
-powerpc               randconfig-001-20250312    gcc-14.2.0
-powerpc               randconfig-002-20250312    clang-21
-powerpc               randconfig-002-20250312    gcc-14.2.0
-powerpc               randconfig-003-20250312    clang-21
-powerpc               randconfig-003-20250312    gcc-14.2.0
-powerpc64             randconfig-001-20250312    clang-17
-powerpc64             randconfig-001-20250312    gcc-14.2.0
-powerpc64             randconfig-002-20250312    clang-15
-powerpc64             randconfig-002-20250312    gcc-14.2.0
-powerpc64             randconfig-003-20250312    clang-21
-powerpc64             randconfig-003-20250312    gcc-14.2.0
-riscv                            allmodconfig    clang-21
-riscv                            allmodconfig    gcc-14.2.0
-riscv                             allnoconfig    clang-15
-riscv                            allyesconfig    clang-21
-riscv                            allyesconfig    gcc-14.2.0
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250312    clang-21
-riscv                 randconfig-001-20250312    gcc-14.2.0
-riscv                 randconfig-002-20250312    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250312    clang-15
-s390                  randconfig-001-20250312    gcc-14.2.0
-s390                  randconfig-002-20250312    clang-16
-s390                  randconfig-002-20250312    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-12
-sh                          polaris_defconfig    clang-21
-sh                          r7780mp_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250312    gcc-14.2.0
-sh                    randconfig-002-20250312    gcc-14.2.0
-sh                            shmin_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250312    gcc-14.2.0
-sparc                 randconfig-002-20250312    gcc-14.2.0
-sparc                       sparc32_defconfig    gcc-14.2.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250312    gcc-14.2.0
-sparc64               randconfig-002-20250312    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-15
-um                               allyesconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250312    gcc-12
-um                    randconfig-001-20250312    gcc-14.2.0
-um                    randconfig-002-20250312    clang-15
-um                    randconfig-002-20250312    gcc-14.2.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250312    clang-19
-x86_64      buildonly-randconfig-001-20250312    gcc-12
-x86_64      buildonly-randconfig-002-20250312    clang-19
-x86_64      buildonly-randconfig-002-20250312    gcc-12
-x86_64      buildonly-randconfig-003-20250312    gcc-12
-x86_64      buildonly-randconfig-004-20250312    clang-19
-x86_64      buildonly-randconfig-004-20250312    gcc-12
-x86_64      buildonly-randconfig-005-20250312    clang-19
-x86_64      buildonly-randconfig-005-20250312    gcc-12
-x86_64      buildonly-randconfig-006-20250312    clang-19
-x86_64      buildonly-randconfig-006-20250312    gcc-12
-x86_64                              defconfig    clang-19
-x86_64                              defconfig    gcc-11
-x86_64                                  kexec    clang-19
-x86_64                randconfig-001-20250312    gcc-12
-x86_64                randconfig-002-20250312    gcc-12
-x86_64                randconfig-003-20250312    gcc-12
-x86_64                randconfig-004-20250312    gcc-12
-x86_64                randconfig-005-20250312    gcc-12
-x86_64                randconfig-006-20250312    gcc-12
-x86_64                randconfig-007-20250312    gcc-12
-x86_64                randconfig-008-20250312    gcc-12
-x86_64                randconfig-071-20250312    clang-19
-x86_64                randconfig-072-20250312    clang-19
-x86_64                randconfig-073-20250312    clang-19
-x86_64                randconfig-074-20250312    clang-19
-x86_64                randconfig-075-20250312    clang-19
-x86_64                randconfig-076-20250312    clang-19
-x86_64                randconfig-077-20250312    clang-19
-x86_64                randconfig-078-20250312    clang-19
-x86_64                               rhel-9.4    clang-19
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250312    gcc-14.2.0
-xtensa                randconfig-002-20250312    gcc-14.2.0
+>> >  ///     }
+>> >  /// }
+>> >  ///
+>> >  /// impl<const SIZE: usize> Drop for IoMem<SIZE> {
+>> >  ///     fn drop(&mut self) {
+>> >  ///         // SAFETY: `self.0.addr()` is guaranteed to be properly m=
+apped by `Self::new`.
+>> > -///         unsafe { bindings::iounmap(self.0.addr() as _); };
+>> > +///         unsafe { bindings::iounmap(self.0.addr() as *mut c_void);=
+ };
+>>
+>> Can't this be a `.cast::<c_void>()`?
+>
+> This is an integer-to-pointer cast. `addr` returns `usize`:
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Oh I missed the `*mut`... In that case, we can't use the `addr`
+suggestion that I made above, instead we should use `expose_provenance`
+above and `with_exposed_provenance` here.
+
+> impl<const SIZE: usize> IoRaw<SIZE> {
+>     [...]
+>
+>     /// Returns the base address of the MMIO region.
+>     #[inline]
+>     pub fn addr(&self) -> usize {
+>         self.addr
+>     }
+>
+>     [...]
+> }
+>
+>>
+>> >  ///     }
+>> >  /// }
+>> >  ///
+>>
+>> > diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
+>> > index 8654d52b0bb9..eb8fa52f08ba 100644
+>> > --- a/rust/kernel/error.rs
+>> > +++ b/rust/kernel/error.rs
+>> > @@ -152,7 +152,7 @@ pub(crate) fn to_blk_status(self) -> bindings::blk=
+_status_t {
+>> >      /// Returns the error encoded as a pointer.
+>> >      pub fn to_ptr<T>(self) -> *mut T {
+>> >          // SAFETY: `self.0` is a valid error due to its invariant.
+>> > -        unsafe { bindings::ERR_PTR(self.0.get() as _).cast() }
+>> > +        unsafe { bindings::ERR_PTR(self.0.get() as isize).cast() }
+>>
+>> Can't this be a `.into()`?
+>
+> error[E0277]: the trait bound `isize: core::convert::From<i32>` is not sa=
+tisfied
+>    --> ../rust/kernel/error.rs:155:49
+>     |
+> 155 |         unsafe { bindings::ERR_PTR(self.0.get().into()).cast() }
+>     |                                                 ^^^^ the trait
+> `core::convert::From<i32>` is not implemented for `isize`
+
+That's a bummer... I wonder why that doesn't exist.
+
+>> >      }
+>> >
+>> >      /// Returns a string representing the error, if one exists.
+>>
+>> > @@ -119,7 +119,7 @@ pub fn $name(&self, offset: usize) -> $type_name {
+>> >              let addr =3D self.io_addr_assert::<$type_name>(offset);
+>> >
+>> >              // SAFETY: By the type invariant `addr` is a valid addres=
+s for MMIO operations.
+>> > -            unsafe { bindings::$name(addr as _) }
+>> > +            unsafe { bindings::$name(addr as *const c_void) }
+>>
+>> Also here, is `.cast::<c_void>()` enough? (and below)
+>
+> It's an integer-to-pointer cast. In the same `impl<const SIZE: usize>
+> IoRaw<SIZE>` as above:
+>
+>     fn io_addr_assert<U>(&self, offset: usize) -> usize {
+>         build_assert!(Self::offset_valid::<U>(offset, SIZE));
+>
+>         self.addr() + offset
+>     }
+
+I would prefer we use the strict_provenance API.
+
+>> >          }
+>> >
+>> >          /// Read IO data from a given offset.
+>>
+>> > diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
+>> > index 04f2d8ef29cb..40d1bd13682c 100644
+>> > --- a/rust/kernel/of.rs
+>> > +++ b/rust/kernel/of.rs
+>> > @@ -22,7 +22,7 @@ unsafe impl RawDeviceId for DeviceId {
+>> >      const DRIVER_DATA_OFFSET: usize =3D core::mem::offset_of!(binding=
+s::of_device_id, data);
+>> >
+>> >      fn index(&self) -> usize {
+>> > -        self.0.data as _
+>> > +        self.0.data as usize
+>>
+>> This should also be `self.0.data.addr()`.
+>
+> Can't do it without strict_provenance.
+>
+>>
+>> >      }
+>> >  }
+>> >
+>> > @@ -34,10 +34,10 @@ pub const fn new(compatible: &'static CStr) -> Sel=
+f {
+>> >          // SAFETY: FFI type is valid to be zero-initialized.
+>> >          let mut of: bindings::of_device_id =3D unsafe { core::mem::ze=
+roed() };
+>> >
+>> > -        // TODO: Use `clone_from_slice` once the corresponding types =
+do match.
+>> > +        // TODO: Use `copy_from_slice` once stabilized for `const`.
+>>
+>> This feature has just been stabilized (5 days ago!):
+>>
+>>     https://github.com/rust-lang/rust/issues/131415
+>
+> Yep! I know :)
+>
+>> @Miguel: Do we already have a target Rust version for dropping the
+>> `RUSTC_BOOTSTRAP=3D1`? If not, then I think we should use this feature
+>> now, since it will be stable by the time we bump the minimum version.
+>> (not in this patch [series] though)
+>>
+>> >          let mut i =3D 0;
+>> >          while i < src.len() {
+>> > -            of.compatible[i] =3D src[i] as _;
+>> > +            of.compatible[i] =3D src[i];
+>> >              i +=3D 1;
+>> >          }
+>>
+>> > @@ -317,7 +320,7 @@ unsafe fn do_release(pdev: &Device, ioptr: usize, =
+num: i32) {
+>> >          // `ioptr` is valid by the safety requirements.
+>> >          // `num` is valid by the safety requirements.
+>> >          unsafe {
+>> > -            bindings::pci_iounmap(pdev.as_raw(), ioptr as _);
+>> > +            bindings::pci_iounmap(pdev.as_raw(), ioptr as *mut kernel=
+::ffi::c_void);
+>>
+>> Again, probably castable.
+>
+> How? `ioptr` is a `usize` (you can see the prototype).
+
+Sorry, I missed all the `*mut`/`*const` prefixes here.
+
+---
+Cheers,
+Benno
+
 
