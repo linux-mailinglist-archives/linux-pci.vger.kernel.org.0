@@ -1,165 +1,175 @@
-Return-Path: <linux-pci+bounces-23545-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23546-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1B8DA5E72A
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 23:16:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D503A5E752
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 23:25:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1B933BAE6E
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 22:16:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD37B3B2F5A
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 22:25:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 188321EF370;
-	Wed, 12 Mar 2025 22:16:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A2E71EF092;
+	Wed, 12 Mar 2025 22:25:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="acqC/clq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDbJAAe1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC7A1EEA40;
-	Wed, 12 Mar 2025 22:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F1219E96D;
+	Wed, 12 Mar 2025 22:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741817788; cv=none; b=aIial9TegqGycj8flP+iFmBv0tatLjs+1nGboUKfdMOQmlww1XMH8LOtVbVg9KLnTHYCYDFupeItSB1fG9btGqsT/LGIGccsD8D1pDTpDqrxnMLXNws1Ngn6B9Q5TB3qOd7FjkSs0PMnWLVW+c/AtYS4IElSt20J/CSJdQAsdnU=
+	t=1741818329; cv=none; b=XwTFqlLzfd6raBAaZqu1oohwJRNjpok6HTptAQYaxwQs6aiykyXVvw7mbejoreG/0AkQMxMGUE3ijh4HuA95wn+00Q7L0PcOXFIAqbt+aKortnhNE71yVvjI31L+E1KLG3zLzCGdLHl5syfpruulOB3YdxkQSg59aw9YJq+TkMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741817788; c=relaxed/simple;
-	bh=vkr3KopYdWUircBEEhav2hH+I7B84ECNwkPnSpSsVCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ukKZpMigVtbwTAfNrOutPCd4IMosx4Ga2BGP80Y/+8sDb7B0pQRsfW76wfe1wJK5e0FJ4eh5gxCbi2SToAr06+ND1Y/awL8XJ64YT939Wda/056EucpJ8Aggxq+0RchQRbF1E50q1pq4wzUZFXC3yeLCnN44mY3taHfEtV5sTGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=acqC/clq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29E89C4CEDD;
-	Wed, 12 Mar 2025 22:16:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741817787;
-	bh=vkr3KopYdWUircBEEhav2hH+I7B84ECNwkPnSpSsVCg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=acqC/clqSUvbGHLoM6HoKK3d+FnFC5UsLEm/ESofPeZh4zRHSzxQ8xZEwpyEwa+UE
-	 jCDXndb9lcYvm38L+aHEmjl7AH1nJ7wY5UHJGZI1WmNBaseG2KnH+QJ6I53vDtwBVA
-	 XuSguY4U+5wmTqZIYYBHQ3ptELul5IR/8DtVlVbcpuVe/V2UxSrxA12AnXPt+ogIim
-	 n/wD0cM0OnqpyqotCR6b1AopO0XXa6cKiYgpYweKJQ5U8RZnKeuCWN8jun0j3RD1LW
-	 mKlNEHtDpGI+8pmm8XHLK76mBYiPX9h8vFyWBk/fA3c5yotJxMPU2gOLetbVN5Z13F
-	 em3cPp2n4qqHA==
-Date: Wed, 12 Mar 2025 17:16:25 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v10 04/10] PCI: dwc: Add helper
- dw_pcie_init_parent_bus_offset()
-Message-ID: <20250312221625.GA711258@bhelgaas>
+	s=arc-20240116; t=1741818329; c=relaxed/simple;
+	bh=VXAHyoi6S/bte6WaCD/Pn5Ote/xnR2EBUMQ/zji8uZM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HMt1cuM0r69V48l1ofAtFoAdxBhrsh9UWPUZTbqPdJRxtM0EN9zNm6Q4qy7Iit4v/NNsI2A1HH+Ll4nkvsIR7nNH6Xb41osTAZvbB10715p3Ao6GfKfg5e5hWIEHwoX8Sfti828SbMDilf30Q9qoaWD40zFF21uK8EIGn4SbSzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FDbJAAe1; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30bfd4d4c63so3672191fa.2;
+        Wed, 12 Mar 2025 15:25:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741818325; x=1742423125; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RQpIKnFqQqjnZqrWUgK5hmSZufspTpLTGHs2PYXqx+A=;
+        b=FDbJAAe1V8P31C6+Cb2eoC2aljsxNHsCQEezO/155K2uUla9org+AbbK8vTw30ysGt
+         UGXSHmu4C8MBQBFD8S2lHvfoaoHcirqPnua4tD9b1bquu4q8CTkEz2uW4/A3RnLjRf8P
+         lE+2la9n/y94lhiQHAilEwTkD7OMIctNixk35o8PdgDM75VkyuGMM+3xwvdvMHwZ0ptv
+         vJDB31L+eM1E4VUQNmUHd4aZmU1O+ChpJpofOmNN8tazohLIAVuSkD374i1RZCop4I2l
+         W5GKeujmJcna0i6wYLzizSrNbt9eiyO2ErZLEuPjmqMnrMX9oeK6n9tRy8QcF/tfTK3j
+         OtwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741818325; x=1742423125;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RQpIKnFqQqjnZqrWUgK5hmSZufspTpLTGHs2PYXqx+A=;
+        b=d/gZAszQhliEEk8OpockAdxgEmDT8HbQ8DExpZMFbePlyHMzfmyFzvsfjByN5bxhmc
+         Fs16xzYuVNtYBBNfR+HRzf1UpQrtcMP3WTMokddV05bpC8M+Vm3U04/oPnMZP0b53E/+
+         KR9cJeKMIJQl0gEbbAWokrAi8VrZO/aQI0ECFklsquTYtZQzMjLdyE9LOIqY2+aTM8g3
+         h2HBDqtDERAPOmCPTsR1WGTlzfaQ0Ab8LSAm4dK4TFV/3HGhilxKYfseWmCEt3CKCbCx
+         e0WBI46qyJoqOiWFu4JJz197bhezFI02oeSl0r0y7hKqjqksUgnFttW+0lKxI2P0bcWG
+         FSEA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1Tna6cEVTRlGmOzOrR9/oIQCNM6edoldKS9TZQThvSYmaNyAF1vlmolhCm1hVQVtktBKO8tKKwaR8@vger.kernel.org, AJvYcCV4RIW7k5Xm0DIcK6YrBU7aAaFYXEeOqKphoes15iFFIu4fKn+Rzt8TEPEK/3OcJ6YcNl/p0as4UwjG@vger.kernel.org, AJvYcCVjdxCWSkTSgzRUnmJVkn67MxvlWo6f0yGgg6tO2FzcxOVFVYqeWdRLD9DqrZgyj7FkVlzqy/O2Bp+eSSXA@vger.kernel.org, AJvYcCVtDbS3DGvFTYR1Zz+UArbG2jXH1dezgd1xNNb9VD7A0znDfkPJ0U+iw7DilIHHfVRTGUKWu27Enr5UU1Y=@vger.kernel.org, AJvYcCW+OvXYOWXERNgnMAS4tB0qbjgPYOxCTaeLfMf50OOE1ReBRkIIFqqEkM9md17z6XTT9SfednIZVZR22v19Yq/s@vger.kernel.org, AJvYcCWcgrmaX2P/L/14kPM5rn8eHsViaRB5GXM8CnV7go6RZH/XdDoATqAchlnPzAk4oEoe6ooXduLZ2KTu9Fb7@vger.kernel.org, AJvYcCXdqCmRhc3lZybjtYCQxJ4yE/M7f4VISYOZVC392avc7DrTGr1u7ADQK2nF24VvYen97sWPM3G20I9Ef868psE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2olGBkxolvZk6CM9/9j7TN713ciS7p+vM/fa1jYfpgyusiMKv
+	w6mtixBQMmLlf5590FwuHeXevBkdef9abfe9ar5GGIT85MiGH0zlp422QOpvMFWemA0sakSVM5r
+	wWnHe1BWEbxT34YdvbCdmZ4ohL68=
+X-Gm-Gg: ASbGncvfDWaCJ4V2YeBh4bs7Xir90E1z1ZVRN3un+E/EfgimQhPwh7FXbr+Pr7wblRK
+	NvR3ldJpSyRWKSFSHX7Zk9yfds7XmafYpWZBtWMPFxMj2beQg6AS31f8ddpVfUurN2ze8CQjJ6k
+	jy3VbOHKKp2l4cxNPjHE8k90tj4PoRxZ/Ur84/AlifXg==
+X-Google-Smtp-Source: AGHT+IGKQgI9mHdQYDXn8YP8O+oMMjkLyXMRIC+V9diumKcyagJmgjCx2MUOMGSE+cXBt7MpiP4TDI26sRzoA7NpJk4=
+X-Received: by 2002:a05:651c:2209:b0:30b:c8b1:dd95 with SMTP id
+ 38308e7fff4ca-30c2069a33fmr34989931fa.22.1741818325120; Wed, 12 Mar 2025
+ 15:25:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310-pci_fixup_addr-v10-4-409dafc950d1@nxp.com>
+References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com>
+ <D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me> <CAJ-ks9=zWAuPUM_61EA6i5QkUpwtNtsN8oF_MUerWGn39MRHhw@mail.gmail.com>
+ <D8EJM4CJ4HAN.1PB2YV8DB77V7@proton.me> <CAJ-ks9mo-H46Wwcu_LOvDy0ncwMR9ii74Fyf3OX-aWNnrZ397g@mail.gmail.com>
+ <CAJ-ks9kCgATKDE2qAuO3XpQfjVO2jGyq3D4sbUcVKyW6G1vuuQ@mail.gmail.com>
+ <D8EL9QFS1XNT.JBSMRXD4D7GT@proton.me> <CAJ-ks9=TRDg3g=NG7k97P_5jXpZ4K4v0DxrmJFR+uF0-3zJkXw@mail.gmail.com>
+ <CAJ-ks9=hAwOGtVv0zh9CcH7XOxjGnizvK1QOMAi8nKStocKr2Q@mail.gmail.com> <D8ELW7X9796K.2ZGJS34LDTHOP@proton.me>
+In-Reply-To: <D8ELW7X9796K.2ZGJS34LDTHOP@proton.me>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 12 Mar 2025 18:24:48 -0400
+X-Gm-Features: AQ5f1JrV0I808OxKHRnh7f5P8lP8791ez-Nxt_VvKYEi31EaPmsz0HYFkpYMAbo
+Message-ID: <CAJ-ks9k1gZ=tLSe6OjuKFgg6=QE5R_Ajo0ZJwZJp08_1LMiODw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 10, 2025 at 04:16:42PM -0400, Frank Li wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Set pci->parent_bus_offset based on the parent bus address from the
-> "config" (Root complex mode) and "addr_space" (Endpoint mode).
-> 
-> .cpu_addr_fixup(cpu_phy_addr). (if implemented) should return the parent
-> bus address corresponding according to cpu_phy_addr.
-> 
-> Sets pp->parent_bus_offset, but doesn't use it, so no functional change
-> intended yet.
-> 
-> Add use_parent_dt_ranges to detect some fake bus translation at platform,
-> which have not .cpu_addr_fixup(). Set use_parent_dt_ranges true explicitly
-> at platform that have .cpu_addr_fixup() and fixed DTB's range. If not one
-> report "fake bus translation" for sometime, this flags can be removed
-> safely.
+On Wed, Mar 12, 2025 at 5:30=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> On Wed Mar 12, 2025 at 10:10 PM CET, Tamir Duberstein wrote:
+> > On Wed, Mar 12, 2025 at 5:04=E2=80=AFPM Tamir Duberstein <tamird@gmail.=
+com> wrote:
+> >>
+> >> On Wed, Mar 12, 2025 at 5:01=E2=80=AFPM Benno Lossin <benno.lossin@pro=
+ton.me> wrote:
+> >> > Always enable the features, we have `allow(stable_features)` for thi=
+s
+> >> > reason (then you don't have to do this dance with checking if it's
+> >> > already stable or not :)
+> >>
+> >> It's not so simple. In rustc < 1.84.0 the lints *and* the strict
+> >> provenance APIs are behind `feature(strict_provenance)`. In rustc >=3D
+> >> 1.84.0 the lints are behind `feature(strict_provenance_lints)`. So you
+> >> need to read the config to learn that you need to enable
+> >> `feature(strict_provenance_lints)`.
+>
+> I see... And `strict_provenance_lints` doesn't exist in <1.84? That's a
+> bit of a bummer...
+>
+> But I guess we could have this config option (in `init/Kconfig`):
+>
+>     config RUSTC_HAS_STRICT_PROVENANCE
+>             def_bool RUSTC_VERSION >=3D 108400
+>
+> and then do this in `lib.rs`:
+>
+>     #![cfg_attr(CONFIG_RUSTC_HAS_STRICT_PROVENANCE, feature(strict_proven=
+ance_lints))]
 
-> +int dw_pcie_init_parent_bus_offset(struct dw_pcie *pci, const char *reg_name,
-> +				   resource_size_t cpu_phy_addr)
-> +{
-> +	struct device *dev = pci->dev;
-> +	struct device_node *np = dev->of_node;
-> +	u64 (*fixup)(struct dw_pcie *pcie, u64 cpu_addr);
-> +	u64 reg_addr, fixup_addr;
-> +	int index;
-> +
-> +	/* Look up reg_name address on parent bus */
-> +	index = of_property_match_string(np, "reg-names", reg_name);
-> +
-> +	if (index < 0) {
-> +		dev_err(dev, "Missed reg-name: %s, Broken DTB file\n", reg_name);
-> +		return -EINVAL;
-> +	}
-> +
-> +	of_property_read_reg(np, index, &reg_addr, NULL);
-> +
-> +	fixup = pci->ops->cpu_addr_fixup;
-> +	if (fixup) {
-> +		fixup_addr = fixup(pci, cpu_phy_addr);
-> +		if (reg_addr == fixup_addr) {
-> +			dev_info(dev, "%#010llx %s reg[%d] == %#010llx; %ps is redundant\n",
-> +				 cpu_phy_addr, reg_name, index,
-> +				 fixup_addr, fixup);
-> +		} else {
-> +			dev_warn_once(dev, "%#010llx %s reg[%d] != %#010llx fixed up addr; DT is broken\n",
-> +				      cpu_phy_addr, reg_name,
-> +				      index, fixup_addr);
-> +			reg_addr = fixup_addr;
-> +		}
-> +	} else if (!pci->use_parent_dt_ranges) {
-> +		if (reg_addr != cpu_phy_addr) {
-> +			dev_warn_once(dev, "Your DTB try to use fake translation, Please check parent's ranges property,");
-> +			return 0;
+Yep! That's exactly what I did, but as I mentioned up-thread, the
+result is that we only cover the `kernel` crate.
 
-IIUC the point of this is to catch a DT that describes a non-zero
-offset when the driver did not implement .cpu_addr_fixup() and
-therefore assumed "reg_addr == cpu_phy_addr".
+>
+> > Actually this isn't even the only problem. It seems that
+> > `-Astable_features` doesn't affect features enabled on the command
+> > line at all:
+> >
+> > error[E0725]: the feature `strict_provenance` is not in the list of
+> > allowed features
+> >  --> <crate attribute>:1:9
+> >   |
+> > 1 | feature(strict_provenance)
+> >   |         ^^^^^^^^^^^^^^^^^
+>
+> That's because you need to append the feature to `rust_allowed_features`
+> in `scripts/Makefile.build` (AFAIK).
 
-I guess that makes sense.  But I think we should include both
-addresses in the message to help understand the issue.
+Thanks, that's a helpful pointer, and it solves some problems but not
+all. The root Makefile contains this bit:
 
-> +		}
-> +	}
-> +
-> +	pci->parent_bus_offset = cpu_phy_addr - reg_addr;
-> +	dev_info(dev, "%s parent bus offset is %#010llx\n",
-> +		 reg_name, pci->parent_bus_offset);
-> +
-> +	return 0;
-> +}
+> KBUILD_HOSTRUSTFLAGS :=3D $(rust_common_flags) -O -Cstrip=3Ddebuginfo \
+> -Zallow-features=3D $(HOSTRUSTFLAGS)
 
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -465,6 +466,16 @@ struct dw_pcie {
->  	struct reset_control_bulk_data	core_rsts[DW_PCIE_NUM_CORE_RSTS];
->  	struct gpio_desc		*pe_rst;
->  	bool			suspended;
-> +	/*
-> +	 * This flag indicates that the vendor driver uses devicetree 'ranges'
-> +	 * property to allow iATU to use the Intermediate Address (IA) for
-> +	 * outbound mapping. Using this flag also avoids the usage of
-> +	 * 'cpu_addr_fixup' callback implementation in the driver.
+which means we can't use the provenance lints against these host
+targets (including e.g. `rustdoc_test_gen`). We can't remove this
+-Zallow-features=3D either because then core fails to compile.
 
-This part of the comment is now wrong.
+I'm at the point where I think I need more involved help. Want to take
+a look at my attempt? It's here:
+https://github.com/tamird/linux/tree/b4/ptr-as-ptr.
 
-> +	 * If use_parent_dt_ranges is false, warning will print if IA is not
-> +	 * equal to cpu physical address. Indicate dtb use a fake translation.
-> +	 */
-> +	bool			use_parent_dt_ranges;
->  };
+Thanks!
+Tamir
 
