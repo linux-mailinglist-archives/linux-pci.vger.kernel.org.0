@@ -1,113 +1,235 @@
-Return-Path: <linux-pci+bounces-23540-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23541-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 436C7A5E6A5
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 22:30:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A4B0A5E6AC
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 22:31:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 786E97A6183
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 21:29:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C16117AB6D1
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 21:30:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D133F1EE017;
-	Wed, 12 Mar 2025 21:30:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D354F1EFFB7;
+	Wed, 12 Mar 2025 21:30:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="db7SZWhO"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jVYXdLGQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFB278C9C;
-	Wed, 12 Mar 2025 21:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36CCE1EFFB2;
+	Wed, 12 Mar 2025 21:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741815045; cv=none; b=jMvCpGE6IP6i8ghO6okIL+Mv4RaXdiKEg3mjOWoB/+LdqDE8BNf2jgnTt3IT0YgzVp59mGcwa8yGN3srWEgL3kEcjlVXVql04BM8zAXEQGiF4QFDodfm6q7nPvxlJQduLJ5HY/rkP2Xk48IcZkz7PpH8jFQ0URziz6QlkziRpms=
+	t=1741815056; cv=none; b=BjJX/WRXyeVxAhsBYQjJFRjkaQnan3FOZ1SOEzO7V2ak1RqxmjX7TBk0Ghyi/7qGlp7u7FRol/7YWgBkgNBS8b4kJvtTdilSvLWnKkgWfX5t0sY03g/beDoiUw2tZXgJ45yhDJZCw8+mshkcJwmRgd4Wz1K1xWldsntNhCepxiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741815045; c=relaxed/simple;
-	bh=LO60XXggN+anABLteCj5yJ/uveuP5Rf8+hxgh8hVLs0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fb1AgegdDQAZ+cbcpfU7OdMX+0Jm4fa9pdtN75abGM/2gB+syWzR/ceagBvneBNMKjfepbYEEPibHDIZgfGBC3UGQOCDKFc4nimJUCXrZ2OFA+9GKjoRUouAhwQ4ze2TGYwmAClTsSgOOkvKWvpEcNxtFNhCjlZ45BA4uwtIAVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=db7SZWhO; arc=none smtp.client-ip=185.70.40.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1741815041; x=1742074241;
-	bh=778zYe9Aon21nmGzdiX6oN8GbRWrDQ7vfoMY5NS12F0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=db7SZWhOzUaLlMzOnZl+tAVoX7Ywpf6RTPMLoaDvI8GIG4p8DrUwaR/a6/Dnreeqp
-	 Nu7j1wKrKLhikHuS/8DeqczefnRuHDH9jvByDQK0OBlScdU/xH/dwFotYy9YjJ+SdI
-	 VX+EXyGto6Ux00AviB5J7HU5riEBB0ASYa1qrADkr64rcloHoLwkAsUCOTixugCBSg
-	 99Gz5RI11wiwzrdeYAG+h9ki6LQ6ya1INqrFCUYV0dVCmbAENvyRJEKTPk1fpZ1xNE
-	 nS4WtSgFpv/MYcelYvI+SD0dnvWoF7pDzZQVnFF6kMq8NclmHvAh9qZtu8iNRITMgl
-	 6OqWA6SEDI/oA==
-Date: Wed, 12 Mar 2025 21:30:33 +0000
-To: Tamir Duberstein <tamird@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
-Message-ID: <D8ELW7X9796K.2ZGJS34LDTHOP@proton.me>
-In-Reply-To: <CAJ-ks9=hAwOGtVv0zh9CcH7XOxjGnizvK1QOMAi8nKStocKr2Q@mail.gmail.com>
-References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com> <D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me> <CAJ-ks9=zWAuPUM_61EA6i5QkUpwtNtsN8oF_MUerWGn39MRHhw@mail.gmail.com> <D8EJM4CJ4HAN.1PB2YV8DB77V7@proton.me> <CAJ-ks9mo-H46Wwcu_LOvDy0ncwMR9ii74Fyf3OX-aWNnrZ397g@mail.gmail.com> <CAJ-ks9kCgATKDE2qAuO3XpQfjVO2jGyq3D4sbUcVKyW6G1vuuQ@mail.gmail.com> <D8EL9QFS1XNT.JBSMRXD4D7GT@proton.me> <CAJ-ks9=TRDg3g=NG7k97P_5jXpZ4K4v0DxrmJFR+uF0-3zJkXw@mail.gmail.com> <CAJ-ks9=hAwOGtVv0zh9CcH7XOxjGnizvK1QOMAi8nKStocKr2Q@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: f8edbb297efc28dbae0cc848a6fd0bf94b85de3d
+	s=arc-20240116; t=1741815056; c=relaxed/simple;
+	bh=b3SG1qguOMx7tqHsbHfarJaOxpoJiGI0tAHShXJVlrg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mchLcKFamnfrP2WQ1XULDUSjEFRFaMKOWV/o+fe9hbqv9Qn+0tt/jtITbuo3YtQ+ZPQpQYcDR2xrTEmqQhbcE8u9MRrXOEWGnDGCPTdHZagLBcgWGeuTDasEWJAsTHql3U36l7MsaE1+yz7qmngkWl9IWvNgMloQ3MiL0C7XGcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jVYXdLGQ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 56DB7210B15D;
+	Wed, 12 Mar 2025 14:30:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 56DB7210B15D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741815054;
+	bh=0jZMHKO18dXTXA4LJuA2uOeEgiBBF4NGlAFfPYSUkIg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jVYXdLGQsYulvVeW8IFJWbnpTdPhO3YkIzVogJSfNX4/5ywy0iqJqge8B5pZ1HaAV
+	 Iv100RzYOsmebNCVxD7ORkWEDunwcz/79GyJiqkQhUDuH+nPFal96SJH1Ki4+uRbVB
+	 jJP64KqnGyiH4Tkhk5Kk5cE7kjlh3hiRNV9MLqM8=
+Message-ID: <3d26e47a-cb42-47f6-a18c-e330ee065a2b@linux.microsoft.com>
+Date: Wed, 12 Mar 2025 14:30:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v5 03/11] Drivers: hv: Enable VTL mode for
+ arm64
+To: Wei Liu <wei.liu@kernel.org>
+Cc: Michael Kelley <mhklinux@outlook.com>, Arnd Bergmann <arnd@arndb.de>,
+ "bhelgaas@google.com" <bhelgaas@google.com>, Borislav Petkov <bp@alien8.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
+ <conor+dt@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Joey Gouly <joey.gouly@arm.com>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, Len Brown <lenb@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Oliver Upton <oliver.upton@linux.dev>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>,
+ "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
+ Sudeep Holla <sudeep.holla@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+ Zenghui Yu <yuzenghui@huawei.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>, "apais@microsoft.com"
+ <apais@microsoft.com>, "benhill@microsoft.com" <benhill@microsoft.com>,
+ "bperkins@microsoft.com" <bperkins@microsoft.com>,
+ "sunilmut@microsoft.com" <sunilmut@microsoft.com>
+References: <20250307220304.247725-1-romank@linux.microsoft.com>
+ <20250307220304.247725-4-romank@linux.microsoft.com>
+ <e0f81049-688e-4f53-a002-5d246281bf8d@app.fastmail.com>
+ <BN7PR02MB41488C06B7E42830C700318DD4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
+ <119cfb59-d68b-4718-b7cb-90cba67827e8@app.fastmail.com>
+ <BN7PR02MB4148FC15ADF0E49327262B92D4D62@BN7PR02MB4148.namprd02.prod.outlook.com>
+ <caa0d793-3f05-4d7c-88d0-224ec0503cfb@linux.microsoft.com>
+ <Z9HvHsGyXDnN38_B@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <Z9HvHsGyXDnN38_B@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed Mar 12, 2025 at 10:10 PM CET, Tamir Duberstein wrote:
-> On Wed, Mar 12, 2025 at 5:04=E2=80=AFPM Tamir Duberstein <tamird@gmail.co=
-m> wrote:
+
+
+On 3/12/2025 1:31 PM, Wei Liu wrote:
+> On Wed, Mar 12, 2025 at 11:33:11AM -0700, Roman Kisel wrote:
 >>
->> On Wed, Mar 12, 2025 at 5:01=E2=80=AFPM Benno Lossin <benno.lossin@proto=
-n.me> wrote:
->> > Always enable the features, we have `allow(stable_features)` for this
->> > reason (then you don't have to do this dance with checking if it's
->> > already stable or not :)
 >>
->> It's not so simple. In rustc < 1.84.0 the lints *and* the strict
->> provenance APIs are behind `feature(strict_provenance)`. In rustc >=3D
->> 1.84.0 the lints are behind `feature(strict_provenance_lints)`. So you
->> need to read the config to learn that you need to enable
->> `feature(strict_provenance_lints)`.
+>> On 3/10/2025 3:18 PM, Michael Kelley wrote:
+>>> From: Arnd Bergmann <arnd@arndb.de> Sent: Monday, March 10, 2025 2:21 PM
+>>>>
+>>>> On Mon, Mar 10, 2025, at 22:01, Michael Kelley wrote:
+>>>>> From: Arnd Bergmann <arnd@arndb.de> Sent: Saturday, March 8, 2025 1:05 PM
+>>>>>>>    config HYPERV_VTL_MODE
+>>>>>>>    	bool "Enable Linux to boot in VTL context"
+>>>>>>> -	depends on X86_64 && HYPERV
+>>>>>>> +	depends on (X86_64 || ARM64)
+>>>>>>>    	depends on SMP
+>>>>>>> +	select OF_EARLY_FLATTREE
+>>>>>>> +	select OF
+>>>>>>>    	default n
+>>>>>>>    	help
+>>>>>>
+>>>>>> Having the dependency below the top-level Kconfig entry feels a little
+>>>>>> counterintuitive. You could flip that back as it was before by doing
+>>>>>>
+>>>>>>         select HYPERV_VTL_MODE if !ACPI
+>>>>>>         depends on ACPI || SMP
+>>>>>>
+>>>>>> in the HYPERV option, leaving the dependency on HYPERV in
+>>>>>> HYPERV_VTL_MODE.
+>>>>>
+>>>>> I would argue that we don't ever want to implicitly select
+>>>>> HYPERV_VTL_MODE because of some other config setting or
+>>>>> lack thereof.  VTL mode is enough of a special case that it should
+>>>>> only be explicitly selected. If someone omits ACPI, then HYPERV
+>>>>> should not be selectable unless HYPERV_VTL_MODE is explicitly
+>>>>> selected.
+>>>>>
+>>>>> The last line of the comment for HYPERV_VTL_MODE says
+>>>>> "A kernel built with this option must run at VTL2, and will not run
+>>>>> as a normal guest."  In other words, don't choose this unless you
+>>>>> 100% know that VTL2 is what you want.
+>>>>
+>>>> It sounds like the latter is the real problem: enabling a feature
+>>>> should never prevent something else from working. Can you describe
+>>>> what VTL context is and why it requires an exception to a rather
+>>>> fundamental rule here? If you build a kernel that runs on every
+>>>> single piece of arm64 hardware and every hypervisor, why can't
+>>>> you add HYPERV_VTL_MODE to that as an option?
+>>>>
+>>
+>> In the VTL mode, we're running the kernel as secure firmware inside the
+>> guest (one might see VTL2 working as Intel SMM or Secure World on ARM).
+>>
+>> [...]
+>>
+>>>
+>>> Ideally, a Linux kernel image could detect at runtime what VTL it is
+>>> running at, and "do the right thing". Unfortunately, on x86 Linux this
+>>> has proved difficult (or perhaps impossible) because the amount of
+>>> boot-time setup required to ask the question about the current VTL
+>>> is significant. The idiosyncrasies and historical baggage of x86 requires
+>>> that Linux do some x86-specific initialization steps for VTL > 0
+>>> before the question can be asked. Hence the introduction of
+>>> CONFIG_HYPERV_VTL_MODE, and the behavior that when it is
+>>> selected, the kernel image won't run normally in VTL 0.
+>>>
+>>> I'll go out on a limb and say that I suspect on arm64 a runtime
+>>> determination based on querying the VTL *could* be made (though
+>>> I'm not the person writing the code). But taking advantage of that
+>>> on arm64 produces an undesirable dichotomy with x86.
+>>
+>> On arm64 that is much easier, I agree. On x86 we'd need a kludge of
+>>
+>> static void __naked __init __aligned(4096) early_hvcall_pg(void)
+>> {
+>> 	/*
+>> 	 * Fill the early hvcall page with `0xF1` aka `INT1` to catch
+>> 	 * programming errors. The hypervisor will overlay the page with
+>> 	 * the vendor-specific code sequences to make hypercalls on x86(_64).
+>> 	 */
+>> 	asm (".skip 4096, 0xf1");
+>> }
+>>
+>> static u8 __init early_hvcall_pg_input[4096] __attribute__((aligned(4096)));
+>> static u8 __init early_hvcall_pg_output[4096]
+>> __attribute__((aligned(4096)));
+>>
+>> static void __init early_connect_to_hv(void)
+>> {
+>> 	union hv_x64_msr_hypercall_contents hypercall_msr;
+>> 	u64 guest_id;
+>>
+>> 	guest_id = hv_generate_guest_id(LINUX_VERSION_CODE);
+>> 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
+>> 	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+>> 	hypercall_msr.enable = 1;
+>> 	hypercall_msr.guest_physical_address =
+>> __phys_to_pfn(virt_to_phys(early_hvcall_pg));
+>> 	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
+>> }
+>>
+>> or variations thereof.
+> 
+> OT here but what's stopping us from doing this on x86?
+> 
 
-I see... And `strict_provenance_lints` doesn't exist in <1.84? That's a
-bit of a bummer...
+At the first glance, seems like nothing I think. For the conf scenarios
+like TDX and SEV-SNP, due to the early hvcall I/O pages above allocated
+in BSS, might need to mark the pages as decrypted and zero them out so
+they look like proper BSS section (the page contents are scrambled after
+flipping the page encryption bit iirc).
 
-But I guess we could have this config option (in `init/Kconfig`):
+> It seems to me there is some value in setting up the hypercall page as
+> early as possible. The same page can be used through the lifetime of the
+> partition. The early input and output pages should be reclaimed.
+> 
 
-    config RUSTC_HAS_STRICT_PROVENANCE
-=09    def_bool RUSTC_VERSION >=3D 108400
+Wholeheartedly agree!
 
-and then do this in `lib.rs`:
+> Also, since the hypervisor will insert an overlay page, it makes sense
+> to not allocate a page from Linux at all. When I ported Xen to run as
+> a guest on Hyper-V, I used that approach. The setup worked just fine.
+> 
+> All being said, things work today, so I'm in no hurry to change things.
+> 
 
-    #![cfg_attr(CONFIG_RUSTC_HAS_STRICT_PROVENANCE, feature(strict_provenan=
-ce_lints))]
+I'll try fleshing this out soon-ish if no one beats me to that :)
 
-> Actually this isn't even the only problem. It seems that
-> `-Astable_features` doesn't affect features enabled on the command
-> line at all:
->
-> error[E0725]: the feature `strict_provenance` is not in the list of
-> allowed features
->  --> <crate attribute>:1:9
->   |
-> 1 | feature(strict_provenance)
->   |         ^^^^^^^^^^^^^^^^^
+> Wei.
 
-That's because you need to append the feature to `rust_allowed_features`
-in `scripts/Makefile.build` (AFAIK).
-
----
-Cheers,
-Benno
+-- 
+Thank you,
+Roman
 
 
