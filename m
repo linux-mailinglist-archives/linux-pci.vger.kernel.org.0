@@ -1,121 +1,132 @@
-Return-Path: <linux-pci+bounces-23513-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23514-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3768DA5E101
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 16:50:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2701AA5E134
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 16:55:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DCC633B9271
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 15:49:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 69D3E17B5BA
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 15:55:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FDEB2566C5;
-	Wed, 12 Mar 2025 15:49:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6B7B2505CA;
+	Wed, 12 Mar 2025 15:55:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JeWcKroP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U1jmuiHs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113AF24E4B1;
-	Wed, 12 Mar 2025 15:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07878198E76
+	for <linux-pci@vger.kernel.org>; Wed, 12 Mar 2025 15:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741794577; cv=none; b=OJeN46Cr2apmp/1vmcbSSKo63anCeCc0/h07t7FGyb5/lZO9qoaulsAnXK1EoiDmsrotQGiFNbxMkrkofeB0e4VeGCwbPNZHB6qVbSB/jqhyg8I2BabYjr+rZ19m4MhdMeA4H5nQNd1qAJArW1tXwlxj6IDnp7r7og/OY7xEDJw=
+	t=1741794949; cv=none; b=kPum85AgUAiyvSzI0PqHktXVVQ3ihC4+pbopYA/pebtqXMXSYpxaUGA+Xtdya+MX7gRPCFTGgwTuRRUE0sF01sLDP2hAdWWjET8CcsBzAOtWhMQ8dvIPVVa8D/NfQnLmrW8RHSYCwj8CsGmIe6uLDLej+IQVu+rX1nogmbG6WIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741794577; c=relaxed/simple;
-	bh=qO0bVVRsexfHs9ID5KYNSlTNf4wVGRYGPnAWO1TSDys=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UyKBtjd7sD9tyMiV7wO/p9q1Zas3I3bptBLoMcJqYCatbhVpEaZRFkSxhxIzKDE1UNBG1ZIDR89BLU15iElyu6NJfpNH4WMdlsG2iMvpLdD19F0ExeZ2YL9cy+FoFjjUJsI8sBZGONKzxTK7BnciWKaxIWhIG2S5VvIMFBPDMo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JeWcKroP; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ff6ce72844so5725a91.2;
-        Wed, 12 Mar 2025 08:49:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741794575; x=1742399375; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qO0bVVRsexfHs9ID5KYNSlTNf4wVGRYGPnAWO1TSDys=;
-        b=JeWcKroPHXglf+UM/h+h0Z+lQtJM5P+my4Ic4T0EPCy66ZNF+xzroJaUTRXiX+yrgf
-         XIYmL+hvmGLmHRwFvIvYX+is9CUefGs6hDKM8VulUfVzzRAlrHuyooRsGYP5CR8QCEbg
-         Oh7bWnKCHYu1filfWg+w20HhrmgNyF9uswrIURv8Skb7GAmKK8Iy7U3u1yKMJq+FQQRt
-         ZnaC/7H3sQWe5lwhVX4oUt5ZenTQJ0mfkon271Xs4QMCKUruhYC2T8Nx8JR5Wt/WD5mX
-         JQV0zuwAezDDBzsu171lV5GfWmESVmgbb6RRRuDGymBTOKh38gDknyup0S6yh8J7nmz4
-         xUiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741794575; x=1742399375;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qO0bVVRsexfHs9ID5KYNSlTNf4wVGRYGPnAWO1TSDys=;
-        b=HqdOUWxHfE/rr5iTAy8IPNHuVMsQQKdDW3Pjus9/9feqr46fQvOPoa+LIE2au5UpLg
-         3hR/usyhwaBTSrvt/NcCQF787U1rb9+QQzISg6eTSiCYTJe6lT+Bmo0HtEKFTosHjnzF
-         gXz3DEns4/8G2iGbHwERVlYZ/sfsPZpuESTeSaZWSVtwDOQgN8GjSFtnOuaUCK0yp22M
-         ZtR1G3Nb/2bYr0kbvU97hvTlz93hjd++ViX+UIcUl7YBPI+TZOxFJI49ukBIFnInFTg9
-         JCsYvIKtqeMnhm8Obzrw3hgXIuVOa5F8qAyA6wwJXoYg88i51YPmbkUilWsVaPaJ96Dv
-         eThQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUy/9I3t7wJg79ytUxdJyiLEbOusWnWPAlbszwvZ3Sc/IyyPczkY40qEHq094qOK7IS1KX9Q/BvRqmy8mFJrM8=@vger.kernel.org, AJvYcCV+NBioyLzMl/dFfFhElZsElULntOY4JeEnxpzyvre1SlpOThZydpa5btbqNjQXzO7e0AaC22MlwX/vsA2n@vger.kernel.org, AJvYcCWUlEGqN8CcB9KE/GQPE8OL4h8jSaFnKpE5Z4FFuTSuTAUohr3RvbKA0lXphxkJsZRl8j1fZATOWSVY/7g=@vger.kernel.org, AJvYcCWdYjiKwr3P+8XxQ7YYG+JHZg91wQ4W7fV9gzf151YAHVQI05/Ck06wazMRAc6+dTizRKBVVB2ZmFigY0BlwrMj@vger.kernel.org, AJvYcCWouRPfAKiAdybrccFcoMErIFPwg1o/19loh9AFdrM38eZW6j850jvM/dd1w0Y+WcPPL+cSABqdDykVChnx@vger.kernel.org, AJvYcCXdk00UcqKekk+pbIa9i+LHYwh+JL7E5BPsF8l945OAQL1R467Z8707nvCrQi48ag/91AgcfyzgD4jN@vger.kernel.org, AJvYcCXkGLO7djdWInS9sDiXJ5Z1IG8pODrFiAY7Fvw9UyCCIyQWHfnnmy9mvzbXpjPaBH/mrfMmOZDFv5jy@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5mDgg6mmKPHXnJ5nycVyqlP9MEmojPNlQ7dVvRWWDAIS+o6dU
-	suRUehLTQjkj76b52S+4A9M/Tsu9zj+OGKVBae5lk5wQkCh7pkvLJenp3ONVu+to1XsbDALTjjI
-	npXeoS0xjvkzIqLzFggbNGCvkT2I=
-X-Gm-Gg: ASbGncsqP43kWkEQyOIAMbi+hlFDAvob19qPBXCe2qB7iS9P0fYWB8M/O1Hcd8k/B7G
-	OOdM+iVvBN/z4406bay3MpkZN1gcvevgI9IN/XVxZoUrtEJnPdwk8mkQVoGbtbgIZSv6+GkWBYY
-	+19BTwTw9d2eb9cNXt+musn2DebA==
-X-Google-Smtp-Source: AGHT+IFe+OpuO99XWupXs4of2kQ2UK3ZQjUDx1ynodylSC86EHTfBlh7n2S/1c35NKi3CjXlMbYTtDOXmh3xmNx65n8=
-X-Received: by 2002:a17:90b:3ec8:b0:2ff:6bcf:540a with SMTP id
- 98e67ed59e1d1-300a578d62cmr9754852a91.6.1741794575223; Wed, 12 Mar 2025
- 08:49:35 -0700 (PDT)
+	s=arc-20240116; t=1741794949; c=relaxed/simple;
+	bh=gNUCu/HfCKabfNHq333gUOCSHKVbcv1QSQE9zC3qAnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dP7rxlHWGG4USBCbmSwYCyxGFzp0OV5RSTIm0St5eodCfpbE3L3ie5OvsB0rwsOI8u6LM67KF+3M+HO+ABWmtIFB+W+Sl/bzxmeLMzK5B82TFCf3EoN0S6jE2qDLS6RfT9pg0Tz4NkZJGkWRvGgsX4K5fbsx7XvlouxTJe4ziO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U1jmuiHs; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741794948; x=1773330948;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gNUCu/HfCKabfNHq333gUOCSHKVbcv1QSQE9zC3qAnM=;
+  b=U1jmuiHsclSDoteo4ThGuFo26EmHlvwtROAwTNGeuD2AROpojHPXaS06
+   020aMYqD1okJK/vI/BR5qs8Bms/dhkslCQapNJILLv1yZOeT3flxKK17y
+   yD+DUUXeM2ggtAwTaAWQNX97ex+d3HXC3oYPVZZEcQDgBHcUBbC5sXCE5
+   5hESaKBKlEuYuV81+Q8co69UpU/cgGk/wWVkweQr4WCZmr3sUImTdomY8
+   JXAWbEN5ENKh/GMeyWsiB5DR+6wv5KzWB8sh5DDEPeLBKQX6ZLsRNcHc/
+   72jd6E6oE0D69wjDtevFMGn6AeVX77ApeXCe9A07mPjObQcimO9CUp6up
+   A==;
+X-CSE-ConnectionGUID: pyfvIf9uQBCMHDpeO8E6LQ==
+X-CSE-MsgGUID: UAm6b6U5TbKQ2HL2vPZmHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="43063087"
+X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
+   d="scan'208";a="43063087"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Mar 2025 08:55:46 -0700
+X-CSE-ConnectionGUID: SJp2Ha2gRCucE3wUjD8A5Q==
+X-CSE-MsgGUID: WVJELzpGSGu8FI18yNQfug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,242,1736841600"; 
+   d="scan'208";a="120649146"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa006.jf.intel.com with ESMTP; 12 Mar 2025 08:55:45 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id BD5C01F2; Wed, 12 Mar 2025 17:55:43 +0200 (EET)
+Date: Wed, 12 Mar 2025 17:55:43 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+	Kenneth Crudup <kenny@panix.com>,
+	"Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>,
+	Ricky Wu <ricky_wu@realtek.com>
+Subject: Re: [PATCH] PCI: pciehp: Avoid unnecessary device replacement check
+Message-ID: <20250312155543.GH3713119@black.fi.intel.com>
+References: <02f166e24c87d6cde4085865cce9adfdfd969688.1741674172.git.lukas@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com>
- <20250309-ptr-as-ptr-v2-5-25d60ad922b7@gmail.com> <D8EDP4SMQG2M.3HUNZGX8X0IL7@proton.me>
- <CAJ-ks9=K06OT6cutUABj2QDHJHJ70719c-eJ=F3n-_bhkYbZ3w@mail.gmail.com>
-In-Reply-To: <CAJ-ks9=K06OT6cutUABj2QDHJHJ70719c-eJ=F3n-_bhkYbZ3w@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 12 Mar 2025 16:49:22 +0100
-X-Gm-Features: AQ5f1JpDZ3MfaqLw9tP1SvKaWd4DrWDIczoaJSjDTCrETi3uYKBvX_O58mzb7EY
-Message-ID: <CANiq72kH0AUxeMPE5qcUiMQiCCTGZvORCtnm6CA1mgksze_s8A@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Benno Lossin <benno.lossin@proton.me>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <02f166e24c87d6cde4085865cce9adfdfd969688.1741674172.git.lukas@wunner.de>
 
-On Wed, Mar 12, 2025 at 4:36=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> Yeah, we don't have strict provenance APIs (and we can't introduce
-> them without compiler tooling or bumping MSRV). I'm not sure if we are
+On Tue, Mar 11, 2025 at 07:27:32AM +0100, Lukas Wunner wrote:
+> Hot-removal of nested PCI hotplug ports suffers from a long-standing
+> race condition which can lead to a deadlock:  A parent hotplug port
+> acquires pci_lock_rescan_remove(), then waits for pciehp to unbind
+> from a child hotplug port.  Meanwhile that child hotplug port tries to
+> acquire pci_lock_rescan_remove() as well in order to remove its own
+> children.
+> 
+> The deadlock only occurs if the parent acquires pci_lock_rescan_remove()
+> first, not if the child happens to acquire it first.
+> 
+> Several workarounds to avoid the issue have been proposed and discarded
+> over the years, e.g.:
+> 
+> https://lore.kernel.org/r/4c882e25194ba8282b78fe963fec8faae7cf23eb.1529173804.git.lukas@wunner.de/
+> 
+> A proper fix is being worked on, but needs more time as it is nontrivial
+> and necessarily intrusive.
+> 
+> Recent commit 9d573d19547b ("PCI: pciehp: Detect device replacement
+> during system sleep") provokes more frequent occurrence of the deadlock
+> when removing more than one Thunderbolt device during system sleep.
+> The commit sought to detect device replacement, but also triggered on
+> device removal.  Differentiating reliably between replacement and
+> removal is impossible because pci_get_dsn() returns 0 both if the device
+> was removed, as well as if it was replaced with one lacking a Device
+> Serial Number.
+> 
+> Avoid the more frequent occurrence of the deadlock by checking whether
+> the hotplug port itself was hot-removed.  If so, there's no sense in
+> checking whether its child device was replaced.
+> 
+> This works because the ->resume_noirq() callback is invoked in top-down
+> order for the entire hierarchy:  A parent hotplug port detecting device
+> replacement (or removal) marks all children as removed using
+> pci_dev_set_disconnected() and a child hotplug port can then reliably
+> detect being removed.
+> 
+> Fixes: 9d573d19547b ("PCI: pciehp: Detect device replacement during system sleep")
+> Reported-by: Kenneth Crudup <kenny@panix.com>
+> Closes: https://lore.kernel.org/r/83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com/
+> Reported-by: Chia-Lin Kao (AceLan) <acelan.kao@canonical.com>
+> Closes: https://lore.kernel.org/r/20240926125909.2362244-1-acelan.kao@canonical.com/
+> Tested-by: Kenneth Crudup <kenny@panix.com>
+> Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-The strict provenance APIs were added a long time ago (1.61) -- in
-fact we briefly discussed doing so back then (we started before that,
-with 1.58).
+Also,
 
-So unless we need some detail that changed recently (i.e. since 1.78),
-we should be able to use them, and it should be fairly safe since they
-are stable now (1.84).
-
-Cheers,
-Miguel
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
