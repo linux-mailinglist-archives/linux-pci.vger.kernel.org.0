@@ -1,89 +1,120 @@
-Return-Path: <linux-pci+bounces-23501-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23502-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0436DA5DFC0
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 16:07:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E32E0A5DFCD
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 16:09:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B9A983A9109
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 15:07:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E50171885B38
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 15:08:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24DA7156F5E;
-	Wed, 12 Mar 2025 15:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="J3V/qstg"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DA4E24E009;
+	Wed, 12 Mar 2025 15:08:48 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA25183CD9;
-	Wed, 12 Mar 2025 15:07:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE8824E00B;
+	Wed, 12 Mar 2025 15:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741792036; cv=none; b=QpPI0Yuhfd35RLZDNlVn9xwTaNwBnk+YKJMYEuz6CoLqFlkQ3wbwmsypMMoo629n+mghg1EMIsEHRk8vdYktoNLnDtHwuLa1ZJ0iLotgxtDeOrVtOvsjjvpyrohZTpgeoZIGPKSVmkde7umhZb6tHEMOlGrmNGyi34ToQQL+S2w=
+	t=1741792128; cv=none; b=DqLUSuRILBUDBvaXzcEEPsdyInC0pxxVeSkUmemG2AXQNlKyow2ci2GyBbwUNMmzrOylYS6KsTElp9gtwCTut9et/2Qm0aXGGXvXo6Fsr+cuO8BAgOUVNGRCJHu6VEbvrOrBvcCRUNe1Qeb3Xz+5r+diTEtSJV/NffKrWs0KpZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741792036; c=relaxed/simple;
-	bh=np+WIadGU74rpJjwWWZpkyFqUUgRYo8QS1bZY8rt66Y=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HEageKps3sF3f9w4Szq3dZ5t4Hbx7EB9/OccAlxD8ToyMo1rpoqWmR8yFgDrNTPdXtwqxlX3W+f/DIwXndcYJW3ZrNd1Pmra1W8GvhXfIi6MYxB+13MIY6SFIX33y4JU7xzIBDM57u9HUGQ3BGqenjZIb1CE5RDmFAK/NVCEmf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=J3V/qstg; arc=none smtp.client-ip=185.70.40.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1741792026; x=1742051226;
-	bh=np+WIadGU74rpJjwWWZpkyFqUUgRYo8QS1bZY8rt66Y=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=J3V/qstg7dXBTPPUV/CHvZLEUogJaMJszagAnoFuQE5zGlpT5QzwGWMM3x5c/APr3
-	 2RWeU1TZX97KgxfBJDkZJAWF+6rGaCnCAwY9C0CqNR9khJhgLkgKdo/fRxH2GewwJR
-	 qU1TpFaIcwEKrhaSyA7eVO4BpFFO57qmjX01UOwQ/tCPmV0a39W4YKbNGQAhDEU3Kt
-	 8dPhFy9uX7hCWQS+Z7gLrHMU+9qd+uK3h+D3Z20EgmU2i9ObK5Ypr/p3/TSOfK4Aya
-	 oYxqYNIB15ZxH30nwvUROver467jBFhvsL9t+RmhhI2HCig0nxqlc6j8XpPRG3uh7Q
-	 mGD1khMVS20+A==
-Date: Wed, 12 Mar 2025 15:07:01 +0000
-To: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] rust: reduce pointer casts, enable related lints
-Message-ID: <D8EDQLZPDO48.1FXHY80CWMXJ1@proton.me>
-In-Reply-To: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com>
-References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: c73bebe457e912f6fdcb06fff3fb73df91fb0eb0
+	s=arc-20240116; t=1741792128; c=relaxed/simple;
+	bh=vQklG8ec9db7Dlo5fbtAFgXm38kjh3vp2rOmrAKlZ7k=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ls9K8ZQsw+NUBm+u9FswZX+n8jcdmRHFg/lbPGi0qyL+VAJlgZaq2O5z8upwmIcmsc0xz/sT70xffJUbRY21q2Rua+yVtibjWo2XIVrlBtn/OijtKvjeXTxndRRUwakEFx+giIaQucSJgohpxat0fusBo5y3MHXt8/R6Owk6yC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZCYqG2KH8z6K9HL;
+	Wed, 12 Mar 2025 23:06:02 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id D495F1404FC;
+	Wed, 12 Mar 2025 23:08:37 +0800 (CST)
+Received: from localhost (10.202.227.76) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 12 Mar
+ 2025 16:08:36 +0100
+Date: Wed, 12 Mar 2025 15:08:35 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+CC: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>, "Santosh
+ Shilimkar" <ssantosh@kernel.org>, Jon Mason <jdmason@kudzu.us>, Dave Jiang
+	<dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
+	<ntb@lists.linux.dev>, Bjorn Helgaas <bhelgaas@google.com>,
+	<linux-pci@vger.kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
+	<wei.liu@kernel.org>, <linux-hyperv@vger.kernel.org>, Wei Huang
+	<wei.huang2@amd.com>, Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>, "James E.J. Bottomley"
+	<James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+	<martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>, Dan Williams
+	<dan.j.williams@intel.com>
+Subject: Re: [patch 02/10] genirq/msi: Use lock guards for MSI descriptor
+ locking
+Message-ID: <20250312150835.00001851@huawei.com>
+In-Reply-To: <87senjz2ar.ffs@tglx>
+References: <20250309083453.900516105@linutronix.de>
+	<20250309084110.267883135@linutronix.de>
+	<20250311180017.00003fcc@huawei.com>
+	<87senjz2ar.ffs@tglx>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Hi Tamir,
+On Tue, 11 Mar 2025 22:26:52 +0100
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-On Sun Mar 9, 2025 at 5:00 PM CET, Tamir Duberstein wrote:
-> This started with a patch that enabled `clippy::ptr_as_ptr`. Benno
-> Lossin suggested I also look into `clippy::ptr_cast_constness` and I
-> discovered `clippy::as_ptr_cast_mut`. This series now enables all 3
-> lints. It also enables `clippy::as_underscore` which ensures other
-> pointer casts weren't missed. The first commit reduces the need for
-> pointer casts and is shared with another series[1].
->
-> Link: https://lore.kernel.org/all/20250307-no-offset-v1-0-0c728f63b69c@gm=
-ail.com/ [1]
->
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> On Tue, Mar 11 2025 at 18:00, Jonathan Cameron wrote:
+> > On Sun,  9 Mar 2025 09:41:44 +0100 (CET)
+> > Thomas Gleixner <tglx@linutronix.de> wrote:  
+> 
+> >>  
+> >> @@ -1037,25 +1032,23 @@ bool msi_create_device_irq_domain(struct
+> >>  	if (msi_setup_device_data(dev))  
+> >
+> > Hmm. We might want to make the docs in cleanup.h more nuanced.
+> > They specifically say to not mix goto and auto cleanup, but 
+> > in the case of scoped_guard() unlikely almost any other case
+> > it should be fine.
+> >  
+> >>  		goto free_fwnode;  
+> 
+> I got rid of the gotos. It requires __free() for the two allocations.
+That works.
 
-Thanks for this series! Did you encounter any instances of `$val as $ty`
-where you couldn't convert them due to unsizing? I remember that we had
-some cases back then (maybe Alice remembers them too?). If not then no
-worries :)
+> 
+> Thanks,
+> 
+>         tglx
+> ---
+> --- a/include/linux/cleanup.h
+> +++ b/include/linux/cleanup.h
+> @@ -216,6 +216,8 @@ const volatile void * __must_check_fn(co
+>  
+>  #define return_ptr(p)	return no_free_ptr(p)
+>  
+> +#define retain_ptr(p)				\
+> +	__get_and_null(p, NULL)
+Single line?
 
----
-Cheers,
-Benno
+This sort of thing got discussed in the past though I doubt I can find
+the thread. There was some push back but maybe now is it's time!
 
+Probably worth shouting about it a bit to attract attention. Maybe
+a separate patch.
+
+Jonathan
 
