@@ -1,192 +1,95 @@
-Return-Path: <linux-pci+bounces-23527-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23528-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4516DA5E47A
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 20:33:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 806EAA5E4AB
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 20:43:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B2A03B67B2
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 19:32:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 51B4F189F46D
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Mar 2025 19:43:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80849257458;
-	Wed, 12 Mar 2025 19:32:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BE72258CE6;
+	Wed, 12 Mar 2025 19:43:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b+Uk3+ue"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="DxXCHqgd"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7651E5706;
-	Wed, 12 Mar 2025 19:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8822566DA;
+	Wed, 12 Mar 2025 19:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741807975; cv=none; b=F0XfPkYpX0uuFdH4R9rum6ItrRxdHzoo6Mv3zY6ByUgjHtVaJ5Ipq6qwo9uyZIfGNAeyltX8xuMKgYZlFc3GyWgaQqd490JOvWjDSp9DA3w1IMmzRWBfTtm3olZ2voLlWZH4EveXiisO3vxuQZ/A/YVGcm5YJagzCfHJqPVb9JM=
+	t=1741808611; cv=none; b=L8HyiIYSd5Pt/6ZqFf6FXGATtXwTtXM5KBxIJn1jM3hj4rbUixlbjrCAsO/T9PQWCcRr8oRE2QO0Bm6A2qNehtiqfPwWNOW0R6x7dD/8WcHadCjJ+sBCdO6RkW1S90jaPM0mxK84cCq4xCbBi6ePBDdBlm8frcLNQVj+Az8hfr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741807975; c=relaxed/simple;
-	bh=UqymYCmygChHTPDYtRXKIe/SXjDPGE2/pDiLoxPaWuE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cEVOohhjBrLAK/i9NT698SIveSUsHhUPiZ9TcU4TQ4HoWLNQ5m65DN343kguEBSmjDioshmFIKawnkHz1VanYnuV0CASO7I9dLOmLTFcYmvgxc5MIJWHwHZqFjsPn8RQZgnQ5vTU02WVmYqcVa/dHQ9eINtHBj18hkeCHXearlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b+Uk3+ue; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10277C4CEDD;
-	Wed, 12 Mar 2025 19:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741807973;
-	bh=UqymYCmygChHTPDYtRXKIe/SXjDPGE2/pDiLoxPaWuE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b+Uk3+ueemhPDieKQx1nZ/0T/AxEPOxYIBTKKZu8d1FoyzOFJ2KMESVuqAJNe8KXO
-	 lPvJ3iwuw2HcCXBIuKgsjNyo/2cqjf8Jop9pQY7LvExmkjK5VQ2tPUtrcbiV3P0ASH
-	 IYBEgv5p8zecYfDaGdbOOAKD9I4sD8DqvB+8A/zcDu1qLHTqXjdRmMZ8Z606DedjEH
-	 z1azm63C7XF2PUIgn/hPn3OfaqKFeeH1obyQ47S5CRNm+ClQQ8oMrtBYnWFPs3mBKy
-	 LtdGBSZ3zpQjDdqi56DXmuUpg730oss4lY71gok4/eHccCcea6u0LtXsrNvTOrgrNG
-	 ex/5JVMLQJT6g==
-Date: Wed, 12 Mar 2025 21:32:49 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
-Message-ID: <20250312193249.GI1322339@unreal>
-References: <cover.1738765879.git.leonro@nvidia.com>
- <20250220124827.GR53094@unreal>
- <CGME20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648@eucas1p2.samsung.com>
- <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
- <d408b1c7-eabf-4a1e-861c-b2ddf8bf9f0e@samsung.com>
+	s=arc-20240116; t=1741808611; c=relaxed/simple;
+	bh=MQpsvFjJVmn++42KDeejIYF6zbqUpGV1N2HykXJ9TvA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=olGqBlRP0h0UOEvd4DUfPxv1E8IoIsW/qa4Azz4+fWsSJASO16TMdIOCTpA/hiAyTMllPJjc0hFozICYz0j4Y4Oi1/7bzC1+zghE+liok4PzvZ716/1TitsaqpGKoE+AejK/qpcuyyK1FNx/Bt3WCp3gIGHVB8kZTeyOs+1cLHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=DxXCHqgd; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1741808605; x=1742067805;
+	bh=k2L8+T93x3C/emjGMuwyW/R5I8BeyS+0TxpevstosCY=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=DxXCHqgd37hI1t1+mSl0RVRBwA13vQ/XVaB09BZ/O0VCttgrhLU0EjhZZiQkCK+I/
+	 xirIOJ/C5+SaHokD1EEAq/798EGmTZaCDP/VR1350NPEJyWWqg2agQGAFYNisnikAK
+	 pM9X/nXhCDpQzQLkpQKvirBihIDT0xyDlbu3pMqI9N59zX67RsIrN1lLmVuQ2JhfD5
+	 tttJlaqwfmONRscNeiyAYqg3X1dlR/mn1+fT8HAYPfdkmzf8BEuLcsIshVhhMOvVoK
+	 daXB5Xif7XB4RWcKuUs9smRkdiuD3NrsMernT3k90UVinCE/TWl7PwwxHM3UYlCPvY
+	 l68ZcyT+sgJ4w==
+Date: Wed, 12 Mar 2025 19:43:19 +0000
+To: Tamir Duberstein <tamird@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
+Message-ID: <D8EJM4CJ4HAN.1PB2YV8DB77V7@proton.me>
+In-Reply-To: <CAJ-ks9=zWAuPUM_61EA6i5QkUpwtNtsN8oF_MUerWGn39MRHhw@mail.gmail.com>
+References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com> <20250309-ptr-as-ptr-v2-5-25d60ad922b7@gmail.com> <D8EDP4SMQG2M.3HUNZGX8X0IL7@proton.me> <CAJ-ks9=K06OT6cutUABj2QDHJHJ70719c-eJ=F3n-_bhkYbZ3w@mail.gmail.com> <D8EG9EM9UU0B.2GLHXRU2XROZ3@proton.me> <CAJ-ks9=+3MQb-tp8TAwYvVj=GOFFFVKJxRMprc8YXZHKhqnDrg@mail.gmail.com> <D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me> <CAJ-ks9=zWAuPUM_61EA6i5QkUpwtNtsN8oF_MUerWGn39MRHhw@mail.gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: bbd40c62717ae5f9397b8b9c9ae87ff25634c232
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d408b1c7-eabf-4a1e-861c-b2ddf8bf9f0e@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 12, 2025 at 10:28:32AM +0100, Marek Szyprowski wrote:
-> Hi Robin
-> 
-> On 28.02.2025 20:54, Robin Murphy wrote:
-> > On 20/02/2025 12:48 pm, Leon Romanovsky wrote:
-> >> On Wed, Feb 05, 2025 at 04:40:20PM +0200, Leon Romanovsky wrote:
-> >>> From: Leon Romanovsky <leonro@nvidia.com>
-> >>>
-> >>> Changelog:
-> >>> v7:
-> >>>   * Rebased to v6.14-rc1
-> >>
-> >> <...>
-> >>
-> >>> Christoph Hellwig (6):
-> >>>    PCI/P2PDMA: Refactor the p2pdma mapping helpers
-> >>>    dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
-> >>>    iommu: generalize the batched sync after map interface
-> >>>    iommu/dma: Factor out a iommu_dma_map_swiotlb helper
-> >>>    dma-mapping: add a dma_need_unmap helper
-> >>>    docs: core-api: document the IOVA-based API
-> >>>
-> >>> Leon Romanovsky (11):
-> >>>    iommu: add kernel-doc for iommu_unmap and iommu_unmap_fast
-> >>>    dma-mapping: Provide an interface to allow allocate IOVA
-> >>>    dma-mapping: Implement link/unlink ranges API
-> >>>    mm/hmm: let users to tag specific PFN with DMA mapped bit
-> >>>    mm/hmm: provide generic DMA managing logic
-> >>>    RDMA/umem: Store ODP access mask information in PFN
-> >>>    RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
-> >>>      linkage
-> >>>    RDMA/umem: Separate implicit ODP initialization from explicit ODP
-> >>>    vfio/mlx5: Explicitly use number of pages instead of allocated 
-> >>> length
-> >>>    vfio/mlx5: Rewrite create mkey flow to allow better code reuse
-> >>>    vfio/mlx5: Enable the DMA link API
-> >>>
-> >>>   Documentation/core-api/dma-api.rst   |  70 ++++
-> >>   drivers/infiniband/core/umem_odp.c   | 250 +++++---------
-> >>>   drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
-> >>>   drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
-> >>>   drivers/infiniband/hw/mlx5/umr.c     |  12 +-
-> >>>   drivers/iommu/dma-iommu.c            | 468 
-> >>> +++++++++++++++++++++++----
-> >>>   drivers/iommu/iommu.c                |  84 ++---
-> >>>   drivers/pci/p2pdma.c                 |  38 +--
-> >>>   drivers/vfio/pci/mlx5/cmd.c          | 375 +++++++++++----------
-> >>>   drivers/vfio/pci/mlx5/cmd.h          |  35 +-
-> >>>   drivers/vfio/pci/mlx5/main.c         |  87 +++--
-> >>>   include/linux/dma-map-ops.h          |  54 ----
-> >>>   include/linux/dma-mapping.h          |  85 +++++
-> >>>   include/linux/hmm-dma.h              |  33 ++
-> >>>   include/linux/hmm.h                  |  21 ++
-> >>>   include/linux/iommu.h                |   4 +
-> >>>   include/linux/pci-p2pdma.h           |  84 +++++
-> >>>   include/rdma/ib_umem_odp.h           |  25 +-
-> >>>   kernel/dma/direct.c                  |  44 +--
-> >>>   kernel/dma/mapping.c                 |  18 ++
-> >>>   mm/hmm.c                             | 264 +++++++++++++--
-> >>>   21 files changed, 1435 insertions(+), 693 deletions(-)
-> >>>   create mode 100644 include/linux/hmm-dma.h
-> >>
-> >> Kind reminder.
+On Wed Mar 12, 2025 at 8:19 PM CET, Tamir Duberstein wrote:
+> I tried using the strict provenance lints locally and I think we can't
+> until we properly bump MSRV due to `clippy::incompatible_msrv`:
+>
+> warning: current MSRV (Minimum Supported Rust Version) is `1.78.0` but
+> this item is stable since `1.84.0`
+>    --> ../rust/kernel/str.rs:696:22
+>     |
+> 696 |             pos: pos.expose_provenance(),
+>     |                      ^^^^^^^^^^^^^^^^^^^
+>     |
+>     =3D help: for further information visit
+> https://rust-lang.github.io/rust-clippy/master/index.html#incompatible_ms=
+rv
 
-<...>
+Oh this is annoying...
 
-> Removing the need for scatterlists was advertised as the main goal of 
-> this new API, but it looks that similar effects can be achieved with 
-> just iterating over the pages and calling page-based DMA API directly.
+> This is with `#![feature(strict_provenance)]`. I can file the issue
+> but I think it's blocked on MSRV >=3D 1.84.0. But maybe you know of a
+> path forward :)
 
-Such iteration can't be enough because P2P pages don't have struct pages,
-so you can't use reliably and efficiently dma_map_page_attrs() call.
+I think we should be able to just `allow(clippy::incompatible_msrv)`,
+since Miguel & other maintainers will test with 1.78 (or at least are
+supposed to :).
 
-The only way to do so is to use dma_map_sg_attrs(), which relies on SG
-(the one that we want to remove) to map P2P pages.
+---
+Cheers,
+Benno
 
-> Maybe I missed something. I still see some advantages in this DMA API 
-> extension, but I would also like to see the clear benefits from 
-> introducing it, like perf logs or other benchmark summary.
-
-We didn't focus yet on performance, however Christoph mentioned in his
-block RFC [1] that even simple conversion should improve performance as
-we are performing one P2P lookup per-bio and not per-SG entry as was
-before [2]. In addition it decreases memory [3] too.
-
-[1] https://lore.kernel.org/all/cover.1730037261.git.leon@kernel.org/
-[2] https://lore.kernel.org/all/34d44537a65aba6ede215a8ad882aeee028b423a.1730037261.git.leon@kernel.org/
-[3] https://lore.kernel.org/all/383557d0fa1aa393dbab4e1daec94b6cced384ab.1730037261.git.leon@kernel.org/
-
-So clear benefits are:
-1. Ability to use native for subsystem structure, e.g. bio for block,
-umem for RDMA, dmabuf for DRM, e.t.c. It removes current wasteful
-conversions from and to SG in order to work with DMA API.
-2. Batched request and iotlb sync optimizations (perform only once).
-3. Avoid very expensive call to pgmap pointer.
-4. Expose MMIO over VFIO without hacks (PCI BAR doesn't have struct pages).
-See this series for such a hack
-https://lore.kernel.org/all/20250307052248.405803-1-vivek.kasireddy@intel.com/
-
-Thanks
-
-> 
-> 
-> Best regards
-> -- 
-> Marek Szyprowski, PhD
-> Samsung R&D Institute Poland
-> 
-> 
 
