@@ -1,202 +1,256 @@
-Return-Path: <linux-pci+bounces-23575-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23576-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDE50A5EB85
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 07:09:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFAF4A5EB99
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 07:19:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0EFB816E7AB
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 06:09:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 72A06189A062
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 06:19:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5BD61F9F72;
-	Thu, 13 Mar 2025 06:09:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EDFE1FAC49;
+	Thu, 13 Mar 2025 06:19:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="FC8xAE9W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGjw6W0K"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2108.outbound.protection.outlook.com [40.92.40.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF32D78F4A;
-	Thu, 13 Mar 2025 06:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.108
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741846165; cv=fail; b=J0hR4/fQj+wZBCldOFaipPnlaOaI6VjN7aefsgnDE15pXbcn5N9fzRt1SBrMCEi10p2SLak3ZQpYj8LgWWDzN/sAidEqJtiBXkEaGWMTDG4eaL413zEkuCgRq6dlJgA+S6cAVpJPT/sJ5NuLedP/wbfzJniGtgGNDuAf2EbHUxM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741846165; c=relaxed/simple;
-	bh=7vfNuw1fq0qJr7pudu0Wayo5vsXmp1dg/5WEG/etqJI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=n+Ww1zaX+fhTGupV4f7nUsZslbvmcm+WF1v7LemYjzXKkBEepySqtd9/f5yTfxIJhvcHAU5cDl2OYPMcPtd1TfVBDbCVZNPJU4e8xOzfJU0mQ5FBP5NCVeau/M7oBd7fCL4L26G1Jfs4++Iyr+RUp6O+f15Ay/0VrHYA/+/A7sQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=FC8xAE9W; arc=fail smtp.client-ip=40.92.40.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UBV4UKimxpClTEhuQndh1kK/91OKLxTr7St1fPXSqq1L3QFuL4GFV8mJ6/ol94dQeatBDl12zhAL82L+s9grzHDLmZ7AMendQA8K8c4ZuIDIJhQTjNhvJLmlamoU+F2/57BZMy0BzNyjjRWELHDs6sksv1Akeoz0Z8Duo6ppGmOhIwLkKJjZv3UrooHzxqOUTubs8tOWHhX+SVQbRP997Bi95YG0YBdXYpM3ldw8oTrt9uiTlVBEsWEtdLZNTcEdgryyE9lrmZLDC1XfVatCDkVqGGCoNj5qyIi8UNZYqLh16kFHOlYbSKSb9l5qMlrfnUP5hvVHr3nO6tuC4ZnqeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rfGxMTQzOdrij5LaIl5bC7E6g9N+/VpQzenBtZyOr3g=;
- b=a7V89VduqizGQSYcYpNNxYQ/NbAX6ljo+FyFhF558kmkdvkn0c2uknQesovaVj9f3e5WWj+S1ZmElTlZHwyDSxOdwJkeq/E+q3A6u7LoTLeRRyRUlhBh/eVdwWLQ9WCE9uNtGQqkekeXfULd9JH0kPkT56tgMz7SeiK2NWegjmQAeliI3zx5R6h6dt8IXoGGuViNulM0G3KgEA+L3XCmaH/605ptVK/EjGoaT2o2ksDnyhyvVA+a+LAVSIjWTOnz8a8FWT+y8T1qwIOpS3/zlmoCnMVADce1ldKsIQr7+MtXjGafiIygYLNPO+5MnUZAuOoI4rCq/aBFhClKUaqfBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rfGxMTQzOdrij5LaIl5bC7E6g9N+/VpQzenBtZyOr3g=;
- b=FC8xAE9WcqNfRzJJ7/+rZuT6T5cRdVeMi3WipjCqJqTlcFLQ2wG2JbddbcHjqYA8+lPdhEF1zOTlKOcNkP4Fr2huVQPGnsjBUkun4Sjb3Z11EATPLs7SG8m5SU5Ilzkmjhg45B9COSvtPWi0R/0s2l2W3ZOsnoUQGdvAKpJjlwF5UWKYXZujD82vvuf+o8TTAiprw6Ioa5JrB/VLKVe8a/h5grx8+jf9xtPLmSDWlBelIC+HTm3redA1zeAKzHO/x7TIqUHbUJR2qEAeaDhf2f3qQwMA624DrauOC6NkwiyX4LPK4AS5sC7aymVIBX87iAb7Ldz+V8XS4vLE5Hw8XQ==
-Received: from DS7PR19MB8883.namprd19.prod.outlook.com (2603:10b6:8:253::16)
- by LV3PR19MB8755.namprd19.prod.outlook.com (2603:10b6:408:28d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Thu, 13 Mar
- 2025 06:09:21 +0000
-Received: from DS7PR19MB8883.namprd19.prod.outlook.com
- ([fe80::e0c2:5b31:534:4305]) by DS7PR19MB8883.namprd19.prod.outlook.com
- ([fe80::e0c2:5b31:534:4305%6]) with mapi id 15.20.8511.026; Thu, 13 Mar 2025
- 06:09:21 +0000
-Message-ID:
- <DS7PR19MB88833DD28977A0740FA4D2FA9DD32@DS7PR19MB8883.namprd19.prod.outlook.com>
-Date: Thu, 13 Mar 2025 10:09:09 +0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/6] arm64: dts: qcom: ipq5018: Add PCIe related nodes
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
- andersson@kernel.org, bhelgaas@google.com, conor+dt@kernel.org,
- devicetree@vger.kernel.org, dmitry.baryshkov@linaro.org, kishon@kernel.org,
- konradybcio@kernel.org, krzk+dt@kernel.org, kw@linux.com,
- lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
- p.zabel@pengutronix.de, quic_nsekar@quicinc.com, robh@kernel.org,
- robimarko@gmail.com, vkoul@kernel.org
-Cc: quic_srichara@quicinc.com
-References: <20250305134239.2236590-1-george.moussalem@outlook.com>
- <DS7PR19MB8883E4A90C8AFF66BCAE14F49DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
- <aff4fd18-59a2-4378-bfd2-840bcd1a2392@oss.qualcomm.com>
-Content-Language: en-US
-From: George Moussalem <george.moussalem@outlook.com>
-In-Reply-To: <aff4fd18-59a2-4378-bfd2-840bcd1a2392@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DX0P273CA0060.AREP273.PROD.OUTLOOK.COM
- (2603:1086:300:5a::13) To DS7PR19MB8883.namprd19.prod.outlook.com
- (2603:10b6:8:253::16)
-X-Microsoft-Original-Message-ID:
- <78d23edf-d31e-4a22-b59e-c30f9d54999c@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600D52F2E;
+	Thu, 13 Mar 2025 06:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741846768; cv=none; b=VGhUU6kfntWuo9bhP8XA9BDT0zyOLUgLfwAWqDpIh4UOB9fAGL55U9FTiFSywQahlA6tstzkpGtdMTuQtWZJRs+B0muCNAVEb0BaThKMGv7ffD1Xz6uWBkCNN4fa9nGozVcJPsNwtj9ko0rZ/LZbtOuQrtJXf1iQDu0V3molF+A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741846768; c=relaxed/simple;
+	bh=6+Op+lyCycwJhs/YJ17iT1umDzfeT7rmCXKyOJCk7ZM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lJcQ9bio+17p7meAtFI4fsOnS3h2RtbWulmJOFsOkxmkOYQnkrBtaNJ3fNkGe7kZsqJa5bgJgNgNq6ubEMsfgZq6WrbEUskTzrLQ1XvaoxfGjGf15u4kwzLKesv4SGVI4wBi9UW18p0Xxn+VWfTm08tIPaPrLpo0gdm5a4c4bTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bGjw6W0K; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22409077c06so15406825ad.1;
+        Wed, 12 Mar 2025 23:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741846765; x=1742451565; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5AEORV8hgJxqEhMV8ZMadRplYEF+lyBFwpCTbagzejc=;
+        b=bGjw6W0KG2axLriXShAQsAUiyCr18L27zMPzN2R38EDPyBbkkxRFa/2oJHKOcrHJHM
+         VIVeO3ZdVs7krBJA1QGb8SWQ4NwQAG2SpokG5kflSfr2P6lTntXUA2GdsAAzNSYZNwv6
+         jwy+nObxvbcLAUyxFPrywpfufFELb1DCSLHiYwq71L7F6EmAN5yQW+n0/0vPdmRiBcHH
+         lDcszVyOP//Wtvo7BZHN45idQ8Km/TpvWTi9+yGbgkqbSGVUBh+xjgdJ8+3/XuJHtbfU
+         qxgCCUPdXbe20FAanIHO/9OuS6M2GkKRo3clw5+JT0cpPCXmJUB2NIo5NvphIUZn8Ox9
+         Dl0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741846765; x=1742451565;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5AEORV8hgJxqEhMV8ZMadRplYEF+lyBFwpCTbagzejc=;
+        b=ohk+zz97jeBT1hXriY5qK7ujDqljPxEWV4TXE9+w4f4twcUyblsdQeTzCxXjFqxhEV
+         Vdq1TfegHSdfq3/lUIxc4DAbmttC8nkEBgymnfKPnHKLTlSXRu30G1ZLwHBaZIRQ6n71
+         SKUMCLmbfiSjWkad9Ry5N5bcOfYzNmCxcVUonpH6x2AeiR6OkD8caKhvzClakwNN1cOk
+         TLlpN5fHd5hI1NB+e35++DwbkzmMzNOuQOR2qd6Fd+nxbllSCP4VRBFh/RLu11sEgOFA
+         Mgc/OUVYT8zfYV9JdHcV1CzKForz0npWYDCURSe1YSllrd7Xz5jZv2LwMIFoJBhGd9t4
+         hISw==
+X-Forwarded-Encrypted: i=1; AJvYcCVFNT2UhNQpqef7UAvr6JgsIse8mBj0Tjza1AGAeENsSX2Z6ZU8NG9MsOW79aaFF4SaZq4W7BXcJ+mx@vger.kernel.org, AJvYcCVYtHrG1cWs9ISAz/me5gm1PF5tBlEAy0CMkS+iFGxUugmD5kvB8lZsaZRKDkVBUvnDms6MLVgRuS4MReSu@vger.kernel.org, AJvYcCXOo550haPH83YOTzqzxcX4oPFnB7QNZ5I+VFITUHzv73jPK/IOMA8QtCjCMo3sXPkwEO9AXRnFLLMwXEwc@vger.kernel.org, AJvYcCXmgRdXfnlIP7J8yj3Mj/H3bp085WsQQIgXCnOUwS55XtAFF52tuhzPz/JKu2FO5AdKttl1mcUurEr8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyyq8Hwl7rilKfABb/UqzySvUpB2MZkfdQjDPbfLhTOLzslAe1F
+	MMG87W7wY3anhTjAKIlmSxeTHxIl6DPRayHzTWd6tVqbqMlN9j9c
+X-Gm-Gg: ASbGnct6rudYaTQppnjDPHcHBNHA+V2zbOylEST3pU+7kLhmT/j4D3UB7OV362ozi2Q
+	dQTZm4IxhmugmZSk8wmU22suYjG2BO99GCcm/iE67IAcqKZ5qMac7PgbYzJybnfDu7EgxVZphLc
+	MXbIEyGKLg/e/PwooflteTn9LVD8KC/GXagGibwK7SXI5TqHaTCWUqQErzGIZWi2R6fQCYdOkdQ
+	2IAasJWT4ZgWUIBKkdyrnw73ed1v7cMVwm+tphSCm72zSdEFRHWfzUmTXn/d2T6kgFpXlNpYhes
+	DrtVr++LGuNOFMosa8OH5WJ/bHt+JlFRmldk4/Ajp/QBGVgAsmSanm2T/RUhptdHiLNzwbHISAx
+	wV2ZVUYtL9lYr4OYrVjEKlVI=
+X-Google-Smtp-Source: AGHT+IEus6VFy47YaAw3pn+3kom0RXfYbUHDNa127pXeDRAp5C/cxTv4BWeEGn3OlBfTu5QxnnHJYw==
+X-Received: by 2002:a17:903:283:b0:224:194c:6942 with SMTP id d9443c01a7336-22428bded4amr397258325ad.34.1741846765523;
+        Wed, 12 Mar 2025 23:19:25 -0700 (PDT)
+Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c68880dfsm5856985ad.38.2025.03.12.23.19.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 23:19:25 -0700 (PDT)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	arnd@arndb.de
+Cc: x86@kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: [PATCH v2 0/6] hyperv: Introduce new way to manage hypercall args
+Date: Wed, 12 Mar 2025 23:19:05 -0700
+Message-Id: <20250313061911.2491-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR19MB8883:EE_|LV3PR19MB8755:EE_
-X-MS-Office365-Filtering-Correlation-Id: b08a0311-ed1b-4a1b-a96d-08dd61f5983a
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|6090799003|5072599009|7092599003|15080799006|8060799006|461199028|19110799003|440099028|3412199025;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZWNEZXlyNW9sLzZ5a0ZQYVFsREdmeDlzRm5CNmQ5MXB4Z3M2Z2V2SzZwcVND?=
- =?utf-8?B?Z1pPd2dOLyt2K0ZlU2pIRTFwOFNDV2pJTlk5L2FrVnJDSWNEcklaOGNCdSsw?=
- =?utf-8?B?cmRUOGZhN3hnNmkyQk5oUkR6QUtnbGVDQzljcC9hclhiM3NDN1VDQkMwSHNO?=
- =?utf-8?B?UFEzSzZYVm5reWl6MXE2U3VNd3lxMlVGUUp6Q01CZ2h3cVVZaEFXNmhKTis3?=
- =?utf-8?B?MDBzRys5UUNyRis0SU9lUFpxZlIrSnNCOUd3Z0xEMi9waEUzVFJKd1M0a3pZ?=
- =?utf-8?B?WHg0Y0RYQmovZEsxYXM0b2RWOXh6WlUzcVVScVV5WGZmUUYwVW05dDJJK3h5?=
- =?utf-8?B?RjBpQkxYYjJtbTV0eWZKUHV1UnRoVVFBVUMvRWladFoyZ1dyL0tKRTYvZE5Q?=
- =?utf-8?B?RndFRG84WWtwOXBOWmxUR0ZKM1p4NDA0UGJjQjRweS81OXg3RHBwamp4K2NK?=
- =?utf-8?B?cWtQQ3NOdUllZ2FqRXBRR2NwVUxjRXd4TTVPTDUzM0g4ZUU0OVJMWUk1REFy?=
- =?utf-8?B?YVRQK3NvVHhQWWNYTzFjd2JYOWlTVklOb2pHbFNySTRqWmZ1VnJGSGhET1Y0?=
- =?utf-8?B?MU1icWRTY1l2bHI1cjdMLzRKTjdqNUUwMzNxL1N5WFNRMEZ4Z1dQdVVGVm5P?=
- =?utf-8?B?RTF0REo4K3ZxSXRObXZmaXdPTk9ka1hnZGt3Q3lTUDhuMWRSNlJYWTd3TzJG?=
- =?utf-8?B?US90Uzc2Uk4vakJ4RTFWNU5pcldOaUVRWlJCdThSeCtseFk1QndPbGY4L1ov?=
- =?utf-8?B?NkhDaUd2bVN6OExMNzdtV0tmMlowRHBMYTNGdGVxZGVVengxU053RVJ6aUY2?=
- =?utf-8?B?WXNnQmFyUWtVZkgwVVR1c20rRjNzZGZwcDZBbGVqN0JiT2ZEREo2MzNDYTA3?=
- =?utf-8?B?RUk1cmVnTXJibXFGcmEwbDIydlBLWlErdDlNVVhLK1BaVkhQS21KY3RwcWJB?=
- =?utf-8?B?S0p4WG1XNUhpMUV0bmRkZlhLbnNoM3haeU5yYnRIR1JXSnk4TEVPeVNXVlNz?=
- =?utf-8?B?ZHI4bU05dDJwSGhncUVFOFlyNHhSZ2g1N3FmUUNFOU4vUG9NblhxZE1mTEZ4?=
- =?utf-8?B?eWlReVFoaHF0UVRtbVcxRW1qdG9UVmEwc3FUK043ODBzMEZUUXdVdWtnNjUy?=
- =?utf-8?B?U0ZuL3VMUVZTRCsvR1RDSzhBYWNLSU9JbzJOSjVIVTNUUCtLaVVSa3YvZXo4?=
- =?utf-8?B?TVMrd2pUUi9RcVdSZHVrMnd2OVQ5YUJGMC9McndSSnVUd3dPWm5XMXdwY1FJ?=
- =?utf-8?B?QW1jMzR0MmdhZkZ1NlpMdlhDMG9lU2loc0pzWWtMTkxweGJlT0Y3Zm9aWS9y?=
- =?utf-8?B?cHZpQmhBdnFaZkRJYTFnVnI1VTA0d2JmWjh5ZU4xOWxTdEY2MzVrQm9XMFlh?=
- =?utf-8?B?Vk9JZ3VsZWE3bVBNVmg3bFNsVU02UVdLVlJOSUYxOGI0SEFoNDJEMnlkN3Uw?=
- =?utf-8?B?VkhVQkNrL05QamQrUFJhL3NiU1lPYXhVcnI3QzBxblVPZlZMUlZQZ3lGSEtB?=
- =?utf-8?Q?UuJNIY=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SGp3L1dPbmc3d1ZiZFM4L2U2L2N6cVoyTjBjS1picXNTdklEWk1iWjFpL1RZ?=
- =?utf-8?B?VkNXcVIybjh4ME5VK3ZBcHlUKzZVMEM4dXFxOTdERm51eGZaMW5VSWlCTk12?=
- =?utf-8?B?YU92bXBVK1lxRTVCYnlEcW45NEtZSkYvZklpcDJhaXMrQkhoVHJuOWtOdEpL?=
- =?utf-8?B?SVByMWpvMGQ0VXpFUlBmWWFmRTBaNml2bE8zbnFFTEFSZ3p4VU5icHd0cEda?=
- =?utf-8?B?Sy9Fa2VVOU1mY2F3VDFpbnhVZ3hHVVRoSHZMVHVWc01YRG53eEpKYXBDKzVI?=
- =?utf-8?B?cHJsV2JOUXJxY0xSekEyV1lEZkFGV2wyT1FZbFFxTHpyOG1SRWNVbjBMTFdJ?=
- =?utf-8?B?ZThCN2dieE1zVnduMFdtelZCOHpQaGNmSlAyNExMRCtJNE44MjZBQUcyWFNQ?=
- =?utf-8?B?OWlJK3h3b1FQQ0E3bzgxT2lMNUMyTElZRE5WMDhpczUwK2NsZnJlVkY2anMy?=
- =?utf-8?B?Z2g1N3Z1WTV4MDR0UXFqWjJORmJRU1I2Z2Z3UlA5MlBkYW5XSUt1VTNIUWhO?=
- =?utf-8?B?SEJGZVpCbU5QaGJXSmFVclZNY1JCZU0xZmVrMS96NDFKVTVKamhUWERCVlpk?=
- =?utf-8?B?ZER0Ylp6VXhnWkl0S2NiUUVzdnhyR0xkdXUyRHpyNTdBMVRVdGp5SGhncGN2?=
- =?utf-8?B?RU9MMkpxenVCbXFzM01JUXk2TGowZUV5L2NXSHFrVTdjQWs3a2R6TXU1V0xr?=
- =?utf-8?B?cCtmQytnR041TGc5ZThoM2RxUkorQzNDbUpmbEhJUk1EUUIvZ29OeVFSajlj?=
- =?utf-8?B?OGl1NGEzd1JsZEdodnB6TkROY3ovTm03cDkyYjlYeFErNmd1UVJRZk1MZkh3?=
- =?utf-8?B?RFNyakcrbGxxa3JDWTRteDZsOFRiV0U3Z0M5dzZiOUo3eWg4N3Z4UUhIaFNj?=
- =?utf-8?B?Y0JQVG15bmN0bmdPZ3lPR3AwcWxubnc4aklsSTYyN3FVMVl0SDJZUmJKYXZh?=
- =?utf-8?B?b21qaDl5UGpwNTlVUloyZUtLMHNscUtKSDJGTy90Qm4xUGYrK0RicTQ5T2Vn?=
- =?utf-8?B?T3hMZWpIa21tckhDN2dvelo0cnNVZHJoeCtGVmVpallSY3lPeEZYWDY1SE50?=
- =?utf-8?B?dFVWdGhFSXJtbGxzaXR2UWZlVFpJR2RSeVI0T3ZkZFgyQXFNUEFRazdRR1o4?=
- =?utf-8?B?dGVuc0tQNmdhVTc2TTdSb3k5M20vNDVhT2NZUDY4U3l6TWhCVVV6RVVpa3Nj?=
- =?utf-8?B?VWtXRWVOL2Q1VUFGemZYK3hsVFppRTBZNlQrT1hmQXJDc0g4aWVSNWgzSnVG?=
- =?utf-8?B?b1oydnRYZldGYzlNSnZIcTlXVzltODVPQ1F2R0gvKzFIczk1cHIweEJGOWFV?=
- =?utf-8?B?MG5PdWZhZ1kxZnFIZmMzbDZLay9nZmJiczVXTldGSnpucHVxK0E1d1VORXdV?=
- =?utf-8?B?Vm5Pa0J5ZmVZcSt3dWdBL1ZuRGFUR25JYmZqYm5Mb1V3TE5lNmh2dEVrVGhu?=
- =?utf-8?B?NzBFemVPZGlUWHl6b0lhcVBWL1BUSkpQVzUxSS9vcjV4Y0FPemI3NFVLVDl1?=
- =?utf-8?B?c05PeGRENTI1WkVEQndlRHdMWFFUbWFWTVdBVEM5ajNXc1FSQXFhZEc4dHZB?=
- =?utf-8?B?R0JPWGFzR3NScUF3Z2QzVzZSdWVnN2MrcWN6V3Z1RFN4TWp4cHZraC80TWRx?=
- =?utf-8?B?bWRXVlF5dWV0RDlVaDJmQkxNbC9EajJjOEpCS1UwamxGSE1vb1c5QXlXNndz?=
- =?utf-8?Q?LzDUdsJxjSV7HfeIuZ9l?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b08a0311-ed1b-4a1b-a96d-08dd61f5983a
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB8883.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 06:09:21.3670
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR19MB8755
+Content-Transfer-Encoding: 8bit
 
+From: Michael Kelley <mhklinux@outlook.com>
 
+This patch set introduces a new way to manage the use of the per-cpu
+memory that is usually the input and output arguments to Hyper-V
+hypercalls. Current code allocates the "hyperv_pcpu_input_arg", and in
+some configurations, the "hyperv_pcpu_output_arg". Each is a 4 KiB
+page of memory allocated per-vCPU. A hypercall call site disables
+interrupts, then uses this memory to set up the input parameters for
+the hypercall, read the output results after hypercall execution, and
+re-enable interrupts. The open coding of these steps has led to
+inconsistencies, and in some cases, violation of the generic
+requirements for the hypercall input and output as described in the
+Hyper-V Top Level Functional Spec (TLFS)[1]. This patch set introduces
+a new family of inline functions to replace the open coding. The new
+functions encapsulate key aspects of the use of per-vCPU memory for
+hypercall input and output,and ensure that the TLFS requirements are
+met (max size of 1 page each for input and output, no overlap of input
+and output, aligned to 8 bytes, etc.).
 
-On 3/8/25 19:08, Konrad Dybcio wrote:
-> On 5.03.2025 2:41 PM, George Moussalem wrote:
->> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
->>
->> From: Nitheesh Sekar <quic_nsekar@quicinc.com>
->>
->> Add phy and controller nodes for a 2-lane Gen2 and
->> a 1-lane Gen2 PCIe bus. IPQ5018 has 8 MSI SPI interrupts and
->> one global interrupt.
->>
->> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
->> Signed-off-by: Sricharan R <quic_srichara@quicinc.com>
->> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
->> ---
-> 
-> [...]
-> 
->> +			#interrupt-cells = <1>;
->> +			interrupt-map-mask = <0 0 0 0x7>;
->> +			interrupt-map = <0 0 0 1 &intc 0 142 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
->> +					<0 0 0 2 &intc 0 143 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
->> +					<0 0 0 3 &intc 0 144 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
->> +					<0 0 0 4 &intc 0 145 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-> 
-> Please all the comments in this patch, they're not very useful
+With this change, hypercall call sites no longer directly access
+"hyperv_pcpu_input_arg" and "hyperv_pcpu_output_arg". Instead, one of
+a family of new functions provides the per-cpu memory that a hypercall
+call site uses to set up hypercall input and output areas.
+Conceptually, there is no longer a difference between the "per-vCPU
+input page" and "per-vCPU output page". Only a single per-vCPU page is
+allocated, and it is used to provide both hypercall input and output.
+All current hypercalls can fit their input and output within that single
+page, though the new code allows easy changing to two pages should a
+future hypercall require a full page for each of the input and output.
 
-Will remove in next version, thanks!
+The new functions always zero the fixed-size portion of the hypercall
+input area (but not any array portion -- see below) so that
+uninitialized memory isn't inadvertently passed to the hypercall.
+Current open-coded hypercall call sites are inconsistent on this point,
+and use of the new functions addresses that inconsistency. The output
+area is not zero'ed by the new code as it is Hyper-V's responsibility
+to provide legal output.
 
-> 
-> Konrad
+When the input or output (or both) contain an array, the new code
+calculates and returns how many array entries fit within the per-cpu
+memory page, which is effectively the "batch size" for the hypercall
+processing multiple entries. This batch size can then be used in the
+hypercall control word to specify the repetition count. This
+calculation of the batch size replaces current open coding of the
+batch size, which is prone to errors. Note that the array portion of
+the input area is *not* zero'ed. The arrays are almost always 64-bit
+GPAs or something similar, and zero'ing that much memory seems
+wasteful at runtime when it will all be overwritten. The hypercall
+call site is responsible for ensuring that no part of the array is
+left uninitialized (just as with current code).
 
-Best regards,
-George
+The new family of functions is realized as a single inline function
+that handles the most complex case, which is a hypercall with input
+and output, both of which contain arrays. Simpler cases are mapped to
+this most complex case with #define wrappers that provide zero or NULL
+for some arguments. Several of the arguments to this new function
+must be compile-time constants generated by "sizeof()" expressions.
+As such, most of the code in the new function is evaluated by the
+compiler, with the result that the runtime code paths are no longer
+than with the current open coding. An exception is the new code
+generated to zero the fixed-size portion of the input area in cases
+where it was not previously done.
+
+Use of the new function typically (but not always) saves a few lines
+of code at each hypercall call site. This is traded off against the
+lines of code added for the new functions. With code currently
+upstream, the net is an add of about 60 lines of code and comments.
+However, as additional hypercall call sites are upstreamed from the
+OpenHCL project[2] in support of Linux running in the Hyper-V root
+partition and in VTLs other than VTL 0, the net lines of code added is
+nearly zero.
+
+A couple hypercall call sites have requirements that are not 100%
+handled by the new function. These still require some manual open-
+coded adjustment or open-coded batch size calculations -- see the
+individual patches in this series. Suggestions on how to do better
+are welcome.
+
+The patches in the series do the following:
+
+Patch 1: Introduce the new family of functions for assigning hypercall
+         input and output arguments.
+
+Patch 2 to 5: Change existing hypercall call sites to use one of the new
+         functions. In some cases, tweaks to the hypercall argument data
+         structures are necessary, but these tweaks are making the data
+         structures more consistent with the overall pattern. These
+         four patches are independent of each other, and can go in any
+         order. The breakup into 4 patches is for ease of review.
+
+Patch 6: Update the name of the variable used to hold the per-cpu memory
+         used for hypercall arguments. Remove code for managing the
+	 per-cpu output page.
+
+Patch 1 from v1 of the patch set has been dropped in v2. It was a bug
+fix that has already been picked up.
+
+The new code compiles and runs successfully on x86 and arm64. Separate
+from this patch set, for evaluation purposes I also applied the
+changes to the additional hypercall call sites in the OpenHCL
+project[2]. However, I don't have the hardware or Hyper-V
+configurations needed to test running in the Hyper-V root partition or
+in a VTL other than VTL 0. So the related hypercall call sites still
+need to be tested to make sure I didn't break anything. Hopefully
+someone with the necessary configurations and Hyper-V versions can
+help with that testing.
+
+For gcc 9.4.0, I've looked at the generated code for a couple of
+hypercall call sites on both x86 and arm64 to ensure that it boils
+down to the equivalent of the current open coding. I have not looked
+at the generated code for later gcc versions or for Clang/LLVM, but
+there's no reason to expect something worse as the code isn't doing
+anything tricky.
+
+This patch set is built against linux-next20250311.
+
+[1] https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/tlfs
+[2] https://github.com/microsoft/OHCL-Linux-Kernel
+
+Michael Kelley (6):
+  Drivers: hv: Introduce hv_hvcall_*() functions for hypercall arguments
+  x86/hyperv: Use hv_hvcall_*() to set up hypercall arguments -- part 1
+  x86/hyperv: Use hv_hvcall_*() to set up hypercall arguments -- part 2
+  Drivers: hv: Use hv_hvcall_*() to set up hypercall arguments
+  PCI: hv: Use hv_hvcall_*() to set up hypercall arguments
+  Drivers: hv: Replace hyperv_pcpu_input/output_arg with hyperv_pcpu_arg
+
+ arch/x86/hyperv/hv_apic.c           |  10 ++-
+ arch/x86/hyperv/hv_init.c           |  12 ++--
+ arch/x86/hyperv/hv_vtl.c            |   9 +--
+ arch/x86/hyperv/irqdomain.c         |  17 +++--
+ arch/x86/hyperv/ivm.c               |  18 ++---
+ arch/x86/hyperv/mmu.c               |  19 ++---
+ arch/x86/hyperv/nested.c            |  14 ++--
+ drivers/hv/hv.c                     |  11 +--
+ drivers/hv/hv_balloon.c             |   4 +-
+ drivers/hv/hv_common.c              |  57 +++++----------
+ drivers/hv/hv_proc.c                |   8 +--
+ drivers/hv/hyperv_vmbus.h           |   2 +-
+ drivers/pci/controller/pci-hyperv.c |  18 +++--
+ include/asm-generic/mshyperv.h      | 103 +++++++++++++++++++++++++++-
+ include/hyperv/hvgdk_mini.h         |   6 +-
+ 15 files changed, 184 insertions(+), 124 deletions(-)
+
+-- 
+2.25.1
+
 
