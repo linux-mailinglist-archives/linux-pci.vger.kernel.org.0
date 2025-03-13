@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-23639-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23640-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 890F2A5F7EA
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 15:24:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A968A5F7EC
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 15:24:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0785619C3BDD
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 14:24:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE44C42039D
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 14:24:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A667267B9C;
-	Thu, 13 Mar 2025 14:24:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B0EE267F5B;
+	Thu, 13 Mar 2025 14:24:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fTjMwdTG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l+YuMV1c"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704F1267B9A;
-	Thu, 13 Mar 2025 14:24:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1C2267F77;
+	Thu, 13 Mar 2025 14:24:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741875852; cv=none; b=f/gdgsPY7f8OCS6JyomjH7h9wB8zeNCO48ph7PD0rPe3k/P+mPHb9fOk/9TMZAKXSJS2YLz+ORrfJwtiwtJyVVkChbOEMINL53etCPYYydDI0HQuBF/ZiBKJBs6NMs16Hd8pE9HCdT07NnQ0B/qPV2YxzzN9ZmKykMmaV8CLgd8=
+	t=1741875863; cv=none; b=QaD8JhmOoSkFkpnfFNIEF1A8LdN/IhwumYBTkVCvy5jNRLauvWcXc7K1ijJPpeQ+0rIE3k2raeP86wX27mOakjoSOAlWo4swItvzfTQqFuZfCAVI3Zts3mc8Xn1OOHsiT9GqYgywCZ+K8V1BcnpSXeUMktGz8j9FXvkCAQgVmfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741875852; c=relaxed/simple;
-	bh=Q/hARVlIDQ7wvoTPwqEz66axIZ5MlN2sqEe7w/dugaY=;
+	s=arc-20240116; t=1741875863; c=relaxed/simple;
+	bh=I8Al09f7wcLXoD3DPF6GNanA8tygpSAjedUh2Nvo+JA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lPUWLFwZzv4apaDpZtWZhdUuz2P6Z5ByNyw2DlbWsBdCJKaETJQhq6IkrnhJvkXjVfgLggXMrRSwHN/UuKqsWC4MFXNd/qyq8yC5iIHw/yNVlqIr8uruG4tK9kQmx/eMHG8HiCcBKZuf21aGoKfClst4P+HO5keY9PF6/iqRprk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fTjMwdTG; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version:Content-Type; b=jPkXZiRwOTuKZo4U7P/4d0hViZw6mirBGjMnQeVqq7elhfXL7yj/+ewMimYo/1Rwpuz5zDBSWbRYNn1Zd2OGQDIA1h4xWtmCxuV7q1zqU0fm8FjyS7xnqXlK7+t89mUUAN1ebHa1oA5nmxgte3rx/yYQkag5SouZMmaUIRI+6/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l+YuMV1c; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741875851; x=1773411851;
+  t=1741875862; x=1773411862;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Q/hARVlIDQ7wvoTPwqEz66axIZ5MlN2sqEe7w/dugaY=;
-  b=fTjMwdTG1L0/6TBzaivmvBFsG90xqAaqvpOIAOZAENGbytE3xF/fvR0u
-   z8iy4ULEFYOok5Z6lfViiwbwYBknCbtsYLWCQw1UiaeKmYmWRvm6X1jue
-   rdOF+4sF4BCwA2MVSwjktmTPnRPsjlokt8edUwAWZxeOQt2CmW266CImg
-   LO+Qderc3SVcOhJS8k3cPnaDX7rRnPxJ9lsGuFxLFZeYjVmP46CO/mDQ0
-   TSaPypc9Q/syBVDCvcIachi5qkKT4SZGQteQuwCgQs2bqepgZun/kkE0q
-   +bvXPIiVkt+zl3MB1YbSgtAsSNIy/LDYdcIONC24Ud6HU8zV61DlszYHv
-   Q==;
-X-CSE-ConnectionGUID: s8eEGxRWQuSreRXEBe2wZg==
-X-CSE-MsgGUID: dD6n79AYTo6B8td4XfSyMA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="43173562"
+  bh=I8Al09f7wcLXoD3DPF6GNanA8tygpSAjedUh2Nvo+JA=;
+  b=l+YuMV1cRS16rsPakFdTux0t/mkF5w7H9rbVRNQzIKoaE0zp/sdVLZ5X
+   oq+tplm8BV3Z68Qeq1WPWwW53ezkukXnFTdVzP/UY7Gt6SBhkpf2ECCUI
+   pM1Q+qRmAT0IHn8am3BwnVqBwxB0uxBVjfc8NVMLZ3lkmFo3J08QbV4lJ
+   Jfj9BO5ZrjnBjUNmJ5flM2/+mkbCHaWOR7A/sGvDddjRqKwhM4vWzooJH
+   KMEZPeUUmK4x8SWDfTfOJ4WXRIGaFrMnR0Ez7oyoylQ+8Oeif/E8z+sHI
+   npYI45NrKYLnvC++PPEw2AV1BBhpKlPy9rrg/A2+Neon7tizWqVG/ek19
+   A==;
+X-CSE-ConnectionGUID: i4X+S54WTF6hH6faokuRKg==
+X-CSE-MsgGUID: WAiuR62gR+uk72EVlkOB2g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="43173604"
 X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="43173562"
+   d="scan'208";a="43173604"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 07:24:10 -0700
-X-CSE-ConnectionGUID: 2WqtBt/zR6mt+8n4R/qu2w==
-X-CSE-MsgGUID: rQcfhDgWSsipDlTGBKLqIg==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 07:24:22 -0700
+X-CSE-ConnectionGUID: HlD4va/lQkeubo96Tc+Qcg==
+X-CSE-MsgGUID: kEFraZpzQpCWHZEyI0+KGA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="126027390"
+   d="scan'208";a="126027444"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.195])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 07:24:06 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 07:24:18 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-pci@vger.kernel.org,
@@ -70,9 +70,9 @@ To: Bjorn Helgaas <bhelgaas@google.com>,
 	linux-kernel@vger.kernel.org
 Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 2/4] PCI/hotplug: Clearing HPIE for the duration of reset is enough
-Date: Thu, 13 Mar 2025 16:23:31 +0200
-Message-Id: <20250313142333.5792-3-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 3/4] PCI/hotplug: reset_lock is not required synchronizing with irq thread
+Date: Thu, 13 Mar 2025 16:23:32 +0200
+Message-Id: <20250313142333.5792-4-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250313142333.5792-1-ilpo.jarvinen@linux.intel.com>
 References: <20250313142333.5792-1-ilpo.jarvinen@linux.intel.com>
@@ -85,41 +85,34 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The previous change cleared HPIE (Hot-Plug Interrupt Enable) in
-pciehp_reset_slot(). Clearing HPIE should be enough to synchronize with
-the interrupt and event handling so that clearing PDCE (Presence Detect
-Changed Enable) and DLLSCE (Data Link Layer State Changed Enable) is
-not necessary. However, the commit be54ea5330d ("PCI: pciehp: Disable
-Data Link Layer State Changed event on suspend") found out that under
-some circumstances, clearing also DLLSCE is necessary.
-
-While this is logically part of the previous change, remove PDCE and
-DLLSCE clearing in now separately to allow bisect pinpoint it better if
-removing their clearing causes some issues.
+Disabling HPIE (Hot-Plug Interrupt Enable) and synchronizing with irq
+handling in pciehp_reset_slot() is enough to ensure no pending events
+are processed during the slot reset. Thus, there is no need to take
+reset_lock in the IRQ thread.
 
 Suggested-by: Lukas Wunner <lukas@wunner.de>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/pci/hotplug/pciehp_hpc.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/pci/hotplug/pciehp_hpc.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index c487e274b282..634cf5004f76 100644
+index 634cf5004f76..26150a6b48f4 100644
 --- a/drivers/pci/hotplug/pciehp_hpc.c
 +++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -915,11 +915,8 @@ int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, bool probe)
+@@ -748,12 +748,10 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
+ 	 * Disable requests have higher priority than Presence Detect Changed
+ 	 * or Data Link Layer State Changed events.
+ 	 */
+-	down_read_nested(&ctrl->reset_lock, ctrl->depth);
+ 	if (events & DISABLE_SLOT)
+ 		pciehp_handle_disable_request(ctrl);
+ 	else if (events & (PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_DLLSC))
+ 		pciehp_handle_presence_or_link_change(ctrl, events);
+-	up_read(&ctrl->reset_lock);
  
- 	if (!pciehp_poll_mode)
- 		ctrl_mask |= PCI_EXP_SLTCTL_HPIE;
--	if (!ATTN_BUTTN(ctrl)) {
--		ctrl_mask |= PCI_EXP_SLTCTL_PDCE;
-+	if (!ATTN_BUTTN(ctrl))
- 		stat_mask |= PCI_EXP_SLTSTA_PDC;
--	}
--	ctrl_mask |= PCI_EXP_SLTCTL_DLLSCE;
- 	stat_mask |= PCI_EXP_SLTSTA_DLLSC;
- 
- 	pcie_write_cmd(ctrl, 0, ctrl_mask);
+ 	ret = IRQ_HANDLED;
+ out:
 -- 
 2.39.5
 
