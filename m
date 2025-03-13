@@ -1,189 +1,144 @@
-Return-Path: <linux-pci+bounces-23677-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23678-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB362A5FDBE
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 18:28:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77427A5FE78
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 18:44:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AE28C7A9FE7
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 17:27:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 75CF016E948
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 17:44:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00349165F1A;
-	Thu, 13 Mar 2025 17:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF641DBB13;
+	Thu, 13 Mar 2025 17:44:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dQ2DxQ6s"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KOhrg+Lu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE45158868;
-	Thu, 13 Mar 2025 17:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5351D7E4C
+	for <linux-pci@vger.kernel.org>; Thu, 13 Mar 2025 17:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741886910; cv=none; b=b0NpawxaFzeeIa/f4Bq11NEGTP5lB04LmPS8hwV7yz8g0qBi9tC0moc/p5Kxdnhk8Cq1vVsrB7cJM3aFDCGiuHb8llGK7rv51+4vr/BGALQPOtFPVBBjz9ad3pKPEa9ED4jm6C05ts3ZNokQP5VzJQ4/kUK7JR0hDoMFx1hcTog=
+	t=1741887866; cv=none; b=QOrKiUOioGd38z/6BFAByg9NFIQb2/uSl7T/A6cw2VFz//IYO8Wc7nwAo+l8VdWMR7t4xXybRmfdDPKXGZ7kHYlNL3HX0RNc9rJ+6+1dwV1voQgh/w4QFqcii2RvaTHe6pz53hWHnajO/xrWxvRMq2mJMqEOUvZYX+6sQZvZMME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741886910; c=relaxed/simple;
-	bh=ysZJy/pStSvMTNKpMrLF6jzCLOYDpj1uIdVrASzzEoY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=f3d7SyDKBtFlqB6a+fvCPFbMtkxPxbZhlBIoroAxyAhToYf4/FMIaoijH90AMVSvW+oWtIJIa3u0ezu1oqStTNARE3Zvznsfc190v3/4oryb4dq6+K2P62adLsxiQfX6aUBS3jLdxeINub1KgUYEZXGE9Rnn0ldBrKgALsaRMVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dQ2DxQ6s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20167C4CEDD;
-	Thu, 13 Mar 2025 17:28:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741886910;
-	bh=ysZJy/pStSvMTNKpMrLF6jzCLOYDpj1uIdVrASzzEoY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=dQ2DxQ6sIpOoITZl4zyHIxnBnbZyOGDZNCdr6pjx83cxo7HKyABB0MY5WSzJPQMiy
-	 3ol/5oSMjL14PA0/ckuboggAjr77NDLlyW/cF4PCSVOSERWtWivHsQYmquJI5Reogs
-	 HM7bSJ5Xii3T05scdfAqplAxvpe8MfMcdZoOUm1paIPCyvWEzJO3msis1SJCp4K1cu
-	 ccxcBkbSQ0hqb0svtmMvC8pQ8gomopQTsJ6IY3MkcJ50NnDR9gbOoogZ29hSAaGpyo
-	 C7Z1Z+K13kh2VAUFqfC76Fp9gcjIaawMMPBmhHRhM7iyhlimU3im7nE91MoZikvLpk
-	 ZsUdRxHkoL0iA==
-Date: Thu, 13 Mar 2025 12:28:28 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jeff Johnson <jjohnson@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	mhi@lists.linux.dev, linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org, quic_pyarlaga@quicinc.com,
-	quic_vbadigan@quicinc.com, quic_vpernami@quicinc.com,
-	quic_mrana@quicinc.com,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Miaoqing Pan <quic_miaoqing@quicinc.com>
-Subject: Re: [PATCH v2 10/10] wifi: ath11k: add support for MHI bandwidth
- scaling
-Message-ID: <20250313172828.GA740705@bhelgaas>
+	s=arc-20240116; t=1741887866; c=relaxed/simple;
+	bh=QV8C66sQqd3HvWMDCeN2JGXKbNAkGEFguMVZSlaWutk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=miSopvbHx6SaVN72noOd6VHW65Y/ldeq7z4uiRKQJe8lDmrb/GMt680nu+gYj6nqEfBR+MmIrN6i7EoP1fTj/css46bUQfH7g6Trb0KfiDtZFuardqzbI7vXFMuN0L9XMcMrcAXCNd/lWQ6/U3fHO+KKeC1O4rsA4OsHNbrVqmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KOhrg+Lu; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-301302a328bso2675139a91.2
+        for <linux-pci@vger.kernel.org>; Thu, 13 Mar 2025 10:44:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1741887864; x=1742492664; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=NhFJsw8uawrCjQJevU/7j+bAkPgtLqvzMAQJU5JD9+8=;
+        b=KOhrg+LuXx7d9C6KKulJtOIW47AXQK03Ii3Cdb1e4XkkFTDbh7Va+0TMluG+MCqfwi
+         l+7euXp9RUPz0YFDNLbSfFz/lPSl8QveFsz1oay9BCjynTdYEL23qLaIBrqws0OXTyMk
+         v9GnLz34MNflm1o1A4hkwzLh3Jnyow7897BmBLFbK0yLnJWTfrFOIpVCTN8ekNwh91CB
+         Hnf2mEXr+a4EwpJO1tO2q7uVi6xWz/V3xm1unERXYKCPWTboYEkATbQELOqu3gnIvz3k
+         blPWgp5c8StBhUIZ1RK9yaYEMT5Uix+EYVCRWru43Guhwsslkh/Lc80wZY52jqwBs4GL
+         OnFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741887864; x=1742492664;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NhFJsw8uawrCjQJevU/7j+bAkPgtLqvzMAQJU5JD9+8=;
+        b=QZNDGnB30TertUn/0NXwuOd6a7NmLh8SY0hZDIkPIux2ddQYbq7y966bg0ziqggsaS
+         KDd6Bm0w1jPC1EZIWBQHXlFWEGGKaDfmMsUkj/Oxe/mYLyFAin0zcrqSu3vgK0vlX1+7
+         WFn+xkDmBBm4x5oDTs9Jm+O7AS+1meRNNfoBg9cVp/9ZkNvSO5v2SOpuu8a48KVVKy4K
+         Se0tS6sccnQgCws7AKtXcpJF8FmCc1bGgbPr+ZuIFzE1u28rIqthihHPD0wKcXl+KX1w
+         XihYMdD7H97umVHIY2MjrbVE4B3MZjJrUpQ7djiRZ80EPSKJmtffpS/BIn3R3+It4rHc
+         Y71w==
+X-Forwarded-Encrypted: i=1; AJvYcCVlrVhN0oaS4IQYH5H/aSZ+/t1oo7VD518sQjOMxpppH5eULdl5dVuGpEknL5ivPQeQd0QudbHV5w0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgrTPptSNGy2f22RFi9Eah78WyZdM/WiAdNZckYGXZLdGZwLrW
+	3/jt9DtVly0+zTSQ3WN1ArHX8tsQOqbtsPm7XnDTvFcD13GbQXoPSHSbTUHsxw==
+X-Gm-Gg: ASbGnctMQB9G9aiY/oyMF6sJCNQ5uYWAq1EB2osUazzzyuzRwDYX3fjJtsQVxbkyZFJ
+	OeLpTbFwGM1mwxI4skfi3Ge9KZbSx80tFHlrjHGs5G2jK1U9S5di9koIWCcUZb3anl2Exo8Yfqp
+	uUn1D2J9bRTYr0T+bnQl/A4AymtgNt/q07qTN65ZIPKlkRSFyKFZPd1fRkH3O4sNnbwxOhV7Uih
+	uE3je1Knvqcc1xlOgOw3nfBnVgkpkCZ9EQdGfZvakoapv0m7ukaHPBi6BYXp01nuMe2dIErPQ8T
+	AvKZE3yH+cmkBhXQJyk5lMMQDSh3EOIzPyKXRhZ8CSA76lxLPaU/1w==
+X-Google-Smtp-Source: AGHT+IEaq+Fi1cGt0rAKa6Fc1r8aIz7Paw4eI3nREquhMURMlKswOymRbr7ex68I++4IhbW37kjVlQ==
+X-Received: by 2002:a17:90b:54c4:b0:2ff:52b8:2767 with SMTP id 98e67ed59e1d1-3014e8619f7mr487146a91.19.1741887864312;
+        Thu, 13 Mar 2025 10:44:24 -0700 (PDT)
+Received: from thinkpad ([120.60.60.84])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30138b4751fsm1670259a91.12.2025.03.13.10.44.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Mar 2025 10:44:23 -0700 (PDT)
+Date: Thu, 13 Mar 2025 23:14:16 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, vigneshr@ti.com, kishon@kernel.org,
+	cassel@kernel.org, wojciech.jasko-EXT@continental-corporation.com,
+	thomas.richard@bootlin.com, bwawrzyn@cisco.com,
+	linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	srk@ti.com
+Subject: Re: [PATCH 1/4] PCI: cadence: Add support to build pcie-cadence
+ library as a kernel module
+Message-ID: <20250313174416.n3c4srf6hb2l3bvg@thinkpad>
+References: <20250307103128.3287497-1-s-vadapalli@ti.com>
+ <20250307103128.3287497-2-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250313-mhi_bw_up-v2-10-869ca32170bf@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250307103128.3287497-2-s-vadapalli@ti.com>
 
-On Thu, Mar 13, 2025 at 05:10:17PM +0530, Krishna Chaitanya Chundru wrote:
-> From: Miaoqing Pan <quic_miaoqing@quicinc.com>
+On Fri, Mar 07, 2025 at 04:01:25PM +0530, Siddharth Vadapalli wrote:
+> From: Kishon Vijay Abraham I <kishon@ti.com>
 > 
-> Add support for MHI bandwidth scaling, which will reduce power consumption
-> if WLAN operates with lower bandwidth. This feature is only enabled for
-> QCA6390.
+> Currently, the Cadence PCIe controller driver can be built as a built-in
+> module only. Since PCIe functionality is not a necessity for booting, add
+> support to build the Cadence PCIe driver as a loadable module as well.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-What is the event that initiates bandwidth scaling or reduces power
-consumption?  Is there any kind of user interface like a sysfs knob
-an administrator can use?
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Does this happen based on ath11k usage?  Battery or thermal status?  
-
-I guess reducing power consumption or reducing heat is probably the
-driving factor since we would always use max performance if power and
-heat were not issues?
-
-Some hints here would be useful.
-
-> Tested-on: WCN6855 hw2.1 PCI WLAN.HSP.1.1-04546-QCAHSPSWPL_V1_V2_SILICONZ_IOE-1
-> Signed-off-by: Miaoqing Pan <quic_miaoqing@quicinc.com>
 > ---
->  drivers/net/wireless/ath/ath11k/mhi.c | 41 +++++++++++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
+>  drivers/pci/controller/cadence/Kconfig             |  6 +++---
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c   |  6 ++++++
+>  drivers/pci/controller/cadence/pcie-cadence-host.c |  9 +++++++++
+>  drivers/pci/controller/cadence/pcie-cadence.c      | 12 ++++++++++++
+>  drivers/pci/controller/cadence/pcie-cadence.h      |  4 ++--
+>  5 files changed, 32 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/net/wireless/ath/ath11k/mhi.c b/drivers/net/wireless/ath/ath11k/mhi.c
-> index 6e45f464a429..74769c0993ae 100644
-> --- a/drivers/net/wireless/ath/ath11k/mhi.c
-> +++ b/drivers/net/wireless/ath/ath11k/mhi.c
-> @@ -20,6 +20,7 @@
->  #define MHI_TIMEOUT_DEFAULT_MS	20000
->  #define RDDM_DUMP_SIZE	0x420000
->  #define MHI_CB_INVALID	0xff
-> +#define MHI_BW_SCALE_CHAN_DB 126
+> diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
+> index 8a0044bb3989..82b58096eea0 100644
+> --- a/drivers/pci/controller/cadence/Kconfig
+> +++ b/drivers/pci/controller/cadence/Kconfig
+> @@ -4,16 +4,16 @@ menu "Cadence-based PCIe controllers"
+>  	depends on PCI
 >  
->  static const struct mhi_channel_config ath11k_mhi_channels_qca6390[] = {
->  	{
-> @@ -73,6 +74,17 @@ static struct mhi_event_config ath11k_mhi_events_qca6390[] = {
->  		.client_managed = false,
->  		.offload_channel = false,
->  	},
-> +	{
-> +		.num_elements = 8,
-> +		.irq_moderation_ms = 0,
-> +		.irq = 1,
-> +		.mode = MHI_DB_BRST_DISABLE,
-> +		.data_type = MHI_ER_BW_SCALE,
-> +		.priority = 2,
-> +		.hardware_event = false,
-> +		.client_managed = false,
-> +		.offload_channel = false,
-> +	},
->  };
+>  config PCIE_CADENCE
+> -	bool
+> +	tristate
 >  
->  static const struct mhi_controller_config ath11k_mhi_config_qca6390 = {
-> @@ -313,6 +325,33 @@ static void ath11k_mhi_op_write_reg(struct mhi_controller *mhi_cntrl,
->  	writel(val, addr);
->  }
->  
-> +static int ath11k_mhi_op_get_misc_doorbell(struct mhi_controller *mhi_cntrl,
-> +					   enum mhi_er_data_type type)
-> +{
-> +	if (type == MHI_ER_BW_SCALE)
-> +		return MHI_BW_SCALE_CHAN_DB;
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int ath11k_mhi_op_bw_scale(struct mhi_controller *mhi_cntrl,
-> +				  struct mhi_link_info *link_info)
-> +{
-> +	enum pci_bus_speed speed = pci_lnkctl2_bus_speed(link_info->target_link_speed);
-> +	struct ath11k_base *ab = dev_get_drvdata(mhi_cntrl->cntrl_dev);
-> +	struct pci_dev *pci_dev = to_pci_dev(ab->dev);
-> +	struct pci_dev *pdev;
-> +
-> +	if (!pci_dev)
-> +		return -EINVAL;
-> +
-> +	pdev = pci_upstream_bridge(pci_dev);
-> +	if (!pdev)
-> +		return -ENODEV;
-> +
-> +	return pcie_set_target_speed(pdev, speed, true);
+>  config PCIE_CADENCE_HOST
+> -	bool
+> +	tristate
+>  	depends on OF
+>  	select IRQ_DOMAIN
 
-Seems kind of unfortunate that:
+Even though this was added earlier, looks like not needed.
 
-  1) The endpoint driver needs to be involved here, even though it
-  does nothing that is endpoint-specific, and
+- Mani
 
-  2) The endpoint driver twiddles something in *another* device (the
-  upstream bridge).  There's a potential locking issue here and
-  potential conflict with any other devices that may be below that
-  bridge.
-
-> +}
-> +
->  static int ath11k_mhi_read_addr_from_dt(struct mhi_controller *mhi_ctrl)
->  {
->  	struct device_node *np;
-> @@ -389,6 +428,8 @@ int ath11k_mhi_register(struct ath11k_pci *ab_pci)
->  	mhi_ctrl->status_cb = ath11k_mhi_op_status_cb;
->  	mhi_ctrl->read_reg = ath11k_mhi_op_read_reg;
->  	mhi_ctrl->write_reg = ath11k_mhi_op_write_reg;
-> +	mhi_ctrl->bw_scale = ath11k_mhi_op_bw_scale;
-> +	mhi_ctrl->get_misc_doorbell = ath11k_mhi_op_get_misc_doorbell;
->  
->  	switch (ab->hw_rev) {
->  	case ATH11K_HW_QCN9074_HW10:
-> 
-> -- 
-> 2.34.1
-> 
+-- 
+மணிவண்ணன் சதாசிவம்
 
