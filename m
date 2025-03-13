@@ -1,103 +1,115 @@
-Return-Path: <linux-pci+bounces-23687-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23688-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 704D2A6034A
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 22:16:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABD90A60364
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 22:26:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B3E3C420030
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 21:16:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 133583AB8EB
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 21:25:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85BDF747F;
-	Thu, 13 Mar 2025 21:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 726471F4CB2;
+	Thu, 13 Mar 2025 21:25:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dh8EwjX0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MnPUcGWQ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B881EA7C9
-	for <linux-pci@vger.kernel.org>; Thu, 13 Mar 2025 21:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAD2126C1E;
+	Thu, 13 Mar 2025 21:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741900560; cv=none; b=R897VEyP3eniVMdu/i1v3EG646NQ3/uZRD0sUxdJFl50hh3KxiyLGl/dRddNdbkxC+kaWahkD9FA1xZbbD/UB1RnDO2IAvKS0GPQoKJWjkBfu0pKeyTMNXxMY/dW37EeHTPqS0UY0wwRJv3VcymmjFUCz2+VcbKoCDS6mhwcD4Y=
+	t=1741901158; cv=none; b=GG6sErMHPiTaoHj8GtUE8bSFBczJK0lzm+T2vKIm3Hf9hTWS3yvBVr6LhQs/N+zj+orwP7HTmo8JRHbh+pItUE9KN8LTeTxXLFGhcrAePwb/W+0wYRLqGtN41WVnwnMq/VfA6cgc97aKUuvj4NxY8RmIZvXPH5ujZcwROrMe8hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741900560; c=relaxed/simple;
-	bh=SBslDw2A231XAPt4VPjHt73apowKjdYrM7+5TgOSj5Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QTse4DX1mCwrNzRIcF4GuFXSM5InmokJyluoD1H6WgnDU0fhgUKSc+xAKzbkQ0PDYQRdNVszuXAVVsXeH8ZrLgXVXi9OfJn/SUxaxfcdI71H5FtL99BLN8XL0gmrsfeDV38nd7J1x4qVCDpujR0C5czOTel7gGwGR2NO1KYoXQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Dh8EwjX0; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e673822f76so2400900a12.2
-        for <linux-pci@vger.kernel.org>; Thu, 13 Mar 2025 14:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741900557; x=1742505357; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SBslDw2A231XAPt4VPjHt73apowKjdYrM7+5TgOSj5Y=;
-        b=Dh8EwjX0s/uWaZgt3HTUquLCqm1Yl258y77zVfTWQdtVcycRVjt8LYTUNmuiyLFl5E
-         1kaea6zIR1MgNmFD9zyVS8AtVKtRQaPsvagbIvRJu4e5Q39fQgvO6I04khqxRQbTulSY
-         Ia576V3JXdifrVhWfDaQPlIwtrTJP3QjDYrTnP1EgdFgqXjcvUVkuAlSfjXz8h3+lQwA
-         gbazShPesiAdfMmBeqZKloU1C1bkNW49tGouSokhEaASNu2DduVUN88+NMkayJPELtMu
-         SHKTDmaMl8bI5wMPOgmJiAcB4M5ZhPhx+HxW3m10Zt13Db6x0lRDMAJRuGs4tdeOQ1Wp
-         t2QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741900557; x=1742505357;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SBslDw2A231XAPt4VPjHt73apowKjdYrM7+5TgOSj5Y=;
-        b=kSoK8d4dRTj3WYUc57vA4bFrbURFQ9D8mmcKYAE4ECvuAXvzeChiLYgOuxkug1zxBw
-         NOJrlE6or3l1BAaieLqFGYt/AF/kwjTVHdFgIPN4PleoZRlnHPV+VtKpKnWX34KXQGM9
-         Gr5JPYVULALShoIG56QcOY5mCvVIenfMSqsPh7u52Yr7Mh0hYLhH+7OXSavxGfjyqnsT
-         9kVELzuCXGUU6s+ijlpjDuRaHdcVKmD4MRLOBPwBE8+BvRcz7LXAh+StcfGqCzEJLeqd
-         n1PWx5b++TT2iHnxWSSupbekn7hPpq2IqOez4jV2iDJsa0iO+uHetYUJdbIiWcLuXR9l
-         Tscw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvtzPp+NvYMdxXKdK5yxqHsybsy9ygn4+VxNvYliC3vVDqScGWk1bCu0x1/8ajCQb2U1JbXwrdqtY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdI0T/YsrUkjR1h6SDNu7OBn6EgGTtbU1qIKy0P3r+YSY1g7DL
-	DRTdvQ2PAdZJiHgP9fbx2Ezx2HNbvcJ0AjL1+QgTICDAOhB5X5w5REsSEU9hiI+qUhCsbKmMxvg
-	a1AlLdasJdzjHnweZn4BBPuAWGJJ8y8XyEDx2
-X-Gm-Gg: ASbGncvGJXkk93b7azeZZ6SNF+6Rjy+zV+81EDBjTH6eobGYDtv7mYxYldjLtMS/MoI
-	NJ+1rX6oAm0Ch8dtG5Uz6D/Cu6tyKht6rIu27I4tpyQggJx/ALP3RUmdljm5yusviDAhDVHd1SF
-	/BzL0hIfc+HqZqARvgSOoTWLrDrVPWynUysFUk8o42iubiBpDhptylIQ==
-X-Google-Smtp-Source: AGHT+IHn8NCuuRX2zTxm/+imEM8zldHiY1ajopitgMfhaTXg9XEBojIA+ZKmdLrJkF/e3AhdyVeXyYlLG0ko7OiJYP4=
-X-Received: by 2002:a05:6402:34d6:b0:5e7:c438:83ec with SMTP id
- 4fb4d7f45d1cf-5e89e6acec2mr185799a12.6.1741900557043; Thu, 13 Mar 2025
- 14:15:57 -0700 (PDT)
+	s=arc-20240116; t=1741901158; c=relaxed/simple;
+	bh=qYeT6sg3o0N3LisLXr2XhjHV7IFvBdDp00R762l5BHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=NsnxfwKsPsgaK3qYKkyozwVBXmAd6VzRNwOHkBxTn1jyJmuPTKqoxM426C5aaWGo+ZyJQE+JMF77WBmEIajKQWpGogzkSw7LKqCCl6nrIPZNWXrFtHy1lBKVQlqsRU2hrvjWPSRqe4vDqM6m/gSdMnywUw5yFnStBdcICQ7j0BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MnPUcGWQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69A88C4CEDD;
+	Thu, 13 Mar 2025 21:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741901157;
+	bh=qYeT6sg3o0N3LisLXr2XhjHV7IFvBdDp00R762l5BHM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=MnPUcGWQoUM9IkqxucI7SH1sBbRubpnGpPw1lssb/UUk3lwzq4rmlkc0xPyPCj5rd
+	 JlMyh/PHDy1W1CuPonbH/Pll68nI+tTwx94KvYM9+7AMUmCGiA93ztgdHm4VZ64E8h
+	 AoK1FqzJmulAoLfr78IUWxAbSSzA2HT56EliMAXTMHKtOwUBZp2iTwrQcoP0bZ66x0
+	 y3DRfvijKNyhLHSoGbpoyqOd9XhhQ9gX32rUWtf+COpyZhMKi/L8YscXr82JNP2BBM
+	 gmAjwny/5OjZEiCi+8y/6R88KqK3zWru5ROzfxer2M5JwoVVuYNBZ4WgSfiCcdj5gk
+	 4MCYTN30/B+HQ==
+Date: Thu, 13 Mar 2025 16:25:55 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v11 04/11] PCI: dwc: Move devm_pci_alloc_host_bridge() to
+ the beginning of dw_pcie_host_init()
+Message-ID: <20250313212555.GA755531@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250304185910.GA251792@bhelgaas> <55988cb7-dfa8-47bd-a5e2-c96cd84d4159@oracle.com>
-In-Reply-To: <55988cb7-dfa8-47bd-a5e2-c96cd84d4159@oracle.com>
-From: Jon Pan-Doh <pandoh@google.com>
-Date: Thu, 13 Mar 2025 14:15:45 -0700
-X-Gm-Features: AQ5f1JrfFSgNrt1g09eVfb5cUWIXrgpXHeRJHbny5Eh7eZP2sYEH7fUOylZqoU4
-Message-ID: <CAMC_AXUq937EPT_TkDs5gqHfC1xiVJAUBBp7Z2faVJ6VsseexA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] PCI/AER: Use the same log level for all messages
-To: Karolina Stolarek <karolina.stolarek@oracle.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller <ben.fuller@oracle.com>, 
-	Drew Walton <drewwalton@microsoft.com>, Anil Agrawal <anilagrawal@meta.com>, 
-	Tony Luck <tony.luck@intel.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9ND5vARXpL8g1t/@lizhi-Precision-Tower-5810>
 
-On Fri, Mar 7, 2025 at 4:05=E2=80=AFAM Karolina Stolarek
-<karolina.stolarek@oracle.com> wrote:
-> As for other changes, I agree, we can split it up. Jon, would you like
-> to do it in v3?
+On Thu, Mar 13, 2025 at 04:45:26PM -0400, Frank Li wrote:
+> On Thu, Mar 13, 2025 at 02:22:54PM -0500, Bjorn Helgaas wrote:
+> > On Thu, Mar 13, 2025 at 11:38:40AM -0400, Frank Li wrote:
+> > > Move devm_pci_alloc_host_bridge() to the beginning of dw_pcie_host_init().
+> > > Since devm_pci_alloc_host_bridge() is common code that doesn't depend on
+> > > any DWC resource, moving it earlier improves code logic and readability.
+> > >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  drivers/pci/controller/dwc/pcie-designware-host.c | 12 ++++++------
+> > >  1 file changed, 6 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > index c57831902686e..52a441662cabe 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > @@ -452,6 +452,12 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+> > >
+> > >  	raw_spin_lock_init(&pp->lock);
+> > >
+> > > +	bridge = devm_pci_alloc_host_bridge(dev, 0);
+> > > +	if (!bridge)
+> > > +		return bridge;
+> >
+> > This returns NULL (0) where it previously returned -ENOMEM.  Callers
+> > interpret zero as "success", so I think it should stil return -ENOMEM.
+> 
+> It should be -ENOMEM. Sorry for that. Strange, not sure what happen when
+> I copy/past code.
+> 
+> Do you need respin it or you can fix it?
 
-Yeah. I can do this in v3.
+I fixed it locally.  But you should fix it, too, in case we do another
+spin for other reasons.
 
-Thanks,
-Jon
+> > I tentatively changed it back to -ENOMEM locally, let me know if
+> > that's wrong.
+> >
+> > > +	pp->bridge = bridge;
+> > > +
 
