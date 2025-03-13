@@ -1,144 +1,226 @@
-Return-Path: <linux-pci+bounces-23678-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23679-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77427A5FE78
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 18:44:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 117E9A5FE91
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 18:51:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 75CF016E948
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 17:44:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B0563AA916
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 17:50:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF641DBB13;
-	Thu, 13 Mar 2025 17:44:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE0891EB9F4;
+	Thu, 13 Mar 2025 17:50:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KOhrg+Lu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bOLJq327"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5351D7E4C
-	for <linux-pci@vger.kernel.org>; Thu, 13 Mar 2025 17:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FAC61E51EE;
+	Thu, 13 Mar 2025 17:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741887866; cv=none; b=QOrKiUOioGd38z/6BFAByg9NFIQb2/uSl7T/A6cw2VFz//IYO8Wc7nwAo+l8VdWMR7t4xXybRmfdDPKXGZ7kHYlNL3HX0RNc9rJ+6+1dwV1voQgh/w4QFqcii2RvaTHe6pz53hWHnajO/xrWxvRMq2mJMqEOUvZYX+6sQZvZMME=
+	t=1741888249; cv=none; b=YwYMAFGjqkH0RMb62XFDe+U2DMqdwD4f68rtOt6bd1PfYu1DEyZ3Jo7RFwAX50/xp0gtrhPOmfpck1wrSUwPCgURics+0OnxvVA+kW1CNSh/koG2x8rdyRuF5jmzKQa7M1M+z5LFFDE/ACKmJHEirYlpjTVvRnxHM5wI5al9SYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741887866; c=relaxed/simple;
-	bh=QV8C66sQqd3HvWMDCeN2JGXKbNAkGEFguMVZSlaWutk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=miSopvbHx6SaVN72noOd6VHW65Y/ldeq7z4uiRKQJe8lDmrb/GMt680nu+gYj6nqEfBR+MmIrN6i7EoP1fTj/css46bUQfH7g6Trb0KfiDtZFuardqzbI7vXFMuN0L9XMcMrcAXCNd/lWQ6/U3fHO+KKeC1O4rsA4OsHNbrVqmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KOhrg+Lu; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-301302a328bso2675139a91.2
-        for <linux-pci@vger.kernel.org>; Thu, 13 Mar 2025 10:44:24 -0700 (PDT)
+	s=arc-20240116; t=1741888249; c=relaxed/simple;
+	bh=Sn4jBdPuMSBTZTRkdxMXVnCXjlwAwsRkCucu9R2NrfY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZEyvHXnPmlE/OGIdI8MGugdR6NuiSxTWpvRj985DQxYLGjo40Zb/EGR5Gg2i1w+4hYzhZI6NS4LUDEJLEO87cj5qMcCskgvVsFE8j0O1c1aneGBUz/syI6YM4vJPt2Ho0/svbqZAEsf/dJWmmPi4tuWi6jFZvWS84VEFg/2mmkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bOLJq327; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30bfca745c7so11602671fa.0;
+        Thu, 13 Mar 2025 10:50:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741887864; x=1742492664; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=NhFJsw8uawrCjQJevU/7j+bAkPgtLqvzMAQJU5JD9+8=;
-        b=KOhrg+LuXx7d9C6KKulJtOIW47AXQK03Ii3Cdb1e4XkkFTDbh7Va+0TMluG+MCqfwi
-         l+7euXp9RUPz0YFDNLbSfFz/lPSl8QveFsz1oay9BCjynTdYEL23qLaIBrqws0OXTyMk
-         v9GnLz34MNflm1o1A4hkwzLh3Jnyow7897BmBLFbK0yLnJWTfrFOIpVCTN8ekNwh91CB
-         Hnf2mEXr+a4EwpJO1tO2q7uVi6xWz/V3xm1unERXYKCPWTboYEkATbQELOqu3gnIvz3k
-         blPWgp5c8StBhUIZ1RK9yaYEMT5Uix+EYVCRWru43Guhwsslkh/Lc80wZY52jqwBs4GL
-         OnFA==
+        d=gmail.com; s=20230601; t=1741888246; x=1742493046; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zKFpAn86ZKK0Tcm/VY5RgvZM4eSEDC/dgaX7ueRRzeU=;
+        b=bOLJq327yzjcYNOH5rYbTnM6xssHxMlX51y1wzcyDViRxxnAjnaxGN27dPuzdNtHif
+         Eyz3Dt7ABAiqqf5ZpIlF5ybf2bzwX4zm/pQ9oUStiuEwFerRKS9X5KYjmrCHa+0xGb8J
+         A2Qmwibv5NIu9ox82qTcrovoTlxhe9tcuwAhDfy4WdkgniTTSEzZPah2lY0qhdkXIDXZ
+         iJVQcGSXr0Gj+3Q1r22sBkBrnzEmBELUnFJ8o8WQ43zNQTQLZz3Yc+np7uohBUK2q4v1
+         ubw4X1USd1HSyE+2iWxnfs91B4roRKv+1oegj6aP77Mhg4ZFmJjJnUZ0JyzNXjNBNnIx
+         /chQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741887864; x=1742492664;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NhFJsw8uawrCjQJevU/7j+bAkPgtLqvzMAQJU5JD9+8=;
-        b=QZNDGnB30TertUn/0NXwuOd6a7NmLh8SY0hZDIkPIux2ddQYbq7y966bg0ziqggsaS
-         KDd6Bm0w1jPC1EZIWBQHXlFWEGGKaDfmMsUkj/Oxe/mYLyFAin0zcrqSu3vgK0vlX1+7
-         WFn+xkDmBBm4x5oDTs9Jm+O7AS+1meRNNfoBg9cVp/9ZkNvSO5v2SOpuu8a48KVVKy4K
-         Se0tS6sccnQgCws7AKtXcpJF8FmCc1bGgbPr+ZuIFzE1u28rIqthihHPD0wKcXl+KX1w
-         XihYMdD7H97umVHIY2MjrbVE4B3MZjJrUpQ7djiRZ80EPSKJmtffpS/BIn3R3+It4rHc
-         Y71w==
-X-Forwarded-Encrypted: i=1; AJvYcCVlrVhN0oaS4IQYH5H/aSZ+/t1oo7VD518sQjOMxpppH5eULdl5dVuGpEknL5ivPQeQd0QudbHV5w0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgrTPptSNGy2f22RFi9Eah78WyZdM/WiAdNZckYGXZLdGZwLrW
-	3/jt9DtVly0+zTSQ3WN1ArHX8tsQOqbtsPm7XnDTvFcD13GbQXoPSHSbTUHsxw==
-X-Gm-Gg: ASbGnctMQB9G9aiY/oyMF6sJCNQ5uYWAq1EB2osUazzzyuzRwDYX3fjJtsQVxbkyZFJ
-	OeLpTbFwGM1mwxI4skfi3Ge9KZbSx80tFHlrjHGs5G2jK1U9S5di9koIWCcUZb3anl2Exo8Yfqp
-	uUn1D2J9bRTYr0T+bnQl/A4AymtgNt/q07qTN65ZIPKlkRSFyKFZPd1fRkH3O4sNnbwxOhV7Uih
-	uE3je1Knvqcc1xlOgOw3nfBnVgkpkCZ9EQdGfZvakoapv0m7ukaHPBi6BYXp01nuMe2dIErPQ8T
-	AvKZE3yH+cmkBhXQJyk5lMMQDSh3EOIzPyKXRhZ8CSA76lxLPaU/1w==
-X-Google-Smtp-Source: AGHT+IEaq+Fi1cGt0rAKa6Fc1r8aIz7Paw4eI3nREquhMURMlKswOymRbr7ex68I++4IhbW37kjVlQ==
-X-Received: by 2002:a17:90b:54c4:b0:2ff:52b8:2767 with SMTP id 98e67ed59e1d1-3014e8619f7mr487146a91.19.1741887864312;
-        Thu, 13 Mar 2025 10:44:24 -0700 (PDT)
-Received: from thinkpad ([120.60.60.84])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30138b4751fsm1670259a91.12.2025.03.13.10.44.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 10:44:23 -0700 (PDT)
-Date: Thu, 13 Mar 2025 23:14:16 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, vigneshr@ti.com, kishon@kernel.org,
-	cassel@kernel.org, wojciech.jasko-EXT@continental-corporation.com,
-	thomas.richard@bootlin.com, bwawrzyn@cisco.com,
-	linux-pci@vger.kernel.org, linux-omap@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	srk@ti.com
-Subject: Re: [PATCH 1/4] PCI: cadence: Add support to build pcie-cadence
- library as a kernel module
-Message-ID: <20250313174416.n3c4srf6hb2l3bvg@thinkpad>
-References: <20250307103128.3287497-1-s-vadapalli@ti.com>
- <20250307103128.3287497-2-s-vadapalli@ti.com>
+        d=1e100.net; s=20230601; t=1741888246; x=1742493046;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zKFpAn86ZKK0Tcm/VY5RgvZM4eSEDC/dgaX7ueRRzeU=;
+        b=ubVsLtrcytDOKc6zI5kbExYAEoWjhb6nFW07DMnKMd0U8s9iDpz4h3Fs9h70P7xxYh
+         sYk4LqyTH1nBQK11ZV56D5M0FOsGEjEJVTtLdZDwoiX6Zio85fDqGklOhmpzzlIrA8jB
+         /yOIuJwK+XzJahRx7+bFAgWM8eI+zwMz0+ND8SIEwDNu28ZcWbG8S5EFUme7Vk3N2zrx
+         2r/a39rKL3ihgIZqtJ3F+mfP7b35TTAyYTOk8nCg9XVICxSicM7vAb9CKZRWvHIcNE60
+         /wrg2Go0L645NVLj67cY+P9yN0XAsS4iElM3Pp4M3JpKK1HfvOzRWbg5NvFbCafFQisl
+         jDbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUObPY/oUYiqG898qWCujH6hotAupTrU4LD6q6cRKeW2Lq10LITqDJdlAWcnVMqzvBxmdAWw/3hOZ7k@vger.kernel.org, AJvYcCVGZna7sZANdlgPDT9Th8Wy77zcQ9B7mMudlUWdDMwNZjE6oExoJ9W+1MzgJfcPya34OPyfMs+UN9OXOTMh@vger.kernel.org, AJvYcCVKbHfmD3n/5OK6J0knWLTcsfl6BaLqR9wxI2S9aVFMUAKesf6bJ847ES5+VfexrZm3VIrTPWtT1QHW@vger.kernel.org, AJvYcCVeJ7X2nHdvZSxFw5uRt9TxJgNKU4QwDuLwMNoArVyvqYF5D8xQNdvDM2YX0gSfDLSERSU98/CNr7RmcTTTaus=@vger.kernel.org, AJvYcCWIUxGvsnNwWL3KWFPam9M9uLYUrhNLljdtXSEl8DYinmAA67fI5xs/BXp+yNWVy/K1mlGlANsMxFCgMKDIcu3D@vger.kernel.org, AJvYcCX1GB0OpE2cvWR7rME/odIrvFYCtzZN2C+TT0U1P3LJkLbZ+ecOOP03Hn0xfhNsdh4QIaZnnAVNvPP70a4=@vger.kernel.org, AJvYcCXP8Z7pWpEZBLa3XuqdnkinmhBjWVHENXBgcmkxw7VlN7+zCQR2J0Pck2BvtN7mFs88Af//KE4wqy+dE6pV@vger.kernel.org
+X-Gm-Message-State: AOJu0YzamTYQrKkSnC8eNF50ZWTG5KUwKK/OOEd0rYFK5hneE2IybszZ
+	H1uVdQeYlWci5x07trv1LshX3rEqp3IuZ8dzjL5lOoa/JhVMFSx7x116s/w0c2rwAIY0fi/Jhsr
+	Mu4//njcR3Fdf8c7rvhMUxA3c668=
+X-Gm-Gg: ASbGncvjjma85h5eD1gv0iTUikQ0gMIfCgI2N+QhGwlU/eXtgI0rZ/w+lwoxEaPocqY
+	wWCdM97cmealdxIihWJ0OxAnn9BzXaDF3nIxq/EqNKbqv++WX1/J0D/3JIifSaPvjkkpBkMtJah
+	n5i1IvxdHiiGk3CSiMNi/XQuKjcq0ux4i2Aw5ZwS4h2Q==
+X-Google-Smtp-Source: AGHT+IFSCHPEFcd03p5HDh9sP6FYCsfZFC/DkMEfdC+Yt81z67oc/lXycRAIL+nUauhtNQVUeMxDtmcjr2PbVMhFYso=
+X-Received: by 2002:a2e:bc08:0:b0:30b:b987:b6a7 with SMTP id
+ 38308e7fff4ca-30c46a49b18mr3205021fa.0.1741888245386; Thu, 13 Mar 2025
+ 10:50:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250307103128.3287497-2-s-vadapalli@ti.com>
+References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com>
+ <CAJ-ks9kCgATKDE2qAuO3XpQfjVO2jGyq3D4sbUcVKyW6G1vuuQ@mail.gmail.com>
+ <D8EL9QFS1XNT.JBSMRXD4D7GT@proton.me> <CAJ-ks9=TRDg3g=NG7k97P_5jXpZ4K4v0DxrmJFR+uF0-3zJkXw@mail.gmail.com>
+ <CAJ-ks9=hAwOGtVv0zh9CcH7XOxjGnizvK1QOMAi8nKStocKr2Q@mail.gmail.com>
+ <D8ELW7X9796K.2ZGJS34LDTHOP@proton.me> <CAJ-ks9k1gZ=tLSe6OjuKFgg6=QE5R_Ajo0ZJwZJp08_1LMiODw@mail.gmail.com>
+ <D8ENBWTC8UPH.LLEGZ2D4U7KQ@proton.me> <CAJ-ks9mJ=2hFxfWEkq+9b=atE89sHXa5NBcdVNRd3az6MSv0pA@mail.gmail.com>
+ <D8F76A4JSEXO.2OKKJLAU5OZN@proton.me>
+In-Reply-To: <D8F76A4JSEXO.2OKKJLAU5OZN@proton.me>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 13 Mar 2025 13:50:06 -0400
+X-Gm-Features: AQ5f1JrNIpV1nyfNQKmWtrjHu1S5LHEkKspW_ObMJhGTNdWLSLayQ_veUoqdoQU
+Message-ID: <CAJ-ks9n1oGAGSrXYWjvR+_raw8h+skkdfSYpeSuQZ9jEs5q-6Q@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 07, 2025 at 04:01:25PM +0530, Siddharth Vadapalli wrote:
-> From: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> Currently, the Cadence PCIe controller driver can be built as a built-in
-> module only. Since PCIe functionality is not a necessity for booting, add
-> support to build the Cadence PCIe driver as a loadable module as well.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+On Thu, Mar 13, 2025 at 10:11=E2=80=AFAM Benno Lossin <benno.lossin@proton.=
+me> wrote:
+>
+> On Thu Mar 13, 2025 at 11:47 AM CET, Tamir Duberstein wrote:
+> > On Wed, Mar 12, 2025 at 6:38=E2=80=AFPM Benno Lossin <benno.lossin@prot=
+on.me> wrote:
+> >>
+> >> On Wed Mar 12, 2025 at 11:24 PM CET, Tamir Duberstein wrote:
+> >> > On Wed, Mar 12, 2025 at 5:30=E2=80=AFPM Benno Lossin <benno.lossin@p=
+roton.me> wrote:
+> >> >>
+> >> >> On Wed Mar 12, 2025 at 10:10 PM CET, Tamir Duberstein wrote:
+> >> >> > On Wed, Mar 12, 2025 at 5:04=E2=80=AFPM Tamir Duberstein <tamird@=
+gmail.com> wrote:
+> >> >> >>
+> >> >> >> On Wed, Mar 12, 2025 at 5:01=E2=80=AFPM Benno Lossin <benno.loss=
+in@proton.me> wrote:
+> >> >> >> > Always enable the features, we have `allow(stable_features)` f=
+or this
+> >> >> >> > reason (then you don't have to do this dance with checking if =
+it's
+> >> >> >> > already stable or not :)
+> >> >> >>
+> >> >> >> It's not so simple. In rustc < 1.84.0 the lints *and* the strict
+> >> >> >> provenance APIs are behind `feature(strict_provenance)`. In rust=
+c >=3D
+> >> >> >> 1.84.0 the lints are behind `feature(strict_provenance_lints)`. =
+So you
+> >> >> >> need to read the config to learn that you need to enable
+> >> >> >> `feature(strict_provenance_lints)`.
+> >> >>
+> >> >> I see... And `strict_provenance_lints` doesn't exist in <1.84? That=
+'s a
+> >> >> bit of a bummer...
+> >> >>
+> >> >> But I guess we could have this config option (in `init/Kconfig`):
+> >> >>
+> >> >>     config RUSTC_HAS_STRICT_PROVENANCE
+> >> >>             def_bool RUSTC_VERSION >=3D 108400
+> >> >>
+> >> >> and then do this in `lib.rs`:
+> >> >>
+> >> >>     #![cfg_attr(CONFIG_RUSTC_HAS_STRICT_PROVENANCE, feature(strict_=
+provenance_lints))]
+> >> >
+> >> > Yep! That's exactly what I did, but as I mentioned up-thread, the
+> >> > result is that we only cover the `kernel` crate.
+> >>
+> >> Ah I see, can't we just have the above line in the other crate roots?
+> >
+> > The most difficult case is doctests. You'd have to add this to every
+> > example AFAICT.
+> >
+> >> >> > Actually this isn't even the only problem. It seems that
+> >> >> > `-Astable_features` doesn't affect features enabled on the comman=
+d
+> >> >> > line at all:
+> >> >> >
+> >> >> > error[E0725]: the feature `strict_provenance` is not in the list =
+of
+> >> >> > allowed features
+> >> >> >  --> <crate attribute>:1:9
+> >> >> >   |
+> >> >> > 1 | feature(strict_provenance)
+> >> >> >   |         ^^^^^^^^^^^^^^^^^
+> >> >>
+> >> >> That's because you need to append the feature to `rust_allowed_feat=
+ures`
+> >> >> in `scripts/Makefile.build` (AFAIK).
+> >> >
+> >> > Thanks, that's a helpful pointer, and it solves some problems but no=
+t
+> >> > all. The root Makefile contains this bit:
+> >> >
+> >> >> KBUILD_HOSTRUSTFLAGS :=3D $(rust_common_flags) -O -Cstrip=3Ddebugin=
+fo \
+> >> >> -Zallow-features=3D $(HOSTRUSTFLAGS)
+> >> >
+> >> > which means we can't use the provenance lints against these host
+> >> > targets (including e.g. `rustdoc_test_gen`). We can't remove this
+> >> > -Zallow-features=3D either because then core fails to compile.
+> >> >
+> >> > I'm at the point where I think I need more involved help. Want to ta=
+ke
+> >> > a look at my attempt? It's here:
+> >> > https://github.com/tamird/linux/tree/b4/ptr-as-ptr.
+>
+> With doing `allow(clippy::incompatible_msrv)`, I meant doing that
+> globally, not having a module to re-export the functions :)
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Yeah, but I think that's too big a hammer. It's a useful warning, and
+it doesn't accept per-item configuration.
 
-> ---
->  drivers/pci/controller/cadence/Kconfig             |  6 +++---
->  drivers/pci/controller/cadence/pcie-cadence-ep.c   |  6 ++++++
->  drivers/pci/controller/cadence/pcie-cadence-host.c |  9 +++++++++
->  drivers/pci/controller/cadence/pcie-cadence.c      | 12 ++++++++++++
->  drivers/pci/controller/cadence/pcie-cadence.h      |  4 ++--
->  5 files changed, 32 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
-> index 8a0044bb3989..82b58096eea0 100644
-> --- a/drivers/pci/controller/cadence/Kconfig
-> +++ b/drivers/pci/controller/cadence/Kconfig
-> @@ -4,16 +4,16 @@ menu "Cadence-based PCIe controllers"
->  	depends on PCI
->  
->  config PCIE_CADENCE
-> -	bool
-> +	tristate
->  
->  config PCIE_CADENCE_HOST
-> -	bool
-> +	tristate
->  	depends on OF
->  	select IRQ_DOMAIN
+> >> I'll take a look tomorrow, you're testing my knowledge of the build
+> >> system a lot here :)
+> >
+> > We're guaranteed to learn something :)
+>
+> Yep! I managed to get it working, but it is rather janky and
+> experimental. I don't think you should use this in your patch series
+> unless Miguel has commented on it.
+>
+> Notable things in the diff below:
+> * the hostrustflags don't get the *provenance_casts lints (which is
+>   correct, I think, but probably not the way I did it with filter-out)
+> * the crates compiler_builtins, bindings, uapi, build_error, libmacros,
+>   ffi, etc do get them, but probably shouldn't?
 
-Even though this was added earlier, looks like not needed.
+Why don't we want host programs to have the same warnings applied? Why
+don't we want it for all those other crates?
 
-- Mani
+I'd expect we want uniform diagnostics settings throughout which is
+why these things are in the Makefile rather than in individual crates
+in the first place.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Your patch sidesteps the problems I'm having by not applying these
+lints to host crates, but I think we should.
 
