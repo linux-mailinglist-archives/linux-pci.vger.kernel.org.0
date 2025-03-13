@@ -1,90 +1,94 @@
-Return-Path: <linux-pci+bounces-23572-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23573-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 882F1A5EB69
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 07:03:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77CD1A5EB78
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 07:05:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F246F3B4F38
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 06:03:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3484A18904FC
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 06:05:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C4821F9A85;
-	Thu, 13 Mar 2025 06:03:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD7771FAC4F;
+	Thu, 13 Mar 2025 06:05:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zplUBdIc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kED28Sjn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F9C5474C
-	for <linux-pci@vger.kernel.org>; Thu, 13 Mar 2025 06:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EAE71F4C82
+	for <linux-pci@vger.kernel.org>; Thu, 13 Mar 2025 06:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741845792; cv=none; b=flUMUSWARzPSRyT5HTu6gE1pjZey5b4NjT0u727rnzxQneSTSu5nWHqjOsUDW18KpOMgisQSDVR0cArry1F0DaFgH398Yhf60uQ8oqnATwxPa6/1zKrpaJcZFVBBgDsoPxTAACKcBh7UPUsZF9wNYnvrnEXOpw4zsXETbksfwBI=
+	t=1741845928; cv=none; b=saLDbzNI/OgjXYbbjjumSHrY1ifpKN9oUddpg0qKIwkCNKSjj0Euf61PH+bHNisRACY4ekMwYaCDPxPgc8XLPMp+cYO5m6pvIWin5OGt13Skg+Bpan11bnsK/r2fCguyasCkWzQrmimaHmIOMmkghvmTlNtUdtXZRXZbMsCwxkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741845792; c=relaxed/simple;
-	bh=3IHj0fwKLeVDGBEhR8BPbj3M6F9IduKAqL/V0C9213o=;
+	s=arc-20240116; t=1741845928; c=relaxed/simple;
+	bh=xnjEUUt219szQVqS0FUbXn7jZKDT0VQ883gSiPYS0ZY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aP011SQmFL2snVE/S8hTmEaz7jWpsNkGSSHwenqP402PTk6828qEAQvFvleVB+3u34tCh33S3070muYxAXziaBykxLGEHkIUn9SVUZaSbiakHEn5oTybsTDoFZmUYcVBvLEwBDIDwLY5WHeF1gXi03LQzmz4mgLugchis3vtzhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zplUBdIc; arc=none smtp.client-ip=209.85.214.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=ljgS+mTXq5wOBe8hdCUpJqN2ORAG66+VW7nLdmQOHrSXPYbe52YMIh0c+NpVIJHPXMDP2xVHC7OGQUJOely5puXaQSsR69P7stIJCqxMfoA+28YdIFRKUBKtX7TllfEUh5Z3r/DHah/aLi/SBveqWVU+Za7TXQFL7tEAwALDEjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kED28Sjn; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22359001f1aso13991365ad.3
-        for <linux-pci@vger.kernel.org>; Wed, 12 Mar 2025 23:03:10 -0700 (PDT)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-223fb0f619dso10794625ad.1
+        for <linux-pci@vger.kernel.org>; Wed, 12 Mar 2025 23:05:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741845790; x=1742450590; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1741845926; x=1742450726; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=f6MdjnJ3ua2k7HKceKUirt21FtnY4dMiCyblx2R2tuo=;
-        b=zplUBdIcrp7/hOs653ldpWZ0xoFlR1vsnxtwjz2h+Ci9p/zwf3/5J2K20czzrE6cTz
-         dTO9HluaW/hMJFKnuRg++aptR3zGIB3zAiz8Wg6VOzRM3GA3ogzBozHoPVmfOVuABoOR
-         2xjJ1cVihKMgJDT83AoBq2joYl2HGsw6CQo/9iMmFNy7inj2y87VoKkMoFu+g3Iqbktd
-         /vPdrqW3P/EAlFyqU3azOhiV+PikG2uciQ6vM3kPFhLG3Th7ohFl3VD1j+j18j0HQuAN
-         TPhnq9+uXXSFzQK82qY1ASsQwHGu/ZLLRilNPI/fsBzc9apQCM/xrpxZq5PqEwdTkpQc
-         bAMg==
+        bh=ECQXFTKYOwgoxNWOGHysFhcD6t84a8REZICN/4jtZ5M=;
+        b=kED28SjnwcZto2IkTRX7p74kNmvwWpgjG6u07C0SY5sCiPVDpwLSPgdVl90OutwA3e
+         tA1Fm8OwFXs7In07wqf3aVAAfdZOmvAS9CUsa+0U/kUm6sUgDJWg4tSrwKl65vpZ2x/D
+         z6Ok6f08iTefTmi5gyABqQNlvNhLVUFR/1n5BaPd2CZH3Ba4GO/VNmBTSAi63e6ddx2L
+         Zlkm6OUKq2fSOUtQZedR14BwP/toHrhOEmYl+OyIRTsdb9JLhWqq+XZ8pEWH9JCD3sk7
+         fzpNITsP9Wy71Go1ygTpeVV+/4kftKFS4mkB4TGusdxDVnkFMpINqZHpJP1WisrNeehs
+         BZKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741845790; x=1742450590;
+        d=1e100.net; s=20230601; t=1741845926; x=1742450726;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f6MdjnJ3ua2k7HKceKUirt21FtnY4dMiCyblx2R2tuo=;
-        b=GEOjIeVhpNwkjj8FmuXaNDm7V7QGB1h4AEOQhfimCYuyyHOXAGVAPst+70PKcmXpWv
-         FneNE6cQAEeERQjkfo8p/EYzKt7cT169vwuKtJp3WmNOAIvQCqjPVFeZtWZ/RnsoFd1T
-         OGS4LXft7cDwdIRFpbdQF3qNS+Vsegg8Pfh1oOkA6lTz3bw/7aKlOp1q/JBpJlh9MZrb
-         gFzjyRz0kElIboLsdMKEExpZC3IYwxY1ScqQRIF86eBxF62F7Bdo4jqoTjXvdXj9Frgw
-         JD8R4nRDHVSMs52jNSC6aTQ3PGEh8o5/KoMIQt1p71BasRieUgBNJHtUEJDMh1X1H7Rd
-         aKEw==
-X-Forwarded-Encrypted: i=1; AJvYcCW60otk+SuBfQU39jziBA3X2XywZKTrShr+9dzBslvTvDn6nyO2rOJGpHfhj6Uwrtnqcb9ghH9516w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWNd+lYWiUSN7qk29//Jcne9xp5pqFPN1ZaIGyrPXfTsra+vZD
-	vW5RHJlXJXzCWgu4+KaK9eywhDMz5sBh0gyyP8FKnMx2QW8OwsHatFx2/5DAvg==
-X-Gm-Gg: ASbGncugHheS4k4DjDOBldjs1YtAUl1mPDrJs15qkqP/U2NKNGtvsoXlUGnZ61IYnrV
-	qy325xvtH4SRpZXwRF1X7VCMKytpHodO38DkbWxJUkiOviQjdCqmte9jcKwyVepR/awv89xT+xq
-	KvxFQmD3paWeCCmsJhzZy5D4AeZKDLTL2C5gSG2NdRGdVu17/bxvgC81pQeUGg10mlhaw/43bhV
-	YgIj4tC2s1k1POkb+79SSGZDWaUOt17fKujy+5/EdvxrskiE3Vm+wXSXbyPKzlbggS3QiBFg6kO
-	IEvHTum0bPWouVd1nYoqhW9c8ZOBwLS0oCelBAJmG3qg/UC2b+sjhA==
-X-Google-Smtp-Source: AGHT+IFPxLRLvvJqzA698/VJnGHbi0WkE2Kuvvzmsfile6eRsQmYWiTTJ/9mF+iWI4d+NDoThioxKg==
-X-Received: by 2002:a17:902:e802:b0:224:584:6f04 with SMTP id d9443c01a7336-2242888ab27mr315006605ad.18.1741845790022;
-        Wed, 12 Mar 2025 23:03:10 -0700 (PDT)
+        bh=ECQXFTKYOwgoxNWOGHysFhcD6t84a8REZICN/4jtZ5M=;
+        b=CU7AOO2kCySiy2YknfB2dzVO4QkNALPH82shsfi3e/W2lfEeomkxrLuspziNyXBSts
+         WGX7okehXYhzv3No3xu1qwDHBi9A1ou0/Z1oUoZJoEpr24U/4wpwfmRO7UUukkQfFcLH
+         lNQMWy4UhrJchW8kPrpJ8Ad/oW1i+3sdpKqxh7KL23rm1vciGCxwdFoi6A1vLgO1aJKc
+         FgIrs7QsaSayed8Yu/rG2YlkKmW9qsT+53TSe8z70oHpZK7/VIyRlOTtE1ScM2s+hFUU
+         MeyC0ChDhKGIZvNqMiCb9mUdeYD/3EeOPb/gkWv5ASRd8c02Ld14IefETXwDwtnl+lrv
+         jEzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUnbRK8RKIaam8y3oGg3JBcbU9ZPQCnw+zzNYMmzOE/UbkZkX39SgiFNLFHidPvdq9xMgQ/j4Tq63Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7yG5C09klok5Q3fSxyau1MZDogKM3Usqu2mm8l7lU9zfSKIv0
+	BH66KMLc0GuaX9o+vEIIylczwNMe6zOf75N/mbVk8+eOJDLUM8aXmxIMK3F7Hg==
+X-Gm-Gg: ASbGncti0SYCWfCpuBWAIRRCMI41UhoLUHhLkHxR+Ipg4y3s7AZn8XsV44Yvvp4pCNw
+	Cllmo2PEj9f/mepn31wZZV0xtIvnUG/Lm9NwWxnESrvaRMmqLX1Fq+oIWswHNZGs5BQHTwOPXIO
+	OdKXm7Bxvp7RCZvjAWPLLzQtQsVEO/PBh8m8DOFKQwviqmYee5x4mBwqKjx/sEBHbSZx5ZYDuXm
+	ttfNC0zq5wYTKDrafed765ss7mE/Kx4hBOHiJLLcNZAMCBcVKgXLyJ50XZUYUygkLErefjWMDnG
+	Q0q7EzP0YyyI/o3uIfP5X2E03gbhhcmUSUkOWMAG6xnhxAKoYvIV2Q==
+X-Google-Smtp-Source: AGHT+IHNYbI7b2RsxEIqYIkLTAuLCtKd3n8R178hhBoO3FhGxq8OJi1CT08xESSMe4ltVJpCSclHjw==
+X-Received: by 2002:a17:902:ec92:b0:220:fce7:d3a6 with SMTP id d9443c01a7336-22592e44a09mr126226875ad.23.1741845926623;
+        Wed, 12 Mar 2025 23:05:26 -0700 (PDT)
 Received: from thinkpad ([120.60.60.84])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c688866asm5616385ad.50.2025.03.12.23.03.05
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-737115781f3sm534483b3a.76.2025.03.12.23.05.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Mar 2025 23:03:09 -0700 (PDT)
-Date: Thu, 13 Mar 2025 11:33:03 +0530
+        Wed, 12 Mar 2025 23:05:26 -0700 (PDT)
+Date: Thu, 13 Mar 2025 11:35:21 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Vidya Sagar <vidyas@nvidia.com>, Frank Li <Frank.Li@nxp.com>,
-	Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: ep: Return -ENOMEM for allocation failures
-Message-ID: <20250313060303.66eqdf7ok5xpkokw@thinkpad>
-References: <36dcb6fc-f292-4dd5-bd45-a8c6f9dc3df7@stanley.mountain>
+	Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RFC NOT TESTED 0/2] PCI: dra7xx: Try to clean up
+ dra7xx_pcie_cpu_addr_fixup()
+Message-ID: <20250313060521.kjue4la47xd7g4te@thinkpad>
+References: <20250305-dra-v1-0-8dc6d9a0e1c0@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -94,38 +98,24 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <36dcb6fc-f292-4dd5-bd45-a8c6f9dc3df7@stanley.mountain>
+In-Reply-To: <20250305-dra-v1-0-8dc6d9a0e1c0@nxp.com>
 
-On Wed, Mar 05, 2025 at 06:00:07PM +0300, Dan Carpenter wrote:
-> If the bitmap allocations fail then dw_pcie_ep_init_registers() currently
-> returns success.  Return -ENOMEM instead.
+On Wed, Mar 05, 2025 at 11:20:21AM -0500, Frank Li wrote:
+> This patches basic on
+> https://lore.kernel.org/imx/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com/
 > 
-> Fixes: 869bc5253406 ("PCI: dwc: ep: Fix DBI access failure for drivers requiring refclk from host")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> I have not hardware to test.
+> 
+> Look for driver owner, who help test this and start move forward to remove
+> cpu_addr_fixup() work.
+> 
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+If you remove cpu_addr_fixup() callback, it will break backwards compatibility
+with old DTs.
+
+You should fix the existing DTs and continue carrying the callback for a while.
 
 - Mani
-
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 20f2436c7091..1b873d486b2d 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -908,6 +908,7 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
->  	if (ret)
->  		return ret;
->  
-> +	ret = -ENOMEM;
->  	if (!ep->ib_window_map) {
->  		ep->ib_window_map = devm_bitmap_zalloc(dev, pci->num_ib_windows,
->  						       GFP_KERNEL);
-> -- 
-> 2.47.2
-> 
 
 -- 
 மணிவண்ணன் சதாசிவம்
