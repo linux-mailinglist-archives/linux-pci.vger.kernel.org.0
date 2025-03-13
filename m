@@ -1,122 +1,178 @@
-Return-Path: <linux-pci+bounces-23641-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23642-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94836A5F7EE
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 15:24:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCC23A5F7FF
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 15:26:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9D2017FD9A
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 14:24:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BDE2519C45DC
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 14:26:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C551A267F6A;
-	Thu, 13 Mar 2025 14:24:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1EB3267F53;
+	Thu, 13 Mar 2025 14:26:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XtMBj6Fw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Egk/Df7Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E475267F50;
-	Thu, 13 Mar 2025 14:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BF9267F4F;
+	Thu, 13 Mar 2025 14:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741875873; cv=none; b=k2Zu2T1biXMBdzuJiGFWp35Dk76spmLHDTLk233lPEB+QR1nH72LG23eZEwSak9j/mJD51paO/5N/eO5Yc3dDbElVgxbxOKQe5PWyIjdwc1HNWQgaFRnuEasAASO8GRb215nC2kDIkondoOj9LcohAMP6IjZ2j3RVtWfG9/kMXU=
+	t=1741875961; cv=none; b=s9lajWk6qfCB2pJeTbmNbWxY9RFFQT814SL+84H+EAupmTli3zOe5FnKaWcz4H6/R3ZH0is/LPl7hTj/FX1jkPSnHQlsk4Otk4RKQMJH6llOwdzo7MZaXuE9GRqzCIa6by8EBiZn5K0nlkK+6Ur/kUu9OMCuGQ35xNWtp90GuPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741875873; c=relaxed/simple;
-	bh=0FxnfcYBhT+cVr2BAwoxmIHH0W1Uu+mQyjkUQszWQkE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u8fUDQm2p5dT/0Qw/mrjSXvvDQFmbrNr8QMLxKiBsqRKxOyftdUPepmPKPD84vyUrY8NrEmF8yLRMgYMK4rXA0UR+iLdvpVrOWm9Snmsfl+EwRLZJFwJS2J9Hf8ZSiaxTMoBbPqP84yc580PbgALhv4qpFva28zY0vXkvoHTrGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XtMBj6Fw; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741875873; x=1773411873;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0FxnfcYBhT+cVr2BAwoxmIHH0W1Uu+mQyjkUQszWQkE=;
-  b=XtMBj6FwzLBJmzia9DlorgYCdrkGdhEp5aOL4fltbIGDdpX3G6RyCuRk
-   TA+xxhY1/PmtrPlf0BSL0r8jZQIXeTWZ+a5/2GOuW1wY6LjsucEq0EBt3
-   HznpuYnrXQvWtvKipk70DAp5StyOdxjqLPfvwReotlCCSHkv1yuV5xaXr
-   jvuhOrcAbEHNVTDZMQX4Z8VCA0TZStUMB+zcKLlpxCwtJuDTZa05uN6Hp
-   b0j4WcByB1McPkZfs3QPFp7YVIzZJrdi0mIUANgbXT4PswRD8tDL2ewlb
-   3VU3OwXsaxmHiKCHKSOzWhh2Zz/T3rp54PQ6pM0dhgkCaa0Ps6H8FGOTE
-   Q==;
-X-CSE-ConnectionGUID: 5NP5LecaSgafuDpTu9wXNw==
-X-CSE-MsgGUID: RUJolReCSBu2QfPQGdJUcw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="43173625"
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="43173625"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 07:24:32 -0700
-X-CSE-ConnectionGUID: JkwN5/auRf+iKsiHt2VPRw==
-X-CSE-MsgGUID: pRVvhwE5T9Sw8DRNhlwXCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
-   d="scan'208";a="126027481"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.195])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 07:24:27 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	Guenter Roeck <groeck@juniper.net>,
-	Lukas Wunner <lukas@wunner.de>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Rajat Jain <rajatxjain@gmail.com>,
-	Joel Mathew Thomas <proxy0@tutamail.com>,
-	linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 4/4] PCI/hotplug: Don't enabled HPIE in poll mode
-Date: Thu, 13 Mar 2025 16:23:33 +0200
-Message-Id: <20250313142333.5792-5-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250313142333.5792-1-ilpo.jarvinen@linux.intel.com>
-References: <20250313142333.5792-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1741875961; c=relaxed/simple;
+	bh=CZx6TwMA0NCh5fjlQFkDkBD0jjZYUy/h1Qs71+ifFJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mqYlGYm39DDmXniTpqGFcDL5AFJWY7CjfOpgPmxZ3KLBDqAiiPyQa46RWvreDZ1Dm5vIX7isEH1TZisMoWHq85tn+N5YyLff4HnLAerJc/nCxO831Srco1aTnAs6v9S3kp4mldBPnU+I/ff4lLnn/Q+blfcRmQA2W53SWrdm8CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Egk/Df7Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10B8BC4CEDD;
+	Thu, 13 Mar 2025 14:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741875960;
+	bh=CZx6TwMA0NCh5fjlQFkDkBD0jjZYUy/h1Qs71+ifFJ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Egk/Df7QgTF4jkaGx8zGZQ9I6MBHi8FpKUeBCjhX1EEYiVwPcoPxBqcctA+UEjCZn
+	 nG0cI2wLCDQ8wCrfpZiEVT3BJ2dEzwmJ0iuZPgtwpOyPsHFNliagzvdAhTRSH3SyxQ
+	 VyQI+fdeul9I4cHBjHW/h8PI4jKHEvXeIGl5ZT+gcrVUjOgUBXTpvdnaPCO54vNan0
+	 3CVuUM6nrO+6eS+x96Pm/hQ53rGeGMGd9AhR97s5IFFyTw4QOfe2VuIZUd7fDOiFCF
+	 L65p25TegzwUG5VpUvqneiC03UBeVcuUREtLUBfVi2ERT/VxCgwLpM8S8jytkGlpSZ
+	 FA389rd5x/NZQ==
+Date: Thu, 13 Mar 2025 15:25:55 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
+	aliceryhl@google.com, tmgross@umich.edu,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 3/4] rust: pci: fix unrestricted &mut pci::Device
+Message-ID: <Z9Lq8xyTbIzfPhRX@pollux>
+References: <20250313021550.133041-1-dakr@kernel.org>
+ <20250313021550.133041-4-dakr@kernel.org>
+ <D8F2S8YNYGZP.3JQKC7ZMRAB2C@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D8F2S8YNYGZP.3JQKC7ZMRAB2C@proton.me>
 
-PCIe hotplug can operate in poll mode without interrupt handlers using
-a polling kthread only. The commit eb34da60edee ("PCI: pciehp: Disable
-hotplug interrupt during suspend") failed to consider that and enables
-HPIE (Hot-Plug Interrupt Enable) unconditionally when resuming the
-Port.
+On Thu, Mar 13, 2025 at 10:44:38AM +0000, Benno Lossin wrote:
+> On Thu Mar 13, 2025 at 3:13 AM CET, Danilo Krummrich wrote:
+> > As by now, pci::Device is implemented as:
+> >
+> > 	#[derive(Clone)]
+> > 	pub struct Device(ARef<device::Device>);
+> >
+> > This may be convenient, but has the implication that drivers can call
+> > device methods that require a mutable reference concurrently at any
+> > point of time.
+> 
+> Which methods take mutable references? The `set_master` method you
+> mentioned also took a shared reference before this patch.
 
-Only set HPIE if non-poll mode is in use. This makes
-pcie_enable_interrupt() match how pcie_enable_notification() already
-handles HPIE.
+Yeah, that's basically a bug that I never fixed (until now), since making it
+take a mutable reference would not have changed anything in terms of
+accessibility.
 
-Fixes: eb34da60edee ("PCI: pciehp: Disable hotplug interrupt during suspend")
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/pci/hotplug/pciehp_hpc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> > Instead define pci::Device as
+> >
+> > 	pub struct Device<Ctx: DeviceContext = Normal>(
+> > 		Opaque<bindings::pci_dev>,
+> > 		PhantomData<Ctx>,
+> > 	);
+> >
+> > and manually implement the AlwaysRefCounted trait.
+> >
+> > With this we can implement methods that should only be called from
+> > bus callbacks (such as probe()) for pci::Device<Core>. Consequently, we
+> > make this type accessible in bus callbacks only.
+> >
+> > Arbitrary references taken by the driver are still of type
+> > ARef<pci::Device> and hence don't provide access to methods that are
+> > reserved for bus callbacks.
+> >
+> > Fixes: 1bd8b6b2c5d3 ("rust: pci: add basic PCI device / driver abstractions")
+> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> 
+> Two small nits below, but it already looks good:
+> 
+> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> 
+> > ---
+> >  drivers/gpu/nova-core/driver.rs |   4 +-
+> >  rust/kernel/pci.rs              | 126 ++++++++++++++++++++------------
+> >  samples/rust/rust_driver_pci.rs |   8 +-
+> >  3 files changed, 85 insertions(+), 53 deletions(-)
+> >
+> 
+> > @@ -351,20 +361,8 @@ fn deref(&self) -> &Self::Target {
+> >  }
+> >  
+> >  impl Device {
+> 
+> One alternative to implementing `Deref` below would be to change this to
+> `impl<Ctx: DeviceContext> Device<Ctx>`. But then one would lose the
+> ability to just do `&pdev` to get a `Device` from a `Device<Core>`... So
+> I think the deref way is better. Just wanted to mention this in case
+> someone re-uses this pattern.
+> 
+> > -    /// Create a PCI Device instance from an existing `device::Device`.
+> > -    ///
+> > -    /// # Safety
+> > -    ///
+> > -    /// `dev` must be an `ARef<device::Device>` whose underlying `bindings::device` is a member of
+> > -    /// a `bindings::pci_dev`.
+> > -    pub unsafe fn from_dev(dev: ARef<device::Device>) -> Self {
+> > -        Self(dev)
+> > -    }
+> > -
+> >      fn as_raw(&self) -> *mut bindings::pci_dev {
+> > -        // SAFETY: By the type invariant `self.0.as_raw` is a pointer to the `struct device`
+> > -        // embedded in `struct pci_dev`.
+> > -        unsafe { container_of!(self.0.as_raw(), bindings::pci_dev, dev) as _ }
+> > +        self.0.get()
+> >      }
+> >  
+> >      /// Returns the PCI vendor ID.
+> 
+> >  impl AsRef<device::Device> for Device {
+> >      fn as_ref(&self) -> &device::Device {
+> > -        &self.0
+> > +        // SAFETY: By the type invariant of `Self`, `self.as_raw()` is a pointer to a valid
+> > +        // `struct pci_dev`.
+> > +        let dev = unsafe { addr_of_mut!((*self.as_raw()).dev) };
+> > +
+> > +        // SAFETY: `dev` points to a valid `struct device`.
+> > +        unsafe { device::Device::as_ref(dev) }
+> 
+> Why not use `&**self` instead (ie go through the `Deref` impl)?
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 26150a6b48f4..7e1ed179c7f3 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -846,7 +846,9 @@ void pcie_enable_interrupt(struct controller *ctrl)
- {
- 	u16 mask;
- 
--	mask = PCI_EXP_SLTCTL_HPIE | PCI_EXP_SLTCTL_DLLSCE;
-+	mask = PCI_EXP_SLTCTL_DLLSCE;
-+	if (!pciehp_poll_mode)
-+		mask |= PCI_EXP_SLTCTL_HPIE;
- 	pcie_write_cmd(ctrl, mask, mask);
- }
- 
--- 
-2.39.5
+`&**self` gives us a `Device` (i.e. `pci::Device`), not a `device::Device`.
 
+> 
+> > @@ -77,7 +77,7 @@ fn probe(pdev: &mut pci::Device, info: &Self::IdInfo) -> Result<Pin<KBox<Self>>>
+> >  
+> >          let drvdata = KBox::new(
+> >              Self {
+> > -                pdev: pdev.clone(),
+> > +                pdev: (&**pdev).into(),
+> 
+> It might be possible to do:
+> 
+>     impl From<&pci::Device<Core>> for ARef<pci::Device> { ... }
+> 
+> Then this line could become `pdev: pdev.into()`.
+
+Yeah, having to write `&**pdev` was bothering me too, and I actually tried what
+you suggest, but it didn't compile -- I'll double check.
 
