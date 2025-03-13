@@ -1,208 +1,135 @@
-Return-Path: <linux-pci+bounces-23681-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23682-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 088CFA5FEFD
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 19:15:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2760AA5FFDC
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 19:45:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E81DB7A8082
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 18:13:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C218179E13
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 18:44:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B26AB1F4170;
-	Thu, 13 Mar 2025 18:12:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F7FD1F03E5;
+	Thu, 13 Mar 2025 18:44:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Vjde6D3e"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LnhXIoTk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97071F03E0;
-	Thu, 13 Mar 2025 18:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1551EFFA9;
+	Thu, 13 Mar 2025 18:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741889540; cv=none; b=ZiSrpbH0Un9g3MsvEUq0c98gwICfJz2TYfZlyhQ8h63tsmIr6MlusVXP2g1AqCkStK4Gen9zJ3lkJEA8B7yhSvoxe+If3tEK++VeB28mqEvr518Uv/4VDiWmf4pro2b/HdCImmefpsNjr8N/jf91FWRawR4vrTMNyE1dIdis3IQ=
+	t=1741891494; cv=none; b=J0uZZRczyQW1BznbWrH3q1nWyz3wZ/xzrD//xZMiT9bDWiJakUKrkP62tG84w8y9T9X1fC1+a5j++85sUHGNlwinNxfgplwXo9YXLnhQYbXBGAJ5pGOO7H+3TkdJ9ILj5sF5ODRLGuIfmIt2bV8RHVO2a0/F1dsZsUYxQ8/hAXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741889540; c=relaxed/simple;
-	bh=8Zqt9zi/FnC7k8GuHDy1ukGq3CUt3k0moSNlURadgLI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vf0W4VqmZg8ccsN0PnXjSRWgZwVrJUxqaLclrYApKMMmjBfj8tEzWK8yltW5ELM5e0/Y/lhuzcfYEd9HK1hEOfuPrVhhbQh8ER1wtHOoKBFogNnFPpQXMz90RkGXcz04lZEcBJB++JLMlQJqZWP3F9WdQoTZqshDBAK8/iYaSc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Vjde6D3e; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1741889533; x=1742148733;
-	bh=srZ9dMa1whdbkDsfnTWuQVdrHW1c6weSBgLs5X2xzXk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=Vjde6D3es+FZD2i6nszzd+Hgukt8o27vgDDfWp2jm96W+oLCnogjSWy9m1JzHPVJX
-	 1irYvVn3fp2UlTepZj4LPqame5PkF1jsA/iUl3OWvTXt9hYSi8UiXKaUQ99JEn/DEz
-	 fo2oDRmOFgswdoLgpDm5x+Ei8G2KeWGyHF3tYcWIgv8mZVR3cvzX8aEGShpo2vcghX
-	 vN6eboR5Md26RDXfVYE5uFKUhR/68AYzFJsEnXn97LUFJnEnlo1zgi4n1lY2E+/sIC
-	 QJaAeDw3MssC1B7ZprfH0fReKBb8747T8wWsl/TQKPc4bW24dWbtRN3QQ4SzLYD6Vz
-	 ZekcLQszuPFXg==
-Date: Thu, 13 Mar 2025 18:12:08 +0000
-To: Tamir Duberstein <tamird@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
-Message-ID: <D8FCATTC479L.BDRZBC6TJ51Q@proton.me>
-In-Reply-To: <CAJ-ks9n1oGAGSrXYWjvR+_raw8h+skkdfSYpeSuQZ9jEs5q-6Q@mail.gmail.com>
-References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com> <CAJ-ks9=TRDg3g=NG7k97P_5jXpZ4K4v0DxrmJFR+uF0-3zJkXw@mail.gmail.com> <CAJ-ks9=hAwOGtVv0zh9CcH7XOxjGnizvK1QOMAi8nKStocKr2Q@mail.gmail.com> <D8ELW7X9796K.2ZGJS34LDTHOP@proton.me> <CAJ-ks9k1gZ=tLSe6OjuKFgg6=QE5R_Ajo0ZJwZJp08_1LMiODw@mail.gmail.com> <D8ENBWTC8UPH.LLEGZ2D4U7KQ@proton.me> <CAJ-ks9mJ=2hFxfWEkq+9b=atE89sHXa5NBcdVNRd3az6MSv0pA@mail.gmail.com> <D8F76A4JSEXO.2OKKJLAU5OZN@proton.me> <CAJ-ks9n1oGAGSrXYWjvR+_raw8h+skkdfSYpeSuQZ9jEs5q-6Q@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: d74d9f9fe6f44074994f0914e725607f21a3708b
+	s=arc-20240116; t=1741891494; c=relaxed/simple;
+	bh=QlrkRP5I6RTz1lPCtN5zk3M5pm0O9z7QzlqRgomvjQM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CCx9XfNv2T5K2aO9a3D222Vcd6VDTIAcUE5rq4+RdmUbX9MXNTFQqO7Mml1FdZp+r6JE2vkNBWre2J9VqZOLsZwCXnifg//g13wygK/3J3jrnrlo5t6O5n4pEfGb98PBl3kZ3CetRqd3A0Oq2dIlNelyWHGH/yykDl+DbFbx1Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LnhXIoTk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0BF5C4CEFF;
+	Thu, 13 Mar 2025 18:44:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741891494;
+	bh=QlrkRP5I6RTz1lPCtN5zk3M5pm0O9z7QzlqRgomvjQM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LnhXIoTkCwWwLQy654e32ktSRBBCvIiG9b2hKyu6onBsTkAjERAmziuGX0st7Auqg
+	 SYpt7I+8sO50eeWmFz4B+ezIQL3iphfcwaLQCecNPFG238AST/I6mJjR9Cm7Qhtnsp
+	 uqShKstvAdW4lKiXALVRC54yMBumFkP74kiRY5MvfBxq67fW2SVAaJuVvhRfMffnds
+	 tCwJOnfiTqJ8ELFf0ZhW/7PFSl/BeJpC2wgo7+yoqk6AfscXq/e4I4u82rnPIoWM9t
+	 hph5YEyoLUulJuNAdCm6KiWPYR7vKjMA3MNxqmcbQWjEQ0bEc8Bjy9bsWw3JEjXvpy
+	 LdfYkYUvJQx2A==
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso237515266b.3;
+        Thu, 13 Mar 2025 11:44:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUjOkqTDsnUMJgKdJWstKbw1msK0smur4UWXJ4qjaVMF4NqqlO3QGrmlIqi+0U4fDg5MysHPacIXTX38g==@vger.kernel.org, AJvYcCV93wDWAOK1LbScokqImL1KqAc1v2nemvom+kF2o+jv8QoG7JVwoUQAkAvyk2AZhh35QjW68UX0+xci@vger.kernel.org, AJvYcCVTjcI4B6vZNbh8NROSoHjmhrnU+HaCubUVatCiuPZvzAzXZosmQOE3p/XPu+PecNrLg6i3X5CbPOT9lJyB@vger.kernel.org, AJvYcCXOcDDi40yOfDEjot8SU+5rIqpA6B+1PR7vfFzqkXVXphd3hUMUmaTiOYNi9hIG7HU41ok+owVQQBifhQ==@vger.kernel.org, AJvYcCXiu1XLk7H6fjObE5SWVJ97tW6yzUuLiyfo9F6BzabzeJZXDu/P9udWa5ZIRwTn+3zh7UGvVWd9Q1OS@vger.kernel.org, AJvYcCXojQGLoiQ8sgeUAcXU7ziiNz6e/pIffPik24AlkH3rz53e/JehjH9GxglH+wRr3VjeA03y9qCqcDYExACT@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOxOdNPWU4ByCg2JYJKbufPKRJ+ajAeqNB2KHEtBK76VGH3vso
+	g8DFLAf6e/6Owti2Ylb7/34pHS9g9/Fv9RQ06zP64blttkqdsY0AheQ6cHfjhXsFHxSZQJH1xOR
+	9r4GgainUWYGdXFWkGp/eCy+JKA==
+X-Google-Smtp-Source: AGHT+IE84CwfiOJs5wEvz9/gyK0Vhm2tPQAYrNHeBZsspi51p+XlCkmCog0DPrxtkstcI25d+u0kzAVhA8ECGZ8aCbU=
+X-Received: by 2002:a17:907:9382:b0:ac2:7a3b:31e2 with SMTP id
+ a640c23a62f3a-ac2b9ea186bmr1272361466b.45.1741891492123; Thu, 13 Mar 2025
+ 11:44:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250307220304.247725-1-romank@linux.microsoft.com> <20250307220304.247725-9-romank@linux.microsoft.com>
+In-Reply-To: <20250307220304.247725-9-romank@linux.microsoft.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 13 Mar 2025 13:44:40 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLmS4EEoPkOmaH6F_0XtQu5wkM-WEfxFvjLA=bJroEUVw@mail.gmail.com>
+X-Gm-Features: AQ5f1JoBoOFXWy0RvRDKcw8n2aFR2QulZQgf-P4S7wWE9_vZ-wABCiQ7BInknts
+Message-ID: <CAL_JsqLmS4EEoPkOmaH6F_0XtQu5wkM-WEfxFvjLA=bJroEUVw@mail.gmail.com>
+Subject: Re: [PATCH hyperv-next v5 08/11] Drivers: hv: vmbus: Get the IRQ
+ number from DeviceTree
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de, catalin.marinas@arm.com, 
+	conor+dt@kernel.org, dave.hansen@linux.intel.com, decui@microsoft.com, 
+	haiyangz@microsoft.com, hpa@zytor.com, joey.gouly@arm.com, krzk+dt@kernel.org, 
+	kw@linux.com, kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org, 
+	manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, maz@kernel.org, 
+	mingo@redhat.com, oliver.upton@linux.dev, rafael@kernel.org, 
+	ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com, 
+	tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org, yuzenghui@huawei.com, 
+	devicetree@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org, 
+	apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com, 
+	sunilmut@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu Mar 13, 2025 at 6:50 PM CET, Tamir Duberstein wrote:
-> On Thu, Mar 13, 2025 at 10:11=E2=80=AFAM Benno Lossin <benno.lossin@proto=
-n.me> wrote:
->>
->> On Thu Mar 13, 2025 at 11:47 AM CET, Tamir Duberstein wrote:
->> > On Wed, Mar 12, 2025 at 6:38=E2=80=AFPM Benno Lossin <benno.lossin@pro=
-ton.me> wrote:
->> >>
->> >> On Wed Mar 12, 2025 at 11:24 PM CET, Tamir Duberstein wrote:
->> >> > On Wed, Mar 12, 2025 at 5:30=E2=80=AFPM Benno Lossin <benno.lossin@=
-proton.me> wrote:
->> >> >>
->> >> >> On Wed Mar 12, 2025 at 10:10 PM CET, Tamir Duberstein wrote:
->> >> >> > On Wed, Mar 12, 2025 at 5:04=E2=80=AFPM Tamir Duberstein <tamird=
-@gmail.com> wrote:
->> >> >> >>
->> >> >> >> On Wed, Mar 12, 2025 at 5:01=E2=80=AFPM Benno Lossin <benno.los=
-sin@proton.me> wrote:
->> >> >> >> > Always enable the features, we have `allow(stable_features)` =
-for this
->> >> >> >> > reason (then you don't have to do this dance with checking if=
- it's
->> >> >> >> > already stable or not :)
->> >> >> >>
->> >> >> >> It's not so simple. In rustc < 1.84.0 the lints *and* the stric=
-t
->> >> >> >> provenance APIs are behind `feature(strict_provenance)`. In rus=
-tc >=3D
->> >> >> >> 1.84.0 the lints are behind `feature(strict_provenance_lints)`.=
- So you
->> >> >> >> need to read the config to learn that you need to enable
->> >> >> >> `feature(strict_provenance_lints)`.
->> >> >>
->> >> >> I see... And `strict_provenance_lints` doesn't exist in <1.84? Tha=
-t's a
->> >> >> bit of a bummer...
->> >> >>
->> >> >> But I guess we could have this config option (in `init/Kconfig`):
->> >> >>
->> >> >>     config RUSTC_HAS_STRICT_PROVENANCE
->> >> >>             def_bool RUSTC_VERSION >=3D 108400
->> >> >>
->> >> >> and then do this in `lib.rs`:
->> >> >>
->> >> >>     #![cfg_attr(CONFIG_RUSTC_HAS_STRICT_PROVENANCE, feature(strict=
-_provenance_lints))]
->> >> >
->> >> > Yep! That's exactly what I did, but as I mentioned up-thread, the
->> >> > result is that we only cover the `kernel` crate.
->> >>
->> >> Ah I see, can't we just have the above line in the other crate roots?
->> >
->> > The most difficult case is doctests. You'd have to add this to every
->> > example AFAICT.
->> >
->> >> >> > Actually this isn't even the only problem. It seems that
->> >> >> > `-Astable_features` doesn't affect features enabled on the comma=
-nd
->> >> >> > line at all:
->> >> >> >
->> >> >> > error[E0725]: the feature `strict_provenance` is not in the list=
- of
->> >> >> > allowed features
->> >> >> >  --> <crate attribute>:1:9
->> >> >> >   |
->> >> >> > 1 | feature(strict_provenance)
->> >> >> >   |         ^^^^^^^^^^^^^^^^^
->> >> >>
->> >> >> That's because you need to append the feature to `rust_allowed_fea=
-tures`
->> >> >> in `scripts/Makefile.build` (AFAIK).
->> >> >
->> >> > Thanks, that's a helpful pointer, and it solves some problems but n=
-ot
->> >> > all. The root Makefile contains this bit:
->> >> >
->> >> >> KBUILD_HOSTRUSTFLAGS :=3D $(rust_common_flags) -O -Cstrip=3Ddebugi=
-nfo \
->> >> >> -Zallow-features=3D $(HOSTRUSTFLAGS)
->> >> >
->> >> > which means we can't use the provenance lints against these host
->> >> > targets (including e.g. `rustdoc_test_gen`). We can't remove this
->> >> > -Zallow-features=3D either because then core fails to compile.
->> >> >
->> >> > I'm at the point where I think I need more involved help. Want to t=
-ake
->> >> > a look at my attempt? It's here:
->> >> > https://github.com/tamird/linux/tree/b4/ptr-as-ptr.
->>
->> With doing `allow(clippy::incompatible_msrv)`, I meant doing that
->> globally, not having a module to re-export the functions :)
+On Fri, Mar 7, 2025 at 4:03=E2=80=AFPM Roman Kisel <romank@linux.microsoft.=
+com> wrote:
 >
-> Yeah, but I think that's too big a hammer. It's a useful warning, and
-> it doesn't accept per-item configuration.
-
-Hmm, I don't think it's as useful. We're going to be using more unstable
-features until we eventually bump the minimum version when we can
-disable `RUSTC_BOOTSTRAP=3D1`. From that point onwards, it will be very
-useful, but before that I don't think that it matters too much. Maybe
-the others disagree.
-
->> >> I'll take a look tomorrow, you're testing my knowledge of the build
->> >> system a lot here :)
->> >
->> > We're guaranteed to learn something :)
->>
->> Yep! I managed to get it working, but it is rather janky and
->> experimental. I don't think you should use this in your patch series
->> unless Miguel has commented on it.
->>
->> Notable things in the diff below:
->> * the hostrustflags don't get the *provenance_casts lints (which is
->>   correct, I think, but probably not the way I did it with filter-out)
->> * the crates compiler_builtins, bindings, uapi, build_error, libmacros,
->>   ffi, etc do get them, but probably shouldn't?
+> The VMBus driver uses ACPI for interrupt assignment on
+> arm64 hence it won't function in the VTL mode where only
+> DeviceTree can be used.
 >
-> Why don't we want host programs to have the same warnings applied? Why
-> don't we want it for all those other crates?
-
-I have never looked at the rust hostprogs before, so I'm missing some
-context here.
-
-I didn't enable them, because they are currently being compiled without
-any unstable features and I thought we might want to keep that. (though
-I don't really see a reason not to compile them with unstable features
-that we also use for the kernel crate)
-
-> I'd expect we want uniform diagnostics settings throughout which is
-> why these things are in the Makefile rather than in individual crates
-> in the first place.
+> Update the VMBus driver to discover interrupt configuration
+> from DT.
 >
-> Your patch sidesteps the problems I'm having by not applying these
-> lints to host crates, but I think we should.
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+>  drivers/hv/vmbus_drv.c | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 75eb1390b45c..c8474b48dcd2 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -2345,6 +2345,36 @@ static int vmbus_acpi_add(struct platform_device *=
+pdev)
+>  }
+>  #endif
+>
+> +static int __maybe_unused vmbus_set_irq(struct platform_device *pdev)
+> +{
+> +       struct irq_data *data;
+> +       int irq;
+> +       irq_hw_number_t hwirq;
+> +
+> +       irq =3D platform_get_irq(pdev, 0);
+> +       if (irq =3D=3D 0) {
+> +               pr_err("VMBus interrupt mapping failure\n");
+> +               return -EINVAL;
+> +       }
+> +       if (irq < 0) {
+> +               pr_err("VMBus interrupt data can't be read from DeviceTre=
+e, error %d\n", irq);
+> +               return irq;
+> +       }
 
-We're probably working on some stuff that Miguel's new build system will
-do entirely differently. So I wouldn't worry too much about getting it
-perfect, as it will be removed in a couple cycles.
+I don't think why you couldn't get the interrupt is important. Just
+check for (irq <=3D 0) and be done with it. I'm not even sure if
+returning 0 is possible now. There's a long history to that and
+NO_IRQ.
 
----
-Cheers,
-Benno
-
+Rob
 
