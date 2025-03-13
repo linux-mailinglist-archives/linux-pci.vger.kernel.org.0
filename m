@@ -1,223 +1,193 @@
-Return-Path: <linux-pci+bounces-23588-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23589-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35A5EA5EE91
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 09:54:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5594A5EFDB
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 10:46:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8CD933B0A63
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 08:54:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2629617B152
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 09:46:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81513262D03;
-	Thu, 13 Mar 2025 08:54:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE2DD22F150;
+	Thu, 13 Mar 2025 09:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DOZ7Cs0s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8911A1FBE86
-	for <linux-pci@vger.kernel.org>; Thu, 13 Mar 2025 08:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D83E1EFF98;
+	Thu, 13 Mar 2025 09:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741856089; cv=none; b=StophNuh2ui9CCPn5aUNfPI3i16iVVFMjXrPpGb9Jc8p6Av6rrmzzUhCawTYWyAy4XmiAbQfsBqGDdVYuQF2q4tVYOOni7bGOxMHBXf8Biu3XdO8k9eUeW2DD+uM2yajlbl3v4/K5kRUAMIfGkMq4QbGHmyylBZLC1khtiHGf3M=
+	t=1741859166; cv=none; b=mOdlpRXy/C+LgUKzUSdbckQAvxOOr+neT4/C1fH+fEXh2LMJK0xWi3LgZk5lrJRjMPoM2zr0DHV4aA3ymt+tvCbZEpCrjk59coSOcAgF9ZPDyq013Kt+4jOFh/LQ10XF7pTOiiUhz5QHJl3MyyVpEGReBiPbeEtHoQJm6h5pMpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741856089; c=relaxed/simple;
-	bh=z4kFVAh8ZwdeetGifHupttht3HiRwRg8if5+O9Ubfv4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SHBHEg7vzmSvR7J8TIQ3TBW1RVBujEBAqEjhqlvQyPL9AdWSKJABPkIOhih2iLc9fWyRFzcIZv7sdeq6KLLg2z9SEtFUVVAsDJ/H0M3o0T7UHQFrHCWXDXDBLnDpa79U4+8ERHllOVdCX3bDnPW/KIihLDu/ANKa8TgvGNMWvhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <l.stach@pengutronix.de>)
-	id 1tseKg-00021i-Us; Thu, 13 Mar 2025 09:54:26 +0100
-Message-ID: <b425a7c7a7d6508daf23fe7046864a498029a7ac.camel@pengutronix.de>
-Subject: Re: [PATCH v1 2/2] PCI: imx6: Use domain number replace the
- hardcodes
-From: Lucas Stach <l.stach@pengutronix.de>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Hongxing Zhu <hongxing.zhu@nxp.com>, Bjorn Helgaas <helgaas@kernel.org>,
-  "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>,  "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "shawnguo@kernel.org" <shawnguo@kernel.org>,  "lpieralisi@kernel.org"
- <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, 
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>,  "s.hauer@pengutronix.de"
- <s.hauer@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, 
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>,  "kernel@pengutronix.de"
- <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>
-Date: Thu, 13 Mar 2025 09:54:25 +0100
-In-Reply-To: <Z9GYm/jp9VIhCEeY@lizhi-Precision-Tower-5810>
-References: 
-	<AS8PR04MB8676E66BD40C37B2A7E390178CD12@AS8PR04MB8676.eurprd04.prod.outlook.com>
-	 <20250311155452.GA629749@bhelgaas>
-	 <DU2PR04MB8677AC699DF11D847AB768708CD02@DU2PR04MB8677.eurprd04.prod.outlook.com>
-	 <fcb5f09f8e4311c7a6ef60aaf3cb4e3f05a8f05e.camel@pengutronix.de>
-	 <Z9GYm/jp9VIhCEeY@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1741859166; c=relaxed/simple;
+	bh=KnDKEsArudUs0xPOlJ+UrPFKez4u7XPSRF38hrC27AY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nETt2K5KH/u4zLniZgdwnNK7xDNFDvkJsls2gwEbfUtakF67r5AJh0g4S9pyBbylPG7+tmKvoXJSPZ2G9Gck6EfI6H6jRVbsgmbGEKGkSpoXQoQfgVVuUm7g+xKLhpjpgllehBcNVC0Qx65eP0fNzsVdFcv0s4A/49yE0hE/KJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DOZ7Cs0s; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741859165; x=1773395165;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=KnDKEsArudUs0xPOlJ+UrPFKez4u7XPSRF38hrC27AY=;
+  b=DOZ7Cs0sRaTKqYvXiRIye7u2Y0gOZ6eDl+Gb1gBrJ9JRYlJC9Mwbxn9J
+   1cC+VjcR9/zhs2C0jiQE4urJKhDMNfw7fWRgN/MjoQ6P6el+SPVLGJWZR
+   XLxqUMpIRTdu0qOluD4iLc222mS4NG8H4G2vHGW3s1Ny1kht5qtJjCcUl
+   saRLyAGPYl0M++zTapDSKz6ULxCPSMBcmYUihJYom6IVUdx1jgAJGAumT
+   ClQUOL+Zq90+YpuESiJb8XLVBqv1GUSOqGIhN3VpWIQhTv9z4bgalOvjl
+   0FMApkSP7hZNdpj4KNiA+9fYxi+R7Ia+dIXzqmigLAQs1nx3gyz+IzMq3
+   w==;
+X-CSE-ConnectionGUID: B7LVfIo+RwOX4f51lj13kQ==
+X-CSE-MsgGUID: 1axMC7G2THqpkKmVxyFK3w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11371"; a="42218666"
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="42218666"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 02:46:04 -0700
+X-CSE-ConnectionGUID: OgZTVnicSw2ndjoz67HmGA==
+X-CSE-MsgGUID: h+IV8g1JRiycZ2xpDz+NkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,244,1736841600"; 
+   d="scan'208";a="121400702"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.195])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 02:45:59 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 13 Mar 2025 11:45:45 +0200 (EET)
+To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
+cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
+    Lucas De Marchi <lucas.demarchi@intel.com>, 
+    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
+    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+    Maxime Ripard <mripard@kernel.org>, 
+    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
+Subject: Re: [PATCH v5 1/6] PCI/IOV: Restore VF resizable BAR state after
+ reset
+In-Reply-To: <20250312225949.969716-2-michal.winiarski@intel.com>
+Message-ID: <d6e026ad-4dd4-2e03-6f8b-a10980fa0ce7@linux.intel.com>
+References: <20250312225949.969716-1-michal.winiarski@intel.com> <20250312225949.969716-2-michal.winiarski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Type: multipart/mixed; boundary="8323328-1098235586-1741859145=:1742"
 
-Am Mittwoch, dem 12.03.2025 um 10:22 -0400 schrieb Frank Li:
-> On Wed, Mar 12, 2025 at 09:28:02AM +0100, Lucas Stach wrote:
-> > Am Mittwoch, dem 12.03.2025 um 04:05 +0000 schrieb Hongxing Zhu:
-> > > > -----Original Message-----
-> > > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > > > Sent: 2025=E5=B9=B43=E6=9C=8811=E6=97=A5 23:55
-> > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > Cc: robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
-> > > > shawnguo@kernel.org; l.stach@pengutronix.de; lpieralisi@kernel.org;
-> > > > kw@linux.com; manivannan.sadhasivam@linaro.org; bhelgaas@google.com=
-;
-> > > > s.hauer@pengutronix.de; festevam@gmail.com; devicetree@vger.kernel.=
-org;
-> > > > linux-pci@vger.kernel.org; imx@lists.linux.dev; kernel@pengutronix.=
-de;
-> > > > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> > > > Subject: Re: [PATCH v1 2/2] PCI: imx6: Use domain number replace th=
-e
-> > > > hardcodes
-> > > >=20
-> > > > On Tue, Mar 11, 2025 at 01:11:04AM +0000, Hongxing Zhu wrote:
-> > > > > > -----Original Message-----
-> > > > > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > > > > > Sent: 2025=E5=B9=B43=E6=9C=8810=E6=97=A5 23:11
-> > > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > > > Cc: robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
-> > > > > > shawnguo@kernel.org; l.stach@pengutronix.de; lpieralisi@kernel.=
-org;
-> > > > > > kw@linux.com; manivannan.sadhasivam@linaro.org;
-> > > > bhelgaas@google.com;
-> > > > > > s.hauer@pengutronix.de; festevam@gmail.com;
-> > > > > > devicetree@vger.kernel.org; linux-pci@vger.kernel.org;
-> > > > > > imx@lists.linux.dev; kernel@pengutronix.de;
-> > > > > > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.=
-org
-> > > > > > Subject: Re: [PATCH v1 2/2] PCI: imx6: Use domain number replac=
-e the
-> > > > > > hardcodes
-> > > > > >=20
-> > > > > > On Wed, Feb 26, 2025 at 10:42:56AM +0800, Richard Zhu wrote:
-> > > > > > > Use the domain number replace the hardcodes to uniquely ident=
-ify
-> > > > > > > different controller on i.MX8MQ platforms. No function change=
-s.
-> > > > > > >=20
-> > > > > > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > > > > > ---
-> > > > > > > =C2=A0drivers/pci/controller/dwc/pci-imx6.c | 14 ++++++------=
---
-> > > > > > > =C2=A01 file changed, 6 insertions(+), 8 deletions(-)
-> > > > > > >=20
-> > > > > > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > b/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > index 90ace941090f..ab9ebb783593 100644
-> > > > > > > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > @@ -41,7 +41,6 @@
-> > > > > > > =C2=A0#define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE	BIT(11)
-> > > > > > > =C2=A0#define IMX8MQ_GPR_PCIE_VREG_BYPASS		BIT(12)
-> > > > > > > =C2=A0#define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11,
-> > > > 8)
-> > > > > > > -#define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
-> > > > > > >=20
-> > > > > > > =C2=A0#define IMX95_PCIE_PHY_GEN_CTRL			0x0
-> > > > > > > =C2=A0#define IMX95_PCIE_REF_USE_PAD			BIT(17)
-> > > > > > > @@ -1474,7 +1473,6 @@ static int imx_pcie_probe(struct
-> > > > > > > platform_device
-> > > > > > *pdev)
-> > > > > > > =C2=A0	struct dw_pcie *pci;
-> > > > > > > =C2=A0	struct imx_pcie *imx_pcie;
-> > > > > > > =C2=A0	struct device_node *np;
-> > > > > > > -	struct resource *dbi_base;
-> > > > > > > =C2=A0	struct device_node *node =3D dev->of_node;
-> > > > > > > =C2=A0	int i, ret, req_cnt;
-> > > > > > > =C2=A0	u16 val;
-> > > > > > > @@ -1515,10 +1513,6 @@ static int imx_pcie_probe(struct
-> > > > > > platform_device *pdev)
-> > > > > > > =C2=A0			return PTR_ERR(imx_pcie->phy_base);
-> > > > > > > =C2=A0	}
-> > > > > > >=20
-> > > > > > > -	pci->dbi_base =3D devm_platform_get_and_ioremap_resource(pd=
-ev,
-> > > > 0,
-> > > > > > &dbi_base);
-> > > > > > > -	if (IS_ERR(pci->dbi_base))
-> > > > > > > -		return PTR_ERR(pci->dbi_base);
-> > > > > >=20
-> > > > > > This makes me wonder.
-> > > > > >=20
-> > > > > > IIUC this means that previously we set controller_id to 1 if th=
-e
-> > > > > > first item in devicetree "reg" was 0x33c00000, and now we will =
-set
-> > > > > > controller_id to 1 if the devicetree "linux,pci-domain" propert=
-y is 1.
-> > > > > > This is good, but I think this new dependency on the correct
-> > > > > > "linux,pci-domain" in devicetree should be mentioned in the com=
-mit log.
-> > > > > >=20
-> > > > > > My bigger worry is that we no longer set pci->dbi_base at all. =
- I
-> > > > > > see that the only use of pci->dbi_base in pci-imx6.c was to
-> > > > > > determine the controller_id, but this is a DWC-based driver, an=
-d the
-> > > > > > DWC core certainly uses
-> > > > > > pci->dbi_base.  Are we sure that none of those DWC core paths a=
-re
-> > > > > > important to pci-imx6.c?
-> > > > > Hi Bjorn:
-> > > > > Thanks for your concerns.
-> > > > > Don't worry about the assignment of pci->dbi_base.
-> > > > > If pci-imx6.c driver doesn't set it. DWC core driver would set it=
- when
-> > > > > =C2=A0dw_pcie_get_resources() is invoked.
-> > > >=20
-> > > > Great, thanks!  Maybe we can amend the commit log to mention that a=
-nd
-> > > > the new "linux,pci-domain" dependency.
-> > > How about the following updates of the commit log?
-> > >=20
-> > > Use the domain number replace the hardcodes to uniquely identify
-> > > different controller on i.MX8MQ platforms. No function changes.
-> > > Please make sure the " linux,pci-domain" is set for i.MX8MQ correctly=
-, since
-> > > =C2=A0the controller id is relied on it totally.
-> > >=20
-> > This breaks running a new kernel on an old DT without the
-> > linux,pci-domain property, which I'm absolutely no fan of. We tried
-> > really hard to keep this way around working in the i.MX world.
->=20
-> 8MQ already add linux,pci-domain since Jan, 2021
->=20
-> commit c0b70f05c87f3b09b391027c6f056d0facf331ef
-> Author: Peng Fan <peng.fan@nxp.com>
-> Date:   Fri Jan 15 11:26:57 2021 +0800
->=20
-> Only missed is pcie-ep side, which have not been used at all boards dts
-> file in upstream.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I wasn't aware of this. 2021 is quite a while ago, so I suspect that
-nobody is going to run a new kernel with a DT this old. I retract my
-objection.
+--8323328-1098235586-1741859145=:1742
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Regards,
-Lucas
+On Wed, 12 Mar 2025, Micha=C5=82 Winiarski wrote:
+
+> Similar to regular resizable BAR, VF BAR can also be resized, e.g. by
+> the system firmware or the PCI subsystem itself.
+>=20
+> Add the capability ID and restore it as a part of IOV state.
+>=20
+> See PCIe r4.0, sec 9.3.7.4.
+>=20
+> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> ---
+>  drivers/pci/iov.c             | 29 ++++++++++++++++++++++++++++-
+>  include/uapi/linux/pci_regs.h |  1 +
+>  2 files changed, 29 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 121540f57d4bf..eb4d33eacacb8 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -7,6 +7,7 @@
+>   * Copyright (C) 2009 Intel Corporation, Yu Zhao <yu.zhao@intel.com>
+>   */
+> =20
+> +#include <linux/bitfield.h>
+>  #include <linux/pci.h>
+>  #include <linux/slab.h>
+>  #include <linux/export.h>
+> @@ -868,6 +869,30 @@ static void sriov_release(struct pci_dev *dev)
+>  =09dev->sriov =3D NULL;
+>  }
+> =20
+> +static void sriov_restore_vf_rebar_state(struct pci_dev *dev)
+> +{
+> +=09unsigned int pos, nbars, i;
+> +=09u32 ctrl;
+> +
+> +=09pos =3D pci_find_ext_capability(dev, PCI_EXT_CAP_ID_VF_REBAR);
+> +=09if (!pos)
+> +=09=09return;
+
+FYI, the commit f7c9bb759161 ("PCI: Cache offset of Resizable BAR=20
+capability") which is currently in pci/enumeration makes this simpler.
+
+> +=09pci_read_config_dword(dev, pos + PCI_REBAR_CTRL, &ctrl);
+> +=09nbars =3D FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, ctrl);
+> +
+> +=09for (i =3D 0; i < nbars; i++, pos +=3D 8) {
+> +=09=09int bar_idx, size;
+> +
+> +=09=09pci_read_config_dword(dev, pos + PCI_REBAR_CTRL, &ctrl);
+> +=09=09bar_idx =3D FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, ctrl);
+> +=09=09size =3D pci_rebar_bytes_to_size(dev->sriov->barsz[bar_idx]);
+> +=09=09ctrl &=3D ~PCI_REBAR_CTRL_BAR_SIZE;
+> +=09=09ctrl |=3D FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
+> +=09=09pci_write_config_dword(dev, pos + PCI_REBAR_CTRL, ctrl);
+> +=09}
+> +}
+> +
+>  static void sriov_restore_state(struct pci_dev *dev)
+>  {
+>  =09int i;
+> @@ -1027,8 +1052,10 @@ resource_size_t pci_sriov_resource_alignment(struc=
+t pci_dev *dev, int resno)
+>   */
+>  void pci_restore_iov_state(struct pci_dev *dev)
+>  {
+> -=09if (dev->is_physfn)
+> +=09if (dev->is_physfn) {
+> +=09=09sriov_restore_vf_rebar_state(dev);
+>  =09=09sriov_restore_state(dev);
+> +=09}
+>  }
+> =20
+>  /**
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.=
+h
+> index 3c2558b98d225..aadd483c47d6f 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -744,6 +744,7 @@
+>  #define PCI_EXT_CAP_ID_L1SS=090x1E=09/* L1 PM Substates */
+>  #define PCI_EXT_CAP_ID_PTM=090x1F=09/* Precision Time Measurement */
+>  #define PCI_EXT_CAP_ID_DVSEC=090x23=09/* Designated Vendor-Specific */
+> +#define PCI_EXT_CAP_ID_VF_REBAR 0x24=09/* VF Resizable BAR */
+>  #define PCI_EXT_CAP_ID_DLF=090x25=09/* Data Link Feature */
+>  #define PCI_EXT_CAP_ID_PL_16GT=090x26=09/* Physical Layer 16.0 GT/s */
+>  #define PCI_EXT_CAP_ID_NPEM=090x29=09/* Native PCIe Enclosure Management=
+ */
+>=20
+
+--=20
+ i.
+
+--8323328-1098235586-1741859145=:1742--
 
