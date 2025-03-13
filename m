@@ -1,146 +1,147 @@
-Return-Path: <linux-pci+bounces-23618-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23619-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3063A5F3D8
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 13:08:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96D5FA5F41B
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 13:20:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05D1F3A6813
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 12:07:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F16057A8471
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Mar 2025 12:19:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49841266596;
-	Thu, 13 Mar 2025 12:07:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D021266EFE;
+	Thu, 13 Mar 2025 12:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GxCw559e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="GK71GE4t"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from mail-10628.protonmail.ch (mail-10628.protonmail.ch [79.135.106.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9D6266EF0;
-	Thu, 13 Mar 2025 12:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2DE22F150
+	for <linux-pci@vger.kernel.org>; Thu, 13 Mar 2025 12:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741867646; cv=none; b=ml+FOGpUv1uAGe05xytw1r1JhIfkybD1cKzM3BbegkgIhRbcqfC1UMPjmNAA7r2XANG3mtySFpLpen86saeTikjScGIpx8N9nZaVJbT0fFN5Yu4vrlCNkr1xYB++/NIv5moC7hxpHcds4hh30rPfl1jAhh/VfHZDmCZz0O+8SxM=
+	t=1741868420; cv=none; b=PWanNkG0G0kQr++VIgfXHmmedtbcNZ770Q+1Y+oOShboLmzKo6lZXnGUjTRjenlsNlurJoT4l3yntfpOm8WCRqAvM6DOnQ5G/rlMNwR3AiwTMnYQ/ENtxqQ5pZKU/cNy0A+Mo3AS7xMwC2le5I72wYHqjqNo3LRp9lCxwtkPAog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741867646; c=relaxed/simple;
-	bh=Ne9bu4AIDTj8Q9X7Md4hyfZO5+zIRYhUdbapdiAxKLA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OHF5IFxnMDXh6dO7q0qebhXd11wJbOdA0WJRXLm+mt2S0Lp0rGifFIDXywXinCtVzZJn82QqS2/FHZQBByEmncXjkguwuEDzXiJhe56h4HzRaK2IiPoizDV24jazoT57f0juDakvJcUai903n1r2sMtmx2OK6nTbfA+Kh4xWPo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GxCw559e; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52DC74d11863344
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Mar 2025 07:07:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1741867624;
-	bh=jjf48QJ5dtYgMD1JQM2Mlfhy8pxv4LcRNvoLveym56k=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=GxCw559eoPGYb9fX3q4TLyLRN2QNZ3S0+Mp0sJZ0CVOXqdHZDb5zRTXy1y8DLJ+2P
-	 vACo6EtyFGTCaD2I++3Gnwe4mxvcpytLATrP20+FeQTeYzyCjN/VdoNbrl27qUk+y/
-	 DDCtbO8j/X+ta/0pgoes46okh5M1FIKNP9GCZwlc=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52DC74bk004764
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 13 Mar 2025 07:07:04 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 13
- Mar 2025 07:07:04 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 13 Mar 2025 07:07:04 -0500
-Received: from localhost (lcpd911.dhcp.ti.com [172.24.227.226])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52DC73mJ113302;
-	Thu, 13 Mar 2025 07:07:04 -0500
-Date: Thu, 13 Mar 2025 17:37:03 +0530
-From: Dhruva Gole <d-gole@ti.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-CC: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Santosh
- Shilimkar <ssantosh@kernel.org>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang
-	<dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
-        <ntb@lists.linux.dev>, Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, Haiyang Zhang <haiyangz@microsoft.com>,
-        Wei Liu
-	<wei.liu@kernel.org>, <linux-hyperv@vger.kernel.org>,
-        Wei Huang
-	<wei.huang2@amd.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>,
-        "Martin K. Petersen"
-	<martin.petersen@oracle.com>,
-        <linux-scsi@vger.kernel.org>
-Subject: Re: [patch 03/10] soc: ti: ti_sci_inta_msi: Switch MSI descriptor
- locking to guard()
-Message-ID: <20250313120703.nchgmrvgx2dt5fjc@lcpd911>
-References: <20250309083453.900516105@linutronix.de>
- <20250309084110.330984023@linutronix.de>
+	s=arc-20240116; t=1741868420; c=relaxed/simple;
+	bh=3iGZSwuLq3yrknLL5RySYUSMhsg9VkT40uzIPuymtTY=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ck69ctvYspXSxjp7HevFq1OO24PJdmRWjgtZxELpIligSpUUCPjC+Gj0YPWGSgv7whbtiauXxvCoZTMgCKv1cM2SB3J/ZylQ2u3XbJ+ix8cXFkV0hE0RMgGaKxRCqTGNMbWzKL8CznBJFL36P2OylwElaWptAnpggjesr1C/V20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=GK71GE4t; arc=none smtp.client-ip=79.135.106.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=7xxo62i6crbnlchhsuekovtiea.protonmail; t=1741868416; x=1742127616;
+	bh=TathujLwFVMTye6lELcmgVbrxs57jJ//7gvzSyvksPM=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=GK71GE4ti4a71r/hc0+htbUWiwqKzC9yioxtJahuey4bUugslOMvEztwq+bQ0lfHa
+	 gi5l8l2xFIoGcpOrJDgreVJ3qFVQq7Oq2POsTU38znOQvgAs4MR2y8ZgDbKf95uAEh
+	 z1PqPpePqBL4RM8zRvqo8eQBKWR8iOMHKSR9Raz2HKZwGHefGNRoTDaMby3f7dY1vY
+	 uDGgnfbycgdXNIuMNgx5SGMHGdMqejzOd/fqhI0XkWPz2HNTD7m6lnF+rUuPDkcTZl
+	 uk+xy+ZkylddaxdRx9U44x1m+x5f09eOh5pedWWQwJ/uSQv4GJLKMKztpXs8eQtWIf
+	 r0BzW3/UhN5+g==
+Date: Thu, 13 Mar 2025 12:20:11 +0000
+To: Antonio Hickey <contact@antoniohickey.com>, Andreas Hindborg <a.hindborg@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, FUJITA Tomonori <fujita.tomonori@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Benno Lossin <y86-dev@protonmail.com>, linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, netdev@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 3/3] rust: replace `addr_of[_mut]!` with `&raw [mut]`
+Message-ID: <D8F4TDZXEN5K.10OKB62YV8AKT@proton.me>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: f64ae2ea4dbafc85decddca94ca7eebb4bcd48cf
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250309084110.330984023@linutronix.de>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mar 09, 2025 at 09:41:46 +0100, Thomas Gleixner wrote:
-> Convert the code to use the new guard(msi_descs_lock).
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Nishanth Menon <nm@ti.com>
-> Cc: Tero Kristo <kristo@kernel.org>
-> Cc: Santosh Shilimkar <ssantosh@kernel.org>
+On Thu Mar 13, 2025 at 6:33 AM CET, Antonio Hickey wrote:
+> Replacing all occurrences of `addr_of!(place)` with `&raw place`, and
+> all occurrences of `addr_of_mut!(place)` with `&raw mut place`.
+>
+> Utilizing the new feature will allow us to reduce macro complexity, and
+> improve consistency with existing reference syntax as `&raw`, `&raw mut`
+> is very similar to `&`, `&mut` making it fit more naturally with other
+> existing code.
+>
+> Depends on: Patch 1/3 0001-rust-enable-raw_ref_op-feature.patch
+
+This information shouldn't be in the commit message. You can put it
+below the `---` (that won't end up in the commit message). But since you
+sent this as part of a series, you don't need to mention it.
+
+> Suggested-by: Benno Lossin <y86-dev@protonmail.com>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1148
+> Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
 > ---
->  drivers/soc/ti/ti_sci_inta_msi.c |   10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
+>  rust/kernel/block/mq/request.rs        |  4 ++--
+>  rust/kernel/faux.rs                    |  4 ++--
+>  rust/kernel/fs/file.rs                 |  2 +-
+>  rust/kernel/init.rs                    |  8 ++++----
+>  rust/kernel/init/macros.rs             | 28 +++++++++++++-------------
+>  rust/kernel/jump_label.rs              |  4 ++--
+>  rust/kernel/kunit.rs                   |  4 ++--
+>  rust/kernel/list.rs                    |  2 +-
+>  rust/kernel/list/impl_list_item_mod.rs |  6 +++---
+>  rust/kernel/net/phy.rs                 |  4 ++--
+>  rust/kernel/pci.rs                     |  4 ++--
+>  rust/kernel/platform.rs                |  4 +---
+>  rust/kernel/rbtree.rs                  | 22 ++++++++++----------
+>  rust/kernel/sync/arc.rs                |  2 +-
+>  rust/kernel/task.rs                    |  4 ++--
+>  rust/kernel/workqueue.rs               |  8 ++++----
+>  16 files changed, 54 insertions(+), 56 deletions(-)
 
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
+[...]
 
-> 
-> --- a/drivers/soc/ti/ti_sci_inta_msi.c
-> +++ b/drivers/soc/ti/ti_sci_inta_msi.c
-> @@ -103,19 +103,15 @@ int ti_sci_inta_msi_domain_alloc_irqs(st
->  	if (ret)
->  		return ret;
->  
-> -	msi_lock_descs(dev);
-> +	guard(msi_descs_lock)(dev);
->  	nvec = ti_sci_inta_msi_alloc_descs(dev, res);
-> -	if (nvec <= 0) {
-> -		ret = nvec;
-> -		goto unlock;
-> -	}
-> +	if (nvec <= 0)
-> +		return nvec;
->  
->  	/* Use alloc ALL as it's unclear whether there are gaps in the indices */
->  	ret = msi_domain_alloc_irqs_all_locked(dev, MSI_DEFAULT_DOMAIN, nvec);
->  	if (ret)
->  		dev_err(dev, "Failed to allocate IRQs %d\n", ret);
-> -unlock:
-> -	msi_unlock_descs(dev);
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_alloc_irqs);
-> 
-> 
+> diff --git a/rust/kernel/jump_label.rs b/rust/kernel/jump_label.rs
+> index 4e974c768dbd..05d4564714c7 100644
+> --- a/rust/kernel/jump_label.rs
+> +++ b/rust/kernel/jump_label.rs
+> @@ -20,8 +20,8 @@
+>  #[macro_export]
+>  macro_rules! static_branch_unlikely {
+>      ($key:path, $keytyp:ty, $field:ident) =3D> {{
+> -        let _key: *const $keytyp =3D ::core::ptr::addr_of!($key);
+> -        let _key: *const $crate::bindings::static_key_false =3D ::core::=
+ptr::addr_of!((*_key).$field);
+> +        let _key: *const $keytyp =3D &raw $key;
 
--- 
-Best regards,
-Dhruva Gole
-Texas Instruments Incorporated
+This should be `&raw const $key`. I wrote that wrongly in the issue.
+
+> +        let _key: *const $crate::bindings::static_key_false =3D &raw (*_=
+key).$field;
+
+Same here.
+
+>          let _key: *const $crate::bindings::static_key =3D _key.cast();
+> =20
+>          #[cfg(not(CONFIG_JUMP_LABEL))]
+> diff --git a/rust/kernel/kunit.rs b/rust/kernel/kunit.rs
+> index 824da0e9738a..18357dd782ed 100644
+> --- a/rust/kernel/kunit.rs
+> +++ b/rust/kernel/kunit.rs
+> @@ -128,9 +128,9 @@ unsafe impl Sync for UnaryAssert {}
+>              unsafe {
+>                  $crate::bindings::__kunit_do_failed_assertion(
+>                      kunit_test,
+> -                    core::ptr::addr_of!(LOCATION.0),
+> +                    &raw LOCATION.0,
+
+And here.
+
+>                      $crate::bindings::kunit_assert_type_KUNIT_ASSERTION,
+> -                    core::ptr::addr_of!(ASSERTION.0.assert),
+> +                    &raw ASSERTION.0.assert,
+
+Lastly here as well.
+
+---
+Cheers,
+Benno
+
 
