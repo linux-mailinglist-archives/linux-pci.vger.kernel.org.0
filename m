@@ -1,139 +1,117 @@
-Return-Path: <linux-pci+bounces-23737-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23738-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA9FEA6106F
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 12:52:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6977DA61070
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 12:55:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1154A3A045D
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 11:52:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B57DA3BC292
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 11:54:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3076E1FAC3B;
-	Fri, 14 Mar 2025 11:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k2FFrBh4"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 228771FCFDB;
+	Fri, 14 Mar 2025 11:54:58 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875FA6EB7D
-	for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 11:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CE68635A;
+	Fri, 14 Mar 2025 11:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741953140; cv=none; b=Z16exYs9x+qyUSj6dbPnGTWeIG125xbkbbBTbPGvq4+Tk605MfuSHetRnfKecJVQtU1vjsnI/rErl70vFh2F2S+FGFDhZLQejeRS3HFzZT6cx+k2Vudo94nZQNUXHnC5xhfONBJmu/PglOiRTNlu8xfP2Mev7ThOQriyzYveD9M=
+	t=1741953298; cv=none; b=YvBNFI8GvmPcQIclw2GrwSTd6L2dFTnv1ZogGghq4PDcDPSiqYPi3N1oUmD0qW2M+ZZ8noLlJKXi9NpRwFL+dYkc+FflFcv0a0Hpo9e30hzia+w0R0LCi7s015khIWK/sUTV1TMrQThE5Y0DthMaa9hHn7uKWRaNXuQxl2DCkx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741953140; c=relaxed/simple;
-	bh=2JTMMazCKfTFOAdapQG9XiQQAcCAcmo0E9k4zEEKWlA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ti2xc5f1j4HNjwjcxQVUQtrLOlsXkPv7UBGFon1rNLBGrxXp+u4OlbO55ldkydxr+U6N9hgOWGtzjOM7nXKpTDD26wudo1+iJLlnC/jE+emCvLOgUsF+1YS+5lZzrauWnpupmgGUOko/KB/FphKOyUsb0cqXV4uYu/e10QcDyGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k2FFrBh4; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2243803b776so56571345ad.0
-        for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 04:52:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741953138; x=1742557938; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=q3k7fvz1tmhIjGgQ1ycjom2LPIMfNTsp0uqFM8k2kiw=;
-        b=k2FFrBh4UJytmad73Y/VeYyGeUuygqFx1nXen0+3JVmmstg5JzlUiR7CPJ3T5+WEHr
-         Si3vtSx2NyR8MpV63TdKov40i8dAWs7sA+0VtNFn6dTd67H9qcMSaFdGl0vorBSU/Itx
-         uJumm/2s9oYMgpopfubTWpDXonO7YTthrqBPDNX6sMPaW3CE1BFSSpBI1YdpTD2/Szyf
-         ZegKpxdpPb5Hf062gRLHtS0bdfDT3sTQxnSKkBmHtkVPCr0iBSqpCpSQJxaPLqltHheS
-         3K34qhRFHdwqHg+yre5WHE5ocb5XOgub3YiOMqgVxgA8woZU/NbNlcexXhEdP/cbgjvn
-         I0sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741953138; x=1742557938;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q3k7fvz1tmhIjGgQ1ycjom2LPIMfNTsp0uqFM8k2kiw=;
-        b=QaeGIb+892M1WgelaQ/PpJ43Lo7BoNrwVlaTLVS3XEeLxB6B2LAVC0Yj3FoQu2K0EJ
-         jfMZHZe/RuhXT3yV3gMMXcoZQtdRq1J6u1+OBeSX//4TWFP2GhV6/pr/XYEslfjFos+l
-         nDE3d9nY8h1bv5EZmUrzNfIyoWcLepzAJQa5XyrOJltnOhq4kyH3QR4A4OK4v0wSSeXg
-         ceTFnPLfoToccZ60oXLYnMCTGjSJvPSWjDpn2lZ1lkHMwC9cU5k3kieGjpRZimZpdCX4
-         FQHTWuqtKRH2wRb/jAGqbHoE4/e7i/usd/qTYHj2Vkss/E/ChBrrXgKrXHH0CpWzLElT
-         rHQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVrjPTEgri8E/+mHEz5RoWSaOZXOxpYQtEqk+opwDqBOezRRT70n1YuRp5JmamlV/dlZ8OKvYzSqg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeulPR0oM2KUoq4Cd6LbOOtVq7GmN/P6dF/CAXGweOyYfTzI0v
-	aInSIWZmNCmo8nQLiIdV89jGvSfmToT6ue737LlM7KxdayqerhpiyJXTXd6RRg==
-X-Gm-Gg: ASbGncsdv/6KXSX+h7Hhzrgu/iP6z8YbAR+J7Sx6Eswv01TlYEvpo3UJUV/VdOpY8fY
-	VJ6wbyjDXRMCxwEKCXXg4Bx8PHINKHAWlewKojyH0xd4e0UGadK0EoRNOxTwP6vYsiPW9caCEmm
-	5C3kL5M7k7q74eLxB6XQRKic5o09axW6Q6iBs/pVC5CPLfJQSTQiXCu/KO4TJFMrnkb5+msetLC
-	vFoGEr66xBFe/dZUCRmRoGmRkoYUp5YvEX9hzvv54GMRzIVG0jgWbzvqNNKgAE0F8pgbX635C3I
-	7d5IeOumCh4VxAK3K/HpVjGGYC/3It7CCziqxane+RrVLRCq7zySiQ8Y
-X-Google-Smtp-Source: AGHT+IG5j5a+pzEwcsJNmm0hEeTrp2CuiBSxB3Ea66ul7lGwBGWPT/QsbfK1PDyEJKG9pn3UaFiZdQ==
-X-Received: by 2002:a05:6a20:7f8d:b0:1f5:80a3:b008 with SMTP id adf61e73a8af0-1f5c13165c8mr3802766637.32.1741953137749;
-        Fri, 14 Mar 2025 04:52:17 -0700 (PDT)
-Received: from thinkpad ([120.56.195.144])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-737115295e5sm2751523b3a.23.2025.03.14.04.52.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 04:52:17 -0700 (PDT)
-Date: Fri, 14 Mar 2025 17:22:12 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Damien Le Moal <dlemoal@kernel.org>, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v3 0/2] PCI: dw-rockchip: hide broken ATS cap in EP-mode
-Message-ID: <20250314115212.ywlee4vyuxyq4x6s@thinkpad>
-References: <20250310094826.842681-4-cassel@kernel.org>
+	s=arc-20240116; t=1741953298; c=relaxed/simple;
+	bh=ujXCNmb3soiv158J2dofpbfmDTJEFnQWHbM9oC1cpcU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q3IuwRndTBLXsyxhKz4XemfpbDgJ/NKE2IexnicpHvTGJgU/WmtbeLxdqOCaYGWryxxHCO9Aslytm1/Mcc35QpYcgz5ZTduKDjpqJ57FQ43uMhMvhf4O5bg8eV/qzH8I1o12dKOizYjq9dL/dBIQARM/IjkTbCiludCIzWbZvSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.43] (g43.guest.molgen.mpg.de [141.14.220.43])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 1345161E64856;
+	Fri, 14 Mar 2025 12:54:23 +0100 (CET)
+Message-ID: <dd9d62d5-54fc-4e7e-8508-1b8e22ac28d5@molgen.mpg.de>
+Date: Fri, 14 Mar 2025 12:54:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: Linux logs new warning `gpio gpiochip0:
+ gpiochip_add_data_with_key: get_direction failed: -22`
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl,
+ linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ linux-pci@vger.kernel.org, regressions@lists.linux.dev
+References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
+ <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
+ <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
+ <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
+ <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de>
+ <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
+ <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
+ <Z78ZK8Sh0cOhMEsH@black.fi.intel.com> <Z78bUPN7kdSnbIjW@black.fi.intel.com>
+ <CACMJSevxA8pC2NTQq3jcKCog+o02Y07gVgQydo19YjC9+5Gs6Q@mail.gmail.com>
+ <Z78jjr8LMa165CZP@smile.fi.intel.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <Z78jjr8LMa165CZP@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250310094826.842681-4-cassel@kernel.org>
 
-On Mon, Mar 10, 2025 at 10:48:26AM +0100, Niklas Cassel wrote:
-> Hello there,
-> 
-> Address Translation Services (ATS) is broken on rk3588 when running the
-> PCIe controller in Endpoint Mode.
-> 
-> This causes IOTLB invalidation timeout errors on the host side when using
-> and rk3588 in Endpoint Mode, and you are unable to run pci_endpoint_test.
-> 
-> Solve this by hiding the ATS capability.
-> With this, we do not get any IOTLB invalidation timeouts, and we can run
-> pci_endpoint_test successfully.
-> 
+Dear Andy, dear Bartosz,
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-- Mani
+Am 26.02.25 um 15:22 schrieb Andy Shevchenko:
+> On Wed, Feb 26, 2025 at 03:14:24PM +0100, Bartosz Golaszewski wrote:
+>> On Wed, 26 Feb 2025 at 14:47, Andy Shevchenko wrote:
+>>> On Wed, Feb 26, 2025 at 03:37:47PM +0200, Andy Shevchenko wrote:
+>>>> On Tue, Feb 25, 2025 at 10:25:00PM +0100, Linus Walleij wrote:
+>>>>> On Mon, Feb 24, 2025 at 9:51 AM <brgl@bgdev.pl> wrote:
+>>>>>
+>>>>>> In any case: Linus: what should be our policy here? There are some pinctrl
+>>>>>> drivers which return EINVAL if the pin in question is not in GPIO mode. I don't
+>>>>>> think this is an error. Returning errors should be reserved for read failures
+>>>>>> and so on. Are you fine with changing the logic here to explicitly default to
+>>>>>> INPUT as until recently all errors would be interpreted as such anyway?
+>>>>>
+>>>>> Oh hm I guess. There was no defined semantic until now anyway. Maybe
+>>>>> Andy has something to say about it though, it's very much his pin controller.
+>>>>
+>>>> Driver is doing correct things. If you want to be pedantic, we need to return
+>>>> all possible pin states (which are currently absent from GPIO get_direction()
+>>>> perspective) and even though it's not possible to tell from the pin muxer
+>>>> p.o.v. If function is I2C, it's open-drain, if some other, it may be completely
+>>>> different, but pin muxer might only guesstimate the state of the particular
+>>>> function is and I do not think guesstimation is a right approach.
+>>>>
+>>>> We may use the specific error code, though. and document that semantics.
+>>>
+>>> Brief looking at the error descriptions and the practical use the best (and
+>>> unique enough) choice may be EBADSLT.
+>>
+>> In any case, I proposed to revert to the previous behavior in
+>> gpiochip_add_data() in my follow-up series so the issue should soon go
+>> away.
+> 
+> Yes, I noted. The above is a material to discuss. We can make that semantics
+> documented and strict and then one may filter out those errors if/when
+> required.
 
-> 
-> Changes since v2:
-> -Added missing EXPORT_SYMBOL_GPL().
-> 
-> 
-> Niklas Cassel (2):
->   PCI: dwc: ep: Add dw_pcie_ep_hide_ext_capability()
->   PCI: dw-rockchip: Hide broken ATS capability
-> 
->  .../pci/controller/dwc/pcie-designware-ep.c   | 39 +++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.h  |  7 ++++
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 27 +++++++++++++
->  3 files changed, 73 insertions(+)
-> 
-> -- 
-> 2.48.1
-> 
+I am still seeing this with 6.14.0-rc6-00022-gb7f94fcf5546. Do you know, 
+if the reverts are going to be in the final 6.14 release?
 
--- 
-மணிவண்ணன் சதாசிவம்
+
+Kind regards,
+
+Paul
 
