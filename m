@@ -1,58 +1,59 @@
-Return-Path: <linux-pci+bounces-23701-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23702-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BB47A60886
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 06:56:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEC10A6088C
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 06:57:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EB54119C2893
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 05:56:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1B7EE3B9035
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 05:56:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96EF42F3B;
-	Fri, 14 Mar 2025 05:55:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73AB914884C;
+	Fri, 14 Mar 2025 05:56:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="BEE6BwTb"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ZFr2pdEJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2092.outbound.protection.outlook.com [40.92.40.92])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2093.outbound.protection.outlook.com [40.92.42.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED712E3363;
-	Fri, 14 Mar 2025 05:55:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F6413B7AE;
+	Fri, 14 Mar 2025 05:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.93
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741931754; cv=fail; b=sVfgG9Vycdxu1ew9jtTVMAThO8vir5Fwszs0QJP32sZtoFjer9tmHKFfT1Eg4mS+ubai/nd86321QG0Y4L4GdEFPTqD5v0SZw9DYDtT4qsOnFvQwJi200AmEhEESZYWhCaNvfi1KAUx467rWatHtVLL7zvzLKdli2HA0azV8quI=
+	t=1741931818; cv=fail; b=e/FZi5F3ReD0+fRZiRZOudN3PR0yJZ71t8vppZ30oibBxgmdXT4A3dwY1RR1DIdSuKjaQrPJeClCAEDqxc2QIJW8ebtBDpW3RFizSyCA6pd024cuyUc3rcXNnt60AdrH3G1dKEnl53mNyuJCe5wvXS2Q7kNbPb0pKO0JuI5sUHM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741931754; c=relaxed/simple;
-	bh=S1urqix5O3OvsWUqYYOD2XItTPttAkLlbqMIxafijvU=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=UeNVtRS8WsyCSTtmHKV0EnMch+F9bWmrS/3lh2Uinov5ZdeeeZrI8ehSua6pkafdTlJObA+bOaKo+V31Tn6W1Ofvx71pfmMlgpZyF5uocChnReOMtSyXK1GfHiJEyK67MVRjgiMQSnYIZXgjtb8ZJF+38NCqbzu2DE9zKeGPJvQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=BEE6BwTb; arc=fail smtp.client-ip=40.92.40.92
+	s=arc-20240116; t=1741931818; c=relaxed/simple;
+	bh=0iB2EmngP/PC2zFqLpubk/Jt1Xm1Gw5EEM72KId3AOY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pgRqsKaaqazrfDkRvI03KnOxfKn2IK6dMl/9PbCiCBqUzKbwbA+AaGZirLNKHNV6XOdlksOZcndLNuMfr5rG0WvLr7wz6C0oSA5V76/KWpO8tc0g5IkOy3zKSO9r/qFWS68OaPmhUt9t1UCP16Jl8xS3px5ytHHYn10JNH/FKow=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ZFr2pdEJ; arc=fail smtp.client-ip=40.92.42.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mSiPwuPihiDv/hgz9yeJBcz2blVe7PG7nXzaUCi0cFgStFknhFYd0ExnkjzyZGWTWERza+U/2GW2Y6vsusB5EdjOEw+pp8WfAJqYypvhtLRlUAOiQG4hUQiKKqyJIYdpuwQdty/URzAw0u26up/j/UN6JB1xb+kbQ25/yLVKXoedhBX8xE+SP8w7R92vP/uFejOO/NlwaCpiLr2aax03lW0xhU8KZ9l75qzJKflQ5FDTUvHwIl76WQkIrhLc2CziCUkYyJCErUXvlYFhg3IigXRbAram+TX/kAN3RihVg6XJ2dwNv/ivP5ZFs9X5WIb6H6/gtOBP9DN4N9XViSxdUA==
+ b=r6PfBGDF3Yt0cvVKOiZXN2Tt7CewqSGR7Y2Zd47UivrCXwdbbaZzRlE0ob339X3iVEtTMfKc68afRXzdXPE+HI0lMxuKcpjGlJPR5QQgFAkRFoLcu54wo6YKxZTZZJzLvrcx8VwrGLVaxyWUDqMSMgouBikpLdSzcnw72cZGhL3Bz+mQgwLCWmmcRQrxLEqxDgTiX3/0jNBBZKxmmISpp4hecjdwG2SDEUrw3SEaoYKbXmrTZ5MCfASwSSFbXMwVIBitORSv9XqTeYzCK62C4C2x7BDG29lrJfnqZ43CVGsYkBWBVU/tW24/UpjXrT+MUBThh4A7zHqkLVGKdPHeMA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=417C73lfXSBlXsOJCfIp3hBipsXa8md+4MQITY+muiI=;
- b=wXH6S5FN9pJyg8BR+8WEThmD9EuIkwRPqeRPvdIIiTNH7SlopUiNZWpU0gqlD1fworsmw3m9n0YtXGgQanVYpvsgIv7MM07/dqhJusOp8rqncUE4cUf93DLDk+sgzRUfyhdgZwMUtGogqG/jTYUvMiafz4eQLEt4meRfJxUKKLAb38jpuLsCnQTKPJ8D6aWqF26h1Mg86hJI60iLyQRzypN/a3s5fgGhwON4d9q5AwIkEnHduAWqMJJjpYPN/l4cHi5H9uMhx9xVmufGyLriJ6TtX8X1KGbKhyD1+ftnkbbfAST1H1z4Et08Xx93pxf9WZgUOVx5XS0YoP+xCMoHLQ==
+ bh=KSYTB0HlHKa1uCDKMWfBr2oMX6vXpaRiLFHCFsWoKMQ=;
+ b=GZdDUJkYFWVJ12z/0g2g9aKio9EoZnw8nRZetKN4IQUVDhrqi9V4c4EoLhgi7t36sfk41O03mpHuAVhES0P1SDhSTq0ZeUGfK5ET/1Q+Yw/FGRz2gbHeJcdVGWEV8qLyCFUCDaYczHVzcgBhXV/q9CTNgPXXDDWAFwSBO6nHuoF/6MiXcCrVvE8IcP+Zf4IQuJu2aSqjERYG9I+eEkkaLSfi07Zt5e7Ym/7euuKTB/GVWjEDM57kU+Vz1CZc5rvvO66A4nf46FczuF4BwkPyxA9jkrfIE1uOcMjKLSJGkK/Afw5xoB/34KAPnGOz5hh3FIZJy9TaKuPmGxwnXaKmww==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=417C73lfXSBlXsOJCfIp3hBipsXa8md+4MQITY+muiI=;
- b=BEE6BwTb3NJGkKFYdRPUaKvT0+YSLsfcZEKnuKyE+nIXv8yY/9mh2vfU9pu92TZgIhO9+kBNevydUCh5Ole6n9yjUhqgZwzJV6ExsqpC+ZAxcqboOaE33UUYqeiHWlWWykqQl6q2Vfpx7CK6nVKVTa7A5XUpdSiqqqUiY9aMvownjyIr/3rFSeGGXqand+2z0bdVxQyKexRGfHl9y3amC5UYn+hB571TNwczKEXc2ADmrVWE4mQXfuGwjTWYtwxjaSNyqPMa7qn82iPLIFqgjKmVE5Lgjl/KSTNYCOzXNOb5lULu9mIF0PvtcAkCcfttaRYciKOPBL9u3hC+OVrTxQ==
+ bh=KSYTB0HlHKa1uCDKMWfBr2oMX6vXpaRiLFHCFsWoKMQ=;
+ b=ZFr2pdEJZzpi/FPcYaHGfrPExxr2fdCyMLNyNixneM0p2kbaO8MfantbKgHyrf7AJLawqJ6knBVsPtiCqX4bbr8uhPKo5YbhJ/0yQgPV+5lg0OD5teQjp8uH381WLo78c8J0IHm6QwHfe112ib5UoNPhJiEb5ryjFCQzw9e0BgZzgYdy8XegYZjcGFdMsTLHSu38+N+TQ57ec+TZ+nkO/pFiDtkhs+KGcJDrCPUzzXQWZ/5Mv2DjXFSNLu9AMxls2Ymb/np5y9hq/5KGrENApsltcYjauv7sCSzTgn+5epclE5mQu1z7TytTxfP7rhCO3HXZz1rb4feToyoBMlvMMA==
 Received: from DS7PR19MB8883.namprd19.prod.outlook.com (2603:10b6:8:253::16)
- by LV8PR19MB8671.namprd19.prod.outlook.com (2603:10b6:408:25b::17) with
+ by SA3PR19MB7795.namprd19.prod.outlook.com (2603:10b6:806:300::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Fri, 14 Mar
- 2025 05:55:49 +0000
+ 2025 05:56:54 +0000
 Received: from DS7PR19MB8883.namprd19.prod.outlook.com
  ([fe80::e0c2:5b31:534:4305]) by DS7PR19MB8883.namprd19.prod.outlook.com
  ([fe80::e0c2:5b31:534:4305%6]) with mapi id 15.20.8534.027; Fri, 14 Mar 2025
- 05:55:49 +0000
+ 05:56:54 +0000
 From: George Moussalem <george.moussalem@outlook.com>
 To: linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -76,18 +77,20 @@ To: linux-arm-msm@vger.kernel.org,
 	vkoul@kernel.org,
 	george.moussalem@outlook.com
 Cc: quic_srichara@quicinc.com
-Subject: [PATCH v4 0/6] Enable IPQ5018 PCI support
-Date: Fri, 14 Mar 2025 09:55:28 +0400
+Subject: [PATCH v4 1/6] dt-bindings: phy: qcom: uniphy-pcie: Add ipq5018 compatible
+Date: Fri, 14 Mar 2025 09:56:39 +0400
 Message-ID:
- <DS7PR19MB8883F2538AA7D047E13C102B9DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
+ <DS7PR19MB88835F541CBC60C97A818B3A9DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <DS7PR19MB8883F2538AA7D047E13C102B9DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
+References: <DS7PR19MB8883F2538AA7D047E13C102B9DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: FR0P281CA0183.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ab::12) To DS7PR19MB8883.namprd19.prod.outlook.com
+X-ClientProxiedBy: FR3P281CA0039.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:4a::11) To DS7PR19MB8883.namprd19.prod.outlook.com
  (2603:10b6:8:253::16)
 X-Microsoft-Original-Message-ID:
- <20250314055528.32669-1-george.moussalem@outlook.com>
+ <20250314055644.32705-1-george.moussalem@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,141 +99,96 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR19MB8883:EE_|LV8PR19MB8671:EE_
-X-MS-Office365-Filtering-Correlation-Id: 56c30393-4af8-481e-3172-08dd62bcded8
-X-MS-Exchange-SLBlob-MailProps:
-	a+H6FLLcF3pAAaZRMwzHQe6ean9cA8ZgEMtbKFguQgXSORD3qOch4yQxoWUtSsQVWkKD5jA5qfuc5+dIMFkUZOJ0pF0iJ4yXF2+q5EYeAgK84AYxcp6aDgFR9KFhwQ8A46gztIz1xLA1cVJz0mVEOn0u3AeuXPGF7IXpdCMo0z/TkRgNYsXUFqH9juVbKYfZT2l6Si6mvARu9UZtlxf3qhuFtir7aoNhNA2xRkZMVkuZgb3ICdHrnFEVMq48O7yIXHEyhYj/Mq7c2AxnQX0kFDAooTO7jtgaN0ggIrciNh/ZokHvPNVaEgN56agPKVfFazaxIzPhR1RNsEXQQhYo8o9MnunIL3T9Ijaid1U6MYd0TuViAoOFVWRUg95+vDADUMNH3xSHkP9fdB4AB7ds6GDIUgVUAx+tvjBrb5rcVVeeRQP+a8VMhhHLbUb6eYSkJItclPwH8WmYbfvxAOFLLyM6NDQGybHS9vu/So8/E2tfVKGzvw656DxSPnRvsH0qjxqN4hBHkFmhPebyz+mS6aSQ8l2La89VdFctpdhfEWxKJ6bhFpGO6doifZuo56ka9Sc+iaemkUZlVzizo1cpjXjnHdTfajQDeN1IxHi+7zyYEFot25Ax+nZzokw1CKCi4DT3Ak2tT4YpQA1VE1rE0MxHAv8wOI0AD5+RsqRvtzfN23Ue7cl72Js8t6x+5R1d8X5XFpMbKdh4l8aUpVta0z0HG64nF83RsBijPdrqH55uTQ+MpGmEbk32JlLU0txEHEbyMfd5FhinXo2I0Mrla1FwBntUUMD7rqxHoLh3Y6bMM2NTlpAkXvgT4EyKJopC
+X-MS-TrafficTypeDiagnostic: DS7PR19MB8883:EE_|SA3PR19MB7795:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9b210326-8ab6-4987-ecf1-08dd62bd058a
 X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|7092599003|461199028|8060799006|15080799006|19110799003|5072599009|5062599005|440099028|3412199025|10035399004|4302099013|1602099012|1710799026;
+	BCL:0;ARA:14566002|5072599009|15080799006|8060799006|19110799003|461199028|7092599003|3412199025|440099028|1710799026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?GrdeWzGUO12dA3zm7BQF9lcsAha02LvSfuydIxa3VGXEAndmD2n7jnF6bsvr?=
- =?us-ascii?Q?eUbEq4y5M7vIjaYjnbUI1/nwVuKECaNd0Cee+UMymhxyjRGyDZ4fc4mtiukJ?=
- =?us-ascii?Q?tWNc5FANlHePP/9aTLoT/EeNur0Xr9wpP/0mzGHZZukWPNgbYboEojwAAKAV?=
- =?us-ascii?Q?mgLxYizJvk8jG3sYcyXInGlmVLxKwPIFKbrO3w8J+qaCMv2oP8aLqXL85Spd?=
- =?us-ascii?Q?4EsHNEzwsF0lUU5Dzhl5cDt7+lieh1vxZU41j1Mlw4om6GQhANHUGfMjgSgV?=
- =?us-ascii?Q?cxeUPtcmk1I/XGfAhYK0iZr7ERE3fXFUGLZNtgE+jYh3ZLOvaFc93IhLnfCA?=
- =?us-ascii?Q?nc4KEOJyY4YVIeyiXCHRk82Ss5vQeqh52oyMZlD22obcVzH01lEcioKAtN8G?=
- =?us-ascii?Q?7Y+8GMwiOXiizGY66Q6giByEpgG1YQZl+7lukqENzVqi1694sOQFKcJTxpRV?=
- =?us-ascii?Q?s2eMun1r9ogA0HhgTKZOGvEISCDqeWGKFcNwlqm+2A+BKciRj/5rAgI9rvTk?=
- =?us-ascii?Q?vNasGEHlPKbbS4hlTW9KddIwr1aleWBIYClcxCkLxjEWM8I3CEP7F7OPjq6s?=
- =?us-ascii?Q?4ZMvKOLdIznYgOsWLx0XV9ZCosulhGO86OS6hGXKy/PJ+Jerjw/qwKW5oM+B?=
- =?us-ascii?Q?rDxqPDNuk7Q6Of//AiVs1Em9XpZknVUiI8wqUJq1MVNnWqvHE4SrnsNpOJTl?=
- =?us-ascii?Q?wtEpw9EqVRWcaxXAp3mCYdmTOHj78Rlh8UgWhmduo2vtSHpZYr0VyAD5C+Ju?=
- =?us-ascii?Q?cuZ56xGl0rOwrYahTO8sgLLJR05VMmcfWQiXP/1PyI+DFnz08vWXXSnWe7u+?=
- =?us-ascii?Q?tbDW5j4xxir/6NvXOamQBt+8Q/132rL+pl3ABdUvSaRL8DEN7XPP1wC3DxEr?=
- =?us-ascii?Q?Um0UyjpQVVeROxG1/ttNPLFr8PdA1QoKjqkn4piuuAzN/gEVnZzpPClM6nAK?=
- =?us-ascii?Q?qMz8Uhi+S0Pslr+Rf96VMISgwZ2GoHZXhReAfpq/Ih8Eodc//GbijQ/0FrAv?=
- =?us-ascii?Q?0r1H3pi7lxyhQ62A737M0gd06Fm5IV4dopF5aDqGUNsEvFnEej8/fmAfx5QQ?=
- =?us-ascii?Q?hTYGY7gT26Ptwj8O68dQP3LR9BIaVZ1hdPQrptOa0H1jkh4U95FAwPbA1QWI?=
- =?us-ascii?Q?NHPAG8Mr442JzBOvyMBndqVvCs0ujIJlZIOHX0D2sVU1duvlKsc5zc5dKx65?=
- =?us-ascii?Q?xIQFJ9/db8kiMPQ4iczPHnC4jlOWbli/ozZNRIOLGcHlN/8p9Kt04Pto2hug?=
- =?us-ascii?Q?DAij+CErk7H9q8MR+CQA?=
+	=?us-ascii?Q?1z5UeEyaawEe+yoz/HuLDpOt3+1DFOCPAtpkoYjhNQ5BWXKTNnav8dlWX898?=
+ =?us-ascii?Q?p/gI2CUCmUpNZ1b5RNOpoMZQLR3CAhCoKq6Bu+bqiflAKPXcPquHhIGFnGd7?=
+ =?us-ascii?Q?EvGOTm8qLGZ9jRFjsrGsxY2Bhs2xRSIA7MNlExjnDinqHXfXWg+LV3Fd/j2U?=
+ =?us-ascii?Q?PU8+ws+LP2DtRlztUL+Tn71EN8H61q+ltYzJ4/Pa2fAU+qtBE3k7Ex3vK5xC?=
+ =?us-ascii?Q?KdUa1tEfzRff/mffNilrMhanVGuqJJftYtcCOd7iOos1bE8L8Xn4TubTEiTO?=
+ =?us-ascii?Q?A8OmRAuqFNWsa8kwR7beWLO4xtYXPofkSFwajty6a1CLhPxviIYTW1pNtvdB?=
+ =?us-ascii?Q?nY5rN8ULtgIUPya25GWJS/tDEnXpM4C4tT9h1TxEORMTKc556C2RbEaRavIJ?=
+ =?us-ascii?Q?6sTdoCP2oLNCT5TxQ+GWcH7ShlSZ7qe2awr8+2NcCTVbTqmNvrLSROtq0s1t?=
+ =?us-ascii?Q?Gmnw7fz/4jKpL490nwiykA+RxN8vSa2E56u6SFr3OrYtyhlrW0jZDO+Dz5ha?=
+ =?us-ascii?Q?fBrLwjlPYWnwk6YaJp7ER/izlJLMmQXNB16PicYYLTGZjFJUyszVu9iGlDr4?=
+ =?us-ascii?Q?kUELO+tL/7mTn2E2llJG/cdr0AdUjChAOiwlSbExpBdnLgVO1p18K8IuS2+o?=
+ =?us-ascii?Q?aTZQT7wJbq/vM/xu9Ufd6gAx09aXlvLQjUTZY2Njhydf2MK4nhLohzmAmwl6?=
+ =?us-ascii?Q?q7EtztDEPerGbjKrsgc1sGOmdZHFKYkIe7S41Xa3ZJ5OsY6yoLJ1xTvoK0uq?=
+ =?us-ascii?Q?sfh91U+AjqyBxsh7z1ApzruuDHbWwO7ve25vy8Tiy8OBWF1TiFhpgJpHAPIj?=
+ =?us-ascii?Q?gIUipXSjApEa2PRG6EkX9moONIOI1vHNEM5n4PpRN4a0XWnQSF3So55icuwH?=
+ =?us-ascii?Q?/QqDd/KzbY0pb3HFvVZRSKebDwg4t9VwXAVddduqukifouHwTW1H9b9VyAGR?=
+ =?us-ascii?Q?QGe+27vZpt4+MEy/l1V2tAiuns0nw7yFtJSnhDwxQEEmZQ1ixaLMJeH+L3BB?=
+ =?us-ascii?Q?1qHT4EJVhDiVFn7QgAfbcEDbjfxPXvGwk0x0HfTK+qmUHUrG0RuIn/Iag9Yi?=
+ =?us-ascii?Q?gCuUmrzINiSh0rwSYy8Id9Y/DdRwt20vMZJJb13Ia6ckcqAH5Ak=3D?=
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?BXJCYufWtD1ln7lhR+ZKuZZ8rHYUr3fxTKelZl1mIPxQrcrz+YpCieMicJIA?=
- =?us-ascii?Q?Z+wNfNfjkJ24NVWdllk1zQHoyT64KgTlR7vEIPlxJ90jY4HAMXY3QS/1Zerw?=
- =?us-ascii?Q?FyHuHcP4PFdyQXALeuPC577tEdCVt6m+EUjeEWG7mgTEqfVMaCcVQKuUAwu4?=
- =?us-ascii?Q?pamN7FEj0WHpUZ6otYRg0lq6XTVrpQLdeBvRUk/w1OsrFSEt4ZHS09BH2XK6?=
- =?us-ascii?Q?edKrSp0sHzZ1liEG3vO+Xo3wmuBdPi88ZkNRCQUz9o5Y0I4BmfL9/B/jhPjR?=
- =?us-ascii?Q?J6vBaHtlGPGtJEnKZ1Xo+Dg79ZNBHC0IIiQ0uG13iEfRmJn+MJkPRXLLSoUC?=
- =?us-ascii?Q?POeKSPbiY9u/owHi8muG75S0u+Jjbq/JbYRxAuTrXkNIwQJybAJ7nfTbhwHK?=
- =?us-ascii?Q?88xq4mFX3ariYJBqscepZveDnKREOYcRq2rwF1J18ufRA+3mfBZ2mDOWwoNQ?=
- =?us-ascii?Q?iNn0F6Xj8GpbSS9mt7G47X1YXrjqZo+spd3G0NAnaURJVw1mS2j0g307dem0?=
- =?us-ascii?Q?O53MRUYDfafLSl9yNsA1+wKQ8lM5R8BaiEEoWnnpfrg4qTbK/AhF9nqD1Pm8?=
- =?us-ascii?Q?iQiuBS8rbZFi53v4Ap6KW+tjgbO8C5BGX2KgMk0ZGVNa9zSOWpLxnqKiISzs?=
- =?us-ascii?Q?PdiX0iqcEl/VyXggLAxOvr5pZNxtl5l6ZkyZ0TBtWPvsHjY7KjCFc/1y+UVB?=
- =?us-ascii?Q?s3l8+EuAe6G208H2LmE/iDzX+KnlOFeocDFjuBQNR3z6XGXIhjtvIC2dJrl0?=
- =?us-ascii?Q?txy9AJyacjwcfBL1rZuePQNvoRRme1edja7V3EoJZrG/AVgvcSwFC+idfODO?=
- =?us-ascii?Q?dNm4btLxZIXXMia23uwppsdhnu3Lgx22KzMmHU7bYOtVeHS2t+6Qpj+iWy5Z?=
- =?us-ascii?Q?Mr/96TM9eBJk6LMLYzoT8B66Ky8fMF6S/7KznSmUOfC0bBX85OPzI8t/8p5l?=
- =?us-ascii?Q?yZPF99zWZ/8nMLZfIpikyj0M35e4o+yLwwJZdOB6Bv5+uX/Y58/Sh5v2BYt4?=
- =?us-ascii?Q?wX2Le8axafosTta0Bh1PEj7kDSpw2QNMirWME6+PtI2iP5Ino4wH1Xc6TwJ9?=
- =?us-ascii?Q?0RJLUg8VInl/eKloCRRHrW6SP4pbjTNFcBg+7aKDxjQp621sV+RMdN3w1lec?=
- =?us-ascii?Q?nA6LC9rl+rQg7sqXD9wglR/f1zhmoiftwmA6KmLn0AQnShUmxORzMTD7OfDp?=
- =?us-ascii?Q?mncvYxIP2sZbLsF2AAN5Pr1HgzGIACIwkgCdaNSvdSRQtcZLfOO5opwTljBN?=
- =?us-ascii?Q?kEtHM5jDxdkszx+76GSk?=
+	=?us-ascii?Q?wgmhk7W9cvzqO7u+BsOYT5z59nT5MUPMokwRUz6KpSRKtFDbxZxxc271qXhd?=
+ =?us-ascii?Q?CZacCo9cuJn3maOKkE7fbweDXbDzI+0fzm+R1YsZzicSukJ5fc8+U8CHGHF0?=
+ =?us-ascii?Q?YViGjtNOaSUlJTFjyazCkdQDhyQJGRLhPd+gkw6tT9+T6Z2v7Zm+yVbcTIfd?=
+ =?us-ascii?Q?tttph7M86Ymmj4tzO+3YRv64jnrt8lKHLOLvWnb2K0RLkSVNS33KgvK1C9JR?=
+ =?us-ascii?Q?P4+OPF3kd6VM0eNlztXmf4799cjs6gl5hSMEujEDAy777BJ7q0xmPp5N58DP?=
+ =?us-ascii?Q?Xhi/LrtrSVBco3XMk7trDkPdHAWC8H6+Tlsn9jwVZaHA92VDZuZfpcmqbBSe?=
+ =?us-ascii?Q?OGbkeQ2nHarfyrAty27OgQsA3+CSHkR5bqtaJSRiRNoIpBDZV8UMNXHqqVP+?=
+ =?us-ascii?Q?EpXVIJz1n7thm9aUvS0gZV+j7uxKHKPAInIvta9bt1eAkttpMjzQziVR4xsp?=
+ =?us-ascii?Q?N78MnP4yqlo2mz24DJuNhG/8sLuo6IaTKRGYcL3mKLacGCEZeGGLO50euOhx?=
+ =?us-ascii?Q?oOWDNCwHJ7IC6n7eDov6E+Gce3GnGQt9KKmlpE3qhczpf/gfP/YQiPjs4Ncu?=
+ =?us-ascii?Q?78VFUmwz3RFiUI51MX07bVqcdUF5XtGVdmxoWioRw48BuOCk23ucatmAdlRP?=
+ =?us-ascii?Q?YIVWvJauDPdS1mvObS3ADoYR4Ls2CVyjgz3EqZjvIDrc1sCimC+Pead5+o/c?=
+ =?us-ascii?Q?Y8JezxQO7b6UbxY8/1ukeMamDeexM+VHvX9ATKx9rOsHKDastsO6nr54Rbw3?=
+ =?us-ascii?Q?TGCxssWr/buf0a8fhx0QoSB2gAMbTS9jX2avynUDokXOhufQ9McwffNmCk1y?=
+ =?us-ascii?Q?rr40cgqtEjVdwwp1mLQ18CigHXdOuXa6IkL15H3tXaDRp+GL92HzqcfU3ETg?=
+ =?us-ascii?Q?O+U6AZ1HyOyVADcYETV/ZTS7QUd/OCyxo+h52HsQaxlHutgVGDUWSuPYooco?=
+ =?us-ascii?Q?uOnkm547xcq1BWyEavbwIcscDvfeF38dyDKxi7oi7//KIenlMJD/2v3PM8EN?=
+ =?us-ascii?Q?Td2waEuZXaSRfizIiGLwv+2UieKG1MEjK+w/ZkUICCOpmvCFSvR+WdR1CkWy?=
+ =?us-ascii?Q?Xb9SsAOgYzkgcoboL7v/Wq9SDtACdMK4agLnMZudF6odX5qTJtqh0cfnypLh?=
+ =?us-ascii?Q?bBjU8yo5lW780mmKirgdjvt79XOzvESdwMHMiZxA8nqPPRfKhoiCdMEBFIyl?=
+ =?us-ascii?Q?tdLMttd49i6QP1rxo5un+kV9EyeSVybF1EMBhnTfu+mve6kUYdhF0Dhs7a+6?=
+ =?us-ascii?Q?11NOLghllRw2jgxTl513?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56c30393-4af8-481e-3172-08dd62bcded8
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b210326-8ab6-4987-ecf1-08dd62bd058a
 X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB8883.namprd19.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2025 05:55:49.3220
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2025 05:56:54.2154
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
 	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR19MB8671
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR19MB7795
 
-This patch series adds the relevant phy and controller
-DT configurations for enabling PCI gen2 support
-on IPQ5018. IPQ5018 has two phys and two controllers, 
-one dual-lane and one single-lane.
+From: Nitheesh Sekar <quic_nsekar@quicinc.com>
 
-Last patch series (v3) submitted dates back to August 30, 2024.
-As I've worked to add IPQ5018 platform support in OpenWrt, I'm
-continuing the efforts to add Linux kernel support.
+The IPQ5018 SoC contains a Gen2 1 and 2-lane PCIe UNIPHY which is the
+same as the one found in IPQ5332. As such, add IPQ5018 compatible.
 
-v4:
-  *) removed dependency as the following have been applied:
-	dt-bindings: phy: qcom,uniphy-pcie: Document PCIe uniphy
-	phy: qcom: Introduce PCIe UNIPHY 28LP driver
-	dt-bindings: PCI: qcom: Document the IPQ5332 PCIe controller
-     Link: https://lore.kernel.org/all/20250313080600.1719505-1-quic_varada@quicinc.com/
-  *) added Mani's RB tag to: PCI: qcom: Add support for IPQ5018
-  *) Removed power-domains property requirement in dt-bindings for IPQ5018
-     and removed Krzysztof's RB tag from:
-     dt-bindings: PCI: qcom: Add IPQ5018 SoC
-  *) fixed author chain and retained Sricharan Ramabadhran in SoB tags and
-     kept Nitheesh Sekar as the original author
-  *) Removed comments as per Konrad's comment in:
-     arm64: dts: qcom: ipq5018: Add PCIe related nodes
-  *) Link to v3 submitted by Sricharan Ramabadhran:
-     Link: https://lore.kernel.org/all/20240830081132.4016860-1-quic_srichara@quicinc.com/
-  *) Link to v3, incorrectly versioned:
-     Link: https://lore.kernel.org/all/DS7PR19MB8883BC190797BECAA78EC50F9DCB2@DS7PR19MB8883.namprd19.prod.outlook.com/
+Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+---
+ .../devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml  | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-v3 (incorrectly versioned):
-  *) Depends on
-     Link: https://patchwork.kernel.org/project/linux-arm-msm/cover/20250220094251.230936-1-quic_varada@quicinc.com/
-  *) Added 8 MSI SPI and 1 global interrupts (Thanks Mani for confirming)
-  *) Added hw revision (internal/synopsys) and nr of lanes in patch 4
-     commit msg
-  *) Sorted reg addresses and moved PCIe nodes accordingly
-  *) Moved to GIC based interrupts
-  *) Added rootport node in controller nodes
-  *) Tested on Linksys devices (MX5500/SPNMX56)
-  *) Link to v2:
-     Link: https://lore.kernel.org/all/20240827045757.1101194-1-quic_srichara@quicinc.com/
-
-v3:
-  Added Reviewed-by tag for patch#1.
-  Fixed dev_err_probe usage in patch#3.
-  Added pinctrl/wak pins for pcie1 in patch#6.
-
-v2:
-  Fixed all review comments from Krzysztof, Robert Marko,
-  Dmitry Baryshkov, Manivannan Sadhasivam, Konrad Dybcio.
-  Updated the respective patches for their changes.
-
-v1:
- Link: https://lore.kernel.org/lkml/32389b66-48f3-8ee8-e2f1-1613feed3cc7@gmail.com/T/
-
-Nitheesh Sekar (6):
-  dt-bindings: phy: qcom: uniphy-pcie: Add ipq5018 compatible
-  phy: qualcomm: qcom-uniphy-pcie 28LP add support for IPQ5018
-  dt-bindings: PCI: qcom: Add IPQ5018 SoC
-  PCI: qcom: Add support for IPQ5018
-  arm64: dts: qcom: ipq5018: Add PCIe related nodes
-  arm64: dts: qcom: ipq5018: Enable PCIe
-
- .../devicetree/bindings/pci/qcom,pcie.yaml    |  58 +++++
- .../phy/qcom,ipq5332-uniphy-pcie-phy.yaml     |   3 +-
- .../arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts |  38 +++
- arch/arm64/boot/dts/qcom/ipq5018.dtsi         | 232 +++++++++++++++++-
- drivers/pci/controller/dwc/pcie-qcom.c        |   1 +
- .../phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c  |  45 ++++
- 6 files changed, 374 insertions(+), 3 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml
+index e39168d55d23..bdfa3417069c 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml
+@@ -11,11 +11,12 @@ maintainers:
+   - Varadarajan Narayanan <quic_varada@quicinc.com>
+ 
+ description:
+-  PCIe and USB combo PHY found in Qualcomm IPQ5332 SoC
++  PCIe and USB combo PHY found in Qualcomm IPQ5018 & IPQ5332 SoCs
+ 
+ properties:
+   compatible:
+     enum:
++      - qcom,ipq5018-uniphy-pcie-phy
+       - qcom,ipq5332-uniphy-pcie-phy
+ 
+   reg:
 -- 
 2.48.1
 
