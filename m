@@ -1,103 +1,155 @@
-Return-Path: <linux-pci+bounces-23741-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23742-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FFFBA6110E
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 13:27:37 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0BD0A61125
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 13:29:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C99F488253C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 12:26:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9FA3D7A5721
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 12:26:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1572D1FECD3;
-	Fri, 14 Mar 2025 12:26:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D2E11FE45A;
+	Fri, 14 Mar 2025 12:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVtusqA6"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62951CBE8C;
-	Fri, 14 Mar 2025 12:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A4318EFD4;
+	Fri, 14 Mar 2025 12:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741955183; cv=none; b=KbacmWN6Wa24w9u6gdo0NKSPMXpl9aR9VuPfmAPzGUbQ/LpiDySldm3TKbbdSJ8Wu96aPJrWxKChydFAS+cDGARwa6t/L2JPGXKI/4Xo9fKb5XHjJjvFOIk6ETghMib/LyPn/dw6tt79Dh17OupAFp6qXDJUlUAlbpdU8fZjdC0=
+	t=1741955250; cv=none; b=c8MIzFiEz+RazqKrXPCkfcnXbFMpDPL9rZ4dPpWxcJQy5Q+VEgXaprJh8uWz0yZscDW3QDAXCOrsaGS9OnyhSv88YD1cStz9Gv2+plrEwxzzbt2MtrRpmiy7P/62g/Rh3nNDoD4XDkYApoRADQc8NaQt1F+P+lk0BhBYiCH4vlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741955183; c=relaxed/simple;
-	bh=CTOADkKaiXL14ofE1ctHaZx6+5tXRWKRi8L0z3hb+x8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bwMpoCNpLoEOlQZ01VQmgNvYzCRAP+Az/afXlvQ8AoYIRq5IYjSWvFcPkCffzi4Eia6Ckw2EoTz8TOXhQHTCIVBr19ZqSLWMsWabi+prGEr7TrpW9titrq69mr6rFJyHxWNEIk+/sgu+Zo5Uz1KdiYNnT1BAhjcUf6C/diAS4l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.43] (g43.guest.molgen.mpg.de [141.14.220.43])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 87A6F61E647AE;
-	Fri, 14 Mar 2025 13:25:52 +0100 (CET)
-Message-ID: <cb12d8d3-229c-4ef9-b585-778772b34ac7@molgen.mpg.de>
-Date: Fri, 14 Mar 2025 13:25:52 +0100
+	s=arc-20240116; t=1741955250; c=relaxed/simple;
+	bh=4AV3UwKKeLK8/P2zg6naYEnpTmcDbmVCSxbXtAHjRV0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HwezfjhRmpmT1y37mAupfMHkTEMkK4zFxIeinHE/PJKxYChbC+/ffqg92gM/IVsLQ7RX2yGChJdIvaCeBg1rrHk+SMN7FIcRxWTRkg6zGexEguUU5i25Ik4xs8t6q38itVVNxIIU70vQdq8c/IKM01Zy7v9pb949cXZpR7iWAts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bVtusqA6; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30c461a45f8so11715101fa.1;
+        Fri, 14 Mar 2025 05:27:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741955246; x=1742560046; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4AV3UwKKeLK8/P2zg6naYEnpTmcDbmVCSxbXtAHjRV0=;
+        b=bVtusqA60eaOdqQGtwVc93tM60aFvBu2q1UIl0EWWu8Vr9OBJ5zpMGXoNgmJ4/Mc7c
+         9eX0HXHXlJFJHWZ9YHyXoTso5LrCcGuVe6gsuyNGkwMibDd3Yu7IILCFIEueItlPND47
+         oUvfJlL7LteDtDbrRzt9bnZP3Bv3ZZkFKVocPx+CyoVSZ4EWTCP9//OOV0sdJaJHcMD+
+         wna9zhIbP2bnQQDOgmOeWQphBb+EnGdVKuuCNqfXHyd1XxzOfXPeCRsf4/AcoHumHefG
+         R9AlOeHd8L3ZH5rLLuQlakRYN0wFFUYF1cc3dV7mJ1Ot5ilCZFywhRdHUM+bZIkLaOJc
+         AswQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741955246; x=1742560046;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4AV3UwKKeLK8/P2zg6naYEnpTmcDbmVCSxbXtAHjRV0=;
+        b=P1IoLhxd+gKswczTTZe9FL5iNkig70/aupQ1rhAU6L4dHAKhumdmZwYvVQRNtAkfHG
+         ZMTU0OKrC8QtnfcfECkiq2x/hegvv8pr4xtG/PidGCN2KizUSYGEfJApv1gWP5mcIQbl
+         06LtFGcBBm20+BLICvGGWBnQdzqVRKpq+iAyF/XkFufUfvp2p6hS8JWKDMBlYt3epm+r
+         89Gp0jw1KEAfM7kNMCrfgBb796LS4SnUqXIHb88EYNA1ytrHCluyEWlwFo8ifABcvmsm
+         48tXBZuuHEQbIWIJPXVN+wII959ZjMMRh59l7P21fn91kOayAuEd6UX3WHyKT+v/6QK/
+         Kz0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUGPOMkrcbVuf+4T+RZsBnwjSmmxuiKoO69Jikxc3Ynorxq5fQe7xAiYQnVDUecO2wPKweIbw0c7FjBdAVG@vger.kernel.org, AJvYcCV+Q/KhjZDTrrhQQ9PD9xb6OyJp+oNiNtB4JHCezB+qyWG8moBkTEi9PZz5sbzwqA2EIWhq9BcZ+6JJWuUSAuY=@vger.kernel.org, AJvYcCV+VFFndnBGvJTpvORCgnj663sMGhc3s3ssVHBfnYuQ3BBE3mDSdeRV8m5eWb3+nmBAXbG45xw2U3Jk@vger.kernel.org, AJvYcCVToTdS+kiKk/+rfeRY4BhosQOHtew4HNEAD7PMkfgeYGJndtqt4p4H34uxZuMbUiufjL6HgDGelbnWYath6+qV@vger.kernel.org, AJvYcCWqkzUmwz4MjP4tlxj5va1jVFfBa1roACqYNQnju+FejZcpkGsoOXN3x8VrEN5Y9ksDpt4AYspXfWOt@vger.kernel.org, AJvYcCXUA4gIWE31vcS9C828JU0l6rboUhDnigrPZdsSNN1gnm2U1pIqyGogQNtlyy/VnoNLQZ9652yU9EAYwWA=@vger.kernel.org, AJvYcCXmAFDT3SyREruNDTN8judfJZByzP1xoQYYTam1gIjc5KHd5gVvuawtUqAVEF3h9iZiOsMJLRZX6LFGqxBQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDaEdr8HuI/9/f1wSqvlH38M2/9dnVseeNjOD5I2GaogIImnHl
+	6p579+IQzsTl1W2nd6L2Z3VloeviloEXTgRhJjlaq4ape7vqMsMIIOxV7qKOipz7wI0hgyVO6Tf
+	asQuiJs5RBVYTlOCQkbBiDjfyRq0=
+X-Gm-Gg: ASbGnctw9iQPXdwUUMlK9weOuUhK/5FB5tbVNABx84X5TePUC/Po7y0MeALrCAml1Kj
+	eSHNevWF03Kx6sYTnEvRI1BGZmh0eKT9oT9y0+xwvvOEu6EgYdn6Oexy2VxwK+LBQ3liAVONfHx
+	flUR0RSqT4BNhyGHTMBmbTlUznE2ZyVi0YKAQxO/eP5x82gvepm5VyiKdaXMBn
+X-Google-Smtp-Source: AGHT+IEKKOnXRbT30S7++IXtH98xYqOrgSQijm1XLQMpNWDgXvnnM4WeGBhsPv4Q9qav2mYGodu2muzBpg4PRWQVFUM=
+X-Received: by 2002:a2e:a417:0:b0:30b:f138:1b9f with SMTP id
+ 38308e7fff4ca-30c4a87a668mr7219251fa.17.1741955245674; Fri, 14 Mar 2025
+ 05:27:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Linux logs new warning `gpio gpiochip0:
- gpiochip_add_data_with_key: get_direction failed: -22`
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
- regressions@lists.linux.dev
-References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
- <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
- <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
- <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
- <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de>
- <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
- <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
- <Z78ZK8Sh0cOhMEsH@black.fi.intel.com> <Z78bUPN7kdSnbIjW@black.fi.intel.com>
- <CACMJSevxA8pC2NTQq3jcKCog+o02Y07gVgQydo19YjC9+5Gs6Q@mail.gmail.com>
- <Z78jjr8LMa165CZP@smile.fi.intel.com>
- <dd9d62d5-54fc-4e7e-8508-1b8e22ac28d5@molgen.mpg.de>
- <CAMRc=Mez_3F0NifXLb18_XNH+-Q7D47HVOrYNt37EWsO9z0zgg@mail.gmail.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <CAMRc=Mez_3F0NifXLb18_XNH+-Q7D47HVOrYNt37EWsO9z0zgg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com>
+ <CAJ-ks9=TRDg3g=NG7k97P_5jXpZ4K4v0DxrmJFR+uF0-3zJkXw@mail.gmail.com>
+ <CAJ-ks9=hAwOGtVv0zh9CcH7XOxjGnizvK1QOMAi8nKStocKr2Q@mail.gmail.com>
+ <D8ELW7X9796K.2ZGJS34LDTHOP@proton.me> <CAJ-ks9k1gZ=tLSe6OjuKFgg6=QE5R_Ajo0ZJwZJp08_1LMiODw@mail.gmail.com>
+ <D8ENBWTC8UPH.LLEGZ2D4U7KQ@proton.me> <CAJ-ks9mJ=2hFxfWEkq+9b=atE89sHXa5NBcdVNRd3az6MSv0pA@mail.gmail.com>
+ <D8F76A4JSEXO.2OKKJLAU5OZN@proton.me> <CAJ-ks9n1oGAGSrXYWjvR+_raw8h+skkdfSYpeSuQZ9jEs5q-6Q@mail.gmail.com>
+ <D8FCATTC479L.BDRZBC6TJ51Q@proton.me>
+In-Reply-To: <D8FCATTC479L.BDRZBC6TJ51Q@proton.me>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Fri, 14 Mar 2025 08:26:48 -0400
+X-Gm-Features: AQ5f1Jow9Vznf8dlXUmINTov6itEsoPcxVta92-eK8lvO6ED3NnfFL22pY12X0A
+Message-ID: <CAJ-ks9=Goh4vWq4DqGALhU0aY9AVm4wv1oKiq4jJQfNGRAyRkA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] rust: enable `clippy::as_underscore` lint
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear Bartosz,
+On Thu, Mar 13, 2025 at 2:12=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> On Thu Mar 13, 2025 at 6:50 PM CET, Tamir Duberstein wrote:
+> > On Thu, Mar 13, 2025 at 10:11=E2=80=AFAM Benno Lossin <benno.lossin@pro=
+ton.me> wrote:
+> >>
+> >>
+> >> With doing `allow(clippy::incompatible_msrv)`, I meant doing that
+> >> globally, not having a module to re-export the functions :)
+> >
+> > Yeah, but I think that's too big a hammer. It's a useful warning, and
+> > it doesn't accept per-item configuration.
+>
+> Hmm, I don't think it's as useful. We're going to be using more unstable
+> features until we eventually bump the minimum version when we can
+> disable `RUSTC_BOOTSTRAP=3D1`. From that point onwards, it will be very
+> useful, but before that I don't think that it matters too much. Maybe
+> the others disagree.
 
+I'd rather keep this narrowly scoped for now -- putting the genie back
+in the bottle later is usually harder.
 
-Am 14.03.25 um 13:19 schrieb Bartosz Golaszewski:
-> On Fri, Mar 14, 2025 at 12:54 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->>>>>
->>>>> Brief looking at the error descriptions and the practical use the best (and
->>>>> unique enough) choice may be EBADSLT.
->>>>
->>>> In any case, I proposed to revert to the previous behavior in
->>>> gpiochip_add_data() in my follow-up series so the issue should soon go
->>>> away.
->>>
->>> Yes, I noted. The above is a material to discuss. We can make that semantics
->>> documented and strict and then one may filter out those errors if/when
->>> required.
->>
->> I am still seeing this with 6.14.0-rc6-00022-gb7f94fcf5546. Do you know,
->> if the reverts are going to be in the final 6.14 release?
-> 
-> linux-next should probably be a better point of reference. I'm about
-> to send out my PR to Linus so it'll be in 6.14-rc7 alright.
+> > Why don't we want host programs to have the same warnings applied? Why
+> > don't we want it for all those other crates?
+>
+> I have never looked at the rust hostprogs before, so I'm missing some
+> context here.
+>
+> I didn't enable them, because they are currently being compiled without
+> any unstable features and I thought we might want to keep that. (though
+> I don't really see a reason not to compile them with unstable features
+> that we also use for the kernel crate)
+>
+> > I'd expect we want uniform diagnostics settings throughout which is
+> > why these things are in the Makefile rather than in individual crates
+> > in the first place.
+> >
+> > Your patch sidesteps the problems I'm having by not applying these
+> > lints to host crates, but I think we should.
+>
+> We're probably working on some stuff that Miguel's new build system will
+> do entirely differently. So I wouldn't worry too much about getting it
+> perfect, as it will be removed in a couple cycles.
 
-Awesome. Thank you!
-
-
-Kind regards,
-
-Paul
+I got it working, but it's pretty messy. Let's discuss on v3.
 
