@@ -1,209 +1,142 @@
-Return-Path: <linux-pci+bounces-23785-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23786-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3927EA61FF4
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 23:11:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CC89A6203A
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 23:22:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09C4C1896AE2
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 22:11:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF70F17D506
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 22:22:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C2C01A317D;
-	Fri, 14 Mar 2025 22:11:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92675205AB5;
+	Fri, 14 Mar 2025 22:21:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RigElek/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nQFlgxAW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135BF262BE;
-	Fri, 14 Mar 2025 22:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19B21DE89E;
+	Fri, 14 Mar 2025 22:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741990262; cv=none; b=Z+TsoJ4vsRjBN/NWQ+713AyxBxlChs9x6NKOcoO3GIBjRom1fSiDZstyo0Hyi3IK4wwOpM7ePI6P8UR+Cf47WP8+O0W6zHv5WjDe3ndledei9ESLSfvsm8L+m1Tzr1iGnc74SWL01LOeg+FK7wTSZBJHXEDrTiRJa9ZGyDVlF9k=
+	t=1741990899; cv=none; b=e6UKPRRLbyBwDu0GB+AMOaVpWPIgiyhKUCbCW38khlswhdElFJBXE5+nbEXgAt826OZO1XDQZIthFPpnFRPVGl+6e5D7Oc+RuzAoRk81rz6h13lhA8SKmhG1HsCbsEuSuNI+RO6jHO6IkuMAVT9LY0EFYBzHPTmlzE0kJ1MYP08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741990262; c=relaxed/simple;
-	bh=Xh+a/XWN8QqEqM2NFk/G96MrvApikJtNFQXq2WvNhb8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=cLo1cNrRXYtBRLEu35rsBdUJAg5DbendZNBzaUXjJj7zw4zsH2uLQk1XmxriKOpEA2dWg+C9LOa3aeVCaMPimCn5fN5vfHkawyJs0m+spbCeKYxlgJJ5k+uX8lXtRAGrHYWn+6qZdAesOKo0NTvdtfJX0ZU04gXpbZmXk7qFyCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RigElek/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C284C4CEE3;
-	Fri, 14 Mar 2025 22:11:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741990261;
-	bh=Xh+a/XWN8QqEqM2NFk/G96MrvApikJtNFQXq2WvNhb8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=RigElek/U3wRrB77G3Pwmz/aC+2T3zPaqblr1Wdc0E+Mqfh7tLm5lWd7p4TJBrmky
-	 6SEIBUxpkUx4lhrMLJF9TI+A7hw2HTpoY9X2V2Hh1L9Dd2dxey7hB8zvbUC5uVfzfi
-	 T+1uHluADbGjDq/lZ4oqp88t3lhGah/errOo/VqSl8R1t6VUFy7cMM4CZ3mMqKkDlk
-	 qeR88q1vl2L1gUuEvnbuzv3DWo4BUx7g0vahg9CMg4Xkged4jxUJLOu5Tg/uUAM89n
-	 Fup2of443Y97ocD/AuSp4QcJ8wLYgiDRZHaUYS26c8HnJyGXwgPbwovYSCI3uED1i7
-	 TMQcQFEY6CrmQ==
-Date: Fri, 14 Mar 2025 17:10:59 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v11 06/11] PCI: dwc: Use devicetree 'ranges' property to
- get rid of cpu_addr_fixup() callback
-Message-ID: <20250314221059.GA806127@bhelgaas>
+	s=arc-20240116; t=1741990899; c=relaxed/simple;
+	bh=bNHo813I0F32BNqKbJfaolMlVwl7tD0FMX9RWCWB8Vc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mgpSMWcpIv0zUfg6KAhRWYETVOe8eu1DBEF41y339JvTd86lri8mthr0YJdJNvkSD8L75QHW2FwAM92MkwBPNtr0czRjiT3JBvTDBCQXwzIyVh5Ud8GOSkc35Imid0Q6IP4kwg2rYnNrOebCYa5L99VUIzBkKceje8ugYKleNaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nQFlgxAW; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so22638701fa.2;
+        Fri, 14 Mar 2025 15:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741990895; x=1742595695; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bNHo813I0F32BNqKbJfaolMlVwl7tD0FMX9RWCWB8Vc=;
+        b=nQFlgxAWeRyp5XvSJy2I6SI5gWxlRZ9nIwGM8e0QHz2TlNvyKrv6ryAcEve/ZORFyk
+         P/ilmoeKl19f/IKMqVJHqcM5nA8qZUCMF9LfN/VBa0YgdNgk+LqXI+v7sCQGGIz8v1Kl
+         fIVtoIQAti9rB3+9UT43CzD+kvDrTsuhWdVgKsX8lfZORzz+2mhcr+bag8eYogkutnBY
+         /Mm5SIzeVvsSVlfkttqSETNDHqHIV1Sd+PCAwXZQbAzcgz9rP468i07Y075EIeTsG7k5
+         3WDWrsBs+ANjly7Shw93k/kOsOFzDHNFFaT9y4E1fecsdGedpfNy/QKycsD3m9ixtjpM
+         98Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741990895; x=1742595695;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bNHo813I0F32BNqKbJfaolMlVwl7tD0FMX9RWCWB8Vc=;
+        b=ZjMxqquGARzF63VwxzpQaH7b22yJm2nQKW/IJqrGZl9eBjvLBF36YLldkv0MgjzFJw
+         CprHtIKX0ZD2q+Tm/WNW8vDqnsLS5IxdHnfKWBal6Kyj8j3WOAf2+WBr4vCHX0TG7sp+
+         +Otwbbxvn5UVWJ9RHcg0cBoUBDbXLLeEoR4hWt8uGPMsKD2K7r4T57Gl67KJza9ygk/I
+         IdwEQuVdDj62Bd0V/XvgyYXbvl97j3rC2SV/kGV3XUcz3Y5vtPomPW0ivhwnU+ZRgHPZ
+         7FF5c2Z7n3SQvQCpXx48h2GOwqyYk7Ou8j1ZFbyOsMjnAQvaBhjJ9zq2RM+rXM8ol57R
+         BoIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEjAlunbZ6VH1RiZgRSDgiTXSbzZM7IbLRopv1Vso8YDRtoIIOl5x+9MMG2frxC82UIxkWVq895pV8XBY=@vger.kernel.org, AJvYcCUoTJqU2YQ2AL40wGxUFMV0G753y7ILO8o7fIxPRRuJcAs4h6TcXcPZPR2bMShggcOxKFOPUq/c4L9y@vger.kernel.org, AJvYcCUttC/SF0b+KHZ8/jOHpeipn046y22zFKBiTqUm1vUfuvINSZY9S2VAOxFg7La+sH+ObbV29uzrXkbTPhAt@vger.kernel.org, AJvYcCWTZC6OZFsB2iLW8pdedud66Pt82QGwCkahpM8w6R+S/hAbTs+3jMr/wJ01GX84Y/JBkHv0zKXGOCRYyWqbxBQ=@vger.kernel.org, AJvYcCXBKXgNeFSfSo6kFIOdF7XqA+k3AXjH+T9aSlyERoJ/G4RV8c8TMMLfAbPNw5kBgmaGoB4cGc26Y0AzoXjO@vger.kernel.org, AJvYcCXPPHcjmHg1Xw10vUdsrwjlcIBtfaVE3ja+MpuglEMmYVSsDFniBkSR/Ds++1dygyle84JqnRfAaJh5icSIf2MR@vger.kernel.org, AJvYcCXo13tZhrrRBQcMFCzy+2RCRoVqKKPftkDR5PlZ/nWLWt96YlllTD/n2toj6zZzRJHL9n7iPiPKLGTr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNCR48cdAiaMU0gYfxgmmYn79HRsAk/HObcZsWlcQei/cBr34q
+	jXXMXRtInm7JNvUwspxjtnSQb+XNxW7Iq9+S3tsNXcUEh0fIgcrAQZNu3GnSr4sWgcExx/cYODc
+	hgUo+u5Y/aro7qml/stYPT2L6td0=
+X-Gm-Gg: ASbGncudvqn4RzoEjVNw7axKkbecSbvjXSS10Kjq96ZRhLha60z+h0Q7aFFcO0fxcNg
+	oZ0z5byUS3qsURxm9QYajejBrvYzJexecJAlTDeIwqUzKwFrERXn8eFz78oMDrTgkijZP64W+5B
+	UZH82lZ00Fez5FT0bpzgEZgts7qmdfG8taa8u1OLLH4otZP9fGqk3DDWw+SWWa
+X-Google-Smtp-Source: AGHT+IGyBV9m3L4w8t2OrUSMAwxoyxvAW/4fi81XmciRP3/5Az2O5GNUknnICX9axlKWv4h/L/9eWm6e7JTJiZoyVC4=
+X-Received: by 2002:a05:651c:a0b:b0:30b:d562:c154 with SMTP id
+ 38308e7fff4ca-30c4a875fe6mr14747691fa.19.1741990895355; Fri, 14 Mar 2025
+ 15:21:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9RJbyoFdkiYHXu9@lizhi-Precision-Tower-5810>
+References: <20250314-ptr-as-ptr-v3-0-e7ba61048f4a@gmail.com>
+ <20250314-ptr-as-ptr-v3-6-e7ba61048f4a@gmail.com> <D8G9LZCS7ETL.9UPPQ73CAUQM@proton.me>
+ <CANiq72=JCgdmd+h4_2VguOO9kxdx3OuTqUmpLix3mTLLHLKbZw@mail.gmail.com>
+In-Reply-To: <CANiq72=JCgdmd+h4_2VguOO9kxdx3OuTqUmpLix3mTLLHLKbZw@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Fri, 14 Mar 2025 18:20:59 -0400
+X-Gm-Features: AQ5f1Jp7KldemuJS7KUxPUxPs7sBfWHcTu3t4bd_hn0YFX45gGFgXjsgYG75HQw
+Message-ID: <CAJ-ks9=Ec0xLg81GUYJ07uDzwtwhFkoEdxaa3kNtV6xSjZ57MQ@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] rust: use strict provenance APIs
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Benno Lossin <benno.lossin@proton.me>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 14, 2025 at 11:21:19AM -0400, Frank Li wrote:
-> On Thu, Mar 13, 2025 at 06:56:17PM -0400, Frank Li wrote:
-> > On Thu, Mar 13, 2025 at 05:04:50PM -0500, Bjorn Helgaas wrote:
-> > > On Thu, Mar 13, 2025 at 11:38:42AM -0400, Frank Li wrote:
-> > > > The 'ranges' property at PCI controller parent bus can indicate address
-> > > > translation information. Most system's bus fabric use 1:1 map between input
-> > > > and output address. but some hardware like i.MX8QXP doesn't use 1:1 map.
-> > >
-> > > I think you've used reg["addr_space"] to get the offset for Endpoints
-> > > forever.
+On Fri, Mar 14, 2025 at 6:00=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Fri, Mar 14, 2025 at 9:18=E2=80=AFPM Benno Lossin <benno.lossin@proton=
+.me> wrote:
 > >
-> > Yes, it still need ranges informaiton at parent bus.
+> > I don't know when we'll be bumping the minimum version. IIRC 1.85.0 is
+> > going to be in debian trixie, so eventually we could bump it to that,
+> > but I'm not sure what the time frame will be for that.
 > >
-> > 	bus@000
-> > 	{
-> > 		ranges = <...>; [1] /* still need this */
-> > 		pcie {
-> > 			ranges = <...>;[2]
-> > 		};
-> > 		pcie-ep {};
-> > 	}
-
-Yes, of course. I'm just making the point that the subject/commit log
-says this patch uses 'ranges' but in fact it uses 'reg'.
-
-> > > I just noticed that through v9, you used 'ranges' to get the offset
-> > > for the Root Complex (with "Add parent_bus_offset to resource_entry"),
-> > > and I think v10 switched to use reg["config"] instead.
-> > >
-> > > I think I originally proposed the idea of "Add parent_bus_offset to
-> > > resource_entry" patch, but I think it turned out to be kind of an ugly
-> > > approach.
-> > >
-> > > Anyway, IIUC this v11 patch actually uses reg["config"] to compute the
-> > > offset, not 'ranges', so we should probably update the subject and
-> > > commit log to reflect that, and maybe remove the now-unused bits of
-> > > the devicetree example.
+> > Maybe we can salvage this effort by gating both the lint and the
+> > unstable features on the versions where it works? @Miguel, what's your
+> > opinion?
 > >
-> > We use reg["config"] to detect offset, but still need parent dts's ranges.
-> > There are two ranges, one is at parent pci bus [1], the other is under
-> > 'pci bus' [2].
-> 
-> Beside, luckly dwc use reg["config"] to indicate config space. but dt also
-> define ranges [2] under pcie node, which can also include 'config's space.
-> 
-> cadence also use reg["cfg"] to do that.
-> res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-> 
-> I am not sure why both choose use reg[] instead of [2]ranges under
-> pcie node. But the result make our situation simpler.
-> 
-> > Although use reg["config"], but still need ranges [1]. And information at
-> > ranges [2] also need be correct.
-> >
-> > The whole devicetree example also validate to help write address translate
-> > informaiton.
-> >
-> > > I do worry a little bit about the assumption that the offset of
-> > > reg["config"] is the same as the offset of the other pieces.  The main
-> > > place we use the offset on RCs is for the ATU, and isn't the ATU in
-> > > the MemSpace area at 0x8000_0000 below?
-> >
-> > No, "Bus fabric" only decode input address from "0x7000_0000..UPLIMIT".
-> > Then output address to 0x8000_0000..UPLIMIT. So below 0x8000_0000 never
-> > happen.
+> > We could even make it simple, requiring 1.84 and not bothering with the
+> > older versions.
+>
+> Regarding Debian Trixie: unknown, since my understanding is that it
+> does not have a release date yet, but apparently mid May is the Hard
+> Freeze and then it may take e.g. a month or two to the release.
+>
+> And when it releases, we may want to wait a while before bumping it,
+> depending on how much time has passed since Rust 1.85.0 and depending
+> on whether we managed to get e.g. Ubuntu LTSs to provide a versioned
+> package etc.
+>
+> If something simple works, then let's just go for that -- we do not
+> care too much about older versions for linting purposes, since people
+> should be testing with the latest stable too anyway.
 
-Minor miscommunication, I think.   I didn't mean there were addresses
-smaller than 0x8000_0000; I meant that in the picture, MemSpace at
-0x8000_0000 is below CfgSpace at 0x8ff0_0000.  The important point is
-that CfgSpace is a separate region from MemSpace, and we're applying
-the CfgSpace offset to the ATU in MemSpace.
+It's not going to be simple because `rust_common_flags` is defined
+before the config is read, which means I'll have to sprinkle
+conditional logic in even more places to enable the lints.
 
-I think it's OK to assume that for now.  AFAICS there is nothing in
-devicetree that explicitly mentions the ATU input address space; it's
-just implicitly part of the intermediate address space described by
-the bus@5f000000 'ranges'.
-
-> > > It's great that in this case the 0x7ff0_0000 to 0x8ff0_0000 "config"
-> > > offset is the same as the 0x7000_0000 to 0x8000_0000 MemSpace offset,
-> > > but I don't know that this is guaranteed for all designs.
-> >
-> > So far, it is the same for use dwc chips. If we meet difference, we can
-> > add later.
-> >
-> > reg["config"] only simplied our implement base on the offset is the same.
-> > But whole concept is unchanged.
-
-> > > > See below diagram:
-> > > >
-> > > >             ┌─────────┐                    ┌────────────┐
-> > > >  ┌─────┐    │         │ IA: 0x8ff8_0000    │            │
-> > > >  │ CPU ├───►│   ┌────►├─────────────────┐  │ PCI        │
-> > > >  └─────┘    │   │     │ IA: 0x8ff0_0000 │  │            │
-> > > >   CPU Addr  │   │  ┌─►├─────────────┐   │  │ Controller │
-> > > > 0x7ff8_0000─┼───┘  │  │             │   │  │            │
-> > > >             │      │  │             │   │  │            │   PCI Addr
-> > > > 0x7ff0_0000─┼──────┘  │             │   └──► IOSpace   ─┼────────────►
-> > > >             │         │             │      │            │    0
-> > > > 0x7000_0000─┼────────►├─────────┐   │      │            │
-> > > >             └─────────┘         │   └──────► CfgSpace  ─┼────────────►
-> > > >              BUS Fabric         │          │            │    0
-> > > >                                 │          │            │
-> > > >                                 └──────────► MemSpace  ─┼────────────►
-> > > >                         IA: 0x8000_0000    │            │  0x8000_0000
-> > > >                                            └────────────┘
-> > > >
-> > > > bus@5f000000 {
-> > > > 	compatible = "simple-bus";
-> > > > 	#address-cells = <1>;
-> > > > 	#size-cells = <1>;
-> > > > 	ranges = <0x80000000 0x0 0x70000000 0x10000000>;
-> > > >
-> > > > 	pcie@5f010000 {
-> > > > 		compatible = "fsl,imx8q-pcie";
-> > > > 		reg = <0x5f010000 0x10000>, <0x8ff00000 0x80000>;
-> > > > 		reg-names = "dbi", "config";
-
-> > > > 		#address-cells = <3>;
-> > > > 		#size-cells = <2>;
-> > > > 		device_type = "pci";
-> > > > 		bus-range = <0x00 0xff>;
-> > > > 		ranges = <0x81000000 0 0x00000000 0x8ff80000 0 0x00010000>,
-> > > > 			 <0x82000000 0 0x80000000 0x80000000 0 0x0ff00000>;
-
-Of course we need this 'ranges' to describe the translation between
-intermediate addresses and PCI bus addresses.  My point is that this
-is not relevant to the parent bus offset we're computing in this
-patch.
-
-So I think for purposes of this patch, we can omit pcie@5f010000
-#address-cells and everything after it.
-
-Bjorn
+The most minimal version of this patch would drop all the build system
+changes and just have conditionally compiled polyfills for the strict
+provenance APIs. Are folks OK with that?
 
