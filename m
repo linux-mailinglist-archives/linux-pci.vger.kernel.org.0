@@ -1,59 +1,59 @@
-Return-Path: <linux-pci+bounces-23703-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23704-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46ECFA6088F
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 06:57:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A056FA60894
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 06:57:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1526C19C2853
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 05:57:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3AA813B2092
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 05:57:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A0FF14900B;
-	Fri, 14 Mar 2025 05:57:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 882D61519B5;
+	Fri, 14 Mar 2025 05:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="XyJt5B2L"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Ob/zbP2C"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2065.outbound.protection.outlook.com [40.92.42.65])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2060.outbound.protection.outlook.com [40.92.42.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA1A1487D1;
-	Fri, 14 Mar 2025 05:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEEF51411DE;
+	Fri, 14 Mar 2025 05:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741931825; cv=fail; b=DTu4xUHLzyY1wU70UiJduIhCmB0SnQv1DOwkJCn6up2h3PR/CNsfE8Qaqg6eCNkrBTO+Y7OUWVW8cdR/IcqYQufFXH1LLp4czT6IS6d6K1Cpk0EJGZP5GjoPMR80YwIlhIs4k0sgXXNWssgQaDrBwAh5j6acQyEH4XJFq1DDazc=
+	t=1741931833; cv=fail; b=T7NdJqu5a7YPbIPB1OFiEqyG3vZIIqr9hVUQNs7HOTMTNcu1W1m3jI0ph2RBZJV1Bb+fOsShUxdkX5W9KbT27piEdCAL2jR8GOAGqGKiv2x4FBU8jCqBZuC7k0HzB7enETbBhGh83W8y3tq9PkP9zMtkPQF/dlQh9gFurzyoo4U=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741931825; c=relaxed/simple;
-	bh=GWCOZ9rcNI1AJM9h62bURuAJSOOf4qg4mjUUYbeDA/c=;
+	s=arc-20240116; t=1741931833; c=relaxed/simple;
+	bh=GcuIdE1Q6MdfQMJ7tRiZMyGHB/gT7Y9AwftcT8y1+bA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=a9ovEQTmkEKW+onZ+06RwLJerZQQy/uLluzwr9G7WsFPZbFXUQQ+KEqCIjy+NgKp+nFwWwfMe1pyI1E3kC8avrc4AhhqGyHDCbSuylQPcfhuffGJ4QNy1TOwypgGYmm6DUgzRa4+tBv6bIR8iYJs/oNji85g27+GqvffO346xUI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=XyJt5B2L; arc=fail smtp.client-ip=40.92.42.65
+	 Content-Type:MIME-Version; b=Ai8Ow1CQ8e+u9YLBjuDVa9xywFK5/W+xCRj4sanIJ+TjgANK+JYYRzaRysIBc5hkQRZEhi+xGcN5ZI4TuG9IevnL2o89ve2q4hzjIH2o1F12hg25h8L5TOvfyYrGp/1tR+Snx4vF+D3UYdB1qVkC+5DwIRZanLnBj7WF5H7OVzE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Ob/zbP2C; arc=fail smtp.client-ip=40.92.42.60
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=f8xT/T69DmyUCNdagxhwg3LObnWg1u3aw7O+++ZjKWWUZKeLfLPHP7TNDIFc4g2HMRYCBvMtBrhhKdH8KeaPrU8EQrxqK3pC5N5SCl71cFsFKOboyfhO+fhLps+Hmm18J0i/DPvfYbc+yCLo/fN4cyFLTu7BxNG3alcrvTS8tc0TtkcU6gNmyWiwKs2Xt+Rzyhpm7Q4QaKClEvZcmpdFpjO92WzPPGmFdvcqkQLv8s7c/sM3trYhDdupNmv/dqzCpfgszR416xz9E/fH+Rg7weAKOJiRPMztiMvzMKwJdPBIKWglzKr5W8lXAMj1gGsCKCKha7pAikWkLnY40d+ksA==
+ b=EunJHnhyniNngr7HPS9T0kuuVbIR7aNncmW3UWW0OH9kk/nHO6vk1xRk0hyvSSYdQrjn3MHiDMMyXWUT1WSCZfwcLpqYuKQbHPjd/D+Fgr8cZwwSU8+XjrVg5XsRAw/acn3ZieMOsJl5mQStOMgOorEktPqbRkbEDP05I+rhcQVuIaXOnGgymZQroKvcEDf9bMMLVXRZaToUP+DyhUnScowQPYYGQwK1+6MXvcFH9FURVM6QdaaatMhGGBhZBt2VDsdQs4Bu3qcKGqLy1prwlXkbJou5ljjbvTQjQodsTvwu0Deo7cisCaEyMIku9yO/MR6PAAdlCpJ3IAP5Ugyaig==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/rb4Fz2eLhjsOK8TaETEHiImaJpPwH1MFsiLK9uFQBY=;
- b=Z4ot7MksPvD34JlsyTlzqtb9eatsO0qFRGVq5/fqzj1zR2wGthP9M4/q4KGr1Y6Xpl9HVuPmHDxDC73YNx+Y9Q6uxqaG70PqzfNgigvSrWdMwF931Lc56ycmRf3Htuew8MGcGTy+fLgL2Imp3USnI/MmL2T1Mrsb+gx26fmEa4SODkM2d2sYx2SMLcQYsDkJnBPpGutMUFz15G07GCB7sHdQEWEqWkj1sOUKykP2jelrApix4uo0FsnYaY0zFatjMjecANLAnGkovyJEOpk5KSdNDLRuaArAQhclBhBROXw66+B1FsCVOkALDZZjqno6Nq3qyfidbEGSvapwMBdTiA==
+ bh=1q9QHU3Yf1rWjFON0rZ5Q36nGPUdQ9v7HXgosXo5x84=;
+ b=viyOhJFv+gLtkDImw032Yg2uozjU114pxGGCaZNuRz6MIV55EEAme+LC/GDXq9+mSewz6mzSyZaqCLQ5iQWdrINzwdogU0zm6Gym31qX0xRQ43HhDfIt1JoPCMkLY417rpWeFXWx6qgdSb/XhGN7Kg1uuG0/igFO+7YdCx1Idgg8Dv0Yho4ZjZETS5W4GDgCzLopJzQfx4DlEcAdAjKL05U6qde261FMYqJIYACijrG0YKCfyyivnWOlp5gh0ImsYLZEupAIzEtCL9RLLq5A9n8Iwrb9e2VGPXDfJuzISLeSg8AIl4fTrSnbyem09qr98pcgcdZ5l60vSqMHpzyQ1w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/rb4Fz2eLhjsOK8TaETEHiImaJpPwH1MFsiLK9uFQBY=;
- b=XyJt5B2LS/xC+dLW3F97gRB1c37vro0bKQbDqaaJ8sXc+RwQ+F63Gk1EHDGOmQnyApgM4dnceX8rdXzGA2Ee7eyAhgVAqV4QiPLDRVWDzDFm9BLvd/sQPkrQYT+z7xw5lNzao1Rkq8kwwyv7zMtBjICNnXn4f+phfya0iT6WPxFnRdP0RPpIow7SuHpIs6VRfFQebddqgSCLeie974t8Zj+PCpXinAp7ydCySUBpvQCoZC3xgIf3zU3OvpeEerQqe0ljaMQuSZco97esf2Ex+Et6WacMl6jWU4Lk+a45sFWO+kIERX8gNoHb+ucS3BVC/nWftZzKq3ju2Gcga+UM+A==
+ bh=1q9QHU3Yf1rWjFON0rZ5Q36nGPUdQ9v7HXgosXo5x84=;
+ b=Ob/zbP2CHrOaD28l8kPcIZiOPk1PCBADJGOAuD1WC/Q9S0PgtjX38IAERAP1VkemMG/hzCQoEQX5sJb2VvGm2KUy684+O2LfvRqrY85Id4ZzWobQg9hJfgeXUv3KNkiqtD1lF9DvMGGS54yFURZN/uopU/dgUUx47Zvn16aDRRwrOKRpqrd9yZk4bx85mRIqG2XjlAZ8+fP/qO2f0/FjBkoy1gC0E9niKyY/z/ygyAqzUPm77mY6wCkRlXhNVSTsqbHVab2DFZxsdXUfh369QsUCMXfFrhxzGhPrGbbjRxV+mdIGR7sIH8fUBkIyDHMCGulAamQQy/MHtpXlVZcm0A==
 Received: from DS7PR19MB8883.namprd19.prod.outlook.com (2603:10b6:8:253::16)
  by SA3PR19MB7795.namprd19.prod.outlook.com (2603:10b6:806:300::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.27; Fri, 14 Mar
- 2025 05:57:01 +0000
+ 2025 05:57:09 +0000
 Received: from DS7PR19MB8883.namprd19.prod.outlook.com
  ([fe80::e0c2:5b31:534:4305]) by DS7PR19MB8883.namprd19.prod.outlook.com
  ([fe80::e0c2:5b31:534:4305%6]) with mapi id 15.20.8534.027; Fri, 14 Mar 2025
- 05:57:01 +0000
+ 05:57:09 +0000
 From: George Moussalem <george.moussalem@outlook.com>
 To: linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
@@ -77,21 +77,21 @@ To: linux-arm-msm@vger.kernel.org,
 	vkoul@kernel.org,
 	george.moussalem@outlook.com
 Cc: quic_srichara@quicinc.com
-Subject: [PATCH v4 2/6] phy: qualcomm: qcom-uniphy-pcie 28LP add support for IPQ5018
-Date: Fri, 14 Mar 2025 09:56:40 +0400
+Subject: [PATCH v4 3/6] dt-bindings: PCI: qcom: Add IPQ5018 SoC
+Date: Fri, 14 Mar 2025 09:56:41 +0400
 Message-ID:
- <DS7PR19MB88838E65D078157F28A110FD9DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
+ <DS7PR19MB88834CAC414A0C2B4D71D57C9DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250314055644.32705-1-george.moussalem@outlook.com>
 References: <DS7PR19MB8883F2538AA7D047E13C102B9DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
  <20250314055644.32705-1-george.moussalem@outlook.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: FR5P281CA0004.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f2::13) To DS7PR19MB8883.namprd19.prod.outlook.com
+X-ClientProxiedBy: FR3P281CA0143.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:95::6) To DS7PR19MB8883.namprd19.prod.outlook.com
  (2603:10b6:8:253::16)
 X-Microsoft-Original-Message-ID:
- <20250314055644.32705-2-george.moussalem@outlook.com>
+ <20250314055644.32705-3-george.moussalem@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -101,58 +101,59 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DS7PR19MB8883:EE_|SA3PR19MB7795:EE_
-X-MS-Office365-Filtering-Correlation-Id: efff2487-0ef0-46e0-a0db-08dd62bd09c0
+X-MS-Office365-Filtering-Correlation-Id: 2aeedb7f-a82d-4ecd-d677-08dd62bd0e73
 X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|5072599009|15080799006|8060799006|19110799003|461199028|7092599003|3412199025|440099028|1710799026;
+	BCL:0;ARA:14566002|5072599009|15080799006|8060799006|19110799003|461199028|7092599003|41001999003|3412199025|440099028|1710799026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?+AD7Byy6fmkCgmEFwEU3PggeFp3EHVzzXY3CPMdRPkS2j+M9Zj6kkc6iYYpR?=
- =?us-ascii?Q?n6gcPHb70+tSQtW5GnUEZitKEmDRnfbxy8UY2/tnwuoqKwuvvGfpaf2JyopL?=
- =?us-ascii?Q?uyt/Ek/7xZAu1TUIU3nahG9fhnT7Sg8ETtoyLUnOSqSYujTbP/5ihJeBp0+U?=
- =?us-ascii?Q?Jlu8yl3X4E9VCFSq75QKinRYag7ju+/4X0QAPQZQb86uZ84S2GKddi6WYw8r?=
- =?us-ascii?Q?ykgl4beqQB6/9viMWiW+nXYNzZirnP0nlU+0UiibiMuCVcJloo+13JurKFRv?=
- =?us-ascii?Q?wkVim9QgS8uDrxEZu0wam9AAapd/giXUbfF/MIBgryS7RDI28tjDP8O5DGZf?=
- =?us-ascii?Q?hiWBAN1piep2il32SfSdz9wHCCeG1kCBT8fruFCrdAH6Sva3eyFPNEw3aWli?=
- =?us-ascii?Q?WI8Ujx54yQn9VGLWqiMvmkUxrlrCNTrMWDshdy8Fu1fSA310DLKyCMBcpFy4?=
- =?us-ascii?Q?QkX8uMN/g6s66WrIO5Td4QpXahMhw2nUPSAeGwTMT9so0NEWikHKVX9duT18?=
- =?us-ascii?Q?R+eNUTCjYTSq+66nye9sJhBxZTq7iTtOqmGtQUZx9pzwbe/SenGYlj/p3W1q?=
- =?us-ascii?Q?XQzw8sdxQ6rxq7+6mvoMEZ2fYmfOypKjiCtt12qbuliUzhwZqaAM2ujifH0V?=
- =?us-ascii?Q?sxNMzdNV9MIp2hPxcUTH6wfCg2koGVEPmonXPGasVf7sFzwp6FTdF/XkFhwi?=
- =?us-ascii?Q?inPqVmZJB5jO9cdlMmftMtsE/uwfM+cDgxDpo9Zte6hiquc6SPWTOZDey/ty?=
- =?us-ascii?Q?wMUkoz0gAGZknnGSrsV8JB98WZpNs4JIHaBMCeZN/tX5JNY5IaxvL1Hrxo3p?=
- =?us-ascii?Q?xN8Ib6C+OeashBZjXKq9fJyqCcTa8xHj29d6Tku+78PMDrwv3XSa2Drmmril?=
- =?us-ascii?Q?bhtNs2U4LCzoKrMjh4lzK97XJc8qSZIDsruhXtVlY67bqQ18oA9EdgXn2lU5?=
- =?us-ascii?Q?vMv/7ATjFIq1VOVZkcZKg5zWUTHcT6wDnj0FTkfxLWoKsyRIS9W9ghXBMPzd?=
- =?us-ascii?Q?38o3CfBM6t5xRjANKwy35oRtVuVJYr3CMhoR/2ffsNJpIEPkEdQy3jYPvBBn?=
- =?us-ascii?Q?1l1algQfSrVRMmv4h91M4ZonlqR+l+uFoJv5VnoDIonWO3gemak=3D?=
+	=?us-ascii?Q?jukMh8B2Yk5YCVJCIKF2aa67Z7kDNZcERMg9JxLN6GISKvrGhvGuSnuA5rYm?=
+ =?us-ascii?Q?zuko19t5s49BspuS6qw8VqAhJewMNRIH2Xp0Ws17ov46fTzwoopma4/ZYqOo?=
+ =?us-ascii?Q?F1s68pgNn171Scp5bTonGExFDW8BlstTgCtxAbs5AWkfan4rkb26zo3GJmw8?=
+ =?us-ascii?Q?sxs2inU2JygOvHf5S6vlcLb9I70G+UGGYeSL1BodP6fgm2Cq1Q8ReYzgoqjg?=
+ =?us-ascii?Q?R8HDBBTnPFqI1+LXEYU6LbaU83lczND7DiA+NP7nAUcIQSOSQL5sX1o89YW8?=
+ =?us-ascii?Q?IFQKLJtRMv41qrr/rYTRSfWwXUy5UIFCOYkRemNKXDKFResLV1QCP2ODXk1i?=
+ =?us-ascii?Q?Q0UrkxCxuX/KVOO31AUcGvkAewFD/+nWxbEp8wmlQLpIPaEFWhRXG/GsMQpt?=
+ =?us-ascii?Q?6qD1LQTFzQ66ClKxXRqs1OXX16S9CoZ8XRj8FCo4kwOXxeyWJlUfr1i5s+k3?=
+ =?us-ascii?Q?R/31amL+NQpaPHG3fBuwKCyRk/yaWUKih9gu5Ntx+i9yPMAEPrAkY3cifRan?=
+ =?us-ascii?Q?+7TAv0b6Q3GSinc/1b6Mn0Sgk/Pdt6tJRF+vtNrKvwryEly3nKS2Ayv8Fgss?=
+ =?us-ascii?Q?rAf4gLVfVDcmFqnjKQNoMB/5jP8lUttjg/baSHU9DN3YDunwiJIrKFpDVIr5?=
+ =?us-ascii?Q?NbY9bS0vrn9wyV6PQhD3IsOSzUhEP5osKzC9MzVZjGJGBuTQjLKOPhKYGtGI?=
+ =?us-ascii?Q?B0BCMOOG9BF15NwjgJ5qUVfPvxnwH7QrJoVrDqAxn3P5D5ODiTE8W9tBq+5k?=
+ =?us-ascii?Q?KORNBGa/17WqOHe4/crD5tUUuz8RVvRTlNsLn6Dk7O9AjylS8Yip3sHKBtU4?=
+ =?us-ascii?Q?NaPCttA6w++jdyu4kFhKfOjF1gAaMRfO2BTDHPuJfJOyXSuMKn/rQXCI8PtW?=
+ =?us-ascii?Q?4i1SoJ59e0Z9dKR1Hgm2/Z1Q+UcrlDRlwAN6R4PkQ/px8cYZ3jWoT2RhW3l2?=
+ =?us-ascii?Q?uJ64k4tpznc+EutxL5jFNWDcv03fhMqEdBxILFUOGxwQ321y3rzLz7+st9oT?=
+ =?us-ascii?Q?xrphpcaoic2qvL82gqpowwoKrSwPPk3jOPs1gef4ONuEA/jiMrgGXg3f57wX?=
+ =?us-ascii?Q?2ndwQUcrqTlrx5CrCHPGQzH2mmGA6G04EoKE3d/HwKVInfrSqD8/x9XUKXAR?=
+ =?us-ascii?Q?qilZg1FMEn54VXVnYfjFlIPUQXy9t+jPOA=3D=3D?=
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?OzEud1HrngZ1A/10K3ZKiDAJgW5pzAjoHgoDvK7+NmaRyOUukP7999gW2JuA?=
- =?us-ascii?Q?IW1zM+lLtWSltwOBEGFzhXQ8DHsBEt1DnxoX4VV/Rf2+E04CFpsq68Jn8gde?=
- =?us-ascii?Q?dGkT6gA11YX+yjoyuzVQsIKW775rJ5e5lmRRixBk+fJ+b37jMPDYkML9kONq?=
- =?us-ascii?Q?KdTB5IhPBxApShwtTIuOsJyajlldY24aTOTbfG7Z9xYn2ex5xfqyRb0wdPz2?=
- =?us-ascii?Q?X5tgtDyG9+fqmM1KhSjVihdpMEoQ2viT6BPu+ugJ3Z7igTmqrVg/Y7TvzaA9?=
- =?us-ascii?Q?r1RrxtiU0r7g3m+heU6jFTsJgkNNteNQZ/m5/JAIt0gUtnVHfXzqbkRVABoZ?=
- =?us-ascii?Q?a+JcVtDjHw54T5G+ANOkk4sXiyHigbP4UOPutAHR27ms1hkNhsG5BSfvuN5S?=
- =?us-ascii?Q?ZD5pkZuVzle9hXl84KjVEaBVBC4UKjoIAGHAe+CCaxn2afLUt7bfiYSTaCEq?=
- =?us-ascii?Q?o9mfURhCNpo13yStE2Swt6V73m91aezrNdRtWFp0VQJGNMgQyxo1u1PqNEZy?=
- =?us-ascii?Q?z/7LboX3KDCm3bn7KmtdwZ/fUV7Km2jkPujmVwQRGliE+UV4mprRZFvfQyZf?=
- =?us-ascii?Q?upExa4pGnVMqLNx7hk+pEzWs45ydcdUHMHXNGF30ajZA6gqDukd+iQLxiFx6?=
- =?us-ascii?Q?gWzV7pD+QFgfVs7eHou5CHj4jxcRKSo7dRiRiOqfZiEBXJuYy8dcZ1NeO8pE?=
- =?us-ascii?Q?/5Wc2nXNPdAhuQ6iWu4dGBmsY15DuNPSI4TFTynCAdaepsU48eVqc7xj8io4?=
- =?us-ascii?Q?Kv8BYfXORbWK+xA1KlJETvjPZKxjcC0DdF6+wYUwg/SmqNeIkfAOhEkp92Yo?=
- =?us-ascii?Q?8xrl00g071gNf1Y5dGfZAuYCcn4sVLkWAkeD+TgrF73bd0pF7pNq+N/ZVFTe?=
- =?us-ascii?Q?xBK138wKsV0nmi7XLt8oOtXYJQ7iyHCs/n8CS8IykHAbiTct3txDOcRoHdmc?=
- =?us-ascii?Q?5UbjJplRhZyYcWCGPGLOViV+9G1mC2x+lke6JUizxAXWsaGxduQYNdAE24jX?=
- =?us-ascii?Q?g14ScuQnUG/ScSLtg69gvdfRjUdq6+6QJQSEfXk5jsucIFsRC2umu26IZr9A?=
- =?us-ascii?Q?MjxgNHYi+PzTomF+9MuQvKbNmyTI7Ue688fcM+e7N8WaGmTkClvoIaYFqypN?=
- =?us-ascii?Q?N6S3N04mHrgYsnXF4AD+h2xW66YtvqzD5WnyIzeaiVHtMurwPXAHgwx54Yci?=
- =?us-ascii?Q?qdobiwl6er9096i9LaRTv2mRDqCGHtavveVCkW6KIQ0DO11VtPYiWdl5kOFU?=
- =?us-ascii?Q?Sf5YMS+Si3SlM5V5wYEG?=
+	=?us-ascii?Q?CuFQ31tD9OuZfPVGArRDH1IrwqB2wq3ueTRuYyoI67rkv8OWPu1vqcx8sYSL?=
+ =?us-ascii?Q?WnmbD60UIs2ntbuiFIgi20Y4U7G3LRSwFC+dbP6tYlX5t5VUpIhSDY+5Pj0J?=
+ =?us-ascii?Q?zvmpRukY0q8323cSXYhSS8NM1WWqKc6nCgCFVSuDuO9tlsu+EIaUHTyNxXjJ?=
+ =?us-ascii?Q?J2T9PXm2p/BLxOM8f5os2KeIGl12O0GnyW/AS/nxqk3OtRUk/vhGdXUFUz5g?=
+ =?us-ascii?Q?rHsD1IQpE9EftyyKKEnU2cm9wHNPdMbkyLIyz3cfGxSgANJH836ATZA4pmZZ?=
+ =?us-ascii?Q?AkST6IfJvvBiGQcStmlkb6A70UDjl5/PVFIYzAGblk7GNQEzD483a99g8got?=
+ =?us-ascii?Q?M7xMDNreTE+68rHLvroq8ho/k4LyV+tbGgEFpGKizr9qt46feCY1lVqtbukH?=
+ =?us-ascii?Q?uGTVm2dYcKIjkZPgDzCARP0JURm3nzNPW18SxO54Ix/foeQgnYRlVYhYALOa?=
+ =?us-ascii?Q?l8RFwDKUN2ma4l9dlphGbrgc0+nu5qHkf/toPrhIVec4glTVJABgZXFvpifn?=
+ =?us-ascii?Q?e7lhgxE6WPhBW0TZhe3nKUjnq1Qc4BvWmhn2wswv/MOLAheDt7y5R/QcD9Sc?=
+ =?us-ascii?Q?B8yxgkJ50wff0Byipp9YvXxGr84znX/XxbNvhyzRTtV9u8fhuTTlM1A6DrC7?=
+ =?us-ascii?Q?NZNGeHcJlSSVEUZ0qIYii9Z9mvVMfaUZSYNxkTWw81mRpjIFJAB+8ZctW1QE?=
+ =?us-ascii?Q?jldN8B+4XX2Xv96q1s50qccwwBYahoMlqFXltyHpgkbJ89LvOb2S5LXO29iD?=
+ =?us-ascii?Q?svwXtVSJiIS0p3zDZCtN0fv2VPiEU+yqY8AeHaQIxNX4G7wz7au1fqlfDDWI?=
+ =?us-ascii?Q?M99lcw/UFqfBIhn+9oLNpW5WTa3J60tkgjgfUVPe00T/fjswaNkKLjDOSsMo?=
+ =?us-ascii?Q?m2US387De/XLMIsOx47dDysz9fVBTGxKm9U075VIkPbLDyp0STSunxCTWaiD?=
+ =?us-ascii?Q?G4CVY+Pv/gwx8LtWfMjb/aWMS/kz0nMenThoKSV/77A1zg6WOca/Kfi1DzFk?=
+ =?us-ascii?Q?r+vyW+lAuSRI9wJagCkTnSnARuhLFPqU69FbEFFEjYSOlZ3fXk5Y925OLMtF?=
+ =?us-ascii?Q?5VMfDw4u4mkQtYZfsnYB8MGWUyUEd+7ZQAGtwiZ1AVRnbMwMTw2myBT3gNto?=
+ =?us-ascii?Q?33SqLlXDwfUy8nF+Ae7pBdN36qbMYe5q+AR2nJCyTASO/ugNPuffvlM3Hqv1?=
+ =?us-ascii?Q?q37NKIQ9U/bZgpK2ezZHdVm9r0PiFe4/T7OQD/cEt2lFVwrc2Ipo3J8UgxAv?=
+ =?us-ascii?Q?YYgoeFxD7zGxY/T4+Rw2?=
 X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: efff2487-0ef0-46e0-a0db-08dd62bd09c0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2aeedb7f-a82d-4ecd-d677-08dd62bd0e73
 X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB8883.namprd19.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2025 05:57:01.7665
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2025 05:57:09.2799
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -162,86 +163,100 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR19MB7795
 
 From: Nitheesh Sekar <quic_nsekar@quicinc.com>
 
-The Qualcomm UNIPHY PCIe PHY 28LP is found on both IPQ5332 and IPQ5018.
-Adding the PHY init sequence, pipe clock rate, and compatible for IPQ5018.
+Add support for the PCIe controller on the Qualcomm
+IPQ5108 SoC to the bindings.
 
 Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
 Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 ---
- .../phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c  | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c b/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c
-index c8b2a3818880..324c0a5d658e 100644
---- a/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c
-@@ -75,6 +75,40 @@ struct qcom_uniphy_pcie {
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index 8f628939209e..d8befaa558e2 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -21,6 +21,7 @@ properties:
+           - qcom,pcie-apq8064
+           - qcom,pcie-apq8084
+           - qcom,pcie-ipq4019
++          - qcom,pcie-ipq5018
+           - qcom,pcie-ipq6018
+           - qcom,pcie-ipq8064
+           - qcom,pcie-ipq8064-v2
+@@ -322,6 +323,63 @@ allOf:
+             - const: ahb # AHB reset
+             - const: phy_ahb # PHY AHB reset
  
- #define phy_to_dw_phy(x)	container_of((x), struct qca_uni_pcie_phy, phy)
- 
-+static const struct qcom_uniphy_pcie_regs ipq5018_regs[] = {
-+	{
-+		.offset = SSCG_CTRL_REG_4,
-+		.val = 0x1cb9,
-+	}, {
-+		.offset = SSCG_CTRL_REG_5,
-+		.val = 0x023a,
-+	}, {
-+		.offset = SSCG_CTRL_REG_3,
-+		.val = 0xd360,
-+	}, {
-+		.offset = SSCG_CTRL_REG_1,
-+		.val = 0x1,
-+	}, {
-+		.offset = SSCG_CTRL_REG_2,
-+		.val = 0xeb,
-+	}, {
-+		.offset = CDR_CTRL_REG_4,
-+		.val = 0x3f9,
-+	}, {
-+		.offset = CDR_CTRL_REG_5,
-+		.val = 0x1c9,
-+	}, {
-+		.offset = CDR_CTRL_REG_2,
-+		.val = 0x419,
-+	}, {
-+		.offset = CDR_CTRL_REG_1,
-+		.val = 0x200,
-+	}, {
-+		.offset = PCS_INTERNAL_CONTROL_2,
-+		.val = 0xf101,
-+	},
-+};
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,pcie-ipq5018
++    then:
++      properties:
++        reg:
++          minItems: 5
++          maxItems: 5
++        reg-names:
++          items:
++            - const: parf # Qualcomm specific registers
++            - const: dbi # DesignWare PCIe registers
++            - const: elbi # External local bus interface registers
++            - const: atu # ATU address space
++            - const: config # PCIe configuration space
++        clocks:
++          minItems: 6
++          maxItems: 6
++        clock-names:
++          items:
++            - const: iface # PCIe to SysNOC BIU clock
++            - const: axi_m # AXI Master clock
++            - const: axi_s # AXI Slave clock
++            - const: ahb # AHB clock
++            - const: aux # Auxiliary clock
++            - const: axi_bridge # AXI bridge clock
++        resets:
++          minItems: 8
++          maxItems: 8
++        reset-names:
++          items:
++            - const: pipe # PIPE reset
++            - const: sleep # Sleep reset
++            - const: sticky # Core sticky reset
++            - const: axi_m # AXI master reset
++            - const: axi_s # AXI slave reset
++            - const: ahb # AHB reset
++            - const: axi_m_sticky # AXI master sticky reset
++            - const: axi_s_sticky # AXI slave sticky reset
++        interrupts:
++          minItems: 8
++          maxItems: 8
++        interrupt-names:
++          items:
++            - const: msi0
++            - const: msi1
++            - const: msi2
++            - const: msi3
++            - const: msi4
++            - const: msi5
++            - const: msi6
++            - const: msi7
++            - const: global
 +
- static const struct qcom_uniphy_pcie_regs ipq5332_regs[] = {
- 	{
- 		.offset = PHY_CFG_PLLCFG,
-@@ -88,6 +122,14 @@ static const struct qcom_uniphy_pcie_regs ipq5332_regs[] = {
- 	},
- };
- 
-+static const struct qcom_uniphy_pcie_data ipq5018_data = {
-+	.lane_offset	= 0x800,
-+	.phy_type	= PHY_TYPE_PCIE_GEN2,
-+	.init_seq	= ipq5018_regs,
-+	.init_seq_num	= ARRAY_SIZE(ipq5018_regs),
-+	.pipe_clk_rate	= 125 * MEGA,
-+};
-+
- static const struct qcom_uniphy_pcie_data ipq5332_data = {
- 	.lane_offset	= 0x800,
- 	.phy_type	= PHY_TYPE_PCIE_GEN3,
-@@ -212,6 +254,9 @@ static inline int phy_pipe_clk_register(struct qcom_uniphy_pcie *phy, int id)
- 
- static const struct of_device_id qcom_uniphy_pcie_id_table[] = {
- 	{
-+		.compatible = "qcom,ipq5018-uniphy-pcie-phy",
-+		.data = &ipq5018_data,
-+	}, {
- 		.compatible = "qcom,ipq5332-uniphy-pcie-phy",
- 		.data = &ipq5332_data,
- 	}, {
+   - if:
+       properties:
+         compatible:
+@@ -562,6 +620,7 @@ allOf:
+               enum:
+                 - qcom,pcie-apq8064
+                 - qcom,pcie-ipq4019
++                - qcom,pcie-ipq5018
+                 - qcom,pcie-ipq8064
+                 - qcom,pcie-ipq8064v2
+                 - qcom,pcie-ipq8074
 -- 
 2.48.1
 
