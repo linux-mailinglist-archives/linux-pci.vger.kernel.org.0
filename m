@@ -1,159 +1,124 @@
-Return-Path: <linux-pci+bounces-23739-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23740-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7752FA610A4
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 13:10:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A335A610C1
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 13:19:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE91B3B9065
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 12:10:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 946943A7618
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 12:19:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F26691FDA76;
-	Fri, 14 Mar 2025 12:10:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07F711FDA61;
+	Fri, 14 Mar 2025 12:19:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pHH5H6Kl"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="X2UdcpvU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9AD42AA6;
-	Fri, 14 Mar 2025 12:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151BB1C8623
+	for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 12:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741954214; cv=none; b=Pr5beSWVUkXiocHuzV7LixgUu4Z4jWfbOyyqloSgzvanTVcg4Yt/FqcWJj1LwVrRVVD5Kd27THUZ95HK6mRrkyUutpFLMHLRfo3gFil1lo/+TJeNZM8CcvZLzatrxI2Tq0/kUDgtvLoo714Eh0xqBXfI1RGXxOsPXmoXZOCG16w=
+	t=1741954786; cv=none; b=iojgRtKyhRmIxTrG6bQxyl68/Nqj3B1KJnseh2ReHNB5hCauOVmEcle2pm+dR1aLIipX6yDiTnm1pLzijMdxyK3EsABQ4vZ6hgHCTncUYprEZsCXo+hywPDdupEvM7wktQVwU4IlmRuz5KU+5Kwua2jwN2Iat3TuiZTNI2kXwGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741954214; c=relaxed/simple;
-	bh=4sCTvJLapBwOpm0X55LwtP7Vlc9maH/J2LHqPEcDS24=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JKvhp3JVHV9Y4eoydpueO1NH75W5UwFnVzxo5BSZFJ6U5Fw302+UTPv46+CIT9AyviUySLH0zDmOKT6cw87x6PGekoRNqsKT2ocHTPYmgyVFU2oqiHd2OGhKQI/w2SZkZyjPpulss46cKITwaBlzQtf+KzwmcgscFb2oobhTFEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pHH5H6Kl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30717C4CEE3;
-	Fri, 14 Mar 2025 12:10:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741954214;
-	bh=4sCTvJLapBwOpm0X55LwtP7Vlc9maH/J2LHqPEcDS24=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pHH5H6KlvZ6hh0Ou3st6+7EcjoBJMA3lm8HX72Lot+dm5yWxVTN9ckGvYAk3LY0YM
-	 0LFVdcdJb3slSEJDObbQ05dHzkA28c0Y9zPflsSk6lahQLAq8IZIgr4Z9nnddo/WDM
-	 +P4XsRZE0WDj3q1s/srfi/mew55jlBfMUVaQIOwGcMm+szt/akXQYCopC/+ra34rzb
-	 s4nHaKPSLDwBHcNqu8s9lQuFZxnfjb4oTVY2/0mAq3/OWfvNJ1dQtNdcWMmtj4QXPJ
-	 BMqoXBqzNv2KaI8flP/CgDc2tYVuXsnUqqhsUq1AXX05JcleFQjyockQCzXygSH3Gk
-	 V7ar9IhzScikg==
-Message-ID: <886439ee-8f56-413f-9a32-1347fe5ac1d9@kernel.org>
-Date: Fri, 14 Mar 2025 13:10:04 +0100
+	s=arc-20240116; t=1741954786; c=relaxed/simple;
+	bh=h1hX18KbVpNPmbTOpsFY+DB6uWmqCs+Nff2SCawByGA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E8FvKMym+EI2F/yoHFsJU3FZcR1Bg2gL3n+vdsGFCPQ622PZVzVfVKcIFR6y5sINF6z3q8c7wiULamSYTRuuBpsJQLnsmC6fhlPxoIrMzo4Pb3jWBQQ1JGQq3QDZMz2S5erQrwTMmRVrzprJkgYWg1EDB5WMfDdvfiB2WjbQnwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=X2UdcpvU; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54954fa61c9so2490844e87.1
+        for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 05:19:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1741954783; x=1742559583; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h1hX18KbVpNPmbTOpsFY+DB6uWmqCs+Nff2SCawByGA=;
+        b=X2UdcpvU3tV+9KaBi/l+Xt4/hB7/3u90EX2V1sZjxNzJo46WvoTVhVm0pkA3iXKOeZ
+         EJQwHI12qMcTo0/ifdWr/BigsPyfn8OMRCuURggV2lRX4hXHk5vMv70f74wO9Lle29u9
+         dD9od1484UZZI6edRDDFjeAK40rVjbpaO1+WpOemRMa9+G0cxF84FVx0ZWJeXi+JPx+k
+         tu4IJJ6nuiwxJ5b/u3cj5nNsIyRtBPvny2DIzUoMtBenBMBtF8WBNY1Ak3CXta/32Lo+
+         MmX6KaIGpR+kdOrbtKeTWTap/7BHlT0TrEZFxhz5aJgNhFSb7PKgD+0sZHKNn5e0vePB
+         CC4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741954783; x=1742559583;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h1hX18KbVpNPmbTOpsFY+DB6uWmqCs+Nff2SCawByGA=;
+        b=Os50DM5PHKn/cU4cDTvRbImWVCsvcJC/KAHvaPTXixbvZJhltXWxuLWcYT8y5dSIw1
+         rt/iC4rqMTQF2iX3paQexexKhCFYnyhtzDUde9ZFqUmSZ/G205jTZDNMDrojEJTcrFfi
+         xJ9zF0hIZeDf8yPZUnvyOHIc879xgzJGWjAOeOceIcXmvCb/il0iaDHML3oj10SCRwAu
+         zuh0CTecrJPeExTee4WrCk/FOlxGbq8QMRuHQ6QHFHKa4ORAT81FlsEvHwVmGAhTkupN
+         YakG00VITYH7VRk/7Fc2Ckje3twjkc20ZIDIh2uITS9WUGMY63QhUsmfKRBficNzL7Ec
+         k5aA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwdG17w26Oxu/7qd2u8iKHcj+NpMBz860OVGt50BFH6dAEJdwKT5uB0KPjEQsZUsdluMAEvlH1ssc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+zIWtzLkCSmceIMbj/XxcCeh+BRMJrUd49+EuqNK2fMSReI89
+	SZEnTzGJqNhQtHgFbNTQLjX5kGvKoBNNKuMzDNhksZD3SbuugRFTkBJjMi6twIuntpCpNhbjaH3
+	pho6ML6TJnabHdtlkJWlLj2RnIt2Aw48Qf90hwA==
+X-Gm-Gg: ASbGncv+xpBf0TG/oPGTADR2kzR/uHlcQEiSy7PnCsrIZ1kHAsSBEFZSy5UEGP6jvb0
+	Yz1KvE+r9ROLX6JyYoMRNcp07n13LcUNp1Z+K5z12OvVZGLOvQlSs3WeKown7NRo1EEWu5CpHVQ
+	N6TVcXL0Ma9iCkex6aS/wl1hMuaI1ZR8gM6TZxnzC9UWzQXPPqHmd/gX/GzA==
+X-Google-Smtp-Source: AGHT+IHUlazwgUqlZgFfrZNU11dRALAC2f4jB8FB+3YipRbXUqsYKKBJIph8mnoYZoKAXAmHTbx2wTkl6nphw9smOAw=
+X-Received: by 2002:a05:6512:2387:b0:549:4e7b:dcf7 with SMTP id
+ 2adb3069b0e04-549c38f5976mr919503e87.3.1741954783089; Fri, 14 Mar 2025
+ 05:19:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/6] arm64: dts: qcom: ipq5018: Add PCIe related nodes
-To: George Moussalem <george.moussalem@outlook.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
- andersson@kernel.org, bhelgaas@google.com, conor+dt@kernel.org,
- devicetree@vger.kernel.org, lumag@kernel.org, kishon@kernel.org,
- konradybcio@kernel.org, krzk+dt@kernel.org, kw@linux.com,
- lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
- p.zabel@pengutronix.de, quic_nsekar@quicinc.com, robh@kernel.org,
- robimarko@gmail.com, vkoul@kernel.org, quic_srichara@quicinc.com
-References: <DS7PR19MB8883F2538AA7D047E13C102B9DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
- <20250314055644.32705-1-george.moussalem@outlook.com>
- <DS7PR19MB888366F3BFE6262375217FA69DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
- <20250314-perfect-free-oarfish-b153be@krzk-bin>
- <DS7PR19MB8883946B587724F649CA55309DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <DS7PR19MB8883946B587724F649CA55309DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
+ <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
+ <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de> <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
+ <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de> <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
+ <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
+ <Z78ZK8Sh0cOhMEsH@black.fi.intel.com> <Z78bUPN7kdSnbIjW@black.fi.intel.com>
+ <CACMJSevxA8pC2NTQq3jcKCog+o02Y07gVgQydo19YjC9+5Gs6Q@mail.gmail.com>
+ <Z78jjr8LMa165CZP@smile.fi.intel.com> <dd9d62d5-54fc-4e7e-8508-1b8e22ac28d5@molgen.mpg.de>
+In-Reply-To: <dd9d62d5-54fc-4e7e-8508-1b8e22ac28d5@molgen.mpg.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 14 Mar 2025 13:19:32 +0100
+X-Gm-Features: AQ5f1Jpc8BQLbO5f_ziXu7q9Ni5SWD-3N0tS5a8gYVuR7dGbfwA8ldlQAZqteb0
+Message-ID: <CAMRc=Mez_3F0NifXLb18_XNH+-Q7D47HVOrYNt37EWsO9z0zgg@mail.gmail.com>
+Subject: Re: Linux logs new warning `gpio gpiochip0: gpiochip_add_data_with_key:
+ get_direction failed: -22`
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	linux-pci@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 14/03/2025 09:50, George Moussalem wrote:
->> Anyway, your patchset cannot be even applied due to broken threading.
->>
->> We keep pointing to issues in your toolset since more than a week.
->> Sending is so trivial that I do not understand why you keep it having
->> broken:
->>
->> `b4 send`
->> or
->> `git format-patch -v4 --cover-letter -6 && git send-email ./v4-*`
->>
->> NAK
-> 
-> Not disagreeing, but I'm not sure why it still breaks.
-> 
-> The git send-email command is exactly what I used before but I found out 
-> it's not an issue in the toolset itself. Outlook.com SMTP servers 
-> replace the original 'Message-ID' header with their own. That is what 
-> causes threading to break. As a workaround, I first send the cover 
+On Fri, Mar 14, 2025 at 12:54=E2=80=AFPM Paul Menzel <pmenzel@molgen.mpg.de=
+> wrote:
+> >>>
+> >>> Brief looking at the error descriptions and the practical use the bes=
+t (and
+> >>> unique enough) choice may be EBADSLT.
+> >>
+> >> In any case, I proposed to revert to the previous behavior in
+> >> gpiochip_add_data() in my follow-up series so the issue should soon go
+> >> away.
+> >
+> > Yes, I noted. The above is a material to discuss. We can make that sema=
+ntics
+> > documented and strict and then one may filter out those errors if/when
+> > required.
+>
+> I am still seeing this with 6.14.0-rc6-00022-gb7f94fcf5546. Do you know,
+> if the reverts are going to be in the final 6.14 release?
+>
 
-They replace it only in the first message. Why the rest of the emails
-are not replaced? Looking at this thread:
-https://lore.kernel.org/all/TYZPR01MB555632DC209AA69996309B58C9C92@TYZPR01MB5556.apcprd01.prod.exchangelabs.com/
+linux-next should probably be a better point of reference. I'm about
+to send out my PR to Linus so it'll be in 6.14-rc7 alright.
 
-All of them look like replaced.
-
-> letter, lookup the Message-ID value and then send the actual patches 
-> using 'git send-email --in-reply-to=<Message-ID>'. I do see them 
-> threaded in my mail client (Thunderbird) and in:
-> https://lore.kernel.org/all/DS7PR19MB8883F2538AA7D047E13C102B9DD22@DS7PR19MB8883.namprd19.prod.outlook.com/#r
-
-Yeah, but not in b4.
-
-> 
-> If this doesn't work, I may need to switch to a different email address.
-
-I recommend using b4 relay:
-https://b4.docs.kernel.org/en/latest/contributor/send.html
-
-
-Best regards,
-Krzysztof
+Bartosz
 
