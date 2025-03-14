@@ -1,196 +1,178 @@
-Return-Path: <linux-pci+bounces-23782-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23783-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32FF8A61CFC
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 21:44:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FFE9A61F6D
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 22:54:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 144883BCA1C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 20:44:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 315A319C3EBD
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 21:54:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58DDF204F7D;
-	Fri, 14 Mar 2025 20:44:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28CBF1C7007;
+	Fri, 14 Mar 2025 21:54:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="afjIK5bM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ArEqmN43"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2241632D3;
-	Fri, 14 Mar 2025 20:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED882E339D;
+	Fri, 14 Mar 2025 21:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741985089; cv=none; b=djwnzpswAwu/vx4TkRIL3Q4Quc14okRUnZEMHwmCqZ1XCFYaNGglBoEhYXPb0bb3CQXmqUr19qOwB67R8qdPjJmju+FjKFhR6JH7TU2jHhBL/vH2SmLkJm87f2C5gCpp0FFSyUjtnzW4K2hmiid8tJz3M5wjKN+5aqE3+FFl+FM=
+	t=1741989251; cv=none; b=Se8OazMi31paHPCDYhkNA6kTU29BdFvweoP82K1p47yxdGC5GBCo9haZXjO+WcoCQFMvJsVAqMMpaUfP4uriPfzaObVifzzrxXHFAu+W7OZNwJByrxB+JdutwXmcAn536tzutHt/a9hRnuueoHSw0P1j87sP8mebEGCmW5kzHO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741985089; c=relaxed/simple;
-	bh=K38rtCg0kuf5BLUm4oFEtAJew5kJ4vmq8l+3NjU1z5A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XQoh6LkHDybsIrldsTBZzpExkmwnHFBLo3k+LH8otG3WYDyXkFKJ7Xoqa/bETMgEgqP50nGmCGfr9Sz5Ru6P76wbYrWdAmyFYJrEE2oDxVoijTcfp+5dkzVoYFqwAmHNk1fE/Rop7Bbb9OXjLhJ2Mb7/GqUyss/6k9uFOp+DNXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=afjIK5bM; arc=none smtp.client-ip=209.85.208.180
+	s=arc-20240116; t=1741989251; c=relaxed/simple;
+	bh=3ySRYi/Sd40PDjn4ZkfWBFvzSvh7Zl86cTJFo//IHwA=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JQvhemMjuNNV/4HHszs/74GgqY5/hFCP2OZ/DS4cbqwAYsiUIqnV3j7tsj5TWqniTX1n50AxTcgnabgtEViq7x76jfTpXQmxAX4NeA4f721fSODBr1ORsQ/QEROuXxACO+VNeRvyQz8Xa5S3TR8jJwZP/KQFzs/rciY7kBuRJKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ArEqmN43; arc=none smtp.client-ip=209.85.219.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30bf8f5dde5so22616831fa.2;
-        Fri, 14 Mar 2025 13:44:47 -0700 (PDT)
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e8fd49b85eso37804316d6.0;
+        Fri, 14 Mar 2025 14:54:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741985085; x=1742589885; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1741989248; x=1742594048; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WbuICH0xY+23m7hRrkhkpy/RJHHQ5P9b5jI+i1zRw3Q=;
-        b=afjIK5bMN1uPHMEjkGieYEiIlmVyPS+KKv4Ui5l33sE8VgVgTumN2zt0k/R1OZ1Ugf
-         iJW4NceEayc3gvUNELbnSrLq3+6TsMckKNP0+rWzs7ZfCU4/qs1eOOa+3MXEFx3PSYnV
-         bGHl03eJZBZBXhIbV4FmxI6uskpR0ovzfsXukLxpD+4ozst5o8JX2NMrRGCEE2TtJF8G
-         nAfT9V9QyyGCWkVxxNwh2pM/9aDzQJkSjEfE0ot/EAa9m5Vy/LkWpkmLO5UAgS18sMBi
-         6eRZUjJQh4tOwNnMDLtTuUHHCK21ylpJeLf5krWwsNXovLSMkZeOTSqQvmdqcD+OLscu
-         YJGw==
+        bh=1INgftpU8//6utpwPix0dkvaDMfAovl6O8aDIwybLag=;
+        b=ArEqmN43tGER4Npj+iDRhedwn2LZdZkXy+VB1y2M4mi4uN5eunDDU7HpQp7aJidCES
+         BwYwm0PiaoihwCVWE+y2eeJfHZjAyY4/Sr++H847Otmp1wBbp74vShqeP5xayksvi4c5
+         rZ6bVQP77+QIstpLIhNnXDuLPnYaRdxl1EIRuXtey5XWpY+2/L/jUdDRnQRQM/osBmUM
+         Na4mz7Oau9rIWlv1qBmCfekD7f0IfU2qVVQX4yynl3pfNvrRypkLZVYAl2FHbPGRd3i2
+         u8tiq2PuU2TMpC0eWUXecI0o09zg7Ch7QC4+MptWGqex6Ku2KRwrUu5BwRJY2i5dN6Xw
+         97nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741985085; x=1742589885;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1741989248; x=1742594048;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WbuICH0xY+23m7hRrkhkpy/RJHHQ5P9b5jI+i1zRw3Q=;
-        b=T2a2mJWvTo7kCDZtYCP+aWfP0qiiWxKHrCuxj54IoFUT1a1bcWFGlIevGknfhp2gQF
-         dcQ1b0P0MT6Ouw4w3Gyctj5VEYlSTp0qKgGy9YcRxLEIBbDJ9Sy0PwFfe+GnyWxNzxWG
-         YxkE1CdhZCK33L0f+xbgSoYf0aPgHxiIV7j9LvdtGu2LGUlHM761HdsqKVrSafrwXTki
-         CvadUsiVLeh9Gj5VnZO5Gd8oLRuq5vP8SelT/wOmO8pqcqEWwt8yoC4pVUWW5XVyrKNS
-         Hbc57+eNJShB9igRfslEQ4cLBHUNAxiEz/dDy3VZ9RQ7PmEV0dIAlsYJb+sCjMVcDZUr
-         PGAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU/VP1StKsL0+OlysiGg+soldO6xMRqDwS+R7d7R7+HpM/gqP97UNFnOLyzF5mF3e337V1J3P1tf0yeTGrHSPo=@vger.kernel.org, AJvYcCUF2uqqdygaETdklYblOMUwhgeUUx0dcBSe7ChagO/e7LP9zoYmu32xWbqSDkBpNbcQutHbnC8dxuoQJI0=@vger.kernel.org, AJvYcCXezX4bscy4YWF6/bICk+IpvkQ3uEQ6QJwUVT63EwH86c6QA8MvuikBLd2L6vwd69ynHl0vZN965xBI@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUHeDt0GmIMv0f3uj52jq1zaZeI4jSpOMcwmOTL0KG/1SDMhKC
-	jHv7l/Kc2/Tau12YJb3klUnM5g/Cbk4HK9S2oQWC8k3yrw7sAoE69jA9U0Lxum7mqA389SeRfZ0
-	jsJzETaN/SdHum/pYyx3YZHOv2TU=
-X-Gm-Gg: ASbGncvNEpZF/rVWA2vrGGA+MuuyfWN4lCSY/h45izdbxyf3EqRCnme1fD6YieKBpqV
-	ZRpmBEu4ngtWhkSrUhHwGto2DAcp3bcKN9bOoqRelrQ79eBrFibWM42nhmiQRRl5RdlJUFkC76k
-	s2INl1EmNEyynTIwFrX1VnRPxwl1zR2hGf2kHcozibWZbHjQm3tip/7DTHVJEgM+1Pf0gN+A==
-X-Google-Smtp-Source: AGHT+IHyjRUH5bP0g+Qn62uRuFdDAKIS1VuKzputx8lydYnmmk3AzYJzf9o4T+3pIf85TbzIVYTDR1jqyEevJPhekyg=
-X-Received: by 2002:a2e:bc29:0:b0:30b:feb4:ed4 with SMTP id
- 38308e7fff4ca-30c4a8f4854mr13405891fa.31.1741985085005; Fri, 14 Mar 2025
- 13:44:45 -0700 (PDT)
+        bh=1INgftpU8//6utpwPix0dkvaDMfAovl6O8aDIwybLag=;
+        b=e3PE2gcqmGKYoo8GkgXD9O6zoykzKMWEyZhjvZIW5BiXUqsjUiNAjd2aEjhmO2DBie
+         7xtQnVwLL8TsRY13rp5/oiehafQ1/ZZ2kXLRv4z8pLRubdRrIRZ20IBlPNwRhk4FtiJT
+         6wTGgw+YKWRtzM/kkswsuYLZPlyU/+2wFl+/nz80O60H7Tq92HjustmCNqOG0hsi4hJe
+         gjIzNJfpDdykbz8jDVP/4Wyc1evCbqNMASgFQRhnVAozORt3RsrNJgXdHXHVqbkwLfBj
+         iJDWKR90EtolQKB7Yim7czXA1EyvB53Q5QDmFgV5dmkumP6JxnPTdA/P5M7z//ol8JKP
+         fdaw==
+X-Forwarded-Encrypted: i=1; AJvYcCULGs++vtUohPtI7kwH2ErPSUNCZ8ygtIswUdrKZWHFgfdZ8EvSz5o5Z2Rrk+jwzLsanqGnJ3CoYcvx@vger.kernel.org, AJvYcCUrBPRKx8AY5MhB8FhAepMy4m43ix6RARMMQ1CBP3NpTdXktgvOghd6DA4vzC+QirU/cpMe2z0MOlfI+FAGwh5T@vger.kernel.org, AJvYcCW7sir0rMapy+IP+M5onkhLCFP4iV4OYwxdq1bMXYrLManOkPkOyjz7ZJCfrRZXwjgLDenHorPIXIr9soQ=@vger.kernel.org, AJvYcCW8zMXvb5yf4n2dZ66IpozvxQAitvEmh2lHQxw2vs9HNsv38P/jYh6qhEkVivlsYkAeFFBqyFC4O4KJ7WuA@vger.kernel.org, AJvYcCX9s4N4gs4MEBFrkRrNjwIHboHyxHQdNR7VzTHItr0M5ymPwXgi98Ie8ioZQpgOgrqNkt5ST4mitHsf@vger.kernel.org, AJvYcCXIoVJgQ32gKfCRU9eOfQp1e19K6Vuiad9WzR5osbyH4jA4z6oUEegnKP+Y9iPXKizlSeMnbw9k3sZWbKZ0cCE=@vger.kernel.org, AJvYcCXaqDA045IPpAMHhcIqH+MrastMnH3ZqCm7v0s/aFvvzKaZKBNctQR5DO1w84Tf/2AnfBBbkkWfBi09UBws@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGA6soMDIHPO1jOAwEnSJTcapEJLiSdvhGGstZcmv3/737sWG3
+	LcwuNE5PepH82OIuVP/qHjWfVtKHHfCPDL7w/XojkfYPG3avRdZP
+X-Gm-Gg: ASbGncv6EdZhcCElBglpreMx8D6ESkEWTUY3/JJjX4Zcc47A5ptVXWLAgZa+fpov5de
+	sA1aAkgfD9dH9I4leSyWTFzOr2eKFKQkkHBf92M2nrEBJ1igB97UGkY880nwkZkFe9OwvLVmsEz
+	dnoTF0XWvbJTWMFLCSGUsaLECdtnWCXeMlQ1Yxp/uQm/UsEE9vVoUq+DAb9Sk4i4bmT1zat15OK
+	EBNeZxp+aOc87ACkBeLlaFsitmR/kagtyJVvUlSDNXCep9KOr/Y5QHcS2bW9LgxH1Bz6yh6dYF3
+	YueucE9TKmYwhIkboYVlK1moKklurZYnrNnBkuntI56JQT461x8coePjqkkz+uwDi/K45UpDBkS
+	KYc2DqDh6HiBRPVW9exVR9NSzXVPrgOWgaTg=
+X-Google-Smtp-Source: AGHT+IGAwnaAynl9Gr+G/DxD2zI2CDyrYhwDggix83306UsT8eqpNyOhXY+jcoxQkv5jp5vlniAvUA==
+X-Received: by 2002:a05:6214:d49:b0:6ea:d388:dc09 with SMTP id 6a1803df08f44-6eaea9e8ad0mr74053736d6.8.1741989248192;
+        Fri, 14 Mar 2025 14:54:08 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-476bb6082bfsm27676711cf.8.2025.03.14.14.54.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 14:54:07 -0700 (PDT)
+Message-ID: <67d4a57f.c80a0220.16ff45.9cf1@mx.google.com>
+X-Google-Original-Message-ID: <Z9Sle_2_JKZyc9bP@winterfell.>
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfauth.phl.internal (Postfix) with ESMTP id E663D1200043;
+	Fri, 14 Mar 2025 17:54:06 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-07.internal (MEProxy); Fri, 14 Mar 2025 17:54:06 -0400
+X-ME-Sender: <xms:faXUZ1VnJ9QSQgj9k3EGImC4wqa0NucDyDri1GFd0UbzmDXgZQQXgw>
+    <xme:faXUZ1l57_s8u58-vaOZT4ST4OkK_uGkPoKpGdTR4KBV5TsK5goknGk7XdwTkYp4c
+    _-rrhSxYhzuQ3B63Q>
+X-ME-Received: <xmr:faXUZxb5aG_NV8Upn1KOkcVLuigoymCm6pyliIMdF1evFRoyeOL4-liZ4k0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeduleeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeejiefhtdeuvdegvddtudffgfegfeehgfdt
+    iedvveevleevhfekhefftdekieehvdenucffohhmrghinheprhhushhtqdhlrghnghdroh
+    hrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegs
+    ohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeige
+    dqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihig
+    mhgvrdhnrghmvgdpnhgspghrtghpthhtohepfedvpdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopehtrghmihhrugesghhmrghilhdrtghomhdprhgtphhtthhopehmrghsrghh
+    ihhrohihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnrghthhgrnheskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtohepnhhitgholhgrshesfhhjrghslhgvrdgvuhdprhgtphht
+    thhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhi
+    hnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhn
+    vghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpd
+    hrtghpthhtohepsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgv
+X-ME-Proxy: <xmx:faXUZ4U-p7hGc6MxGQeWJJlJAlyJ9aYzcL92BR0G0So3CK_lq1ZcGw>
+    <xmx:faXUZ_ngQBbI-JQZyEYJoDSiWxbQtGVp2tymuIXDQIOaXNE3POgCog>
+    <xmx:faXUZ1ccMpiBHxQHiL254VrUOfbubOI-JaQWIss-J-F-Q2fFABOcNw>
+    <xmx:faXUZ5HMndfmXQb4aSBdVsIv9H4wPU_zVAUWgBSjbLptklCUswXSBA>
+    <xmx:fqXUZ5ksV_AGS7-TQ7iwaQGGJHUVPF0w1hgI4z6JGQ8EiVIffVjLkAf_>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 14 Mar 2025 17:54:05 -0400 (EDT)
+Date: Fri, 14 Mar 2025 14:54:03 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,	linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org,	rust-for-linux@vger.kernel.org,
+ linux-kselftest@vger.kernel.org,	kunit-dev@googlegroups.com,
+ linux-pci@vger.kernel.org,	linux-block@vger.kernel.org,
+ devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] rust: use strict provenance APIs
+References: <20250314-ptr-as-ptr-v3-0-e7ba61048f4a@gmail.com>
+ <20250314-ptr-as-ptr-v3-6-e7ba61048f4a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307-no-offset-v1-0-0c728f63b69c@gmail.com>
- <20250307-no-offset-v1-2-0c728f63b69c@gmail.com> <D8G8DV3PX8VX.2WHSM0TWH8JWV@proton.me>
-In-Reply-To: <D8G8DV3PX8VX.2WHSM0TWH8JWV@proton.me>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 14 Mar 2025 16:44:08 -0400
-X-Gm-Features: AQ5f1JqK-ZmY1G6R0T76WtY--7gK8sc6Jlrs7D3Ueck0gX06YyrRpp9KYLIz3RI
-Message-ID: <CAJ-ks9m2ZHguB9N9-WM0EsO5MjaZ9yRamo_9NytAdzaDdb9aWQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] rust: workqueue: remove HasWork::OFFSET
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250314-ptr-as-ptr-v3-6-e7ba61048f4a@gmail.com>
 
-On Fri, Mar 14, 2025 at 3:20=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
-e> wrote:
->
-> On Fri Mar 7, 2025 at 10:58 PM CET, Tamir Duberstein wrote:
-> > Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
-> > the interface of `HasWork` and replacing pointer arithmetic with
-> > `container_of!`. Remove the provided implementation of
-> > `HasWork::get_work_offset` without replacement; an implementation is
-> > already generated in `impl_has_work!`. Remove the `Self: Sized` bound o=
-n
-> > `HasWork::work_container_of` which was apparently necessary to access
-> > `OFFSET` as `OFFSET` no longer exists.
-> >
-> > A similar API change was discussed on the hrtimer series[1].
-> >
-> > Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5b=
-d3bf0ce6cc@kernel.org/ [1]
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > ---
-> >  rust/kernel/workqueue.rs | 45 ++++++++++++----------------------------=
------
-> >  1 file changed, 12 insertions(+), 33 deletions(-)
->
-> What is the motivation of this change? I didn't follow the discussion,
-> so if you explained it there, it would be nice if you could also add it
-> to this commit message.
+On Fri, Mar 14, 2025 at 08:28:10AM -0400, Tamir Duberstein wrote:
+[...]
+> --- a/rust/kernel/alloc.rs
+> +++ b/rust/kernel/alloc.rs
+> @@ -217,7 +217,7 @@ unsafe fn free(ptr: NonNull<u8>, layout: Layout) {
+>  
+>  /// Returns a properly aligned dangling pointer from the given `layout`.
+>  pub(crate) fn dangling_from_layout(layout: Layout) -> NonNull<u8> {
+> -    let ptr = layout.align() as *mut u8;
+> +    let ptr = crate::with_exposed_provenance_mut(layout.align());
 
-The motivation is right at the top: it narrows the interface and
-replaces pointer arithmetic with an existing macro, and then deletes
-unnecessary code.
+Dangling pointers don't have provenance, neither has its provenance been
+exposed. I think should use `without_provenance_mut()` here:
 
-> > diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
-> > index 0cd100d2aefb..0e2e0ecc58a6 100644
-> > --- a/rust/kernel/workqueue.rs
-> > +++ b/rust/kernel/workqueue.rs
-> > @@ -429,51 +429,23 @@ pub unsafe fn raw_get(ptr: *const Self) -> *mut b=
-indings::work_struct {
-> >  ///
-> >  /// # Safety
-> >  ///
-> > -/// The [`OFFSET`] constant must be the offset of a field in `Self` of=
- type [`Work<T, ID>`]. The
-> > -/// methods on this trait must have exactly the behavior that the defi=
-nitions given below have.
-> > +/// The methods on this trait must have exactly the behavior that the =
-definitions given below have.
-> >  ///
-> >  /// [`impl_has_work!`]: crate::impl_has_work
-> > -/// [`OFFSET`]: HasWork::OFFSET
-> >  pub unsafe trait HasWork<T, const ID: u64 =3D 0> {
-> > -    /// The offset of the [`Work<T, ID>`] field.
-> > -    const OFFSET: usize;
-> > -
-> > -    /// Returns the offset of the [`Work<T, ID>`] field.
-> > -    ///
-> > -    /// This method exists because the [`OFFSET`] constant cannot be a=
-ccessed if the type is not
-> > -    /// [`Sized`].
-> > -    ///
-> > -    /// [`OFFSET`]: HasWork::OFFSET
-> > -    #[inline]
-> > -    fn get_work_offset(&self) -> usize {
-> > -        Self::OFFSET
-> > -    }
-> > -
-> >      /// Returns a pointer to the [`Work<T, ID>`] field.
-> >      ///
-> >      /// # Safety
-> >      ///
-> >      /// The provided pointer must point at a valid struct of type `Sel=
-f`.
-> > -    #[inline]
-> > -    unsafe fn raw_get_work(ptr: *mut Self) -> *mut Work<T, ID> {
-> > -        // SAFETY: The caller promises that the pointer is valid.
-> > -        unsafe { (ptr as *mut u8).add(Self::OFFSET) as *mut Work<T, ID=
-> }
-> > -    }
-> > +    unsafe fn raw_get_work(ptr: *mut Self) -> *mut Work<T, ID>;
-> >
-> >      /// Returns a pointer to the struct containing the [`Work<T, ID>`]=
- field.
-> >      ///
-> >      /// # Safety
-> >      ///
-> >      /// The pointer must point at a [`Work<T, ID>`] field in a struct =
-of type `Self`.
-> > -    #[inline]
-> > -    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut Self
-> > -    where
-> > -        Self: Sized,
->
-> This bound is required in order to allow the usage of `dyn HasWork` (ie
-> object safety), so it should stay.
->
-> Maybe add a comment explaining why it's there.
+	https://doc.rust-lang.org/std/ptr/fn.without_provenance_mut.html
 
-I guess a doctest would be better, but I still don't understand why
-the bound is needed. Sorry, can you cite something or explain in more
-detail please?
+see also the source of core::ptr::dangling().
+
+The rest Rust code changes look good to me. Although I would suggest you
+to split this patch into several patches: you can do the conversion from
+"as" pattern to provenance API one file by one file, and this make it
+easier for people to review. And after the conversions are done, you can
+introduce the Makefile changes.
+
+Regards,
+Boqun
+
+[...]
 
