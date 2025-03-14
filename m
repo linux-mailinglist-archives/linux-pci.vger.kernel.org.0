@@ -1,177 +1,257 @@
-Return-Path: <linux-pci+bounces-23732-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23733-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2783A60DC0
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 10:48:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C3D4A60F55
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 11:53:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2915517739A
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 09:48:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7321D16CA13
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 10:53:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0974E1C8623;
-	Fri, 14 Mar 2025 09:48:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E727E1FDA63;
+	Fri, 14 Mar 2025 10:53:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DOHOOvx/"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MdOLMJHU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938571EFFA9
-	for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 09:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783FE1FCFD3
+	for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 10:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741945704; cv=none; b=hCA6AuMizQF/JD6fXJ9zXdn3jGuM1BJQyZUT4uT0ekwCSPbTpzLkSpLBT5Rr1ouSUnXow8jJ1AywCHROChxFD+8dYJjOCRTCyRrsj8XDx+TP84jkBRzQHRyVuZOxJHm0acHD6l52YB+HotgDjA6NGw+zhZ23FCe8ZW6alXvrcqQ=
+	t=1741949593; cv=none; b=aaSUR9jzFn81uq44jArgKLdeLW85flugMJLZGiKa1cgilIzRUjy5Gi0dHB2C318WRlhpeUd6esIvpdRtRbRhYnQP0l1W3Qsc5+xtTLgI+dm1lGmcTriN4QhpUYD8vLPE+DT0aw4IcnBX/F9vBHa7BMFvJABv6SUTPMnVNCHDoYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741945704; c=relaxed/simple;
-	bh=ntrXBr+INEaTdjjIuTH+2ThTesvG7vd12dHm2Z44+kE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TtFN2z6OG13sOVfST9GwchI7xmMxpivz95naQohILTZcN+94+BtTqpwBfDOb7OgDVuU6CoBc06MufRDj5xkalI0RGxdfQ04rIQER5jhQMNNJrMkndlvme3JJo8xgaGKqLF8azrroUZYo/FUrb65hFby21smvX0MoUt3FACBygxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DOHOOvx/; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5439a6179a7so2199003e87.1
-        for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 02:48:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741945701; x=1742550501; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FD6bznsu01iYGcm6ewJe4RuYE462CwiH5xGheRZGZw0=;
-        b=DOHOOvx/mmRGl3azR92KT5IuS/fBneL/4J9rWUDNTWUEiI+oIiI1GoWcLzxcKDwjqi
-         6t3luIJollkQTLEgYJ4o7ZcwY//58IWreObq3DQvFjli1V/tLpzEMEracAOIpE3uuAsF
-         FkUe3mUb8HDpL68m9UMEDjTLVhqkBS9g8wdFtjvp8eG2jejfge7hu9R9eVgSH+i0pemx
-         yu8ZeN8tItXieyFGNWZdnxU4MebAk5bvY6+90x9WbF2f4BZxOas3KPATFMedRZwfCx3p
-         I8mfL/LTXjKdvDHwlPlzFxTejZOgc6hRtU2OCRgcluxZr87CfRLjDXP7rZDRBqirM29p
-         0n6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741945701; x=1742550501;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FD6bznsu01iYGcm6ewJe4RuYE462CwiH5xGheRZGZw0=;
-        b=hWMIQBD9zFfajYS5esnwVelCuHLQf/5peCFXABPop7ntuFdILOl7lGqQRGA/hPCiKv
-         anQXKBQJhIDhiSB5DuvHRVuJ2b+CZb5IoBX5Lildx0cKw3h21Px7VXc16jigMzRrbszN
-         N8Uz9Tyum5eUfpmdKOtzUgCNTCxKkWo3YfF+SydK+o/VSXgF6Sl8YFxMGEw0YKfGKrW9
-         8r0yO/wgOxMM+8N32qfhFaxjgZcM3+xGcDCnec3WAysHKDP74zMow44TxLlea4/mGJLZ
-         S6V54jfxq+NuUhwnuK7p1Fy2+sifdITfe1WSneDWRzmRs562qtRvoji3Fmn+q3Kg2x/z
-         2LmA==
-X-Forwarded-Encrypted: i=1; AJvYcCUoUYJF2xWCGO6e7oiaVnJg0IkpRqd79FEMwhkJD5owciaG5jBlNvQWyN4/Fm+TSsjGbEYVI/GDMOo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4WE0Y3Af2YjKqY3yE8aQdOnwCq75gbKJFHlFWUcZxPeVZlaFl
-	POO02uF/1kExzIz5i1jIQAEc+zERFiyKIIFX3k1b9eQkSuUOTr2a35Qh/919W59Dyo3m/Xqdin0
-	9ozq5zroTLSGIzgyyH0H3IHS2y3r4vwAW3LEDkQ==
-X-Gm-Gg: ASbGncv8zCznNrScGWZHqcfIUuLsEWs6Pw3KntYNLViuIg+1MJKoxu694kx5TsMY7M/
-	sdQN7VnIaJa3f5FgiFvcl9Buq5UCtSHVw1AzGU05GZ/yuUjKeTqloOUSpLx0avKfDWvyWVVx0mZ
-	Fm0EeHhq/y62QKAs+y+JkkBmtXMei7AeE=
-X-Google-Smtp-Source: AGHT+IF+BXUJPCiL1c7sbvSs4gfqol1v20qox8jtJslAuMcy8M2YGJF8kQcGGVoAZtCirbS3VlFVKlXtncaYF36CYig=
-X-Received: by 2002:a05:6512:ba8:b0:549:7145:5d2d with SMTP id
- 2adb3069b0e04-549c3f97f37mr544029e87.16.1741945700612; Fri, 14 Mar 2025
- 02:48:20 -0700 (PDT)
+	s=arc-20240116; t=1741949593; c=relaxed/simple;
+	bh=/diLEnQGyox4m43R89ccR1VQLGWi1rjL6IMj1qEyYJk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=JB0+birr8rSVgfuk56hsrjzuj9Th+0iVgY5TFrMmIjaM5mI2vB5p6QZqqtGZtdWVkaTnJPGosOgKY+q0U17k0a2/fM7/9s7vFC/5MJd4tkJ2hL8WJgyCeuRF9Vk7AT5QYJOqOwW8xV1hzYROjQ14ahYqUH1q8nrQj08lCEA5KxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=MdOLMJHU; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250314105304euoutp0222ceb17e56a16f7b07627b83feece75c~sper-SOu40035700357euoutp02S
+	for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 10:53:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250314105304euoutp0222ceb17e56a16f7b07627b83feece75c~sper-SOu40035700357euoutp02S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1741949584;
+	bh=GDf7n0z9BWmBAuRh2vgU2+KaAQVjN1nhK84TViW1sYU=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=MdOLMJHUTJrYMmIgbHdkLHQa0BaipyVj9vZkqE3i711JoVrfW4o9DXKjSjzsr8dAb
+	 3765vI0Ql8f3XeARsmAjNzYbAYy9o3oHk0ICfZvky3SOIvGEz5GgpsT+He9dahJlqz
+	 5sQLqKJzcCXDJa8VgL+Ji4svN9PQK9fP+6peB5Kw=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20250314105304eucas1p2f89c0fb6d3ceaa92ae0f0da9fa170bc2~sperhfC6B0385003850eucas1p26;
+	Fri, 14 Mar 2025 10:53:04 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id A0.7B.20397.F8A04D76; Fri, 14
+	Mar 2025 10:53:03 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250314105303eucas1p1dcc67c3bc4c94d4a44b5aef03e5de21c~speqyQqt50374503745eucas1p1l;
+	Fri, 14 Mar 2025 10:53:03 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250314105303eusmtrp1590b805c70e1352e73549438ffaf406e~speqxS-3P2086620866eusmtrp1b;
+	Fri, 14 Mar 2025 10:53:03 +0000 (GMT)
+X-AuditID: cbfec7f5-e59c770000004fad-13-67d40a8f112c
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 54.1B.19654.F8A04D76; Fri, 14
+	Mar 2025 10:53:03 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250314105259eusmtip1ca4b7caf6e6d3445b47482f62192d308~spenscCDP0752407524eusmtip1b;
+	Fri, 14 Mar 2025 10:52:59 +0000 (GMT)
+Message-ID: <adb63b87-d8f2-4ae6-90c4-125bde41dc29@samsung.com>
+Date: Fri, 14 Mar 2025 11:52:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <SJ1PR11MB61295DE21A1184AEE0786E25B9D22@SJ1PR11MB6129.namprd11.prod.outlook.com>
-In-Reply-To: <SJ1PR11MB61295DE21A1184AEE0786E25B9D22@SJ1PR11MB6129.namprd11.prod.outlook.com>
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Date: Fri, 14 Mar 2025 17:48:09 +0800
-X-Gm-Features: AQ5f1Jp8h2KQrj8cXSVVa65hkY1o46EVlIPZXIQrn2pTPHmKX_laXhYL3waLDDA
-Message-ID: <CABQgh9HBqbJYnUqJzG+nOY=B8nQ-8Scy8i0ctszBm8rzpocNFw@mail.gmail.com>
-Subject: Re: Regression on linux-next (next-20250312)
-To: "Borah, Chaitanya Kumar" <chaitanya.kumar.borah@intel.com>
-Cc: "robin.murphy@arm.com" <robin.murphy@arm.com>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, 
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, 
-	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>, 
-	"Kurmi, Suresh Kumar" <suresh.kumar.kurmi@intel.com>, "Saarinen, Jani" <jani.saarinen@intel.com>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>, Joerg Roedel
+	<joro@8bytes.org>, Will Deacon <will@kernel.org>, Sagi Grimberg
+	<sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas
+	<yishaih@nvidia.com>, Shameer Kolothum
+	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, Randy
+	Dunlap <rdunlap@infradead.org>
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20250312193249.GI1322339@unreal>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0xTVxzHc+69vbfUlF1KHUemc2tkA5SHUfCYiVHHH3fLtriZbZlLps28
+	K2S81vLQZYsVoUh5CaKFUqAbpQJWcFSYoIa2jlcYA60SQB4yeSjKFKUk0M2OcnHjv8/5fX/f
+	fL/n5PBxUQPpy4+OS2TlcdIYCSkgGtsWeoLyBLdloY904UhXZyLRvCubRBeG80hkSI1C45YM
+	gKovtGJocQ6h4qIOgEo0DzCUWXKJQgW2PoAqZxoopDv7HSpcrMTR9cHN6CeVgUD2Zh2JRkwu
+	Hio3TlCou6ydRJO2HAIZ0pdoZkhDIOvTcR6qffSEQL/eSeWhtKEwZDwr2LOeGbeWYYypzASY
+	yTuTgNHXJzE9I78QTNpvMzzGXBXIVFx7iDH27iSmviaTZOqfFVBMR5GTYMyG48wDczFgrg4o
+	SaYi9wxvv/igYNcRNiY6mZWH7D4siGq+P8VLyN5ydPDJIqkEWX5q4MGH9HY4WtuPqYGAL6Kr
+	ACzPaSXdgoieA1DVQXPCcwA7W3PBS4fDYcE54TyAt+wuwDlmARwe47lZSO+GtfdGlpmg/WB/
+	XQXBzb1gZ/H4Mq+lN8LRwSLKzd50JLQ05uNuFi/tV+uHee4AnDZTUHc7czkAp33g4Hg55maS
+	3grVM+rlqh50MKxuzVjZ2QhPNpQst4N0kwAOOF0rtSOh01KLcewNp9svUxyvh11nsgnOkAGg
+	3jmKcYfTACqnBlfc78ChPxaX4vhLEQGwrjmEG++FvY4xyj2GtCfsn/HiSnjCgkYNzo2F8JRK
+	xG2/BbXttf/FWntv4aeBRLvqXbSrrqlddR3t/7l6QNQAHzZJEStjFdvi2JRghTRWkRQnC/46
+	PrYeLP3srhftjiugano22AYwPrAByMclYiGy22Ui4RHpse9ZefwheVIMq7CB1/iExEf4c0u6
+	TETLpInstyybwMpfqhjfw1eJleLNYe89rrnZpDbOhmft32RY6NmSvylqaOBc2q5Ca8nend2q
+	yy2/88QGAd/17g9avcrb9FmoZV3XqzdfTBaiV7Z3lFxpO08TIUZLm9f0mgTf0AxqPmBs36GL
+	Hzw9t02Tk+yv1w5f80/94kTi87o1/6QcrGyJVPqdKs0//MYxCjQduPfwU1AVkFwdMVvkrYn9
+	pHfDnrvRYX/XYKXfUAeue32ZIvkrdeF4mMMYlJNz40al+k+DPSTiK0XQs4asfT9uFn+4oMt7
+	c2TnyLr7J8u7LjnZibvp8Sfers+ae73z4gZ84uoOocxzrXOgMLzsox0p5sd9uUenAmP837fO
+	K0zDffKICvzzjyWEIkq6NRCXK6T/Av6VCMRIBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJKsWRmVeSWpSXmKPExsVy+t/xu7r9XFfSDa6/4LGYs34Nm8W3/z1s
+	Fqvv9rNZLGnKsHhyoJ3RYuXqo0wWv75YWMyccYLRYvb0F0wWnbM3sFtMOnSN0WLp263sFnOm
+	FlpM+bWU2WLvLW2LhW1LWCwu75rDZnFvzX9Wi/nLnrJbnJ13nM3i2aFeFoslrUDW2zvTWSwO
+	fnjCarHu9XsWi+1Xm1gtWu6YWiybyuUg4/Hk4DwmjzXz1jB6PLv6jNFjwaZSj/P3NrJ4tBx5
+	y+qxeYWWx+I9L5k8Lp8t9di0qpPNY9OnSeweJ2b8ZvHYvKTe48XmmYweu282sHks7pvMGiAS
+	pWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJex6/Fz
+	1oIenYpb73+xNTB2q3YxcnJICJhIfP16gLmLkYtDSGApo8Tdvs3MEAkZiZPTGlghbGGJP9e6
+	2CCK3jNKPGt5zwiS4BWwk1j34B5YEYuAqsSN9YtZIOKCEidnPgGzRQXkJe7fmsEOYgsLuEgc
+	2DYRbIEIUP3KBXdZQYYyC2xllzhyrA/qjC1MEmfvzgbrYBYQl7j1ZD4TiM0mYCjR9RbkDE4O
+	TgE9iZVH2xkhaswkurZ2QdnyEs1bZzNPYBSaheSQWUhGzULSMgtJywJGllWMIqmlxbnpucVG
+	esWJucWleel6yfm5mxiBaWrbsZ9bdjCufPVR7xAjEwfjIUYJDmYlEV6Ly5fThXhTEiurUovy
+	44tKc1KLDzGaAkNjIrOUaHI+MFHmlcQbmhmYGpqYWRqYWpoZK4nzsl05nyYkkJ5YkpqdmlqQ
+	WgTTx8TBKdXAVJLWldx/8Or3ySXH/GzqJkb4cYQ2HnjvIXdj4gqpT1Hx78Prui0/nDA3nNd4
+	7OSm7y2nM+LkrRakvLRwrp/srKTYFn/moHTXj8LKH1r162Rn3C9b9U3dnClQ72Fs3U/FXzFv
+	Tz4p+LxGPKOb2Ttl0XqHm+aX9eannXs6Z80W731BZbGh9x5oiR+8x3Ajid+xtq4qLd6hauET
+	ge1dn17cVJdr3T5DUWfb3okfd3Kls5/T2WrQK79DQ/lCysLuCRX9sw8WOmvOVzx7+fkZK1v+
+	gMVebh+K/nsbcR1xOsIv58j/Iccv1MjyUb28q+ajhetOqDCEpFzJbGVectHqzpyTr74rbzo0
+	w3fGAn1Bhzl7lFiKMxINtZiLihMBoquq1twDAAA=
+X-CMS-MailID: 20250314105303eucas1p1dcc67c3bc4c94d4a44b5aef03e5de21c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648
+References: <cover.1738765879.git.leonro@nvidia.com>
+	<20250220124827.GR53094@unreal>
+	<CGME20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648@eucas1p2.samsung.com>
+	<1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
+	<d408b1c7-eabf-4a1e-861c-b2ddf8bf9f0e@samsung.com>
+	<20250312193249.GI1322339@unreal>
 
-Hi, Borah
+On 12.03.2025 20:32, Leon Romanovsky wrote:
+> On Wed, Mar 12, 2025 at 10:28:32AM +0100, Marek Szyprowski wrote:
+>> Hi Robin
+>>
+>> On 28.02.2025 20:54, Robin Murphy wrote:
+>>> On 20/02/2025 12:48 pm, Leon Romanovsky wrote:
+>>>> On Wed, Feb 05, 2025 at 04:40:20PM +0200, Leon Romanovsky wrote:
+>>>>> From: Leon Romanovsky <leonro@nvidia.com>
+>>>>>
+>>>>> Changelog:
+>>>>> v7:
+>>>>>    * Rebased to v6.14-rc1
+>>>> <...>
+>>>>
+>>>>> Christoph Hellwig (6):
+>>>>>     PCI/P2PDMA: Refactor the p2pdma mapping helpers
+>>>>>     dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
+>>>>>     iommu: generalize the batched sync after map interface
+>>>>>     iommu/dma: Factor out a iommu_dma_map_swiotlb helper
+>>>>>     dma-mapping: add a dma_need_unmap helper
+>>>>>     docs: core-api: document the IOVA-based API
+>>>>>
+>>>>> Leon Romanovsky (11):
+>>>>>     iommu: add kernel-doc for iommu_unmap and iommu_unmap_fast
+>>>>>     dma-mapping: Provide an interface to allow allocate IOVA
+>>>>>     dma-mapping: Implement link/unlink ranges API
+>>>>>     mm/hmm: let users to tag specific PFN with DMA mapped bit
+>>>>>     mm/hmm: provide generic DMA managing logic
+>>>>>     RDMA/umem: Store ODP access mask information in PFN
+>>>>>     RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
+>>>>>       linkage
+>>>>>     RDMA/umem: Separate implicit ODP initialization from explicit ODP
+>>>>>     vfio/mlx5: Explicitly use number of pages instead of allocated
+>>>>> length
+>>>>>     vfio/mlx5: Rewrite create mkey flow to allow better code reuse
+>>>>>     vfio/mlx5: Enable the DMA link API
+>>>>>
+>>>>>    Documentation/core-api/dma-api.rst   |  70 ++++
+>>>>    drivers/infiniband/core/umem_odp.c   | 250 +++++---------
+>>>>>    drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
+>>>>>    drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
+>>>>>    drivers/infiniband/hw/mlx5/umr.c     |  12 +-
+>>>>>    drivers/iommu/dma-iommu.c            | 468
+>>>>> +++++++++++++++++++++++----
+>>>>>    drivers/iommu/iommu.c                |  84 ++---
+>>>>>    drivers/pci/p2pdma.c                 |  38 +--
+>>>>>    drivers/vfio/pci/mlx5/cmd.c          | 375 +++++++++++----------
+>>>>>    drivers/vfio/pci/mlx5/cmd.h          |  35 +-
+>>>>>    drivers/vfio/pci/mlx5/main.c         |  87 +++--
+>>>>>    include/linux/dma-map-ops.h          |  54 ----
+>>>>>    include/linux/dma-mapping.h          |  85 +++++
+>>>>>    include/linux/hmm-dma.h              |  33 ++
+>>>>>    include/linux/hmm.h                  |  21 ++
+>>>>>    include/linux/iommu.h                |   4 +
+>>>>>    include/linux/pci-p2pdma.h           |  84 +++++
+>>>>>    include/rdma/ib_umem_odp.h           |  25 +-
+>>>>>    kernel/dma/direct.c                  |  44 +--
+>>>>>    kernel/dma/mapping.c                 |  18 ++
+>>>>>    mm/hmm.c                             | 264 +++++++++++++--
+>>>>>    21 files changed, 1435 insertions(+), 693 deletions(-)
+>>>>>    create mode 100644 include/linux/hmm-dma.h
+>>>> Kind reminder.
+> <...>
+>
+>> Removing the need for scatterlists was advertised as the main goal of
+>> this new API, but it looks that similar effects can be achieved with
+>> just iterating over the pages and calling page-based DMA API directly.
+> Such iteration can't be enough because P2P pages don't have struct pages,
+> so you can't use reliably and efficiently dma_map_page_attrs() call.
+>
+> The only way to do so is to use dma_map_sg_attrs(), which relies on SG
+> (the one that we want to remove) to map P2P pages.
 
-On Fri, 14 Mar 2025 at 17:18, Borah, Chaitanya Kumar
-<chaitanya.kumar.borah@intel.com> wrote:
->
-> Hello Robin,
->
-> Hope you are doing well. I am Chaitanya from the linux graphics team in Intel.
->
-> This mail is regarding a regression we are seeing in our CI runs[1] on linux-next repository.
->
-> Since the version next-20250312 [2], we are seeing the following regression
->
-> `````````````````````````````````````````````````````````````````````````````````
-> <4>[    6.246790] reg-dummy reg-dummy: late IOMMU probe at driver bind, something fishy here!
-> <4>[    6.246812] WARNING: CPU: 0 PID: 1 at drivers/iommu/iommu.c:449 __iommu_probe_device+0x140/0x570
-> <4>[    6.246822] Modules linked in:
-> <4>[    6.246830] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc6-next-20250312-next-20250312-g9fbcd7b32bf7+ #1
-> <4>[    6.246838] Hardware name: Intel Corporation Arrow Lake Client Platform/MTL-S UDIMM 2DPC EVCRB, BIOS MTLSFWI1.R00.4400.D85.2410100007 10/10/2024
-> <4>[    6.246847] RIP: 0010:__iommu_probe_device+0x140/0x570
-> `````````````````````````````````````````````````````````````````````````````````
-> Details log can be found in [3].
->
-> After bisecting the tree, the following patch [4] seems to be the first "bad" commit
->
-> `````````````````````````````````````````````````````````````````````````````````````````````````````````
-> commit bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c
-> Author: Robin Murphy mailto:robin.murphy@arm.com
-> Date:   Fri Feb 28 15:46:33 2025 +0000
->
->     iommu: Get DT/ACPI parsing into the proper probe path
->
-> `````````````````````````````````````````````````````````````````````````````````````````````````````````
->
-> We also verified that if we revert the patch the issue is not seen.
->
-> Could you please check why the patch causes this regression and provide a fix if necessary?
+That's something I don't get yet. How P2P pages can be used with 
+dma_map_sg_attrs(), but not with dma_map_page_attrs()? Both operate 
+internally on struct page pointer.
 
-I just send one fix caused by this patch
-Just FYI
-
-[PATCH] PCI: declare quirk_huawei_pcie_sva as FIXUP_HEADER
-
-"bcb81ac6ae3c iommu: Get DT/ACPI parsing into the proper probe path"
-changes arm_smmu_probe_device sequence.
-
-From
-pci_bus_add_device(virtfn)
--> pci_fixup_device(pci_fixup_final, dev)
--> arm_smmu_probe_device
-
-To
-pci_device_add(virtfn, virtfn->bus)
--> pci_fixup_device(pci_fixup_header, dev)
--> arm_smmu_probe_device
-
-So declare the fixup as pci_fixup_header to take effect
-before arm_smmu_probe_device.
-
-If your system has fixup, it may need a change '
-from
-DECLARE_PCI_FIXUP_FINAL
-to
-DECLARE_PCI_FIXUP_HEADER
-
-Thanks
-
-
+>> Maybe I missed something. I still see some advantages in this DMA API
+>> extension, but I would also like to see the clear benefits from
+>> introducing it, like perf logs or other benchmark summary.
+> We didn't focus yet on performance, however Christoph mentioned in his
+> block RFC [1] that even simple conversion should improve performance as
+> we are performing one P2P lookup per-bio and not per-SG entry as was
+> before [2]. In addition it decreases memory [3] too.
 >
-> Thank you.
+> [1] https://lore.kernel.org/all/cover.1730037261.git.leon@kernel.org/
+> [2] https://lore.kernel.org/all/34d44537a65aba6ede215a8ad882aeee028b423a.1730037261.git.leon@kernel.org/
+> [3] https://lore.kernel.org/all/383557d0fa1aa393dbab4e1daec94b6cced384ab.1730037261.git.leon@kernel.org/
 >
-> Regards
->
-> Chaitanya
->
-> [1] https://intel-gfx-ci.01.org/tree/linux-next/combined-alt.html?
-> [2] https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20250312
-> [3] https://intel-gfx-ci.01.org/tree/linux-next/next-20250312/bat-arls-6/boot0.txt
-> [4] https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20250312&id=bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c
->
->
+> So clear benefits are:
+> 1. Ability to use native for subsystem structure, e.g. bio for block,
+> umem for RDMA, dmabuf for DRM, e.t.c. It removes current wasteful
+> conversions from and to SG in order to work with DMA API.
+> 2. Batched request and iotlb sync optimizations (perform only once).
+> 3. Avoid very expensive call to pgmap pointer.
+> 4. Expose MMIO over VFIO without hacks (PCI BAR doesn't have struct pages).
+> See this series for such a hack
+> https://lore.kernel.org/all/20250307052248.405803-1-vivek.kasireddy@intel.com/
+
+I see those benefits and I admit that for typical DMA-with-IOMMU case it 
+would improve some things. I think that main concern from Robin was how 
+to handle it for the cases without an IOMMU.
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
 
