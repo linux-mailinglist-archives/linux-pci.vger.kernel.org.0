@@ -1,338 +1,630 @@
-Return-Path: <linux-pci+bounces-23787-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23788-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9548A62186
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 00:21:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33BB6A62209
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 00:42:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C8A764214B5
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 23:21:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6C8C33B365C
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 23:42:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CF3D1EEA29;
-	Fri, 14 Mar 2025 23:21:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 271D51F55EF;
+	Fri, 14 Mar 2025 23:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="XtLqJkQx"
+	dkim=pass (2048-bit key) header.d=antoniohickey.com header.i=@antoniohickey.com header.b="FVSdnVvy";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="R63Xzxpz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012001.outbound.protection.outlook.com [52.101.66.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from a8-87.smtp-out.amazonses.com (a8-87.smtp-out.amazonses.com [54.240.8.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D1A17BA1;
-	Fri, 14 Mar 2025 23:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.1
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741994498; cv=fail; b=aNrmawwECnoZFl+Jc+ahOa3YOM/x9QItHAVhW+mIO0saKwLAZBi3TPwQuTLCJ5BQs0Rr4SiUD/pEZ9bmNDpd/beseyNZxnxIEIwm81KQE7660xRJo5DCzMMp50T7udI/6LhQATq0OOJb4AgPixmQH6QHzWJka6yQ+yI4qY3xwf4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741994498; c=relaxed/simple;
-	bh=FDe35ur7sbRaXzVQcLIvApXVx/ZpWL7S8NRSqZnLTq8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=O9cbKeSJgtaG408Uttu6fRb+3Vs+HBiAqSQGPDJlga0MKzoIKd8xED43A4UewJfH1te0WJblxxnnMwpGJa3VTRYk/8lkI0gsQsDkmkBgNa7QTA2uVxs6h/KFkfWYQ3Fldkm5l2lU9wNOSPsHTOyuL8YJMqdVFFVCkE/SqYwPsBM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=XtLqJkQx; arc=fail smtp.client-ip=52.101.66.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fNap8odovlp2RqLO083uy6RiDhS3HXmxPlFIrAPQXA4yYprXX8cCi12pgAtLO6NAPw4K1ewThciOOjLhTfhfi41EPVbvsBrlKhBwDicWi9pE5NtFRXkRpjPeYIRxbKFdwTVx1bB42Bq2SYrQ7LkBDirXDJFGFGHcSoYi8uRFhYwnXKk6eTE2MTL40qJIMxxlcQSGP89gHzs+OBjmTFErMa+dTi4Qahc35udUovx8jbZGi0B2+cwqkt/l6C5O5oJhyMBxFJJGf/DUsvSjX4nANGTutsRKdTv8gURf/n0TUMuy1icLt0zHxxhyHRJ+jdvHRFTOqNAarF8guaY81k0PQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a6CnTRMtrSlVJCOeQSqbMiON3Bs59pryYXS649HV49Q=;
- b=XyvHxiMnGOkSI+FCuovAOuknVhSbXkxPxlCRu8qsNbvBRhFsniWcLneQJs5D9SpuRCMPGXitPF79scJr0y+4t+rK8eMPmXUJ7AvOBRnUdQo2b9oTBHXClATvgnnvnyYyfq8fP2I5KzdeGgkBWSjfcJNWv3orqJbKPmv1h+mpL5W/vmasZiCVe/cUEchZlVwH0lhepByj0H2uk49C1SsUnRoRr4f+WsCO5jgiBWM7HlSTEVGwEwjDJ//KcM6r6GAV0eLGcFj6GmlbsHWCEEZX22zqc6FrEhG0aEGZlbjX96VmgDBC2iupI0E8F0+vOUuRIQFywJBjZzin2h6GMk+9iQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a6CnTRMtrSlVJCOeQSqbMiON3Bs59pryYXS649HV49Q=;
- b=XtLqJkQxq3GAb7uz/RTFP4WveC0w+/Ze3xdIKr8PRYST1+zz7yZ3tFuS9frwVlmUsw6A2CVqpSsUWZ0pDGaw1AugQBeqr4wp2VKRkttGGj9OoQIT7WKUQA9279yRZVu8t5l24J7mGHMxE5lpDt1g5W2ii16qfpHZMiRSuO26Z9IiWAj1NJB4kw9idgFS2OOduUll8WC4xPlc3hDolqNZG7Y8CwYxWEzXyP6/sLKXPMvXPZleW2rYw/l+78bo/iChquyPXYm7cAIAdTEz84EePKumB1S7Rm4V89f88+pIdwX88UHyQL7LE7jp5Yxgs3XjFH5VqIG0XeZJtwABJlrqsw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DBAPR04MB7384.eurprd04.prod.outlook.com (2603:10a6:10:1b1::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.28; Fri, 14 Mar
- 2025 23:21:32 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%3]) with mapi id 15.20.8511.026; Fri, 14 Mar 2025
- 23:21:32 +0000
-Date: Fri, 14 Mar 2025 19:21:22 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH v11 06/11] PCI: dwc: Use devicetree 'ranges' property to
- get rid of cpu_addr_fixup() callback
-Message-ID: <Z9S58n/6cE5QFRUD@lizhi-Precision-Tower-5810>
-References: <Z9RJbyoFdkiYHXu9@lizhi-Precision-Tower-5810>
- <20250314221059.GA806127@bhelgaas>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250314221059.GA806127@bhelgaas>
-X-ClientProxiedBy: SJ0PR03CA0075.namprd03.prod.outlook.com
- (2603:10b6:a03:331::20) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4090A1F4701;
+	Fri, 14 Mar 2025 23:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.8.87
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741995720; cv=none; b=YhCfkScXd0zjvxCoa7+Q5SUwRqsjUSH3oBNexAn22MvgKnN3wlD41WCtdUAQFzEY3D/56PkaeVu8r8tUm0TufhJpBkTZctNOPCE6zyplLE3bXk85/0QfF9wOwmQeHOJAQuijbVygp4oTgRkosD8tPybOzcROMBpJZxc6x302GD0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741995720; c=relaxed/simple;
+	bh=pHvx9d+HDAMV94DS0MC6Livhm17g6usKXutS7tJNVMU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=laOGloDxPYfbrBFWHffDxzPnbUgdpSwl5OYXN/E2frpYkiFOgwoG9/0d5I7V78l9qd0o4N6dOor+u9gzsCkvlajruN7uINPUlQ5ECL+wb7xTZD+UFu5yjIaKAQNH7Z3ARRx1bKYOuZWh/+DaS/aFgzp5CVJabE0IONeafM2NalI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antoniohickey.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (2048-bit key) header.d=antoniohickey.com header.i=@antoniohickey.com header.b=FVSdnVvy; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=R63Xzxpz; arc=none smtp.client-ip=54.240.8.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antoniohickey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=cgcwyxycg75iw36cao5ku2ksreqpjkvc; d=antoniohickey.com;
+	t=1741995716;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
+	bh=pHvx9d+HDAMV94DS0MC6Livhm17g6usKXutS7tJNVMU=;
+	b=FVSdnVvya9EnaCW4b7nwD25Ii7l7zizG/kW/O49rWuaZIfbcbgAv1jrqE8Z8BYHY
+	yu0FeokjLTICKBNKsAlqX7iSGy9oglqHbVfyaAhj+1Tf6PDSTUlD1GTUyXrSyrr+1V3
+	SnyVm+vIOn0Jys7fZLEJHWeNjEsoMJOPr82xgIJ6AOCwXy2c6bA4S9HrW6cx8D60VPD
+	hojbj468R7XQhHY9KSHxAvAYKFO0F4tr6UqE07Qkpa0gxlhP5QS2ZcecD+KXqGweDhS
+	nyt1K/H7UjdXsShixagJN9xv8zSzzMG/y2X9+SBcbWcIhsTV0BW6TesF14DRMNctRfG
+	sOZ/4ALIGw==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1741995716;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+	bh=pHvx9d+HDAMV94DS0MC6Livhm17g6usKXutS7tJNVMU=;
+	b=R63Xzxpz8WVGQlPP9tLGoe23VfYm+brmmkTs2XgX2DvQ10L4WGADFG/K7Lwb7HqT
+	AQ+I3gxvPfQFQt9bO1ptdv8FJZsq8wfpWNuHQxF42fxUHUYzvChN1IqSaj/oORFHgPZ
+	RbEpYFUcVYZBdO4dsJD9aRr7tHpaANJeVIJndhoo=
+From: Antonio Hickey <contact@antoniohickey.com>
+To: Andreas Hindborg <a.hindborg@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: Antonio Hickey <contact@antoniohickey.com>, linux-block@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH v3 2/3] rust: replace `addr_of[_mut]!` with `&raw [mut]`
+Date: Fri, 14 Mar 2025 23:41:55 +0000
+Message-ID: <0100019597092d67-0da59c6d-9680-413f-bbce-109ef95724cc-000000@email.amazonses.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250314234148.599196-1-contact@antoniohickey.com>
+References: <20250314234148.599196-1-contact@antoniohickey.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBAPR04MB7384:EE_
-X-MS-Office365-Filtering-Correlation-Id: 510d802f-0f40-48d7-f596-08dd634ef4ae
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZlQwQkwwazFmeEJGZzZuS3dLT1NLUkluRko4R2ZKN21hclB3ak5XNkdId1Bk?=
- =?utf-8?B?TmhxM0ZHSjdKM2lMUDhqS1ErMitwQUcrRDZuOFM1bUVjQzNSNlJlRmNpSG5M?=
- =?utf-8?B?Z0lXMUFwdlplQjBhdXdBM3IxbDdaOWdQKzd2U2hDcGJKUngrdUdicmYyTGVx?=
- =?utf-8?B?R2dNSnQwemhKaFhYVU9PM2twT3VHV29YbitudGJBY2R0SnlkNnA0UmR1TVVz?=
- =?utf-8?B?U2Y5YSszRlJ2NmJLWTZJNzcrajhBYkxyM0tLc1g1ZzVxWVUzZzBYYmt5VGdP?=
- =?utf-8?B?d3Q1MXJWYmEzRHlQR3J2dU5oVHBhY1JWNGFNWHNwWHBsdEJVT0JTVFhXQkdp?=
- =?utf-8?B?QUpWSU5LRE5MVnJOc2w2OHhhbm5vZWF2bUt6d2xHNnU3Y3lyS2VrWkp2UGZ0?=
- =?utf-8?B?aVpSV1YrdG40cnhSS2RiVHdXWElkNE9XK2VkWkU3UExVL3hTZXMwU1Y4S3Az?=
- =?utf-8?B?S3dDOWh4ZDE3VlZ3Q2JjaExRSnliTWlsdmFyMnR1VHBzMnNBaHdINkRndW9I?=
- =?utf-8?B?eFNLdFFJb2dFTTJwS25JV0xEZ1NQN01QWFZaU1d1c3pjUUgxbnNiK2ZqN1ND?=
- =?utf-8?B?TnorK0h4QnNMOWd4aUxWMCsvSDRMWXBQOFlmU29NNk5VeDlCdHh2eW5qRlhj?=
- =?utf-8?B?SFBhNlIyeGJHd0xjVStsMG1kNlQ3bXJGTmxIYXpZbWd0RXE5UVY0VTZ2UVUr?=
- =?utf-8?B?aTBhZjVUY2hTRG1IRTZWVSszWTVvZUFaWjlHdUlsRVV5L1EyQmVud2xTZ09P?=
- =?utf-8?B?cFE4em1CU2RqN01wQWtnRDdYWmVkbGEwZ2h6WE5XOGZYQnNuTlFROUErOVd1?=
- =?utf-8?B?VThSdWhlU1VpSzJta3U0OEVoQXMrbnQ2Q0lSUHpCSUxVL0s2WDRpbFB2R21D?=
- =?utf-8?B?MXdqSG9wS0c4a1IzMUFNVUt3cjNTS0FvMVJDSjRmelZ6MzBvRUVwakZjN2N2?=
- =?utf-8?B?TmhqbTVheVV1ZmVWRzY4aEJlYy9PeFRuTVJvd3BHZVZOckNKUWM3eUxkRXFn?=
- =?utf-8?B?c0J6RElhcVYwTE9RRkx5a2VOVWxaSnhrVkZldVFsVDBoaXZKZ1J5eHZvUk5F?=
- =?utf-8?B?WElsdElpTlhKbWFnWWRtZTBtVFQ0S1VsaU5ZWlU0UHFUWXBaL2F4eWNaVWRL?=
- =?utf-8?B?OTZRRmZQVVFnai9uTzFSaGVKZ1VvUlQxSCsvOUtLNlRhckpuQ3BGQ2lkM2Rz?=
- =?utf-8?B?S01nMjVqRW14aGN3YTlkNnF1QldJeFh5ZGQyN3dhdEF0Tlc2V0JyL0hhRlJs?=
- =?utf-8?B?Ui9YeFFRbkt0Y2NTUGlrdnNubHJOVmNxY3lmdUVNamZReDd1NGVGelZRK25n?=
- =?utf-8?B?YUtwSEhvVUsxdWlwTnJwS2pSNklGWHQ3MmlOS0lHT3ZWQmlBc2luaFk0dUQ4?=
- =?utf-8?B?WVFZQU5iaDRYSXZUWVJQekU4QVh5cEhVVmFSWkYwSVAxamtRcVg2VG90bUxP?=
- =?utf-8?B?YVNqcmw3LzdnYlNZcFlNbjFlRVZnQmFmNDMyeE5mM2VuL3p0d21QQVFVNjA4?=
- =?utf-8?B?eFh0bkhUc3cyLzVBQ0cycEgvMGFvUHZLSnRrR01EbXVPSmRGa3pxRjRQVTdN?=
- =?utf-8?B?N0NZWUtCQzBicDZLSWdPSWNFUzYyVlJSVnZreVFEZWo4eVpsYktHRW5EdFAx?=
- =?utf-8?B?K0s2OUk5U3VqUi9obVMzblNwUHNEcGZFVURSUDZOdGpML2lIRDV3SWNWVXd2?=
- =?utf-8?B?MEp5YVc5a3E1Y0VlamYyTVdIL0tLejdaMmNBcHJxKzFidDlLU1AxZFB0TWlN?=
- =?utf-8?B?MDRRWGE0OVpZcDhEMVhiblY5cEhnZ2RoN2ZRc29jWWN2RjhIdWdKRXJ2bjd6?=
- =?utf-8?B?YmFOUkQreWtaL2JGWFdyRTUwSUlaNHFZQUV1cll1S1pvSWhaTjl3bDJqZ2tJ?=
- =?utf-8?B?YkJLTmpQbjcvbnlSYUgxOVR6VHNOWXkwRTlVbmxJMlRVd2d4dDYwSitMQUZo?=
- =?utf-8?Q?PzZ+HRWL3yXFuDJOE/5P0bHTBtFfgDu+?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cDR3NC9jSllDcmpjbTIvVjJ5aXJpTkNQQlFlNUNuMGhqeW9YR1ErK05VR0xp?=
- =?utf-8?B?UHFJcE1YYnh3a1RoMFBJMzBHTzRBTklSWEZMSTZ1dkRQcWcrZXFudWU2c1Jx?=
- =?utf-8?B?dEgrOVF5RVZ1bG44OGVJaHE0QlI0ZEl4bDVOMlI5YUo3dTh5TDlNY2RSUE1k?=
- =?utf-8?B?emhjcWZhaVNFZU0yUExmaitFbnhmV05MYUtJdkJtMS93VnhuUnNkY2ljRWlF?=
- =?utf-8?B?aGRXakxiM1N0d0hNVVJGQTNlOGk0S0svN2hjZVkxZmMwZysyQzNJbFEzUEpo?=
- =?utf-8?B?TUxlQUFCUituODlKZnVyKzRyN3JETGJPRk9oemMvcFNEMzJOWFJRbXk0NmRl?=
- =?utf-8?B?aC92MWg1TUpNY1htVVo3MzVDNDJKNmEwZVhmaUUyV1c2U0dmS0tjWmtRcGpG?=
- =?utf-8?B?ZEtzSVBocTU0cDZ5Z1lmbnltZVl1T1ljdlNvM2xvQU5Tb0VOWGJkOS81czZM?=
- =?utf-8?B?b1R0WnlITDd3RkVobFV4ZEZGUHBUTlRuaWZIaE9Pc1B1dDR5Y3pyOTNPbU40?=
- =?utf-8?B?VTlrWjJFYVZlNXA1LzRYYXFUQkNSTlVuVDMxS1BXdHhhZkFTbE4zQStETTFC?=
- =?utf-8?B?NkhOK0NSakYyQ0lNN0F0Mm5QWUh1eHRqWndueE1uVUlQUU53d3QvLzk2VE4v?=
- =?utf-8?B?c3NxS0tjb0huT3hWMUxmL0QxU1Q0MnNwUG5tK3ZSMXNjd3RCbHNYYllVUnMx?=
- =?utf-8?B?eUE2SjQxVWRyUm40MHlySGRlcTlwUlYyeVA2M3FxTnI0aGhuWGQ3VmZ6SlFw?=
- =?utf-8?B?WEtVM3Q5OVltOFN2eXFwRWVMeW9Ub3lqWkd3Um1nNFl5bW84OXFMNEF2eEY0?=
- =?utf-8?B?bHVEdHNuT1lhcWlTUWdyRm5zRU5qQUJiQTZKaGtOay9IYTZQRkNMQkpLbnZK?=
- =?utf-8?B?N2tFY3dvRjl1UDRQTkozRnN0TGFxWVlYb0J3bnNpdldwVEpXNW5sRTZNZ21h?=
- =?utf-8?B?K2czbTJNUGl1NFBLNGlITVFHWUt4NTZnTkJseTZJeTVIUTNOQjVpdlppZ1Nl?=
- =?utf-8?B?YU5JU2tOMUllU0xHR0JzU0dIOVVZbDJCY1FPeUFBWWtWZ1k0aHNsbnJFODJ5?=
- =?utf-8?B?ZTVFejRMQWVOZGpVQVBJZU14TE80ZC9ya25SOGRneHpDc2Ewc0pDcUQvalBp?=
- =?utf-8?B?cVhzZnY5aUIvYlFSb1N4ZE9jREF5ZXo4bHBPRlB5ai9oOUxuL3RlRDlZZEF6?=
- =?utf-8?B?NW5BVDBDQm5nZ1dvY295YVpjNUozNEQybE9wK0pzRE43MnlBSm1LVE9SK092?=
- =?utf-8?B?dXB0ZFRsTTRaNm5maC9ENzVlaWF4ZHBKVmFUUWEzY3ptN0Jkc2V5cXovUHBR?=
- =?utf-8?B?c3VJbUJENDZteFNNeEdyNUlMNTZnNE43NW91eUVmTi9sSkNLOW50WnFvRzlm?=
- =?utf-8?B?RnRwaEtEc0JWa1hvYnFCbVVhdnhaOHF3OTBkbmhta0s2SmgwdHhyKzRDR0ZB?=
- =?utf-8?B?NVZEMHZtakNTK2FCTUU4WjhreHV1WjJEY0hWZ0h1YUF6NHdOaXAvOUdjYk9j?=
- =?utf-8?B?OE5Uei9abm5kN3YrM0o1aHpJYTRRb2RyR255d0xYVE5ySzErVmZvWjh4S1FL?=
- =?utf-8?B?S3hCeHdnL1Q5cGR5SEh6elcwcERFMUc1a29WY2FFa1ZUQXFob2NBNlNWMGhL?=
- =?utf-8?B?WmJFSDBtaWlMSkZCT3pmbWc5SjBWcTNQZ0h5RjkxMTdkUGY0SS9vbGtCR0ZL?=
- =?utf-8?B?Lzd1OVpwemdPRVMzOEx3amREU1hXczdhWmh3dldiVytEWmNjdzE5ZjF0RC8r?=
- =?utf-8?B?V0FCN0VCdUU0RjcvengyZ0l4UjJkVk0rcGVFOWZ0MnMzTVpiMHpFdnI1eEo5?=
- =?utf-8?B?Q3ZBQTk2dUZYSlJSTU1JQTZ5eUhMZEhpMit5M0F6NFdib0Faajk1SHVnVnYv?=
- =?utf-8?B?K1BGY0FpVHRYeVdNKyt1TjZ6SnJqUlhhb3djaHNxSGFJR2MvYzZBa1BKbC9U?=
- =?utf-8?B?ZjJGRDFLY09hTnJWb01Zb09vTlEyNnRLWjczQ0h2clY3djNxdVhRRVl1bHln?=
- =?utf-8?B?ZXRFVjc3d2ptYXJ6RUF4V1QybWdlSEE4N0trVnhTTUoyM1lJaU1iaU1yd3l6?=
- =?utf-8?B?Rm8zSENZbnFzSWJnVithblpxRElnc2VaM04wOEFQNGtpU0xKQnRYRDVaL2Vt?=
- =?utf-8?Q?fG4Y=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 510d802f-0f40-48d7-f596-08dd634ef4ae
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2025 23:21:32.2688
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jBLIShs3RtrBL2uhiH/Xp95DTDJgmyggnxmyZ+UzigSw/SrOK8+Tb7FNqmXEkHFtt1D2aHyZk5qWL9q5oKzk8Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7384
+Content-Transfer-Encoding: 8bit
+Feedback-ID: ::1.us-east-1.3SHHfi5Rh4c+NdtIv+pxNWeqDT0J3zAhYZLMebdhE9o=:AmazonSES
+X-SES-Outgoing: 2025.03.14-54.240.8.87
 
-On Fri, Mar 14, 2025 at 05:10:59PM -0500, Bjorn Helgaas wrote:
-> On Fri, Mar 14, 2025 at 11:21:19AM -0400, Frank Li wrote:
-> > On Thu, Mar 13, 2025 at 06:56:17PM -0400, Frank Li wrote:
-> > > On Thu, Mar 13, 2025 at 05:04:50PM -0500, Bjorn Helgaas wrote:
-> > > > On Thu, Mar 13, 2025 at 11:38:42AM -0400, Frank Li wrote:
-> > > > > The 'ranges' property at PCI controller parent bus can indicate address
-> > > > > translation information. Most system's bus fabric use 1:1 map between input
-> > > > > and output address. but some hardware like i.MX8QXP doesn't use 1:1 map.
-> > > >
-> > > > I think you've used reg["addr_space"] to get the offset for Endpoints
-> > > > forever.
-> > >
-> > > Yes, it still need ranges informaiton at parent bus.
-> > >
-> > > 	bus@000
-> > > 	{
-> > > 		ranges = <...>; [1] /* still need this */
-> > > 		pcie {
-> > > 			ranges = <...>;[2]
-> > > 		};
-> > > 		pcie-ep {};
-> > > 	}
->
-> Yes, of course. I'm just making the point that the subject/commit log
-> says this patch uses 'ranges' but in fact it uses 'reg'.
+Replacing all occurrences of `addr_of!(place)` with `&raw const place`, and
+all occurrences of `addr_of_mut!(place)` with `&raw mut place`.
 
-Actaully my means: 'ranges' in subject means parent bus's ranges. Anyway
-how about:
+Utilizing the new feature will allow us to reduce macro complexity, and
+improve consistency with existing reference syntax as `&raw const`, `&raw mut`
+is very similar to `&`, `&mut` making it fit more naturally with other
+existing code.
 
-Use reg['config'] dettect parent_bus_offset to get rid of cpu_addr_fixup() callback
+Suggested-by: Benno Lossin <benno.lossin@proton.me>
+Link: https://github.com/Rust-for-Linux/linux/issues/1148
+Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
+---
+ rust/kernel/block/mq/request.rs        |  4 ++--
+ rust/kernel/faux.rs                    |  4 ++--
+ rust/kernel/fs/file.rs                 |  2 +-
+ rust/kernel/init.rs                    |  8 ++++----
+ rust/kernel/init/macros.rs             | 28 +++++++++++++-------------
+ rust/kernel/jump_label.rs              |  4 ++--
+ rust/kernel/kunit.rs                   |  4 ++--
+ rust/kernel/list.rs                    |  2 +-
+ rust/kernel/list/impl_list_item_mod.rs |  6 +++---
+ rust/kernel/net/phy.rs                 |  4 ++--
+ rust/kernel/pci.rs                     |  4 ++--
+ rust/kernel/platform.rs                |  4 +---
+ rust/kernel/rbtree.rs                  | 22 ++++++++++----------
+ rust/kernel/sync/arc.rs                |  2 +-
+ rust/kernel/task.rs                    |  4 ++--
+ rust/kernel/workqueue.rs               |  8 ++++----
+ 16 files changed, 54 insertions(+), 56 deletions(-)
 
->
-> > > > I just noticed that through v9, you used 'ranges' to get the offset
-> > > > for the Root Complex (with "Add parent_bus_offset to resource_entry"),
-> > > > and I think v10 switched to use reg["config"] instead.
-> > > >
-> > > > I think I originally proposed the idea of "Add parent_bus_offset to
-> > > > resource_entry" patch, but I think it turned out to be kind of an ugly
-> > > > approach.
-> > > >
-> > > > Anyway, IIUC this v11 patch actually uses reg["config"] to compute the
-> > > > offset, not 'ranges', so we should probably update the subject and
-> > > > commit log to reflect that, and maybe remove the now-unused bits of
-> > > > the devicetree example.
-> > >
-> > > We use reg["config"] to detect offset, but still need parent dts's ranges.
-> > > There are two ranges, one is at parent pci bus [1], the other is under
-> > > 'pci bus' [2].
-> >
-> > Beside, luckly dwc use reg["config"] to indicate config space. but dt also
-> > define ranges [2] under pcie node, which can also include 'config's space.
-> >
-> > cadence also use reg["cfg"] to do that.
-> > res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-> >
-> > I am not sure why both choose use reg[] instead of [2]ranges under
-> > pcie node. But the result make our situation simpler.
-> >
-> > > Although use reg["config"], but still need ranges [1]. And information at
-> > > ranges [2] also need be correct.
-> > >
-> > > The whole devicetree example also validate to help write address translate
-> > > informaiton.
-> > >
-> > > > I do worry a little bit about the assumption that the offset of
-> > > > reg["config"] is the same as the offset of the other pieces.  The main
-> > > > place we use the offset on RCs is for the ATU, and isn't the ATU in
-> > > > the MemSpace area at 0x8000_0000 below?
-> > >
-> > > No, "Bus fabric" only decode input address from "0x7000_0000..UPLIMIT".
-> > > Then output address to 0x8000_0000..UPLIMIT. So below 0x8000_0000 never
-> > > happen.
->
-> Minor miscommunication, I think.   I didn't mean there were addresses
-> smaller than 0x8000_0000; I meant that in the picture, MemSpace at
-> 0x8000_0000 is below CfgSpace at 0x8ff0_0000.  The important point is
-> that CfgSpace is a separate region from MemSpace, and we're applying
-> the CfgSpace offset to the ATU in MemSpace.
->
-> I think it's OK to assume that for now.  AFAICS there is nothing in
-> devicetree that explicitly mentions the ATU input address space; it's
-> just implicitly part of the intermediate address space described by
-> the bus@5f000000 'ranges'.
+diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request.rs
+index 7943f43b9575..4a5b7ec914ef 100644
+--- a/rust/kernel/block/mq/request.rs
++++ b/rust/kernel/block/mq/request.rs
+@@ -12,7 +12,7 @@
+ };
+ use core::{
+     marker::PhantomData,
+-    ptr::{addr_of_mut, NonNull},
++    ptr::NonNull,
+     sync::atomic::{AtomicU64, Ordering},
+ };
+ 
+@@ -187,7 +187,7 @@ pub(crate) fn refcount(&self) -> &AtomicU64 {
+     pub(crate) unsafe fn refcount_ptr(this: *mut Self) -> *mut AtomicU64 {
+         // SAFETY: Because of the safety requirements of this function, the
+         // field projection is safe.
+-        unsafe { addr_of_mut!((*this).refcount) }
++        unsafe { &raw mut (*this).refcount }
+     }
+ }
+ 
+diff --git a/rust/kernel/faux.rs b/rust/kernel/faux.rs
+index 5acc0c02d451..52ac554c1119 100644
+--- a/rust/kernel/faux.rs
++++ b/rust/kernel/faux.rs
+@@ -7,7 +7,7 @@
+ //! C header: [`include/linux/device/faux.h`]
+ 
+ use crate::{bindings, device, error::code::*, prelude::*};
+-use core::ptr::{addr_of_mut, null, null_mut, NonNull};
++use core::ptr::{null, null_mut, NonNull};
+ 
+ /// The registration of a faux device.
+ ///
+@@ -45,7 +45,7 @@ impl AsRef<device::Device> for Registration {
+     fn as_ref(&self) -> &device::Device {
+         // SAFETY: The underlying `device` in `faux_device` is guaranteed by the C API to be
+         // a valid initialized `device`.
+-        unsafe { device::Device::as_ref(addr_of_mut!((*self.as_raw()).dev)) }
++        unsafe { device::Device::as_ref((&raw mut (*self.as_raw()).dev)) }
+     }
+ }
+ 
+diff --git a/rust/kernel/fs/file.rs b/rust/kernel/fs/file.rs
+index ed57e0137cdb..7ee4830b67f3 100644
+--- a/rust/kernel/fs/file.rs
++++ b/rust/kernel/fs/file.rs
+@@ -331,7 +331,7 @@ pub fn flags(&self) -> u32 {
+         // SAFETY: The file is valid because the shared reference guarantees a nonzero refcount.
+         //
+         // FIXME(read_once): Replace with `read_once` when available on the Rust side.
+-        unsafe { core::ptr::addr_of!((*self.as_ptr()).f_flags).read_volatile() }
++        unsafe { (&raw const (*self.as_ptr()).f_flags).read_volatile() }
+     }
+ }
+ 
+diff --git a/rust/kernel/init.rs b/rust/kernel/init.rs
+index 7fd1ea8265a5..a8fac6558671 100644
+--- a/rust/kernel/init.rs
++++ b/rust/kernel/init.rs
+@@ -122,7 +122,7 @@
+ //! ```rust
+ //! # #![expect(unreachable_pub, clippy::disallowed_names)]
+ //! use kernel::{init, types::Opaque};
+-//! use core::{ptr::addr_of_mut, marker::PhantomPinned, pin::Pin};
++//! use core::{marker::PhantomPinned, pin::Pin};
+ //! # mod bindings {
+ //! #     #![expect(non_camel_case_types)]
+ //! #     #![expect(clippy::missing_safety_doc)]
+@@ -159,7 +159,7 @@
+ //!         unsafe {
+ //!             init::pin_init_from_closure(move |slot: *mut Self| {
+ //!                 // `slot` contains uninit memory, avoid creating a reference.
+-//!                 let foo = addr_of_mut!((*slot).foo);
++//!                 let foo = &raw mut (*slot).foo;
+ //!
+ //!                 // Initialize the `foo`
+ //!                 bindings::init_foo(Opaque::raw_get(foo));
+@@ -541,7 +541,7 @@ macro_rules! stack_try_pin_init {
+ ///
+ /// ```rust
+ /// # use kernel::{macros::{Zeroable, pin_data}, pin_init};
+-/// # use core::{ptr::addr_of_mut, marker::PhantomPinned};
++/// # use core::marker::PhantomPinned;
+ /// #[pin_data]
+ /// #[derive(Zeroable)]
+ /// struct Buf {
+@@ -554,7 +554,7 @@ macro_rules! stack_try_pin_init {
+ /// pin_init!(&this in Buf {
+ ///     buf: [0; 64],
+ ///     // SAFETY: TODO.
+-///     ptr: unsafe { addr_of_mut!((*this.as_ptr()).buf).cast() },
++///     ptr: unsafe { &raw mut (*this.as_ptr()).buf.cast() },
+ ///     pin: PhantomPinned,
+ /// });
+ /// pin_init!(Buf {
+diff --git a/rust/kernel/init/macros.rs b/rust/kernel/init/macros.rs
+index 1fd146a83241..af525fbb2f01 100644
+--- a/rust/kernel/init/macros.rs
++++ b/rust/kernel/init/macros.rs
+@@ -244,25 +244,25 @@
+ //!                     struct __InitOk;
+ //!                     // This is the expansion of `t,`, which is syntactic sugar for `t: t,`.
+ //!                     {
+-//!                         unsafe { ::core::ptr::write(::core::addr_of_mut!((*slot).t), t) };
++//!                         unsafe { ::core::ptr::write(&raw mut (*slot).t, t) };
+ //!                     }
+ //!                     // Since initialization could fail later (not in this case, since the
+ //!                     // error type is `Infallible`) we will need to drop this field if there
+ //!                     // is an error later. This `DropGuard` will drop the field when it gets
+ //!                     // dropped and has not yet been forgotten.
+ //!                     let __t_guard = unsafe {
+-//!                         ::pinned_init::__internal::DropGuard::new(::core::addr_of_mut!((*slot).t))
++//!                         ::pinned_init::__internal::DropGuard::new(&raw mut (*slot).t)
+ //!                     };
+ //!                     // Expansion of `x: 0,`:
+ //!                     // Since this can be an arbitrary expression we cannot place it inside
+ //!                     // of the `unsafe` block, so we bind it here.
+ //!                     {
+ //!                         let x = 0;
+-//!                         unsafe { ::core::ptr::write(::core::addr_of_mut!((*slot).x), x) };
++//!                         unsafe { ::core::ptr::write(&raw mut (*slot).x, x) };
+ //!                     }
+ //!                     // We again create a `DropGuard`.
+ //!                     let __x_guard = unsafe {
+-//!                         ::kernel::init::__internal::DropGuard::new(::core::addr_of_mut!((*slot).x))
++//!                         ::kernel::init::__internal::DropGuard::new(&raw mut (*slot).x)
+ //!                     };
+ //!                     // Since initialization has successfully completed, we can now forget
+ //!                     // the guards. This is not `mem::forget`, since we only have
+@@ -459,15 +459,15 @@
+ //!         {
+ //!             struct __InitOk;
+ //!             {
+-//!                 unsafe { ::core::ptr::write(::core::addr_of_mut!((*slot).a), a) };
++//!                 unsafe { ::core::ptr::write(&raw mut (*slot).a, a) };
+ //!             }
+ //!             let __a_guard = unsafe {
+-//!                 ::kernel::init::__internal::DropGuard::new(::core::addr_of_mut!((*slot).a))
++//!                 ::kernel::init::__internal::DropGuard::new(&raw mut (*slot).a)
+ //!             };
+ //!             let init = Bar::new(36);
+-//!             unsafe { data.b(::core::addr_of_mut!((*slot).b), b)? };
++//!             unsafe { data.b(&raw mut (*slot).b, b)? };
+ //!             let __b_guard = unsafe {
+-//!                 ::kernel::init::__internal::DropGuard::new(::core::addr_of_mut!((*slot).b))
++//!                 ::kernel::init::__internal::DropGuard::new(&raw mut (*slot).b)
+ //!             };
+ //!             ::core::mem::forget(__b_guard);
+ //!             ::core::mem::forget(__a_guard);
+@@ -1210,7 +1210,7 @@ fn assert_zeroable<T: $crate::init::Zeroable>(_: *mut T) {}
+         // SAFETY: `slot` is valid, because we are inside of an initializer closure, we
+         // return when an error/panic occurs.
+         // We also use the `data` to require the correct trait (`Init` or `PinInit`) for `$field`.
+-        unsafe { $data.$field(::core::ptr::addr_of_mut!((*$slot).$field), init)? };
++        unsafe { $data.$field(&raw mut (*$slot).$field, init)? };
+         // Create the drop guard:
+         //
+         // We rely on macro hygiene to make it impossible for users to access this local variable.
+@@ -1218,7 +1218,7 @@ fn assert_zeroable<T: $crate::init::Zeroable>(_: *mut T) {}
+         ::kernel::macros::paste! {
+             // SAFETY: We forget the guard later when initialization has succeeded.
+             let [< __ $field _guard >] = unsafe {
+-                $crate::init::__internal::DropGuard::new(::core::ptr::addr_of_mut!((*$slot).$field))
++                $crate::init::__internal::DropGuard::new(&raw mut (*$slot).$field)
+             };
+ 
+             $crate::__init_internal!(init_slot($use_data):
+@@ -1241,7 +1241,7 @@ fn assert_zeroable<T: $crate::init::Zeroable>(_: *mut T) {}
+         //
+         // SAFETY: `slot` is valid, because we are inside of an initializer closure, we
+         // return when an error/panic occurs.
+-        unsafe { $crate::init::Init::__init(init, ::core::ptr::addr_of_mut!((*$slot).$field))? };
++        unsafe { $crate::init::Init::__init(init, &raw mut (*$slot).$field)? };
+         // Create the drop guard:
+         //
+         // We rely on macro hygiene to make it impossible for users to access this local variable.
+@@ -1249,7 +1249,7 @@ fn assert_zeroable<T: $crate::init::Zeroable>(_: *mut T) {}
+         ::kernel::macros::paste! {
+             // SAFETY: We forget the guard later when initialization has succeeded.
+             let [< __ $field _guard >] = unsafe {
+-                $crate::init::__internal::DropGuard::new(::core::ptr::addr_of_mut!((*$slot).$field))
++                $crate::init::__internal::DropGuard::new(&raw mut (*$slot).$field)
+             };
+ 
+             $crate::__init_internal!(init_slot():
+@@ -1272,7 +1272,7 @@ fn assert_zeroable<T: $crate::init::Zeroable>(_: *mut T) {}
+             // Initialize the field.
+             //
+             // SAFETY: The memory at `slot` is uninitialized.
+-            unsafe { ::core::ptr::write(::core::ptr::addr_of_mut!((*$slot).$field), $field) };
++            unsafe { ::core::ptr::write(&raw mut (*$slot).$field, $field) };
+         }
+         // Create the drop guard:
+         //
+@@ -1281,7 +1281,7 @@ fn assert_zeroable<T: $crate::init::Zeroable>(_: *mut T) {}
+         ::kernel::macros::paste! {
+             // SAFETY: We forget the guard later when initialization has succeeded.
+             let [< __ $field _guard >] = unsafe {
+-                $crate::init::__internal::DropGuard::new(::core::ptr::addr_of_mut!((*$slot).$field))
++                $crate::init::__internal::DropGuard::new(&raw mut (*$slot).$field)
+             };
+ 
+             $crate::__init_internal!(init_slot($($use_data)?):
+diff --git a/rust/kernel/jump_label.rs b/rust/kernel/jump_label.rs
+index 4e974c768dbd..ca10abae0eee 100644
+--- a/rust/kernel/jump_label.rs
++++ b/rust/kernel/jump_label.rs
+@@ -20,8 +20,8 @@
+ #[macro_export]
+ macro_rules! static_branch_unlikely {
+     ($key:path, $keytyp:ty, $field:ident) => {{
+-        let _key: *const $keytyp = ::core::ptr::addr_of!($key);
+-        let _key: *const $crate::bindings::static_key_false = ::core::ptr::addr_of!((*_key).$field);
++        let _key: *const $keytyp = &raw const $key;
++        let _key: *const $crate::bindings::static_key_false = &raw const (*_key).$field;
+         let _key: *const $crate::bindings::static_key = _key.cast();
+ 
+         #[cfg(not(CONFIG_JUMP_LABEL))]
+diff --git a/rust/kernel/kunit.rs b/rust/kernel/kunit.rs
+index 824da0e9738a..a17ef3b2e860 100644
+--- a/rust/kernel/kunit.rs
++++ b/rust/kernel/kunit.rs
+@@ -128,9 +128,9 @@ unsafe impl Sync for UnaryAssert {}
+             unsafe {
+                 $crate::bindings::__kunit_do_failed_assertion(
+                     kunit_test,
+-                    core::ptr::addr_of!(LOCATION.0),
++                    &raw const LOCATION.0,
+                     $crate::bindings::kunit_assert_type_KUNIT_ASSERTION,
+-                    core::ptr::addr_of!(ASSERTION.0.assert),
++                    &raw const ASSERTION.0.assert,
+                     Some($crate::bindings::kunit_unary_assert_format),
+                     core::ptr::null(),
+                 );
+diff --git a/rust/kernel/list.rs b/rust/kernel/list.rs
+index c0ed227b8a4f..e98f0820f002 100644
+--- a/rust/kernel/list.rs
++++ b/rust/kernel/list.rs
+@@ -176,7 +176,7 @@ pub fn new() -> impl PinInit<Self> {
+     #[inline]
+     unsafe fn fields(me: *mut Self) -> *mut ListLinksFields {
+         // SAFETY: The caller promises that the pointer is valid.
+-        unsafe { Opaque::raw_get(ptr::addr_of!((*me).inner)) }
++        unsafe { Opaque::raw_get(&raw const (*me).inner) }
+     }
+ 
+     /// # Safety
+diff --git a/rust/kernel/list/impl_list_item_mod.rs b/rust/kernel/list/impl_list_item_mod.rs
+index a0438537cee1..014b6713d59d 100644
+--- a/rust/kernel/list/impl_list_item_mod.rs
++++ b/rust/kernel/list/impl_list_item_mod.rs
+@@ -49,7 +49,7 @@ macro_rules! impl_has_list_links {
+         // SAFETY: The implementation of `raw_get_list_links` only compiles if the field has the
+         // right type.
+         //
+-        // The behavior of `raw_get_list_links` is not changed since the `addr_of_mut!` macro is
++        // The behavior of `raw_get_list_links` is not changed since the `&raw mut` op is
+         // equivalent to the pointer offset operation in the trait definition.
+         unsafe impl$(<$($implarg),*>)? $crate::list::HasListLinks$(<$id>)? for
+             $self $(<$($selfarg),*>)?
+@@ -61,7 +61,7 @@ unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut $crate::list::ListLinks$(<$
+                 // SAFETY: The caller promises that the pointer is not dangling. We know that this
+                 // expression doesn't follow any pointers, as the `offset_of!` invocation above
+                 // would otherwise not compile.
+-                unsafe { ::core::ptr::addr_of_mut!((*ptr)$(.$field)*) }
++                unsafe { &raw mut (*ptr)$(.$field)* }
+             }
+         }
+     )*};
+@@ -103,7 +103,7 @@ macro_rules! impl_has_list_links_self_ptr {
+             unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut $crate::list::ListLinks$(<$id>)? {
+                 // SAFETY: The caller promises that the pointer is not dangling.
+                 let ptr: *mut $crate::list::ListLinksSelfPtr<$item_type $(, $id)?> =
+-                    unsafe { ::core::ptr::addr_of_mut!((*ptr).$field) };
++                    unsafe { &raw mut (*ptr).$field };
+                 ptr.cast()
+             }
+         }
+diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
+index a59469c785e3..757db052cc09 100644
+--- a/rust/kernel/net/phy.rs
++++ b/rust/kernel/net/phy.rs
+@@ -7,7 +7,7 @@
+ //! C headers: [`include/linux/phy.h`](srctree/include/linux/phy.h).
+ 
+ use crate::{error::*, prelude::*, types::Opaque};
+-use core::{marker::PhantomData, ptr::addr_of_mut};
++use core::marker::PhantomData;
+ 
+ pub mod reg;
+ 
+@@ -285,7 +285,7 @@ impl AsRef<kernel::device::Device> for Device {
+     fn as_ref(&self) -> &kernel::device::Device {
+         let phydev = self.0.get();
+         // SAFETY: The struct invariant ensures that `mdio.dev` is valid.
+-        unsafe { kernel::device::Device::as_ref(addr_of_mut!((*phydev).mdio.dev)) }
++        unsafe { kernel::device::Device::as_ref(&raw mut (*phydev).mdio.dev) }
+     }
+ }
+ 
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index f7b2743828ae..6cb9ed1e7cbf 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -17,7 +17,7 @@
+     types::{ARef, ForeignOwnable, Opaque},
+     ThisModule,
+ };
+-use core::{ops::Deref, ptr::addr_of_mut};
++use core::ops::Deref;
+ use kernel::prelude::*;
+ 
+ /// An adapter for the registration of PCI drivers.
+@@ -60,7 +60,7 @@ extern "C" fn probe_callback(
+     ) -> kernel::ffi::c_int {
+         // SAFETY: The PCI bus only ever calls the probe callback with a valid pointer to a
+         // `struct pci_dev`.
+-        let dev = unsafe { device::Device::get_device(addr_of_mut!((*pdev).dev)) };
++        let dev = unsafe { device::Device::get_device(&raw mut (*pdev).dev) };
+         // SAFETY: `dev` is guaranteed to be embedded in a valid `struct pci_dev` by the call
+         // above.
+         let mut pdev = unsafe { Device::from_dev(dev) };
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 1297f5292ba9..344875ad7b82 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -14,8 +14,6 @@
+     ThisModule,
+ };
+ 
+-use core::ptr::addr_of_mut;
+-
+ /// An adapter for the registration of platform drivers.
+ pub struct Adapter<T: Driver>(T);
+ 
+@@ -55,7 +53,7 @@ unsafe fn unregister(pdrv: &Opaque<Self::RegType>) {
+ impl<T: Driver + 'static> Adapter<T> {
+     extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> kernel::ffi::c_int {
+         // SAFETY: The platform bus only ever calls the probe callback with a valid `pdev`.
+-        let dev = unsafe { device::Device::get_device(addr_of_mut!((*pdev).dev)) };
++        let dev = unsafe { device::Device::get_device(&raw mut (*pdev).dev) };
+         // SAFETY: `dev` is guaranteed to be embedded in a valid `struct platform_device` by the
+         // call above.
+         let mut pdev = unsafe { Device::from_dev(dev) };
+diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
+index 1ea25c7092fb..b0ad35663cb0 100644
+--- a/rust/kernel/rbtree.rs
++++ b/rust/kernel/rbtree.rs
+@@ -11,7 +11,7 @@
+     cmp::{Ord, Ordering},
+     marker::PhantomData,
+     mem::MaybeUninit,
+-    ptr::{addr_of_mut, from_mut, NonNull},
++    ptr::{from_mut, NonNull},
+ };
+ 
+ /// A red-black tree with owned nodes.
+@@ -238,7 +238,7 @@ pub fn values_mut(&mut self) -> impl Iterator<Item = &'_ mut V> {
+ 
+     /// Returns a cursor over the tree nodes, starting with the smallest key.
+     pub fn cursor_front(&mut self) -> Option<Cursor<'_, K, V>> {
+-        let root = addr_of_mut!(self.root);
++        let root = &raw mut self.root;
+         // SAFETY: `self.root` is always a valid root node
+         let current = unsafe { bindings::rb_first(root) };
+         NonNull::new(current).map(|current| {
+@@ -253,7 +253,7 @@ pub fn cursor_front(&mut self) -> Option<Cursor<'_, K, V>> {
+ 
+     /// Returns a cursor over the tree nodes, starting with the largest key.
+     pub fn cursor_back(&mut self) -> Option<Cursor<'_, K, V>> {
+-        let root = addr_of_mut!(self.root);
++        let root = &raw mut self.root;
+         // SAFETY: `self.root` is always a valid root node
+         let current = unsafe { bindings::rb_last(root) };
+         NonNull::new(current).map(|current| {
+@@ -459,7 +459,7 @@ pub fn cursor_lower_bound(&mut self, key: &K) -> Option<Cursor<'_, K, V>>
+         let best = best_match?;
+ 
+         // SAFETY: `best` is a non-null node so it is valid by the type invariants.
+-        let links = unsafe { addr_of_mut!((*best.as_ptr()).links) };
++        let links = unsafe { &raw mut (*best.as_ptr()).links };
+ 
+         NonNull::new(links).map(|current| {
+             // INVARIANT:
+@@ -767,7 +767,7 @@ pub fn remove_current(self) -> (Option<Self>, RBTreeNode<K, V>) {
+         let node = RBTreeNode { node };
+         // SAFETY: The reference to the tree used to create the cursor outlives the cursor, so
+         // the tree cannot change. By the tree invariant, all nodes are valid.
+-        unsafe { bindings::rb_erase(&mut (*this).links, addr_of_mut!(self.tree.root)) };
++        unsafe { bindings::rb_erase(&mut (*this).links, &raw mut self.tree.root) };
+ 
+         let current = match (prev, next) {
+             (_, Some(next)) => next,
+@@ -803,7 +803,7 @@ fn remove_neighbor(&mut self, direction: Direction) -> Option<RBTreeNode<K, V>>
+             let neighbor = neighbor.as_ptr();
+             // SAFETY: The reference to the tree used to create the cursor outlives the cursor, so
+             // the tree cannot change. By the tree invariant, all nodes are valid.
+-            unsafe { bindings::rb_erase(neighbor, addr_of_mut!(self.tree.root)) };
++            unsafe { bindings::rb_erase(neighbor, &raw mut self.tree.root) };
+             // SAFETY: By the type invariant of `Self`, all non-null `rb_node` pointers stored in `self`
+             // point to the links field of `Node<K, V>` objects.
+             let this = unsafe { container_of!(neighbor, Node<K, V>, links) }.cast_mut();
+@@ -918,7 +918,7 @@ unsafe fn to_key_value_raw<'b>(node: NonNull<bindings::rb_node>) -> (&'b K, *mut
+         let k = unsafe { &(*this).key };
+         // SAFETY: The passed `node` is the current node or a non-null neighbor,
+         // thus `this` is valid by the type invariants.
+-        let v = unsafe { addr_of_mut!((*this).value) };
++        let v = unsafe { &raw mut (*this).value };
+         (k, v)
+     }
+ }
+@@ -1027,7 +1027,7 @@ fn next(&mut self) -> Option<Self::Item> {
+         self.next = unsafe { bindings::rb_next(self.next) };
+ 
+         // SAFETY: By the same reasoning above, it is safe to dereference the node.
+-        Some(unsafe { (addr_of_mut!((*cur).key), addr_of_mut!((*cur).value)) })
++        Some(unsafe { (&raw mut (*cur).key, &raw mut (*cur).value) })
+     }
+ }
+ 
+@@ -1170,7 +1170,7 @@ fn insert(self, node: RBTreeNode<K, V>) -> &'a mut V {
+ 
+         // SAFETY: `node` is valid at least until we call `Box::from_raw`, which only happens when
+         // the node is removed or replaced.
+-        let node_links = unsafe { addr_of_mut!((*node).links) };
++        let node_links = unsafe { &raw mut (*node).links };
+ 
+         // INVARIANT: We are linking in a new node, which is valid. It remains valid because we
+         // "forgot" it with `Box::into_raw`.
+@@ -1178,7 +1178,7 @@ fn insert(self, node: RBTreeNode<K, V>) -> &'a mut V {
+         unsafe { bindings::rb_link_node(node_links, self.parent, self.child_field_of_parent) };
+ 
+         // SAFETY: All pointers are valid. `node` has just been inserted into the tree.
+-        unsafe { bindings::rb_insert_color(node_links, addr_of_mut!((*self.rbtree).root)) };
++        unsafe { bindings::rb_insert_color(node_links, &raw mut (*self.rbtree).root) };
+ 
+         // SAFETY: The node is valid until we remove it from the tree.
+         unsafe { &mut (*node).value }
+@@ -1261,7 +1261,7 @@ fn replace(self, node: RBTreeNode<K, V>) -> RBTreeNode<K, V> {
+ 
+         // SAFETY: `node` is valid at least until we call `Box::from_raw`, which only happens when
+         // the node is removed or replaced.
+-        let new_node_links = unsafe { addr_of_mut!((*node).links) };
++        let new_node_links = unsafe { &raw mut (*node).links };
+ 
+         // SAFETY: This updates the pointers so that `new_node_links` is in the tree where
+         // `self.node_links` used to be.
+diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
+index 3cefda7a4372..81d8b0f84957 100644
+--- a/rust/kernel/sync/arc.rs
++++ b/rust/kernel/sync/arc.rs
+@@ -243,7 +243,7 @@ pub fn into_raw(self) -> *const T {
+         let ptr = self.ptr.as_ptr();
+         core::mem::forget(self);
+         // SAFETY: The pointer is valid.
+-        unsafe { core::ptr::addr_of!((*ptr).data) }
++        unsafe { &raw const (*ptr).data }
+     }
+ 
+     /// Recreates an [`Arc`] instance previously deconstructed via [`Arc::into_raw`].
+diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
+index 49012e711942..b2ac768eed23 100644
+--- a/rust/kernel/task.rs
++++ b/rust/kernel/task.rs
+@@ -257,7 +257,7 @@ pub fn as_ptr(&self) -> *mut bindings::task_struct {
+     pub fn group_leader(&self) -> &Task {
+         // SAFETY: The group leader of a task never changes after initialization, so reading this
+         // field is not a data race.
+-        let ptr = unsafe { *ptr::addr_of!((*self.as_ptr()).group_leader) };
++        let ptr = unsafe { *(&raw const (*self.as_ptr()).group_leader) };
+ 
+         // SAFETY: The lifetime of the returned task reference is tied to the lifetime of `self`,
+         // and given that a task has a reference to its group leader, we know it must be valid for
+@@ -269,7 +269,7 @@ pub fn group_leader(&self) -> &Task {
+     pub fn pid(&self) -> Pid {
+         // SAFETY: The pid of a task never changes after initialization, so reading this field is
+         // not a data race.
+-        unsafe { *ptr::addr_of!((*self.as_ptr()).pid) }
++        unsafe { *(&raw const (*self.as_ptr()).pid) }
+     }
+ 
+     /// Returns the UID of the given task.
+diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+index 0cd100d2aefb..34e8abb38974 100644
+--- a/rust/kernel/workqueue.rs
++++ b/rust/kernel/workqueue.rs
+@@ -401,9 +401,9 @@ pub fn new(name: &'static CStr, key: &'static LockClassKey) -> impl PinInit<Self
+     pub unsafe fn raw_get(ptr: *const Self) -> *mut bindings::work_struct {
+         // SAFETY: The caller promises that the pointer is aligned and not dangling.
+         //
+-        // A pointer cast would also be ok due to `#[repr(transparent)]`. We use `addr_of!` so that
+-        // the compiler does not complain that the `work` field is unused.
+-        unsafe { Opaque::raw_get(core::ptr::addr_of!((*ptr).work)) }
++        // A pointer cast would also be ok due to `#[repr(transparent)]`. We use `&raw const (*ptr).work`
++        // so that the compiler does not complain that the `work` field is unused.
++        unsafe { Opaque::raw_get(&raw const (*ptr).work) }
+     }
+ }
+ 
+@@ -510,7 +510,7 @@ macro_rules! impl_has_work {
+             unsafe fn raw_get_work(ptr: *mut Self) -> *mut $crate::workqueue::Work<$work_type $(, $id)?> {
+                 // SAFETY: The caller promises that the pointer is not dangling.
+                 unsafe {
+-                    ::core::ptr::addr_of_mut!((*ptr).$field)
++                    &raw mut (*ptr).$field
+                 }
+             }
+         }
+-- 
+2.48.1
 
-Actually 'ranges' means address tranlation from child node to parent node.
-that should means address to ATU input. It will be good if docuemnt
-somewhere. Do you think where should document?
-
->
-> > > > It's great that in this case the 0x7ff0_0000 to 0x8ff0_0000 "config"
-> > > > offset is the same as the 0x7000_0000 to 0x8000_0000 MemSpace offset,
-> > > > but I don't know that this is guaranteed for all designs.
-> > >
-> > > So far, it is the same for use dwc chips. If we meet difference, we can
-> > > add later.
-> > >
-> > > reg["config"] only simplied our implement base on the offset is the same.
-> > > But whole concept is unchanged.
->
-> > > > > See below diagram:
-> > > > >
-> > > > >             ┌─────────┐                    ┌────────────┐
-> > > > >  ┌─────┐    │         │ IA: 0x8ff8_0000    │            │
-> > > > >  │ CPU ├───►│   ┌────►├─────────────────┐  │ PCI        │
-> > > > >  └─────┘    │   │     │ IA: 0x8ff0_0000 │  │            │
-> > > > >   CPU Addr  │   │  ┌─►├─────────────┐   │  │ Controller │
-> > > > > 0x7ff8_0000─┼───┘  │  │             │   │  │            │
-> > > > >             │      │  │             │   │  │            │   PCI Addr
-> > > > > 0x7ff0_0000─┼──────┘  │             │   └──► IOSpace   ─┼────────────►
-> > > > >             │         │             │      │            │    0
-> > > > > 0x7000_0000─┼────────►├─────────┐   │      │            │
-> > > > >             └─────────┘         │   └──────► CfgSpace  ─┼────────────►
-> > > > >              BUS Fabric         │          │            │    0
-> > > > >                                 │          │            │
-> > > > >                                 └──────────► MemSpace  ─┼────────────►
-> > > > >                         IA: 0x8000_0000    │            │  0x8000_0000
-> > > > >                                            └────────────┘
-> > > > >
-> > > > > bus@5f000000 {
-> > > > > 	compatible = "simple-bus";
-> > > > > 	#address-cells = <1>;
-> > > > > 	#size-cells = <1>;
-> > > > > 	ranges = <0x80000000 0x0 0x70000000 0x10000000>;
-> > > > >
-> > > > > 	pcie@5f010000 {
-> > > > > 		compatible = "fsl,imx8q-pcie";
-> > > > > 		reg = <0x5f010000 0x10000>, <0x8ff00000 0x80000>;
-> > > > > 		reg-names = "dbi", "config";
->
-> > > > > 		#address-cells = <3>;
-> > > > > 		#size-cells = <2>;
-> > > > > 		device_type = "pci";
-> > > > > 		bus-range = <0x00 0xff>;
-> > > > > 		ranges = <0x81000000 0 0x00000000 0x8ff80000 0 0x00010000>,
-> > > > > 			 <0x82000000 0 0x80000000 0x80000000 0 0x0ff00000>;
->
-> Of course we need this 'ranges' to describe the translation between
-> intermediate addresses and PCI bus addresses.  My point is that this
-> is not relevant to the parent bus offset we're computing in this
-> patch.
->
-> So I think for purposes of this patch, we can omit pcie@5f010000
-> #address-cells and everything after it.
->
-
-Okay, we can remove it.
-
-Frank
-
-> Bjorn
 
