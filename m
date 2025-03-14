@@ -1,58 +1,126 @@
-Return-Path: <linux-pci+bounces-23768-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23769-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC28BA61782
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 18:26:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 528BDA6179D
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 18:29:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B7403BF490
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 17:25:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9120616FCDE
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 17:28:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DCCF202C55;
-	Fri, 14 Mar 2025 17:26:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93A4920469B;
+	Fri, 14 Mar 2025 17:28:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sA8CbSgw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+mVsdSe"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0A878F2E
-	for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 17:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A145204694;
+	Fri, 14 Mar 2025 17:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741973160; cv=none; b=B8rSTHV7VXQ9t9G2xSr6pKircbI6kdqijW6LUsciXVRPJga96gVbXwQPK0THdP5/+qavtXUVNMMPWdt0ZyYY425HxUiIpiOuQ/iCqLH240R5WvQV7B+k92Sw8KZhKFdZ3oxDuTkENCNXijU4tfjF3QI+LLH1YmSrNrsno5X3m74=
+	t=1741973298; cv=none; b=sLZvrf0osTrAup9J+itHTl4vA4mRYZMggpygYm6Et2RupKqptvVm8vgWyds8v/giHhT2FojcK+Uhmn/eFEZVNSzA25WdPMGMJENGrxf2xLFiGKmw4IOLFspG3XmNxAsYCwMf/Q5aAICkjxyzYW5NZAkj5/7RnYEAqZ1WiX9QQUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741973160; c=relaxed/simple;
-	bh=UIJXNolUGtJfcKywP8uH0tGGNZVAqDCIpjVKL+n0aYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N754rSxO2EFM9Sxt+1WHdHnVNLtd6czLrkM47A20+SXfHBGyTCkwqncGZhHp0I6b+O5RdvYspt6f94d51K5zr8EC0EdingFqNNidTJq8JA2DCT9rVHo0L/6kVw0x9xHwmlHH52cDKFLcGIl1pRj2jLo1rWmmdfhegagePtsF0Zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sA8CbSgw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE989C4CEE3;
-	Fri, 14 Mar 2025 17:25:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741973159;
-	bh=UIJXNolUGtJfcKywP8uH0tGGNZVAqDCIpjVKL+n0aYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sA8CbSgwCiXt1+XeENj4l1v79xz5IwtVN7Q2PzEsdiH91yJiwlZpbntv+YXry3kMY
-	 5RN7tY4T4IgUOf97XxbJPFAJAbGC5oEHvpC4Kcuaog+q5WGlJ0Onm79UXo+LTucUrt
-	 yymykQfGfNA6X4EbVh98EYVlyOG8aCs/ULYSyO/4a/7koJeFfOmA130/9q0Cr0VNKc
-	 xVB4jfF/qDqqOR6BebAq/T1z9FkY2Jkab+HSoVSssfpztHeULi3mtJasj8zmuDvYhq
-	 ViofhMTc1y9CKMg4Lvm+z9bl3PjeZ0mpN6+pk8ueht7mmrXXkHddneQKh6jdeU+FV9
-	 IIGaZZBW5e0uw==
-Date: Fri, 14 Mar 2025 18:25:54 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: bhelgaas@google.com, kw@linux.com, linux-pci@vger.kernel.org,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 7/7] misc: pci_endpoint_test: Add support for
- PCITEST_IRQ_TYPE_AUTO
-Message-ID: <Z9Rmoh_vtrXzFG0X@ryzen>
-References: <20250310111016.859445-9-cassel@kernel.org>
- <20250310111016.859445-16-cassel@kernel.org>
- <20250314124548.inffbk3c4kw22rwb@thinkpad>
+	s=arc-20240116; t=1741973298; c=relaxed/simple;
+	bh=mRc6Qzp+fDySnwvcYJlAcal8yjcDJzBh4K2OKc81DgM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PTIeFkaVq+ltlVRQF3e3zSyw3BDaBFQyPvPz8s0w4Sr1yCD6BtXE9qY9G4+diRoc/+skcDnqGZe1vxhzBDhLfIaCjlGE7/6rpz1HTlKsqGfbidQT7LpC7eVawPUd4HhsYTDZ83hAT9HtfE0im1LQFqGWUR/aGTkZi7XnLw+xC1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+mVsdSe; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4767e969b94so36910151cf.2;
+        Fri, 14 Mar 2025 10:28:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741973294; x=1742578094; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KJghd27vPBEu/LGbRtV6LiK050yXADXaFFga3GAq6fg=;
+        b=Y+mVsdSeMacyBLhsWHNekr21R4AqDWskzSPb9c+YnmYW/4EEdZ8t0dBm0N4zPFQQXC
+         NDpQWjxoDR82PW+SWormp7+d0N2BIgONMJzs2Z4+ENfmrxuB3bRTdsSU+XMD9DJTNRxQ
+         2WZFadrb/wkGMFIh2EMkLcUY63yKNfIt0x4gS6Y6pQLpYZ/Jtzrl4jTAdOzQHeXP2ecG
+         YDVshHlMhAxt18rJrMGEg6vbb7/804sP8HJD3Un30f8a+xMLpW8tNdg+6nSMIT02X0MU
+         CoCaTJJaslRAXatJabKcoZ0H/CKekIJL0xbC2twyClJkceXWD7Z61/pL1jGsKsGdJA37
+         aGoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741973294; x=1742578094;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KJghd27vPBEu/LGbRtV6LiK050yXADXaFFga3GAq6fg=;
+        b=ONazWLH7+ukpOTCnCnPjONw9UkFT0j3lK3BQF797HkbcACkCnfNQvu2FN7svGS1FrJ
+         /KHYWwiNCJHmEiA14FmigzOHeNy2rFLUV9aQWKx1xHaqzAHhhVC1lge7ltp8dpz5kNvT
+         /1qgsomOwlAqxx5fmAL4/ttDcihAqXhF1ay4RC+7r20efk+oJ4y+nluJdSfrw4lJZPCo
+         /AwGqOSrVpMP9YvuW0PIqKBowpFfhHwvnx3acsHycIHgQ6ljPHpnwaAzfWQjFbzJszHl
+         7rtJS25sipA2cGZQsnQYryVN532tTxXOUTf5KnivaF4N6fU3xQB01iFa4krAee1ApVoE
+         CZgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUv4X+7wuEMDuqKEEul4hbaYrFZtD2IQv8pBXKlIFbF4GszuEb6f1VE6KCrwwoGKBXLNXwuSbPhp+5ABJE=@vger.kernel.org, AJvYcCV49PDrHCJbDz9GM+mP2LwoNCoINmJub+E8n/f2cE24d1IByYe/8C1EpmEYCHesj6G/H5U2YDs493T1ki98OCQ=@vger.kernel.org, AJvYcCVshgStkbiPQypWRFrz1PuYtUQEdqGhkuqK0KokElVyYGhkHc20dHez1vlw0Ys9SzC7TvHL2i82v8xx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZb7IxrU27cNcbKhjPyM1NWBZ5UixIzDoLEnsBzQrcRz3tHhb+
+	EG7i8Dl6DcqSczQWQAEPXuPogTGTc7Sejcd263Ld6N58fnXFLiI/
+X-Gm-Gg: ASbGncvT93Z83lTFzwc1uloXOQ5pqjH7uZhT3wVhZNJb4Y+b1yTHAh9Ai3ZYKXVJxab
+	ZOSLgbZDCB7UtoSvQDfL2dFJnAoa+95mvcN63eRpD4NcO41B1jhNTEBe0qUCWYBwCw2e8XZ5oQn
+	VihmdMoILht44hUeX4rnyFNoTaPNLPIxx8+tVDAoSe2lIVhs6StaIMDapNIi1RitsaACivbbS+q
+	aiPPiJFMZxuWY4OHntZKQBXfGFOwtNcIOygF663HQgxHczNUJmlEtyp0Cy0jTMaddWl11jvjqMf
+	lCi2EBiyBsqDc8u1ZrtPm4OaBOlNmJzTx1L+DVo6Y4rdiEp8ia3iocgOmtLeXKXzc81fcjga8GT
+	D9+jBPL1fN7+Z6Se2uKK3xgLI8J1hm82F/0g=
+X-Google-Smtp-Source: AGHT+IFYWh9NNAwSznb00n2bz+DizWEr9n7C6oGg7LjQgfQkMSaO5pJuBPli7Iv5c8DcDoF88oq7Rg==
+X-Received: by 2002:a05:622a:180d:b0:476:6215:eaf7 with SMTP id d75a77b69052e-476c813f762mr51629721cf.19.1741973294000;
+        Fri, 14 Mar 2025 10:28:14 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-476bb63cb1csm25507461cf.19.2025.03.14.10.28.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 10:28:13 -0700 (PDT)
+Message-ID: <67d4672d.c80a0220.68408.902a@mx.google.com>
+X-Google-Original-Message-ID: <Z9RnKWBz92zhhAUc@winterfell.>
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 03E18120007F;
+	Fri, 14 Mar 2025 13:28:13 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Fri, 14 Mar 2025 13:28:13 -0400
+X-ME-Sender: <xms:LGfUZ3JSA28Qxtl7xetqlKDJhjjl6PMMIOGMkPEkIai3uM7cQjslKA>
+    <xme:LGfUZ7KiimWhf9Br8rB0f8oLFStG7KPOhURRCVFwUFnxoJzn3XZWixoYBcUMIQEAI
+    _hYkxfw626mRD-bTQ>
+X-ME-Received: <xmr:LGfUZ_uJqxn_PdhwEwlCyW1g9i2aCtfjpi_dc6yF34Yfa_thOGQniwDwyA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufedugedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpefhtedvgfdtueekvdekieetieetjeeihedv
+    teehuddujedvkedtkeefgedvvdehtdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
+    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
+    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
+    nhgrmhgvpdhnsggprhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhi
+    nhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdp
+    rhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgi
+    drghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihg
+    uhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrd
+    gtohhmpdhrtghpthhtohepsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgv
+X-ME-Proxy: <xmx:LGfUZwauSC5jiRC3mPD-sOuRoIfdLg7bgzSsyL9IVgIEpnUHNIxdxQ>
+    <xmx:LGfUZ-ZAF99Zrt_TgZFrXaeZzMki3pZ9naa2fQ8rKBofBajlnG2jDQ>
+    <xmx:LGfUZ0DiI6pz7GVQFQiJv8-HSnoh-5tMf6P4CKYeDDHbJMa7Ky-3jg>
+    <xmx:LGfUZ8ZmKjTZAA2robFGRsly6-MJoJ7IJvY8t2FEvXQG8WAcEUV7dA>
+    <xmx:LGfUZypznMllDmytb7hJL-pn2gjxQNSYoPy2SwmjU66xUGeUN3QoIzWW>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 14 Mar 2025 13:28:12 -0400 (EDT)
+Date: Fri, 14 Mar 2025 10:28:09 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
+	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] Improve soundness of bus device abstractions
+References: <20250314160932.100165-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -61,199 +129,64 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250314124548.inffbk3c4kw22rwb@thinkpad>
+In-Reply-To: <20250314160932.100165-1-dakr@kernel.org>
 
-Hello Mani,
-
-On Fri, Mar 14, 2025 at 06:15:48PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Mar 10, 2025 at 12:10:24PM +0100, Niklas Cassel wrote:
-> > For PCITEST_MSI we really want to set PCITEST_SET_IRQTYPE explicitly
-> > to PCITEST_IRQ_TYPE_MSI, since we want to test if MSI works.
-> > 
-> > For PCITEST_MSIX we really want to set PCITEST_SET_IRQTYPE explicitly
-> > to PCITEST_IRQ_TYPE_MSIX, since we want to test if MSI works.
-> > 
-> > For PCITEST_LEGACY_IRQ we really want to set PCITEST_SET_IRQTYPE explicitly
-> > to PCITEST_IRQ_TYPE_INTX, since we want to test if INTx works.
-> > 
-> > However, for PCITEST_WRITE, PCITEST_READ, PCITEST_COPY, we really don't
-> > care which IRQ type that is used, we just want to use a IRQ type that is
-> > supported by the EPC.
-> > 
-> > The old behavior was to always use MSI for PCITEST_WRITE, PCITEST_READ,
-> > PCITEST_COPY, was to always set IRQ type to MSI before doing the actual
-> > test, however, there are EPC drivers that do not support MSI.
-> > 
-> > Add a new PCITEST_IRQ_TYPE_AUTO, that will use the CAPS register to see
-> > which IRQ types the endpoint supports, and use one of the supported IRQ
-> > types.
-> > 
+On Fri, Mar 14, 2025 at 05:09:03PM +0100, Danilo Krummrich wrote:
+> Currently, when sharing references of bus devices (e.g. ARef<pci::Device>), we
+> do not have a way to restrict which functions of a bus device can be called.
 > 
-> If the intention is to let the test figure out the supported IRQ type, why can't
-> you move the logic to set the supported IRQ to
-> pci_endpoint_test_{copy/read/write} functions itself?
+> Consequently, it is possible to call all bus device functions concurrently from
+> any context. This includes functions, which access fields of the (bus) device,
+> which are not protected against concurrent access.
+> 
+> This is improved by applying an execution context to the bus device in form of a
+> generic type.
+> 
+> For instance, the PCI device reference that is passed to probe() has the type
+> pci::Device<Core>, which implements all functions that are only allowed to be
+> called from bus callbacks.
+> 
+> The implementation for the default context (pci::Device) contains all functions
+> that are safe to call from any context concurrently.
+> 
+> The context types can be extended as required, e.g. to limit availability  of
+> certain (bus) device functions to probe().
+> 
+> A branch containing the patches can be found in [1].
+> 
+> [1] https://web.git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/device
+> 
 
-If you look at how things were before your commit 392188bb0f6e ("selftests:
-pci_endpoint: Migrate to Kselftest framework"):
+Again,
 
-echo "Read Tests"
-echo
+Acked-by: Boqun Feng <boqun.feng@gmail.com>
 
-pcitest -i 1
+Regards,
+Boqun
 
-pcitest -r -s 1
-pcitest -r -s 1024
-pcitest -r -s 1025
-pcitest -r -s 1024000
-pcitest -r -s 1024001
-echo
-
-echo "Write Tests"
-echo
-
-pcitest -w -s 1
-pcitest -w -s 1024
-pcitest -w -s 1025
-pcitest -w -s 1024000
-pcitest -w -s 1024001
-echo
-
-echo "Copy Tests"
-echo
-
-pcitest -c -s 1
-pcitest -c -s 1024
-pcitest -c -s 1025
-pcitest -c -s 1024000
-pcitest -c -s 1024001
-
-
-All three test cases were using MSI.
-
-
-However, there was no error handling, so for a platform only supporting
-MSI-X, the call to "pcitest -i 1" could fail, and the tests were still
-going to use MSI-X (or whatever supported by the platform), and pass.
-
-
-
-After your commit 392188bb0f6e ("selftests: pci_endpoint: Migrate to
-Kselftest framework"):
-
-
-TEST_F(pci_ep_data_transfer, READ_TEST)
-{
-	struct pci_endpoint_test_xfer_param param = {};
-	int ret, i;
-
-	if (variant->use_dma)
-		param.flags = PCITEST_FLAGS_USE_DMA;
-
-	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
-	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
-
-	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
-		param.size = test_size[i];
-		pci_ep_ioctl(PCITEST_READ, &param);
-		EXPECT_FALSE(ret) TH_LOG("Test failed for size (%ld)",
-					 test_size[i]);
-	}
-}
-
-TEST_F(pci_ep_data_transfer, WRITE_TEST)
-{
-	struct pci_endpoint_test_xfer_param param = {};
-	int ret, i;
-
-	if (variant->use_dma)
-		param.flags = PCITEST_FLAGS_USE_DMA;
-
-	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
-	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
-
-	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
-		param.size = test_size[i];
-		pci_ep_ioctl(PCITEST_WRITE, &param);
-		EXPECT_FALSE(ret) TH_LOG("Test failed for size (%ld)",
-					 test_size[i]);
-	}
-}
-
-TEST_F(pci_ep_data_transfer, COPY_TEST)
-{
-	struct pci_endpoint_test_xfer_param param = {};
-	int ret, i;
-
-	if (variant->use_dma)
-		param.flags = PCITEST_FLAGS_USE_DMA;
-
-	pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);
-	ASSERT_EQ(0, ret) TH_LOG("Can't set MSI IRQ type");
-
-	for (i = 0; i < ARRAY_SIZE(test_size); i++) {
-		param.size = test_size[i];
-		pci_ep_ioctl(PCITEST_COPY, &param);
-		EXPECT_FALSE(ret) TH_LOG("Test failed for size (%ld)",
-					 test_size[i]);
-	}
-}
-
-
-Each test case explicitly calls ioctl(PCITEST_SET_IRQTYPE, 1); to use MSI,
-and unlike before, will fail the test case if PCITEST_SET_IRQTYPE fails.
-
-
-Then take Kunihiko commit 9240c27c3fdd ("misc: pci_endpoint_test: Remove
-global 'irq_type' and 'no_msi'")
-
-Before your and Kunihiko commits, a platform that did set the kernel module
-parameter 'irq_type' would, if 'pcitest -i 1' failed,  use the value set by
-that kernel module parameter for the read/write/copy test cases.
-
-There is no guarantee that an EPC supports MSI, it might support only legacy
-and INTx, so I was trying to restore use cases that were previously working.
-
-
-
-I guess one option would be to remove the
-"pci_ep_ioctl(PCITEST_SET_IRQTYPE, 1);" calls from the test cases that you
-added, and then let the test cases themselves set the proper irq_type in
-the BAR register. But, wouldn't that be an API change? READ/WRITE/COPY
-test ioctls have always respected the (a successful) PCITEST_SET_IRQTYPE,
-now all of a sudden, they shouldn't?
-
-
-Since your commit 392188bb0f6e: each test case calls PCITEST_SET_IRQTYPE,
-and gives an error if the PCITEST_SET_IRQTYPE ioctl() fails.
-
-See Kunihiko commit log:
-"... all tests that use interrupts first call ioctl(SET_IRQTYPE)
-to set "test->irq_type", then write the value of test->irq_type into
-the register pointed by test_reg_bar, and request the interrupt to the
-endpoint. The endpoint function driver, pci-epf-test, refers to the
-register, and determine which type of interrupt to raise."
-
-READ/WRITE/COPY test cases/ioctls use interrupts.
-
-
-I guess we could modify the read/write/copy test cases to not call
-ioctl(SET_IRQTYPE), and remove the verification that ioctl(SET_IRQTYPE)
-succeded, and change the behavior from older kernel releases, and make
-READ/WRITE/COPY ioctls from now on ignore the configured irq_type using
-ioctl(SET_IRQTYPE).
-
-(If the user is using a selftest binary that has the ioctl(SET_IRQTYPE)
-and ioctl(SET_IRQTYPE) verification in these test cases, the IRQ_TYPE
-will get changed, so the verification will pass, but the succeeding
-ioctl will not use that irq_type.)
-
-But...
-
-Is that really simpler / less confusing that just adding IRQ_TYPE_AUTO,
-to maintain the uniformity that all test cases that will trigger IRQs
-call ioctl(SET_IRQTYPE) before the actual ioctl that will trigger IRQs?
-
-
-Kind regards,
-Niklas
+> Changes in v2:
+>   - make `DeviceContext` trait sealed
+>   - impl From<&pci::Device<device::Core>> for ARef<pci::Device>
+>   - impl From<&platform::Device<device::Core>> for ARef<platform::Device>
+>   - rebase onto v6.14-rc6
+>   - apply RBs
+> 
+> Danilo Krummrich (4):
+>   rust: pci: use to_result() in enable_device_mem()
+>   rust: device: implement device context marker
+>   rust: pci: fix unrestricted &mut pci::Device
+>   rust: platform: fix unrestricted &mut platform::Device
+> 
+>  rust/kernel/device.rs                |  26 +++++
+>  rust/kernel/pci.rs                   | 137 +++++++++++++++++----------
+>  rust/kernel/platform.rs              |  95 +++++++++++++------
+>  samples/rust/rust_driver_pci.rs      |   8 +-
+>  samples/rust/rust_driver_platform.rs |  11 ++-
+>  5 files changed, 187 insertions(+), 90 deletions(-)
+> 
+> 
+> base-commit: 80e54e84911a923c40d7bee33a34c1b4be148d7a
+> -- 
+> 2.48.1
+> 
 
