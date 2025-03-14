@@ -1,95 +1,163 @@
-Return-Path: <linux-pci+bounces-23751-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23752-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 390D2A611BD
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 13:50:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D86AA611FC
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 14:05:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8AED01B61FE6
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 12:50:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6718C3BB99B
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 13:05:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 714FB1FF1D4;
-	Fri, 14 Mar 2025 12:49:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2CB01E521B;
+	Fri, 14 Mar 2025 13:05:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="krU0OQSN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pxzv8TBL"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87631FE44E;
-	Fri, 14 Mar 2025 12:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BEC1E531
+	for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 13:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741956595; cv=none; b=VCVCvDorHX6jxc/BXD7fnOD8yh6FIHOqM1phtGZo9UO/udkc98W1//B99Tl+JzCzj9gMx1Pr00X63nERqrZAfzmi4K+knpTPjW+YVTRK9I97IQDYYc/gBLfBPOY4rfEa4kTFoz7uG6bQt1uioruGflp34bG2ejsqa9otqDj6NvI=
+	t=1741957520; cv=none; b=PLM7d2GecwVmijL3FtqzirM9Z5yObBA5x2G7qh5y1qCXyBTaTCLCpPIKJ+xp38gQ+3NKNNe/ETlyWT3L6O8VMwoGOttPDNBe3qcfMPqF3/EWhzUrHAHfPbuIoWBg+q2TK7+2Zrv4voSuAIxYC44Gh4zoe2IqMEVSlifFE3uyoyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741956595; c=relaxed/simple;
-	bh=X5zqCLpGyDYLA9j9uyKQAE8GZpKSHtYrqhwWQuvKGsw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mQv9bLcP2QznTRbH8eHFGhGBSkoJC1hE7pB5Ojre1B+hIZuM5CijEsImCt1T2rE1bW6AkT9h5+JhJhMCdojxQP27mt+Ba91EqsEjQ7JzCX7tIXbqnPMQYfkjgHVrmimC1RUVHLZ66ji763ixPEgCT4eMYgkma+AnsxoYUKLHluI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=krU0OQSN; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e6194e9d2cso3636225a12.2;
-        Fri, 14 Mar 2025 05:49:53 -0700 (PDT)
+	s=arc-20240116; t=1741957520; c=relaxed/simple;
+	bh=Bp+yUfR/BUVTN0kSxxdvBkfquqMsS4/iOvCdYieA9Og=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=emko20XtpYR0DSxeMBdsCdjjKmx5i8XjDO0jXq4Dqm1fL8NigON83cZvp2pVWkuQyT/rAv+H68T7TQz7ltWd3xwThaku2oU/vdrhtiz3qEBikI8YjQsT/iy4DHEkzAsWJEbNm+6a7mrqgIhardsFTAsgiJzVIhrNv/ZpsBSsnCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Pxzv8TBL; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2232aead377so45270065ad.0
+        for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 06:05:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741956592; x=1742561392; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=X5zqCLpGyDYLA9j9uyKQAE8GZpKSHtYrqhwWQuvKGsw=;
-        b=krU0OQSNTusC9ehThKm0UwB5X3ehnSGjeHaMNpqcFb9XQqldkb88Dc+k1yuI0/KTOs
-         QF+Lt79ltY6LREPKzwMpA5SejcFBthqY+xzuw1r6khIJM3y0hAdL1p9MrF3uiyC99aoV
-         HIFaFjZ/am1RAjry31jg+oy7LO+xPunFxSHqWoZOFWNNnz7BVRTKOyJmIgH1VPTV5ZH9
-         OpCZ1AwmCtgDLpZGlPhdnzLguHfb1rfAkjj/HK14KK50tNo6pjfZpPu+/kw+dzqHuFHX
-         vQLyVTaEXTrdEbQVTznlLQ4zr4YeXoQP1A8WBpaXoU8PAFuyolVZzPzs9IITj9fr46Fv
-         Qn+g==
+        d=linaro.org; s=google; t=1741957518; x=1742562318; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qRblWdI7mkID34LfuZJ2escYTtLCuKs2WVmIAWsWW0M=;
+        b=Pxzv8TBLsUOahBo7PFQ7z2FQAb8cG0onBpYkSCGKbEI46NtGyhqVdm5MJpIWH9MgvB
+         +mmXRv+FoOXR5rVYsMfZPFk4VfMfLSKwPQw7C8COD534s9hu/LhzEWNXT85rSypWUfkm
+         put/N22IAGJ5C9gOmX3sGU6BBdX+zj9+3xkOELu/j8xegICJ/cyPuI8cEcy+/+ByEIEu
+         C/ADmXIXSE7KKjliuHKrfKai2uyxpr+Ba089qQp2en+asbvtVFsanN0vQk/b3MLbmpX/
+         dS3U6QXUZ9r4uuVljCOPXIbzrnNJabx2/mK1h8sud/aJHJ+DaHadyScQ9y9l0vfU3+HB
+         ot1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741956592; x=1742561392;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X5zqCLpGyDYLA9j9uyKQAE8GZpKSHtYrqhwWQuvKGsw=;
-        b=WWmF/HELDoza/u7/TpRIW/arl6UFhmkWcBKM+h9FuFtUNAGqQKk1jlxR2vAgFK0Zor
-         Gf6mTKEpZ/iGlv2MB2qbfmMEk4e8kX/UKBmzI6LXKNL/AzGUi/pFBtkLKFUv5gxLSiHH
-         hw5QKsrK6/ISUZ0EAtch15hOySHNPQv/XLBahWKn+m5q3HvsOOKOlkhbxYJII0rx7uTV
-         ycHZIWBjwtInMC7HYF61N98uakmxTBIXo++jvh5UT3y4/IwCguUlzKtLGggKynnGzSL/
-         vyuKPO6IyY740UgpC/fnpYIzuxJcIqtEYisGwZP1kqN4UBGQ+LacpZ6G5y3G5QiHpiOn
-         FHGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUa0lRf320MpiF19NpYZw/DL1v+M/4ZMmZhr27VUAZ4KIuftIzDAp8/1tMO913EeHlm49WTzq7ZUkkwQGA=@vger.kernel.org, AJvYcCXMN1LXDmcb03H2By4hhdFHSkyx2c8endE9u9NuGK0lZQB7Rn/XvYk6Qq+5zLUUxskDq5lpTT4vP12h@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPoNu4Dc1x4dO/0Qh5E05QFYQfAw6ZRyl9ThRJla3TPkbzGibE
-	ymmKSNaBLUy80TrvJF1LzIxbru1VPQeo+WpNoSFZ24eeoxgUZqeKBmFJQjqy23Yk+dq0Z3M6lir
-	H8GYH1GtO5Y0x2AOLJeKWgOgZshc=
-X-Gm-Gg: ASbGncsRCK1YRhSLSqQeBFs9VcXLH3suZAb69OyGQxe08J/eVAuoXIjVBPqcSxgiTY9
-	AAPHERMJKM9J7w4foaQjye/sbdzzCietEnd6/tdCTPnlEtap1b+VQeQjHyV5wzYjTadgiD5REy7
-	sYMI5cCv/pubnUwUIc5HvLSFt1KmJtq6yPK3xjDWK64pc7Z1U6jJZEgpEA56n1
-X-Google-Smtp-Source: AGHT+IEGjdkdr1fGzpz3lMEfZQVZH8C0WzNs9jmVqKwfp5G6gM62ZAjOAOpCk1J9jsxltITKchYxgMvNxAl9HVGZLPc=
-X-Received: by 2002:a05:6402:34c3:b0:5e5:bfab:524 with SMTP id
- 4fb4d7f45d1cf-5e89f24ef49mr2591094a12.3.1741956591938; Fri, 14 Mar 2025
- 05:49:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741957518; x=1742562318;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qRblWdI7mkID34LfuZJ2escYTtLCuKs2WVmIAWsWW0M=;
+        b=kBDmAbUflc8XrsnPzvhtNl/nlxiw6x6eQzE1mHpp+nVdqm+xJyOMc1kpeVIBIx7Kit
+         VFgBIAiCud0ObDvFN6HlgvfVGLDBeZDguRaAJCPgQl3Xcz9Dq9DXVHIDaWPb6VN2Vnbc
+         Y0JxpnKIn+U81bn2Q5lqxe3I75gcLrFAK2VCiAodwQJyE7j30z05ybGITtECHZK9Xaut
+         un3pACW+2gh0Nu3vKF7dBwsE1dmZxFXuco9+QKAK+ow5gRaFVMYmqNOTYB4dA/xTOxIH
+         jvsuBJeskvDsA9EogmZvWtU9OJaeSjAv5gNL4pdr/FLQv3loqDtMGlvPb5lfEutT4gIM
+         0Cyw==
+X-Forwarded-Encrypted: i=1; AJvYcCWwRhBkaTxKFeHTlGVlcTlnlB9GYqKhjEU28bWdUAxHw1pCfQNfJ2BaB2ZxYULOSE4xgolXgc2PuBA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/rpLZ16rxi29ooEsovMT8AtGPVhpvWzL4cykpnBiaXAN2l3mv
+	8nrPc1fUnjx3/XGOJvNj9zFlrVYzL4aMmRnBqp2oR4Ck1tmn1N8ZmJVenPCcBA==
+X-Gm-Gg: ASbGncsfr186FUCLYmMRo52fA90EJlb5wgQBQOXPS9oD/jniK5bdi/n24ObmyOowIK0
+	qEOC+pR+lNiJm5MiCc7ZmDFJQZ3h0NyPRrvpmGxaR9ISt4rtOR5IHVMVnGqNC9I61dm94aNW5JW
+	cpOYE3xpXaCDKuDL6vwzWwxVx3tLiYOvdXH98JnIzUTgiAa/4FjBL7wJFiRwFUqVc96/HkmIdru
+	FYEwUVlisdcCVrGyVvvaPU3a6aToGZKf16BEe7zmy1e6nctdqcbxZeHUmH/aSNMA0d8y9QFXp8S
+	9HXiJJ/6xe5zaGmviYytsBrah+yBEQShVaRqbrlxbZtWq/opSfjffK3CxNpEx5DACaU=
+X-Google-Smtp-Source: AGHT+IGoPEXzVJnmuqrzVkeYZ3RggLz9YfKCX5FweKJeaERv4ORk4uqdfjB8FBS0rzsr49sWfcR5aA==
+X-Received: by 2002:a17:902:e802:b0:224:1074:63a2 with SMTP id d9443c01a7336-225e0b09859mr33593705ad.43.1741957518482;
+        Fri, 14 Mar 2025 06:05:18 -0700 (PDT)
+Received: from thinkpad ([120.56.195.144])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bbfe22sm28051975ad.206.2025.03.14.06.05.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 06:05:17 -0700 (PDT)
+Date: Fri, 14 Mar 2025 18:35:11 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	bwawrzyn@cisco.com, thomas.richard@bootlin.com,
+	wojciech.jasko-EXT@continental-corporation.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2] PCI: cadence: Add configuration space capability search API
+Message-ID: <20250314130511.hmceagpx5oq5gvrr@thinkpad>
+References: <20250308133903.322216-1-18255117159@163.com>
+ <20250309023839.2cakdpmsbzn6pm7g@uda0492258>
+ <3e6645a8-6de9-4125-8444-fa1a4f526881@163.com>
+ <20250309054835.4ydiq4xpguxtbvkf@uda0492258>
+ <bf9fc865-58b9-45ed-a346-ce82899d838c@163.com>
+ <20250309100243.ihrxe6vfdugzpzsn@uda0492258>
+ <9eee0ab5-d870-451d-bf38-41578f487854@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307-no-offset-v1-0-0c728f63b69c@gmail.com>
-In-Reply-To: <20250307-no-offset-v1-0-0c728f63b69c@gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 14 Mar 2025 08:49:15 -0400
-X-Gm-Features: AQ5f1JodQ1cMn9jAHSmh5rXhI1uUOHZC-6K9hXSSgoYaQ-kS0BzkUlTCSiWngGw
-Message-ID: <CAJ-ks9kUUtg5BiTztCckbaU2F74uxhso5mT4Yi_p3n9LmhYZYg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] rust: workqueue: remove HasWork::OFFSET
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9eee0ab5-d870-451d-bf38-41578f487854@163.com>
 
-Gentle ping on this.
+On Mon, Mar 10, 2025 at 11:09:54PM +0800, Hans Zhang wrote:
+> 
+> 
+> On 2025/3/9 18:02, Siddharth Vadapalli wrote:
+> > > Hi Siddharth,
+> > > 
+> > > Prior to this patch, I don't think hard-coded is that reasonable. Because
+> > > the SOC design of each company does not guarantee that the offset of each
+> > > capability is the same. This parameter can be configured when selecting PCIe
+> > > configuration options. The current code that just happens to hit the offset
+> > > address is the same.
+> > 
+> > 1. You are modifying the driver for the Cadence PCIe Controller IP and
+> > not the one for your SoC (a.k.a the application/glue/wrapper driver).
+> > 2. The offsets are tied to the Controller IP and not to your SoC. Any
+> > differences that arise due to IP Integration into your SoC should be
+> > handled in the Glue driver (the one which you haven't upstreamed yet).
+> > 3. If the offsets in the Controller IP itself have changed, this
+> > indicates a different IP version which has nothing to do with the SoC
+> > that you are using.
+> > 
+> > Please clarify whether you are facing problems with the offsets due to a
+> > difference in the IP Controller Version, or due to the way in which the IP
+> > was integrated into your SoC.
+> > 
+> 
+> Hi Siddharth,
+> 
+> I have consulted several PCIe RTL designers in the past two days. They told
+> me that the controller IP of Synopsys or Cadence can be configured with the
+> offset address of the capability. I don't think it has anything to do with
+> SOC, it's just a feature of PCIe controller IP. In particular, the number of
+> extended capability is relatively large. When RTL is generated, one more
+> configuration may cause the offset addresses of extended capability to be
+> different. Therefore, it is unreasonable to assign all the offset addresses
+> in advance.
+> 
+> Here, I want to make Cadence PCIe common driver more general. When we keep
+> developing new SoCs, the capability or extended capability offset address
+> may eventually be inconsistent.
+> 
+> Thank you very much Siddharth for discussing this patch with me. I would
+> like to know what other maintainers have to say about this.
+> 
+
+Even though this patch is mostly for an out of tree controller driver which is
+not going to be upstreamed, the patch itself is serving some purpose. I really
+like to avoid the hardcoded offsets wherever possible. So I'm in favor of this
+patch.
+
+However, these newly introduced functions are a duplicated version of DWC
+functions. So we will end up with duplicated functions in multiple places. I'd
+like them to be moved (both this and DWC) to drivers/pci/pci.c if possible. The
+generic function *_find_capability() can accept the controller specific readl/
+readw APIs and the controller specific private data.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
