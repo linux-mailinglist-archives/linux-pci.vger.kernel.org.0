@@ -1,216 +1,201 @@
-Return-Path: <linux-pci+bounces-23774-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23775-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D321A619CC
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 19:49:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5936AA61A48
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 20:21:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4821E188A531
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 18:49:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F3EF97A4505
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 19:20:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1477204851;
-	Fri, 14 Mar 2025 18:49:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4590C204F71;
+	Fri, 14 Mar 2025 19:20:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQVmjcjZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Fjs+NSzF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F39913A26D;
-	Fri, 14 Mar 2025 18:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575C51FDA9C
+	for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 19:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741978157; cv=none; b=Rfwp00l7YChLwnfv2D+qvaSMdEVw1AreDkDDDNwQzwyC2a345rvLAWq8TG9Dywqhqyw98QPazUfpYgeY9Al0JzksAc4Mwk44OIfneIJeJUKTsNPLYy4w1zRBPftr5mKlafeLRX7/Qjz5VX8o7Dj9ndpXiatN1qg96M52qDxwdRQ=
+	t=1741980057; cv=none; b=sDn3coeTzwary3JAV5rkiL+KzI9VNh9rUj7HsxcIPFtMwiWhXYHPYb/VVEqVxsHw1CH755WRUq5EZd8nZjhH4b7GzT+VaIol/q2fp8JGsilcL7p437V2tAeQsiubxGQV6YTFRdbsOsnL9BmQFYqa+GkkoS3WDctbjpGVn8zoYcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741978157; c=relaxed/simple;
-	bh=O6TQHcNZOIDORUQUex99gbjkbXRSAsx+LziCN6QYCcQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XRiC/ALWiGdDRnu3t9+TNmp2WE4FzEkuuQpnHJWJ1ue3RLEWuflPvd+mKPiw+yQRyhtZvud2ba2W8pNmOZxDsOJtB8ilWir8dyaU/ycLGwPBAqtl/3Y3JXfH9BKmC1ybq0dn3NNPjGFSytbWyfTDFZFpjRluh1ptVui85nhswDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQVmjcjZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C4A3C4CEE9;
-	Fri, 14 Mar 2025 18:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741978156;
-	bh=O6TQHcNZOIDORUQUex99gbjkbXRSAsx+LziCN6QYCcQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rQVmjcjZhe/sj5yONxV2qVxL98CsQ/XLSI8I1aZI9aDjryLW+sVGMqcfI9Bca9bOS
-	 BjeRuzyi8Km8hWOU7pWxLh0zSj3Q5xmQc8mdYFqkiDMoJN2jPM4GlDtxa49auZ9+wv
-	 o4Atu8WInpcl8PAepC/fXyU6iiNJ15uue0LdQRbYK1nJzWh83j90x9tnoa0sRasVK1
-	 38iJcCj/HUFJNu/wqR3UGB0O36uPS2R51CHZ5YoiakTWuHP1tXd0Pvob4wtZn293CI
-	 sVep3kKdHjc3A4MK0/PKcdqXaMCX1hnu3s63bSmSw7dabMqNw6WwX2YJoxC1T+nsVF
-	 6r+AVkQEbO0Yg==
-Date: Fri, 14 Mar 2025 20:49:11 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
-Message-ID: <20250314184911.GR1322339@unreal>
-References: <cover.1738765879.git.leonro@nvidia.com>
- <20250220124827.GR53094@unreal>
- <CGME20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648@eucas1p2.samsung.com>
- <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
- <d408b1c7-eabf-4a1e-861c-b2ddf8bf9f0e@samsung.com>
- <20250312193249.GI1322339@unreal>
- <adb63b87-d8f2-4ae6-90c4-125bde41dc29@samsung.com>
+	s=arc-20240116; t=1741980057; c=relaxed/simple;
+	bh=wNQHuLdZvgcCKvlScN1lrTfyQ0hrUuljvEDBKsMOy6w=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BC0S/EZ+pBf12ZYCJO+jjhvSuG8C15jGpU4LJwVlNLZOXvULV8vRp5ALqGSEVIdiT2RmKLLy8SOx31n/6fU9FXU+YiSaKEaa6B3oEMwIh6bjAJr3kPcbnTSkRNp3e+427GeVe2UQivoNM0v1ySn+xPVI6fGCWPUurWbJcmeOAuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Fjs+NSzF; arc=none smtp.client-ip=185.70.40.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1741980046; x=1742239246;
+	bh=9dJbCsG+3iacLH4tb4fmUoDsa/aO1aDzdfXxttzDOrY=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=Fjs+NSzFawSLNsa09TFnRz6biEqh10Ncv0mh+buk3EHwrZqdxqi8/wiragXH46+tA
+	 9Cqki42WkDSHpNksr6hBbaeNCimtpIfUk77+5bFIwplsBTWRCrSD5pyXAUgc6ha/i/
+	 F/AbXBhgVOheRGaQpCgNOJ1WeX0VMSBb//HLGSk0qlyIaAhYMF50PzCAQi0M3Or2oy
+	 OFlo7aXbxTagMLVm9NAcvmcaFEAvLBm4dlaKjRB4RLWOwN1hyQJ0hHh/otSU1UaaAM
+	 7jgt3qJkyGtcgZITwoPDGvyz7CJ7o1Hkj/k/FGaoCehgKXDM58Gr8vebZK412X1hTN
+	 VQyW65skxgrjw==
+Date: Fri, 14 Mar 2025 19:20:39 +0000
+To: Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/2] rust: workqueue: remove HasWork::OFFSET
+Message-ID: <D8G8DV3PX8VX.2WHSM0TWH8JWV@proton.me>
+In-Reply-To: <20250307-no-offset-v1-2-0c728f63b69c@gmail.com>
+References: <20250307-no-offset-v1-0-0c728f63b69c@gmail.com> <20250307-no-offset-v1-2-0c728f63b69c@gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 62e23f231bb6f0fe7703572b1bd93319989c4b3a
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <adb63b87-d8f2-4ae6-90c4-125bde41dc29@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 14, 2025 at 11:52:58AM +0100, Marek Szyprowski wrote:
-> On 12.03.2025 20:32, Leon Romanovsky wrote:
-> > On Wed, Mar 12, 2025 at 10:28:32AM +0100, Marek Szyprowski wrote:
-> >> Hi Robin
-> >>
-> >> On 28.02.2025 20:54, Robin Murphy wrote:
-> >>> On 20/02/2025 12:48 pm, Leon Romanovsky wrote:
-> >>>> On Wed, Feb 05, 2025 at 04:40:20PM +0200, Leon Romanovsky wrote:
-> >>>>> From: Leon Romanovsky <leonro@nvidia.com>
-> >>>>>
-> >>>>> Changelog:
-> >>>>> v7:
-> >>>>>    * Rebased to v6.14-rc1
-> >>>> <...>
-> >>>>
-> >>>>> Christoph Hellwig (6):
-> >>>>>     PCI/P2PDMA: Refactor the p2pdma mapping helpers
-> >>>>>     dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
-> >>>>>     iommu: generalize the batched sync after map interface
-> >>>>>     iommu/dma: Factor out a iommu_dma_map_swiotlb helper
-> >>>>>     dma-mapping: add a dma_need_unmap helper
-> >>>>>     docs: core-api: document the IOVA-based API
-> >>>>>
-> >>>>> Leon Romanovsky (11):
-> >>>>>     iommu: add kernel-doc for iommu_unmap and iommu_unmap_fast
-> >>>>>     dma-mapping: Provide an interface to allow allocate IOVA
-> >>>>>     dma-mapping: Implement link/unlink ranges API
-> >>>>>     mm/hmm: let users to tag specific PFN with DMA mapped bit
-> >>>>>     mm/hmm: provide generic DMA managing logic
-> >>>>>     RDMA/umem: Store ODP access mask information in PFN
-> >>>>>     RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
-> >>>>>       linkage
-> >>>>>     RDMA/umem: Separate implicit ODP initialization from explicit ODP
-> >>>>>     vfio/mlx5: Explicitly use number of pages instead of allocated
-> >>>>> length
-> >>>>>     vfio/mlx5: Rewrite create mkey flow to allow better code reuse
-> >>>>>     vfio/mlx5: Enable the DMA link API
-> >>>>>
-> >>>>>    Documentation/core-api/dma-api.rst   |  70 ++++
-> >>>>    drivers/infiniband/core/umem_odp.c   | 250 +++++---------
-> >>>>>    drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
-> >>>>>    drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
-> >>>>>    drivers/infiniband/hw/mlx5/umr.c     |  12 +-
-> >>>>>    drivers/iommu/dma-iommu.c            | 468
-> >>>>> +++++++++++++++++++++++----
-> >>>>>    drivers/iommu/iommu.c                |  84 ++---
-> >>>>>    drivers/pci/p2pdma.c                 |  38 +--
-> >>>>>    drivers/vfio/pci/mlx5/cmd.c          | 375 +++++++++++----------
-> >>>>>    drivers/vfio/pci/mlx5/cmd.h          |  35 +-
-> >>>>>    drivers/vfio/pci/mlx5/main.c         |  87 +++--
-> >>>>>    include/linux/dma-map-ops.h          |  54 ----
-> >>>>>    include/linux/dma-mapping.h          |  85 +++++
-> >>>>>    include/linux/hmm-dma.h              |  33 ++
-> >>>>>    include/linux/hmm.h                  |  21 ++
-> >>>>>    include/linux/iommu.h                |   4 +
-> >>>>>    include/linux/pci-p2pdma.h           |  84 +++++
-> >>>>>    include/rdma/ib_umem_odp.h           |  25 +-
-> >>>>>    kernel/dma/direct.c                  |  44 +--
-> >>>>>    kernel/dma/mapping.c                 |  18 ++
-> >>>>>    mm/hmm.c                             | 264 +++++++++++++--
-> >>>>>    21 files changed, 1435 insertions(+), 693 deletions(-)
-> >>>>>    create mode 100644 include/linux/hmm-dma.h
-> >>>> Kind reminder.
-> > <...>
-> >
-> >> Removing the need for scatterlists was advertised as the main goal of
-> >> this new API, but it looks that similar effects can be achieved with
-> >> just iterating over the pages and calling page-based DMA API directly.
-> > Such iteration can't be enough because P2P pages don't have struct pages,
-> > so you can't use reliably and efficiently dma_map_page_attrs() call.
-> >
-> > The only way to do so is to use dma_map_sg_attrs(), which relies on SG
-> > (the one that we want to remove) to map P2P pages.
-> 
-> That's something I don't get yet. How P2P pages can be used with 
-> dma_map_sg_attrs(), but not with dma_map_page_attrs()? Both operate 
-> internally on struct page pointer.
+On Fri Mar 7, 2025 at 10:58 PM CET, Tamir Duberstein wrote:
+> Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
+> the interface of `HasWork` and replacing pointer arithmetic with
+> `container_of!`. Remove the provided implementation of
+> `HasWork::get_work_offset` without replacement; an implementation is
+> already generated in `impl_has_work!`. Remove the `Self: Sized` bound on
+> `HasWork::work_container_of` which was apparently necessary to access
+> `OFFSET` as `OFFSET` no longer exists.
+>
+> A similar API change was discussed on the hrtimer series[1].
+>
+> Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3=
+bf0ce6cc@kernel.org/ [1]
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+>  rust/kernel/workqueue.rs | 45 ++++++++++++------------------------------=
+---
+>  1 file changed, 12 insertions(+), 33 deletions(-)
 
-Yes, and no.
-See users of is_pci_p2pdma_page(...) function. In dma_*_sg() APIs, there
-is a real check and support for p2p. In dma_map_page_attrs() variants,
-this support is missing (ignored, or error is returned).
+What is the motivation of this change? I didn't follow the discussion,
+so if you explained it there, it would be nice if you could also add it
+to this commit message.
 
-> 
-> >> Maybe I missed something. I still see some advantages in this DMA API
-> >> extension, but I would also like to see the clear benefits from
-> >> introducing it, like perf logs or other benchmark summary.
-> > We didn't focus yet on performance, however Christoph mentioned in his
-> > block RFC [1] that even simple conversion should improve performance as
-> > we are performing one P2P lookup per-bio and not per-SG entry as was
-> > before [2]. In addition it decreases memory [3] too.
-> >
-> > [1] https://lore.kernel.org/all/cover.1730037261.git.leon@kernel.org/
-> > [2] https://lore.kernel.org/all/34d44537a65aba6ede215a8ad882aeee028b423a.1730037261.git.leon@kernel.org/
-> > [3] https://lore.kernel.org/all/383557d0fa1aa393dbab4e1daec94b6cced384ab.1730037261.git.leon@kernel.org/
-> >
-> > So clear benefits are:
-> > 1. Ability to use native for subsystem structure, e.g. bio for block,
-> > umem for RDMA, dmabuf for DRM, e.t.c. It removes current wasteful
-> > conversions from and to SG in order to work with DMA API.
-> > 2. Batched request and iotlb sync optimizations (perform only once).
-> > 3. Avoid very expensive call to pgmap pointer.
-> > 4. Expose MMIO over VFIO without hacks (PCI BAR doesn't have struct pages).
-> > See this series for such a hack
-> > https://lore.kernel.org/all/20250307052248.405803-1-vivek.kasireddy@intel.com/
-> 
-> I see those benefits and I admit that for typical DMA-with-IOMMU case it 
-> would improve some things. I think that main concern from Robin was how 
-> to handle it for the cases without an IOMMU.
+> diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+> index 0cd100d2aefb..0e2e0ecc58a6 100644
+> --- a/rust/kernel/workqueue.rs
+> +++ b/rust/kernel/workqueue.rs
+> @@ -429,51 +429,23 @@ pub unsafe fn raw_get(ptr: *const Self) -> *mut bin=
+dings::work_struct {
+>  ///
+>  /// # Safety
+>  ///
+> -/// The [`OFFSET`] constant must be the offset of a field in `Self` of t=
+ype [`Work<T, ID>`]. The
+> -/// methods on this trait must have exactly the behavior that the defini=
+tions given below have.
+> +/// The methods on this trait must have exactly the behavior that the de=
+finitions given below have.
+>  ///
+>  /// [`impl_has_work!`]: crate::impl_has_work
+> -/// [`OFFSET`]: HasWork::OFFSET
+>  pub unsafe trait HasWork<T, const ID: u64 =3D 0> {
+> -    /// The offset of the [`Work<T, ID>`] field.
+> -    const OFFSET: usize;
+> -
+> -    /// Returns the offset of the [`Work<T, ID>`] field.
+> -    ///
+> -    /// This method exists because the [`OFFSET`] constant cannot be acc=
+essed if the type is not
+> -    /// [`Sized`].
+> -    ///
+> -    /// [`OFFSET`]: HasWork::OFFSET
+> -    #[inline]
+> -    fn get_work_offset(&self) -> usize {
+> -        Self::OFFSET
+> -    }
+> -
+>      /// Returns a pointer to the [`Work<T, ID>`] field.
+>      ///
+>      /// # Safety
+>      ///
+>      /// The provided pointer must point at a valid struct of type `Self`=
+.
+> -    #[inline]
+> -    unsafe fn raw_get_work(ptr: *mut Self) -> *mut Work<T, ID> {
+> -        // SAFETY: The caller promises that the pointer is valid.
+> -        unsafe { (ptr as *mut u8).add(Self::OFFSET) as *mut Work<T, ID> =
+}
+> -    }
+> +    unsafe fn raw_get_work(ptr: *mut Self) -> *mut Work<T, ID>;
+> =20
+>      /// Returns a pointer to the struct containing the [`Work<T, ID>`] f=
+ield.
+>      ///
+>      /// # Safety
+>      ///
+>      /// The pointer must point at a [`Work<T, ID>`] field in a struct of=
+ type `Self`.
+> -    #[inline]
+> -    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut Self
+> -    where
+> -        Self: Sized,
 
-In such case, we fallback to non-IOMMU flow (old, well-established one).
-See this HMM patch as an example https://lore.kernel.org/all/a796da065fa8a9cb35d591ce6930400619572dcc.1738765879.git.leonro@nvidia.com/
-+dma_addr_t hmm_dma_map_pfn(struct device *dev, struct hmm_dma_map *map,
-+			   size_t idx,
-+			   struct pci_p2pdma_map_state *p2pdma_state)
-...
-+	if (dma_use_iova(state)) {
-...
-+	} else {
-...
-+		dma_addr = dma_map_page(dev, page, 0, map->dma_entry_size,
-+					DMA_BIDIRECTIONAL);
+This bound is required in order to allow the usage of `dyn HasWork` (ie
+object safety), so it should stay.
 
-Thanks
+Maybe add a comment explaining why it's there.
 
-> 
-> Best regards
-> -- 
-> Marek Szyprowski, PhD
-> Samsung R&D Institute Poland
-> 
+---
+Cheers,
+Benno
+
+> -    {
+> -        // SAFETY: The caller promises that the pointer points at a fiel=
+d of the right type in the
+> -        // right kind of struct.
+> -        unsafe { (ptr as *mut u8).sub(Self::OFFSET) as *mut Self }
+> -    }
+> +    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut Self;
+>  }
+> =20
+>  /// Used to safely implement the [`HasWork<T, ID>`] trait.
+> @@ -504,8 +476,6 @@ macro_rules! impl_has_work {
+>          // SAFETY: The implementation of `raw_get_work` only compiles if=
+ the field has the right
+>          // type.
+>          unsafe impl$(<$($generics)+>)? $crate::workqueue::HasWork<$work_=
+type $(, $id)?> for $self {
+> -            const OFFSET: usize =3D ::core::mem::offset_of!(Self, $field=
+) as usize;
+> -
+>              #[inline]
+>              unsafe fn raw_get_work(ptr: *mut Self) -> *mut $crate::workq=
+ueue::Work<$work_type $(, $id)?> {
+>                  // SAFETY: The caller promises that the pointer is not d=
+angling.
+> @@ -513,6 +483,15 @@ unsafe fn raw_get_work(ptr: *mut Self) -> *mut $crat=
+e::workqueue::Work<$work_typ
+>                      ::core::ptr::addr_of_mut!((*ptr).$field)
+>                  }
+>              }
+> +
+> +            #[inline]
+> +            unsafe fn work_container_of(
+> +                ptr: *mut $crate::workqueue::Work<$work_type $(, $id)?>,
+> +            ) -> *mut Self {
+> +                // SAFETY: The caller promises that the pointer points a=
+t a field of the right type
+> +                // in the right kind of struct.
+> +                unsafe { $crate::container_of!(ptr, Self, $field) }
+> +            }
+>          }
+>      )*};
+>  }
+
+
 
