@@ -1,119 +1,125 @@
-Return-Path: <linux-pci+bounces-23729-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23730-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82237A60D69
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 10:36:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B337A60D7A
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 10:38:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 709B619C520A
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 09:36:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 625DC460AE5
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 09:37:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EABF1EE00E;
-	Fri, 14 Mar 2025 09:36:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7EE11A8401;
+	Fri, 14 Mar 2025 09:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q5Ce7r+J"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBBD51EB187;
-	Fri, 14 Mar 2025 09:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3401DE4D6;
+	Fri, 14 Mar 2025 09:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741944972; cv=none; b=SgEmki7rAOgcx+YRUN+cpnPixKI7/knwJVE4qD1d5WHPQGgIEjjcxKLETq7fGGZeCNlSWHlJNzdmzlUnKEPQt1I077nSQJ2VtnFGxZ7HCCWBTG2RqHCq8KSntnAL/i75QxpDLr3psex7nbCmwHnARUgJkHdZH41wHZq6skA8cHg=
+	t=1741945057; cv=none; b=VVCjkXkso0dj7C0u7I0aKIiWn6tGmUI1ZcE1FlNJBRInCZfMoJsOrJaK3WGmMjTWFZ/wg8QWyQu3FPxobQn67mnlv9EnG5CZr9wfzOStyGqW2gnajuRn1g8HBynRqX39KVS0N6ZUJHa5UnY/hF4ziQl5xTu1s3tt9k4MjlQ4PMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741944972; c=relaxed/simple;
-	bh=vHSUy96CZBRi+d90hGbb74zU2U2xUzR8ZmsASxXtejU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B4hBpvziQ4vCO5Mf+b9AvHxyFUTfUK53fSRme+v7lOMnR/kl64ODYHQwuzknyYPZkcdCPasVbYpBHnpcBUTGGxgYmDJunm+bJwj02MbjUZtTWv0fJmFvJ268mm6aVHJiC3ulSBQyTRZ8U7Zu2d0izMD3yiUNjlLIlUFU1ILw5oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B6F7113E;
-	Fri, 14 Mar 2025 02:36:18 -0700 (PDT)
-Received: from [10.57.39.196] (unknown [10.57.39.196])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F8663F673;
-	Fri, 14 Mar 2025 02:36:06 -0700 (PDT)
-Message-ID: <f2e3c123-6d58-4560-be4f-b9171c0d9c73@arm.com>
-Date: Fri, 14 Mar 2025 09:36:03 +0000
+	s=arc-20240116; t=1741945057; c=relaxed/simple;
+	bh=Fjgr2aFaWgmQHGHqcXstlnmekThE3AVn9chYHcPpIQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Amt59Sm1k61KajBrAgWKIjvEGK7BJngUB3bylBSVDIegzv1lk0BtxntNk108+Qd/E6aUHXxiYfrbMjtlnlCPs6AUtdSxE/rhyqNjaKi/w019H9on/83m5Z9Ai/D1Z1bK6tHNydl2DqkuHOm7slAtYfXSQHpZi3dKNt+EMZrPTtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Q5Ce7r+J; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=/qgsKlDiT9BP/oIoId2DK84ZUVdJn5GENc/rrkdVUCM=; b=Q5Ce7r+JgAyL9BgcLONl0OR20V
+	XgOcSIKb8GXyGW30KGk2DpDS9w7YcUuwwTMRtoYcAkVfMXsKu1hUrD0FEwxQZ6x7fBVoJec2ex69e
+	giz+rK8wU0FzfurRDgYgHJHoVkoyGw82LzLKkdblVd0UslzK3avQjGW1Nji3hwNL7Lh7ibbwuZ5h7
+	7/SQRBvnaBEyZ56r4fHvvVSoj6AE+WFLvfzlRdmOWCabn+kWpiQ3lD/RwPkLnA+iS7gEGbE/RmF2H
+	7HneaI5OwU2LmAWgPxPIk2RZTyHEyn7neMU7/pyafy7XgZ9dlyJdYHO9ODV/WvwQC3MQbfoaNQkyk
+	MuXRiYTg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tt1Te-0000000FCOp-2oKj;
+	Fri, 14 Mar 2025 09:37:14 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3E7483006C0; Fri, 14 Mar 2025 10:37:14 +0100 (CET)
+Date: Fri, 14 Mar 2025 10:37:14 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dhruva Gole <d-gole@ti.com>, Tero Kristo <kristo@kernel.org>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
+	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	linux-hyperv@vger.kernel.org, Wei Huang <wei.huang2@amd.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Subject: Re: [patch V2 01/10] cleanup: Provide retain_ptr()
+Message-ID: <20250314093714.GW5880@noisy.programming.kicks-ass.net>
+References: <20250313130212.450198939@linutronix.de>
+ <20250313130321.442025758@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression on linux-next (next-20250312)
-To: "Borah, Chaitanya Kumar" <chaitanya.kumar.borah@intel.com>
-Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
- "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
- "Kurmi, Suresh Kumar" <suresh.kumar.kurmi@intel.com>,
- "Saarinen, Jani" <jani.saarinen@intel.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <SJ1PR11MB61295DE21A1184AEE0786E25B9D22@SJ1PR11MB6129.namprd11.prod.outlook.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <SJ1PR11MB61295DE21A1184AEE0786E25B9D22@SJ1PR11MB6129.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313130321.442025758@linutronix.de>
 
-On 2025-03-14 9:17 am, Borah, Chaitanya Kumar wrote:
-> Hello Robin,
+On Thu, Mar 13, 2025 at 02:03:38PM +0100, Thomas Gleixner wrote:
+> In cases where an allocation is consumed by another function, the
+> allocation needs to be retained on success or freed on failure. The code
+> pattern is usually:
 > 
-> Hope you are doing well. I am Chaitanya from the linux graphics team in Intel.
+> 	struct foo *f = kzalloc(sizeof(*f), GFP_KERNEL);
+> 	struct bar *b;
 > 
-> This mail is regarding a regression we are seeing in our CI runs[1] on linux-next repository.
+> 	,,,
+> 	// Initialize f
+> 	...
+> 	if (ret)
+> 		goto free;
+>         ...
+> 	bar = bar_create(f);
+> 	if (!bar) {
+> 		ret = -ENOMEM;
+> 	   	goto free;
+> 	}
+> 	...
+> 	return 0;
+> free:
+> 	kfree(f);
+> 	return ret;
 > 
-> Since the version next-20250312 [2], we are seeing the following regression
+> This prevents using __free(kfree) on @f because there is no canonical way
+> to tell the cleanup code that the allocation should not be freed.
 > 
-> `````````````````````````````````````````````````````````````````````````````````
-> <4>[    6.246790] reg-dummy reg-dummy: late IOMMU probe at driver bind, something fishy here!
-> <4>[    6.246812] WARNING: CPU: 0 PID: 1 at drivers/iommu/iommu.c:449 __iommu_probe_device+0x140/0x570
-> <4>[    6.246822] Modules linked in:
-> <4>[    6.246830] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc6-next-20250312-next-20250312-g9fbcd7b32bf7+ #1
-> <4>[    6.246838] Hardware name: Intel Corporation Arrow Lake Client Platform/MTL-S UDIMM 2DPC EVCRB, BIOS MTLSFWI1.R00.4400.D85.2410100007 10/10/2024
-> <4>[    6.246847] RIP: 0010:__iommu_probe_device+0x140/0x570
-> `````````````````````````````````````````````````````````````````````````````````
-> Details log can be found in [3].
+> Abusing no_free_ptr() by force ignoring the return value is not really a
+> sensible option either.
 > 
-> After bisecting the tree, the following patch [4] seems to be the first "bad" commit
-> 
-> `````````````````````````````````````````````````````````````````````````````````````````````````````````
-> commit bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c
-> Author: Robin Murphy mailto:robin.murphy@arm.com
-> Date:   Fri Feb 28 15:46:33 2025 +0000
-> 
->      iommu: Get DT/ACPI parsing into the proper probe path
-> 
-> `````````````````````````````````````````````````````````````````````````````````````````````````````````
-> 
-> We also verified that if we revert the patch the issue is not seen.
-> 
-> Could you please check why the patch causes this regression and provide a fix if necessary?
+> Provide an explicit macro retain_ptr(), which NULLs the cleanup
+> pointer. That makes it easy to analyze and reason about.
 
-Yes, the warnings are false positives, and the fix is already in today's 
--next, see 73d2f10957f5 ("iommu: Don't warn prematurely about dodgy 
-probes"). Sorry for the disruption.
+So no objection per se, but one way to solve this is by handing
+ownership to bar_create(), such that it is responsible for freeing f on
+failure.
 
-Thanks,
-Robin.
-
-> 
-> Thank you.
-> 
-> Regards
-> 
-> Chaitanya
-> 
-> [1] https://intel-gfx-ci.01.org/tree/linux-next/combined-alt.html?
-> [2] https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20250312
-> [3] https://intel-gfx-ci.01.org/tree/linux-next/next-20250312/bat-arls-6/boot0.txt
-> [4] https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20250312&id=bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c
-> 
-
+Anyway, I suspect the __must_check came from Linus, OTOH take_fd(), the
+equivalent for file descriptors	also don't have that __must_check. So
+clearly we have precedent here.
 
