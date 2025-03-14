@@ -1,165 +1,216 @@
-Return-Path: <linux-pci+bounces-23773-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23774-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E439A61891
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 18:50:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D321A619CC
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 19:49:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 74E8B887196
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 17:49:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4821E188A531
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 18:49:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3663B204684;
-	Fri, 14 Mar 2025 17:49:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1477204851;
+	Fri, 14 Mar 2025 18:49:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="heVTl5fY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQVmjcjZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3A82046B5;
-	Fri, 14 Mar 2025 17:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F39913A26D;
+	Fri, 14 Mar 2025 18:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741974542; cv=none; b=Qs/jcs6/w+fCTRW21GgiB0KsRGpPPQXYn1r/ZXei96r9pKsTKBQ1OSaMo3iRPcjAzLq87a4GmWtqYoOr6Uz4XNAbXFCLf3+OPGPzMJMvPRar5OaBcGyx3JdvgebWUn7+wO2HaOHr/QLnJ21Z3H1bC81FyUFRbom7gPHkN7PDCcM=
+	t=1741978157; cv=none; b=Rfwp00l7YChLwnfv2D+qvaSMdEVw1AreDkDDDNwQzwyC2a345rvLAWq8TG9Dywqhqyw98QPazUfpYgeY9Al0JzksAc4Mwk44OIfneIJeJUKTsNPLYy4w1zRBPftr5mKlafeLRX7/Qjz5VX8o7Dj9ndpXiatN1qg96M52qDxwdRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741974542; c=relaxed/simple;
-	bh=5CX0PxqyCR/cXugcODKOqmcWv5REPQUfyw3SdDx6M1k=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BUW+kLXCNp2O1B5Ve7O11H8L4NXyYIAxjz1Cay+dR3Uaiap/YShZI0Ah0kJSGQLDjCF5RtwXwB3pxYy7m0CDaHaxPkgxWeID4TEau+QH8XAAgDNOGsdUNkEwDnMZkBZFIwX8DkhWWsh87GCv2LT0QX8rfC7cIozHP3ueHZXmoO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=heVTl5fY; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-476ab588f32so31956781cf.2;
-        Fri, 14 Mar 2025 10:49:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741974539; x=1742579339; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dixI4ahQHaRBhFTm9g6VyvYe7UeqgOMzNkhyZ63tKIg=;
-        b=heVTl5fYLlEzRZnklLysYeGPTdBAscIh2i2ax6AYxN/y+g7Tu4fx4eYCTKvkbQm6tt
-         F5ShxFTSALrcbw5Rf739Zbe6cB+/+Kwh8YLdffAP2qCaBIU6no3tohS5UnE6yVSgEvop
-         tyQoqer+zieGfzMgt6geb5XWkfNOLVr3fKqkpDt8xmhVHUe7OmXMgTDmDbaFRp61DS1W
-         xzwuRUoBeKBtFk1lv4OAwmz/Okp5Ee5+K8q4NIn+W62dycfriJLeTvScHSKTvOlP7Ek6
-         UFNgOdOkTZKpL9s8Lym/BY5D7XuWr2ibSKq18bfEPL3Je9ULMCkXdwf3+1YfTvlR3MkW
-         VciQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741974539; x=1742579339;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dixI4ahQHaRBhFTm9g6VyvYe7UeqgOMzNkhyZ63tKIg=;
-        b=mblNAhT8Zl+Rfg5eRtNNO/xtLHEpXB+fyzTTzPCMVLYX5gIha7iUKCfa3VR7cZEQMr
-         pFeyORjBGqIgOikMdoJs1b6JhiuMvLGs4QMCeCq6R+9dwI6v26Eiy+f4R+BD9IvnO++X
-         II4X5BF9+ZSIIrjzBMzvifsfejyiJHZuIp7380x4/sG2T7M64KgCiTk/od/4IPYmJJgS
-         bVIj//hjuVKRMwgO9CMRRfLrgw2GgsrLTBTHgjPz/8lPwrVhskvocphg12F1qmndteuK
-         YJuMRQ1YOc9p9FeCPfLRhg0WB65X3psZjatUDSEm1ibd8JSajluJEVZE1JYaFKPWcjSb
-         gWXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuC8974j0a7/QoL06HpU1pJ4t/L1pQWUQIBXm6X0GKjv7z2acosadqvjUp+9n5XL8LohWjSxnU+CmhJHkWCds=@vger.kernel.org, AJvYcCWCz58AsWFarlyjhCadaNbrqnfPM56RCWcbeWn1r7xaJt1MtmVUyf1r1L8Qtu9zHQK0xMTtPnokPIbcD8k=@vger.kernel.org, AJvYcCX9TVLR2XVqs61LUK6KWpuVjiesTfYERsOR+MHSzQRa/hDm1NC0cbuZJ0QKI89qZ/Y32Y0kTp/G7OQR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzul3feZ85EFZj7m7AXpRtTGrlGDr6tfnk4lA3mBbGw4Ur/YNs1
-	/UppytlBFBnR27dTEGO1j8BMa7NncZEHJjR6R3MfuwLc4AdM3heu
-X-Gm-Gg: ASbGncuIT9xKfkIXZn6TgZy2+cZFwrJJFUKq8m77kJ0k1zixGXLL0CC7kfp1iMRX8IA
-	nnNzYUDJ7QF0GavyOxSafgAFyIqFthv98bZ72fIeIPahUvxabrnHEOrbdQwdYDigTm3z9pQBj31
-	k4pBJiqx1rnNcy8LZVZUnPvBJwaJMG/ZObLxmUBysrzjO4vYCszktTlUPo8tu5qUOu5X0hNUJQt
-	CrDBpMx9oaSfwsbzdExqH5nMSGyUxGrcHDRgIdllCPMyVz59RAuPlQPL2zqNB+DiANnxhsyM7eV
-	jGjWvgRP4nZPAxKtQK3bUsgx9kxeL159ypYjz1jgVjhyKL7fpo2iN3Aklp11kasxo/R+7MkK8ce
-	y+MYXAHlt6ARv85eOMITunfT1GWobMnHwZaE=
-X-Google-Smtp-Source: AGHT+IETlmM8hWJT8cSsf7LOVEUlZOqkH94DgERsFKpZv0JEfHuxAU2VESE/j8yYxTqEvss5fhNolg==
-X-Received: by 2002:a05:622a:5e8b:b0:472:6aa:d6be with SMTP id d75a77b69052e-476c8142d12mr44697011cf.17.1741974539224;
-        Fri, 14 Mar 2025 10:48:59 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-476bb82bf45sm25513721cf.75.2025.03.14.10.48.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 10:48:58 -0700 (PDT)
-Message-ID: <67d46c0a.050a0220.30a410.8bef@mx.google.com>
-X-Google-Original-Message-ID: <Z9RsBhMj01baL73W@winterfell.>
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 6F3E21200043;
-	Fri, 14 Mar 2025 13:48:58 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Fri, 14 Mar 2025 13:48:58 -0400
-X-ME-Sender: <xms:CmzUZ7HmVt0brZLMe8VBEo-XzmQoPslQEmk5Dc-5jhFwR-GOUoI8PA>
-    <xme:CmzUZ4VbZcLSxmf5xWrQthK1PCVg6__haumM21E2kTN7AeyuIUvZnaH0Z4Kn-xEkZ
-    3gOj-OvGDHdHXNj9g>
-X-ME-Received: <xmr:CmzUZ9LNXYHlBq3miiJBib3Lyt0gzVzlZ5s_2Wkq-x9z7Mb_HRMrLYeKeRY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufedugeekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfel
-    leeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
-    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudeipdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhr
-    tghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegshhgvlh
-    hgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprh
-    gtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhn
-    fegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtphhtthhopegsvghnnhhordhloh
-    hsshhinhesphhrohhtohhnrdhmvg
-X-ME-Proxy: <xmx:CmzUZ5G6Vno3joXRmrPjeZMgbML9Ek7wmKPtIwtMHlbTk7-6zX567w>
-    <xmx:CmzUZxV6e_q2vrDx0kaRMx-glG8tBhTNvpN5p23bVfYy3UtJR71zoQ>
-    <xmx:CmzUZ0N1hNhPUEz602X6XTBrH8UqE-kT1jyeXrXmVUcte3hPF3zzGw>
-    <xmx:CmzUZw2xIdjHIURlTexrvdx32T95ufawrOa_FZ3uCB2FlRgwbAbaVg>
-    <xmx:CmzUZ2XdFtJnycZqmTYss5tEeHSu7IBcK-CpJaO-w5mQwASsbJCOLMnH>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 14 Mar 2025 13:48:57 -0400 (EDT)
-Date: Fri, 14 Mar 2025 10:48:54 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] rust: device: implement device context marker
-References: <20250314160932.100165-1-dakr@kernel.org>
- <20250314160932.100165-3-dakr@kernel.org>
- <67d465bb.050a0220.d2e19.8fc9@mx.google.com>
- <Z9RoBMXWsrjg6jjg@cassiopeiae>
+	s=arc-20240116; t=1741978157; c=relaxed/simple;
+	bh=O6TQHcNZOIDORUQUex99gbjkbXRSAsx+LziCN6QYCcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XRiC/ALWiGdDRnu3t9+TNmp2WE4FzEkuuQpnHJWJ1ue3RLEWuflPvd+mKPiw+yQRyhtZvud2ba2W8pNmOZxDsOJtB8ilWir8dyaU/ycLGwPBAqtl/3Y3JXfH9BKmC1ybq0dn3NNPjGFSytbWyfTDFZFpjRluh1ptVui85nhswDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQVmjcjZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C4A3C4CEE9;
+	Fri, 14 Mar 2025 18:49:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741978156;
+	bh=O6TQHcNZOIDORUQUex99gbjkbXRSAsx+LziCN6QYCcQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rQVmjcjZhe/sj5yONxV2qVxL98CsQ/XLSI8I1aZI9aDjryLW+sVGMqcfI9Bca9bOS
+	 BjeRuzyi8Km8hWOU7pWxLh0zSj3Q5xmQc8mdYFqkiDMoJN2jPM4GlDtxa49auZ9+wv
+	 o4Atu8WInpcl8PAepC/fXyU6iiNJ15uue0LdQRbYK1nJzWh83j90x9tnoa0sRasVK1
+	 38iJcCj/HUFJNu/wqR3UGB0O36uPS2R51CHZ5YoiakTWuHP1tXd0Pvob4wtZn293CI
+	 sVep3kKdHjc3A4MK0/PKcdqXaMCX1hnu3s63bSmSw7dabMqNw6WwX2YJoxC1T+nsVF
+	 6r+AVkQEbO0Yg==
+Date: Fri, 14 Mar 2025 20:49:11 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
+Message-ID: <20250314184911.GR1322339@unreal>
+References: <cover.1738765879.git.leonro@nvidia.com>
+ <20250220124827.GR53094@unreal>
+ <CGME20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648@eucas1p2.samsung.com>
+ <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
+ <d408b1c7-eabf-4a1e-861c-b2ddf8bf9f0e@samsung.com>
+ <20250312193249.GI1322339@unreal>
+ <adb63b87-d8f2-4ae6-90c4-125bde41dc29@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <Z9RoBMXWsrjg6jjg@cassiopeiae>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <adb63b87-d8f2-4ae6-90c4-125bde41dc29@samsung.com>
 
-On Fri, Mar 14, 2025 at 06:31:48PM +0100, Danilo Krummrich wrote:
-> On Fri, Mar 14, 2025 at 10:21:58AM -0700, Boqun Feng wrote:
-> > On Fri, Mar 14, 2025 at 05:09:05PM +0100, Danilo Krummrich wrote:
-> > > Some bus device functions should only be called from bus callbacks,
-> > > such as probe(), remove(), resume(), suspend(), etc.
-> > > 
-> > > To ensure this add device context marker structs, that can be used as
-> > > generics for bus device implementations.
-> > > 
-> > > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> > > Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> > 
-> > Try chronological order for the tags? It was suggested first and then
-> > reviewed.
+On Fri, Mar 14, 2025 at 11:52:58AM +0100, Marek Szyprowski wrote:
+> On 12.03.2025 20:32, Leon Romanovsky wrote:
+> > On Wed, Mar 12, 2025 at 10:28:32AM +0100, Marek Szyprowski wrote:
+> >> Hi Robin
+> >>
+> >> On 28.02.2025 20:54, Robin Murphy wrote:
+> >>> On 20/02/2025 12:48 pm, Leon Romanovsky wrote:
+> >>>> On Wed, Feb 05, 2025 at 04:40:20PM +0200, Leon Romanovsky wrote:
+> >>>>> From: Leon Romanovsky <leonro@nvidia.com>
+> >>>>>
+> >>>>> Changelog:
+> >>>>> v7:
+> >>>>>    * Rebased to v6.14-rc1
+> >>>> <...>
+> >>>>
+> >>>>> Christoph Hellwig (6):
+> >>>>>     PCI/P2PDMA: Refactor the p2pdma mapping helpers
+> >>>>>     dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
+> >>>>>     iommu: generalize the batched sync after map interface
+> >>>>>     iommu/dma: Factor out a iommu_dma_map_swiotlb helper
+> >>>>>     dma-mapping: add a dma_need_unmap helper
+> >>>>>     docs: core-api: document the IOVA-based API
+> >>>>>
+> >>>>> Leon Romanovsky (11):
+> >>>>>     iommu: add kernel-doc for iommu_unmap and iommu_unmap_fast
+> >>>>>     dma-mapping: Provide an interface to allow allocate IOVA
+> >>>>>     dma-mapping: Implement link/unlink ranges API
+> >>>>>     mm/hmm: let users to tag specific PFN with DMA mapped bit
+> >>>>>     mm/hmm: provide generic DMA managing logic
+> >>>>>     RDMA/umem: Store ODP access mask information in PFN
+> >>>>>     RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
+> >>>>>       linkage
+> >>>>>     RDMA/umem: Separate implicit ODP initialization from explicit ODP
+> >>>>>     vfio/mlx5: Explicitly use number of pages instead of allocated
+> >>>>> length
+> >>>>>     vfio/mlx5: Rewrite create mkey flow to allow better code reuse
+> >>>>>     vfio/mlx5: Enable the DMA link API
+> >>>>>
+> >>>>>    Documentation/core-api/dma-api.rst   |  70 ++++
+> >>>>    drivers/infiniband/core/umem_odp.c   | 250 +++++---------
+> >>>>>    drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
+> >>>>>    drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
+> >>>>>    drivers/infiniband/hw/mlx5/umr.c     |  12 +-
+> >>>>>    drivers/iommu/dma-iommu.c            | 468
+> >>>>> +++++++++++++++++++++++----
+> >>>>>    drivers/iommu/iommu.c                |  84 ++---
+> >>>>>    drivers/pci/p2pdma.c                 |  38 +--
+> >>>>>    drivers/vfio/pci/mlx5/cmd.c          | 375 +++++++++++----------
+> >>>>>    drivers/vfio/pci/mlx5/cmd.h          |  35 +-
+> >>>>>    drivers/vfio/pci/mlx5/main.c         |  87 +++--
+> >>>>>    include/linux/dma-map-ops.h          |  54 ----
+> >>>>>    include/linux/dma-mapping.h          |  85 +++++
+> >>>>>    include/linux/hmm-dma.h              |  33 ++
+> >>>>>    include/linux/hmm.h                  |  21 ++
+> >>>>>    include/linux/iommu.h                |   4 +
+> >>>>>    include/linux/pci-p2pdma.h           |  84 +++++
+> >>>>>    include/rdma/ib_umem_odp.h           |  25 +-
+> >>>>>    kernel/dma/direct.c                  |  44 +--
+> >>>>>    kernel/dma/mapping.c                 |  18 ++
+> >>>>>    mm/hmm.c                             | 264 +++++++++++++--
+> >>>>>    21 files changed, 1435 insertions(+), 693 deletions(-)
+> >>>>>    create mode 100644 include/linux/hmm-dma.h
+> >>>> Kind reminder.
+> > <...>
+> >
+> >> Removing the need for scatterlists was advertised as the main goal of
+> >> this new API, but it looks that similar effects can be achieved with
+> >> just iterating over the pages and calling page-based DMA API directly.
+> > Such iteration can't be enough because P2P pages don't have struct pages,
+> > so you can't use reliably and efficiently dma_map_page_attrs() call.
+> >
+> > The only way to do so is to use dma_map_sg_attrs(), which relies on SG
+> > (the one that we want to remove) to map P2P pages.
 > 
-> Is that a thing? When I apply patches I usully keep ACKs, RBs and SOBs together
-> at the bottom.
+> That's something I don't get yet. How P2P pages can be used with 
+> dma_map_sg_attrs(), but not with dma_map_page_attrs()? Both operate 
+> internally on struct page pointer.
 
-I don't think it's a hard requirement, but it makes logical sense to
-order the tags except your own SoB based on chronological order when
-re-submitting a new version IMO. It's in the same spirit of putting SoBs
-in chronological when multiple people handle the patches.
+Yes, and no.
+See users of is_pci_p2pdma_page(...) function. In dma_*_sg() APIs, there
+is a real check and support for p2p. In dma_map_page_attrs() variants,
+this support is missing (ignored, or error is returned).
 
-But it's your choice, I just feel it's a bit odd in the current order
-;-)
+> 
+> >> Maybe I missed something. I still see some advantages in this DMA API
+> >> extension, but I would also like to see the clear benefits from
+> >> introducing it, like perf logs or other benchmark summary.
+> > We didn't focus yet on performance, however Christoph mentioned in his
+> > block RFC [1] that even simple conversion should improve performance as
+> > we are performing one P2P lookup per-bio and not per-SG entry as was
+> > before [2]. In addition it decreases memory [3] too.
+> >
+> > [1] https://lore.kernel.org/all/cover.1730037261.git.leon@kernel.org/
+> > [2] https://lore.kernel.org/all/34d44537a65aba6ede215a8ad882aeee028b423a.1730037261.git.leon@kernel.org/
+> > [3] https://lore.kernel.org/all/383557d0fa1aa393dbab4e1daec94b6cced384ab.1730037261.git.leon@kernel.org/
+> >
+> > So clear benefits are:
+> > 1. Ability to use native for subsystem structure, e.g. bio for block,
+> > umem for RDMA, dmabuf for DRM, e.t.c. It removes current wasteful
+> > conversions from and to SG in order to work with DMA API.
+> > 2. Batched request and iotlb sync optimizations (perform only once).
+> > 3. Avoid very expensive call to pgmap pointer.
+> > 4. Expose MMIO over VFIO without hacks (PCI BAR doesn't have struct pages).
+> > See this series for such a hack
+> > https://lore.kernel.org/all/20250307052248.405803-1-vivek.kasireddy@intel.com/
+> 
+> I see those benefits and I admit that for typical DMA-with-IOMMU case it 
+> would improve some things. I think that main concern from Robin was how 
+> to handle it for the cases without an IOMMU.
 
-Regards,
-Boqun
+In such case, we fallback to non-IOMMU flow (old, well-established one).
+See this HMM patch as an example https://lore.kernel.org/all/a796da065fa8a9cb35d591ce6930400619572dcc.1738765879.git.leonro@nvidia.com/
++dma_addr_t hmm_dma_map_pfn(struct device *dev, struct hmm_dma_map *map,
++			   size_t idx,
++			   struct pci_p2pdma_map_state *p2pdma_state)
+...
++	if (dma_use_iova(state)) {
+...
++	} else {
+...
++		dma_addr = dma_map_page(dev, page, 0, map->dma_entry_size,
++					DMA_BIDIRECTIONAL);
+
+Thanks
+
+> 
+> Best regards
+> -- 
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
+> 
 
