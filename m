@@ -1,54 +1,59 @@
-Return-Path: <linux-pci+bounces-23777-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23778-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 996EAA61ADC
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 20:40:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65B57A61B3E
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 21:00:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DCF86420187
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 19:40:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A543F420B97
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 20:00:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6B6715A848;
-	Fri, 14 Mar 2025 19:40:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15611204C32;
+	Fri, 14 Mar 2025 19:59:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lkNexEeb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vG43qzsB"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9C417D2;
-	Fri, 14 Mar 2025 19:40:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E741FDA9C
+	for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 19:59:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741981233; cv=none; b=PNJRTVJzYiHhQ+G/4bB0yK3Hw4gcjilSIVwL+/W/sYWkiDbuSZ5GFmPsry7Mn4a4AAKJaZ6eoTVQZyfmS+d1bgh80hEhWuFtTtzPOWYiRF3iplJhJjr/T3RX2lpbpIIa3NATFAr3G2O4KJzGtJDl/4zJEsJiFy1A0miCEkmpzJ0=
+	t=1741982392; cv=none; b=Q8tdF8mQgUZV2UfPVcdsacSPpqcGfo4GPVHR4pRQEexz3QCGvfONhQV+dKsOoh6AukSrE1ZqHT03XniuDLeUQnwTnGnTFh8Pnfk8g2t9OVA44oIoEoZc4/VZ6kSzoeMGUdqAElh8hGJnKQkqcL9BlW4Rc4M4IssG1W0iUJfScqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741981233; c=relaxed/simple;
-	bh=IcViIoyQuIwvjOKTv7xso/ATQXDP/KFmnaBlf6ULPVw=;
+	s=arc-20240116; t=1741982392; c=relaxed/simple;
+	bh=UGWT3ec3Ir8uU5CvoVR7Fbk4i4rmDS/jpVjfDWB7oLA=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=cNSfCDvw05CijDSYrwwfC2Dz0QU/L8DVa+Sod5cMsorn78cxH+1ji12WMKgdjXJlFO4hj1hppS5fMWxJ8jakEHpwIoAfP+yo8gOJJTVTYULZ40j4Tv5H4Q7o4ZOBINmrC5maY8N9BXZkGj0LpQVTcjnTDET5eS3NFSN206jOaPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lkNexEeb; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AC10C4CEE3;
-	Fri, 14 Mar 2025 19:40:33 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=EF8bgJJakBzWw4pQVKm1v8GkqM0FLBBlUdXQWa83C+lfrw4JePns552FPmEGzfkF0njibogfbCCrK7Du/TPRqw+mbdU/9sNtMVT/URGPOm9z6z8VSfC+ql+rbaFm7xv8zmNnayVN8+srKb4OOWKHZ4wGOpDLiwIJ34Z/02O/2d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vG43qzsB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44152C4CEE3;
+	Fri, 14 Mar 2025 19:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741981233;
-	bh=IcViIoyQuIwvjOKTv7xso/ATQXDP/KFmnaBlf6ULPVw=;
+	s=k20201202; t=1741982391;
+	bh=UGWT3ec3Ir8uU5CvoVR7Fbk4i4rmDS/jpVjfDWB7oLA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=lkNexEebThSwtdRrPAup8bXMoJER1M9KpLBf3fswA1CsmARAK9TKlnFcOJA/HEBrG
-	 VIUtez4QCUJVsdf4/OCMlZEH2jUAE5+lOR5B/4VPLx5ETPmCMoFkFzqrKyEyBWfVT4
-	 gdnJHxGT3RmJ41fTmi2kjuZqIaA9oKCmcubKh1/1SLkPxa9xtVthGvf0FCpAVSeIsS
-	 mX5pGt/6Y1Qq4InYwiqI6anNLA0l2MPhEDImz6wfEFvfX6rmTSmGhqk2DV3ywXqKWE
-	 XC859CiCBaiJ8BKTYbTCEZS2Gi5u2cT7CqwAb2YKLVxRzQ80cEHrI86kHpGhKq6zVk
-	 KZ8WcqllXpdfA==
-Date: Fri, 14 Mar 2025 14:40:31 -0500
+	b=vG43qzsB6BGDDkID9J2QIybvRDFow6tZzKK5SPZtcXk76FTDtzjBj7UAm5175rJgH
+	 o323kHWLJy3eXGnnZI3lYEbkDF9IGZyhpeWM5j3Xm4ckJ+0LHwzqmbW+z7qd7Kvpdc
+	 iU7V4Wwj6rIZEXXwem0F7cN1IniVxPfedk7FwJ3TYXZ99Y+Ikbkj5JZvOENKc6I0p3
+	 nCZzKfmaalFAhzd57q27LRE16BEcXBnBtCsCts+6wUt+ZZxi8E16vCMBm+ONqzPVcb
+	 nFx4ykGTGeEfUYNmCmRnFV0gu4LmOaBNecMyZ1/cnn+/Vpnkm1FgsoqoTBMEBwcmqd
+	 3QxBB50fxvZaA==
+Date: Fri, 14 Mar 2025 14:59:49 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>
-Cc: linux-bluetooth@vger.kernel.org, linux-pci@vger.kernel.org,
-	bhelgaas@google.com, ravishankar.srivatsa@intel.com,
-	chethan.tumkur.narayan@intel.com, Kiran K <kiran.k@intel.com>
-Subject: Re: [PATCH v1] Bluetooth: btintel_pcie: Support function level reset
-Message-ID: <20250314194031.GA785335@bhelgaas>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH] PCI: loongson: Add quirk for OHCI device rev 0x02
+Message-ID: <20250314195949.GA792185@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,67 +62,54 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250314101613.3682010-1-chandrashekar.devegowda@intel.com>
+In-Reply-To: <20250121114225.2727684-1-chenhuacai@loongson.cn>
 
-On Fri, Mar 14, 2025 at 12:16:13PM +0200, Chandrashekar Devegowda wrote:
-> Support function level reset (flr) on hardware exception to recover
-> controller. Driver also implements the back-off time of 5 seconds and
-> the maximum number of retries are limited to 5 before giving up.
+On Tue, Jan 21, 2025 at 07:42:25PM +0800, Huacai Chen wrote:
+> The OHCI controller (rev 0x02) under LS7A PCI host has a hardware flaw.
+> MMIO register with offset 0x60/0x64 is treated as legacy PS2-compatible
+> keyboard/mouse interface, which confuse the OHCI controller. Since OHCI
+> only use a 4KB BAR resource indeed, the LS7A OHCI controller's 32KB BAR
+> is wrapped around (the second 4KB BAR space is the same as the first 4KB
+> internally). So we can add an 4KB offset (0x1000) to the BAR resource as
+> a workaround.
 
-Sort of weird that the commit log mentions FLR, but it's not mentioned
-in the patch itself except for BTINTEL_PCIE_FLR_RESET_MAX_RETRY.
-Apparently the assumption is that DSM_SET_RESET_METHOD_PCIE performs
-an FLR.
+It looks like usb_hcd_pci_probe() only uses BAR 0 in the OHCI case, so
+I assume this OHCI controller has a single 32KB BAR?
 
-Since this is an ACPI _DSM, presumably this mechanism only works for
-devices built into the platform, not for any potential plug-in devices
-that would not be described via ACPI.  I guess this driver probably
-already only works for built-in devices because it also uses
-DSM_SET_WDISABLE2_DELAY and DSM_SET_RESET_METHOD.
+And you're saying that in that BAR, the 0x1000-0x1fff offsets are
+aliases of the 0x0000-0x0fff area?
 
-There is a generic PCI core way to do FLR (pcie_reset_flr()), so I
-assume the _DSM exists because the device needs some additional
-device-specific work around the FLR.
+And this causes some kind of problem because the OCHI driver looks at
+offsets 0x60 and 0x64 into the BAR and sees something it doesn't like?
 
-> +static void btintel_pcie_removal_work(struct work_struct *wk)
+And this quirk adds 0x1000 to the BAR start, so the OHCI driver looks
+at offsets 0x1060 and 0x1064 of the original BAR, and that somehow
+avoids a problem?  Even though those are aliases of 0x0060 and 0x0064
+of the original BAR?
+
+> +static void loongson_ohci_quirk(struct pci_dev *dev)
 > +{
-> +	struct btintel_pcie_removal *removal =
-> +		container_of(wk, struct btintel_pcie_removal, work);
-> +	struct pci_dev *pdev = removal->pdev;
-> +	struct pci_bus *bus;
-> +	struct btintel_pcie_data *data;
-> +
-> +	data = pci_get_drvdata(pdev);
-> +
-> +	pci_lock_rescan_remove();
-> +
-> +	bus = pdev->bus;
-> +	if (!bus)
-> +		goto out;
-> +
-> +	btintel_acpi_reset_method(data->hdev);
-> +	pci_stop_and_remove_bus_device(pdev);
-> +	pci_dev_put(pdev);
-> +
-> +	if (bus->parent)
-> +		bus = bus->parent;
-> +	pci_rescan_bus(bus);
+> +	if (dev->revision == 0x2)
+> +		dev->resource[0].start += 0x1000;
 
-This remove and rescan by a driver that's bound to the device subverts
-the driver model.  pci_stop_and_remove_bus_device() detaches the
-driver from the device.  After the driver is detached, we should not
-be running any driver code.
+What does this do to the iomem_resource tree?  IIUC, dev->resource[0]
+no longer correctly describes the PCI address space consumed by the
+device.  
 
-There are a couple other drivers that remove their own device (ath9k,
-iwlwifi, asus_wmi, eeepc-laptop), but I think those are broken and
-it's a mistake to add this pattern to more drivers.
+If the BAR is actually programmed with [mem 0x20000000-0x20007fff],
+the device responds to PCI accesses in that range.  Now you update
+resource[0] so it describes the space [mem 0x20001000-0x20008fff].  So
+the kernel *thinks* the space at [mem 0x20000000-0x20000fff] is free
+and available for something else, which is not true, and that the
+device responds at [mem 0x0x20008000-0x20008fff], which is also not
+true.
 
-What's the reason for doing the remove and rescan?  The PCI core
-doesn't reset the device when you do this, so it's not a "bigger
-hammer reset".
+I think the resource has already been put into the iomem_resource tree
+by the time the final fixups are run, so this also may corrupt the
+sorting of the tree.
 
-> +out:
-> +	pci_unlock_rescan_remove();
-> +	kfree(removal);
+This just doesn't look safe to me.
+
 > +}
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_OHCI, loongson_ohci_quirk);
 
