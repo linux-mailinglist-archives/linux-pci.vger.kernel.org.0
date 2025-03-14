@@ -1,199 +1,159 @@
-Return-Path: <linux-pci+bounces-23709-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23710-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FA3FA60949
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 07:47:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01A0CA60954
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 07:55:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7CE213A23D9
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 06:47:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 84B7418985D2
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Mar 2025 06:55:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6FA713D26B;
-	Fri, 14 Mar 2025 06:47:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E3A622339;
+	Fri, 14 Mar 2025 06:55:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QBExZSDE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kwK2PpU/"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D1622339;
-	Fri, 14 Mar 2025 06:47:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A037512B94;
+	Fri, 14 Mar 2025 06:55:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741934838; cv=none; b=VhjtpZtEZKtOcZzDttBlNT9AKVtdgdlJ7tlRoEu9dUHEYCSNStynAqBHjOSMAMHHMYuHNQsBQD5HcjEy6HaOySOXc66VPDLFwEV9e4nSWqNtj6UNfL3Y41vhoQnE2m6ctjLKcqA1uOdaqEMMhfrL8VusM+t1MxuPJ2GUFkwWB9o=
+	t=1741935307; cv=none; b=tRVufmsWmWHdMr5a2E8eE+P1dMwCNIV7egCNgVByExTa7duEnQ8dSvOtXoOWoM4+prNDsBJ0MG1SFpF9BgddE6gIu7apw8mtEuosNdarmMp6Xki/DdHy4AbIATu6irgc7Qr9p6UR9fD1eGhiNzgnvngHwbsWqwmXHkeitexnPrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741934838; c=relaxed/simple;
-	bh=vjRo8A/nl0MNPlHLRqdBMTEDNlFgWMnGlQWCZBpMdxc=;
+	s=arc-20240116; t=1741935307; c=relaxed/simple;
+	bh=6gTzgQOVd3ne/8XxLFr1dWkRTC9CQZ+P5VXsdL+HTeU=;
 	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OdVZyEsqRo/wS0vip4uRjTIkqT3TkETG+bzFc1h8Qy6pkRC8bBGNfvObqhJ32o2wI8FO7Rk0dELfPRjTo9iKGKsy+H4XW/AzI6ZD/Cuyartbljw+JIB9HHRXiu+28qsHmYhPhxCBO7X1VsOl9/RTvpBMLGvO3WtABcUFeQ4IuVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QBExZSDE; arc=none smtp.client-ip=198.47.19.246
+	 Content-Type:Content-Disposition:In-Reply-To; b=DfVUQkbHBlT2q4EaRHlHGwWG2HwtEtUWiUyqMlJ5KQI3hjv4ydYwjrsE3PmU37LwnDtyWKniSMp+9hyggHz2PULFaHyKM/fSX/bbatVgv1KOCJi7nrEcXRbJ8+VYpvVSHgPZRMlrTkMB/XwwdMa/nUPU8tx821RE7Q5bUGAYFqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kwK2PpU/; arc=none smtp.client-ip=198.47.19.246
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52E6kiWC2063154
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52E6skUj2064774
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Mar 2025 01:46:44 -0500
+	Fri, 14 Mar 2025 01:54:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1741934804;
-	bh=sdv4Yo9ucrKy29fcoJrxnRwdBQqji21FxYro7lytlc4=;
+	s=ti-com-17Q1; t=1741935286;
+	bh=Dtma4NIIxwZ25QmncfJqv/YPoOIELjervTPth/gAlKU=;
 	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=QBExZSDEGmPHLzA6qsuMdsZ87CEhH9UuDdJqw8tIQ8kGUBYsBbWc1N3cliSogzmvO
-	 N2qYjaClgK7sXf35eZ2kg3naoyhq8X84YJtLCEf1iSCMjhVyqQcXKjksGHbd3wt1EW
-	 KQRypMsLx8Y2DJtGqXwZPVcifxJIefmf6uA6El6Q=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52E6ki2E108138
+	b=kwK2PpU/bjctEmztwr2AEu5GYAxTepORfZ7T/uDON7Do6KtcT/0PM7dHxR7ccWh/O
+	 kDgB6WtEZ5AJHuRsA32IK6VcZErzgbJ/J1f0NuXX6Yv77d+/pts2MX4WLk5Ew59+NJ
+	 gM1oxS9pfpG0xFPZweuyWIrit78DYbR9xWstwqDs=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52E6skSm003712
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 14 Mar 2025 01:46:44 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 14 Mar 2025 01:54:46 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 14
- Mar 2025 01:46:43 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2025 01:54:46 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 14 Mar 2025 01:46:43 -0500
+ Frontend Transport; Fri, 14 Mar 2025 01:54:46 -0500
 Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52E6kgOi032405;
-	Fri, 14 Mar 2025 01:46:43 -0500
-Date: Fri, 14 Mar 2025 12:16:42 +0530
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52E6simv093913;
+	Fri, 14 Mar 2025 01:54:45 -0500
+Date: Fri, 14 Mar 2025 12:24:44 +0530
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: Frank Li <Frank.Li@nxp.com>, Tony Lindgren <tony@atomide.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Siddharth
- Vadapalli <s-vadapalli@ti.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas
-	<bhelgaas@google.com>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH PATCH RFC NOT TESTED 1/2] ARM: dts: ti: dra7: Correct
- ranges for PCIe and parent bus nodes
-Message-ID: <20250314064642.fyf3jqylmc6meft7@uda0492258>
-References: <20250305-dra-v1-0-8dc6d9a0e1c0@nxp.com>
- <20250305-dra-v1-1-8dc6d9a0e1c0@nxp.com>
- <20250313165311.2fj7aus3pcsg4m2c@thinkpad>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <vigneshr@ti.com>, <kishon@kernel.org>, <cassel@kernel.org>,
+        <wojciech.jasko-EXT@continental-corporation.com>,
+        <thomas.richard@bootlin.com>, <bwawrzyn@cisco.com>,
+        <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>
+Subject: Re: [PATCH 1/4] PCI: cadence: Add support to build pcie-cadence
+ library as a kernel module
+Message-ID: <20250314065444.fmvhyqmuefnm4mcq@uda0492258>
+References: <20250307103128.3287497-1-s-vadapalli@ti.com>
+ <20250307103128.3287497-2-s-vadapalli@ti.com>
+ <20250313174416.n3c4srf6hb2l3bvg@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250313165311.2fj7aus3pcsg4m2c@thinkpad>
+In-Reply-To: <20250313174416.n3c4srf6hb2l3bvg@thinkpad>
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, Mar 13, 2025 at 10:23:11PM +0530, Manivannan Sadhasivam wrote:
+On Thu, Mar 13, 2025 at 11:14:16PM +0530, Manivannan Sadhasivam wrote:
 
 Hello Mani,
 
-> On Wed, Mar 05, 2025 at 11:20:22AM -0500, Frank Li wrote:
+> On Fri, Mar 07, 2025 at 04:01:25PM +0530, Siddharth Vadapalli wrote:
+> > From: Kishon Vijay Abraham I <kishon@ti.com>
+> > 
+> > Currently, the Cadence PCIe controller driver can be built as a built-in
+> > module only. Since PCIe functionality is not a necessity for booting, add
+> > support to build the Cadence PCIe driver as a loadable module as well.
+> > 
+> > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 > 
-> If you want a specific patch to be tested, you can add [PATCH RFT] tag.C
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > 
-> > According to code in drivers/pci/controller/dwc/pci-dra7xx.c
-> > 
-> > dra7xx_pcie_cpu_addr_fixup()
-> > {
-> > 	return cpu_addr & DRA7XX_CPU_TO_BUS_ADDR;  //0x0FFFFFFF
-> > }
-> > 
-> > PCI parent bus trim high 4 bits address to 0. Correct ranges in
-> > target-module@51000000 to algin hardware behavior, which translate PCIe
-> > outbound address 0..0x0fff_ffff to 0x2000_0000..0x2fff_ffff.
-> > 
-> > Set 'config' and 'addr_space' reg values to 0.
-> > Change parent bus address of downstream I/O and non-prefetchable memory to
-> > 0.
-> > 
-> > Ensure no functional impact on the final address translation result.
-> > 
-> > Prepare for the removal of the driver’s cpu_addr_fixup().
-> > 
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > > ---
-> >  arch/arm/boot/dts/ti/omap/dra7.dtsi | 18 +++++++++---------
-> >  1 file changed, 9 insertions(+), 9 deletions(-)
+> >  drivers/pci/controller/cadence/Kconfig             |  6 +++---
+> >  drivers/pci/controller/cadence/pcie-cadence-ep.c   |  6 ++++++
+> >  drivers/pci/controller/cadence/pcie-cadence-host.c |  9 +++++++++
+> >  drivers/pci/controller/cadence/pcie-cadence.c      | 12 ++++++++++++
+> >  drivers/pci/controller/cadence/pcie-cadence.h      |  4 ++--
+> >  5 files changed, 32 insertions(+), 5 deletions(-)
 > > 
-> > diff --git a/arch/arm/boot/dts/ti/omap/dra7.dtsi b/arch/arm/boot/dts/ti/omap/dra7.dtsi
-> > index b709703f6c0d4..9213fdd25330b 100644
-> > --- a/arch/arm/boot/dts/ti/omap/dra7.dtsi
-> > +++ b/arch/arm/boot/dts/ti/omap/dra7.dtsi
-> > @@ -196,7 +196,7 @@ axi0: target-module@51000000 {
-> >  			#size-cells = <1>;
-> >  			#address-cells = <1>;
-> >  			ranges = <0x51000000 0x51000000 0x3000>,
-> > -				 <0x20000000 0x20000000 0x10000000>;
-> > +				 <0x00000000 0x20000000 0x10000000>;
+> > diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
+> > index 8a0044bb3989..82b58096eea0 100644
+> > --- a/drivers/pci/controller/cadence/Kconfig
+> > +++ b/drivers/pci/controller/cadence/Kconfig
+> > @@ -4,16 +4,16 @@ menu "Cadence-based PCIe controllers"
+> >  	depends on PCI
+> >  
+> >  config PCIE_CADENCE
+> > -	bool
+> > +	tristate
+> >  
+> >  config PCIE_CADENCE_HOST
+> > -	bool
+> > +	tristate
+> >  	depends on OF
+> >  	select IRQ_DOMAIN
 > 
-> I'm not able to interpret this properly. So this essentially means that the
-> parent address 0x20000000 is mapped to child address 0x00000000. And the child
-> address is same for other controller as well.
-> 
-> Also, the cpu_addr_fixup() is doing the same by masking out the upper 4 bits. I
-> tried looking into the DRA7 TRM, but it says (ECAM_Param_Base_Addr +
-> 0x20000000) where ECAM_Param_Base_Addr = 0x0000_0000 to 0x0FFF_F000.
-> 
-> I couldn't relate TRM with the cpu_addr_fixup() callback. Can someone from TI
-> shed light on this?
+> Even though this was added earlier, looks like not needed.
 
-A "git blame" on the line being modified in dra7.dtsi gives the
-following commit:
-https://github.com/torvalds/linux/commit/c761028ef5e2
-prior to which the ranges is exactly the same as the one being added by
-this patch.
+Thank you for reviewing this patch.
 
-The cpu_addr_fixup() function was introduced by the following commit:
-https://github.com/torvalds/linux/commit/2ed6cc71e6f7
-with the reason described in
-Section 24.9.4.3.2 PCIe Controller Slave Port
-of the T.R.M. at:
-https://www.ti.com/lit/ug/spruic2d/spruic2d.pdf
----------------------------------------------------------------------------
-NOTE:
-The PCIe controller remains fully functional, and able to send transactions
-to, for example, anywhere within the 64-bit PCIe memory space, with the
-appropriate remapping of the 28-bit address by the outbound address
-translation unit (iATU). The limitation is that the total size of addressed
-PCIe regions (in config, memory, IO spaces) must be less than 2^28 bytes.
----------------------------------------------------------------------------
+drivers/pci/controller/cadence/Kconfig has the following:
+...
+	config PCIE_CADENCE_HOST
+		bool
+		depends on OF
+		select IRQ_DOMAIN
+		select PCIE_CADENCE
+...
+	config PCI_J721E_HOST
+		bool "TI J721E PCIe controller (host mode)"
+		depends on ARCH_K3 || COMPILE_TEST
+		depends on OF
+		select PCIE_CADENCE_HOST
+		select PCI_J721E
+...
+So PCI_J721E_HOST selects PCIE_CADENCE_HOST which in turn selects
+PCIE_CADENCE. As of now, none of these configs are enabled in
+arm64-defconfig, and they also will not be accepted as built-in modules
+as it will bloat the Linux Image for everyone. For that reason, they are
+all being converted to loadable modules, and their configs will eventually
+be enabled in arm64-defconfig as loadable modules.
 
-The entire sequence is:
-0) dra7.dtsi had ranges which match the ranges in the current patch.
-1) cpu_addr_fixup() was added by
-https://github.com/torvalds/linux/commit/2ed6cc71e6f7
-2) ranges was updated to <0x20000000 0x20000000 0x10000000> by:
-https://github.com/torvalds/linux/commit/c761028ef5e2
-3) ranges is being changed back to its original state of "0)" above.
-
-cpu_addr_fixup() was introduced to remove the following:
-	pp->io_base &= DRA7XX_CPU_TO_BUS_ADDR;
-	pp->mem_base &= DRA7XX_CPU_TO_BUS_ADDR;
-	pp->cfg0_base &= DRA7XX_CPU_TO_BUS_ADDR;
-	pp->cfg1_base &= DRA7XX_CPU_TO_BUS_ADDR;
-in dra7xx_pcie_host_init(). The reason for the above is mentioned in the
-"NOTE" as:
----------------------------------------------------------------------------
-The limitation is that the total size of addressed PCIe regions
-(in config, memory, IO spaces) must be less than 2^28 bytes.
----------------------------------------------------------------------------
-
-I am not sure if Frank is accounting for all of this in the current patch
-as well as the dependent patch series associated with removing
-cpu_addr_fixup().
-
-Regarding testing the series, I unfortunately don't have the hardware so
-I cannot test it.
+Please let me know if I misunderstood your comment regarding the quoted
+change not being required.
 
 Regards,
 Siddharth.
