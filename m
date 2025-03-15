@@ -1,126 +1,192 @@
-Return-Path: <linux-pci+bounces-23840-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23841-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1BC2A62FC5
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 17:04:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3051CA6304B
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 17:51:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB6667A411D
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 16:03:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 07EBF189AFD5
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 16:52:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9BB9201270;
-	Sat, 15 Mar 2025 16:04:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 058E520297F;
+	Sat, 15 Mar 2025 16:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z3GdGf47"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1CA17995E;
-	Sat, 15 Mar 2025 16:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 500132F3B
+	for <linux-pci@vger.kernel.org>; Sat, 15 Mar 2025 16:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742054657; cv=none; b=pOo8HShUWWaehZ4j+Sw5hfnNUdOaykOAAHF/3ytgYkLDXWs+r4dgK8iYO2ZyzilXXnoPQtTIxAuZUst4sW52FESmPxvXtc7GmngmYLWsaeZ1wAJ3K8sAtu8ky5xWYzqBpj257qrQJTBhXKr8XiHJYuFHbO6969tpUrD3k6VD85U=
+	t=1742057511; cv=none; b=k0HCyYyWkt6AFxNLgz1ZaFOiFs55JbyJ4aXywHN4f8NJERkYO0xCcHgnuRHtte8/qeAcvoSw33Cf4bdyslb7Y/8AYYg+vX338pre20rqrOQlhFTCFtmlThvMn/1rCKF2S4LqjQdi/j9hYnTrQ65mZsU2dGwiVHP25d7aL+TIzdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742054657; c=relaxed/simple;
-	bh=jCLcEAKOk+ffm3F5QK/1pdIOC2FtZ2xLKeqPv2n00MU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jc3lv0wsIGwYTKLwOTtmkUOH1ZpuGdqBCTkcmVh+0l95CSxJDVgxsmO6NlKAIRpGJvF9DH85kvJ19/EZme7PpJpp63WkB9j3PuqXuNQmcJz651o9rO1sTIxsMf//VT7is01pQAsG/E5cm3LTGTmvqMxs0C63y346yM0I2qZ3SnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id B71622800B4B2;
-	Sat, 15 Mar 2025 16:58:11 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id A15C916BB0D; Sat, 15 Mar 2025 16:58:11 +0100 (CET)
-Date: Sat, 15 Mar 2025 16:58:11 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Guenter Roeck <groeck@juniper.net>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Rajat Jain <rajatxjain@gmail.com>,
-	Joel Mathew Thomas <proxy0@tutamail.com>,
-	linux-kernel@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/4] PCI/hotplug: Disable HPIE over reset
-Message-ID: <Z9Wjk2GzrSURZoTG@wunner.de>
-References: <20250313142333.5792-1-ilpo.jarvinen@linux.intel.com>
- <20250313142333.5792-2-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1742057511; c=relaxed/simple;
+	bh=P625AIIdAU9zWohrbq16Vbn4rfAskQsrNv27HeDc+20=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=q4v08jJ6kIXPaTSoUfMdavw0xKfVTj0TS/rp2Op6vI9WMEjgVqJV21/MVGVD+331YNMRmUZvjscw+BOaHVW8BvxQ6nqq4JQXO5FFC2IYLjZnlRRFYtKu+SiZ6Uq756oJB312Olp+A2BCbirC95npGAq9xtHuyW5uEZC7WW84e8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z3GdGf47; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742057511; x=1773593511;
+  h=date:from:to:cc:subject:message-id;
+  bh=P625AIIdAU9zWohrbq16Vbn4rfAskQsrNv27HeDc+20=;
+  b=Z3GdGf47Sx3081H/OO1OdB9u7SIe8LQBuJaBmsW4s5tnshilhtN5NP3b
+   1OFjwuBMm/4gsJ9I0G0hjh6gprMhcX30SOwwRwfubUiaiPWqIL5dDjqAH
+   6O684L8zN5v0vU+mFDzYDsSDtbDe1VSVhb+OdeQEpDqnszUuwniqPkAxs
+   TlqS7hV/QRpQyQH4NmWAJ4WB1Bykt0DLXIY84EhWlApggLYioC7MmAlFB
+   bDlxEu9GzbL+d7CvH7z102tFhoGfVp+Lo6GgELihf2OzekUt9NRF4m03v
+   pBrGs8/bMbM2PDMPU5FjmfapV4D+1Y/JJTpXNZC8ARIJ6UCaFLjlGwvvv
+   Q==;
+X-CSE-ConnectionGUID: pvhBfQbZQ/CtL/x4nYYzEA==
+X-CSE-MsgGUID: wV5qIC6LSCy4lg5mGmu2LA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11374"; a="54580344"
+X-IronPort-AV: E=Sophos;i="6.14,250,1736841600"; 
+   d="scan'208";a="54580344"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2025 09:51:50 -0700
+X-CSE-ConnectionGUID: ybZpK0WOSPyJhUBc5jeUVQ==
+X-CSE-MsgGUID: RudfRUDFT2CIcblrTr15LQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,250,1736841600"; 
+   d="scan'208";a="126627781"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 15 Mar 2025 09:51:48 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ttUji-000BUB-28;
+	Sat, 15 Mar 2025 16:51:46 +0000
+Date: Sun, 16 Mar 2025 00:51:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:devres] BUILD SUCCESS
+ b1a7f99967fc0c052db8e65b449c7b32b1e9177f
+Message-ID: <202503160032.6N3t9p1n-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250313142333.5792-2-ilpo.jarvinen@linux.intel.com>
 
-On Thu, Mar 13, 2025 at 04:23:30PM +0200, Ilpo Järvinen wrote:
-> pciehp_reset_slot() disables PDCE (Presence Detect Changed Enable) and
-> DLLSCE (Data Link Layer State Changed Enable) for the duration of reset
-> and clears the related status bits PDC and DLLSC from the Slot Status
-> register after the reset to avoid hotplug incorrectly assuming the card
-> was removed.
-> 
-> However, hotplug shares interrupt with PME and BW notifications both of
-> which can make pciehp_isr() to run despite PDCE and DLLSCE bits being
-> off. pciehp_isr() then picks PDC or DLLSC bits from the Slot Status
-> register due to the events that occur during reset and caches them into
-> ->pending_events. Later, the IRQ thread in pciehp_ist() will process
-> the ->pending_events and will assume the Link went Down due to a card
-> change (in pciehp_handle_presence_or_link_change()).
-> 
-> Change pciehp_reset_slot() to also clear HPIE (Hot-Plug Interrupt
-> Enable) as pciehp_isr() will first check HPIE to see if the interrupt
-> is not for it. Then synchronize with the IRQ handling to ensure no
-> events are pending, before invoking the reset.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git devres
+branch HEAD: b1a7f99967fc0c052db8e65b449c7b32b1e9177f  PCI: Check BAR index for validity
 
-After dwelling on this for a while, I'm thinking that it may re-introduce
-the issue fixed by commit f5eff5591b8f ("PCI: pciehp: Fix AB-BA deadlock
-between reset_lock and device_lock"):
+elapsed time: 1449m
 
-Looking at the second and third stack trace in its commit message,
-down_write(reset_lock) in pciehp_reset_slot() is basically equivalent
-to synchronize_irq() and we're holding device_lock() at that point,
-hindering progress of pciehp_ist().
+configs tested: 99
+configs skipped: 1
 
-So I think I have guided you in the wrong direction and I apologize
-for that.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-However it seems to me that this should be solvable with the small
-patch below.  Am I missing something?
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250315    gcc-13.2.0
+arc                   randconfig-002-20250315    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    gcc-14.2.0
+arm                              allyesconfig    gcc-14.2.0
+arm                   randconfig-001-20250315    gcc-14.2.0
+arm                   randconfig-002-20250315    clang-21
+arm                   randconfig-003-20250315    clang-21
+arm                   randconfig-004-20250315    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250315    gcc-14.2.0
+arm64                 randconfig-002-20250315    gcc-14.2.0
+arm64                 randconfig-003-20250315    clang-16
+arm64                 randconfig-004-20250315    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250315    gcc-14.2.0
+csky                  randconfig-002-20250315    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    gcc-14.2.0
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250315    clang-21
+hexagon               randconfig-002-20250315    clang-17
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250315    gcc-12
+i386        buildonly-randconfig-002-20250315    clang-19
+i386        buildonly-randconfig-003-20250315    clang-19
+i386        buildonly-randconfig-004-20250315    clang-19
+i386        buildonly-randconfig-005-20250315    gcc-11
+i386        buildonly-randconfig-006-20250315    gcc-12
+i386                                defconfig    clang-19
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250315    gcc-14.2.0
+loongarch             randconfig-002-20250315    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250315    gcc-14.2.0
+nios2                 randconfig-002-20250315    gcc-14.2.0
+openrisc                          allnoconfig    clang-15
+openrisc                          allnoconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-15
+parisc                            allnoconfig    gcc-14.2.0
+parisc                randconfig-001-20250315    gcc-14.2.0
+parisc                randconfig-002-20250315    gcc-14.2.0
+powerpc                           allnoconfig    clang-15
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc               randconfig-001-20250315    clang-21
+powerpc               randconfig-002-20250315    gcc-14.2.0
+powerpc               randconfig-003-20250315    clang-18
+powerpc64             randconfig-001-20250315    gcc-14.2.0
+powerpc64             randconfig-002-20250315    clang-18
+powerpc64             randconfig-003-20250315    gcc-14.2.0
+riscv                             allnoconfig    clang-15
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250315    gcc-14.2.0
+riscv                 randconfig-002-20250315    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250315    clang-19
+s390                  randconfig-002-20250315    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250315    gcc-14.2.0
+sh                    randconfig-002-20250315    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250315    gcc-14.2.0
+sparc                 randconfig-002-20250315    gcc-14.2.0
+sparc64               randconfig-001-20250315    gcc-14.2.0
+sparc64               randconfig-002-20250315    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-15
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250315    gcc-12
+um                    randconfig-002-20250315    clang-18
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250315    gcc-12
+x86_64      buildonly-randconfig-002-20250315    clang-19
+x86_64      buildonly-randconfig-003-20250315    clang-19
+x86_64      buildonly-randconfig-004-20250315    clang-19
+x86_64      buildonly-randconfig-005-20250315    clang-19
+x86_64      buildonly-randconfig-006-20250315    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250315    gcc-14.2.0
+xtensa                randconfig-002-20250315    gcc-14.2.0
 
-@Joel Mathew Thomas, could you give the below patch a spin and see
-if it helps?
-
-Thanks!
-
--- >8 --
-
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index bb5a8d9f03ad..99a2ac13a3d1 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -688,6 +688,11 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 		return IRQ_HANDLED;
- 	}
- 
-+	/* Ignore events masked by pciehp_reset_slot(). */
-+	events &= ctrl->slot_ctrl;
-+	if (!events)
-+		return IRQ_HANDLED;
-+
- 	/* Save pending events for consumption by IRQ thread. */
- 	atomic_or(events, &ctrl->pending_events);
- 	return IRQ_WAKE_THREAD;
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
