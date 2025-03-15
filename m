@@ -1,154 +1,181 @@
-Return-Path: <linux-pci+bounces-23850-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23851-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6C30A63154
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 19:13:33 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFD42A631D7
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 19:45:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB9EF18924A1
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 18:13:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 25512174BEE
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 18:45:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF20B204F8C;
-	Sat, 15 Mar 2025 18:13:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4B4C15573F;
+	Sat, 15 Mar 2025 18:45:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJeNttz5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekYYnoCN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08701FECAD;
-	Sat, 15 Mar 2025 18:13:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9672A1F5FD;
+	Sat, 15 Mar 2025 18:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742062408; cv=none; b=KCBTNkis2iHORf2z9tp0yO67onX5lMDyvHNO8c1DM2gicjF2M+ITfIPskX3Vcnt0gdCDJSd3A2+4HAOfVn3b+Hbttk5Jb0FWQ70biPw1Td1Zli9w46/a96sZ2ecNpoEnVIi9brFS8thycSQhd8cchdfypXiThcMGcQtPD5RZ5XU=
+	t=1742064325; cv=none; b=X8Hkt3KY+LuWdg8JiWmkcLsgfdgCrqAhrmTDkrxcppgM396/Bl+om3LgVdb8yeIAhzdxereXxRRCiFryA99ZZI3LVYSG8Do0sQWhnwJS65lgPWUWG8JGGix/xrW11HHReZRAts8QK53ibUDiIutWTGHmYJ9c/lxtxTj5mRSn81k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742062408; c=relaxed/simple;
-	bh=j3l0CwRAA7jzKYQesrIbEeXl2+YGefTcqALSuRxhtJE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g0Q5tf0HlqTytRZEZZJaXhVprLxBpbLvbI2SK+zNEIUTB9KDK6UVaBb5EFdWb1KnkKa/QOYosx5F368ggdX70+UkCoJ8PBgXbKMWf2knZDRr0+xZDjvcWynh72NQ9q0dHF6Mvx05g04pYpBPsgJIdkoVCSg7lRuRAimhOc4QDp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kJeNttz5; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-307c13298eeso36054631fa.0;
-        Sat, 15 Mar 2025 11:13:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742062405; x=1742667205; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fw7G1r38bDsOV/Hp+FePWmAtnNh1LoMrSS/+4/QiIfA=;
-        b=kJeNttz5/Az//QSyIn1onLfEzNw7Z6ajsRfBtX1KYGFySqF3p8+nYyL01pcyKWNmIU
-         KqbG5ZZYTnntc9iYOaCzGy2X+/p5MMS/r16YImeYOZh7Zm+IXNvPfO2+IrHbWLF2VyhR
-         kvJUJ76N5MzH1zdOMY2WyI6KZKdlRTdHFmzzmAaOvNKRwm1F4VOLau03AMBNnFu+PAbI
-         QUNlisPBtSRi8eweO4zW9EdoWRfaNb3JoxiL7+LamU7uOgcYlSbYXrZ/9k0sSdpDBbyr
-         q7Gj8I4JUNcrpwJElvjDRjaLuerp8gYG6+QDRWLI28OzPhT68ab9Z3Dul/IkMpMB+gO0
-         tACg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742062405; x=1742667205;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fw7G1r38bDsOV/Hp+FePWmAtnNh1LoMrSS/+4/QiIfA=;
-        b=etQFM2W8bUEf+jZi1xtjivkV9omYjxgyatq35AGKJ9PYYsSLiOWF/joR5fzCC+M3FS
-         u1ORa1D3HCJnhQRBVeAxJAwNJ6sO0TlI7ux/X46DCwSfg+DaWVZ//0vXasOtmhh+ueI+
-         Zcqd5M57Nb15w5tkIzCNTf4HGy4vY/bFro8xE4nbwNPrV88pjKw6DAqhlBjccv8sjYEH
-         99xBHbbYcP3vvNDWA1bjcavwbqNC2rslg6BtAMPTI/N1BvUC90zv9EO1b+d3W/ZPlZKh
-         vFzjJB6BKvFarv1vJZl6gCxdHzGAmurH2KdayfmV4QnSYmtRETclvGtlbT9Vb6S/7A9m
-         P3ow==
-X-Forwarded-Encrypted: i=1; AJvYcCUEas5RSaatlburOehfNU9bqw/XoI0Z0Lj+x0+INpeIj5SqX2jIo+hss8ci++MHFdwDhoQgk5vAGqWndbyU3SU=@vger.kernel.org, AJvYcCUkPfRKF+cEXla2WaCfglCpTq+udQSWuQupV2tK4n1gTG0aiEdcfGFY+8L/SmSWqWOabMaC7qFYYq4o@vger.kernel.org, AJvYcCVz3LEkLG97tNNp44w7leVU636rIFa68p+t6xGilppq3hMW2yDKHd/iv5E2TpnVIPoBgYvYJ/RqirTE7jY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWZU+Q4v/H5Ae+nxRUXTYlOUwYeHyWiUdYSC8XaAwO6YpEFFGi
-	QVRjEwtcDrvIPe22RfkU/q8vo9vuLV6TvEwFuvfcV6fdGZrZF6mmkqhp2FgUD4Gj41RVS+vh85H
-	B0kCZ+R3Ij5ePV4vEvKzbFyML7Ps=
-X-Gm-Gg: ASbGncvw9YYc+QO3qblTYKsHL9genC0kFmSmkhXucI1GP+p+Jn60orEhNajxI+TmcVS
-	6X/gKTWVy2TAGf5HOt5114ZIN4l0Zf3fuAXPdGn/SyWbkfmxc6uhzT/MJVeDNTVK5x2/I0Nfg6m
-	g6yrOZZlsh+9Lw4BD2oviebAsjIK4ifTuZKFcKJyB+TTa+zoIyo3+MeGD2c3Vb
-X-Google-Smtp-Source: AGHT+IE0KAjbxCNTic2NO46G6ymGqtVgtOfyw7GNav0dyFztDRa2jv5OYpU6S/JmdNaLeStQlEXiGai7YwJdGALS1bo=
-X-Received: by 2002:a2e:8310:0:b0:30b:e73e:e472 with SMTP id
- 38308e7fff4ca-30c3de17df1mr38383941fa.14.1742062404658; Sat, 15 Mar 2025
- 11:13:24 -0700 (PDT)
+	s=arc-20240116; t=1742064325; c=relaxed/simple;
+	bh=4MhnkjWg/sUNC8gItCM/jiir8SJBGG2nGEGqhQyt2oM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=lK9XxtSDeh/AUSoUhqtiUU50FCN/OzJ5yZv8+masGY8rmyf2BNO+xAmTfBk1AbjfDRMa6Pys//xFWuVgKnqcabnS4hLxYZM6JwDSPgSjLJU3S1Mxwfrwqi39mkUBx59XqAlt7iE/sAh2/vVziZHE1kmjZMggNrd+2n2+mqc/Z/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekYYnoCN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF6E9C4CEE5;
+	Sat, 15 Mar 2025 18:45:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742064325;
+	bh=4MhnkjWg/sUNC8gItCM/jiir8SJBGG2nGEGqhQyt2oM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ekYYnoCNuNGq8GKgAHkJLE8+/WhianniML9ojpkV7NZIPXHS3fhqp4CCkOSBn3gQA
+	 ZuHm8JMr9eVigUhkdFponK9pava0p8RDgb4Z+lkwOStZiGlX39vdHOpg93tQaNP2gh
+	 iW4fFeOxiJy24BUtSlZ5xalyDL6VUSPTlF7LrqzipEmq7Tp1RWxSIV9JjJ7ZVYutXs
+	 8mqnsU49tYj9HwhPetAjLwFEMCgOTca6Y9mA1UeSIpyoMWn3BgrWWKdq7hv/IQwqpH
+	 gmEH59mi5/Zro2o7LAv991Gw7iEwkFRBxek7djhIgywcvQUxyJuEBxLukwkBWoLru9
+	 Dm57qYb49gWOw==
+Date: Sat, 15 Mar 2025 13:45:23 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Baolu Lu <baolu.lu@linux.intel.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	iommu@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Declare quirk_huawei_pcie_sva() as
+ pci_fixup_header
+Message-ID: <20250315184523.GA848225@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307-no-offset-v1-0-0c728f63b69c@gmail.com>
- <20250307-no-offset-v1-2-0c728f63b69c@gmail.com> <D8G8DV3PX8VX.2WHSM0TWH8JWV@proton.me>
- <CAJ-ks9m2ZHguB9N9-WM0EsO5MjaZ9yRamo_9NytAdzaDdb9aWQ@mail.gmail.com>
- <D8GQGCVTK0IL.16YO67C0IKLHA@proton.me> <CAJ-ks9mUPkP=QDGekbi1PRfpKKigXj87-_a25JBGHVRSiEe_AA@mail.gmail.com>
- <D8H1FFDMNLR3.STRVYQI7J496@proton.me>
-In-Reply-To: <D8H1FFDMNLR3.STRVYQI7J496@proton.me>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sat, 15 Mar 2025 14:12:48 -0400
-X-Gm-Features: AQ5f1JpCmV5HSBwmMBPR0tcNsqUNJYUMxZ9jOJqxNmNvCYCRpdj1FogTkOAVT1s
-Message-ID: <CAJ-ks9m-ab9Y5RD01higxZxbowZi_0tsSmCCw2umJLxBLH4dEw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] rust: workqueue: remove HasWork::OFFSET
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250315101319.5269-1-zhangfei.gao@linaro.org>
 
-On Sat, Mar 15, 2025 at 2:06=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
-e> wrote:
->
-> On Sat Mar 15, 2025 at 4:37 PM CET, Tamir Duberstein wrote:
-> > On Sat, Mar 15, 2025 at 5:30=E2=80=AFAM Benno Lossin <benno.lossin@prot=
-on.me> wrote:
-> >>
-> >> On Fri Mar 14, 2025 at 9:44 PM CET, Tamir Duberstein wrote:
-> >> > On Fri, Mar 14, 2025 at 3:20=E2=80=AFPM Benno Lossin <benno.lossin@p=
-roton.me> wrote:
-> >> >>
-> >> >> On Fri Mar 7, 2025 at 10:58 PM CET, Tamir Duberstein wrote:
-> >> >> >      /// Returns a pointer to the struct containing the [`Work<T,=
- ID>`] field.
-> >> >> >      ///
-> >> >> >      /// # Safety
-> >> >> >      ///
-> >> >> >      /// The pointer must point at a [`Work<T, ID>`] field in a s=
-truct of type `Self`.
-> >> >> > -    #[inline]
-> >> >> > -    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut S=
-elf
-> >> >> > -    where
-> >> >> > -        Self: Sized,
-> >> >>
-> >> >> This bound is required in order to allow the usage of `dyn HasWork`=
- (ie
-> >> >> object safety), so it should stay.
-> >> >>
-> >> >> Maybe add a comment explaining why it's there.
-> >> >
-> >> > I guess a doctest would be better, but I still don't understand why
-> >> > the bound is needed. Sorry, can you cite something or explain in mor=
-e
-> >> > detail please?
-> >>
-> >> Here is a link: https://doc.rust-lang.org/reference/items/traits.html#=
-dyn-compatibility
-> >>
-> >> But I realized that the trait wasn't object safe to begin with due to
-> >> the `OFFSET` associated constant. So I'm not sure we need this. Alice,
-> >> do you need `dyn HasWork`?
-> >
-> > I wrote a simple test:
->
-> [...]
->
-> > so I don't think adding the Sized bound makes sense - we'd end up
-> > adding it on every item in the trait.
->
-> Yeah the `Sized` bound was probably to make the cast work, so let's
-> remove it.
+On Sat, Mar 15, 2025 at 10:13:19AM +0000, Zhangfei Gao wrote:
+> The commit bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper
+> probe path") changes the arm_smmu_probe_device() sequence.
 
-It's already removed, right?
+> The arm_smmu_probe_device() is now called earlier via pci_device_add(),
+> which calls pci_fixup_device() at the "pci_fixup_header" phase, while
+> originally it was called from the pci_bus_add_device(), which called
+> pci_fixup_device() at the "pci_fixup_final" phase.
+> 
+> The callstack before:
+> [ 1121.314405]  arm_smmu_probe_device+0x48/0x450
+> [ 1121.314410]  __iommu_probe_device+0xc4/0x3c8
+> [ 1121.314412]  iommu_probe_device+0x40/0x90
+> [ 1121.314414]  acpi_dma_configure_id+0xb4/0x100
+> [ 1121.314417]  pci_dma_configure+0xf8/0x108
+> [ 1121.314421]  really_probe+0x78/0x278
+> [ 1121.314425]  __driver_probe_device+0x80/0x140
+> [ 1121.314427]  driver_probe_device+0x48/0x130
+> [ 1121.314430]  __device_attach_driver+0xc0/0x108
+> [ 1121.314432]  bus_for_each_drv+0x8c/0xf8
+> [ 1121.314435]  __device_attach+0x104/0x1a0
+> [ 1121.314437]  device_attach+0x1c/0x30
+> [ 1121.314440]  pci_bus_add_device+0xb8/0x1f0
+> [ 1121.314442]  pci_iov_add_virtfn+0x2ac/0x300
+> 
+> And after:
+> [  215.072859]  arm_smmu_probe_device+0x48/0x450
+> [  215.072871]  __iommu_probe_device+0xc0/0x468
+> [  215.072875]  iommu_probe_device+0x40/0x90
+> [  215.072877]  iommu_bus_notifier+0x38/0x68
+> [  215.072879]  notifier_call_chain+0x80/0x148
+> [  215.072886]  blocking_notifier_call_chain+0x50/0x80
+> [  215.072889]  bus_notify+0x44/0x68
+> [  215.072896]  device_add+0x580/0x768
+> [  215.072898]  pci_device_add+0x1e8/0x568
+> [  215.072906]  pci_iov_add_virtfn+0x198/0x300
+
+The stacktraces definitely help connect the dots but don't integrate
+the fixup phases and the timestamps are unnecessary distraction.
+
+I would omit all the above except the first paragraph and include
+something like this instead, which shows how arm_smmu_probe_device()
+was previously after final fixups and is now between header and final
+fixups:
+
+  pci_iov_add_virtfn
+    pci_device_add
+      pci_fixup_device(pci_fixup_header)      <--
+      device_add
+        bus_notify
+          iommu_bus_notifier
+  +         iommu_probe_device
+  +           arm_smmu_probe_device
+    pci_bus_add_device
+      pci_fixup_device(pci_fixup_final)       <--
+      device_attach
+        driver_probe_device
+          really_probe
+            pci_dma_configure
+              acpi_dma_configure_id
+  -             iommu_probe_device
+  -               arm_smmu_probe_device
+
+This is the pci_iov_add_virtfn().  The non-SR-IOV case is similar in
+that pci_device_add() is called from pci_scan_single_device() in the
+generic enumeration path, and pci_bus_add_device() is called later,
+after all a host bridge has been enumerated.
+
+> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> [kwilczynski: commit log]
+> Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+
+You should never include somebody else's Signed-off-by below yours.
+You should only add *your own* Signed-off-by:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.13#n396
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> ---
+> 
+> v2: Modify commit log
+> 
+>  drivers/pci/quirks.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index f840d611c450..a9759889ff5e 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -1991,12 +1991,12 @@ static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
+>  	    device_create_managed_software_node(&pdev->dev, properties, NULL))
+>  		pci_warn(pdev, "could not add stall property");
+>  }
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
+> -DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
+>  
+>  /*
+>   * It's possible for the MSI to get corrupted if SHPC and ACPI are used
+> -- 
+> 2.25.1
+> 
 
