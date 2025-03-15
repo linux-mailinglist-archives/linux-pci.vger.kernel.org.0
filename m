@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-23865-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23866-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5560A63268
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 21:18:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C955A63271
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 21:19:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C28EF1897268
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 20:18:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2A1243B8D3E
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 20:18:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D44782066E9;
-	Sat, 15 Mar 2025 20:16:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4C08207649;
+	Sat, 15 Mar 2025 20:16:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3FvEGl8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FzEWSv+O"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A400B2066DA;
-	Sat, 15 Mar 2025 20:16:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8D41A3166;
+	Sat, 15 Mar 2025 20:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742069774; cv=none; b=twdR/ATV2/8pJ+TsKEV9oda6nQ8e5SuhFgG2hgZOxTYNHJLYWAlNkguzLU/LDexEIY7vgYaL7QPbxeCWwxTIEep658L02tZ5AEGy+rOPSMuFcx86B68KofFqgnnRRiOkn8H+opVOLecIDJiVGffzh8BEZTZsBl3uJddxYPymRIA=
+	t=1742069777; cv=none; b=sP7gwVdODuP41A7sVTkHNmJHRlVbvtcODP4N9GqW/O+SEiWQf13wZcNYGat2gzMu8UJWely6VF2o23+PenYagSqp2yeu5mmgmgFNu2h+4S2KjInw0eZCgDiCR5CJKGuPlaoVncgq6Os8skOiRN1Mc+divsFwI2KDerFYHCA8rfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742069774; c=relaxed/simple;
-	bh=XAdlaYzjQoosyPBD0jLktaFmMhD16smqlC6i/QRL9zQ=;
+	s=arc-20240116; t=1742069777; c=relaxed/simple;
+	bh=105HHpfUPVd9t7/zj1iauZX4cIcW9Ve3yTFuWMtBj1A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gnrsE06y6iIrqnRDHcsZm9xS98J8urBj72dqa/EFbtG3b0Qp9HVJdfLSyZIMZ5fdfwUfkDCsht2nLVQB9xZpXh9D6vJTw6dLgmSDs5Z1IWxo2NkuHxaFqfrLvmWngtRNTBHs9ChuD6QX2olouV13yWe6TOB7lrJfzoeJPWAjcGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3FvEGl8; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F1BDC4CEE5;
-	Sat, 15 Mar 2025 20:16:14 +0000 (UTC)
+	 MIME-Version; b=YygzqIpE/2h2AlXwaawE0ENO55KEfierbER2hV0Jw+LYPoBcXSyuvsWahsdcpmZnzS8Tfcwvmaoyl8K0N6FyHcnQghsPkJV7vksHmx4m37VitUf+Ow5D5qLlS34SUkCc/RpfVtAqN3pakl4Lq2SA4DFex3waH+9ULpnQH4quEOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FzEWSv+O; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA906C4CEE5;
+	Sat, 15 Mar 2025 20:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742069774;
-	bh=XAdlaYzjQoosyPBD0jLktaFmMhD16smqlC6i/QRL9zQ=;
+	s=k20201202; t=1742069776;
+	bh=105HHpfUPVd9t7/zj1iauZX4cIcW9Ve3yTFuWMtBj1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Z3FvEGl81nS7A40m+2KG5ZddWD1/06Svf1mmASBOyFwaUhXZ7ZRj9OF1XJCf/3/q4
-	 5Kk00axEgxfhKLY9Lr729RByry0acwrXCEbA2sogmqpyNI1SExTwOUIBC361pmOjFj
-	 +aVNVNQcOTCKOvJXwe8RK7klRXAQN7xEKCD5db+YK5DryoBVipbmfnm1cc4RQriBg3
-	 djHZ9L/NeoqRMM/ljEQzgMtM44CHEpYSsajRYG2NhIXsq7kslzErl6crWcMcWjvuJV
-	 TL3dmjsvaQ89osskOFroM7I6wc8GLV4RVsEuNDPWNt60Pa5joSSElwhWXdv2KA/AWa
-	 cIXiW943rMAfQ==
+	b=FzEWSv+OcMks1F40iFgZwoL+iixaSs6Z593H634Pxe7H90l/FPNGHJvIcxotyCYCg
+	 +SD3zL0pFeY9Oge30U4evm7k4KzF3eJfvma4aRMmwg6oxixmFHVWvCFmvMalHMFBfL
+	 J3YcUCzNEheJ9DS6pBQULj1yJmypwztI8y4VuRKffNvt45udPHbOOgd3Ar4fNTJFoI
+	 /yMcYNdFOUvtJe3QzJph721u1iNA0Ynv6Vhk/hnOWu1D7Yqg5vcLrRJdQePK5MeqPy
+	 N1JMS0ILNC6KJyZ9MtYR5aCWkgfnEXMaj7alXqOGfK5IwP0pjcdDLkXOGUlBZMcMMZ
+	 3ApTAdRFvHJiA==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Frank Li <Frank.Li@nxp.com>
 Cc: Rob Herring <robh@kernel.org>,
@@ -62,9 +62,9 @@ Cc: Rob Herring <robh@kernel.org>,
 	linux-arm-kernel@lists.infradead.org,
 	imx@lists.linux.dev,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v12 12/13] PCI: dwc: Use parent_bus_offset to remove need for .cpu_addr_fixup()
-Date: Sat, 15 Mar 2025 15:15:47 -0500
-Message-Id: <20250315201548.858189-13-helgaas@kernel.org>
+Subject: [PATCH v12 13/13] PCI: imx6: Remove cpu_addr_fixup()
+Date: Sat, 15 Mar 2025 15:15:48 -0500
+Message-Id: <20250315201548.858189-14-helgaas@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250315201548.858189-1-helgaas@kernel.org>
 References: <20250315201548.858189-1-helgaas@kernel.org>
@@ -78,122 +78,61 @@ Content-Transfer-Encoding: 8bit
 
 From: Frank Li <Frank.Li@nxp.com>
 
-We know the parent_bus_offset, either computed from a DT reg property (the
-offset is the CPU physical addr - the 'config'/'addr_space' address on the
-parent bus) or from a .cpu_addr_fixup() (which may have used a host bridge
-window offset).
+Remove cpu_addr_fixup() because dwc common driver already handle address
+translation.
 
-Apply that parent_bus_offset instead of calling .cpu_addr_fixup() when
-programming the ATU.
-
-This assumes all intermediate addresses are at the same offset from the CPU
-physical addresses.
-
-Link: https://lore.kernel.org/r/20250313-pci_fixup_addr-v11-9-01d2313502ab@nxp.com
+Link: https://lore.kernel.org/r/20250313-pci_fixup_addr-v11-11-01d2313502ab@nxp.com
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
-[bhelgaas: commit log]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Acked-by: Richard Zhu <hongxing.zhu@nxp.com>
 ---
- drivers/pci/controller/dwc/pcie-designware-ep.c   |  5 +++--
- drivers/pci/controller/dwc/pcie-designware-host.c | 12 ++++++------
- drivers/pci/controller/dwc/pcie-designware.c      |  3 ---
- 3 files changed, 9 insertions(+), 11 deletions(-)
+ drivers/pci/controller/dwc/pci-imx6.c | 18 +-----------------
+ 1 file changed, 1 insertion(+), 17 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 2ef9964fa080..c1feaadb046a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -314,7 +314,8 @@ static void dw_pcie_ep_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 90ace941090f..d1eb535df73e 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1217,22 +1217,6 @@ static void imx_pcie_host_exit(struct dw_pcie_rp *pp)
+ 		regulator_disable(imx_pcie->vpcie);
+ }
  
--	ret = dw_pcie_find_index(ep, addr, &atu_index);
-+	ret = dw_pcie_find_index(ep, addr - pci->parent_bus_offset,
-+				 &atu_index);
- 	if (ret < 0)
- 		return;
- 
-@@ -333,7 +334,7 @@ static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
- 
- 	atu.func_no = func_no;
- 	atu.type = PCIE_ATU_TYPE_MEM;
--	atu.parent_bus_addr = addr;
-+	atu.parent_bus_addr = addr - pci->parent_bus_offset;
- 	atu.pci_addr = pci_addr;
- 	atu.size = size;
- 	ret = dw_pcie_ep_outbound_atu(ep, &atu);
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 9e38ac7d1bcb..d760abcbb785 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -635,7 +635,7 @@ static void __iomem *dw_pcie_other_conf_map_bus(struct pci_bus *bus,
- 		type = PCIE_ATU_TYPE_CFG1;
- 
- 	atu.type = type;
--	atu.parent_bus_addr = pp->cfg0_base;
-+	atu.parent_bus_addr = pp->cfg0_base - pci->parent_bus_offset;
- 	atu.pci_addr = busdev;
- 	atu.size = pp->cfg0_size;
- 
-@@ -660,7 +660,7 @@ static int dw_pcie_rd_other_conf(struct pci_bus *bus, unsigned int devfn,
- 
- 	if (pp->cfg0_io_shared) {
- 		atu.type = PCIE_ATU_TYPE_IO;
--		atu.parent_bus_addr = pp->io_base;
-+		atu.parent_bus_addr = pp->io_base - pci->parent_bus_offset;
- 		atu.pci_addr = pp->io_bus_addr;
- 		atu.size = pp->io_size;
- 
-@@ -686,7 +686,7 @@ static int dw_pcie_wr_other_conf(struct pci_bus *bus, unsigned int devfn,
- 
- 	if (pp->cfg0_io_shared) {
- 		atu.type = PCIE_ATU_TYPE_IO;
--		atu.parent_bus_addr = pp->io_base;
-+		atu.parent_bus_addr = pp->io_base - pci->parent_bus_offset;
- 		atu.pci_addr = pp->io_bus_addr;
- 		atu.size = pp->io_size;
- 
-@@ -755,7 +755,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- 
- 		atu.index = i;
- 		atu.type = PCIE_ATU_TYPE_MEM;
--		atu.parent_bus_addr = entry->res->start;
-+		atu.parent_bus_addr = entry->res->start - pci->parent_bus_offset;
- 		atu.pci_addr = entry->res->start - entry->offset;
- 
- 		/* Adjust iATU size if MSG TLP region was allocated before */
-@@ -777,7 +777,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- 		if (pci->num_ob_windows > ++i) {
- 			atu.index = i;
- 			atu.type = PCIE_ATU_TYPE_IO;
--			atu.parent_bus_addr = pp->io_base;
-+			atu.parent_bus_addr = pp->io_base - pci->parent_bus_offset;
- 			atu.pci_addr = pp->io_bus_addr;
- 			atu.size = pp->io_size;
- 
-@@ -921,7 +921,7 @@ static int dw_pcie_pme_turn_off(struct dw_pcie *pci)
- 	atu.size = resource_size(pci->pp.msg_res);
- 	atu.index = pci->pp.msg_atu_index;
- 
--	atu.parent_bus_addr = pci->pp.msg_res->start;
-+	atu.parent_bus_addr = pci->pp.msg_res->start - pci->parent_bus_offset;
- 
- 	ret = dw_pcie_prog_outbound_atu(pci, &atu);
- 	if (ret)
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 985264c88b92..d9d2090f380c 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -475,9 +475,6 @@ int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
- 	u32 retries, val;
- 	u64 limit_addr;
- 
--	if (pci->ops && pci->ops->cpu_addr_fixup)
--		parent_bus_addr = pci->ops->cpu_addr_fixup(pci, parent_bus_addr);
+-static u64 imx_pcie_cpu_addr_fixup(struct dw_pcie *pcie, u64 cpu_addr)
+-{
+-	struct imx_pcie *imx_pcie = to_imx_pcie(pcie);
+-	struct dw_pcie_rp *pp = &pcie->pp;
+-	struct resource_entry *entry;
 -
- 	limit_addr = parent_bus_addr + atu->size - 1;
+-	if (!(imx_pcie->drvdata->flags & IMX_PCIE_FLAG_CPU_ADDR_FIXUP))
+-		return cpu_addr;
+-
+-	entry = resource_list_first_type(&pp->bridge->windows, IORESOURCE_MEM);
+-	if (!entry)
+-		return cpu_addr;
+-
+-	return cpu_addr - entry->offset;
+-}
+-
+ /*
+  * In old DWC implementations, PCIE_ATU_INHIBIT_PAYLOAD in iATU Ctrl2
+  * register is reserved, so the generic DWC implementation of sending the
+@@ -1263,7 +1247,6 @@ static const struct dw_pcie_host_ops imx_pcie_host_dw_pme_ops = {
+ static const struct dw_pcie_ops dw_pcie_ops = {
+ 	.start_link = imx_pcie_start_link,
+ 	.stop_link = imx_pcie_stop_link,
+-	.cpu_addr_fixup = imx_pcie_cpu_addr_fixup,
+ };
  
- 	if ((limit_addr & ~pci->region_limit) != (parent_bus_addr & ~pci->region_limit) ||
+ static void imx_pcie_ep_init(struct dw_pcie_ep *ep)
+@@ -1645,6 +1628,7 @@ static int imx_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	pci->use_parent_dt_ranges = true;
+ 	if (imx_pcie->drvdata->mode == DW_PCIE_EP_TYPE) {
+ 		ret = imx_add_pcie_ep(imx_pcie, pdev);
+ 		if (ret < 0)
 -- 
 2.34.1
 
