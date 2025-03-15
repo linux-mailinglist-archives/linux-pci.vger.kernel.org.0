@@ -1,59 +1,58 @@
-Return-Path: <linux-pci+bounces-23848-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23849-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7FA6A63132
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 19:01:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81C56A63148
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 19:06:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2922B174748
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 18:01:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8931C1892775
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 18:06:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 275202046B1;
-	Sat, 15 Mar 2025 18:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09D2F204F86;
+	Sat, 15 Mar 2025 18:06:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="YQBSNm5r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="bCybOOt5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
+Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0001F790C;
-	Sat, 15 Mar 2025 18:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F06B14900B
+	for <linux-pci@vger.kernel.org>; Sat, 15 Mar 2025 18:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742061661; cv=none; b=rqSf1tVkz4MT7b9XTGbormzBRXbhRCmYsTRNya+QGwRDGW7MPgPCuqCdkc7JnVLUYmF6AmxSm8fgmm1BACDM0r67KqrVeXBNhfASDq5pQw7ouKplCOV8+6XPLh9qpme33f+gNBarB3ZYvzWrE3BfxREv0E134IUUsRLm7eathrs=
+	t=1742061986; cv=none; b=JjNpRETr89Cl0CKvDP1Dmu+yGmCNxm9nPO6wuVcli95m3ejid6m/MagLnsI0rWUC094+2WH/CUAVQIeNqyRqk5E0OqScSo6N0CZzgwDgDNC0DbxUkTOix7/Lr/VQA21cMo0WYWndA/zOvQN7tnS6GTrqg1g1eFxN2Dw5T6ncpd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742061661; c=relaxed/simple;
-	bh=AQGvhnW+89joQbtnIYgMqzkrKefUsN/EBiBpxqMXD3M=;
+	s=arc-20240116; t=1742061986; c=relaxed/simple;
+	bh=83ux7GsQRAgjjlG+gq3dyYD7axH8T/COpDz69itGy60=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S6mQoDE+dhchrxROIzDimsAE3dGIidNYTcpJcccNwFmL0ZKBUhps0obYu2EoFTTnHUN+sHdT/xw/YNSIdtoJRMIuHGiWcZcxCGQbPdDSX0KknMkCpxLCM5cQvYKTvLkf7R6P21F7cI2y7fxSydK/wJ3NyCYW6ZuRnzcH3oq99kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=YQBSNm5r; arc=none smtp.client-ip=185.70.40.133
+	 MIME-Version:Content-Type; b=K+8EjgQHGUmJPOP1nzc8iVE5/5BMTEB+4DbX9RiRsNtTEvpNlle2ccnf5o/U7edwzau2tW2GZzQDednp3M3ZvTPaXGPuqUV+6iY587Y1uEagk421JCa3fY2GXMvaRN5LnAsLLA6e7RwaUmPZr85BrhC88SSuA0CAiTFGnMMJkZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=bCybOOt5; arc=none smtp.client-ip=109.224.244.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1742061656; x=1742320856;
-	bh=AQGvhnW+89joQbtnIYgMqzkrKefUsN/EBiBpxqMXD3M=;
+	s=ex2xmw5vhvdnldae5axehbswa4.protonmail; t=1742061978; x=1742321178;
+	bh=eHMVOO8dy0bGHyPqCdhgzieWBEwWHl2axuWPpum4f5U=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=YQBSNm5rm3zDSkda26bpQz4cz3kOmYU0eTl0lth9UKvCZXGjSGzd6PsjFfUKKMy3J
-	 GrYoFmqDIXnYxh6q/bn2zQJdg3uA9rkmXmBHe5Tdyoc6rpYBojJlYDHrjGyIe2kR4t
-	 +EZ56x1KZ+F86WXa1sZThE/dGYNe/VVb2Ba8ITYCCd32Obp+P9T8bKEoZyUsv9k2M8
-	 ztNaBlLgOiveGrJphf+wqT8fq9AOcc2L/Iee/wIICoez++0FIyC7FUq8Kslmk+I8Lz
-	 PA+VltRu0qSquuI4YM48XtMZvBm6we7E28qwveNZlP5uQZvUZT963yorq5xNXTFwVP
-	 ch5qzW3cxAUmA==
-Date: Sat, 15 Mar 2025 18:00:50 +0000
-To: Boqun Feng <boqun.feng@gmail.com>
+	b=bCybOOt52C5584XztwIQ++wC7EVnTKZBCHim+RN/GfYijeMun48CKK5i1wDS96ld/
+	 g//MZ6Kblz4vgRq1HkS7/RwMtN/Z1qSN2r9Hie6BF5kBPTi1IcmVgFFhahV/oKkDNm
+	 XQ6UMLyJW54ffHh2l+Xq7IKfsrq45KOPAEBj8Pv1LbbyzPqlNt2s/zqa1P/8KDEK7D
+	 dEQDQf0kvUd3bNHbW2sw3R81dYSt1/h/yzJaOgNPEhS7ovK7pGb9N8SpxcOfb9El52
+	 fGqS11Ia0ooIwG5XKjgeCEXYgivQXr+nAHVQnwcvLrneTdKmWsd2WCBhHc4TxlWCLt
+	 zcS0myQp4KtFg==
+Date: Sat, 15 Mar 2025 18:06:13 +0000
+To: Tamir Duberstein <tamird@gmail.com>
 From: Benno Lossin <benno.lossin@proton.me>
-Cc: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] rust: use strict provenance APIs
-Message-ID: <D8H1B8HT45UJ.OQ8N8YS92UL5@proton.me>
-In-Reply-To: <Z9V0jSfuhqWi_t52@Mac.home>
-References: <20250314-ptr-as-ptr-v3-0-e7ba61048f4a@gmail.com> <20250314-ptr-as-ptr-v3-6-e7ba61048f4a@gmail.com> <67d4a57f.c80a0220.16ff45.9cf1@mx.google.com> <D8GQJQFGKB8C.DZBUZT4IJIM0@proton.me> <Z9V0jSfuhqWi_t52@Mac.home>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/2] rust: workqueue: remove HasWork::OFFSET
+Message-ID: <D8H1FFDMNLR3.STRVYQI7J496@proton.me>
+In-Reply-To: <CAJ-ks9mUPkP=QDGekbi1PRfpKKigXj87-_a25JBGHVRSiEe_AA@mail.gmail.com>
+References: <20250307-no-offset-v1-0-0c728f63b69c@gmail.com> <20250307-no-offset-v1-2-0c728f63b69c@gmail.com> <D8G8DV3PX8VX.2WHSM0TWH8JWV@proton.me> <CAJ-ks9m2ZHguB9N9-WM0EsO5MjaZ9yRamo_9NytAdzaDdb9aWQ@mail.gmail.com> <D8GQGCVTK0IL.16YO67C0IKLHA@proton.me> <CAJ-ks9mUPkP=QDGekbi1PRfpKKigXj87-_a25JBGHVRSiEe_AA@mail.gmail.com>
 Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: e83c3409294cafcbb4ff1e1cee286a3ff1c398c1
+X-Pm-Message-ID: 51459de54904159270930fbf4b47c18a6cbba89e
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -63,31 +62,54 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sat Mar 15, 2025 at 1:37 PM CET, Boqun Feng wrote:
-> On Sat, Mar 15, 2025 at 09:34:42AM +0000, Benno Lossin wrote:
-> [...]
->> > The rest Rust code changes look good to me. Although I would suggest y=
-ou
->> > to split this patch into several patches: you can do the conversion fr=
-om
->> > "as" pattern to provenance API one file by one file, and this make it
->> > easier for people to review. And after the conversions are done, you c=
-an
->> > introduce the Makefile changes.
->>=20
->> I think it's fine to do several of the `as` conversions in a single
+On Sat Mar 15, 2025 at 4:37 PM CET, Tamir Duberstein wrote:
+> On Sat, Mar 15, 2025 at 5:30=E2=80=AFAM Benno Lossin <benno.lossin@proton=
+.me> wrote:
+>>
+>> On Fri Mar 14, 2025 at 9:44 PM CET, Tamir Duberstein wrote:
+>> > On Fri, Mar 14, 2025 at 3:20=E2=80=AFPM Benno Lossin <benno.lossin@pro=
+ton.me> wrote:
+>> >>
+>> >> On Fri Mar 7, 2025 at 10:58 PM CET, Tamir Duberstein wrote:
+>> >> >      /// Returns a pointer to the struct containing the [`Work<T, I=
+D>`] field.
+>> >> >      ///
+>> >> >      /// # Safety
+>> >> >      ///
+>> >> >      /// The pointer must point at a [`Work<T, ID>`] field in a str=
+uct of type `Self`.
+>> >> > -    #[inline]
+>> >> > -    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut Sel=
+f
+>> >> > -    where
+>> >> > -        Self: Sized,
+>> >>
+>> >> This bound is required in order to allow the usage of `dyn HasWork` (=
+ie
+>> >> object safety), so it should stay.
+>> >>
+>> >> Maybe add a comment explaining why it's there.
+>> >
+>> > I guess a doctest would be better, but I still don't understand why
+>> > the bound is needed. Sorry, can you cite something or explain in more
+>> > detail please?
+>>
+>> Here is a link: https://doc.rust-lang.org/reference/items/traits.html#dy=
+n-compatibility
+>>
+>> But I realized that the trait wasn't object safe to begin with due to
+>> the `OFFSET` associated constant. So I'm not sure we need this. Alice,
+>> do you need `dyn HasWork`?
 >
-> Well, "fine" !=3D "recommended", right? ;-) If the patch was split,
-> reviewers would be able to give Reviewed-by to individual patches that
-> looks fine trivially. Then it's easier to make progress every iteration,
-> and also allows partially applying the changes. Of course it doesn't
-> have to be file-by-file.
+> I wrote a simple test:
 
-While I see your point, in this case splitting file-by-file is too much.
-v4 has: 9 files changed, 82 insertions(+), 27 deletions(-). I've seen
-much bigger changes that do smaller things like this patch.
+[...]
 
-At around 150 lines added + deleted I find it more and more difficult.
+> so I don't think adding the Sized bound makes sense - we'd end up
+> adding it on every item in the trait.
+
+Yeah the `Sized` bound was probably to make the cast work, so let's
+remove it.
 
 ---
 Cheers,
