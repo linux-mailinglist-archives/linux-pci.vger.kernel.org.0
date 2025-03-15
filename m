@@ -1,96 +1,73 @@
-Return-Path: <linux-pci+bounces-23812-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23813-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F457A627F7
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 08:17:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7640AA62890
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 08:55:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C23D3B29DA
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 07:17:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8EBA03BFB4A
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 07:55:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 353A91DFD96;
-	Sat, 15 Mar 2025 07:17:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A606E1401C;
+	Sat, 15 Mar 2025 07:55:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PBwhn4uB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jeGa14ps"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F6B1DE2DB;
-	Sat, 15 Mar 2025 07:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9850AAD51
+	for <linux-pci@vger.kernel.org>; Sat, 15 Mar 2025 07:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742023053; cv=none; b=IdAJVFDoMTonoVPs9Fof1ZeGgL1aI+Dw+N2pg6Vfmm1EvKjX37fo2n9qRMOHoZBpcnALPcQsRdpHXQgwMSdx7AM29lLrpefhCtUZWc0jEIatgGO2QBgjwFTiewAgv9jMcI7opOfF8UDrKo01M7iecv/iOJitM/rZXNo+yLGGhDI=
+	t=1742025351; cv=none; b=TDzhg3yuJBQy1yA8UeNIGrVP/p1EbFeq/Ne/Jmjrqgx1ncpeTNwTdwI9E7dOHeVBn+4nED9idY2a7FJUOb7g3d4OWTEuvsCP31xUVcFna8WBl+4dJaUsAm3Ls4C3x0mAh+3+DnhnrFq4ooLLhT6X+2sIB9SDW6KvkMNf9Z6d9F0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742023053; c=relaxed/simple;
-	bh=D6dyM5fcK5sfnzdnunmUBGtPiFQ2gHj2jDLotPVsetI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O1UJ9fDU4xwAgAyekV136GylZF7MHOxKo8iUZ7ntOeZMBQSx5y2ZwW3N5ekz0rCHkyrjUJy4McgAD6CdipcF5X0dGahx5DMIpZeOpzGxwP/8+SaU3E3IZMzvcprkkdCZsKbNEMN3vKSoNoDvZItfPSlrWbX/h6YkQeCOYGtBq/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PBwhn4uB; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1742025351; c=relaxed/simple;
+	bh=zu3Tia79/uGkjtvhlEUOVvXzE1PXegjimucBD78ruiw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=iQkLrk3kX6owx3V++zoKTUoQA8IOG2Cye1v5DdYmZF35tjjdhI+iVeNgbqOrrXMTU4IJhz/FN5YWp/nVFAs3QR9WcDHdi5maNUnUXxE1z9+ckyS5SUcDo7lUkNUZwXah/hzcsWDt4qBz74zDtRRi8roC9wjT49YA0VWqpyfauGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jeGa14ps; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742023051; x=1773559051;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=D6dyM5fcK5sfnzdnunmUBGtPiFQ2gHj2jDLotPVsetI=;
-  b=PBwhn4uBbLumsUFXXThK5dL5rz2PTmMmNzHUY0FIDNwL/yF9GSh1iooc
-   ZkOL/KqBoMA1yHhuUaJKy1MDg7R/ynEl4XXmpCho3IX2mTAgznebzN3Ez
-   tH5ilKB9FSvVn8NzyNeVWQEEcWN3QlJ/gVKpqgapAWJXR5CPmpdXgc37I
-   BJAj9uU/atupGJ/uF0qVWkLIcjojL+1DDBsoVcsBnP1HJUboiJS5ZXV4c
-   s8kSj6WYuRZudNHJ1gxAwwu0fRJXwVlxjPPtHe+0nqDRYE9i9g/5nHthQ
-   Dsc/AAjJ2bzrIKah7AyC4oecF6lmz3NGDFyldJmSx+qGwcbDvmkWN8Tw1
+  t=1742025350; x=1773561350;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=zu3Tia79/uGkjtvhlEUOVvXzE1PXegjimucBD78ruiw=;
+  b=jeGa14psHKOmAZHq9Vlgt7YmwfptPhYWLTYDTLpsXLcizSPxkikJ3T1I
+   M+xH5c0BvVkRMV6bn/fxqqDYlDeWbJ+RkXpjIxeyijyO272fmNNUPmjxE
+   4yh1t1vKLG2sJ9Xw9sJ6PXN8+Vle5CzuK/E6Ns8Fck6KOTnyI6fYMEE2D
+   ejcR4DpSJ8YwLActlgWi0pAUOZ64f0PA3OLjc9pxsN8gGQZKxm21lyS9X
+   j1EY8kBcFMelFHsWzvesGtivSqF7IudQvYfVxNJR3bHejbAsSZb9AohVe
+   kBjmnPaOcl6BMsIvXhICoo1D0Kbo+D6AT9qq/oVA54z2ke9DBWAlwIFpj
    Q==;
-X-CSE-ConnectionGUID: 1qdPOMgASdy5BJ1+6Nx6Rw==
-X-CSE-MsgGUID: yAeKQXamRv+Ui08CRRk03Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="42427589"
+X-CSE-ConnectionGUID: PhhBdvlqTUuPuwiqxVsz+g==
+X-CSE-MsgGUID: Xxt+3QpbRQyMFaN12+YHVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="46829405"
 X-IronPort-AV: E=Sophos;i="6.14,249,1736841600"; 
-   d="scan'208";a="42427589"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2025 00:17:31 -0700
-X-CSE-ConnectionGUID: mbIXekZnRfqWbHnE0G4Uaw==
-X-CSE-MsgGUID: FtpkTt5YQleFCTfAFY66RQ==
+   d="scan'208";a="46829405"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2025 00:55:49 -0700
+X-CSE-ConnectionGUID: r20dos/TQuCpntXqr+owAQ==
+X-CSE-MsgGUID: FfNMFRs0QlyulCZcAV7jNw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,249,1736841600"; 
-   d="scan'208";a="125685350"
+   d="scan'208";a="126557156"
 Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 15 Mar 2025 00:17:22 -0700
+  by fmviesa004.fm.intel.com with ESMTP; 15 Mar 2025 00:55:47 -0700
 Received: from kbuild by a4747d147074 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1ttLln-000B7l-1S;
-	Sat, 15 Mar 2025 07:17:19 +0000
-Date: Sat, 15 Mar 2025 15:16:20 +0800
+	id 1ttMMz-000B9X-34;
+	Sat, 15 Mar 2025 07:55:45 +0000
+Date: Sat, 15 Mar 2025 15:55:10 +0800
 From: kernel test robot <lkp@intel.com>
-To: Tamir Duberstein <tamird@gmail.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
-	linux-block@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] rust: use strict provenance APIs
-Message-ID: <202503151519.6bGsjUd3-lkp@intel.com>
-References: <20250314-ptr-as-ptr-v3-6-e7ba61048f4a@gmail.com>
+To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:quirks] BUILD SUCCESS
+ be52d0e930b39aee0c62122fcf8a8a246b0c2fa1
+Message-ID: <202503151503.AiRox9OP-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -98,145 +75,186 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250314-ptr-as-ptr-v3-6-e7ba61048f4a@gmail.com>
 
-Hi Tamir,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git quirks
+branch HEAD: be52d0e930b39aee0c62122fcf8a8a246b0c2fa1  PCI: Declare quirk_huawei_pcie_sva() as pci_fixup_header
 
-kernel test robot noticed the following build errors:
+elapsed time: 1451m
 
-[auto build test ERROR on a1eb95d6b5f4cf5cc7b081e85e374d1dd98a213b]
+configs tested: 165
+configs skipped: 2
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tamir-Duberstein/rust-retain-pointer-mut-ness-in-container_of/20250315-003150
-base:   a1eb95d6b5f4cf5cc7b081e85e374d1dd98a213b
-patch link:    https://lore.kernel.org/r/20250314-ptr-as-ptr-v3-6-e7ba61048f4a%40gmail.com
-patch subject: [PATCH v3 6/6] rust: use strict provenance APIs
-config: x86_64-randconfig-002-20250315 (https://download.01.org/0day-ci/archive/20250315/202503151519.6bGsjUd3-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250315/202503151519.6bGsjUd3-lkp@intel.com/reproduce)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503151519.6bGsjUd3-lkp@intel.com/
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                         haps_hs_defconfig    gcc-13.2.0
+arc                     nsimosci_hs_defconfig    gcc-13.2.0
+arc                   randconfig-001-20250314    gcc-13.2.0
+arc                   randconfig-001-20250315    gcc-14.2.0
+arc                   randconfig-002-20250314    gcc-13.2.0
+arc                   randconfig-002-20250315    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                          ixp4xx_defconfig    gcc-14.2.0
+arm                   randconfig-001-20250314    clang-21
+arm                   randconfig-001-20250315    gcc-14.2.0
+arm                   randconfig-002-20250314    gcc-14.2.0
+arm                   randconfig-002-20250315    gcc-14.2.0
+arm                   randconfig-003-20250314    gcc-14.2.0
+arm                   randconfig-003-20250315    gcc-14.2.0
+arm                   randconfig-004-20250314    gcc-14.2.0
+arm                   randconfig-004-20250315    gcc-14.2.0
+arm                        realview_defconfig    clang-19
+arm                         socfpga_defconfig    gcc-14.2.0
+arm                           spitz_defconfig    gcc-14.2.0
+arm                    vt8500_v6_v7_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250314    gcc-14.2.0
+arm64                 randconfig-001-20250315    gcc-14.2.0
+arm64                 randconfig-002-20250314    clang-21
+arm64                 randconfig-002-20250315    gcc-14.2.0
+arm64                 randconfig-003-20250314    clang-15
+arm64                 randconfig-003-20250315    gcc-14.2.0
+arm64                 randconfig-004-20250314    clang-21
+arm64                 randconfig-004-20250315    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250314    gcc-14.2.0
+csky                  randconfig-002-20250314    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250314    clang-21
+hexagon               randconfig-002-20250314    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250314    clang-19
+i386        buildonly-randconfig-001-20250315    clang-19
+i386        buildonly-randconfig-002-20250314    clang-19
+i386        buildonly-randconfig-002-20250315    clang-19
+i386        buildonly-randconfig-003-20250314    gcc-12
+i386        buildonly-randconfig-003-20250315    clang-19
+i386        buildonly-randconfig-004-20250314    gcc-12
+i386        buildonly-randconfig-004-20250315    clang-19
+i386        buildonly-randconfig-005-20250314    gcc-12
+i386        buildonly-randconfig-005-20250315    clang-19
+i386        buildonly-randconfig-006-20250314    gcc-12
+i386        buildonly-randconfig-006-20250315    clang-19
+i386                                defconfig    clang-19
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250314    gcc-14.2.0
+loongarch             randconfig-002-20250314    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                          atari_defconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                        bcm47xx_defconfig    clang-21
+mips                          rb532_defconfig    clang-17
+mips                       rbtx49xx_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250314    gcc-14.2.0
+nios2                 randconfig-002-20250314    gcc-14.2.0
+openrisc                          allnoconfig    clang-15
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-15
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250314    gcc-14.2.0
+parisc                randconfig-002-20250314    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-15
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                   currituck_defconfig    clang-17
+powerpc                 mpc832x_rdb_defconfig    gcc-14.2.0
+powerpc                     mpc83xx_defconfig    clang-21
+powerpc               randconfig-001-20250314    clang-21
+powerpc               randconfig-002-20250314    gcc-14.2.0
+powerpc               randconfig-003-20250314    gcc-14.2.0
+powerpc64             randconfig-001-20250314    gcc-14.2.0
+powerpc64             randconfig-002-20250314    clang-17
+powerpc64             randconfig-003-20250314    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    clang-15
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-21
+riscv                               defconfig    clang-19
+riscv                 randconfig-001-20250314    clang-19
+riscv                 randconfig-002-20250314    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250314    gcc-14.2.0
+s390                  randconfig-002-20250314    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250314    gcc-14.2.0
+sh                    randconfig-002-20250314    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250314    gcc-14.2.0
+sparc                 randconfig-002-20250314    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250314    gcc-14.2.0
+sparc64               randconfig-002-20250314    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-15
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250314    gcc-12
+um                    randconfig-002-20250314    gcc-12
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250314    clang-19
+x86_64      buildonly-randconfig-001-20250315    clang-19
+x86_64      buildonly-randconfig-002-20250314    clang-19
+x86_64      buildonly-randconfig-002-20250315    clang-19
+x86_64      buildonly-randconfig-003-20250314    gcc-12
+x86_64      buildonly-randconfig-003-20250315    clang-19
+x86_64      buildonly-randconfig-004-20250314    clang-19
+x86_64      buildonly-randconfig-004-20250315    clang-19
+x86_64      buildonly-randconfig-005-20250314    gcc-12
+x86_64      buildonly-randconfig-005-20250315    clang-19
+x86_64      buildonly-randconfig-006-20250314    gcc-12
+x86_64      buildonly-randconfig-006-20250315    clang-19
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-19
+x86_64                randconfig-001-20250315    clang-19
+x86_64                randconfig-002-20250315    clang-19
+x86_64                randconfig-003-20250315    clang-19
+x86_64                randconfig-004-20250315    clang-19
+x86_64                randconfig-005-20250315    clang-19
+x86_64                randconfig-006-20250315    clang-19
+x86_64                randconfig-007-20250315    clang-19
+x86_64                randconfig-008-20250315    clang-19
+x86_64                               rhel-9.4    clang-19
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                  nommu_kc705_defconfig    gcc-14.2.0
+xtensa                randconfig-001-20250314    gcc-14.2.0
+xtensa                randconfig-002-20250314    gcc-14.2.0
 
-All errors (new ones prefixed by >>):
-
-   In file included from arch/x86/kernel/asm-offsets.c:14:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:21:
-   In file included from include/linux/mm.h:2224:
-   include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-   504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-   |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-   505 |                            item];
-   |                            ~~~~
-   include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-   511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-   |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-   512 |                            NR_VM_NUMA_EVENT_ITEMS +
-   |                            ~~~~~~~~~~~~~~~~~~~~~~
-   2 warnings generated.
-   ***
-   *** Rust bindings generator 'bindgen' < 0.69.5 together with libclang >= 19.1
-   *** may not work due to a bug (https://github.com/rust-lang/rust-bindgen/pull/2824),
-   *** unless patched (like Debian's).
-   ***   Your bindgen version:  0.65.1
-   ***   Your libclang version: 19.1.7
-   ***
-   ***
-   *** Please see Documentation/rust/quick-start.rst for details
-   *** on how to set up the Rust support.
-   ***
-   In file included from rust/helpers/helpers.c:10:
-   In file included from rust/helpers/blk.c:3:
-   In file included from include/linux/blk-mq.h:5:
-   In file included from include/linux/blkdev.h:9:
-   In file included from include/linux/blk_types.h:10:
-   In file included from include/linux/bvec.h:10:
-   In file included from include/linux/highmem.h:8:
-   In file included from include/linux/cacheflush.h:5:
-   In file included from arch/x86/include/asm/cacheflush.h:5:
-   In file included from include/linux/mm.h:2224:
-   include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-   504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-   |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-   505 |                            item];
-   |                            ~~~~
-   include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-   511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-   |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-   512 |                            NR_VM_NUMA_EVENT_ITEMS +
-   |                            ~~~~~~~~~~~~~~~~~~~~~~
-   2 warnings generated.
-   clang diag: include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-   clang diag: include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-   clang diag: include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-   clang diag: include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-   clang diag: include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-   clang diag: include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
->> error[E0425]: cannot find function `with_exposed_provenance` in module `core::ptr`
-   --> rust/kernel/lib.rs:37:20
-   |
-   37  |         core::ptr::with_exposed_provenance(addr)
-   |                    ^^^^^^^^^^^^^^^^^^^^^^^
-   |
-   ::: /opt/cross/rustc-1.78.0-bindgen-0.65.1/rustup/toolchains/1.78.0-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/ptr/mod.rs:593:1
-   |
-   593 | pub const fn without_provenance<T>(addr: usize) -> *const T {
-   | ----------------------------------------------------------- similarly named function `without_provenance` defined here
-   |
-   help: a function with a similar name exists
-   |
-   37  |         core::ptr::without_provenance(addr)
-   |                    ~~~~~~~~~~~~~~~~~~
-   help: consider importing this function through its public re-export
-   |
-   30  +     use crate::with_exposed_provenance;
-   |
-   help: if you import `with_exposed_provenance`, refer to it directly
-   |
-   37  -         core::ptr::with_exposed_provenance(addr)
-   37  +         with_exposed_provenance(addr)
-   |
 --
->> error[E0425]: cannot find function `with_exposed_provenance_mut` in module `core::ptr`
-   --> rust/kernel/lib.rs:42:20
-   |
-   42  |         core::ptr::with_exposed_provenance_mut(addr)
-   |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-   |
-   ::: /opt/cross/rustc-1.78.0-bindgen-0.65.1/rustup/toolchains/1.78.0-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/ptr/mod.rs:637:1
-   |
-   637 | pub const fn without_provenance_mut<T>(addr: usize) -> *mut T {
-   | ------------------------------------------------------------- similarly named function `without_provenance_mut` defined here
-   |
-   help: a function with a similar name exists
-   |
-   42  |         core::ptr::without_provenance_mut(addr)
-   |                    ~~~~~~~~~~~~~~~~~~~~~~
-   help: consider importing this function through its public re-export
-   |
-   30  +     use crate::with_exposed_provenance_mut;
-   |
-   help: if you import `with_exposed_provenance_mut`, refer to it directly
-   |
-   42  -         core::ptr::with_exposed_provenance_mut(addr)
-   42  +         with_exposed_provenance_mut(addr)
-   |
---
->> error[E0599]: no method named `expose_provenance` found for raw pointer `*const T` in the current scope
-   --> rust/kernel/lib.rs:32:14
-   |
-   32 |         addr.expose_provenance()
-   |              ^^^^^^^^^^^^^^^^^ method not found in `*const T`
-   |
-   = note: try using `<*const T>::as_ref()` to get a reference to the type behind the pointer: https://doc.rust-lang.org/std/primitive.pointer.html#method.as_ref
-   = note: using `<*const T>::as_ref()` on a pointer which is unaligned or points to invalid or uninitialized memory is undefined behavior
-
--- 
 0-DAY CI Kernel Test Service
 https://github.com/intel/lkp-tests/wiki
 
