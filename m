@@ -1,120 +1,102 @@
-Return-Path: <linux-pci+bounces-23845-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23846-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0283BA6305F
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 17:59:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1A42A6306D
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 18:02:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 083601892891
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 16:59:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E6E3A178E41
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 17:02:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B885202F64;
-	Sat, 15 Mar 2025 16:59:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36E771917D0;
+	Sat, 15 Mar 2025 17:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dS70T1Fp"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="tXIJc2nM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-13.smtpout.orange.fr [80.12.242.13])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBEC13AD22;
-	Sat, 15 Mar 2025 16:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE572E339D;
+	Sat, 15 Mar 2025 17:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742057969; cv=none; b=EzJ2it3gtrLZCC4rnFP44NVFCtAy0E1UuAYF8BILIT5F9ffEgy9ekZCQ5ye6MvjjuK3wE9W6XHgVgxqkBoxqrIGA2zvYJu7gKzIGp299Ydsc8NsR6Wx2WfQLeQS800MJRa7WKZNCleyhN2NUrVmRZQxnnRVyCEvH46a5fVkhlDM=
+	t=1742058118; cv=none; b=AqQNdcxn9M3zyFgwT1TnInYN6E7AUEOK4dOh88qxWti5TfPDVORz6RjzWW1cTdEV1us6A+5u4MbmDEptvIrYJIdzuyvTSW7ZMlSi1NEqAaIXmtsVSFiofrfSW5YM8r7bMkQzuOnYil8hhIMSTWOE+5CsWBtmNfoHmIO3j5qaMts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742057969; c=relaxed/simple;
-	bh=AvP8HBp5JgocLhOoMHSLf4D6s2CBJQEzj9+bAMqWXzY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mZa9QBtFUUlo7Kvj8JA9odoYp6596p63f+UxhFc6SZdZh922rey2rFFwu52SR4Dj2gJfFKAT9p6hpqEvie3q8muwgMfgmJux1BMcDoqN6jUURDulkmy72inaqiz+FQcw2aU+Jc4C04QIPZ2yAKytOEtm3mxgnYA4Av5IwSSvU+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dS70T1Fp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506D6C4CEE5;
-	Sat, 15 Mar 2025 16:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742057968;
-	bh=AvP8HBp5JgocLhOoMHSLf4D6s2CBJQEzj9+bAMqWXzY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dS70T1FpoFr3Jew8AOyyMO6/BikWm0dQRyUKaPq3I9sLADIwXs3U4sXTyQU+1eWQh
-	 30DUcdSjzo1PgL/vH/ZEIGLAOGjHJAHY00hvS3KCx7I8N9DFlbuszpZDzZyxJd+pHy
-	 Mu3+FIVVA9ZRfIeZna90hQ9AvGMH33Ir81DfHtVBsFzyFX7/PeNsl9naRBMoCT0nND
-	 awFapLBjdVCbUvJ9WnL6AevLfgSy+4SoWveBFdwgfENxVpSD16uJ2C7xjeDweUxUMM
-	 bMg1i6ADTw0TU9T46zLZsufktTM6MJGZZZSWqf0bcUayxEiQ5/PpzQRs1T5urwPX2o
-	 djzsl5aNpiFtg==
-Date: Sat, 15 Mar 2025 17:59:19 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, bhelgaas@google.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	tmgross@umich.edu, a.hindborg@samsung.com, aliceryhl@google.com,
-	airlied@gmail.com, fujita.tomonori@gmail.com, lina@asahilina.net,
-	pstanner@redhat.com, ajanulgu@redhat.com, lyude@redhat.com,
-	robh@kernel.org, daniel.almeida@collabora.com, saravanak@google.com,
-	dirk.behme@de.bosch.com, j@jannau.net, fabien.parent@linaro.org,
-	chrisi.schrefl@gmail.com, paulmck@kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	rcu@vger.kernel.org, Wedson Almeida Filho <wedsonaf@gmail.com>
-Subject: Re: [PATCH v7 03/16] rust: implement `IdArray`, `IdTable` and
- `RawDeviceId`
-Message-ID: <Z9Wx53fSQw39nHpx@pollux>
-References: <20241219170425.12036-1-dakr@kernel.org>
- <20241219170425.12036-4-dakr@kernel.org>
- <CAJ-ks9nnQU4ryR1mbaWqNqcH+b=-s8Y0xKxTF-TQvfNGsWO7+w@mail.gmail.com>
+	s=arc-20240116; t=1742058118; c=relaxed/simple;
+	bh=qsvDZBFJn+k2AhxkKXFKL3KNzYjE0N21z/rxR3lsLo8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tCcXwA0Vko/VvGylB9iM7zRjlptfHzXdhTh/SDOiDuiNJSdKn6Sut1XNH7M61XxiP5SNyq6cmqdUJy0zKk+e1zMIk8nn1L9AAXsiQVHS0RFQAXfVb4NkQ4J/NLDx6jDbq+gUUGODWPFqM70MoQf5x11zoQmQTXkmwo4//oTyWM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=tXIJc2nM; arc=none smtp.client-ip=80.12.242.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Received: from fedora.home ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id tUs8tc2fuYvuMtUsCtRRfC; Sat, 15 Mar 2025 18:00:33 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1742058033;
+	bh=u2hd/aiDIzivl8fJWTXxpfToEX5iwbckZhgnX/3wwy0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=tXIJc2nMwfBAUeQG7gEuPtRhM2ohL971lvAiI/fr0v44zTwOZdAhikGq2mtn63Y9m
+	 TByQo/Bemw6NS/qx0crPBllC+TxhSWkpHma109hZjtmDRBVcXJN1ec4bg3iImXw3nJ
+	 cenhrxZt01HFXlX8YbwTIp6Qm4PXUTPPJdMfhIHQFj2+hTtv9rECVlVW5QhXbCQ1o/
+	 B9KQKaTk52cwp23MPLSjfeO1Cq284SXlRizmJMSvOErpSCAvzRVp7IkZIS3xKbjnBo
+	 McfR50wSdVi7N/ZUEo3hh/xp6KsPAm8/9nVxd2ugZyjOv3hSzTuAbIjPTW56W+PkIl
+	 rwdGilaDthDxA==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 15 Mar 2025 18:00:33 +0100
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Shawn Guo <shawn.guo@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: histb: Remove an unneeded NULL test in histb_pcie_remove()
+Date: Sat, 15 Mar 2025 18:00:36 +0100
+Message-ID: <c369b5d25e17a44984ae5a889ccc28a59a0737f7.1742058005.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ-ks9nnQU4ryR1mbaWqNqcH+b=-s8Y0xKxTF-TQvfNGsWO7+w@mail.gmail.com>
 
-On Sat, Mar 15, 2025 at 12:52:27PM -0400, Tamir Duberstein wrote:
-> On Thu, Dec 19, 2024 at 12:08 PM Danilo Krummrich <dakr@kernel.org> wrote:
-> >
-> > +/// Marker trait to indicate a Rust device ID type represents a corresponding C device ID type.
-> > +///
-> > +/// This is meant to be implemented by buses/subsystems so that they can use [`IdTable`] to
-> > +/// guarantee (at compile-time) zero-termination of device id tables provided by drivers.
-> > +///
-> > +/// # Safety
-> > +///
-> > +/// Implementers must ensure that:
-> > +///   - `Self` is layout-compatible with [`RawDeviceId::RawType`]; i.e. it's safe to transmute to
-> > +///     `RawDeviceId`.
-> > +///
-> > +///     This requirement is needed so `IdArray::new` can convert `Self` to `RawType` when building
-> > +///     the ID table.
-> > +///
-> > +///     Ideally, this should be achieved using a const function that does conversion instead of
-> > +///     transmute; however, const trait functions relies on `const_trait_impl` unstable feature,
-> > +///     which is broken/gone in Rust 1.73.
-> > +///
-> > +///   - `DRIVER_DATA_OFFSET` is the offset of context/data field of the device ID (usually named
-> > +///     `driver_data`) of the device ID, the field is suitable sized to write a `usize` value.
-> > +///
-> > +///     Similar to the previous requirement, the data should ideally be added during `Self` to
-> > +///     `RawType` conversion, but there's currently no way to do it when using traits in const.
-> > +pub unsafe trait RawDeviceId {
-> > +    /// The raw type that holds the device id.
-> > +    ///
-> > +    /// Id tables created from [`Self`] are going to hold this type in its zero-terminated array.
-> > +    type RawType: Copy;
-> > +
-> > +    /// The offset to the context/data field.
-> > +    const DRIVER_DATA_OFFSET: usize;
-> > +
-> > +    /// The index stored at `DRIVER_DATA_OFFSET` of the implementor of the [`RawDeviceId`] trait.
-> > +    fn index(&self) -> usize;
-> > +}
-> 
-> Very late to the game here, but have a question about the use of
-> OFFSET here. Why is this preferred to a method that returns a pointer
-> to the field?
+phy_exit() handles NULL as a parameter, so there is no need for an extra
+test.
+This makes the code consistent with the error handling path of the probe.
 
-We need it from const context, trait methods can't be const (yet).
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Follow up to commit d8dba4a635bc, where the NULL check from the patch in
+the Link: was removed when applied.
+---
+ drivers/pci/controller/dwc/pcie-histb.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-histb.c b/drivers/pci/controller/dwc/pcie-histb.c
+index d84e46ca4490..1f2f4c28a949 100644
+--- a/drivers/pci/controller/dwc/pcie-histb.c
++++ b/drivers/pci/controller/dwc/pcie-histb.c
+@@ -432,8 +432,7 @@ static void histb_pcie_remove(struct platform_device *pdev)
+ 
+ 	histb_pcie_host_disable(hipcie);
+ 
+-	if (hipcie->phy)
+-		phy_exit(hipcie->phy);
++	phy_exit(hipcie->phy);
+ }
+ 
+ static const struct of_device_id histb_pcie_of_match[] = {
+-- 
+2.48.1
+
 
