@@ -1,116 +1,159 @@
-Return-Path: <linux-pci+bounces-23822-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23823-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD528A62BDC
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 12:33:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8A9CA62BFA
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 12:40:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 175A4176EEC
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 11:33:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3F4D189BE18
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 11:41:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDBDE1F5859;
-	Sat, 15 Mar 2025 11:33:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3620F1D9A79;
+	Sat, 15 Mar 2025 11:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qzEbg2K/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KAlDNG7d"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A057B1DF964;
-	Sat, 15 Mar 2025 11:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6D618B494;
+	Sat, 15 Mar 2025 11:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742038405; cv=none; b=mrJLjdYJ63l+VknBC+4LPoz/cbpen5mEdR3TQ+l2RbX6jbzjvRpIbgYyuDXFt8VuTQc+14us2NiXi9i0txPyMk9KQp+lFK9Wb1T/ftvR93ji3ZZ7DCZAe/HyjcGah7U4TOrjEb8CNaPIHTkVsxrEEailiecyspDaDV0bObhb+DA=
+	t=1742038852; cv=none; b=SZdm5ROVD2uXD9H0EJM2RQwMaVmd1oD4bJJW4FSUi9PV/P/xj7GtMjVVp6nu9FqnMDttHMOJ63bz3pX9gjcAgKbC95ld42XxrQMgfs2oN38R1FH6SQsuBkvGrDEc0N8MxzxaTuvE6c8y+KPiNJ/1iB0cn8W26pOnmJbuVoQRRs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742038405; c=relaxed/simple;
-	bh=BDQZv8lqGd0hrzPUX9cD3C3T2p2eEFtU7Po6FV9qw9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=unTCGZt9GrhS9wPw1gCBGI1giQdPrnKHyEPnDjTb8gRoCd8xEq2RspHxH1Xweg8Rhg2/XnaGFvNQArIxtNEY9bXHnH6yOQuQXyk+5ffkNadEfbPj5j1xdLJZr5++oOqXjlTxN4HEa2kLYe/y82VA+ExkOkXkjd9TIEXX34bKYAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qzEbg2K/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCBF6C4CEE5;
-	Sat, 15 Mar 2025 11:33:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742038405;
-	bh=BDQZv8lqGd0hrzPUX9cD3C3T2p2eEFtU7Po6FV9qw9s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qzEbg2K/OtQilABgbv56DY4XMePLhgi85vZyujxGFyAHFw5FONRAM9wd8ZrReatgJ
-	 c06KMQpFqXdqoruiW0SzV4NLVrFIobIuv5SbxLn4ocCTovcJSUAlWaBjdD0wXFAoHe
-	 fW3dvqB+VpME8Y4CPlLPANi864328+b5OuImxVS7Hh2PrIeAfWSS7lDrQ9/hPkFiXL
-	 QLR6HWIdHmnRHMXALrQ/tqvW9MyoENeLLqEsy8rurrV8vucFWmVoxQj4sEfScr0MhR
-	 K4XeFIVlUvJyQHPdOyadx8wekPo5+do9T1dN8kr2So8FqQeBCiq60nK7WVzeKwMkRQ
-	 Jop/2Tv3AXIIA==
-Date: Sat, 15 Mar 2025 20:33:23 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Baolu Lu <baolu.lu@linux.intel.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: Declare quirk_huawei_pcie_sva() as
- pci_fixup_header
-Message-ID: <20250315113323.GA3547675@rocinante>
-References: <20250314071058.6713-1-zhangfei.gao@linaro.org>
- <20250315101319.5269-1-zhangfei.gao@linaro.org>
+	s=arc-20240116; t=1742038852; c=relaxed/simple;
+	bh=GZk4fae/MYr67eBVU1vWnrMYaBDTRXLN3fZqhAOhcd0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s30iibRsMlVPXSSCoty73HpTaJry7tvkIIYP5Jm3H2tB1PwcvpN/yBx7tNNtodZ0uGivyq0EpPYuSGGAOWu+G+6M3zlrVhko/OTrYGyvhdals/t8qDHFDuf0sR1kz68i2yh9YUCkouYJDe1BIQWsjzVrQTMxBt7jeV6LWpCHaQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KAlDNG7d; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5498c742661so3193068e87.1;
+        Sat, 15 Mar 2025 04:40:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742038848; x=1742643648; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GZk4fae/MYr67eBVU1vWnrMYaBDTRXLN3fZqhAOhcd0=;
+        b=KAlDNG7dt4zKx0AH91qp79BI9taKzij5Xp8l4i4jCE8S5cht2xf91aik0LtrrilhNj
+         8rAMXrlLVWZ2W+dzlYZ2NDGeoAPf2SJiKrpkr4CrRcj1y1lbdLDH+ehXD12IlL22cm78
+         R0+62ysJdcoa3imc9rU0eI52QygsXkcROtQAveX5sXvsuMdl/K7VHawsHyd1PWGjkIyh
+         4+y+9GO21tvEbKwsOpIbQLhKLVDs7SOiKIfCR6DSRTBzW44a2KOH8BkA6TlB//b45V3z
+         /6fX5vyFx8xqDcu++9OZ204pquss/3UrOhfAcMhFKoHHIrrNu7oSx6qv7+7hmaXPiQFs
+         BCEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742038848; x=1742643648;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GZk4fae/MYr67eBVU1vWnrMYaBDTRXLN3fZqhAOhcd0=;
+        b=CdVMufDNsLbghnq1l9RlUNavGHm9MiA+FgEfMSbTPuuj8DkF4Wj875AB697hyhI6Jh
+         cKRoQaPhdE2uc42+WTfXYLwsPKUpkEgGN1Q2tAFo8LAr0/SMjp4dQH4KWOWidppuFEP0
+         yF8vAUK55f0R98/qKUfJcZvYekkw1tYepn56Jx9IOdb19ojEUqY9Cs0yQkiXZ7RrktCF
+         lhS681Iw52Qtw0Xoh8JgwAs0J/kbWgOyO7vsYdrLfRrwDjTkBURdBh/ckqwylXeTBpKU
+         FoqYW6cmQjOOnXQATqTuHHVG3ZCtvXDpgws9M1tU37DAA9CIk2/YUkJPM8iNPcY3O5s+
+         Y1yA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbIA/2TqJLBqBUjmdcfzxfnHizYcjul0NnpwLhfu9dvZMmKE76JO1zZJBfR/55by7ri9/MOb7hvW9C@vger.kernel.org, AJvYcCVyoWwPuwNlvbG4nvhyhwpFAXr+c1bS+/tkhFiqliQjqOJ5ixvI5V3IQDyADyx7KbSUbvvEHkrAKJuAukDp@vger.kernel.org, AJvYcCW329spGndCqefyPRRvl/wsCD8uhi/YX+DdsoDniBHvHzS/2uSyb0vM3vHXgLGJ7RqoO9nseLdbba1NJw4=@vger.kernel.org, AJvYcCWCJhQ24QOo/dztb6+pOoFRNiNPOJCJJO31lXE4aEa1vPt3e97vDxHD+XPUZAdXjJklfVYcHOAAfFj/@vger.kernel.org, AJvYcCWLM/tdU8sVIyfKOsEo6LZ5UYk5GCQ7X2ZzwIUgBggNFOujGN9l/uo0XV0pwU4fw77zVuoRcNLTWwVJd4bwRf4=@vger.kernel.org, AJvYcCX5odi5CO2dYIdJ+ZDo6neaUqw150jjQUpROq0jzKRo0raauXWuDLIjhH4tUzdAJMyWF0K3icQKkfGW7aQ8mkqY@vger.kernel.org, AJvYcCX8pKeidYEco346y9OgHsUofNUj/YjHE5fFIlVURDVeagrArbFNVyfwgjX8NGRu2flT7LkA3h1saBSGmE7S@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGfBr5LYqNRe1WTW7VRBxXbO1MtN/1svz+CJuHGbh1KOEi1CJz
+	FalRS7uWYRprZS9anKAx5vV5raYA1ROmWLYfIRsr3xGW6XG7TtVCVxlyysPwmBaBsz/+0ubWYhv
+	ST8JrnTxKdqIShQnZHqkEyaVGTFU=
+X-Gm-Gg: ASbGnctChh6TJ98fNkh4xw7JrB/GEJaRTpD0juckxOX6L2defRnppTSv3dPLf8SJhH+
+	948uukqissJc5KSVHcUoVABxLWR4eAhfE1tcrIcUxoU5U5gDyyjitJcA36A8BN+/OZPJGT+EIA2
+	eNtxd8HMJsoErsrp3HZfPRsJCemCWHd+7aFAqUMIjG4wlj004akHn6BgkDsmwF
+X-Google-Smtp-Source: AGHT+IE5YOwdAlkimyDKgierukU/3MUe/Bnh+7Dt6lI9qeuVqTH+ammroy8zrPwyvHKRkmqwZzkFDYys53YFqpqT1HU=
+X-Received: by 2002:a05:6512:b0e:b0:545:3032:bc50 with SMTP id
+ 2adb3069b0e04-549c38fb8f3mr2455457e87.19.1742038848058; Sat, 15 Mar 2025
+ 04:40:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250315101319.5269-1-zhangfei.gao@linaro.org>
+References: <20250314-ptr-as-ptr-v3-0-e7ba61048f4a@gmail.com>
+ <20250314-ptr-as-ptr-v3-6-e7ba61048f4a@gmail.com> <D8G9LZCS7ETL.9UPPQ73CAUQM@proton.me>
+ <CANiq72=JCgdmd+h4_2VguOO9kxdx3OuTqUmpLix3mTLLHLKbZw@mail.gmail.com>
+ <CAJ-ks9=Ec0xLg81GUYJ07uDzwtwhFkoEdxaa3kNtV6xSjZ57MQ@mail.gmail.com> <D8GQRANRVU11.SI7SZ8RAXXF@proton.me>
+In-Reply-To: <D8GQRANRVU11.SI7SZ8RAXXF@proton.me>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sat, 15 Mar 2025 07:40:11 -0400
+X-Gm-Features: AQ5f1JoeAoHyy6Si2IMNvKKkRV0I5imCdPBPltc96FGLSP5A2aIFj72qS0jC_mU
+Message-ID: <CAJ-ks9m7GwHgBCEYcNiNC7HTMscO9es-RtvnCZLO=PmiU530yQ@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] rust: use strict provenance APIs
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Sat, Mar 15, 2025 at 5:44=E2=80=AFAM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> On Fri Mar 14, 2025 at 11:20 PM CET, Tamir Duberstein wrote:
+> > On Fri, Mar 14, 2025 at 6:00=E2=80=AFPM Miguel Ojeda
+> > <miguel.ojeda.sandonis@gmail.com> wrote:
+> >>
+> >> On Fri, Mar 14, 2025 at 9:18=E2=80=AFPM Benno Lossin <benno.lossin@pro=
+ton.me> wrote:
+> >> >
+> >> > I don't know when we'll be bumping the minimum version. IIRC 1.85.0 =
+is
+> >> > going to be in debian trixie, so eventually we could bump it to that=
+,
+> >> > but I'm not sure what the time frame will be for that.
+> >> >
+> >> > Maybe we can salvage this effort by gating both the lint and the
+> >> > unstable features on the versions where it works? @Miguel, what's yo=
+ur
+> >> > opinion?
+> >> >
+> >> > We could even make it simple, requiring 1.84 and not bothering with =
+the
+> >> > older versions.
+> >>
+> >> Regarding Debian Trixie: unknown, since my understanding is that it
+> >> does not have a release date yet, but apparently mid May is the Hard
+> >> Freeze and then it may take e.g. a month or two to the release.
+> >>
+> >> And when it releases, we may want to wait a while before bumping it,
+> >> depending on how much time has passed since Rust 1.85.0 and depending
+> >> on whether we managed to get e.g. Ubuntu LTSs to provide a versioned
+> >> package etc.
+>
+> Yeah that's what I thought, thanks for confirming.
+>
+> >> If something simple works, then let's just go for that -- we do not
+> >> care too much about older versions for linting purposes, since people
+> >> should be testing with the latest stable too anyway.
+> >
+> > It's not going to be simple because `rust_common_flags` is defined
+> > before the config is read, which means I'll have to sprinkle
+> > conditional logic in even more places to enable the lints.
+> >
+> > The most minimal version of this patch would drop all the build system
+> > changes and just have conditionally compiled polyfills for the strict
+> > provenance APIs. Are folks OK with that?
+>
+> So you'd not enable the lint, but fix all occurrences? I think we should
+> still have the lint (if it's too cumbersome, then let's only enable it
+> in the kernel crate).
 
-> The commit bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper
-> probe path") changes the arm_smmu_probe_device() sequence.
-> 
-> The arm_smmu_probe_device() is now called earlier via pci_device_add(),
-> which calls pci_fixup_device() at the "pci_fixup_header" phase, while
-> originally it was called from the pci_bus_add_device(), which called
-> pci_fixup_device() at the "pci_fixup_final" phase.
-> 
-> The callstack before:
-> [ 1121.314405]  arm_smmu_probe_device+0x48/0x450
-> [ 1121.314410]  __iommu_probe_device+0xc4/0x3c8
-> [ 1121.314412]  iommu_probe_device+0x40/0x90
-> [ 1121.314414]  acpi_dma_configure_id+0xb4/0x100
-> [ 1121.314417]  pci_dma_configure+0xf8/0x108
-> [ 1121.314421]  really_probe+0x78/0x278
-> [ 1121.314425]  __driver_probe_device+0x80/0x140
-> [ 1121.314427]  driver_probe_device+0x48/0x130
-> [ 1121.314430]  __device_attach_driver+0xc0/0x108
-> [ 1121.314432]  bus_for_each_drv+0x8c/0xf8
-> [ 1121.314435]  __device_attach+0x104/0x1a0
-> [ 1121.314437]  device_attach+0x1c/0x30
-> [ 1121.314440]  pci_bus_add_device+0xb8/0x1f0
-> [ 1121.314442]  pci_iov_add_virtfn+0x2ac/0x300
-> 
-> And after:
-> [  215.072859]  arm_smmu_probe_device+0x48/0x450
-> [  215.072871]  __iommu_probe_device+0xc0/0x468
-> [  215.072875]  iommu_probe_device+0x40/0x90
-> [  215.072877]  iommu_bus_notifier+0x38/0x68
-> [  215.072879]  notifier_call_chain+0x80/0x148
-> [  215.072886]  blocking_notifier_call_chain+0x50/0x80
-> [  215.072889]  bus_notify+0x44/0x68
-> [  215.072896]  device_add+0x580/0x768
-> [  215.072898]  pci_device_add+0x1e8/0x568
-> [  215.072906]  pci_iov_add_virtfn+0x198/0x300
-> 
-> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> [kwilczynski: commit log]
-> Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-
-So, this will go through the IOMMU three, correct?  Once Bjorn adds his "Acked-by" tag.
-
-Just want to make sure.
-
-	Krzysztof
+=F0=9F=91=8D
 
