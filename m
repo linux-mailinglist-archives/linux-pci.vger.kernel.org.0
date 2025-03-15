@@ -1,189 +1,157 @@
-Return-Path: <linux-pci+bounces-23835-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23836-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0450BA62D15
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 13:59:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBEAFA62D49
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 14:12:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D027418946EE
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 12:59:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9163B189CDC7
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 13:13:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 943011FA178;
-	Sat, 15 Mar 2025 12:59:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E41381FA167;
+	Sat, 15 Mar 2025 13:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2D/3uEs"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="lZ2/HmJ4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="H5fbJXZv"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-b7-smtp.messagingengine.com (flow-b7-smtp.messagingengine.com [202.12.124.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB301E7C20;
-	Sat, 15 Mar 2025 12:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B411DF24E;
+	Sat, 15 Mar 2025 13:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742043575; cv=none; b=fBqAybqY0Ek+yyZZ2U3qJc3EtUP0ZVurEZeLOAxuXZKNpadfxUkzvLy+pNA4NWUNEM1Dq1+pjPMIn9UoVugxVgs0Y9i5Gafidlyo+2jh2wE6bvxgT9gWAVx3WCKPx8HXNZcQ5qs5/WQ2wWDuLWm/2m6wVRae51xquvIaWmer2MU=
+	t=1742044371; cv=none; b=Hrm4bmqdNsRO9FP01HUQXCMjIL2S4Ks+IOalJoc70vZCcKBY5msadBrNQ6UliYbj0cDCnJV+m6hELozGnsaBNzQcwqOm9LWZ4EkKcFdoktUqs4rTDTy2/PVeSgEeJLvHG2XaKRKXu5zZJ8cw+N9f/pB2dF4wpEUq1JYKVRspT+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742043575; c=relaxed/simple;
-	bh=Ecv+iNkGFfi9tUIlY/rwyQCIyEj65xXadpmlroL1C4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bgslsZelC7xjRSMYG6hvosC2QlvDZhjGWZLpS1xlKrwRALJQrLgG7BqeYGe9xndYcc5OdpKUeaNhOALpTeKLjrrW6e8Z3sGWHHJWPPsCwpF4SMH5JHTEV7Aiy8r5cPyfd+/T51VA18tWxHmtFCEwVEu5SHun09lW3f14xopzZgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D2D/3uEs; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c3c4ff7d31so378266485a.1;
-        Sat, 15 Mar 2025 05:59:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742043573; x=1742648373; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=3sz3C7TI4DPvSlkchso2NNuBOnisGdY3eDfJJKlUEcw=;
-        b=D2D/3uEsHIf3XX5YuMp9i/yQyYhQ/7r4gpEp/Qk1f5dNkWC1DNsWpc66U2TOwKkQO4
-         BwtMJt9nWmvkrpPsUZdhhJr6lchNFfE4K4ce7XX/oarvMISVYAPJWzlTEWlBW0vuoSjF
-         BipqvF5Uy+GPZf8iKlLsRopBSnAa1SzzD2nxAkVyZ02isCQdv3S4AOCtjcGdKytYFm4a
-         4rO4ZoXotO3gwO8LmC6bnacDTdw5tVUs7ZtM2iiNv3iqT9jYVg5HRAcxg3QC8tiqP3zZ
-         meoPBQynHP/QIhL9VXrCDaGgR6Ebzm8JO8gFsS/eTQm/25ib8GX1NYOrQXR81Yfxvwrf
-         Lwnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742043573; x=1742648373;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3sz3C7TI4DPvSlkchso2NNuBOnisGdY3eDfJJKlUEcw=;
-        b=EpbNAPOluy9HL2U1L+L5oZc9fzxO07ot5kCH10ES8RHzkcTFWYj6XPfscRm7dipVC/
-         dAq6F+JMLEVH+OmiTRa+S8YBDDyi7O+MoM7EV/XrVJwagVSW5T7awOb83oetbbKkZ4aL
-         q8KX4MvtfIUNx7fc1til/EmZYBjZY5k6NRVYZvDRQ8qq/XyNLX/7bcJrUMnnKRwzIN2k
-         p9GBSfvvHtABfE+wQFWLo/dn7yDkl1Yw/kTIiG3cG4dVck7NuuMqngCqc4xQF0N5fEyp
-         plN4+tlS/WhZYUBju0txF2vHi7o2aDeD0xclqsXNWziHgXhE1xr2Nn+I6rBl7FxAf2IV
-         zFrg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9maMFDC46Y5ToPXIlKFCpDTwrjDMsjk3p3dtJuYOzOV0xi4+c7pUddubHS+SmeKX7bRGrZXvqU6AW6mLy@vger.kernel.org, AJvYcCUHpLd+kfoZyB20niGchOlOc74fYQ/xjcy+qx12Nta4xKEQwA3b6VPE7ToRAFPvyrLFD524kjuwll87sJ0ayr8=@vger.kernel.org, AJvYcCVD9g56bCXpTnYQegweqjsJ7fJs3NTKQaPAzrsXylMvE3xcBTcUVTXGhWbjXLRj5E/HKZZWF/LtZLIK@vger.kernel.org, AJvYcCVtH0ohIjCK3XWyw7lMSp1/fimD+hTqNXnvi0MgK4Q0vLCWacrCDFIQ0IcGufZdDoPWZH4gWy2yuH38@vger.kernel.org, AJvYcCWW/zpJd/WnPTkYOUG4+x6EDLTazEczdk1JH19q07CHM5xGNSrZVEKY8sNuPoyOOeAfvyWIlEFzOCeVIJFq@vger.kernel.org, AJvYcCWgF/YWCVUIpi2J6YJZYlzW365jnh8O7Bj3p9vgfUYKBYJAFhpCFD21/HDhlTXALnHTG5uDDsrBXM4gaWD2UCwl@vger.kernel.org, AJvYcCXcYmgAOOCLt8ijHsHZvASFTlehXRl9U3KuRvK8oNHPat1WWmyD2qFCuGw3k/XDmYD5DpHZYj6nsAjp45o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQUYf4m+cXK8Gdg5B1KCDlJBG09EuRSi8It1vY68vLrxjmBysN
-	I6IpTlaAvw0FP09nswqMQ1GenxTzfe+n4byYF/b7Fk7QlSUHvUUz
-X-Gm-Gg: ASbGncvpg/Qo25CiiC3E2apKAZSPXy40Ci1q6/sLWtacaSA1AOMlYQqdmgLqcAiTepr
-	0ixp8CYlu1ukYKE+4nSoYWSpFu07yoaXhPatMrWIL4sEeTdwvHaGApGP05JZB16Omqw17w4FvxM
-	pGw8DG3tOaMZcTi88wZi3WGBYsLSB5QJIhQslPu9Qm+q+4j82+EBDch5uaVZtICra1hxVpNmOoT
-	A8fzToRIWm53dhkVIb47VP/eZnS2iS6PUoOtEVMSdmPoDCbEDhYhFrTHcLBpM20w+lvBYXmRV9z
-	+VMJBrmi4P5F/lfyCFXUKktm01eGN1jmRM2Jwp59fpaoAA1mqiCkiRpZ1TcNN1acDBa+xfVEJDa
-	OLIEYaaaZLA8LQk75C8zx1j1RavSbgGtf/jM=
-X-Google-Smtp-Source: AGHT+IEpbbxMYi7EBT1EpTmd88snq+U0V3yFRIPptelZUz7jiwwoiDRCLnSaptxPR29bV7X4h0Mpwg==
-X-Received: by 2002:a05:620a:444d:b0:7c5:58b0:42c1 with SMTP id af79cd13be357-7c57c810e96mr650223585a.34.1742043572800;
-        Sat, 15 Mar 2025 05:59:32 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c573c9ddacsm374895885a.54.2025.03.15.05.59.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Mar 2025 05:59:32 -0700 (PDT)
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfauth.phl.internal (Postfix) with ESMTP id A10EC120007C;
-	Sat, 15 Mar 2025 08:59:31 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-12.internal (MEProxy); Sat, 15 Mar 2025 08:59:31 -0400
-X-ME-Sender: <xms:s3nVZ8TdeqsmhV7UVIaGrrgzTLRzzVaVHK404GklawqDuqmLzeWN_g>
-    <xme:s3nVZ5ygNBeWaTrB25Kh6mbqtrGaDWmNhx9EW6GezrBDHJUHfQJdttYPggPyelQ0e
-    S_DHs85hIZIZkE64Q>
-X-ME-Received: <xmr:s3nVZ53i5Hi3M9gJghxNbkTSCqGS3BQTkAJLssJdEL0mDX_fr46ponHE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeefjeekucetufdoteggodetrf
+	s=arc-20240116; t=1742044371; c=relaxed/simple;
+	bh=Ir7gaVJJx081V4ur1/3ISg9vasrkT0sEwxI357Klsss=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=fqICufFMBWHKmb/XVWg1CtAH941RMQtR9zJZ8AQoAIiFdSj47+pfpXn70b1kkIZ02Zi/9MnC/p/fedWLIM1DZyGulnhTdrUA5RC6JKCEa+emcHXCSOHeHwixVIbDF+oP0p/lcn58y0WEK4Jx8Ef/oqrIR2+Sc1ye/SA2xYAlstM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=lZ2/HmJ4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=H5fbJXZv; arc=none smtp.client-ip=202.12.124.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailflow.stl.internal (Postfix) with ESMTP id E9D261D41476;
+	Sat, 15 Mar 2025 09:12:46 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-07.internal (MEProxy); Sat, 15 Mar 2025 09:12:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1742044366;
+	 x=1742051566; bh=zjpqPzRFbrMWa9s0+G/5KdhXuFCxnkj7sVYO/d8vBxQ=; b=
+	lZ2/HmJ4Luof3h0jM9GjUUFV2YpYFeD7OGy2kLNvpLkJjviGMki9XUyLU2U/0OMB
+	CkwvIYIhidWAd1GKRWdV6TEbefX53lV5jKtRRfa23y2b9ef4wcfx6yUlJ/FJmy9o
+	fIWWzZNpLG9eT9hCRQGMUVkJ4jPTjeKEnKU1uTIz4UKNdqytzIe+pGxQ/59IZDiQ
+	l6uMIJOcPnk4WZpTL9cJdkidWOcgJJuOqXi1sJkWQ8RwVEMtHtVZJxE9vq8CyRLI
+	228k4aXecExrqxH4IPg6EpqxBGqmpaQA6RlGidCe7aM1NNTb8gkVO03iTGcdDykQ
+	n2HMhtm5wnKClR7xeIEezA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742044366; x=
+	1742051566; bh=zjpqPzRFbrMWa9s0+G/5KdhXuFCxnkj7sVYO/d8vBxQ=; b=H
+	5fbJXZv8JDZz2yet9pCdXyzltbiv1u7lorfHdCFab6j/MODdd1FrsTK19ZypetAO
+	OBwVbn0H+RdYm34vJZnCxfkiutdnBBXHhTAv1I4KUjUAMMVBnWS3Zx4JpN4OdteV
+	lgEstOBROYSojsFLGIq8AApnm2XyHoFjjjYwFRY224P0YanLHjQRCMq0taH/p2M0
+	fXj2+HZYDWFZF0KDTmo3JWNNVX5+fwfKTvAoZ1jIsCOac0rwSMZO6GQzG4NXNWEV
+	VWzYg4UcwWlsN/Ms5mThJrs3x1evFn6Fg43gWYM2onHPKw6vPmDGidNAxsioUKhz
+	tIyTTW25KsI/qgII9GrPA==
+X-ME-Sender: <xms:zHzVZ5e5bbccQ71eoT8MsSnlXos6dj6O4LkQW_sKfOjBwJN9ga_7XQ>
+    <xme:zHzVZ3PLn__o3phvppzjPnaRYNaigd1xifdYMmPHdAtgA2EfSEDm-96xVIk_mpwIH
+    N52W5V-y9tAcT1cwxE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeefkeduucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
-    tdejnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrg
-    hilhdrtghomheqnecuggftrfgrthhtvghrnhepvefghfeuveekudetgfevudeuudejfeel
-    tdfhgfehgeekkeeigfdukefhgfegleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
-    rghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpe
-    epghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeefvddp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepthgrmhhirhgusehgmhgrihhlrdgtoh
-    hmpdhrtghpthhtohepsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghp
-    thhtohepmhgrshgrhhhirhhohieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgrth
-    hhrghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnihgtohhlrghssehfjhgrshhl
-    vgdrvghupdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    eprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhies
-    ghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonh
-    hmrghilhdrtghomh
-X-ME-Proxy: <xmx:s3nVZwD3rHARBzffMwEo8y5Gj0UgqGvgIWncmE4VxNcjL1f7aKoavw>
-    <xmx:s3nVZ1jv0k-EA8DcHnDKPwNvS4HCVAvWdleIUGgEgTRphYprSMukYg>
-    <xmx:s3nVZ8qU3_V62dVihs6JImUnjbPjbz7RDz0qCLJDX8zlCOiBOnyYzw>
-    <xmx:s3nVZ4hntVgpm3x2UQaRwfixWs2bfmTblOP8Fqrs1jVnmDrzvoF_vA>
-    <xmx:s3nVZ8QRUioK8FjOwuLJwK7CW6U3LykcFm8XcERBRFGe79knaO8nrmOw>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 15 Mar 2025 08:59:31 -0400 (EDT)
-Date: Sat, 15 Mar 2025 05:59:30 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Benno Lossin <benno.lossin@proton.me>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,	linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org,	rust-for-linux@vger.kernel.org,
- linux-kselftest@vger.kernel.org,	kunit-dev@googlegroups.com,
- linux-pci@vger.kernel.org,	linux-block@vger.kernel.org,
- devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] rust: use strict provenance APIs
-Message-ID: <Z9V5srg9h73ufu3G@Mac.home>
-References: <20250314-ptr-as-ptr-v3-0-e7ba61048f4a@gmail.com>
- <20250314-ptr-as-ptr-v3-6-e7ba61048f4a@gmail.com>
- <67d4a57f.c80a0220.16ff45.9cf1@mx.google.com>
- <D8GQJQFGKB8C.DZBUZT4IJIM0@proton.me>
- <Z9V0jSfuhqWi_t52@Mac.home>
- <CAJ-ks9k+5c-MYNaxv412Ri1LDAxvkdSQQfKEgQtTu6aEsS-XFA@mail.gmail.com>
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    geefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsphesrghlihgvnhekrdguvg
+    dprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghp
+    thhtohepjhhovgihrdhgohhulhihsegrrhhmrdgtohhmpdhrtghpthhtohepmhgrrhhkrd
+    hruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtohepshhuuggvvghprdhhohhllhgr
+    segrrhhmrdgtohhmpdhrtghpthhtohepshhuiihukhhirdhpohhulhhoshgvsegrrhhmrd
+    gtohhmpdhrtghpthhtohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphht
+    thhopeihuhiivghnghhhuhhisehhuhgrfigvihdrtghomhdprhgtphhtthhopegtohhnoh
+    hrodgutheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:zHzVZyhKN6cMRS4T7Hyae4tpIeUndwwkmU8hurEs_dOE89UDlPVf6Q>
+    <xmx:zHzVZy_v7TD1PtrsgQplvuTn8Rk60LqhHhFGQUaeKuGzNK7CLnbYHg>
+    <xmx:zHzVZ1vVyhc3jQx09MJdCmVEumffhYKMcs14uJ8B14nC6wN-yqYSHQ>
+    <xmx:zHzVZxE213fSgpsEbMo0wfDUAThAM6CnHsoTjCTY9GC3DBJyiy-zsw>
+    <xmx:znzVZztE_URjpvPiI1QQu-wngtUYNO6vdD-kx2_N6EFnVyHS0jhLgu_A>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 6EB5A2220072; Sat, 15 Mar 2025 09:12:44 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ-ks9k+5c-MYNaxv412Ri1LDAxvkdSQQfKEgQtTu6aEsS-XFA@mail.gmail.com>
+Date: Sat, 15 Mar 2025 14:12:24 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Roman Kisel" <romank@linux.microsoft.com>, bhelgaas@google.com,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "Dexuan Cui" <decui@microsoft.com>,
+ "Haiyang Zhang" <haiyangz@microsoft.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, "Joey Gouly" <joey.gouly@arm.com>,
+ krzk+dt@kernel.org, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>, "Len Brown" <lenb@kernel.org>,
+ "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
+ "Mark Rutland" <mark.rutland@arm.com>, "Marc Zyngier" <maz@kernel.org>,
+ "Ingo Molnar" <mingo@redhat.com>,
+ "Oliver Upton" <oliver.upton@linux.dev>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ "Rob Herring" <robh@kernel.org>, ssengar@linux.microsoft.com,
+ "Sudeep Holla" <sudeep.holla@arm.com>,
+ "Suzuki K Poulose" <suzuki.poulose@arm.com>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Wei Liu" <wei.liu@kernel.org>,
+ "Will Deacon" <will@kernel.org>, "Zenghui Yu" <yuzenghui@huawei.com>,
+ devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-acpi@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
+Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com
+Message-Id: <50ec2615-97cf-423d-bfe6-f65092a14348@app.fastmail.com>
+In-Reply-To: <96bc4caf-b79a-4111-bafa-a7662260f4be@linux.microsoft.com>
+References: <20250315001931.631210-1-romank@linux.microsoft.com>
+ <20250315001931.631210-2-romank@linux.microsoft.com>
+ <96bc4caf-b79a-4111-bafa-a7662260f4be@linux.microsoft.com>
+Subject: Re: [PATCH hyperv-next v6 01/11] arm64: kvm, smccc: Introduce and use API for
+ detecting hypervisor presence
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Sat, Mar 15, 2025 at 08:41:49AM -0400, Tamir Duberstein wrote:
-> On Sat, Mar 15, 2025 at 8:37 AM Boqun Feng <boqun.feng@gmail.com> wrote:
-> >
-> > On Sat, Mar 15, 2025 at 09:34:42AM +0000, Benno Lossin wrote:
-> > [...]
-> > > > The rest Rust code changes look good to me. Although I would suggest you
-> > > > to split this patch into several patches: you can do the conversion from
-> > > > "as" pattern to provenance API one file by one file, and this make it
-> > > > easier for people to review. And after the conversions are done, you can
-> > > > introduce the Makefile changes.
-> > >
-> > > I think it's fine to do several of the `as` conversions in a single
-> >
-> > Well, "fine" != "recommended", right? ;-) If the patch was split,
-> > reviewers would be able to give Reviewed-by to individual patches that
-> > looks fine trivially. Then it's easier to make progress every iteration,
-> > and also allows partially applying the changes. Of course it doesn't
-> > have to be file-by-file.
-> 
-> I sent v4 a little while ago, hopefully the resulting complexity is
-> manageable now that the build system is untouched.
-> 
+On Sat, Mar 15, 2025, at 01:27, Roman Kisel wrote:
+> On 3/14/2025 5:19 PM, Roman Kisel wrote:
+>
+> While the change is Acked, here is the caveat maybe.
+>
+> This patch produces warnings wtih sparse and CHECK_ENDING.
+> That said, the kernel build produces a whole lot more other warnings
+> from building with sparse by itself and/or with CHECK_ENDING.
+>
+> I am not sure how to proceed with that, thinking I should
+> not add warnings yet at the same time there are many others.
+> Not certain if folks take these signals as fyi or blockers.
 
-I have fun plans today (skiing!), so won't be able to take another
-detailed look. What I was trying to say is that: should you split the
-patches, I would have already given some Reviewed-bys ;-) But as Benno
-said, it's fine, so don't worry, I will take another look later. Thanks!
+It would be best not to add warnigns. There is slow progress on
+fixing all the endianess warnings and I hope this can eventually
+complete, so even if there are many existing ones please try to
+keep new code clean.
 
-Regards,
-Boqun
-
-> Cheers.
-> 
-> Tamir
+     Arnd
 
