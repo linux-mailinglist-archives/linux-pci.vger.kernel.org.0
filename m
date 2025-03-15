@@ -1,179 +1,117 @@
-Return-Path: <linux-pci+bounces-23808-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23809-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C09FA62403
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 02:29:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37C6AA6258A
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 04:45:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B35E73BDB39
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 01:29:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3C4C3B84E1
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 03:45:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD37A16F0E8;
-	Sat, 15 Mar 2025 01:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C46136124;
+	Sat, 15 Mar 2025 03:45:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S6jQ4v4R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KkOxLG+8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD2716EB42
-	for <linux-pci@vger.kernel.org>; Sat, 15 Mar 2025 01:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACE563D
+	for <linux-pci@vger.kernel.org>; Sat, 15 Mar 2025 03:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742002174; cv=none; b=Kgj2mko7Q+ejZKp+uvQW0OhTxfq5lAhlDfAdd3h8+qV03hrhnAImzQxDtWcmY1yzYZ0u83MboifXF5geVAvhp7b10ZQvfWlbBfm5aAEKI1Pg+orATzIWMu+tVzk8af0HOn/5ypoZ/v2hZbMwbbfIkwE4Ne2kSuQpgNztGhhqrRg=
+	t=1742010320; cv=none; b=TU1ou5ctasMb5w4exG6EqEjir8XXi+odr0Opg9n6m2YFneA6Tcl/tFoSvEwY3gMULiwmXhLpigGNHVV6+oRpmO963q6BAvO+IxSNqPz+JXM5ZeushI0Xsn/uzbyEr63jG+BACn17NwMwy88Yed85Xu6DXx3guVqTD76FWCgO0HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742002174; c=relaxed/simple;
-	bh=bL3E6ZKdsE327UUQdlOSCxHKLR6a7H2JRLqB/6goHos=;
+	s=arc-20240116; t=1742010320; c=relaxed/simple;
+	bh=U4IbF6pxY+oCSDLe2JwLjQ1HJpSBUObvEzG8VSi0ZEA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ikt4oHQMz3teNok7WbJ7WwwwAcyZ0pYh0CZnfFbDgNK+JlJkbjF7Vsh9ERIRCpr5vHdO451OxpHo17LwqYD+FiIzVFJc7fEKIbgzzuXiOzqVr2zDTGL6CQZJCR6GNdTIPBEQWlJl+PI2HdII8ybkcFB64+izeqUXVfylRmRmNUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S6jQ4v4R; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54954fa61c8so2483647e87.1
-        for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 18:29:31 -0700 (PDT)
+	 To:Cc:Content-Type; b=mAvb+hvXQInAWc9agYhe6FqslakZzbaw8+MOg3NZeu4KxTVTvovhAzOklYi0E6gn2/Id74tXJzU3v/8giRpURqLyE0wjgjZNR49SKoI0FKzVI8CQRGmgdEA4ZiLI+GiC5YmVOv52KppdTB5m9V/aY8S0/vYebUJDwY47QYpVHaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KkOxLG+8; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac25313ea37so548096466b.1
+        for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 20:45:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742002170; x=1742606970; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6w0disyuUDvtQQ+N3XWfjRUpHu9jC93VlrnWH3RRULk=;
-        b=S6jQ4v4RiZDaWdJ5uwqJ7dsOtltzLcWmBYqOwPWLjiSInftLAaPxVP8kqsFk6k38Oo
-         QuAqqiKFlfQUqt6II8SPlwYzPJGvf+SikGi78MJfPjQ/zQTXhYk3SrmLxFW++97aebCS
-         F7zo1JM/Ft/X3z5ljvpB14Ju4WRM6DTkQrwpvPAlg77CD26wd9r6GKuSJAfUTN9XUW+y
-         ZAfwRvNATdIAKSblMn02efRQ0fQz54odxy3mFQuBM0Nh+VKuXEm1xEQufA7oXDEKgGEd
-         XSp294eaS7HNZxzN9fnnG8O4zFTz1d9x5v5usOKGukUi3yfwZ7FVnVS999oeGkoJMq4y
-         oqdg==
+        d=gmail.com; s=20230601; t=1742010315; x=1742615115; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H4xHD85bk13rBdgxAVADV77Uq2Fwwp1qTFHU1nr78k0=;
+        b=KkOxLG+894os/tFjmIc0VdL5kYKOs5tGKZTkcYu0uU4NNDWqZvn0Pt3HVgXTo+v/kv
+         Tc7P9OSMwvRjIy3N+18fMK2/UEZiK8NJcEM5Bm0edjvbKlJYRLdP+rmy5DretbLIWpNO
+         KX7qWnBL8dDd3x9Zcr2iDaJlS5Q3KchBR/BS6SkJnwapccWVubl0LjyCfjjP6TH1TXqy
+         6xfcJmu7WTXxJxMAeIcfbwxXRq6AAiH2ldjSWZhfOlGLCaNLSsqQDm7bQK2xKZ1oceLp
+         D2sD/NNWKKZEj8BRnjrFzxTDJBEQktvsJhcTTnyFwRPqEXU2203viNJiv6CGv2zqnjss
+         ogbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742002170; x=1742606970;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6w0disyuUDvtQQ+N3XWfjRUpHu9jC93VlrnWH3RRULk=;
-        b=MvuqCJl/hh4i4VPILyq4MviGo6LzTy8XYeFgjd1N4i+wOeS0XULgDYJVDJVHUb4y5X
-         w5hGVKPWDhg7oN3zqipptwc0cE02xLyPh5jlGPfP9o5P8gOniqiBE3PFrgkNQtp42Xji
-         sjgLgY6YWigjaQ7lLh41pLfqWU7r8L9yzHNyR9FKZH3REOgIN4Gb4Pl6dCdYnhaTVvoM
-         8Rtm80a4EyVnp/2bAXuTZp+w7fQmMMirIhQibkUVtdtBON8v6ebZ15sHYY6fuQY/1lRw
-         WjbKGZdpElvj8zX//NBVx5YHU/5EwOJD4jqpX3hpEsqDjwkE+AS7lGGtovdRV+ZLD3Hp
-         hM6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVot0itODj2n7xN41Qs0mfBiczQOEYM03m4omQw7i6My0PPPt/YFSSvoWzE4oUWKUeymfzxvOPqIxM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrhA2Gjzxig4r+K8sls2BfjHg/hhP7GTLK6TJf4fdRKvy5vyJ0
-	XthOtHU84tsFhoeexxrWdB7/mHGSJimHDaVnxWjMxlPJcyMzDC9I5X4jPYYI26ep64Ragzi3+lu
-	dKO82YRjUFbCnZJgl8MJ1+Ur6IIleaSVFsTc07Q==
-X-Gm-Gg: ASbGncsuPfjmXSdTtTgEDsBMNpynDZLYv6joXJTQzIP09z74VV5U7dfB3tryGm6OMvh
-	X1CJEIPMBJItSqWJwGhvNqwdPV/t2Ruq5R890qihUSvayjNqONwHXQ+9utmmoGi6Gq2brY3bqVf
-	6hwtDg8ygeawWvKHX1rabKcMgM
-X-Google-Smtp-Source: AGHT+IEcrCNfkXntuX0aeO1m76LAx6oQqfZga4okctB2AQ1NJbZPVtoeE1K8MorP61BHMqFs6rP9wk4g9/bvh9zwZ0k=
-X-Received: by 2002:a05:6512:31c3:b0:549:8f06:8225 with SMTP id
- 2adb3069b0e04-549c39507ebmr1467555e87.53.1742002169612; Fri, 14 Mar 2025
- 18:29:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742010315; x=1742615115;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H4xHD85bk13rBdgxAVADV77Uq2Fwwp1qTFHU1nr78k0=;
+        b=nooizvsaiHEY/SDtTLKdq5hdujGfXtyIIg74jijXxztF5EzRjNMVVzOEeBpgwDhMvx
+         yCI3shaFeeErPB1jOHcAAhzsackhind68oPjo2G3mGxmbnTypDxNkafxPIYFcQorNGKP
+         RSCDQNo3e/lzBtxaTtBo2BauS/TfEfzzXEL96en6WmA0d3BY7R3m178cKgksJNsr4ZME
+         YJn4/idbUkntrejaz/jRKJ53TpB23xGWkGMaYbJRSlFICm9vKtROlE1/h3/EE54aAcj9
+         s1/XwjrFbFJZDYrmtJMymt5LLqZD0EktNmRjZloOR5NKUTlXciVgcez1ouV6+6JmK/CW
+         RJnw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8NyoInd3i61eM17us9xZa3cAnhIHFHJYbv04gGv80c3yvsj5igdnQ8KIOyt2kGNsH2SiLcW4dIHY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2EowCYewMokCKDrf5ct36vcw/FPlimLIh3N0EeCMzajfY9uPY
+	555SWzp6atlNh1ahzgAZlLY/qgPaJf+gsvzF4IY7kCS4rNqoBI/dIfS1vTFi9FXIqF2d4hrRuKk
+	Gtj5aVZLledq+Ct+1Gkc+ut99FK4=
+X-Gm-Gg: ASbGnctxG7dvwNI2ItHv47lJJayic/E3K+LVAXb4XH0+q1+zrSFjyXWTo2vM1HXs8vK
+	Tr7DyiJi3pX4q9RGPa2UKF48iywDaDwJsGcgaryR2eQuqTsfsOFli97ShKGW0B/yrMKPyaKlO5J
+	gJkCrVZ0YGrFLyhvycS9H9z4pzYg==
+X-Google-Smtp-Source: AGHT+IGra1XDxh5h5Up0e7GFY40swSizxIX0ymUzziu7LRfD5GHIjXaWW8aTawtfXJ2P1d4B80VnS34KuofpeNCCxEc=
+X-Received: by 2002:a17:907:2cc5:b0:abf:6ede:dce1 with SMTP id
+ a640c23a62f3a-ac3301fdf30mr518911866b.24.1742010315415; Fri, 14 Mar 2025
+ 20:45:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250314071058.6713-1-zhangfei.gao@linaro.org> <20250314162838.GA781747@bhelgaas>
-In-Reply-To: <20250314162838.GA781747@bhelgaas>
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Date: Sat, 15 Mar 2025 09:29:18 +0800
-X-Gm-Features: AQ5f1Jq548u8pPFXs_fox2r7erQleFFr1iIjN49eNipnJu4ChBbFpiLc4BGDKXE
-Message-ID: <CABQgh9H_vGTPfB_dY+fT9gsWw5K53o0MBXf25LamaxBfVc2-Qw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: declare quirk_huawei_pcie_sva as FIXUP_HEADER
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Baolu Lu <baolu.lu@linux.intel.com>, 
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	iommu@lists.linux.dev, linux-pci@vger.kernel.org
+References: <20250121114225.2727684-1-chenhuacai@loongson.cn> <20250314075328.GB234496@rocinante>
+In-Reply-To: <20250314075328.GB234496@rocinante>
+From: Huacai Chen <chenhuacai@gmail.com>
+Date: Sat, 15 Mar 2025 11:45:04 +0800
+X-Gm-Features: AQ5f1JrWWKwjHb4Ce5K2WmEkLOb-NSx_bkI_ZCFrqwYvNrtG183P5zH1bX1BfpY
+Message-ID: <CAAhV-H7AnAnmPT73wQtx2gUitrLumc3NURvBWzJYj0UkNHw=oA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: loongson: Add quirk for OHCI device rev 0x02
+To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, 
+	Jianmin Lv <lvjianmin@loongson.cn>, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 15 Mar 2025 at 00:28, Bjorn Helgaas <helgaas@kernel.org> wrote:
+Hi, Krzysztof,
+
+On Fri, Mar 14, 2025 at 3:53=E2=80=AFPM Krzysztof Wilczy=C5=84ski <kw@linux=
+.com> wrote:
 >
-> On Fri, Mar 14, 2025 at 07:10:58AM +0000, Zhangfei Gao wrote:
-> > "bcb81ac6ae3c iommu: Get DT/ACPI parsing into the proper probe path"
-> > changes arm_smmu_probe_device sequence.
+> Hello,
 >
-> Normal commit reference style is:
+> > The OHCI controller (rev 0x02) under LS7A PCI host has a hardware flaw.
+> > MMIO register with offset 0x60/0x64 is treated as legacy PS2-compatible
+> > keyboard/mouse interface, which confuse the OHCI controller. Since OHCI
+> > only use a 4KB BAR resource indeed, the LS7A OHCI controller's 32KB BAR
+> > is wrapped around (the second 4KB BAR space is the same as the first 4K=
+B
+> > internally). So we can add an 4KB offset (0x1000) to the BAR resource a=
+s
+> > a workaround.
 >
->   bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
->
-> bcb81ac6ae3c is not a valid upstream commit.  It does appear in
-> next-20250314, incorporated via f5a5f66e2791 ("Merge branches
-> 'apple/dart', 'arm/smmu/updates', 'arm/smmu/bindings', 's390', 'core',
-> 'intel/vt-d' and 'amd/amd-vi' into next") from
-> git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git.
->
-> I think there's some value in keeping fixes close to whatever needs to
-> be fixed, so since bcb81ac6ae3c came via the iommu tree, I would tend
-> to merge the fix the same way.
+> Applied to controller/loongson, thank you!
+I'm sorry but since Bjorn has some questions, and I need some time to
+investigate, please drop it at present. Thanks.
 
-OK, understand.
-Then would you mind give an ack.
+Huacai
 
 >
-> Unless there's a rebase to merge this change before bcb81ac6ae3c, this
-> probably needs a "Fixes:" tag so people who backport bcb81ac6ae3c have
-> a hint that this quirk change should be backported along with it.
->
-> > From
-> > pci_bus_add_device(virtfn)
-> > -> pci_fixup_device(pci_fixup_final, dev)
-> > -> arm_smmu_probe_device
-> >
-> > To
-> > pci_device_add(virtfn, virtfn->bus)
-> > -> pci_fixup_device(pci_fixup_header, dev)
-> > -> arm_smmu_probe_device
->
-> This doesn't include enough detail to show the change.  I don't know
-> the path to arm_smmu_probe_device() and how it relates to
-> pci_bus_add_device() and pci_device_add().
->
-
-Thanks Bjorn
-
-How about changing to this.
-
-Subject: [PATCH] PCI: declare quirk_huawei_pcie_sva as FIXUP_HEADER
-
-The arm_smmu_probe_device is now called earlier via pci_device_add,
-which calls pci_fixup_device(pci_fixup_header, dev),
-while originally it is called from pci_bus_add_device,
-which calls pci_fixup_device(pci_fixup_final, dev).
-
-So declare the fixup as pci_fixup_header to take effect
-before arm_smmu_probe_device.
-
-Calling stack
-Before:
-[ 1121.314405]  arm_smmu_probe_device+0x48/0x450
-[ 1121.314410]  __iommu_probe_device+0xc4/0x3c8
-[ 1121.314412]  iommu_probe_device+0x40/0x90
-[ 1121.314414]  acpi_dma_configure_id+0xb4/0x100
-[ 1121.314417]  pci_dma_configure+0xf8/0x108
-[ 1121.314421]  really_probe+0x78/0x278
-[ 1121.314425]  __driver_probe_device+0x80/0x140
-[ 1121.314427]  driver_probe_device+0x48/0x130
-[ 1121.314430]  __device_attach_driver+0xc0/0x108
-[ 1121.314432]  bus_for_each_drv+0x8c/0xf8
-[ 1121.314435]  __device_attach+0x104/0x1a0
-[ 1121.314437]  device_attach+0x1c/0x30
-[ 1121.314440]  pci_bus_add_device+0xb8/0x1f0
-[ 1121.314442]  pci_iov_add_virtfn+0x2ac/0x300
-
-Now:
-[  215.072859]  arm_smmu_probe_device+0x48/0x450
-[  215.072871]  __iommu_probe_device+0xc0/0x468
-[  215.072875]  iommu_probe_device+0x40/0x90
-[  215.072877]  iommu_bus_notifier+0x38/0x68
-[  215.072879]  notifier_call_chain+0x80/0x148
-[  215.072886]  blocking_notifier_call_chain+0x50/0x80
-[  215.072889]  bus_notify+0x44/0x68
-[  215.072896]  device_add+0x580/0x768
-[  215.072898]  pci_device_add+0x1e8/0x568
-[  215.072906]  pci_iov_add_virtfn+0x198/0x300
-
-Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-
-Thanks
+>         Krzysztof
 
