@@ -1,117 +1,98 @@
-Return-Path: <linux-pci+bounces-23809-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23810-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37C6AA6258A
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 04:45:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D0B07A625B4
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 05:00:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3C4C3B84E1
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 03:45:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05E713BD821
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 04:00:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C46136124;
-	Sat, 15 Mar 2025 03:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KkOxLG+8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 812B5A2D;
+	Sat, 15 Mar 2025 04:00:40 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACE563D
-	for <linux-pci@vger.kernel.org>; Sat, 15 Mar 2025 03:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC522E3364
+	for <linux-pci@vger.kernel.org>; Sat, 15 Mar 2025 04:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742010320; cv=none; b=TU1ou5ctasMb5w4exG6EqEjir8XXi+odr0Opg9n6m2YFneA6Tcl/tFoSvEwY3gMULiwmXhLpigGNHVV6+oRpmO963q6BAvO+IxSNqPz+JXM5ZeushI0Xsn/uzbyEr63jG+BACn17NwMwy88Yed85Xu6DXx3guVqTD76FWCgO0HU=
+	t=1742011240; cv=none; b=V7Kzy71PJLp71RWJS9SDMtcv/RD+jJanklKkOSwC9Pv/YQXPBBkrIHqkqovFVUYAcTYxyP0uSeWNzVi9lajlsYRqp+6/l2PvBUm2K9wLwkpdL5du6psOj4B6JH2dhhKfiUNFnweMnH5cw08TaOQFtaA9qfXZyebxEhd97JVbmF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742010320; c=relaxed/simple;
-	bh=U4IbF6pxY+oCSDLe2JwLjQ1HJpSBUObvEzG8VSi0ZEA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mAvb+hvXQInAWc9agYhe6FqslakZzbaw8+MOg3NZeu4KxTVTvovhAzOklYi0E6gn2/Id74tXJzU3v/8giRpURqLyE0wjgjZNR49SKoI0FKzVI8CQRGmgdEA4ZiLI+GiC5YmVOv52KppdTB5m9V/aY8S0/vYebUJDwY47QYpVHaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KkOxLG+8; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1742011240; c=relaxed/simple;
+	bh=2woC3DbyjNQW4/oTAgArm8ct8872r38LT1LJiBNQfuU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rYXfj+IHxlE15FxZafeVxotgdw03LNBCE8ldP/OoJcy1sJbzFbPB9yXuIzmk3kC1mAiRQkDyXss5yDi86k8gPbfE5snJ0sYjRMU/e+7RZXHH5/QShB2qOAFjPkttPmWZah0OLsw6Ilb/AtYeBaXDCRfKRi2iU0YAuCY9Mh00sts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac25313ea37so548096466b.1
-        for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 20:45:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742010315; x=1742615115; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H4xHD85bk13rBdgxAVADV77Uq2Fwwp1qTFHU1nr78k0=;
-        b=KkOxLG+894os/tFjmIc0VdL5kYKOs5tGKZTkcYu0uU4NNDWqZvn0Pt3HVgXTo+v/kv
-         Tc7P9OSMwvRjIy3N+18fMK2/UEZiK8NJcEM5Bm0edjvbKlJYRLdP+rmy5DretbLIWpNO
-         KX7qWnBL8dDd3x9Zcr2iDaJlS5Q3KchBR/BS6SkJnwapccWVubl0LjyCfjjP6TH1TXqy
-         6xfcJmu7WTXxJxMAeIcfbwxXRq6AAiH2ldjSWZhfOlGLCaNLSsqQDm7bQK2xKZ1oceLp
-         D2sD/NNWKKZEj8BRnjrFzxTDJBEQktvsJhcTTnyFwRPqEXU2203viNJiv6CGv2zqnjss
-         ogbA==
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-300f92661fcso482612a91.3
+        for <linux-pci@vger.kernel.org>; Fri, 14 Mar 2025 21:00:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742010315; x=1742615115;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H4xHD85bk13rBdgxAVADV77Uq2Fwwp1qTFHU1nr78k0=;
-        b=nooizvsaiHEY/SDtTLKdq5hdujGfXtyIIg74jijXxztF5EzRjNMVVzOEeBpgwDhMvx
-         yCI3shaFeeErPB1jOHcAAhzsackhind68oPjo2G3mGxmbnTypDxNkafxPIYFcQorNGKP
-         RSCDQNo3e/lzBtxaTtBo2BauS/TfEfzzXEL96en6WmA0d3BY7R3m178cKgksJNsr4ZME
-         YJn4/idbUkntrejaz/jRKJ53TpB23xGWkGMaYbJRSlFICm9vKtROlE1/h3/EE54aAcj9
-         s1/XwjrFbFJZDYrmtJMymt5LLqZD0EktNmRjZloOR5NKUTlXciVgcez1ouV6+6JmK/CW
-         RJnw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8NyoInd3i61eM17us9xZa3cAnhIHFHJYbv04gGv80c3yvsj5igdnQ8KIOyt2kGNsH2SiLcW4dIHY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2EowCYewMokCKDrf5ct36vcw/FPlimLIh3N0EeCMzajfY9uPY
-	555SWzp6atlNh1ahzgAZlLY/qgPaJf+gsvzF4IY7kCS4rNqoBI/dIfS1vTFi9FXIqF2d4hrRuKk
-	Gtj5aVZLledq+Ct+1Gkc+ut99FK4=
-X-Gm-Gg: ASbGnctxG7dvwNI2ItHv47lJJayic/E3K+LVAXb4XH0+q1+zrSFjyXWTo2vM1HXs8vK
-	Tr7DyiJi3pX4q9RGPa2UKF48iywDaDwJsGcgaryR2eQuqTsfsOFli97ShKGW0B/yrMKPyaKlO5J
-	gJkCrVZ0YGrFLyhvycS9H9z4pzYg==
-X-Google-Smtp-Source: AGHT+IGra1XDxh5h5Up0e7GFY40swSizxIX0ymUzziu7LRfD5GHIjXaWW8aTawtfXJ2P1d4B80VnS34KuofpeNCCxEc=
-X-Received: by 2002:a17:907:2cc5:b0:abf:6ede:dce1 with SMTP id
- a640c23a62f3a-ac3301fdf30mr518911866b.24.1742010315415; Fri, 14 Mar 2025
- 20:45:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742011238; x=1742616038;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d4+qPDPuCstNLo/GcF5oRKkN5WGqyPb6TlEhsmHq4Bg=;
+        b=L6uYil6c1fbRTku6DQ2qb1evyEYJM5rmY3B5KphaJriwnxj/IbvnZAAhYXGruL4mJe
+         iqnRILHQIeHqSGSIan//hNM9nU3wWMlZ8jEl3n5pG+VE1UJ/OtxlVUuerkP71KgKiYQM
+         DlWxGhyWUybg+oxiFeYC53E6XnKrgv/6uMrA375vS0Ee18iKjcLpEPeNW++y9m8PwOxL
+         EcZ5TN70dx8cI9MIM6ix9YAe3BQBCEKMx4ZXGZpEwFuM+aJk1Jsykl7XfS5mB07ZOpvA
+         147lAuXpzhI6ev9EBuryoeRzrE6DsTZYGBkILa/MIs7ncv/L9XJ1bZXBWsFSBkkjIHkU
+         Kzzw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7o8BISCEJ7Va1q3niWrH8NbjygnJt1b6PvXjV7ZYKZxvfaZQ6QPEjT0A6PMRT9YWWMdi8deBfyjI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWKOw9iB5xvWDv4l5uZpim5QTW4DTgmO40d+FwHLGevLqaFPRO
+	x5cOTw9u+yaShbO54HA57KFPnZ1XKmLM35va63d9VcAmysXqY8rRXEvBhh2cI1Q=
+X-Gm-Gg: ASbGncsBcT10O3JPgEivQ6CLqcxP2prwfMMpR7SUiR+fzdaADJK3+GUWxmJLddYteSk
+	8v8RDWkOLyELbbhnwonaN00a0TxXxeA0D8fHrmlqzHTG2V/use+tTw/vjqxMA+mPeEadNk/kQqt
+	xc4xygzm6j/mzeqpb57ljVIREixvyWIAAryz5EdDxgg1cRJY50y21D0VG7d3LXjVmu+X7d/K3Ma
+	BAuawkWgohc1eq6Fv9qCcTzNvtg+XyNDaeZnj1gYkClveuoZs8Vzag31Y2CuzaVGmxjceYBDK3w
+	cXtfpHbQRdSvqvBKyF7N8yjN/zlJhT3jwfhI9VvBEMyoiFa0pbwgKd/nXoFtH5HGpQ2qBODxCoy
+	eJNE=
+X-Google-Smtp-Source: AGHT+IFWzmbV5/zR9nbzhbecfW4czNyqg55fBOJekyEeIbSoHSEQYX3s3SluZQ1ia70Wa+HdD3fKPQ==
+X-Received: by 2002:a17:90b:5387:b0:2ee:ee5e:42fb with SMTP id 98e67ed59e1d1-30151c9a276mr6130549a91.13.1742011238094;
+        Fri, 14 Mar 2025 21:00:38 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-301539ec999sm1849652a91.14.2025.03.14.21.00.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 21:00:37 -0700 (PDT)
+Date: Sat, 15 Mar 2025 13:00:35 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Huacai Chen <chenhuacai@gmail.com>
+Cc: Huacai Chen <chenhuacai@loongson.cn>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH] PCI: loongson: Add quirk for OHCI device rev 0x02
+Message-ID: <20250315040035.GA167520@rocinante>
+References: <20250121114225.2727684-1-chenhuacai@loongson.cn>
+ <20250314075328.GB234496@rocinante>
+ <CAAhV-H7AnAnmPT73wQtx2gUitrLumc3NURvBWzJYj0UkNHw=oA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250121114225.2727684-1-chenhuacai@loongson.cn> <20250314075328.GB234496@rocinante>
-In-Reply-To: <20250314075328.GB234496@rocinante>
-From: Huacai Chen <chenhuacai@gmail.com>
-Date: Sat, 15 Mar 2025 11:45:04 +0800
-X-Gm-Features: AQ5f1JrWWKwjHb4Ce5K2WmEkLOb-NSx_bkI_ZCFrqwYvNrtG183P5zH1bX1BfpY
-Message-ID: <CAAhV-H7AnAnmPT73wQtx2gUitrLumc3NURvBWzJYj0UkNHw=oA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: loongson: Add quirk for OHCI device rev 0x02
-To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, 
-	Jianmin Lv <lvjianmin@loongson.cn>, Xuefeng Li <lixuefeng@loongson.cn>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAhV-H7AnAnmPT73wQtx2gUitrLumc3NURvBWzJYj0UkNHw=oA@mail.gmail.com>
 
-Hi, Krzysztof,
+Hello,
 
-On Fri, Mar 14, 2025 at 3:53=E2=80=AFPM Krzysztof Wilczy=C5=84ski <kw@linux=
-.com> wrote:
+> > Applied to controller/loongson, thank you!
 >
-> Hello,
->
-> > The OHCI controller (rev 0x02) under LS7A PCI host has a hardware flaw.
-> > MMIO register with offset 0x60/0x64 is treated as legacy PS2-compatible
-> > keyboard/mouse interface, which confuse the OHCI controller. Since OHCI
-> > only use a 4KB BAR resource indeed, the LS7A OHCI controller's 32KB BAR
-> > is wrapped around (the second 4KB BAR space is the same as the first 4K=
-B
-> > internally). So we can add an 4KB offset (0x1000) to the BAR resource a=
-s
-> > a workaround.
->
-> Applied to controller/loongson, thank you!
-I'm sorry but since Bjorn has some questions, and I need some time to
-investigate, please drop it at present. Thanks.
+> I'm sorry but since Bjorn has some questions, and I need some time to
+> investigate, please drop it at present. Thanks.
 
-Huacai
+No problem!  I saw comments from Bjorn, too.  Thank you for taking the time
+to look into the concerns raised to refine this fix.  Appreciated.
 
->
->         Krzysztof
+	Krzysztof
 
