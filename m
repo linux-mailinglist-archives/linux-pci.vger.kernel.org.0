@@ -1,159 +1,91 @@
-Return-Path: <linux-pci+bounces-23823-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23824-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8A9CA62BFA
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 12:40:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61DD8A62C2C
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 12:57:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3F4D189BE18
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 11:41:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 932E016AD26
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 11:57:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3620F1D9A79;
-	Sat, 15 Mar 2025 11:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KAlDNG7d"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31FEE1F8733;
+	Sat, 15 Mar 2025 11:57:34 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6D618B494;
-	Sat, 15 Mar 2025 11:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F229D1F583C;
+	Sat, 15 Mar 2025 11:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742038852; cv=none; b=SZdm5ROVD2uXD9H0EJM2RQwMaVmd1oD4bJJW4FSUi9PV/P/xj7GtMjVVp6nu9FqnMDttHMOJ63bz3pX9gjcAgKbC95ld42XxrQMgfs2oN38R1FH6SQsuBkvGrDEc0N8MxzxaTuvE6c8y+KPiNJ/1iB0cn8W26pOnmJbuVoQRRs4=
+	t=1742039854; cv=none; b=WPwf/TWnA1kN+pi6sIzf4tXbVWG8kLwOz8BnYo9Z/1Nte+AHpSR5mkKWFHV16VFbAp/oXhnukYyVq0rYbm5zIOqabvqO16hMEpac92zWkSXzFd/3dbvV/mgn2dT98HAGh7ruG9NKN3IFtS92EgO8ofowNwmMLetjNSHuRYyY+yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742038852; c=relaxed/simple;
-	bh=GZk4fae/MYr67eBVU1vWnrMYaBDTRXLN3fZqhAOhcd0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s30iibRsMlVPXSSCoty73HpTaJry7tvkIIYP5Jm3H2tB1PwcvpN/yBx7tNNtodZ0uGivyq0EpPYuSGGAOWu+G+6M3zlrVhko/OTrYGyvhdals/t8qDHFDuf0sR1kz68i2yh9YUCkouYJDe1BIQWsjzVrQTMxBt7jeV6LWpCHaQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KAlDNG7d; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5498c742661so3193068e87.1;
-        Sat, 15 Mar 2025 04:40:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742038848; x=1742643648; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GZk4fae/MYr67eBVU1vWnrMYaBDTRXLN3fZqhAOhcd0=;
-        b=KAlDNG7dt4zKx0AH91qp79BI9taKzij5Xp8l4i4jCE8S5cht2xf91aik0LtrrilhNj
-         8rAMXrlLVWZ2W+dzlYZ2NDGeoAPf2SJiKrpkr4CrRcj1y1lbdLDH+ehXD12IlL22cm78
-         R0+62ysJdcoa3imc9rU0eI52QygsXkcROtQAveX5sXvsuMdl/K7VHawsHyd1PWGjkIyh
-         4+y+9GO21tvEbKwsOpIbQLhKLVDs7SOiKIfCR6DSRTBzW44a2KOH8BkA6TlB//b45V3z
-         /6fX5vyFx8xqDcu++9OZ204pquss/3UrOhfAcMhFKoHHIrrNu7oSx6qv7+7hmaXPiQFs
-         BCEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742038848; x=1742643648;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GZk4fae/MYr67eBVU1vWnrMYaBDTRXLN3fZqhAOhcd0=;
-        b=CdVMufDNsLbghnq1l9RlUNavGHm9MiA+FgEfMSbTPuuj8DkF4Wj875AB697hyhI6Jh
-         cKRoQaPhdE2uc42+WTfXYLwsPKUpkEgGN1Q2tAFo8LAr0/SMjp4dQH4KWOWidppuFEP0
-         yF8vAUK55f0R98/qKUfJcZvYekkw1tYepn56Jx9IOdb19ojEUqY9Cs0yQkiXZ7RrktCF
-         lhS681Iw52Qtw0Xoh8JgwAs0J/kbWgOyO7vsYdrLfRrwDjTkBURdBh/ckqwylXeTBpKU
-         FoqYW6cmQjOOnXQATqTuHHVG3ZCtvXDpgws9M1tU37DAA9CIk2/YUkJPM8iNPcY3O5s+
-         Y1yA==
-X-Forwarded-Encrypted: i=1; AJvYcCUbIA/2TqJLBqBUjmdcfzxfnHizYcjul0NnpwLhfu9dvZMmKE76JO1zZJBfR/55by7ri9/MOb7hvW9C@vger.kernel.org, AJvYcCVyoWwPuwNlvbG4nvhyhwpFAXr+c1bS+/tkhFiqliQjqOJ5ixvI5V3IQDyADyx7KbSUbvvEHkrAKJuAukDp@vger.kernel.org, AJvYcCW329spGndCqefyPRRvl/wsCD8uhi/YX+DdsoDniBHvHzS/2uSyb0vM3vHXgLGJ7RqoO9nseLdbba1NJw4=@vger.kernel.org, AJvYcCWCJhQ24QOo/dztb6+pOoFRNiNPOJCJJO31lXE4aEa1vPt3e97vDxHD+XPUZAdXjJklfVYcHOAAfFj/@vger.kernel.org, AJvYcCWLM/tdU8sVIyfKOsEo6LZ5UYk5GCQ7X2ZzwIUgBggNFOujGN9l/uo0XV0pwU4fw77zVuoRcNLTWwVJd4bwRf4=@vger.kernel.org, AJvYcCX5odi5CO2dYIdJ+ZDo6neaUqw150jjQUpROq0jzKRo0raauXWuDLIjhH4tUzdAJMyWF0K3icQKkfGW7aQ8mkqY@vger.kernel.org, AJvYcCX8pKeidYEco346y9OgHsUofNUj/YjHE5fFIlVURDVeagrArbFNVyfwgjX8NGRu2flT7LkA3h1saBSGmE7S@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGfBr5LYqNRe1WTW7VRBxXbO1MtN/1svz+CJuHGbh1KOEi1CJz
-	FalRS7uWYRprZS9anKAx5vV5raYA1ROmWLYfIRsr3xGW6XG7TtVCVxlyysPwmBaBsz/+0ubWYhv
-	ST8JrnTxKdqIShQnZHqkEyaVGTFU=
-X-Gm-Gg: ASbGnctChh6TJ98fNkh4xw7JrB/GEJaRTpD0juckxOX6L2defRnppTSv3dPLf8SJhH+
-	948uukqissJc5KSVHcUoVABxLWR4eAhfE1tcrIcUxoU5U5gDyyjitJcA36A8BN+/OZPJGT+EIA2
-	eNtxd8HMJsoErsrp3HZfPRsJCemCWHd+7aFAqUMIjG4wlj004akHn6BgkDsmwF
-X-Google-Smtp-Source: AGHT+IE5YOwdAlkimyDKgierukU/3MUe/Bnh+7Dt6lI9qeuVqTH+ammroy8zrPwyvHKRkmqwZzkFDYys53YFqpqT1HU=
-X-Received: by 2002:a05:6512:b0e:b0:545:3032:bc50 with SMTP id
- 2adb3069b0e04-549c38fb8f3mr2455457e87.19.1742038848058; Sat, 15 Mar 2025
- 04:40:48 -0700 (PDT)
+	s=arc-20240116; t=1742039854; c=relaxed/simple;
+	bh=CnEyCWSi3pIVVY33cscVOYALlAkRoSkSONlyJJBvaF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YDzMgaZ4/K9zm9Kgk60clENdC0o4nIoRb2UQnXn5kuneQ0iYooHmtcUbpL5SVp9+7mTFp0HFS13W08PkibZM9kai7c0qIfbAT6mHnqRZJ+YOWKOj8ExEbBhNoZ/h1dhY9iBbBpdLmwwU9ykrk3EiGqU50oO+E+pdxRVh7M1So+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1EE7330000085;
+	Sat, 15 Mar 2025 12:57:22 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 065F716BB17; Sat, 15 Mar 2025 12:57:22 +0100 (CET)
+Date: Sat, 15 Mar 2025 12:57:21 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Guenter Roeck <groeck@juniper.net>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Rajat Jain <rajatxjain@gmail.com>,
+	Joel Mathew Thomas <proxy0@tutamail.com>,
+	linux-kernel@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH 4/4] PCI/hotplug: Don't enabled HPIE in poll mode
+Message-ID: <Z9VrITX60AJ3o60V@wunner.de>
+References: <20250313142333.5792-1-ilpo.jarvinen@linux.intel.com>
+ <20250313142333.5792-5-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250314-ptr-as-ptr-v3-0-e7ba61048f4a@gmail.com>
- <20250314-ptr-as-ptr-v3-6-e7ba61048f4a@gmail.com> <D8G9LZCS7ETL.9UPPQ73CAUQM@proton.me>
- <CANiq72=JCgdmd+h4_2VguOO9kxdx3OuTqUmpLix3mTLLHLKbZw@mail.gmail.com>
- <CAJ-ks9=Ec0xLg81GUYJ07uDzwtwhFkoEdxaa3kNtV6xSjZ57MQ@mail.gmail.com> <D8GQRANRVU11.SI7SZ8RAXXF@proton.me>
-In-Reply-To: <D8GQRANRVU11.SI7SZ8RAXXF@proton.me>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sat, 15 Mar 2025 07:40:11 -0400
-X-Gm-Features: AQ5f1JoeAoHyy6Si2IMNvKKkRV0I5imCdPBPltc96FGLSP5A2aIFj72qS0jC_mU
-Message-ID: <CAJ-ks9m7GwHgBCEYcNiNC7HTMscO9es-RtvnCZLO=PmiU530yQ@mail.gmail.com>
-Subject: Re: [PATCH v3 6/6] rust: use strict provenance APIs
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250313142333.5792-5-ilpo.jarvinen@linux.intel.com>
 
-On Sat, Mar 15, 2025 at 5:44=E2=80=AFAM Benno Lossin <benno.lossin@proton.m=
-e> wrote:
->
-> On Fri Mar 14, 2025 at 11:20 PM CET, Tamir Duberstein wrote:
-> > On Fri, Mar 14, 2025 at 6:00=E2=80=AFPM Miguel Ojeda
-> > <miguel.ojeda.sandonis@gmail.com> wrote:
-> >>
-> >> On Fri, Mar 14, 2025 at 9:18=E2=80=AFPM Benno Lossin <benno.lossin@pro=
-ton.me> wrote:
-> >> >
-> >> > I don't know when we'll be bumping the minimum version. IIRC 1.85.0 =
-is
-> >> > going to be in debian trixie, so eventually we could bump it to that=
-,
-> >> > but I'm not sure what the time frame will be for that.
-> >> >
-> >> > Maybe we can salvage this effort by gating both the lint and the
-> >> > unstable features on the versions where it works? @Miguel, what's yo=
-ur
-> >> > opinion?
-> >> >
-> >> > We could even make it simple, requiring 1.84 and not bothering with =
-the
-> >> > older versions.
-> >>
-> >> Regarding Debian Trixie: unknown, since my understanding is that it
-> >> does not have a release date yet, but apparently mid May is the Hard
-> >> Freeze and then it may take e.g. a month or two to the release.
-> >>
-> >> And when it releases, we may want to wait a while before bumping it,
-> >> depending on how much time has passed since Rust 1.85.0 and depending
-> >> on whether we managed to get e.g. Ubuntu LTSs to provide a versioned
-> >> package etc.
->
-> Yeah that's what I thought, thanks for confirming.
->
-> >> If something simple works, then let's just go for that -- we do not
-> >> care too much about older versions for linting purposes, since people
-> >> should be testing with the latest stable too anyway.
-> >
-> > It's not going to be simple because `rust_common_flags` is defined
-> > before the config is read, which means I'll have to sprinkle
-> > conditional logic in even more places to enable the lints.
-> >
-> > The most minimal version of this patch would drop all the build system
-> > changes and just have conditionally compiled polyfills for the strict
-> > provenance APIs. Are folks OK with that?
->
-> So you'd not enable the lint, but fix all occurrences? I think we should
-> still have the lint (if it's too cumbersome, then let's only enable it
-> in the kernel crate).
+On Thu, Mar 13, 2025 at 04:23:33PM +0200, Ilpo Järvinen wrote:
+> PCIe hotplug can operate in poll mode without interrupt handlers using
+> a polling kthread only. The commit eb34da60edee ("PCI: pciehp: Disable
+> hotplug interrupt during suspend") failed to consider that and enables
+> HPIE (Hot-Plug Interrupt Enable) unconditionally when resuming the
+> Port.
+> 
+> Only set HPIE if non-poll mode is in use. This makes
+> pcie_enable_interrupt() match how pcie_enable_notification() already
+> handles HPIE.
+> 
+> Fixes: eb34da60edee ("PCI: pciehp: Disable hotplug interrupt during suspend")
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-=F0=9F=91=8D
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+
+There's a typo in the subject line (s/enabled/enable/).
+
+This patch does not depend on the preceding patches in the series
+and can be applied by itself.
+
+Thanks,
+
+Lukas
 
