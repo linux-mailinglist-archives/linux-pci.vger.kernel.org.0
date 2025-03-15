@@ -1,194 +1,295 @@
-Return-Path: <linux-pci+bounces-23791-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23792-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8635A622A8
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 01:18:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82CA6A622B5
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 01:20:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78CD019C2744
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 00:18:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BAB983BBFB8
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 00:19:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C27C610F9;
-	Sat, 15 Mar 2025 00:18:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C337317C61;
+	Sat, 15 Mar 2025 00:19:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GdO7T1Oj"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AHVPYber"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2401936D;
-	Sat, 15 Mar 2025 00:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE0C22E3387;
+	Sat, 15 Mar 2025 00:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741997904; cv=none; b=fdrqUXVU2dUsHSznPaCdV/FpZVyVxpftXfM855D3CwNwNVAk+xy1azntM2rVog9/CNa9HPTpgOURJF/dmgJCqnrYtf3mzKJWYxwnmcetBml2azJMcIqnXuYGr0BkQyzti2rWqN1/KCA5C1Mj5d7qbBjKk3U70rCMUZQkY4X5w/I=
+	t=1741997975; cv=none; b=rr9Bd58BaBRNOM56WNNwGXXkHvsZA4HqhVLNyL+mRGzBUTWuRI+NwtVYaB/ws06WS2S18FNS94zyBA71HVRJ10tQZ16V6k6Ilp1z+z2Jw80p2UkDZmheGWZ0QLkGIk6DGSC2rAath0lL6EVR+BRHFyUlu8y1P0/IicIO/RyxMQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741997904; c=relaxed/simple;
-	bh=g7N0/JCTS6OufAO4Kgybu5W7kXCd+wNIWPPOS/UbXwU=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fm0ceJCHH3ikE/AfVPFboWes51+wBIvJrKnYe5HT0xPI7OudxogMPM+x1pKVO2vJEczqmWDoLTcIhiCmRggn/C9F2u4yZYDImyxWmTwRkp6/Vma7OoQ3deAeicco7cllO65w+D5pkKKfKxvGjRGjp+wv9I+F17+WL05vYLsb10s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GdO7T1Oj; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c542ffec37so271708685a.2;
-        Fri, 14 Mar 2025 17:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741997902; x=1742602702; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MW/Q581Re/FQqAaGAz+jf2rOlLwJG+NP8CU6/zqtpc4=;
-        b=GdO7T1OjzsZnCsdfFUtWKvI9/LNYbdF93rZmXqJZpVhrtD9LZ21S+AllwQm/ohuwQS
-         /L0mR40SclPErNtv9SvZNV+F8uwI+MRmqMt2ZDNjY2LNUafTatPRGAiO4cqE0mIW0Ldd
-         DQeEc266WfdGf1N6eJ6UphjgXdaOYfDH36Rjk2vyYUUQnAkDthTBwHQtlXjTwYNlGPSE
-         n/yeesuUzDUFe2KY3iJHgpvMeIkAY8ZPYyQhNlvgDCCGupzSzxe1wx3dtFxPKGF6ByEf
-         QckeGMI5bizYVDNsdlJQyfAX4YggfznMvyl5Jfu9UAm+v10OHbk9NfurdiEInUbMezrj
-         93PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741997902; x=1742602702;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MW/Q581Re/FQqAaGAz+jf2rOlLwJG+NP8CU6/zqtpc4=;
-        b=SFdGp1aIOzpPxbzq688wsECtYat3vM8pdVuedruEfjGodNw5vy0ew+taNgqmIa9guA
-         +2xcIckK221vdYUQ73fBdhAuUFygpUmC157fOEbhyy9bbd6ajS6gGi8Hw8QIftUU7tPW
-         q9woLpGhfOhNSNmnBU4qtWGLm40qi0O3k9HzTAw+FO1bNcrNc443iPHv4edU8O0kJTuo
-         BY5LvmxKzmKrjEu21SUQWllsR743fRC2qI+Eut/R006MRlxnn2Cir9Qu6An8qtNo+l1x
-         GzdYbBCxWeYQymL7ygiJ1oiVyZXveAvdDxkXqguLe5kAIYZteQmNbFcv/xOUWTfsSwM1
-         NFhA==
-X-Forwarded-Encrypted: i=1; AJvYcCVEEUsUCcd2Mi/79fWJzl9kX2fXVwjTJONi6J7a1PfvbC5L7aCUbhbaahGhBUoXosHDYcHUpwqExI/RlA==@vger.kernel.org, AJvYcCVsaThx2nfmrGJt7PXJPO5tAytJe6nhVZEDkHthUUkZ/r8baEC0VhJ3vW8ePyLZAOyOmfuIMB6LuCUxCEOmSVk=@vger.kernel.org, AJvYcCWgUkaOQloo9Z7DapYzqdL+jssp3idU8ao+HY4lMwLOQkjJAVw89JeGJBUKfCbOCHQBuiv3aW4L97xs+rnv@vger.kernel.org, AJvYcCXEmOdTK09OwwKsyWmqIs7uF/8QBWALRtJ9yn59+juA5oa2Cv/BQlr3afhTvGWvPm02X5BV3cTq@vger.kernel.org, AJvYcCXc9Gvd+JnCE5EvFqjL9gD8JpSrM+/l/MaAE+caLlP2VRy/T9h0EUHKkiI+nD40Rrh4tAh2KrhGG025ocLpOU92@vger.kernel.org, AJvYcCXr205yrglrgebsJ3Y9iaaT0gQs9Wdpb4b4Q5O8hGx2uFGnKlhpTDczqJ6GNNv0NY5vY14dbjynG64Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP+rP6BA7+aakxNAnP7jBaP8+ZuPabEiGGa1Pz+brlHSN1EzGG
-	NRHe2Z+4JGqXHgdSF7fvsmmszTYZMfpRUb4UO3LyPN8TBuD7hnMB
-X-Gm-Gg: ASbGncvBcYVYUtE011lw8GeEdFTywhl8tO1g7Uhxbtib2Ds64kFio3WGV5hT/eBn1gT
-	b4a3m5soJRTH1HCRII6yZBuwnFsw2PIQg4AUqYXWms5chCS5bDtHcglJLbybQVTXPp0MOx/0Pnn
-	xBfI53j1bF9kvTz/zT3o5P7sw8cRf03v5wBgT85S4re/HPY/KeyKTxvmFGn4Bw0S2Wugql0Ljw7
-	ckbaF7pSvZgE+xwFoZ0DBbPGV3/cs3MhhdHOdBGGFbFUQbqNoYu7v3z8p3600fHjt+Zykm4rmo3
-	VpaVr8ozUOXt2R+HFOiA/i0eYG/Q4nVlaz8RcUqC6uUgy/JgJzdaWufcH82sWwbw7om707e5rdb
-	6gg+KpzwdntL1/my8eyzQEgeZQ2rs55qowpHhn2RSsKcC2Q==
-X-Google-Smtp-Source: AGHT+IEwyke4ZW6L+ZW3RCnZV78prYvLyXaehAEXAI6EbOZkgETy/Y95traqlk8pruRLBhO0X4DyAA==
-X-Received: by 2002:a05:620a:3193:b0:7c5:5cc4:ca61 with SMTP id af79cd13be357-7c57c79bc00mr650619685a.12.1741997901820;
-        Fri, 14 Mar 2025 17:18:21 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c573c4f53csm316677385a.22.2025.03.14.17.18.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Mar 2025 17:18:21 -0700 (PDT)
-Message-ID: <67d4c74d.050a0220.66d0.b23d@mx.google.com>
-X-Google-Original-Message-ID: <Z9THSUE08cLVCy84@winterfell.>
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 692F61200043;
-	Fri, 14 Mar 2025 20:18:20 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Fri, 14 Mar 2025 20:18:20 -0400
-X-ME-Sender: <xms:S8fUZ93vaXJHgA4i2OX5j7lqSUEMZSSO9FqzBdBhtRyWLxXVYVCsmw>
-    <xme:S8fUZ0HLTfLNJiQeMU5I6MqZ8QPxOGPZjEbiLBTc00U_pJoJb74wL9HqKM2Ymoseo
-    QJfsxTfTu-hLA_N2Q>
-X-ME-Received: <xmr:S8fUZ95ICMUGXCYWQXMOcOfyhFgvt-wKrx0HdFdd-gHr2P4k5Sz2PT3dGEs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufedvvdehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeelveeftdduudduudekudehtdevheduuedv
-    vedtjefghffhvefgtefggedugeekjeenucffohhmrghinheprghspghpthhrrdhgrhhouh
-    hppdgrshgpphhtrhdrphhiugenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhith
-    ihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgr
-    ihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepvdehpdhmohguvg
-    epshhmthhpohhuthdprhgtphhtthhopegtohhnthgrtghtsegrnhhtohhnihhohhhitghk
-    vgihrdgtohhmpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgv
-    gidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhi
-    hguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhl
-    rdgtohhmpdhrtghpthhtohepsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpd
-    hrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohep
-    thhmghhrohhsshesuhhmihgthhdrvgguuh
-X-ME-Proxy: <xmx:S8fUZ63miUs8A46sM87ugHi-Oyv5gDGAOeV2jp8WrX9Vhu4cAcu8og>
-    <xmx:S8fUZwFqtvgMWQzw4nkYqCBH9hzZYEAbc02r9W5gKE7rZPxMu08RmA>
-    <xmx:S8fUZ7-kuuBfRqtDRPk1VY26XFfYxB3Y68xUHg_yuDsT9QaXGIpoPA>
-    <xmx:S8fUZ9lQLVRAlJ0sWQuVHZZlUZUZRYhswChrgXCMpPJsig0jRtoopw>
-    <xmx:TMfUZ0Evq0x3ESylammkr00E6rkZlRYT26JN4xhqw84EzOt3FOQMe2uu>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 14 Mar 2025 20:18:18 -0400 (EDT)
-Date: Fri, 14 Mar 2025 17:18:17 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Antonio Hickey <contact@antoniohickey.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-block@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	netdev@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] rust: replace `addr_of[_mut]!` with `&raw [mut]`
-References: <20250314234148.599196-1-contact@antoniohickey.com>
- <0100019597092d67-0da59c6d-9680-413f-bbce-109ef95724cc-000000@email.amazonses.com>
+	s=arc-20240116; t=1741997975; c=relaxed/simple;
+	bh=jqQL/axxeVbP6FsyRUY66C53ezuUX9eX9SGH4v/OLEM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pFE4gPkBXYRd8bK4Z9nsImidWA9m+tMNlS3fQ3z3m4ZBhz7NVPCti9iVos88denc1S/iaSthQTqnk0WOX1vVn+zl9F9nZuyqdp4Nmvt1wM5b/YPm6FSsDnYZYP7YZ/PUi04uhpDr9dxGj9eHc2vu/7k98hsuEQTfhhe73HL81GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AHVPYber; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id D4EB02033459;
+	Fri, 14 Mar 2025 17:19:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D4EB02033459
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1741997973;
+	bh=IFDGTilfS/bhksZe1/+y1s5O6KhZVkjslHMlSRzOeLw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AHVPYberswjwKcT6Z77GLpqu3dEV9bow+4NNwPmPVXC8jNOSVCwAftXKyFC4iOBwa
+	 6zVpXN4gOHy9ZubjASdeyzlqaN2gCJZAfAzmNxPZICtqSWezuX/ebu5eyWbfKQ1DAI
+	 7kvgRfFBf6WbJLAIeBc05WzefEpZfCws0jVyHsd0=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: arnd@arndb.de,
+	bhelgaas@google.com,
+	bp@alien8.de,
+	catalin.marinas@arm.com,
+	conor+dt@kernel.org,
+	dan.carpenter@linaro.org,
+	dave.hansen@linux.intel.com,
+	decui@microsoft.com,
+	haiyangz@microsoft.com,
+	hpa@zytor.com,
+	joey.gouly@arm.com,
+	krzk+dt@kernel.org,
+	kw@linux.com,
+	kys@microsoft.com,
+	lenb@kernel.org,
+	lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	mark.rutland@arm.com,
+	maz@kernel.org,
+	mingo@redhat.com,
+	oliver.upton@linux.dev,
+	rafael@kernel.org,
+	robh@kernel.org,
+	ssengar@linux.microsoft.com,
+	sudeep.holla@arm.com,
+	suzuki.poulose@arm.com,
+	tglx@linutronix.de,
+	wei.liu@kernel.org,
+	will@kernel.org,
+	yuzenghui@huawei.com,
+	devicetree@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	x86@kernel.org
+Cc: apais@microsoft.com,
+	benhill@microsoft.com,
+	bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: [PATCH hyperv-next v6 00/11] arm64: hyperv: Support Virtual Trust Level Boot
+Date: Fri, 14 Mar 2025 17:19:20 -0700
+Message-ID: <20250315001931.631210-1-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0100019597092d67-0da59c6d-9680-413f-bbce-109ef95724cc-000000@email.amazonses.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 14, 2025 at 11:41:55PM +0000, Antonio Hickey wrote:
-[...]
->      /// Recreates an [`Arc`] instance previously deconstructed via [`Arc::into_raw`].
-> diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
-> index 49012e711942..b2ac768eed23 100644
-> --- a/rust/kernel/task.rs
-> +++ b/rust/kernel/task.rs
-> @@ -257,7 +257,7 @@ pub fn as_ptr(&self) -> *mut bindings::task_struct {
->      pub fn group_leader(&self) -> &Task {
->          // SAFETY: The group leader of a task never changes after initialization, so reading this
->          // field is not a data race.
-> -        let ptr = unsafe { *ptr::addr_of!((*self.as_ptr()).group_leader) };
-> +        let ptr = unsafe { *(&raw const (*self.as_ptr()).group_leader) };
+This patch set allows the Hyper-V code to boot on ARM64 inside a Virtual Trust
+Level. These levels are a part of the Virtual Secure Mode documented in the
+Top-Level Functional Specification available at
+https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/vsm.
 
-This can be a
+The OpenHCL paravisor https://github.com/microsoft/openvmm/tree/main/openhcl
+can serve as a practical application of these patches on ARM64.
 
-    let ptr = unsafe { (*self.as_ptr()).group_leader };
+For validation, I built kernels for the {x86_64, ARM64} x {VTL0, VTL2} set with
+a small initrd embedded into the kernel and booted VMs managed by Hyper-V and
+OpenVMM off of that.
 
->  
->          // SAFETY: The lifetime of the returned task reference is tied to the lifetime of `self`,
->          // and given that a task has a reference to its group leader, we know it must be valid for
-> @@ -269,7 +269,7 @@ pub fn group_leader(&self) -> &Task {
->      pub fn pid(&self) -> Pid {
->          // SAFETY: The pid of a task never changes after initialization, so reading this field is
->          // not a data race.
-> -        unsafe { *ptr::addr_of!((*self.as_ptr()).pid) }
-> +        unsafe { *(&raw const (*self.as_ptr()).pid) }
+Starting from V5, the patch series includes a non-functional change to KVM on
+arm64 which I tested as well.
 
-ditto:
+[V6]
+    - Use more intuitive Kconfig update.
+    - Remove ifdef for getting IRQ number
+    ** Thank you, Arnd! **
 
-    unsafe { (*self.as_ptr()).pid }
+    - Simplify code for finding the parent IRQ domain.
+    ** Thank you, Bjorn! **
 
-because `*self.as_ptr()` is a place expression and won't create
-temporary references.
+    - Remove a superfluous check.
+    ** Thank you, Dan! **
 
-There are also a few clippy warnings, you can check them with CLIPPY=1.
+    - Make the commit title and descrtiption legible.
+    - Don't set additionalProperties to true.
+    ** Thank you, Krzysztof! **
+
+    - Fix spelling in the commit title and description.
+    - Trade-offs for options in Kconfig.
+    - Export the new symbol as hyperv-pci can be built as a module.
+    ** Thank you, Michael! **
+
+    - Simplify code for getting IRQ number.
+    ** Thank you, Rob! **
+
+    - Add comment to clarify when running in VTL mode is reported.
+    ** Thank you, Wei! **
+
+[V5]
+  https://lore.kernel.org/linux-hyperv/20250307220304.247725-1-romank@linux.microsoft.com/
+    - Provide and use a common SMCCC-based infra for the arm64 hypervisor guests
+      to detect hypervisor presence.
+    ** Thank you, Arnd! **
+
+    - Fix line wraps to follow the rest of the code.
+    - Open-code getting IRQ domain parent in the ACPI case to make the code
+      better.
+    ** Thank you, Bjorn! **
+
+    - Test the binding with the latest dtschema.
+    - Clean up the commit title and description.
+    - Use proper defines for known constants.
+    ** Thank you, Krzysztof! **
+
+    - Extend comment on why ACPI v6 is checked for.
+    - Reorder patches to make sure that even with partial series application
+      the compilation succeeds.
+    - Report VTL the kernel runs in.
+    - Use "X86_64" in Kconfig rather than "X86".
+    - Extract a non-functional change for hv_get_vmbus_root_device() into
+      a separate patch.
+    ** Thank you, Michael! **
+
+[V4]
+    https://lore.kernel.org/linux-hyperv/20250212014321.1108840-1-romank@linux.microsoft.com/
+    - Fixed wording to match acronyms defined in the "Terms and Abbreviations"
+      section of the SMCCC specification throughout the patch series.
+      **Thank you, Michael!**
+
+    - Replaced the hypervisor ID containing ASCII with an UUID as
+      required by the specification.
+      **Thank you, Michael!**
+
+    - Added an explicit check for `SMCCC_RET_NOT_SUPPORTED` when discovering the
+      hypervisor presence to make the backward compatibility obvious.
+      **Thank you, Saurabh!**
+
+    - Split the fix for `get_vtl(void)` out to make it easier to backport.
+    - Refactored the configuration options as requested to eliminate the risk
+      of building non-functional kernels with randomly selected options.
+      **Thank you, Michael!**
+
+    - Refactored the changes not to introduce an additional file with
+      a one-line function.
+      **Thank you, Wei!**
+
+    - Fixed change description for the VMBus DeviceTree changes, used
+      `scripts/get_maintainers.pl` on the latest kernel to get the up-to-date list
+      of maintainers as requested.
+      **Thank you, Krzysztof!**
+
+    - Removed the added (paranoidal+superfluous) checks for DMA coherence in the
+      VMBus driver and instead relied on the DMA and the OF subsystem code.
+      **Thank you, Arnd, Krzysztof, Michael!**
+
+    - Used another set of APIs for discovering the hardware interrupt number
+      in the VMBus driver to be able to build the driver as a module.
+      **Thank you, Michael, Saurabh!**
+
+    - Renamed the newly introduced `get_vmbus_root_device(void)` function to
+      `hv_get_vmbus_root_device(void)` as requested.
+      **Thank you, Wei!**
+
+    - Applied the suggested small-scale refactoring to simplify changes to the Hyper-V
+      PCI driver. Taking the offered liberty of doing the large scale refactoring
+      in another patch series.
+      **Thank you, Michael!**
+
+    - Added a fix for the issue discovered internally where the CPU would not
+      get the interrupt from a PCI device attached to VTL2 as the shared peripheral
+      interrupt number (SPI) was not offset by 32 (the first valid SPI number).
+      **Thank you, Brian!**
+
+[V3]
+    https://lore.kernel.org/lkml/20240726225910.1912537-1-romank@linux.microsoft.com/
+    - Employed the SMCCC function recently implemented in the Microsoft Hyper-V
+      hypervisor to detect running on Hyper-V/arm64. No dependence on ACPI/DT is
+      needed anymore although the source code still falls back to ACPI as the new
+      hypervisor might be available only in the Windows Insiders channel just
+      yet.
+    - As a part of the above, refactored detecting the hypervisor via ACPI FADT.
+    - There was a suggestion to explore whether it is feasible or not to express
+      that ACPI must be absent for the VTL mode and present for the regular guests
+      in the Hyper-V Kconfig file.
+      My current conclusion is that this will require refactoring in many places.
+      That becomes especially convoluted on x86_64 due to the MSI and APIC
+      dependencies. I'd ask to let us tackle that in another patch series (or chalk
+      up to nice-have's rather than fires to put out) to separate concerns and
+      decrease chances of breakage.
+    - While refactoring `get_vtl(void)` and the related code, fixed the hypercall
+      output address not to overlap with the input as the Hyper-V TLFS mandates:
+      "The input and output parameter lists cannot overlap or cross page boundaries."
+      See https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/hypercall-interface
+      for more.
+      Some might argue that should've been a topic for a separate patch series;
+      I'd counter that the change is well-contained (one line), has no dependencies,
+      and makes the code legal.
+    - Made the VTL boot code (c)leaner as was suggested.
+    - Set DMA cache coherency for the VMBus.
+    - Updated DT bindings in the VMBus documentation (separated out into a new patch).
+    - Fixed `vmbus_set_irq` to use the API that works both for the ACPI and OF.
+    - Reworked setting up the vPCI MSI IRQ domain in the non-ACPI case. The logic
+      looks a bit fiddly/ad-hoc as I couldn't find the API that would fit the bill.
+      Added comments to explain myself.
+
+[V2]
+    https://lore.kernel.org/all/20240514224508.212318-1-romank@linux.microsoft.com/
+    - Decreased number of #ifdef's
+    - Updated the wording in the commit messages to adhere to the guidlines
+    - Sending to the correct set of maintainers and mail lists
+
+[V1]
+    https://lore.kernel.org/all/20240510160602.1311352-1-romank@linux.microsoft.com/
+
+Roman Kisel (11):
+  arm64: kvm, smccc: Introduce and use API for detecting hypervisor
+    presence
+  arm64: hyperv: Use SMCCC to detect hypervisor presence
+  Drivers: hv: Enable VTL mode for arm64
+  Drivers: hv: Provide arch-neutral implementation of get_vtl()
+  arm64: hyperv: Initialize the Virtual Trust Level field
+  arm64, x86: hyperv: Report the VTL the system boots in
+  dt-bindings: microsoft,vmbus: Add interrupt and DMA coherence
+    properties
+  Drivers: hv: vmbus: Get the IRQ number from DeviceTree
+  Drivers: hv: vmbus: Introduce hv_get_vmbus_root_device()
+  ACPI: irq: Introduce  acpi_get_gsi_dispatcher()
+  PCI: hv: Get vPCI MSI IRQ domain from DeviceTree
+
+ .../bindings/bus/microsoft,vmbus.yaml         | 17 ++++-
+ arch/arm64/hyperv/mshyperv.c                  | 46 ++++++++++--
+ arch/arm64/kvm/hypercalls.c                   |  5 +-
+ arch/x86/hyperv/hv_init.c                     | 34 ---------
+ arch/x86/hyperv/hv_vtl.c                      |  7 +-
+ drivers/acpi/irq.c                            | 15 +++-
+ drivers/firmware/smccc/kvm_guest.c            | 10 +--
+ drivers/firmware/smccc/smccc.c                | 19 +++++
+ drivers/hv/Kconfig                            |  6 +-
+ drivers/hv/hv_common.c                        | 31 ++++++++
+ drivers/hv/vmbus_drv.c                        | 53 ++++++++++++--
+ drivers/pci/controller/pci-hyperv.c           | 73 +++++++++++++++++--
+ include/asm-generic/mshyperv.h                |  6 ++
+ include/hyperv/hvgdk_mini.h                   |  2 +-
+ include/linux/acpi.h                          |  5 +-
+ include/linux/arm-smccc.h                     | 55 +++++++++++++-
+ include/linux/hyperv.h                        |  2 +
+ 17 files changed, 307 insertions(+), 79 deletions(-)
 
 
-Besides, it'll be easy to review if you can split the changes into
-multiple patches. Thanks!
+base-commit: d9608f6dc3e3229a40e1db1dab573d6882f38c2a
+-- 
+2.43.0
 
-Regards,
-Boqun
-	
->      }
->  
->      /// Returns the UID of the given task.
-[...]
 
