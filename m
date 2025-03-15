@@ -1,98 +1,175 @@
-Return-Path: <linux-pci+bounces-23819-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23820-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7474A62A72
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 10:48:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4C6BA62ABC
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 11:10:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A7EB6189D209
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 09:48:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1477E3B9B0A
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Mar 2025 10:10:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92B4A1F5858;
-	Sat, 15 Mar 2025 09:47:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D4A01E1C1A;
+	Sat, 15 Mar 2025 10:10:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="huhRdlgp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TCxgd/Zn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079BF1F3BA5;
-	Sat, 15 Mar 2025 09:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C74718DF73
+	for <linux-pci@vger.kernel.org>; Sat, 15 Mar 2025 10:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742032079; cv=none; b=i0DombKyvfSo4KcufjK2Lr2622n8I4D/AWz9K/++AvJcrA41i/dR/0yFRUGRnp2k/tXSrmuWdjgFMLt4itOwUFiYt5qpae2074g0VHLP6FI4eFVHngL0ThGK6JsfR/v2VAL6IUdbJV8lW1uvzgdznC6xTAadiDUaJO5LVtlrgog=
+	t=1742033450; cv=none; b=bD48MkyaKwdE32zd0EPceiccEJf5bKZL2L6y5vK3lzn90Yy/WzZco53+UR0xc9+nG213IWfKnaXBaO6gDfr3ZRiyvdP6UgqbxE7/akuJqBjbfdfsT3vlLrUrUhJ+TnbCnZjYRA01g5KCL9LRf+e8y+SrQ7f0zo57QbCYPe5RUnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742032079; c=relaxed/simple;
-	bh=7CqIO2/a0U9+oy6kNqO6XNpT52/jDsv0DiXJpmmUevA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gfuuOR1x6/ld/PtseLd+CEbysXKVAnGHVlgkJt/TE+uR663RSvkLLPSDgu4p9Z2XWQy3M37ScEo1za74IzcmPNRtAgUvTa1nd9X+V/FPjtdCegmjn+doddRInECTR7d7HGW+yzjh9NwsAFuH3uIdlwtihHbwz5PZVatU4j+C/OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=huhRdlgp; arc=none smtp.client-ip=185.70.40.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1742032075; x=1742291275;
-	bh=YpMrKdCi6avddH9GQIVObLt9iwLl9bTrbYaJbhO6aWs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=huhRdlgpk0zebEQhrgVrn61dI92d0m27GER/kzfWLJ8X2bK9QJPTc/zEU3l6MM8PE
-	 msflN1IByzbQOCx08jmvjixBLTxEHezv+d/ex8q5RTv5oOpStFdobWgHZnpCglf+GW
-	 4SrFNcTURHgHO2DOyu9KgU6JUp4WH0S0V0LGOcJr/gD6p8t94++9hTf7fNYNC91dud
-	 fRB4ASTPQxXB1mizw+ZsaimzeDbgp2NQqN4i3LI2Ts5UbBTcnoJUOZAb6rNlz9T6VS
-	 YM/iPt0GO2hfhA+6BwNtjMhQvGBMWTgrhImtggYdXQfKctdtaPspGUlbxHQNj18xLZ
-	 OWuYN4da9wX6g==
-Date: Sat, 15 Mar 2025 09:47:51 +0000
-To: Boqun Feng <boqun.feng@gmail.com>, Antonio Hickey <contact@antoniohickey.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, FUJITA Tomonori <fujita.tomonori@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, netdev@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] rust: replace `addr_of[_mut]!` with `&raw [mut]`
-Message-ID: <D8GQTTOG3YEA.L56HVS2ZWZMK@proton.me>
-In-Reply-To: <67d4c889.050a0220.35d7ce.b4b0@mx.google.com>
-References: <20250314234148.599196-1-contact@antoniohickey.com> <0100019597092d67-0da59c6d-9680-413f-bbce-109ef95724cc-000000@email.amazonses.com> <67d4c889.050a0220.35d7ce.b4b0@mx.google.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: f41ba0e3cf90358c69c91d746250ed35f9c78c43
+	s=arc-20240116; t=1742033450; c=relaxed/simple;
+	bh=vo1Ew4aLSrrge0Lgz3BYM6r54y2dPTj2RJNNDXpsAMc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RKe0DddkwQxJ1Q4halDcbWFzazzPeKt9s46ZkE0e0qVc0xZhExsaqo8Nb9g5V5GAltGlAJqju8m4OUz3yBQaLlENl7DEZeonpSPox/6jcGtTKxCGlC3K1ha6kuAhKCr2CjLHGz1/9I2A2hbF4E0A8IRxY9HSYcUyevK4vyI9fk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TCxgd/Zn; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224019ad9edso72560935ad.1
+        for <linux-pci@vger.kernel.org>; Sat, 15 Mar 2025 03:10:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742033446; x=1742638246; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yyw0PGKWLV1nMfM+kNzqLLYQtPTsmeX5w4ikFyh9R7s=;
+        b=TCxgd/Znrq1Pa4kN1zt5GI53SwfjxlCvojXLTMRTzyGtaybRdu8cDhULHVSyplAeQl
+         baUit4Ffaaa9x8LOTvi3ENtZoWeWhgl6oD6K5txCybrmQFzou42GctxIIBj+3nYSKiA1
+         GqcSEdQS5J5fC9cyRaj/TTouT3d5GbAf9usaE9ErcSWLdafThnCgc2HEnIh/zreDiJDx
+         NQGw1e/vG3anLiXKZNr8Htc+ptSi0rzLZWE8kEy6K4zfXlEwueaMTJZ9LusTIrDNJXxr
+         OMmigsMqBxZv40KpXzGDbqhNPnCLo12eLO0/7bTOrfZiP35izWnfdN2skgZfHYfqnaAo
+         HNlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742033446; x=1742638246;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yyw0PGKWLV1nMfM+kNzqLLYQtPTsmeX5w4ikFyh9R7s=;
+        b=IXmROwTP+2jvO+akSwtJGMGGSy3ZALWvYfvleaKlorI8UbbP2voNGGIyAXhhfnv6zJ
+         Vg5z6gmNBuWZeiKTi7N6qEQuLcqHT7RO6KBxvTYJzebaZjKsmKkJIQbNpMudg3A4Fu6I
+         CfZVpMqs7bydPlFo6BoZgXuigVzVCbp5h2eGiq89SGpg4+ciPAPy1WS7/PIVAfh0eN2T
+         s5+U2azPLA4/3BIo1FrnHmJh9uosPwag+b4cEuMDzyVEQ3E1iCVOAhNuD73mfoHGCwsr
+         iKEPxEKXNZnzm2XVQGae4WvVh+/97jz6Den3quXcZIngIGMMy1TH/Swi4NskYE/ko7IH
+         lm0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVzyal5PxEITwBOZIHnhF1Jq8uhQiHncjjNs0TWDqcpDSI7jmafIQbhCIJ1Asrl4XuOUF6GEYr1zlM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwW0SPZEy2NgrGQ8SUz7mSPXpoM7lrAvovniS1E5FqdG75Tigrg
+	9zmR7gDEF1Twp3CSVyCegEn6HF/KYTSwi/VA8gQsyiXffjc3XUPOXZ/VAVqe/0o/Uu8By5xcS1+
+	kyRYAYA==
+X-Gm-Gg: ASbGncvjOOSqHphq0A6AG7K+q5Z+UHtG29GCYMFcg+9Tb5Dr+6poDbWfZkSrJtksTLJ
+	CH2HP1o3ep9PMBPfAblCqwee22Nc34ih5DsNrHUSpuUO5Xq8lln23PsWh7x9xAjeEqMJE1oN0eF
+	qyoAiQhcc91EpOS6o+003Z+03muL6LAFhMaKamKuQ/YSrB3+QbLwdhtwwczAAQTVGiYY3O8zNwI
+	zGlOCN/J+SORmb9UgLiPc3nhk7Tl9imnP+SFuceGiHuQiVTKo1lKvOhCWiFLEjesqU9I9CxWV+Y
+	/JZLalSJkAgBudRo7uV3k2QLalKZmABzxSqNevkHat6eiQ==
+X-Google-Smtp-Source: AGHT+IHosIY5bP7h7ArQEoRLmL4SQpY/tfLFxgPSITUzhMnagdaeGJGiz8uq3+AHPbKPkmPtW1BXFw==
+X-Received: by 2002:a05:6a00:a27:b0:736:4644:86ee with SMTP id d2e1a72fcca58-7372235af19mr6775218b3a.14.1742033446613;
+        Sat, 15 Mar 2025 03:10:46 -0700 (PDT)
+Received: from gmail.com ([121.37.54.139])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-737115511dasm4305588b3a.60.2025.03.15.03.10.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Mar 2025 03:10:45 -0700 (PDT)
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Baolu Lu <baolu.lu@linux.intel.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: iommu@lists.linux.dev,
+	linux-pci@vger.kernel.org,
+	llinux-kernel@vger.kernel.org,
+	Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v2] PCI: Declare quirk_huawei_pcie_sva() as pci_fixup_header
+Date: Sat, 15 Mar 2025 10:10:32 +0000
+Message-Id: <20250315101032.5152-1-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250314071058.6713-1-zhangfei.gao@linaro.org>
+References: <20250314071058.6713-1-zhangfei.gao@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat Mar 15, 2025 at 1:23 AM CET, Boqun Feng wrote:
-> On Fri, Mar 14, 2025 at 11:41:55PM +0000, Antonio Hickey wrote:
-> [...]
->> @@ -541,7 +541,7 @@ macro_rules! stack_try_pin_init {
->>  ///
->>  /// ```rust
->>  /// # use kernel::{macros::{Zeroable, pin_data}, pin_init};
->> -/// # use core::{ptr::addr_of_mut, marker::PhantomPinned};
->> +/// # use core::marker::PhantomPinned;
->>  /// #[pin_data]
->>  /// #[derive(Zeroable)]
->>  /// struct Buf {
->> @@ -554,7 +554,7 @@ macro_rules! stack_try_pin_init {
->>  /// pin_init!(&this in Buf {
->>  ///     buf: [0; 64],
->>  ///     // SAFETY: TODO.
->> -///     ptr: unsafe { addr_of_mut!((*this.as_ptr()).buf).cast() },
->> +///     ptr: unsafe { &raw mut (*this.as_ptr()).buf.cast() },
->
-> This should be:
->
->
-> ///     ptr: unsafe { &raw mut ((*this.as_ptr()).buf).cast() },
->
-> , right?
+The commit bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper
+probe path") changes the arm_smmu_probe_device() sequence.
 
-I'd say it has to be `ptr: unsafe { (&raw mut ((*this.as_ptr()).buf)).cast(=
-) }
+The arm_smmu_probe_device() is now called earlier via pci_device_add(),
+which calls pci_fixup_device() at the "pci_fixup_header" phase, while
+originally it was called from the pci_bus_add_device(), which called
+pci_fixup_device() at the "pci_fixup_final" phase.
 
+The callstack before:
+[ 1121.314405]  arm_smmu_probe_device+0x48/0x450
+[ 1121.314410]  __iommu_probe_device+0xc4/0x3c8
+[ 1121.314412]  iommu_probe_device+0x40/0x90
+[ 1121.314414]  acpi_dma_configure_id+0xb4/0x100
+[ 1121.314417]  pci_dma_configure+0xf8/0x108
+[ 1121.314421]  really_probe+0x78/0x278
+[ 1121.314425]  __driver_probe_device+0x80/0x140
+[ 1121.314427]  driver_probe_device+0x48/0x130
+[ 1121.314430]  __device_attach_driver+0xc0/0x108
+[ 1121.314432]  bus_for_each_drv+0x8c/0xf8
+[ 1121.314435]  __device_attach+0x104/0x1a0
+[ 1121.314437]  device_attach+0x1c/0x30
+[ 1121.314440]  pci_bus_add_device+0xb8/0x1f0
+[ 1121.314442]  pci_iov_add_virtfn+0x2ac/0x300
+
+And after:
+[  215.072859]  arm_smmu_probe_device+0x48/0x450
+[  215.072871]  __iommu_probe_device+0xc0/0x468
+[  215.072875]  iommu_probe_device+0x40/0x90
+[  215.072877]  iommu_bus_notifier+0x38/0x68
+[  215.072879]  notifier_call_chain+0x80/0x148
+[  215.072886]  blocking_notifier_call_chain+0x50/0x80
+[  215.072889]  bus_notify+0x44/0x68
+[  215.072896]  device_add+0x580/0x768
+[  215.072898]  pci_device_add+0x1e8/0x568
+[  215.072906]  pci_iov_add_virtfn+0x198/0x300
+
+Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+[kwilczynski: commit log]
+Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 ---
-Cheers,
-Benno
+
+v2: Modify commit log
+
+ drivers/pci/quirks.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index f840d611c450..a9759889ff5e 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -1991,12 +1991,12 @@ static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
+ 	    device_create_managed_software_node(&pdev->dev, properties, NULL))
+ 		pci_warn(pdev, "could not add stall property");
+ }
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
+ 
+ /*
+  * It's possible for the MSI to get corrupted if SHPC and ACPI are used
+-- 
+2.25.1
 
 
