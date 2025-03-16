@@ -1,161 +1,198 @@
-Return-Path: <linux-pci+bounces-23884-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23885-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B2D3A633C7
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 05:15:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32D20A633CC
+	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 05:15:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C0BA8167605
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 04:15:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46CE63A73E1
+	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 04:15:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED33B2940B;
-	Sun, 16 Mar 2025 04:15:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11722DF49;
+	Sun, 16 Mar 2025 04:15:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lnAKQvEm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HbAmTkhJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB42EBE;
-	Sun, 16 Mar 2025 04:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B480C3596D
+	for <linux-pci@vger.kernel.org>; Sun, 16 Mar 2025 04:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742098525; cv=none; b=t/EKv+/TGK7xIO/D+5o7DAoKJrmpZTWc8tTmtnKkkWv4KsLmeO253WwG9qu19BzArFawNkSfQ02M1cAn133HRGG+8R+v0wQ/vCTUgFKp2EiBbUgPygQAP54m7g3Hn5vEWLPHNOrb798CYMg+Gk0Wydndlk62ipslP+NCS5fe9XI=
+	t=1742098545; cv=none; b=A2C6OVP1WfkCnmU8VAwPaNjNnNWT2Lcp2FPYdEUTKxyx3JUJ90xfTkjqlScDY/KmkMDyzoTJPHc8ivPdfJ9tMqwJVd07tGy7dJDetmvuLVnymr6DEnfJ8XbfxdTO0706qTQ5LQvXMxrYQxoarfLYR+jkHqOxakfx6uq04Z4FFeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742098525; c=relaxed/simple;
-	bh=QdLPfHOpgg9eDBnJdTiWJNgY72yD73d61f//viDuw8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KmVXkzGh2CMVjmOnCc2P3GXRtJFKRAfPgbQ+g97p6/pyokfpsQ//ZIa1FRKGjVeA8QjFCBSBCUMktVeK2d+7qnuMMaMMal2qqyXYiSzk0sfNHItD//lWTYWuNfEL/MYeNzm6Jx3vaPwagewg93U90a/31VE/KbCSVDOJi7PHTUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lnAKQvEm; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-471fe5e0a80so30657061cf.1;
-        Sat, 15 Mar 2025 21:15:23 -0700 (PDT)
+	s=arc-20240116; t=1742098545; c=relaxed/simple;
+	bh=m7IGz1Su6f3WyaLHo4IduccdGORIbl0HNVhX7LjFWSk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Kc5vmeDIzYjSbMYtBJqyTNbmfmHmtcR4VTIn/7i1WgiT4K/L0H1fv9L4Lw/uYPxbd9dcMjwNuGKPkVhhlq3gh0PSObuEdgnf/ZFzrD7GskAGz7LrT8dz7CDrUTV4irmZqwuOo99nlBeGnBqfF50MSImgaut3OMAy9BIU4WNCSPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HbAmTkhJ; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so30223681fa.2
+        for <linux-pci@vger.kernel.org>; Sat, 15 Mar 2025 21:15:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742098523; x=1742703323; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1742098541; x=1742703341; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mvMWMFB/hUHArUvcLdKUgOpO6qHWD0PVBQLUW1u7Ejk=;
-        b=lnAKQvEmqO6V3UMzKpuWde7FAQ9SHo0krvEBvzmZOrk93kEok72R5HuKgjQTIFXIff
-         sDskDPQLtNsIDtk//nhKU1wsHl2giMdRD9cgowm4hKCDCaKcXbVwHTwFfAkrQqt3qIlU
-         AphaR7bpR9ej+tbLCCrHE9AVTTwyQqiRLHqMQ9HvhqfY95wiRFdScH6nJhMDLROb5Fjm
-         f46zaEVvqtzzuBN979xqT8KoxqtSgnvOj15kTAFmVlA1jbWkDg9h2SEWtUHF1SV0BmKl
-         C7RGSjubS/moPL1qeI9gxuJCD2r63s2uTA1vgw933H/2qZnY9uzykdSBeBVyBHMpO9kj
-         M+Xg==
+        bh=UM1L2R64O8F7JlGmLCnfToZ8ny94Rpb02pePzSUOCDQ=;
+        b=HbAmTkhJ2Dt5ct1pddk+M4XRJk6N86EzpYUVhQMspxT4qa769/h6v3gqTOkC4n71mj
+         ThjDucmxWYLvS/3P1rFAch7+fp8zxR1zdvf6HhSlm8i6DxdwGilBbEyRKH+kyqTFcSNN
+         yZPiNa++y7IYcQAWMVXNVtsH4ExrilemoE7PxhQ9/efbStUCjvBVTyr7nc7NAeuMfAvm
+         h3g3H15k+sUgVsVzv+8Q6++Ssluvt/FqFQYmOvF/cRJPH9TdBDjmxkYU9Pze3MWepnlp
+         UAMbRysWT/rgdPwe7Eug4KGRzUWcCWCCBxL1OvYZlIXwKfEZRbP/y/sr+xEmlI7UX0JG
+         dEOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742098523; x=1742703323;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1742098541; x=1742703341;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mvMWMFB/hUHArUvcLdKUgOpO6qHWD0PVBQLUW1u7Ejk=;
-        b=WFZZsmsmMm1cq5ayVUwtdlrRVdUZd9zUEaAVQCy1v0OEK3sJBP/Xq7lKDbUz9d9tJh
-         LGmZ36cfDvrtbuhm3Rl0mqT0n6If5vmXLtc+t5kfg2PwsNnaE0KpVXVYnPIBEej/QC8z
-         bNg+bC6DINAOo5y3r3PrXS9OQPEs54OZF1dnUh7/bSGuLw2pv8xG5Xb6K3Ly/hDpnTTL
-         0DrEw55L/I23K4bjG8X791wFYa66WNMC1T728Hqa/lUuG7Q4WXzCyoIThceDKYWJxHZc
-         LzRU4YrKsWb2gZ9US3pQQzm0rDf0uXRQpoVsve8K19ih90wyIp2HGKo7YRzB3C1JqhoG
-         9gxA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdAyjWSfW54Izp/bPMITqT9Yzgu/55JMhDEdswf83Fy+ODGgF7f70t2FfVcNrGdkopi1Pr9w4NM63Kzi38z5U=@vger.kernel.org, AJvYcCVhew7hPatRg6p3HvaVynSL64jTvIpAbZqJHXlBVKOBIRd77DH+kFHQPChbwdDGoLwJ5u7xcXJaxW5eAPMcqgfA@vger.kernel.org, AJvYcCVijVKT5M83kOgZXGLH1Z1YgEPVjApPGpeEAY6arLXvHyEXg+xBWAL7X107RxU88Q1V8epBVAK8tMvG@vger.kernel.org, AJvYcCVmNng+afYS1PIvhrusA1P4W18ZIueGW2b4ganFUME1PRsjVgDqlGIqFwmVB5NmK+yETcdolPmD/ONchg==@vger.kernel.org, AJvYcCW8oRLaC46zexVG+9GdjvvPNh0JVwMJUUDFH3S3JhM00QPlAffJ7jzvQyx1HyHdu77ZBbh30UTK679tCaDG@vger.kernel.org, AJvYcCXBSV8SgBA6BlWF1UwiC4Xjo6eJGLbuAicCGVx81kEQ9LoxESWLaktzyJ4qUTkUJdtBYtjTtutA@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx27zdavri3ylDsuEnJmWeSxs19OUi+xH5h4rokVtN4AocfYsrq
-	oi4KaUsAfIk6kMzjf7jOkcmmytbgJqVFcIwJ7XBSCiKjSsie3JOy
-X-Gm-Gg: ASbGnctN7/K5Mj1KS1UixK1xLSLPowrc2Hsu10quyV7l84Uyy3M1R9/MErBKn/ffSIB
-	/OFk00EiXEdNa0FZZsFre4XnhZIxNYvvLcmjN7i2k0eYQd7HKO+4uc7HeqbPM3ksWOs23qdbhAd
-	eLUDpTkGgXhG3uBHWV4E1NaU3KQzYefZbNVu2+a3dZ8PhyrAO/ETf5MoU+KIQ0Z/JVRz0gQm6Qm
-	AY6JEGDu26OlsDQ/JfLW6WZshzSwGl38qJJQ6klLcaJWyZRc1v6FkyJKf2OWTgX49KQ+dvrtYHt
-	SAyvxyGzZgCXIDn1SRow5xIUKi8RqetZWkCRQ0SHCkddyUoqz0+NTrmxnKIwD6LStZbdky0Haj7
-	RZJNuck3hUSQTMP2EAikaWXVscK+N49Nc5jA=
-X-Google-Smtp-Source: AGHT+IHQGwXgWbnPN8FsSKmsTkKfZ7JrACeBVWAlSeDsUZfAPOA+ndsuFpLSTHyePO2ANb/zmZmWlg==
-X-Received: by 2002:ac8:5908:0:b0:476:89a8:f73f with SMTP id d75a77b69052e-476c81461damr122156681cf.21.1742098522990;
-        Sat, 15 Mar 2025 21:15:22 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-476bb7f3d0fsm40425921cf.59.2025.03.15.21.15.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Mar 2025 21:15:22 -0700 (PDT)
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 9B0BA1200043;
-	Sun, 16 Mar 2025 00:15:21 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Sun, 16 Mar 2025 00:15:21 -0400
-X-ME-Sender: <xms:WVDWZz8S9sMETK0Gd_5N8fXHJs4n8xWjajbCIY-NoW1NUhpsUp8zlQ>
-    <xme:WVDWZ_t6NEDcYY62fyRQ4JbYVCKKLTGpR8i5Qsne2cozukfocdqkRrPpf7Ya67Lse
-    sFdIaFBlFyNcaXnoQ>
-X-ME-Received: <xmr:WVDWZxA3mn3aM1LfrI_-DcIG7jbx-JdYGzlOPK7TeQZ44P8NZ1rtfdS4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddufeehiedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpeffhf
-    fvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfhvghnghcu
-    oegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhephe
-    dugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedvnecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomh
-    gvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeeh
-    heehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmh
-    gvpdhnsggprhgtphhtthhopedvhedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohep
-    tghonhhtrggtthesrghnthhonhhiohhhihgtkhgvhidrtghomhdprhgtphhtthhopegrrd
-    hhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgih
-    nhhorhesghhmrghilhdrtghomhdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhogh
-    hlvgdrtghomhdprhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhm
-    vgdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoh
-    epsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtohepsghr
-    vghnuggrnhdrhhhighhgihhnsheslhhinhhugidruggvvhdprhgtphhtthhopegurghkrh
-    eskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:WVDWZ_c9xe9HPIhNQWLxpA6kt5nyaPiC_v2-cm_iod1Lt-0yJ6_BOw>
-    <xmx:WVDWZ4MQn9rr62nGFnXBWTtnfbAvB9lScmQYKHcx006jFK8bwCKepw>
-    <xmx:WVDWZxlWOlKlu6ZNxsMAzocZxfh6v7FQ58Cc4O7d9rxl6sYklRUQTg>
-    <xmx:WVDWZyuw2usNk1kgRpbGpyrdn3xKRC1MpjzG6r_Xwm-AubA6J03ltA>
-    <xmx:WVDWZytxuKC0J-PLthMIdPHgKbPF1p_OuuSpCMHYhVr_n7Ym1EAW1hw8>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 16 Mar 2025 00:15:21 -0400 (EDT)
-Date: Sat, 15 Mar 2025 21:15:19 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Antonio Hickey <contact@antoniohickey.com>
-Cc: a.hindborg@kernel.org, alex.gaynor@gmail.com, aliceryhl@google.com,
-	benno.lossin@proton.me, bhelgaas@google.com,
-	bjorn3_gh@protonmail.com, brendan.higgins@linux.dev,
-	dakr@kernel.org, davidgow@google.com, fujita.tomonori@gmail.com,
-	gary@garyguo.net, gregkh@linuxfoundation.org,
-	kunit-dev@googlegroups.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-pci@vger.kernel.org, netdev@vger.kernel.org, ojeda@kernel.org,
-	rafael@kernel.org, rmoar@google.com, rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu
-Subject: Re: Re: [PATCH v3 2/3] rust: replace `addr_of[_mut]!` with `&raw
- [mut]`
-Message-ID: <Z9ZQV7EbzeOPsUUU@Mac.home>
-References: <67d4c74d.050a0220.66d0.b23d@mx.google.com>
- <010001959ce25be2-a436530e-858c-4da8-b823-24f98bad392b-000000@email.amazonses.com>
+        bh=UM1L2R64O8F7JlGmLCnfToZ8ny94Rpb02pePzSUOCDQ=;
+        b=xA7Ypdc0TrSfn3SUnWZ7lilMihfbFlbZK5ABnBVe3fmZb1IaoIl8dKYG4kSD4I+nJg
+         PRzYWmBzRMkKXTcc7uPTTeQXc030TgoPwK01euxY0/LNev40f2uuP5X0h3ceigB0gnpA
+         +tyKQMO5dEmWQ5l77rwd9ScfCr9UMgu9fZNpOouivCcCmCcYehxBk4xkdlteWenK8Uvd
+         u69u/ZpCK1hMD8xD0z5xjczQXdUTzanFHxbr+r/1beXHJ/3XfaeMlFkzdMEHBNsZqM50
+         CtmqIkMX14U6OWDXEHd2TsrKzt8CzcVV441qiK7sOFlxdMgVP7VyFRPqyA1Joc/F9h1B
+         NGAg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2NRY07gAYHRwvQut4FtlpHLMcWSyKedrmuG31DPN6w9FKZjTVLicMQ5Q63isYFMmbRbCmjFC1Zsw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9SINLGyfeBQMMs7T2e/6xFfB4jhrPioWocVB25Az0me+PtnnV
+	2u7V0Ys/XxPNODPAAFGtAF3jbPw2K9q6T65WzFSfP75jzCHg2uWR+lyTo6gsJ426mEL+IgMuxXv
+	CgbUvyxtPU5I/N5qUm8juLHC7Tp/ukf/jCtjZzbbH/ZaOwqUR1sLYXHG+yfQ=
+X-Gm-Gg: ASbGncsDNnRkJ2l16DoELEHvPiiDiblS1BD2aldVjINwzsSPLslMorGX09FmlUAF4lK
+	VFQnT0Su2i+xu4YSVCH8ZWnc1gNKFzVYjWhBZ+Xe1SxlMkuOBoCJ9ObtXCez4ybqIL0x8Xc2phF
+	IUand0WtrgiaJ9DE5SnYpRxiXprquYjtk=
+X-Google-Smtp-Source: AGHT+IH/A1bDu+ZfR2zvqow6IEEeruRcPFjB/u+4/oPSeeNjvl37vt/MG/IPQnpIeLwVaSqEfw8ri/ih3A9wXOYJg1k=
+X-Received: by 2002:a05:6512:6d6:b0:549:4b8c:a118 with SMTP id
+ 2adb3069b0e04-549c3900385mr2453886e87.17.1742098540708; Sat, 15 Mar 2025
+ 21:15:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <010001959ce25be2-a436530e-858c-4da8-b823-24f98bad392b-000000@email.amazonses.com>
+References: <20250315101319.5269-1-zhangfei.gao@linaro.org> <20250315184523.GA848225@bhelgaas>
+In-Reply-To: <20250315184523.GA848225@bhelgaas>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Date: Sun, 16 Mar 2025 12:15:29 +0800
+X-Gm-Features: AQ5f1JqAU9NOtpVBFyhTYYvnRxSZUPako8sV1dSH2-zJnWm6JJHjU4CXdg9YkTg
+Message-ID: <CABQgh9E=z9SqbbnLfqQrSX8XqGMooz3EvUescpRY1XYQgvnHjA@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Declare quirk_huawei_pcie_sva() as pci_fixup_header
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Baolu Lu <baolu.lu@linux.intel.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	iommu@lists.linux.dev, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 16, 2025 at 02:57:15AM +0000, Antonio Hickey wrote:
-> On Fri, Mar 14, 2025 at 05:18:17PM -0700, Boqun Feng wrote:
-> > Besides, it'll be easy to review if you can split the changes into
-> > multiple patches. Thanks!
-> 
-> 
-> Hey Boqun,
-> 
-> Thanks for the review, do you think splitting this patch
-> into a seperate patch for each file would be best?
-> 
+On Sun, 16 Mar 2025 at 02:45, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Sat, Mar 15, 2025 at 10:13:19AM +0000, Zhangfei Gao wrote:
+> > The commit bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper
+> > probe path") changes the arm_smmu_probe_device() sequence.
+>
+> > The arm_smmu_probe_device() is now called earlier via pci_device_add(),
+> > which calls pci_fixup_device() at the "pci_fixup_header" phase, while
+> > originally it was called from the pci_bus_add_device(), which called
+> > pci_fixup_device() at the "pci_fixup_final" phase.
+> >
+> > The callstack before:
+> > [ 1121.314405]  arm_smmu_probe_device+0x48/0x450
+> > [ 1121.314410]  __iommu_probe_device+0xc4/0x3c8
+> > [ 1121.314412]  iommu_probe_device+0x40/0x90
+> > [ 1121.314414]  acpi_dma_configure_id+0xb4/0x100
+> > [ 1121.314417]  pci_dma_configure+0xf8/0x108
+> > [ 1121.314421]  really_probe+0x78/0x278
+> > [ 1121.314425]  __driver_probe_device+0x80/0x140
+> > [ 1121.314427]  driver_probe_device+0x48/0x130
+> > [ 1121.314430]  __device_attach_driver+0xc0/0x108
+> > [ 1121.314432]  bus_for_each_drv+0x8c/0xf8
+> > [ 1121.314435]  __device_attach+0x104/0x1a0
+> > [ 1121.314437]  device_attach+0x1c/0x30
+> > [ 1121.314440]  pci_bus_add_device+0xb8/0x1f0
+> > [ 1121.314442]  pci_iov_add_virtfn+0x2ac/0x300
+> >
+> > And after:
+> > [  215.072859]  arm_smmu_probe_device+0x48/0x450
+> > [  215.072871]  __iommu_probe_device+0xc0/0x468
+> > [  215.072875]  iommu_probe_device+0x40/0x90
+> > [  215.072877]  iommu_bus_notifier+0x38/0x68
+> > [  215.072879]  notifier_call_chain+0x80/0x148
+> > [  215.072886]  blocking_notifier_call_chain+0x50/0x80
+> > [  215.072889]  bus_notify+0x44/0x68
+> > [  215.072896]  device_add+0x580/0x768
+> > [  215.072898]  pci_device_add+0x1e8/0x568
+> > [  215.072906]  pci_iov_add_virtfn+0x198/0x300
+>
+> The stacktraces definitely help connect the dots but don't integrate
+> the fixup phases and the timestamps are unnecessary distraction.
+>
+> I would omit all the above except the first paragraph and include
+> something like this instead, which shows how arm_smmu_probe_device()
+> was previously after final fixups and is now between header and final
+> fixups:
+>
+>   pci_iov_add_virtfn
+>     pci_device_add
+>       pci_fixup_device(pci_fixup_header)      <--
+>       device_add
+>         bus_notify
+>           iommu_bus_notifier
+>   +         iommu_probe_device
+>   +           arm_smmu_probe_device
+>     pci_bus_add_device
+>       pci_fixup_device(pci_fixup_final)       <--
+>       device_attach
+>         driver_probe_device
+>           really_probe
+>             pci_dma_configure
+>               acpi_dma_configure_id
+>   -             iommu_probe_device
+>   -               arm_smmu_probe_device
+>
+> This is the pci_iov_add_virtfn().  The non-SR-IOV case is similar in
+> that pci_device_add() is called from pci_scan_single_device() in the
+> generic enumeration path, and pci_bus_add_device() is called later,
+> after all a host bridge has been enumerated.
 
-That'll be my suggestion. Although you could group a few changes
-together for example, changes on rust/kernel/init.rs and
-rust/kernel/init/macro.rs can be put into one patch. Thanks!
+Thanks Bjorn
 
-Regards,
-Boqun
+Will update in v3.
 
-> Thanks,
-> Antonio
-> 
+One thing is the probe sequence change is the fixing result, not newly adde=
+d.
+iommu_bus_notifier
+    iommu_probe_device
+        __iommu_probe_device
+            ops =3D iommu_fwspec_ops(dev_iommu_fwspec_get(dev));
+             if (!ops)
+                 return -ENODEV;
+This calling sequence existed before but returned here since ops =3D NULL.
+It is fixed in the commit bcb81ac6ae3c, so arm_smmu_probe_device
+happens earlier and quicker.
+
+>
+> > Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe =
+path")
+> > Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> > [kwilczynski: commit log]
+> > Signed-off-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
+>
+> You should never include somebody else's Signed-off-by below yours.
+> You should only add *your own* Signed-off-by:
+
+OK
+
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
+ocumentation/process/submitting-patches.rst?id=3Dv6.13#n396
+>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Thanks
 
