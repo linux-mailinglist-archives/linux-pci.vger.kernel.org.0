@@ -1,127 +1,163 @@
-Return-Path: <linux-pci+bounces-23889-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23890-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34C04A635B3
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 13:54:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25B2CA635B5
+	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 13:56:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D4E17A6F57
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 12:53:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34B4C3ADC1F
+	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 12:56:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E60711A76D4;
-	Sun, 16 Mar 2025 12:54:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 614BB1A3166;
+	Sun, 16 Mar 2025 12:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzJ1ozKn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igbKnT9h"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A581A3166;
-	Sun, 16 Mar 2025 12:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB9B86348;
+	Sun, 16 Mar 2025 12:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742129687; cv=none; b=ZxuiMdypxbs/nQPX0Jxx4td7FWOyrZ+pdwMq+44cxnwVGJ8bRIaenTH2vJPDADjgjU4QnwonXO33StdQ/SzA8uPi11bJjkWz01rxp4Mdwk/qDiOzvxXTyc+4xgOtYbnW1ZfjYDgaa+V4TC0oGQiEMyiYUrcqJF7PGaJgJDDWRxY=
+	t=1742129775; cv=none; b=mwhROgauEj3JC9MApI2EBsg2jy/FyqBVeUyfHtX6CUrzra8eG2uCKt2ikV4VzmCKn1Rj+2qCt8gQ1FPTO07+sM6AI7yb2yxkgFKEsQQr70RlsBLDSN6gGk1U2m5n4ZPjaYgiTud0BLZyMjEcZgmZj2j0inPAOP+v7Wo2Cqm/q3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742129687; c=relaxed/simple;
-	bh=la8iWv4aKLDOW0r7llYW7xIb+W8ddGrURAKkkeCgcDE=;
+	s=arc-20240116; t=1742129775; c=relaxed/simple;
+	bh=Ocn/uO+vY59KpMjH6hgrdCnzTaj9S3SKMOhRLOHNbcs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rBzYuUnF0zwciAfol2TuLr5ae7KTemmsk6LnurUkY0+jrGi2rYrbJ3DBYmCoawDkL0jHm5ecssn+7crO7UB4DcuSl5Au2E0AwuDJSPn8zNfO2WNljVhMVW1EdR3IXypm+A598d0bAWeA3I35jK5MUPdCaMKoYezzFEyGg50sofI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LzJ1ozKn; arc=none smtp.client-ip=209.85.208.180
+	 To:Cc:Content-Type; b=INnv3b4EzLknQ7fa8eWHEuPuuERtYKBqdAMrRcxlUOz7kOw66B0t/FJOeX39bAgwV1/gELgqHboMHeYmocQhUeG/ibKhIrbTt6KjMRfb2axVAO2sfIqIN6noWzuS1QBWw8li2aA45pPwtJ+iouakt2o1PgTYV2wd0QgAT25WBT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=igbKnT9h; arc=none smtp.client-ip=209.85.208.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30bae572157so36825201fa.3;
-        Sun, 16 Mar 2025 05:54:44 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so32007171fa.2;
+        Sun, 16 Mar 2025 05:56:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742129683; x=1742734483; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742129772; x=1742734572; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=m72Ysl4ko4hY5HZYX4qrB+VwpHKR3dQw5Vbh4xYJNfA=;
-        b=LzJ1ozKnTBK3Nuks3YCvLJW7/Z/EgJgIT+3DVVjlxG0cEo3AjIIqyITHuNZcgCvdNG
-         ckvoPbVH7s4LIV+Eb8W42Y0RmHfkOOQrgDG7eH4m5REbTCfONTLexr77qTPXjBT0X2uK
-         C8tNEWxvNiWNIIsL1FYCr1FVPeTbabcOsEzbqkCe/KofTBJlpObvczW5n8gCbQAqbXYA
-         ni1gAVBY6EiwWvYD8SUTOyyUTfnLnUSb/4byMTJOl+yJKGzzbtD7G6yDHRKR3cbannAI
-         tYpMNrEyuHng7ezK4ZbMPndMnNYgKyY8D3dwdt2H7fe+zUTSCZTfLKTIGtg/6rrjXJ51
-         eXuA==
+        bh=GPg9r87IObi4Gw9NiE4FiHXsXbdtNEYE0P7vTB1dDPU=;
+        b=igbKnT9hX2+U0dlwsIeMpHZla6GA1Gy32ZC8tlp+WYKZV/thSyxGo0hXqg5ap9B1hr
+         JeG742r4Z2xCzyTnpByXR0WOYUhrqxeU1Wb8/MoqREOzWQSEVlfxpbLnWMInoNtcS6RR
+         k5D2Zrg8cogaZya7y1bDfC1xj41UaoSsRBJ2/J1cymYmmYaqbRGgBfyOdgEu2TRCXWCP
+         YtRoPSQzQD9oxVDaC7d5v5O45ojy/3WBPrWq1IwWYG1rDXXSHhkLnm/ATpHSPgNVFv8S
+         JnABn4FF50MNwrLgLpMo7E+uSu6c0Z+cfo1wwNeyaP/8rPD7/W3VRfjxX0Az3kXaZamy
+         eYNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742129683; x=1742734483;
+        d=1e100.net; s=20230601; t=1742129772; x=1742734572;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=m72Ysl4ko4hY5HZYX4qrB+VwpHKR3dQw5Vbh4xYJNfA=;
-        b=gv99bfCGwAGJvDkbgP26SE+bgfjfIlIBiWAk4lA7pto2km5SXytDRbzz2cgvIWVZg3
-         mortDva990284TCukzWVZqbC6UA6J9eujJxQe4UUmamZ5T6c2DwL3X6s59MxmqpFnyCK
-         +5fFqA9U0rURglxrQyNnG22fLpMebPbqf1SxJtW7AQVMeV/7wyLh7iZeLlMD5muGFGwy
-         f68WXrtx0UMsC9/vB/+Q81RmrfR2WmVJq3+ZHI0JirmOEr4NQyf80gEqxwXregLK4uE4
-         VzOnFI2esBGU7/vfYlZsbzRhxkBBzVAhEqx9DOWiAN5l9tXIhQ5sp/yjFkCaDdjn2uDS
-         p6Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2dhLCV85wGtXu3yEePIZK4bNWZvQxnPh7dq8U/gHcndt/CliEvlUUjNCUhshx37/KElPv/pI/LA98Vi4=@vger.kernel.org, AJvYcCV/U53Oo/PSiZEmtbzR/nK5raK8kyocbCWtZjLSLRFjh51qO/FpKtRt2ZmXOZssHRlNKuOkBpzypY5G@vger.kernel.org, AJvYcCV6pxQlOQzoiEB53tuH+MlSNik8GKAQmhyjRYJnDyqOkvuia3x6olG6EpTNdm30Q0ee3Nx6fHYUborDlkb5GUeQ@vger.kernel.org, AJvYcCVID1K3veLYfT7XuVDwnywSuxbs3rcH4z59WP4InNShqnwi9Fg2O3XHhJtBNUchF5uGoOf7ueITjqjcpYNN@vger.kernel.org, AJvYcCXLk2pifFd39Im7duj+7xtz+Y30iLga6qVyU+OYs5aEZlbO8AuCofT+v+SwiEOy6UgwmUzcxf+2MVf4@vger.kernel.org, AJvYcCXVfAkKd75cOvtRCJPaW3d+dGAwIFhMTlnppWRoWZwGOHtgG0v+Hzrjan2AVHTyIz+Fl223DGJbtyQWPsIOBXo=@vger.kernel.org, AJvYcCXaS39X6QebQQr7K6IGzJgLEY6n6/ZkKygkXmym4LPwBtbV2WYxj6aPMrhbJNNRBf2I5n/JVgYfh0LM2Mi2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxy521CC1DqjXoztkQSjYqGM8frgwcgske38ps3FBv1OsbgBDDo
-	T7mTmhYAov8aq0WlPE9/Xe9hrn0BSLQFJn6S/ESvA+xGflocp8PtkAhwWLslq7hmQ7tKbprg49t
-	0C0cx5qUEeJQ0r+6rzjOFr0jtOPI=
-X-Gm-Gg: ASbGnctES8i5UEnZ4poeOrMM8Kk7QcpYB3zmDMCjL63nAD7esNbwhzWMEM1xx2kMDjD
-	5sAOwTdW2jpQ6bPSTyFk87z/rp/1jR07aVq2PFWX9TJW2nzmQGV2VfZyupIcwIww3qT6BbXhrtz
-	EqhoI01rDkxNgc2dnBzLsB+fxtVZzPYaCuZGFci2KuwmNIihMex9HpyKpy+lmF
-X-Google-Smtp-Source: AGHT+IE6iBXWS50nKSAYwo5FCXBdnhbNHVXtxORgs/RwlrM4JXF7GGDHtXE0EnpBEkJ1e6Y0/wbpMEdDeSo/iTCQCcY=
-X-Received: by 2002:a2e:a98e:0:b0:30b:d17b:269a with SMTP id
- 38308e7fff4ca-30c4a749070mr42282761fa.7.1742129682837; Sun, 16 Mar 2025
- 05:54:42 -0700 (PDT)
+        bh=GPg9r87IObi4Gw9NiE4FiHXsXbdtNEYE0P7vTB1dDPU=;
+        b=tUwk1fdGnv/dDfFeC9Vf8t2ZmnHPW9guYsk/VAgUw+nZVkoFvL9oddTA22Lfs9BP/G
+         +h83mN5sVbCEPM2xmn3n8afrp4+P16Mdg5ctymSi0fZMN/bG69umJKeoqb+3gbb4B3oX
+         wfZnCrx3ri9SwcH2BZS2G/WaX5Zz3Q+QIE9KYlio7UsuxRGMQf8lDCb/DsGmpxYYebdN
+         VqszwHBb/shz5t2q8ITM6nprh2c7hYMvSQGmxS1JYWto2yqidjwhORrTTs3l6axYE6h8
+         ahp0XJDkjKnqtY0hdDESYL0mwLOUbaMXPRNMgf9IRFJYlevl4J/BAASMxMu3DTgQ1tN1
+         2C8w==
+X-Forwarded-Encrypted: i=1; AJvYcCV95thpiEztVWblOBGQm/DKIB4PqYvZhnTbtHe9L36b7589kcubb0D4mnbOpnBjByu9FgL9dQGMYX5+2GuPLTk=@vger.kernel.org, AJvYcCVB/E8ZwUbgEJ1ul0L0gIJTQZRAXnC0xaYTpA9TEQ6BvDBuGd+HkWexmhlS+MpY3qCHHYZaQmY3u/sPUvs=@vger.kernel.org, AJvYcCXC/EZyM1FDAjtihw/bzlAxSR71JtB7ZNsBkfYfb9prIeluVVWJMU81tv5M0/yyo3XqkvP6G3cLPpPx@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLk+2mrqt51IEOZekltXxDbHStFNJmdgWbTNKw+T8awp+dYvET
+	AOzyX7M7p70O9w3qdZu8F0nD+WozJ7aBHAaoXq5IQVdRykrTgCu0MtGQmS2oUaQ3y9iDBzrn/nA
+	hcuWToEgcx8FQmzFUjpK0IVy3D+0=
+X-Gm-Gg: ASbGncvRURwHJ9Jfayev8t3ZgkqjUAN+5QUt07NDOQSTAuUFLxfDQUFus/lPQ8Bsotl
+	JQiYp5j40jtvLPbrOmkalSfVlAiobs7tEbitJOU0Ou6hu+bb3tI9XtMd6FEbI822LMyK4LHW/2g
+	COJx3eg5QYk7w+GVaE+iaU3B6qpsf/5a+1xnmBL5jjm3wv5w9zoeM30jpD8Qg1
+X-Google-Smtp-Source: AGHT+IEB3g08YBO1dOwWq8G46PScJgDK7E3EVe9dpwLMBuAuKq+vznF1myPizfVxPDKZPdBnPZmp0M/d2N+YxfF3wnY=
+X-Received: by 2002:a05:651c:546:b0:30b:f0fd:fd19 with SMTP id
+ 38308e7fff4ca-30c4a861114mr39796821fa.16.1742129771448; Sun, 16 Mar 2025
+ 05:56:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250315-ptr-as-ptr-v4-0-b2d72c14dc26@gmail.com>
- <20250315-ptr-as-ptr-v4-6-b2d72c14dc26@gmail.com> <Z9ZbNY2XR10vt3Ro@Mac.home>
-In-Reply-To: <Z9ZbNY2XR10vt3Ro@Mac.home>
+References: <20250307-no-offset-v1-0-0c728f63b69c@gmail.com>
+ <20250307-no-offset-v1-2-0c728f63b69c@gmail.com> <D8G8DV3PX8VX.2WHSM0TWH8JWV@proton.me>
+ <CAJ-ks9m2ZHguB9N9-WM0EsO5MjaZ9yRamo_9NytAdzaDdb9aWQ@mail.gmail.com>
+ <D8GQGCVTK0IL.16YO67C0IKLHA@proton.me> <CAJ-ks9mUPkP=QDGekbi1PRfpKKigXj87-_a25JBGHVRSiEe_AA@mail.gmail.com>
+ <D8H1FFDMNLR3.STRVYQI7J496@proton.me> <CAJ-ks9m-ab9Y5RD01higxZxbowZi_0tsSmCCw2umJLxBLH4dEw@mail.gmail.com>
+In-Reply-To: <CAJ-ks9m-ab9Y5RD01higxZxbowZi_0tsSmCCw2umJLxBLH4dEw@mail.gmail.com>
 From: Tamir Duberstein <tamird@gmail.com>
-Date: Sun, 16 Mar 2025 08:54:06 -0400
-X-Gm-Features: AQ5f1Jq4oEInzEsIP6AyCUxxntLRsaKIunWuOaZj1h8pyzZQkrJrV4gfLymNygE
-Message-ID: <CAJ-ks9ntUhnD2D1qUCosrKk2bEYHXFDLEanznpNn51d6CbD6aw@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] rust: use strict provenance APIs
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+Date: Sun, 16 Mar 2025 08:55:34 -0400
+X-Gm-Features: AQ5f1JoYTWUUcHlAnq9Hz70y1Kp2Aem-XOTMMmjvLaf6Tt2bXOviM7q7OFZq_ZM
+Message-ID: <CAJ-ks9=AKR+LUMBjLNrC9NZst9+18Q3HTrWn4q+baz87BbG6Rw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] rust: workqueue: remove HasWork::OFFSET
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
 	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 16, 2025 at 1:01=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
+On Sat, Mar 15, 2025 at 2:12=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
 >
-> On Sat, Mar 15, 2025 at 08:17:30AM -0400, Tamir Duberstein wrote:
-> [...]
-> > diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
-> > index 40d1bd13682c..f9459694cbdc 100644
-> > --- a/rust/kernel/of.rs
-> > +++ b/rust/kernel/of.rs
-> > @@ -22,7 +22,7 @@ unsafe impl RawDeviceId for DeviceId {
-> >      const DRIVER_DATA_OFFSET: usize =3D core::mem::offset_of!(bindings=
-::of_device_id, data);
+> On Sat, Mar 15, 2025 at 2:06=E2=80=AFPM Benno Lossin <benno.lossin@proton=
+.me> wrote:
 > >
-> >      fn index(&self) -> usize {
-> > -        self.0.data as usize
-> > +        crate::expose_provenance(self.0.data)
+> > On Sat Mar 15, 2025 at 4:37 PM CET, Tamir Duberstein wrote:
+> > > On Sat, Mar 15, 2025 at 5:30=E2=80=AFAM Benno Lossin <benno.lossin@pr=
+oton.me> wrote:
+> > >>
+> > >> On Fri Mar 14, 2025 at 9:44 PM CET, Tamir Duberstein wrote:
+> > >> > On Fri, Mar 14, 2025 at 3:20=E2=80=AFPM Benno Lossin <benno.lossin=
+@proton.me> wrote:
+> > >> >>
+> > >> >> On Fri Mar 7, 2025 at 10:58 PM CET, Tamir Duberstein wrote:
+> > >> >> >      /// Returns a pointer to the struct containing the [`Work<=
+T, ID>`] field.
+> > >> >> >      ///
+> > >> >> >      /// # Safety
+> > >> >> >      ///
+> > >> >> >      /// The pointer must point at a [`Work<T, ID>`] field in a=
+ struct of type `Self`.
+> > >> >> > -    #[inline]
+> > >> >> > -    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut=
+ Self
+> > >> >> > -    where
+> > >> >> > -        Self: Sized,
+> > >> >>
+> > >> >> This bound is required in order to allow the usage of `dyn HasWor=
+k` (ie
+> > >> >> object safety), so it should stay.
+> > >> >>
+> > >> >> Maybe add a comment explaining why it's there.
+> > >> >
+> > >> > I guess a doctest would be better, but I still don't understand wh=
+y
+> > >> > the bound is needed. Sorry, can you cite something or explain in m=
+ore
+> > >> > detail please?
+> > >>
+> > >> Here is a link: https://doc.rust-lang.org/reference/items/traits.htm=
+l#dyn-compatibility
+> > >>
+> > >> But I realized that the trait wasn't object safe to begin with due t=
+o
+> > >> the `OFFSET` associated constant. So I'm not sure we need this. Alic=
+e,
+> > >> do you need `dyn HasWork`?
+> > >
+> > > I wrote a simple test:
+> >
+> > [...]
+> >
+> > > so I don't think adding the Sized bound makes sense - we'd end up
+> > > adding it on every item in the trait.
+> >
+> > Yeah the `Sized` bound was probably to make the cast work, so let's
+> > remove it.
 >
-> Even though of_device_id::data was defined as `void *`, but in Rust we
-> use it to store index, see kernel::device_id::{IdTable::info(),
-> IdArray::new()}. Hence we should use self.0.data.addr() here.
+> It's already removed, right?
 
-Good point, thanks.
+Ping. Can you help me understand what change, if any, you think is required=
+?
 
