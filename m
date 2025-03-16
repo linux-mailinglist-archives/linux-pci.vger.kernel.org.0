@@ -1,163 +1,191 @@
-Return-Path: <linux-pci+bounces-23890-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23891-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25B2CA635B5
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 13:56:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39673A636B6
+	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 18:13:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 34B4C3ADC1F
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 12:56:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7846416E43E
+	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 17:13:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 614BB1A3166;
-	Sun, 16 Mar 2025 12:56:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E58FC1ADC8F;
+	Sun, 16 Mar 2025 17:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igbKnT9h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lAptBwQJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB9B86348;
-	Sun, 16 Mar 2025 12:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507EA1A23B8;
+	Sun, 16 Mar 2025 17:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742129775; cv=none; b=mwhROgauEj3JC9MApI2EBsg2jy/FyqBVeUyfHtX6CUrzra8eG2uCKt2ikV4VzmCKn1Rj+2qCt8gQ1FPTO07+sM6AI7yb2yxkgFKEsQQr70RlsBLDSN6gGk1U2m5n4ZPjaYgiTud0BLZyMjEcZgmZj2j0inPAOP+v7Wo2Cqm/q3Q=
+	t=1742145191; cv=none; b=L72wP88vI5UCgl44BeruWEm2GMJGCjCjz1OJoGfkep59+bnS9dQ1HFp1JO31dKjCwNeF6H0LcHnZ7O2TZ1+BEYTw4wY1T1ttsEFIbRanmZSreCI9cppw0FQjhYzwQ/ku7lSoE/jEhxL+HxYgb/Z1euZD76lvpHRNxdm8lgVX+Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742129775; c=relaxed/simple;
-	bh=Ocn/uO+vY59KpMjH6hgrdCnzTaj9S3SKMOhRLOHNbcs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=INnv3b4EzLknQ7fa8eWHEuPuuERtYKBqdAMrRcxlUOz7kOw66B0t/FJOeX39bAgwV1/gELgqHboMHeYmocQhUeG/ibKhIrbTt6KjMRfb2axVAO2sfIqIN6noWzuS1QBWw8li2aA45pPwtJ+iouakt2o1PgTYV2wd0QgAT25WBT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=igbKnT9h; arc=none smtp.client-ip=209.85.208.170
+	s=arc-20240116; t=1742145191; c=relaxed/simple;
+	bh=gZfG+mmR5ZOm4scj8+O7ZYzlO/+53iNpUXxBUO2Izm8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n586lTlCHOI3WKxn5Mu16NMURHJdmHnCWOmC9AEZgwEhnYwr6xPx/k+xqEytObl9JwVgWWLf62ELIHxwZviidh2ohwpOulgpTA/4/b3bGkVepeoO/1GBTi9j8dWb+EdIquAxPDydumUfcD2JaJc8qIn5PiigEfdc++wVD25utYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lAptBwQJ; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so32007171fa.2;
-        Sun, 16 Mar 2025 05:56:13 -0700 (PDT)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-224100e9a5cso68164685ad.2;
+        Sun, 16 Mar 2025 10:13:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742129772; x=1742734572; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GPg9r87IObi4Gw9NiE4FiHXsXbdtNEYE0P7vTB1dDPU=;
-        b=igbKnT9hX2+U0dlwsIeMpHZla6GA1Gy32ZC8tlp+WYKZV/thSyxGo0hXqg5ap9B1hr
-         JeG742r4Z2xCzyTnpByXR0WOYUhrqxeU1Wb8/MoqREOzWQSEVlfxpbLnWMInoNtcS6RR
-         k5D2Zrg8cogaZya7y1bDfC1xj41UaoSsRBJ2/J1cymYmmYaqbRGgBfyOdgEu2TRCXWCP
-         YtRoPSQzQD9oxVDaC7d5v5O45ojy/3WBPrWq1IwWYG1rDXXSHhkLnm/ATpHSPgNVFv8S
-         JnABn4FF50MNwrLgLpMo7E+uSu6c0Z+cfo1wwNeyaP/8rPD7/W3VRfjxX0Az3kXaZamy
-         eYNg==
+        d=gmail.com; s=20230601; t=1742145189; x=1742749989; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=s6+LYeTuKw2K95gVdGQ9o8M/p/ryIaOOR0ecIS32DgA=;
+        b=lAptBwQJCNAg0PWwz8Os2oxyp9ncmIr/Y1jc5uwQWVXClYilnUuzLXxLPR0dzoEWRf
+         mF8cxXz7AmgJzlDP82cL+aL6TPhvoVQv2tpXIx3wToHKjs1ZDGAD8nR4iTQ8nE0JBwPH
+         /afOGEaxloTYcK3lzCKTqQjCHh0Em1STMzRIH806NW7+dBIeRo4Ot37ZWKoVCOD+kP54
+         nPrLia6P1ZwUMipGR4LdVcJ/Ru85ilxefO0yHKY7GCiWA0K2TJl1XX/45WsZGhZWGmh2
+         q9PidTq2WE9jvr/Vnvyb8ScQx/CdFfr1UGtrB+Y98ZpLifk+r35h2L+woCBivNeB5F89
+         ceYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742129772; x=1742734572;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GPg9r87IObi4Gw9NiE4FiHXsXbdtNEYE0P7vTB1dDPU=;
-        b=tUwk1fdGnv/dDfFeC9Vf8t2ZmnHPW9guYsk/VAgUw+nZVkoFvL9oddTA22Lfs9BP/G
-         +h83mN5sVbCEPM2xmn3n8afrp4+P16Mdg5ctymSi0fZMN/bG69umJKeoqb+3gbb4B3oX
-         wfZnCrx3ri9SwcH2BZS2G/WaX5Zz3Q+QIE9KYlio7UsuxRGMQf8lDCb/DsGmpxYYebdN
-         VqszwHBb/shz5t2q8ITM6nprh2c7hYMvSQGmxS1JYWto2yqidjwhORrTTs3l6axYE6h8
-         ahp0XJDkjKnqtY0hdDESYL0mwLOUbaMXPRNMgf9IRFJYlevl4J/BAASMxMu3DTgQ1tN1
-         2C8w==
-X-Forwarded-Encrypted: i=1; AJvYcCV95thpiEztVWblOBGQm/DKIB4PqYvZhnTbtHe9L36b7589kcubb0D4mnbOpnBjByu9FgL9dQGMYX5+2GuPLTk=@vger.kernel.org, AJvYcCVB/E8ZwUbgEJ1ul0L0gIJTQZRAXnC0xaYTpA9TEQ6BvDBuGd+HkWexmhlS+MpY3qCHHYZaQmY3u/sPUvs=@vger.kernel.org, AJvYcCXC/EZyM1FDAjtihw/bzlAxSR71JtB7ZNsBkfYfb9prIeluVVWJMU81tv5M0/yyo3XqkvP6G3cLPpPx@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLk+2mrqt51IEOZekltXxDbHStFNJmdgWbTNKw+T8awp+dYvET
-	AOzyX7M7p70O9w3qdZu8F0nD+WozJ7aBHAaoXq5IQVdRykrTgCu0MtGQmS2oUaQ3y9iDBzrn/nA
-	hcuWToEgcx8FQmzFUjpK0IVy3D+0=
-X-Gm-Gg: ASbGncvRURwHJ9Jfayev8t3ZgkqjUAN+5QUt07NDOQSTAuUFLxfDQUFus/lPQ8Bsotl
-	JQiYp5j40jtvLPbrOmkalSfVlAiobs7tEbitJOU0Ou6hu+bb3tI9XtMd6FEbI822LMyK4LHW/2g
-	COJx3eg5QYk7w+GVaE+iaU3B6qpsf/5a+1xnmBL5jjm3wv5w9zoeM30jpD8Qg1
-X-Google-Smtp-Source: AGHT+IEB3g08YBO1dOwWq8G46PScJgDK7E3EVe9dpwLMBuAuKq+vznF1myPizfVxPDKZPdBnPZmp0M/d2N+YxfF3wnY=
-X-Received: by 2002:a05:651c:546:b0:30b:f0fd:fd19 with SMTP id
- 38308e7fff4ca-30c4a861114mr39796821fa.16.1742129771448; Sun, 16 Mar 2025
- 05:56:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742145189; x=1742749989;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s6+LYeTuKw2K95gVdGQ9o8M/p/ryIaOOR0ecIS32DgA=;
+        b=QW2KAicvQsowh912oTruiXEZvpyXAk62Up3/Q6jatjAGGiKgO4KooNPa/Rvtvf4h8D
+         snvWLduv4OCfO99GtTQNKQnHrFRLoZAh/sRhGyidohaRdfaVvfCCQDn22j8wtxsGf53q
+         AkI6/scdIefwzCE9eTymvj7EaC2l/QFHMFWDpvON2NeaSQBoDhPOVs29DnPhkLVzOQA9
+         VJExOGrWzRDGnXy8IkdL8eZe31coiiiZjHZRbRGnAuGwmZTr5HCRs7wQvzwC8FW002au
+         HAxlCzdu+i7kNHFx03Zhe33RgjVCa54ZHz0bAQYqynkWGhqvGg3A7vnT1uK16vl7q098
+         86lA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgsA9nvWm+l9XNGzEXN1lnQUzc6KP+x2yvWHIzu2mzriYkG+ySdJc955wVc/5hBVA7kUsKnhsbwkAQ@vger.kernel.org, AJvYcCWOUDJdgAtYElAts5yn58/sSYc8jPR6gwI8wXiU3x3Q+M8gpPqKxn/dg8StuqIDAGw0EXKTqqTD3c3UhgU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYMmY89Tb7nP59cBiOI3Y7KVMfqasOoV/gziabIytSHHymHHsi
+	0cBcHflZVFDN+JeaZoHM0R2xyFISIQjCXcr17jrw0dyDXP32/HwP
+X-Gm-Gg: ASbGncsZ5Atw+E91nd3GnSKZejEwsG2by2ppcqkD2rFEY9ncXUnDBWDxyYiK8SiLpEi
+	hqM17thM1wxq5pZmGL63IjY3qZyDEtj+AtEpCAoyNfWZc0c9uMhq+ZSFp+ElwuYtfJoxjastLXb
+	FO08+RSCTCfi8M1Y+aqaS5KKywGdqSWwQj8BNxLxXs1W/Gl+slH6I48YCTL4+U0OORt5wx1fyQ0
+	+R1Q9WNGdOBQHlFIO5EWb+hGnC6G8qN3ZruWcqbZgyrO3VVkZvi9dAFoWH0SvCVtRp/MVIZTAv5
+	T9eGsLWHJcjObdxt2/fa6HFt+aQZgSfUeVo0UsX6wuNaQwlDI6c0yjicHn4=
+X-Google-Smtp-Source: AGHT+IHN6IHHl4o2biDKthB8P90GW61u0ceqgL1egI/yJY3yeQWb57WuUSMeoFVKeGhHjZkeO30EJA==
+X-Received: by 2002:a17:902:c949:b0:224:3c9:19ae with SMTP id d9443c01a7336-225e0af554dmr135710595ad.34.1742145189418;
+        Sun, 16 Mar 2025 10:13:09 -0700 (PDT)
+Received: from localhost.localdomain ([103.221.69.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c68a4063sm60189635ad.65.2025.03.16.10.13.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Mar 2025 10:13:08 -0700 (PDT)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Daire McNamara <daire.mcnamara@microchip.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Kevin Xie <kevin.xie@starfivetech.com>,
+	Minda Chen <minda.chen@starfivetech.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Mason Huo <mason.huo@starfivetech.com>,
+	linux-pci@vger.kernel.org (open list:PCI DRIVER FOR PLDA PCIE IP),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH v2 1/2] PCI: plda: Remove unused IRQ handler and simplify IRQ request logic
+Date: Sun, 16 Mar 2025 22:42:45 +0530
+Message-ID: <20250316171250.5901-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250307-no-offset-v1-0-0c728f63b69c@gmail.com>
- <20250307-no-offset-v1-2-0c728f63b69c@gmail.com> <D8G8DV3PX8VX.2WHSM0TWH8JWV@proton.me>
- <CAJ-ks9m2ZHguB9N9-WM0EsO5MjaZ9yRamo_9NytAdzaDdb9aWQ@mail.gmail.com>
- <D8GQGCVTK0IL.16YO67C0IKLHA@proton.me> <CAJ-ks9mUPkP=QDGekbi1PRfpKKigXj87-_a25JBGHVRSiEe_AA@mail.gmail.com>
- <D8H1FFDMNLR3.STRVYQI7J496@proton.me> <CAJ-ks9m-ab9Y5RD01higxZxbowZi_0tsSmCCw2umJLxBLH4dEw@mail.gmail.com>
-In-Reply-To: <CAJ-ks9m-ab9Y5RD01higxZxbowZi_0tsSmCCw2umJLxBLH4dEw@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Sun, 16 Mar 2025 08:55:34 -0400
-X-Gm-Features: AQ5f1JoYTWUUcHlAnq9Hz70y1Kp2Aem-XOTMMmjvLaf6Tt2bXOviM7q7OFZq_ZM
-Message-ID: <CAJ-ks9=AKR+LUMBjLNrC9NZst9+18Q3HTrWn4q+baz87BbG6Rw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] rust: workqueue: remove HasWork::OFFSET
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 15, 2025 at 2:12=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> On Sat, Mar 15, 2025 at 2:06=E2=80=AFPM Benno Lossin <benno.lossin@proton=
-.me> wrote:
-> >
-> > On Sat Mar 15, 2025 at 4:37 PM CET, Tamir Duberstein wrote:
-> > > On Sat, Mar 15, 2025 at 5:30=E2=80=AFAM Benno Lossin <benno.lossin@pr=
-oton.me> wrote:
-> > >>
-> > >> On Fri Mar 14, 2025 at 9:44 PM CET, Tamir Duberstein wrote:
-> > >> > On Fri, Mar 14, 2025 at 3:20=E2=80=AFPM Benno Lossin <benno.lossin=
-@proton.me> wrote:
-> > >> >>
-> > >> >> On Fri Mar 7, 2025 at 10:58 PM CET, Tamir Duberstein wrote:
-> > >> >> >      /// Returns a pointer to the struct containing the [`Work<=
-T, ID>`] field.
-> > >> >> >      ///
-> > >> >> >      /// # Safety
-> > >> >> >      ///
-> > >> >> >      /// The pointer must point at a [`Work<T, ID>`] field in a=
- struct of type `Self`.
-> > >> >> > -    #[inline]
-> > >> >> > -    unsafe fn work_container_of(ptr: *mut Work<T, ID>) -> *mut=
- Self
-> > >> >> > -    where
-> > >> >> > -        Self: Sized,
-> > >> >>
-> > >> >> This bound is required in order to allow the usage of `dyn HasWor=
-k` (ie
-> > >> >> object safety), so it should stay.
-> > >> >>
-> > >> >> Maybe add a comment explaining why it's there.
-> > >> >
-> > >> > I guess a doctest would be better, but I still don't understand wh=
-y
-> > >> > the bound is needed. Sorry, can you cite something or explain in m=
-ore
-> > >> > detail please?
-> > >>
-> > >> Here is a link: https://doc.rust-lang.org/reference/items/traits.htm=
-l#dyn-compatibility
-> > >>
-> > >> But I realized that the trait wasn't object safe to begin with due t=
-o
-> > >> the `OFFSET` associated constant. So I'm not sure we need this. Alic=
-e,
-> > >> do you need `dyn HasWork`?
-> > >
-> > > I wrote a simple test:
-> >
-> > [...]
-> >
-> > > so I don't think adding the Sized bound makes sense - we'd end up
-> > > adding it on every item in the trait.
-> >
-> > Yeah the `Sized` bound was probably to make the cast work, so let's
-> > remove it.
->
-> It's already removed, right?
+The plda_event_handler() function has been removed since it only returned
+IRQ_HANDLED without performing any processing. Additionally, the IRQ
+request logic in plda_init_interrupts() has been streamlined by removing
+the redundant devm_request_irq() call when the request_event_irq()
+callback is not defined.
 
-Ping. Can you help me understand what change, if any, you think is required=
-?
+Change ensures that interrupts are requested exclusively through the
+request_event_irq() callback when available, enhancing code clarity
+and maintainability.
+
+Changes help fix kmemleak reported following debug log.
+
+$ sudo cat /sys/kernel/debug/kmemleak
+unreferenced object 0xffffffd6c47c2600 (size 128):
+  comm "kworker/u16:2", pid 38, jiffies 4294942263
+  hex dump (first 32 bytes):
+    cc 7c 5a 8d ff ff ff ff 40 b0 47 c8 d6 ff ff ff  .|Z.....@.G.....
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace (crc 4f07ff07):
+    __create_object+0x2a/0xfc
+    kmemleak_alloc+0x38/0x98
+    __kmalloc_cache_noprof+0x296/0x444
+    request_threaded_irq+0x168/0x284
+    devm_request_threaded_irq+0xa8/0x13c
+    plda_init_interrupts+0x46e/0x858
+    plda_pcie_host_init+0x356/0x468
+    starfive_pcie_probe+0x2f6/0x398
+    platform_probe+0x106/0x150
+    really_probe+0x30e/0x746
+    __driver_probe_device+0x11c/0x2c2
+    driver_probe_device+0x5e/0x316
+    __device_attach_driver+0x296/0x3a4
+    bus_for_each_drv+0x1d0/0x260
+    __device_attach+0x1fa/0x2d6
+    device_initial_probe+0x14/0x28
+unreferenced object 0xffffffd6c47c2900 (size 128):
+  comm "kworker/u16:2", pid 38, jiffies 4294942281
+
+Fixes: 4602c370bdf6 ("PCI: microchip: Move IRQ functions to pcie-plda-host.c")
+Cc: Minda Chen <minda.chen@starfivetech.com>
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+v1: drop the dummy IRQ handler used in previous version
+   [0] https://lore.kernel.org/linux-pci/20250224144155.omzrmls7hpjqw6yl@thinkpad/T/
+---
+ drivers/pci/controller/plda/pcie-plda-host.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/controller/plda/pcie-plda-host.c
+index 4153214ca4103..f7edfa97723f8 100644
+--- a/drivers/pci/controller/plda/pcie-plda-host.c
++++ b/drivers/pci/controller/plda/pcie-plda-host.c
+@@ -280,11 +280,6 @@ static u32 plda_get_events(struct plda_pcie_rp *port)
+ 	return events;
+ }
+ 
+-static irqreturn_t plda_event_handler(int irq, void *dev_id)
+-{
+-	return IRQ_HANDLED;
+-}
+-
+ static void plda_handle_event(struct irq_desc *desc)
+ {
+ 	struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
+@@ -452,16 +447,13 @@ int plda_init_interrupts(struct platform_device *pdev,
+ 			return -ENXIO;
+ 		}
+ 
+-		if (event->request_event_irq)
++		if (event->request_event_irq) {
+ 			ret = event->request_event_irq(port, event_irq, i);
+-		else
+-			ret = devm_request_irq(dev, event_irq,
+-					       plda_event_handler,
+-					       0, NULL, port);
+-
+-		if (ret) {
+-			dev_err(dev, "failed to request IRQ %d\n", event_irq);
+-			return ret;
++			if (ret) {
++				dev_err(dev, "failed to request IRQ %d\n",
++					event_irq);
++				return ret;
++			}
+ 		}
+ 	}
+ 
+
+base-commit: cb82ca153949c6204af793de24b18a04236e79fd
+-- 
+2.48.1
+
 
