@@ -1,98 +1,127 @@
-Return-Path: <linux-pci+bounces-23888-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23889-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11855A63584
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 12:57:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34C04A635B3
+	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 13:54:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5EE0816E612
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 11:57:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D4E17A6F57
+	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 12:53:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51D071A2381;
-	Sun, 16 Mar 2025 11:57:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E60711A76D4;
+	Sun, 16 Mar 2025 12:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzJ1ozKn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE028156C79;
-	Sun, 16 Mar 2025 11:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A581A3166;
+	Sun, 16 Mar 2025 12:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742126251; cv=none; b=qVxWL8uA7uHDbEx57A2KBeGyI9rih+Kk4QokkGAJ+goLztnIcuQLz2B/wRIbKv687+/Xc7aMXsSGu1w7/xl/l4xRt3Q/SvVQEAUbk2UoUs+mr6stAZt1fMa/YC28WL12hpmzz6FMsfg1IGcqHAscdofF8m0+VPECwajB8iDKAyg=
+	t=1742129687; cv=none; b=ZxuiMdypxbs/nQPX0Jxx4td7FWOyrZ+pdwMq+44cxnwVGJ8bRIaenTH2vJPDADjgjU4QnwonXO33StdQ/SzA8uPi11bJjkWz01rxp4Mdwk/qDiOzvxXTyc+4xgOtYbnW1ZfjYDgaa+V4TC0oGQiEMyiYUrcqJF7PGaJgJDDWRxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742126251; c=relaxed/simple;
-	bh=2WF/LbKitrWCBqXXi1nhQ7fkqFR9nNo/2lMHL7NRV5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m3Li7JusO9Na0aiVbSF+iBxTJXNb5ImIeqzyLeXutrZcsUWVA6/JQz0gXwG1aLBXyqSHKwFk+bCyvR3N/z/5Gp1I4wiQTxKMsJ1h/MqgXo+p7OWz0tV3jWk1Ydcey5m5V5PeA62gUeKlB5/sFFDYVmwSW5oSMi6vaBKKVBFLeBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+	s=arc-20240116; t=1742129687; c=relaxed/simple;
+	bh=la8iWv4aKLDOW0r7llYW7xIb+W8ddGrURAKkkeCgcDE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rBzYuUnF0zwciAfol2TuLr5ae7KTemmsk6LnurUkY0+jrGi2rYrbJ3DBYmCoawDkL0jHm5ecssn+7crO7UB4DcuSl5Au2E0AwuDJSPn8zNfO2WNljVhMVW1EdR3IXypm+A598d0bAWeA3I35jK5MUPdCaMKoYezzFEyGg50sofI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LzJ1ozKn; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2254e0b4b79so83761285ad.2;
-        Sun, 16 Mar 2025 04:57:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742126249; x=1742731049;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30bae572157so36825201fa.3;
+        Sun, 16 Mar 2025 05:54:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742129683; x=1742734483; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F5ZPUuGLWzPE3DEGuxQdFm1d6rNLeHLFFd3OHs6+QQU=;
-        b=UCA+cZVs/MuzuCgHR8xyoA/JTmFN/qDVrSQd/H9DeQG4UOhyrdQ9XLgSr+innv14zE
-         uBghM5dDuEZaxC117ad7+KIV0JZqP6MnFq/WvLO4d+9cDP5Mc3UxURomf0GwhDwgoWPS
-         KsPCu7cE3ZYSGdJ3G7Z64FtLTSBo8bvVEhKAi2Xfhiw8mN2oqQ4pQNxpxvQyA5dDnr3D
-         nrnPMqXy2W0ByFUsCOo9qWaM0+ZWsyxXxLwsqMrRM0fAo20mAX0ITBuLLfO5N4AvH/as
-         giMPzXA7/d/XkU/hh6SvJoU2rR6OEvU45OpEWJq83GJGhESJw8RHcU0gJMlatGeU3IBV
-         hWvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsLDN3XCR2OxbLFilXUDR/pg/4YvEflqtP9uppBvm0aZANO7vz5vpdtrMyh+ACwuAwWTfhxODN3HV+AMbk@vger.kernel.org, AJvYcCVY1O1e/7JS8RbDf8u7LSYS1BOwRE94OENjwUbkKuBL+2P/WPaaAA0Zg8Ij40+/12hYn4dd0EnvfGT1iSPON7U=@vger.kernel.org, AJvYcCXVm3+fCHEaVeCjRTIxW0pH/8Q3NqFy0FZUWlsfe7pw4DsjITxbUnGh8oOx0lEuM2A/49oAeJol/YXr@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP6fGcogcvuI7skBQn4MuyfafonQTd3ckH2pOQHv2sDbM2TTt1
-	rv9MsePr82jSvrWSOXqRjjChfCWkbeDVZA0V6vSIGp6vg5Ic7VBL
-X-Gm-Gg: ASbGncsPmIZvs0XN1WuuLW93w0RzfxvPLI6PpIa61jooob0mG5Pi4MFtAA5mMFGKlRN
-	scBNMK7FWhJr76Ik04DJg6yIZaJ5IUCDNiaubUot1Y0R+WTOsvDdFuoSX1cs7NIC4XmqDWax1vS
-	i2/D442jD5OBzyVoK3oN1/AGnKWR02j53eQoVqTeKf8vJesGIQNX3BxUqdX+K61b3hTnAlbfxDk
-	PgUMLmiwwv1s+xvyIUB35iilN625mlmvtpNxFpBLJDNKUzMlBNIfhsEvARJ0FcdByp8nn7YmGAJ
-	x9aAMNiKhxSPosy2yOFRbBveToGGCY6Cj3UOWvdesCAt4dn35cJC/n8UoY/ZL7hgeepVu2abfoo
-	jCoo=
-X-Google-Smtp-Source: AGHT+IEQUgd9b03NsYUaj6vePK7+aFkFyLwaesjtcXEgi2/cqXOUtR6mlOUWm/CB/nd0+pkmYkP/oQ==
-X-Received: by 2002:a17:903:2391:b0:223:619e:71da with SMTP id d9443c01a7336-225e0b23b6dmr122934195ad.49.1742126248842;
-        Sun, 16 Mar 2025 04:57:28 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-225c68883adsm56844685ad.47.2025.03.16.04.57.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Mar 2025 04:57:28 -0700 (PDT)
-Date: Sun, 16 Mar 2025 20:57:26 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Shawn Guo <shawn.guo@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: histb: Remove an unneeded NULL test in
- histb_pcie_remove()
-Message-ID: <20250316115726.GA3021602@rocinante>
-References: <c369b5d25e17a44984ae5a889ccc28a59a0737f7.1742058005.git.christophe.jaillet@wanadoo.fr>
+        bh=m72Ysl4ko4hY5HZYX4qrB+VwpHKR3dQw5Vbh4xYJNfA=;
+        b=LzJ1ozKnTBK3Nuks3YCvLJW7/Z/EgJgIT+3DVVjlxG0cEo3AjIIqyITHuNZcgCvdNG
+         ckvoPbVH7s4LIV+Eb8W42Y0RmHfkOOQrgDG7eH4m5REbTCfONTLexr77qTPXjBT0X2uK
+         C8tNEWxvNiWNIIsL1FYCr1FVPeTbabcOsEzbqkCe/KofTBJlpObvczW5n8gCbQAqbXYA
+         ni1gAVBY6EiwWvYD8SUTOyyUTfnLnUSb/4byMTJOl+yJKGzzbtD7G6yDHRKR3cbannAI
+         tYpMNrEyuHng7ezK4ZbMPndMnNYgKyY8D3dwdt2H7fe+zUTSCZTfLKTIGtg/6rrjXJ51
+         eXuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742129683; x=1742734483;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=m72Ysl4ko4hY5HZYX4qrB+VwpHKR3dQw5Vbh4xYJNfA=;
+        b=gv99bfCGwAGJvDkbgP26SE+bgfjfIlIBiWAk4lA7pto2km5SXytDRbzz2cgvIWVZg3
+         mortDva990284TCukzWVZqbC6UA6J9eujJxQe4UUmamZ5T6c2DwL3X6s59MxmqpFnyCK
+         +5fFqA9U0rURglxrQyNnG22fLpMebPbqf1SxJtW7AQVMeV/7wyLh7iZeLlMD5muGFGwy
+         f68WXrtx0UMsC9/vB/+Q81RmrfR2WmVJq3+ZHI0JirmOEr4NQyf80gEqxwXregLK4uE4
+         VzOnFI2esBGU7/vfYlZsbzRhxkBBzVAhEqx9DOWiAN5l9tXIhQ5sp/yjFkCaDdjn2uDS
+         p6Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2dhLCV85wGtXu3yEePIZK4bNWZvQxnPh7dq8U/gHcndt/CliEvlUUjNCUhshx37/KElPv/pI/LA98Vi4=@vger.kernel.org, AJvYcCV/U53Oo/PSiZEmtbzR/nK5raK8kyocbCWtZjLSLRFjh51qO/FpKtRt2ZmXOZssHRlNKuOkBpzypY5G@vger.kernel.org, AJvYcCV6pxQlOQzoiEB53tuH+MlSNik8GKAQmhyjRYJnDyqOkvuia3x6olG6EpTNdm30Q0ee3Nx6fHYUborDlkb5GUeQ@vger.kernel.org, AJvYcCVID1K3veLYfT7XuVDwnywSuxbs3rcH4z59WP4InNShqnwi9Fg2O3XHhJtBNUchF5uGoOf7ueITjqjcpYNN@vger.kernel.org, AJvYcCXLk2pifFd39Im7duj+7xtz+Y30iLga6qVyU+OYs5aEZlbO8AuCofT+v+SwiEOy6UgwmUzcxf+2MVf4@vger.kernel.org, AJvYcCXVfAkKd75cOvtRCJPaW3d+dGAwIFhMTlnppWRoWZwGOHtgG0v+Hzrjan2AVHTyIz+Fl223DGJbtyQWPsIOBXo=@vger.kernel.org, AJvYcCXaS39X6QebQQr7K6IGzJgLEY6n6/ZkKygkXmym4LPwBtbV2WYxj6aPMrhbJNNRBf2I5n/JVgYfh0LM2Mi2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxy521CC1DqjXoztkQSjYqGM8frgwcgske38ps3FBv1OsbgBDDo
+	T7mTmhYAov8aq0WlPE9/Xe9hrn0BSLQFJn6S/ESvA+xGflocp8PtkAhwWLslq7hmQ7tKbprg49t
+	0C0cx5qUEeJQ0r+6rzjOFr0jtOPI=
+X-Gm-Gg: ASbGnctES8i5UEnZ4poeOrMM8Kk7QcpYB3zmDMCjL63nAD7esNbwhzWMEM1xx2kMDjD
+	5sAOwTdW2jpQ6bPSTyFk87z/rp/1jR07aVq2PFWX9TJW2nzmQGV2VfZyupIcwIww3qT6BbXhrtz
+	EqhoI01rDkxNgc2dnBzLsB+fxtVZzPYaCuZGFci2KuwmNIihMex9HpyKpy+lmF
+X-Google-Smtp-Source: AGHT+IE6iBXWS50nKSAYwo5FCXBdnhbNHVXtxORgs/RwlrM4JXF7GGDHtXE0EnpBEkJ1e6Y0/wbpMEdDeSo/iTCQCcY=
+X-Received: by 2002:a2e:a98e:0:b0:30b:d17b:269a with SMTP id
+ 38308e7fff4ca-30c4a749070mr42282761fa.7.1742129682837; Sun, 16 Mar 2025
+ 05:54:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c369b5d25e17a44984ae5a889ccc28a59a0737f7.1742058005.git.christophe.jaillet@wanadoo.fr>
+References: <20250315-ptr-as-ptr-v4-0-b2d72c14dc26@gmail.com>
+ <20250315-ptr-as-ptr-v4-6-b2d72c14dc26@gmail.com> <Z9ZbNY2XR10vt3Ro@Mac.home>
+In-Reply-To: <Z9ZbNY2XR10vt3Ro@Mac.home>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Sun, 16 Mar 2025 08:54:06 -0400
+X-Gm-Features: AQ5f1Jq4oEInzEsIP6AyCUxxntLRsaKIunWuOaZj1h8pyzZQkrJrV4gfLymNygE
+Message-ID: <CAJ-ks9ntUhnD2D1qUCosrKk2bEYHXFDLEanznpNn51d6CbD6aw@mail.gmail.com>
+Subject: Re: [PATCH v4 6/6] rust: use strict provenance APIs
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Sun, Mar 16, 2025 at 1:01=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> On Sat, Mar 15, 2025 at 08:17:30AM -0400, Tamir Duberstein wrote:
+> [...]
+> > diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
+> > index 40d1bd13682c..f9459694cbdc 100644
+> > --- a/rust/kernel/of.rs
+> > +++ b/rust/kernel/of.rs
+> > @@ -22,7 +22,7 @@ unsafe impl RawDeviceId for DeviceId {
+> >      const DRIVER_DATA_OFFSET: usize =3D core::mem::offset_of!(bindings=
+::of_device_id, data);
+> >
+> >      fn index(&self) -> usize {
+> > -        self.0.data as usize
+> > +        crate::expose_provenance(self.0.data)
+>
+> Even though of_device_id::data was defined as `void *`, but in Rust we
+> use it to store index, see kernel::device_id::{IdTable::info(),
+> IdArray::new()}. Hence we should use self.0.data.addr() here.
 
-> phy_exit() handles NULL as a parameter, so there is no need for an extra
-> test.
-> This makes the code consistent with the error handling path of the probe.
-
-Thank you for the due diligence here!  Much appreciated.
-
-I squashed this patch against the changes already on the branch.
-
-Thank you!
-
-	Krzysztof
+Good point, thanks.
 
