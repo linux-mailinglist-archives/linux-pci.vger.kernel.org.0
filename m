@@ -1,111 +1,63 @@
-Return-Path: <linux-pci+bounces-23923-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23924-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97EF5A64C7D
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 12:27:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 761A2A64C8B
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 12:29:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A31F188DD3A
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 11:27:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B6A01173160
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 11:29:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B5332356D1;
-	Mon, 17 Mar 2025 11:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="b3xYLOo0"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8387223716E;
+	Mon, 17 Mar 2025 11:29:44 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3F121A436
-	for <linux-pci@vger.kernel.org>; Mon, 17 Mar 2025 11:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DD61236436;
+	Mon, 17 Mar 2025 11:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742210867; cv=none; b=g57UYBE3gxCrzN9rLi736aZJjlfvdlldeAGEqqdvXppYYMU/yJVQQ/t8BTlmMqiNcW2HJwTr4lnOdCIkC8PeoJyLcw2c1LfVlXQv6pPsP63NS9Jui7Gj7RNfMDdko3clQXi0OA/w7doL3+34HsC8vnq9SmfhNbhJyYFwEtJOEBk=
+	t=1742210984; cv=none; b=MOqpd1bdmMCsSNTIPrrMFfJQIWgGFOSqjckJoxIUggoitvF6P5q5NI0bBinlKgmstnUh1hnJKLRBw193Cnh0B8BYr2SfA7vEP5QJ1wZHg0KgXNdgVn/X0X5ltXLYULy+0fBPkzmcUw6zUr7heJ/r0v0/iaaWVrpk4W8fWeTk9ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742210867; c=relaxed/simple;
-	bh=JiU79bmCJxOwRp4oAbETla+RO60mQJSftJKMO9L+DTE=;
+	s=arc-20240116; t=1742210984; c=relaxed/simple;
+	bh=CFrYoZQRyimdBrmP/wFQMT8RlZP7qZLZb+JQWLgySes=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MkHJaX3dRQD1NRq/dRgn6NCbSdvIsZs+bA4oWlRJR4PNon/IzTtGzxjAsnInupJC+40ob+dCAoSqbKRJdpqSy+2bsbc8NAUmIY9oVZnaIl8Kl/0QdT8DcgT/MMeNXF5qiQfgvcc2dPMKOEzQHQ/WgueyQHcaUEs9l6sZdb6cjlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=b3xYLOo0; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52H98bF9016450
-	for <linux-pci@vger.kernel.org>; Mon, 17 Mar 2025 11:27:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=Ks6H1Qe4LqVgg5DG9PYOBphr
-	rgmZjuWkDZ+NJuoP5cU=; b=b3xYLOo0wdLbXGQr07iIEukKPKy0hFn8wL0YPyNs
-	nqGjRcsC2lSNX/7+wXy9tzpxJTvOFc3vENEb+dPZ6j7AA0RIU36UN2aPY4kyDilZ
-	Vt8EO1SHDBhS3Uwe5ZSfVSyQhNk5cf5VwQfW+/chuXu+qG0MqZxmwVxnw6NUKy5J
-	xm2fXaKR9cYjoJZ832RaQTauti/YNG1MeRcnwQv0644XuX722m6uky8qTqgQOgIp
-	aFwrZvg+IxUOm4bUJSmY4qbCDDD8ezeJTsI2fzHQieEfP8dxJuKx86cCDtQKtTwv
-	NM/4Ywr/it7G6mJAyGfllLDcYK0/HPOruyuA7uJAl53a8Q==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d2qm4e5w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Mon, 17 Mar 2025 11:27:44 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c3b8b95029so623828085a.0
-        for <linux-pci@vger.kernel.org>; Mon, 17 Mar 2025 04:27:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742210857; x=1742815657;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ks6H1Qe4LqVgg5DG9PYOBphrrgmZjuWkDZ+NJuoP5cU=;
-        b=evJYTOvMWu+KmVjx0mA7tMYIvu5ABNmRl3QETjUg5t0TAZyfX4gauVvMQ1CLv5on8n
-         1wJYNe6kXFdf9KumnN10UIrP31qRAHJ28XIuqo4tat/6qzO/xcd5gmy56Y7HUe0SGEGS
-         HDyAJerkCzlHlwxd6nXdqdD3mWm69+OlUTbrAVWGCMh7tYbGHQ73+aDj8Tb/XA1HhDHM
-         +N1vj0GiaEXccIGcall2l3bJoGZbrJ1fex09WZZrl4KkDi00DG/4qfuDwHfK8d9FLPZe
-         WniIiSgWORuZHhuzFQDnSYLiOxi2hF1PSEEmK0BhH4y0Vhyhzi5xqUfCkvTb2SiaYG5z
-         rQTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFKnNZFJbVCC8WST/rNQmriP6ZjQdAd1OX+cw6JGQBzuvUfpo9yxGctw9e2XTnH2wvzZU9T9p+RXE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2i6Sr3ToMU/aPRrWTyaZUG5XBg31q301Zcy1SFcTfQqVg8rBY
-	Ofb03j3FeddoaemIzALgfJihquQtjwzFAQbaYF9tiES5IMDSOteOQXqVjL5kGtwT3XGSwFeC8z2
-	HHwH2nZpwdf/1CdgansUTt81Ib4oL7qBmKqGLkBC4QMMdtN4g0RdXdeRy+OY=
-X-Gm-Gg: ASbGncszwgtFp8e6/Fz4mVnHtY95JDsOtuyYZ97EGfFticRoglfvPucwpPXjz3MZs2u
-	V2ORFJLDcDrxHtkGZc2qgEyWer88HwOsz0KbcID8EoRvuhYjOf/tPrfIPGlHzs8f13Eo3TAttQ5
-	5RbQAttc2OFdoVL6vnRPhoQ+f3/VsZTGh6sXG2IO/WR0vbvoHYSZWTmdidGfJHsGNLb09S7BnPT
-	+NDJmSLcY09IJeDk1wuYxouU4psuun2oYNZzrjVx12iKQRnLqUa7TT6tJAJH7mdO1YJSVb+0dRY
-	LbmjoxQdZZbj52FKNJSuOTPWXLxFKjTZHMQGDmO79z3sSo6bGZEPUfB3M5w+RhtYwzrtjOrz+2V
-	oLsw=
-X-Received: by 2002:a05:620a:372b:b0:7c5:3df0:48cf with SMTP id af79cd13be357-7c57c7b99edmr1608500685a.3.1742210857635;
-        Mon, 17 Mar 2025 04:27:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEgmKbqNlFcHOVK7QmTXPEEAfaypemgHDiFvZ5/SKCUl+uj1n4jhLXU7saD/jBY49l4D08veg==
-X-Received: by 2002:a05:620a:372b:b0:7c5:3df0:48cf with SMTP id af79cd13be357-7c57c7b99edmr1608497685a.3.1742210857270;
-        Mon, 17 Mar 2025 04:27:37 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30c3f1dbb12sm15187661fa.95.2025.03.17.04.27.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 04:27:35 -0700 (PDT)
-Date: Mon, 17 Mar 2025 13:27:33 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com,
-        amitk@kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, jorge.ramirez@oss.qualcomm.com
-Subject: Re: [PATCH v4 02/10] arm64: dts: qcom: qcs6490-rb3gen2: Add TC956x
- PCIe switch node
-Message-ID: <c4ompv3t256tl4qosapvtt5fkk5wwqxikclwwuyffvvbu6noig@y2y3hhf24mtf>
-References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
- <20250225-qps615_v4_1-v4-2-e08633a7bdf8@oss.qualcomm.com>
- <ciqgmfi4wkvqpvaf4zsqn3k2nrllsaglbx7ve3g2nbecoj35d6@okgcsvfx27z5>
- <6e51e35f-78c3-5d2b-697e-ce4a7da7b15c@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=j1RA93KfoGqkh1+A7hpHJAe4AhiChaHRTqzZPLHP/sZIQV50uxlkHgYOzZPQIYzit9VkPDurGN3ratJj8biXXWxT67ar47oZuFRk+YpDsnYyZ2oTC3dbrZRF3uN5wM7F78WZes4Y2splJi1y8Ra5WJy8nDfgpBCCSPtR5JjYaZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3083613D5;
+	Mon, 17 Mar 2025 04:29:49 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5CEB43F694;
+	Mon, 17 Mar 2025 04:29:33 -0700 (PDT)
+Date: Mon, 17 Mar 2025 11:29:30 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+	catalin.marinas@arm.com, conor+dt@kernel.org,
+	dan.carpenter@linaro.org, dave.hansen@linux.intel.com,
+	decui@microsoft.com, haiyangz@microsoft.com, hpa@zytor.com,
+	joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com,
+	kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org, maz@kernel.org, mingo@redhat.com,
+	oliver.upton@linux.dev, rafael@kernel.org, robh@kernel.org,
+	ssengar@linux.microsoft.com, sudeep.holla@arm.com,
+	suzuki.poulose@arm.com, tglx@linutronix.de, wei.liu@kernel.org,
+	will@kernel.org, yuzenghui@huawei.com, devicetree@vger.kernel.org,
+	kvmarm@lists.linux.dev, linux-acpi@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
+	benhill@microsoft.com, bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: Re: [PATCH hyperv-next v6 01/11] arm64: kvm, smccc: Introduce and
+ use API for detecting hypervisor presence
+Message-ID: <Z9gHmkNOsd29viHj@J2N7QTR9R3.cambridge.arm.com>
+References: <20250315001931.631210-1-romank@linux.microsoft.com>
+ <20250315001931.631210-2-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -114,140 +66,234 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6e51e35f-78c3-5d2b-697e-ce4a7da7b15c@quicinc.com>
-X-Proofpoint-ORIG-GUID: 6d5dqaApV5m7ZJlUsfg1HurbnCvqXcZw
-X-Proofpoint-GUID: 6d5dqaApV5m7ZJlUsfg1HurbnCvqXcZw
-X-Authority-Analysis: v=2.4 cv=DLWP4zNb c=1 sm=1 tr=0 ts=67d80730 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=iBLCvXWk7JtlIUnLWUQA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-17_04,2025-03-17_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- impostorscore=0 adultscore=0 malwarescore=0 suspectscore=0 spamscore=0
- lowpriorityscore=0 clxscore=1015 mlxlogscore=999 phishscore=0 bulkscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503170084
+In-Reply-To: <20250315001931.631210-2-romank@linux.microsoft.com>
 
-On Mon, Mar 17, 2025 at 03:05:17PM +0530, Krishna Chaitanya Chundru wrote:
+On Fri, Mar 14, 2025 at 05:19:21PM -0700, Roman Kisel wrote:
+> The KVM/arm64 uses SMCCC to detect hypervisor presence. That code is
+> private, and it follows the SMCCC specification. Other existing and
+> emerging hypervisor guest implementations can and should use that
+> standard approach as well.
 > 
+> Factor out a common infrastructure that the guests can use, update KVM
+> to employ the new API. The central notion of the SMCCC method is the
+> UUID of the hypervisor, and the API follows that.
 > 
-> On 2/25/2025 5:19 PM, Dmitry Baryshkov wrote:
-> > On Tue, Feb 25, 2025 at 03:03:59PM +0530, Krishna Chaitanya Chundru wrote:
-> > > Add a node for the TC956x PCIe switch, which has three downstream ports.
-> > > Two embedded Ethernet devices are present on one of the downstream ports.
-> > > 
-> > > Power to the TC956x is supplied through two LDO regulators, controlled by
-> > > two GPIOs, which are added as fixed regulators. Configure the TC956x
-> > > through I2C.
-> > > 
-> > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > > Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-> > > Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 116 +++++++++++++++++++++++++++
-> > >   arch/arm64/boot/dts/qcom/sc7280.dtsi         |   2 +-
-> > >   2 files changed, 117 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> > > index 7a36c90ad4ec..13dbb24a3179 100644
-> > > --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> > > +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
-> > > @@ -218,6 +218,31 @@ vph_pwr: vph-pwr-regulator {
-> > >   		regulator-min-microvolt = <3700000>;
-> > >   		regulator-max-microvolt = <3700000>;
-> > >   	};
-> > > +
-> > > +	vdd_ntn_0p9: regulator-vdd-ntn-0p9 {
-> > > +		compatible = "regulator-fixed";
-> > > +		regulator-name = "VDD_NTN_0P9";
-> > > +		gpio = <&pm8350c_gpios 2 GPIO_ACTIVE_HIGH>;
-> > > +		regulator-min-microvolt = <899400>;
-> > > +		regulator-max-microvolt = <899400>;
-> > > +		enable-active-high;
-> > > +		pinctrl-0 = <&ntn_0p9_en>;
-> > > +		pinctrl-names = "default";
-> > > +		regulator-enable-ramp-delay = <4300>;
-> > > +	};
-> > > +
-> > > +	vdd_ntn_1p8: regulator-vdd-ntn-1p8 {
-> > > +		compatible = "regulator-fixed";
-> > > +		regulator-name = "VDD_NTN_1P8";
-> > > +		gpio = <&pm8350c_gpios 3 GPIO_ACTIVE_HIGH>;
-> > > +		regulator-min-microvolt = <1800000>;
-> > > +		regulator-max-microvolt = <1800000>;
-> > > +		enable-active-high;
-> > > +		pinctrl-0 = <&ntn_1p8_en>;
-> > > +		pinctrl-names = "default";
-> > > +		regulator-enable-ramp-delay = <10000>;
-> > > +	};
-> > > +
-> > >   };
-> > >   &apps_rsc {
-> > > @@ -735,6 +760,75 @@ &pcie1_phy {
-> > >   	status = "okay";
-> > >   };
-> > > +&pcie1_port {
-> > > +	pcie@0,0 {
-> > > +		compatible = "pci1179,0623", "pciclass,0604";
-> > > +		reg = <0x10000 0x0 0x0 0x0 0x0>;
-> > > +		#address-cells = <3>;
-> > > +		#size-cells = <2>;
-> > > +
-> > > +		device_type = "pci";
-> > > +		ranges;
-> > > +		bus-range = <0x2 0xff>;
-> > > +
-> > > +		vddc-supply = <&vdd_ntn_0p9>;
-> > > +		vdd18-supply = <&vdd_ntn_1p8>;
-> > > +		vdd09-supply = <&vdd_ntn_0p9>;
-> > > +		vddio1-supply = <&vdd_ntn_1p8>;
-> > > +		vddio2-supply = <&vdd_ntn_1p8>;
-> > > +		vddio18-supply = <&vdd_ntn_1p8>;
-> > > +
-> > > +		i2c-parent = <&i2c0 0x77>;
-> > > +
-> > > +		reset-gpios = <&pm8350c_gpios 1 GPIO_ACTIVE_LOW>;
-> > > +
-> > > +		pcie@1,0 {
-> > 
-> > PCIe bus can be autodetected. Is there a reason for describing all the
-> > ports and a full topology? If so, it should be stated in the commit
-> > message.
-> > 
-> As these ports are fixed we are defining them here, I will mention this
-> in the commit message. It is similar to how we added pcieport for all
-> the platforms, I tried to add full topology here. And if we want to
-> configure any ports like l0s entry delay, l1 entry delay etc in future
-> we need these full topology to be present.
-
-Ack
-
+> No functional changes. Validated with a KVM/arm64 guest.
 > 
-> - Krishna Chaitanya.
-> > > +			reg = <0x20800 0x0 0x0 0x0 0x0>;
-> > > +			#address-cells = <3>;
-> > > +			#size-cells = <2>;
-> > > +
-> > > +			device_type = "pci";
-> > > +			ranges;
-> > > +			bus-range = <0x3 0xff>;
-> > > +		};
-> > > +
-> > > +		pcie@2,0 {
-> > > +			reg = <0x21000 0x0 0x0 0x0 0x0>;
-> > > +			#address-cells = <3>;
-> > > +			#size-cells = <2>;
-> > > +
-> > > +			device_type = "pci";
-> > > +			ranges;
-> > > +			bus-range = <0x4 0xff>;
-> > > +		};
-> > > +
-> > > +		pcie@3,0 {
-> > 
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/arm64/kvm/hypercalls.c        |  5 +--
+>  drivers/firmware/smccc/kvm_guest.c | 10 ++----
+>  drivers/firmware/smccc/smccc.c     | 19 +++++++++++
+>  include/linux/arm-smccc.h          | 55 +++++++++++++++++++++++++++---
+>  4 files changed, 73 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/hypercalls.c b/arch/arm64/kvm/hypercalls.c
+> index 27ce4cb44904..92b9bc1ea8e8 100644
+> --- a/arch/arm64/kvm/hypercalls.c
+> +++ b/arch/arm64/kvm/hypercalls.c
+> @@ -353,10 +353,7 @@ int kvm_smccc_call_handler(struct kvm_vcpu *vcpu)
+>  			val[0] = gpa;
+>  		break;
+>  	case ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID:
+> -		val[0] = ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_0;
+> -		val[1] = ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_1;
+> -		val[2] = ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_2;
+> -		val[3] = ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_3;
+> +		UUID_TO_SMCCC_RES(ARM_SMCCC_VENDOR_HYP_UID_KVM, val);
+>  		break;
+>  	case ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID:
+>  		val[0] = smccc_feat->vendor_hyp_bmap;
+> diff --git a/drivers/firmware/smccc/kvm_guest.c b/drivers/firmware/smccc/kvm_guest.c
+> index f3319be20b36..b5084b309ea0 100644
+> --- a/drivers/firmware/smccc/kvm_guest.c
+> +++ b/drivers/firmware/smccc/kvm_guest.c
+> @@ -14,17 +14,11 @@ static DECLARE_BITMAP(__kvm_arm_hyp_services, ARM_SMCCC_KVM_NUM_FUNCS) __ro_afte
+>  
+>  void __init kvm_init_hyp_services(void)
+>  {
+> +	uuid_t kvm_uuid = ARM_SMCCC_VENDOR_HYP_UID_KVM;
+>  	struct arm_smccc_res res;
+>  	u32 val[4];
+>  
+> -	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
+> -		return;
+> -
+> -	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
+> -	if (res.a0 != ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_0 ||
+> -	    res.a1 != ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_1 ||
+> -	    res.a2 != ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_2 ||
+> -	    res.a3 != ARM_SMCCC_VENDOR_HYP_UID_KVM_REG_3)
+> +	if (!arm_smccc_hyp_present(&kvm_uuid))
+>  		return;
+>  
+>  	memset(&res, 0, sizeof(res));
+> diff --git a/drivers/firmware/smccc/smccc.c b/drivers/firmware/smccc/smccc.c
+> index a74600d9f2d7..7399f27d58e5 100644
+> --- a/drivers/firmware/smccc/smccc.c
+> +++ b/drivers/firmware/smccc/smccc.c
+> @@ -67,6 +67,25 @@ s32 arm_smccc_get_soc_id_revision(void)
+>  }
+>  EXPORT_SYMBOL_GPL(arm_smccc_get_soc_id_revision);
+>  
+> +bool arm_smccc_hyp_present(const uuid_t *hyp_uuid)
+> +{
+> +	struct arm_smccc_res res = {};
+> +
+> +	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
+> +		return false;
+> +	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
+> +	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
+> +		return false;
+> +
+> +	return ({
+> +		const uuid_t uuid = SMCCC_RES_TO_UUID(res.a0, res.a1, res.a2, res.a3);
+> +		const bool present = uuid_equal(&uuid, hyp_uuid);
+> +
+> +		present;
+> +	});
+> +}
 
--- 
-With best wishes
-Dmitry
+This use of a statement expression is bizarre, and the function would be
+clearer without it, e.g.
+
+| bool arm_smccc_hyp_present(const uuid_t *hyp_uuid)
+| {
+| 	struct arm_smccc_res res = {};
+| 	uuid_t uuid;
+| 
+| 	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
+| 		return false;
+| 
+| 	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
+| 	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
+| 		return false;
+| 	
+| 	uuid_t = SMCCC_RES_TO_UUID(res.a0, res.a1, res.a2, res.a3);
+| 	return uuid_equal(&uuid, hyp_uuid);
+| }
+
+As noted below, I'd prefer if this were renamed to something like
+arm_smccc_hypervisor_has_uuid(), to more clearly indicate what is being
+checked.
+
+[...]
+
+> +/**
+> + * arm_smccc_hyp_present(const uuid_t *hyp_uuid)
+> + *
+> + * Returns `true` if the hypervisor advertises its presence via SMCCC.
+> + *
+> + * When the function returns `false`, the caller shall not assume that
+> + * there is no hypervisor running. Instead, the caller must fall back to
+> + * other approaches if any are available.
+> + */
+> +bool arm_smccc_hyp_present(const uuid_t *hyp_uuid);
+
+I'd prefer if this were:
+
+| /*
+|  * Returns whether a specific hypervisor UUID is advertised for the
+|  * Vendor Specific Hypervisor Service range.
+|  */
+| bool arm_smccc_hypervisor_has_uuid(const uuid_t *uuid);
+
+> +#define SMCCC_RES_TO_UUID(r0, r1, r2, r3) \
+> +	UUID_INIT( \
+> +		cpu_to_le32(lower_32_bits(r0)), \
+> +		cpu_to_le32(lower_32_bits(r1)) & 0xffff, \
+> +		cpu_to_le32(lower_32_bits(r1)) >> 16, \
+> +		cpu_to_le32(lower_32_bits(r2)) & 0xff, \
+> +		(cpu_to_le32(lower_32_bits(r2)) >> 8) & 0xff, \
+> +		(cpu_to_le32(lower_32_bits(r2)) >> 16) & 0xff, \
+> +		(cpu_to_le32(lower_32_bits(r2)) >> 24) & 0xff, \
+> +		cpu_to_le32(lower_32_bits(r3)) & 0xff, \
+> +		(cpu_to_le32(lower_32_bits(r3)) >> 8) & 0xff, \
+> +		(cpu_to_le32(lower_32_bits(r3)) >> 16) & 0xff, \
+> +		(cpu_to_le32(lower_32_bits(r3)) >> 24) & 0xff \
+> +	)
+
+I think this'd be clearer if we did something similar to what we did for
+the SMCCC SOC_ID name:
+
+  https://lore.kernel.org/linux-arm-kernel/20250219005932.3466-1-paul@os.amperecomputing.com/
+
+... and pack/unpack the bytes explicitly, e.g.
+
+| static inline uuid smccc_res_to_uuid(u32 r0, u32, r1, u32 r2, u32 r3)
+| {
+| 	uuid_t uuid = {
+| 		.b = {
+| 			[0]  = (r0 >> 0)  & 0xff,
+| 			[1]  = (r0 >> 8)  & 0xff,
+| 			[2]  = (r0 >> 16) & 0xff,
+| 			[3]  = (r0 >> 24) & 0xff,
+| 
+| 			[4]  = (r1 >> 0)  & 0xff,
+| 			[5]  = (r1 >> 8)  & 0xff,
+| 			[6]  = (r1 >> 16) & 0xff,
+| 			[7]  = (r1 >> 24) & 0xff,
+| 
+| 			[8]  = (r2 >> 0)  & 0xff,
+| 			[9]  = (r2 >> 8)  & 0xff,
+| 			[10] = (r2 >> 16) & 0xff,
+| 			[11] = (r2 >> 24) & 0xff,
+| 
+| 			[12] = (r3 >> 0)  & 0xff,
+| 			[13] = (r3 >> 8)  & 0xff,
+| 			[14] = (r3 >> 16) & 0xff,
+| 			[15] = (r3 >> 24) & 0xff,
+| 		},
+| 	};
+| 
+| 	return uuid;
+| }
+
+... which is a bit more verbose, but clearly aligns with what the SMCCC
+spec says w.r.t. packing/unpacking, and should avoid warnings about
+endianness conversions.
+
+> +
+> +#define UUID_TO_SMCCC_RES(uuid_init, regs) do { \
+> +		const uuid_t uuid = uuid_init; \
+> +		(regs)[0] = le32_to_cpu((u32)uuid.b[0] | (uuid.b[1] << 8) | \
+> +						((uuid.b[2]) << 16) | ((uuid.b[3]) << 24)); \
+> +		(regs)[1] = le32_to_cpu((u32)uuid.b[4] | (uuid.b[5] << 8) | \
+> +						((uuid.b[6]) << 16) | ((uuid.b[7]) << 24)); \
+> +		(regs)[2] = le32_to_cpu((u32)uuid.b[8] | (uuid.b[9] << 8) | \
+> +						((uuid.b[10]) << 16) | ((uuid.b[11]) << 24)); \
+> +		(regs)[3] = le32_to_cpu((u32)uuid.b[12] | (uuid.b[13] << 8) | \
+> +						((uuid.b[14]) << 16) | ((uuid.b[15]) << 24)); \
+> +	} while (0)
+> +
+> +#endif /* !__ASSEMBLER__ */
+
+IMO it'd be clearer to initialise a uuid_t beforehand, and then allow
+the helper to unpack the bytes, e.g.
+
+static inline u32 smccc_uuid_to_reg(const uuid_t uuid, int reg)
+{
+	u32 val = 0;
+
+	val |= (u32)(uuid.b[4 * reg + 0] << 0)
+	val |= (u32)(uuid.b[4 * reg + 1] << 8)
+	val |= (u32)(uuid.b[4 * reg + 2] << 16)
+	val |= (u32)(uuid.b[4 * reg + 3] << 24)
+
+	return val:
+}
+
+#define UUID_TO_SMCCC_RES(uuid, regs)		\
+do {						\
+	(regs)[0] = smccc_uuid_to_reg(uuid, 0); \
+	(regs)[1] = smccc_uuid_to_reg(uuid, 1); \
+	(regs)[2] = smccc_uuid_to_reg(uuid, 2); \
+	(regs)[3] = smccc_uuid_to_reg(uuid, 3); \
+} while (0)
+
+... though arguably at that point you can get rid of the
+UUID_TO_SMCCC_RES() macro and just expand that directly at the callsite.
+
+Mark.
 
