@@ -1,222 +1,169 @@
-Return-Path: <linux-pci+bounces-23898-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23899-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D996A6377D
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 22:14:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CD31A639D9
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 02:14:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 28AD2169859
-	for <lists+linux-pci@lfdr.de>; Sun, 16 Mar 2025 21:14:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 519BB3A59C5
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 01:14:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B448189915;
-	Sun, 16 Mar 2025 21:14:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F38E32C8B;
+	Mon, 17 Mar 2025 01:14:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jttGMgve"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gEfgKsHk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C278B3D6F
-	for <linux-pci@vger.kernel.org>; Sun, 16 Mar 2025 21:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFB126AD0
+	for <linux-pci@vger.kernel.org>; Mon, 17 Mar 2025 01:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742159650; cv=none; b=LJs4bP9BGEvQ2E51Whg+Y8NoBcsETjge2tDU2KD6hPy8J3/EJigDLfa3chjpTZg7WK/tVZ9n/Xh/ThIGJlgJFpem4u7n+/Z2kQ+KMA8wdoGypV0ljjK1F83gU57BCK5dAcJoXQDvv9+rI17hQ3LnqirskoX4ViP2+5dLs4gV0Ps=
+	t=1742174049; cv=none; b=R0287sPF7RMIcBkIaAljw7hcALx4t2oCx6LIaHrThvbfQw/pFiwEI2iI2tE5rZYp1GDvcQL/CknNiEYgvqjWm5T7dWflBV1aS2Jr/bY7CAi+6f3rrWXDULParrGOsjRZWY/kTJuMnyX49YJDNNelu9XeueXqZqdysya4U7k6nDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742159650; c=relaxed/simple;
-	bh=hiDgk0yb7zRqdKNZpyk0dJJp50wNHKSt2fu0kROpTto=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=uDh5mCdRErUgVESDt3hqgzMbRf9pvydO+6+nOSsqJMJ28HVwt3yiSIUk3Snk6TBxJoaD7W/P1mfihzVDXnJDnthbCISvHFPf+FT62tB0ehSvKeNcFo6qjdyeyLosGepuRqnuTuDnQieAbMLi4xhVEAiJts7JSzfmyqjJIttQejU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jttGMgve; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742159649; x=1773695649;
-  h=date:from:to:cc:subject:message-id;
-  bh=hiDgk0yb7zRqdKNZpyk0dJJp50wNHKSt2fu0kROpTto=;
-  b=jttGMgve3i5Cy/3yFjnThdl4eJFn9EiB9FkqNgCpXCR9ETL0zN1guRnN
-   +QXM3ZfMTpoq73xHCjndNFwZdS3WVUphOvPtcrkcgowx3d32dMFIONJxt
-   lvFBEymKTLxUCHbfaxCkqxlmYWiDGrj9rvYg8kNCdTbjtL06TxebMkPgw
-   n0KCC2bUHM/erlRQWXutk78aJ3ZSe4L1d/qa9ctnGNtOodQcK1PYRQ9uG
-   tb5VCsvAFIJ1IPblLt5b0PnAv2U5eXNW4aVyGqdhWBw83YmsYSf+DmLCP
-   M6Z4VbDIFSw6x8rctufUPcerv7Y3TyB4aujjhbf1YbJS68rTSfL+TmTUZ
-   A==;
-X-CSE-ConnectionGUID: SDth1mZ4RGyeoxZEqdfoCQ==
-X-CSE-MsgGUID: w8Rhco7TQj24jI/FySYYXQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11375"; a="60641570"
-X-IronPort-AV: E=Sophos;i="6.14,252,1736841600"; 
-   d="scan'208";a="60641570"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2025 14:14:08 -0700
-X-CSE-ConnectionGUID: eohqh7L0Q1umJBm3i0LzQg==
-X-CSE-MsgGUID: itzIHfgZSJO1MZsqYreEUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,252,1736841600"; 
-   d="scan'208";a="121480312"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 16 Mar 2025 14:14:07 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ttvJ6-000CFU-2t;
-	Sun, 16 Mar 2025 21:14:04 +0000
-Date: Mon, 17 Mar 2025 05:13:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- df90ab163b755e94fe1604cbb758248e65b3a139
-Message-ID: <202503170518.kv0KQK0u-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1742174049; c=relaxed/simple;
+	bh=HBdNRz7NWotgzuk+x/kxszEOIgphn0BH0jzSWHy0fPM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bnLq0oMaf+sm99tLBFp4weLoDfdTIJK2zFq5FQMxvThLIIoWUA+4pjZRfEaSJgeHbm9P1CaDtYYGM+8DB8YPdKGkX97/ATHI0QOIBE/WcyIc35wUmn0f+7boMHpSeu18PwbpYAdJmdspmJZGKtD1vUt2+zWbFrvxwYvmjaXo+RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gEfgKsHk; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2fa8ada6662so3125116a91.1
+        for <linux-pci@vger.kernel.org>; Sun, 16 Mar 2025 18:14:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742174047; x=1742778847; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cXru3TCUuPTakrv/YVRqLX7LKq46qhiQdzkoohXODxU=;
+        b=gEfgKsHkm0Vl86jhUd+X9IigA8hrTG2cdi1ojK5zHhAemtdoXArjAPz+lCq7BnPc3F
+         OwgreBedzUOq8J8g6l4JP2ajaPSrE2RfnIDVEwlN8Sh9yPIy5vWq808YAzCDLOroEC5X
+         OKRgOvfV/mGuHRAK5ODOLvAek/rtxPhXsXC1SGrSxanxZss/NzR6upoXtl73AnXS3oLe
+         k9XCEJDrweoakTRTsZVv1iZYJ3vKiWpCTbrYQfUT1w9nemqHxlGwCG1I7pGgRDGVi/ef
+         7VJ8MtCzni8u/4Mm5nZhNN2JVQkwtpYs1WITuTPsaE5C4jSWqmTO2bJ6LsrbIe+vB7CW
+         J4Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742174047; x=1742778847;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cXru3TCUuPTakrv/YVRqLX7LKq46qhiQdzkoohXODxU=;
+        b=jPifTNhHzv8r9xt0d9pRilXpwmZ4enZMCcNR0aNtmJ7KXQ+NGLKkR2rj0/LiEYbnNM
+         YdzHJPROUfsU/nGsmynfrZyV3euZ2s3lAhlc3sTlsFtjltxjYkXea++99OUH/wr/Sk+m
+         Rlcj4CQWJhqOIouynoYiQqD6gIVGClEoXMTrDm7Kd4Ne5kitVnXj+tX07tlotJ+VswZb
+         aHRvraFKpOq3r/NY/geOPBafA98nke78gIaAqmP3Ah2PH7tCTvOf9agVEaxQmfzHSJbM
+         uSSEblIeIzM8wU85F7ic5BAjRSnmPj/GFYF4NAe7s//nXtzNCrEzo6UMph9/NR/ciwzw
+         ndeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXiDQimyPumh61z0IrLfhocqUo1CXhSdeXXU/bL8jdz8tvjzoBXkSNIgK4e+ROZQSqPrECC8iUqyrQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXa0P2Td3kYq/XIAyP2mf7vkFz+ZSbwD1iUQbM+IWZr29yGB4c
+	k/YHvNbczTbBVMQkD5VX/V0A4Cl0emtI9kGdSfaMsfb24AYvaOFsU95NznXpVLbAQ3FV0OFkS4u
+	560j5gA==
+X-Gm-Gg: ASbGncupzYvJXbrq24VujJ/bL+JRo+fHFTwVz4q+Q/NsP37a1X0KVMoshwswROeFmlh
+	34vdrGwVoB+9Zk9jnk3LHK3N5RqpQ5YbJgtZiDMZN32GLSRyrq//0pt34eSms+p2NNItW8FExR9
+	7SAzVwY3lBd2mX9LJaYrA+mv2B6L3nVQE7ZRHUvIg8O+vjOBE7Vf6L0egmkQtYFuxV5nbekdVdv
+	/G6qqQZpHkFyDX6BlgzCNan/BdJ8M/Rs9aK8XfK8ioxSqlbeJtuAe5YilzywqnFYWk9gRIXFyeQ
+	nx4QdsXbpTHHHHsAqiAOOD0umDYG89lmKqfS5C8+Kmwq5g==
+X-Google-Smtp-Source: AGHT+IGOmbtA4Nm1nxJHb0yeQ9L0e+qEg9pRtI7VVMCpHNpNnF2DyuK2Y2lCTtT06AGryzfhV/6wQw==
+X-Received: by 2002:a17:90b:5201:b0:2ff:5750:7a34 with SMTP id 98e67ed59e1d1-30151d81d60mr10497286a91.34.1742174046713;
+        Sun, 16 Mar 2025 18:14:06 -0700 (PDT)
+Received: from gmail.com ([121.37.54.139])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30153bb94e2sm4756494a91.45.2025.03.16.18.14.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Mar 2025 18:14:06 -0700 (PDT)
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Baolu Lu <baolu.lu@linux.intel.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: iommu@lists.linux.dev,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v3] PCI: Declare quirk_huawei_pcie_sva() as pci_fixup_header
+Date: Mon, 17 Mar 2025 01:13:52 +0000
+Message-Id: <20250317011352.5806-1-zhangfei.gao@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250315101032.5152-1-zhangfei.gao@linaro.org>
+References: <20250315101032.5152-1-zhangfei.gao@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: df90ab163b755e94fe1604cbb758248e65b3a139  Merge branch 'pci/misc'
+The commit bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper
+probe path") fixed the iommu_probe_device() flow to correctly initialize
+firmware operations, allowing arm_smmu_probe_device() to be invoked
+earlier. This changes the invocation timing of arm_smmu_probe_device
+from the final fixup phase to the header fixup phase.
 
-elapsed time: 1444m
+pci_iov_add_virtfn
+    pci_device_add
+      pci_fixup_device(pci_fixup_header)      <--
+      device_add
+        bus_notify
+          iommu_bus_notifier
+  +         iommu_probe_device
+  +           arm_smmu_probe_device
+    pci_bus_add_device
+      pci_fixup_device(pci_fixup_final)       <--
+      device_attach
+        driver_probe_device
+          really_probe
+            pci_dma_configure
+              acpi_dma_configure_id
+  -             iommu_probe_device
+  -               arm_smmu_probe_device
 
-configs tested: 129
-configs skipped: 6
+This is the pci_iov_add_virtfn().  The non-SR-IOV case is similar in
+that pci_device_add() is called from pci_scan_single_device() in the
+generic enumeration path, and pci_bus_add_device() is called later,
+after all a host bridge has been enumerated.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Declare the fixup as pci_fixup_header to ensure the configuration
+happens before arm_smmu_probe_device.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                                 defconfig    gcc-13.2.0
-arc                        nsimosci_defconfig    gcc-13.2.0
-arc                   randconfig-001-20250316    gcc-13.2.0
-arc                   randconfig-002-20250316    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                          moxart_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250316    clang-15
-arm                   randconfig-002-20250316    gcc-14.2.0
-arm                   randconfig-003-20250316    gcc-14.2.0
-arm                   randconfig-004-20250316    clang-21
-arm                        realview_defconfig    clang-16
-arm                        spear6xx_defconfig    clang-15
-arm                        vexpress_defconfig    gcc-14.2.0
-arm                         wpcm450_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250316    clang-17
-arm64                 randconfig-002-20250316    clang-19
-arm64                 randconfig-003-20250316    clang-21
-arm64                 randconfig-004-20250316    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250316    gcc-14.2.0
-csky                  randconfig-002-20250316    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250316    clang-21
-hexagon               randconfig-002-20250316    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250316    clang-19
-i386        buildonly-randconfig-002-20250316    clang-19
-i386        buildonly-randconfig-003-20250316    gcc-12
-i386        buildonly-randconfig-004-20250316    clang-19
-i386        buildonly-randconfig-005-20250316    clang-19
-i386        buildonly-randconfig-006-20250316    clang-19
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250316    gcc-14.2.0
-loongarch             randconfig-002-20250316    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                        m5307c3_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250316    gcc-14.2.0
-nios2                 randconfig-002-20250316    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-openrisc                 simple_smp_defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250316    gcc-14.2.0
-parisc                randconfig-002-20250316    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                 linkstation_defconfig    clang-20
-powerpc               randconfig-001-20250316    gcc-14.2.0
-powerpc               randconfig-002-20250316    gcc-14.2.0
-powerpc               randconfig-003-20250316    clang-15
-powerpc64             randconfig-001-20250316    clang-21
-powerpc64             randconfig-002-20250316    clang-19
-powerpc64             randconfig-003-20250316    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250316    clang-21
-riscv                 randconfig-002-20250316    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20250316    gcc-14.2.0
-s390                  randconfig-002-20250316    clang-16
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                ecovec24-romimage_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250316    gcc-14.2.0
-sh                    randconfig-002-20250316    gcc-14.2.0
-sh                           se7619_defconfig    gcc-14.2.0
-sh                           se7724_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250316    gcc-14.2.0
-sparc                 randconfig-002-20250316    gcc-14.2.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250316    gcc-14.2.0
-sparc64               randconfig-002-20250316    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250316    clang-21
-um                    randconfig-002-20250316    gcc-12
-um                           x86_64_defconfig    clang-15
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250316    gcc-12
-x86_64      buildonly-randconfig-002-20250316    gcc-12
-x86_64      buildonly-randconfig-003-20250316    clang-19
-x86_64      buildonly-randconfig-004-20250316    clang-19
-x86_64      buildonly-randconfig-005-20250316    gcc-12
-x86_64      buildonly-randconfig-006-20250316    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250316    gcc-14.2.0
-xtensa                randconfig-002-20250316    gcc-14.2.0
+Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
+Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+v3: modify commit msg, add Acked-by
+v2: modify commit msg
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+ drivers/pci/quirks.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index f840d611c450..a9759889ff5e 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -1991,12 +1991,12 @@ static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
+ 	    device_create_managed_software_node(&pdev->dev, properties, NULL))
+ 		pci_warn(pdev, "could not add stall property");
+ }
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
+-DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
+ 
+ /*
+  * It's possible for the MSI to get corrupted if SHPC and ACPI are used
+-- 
+2.25.1
+
 
