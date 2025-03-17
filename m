@@ -1,134 +1,151 @@
-Return-Path: <linux-pci+bounces-23994-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23995-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A307A66153
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 23:12:07 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B51FFA661C8
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 23:39:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE1EA189FE39
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 22:12:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C99A4177706
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 22:39:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 606822045A1;
-	Mon, 17 Mar 2025 22:12:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C1E5200B9B;
+	Mon, 17 Mar 2025 22:39:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zk11OSnm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gWshK70t"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0832036FD;
-	Mon, 17 Mar 2025 22:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF6F156F4A
+	for <linux-pci@vger.kernel.org>; Mon, 17 Mar 2025 22:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742249522; cv=none; b=MFG4LSlHQToco31zUQMdLU0+jZ7+n6WyP8EunYKp44tqHATdQ/Z5sJZmG9EHGKKlHZ2CQk72Kc7eIw26k2FmD6sEfgDP9RkbkYF+1Witd5rJGcsMBX6ymKIAXyq9KJsC0L3bXvtLM80UQC+uMm1neVV8DBVdbA3AfpY2S3icBAU=
+	t=1742251149; cv=none; b=fXPvhdsLlNLol7OfVB2jq3U/5EQ9aryPPXN5Y1PlvQ1DJq4i4hr23HofcvX1BhNuQZkYAQ6Z9HHE3dihBfbx1oGZ/2/cMV0P7QWzEkyxsXcfl4ii4sxRQNlo9A2vcYDGMp+hc67qifEx+OD5LYLDAYMd77YZ8F/o/I2JfTmRgcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742249522; c=relaxed/simple;
-	bh=JEdZ8g1iC7LvD0mCARyJ8WNae6kxKED75zVQlYCHfjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Gco8JM8dBqZFsiH8UdmX6YQwF9G1XVyqllBC5hFaqgvT+V7CXlPWzKQ+mPo2+tsgzKgP6P5BzKHuYwp3gmoENT/nDavk3qmAn4xyl8IBRNYutrdxDvkaUZ/x7XzpT6s3JJT1fJ1fcvVEDQAXs9ON1VtYXQzTkvdT1tvAEK1/cAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zk11OSnm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CCC2C4CEE3;
-	Mon, 17 Mar 2025 22:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742249521;
-	bh=JEdZ8g1iC7LvD0mCARyJ8WNae6kxKED75zVQlYCHfjg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Zk11OSnmRIHe1gd+qJ9NrAMljHh+/a/ZiBfI7D7Qjd6Sb4UVTyl5AqAOgX1u+yorY
-	 0lP7AxucUDDi9vYR52g1jtp+qhrCJVTD/n3duivvfyuNR4zi4V3ZyatQU67KtkHOwa
-	 yM+8fi1hSeGTfUVr2qKob17ces1ehwWrTIfDeQrJN7i8zratTI1tvK0h0+rE0gMplU
-	 TwvOB5I4p3GnjJkUotzsf0MNR1tweERRcH+lekiTra0tGkNv0tRDf5M/rQm4ImEpT3
-	 lNzNHfAwZBEHqMXBg7Mvy5LN3lWqD5VkwwCqkR0imtuhLCB+j7ST32TmPizFtD8i6l
-	 MVVyg/Le2JilA==
-Date: Mon, 17 Mar 2025 17:12:00 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v12 00/13] PCI: Use device bus range info to cleanup RC
- Host/EP pci_fixup_addr()
-Message-ID: <20250317221200.GA975949@bhelgaas>
+	s=arc-20240116; t=1742251149; c=relaxed/simple;
+	bh=mquX9i7pAQ/himAy6+VWYSp1OgDbQoyAvlhyricqX+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I6/qmz/lxZk5OvhMWLj/TN8TXc64zMKbVOo4p7aSZLjAu/Rtmq8BjQfUzvXyFY9Rg4fqmLqDMRq2CRoCUmdGdy60T1mSOcu6gQCVImlJyCUCZjCjq+6BXEHX2HSlJLfvvH3uLQDQbhkNkE5abKSedIy8goOr3/oDdsc8KBOt1ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gWshK70t; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742251147;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JmYgdowPoipn2eB0gwBS5Rlmh9/HbjoRVzD1SOShhrs=;
+	b=gWshK70tnIMr6avvIZw6WK+tl7EHEjLXqbc1lMyHUdufs4pUMtqih2GFb9CpGfiwOaeZei
+	6u7GvhQONzmaavZyjYLgX10M8tn48Qr8h2FsPnP2Pp6vuJdFPJ/rGUZTE0mEobk7Y6iNf+
+	IHg0scg4ci0FjqeDg8vebgPqBL8OhwU=
+Received: from mail-oa1-f71.google.com (mail-oa1-f71.google.com
+ [209.85.160.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-561-VFGIAHgcPKKWDnRFM04ZqQ-1; Mon, 17 Mar 2025 18:39:05 -0400
+X-MC-Unique: VFGIAHgcPKKWDnRFM04ZqQ-1
+X-Mimecast-MFC-AGG-ID: VFGIAHgcPKKWDnRFM04ZqQ_1742251145
+Received: by mail-oa1-f71.google.com with SMTP id 586e51a60fabf-2c2dc0ea814so297046fac.3
+        for <linux-pci@vger.kernel.org>; Mon, 17 Mar 2025 15:39:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742251145; x=1742855945;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JmYgdowPoipn2eB0gwBS5Rlmh9/HbjoRVzD1SOShhrs=;
+        b=N/JqKf//G3TpGZY9RR1bd7eR6rcDnE7tddVHgkTFtOfsgdr5dhGMAwaBC9s90beolP
+         4uDSTS2a3Ikyem4PstUJ9BaSM/zXf9WXan0pz8reeWB4sIzNoCgDbbhpIQRH+2RUlSOC
+         ZLEZGmw4Ndd0nmSRCJcMKTQolcPbFp+RFeBT5lHOU3eI8QDZVJs9ZckEA3NyDrq/662O
+         zObAQk2X3gAhwq3XkfG8+PzLTz5wQFTP2JkucwKdSbV+CCkRebPa+PwFE6LXvu0K1CMd
+         OlouN3IGazWcj8W4SG0hnNEtJZhlPsV6Dw3v4Nzgq9wfMgozh2rzExhNIR4lsjBJIMON
+         wZPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXo2vgy/ao03tOIZyPJZGD1CYyg9oneyrmSf32olAJ2HFmoZEAXfJ9j28yCO6cNL3Pq1lAHCuC7G7Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlG67RzC16o2PVkN67hO8q2rQK7ORwYsSBG1k3JvejjvzY1JI7
+	yrRiTO17lY0ZWXQtnzQXCn3EnC2z0XC/UQ65lPB5ZWfZj9xPDmVbjxBYth9zsa1MWAZN7P8YCWs
+	lt9X4eq0IGAcsyHvXAnoiVAaFCSgV+hojLbx232poED3AsvgshCR+3hx4uQ==
+X-Gm-Gg: ASbGncubzJqatvx/83DvMZG2wToEaVsPgUss2n4ALtODZ7LTTXkCaRipE6z1eOwQs1Y
+	bBDkAoi5IjETdg1gnmvQhE3VJV7y713UPfFqcTI9dOl7kzeS88Y1RwzxqmLSckrQZqEs4G9GnXb
+	r0MXKaIzANOf/L7Xg4XdWgbItdhFNraP0bo/YHJwBNRR29hGxRH4ZOfHkMTO9A+7RlCM4SUVacw
+	Fsrjmt9fxiroJkblCSWOfG3Z8b7kQB0lbVljML6Xvmw8nSncObhU44TA2UPGEPlpVWfaLGUdJAU
+	STVOJWpq0octnpkrR4k=
+X-Received: by 2002:a05:6820:270a:b0:600:2729:25ba with SMTP id 006d021491bc7-601e45be988mr2442910eaf.1.1742251144855;
+        Mon, 17 Mar 2025 15:39:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFbsNciZRw/nFluLflYZvQyGShPH55bNzYgUMAisb3ebrP4tjURZQuOYf8gabdM+YWR7SpgVg==
+X-Received: by 2002:a05:6820:270a:b0:600:2729:25ba with SMTP id 006d021491bc7-601e45be988mr2442906eaf.1.1742251144509;
+        Mon, 17 Mar 2025 15:39:04 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-601e4f41f85sm1426282eaf.16.2025.03.17.15.39.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 15:39:02 -0700 (PDT)
+Date: Mon, 17 Mar 2025 16:38:59 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: =?UTF-8?B?TWljaGHFgg==?= Winiarski <michal.winiarski@intel.com>
+Cc: Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, "Bjorn
+ Helgaas" <bhelgaas@google.com>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, <linux-pci@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] PCI: Fix BAR resizing when VF BARs are assigned
+Message-ID: <20250317163859.671a618f.alex.williamson@redhat.com>
+In-Reply-To: <kgoycgt2rmf3cdlqdotkhuov7fkqfk2zf7dbysgwvuipsezxb4@dokqn7xrsdvz>
+References: <20250307140349.5634-1-ilpo.jarvinen@linux.intel.com>
+	<20250314085649.4aefc1b5.alex.williamson@redhat.com>
+	<kgoycgt2rmf3cdlqdotkhuov7fkqfk2zf7dbysgwvuipsezxb4@dokqn7xrsdvz>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250315201548.858189-1-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 15, 2025 at 03:15:35PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> This is a v12 based on Frank's v11 series.
-> 
-> v11 https://lore.kernel.org/r/20250313-pci_fixup_addr-v11-0-01d2313502ab@nxp.com
->     
-> Changes from v11:
->   - Call devm_pci_alloc_host_bridge() early in dw_pcie_host_init(), before
->     any devicetree-related code
->   - Call devm_pci_epc_create() early in dw_pcie_ep_init(), before any
->     devicetree-related code
->   - Consolidate devicetree-related code in dw_pcie_host_get_resources() and
->     dw_pcie_ep_get_resources()
->   - Integrate dw_pcie_cfg0_setup() into dw_pcie_host_get_resources()
->   - Convert dw_pcie_init_parent_bus_offset() to dw_pcie_parent_bus_offset()
->     which returns the offset rather than setting it internally
->   - Split the debug comparison of devicetree info with .cpu_addr_fixup() to
->     separate patch so we can easily revert it later
->   - Drop "cpu_addr_fixup() usage detected" warning since we always warn
->     about something in that case anyway
-> 
-> Any comments welcome.
-> 
-> 
-> Bjorn Helgaas (3):
->   PCI: dwc: Consolidate devicetree handling in
->     dw_pcie_host_get_resources()
->   PCI: dwc: ep: Call epc_create() early in dw_pcie_ep_init()
->   PCI: dwc: ep: Consolidate devicetree handling in
->     dw_pcie_ep_get_resources()
-> 
-> Frank Li (10):
->   PCI: dwc: Use resource start as iomap() input in
->     dw_pcie_pme_turn_off()
->   PCI: dwc: Rename cpu_addr to parent_bus_addr for ATU configuration
->   PCI: dwc: Call devm_pci_alloc_host_bridge() early in
->     dw_pcie_host_init()
->   PCI: dwc: Add dw_pcie_parent_bus_offset()
->   PCI: dwc: Add dw_pcie_parent_bus_offset() checking and debug
->   PCI: dwc: Use devicetree 'reg[config]' to derive CPU -> ATU addr
->     offset
->   PCI: dwc: ep: Use devicetree 'reg[addr_space]' to derive CPU -> ATU
->     addr offset
->   PCI: dwc: ep: Ensure proper iteration over outbound map windows
->   PCI: dwc: Use parent_bus_offset to remove need for .cpu_addr_fixup()
->   PCI: imx6: Remove cpu_addr_fixup()
-> 
->  drivers/pci/controller/dwc/pci-imx6.c         | 18 +---
->  .../pci/controller/dwc/pcie-designware-ep.c   | 74 +++++++++++------
->  .../pci/controller/dwc/pcie-designware-host.c | 57 ++++++++-----
->  drivers/pci/controller/dwc/pcie-designware.c  | 82 ++++++++++++++-----
->  drivers/pci/controller/dwc/pcie-designware.h  | 24 +++++-
->  5 files changed, 171 insertions(+), 84 deletions(-)
+On Mon, 17 Mar 2025 19:18:03 +0100
+Micha=C5=82 Winiarski <michal.winiarski@intel.com> wrote:
 
-Applied to pci/controller/dwc-cpu-addr-fixup for v6.15.
+> On Fri, Mar 14, 2025 at 08:56:49AM -0600, Alex Williamson wrote:
+> > On Fri,  7 Mar 2025 16:03:49 +0200
+> > Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
+> >  =20
+> > > __resource_resize_store() attempts to release all resources of the
+> > > device before attempting the resize. The loop, however, only covers
+> > > standard BARs (< PCI_STD_NUM_BARS). If a device has VF BARs that are
+> > > assigned, pci_reassign_bridge_resources() finds the bridge window sti=
+ll
+> > > has some assigned child resources and returns -NOENT which makes
+> > > pci_resize_resource() to detect an error and abort the resize.
+> > >=20
+> > > Change the release loop to cover all resources up to VF BARs which
+> > > allows the resize operation to release the bridge windows and attempt
+> > > to assigned them again with the different size.
+> > >=20
+> > > As __resource_resize_store() checks first that no driver is bound to
+> > > the PCI device before resizing is allowed, SR-IOV cannot be enabled
+> > > during resize so it is safe to release also the IOV resources. =20
+> >=20
+> > Is this true?  pci-pf-stub doesn't teardown SR-IOV on release, which I
+> > understand is done intentionally.  Thanks, =20
+>=20
+> Is that really intentional?
+> PCI warns when that scenario occurs:
+> https://elixir.bootlin.com/linux/v6.13.7/source/drivers/pci/iov.c#L936
 
-Thank you very much, Frank, for all your hard work on driving this
-series!  I think this is a major improvement.
+Yep, it warns.  It doesn't prevent it from happening though.
+
+> I thought that the usecase is binding pci-pf-stub, creating VFs, and
+> letting the driver be.
+> But unbinding after creating VFs? What's the goal of that?
+> Perhaps we're just missing .remove() in pci-pf-stub?
+
+I guess I don't actually know that leaving SR-IOV enabled was
+intentional, maybe it was an oversight.  The original commit only
+mentions the case of a device that requires nothing but this shim as
+the PF driver.  A pci_warn() isn't much disincentive, the system might
+already have taints.  If it's something that we really want to show as
+broken, it'd probably need to be a WARN_ON.  Thanks,
+
+Alex
+
 
