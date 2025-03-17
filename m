@@ -1,191 +1,232 @@
-Return-Path: <linux-pci+bounces-23909-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23910-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61A02A64787
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 10:35:07 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C755A64793
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 10:35:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A9163A6471
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 09:34:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 984751889E59
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 09:36:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DDD5222594;
-	Mon, 17 Mar 2025 09:34:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FB732222B2;
+	Mon, 17 Mar 2025 09:35:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="O6yrVXnX"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RL+/zQP+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD8D21D595;
-	Mon, 17 Mar 2025 09:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84376222562;
+	Mon, 17 Mar 2025 09:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742204047; cv=none; b=W6TJfwxg09jU180W5Vn48WZ1c6P0lNn5P3t1F+lm0676o+GMY34UguOwvSF5XJ8NdjGmMucPFD/HfP42WxrV+AajcxQkMwWFBwxZXNqpp3+Lm+dTlG1OEN1IgxYw4pjG2aqQbTXDZtmYCBaeoeM2UjjfMm9ELqwDQlsJY1x+nEI=
+	t=1742204151; cv=none; b=jxEmPaQ+HPC5z04zQ0DFPlebqoBqFxPGpWTHOY9MhLj+U/hNyU/7B8OdaOJk0Y5mnA9uu2yVYiPVJNY/3FeCQdsLMIasvj0C1dvZguep+3vUKTm3ltgOdEKwK+6aQ0NYYjkDTLVifIfUzvIsBqZM5R9gm7KFrqqZBV3Cw3/tC5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742204047; c=relaxed/simple;
-	bh=ELzfSEZuhr25sXbSFYa8Pvn+Hzk6Nq+k/X6C4475L78=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T7jn0LWx2U3R9f0RtVEn6kigwoB7ggMdkYAgG5xdNE1/7CcUsaTRFAuGI7GvTRdzaEjQ2wo6JkKVaEy86fMCpTgYjQX5ANiMpH10J5+0C9FxYhDh1bW35iwwBs7fTHoB++ooi1wGs1sgQ6NvhJsZOrs1Llk4X7dWXLA7MZkgNKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=O6yrVXnX; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1742204040; x=1742463240;
-	bh=FMpu9u3oj6vcJmcZvMEZn/YisvXXjcOdgQLecCKsTSY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=O6yrVXnXOA3zGBPsi58FLNfuNpgVmzRiUQVSt6n2RvDFaScYeNrmXm3L1XRnQzrCB
-	 8YlXNeEvc40Q8ELt8iWYb+KxAyvWpjqulvZgkNYKWJO35Cij+vUrsQ0GE7dUOlk+Jc
-	 rzMvfujAWxXxusZkbpaGYypuRMbU0pOLD+IP4MHj08+imTci+wd6XeRMC5LuYndpni
-	 M9/0EHtFyD89TeUGfSMNoe5XXrjHoXufvS4DgXPkj63oNVXQntmnqx4q3dqLr5UZPP
-	 OuNLW59d65h/ntfWzcGZJHsxtH2V6/1dpPJRMXGxgh4h0t6z0VLLIpNrDRSFWnHQPf
-	 hwkSkhYH00J8Q==
-Date: Mon, 17 Mar 2025 09:33:52 +0000
-To: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 6/6] rust: use strict provenance APIs
-Message-ID: <D8IFS7175NNQ.3VAP8WA2QC8WF@proton.me>
-In-Reply-To: <20250315-ptr-as-ptr-v4-6-b2d72c14dc26@gmail.com>
-References: <20250315-ptr-as-ptr-v4-0-b2d72c14dc26@gmail.com> <20250315-ptr-as-ptr-v4-6-b2d72c14dc26@gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: ae828af5ffc8f596a802aaa8ecc51e4ae679d167
+	s=arc-20240116; t=1742204151; c=relaxed/simple;
+	bh=ydKbUy0g0dQk5Pf63CXpSEv9U9PhXU/f5x0kUsp/Q/A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ODWUl/xy2YKN3fZTQi5ibmk96KebvOhxXFpvLYnsiZr7dVM+v9Ja7c2hDl11aqvND0SJbYGTkSqJIJ6p8sbAcyp2RCQkH4jMCjk4yYxzaQeCs/J9CojwOp/xEQXCM5FSs2xzB4DL2X6JwLaI0FlXSEiE+ErJ224N1V0MaZqcv+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RL+/zQP+; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52GMWBiO023396;
+	Mon, 17 Mar 2025 09:35:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qF2h5i7vKFz1+33BAtMihVx4WQ+5fW9K69V9+MemX1U=; b=RL+/zQP+0j2dklnt
+	JqUWFkNg8KWRvCdSJ3T4Yq2Lf/Au5ltK5qnx/S/ZcmlQcvsUV8scogWCJD+G9GG7
+	Wk+9WGYJJXeL2rz0dUmQH/ZzyeySRtog4lYzKDLSjgHEHoRO+v2bisGCIDidtKKM
+	q7h9lCCorh8U8KI5kQaPmTPCpS7KUgvDgSjxkHJFwNuGJULXII1OkCVPGrFASBEX
+	Uvm2Z7EV/Z1qV/jy2m3sSgcgtGmzRp8rI5DZldS1dmdoDeaWB8UkiY4j6lYEaoAE
+	9ZnUfqTZK0PMmAqJN9m0btIpp/pdjRdv5Z+8h0BU8HbyG6SDCYoY3s0sKmTqH5xw
+	zuyKfg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d2ahc4x8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Mar 2025 09:35:28 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52H9ZRS8031973
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Mar 2025 09:35:27 GMT
+Received: from [10.216.37.239] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 17 Mar
+ 2025 02:35:21 -0700
+Message-ID: <6e51e35f-78c3-5d2b-697e-ce4a7da7b15c@quicinc.com>
+Date: Mon, 17 Mar 2025 15:05:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v4 02/10] arm64: dts: qcom: qcs6490-rb3gen2: Add TC956x
+ PCIe switch node
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Krishna Chaitanya Chundru
+	<krishna.chundru@oss.qualcomm.com>
+CC: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
+	<kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "Rob Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor Dooley" <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Konrad Dybcio" <konradybcio@kernel.org>,
+        <cros-qcom-dts-watchers@chromium.org>,
+        Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        <quic_vbadigan@quicnic.com>, <amitk@kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <jorge.ramirez@oss.qualcomm.com>
+References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
+ <20250225-qps615_v4_1-v4-2-e08633a7bdf8@oss.qualcomm.com>
+ <ciqgmfi4wkvqpvaf4zsqn3k2nrllsaglbx7ve3g2nbecoj35d6@okgcsvfx27z5>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <ciqgmfi4wkvqpvaf4zsqn3k2nrllsaglbx7ve3g2nbecoj35d6@okgcsvfx27z5>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Ronk3wIUBrbfgaMtVsHQGd7xfCAacnwz
+X-Proofpoint-GUID: Ronk3wIUBrbfgaMtVsHQGd7xfCAacnwz
+X-Authority-Analysis: v=2.4 cv=R7kDGcRX c=1 sm=1 tr=0 ts=67d7ece0 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8
+ a=bI46KiJKG97eG1GfczgA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-17_03,2025-03-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ impostorscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 suspectscore=0 priorityscore=1501 lowpriorityscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503170070
 
-On Sat Mar 15, 2025 at 1:17 PM CET, Tamir Duberstein wrote:
-> Throughout the tree, use the strict provenance APIs stabilized in Rust
-> 1.84.0[1]. Retain backwards-compatibility by introducing forwarding
-> functions at the `kernel` crate root along with polyfills for rustc <
-> 1.84.0.
->
-> Use `#[allow(clippy::incompatible_msrv)]` to avoid warnings on rustc <
-> 1.84.0 as our MSRV is 1.78.0.
-
-This isn't necessary, right?
-
-> In the `kernel` crate, enable the strict provenance lints on rustc >=3D
-> 1.84.0; do this in `lib.rs` rather than `Makefile` to avoid introducing
-> compiler flags that are dependent on the rustc version in use.
-
-So it won't be enabled in the doctests, right?
-
-> Link: https://blog.rust-lang.org/2025/01/09/Rust-1.84.0.html#strict-prove=
-nance-apis [1]
-> Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> Link: https://lore.kernel.org/all/D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me/
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
->  init/Kconfig           |  3 +++
->  rust/kernel/alloc.rs   |  2 +-
->  rust/kernel/devres.rs  |  4 ++--
->  rust/kernel/io.rs      | 14 +++++++-------
->  rust/kernel/lib.rs     | 52 ++++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  rust/kernel/of.rs      |  2 +-
->  rust/kernel/pci.rs     |  4 ++--
->  rust/kernel/str.rs     | 16 ++++++----------
->  rust/kernel/uaccess.rs | 12 ++++++++----
->  9 files changed, 82 insertions(+), 27 deletions(-)
 
 
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 486715528587..84eb2602e79e 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -17,6 +17,9 @@
->  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(coerce_unsized=
-))]
->  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(dispatch_from_=
-dyn))]
->  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(unsize))]
-> +#![cfg_attr(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE, feature(strict_pr=
-ovenance_lints))]
-> +#![cfg_attr(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE, deny(fuzzy_proven=
-ance_casts))]
-> +#![cfg_attr(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE, deny(lossy_proven=
-ance_casts))]
->  #![feature(inline_const)]
->  #![feature(lint_reasons)]
->  // Stable in Rust 1.83
-> @@ -25,6 +28,55 @@
->  #![feature(const_ptr_write)]
->  #![feature(const_refs_to_cell)]
-> =20
-> +#[cfg(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE)]
-> +#[allow(clippy::incompatible_msrv)]
+On 2/25/2025 5:19 PM, Dmitry Baryshkov wrote:
+> On Tue, Feb 25, 2025 at 03:03:59PM +0530, Krishna Chaitanya Chundru wrote:
+>> Add a node for the TC956x PCIe switch, which has three downstream ports.
+>> Two embedded Ethernet devices are present on one of the downstream ports.
+>>
+>> Power to the TC956x is supplied through two LDO regulators, controlled by
+>> two GPIOs, which are added as fixed regulators. Configure the TC956x
+>> through I2C.
+>>
+>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+>> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 116 +++++++++++++++++++++++++++
+>>   arch/arm64/boot/dts/qcom/sc7280.dtsi         |   2 +-
+>>   2 files changed, 117 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> index 7a36c90ad4ec..13dbb24a3179 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> @@ -218,6 +218,31 @@ vph_pwr: vph-pwr-regulator {
+>>   		regulator-min-microvolt = <3700000>;
+>>   		regulator-max-microvolt = <3700000>;
+>>   	};
+>> +
+>> +	vdd_ntn_0p9: regulator-vdd-ntn-0p9 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "VDD_NTN_0P9";
+>> +		gpio = <&pm8350c_gpios 2 GPIO_ACTIVE_HIGH>;
+>> +		regulator-min-microvolt = <899400>;
+>> +		regulator-max-microvolt = <899400>;
+>> +		enable-active-high;
+>> +		pinctrl-0 = <&ntn_0p9_en>;
+>> +		pinctrl-names = "default";
+>> +		regulator-enable-ramp-delay = <4300>;
+>> +	};
+>> +
+>> +	vdd_ntn_1p8: regulator-vdd-ntn-1p8 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "VDD_NTN_1P8";
+>> +		gpio = <&pm8350c_gpios 3 GPIO_ACTIVE_HIGH>;
+>> +		regulator-min-microvolt = <1800000>;
+>> +		regulator-max-microvolt = <1800000>;
+>> +		enable-active-high;
+>> +		pinctrl-0 = <&ntn_1p8_en>;
+>> +		pinctrl-names = "default";
+>> +		regulator-enable-ramp-delay = <10000>;
+>> +	};
+>> +
+>>   };
+>>   
+>>   &apps_rsc {
+>> @@ -735,6 +760,75 @@ &pcie1_phy {
+>>   	status = "okay";
+>>   };
+>>   
+>> +&pcie1_port {
+>> +	pcie@0,0 {
+>> +		compatible = "pci1179,0623", "pciclass,0604";
+>> +		reg = <0x10000 0x0 0x0 0x0 0x0>;
+>> +		#address-cells = <3>;
+>> +		#size-cells = <2>;
+>> +
+>> +		device_type = "pci";
+>> +		ranges;
+>> +		bus-range = <0x2 0xff>;
+>> +
+>> +		vddc-supply = <&vdd_ntn_0p9>;
+>> +		vdd18-supply = <&vdd_ntn_1p8>;
+>> +		vdd09-supply = <&vdd_ntn_0p9>;
+>> +		vddio1-supply = <&vdd_ntn_1p8>;
+>> +		vddio2-supply = <&vdd_ntn_1p8>;
+>> +		vddio18-supply = <&vdd_ntn_1p8>;
+>> +
+>> +		i2c-parent = <&i2c0 0x77>;
+>> +
+>> +		reset-gpios = <&pm8350c_gpios 1 GPIO_ACTIVE_LOW>;
+>> +
+>> +		pcie@1,0 {
+> 
+> PCIe bus can be autodetected. Is there a reason for describing all the
+> ports and a full topology? If so, it should be stated in the commit
+> message.
+> 
+As these ports are fixed we are defining them here, I will mention this
+in the commit message. It is similar to how we added pcieport for all
+the platforms, I tried to add full topology here. And if we want to
+configure any ports like l0s entry delay, l1 entry delay etc in future
+we need these full topology to be present.
 
-Do we still need this allow?
-
-> +mod strict_provenance {
-> +    #[doc(hidden)]
-
-Why make them hidden in docs?
-
-> +    pub fn expose_provenance<T>(addr: *const T) -> usize {
-> +        addr.expose_provenance()
-
-Instead of having these stubs here, you can probably just do
-
-    pub use core::ptr::expose_provenance;
-
-> +    }
-> +
-> +    #[doc(hidden)]
-> +    pub fn without_provenance_mut<T>(addr: usize) -> *mut T {
-> +        core::ptr::without_provenance_mut(addr)
-> +    }
-> +
-> +    #[doc(hidden)]
-> +    pub fn with_exposed_provenance<T>(addr: usize) -> *const T {
-> +        core::ptr::with_exposed_provenance(addr)
-> +    }
-> +
-> +    #[doc(hidden)]
-> +    pub fn with_exposed_provenance_mut<T>(addr: usize) -> *mut T {
-> +        core::ptr::with_exposed_provenance_mut(addr)
-> +    }
-> +}
-> +
-> +#[cfg(not(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE))]
-> +mod strict_provenance {
-> +    #[doc(hidden)]
-
-I think we should document these.
-
----
-Cheers,
-Benno
-
-> +    pub fn expose_provenance<T>(addr: *const T) -> usize {
-> +        addr.cast::<()>() as usize
-> +    }
-> +
-> +    #[doc(hidden)]
-> +    pub fn without_provenance_mut<T>(addr: usize) -> *mut T {
-> +        addr as *mut T
-> +    }
-> +
-> +    #[doc(hidden)]
-> +    pub fn with_exposed_provenance<T>(addr: usize) -> *const T {
-> +        addr as *const T
-> +    }
-> +
-> +    #[doc(hidden)]
-> +    pub fn with_exposed_provenance_mut<T>(addr: usize) -> *mut T {
-> +        addr as *mut T
-> +    }
-> +}
-> +
-> +pub use strict_provenance::*;
-
+- Krishna Chaitanya.
+>> +			reg = <0x20800 0x0 0x0 0x0 0x0>;
+>> +			#address-cells = <3>;
+>> +			#size-cells = <2>;
+>> +
+>> +			device_type = "pci";
+>> +			ranges;
+>> +			bus-range = <0x3 0xff>;
+>> +		};
+>> +
+>> +		pcie@2,0 {
+>> +			reg = <0x21000 0x0 0x0 0x0 0x0>;
+>> +			#address-cells = <3>;
+>> +			#size-cells = <2>;
+>> +
+>> +			device_type = "pci";
+>> +			ranges;
+>> +			bus-range = <0x4 0xff>;
+>> +		};
+>> +
+>> +		pcie@3,0 {
+> 
 
