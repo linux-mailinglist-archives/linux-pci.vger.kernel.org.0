@@ -1,182 +1,144 @@
-Return-Path: <linux-pci+bounces-23983-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23984-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3812FA65CAA
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 19:34:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94E61A65D10
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 19:44:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 749241886223
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 18:34:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C4FF41894BF8
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 18:44:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEB0A1B4242;
-	Mon, 17 Mar 2025 18:33:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A1511527B4;
+	Mon, 17 Mar 2025 18:44:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xq7BStlh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m3gWHrZV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C915119048F;
-	Mon, 17 Mar 2025 18:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4881A0BCD
+	for <linux-pci@vger.kernel.org>; Mon, 17 Mar 2025 18:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742236434; cv=none; b=TVyj3QqAuJU0Z/e0MG7WBa0lYNMfOxgEI/qxIWuLkCeiR3ybmM1DSbS9BgXxw/JWdrDbam8h+s+4F98aHM3yu+zRIW9z/JMDm63YInaSNFVAzOAYUz/R5aVeLGZD+FYdZiFi19AQOCE4FsoWHsGcOdJm2dbNFNZZHSLMH7HWsts=
+	t=1742237077; cv=none; b=obkN7sNozqS+zZ6h7X1Gw1E3Mw/cbfsI9g516yczhHlxqIdSu7IxXojNuYXKbWzWpUEoSWUnPWGHuYb5Vux2jhhajatmCJANl4agakfwvtTHS5QKAPNEcmr1e+r1+fFFRwMVaTApK6557L2THRQ5Fqnd5Qj+5WGwEVnAOOfBxJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742236434; c=relaxed/simple;
-	bh=ehOGcmrGZaJQniQGWoH0A1zU6UMeQK1IbOtzAOin1lY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jf4fHc0KDwqL7fu5m6Z+InUZNofIJOE3hGKU7yTfzrWrwCRPO1dHzhFLcZ0xgrrW6CXJMJ5dSGUgii9zs3e1wLIaUvYdIn7cdE0znFCVcgVsEfebNQo4e5WDQoGVQCs7bChAIbxh0vusdywCN/2zB9UtThbCLTtfc90i7C7gL9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xq7BStlh; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-3061513d353so59395991fa.2;
-        Mon, 17 Mar 2025 11:33:52 -0700 (PDT)
+	s=arc-20240116; t=1742237077; c=relaxed/simple;
+	bh=9iOXAs2PFt3YwJampbSJRtPXBI4s7pqVxzc8QTfv/EU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DcWymOla93Ko/jJscaLME4TiSBpTeDaczodRnOTkqO8hie0DV3blxBpQgLC8OSm7dGwrYIEUxDu7Lre2HNcF8unga4sD44t37rjc32f7WYVHub1o70I75VD7uvTqM1e+W6UXs85Hp0GnDjozAC6hkKeBH0VW2Jwe0PVbtXOdjs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m3gWHrZV; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22359001f1aso42111625ad.3
+        for <linux-pci@vger.kernel.org>; Mon, 17 Mar 2025 11:44:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742236431; x=1742841231; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+RgH8a/UTVf+jUM886CjeJ+7fFyfFZ683ptFNfGfQ4E=;
-        b=Xq7BStlhC2uV+7o/89RKvcRLCLmppScbfvZ/eWDMNgkfFlcHKxObU45wkw4xs9VPIp
-         psb9CbihFbBjP3+lWk/gZrYW46q18kB5sfAc2Oj3EGYhh5YpeHQTgsWl+ya4eV3QviYY
-         uTJceN9XW+hrrK9Vddn0bBgwMDDCV/N2ENHHNoj3rRC52F1AhA0LO0NZZgkLYApViZAk
-         1rmEeG/GIVaMvkJwPFfek8IyORFb039hSE46IRKqAQXp0XfmCxMDOAQ9HO1Cr5FeePEI
-         b8EDAmDisPDjNQVtl+NgDeowq08hC6Rm5OAMbRP8pHVXIumyfClpZoJ603rSbTeDAdmI
-         YyiQ==
+        d=linaro.org; s=google; t=1742237075; x=1742841875; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=oR3+sjzXfF1kJu70R/WOS6OhxjSB2FVGl0MhcctQyD8=;
+        b=m3gWHrZVN+5WRiJmJyXiBIUVN0+g6de0QDYfaFmZZQiXDeHdr+PH4ee/RNF+UfzqRo
+         rN/jhhO61+/pOt5JyzcrECGkWsoWwGbeuVB3WZeE1pREW3HeSSJI27dZSOM1a4qh0Z6g
+         Xg53snEUJGQ/WaGfm8tZkb8UnXDblgNGg2pzT6mzhZosK2cU/1NOsEjqc/I5fd9qoWKB
+         3W0hBWu8VVj8WAeid9ff4WuerDCdSbDRfpe3H0uyFQtvHdkToqNKkjhEzCHUK6pF568S
+         hFDlAddtbrKr2YNXzUQl6vnzlWWz+d/FDnZoS506XD3kPuE98JKXbPJRjssg+EJQbSfH
+         EuNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742236431; x=1742841231;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+RgH8a/UTVf+jUM886CjeJ+7fFyfFZ683ptFNfGfQ4E=;
-        b=d/t1cZiYhgLrJOn27oZPrBeGkZ3FVbyl4KKfho8cm0JlySJGsWVi3d5iuKZwb0cm8F
-         I74cdpL8JeViugwRueUbhuOmfG7ElEtTVFCONw3QglX6H1w0QJdBVRantEQvI7cIFYO2
-         eKmxlIkKomIZoAu+vg+rqojP5pomLVujrKByaCvyHDMaK0BS6DU+7o7i/v9p12rj5rKX
-         tAeY8VIFMAqEEFocpbHX8fhDhx72QK6InZyVQswkHTJne7uHY3zGJwa/UlGooWc8iYoU
-         +hQuwNb2ypRE24aG4TujLcFDIY2OH8RGYe8gPSftmI0cKrUBC0tnxVH1k1nIY9oZqflC
-         7W/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVAqH8Wg5tPAUlnBzExLDCv57Uto2Qd5VHeOgQ1SGsHSavOgW/IVaEHfkTl33zzNp9CvxfR9kx9YA4N1Us8fJXa@vger.kernel.org, AJvYcCVXigdoblaqLcGKpPaF9+fglXfLJCjtH75Si3xTQTcHFgimeIhAjjHP9+eBrOU7elz6dqrHDiHQW4UEBra8@vger.kernel.org, AJvYcCVgYl4jU8aYaF+tfwiHJASxcji5fqNIc0xGgxu0xw0yOQmMzVuziR2q5w+tOk5M/1GbFgcssoOi4CUja/Cg@vger.kernel.org, AJvYcCVr806qnfmtjgfoqScQD+EGxS8myD6Cgz8aXQRv+ECzoTH+6KsW30tIL8RJ2bZlfNDy0D0WLqpHuEQNrmM=@vger.kernel.org, AJvYcCW+pr9F+ww50tK4+d4ccYlVSLQ7k4jL6VAZK8vKyB8ddTPicp0Wf/33+/ngFFLGzakvcRoyz7YvVxLp@vger.kernel.org, AJvYcCWwQagfSD1i7QAx8TPkxgUryOzAcKVW1UdGXLVS3fklxj3PtBPp0YTBW1bsws9dKL8nFX7gWvLF7OW339xJz+o=@vger.kernel.org, AJvYcCXF8Tqmw8leeb27OGdjFKWzzKHswBpBiacxHZZe9ErNp98pmuQLWAXf+TGnJJrCmTn2oQ6DNQJuossj@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPRIWILSn/aEBEg7rxCXkhxjf3E10AehE8fV8V2SWmKv1V+WdS
-	/uE6u6kN4wlg1+RxslDCqhKNL4APFYSPeRh+HVmEu+xDlw58+68tRmkdhAOfgw//1q+udw6vm/T
-	QL7ltdiLg/2tZukCm2bjOyoNY8pg=
-X-Gm-Gg: ASbGnctZ0Dw1vBqU/m66tamo9h8njQdFrW7qlrHrS0Emk6AdQOR61Gf9tCwffTm6pkA
-	uM7t/FsI6wfQzaq4tzHTAVIUwoAObRduagV2nORoKpmjkiUwa4t0JvEpSp9haMbEAH/yQztZIxl
-	S4SpjN2P8SxsfXTSeUgeUmpL1aaSOYgNp5mWXZAQEN/Zw3JHaqjJyZ+DEFmBmR
-X-Google-Smtp-Source: AGHT+IEuOyU1EAIZGNPcU1UQpVvmze5Fv4puhAbwE4i2xu3ParhHBig+KUJCu/9ANLld3Xe0NJ1pTjvfSHUJlGkg4r0=
-X-Received: by 2002:a2e:7819:0:b0:30b:b204:6b98 with SMTP id
- 38308e7fff4ca-30c97543facmr9366801fa.12.1742236430751; Mon, 17 Mar 2025
- 11:33:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742237075; x=1742841875;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oR3+sjzXfF1kJu70R/WOS6OhxjSB2FVGl0MhcctQyD8=;
+        b=kF9ODrACf3BnaPzNgaqC5PTWivZmzC1PPBUiCUMFAsXzkoidgvk0HVGrik7ilWtbm5
+         m19ThFc+15sjUA+12RoA5A7Emtr4SgEmR3oC5+hHK4MEPaeazT3JWoeuJQyiOaZpYg1b
+         DLd6JO1pn6AZo3IxTVm9cf+lAVjRUzO7JO8X02J77jfIZFwM3+Sxv9zDC6nSWPNRhxji
+         1hHYNgZdSvUEj8+D9Ra9/ri3Y4mc1OecZ0cO32/mIaow+IUAMdxzELYtnzmb9mXwWfcl
+         s+2ruOj4oFrIzqQUNFngybYdzLi1hSuGEygCwH32HKzmvWSmV0lkMDAYM/T7PuSzcRD3
+         cfhw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1HxYyv++LFxCQIgDtd/jZi+co9kzKX6qZSTBfHigaE8rhLes4z3hD9U4zkcylTUAg7ukpE1SGnTk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOg+58tJ+CAh+6G5rlsMmvWHQxOb/ZrQUEZ9feH1dv3BWijVbE
+	+AmQCH4d1328JCgL0n7dSAXPessZup2/98/H65FN5Txo1oFMCLedyQvwvdoLag==
+X-Gm-Gg: ASbGnct+kIqHtaidepJG0T6G9g8kTE8FfRmATSsdnKWRTqohSpiJLKgbHcVMU6F/hxX
+	9yaAnO8EIneJ7kjp/J6JWRNUF1YNj+TUXDkl9CY4HTFKdoTVZ/gJCMHlHNePQD6TKhT2N+pcHTm
+	QYeZ96uv3S40rjbGEQ6MO+TNlck7BPPjkCZ4CCBlI77wsh57lnZpx2tMCWWbHaMkzpW3NBOCw9W
+	1r2d0nsGq3S7/od4JaMnpsEBxpBmF1rWf/hoUVdmGvsw00cHxLYHNnIbyGt6vv2tOx2+ra0CRu+
+	TXHsAtMpd5eNyhW/G/Wa6pZyvC8Jy9dFLz3j3eti2km5XPuU3b19lKpNm/2Fbm2WQw==
+X-Google-Smtp-Source: AGHT+IGISBTwHnOEY2bEJPR+BTe1q1qlpEiRYXNfbcGJ9ZaqciEpkdDRztt/9NPlZLzrMm9yu+GByw==
+X-Received: by 2002:a17:902:e5c7:b0:215:94eb:adb6 with SMTP id d9443c01a7336-2262c5edffemr7634215ad.40.1742237074779;
+        Mon, 17 Mar 2025 11:44:34 -0700 (PDT)
+Received: from thinkpad ([120.60.130.16])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c68884fcsm79360525ad.16.2025.03.17.11.44.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 11:44:34 -0700 (PDT)
+Date: Tue, 18 Mar 2025 00:14:27 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Frank Li <Frank.Li@nxp.com>, Tony Lindgren <tony@atomide.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH RFC NOT TESTED 0/2] PCI: dra7xx: Try to clean up
+ dra7xx_pcie_cpu_addr_fixup()
+Message-ID: <20250317184427.7wkcr7jwu53r5jog@thinkpad>
+References: <20250313060521.kjue4la47xd7g4te@thinkpad>
+ <20250317173008.GA933389@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
- <20250317-ptr-as-ptr-v5-6-5b5f21fa230a@gmail.com> <D8IQCJHJWPNJ.1J2UO4OK0D0B3@proton.me>
- <CAJ-ks9=cBEZqPHMWsh7-c16LTg+i+RmDFigwy81o9yOj2J+jFA@mail.gmail.com>
-In-Reply-To: <CAJ-ks9=cBEZqPHMWsh7-c16LTg+i+RmDFigwy81o9yOj2J+jFA@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 17 Mar 2025 14:33:14 -0400
-X-Gm-Features: AQ5f1JrVwUf05ntBkD98vS-EcZTcBLddhaoJo6_SZObmEIDvKFbJY6SKC0TNZzk
-Message-ID: <CAJ-ks9nCdcn7ajG69m+2QTgYxvELd2h7kdBb_bLpTwQbnZ8X_Q@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] rust: use strict provenance APIs
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250317173008.GA933389@bhelgaas>
 
-On Mon, Mar 17, 2025 at 2:31=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> On Mon, Mar 17, 2025 at 1:50=E2=80=AFPM Benno Lossin <benno.lossin@proton=
-.me> wrote:
-> >
-> > On Mon Mar 17, 2025 at 3:23 PM CET, Tamir Duberstein wrote:
-> > > Throughout the tree, use the strict provenance APIs stabilized in Rus=
-t
-> > > 1.84.0[1]. Retain backwards-compatibility by introducing forwarding
-> > > functions at the `kernel` crate root along with polyfills for rustc <
-> > > 1.84.0.
-> > >
-> > > Use `#[allow(clippy::incompatible_msrv)]` to avoid warnings on rustc =
-<
-> > > 1.84.0 as our MSRV is 1.78.0.
-> > >
-> > > In the `kernel` crate, enable the strict provenance lints on rustc >=
-=3D
-> > > 1.84.0; do this in `lib.rs` rather than `Makefile` to avoid introduci=
-ng
-> > > compiler flags that are dependent on the rustc version in use.
-> > >
-> > > Link: https://blog.rust-lang.org/2025/01/09/Rust-1.84.0.html#strict-p=
-rovenance-apis [1]
-> > > Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> > > Link: https://lore.kernel.org/all/D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.m=
-e/
-> > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> >
-> > One comment below, with that fixed:
-> >
-> > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> >
-> > > ---
-> > >  init/Kconfig           |   3 ++
-> > >  rust/kernel/alloc.rs   |   2 +-
-> > >  rust/kernel/devres.rs  |   4 +-
-> > >  rust/kernel/io.rs      |  14 +++----
-> > >  rust/kernel/lib.rs     | 108 +++++++++++++++++++++++++++++++++++++++=
-++++++++++
-> > >  rust/kernel/of.rs      |   2 +-
-> > >  rust/kernel/pci.rs     |   4 +-
-> > >  rust/kernel/str.rs     |  16 +++-----
-> > >  rust/kernel/uaccess.rs |  12 ++++--
-> > >  9 files changed, 138 insertions(+), 27 deletions(-)
-> >
-> >
-> > > +#[cfg(not(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE))]
-> > > +mod strict_provenance {
-> > > +    /// Gets the "address" portion of the pointer.
-> > > +    ///
-> > > +    /// See https://doc.rust-lang.org/stable/core/primitive.pointer.=
-html#method.addr.
-> > > +    #[inline]
-> > > +    pub fn addr<T>(ptr: *const T) -> usize {
-> > > +        // This is core's implementation from
-> > > +        // https://github.com/rust-lang/rust/commit/4291332175d12e79=
-e6061cdc3f5dccac2e28b969 through
-> > > +        // https://github.com/rust-lang/rust/blob/1.84.0/library/cor=
-e/src/ptr/const_ptr.rs#L172
-> > > +        // which is the first version that satisfies `CONFIG_RUSTC_H=
-AS_STABLE_STRICT_PROVENANCE`.
-> > > +        #[allow(clippy::undocumented_unsafe_blocks)]
-> > > +        unsafe {
-> > > +            #[allow(clippy::transmutes_expressible_as_ptr_casts)]
-> > > +            core::mem::transmute(ptr.cast::<()>())
-> > > +        }
-> >
-> > I think we should just use `ptr as usize` here instead. It's going away
-> > at some point and it will only affect optimizations (I don't even know
-> > if they exist at the moment) of old versions.
->
-> Why get cute? I'd rather defer to the standard library.
+On Mon, Mar 17, 2025 at 12:30:08PM -0500, Bjorn Helgaas wrote:
+> On Thu, Mar 13, 2025 at 11:35:21AM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, Mar 05, 2025 at 11:20:21AM -0500, Frank Li wrote:
+> > > This patches basic on
+> > > https://lore.kernel.org/imx/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com/
+> > > 
+> > > I have not hardware to test.
+> > > 
+> > > Look for driver owner, who help test this and start move forward to remove
+> > > cpu_addr_fixup() work.
+> > 
+> > If you remove cpu_addr_fixup() callback, it will break backwards
+> > compatibility with old DTs.
+> 
+> Do you have any pointers to DTs that will be broken?  Or to commits
+> where they were fixed?
+> 
 
-Ah, this is gone anyway with Boqun's suggestion - this function exists in 1=
-.78.
+Any patch that fixes issues in DT and then makes the required changes in the
+driver without accounting for the old DTs will break backwards compatibility.
+
+> > You should fix the existing DTs and continue carrying the callback
+> > for a while.
+> 
+> Any insight into where these existing DTs are used and how long
+> they're likely to live?
+> 
+
+There is no fixed rule in this afaik. Just like we continue to support old
+hardwares, we need to continue supporting old DTs for some time. The best we can
+do is provide some warning so that users can update their DTBs. Then we can get
+rid of the old DT support in the driver after some time.
+
+That's why I asked Frank to add the warning previously.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
