@@ -1,48 +1,72 @@
-Return-Path: <linux-pci+bounces-23905-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23906-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9417A64390
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 08:28:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13459A643DB
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 08:37:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 220707A3F05
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 07:27:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 56AB5164B68
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 07:37:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B819B214A8F;
-	Mon, 17 Mar 2025 07:28:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F16721ABC3;
+	Mon, 17 Mar 2025 07:37:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ivrj0Jh1"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sB6XMZ1a"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E5C18C337;
-	Mon, 17 Mar 2025 07:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEA421ABC0
+	for <linux-pci@vger.kernel.org>; Mon, 17 Mar 2025 07:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742196492; cv=none; b=SqTGKymTGTkekQIm9RmUjaB3qFCWBhkze33RYZVEZfFPwSSm3qqf9PnAzoLvsqFrYKZNEhRchGTort2SxSs7VnsfaJzgswh+JB9mOw8kw0sD7TdqtogVYiVQM9WoOKGUaQ8MWr/uVpyz8I5na4md2kOqdGMhZt61F9Im7X83mJ4=
+	t=1742197039; cv=none; b=ayUTElNxNgtZxh+Xnw2ndqdaXEYi1JGU73SlibVvhFqlhSwX1SqCSImdXexCFt5LHOoqFsNcNXH+s5ZF44RXXh4q5mQGny+Cl4vL3lXEGsNFiz+gUDF0Rsk8EWoU0c7W+WYD7BrIEvtnPbT5Uf+pvogeS01RzZps1ClFOt7y67Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742196492; c=relaxed/simple;
-	bh=AssJDYi439WyyCNzg7U74qB8Kl+svawCNsA4VGSwk2c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C0GjWqKk6cWW+8SKYLGO0a51ymy+sx0cA3e/MWqtELKQAzSJpY6XXSmWE3VsCf7JHaieOnyH35d6sTnv4Q4/hQ8khYadMg+ygUF5mvtpGvmijOK9YZ/szLR/hUVnNZ6VHkE6XNji2kFd2QXLDYQ793RqCxTEI+LUb9w8aqgk3sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ivrj0Jh1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7F5CC4CEE3;
-	Mon, 17 Mar 2025 07:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742196491;
-	bh=AssJDYi439WyyCNzg7U74qB8Kl+svawCNsA4VGSwk2c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ivrj0Jh17GfdawxjUu/NQ3d8ovR86f5TzMftg4mDfoD4JktO0xgjPnHKcGnxr6ECr
-	 SBUL7dPJfcdokveLEfIaD4p+UTXKsd0dTsJ72sJH8pQ+YQVdLaSKO4hc1VGLOsyyqz
-	 vQvaqh+f2TKNzVRFChHM0XM2HZ5tyLDms+jUUIsILl8fCiAQBtpunzw8alqO/FN/A9
-	 vIefOz2UkS6E9j01ZJPiBs2OAI1yXviNB+/+gituRNCkkFGmdsmVBGCS33zEwH9tMa
-	 +fPOhbFb8Z+UGtv1ScnvqoMf7q92ZU9AIlWh6VzLEpymsW0PLbAH/w8QmXmO8Io6Sq
-	 AaaSVZXEUFQlA==
-Message-ID: <fa434d7f-b34e-43d9-987a-d3948305166a@kernel.org>
-Date: Mon, 17 Mar 2025 08:28:01 +0100
+	s=arc-20240116; t=1742197039; c=relaxed/simple;
+	bh=SFmlq+Hub3wCc4sGh1RVxuZfGHVHEPpPWlupMB+4k6U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=eZctxPkln7sAoGqoGqRJIElmsTapCtg5dHKD5IXuJI2e7AK8b9zRbukE5mLtYSkIkeR5wLZywAXAlb+4c4tq9qrZ3ffJRbA7JyartFsQJs4GPrfyXAU9gpUsw22vea9xAJ6hmLZP7VEniLooE5+lGi1qLL49c2tkVFwG804nbo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=sB6XMZ1a; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250317073709euoutp016f20a3a77b2833d1bf0a67955d3dc02f~thve4aPcL2927929279euoutp018
+	for <linux-pci@vger.kernel.org>; Mon, 17 Mar 2025 07:37:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250317073709euoutp016f20a3a77b2833d1bf0a67955d3dc02f~thve4aPcL2927929279euoutp018
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1742197029;
+	bh=ZaQSVSoO7FdZ/KRmR5xRUM1DG4A8RjH7vN64i+7mIjk=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=sB6XMZ1a3zCFHqHN2N6WcZG8i0jVhDZcTfhl0Jz5VpF21POpERGjNvWs/678kIFEq
+	 p14WY3N80aTlMN7dyIAE7WXWXug01cPsX5SEKc4sHcp3Hdyl1yDCXEdd2smVdkIeK4
+	 v/LSbOm+Zssndv8I2JFVHr/fj5scOI94UL4fGh9g=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20250317073708eucas1p20eada3facfb94d6fcbe1104a02cc23e3~thvehokGl1243412434eucas1p28;
+	Mon, 17 Mar 2025 07:37:08 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id F6.09.20409.421D7D76; Mon, 17
+	Mar 2025 07:37:08 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250317073708eucas1p154688365792efe9f9e0218c7cb1b61ef~thveF8WtG1588615886eucas1p1K;
+	Mon, 17 Mar 2025 07:37:08 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250317073708eusmtrp2874930c163fff0f8144c0f647ac13950~thveFEXaL2757927579eusmtrp2N;
+	Mon, 17 Mar 2025 07:37:08 +0000 (GMT)
+X-AuditID: cbfec7f4-c0df970000004fb9-bc-67d7d1241ad3
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 4E.B3.19654.421D7D76; Mon, 17
+	Mar 2025 07:37:08 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250317073705eusmtip1511ad27da5e39e2b81aad31d6b360a1e~thvbOSoZn3052930529eusmtip1M;
+	Mon, 17 Mar 2025 07:37:05 +0000 (GMT)
+Message-ID: <cdc333e4-25bb-4171-9f6e-01f1de947db3@samsung.com>
+Date: Mon, 17 Mar 2025 08:37:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,90 +74,158 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/6] dt-bindings: PCI: qcom: Add IPQ5018 SoC
-To: George Moussalem <george.moussalem@outlook.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
- andersson@kernel.org, bhelgaas@google.com, conor+dt@kernel.org,
- devicetree@vger.kernel.org, lumag@kernel.org, kishon@kernel.org,
- konradybcio@kernel.org, krzk+dt@kernel.org, kw@linux.com,
- lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
- p.zabel@pengutronix.de, quic_nsekar@quicinc.com, robh@kernel.org,
- robimarko@gmail.com, vkoul@kernel.org, quic_srichara@quicinc.com
-References: <DS7PR19MB8883F2538AA7D047E13C102B9DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
- <20250314055644.32705-1-george.moussalem@outlook.com>
- <DS7PR19MB88834CAC414A0C2B4D71D57C9DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
- <20250314-greedy-tested-flamingo-59ae28@krzk-bin>
- <DS7PR19MB88839F5961CB1C0AAC1902959DD22@DS7PR19MB8883.namprd19.prod.outlook.com>
- <6843e66c-d85c-4af0-8b49-773803825381@kernel.org>
- <DS7PR19MB8883AB849DC21D7C43DDA78A9DDF2@DS7PR19MB8883.namprd19.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
+ path
+To: Robin Murphy <robin.murphy@arm.com>, Lorenzo Pieralisi
+	<lpieralisi@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla
+	<sudeep.holla@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
+	<lenb@kernel.org>, Russell King <linux@armlinux.org.uk>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, Stuart
+	Yoder <stuyoder@gmail.com>, Laurentiu Tudor <laurentiu.tudor@nxp.com>, Nipun
+	Gupta <nipun.gupta@amd.com>, Nikhil Agarwal <nikhil.agarwal@amd.com>, Joerg
+	Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Rob Herring
+	<robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
+	<bhelgaas@google.com>
+Cc: linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Charan Teja Kalla
+	<quic_charante@quicinc.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <DS7PR19MB8883AB849DC21D7C43DDA78A9DDF2@DS7PR19MB8883.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <b63ff6b4-9dc3-42ea-8b87-d4fdead8d0eb@arm.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sf1CTZRzv2ftjL7PRy8DjERNqIUV3QRjePXdwXKVXb5eelnmdnWUL3oYX
+	G7Q5NfOCBCTevAMhGAxhhJzrkNwYRZuRtOGYgHIiJ3ALQXQVwo0fMkAhXIx3Fv99vp/v9/P9
+	fL7PPRQmqSUjqIPKQ6xKKcuQkiK8peNhz0vRvQPyl8c4hOpPpKOJ8mkS6S/3ECj3rJFENmul
+	EC16ESqsMgmRt7gbR9ZRD4kMl4oAMt/tJ1DfxTMkulbjJJG97DeA8v7Jw1GFJQ7N3SvHkVGv
+	QNXeMgz5Wi1CZJt2E4izL6+sbXJhyNBlwVHe0NZXNzBuW42Ayb+xTDKNNY2A6evvxRir7paQ
+	qTVrmLzLHoIxNxSSTFt1o5Bprs9mxporAdM0aREwp1u/YmbNkbuDPxAlp7EZBw+zqviUj0Xp
+	pplZkFWw8WjRYgeRAybWcyCIgnQi/KvvqoADIkpC/wBgyXwFyRdeAG87rYHOLIBVjhHBY0n7
+	6UsE3zAA6Cw1Ar6YAfDct23APyWmU2DDyWXCj3F6MxzOnSJ5PgR2VrpxP15PR8ERV4XQj0Pp
+	PXCSu7O6KIw2E3Ag/+qqBUb/CaDp5uCqGqPDocutX81B0gmQ83CrfBCdBLVLVpyfiYK5P1dh
+	fjGkq0Wwbs4n5INvh522JcDjUDju/CnAPw19Vr2AFxQAWLs0EiiKAcz52xVQJMGhnsUVO2rF
+	IhYaL8bz9GuQmy3D/DSkg+GgJ4QPEQxLWrQBWgy/OSnhp2OgznnhP1vb9RtYMZDq1jyMbs2Z
+	ujXn6P73rQV4AwhnNWqFnFVvUbJH4tQyhVqjlMelZirMYOUTdz9yei3AMD4TZwcCCtgBpDBp
+	mBi3DMgl4jTZF8dYVeYBlSaDVdvBRgqXhovr2vLlElouO8R+xrJZrOpxV0AFReQI9jseoZIE
+	/YcvXNh3Yh8BnlN1OZR7hraZClVFhuPB5N1kpdJ2e1ir6Jze1PTjg5bYzb3k2/ffTz1Q0b5h
+	7/ldmTXHFj9Nei/JxS28kt1T0xom/a68j52w9UuKqocnNa0745uoN7qOurZ93zf2gGpIDC2Z
+	IkoPd0eu+1zmSb4lkjSWGrf8Kn6zeW77J8mewd66L6WTqdrradoex7OnBI6Q0XciF16PUmx6
+	65f2a74Y1TMdRFFXWBZ4imzO1kz5dqbn7zi+/48nfj91ZCHtPFe/46wxOnVr0E1pypWYdyOE
+	soem2K/Hn5Qs0fOJe+9NrGMNu55PEEef+8hpuDI/WuALuVPqdd+X4up0WcKLmEot+xfEUw3r
+	MwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEKsWRmVeSWpSXmKPExsVy+t/xu7oqF6+nG2xZLWmxpCnD4vW0D2wW
+	84+cY7VoXryezeLgzpnsFr++WFh0zt7AbvFlwmkWi50P37JZLN/Xz2ix6fE1VovLu+awWZyd
+	d5zN4tDUvYwWLX9aWCxm7NCz+PpyGovF+vm5FnO/TGW2+L9nB7vFwQ9PWC26Dv0FGrvxFrPF
+	8lM7WCxa7pg6SHo8OTiPyaP10l82jzXz1jB6XL52kdlj56y77B4LNpV6tBx5y+qxaVUnm8f+
+	uWvYPTYvqfd4sXkmo8fGdzuYPCbuqfP4vEkugC9Kz6Yov7QkVSEjv7jEVina0MJIz9DSQs/I
+	xFLP0Ng81srIVEnfziYlNSezLLVI3y5BL2PDx8+MBe3SFf2/jrE2ML4W7WLk5JAQMJE4PHEf
+	axcjF4eQwFJGiSuTL7BDJGQkTk5rYIWwhSX+XOtigyh6zyjx/PMKZpAEr4CdxKq2v2BFLAKq
+	Evea37NBxAUlTs58wgJiiwrIS9y/NQNsqLBAsMS7rkeMIINEBLaxSlybt5MZxGEWeMoo8eX8
+	M6g7bjJLXNyxG2wss4C4xK0n85lAbDYBQ4mut11gKzgFrCWm/97JAlFjJtG1tYsRwpaXaN46
+	m3kCo9AsJJfMQjJqFpKWWUhaFjCyrGIUSS0tzk3PLTbSK07MLS7NS9dLzs/dxAhMPNuO/dyy
+	g3Hlq496hxiZOBgPMUpwMCuJ8LLsuJ4uxJuSWFmVWpQfX1Sak1p8iNEUGBwTmaVEk/OBqS+v
+	JN7QzMDU0MTM0sDU0sxYSZyX7cr5NCGB9MSS1OzU1ILUIpg+Jg5OqQamrNcHz8tY7L+6y1/q
+	yhefWQ967DalqXfJz28Ru2tU8qG9+OAezgZvoYXzFEM/7ft4THrpHcP4Z66vtTyr9GTMWvce
+	mfvyo6yxrNfljxbaZx7rBR2SzVfSaP/tz/Bpf3aSwuP7L65VRTioV+c1+Jvz/W60vmu17d7p
+	+h1/Hlw1FZ7RrblXaWN0hWKQ/vvKmIdnlnz2twizzA2MXSWg/v5qj+SXrVsUd7i3mDvZbHl7
+	mNHhSdmZu9nLJZk1+RTZGMQjNZ4bmJySi29csXGOAvva2Syz5vgtdHXYn2LvckEzymaHuFmV
+	76HGKQKNfxTu3Pv7NVt40kTZHVafY80/1SZWONueWa+xOXOL5PkNVu1KLMUZiYZazEXFiQBz
+	uCxsxQMAAA==
+X-CMS-MailID: 20250317073708eucas1p154688365792efe9f9e0218c7cb1b61ef
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd
+References: <cover.1740753261.git.robin.murphy@arm.com>
+	<e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+	<CGME20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd@eucas1p2.samsung.com>
+	<9b358d68-332e-404e-9a75-740297f7b28d@samsung.com>
+	<417d6f59-0d78-4e81-ad0b-e06846f786b0@arm.com>
+	<bf2adf5d-1432-4bb7-846c-e1bcfa84858b@samsung.com>
+	<016bb7ca-f0d3-464e-ac74-46e6f78e90d7@arm.com>
+	<b63ff6b4-9dc3-42ea-8b87-d4fdead8d0eb@arm.com>
 
-On 17/03/2025 06:49, George Moussalem wrote:
+On 13.03.2025 15:12, Robin Murphy wrote:
+> On 2025-03-13 1:06 pm, Robin Murphy wrote:
+>> On 2025-03-13 12:23 pm, Marek Szyprowski wrote:
+>>> On 13.03.2025 12:01, Robin Murphy wrote:
+>>>> On 2025-03-13 9:56 am, Marek Szyprowski wrote:
+>>>> [...]
+>>>>> This patch landed in yesterday's linux-next as commit bcb81ac6ae3c
+>>>>> ("iommu: Get DT/ACPI parsing into the proper probe path"). In my 
+>>>>> tests I
+>>>>> found it breaks booting of ARM64 RK3568-based Odroid-M1 board
+>>>>> (arch/arm64/boot/dts/rockchip/rk3568-odroid-m1.dts). Here is the
+>>>>> relevant kernel log:
 >>>>
+>>>> ...and the bug-flushing-out begins!
+>>>>
+>>>>> Unable to handle kernel NULL pointer dereference at virtual address
+>>>>> 00000000000003e8
+>>>>> Mem abort info:
+>>>>>      ESR = 0x0000000096000004
+>>>>>      EC = 0x25: DABT (current EL), IL = 32 bits
+>>>>>      SET = 0, FnV = 0
+>>>>>      EA = 0, S1PTW = 0
+>>>>>      FSC = 0x04: level 0 translation fault
+>>>>> Data abort info:
+>>>>>      ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+>>>>>      CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+>>>>>      GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+>>>>> [00000000000003e8] user address but active_mm is swapper
+>>>>> Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+>>>>> Modules linked in:
+>>>>> CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc3+ #15533
+>>>>> Hardware name: Hardkernel ODROID-M1 (DT)
+>>>>> pstate: 00400009 (nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>>>>> pc : devm_kmalloc+0x2c/0x114
+>>>>> lr : rk_iommu_of_xlate+0x30/0x90
+>>>>> ...
+>>>>> Call trace:
+>>>>>     devm_kmalloc+0x2c/0x114 (P)
+>>>>>     rk_iommu_of_xlate+0x30/0x90
+>>>>
+>>>> Yeah, looks like this is doing something a bit questionable which 
+>>>> can't
+>>>> work properly. TBH the whole dma_dev thing could probably be 
+>>>> cleaned up
+>>>> now that we have proper instances, but for now does this work?
 >>>
->>> Thanks Krzysztof. I did reorder them deliberately based on unit
->>> addresses as discussed also in other threads about IPQ9574 and IPQ5332
->>> as I thought it would be neater that way. I'll change it back, reuse
+>>> Yes, this patch fixes the problem I've observed.
+>>>
+>>> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>
+>>> BTW, this dma_dev idea has been borrowed from my exynos_iommu driver 
+>>> and
+>>> I doubt it can be cleaned up.
 >>
->> Which discusses were that? What were the reasons to start with parf?
->>
-> 
-> I based the reordering on this patch so assumed that was the direction 
-> (at that time):
-> https://patchwork.kernel.org/project/linux-pci/patch/20250128062708.573662-5-quic_varada@quicinc.com/
+>> On the contrary I suspect they both can - it all dates back to when 
+>> we had the single global platform bus iommu_ops and the SoC drivers 
+>> were forced to bodge their own notion of multiple instances, but with 
+>> the modern core code, ops are always called via a valid IOMMU 
+>> instance or domain, so in principle it should always be possible to 
+>> get at an appropriate IOMMU device now. IIRC it was mostly about 
+>> allocating and DMA-mapping the pagetables in domain_alloc, where the 
+>> private notion of instances didn't have enough information, but 
+>> domain_alloc_paging solves that.
+>
+> Bah, in fact I think I am going to have to do that now, since although 
+> it doesn't crash, rk_domain_alloc_paging() will also be failing for 
+> the same reason. Time to find a PSU for the RK3399 board, I guess...
+>
+> (Or maybe just move the dma_dev assignment earlier to match Exynos?)
 
-That's a patch, not a discussion. I don't think anyone suggested
-changing order or starting with 'parf' entry.
+Well I just found that Exynos IOMMU is also broken on some on my test 
+boards. It looks that the runtime pm links are somehow not correctly 
+established. I will try to analyze this later in the afternoon.
 
 
-Best regards,
-Krzysztof
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
 
