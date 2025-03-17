@@ -1,169 +1,196 @@
-Return-Path: <linux-pci+bounces-23899-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23901-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CD31A639D9
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 02:14:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D8BAA63C89
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 04:00:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 519BB3A59C5
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 01:14:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 153EB1883C70
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 03:00:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F38E32C8B;
-	Mon, 17 Mar 2025 01:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gEfgKsHk"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D5B81459F7;
+	Mon, 17 Mar 2025 02:57:33 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2116.outbound.protection.partner.outlook.cn [139.219.146.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFB126AD0
-	for <linux-pci@vger.kernel.org>; Mon, 17 Mar 2025 01:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742174049; cv=none; b=R0287sPF7RMIcBkIaAljw7hcALx4t2oCx6LIaHrThvbfQw/pFiwEI2iI2tE5rZYp1GDvcQL/CknNiEYgvqjWm5T7dWflBV1aS2Jr/bY7CAi+6f3rrWXDULParrGOsjRZWY/kTJuMnyX49YJDNNelu9XeueXqZqdysya4U7k6nDY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742174049; c=relaxed/simple;
-	bh=HBdNRz7NWotgzuk+x/kxszEOIgphn0BH0jzSWHy0fPM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bnLq0oMaf+sm99tLBFp4weLoDfdTIJK2zFq5FQMxvThLIIoWUA+4pjZRfEaSJgeHbm9P1CaDtYYGM+8DB8YPdKGkX97/ATHI0QOIBE/WcyIc35wUmn0f+7boMHpSeu18PwbpYAdJmdspmJZGKtD1vUt2+zWbFrvxwYvmjaXo+RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gEfgKsHk; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2fa8ada6662so3125116a91.1
-        for <linux-pci@vger.kernel.org>; Sun, 16 Mar 2025 18:14:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742174047; x=1742778847; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cXru3TCUuPTakrv/YVRqLX7LKq46qhiQdzkoohXODxU=;
-        b=gEfgKsHkm0Vl86jhUd+X9IigA8hrTG2cdi1ojK5zHhAemtdoXArjAPz+lCq7BnPc3F
-         OwgreBedzUOq8J8g6l4JP2ajaPSrE2RfnIDVEwlN8Sh9yPIy5vWq808YAzCDLOroEC5X
-         OKRgOvfV/mGuHRAK5ODOLvAek/rtxPhXsXC1SGrSxanxZss/NzR6upoXtl73AnXS3oLe
-         k9XCEJDrweoakTRTsZVv1iZYJ3vKiWpCTbrYQfUT1w9nemqHxlGwCG1I7pGgRDGVi/ef
-         7VJ8MtCzni8u/4Mm5nZhNN2JVQkwtpYs1WITuTPsaE5C4jSWqmTO2bJ6LsrbIe+vB7CW
-         J4Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742174047; x=1742778847;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cXru3TCUuPTakrv/YVRqLX7LKq46qhiQdzkoohXODxU=;
-        b=jPifTNhHzv8r9xt0d9pRilXpwmZ4enZMCcNR0aNtmJ7KXQ+NGLKkR2rj0/LiEYbnNM
-         YdzHJPROUfsU/nGsmynfrZyV3euZ2s3lAhlc3sTlsFtjltxjYkXea++99OUH/wr/Sk+m
-         Rlcj4CQWJhqOIouynoYiQqD6gIVGClEoXMTrDm7Kd4Ne5kitVnXj+tX07tlotJ+VswZb
-         aHRvraFKpOq3r/NY/geOPBafA98nke78gIaAqmP3Ah2PH7tCTvOf9agVEaxQmfzHSJbM
-         uSSEblIeIzM8wU85F7ic5BAjRSnmPj/GFYF4NAe7s//nXtzNCrEzo6UMph9/NR/ciwzw
-         ndeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXiDQimyPumh61z0IrLfhocqUo1CXhSdeXXU/bL8jdz8tvjzoBXkSNIgK4e+ROZQSqPrECC8iUqyrQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXa0P2Td3kYq/XIAyP2mf7vkFz+ZSbwD1iUQbM+IWZr29yGB4c
-	k/YHvNbczTbBVMQkD5VX/V0A4Cl0emtI9kGdSfaMsfb24AYvaOFsU95NznXpVLbAQ3FV0OFkS4u
-	560j5gA==
-X-Gm-Gg: ASbGncupzYvJXbrq24VujJ/bL+JRo+fHFTwVz4q+Q/NsP37a1X0KVMoshwswROeFmlh
-	34vdrGwVoB+9Zk9jnk3LHK3N5RqpQ5YbJgtZiDMZN32GLSRyrq//0pt34eSms+p2NNItW8FExR9
-	7SAzVwY3lBd2mX9LJaYrA+mv2B6L3nVQE7ZRHUvIg8O+vjOBE7Vf6L0egmkQtYFuxV5nbekdVdv
-	/G6qqQZpHkFyDX6BlgzCNan/BdJ8M/Rs9aK8XfK8ioxSqlbeJtuAe5YilzywqnFYWk9gRIXFyeQ
-	nx4QdsXbpTHHHHsAqiAOOD0umDYG89lmKqfS5C8+Kmwq5g==
-X-Google-Smtp-Source: AGHT+IGOmbtA4Nm1nxJHb0yeQ9L0e+qEg9pRtI7VVMCpHNpNnF2DyuK2Y2lCTtT06AGryzfhV/6wQw==
-X-Received: by 2002:a17:90b:5201:b0:2ff:5750:7a34 with SMTP id 98e67ed59e1d1-30151d81d60mr10497286a91.34.1742174046713;
-        Sun, 16 Mar 2025 18:14:06 -0700 (PDT)
-Received: from gmail.com ([121.37.54.139])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30153bb94e2sm4756494a91.45.2025.03.16.18.14.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Mar 2025 18:14:06 -0700 (PDT)
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Baolu Lu <baolu.lu@linux.intel.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Cc: iommu@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH v3] PCI: Declare quirk_huawei_pcie_sva() as pci_fixup_header
-Date: Mon, 17 Mar 2025 01:13:52 +0000
-Message-Id: <20250317011352.5806-1-zhangfei.gao@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250315101032.5152-1-zhangfei.gao@linaro.org>
-References: <20250315101032.5152-1-zhangfei.gao@linaro.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B91617A2EA;
+	Mon, 17 Mar 2025 02:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.116
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742180253; cv=fail; b=Tvv3chYwR2CwdhvL0oUtC/5KCYvV9sAJc/AvSW//yVbcuJsdZyFAVhj3Ng+lzTkiDq7X0GqylTQfpYKoZWnMs0mOw0XenRL/HJlbWdPudc8h6d1Q8kTWRnXmKuXor5SU3lxdzDmqwNDNDSkz5liLa6cuLu9xsOShNdXDpPpZXqs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742180253; c=relaxed/simple;
+	bh=UKLePFuwcAYo8bHpGPEvkJojBkO6NnKaDSFWjGcYV5Y=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=IvliOB5tOa2f0759zle0AcT/HWjQ4SydSLUT/WGMK1sJMoGKpaNZ0x6DHeWux5cW17lzYSdLqg4BvoT2xTcEe6AHVqpUWg6Bq8CILV15+S+PriIbCN0LW6yuGBH0TksYRn/8dOZGfFNfRveMkIuD7EuDjTudnj14fWWiecloWWA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FsVPaocjGGbWbKy0HtZdXuJkp+8z1GXSpG8ZnB+lg9Qhywuxt1FOqOdQFo+KXfLtqiNKCTGXmB6DOEPdt37UOx9fDcjzouYgVHLVgk/O5N9ILACvsSVq0g1/12Or8lxlPAXxYFBDBMFxrwhYMM+SCWYzgqlhTfqO5OntPgqqUULp9lkkvmanmZfmfeJXRkBtIEoDt1t6IPOR2DhiN/3o0j+b8HTrtN8XeHnB2oeJ48QQwkZIaWkZIRvx2TCLAT4kpR7QaDsCvSE0XkAF4v+NlsXyYNAtxqCOTlyVvaJcmODz1Gj2HDM0Jept2veiMX8loL4CGFktgZq966109PjeqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a2yALXYMOL6yC4QgtRrrdIjEJjtHQo1a+bnhH55RoT0=;
+ b=FWUesbrfsyNVvbq8BQzNIHBAZ2TyAiZt9zFRaROJa2V+uRomApM7f8W7whqpqIlA5klOpfBzu56pvBIv80osgKc8Xq0+XYI23T8PQPFGK1aWAzkjTt59+VGnlAJGBc6bvwNpVHnUjEJ+uQ2Ks3y9AS9uH2w2UlACMzfqAwngJJ7vOTxbRMYTGI8RUaH1aHK34JJsH9vl74xq9oajx+fSHdi+7cRtRApR37QkENIUqQvcCL6/KhceU10JqbjAsWHi3t4ulDKDfG5GnxQN9HSXN+vmN3rj7hz9Sox/5OLD3vXKG4lujCerxLFrKlt4gsxGdvEgX9yScKWXHRRMPwMjfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::15) by SHXPR01MB0670.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:26::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.33; Mon, 17 Mar
+ 2025 02:23:05 +0000
+Received: from SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+ ([fe80::3f35:8db2:7fdf:9ffb]) by
+ SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn ([fe80::3f35:8db2:7fdf:9ffb%4])
+ with mapi id 15.20.8377.007; Mon, 17 Mar 2025 02:23:05 +0000
+From: Minda Chen <minda.chen@starfivetech.com>
+To: Anand Moon <linux.amoon@gmail.com>, Daire McNamara
+	<daire.mcnamara@microchip.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, Bjorn
+ Helgaas <bhelgaas@google.com>, Kevin Xie <kevin.xie@starfivetech.com>, Conor
+ Dooley <conor.dooley@microchip.com>, Mason Huo <mason.huo@starfivetech.com>,
+	"open list:PCI DRIVER FOR PLDA PCIE IP" <linux-pci@vger.kernel.org>, open
+ list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] PCI: starfive: Simplify event doorbell bitmap
+ initialization in pcie-starfive
+Thread-Topic: [PATCH v2 2/2] PCI: starfive: Simplify event doorbell bitmap
+ initialization in pcie-starfive
+Thread-Index: AQHblpa2er1tAxC//ki5MhVtCgBi17N2mdkA
+Date: Mon, 17 Mar 2025 02:23:05 +0000
+Message-ID:
+ <SHXPR01MB08630F70345E05F6124B54B8E6DF2@SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn>
+References: <20250316171250.5901-1-linux.amoon@gmail.com>
+ <20250316171250.5901-2-linux.amoon@gmail.com>
+In-Reply-To: <20250316171250.5901-2-linux.amoon@gmail.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SHXPR01MB0863:EE_|SHXPR01MB0670:EE_
+x-ms-office365-filtering-correlation-id: 77ecc8d3-8173-4710-fce6-08dd64faa6c6
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|41320700013|1800799024|7416014|38070700018|921020;
+x-microsoft-antispam-message-info:
+ CAWZ9YEZLn3SiQLNQwh5oTbBG0UKEkpiOFMhZVFN2pGz5fguXtACiCiqU1o2QC3ZB/3HUa/uUzgWNgWaxgLYWLas2UYMK67zCHd2NanczsDDo64b+mOPLRON0pl0HeG5vUgc7DItTvebJu5BArSiG7PnHJUQEb1zwgyJ9R43+bCmjiO0A/R14EUf+0Afr97Hkj2FCzoAnHocFouXfP+OqG1BTw+Z0CVodf+cvFSrv1n10iDcD7+97/hmz/PZBsP8KstYS3w7a+efcWymIzw8JkNIRZsa8nUjL3OlHw3ykvP/owz0Q+j2jhP52CZ0zD6IeaHtXY6agdITVnRdGZ49ml2R5IDk2V52C5mO4fjxbCoKnwrWDSvUMAlKyoTz9XMXG3p94vtDd1SCUkFj8FmWhDNd3DFK0Lw54VVuxaPWzaa5yyMavXrWPx+2cmwdXtZPTG8892h2LPLFSZ2hPTeJinw+d6pyr6G5fYdShdoJwm2WrLa/wPX59AEf/2AbquYH433JzR8XhOZQluf6M3MyegofhJbX34lniTkct2Ld1afUZG3Zu5zwjp3W0dp/Dhib7nsKyWGMv/8GeM6lsKKJf+2dU1dvyQ1eXCBqT+NeHcc=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(366016)(41320700013)(1800799024)(7416014)(38070700018)(921020);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-2?Q?7J3LKRqyVc2p0ko6jty4icTLCLYam27JhaIcypENFiMcEcmX8fEDXj6Vn6?=
+ =?iso-8859-2?Q?tlMRudQmqPubRIw2trF4ox/LSsEezxsSNw+p3h2iuQXHZaB0WTPbUeYuM3?=
+ =?iso-8859-2?Q?vRrzrgREqyQnFozdDDNc+XJcV+njYa93QOkCirLeDeTWQ3PWhIsUKv70JA?=
+ =?iso-8859-2?Q?k/Fml/Nt0dOI9c44oZDYW/IIi8Mz+HeTKODxnVKowpVIH4sos0/AXq2W0I?=
+ =?iso-8859-2?Q?J1EJRPfLN2ISurho5ulF+J3hMWszCJuKSFI0Jria+eglUZxnPub24KZ7sM?=
+ =?iso-8859-2?Q?hZa3FAGj/q6780o12hK63G5DLbs0llcHe8Ex4X4RPwInKO7Poov11jV1FJ?=
+ =?iso-8859-2?Q?ZwJN0oXhn0h7aiJcXW7JwvEbjOBRe/qdXxMOD/dBTN0BjJBmONStxpN2zL?=
+ =?iso-8859-2?Q?e7VJrJxcbbiX2YzJ39Oq0b4h2Dgf0Hmz0uW1htfssmEcohdL0nXkaT+bsi?=
+ =?iso-8859-2?Q?vWVLvQy4J9wvXsQWNLkw/3o0l8IwnKq2Xk+0VIQx5U8710/8LmyR475MNH?=
+ =?iso-8859-2?Q?Z56jx81fI/QQdJYrGlxDmWOay3QeSvXc5GRXo7p8L3UN/M5f8vs/wx0xm1?=
+ =?iso-8859-2?Q?h17DLWJjJN+4xFuBXlEOlpKKEEiAFgXOCrzEoD2LIFoBOrapjCQe+4N4Mw?=
+ =?iso-8859-2?Q?GmgojXDDebIbqn2UZld3IsMtnwYSpOEmAhjaSLuIbCtu4ceLHkqjYxFVaT?=
+ =?iso-8859-2?Q?0mSCrczqdY4Hv72DVZGnqYOZdvkXr+wc6uaqWfn894wIbVYRvDn1rMnV6D?=
+ =?iso-8859-2?Q?Dg87EE+5WAoFkW3hfwhVRbPpwwoFauzbkW2xxj/O9LWXJzKMCZ5CSLzvYj?=
+ =?iso-8859-2?Q?b6MOMpQ6ME9lUGeu6t6dXWUjaX9bFVeJhcGGtGbfRM5epIXjt54VT6IeuC?=
+ =?iso-8859-2?Q?rKpUeEEquNP7Dn1qGYR9Y9qSoKTR09upfDMwYL7b1ZsJkfMWVoXLWufKB2?=
+ =?iso-8859-2?Q?gZGLXTHlQLy3je4MDAJg8XYZ4Ht4JNIUa8BEVfWajp1wkjW1MwVISGXz4i?=
+ =?iso-8859-2?Q?AoIZCApBx803RZzdlOyhdG7iLOSCcDOUXX3pIzVf21xAiGP/Yybo5kyhQT?=
+ =?iso-8859-2?Q?CSA9yZuXX97tq79ewazB+ZhWlo6SYAoUcQn4ByoDJpjb0safTq7oKOmFLo?=
+ =?iso-8859-2?Q?3xagvwmedeS1M/HX6E5hO3SLkk3MDv1ndrIl0j3X59GSsIPlVlk0UD5/rP?=
+ =?iso-8859-2?Q?ILdtXlnxem1ruWt3DIJzKX4CJ3cBsyWTZ2hqIVUq9YTi2/WI26VJpTUPcq?=
+ =?iso-8859-2?Q?ReErbPHC1qzw6CO0Z+aYUW+a0Og837sAMxHkW6xkOlpqVONqxx5w8eznlo?=
+ =?iso-8859-2?Q?4KsNetfSHk4M3Kj3wq00wDlThlaY8Wc/Vy7KhB/8U/AlrDfFnwy7fn+K1u?=
+ =?iso-8859-2?Q?O4GFelFaaFDkZvrk75a5+wvxbLPr8XIUZHBhKUb3WhDLj6iVZaVMZqSirK?=
+ =?iso-8859-2?Q?hQ8+9r69Oua11wF8GiWRNebSVx1f29RR3ZmMQqpypDZEvrPaEjMXB44Gqv?=
+ =?iso-8859-2?Q?UmIYJRPjTKJhrkLFDB4y24aEGriMGiQsKzPnI902NSwv1yWxu4q5ae/tcu?=
+ =?iso-8859-2?Q?O0tvb87tmUWSqHEWkYNowgLWof0HGhiUCjTfz0rKhA6G43xonLDqx9Yvp2?=
+ =?iso-8859-2?Q?dYx6aPDx3knjfDizcdPVjU3C62dpYdUzir?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0863.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77ecc8d3-8173-4710-fce6-08dd64faa6c6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2025 02:23:05.9039
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xC6LMjSH+/0fmIqAYrUuxmZAN3KGiKH0tK/kszMbkQ2l1eEUic9S8z0BhuX9NyorXFZsMjbPOTS7NrNWP0tUUR0EG0Ak6ukHKi3rEy7oojg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0670
 
-The commit bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper
-probe path") fixed the iommu_probe_device() flow to correctly initialize
-firmware operations, allowing arm_smmu_probe_device() to be invoked
-earlier. This changes the invocation timing of arm_smmu_probe_device
-from the final fixup phase to the header fixup phase.
 
-pci_iov_add_virtfn
-    pci_device_add
-      pci_fixup_device(pci_fixup_header)      <--
-      device_add
-        bus_notify
-          iommu_bus_notifier
-  +         iommu_probe_device
-  +           arm_smmu_probe_device
-    pci_bus_add_device
-      pci_fixup_device(pci_fixup_final)       <--
-      device_attach
-        driver_probe_device
-          really_probe
-            pci_dma_configure
-              acpi_dma_configure_id
-  -             iommu_probe_device
-  -               arm_smmu_probe_device
 
-This is the pci_iov_add_virtfn().  The non-SR-IOV case is similar in
-that pci_device_add() is called from pci_scan_single_device() in the
-generic enumeration path, and pci_bus_add_device() is called later,
-after all a host bridge has been enumerated.
+>=20
+> The events_bitmap initialization in starfive_pcie_probe() previously mask=
+ed out
+> the PLDA_AXI_DOORBELL and PLDA_PCIE_DOORBELL events.
+>=20
+> These masking has been removed, allowing these events to be included in t=
+he
+> bitmap. With this change ensures that all interrupt events are properly
+> accounted for and may be necessary for handling doorbell events in certai=
+n use
+> cases.
+>=20
+> PCIe Doorbell Events: These are typically used to notify a device about a=
+n event
+> or to trigger an action. For example, a host system can write to a doorbe=
+ll
+> register on a PCIe device to signal that new data is available or that an
+> operation should start12.
+>=20
+> AXI-PCIe Bridge: This bridge acts as a protocol converter between AXI
+> (Advanced eXtensible Interface) and PCIe (Peripheral Component Interconne=
+ct
+> Express) domains. It allows transactions to be converted and communicated
+> between these two different protocols3.
+>=20
+> Fixes: 39b91eb40c6a ("PCI: starfive: Add JH7110 PCIe controller")
+> Cc: Minda Chen <minda.chen@starfivetech.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+> v2: new patch
+> ---
+>  drivers/pci/controller/plda/pcie-starfive.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/plda/pcie-starfive.c
+> b/drivers/pci/controller/plda/pcie-starfive.c
+> index e73c1b7bc8efc..d2c2a8e039e10 100644
+> --- a/drivers/pci/controller/plda/pcie-starfive.c
+> +++ b/drivers/pci/controller/plda/pcie-starfive.c
+> @@ -410,9 +410,7 @@ static int starfive_pcie_probe(struct platform_device
+> *pdev)
+>  	plda->host_ops =3D &sf_host_ops;
+>  	plda->num_events =3D PLDA_MAX_EVENT_NUM;
+>  	/* mask doorbell event */
+> -	plda->events_bitmap =3D GENMASK(PLDA_INT_EVENT_NUM - 1, 0)
+> -			     & ~BIT(PLDA_AXI_DOORBELL)
+> -			     & ~BIT(PLDA_PCIE_DOORBELL);
+> +	plda->events_bitmap =3D GENMASK(PLDA_INT_EVENT_NUM - 1, 0);
+>  	plda->events_bitmap <<=3D PLDA_NUM_DMA_EVENTS;
+>  	ret =3D plda_pcie_host_init(&pcie->plda, &starfive_pcie_ops,
+>  				  &stf_pcie_event);
+> --
+> 2.48.1
 
-Declare the fixup as pci_fixup_header to ensure the configuration
-happens before arm_smmu_probe_device.
-
-Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
-v3: modify commit msg, add Acked-by
-v2: modify commit msg
-
- drivers/pci/quirks.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index f840d611c450..a9759889ff5e 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1991,12 +1991,12 @@ static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
- 	    device_create_managed_software_node(&pdev->dev, properties, NULL))
- 		pci_warn(pdev, "could not add stall property");
- }
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
--DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa255, quirk_huawei_pcie_sva);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa256, quirk_huawei_pcie_sva);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa258, quirk_huawei_pcie_sva);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_HUAWEI, 0xa259, quirk_huawei_pcie_sva);
- 
- /*
-  * It's possible for the MSI to get corrupted if SHPC and ACPI are used
--- 
-2.25.1
-
+Hi Anand
+   Mask the door bell interrupt is required. In some case, ( eg :NVMe read/=
+write mass data) found error.
 
