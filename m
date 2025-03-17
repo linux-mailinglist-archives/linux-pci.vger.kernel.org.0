@@ -1,62 +1,58 @@
-Return-Path: <linux-pci+bounces-23973-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23974-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67112A65B9A
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 18:54:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64CD7A65BD4
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 19:00:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A3B23189CE51
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 17:54:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 42D1B881F83
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 17:59:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B19CA1AF0C1;
-	Mon, 17 Mar 2025 17:54:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AE531B043E;
+	Mon, 17 Mar 2025 17:59:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ukDa8iYB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bRjmX+BQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812FD1A3A8A;
-	Mon, 17 Mar 2025 17:54:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D518E1B0435;
+	Mon, 17 Mar 2025 17:59:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742234061; cv=none; b=BzShN5JRWZXnL05dpkKHcV1jXAvKEo+/EgjoeD7oWM3PXxzKJZnGOd8RVa5qPS2gFS19y/EBvqN+R9duCFSxzqqRpG4M2O02pyCNj7e0xm+FNLoP82zAiANEpqtSOLbKd9XHxCQqTHNNPWWMWYfdiomVC04XhMWWJPqnb+rU9rg=
+	t=1742234344; cv=none; b=dTnwVC0be6VVdIDeJ9CxFsFGuoI2hEzhQ2ALJygVJwk39k/YgUYKxAVbnKD75Qwc1jXPWpNduhCe8IhWsX0rdluimWEJHg6n2vnjS9m5kapYkoxGpnBTO+9lo3dc+sLWHDoZy9idDVrqaI4qeVCC7XoDXhON1VU7bEl0+b2frBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742234061; c=relaxed/simple;
-	bh=kX4VuRRRWx+u1lJbW0uI3jrw3LlGVRsJGxWxvXqbY9s=;
+	s=arc-20240116; t=1742234344; c=relaxed/simple;
+	bh=Ao/Q1TdsuIo6DPrZFpK335g5H7u6ziXmDeACnbRYYzk=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=SO8+CCY/Lo7MDA6Yhnb4m/qUXR3XQb2KWeiGZPi89SGlmMR6B+ncNzhFSdsuPd/+l8uzYx8Y6ROZG1Wobw9kC+aNtvlyMrZe9uRGuRsOp8iP1EG1aosT9+195Xw8lKN9PuKoXHhO3Swlp57Ycg9SI/0dCgsJzjK/Q43fLCr9FIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ukDa8iYB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7CB6C4CEE3;
-	Mon, 17 Mar 2025 17:54:20 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=SYkZFkCm7jMvKWkdHPqbUFgt2QNcFkjv02om14c58mZ8D0DLyIOpsUydC3qAROqKS6FdXUBu26pBmHDcPRLC5+cxAYQEY5RwNEltADKHGE1cuDvSe8M1MFgca4UZZxJ0CtagJMC5jZnI0t4lfuPGKXC7hpqeBDkUN8mjQgzVfz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bRjmX+BQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31D8EC4CEE3;
+	Mon, 17 Mar 2025 17:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742234061;
-	bh=kX4VuRRRWx+u1lJbW0uI3jrw3LlGVRsJGxWxvXqbY9s=;
+	s=k20201202; t=1742234344;
+	bh=Ao/Q1TdsuIo6DPrZFpK335g5H7u6ziXmDeACnbRYYzk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ukDa8iYBIhP30GZ42RJLzH8fnhhlTZzUm1vruh0qbIY+q3O5i9O8Nqqd1nfbnaUgx
-	 pPejfkBo1EqKO9T05Wr+aKG+QMnFRlSUF0NwUTcefjUx/JeUES3LLoNFH7c9Hgzz4N
-	 Wod5yDqNs+vDpkesPoPkwar4Qzv5lOOLmNP0lcH7JnXyGV0WtaDqy8VdZJUtY4+kUN
-	 WAGvECKL4Z2zJx0r9tzKK7WSYPjPiuqrpa2wRIfdYnsbUPqk6WtnEBcXGG859jFrdX
-	 JhdRe6rQnZKw8tLFujTRLlvf/ZlldBPO8r/WKGKKCI3fy3W+9w45jxmqizOg13r6v1
-	 H54jqE/FuffrA==
-Date: Mon, 17 Mar 2025 12:54:19 -0500
+	b=bRjmX+BQVsq9fWgV5dx+0r73WyI/OoZd5ruO71XLwrfB9pcwR7pV/4haaaL5BcTke
+	 DQXO71UhjfG0wpLQbu9J21X4h4mfw7f1I7oeyXBBBlgUGBhwTt1QUtJu2gn4d0tr/O
+	 Z6I735FiVvWzi8Hi+ulkdfahfvCaGjzyAagdWIAbtkYTptsKJA/rMdECDZKubFiRlM
+	 owqDkwXZGGDduEXXfKzYVJnTPJYvA/+QjiNOtlD+iRQOl9Ymgu89SthSnu5kgRoCEy
+	 WbNZgtAW8rhxPt8UVf7wmQvJwnwQrm6i+H8YRMjvHZLNDRFcPDTpli3wJNS7Bmf837
+	 MwvOqzxSZ3bVw==
+Date: Mon, 17 Mar 2025 12:59:02 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jesper Nilsson <jesper.nilsson@axis.com>
-Cc: Frank Li <Frank.Li@nxp.com>, Lars Persson <lars.persson@axis.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Chuanhua Lei <lchuanhua@maxlinear.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@axis.com,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH RFC NOT TESTED 0/2] PCI: artpec6: Try to clean up
- artpec6_pcie_cpu_addr_fixup()
-Message-ID: <20250317175419.GA933527@bhelgaas>
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC NOT TESTED] PCI: intel-gw: Use use_parent_dt_ranges
+ and clean up intel_pcie_cpu_addr_fixup()
+Message-ID: <20250317175902.GA934093@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -65,127 +61,92 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z88Xh75G6Wabwl2O@axis.com>
+In-Reply-To: <20250305-intel-v1-1-40db3a685490@nxp.com>
 
-On Mon, Mar 10, 2025 at 05:47:03PM +0100, Jesper Nilsson wrote:
-> Hi again Frank!
+On Wed, Mar 05, 2025 at 12:07:54PM -0500, Frank Li wrote:
+> Remove intel_pcie_cpu_addr_fixup() as the DT bus fabric should provide correct
+> address translation. Set use_parent_dt_ranges to allow the DWC core driver to
+> fetch address translation from the device tree.
 > 
-> I've now tested this patch-set together with your v9 on-top of the
-> next-branch of the pci tree, and seems to be working good on my
-> ARTPEC-6 set as RC:
-> 
-> # lspci
-> 00:00.0 PCI bridge: Renesas Technology Corp. Device 0024
-> 01:00.0 PCI bridge: Pericom Semiconductor PI7C9X2G304 EL/SL PCIe2 3-Port/4-Lane Packet Switch (rev 05)
-> 02:01.0 PCI bridge: Pericom Semiconductor PI7C9X2G304 EL/SL PCIe2 3-Port/4-Lane Packet Switch (rev 05)
-> 02:02.0 PCI bridge: Pericom Semiconductor PI7C9X2G304 EL/SL PCIe2 3-Port/4-Lane Packet Switch (rev 05)
-> 03:00.0 Non-Volatile memory controller: Phison Electronics Corporation E18 PCIe4 NVMe Controller (rev 01)
-> 
-> However, when running as EP, I found that the DT setup for pcie_ep
-> wasn't correct:
-> 
-> diff --git a/arch/arm/boot/dts/axis/artpec6.dtsi b/arch/arm/boot/dts/axis/artpec6.dtsi
-> index 399e87f72865..6d52f60d402d 100644
-> --- a/arch/arm/boot/dts/axis/artpec6.dtsi
-> +++ b/arch/arm/boot/dts/axis/artpec6.dtsi
-> @@ -195,8 +195,8 @@ pcie: pcie@f8050000 {
->  
->                 pcie_ep: pcie_ep@f8050000 {
->                         compatible = "axis,artpec6-pcie-ep", "snps,dw-pcie";
-> -                       reg = <0xf8050000 0x2000
-> -                              0xf8051000 0x2000
-> +                       reg = <0xf8050000 0x1000
-> +                              0xf8051000 0x1000
->                                0xf8040000 0x1000
->                                0x00000000 0x20000000>;
->                         reg-names = "dbi", "dbi2", "phy", "addr_space";
-> 
-> Even with this fix, I get a panic in dw_pcie_read_dbi() in EP-setup,
-> both with and without:
-> 
-> "PCI: artpec6: Use use_parent_dt_ranges and clean up artpec6_pcie_cpu_addr_fixup()"
-> 
-> so it looks like the ARTPEC-6 EP functionality wasn't completely tested
-> with this config.
-> 
-> The ARTPEC-7 variant does work as EP with our local config, I'll try
-> to see what I can do to correct ARTPEC-6 using the setup for ARTPEC-7,
-> and test your patchset on the ARTPEC-7.
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Where are we at with this?
+Any update on this, Chuanhua?
 
-First priority: I plan to merge v12 of Frank's series [1] for v6.15.
-I hope this works with existing DTs on artpec6, both for RC and EP.
-If not, we need to figure it out ASAP.
+I plan to merge v12 of Frank's series [1] for v6.15.  We need to know
+ASAP if that would break intel-gw.
 
-Second priority: For this series of:
+If we knew that it was safe to also apply this patch to remove
+intel_pcie_cpu_addr(), that would be even better.
 
-  ARM: dts: artpec6: Move PCIe nodes under bus@c0000000
-  PCI: artpec6: Use use_parent_dt_ranges and clean up artpec6_pcie_cpu_addr_fixup()
+I will plan to apply the patch below on top of Frank's series [1] for
+v6.15 unless I hear that it would break something.
 
-it looks like there's an open issue with the dts patch that Rob
-noticed [2].  It would be great if we could fix that issue and get it
-queued up if it's safe to merge independently of Frank's v12 series.
-
-It looks like the artpec6_pcie_cpu_addr_fixup() removal probably needs
-to be delayed until we know all DTs in the field are fixed?  This
-might mean that we can *never* remove artpec6_pcie_cpu_addr_fixup()
-unless we can identify and work around the broken DTs in the kernel.
+Bjorn
 
 [1] https://lore.kernel.org/r/20250315201548.858189-1-helgaas@kernel.org
-[2] https://lore.kernel.org/r/174170613961.3566466.13045709851799071104.robh@kernel.org
 
-> On Wed, Mar 05, 2025 at 04:33:18PM +0100, Jesper Nilsson wrote:
-> > Hi Frank,
-> > 
-> > I'm the current maintainer of this driver. As Niklas Cassel wrote in
-> > another email, artpec-7 was supposed to be upstreamed, as it is in most
-> > parts identical to the artpec-6, but reality got in the way. I don't
-> > think there is very much left to support it at the same level as artpec-6,
-> > but give me some time to see if the best thing is to drop the artpec-7
-> > support as Niklas suggested.
-> > 
-> > Unfortunately, I'm travelling right now and don't have access to any
-> > of my boards. I'll perform some testing next week when I'm back and
-> > help to clean this up.
-> > 
-> > Best regards,
-> > 
-> > /Jesper
-> > 
-> > 
-> > On Tue, Mar 04, 2025 at 12:49:34PM -0500, Frank Li wrote:
-> > > This patches basic on
-> > > https://lore.kernel.org/imx/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com/
-> > > 
-> > > I have not hardware to test and there are not axis,artpec7-pcie in kernel
-> > > tree.
-> > > 
-> > > Look for driver owner, who help test this and start move forward to remove
-> > > cpu_addr_fixup() work.
-> > > 
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > > Frank Li (2):
-> > >       ARM: dts: artpec6: Move PCIe nodes under bus@c0000000
-> > >       PCI: artpec6: Use use_parent_dt_ranges and clean up artpec6_pcie_cpu_addr_fixup()
-> > > 
-> > >  arch/arm/boot/dts/axis/artpec6.dtsi       | 92 +++++++++++++++++--------------
-> > >  drivers/pci/controller/dwc/pcie-artpec6.c | 20 +------
-> > >  2 files changed, 52 insertions(+), 60 deletions(-)
-> > > ---
-> > > base-commit: 1552be4855dacca5ea39b15b1ef0b96c91dbea0d
-> > > change-id: 20250304-axis-6d12970976b4
-> > > 
-> > > Best regards,
-> > > ---
-> > > Frank Li <Frank.Li@nxp.com>
-> > 
-> > /^JN - Jesper Nilsson
-> > -- 
-> >                Jesper Nilsson -- jesper.nilsson@axis.com
+> ---
+> This patches basic on
+> https://lore.kernel.org/imx/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com/
 > 
-> /^JN - Jesper Nilsson
-> -- 
->                Jesper Nilsson -- jesper.nilsson@axis.com
+> I have not hardware to test and there are not intel,lgm-pcie in kernel
+> tree.
+> 
+> Your dts should correct reflect hardware behavor, ref:
+> https://lore.kernel.org/linux-pci/Z8huvkENIBxyPKJv@axis.com/T/#mb7ae78c3a22324b37567d24ecc1c810c1b3f55c5
+> 
+> According to your intel_pcie_cpu_addr_fixup()
+> 
+> Basically, config space/io/mem space need minus SZ_256. parent bus range
+> convert it to original value.
+> 
+> Look for driver owner, who help test this and start move forward to remove
+> cpu_addr_fixup() work.
+> ---
+> Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-intel-gw.c | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> index 9b53b8f6f268e..c21906eced618 100644
+> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
+> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> @@ -57,7 +57,6 @@
+>  	PCIE_APP_IRN_INTA | PCIE_APP_IRN_INTB | \
+>  	PCIE_APP_IRN_INTC | PCIE_APP_IRN_INTD)
+>  
+> -#define BUS_IATU_OFFSET			SZ_256M
+>  #define RESET_INTERVAL_MS		100
+>  
+>  struct intel_pcie {
+> @@ -381,13 +380,7 @@ static int intel_pcie_rc_init(struct dw_pcie_rp *pp)
+>  	return intel_pcie_host_setup(pcie);
+>  }
+>  
+> -static u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
+> -{
+> -	return cpu_addr + BUS_IATU_OFFSET;
+> -}
+> -
+>  static const struct dw_pcie_ops intel_pcie_ops = {
+> -	.cpu_addr_fixup = intel_pcie_cpu_addr,
+>  };
+>  
+>  static const struct dw_pcie_host_ops intel_pcie_dw_ops = {
+> @@ -409,6 +402,7 @@ static int intel_pcie_probe(struct platform_device *pdev)
+>  	platform_set_drvdata(pdev, pcie);
+>  	pci = &pcie->pci;
+>  	pci->dev = dev;
+> +	pci->use_parent_dt_ranges = true;
+>  	pp = &pci->pp;
+>  
+>  	ret = intel_pcie_get_resources(pdev);
+> 
+> ---
+> base-commit: 1552be4855dacca5ea39b15b1ef0b96c91dbea0d
+> change-id: 20250305-intel-7c25bfb498b1
+> 
+> Best regards,
+> 
 
