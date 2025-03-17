@@ -1,185 +1,170 @@
-Return-Path: <linux-pci+bounces-23981-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23982-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2F24A65C6F
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 19:23:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56236A65CA2
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 19:32:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8F123BC8FE
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 18:22:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E22216A374
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 18:32:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37D121DFE12;
-	Mon, 17 Mar 2025 18:22:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6F401BC07B;
+	Mon, 17 Mar 2025 18:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDTqqigD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0C4B1B3939;
-	Mon, 17 Mar 2025 18:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A809315573A;
+	Mon, 17 Mar 2025 18:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742235760; cv=none; b=NqAcqFHS67Vz5WRAMDl7KLwkh51Os+VwN/emgxO+cb1BNas9qdhcDDIyESp1l/MVPd7V62z5W4FQbCP4HARK1FYAQM7/7TOv+A52wemGvfqBbH80vt4qmgp4+zjbmpkTRMlTWJoUvBypXPbw3NQtgqJjmzImw96btuyEP/z6dBk=
+	t=1742236317; cv=none; b=Ovd0ayEePdbQcs499D9l13SxhQ3XOqm4RZeaWNIomplb1EH+vzhP2teMB/fU6pzW7LLcxreZI1u2MO09jnwJSguY4BdggTyplEWYHrmNX+C71Ulnk/Nai6CUXXJe/bTOtm9sYfxvuqZWR9kK9oW/FF8SaiO+1p+sqEHUgDqnDag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742235760; c=relaxed/simple;
-	bh=44VDUOTHi+IyXQXHXRAtJrDaqv8fVnRDzd+yekNyNXs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j+N0gzrxCaMf083crQqcm+LSHMcIb666AhlT4ttvcBzYB5Q4q5I8aRBOUWS0Kz02cTdAWEII+W3zvFKyrmJN9K8oEQ83znOi+PT6l7VCznfQogDI3kKRMmqT/in71pk+2YTIesgdBt3e0KSGliIhkrfaFC2b6IgI1LG1ZfkWIzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0591113D5;
-	Mon, 17 Mar 2025 11:22:45 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 603BF3F63F;
-	Mon, 17 Mar 2025 11:22:33 -0700 (PDT)
-Message-ID: <d6cd5e64-e2c0-4c6e-9c89-ce8b3e0a4a5b@arm.com>
-Date: Mon, 17 Mar 2025 18:22:32 +0000
+	s=arc-20240116; t=1742236317; c=relaxed/simple;
+	bh=GUdlu9CBP5F5dI2Y8Ye2ckdBW8ifZqJH0P0YqQpuV6c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SoFpgyZIlZw56VoZkAY6vzOezdiCokTM0ylouFqBEk7gGnttOpF/rx8Ez5avGnebEG3FE6S5G0sx3npuJ6BL8uLXvJ3M/TmNVb1y2jbwhA5tXxnejlyr0AGWMTCrvoD0Qom3qtuIm/+7a0nNL2z0RWlotjaLGnXO+TmvMT9F7S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gDTqqigD; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bfe0d2b6dso53864641fa.3;
+        Mon, 17 Mar 2025 11:31:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742236314; x=1742841114; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xNP/SipY9rGfX3yqYI9bcBc8SEPT09LFO6ib/YoE8Mc=;
+        b=gDTqqigDDP8hyq0sQiw4yb/r5QmOvsEtsSqWjW6ikIrOPz0r2LWbigZfaYOzqam+zT
+         D/vHruoWHIRhuL+sZ0klddFfIMrOkBR8+OFRZ4EjIZZHZEWlqUYpnV8ynhScU8GF0PeG
+         Rm1DHV+4Sn6NacJwR7mrJsP6Q+2F+mt0V90+UctJEz5oK1tr3kyYLs/MyZGY0ETfttyj
+         ZxKmwgEp02Z0YxniMd/0rtjnsi6iGGxepOzKHjCykrQgmX3hGOflqrjLfD8BoVJ2aVrI
+         pFFKAmBnlSJlsy9Z79g2t7BDR8m5YAjbMVF/IcAiFClRVvFEsdRHXI7bGBWWeea+XDdc
+         sKoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742236314; x=1742841114;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xNP/SipY9rGfX3yqYI9bcBc8SEPT09LFO6ib/YoE8Mc=;
+        b=AXDU30QBmyjZlDLha053XRGJq5v6axXjb2lbl2ZheP+xROr6JfdRMzWMOD7FhUCMs/
+         HFKk5KWtn8rIsuT7D28J8GTPwGnCVk+5eZlDBkzD8kpvRaWpPg3VQnxuJvrS/EKuW9m9
+         xKg9o0NTajr1IVoWKtAl+Hnmu4mKrOt3x7oEk69FLJEIO9bMdwljy43zmbGpooH5mlQZ
+         rj8Aq/RJXzHFmdrdavsr3Ezqr01HtCyLzz0cqbDXo3sy4KJHYU4UmDn7Y59QpK358+rm
+         CsKT+Ge4/UVpbszjduUx2toLukbWQU5wntMsCsey/92yEK/zDK3IXhGeN40C9DsBRQT1
+         jt5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUEz+W9uZ2Pro1Zi9TAI+YZzoADr1+8tYLkO1Hrs+EXv9SeQI/IP3qNhzQt5wAjZTHpUBaKbSI3av0Jpybl6PA=@vger.kernel.org, AJvYcCUY+yWQ9ORywIMM4cD2lrdO9BNJ5LnUFaeWYxPAFmDoynmX25ZoVuW9bJWbApO+cVQfuBtMmnRRRUzlr2gF@vger.kernel.org, AJvYcCV3avjrcLj9XvUR4D3n+11ncqaLXs7guTw4o0jrsqVW2efe68JZ10RL1dq8dUQWaeDgs77ejj+msmsP@vger.kernel.org, AJvYcCVF2l6JtbTtllDjZHLl9xwhVfpTFPJckd85CMIyAGR4NIuR2AlRjkgdJiWuIS7MZs/ZGR9RbRhrpcy0@vger.kernel.org, AJvYcCVlt5KA05OzVybKBK7ilnqFpwKWvWiQUUGqsuFTd2KmxUwwvigysY+CxZssKX3NEWolZ/7KK160KR6VTAc=@vger.kernel.org, AJvYcCX+5be8lYOGokyQ1cP62i7w6oEW4PevxQ9im0nA0wuUucehdx9UFnkvgiFB0JxWLZBbeiIlKZGOOOxjENireDnj@vger.kernel.org, AJvYcCXc3It0x0d4jzQf9/Ej1qW/roDnYPjUXifyG7PaysvD5QlxlBGGWSAGdUblGnUd6BpWFXaN9XNNNRdVsvee@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGqnyaSW6T9sMxNoA7h/91VR68YNIZyy0/8PhujwSCsCsYmE/A
+	ExjZ+HBD1BepTDpbDA1tWBU7/LuLRo5B4OudaMr3pcp6fQI6aOlv7VUVfPpHv5s/ma/0qzxLwAR
+	4Rm4Ntju736ieP/An+14zKOUyumxHFMk22iKwEg==
+X-Gm-Gg: ASbGncuWJglzZ/SfP5Qc+jYZpjFbSO1O0ZmB4ibQoUGTO+BFWYrqQUhzWSY/LerI9nU
+	dRiHraWLlWbeXPkrPlmKnoyaXZkHeemH3alwN3hqW9oloLWQXNig29EGSimqbvy06FBX8Lr6Ap0
+	jMEGJ8zjb7FmD2QtdPHLItewSqeIOHTSEgPWKEiV1cwWuGK9qHKEGqX1Bader+
+X-Google-Smtp-Source: AGHT+IEZvVPmFY03wZUVY/ylW/q1BAu23Bh0J53NdaLLp76SOniWjZtzsJ0TyVYBwZ7GjS+TdC448tm/USrojMxl29k=
+X-Received: by 2002:a2e:be06:0:b0:30c:1fc4:418e with SMTP id
+ 38308e7fff4ca-30c4a8d225bmr90356151fa.26.1742236313542; Mon, 17 Mar 2025
+ 11:31:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
- path
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Hanjun Guo
- <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Russell King <linux@armlinux.org.uk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>, Stuart Yoder <stuyoder@gmail.com>,
- Laurentiu Tudor <laurentiu.tudor@nxp.com>, Nipun Gupta
- <nipun.gupta@amd.com>, Nikhil Agarwal <nikhil.agarwal@amd.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- Charan Teja Kalla <quic_charante@quicinc.com>
-References: <cover.1740753261.git.robin.murphy@arm.com>
- <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
- <CGME20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd@eucas1p2.samsung.com>
- <9b358d68-332e-404e-9a75-740297f7b28d@samsung.com>
- <417d6f59-0d78-4e81-ad0b-e06846f786b0@arm.com>
- <bf2adf5d-1432-4bb7-846c-e1bcfa84858b@samsung.com>
- <016bb7ca-f0d3-464e-ac74-46e6f78e90d7@arm.com>
- <b63ff6b4-9dc3-42ea-8b87-d4fdead8d0eb@arm.com>
- <cdc333e4-25bb-4171-9f6e-01f1de947db3@samsung.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <cdc333e4-25bb-4171-9f6e-01f1de947db3@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
+ <20250317-ptr-as-ptr-v5-6-5b5f21fa230a@gmail.com> <D8IQCJHJWPNJ.1J2UO4OK0D0B3@proton.me>
+In-Reply-To: <D8IQCJHJWPNJ.1J2UO4OK0D0B3@proton.me>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 17 Mar 2025 14:31:16 -0400
+X-Gm-Features: AQ5f1Jri1KT9n-llBAsDBvGxTN7gIuyMaWJX8rvKMwx-KwPH-TLKot_wyhCkGgs
+Message-ID: <CAJ-ks9=cBEZqPHMWsh7-c16LTg+i+RmDFigwy81o9yOj2J+jFA@mail.gmail.com>
+Subject: Re: [PATCH v5 6/6] rust: use strict provenance APIs
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 17/03/2025 7:37 am, Marek Szyprowski wrote:
-> On 13.03.2025 15:12, Robin Murphy wrote:
->> On 2025-03-13 1:06 pm, Robin Murphy wrote:
->>> On 2025-03-13 12:23 pm, Marek Szyprowski wrote:
->>>> On 13.03.2025 12:01, Robin Murphy wrote:
->>>>> On 2025-03-13 9:56 am, Marek Szyprowski wrote:
->>>>> [...]
->>>>>> This patch landed in yesterday's linux-next as commit bcb81ac6ae3c
->>>>>> ("iommu: Get DT/ACPI parsing into the proper probe path"). In my
->>>>>> tests I
->>>>>> found it breaks booting of ARM64 RK3568-based Odroid-M1 board
->>>>>> (arch/arm64/boot/dts/rockchip/rk3568-odroid-m1.dts). Here is the
->>>>>> relevant kernel log:
->>>>>
->>>>> ...and the bug-flushing-out begins!
->>>>>
->>>>>> Unable to handle kernel NULL pointer dereference at virtual address
->>>>>> 00000000000003e8
->>>>>> Mem abort info:
->>>>>>       ESR = 0x0000000096000004
->>>>>>       EC = 0x25: DABT (current EL), IL = 32 bits
->>>>>>       SET = 0, FnV = 0
->>>>>>       EA = 0, S1PTW = 0
->>>>>>       FSC = 0x04: level 0 translation fault
->>>>>> Data abort info:
->>>>>>       ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
->>>>>>       CM = 0, WnR = 0, TnD = 0, TagAccess = 0
->>>>>>       GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
->>>>>> [00000000000003e8] user address but active_mm is swapper
->>>>>> Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
->>>>>> Modules linked in:
->>>>>> CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc3+ #15533
->>>>>> Hardware name: Hardkernel ODROID-M1 (DT)
->>>>>> pstate: 00400009 (nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->>>>>> pc : devm_kmalloc+0x2c/0x114
->>>>>> lr : rk_iommu_of_xlate+0x30/0x90
->>>>>> ...
->>>>>> Call trace:
->>>>>>      devm_kmalloc+0x2c/0x114 (P)
->>>>>>      rk_iommu_of_xlate+0x30/0x90
->>>>>
->>>>> Yeah, looks like this is doing something a bit questionable which
->>>>> can't
->>>>> work properly. TBH the whole dma_dev thing could probably be
->>>>> cleaned up
->>>>> now that we have proper instances, but for now does this work?
->>>>
->>>> Yes, this patch fixes the problem I've observed.
->>>>
->>>> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>>>
->>>> BTW, this dma_dev idea has been borrowed from my exynos_iommu driver
->>>> and
->>>> I doubt it can be cleaned up.
->>>
->>> On the contrary I suspect they both can - it all dates back to when
->>> we had the single global platform bus iommu_ops and the SoC drivers
->>> were forced to bodge their own notion of multiple instances, but with
->>> the modern core code, ops are always called via a valid IOMMU
->>> instance or domain, so in principle it should always be possible to
->>> get at an appropriate IOMMU device now. IIRC it was mostly about
->>> allocating and DMA-mapping the pagetables in domain_alloc, where the
->>> private notion of instances didn't have enough information, but
->>> domain_alloc_paging solves that.
->>
->> Bah, in fact I think I am going to have to do that now, since although
->> it doesn't crash, rk_domain_alloc_paging() will also be failing for
->> the same reason. Time to find a PSU for the RK3399 board, I guess...
->>
->> (Or maybe just move the dma_dev assignment earlier to match Exynos?)
-> 
-> Well I just found that Exynos IOMMU is also broken on some on my test
-> boards. It looks that the runtime pm links are somehow not correctly
-> established. I will try to analyze this later in the afternoon.
+On Mon, Mar 17, 2025 at 1:50=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> On Mon Mar 17, 2025 at 3:23 PM CET, Tamir Duberstein wrote:
+> > Throughout the tree, use the strict provenance APIs stabilized in Rust
+> > 1.84.0[1]. Retain backwards-compatibility by introducing forwarding
+> > functions at the `kernel` crate root along with polyfills for rustc <
+> > 1.84.0.
+> >
+> > Use `#[allow(clippy::incompatible_msrv)]` to avoid warnings on rustc <
+> > 1.84.0 as our MSRV is 1.78.0.
+> >
+> > In the `kernel` crate, enable the strict provenance lints on rustc >=3D
+> > 1.84.0; do this in `lib.rs` rather than `Makefile` to avoid introducing
+> > compiler flags that are dependent on the rustc version in use.
+> >
+> > Link: https://blog.rust-lang.org/2025/01/09/Rust-1.84.0.html#strict-pro=
+venance-apis [1]
+> > Suggested-by: Benno Lossin <benno.lossin@proton.me>
+> > Link: https://lore.kernel.org/all/D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me/
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+>
+> One comment below, with that fixed:
+>
+> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+>
+> > ---
+> >  init/Kconfig           |   3 ++
+> >  rust/kernel/alloc.rs   |   2 +-
+> >  rust/kernel/devres.rs  |   4 +-
+> >  rust/kernel/io.rs      |  14 +++----
+> >  rust/kernel/lib.rs     | 108 +++++++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  rust/kernel/of.rs      |   2 +-
+> >  rust/kernel/pci.rs     |   4 +-
+> >  rust/kernel/str.rs     |  16 +++-----
+> >  rust/kernel/uaccess.rs |  12 ++++--
+> >  9 files changed, 138 insertions(+), 27 deletions(-)
+>
+>
+> > +#[cfg(not(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE))]
+> > +mod strict_provenance {
+> > +    /// Gets the "address" portion of the pointer.
+> > +    ///
+> > +    /// See https://doc.rust-lang.org/stable/core/primitive.pointer.ht=
+ml#method.addr.
+> > +    #[inline]
+> > +    pub fn addr<T>(ptr: *const T) -> usize {
+> > +        // This is core's implementation from
+> > +        // https://github.com/rust-lang/rust/commit/4291332175d12e79e6=
+061cdc3f5dccac2e28b969 through
+> > +        // https://github.com/rust-lang/rust/blob/1.84.0/library/core/=
+src/ptr/const_ptr.rs#L172
+> > +        // which is the first version that satisfies `CONFIG_RUSTC_HAS=
+_STABLE_STRICT_PROVENANCE`.
+> > +        #[allow(clippy::undocumented_unsafe_blocks)]
+> > +        unsafe {
+> > +            #[allow(clippy::transmutes_expressible_as_ptr_casts)]
+> > +            core::mem::transmute(ptr.cast::<()>())
+> > +        }
+>
+> I think we should just use `ptr as usize` here instead. It's going away
+> at some point and it will only affect optimizations (I don't even know
+> if they exist at the moment) of old versions.
 
-Hmm, I tried to get an Odroid-XU3 up and running, but it seems unable to 
-boot my original 6.14-rc3-based branch - even with the IOMMU driver 
-disabled, it's consistently dying somewhere near (or just after) init 
-with what looks like some catastrophic memory corruption issue - very 
-occasionally it's managed to print the first line of various different 
-panics.
-
-Before that point though, with the IOMMU driver enabled it does appear 
-to show signs of working OK:
-
-[    0.649703] exynos-sysmmu 14650000.sysmmu: hardware version: 3.3
-[    0.654220] platform 14450000.mixer: Adding to iommu group 1
-...
-[    2.680920] exynos-mixer 14450000.mixer: exynos_iommu_attach_device: 
-Attached IOMMU with pgtable 0x42924000
-...
-[    5.196674] exynos-mixer 14450000.mixer: 
-exynos_iommu_identity_attach: Restored IOMMU to IDENTITY from pgtable 
-0x42924000
-[    5.207091] exynos-mixer 14450000.mixer: exynos_iommu_attach_device: 
-Attached IOMMU with pgtable 0x42884000
-
-
-The multi-instance stuff in probe/release does look a bit suspect, 
-however - seems like the second instance probe would overwrite the first 
-instance's links, and then there would be a double-del() if the device 
-were ever actually released again? I may have made that much more likely 
-to happen, but I suspect it was already possible with async driver probe...
-
-Thanks,
-Robin.
+Why get cute? I'd rather defer to the standard library.
 
