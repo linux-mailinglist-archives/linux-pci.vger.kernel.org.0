@@ -1,250 +1,324 @@
-Return-Path: <linux-pci+bounces-23920-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23921-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7A00A64B10
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 11:54:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 467E7A64C54
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 12:22:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 08FA016F650
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 10:54:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 46547188D596
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 11:22:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDFBD235375;
-	Mon, 17 Mar 2025 10:54:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2DAE233141;
+	Mon, 17 Mar 2025 11:22:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQJtQuoY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PFwtEd3P"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04AF233141;
-	Mon, 17 Mar 2025 10:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742208840; cv=none; b=XbBXkUuxUTDSYcULXowK1ilLaZ5MFtCnk2NXm1nVyCxQBngEbRQhbMgCCa9Xqd9qE/IMpp38UhnOr0OP4y+isW8dQagHz3q6AP82EuIUAW3KzrKZw6fDzx6TeAA/K2DT8SyLMGStDP0RhoMmwjvrHuoLMaCAsmqq06pDfVhdaHY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742208840; c=relaxed/simple;
-	bh=xQCIvtZ7gkiHiOAfI0sMD7QZtE9jk12bnsX/6xPz/l4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LjC6Xh0WS1Mju5WdOccTMDLbMCpL3mt41lC9QMQqmatV4+7ecfS5iIVxufHQdLYT0IXXek0AbsufHDd1zoV79zqD+DtTutoRF+ve7L04oKBrbxo6+YtJJuskAVo8qCmkSPOfR5Sw6UIaY16L+uZBiY1pfrs29DNKEenJsIAf2pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MQJtQuoY; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bfb6ab47cso42296281fa.3;
-        Mon, 17 Mar 2025 03:53:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742208836; x=1742813636; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W2GJ9qJ8OjX1yfsEXuO0p0ppxNDngQ6k8zpz585ECzc=;
-        b=MQJtQuoYOIp0Cog5Vgqd1mpwZt0F1578JzBjV2B5ba7wrchb4cO17BwCSoPWY7fwWa
-         TLZyy6ISpvB1P2jTRN/twILS0SYAh5SeQX7ZGN1o7RthRMP8NxuZOrS8OAxWkIXyGqhH
-         r9VhDPvq2TYiHuGBzto7qmtrefwy2EeyJn4Z2msWoHDsMukinH4rBUkivFrIVJYVm2Ru
-         Z/D9xy1fiD4vz3mOkGhKe14uWI0qJwGBSf77huAUQ9Vdznqbzv4t4i/fytd3RS3J+j53
-         38J/Gs4VqByHm4QEn60Yqp/JRilMfugeMpTLM/kGPIfucBkoKZtquWf3XKaJmm0MUI93
-         o0Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742208836; x=1742813636;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W2GJ9qJ8OjX1yfsEXuO0p0ppxNDngQ6k8zpz585ECzc=;
-        b=WkS4W2MGFxYPUIVey6GJDTFUIDb2+GYJ3BHN/BcUyOiEiE7OAk46m5Rtatz1ylN1qF
-         yjVTkUlYvby/3z3u7dIOX9JR9k7tJqSdAHpRBfgmRtvoBXWyuixERw7OLnnfusJbq1Px
-         hXxqNKQsivjrwgdLzPDj8jqy/lC4/lA8ZgemEr2z8mse8l9qQR4B7gr4kUOk1zNgQ3uB
-         3jWMySW8TDaesrWhXXuXfDAKq9cXe3fiw02XeKQ7mF9w4/pFhBzTg39oh8SN9MgAkDrA
-         +zXLodt92ITzUrvKFCATmRxDNL04UBDWDFlpbSQPiiBCcNgLmrj09+hChrGCsAUkfuLE
-         vBcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUq8f14I1k1UIlQVV1+yeJUQsDpXx6ALD8AGeQ9drlJWE181BLc1SIce+fxwlKkMwd21msQfmNAOjqga9dNBZPb@vger.kernel.org, AJvYcCV0UjchdIGv8VA5Z9thu+TOIzG5Ti+H0mjuvn7QkgqQBpFqClciSYPTerFxw09/CxALxF+9b7X6UNNEE9Pj@vger.kernel.org, AJvYcCVRoHnxpPF8eLNqNZoSDXRu8VcYG/V0RbAQv+mzmQHlSlbjziqMg/k6kWclINlpSUXoWLeDL31TfZtwvig=@vger.kernel.org, AJvYcCVq8cOqd+kvTHwNGSksNPnNJ1cosQTdUaPsyfKqmxppEvbaNh/4/WD9G9A17/oarN1D7ALleV6k7pVH@vger.kernel.org, AJvYcCW10kAxPm8Ns5U3ziW3gxImNT8U+Q+qCO5VIv4PxHr5wegDQVNDl5YErzsFN0E5ui6euSMDoTKFJaMR@vger.kernel.org, AJvYcCWxLRnnLgPFuwmqdci4ebZtxrCD0FpQXo/PH743ZImOJx3sr3OtXgS5Xff9+k7siFls2pyriGv7KdtuUbjY@vger.kernel.org, AJvYcCXXpPdM3/fEcnTTjmMrbM9W/xotclTo+SkYS6N6RjaJJWIbJZO030muX2zT5GyICWSFQT/LUY0MMD6M1vVeXmI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEbzo4uHWyQnxmok/icIu1jl/35H3XtFYnkXfzQ/k66IQ3oIVs
-	TEOCzP0EfzwvuuLyeZV4H/hq+26TSIpifEKvS48m2G2G9PYA+YGHwGpmqFRtE65ge8V7W/+sY37
-	YrL1geAENWgN4bjcvJ6GHOTZ7bYU=
-X-Gm-Gg: ASbGncsrzBvPKznCiQXic9uSMd/dEsDHTpiUhFeKzAZauN5ycxuAoXa27zycZqzlRKb
-	t1b7YiSuhHhsghtUtR6XqlEMgcMGHrUioK449oqXgiIhJoSEzFoa1Av1fgbTqhkO+RJjZs3MENC
-	WitJPZXlsWkWNNjG2zzP2C7OOA3pg2nQlB60rPLbppO1blaCfX3LbKpWAcHsrO
-X-Google-Smtp-Source: AGHT+IEeubawRlSkpRnGzmVWw22++0Ktqk/MMMgtA5rXFVJr9UoRX1gyCSDhiL2Xi0GL2rblLWjf9DmjfBaJCJzQ7wE=
-X-Received: by 2002:a05:651c:221b:b0:30b:d63c:ad20 with SMTP id
- 38308e7fff4ca-30c4a8ce9dbmr64521931fa.24.1742208835540; Mon, 17 Mar 2025
- 03:53:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE4119F133;
+	Mon, 17 Mar 2025 11:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742210525; cv=fail; b=tFMH4ewvmH6NldbAIRz3YUbwfoZ4Oz46kw1K6z2Nr0VoY+3SeuJsh3wxiMdjrqM4mR8vniSQ0eebYpUlBHkduG9HsGwszOmTI8xusEDs9/2yi6r4N3aLdx4mXH2fzW60lp6/zizf8efMGfeP+JWg2NZm4Mslz51aim+OFLWhT3E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742210525; c=relaxed/simple;
+	bh=v6/3+LZgtaZBz0WqMWux26Xd5VqFQEjnvnfpwsdLnvM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=NoC5kVpTDhu43xFvu4g8e2VUSOnUoAfe8ClM95zZtRomCZ5+LMooKYKmDUKrPnyb7wtGrACr397JCcup1+MZI4Kp27cEgcr1YLSUSxsCEy1/Lj4Diw3qFgwg3Gwg8gSlcktZFmDCWNe5uNcVmhyaT2WM33v/hgZf+Ep6Fq3boiI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PFwtEd3P; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742210524; x=1773746524;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=v6/3+LZgtaZBz0WqMWux26Xd5VqFQEjnvnfpwsdLnvM=;
+  b=PFwtEd3PkPtrq4F77I65APY4hOTs+QjqQcoN+oC0tr/echeTqT2G3UNV
+   usyPXCs2BPlHU9hd6pF+nPrzJNct4NDD8vqeltt67uBflHPLigefyjqfX
+   nDuMvZJnXIQaacoiwkADPL/trq6aau9EBEwFrXIBHYkCLlXcOKRMQUatW
+   KkTsmrdYrWKAjafpc2zIwN79vL8nFsjOIY9hQwOy1RRMF74mWBErxsDk/
+   fBE/qTMgl79qotKo7Zbvg0VwxEdz4cCEzBEEYb8N2YoJKp1OCR05rks6Y
+   nRNBs7I7dFSim3R+NNtHPQUpIMir4mlGH46Gwv+aKpJPqE0f50ND0EjD4
+   A==;
+X-CSE-ConnectionGUID: oOpiI/dKQGyfz32SWLPxQQ==
+X-CSE-MsgGUID: jgOfgjNGQOifQ+EljejfFA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11375"; a="43403138"
+X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
+   d="scan'208";a="43403138"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 04:22:03 -0700
+X-CSE-ConnectionGUID: 775rzNTMRZm3Y9aruGkzJQ==
+X-CSE-MsgGUID: ukPAsExZSKeKIuzUh+SAxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,253,1736841600"; 
+   d="scan'208";a="122093593"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 04:22:03 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 17 Mar 2025 04:22:02 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Mon, 17 Mar 2025 04:22:02 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.176)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 17 Mar 2025 04:22:02 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xMx1aZbsA5WKcAtDjE46JTe0pZQd2gilnBJmK5SnytRFL84A1ArMWvwVeStKQ2twM7rd1x6hCq1gdTH1HrqKdn86QsiDgxsO0upLwaaYjpX/bVB4+6S8jnucR/4jsbS3U01Uh1Wu06RQYaJJ/ygDYr7Mq6epozs6GVQ1FilW8tAjQF2jfY1POPQv+kOG0GFUcFlxuaM0/AEkO7ALwjU7fHm5A9NUOddE40ZhXyAIHwhIosZ8+3FZRnEixUZXMGwOP8gjFOxDF8lfk0Bf4iZqTQpBmF4YFtj6IrcDnlCL+zq4ODMR+DsOkoXp5KVNW8Cdz7ybbepRUutrY7fuipPf1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MWr3CLluP/aOMdyVTV3X8knvgrCVeX+5I2twvQSz7Uw=;
+ b=LcmHtlMHpsqE0ZxBFllkHmCetdhqP+VKC4YA2nf192I9SbMwa4Xz0tBQhRCKJZiP01Qc9LIfUiBdUSqn7isUr2wjBRuPLkqJ6Toy7miXUU0bvljK86uDQM4OrnYGE2L2mWCh2l3MlDxwqzkLV7EMi1x8SX+agl1xWFdr0TRIWiOvDB4grs/naOsI7VXRtzGeWkoQ6pnHPR5Q5Xr842pzw/xuovbdIT3yIHike05Rlk8/JLkHcULvXmjd4sOWP9gtJhhDV5AUk+31nO/346DpuquRIR5NwVkRubUXwEegyuil7fFqsSkz3AK1X5RkY1IwzHslxY3Ibcvv/vAvwc9zZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM4PR11MB5373.namprd11.prod.outlook.com (2603:10b6:5:394::7) by
+ LV3PR11MB8579.namprd11.prod.outlook.com (2603:10b6:408:1b6::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.26; Mon, 17 Mar 2025 11:22:00 +0000
+Received: from DM4PR11MB5373.namprd11.prod.outlook.com
+ ([fe80::927a:9c08:26f7:5b39]) by DM4PR11MB5373.namprd11.prod.outlook.com
+ ([fe80::927a:9c08:26f7:5b39%7]) with mapi id 15.20.8534.031; Mon, 17 Mar 2025
+ 11:22:00 +0000
+Date: Mon, 17 Mar 2025 12:21:56 +0100
+From: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+CC: <linux-pci@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>,
+	"Bjorn Helgaas" <bhelgaas@google.com>, Christian =?utf-8?B?S8O2bmln?=
+	<christian.koenig@amd.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+	<kw@linux.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Michal Wajdeczko
+	<michal.wajdeczko@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	"Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matt Roper
+	<matthew.d.roper@intel.com>
+Subject: Re: [PATCH v5 1/6] PCI/IOV: Restore VF resizable BAR state after
+ reset
+Message-ID: <xbtcs6tzggmpv4icelgzhpixad23evefcf6jjsxi74qkjvxyue@mzb67hniua4o>
+References: <20250312225949.969716-1-michal.winiarski@intel.com>
+ <20250312225949.969716-2-michal.winiarski@intel.com>
+ <d6e026ad-4dd4-2e03-6f8b-a10980fa0ce7@linux.intel.com>
+ <f99f1533-2dd7-7ba8-3a5c-f68e45b1e8b6@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f99f1533-2dd7-7ba8-3a5c-f68e45b1e8b6@linux.intel.com>
+X-ClientProxiedBy: VI1P189CA0020.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:802:2a::33) To DM4PR11MB5373.namprd11.prod.outlook.com
+ (2603:10b6:5:394::7)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250315-ptr-as-ptr-v4-0-b2d72c14dc26@gmail.com>
- <20250315-ptr-as-ptr-v4-6-b2d72c14dc26@gmail.com> <D8IFS7175NNQ.3VAP8WA2QC8WF@proton.me>
-In-Reply-To: <D8IFS7175NNQ.3VAP8WA2QC8WF@proton.me>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 17 Mar 2025 06:53:19 -0400
-X-Gm-Features: AQ5f1JqqKWQmJQtQxcuGwEC9JarpMRPLE1rROZqjJX4KytwdbIBYSIApzB74Pbo
-Message-ID: <CAJ-ks9mXzM6D++vq0QCugaFOS9ES0j7GpeWZqckY0dA3JwpnJw@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] rust: use strict provenance APIs
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB5373:EE_|LV3PR11MB8579:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9074a3fc-8969-4bc1-ffd3-08dd6545ef5d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?Mm1CcFByTjNwMzNIWTM4RE5HOGpDQ1lWcm5uaEgvYmZ0VGVXQmhrbkdpenpF?=
+ =?utf-8?B?dlk5OTVucDliMGRFSk13TWF2OGVZcUhKam43YVdiYTJGMG1DWkdsZWtNOHBK?=
+ =?utf-8?B?ZlRBTkFPR1U2Z1I0eTVCNlQ5ZGp6bWpUUGRpVXNOV0VJSUJwNmNOeVZMZjRJ?=
+ =?utf-8?B?VVNIVzAyUWRkUmRJd1MwTTZtTUdROGdydk5HdkFuMW94STdTRXhKM0V1eWc4?=
+ =?utf-8?B?cnhlRmZLd2laYUgyTUxXNEg5N2dlQTAwaVVOUm5ORUJ6MmZia2t5aFZqd2NE?=
+ =?utf-8?B?Q1dmVElvMUw4WWlZNGM0MUs3T2tVOWFGSFYrVVZIQWt1dFNmSWp6QW9INFJB?=
+ =?utf-8?B?RTl5QVdhREFFV3hIanMrVXV1ZnlaZkt2bzBwUC9Md0J3UjRiUnJMUkp4OGV4?=
+ =?utf-8?B?MjlhYTNpL1pKZUNXUTh3Rm9XSVdOZm9Od0l4V1lPQ2xxSnJLNEMwa24vdCtR?=
+ =?utf-8?B?SytVTEZsMEQ1ZzNNMmRMenRPV0tvWWpnalYxaFdhaUpXTW02UnA3RC9iMXl1?=
+ =?utf-8?B?akZ5K0g5UzBLUkhSN0NoZzZTbjhjK0lDMmhSN2I1akxhUmtXenI5Z3d1Q21C?=
+ =?utf-8?B?b2h1QUNoZno1QzBhZ3gxMm5PNmlxeXJjdVdhRml2ZW5sTnRyOUZ5aUNReUQx?=
+ =?utf-8?B?a2trNUx5VCt4a2drR1NtZFVPSmhlNFJMMWtSUTRDQkpCZVdkTHB1NWpML3Jy?=
+ =?utf-8?B?aE42bXJLOTFMcVdicTREQlQ0dXM0VWs4dWFaNkdYdURWREVyMDIyZ3hzSk9i?=
+ =?utf-8?B?ckhmdlg2WENJZnl6a3M3ZU0zcGNZSGxPN1crS3lWcXdob1VSczNpRis1Zldi?=
+ =?utf-8?B?dFArOVF3MzhDRHZPeklLQ1NKNFdGSHNSZVFyTjBPSGY5QUtYdzUzY0ZpTDZC?=
+ =?utf-8?B?Tk9FUXZobWRtamZaMVc1S1NlVDUzNjlYS01HZCtwaE8vb2JxZXJDK0NGQ1hi?=
+ =?utf-8?B?VzdmeFVtMFBheUdaRjk0eGlXV2FVaVlDM2dvbVlsc2pldXZZTkNtVFJEU0ZJ?=
+ =?utf-8?B?bk1scFV3Q2NnbW8yZTA2VG5FalRsaWpIVlc2YnVkOGJvWk9yNGtJU0FuVFl5?=
+ =?utf-8?B?QzIzRFVsMS9Od2xralR5Z1paWUx0ZFNJRTI4UmlIS1kwL0l0OHN0ejlueEtI?=
+ =?utf-8?B?Q1N1UWljSjVpQkxBVml1L0tyMkJYTTBXVGFDUVgwR3hlbXdLR3dDQmx4QjFu?=
+ =?utf-8?B?cEV4bTFScE8xVDJFaThkNUlQdmEvclpJby8vWHRaTkhOS3JRcy9ncHRQSlB1?=
+ =?utf-8?B?dGV6K3MvYzZCcjJpMzNtOGFzWHFIWWxnK2Y5dlJJWWJFb2Uvb0FONlRJZnY4?=
+ =?utf-8?B?dGk1aW5aWGZkUjZGY2hzeDVzZ0xOdEJPaFNwY1ptM1Ercng4UUF4ckQ3akFy?=
+ =?utf-8?B?YzNiVEY1Ym13MldOejhmUlh5RU5DYjA5UW5iWUtVTXVpMFVVUVdnc0g5bExn?=
+ =?utf-8?B?aTlJWlBxTllRelZlRkhQNkJDSmllRjFlSEJoSUE2RHZBOHpNRk83ZFQ3QUFi?=
+ =?utf-8?B?TElmK2xTbEc3emJWYmxqQ25qRGsvazNENjMxQVlKSUIzMnJYaEJiUks3dTh2?=
+ =?utf-8?B?alptVzlhdXZqR2x5REJ1ZlhDanowQkd3bnRjWHkvSVNoWFV4TU1FZXp4clhM?=
+ =?utf-8?B?czhnVDFIY0o2SGZMaVhLMFVDNkZSOUp0b0ZpTjFJRTRCSUdTdnQ2S0xYOXEw?=
+ =?utf-8?B?QXdRTktHaXBXT05YTWVMcEpvcmdIL2hlM08yeTJXeUtSbnJJdUhaVGhKc09q?=
+ =?utf-8?B?NWZUSEwxakZrcHpuRlNHTWdJaDh5VXZIbUtWaGdsK3RqTllWdDRTUENITzRm?=
+ =?utf-8?B?UitIVzVjNklDeUdrWjE1UFRrb1k2aEdDdzZIRGo0U3JaQjZQZWQyaHZiZnBB?=
+ =?utf-8?Q?t0jxc/ZyX9l1C?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SzV3U2tJamJ4UENzaG8wSXEyV0lyQmJlcStZWGx3dUhTUW1qZHBtRDRDcUhM?=
+ =?utf-8?B?aHJQdnRaVk1zZktmNVpEcmM5enBjRHZVOWJiTzRnd2hFdGZVSUF6Y0NhMlhW?=
+ =?utf-8?B?K1UyQUthQUVvTVRIMkdtRkZEcHBiVmRLUWNURWRNVW04OXk3alluVHpqNU92?=
+ =?utf-8?B?ZW91WUxqTWJoQWZEaVNxY2FDRk0zLy96UzkrS0dDZzEyYVBBQStrcmxPR0M2?=
+ =?utf-8?B?QlJ2NTNMd3FhN0R4cytBM3VML1ZhOFZseFFuL3BtWnFiUU1DMmgydUI4UGJE?=
+ =?utf-8?B?RHJrd0wwaVVNVXB3WVd4UjkzUThCOXFGRG1XWENZV29FZnZFeE5hdzR6WVVR?=
+ =?utf-8?B?NzVBcVMxNCtzU1I5bFA4bWw1QU9ZaFhWTER0dzBLckswbWd6SmR4K2doZjBk?=
+ =?utf-8?B?VXowd211RkdpYlJLTU52VldCRUFzNzBQUitudm1uRFl6ZkpTdWNZbDFIdVc0?=
+ =?utf-8?B?WnpYVDAvRjd5Z0F0YlBtVmZRT0syL1lTbzJYVVorT1pLNjl2L0E4aVprR2tZ?=
+ =?utf-8?B?SFh1VGREbG1nc2QyNWM0YUdYK3hBNXQ5UDRYcVVlRnA1YUFCL3FjcEM1YTRQ?=
+ =?utf-8?B?Tk4xOXNUSWlVUUYyaFF3d0E5V254WUw2Nk9XcVJCNmcvc2V0djF6bUZ6YmhX?=
+ =?utf-8?B?ak5qTVRtT1hYMUVPVjJaQ0dRVDgzVk12anZZRlNvR2JsQ2Y3K01GQy9pa2RN?=
+ =?utf-8?B?Z0RmeXI5bFFCTFNHTGZjalFiU082Mm9aUDFGWGR0YUxoZ3pFeW9SLzlDSVht?=
+ =?utf-8?B?VlNOVGl4QzhCclhTbmxSYkxzZmt2dW9YSlNpUWZCV3R2UmRqd29SYlluZkJT?=
+ =?utf-8?B?ODU0ZnBYakN3RFd5aG94aDJWV3ZEVkcwQ2NURFkraTArWXJ3clVLdmd0Y0x0?=
+ =?utf-8?B?K2puRVA4dFoxNlN3NmJjdlNtUk53b3lFQlU5WUxKOXpYWFh5czZIaEN3SXVu?=
+ =?utf-8?B?eU5MZEF3c2ZrcUtDNlpZWDBRb1JUTkQxVi9RZldUL3A2TloySkM5WHN0RUxK?=
+ =?utf-8?B?VmZ2YzVWNEdOS0QvcVZ3cUtwQUJKYkJZUWVrUlJPekZsU0I4R1NDd0VoOE1V?=
+ =?utf-8?B?SUVDdldwSEM0aENseEdodHhIekFNbTVoRlRaaWVCdG5RRGpyL09OK2V4cnRC?=
+ =?utf-8?B?Z2txL1pJWU84NWx3L3l0OGw0b2Ewem5OUWhHSWtpb05NT0tOaURUdHludHBX?=
+ =?utf-8?B?WWRnbnplWm44TGRSY3FyMWZwWFVDeTAzbko2MVVOdGpnd1pEc25zc3AwQnFW?=
+ =?utf-8?B?S2VWWDBMMUZ0QTZLWGpGekdLd3hZdm1oaUhLaGhNbVUzRnlxRnl1MmVNK1VO?=
+ =?utf-8?B?bXpnbzJEa3d5S3U0MVBoanQ4NU56M3dCWG5rSTVZcWNzYVJ5RWJtN2MzUVJh?=
+ =?utf-8?B?NVJnMzB5SHkzRjllY3RPZmNDT2tZS0s3emZKcDFJUkNOT3VlMWJKVmZjL2dG?=
+ =?utf-8?B?QUtRcVVESEh0Q0dWYUtFRzJaTCtEZzBvZHF3ZURNa3oxUjNCUXo0cVBhWXh3?=
+ =?utf-8?B?R21SeFlaWnlQb0prZUtNM2VIM09zZGVXWWFUNHhwTExUem85WHA4blhtbTdr?=
+ =?utf-8?B?bUlkOEYyZDJkNFA2SXpBUE53QWMyb1hVaC9nbGtUcjNBMkpuN3dPZW1nWmts?=
+ =?utf-8?B?WWZnMTBOc1ZLTU9raEFZZEVUZzNZMEg0OVM2Tnh4SFRjeW5tTHdpSGJIV1dI?=
+ =?utf-8?B?bUZyVDhNd1JRRWVKVlplVk9kNHlhUXAxcitsc2NTQkRwVlFxSVZOMG4xbGV6?=
+ =?utf-8?B?cnB5ckhPWC9XSlJha0dJTjIvK1BvUjg5bU8yN1p2ejVwTjZiT1pHSXFaTGV5?=
+ =?utf-8?B?dFNyZmtFNEwxZzJ3a05lNGJCNzkyV2wxRnk2ODI3dzNjaDFTUUI0WktpTnRN?=
+ =?utf-8?B?QXcrTU5HTnIwd3YyUjBUOVhsOEhEWWVMVm1HWmVtYXhhSXl5YUV5WDJlZzV0?=
+ =?utf-8?B?Z3NacDdhVHViNGoxWVJDeUJVVXc3c0t6a09OV0dBUDc3KzlZSWQ3ZUZ4SGFL?=
+ =?utf-8?B?QjZxRksxNzhtTGxEWm9waVNOVG9zQldqV3lTMDJ0TXdJRENZclJmV0N6SzZx?=
+ =?utf-8?B?ZXIxVEJTUlVXU3Uvd1lPMkt4SzlsWlNLK3JDcCticVZyMnVvMCtPbmFuMG9s?=
+ =?utf-8?B?Qk1mdnhiL1JBTzlyeFl0RzhDQkZEQnBWMEs2ZXZ1QzQ4NDJhTllNOEhleUh4?=
+ =?utf-8?B?M2c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9074a3fc-8969-4bc1-ffd3-08dd6545ef5d
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5373.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2025 11:22:00.1874
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0968Vdis/ljUtQp/teMbJHxRelHsputpRm7C0bVzhtUHOpTU+Kt/0hDYhPbio97Dm1OA/TGdNZjWL887sOM/XbeDDe9/ImJa3lCPjS8uwUs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8579
+X-OriginatorOrg: intel.com
 
-On Mon, Mar 17, 2025 at 5:34=E2=80=AFAM Benno Lossin <benno.lossin@proton.m=
-e> wrote:
->
-> On Sat Mar 15, 2025 at 1:17 PM CET, Tamir Duberstein wrote:
-> > Throughout the tree, use the strict provenance APIs stabilized in Rust
-> > 1.84.0[1]. Retain backwards-compatibility by introducing forwarding
-> > functions at the `kernel` crate root along with polyfills for rustc <
-> > 1.84.0.
-> >
-> > Use `#[allow(clippy::incompatible_msrv)]` to avoid warnings on rustc <
-> > 1.84.0 as our MSRV is 1.78.0.
->
-> This isn't necessary, right?
+On Thu, Mar 13, 2025 at 11:50:37AM +0200, Ilpo Järvinen wrote:
+> On Thu, 13 Mar 2025, Ilpo Järvinen wrote:
+> 
+> > On Wed, 12 Mar 2025, Michał Winiarski wrote:
+> > 
+> > > Similar to regular resizable BAR, VF BAR can also be resized, e.g. by
+> > > the system firmware or the PCI subsystem itself.
+> > > 
+> > > Add the capability ID and restore it as a part of IOV state.
+> > > 
+> > > See PCIe r4.0, sec 9.3.7.4.
+> > > 
+> > > Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
+> > > Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> > > Reviewed-by: Christian König <christian.koenig@amd.com>
+> > > ---
+> > >  drivers/pci/iov.c             | 29 ++++++++++++++++++++++++++++-
+> > >  include/uapi/linux/pci_regs.h |  1 +
+> > >  2 files changed, 29 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > > index 121540f57d4bf..eb4d33eacacb8 100644
+> > > --- a/drivers/pci/iov.c
+> > > +++ b/drivers/pci/iov.c
+> > > @@ -7,6 +7,7 @@
+> > >   * Copyright (C) 2009 Intel Corporation, Yu Zhao <yu.zhao@intel.com>
+> > >   */
+> > >  
+> > > +#include <linux/bitfield.h>
+> > >  #include <linux/pci.h>
+> > >  #include <linux/slab.h>
+> > >  #include <linux/export.h>
+> > > @@ -868,6 +869,30 @@ static void sriov_release(struct pci_dev *dev)
+> > >  	dev->sriov = NULL;
+> > >  }
+> > >  
+> > > +static void sriov_restore_vf_rebar_state(struct pci_dev *dev)
+> > > +{
+> > > +	unsigned int pos, nbars, i;
+> > > +	u32 ctrl;
+> > > +
+> > > +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_VF_REBAR);
+> > > +	if (!pos)
+> > > +		return;
+> > 
+> > FYI, the commit f7c9bb759161 ("PCI: Cache offset of Resizable BAR 
+> > capability") which is currently in pci/enumeration makes this simpler.
+> 
+> I'm sorry, I realized it's not the same capability but you should do 
+> similar thing for VF rebar capability as caching the value of 
+> pci_find_ext_capability() avoids some slowness during save/restore.
 
-It is necessary. MSRV is encoded in .clippy.toml, it doesn't matter
-what the *current* rustc version is.
+The series was based on pci/resource due to other dependencies.
+But yeah - point taken, I'll use caching in next revision.
 
-> > In the `kernel` crate, enable the strict provenance lints on rustc >=3D
-> > 1.84.0; do this in `lib.rs` rather than `Makefile` to avoid introducing
-> > compiler flags that are dependent on the rustc version in use.
->
-> So it won't be enabled in the doctests, right?
+Thanks,
+-Michał
 
-Yes, that is correct.
+> 
+> -- 
+>  i.
+> 
+> > > +	pci_read_config_dword(dev, pos + PCI_REBAR_CTRL, &ctrl);
+> > > +	nbars = FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, ctrl);
+> > > +
+> > > +	for (i = 0; i < nbars; i++, pos += 8) {
+> > > +		int bar_idx, size;
+> > > +
+> > > +		pci_read_config_dword(dev, pos + PCI_REBAR_CTRL, &ctrl);
+> > > +		bar_idx = FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, ctrl);
+> > > +		size = pci_rebar_bytes_to_size(dev->sriov->barsz[bar_idx]);
+> > > +		ctrl &= ~PCI_REBAR_CTRL_BAR_SIZE;
+> > > +		ctrl |= FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
+> > > +		pci_write_config_dword(dev, pos + PCI_REBAR_CTRL, ctrl);
+> > > +	}
+> > > +}
+> > > +
+> > >  static void sriov_restore_state(struct pci_dev *dev)
+> > >  {
+> > >  	int i;
+> > > @@ -1027,8 +1052,10 @@ resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno)
+> > >   */
+> > >  void pci_restore_iov_state(struct pci_dev *dev)
+> > >  {
+> > > -	if (dev->is_physfn)
+> > > +	if (dev->is_physfn) {
+> > > +		sriov_restore_vf_rebar_state(dev);
+> > >  		sriov_restore_state(dev);
+> > > +	}
+> > >  }
+> > >  
+> > >  /**
+> > > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> > > index 3c2558b98d225..aadd483c47d6f 100644
+> > > --- a/include/uapi/linux/pci_regs.h
+> > > +++ b/include/uapi/linux/pci_regs.h
+> > > @@ -744,6 +744,7 @@
+> > >  #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+> > >  #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
+> > >  #define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
+> > > +#define PCI_EXT_CAP_ID_VF_REBAR 0x24	/* VF Resizable BAR */
+> > >  #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+> > >  #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
+> > >  #define PCI_EXT_CAP_ID_NPEM	0x29	/* Native PCIe Enclosure Management */
+> > > 
+> > 
+> > 
 
-> > Link: https://blog.rust-lang.org/2025/01/09/Rust-1.84.0.html#strict-pro=
-venance-apis [1]
-> > Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> > Link: https://lore.kernel.org/all/D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me/
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > ---
-> >  init/Kconfig           |  3 +++
-> >  rust/kernel/alloc.rs   |  2 +-
-> >  rust/kernel/devres.rs  |  4 ++--
-> >  rust/kernel/io.rs      | 14 +++++++-------
-> >  rust/kernel/lib.rs     | 52 ++++++++++++++++++++++++++++++++++++++++++=
-++++++++
-> >  rust/kernel/of.rs      |  2 +-
-> >  rust/kernel/pci.rs     |  4 ++--
-> >  rust/kernel/str.rs     | 16 ++++++----------
-> >  rust/kernel/uaccess.rs | 12 ++++++++----
-> >  9 files changed, 82 insertions(+), 27 deletions(-)
->
->
-> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> > index 486715528587..84eb2602e79e 100644
-> > --- a/rust/kernel/lib.rs
-> > +++ b/rust/kernel/lib.rs
-> > @@ -17,6 +17,9 @@
-> >  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(coerce_unsiz=
-ed))]
-> >  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(dispatch_fro=
-m_dyn))]
-> >  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(unsize))]
-> > +#![cfg_attr(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE, feature(strict_=
-provenance_lints))]
-> > +#![cfg_attr(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE, deny(fuzzy_prov=
-enance_casts))]
-> > +#![cfg_attr(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE, deny(lossy_prov=
-enance_casts))]
-> >  #![feature(inline_const)]
-> >  #![feature(lint_reasons)]
-> >  // Stable in Rust 1.83
-> > @@ -25,6 +28,55 @@
-> >  #![feature(const_ptr_write)]
-> >  #![feature(const_refs_to_cell)]
-> >
-> > +#[cfg(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE)]
-> > +#[allow(clippy::incompatible_msrv)]
->
-> Do we still need this allow?
-
-Yes, explained above.
-
-> > +mod strict_provenance {
-> > +    #[doc(hidden)]
->
-> Why make them hidden in docs?
-
-I've added documentation that defers to the standard library.
-
->
-> > +    pub fn expose_provenance<T>(addr: *const T) -> usize {
-> > +        addr.expose_provenance()
->
-> Instead of having these stubs here, you can probably just do
->
->     pub use core::ptr::expose_provenance;
-
-This doesn't work for the methods on primitives, but it works for the
-free functions. Done.
-
-
-> > +    }
-> > +
-> > +    #[doc(hidden)]
-> > +    pub fn without_provenance_mut<T>(addr: usize) -> *mut T {
-> > +        core::ptr::without_provenance_mut(addr)
-> > +    }
-> > +
-> > +    #[doc(hidden)]
-> > +    pub fn with_exposed_provenance<T>(addr: usize) -> *const T {
-> > +        core::ptr::with_exposed_provenance(addr)
-> > +    }
-> > +
-> > +    #[doc(hidden)]
-> > +    pub fn with_exposed_provenance_mut<T>(addr: usize) -> *mut T {
-> > +        core::ptr::with_exposed_provenance_mut(addr)
-> > +    }
-> > +}
-> > +
-> > +#[cfg(not(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE))]
-> > +mod strict_provenance {
-> > +    #[doc(hidden)]
->
-> I think we should document these.
-
-Done.
-
->
-> ---
-> Cheers,
-> Benno
->
-> > +    pub fn expose_provenance<T>(addr: *const T) -> usize {
-> > +        addr.cast::<()>() as usize
-> > +    }
-> > +
-> > +    #[doc(hidden)]
-> > +    pub fn without_provenance_mut<T>(addr: usize) -> *mut T {
-> > +        addr as *mut T
-> > +    }
-> > +
-> > +    #[doc(hidden)]
-> > +    pub fn with_exposed_provenance<T>(addr: usize) -> *const T {
-> > +        addr as *const T
-> > +    }
-> > +
-> > +    #[doc(hidden)]
-> > +    pub fn with_exposed_provenance_mut<T>(addr: usize) -> *mut T {
-> > +        addr as *mut T
-> > +    }
-> > +}
-> > +
-> > +pub use strict_provenance::*;
->
 
