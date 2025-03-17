@@ -1,212 +1,183 @@
-Return-Path: <linux-pci+bounces-23976-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23977-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F637A65BE7
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 19:06:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 033A1A65BF0
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 19:09:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D5063B42DE
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 18:06:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D58403BEBB6
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 18:08:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5ACC1B4235;
-	Mon, 17 Mar 2025 18:06:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 600DC1ACEDE;
+	Mon, 17 Mar 2025 18:08:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iPnSwcYI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cEQXogVo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0212CA47;
-	Mon, 17 Mar 2025 18:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930C619F420;
+	Mon, 17 Mar 2025 18:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742234805; cv=none; b=clH7bdTnRGolwnB2vMoM/sOVvryQosNce73SO40Oy0rVxdm9VyQ0gmLAQZi+eZH9H6/PZqqIc0PsDhdOiRMmL+nobgc0RS8enasMvprqzDlljvstLlGvRhLBZSNhdsnzBQlPPxkzXnzC5GgFNip8o2qXSe4IYvnfXlPXE5dKjlk=
+	t=1742234902; cv=none; b=N3mt5rS+B0bwhG4u+5yOW+Y8kntQahFHT2I8c73LITd5DhPhhQA3vGbc0ypcnwtss2IIed2qSkQUXE7fXUGfIgFk1QXoKhDcvxWvEK0Ix8tHpOS40cUgq4sIh3ro9nlHRCm25xJRQclXkfa6uOXgdl8eBgqk/UMHfjR96VJU7nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742234805; c=relaxed/simple;
-	bh=DncVUtVQlQzg6arT7ft00lfPJKOTmpA3REaCtwPYQdA=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=smpr2Tz7JnZ2v2oCV0+jmIIROAJ8l6dIjB8UuuvyGmxqo/YvNSHbaLIBtN5tldazCeyBzQ17DpvFpduXNFBaZSX/V8Wof7mqMU3ngCU/lIdUg66KqLb9hKbF0czekDW6zKGR9MigLlAOfiqj/xmWyfL354WICV28/F73H9Ljo0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iPnSwcYI; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e86b92d3b0so41391816d6.2;
-        Mon, 17 Mar 2025 11:06:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742234803; x=1742839603; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=I5GVWwgv9Am/z+q8ZZcKwL4ApxzwHrcBEQXJPU3wffQ=;
-        b=iPnSwcYINZ2V/fqc8ZX4f9/7NOq1UMO6Sldso+jmcbyT/Xv3JQH6AXzTFudM9d7Hgc
-         1BQYWmyVumTugOHviTzv2JsvPPE+uV2PYnn2fNDUS6vWC8QW0hDxWciBI5QXB4wLVZA/
-         UYs8+08v7zkD3QCYrafg7m/vChDnpap+HIKsi6sLNRGvd7acAdPnD3Xjr7Y9qsDfab3F
-         Nrk8KV9qu0JHSRekktIcSXwV8kepfreL43svsNxY7BTX+5Lj1upRR0+I2KDACOLHb8Dz
-         Q/Ne1QvNwWfHkrgXvoV1D9NAA6cf6T5F0aBtWv4SOfKTmn+00ZdffomWalgIHDuk9ddN
-         MxyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742234803; x=1742839603;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=I5GVWwgv9Am/z+q8ZZcKwL4ApxzwHrcBEQXJPU3wffQ=;
-        b=uIdxL4K2Eenj74vfiAuYB73tVjNRf937eQB1fQeSE04JIyI09qwgaQUcuvrCGaL8UV
-         nxXaLc54YdO3yAIzYmvqx/uksYvXJ+yYiqrZNxr5wPJ5+7IroAFyn/fl9OIJJ2nam4a0
-         zuyYa3quBoSl3GmE5LArQ1tff3vPcgvW2L1M7/2r3zI+p+mI+KfGPeQkUMgxm2+ydCEJ
-         HBE1GNA8qQohm+w9fiTvSWCX8L69Zl6RMCpTQw7C147DwdqZkBWg8OWhQXuyOik9Cw/6
-         oCrqszoLDOO3cCOhH6JeAk16NLbHSlutDsER1+kJ2m1Ln9+fWeVqAgCBGQN8ARHqAvqv
-         7ecA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDv4AK4lfofAM7oe+Ri1OFMNbEaanKehawkgq8JQHz5BZYhFLQP6l7ceA3VschNc4Ht2k02q+sX++u0gvuqAyW@vger.kernel.org, AJvYcCVDlOsMLOWnwWaXXBGWAhw/gahBbAGeE7YKQzscMlriF4ff3ZcwBkZiqm0f5QftlLw4LVSwGDh7uYqfJcc=@vger.kernel.org, AJvYcCW3Hgp92DcGfdkHpNd/wvxi7FGlOeVkLZVugSsglt2IQzfK8/GJ7k2M6d/oOr2i0c7Vk4p8bkeuPTtsWwug@vger.kernel.org, AJvYcCWE6RnHqDL1fORpYO3b8F1aKBXASmonq+qoc7q2Frqx2XkZfXvQJiaMdgiuRcc2ldt8JL3filwGnXkm@vger.kernel.org, AJvYcCWtVdOfUrK2qNrgA+nzFve7WxU6U50dbGJFvQir74/0iqX11CrFMt36s6Oa1lYZajsQV2Dl8it0dzyq2UwHajg=@vger.kernel.org, AJvYcCXmWYPd29KJ/ZVCRzJ+FTuRYQoOKxepODzUAOiEmjuG4BedzYNQGywfoJ41O1H9ME2wabJxoh458HGw@vger.kernel.org, AJvYcCXsQxa32Ot2dIDMa9UxthgQPCsd6tZujbl6SrTocYYqvd08nWXVudpOKz07R17J5UWbP8pQjXEJ5bGrECSc@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrLv+NaWfdMtMfzUQs8KOCbo5aF4XOBvT2WBtAW+8DWy3COss+
-	/nzkcRhDckeecVOlitfuIQ94UxcNMHHZmf78Ph/PTMkzQ1rxjJXN
-X-Gm-Gg: ASbGncusxvVl0tn4v9Zs3iqeKpwXwSk7dxxDeMbptxn2MCss07JbKD6Uzaqx6zfCw09
-	cHMgeo36viuFgYFynu4S7pxzMmARSu6Eb0R+LJUVI5zLaPT+g+Du9uHnp1enHbQZDJvlgUX8Jbe
-	12kRdv26Wjwnz4OB+CV8soaamALye/7gemTbXcdYW9B78As5JO7Rb8bek5E0XrfVu4VoDvjpsBX
-	vr68VQTAoKSwJO0mQmXpbhygF5Cqqnlui+gESUpGFjrnqtYkybaCQwJSE88KdNtk6wgFXkBN50A
-	bJ7ngmbHJ9VpZfeCl99RfdBLATKD/98uVpPLxlUzDK0y5VWJqWgyai9i2nIBExzDmIqLnZI9bVZ
-	gV3tyTFGHB9NTDvwXKddQqxitNTTEfS9evaI=
-X-Google-Smtp-Source: AGHT+IFGmJqNXJT08o6OuOGFp+PPKCptxVOAoemJXV69JqRDfPXGEiTZwKbWhjKikA46wscmR9ossA==
-X-Received: by 2002:a05:6214:e6d:b0:6e6:5e15:d94f with SMTP id 6a1803df08f44-6eaeaa8e068mr189657056d6.27.1742234802738;
-        Mon, 17 Mar 2025 11:06:42 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade330de1sm57167776d6.74.2025.03.17.11.06.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 11:06:42 -0700 (PDT)
-Message-ID: <67d864b2.0c0a0220.39fb6f.4df4@mx.google.com>
-X-Google-Original-Message-ID: <Z9hkr9QVo4e1sXGS@winterfell.>
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 8E1EC1200043;
-	Mon, 17 Mar 2025 14:06:41 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Mon, 17 Mar 2025 14:06:41 -0400
-X-ME-Sender: <xms:sWTYZ61fjIMv2yJdV3negYmNMIXgPWvB813WBz0cN6IUGGj_AfOH_w>
-    <xme:sWTYZ9FGLKLHkp6WetUW5tLksSgT_ay0MKm5Hk5zUDgUilayKL1g1-2yKvALT3Ln4
-    HtXlTQEId-OhxHbsg>
-X-ME-Received: <xmr:sWTYZy5FhlLB2-1WEdDKVETS9QJFYadNJhvpixmHJnD69AJJSTzizCYa_p4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugedtvddtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
-    tdejnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrg
-    hilhdrtghomheqnecuggftrfgrthhtvghrnhepieehfeekgfdvfeetjeejudekhfeiveel
-    feefveehheeffffhkefhteevffevhffgnecuffhomhgrihhnpehruhhsthdqlhgrnhhgrd
-    horhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
-    sghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtie
-    egqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhi
-    gihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeefvddpmhhouggvpehsmhhtphhouhhtpd
-    hrtghpthhtohepthgrmhhirhgusehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrshgr
-    hhhirhhohieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgrthhhrghnsehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehnihgtohhlrghssehfjhgrshhlvgdrvghupdhrtghp
-    thhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrg
-    ihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdr
-    nhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomh
-    dprhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvg
-X-ME-Proxy: <xmx:sWTYZ700nrQ9a41smnLTdIM1716THWopumBvhBlMr5LK9RPdZ_9mnQ>
-    <xmx:sWTYZ9EGPssG1Ocqw2WpNJQeAWn8as6gEdqzG3jKGsGj9ZjtRyYLtw>
-    <xmx:sWTYZ09JG0skmH8q7Dbv4WFAdlzMvClSqqKZ0SxIyobt8PoXZhzhvw>
-    <xmx:sWTYZynC7AdzcrAoGdlJO5JauQgMJZgzL97SFZFlhonfarA78-_MkQ>
-    <xmx:sWTYZ1FOvKqZPC-CLbv34VvNN1yy1u6ecnRFyVrvVJQTCldv9jGFf28P>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 17 Mar 2025 14:06:40 -0400 (EDT)
-Date: Mon, 17 Mar 2025 11:06:39 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,	linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org,	rust-for-linux@vger.kernel.org,
- linux-kselftest@vger.kernel.org,	kunit-dev@googlegroups.com,
- linux-pci@vger.kernel.org,	linux-block@vger.kernel.org,
- devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 6/6] rust: use strict provenance APIs
-References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
- <20250317-ptr-as-ptr-v5-6-5b5f21fa230a@gmail.com>
- <67d85e51.050a0220.2a36b.58b3@mx.google.com>
- <CAJ-ks9kBp8zPfaQuZRb0Unms1b13hDb5cRypceO8TWFR0Ty5Ww@mail.gmail.com>
+	s=arc-20240116; t=1742234902; c=relaxed/simple;
+	bh=Mu7m47kKBA0YhW5neOWnvRRU9TV9xE/f1KoAz4j7z80=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=V3gKShhvLAm/Uo/3+YKSGdP/uc0VR+gsGti1jjcRfCgMh1TZE59mFBrBVja23Npc2uE3wn80aPqOm3VSnLzBVsVZqB20HEvewrcYkYouGZ+nDPHQxKKrxXzD5PSKpbeizNc3oZ6KdC3uck1E4xs7xAF56FYk7wjcTfDr7Gt9Frw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cEQXogVo; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742234901; x=1773770901;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=Mu7m47kKBA0YhW5neOWnvRRU9TV9xE/f1KoAz4j7z80=;
+  b=cEQXogVoI/93v3JjG60AL3KN47IyjT09dE667TlaNqGcLjbUfpZBItQw
+   LKc8Xtn5SIEP1Mfz7o3Ll/fSvKGR+vmAZQAdeTQ27Wq/XDflcNUo/5hYO
+   vNT2e2RzU6yd1IOg4WOjfDArTjaUu3YlnVJxbcHs0fPnVy4Wi0djFWWJg
+   oQAce3rMcXEPxvG2/WxE33xOSNbu/7mkcmh7B1TcExzYvzO+izYNNhh6F
+   nBiIi3plDQmY9xNcAORPdBwRCZvh23KuaH4vimfDMPmJv7kxUcEc5O28x
+   pSpY3CSVCwNCj39PHFrKCVryUt7vBz+8aXOFQ2H7iEBQPfX5tX/tQPd0c
+   A==;
+X-CSE-ConnectionGUID: NhF3RMfoRmaX4piChoRCjw==
+X-CSE-MsgGUID: cfIPq2HqQbW3U9NCeL4ZZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="43258658"
+X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
+   d="scan'208";a="43258658"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 11:08:20 -0700
+X-CSE-ConnectionGUID: /lAY/v6iTu2NXtbhs97EQw==
+X-CSE-MsgGUID: DGuQfm/TTQe10ci770s4iQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,254,1736841600"; 
+   d="scan'208";a="153007123"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.60])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 11:08:15 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 17 Mar 2025 20:08:12 +0200 (EET)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    Guenter Roeck <groeck@juniper.net>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+    Rajat Jain <rajatxjain@gmail.com>, 
+    Joel Mathew Thomas <proxy0@tutamail.com>, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/4] PCI/hotplug: Disable HPIE over reset
+In-Reply-To: <Z9Wjk2GzrSURZoTG@wunner.de>
+Message-ID: <a18432fc-a9ff-0435-cd94-912bf2dcb4b3@linux.intel.com>
+References: <20250313142333.5792-1-ilpo.jarvinen@linux.intel.com> <20250313142333.5792-2-ilpo.jarvinen@linux.intel.com> <Z9Wjk2GzrSURZoTG@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ-ks9kBp8zPfaQuZRb0Unms1b13hDb5cRypceO8TWFR0Ty5Ww@mail.gmail.com>
+Content-Type: multipart/mixed; BOUNDARY="8323328-233792055-1742232008=:944"
+Content-ID: <2adfc975-5a6a-f98c-67a2-8b6bd7590068@linux.intel.com>
 
-On Mon, Mar 17, 2025 at 02:04:34PM -0400, Tamir Duberstein wrote:
-> On Mon, Mar 17, 2025 at 1:39 PM Boqun Feng <boqun.feng@gmail.com> wrote:
-> >
-> > On Mon, Mar 17, 2025 at 10:23:56AM -0400, Tamir Duberstein wrote:
-> > [...]
-> > > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> > > index fc6835cc36a3..c1b274c04a0f 100644
-> > > --- a/rust/kernel/lib.rs
-> > > +++ b/rust/kernel/lib.rs
-> > > @@ -17,6 +17,11 @@
-> > >  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(coerce_unsized))]
-> > >  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(dispatch_from_dyn))]
-> > >  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(unsize))]
-> > > +#![cfg_attr(
-> > > +    CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE,
-> > > +    feature(strict_provenance_lints),
-> > > +    deny(fuzzy_provenance_casts, lossy_provenance_casts)
-> > > +)]
-> > >  #![feature(inline_const)]
-> > >  #![feature(lint_reasons)]
-> > >  // Stable in Rust 1.83
-> > > @@ -25,6 +30,109 @@
-> > >  #![feature(const_ptr_write)]
-> > >  #![feature(const_refs_to_cell)]
-> > >
-> > > +#[cfg(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE)]
-> > > +#[allow(clippy::incompatible_msrv)]
-> > > +mod strict_provenance {
-> > > +    /// Gets the "address" portion of the pointer.
-> > > +    ///
-> > > +    /// See https://doc.rust-lang.org/stable/core/primitive.pointer.html#method.addr.
-> > > +    #[inline]
-> > > +    pub fn addr<T>(ptr: *const T) -> usize {
-> > > +        ptr.addr()
-> > > +    }
-> > > +
-> >
-> > For addr(), I would just enable feature(strict_provenance) if
-> > CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE=n, because that feature is
-> > available for 1.78. Plus we may need with_addr() or map_addr() in the
-> > future.
-> 
-> We still need these stubs to avoid `clippy::incompatible_msrv`, and
-> we'll need those until MSRV is above 1.84.
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Hmm.. why? Clippy cannot work with unstable features?
+--8323328-233792055-1742232008=:944
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <84f24538-a527-e2dd-d7ca-4ecf85be92af@linux.intel.com>
 
-Regards,
-Boqun
+On Sat, 15 Mar 2025, Lukas Wunner wrote:
 
-> >
-> > It saves the cost of maintaining our own *addr() and removing it when
-> > we bump to a strict_provenance stablized version as minimal verision in
-> > the future. Thoughts?
-> >
-> 
-> I can do this by making this particular stub unconditional. I'll do that.
+> On Thu, Mar 13, 2025 at 04:23:30PM +0200, Ilpo J=E4rvinen wrote:
+> > pciehp_reset_slot() disables PDCE (Presence Detect Changed Enable) and
+> > DLLSCE (Data Link Layer State Changed Enable) for the duration of reset
+> > and clears the related status bits PDC and DLLSC from the Slot Status
+> > register after the reset to avoid hotplug incorrectly assuming the card
+> > was removed.
+> >=20
+> > However, hotplug shares interrupt with PME and BW notifications both of
+> > which can make pciehp_isr() to run despite PDCE and DLLSCE bits being
+> > off. pciehp_isr() then picks PDC or DLLSC bits from the Slot Status
+> > register due to the events that occur during reset and caches them into
+> > ->pending_events. Later, the IRQ thread in pciehp_ist() will process
+> > the ->pending_events and will assume the Link went Down due to a card
+> > change (in pciehp_handle_presence_or_link_change()).
+> >=20
+> > Change pciehp_reset_slot() to also clear HPIE (Hot-Plug Interrupt
+> > Enable) as pciehp_isr() will first check HPIE to see if the interrupt
+> > is not for it. Then synchronize with the IRQ handling to ensure no
+> > events are pending, before invoking the reset.
+>=20
+> After dwelling on this for a while, I'm thinking that it may re-introduce
+> the issue fixed by commit f5eff5591b8f ("PCI: pciehp: Fix AB-BA deadlock
+> between reset_lock and device_lock"):
+>=20
+> Looking at the second and third stack trace in its commit message,
+> down_write(reset_lock) in pciehp_reset_slot() is basically equivalent
+> to synchronize_irq() and we're holding device_lock() at that point,
+> hindering progress of pciehp_ist().
+
+This description was somewhat confusing but what I can see, now that you=20
+mentioned this, is that if pciehp_reset_slot() calls synchronize_irq(), it=
+=20
+can result in trying to acquire device_lock() again while trying to drain=
+=20
+the pending events. ->reset_lock seems irrelevant to that problem.
+
+Thus, pciehp_reset_slot() cannot ever rely on completing the processing of=
+=20
+all pending events before it invokes the reset as long as any of its=20
+callers is holding device_lock().
+
+It's a bit sad, because removing most of the reset_lock complexity would=20
+have been nice simplification in locking, effectively it would have=20
+reverted f5eff5591b8f too.
+
+> So I think I have guided you in the wrong direction and I apologize
+> for that.
+>=20
+> However it seems to me that this should be solvable with the small
+> patch below.  Am I missing something?
+>=20
+> @Joel Mathew Thomas, could you give the below patch a spin and see
+> if it helps?
+>=20
+> Thanks!
+>=20
+> -- >8 --
+>=20
+> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pcieh=
+p_hpc.c
+> index bb5a8d9f03ad..99a2ac13a3d1 100644
+> --- a/drivers/pci/hotplug/pciehp_hpc.c
+> +++ b/drivers/pci/hotplug/pciehp_hpc.c
+> @@ -688,6 +688,11 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+>  =09=09return IRQ_HANDLED;
+>  =09}
+> =20
+> +=09/* Ignore events masked by pciehp_reset_slot(). */
+> +=09events &=3D ctrl->slot_ctrl;
+> +=09if (!events)
+> +=09=09return IRQ_HANDLED;
+> +
+>  =09/* Save pending events for consumption by IRQ thread. */
+>  =09atomic_or(events, &ctrl->pending_events);
+>  =09return IRQ_WAKE_THREAD;
+
+Yes, this should work, I think.
+
+I'm not entirely sure though how reading ->slot_ctrl here synchronizes=20
+wrt. pciehp_reset_slot() invoking reset. What guarantees pciehp_isr() sees=
+=20
+the updated ->slot_ctrl when pciehp_reset_slot() has proceeded to invoke=20
+the reset? (I'm in general very hesitant about lockless and barrierless=20
+reader being race free, I might be just paranoid about it.)
+
+--=20
+ i.
+--8323328-233792055-1742232008=:944--
 
