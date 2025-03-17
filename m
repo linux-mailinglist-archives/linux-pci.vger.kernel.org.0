@@ -1,380 +1,223 @@
-Return-Path: <linux-pci+bounces-23964-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23965-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CBB1A657F6
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 17:26:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D87CBA659F0
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 18:12:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A493A161E25
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 16:26:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E039B3B77C6
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 17:07:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32B9119DF4A;
-	Mon, 17 Mar 2025 16:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4A5F1ACEB7;
+	Mon, 17 Mar 2025 17:07:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Zb/b0736"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MU0M1OS/"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20B4198E60;
-	Mon, 17 Mar 2025 16:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A3E91AAA1E;
+	Mon, 17 Mar 2025 17:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742228794; cv=none; b=vDxiwDLyq+l7Y4+p9w54u6CaMyNHf48m49EnxaZjfRAY3LGB/dVrp6KrOznK2zWuXhIyKipXHSV41lY8vCjxcJD3PCBN/58oM5kXUy7T63kStf9cK8tioE1bmRUESmzhq8rd8S4C0yobvqJf2tOOCcxXw7+3QUs6P7LH7KPp6qo=
+	t=1742231225; cv=none; b=Oietrk9lBWkm4yi9/m/YASgBp1ABhsNmSu/orC4SCfkjL9Lp21+qK2pkdcjPn7nxdWdljhUT5kiD4kCErdwngbWeguTrf6dnRRg1CW1H0Rrebph5JKoM83nEyxivmmL6XXPMhKlWjbplekrhqNhG9/ndKqsaQUp8KepCESzOMTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742228794; c=relaxed/simple;
-	bh=+Ndjy4xmcEbXyhbj74b5WBRBd0mqSMQV+7NKaMwfF0w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JWe9iYrWD8VWROwab7WlXSnwx+mPR7062J7VVmo4xQp3nA1x6XAXb1cJ2AKjBnNUBoUcD/pnkK23CoM2htZbUjcm1++yIIo+91JstmJox5yXiibyWHMaBgZX/HkCr/j9UgPVOObFCpsKb3RRpFxq4Fg7StM3tbf1Vm8UayAixhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=Zb/b0736; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1742228790;
-	bh=+Ndjy4xmcEbXyhbj74b5WBRBd0mqSMQV+7NKaMwfF0w=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=Zb/b0736daXymZaWap1l3aurwmc/9FF73bbGMNHV9DFCCB5Jch9TlatrPBsTcmAxi
-	 C1srhA4D8T6OAx6K3bNyEQlA++AhjiFPFLKi1OZJKi0phx1X/gNmO4BOiMxfIumFxx
-	 XVuEkLWLXWf3aNnBbAf800il9shIJMoGK9hmGfis=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 0F8421C01F4;
-	Mon, 17 Mar 2025 12:26:30 -0400 (EDT)
-Message-ID: <609eeb873fdef6171c71f3beda289d799cb7172c.camel@HansenPartnership.com>
-Subject: Re: [patch V3 09/10] scsi: ufs: qcom: Remove the MSI descriptor
- abuse
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "Martin K.
- Petersen" <martin.petersen@oracle.com>,  linux-scsi@vger.kernel.org,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,  Nishanth Menon
- <nm@ti.com>, Dhruva Gole <d-gole@ti.com>, Tero Kristo <kristo@kernel.org>, 
- Santosh Shilimkar <ssantosh@kernel.org>, Logan Gunthorpe
- <logang@deltatee.com>, Dave Jiang <dave.jiang@intel.com>,  Jon Mason
- <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
- Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, Michael
- Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>, Haiyang Zhang
- <haiyangz@microsoft.com>, linux-hyperv@vger.kernel.org, Wei Huang
- <wei.huang2@amd.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Date: Mon, 17 Mar 2025 12:26:29 -0400
-In-Reply-To: <20250317092946.265146293@linutronix.de>
-References: <20250317092919.008573387@linutronix.de>
-	 <20250317092946.265146293@linutronix.de>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	s=arc-20240116; t=1742231225; c=relaxed/simple;
+	bh=7tPScfD9PU8GwL510NRuJpyMhhbfKbW53uXGSxQrROM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pdA3ehNdmt1Q1c8OvLjRoGUJ1iYWnTc1Dx0CH8nEmObYnmaZ/ijrsiS3uFOdaxjDhdUKuHdujxBGl4gANUBKkcok6iXoOqQOMz52KKhmB+u/jPwx+IAg+35va9TPs5O7D2l4/jLXmw5Fewr2evi9GXACOMnmAjVnLBWuA/tLdy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MU0M1OS/; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id F377E2033444;
+	Mon, 17 Mar 2025 10:07:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F377E2033444
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742231223;
+	bh=pVVBjR0mSZEIXZn2jj+yPFFn+SpqZ/2BXJvya8/hhRQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MU0M1OS/SvjdiBbQjAOJYZVPoksU5Sb1yCAuzxLUPv37SeuxHwFF7pbmInik5NNNf
+	 ujAGpzMt6UzTDHpp2h9YUMIjgxST9XFEazJyWc/ho17h+5D8kAGPqKrOHOkNjLv0Ub
+	 nO3vFYqx3hqhVWLCI6WxBr/n/WIQUkrc9WLiqbi4=
+Message-ID: <9c3f2492-823e-4548-8ad3-6aeb9c86d528@linux.microsoft.com>
+Date: Mon, 17 Mar 2025 10:07:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v6 11/11] PCI: hv: Get vPCI MSI IRQ domain
+ from DeviceTree
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, conor+dt@kernel.org, dan.carpenter@linaro.org,
+ dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com,
+ hpa@zytor.com, joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com,
+ kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org,
+ manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, maz@kernel.org,
+ mingo@redhat.com, oliver.upton@linux.dev, rafael@kernel.org,
+ robh@kernel.org, ssengar@linux.microsoft.com, sudeep.holla@arm.com,
+ suzuki.poulose@arm.com, tglx@linutronix.de, wei.liu@kernel.org,
+ will@kernel.org, yuzenghui@huawei.com, devicetree@vger.kernel.org,
+ kvmarm@lists.linux.dev, linux-acpi@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, x86@kernel.org, apais@microsoft.com,
+ benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com
+References: <20250315184903.GA848938@bhelgaas>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <20250315184903.GA848938@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2025-03-17 at 14:29 +0100, Thomas Gleixner wrote:
-> The driver abuses the MSI descriptors for internal purposes. Aside of
-> core code and MSI providers nothing has to care about their
-> existence. They have been encapsulated with a lot of effort because
-> this kind of abuse caused all sorts of issues including a
-> maintainability nightmare.
->=20
-> Rewrite the code so it uses dedicated storage to hand the required
-> information to the interrupt handler.
->=20
-> No functional change intended.
->=20
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org
->=20
->=20
-> ---
-> =C2=A0drivers/ufs/host/ufs-qcom.c |=C2=A0=C2=A0 77 ++++++++++++++++++++++=
------------
-> -----------
-> =C2=A01 file changed, 40 insertions(+), 37 deletions(-)
->=20
-> --- a/drivers/ufs/host/ufs-qcom.c
-> +++ b/drivers/ufs/host/ufs-qcom.c
-> @@ -1782,15 +1782,19 @@ static void ufs_qcom_write_msi_msg(struc
-> =C2=A0	ufshcd_mcq_config_esi(hba, msg);
-> =C2=A0}
-> =C2=A0
-> +struct ufs_qcom_irq {
-> +	unsigned int		irq;
-> +	unsigned int		idx;
-> +	struct ufs_hba		*hba;
-> +};
-> +
-> =C2=A0static irqreturn_t ufs_qcom_mcq_esi_handler(int irq, void *data)
-> =C2=A0{
-> -	struct msi_desc *desc =3D data;
-> -	struct device *dev =3D msi_desc_to_dev(desc);
-> -	struct ufs_hba *hba =3D dev_get_drvdata(dev);
-> -	u32 id =3D desc->msi_index;
-> -	struct ufs_hw_queue *hwq =3D &hba->uhq[id];
-> +	struct ufs_qcom_irq *qi =3D data;
-> +	struct ufs_hba *hba =3D qi->hba;
-> +	struct ufs_hw_queue *hwq =3D &hba->uhq[qi->idx];
-> =C2=A0
-> -	ufshcd_mcq_write_cqis(hba, 0x1, id);
-> +	ufshcd_mcq_write_cqis(hba, 0x1, qi->idx);
-> =C2=A0	ufshcd_mcq_poll_cqe_lock(hba, hwq);
-> =C2=A0
-> =C2=A0	return IRQ_HANDLED;
-> @@ -1799,8 +1803,7 @@ static irqreturn_t ufs_qcom_mcq_esi_hand
-> =C2=A0static int ufs_qcom_config_esi(struct ufs_hba *hba)
-> =C2=A0{
-> =C2=A0	struct ufs_qcom_host *host =3D ufshcd_get_variant(hba);
-> -	struct msi_desc *desc;
-> -	struct msi_desc *failed_desc =3D NULL;
-> +	struct ufs_qcom_irq *qi;
-> =C2=A0	int nr_irqs, ret;
-> =C2=A0
-> =C2=A0	if (host->esi_enabled)
-> @@ -1811,47 +1814,47 @@ static int ufs_qcom_config_esi(struct uf
-> =C2=A0	 * 2. Poll queues do not need ESI.
-> =C2=A0	 */
-> =C2=A0	nr_irqs =3D hba->nr_hw_queues - hba-
-> >nr_queues[HCTX_TYPE_POLL];
-> +	qi =3D devm_kcalloc(hba->dev, nr_irqs, sizeof(*qi),
-> GFP_KERNEL);
-> +	if (qi)
 
-Typo causing logic inversion: should be !qi here (you need a more
-responsive ! key).
 
-> +		return -ENOMEM;
-> +
-> =C2=A0	ret =3D platform_device_msi_init_and_alloc_irqs(hba->dev,
-> nr_irqs,
-> =C2=A0						=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> ufs_qcom_write_msi_msg);
-> =C2=A0	if (ret) {
-> =C2=A0		dev_err(hba->dev, "Failed to request Platform MSI
-> %d\n", ret);
-> -		return ret;
-> +		goto cleanup;
-> =C2=A0	}
-> =C2=A0
-> -	msi_lock_descs(hba->dev);
-> -	msi_for_each_desc(desc, hba->dev, MSI_DESC_ALL) {
-> -		ret =3D devm_request_irq(hba->dev, desc->irq,
-> -				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ufs_qcom_mcq_esi_handler,
-> -				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IRQF_SHARED, "qcom-mcq-esi",
-> desc);
-> +	for (int idx =3D 0; idx < nr_irqs; idx++) {
-> +		qi[idx].irq =3D msi_get_virq(hba->dev, idx);
-> +		qi[idx].idx =3D idx;
-> +		qi[idx].hba =3D hba;
-> +
-> +		ret =3D devm_request_irq(hba->dev, qi[idx].irq,
-> ufs_qcom_mcq_esi_handler,
-> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IRQF_SHARED, "qcom-mcq-esi",
-> qi + idx);
-> =C2=A0		if (ret) {
-> =C2=A0			dev_err(hba->dev, "%s: Fail to request IRQ
-> for %d, err =3D %d\n",
-> -				__func__, desc->irq, ret);
-> -			failed_desc =3D desc;
-> -			break;
-> +				__func__, qi[idx].irq, ret);
-> +			qi[idx].irq =3D 0;
-> +			goto cleanup;
-> =C2=A0		}
-> =C2=A0	}
-> -	msi_unlock_descs(hba->dev);
-> =C2=A0
-> -	if (ret) {
-> -		/* Rewind */
-> -		msi_lock_descs(hba->dev);
-> -		msi_for_each_desc(desc, hba->dev, MSI_DESC_ALL) {
-> -			if (desc =3D=3D failed_desc)
-> -				break;
-> -			devm_free_irq(hba->dev, desc->irq, hba);
-> -		}
-> -		msi_unlock_descs(hba->dev);
-> -		platform_device_msi_free_irqs_all(hba->dev);
-> -	} else {
-> -		if (host->hw_ver.major =3D=3D 6 && host->hw_ver.minor =3D=3D
-> 0 &&
-> -		=C2=A0=C2=A0=C2=A0 host->hw_ver.step =3D=3D 0)
-> -			ufshcd_rmwl(hba, ESI_VEC_MASK,
-> -				=C2=A0=C2=A0=C2=A0 FIELD_PREP(ESI_VEC_MASK,
-> MAX_ESI_VEC - 1),
-> -				=C2=A0=C2=A0=C2=A0 REG_UFS_CFG3);
-> -		ufshcd_mcq_enable_esi(hba);
-> -		host->esi_enabled =3D true;
-> +	if (host->hw_ver.major =3D=3D 6 && host->hw_ver.minor =3D=3D 0 &&
-> +	=C2=A0=C2=A0=C2=A0 host->hw_ver.step =3D=3D 0) {
-> +		ufshcd_rmwl(hba, ESI_VEC_MASK,
-> +			=C2=A0=C2=A0=C2=A0 FIELD_PREP(ESI_VEC_MASK, MAX_ESI_VEC -
-> 1),
-> +			=C2=A0=C2=A0=C2=A0 REG_UFS_CFG3);
-> =C2=A0	}
-> -
-> +	ufshcd_mcq_enable_esi(hba);
-> +	host->esi_enabled =3D true;
-> +	return 0;
-> +
-> +cleanup:
-> +	for (int idx =3D 0; qi[idx].irq; idx++)
-> +		devm_free_irq(hba->dev, qi[idx].irq, hba);
-> +	platform_device_msi_free_irqs_all(hba->dev);
-> +	devm_kfree(hba->dev, qi);
-> =C2=A0	return ret;
-> =C2=A0}
+On 3/15/2025 11:49 AM, Bjorn Helgaas wrote:
+> On Fri, Mar 14, 2025 at 05:19:31PM -0700, Roman Kisel wrote:
+>> The hyperv-pci driver uses ACPI for MSI IRQ domain configuration on
+>> arm64. It won't be able to do that in the VTL mode where only DeviceTree
+>> can be used.
+>>
+>> Update the hyperv-pci driver to get vPCI MSI IRQ domain in the DeviceTree
+>> case, too.
+>>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> Looks good to me; trivial whitespace comment below.
+> 
 
-This does seem to be exactly the pattern you describe in 1/10, although
-I'm not entirely convinced that something like the below is more
-readable and safe.
+Thanks a bunch!! I'll fix that the whitespace (and remove the unused
+variable the robot noticed).
 
-Regards,
+>> ---
+>>   drivers/pci/controller/pci-hyperv.c | 73 ++++++++++++++++++++++++++---
+>>   1 file changed, 67 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+>> index 6084b38bdda1..cbff19e8a07c 100644
+>> --- a/drivers/pci/controller/pci-hyperv.c
+>> +++ b/drivers/pci/controller/pci-hyperv.c
+>> @@ -50,6 +50,7 @@
+>>   #include <linux/irqdomain.h>
+>>   #include <linux/acpi.h>
+>>   #include <linux/sizes.h>
+>> +#include <linux/of_irq.h>
+>>   #include <asm/mshyperv.h>
+>>   
+>>   /*
+>> @@ -817,9 +818,17 @@ static int hv_pci_vec_irq_gic_domain_alloc(struct irq_domain *domain,
+>>   	int ret;
+>>   
+>>   	fwspec.fwnode = domain->parent->fwnode;
+>> -	fwspec.param_count = 2;
+>> -	fwspec.param[0] = hwirq;
+>> -	fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+>> +	if (is_of_node(fwspec.fwnode)) {
+>> +		/* SPI lines for OF translations start at offset 32 */
+>> +		fwspec.param_count = 3;
+>> +		fwspec.param[0] = 0;
+>> +		fwspec.param[1] = hwirq - 32;
+>> +		fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
+>> +	} else {
+>> +		fwspec.param_count = 2;
+>> +		fwspec.param[0] = hwirq;
+>> +		fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+>> +	}
+>>   
+>>   	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
+>>   	if (ret)
+>> @@ -887,10 +896,47 @@ static const struct irq_domain_ops hv_pci_domain_ops = {
+>>   	.activate = hv_pci_vec_irq_domain_activate,
+>>   };
+>>   
+>> +#ifdef CONFIG_OF
+>> +
+>> +static struct irq_domain *hv_pci_of_irq_domain_parent(void)
+>> +{
+>> +	struct device_node *parent;
+>> +	struct irq_domain *domain;
+>> +
+>> +	parent = of_irq_find_parent(hv_get_vmbus_root_device()->of_node);
+>> +	if (!parent)
+>> +		return NULL;
+>> +	domain = irq_find_host(parent);
+>> +	of_node_put(parent);
+>> +
+>> +	return domain;
+>> +}
+>> +
+>> +#endif
+>> +
+>> +#ifdef CONFIG_ACPI
+>> +
+>> +static struct irq_domain *hv_pci_acpi_irq_domain_parent(void)
+>> +{
+>> +	struct irq_domain *domain;
+>> +	acpi_gsi_domain_disp_fn gsi_domain_disp_fn;
+>> +
+>> +	if (acpi_irq_model != ACPI_IRQ_MODEL_GIC)
+>> +		return NULL;
+>> +	gsi_domain_disp_fn = acpi_get_gsi_dispatcher();
+>> +	if (!gsi_domain_disp_fn)
+>> +		return NULL;
+>> +	return irq_find_matching_fwnode(gsi_domain_disp_fn(0),
+>> +				     DOMAIN_BUS_ANY);
+>> +}
+>> +
+>> +#endif
+>> +
+>>   static int hv_pci_irqchip_init(void)
+>>   {
+>>   	static struct hv_pci_chip_data *chip_data;
+>>   	struct fwnode_handle *fn = NULL;
+>> +	struct irq_domain *irq_domain_parent = NULL;
+>>   	int ret = -ENOMEM;
+>>   
+>>   	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
+>> @@ -907,9 +953,24 @@ static int hv_pci_irqchip_init(void)
+>>   	 * way to ensure that all the corresponding devices are also gone and
+>>   	 * no interrupts will be generated.
+>>   	 */
+>> -	hv_msi_gic_irq_domain = acpi_irq_create_hierarchy(0, HV_PCI_MSI_SPI_NR,
+>> -							  fn, &hv_pci_domain_ops,
+>> -							  chip_data);
+>> +#ifdef CONFIG_ACPI
+>> +	if (!acpi_disabled)
+>> +		irq_domain_parent = hv_pci_acpi_irq_domain_parent();
+>> +#endif
+>> +#if defined(CONFIG_OF)
+>> +	if (!irq_domain_parent)
+>> +		irq_domain_parent = hv_pci_of_irq_domain_parent();
+>> +#endif
+>> +	if (!irq_domain_parent) {
+>> +		WARN_ONCE(1, "Invalid firmware configuration for VMBus interrupts\n");
+>> +		ret = -EINVAL;
+>> +		goto free_chip;
+>> +	}
+>> +
+>> +	hv_msi_gic_irq_domain = irq_domain_create_hierarchy(
+>> +		irq_domain_parent, 0, HV_PCI_MSI_SPI_NR,
+>> +		fn, &hv_pci_domain_ops,
+>> +		chip_data);
+> 
+> This is a different style of indenting the parameters than other
+> similar cases in this file, which line up parameters on subsequent
+> lines under the open parenthesis.
+> 
+>>   	if (!hv_msi_gic_irq_domain) {
+>>   		pr_err("Failed to create Hyper-V arm64 vPCI MSI IRQ domain\n");
+>> -- 
+>> 2.43.0
+>>
 
-James
-
----
-
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index 23b9f6efa047..26b0c665c3b7 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -1782,25 +1782,37 @@ static void ufs_qcom_write_msi_msg(struct msi_desc =
-*desc, struct msi_msg *msg)
- 	ufshcd_mcq_config_esi(hba, msg);
- }
-=20
-+struct ufs_qcom_irq {
-+	unsigned int		irq;
-+	unsigned int		idx;
-+	struct ufs_hba		*hba;
-+};
-+
- static irqreturn_t ufs_qcom_mcq_esi_handler(int irq, void *data)
- {
--	struct msi_desc *desc =3D data;
--	struct device *dev =3D msi_desc_to_dev(desc);
--	struct ufs_hba *hba =3D dev_get_drvdata(dev);
--	u32 id =3D desc->msi_index;
--	struct ufs_hw_queue *hwq =3D &hba->uhq[id];
-+	struct ufs_qcom_irq *qi =3D data;
-+	struct ufs_hba *hba =3D qi->hba;
-+	struct ufs_hw_queue *hwq =3D &hba->uhq[qi->idx];
-=20
--	ufshcd_mcq_write_cqis(hba, 0x1, id);
-+	ufshcd_mcq_write_cqis(hba, 0x1, qi->idx);
- 	ufshcd_mcq_poll_cqe_lock(hba, hwq);
-=20
- 	return IRQ_HANDLED;
- }
-=20
-+DEFINE_FREE(ufs_qcom_irq, struct ufs_qcom_irq *,
-+	    if (_T) {							\
-+		    for (int idx =3D 0; _T[idx].irq; idx++)		\
-+			    devm_free_irq(_T[idx].hba->dev, _T[idx].irq, \
-+					  _T[idx].hba);			\
-+		    platform_device_msi_free_irqs_all(_T[0].hba->dev);	\
-+		    devm_kfree(_T[0].hba->dev, _T);			\
-+	    })
-+
- static int ufs_qcom_config_esi(struct ufs_hba *hba)
- {
- 	struct ufs_qcom_host *host =3D ufshcd_get_variant(hba);
--	struct msi_desc *desc;
--	struct msi_desc *failed_desc =3D NULL;
-+	struct ufs_qcom_irq *qi __free(ufs_qcom_irq);
- 	int nr_irqs, ret;
-=20
- 	if (host->esi_enabled)
-@@ -1811,6 +1823,11 @@ static int ufs_qcom_config_esi(struct ufs_hba *hba)
- 	 * 2. Poll queues do not need ESI.
- 	 */
- 	nr_irqs =3D hba->nr_hw_queues - hba->nr_queues[HCTX_TYPE_POLL];
-+	qi =3D devm_kcalloc(hba->dev, nr_irqs, sizeof(*qi), GFP_KERNEL);
-+	if (!qi)
-+		return -ENOMEM;
-+	qi[0].hba =3D hba;	/* required by __free() */
-+
- 	ret =3D platform_device_msi_init_and_alloc_irqs(hba->dev, nr_irqs,
- 						      ufs_qcom_write_msi_msg);
- 	if (ret) {
-@@ -1818,41 +1835,31 @@ static int ufs_qcom_config_esi(struct ufs_hba *hba)
- 		return ret;
- 	}
-=20
--	msi_lock_descs(hba->dev);
--	msi_for_each_desc(desc, hba->dev, MSI_DESC_ALL) {
--		ret =3D devm_request_irq(hba->dev, desc->irq,
--				       ufs_qcom_mcq_esi_handler,
--				       IRQF_SHARED, "qcom-mcq-esi", desc);
-+	for (int idx =3D 0; idx < nr_irqs; idx++) {
-+		qi[idx].irq =3D msi_get_virq(hba->dev, idx);
-+		qi[idx].idx =3D idx;
-+		qi[idx].hba =3D hba;
-+
-+		ret =3D devm_request_irq(hba->dev, qi[idx].irq, ufs_qcom_mcq_esi_handler=
-,
-+				       IRQF_SHARED, "qcom-mcq-esi", qi + idx);
- 		if (ret) {
- 			dev_err(hba->dev, "%s: Fail to request IRQ for %d, err =3D %d\n",
--				__func__, desc->irq, ret);
--			failed_desc =3D desc;
--			break;
-+				__func__, qi[idx].irq, ret);
-+			qi[idx].irq =3D 0;
-+			return ret;
- 		}
- 	}
--	msi_unlock_descs(hba->dev);
-+	retain_ptr(qi);
-=20
--	if (ret) {
--		/* Rewind */
--		msi_lock_descs(hba->dev);
--		msi_for_each_desc(desc, hba->dev, MSI_DESC_ALL) {
--			if (desc =3D=3D failed_desc)
--				break;
--			devm_free_irq(hba->dev, desc->irq, hba);
--		}
--		msi_unlock_descs(hba->dev);
--		platform_device_msi_free_irqs_all(hba->dev);
--	} else {
--		if (host->hw_ver.major =3D=3D 6 && host->hw_ver.minor =3D=3D 0 &&
--		    host->hw_ver.step =3D=3D 0)
--			ufshcd_rmwl(hba, ESI_VEC_MASK,
--				    FIELD_PREP(ESI_VEC_MASK, MAX_ESI_VEC - 1),
--				    REG_UFS_CFG3);
--		ufshcd_mcq_enable_esi(hba);
--		host->esi_enabled =3D true;
-+	if (host->hw_ver.major =3D=3D 6 && host->hw_ver.minor =3D=3D 0 &&
-+	    host->hw_ver.step =3D=3D 0) {
-+		ufshcd_rmwl(hba, ESI_VEC_MASK,
-+			    FIELD_PREP(ESI_VEC_MASK, MAX_ESI_VEC - 1),
-+			    REG_UFS_CFG3);
- 	}
--
--	return ret;
-+	ufshcd_mcq_enable_esi(hba);
-+	host->esi_enabled =3D true;
-+	return 0;
- }
-=20
- /*
+-- 
+Thank you,
+Roman
 
 
