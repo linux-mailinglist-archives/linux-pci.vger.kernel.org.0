@@ -1,125 +1,92 @@
-Return-Path: <linux-pci+bounces-23955-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23956-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AFB9A653B4
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 15:36:12 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DE79A654D3
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 16:01:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8C6E07A86DF
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 14:35:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12CA67A5042
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 14:59:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4A93241C99;
-	Mon, 17 Mar 2025 14:35:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CD0524503B;
+	Mon, 17 Mar 2025 15:00:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X33WEUha"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="XNbAaFS7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-24417.protonmail.ch (mail-24417.protonmail.ch [109.224.244.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5823245036;
-	Mon, 17 Mar 2025 14:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD34A241683;
+	Mon, 17 Mar 2025 15:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742222136; cv=none; b=ujy3XTjQzU/DUKqg7yLPjIqch7bS1+Dx1zB1Yq6UsDSzzRMBXFMJ8rmF1n8VpboF458XJKo7CBtV4iNNfFdQjjCBWgFs6LAu5R/s9+AwNDPAWxQL+es1ZPnfpvootlbDVMriklCewJtl48gy7R0N0m+s8HfC6gwmqnW5kxcVzMc=
+	t=1742223637; cv=none; b=mTVkvepTRz1Ab+0/HG28Gqy7b/W/sZKWKIggoVJKdz9yDqRokHaF0ei3KLWAuSXT2dGIYha4nQMMxx89+J8GpoczsWmmysR+ehFLGThpf9argbo4GXtZKFMM+DUU5fzyMLJbc21wgfLbZbPwYiH0nMHgPvcQiUy/DCXuIXNsIw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742222136; c=relaxed/simple;
-	bh=Os/3OUI8KCcOIG1iOxmuXB6ZFpAj0XoaeG61qBtx0NA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tQ1TmoAbjMWPxrP11SgiBg+0Uae59+6klbP2ZlY2IgHeoT+Czd9wie0eO8N/vOMlIFcCuBFILWxjIE70CWDYgTHzTKmFvVlxyNEtoQVVtIAcaKIambSi4a/pmyW0fuO0WA36eiHKns3yGXz2+jAjT02OxBX9L+++slzUvnXBQPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X33WEUha; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39133f709f5so2720114f8f.0;
-        Mon, 17 Mar 2025 07:35:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742222133; x=1742826933; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=w87Zh3I28Z1+Sqxqq72rJtkODwwHBc+MVhcgl8wWLzQ=;
-        b=X33WEUhab50tJOI/mwwnSQZGmqv1CRhRTg1NjUWfGiQo2MXxiFoqW5PzPMtTihkojd
-         GdOT8QYVCJ+ph/1AG+8r3qW15QNnjiRmJBNyablQfzootPOb76e2iCkjOY8GicP923Af
-         Cy172UBERuS590u56BgiAFD2a7HN0gfq7tAVkDpmzE63AaZ76024RgsDANcC61B8ZxT1
-         cnldEF2OiRnnH8b0nCN3H5N4zstJWV4eD+iGhJBInU4b/T+Nzco3pUCxLlEEK3ai1Xk9
-         Em1tiQcK6AWumBNocYhYyIP/W5dxctsrBJZgaG9RDojB0FqkI4TzGyEbld7aRipNmdPP
-         7PrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742222133; x=1742826933;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w87Zh3I28Z1+Sqxqq72rJtkODwwHBc+MVhcgl8wWLzQ=;
-        b=J6tBfWOVc4OHYwQoC5+q5AcUILZwL5126HtXUkF+yMsBNbD/XBGUjBxhvgEIjJq/2t
-         q5FYbL3VzTBFfTrNL1l5w4hE/OExw+nTPQICy0vHOPy/qdgMZBfDf4+WXnBByUjL/XwG
-         XGmGwKZatDQXEj/Pj+oZDInP+hhhuuRo8CdrxNJ6cPynEBky1iEQ0vkXoRKOIL+4Rn3O
-         832RoFfAUSrv+f95drX6DU7UfFq+HJE/DLmG+SRqXPL3io4BxrVdwVZFh0AJuAOKr6XH
-         +h+q/q0+ocE49sQgAKbPTHJGTkZ98sVlVjqIYEjojwVhv85Z+3Nr4a2I+00M8foz5wsP
-         U+rg==
-X-Forwarded-Encrypted: i=1; AJvYcCUg75F7xYOMdVZJJKHhNrnb0dHLhmkRiTQ4Naqhlelpf6/PztlImjlLzvQdqib59l8Kzr2wQEacurIlONE=@vger.kernel.org, AJvYcCW40msMrNuC89cH2wXUNCMN+fQ7721Uqoak6nNadyDsEOQa4exl24oq5Fz2VsxsjsWzfUjAeoG5VqQ3@vger.kernel.org
-X-Gm-Message-State: AOJu0YySME+JfqiOEtfTurxsX/K0/SQ3nNwDsqsq/87yneAkE15nIgF7
-	5zECWcmNKq6nyJG6bfLTJmt1lc07NQm+Xle0p2N1l6bFxGhiJzo0
-X-Gm-Gg: ASbGncsJeRYWLgs0Aqve/9uO9N8lSNNU7viViW32sFbybMRrmVmNjsBy7PrmvYM6VZo
-	/M/l9geGGg4idyu6u/2YcVQUVmdws9b9Nso9Xy37l1eo+QDDd6MFRX6j1y5phyUQ3T9+RhS9giD
-	EGlx00iZVRghB9PBeoBcStFM3FcF4Lq+3mtPyhom8HTI24vZKiZ/2O20pSSsCybsisXgKgqQX3J
-	Tth0i4HTbltMmQFcI+A6jcxOwCSHmgh3pa2jU7VaEuuaT92SqOMjxWUUB7uHcpPY0ls8CeVYv+L
-	nKEfvyYF2kksxgCUrUBCwmLgErnztSsLS9nb6naefFhEkw==
-X-Google-Smtp-Source: AGHT+IGj2U95C2D/UDRSgWDo1hfyu3+i9z8iABs6gkm9zWiBp79gxMqCjLlCuVAE4sL2PJ8+U38jmA==
-X-Received: by 2002:adf:a348:0:b0:391:401f:bfd8 with SMTP id ffacd0b85a97d-39720584500mr11131524f8f.55.1742222132717;
-        Mon, 17 Mar 2025 07:35:32 -0700 (PDT)
-Received: from localhost ([194.120.133.58])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-395cb40cdd0sm15208107f8f.77.2025.03.17.07.35.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 07:35:32 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] PCI: brcmstb: make const read-only arrays static
-Date: Mon, 17 Mar 2025 14:34:56 +0000
-Message-ID: <20250317143456.477901-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1742223637; c=relaxed/simple;
+	bh=cWkQsoSV/IZUx6NDHHMXi0u9x4VMUdLI8PhyNjOqZn8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JV5y3UA80cx1M63MG+m2FT272c3tBq3Yek0ZAQPiKQclzfP6/hk3Ow6fOW5HuV1LllKqbeoajTv1pQjqUkj8KOZ3Tequ+h/uILmwmAGqJuGxeMjnTDyVJ7ZaY4Zxv5A1BJTfC+iStxZK14M68eDO71IomQgtWTbJaLwLekDLglE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=XNbAaFS7; arc=none smtp.client-ip=109.224.244.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1742223633; x=1742482833;
+	bh=2jV32eFqRje1RzHN9WgvrVAw0d//cFd065kmoy6q4vw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=XNbAaFS7YmwSZSS6lTWs9g7U1K2XAtOZg0C3sK6ueUvAmr5BtDZj6IQw9+J5RQFQq
+	 FHsYc/2HGxesqxq1sChqL1n9z39vsXSbe9A1oli5+l+98nhgSKu1hB+JWtrwtN0MYI
+	 6onS600ofo+EkmZ4cAx7SuZAAYDxmTUFBmU+5eai6rRlrjX6EGgXArKDRcpVws3HDt
+	 yPvoV+A8wpCBfL3rDCa/mHpwj+FhDF7Ss3FEphgevmybLuJICw+ln3azmKqu89SeZ0
+	 /38zZWgOwlOLNn+7cdlWir3HndGMSX7/hNc8SRYODtPSlIr9HJFCvJL/hLGEmti3BG
+	 qUEqifVlTV5ww==
+Date: Mon, 17 Mar 2025 15:00:26 +0000
+To: Tamir Duberstein <tamird@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 6/6] rust: use strict provenance APIs
+Message-ID: <D8IMQ8OEOMAG.1AFKGZJ1C4DGQ@proton.me>
+In-Reply-To: <CAJ-ks9kH3SE91XSadBx1qFaG5dem93o_ctR0t2FwW-0ZfkRNwQ@mail.gmail.com>
+References: <20250315-ptr-as-ptr-v4-0-b2d72c14dc26@gmail.com> <20250315-ptr-as-ptr-v4-6-b2d72c14dc26@gmail.com> <D8IFS7175NNQ.3VAP8WA2QC8WF@proton.me> <CAJ-ks9mXzM6D++vq0QCugaFOS9ES0j7GpeWZqckY0dA3JwpnJw@mail.gmail.com> <CAJ-ks9kH3SE91XSadBx1qFaG5dem93o_ctR0t2FwW-0ZfkRNwQ@mail.gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 6436172b8e08da928624aeaa38482e05181d7d0f
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Don't populate the const read-only arrays data and regs on the stack at
-run time, instead make them static.
+On Mon Mar 17, 2025 at 3:13 PM CET, Tamir Duberstein wrote:
+> On Mon, Mar 17, 2025 at 6:53=E2=80=AFAM Tamir Duberstein <tamird@gmail.co=
+m> wrote:
+>>
+>> On Mon, Mar 17, 2025 at 5:34=E2=80=AFAM Benno Lossin <benno.lossin@proto=
+n.me> wrote:
+>> >
+>> > > +    pub fn expose_provenance<T>(addr: *const T) -> usize {
+>> > > +        addr.expose_provenance()
+>> >
+>> > Instead of having these stubs here, you can probably just do
+>> >
+>> >     pub use core::ptr::expose_provenance;
+>>
+>> This doesn't work for the methods on primitives, but it works for the
+>> free functions. Done.
+>
+> Have to revert this, writing `pub use ...` directly causes the MSRV
+> clippy lint to fire at the caller.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Ah that is unfortunate.
+
 ---
- drivers/pci/controller/pcie-brcmstb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 8b2b099e81eb..d258b571f642 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -832,8 +832,8 @@ static int brcm_pcie_perst_set_generic(struct brcm_pcie *pcie, u32 val)
- 
- static int brcm_pcie_post_setup_bcm2712(struct brcm_pcie *pcie)
- {
--	const u16 data[] = { 0x50b9, 0xbda1, 0x0094, 0x97b4, 0x5030, 0x5030, 0x0007 };
--	const u8 regs[] = { 0x16, 0x17, 0x18, 0x19, 0x1b, 0x1c, 0x1e };
-+	static const u16 data[] = { 0x50b9, 0xbda1, 0x0094, 0x97b4, 0x5030, 0x5030, 0x0007 };
-+	static const u8 regs[] = { 0x16, 0x17, 0x18, 0x19, 0x1b, 0x1c, 0x1e };
- 	int ret, i;
- 	u32 tmp;
- 
--- 
-2.47.2
+Cheers,
+Benno
 
 
