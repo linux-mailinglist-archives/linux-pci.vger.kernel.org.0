@@ -1,124 +1,130 @@
-Return-Path: <linux-pci+bounces-23933-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-23934-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC242A650C1
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 14:23:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54DC8A650D2
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 14:29:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C76733B62EC
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 13:23:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A998F1680AE
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Mar 2025 13:29:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B52623E25A;
-	Mon, 17 Mar 2025 13:23:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CC6923E23D;
+	Mon, 17 Mar 2025 13:29:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOtwng8s"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yr6pc4Xe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EaILQh/X"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C03D23C8CE;
-	Mon, 17 Mar 2025 13:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB85EBE;
+	Mon, 17 Mar 2025 13:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742217803; cv=none; b=rz//FNLv1Y3pJ9D5CwetNCZeF/oZjzDa9knYgU/j5uGY541MjzVKlktj1TnQ1dpKFwVCzaS9YVZpw95MLiWyX1sk9xqRo8NqXriLNCdmVH7ySHGNt2mz8/ZBhXsOEznKely7b5rkZbw0GHttWolcYC52IZmdDqG8uwkPeR1uKr4=
+	t=1742218165; cv=none; b=LxcNtKz1CStkP/FS6Uhqy1v9k5HzmNwNAf+RJyeEFzOn4xjbs++XqYKUCJDzQtPtCV39Jfu62uXZn7cRnRRHdBJRGE69Vsein3DVI+iZt4U8r5tRRM7dGx902/nJFDoM9KXVhxXLaYQs2epFYsGhZDh6MbBZ0I60qbGAyg8Imkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742217803; c=relaxed/simple;
-	bh=BpyEdD917DTKrssNtjyvHazyp1gxLX2BMxDRS4uuMT8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=nuiXbkQqIUY9NnYWiZaIqwQupPRyiIxAL8o8J4kA2I2yDtOWMeU53qAtuUPzyOUBB+9aFgHsaOf3wuEZySgXATlcr09ncAPbesF7foUWiZ5l8FZnHZVTrsj5IzZ+nO9Btd2rjuWNbX5x+X3L9xhVNt5QUf+gptkDQ73Zbpi7Kg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOtwng8s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59904C4CEE9;
-	Mon, 17 Mar 2025 13:23:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742217803;
-	bh=BpyEdD917DTKrssNtjyvHazyp1gxLX2BMxDRS4uuMT8=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=OOtwng8s80n8AiNj2LAhGke8+KaiNxKdafKlsHRhPYzXc+QVQc5TVmKrElCFg/zWa
-	 H9DyMFazp2LZtcLlXjiztpdMKQV4u+JAWOtiNT8aRMOrhLihU7HaBwYbcVRW5NxrOw
-	 GPjkAqFHZzePBAMTXtfDNBe/doWXtsAUYEViaLjvVludR0Po1Rv5NvUYVWt2xnUXUd
-	 fSW4lHdACvaNx/twmdZH8cMs8LSxqGeeckSi/RpB90/NBy11BxL/hQzPKPhd587ajt
-	 WCYJTENFFL/TJKFkYjfRlGz+phfYrG7qcrh0Thpc9IH0D60LGwRH5IYy5HJSMhKdag
-	 1FxV+9hsgUswA==
-Message-ID: <78e580bd-420c-4e5e-9383-7919c422ab58@kernel.org>
-Date: Mon, 17 Mar 2025 14:23:15 +0100
+	s=arc-20240116; t=1742218165; c=relaxed/simple;
+	bh=H5ugNwb/4njRzQNXYV96KTDFYqXK4NXqoPzX+JIOneY=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=RCm8RHFIMCnbsKPzm7/K4/wJIORoXIUhl5OV+Wzaqv1Y1Q8GvaHlzbuytgcro695Yvgg8hgN9a8sElkF6Vg6awX4Z0Y+op+oa9Q4dkHrJ3AKLhQGl9rOxUTuWzZoczaacwQDNaIUjRJr5cMASPx5gDYI74+oz9DMoqUz5WciXis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yr6pc4Xe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EaILQh/X; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Message-ID: <20250317092919.008573387@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742218162;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc; bh=/tkx7mGZE55fKVFe1pUE/8sU5HhoRIfrbJei1zExT88=;
+	b=yr6pc4XeAhEidQ4Km4UJn9OshKsObaGeBldPzvf7ipJh1aJrkKOsrbFSSayGf2ONl7jkjt
+	Gq9vZKyYyBb6PgpBAy1JBx4YSZI80w2S8Xv0qSC5vxD6Htqgy40sWtrAEmALuCV0zPzFNo
+	c2xsUNpRoVdpUNgt+uR9cGCLiqRRjqVpFVjysPVTqBBlQINju3iDrZ7/S5BSxJkxq+BPcc
+	Zz0KbulOOw4mlce14M49OIVdBVCBvPCZJ6vvcJ2IIxHZOjKiHiXXiDLxZ1PrCu4qGb9i60
+	okcHhMaovtVZaUXdkVPe/4gPWg03yvtjY5JQzoOiMO47xVkALXk9xn6kZ37z5Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742218162;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc; bh=/tkx7mGZE55fKVFe1pUE/8sU5HhoRIfrbJei1zExT88=;
+	b=EaILQh/XO5ohqXn/oN1aidRsCBODBkFh26xjmaN6HX+y99Kiv74r1Ikip1b7S+v9PkPcN7
+	8X6tfx1Os50KkXDg==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Nishanth Menon <nm@ti.com>,
+ Dhruva Gole <d-gole@ti.com>,
+ Tero Kristo <kristo@kernel.org>,
+ Santosh Shilimkar <ssantosh@kernel.org>,
+ Logan Gunthorpe <logang@deltatee.com>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Jon Mason <jdmason@kudzu.us>,
+ Allen Hubbe <allenbh@gmail.com>,
+ ntb@lists.linux.dev,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ linux-pci@vger.kernel.org,
+ Michael Kelley <mhklinux@outlook.com>,
+ Wei Liu <wei.liu@kernel.org>,
+ Haiyang Zhang <haiyangz@microsoft.com>,
+ linux-hyperv@vger.kernel.org,
+ Wei Huang <wei.huang2@amd.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ linux-scsi@vger.kernel.org,
+ Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Subject: [patch V3 00/10] genirq/msi: Spring cleaning
+Date: Mon, 17 Mar 2025 14:29:21 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 1/4] dt-bindings: PCI: qcom: Add MHI registers for
- IPQ9574
-To: Varadarajan Narayanan <quic_varada@quicinc.com>, bhelgaas@google.com,
- lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- andersson@kernel.org, konradybcio@kernel.org, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250317100029.881286-1-quic_varada@quicinc.com>
- <20250317100029.881286-2-quic_varada@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250317100029.881286-2-quic_varada@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 17/03/2025 11:00, Varadarajan Narayanan wrote:
-> The MHI range is present in ipq5332, ipq6018, ipq8074 and ipq9574.
-> Append the MHI register range and complete the hardware description
-> for the above SoCs.
-> 
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+This is version 3 of the cleanup work. The previous version can be found
+here:
 
+   https://lore.kernel.org/all/20250313130212.450198939@linutronix.de
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+While converting the MSI descriptor locking to a lock guard() I stumbled
+over various abuse of MSI descriptors (again).
 
-Best regards,
-Krzysztof
+The following series cleans up the offending code and converts the MSI
+descriptor locking over to lock guards.
+
+Changes vs. V2:
+
+   - Use __free() in __msix_setup_interrupts() - PeterZ
+
+   - Fix a typo in the msi core code
+
+   - Collect Reviewed/Tested/Acked-by tags where appropriate
+
+Patches 1, 3-4, 6-10 are unmodifed.
+
+The series applies on:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/msi
+
+and is available from git:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git irq/msi
+
+Thanks,
+
+	tglx
+---
+ drivers/ntb/msi.c                   |   22 +---
+ drivers/pci/controller/pci-hyperv.c |   14 --
+ drivers/pci/msi/api.c               |    6 -
+ drivers/pci/msi/msi.c               |  171 ++++++++++++++++++++++--------------
+ drivers/pci/pci.h                   |    9 +
+ drivers/pci/tph.c                   |   44 ---------
+ drivers/soc/ti/ti_sci_inta_msi.c    |   10 --
+ drivers/ufs/host/ufs-qcom.c         |   75 ++++++++-------
+ include/linux/cleanup.h             |   17 +++
+ include/linux/irqdomain.h           |    2 
+ include/linux/msi.h                 |    7 +
+ kernel/irq/msi.c                    |  125 ++++++++++----------------
+ 12 files changed, 249 insertions(+), 253 deletions(-)
 
