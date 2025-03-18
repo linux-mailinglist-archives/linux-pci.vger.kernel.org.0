@@ -1,173 +1,197 @@
-Return-Path: <linux-pci+bounces-24052-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24053-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2741FA677AA
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 16:24:50 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76894A677EE
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 16:33:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 272423AA6D6
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 15:24:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3F9207A9559
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 15:32:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCE1B20E6EE;
-	Tue, 18 Mar 2025 15:24:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67113211464;
+	Tue, 18 Mar 2025 15:31:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tx31GU47"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qs+29R09"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490AF20F09D
-	for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 15:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9D820E6F6;
+	Tue, 18 Mar 2025 15:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742311448; cv=none; b=C5qHjyptAsQhiZZ/vWY8SL/eaNyXH1aPFczfzZ+l9HyZupJd6hNEIolJ5ryllGLYPrlAWhZ6urJsz2V6D24R1A5G6HUgYYFF/UDfKp3u6qtxUTJFHjVVmLDwn+wEH0eLKNqL01fYwMFDsNLEoD1PSuyf32uTilYGReh1eWlWYnA=
+	t=1742311910; cv=none; b=XUCsKIQY1CZAFa7JxU4v+fFiMiLCBBkAUeSvmfjupo7hLLFNe2TTeFLMJE2Q4iu3Y/nTtkhR0W9XnICE/Upgg2W5Bvd2PnEmHiiV51HetRof9b5TBkRgrV3i7ol/tUJa9i7osDatj3jj0GwP7fsLzuWQFM2dxXecGFDHexuXbSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742311448; c=relaxed/simple;
-	bh=Cf1OUc2bx4y6zBMNWnUJYqW8Aw9LIHUNqo7NCdWdpg4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CyG9rTOF5/AfSJseJ4/Ll18AYiJZdp6QcDXsLFDvDBa+IgsmOf42Sr+ZhqcxTw6s8ENvrxZvdfos3dtOErnkiYviDpVlfYMgUOsKZdnzqySX9Rbx/y253PUgnJaLr7Va+qpUIkN2iSNDMKdNEIeNXF5wqzoeauLRhA7ffhk+MHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tx31GU47; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742311442;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Wbk8EGXD4NayOlZfLLYd39YdsPD/QxzEO894bNthxCE=;
-	b=Tx31GU478b9g7BCZn0H8T/b6A4lWibGiU5BZm66xImHQHsSYhegf7/USsREFmAaUgnAOQT
-	nvDPLqOgQSHy2YAcnxYNawUAraegNwKOv8SIXxurbAdX7484JuiZ/8/5E7z1YRYBbDi965
-	fkbSlICwXnOQ3jATbBRLCGNQjKQFT0I=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-359-HMhD9TjPO763_hbqvrTCwA-1; Tue, 18 Mar 2025 11:23:55 -0400
-X-MC-Unique: HMhD9TjPO763_hbqvrTCwA-1
-X-Mimecast-MFC-AGG-ID: HMhD9TjPO763_hbqvrTCwA_1742311435
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d43405d1baso6664175ab.0
-        for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 08:23:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742311435; x=1742916235;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wbk8EGXD4NayOlZfLLYd39YdsPD/QxzEO894bNthxCE=;
-        b=hsRh4/jKkJ7QIH13sJTsyPgt1WuZebHarUAQ5OlHtXbSiUy42yMzXOZdldmFlwuNYe
-         vu04YDhgvKpzp/xuWL2UJ84mr+Z54spu7uoi5NXp1wPNBnGcj1pCAlu+3kfmsRC1VRed
-         kAbHbEy40woioD1I39xBN0jARW0qWGEffJ4+jj/Xh9CV55EQcL6ARy3Ozq/jJppqvGre
-         7oQ8kZIn3OeupU6Y7C9T6g5HeLZO3/U5YbjHgTEOfbEuJFfok8pUIRrywJs5VuoqDe5a
-         HqGSspPRuJSUvbkU+srrkn0HyQg5cQcGxTUJHROKe+IQqWLjH7jcXD+pyUPAgOWGXja+
-         e0Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCWQNT/t8KFMaxBROYxgBIxD21XyPAXaZ2DURpcOTicBDQJmaXZS5b+5alTMPPERvo7iO3/6aIWrFp8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp3gMKV81ZVyed1IPIRCLnpA90mgxnuIINQccrbD1lCCjOZWyo
-	/oTPWkCPWnysafSOtpWx9t1Z+2fLh8s1SI1yopoGJRWUaJcadXnENS1mzj5nPNYWtmqnqvn9C5I
-	9tWWuyNAxco6PORjUaYdy3kUMoWcfq1lgyR71Da9XKKe2TIiI3RwGj6QZIg==
-X-Gm-Gg: ASbGncvyATHvY9vw6uLGVHUVAwAli0gUIiuWfyFc6K7UZZNx7ZED/83TnRGaLjjOXDD
-	PM15smp33TXyi/W0CVsFBZCizT1m3gITSRf/Dt0Yi2djs2PAJxK2PF7GElc2pFqktrQXCkU+0li
-	VLmeHzf69MDvsXr7TC0A0vG3xzk8NAkwH0Ttk1F/TylVwmDI7EB+1S+ZSu2PTvk0LOGltS86lcw
-	pO1QvE+jTE4nPAjOPfF8Ip9zIHpzRg0gyr78fX0zvSvz93U8oQGro2PG88ZaIstqMFYBfx7U3KI
-	J15/xBxQ0KV2B2c0xLU=
-X-Received: by 2002:a05:6e02:1d1a:b0:3d3:dba6:794b with SMTP id e9e14a558f8ab-3d48397f815mr49346545ab.0.1742311435152;
-        Tue, 18 Mar 2025 08:23:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEsqooDZPEJptdKOp2GMmqlQWXXfWQoj6QYiJvFz7JFaLA5sT8U5NHTJbX8x5gNGdFuZRsaOg==
-X-Received: by 2002:a05:6e02:1d1a:b0:3d3:dba6:794b with SMTP id e9e14a558f8ab-3d48397f815mr49346465ab.0.1742311434790;
-        Tue, 18 Mar 2025 08:23:54 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2637193edsm2809223173.31.2025.03.18.08.23.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 08:23:53 -0700 (PDT)
-Date: Tue, 18 Mar 2025 09:23:52 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Alexander Duyck
- <alexanderduyck@fb.com>, =?UTF-8?B?TWljaGHFgg==?= Winiarski
- <michal.winiarski@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
- linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] PCI: Fix BAR resizing when VF BARs are assigned
-Message-ID: <20250318092352.1bf43af4.alex.williamson@redhat.com>
-In-Reply-To: <20250318090157.525949f9.alex.williamson@redhat.com>
-References: <20250307140349.5634-1-ilpo.jarvinen@linux.intel.com>
-	<20250314085649.4aefc1b5.alex.williamson@redhat.com>
-	<kgoycgt2rmf3cdlqdotkhuov7fkqfk2zf7dbysgwvuipsezxb4@dokqn7xrsdvz>
-	<20250317163859.671a618f.alex.williamson@redhat.com>
-	<ea24cc36-36c7-1b28-f9ba-78f7161430ca@linux.intel.com>
-	<20250318090157.525949f9.alex.williamson@redhat.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1742311910; c=relaxed/simple;
+	bh=xfVP5X6JUhbI8KG9gpiy9o/m49qsXUbi7Lo3C+GZ7vY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ArdthW8tPrw0AADhvEfac1VVZVtanQgUwssxpv1/tE0GJ899lifqfCqOwScotL8RQmZ/+weqFPdpr/YOsPv7vd6ut/IrO+x0zibyaJwgooXAvhog6SgDegIoJLuszBuJK3RT8o7xEwz6IZWqmGDbMsj7TRCnqA0tYL+Ni/+BFr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qs+29R09; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84D57C4CEDD;
+	Tue, 18 Mar 2025 15:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742311909;
+	bh=xfVP5X6JUhbI8KG9gpiy9o/m49qsXUbi7Lo3C+GZ7vY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Qs+29R09M/HjOvbEO9IttVjrc2c7gUuI2msCv+/OQoRlHDeU037m8qOF2+baNjxjx
+	 ckPCjPUDjqkT4EZAdSzhjb1OeFFedsNLEB9S64U+XnxuCBovC0Z7OkloLNjMUClMfp
+	 TSb8WkMOF3ak7mjsSz5ybjEuUUTZBy9GCWYBeBIoqbnRv3HhdsF81JlXKfKisJevuP
+	 03P/jP+g2o8GhXiq1wMl8+6WkeVC4tkkdTfXIRrPclVf93FiSUdgvz+hLYuZH/IVxP
+	 sFuHGwYyqLYRQS+8xhKIgSq54DDAz77Q08p39dYJZjv1XHNI+jP3x7Fy/MEeCkFa7d
+	 q8IpALC1sbbAA==
+Date: Tue, 18 Mar 2025 10:31:48 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Lei Chuan Hua <lchuanhua@maxlinear.com>
+Cc: Frank Li <Frank.Li@nxp.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC NOT TESTED] PCI: intel-gw: Use use_parent_dt_ranges
+ and clean up intel_pcie_cpu_addr_fixup()
+Message-ID: <20250318153148.GA1000275@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BY3PR19MB5076A8D664FAA83E7C168300BDDE2@BY3PR19MB5076.namprd19.prod.outlook.com>
 
-On Tue, 18 Mar 2025 09:01:57 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+On Tue, Mar 18, 2025 at 01:49:46AM +0000, Lei Chuan Hua wrote:
+> Hi Bjorn,
+> 
+> I did a quick test with necessary change in dts. It worked, please move on.
 
-> On Tue, 18 Mar 2025 13:42:57 +0200 (EET)
-> Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
->=20
-> > + Jakub
-> > + Alexander
-> >=20
-> > On Mon, 17 Mar 2025, Alex Williamson wrote: =20
-> > > On Mon, 17 Mar 2025 19:18:03 +0100
-> > > Micha=C5=82 Winiarski <michal.winiarski@intel.com> wrote:   =20
-> > > > On Fri, Mar 14, 2025 at 08:56:49AM -0600, Alex Williamson wrote:   =
-=20
-> > > > > On Fri,  7 Mar 2025 16:03:49 +0200
-> > > > > Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
-> > > > >      =20
-> > > > > > __resource_resize_store() attempts to release all resources of =
-the
-> > > > > > device before attempting the resize. The loop, however, only co=
-vers
-> > > > > > standard BARs (< PCI_STD_NUM_BARS). If a device has VF BARs tha=
-t are
-> > > > > > assigned, pci_reassign_bridge_resources() finds the bridge wind=
-ow still
-> > > > > > has some assigned child resources and returns -NOENT which makes
-> > > > > > pci_resize_resource() to detect an error and abort the resize.
-> > > > > >=20
-> > > > > > Change the release loop to cover all resources up to VF BARs wh=
-ich
-> > > > > > allows the resize operation to release the bridge windows and a=
-ttempt
-> > > > > > to assigned them again with the different size.
-> > > > > >=20
-> > > > > > As __resource_resize_store() checks first that no driver is bou=
-nd to
-> > > > > > the PCI device before resizing is allowed, SR-IOV cannot be ena=
-bled
-> > > > > > during resize so it is safe to release also the IOV resources. =
-    =20
-> > > > >=20
-> > > > > Is this true?  pci-pf-stub doesn't teardown SR-IOV on release, wh=
-ich I
-> > > > > understand is done intentionally.  Thanks,     =20
-> >=20
-> > Thanks for reviewing. I'm sorry I just took Micha=C5=82's word on this =
-for=20
-> > granted so I didn't check it myself.
-> >=20
-> > I could amend __resource_resize_store() to return -EBUSY if SR-IOV is=20
-> > there despite no driver being present =20
->=20
-> I probably never really considered resizing BARs for an SR-IOV capable
-> device when adding this support originally, but it seems valid to me
-> that if we extend releasing resources to the SR-IOV BARs that we simply
-> need to assert that SR-IOV is disabled and fail otherwise.  Thanks,
+What does this mean?  By "move on", do you mean that I should merge
+the patch below (the removal of intel_pcie_cpu_addr())?
 
-Also, I've never seen it, but I'm under the impression that it's
-possible for pre-boot to hand-off a device with SR-IOV already enabled.
-Therefore I think this would be a worthwhile addition, regardless of the
-behavior of any given in-kernel driver.  Thanks,
+I do not want to merge a change that will break any existing intel-gw
+platform.  When you say "with necessary change in dts", it makes me
+think the removal of intel_pcie_cpu_addr() forces a change to dts,
+which would not be acceptable.  We can't force users to upgrade the
+dts just to run a newer kernel.
 
-Alex
+I assume 250318 linux-next, which includes Frank's v12 series, should
+work with no change to dts required.  (It would be awesome if you can
+verify that.)
 
+If you apply this patch to remove intel_pcie_cpu_addr() on top of
+250318 linux-next, does it still work with no changes to dts?
+
+If you have to make a dts change for it to work after removing
+intel_pcie_cpu_addr(), then we have a problem.
+
+I do not see a .dts file in the upstream tree that contains
+"intel,lgm-pcie", so I don't know what the .dts contains or how it is
+distributed.
+
+I do see the binding at
+Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml,
+but the example there does not include anything about address
+translation between the CPU and the PCI controller, so my guess is
+that there are .dts files in the field that will not work if we remove
+intel_pcie_cpu_addr().
+
+> ________________________________________
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Tuesday, March 18, 2025 1:59 AM
+> To: Frank Li <Frank.Li@nxp.com>
+> Cc: Lei Chuan Hua <lchuanhua@maxlinear.com>; Lorenzo Pieralisi <lpieralisi@kernel.org>; Krzysztof Wilczyński <kw@linux.com>; Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>; Rob Herring <robh@kernel.org>; Bjorn Helgaas <bhelgaas@google.com>; linux-pci@vger.kernel.org <linux-pci@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
+> Subject: Re: [PATCH RFC NOT TESTED] PCI: intel-gw: Use use_parent_dt_ranges and clean up intel_pcie_cpu_addr_fixup()
+> 
+> 
+> 
+> On Wed, Mar 05, 2025 at 12:07:54PM -0500, Frank Li wrote:
+> > Remove intel_pcie_cpu_addr_fixup() as the DT bus fabric should provide correct
+> > address translation. Set use_parent_dt_ranges to allow the DWC core driver to
+> > fetch address translation from the device tree.
+> >
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> 
+> Any update on this, Chuanhua?
+> 
+> I plan to merge v12 of Frank's series [1] for v6.15.  We need to know
+> ASAP if that would break intel-gw.
+> 
+> If we knew that it was safe to also apply this patch to remove
+> intel_pcie_cpu_addr(), that would be even better.
+> 
+> I will plan to apply the patch below on top of Frank's series [1] for
+> v6.15 unless I hear that it would break something.
+> 
+> Bjorn
+> 
+> [1] https://lore.kernel.org/r/20250315201548.858189-1-helgaas@kernel.org
+> 
+> > ---
+> > This patches basic on
+> > https://lore.kernel.org/imx/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com/
+> >
+> > I have not hardware to test and there are not intel,lgm-pcie in kernel
+> > tree.
+> >
+> > Your dts should correct reflect hardware behavor, ref:
+> > https://lore.kernel.org/linux-pci/Z8huvkENIBxyPKJv@axis.com/T/#mb7ae78c3a22324b37567d24ecc1c810c1b3f55c5
+> >
+> > According to your intel_pcie_cpu_addr_fixup()
+> >
+> > Basically, config space/io/mem space need minus SZ_256. parent bus range
+> > convert it to original value.
+> >
+> > Look for driver owner, who help test this and start move forward to remove
+> > cpu_addr_fixup() work.
+> > ---
+> > Frank Li <Frank.Li@nxp.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-intel-gw.c | 8 +-------
+> >  1 file changed, 1 insertion(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> > index 9b53b8f6f268e..c21906eced618 100644
+> > --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
+> > +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> > @@ -57,7 +57,6 @@
+> >       PCIE_APP_IRN_INTA | PCIE_APP_IRN_INTB | \
+> >       PCIE_APP_IRN_INTC | PCIE_APP_IRN_INTD)
+> >
+> > -#define BUS_IATU_OFFSET                      SZ_256M
+> >  #define RESET_INTERVAL_MS            100
+> >
+> >  struct intel_pcie {
+> > @@ -381,13 +380,7 @@ static int intel_pcie_rc_init(struct dw_pcie_rp *pp)
+> >       return intel_pcie_host_setup(pcie);
+> >  }
+> >
+> > -static u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
+> > -{
+> > -     return cpu_addr + BUS_IATU_OFFSET;
+> > -}
+> > -
+> >  static const struct dw_pcie_ops intel_pcie_ops = {
+> > -     .cpu_addr_fixup = intel_pcie_cpu_addr,
+> >  };
+> >
+> >  static const struct dw_pcie_host_ops intel_pcie_dw_ops = {
+> > @@ -409,6 +402,7 @@ static int intel_pcie_probe(struct platform_device *pdev)
+> >       platform_set_drvdata(pdev, pcie);
+> >       pci = &pcie->pci;
+> >       pci->dev = dev;
+> > +     pci->use_parent_dt_ranges = true;
+> >       pp = &pci->pp;
+> >
+> >       ret = intel_pcie_get_resources(pdev);
+> >
+> > ---
+> > base-commit: 1552be4855dacca5ea39b15b1ef0b96c91dbea0d
+> > change-id: 20250305-intel-7c25bfb498b1
+> >
+> > Best regards,
+> >
 
