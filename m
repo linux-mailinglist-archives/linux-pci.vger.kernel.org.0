@@ -1,48 +1,48 @@
-Return-Path: <linux-pci+bounces-24030-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24031-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E58AA67057
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 10:53:41 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D87F6A6705F
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 10:55:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 836C2188D78B
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 09:53:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BEC397ABFA1
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 09:54:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80DD4207A11;
-	Tue, 18 Mar 2025 09:52:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9993A1F8BC8;
+	Tue, 18 Mar 2025 09:55:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWXjQD69"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xpg7BhCM"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D69207A00;
-	Tue, 18 Mar 2025 09:52:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AAA6288DB;
+	Tue, 18 Mar 2025 09:55:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742291566; cv=none; b=gnoWCrBa4cAOsGCn3E62JD54LDRqCUe4VFf6uBOJYtyyjvDZM+plSyEPnwVckzPc6n9sAVdotQRj78xeGkJ494V038YdRt4nw3nKO8/KcIw4A3kEQtjVDhEOKoFmDlYPQrm3BRysEBdyo+b1ThELbqKMCUU5p4a5+yo5WohQJ1g=
+	t=1742291700; cv=none; b=p+zqdeipaur33ohKksfN80miBUHC0/H1U/gCTTT8117XAQHV1Ap9lrFZnpvM73ddulC8FcRPcbZyHjbJOOpLI+HSFHqifd/2tj8DATky//PcyqG36HLSVayEje6DjV//4lfqhoOv0vVHDzFp/gDL563U897QLYBfGg3ddRWsxzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742291566; c=relaxed/simple;
-	bh=wbiT/Za974dRgPeik0jQmOKTA3pB34ji6ub1FSN3UNA=;
+	s=arc-20240116; t=1742291700; c=relaxed/simple;
+	bh=MMPIxNsQcdcDvT/XxJco5+7bOja52mFKmZbSLgBsJI8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rehV/wnFsUsab1JeffoqOetmqepZ3PYDHXhmd0BlNNc1fMH66llRDSaGrNHANOZ5YrUQSK5ldA771/muWiTu03P8Mw2DhRGyVGSRj67GaKdR8y3KR9CUFX4N1yImkR3BiXARQK9p16t7bIuTgk8g/+xbc7gYtWEjOwT25aJjv/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWXjQD69; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F3EBC4CEDD;
-	Tue, 18 Mar 2025 09:52:40 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=Zz5rQJjCVKDBGbx2b5rrzTo0o9+fXijnvGXUrg0ULjrWrwgZG0lErudwdvNLQ1YuImubiM2aCqKd0fNSjgCEl1CowaRaAKEvr+8HJNpB97ttI7hI1YJN4mQDFcRetn8RLYIuw5QZ/IKv42xqxWCuSBAZb5+1mIQDCQ0ZfkKJTac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xpg7BhCM; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73079C4CEDD;
+	Tue, 18 Mar 2025 09:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742291565;
-	bh=wbiT/Za974dRgPeik0jQmOKTA3pB34ji6ub1FSN3UNA=;
+	s=k20201202; t=1742291700;
+	bh=MMPIxNsQcdcDvT/XxJco5+7bOja52mFKmZbSLgBsJI8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kWXjQD69grngLEhzCwr/ums4RPyQEdIIbjf34Fr9DQJ9LCBwL20+MX07BfTyh31gv
-	 gVji2cbgGoB3ZJmK9U8lxC60IAS8z2oY5bDibjAoUpZyyBio0sVTWrZGDejUeWmQwA
-	 FVCJ1cMHpRFhsOAJnWSo0JOwyTO03JB3uUWbfsZ1gNFRV5NqkVASGUBQrs7vVkkrKc
-	 zCxLfOwwGBn8Z65ly63GjWPtn3oUUAe1dDdgkdBON9BqmY94pbfP136Z75idQrzQoC
-	 U5bjKwBhOeq8xu3nHDRskWGs0xKMq6brF3zADumASJjOXW8I5kmfRXIF84q/DfzsZQ
-	 5dpYXKfRjhngA==
-Message-ID: <afe7947b-ed71-40d0-aa2e-b16549fc6b7d@kernel.org>
-Date: Tue, 18 Mar 2025 10:52:37 +0100
+	b=Xpg7BhCMsNJ+5BhpWN2MZmwNuSLMoEAMw/OYupKD6twjduWywyPVOx6+xXLHfFe0q
+	 mPt/e4/F6v4swLbnAm/ie4cgurnTxx57sS129TLXUy3bJKnEkLyVOVElgoxc+oFmA7
+	 QNkRmZ+jupsF9blwYloTiJ6YUap8fxk5chyqtMYHvd33dEAHqLQTGmBLijWF0kkaGO
+	 5FbVtM9v/KD3QT2C02ds0BVbsneoWIpHR1xQ1PyC9e5CXGwE8+etmmB2oGjuH6mrF1
+	 x7+wPPnKKcwZ3fB8OKOCBmV7lY0Z0VZDoS6wX6XyRBiakhTl2k5koJmOPKqhX58G0E
+	 oVkd7Vy4KxPRw==
+Message-ID: <6cbec220-5ecc-4471-b819-031673d667df@kernel.org>
+Date: Tue, 18 Mar 2025 10:54:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -50,8 +50,8 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: PCI: xilinx-cpm: Add reset-gpios for
- PCIe RP PERST#
+Subject: Re: [PATCH v4 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST#
+ signal
 To: Sai Krishna Musham <sai.krishna.musham@amd.com>, bhelgaas@google.com,
  lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, cassel@kernel.org
@@ -59,7 +59,7 @@ Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, michal.simek@amd.com,
  bharat.kumar.gogada@amd.com, thippeswamy.havalige@amd.com
 References: <20250318092648.2298280-1-sai.krishna.musham@amd.com>
- <20250318092648.2298280-2-sai.krishna.musham@amd.com>
+ <20250318092648.2298280-3-sai.krishna.musham@amd.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -105,52 +105,70 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250318092648.2298280-2-sai.krishna.musham@amd.com>
+In-Reply-To: <20250318092648.2298280-3-sai.krishna.musham@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 18/03/2025 10:26, Sai Krishna Musham wrote:
-> Changes for v2:
-> - Add define from include/dt-bindings/gpio/gpio.h for PERST# polarity
-> - Update commit message
-> ---
->  .../bindings/pci/xilinx-versal-cpm.yaml       | 21 ++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> index d674a24c8ccc..904594138af2 100644
-> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-> @@ -24,15 +24,20 @@ properties:
->      items:
->        - description: CPM system level control and status registers.
->        - description: Configuration space region and bridge registers.
-> +      - description: CPM clock and reset control registers.
->        - description: CPM5 control and status registers.
-
-You cannot add items to the middle, that's an ABI break. Adding required
-properties is also an ABI break. Why you cannot add it to the end of the
-list?
-
-Or at least explain ABI break impact in commit msg?
-
-
-> -    minItems: 2
-> +    minItems: 3
->  
->    reg-names:
->      items:
->        - const: cpm_slcr
->        - const: cfg
-> +      - const: cpm_crx
->        - const: cpm_csr
-> -    minItems: 2
-> +    minItems: 3
+>  	const struct xilinx_cpm_variant *variant = port->variant;
+> +	struct device *dev = port->dev;
+> +	struct gpio_desc *reset_gpio;
 > +
-> +  reset-gpios:
-> +    description: GPIO used as PERST# signal
+> +	/* Request the GPIO for PCIe reset signal */
+> +	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(reset_gpio)) {
+> +		dev_err(dev, "Failed to request reset GPIO\n");
 
-Isn't this already in pci-bus-common.yaml?
+Isn't this probe path? If not, then why? How are you going to handle
+deferrer probe?
+
+> +		return;> +	}
+> +
+> +	/* Assert the reset signal */
+> +	gpiod_set_value(reset_gpio, 1);
+
+It was already asserted.
+
+>  
+> -	if (variant->version == CPM5NC_HOST)
+> +	/* Assert the PCIe IP reset */
+> +	writel_relaxed(0x1, port->crx_base + variant->cpm_pcie_rst);
+> +
+> +	/* Controller specific delay */
+> +	udelay(50);
+> +
+> +	/* Deassert the PCIe IP reset */
+> +	writel_relaxed(0x0, port->crx_base + variant->cpm_pcie_rst);
+> +
+> +	/* Deassert the reset signal */
+> +	gpiod_set_value(reset_gpio, 0);
+> +	mdelay(PCIE_T_RRS_READY_MS);
+> +
+> +	if (variant->version == CPM5NC_HOST) {
+> +		/* Clear Firewall */
+> +		writel_relaxed(0x00, port->cpm5nc_base +
+> +			       XILINX_CPM5NC_PCIE0_FW);
+> +		writel_relaxed(0x01, port->cpm5nc_base +
+> +			       XILINX_CPM5NC_PCIE0_FW);
+> +		writel_relaxed(0x00, port->cpm5nc_base +
+> +			       XILINX_CPM5NC_PCIE0_FW);
+>  		return;
+> +	}
+>  
+>  	if (cpm_pcie_link_up(port))
+>  		dev_info(port->dev, "PCIe Link is UP\n");
+> @@ -551,6 +598,19 @@ static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie *port,
+>  		port->reg_base = port->cfg->win;
+>  	}
+>  
+> +	port->crx_base = devm_platform_ioremap_resource_byname(pdev,
+> +							       "cpm_crx");
+
+And here is the actual ABI break.
+
+> +	if (IS_ERR(port->crx_base))
+> +		return PTR_ERR(port->crx_base);
+
 
 
 Best regards,
