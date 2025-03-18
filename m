@@ -1,133 +1,317 @@
-Return-Path: <linux-pci+bounces-24060-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24061-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CF5CA67AE6
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 18:28:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD90EA67DFA
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 21:25:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 97A6A19C7D55
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 17:26:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F1A2882C54
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 20:24:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5105211A2B;
-	Tue, 18 Mar 2025 17:24:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA3A3208970;
+	Tue, 18 Mar 2025 20:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEZ+jD05"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1554A2116F7;
-	Tue, 18 Mar 2025 17:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4F017A30D;
+	Tue, 18 Mar 2025 20:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742318698; cv=none; b=m44P6SBFQJKLsZUsz57rDZaF6syAc57i3W9OWqLUJcDxtoi8pxzuuWWAd7nEoinuVuu1WG82KPutqPYMafvxTXoZxWBNc3wIKOHtqmgn1C/ix26w6pPnDquHBjXeRqGFPNVNa7X+CH3StuZY/cg9cLc2fQb9WKpvXFdu1+mi8hk=
+	t=1742329459; cv=none; b=SQh1KrTCzHJQw14lzvEyRRKuEXOJTpeH+gPVtkjhFMiPhmHwHoU0VYwUqRpqrcbb4Z3YwAT7h35XBW5xdI2blEAflXxImvHllC2Mr4PgC+ExaFvlISMyoaUKaU6N9Hzkigo1rKxlrtSGfl6H/fjIHc6db2UXLVj4negVa/FZujk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742318698; c=relaxed/simple;
-	bh=ucssZ3UhhMj+KmH04MIyEZkp3eejH8AJj6Bc+qwhZ14=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KfSWnmcPpuRf0aty/+HUIOSaPOtbh5n+Vf++2ICVYol1dDqkWBaSFSNHTVE+4vOMcZZSUVPL11iPDCCHr46J8FtMWlIigX9w63eea3DAv62FgwyK1v/K96Uf2B4KYJIzhj0F2unv70RSYgBwhAW+f3/zj9iPlZ6Db+QULpUufjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC10B113E;
-	Tue, 18 Mar 2025 10:25:04 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 971943F673;
-	Tue, 18 Mar 2025 10:24:52 -0700 (PDT)
-Message-ID: <25bd5477-a388-405f-a976-6b1a59860ef8@arm.com>
-Date: Tue, 18 Mar 2025 17:24:51 +0000
+	s=arc-20240116; t=1742329459; c=relaxed/simple;
+	bh=gDD5uj92n/KTWCwpkdaHT9ddiDTZCOIsEGMAyb98bik=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=dQ3QsIxHUNrwAXb1Dy2PkjNS9T9XZaJpWJw1YxJhUgXSgT5EcaONr94DKXneqlTidusipOm2siMyLBBIFpYy6KtyoRhumnZl+E16GibCL2UONpr+aN5glcdFii99trZrBVEWJFh0gBlt7eFzaO9MfHi03zgLqSGGQC5l1ERMOno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEZ+jD05; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE192C4CEDD;
+	Tue, 18 Mar 2025 20:24:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742329458;
+	bh=gDD5uj92n/KTWCwpkdaHT9ddiDTZCOIsEGMAyb98bik=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=lEZ+jD0581UoR31Vg2kaNKEsmWfBiZ4sE3jwW+tiDbk6mmsVWJmKfUPkfSIwZ5dgV
+	 jSCEd5hmr9W6XS7AJ8Iyu6pT084nxk6kklmMMBT7LvewZH/IEPmZSA1tXZwHKkamxJ
+	 BR1yjSjS15EgkwzN4J6fRghD96oHtlNoiagI2fqBJPtqDslnvyqnrpP/Z7B2t1+nkA
+	 kc6RpLLx1H5xyhah/sU7DSmWAmzlFA3cidbdc/YNYOiSSnePx1TEROjnKZrU/Yl452
+	 +ue3WpkN9xbqLjfpUYpgDna8Pw6yHHMOCHO19DgXOUNcc0Ascmeb4y93dXOgNrcLvu
+	 Hxoy7ywAmGxFQ==
+Date: Tue, 18 Mar 2025 15:24:16 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Nishanth Menon <nm@ti.com>, Dhruva Gole <d-gole@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
+	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
+	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	linux-hyperv@vger.kernel.org, Wei Huang <wei.huang2@amd.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Subject: Re: [patch V3 05/10] PCI/MSI: Switch to MSI descriptor locking to
+ guard()
+Message-ID: <20250318202416.GA1012281@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
- path
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Russell King <linux@armlinux.org.uk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>, Stuart Yoder <stuyoder@gmail.com>,
- Laurentiu Tudor <laurentiu.tudor@nxp.com>, Nipun Gupta
- <nipun.gupta@amd.com>, Nikhil Agarwal <nikhil.agarwal@amd.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, Charan Teja Kalla <quic_charante@quicinc.com>,
- Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-References: <cover.1740753261.git.robin.murphy@arm.com>
- <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
- <CAMuHMdWPFnHTFeeWL2-BU8tKOL-E5K2ROOz=LLBLTJJLCK9NgA@mail.gmail.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <CAMuHMdWPFnHTFeeWL2-BU8tKOL-E5K2ROOz=LLBLTJJLCK9NgA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250317092946.014189955@linutronix.de>
 
-Hi Geert,
-
-On 18/03/2025 4:37 pm, Geert Uytterhoeven wrote:
-[...]
-> Thanks for your patch, which is now commit bcb81ac6ae3c2ef9 ("iommu:
-> Get DT/ACPI parsing into the proper probe path") in iommu/next.
+On Mon, Mar 17, 2025 at 02:29:27PM +0100, Thomas Gleixner wrote:
+> Convert the code to use the new guard(msi_descs_lock).
 > 
-> This patch triggers two issues on R-Car Gen3 platforms:
+> No functional change intended.
 > 
-> 1. I am seeing a warning on Renesas Salvator-XS with R-Car M3N
-> (but not on the similar board with R-Car H3), and only for SATA[1].
-> Unfortunately commit 73d2f10957f517e5 ("iommu: Don't warn prematurely
-> about dodgy probes") does not help:
-[...]
->      Call trace:
->       __iommu_probe_device+0x208/0x38c (P)
->       iommu_probe_device+0x34/0x74
->       of_iommu_configure+0x128/0x200
->       of_dma_configure_id+0xdc/0x1d4
->       platform_dma_configure+0x48/0x6c
->       really_probe+0xf0/0x260
->       __driver_probe_device+0xec/0x104
->       driver_probe_device+0x3c/0xc0
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-pci@vger.kernel.org
 
-Hurrah, this is the warning doing the correct job - something *is* off
-if we're now getting here without the IOMMU configuration being done
-already (for a normal device with no other funny business going on).
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> 2. The IOMMU driver's iommu_ops.of_xlate() callback is called about
-> three times as much as before:
+To help connect these together, I might mention "msi_descs_lock"
+specifically in the subject line of the earlier patch:
 
-That would suggest that the fwspec gets set up OK, then something later
-in the __iommu_probe_device() path fails and tears it down again, so the
-next attempt starts from scratch. Do you see the "Cannot attach to
-IPMMU" message firing? And similarly to the Rockchip case, does the
-below help?
+  genirq/msi: Use lock guards for MSI descriptor locking
 
-Thanks,
-Robin.
+The msi_capability_init() -> __msi_capability_init() rework is a big
+chunk compared to the rest of this patch.  Same for
+msix_setup_interrupts() -> __msix_setup_interrupts().
 
------>8-----
-diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
-index 074daf1aac4e..5d416262ae5f 100644
---- a/drivers/iommu/ipmmu-vmsa.c
-+++ b/drivers/iommu/ipmmu-vmsa.c
-@@ -1081,6 +1081,7 @@ static int ipmmu_probe(struct platform_device *pdev)
-  		}
-  	}
-  
-+	platform_set_drvdata(pdev, mmu);
-  	/*
-  	 * Register the IPMMU to the IOMMU subsystem in the following cases:
-  	 * - R-Car Gen2 IPMMU (all devices registered)
-@@ -1103,7 +1104,6 @@ static int ipmmu_probe(struct platform_device *pdev)
-  	 * ipmmu_init() after the probe function returns.
-  	 */
-  
--	platform_set_drvdata(pdev, mmu);
-  
-  	return 0;
-  }
+I think I see the point (basically move the body to the new "__"
+functions and put the guard() in the original functions before calling
+the new ones).
+
+> ---
+> V3: Use__free in __msix_setup_interrupts() - PeterZ
+> V2: Remove the gotos - Jonathan
+> ---
+>  drivers/pci/msi/api.c |    6 --
+>  drivers/pci/msi/msi.c |  124 +++++++++++++++++++++++++-------------------------
+>  2 files changed, 64 insertions(+), 66 deletions(-)
+> 
+> --- a/drivers/pci/msi/api.c
+> +++ b/drivers/pci/msi/api.c
+> @@ -53,10 +53,9 @@ void pci_disable_msi(struct pci_dev *dev
+>  	if (!pci_msi_enabled() || !dev || !dev->msi_enabled)
+>  		return;
+>  
+> -	msi_lock_descs(&dev->dev);
+> +	guard(msi_descs_lock)(&dev->dev);
+>  	pci_msi_shutdown(dev);
+>  	pci_free_msi_irqs(dev);
+> -	msi_unlock_descs(&dev->dev);
+>  }
+>  EXPORT_SYMBOL(pci_disable_msi);
+>  
+> @@ -196,10 +195,9 @@ void pci_disable_msix(struct pci_dev *de
+>  	if (!pci_msi_enabled() || !dev || !dev->msix_enabled)
+>  		return;
+>  
+> -	msi_lock_descs(&dev->dev);
+> +	guard(msi_descs_lock)(&dev->dev);
+>  	pci_msix_shutdown(dev);
+>  	pci_free_msi_irqs(dev);
+> -	msi_unlock_descs(&dev->dev);
+>  }
+>  EXPORT_SYMBOL(pci_disable_msix);
+>  
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -336,41 +336,11 @@ static int msi_verify_entries(struct pci
+>  	return !entry ? 0 : -EIO;
+>  }
+>  
+> -/**
+> - * msi_capability_init - configure device's MSI capability structure
+> - * @dev: pointer to the pci_dev data structure of MSI device function
+> - * @nvec: number of interrupts to allocate
+> - * @affd: description of automatic IRQ affinity assignments (may be %NULL)
+> - *
+> - * Setup the MSI capability structure of the device with the requested
+> - * number of interrupts.  A return value of zero indicates the successful
+> - * setup of an entry with the new MSI IRQ.  A negative return value indicates
+> - * an error, and a positive return value indicates the number of interrupts
+> - * which could have been allocated.
+> - */
+> -static int msi_capability_init(struct pci_dev *dev, int nvec,
+> -			       struct irq_affinity *affd)
+> +static int __msi_capability_init(struct pci_dev *dev, int nvec, struct irq_affinity_desc *masks)
+>  {
+> -	struct irq_affinity_desc *masks = NULL;
+> +	int ret = msi_setup_msi_desc(dev, nvec, masks);
+>  	struct msi_desc *entry, desc;
+> -	int ret;
+> -
+> -	/* Reject multi-MSI early on irq domain enabled architectures */
+> -	if (nvec > 1 && !pci_msi_domain_supports(dev, MSI_FLAG_MULTI_PCI_MSI, ALLOW_LEGACY))
+> -		return 1;
+> -
+> -	/*
+> -	 * Disable MSI during setup in the hardware, but mark it enabled
+> -	 * so that setup code can evaluate it.
+> -	 */
+> -	pci_msi_set_enable(dev, 0);
+> -	dev->msi_enabled = 1;
+> -
+> -	if (affd)
+> -		masks = irq_create_affinity_masks(nvec, affd);
+>  
+> -	msi_lock_descs(&dev->dev);
+> -	ret = msi_setup_msi_desc(dev, nvec, masks);
+>  	if (ret)
+>  		goto fail;
+>  
+> @@ -399,19 +369,48 @@ static int msi_capability_init(struct pc
+>  
+>  	pcibios_free_irq(dev);
+>  	dev->irq = entry->irq;
+> -	goto unlock;
+> -
+> +	return 0;
+>  err:
+>  	pci_msi_unmask(&desc, msi_multi_mask(&desc));
+>  	pci_free_msi_irqs(dev);
+>  fail:
+>  	dev->msi_enabled = 0;
+> -unlock:
+> -	msi_unlock_descs(&dev->dev);
+> -	kfree(masks);
+>  	return ret;
+>  }
+>  
+> +/**
+> + * msi_capability_init - configure device's MSI capability structure
+> + * @dev: pointer to the pci_dev data structure of MSI device function
+> + * @nvec: number of interrupts to allocate
+> + * @affd: description of automatic IRQ affinity assignments (may be %NULL)
+> + *
+> + * Setup the MSI capability structure of the device with the requested
+> + * number of interrupts.  A return value of zero indicates the successful
+> + * setup of an entry with the new MSI IRQ.  A negative return value indicates
+> + * an error, and a positive return value indicates the number of interrupts
+> + * which could have been allocated.
+> + */
+> +static int msi_capability_init(struct pci_dev *dev, int nvec,
+> +			       struct irq_affinity *affd)
+> +{
+> +	/* Reject multi-MSI early on irq domain enabled architectures */
+> +	if (nvec > 1 && !pci_msi_domain_supports(dev, MSI_FLAG_MULTI_PCI_MSI, ALLOW_LEGACY))
+> +		return 1;
+> +
+> +	/*
+> +	 * Disable MSI during setup in the hardware, but mark it enabled
+> +	 * so that setup code can evaluate it.
+> +	 */
+> +	pci_msi_set_enable(dev, 0);
+> +	dev->msi_enabled = 1;
+> +
+> +	struct irq_affinity_desc *masks __free(kfree) =
+> +		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
+> +
+> +	guard(msi_descs_lock)(&dev->dev);
+> +	return __msi_capability_init(dev, nvec, masks);
+> +}
+> +
+>  int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
+>  			   struct irq_affinity *affd)
+>  {
+> @@ -666,38 +665,39 @@ static void msix_mask_all(void __iomem *
+>  		writel(ctrl, base + PCI_MSIX_ENTRY_VECTOR_CTRL);
+>  }
+>  
+> -static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
+> -				 int nvec, struct irq_affinity *affd)
+> -{
+> -	struct irq_affinity_desc *masks = NULL;
+> -	int ret;
+> +DEFINE_FREE(free_msi_irqs, struct pci_dev *, if (_T) pci_free_msi_irqs(_T));
+>  
+> -	if (affd)
+> -		masks = irq_create_affinity_masks(nvec, affd);
+> +static int __msix_setup_interrupts(struct pci_dev *__dev, struct msix_entry *entries,
+> +				   int nvec, struct irq_affinity_desc *masks)
+> +{
+> +	struct pci_dev *dev __free(free_msi_irqs) = __dev;
+>  
+> -	msi_lock_descs(&dev->dev);
+> -	ret = msix_setup_msi_descs(dev, entries, nvec, masks);
+> +	int ret = msix_setup_msi_descs(dev, entries, nvec, masks);
+>  	if (ret)
+> -		goto out_free;
+> +		return ret;
+>  
+>  	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
+>  	if (ret)
+> -		goto out_free;
+> +		return ret;
+>  
+>  	/* Check if all MSI entries honor device restrictions */
+>  	ret = msi_verify_entries(dev);
+>  	if (ret)
+> -		goto out_free;
+> +		return ret;
+>  
+> +	retain_ptr(dev);
+>  	msix_update_entries(dev, entries);
+> -	goto out_unlock;
+> +	return 0;
+> +}
+>  
+> -out_free:
+> -	pci_free_msi_irqs(dev);
+> -out_unlock:
+> -	msi_unlock_descs(&dev->dev);
+> -	kfree(masks);
+> -	return ret;
+> +static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
+> +				 int nvec, struct irq_affinity *affd)
+> +{
+> +	struct irq_affinity_desc *masks __free(kfree) =
+> +		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
+> +
+> +	guard(msi_descs_lock)(&dev->dev);
+> +	return __msix_setup_interrupts(dev, entries, nvec, masks);
+>  }
+>  
+>  /**
+> @@ -871,13 +871,13 @@ void __pci_restore_msix_state(struct pci
+>  
+>  	write_msg = arch_restore_msi_irqs(dev);
+>  
+> -	msi_lock_descs(&dev->dev);
+> -	msi_for_each_desc(entry, &dev->dev, MSI_DESC_ALL) {
+> -		if (write_msg)
+> -			__pci_write_msi_msg(entry, &entry->msg);
+> -		pci_msix_write_vector_ctrl(entry, entry->pci.msix_ctrl);
+> +	scoped_guard (msi_descs_lock, &dev->dev) {
+> +		msi_for_each_desc(entry, &dev->dev, MSI_DESC_ALL) {
+> +			if (write_msg)
+> +				__pci_write_msi_msg(entry, &entry->msg);
+> +			pci_msix_write_vector_ctrl(entry, entry->pci.msix_ctrl);
+> +		}
+>  	}
+> -	msi_unlock_descs(&dev->dev);
+>  
+>  	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
+>  }
+> 
 
