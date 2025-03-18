@@ -1,211 +1,247 @@
-Return-Path: <linux-pci+bounces-24011-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24012-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F7E4A66AE9
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 07:53:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7880FA66B64
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 08:18:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2147173F5E
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 06:53:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5570B3BB4B6
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 07:18:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 417A81BD4F7;
-	Tue, 18 Mar 2025 06:53:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E04011DE4D7;
+	Tue, 18 Mar 2025 07:18:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/yu8Tz7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MQ2Dj7Fu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789B81A2643;
-	Tue, 18 Mar 2025 06:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3391443151
+	for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 07:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742280817; cv=none; b=uVSs6d3ICtoc0ho6/NlKGd0rA79p2BCi+ptMLHsGlDrln5j+cn2aFwqA9DHbVHvDQvXRnDTyB4NCSyXctVtyjrmOzXh6yih9jUND1OZGtBwWukRhgvfCJ2t4FZfMpVKbqbFeSgsSSlVl0P67iohbsvKtaGYte09wOXWFHxd/ZmY=
+	t=1742282297; cv=none; b=qiIp9xaBliUtCI+TbtVBCOJSu/wMi8VvSasBqrICBwDeP3ajyacT0sZZmVvRwQ6AX8qnEbIxtlVR3agNCvlHtApwWFJGBiR+Bqya0IyTnTX8jeTQ8iZW7eaKOk4m6qSRu9FitWWMSzMBOcNa8D1/S0HPehLo8H7gP5pEbb8fys4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742280817; c=relaxed/simple;
-	bh=FRAcuRcyfjK2vsi/p7eiYS7Mv5TYPG4QdBuhO0/m2/0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fizMyZdW5JyW6VWKeKTYxuPSyRRt3RjM2MhhQc/Svd/onJZwQN0sl1CBZj9y//YEZd7VShoSNDLJuXv8+xy2gf2keAmP0J4uXgMzdVYspvEqp/x15ZhiLoqldZKySYp25sV3b8Rhcl4DaYPVpkkoKOJn+3u3k0dgLR5M+AvukxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D/yu8Tz7; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86d36e41070so2220021241.3;
-        Mon, 17 Mar 2025 23:53:35 -0700 (PDT)
+	s=arc-20240116; t=1742282297; c=relaxed/simple;
+	bh=sHkWokmPrqXsdDV7+i8VB3rJOPWoE1XI438bG7S5Nlc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KxVEIBFS9u8U8gZxpCBLkT5m8k0/MxPGZ3U77T0VzhS1430gyo6DLcByQW3FRba50fDdFp7C/xEYEgejq1N631sOYnLh+MX/LQ3YfZ9WwEZa01mrqQCDs1P83i26VpeLiYMI0DYB/xNJwlIZxxnwepB0VTkUNkDKLEDOxYaQQ7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MQ2Dj7Fu; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22349bb8605so112579825ad.0
+        for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 00:18:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742280814; x=1742885614; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BR7STtbjDPO6lmSbp4QD6SK3P/KeQf8lIol2C5kgJAI=;
-        b=D/yu8Tz7k6amxc+2QGzv9TVjYSC9kuJWCgW4/lGtO4OKMK1ysoJiCgLMMsuZOLlGzN
-         hamNpCiY4Y87IVC69+jeVRdynfNdLB/rQ1qX3+jgihDp7yNJHz+qyfrgLIDK3uClpbu3
-         dSkytCU8i6Uic2VOxByfmIJUKLtXG6L6iBR1a4T5goBC69vwdsDEutxweQUbBLagEeMK
-         /P1BvvSRlY+eW5NnR/5D0QPwIuf5XQgG6xZcoeI9yypOdV8ojy9UKFBjyPERhAHq4NWN
-         dVg5jQAqNF/KW+wcUgSQcJ3LEFbb9QgyjYNsENRqfoijC/MajEwiJifC5lpeKxyD3j31
-         P7aA==
+        d=linaro.org; s=google; t=1742282295; x=1742887095; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uL3J0kJ07qCQwLi/H8v/Z+UezU+LpDO7hkpWTExk8ys=;
+        b=MQ2Dj7FuHbOQVJ5YTk0xYiXvhy57ZnHOSkxAJ0yPyePEmJh9SaVwgup/Sc6Fq8A4v3
+         7Mwe3Duhv/9grkY8khBxRl1JLymtWOG6oIBV+Z9acEtLjDNp6xvNAFeha/7Kp4xnZYsV
+         qvpVlpGnAVZtKHmq1J7HqZigN8n5ETDmNxtiZGhP5ejtRlt92HBuUNU1n9R72ehYwIum
+         BmQ3VTYZ+t7zsJuTozqLaK4193Xj9bTYZ7h4TOw0VOV2USV+Lw8SMZb7oCkT1qEBPTMU
+         EokAipHKCrPZiY8Zkx/9csn8fQoUOmCvQoJ+epj8M4RTK7/QRPzJFj25ZC89Ab0KRD62
+         FFXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742280814; x=1742885614;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BR7STtbjDPO6lmSbp4QD6SK3P/KeQf8lIol2C5kgJAI=;
-        b=bL/DNF9J+HPL+w5AfXA8hcDKVUsd2cVPuut5TCD3U6w09qXVhRsCdfsHarLFt82Her
-         T+4yC1e+VK1G/+qZdfKw5O8gGv9yNurbw9rolmTui5gR1B4kdIJTJTTR8wb9uE/WfjfV
-         JWWMtMf0LEjAbtmGRYkFUB/tbjbfGWFvCPLuaCA1LXDXzs0gOCjXJU74cMOrJbv1QfxF
-         pc16xbGl75BnDaJeW8wLjBfoYiBzqy4GTpyVoCLJMIU1JZuso2tUpuXRv4XEw+V6SGCq
-         8SmRDEbfbUHL7KFEsEvfmC7HIYUhq7zSeUbyDdF7bxUTqlNZCgM6rjZAxXV2cFUihOPK
-         fpOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvdLh8+9xaXmqPDe3eBvrQMa9w4jbbdFT7CQxloTQtHptttpRNUGyxPXsrB25+H2oABGaaMiNKQ24=@vger.kernel.org, AJvYcCVOgKUZcXL7pgpuDiY4EIfHPD4PXv+M7WO42XW9E1V4UQTrB/+8hceR8Q8hcmGa96i20/JkkoRLrSF1xSn/@vger.kernel.org, AJvYcCWQuLGjmXmRTfgAB6gJxknF2FKwmramS97TO1vzMYBvnhQIKJ+F74ShqB8v4pK7SpVC/MD5scI6+z2gk4YMHA8=@vger.kernel.org, AJvYcCWuJpfc6tgOgtuHZfBUbg56+NSmIx+tDoeCcQynv7fI/9YZjVGELvmhVK28hK26xFJgGycfB2a5MmBN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSpT5BbH4YKZZ4DUD0FiapbUHvxXyf7BH1MiNjKEkfefVLA/rH
-	4cVfhZUDOIsEo0RVZ+6O1IcF2cF89LQzrxrHrQ0yaFJHhSicIu9iMa8dk6VHMyvsYVE7yWq7Ft2
-	BRG+eU77eHX/E7h5Irx45WantSSD7xQ==
-X-Gm-Gg: ASbGncuLQBXQbaVwAV71KgalB14zECehV/RbX4VV30g25lPhYUpYvoNL+LnDahVvvIe
-	Goh46gUrD0Da/Tbv7k1PeHF6vg5Eb6C2QVAKySXu570tcm4ZQF8VTgznkX3wy4QmYnX9/Cw0Uwb
-	xRQeRouVE2P1jv7GBBym8M1mhGYPrDiDAw7iOCpXn7IErFImlRbXJ/+Eg=
-X-Google-Smtp-Source: AGHT+IGE7hhWr4lBUp2iXX61mOHrHkLHcdsZ+lfSmDPcbezM6eWo2r4cHmhD0lVawhY5flsil/9O0ciB1HTJ1THSObY=
-X-Received: by 2002:a05:6102:3908:b0:4bb:eb4a:f9ec with SMTP id
- ada2fe7eead31-4c4d91601c2mr2350382137.16.1742280814182; Mon, 17 Mar 2025
- 23:53:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742282295; x=1742887095;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uL3J0kJ07qCQwLi/H8v/Z+UezU+LpDO7hkpWTExk8ys=;
+        b=Ac8mOMYNII1TTXPrRt4byEQq3BZJGrc8EmwnPld1PepkqRloL9FiTNv8MBoINPBJpy
+         g7V5aE3Js7PKgFEf6heisMfyJhv1eVraxXNZSUac5QtdTQC+Oi57ndtqnCROStYoVjZM
+         1ilWeukGWxv/5qwa44S7fkP1qNZ6qji4ltyUgE99GFJEf+b6kA/KPsP5C48db2zamoJA
+         bwyQ7iu4oV393tKU+Uv1CgGqG8jSZJk7ubpiT+MozUlthWBlEURcC5bqVx8TtOUslfwc
+         nTkt7Yo5avLpvKi6+QxJ1iokMVnZoECPJbhFGhXCBaWmnMwCS7v3tp/TS4rOYRdghhSc
+         HxGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXKo6B7DNzb+JOadU9ZELJepecZBHQS1z2/thfJOaQmB1MrAkvAegTAmtbKO15Yigm+YG0hhLjJrXc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqQ4XOZ1o+paqd0XCHHuM7UfbRvdyLcDHUUsgvx5go50vD5hGB
+	UZJ0rGsoaza06KO3mnYJJBWvvVsw1e9x97sXC1OJ5RIEqH3H1C5Ubv3tujcqPw==
+X-Gm-Gg: ASbGncslAJvJ7hOZDe4GjEIeZhiQD0Ig+XfBzqZ0mb7vWivIfsIr/9D24fhw4CIszaQ
+	qWzKqkQoLZ9+K7usvuIQlrTXTjMGDVRKqBoX0Oq+QlPhAKz9mksZBeI8HAKjdjyJJuyTAoEHdUB
+	JGKFFG6EXzWbFiAmQk7iiLyMEkx1jcsM+3oRIDzlKoUZlXOP5t/xKbs6zbeNyw1repdz6wvXkl1
+	SL7Jq5BGaD1bec/tfvYwjUAuMaSLmKue/PSLZaxwD7dmZ1UtG7IImETMXqiAFpRjvD2p7xCWNk6
+	2E9j17vqWRKaIQcjwApHKQ2tUApqCBKeDZb0HCz+DEappCI8t/OuDPbYTjMBwe6h/C0=
+X-Google-Smtp-Source: AGHT+IEzVk5IzlQIC5VwuXRJuSpzspEea6bADLr7EeZbZUTj69tT3vTxsaaX4dqVtRwwYUxDGF902w==
+X-Received: by 2002:a17:903:3bad:b0:223:2cae:4a96 with SMTP id d9443c01a7336-225e0b0fa67mr181209535ad.42.1742282295391;
+        Tue, 18 Mar 2025 00:18:15 -0700 (PDT)
+Received: from thinkpad ([120.56.195.170])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba7275sm87355885ad.115.2025.03.18.00.18.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 00:18:15 -0700 (PDT)
+Date: Tue, 18 Mar 2025 12:47:56 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: George Moussalem <george.moussalem@outlook.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+	andersson@kernel.org, bhelgaas@google.com, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, dmitry.baryshkov@linaro.org,
+	kishon@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org,
+	kw@linux.com, lpieralisi@kernel.org, p.zabel@pengutronix.de,
+	quic_nsekar@quicinc.com, robh@kernel.org, robimarko@gmail.com,
+	vkoul@kernel.org, quic_srichara@quicinc.com
+Subject: Re: [PATCH v3 5/6] arm64: dts: qcom: ipq5018: Add PCIe related nodes
+Message-ID: <20250318071756.uilfhwfzgr5gds3o@thinkpad>
+References: <20250305134239.2236590-1-george.moussalem@outlook.com>
+ <DS7PR19MB8883E4A90C8AFF66BCAE14F49DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <PsAMnW6hScU1fLV8ucb6wOkHECGXCrwXeSEfeVs3Hc-zbwrML674jGT8H_XNvWiF6EdymYJZSusanBrtAsZjAg==@protonmail.internalid>
- <20250107035058.818539-1-alistair@alistair23.me> <878qrm6e2p.fsf@kernel.org> <CAKmqyKO+O6H8+Y2ybz+qiAtgGbLeHMzswo9weWbg0Wc--gEiMA@mail.gmail.com>
-In-Reply-To: <CAKmqyKO+O6H8+Y2ybz+qiAtgGbLeHMzswo9weWbg0Wc--gEiMA@mail.gmail.com>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Tue, 18 Mar 2025 16:53:08 +1000
-X-Gm-Features: AQ5f1Joy-EDdMlhXi465AXJ7d9QJ1VvxVVGStzCd-Shl2lbZ3RxltcRyszgw8bw
-Message-ID: <CAKmqyKMFAUp0=FzNfhs+r+RfLK0n_Fp7YhUhjY2m=p7wSgFONg@mail.gmail.com>
-Subject: Re: [PATCH v5 00/11] rust: bindings: Auto-generate inline static functions
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Alistair Francis <alistair@alistair23.me>, bhelgaas@google.com, 
-	rust-for-linux@vger.kernel.org, lukas@wunner.de, gary@garyguo.net, 
-	akpm@linux-foundation.org, tmgross@umich.edu, boqun.feng@gmail.com, 
-	ojeda@kernel.org, linux-cxl@vger.kernel.org, bjorn3_gh@protonmail.com, 
-	me@kloenk.dev, linux-kernel@vger.kernel.org, aliceryhl@google.com, 
-	alistair.francis@wdc.com, linux-pci@vger.kernel.org, benno.lossin@proton.me, 
-	alex.gaynor@gmail.com, Jonathan.Cameron@huawei.com, wilfred.mallawa@wdc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DS7PR19MB8883E4A90C8AFF66BCAE14F49DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
 
-On Tue, Jan 14, 2025 at 4:02=E2=80=AFPM Alistair Francis <alistair23@gmail.=
-com> wrote:
->
-> On Tue, Jan 7, 2025 at 9:48=E2=80=AFPM Andreas Hindborg <a.hindborg@kerne=
-l.org> wrote:
-> >
-> > "Alistair Francis" <alistair@alistair23.me> writes:
-> >
-> > > The kernel includes a large number of static inline functions that ar=
-e
-> > > defined in header files. One example is the crypto_shash_descsize()
-> > > function which is defined in hash.h as
-> > >
-> > > ```
-> > > static inline unsigned int crypto_shash_descsize(struct crypto_shash =
-*tfm)
-> > > {
-> > >         return tfm->descsize;
-> > > }
-> > > ```
-> > >
-> > > bindgen is currently unable to generate bindings to these functions a=
-s
-> > > they are not publically exposed (they are static after all).
-> > >
-> > > The Rust code currently uses rust_helper_* functions, such as
-> > > rust_helper_alloc_pages() for example to call the static inline
-> > > functions. But this is a hassle as someone needs to write a C helper
-> > > function.
-> > >
-> > > Instead we can use the bindgen wrap-static-fns feature. The feature
-> > > is marked as experimental, but has recently been promoted to
-> > > non-experimental (depending on your version of bindgen).
-> > >
-> > > By supporting wrap-static-fns we automatically generate a C file call=
-ed
-> > > extern.c that exposes the static inline functions, for example like t=
-his
-> > >
-> > > ```
-> > > unsigned int crypto_shash_descsize__extern(struct crypto_shash *tfm) =
-{ return crypto_shash_descsize(tfm); }
-> > > ```
-> > >
-> > > The nice part is that this is auto-generated.
-> > >
-> > > We then also get a bindings_generate_static.rs file with the Rust
-> > > binding, like this
-> > >
-> > > ```
-> > > extern "C" {
-> > >     #[link_name =3D "crypto_shash_descsize__extern"]
-> > >     pub fn crypto_shash_descsize(tfm: *mut crypto_shash) -> core::ffi=
-::c_uint;
-> > > }
-> > > ```
-> > >
-> > > So now we can use the static inline functions just like normal
-> > > functions.
-> > >
-> > > There are a bunch of static inline functions that don't work though, =
-because
-> > > the C compiler fails to build extern.c:
-> > >  * functions with inline asm generate "operand probably does not matc=
-h constraints"
-> > >    errors (rip_rel_ptr() for example)
-> > >  * functions with bit masks (u32_encode_bits() and friends) result in
-> > >    "call to =E2=80=98__bad_mask=E2=80=99 declared with attribute erro=
-r: bad bitfield mask"
-> > >    errors
-> > >
-> > > As well as that any static inline function that calls a function that=
- has been
-> > > kconfig-ed out will fail to link as the function being called isn't b=
-uilt
-> > > (mdio45_ethtool_gset_npage for example)
-> > >
-> > > Due to these failures we use a allow-list system (where functions mus=
-t
-> > > be manually enabled).
-> > >
-> > > This series adds support for bindgen generating wrappers for inline s=
-tatics and
-> > > then converts the existing helper functions to this new method. This =
-doesn't
-> > > work for C macros, so we can't reamove all of the helper functions, b=
-ut we
-> > > can remove most.
-> > >
-> > > v5:
-> > >  - Rebase on latest rust-next on top of v6.13-rc6
-> > >  - Allow support for LTO inlining (not in this series, see
-> > >    https://github.com/alistair23/linux/commit/e6b847324b4f5e904e007c0=
-e288c88d2483928a8)
-> >
-> > Thanks! Since Gary just sent v2 of the LTO patch [1], could you rebase
-> > on that and list it as a dependency? If you are using b4 there is a nic=
-e
->
-> I can't get Gary's series to apply on rust-next (it does apply on
-> master though).
->
-> I might just wait until Gary's series gets picked up to rust-next as
-> there is already a lot of manual rebasing going on and my series
-> currently applies on rust-next.
->
-> Unfortunately there are just constant conflicts as the number of
-> manual C helpers are continually growing.
->
-> Obviously when/if this series is approved I can do a final rebase, I
-> would just like to avoid unnecessary churn in the meantime
+On Wed, Mar 05, 2025 at 05:41:30PM +0400, George Moussalem wrote:
+> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> 
+> From: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> 
+> Add phy and controller nodes for a 2-lane Gen2 and
+> a 1-lane Gen2 PCIe bus. IPQ5018 has 8 MSI SPI interrupts and
+> one global interrupt.
+> 
+> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> Signed-off-by: Sricharan R <quic_srichara@quicinc.com>
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+> ---
+>  arch/arm64/boot/dts/qcom/ipq5018.dtsi | 232 +++++++++++++++++++++++++-
+>  1 file changed, 230 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+> index 8914f2ef0bc4..301a044bdf6d 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+> @@ -147,6 +147,234 @@ usbphy0: phy@5b000 {
+>  			status = "disabled";
+>  		};
+>  
+> +		pcie1: pcie@78000 {
+> +			compatible = "qcom,pcie-ipq5018";
+> +			reg = <0x00078000 0x3000>,
+> +			      <0x80000000 0xf1d>,
+> +			      <0x80000f20 0xa8>,
+> +			      <0x80001000 0x1000>,
+> +			      <0x80100000 0x1000>;
+> +			reg-names = "parf",
+> +				    "dbi",
+> +				    "elbi",
+> +				    "atu",
+> +				    "config";
+> +			device_type = "pci";
+> +			linux,pci-domain = <0>;
+> +			bus-range = <0x00 0xff>;
+> +			num-lanes = <1>;
+> +			max-link-speed = <2>;
 
-Any more thoughts on this?
+Why do you want to limit link speed?
 
-Alistair
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +
+> +			phys = <&pcie1_phy>;
+> +			phy-names ="pciephy";
+> +
+> +			ranges = <0x81000000 0 0x80200000 0x80200000 0 0x00100000>,	/* I/O */
+> +				 <0x82000000 0 0x80300000 0x80300000 0 0x10000000>;	/* MEM */
+
+These ranges are wrong. Please check with other DT files.
+
+Same comments to other instance as well.
+
+> +
+> +			msi-map = <0x0 &v2m0 0x0 0xff8>;
+> +
+> +			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "msi0",
+> +					  "msi1",
+> +					  "msi2",
+> +					  "msi3",
+> +					  "msi4",
+> +					  "msi5",
+> +					  "msi6",
+> +					  "msi7",
+> +					  "global";
+> +
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0x7>;
+> +			interrupt-map = <0 0 0 1 &intc 0 142 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+> +					<0 0 0 2 &intc 0 143 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+> +					<0 0 0 3 &intc 0 144 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+> +					<0 0 0 4 &intc 0 145 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+> +
+> +			clocks = <&gcc GCC_SYS_NOC_PCIE1_AXI_CLK>,
+> +				 <&gcc GCC_PCIE1_AXI_M_CLK>,
+> +				 <&gcc GCC_PCIE1_AXI_S_CLK>,
+> +				 <&gcc GCC_PCIE1_AHB_CLK>,
+> +				 <&gcc GCC_PCIE1_AUX_CLK>,
+> +				 <&gcc GCC_PCIE1_AXI_S_BRIDGE_CLK>;
+> +			clock-names = "iface",
+> +				      "axi_m",
+> +				      "axi_s",
+> +				      "ahb",
+> +				      "aux",
+> +				      "axi_bridge";
+> +
+> +			resets = <&gcc GCC_PCIE1_PIPE_ARES>,
+> +				 <&gcc GCC_PCIE1_SLEEP_ARES>,
+> +				 <&gcc GCC_PCIE1_CORE_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE1_AXI_MASTER_ARES>,
+> +				 <&gcc GCC_PCIE1_AXI_SLAVE_ARES>,
+> +				 <&gcc GCC_PCIE1_AHB_ARES>,
+> +				 <&gcc GCC_PCIE1_AXI_MASTER_STICKY_ARES>,
+> +				 <&gcc GCC_PCIE1_AXI_SLAVE_STICKY_ARES>;
+> +			reset-names = "pipe",
+> +				      "sleep",
+> +				      "sticky",
+> +				      "axi_m",
+> +				      "axi_s",
+> +				      "ahb",
+> +				      "axi_m_sticky",
+> +				      "axi_s_sticky";
+> +
+> +			status = "disabled";
+> +
+> +			pcie@0 {
+> +				device_type = "pci";
+> +				reg = <0x0 0x0 0x0 0x0 0x0>;
+> +
+> +				#address-cells = <3>;
+> +				#size-cells = <2>;
+> +				ranges;
+> +			};
+> +		};
+> +
+> +		pcie1_phy: phy@7e000{
+> +			compatible = "qcom,ipq5018-uniphy-pcie-phy";
+> +			reg = <0x0007e000 0x800>;
+> +
+> +			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
+> +
+> +			resets = <&gcc GCC_PCIE1_PHY_BCR>,
+> +				 <&gcc GCC_PCIE1PHY_PHY_BCR>;
+> +
+> +			#clock-cells = <0>;
+> +
+
+Please get rid of these newlines between -cells properties.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
