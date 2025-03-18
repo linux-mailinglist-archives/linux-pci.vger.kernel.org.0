@@ -1,158 +1,173 @@
-Return-Path: <linux-pci+bounces-24049-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24050-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6EA4A676F5
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 15:55:21 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96DA8A67704
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 15:57:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3C7019A71C0
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 14:52:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 87DDE163978
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 14:55:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CB7C20CCEA;
-	Tue, 18 Mar 2025 14:51:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD6C32F30;
+	Tue, 18 Mar 2025 14:55:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4oxc0Pv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GVmz39mq"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F4520C47B;
-	Tue, 18 Mar 2025 14:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCDF20DD59;
+	Tue, 18 Mar 2025 14:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742309460; cv=none; b=ONqKOHSg6g/6SLLUlU+eAp3dXyys11vaTYAcazGmoygRZw6OnW2x5rOoi3N82+Ihhu3JjqBEa3sOAO5S6qGCx8W6Gblpc8G4h89WXs4MLzpYzr7XvoL9IQT+XwKd1SAVn8DM11GyxUxddsRvdyQcIPUhkrKDmFf6qZFTZLDTFS8=
+	t=1742309726; cv=none; b=dngIMYLLYZi0r0gK3Cios7kcW2P9gqkJ5Zk7ediyEdFP6j/q+wAd7gLLqjUY0h2RZX4m7hPxrwJDrzjEu8KUYzRTvadwz0g8aocT9HB6vsqZ8DSbBMsbdIJF0pfHM0v4KcBBsCfGK6pSM6+PaTyIbIGGmZfvepCkxggG3/LkupA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742309460; c=relaxed/simple;
-	bh=AV1Nxik7JBkOIVEYVNlGI3SIY7/qAIdx7hP6IDQ9sHw=;
+	s=arc-20240116; t=1742309726; c=relaxed/simple;
+	bh=H9DLnK3r7MFZDcbdgHuLqqfMHsM14MtRNwArj1moT8A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SRl+OVte8SUGGPwHWkXPDlpKeb2iWjvrUE4DoaOkxTeXjjFjTezXgajuD2H/PMagzETa5qoA3pzhPZUjRUbknORw2dHT5TYa25NCxwZXM2PJZP9fo707RQljZpiWHgR0baqr9KYIqHoszbFQdD37ioYe2mUsuqYsKz/iIjE9SsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H4oxc0Pv; arc=none smtp.client-ip=209.85.208.176
+	 To:Cc:Content-Type; b=gFCAjU0BMXiz7rEoAscOLsuqYyUhArKb3pI4JoBOraz+m3v/a1HLMQ6I/BkcPOBKXFid92cGNLwGBTJEuZAdubzHMVyU/NXrqWUzM7/bbTY4jjP+QA/ImStaQ6k5ZhyzMg7KyBiX1q3KbyFr2QJ8ushhSC/DZwe27wrjj4BvwLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GVmz39mq; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso57204491fa.1;
-        Tue, 18 Mar 2025 07:50:54 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30762598511so59865601fa.0;
+        Tue, 18 Mar 2025 07:55:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742309453; x=1742914253; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742309719; x=1742914519; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AV1Nxik7JBkOIVEYVNlGI3SIY7/qAIdx7hP6IDQ9sHw=;
-        b=H4oxc0PvCeDDPsJArDnxVmZV9LI/er2Ez4zQlfQ+13cnk0XCAq6B5b7Usw1GoNraT/
-         GoFSGsMEVCME632Cus2a4lW42GDMNbqqHCX0QHdsZpPJtxoE8qjUYA4HhvenrVzRB0mY
-         AcgcSlNhPkCBpmfpPZmnMPPn24FeBzlFPkOZVMWpbNI4VHrkmxcm19PCbXrjG9/pZS2G
-         I6KX7ifVLYFi0+AaAeVjl8m19ALMKRcat7BVa8G+YByo7nb9psRgvJbrywSd4s2uNKat
-         XLEpmNyJyvgVOGoT6BqHZDmDSfqKZ3xzyliK/Pp6BAO8GnESgwC7C+H/KO9RnAMxfJZ3
-         OMdA==
+        bh=vk1MOiDuVZr9W40/mLkzWnl5G4mhGBTZpl9F//I5jok=;
+        b=GVmz39mqEBqiv8gTRHV2XOtEvy6q2ngLGAkGi7Jud/dF1CdFOVlRsZ8TaEZk/Zb0RT
+         RRzIxriY0Dz+oooDMvnE7CfDMoMi6okqDG918EbPdTUj/CEeh9s3DzruZd7g7CELNopP
+         TqT3lI/QPBmXZSwS15fDDzWSEO3mfUg0ZiWX6WbBx4namnLwz5IytQVKaNAMU5Fm+6Zy
+         4LzY/jNViF6o4SrjItBqKUO1CdP0eXefQxprGYF03RAbodiDWRRUQYb3ohnALl53mfcz
+         V1+QJQhT3Ogz0J+ZlxRwOuHV4a42Zt0xhTVI3aE2MMh7fWD10RK60Oq0PVpHK8TKXONf
+         Q+sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742309453; x=1742914253;
+        d=1e100.net; s=20230601; t=1742309719; x=1742914519;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AV1Nxik7JBkOIVEYVNlGI3SIY7/qAIdx7hP6IDQ9sHw=;
-        b=uQGl49eggbc4ry7wa/IGCGHqIsgFTQWHm8kUjHtP0ocAhBiy3/UmLRVsFv6260/Ls6
-         tYel5DCPZyuIfbTdypWRh6ZXW/QGruMp90MndYwnmMGBJKjgssvAePhVeCsj8eMiwlZo
-         WNm8V7Gz0rnaEXc2GUEawuL7q+nIM9j/5JlXIBTRN0Fvluh8isFPhcNRG7mspYJlUq97
-         KOuWQUru6fi1RdGquQOmgUmXNO2Jjli/W6Vm5p8cBoTR4TFJCftUWgpqnOnlvoL8BANg
-         0XnkdZxxGqVtk/+qK9iGwGbohJr0AYjXa7jnTMKP9yHTU4gxSMk+0hPwm0x3xDVQGFVl
-         IK0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVMCz1XFXQjmAlTIYeXxMnTY5XsGQJ/0kgvUcO/hN3YDxPSztMafEc7Qlg2RT7TW/D85/ZoVbWnmBJs78IOVAM=@vger.kernel.org, AJvYcCW0cpqSAkeI6OlNpYaLKxGgWLlxSFeIHoq3Zf/u67Sj/gE0HIry3AZ3RCs1YtjpFIe74pxW7hJzXlj5@vger.kernel.org, AJvYcCWZUyQQTMyq3YXKrTqcUUPPf2/Cz4yqamok4EavW42WZ8ywSNV857sXpyey3VtkQTZ+gfEKnuD7LR4=@vger.kernel.org, AJvYcCWbwe/FZqsJKw66wqhBpkNpvr3/OGFJ+vHHmtGyC7NKrVTi1Oj5lHzlF/VAo/LDrISGUd/vp/IGxFHK488K@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0OH0Swj/gS6Bf3lT++KBhVGjiwvYfia6ehKSoZn7vVbz9zZgr
-	62RWeWaqYkOjNpqPInOLFCjCISHrPoEaUFAehQ2FZ7d0MZKtqmRoqZYw6IZFIxrT0OGektSj7NR
-	Qb3EoSfZfMUsEcl6JmESOVAYi/kI=
-X-Gm-Gg: ASbGnctdZE6+EX8fakrifKDZNZpgISbDoKdfvHDSaEwN85875rS5vmpngab+LkDouYH
-	jx5eUv/LOcnkJUj7GbUtrLlK6bXRA9WeM9yzJoNl2IFslj4nAgaUy4+YUjvw/621Gu605ZPaz78
-	SnUmuPawb4DXIr8eeUJIZLXpDojIlhpuspTv5fM5qvBQ==
-X-Google-Smtp-Source: AGHT+IHoYcofaDV167At8gyTlcxgahoKqecaiJRiqZIsUp3WL1jI7jHwfGXN+eAotV8neRNb+frmdsSnmpBQRfzAEi4=
-X-Received: by 2002:a2e:a781:0:b0:30c:12b8:fb97 with SMTP id
- 38308e7fff4ca-30cd95cdfb0mr22215931fa.11.1742309452463; Tue, 18 Mar 2025
- 07:50:52 -0700 (PDT)
+        bh=vk1MOiDuVZr9W40/mLkzWnl5G4mhGBTZpl9F//I5jok=;
+        b=uQ9kpfUpGFhNl8kcmui1p9LA+4RwzP3b4vmj1gFSOA+lyY8loG4QhQ4xEHNhsjcvjn
+         q9R3hFwwGOZP0uugc+Mk7SV9O1yIYvlleFbWY6qjBWdVWyeN7+qn8GxrEDTJ6b6VhnqZ
+         TkaFFpGHPywzmugmBUGjRafWwqevpAC5LSc+nRUYjAw7JZ/0kUC3sbzjdF5OmyBYb03o
+         xMNIG6/dO4BpHwZnmcGoJfLJSaOx+pcaDYUPIn3qwYyFZ+snPOqQcET9czC8gOsIQTGM
+         Cq3ilr8QzvNQ9Krzowt6dhWIA7oz5ZTr84IZGmVDFp3CbKHo9s/uJfK0qlDqvAvykG1e
+         j+Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9J5XtFwg/CdCV3v8uVvUjWUlH2VKnZzBlwZOWdV+fwE6lWEzTgB7jHypCQS/iGHNcif6Dc9y8WWoI@vger.kernel.org, AJvYcCXYk4phqeEHUbmRV9yVqs2zdRCgpYiHdgRuBWZP/UByqNYEydeLIXw+LszFQOYrjMITUbbeF0z6y/uFG5wrBWM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjMhItwH3TRk9rtj1D+MOaaYmEz5SHazxH6tb+j32O3bYLZoxG
+	t1QyycbQqGCM1zl98gYk6O7AQrXYQUqwUxUI2P002r/r3WpKQejOqV9287QRCWLjecZ0Ntj79qe
+	+TGS+ZkibfhX0271x5d/krsok7OU=
+X-Gm-Gg: ASbGncsJ+/YpCY8qLNW2s/opfxlJHZn6PgepIFb8WRO/RlU8kYLUw7hPFosjp2Rfz7d
+	6CkehZmVAKir9Qemkyz/xPcRsnjh56vhnrxJSMfp1qdXdLhQzabFhSuQffc5FZdOIoAAoAS9kxR
+	Wga+g3j1cW5fN3IA6ae0SAOj7J
+X-Google-Smtp-Source: AGHT+IGr+uYyVgPeNQu960dfIc9ujbpOwU8c48uenI1Yjyt54q2PhPy9HSGdKaQ5VuBpNHAIAArZ2K3Ckjj/ZnRlWTo=
+X-Received: by 2002:a05:651c:503:b0:30b:c22d:83b3 with SMTP id
+ 38308e7fff4ca-30c4a861dd4mr96849811fa.15.1742309718913; Tue, 18 Mar 2025
+ 07:55:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <PsAMnW6hScU1fLV8ucb6wOkHECGXCrwXeSEfeVs3Hc-zbwrML674jGT8H_XNvWiF6EdymYJZSusanBrtAsZjAg==@protonmail.internalid>
- <20250107035058.818539-1-alistair@alistair23.me> <878qrm6e2p.fsf@kernel.org>
- <CAKmqyKO+O6H8+Y2ybz+qiAtgGbLeHMzswo9weWbg0Wc--gEiMA@mail.gmail.com> <CAKmqyKMFAUp0=FzNfhs+r+RfLK0n_Fp7YhUhjY2m=p7wSgFONg@mail.gmail.com>
-In-Reply-To: <CAKmqyKMFAUp0=FzNfhs+r+RfLK0n_Fp7YhUhjY2m=p7wSgFONg@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 18 Mar 2025 10:50:15 -0400
-X-Gm-Features: AQ5f1Jpsgdw9M0V8e3T4BspLDyv9RIhRJmXxkp78APBJs9vA4fZG8z3nwGNCckY
-Message-ID: <CAJ-ks9mtG+QcGNpSgZ2Wh-wgXtFiJ-7Xrr4-07xe9hxxdRuTSA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/11] rust: bindings: Auto-generate inline static functions
-To: Alistair Francis <alistair23@gmail.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Alistair Francis <alistair@alistair23.me>, bhelgaas@google.com, 
-	rust-for-linux@vger.kernel.org, lukas@wunner.de, gary@garyguo.net, 
-	akpm@linux-foundation.org, tmgross@umich.edu, boqun.feng@gmail.com, 
-	ojeda@kernel.org, linux-cxl@vger.kernel.org, bjorn3_gh@protonmail.com, 
-	me@kloenk.dev, linux-kernel@vger.kernel.org, aliceryhl@google.com, 
-	alistair.francis@wdc.com, linux-pci@vger.kernel.org, benno.lossin@proton.me, 
-	alex.gaynor@gmail.com, Jonathan.Cameron@huawei.com, wilfred.mallawa@wdc.com
+References: <20250314101613.3682010-1-chandrashekar.devegowda@intel.com> <20250314194031.GA785335@bhelgaas>
+In-Reply-To: <20250314194031.GA785335@bhelgaas>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Tue, 18 Mar 2025 10:55:06 -0400
+X-Gm-Features: AQ5f1JoQCuhokgmJqmNrk8yopLZQilzqZUrF-cnQh2mSnJeE7OSgEgLfRWhXP-w
+Message-ID: <CABBYNZJQn4ZYMxLqCkJwA71a_VWhu4QXTkU7vt7wiQXf3bdYdQ@mail.gmail.com>
+Subject: Re: [PATCH v1] Bluetooth: btintel_pcie: Support function level reset
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>, linux-bluetooth@vger.kernel.org, 
+	linux-pci@vger.kernel.org, bhelgaas@google.com, 
+	ravishankar.srivatsa@intel.com, chethan.tumkur.narayan@intel.com, 
+	Kiran K <kiran.k@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 18, 2025 at 2:53=E2=80=AFAM Alistair Francis <alistair23@gmail.=
-com> wrote:
+Hi Bjorn,
+
+On Fri, Mar 14, 2025 at 3:40=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
 >
-> On Tue, Jan 14, 2025 at 4:02=E2=80=AFPM Alistair Francis <alistair23@gmai=
-l.com> wrote:
-> >
-> > On Tue, Jan 7, 2025 at 9:48=E2=80=AFPM Andreas Hindborg <a.hindborg@ker=
-nel.org> wrote:
-> > >
-> > > Thanks! Since Gary just sent v2 of the LTO patch [1], could you rebas=
-e
-> > > on that and list it as a dependency? If you are using b4 there is a n=
-ice
-> >
-> > I can't get Gary's series to apply on rust-next (it does apply on
-> > master though).
-> >
-> > I might just wait until Gary's series gets picked up to rust-next as
-> > there is already a lot of manual rebasing going on and my series
-> > currently applies on rust-next.
-> >
-> > Unfortunately there are just constant conflicts as the number of
-> > manual C helpers are continually growing.
-> >
-> > Obviously when/if this series is approved I can do a final rebase, I
-> > would just like to avoid unnecessary churn in the meantime
+> On Fri, Mar 14, 2025 at 12:16:13PM +0200, Chandrashekar Devegowda wrote:
+> > Support function level reset (flr) on hardware exception to recover
+> > controller. Driver also implements the back-off time of 5 seconds and
+> > the maximum number of retries are limited to 5 before giving up.
 >
-> Any more thoughts on this?
+> Sort of weird that the commit log mentions FLR, but it's not mentioned
+> in the patch itself except for BTINTEL_PCIE_FLR_RESET_MAX_RETRY.
+> Apparently the assumption is that DSM_SET_RESET_METHOD_PCIE performs
+> an FLR.
+>
+> Since this is an ACPI _DSM, presumably this mechanism only works for
+> devices built into the platform, not for any potential plug-in devices
+> that would not be described via ACPI.  I guess this driver probably
+> already only works for built-in devices because it also uses
+> DSM_SET_WDISABLE2_DELAY and DSM_SET_RESET_METHOD.
+>
+> There is a generic PCI core way to do FLR (pcie_reset_flr()), so I
+> assume the _DSM exists because the device needs some additional
+> device-specific work around the FLR.
+>
+> > +static void btintel_pcie_removal_work(struct work_struct *wk)
+> > +{
+> > +     struct btintel_pcie_removal *removal =3D
+> > +             container_of(wk, struct btintel_pcie_removal, work);
+> > +     struct pci_dev *pdev =3D removal->pdev;
+> > +     struct pci_bus *bus;
+> > +     struct btintel_pcie_data *data;
+> > +
+> > +     data =3D pci_get_drvdata(pdev);
+> > +
+> > +     pci_lock_rescan_remove();
+> > +
+> > +     bus =3D pdev->bus;
+> > +     if (!bus)
+> > +             goto out;
+> > +
+> > +     btintel_acpi_reset_method(data->hdev);
+> > +     pci_stop_and_remove_bus_device(pdev);
+> > +     pci_dev_put(pdev);
+> > +
+> > +     if (bus->parent)
+> > +             bus =3D bus->parent;
+> > +     pci_rescan_bus(bus);
+>
+> This remove and rescan by a driver that's bound to the device subverts
+> the driver model.  pci_stop_and_remove_bus_device() detaches the
+> driver from the device.  After the driver is detached, we should not
+> be running any driver code.
 
-Hi Alistair,
+Yeah, this self removal was sort of bugging me as well, although I'm
+not familiar enough with the pci subsystem, having the driver remove
+and continue running code like pci_rescan_bus seems wrong as we may
+end up with multiple instances of the same driver.
 
-I can't speak for Gary as I don't know what his plans are for that LTO
-series, but I did review that series and this one, and at first glance
-the two seem orthogonal. The goal of Gary's series is to LTO C helpers
-into Rust, while the goal of this series is to machine-generate those
-helpers. Do I have that right?
+> There are a couple other drivers that remove their own device (ath9k,
+> iwlwifi, asus_wmi, eeepc-laptop), but I think those are broken and
+> it's a mistake to add this pattern to more drivers.
+>
+> What's the reason for doing the remove and rescan?  The PCI core
+> doesn't reset the device when you do this, so it's not a "bigger
+> hammer reset".
 
-If yes, I think it's important to think about how the two fit
-together, at least conceptually. Mechanically I think there's an issue
-with this trick:
+I guess it was more of the expectation of Chandru to have a sort of
+hard reset, driver remove+probe, instead of a soft reset where the
+driver will just need to reinit itself after performing
+pcie_reset_flr.
 
-#ifdef __BINDGEN__
-#define __rust_helper
-#else
-#define __rust_helper inline
-#endif
+> > +out:
+> > +     pci_unlock_rescan_remove();
+> > +     kfree(removal);
+> > +}
+>
 
-which the LTO series uses to generate Rust stubs for these functions
-while also keeping them marked inline in LLVM IR/bitcode.
 
-That said, I see some discussion of cross-language LTO in "How to
-handle static inline functions" [1], so maybe there's another way that
-makes more sense in light of this series.
-
-Updating the cover letter to elucidate these details is where I'd
-suggest you start.
-
-Cheers.
-Tamir
-
-[1] https://github.com/rust-lang/rust-bindgen/discussions/2405
+--=20
+Luiz Augusto von Dentz
 
