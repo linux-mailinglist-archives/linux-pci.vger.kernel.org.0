@@ -1,317 +1,210 @@
-Return-Path: <linux-pci+bounces-24061-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24062-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD90EA67DFA
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 21:25:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2FE6A67E04
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 21:30:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3F1A2882C54
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 20:24:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 713F3188D0FC
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 20:29:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA3A3208970;
-	Tue, 18 Mar 2025 20:24:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D23E1DED5D;
+	Tue, 18 Mar 2025 20:28:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEZ+jD05"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AJqGko/f"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4F017A30D;
-	Tue, 18 Mar 2025 20:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC7D1DE4FE
+	for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 20:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742329459; cv=none; b=SQh1KrTCzHJQw14lzvEyRRKuEXOJTpeH+gPVtkjhFMiPhmHwHoU0VYwUqRpqrcbb4Z3YwAT7h35XBW5xdI2blEAflXxImvHllC2Mr4PgC+ExaFvlISMyoaUKaU6N9Hzkigo1rKxlrtSGfl6H/fjIHc6db2UXLVj4negVa/FZujk=
+	t=1742329739; cv=none; b=Wv/ru1RBXz532EER3Wm9/fIctCKlTJEwIXv2mF5KfrBwu+PCQL/5SYcuI/I+eOuv6wp2AfeJSlhrxhjOCH3x0Y+wO/KEzetYCwYp/7rcqDJxKY1F5Y5OKxMm3iQegRSZFyFgmLAcOmygicCFWOgSiKn9O4qEOXRp32FXZ6DO0+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742329459; c=relaxed/simple;
-	bh=gDD5uj92n/KTWCwpkdaHT9ddiDTZCOIsEGMAyb98bik=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dQ3QsIxHUNrwAXb1Dy2PkjNS9T9XZaJpWJw1YxJhUgXSgT5EcaONr94DKXneqlTidusipOm2siMyLBBIFpYy6KtyoRhumnZl+E16GibCL2UONpr+aN5glcdFii99trZrBVEWJFh0gBlt7eFzaO9MfHi03zgLqSGGQC5l1ERMOno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEZ+jD05; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE192C4CEDD;
-	Tue, 18 Mar 2025 20:24:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742329458;
-	bh=gDD5uj92n/KTWCwpkdaHT9ddiDTZCOIsEGMAyb98bik=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=lEZ+jD0581UoR31Vg2kaNKEsmWfBiZ4sE3jwW+tiDbk6mmsVWJmKfUPkfSIwZ5dgV
-	 jSCEd5hmr9W6XS7AJ8Iyu6pT084nxk6kklmMMBT7LvewZH/IEPmZSA1tXZwHKkamxJ
-	 BR1yjSjS15EgkwzN4J6fRghD96oHtlNoiagI2fqBJPtqDslnvyqnrpP/Z7B2t1+nkA
-	 kc6RpLLx1H5xyhah/sU7DSmWAmzlFA3cidbdc/YNYOiSSnePx1TEROjnKZrU/Yl452
-	 +ue3WpkN9xbqLjfpUYpgDna8Pw6yHHMOCHO19DgXOUNcc0Ascmeb4y93dXOgNrcLvu
-	 Hxoy7ywAmGxFQ==
-Date: Tue, 18 Mar 2025 15:24:16 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Nishanth Menon <nm@ti.com>, Dhruva Gole <d-gole@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
-	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
-	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	linux-hyperv@vger.kernel.org, Wei Huang <wei.huang2@amd.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Subject: Re: [patch V3 05/10] PCI/MSI: Switch to MSI descriptor locking to
- guard()
-Message-ID: <20250318202416.GA1012281@bhelgaas>
+	s=arc-20240116; t=1742329739; c=relaxed/simple;
+	bh=z3SwAzygq2jSUcYnwqKx9b+QxuvI4Z047qYhYaSz97o=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=ew/8FjSTVpcPheKHaDaBsoVOe2yRE74WxtweUTZI2aI7yhUiZl6mHzjF5mNISR02/uB9bZ8+B9O2DvcK39NnDmWMO43eo0l+qBqgBhY6GnkrUx/C0K41UcbZ5s1ssRdPigCRkMzBr+4qyXH6saKhydLVl2bcuwKhMSMYt5pCPNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AJqGko/f; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742329737; x=1773865737;
+  h=date:from:to:cc:subject:message-id;
+  bh=z3SwAzygq2jSUcYnwqKx9b+QxuvI4Z047qYhYaSz97o=;
+  b=AJqGko/fEDgzcypCsUe9TpYb++8+UrxQZWDu0rEdX2WJlrpMkQXHJ5sJ
+   PDuNJ2q6WOmqy/UMGCuQX7XGdjpvehB1SjW46Sfc3z0GTUYOUGfVk59D6
+   PrYNYqFU++PPdnW8qQneXCW+B8TmEkw3CItobOqiWyn6jozdxmkjA0cbz
+   aEn3Q0zGLIbUDPDZAYYjKCaoQgW39bDglLhfUO1SKtv5Tp763Fg5FDVhl
+   gIymM4dFJn/E34oyTb0Zk6mATVuTjgKxEjGbjb5Tr+7gKBkcajQV9/qJa
+   8oXCFBfBp4qumy2SVfySJ/6aIJZbnk61gYWaU8zsjiExpG+Ngy0N4ZW0m
+   w==;
+X-CSE-ConnectionGUID: o6hufzjPTtKl1Pfjld4ATQ==
+X-CSE-MsgGUID: NRBnllyMSKCpJ8uQWP6uHw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="43595012"
+X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
+   d="scan'208";a="43595012"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 13:28:56 -0700
+X-CSE-ConnectionGUID: oEdFirUARnWlBfar5vEh1A==
+X-CSE-MsgGUID: Z0rbKoSlRKef5QVRqwf2Nw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
+   d="scan'208";a="127562953"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa005.jf.intel.com with ESMTP; 18 Mar 2025 13:28:56 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tudWQ-000EA2-28;
+	Tue, 18 Mar 2025 20:27:08 +0000
+Date: Wed, 19 Mar 2025 04:25:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:next] BUILD SUCCESS
+ 34f2ddfdaee9c1c18959de11f99c83929bf4532a
+Message-ID: <202503190423.P918fz4J-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250317092946.014189955@linutronix.de>
 
-On Mon, Mar 17, 2025 at 02:29:27PM +0100, Thomas Gleixner wrote:
-> Convert the code to use the new guard(msi_descs_lock).
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+branch HEAD: 34f2ddfdaee9c1c18959de11f99c83929bf4532a  Merge branch 'pci/misc'
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+elapsed time: 1454m
 
-To help connect these together, I might mention "msi_descs_lock"
-specifically in the subject line of the earlier patch:
+configs tested: 117
+configs skipped: 1
 
-  genirq/msi: Use lock guards for MSI descriptor locking
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-The msi_capability_init() -> __msi_capability_init() rework is a big
-chunk compared to the rest of this patch.  Same for
-msix_setup_interrupts() -> __msix_setup_interrupts().
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-9.3.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-13.3.0
+arc                              allyesconfig    gcc-10.5.0
+arc                        nsimosci_defconfig    gcc-14.2.0
+arc                   randconfig-001-20250318    gcc-13.2.0
+arc                   randconfig-002-20250318    gcc-13.2.0
+arc                    vdk_hs38_smp_defconfig    gcc-11.5.0
+arm                              allmodconfig    gcc-13.3.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                         at91_dt_defconfig    clang-21
+arm                      jornada720_defconfig    clang-21
+arm                       multi_v4t_defconfig    clang-16
+arm                          pxa168_defconfig    clang-19
+arm                   randconfig-001-20250318    gcc-14.2.0
+arm                   randconfig-002-20250318    clang-21
+arm                   randconfig-003-20250318    gcc-14.2.0
+arm                   randconfig-004-20250318    clang-21
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-8.5.0
+arm64                 randconfig-001-20250318    clang-21
+arm64                 randconfig-002-20250318    clang-14
+arm64                 randconfig-003-20250318    gcc-14.2.0
+arm64                 randconfig-004-20250318    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250318    gcc-14.2.0
+csky                  randconfig-002-20250318    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250318    clang-21
+hexagon               randconfig-002-20250318    clang-17
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250318    clang-20
+i386        buildonly-randconfig-002-20250318    clang-20
+i386        buildonly-randconfig-003-20250318    clang-20
+i386        buildonly-randconfig-004-20250318    clang-20
+i386        buildonly-randconfig-005-20250318    clang-20
+i386        buildonly-randconfig-006-20250318    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250318    gcc-14.2.0
+loongarch             randconfig-002-20250318    gcc-14.2.0
+m68k                             allmodconfig    gcc-8.5.0
+m68k                              allnoconfig    gcc-5.5.0
+m68k                             allyesconfig    gcc-6.5.0
+m68k                        m5272c3_defconfig    gcc-9.3.0
+microblaze                       allmodconfig    gcc-9.3.0
+microblaze                        allnoconfig    gcc-11.5.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250318    gcc-14.2.0
+nios2                 randconfig-002-20250318    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-5.5.0
+parisc                            allnoconfig    gcc-5.5.0
+parisc                           allyesconfig    gcc-9.3.0
+parisc                randconfig-001-20250318    gcc-14.2.0
+parisc                randconfig-002-20250318    gcc-14.2.0
+powerpc                          allmodconfig    gcc-10.5.0
+powerpc                           allnoconfig    gcc-8.5.0
+powerpc                          allyesconfig    clang-21
+powerpc                     ep8248e_defconfig    gcc-11.5.0
+powerpc                   lite5200b_defconfig    clang-21
+powerpc               randconfig-001-20250318    clang-21
+powerpc               randconfig-002-20250318    clang-21
+powerpc               randconfig-003-20250318    gcc-14.2.0
+powerpc64             randconfig-001-20250318    clang-21
+powerpc64             randconfig-002-20250318    gcc-14.2.0
+powerpc64             randconfig-003-20250318    gcc-14.2.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-7.5.0
+riscv                            allyesconfig    clang-16
+riscv                 randconfig-001-20250318    clang-21
+riscv                 randconfig-002-20250318    clang-21
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250318    clang-15
+s390                  randconfig-002-20250318    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-10.5.0
+sh                               allyesconfig    gcc-14.2.0
+sh                          kfr2r09_defconfig    gcc-5.5.0
+sh                    randconfig-001-20250318    gcc-14.2.0
+sh                    randconfig-002-20250318    gcc-14.2.0
+sh                   sh7770_generic_defconfig    gcc-10.5.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-6.5.0
+sparc                 randconfig-001-20250318    gcc-14.2.0
+sparc                 randconfig-002-20250318    gcc-14.2.0
+sparc64               randconfig-001-20250318    gcc-14.2.0
+sparc64               randconfig-002-20250318    gcc-14.2.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250318    clang-21
+um                    randconfig-002-20250318    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250318    clang-20
+x86_64      buildonly-randconfig-002-20250318    clang-20
+x86_64      buildonly-randconfig-003-20250318    clang-20
+x86_64      buildonly-randconfig-004-20250318    clang-20
+x86_64      buildonly-randconfig-005-20250318    gcc-12
+x86_64      buildonly-randconfig-006-20250318    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250318    gcc-14.2.0
+xtensa                randconfig-002-20250318    gcc-14.2.0
 
-I think I see the point (basically move the body to the new "__"
-functions and put the guard() in the original functions before calling
-the new ones).
-
-> ---
-> V3: Use__free in __msix_setup_interrupts() - PeterZ
-> V2: Remove the gotos - Jonathan
-> ---
->  drivers/pci/msi/api.c |    6 --
->  drivers/pci/msi/msi.c |  124 +++++++++++++++++++++++++-------------------------
->  2 files changed, 64 insertions(+), 66 deletions(-)
-> 
-> --- a/drivers/pci/msi/api.c
-> +++ b/drivers/pci/msi/api.c
-> @@ -53,10 +53,9 @@ void pci_disable_msi(struct pci_dev *dev
->  	if (!pci_msi_enabled() || !dev || !dev->msi_enabled)
->  		return;
->  
-> -	msi_lock_descs(&dev->dev);
-> +	guard(msi_descs_lock)(&dev->dev);
->  	pci_msi_shutdown(dev);
->  	pci_free_msi_irqs(dev);
-> -	msi_unlock_descs(&dev->dev);
->  }
->  EXPORT_SYMBOL(pci_disable_msi);
->  
-> @@ -196,10 +195,9 @@ void pci_disable_msix(struct pci_dev *de
->  	if (!pci_msi_enabled() || !dev || !dev->msix_enabled)
->  		return;
->  
-> -	msi_lock_descs(&dev->dev);
-> +	guard(msi_descs_lock)(&dev->dev);
->  	pci_msix_shutdown(dev);
->  	pci_free_msi_irqs(dev);
-> -	msi_unlock_descs(&dev->dev);
->  }
->  EXPORT_SYMBOL(pci_disable_msix);
->  
-> --- a/drivers/pci/msi/msi.c
-> +++ b/drivers/pci/msi/msi.c
-> @@ -336,41 +336,11 @@ static int msi_verify_entries(struct pci
->  	return !entry ? 0 : -EIO;
->  }
->  
-> -/**
-> - * msi_capability_init - configure device's MSI capability structure
-> - * @dev: pointer to the pci_dev data structure of MSI device function
-> - * @nvec: number of interrupts to allocate
-> - * @affd: description of automatic IRQ affinity assignments (may be %NULL)
-> - *
-> - * Setup the MSI capability structure of the device with the requested
-> - * number of interrupts.  A return value of zero indicates the successful
-> - * setup of an entry with the new MSI IRQ.  A negative return value indicates
-> - * an error, and a positive return value indicates the number of interrupts
-> - * which could have been allocated.
-> - */
-> -static int msi_capability_init(struct pci_dev *dev, int nvec,
-> -			       struct irq_affinity *affd)
-> +static int __msi_capability_init(struct pci_dev *dev, int nvec, struct irq_affinity_desc *masks)
->  {
-> -	struct irq_affinity_desc *masks = NULL;
-> +	int ret = msi_setup_msi_desc(dev, nvec, masks);
->  	struct msi_desc *entry, desc;
-> -	int ret;
-> -
-> -	/* Reject multi-MSI early on irq domain enabled architectures */
-> -	if (nvec > 1 && !pci_msi_domain_supports(dev, MSI_FLAG_MULTI_PCI_MSI, ALLOW_LEGACY))
-> -		return 1;
-> -
-> -	/*
-> -	 * Disable MSI during setup in the hardware, but mark it enabled
-> -	 * so that setup code can evaluate it.
-> -	 */
-> -	pci_msi_set_enable(dev, 0);
-> -	dev->msi_enabled = 1;
-> -
-> -	if (affd)
-> -		masks = irq_create_affinity_masks(nvec, affd);
->  
-> -	msi_lock_descs(&dev->dev);
-> -	ret = msi_setup_msi_desc(dev, nvec, masks);
->  	if (ret)
->  		goto fail;
->  
-> @@ -399,19 +369,48 @@ static int msi_capability_init(struct pc
->  
->  	pcibios_free_irq(dev);
->  	dev->irq = entry->irq;
-> -	goto unlock;
-> -
-> +	return 0;
->  err:
->  	pci_msi_unmask(&desc, msi_multi_mask(&desc));
->  	pci_free_msi_irqs(dev);
->  fail:
->  	dev->msi_enabled = 0;
-> -unlock:
-> -	msi_unlock_descs(&dev->dev);
-> -	kfree(masks);
->  	return ret;
->  }
->  
-> +/**
-> + * msi_capability_init - configure device's MSI capability structure
-> + * @dev: pointer to the pci_dev data structure of MSI device function
-> + * @nvec: number of interrupts to allocate
-> + * @affd: description of automatic IRQ affinity assignments (may be %NULL)
-> + *
-> + * Setup the MSI capability structure of the device with the requested
-> + * number of interrupts.  A return value of zero indicates the successful
-> + * setup of an entry with the new MSI IRQ.  A negative return value indicates
-> + * an error, and a positive return value indicates the number of interrupts
-> + * which could have been allocated.
-> + */
-> +static int msi_capability_init(struct pci_dev *dev, int nvec,
-> +			       struct irq_affinity *affd)
-> +{
-> +	/* Reject multi-MSI early on irq domain enabled architectures */
-> +	if (nvec > 1 && !pci_msi_domain_supports(dev, MSI_FLAG_MULTI_PCI_MSI, ALLOW_LEGACY))
-> +		return 1;
-> +
-> +	/*
-> +	 * Disable MSI during setup in the hardware, but mark it enabled
-> +	 * so that setup code can evaluate it.
-> +	 */
-> +	pci_msi_set_enable(dev, 0);
-> +	dev->msi_enabled = 1;
-> +
-> +	struct irq_affinity_desc *masks __free(kfree) =
-> +		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
-> +
-> +	guard(msi_descs_lock)(&dev->dev);
-> +	return __msi_capability_init(dev, nvec, masks);
-> +}
-> +
->  int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
->  			   struct irq_affinity *affd)
->  {
-> @@ -666,38 +665,39 @@ static void msix_mask_all(void __iomem *
->  		writel(ctrl, base + PCI_MSIX_ENTRY_VECTOR_CTRL);
->  }
->  
-> -static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
-> -				 int nvec, struct irq_affinity *affd)
-> -{
-> -	struct irq_affinity_desc *masks = NULL;
-> -	int ret;
-> +DEFINE_FREE(free_msi_irqs, struct pci_dev *, if (_T) pci_free_msi_irqs(_T));
->  
-> -	if (affd)
-> -		masks = irq_create_affinity_masks(nvec, affd);
-> +static int __msix_setup_interrupts(struct pci_dev *__dev, struct msix_entry *entries,
-> +				   int nvec, struct irq_affinity_desc *masks)
-> +{
-> +	struct pci_dev *dev __free(free_msi_irqs) = __dev;
->  
-> -	msi_lock_descs(&dev->dev);
-> -	ret = msix_setup_msi_descs(dev, entries, nvec, masks);
-> +	int ret = msix_setup_msi_descs(dev, entries, nvec, masks);
->  	if (ret)
-> -		goto out_free;
-> +		return ret;
->  
->  	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
->  	if (ret)
-> -		goto out_free;
-> +		return ret;
->  
->  	/* Check if all MSI entries honor device restrictions */
->  	ret = msi_verify_entries(dev);
->  	if (ret)
-> -		goto out_free;
-> +		return ret;
->  
-> +	retain_ptr(dev);
->  	msix_update_entries(dev, entries);
-> -	goto out_unlock;
-> +	return 0;
-> +}
->  
-> -out_free:
-> -	pci_free_msi_irqs(dev);
-> -out_unlock:
-> -	msi_unlock_descs(&dev->dev);
-> -	kfree(masks);
-> -	return ret;
-> +static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
-> +				 int nvec, struct irq_affinity *affd)
-> +{
-> +	struct irq_affinity_desc *masks __free(kfree) =
-> +		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
-> +
-> +	guard(msi_descs_lock)(&dev->dev);
-> +	return __msix_setup_interrupts(dev, entries, nvec, masks);
->  }
->  
->  /**
-> @@ -871,13 +871,13 @@ void __pci_restore_msix_state(struct pci
->  
->  	write_msg = arch_restore_msi_irqs(dev);
->  
-> -	msi_lock_descs(&dev->dev);
-> -	msi_for_each_desc(entry, &dev->dev, MSI_DESC_ALL) {
-> -		if (write_msg)
-> -			__pci_write_msi_msg(entry, &entry->msg);
-> -		pci_msix_write_vector_ctrl(entry, entry->pci.msix_ctrl);
-> +	scoped_guard (msi_descs_lock, &dev->dev) {
-> +		msi_for_each_desc(entry, &dev->dev, MSI_DESC_ALL) {
-> +			if (write_msg)
-> +				__pci_write_msi_msg(entry, &entry->msg);
-> +			pci_msix_write_vector_ctrl(entry, entry->pci.msix_ctrl);
-> +		}
->  	}
-> -	msi_unlock_descs(&dev->dev);
->  
->  	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
->  }
-> 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
