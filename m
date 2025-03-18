@@ -1,153 +1,156 @@
-Return-Path: <linux-pci+bounces-24039-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24040-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 093D1A67225
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 12:07:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A22CA672EB
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 12:45:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 814EA176E95
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 11:04:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A5FE3BBBF8
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 11:43:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFCB6209F58;
-	Tue, 18 Mar 2025 11:04:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF96520AF7E;
+	Tue, 18 Mar 2025 11:43:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KCHl1uMi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EILedG9Q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30040208978
-	for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 11:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43809202C2B;
+	Tue, 18 Mar 2025 11:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742295847; cv=none; b=BSdRDtNgU+SAfc9ZURJmirAo0u1BgpjZ6rG/igS/H4Ai68Hm74teIdatwhzfhaVbcINLCZK7AhoUk7QRfYTlws08mFiluaSdM989MCtwYDYy5Cj368xKqfsgJ4RsEDbZIrLHBzDQN5qNuNCr0ugUx6jMmKnl6B0Ql3dtnYNNvcg=
+	t=1742298228; cv=none; b=MEvzK8Yo3e3VyQCapieAy8TEVfKjRQJzSHn/jzEWwPhhwpK5QKod7i/JQRrrkMHG25NcSD9MWnfzVau5KRGzHSYlyj8n642b7rObU7AW75d0H4tOaxAoOyi29ysbW3v5tHwYS3Hjhb+nbR4Rc7hJa+D3zceMoH9RynaIQkzj3dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742295847; c=relaxed/simple;
-	bh=4v+Fsi08Fwv3zu1k13Ka+W1n8gTUPuWDc5vnbr4NK+k=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U2DPzh51CX4dYyXFGjqUcdvmziaW/yTRMxJuigb4Sy23TlfupbS6Qt1H+lzG+uw32PmdosW1s0pIrdSTY9VZysmuK063KX8Evgajj/MpBRTdN4Fj7qnnxH/Zso5cgveiHPGSnxuOdxWIfZFsKbDhuSEB5fKe7+717uDOnyY/Qkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KCHl1uMi; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac298c8fa50so1021269866b.1
-        for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 04:04:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1742295840; x=1742900640; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=is8WhR9m8WQE+4k9i/DT+FdMHQKk7RaZk/UQmejRp3g=;
-        b=KCHl1uMi40c8cwKLuGWZ5TZVwXh8ppfgC3SmGQWDrjap53sf3ZBnVC7f9rd8KPckIC
-         VXg/JL7lXs/3ABH+E+t5ZkN9vwCq/lAmp7CJnRfLWws2n9Ud49DkDEmn/tghKpc2pEc4
-         WFdgcMO1JBzddJVqsFNKpmvNhqpY1YmzN3gbs76ZujwSGV6/4E9omSKS0/svpJhjygxd
-         t/YUmPNytteNxWUN9GPBg5nzRkL+xemTGfjUvR/lUgMMnwCHpVciN6xSmNJOApA5FGp3
-         CzykRdcrEFeBMsPjjsGlYwLC3/KjJgQ/ho+hYdT86w/CWynWved48KD0lrsXDibYWvu4
-         9siQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742295840; x=1742900640;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=is8WhR9m8WQE+4k9i/DT+FdMHQKk7RaZk/UQmejRp3g=;
-        b=m2+9TRL/NDivEkayCRPVU19qmPBTJ+/dHyG2ujHcqr0/6JZRtsBhskCaHx8Ij99ozF
-         kH5eKO93Ub5EvcL9Skp7rtev/582c9Qt2Xyfs/lqJYmMEzfvvx1zMBGpMBG4kM9GyoCa
-         FKjXfY8zEbJD6J3ocgNRFUROng8Pcr/hEHeC0ntC/7PXRcM6Dw9c7/jxpPCztxW4+iOc
-         apuwIVrOIu75RG/qt39t4u1N9B5qT6bClMIQOUkda9E6YqMqeAJkrYan8H2s4eSsjui6
-         weqnxXLjyXs2mIQEZEostQeHsEv4H0Vxv+ItKQBqYkXIQZP1TAkq+kXaovmm3QYPL/8i
-         74Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCUICic0OEsWDasZNFSzQzmQDXSgDyExSf0jCSONa0OgBkyOYH9MW4QsC0tNvaKWUljh1WFiSbzqOEA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvK/jXFMXUW+DS5jPoIdJwKRf58lYveuN0VCv3p3mTOwweVvQr
-	SX9Wvm5REe5NDudg+THAehjJoCREpzpD4fGA1GVXfh2FDMy0t5LtYmXnYzty6Wk=
-X-Gm-Gg: ASbGncuttyYE7SepL6TWxLFuZkjSnyMPRyqyDtGu8FbCtPBytI8DJNfDwAROOoq+kHm
-	sF5fDDb2EJsiFSjpPrsdzZF5ihx4+EMrhQX7O6+CVd+WDDSwVIm+Qj/SJMsuA67WgQNc9Lx/uDG
-	cSyGuihqYViYoxcZOsF6IGBt6LYjlrRhLGlBOnQqECaivja5KNxsvDwiCYJRZOIKkdO8UVdnfb2
-	TWgY1w+chPU691XMh9Pn+IsezmF0CAg4DV8bIkypvwPqeZQtmhxHAc6mT4BDVomQaNe6qNLLSUg
-	gdKkPC8Sg1tfvexUgdMpug2wYz91N/1Rfr8TLWlguuKhHBc7ki289EdX/cVE8ylWghIEVPxWzxV
-	6bBBbe+FJsdbUfiE=
-X-Google-Smtp-Source: AGHT+IHSFIas9nSr0GTvP8XDNoyPypRdkL0u01Zf6bNvQk2jQCXUoByUBqIy6f605R78yLU5u1JN+Q==
-X-Received: by 2002:a17:907:3e0d:b0:ac1:de84:dec0 with SMTP id a640c23a62f3a-ac3302d3694mr1426644966b.26.1742295840401;
-        Tue, 18 Mar 2025 04:04:00 -0700 (PDT)
-Received: from localhost (host-80-117-53-131.retail.telecomitalia.it. [80.117.53.131])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146aea4csm828388566b.33.2025.03.18.04.03.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 04:03:59 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 18 Mar 2025 12:05:12 +0100
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Stefan Wahren <wahrenst@gmx.net>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v7 08/11] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <Z9lTaKsbLND4i3Ir@apocalypse>
-References: <cover.1738963156.git.andrea.porta@suse.com>
- <d1362766e3e966f78591129de918046a4b892c18.1738963156.git.andrea.porta@suse.com>
- <87525350-b432-40b3-927c-60cd74228ea4@gmx.net>
- <Z7dnnW4npJmfOVE0@apocalypse>
+	s=arc-20240116; t=1742298228; c=relaxed/simple;
+	bh=9pgO6Nq9FufpoLVG0jaa9Kh3C8hqzKLmapfMYEG0PWk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=q6gYdIzJCR27dK8OVRGJ33CwxS1gRRZlmxW510d4TU/gsgQt0hOifcpIb5olyLA77eivemUwVqjlXgfUvSP7fIecJYaVCaHsUFidk+Waqi2NKgEQdvkrbnk3YTqreFLJJ2IcX61Z6/BNeZ0mIOIdyDvYp/Ib6hkSueocVJb3YQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EILedG9Q; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742298223; x=1773834223;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=9pgO6Nq9FufpoLVG0jaa9Kh3C8hqzKLmapfMYEG0PWk=;
+  b=EILedG9Qw7AL4VGmSUXH7gJz4ymNcF/gIYr4rrYjjMYdGJfLy8QCweOq
+   jupb+JH8qTHr3G/HjYTfmVEx0tGhIwVGay/1OOPNlnQ/FDaWvU36IENoS
+   wSHya/4g9JPG0QHpO+gKJ7jqhy6K3b60/irbksz8VgJbGJqDHQqW49YjQ
+   QI9zJMv/EbJ3YDzlS/FqDUQi7ESWwGJex+wKOtal2jjoX2/lfzPfJGLC+
+   nGE9Akadn/8RP/8EPJToMsSS4nCsHznrFngCv2X36ckiBqbbKVyar1WpH
+   fQBhMtHwZAhj/cMKnGFlLep80SwFGG08NhalHgo/WmWfbdPdjm4411C0H
+   g==;
+X-CSE-ConnectionGUID: 0I2jg6teR2akw/62ZWQp/g==
+X-CSE-MsgGUID: ym44pVlTTe6RVGj9z/fKOw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="43605631"
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="43605631"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 04:43:02 -0700
+X-CSE-ConnectionGUID: xcxCkDWxQO6apgu0MWTcRg==
+X-CSE-MsgGUID: 5irvdhhLQ8mFxi7vH/dqZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="126443523"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.171])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 04:43:00 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 18 Mar 2025 13:42:57 +0200 (EET)
+To: Alex Williamson <alex.williamson@redhat.com>, 
+    Jakub Kicinski <kuba@kernel.org>, Alexander Duyck <alexanderduyck@fb.com>
+cc: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] PCI: Fix BAR resizing when VF BARs are assigned
+In-Reply-To: <20250317163859.671a618f.alex.williamson@redhat.com>
+Message-ID: <ea24cc36-36c7-1b28-f9ba-78f7161430ca@linux.intel.com>
+References: <20250307140349.5634-1-ilpo.jarvinen@linux.intel.com> <20250314085649.4aefc1b5.alex.williamson@redhat.com> <kgoycgt2rmf3cdlqdotkhuov7fkqfk2zf7dbysgwvuipsezxb4@dokqn7xrsdvz> <20250317163859.671a618f.alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7dnnW4npJmfOVE0@apocalypse>
+Content-Type: multipart/mixed; BOUNDARY="8323328-1442975368-1742297604=:964"
+Content-ID: <89e45673-8795-5956-7f7d-22b5b4ead0dc@linux.intel.com>
 
-Hi Stefan,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On 18:34 Thu 20 Feb     , Andrea della Porta wrote:
-> Hi Stefan,
-> 
-> On 15:21 Sat 08 Feb     , Stefan Wahren wrote:
-> > Hi Andrea,
-> > 
-> > Am 07.02.25 um 22:31 schrieb Andrea della Porta:
-> > > +		msix_cfg_set(rp1, hwirq, MSIX_CFG_IACK_EN);
-> > > +		rp1->level_triggered_irq[hwirq] = true;
-> > > +	break;
-> > > +	case IRQ_TYPE_EDGE_RISING:
-> > > +		msix_cfg_clr(rp1, hwirq, MSIX_CFG_IACK_EN);
-> > > +		rp1->level_triggered_irq[hwirq] = false;
-> > > +		break;
-> > > +	default:
-> > > +		return -EINVAL;
-> > It would be nice to document why only IRQ_TYPE_LEVEL_HIGH and
-> > IRQ_TYPE_EDGE_RISING are supported. In case it's a software limitation,
-> > this function would be a good place. In case this is a hardware
-> > limitation this should be in the binding.
-> 
-> All ints are level-triggered. I guess I should add a short comment in
-> the bindings.
-> 
+--8323328-1442975368-1742297604=:964
+Content-Type: text/plain; CHARSET=ISO-8859-2
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <e38a54da-a068-0a6a-b77c-f2699afd2024@linux.intel.com>
 
-Quick errata: s/level-triggered/active high/
++ Jakub
++ Alexander
 
-Thanks,
-Andrea
+On Mon, 17 Mar 2025, Alex Williamson wrote:
+> On Mon, 17 Mar 2025 19:18:03 +0100
+> Micha=B3 Winiarski <michal.winiarski@intel.com> wrote:
+> > On Fri, Mar 14, 2025 at 08:56:49AM -0600, Alex Williamson wrote:
+> > > On Fri,  7 Mar 2025 16:03:49 +0200
+> > > Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
+> > >  =20
+> > > > __resource_resize_store() attempts to release all resources of the
+> > > > device before attempting the resize. The loop, however, only covers
+> > > > standard BARs (< PCI_STD_NUM_BARS). If a device has VF BARs that ar=
+e
+> > > > assigned, pci_reassign_bridge_resources() finds the bridge window s=
+till
+> > > > has some assigned child resources and returns -NOENT which makes
+> > > > pci_resize_resource() to detect an error and abort the resize.
+> > > >=20
+> > > > Change the release loop to cover all resources up to VF BARs which
+> > > > allows the resize operation to release the bridge windows and attem=
+pt
+> > > > to assigned them again with the different size.
+> > > >=20
+> > > > As __resource_resize_store() checks first that no driver is bound t=
+o
+> > > > the PCI device before resizing is allowed, SR-IOV cannot be enabled
+> > > > during resize so it is safe to release also the IOV resources. =20
+> > >=20
+> > > Is this true?  pci-pf-stub doesn't teardown SR-IOV on release, which =
+I
+> > > understand is done intentionally.  Thanks, =20
+
+Thanks for reviewing. I'm sorry I just took Micha=B3's word on this for=20
+granted so I didn't check it myself.
+
+I could amend __resource_resize_store() to return -EBUSY if SR-IOV is=20
+there despite no driver being present, but lets hear if Alexander or Jakub=
+=20
+has some input on this.
+
+> > Is that really intentional?
+> > PCI warns when that scenario occurs:
+> > https://elixir.bootlin.com/linux/v6.13.7/source/drivers/pci/iov.c#L936
+>=20
+> Yep, it warns.  It doesn't prevent it from happening though.
+>=20
+> > I thought that the usecase is binding pci-pf-stub, creating VFs, and
+> > letting the driver be.
+> > But unbinding after creating VFs? What's the goal of that?
+> > Perhaps we're just missing .remove() in pci-pf-stub?
+>=20
+> I guess I don't actually know that leaving SR-IOV enabled was
+> intentional, maybe it was an oversight.  The original commit only
+> mentions the case of a device that requires nothing but this shim as
+> the PF driver.  A pci_warn() isn't much disincentive, the system might
+> already have taints.  If it's something that we really want to show as
+> broken, it'd probably need to be a WARN_ON.=20
+
+Added Alexander and Jakub, perhaps they remember something or if there are=
+=20
+caveats going either way.
+
+--=20
+ i.
+--8323328-1442975368-1742297604=:964--
 
