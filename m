@@ -1,92 +1,101 @@
-Return-Path: <linux-pci+bounces-24012-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24013-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7880FA66B64
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 08:18:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AE4AA66CA2
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 08:50:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5570B3BB4B6
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 07:18:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5F08F3AF2D0
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 07:49:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E04011DE4D7;
-	Tue, 18 Mar 2025 07:18:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49B071F872B;
+	Tue, 18 Mar 2025 07:46:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MQ2Dj7Fu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GKqK1dU7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3391443151
-	for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 07:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECF41EF369
+	for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 07:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742282297; cv=none; b=qiIp9xaBliUtCI+TbtVBCOJSu/wMi8VvSasBqrICBwDeP3ajyacT0sZZmVvRwQ6AX8qnEbIxtlVR3agNCvlHtApwWFJGBiR+Bqya0IyTnTX8jeTQ8iZW7eaKOk4m6qSRu9FitWWMSzMBOcNa8D1/S0HPehLo8H7gP5pEbb8fys4=
+	t=1742283987; cv=none; b=r7TlG3k9ZEMY/2lhXbVqUudKF7ZagHEyu4evqIauHfypqgZRpUU4TBHAavUpgoDHyAIEEndtSZ/Rn/yeVU2tfqdq0U9upoh0ZHxxmPLGS4pRzGljqknhx2AEIyjdD+caCXCUJf4tPE0Thcq60Ou7tzpzML2wmR/fT6XgIYzLQ50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742282297; c=relaxed/simple;
-	bh=sHkWokmPrqXsdDV7+i8VB3rJOPWoE1XI438bG7S5Nlc=;
+	s=arc-20240116; t=1742283987; c=relaxed/simple;
+	bh=LvywzN1RBsv3mdA4STwvBcFAP/jhi6wX7UwEJ79LVdE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KxVEIBFS9u8U8gZxpCBLkT5m8k0/MxPGZ3U77T0VzhS1430gyo6DLcByQW3FRba50fDdFp7C/xEYEgejq1N631sOYnLh+MX/LQ3YfZ9WwEZa01mrqQCDs1P83i26VpeLiYMI0DYB/xNJwlIZxxnwepB0VTkUNkDKLEDOxYaQQ7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MQ2Dj7Fu; arc=none smtp.client-ip=209.85.214.179
+	 Content-Type:Content-Disposition:In-Reply-To; b=agIFHS/+aRnnxnYM8wUgGJkxDlSONIEoXC8Y1sZ2jSiGjiO/MmPxy65c7zGvgtyLG78mCF2urd/+LLodaTnF+NvKv+2nakMpPpu5hLQ4Hu9j9LtQLm7pR0LUlXlCT6OaVV615mr5g2t1zeg5s+N1HYJv4wI/46ScqQkkShGyblM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GKqK1dU7; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22349bb8605so112579825ad.0
-        for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 00:18:15 -0700 (PDT)
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22580c9ee0aso91046235ad.2
+        for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 00:46:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742282295; x=1742887095; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1742283984; x=1742888784; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=uL3J0kJ07qCQwLi/H8v/Z+UezU+LpDO7hkpWTExk8ys=;
-        b=MQ2Dj7FuHbOQVJ5YTk0xYiXvhy57ZnHOSkxAJ0yPyePEmJh9SaVwgup/Sc6Fq8A4v3
-         7Mwe3Duhv/9grkY8khBxRl1JLymtWOG6oIBV+Z9acEtLjDNp6xvNAFeha/7Kp4xnZYsV
-         qvpVlpGnAVZtKHmq1J7HqZigN8n5ETDmNxtiZGhP5ejtRlt92HBuUNU1n9R72ehYwIum
-         BmQ3VTYZ+t7zsJuTozqLaK4193Xj9bTYZ7h4TOw0VOV2USV+Lw8SMZb7oCkT1qEBPTMU
-         EokAipHKCrPZiY8Zkx/9csn8fQoUOmCvQoJ+epj8M4RTK7/QRPzJFj25ZC89Ab0KRD62
-         FFXg==
+        bh=/5KVGOst+i3EqYlF+Sx7sAtMWBsKlTUEKDgYGkLY1j4=;
+        b=GKqK1dU7X3dkWLgRrNObHATUGX/K3vSyw0fjqLWL5TmdobHQJ4wDYuUIkKjdeQBIz7
+         cnNyXy/i0jkH7OaJvd9NvZmYzlz+k25HaiRVM6hxL29FqcDSKZVca5Cc0d/LksSpJ05k
+         FWt6CWtqJdMG0YxjoCYRqqx7Zu2yH3xj9/70FX979wmMIMt+zeHOKheEZBQ28jweTck6
+         uHDq06s6+q8fsIESdD/9+MnDb/MKlziXHG/7rKSNxKmahxpMchfDB2IOK52X6Qakx5c9
+         XdcSg6MJelmtbI+knx+qY33TzEOXm50OKQ+5/NWCxemmbjYl65Kt83IuL9Me2SifS5Hg
+         OPpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742282295; x=1742887095;
+        d=1e100.net; s=20230601; t=1742283984; x=1742888784;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uL3J0kJ07qCQwLi/H8v/Z+UezU+LpDO7hkpWTExk8ys=;
-        b=Ac8mOMYNII1TTXPrRt4byEQq3BZJGrc8EmwnPld1PepkqRloL9FiTNv8MBoINPBJpy
-         g7V5aE3Js7PKgFEf6heisMfyJhv1eVraxXNZSUac5QtdTQC+Oi57ndtqnCROStYoVjZM
-         1ilWeukGWxv/5qwa44S7fkP1qNZ6qji4ltyUgE99GFJEf+b6kA/KPsP5C48db2zamoJA
-         bwyQ7iu4oV393tKU+Uv1CgGqG8jSZJk7ubpiT+MozUlthWBlEURcC5bqVx8TtOUslfwc
-         nTkt7Yo5avLpvKi6+QxJ1iokMVnZoECPJbhFGhXCBaWmnMwCS7v3tp/TS4rOYRdghhSc
-         HxGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXKo6B7DNzb+JOadU9ZELJepecZBHQS1z2/thfJOaQmB1MrAkvAegTAmtbKO15Yigm+YG0hhLjJrXc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqQ4XOZ1o+paqd0XCHHuM7UfbRvdyLcDHUUsgvx5go50vD5hGB
-	UZJ0rGsoaza06KO3mnYJJBWvvVsw1e9x97sXC1OJ5RIEqH3H1C5Ubv3tujcqPw==
-X-Gm-Gg: ASbGncslAJvJ7hOZDe4GjEIeZhiQD0Ig+XfBzqZ0mb7vWivIfsIr/9D24fhw4CIszaQ
-	qWzKqkQoLZ9+K7usvuIQlrTXTjMGDVRKqBoX0Oq+QlPhAKz9mksZBeI8HAKjdjyJJuyTAoEHdUB
-	JGKFFG6EXzWbFiAmQk7iiLyMEkx1jcsM+3oRIDzlKoUZlXOP5t/xKbs6zbeNyw1repdz6wvXkl1
-	SL7Jq5BGaD1bec/tfvYwjUAuMaSLmKue/PSLZaxwD7dmZ1UtG7IImETMXqiAFpRjvD2p7xCWNk6
-	2E9j17vqWRKaIQcjwApHKQ2tUApqCBKeDZb0HCz+DEappCI8t/OuDPbYTjMBwe6h/C0=
-X-Google-Smtp-Source: AGHT+IEzVk5IzlQIC5VwuXRJuSpzspEea6bADLr7EeZbZUTj69tT3vTxsaaX4dqVtRwwYUxDGF902w==
-X-Received: by 2002:a17:903:3bad:b0:223:2cae:4a96 with SMTP id d9443c01a7336-225e0b0fa67mr181209535ad.42.1742282295391;
-        Tue, 18 Mar 2025 00:18:15 -0700 (PDT)
+        bh=/5KVGOst+i3EqYlF+Sx7sAtMWBsKlTUEKDgYGkLY1j4=;
+        b=AZQ+N28Kj67aBeDdqZteE/hmqyME241zV0zwuqIgt4Zyf+uFXUXTi/g6FzB1/kmr8q
+         mgWC8H42NqUKHTV0FJlYckIpIis9UC+7Qu9Yi2yeJAXW+JrYtJIp4fmZnZJA1oxz9LbT
+         mjQh1UOPA1bV48C2b0qoOVclbynFJXJ97bZkzHRHpbSuJ7Xii8JsNSNzaeEbsjyJFMVJ
+         hjfy44w2QHnbOMpMrdz7IsVymvL28J7VWOPYahcvC4RhOjDFWyuttTMifcp6bzdHt/HP
+         aEefMa1FQ1kJ2THze9lNLP/J175LnOKwMH4uYgtO85mCxBXiT0RXCbXa+PH7viWmCAP+
+         OvJA==
+X-Forwarded-Encrypted: i=1; AJvYcCX9De2ehSE0ClGsedEOQPUsSwOt7/F5sXtu8iParB0eLIp9VdJUU1CbuYR5RJt3fq7d2jzrGLWYZJM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8BlTJc6xF+MIqfGHyI0DbPl2/e/luOL3C1MrMhuI9sDk57TFe
+	AGELw998dcVdOPL98G2TXuncrYMH1cTBvxri+Qbr6YOLzhhqCn9TBK9Ra/j8Sg==
+X-Gm-Gg: ASbGnctGCFyH3YO2TtDLaU4IVcTKUVDdWOk8W9ZpYw1aL3eP+Ob3Nc5B1a4MtDSmjbd
+	RU81k+JbbvVFRYwYylPTA+kiqIUOQgSMYTjwbOv1dC3cldAStsCunBSULOBQR0w0VXEoxKfSWwh
+	8VgAdrgEy+pVOSulQrt+ZANVqq8HgBkX8cnGPqVSPGrdAbVZwULGkU74uAuQ7or+CR1KxbSc456
+	KWDoLSxvbgI/gOJi2Bart+eG2TWO190bt3d8ejj1le4mtZ2Ql/tg/EiBBiKKL1nCmixTJa/IEup
+	ppKleMUF0b+8IHiblxivuJD6+AovDWOphJykGdhJbZeah+ZbU2t819AZCK9PF6YD1Oc=
+X-Google-Smtp-Source: AGHT+IGk7Wbvv+p+ljwVovByJjOFoHfppHTP1+cVpoZmuorSMChPEuewTXvxnqB++I9G1ZambQYJAA==
+X-Received: by 2002:a05:6a00:2309:b0:736:41ec:aaad with SMTP id d2e1a72fcca58-73722382f9bmr19932531b3a.14.1742283984406;
+        Tue, 18 Mar 2025 00:46:24 -0700 (PDT)
 Received: from thinkpad ([120.56.195.170])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba7275sm87355885ad.115.2025.03.18.00.18.04
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-737116b3de4sm9153147b3a.179.2025.03.18.00.46.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 00:18:15 -0700 (PDT)
-Date: Tue, 18 Mar 2025 12:47:56 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: George Moussalem <george.moussalem@outlook.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-	andersson@kernel.org, bhelgaas@google.com, conor+dt@kernel.org,
-	devicetree@vger.kernel.org, dmitry.baryshkov@linaro.org,
-	kishon@kernel.org, konradybcio@kernel.org, krzk+dt@kernel.org,
-	kw@linux.com, lpieralisi@kernel.org, p.zabel@pengutronix.de,
-	quic_nsekar@quicinc.com, robh@kernel.org, robimarko@gmail.com,
-	vkoul@kernel.org, quic_srichara@quicinc.com
-Subject: Re: [PATCH v3 5/6] arm64: dts: qcom: ipq5018: Add PCIe related nodes
-Message-ID: <20250318071756.uilfhwfzgr5gds3o@thinkpad>
-References: <20250305134239.2236590-1-george.moussalem@outlook.com>
- <DS7PR19MB8883E4A90C8AFF66BCAE14F49DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
+        Tue, 18 Mar 2025 00:46:23 -0700 (PDT)
+Date: Tue, 18 Mar 2025 13:16:18 +0530
+From: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Lucas Stach <l.stach@pengutronix.de>, Frank Li <Frank.li@nxp.com>,
+	Hongxing Zhu <hongxing.zhu@nxp.com>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 2/2] PCI: imx6: Use domain number replace the hardcodes
+Message-ID: <20250318074618.tqbnr7nv665fk25n@thinkpad>
+References: <b425a7c7a7d6508daf23fe7046864a498029a7ac.camel@pengutronix.de>
+ <20250313160648.GA736867@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -96,149 +105,146 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <DS7PR19MB8883E4A90C8AFF66BCAE14F49DCB2@DS7PR19MB8883.namprd19.prod.outlook.com>
+In-Reply-To: <20250313160648.GA736867@bhelgaas>
 
-On Wed, Mar 05, 2025 at 05:41:30PM +0400, George Moussalem wrote:
-> From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+On Thu, Mar 13, 2025 at 11:06:48AM -0500, Bjorn Helgaas wrote:
+> On Thu, Mar 13, 2025 at 09:54:25AM +0100, Lucas Stach wrote:
+> > Am Mittwoch, dem 12.03.2025 um 10:22 -0400 schrieb Frank Li:
+> > > On Wed, Mar 12, 2025 at 09:28:02AM +0100, Lucas Stach wrote:
+> > > > Am Mittwoch, dem 12.03.2025 um 04:05 +0000 schrieb Hongxing Zhu:
+> > > > > > -----Original Message-----
+> > > > > > From: Bjorn Helgaas <helgaas@kernel.org>
+> > > > > > Sent: 2025年3月11日 23:55
+> > > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > > > > > Cc: robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
+> > > > > > shawnguo@kernel.org; l.stach@pengutronix.de; lpieralisi@kernel.org;
+> > > > > > kw@linux.com; manivannan.sadhasivam@linaro.org; bhelgaas@google.com;
+> > > > > > s.hauer@pengutronix.de; festevam@gmail.com; devicetree@vger.kernel.org;
+> > > > > > linux-pci@vger.kernel.org; imx@lists.linux.dev; kernel@pengutronix.de;
+> > > > > > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> > > > > > Subject: Re: [PATCH v1 2/2] PCI: imx6: Use domain number replace the
+> > > > > > hardcodes
+> > > > > > 
+> > > > > > On Tue, Mar 11, 2025 at 01:11:04AM +0000, Hongxing Zhu wrote:
+> > > > > > > > -----Original Message-----
+> > > > > > > > From: Bjorn Helgaas <helgaas@kernel.org>
+> > > > > > > > Sent: 2025年3月10日 23:11
+> > > > > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > > > > > > > Cc: robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
+> > > > > > > > shawnguo@kernel.org; l.stach@pengutronix.de; lpieralisi@kernel.org;
+> > > > > > > > kw@linux.com; manivannan.sadhasivam@linaro.org;
+> > > > > > bhelgaas@google.com;
+> > > > > > > > s.hauer@pengutronix.de; festevam@gmail.com;
+> > > > > > > > devicetree@vger.kernel.org; linux-pci@vger.kernel.org;
+> > > > > > > > imx@lists.linux.dev; kernel@pengutronix.de;
+> > > > > > > > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> > > > > > > > Subject: Re: [PATCH v1 2/2] PCI: imx6: Use domain number replace the
+> > > > > > > > hardcodes
+> > > > > > > > 
+> > > > > > > > On Wed, Feb 26, 2025 at 10:42:56AM +0800, Richard Zhu wrote:
+> > > > > > > > > Use the domain number replace the hardcodes to uniquely identify
+> > > > > > > > > different controller on i.MX8MQ platforms. No function changes.
+> > > > > > > > > 
+> > > > > > > > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > > > > > > > > ---
+> > > > > > > > >  drivers/pci/controller/dwc/pci-imx6.c | 14 ++++++--------
+> > > > > > > > >  1 file changed, 6 insertions(+), 8 deletions(-)
+> > > > > > > > > 
+> > > > > > > > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
+> > > > > > > > > b/drivers/pci/controller/dwc/pci-imx6.c
+> > > > > > > > > index 90ace941090f..ab9ebb783593 100644
+> > > > > > > > > --- a/drivers/pci/controller/dwc/pci-imx6.c
+> > > > > > > > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> > > > > > > > > @@ -41,7 +41,6 @@
+> > > > > > > > >  #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE	BIT(11)
+> > > > > > > > >  #define IMX8MQ_GPR_PCIE_VREG_BYPASS		BIT(12)
+> > > > > > > > >  #define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11,
+> > > > > > 8)
+> > > > > > > > > -#define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
+> > > > > > > > > 
+> > > > > > > > >  #define IMX95_PCIE_PHY_GEN_CTRL			0x0
+> > > > > > > > >  #define IMX95_PCIE_REF_USE_PAD			BIT(17)
+> > > > > > > > > @@ -1474,7 +1473,6 @@ static int imx_pcie_probe(struct
+> > > > > > > > > platform_device
+> > > > > > > > *pdev)
+> > > > > > > > >  	struct dw_pcie *pci;
+> > > > > > > > >  	struct imx_pcie *imx_pcie;
+> > > > > > > > >  	struct device_node *np;
+> > > > > > > > > -	struct resource *dbi_base;
+> > > > > > > > >  	struct device_node *node = dev->of_node;
+> > > > > > > > >  	int i, ret, req_cnt;
+> > > > > > > > >  	u16 val;
+> > > > > > > > > @@ -1515,10 +1513,6 @@ static int imx_pcie_probe(struct
+> > > > > > > > platform_device *pdev)
+> > > > > > > > >  			return PTR_ERR(imx_pcie->phy_base);
+> > > > > > > > >  	}
+> > > > > > > > > 
+> > > > > > > > > -	pci->dbi_base = devm_platform_get_and_ioremap_resource(pdev,
+> > > > > > 0,
+> > > > > > > > &dbi_base);
+> > > > > > > > > -	if (IS_ERR(pci->dbi_base))
+> > > > > > > > > -		return PTR_ERR(pci->dbi_base);
+> > > > > > > > 
+> > > > > > > > This makes me wonder.
+> > > > > > > > 
+> > > > > > > > IIUC this means that previously we set controller_id to
+> > > > > > > > 1 if the first item in devicetree "reg" was 0x33c00000,
+> > > > > > > > and now we will set controller_id to 1 if the devicetree
+> > > > > > > > "linux,pci-domain" property is 1.  This is good, but I
+> > > > > > > > think this new dependency on the correct
+> > > > > > > > "linux,pci-domain" in devicetree should be mentioned in
+> > > > > > > > the commit log.
+> > > > > > > > 
+> > > > > > > > My bigger worry is that we no longer set pci->dbi_base
+> > > > > > > > at all.  I see that the only use of pci->dbi_base in
+> > > > > > > > pci-imx6.c was to determine the controller_id, but this
+> > > > > > > > is a DWC-based driver, and the DWC core certainly uses
+> > > > > > > > pci->dbi_base.  Are we sure that none of those DWC core
+> > > > > > > > paths are important to pci-imx6.c?
+> > > > > > >
+> > > > > > > Thanks for your concerns.  Don't worry about the
+> > > > > > > assignment of pci->dbi_base.  If pci-imx6.c driver doesn't
+> > > > > > > set it. DWC core driver would set it when
+> > > > > > >  dw_pcie_get_resources() is invoked.
+> > > > > > 
+> > > > > > Great, thanks!  Maybe we can amend the commit log to mention
+> > > > > > that and the new "linux,pci-domain" dependency.
+> > > > >
+> > > > > How about the following updates of the commit log?
+> > > > > 
+> > > > > Use the domain number replace the hardcodes to uniquely
+> > > > > identify different controller on i.MX8MQ platforms. No
+> > > > > function changes.  Please make sure the " linux,pci-domain" is
+> > > > > set for i.MX8MQ correctly, since  the controller id is relied
+> > > > > on it totally.
+> > > > > 
+> > > > This breaks running a new kernel on an old DT without the
+> > > > linux,pci-domain property, which I'm absolutely no fan of. We
+> > > > tried really hard to keep this way around working in the i.MX
+> > > > world.
+> > > 
+> > > 8MQ already add linux,pci-domain since Jan, 2021
+> > > 
+> > > commit c0b70f05c87f3b09b391027c6f056d0facf331ef
+> > > Author: Peng Fan <peng.fan@nxp.com>
+> > > Date:   Fri Jan 15 11:26:57 2021 +0800
+> > > 
+> > > Only missed is pcie-ep side, which have not been used at all boards dts
+> > > file in upstream.
+> > 
+> > I wasn't aware of this. 2021 is quite a while ago, so I suspect that
+> > nobody is going to run a new kernel with a DT this old. I retract my
+> > objection.
 > 
-> From: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> Sounds good, thanks, Lucas.  We really do want to avoid breaking old
+> DTs, so I appreciate your highlighting of it.  Even if we believe none
+> of them will break, I think it's worth mentioning the
+> 'linux,pci-domain' dependency and the commit that added it to the
+> .dtsi in the commit log.
 > 
-> Add phy and controller nodes for a 2-lane Gen2 and
-> a 1-lane Gen2 PCIe bus. IPQ5018 has 8 MSI SPI interrupts and
-> one global interrupt.
-> 
-> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
-> Signed-off-by: Sricharan R <quic_srichara@quicinc.com>
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
->  arch/arm64/boot/dts/qcom/ipq5018.dtsi | 232 +++++++++++++++++++++++++-
->  1 file changed, 230 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-> index 8914f2ef0bc4..301a044bdf6d 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-> @@ -147,6 +147,234 @@ usbphy0: phy@5b000 {
->  			status = "disabled";
->  		};
->  
-> +		pcie1: pcie@78000 {
-> +			compatible = "qcom,pcie-ipq5018";
-> +			reg = <0x00078000 0x3000>,
-> +			      <0x80000000 0xf1d>,
-> +			      <0x80000f20 0xa8>,
-> +			      <0x80001000 0x1000>,
-> +			      <0x80100000 0x1000>;
-> +			reg-names = "parf",
-> +				    "dbi",
-> +				    "elbi",
-> +				    "atu",
-> +				    "config";
-> +			device_type = "pci";
-> +			linux,pci-domain = <0>;
-> +			bus-range = <0x00 0xff>;
-> +			num-lanes = <1>;
-> +			max-link-speed = <2>;
 
-Why do you want to limit link speed?
-
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +
-> +			phys = <&pcie1_phy>;
-> +			phy-names ="pciephy";
-> +
-> +			ranges = <0x81000000 0 0x80200000 0x80200000 0 0x00100000>,	/* I/O */
-> +				 <0x82000000 0 0x80300000 0x80300000 0 0x10000000>;	/* MEM */
-
-These ranges are wrong. Please check with other DT files.
-
-Same comments to other instance as well.
-
-> +
-> +			msi-map = <0x0 &v2m0 0x0 0xff8>;
-> +
-> +			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "msi0",
-> +					  "msi1",
-> +					  "msi2",
-> +					  "msi3",
-> +					  "msi4",
-> +					  "msi5",
-> +					  "msi6",
-> +					  "msi7",
-> +					  "global";
-> +
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0x7>;
-> +			interrupt-map = <0 0 0 1 &intc 0 142 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-> +					<0 0 0 2 &intc 0 143 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-> +					<0 0 0 3 &intc 0 144 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-> +					<0 0 0 4 &intc 0 145 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-> +
-> +			clocks = <&gcc GCC_SYS_NOC_PCIE1_AXI_CLK>,
-> +				 <&gcc GCC_PCIE1_AXI_M_CLK>,
-> +				 <&gcc GCC_PCIE1_AXI_S_CLK>,
-> +				 <&gcc GCC_PCIE1_AHB_CLK>,
-> +				 <&gcc GCC_PCIE1_AUX_CLK>,
-> +				 <&gcc GCC_PCIE1_AXI_S_BRIDGE_CLK>;
-> +			clock-names = "iface",
-> +				      "axi_m",
-> +				      "axi_s",
-> +				      "ahb",
-> +				      "aux",
-> +				      "axi_bridge";
-> +
-> +			resets = <&gcc GCC_PCIE1_PIPE_ARES>,
-> +				 <&gcc GCC_PCIE1_SLEEP_ARES>,
-> +				 <&gcc GCC_PCIE1_CORE_STICKY_ARES>,
-> +				 <&gcc GCC_PCIE1_AXI_MASTER_ARES>,
-> +				 <&gcc GCC_PCIE1_AXI_SLAVE_ARES>,
-> +				 <&gcc GCC_PCIE1_AHB_ARES>,
-> +				 <&gcc GCC_PCIE1_AXI_MASTER_STICKY_ARES>,
-> +				 <&gcc GCC_PCIE1_AXI_SLAVE_STICKY_ARES>;
-> +			reset-names = "pipe",
-> +				      "sleep",
-> +				      "sticky",
-> +				      "axi_m",
-> +				      "axi_s",
-> +				      "ahb",
-> +				      "axi_m_sticky",
-> +				      "axi_s_sticky";
-> +
-> +			status = "disabled";
-> +
-> +			pcie@0 {
-> +				device_type = "pci";
-> +				reg = <0x0 0x0 0x0 0x0 0x0>;
-> +
-> +				#address-cells = <3>;
-> +				#size-cells = <2>;
-> +				ranges;
-> +			};
-> +		};
-> +
-> +		pcie1_phy: phy@7e000{
-> +			compatible = "qcom,ipq5018-uniphy-pcie-phy";
-> +			reg = <0x0007e000 0x800>;
-> +
-> +			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
-> +
-> +			resets = <&gcc GCC_PCIE1_PHY_BCR>,
-> +				 <&gcc GCC_PCIE1PHY_PHY_BCR>;
-> +
-> +			#clock-cells = <0>;
-> +
-
-Please get rid of these newlines between -cells properties.
+If there is a dependency, then it should be added to the binding. Only that will
+ensure that the DTs will have the dependent property present.
 
 - Mani
 
