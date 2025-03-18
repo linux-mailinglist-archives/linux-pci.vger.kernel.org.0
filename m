@@ -1,436 +1,164 @@
-Return-Path: <linux-pci+bounces-24023-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24024-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 386DEA66FA8
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 10:25:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EF35A66FB5
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 10:27:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BCC7C3BE62D
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 09:23:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 67325167FEA
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 09:27:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E87C92066EF;
-	Tue, 18 Mar 2025 09:23:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77A2820764A;
+	Tue, 18 Mar 2025 09:27:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="OTAqvIZo"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ckcKt7oZ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2062.outbound.protection.outlook.com [40.107.102.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFF0204F8A;
-	Tue, 18 Mar 2025 09:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742289838; cv=none; b=R65RF1RqNvhfwN7M3V87LSBKEH0N3jniKrBAO/fy+qZUJnadW4c4EHdCURkDqQN/nuGHjfFzycJXdShNT4kEe4NE8MvV+6Hnoz8KpO+o+ifqPT316Dys4ywo4QIpeiwIjAxZpG5xwYHozbO7xaqu14n+UsrNvkpEwappl27sy9w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742289838; c=relaxed/simple;
-	bh=rshk75o930iXzjXZKX+5UTvSwiOC3zAysRaXInOpHOM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oA8gqVuZP649kaa+bFJEXfgZNVymIIW1uZ7JEPfNPKB+CcstmsfAOczU8zHai6Z4ByutnLW/07VHdhD61iN7MIWAnXZ7qD0rowNZrR/dP43iawyD36ft8A1Qm6Rykid98u92XeTx9S8eeQUQwGhtTAJ8ftpMhMSqBC022o5po9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=OTAqvIZo; arc=none smtp.client-ip=79.135.106.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1742289829; x=1742549029;
-	bh=mQuW6b5jEmujh9k3HmmMRVbEVNl+m8ypHt+c7938u3M=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=OTAqvIZotcTkpmzzHrVJO77lGvvBaJqCw6aZvIXLyzy00fylMI7CFEMx0sfQhvcro
-	 tnA1uU41VKSN/iOn4EcqWRctj9wVlL3bbJeJa2OeBPQrjrAUlItcbqYoS46w0ezL3+
-	 GZh9fc+DPNTUGT4Yu1vLOjTi2sB4hItn5Sj1w29NBOkFcNgRf0YMEocDHrg69LmW7Z
-	 Zmt73feWtwhnITqi1dvAxpNO91oaXGJ8EP7rALZss7pGnxIlOBSBNpUhtz3YwOqcGB
-	 q8ReXtgigVleXgJtv0Z+2m0Tme8247kakEQCVgkrKEr9g7QwE1IVkW/77fS3kE8PQJ
-	 lDAEM2rAFsDpw==
-Date: Tue, 18 Mar 2025 09:23:42 +0000
-To: Boqun Feng <boqun.feng@gmail.com>, Tamir Duberstein <tamird@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 6/6] rust: use strict provenance APIs
-Message-ID: <D8JA6Z142FKY.4RRGIN0PDDYQ@proton.me>
-In-Reply-To: <67d8ba3e.050a0220.39b3b5.753c@mx.google.com>
-References: <67d864b2.0c0a0220.39fb6f.4df4@mx.google.com> <CAJ-ks9=uHjJrzM0ruvm4v4wr8LygRMP-1orWBy_9OiNNeQr0ow@mail.gmail.com> <CAJ-ks9=Qcmvbm=YGJ=jrX_+YdMsftk=FAimszYZB1OUuV4diZw@mail.gmail.com> <67d885ff.0c0a0220.111215.5644@mx.google.com> <CAJ-ks9kYB1b4XsQcFb=NScPq+R+13U+Sv-6opi-yp6=ZjuLD_g@mail.gmail.com> <67d88a1d.050a0220.2cdacf.4adf@mx.google.com> <CAJ-ks9kg4Br=56HT7T5sWpoMKhRqT_2x+cpQAWoyrEG3qyqQ6Q@mail.gmail.com> <67d895cc.050a0220.99d33.5adc@mx.google.com> <67d8ba3e.050a0220.39b3b5.753c@mx.google.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 62fa245554ceb372780867add0e7aa64a9f3faec
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D910205E0F;
+	Tue, 18 Mar 2025 09:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742290026; cv=fail; b=HLjrDpTpZpOECPdZRbizN10Se9v4qtM4R7g036+YFx+78JM7HMJiV7Q+IL0WS5BCspL71SuY9EZUoIihxtfX4Y175oWvJ77jHJakNQlweNbKsR8EknoV9LUB3x5PK1P2/7HlntT3549yCi2gieTm6HwJWuM81jQR+kFVoL5kU2Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742290026; c=relaxed/simple;
+	bh=f3zp18Tnp7Mz9ZOfXYwTEIUGZaGzP/25PB3R5IocrEg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A/AsMqOp22JtotGDlviQGvlpdQc5p3LRnDZ27jV2x2zLnTTdQB9npeysPqqhYSJkyPHJj/qzbv6dnd/wC/Nl5llfnm/CVFjVMtW0+RIADnuK7EmaIOmvOxJv9yP+SQzfF48QS2kujkPnYiIi7lauBPe67/0tICt+OHR181bxTfo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ckcKt7oZ; arc=fail smtp.client-ip=40.107.102.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=y1LA0+sIbhe+coxYKDj6Z1qY0IEhXtlKx+FT8o1oxWaxFUsCVZKeUtZ3WPbk9VfoY23HMIq4DQIe1XYG9TCtcxHlRnG+JpqtsZ5ac/c4br+eib97bA85VA4GdtbEgTOqoBgUDglL3VuYl66YO3EqvPfZCmzp9p0CgQH2GhcQlhUoxqHxjmQrFxhUxo6lMDYDE/yW5kqY86V0XZEzwkUiny1iq3klP62Xh4BCgugLAx9zsx6GUFsSYVEryl87JAl+f5PRnbtiS4tqJnA9E3aLEWQ20LXOJDgtgwEKcXUQyvJnnCaFLc4c74mgu7+qIMPyYkRDWtGEv4Hmz8lfKl3fqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qqCzsOzfymeZDWnPioulr+ZxMXQ6Q6i3Wi2mPwmh460=;
+ b=wFG8pS07UCnS++8cYv1mkvjVNh4ap/cS5Gja3HXBjeyuDzmdxuIrUhUHU3wfuUK1MktVhWl4LQs0lGbkRIM+7zeFa2U53I99nBn7ClMyOGq89H6ZS/HO0LLgNg3b4EnAwOIR04eyiV8owvopUHzacovt27YKRvrYyCHTdgVvKv1mimkXJa8ypRA75whR9GZDQA9CBFzX7G4t26xrWMOxhFViiKWyrmaguIH0ipQ1Ph35XRgsUiB8pr7drOJZVa7stEDXaL3m7Hhxn1NsQp14dl8zHuh6rmqhi8ol40aUmSYP6t5ecOvxIYS5mgj2rvrwmnS6i3pAHUC+e8T7NwlXuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qqCzsOzfymeZDWnPioulr+ZxMXQ6Q6i3Wi2mPwmh460=;
+ b=ckcKt7oZGxITD9rdXQGCuaKgon+3mM3eBkRoSdBq4CrNQAHaD/m8EucVUMwSLiLITSBfY6ZEhJ5lNxLI5RNTnBAG0i/zcWX8oHCDpoEB7o4qcwXLn+hnNXEu0wsoxZvx35v/Y1w+XT4WezO6OfVkfkC0WyHw4TtNgwxLytZ+SZc=
+Received: from BN0PR07CA0011.namprd07.prod.outlook.com (2603:10b6:408:141::32)
+ by CY8PR12MB7413.namprd12.prod.outlook.com (2603:10b6:930:5f::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Tue, 18 Mar
+ 2025 09:27:00 +0000
+Received: from BN3PEPF0000B36D.namprd21.prod.outlook.com
+ (2603:10b6:408:141:cafe::55) by BN0PR07CA0011.outlook.office365.com
+ (2603:10b6:408:141::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.33 via Frontend Transport; Tue,
+ 18 Mar 2025 09:27:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN3PEPF0000B36D.mail.protection.outlook.com (10.167.243.164) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8583.3 via Frontend Transport; Tue, 18 Mar 2025 09:27:00 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 18 Mar
+ 2025 04:26:59 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 18 Mar
+ 2025 04:26:59 -0500
+Received: from xhdlc210324.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Tue, 18 Mar 2025 04:26:56 -0500
+From: Sai Krishna Musham <sai.krishna.musham@amd.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <cassel@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
+	<bharat.kumar.gogada@amd.com>, <thippeswamy.havalige@amd.com>,
+	<sai.krishna.musham@amd.com>
+Subject: [PATCH v4 0/2] Add support for PCIe RP PERST#
+Date: Tue, 18 Mar 2025 14:56:46 +0530
+Message-ID: <20250318092648.2298280-1-sai.krishna.musham@amd.com>
+X-Mailer: git-send-email 2.44.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36D:EE_|CY8PR12MB7413:EE_
+X-MS-Office365-Filtering-Correlation-Id: d0b7ddff-aa37-430c-d3bd-08dd65ff0940
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tP0nAYnsTqhMVhYLqAD0+A0ehamzTAORMdnJ4+/QAXdKziUIKyXOAsVP6YdN?=
+ =?us-ascii?Q?uYSOKMgVkiWt9H+OLJxk3IjSqeDyQ8rbgcoFOQD+yJInvq0s8FsL+EVqQC2j?=
+ =?us-ascii?Q?JZBji65tEFZJ5PjmLoO1ZvG2FB/9DBrTORR19jlLbeQQuTNBWoKogkuazeuA?=
+ =?us-ascii?Q?ZHEEh26Fc/Q3BQPStIoGApm8w71Ue10cTmxJ5o/l4V/HC9kCsbBl1DOCaRQE?=
+ =?us-ascii?Q?7Cx0ShaZE5t0cUnuVRnUR+wLrz866+TIpnGHupBpDJtRCf/IL66oBuIFutdB?=
+ =?us-ascii?Q?AE7jiwIye7DsHk6miQbDAGfzx6RCpKpuadiH34b8Hn3zFXNv6FyFnEL1ESph?=
+ =?us-ascii?Q?2+YeZFkRYDHMMTmLz8m6o32axlU9Qo2K8BCXRyAP5Z1ziZwjSGQrDK074EMS?=
+ =?us-ascii?Q?4WhJ9pmi9+0KZEEui+UGnYiaCGu073K+RM6jhin3xmxvMwQ2yeaH2AYfvhzV?=
+ =?us-ascii?Q?KpQCPsgjSP3mQT1e0jU8rULCh3KvpEDzgScrdQ3MZsNYL0+V3Bh9FJn5/Uz4?=
+ =?us-ascii?Q?kUU4u4OHMlrRHVnLtkX4yHhSshNJ/z4Yu4i0eFh74ZmfLHmHNPr+fSSeE422?=
+ =?us-ascii?Q?CbIFBkRZqW5r1cCGWWA/s/T2Q3ys5xNe95zzQYB21THgh5sWiFBXVMazElJ5?=
+ =?us-ascii?Q?L+J2KVxGZkVeJtewbKFBozjgS4jdpb3wbJcrvCC7K6jyYPBtIN9CzchZEOud?=
+ =?us-ascii?Q?o0dxVpxAALTujtRIC6mWKME57TVzgtW3HgOBooi3731MKLFg4EBBR2cCXClu?=
+ =?us-ascii?Q?jS0/swdPxOioySIsIV3MMeBwn+gMe+RMTJzkOtxyxznp5dX0bezJvcbHCjOC?=
+ =?us-ascii?Q?fST5NirpFtj6UJNklE11QtfR0UpR9YXsip8O1ZMUxRoE9dL8vPeeIE7eUen5?=
+ =?us-ascii?Q?ulHiX6lEMo9R9LS5MXeNQ3kzIKcMJowwigz5/JVyuLzIvHdC5+kZdEDqtP0i?=
+ =?us-ascii?Q?lxfSH3VkU2D9QXUxKVMRI3zz5z+C+v7ldntXnNDiLwJO7YMb48s3/ucB7BeL?=
+ =?us-ascii?Q?ngTb3cdxT0S3WYvgI6r6rp5UFSiSytN4m46R5A+sifFjozPotwg93j9STleg?=
+ =?us-ascii?Q?7n8O/VYobLfG0PjiP0Eh7KR4KHeUk7FpQboF6zq+XoiMoMJOC346K7ulp0T0?=
+ =?us-ascii?Q?riy4w+VOJL/71Ge+pK3QBH+5q8c2JUll+cgbNuV4OfzD0Ii7KEPTzz3npdyI?=
+ =?us-ascii?Q?Vedu8l22L14kvvcHMqEjaOcpILQkrv7aUGXlLC+ZlMxj+PI3WFwnPn8PSFNU?=
+ =?us-ascii?Q?vZx9oRbPCytuijsqddwTWzxlL3pXyX/PKZqNh6zMcCew/LsmJn59K4N/ZGuc?=
+ =?us-ascii?Q?OlHNlVeENfxS6Kt/GhzbeC0p+Hg4WjmvnxAPldDEFqBxFhGZ4kdqcgB3C1P7?=
+ =?us-ascii?Q?StHZQRcIK1T3SCP0img4LvjTgrR2Ara0CZm6mhx5I4vvw3c4crCBzz3I1TNT?=
+ =?us-ascii?Q?vVpda7rA/b3BiWc1DCWzXMBchU4rXt+U3/PDwPX1WuJ0FCYaa2D1bfzs6Kmo?=
+ =?us-ascii?Q?YO+IFfDUhIsFbQ4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2025 09:27:00.2318
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0b7ddff-aa37-430c-d3bd-08dd65ff0940
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B36D.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7413
 
-On Tue Mar 18, 2025 at 1:11 AM CET, Boqun Feng wrote:
-> On Mon, Mar 17, 2025 at 02:36:08PM -0700, Boqun Feng wrote:
-> [...]
->> >=20
->> > What about `pointer::expose_provenance`? It's a method that was added =
-in 1.79.0.
->> >=20
->>=20
->> We have a few options:
->>=20
->> 1) we can decide to use funtion-version of expose_provenance() (i.e. the
->>    stub), if we feel the symmetry with with_exposed_provenance() is
->>    a strong rationale. This also means we won't likely use
->>    pointer::expose_provenance() in the future. That is, although kernel
->>    doesn't have stable internal API, but in the foreseeable future, we
->>    decide to use funtion-version of expose_provenance().
->>=20
->> 2) we can introduce a PtrExt trait for <1.79
->>=20
->>    pub trait PtrExt<T> {
->>        fn expose_provenance(self) -> usize;
->>    }
->>=20
->>    and
->>=20
->>    impl<T> PtrExt<T> for *const T {
->>    =09...
->>    }
->>=20
->>    and `PtrExt` in kernel::prelude.
->>=20
->>    (we need to #[allow(unstable_name_collisions)] to make that work)
->>=20
->>    We can also make with_exposed_provenance() use the same *Ext trick,
->>    and remove it when we bump the minimal rustc version.
->
-> This is probably a wrong suggestion, because with_exposed_provenance()
-> is a function instead of a method in Rust std.
->
-> Below is what I combined all together (based on your v5 patchset), and I
-> did test on 1.78, 1.79, 1.84 and 1.85 and it seems working ;-)
+Add support for PCIe Root Port PERST# signal.
 
-I like this a lot, I also thought that we should just disable the
-`incompatible_msrv` lint. That we get rid of the stubs is a nice bonus
-:)
+Add `reset-gpios` property to the Versal CPM PCIe controller binding.
+Add CPM clock and reset control register base for handling Versal CPM PCIe IP reset.
 
-The only annoying thing that's left IMO is that we need to conditionally=20
-import the `PtrExt` trait, but that would need the built-in prelude
-feature :(
+Sai Krishna Musham (2):
+  dt-bindings: PCI: xilinx-cpm: Add reset-gpios for PCIe RP PERST#
+  PCI: xilinx-cpm: Add support for PCIe RP PERST# signal
 
-Couple notes below.
+ .../bindings/pci/xilinx-versal-cpm.yaml       | 21 ++++--
+ drivers/pci/controller/pcie-xilinx-cpm.c      | 66 ++++++++++++++++++-
+ 2 files changed, 81 insertions(+), 6 deletions(-)
 
-> Regards,
-> Boqun
-> ------------------------------------->8
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 82e28d6f7c3f..e316b98b3612 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -135,6 +135,9 @@ config RUSTC_HAS_COERCE_POINTEE
->  config RUSTC_HAS_STABLE_STRICT_PROVENANCE
->  =09def_bool RUSTC_VERSION >=3D 108400
-> =20
-> +config RUSTC_HAS_EXPOSED_PROVENANCE
-> +=09def_bool RUSTC_VERSION >=3D 107900
-> +
->  config PAHOLE_VERSION
->  =09int
->  =09default $(shell,$(srctree)/scripts/pahole-version.sh $(PAHOLE))
-> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> index e8232bb771b2..a87a437bd9ab 100644
-> --- a/rust/kernel/devres.rs
-> +++ b/rust/kernel/devres.rs
-> @@ -64,7 +64,7 @@ struct DevresInner<T> {
->  ///             return Err(ENOMEM);
->  ///         }
->  ///
-> -///         Ok(IoMem(IoRaw::new(kernel::expose_provenance(addr), SIZE)?)=
-)
-> +///         Ok(IoMem(IoRaw::new(addr.expose_provenance(), SIZE)?))
->  ///     }
->  /// }
->  ///
-> diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-> index 0a018ad7478a..60c71f26d29d 100644
-> --- a/rust/kernel/io.rs
-> +++ b/rust/kernel/io.rs
-> @@ -75,7 +75,7 @@ pub fn maxsize(&self) -> usize {
->  ///             return Err(ENOMEM);
->  ///         }
->  ///
-> -///         Ok(IoMem(IoRaw::new(kernel::expose_provenance(addr), SIZE)?)=
-)
-> +///         Ok(IoMem(IoRaw::new(addr.expose_provenance(), SIZE)?))
->  ///     }
->  /// }
->  ///
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index c1b274c04a0f..79b19e601372 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -22,6 +22,9 @@
->      feature(strict_provenance_lints),
->      deny(fuzzy_provenance_casts, lossy_provenance_casts)
->  )]
-> +#![cfg_attr(not(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE), feature(stri=
-ct_provenance))]
-> +#![cfg_attr(all(not(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE), CONFIG_R=
-USTC_HAS_EXPOSED_PROVENANCE), feature(exposed_provenance))]
-> +
->  #![feature(inline_const)]
->  #![feature(lint_reasons)]
->  // Stable in Rust 1.83
-> @@ -30,78 +33,24 @@
->  #![feature(const_ptr_write)]
->  #![feature(const_refs_to_cell)]
-> =20
-> -#[cfg(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE)]
-> -#[allow(clippy::incompatible_msrv)]
-> -mod strict_provenance {
-> -    /// Gets the "address" portion of the pointer.
-> -    ///
-> -    /// See https://doc.rust-lang.org/stable/core/primitive.pointer.html=
-#method.addr.
-> -    #[inline]
-> -    pub fn addr<T>(ptr: *const T) -> usize {
-> -        ptr.addr()
-> -    }
-> -
-> -    /// Exposes the "provenance" part of the pointer for future use in
-> -    /// [`with_exposed_provenance`] and returns the "address" portion.
-> -    ///
-> -    /// See https://doc.rust-lang.org/stable/core/primitive.pointer.html=
-#method.expose_provenance.
-> -    #[inline]
-> -    pub fn expose_provenance<T>(ptr: *const T) -> usize {
-> -        ptr.expose_provenance()
-> -    }
-> -
-> -    /// Converts an address back to a pointer, picking up some previousl=
-y 'exposed'
-> -    /// provenance.
-> -    ///
-> -    /// See https://doc.rust-lang.org/stable/core/ptr/fn.with_exposed_pr=
-ovenance.html.
-> -    #[inline]
-> -    pub fn with_exposed_provenance<T>(addr: usize) -> *const T {
-> -        core::ptr::with_exposed_provenance(addr)
-> -    }
-> -
-> -    /// Converts an address back to a mutable pointer, picking up some p=
-reviously 'exposed'
-> -    /// provenance.
-> -    ///
-> -    /// See https://doc.rust-lang.org/stable/core/ptr/fn.with_exposed_pr=
-ovenance_mut.html
-> -    #[inline]
-> -    pub fn with_exposed_provenance_mut<T>(addr: usize) -> *mut T {
-> -        core::ptr::with_exposed_provenance_mut(addr)
-> -    }
-> -
-> -    /// Creates a pointer with the given address and no [provenance][cra=
-te::ptr#provenance].
-> -    ///
-> -    /// See https://doc.rust-lang.org/stable/core/ptr/fn.without_provena=
-nce_mut.html.
-> -    #[inline]
-> -    pub fn without_provenance_mut<T>(addr: usize) -> *mut T {
-> -        core::ptr::without_provenance_mut(addr)
-> -    }
-> -}
-> +#![allow(clippy::incompatible_msrv)]
-> =20
-> -#[cfg(not(CONFIG_RUSTC_HAS_STABLE_STRICT_PROVENANCE))]
-> +#[cfg(not(CONFIG_RUSTC_HAS_EXPOSED_PROVENANCE))]
->  mod strict_provenance {
-
-Since there is only a single trait and impl in here, I think we don't
-need a module.
-
-> -    /// Gets the "address" portion of the pointer.
-> -    ///
-> -    /// See https://doc.rust-lang.org/stable/core/primitive.pointer.html=
-#method.addr.
-> -    #[inline]
-> -    pub fn addr<T>(ptr: *const T) -> usize {
-> -        // This is core's implementation from
-> -        // https://github.com/rust-lang/rust/commit/4291332175d12e79e606=
-1cdc3f5dccac2e28b969 through
-> -        // https://github.com/rust-lang/rust/blob/1.84.0/library/core/sr=
-c/ptr/const_ptr.rs#L172
-> -        // which is the first version that satisfies `CONFIG_RUSTC_HAS_S=
-TABLE_STRICT_PROVENANCE`.
-> -        #[allow(clippy::undocumented_unsafe_blocks)]
-> -        unsafe {
-> -            #[allow(clippy::transmutes_expressible_as_ptr_casts)]
-> -            core::mem::transmute(ptr.cast::<()>())
-> -        }
-> +    #[doc(hidden)]
-> +    pub trait PtrExt<T> {
-
-The `T` here and in the impl below probably should have a `?Sized`
-bound, since that's also what the stdlib does.
-
-> +        /// Exposes the "provenance" part of the pointer for future use =
-in
-> +        /// [`with_exposed_provenance`] and returns the "address" portio=
-n.
-> +        ///
-> +        /// See https://doc.rust-lang.org/stable/core/primitive.pointer.=
-html#method.expose_provenance.
-> +        fn expose_provenance(self) -> usize;
->      }
-> =20
-> -    /// Exposes the "provenance" part of the pointer for future use in
-> -    /// [`with_exposed_provenance`] and returns the "address" portion.
-> -    ///
-> -    /// See https://doc.rust-lang.org/stable/core/primitive.pointer.html=
-#method.expose_provenance.
-> -    #[inline]
-> -    pub fn expose_provenance<T>(ptr: *const T) -> usize {
-> -        ptr.cast::<()>() as usize
-> +    impl<T> PtrExt<T> for *const T {
-> +        #[inline]
-> +        fn expose_provenance(self) -> usize {
-> +            self.cast::<()>() as usize
-> +        }
->      }
-> =20
->      /// Converts an address back to a pointer, picking up some previousl=
-y 'exposed'
-> @@ -131,8 +80,12 @@ pub fn without_provenance_mut<T>(addr: usize) -> *mut=
- T {
->      }
->  }
-> =20
-> +#[cfg(not(CONFIG_RUSTC_HAS_EXPOSED_PROVENANCE))]
->  pub use strict_provenance::*;
-> =20
-> +#[cfg(CONFIG_RUSTC_HAS_EXPOSED_PROVENANCE)]
-> +pub use core::ptr::{with_exposed_provenance, with_exposed_provenance_mut=
-, without_provenance_mut};
-
-We shouldn't need this any longer, right?
-
----
-Cheers,
-Benno
-
-> +
->  // Ensure conditional compilation based on the kernel configuration work=
-s;
->  // otherwise we may silently break things like initcall handling.
->  #[cfg(not(CONFIG_RUST))]
-> diff --git a/rust/kernel/of.rs b/rust/kernel/of.rs
-> index b70076d16008..3670676071ff 100644
-> --- a/rust/kernel/of.rs
-> +++ b/rust/kernel/of.rs
-> @@ -22,7 +22,7 @@ unsafe impl RawDeviceId for DeviceId {
->      const DRIVER_DATA_OFFSET: usize =3D core::mem::offset_of!(bindings::=
-of_device_id, data);
-> =20
->      fn index(&self) -> usize {
-> -        crate::addr(self.0.data)
-> +        self.0.data.addr()
->      }
->  }
-> =20
-> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> index 87c9f67b3f0f..73958abdc522 100644
-> --- a/rust/kernel/pci.rs
-> +++ b/rust/kernel/pci.rs
-> @@ -287,7 +287,7 @@ fn new(pdev: Device, num: u32, name: &CStr) -> Result=
-<Self> {
->          // `pdev` is valid by the invariants of `Device`.
->          // `num` is checked for validity by a previous call to `Device::=
-resource_len`.
->          // `name` is always valid.
-> -        let ioptr =3D crate::expose_provenance(unsafe { bindings::pci_io=
-map(pdev.as_raw(), num, 0) });
-> +        let ioptr =3D unsafe { bindings::pci_iomap(pdev.as_raw(), num, 0=
-) }.expose_provenance();
->          if ioptr =3D=3D 0 {
->              // SAFETY:
->              // `pdev` valid by the invariants of `Device`.
-> diff --git a/rust/kernel/prelude.rs b/rust/kernel/prelude.rs
-> index baa774a351ce..3ea6aa9e40e5 100644
-> --- a/rust/kernel/prelude.rs
-> +++ b/rust/kernel/prelude.rs
-> @@ -41,3 +41,6 @@
->  pub use super::init::InPlaceInit;
-> =20
->  pub use super::current;
-> +
-> +#[cfg(not(CONFIG_RUSTC_HAS_EXPOSED_PROVENANCE))]
-> +pub use super::PtrExt;
-> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-> index 6bc6357293e4..d8e740267f14 100644
-> --- a/rust/kernel/str.rs
-> +++ b/rust/kernel/str.rs
-> @@ -8,6 +8,9 @@
-> =20
->  use crate::error::{code::*, Error};
-> =20
-> +#[cfg(not(CONFIG_RUSTC_HAS_EXPOSED_PROVENANCE))]
-> +use crate::PtrExt;
-> +
->  /// Byte string without UTF-8 validity guarantee.
->  #[repr(transparent)]
->  pub struct BStr([u8]);
-> @@ -692,9 +695,9 @@ fn new() -> Self {
->      pub(crate) unsafe fn from_ptrs(pos: *mut u8, end: *mut u8) -> Self {
->          // INVARIANT: The safety requirements guarantee the type invaria=
-nts.
->          Self {
-> -            beg: crate::expose_provenance(pos),
-> -            pos: crate::expose_provenance(pos),
-> -            end: crate::expose_provenance(end),
-> +            beg: pos.expose_provenance(),
-> +            pos: pos.expose_provenance(),
-> +            end: end.expose_provenance(),
->          }
->      }
-> =20
-> @@ -705,7 +708,7 @@ pub(crate) unsafe fn from_ptrs(pos: *mut u8, end: *mu=
-t u8) -> Self {
->      /// The memory region starting at `buf` and extending for `len` byte=
-s must be valid for writes
->      /// for the lifetime of the returned [`RawFormatter`].
->      pub(crate) unsafe fn from_buffer(buf: *mut u8, len: usize) -> Self {
-> -        let pos =3D crate::expose_provenance(buf);
-> +        let pos =3D buf.expose_provenance();
->          // INVARIANT: We ensure that `end` is never less then `buf`, and=
- the safety requirements
->          // guarantees that the memory region is valid for writes.
->          Self {
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 08b6380933f5..b070da0ea972 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -226,7 +226,7 @@ $(obj)/%.lst: $(obj)/%.c FORCE
->  # Compile Rust sources (.rs)
->  # ----------------------------------------------------------------------=
------
-> =20
-> -rust_allowed_features :=3D asm_const,asm_goto,arbitrary_self_types,lint_=
-reasons
-> +rust_allowed_features :=3D asm_const,asm_goto,arbitrary_self_types,lint_=
-reasons,exposed_provenance
-> =20
->  # `--out-dir` is required to avoid temporaries being created by `rustc` =
-in the
->  # current working directory, which may be not accessible in the out-of-t=
-ree
-> diff --git a/scripts/rustdoc_test_gen.rs b/scripts/rustdoc_test_gen.rs
-> index 036635fb1621..331ed32adc35 100644
-> --- a/scripts/rustdoc_test_gen.rs
-> +++ b/scripts/rustdoc_test_gen.rs
-> @@ -224,6 +224,8 @@ macro_rules! assert_eq {{
->          BufWriter::new(File::create("rust/doctests_kernel_generated.rs")=
-.unwrap()),
->          r#"//! `kernel` crate documentation tests.
-> =20
-> +#![allow(clippy::incompatible_msrv)]
-> +
->  const __LOG_PREFIX: &[u8] =3D b"rust_doctests_kernel\0";
-> =20
->  {rust_tests}
-
+-- 
+2.44.1
 
 
