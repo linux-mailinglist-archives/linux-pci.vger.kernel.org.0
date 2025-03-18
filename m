@@ -1,176 +1,142 @@
-Return-Path: <linux-pci+bounces-24031-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24032-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D87F6A6705F
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 10:55:07 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37F35A67118
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 11:21:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BEC397ABFA1
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 09:54:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9BD37421099
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 10:21:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9993A1F8BC8;
-	Tue, 18 Mar 2025 09:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xpg7BhCM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 709BC207E11;
+	Tue, 18 Mar 2025 10:21:32 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AAA6288DB;
-	Tue, 18 Mar 2025 09:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AB0207E0D;
+	Tue, 18 Mar 2025 10:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742291700; cv=none; b=p+zqdeipaur33ohKksfN80miBUHC0/H1U/gCTTT8117XAQHV1Ap9lrFZnpvM73ddulC8FcRPcbZyHjbJOOpLI+HSFHqifd/2tj8DATky//PcyqG36HLSVayEje6DjV//4lfqhoOv0vVHDzFp/gDL563U897QLYBfGg3ddRWsxzQ=
+	t=1742293292; cv=none; b=MdgM/2G71AX16hpqnkJh5XaYabc78AWLLG8jtFw8u3UcxXK6aQi7hA6K2o5K1qRz1wkYBQw9WHWCb8g2TxF7UcALESU9VluWk0w+I9iDRWczbad2BrBAYtzCK0IEgn7b7Q1MSRGGd/f3hOfGBNkuokgAK+hUhPj2fcUi6AJSUmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742291700; c=relaxed/simple;
-	bh=MMPIxNsQcdcDvT/XxJco5+7bOja52mFKmZbSLgBsJI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zz5rQJjCVKDBGbx2b5rrzTo0o9+fXijnvGXUrg0ULjrWrwgZG0lErudwdvNLQ1YuImubiM2aCqKd0fNSjgCEl1CowaRaAKEvr+8HJNpB97ttI7hI1YJN4mQDFcRetn8RLYIuw5QZ/IKv42xqxWCuSBAZb5+1mIQDCQ0ZfkKJTac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xpg7BhCM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73079C4CEDD;
-	Tue, 18 Mar 2025 09:54:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742291700;
-	bh=MMPIxNsQcdcDvT/XxJco5+7bOja52mFKmZbSLgBsJI8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Xpg7BhCMsNJ+5BhpWN2MZmwNuSLMoEAMw/OYupKD6twjduWywyPVOx6+xXLHfFe0q
-	 mPt/e4/F6v4swLbnAm/ie4cgurnTxx57sS129TLXUy3bJKnEkLyVOVElgoxc+oFmA7
-	 QNkRmZ+jupsF9blwYloTiJ6YUap8fxk5chyqtMYHvd33dEAHqLQTGmBLijWF0kkaGO
-	 5FbVtM9v/KD3QT2C02ds0BVbsneoWIpHR1xQ1PyC9e5CXGwE8+etmmB2oGjuH6mrF1
-	 x7+wPPnKKcwZ3fB8OKOCBmV7lY0Z0VZDoS6wX6XyRBiakhTl2k5koJmOPKqhX58G0E
-	 oVkd7Vy4KxPRw==
-Message-ID: <6cbec220-5ecc-4471-b819-031673d667df@kernel.org>
-Date: Tue, 18 Mar 2025 10:54:53 +0100
+	s=arc-20240116; t=1742293292; c=relaxed/simple;
+	bh=7mox+rQP13cKtgejtr8ZU+eh1fVDo3WnCxArWV3DXRc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WDzypAzGioiIBBVx0qlTvrib4NTG/EwdvB1XpBsuAgxe5U1YH4yieVpUSBbQES0r56xbFWybtiHqhFzDANbtubxuck7/pJPpUwljcOCpfLjpuf34WQ4d3PmIQtDCiuBkN2LtTCcME2S9w0i5fI5m9GCNl9myJyzHQlrnfrkfxoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-523effaf7ecso2554298e0c.3;
+        Tue, 18 Mar 2025 03:21:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742293288; x=1742898088;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QoDmWe/UGb3lnwkGClfcGSqUWh6tLGvw+A6qxymrSxM=;
+        b=cOT/nasUuV8QJnY1dOW58u2tHZ9zsaLPqD7zFmYQgDapPCveRl1xtOYHrq/SZ8TtAs
+         BhPYzbJKnqanls3N3PeaZJ24fbrkMxBFLTk9D3MmponrnWX0y3+qg7dSi2AjMYRgWgr6
+         ZltxO9e86OU9GIgzM5tg4kWBg2abouQfk2fiW2CveggwBql7hdqCvKcTne0DDHzXAtCY
+         mjalzhfLzqjj2/9pSbojR5bst8ABC5aibbvrviG0sA5xCdV6LxbV7Ak9fKgZ8VTkNOyn
+         EGws0zkItbNdeJ943JcWv/43G/wba8sCy5C85pNgPtew3Dz9Yphv/kpkgGR7DU0yRNeX
+         crEA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7P8nwKPf7rjr6+fXdRDEzoy1Nl/o0NlOfKLGYGXIZ1NPM3S3OPS6XVdtVTjO6UFpv/R/PhqFz1uiJGWzK@vger.kernel.org, AJvYcCVzqoE0ub7PDa4Lx7HRH/VK/cD7HwwS0lar8J8E1/OPGGeNK93xXORXHz8LzAtOm8ZCr6RPLn3V9vpZ@vger.kernel.org, AJvYcCX49Q2yvcMd26I73EJyxJ4GthS8V2ML4uu1XRxHae0IdM6bcT0oHMMNrS3BLtamQqH6lh1Nsy9JGN0M@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9dkDtyedZaQetV2cd9nr+Dn2kFFMkknYxL+wQMssJ8CaeWQgP
+	/MvHWh9NdKmjNSi6hVM3MC9roR0O40myy/Nup2gq5SJ6d1ppNq7oOL9L4Oa4
+X-Gm-Gg: ASbGncu/3c7KBuXYHu/7kaRUEHEfwshrFr6NJnSZFuvQo4o40DsIPyzIg80nJLwtjiH
+	xY3ZOJIMUjtmY4zgsusYlQZUneXRlq3j7CnAF+S7sj3UOJ/Vk8F4Mboi5p1xURIvB+xYS5ay9w/
+	BKEHJhNXe6rWmoG0wTsdXEuT/d1r25AU57Mq6a1HRp189nqnu9GCGeCKDwE4RafiTcJwFgmTPJR
+	uTI5CO9eiwM1b97W5zAUpUDP8okZwU6nmi+JcJGqJyo+yoU+XEUwJNrnS0q0ppC+5XB4gyRRlY8
+	rueVllE/HgXABp7HjFNB69Pou6FMdrzYiVoi+MK+9sa0pnXZoC2Kmk009dpkxuCGhsfPDTt4V3v
+	/gxLB6bFwVAo=
+X-Google-Smtp-Source: AGHT+IG15bLsJHlNASDftZy3Ras1S6N5mgYYQYbL1tH6/FBmsXn1RAA94zUq4dQ2yNmksMWX3/PW5w==
+X-Received: by 2002:a05:6122:1797:b0:523:763b:3649 with SMTP id 71dfb90a1353d-524499e6376mr9098898e0c.6.1742293288577;
+        Tue, 18 Mar 2025 03:21:28 -0700 (PDT)
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5243a71e866sm1943059e0c.48.2025.03.18.03.21.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Mar 2025 03:21:28 -0700 (PDT)
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5241abb9761so2388218e0c.1;
+        Tue, 18 Mar 2025 03:21:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUb+Idi/iIotZR8kTvWyVFH5wd8aYoh43iekEdeUcqV5GQWJnGNPcZGXE3I70jfolKmYgWNgItXOwLNWCuN@vger.kernel.org, AJvYcCWo1tw/PvTrNxkmGGy9nkFgMYeYYgsjxU/a6nf9OjJVvv6naRFEnrPiBRcnx74P1s0o8b2FGnvJAYWW@vger.kernel.org, AJvYcCXdbFL/+/KAXAYEoKU5Y6mcXogSbZRSJVDJozBp6/qXV+Ynv5YDmxFL3hmY783HXJmXaj+yseBuydNK@vger.kernel.org
+X-Received: by 2002:a05:6102:3912:b0:4c2:ffc8:93d9 with SMTP id
+ ada2fe7eead31-4c38313e0b2mr11168666137.9.1742293287761; Tue, 18 Mar 2025
+ 03:21:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST#
- signal
-To: Sai Krishna Musham <sai.krishna.musham@amd.com>, bhelgaas@google.com,
- lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, cassel@kernel.org
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, michal.simek@amd.com,
- bharat.kumar.gogada@amd.com, thippeswamy.havalige@amd.com
-References: <20250318092648.2298280-1-sai.krishna.musham@amd.com>
- <20250318092648.2298280-3-sai.krishna.musham@amd.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250318092648.2298280-3-sai.krishna.musham@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250228093351.923615-1-thippeswamy.havalige@amd.com> <20250228093351.923615-4-thippeswamy.havalige@amd.com>
+In-Reply-To: <20250228093351.923615-4-thippeswamy.havalige@amd.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 18 Mar 2025 11:21:15 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUQ+pPg_bsPq_MXOe_Q8QkEVy6amZdXvsn3BK4+2NOFBA@mail.gmail.com>
+X-Gm-Features: AQ5f1JqmIotS6ImEBxMg6HmFpsq89vT0syujgjflVP7WgI6KVWcnVzr7cYeS4Kg
+Message-ID: <CAMuHMdUQ+pPg_bsPq_MXOe_Q8QkEVy6amZdXvsn3BK4+2NOFBA@mail.gmail.com>
+Subject: Re: [PATCH v15 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, michal.simek@amd.com, 
+	bharat.kumar.gogada@amd.com, jingoohan1@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 18/03/2025 10:26, Sai Krishna Musham wrote:
->  	const struct xilinx_cpm_variant *variant = port->variant;
-> +	struct device *dev = port->dev;
-> +	struct gpio_desc *reset_gpio;
+Hi Thippeswamy,
+
+On Fri, 28 Feb 2025 at 10:35, Thippeswamy Havalige
+<thippeswamy.havalige@amd.com> wrote:
+> Add support for AMD MDB (Multimedia DMA Bridge) IP core as Root Port.
+>
+> The Versal2 devices include MDB Module. The integrated block for MDB along
+> with the integrated bridge can function as PCIe Root Port controller at
+> Gen5 32-GT/s operation per lane.
+>
+> Bridge supports error and INTx interrupts and are handled using platform
+> specific interrupt line in Versal2.
+>
+> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+
+Thanks for your patch, which is now commit e229f853f5b277a5
+("PCI: amd-mdb: Add AMD MDB Root Port driver") in pci/next.
+
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -27,6 +27,17 @@ config PCIE_AL
+>           required only for DT-based platforms. ACPI platforms with the
+>           Annapurna Labs PCIe controller don't need to enable this.
+>
+> +config PCIE_AMD_MDB
+> +       bool "AMD MDB Versal2 PCIe Host controller"
+> +       depends on OF || COMPILE_TEST
+
+AFAIK, AMD Versal2 is an ARM64 SoC, so this should depend on (at least)
+ARM64 || COMPILE_TEST, too.  If there's ever gonna be an ARCH_VERSAL
+symbol, it could be used as a dependency instead.
+
+> +       depends on PCI && PCI_MSI
+> +       select PCIE_DW_HOST
+> +       help
+> +         Say Y here if you want to enable PCIe controller support on AMD
+> +         Versal2 SoCs. The AMD MDB Versal2 PCIe controller is based on
+> +         DesignWare IP and therefore the driver re-uses the DesignWare core
+> +         functions to implement the driver.
 > +
-> +	/* Request the GPIO for PCIe reset signal */
-> +	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(reset_gpio)) {
-> +		dev_err(dev, "Failed to request reset GPIO\n");
 
-Isn't this probe path? If not, then why? How are you going to handle
-deferrer probe?
+Gr{oetje,eeting}s,
 
-> +		return;> +	}
-> +
-> +	/* Assert the reset signal */
-> +	gpiod_set_value(reset_gpio, 1);
-
-It was already asserted.
-
->  
-> -	if (variant->version == CPM5NC_HOST)
-> +	/* Assert the PCIe IP reset */
-> +	writel_relaxed(0x1, port->crx_base + variant->cpm_pcie_rst);
-> +
-> +	/* Controller specific delay */
-> +	udelay(50);
-> +
-> +	/* Deassert the PCIe IP reset */
-> +	writel_relaxed(0x0, port->crx_base + variant->cpm_pcie_rst);
-> +
-> +	/* Deassert the reset signal */
-> +	gpiod_set_value(reset_gpio, 0);
-> +	mdelay(PCIE_T_RRS_READY_MS);
-> +
-> +	if (variant->version == CPM5NC_HOST) {
-> +		/* Clear Firewall */
-> +		writel_relaxed(0x00, port->cpm5nc_base +
-> +			       XILINX_CPM5NC_PCIE0_FW);
-> +		writel_relaxed(0x01, port->cpm5nc_base +
-> +			       XILINX_CPM5NC_PCIE0_FW);
-> +		writel_relaxed(0x00, port->cpm5nc_base +
-> +			       XILINX_CPM5NC_PCIE0_FW);
->  		return;
-> +	}
->  
->  	if (cpm_pcie_link_up(port))
->  		dev_info(port->dev, "PCIe Link is UP\n");
-> @@ -551,6 +598,19 @@ static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie *port,
->  		port->reg_base = port->cfg->win;
->  	}
->  
-> +	port->crx_base = devm_platform_ioremap_resource_byname(pdev,
-> +							       "cpm_crx");
-
-And here is the actual ABI break.
-
-> +	if (IS_ERR(port->crx_base))
-> +		return PTR_ERR(port->crx_base);
+                        Geert
 
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Best regards,
-Krzysztof
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
