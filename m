@@ -1,173 +1,161 @@
-Return-Path: <linux-pci+bounces-24050-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24051-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96DA8A67704
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 15:57:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1A09A67745
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 16:08:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 87DDE163978
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 14:55:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92EE4189A2B1
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 15:02:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD6C32F30;
-	Tue, 18 Mar 2025 14:55:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7537A2E62C;
+	Tue, 18 Mar 2025 15:02:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GVmz39mq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aDUhq0BG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCDF20DD59;
-	Tue, 18 Mar 2025 14:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2935620D50E
+	for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 15:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742309726; cv=none; b=dngIMYLLYZi0r0gK3Cios7kcW2P9gqkJ5Zk7ediyEdFP6j/q+wAd7gLLqjUY0h2RZX4m7hPxrwJDrzjEu8KUYzRTvadwz0g8aocT9HB6vsqZ8DSbBMsbdIJF0pfHM0v4KcBBsCfGK6pSM6+PaTyIbIGGmZfvepCkxggG3/LkupA=
+	t=1742310130; cv=none; b=QfpGkLblbwX2a3rSf2mcRe5OZahOKxd/XJsXlUkoiBDd/S9C9dN2llWDo4+kkEtsh0XbieWYtuXUI7d680uXgGrQwgfpmZTQPvCPpqAaf9ran7rw30+b3IXuKUeL767O7ctaCEqyk54TdIt7fm3MPJK7dt1BpfsHZT5BsnYWJ/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742309726; c=relaxed/simple;
-	bh=H9DLnK3r7MFZDcbdgHuLqqfMHsM14MtRNwArj1moT8A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gFCAjU0BMXiz7rEoAscOLsuqYyUhArKb3pI4JoBOraz+m3v/a1HLMQ6I/BkcPOBKXFid92cGNLwGBTJEuZAdubzHMVyU/NXrqWUzM7/bbTY4jjP+QA/ImStaQ6k5ZhyzMg7KyBiX1q3KbyFr2QJ8ushhSC/DZwe27wrjj4BvwLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GVmz39mq; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30762598511so59865601fa.0;
-        Tue, 18 Mar 2025 07:55:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742309719; x=1742914519; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vk1MOiDuVZr9W40/mLkzWnl5G4mhGBTZpl9F//I5jok=;
-        b=GVmz39mqEBqiv8gTRHV2XOtEvy6q2ngLGAkGi7Jud/dF1CdFOVlRsZ8TaEZk/Zb0RT
-         RRzIxriY0Dz+oooDMvnE7CfDMoMi6okqDG918EbPdTUj/CEeh9s3DzruZd7g7CELNopP
-         TqT3lI/QPBmXZSwS15fDDzWSEO3mfUg0ZiWX6WbBx4namnLwz5IytQVKaNAMU5Fm+6Zy
-         4LzY/jNViF6o4SrjItBqKUO1CdP0eXefQxprGYF03RAbodiDWRRUQYb3ohnALl53mfcz
-         V1+QJQhT3Ogz0J+ZlxRwOuHV4a42Zt0xhTVI3aE2MMh7fWD10RK60Oq0PVpHK8TKXONf
-         Q+sg==
+	s=arc-20240116; t=1742310130; c=relaxed/simple;
+	bh=NeRQV6sfvbTorj7f26S+KJdYMGp4UY/s/qd3Ja4u+tk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SJB+MQuBuPFKhj1Z+o63MP221Mnt3oQexkbW32bpfMw2whPRCAcCSfphFbeHl+XYKMp5tqrmeEtEFe5BfBDUU4tY1hthKMwekUPaL5NBysoAwfhjlxdbDBj40nm77zP14GUUUOd3yPm4aOpFHdV3dIZpwkBh7rBzctT/cRDlEmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aDUhq0BG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742310127;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S4YD2sf+w7TG9LkPdewhHv9XVtamWwqRcBK8ja6UyyY=;
+	b=aDUhq0BGNFX/r9G/wJjI5jL03nj7P3+OusVtj88Ls1rdBz6TyPCP4OHCkCfajhkvhB9M1s
+	McPE5SGFAVAyvCYSwyjuVWbia7gWhxr+HsEQUircIuN+XhrWDcEZbaCodm/VFScPDR0FLZ
+	MjT668ukhwVnqNVpInd2Q8VUhWQOUxM=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-37-xjpRtFcKOSSeMbEgiUlw4Q-1; Tue, 18 Mar 2025 11:02:05 -0400
+X-MC-Unique: xjpRtFcKOSSeMbEgiUlw4Q-1
+X-Mimecast-MFC-AGG-ID: xjpRtFcKOSSeMbEgiUlw4Q_1742310121
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d44e9f0e69so8705805ab.3
+        for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 08:02:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742309719; x=1742914519;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1742310121; x=1742914921;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vk1MOiDuVZr9W40/mLkzWnl5G4mhGBTZpl9F//I5jok=;
-        b=uQ9kpfUpGFhNl8kcmui1p9LA+4RwzP3b4vmj1gFSOA+lyY8loG4QhQ4xEHNhsjcvjn
-         q9R3hFwwGOZP0uugc+Mk7SV9O1yIYvlleFbWY6qjBWdVWyeN7+qn8GxrEDTJ6b6VhnqZ
-         TkaFFpGHPywzmugmBUGjRafWwqevpAC5LSc+nRUYjAw7JZ/0kUC3sbzjdF5OmyBYb03o
-         xMNIG6/dO4BpHwZnmcGoJfLJSaOx+pcaDYUPIn3qwYyFZ+snPOqQcET9czC8gOsIQTGM
-         Cq3ilr8QzvNQ9Krzowt6dhWIA7oz5ZTr84IZGmVDFp3CbKHo9s/uJfK0qlDqvAvykG1e
-         j+Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9J5XtFwg/CdCV3v8uVvUjWUlH2VKnZzBlwZOWdV+fwE6lWEzTgB7jHypCQS/iGHNcif6Dc9y8WWoI@vger.kernel.org, AJvYcCXYk4phqeEHUbmRV9yVqs2zdRCgpYiHdgRuBWZP/UByqNYEydeLIXw+LszFQOYrjMITUbbeF0z6y/uFG5wrBWM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjMhItwH3TRk9rtj1D+MOaaYmEz5SHazxH6tb+j32O3bYLZoxG
-	t1QyycbQqGCM1zl98gYk6O7AQrXYQUqwUxUI2P002r/r3WpKQejOqV9287QRCWLjecZ0Ntj79qe
-	+TGS+ZkibfhX0271x5d/krsok7OU=
-X-Gm-Gg: ASbGncsJ+/YpCY8qLNW2s/opfxlJHZn6PgepIFb8WRO/RlU8kYLUw7hPFosjp2Rfz7d
-	6CkehZmVAKir9Qemkyz/xPcRsnjh56vhnrxJSMfp1qdXdLhQzabFhSuQffc5FZdOIoAAoAS9kxR
-	Wga+g3j1cW5fN3IA6ae0SAOj7J
-X-Google-Smtp-Source: AGHT+IGr+uYyVgPeNQu960dfIc9ujbpOwU8c48uenI1Yjyt54q2PhPy9HSGdKaQ5VuBpNHAIAArZ2K3Ckjj/ZnRlWTo=
-X-Received: by 2002:a05:651c:503:b0:30b:c22d:83b3 with SMTP id
- 38308e7fff4ca-30c4a861dd4mr96849811fa.15.1742309718913; Tue, 18 Mar 2025
- 07:55:18 -0700 (PDT)
+        bh=S4YD2sf+w7TG9LkPdewhHv9XVtamWwqRcBK8ja6UyyY=;
+        b=eltMwEBtPlQxPFSfPdh1m5UYdwxw/RooaPl+2K0f25Lu7yDM77rw2OEKFxkM/NOYvi
+         CnwRDY063iSsjBKkQ5v2XSITxwKQTzkIDO0AmwaRIJAS7m5qYLw/jRVXtzYqRwpRzggr
+         IPCgIvNfh9nLuyQuN3mPoM7G2V3cncAgg9HRuAG1uNgVM4e0TlmoMuxyDnqKFBhfa6Ns
+         j093Lui2UuVJYDKIUHrEQhq0+VgMsZXCsrT7uDGFW+TVaEfonlUHlgLGtQ1Ig5ChBEGz
+         qAQUVXy1RCYSEBZ89B/m4MjyjvqWKGNtNopKN2Fmcm14KEevyGOqmvAb4rCu7OPqG2Hh
+         efQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlY238We4XyCMbxnX2GMEK0B/ps/jRlF4fkamJIg8eIkVZVrNswumn9/iFq/FhqEReHNqgjNK2PCs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLbl/IBjra7nScJGY7jVnjvewU0N5M0J8hMDxgLNp9wTZ0gZ3Z
+	Yo5qSR/ciuMMDj3aoAwJ/SAVh8KDNqme0h6vfgst9x/o4wd1YaDvSu2ze0PZN6KhyJVklTdicOP
+	eZRvuAthA2Kgf0f5MW8tHxWgVgt1arbl4qo99IgYyScCdUi2NGfWHekz9cw==
+X-Gm-Gg: ASbGnctCHG1YCfTRpqro27KLcGKzSKiP8WSwkV/+oPsXuN22A+2E23jAMHAGTMMso/B
+	7RvQgCJ0r6ymVnHidvWTglSI4xjoFPDOLi9HtVwCN8j7QI/TkQBNRn5UsVxp3qcuN0dF0FHZC05
+	bYyu97bhLdfyzTz0TAuXlVQWZPK7BQ5ElIeb6d/KjPS7KaZozD6oywwYUdUhD+I18FiPD9k6XpR
+	FOeGiA4QskqEY26fCOX/ksvwurVthdMZ6/jY+AnaPq69sVcmtjzxNKhGOWUSIVPQ7oyehZUU+6W
+	M7sNaMsfPflze2x1AUA=
+X-Received: by 2002:a92:cd8f:0:b0:3d2:b3ad:8491 with SMTP id e9e14a558f8ab-3d4839f5b51mr45017915ab.2.1742310121224;
+        Tue, 18 Mar 2025 08:02:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFgEcLIWZMtQ3F020b/3FknCQq+tiAONkCx2hpltju6JhikxxWuBUauM9d3Fq+6ZXXyItoDnA==
+X-Received: by 2002:a92:cd8f:0:b0:3d2:b3ad:8491 with SMTP id e9e14a558f8ab-3d4839f5b51mr45017785ab.2.1742310120858;
+        Tue, 18 Mar 2025 08:02:00 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f263816ae0sm2795939173.119.2025.03.18.08.01.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 08:01:59 -0700 (PDT)
+Date: Tue, 18 Mar 2025 09:01:57 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Alexander Duyck
+ <alexanderduyck@fb.com>, =?UTF-8?B?TWljaGHFgg==?= Winiarski
+ <michal.winiarski@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+ linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] PCI: Fix BAR resizing when VF BARs are assigned
+Message-ID: <20250318090157.525949f9.alex.williamson@redhat.com>
+In-Reply-To: <ea24cc36-36c7-1b28-f9ba-78f7161430ca@linux.intel.com>
+References: <20250307140349.5634-1-ilpo.jarvinen@linux.intel.com>
+	<20250314085649.4aefc1b5.alex.williamson@redhat.com>
+	<kgoycgt2rmf3cdlqdotkhuov7fkqfk2zf7dbysgwvuipsezxb4@dokqn7xrsdvz>
+	<20250317163859.671a618f.alex.williamson@redhat.com>
+	<ea24cc36-36c7-1b28-f9ba-78f7161430ca@linux.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250314101613.3682010-1-chandrashekar.devegowda@intel.com> <20250314194031.GA785335@bhelgaas>
-In-Reply-To: <20250314194031.GA785335@bhelgaas>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Tue, 18 Mar 2025 10:55:06 -0400
-X-Gm-Features: AQ5f1JoQCuhokgmJqmNrk8yopLZQilzqZUrF-cnQh2mSnJeE7OSgEgLfRWhXP-w
-Message-ID: <CABBYNZJQn4ZYMxLqCkJwA71a_VWhu4QXTkU7vt7wiQXf3bdYdQ@mail.gmail.com>
-Subject: Re: [PATCH v1] Bluetooth: btintel_pcie: Support function level reset
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>, linux-bluetooth@vger.kernel.org, 
-	linux-pci@vger.kernel.org, bhelgaas@google.com, 
-	ravishankar.srivatsa@intel.com, chethan.tumkur.narayan@intel.com, 
-	Kiran K <kiran.k@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi Bjorn,
+On Tue, 18 Mar 2025 13:42:57 +0200 (EET)
+Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
 
-On Fri, Mar 14, 2025 at 3:40=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Fri, Mar 14, 2025 at 12:16:13PM +0200, Chandrashekar Devegowda wrote:
-> > Support function level reset (flr) on hardware exception to recover
-> > controller. Driver also implements the back-off time of 5 seconds and
-> > the maximum number of retries are limited to 5 before giving up.
->
-> Sort of weird that the commit log mentions FLR, but it's not mentioned
-> in the patch itself except for BTINTEL_PCIE_FLR_RESET_MAX_RETRY.
-> Apparently the assumption is that DSM_SET_RESET_METHOD_PCIE performs
-> an FLR.
->
-> Since this is an ACPI _DSM, presumably this mechanism only works for
-> devices built into the platform, not for any potential plug-in devices
-> that would not be described via ACPI.  I guess this driver probably
-> already only works for built-in devices because it also uses
-> DSM_SET_WDISABLE2_DELAY and DSM_SET_RESET_METHOD.
->
-> There is a generic PCI core way to do FLR (pcie_reset_flr()), so I
-> assume the _DSM exists because the device needs some additional
-> device-specific work around the FLR.
->
-> > +static void btintel_pcie_removal_work(struct work_struct *wk)
-> > +{
-> > +     struct btintel_pcie_removal *removal =3D
-> > +             container_of(wk, struct btintel_pcie_removal, work);
-> > +     struct pci_dev *pdev =3D removal->pdev;
-> > +     struct pci_bus *bus;
-> > +     struct btintel_pcie_data *data;
-> > +
-> > +     data =3D pci_get_drvdata(pdev);
-> > +
-> > +     pci_lock_rescan_remove();
-> > +
-> > +     bus =3D pdev->bus;
-> > +     if (!bus)
-> > +             goto out;
-> > +
-> > +     btintel_acpi_reset_method(data->hdev);
-> > +     pci_stop_and_remove_bus_device(pdev);
-> > +     pci_dev_put(pdev);
-> > +
-> > +     if (bus->parent)
-> > +             bus =3D bus->parent;
-> > +     pci_rescan_bus(bus);
->
-> This remove and rescan by a driver that's bound to the device subverts
-> the driver model.  pci_stop_and_remove_bus_device() detaches the
-> driver from the device.  After the driver is detached, we should not
-> be running any driver code.
+> + Jakub
+> + Alexander
+>=20
+> On Mon, 17 Mar 2025, Alex Williamson wrote:
+> > On Mon, 17 Mar 2025 19:18:03 +0100
+> > Micha=C5=82 Winiarski <michal.winiarski@intel.com> wrote: =20
+> > > On Fri, Mar 14, 2025 at 08:56:49AM -0600, Alex Williamson wrote: =20
+> > > > On Fri,  7 Mar 2025 16:03:49 +0200
+> > > > Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
+> > > >    =20
+> > > > > __resource_resize_store() attempts to release all resources of the
+> > > > > device before attempting the resize. The loop, however, only cove=
+rs
+> > > > > standard BARs (< PCI_STD_NUM_BARS). If a device has VF BARs that =
+are
+> > > > > assigned, pci_reassign_bridge_resources() finds the bridge window=
+ still
+> > > > > has some assigned child resources and returns -NOENT which makes
+> > > > > pci_resize_resource() to detect an error and abort the resize.
+> > > > >=20
+> > > > > Change the release loop to cover all resources up to VF BARs which
+> > > > > allows the resize operation to release the bridge windows and att=
+empt
+> > > > > to assigned them again with the different size.
+> > > > >=20
+> > > > > As __resource_resize_store() checks first that no driver is bound=
+ to
+> > > > > the PCI device before resizing is allowed, SR-IOV cannot be enabl=
+ed
+> > > > > during resize so it is safe to release also the IOV resources.   =
+=20
+> > > >=20
+> > > > Is this true?  pci-pf-stub doesn't teardown SR-IOV on release, whic=
+h I
+> > > > understand is done intentionally.  Thanks,   =20
+>=20
+> Thanks for reviewing. I'm sorry I just took Micha=C5=82's word on this fo=
+r=20
+> granted so I didn't check it myself.
+>=20
+> I could amend __resource_resize_store() to return -EBUSY if SR-IOV is=20
+> there despite no driver being present
 
-Yeah, this self removal was sort of bugging me as well, although I'm
-not familiar enough with the pci subsystem, having the driver remove
-and continue running code like pci_rescan_bus seems wrong as we may
-end up with multiple instances of the same driver.
+I probably never really considered resizing BARs for an SR-IOV capable
+device when adding this support originally, but it seems valid to me
+that if we extend releasing resources to the SR-IOV BARs that we simply
+need to assert that SR-IOV is disabled and fail otherwise.  Thanks,
 
-> There are a couple other drivers that remove their own device (ath9k,
-> iwlwifi, asus_wmi, eeepc-laptop), but I think those are broken and
-> it's a mistake to add this pattern to more drivers.
->
-> What's the reason for doing the remove and rescan?  The PCI core
-> doesn't reset the device when you do this, so it's not a "bigger
-> hammer reset".
+Alex
 
-I guess it was more of the expectation of Chandru to have a sort of
-hard reset, driver remove+probe, instead of a soft reset where the
-driver will just need to reinit itself after performing
-pcie_reset_flr.
-
-> > +out:
-> > +     pci_unlock_rescan_remove();
-> > +     kfree(removal);
-> > +}
->
-
-
---=20
-Luiz Augusto von Dentz
 
