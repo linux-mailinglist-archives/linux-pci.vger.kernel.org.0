@@ -1,265 +1,158 @@
-Return-Path: <linux-pci+bounces-24028-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24030-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DA8BA6701E
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 10:45:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E58AA67057
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 10:53:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5C7273AFC26
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 09:45:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 836C2188D78B
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 09:53:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C4EC224CC;
-	Tue, 18 Mar 2025 09:44:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80DD4207A11;
+	Tue, 18 Mar 2025 09:52:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZMO59ay9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWXjQD69"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5163207A2E
-	for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 09:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D69207A00;
+	Tue, 18 Mar 2025 09:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742291099; cv=none; b=HvouIbfiV3czNz/kg1FLyjCUqLYEzQHhA7b9M7XzWqrJijDYXxLxu8JLoS/yVCNlPYrvce5mm1Rcwx1v2c7ddcvUT7LVrDmXLuewLEQrfj7XDw0l+/bKUagwJaAHPVo0F9Zbu5GlEpyygie9YXQe026c+AUo7QYg2ZOJEXbyAK4=
+	t=1742291566; cv=none; b=gnoWCrBa4cAOsGCn3E62JD54LDRqCUe4VFf6uBOJYtyyjvDZM+plSyEPnwVckzPc6n9sAVdotQRj78xeGkJ494V038YdRt4nw3nKO8/KcIw4A3kEQtjVDhEOKoFmDlYPQrm3BRysEBdyo+b1ThELbqKMCUU5p4a5+yo5WohQJ1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742291099; c=relaxed/simple;
-	bh=raGUllWJomob8pRySrj7Qf7XmWKdYOqMKi7Hn0TQG+c=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pBVLdSAB21st0LL89lTwmI1CwhdYqxVniHt8palQiP0vk03M8n0ozC5V+TeNXTOqXVxk+trgJ2Z72L2KQQB6iq/LcL0GsBqc1njjX15MXzyjeddR8awVuhoyFwGyjrvHYfYGCw0JnRpyfinixSx74D7BRM1RWWUmx0/rJW/nyS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZMO59ay9; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso11682779a12.1
-        for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 02:44:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1742291095; x=1742895895; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4eInU4xGBu0Mt8Lm17X6zPVhTvmNik5PGbnkQOxA+YU=;
-        b=ZMO59ay9fHfT96rInwKCEFW4JQm/ORR0iYosd/bJf9B50nRRSVn2nAWtctgPxWH44J
-         06TJT4+3Bd0BZ8vRURy5KhTkv5nCTBYgdDakZI9ZaDOJ+vYhpIpIcdnSh82cryEbpFaG
-         MCe0Pj2ZZxOK6GGxk5MZWfKmIKYFNz7ui8fVynMOB0z4zZVMQlQMRvAGEGOYaEkxjKbl
-         2iWp4r0grH4J7gVzIPAhZa6gfy+cSsK7cURSC5mivNmgOas8EWvF4qYog2vAx35EF3aF
-         Z/hUxzPO3AuBb224graHCQNSxcypA0Db+ALdEsqHf6FzVfus9071ar58oks8O4pGS2pE
-         9VWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742291095; x=1742895895;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4eInU4xGBu0Mt8Lm17X6zPVhTvmNik5PGbnkQOxA+YU=;
-        b=Nvv4r9kFxRYVyNBGC9cgik3xmYGrkYyKj4OyMZpSLJzFPOc7pNuH9s5x8yy/XeV8F0
-         KffRh0bdqFYe50+ESghcf98toJqNN2kuP4wQcuoWXncNRcTqlGTL6nSAyU2gSA/+uSvJ
-         NXOYEtNJ4RvFRJb+OeoCHJfxRddpacXCc7wLwspxA9YBgKVeU7P5q+ARBPP+Dlz8OpBV
-         EeLdpyyjHTC5Xdg311LTTo4gOZ1S5PTjqo9hn91fsQYO+icl836EbajLzVGpelOJT9kU
-         f8AJubA+IYgsng4IF42BxtVPea+TPsgFBOJ7X5JmeXbthMIKwD9CRyk+rK5TxBprCHHW
-         3RZw==
-X-Forwarded-Encrypted: i=1; AJvYcCVbGJUlxBm0IXkPzYZv40+f/RFPNoxm2P8LWp44IaTgYDymLfoERppQ9JU3Moi4xyvpkULr2f6aCo8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmomCnkumbgzYsWePkCPSXRx8YTZXR5xTOYmOfVGm2tdWXTodG
-	c7thzbP4D3QIY1s0GIG31RGcQ//w7dR1NVeflhQHC1Z9ZiNZKqZS/bk9PZOp4Hc=
-X-Gm-Gg: ASbGncsXdjC1wzufJAxWrrIAOwnSXQakPSIBzXgLr9DTeBncemCuELRVUPQAMKtaI4E
-	7bS1eDdFPpWH9+SosaTPLJgKE/WQA6MsIX+7xijVNvNSAV+xk1WEd0GaniScOlEBSReSUFw+i7T
-	ntRIcMPJKfIFP5IjChnhfkRhJ+MqdRg7aPjzAQMhnkmGOK2rmTSPITmb1ER/UhZMG8w3MwM2QxI
-	bRCnEeyMHmeCUW159F7siQCc0SjUMlYbaAMEYf5UGx1lJiBMCweV6XqvWrIuJeaiB6NuFlJcgCX
-	G6UXiqbEfISxHl+SIX/w1Rl6/reu1jdzGh+m0uGUcDBdNlRYdKSF4J7WOl0IAtdBaWbSFG0ONsT
-	paEu/+5kJ0d3xomU=
-X-Google-Smtp-Source: AGHT+IF5nVWbdkGdXhT8Rbx0xwnOfVzY2zNtg2VYzomJ4pLfS9zkgHWMH1EzA7usUUR4N2OG/B9QfA==
-X-Received: by 2002:a05:6402:3491:b0:5e6:102a:c30 with SMTP id 4fb4d7f45d1cf-5eb1efcbee0mr3044112a12.2.1742291094785;
-        Tue, 18 Mar 2025 02:44:54 -0700 (PDT)
-Received: from localhost (host-80-117-53-131.retail.telecomitalia.it. [80.117.53.131])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e8169bca53sm7562109a12.46.2025.03.18.02.44.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 02:44:54 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 18 Mar 2025 10:46:07 +0100
-To: Krzysztof Wilczynski <kw@linux.com>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v7 08/11] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <Z9lA31gBjpIRHm6y@apocalypse>
-References: <cover.1738963156.git.andrea.porta@suse.com>
- <d1362766e3e966f78591129de918046a4b892c18.1738963156.git.andrea.porta@suse.com>
- <20250314083730.GC234496@rocinante>
+	s=arc-20240116; t=1742291566; c=relaxed/simple;
+	bh=wbiT/Za974dRgPeik0jQmOKTA3pB34ji6ub1FSN3UNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rehV/wnFsUsab1JeffoqOetmqepZ3PYDHXhmd0BlNNc1fMH66llRDSaGrNHANOZ5YrUQSK5ldA771/muWiTu03P8Mw2DhRGyVGSRj67GaKdR8y3KR9CUFX4N1yImkR3BiXARQK9p16t7bIuTgk8g/+xbc7gYtWEjOwT25aJjv/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWXjQD69; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F3EBC4CEDD;
+	Tue, 18 Mar 2025 09:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742291565;
+	bh=wbiT/Za974dRgPeik0jQmOKTA3pB34ji6ub1FSN3UNA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kWXjQD69grngLEhzCwr/ums4RPyQEdIIbjf34Fr9DQJ9LCBwL20+MX07BfTyh31gv
+	 gVji2cbgGoB3ZJmK9U8lxC60IAS8z2oY5bDibjAoUpZyyBio0sVTWrZGDejUeWmQwA
+	 FVCJ1cMHpRFhsOAJnWSo0JOwyTO03JB3uUWbfsZ1gNFRV5NqkVASGUBQrs7vVkkrKc
+	 zCxLfOwwGBn8Z65ly63GjWPtn3oUUAe1dDdgkdBON9BqmY94pbfP136Z75idQrzQoC
+	 U5bjKwBhOeq8xu3nHDRskWGs0xKMq6brF3zADumASJjOXW8I5kmfRXIF84q/DfzsZQ
+	 5dpYXKfRjhngA==
+Message-ID: <afe7947b-ed71-40d0-aa2e-b16549fc6b7d@kernel.org>
+Date: Tue, 18 Mar 2025 10:52:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250314083730.GC234496@rocinante>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] dt-bindings: PCI: xilinx-cpm: Add reset-gpios for
+ PCIe RP PERST#
+To: Sai Krishna Musham <sai.krishna.musham@amd.com>, bhelgaas@google.com,
+ lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, cassel@kernel.org
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, michal.simek@amd.com,
+ bharat.kumar.gogada@amd.com, thippeswamy.havalige@amd.com
+References: <20250318092648.2298280-1-sai.krishna.musham@amd.com>
+ <20250318092648.2298280-2-sai.krishna.musham@amd.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250318092648.2298280-2-sai.krishna.musham@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Krzysztof,
+On 18/03/2025 10:26, Sai Krishna Musham wrote:
+> Changes for v2:
+> - Add define from include/dt-bindings/gpio/gpio.h for PERST# polarity
+> - Update commit message
+> ---
+>  .../bindings/pci/xilinx-versal-cpm.yaml       | 21 ++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> index d674a24c8ccc..904594138af2 100644
+> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> @@ -24,15 +24,20 @@ properties:
+>      items:
+>        - description: CPM system level control and status registers.
+>        - description: Configuration space region and bridge registers.
+> +      - description: CPM clock and reset control registers.
+>        - description: CPM5 control and status registers.
 
-On 17:37 Fri 14 Mar     , Krzysztof Wilczynski wrote:
-> Hello,
-> 
-> Even though this is not for the PCI sub-system directly, I had a very brief
-> look over the code.  I hope you don't mind.
+You cannot add items to the middle, that's an ABI break. Adding required
+properties is also an ABI break. Why you cannot add it to the end of the
+list?
 
-Highly appreciated, thanks!
+Or at least explain ABI break impact in commit msg?
 
-> 
-> As such, a few nit picks, nothing blocking.
-> 
-> > +# RaspberryPi RP1 misc device
-> 
-> Would this be better if it matched the "tristate" description below?
 
-Ack.
+> -    minItems: 2
+> +    minItems: 3
+>  
+>    reg-names:
+>      items:
+>        - const: cpm_slcr
+>        - const: cfg
+> +      - const: cpm_crx
+>        - const: cpm_csr
+> -    minItems: 2
+> +    minItems: 3
+> +
+> +  reset-gpios:
+> +    description: GPIO used as PERST# signal
 
-> 
-> > +config MISC_RP1
-> > +	tristate "RaspberryPi RP1 PCIe support"
-> > +	depends on OF_IRQ && OF_OVERLAY && PCI_MSI && PCI_QUIRKS
-> > +	select PCI_DYNAMIC_OF_NODES
-> > +	help
-> > +	  Support the RP1 peripheral chip found on Raspberry Pi 5 board.
-> > +
-> > +	  This device supports several sub-devices including e.g. Ethernet
-> > +	  controller, USB controller, I2C, SPI and UART.
-> > +
-> > +	  The driver is responsible for enabling the DT node once the PCIe
-> > +	  endpoint has been configured, and handling interrupts.
-> > +
-> > +	  This driver uses an overlay to load other drivers to support for
-> > +	  RP1 internal sub-devices.
-> 
-> > +/* the dts overlay is included from the dts directory so
-> 
->   /*
->    * The dts overlay is included from the dts directory so
-> 
-> To make the code comment match rest of the style.
+Isn't this already in pci-bus-common.yaml?
 
-Ack.
 
-> 
-> > +/*
-> > + * Copyright (c) 2018-24 Raspberry Pi Ltd.
-> > + * All rights reserved.
-> 
->   Copyright (c) 2018-2025 Raspberry Pi Ltd.
-> 
-> To spell the current year fully, plus update it to 2025 already.
-> 
-> I would also add an extra newline here to split the two apart a bit.
-
-Ack.
-
-> 
-> > +	if (pci_resource_len(pdev, 1) <= 0x10000) {
-> > +		dev_err(&pdev->dev,
-> > +			"Not initialised - is the firmware running?\n");
-> > +		return -EINVAL;
-> > +	}
-> 
-> The American spelling in the above might be better.  But I don't have
-> strong opinions here.  It seems more popular in error messages.
-
-I agree.
-
-> 
-> > +	err = pci_alloc_irq_vectors(pdev, RP1_INT_END, RP1_INT_END,
-> > +				    PCI_IRQ_MSIX);
-> > +	if (err < 0) {
-> > +		return dev_err_probe(&pdev->dev, err,
-> > +				     "pci_alloc_irq_vectors failed");
-> 
-> Missing a new line at the end, but also...
-> 
->   return dev_err_probe(&pdev->dev, err,
-> 		       "Failed to allocate MSI-X vectors\n");
-
-Ack.
-
-> 
-> Or, something like this over this the function name.  Perhaps exposing
-> error code could be useful to the end user? If so then something like this:
-> 
->   return dev_err_probe(&pdev->dev, err,
-> 		       "Failed to allocate MSI-X vectors, err=%d\n", err);
-
-dev_err_probe() should already print the err code, no need to add it.
-
-> 
-> Here and other errors where appropriate.
-
-I've changed dev_err() to dev_err_probe() in cases where the error code
-is not evident (i.e. hardcoded) from the source.
-
-> 
-> > +	for (i = 0; i < RP1_INT_END; i++) {
-> > +		unsigned int irq = irq_create_mapping(rp1->domain, i);
-> > +
-> > +		if (!irq) {
-> > +			dev_err(&pdev->dev, "failed to create irq mapping\n");
-> 
->   dev_err(&pdev->dev, "Failed to create IRQ mapping\n");
-> 
-> To make the error message capitalisation consistent.
-
-Ack.
-
-> 
-> > +static const struct pci_device_id dev_id_table[] = {
-> > +	{ PCI_DEVICE(PCI_VENDOR_ID_RPI, PCI_DEVICE_ID_RPI_RP1_C0), },
-> > +	{ 0, }
-> 
->   { }
-> 
-> Would probably be sufficient.
-
-Ack.
-
-> 
-> > +MODULE_AUTHOR("Phil Elwell <phil@raspberrypi.com>");
-> > +MODULE_AUTHOR("Andrea della Porta <andrea.porta@suse.com>");
-> > +MODULE_DESCRIPTION("RP1 wrapper");
-> 
->   RaspberryPi RP1 misc device
-> 
-> To match the Kconfig comment in the above description or the one from the
-> "tristate" also in Kconfig.
-
-Ack.
-
-> 
-> Thank you for all the work here!
-
-Thank you so much for your review!
-
-Andrea
-
-> 
-> 	Krzysztof
+Best regards,
+Krzysztof
 
