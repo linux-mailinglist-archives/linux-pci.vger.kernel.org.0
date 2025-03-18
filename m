@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-24035-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24036-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 142A9A67160
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 11:35:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DA01A6715F
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 11:35:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E4AEF7AB2BD
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 10:33:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B42AB1899F6F
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 10:35:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5875206F18;
-	Tue, 18 Mar 2025 10:34:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3ACC20469A;
+	Tue, 18 Mar 2025 10:34:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MngzIVoH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="irY7L6qz"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B127E202997
-	for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 10:34:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED0E202997
+	for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 10:34:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742294085; cv=none; b=pGpunpPIjRT44aGF+LR4o5Q5mXZcwX0dDYvMrTyeNtDTFzmHamqOfd2rUp4KxJed6Icarf4v2CZPlRSKqR11FYardo4dYtgcJtbY80TtujrMg75R9EoHQREc4CwOwy42petWpS87eV959xTsglQEJWDZBbD9MR0ZaqMdr0D/zb8=
+	t=1742294087; cv=none; b=JfqymMo8Nbhj/zmMWkSH1o32LZ56dWRpCUyfsCqxBNOIoj+ip8BGIudaqM9SovjG/9WtCSyDyJNaGWagcBUFCDnj/DLz94nHbTK/zLfIPic3uPXmL2v1BWgQnGASfAzu/YDxxEBxf7MwVp4MJaWYdh6tSvTrLh+A071+nw1xEzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742294085; c=relaxed/simple;
-	bh=vWFbYZ4X7nT2H0Gc1jZ4SL8M29/PajaJvftiDxaBDr0=;
+	s=arc-20240116; t=1742294087; c=relaxed/simple;
+	bh=Wi/+WPCv9YnzjLMK4r8AZm+W8OVyqzF5D4rGYKI6VwQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SOOVd+Qv8Tsy0eyIESfnNUwU/8a6wOHV61xacJOl1U58QRZYe4C0HKygfBcWbEBFj2SkcZxOG/byFfZnUDu7n9l5eTE0Yf+KKyPdcsnW8jHjunKzlQ11p3P088/EBakGwxttdIu+lyDG0/ru1AKCZsNdOFVH4X9tJSohjihHz4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MngzIVoH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACDB5C4CEEE;
-	Tue, 18 Mar 2025 10:34:43 +0000 (UTC)
+	 MIME-Version; b=LbVSgmE/A14zSe7y5NupPjX8qm9L0LBTgxUqJ3CZBbEJGRu1LLmPXnPfFm++sZeDJHzg0QcySqg2kWjqu9uFGfVx0Qz42wgP9ooGwkQU6GsnuwBoXbqSH/WvaPK22PAj5QDnGY4ghBLbFPyaYfT1rWbYd1ok7wfN2UihUS88KHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=irY7L6qz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADB36C4CEEF;
+	Tue, 18 Mar 2025 10:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742294085;
-	bh=vWFbYZ4X7nT2H0Gc1jZ4SL8M29/PajaJvftiDxaBDr0=;
+	s=k20201202; t=1742294087;
+	bh=Wi/+WPCv9YnzjLMK4r8AZm+W8OVyqzF5D4rGYKI6VwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MngzIVoHxqVQFjyY4Ty9x9V3vLytdgbPhwJZbq1ALifMVNdHmLRBEzGg4fpsO2BW9
-	 2oisLRm39SfzbITnLZHuhQxO17/DH3UrJZOMQ/z92QsUBZKNdwlzw8jk+0hMNbsYze
-	 iU1SLOECAe6iluU3hXZTeb5pEmt2iRQwj/s2M7/lXV9mIXNKGR3iaxX8jQJnaFqbqg
-	 YFU+toVHRUX94K47CZp0eNEXXz5/teGduhemf8FGamsts7XsEhjxBhGr4INLzTqCyc
-	 0a3Um2SKhpUN5kAS32oaKoS/dPACcQxBSGVQ3Lf8iwUPZzBD7gf5lrXhWpDTV0dqd2
-	 rIn5IsRr7tZFg==
+	b=irY7L6qzzwuRilvJaKNtoxdl7NoBSXkGZA2GvsCwnxDtpup8rJFVU34WG/6m8puAq
+	 RLv4I8wPhpjmGDISbAz01vnZfNsR+NCznOb+7XiyezdP8TTon341RAz+l8qbjKtctG
+	 HnZvXQHaJKy2DVYeDoJL1KpmwSetyEp7AVGXeYWHDaGFJDbxmr6v5lNuFsrzpy7k5a
+	 eTBtdNh4x3slb6FA+3Ad0gbo1OlDA1tj+QFvyVry0P3tJEgEd6ySeh4sLjr1l5unDh
+	 WGmuV7ICXx0lTzEUXM54D/squGFNuVq3r1vfxI43lib8nw4hNb7lWtygsukBAvQYCE
+	 bNezlA2/mDkew==
 From: Niklas Cassel <cassel@kernel.org>
 To: bhelgaas@google.com,
 	kw@linux.com,
@@ -49,9 +49,9 @@ Cc: linux-pci@vger.kernel.org,
 	Damien Le Moal <dlemoal@kernel.org>,
 	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
 	Niklas Cassel <cassel@kernel.org>
-Subject: [PATCH 2/4] misc: pci_endpoint_test: Fetch supported IRQ types in CAPS register
-Date: Tue, 18 Mar 2025 11:33:33 +0100
-Message-ID: <20250318103330.1840678-8-cassel@kernel.org>
+Subject: [PATCH 3/4] misc: pci_endpoint_test: Let PCITEST_{READ,WRITE,COPY} set IRQ type automatically
+Date: Tue, 18 Mar 2025 11:33:34 +0100
+Message-ID: <20250318103330.1840678-9-cassel@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250318103330.1840678-6-cassel@kernel.org>
 References: <20250318103330.1840678-6-cassel@kernel.org>
@@ -61,59 +61,218 @@ List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1623; i=cassel@kernel.org; h=from:subject; bh=vWFbYZ4X7nT2H0Gc1jZ4SL8M29/PajaJvftiDxaBDr0=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNJvev/b+3Dx3+X/2NM33y2czb3pTwjr3ntaFjkKZ7btP h/HHbCtuKOUhUGMi0FWTJHF94fL/uJu9ynHFe/YwMxhZQIZwsDFKQATeVjJyPC/4uBBLe9DWk02 HNcV3Q6GH+bg8chuK73ZV5il9iUpvZ2R4djnPJeCzdk8updLPt5sK/WboyLn3Hsm2ePRvMUfGc/ +ZwQA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6120; i=cassel@kernel.org; h=from:subject; bh=Wi/+WPCv9YnzjLMK4r8AZm+W8OVyqzF5D4rGYKI6VwQ=; b=owGbwMvMwCV2MsVw8cxjvkWMp9WSGNJvev9r+jgtIGXecpOeCQvz1Ux1vBz6Zh57EVf6+u+hy jeRoVqsHaUsDGJcDLJiiiy+P1z2F3e7TzmueMcGZg4rE8gQBi5OAZjInXaGf9reW+bxpSytjP7l HK/AWLZKSSemOk1D3Z9z/1VZ5bNrChkZ5i4s/fbzZPVmG6Hu6P2Rr9k798Vde9/BUrBx1i8RZpU 33AA=
 X-Developer-Key: i=cassel@kernel.org; a=openpgp; fpr=5ADE635C0E631CBBD5BE065A352FE6582ED9B5DA
 Content-Transfer-Encoding: 8bit
 
-Fetch supported IRQ types in CAPS register and save them in struct
-pci_endpoint_test.
+The test cases for read/write/copy currently do:
+1) ioctl(PCITEST_SET_IRQTYPE, MSI)
+2) ioctl(PCITEST_{READ,WRITE,COPY})
 
-The supported IRQ types will be used in follow-up commit.
+This design is quite bad for a few reasons:
+-It assumes that all PCI EPCs support MSI.
+-One ioctl should be sufficient for these test cases.
+
+Modify the PCITEST_{READ,WRITE,COPY} ioctls to set IRQ type automatically,
+overwriting the currently configured IRQ type. It there are no IRQ types
+supported in the CAPS register, fall back to MSI IRQs. This way the
+implementation is no worse than before this commit.
+
+Any test case that requires a specific IRQ type, e.g. MSIX_TEST, will do
+an explicit PCITEST_SET_IRQTYPE ioctl at the start of the test case, thus
+it is safe to always overwrite the configured IRQ type.
 
 Signed-off-by: Niklas Cassel <cassel@kernel.org>
 ---
- drivers/misc/pci_endpoint_test.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/misc/pci_endpoint_test.c | 126 +++++++++++++++++--------------
+ 1 file changed, 68 insertions(+), 58 deletions(-)
 
 diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 849d730ba14dd..3c04121d24733 100644
+index 3c04121d24733..cfaeeea7642ac 100644
 --- a/drivers/misc/pci_endpoint_test.c
 +++ b/drivers/misc/pci_endpoint_test.c
-@@ -66,6 +66,9 @@
- 
- #define PCI_ENDPOINT_TEST_CAPS			0x30
- #define CAP_UNALIGNED_ACCESS			BIT(0)
-+#define CAP_MSI					BIT(1)
-+#define CAP_MSIX				BIT(2)
-+#define CAP_INTX				BIT(3)
- 
- #define PCI_DEVICE_ID_TI_AM654			0xb00c
- #define PCI_DEVICE_ID_TI_J7200			0xb00f
-@@ -112,6 +115,7 @@ struct pci_endpoint_test {
- 	struct miscdevice miscdev;
- 	enum pci_barno test_reg_bar;
- 	size_t alignment;
-+	u32 ep_caps;
- 	const char *name;
- };
- 
-@@ -892,13 +896,12 @@ static void pci_endpoint_test_get_capabilities(struct pci_endpoint_test *test)
- {
- 	struct pci_dev *pdev = test->pdev;
- 	struct device *dev = &pdev->dev;
--	u32 caps;
- 
--	caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
--	dev_dbg(dev, "PCI_ENDPOINT_TEST_CAPS: %#x\n", caps);
-+	test->ep_caps = pci_endpoint_test_readl(test, PCI_ENDPOINT_TEST_CAPS);
-+	dev_dbg(dev, "PCI_ENDPOINT_TEST_CAPS: %#x\n", test->ep_caps);
- 
- 	/* CAP_UNALIGNED_ACCESS is set if the EP can do unaligned access */
--	if (caps & CAP_UNALIGNED_ACCESS)
-+	if (test->ep_caps & CAP_UNALIGNED_ACCESS)
- 		test->alignment = 0;
+@@ -464,6 +464,62 @@ static int pci_endpoint_test_validate_xfer_params(struct device *dev,
+ 	return 0;
  }
  
++static int pci_endpoint_test_clear_irq(struct pci_endpoint_test *test)
++{
++	pci_endpoint_test_release_irq(test);
++	pci_endpoint_test_free_irq_vectors(test);
++
++	return 0;
++}
++
++static int pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
++				      int req_irq_type)
++{
++	struct pci_dev *pdev = test->pdev;
++	struct device *dev = &pdev->dev;
++	int ret;
++
++	if (req_irq_type < PCITEST_IRQ_TYPE_INTX ||
++	    req_irq_type > PCITEST_IRQ_TYPE_MSIX) {
++		dev_err(dev, "Invalid IRQ type option\n");
++		return -EINVAL;
++	}
++
++	if (test->irq_type == req_irq_type)
++		return 0;
++
++	pci_endpoint_test_release_irq(test);
++	pci_endpoint_test_free_irq_vectors(test);
++
++	ret = pci_endpoint_test_alloc_irq_vectors(test, req_irq_type);
++	if (ret)
++		return ret;
++
++	ret = pci_endpoint_test_request_irq(test);
++	if (ret) {
++		pci_endpoint_test_free_irq_vectors(test);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int pci_endpoint_test_set_auto_irq(struct pci_endpoint_test *test,
++					  int *irq_type)
++{
++	if (test->ep_caps & CAP_MSI)
++		*irq_type = PCITEST_IRQ_TYPE_MSI;
++	else if (test->ep_caps & CAP_MSIX)
++		*irq_type = PCITEST_IRQ_TYPE_MSIX;
++	else if (test->ep_caps & CAP_INTX)
++		*irq_type = PCITEST_IRQ_TYPE_INTX;
++	else
++		/* fallback to MSI if no caps defined */
++		*irq_type = PCITEST_IRQ_TYPE_MSI;
++
++	return pci_endpoint_test_set_irq(test, *irq_type);
++}
++
+ static int pci_endpoint_test_copy(struct pci_endpoint_test *test,
+ 				   unsigned long arg)
+ {
+@@ -483,7 +539,7 @@ static int pci_endpoint_test_copy(struct pci_endpoint_test *test,
+ 	dma_addr_t orig_dst_phys_addr;
+ 	size_t offset;
+ 	size_t alignment = test->alignment;
+-	int irq_type = test->irq_type;
++	int irq_type;
+ 	u32 src_crc32;
+ 	u32 dst_crc32;
+ 	int ret;
+@@ -504,11 +560,9 @@ static int pci_endpoint_test_copy(struct pci_endpoint_test *test,
+ 	if (use_dma)
+ 		flags |= FLAG_USE_DMA;
+ 
+-	if (irq_type < PCITEST_IRQ_TYPE_INTX ||
+-	    irq_type > PCITEST_IRQ_TYPE_MSIX) {
+-		dev_err(dev, "Invalid IRQ type option\n");
+-		return -EINVAL;
+-	}
++	ret = pci_endpoint_test_set_auto_irq(test, &irq_type);
++	if (ret)
++		return ret;
+ 
+ 	orig_src_addr = kzalloc(size + alignment, GFP_KERNEL);
+ 	if (!orig_src_addr) {
+@@ -616,7 +670,7 @@ static int pci_endpoint_test_write(struct pci_endpoint_test *test,
+ 	dma_addr_t orig_phys_addr;
+ 	size_t offset;
+ 	size_t alignment = test->alignment;
+-	int irq_type = test->irq_type;
++	int irq_type;
+ 	size_t size;
+ 	u32 crc32;
+ 	int ret;
+@@ -637,11 +691,9 @@ static int pci_endpoint_test_write(struct pci_endpoint_test *test,
+ 	if (use_dma)
+ 		flags |= FLAG_USE_DMA;
+ 
+-	if (irq_type < PCITEST_IRQ_TYPE_INTX ||
+-	    irq_type > PCITEST_IRQ_TYPE_MSIX) {
+-		dev_err(dev, "Invalid IRQ type option\n");
+-		return -EINVAL;
+-	}
++	ret = pci_endpoint_test_set_auto_irq(test, &irq_type);
++	if (ret)
++		return ret;
+ 
+ 	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
+ 	if (!orig_addr) {
+@@ -714,7 +766,7 @@ static int pci_endpoint_test_read(struct pci_endpoint_test *test,
+ 	dma_addr_t orig_phys_addr;
+ 	size_t offset;
+ 	size_t alignment = test->alignment;
+-	int irq_type = test->irq_type;
++	int irq_type;
+ 	u32 crc32;
+ 	int ret;
+ 
+@@ -734,11 +786,9 @@ static int pci_endpoint_test_read(struct pci_endpoint_test *test,
+ 	if (use_dma)
+ 		flags |= FLAG_USE_DMA;
+ 
+-	if (irq_type < PCITEST_IRQ_TYPE_INTX ||
+-	    irq_type > PCITEST_IRQ_TYPE_MSIX) {
+-		dev_err(dev, "Invalid IRQ type option\n");
+-		return -EINVAL;
+-	}
++	ret = pci_endpoint_test_set_auto_irq(test, &irq_type);
++	if (ret)
++		return ret;
+ 
+ 	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
+ 	if (!orig_addr) {
+@@ -790,46 +840,6 @@ static int pci_endpoint_test_read(struct pci_endpoint_test *test,
+ 	return ret;
+ }
+ 
+-static int pci_endpoint_test_clear_irq(struct pci_endpoint_test *test)
+-{
+-	pci_endpoint_test_release_irq(test);
+-	pci_endpoint_test_free_irq_vectors(test);
+-
+-	return 0;
+-}
+-
+-static int pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
+-				      int req_irq_type)
+-{
+-	struct pci_dev *pdev = test->pdev;
+-	struct device *dev = &pdev->dev;
+-	int ret;
+-
+-	if (req_irq_type < PCITEST_IRQ_TYPE_INTX ||
+-	    req_irq_type > PCITEST_IRQ_TYPE_MSIX) {
+-		dev_err(dev, "Invalid IRQ type option\n");
+-		return -EINVAL;
+-	}
+-
+-	if (test->irq_type == req_irq_type)
+-		return 0;
+-
+-	pci_endpoint_test_release_irq(test);
+-	pci_endpoint_test_free_irq_vectors(test);
+-
+-	ret = pci_endpoint_test_alloc_irq_vectors(test, req_irq_type);
+-	if (ret)
+-		return ret;
+-
+-	ret = pci_endpoint_test_request_irq(test);
+-	if (ret) {
+-		pci_endpoint_test_free_irq_vectors(test);
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-
+ static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
+ 				    unsigned long arg)
+ {
 -- 
 2.48.1
 
