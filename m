@@ -1,586 +1,202 @@
-Return-Path: <linux-pci+bounces-24084-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24083-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F21D9A68842
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 10:38:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE63FA6881F
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 10:34:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 82A0A168EA2
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 09:37:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0E1F3A6920
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 09:33:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 849F325A35E;
-	Wed, 19 Mar 2025 09:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MAm11FZz"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4ECC2561BA;
+	Wed, 19 Mar 2025 09:31:18 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2136.outbound.protection.outlook.com [40.107.117.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0DF253B6E;
-	Wed, 19 Mar 2025 09:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742376742; cv=none; b=s5eDPeB3VKmu4nvmvzbf0Q5rnHhvcdFcIh6qi8ojoBadUlrEEWXEhXpK5bTOAER+lmNQX6p361rDVPZ7BC5UzgPRzsRE8XpPAVcZ2h+nSJA4rKrs/GsqjmVJPh6zSJBCmGgqb0AjJIewMwfIX6qrc46dQTsdaNa3SL0mdRV1Va0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742376742; c=relaxed/simple;
-	bh=WmolbYADk/HgtcX4FFtbA+sZUbnRdoFjblnJqTCUNwc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=opVyA5EO2BEtkVLXhJ1hywRd6FYJirWPJVMShBoTKJHO/yyM4ZSne5ONPxb3mBZuMJHLAncvQ8iMpvKxOLL74DHhwiRIBnN2d059ewayPohg09YE4SQk5ubCZrh1CWCac/yYQjuIERnRY9QgU0z+jjHu8TCpmX60ZzUjB6AtABM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MAm11FZz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 723C7C4CEE9;
-	Wed, 19 Mar 2025 09:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742376741;
-	bh=WmolbYADk/HgtcX4FFtbA+sZUbnRdoFjblnJqTCUNwc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MAm11FZz7MlEOZr364jjvY6giNGkq7ov/vCfF2HUB8KdSmXFnfO6qnf7RRcae/QQC
-	 OstaI6YFA6WM+/SL7z77M6BtbpqqCPNw0JyiyoZmITT7s92B1WY4eY2JdsYPTZIx6+
-	 7DQfZAzLA/b1q21BPpCxJvMM9um8qmBKdEBJbtj1c/IV1FOzj5qJpvriqjW+T5cHwS
-	 BmxA6iwfMD14eVt+xjYG1fCex6qiazLNHwhY4SaDtA2RqQtQTqQ5SmO0sBf047AmJT
-	 AwX5GwYCikNHekntK+5aWDcvCPw0vb6XuSu+HxpM6fZZq8GiYhLIuYpaYpHAe5bgO4
-	 +LfsxdU1EHiOw==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-To: tglx@linutronix.de
-Cc: maz@kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-	Toan Le <toan@os.amperecomputing.com>,
-	Joyce Ooi <joyce.ooi@intel.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v2 29/57] irqdomain: pci: Switch to irq_domain_create_linear()
-Date: Wed, 19 Mar 2025 10:29:22 +0100
-Message-ID: <20250319092951.37667-30-jirislaby@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250319092951.37667-1-jirislaby@kernel.org>
-References: <20250319092951.37667-1-jirislaby@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F360255E44;
+	Wed, 19 Mar 2025 09:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.136
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742376678; cv=fail; b=qgONWqAzMXmVShPI2HeU9fyib4mP5mgTjDRKuMaZOwFMuIUqy0kE1MqoI4WVJlHvFw3Rsz3BqX/pmWjEPxP5qfkHVcX4KojVnDKMvvQK2nEJK/1mYtofvlKDAaueXd3q0jDacz9qMjr9iYyREYK/ONhw+ISzekFMaCs3LMWcgyI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742376678; c=relaxed/simple;
+	bh=TxS2usu/30vIgxooPZw3O40OhwA2v25uFHP+8C67nFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BinwG0VEqMPbEoz1Bq7WSqrJENDVKiW81Qk9nwaFHZbGpqcV/pH7MPDPIlOrsd6/zIWGvnIXMtiub208dUXylJH29sE1Ix5vGYSPqxEDnRG6RpsTRxMSpogoCTYOgabtOlA+xaKKuuNri026ohiGhjfgbebF45akqQtR9LVIvGo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.117.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UCnwOM0joVNX+SZhCIhil4tXaMqZe6JvTe+ihdw+qAkfIfWeWu/omLwyQXhg6NWDOKaroV17+QZABP3Jzi3D3uHNUzFdgT+KqCR4WIr1bKq75G5KDwaogs4g7OXz24KkIXE6buWe22VxWioHFq82Ld6fz67jZ7hXsHS6dmm2OE2adu9ITGkL1KNcxqQapmYd1kxcMTj/JZPR2+ZvWfSQT5+st/Bam1t5Hg4EBNTN7C4OPFrh6IQxW3KzpwRGwmjhadG8DY5WM3hq9q8XXpBA698/mNWzgVcYyCOIhhuIBwWc+vAOBMChPGxLuofknBH80ZHcUGI90Js7Ws6p6OelUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wamUso4b1WGimo/sIrO/N6kBi2SFz6qid5Yg0KAIl8s=;
+ b=ov81ySNK/dNPNv/KUp+CHWC36oCOU/ncwYlBwYfdEaFmxoXrPKdWvwFW3lu3RHe2QTqOTE7dJ7BDLXoBlZ2QPN4fmVkKCKqsciLsu876I7et8S9Nwe//9UEZPKu/n3XKDfNLSKvuHV1B88M+RwcSWXujTzphtPPhBaFH99zY7ovmcG1+vffpA0jb89oJvqh7W+OAe6kxDY+EUtPqLGJ5a+Cvzsh5qTgIw4YoyI09fglwqS0RCI5jXIJ8UzQXOWSczBK/k2GrXjhD+pINjEulWMF28XdhYn4EJTzInPF7uCVm1/C8XN/E0ivCATJBOQ6XSE1V4bTyVfSRG+VaoDvbxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=bootlin.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from SI2PR01CA0036.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::22) by TYSPR06MB6900.apcprd06.prod.outlook.com
+ (2603:1096:400:46e::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Wed, 19 Mar
+ 2025 09:31:09 +0000
+Received: from SG1PEPF000082E7.apcprd02.prod.outlook.com
+ (2603:1096:4:192:cafe::b8) by SI2PR01CA0036.outlook.office365.com
+ (2603:1096:4:192::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.34 via Frontend Transport; Wed,
+ 19 Mar 2025 09:31:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG1PEPF000082E7.mail.protection.outlook.com (10.167.240.10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.20 via Frontend Transport; Wed, 19 Mar 2025 09:31:08 +0000
+Received: from nchen-desktop (unknown [172.16.64.25])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 05C224160CA0;
+	Wed, 19 Mar 2025 17:31:07 +0800 (CST)
+Date: Wed, 19 Mar 2025 17:31:01 +0800
+From: Peter Chen <peter.chen@cixtech.com>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"vigneshr@ti.com" <vigneshr@ti.com>,
+	"kishon@kernel.org" <kishon@kernel.org>,
+	"cassel@kernel.org" <cassel@kernel.org>,
+	"wojciech.jasko-EXT@continental-corporation.com" <wojciech.jasko-EXT@continental-corporation.com>,
+	"thomas.richard@bootlin.com" <thomas.richard@bootlin.com>,
+	"bwawrzyn@cisco.com" <bwawrzyn@cisco.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"srk@ti.com" <srk@ti.com>
+Subject: Re: [PATCH 0/4] Loadable Module support for PCIe Cadence and J721E
+Message-ID: <Z9qO1f5MgNcwO5A4@nchen-desktop>
+References: <20250307103128.3287497-1-s-vadapalli@ti.com>
+ <Z9pffxeXHVOsoi4O@nchen-desktop>
+ <20250319062534.ollh3s5t7znf5zqs@uda0492258>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250319062534.ollh3s5t7znf5zqs@uda0492258>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E7:EE_|TYSPR06MB6900:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9dc306cf-f9af-4ae5-b6ac-08dd66c8c776
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tgIQtoKrlMmWie5lenXMooAs9Whn9Kl8+q3easyt1ueI0+VfKxE/aKMP+44F?=
+ =?us-ascii?Q?yMNOtYrJ68h/dWFWFdDRN67bAb8TvxU/iBw2H1xVKc5fUk7qzyQRZNqpE9ZU?=
+ =?us-ascii?Q?g4d0s5zbclW23H5wfjY6a7VzUBytaZ9p4yXLJ7rEaVkh/zsDoTwExHrtvdKr?=
+ =?us-ascii?Q?brTmnhIcsBU7bzEcEIqP4u7tS5GeB0di9ZcBDhaKny1O2Ca9E3k5NsFB9rUS?=
+ =?us-ascii?Q?q97Gn34Kq2JqTkiPyH24L910/n1vZyrWwD4K1w0w7g86J4dZaIc8kiD94Mct?=
+ =?us-ascii?Q?lpeWZ0eMCrlnZSRxXt3SbBPq+IEwkzF/rTjw3LbkygG4qRjKhe7jxqati7+A?=
+ =?us-ascii?Q?adsymHpb2YDTeZD3qKfgiz4lWgWTmyyl84+fnQXX+xn+bQKN00AGngQr/Vr7?=
+ =?us-ascii?Q?ssb2wYvea3YTy14U3IVCgkBBGfR56jD4utXPEbt/usHZ6TU4PB+NqmjDQod7?=
+ =?us-ascii?Q?lrb4O6mSjbj8ZAF/rwjd9x3WXVPq4KUX1OJg7QWKCfT+6qUKEcnAD+U2/1rN?=
+ =?us-ascii?Q?8Caxq1pW9gJXgCGxqePcvbxDisnNevCNE22YuhRfsemJRkYtf0hnN+SzQJuG?=
+ =?us-ascii?Q?Kl7xH9bKOuYPo12Q2o3tD6pb+bnShiDFh5LhMh6iWyGtE//xwQxbe8nkYaZn?=
+ =?us-ascii?Q?dxaj6cDGkt1RpKyI70Zsf3UnEXmf5S1CdZhKokN6sJir68PHdbOmxbxqrKu4?=
+ =?us-ascii?Q?yqUDUrQ0P2Q+++0yyLt1Bf3ibEdetN3jxHLwU5CNU9LM6w3j7XWvWdmT6rmt?=
+ =?us-ascii?Q?jP4m61SzJOuegpze/36XlfOZYgjeFWFk5WUo8MbLsF4k/asmSzsZ5z6Kn89T?=
+ =?us-ascii?Q?J3hMDS89o4bPrVn+Qax/pv2WzSEbvTlxrIGfutk7giAZzcXLxIXUhSjxSOhy?=
+ =?us-ascii?Q?+wOVKcT1fmm9SI9NWYbrkEniCBdLQZrNROn8wFHZe1ni3wVz4zA/cz03uC+l?=
+ =?us-ascii?Q?yzxWGBXJQs71Bi3rCV3r4jIY35bufniJTTigHQEfCPCp2rQ8uXUHHsbxoMZv?=
+ =?us-ascii?Q?XC8S8qxPeMgNSP8VizuQiXUT9+watp4aXLZLEr6+fBhvRey62TQ+SIhiC2q5?=
+ =?us-ascii?Q?OYkykyRU1odGA1v21wmg5L6Tq6+y0PoRqGaoMzkkaeseonRX0uSEkayO4lbP?=
+ =?us-ascii?Q?+cLGKSy1ggF+I+ogs6D7+eHRS6PZYeqm0fVoScoIYY2dcK6c0VEP8iFcHfNS?=
+ =?us-ascii?Q?ftUrckhM3DYoALUdFuqYjPxkclQUc1UBIK534a6aIGKhKgZ0oc0E61pUauy8?=
+ =?us-ascii?Q?0KBbaUOtt4z26Bqqli+aFMxgNTEiHCS0q3E7mr4w/AuA9WYZkAcNSwaf5OTH?=
+ =?us-ascii?Q?2bZoKk/FabjcGiXhXlYaSnkGcz77YaNY1vDEBiR6doFS1i9kZa/CSCKw+Aat?=
+ =?us-ascii?Q?04WYV5bCnSaVddm1IAR8KS2QgwUR5MGO2QyUrjOHR3kU3prSXRdHO9hAa0Br?=
+ =?us-ascii?Q?wnvj4MSbtHFNXJuBLIv0iL2WoTC+dq6kB05+BRdvkdfZenaFSt25CHDzos+N?=
+ =?us-ascii?Q?CpB52NGxutAXfVo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 09:31:08.0541
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9dc306cf-f9af-4ae5-b6ac-08dd66c8c776
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: SG1PEPF000082E7.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB6900
 
-irq_domain_add_linear() is going away as being obsolete now. Switch to
-the preferred irq_domain_create_linear(). That differs in the first
-parameter: It takes more generic struct fwnode_handle instead of struct
-device_node. Therefore, of_fwnode_handle() is added around the
-parameter.
+On 25-03-19 14:25:34, Siddharth Vadapalli wrote:
+> > >
+> > > Hello,
+> > >
+> > > This series enables support to build the PCIe Cadence Controller drivers
+> > > and the PCI J721E Application/Wrapper/Glue driver as Loadable Kernel
+> > > Modules. The motivation for this series is that PCIe is not a necessity
+> > > for booting the SoC, due to which it doesn't have to be a built-in
+> > > module. Additionally, the defconfig doesn't enable the PCIe Cadence
+> > > Controller drivers and the PCI J721E driver, due to which PCIe is not
+> > > supported by default. Enabling the configs as of now (i.e. without this
+> > > series) will result in built-in drivers i.e. a bloated Linux Image for
+> > > everyone who doesn't have the PCIe Controller.
+> >
+> > If the user doesn't enable PCIe controller device through DTS/ACPI,
+> > that's doesn't matter.
+> 
+> The Linux Image for arm64 systems built using:
+> arch/arm64/configs/defconfig
+> will not have support for the Cadence PCIe Controller and the PCIe J721e
+> driver, because these configs aren't enabled.
+> 
+> >
+> > > @@ -209,6 +209,12 @@ CONFIG_NFC=m
+> > >  CONFIG_NFC_NCI=m
+> > >  CONFIG_NFC_S3FWRN5_I2C=m
+> > >  CONFIG_PCI=y
+> > > +CONFIG_PCI_J721E=m
+> > > +CONFIG_PCI_J721E_HOST=m
+> > > +CONFIG_PCI_J721E_EP=m
+> > > +CONFIG_PCIE_CADENCE=m
+> > > +CONFIG_PCIE_CADENCE_HOST=m
+> > > +CONFIG_PCIE_CADENCE_EP=m
+> >
+> > The common Cadence configuration will be select if the glue layer's
+> > configuration is select according to Kconfig.
+> >
+> > Please do not set common configuration as module, some user may need
+> > it as build-in like dw's. Considering the situation, the rootfs is at
+> > NVMe.
+> 
+> The common configuration at the moment is "DISABLED" i.e. no support for
+> the Cadence Controller at all. Which "user" are you referring to? This
+> series was introduced since having the drivers built-in was pushed back at:
 
-Note some of the users can likely use dev->fwnode directly instead of
-indirect of_fwnode_handle(dev->of_node). But dev->fwnode is not
-guaranteed to be set for all, so this has to be investigated on case to
-case basis (by people who can actually test with the HW).
+We are using Cadence controller, and prepare upstream radxa-o6 board
+whose rootfs is at PCIe NVMe.
 
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: "Krzysztof Wilczyński" <kw@linux.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: "Pali Rohár" <pali@kernel.org>
-Cc: Toan Le <toan@os.amperecomputing.com>
-Cc: Joyce Ooi <joyce.ooi@intel.com>
-Cc: Jim Quinlan <jim2101024@gmail.com>
-Cc: Nicolas Saenz Julienne <nsaenz@kernel.org>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
-Cc: Ray Jui <rjui@broadcom.com>
-Cc: Scott Branden <sbranden@broadcom.com>
-Cc: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Jianjun Wang <jianjun.wang@mediatek.com>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
-Cc: Michal Simek <michal.simek@amd.com>
-Cc: Daire McNamara <daire.mcnamara@microchip.com>
-Cc: linux-pci@vger.kernel.org
----
- drivers/pci/controller/dwc/pci-dra7xx.c            |  4 ++--
- drivers/pci/controller/dwc/pci-keystone.c          |  2 +-
- drivers/pci/controller/dwc/pcie-dw-rockchip.c      |  4 ++--
- drivers/pci/controller/dwc/pcie-uniphier.c         |  2 +-
- .../pci/controller/mobiveil/pcie-mobiveil-host.c   |  9 ++++-----
- drivers/pci/controller/pci-aardvark.c              | 14 +++++---------
- drivers/pci/controller/pci-ftpci100.c              |  4 ++--
- drivers/pci/controller/pci-mvebu.c                 |  6 +++---
- drivers/pci/controller/pci-xgene-msi.c             |  3 +--
- drivers/pci/controller/pcie-altera-msi.c           |  2 +-
- drivers/pci/controller/pcie-altera.c               |  2 +-
- drivers/pci/controller/pcie-brcmstb.c              |  2 +-
- drivers/pci/controller/pcie-iproc-msi.c            |  4 ++--
- drivers/pci/controller/pcie-mediatek-gen3.c        |  9 +++++----
- drivers/pci/controller/pcie-mediatek.c             |  4 ++--
- drivers/pci/controller/pcie-rockchip-host.c        |  4 ++--
- drivers/pci/controller/pcie-xilinx-cpm.c           | 10 ++++------
- drivers/pci/controller/pcie-xilinx-dma-pl.c        | 12 ++++++------
- drivers/pci/controller/pcie-xilinx-nwl.c           |  9 +++------
- drivers/pci/controller/pcie-xilinx.c               |  5 ++---
- drivers/pci/controller/plda/pcie-plda-host.c       | 14 ++++++--------
- 21 files changed, 56 insertions(+), 69 deletions(-)
+You could build driver as module for TI glue layer, but don't force
+other vendors using module as well, see dwc as an example please.
 
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index 33d6bf460ffe..3219704aba0e 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -359,8 +359,8 @@ static int dra7xx_pcie_init_irq_domain(struct dw_pcie_rp *pp)
- 
- 	irq_set_chained_handler_and_data(pp->irq, dra7xx_pcie_msi_irq_handler,
- 					 pp);
--	dra7xx->irq_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
--						   &intx_domain_ops, pp);
-+	dra7xx->irq_domain = irq_domain_create_linear(of_fwnode_handle(pcie_intc_node),
-+						      PCI_NUM_INTX, &intx_domain_ops, pp);
- 	of_node_put(pcie_intc_node);
- 	if (!dra7xx->irq_domain) {
- 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 76a37368ae4f..1385d9db7b32 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -761,7 +761,7 @@ static int ks_pcie_config_intx_irq(struct keystone_pcie *ks_pcie)
- 						 ks_pcie);
- 	}
- 
--	intx_irq_domain = irq_domain_add_linear(intc_np, PCI_NUM_INTX,
-+	intx_irq_domain = irq_domain_create_linear(of_fwnode_handle(intc_np), PCI_NUM_INTX,
- 					&ks_pcie_intx_irq_domain_ops, NULL);
- 	if (!intx_irq_domain) {
- 		dev_err(dev, "Failed to add irq domain for INTX irqs\n");
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index c624b7ebd118..678d510a261d 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -144,8 +144,8 @@ static int rockchip_pcie_init_irq_domain(struct rockchip_pcie *rockchip)
- 		return -EINVAL;
- 	}
- 
--	rockchip->irq_domain = irq_domain_add_linear(intc, PCI_NUM_INTX,
--						    &intx_domain_ops, rockchip);
-+	rockchip->irq_domain = irq_domain_create_linear(of_fwnode_handle(intc), PCI_NUM_INTX,
-+							&intx_domain_ops, rockchip);
- 	of_node_put(intc);
- 	if (!rockchip->irq_domain) {
- 		dev_err(dev, "failed to get a INTx IRQ domain\n");
-diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-index 5757ca3803c9..43b28f826edd 100644
---- a/drivers/pci/controller/dwc/pcie-uniphier.c
-+++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-@@ -279,7 +279,7 @@ static int uniphier_pcie_config_intx_irq(struct dw_pcie_rp *pp)
- 		goto out_put_node;
- 	}
- 
--	pcie->intx_irq_domain = irq_domain_add_linear(np_intc, PCI_NUM_INTX,
-+	pcie->intx_irq_domain = irq_domain_create_linear(of_fwnode_handle(np_intc), PCI_NUM_INTX,
- 						&uniphier_intx_domain_ops, pp);
- 	if (!pcie->intx_irq_domain) {
- 		dev_err(pci->dev, "Failed to get INTx domain\n");
-diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-index 6628eed9d26e..a600f46ee3c3 100644
---- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-+++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-@@ -439,8 +439,8 @@ static int mobiveil_allocate_msi_domains(struct mobiveil_pcie *pcie)
- 	struct mobiveil_msi *msi = &pcie->rp.msi;
- 
- 	mutex_init(&msi->lock);
--	msi->dev_domain = irq_domain_add_linear(NULL, msi->num_of_vectors,
--						&msi_domain_ops, pcie);
-+	msi->dev_domain = irq_domain_create_linear(NULL, msi->num_of_vectors,
-+						   &msi_domain_ops, pcie);
- 	if (!msi->dev_domain) {
- 		dev_err(dev, "failed to create IRQ domain\n");
- 		return -ENOMEM;
-@@ -461,12 +461,11 @@ static int mobiveil_allocate_msi_domains(struct mobiveil_pcie *pcie)
- static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
- {
- 	struct device *dev = &pcie->pdev->dev;
--	struct device_node *node = dev->of_node;
- 	struct mobiveil_root_port *rp = &pcie->rp;
- 
- 	/* setup INTx */
--	rp->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
--						&intx_domain_ops, pcie);
-+	rp->intx_domain = irq_domain_create_linear(of_fwnode_handle(dev->of_node), PCI_NUM_INTX,
-+						   &intx_domain_ops, pcie);
- 
- 	if (!rp->intx_domain) {
- 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index a29796cce420..7bac64533b14 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -1456,9 +1456,8 @@ static int advk_pcie_init_msi_irq_domain(struct advk_pcie *pcie)
- 	raw_spin_lock_init(&pcie->msi_irq_lock);
- 	mutex_init(&pcie->msi_used_lock);
- 
--	pcie->msi_inner_domain =
--		irq_domain_add_linear(NULL, MSI_IRQ_NUM,
--				      &advk_msi_domain_ops, pcie);
-+	pcie->msi_inner_domain = irq_domain_create_linear(NULL, MSI_IRQ_NUM,
-+							  &advk_msi_domain_ops, pcie);
- 	if (!pcie->msi_inner_domain)
- 		return -ENOMEM;
- 
-@@ -1508,9 +1507,8 @@ static int advk_pcie_init_irq_domain(struct advk_pcie *pcie)
- 	irq_chip->irq_mask = advk_pcie_irq_mask;
- 	irq_chip->irq_unmask = advk_pcie_irq_unmask;
- 
--	pcie->irq_domain =
--		irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
--				      &advk_pcie_irq_domain_ops, pcie);
-+	pcie->irq_domain = irq_domain_create_linear(of_fwnode_handle(pcie_intc_node), PCI_NUM_INTX,
-+						    &advk_pcie_irq_domain_ops, pcie);
- 	if (!pcie->irq_domain) {
- 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
- 		ret = -ENOMEM;
-@@ -1549,9 +1547,7 @@ static const struct irq_domain_ops advk_pcie_rp_irq_domain_ops = {
- 
- static int advk_pcie_init_rp_irq_domain(struct advk_pcie *pcie)
- {
--	pcie->rp_irq_domain = irq_domain_add_linear(NULL, 1,
--						    &advk_pcie_rp_irq_domain_ops,
--						    pcie);
-+	pcie->rp_irq_domain = irq_domain_create_linear(NULL, 1, &advk_pcie_rp_irq_domain_ops, pcie);
- 	if (!pcie->rp_irq_domain) {
- 		dev_err(&pcie->pdev->dev, "Failed to add Root Port IRQ domain\n");
- 		return -ENOMEM;
-diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
-index ffdeed25e961..28e43831c0f1 100644
---- a/drivers/pci/controller/pci-ftpci100.c
-+++ b/drivers/pci/controller/pci-ftpci100.c
-@@ -345,8 +345,8 @@ static int faraday_pci_setup_cascaded_irq(struct faraday_pci *p)
- 		return irq ?: -EINVAL;
- 	}
- 
--	p->irqdomain = irq_domain_add_linear(intc, PCI_NUM_INTX,
--					     &faraday_pci_irqdomain_ops, p);
-+	p->irqdomain = irq_domain_create_linear(of_fwnode_handle(intc), PCI_NUM_INTX,
-+						&faraday_pci_irqdomain_ops, p);
- 	of_node_put(intc);
- 	if (!p->irqdomain) {
- 		dev_err(p->dev, "failed to create Gemini PCI IRQ domain\n");
-diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
-index b0e3bce10aa4..60da24ba0a19 100644
---- a/drivers/pci/controller/pci-mvebu.c
-+++ b/drivers/pci/controller/pci-mvebu.c
-@@ -1078,9 +1078,9 @@ static int mvebu_pcie_init_irq_domain(struct mvebu_pcie_port *port)
- 		return -ENODEV;
- 	}
- 
--	port->intx_irq_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
--						      &mvebu_pcie_intx_irq_domain_ops,
--						      port);
-+	port->intx_irq_domain = irq_domain_create_linear(of_fwnode_handle(pcie_intc_node),
-+							 PCI_NUM_INTX,
-+							 &mvebu_pcie_intx_irq_domain_ops, port);
- 	of_node_put(pcie_intc_node);
- 	if (!port->intx_irq_domain) {
- 		dev_err(dev, "Failed to get INTx IRQ domain for %s\n", port->name);
-diff --git a/drivers/pci/controller/pci-xgene-msi.c b/drivers/pci/controller/pci-xgene-msi.c
-index 69a9c0a87639..d07e97e22d6d 100644
---- a/drivers/pci/controller/pci-xgene-msi.c
-+++ b/drivers/pci/controller/pci-xgene-msi.c
-@@ -242,8 +242,7 @@ static const struct irq_domain_ops msi_domain_ops = {
- 
- static int xgene_allocate_domains(struct xgene_msi *msi)
- {
--	msi->inner_domain = irq_domain_add_linear(NULL, NR_MSI_VEC,
--						  &msi_domain_ops, msi);
-+	msi->inner_domain = irq_domain_create_linear(NULL, NR_MSI_VEC, &msi_domain_ops, msi);
- 	if (!msi->inner_domain)
- 		return -ENOMEM;
- 
-diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
-index 5fb3a2e0017e..a43f21eb8fbb 100644
---- a/drivers/pci/controller/pcie-altera-msi.c
-+++ b/drivers/pci/controller/pcie-altera-msi.c
-@@ -166,7 +166,7 @@ static int altera_allocate_domains(struct altera_msi *msi)
- {
- 	struct fwnode_handle *fwnode = of_fwnode_handle(msi->pdev->dev.of_node);
- 
--	msi->inner_domain = irq_domain_add_linear(NULL, msi->num_of_vectors,
-+	msi->inner_domain = irq_domain_create_linear(NULL, msi->num_of_vectors,
- 					     &msi_domain_ops, msi);
- 	if (!msi->inner_domain) {
- 		dev_err(&msi->pdev->dev, "failed to create IRQ domain\n");
-diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-index 70409e71a18f..0fc77176a52e 100644
---- a/drivers/pci/controller/pcie-altera.c
-+++ b/drivers/pci/controller/pcie-altera.c
-@@ -855,7 +855,7 @@ static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
- 	struct device_node *node = dev->of_node;
- 
- 	/* Setup INTx */
--	pcie->irq_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
-+	pcie->irq_domain = irq_domain_create_linear(of_fwnode_handle(node), PCI_NUM_INTX,
- 					&intx_domain_ops, pcie);
- 	if (!pcie->irq_domain) {
- 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 1f356fca07a2..fbbbe9f2d171 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -584,7 +584,7 @@ static int brcm_allocate_domains(struct brcm_msi *msi)
- 	struct fwnode_handle *fwnode = of_fwnode_handle(msi->np);
- 	struct device *dev = msi->dev;
- 
--	msi->inner_domain = irq_domain_add_linear(NULL, msi->nr, &msi_domain_ops, msi);
-+	msi->inner_domain = irq_domain_create_linear(NULL, msi->nr, &msi_domain_ops, msi);
- 	if (!msi->inner_domain) {
- 		dev_err(dev, "failed to create IRQ domain\n");
- 		return -ENOMEM;
-diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
-index 804b3a5787c5..d2cb4c4f821a 100644
---- a/drivers/pci/controller/pcie-iproc-msi.c
-+++ b/drivers/pci/controller/pcie-iproc-msi.c
-@@ -446,8 +446,8 @@ static void iproc_msi_disable(struct iproc_msi *msi)
- static int iproc_msi_alloc_domains(struct device_node *node,
- 				   struct iproc_msi *msi)
- {
--	msi->inner_domain = irq_domain_add_linear(NULL, msi->nr_msi_vecs,
--						  &msi_domain_ops, msi);
-+	msi->inner_domain = irq_domain_create_linear(NULL, msi->nr_msi_vecs,
-+						     &msi_domain_ops, msi);
- 	if (!msi->inner_domain)
- 		return -ENOMEM;
- 
-diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-index 9d52504acae4..b55f5973414c 100644
---- a/drivers/pci/controller/pcie-mediatek-gen3.c
-+++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-@@ -745,8 +745,8 @@ static int mtk_pcie_init_irq_domains(struct mtk_gen3_pcie *pcie)
- 		return -ENODEV;
- 	}
- 
--	pcie->intx_domain = irq_domain_add_linear(intc_node, PCI_NUM_INTX,
--						  &intx_domain_ops, pcie);
-+	pcie->intx_domain = irq_domain_create_linear(of_fwnode_handle(intc_node), PCI_NUM_INTX,
-+						     &intx_domain_ops, pcie);
- 	if (!pcie->intx_domain) {
- 		dev_err(dev, "failed to create INTx IRQ domain\n");
- 		ret = -ENODEV;
-@@ -756,8 +756,9 @@ static int mtk_pcie_init_irq_domains(struct mtk_gen3_pcie *pcie)
- 	/* Setup MSI */
- 	mutex_init(&pcie->lock);
- 
--	pcie->msi_bottom_domain = irq_domain_add_linear(node, PCIE_MSI_IRQS_NUM,
--				  &mtk_msi_bottom_domain_ops, pcie);
-+	pcie->msi_bottom_domain = irq_domain_create_linear(of_fwnode_handle(node),
-+							   PCIE_MSI_IRQS_NUM,
-+							   &mtk_msi_bottom_domain_ops, pcie);
- 	if (!pcie->msi_bottom_domain) {
- 		dev_err(dev, "failed to create MSI bottom domain\n");
- 		ret = -ENODEV;
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index efcc4a7c17be..e1934aa06c8d 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -569,8 +569,8 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
- 		return -ENODEV;
- 	}
- 
--	port->irq_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
--						 &intx_domain_ops, port);
-+	port->irq_domain = irq_domain_create_linear(of_fwnode_handle(pcie_intc_node), PCI_NUM_INTX,
-+						    &intx_domain_ops, port);
- 	of_node_put(pcie_intc_node);
- 	if (!port->irq_domain) {
- 		dev_err(dev, "failed to get INTx IRQ domain\n");
-diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-index 6a46be17aa91..b9e7a8710cf0 100644
---- a/drivers/pci/controller/pcie-rockchip-host.c
-+++ b/drivers/pci/controller/pcie-rockchip-host.c
-@@ -693,8 +693,8 @@ static int rockchip_pcie_init_irq_domain(struct rockchip_pcie *rockchip)
- 		return -EINVAL;
- 	}
- 
--	rockchip->irq_domain = irq_domain_add_linear(intc, PCI_NUM_INTX,
--						    &intx_domain_ops, rockchip);
-+	rockchip->irq_domain = irq_domain_create_linear(of_fwnode_handle(intc), PCI_NUM_INTX,
-+							&intx_domain_ops, rockchip);
- 	of_node_put(intc);
- 	if (!rockchip->irq_domain) {
- 		dev_err(dev, "failed to get a INTx IRQ domain\n");
-diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-index d0ab187d917f..879746e82c50 100644
---- a/drivers/pci/controller/pcie-xilinx-cpm.c
-+++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-@@ -395,17 +395,15 @@ static int xilinx_cpm_pcie_init_irq_domain(struct xilinx_cpm_pcie *port)
- 		return -EINVAL;
- 	}
- 
--	port->cpm_domain = irq_domain_add_linear(pcie_intc_node, 32,
--						 &event_domain_ops,
--						 port);
-+	port->cpm_domain = irq_domain_create_linear(of_fwnode_handle(pcie_intc_node), 32,
-+						    &event_domain_ops, port);
- 	if (!port->cpm_domain)
- 		goto out;
- 
- 	irq_domain_update_bus_token(port->cpm_domain, DOMAIN_BUS_NEXUS);
- 
--	port->intx_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
--						  &intx_domain_ops,
--						  port);
-+	port->intx_domain = irq_domain_create_linear(of_fwnode_handle(pcie_intc_node), PCI_NUM_INTX,
-+						     &intx_domain_ops, port);
- 	if (!port->intx_domain)
- 		goto out;
- 
-diff --git a/drivers/pci/controller/pcie-xilinx-dma-pl.c b/drivers/pci/controller/pcie-xilinx-dma-pl.c
-index 71cf13ae51c7..dc9690a535e1 100644
---- a/drivers/pci/controller/pcie-xilinx-dma-pl.c
-+++ b/drivers/pci/controller/pcie-xilinx-dma-pl.c
-@@ -472,8 +472,8 @@ static int xilinx_pl_dma_pcie_init_msi_irq_domain(struct pl_dma_pcie *port)
- 	int size = BITS_TO_LONGS(XILINX_NUM_MSI_IRQS) * sizeof(long);
- 	struct fwnode_handle *fwnode = of_fwnode_handle(port->dev->of_node);
- 
--	msi->dev_domain = irq_domain_add_linear(NULL, XILINX_NUM_MSI_IRQS,
--						&dev_msi_domain_ops, port);
-+	msi->dev_domain = irq_domain_create_linear(NULL, XILINX_NUM_MSI_IRQS,
-+						   &dev_msi_domain_ops, port);
- 	if (!msi->dev_domain)
- 		goto out;
- 
-@@ -585,15 +585,15 @@ static int xilinx_pl_dma_pcie_init_irq_domain(struct pl_dma_pcie *port)
- 		return -EINVAL;
- 	}
- 
--	port->pldma_domain = irq_domain_add_linear(pcie_intc_node, 32,
--						   &event_domain_ops, port);
-+	port->pldma_domain = irq_domain_create_linear(of_fwnode_handle(pcie_intc_node), 32,
-+						      &event_domain_ops, port);
- 	if (!port->pldma_domain)
- 		return -ENOMEM;
- 
- 	irq_domain_update_bus_token(port->pldma_domain, DOMAIN_BUS_NEXUS);
- 
--	port->intx_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
--						  &intx_domain_ops, port);
-+	port->intx_domain = irq_domain_create_linear(of_fwnode_handle(pcie_intc_node), PCI_NUM_INTX,
-+						     &intx_domain_ops, port);
- 	if (!port->intx_domain) {
- 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
- 		return -ENOMEM;
-diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
-index 9cf8a96f7bc4..c8b05477b719 100644
---- a/drivers/pci/controller/pcie-xilinx-nwl.c
-+++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-@@ -498,8 +498,7 @@ static int nwl_pcie_init_msi_irq_domain(struct nwl_pcie *pcie)
- 	struct fwnode_handle *fwnode = of_fwnode_handle(dev->of_node);
- 	struct nwl_msi *msi = &pcie->msi;
- 
--	msi->dev_domain = irq_domain_add_linear(NULL, INT_PCI_MSI_NR,
--						&dev_msi_domain_ops, pcie);
-+	msi->dev_domain = irq_domain_create_linear(NULL, INT_PCI_MSI_NR, &dev_msi_domain_ops, pcie);
- 	if (!msi->dev_domain) {
- 		dev_err(dev, "failed to create dev IRQ domain\n");
- 		return -ENOMEM;
-@@ -582,10 +581,8 @@ static int nwl_pcie_init_irq_domain(struct nwl_pcie *pcie)
- 		return -EINVAL;
- 	}
- 
--	pcie->intx_irq_domain = irq_domain_add_linear(intc_node,
--						      PCI_NUM_INTX,
--						      &intx_domain_ops,
--						      pcie);
-+	pcie->intx_irq_domain = irq_domain_create_linear(of_fwnode_handle(intc_node), PCI_NUM_INTX,
-+							 &intx_domain_ops, pcie);
- 	of_node_put(intc_node);
- 	if (!pcie->intx_irq_domain) {
- 		dev_err(dev, "failed to create IRQ domain\n");
-diff --git a/drivers/pci/controller/pcie-xilinx.c b/drivers/pci/controller/pcie-xilinx.c
-index 0b534f73a942..e36aa874bae9 100644
---- a/drivers/pci/controller/pcie-xilinx.c
-+++ b/drivers/pci/controller/pcie-xilinx.c
-@@ -461,9 +461,8 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie *pcie)
- 		return -ENODEV;
- 	}
- 
--	pcie->leg_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
--						 &intx_domain_ops,
--						 pcie);
-+	pcie->leg_domain = irq_domain_create_linear(of_fwnode_handle(pcie_intc_node), PCI_NUM_INTX,
-+						    &intx_domain_ops, pcie);
- 	of_node_put(pcie_intc_node);
- 	if (!pcie->leg_domain) {
- 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-diff --git a/drivers/pci/controller/plda/pcie-plda-host.c b/drivers/pci/controller/plda/pcie-plda-host.c
-index 4c7a9fa311e3..3abedf723215 100644
---- a/drivers/pci/controller/plda/pcie-plda-host.c
-+++ b/drivers/pci/controller/plda/pcie-plda-host.c
-@@ -155,8 +155,7 @@ static int plda_allocate_msi_domains(struct plda_pcie_rp *port)
- 
- 	mutex_init(&port->msi.lock);
- 
--	msi->dev_domain = irq_domain_add_linear(NULL, msi->num_vectors,
--						&msi_domain_ops, port);
-+	msi->dev_domain = irq_domain_create_linear(NULL, msi->num_vectors, &msi_domain_ops, port);
- 	if (!msi->dev_domain) {
- 		dev_err(dev, "failed to create IRQ domain\n");
- 		return -ENOMEM;
-@@ -393,10 +392,9 @@ static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
- 		return -EINVAL;
- 	}
- 
--	port->event_domain = irq_domain_add_linear(pcie_intc_node,
--						   port->num_events,
--						   &plda_event_domain_ops,
--						   port);
-+	port->event_domain = irq_domain_create_linear(of_fwnode_handle(pcie_intc_node),
-+						      port->num_events, &plda_event_domain_ops,
-+						      port);
- 	if (!port->event_domain) {
- 		dev_err(dev, "failed to get event domain\n");
- 		of_node_put(pcie_intc_node);
-@@ -405,8 +403,8 @@ static int plda_pcie_init_irq_domains(struct plda_pcie_rp *port)
- 
- 	irq_domain_update_bus_token(port->event_domain, DOMAIN_BUS_NEXUS);
- 
--	port->intx_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
--						  &intx_domain_ops, port);
-+	port->intx_domain = irq_domain_create_linear(of_fwnode_handle(pcie_intc_node), PCI_NUM_INTX,
-+						     &intx_domain_ops, port);
- 	if (!port->intx_domain) {
- 		dev_err(dev, "failed to get an INTx IRQ domain\n");
- 		of_node_put(pcie_intc_node);
 -- 
-2.49.0
 
+Best regards,
+Peter
 
