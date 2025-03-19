@@ -1,58 +1,59 @@
-Return-Path: <linux-pci+bounces-24157-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24158-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79ADEA69916
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 20:22:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 952F9A699EA
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 21:02:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B5B701883949
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 19:22:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 98E987A6DEA
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 20:01:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02F2C20C49E;
-	Wed, 19 Mar 2025 19:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14B9E2135CB;
+	Wed, 19 Mar 2025 20:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IgdBjC8q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="KHKntT7u"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7822F37;
-	Wed, 19 Mar 2025 19:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2F9208970
+	for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 20:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742412166; cv=none; b=hG8ibZUauC8aHKVN+J45Sbiny8lkLvScP9FcGH+KEw5gDujbsUWyV7FZlqQfZJTPP/6P0fNy3/W/gF7ZB2N+xRxPciZ1slUdI9h7in+j7X5HTSz2a3mkWRQcCH+ZN/TVx+xQfCWPUIN9ZgVBWw6eY66y4hUCISmQGUCEeUjFKw4=
+	t=1742414547; cv=none; b=LrGfj2RjaU7vUEcF7SxgsXx3UoCPlHVtET12lJz/UB4Qeal2XgFtq/KY27haKq3XPm0Ove/+gkcbb3thmcPtW6TauC3L9T3fZMr0bXb9V3xHdVyIuXMLdxcBNEIfz74kLYoq0lN+sqyVAyeIXdL3csSJp2FU+w1zo0Ot16s18x4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742412166; c=relaxed/simple;
-	bh=hp6/NGk818hWA31F/faP/QydOEsvoVm19SW4JKDcbkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=UsDwoLwu4pA+Rv/A2aT8VlNGmx3Fo9UYSRtjhYyMEq6xlY546qP/FZ6fHkuTe65xQi1BmHZf/rFq+2ssdbHgT98yUAQUkR4+ITAg4vDNF1IaplQYfHVl+aC4OpZ0zbxpEgzT4G++/xJ+pci9JWLXrmh2VUOE//1HmRwZvVfuM20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IgdBjC8q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D4A6C4CEE4;
-	Wed, 19 Mar 2025 19:22:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742412166;
-	bh=hp6/NGk818hWA31F/faP/QydOEsvoVm19SW4JKDcbkc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=IgdBjC8qWDxFiltEAF/YNbtupLSeKeLHghpusBQFXZGM9Mye3xChIyVJVK1rhITJu
-	 0rzls2eQWbcH6gEpQ61fckMpj6/BEhPPDm4Oqb5bRLQ9AemAr1BS49tSBkl8vV90qe
-	 0thCQ6LIfSCR/Loc2JKE9cqNCy+IYcxbIcm0uXO+/cvhWrYFB8L8r+8zSYZsGdcRcC
-	 O6g+YRi8iDVQDSpCcIB8TPTwvYg+BnSdYJIrmikBZ7UDeHajaqFevev5DIhVqKObzO
-	 kS/Vrw0YOVSkjEMO5HrA0z/DVGiZPjWEMD+LvufqXg+TIYfwcVEn3w2iIUoTXc1f0c
-	 QV94fNKE3QMmQ==
-Date: Wed, 19 Mar 2025 14:22:44 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lei Chuan Hua <lchuanhua@maxlinear.com>
-Cc: Frank Li <Frank.Li@nxp.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC NOT TESTED] PCI: intel-gw: Use use_parent_dt_ranges
- and clean up intel_pcie_cpu_addr_fixup()
-Message-ID: <20250319192244.GA1053712@bhelgaas>
+	s=arc-20240116; t=1742414547; c=relaxed/simple;
+	bh=lmBL7zejKvnUDqOWdxUwfNo/k5rPUmaeIm9R+fKvhCw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e+ZYkjIvRMg+E6rLQloFsVPKqyZ4z5pVOhqaLFaVI2pc6XpU/N1IZPX0P9JIpqKeC9EhlUUqKknDludn4VOa2TiTyNvVJ0mD4nFokYrKr8Yg8KDPHcBdUDSDnAIyOEngPInWYgRsLhkoCyUHXUbPa6njyuAOb3cUNbePWdOtFwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=KHKntT7u; arc=none smtp.client-ip=79.135.106.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=rzien2anczd5pltdexn7zrjcni.protonmail; t=1742414541; x=1742673741;
+	bh=AZ0CyElZ+X6TSDauNtt6GcIL1oWwt7laTyNsmPTHFuc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=KHKntT7uXn0VxwAicITA/daL5jI3pMXg8QnDlyUUeSPXJH03KqsQZJgJya7S4VEgY
+	 6f4EsueCVQzOEIPKWMfkYL1uE9a0qyFxYwySsR/4EfpW9kZhTESmCUWRfDpv8aisqC
+	 IZfml1PJyXoDScAG57T+qlM7orApxfF58G4CE9Na4SnugYU3IbbjvbUH6JDzm1xgU1
+	 FdM4lt/19rykYeA1nXurYlGl9JFPmAPoVsEXq1IVEC+8fbU7adph/JaFYKgMN7/O14
+	 2Wvsna7ZLGpinVuY0yPqJDpoZWghokos2c8BKxY+l3Y57nrPOJBEZ3AEwiqIJsHNlN
+	 d4pbl+AhnAUNA==
+Date: Wed, 19 Mar 2025 20:02:10 +0000
+To: Alice Ryhl <aliceryhl@google.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 6/6] rust: use strict provenance APIs
+Message-ID: <D8KIECKPCJN5.3MR59IHCSZMUJ@proton.me>
+In-Reply-To: <Z9q2xpwsNMDzZ2Gp@google.com>
+References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com> <20250317-ptr-as-ptr-v5-6-5b5f21fa230a@gmail.com> <Z9lnIJCcVSza6UVo@google.com> <D8JTC30W0NF6.17SR73Y9I99ZT@proton.me> <Z9q2xpwsNMDzZ2Gp@google.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: ca7cc9420e0e1361b7fbb21fd83254119179e3ac
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,211 +61,140 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BY3PR19MB5076ADD0AC135D455D10B5CEBDD92@BY3PR19MB5076.namprd19.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 19, 2025 at 06:10:57AM +0000, Lei Chuan Hua wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: Tuesday, 18 March 2025 11:32 pm
-> > To: Lei Chuan Hua <lchuanhua@maxlinear.com>
-> > Cc: Frank Li <Frank.Li@nxp.com>; Lorenzo Pieralisi
-> > <lpieralisi@kernel.org>; Krzysztof Wilczyński <kw@linux.com>; Manivannan
-> > Sadhasivam <manivannan.sadhasivam@linaro.org>; Rob Herring
-> > <robh@kernel.org>; Bjorn Helgaas <bhelgaas@google.com>; linux-
-> > pci@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH RFC NOT TESTED] PCI: intel-gw: Use
-> > use_parent_dt_ranges and clean up intel_pcie_cpu_addr_fixup()
-> > 
-> > This email was sent from outside of MaxLinear.
-> > 
-> > On Tue, Mar 18, 2025 at 01:49:46AM +0000, Lei Chuan Hua wrote:
-> > > Hi Bjorn,
-> > >
-> > > I did a quick test with necessary change in dts. It worked, please
-> > > move on.
-> > 
-> > What does this mean?  By "move on", do you mean that I should merge the
-> > patch below (the removal of intel_pcie_cpu_addr())?
+On Wed Mar 19, 2025 at 1:21 PM CET, Alice Ryhl wrote:
+> On Wed, Mar 19, 2025 at 12:23:44AM +0000, Benno Lossin wrote:
+>> On Tue Mar 18, 2025 at 1:29 PM CET, Alice Ryhl wrote:
+>> > On Mon, Mar 17, 2025 at 10:23:56AM -0400, Tamir Duberstein wrote:
+>> >> Throughout the tree, use the strict provenance APIs stabilized in Rus=
+t
+>> >> 1.84.0[1]. Retain backwards-compatibility by introducing forwarding
+>> >> functions at the `kernel` crate root along with polyfills for rustc <
+>> >> 1.84.0.
+>> >>=20
+>> >> Use `#[allow(clippy::incompatible_msrv)]` to avoid warnings on rustc =
+<
+>> >> 1.84.0 as our MSRV is 1.78.0.
+>> >>=20
+>> >> In the `kernel` crate, enable the strict provenance lints on rustc >=
+=3D
+>> >> 1.84.0; do this in `lib.rs` rather than `Makefile` to avoid introduci=
+ng
+>> >> compiler flags that are dependent on the rustc version in use.
+>> >>=20
+>> >> Link: https://blog.rust-lang.org/2025/01/09/Rust-1.84.0.html#strict-p=
+rovenance-apis [1]
+>> >> Suggested-by: Benno Lossin <benno.lossin@proton.me>
+>> >> Link: https://lore.kernel.org/all/D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.m=
+e/
+>> >> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+>> >
+>> > I'm not convinced that the pros of this change outweigh the cons. I
+>> > think this is going to be too confusing for the C developers who look =
+at
+>> > this code.
+>>=20
+>> 1) I think we should eliminate all possible `as` conversions. They are
+>>    non-descriptive (since they can do may *very* different things) and
+>>    ptr2int conversions are part of that.
+>> 2) At some point we will have to move to the provenance API, since
+>>    that's what Rust chose to do. I don't think that doing it at a later
+>>    point is doing anyone a favor.
 >
->   I mean you can merge the patch with removal of intel_pcie_cpu_addr()
-> 
-> > I do not want to merge a change that will break any existing intel-gw
-> > platform.  When you say "with necessary change in dts", it makes me
-> > think the removal of intel_pcie_cpu_addr() forces a change to dts, which
-> > would not be acceptable.  We can't force users to upgrade the dts just
-> > to run a newer kernel.
+> We don't *have* to do anything. Sure, most `as` conversions can be
+> removed now that we have fixed the integer type mappings, but I'm still
+> not convinced by this case.
 >
->   Actually, intel_pcie_cpu_addr() did the address translation, so in our case,
->   Dts has to adapt to this change.
+> Like, sure, use it for that one case in `kernel::str` where it uses
+> integers for pointers for some reason. But most other cases, provenance
+> isn't useful.
 >
-> > I assume 250318 linux-next, which includes Frank's v12 series, should
-> > work with no change to dts required.  (It would be awesome if you can
-> > verify that.)
-> 
->   I will try 250318 linux-next and let you know the result once it is done.
-> 
-> > If you apply this patch to remove intel_pcie_cpu_addr() on top of
-> > 250318 linux-next, does it still work with no changes to dts?
+>> 3) I don't understand the argument that this is confusing to C devs.
+>>    They are just normal functions that are well-documented (and if
+>>    that's not the case, we can just improve them upstream). And
+>>    functions are much easier to learn about than `as` casts (those are
+>>    IMO much more difficult to figure out than then strict provenance
+>>    functions).
 >
->   I think we need to adapt dts change. Even this series patch has dts
->   adaption part.
-> 
-> > If you have to make a dts change for it to work after removing
-> > intel_pcie_cpu_addr(), then we have a problem.
+> I really don't think that's true, no matter how good the docs are. If
+> you see `addr as *mut c_void` as a C dev, you are going to immediately
+> understand what that means. If you see with_exposed_provenance(addr),
+> you're not going to understand what that means from the name - you have
+> to interrupt your reading and look up the function with the weird name.
 >
->   We can update the dts yaml file.
+> And those docs probably spend a long time talking about stuff that
+> doesn't matter for your pointer, since it's probably a userspace pointer
+> or similar.
 >
-> > I do not see a .dts file in the upstream tree that contains "intel,lgm-
-> > pcie", so I don't know what the .dts contains or how it is distributed.
-> > 
-> > I do see the binding at
-> > Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml,
-> > but the example there does not include anything about address
-> > translation between the CPU and the PCI controller, so my guess is that
-> > there are .dts files in the field that will not work if we remove
-> > intel_pcie_cpu_addr().
+>> Thus I think we should keep this patch (with Boqun's improvement).
+>>=20
+>> >> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+>> >> index 719b0a48ff55..96393bcf6bd7 100644
+>> >> --- a/rust/kernel/uaccess.rs
+>> >> +++ b/rust/kernel/uaccess.rs
+>> >> @@ -226,7 +226,9 @@ pub fn read_raw(&mut self, out: &mut [MaybeUninit=
+<u8>]) -> Result {
+>> >>          }
+>> >>          // SAFETY: `out_ptr` points into a mutable slice of length `=
+len`, so we may write
+>> >>          // that many bytes to it.
+>> >> -        let res =3D unsafe { bindings::copy_from_user(out_ptr, self.=
+ptr as *const c_void, len) };
+>> >> +        let res =3D unsafe {
+>> >> +            bindings::copy_from_user(out_ptr, crate::with_exposed_pr=
+ovenance(self.ptr), len)
+>> >> +        };
+>> >>          if res !=3D 0 {
+>> >>              return Err(EFAULT);
+>> >>          }
+>> >> @@ -264,7 +266,7 @@ pub fn read<T: FromBytes>(&mut self) -> Result<T>=
+ {
+>> >>          let res =3D unsafe {
+>> >>              bindings::_copy_from_user(
+>> >>                  out.as_mut_ptr().cast::<c_void>(),
+>> >> -                self.ptr as *const c_void,
+>> >> +                crate::with_exposed_provenance(self.ptr),
+>> >>                  len,
+>> >>              )
+>> >>          };
+>> >
+>> > That's especially true for cases like this. These are userspace pointe=
+rs
+>> > that are never dereferenced. It's not useful to care about provenance
+>> > here.
+>>=20
+>> I agree for this case, but I think we shouldn't be using raw pointers
+>> for this to begin with. I'd think that a newtype wrapping `usize` is a
+>> much better fit. It can then also back the `IoRaw` type. AFAIU user
+>> space pointers don't have provenance, right? (if they do, then we should
+>> use this API :)
 >
->   This driver is for x86 atom platform, no upstream dts file even in
->   arch/x86/boot Since upstream x86 platforms use acpi, even several
->   platforms use dts, but never create dts directory in
->   arch/x86/boot.
-> 
->   As I mentioned earlier, dts needs a minor change.
+> We're doing that to the fullest extent possible already. We only convert
+> them to pointers when calling C FFI functions that take user pointers as
+> a raw pointer.
 
-If there are end users that have a dts that must be changed before
-intel_pcie_cpu_addr() can be removed, we can't remove it because we
-can't force those users to upgrade their dts.
+In our meeting, we discussed all of this in more detail. I now
+understand Alice's concern better: it's about userspace pointers, they
+don't have provenance and thus shouldn't use the strict provenance API.
 
-If this driver is only used internally to Intel, or if the hardware
-has never been shipped to end users, it's OK to remove
-intel_pcie_cpu_addr() and assume those internal users will update dts.
+There are two possible solutions to this:
+* introduce a transparent `UserPtr` type that bindgen uses instead of a
+  raw pointer when it encounters a userspace pointer (annotated on the C
+  side).
+* use a `to_user_pointer` function instead of `without_provenance` to
+  better convey the meaning.
 
-> > > ________________________________________
-> > > From: Bjorn Helgaas <mailto:helgaas@kernel.org>
-> > > Sent: Tuesday, March 18, 2025 1:59 AM
-> > > To: Frank Li <mailto:Frank.Li@nxp.com>
-> > > Cc: Lei Chuan Hua <mailto:lchuanhua@maxlinear.com>; Lorenzo Pieralisi
-> > > <mailto:lpieralisi@kernel.org>; Krzysztof Wilczyński <mailto:kw@linux.com>;
-> > > Manivannan Sadhasivam <mailto:manivannan.sadhasivam@linaro.org>; Rob Herring
-> > > <mailto:robh@kernel.org>; Bjorn Helgaas <mailto:bhelgaas@google.com>;
-> > > mailto:linux-pci@vger.kernel.org <mailto:linux-pci@vger.kernel.org>;
-> > > mailto:linux-kernel@vger.kernel.org <mailto:linux-kernel@vger.kernel.org>
-> > > Subject: Re: [PATCH RFC NOT TESTED] PCI: intel-gw: Use
-> > > use_parent_dt_ranges and clean up intel_pcie_cpu_addr_fixup()
-> > >
-> > >
-> > >
-> > > On Wed, Mar 05, 2025 at 12:07:54PM -0500, Frank Li wrote:
-> > > > Remove intel_pcie_cpu_addr_fixup() as the DT bus fabric should
-> > > > provide correct address translation. Set use_parent_dt_ranges to
-> > > > allow the DWC core driver to fetch address translation from the
-> > device tree.
-> > > >
-> > > > Signed-off-by: Frank Li <mailto:Frank.Li@nxp.com>
-> > >
-> > > Any update on this, Chuanhua?
-> > >
-> > > I plan to merge v12 of Frank's series [1] for v6.15.  We need to know
-> > > ASAP if that would break intel-gw.
-> > >
-> > > If we knew that it was safe to also apply this patch to remove
-> > > intel_pcie_cpu_addr(), that would be even better.
-> > >
-> > > I will plan to apply the patch below on top of Frank's series [1] for
-> > > v6.15 unless I hear that it would break something.
-> > >
-> > > Bjorn
-> > >
-> > > [1]
-> > > https://nam12.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore
-> > > .kernel.org%2Fr%2F20250315201548.858189-1-helgaas%40kernel.org&data=05
-> > > %7C02%7Clchuanhua%40maxlinear.com%7C1612d73ded5741bbd37508dd66320100%7
-> > > Cdac2800513e041b882807663835f2b1d%7C0%7C0%7C638779087153570342%7CUnkno
-> > > wn%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXa
-> > > W4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=aIuZWzwFy2r
-> > > rzsJ5KfbxWKMx%2BPn1WHx2KvpSR0nxsl8%3D&reserved=0
-> > >
-> > > > ---
-> > > > This patches basic on
-> > > > https://nam12.safelinks.protection.outlook.com/?url=https%3A%2F%2Flo
-> > > > re.kernel.org%2Fimx%2F20250128-pci_fixup_addr-v9-0-3c4bb506f665%40nx
-> > > > p.com%2F&data=05%7C02%7Clchuanhua%40maxlinear.com%7C1612d73ded5741bb
-> > > > d37508dd66320100%7Cdac2800513e041b882807663835f2b1d%7C0%7C0%7C638779
-> > > > 087153596851%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiI
-> > > > wLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C
-> > > > %7C%7C&sdata=mht19VSB24Znpvtz1pOlmtHYec%2BDBDH70zuLOZmwlSI%3D&reserv
-> > > > ed=0
-> > > >
-> > > > I have not hardware to test and there are not intel,lgm-pcie in
-> > > > kernel tree.
-> > > >
-> > > > Your dts should correct reflect hardware behavor, ref:
-> > > > https://nam12.safelinks.protection.outlook.com/?url=https%3A%2F%2Flo
-> > > > re.kernel.org%2Flinux-pci%2FZ8huvkENIBxyPKJv%40axis.com%2FT%2F%23mb7
-> > > > ae78c3a22324b37567d24ecc1c810c1b3f55c5&data=05%7C02%7Clchuanhua%40ma
-> > > > xlinear.com%7C1612d73ded5741bbd37508dd66320100%7Cdac2800513e041b8828
-> > > > 07663835f2b1d%7C0%7C0%7C638779087153612764%7CUnknown%7CTWFpbGZsb3d8e
-> > > > yJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiT
-> > > > WFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=DUsGCW%2FZpvx4whLteoIjYqw
-> > > > d6oOk9rXks%2BV40i5sovI%3D&reserved=0
-> > > >
-> > > > According to your intel_pcie_cpu_addr_fixup()
-> > > >
-> > > > Basically, config space/io/mem space need minus SZ_256. parent bus
-> > > > range convert it to original value.
-> > > >
-> > > > Look for driver owner, who help test this and start move forward to
-> > > > remove
-> > > > cpu_addr_fixup() work.
-> > > > ---
-> > > > Frank Li <mailto:Frank.Li@nxp.com>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-intel-gw.c | 8 +-------
-> > > >  1 file changed, 1 insertion(+), 7 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c
-> > > > b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> > > > index 9b53b8f6f268e..c21906eced618 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
-> > > > @@ -57,7 +57,6 @@
-> > > >       PCIE_APP_IRN_INTA | PCIE_APP_IRN_INTB | \
-> > > >       PCIE_APP_IRN_INTC | PCIE_APP_IRN_INTD)
-> > > >
-> > > > -#define BUS_IATU_OFFSET                      SZ_256M
-> > > >  #define RESET_INTERVAL_MS            100
-> > > >
-> > > >  struct intel_pcie {
-> > > > @@ -381,13 +380,7 @@ static int intel_pcie_rc_init(struct dw_pcie_rp
-> > *pp)
-> > > >       return intel_pcie_host_setup(pcie);  }
-> > > >
-> > > > -static u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
-> > > > -{
-> > > > -     return cpu_addr + BUS_IATU_OFFSET;
-> > > > -}
-> > > > -
-> > > >  static const struct dw_pcie_ops intel_pcie_ops = {
-> > > > -     .cpu_addr_fixup = intel_pcie_cpu_addr,
-> > > >  };
-> > > >
-> > > >  static const struct dw_pcie_host_ops intel_pcie_dw_ops = { @@
-> > > > -409,6 +402,7 @@ static int intel_pcie_probe(struct platform_device
-> > *pdev)
-> > > >       platform_set_drvdata(pdev, pcie);
-> > > >       pci = &pcie->pci;
-> > > >       pci->dev = dev;
-> > > > +     pci->use_parent_dt_ranges = true;
-> > > >       pp = &pci->pp;
-> > > >
-> > > >       ret = intel_pcie_get_resources(pdev);
-> > > >
-> > > > ---
-> > > > base-commit: 1552be4855dacca5ea39b15b1ef0b96c91dbea0d
-> > > > change-id: 20250305-intel-7c25bfb498b1
-> > > >
-> > > > Best regards,
-> > > >
+I prefer the first one, but it probably needs special bindgen support,
+so we should go with the second one until we can change it.
+
+
+Miguel also said that he wants to have a piece of documentation in the
+patch. I can write that, if he specifies a bit more what exactly it
+should contain :)
+
+---
+Cheers,
+Benno
+
 
