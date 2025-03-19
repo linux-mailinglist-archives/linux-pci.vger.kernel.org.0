@@ -1,202 +1,303 @@
-Return-Path: <linux-pci+bounces-24083-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24085-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE63FA6881F
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 10:34:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8918EA688CF
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 10:54:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0E1F3A6920
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 09:33:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0546B1897D83
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 09:52:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4ECC2561BA;
-	Wed, 19 Mar 2025 09:31:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2482A2116F4;
+	Wed, 19 Mar 2025 09:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gv8GxDir"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2136.outbound.protection.outlook.com [40.107.117.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F360255E44;
-	Wed, 19 Mar 2025 09:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.136
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742376678; cv=fail; b=qgONWqAzMXmVShPI2HeU9fyib4mP5mgTjDRKuMaZOwFMuIUqy0kE1MqoI4WVJlHvFw3Rsz3BqX/pmWjEPxP5qfkHVcX4KojVnDKMvvQK2nEJK/1mYtofvlKDAaueXd3q0jDacz9qMjr9iYyREYK/ONhw+ISzekFMaCs3LMWcgyI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742376678; c=relaxed/simple;
-	bh=TxS2usu/30vIgxooPZw3O40OhwA2v25uFHP+8C67nFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BinwG0VEqMPbEoz1Bq7WSqrJENDVKiW81Qk9nwaFHZbGpqcV/pH7MPDPIlOrsd6/zIWGvnIXMtiub208dUXylJH29sE1Ix5vGYSPqxEDnRG6RpsTRxMSpogoCTYOgabtOlA+xaKKuuNri026ohiGhjfgbebF45akqQtR9LVIvGo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.117.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UCnwOM0joVNX+SZhCIhil4tXaMqZe6JvTe+ihdw+qAkfIfWeWu/omLwyQXhg6NWDOKaroV17+QZABP3Jzi3D3uHNUzFdgT+KqCR4WIr1bKq75G5KDwaogs4g7OXz24KkIXE6buWe22VxWioHFq82Ld6fz67jZ7hXsHS6dmm2OE2adu9ITGkL1KNcxqQapmYd1kxcMTj/JZPR2+ZvWfSQT5+st/Bam1t5Hg4EBNTN7C4OPFrh6IQxW3KzpwRGwmjhadG8DY5WM3hq9q8XXpBA698/mNWzgVcYyCOIhhuIBwWc+vAOBMChPGxLuofknBH80ZHcUGI90Js7Ws6p6OelUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wamUso4b1WGimo/sIrO/N6kBi2SFz6qid5Yg0KAIl8s=;
- b=ov81ySNK/dNPNv/KUp+CHWC36oCOU/ncwYlBwYfdEaFmxoXrPKdWvwFW3lu3RHe2QTqOTE7dJ7BDLXoBlZ2QPN4fmVkKCKqsciLsu876I7et8S9Nwe//9UEZPKu/n3XKDfNLSKvuHV1B88M+RwcSWXujTzphtPPhBaFH99zY7ovmcG1+vffpA0jb89oJvqh7W+OAe6kxDY+EUtPqLGJ5a+Cvzsh5qTgIw4YoyI09fglwqS0RCI5jXIJ8UzQXOWSczBK/k2GrXjhD+pINjEulWMF28XdhYn4EJTzInPF7uCVm1/C8XN/E0ivCATJBOQ6XSE1V4bTyVfSRG+VaoDvbxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=bootlin.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from SI2PR01CA0036.apcprd01.prod.exchangelabs.com
- (2603:1096:4:192::22) by TYSPR06MB6900.apcprd06.prod.outlook.com
- (2603:1096:400:46e::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Wed, 19 Mar
- 2025 09:31:09 +0000
-Received: from SG1PEPF000082E7.apcprd02.prod.outlook.com
- (2603:1096:4:192:cafe::b8) by SI2PR01CA0036.outlook.office365.com
- (2603:1096:4:192::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.34 via Frontend Transport; Wed,
- 19 Mar 2025 09:31:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- SG1PEPF000082E7.mail.protection.outlook.com (10.167.240.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.20 via Frontend Transport; Wed, 19 Mar 2025 09:31:08 +0000
-Received: from nchen-desktop (unknown [172.16.64.25])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 05C224160CA0;
-	Wed, 19 Mar 2025 17:31:07 +0800 (CST)
-Date: Wed, 19 Mar 2025 17:31:01 +0800
-From: Peter Chen <peter.chen@cixtech.com>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc: "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"vigneshr@ti.com" <vigneshr@ti.com>,
-	"kishon@kernel.org" <kishon@kernel.org>,
-	"cassel@kernel.org" <cassel@kernel.org>,
-	"wojciech.jasko-EXT@continental-corporation.com" <wojciech.jasko-EXT@continental-corporation.com>,
-	"thomas.richard@bootlin.com" <thomas.richard@bootlin.com>,
-	"bwawrzyn@cisco.com" <bwawrzyn@cisco.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"srk@ti.com" <srk@ti.com>
-Subject: Re: [PATCH 0/4] Loadable Module support for PCIe Cadence and J721E
-Message-ID: <Z9qO1f5MgNcwO5A4@nchen-desktop>
-References: <20250307103128.3287497-1-s-vadapalli@ti.com>
- <Z9pffxeXHVOsoi4O@nchen-desktop>
- <20250319062534.ollh3s5t7znf5zqs@uda0492258>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CA4251796
+	for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 09:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742377883; cv=none; b=rdTuNikxvZsAR3cBqAW+rssqQwJkfMNYCwaH09L0mwICqo2RF6oJBOSar9ux2IgroW6jgemj3e8bRdS4QX0UjwD1nsn1Sf52ZSQfg1x5Cn/cb6YQWsVVc/7r7JMWzfFtKL3bvpZP4qfs2tIeMHngdndIJa/lrrf2IP0IyPSt45s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742377883; c=relaxed/simple;
+	bh=LxXkJ4RcYxcWEj/wSb04wClhmIdMFFdfkcRchZXi4tM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MA/GLYQtVUVZScsKat5cD7e7IUHmw3ZA5JUZOaVY/1qhd988GkdqjUmo5dc07VEMHz7JvvEtyew0XX6rTOHTQg15tQqH1kS4Dvh3093l4vz4UhksPNIjl0xHmTPHJ1D4WDROnY/9fSiCSolw+LYGl4K6PfI4x+qD4/qZCMIrJtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gv8GxDir; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742377881; x=1773913881;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=LxXkJ4RcYxcWEj/wSb04wClhmIdMFFdfkcRchZXi4tM=;
+  b=Gv8GxDirJr8dEAyqlnhfw9s03shw2I2+mX98MRDe+WLqszA36BFIVUll
+   OFdOxT1Y4jl2+sazoE7vacjEnyQtGuGrIcudggerFLNvj9h0AydrUSBwp
+   hKT5x8sAAnMR4p37KPQUNXTWBLyvIPXOUXQY+Q17ksuSn7EcPL0LHXL7F
+   AtWXG48UFqsUg31NeZawKIl/zMV3BVUfGXeyymK2TCj4cpLBbuAtkyogD
+   JmGxoCZ2TvmczDo7v2Zf2yEX7xo7B0D+IG0Abx/1f4EWZeU5bxec/0iAo
+   u3mppepiyGaxeKGBMm2OfLBdQzWKDtAO0FbIc0cunlfGm1qn4akvnL+s7
+   w==;
+X-CSE-ConnectionGUID: ZLqtVhnGQlSsrk2xZLkxrA==
+X-CSE-MsgGUID: tpOmb7mtSJi1VOg+E3UOsw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="43659532"
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="43659532"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 02:51:21 -0700
+X-CSE-ConnectionGUID: Z7+alx1zRpiCWpJxw/4yVw==
+X-CSE-MsgGUID: N+PN98L3S6GSExa5zMtMwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="122549684"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.21])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 02:51:17 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 19 Mar 2025 11:51:14 +0200 (EET)
+To: Jon Pan-Doh <pandoh@google.com>
+cc: Bjorn Helgaas <bhelgaas@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Terry Bowman <Terry.bowman@amd.com>
+Subject: Re: [PATCH v3 7/8] PCI/AER: Add sysfs attributes for log
+ ratelimits
+In-Reply-To: <20250319084050.366718-8-pandoh@google.com>
+Message-ID: <2c71292f-dcbd-b00f-36da-fb1a9747427c@linux.intel.com>
+References: <20250319084050.366718-1-pandoh@google.com> <20250319084050.366718-8-pandoh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319062534.ollh3s5t7znf5zqs@uda0492258>
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG1PEPF000082E7:EE_|TYSPR06MB6900:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9dc306cf-f9af-4ae5-b6ac-08dd66c8c776
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?tgIQtoKrlMmWie5lenXMooAs9Whn9Kl8+q3easyt1ueI0+VfKxE/aKMP+44F?=
- =?us-ascii?Q?yMNOtYrJ68h/dWFWFdDRN67bAb8TvxU/iBw2H1xVKc5fUk7qzyQRZNqpE9ZU?=
- =?us-ascii?Q?g4d0s5zbclW23H5wfjY6a7VzUBytaZ9p4yXLJ7rEaVkh/zsDoTwExHrtvdKr?=
- =?us-ascii?Q?brTmnhIcsBU7bzEcEIqP4u7tS5GeB0di9ZcBDhaKny1O2Ca9E3k5NsFB9rUS?=
- =?us-ascii?Q?q97Gn34Kq2JqTkiPyH24L910/n1vZyrWwD4K1w0w7g86J4dZaIc8kiD94Mct?=
- =?us-ascii?Q?lpeWZ0eMCrlnZSRxXt3SbBPq+IEwkzF/rTjw3LbkygG4qRjKhe7jxqati7+A?=
- =?us-ascii?Q?adsymHpb2YDTeZD3qKfgiz4lWgWTmyyl84+fnQXX+xn+bQKN00AGngQr/Vr7?=
- =?us-ascii?Q?ssb2wYvea3YTy14U3IVCgkBBGfR56jD4utXPEbt/usHZ6TU4PB+NqmjDQod7?=
- =?us-ascii?Q?lrb4O6mSjbj8ZAF/rwjd9x3WXVPq4KUX1OJg7QWKCfT+6qUKEcnAD+U2/1rN?=
- =?us-ascii?Q?8Caxq1pW9gJXgCGxqePcvbxDisnNevCNE22YuhRfsemJRkYtf0hnN+SzQJuG?=
- =?us-ascii?Q?Kl7xH9bKOuYPo12Q2o3tD6pb+bnShiDFh5LhMh6iWyGtE//xwQxbe8nkYaZn?=
- =?us-ascii?Q?dxaj6cDGkt1RpKyI70Zsf3UnEXmf5S1CdZhKokN6sJir68PHdbOmxbxqrKu4?=
- =?us-ascii?Q?yqUDUrQ0P2Q+++0yyLt1Bf3ibEdetN3jxHLwU5CNU9LM6w3j7XWvWdmT6rmt?=
- =?us-ascii?Q?jP4m61SzJOuegpze/36XlfOZYgjeFWFk5WUo8MbLsF4k/asmSzsZ5z6Kn89T?=
- =?us-ascii?Q?J3hMDS89o4bPrVn+Qax/pv2WzSEbvTlxrIGfutk7giAZzcXLxIXUhSjxSOhy?=
- =?us-ascii?Q?+wOVKcT1fmm9SI9NWYbrkEniCBdLQZrNROn8wFHZe1ni3wVz4zA/cz03uC+l?=
- =?us-ascii?Q?yzxWGBXJQs71Bi3rCV3r4jIY35bufniJTTigHQEfCPCp2rQ8uXUHHsbxoMZv?=
- =?us-ascii?Q?XC8S8qxPeMgNSP8VizuQiXUT9+watp4aXLZLEr6+fBhvRey62TQ+SIhiC2q5?=
- =?us-ascii?Q?OYkykyRU1odGA1v21wmg5L6Tq6+y0PoRqGaoMzkkaeseonRX0uSEkayO4lbP?=
- =?us-ascii?Q?+cLGKSy1ggF+I+ogs6D7+eHRS6PZYeqm0fVoScoIYY2dcK6c0VEP8iFcHfNS?=
- =?us-ascii?Q?ftUrckhM3DYoALUdFuqYjPxkclQUc1UBIK534a6aIGKhKgZ0oc0E61pUauy8?=
- =?us-ascii?Q?0KBbaUOtt4z26Bqqli+aFMxgNTEiHCS0q3E7mr4w/AuA9WYZkAcNSwaf5OTH?=
- =?us-ascii?Q?2bZoKk/FabjcGiXhXlYaSnkGcz77YaNY1vDEBiR6doFS1i9kZa/CSCKw+Aat?=
- =?us-ascii?Q?04WYV5bCnSaVddm1IAR8KS2QgwUR5MGO2QyUrjOHR3kU3prSXRdHO9hAa0Br?=
- =?us-ascii?Q?wnvj4MSbtHFNXJuBLIv0iL2WoTC+dq6kB05+BRdvkdfZenaFSt25CHDzos+N?=
- =?us-ascii?Q?CpB52NGxutAXfVo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 09:31:08.0541
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9dc306cf-f9af-4ae5-b6ac-08dd66c8c776
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: SG1PEPF000082E7.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB6900
+Content-Type: text/plain; charset=US-ASCII
 
-On 25-03-19 14:25:34, Siddharth Vadapalli wrote:
-> > >
-> > > Hello,
-> > >
-> > > This series enables support to build the PCIe Cadence Controller drivers
-> > > and the PCI J721E Application/Wrapper/Glue driver as Loadable Kernel
-> > > Modules. The motivation for this series is that PCIe is not a necessity
-> > > for booting the SoC, due to which it doesn't have to be a built-in
-> > > module. Additionally, the defconfig doesn't enable the PCIe Cadence
-> > > Controller drivers and the PCI J721E driver, due to which PCIe is not
-> > > supported by default. Enabling the configs as of now (i.e. without this
-> > > series) will result in built-in drivers i.e. a bloated Linux Image for
-> > > everyone who doesn't have the PCIe Controller.
-> >
-> > If the user doesn't enable PCIe controller device through DTS/ACPI,
-> > that's doesn't matter.
-> 
-> The Linux Image for arm64 systems built using:
-> arch/arm64/configs/defconfig
-> will not have support for the Cadence PCIe Controller and the PCIe J721e
-> driver, because these configs aren't enabled.
-> 
-> >
-> > > @@ -209,6 +209,12 @@ CONFIG_NFC=m
-> > >  CONFIG_NFC_NCI=m
-> > >  CONFIG_NFC_S3FWRN5_I2C=m
-> > >  CONFIG_PCI=y
-> > > +CONFIG_PCI_J721E=m
-> > > +CONFIG_PCI_J721E_HOST=m
-> > > +CONFIG_PCI_J721E_EP=m
-> > > +CONFIG_PCIE_CADENCE=m
-> > > +CONFIG_PCIE_CADENCE_HOST=m
-> > > +CONFIG_PCIE_CADENCE_EP=m
-> >
-> > The common Cadence configuration will be select if the glue layer's
-> > configuration is select according to Kconfig.
-> >
-> > Please do not set common configuration as module, some user may need
-> > it as build-in like dw's. Considering the situation, the rootfs is at
-> > NVMe.
-> 
-> The common configuration at the moment is "DISABLED" i.e. no support for
-> the Cadence Controller at all. Which "user" are you referring to? This
-> series was introduced since having the drivers built-in was pushed back at:
+On Wed, 19 Mar 2025, Jon Pan-Doh wrote:
 
-We are using Cadence controller, and prepare upstream radxa-o6 board
-whose rootfs is at PCIe NVMe.
+> Allow userspace to read/write log ratelimits per device (including
+> enable/disable). Create aer/ sysfs directory to store them and any
+> future aer configs.
+> 
+> Tested using aer-inject[1]. Configured correctable log ratelimit to 5.
+> Sent 6 AER errors. Observed 5 errors logged while AER stats
+> (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) shows 6.
+> 
+> Disabled ratelimiting and sent 6 more AER errors. Observed all 6 errors
+> logged and accounted in AER stats (12 total errors).
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
+> 
+> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
+> ---
+>  .../testing/sysfs-bus-pci-devices-aer_stats   | 34 +++++++
+>  Documentation/PCI/pcieaer-howto.rst           |  3 +
+>  drivers/pci/pci-sysfs.c                       |  1 +
+>  drivers/pci/pci.h                             |  1 +
+>  drivers/pci/pcie/aer.c                        | 93 +++++++++++++++++++
+>  5 files changed, 132 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> index d1f67bb81d5d..4561653fdbde 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> @@ -117,3 +117,37 @@ Date:		July 2018
+>  KernelVersion:	4.19.0
+>  Contact:	linux-pci@vger.kernel.org, rajatja@google.com
+>  Description:	Total number of ERR_NONFATAL messages reported to rootport.
+> +
+> +PCIe AER ratelimits
+> +-------------------
+> +
+> +These attributes show up under all the devices that are AER capable.
+> +They represent configurable ratelimits of logs per error type.
+> +
+> +See Documentation/PCI/pcieaer-howto.rst for more info on ratelimits.
+> +
+> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_log_enable
+> +Date:		March 2025
+> +KernelVersion:	6.15.0
+> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
+> +Description:	Writing 1/0 enables/disables AER log ratelimiting. Reading
+> +		gets whether or not AER is currently enabled. Enabled by
+> +		default.
+> +
+> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_in_5secs_cor_log
+> +Date:		March 2025
+> +KernelVersion:	6.15.0
+> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
+> +Description:	Ratelimit burst for correctable error logs. Writing a value
+> +		changes the number of errors (burst) allowed per interval
+> +		(5 second window) before ratelimiting. Reading gets the
+> +		current ratelimit burst.
+> +
+> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_in_5secs_uncor_log
+> +Date:		March 2025
+> +KernelVersion:	6.15.0
+> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
+> +Description:	Ratelimit burst for uncorrectable error logs. Writing a
+> +		value changes the number of errors (burst) allowed per
+> +		interval (5 second window) before ratelimiting. Reading
+> +		gets the current ratelimit burst.
+> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
+> index 896d2a232a90..b45a2e18d1cf 100644
+> --- a/Documentation/PCI/pcieaer-howto.rst
+> +++ b/Documentation/PCI/pcieaer-howto.rst
+> @@ -96,6 +96,9 @@ type (correctable vs. uncorrectable).
+>  AER uses the default ratelimit of DEFAULT_RATELIMIT_BURST (10 events) over
+>  DEFAULT_RATELIMIT_INTERVAL (5 seconds).
+>  
+> +Ratelimits are exposed in the form of sysfs attributes and configurable.
+> +See Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats.
 
-You could build driver as module for TI glue layer, but don't force
-other vendors using module as well, see dwc as an example please.
+Why does the next patch immediately modify this? A patch series should try 
+to avoid back and forth changes like that.
 
 -- 
+ i.
 
-Best regards,
-Peter
+>  AER Statistics / Counters
+>  -------------------------
+>  
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index b46ce1a2c554..16de3093294e 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1801,6 +1801,7 @@ const struct attribute_group *pci_dev_attr_groups[] = {
+>  	&pcie_dev_attr_group,
+>  #ifdef CONFIG_PCIEAER
+>  	&aer_stats_attr_group,
+> +	&aer_attr_group,
+>  #endif
+>  #ifdef CONFIG_PCIEASPM
+>  	&aspm_ctrl_attr_group,
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 9d63d32f041c..34633fe12201 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -889,6 +889,7 @@ void pci_no_aer(void);
+>  void pci_aer_init(struct pci_dev *dev);
+>  void pci_aer_exit(struct pci_dev *dev);
+>  extern const struct attribute_group aer_stats_attr_group;
+> +extern const struct attribute_group aer_attr_group;
+>  void pci_aer_clear_fatal_status(struct pci_dev *dev);
+>  int pci_aer_clear_status(struct pci_dev *dev);
+>  int pci_aer_raw_clear_status(struct pci_dev *dev);
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 0bd20c4993d4..13227a94c9f9 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -631,6 +631,99 @@ const struct attribute_group aer_stats_attr_group = {
+>  	.is_visible = aer_stats_attrs_are_visible,
+>  };
+>  
+> +/*
+> + * Ratelimit enable toggle uses interval value of
+> + * 0: disabled
+> + * DEFAULT_RATELIMIT_INTERVAL: enabled
+> + */
+> +static ssize_t ratelimit_log_enable_show(struct device *dev,
+> +					 struct device_attribute *attr,
+> +					 char *buf)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	bool enable = pdev->aer_report->cor_log_ratelimit.interval != 0;
+> +
+> +	return sysfs_emit(buf, "%d\n", enable);
+> +}
+> +
+> +static ssize_t ratelimit_log_enable_store(struct device *dev,
+> +					  struct device_attribute *attr,
+> +					  const char *buf, size_t count)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	bool enable;
+> +	int interval;
+> +
+> +	if (kstrtobool(buf, &enable) < 0)
+> +		return -EINVAL;
+> +
+> +	if (enable)
+> +		interval = DEFAULT_RATELIMIT_INTERVAL;
+> +	else
+> +		interval = 0;
+> +
+> +	pdev->aer_report->cor_log_ratelimit.interval = interval;
+> +	pdev->aer_report->uncor_log_ratelimit.interval = interval;
+> +	return count;
+> +}
+> +static DEVICE_ATTR_RW(ratelimit_log_enable);
+> +
+> +/*
+> + * Ratelimits are doubled as a given error produces 2 logs (root port
+> + * and endpoint) that should be under same ratelimit.
+> + */
+> +#define aer_ratelimit_burst_attr(name, ratelimit)			\
+> +	static ssize_t							\
+> +	name##_show(struct device *dev, struct device_attribute *attr,	\
+> +		    char *buf)						\
+> +{									\
+> +	struct pci_dev *pdev = to_pci_dev(dev);				\
+> +	return sysfs_emit(buf, "%d\n",					\
+> +			  pdev->aer_report->ratelimit.burst / 2);	\
+> +}									\
+> +									\
+> +	static ssize_t							\
+> +	name##_store(struct device *dev, struct device_attribute *attr,	\
+> +		     const char *buf, size_t count)			\
+> +{									\
+> +	struct pci_dev *pdev = to_pci_dev(dev);				\
+> +	int burst;							\
+> +									\
+> +	if (kstrtoint(buf, 0, &burst) < 0)				\
+> +		return -EINVAL;						\
+> +									\
+> +	pdev->aer_report->ratelimit.burst = burst * 2;			\
+> +	return count;							\
+> +}									\
+> +static DEVICE_ATTR_RW(name)
+> +
+> +aer_ratelimit_burst_attr(ratelimit_in_5secs_cor_log, cor_log_ratelimit);
+> +aer_ratelimit_burst_attr(ratelimit_in_5secs_uncor_log, uncor_log_ratelimit);
+> +
+> +static struct attribute *aer_attrs[] = {
+> +	&dev_attr_ratelimit_log_enable.attr,
+> +	&dev_attr_ratelimit_in_5secs_cor_log.attr,
+> +	&dev_attr_ratelimit_in_5secs_uncor_log.attr,
+> +	NULL
+> +};
+> +
+> +static umode_t aer_attrs_are_visible(struct kobject *kobj,
+> +				     struct attribute *a, int n)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	if (!pdev->aer_report)
+> +		return 0;
+> +	return a->mode;
+> +}
+> +
+> +const struct attribute_group aer_attr_group = {
+> +	.name = "aer",
+> +	.attrs = aer_attrs,
+> +	.is_visible = aer_attrs_are_visible,
+> +};
+> +
+>  void pci_dev_aer_stats_incr(struct pci_dev *pdev, struct aer_err_info *info)
+>  {
+>  	unsigned long status = info->status & ~info->mask;
+> 
+
 
