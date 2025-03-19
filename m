@@ -1,300 +1,323 @@
-Return-Path: <linux-pci+bounces-24185-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24186-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB3D3A69BD3
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 23:12:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2C94A69BF3
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 23:21:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 24DA2188AA0C
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 22:12:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E87191892661
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 22:21:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1121219312;
-	Wed, 19 Mar 2025 22:11:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F04722144C8;
+	Wed, 19 Mar 2025 22:21:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="hthE3dox"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MbR9KpmN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazolkn19010002.outbound.protection.outlook.com [52.103.11.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB5D215792;
-	Wed, 19 Mar 2025 22:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.11.2
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742422316; cv=fail; b=plv4UzygNsx8SpdsvyYiTMgS1eBf7qOOXMgWOJbOPUMmlPXShSaRswNpiUMyiVgyMnvrMFdCtwzgq4i/illffOLFt5JdzsCc3g0M6rJE+LyLNc5M864VH33mCWEGwRly2lIFZ8ETBZBIoVWsfzfVnzAXUR5RIjXBCSo6rmkdS8w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742422316; c=relaxed/simple;
-	bh=Kn1a+I9o5gWGBnwjbvINiP8JzYWG+91LuaX1edVJuG4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ti6hg8LOQaMlTZud183c7Qkl7076ZETu+qJfSngZbIBrXkH0lqVlGGXv8GD0N5UachWMlrb9R5lGzJdVFbZQdQunpoy8ysjKOL2hPhgIn24lfDyTu5FTMHHu2I2OJbPLeENz2+x/COVz2w4oNHiP5Yb/5KjxJO038HHlW71QP2A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=hthE3dox; arc=fail smtp.client-ip=52.103.11.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RC9Kvqq4x7xPerd5dbf3bPTog1wY8mR+KCxy/G3IgfGXp7qazpTe4yx0S5qPbVhj1dyRJ0RvzXqdHHGvvLWMHpfDgp6rq7MUK4tpTk/xxUTLNogt5NvntlCRTL7kLEO3VKL7bwwMXlfxo8PrgWubdCGAAmsPbvzMCZjsXg40yxyymctDk+1opb8+lT1sPbbrWMShq2f9R6B4c8ZnO3ITAcQpakFSwJI4pWvw0/P9s2CUGZzZ2UzzrH+iD8oU9e7Xxly4BCabyF8j3QYpMfrNA3ndSY9RV/ZDKXZ2PFb5plmKBdBD6kIfpythVpHYCqKU7rPj1SifhIcEpcHPqS/REw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tQFCOMB/MiULmPkh5Xy/rPPwUgUOby8wHm3uz+yfWkc=;
- b=eNH8T+alDBEzsJC7urgJdOFmT3NSaUtiyg1t2qz9VMQVIdcTAK/7pKZ9oppma2n32ybz9GlMM+B1VsGK48KF9ShgBPTNQooggBcBNMApPJ9GVOAnJFLEvUuG8dKSch6u49RlKkPzU0oeJwIjwB3pDDlYw4FzbqBV16jMkRexMCU/kg54R07Gm4rYRslZpkkH6jgRBWKStHveo5bQRr0HJzRnSkawC2aqBdNHxhBPAT/DxdldbZCIIx+NqTGiI/aAU8SFhVYAbkh+tPaGFdgEId8Vx619PSdkVRbjcuq6CZBtPzfptC7yA7qaztwrQhZkmAZhCFFvakGeNJSCswUGgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tQFCOMB/MiULmPkh5Xy/rPPwUgUOby8wHm3uz+yfWkc=;
- b=hthE3doxrZR9614ReNP46tI0aweiWfuKHZysx47YSed8irq/M42qozIybZgjE67kFs8jQbx6/dK5eunNApxZq3x6teRQ4zJ6lX0OpHrNKmd34dx0bS1aWN8lsATThQfncDRrtQj1j6Pa2NMwejGW62UzTRu6xKAClX07aiJtqfVpyB0eDqJlUhosClrAhvP1mGHFGV9hpt6lXUMAEJ7n3yry/IzD58S9BMW6ZEmzHSUWhC3wj2Z/ot8eeaIf+9Lg9xxVTro7PVFGWS9W6qEs5OzB1ofSh15aVimqSNPJAUBCgvDLrr/3uI1VnJbQuUog21fNPpGzOaN1bLwck5qAeA==
-Received: from BN7PR02MB4148.namprd02.prod.outlook.com (2603:10b6:406:f6::17)
- by CH0PR02MB8167.namprd02.prod.outlook.com (2603:10b6:610:10c::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Wed, 19 Mar
- 2025 22:11:50 +0000
-Received: from BN7PR02MB4148.namprd02.prod.outlook.com
- ([fe80::1c3a:f677:7a85:4911]) by BN7PR02MB4148.namprd02.prod.outlook.com
- ([fe80::1c3a:f677:7a85:4911%4]) with mapi id 15.20.8534.034; Wed, 19 Mar 2025
- 22:11:50 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Mark Rutland <mark.rutland@arm.com>, Roman Kisel
-	<romank@linux.microsoft.com>
-CC: "arnd@arndb.de" <arnd@arndb.de>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"decui@microsoft.com" <decui@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "hpa@zytor.com" <hpa@zytor.com>,
-	"joey.gouly@arm.com" <joey.gouly@arm.com>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "kw@linux.com" <kw@linux.com>, "kys@microsoft.com"
-	<kys@microsoft.com>, "lenb@kernel.org" <lenb@kernel.org>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"maz@kernel.org" <maz@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, "rafael@kernel.org"
-	<rafael@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"sudeep.holla@arm.com" <sudeep.holla@arm.com>, "suzuki.poulose@arm.com"
-	<suzuki.poulose@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
-	<will@kernel.org>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>,
-	"apais@microsoft.com" <apais@microsoft.com>, "benhill@microsoft.com"
-	<benhill@microsoft.com>, "bperkins@microsoft.com" <bperkins@microsoft.com>,
-	"sunilmut@microsoft.com" <sunilmut@microsoft.com>
-Subject: RE: [PATCH hyperv-next v6 02/11] arm64: hyperv: Use SMCCC to detect
- hypervisor presence
-Thread-Topic: [PATCH hyperv-next v6 02/11] arm64: hyperv: Use SMCCC to detect
- hypervisor presence
-Thread-Index: AQHblUAkoBBQzsRuEEy6HcktK4WqQrN3N46AgAPUpyA=
-Date: Wed, 19 Mar 2025 22:11:50 +0000
-Message-ID:
- <BN7PR02MB414871F1A3D8EF3809391F2FD4D92@BN7PR02MB4148.namprd02.prod.outlook.com>
-References: <20250315001931.631210-1-romank@linux.microsoft.com>
- <20250315001931.631210-3-romank@linux.microsoft.com>
- <Z9gJlQgV3hm1kxY0@J2N7QTR9R3.cambridge.arm.com>
-In-Reply-To: <Z9gJlQgV3hm1kxY0@J2N7QTR9R3.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN7PR02MB4148:EE_|CH0PR02MB8167:EE_
-x-ms-office365-filtering-correlation-id: 229cfce5-568f-499c-4c76-08dd67330c29
-x-microsoft-antispam:
- BCL:0;ARA:14566002|8062599003|8060799006|461199028|15080799006|19110799003|41001999003|3412199025|102099032|440099028;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?GPNdOqi++imkAfkZkUaYXRz9UV5S6znkgcvOZRNEGPuuQ/atYyquKkVkcXgl?=
- =?us-ascii?Q?9c/PqOg6Uar8T7CG3KnOCuN/4P0cxnkXETXbaw1oNH5csn0Oz1hNhpsm6y15?=
- =?us-ascii?Q?D8gHahv0NpucjnJYvvfOH5TS15VLIBAMmyZm9l4872827DYclehrQPkY4A5+?=
- =?us-ascii?Q?5o/rnxCKfsMe3D/vgQHqXM0xq3OMgq6BSgXZj+evEPJImQf8WS+BgeuiLaJh?=
- =?us-ascii?Q?/Tia4qgEh1CnJSlemDNZqxoZ/tDSY5bGKFUzwm/prjiNOnOn6rSbMhEmMapU?=
- =?us-ascii?Q?6vPSFU4E6gTD7Wu5yyseusKRmBh3QGjDbBtxOjRikDwruNCJYXO5Mf+XVNdw?=
- =?us-ascii?Q?uYZItLplpJk0LM+KrfujHexSOj/ufFRPJ2HnoP/RVO019CGVqduI/o1A4JlD?=
- =?us-ascii?Q?xRkPMEIL2WbgEy1fKKq1L4tqHRbmrlwg7k44la9QZEpxauTwGcWXdj6HL1xf?=
- =?us-ascii?Q?9GFlxaU3GZO9wkoHAoUZHcc/JDya0sKSNMkedBzxpummVDKu7apKXDYuM8cC?=
- =?us-ascii?Q?WZfcqCHVCtRRjoNTz5+g1gUWenvAZNrsvj/QhKpc2zyDJERSArkg+9RlsTfr?=
- =?us-ascii?Q?QTTELp5LIPED8beqgQ6cqn53FXoA05JsX15WFTKxazRQZFXKWcNFj0Zg/3td?=
- =?us-ascii?Q?d5YoABI/Cm5fLDoTURJ7hodyD+g9Sgw99cUbrUyKVwsHta6GNsSoWH9OD67b?=
- =?us-ascii?Q?Q1Mpa3Z6cLSfY2vnKq/vr9TDDmAquS6yIKKQx8m8W6GCJ3LmqcWuM7+8J0PF?=
- =?us-ascii?Q?WKeBV1K78n2A4eGfihQpJgeYU0URQwGk5R6hDQCJK1xvnWlNupo11QhWpKgT?=
- =?us-ascii?Q?DjIV0OjHicYYHd754tWUojz2SlGrDLhxIPeiruHp4k/QmuKbMzsxHgdJByc/?=
- =?us-ascii?Q?whG1dqbJNpg/59OHXJyxFJhEHXFnIIEJWEDXflYiEEhO0h3uxxVldR+Ae/3L?=
- =?us-ascii?Q?oaGBb35+ucNE8ULk9Lj2V2U4/OD4lxtwD9l1pEHGUX5qvF6RGe3mhd7waU4K?=
- =?us-ascii?Q?bh8wOFQDVWseJl8PyqT/fG8q57xs6iTSY0x3tq4097xAuKG12TeqdF4DdE2p?=
- =?us-ascii?Q?eN/pwOkqcSGf2KCtlZChvl9oyAMTG8Tcgkn2ZDlOmPjOTvR70myAIYjZrr1H?=
- =?us-ascii?Q?CV16sw9r93gh?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?FrfF+qz+U2b94+727QUO675a2+QZC1MuPWEyOBMc7WjvL3hxqje3G4tEFTC/?=
- =?us-ascii?Q?XdGG4OtH/kuHgmxmzCtWFbZgZc0z7v+Io/Fr+Wp9aJAwtlLeAvOZS5ZarmrK?=
- =?us-ascii?Q?KrI7YByOC84Y4RYJIrVcnZ65tyQwvdlEYHhPncMW3xScfnV7Ysp/bQ1kCmx3?=
- =?us-ascii?Q?EMdycTj1PK0jaEuuQUcm/xWeOH/AXNzCFSZaktEtob8CarrgUWbpgLX2ydWC?=
- =?us-ascii?Q?WHq0UrEto2+Hw3NQ7LKivejGdAfyIgnCagrMDt7wm2BNApzyO71Auczl4YOx?=
- =?us-ascii?Q?2sH1XmtYiY2uGLNhd2GQw006OaeZdk/SMHCoWgM6H1ZsXcXLyfaizj8RMRX0?=
- =?us-ascii?Q?G7E0b9fz/XxARQzKXT30CalN/4lfb407pqJRs6MgJx0OU+lddcdb84KSHhTW?=
- =?us-ascii?Q?4PIgMn+1nsf2YiU4go+Osy7QKG/Qjf8Q9rXGBTCjLqNOroVhizFrrXpZFvoP?=
- =?us-ascii?Q?fe5TvzMi3xlkQ7na+tc5CvivEnBvgawMaIBbEHoRwmcprYLQCof6w8HxSmxm?=
- =?us-ascii?Q?9995TzcbA6AxF6kSsRYSsp7MiWILuwZKZOww5RUfS98qQwR6v5ycrqLXaY1O?=
- =?us-ascii?Q?gxkbh3wmgV5WUU/I5qxCY2JjeCtiHpcqdXExjLZveWuFkIhVh+SXcW2RFdvQ?=
- =?us-ascii?Q?7kdxtxuvXUR9gmbXNRHrfSNzZQDxb8oFZsbsFkIzWlRMKHxFGCq9eff9P3/s?=
- =?us-ascii?Q?6ilQdEud2GJvYEcn6xKxOWbef9QGomA3wqOf6NwwulkTGwm997aWbuAu2FLI?=
- =?us-ascii?Q?RskdUZ594yqzAOeCgdcEDIZrvWmadFnN+OOiCoYtJq4zrpLtRRFqPjP03BDc?=
- =?us-ascii?Q?2h71bbx8SjkC7UgGfdRT0RLvvVuqKxTVzqYWOEVD5rorF9srHfsGSlPXiwlG?=
- =?us-ascii?Q?pZd5+gfh5zJqr+huyom1VGx8klxtn5LdBLmsVT6iN0FpVHBb8mKGKbIF6UBM?=
- =?us-ascii?Q?7AV0RFiMcsgwFHHv9GHBUunkbXpwMpWRMglKZ1YDl9a7i3gvoBJIFw/R1AX5?=
- =?us-ascii?Q?TbWmfIS4OMaYg4kWwUzLmgkVzJwZRRF+1ZB2oBfkDq2k16VVhTfbOmmO5/H7?=
- =?us-ascii?Q?9sHHunYfMRVGLlCh+85rA5lmfAo0QNC8GO9tO/7IYb2DWT8kzb1cdBBCe45l?=
- =?us-ascii?Q?f4xSYjnywM8qNg7HvPzaAf5aUcBng1Xo5CipzvFHFuY85lY4p4OBxktG0bR9?=
- =?us-ascii?Q?9Jr7P5zTnWRgX/bblPZPZMK6r8+1TDcAa4fXg7gAUsI7bNaecm0O1/uHP64?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55551BD9C7
+	for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 22:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742422882; cv=none; b=k5vqAcr145AZZaxKYz66w4ZsgHHbkMz5gpMwUaU9o1vCyt0+EX8KSh07QRl1j4aGP1Azs0JJzq5FZ0TOH+mE9kozs93ZdkOuzv6gPtTw+FpH26LNbGiylOqVPhze247gXix9deU3nGp/p7fBhnASycUunTTJRF+T+sZWbLbOjJM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742422882; c=relaxed/simple;
+	bh=aHwaF2XqOo84yuDl4agNQt2TLSqtrIugjXKLgx3OoYQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=eLteBqyhaUdhacb4x45UrRoiX6AQ+FzOsC8KnniiOqTJvrG5jl8gRayEEaxYC85NF+HWAW0XrS3U8/4R62MkJyvs88Y+jL0Xmqa+vsYWIl8ks93s1xxQi9MhhUiJbV1SYbPNcgD+NEDV/noYezTxs2kxlwKx9vdxoYfHkmjPhdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MbR9KpmN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E357C4CEE4;
+	Wed, 19 Mar 2025 22:21:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742422882;
+	bh=aHwaF2XqOo84yuDl4agNQt2TLSqtrIugjXKLgx3OoYQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=MbR9KpmNYIjE4m91Y+DsaIb2+bKU33FkGQSFgby/5Xm1sUqapjUGeWEwrjCj0IiyL
+	 hc8ntsxv0qbTtiLkcufmkJg5anoq9RHppxqhuHdg3gWB1GTNBbdLxr51u/0LhUGBS9
+	 k/15jZx5F+c7USdlk4pz2hXS5l3XRWGbm9RhIKoRyJ6wIMwbIpgftCKqddByUbN66b
+	 GBWsdqlSRF/nuOWam7JNnRbXhSCVyYlivc/AtLmM5Sfv6gC6R88xJXJ6LBdT5kITGp
+	 8h2jltJWMTFNUVKaq1z/GXAH0V7k6nB5d2pEwX4mirrK18X5lW2wqlkpA32TSmoltv
+	 U9NWXQYNXAvsw==
+Date: Wed, 19 Mar 2025 17:21:20 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Karolina Stolarek <karolina.stolarek@oracle.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Jon Pan-Doh <pandoh@google.com>,
+	Terry Bowman <terry.bowman@amd.com>, Len Brown <lenb@kernel.org>,
+	James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Ben Cheatham <Benjamin.Cheatham@amd.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Liu Xinpeng <liuxp11@chinatelecom.cn>,
+	Darren Hart <darren@os.amperecomputing.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH] PCI/AER: Consolidate CXL and native AER reporting paths
+Message-ID: <20250319222120.GA1064967@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR02MB4148.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 229cfce5-568f-499c-4c76-08dd67330c29
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2025 22:11:50.1092
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR02MB8167
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8bcb8c9a7b38ce3bdaca5a64fe76f08b0b337511.1742202797.git.karolina.stolarek@oracle.com>
 
-From: Mark Rutland <mark.rutland@arm.com> Sent: Monday, March 17, 2025 4:38=
- AM
->=20
-> On Fri, Mar 14, 2025 at 05:19:22PM -0700, Roman Kisel wrote:
-> > The arm64 Hyper-V startup path relies on ACPI to detect
-> > running under a Hyper-V compatible hypervisor. That
-> > doesn't work on non-ACPI systems.
-> >
-> > Hoist the ACPI detection logic into a separate function. Then
-> > use the vendor-specific hypervisor service call (implemented
-> > recently in Hyper-V) via SMCCC in the non-ACPI case.
-> >
-> > Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> > Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-> > ---
-> >  arch/arm64/hyperv/mshyperv.c | 43 +++++++++++++++++++++++++++++++-----
-> >  1 file changed, 38 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.=
-c
-> > index 2265ea5ce5ad..c5b03d3af7c5 100644
-> > --- a/arch/arm64/hyperv/mshyperv.c
-> > +++ b/arch/arm64/hyperv/mshyperv.c
-> > @@ -27,6 +27,41 @@ int hv_get_hypervisor_version(union
-> hv_hypervisor_version_info *info)
-> >  	return 0;
-> >  }
-> >
-> > +static bool __init hyperv_detect_via_acpi(void)
-> > +{
-> > +	if (acpi_disabled)
-> > +		return false;
-> > +#if IS_ENABLED(CONFIG_ACPI)
-> > +	/*
-> > +	 * Hypervisor ID is only available in ACPI v6+, and the
-> > +	 * structure layout was extended in v6 to accommodate that
-> > +	 * new field.
-> > +	 *
-> > +	 * At the very minimum, this check makes sure not to read
-> > +	 * past the FADT structure.
-> > +	 *
-> > +	 * It is also needed to catch running in some unknown
-> > +	 * non-Hyper-V environment that has ACPI 5.x or less.
-> > +	 * In such a case, it can't be Hyper-V.
-> > +	 */
-> > +	if (acpi_gbl_FADT.header.revision < 6)
-> > +		return false;
-> > +	return strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8) =
-=3D=3D 0;
-> > +#else
-> > +	return false;
-> > +#endif
-> > +}
-> > +
->=20
-> The 'acpi_disabled' variable doesn't exist for !CONFIG_ACPI, so its use
-> prior to the ifdeffery looks misplaced.
+[+cc ACPI APEI reviewers and more CXL folks]
 
-FWIW, include/linux/acpi.h has=20
+On Mon, Mar 17, 2025 at 10:14:46AM +0000, Karolina Stolarek wrote:
+> Make CXL devices use aer_print_error() when reporting AER errors.
+> Add a helper function to populate aer_err_info struct before logging
+> an error. Move struct aer_err_info definition to the aer.h header
+> to make it visible to CXL.
 
-#define acpi_disabled 1
+Previously, pci_print_aer() was used by both CXL (via
+cxl_handle_rdport_errors()) and by ACPI GHES via aer_recover_queue()
+and aer_recover_work_func(), right?
 
-when !CONFIG_ACPI.  But I agree that using a stub is better.
+And after this patch, they would use aer_print_error() like native 
+AER, native DPC, and the ACPI EDR DPC path?
 
-Michael
+If it changes the GHES path, I think we should mention that in the
+subject and commit log as well.
 
->=20
-> Usual codestyle is to avoid ifdeffery if possible, using IS_ENABLED().
-> Otherwise, use a stub, e.g.
->=20
-> | #ifdef CONFIG_ACPI
-> | static bool __init hyperv_detect_via_acpi(void)
-> | {
-> | 	if (acpi_disabled)
-> | 		return false;
-> |
-> | 	if (acpi_gbl_FADT.header.revision < 6)
-> | 		return false;
-> |
-> | 	return strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8) =
-=3D=3D 0;
-> | }
-> | #else
-> | static inline bool hyperv_detect_via_acpi(void) { return false; }
-> | #endif
->=20
-> Mark.
->=20
-> > +static bool __init hyperv_detect_via_smccc(void)
-> > +{
-> > +	uuid_t hyperv_uuid =3D UUID_INIT(
-> > +		0x4d32ba58, 0x4764, 0xcd24,
-> > +		0x75, 0x6c, 0xef, 0x8e,
-> > +		0x24, 0x70, 0x59, 0x16);
-> > +
-> > +	return arm_smccc_hyp_present(&hyperv_uuid);
-> > +}
-> > +
-> >  static int __init hyperv_init(void)
-> >  {
-> >  	struct hv_get_vp_registers_output	result;
-> > @@ -35,13 +70,11 @@ static int __init hyperv_init(void)
-> >
-> >  	/*
-> >  	 * Allow for a kernel built with CONFIG_HYPERV to be running in
-> > -	 * a non-Hyper-V environment, including on DT instead of ACPI.
-> > +	 * a non-Hyper-V environment.
-> > +	 *
-> >  	 * In such cases, do nothing and return success.
-> >  	 */
-> > -	if (acpi_disabled)
-> > -		return 0;
-> > -
-> > -	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
-> > +	if (!hyperv_detect_via_acpi() && !hyperv_detect_via_smccc())
-> >  		return 0;
-> >
-> >  	/* Setup the guest ID */
-> > --
-> > 2.43.0
-> >
+I think this consolidation is a good thing, because I don't think we
+should log errors differently just because we learned about them via a
+different path.  
 
+But I think this also changes the text we put in dmesg, which is
+potentially disruptive to users and scripts that consume it, so I
+think we should include a comparison of the previous and new text in
+the commit log.
+
+Eventually would like an ack from the CXL and GHES folks before
+merging, but I have a couple more questions below.
+
+> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> ---
+> The patch was tested on the top of Terry Bowman's series[1], with
+> a setup as outlined in the cover letter, and rebased on the top
+> of pci-next, with no functional changes.
+> 
+> [1] -
+> https://lore.kernel.org/linux-pci/20250211192444.2292833-1-terry.bowman@amd.com
+> 
+>  drivers/cxl/core/pci.c |  5 +++-
+>  drivers/pci/pci.h      | 23 ----------------
+>  drivers/pci/pcie/aer.c | 60 ++++++++++++++++++------------------------
+>  include/linux/aer.h    | 25 ++++++++++++++++--
+>  4 files changed, 52 insertions(+), 61 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 013b869b66cb..217f13c30bde 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -871,6 +871,7 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
+>  {
+>  	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+>  	struct aer_capability_regs aer_regs;
+> +	struct aer_err_info info;
+>  	struct cxl_dport *dport;
+>  	int severity;
+>  
+> @@ -885,7 +886,9 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
+>  	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
+>  		return;
+>  
+> -	pci_print_aer(pdev, severity, &aer_regs);
+> +	memset(&info, 0, sizeof(info));
+> +	populate_aer_err_info(&info, severity, &aer_regs);
+
+Maybe the memset() should go inside populate_aer_err_info() to avoid
+potential error in the callers?  I'm guessing we don't envision a case
+where "info" already contains data that needs to be preserved?
+
+Both GHES and CXL start with struct aer_capability_regs from
+include/linux/aer.h, so instead of also exposing struct aer_err_info
+to the world, maybe we should have a logging interface like
+aer_recover_queue() that takes a struct aer_capability_regs pointer
+that CXL could use?  Or maybe it could use aer_recover_queue()
+directly?
+
+> +	aer_print_error(pdev, &info);
+>  
+>  	if (severity == AER_CORRECTABLE)
+>  		cxl_handle_rdport_cor_ras(cxlds, dport);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 9e0378fa30ac..b799c2ff7b85 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -561,30 +561,7 @@ static inline bool pci_dev_test_and_set_removed(struct pci_dev *dev)
+>  #ifdef CONFIG_PCIEAER
+>  #include <linux/aer.h>
+>  
+> -#define AER_MAX_MULTI_ERR_DEVICES	5	/* Not likely to have more */
+> -
+> -struct aer_err_info {
+> -	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+> -	int error_dev_num;
+> -
+> -	unsigned int id:16;
+> -
+> -	unsigned int severity:2;	/* 0:NONFATAL | 1:FATAL | 2:COR */
+> -	unsigned int __pad1:5;
+> -	unsigned int multi_error_valid:1;
+> -
+> -	unsigned int first_error:5;
+> -	unsigned int __pad2:2;
+> -	unsigned int tlp_header_valid:1;
+> -
+> -	unsigned int status;		/* COR/UNCOR Error Status */
+> -	unsigned int mask;		/* COR/UNCOR Error Mask */
+> -	struct pcie_tlp_log tlp;	/* TLP Header */
+> -};
+> -
+>  int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
+> -void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+> -
+>  int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
+>  		      unsigned int tlp_len, bool flit,
+>  		      struct pcie_tlp_log *log);
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index a1cf8c7ef628..411450ff981e 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -760,47 +760,33 @@ int cper_severity_to_aer(int cper_severity)
+>  EXPORT_SYMBOL_GPL(cper_severity_to_aer);
+>  #endif
+>  
+> -void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> -		   struct aer_capability_regs *aer)
+> +void populate_aer_err_info(struct aer_err_info *info, int aer_severity,
+> +			   struct aer_capability_regs *regs)
+>  {
+> -	int layer, agent, tlp_header_valid = 0;
+> -	u32 status, mask;
+> -	struct aer_err_info info;
+> +	int tlp_header_valid;
+> +
+> +	info->severity = aer_severity;
+> +	info->first_error = PCI_ERR_CAP_FEP(regs->cap_control);
+>  
+>  	if (aer_severity == AER_CORRECTABLE) {
+> -		status = aer->cor_status;
+> -		mask = aer->cor_mask;
+> +		info->id = regs->cor_err_source;
+> +		info->status = regs->cor_status;
+> +		info->mask = regs->cor_mask;
+>  	} else {
+> -		status = aer->uncor_status;
+> -		mask = aer->uncor_mask;
+> -		tlp_header_valid = status & AER_LOG_TLP_MASKS;
+> +		info->id = regs->uncor_err_source;
+> +		info->status = regs->uncor_status;
+> +		info->mask = regs->uncor_mask;
+> +		tlp_header_valid = info->status & AER_LOG_TLP_MASKS;
+> +
+> +		if (tlp_header_valid) {
+> +			info->tlp_header_valid = tlp_header_valid;
+> +			info->tlp = regs->header_log;
+> +		}
+>  	}
+> +}
+> +EXPORT_SYMBOL_NS_GPL(populate_aer_err_info, "CXL");
+>  
+> -	layer = AER_GET_LAYER_ERROR(aer_severity, status);
+> -	agent = AER_GET_AGENT(aer_severity, status);
+> -
+> -	memset(&info, 0, sizeof(info));
+> -	info.severity = aer_severity;
+> -	info.status = status;
+> -	info.mask = mask;
+> -	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
+> -
+> -	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+> -	__aer_print_error(dev, &info);
+> -	pci_err(dev, "aer_layer=%s, aer_agent=%s\n",
+> -		aer_error_layer[layer], aer_agent_string[agent]);
+> -
+> -	if (aer_severity != AER_CORRECTABLE)
+> -		pci_err(dev, "aer_uncor_severity: 0x%08x\n",
+> -			aer->uncor_severity);
+> -
+> -	if (tlp_header_valid)
+> -		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+>  
+> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+> -			aer_severity, tlp_header_valid, &aer->header_log);
+> -}
+> -EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+>  
+>  /**
+>   * add_error_device - list device to be handled
+> @@ -1136,6 +1122,7 @@ static void aer_recover_work_func(struct work_struct *work)
+>  {
+>  	struct aer_recover_entry entry;
+>  	struct pci_dev *pdev;
+> +	struct aer_err_info info;
+>  
+>  	while (kfifo_get(&aer_recover_ring, &entry)) {
+>  		pdev = pci_get_domain_bus_and_slot(entry.domain, entry.bus,
+> @@ -1146,7 +1133,10 @@ static void aer_recover_work_func(struct work_struct *work)
+>  			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
+>  			continue;
+>  		}
+> -		pci_print_aer(pdev, entry.severity, entry.regs);
+> +
+> +		memset(&info, 0, sizeof(info));
+> +		populate_aer_err_info(&info, entry.severity, entry.regs);
+> +		aer_print_error(pdev, &info);
+>  
+>  		/*
+>  		 * Memory for aer_capability_regs(entry.regs) is being
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index 02940be66324..ab408ec18e85 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -53,6 +53,26 @@ struct aer_capability_regs {
+>  	u16 uncor_err_source;
+>  };
+>  
+> +#define AER_MAX_MULTI_ERR_DEVICES	5	/* Not likely to have more */
+> +struct aer_err_info {
+> +	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+> +	int error_dev_num;
+> +
+> +	unsigned int id:16;
+> +
+> +	unsigned int severity:2;	/* 0:NONFATAL | 1:FATAL | 2:COR */
+> +	unsigned int __pad1:5;
+> +	unsigned int multi_error_valid:1;
+> +
+> +	unsigned int first_error:5;
+> +	unsigned int __pad2:2;
+> +	unsigned int tlp_header_valid:1;
+> +
+> +	unsigned int status;		/* COR/UNCOR Error Status */
+> +	unsigned int mask;		/* COR/UNCOR Error Mask */
+> +	struct pcie_tlp_log tlp;	/* TLP Header */
+> +};
+> +
+>  #if defined(CONFIG_PCIEAER)
+>  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>  int pcie_aer_is_native(struct pci_dev *dev);
+> @@ -64,8 +84,9 @@ static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+>  #endif
+>  
+> -void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> -		    struct aer_capability_regs *aer);
+> +void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+> +void populate_aer_err_info(struct aer_err_info *info, int aer_severity,
+> +			   struct aer_capability_regs *regs);
+>  int cper_severity_to_aer(int cper_severity);
+>  void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
+>  		       int severity, struct aer_capability_regs *aer_regs);
+> -- 
+> 2.43.5
+> 
 
