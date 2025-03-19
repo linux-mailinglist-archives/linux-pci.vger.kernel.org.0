@@ -1,141 +1,184 @@
-Return-Path: <linux-pci+bounces-24086-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24087-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D12F3A688DD
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 10:55:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBF70A688F6
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 11:00:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 22BFF166A3A
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 09:52:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD86D3A6795
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 09:55:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 192F730100;
-	Wed, 19 Mar 2025 09:52:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C1BA250C0E;
+	Wed, 19 Mar 2025 09:55:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RtDyKO44"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ErJXr9Px"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F371C5D65
-	for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 09:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC7B1F4CBE
+	for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 09:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742377963; cv=none; b=t44wyIwUXGBi7YACjt2fybCeJ/4L34tBgSTgtKIy1/yvSQl+n9bJpRRcX5hj5g/DYUweP1V4Oj1CWl1+FgKo95rEP46ULSWVsKBWSqNTXyDMBAVHwfZ+JH0BCDGGyi0w7k6Yh8GR9wkri+ky8T1TLA0hQyVFb9pq73gRYNyGyVw=
+	t=1742378122; cv=none; b=HLz9rM+/XGXArfgisZNOImJa5jSbD1qvLNnvEW+/XwES1+hXjvan28yd6T9rAzJdWlREP5bEBZtRMN5Z8svQ8si90QaJMs2NHeDTXp/aFsMs5Y7M3ppVjsi88IAPLvDL8aqhFvzJBc9FFsp9HVh1dnu9nE9RDkN/M2eug3Qr9h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742377963; c=relaxed/simple;
-	bh=T5LftzC6kQOYomWNFvTVs+zW5dhR7pm6qdyMujwdkSk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=myenTh1kuxTiRegGAXHchXdC5vQObW7eaWKQLuAVV8B8HnNLXVWiYR5G8oXyY5SUxohgDQMyzRDJThTWCLpAsziRWO8+4FO/U93L0WSq69MmsneCkLxD9O7EqYjZrQjHZcHPx9mSoXwQM19F+yDiPn9D3rc180nnxFBiDDiV0lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RtDyKO44; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742377961; x=1773913961;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=T5LftzC6kQOYomWNFvTVs+zW5dhR7pm6qdyMujwdkSk=;
-  b=RtDyKO449m2kNEGQgO7eCn0x/RNzvJgKYk7Oi6FTpdWr+hAWxaeYw8co
-   evWHd9ZtNb3hqBJHFT2FGPjq9wyFmu7HVYweun60Lys5WCNMcqgarcjFK
-   3zG2qUkIXXT/pTmBAnf/Qt+OPPWi5R8iQa+I1eTmkr1rRda5jLY0gpvPc
-   EBYUYcy9pHJlTILaxLSvdNeLM6YyhfAUupo2Zfj7utkHZt+XFUz1+Wv5E
-   GHO3qS+W2pWpgDYbALVRwztW3D+iQxHndOCGR3MBt8vaIhKITzEgk0NIt
-   EYmRHR7lnrtygG5eRL3Uz7bGECFh7spzGPQwvdxr6VjaxxhM33Tdtz0wj
-   w==;
-X-CSE-ConnectionGUID: uHHk2G0UTsCAZEaeD6nioQ==
-X-CSE-MsgGUID: 0S6xWgsQTcu+4j67rNAmfw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="53773494"
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="53773494"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 02:52:39 -0700
-X-CSE-ConnectionGUID: oasudJ+vT1aD+3J/KWJf+g==
-X-CSE-MsgGUID: EqNj6PGNQ+iV1CrBijfeJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="122717223"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.21])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 02:52:34 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 19 Mar 2025 11:52:31 +0200 (EET)
-To: Jon Pan-Doh <pandoh@google.com>
-cc: Bjorn Helgaas <bhelgaas@google.com>, 
-    Karolina Stolarek <karolina.stolarek@oracle.com>, 
-    linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
-    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Lukas Wunner <lukas@wunner.de>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-    Terry Bowman <Terry.bowman@amd.com>
-Subject: Re: [PATCH v3 2/8] PCI/AER: Make all pci_print_aer() log levels
- depend on error type
-In-Reply-To: <20250319084050.366718-3-pandoh@google.com>
-Message-ID: <75e10cc0-2690-f55e-409b-bf1f1dddaeae@linux.intel.com>
-References: <20250319084050.366718-1-pandoh@google.com> <20250319084050.366718-3-pandoh@google.com>
+	s=arc-20240116; t=1742378122; c=relaxed/simple;
+	bh=hBOe4eClj0gkWkRr8z2a+nIUH8GY5enRwn+OsacCLh0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PBtNoRYjL9b/ZrpT7xcENgsHszGQaNQAPsucQd99/4fK6c444U0FEUFLsN39eUBAqbVx3cyeKmtwW05e1a6KO4wCP+myi3pJo8FMEnsIf74D3QaO7dvgPXuChXGzKlm9BTns2i/3eg1jvAtAZL6twwijyrTmBvTV7U2JFVtwmw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ErJXr9Px; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2239c066347so141607665ad.2
+        for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 02:55:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742378120; x=1742982920; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WnVvGzQPAnyj4mnUyy5QvfWa2P714m+BjFv+31OFFM4=;
+        b=ErJXr9Px3IqX5NAhegRhH0YTyzIiSSt18QCZSc7CbbWB0wWVj60R4jSC/BQoWDDvsW
+         Az95PgUrJN/BQKQFlid8MV4mKxENbxdaPRDyWHMz9Z69Lr3os6saXGy7XSGq9AOEOyq2
+         jPprev0z9MCzhl7WHjMEeXsHgx6bUZ/H3m2SoMmjyUZfq9ypJ5ELD1wqM8cqWt/4w53/
+         BxYxdb8xLujafjHw92djc5uP1OeLdyVSdxS6UGBbfZ+72WY28EtL2kzsQRX9JjKB2k/4
+         Tt1OJxXZEmZocVNzfyOfAfWXn1Zx05zj44LEkAvgfvd3n8mcWcJCrbSqh1t+CKCh6rfq
+         tEgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742378120; x=1742982920;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WnVvGzQPAnyj4mnUyy5QvfWa2P714m+BjFv+31OFFM4=;
+        b=sGEBF2scCwdL2R8VLxiSWON26JWeqhJ4WFjmh0M1w4dvyAZsSAgzimUXTAFMNU6zZt
+         prN63GM/08BKMClbmqRwQEOwU3EBOFbngmpysyJ/7/UYd+Yr+ge/O+gAb6v+1yvVoHwx
+         8XObONGmYc3oh7mbO9bKICWu5usvCvj5KBZgtkNHDf1/M+irctoVClf7BuHD2n6lkNxn
+         lY+PtF5EXv9hSRMDmkH/m8xiRl7o08WxJnoEklYHtBxlHzxrFMiqfwZpDymdqt/MT0Z+
+         +zFaW577sDoqJFEUPw8c+mXGMf4XIlWS8srAGOuRszCK7QaKI7IKuIHU0PEgw2B2o6B8
+         mgEw==
+X-Forwarded-Encrypted: i=1; AJvYcCXRTA40xMgJqYxRVBnEx9n9OwIWKhFfHFCLlHrfdihnfN/KO4yeC+kSMnwQpKx+am6CwWeo6lQIZ5c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFeAxS2KLmKQKGQ/83M724yAGgFIZsaNSMSJy0NTRZv3TWISeI
+	PvnoEOeUOtdStyrcr2EDWupX2O4Ms9hsSLAQ44bwdXUcK/5Ik65a6/sBOB68kg==
+X-Gm-Gg: ASbGncv2NlMMPDQaSa2mQ/qSE6/vEP21VK9KWmUbJlZTbeWYhHrJUhktSILJr/zVmI+
+	IZtLWqt23xFhCSKS9m/9SvucQ+UsorrdnknTClXaEHjNu/M84RD4RgJxgVMqBNsm3TS1mqLQOLN
+	ZNJRMQIsYb1hWZP0ixnH50W6EMO5tdC3F4pYMSMEAo5dYm/9uzEHgwPKLEOQSIb+dTB/zl1DmAp
+	kBFu7Z8ajEHG1GvFaldVTkGZ0OiihF7Uzt/pncGQiXZDYO/ouvJW51bwfOSqfxq5iPJZbK7Ikkf
+	ysiaqo/bZdXCipC+xjTrmynZRJXg0TP3VWpJm/ibxANsy5kc3irTBlM=
+X-Google-Smtp-Source: AGHT+IGY1KwFvtNIJJm5MS9eiMIfZ3YUeAX6DKMaBqQ27dy8OhBjwCrp+JyiEaWtexFKt71h73MydQ==
+X-Received: by 2002:a05:6a00:9a4:b0:736:3c2f:acdd with SMTP id d2e1a72fcca58-7376d645bcemr3514839b3a.14.1742378119616;
+        Wed, 19 Mar 2025 02:55:19 -0700 (PDT)
+Received: from thinkpad ([120.60.70.130])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56ea0511bsm10473365a12.45.2025.03.19.02.55.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 02:55:19 -0700 (PDT)
+Date: Wed, 19 Mar 2025 15:25:11 +0530
+From: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
+To: Peter Chen <peter.chen@cixtech.com>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"vigneshr@ti.com" <vigneshr@ti.com>,
+	"kishon@kernel.org" <kishon@kernel.org>,
+	"cassel@kernel.org" <cassel@kernel.org>,
+	"wojciech.jasko-EXT@continental-corporation.com" <wojciech.jasko-EXT@continental-corporation.com>,
+	"thomas.richard@bootlin.com" <thomas.richard@bootlin.com>,
+	"bwawrzyn@cisco.com" <bwawrzyn@cisco.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"srk@ti.com" <srk@ti.com>
+Subject: Re: [PATCH 0/4] Loadable Module support for PCIe Cadence and J721E
+Message-ID: <20250319095511.hf3y2c6vbbnm3ien@thinkpad>
+References: <20250307103128.3287497-1-s-vadapalli@ti.com>
+ <Z9pffxeXHVOsoi4O@nchen-desktop>
+ <20250319062534.ollh3s5t7znf5zqs@uda0492258>
+ <Z9qO1f5MgNcwO5A4@nchen-desktop>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-59666235-1742377951=:988"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z9qO1f5MgNcwO5A4@nchen-desktop>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, Mar 19, 2025 at 05:31:01PM +0800, Peter Chen wrote:
+> On 25-03-19 14:25:34, Siddharth Vadapalli wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > This series enables support to build the PCIe Cadence Controller drivers
+> > > > and the PCI J721E Application/Wrapper/Glue driver as Loadable Kernel
+> > > > Modules. The motivation for this series is that PCIe is not a necessity
+> > > > for booting the SoC, due to which it doesn't have to be a built-in
+> > > > module. Additionally, the defconfig doesn't enable the PCIe Cadence
+> > > > Controller drivers and the PCI J721E driver, due to which PCIe is not
+> > > > supported by default. Enabling the configs as of now (i.e. without this
+> > > > series) will result in built-in drivers i.e. a bloated Linux Image for
+> > > > everyone who doesn't have the PCIe Controller.
+> > >
+> > > If the user doesn't enable PCIe controller device through DTS/ACPI,
+> > > that's doesn't matter.
+> > 
+> > The Linux Image for arm64 systems built using:
+> > arch/arm64/configs/defconfig
+> > will not have support for the Cadence PCIe Controller and the PCIe J721e
+> > driver, because these configs aren't enabled.
+> > 
+> > >
+> > > > @@ -209,6 +209,12 @@ CONFIG_NFC=m
+> > > >  CONFIG_NFC_NCI=m
+> > > >  CONFIG_NFC_S3FWRN5_I2C=m
+> > > >  CONFIG_PCI=y
+> > > > +CONFIG_PCI_J721E=m
+> > > > +CONFIG_PCI_J721E_HOST=m
+> > > > +CONFIG_PCI_J721E_EP=m
+> > > > +CONFIG_PCIE_CADENCE=m
+> > > > +CONFIG_PCIE_CADENCE_HOST=m
+> > > > +CONFIG_PCIE_CADENCE_EP=m
+> > >
+> > > The common Cadence configuration will be select if the glue layer's
+> > > configuration is select according to Kconfig.
+> > >
+> > > Please do not set common configuration as module, some user may need
+> > > it as build-in like dw's. Considering the situation, the rootfs is at
+> > > NVMe.
+> > 
+> > The common configuration at the moment is "DISABLED" i.e. no support for
+> > the Cadence Controller at all. Which "user" are you referring to? This
+> > series was introduced since having the drivers built-in was pushed back at:
+> 
+> We are using Cadence controller, and prepare upstream radxa-o6 board
+> whose rootfs is at PCIe NVMe.
+> 
 
---8323328-59666235-1742377951=:988
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+It doesn't matter. Only criteria AFAIK to build the driver as built-in in
+defconfig is that it should be a depedency for console. For some time, storage
+was also a dependency, but for sure PCIe is not.
 
-On Wed, 19 Mar 2025, Jon Pan-Doh wrote:
+Moreover, CONFIG_BLK_DEV_NVME is built as a module in ARM64 defconfig. So it
+doesn't matter if you build PCIe controller driver as a built-in or not. You
+need to load the NVMe driver somehow.
 
-> From: Karolina Stolarek <karolina.stolarek@oracle.com>
->=20
-> Some existing logs in pci_print_aer() log with error severity
-> by default. Convert them to depend on error type (consistent
-> with rest of AER logging).
->=20
-> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
-> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
-> ---
->  drivers/pci/pcie/aer.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index cc9c80cd88f3..7eeaad917134 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -784,14 +784,14 @@ void pci_print_aer(struct pci_dev *dev, int aer_sev=
-erity,
->  =09info.mask =3D mask;
->  =09info.first_error =3D PCI_ERR_CAP_FEP(aer->cap_control);
-> =20
-> -=09pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
-> +=09aer_printk(level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", stat=
-us, mask);
->  =09__aer_print_error(dev, &info, level);
-> -=09pci_err(dev, "aer_layer=3D%s, aer_agent=3D%s\n",
-> -=09=09aer_error_layer[layer], aer_agent_string[agent]);
-> +=09aer_printk(level, dev, "aer_layer=3D%s, aer_agent=3D%s\n",
-> +=09=09   aer_error_layer[layer], aer_agent_string[agent]);
-> =20
->  =09if (aer_severity !=3D AER_CORRECTABLE)
-> -=09=09pci_err(dev, "aer_uncor_severity: 0x%08x\n",
-> -=09=09=09aer->uncor_severity);
-> +=09=09aer_printk(level, dev, "aer_uncor_severity: 0x%08x\n",
-> +=09=09=09   aer->uncor_severity);
-> =20
->  =09if (tlp_header_valid)
->  =09=09pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
->=20
+So please use initramfs.
 
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> You could build driver as module for TI glue layer, but don't force
+> other vendors using module as well, see dwc as an example please.
+> 
 
---=20
- i.
+DWC is a bad example here. Only reason the DWC drivers are not loadable is due
+to the in-built MSI controller implementation as irqchip. People tend to build
+the irqchip controllers as always built-in for some known issues. Even then some
+driver developers prefer to built them as loadable module but suppress unbind to
+avoid rmmoding the module.
 
---8323328-59666235-1742377951=:988--
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
