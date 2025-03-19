@@ -1,167 +1,137 @@
-Return-Path: <linux-pci+bounces-24154-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24155-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29987A697F8
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 19:25:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D633FA6984B
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 19:47:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CBF9A3BA575
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 18:23:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 38DA019C241A
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 18:47:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5118E20C463;
-	Wed, 19 Mar 2025 18:23:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60586184524;
+	Wed, 19 Mar 2025 18:47:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j4HjHWU0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r7eZnJjG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5D920B20D;
-	Wed, 19 Mar 2025 18:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4B414AD29
+	for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 18:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742408628; cv=none; b=lF0vON7Hs3Nf16wxwEfYmVHYMxtNsvYZC+O6mU3QmuKtlUYWvgastkpf0dcPp6ptTqytxNk1FOtJBeHX0tTgjFZg+70X3ZbE7S/REYnxNkcFUHqGSZRWLjthyckyNT7G0UULlS5M6+iDzYkPr1yWwl7wTHlj4VSm2rqBYFmOFzA=
+	t=1742410024; cv=none; b=JB9bA+Vnn7EeqySs1uJtapSqUx9VI2aedZU2llcnActQgY9g9URjEBkPIr1J8b06xUmc4uwijCWa2RK7R5HOffVvdPLnr7f/6VJX2ZbEyPKEn4EaQBj4ekA6ZNQVNp3oGI3byJsgDCjp5jHWXCfWZYgBFMNVB3rZFzH9FccWNgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742408628; c=relaxed/simple;
-	bh=7GpRSo1f4MpmUps8FOp+0DDkfwMvKF616oD0sC3QzMU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sUttccy8dgHGAqGI6YkjIR+DfaRgKhO71mAINxUlNwRqSzRZ0SEMzIdiaa0lU+3EdRKd4TTqG5zQhlHqjiRmji0sN5xX7HsXEU/NI7nV88Yx0yDZKm+9e8Siko5x5/yXY33r/FEzTG7uU7RsRnC6x/T6rKDs3MfGFBip2/Hp4dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j4HjHWU0; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bd11bfec6so73521fa.0;
-        Wed, 19 Mar 2025 11:23:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742408624; x=1743013424; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vM5vjdDKgplT27wll6RHU/DkDnOyBUK3CxhD6DbHY44=;
-        b=j4HjHWU07NGBxMj1a8I06uk+LpqLa2bIvA+H672d3ZjkKvw0iyBYWX50nKfowdS0Na
-         gTWGOomv2tjjvkoGELZUOLrP7RRQ3uSGDZf8u3wZ6yw6oy6JYtp3k0s59LT8o1pt1Smm
-         CMaQxacgezEO7WTg83+67eP8mZ3bt0K4Lm0M8rAyrq8ehgf8tKe1/G975lJ1+01voyQL
-         3Nbv+nUWiIezWhnwS+t+qsh75+0goCKMCGYpeEA++rUZqmaA4Axd6CZ8wbs8C/JxLZfF
-         q2qcSCrKI9SvOXLCuVy/XLAeyJYKs/d4FhjrPF7UX0NimPlG6+1A/OqrcupL7xR/dUKb
-         fsiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742408624; x=1743013424;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vM5vjdDKgplT27wll6RHU/DkDnOyBUK3CxhD6DbHY44=;
-        b=iKu0qP2VJYKe16/yzjki1E2A4JXhrA332PmB3ovL0Fa2+ylJx5MfpQehwjhUVEA7PJ
-         3YaTo7/w/YcVOUVsPV/wizBrkBLfrKV5zCSo5PTAPZvJVfweAFMm/3OaPBYmtJAn5aGJ
-         yCVXna95LObJA6+1txR6x3FH/rmnfu67330j9Pll+rpCK30RPTNu1pfbc271NJmTEPjg
-         OUW64ItTS/xRuyJMdWrKzmlhHsQbX6xCRK+dhtXCHDaMP/NY529dhFgQZl/EaJpq2c80
-         CkZ4CcNhdXgNlUk5fwL++eOTzGS330tCtDvE85kYBkp6pIIycb2xefXkjLDO6yicQvI0
-         nWQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsDCgFHowtbrq0f6s2UAwq9pPnZqFFggJh9wtEv7em3e9+Rnarlrv0z9yZch9QCI9licEI1qgExNNZ@vger.kernel.org, AJvYcCW30xbqKv+WcxkBH+HZVX/FU4v5yNbWqmnE5shfIDIdyV5MkOIC0J8PFEIn33GWZvcvYTHB+MtD8If+I3CzayU=@vger.kernel.org, AJvYcCWLkh9IMSmSZIKxgII1iR3XuhtzkPWuHcriSomD/CwTrOrmwrM0NMKOp2tcIwp5BCNiFXqpCg2BcYjR7nf4nQ3y@vger.kernel.org, AJvYcCWOz8TMoSvkZ336uXQN4ZSMAQqB+ebXxX3lAjrT9mGXP1mE1FG6TVakrT4H8/Xo5wmS+317yZxDq+H2HvM=@vger.kernel.org, AJvYcCX+Bp9gPkyQu3dIvl2e22CvVw/et1ktYTR8P15Hu7uXiy8zrYR9HeRgxTtIWdXzZdXjDeY2ACoEJOMdO6nL@vger.kernel.org, AJvYcCX/8dh34L+e9Uv0/MB+Tu64Upy2Y+R0jWnCdpXrfqitZfU6bnMfbnBIvtNVroFsfFZmPBN7ZcM3H14N@vger.kernel.org, AJvYcCXWPnpT3diCGZMNKG+G5pncopaZ9VKLRVE1oOgTwt19fwBbfqVvSgfM+cICM9LLKZPD1FscydUhpwpH0csL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOii58+VsG5yxGS/QMPsOaqWbTJz3+eo5C2S3tTIXx9+f36Ooq
-	3OB2DADHtBLveSqCxWhRLo0rtzpNFAeoY0NQoPkXuWm6q+s2DGTPNxqyPxctCg7YMNju4SKX83v
-	0/4lD9hAutDFw/Eyh6kvJFdz/PM0=
-X-Gm-Gg: ASbGncvEFUgMEZ+ZhSQX6k3QDY9fgMQbFPPZRc/o9QRKSgyhoJrztdE7UTfsqpwtQqZ
-	nHQald3ydURBrRU7NRPevLgJxkOkIljYnz2N8lLdci3t9l79D+jVjNjURnfLfybv5GAbsO7mwtH
-	6trRzP0tGeI3F5Mmo0cesnYtdPvUR02M0loeJ1iNEK6g==
-X-Google-Smtp-Source: AGHT+IGEOK5N8tHIazzaBBFYwKPt7IK0lEyYARQ8Yuk7nnN9JY1twqyBbq57jCCO+3DJSYYYx9K5vKdbuZ/veyaYAWE=
-X-Received: by 2002:a2e:a912:0:b0:30b:9813:afff with SMTP id
- 38308e7fff4ca-30d6a465c16mr17800591fa.31.1742408624335; Wed, 19 Mar 2025
- 11:23:44 -0700 (PDT)
+	s=arc-20240116; t=1742410024; c=relaxed/simple;
+	bh=nUOBL473t1UiwAh22Jrh+3gC83V0sP7DrJsz4diK4y4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=onT5Filo7IYWh43KVKui6zG5QBsnwRtZc7EO0uX8DZBhMVFYIYb35I16cOd65Fwo8JpFip+Wei0ZZVAq8IuLZylzCW4YZFPXVSagYrhY2ebgiNF8WuDxkrLmndfNLWmp279+byzbuhzFpe5Ue7kCP07Cn9SLNlwovGhR5zxvdxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r7eZnJjG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8738FC4CEE4;
+	Wed, 19 Mar 2025 18:47:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742410023;
+	bh=nUOBL473t1UiwAh22Jrh+3gC83V0sP7DrJsz4diK4y4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=r7eZnJjGQcqBwCs4HToeHHilbggU8UElCAgeXis18g5SNMhk8YUXsJPUKZG27/17K
+	 U1d6FHW1JuUQjKsZ3tLv3adxefWwo+1h80oWa18HPm+k3edrRgL+zMnEu/Bbw+om1n
+	 GWx14XxsEBJzfnUOfq5Nwv91bDSDmNESf2zj6TxwPQrHLBlcrTDS5jae2Y0Wvkee7m
+	 RavLFSz3XBrfspVYXm2LbJSx14pberJMSksCw6bm2kYIzRKrmLmI9Fvz9j22m/AK1p
+	 heFh0s9t3e3HLwAioMqeVn9AZhW/fTNuXNISJFtNBhUrt8tHU4AaRiuy0inPywL5vg
+	 PAJJFSXSbvUaw==
+Date: Wed, 19 Mar 2025 13:47:02 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jon Pan-Doh <pandoh@google.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	linux-pci@vger.kernel.org,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Terry Bowman <Terry.bowman@amd.com>
+Subject: Re: [PATCH v3 5/8] PCI/AER: Introduce ratelimit for error logs
+Message-ID: <20250319184702.GA1051253@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
- <20250317-ptr-as-ptr-v5-6-5b5f21fa230a@gmail.com> <Z9lnIJCcVSza6UVo@google.com>
- <D8JTC30W0NF6.17SR73Y9I99ZT@proton.me> <Z9q2xpwsNMDzZ2Gp@google.com>
- <CAJ-ks9m8r_ABh4ift3wmM_wpbYLo=ZuhUarfLJKQnS7TcGHRdg@mail.gmail.com> <D8KBL9Z0B68N.2Q3MU9UK9YI6G@proton.me>
-In-Reply-To: <D8KBL9Z0B68N.2Q3MU9UK9YI6G@proton.me>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 19 Mar 2025 14:23:07 -0400
-X-Gm-Features: AQ5f1JqqkJVkMtcz0tmGeT7J4y37KKPcDpFZR1eCkSoR2DOM6YfFaGeUBI4_56I
-Message-ID: <CAJ-ks9kD++_T_3my1Etam9PRJHHZvdM=zbkWgbxW3oybwMTw9w@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] rust: use strict provenance APIs
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Alice Ryhl <aliceryhl@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250319084050.366718-6-pandoh@google.com>
 
-On Wed, Mar 19, 2025 at 10:42=E2=80=AFAM Benno Lossin <benno.lossin@proton.=
-me> wrote:
->
-> On Wed Mar 19, 2025 at 3:14 PM CET, Tamir Duberstein wrote:
-> > On Wed, Mar 19, 2025 at 8:21=E2=80=AFAM Alice Ryhl <aliceryhl@google.co=
-m> wrote:
-> >> On Wed, Mar 19, 2025 at 12:23:44AM +0000, Benno Lossin wrote:
-> >> > On Tue Mar 18, 2025 at 1:29 PM CET, Alice Ryhl wrote:
-> >> > > On Mon, Mar 17, 2025 at 10:23:56AM -0400, Tamir Duberstein wrote:
-> >> > >> @@ -264,7 +266,7 @@ pub fn read<T: FromBytes>(&mut self) -> Resul=
-t<T> {
-> >> > >>          let res =3D unsafe {
-> >> > >>              bindings::_copy_from_user(
-> >> > >>                  out.as_mut_ptr().cast::<c_void>(),
-> >> > >> -                self.ptr as *const c_void,
-> >> > >> +                crate::with_exposed_provenance(self.ptr),
-> >> > >>                  len,
-> >> > >>              )
-> >> > >>          };
-> >> > >
-> >> > > That's especially true for cases like this. These are userspace po=
-inters
-> >> > > that are never dereferenced. It's not useful to care about provena=
-nce
-> >> > > here.
-> >> >
-> >> > I agree for this case, but I think we shouldn't be using raw pointer=
-s
-> >> > for this to begin with. I'd think that a newtype wrapping `usize` is=
- a
-> >> > much better fit. It can then also back the `IoRaw` type. AFAIU user
-> >> > space pointers don't have provenance, right? (if they do, then we sh=
-ould
-> >> > use this API :)
-> >>
-> >> We're doing that to the fullest extent possible already. We only conve=
-rt
-> >> them to pointers when calling C FFI functions that take user pointers =
-as
-> >> a raw pointer.
-> >>
-> >> Alice
-> >
-> > Personally, I agree with Benno that `as` conversions are a misfeature
-> > in the language.
-> >
-> > I think this patch and the ensuing discussion is making perfect the
-> > enemy of good, so I'd prefer to drop it and revisit when the
-> > ergonomics have improved.
->
-> I don't think that we need to rush on the rest of the patch series.
-> Boqun's suggestion is very good and I'm not sure which ergonomics need
-> to be improved here.
+On Wed, Mar 19, 2025 at 01:40:46AM -0700, Jon Pan-Doh wrote:
+> Spammy devices can flood kernel logs with AER errors and slow/stall
+> execution. Add per-device ratelimits for AER correctable and uncorrectable
+> errors that use the kernel defaults (10 per 5s).
+> 
+> Tested using aer-inject[1]. Sent 11 AER errors. Observed 10 errors logged
+> while AER stats (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) show
+> true count of 11.
 
-The improved ergonomics arrive in Rust 1.79. See Boqun's reply that
-explains we need to keep all the stubs until then.
+I think this is really on the right track.  A few minor comments
+below.
 
-Regarding landing the rest of the series - you said it yourself: "it's
-only going to get more painful in the long run to change this". The
-nature of lints is that the longer you don't enable them, the likelier
-you are to have a higher hill to climb later.
+> @@ -697,6 +711,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
+>  {
+>  	int layer, agent;
+>  	int id = pci_dev_id(dev);
+> +	struct ratelimit_state *ratelimit;
+>  
+>  	if (!info->status) {
+>  		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+> @@ -704,6 +719,17 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
+>  		goto out;
+>  	}
+>  
+> +	if (info->severity == AER_CORRECTABLE)
+> +		ratelimit = &dev->aer_report->cor_log_ratelimit;
+> +	else
+> +		ratelimit = &dev->aer_report->uncor_log_ratelimit;
+> +
+> +	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+> +			info->severity, info->tlp_header_valid, &info->tlp);
+> +
+> +	if (!__ratelimit(ratelimit))
+> +		return;
+
+  - I think the ratelimit lookup and __ratelimit() call should be
+    together since there's no need for trace_aer_event() to be in the
+    middle.
+
+  - The lookup and __ratelimit() calls are repeated and are probably
+    worth factoring out into something like this:
+
+      static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
+
+  - Previously we *always* called trace_aer_event(), but now we don't
+    in the !info->status case.  Maybe an unintentional change?  I
+    think we should call trace_aer_event() always, or change that in a
+    separate patch if we need to.  This would always have been simpler
+    if trace_aer_event() had been the very first thing in the
+    function.
+
+  - The !info->status case message is not rate-limited.  Seems like
+    maybe it should be?
+
+>  	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
+>  	agent = AER_GET_AGENT(info->severity, info->status);
+>  
+> @@ -722,21 +748,33 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
+>  out:
+>  	if (info->id && info->error_dev_num > 1 && info->id == id)
+>  		pci_err(dev, "  Error of this Agent is reported first\n");
+> -
+> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+> -			info->severity, info->tlp_header_valid, &info->tlp);
+>  }
 
