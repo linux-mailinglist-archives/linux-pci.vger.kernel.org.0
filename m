@@ -1,118 +1,106 @@
-Return-Path: <linux-pci+bounces-24114-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24115-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB3A2A68BAD
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 12:32:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A04AA68C5C
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 13:05:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E9C2D88324B
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 11:25:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7343118970FB
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 12:05:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D4CF254AE4;
-	Wed, 19 Mar 2025 11:25:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B26C525525C;
+	Wed, 19 Mar 2025 12:05:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VIay126Q"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PQ4r6ggi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F998F5A;
-	Wed, 19 Mar 2025 11:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40428254844
+	for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 12:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742383529; cv=none; b=jPefCDVgonV99RrED3EkVbS56+Nf0iZYR2se1fuXsqMC7LyiNsU9JU4h9vSE6ExdgJKbGuiO68uQMkVGt8P/Sif9Ip3cEeq4eEGolyfILDcrjbimDZ+hQjdHFPjRpJIFw8GbS0A/Ftw2123g/xkYRHmO3TgDE5eRKZB5zKNurwA=
+	t=1742385919; cv=none; b=omMJ/9jG+Q7pHDE6waH05HeRfPBGBVYcOykzx5SHnsNKX2OaUlH7ANW//Sbs0rVNmMfYysoRzG6DA81K81TkFlMQQzr2eaFtyCr+O97aVUvoSbqPlO6wtEt1YcliAsJR51+WYulC3qlA2y0x4SnFXjTKM5SdRMaZInuqfdqMd9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742383529; c=relaxed/simple;
-	bh=MJqM5yOhWAMZ87htLDZYjYynv/mgewh+JWoF0niIk60=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AF3ZNjhppDbvZKZ1iYkqWSIr6juEovkdCXZbv4xhfb5uxzr/iyDHE5nz/wSlHq4DUgwzaz51tFxPcJr+KN3gG+mohdf2vkMWB2Lemq18HN21zG2Y/YAYzuy0mRrPgWNSKvlLm7RZqFBxXPqQSTd8q7ADUIdOfJKY6MHCuZcIVtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VIay126Q; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F92EC4CEEE;
-	Wed, 19 Mar 2025 11:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742383528;
-	bh=MJqM5yOhWAMZ87htLDZYjYynv/mgewh+JWoF0niIk60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VIay126QqT6XWiOuJBVKo0wQa4qp7DobLplN0afy0i9TB5K4LT9khSARMpbN4gHmP
-	 u5c7D0Ub+qZgzudpkKb+7Q2P9l1vD5Ael6uUmvRlTYa7W/LbFq4WwSUrKXqmIoZ+xV
-	 RLCEQFCiaKnws+5A+HzG2APbAeH09lnl2ZN2l4fN6Mh7G0aDCaDFcmNlRUIoQ4MWEe
-	 Ydo/Q/sRXzy+GdLT5UZqNsZ211GurqXfaEzSgqFUTyTcbBc+z/JhfKaXATQ/VuxhY+
-	 7x24e5W9xklbmVYTZYVkUvgsIzFQkYHsQT4/WO+y0z5SlFRyOYiJ7cp05XPDD/JKUr
-	 47wmORQNt+wkg==
-Date: Wed, 19 Mar 2025 12:25:23 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: bhelgaas@google.com, gregkh@linuxfoundation.org, rafael@kernel.org,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] rust: pci: impl Send + Sync for pci::Device
-Message-ID: <Z9qpo0zp1jqnh9we@pollux>
-References: <ddLRqqXuFiaRVyCNUWk5k3cc0pJCteUQ5tBxGr5_7QXDeygE0d-YFc9nbJD0pNJ8RjZ3nCaWOCM56r0ZWmWdJw==@protonmail.internalid>
- <20250318212940.137577-1-dakr@kernel.org>
- <87o6xxgtf8.fsf@kernel.org>
+	s=arc-20240116; t=1742385919; c=relaxed/simple;
+	bh=UTpQE/WDHXX+Pj2gIRldO9FHapRhYQUBIR9vGMBjXz8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Gxjdx6+CHlfLfgV4MmcrDTKabSN8faCWOe4qjpjCF2rFXZ82fNAvdfVymQWYBPOBHNq7QFxHoPqfyGYLorAkeaXgyybq6GeXiLF25tt7z9nguL8+DuEeAiqy6nwcka49XyU7odr+IPal5eKi6moR168y+OFbi/7slxH4gSBJimg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PQ4r6ggi; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43ced8c2eb7so32770075e9.1
+        for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 05:05:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742385915; x=1742990715; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SHjoqVYNu/hQnnRhnhN3ZDP1fdRodfuuB9jqsnKQgGY=;
+        b=PQ4r6ggiGR2/zST+7vBh48aOU2o0nxQZDUg+MwLplpcXccsUka3PTxE4itSf4wBGfi
+         bcYHNQK34CurX73QC4V8B406YPxWQrTylIXaTM6JBWvEMrd73XcbCAbBTzevhvCeT8/x
+         67bJ/BZ83zp1gDWinpp0eFffxspueJuhnIPp2xNS9ugQQlG1vp257HTQgPrzBljenc2g
+         kHHqOQ0g962hRqinysqTrU0/yUAhs2qAAK4MZv/ylvP5k/dLW7d0pLrMkacwlZK9acuG
+         e73VoDRmL10crIoFhpljJ+5LGO3xdxiOOtlmtx1jHE389OCSP74oWzUNCVBtXO5KhuGu
+         eYRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742385915; x=1742990715;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SHjoqVYNu/hQnnRhnhN3ZDP1fdRodfuuB9jqsnKQgGY=;
+        b=ZrcYmKs0Q+UhmVMNnpATXdf75oekB0gH9b31xDw47CdggvXB0qlJXgEB6IowB7jojW
+         HpkkVEmWs/PwXLwW1UrfixbQlIMEswaZKQayhg0nw+90KXUcUht9T5u1uQkK2W4qWLEs
+         JLH6GBZzFMEt3fKFAIcozyak935LpCcf36d310XpmB1ex41/Hc91g5BHX9QnvDhuOUL7
+         01vuuj483zTXwnnCouuW9S3Z1mOnXT4JxMfIgLvu6QU1FdqMh0jfuD3yruzJrlaSKEvz
+         vh3xIRPYzkqA2ATjy0xgq8jzQkXVAGf8zhhaesXvG3/NyIkrX9GKeF0ovYvsBK/wac4/
+         zC6g==
+X-Forwarded-Encrypted: i=1; AJvYcCXZsXao7VXBFeDXsmjPoNVye2a19uiCSwLRpcdqja3beS3jND60OF2um4GJuvCFmxFvdqsIAaq3zXI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMrXfN10EviLIRsr1GZGGy++mfly4EYl5rYPXClzprOEkx3+Kb
+	f6/HOOaReeB7DsjmazXy3xb7TVkapp+MNshEJ3KcQ4Ycpv5/oVP3HW/VIDXUXBvos4U672zQUtk
+	0saFEYl0kOjGQcA==
+X-Google-Smtp-Source: AGHT+IFaXPdS8TCkZsZefth+83S/r0xkFDIhe42WgR9A4FWNHKsaSXTQ6ADBjbZgLGd3yEXt0ppyKH9qlJr1n6Q=
+X-Received: from wmbbi21.prod.google.com ([2002:a05:600c:3d95:b0:43d:cf6:81b9])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3482:b0:43c:efae:a73 with SMTP id 5b1f17b1804b1-43d4378e8d5mr25155485e9.10.1742385915734;
+ Wed, 19 Mar 2025 05:05:15 -0700 (PDT)
+Date: Wed, 19 Mar 2025 12:05:13 +0000
+In-Reply-To: <20250318212940.137577-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o6xxgtf8.fsf@kernel.org>
+Mime-Version: 1.0
+References: <20250318212940.137577-1-dakr@kernel.org>
+Message-ID: <Z9qy-UNJjazZZnQw@google.com>
+Subject: Re: [PATCH 1/2] rust: pci: impl Send + Sync for pci::Device
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: bhelgaas@google.com, gregkh@linuxfoundation.org, rafael@kernel.org, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	a.hindborg@kernel.org, tmgross@umich.edu, linux-pci@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Mar 19, 2025 at 12:18:35PM +0100, Andreas Hindborg wrote:
-> "Danilo Krummrich" <dakr@kernel.org> writes:
+On Tue, Mar 18, 2025 at 10:29:21PM +0100, Danilo Krummrich wrote:
+> Commit 7b948a2af6b5 ("rust: pci: fix unrestricted &mut pci::Device")
+> changed the definition of pci::Device and discarded the implicitly
+> derived Send and Sync traits.
 > 
-> > Commit 7b948a2af6b5 ("rust: pci: fix unrestricted &mut pci::Device")
-> > changed the definition of pci::Device and discarded the implicitly
-> > derived Send and Sync traits.
-> >
-> > This isn't required by upstream code yet, and hence did not cause any
-> > issues. However, it is relied on by upcoming drivers, hence add it back
-> > in.
-> >
-> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> > ---
-> >  rust/kernel/pci.rs | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> > index 0ac6cef74f81..0d09ae34a64d 100644
-> > --- a/rust/kernel/pci.rs
-> > +++ b/rust/kernel/pci.rs
-> > @@ -465,3 +465,10 @@ fn as_ref(&self) -> &device::Device {
-> >          unsafe { device::Device::as_ref(dev) }
-> >      }
-> >  }
-> > +
-> > +// SAFETY: A `Device` is always reference-counted and can be released from any thread.
-> > +unsafe impl Send for Device {}
-> > +
-> > +// SAFETY: `Device` can be shared among threads because all methods of `Device`
-> > +// (i.e. `Device<Normal>) are thread safe.
-> > +unsafe impl Sync for Device {}
-> >
-> > base-commit: 4d320e30ee04c25c660eca2bb33e846ebb71a79a
+> This isn't required by upstream code yet, and hence did not cause any
+> issues. However, it is relied on by upcoming drivers, hence add it back
+> in.
 > 
-> I can't find the base-commit and the patch does not apply clean on v6.14-rc7:
-> 
->   patching file rust/kernel/pci.rs
->   Hunk #1 succeeded at 432 with fuzz 1 (offset -33 lines).
-> 
-> Otherwise looks good. You might want to rebase?
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
-This is intentional, the base commit is from the driver-core tree, where also
-commit 7b948a2af6b5 ("rust: pci: fix unrestricted &mut pci::Device") landed.
+I have a question related to this ... does the Driver trait need to
+require T: Send?
 
-> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-> 
-> 
-> Best regards,
-> Andreas Hindborg
-> 
-> 
+The change itself LGTM, so:
+
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+
+Alice
 
