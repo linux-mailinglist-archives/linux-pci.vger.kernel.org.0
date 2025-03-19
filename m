@@ -1,107 +1,112 @@
-Return-Path: <linux-pci+bounces-24150-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24151-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AE6AA69753
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 19:01:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AC5BA69738
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 18:59:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B85D42784F
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 17:59:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 49F9C7AE90C
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 17:58:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 007B9207A2C;
-	Wed, 19 Mar 2025 17:57:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F225207A20;
+	Wed, 19 Mar 2025 17:57:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qBYLy7sn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fr7vnryu"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AC41DF996;
-	Wed, 19 Mar 2025 17:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6417F1DF269
+	for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 17:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742407040; cv=none; b=qcnx9WaUIIH/PWeaE3ngEvQQPFcOwDGoFMDBxy7kcoR9aSw0UbvzTufHJo7rguqQQ0mmALpOGZs+8S5ncY88l0wpobGneQ93eyWZ+x/lEAYW4Y6lPF1G9oVBe6NZ0zEJGCoXZ3RjrImMc51X4OZWKuE4BMsV09ky379P8fesVf4=
+	t=1742407042; cv=none; b=dVp2n0JeNq0UFluWhqtJT9NbIRKZJuzKSFvWTsCqrWBQ0MkNBrnDDs1LfXCQzEeG8Kq52iIT9uKlyeyPhW/P+kXlyTdhqioWX6U87D/kpejp2wpGVIfC50IjwXLU97tHbdeEHvkLFxY7Ta1LJV5NhWTHuDlp7i5cdY6e/2bPpHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742407040; c=relaxed/simple;
-	bh=x/hWcu7hfGNMhMcXsuOe2hPqkjtVovgGKFse7OI9onY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WOijYX20jMUmt2A5vijUs7d5axnegGqZ/X6pV68kGy9vZ9NqKstejIRvYwEMK0NkBwi7UJfq/GnuII8Ur/CDKcR/e5oZajFEJC+ajHr9sMhLOYBaj3eEMlMkcsWArSY8S1MH2FvGpeXLE5bC0YLvgA31eFZoZP1w8Lg5GNIocxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=qBYLy7sn; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 396FDC4CEE4;
-	Wed, 19 Mar 2025 17:57:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742407038;
-	bh=x/hWcu7hfGNMhMcXsuOe2hPqkjtVovgGKFse7OI9onY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qBYLy7sn/IUoHj3YtwIbjzLk/w5aSov6AnOGf5SPYY3L7a8BBfBU2l8TNmAICt3wh
-	 PBJSRG8BtJhCrkJsZFrog9DGcL3NKCi62g/mlenJGW0GfQ6fQLuUExpyp+nMRi8K0B
-	 efQ7+N9kGJrTLBOkaRDr3nHaxIGPL+d7PqFbFqwI=
-Date: Wed, 19 Mar 2025 10:55:59 -0700
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] rust: pci: require Send for Driver trait implementers
-Message-ID: <2025031938-dismiss-specked-a590@gregkh>
-References: <20250319145350.69543-1-dakr@kernel.org>
- <2025031914-knelt-coffee-8821@gregkh>
- <Z9r6sUYPOajnkiHD@cassiopeiae>
+	s=arc-20240116; t=1742407042; c=relaxed/simple;
+	bh=lp1CSzhsZ4Yc2jst70wkMTEAcZ2URg4ozVOR+hMeJn0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=DOlXKN7eu/4fTI/WYO3baZbZPPADNzLSA4DXRXas/EbUDm3ik4wMTmA63c4NjLU1FJAQJoC951iJ6d3Kr6LwmolzswRvSYyBmsWXpreWxjefUX301obOxFAcM39jyCET07EiG32o+FlT/8LOVmrCPCyqyleT7NAdt9kTO5zhzV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fr7vnryu; arc=none smtp.client-ip=209.85.160.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2c266464ce0so1883788fac.0
+        for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 10:57:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742407039; x=1743011839; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lp1CSzhsZ4Yc2jst70wkMTEAcZ2URg4ozVOR+hMeJn0=;
+        b=fr7vnryu1z7FMO9Wrl3W8lTVeJ7oAQTWdsV1KSnPZIhvv3yc2K92BHWWpjW4TYddGF
+         ElxbDPSR9ur2JsXOg1mT/Kx9dZEeoeqEe3WFApKpjF+cNU6WsGc1VQmbR23lrR8AE1KN
+         EG3tjPAYxWGg5ploNfD/lvKItE39Hdk4tNk076MzPPDGL7ap5AxAkSsV7BFXGX1+ggMs
+         VYSw54MleZvWd2Do4MWWqztqX+CAobTYlwHG08wvNdqI4QgTOyaf/CdqHUsH/RuMtpyc
+         J6bWWJ8k0JmnVyg9Am2XH/UV63yc9xnDxNmlGGwMpzReD7D51n/ymP+ST9WdGwFc1CCm
+         RX5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742407039; x=1743011839;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lp1CSzhsZ4Yc2jst70wkMTEAcZ2URg4ozVOR+hMeJn0=;
+        b=JIQZHwLOciIGNhn2UWTNS/0tahPlnrSygzflCjw/X1e0MqJulYxEGHwfx2TjLutZpO
+         +RwaGvbti3XBGSaTpPYo4WWMe/NMtbZDNvLxLVL/HcyzmwYvkgkqgwdpn/t1w8daQIR4
+         FDPFnUrxsNIz2Ns/AhlkEw9Ae8kZh+4uWe71O9DQ151O5sMFx7bXBAyUohWQ/iKPSYMu
+         jSQe9h5afmnr7CeHHAp71/KxpV2LNNCnnRjyNuexRwaA/i4MDx/Foqc+C4Jly45fNYhv
+         ovEFw8hySsxAh1vpjI0PAa68xvu0x+tx97BR60ByP1LvevFEU5+BNzgl97JZ0uV/U+A+
+         h4rA==
+X-Gm-Message-State: AOJu0Yw5JnxC+/b8hkujAvhN+shibXKOQT5LLwVoaJWJxayX3WaII31h
+	+u0nhIorA/zkpOn0W7+glmW7IePAV4bXNfoztqgMxa4WLH8Rim0+Hi1P3aDzfUq5/29VElXpJNO
+	tBESZQZlrkSF0fTHWVJyGJ6joAGDPsQ==
+X-Gm-Gg: ASbGncsJYsKO3Bq8En2tdHvkJX5WmxS4RZzTSTPhPs4ct4ocdAjlS4/kp15Fg6qHFeu
+	LohVq4XfeSDOW+FTUwMUzzF2D+BTK6LLpHuygQkoaykhv9HV1Tm0XcxaIwkGt/PbSCtDmTepiqF
+	qTfceTUWHG7kdZrgPdb91AqnP5abzZBEYCHX07JXk=
+X-Google-Smtp-Source: AGHT+IFeE42V4i9smJ5ZmrlAseTSIgVG+NpxMg/AonIHlvKUYq52MoAUBIsNFNjI+5DsmmxBs7xB3nzNt57B4ZRMero=
+X-Received: by 2002:a05:6870:a90a:b0:29e:6547:bffa with SMTP id
+ 586e51a60fabf-2c745575ebemr2337065fac.21.1742407039228; Wed, 19 Mar 2025
+ 10:57:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9r6sUYPOajnkiHD@cassiopeiae>
+From: Muni Sekhar <munisekharrms@gmail.com>
+Date: Wed, 19 Mar 2025 23:27:07 +0530
+X-Gm-Features: AQ5f1Jpxu-rmNxcmath8GZEOZl3P553d4m8cXqi9s3eGTS4JI70KUGhStuXtf0Q
+Message-ID: <CAHhAz+ibkpwJ4vduDGC+n7Pjp=4ZbtkVmvQFoFXgZYV+TcDWXQ@mail.gmail.com>
+Subject: Query Regarding PCI Configuration Space Mapping and BAR Programming
+To: linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 19, 2025 at 06:11:13PM +0100, Danilo Krummrich wrote:
-> On Wed, Mar 19, 2025 at 10:03:49AM -0700, Greg KH wrote:
-> > On Wed, Mar 19, 2025 at 03:52:55PM +0100, Danilo Krummrich wrote:
-> > > The instance of Self, returned and created by Driver::probe() is
-> > > dropped in the bus' remove() callback.
-> > > 
-> > > Request implementers of the Driver trait to implement Send, since the
-> > > remove() callback is not guaranteed to run from the same thread as
-> > > probe().
-> > > 
-> > > Fixes: 1bd8b6b2c5d3 ("rust: pci: add basic PCI device / driver abstractions")
-> > > Reported-by: Alice Ryhl <aliceryhl@google.com>
-> > > Closes: https://lore.kernel.org/lkml/Z9rDxOJ2V2bPjj5i@google.com/
-> > > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> > > ---
-> > >  rust/kernel/pci.rs | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > As there's no in-kernel users of these, any objection for me to take
-> > them for 6.15-rc1, or should they go now to Linus for 6.14-final?
-> 
-> I think it's fine to take them for 6.15-rc1 only.
-> 
-> --
-> 
-> Note that, while those patches can be taken "as is" to stable trees, they
-> require
-> 
-> 	rust: platform: impl Send + Sync for platform::Device
-> 	rust: pci: impl Send + Sync for pci::Device
-> 
-> as well, if
-> 
-> 	7b948a2af6b5 ("rust: pci: fix unrestricted &mut pci::Device")
-> 	4d320e30ee04 ("rust: platform: fix unrestricted &mut platform::Device")
-> 
-> are in the same tree.
+Dear Linux-PCI Maintainers,
 
-Cool, I'll deal with that in a few weeks when -rc1 is out, thanks for
-the warning.
+I have a few questions regarding PCI configuration space and Base
+Address Register (BAR) programming:
 
-greg k-h
+PCI Configuration Space Mapping:
+PCI devices have standard registers (Device ID, Vendor ID, Status,
+Command, etc.) in their configuration space.
+These registers are mapped to memory locations. How can we determine
+the exact memory location where these configuration space registers
+are mapped?
+
+Base Address Registers (BARs) Programming:
+How are BAR registers programmed, and what ensures they do not
+conflict with other devices mapped memory in the system?
+If a BAR mapping clashes with another device=E2=80=99s memory range, how do=
+es
+the system handle this?
+
+Does the BIOS/firmware allocate BAR addresses, or does the OS have a
+role in reconfiguring them during device initialization?
+If you could provide any source code references from the Linux kernel
+that handle these aspects, it would be greatly appreciated.
+
+Looking forward to your insights.
+
+--
+Thanks,
+Sekhar
 
