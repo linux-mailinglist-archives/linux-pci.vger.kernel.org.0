@@ -1,139 +1,229 @@
-Return-Path: <linux-pci+bounces-24070-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24071-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C4FDA6850B
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 07:26:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80DB2A686D0
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 09:31:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA13519C4F0B
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 06:26:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D76F617A44D
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 08:31:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FA42207DE2;
-	Wed, 19 Mar 2025 06:26:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B409251789;
+	Wed, 19 Mar 2025 08:31:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FECVW/wH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/ZmCalc"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CEC36B;
-	Wed, 19 Mar 2025 06:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C994D20F091;
+	Wed, 19 Mar 2025 08:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742365570; cv=none; b=SvaGK3BZm4bdT/wgG9ubivqG+ahZzYJCKWN1O6/RiqyTWaKb6wwf9KcMczFiLhpoakZi1xMjEOHyOTbqgosg4o9vRuI+aBdUB+J0653iqaAiXTCrvY/YwZ2KzjBXhJ5R/KUK0mKtsrIEK9kkT1GHVOJbSpweIgbbtiVFMgAUDeM=
+	t=1742373064; cv=none; b=RzdkwKfac6Rf+c9N9OBTOIuZiLPR4sBUmgcHPxk72VnU/5NutxShNmzge43QSrV3vvdEktIhE2ri81Y1nbdvTBZpSyjNW/vgS8PL/A9NYTrhpae/kgu7+eLemU5GkIzWddUQ6uEGjQwu8DZS/C+H1UotPz6s931hb8TuF5CFDdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742365570; c=relaxed/simple;
-	bh=U6SArNBHWS1YYTHhdyr6Rup9vaUAqNexq3y6l+RSFV8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FMYDJpWAipFWEg6rdRpd9kixnpipkl2kNTf3b5U6b6JzPX0D2wGbktVWUDR9n8mSUqi0Y4ZQCS2XL75SMLEukCloo2imMAQV5fExk+QT2ak3Ej8uhW8BHTS79tIFuf/qxz41zYicPmYDeIXibsd/gh1FkbnftOUPypxoz4bD7XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FECVW/wH; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52J6PaLY2867113
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Mar 2025 01:25:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1742365536;
-	bh=wv/JMa59iPeha8ecw51y5UYHYXQ3yaH9RGx+mD3DOpc=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=FECVW/wHrZKI1FDW/kX1vkt0dr8LLLpKGdETf309/1kTHOrO4GqcSoKZGBnf6O5gw
-	 ozqbDvJ08pOS3xeoh8sJtJhMtqpRSm1fCwC3EDKPIZtXpFxRgk2b51Zb531APUBGBi
-	 E7axGjYlhdUY9fsgS3CxQGia9KMipVgWSETY4HHU=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52J6PaWK000874
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 19 Mar 2025 01:25:36 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 19
- Mar 2025 01:25:35 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 19 Mar 2025 01:25:36 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52J6PZnl106908;
-	Wed, 19 Mar 2025 01:25:35 -0500
-Date: Wed, 19 Mar 2025 11:55:34 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Peter Chen <peter.chen@cixtech.com>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <vigneshr@ti.com>, <kishon@kernel.org>,
-        <cassel@kernel.org>, <wojciech.jasko-EXT@continental-corporation.com>,
-        <thomas.richard@bootlin.com>, <bwawrzyn@cisco.com>,
-        <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>
-Subject: Re: [PATCH 0/4] Loadable Module support for PCIe Cadence and J721E
-Message-ID: <20250319062534.ollh3s5t7znf5zqs@uda0492258>
-References: <20250307103128.3287497-1-s-vadapalli@ti.com>
- <Z9pffxeXHVOsoi4O@nchen-desktop>
+	s=arc-20240116; t=1742373064; c=relaxed/simple;
+	bh=w3JmB7o8CKormT/Akok+UN9U+U8VYEVmbKd3okiCYoE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WcgP+Rt+xPObIsmt1BqHd3kuIvYuVeA+JzlrwHBTJngo8cyeE61nA38kDLiV+xG6gNN1eG/sT+YCRh7/yn+BKu2pG3h0MnAqWDOD0mSfrL+Lt8Sa7Al9oLz1f8aVVDhO2E1wUo4FW4mnQhyivBvyDGOtJB972JsS+wlirjcumWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/ZmCalc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96DF5C4CEE9;
+	Wed, 19 Mar 2025 08:31:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742373063;
+	bh=w3JmB7o8CKormT/Akok+UN9U+U8VYEVmbKd3okiCYoE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k/ZmCalc1dPOZG6tOAhA+Vbavt7ywew9AlCIx2pzmLHVBTMjREfKHqE2Yum/A2k90
+	 Mgo+utD6esZ3GSzapnLqbyG8yVsrTWUf4LItvlOCrYiiwuNO3yR2hQSEZpAOU6nnCo
+	 ZQRiEYn2mZ5bFSK8HEji2pCWj4CLMwBv5PoBA514qIBaTnW4NxRHmPJsRxHz6F9LM6
+	 DEj4Vkpkiz3HR+9d8OInlfDxTa9WdUELXV90gpobKxd8KKBd5UGsQL7y13D0qR11Xw
+	 1V/5hXHr1Z4zSHswxS63wOUI6bDFZ2FK5D8dKbOltHWG9ThPOmE1f0m3YkoTz1ruoI
+	 rs/FbXe+RBpfw==
+Date: Wed, 19 Mar 2025 10:30:58 +0200
+From: Leon Romanovsky <leon@kernel.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
+Message-ID: <20250319083058.GG1322339@unreal>
+References: <cover.1738765879.git.leonro@nvidia.com>
+ <20250220124827.GR53094@unreal>
+ <CGME20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648@eucas1p2.samsung.com>
+ <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
+ <d408b1c7-eabf-4a1e-861c-b2ddf8bf9f0e@samsung.com>
+ <20250312193249.GI1322339@unreal>
+ <adb63b87-d8f2-4ae6-90c4-125bde41dc29@samsung.com>
+ <20250314184911.GR1322339@unreal>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <Z9pffxeXHVOsoi4O@nchen-desktop>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250314184911.GR1322339@unreal>
 
-On Wed, Mar 19, 2025 at 02:09:03PM +0800, Peter Chen wrote:
-
-Hello Peter,
-
-> On 25-03-07 16:01:24, Siddharth Vadapalli wrote:
-> > EXTERNAL EMAIL
-> >
-> > Hello,
-> >
-> > This series enables support to build the PCIe Cadence Controller drivers
-> > and the PCI J721E Application/Wrapper/Glue driver as Loadable Kernel
-> > Modules. The motivation for this series is that PCIe is not a necessity
-> > for booting the SoC, due to which it doesn't have to be a built-in
-> > module. Additionally, the defconfig doesn't enable the PCIe Cadence
-> > Controller drivers and the PCI J721E driver, due to which PCIe is not
-> > supported by default. Enabling the configs as of now (i.e. without this
-> > series) will result in built-in drivers i.e. a bloated Linux Image for
-> > everyone who doesn't have the PCIe Controller.
+On Fri, Mar 14, 2025 at 08:49:11PM +0200, Leon Romanovsky wrote:
+> On Fri, Mar 14, 2025 at 11:52:58AM +0100, Marek Szyprowski wrote:
+> > On 12.03.2025 20:32, Leon Romanovsky wrote:
+> > > On Wed, Mar 12, 2025 at 10:28:32AM +0100, Marek Szyprowski wrote:
+> > >> Hi Robin
+> > >>
+> > >> On 28.02.2025 20:54, Robin Murphy wrote:
+> > >>> On 20/02/2025 12:48 pm, Leon Romanovsky wrote:
+> > >>>> On Wed, Feb 05, 2025 at 04:40:20PM +0200, Leon Romanovsky wrote:
+> > >>>>> From: Leon Romanovsky <leonro@nvidia.com>
+> > >>>>>
+> > >>>>> Changelog:
+> > >>>>> v7:
+> > >>>>>    * Rebased to v6.14-rc1
+> > >>>> <...>
+> > >>>>
+> > >>>>> Christoph Hellwig (6):
+> > >>>>>     PCI/P2PDMA: Refactor the p2pdma mapping helpers
+> > >>>>>     dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
+> > >>>>>     iommu: generalize the batched sync after map interface
+> > >>>>>     iommu/dma: Factor out a iommu_dma_map_swiotlb helper
+> > >>>>>     dma-mapping: add a dma_need_unmap helper
+> > >>>>>     docs: core-api: document the IOVA-based API
+> > >>>>>
+> > >>>>> Leon Romanovsky (11):
+> > >>>>>     iommu: add kernel-doc for iommu_unmap and iommu_unmap_fast
+> > >>>>>     dma-mapping: Provide an interface to allow allocate IOVA
+> > >>>>>     dma-mapping: Implement link/unlink ranges API
+> > >>>>>     mm/hmm: let users to tag specific PFN with DMA mapped bit
+> > >>>>>     mm/hmm: provide generic DMA managing logic
+> > >>>>>     RDMA/umem: Store ODP access mask information in PFN
+> > >>>>>     RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
+> > >>>>>       linkage
+> > >>>>>     RDMA/umem: Separate implicit ODP initialization from explicit ODP
+> > >>>>>     vfio/mlx5: Explicitly use number of pages instead of allocated
+> > >>>>> length
+> > >>>>>     vfio/mlx5: Rewrite create mkey flow to allow better code reuse
+> > >>>>>     vfio/mlx5: Enable the DMA link API
+> > >>>>>
+> > >>>>>    Documentation/core-api/dma-api.rst   |  70 ++++
+> > >>>>    drivers/infiniband/core/umem_odp.c   | 250 +++++---------
+> > >>>>>    drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
+> > >>>>>    drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
+> > >>>>>    drivers/infiniband/hw/mlx5/umr.c     |  12 +-
+> > >>>>>    drivers/iommu/dma-iommu.c            | 468
+> > >>>>> +++++++++++++++++++++++----
+> > >>>>>    drivers/iommu/iommu.c                |  84 ++---
+> > >>>>>    drivers/pci/p2pdma.c                 |  38 +--
+> > >>>>>    drivers/vfio/pci/mlx5/cmd.c          | 375 +++++++++++----------
+> > >>>>>    drivers/vfio/pci/mlx5/cmd.h          |  35 +-
+> > >>>>>    drivers/vfio/pci/mlx5/main.c         |  87 +++--
+> > >>>>>    include/linux/dma-map-ops.h          |  54 ----
+> > >>>>>    include/linux/dma-mapping.h          |  85 +++++
+> > >>>>>    include/linux/hmm-dma.h              |  33 ++
+> > >>>>>    include/linux/hmm.h                  |  21 ++
+> > >>>>>    include/linux/iommu.h                |   4 +
+> > >>>>>    include/linux/pci-p2pdma.h           |  84 +++++
+> > >>>>>    include/rdma/ib_umem_odp.h           |  25 +-
+> > >>>>>    kernel/dma/direct.c                  |  44 +--
+> > >>>>>    kernel/dma/mapping.c                 |  18 ++
+> > >>>>>    mm/hmm.c                             | 264 +++++++++++++--
+> > >>>>>    21 files changed, 1435 insertions(+), 693 deletions(-)
+> > >>>>>    create mode 100644 include/linux/hmm-dma.h
+> > >>>> Kind reminder.
+> > > <...>
+> > >
+> > >> Removing the need for scatterlists was advertised as the main goal of
+> > >> this new API, but it looks that similar effects can be achieved with
+> > >> just iterating over the pages and calling page-based DMA API directly.
+> > > Such iteration can't be enough because P2P pages don't have struct pages,
+> > > so you can't use reliably and efficiently dma_map_page_attrs() call.
+> > >
+> > > The only way to do so is to use dma_map_sg_attrs(), which relies on SG
+> > > (the one that we want to remove) to map P2P pages.
+> > 
+> > That's something I don't get yet. How P2P pages can be used with 
+> > dma_map_sg_attrs(), but not with dma_map_page_attrs()? Both operate 
+> > internally on struct page pointer.
 > 
-> If the user doesn't enable PCIe controller device through DTS/ACPI,
-> that's doesn't matter.
+> Yes, and no.
+> See users of is_pci_p2pdma_page(...) function. In dma_*_sg() APIs, there
+> is a real check and support for p2p. In dma_map_page_attrs() variants,
+> this support is missing (ignored, or error is returned).
+> 
+> > 
+> > >> Maybe I missed something. I still see some advantages in this DMA API
+> > >> extension, but I would also like to see the clear benefits from
+> > >> introducing it, like perf logs or other benchmark summary.
+> > > We didn't focus yet on performance, however Christoph mentioned in his
+> > > block RFC [1] that even simple conversion should improve performance as
+> > > we are performing one P2P lookup per-bio and not per-SG entry as was
+> > > before [2]. In addition it decreases memory [3] too.
+> > >
+> > > [1] https://lore.kernel.org/all/cover.1730037261.git.leon@kernel.org/
+> > > [2] https://lore.kernel.org/all/34d44537a65aba6ede215a8ad882aeee028b423a.1730037261.git.leon@kernel.org/
+> > > [3] https://lore.kernel.org/all/383557d0fa1aa393dbab4e1daec94b6cced384ab.1730037261.git.leon@kernel.org/
+> > >
+> > > So clear benefits are:
+> > > 1. Ability to use native for subsystem structure, e.g. bio for block,
+> > > umem for RDMA, dmabuf for DRM, e.t.c. It removes current wasteful
+> > > conversions from and to SG in order to work with DMA API.
+> > > 2. Batched request and iotlb sync optimizations (perform only once).
+> > > 3. Avoid very expensive call to pgmap pointer.
+> > > 4. Expose MMIO over VFIO without hacks (PCI BAR doesn't have struct pages).
+> > > See this series for such a hack
+> > > https://lore.kernel.org/all/20250307052248.405803-1-vivek.kasireddy@intel.com/
+> > 
+> > I see those benefits and I admit that for typical DMA-with-IOMMU case it 
+> > would improve some things. I think that main concern from Robin was how 
+> > to handle it for the cases without an IOMMU.
+> 
+> In such case, we fallback to non-IOMMU flow (old, well-established one).
+> See this HMM patch as an example https://lore.kernel.org/all/a796da065fa8a9cb35d591ce6930400619572dcc.1738765879.git.leonro@nvidia.com/
+> +dma_addr_t hmm_dma_map_pfn(struct device *dev, struct hmm_dma_map *map,
+> +			   size_t idx,
+> +			   struct pci_p2pdma_map_state *p2pdma_state)
+> ...
+> +	if (dma_use_iova(state)) {
+> ...
+> +	} else {
+> ...
+> +		dma_addr = dma_map_page(dev, page, 0, map->dma_entry_size,
+> +					DMA_BIDIRECTIONAL);
+> 
+> Thanks
 
-The Linux Image for arm64 systems built using:
-arch/arm64/configs/defconfig
-will not have support for the Cadence PCIe Controller and the PCIe J721e
-driver, because these configs aren't enabled.
+Marek,
+
+Did it answer your concerns?
+
+How can we progress here? As you can see, the chances to get meaningful
+response to your review request and my questions are not high.
+
+Thanks
 
 > 
-> > @@ -209,6 +209,12 @@ CONFIG_NFC=m
-> >  CONFIG_NFC_NCI=m
-> >  CONFIG_NFC_S3FWRN5_I2C=m
-> >  CONFIG_PCI=y
-> > +CONFIG_PCI_J721E=m
-> > +CONFIG_PCI_J721E_HOST=m
-> > +CONFIG_PCI_J721E_EP=m
-> > +CONFIG_PCIE_CADENCE=m
-> > +CONFIG_PCIE_CADENCE_HOST=m
-> > +CONFIG_PCIE_CADENCE_EP=m
+> > 
+> > Best regards
+> > -- 
+> > Marek Szyprowski, PhD
+> > Samsung R&D Institute Poland
+> > 
 > 
-> The common Cadence configuration will be select if the glue layer's
-> configuration is select according to Kconfig.
-> 
-> Please do not set common configuration as module, some user may need
-> it as build-in like dw's. Considering the situation, the rootfs is at
-> NVMe.
-
-The common configuration at the moment is "DISABLED" i.e. no support for
-the Cadence Controller at all. Which "user" are you referring to? This
-series was introduced since having the drivers built-in was pushed back at:
-https://lore.kernel.org/linux-arm-kernel/20250122145822.4ewsmkk6ztbeejzf@slashing/
-
-Regards,
-Siddharth.
 
