@@ -1,54 +1,60 @@
-Return-Path: <linux-pci+bounces-24169-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24170-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA2DBA69B0D
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 22:41:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D5A1A69B2B
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 22:47:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 51DF77AFAD9
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 21:40:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F022A8A7AC9
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 21:46:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6894C214A8D;
-	Wed, 19 Mar 2025 21:41:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 959C814AD29;
+	Wed, 19 Mar 2025 21:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tOgOFqBS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xm0dCD0o"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E966134B0;
-	Wed, 19 Mar 2025 21:41:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C2918E25;
+	Wed, 19 Mar 2025 21:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742420466; cv=none; b=SjbTYs/D8tlhTXuSDPxvuYD0vU7W3H0ATMGuHhxplUSyFLp/j+AodR1iA59MEzDXqQsPHPIvKEHvO5yRCKcND9DFkK1xpyXkaMEGGxOIa3bXpRqvcCqjM6fOO5ZwL1hNuwwvvO6MiGFHfyp5wFkCcMW9byVLXFyrsOFCyYesOUs=
+	t=1742420826; cv=none; b=C0HTebhAWTARy+z+dwjCkY+qjZw+3aqIXPH+fJ5QawgEXNZI6LPkVeP5AIs/4ZLna9uw4Jud0FwLLTIscHZGULA+wn4LlhWyQrV/fhikt6M0NpGMavKLC/xIPlnQNz3Ek8tD3mMRSlfv2S2Y6x+fRVAYJVYMpRScV0Mmt2I+i+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742420466; c=relaxed/simple;
-	bh=1N3HPS6GdhIWRxi5K2p0IjzZ0vZUkK5sHUaKq5AGCZg=;
+	s=arc-20240116; t=1742420826; c=relaxed/simple;
+	bh=drBqWStFtF8fJz5puTxFYQoOOJCqEbVWvwRSaDvN58M=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=SZk8t7XZSev6DrqJ3A0PrvN+RPkKCjaAZbqRepWapyMtQ8SCITPY2O6PhqBJV/QqgQiV3EdhoJfEhnj4Al0uTNyOHn1XOnUU8wDJPhYPzY3GV8z46E9hHNSrmYt8GyWybKanrquYcZ6drkIpZg+SDuYo0a8Sqr9kQ0YjQZhrDpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tOgOFqBS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86AA4C4CEE4;
-	Wed, 19 Mar 2025 21:41:05 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=QdqWScG2n6ySPHCe4USKwGu7Fg1WNeLjFsSIMaQm0PrlnxVix3d2z3rjamvkQMfwj8bndL9YvPe+wM1Unjobxfc56nZaS8XB43Q8OukM/O3Ja0Pogerfd9gZdYOcxjNKibj3ABRD/WzoaUPAZbTbu5Qt2ovtCIvjvAhy8INbRiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xm0dCD0o; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A6AC4CEE4;
+	Wed, 19 Mar 2025 21:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742420465;
-	bh=1N3HPS6GdhIWRxi5K2p0IjzZ0vZUkK5sHUaKq5AGCZg=;
+	s=k20201202; t=1742420825;
+	bh=drBqWStFtF8fJz5puTxFYQoOOJCqEbVWvwRSaDvN58M=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=tOgOFqBSzkwDgLvaZ7TvtEwF9CMN6qTm+VDeCJiHQmouHp2pG06HnFA0zdUrmCdd+
-	 id1kELJIDUyAo9OwA+zulS5RpK+dTdCm9K83Y3z7cKJoIJ0eSsrcg/l6+s0QxeQtif
-	 QRM371Dox7dB5mTXPjcz2LSt9Laf3UmemFv91W68CtalUVloPI+T37CJL9xJ3ucIhT
-	 bodyHDtGyUvCd28XjSEDcT/4YGlyxp7axKyR8cgL6ciEnLX+bH+c1y3ffo9sCpvq+Y
-	 bKFKJ6znIroaNs6cweiwxNj1pQXT/qLIdx+gG1XvBsURaa6WBBjY6PNBLGgpoehRZZ
-	 8sJsv6YYezu2A==
-Date: Wed, 19 Mar 2025 16:41:04 -0500
+	b=Xm0dCD0omSTxjAHMhO2aCDrHF4OL0oUW03WsmS63kOo+nrVE92vq0u+IrO49LTgZ6
+	 oiDT3okdGGexg//TTw60rEeA1mpFG+8ldm1dN92QbUwLJ3oSywYBzDpmqRUTtIUoMX
+	 fgtpSeqAJJ/jkX7jWK5m8ltWAhpPVfJPewqVHMm6sTj9Ik4ngVDlSWAP4JxkSxOgek
+	 a0F3JGhWoAJRArQtt91EgztdUyqzdifJskQOqBpr888lbJ7vHIw/4V0KsiXyTuWC3X
+	 l3OwmU9ZqHpaK+2mTiOTLkb6Y5vDh5CiFQcSy2WHtLZhDQn5+YnXoONVWQkWbj9pkB
+	 eE6jc/YUBWnWQ==
+Date: Wed, 19 Mar 2025 16:47:04 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Naveen Kumar P <naveenkumar.parna@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernelnewbies <kernelnewbies@kernelnewbies.org>,
-	linux-acpi@vger.kernel.org
-Subject: Re: PCI: hotplug_event: PCIe PLDA Device BAR Reset
-Message-ID: <20250319214104.GA1064058@bhelgaas>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: PCIE_AMD_MDB should depend on ARM64
+Message-ID: <20250319214704.GA1064668@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -57,17 +63,38 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMciSVVu6qL6QV7KqLem2ZoRoW2T5a3s13EyKE-4SFGHDFfR4g@mail.gmail.com>
+In-Reply-To: <eaef1dea7edcf146aa377d5e5c5c85a76ff56bae.1742306383.git.geert+renesas@glider.be>
 
-On Wed, Mar 19, 2025 at 08:07:55PM +0530, Naveen Kumar P wrote:
-> ...
-> I am reaching out to follow up on the PCI BAR0 reset issue and its
-> potential connection to the ACPI errors observed in my system running
-> Linux kernel 6.13.0+.
-> ...
+On Tue, Mar 18, 2025 at 03:00:54PM +0100, Geert Uytterhoeven wrote:
+> The AMD MDB Versal2 PCIe controller is only present on AMD Versal2
+> ARM64-based SoCs.  Hence add a dependency on ARM64, to prevent asking
+> the user about this driver when configuring a kernel for a different
+> architecture than ARM64.
+> 
+> Fixes: e229f853f5b277a5 ("PCI: amd-mdb: Add AMD MDB Root Port driver")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Trying to finish up the last bits for the upcoming v6.15 merge window,
-will come back to this later.
+Squashed into e229f853f5b277a5, thanks, Geert!
 
-Bjorn
+> ---
+> To be replaced by ARCH_VERSAL, if/when it ever appears for real.
+> ---
+>  drivers/pci/controller/dwc/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 39b1a89cb6b7ee80..48f1e3c7825b55e0 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -39,6 +39,7 @@ config PCIE_AL
+>  
+>  config PCIE_AMD_MDB
+>  	bool "AMD MDB Versal2 PCIe controller"
+> +	depends on ARM64 || COMPILE_TEST
+>  	depends on OF || COMPILE_TEST
+>  	depends on PCI_MSI
+>  	select PCIE_DW_HOST
+> -- 
+> 2.43.0
+> 
 
