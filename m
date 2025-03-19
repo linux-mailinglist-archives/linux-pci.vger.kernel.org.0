@@ -1,71 +1,59 @@
-Return-Path: <linux-pci+bounces-24146-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24147-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94F71A695FB
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 18:11:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D47F9A6960F
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 18:12:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD8758A12E9
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 17:09:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E283817A299
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 17:11:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA5B71E231A;
-	Wed, 19 Mar 2025 17:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4046F1E3DCD;
+	Wed, 19 Mar 2025 17:11:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eVMIdqIB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XArfv0PW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D7C257D;
-	Wed, 19 Mar 2025 17:09:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151301AAC4;
+	Wed, 19 Mar 2025 17:11:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742404176; cv=none; b=J1Swn5yfTMXzlmPoDFqjJO5dtvQx9HLcV8kMTwhuPYpCDOjXj9K1eQmJ3KdcvYUODg0U3vR0t26EYcrlwFn2en5KwgQk2frd+Lg8LlXthR2UYqal7kWSSeWpyPM9cccuKcypQad6skRYXrxn/5vhH8eqcIs/qCAZ29XkpgTpIU0=
+	t=1742404279; cv=none; b=EG564gwAkx8rcW8HzmXSaaI17sWIQE0tIGCfDtBxGoIAHGUwxH447NLOtnt1KI7qiuK2dpU4YI2WqE+xvcW2Ea9tPaPt22oB9S9SViwJ+lRNl2tEaq7EO1461YaYmYKEwexMUUL3tDqStpaPo6EEiplsSvQ8++Ytx2zFPbBM8sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742404176; c=relaxed/simple;
-	bh=iKCIiHI9Se7fL/4P3PMyQSCP9PrppXcJWRXpCMClUpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JRv9rMvjtqZZnkovHXLQ49CCHE+FgKvjlJ1Ihzz55pZUAFBuiDmIB0p2i+VjStfzV5lTLwf7no31ckC3yGy9anuTIu1IZmFO115MbJFxG5t0WVYlKqDfYIHqDlA7hOi54gzhp3szQqkRo1Z8fm4KGRljXmCVT03NHjlfKTxpnzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eVMIdqIB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1911C4CEE4;
-	Wed, 19 Mar 2025 17:09:34 +0000 (UTC)
+	s=arc-20240116; t=1742404279; c=relaxed/simple;
+	bh=GMp7LMG2il8B0IyAgcjhCSz5w3px7FVm2W9ov08nXrY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CJt+Gqd2Bv8J6Bl41EtUKE7anbFfnJCCB01QWC/xR5fDwzEz3W08EdRZe6EgjaNcrb+xx0ciMRgMJUZHSrefkU+qhd3QbM9mCkCpscZusNxcjdaJQTn7egmvLnlTLaewwyQJteAg9wKqC8M6e4U6HmJ9RDHwOK8dCqN6k8U9dfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XArfv0PW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB6CC4CEE8;
+	Wed, 19 Mar 2025 17:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742404175;
-	bh=iKCIiHI9Se7fL/4P3PMyQSCP9PrppXcJWRXpCMClUpE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=eVMIdqIB9UuKhiW0pG8us2LpVUwratI0xxa0yomDDHx41i3mnIX+qZcRuxb6tf+0W
-	 KKNrUnPfUlrateIDY1Hxzk/9q0/3NfikIJGzUZ9fg4gl2sd0BjZeKYd2013vflRrUT
-	 vgjeC/Cj7Euckh3MoZG3D5bLA05/ymgGsaN4Te0lQykVqz6Ng0Yw4rXwFFvFMTikh3
-	 L4kEZhj59cGSUyagtiRiKiNLFtjDPvuG59poj0DM5FCfJ3Wu+aH0lcMlk25syDoBQ5
-	 vFfM9c3CqVvjY4js5dOBoahAOx2IFp3uCxR3GGkD7fLeBlDx7Qg9N1RP8q3upwUiPc
-	 VWTOlwKzEhuuw==
-Date: Wed, 19 Mar 2025 12:09:32 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Nishanth Menon <nm@ti.com>, Dhruva Gole <d-gole@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
-	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
-	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	Wei Huang <wei.huang2@amd.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>
-Subject: Re: [patch V4 09/14] PCI/MSI: Switch msix_capability_init() to
- guard(msi_desc_lock)
-Message-ID: <20250319170932.GA1046398@bhelgaas>
+	s=k20201202; t=1742404278;
+	bh=GMp7LMG2il8B0IyAgcjhCSz5w3px7FVm2W9ov08nXrY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XArfv0PWOLsGYP/039RLwSeB5Cbcey/tZmGCF7iB8BCQP45bLt9s8pFxrU2ZbydmZ
+	 nM2OSg5xdvTeegXFH1PTBkz+K4wYHxCX8t5OJv2g0dL2JcsAvrFaiFS1AAHltOsV9U
+	 +CFg0pB0xygx7sRwhgqxSEJJy6T/5sR3FbZiRolHEZIDUYv3ZRiSe4zVauYbBkLm5Y
+	 nkvs3LqBA+XFwkKgXHeiEO0KRaw1sbFeR2bV70ckL8y61LHYQYSVVDr1kxxylZIPWn
+	 gJWzutSUkZWEg8aGNDIp0Kf4Y9OXK6sKcQMMiwelOvC2c8pcQhdKRn3p150jTZ+8rc
+	 WioyPyhfHNv4w==
+Date: Wed, 19 Mar 2025 18:11:13 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] rust: pci: require Send for Driver trait implementers
+Message-ID: <Z9r6sUYPOajnkiHD@cassiopeiae>
+References: <20250319145350.69543-1-dakr@kernel.org>
+ <2025031914-knelt-coffee-8821@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,85 +62,42 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250319105506.564105011@linutronix.de>
+In-Reply-To: <2025031914-knelt-coffee-8821@gregkh>
 
-On Wed, Mar 19, 2025 at 11:56:54AM +0100, Thomas Gleixner wrote:
-> Split the lock protected functionality of msix_capability_init() out into a
-> helper function and use guard(msi_desc_lock) to replace the lock/unlock
-> pair.
+On Wed, Mar 19, 2025 at 10:03:49AM -0700, Greg KH wrote:
+> On Wed, Mar 19, 2025 at 03:52:55PM +0100, Danilo Krummrich wrote:
+> > The instance of Self, returned and created by Driver::probe() is
+> > dropped in the bus' remove() callback.
+> > 
+> > Request implementers of the Driver trait to implement Send, since the
+> > remove() callback is not guaranteed to run from the same thread as
+> > probe().
+> > 
+> > Fixes: 1bd8b6b2c5d3 ("rust: pci: add basic PCI device / driver abstractions")
+> > Reported-by: Alice Ryhl <aliceryhl@google.com>
+> > Closes: https://lore.kernel.org/lkml/Z9rDxOJ2V2bPjj5i@google.com/
+> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> > ---
+> >  rust/kernel/pci.rs | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Simplify the error path in the helper function by utilizing a custom
-> cleanup to get rid of the remaining gotos.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> As there's no in-kernel users of these, any objection for me to take
+> them for 6.15-rc1, or should they go now to Linus for 6.14-final?
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+I think it's fine to take them for 6.15-rc1 only.
 
-> ---
-> V4: Split out from the previous combo patch
-> ---
->  drivers/pci/msi/msi.c |   36 ++++++++++++++++++++----------------
->  1 file changed, 20 insertions(+), 16 deletions(-)
-> 
-> --- a/drivers/pci/msi/msi.c
-> +++ b/drivers/pci/msi/msi.c
-> @@ -663,35 +663,39 @@ static void msix_mask_all(void __iomem *
->  		writel(ctrl, base + PCI_MSIX_ENTRY_VECTOR_CTRL);
->  }
->  
-> -static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
-> -				 int nvec, struct irq_affinity *affd)
-> +DEFINE_FREE(free_msi_irqs, struct pci_dev *, if (_T) pci_free_msi_irqs(_T));
-> +
-> +static int __msix_setup_interrupts(struct pci_dev *__dev, struct msix_entry *entries,
-> +				   int nvec, struct irq_affinity_desc *masks)
->  {
-> -	struct irq_affinity_desc *masks __free(kfree) =
-> -		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
-> -	int ret;
-> +	struct pci_dev *dev __free(free_msi_irqs) = __dev;
->  
-> -	msi_lock_descs(&dev->dev);
-> -	ret = msix_setup_msi_descs(dev, entries, nvec, masks);
-> +	int ret = msix_setup_msi_descs(dev, entries, nvec, masks);
->  	if (ret)
-> -		goto out_free;
-> +		return ret;
->  
->  	ret = pci_msi_setup_msi_irqs(dev, nvec, PCI_CAP_ID_MSIX);
->  	if (ret)
-> -		goto out_free;
-> +		return ret;
->  
->  	/* Check if all MSI entries honor device restrictions */
->  	ret = msi_verify_entries(dev);
->  	if (ret)
-> -		goto out_free;
-> +		return ret;
->  
-> +	retain_ptr(dev);
->  	msix_update_entries(dev, entries);
-> -	goto out_unlock;
-> +	return 0;
-> +}
-> +
-> +static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
-> +				 int nvec, struct irq_affinity *affd)
-> +{
-> +	struct irq_affinity_desc *masks __free(kfree) =
-> +		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
->  
-> -out_free:
-> -	pci_free_msi_irqs(dev);
-> -out_unlock:
-> -	msi_unlock_descs(&dev->dev);
-> -	return ret;
-> +	guard(msi_descs_lock)(&dev->dev);
-> +	return __msix_setup_interrupts(dev, entries, nvec, masks);
->  }
->  
->  /**
-> 
+--
+
+Note that, while those patches can be taken "as is" to stable trees, they
+require
+
+	rust: platform: impl Send + Sync for platform::Device
+	rust: pci: impl Send + Sync for pci::Device
+
+as well, if
+
+	7b948a2af6b5 ("rust: pci: fix unrestricted &mut pci::Device")
+	4d320e30ee04 ("rust: platform: fix unrestricted &mut platform::Device")
+
+are in the same tree.
 
