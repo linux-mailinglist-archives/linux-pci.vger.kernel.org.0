@@ -1,153 +1,208 @@
-Return-Path: <linux-pci+bounces-24094-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24095-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C23EA689CB
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 11:39:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85AB0A689F6
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 11:47:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D02C93B028A
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 10:37:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1BF567AC1B5
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 10:46:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5169252917;
-	Wed, 19 Mar 2025 10:38:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 045D5253350;
+	Wed, 19 Mar 2025 10:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="THaB1Mxk"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eXS/EgWo"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D060220E31B;
-	Wed, 19 Mar 2025 10:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310911AB50D;
+	Wed, 19 Mar 2025 10:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742380688; cv=none; b=fxNusGijjeIFPbbQ2uoD9dZrQx+hBZWW7t/GkjNNCdex0575WOphaUHuLXPmrsQZSXKipjjlH2T73DtTyi6Gd9QQPDhN3moiaZ+SiyOndIysNfIMYdP/5gN/a/XfupqG8cLbS6+JGhx3pexhrViUVlKnyZfRlgK4K4rRlF9RAnc=
+	t=1742381225; cv=none; b=dYoBqqNMzIosBa8ygQZL5BzD2D6Wi8k5gD7Ztfx0HolLxhJyfd9+2pZqhP4laT3LOXQsRSiNKMZZNcY9UMaLYIzmFGEyOcuqzDixGMJ14P5U/wO0FLDHeQnhY9rfsPWXCczVDyx7RRNad7PzggRrRGOzFwiFKcG2HyVjOQBc2L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742380688; c=relaxed/simple;
-	bh=+oIZNufj1mq+T+ll5yqNMkYOAPUj49odlNka6Mg6bSU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nVKzTy4SyT6TXNHN0rVXTd/r1HSNJPl5j0o7s4fITmAQMzeHZN8NukoQD+Dd635CSRmhjcBOGnpty4+LDkN8MOR0VDnjhzO1gxinzLLcNIazWpuUOBvtfuiHO2g2DJr5vVrkaTffdBMCyeINDuzqNOJaQvRCDcf5ECITZrtjdew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=THaB1Mxk; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52JAbbc6298165
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Mar 2025 05:37:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1742380657;
-	bh=VOJRXhgr4IvDYXXr3sLTtCmEn5aq6QJfPwnK5S28w5g=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=THaB1MxklKFszLt4uo+Kcwpd94AavvnNOGhhcEhJYjf7HeEli37mE7XGxcIM5PddP
-	 PhqRLc2PVxBzS/ZtsWybKw5gTZeqC9S9AG3jFOls1SupDnC8/fbBO0qmkOrGa00zwu
-	 kGzn+Z1n82sVRFvkRcapG88nFiMezHT3q0am6Mzs=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52JAbb5l088419
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 19 Mar 2025 05:37:37 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 19
- Mar 2025 05:37:36 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 19 Mar 2025 05:37:36 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52JAbZv4021781;
-	Wed, 19 Mar 2025 05:37:36 -0500
-Date: Wed, 19 Mar 2025 16:07:35 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <vigneshr@ti.com>, <kishon@kernel.org>, <cassel@kernel.org>,
-        <wojciech.jasko-EXT@continental-corporation.com>,
-        <thomas.richard@bootlin.com>, <bwawrzyn@cisco.com>,
-        <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>
-Subject: Re: [PATCH 3/4] PCI: cadence-ep: Introduce cdns_pcie_ep_disable
- helper for cleanup
-Message-ID: <20250319103735.a45aa5trofo2c2fc@uda0492258>
-References: <20250307103128.3287497-1-s-vadapalli@ti.com>
- <20250307103128.3287497-4-s-vadapalli@ti.com>
- <20250318080304.jsmrxqil6pn74nzh@thinkpad>
- <20250318081239.rvbk3rqud7wcj5pj@uda0492258>
- <20250319103217.aaoxpzk2baqna5vc@thinkpad>
+	s=arc-20240116; t=1742381225; c=relaxed/simple;
+	bh=oTjeU3H0xgLz5rvCK/p6GUcpiASa4U19hfsd4o7cV4o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pCr7B5/FaTXiOe0lBBk/QqcZjlNckJiVLnnwd+HnQnHMqOs9zpjr8cXtPgRdgU2G/mJ9hkmSSIesrf8TtQqyi7EXG+XXYIvXMOYjb34Ygg82OWQnEjTLwl71/fhHVeiSAT7JelMYr5RiNw38kGE9rJvVBdd2hLK8lnEFi4wdMNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eXS/EgWo; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52J4lsh1002204;
+	Wed, 19 Mar 2025 10:46:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	SsDBzc36ohrpKX/5NkP/64fCbh3ApB3wzUJ4hBcpHfI=; b=eXS/EgWoYhBY9rF0
+	Ofyx8/HKM85VmaLQyucYqCEBUijYFKxgTca6z5kPUd5O5EOMqKUXSF4RwMB937/9
+	ogHxcs6Rggpe8ffw0PFkAxsx45bBSS4xO/kJT0uGLiB2V2uGXOroTqWimvFCw0ZB
+	cJK3NT9TY/AWmddozFRcu/CQGoVo/LqMzplFB+M9rr1sXHGsQ1atvMT4o2VWhlk9
+	nivUN9juSwmLoRq1ZCS+XoMwFZngxCd14bf6NnnwEHrm5JK+7kukHI/PFZC7m0tv
+	CRIoCq6YUEQm5d6w0WV+LgDGCIYDWVB6MZ3jFwvdqppXSov+ReJv6MajhIDQ+kxe
+	HwMRKw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45etmbwksf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Mar 2025 10:46:44 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52JAkhhY001946
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Mar 2025 10:46:43 GMT
+Received: from [10.216.37.197] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Mar
+ 2025 03:46:36 -0700
+Message-ID: <f2e67746-853d-8545-133a-13452548d504@quicinc.com>
+Date: Wed, 19 Mar 2025 16:16:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250319103217.aaoxpzk2baqna5vc@thinkpad>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v4 02/10] arm64: dts: qcom: qcs6490-rb3gen2: Add TC956x
+ PCIe switch node
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        "Bjorn
+ Helgaas" <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        <cros-qcom-dts-watchers@chromium.org>,
+        Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        <quic_vbadigan@quicnic.com>, <amitk@kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <jorge.ramirez@oss.qualcomm.com>
+References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
+ <20250225-qps615_v4_1-v4-2-e08633a7bdf8@oss.qualcomm.com>
+ <kao2wccsiflgrvq7vj22cffbxeessfz5lc2o2hml54kfuv2mpn@2bf2qkdozzjq>
+ <8a2bce29-95dc-53b0-0516-25a380d94532@oss.qualcomm.com>
+ <CAO9ioeW6-KgRmFO93Ouhyx9uQcdaPoX3=mjpz_2SPHKiHh3RkQ@mail.gmail.com>
+ <16a9ff11-70dc-22e9-bd3c-ed10bf8b4fea@quicinc.com>
+ <hkm76yogjp6fjrldkyatekhg7orcd6wkc43d2e7cwzqfrdxjwh@b4f2rilmf6gh>
+ <303194d4-d342-ea4c-0bb6-5f5d0297ba23@quicinc.com>
+ <xkjozxbchqi6mhstqctejfk7vmwux4kdff2nyrcu5nxqzxv73z@agb7rbapsvx2>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <xkjozxbchqi6mhstqctejfk7vmwux4kdff2nyrcu5nxqzxv73z@agb7rbapsvx2>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 944huA-oaOxxljJyTO-sE6gk-GZXS9CZ
+X-Proofpoint-GUID: 944huA-oaOxxljJyTO-sE6gk-GZXS9CZ
+X-Authority-Analysis: v=2.4 cv=aMLwqa9m c=1 sm=1 tr=0 ts=67daa094 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8
+ a=tXJkAfc3zCRTSkwtStQA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-19_03,2025-03-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 spamscore=0 clxscore=1015 phishscore=0 mlxscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503190074
 
-On Wed, Mar 19, 2025 at 04:02:17PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Mar 18, 2025 at 01:42:39PM +0530, Siddharth Vadapalli wrote:
-> > On Tue, Mar 18, 2025 at 01:33:04PM +0530, Manivannan Sadhasivam wrote:
-> > 
-> > Hello Mani,
-> > 
-> > > On Fri, Mar 07, 2025 at 04:01:27PM +0530, Siddharth Vadapalli wrote:
-> > > > Introduce the helper function cdns_pcie_ep_disable() which will undo the
-> > > > configuration performed by cdns_pcie_ep_setup(). Also, export it for use
-> > > > by the existing callers of cdns_pcie_ep_setup(), thereby allowing them
-> > > > to cleanup on their exit path.
-> > > > 
-> > > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > > > ---
-> > > >  drivers/pci/controller/cadence/pcie-cadence-ep.c | 10 ++++++++++
-> > > >  drivers/pci/controller/cadence/pcie-cadence.h    |  5 +++++
-> > > >  2 files changed, 15 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > > > index eeb2afdd223e..85bec57fa5d9 100644
-> > > > --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > > > +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-> > > > @@ -646,6 +646,16 @@ static const struct pci_epc_ops cdns_pcie_epc_ops = {
-> > > >  	.get_features	= cdns_pcie_ep_get_features,
-> > > >  };
-> > > >  
-> > > > +void cdns_pcie_ep_disable(struct cdns_pcie_ep *ep)
-> > > > +{
-> > > > +	struct device *dev = ep->pcie.dev;
-> > > > +	struct pci_epc *epc = to_pci_epc(dev);
-> > > > +
-> > > 
-> > > pci_epc_deinit_notify()
-> > 
-> > I had initially planned to add this, but I noticed that it is not
-> > invoked by dw_pcie_ep_deinit() within
-> > drivers/pci/controller/dwc/pcie-designware-ep.c
-> > Since cdns_pcie_ep_disable() is similar to dw_pcie_ep_deinit(), I
-> > decided to drop it. Current callers of pci_epc_deinit_notify() are:
-> > drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > drivers/pci/controller/dwc/pcie-tegra194.c
-> > while there are many more users of dw_pcie_ep_deinit() that don't invoke
-> > pci_epc_deinit_notify().
-> > 
-> > While I don't intend to justify dropping pci_epc_deinit_notify() in the
-> > cleanup path, I wanted to check if this should be added to
-> > dw_pcie_ep_deinit() as well. Or is it the case that dw_pcie_ep_deinit()
-> > is different from cdns_pcie_ep_disable()? Please let me know.
-> > 
+
+
+On 3/19/2025 3:51 PM, Dmitry Baryshkov wrote:
+> On Wed, Mar 19, 2025 at 03:46:00PM +0530, Krishna Chaitanya Chundru wrote:
+>>
+>>
+>> On 3/19/2025 3:43 PM, Dmitry Baryshkov wrote:
+>>> On Wed, Mar 19, 2025 at 09:14:22AM +0530, Krishna Chaitanya Chundru wrote:
+>>>>
+>>>>
+>>>> On 3/18/2025 10:30 PM, Dmitry Baryshkov wrote:
+>>>>> On Tue, 18 Mar 2025 at 18:11, Krishna Chaitanya Chundru
+>>>>> <krishna.chundru@oss.qualcomm.com> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 3/17/2025 4:57 PM, Dmitry Baryshkov wrote:
+>>>>>>> On Tue, Feb 25, 2025 at 03:03:59PM +0530, Krishna Chaitanya Chundru wrote:
+>>>>>>>> Add a node for the TC956x PCIe switch, which has three downstream ports.
+>>>>>>>> Two embedded Ethernet devices are present on one of the downstream ports.
+>>>>>>>>
+>>>>>>>> Power to the TC956x is supplied through two LDO regulators, controlled by
+>>>>>>>> two GPIOs, which are added as fixed regulators. Configure the TC956x
+>>>>>>>> through I2C.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>>>>>>>> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+>>>>>>>> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>>>>>>> ---
+>>>>>>>>      arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 116 +++++++++++++++++++++++++++
+>>>>>>>>      arch/arm64/boot/dts/qcom/sc7280.dtsi         |   2 +-
+>>>>>>>>      2 files changed, 117 insertions(+), 1 deletion(-)
+>>>>>>>>
+>>>>>>>> @@ -735,6 +760,75 @@ &pcie1_phy {
+>>>>>>>>         status = "okay";
+>>>>>>>>      };
+>>>>>>>>
+>>>>>>>> +&pcie1_port {
+>>>>>>>> +    pcie@0,0 {
+>>>>>>>> +            compatible = "pci1179,0623", "pciclass,0604";
+>>>>>>>> +            reg = <0x10000 0x0 0x0 0x0 0x0>;
+>>>>>>>> +            #address-cells = <3>;
+>>>>>>>> +            #size-cells = <2>;
+>>>>>>>> +
+>>>>>>>> +            device_type = "pci";
+>>>>>>>> +            ranges;
+>>>>>>>> +            bus-range = <0x2 0xff>;
+>>>>>>>> +
+>>>>>>>> +            vddc-supply = <&vdd_ntn_0p9>;
+>>>>>>>> +            vdd18-supply = <&vdd_ntn_1p8>;
+>>>>>>>> +            vdd09-supply = <&vdd_ntn_0p9>;
+>>>>>>>> +            vddio1-supply = <&vdd_ntn_1p8>;
+>>>>>>>> +            vddio2-supply = <&vdd_ntn_1p8>;
+>>>>>>>> +            vddio18-supply = <&vdd_ntn_1p8>;
+>>>>>>>> +
+>>>>>>>> +            i2c-parent = <&i2c0 0x77>;
+>>>>>>>> +
+>>>>>>>> +            reset-gpios = <&pm8350c_gpios 1 GPIO_ACTIVE_LOW>;
+>>>>>>>> +
+>>>>>>>
+>>>>>>> I think I've responded here, but I'm not sure where the message went:
+>>>>>>> please add pinctrl entry for this pin.
+>>>>>>>
+>>>>>> Do we need to also add pinctrl property for this node and refer the
+>>>>>> pinctrl entry for this pin?
+>>>>>
+>>>>> I think that is what I've asked for, was that not?
+>>>> Currently there is no pincntrl property defined for this.
+>>>
+>>> Does it need to be defined separately / specially?
+>>>
+>> yes we need to define this property now.
 > 
-> Reason why it was not added to dw_pcie_ep_deinit() because, deinit_notify() is
-> supposed to be called while performing the resource cleanup with active refclk.
+> Could you please point out existing schema files defining those
+> properties?
+sorry I was not able to get which schema file you are requesting for,
+if it is tc956x it is in this series only.
+
+What I understood from these conversation is we need to define pinctrl
+property and refer the reset gpio pin in next series. If it was wrong
+please correct me.
+
+- Krishna Chaitanya.
 > 
-> Some plaforms (Tegra, Qcom) depend on refclk from host. So if deinit_notify() is
-> called when there is no refclk, it will crash the endpoint SoC. But since
-> cadence endpoint platforms seem to generate their own refclk, you can call
-> deinit_notify() during deinit phase.
-
-Thank you for the clarification. I will add pci_epc_deinit_notify() to
-cdns_pcie_ep_disable() in the v2 series.
-
-Regards,
-Siddharth.
 
