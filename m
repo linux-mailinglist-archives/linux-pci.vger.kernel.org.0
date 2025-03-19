@@ -1,228 +1,217 @@
-Return-Path: <linux-pci+bounces-24127-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24128-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B70FA68F6B
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 15:37:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBD94A68EE5
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 15:22:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3801D1B67E29
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 14:15:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1237A3B03D8
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 14:19:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C31BC1B85EE;
-	Wed, 19 Mar 2025 14:15:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4635E1C0DED;
+	Wed, 19 Mar 2025 14:19:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjIFafIC"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YfKdtHkG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2074.outbound.protection.outlook.com [40.107.243.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD86F17A2E7;
-	Wed, 19 Mar 2025 14:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742393711; cv=none; b=IMr8MkuAwZupGbhgO7AO38EtQWXxoG9JqKas0mRCapDpU7uOvjT5rnsrz1OSPZ15PH43TnPCUdNORAYQ37f8IlyO4LSbClhtRXGEQDfWwrhJ/39bEQmAE2Jz6vKSichTTT6sl9hct82Nhw5ad96U2nwhehHdkl3pAlrpJY58Uzo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742393711; c=relaxed/simple;
-	bh=soRBHKuXHAhfbzS4wZUjxzqCvZJqD5O3F1rh8HobrP8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K9h7axLRnYXoAc49B2ksMgSYOoUgH900f51J4Sxg7ivaqIZOEJqmAaK5QafIotPHhKSHQUuNwg8x6GKDaCE444gGRV1UwwPx/cBmB1QEugd7rD6+fSjQH2cRKbazo5chg/7ytH0gZ3quYIhmN6m5RbG9U7pCaUbjSMcRfJ5f+5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MjIFafIC; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30bfca745c7so69896461fa.0;
-        Wed, 19 Mar 2025 07:15:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742393708; x=1742998508; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=omRKJWK9MexjsAQwKDXOrJ+QXdF1TIOx0mszaRJ4U3E=;
-        b=MjIFafIC6qJPytuAzn4SqnRontOUv4Ap5qI28fVaXWe9AL+rAm7w9MKQey+/FGJzqt
-         DfwPIXzJiH3w4mlqY6fSwVE7zH4g6ZpsW28Zi5ji6E0PBYfnrNUyNecwBfoEtwQdzs3g
-         Me5MwxESfywpnM9bH6UPbJbenpqke1qsfSDbR8y5Y2XzH6Bpz2cxv1tUTizwa/SEBdv9
-         X/H8OvMTitxAajpvF35Kj0w0LQYGgO+LGMh01YiP4xc1KL6zuoTeMPhoTHe7Yc+o6YU3
-         x2RcWbC88BVDtqtC/tJzBDhf2KOUhSGYq9Nf9VZdjsKm/Hy27FKhL3eHZyZrIF4PRsnj
-         ZVuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742393708; x=1742998508;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=omRKJWK9MexjsAQwKDXOrJ+QXdF1TIOx0mszaRJ4U3E=;
-        b=evaBrEzo/Odux78eLQVkdZf1qW43fdCkGP2KmJpzKxzxw9x2uIK9lXT685KA1IlT9w
-         zk0ehwCPTN+QKrf2U8bor3QX63yFRm384j5p3XjA5ocRwrqVBCIc/TlPg7gec8tsNmRw
-         zM1l2aXHlN4xKoK4iOmWbLRW7DR6HM49Wqqc9zmje1IxWIyjqMET+FpTr4pDzOs9HEO7
-         5Q3nT8SOTVRKQnlQ2B3t4Kw4ugUdfNI0/MW41sOKNBm9Bbz9REX2DikqrqnM/TrauHsZ
-         ngkRKF3WISdHmci0oHrPrCUOVQFc08CvAO624T59NOOJ9WvyVU3niyxpkZwWVTG9dCWK
-         krFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9ArWjGBuu70okt1UrOAtWrubkOtljI7nHVxVcWM9vgqQw5YCcOvinOzcV35wu5z3uaV1j/E9kbmsu@vger.kernel.org, AJvYcCUkATTNVyafHZm2i+la5nGbsymWK2UmpXd4zTFHO2YL3s8WcA3Tck46OznaX06/13Lxqbsz8Ky2WqUHeuo=@vger.kernel.org, AJvYcCV1XE43Lr4J6RfTfTdVNQpFYnAnBVfLDX/kS5K1sEvAGxthozxxM4FA9oPeqd+YzDQQ0QnGnbSNlMGS@vger.kernel.org, AJvYcCW4fH0ea7Wez6P5ZNEReUd237hhDkEBNhBxs99IlWap2gmYpPRKb8qzSGwCmjlv5KsSy+2/A0edgziCln2j5L8=@vger.kernel.org, AJvYcCX7X5YJ7LHW665iRms4X0RM3Ed8QEJi7p0KSu9KEOFVNtp12+5aEXO+Kvl0nvoOrTUWk8Odj+4Msh4V7dgBUjjv@vger.kernel.org, AJvYcCXPAr8WhOaIsBWQ2sJ46D1KGmN6Aiy5TM4fTKxze9tzZKkPFa6xUaiJuKyXXs1/kMynGNuDF3Zyc8TMb4r8@vger.kernel.org, AJvYcCXSOFY5v6WxSoX4PHpJ65/cJ0DBSq5zWPqIMpXm9LZxWtShtMyxLLJuIqpeLvygKylUrCG+dROHA0dxgID+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEVaj69bOlm+ROerAVinVaBe+zSp3r0saHpeqDnpRmzkyN+8Rz
-	V7/7uADqUfkB5x/zKyBe4pl4ad95DFWPvJ7M81Cmpfz7zRyuzvZgsfJhGVfcb6cIk4AnaP7Kt50
-	CphoJvo26/MeWQT5iOByDi2yqVQw=
-X-Gm-Gg: ASbGncv9seVvKt7nx2hP5WkxcaEZXH6dqHZ9rmBNSr+Es0UcBHoPjIcEyqDrHWjSfwe
-	m3xUwh7S796bsxioKIEmJYjv++a1Khh2wfzZfcfLNzThCfuxAdSB7EGz76PgeUr7q7fwywHFnh6
-	zm3XecBnKINYtjLl82gbcCcNOKrFsvUQYtpXPgtx1NDg==
-X-Google-Smtp-Source: AGHT+IE2kuxS9+6hmerN8azzogPPnG6YOR0pawaKaHpqogkvHtFjmfrpl84a2HNK1iEZA2uiAgHTzd6L5hmK8RS/L14=
-X-Received: by 2002:a05:651c:2127:b0:30b:c83e:720f with SMTP id
- 38308e7fff4ca-30d6a410c7cmr11265591fa.7.1742393707679; Wed, 19 Mar 2025
- 07:15:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A611B6CE5;
+	Wed, 19 Mar 2025 14:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742393946; cv=fail; b=CVKqgBRTU0QiRI3ix1/d5calGmKB+LFYQGcaAQuVBpbKWcJrdz7sX5DosILWGhgt6pJhKDOXkr3r0SWqgh6KnFJDEw2K18jzr0+6W7NtXvzG5xjvWRcZKQOcCmc/AT8ZcSdPmepTe04eIoUXVRdg3cchIXvbSPg5BgQ7hpqS1jY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742393946; c=relaxed/simple;
+	bh=UUb05NvzCLTNBr1/+0TqXNhyDpihjVJQfq7WHum0eFM=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=nQYTfhHJYZBkxQe0v7TZPFANmn/nZggoj79s2m8uAPi89jVrzjDKZ+q8KaaMC7bSFiuuCsZ6REDTcdfdtXfj7WdIJEe/t5cczczn0/UKDsakMQ9Ad5kflTFs3/9vKhRsvqoOyM3LEpni2KwwGVKrIqSK2i/uye57Wh9vhp4/xlA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YfKdtHkG; arc=fail smtp.client-ip=40.107.243.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AklxE+JjptjKbyndxAKsMxxxoU4mh9eVHGRjw9eNmI2ocBhj066qf2rUd+fG7L7JWfVfJ70pFB/JaLM7HPRxnAa0GgZH9LszhN4sX8YbcdGGzi6ZrfZfvpD9zgFoNa2fhIFbJYjVj2RhFWKH/W+LlctqC3UzwCgbOtLIp5Bj3lY6Hm0eHklv8WjJtFMIazofRboyCnViadBu3WSS4FGtjmiU+SOKnHqmRAqlcMnNIajllJ/kpLXEGzONE8E1aHfxWsI72UShkG/WsTo3l2cVyDMHFp8TkdxtqR7RnS3SskEnIlCt2Exa7iVIYMO+Acz48GHAw7yyPC99p99+AUEIqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PMB+YhZVO5ivVbu581f6n4afDV4UzXwgWrMtdjs9+6I=;
+ b=ODarGfol7FnDNHH+6TDj85ZtC8neEJ1By2d8NHhUBj7jyvQoXyJ6RZmYEfxXnPhqmcQ+DWZRcq7gwmMw0XxM6t50zzaXXKcDxKZTGrSQGikejKvIpp7zVx1he2b6i+aBJCu/GGAb2b9akvVIUg/bGE9BNx9SOjO3Sdur7RiyFhJhJw542+AKwVLjhsSRkkzjV090B2olb0ylkabUtFYiENE66chJqvvyaclIYL8dsLAC/MYA7Bqpapcz5PNJUj3VROkoV6FbYLhUJ80BTXJLTFhIE5J2YOJVOW/ZRKUmZrmW8YML5REa63R6I8ApP2xugWY7bA+DmEBhX13LF8IsZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PMB+YhZVO5ivVbu581f6n4afDV4UzXwgWrMtdjs9+6I=;
+ b=YfKdtHkGyvTkx2ZtUkI/5lfgSXC0F8pGbcbuKRF0Y1tCRey51ZvmdhTXk0PoXdWjyYS9LGxWWgXZHRSW5YJ4a5rp2aDw7KVUZs4+UHmxuVauHKDqEXnX5f9FhsrSl+GU1AXzfRTU/WZ5BkCcXsVda2NFPnymciPdBr4e2PtC9NUbAc/l8RtSq24CyL6ihYjCmhQI51oanYNbpJWERG6YStq/uEbJQnMx8m5WhQvDGqSJQVVBE4xMSJ1A1NvphFtBAjXlNwJhup7fkAN6uhtb4OLgWBlaqG46+fJimx0iSBFK5kWqsI3HxUuvV3V1ZKPoihR/xHCa23QORA9lOs+xLw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by MW4PR12MB5643.namprd12.prod.outlook.com (2603:10b6:303:188::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Wed, 19 Mar
+ 2025 14:19:00 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%6]) with mapi id 15.20.8534.034; Wed, 19 Mar 2025
+ 14:18:59 +0000
+From: Alexandre Courbot <acourbot@nvidia.com>
+Subject: [PATCH v2 0/2] rust/revocable: add try_access_with() convenience
+ method
+Date: Wed, 19 Mar 2025 23:18:54 +0900
+Message-Id: <20250319-try_with-v2-0-822ec63c05fb@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAE7S2mcC/3WMwQ7CIBAFf6XhLAbaVIsn/8M0Btmt7EEwQNCm4
+ d+lPXnQ47y8mYVFDISRnZqFBcwUybsK7a5hxmp3R05QmbWi7UUnO57CfH1RstwYNSkJ0N0OgtX
+ 7M+BE7y11GStbismHeStnua4/IllyyXs1iUGbQQgJZ5cJSO+Nf6zRP4YGo/GIoAatvo2xlPIBD
+ mVSutMAAAA=
+X-Change-ID: 20250313-try_with-cc9f91dd3b60
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ Danilo Krummrich <dakr@kernel.org>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: OS0PR01CA0018.jpnprd01.prod.outlook.com
+ (2603:1096:604:24::23) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
- <20250317-ptr-as-ptr-v5-6-5b5f21fa230a@gmail.com> <Z9lnIJCcVSza6UVo@google.com>
- <D8JTC30W0NF6.17SR73Y9I99ZT@proton.me> <Z9q2xpwsNMDzZ2Gp@google.com>
-In-Reply-To: <Z9q2xpwsNMDzZ2Gp@google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 19 Mar 2025 10:14:31 -0400
-X-Gm-Features: AQ5f1JrpdSjcw-UeRIviJZbfSflMiKfOV4agzm5OnMFsQT1IS5sITNF_DoEDTos
-Message-ID: <CAJ-ks9m8r_ABh4ift3wmM_wpbYLo=ZuhUarfLJKQnS7TcGHRdg@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] rust: use strict provenance APIs
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Benno Lossin <benno.lossin@proton.me>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|MW4PR12MB5643:EE_
+X-MS-Office365-Filtering-Correlation-Id: a8443bcd-8430-434d-081b-08dd66f0fda6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|1800799024|376014|7416014|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WlZ2TXRUUWRIenpucVRGM1FPRFQxS2dCYW9HMDhkMGRMTXQyZmg3NjJBNlNM?=
+ =?utf-8?B?T29NSnA4VVpLUnMvci9ic21JMGV0TXNRMGRwWFNwVjhwbXl2b2t0aGoxdEg2?=
+ =?utf-8?B?OU9KY2dHVWFnN3RCMVU0L3BnWVJlRGUxVFVDcW8rNWxzNC91anRxeStETURC?=
+ =?utf-8?B?UFNrSWhHbURSL0IzMExidXl3VVZYVXg3MlFab2FObHp4OFF3c2didHJLVnlZ?=
+ =?utf-8?B?SktoVG0zMWlkRXB2RTEzUHR0OVc1dmltcnZ1RDMwOEROQUZmSHkzLy9mVjlh?=
+ =?utf-8?B?WHFRdG83QURFVHVhY2c3Q2hjRDB0b2x2cDJOTXh3Y0x2V3NaaFUzaUhmYWxQ?=
+ =?utf-8?B?STF4KzYwWjRORjBLUXVSbTYrbmk2eEtoL3NHL2JkT2pDVDlMYnFHQUg5dmNI?=
+ =?utf-8?B?emVSTVYza21lV3hweVEwd0ZqK1pnLzJVZE1DbVNQR01INHptZ3ZjSmlqb2xT?=
+ =?utf-8?B?WjNRYW9SMmdVSDdrNmxvZjFoR2xNcGtNTnU3cXh2MmRtZ250dVdtM1JmcEMy?=
+ =?utf-8?B?N2I2VXV4U0RXMVlYYlN6czl3OEhybUVOaFA1MENiUU1ldlo4VE1PRDk3N3dJ?=
+ =?utf-8?B?V1VWT0NHcWRGeXhEZDZiV1hpemJla0dkTExhMUJ2ZEVTUkdJVU1JRElYbVpJ?=
+ =?utf-8?B?bDI3KzBOdkhnNzZ3R3hFcFhEU05od0ZKSnlBd1pJNjBnUWwwc0NBRmxYWFo2?=
+ =?utf-8?B?YmRjRmhQSmxLRjVSRlJ3a1k2ejl4UUNXUldVY3M1eEVoYzMrclMxd1RFNEVw?=
+ =?utf-8?B?YkVFZkdjdXB3YjBWMDlXazgzMDBZTkxkNWxKbFVyYmk0ZG0ydWhNc1VMTXpl?=
+ =?utf-8?B?TUt6NXpxdWxKeVQ1Z2kxUW55d2xSekFaZDVDa0tKMzZGNEVZd2VLTVd5UTFo?=
+ =?utf-8?B?WkcwU0d2RUg4Vm9JN2lMZEVxc3YrTUYyR0d1UjV4WnpuSVFZbG56ZENEMGd2?=
+ =?utf-8?B?QTZGY2FNZkJhVjRmM2N1U3dLa05PY2dzQmplT3lZRXhRRld0UEhXVlFTS1Vj?=
+ =?utf-8?B?TkRqbnpOT1R5UzZWT0ROWjg0ODJCOElMeHhHQk9WRElRVlBnV2NVVjhFTGda?=
+ =?utf-8?B?R21CNlN4Q0JQTFovT3haZkliY04wNS83S2pTTitPSCt6d09ZWXNoQm93ZU1M?=
+ =?utf-8?B?Z1p1QzRYVnFLaDBJRnBncmF4WlBHVS8wcnlieGJlbXJweVFmZnhVUkpMVmlX?=
+ =?utf-8?B?VHBrVnNXWWFXbE92YWxTZnJRVG1qbUFhMEh6R2U4bjFKQ1F4Rk16cityS2hp?=
+ =?utf-8?B?MGpaK1JyNlpMeDB5QWo2MUV1KzV0SVd1RDJIYVU4SlNCeWNSZExNTUo5ZFhl?=
+ =?utf-8?B?Mm55WklyTXRMWE5vV3Jhc0hMRlNTeEtEUSt0MmNyUy8xWUROWTU3SzFCa1dO?=
+ =?utf-8?B?NlhVSWppNjJKb0lIYzkyTElRczlsRjlhaGZZRFBEOG9Qa2F6TjcwdWY1U0hY?=
+ =?utf-8?B?T1EwVEJZaVZENEY2Q0lkZ2kvT2ZjREdzV2QwKzV5RTNOTk5zYmpDdklORDFw?=
+ =?utf-8?B?TEkzTVFXUHk4YnFVS1BUZGhwRmt1NHpNQjE1dHYydXd6WkVFdjl4dlVxM045?=
+ =?utf-8?B?TGFlL0V2eVVXa1FhVzhCK3loNE1NY3pmTWkrK0hLRzJQVlcyblYxKzRyaDN3?=
+ =?utf-8?B?eWhxbU1sbVp4TDNjYTMxQzByVk9kZ2ptMUJMR1RuUVYxdHp0K3ZtbzRhUFlE?=
+ =?utf-8?B?TGtCQ1JBQVJtMUpMUkVsRXdrWFZnM0xJOHpCcWZOZHZRd05hWEJReXRWaEIy?=
+ =?utf-8?B?RG9WeVNBcHp3NDh1Y3VtSEdjWmVQNEYxY0MvU2VYaUUwbzN3TWtHbzVuNjYr?=
+ =?utf-8?B?ZXdkdllPMlltMGpTYVRlelpLYkZVMG5SVmM2U2ZsS0xjZWI2WFY4R041MERI?=
+ =?utf-8?B?UVJCOG9wQXFmeDR0ME9DdEcycTdTRVRncGFUbjBwMDVnZnE1KzJUVEpaNEs0?=
+ =?utf-8?Q?mqvezZiajio=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(376014)(7416014)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NWJjYm8zUFRLTXZKcWgwUlhMbTlNU0ZwYkxJS1ZQU0JXaUlZeHRZNndTVGk5?=
+ =?utf-8?B?aUU1ZFpOUUR1b3MyRHp6V3F4eDg0bHFsUUlBMTJYKzNxMEZ0cXR2TlRnRFRy?=
+ =?utf-8?B?ci9SQWc5dkJIZ1N4czZERVJ0NkhSRGswOGtQdWxoT05xdm1lamFpRzdpdW1M?=
+ =?utf-8?B?T05rSFRGajBhZU02VVpTVEZyZFhnZDdkemZuUkNTSFBacURWU3NvazJUdFh6?=
+ =?utf-8?B?NkpkUGd4bllZcHRWQWJCS0RJaGJKNUN2NXVmRW81OGE3TGh3bU9Ram5WYjk0?=
+ =?utf-8?B?MlBOdzJQZE9oUWxKZHJZMmdIeFdiMVhQTVBMVGF4YmV6b3VYMVQ2TGVTYm1H?=
+ =?utf-8?B?bUtPSmM5a2w2YldoNHdaaCsyVzZRYU14MXFvcHBVNG1PdHRYRUV4bnBucGIx?=
+ =?utf-8?B?WmhkcExMYmJXak9jMk1ybmR4YzRwM2MrR2VXZGFsK0Y0cVpPWWxETmh5SjZT?=
+ =?utf-8?B?eGNkcDlqRjNSWEZMN1RIT3c3bWpOajBLTDB6WVlOWHhZbFRPOGNFc1NtallE?=
+ =?utf-8?B?ZnVGUUcwT2pFN24weFVKYTRpaG9hSFlQTko5dXhEU3RROHZoamZsdDdtVG1G?=
+ =?utf-8?B?d3VsSm54VGt0TG5XZUVTODBjTHcySytZQ0dMNGhHOE1lcVc5alVmZ0ViSWNX?=
+ =?utf-8?B?WFMwTXRnUVB0c1lLNE9SK1l3bWl1aTBqYzJtaWY0cHYrOVpLT3pPM0N6ZVVJ?=
+ =?utf-8?B?bzRxSnBOY2lEb2UrNzNaREE0WkJST2gwbzFPR0pteWtmeUxqOXRpWi9VNzhK?=
+ =?utf-8?B?ZWxRdmxBK1ZqbkM3SlJBNFNHUGZTTkZmRWxIbWNvQUl2THduRjBXdm1JSG45?=
+ =?utf-8?B?R2pGTHlISWdMTzJna203UlR1aGdnSE8zM3h4Y0JuZldMd3dSL20zS2w4d0da?=
+ =?utf-8?B?OGhqdmR6d0lnZWFPdWxOczBPUXY3QUlVT3dHYllWVFdJT0NDNG0zMmt4MUMx?=
+ =?utf-8?B?NzNZdDRlUkRaQnBYL2JuQXk5SUtxSy9xNGExM29ydE5NYnJDdUxmaSt5aSth?=
+ =?utf-8?B?eUNIZUQzUzNsKzhyWStiYVk2bzJnMzlkZExmNG5WSk9XT2c0ZklxWHVSbWMy?=
+ =?utf-8?B?SzNjY1BxQWZocHpNeTdlSE5pMFl1UGl2RnFYWGE1VytZNEhGNUcvVFlZNzFZ?=
+ =?utf-8?B?ZlNZT2tlVld6c2pCOE5FV1RMSUFsYk9CSWo5NUwyR3RXc0hyRDN2NmFONlli?=
+ =?utf-8?B?azh1MWVBbjQzQUxLYlRaYjVGYnhlVjJQa2JoTXRoZnhhVThSZFpkcytWVDlo?=
+ =?utf-8?B?elJ4WlJ2YTY1QTdJL25UNzNFMTNQRVozamY5SmRydUI5aVRaSUtuTlA2S2RE?=
+ =?utf-8?B?cFpuVlQzNW44Q2R0aUNQakRndlVvRWtETURnOS9paFBNUnJ2WFpweUVTM2F0?=
+ =?utf-8?B?Slk0NGFaeDE4RmRFQjJwQjYvOHpMNjE1UFR3MFNPR3hPYnd1cmNoNy81bWJF?=
+ =?utf-8?B?Q2F5TTRVK2xGcUlScHU0N2JlekpNb1ZTWjh5OXZuTmh2eVFBWm9LZWRtNjhH?=
+ =?utf-8?B?NnM0emgzR3FCejJPZjdXMzhoRldadHpWVGxSUFlBM3Q4SUJaemFtaDJ6a3lT?=
+ =?utf-8?B?bFc0QzNuaU5ocmVKQVFKVGVFZGNnUG1GRDNwV3J0L29pNUJ1cnM3dkc3bW5H?=
+ =?utf-8?B?N1N5VHIzT2x2NmpqMmdkWnJMK2FHVCtNWlNIaXFFSmtPY2FEdEpsOEdLNytp?=
+ =?utf-8?B?M1ZydzhoQnJlUVRDbTNrZjVaeDRVTGVBSEI5cTU5eVN2czNUcVk1aTU3OXdj?=
+ =?utf-8?B?YWlPclkxdlJqZjVBK0lsbTJPSWRlekNxcGcwTGhVOUMwZlRqR3ZaalBUcXha?=
+ =?utf-8?B?Y1drR25JNGVpcGw3YnlYVEFTeURCNFFobUtPSFl5a0pkelMzQ3ZHbnpGdjNk?=
+ =?utf-8?B?UnNBeElnRml3K3NmL2trVlVVTlFSV1RSaXhjZE1DNW51NHA1QWxia3ZsdEJx?=
+ =?utf-8?B?U2tYTmVDN2V5MlJlWW1DcmF5VUpDTWxQWHFvclo2SllsdkhDNFkrUjd6Tjhu?=
+ =?utf-8?B?Q3QvSU51UFhRQU5lcjFlRm1PYWdzbFRTSnpUeTJodlhqM1pJZkdiTVVsR29S?=
+ =?utf-8?B?QldBT29pbUhMLzM3a3AvTWlIdFE0TzErQWJNb1libjBuQm5kZWlFRVlmN0c2?=
+ =?utf-8?B?bnBVa1RQWHpjd0paVWpGdW1rZkhZc29MbzdLc2xYejdQbEd4ZWk0RWFQQlA1?=
+ =?utf-8?Q?e1TnvqkXbRvH2UNRNtgr99v3t1q+d+Sqrxf/p6SGh4o+?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8443bcd-8430-434d-081b-08dd66f0fda6
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 14:18:59.3145
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: b2+4+LfgxHytPW+W7cHyz2os7UqjBVFk4OztgTrwGfEMnBUEk4sKxX3p1yhYf1FyiRx3dfrVvnHFE6h/6v09LA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5643
 
-On Wed, Mar 19, 2025 at 8:21=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> On Wed, Mar 19, 2025 at 12:23:44AM +0000, Benno Lossin wrote:
-> > On Tue Mar 18, 2025 at 1:29 PM CET, Alice Ryhl wrote:
-> > > On Mon, Mar 17, 2025 at 10:23:56AM -0400, Tamir Duberstein wrote:
-> > >> Throughout the tree, use the strict provenance APIs stabilized in Ru=
-st
-> > >> 1.84.0[1]. Retain backwards-compatibility by introducing forwarding
-> > >> functions at the `kernel` crate root along with polyfills for rustc =
-<
-> > >> 1.84.0.
-> > >>
-> > >> Use `#[allow(clippy::incompatible_msrv)]` to avoid warnings on rustc=
- <
-> > >> 1.84.0 as our MSRV is 1.78.0.
-> > >>
-> > >> In the `kernel` crate, enable the strict provenance lints on rustc >=
-=3D
-> > >> 1.84.0; do this in `lib.rs` rather than `Makefile` to avoid introduc=
-ing
-> > >> compiler flags that are dependent on the rustc version in use.
-> > >>
-> > >> Link: https://blog.rust-lang.org/2025/01/09/Rust-1.84.0.html#strict-=
-provenance-apis [1]
-> > >> Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> > >> Link: https://lore.kernel.org/all/D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.=
-me/
-> > >> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > >
-> > > I'm not convinced that the pros of this change outweigh the cons. I
-> > > think this is going to be too confusing for the C developers who look=
- at
-> > > this code.
-> >
-> > 1) I think we should eliminate all possible `as` conversions. They are
-> >    non-descriptive (since they can do may *very* different things) and
-> >    ptr2int conversions are part of that.
-> > 2) At some point we will have to move to the provenance API, since
-> >    that's what Rust chose to do. I don't think that doing it at a later
-> >    point is doing anyone a favor.
->
-> We don't *have* to do anything. Sure, most `as` conversions can be
-> removed now that we have fixed the integer type mappings, but I'm still
-> not convinced by this case.
->
-> Like, sure, use it for that one case in `kernel::str` where it uses
-> integers for pointers for some reason. But most other cases, provenance
-> isn't useful.
->
-> > 3) I don't understand the argument that this is confusing to C devs.
-> >    They are just normal functions that are well-documented (and if
-> >    that's not the case, we can just improve them upstream). And
-> >    functions are much easier to learn about than `as` casts (those are
-> >    IMO much more difficult to figure out than then strict provenance
-> >    functions).
->
-> I really don't think that's true, no matter how good the docs are. If
-> you see `addr as *mut c_void` as a C dev, you are going to immediately
-> understand what that means. If you see with_exposed_provenance(addr),
-> you're not going to understand what that means from the name - you have
-> to interrupt your reading and look up the function with the weird name.
->
-> And those docs probably spend a long time talking about stuff that
-> doesn't matter for your pointer, since it's probably a userspace pointer
-> or similar.
->
-> > Thus I think we should keep this patch (with Boqun's improvement).
-> >
-> > >> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-> > >> index 719b0a48ff55..96393bcf6bd7 100644
-> > >> --- a/rust/kernel/uaccess.rs
-> > >> +++ b/rust/kernel/uaccess.rs
-> > >> @@ -226,7 +226,9 @@ pub fn read_raw(&mut self, out: &mut [MaybeUnini=
-t<u8>]) -> Result {
-> > >>          }
-> > >>          // SAFETY: `out_ptr` points into a mutable slice of length =
-`len`, so we may write
-> > >>          // that many bytes to it.
-> > >> -        let res =3D unsafe { bindings::copy_from_user(out_ptr, self=
-.ptr as *const c_void, len) };
-> > >> +        let res =3D unsafe {
-> > >> +            bindings::copy_from_user(out_ptr, crate::with_exposed_p=
-rovenance(self.ptr), len)
-> > >> +        };
-> > >>          if res !=3D 0 {
-> > >>              return Err(EFAULT);
-> > >>          }
-> > >> @@ -264,7 +266,7 @@ pub fn read<T: FromBytes>(&mut self) -> Result<T=
-> {
-> > >>          let res =3D unsafe {
-> > >>              bindings::_copy_from_user(
-> > >>                  out.as_mut_ptr().cast::<c_void>(),
-> > >> -                self.ptr as *const c_void,
-> > >> +                crate::with_exposed_provenance(self.ptr),
-> > >>                  len,
-> > >>              )
-> > >>          };
-> > >
-> > > That's especially true for cases like this. These are userspace point=
-ers
-> > > that are never dereferenced. It's not useful to care about provenance
-> > > here.
-> >
-> > I agree for this case, but I think we shouldn't be using raw pointers
-> > for this to begin with. I'd think that a newtype wrapping `usize` is a
-> > much better fit. It can then also back the `IoRaw` type. AFAIU user
-> > space pointers don't have provenance, right? (if they do, then we shoul=
-d
-> > use this API :)
->
-> We're doing that to the fullest extent possible already. We only convert
-> them to pointers when calling C FFI functions that take user pointers as
-> a raw pointer.
->
-> Alice
+This is a feature I found useful to have while writing Nova driver code
+that accessed registers alongside other operations. I would find myself
+quite confused about whether the guard was held or dropped at a given
+point of the code, and it felt like walking through a minefield; this
+pattern makes things safer and easier to read according to my experience
+writing nova-core code.
 
-Personally, I agree with Benno that `as` conversions are a misfeature
-in the language.
+Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+---
+Changes in v2:
+- Use FnOnce for the callback type.
+- Rename to try_access_with.
+- Don't assume that users will want to map failure to ENXIO and return
+  an option.
+- Use a single method and let users adapt the behavior using their own
+  wrappers/macros.
 
-I think this patch and the ensuing discussion is making perfect the
-enemy of good, so I'd prefer to drop it and revisit when the
-ergonomics have improved.
+---
+Alexandre Courbot (2):
+      rust/revocable: add try_access_with() convenience method
+      samples: rust: convert PCI rust sample driver to use try_access_with()
+
+ rust/kernel/revocable.rs        | 16 ++++++++++++++++
+ samples/rust/rust_driver_pci.rs | 11 +++++------
+ 2 files changed, 21 insertions(+), 6 deletions(-)
+---
+base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
+change-id: 20250313-try_with-cc9f91dd3b60
+
+Best regards,
+-- 
+Alexandre Courbot <acourbot@nvidia.com>
+
 
