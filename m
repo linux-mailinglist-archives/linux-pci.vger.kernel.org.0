@@ -1,188 +1,105 @@
-Return-Path: <linux-pci+bounces-24187-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24188-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AFA9A69C12
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 23:29:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 122DAA69C4B
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 23:53:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92A361897583
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 22:29:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D24253BCC87
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 22:52:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9908B21C17B;
-	Wed, 19 Mar 2025 22:29:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B79E821CA12;
+	Wed, 19 Mar 2025 22:52:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g0NiihJw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cp+9mv/o"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B197E1
-	for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 22:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055231E0DF5
+	for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 22:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742423371; cv=none; b=FgsQTsk09ZEEf2K3QQzxfZ4lVJY4uXSgicEAuxKdugu92tWPXtrTzGphR1nkZpfc210EUucjFwV11mThLicNjgjIJA+W6KjYzzXGYoOOsYiiD2+u4rEpESeIsyWXA/vcrFKP7kVHhLQjQGJbyUub0hzSpSWwB3ZXVr0hnT3v0/s=
+	t=1742424757; cv=none; b=Vw+pPanONTFjLRexUxHWOxPth/sZ38SZyWnQs+82Oo8MILdDdzDIBWoUdbx0Gi3+d2fOGDlOquTd0Uxtd86Jd2hKcgkuxtBfnZzunlg5GihlsLGPRQiqdOEjUOjcy90rTWxPH03H3SlD1unvEW+GlHh6wqlJZVmnN0CO3rC60RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742423371; c=relaxed/simple;
-	bh=v2iXFSSL3TlOTn1D7AnfxdJ8zHloXM7Z085NkCxJlxw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aw0+k1/4TGopbmYKMKIDUsC+p4LefzFndXzVk0nKhU2X11vOTAd0ELVAx99RmVTk6YPKNgn8pdmuoDLljeyEzN0wQz8aMPV7iuuKE8vqowpYxN/ErSKrLMyVm9F96vT9cG/N3Hrucmqd1iNOBSU3F1dqV1mRn6xXLMbM7dJCPs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g0NiihJw; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742423370; x=1773959370;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=v2iXFSSL3TlOTn1D7AnfxdJ8zHloXM7Z085NkCxJlxw=;
-  b=g0NiihJwM+121BBlIttskhtZHJb1RBeRCZw5lD5QD/joB4e1DZZ7OgO+
-   ygs+4ipKYNMDjmPXFevTx76iB98Iqt1FOLIuZedfBGjQRILpJDRIqMUk7
-   QuNVtSpTovtte6X/c937efsgY1DL5NqkwhZQvAz/qzemT2ytxf8xrRN6S
-   3Z5SIzKG+djyu7m/7FN3S791zH/h3ZSa4QZ0loqjvd/sEIUsOcZ3iq7Z4
-   JbDDM+TomOYviCvS4nThS4KsxeBSxPSBA4RQ5H2WORnnEYjTzr7sbrJl6
-   bky3CgvgsXIrR6NSBmYOkmUuRu8Pqm/Z6q3jcrZbx//BHeiENKF0HlUNy
-   g==;
-X-CSE-ConnectionGUID: B8KO+BF/Smql7b1ARDDKJg==
-X-CSE-MsgGUID: 3xWdyMdgT3a+nHpQLRYv9Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="43747302"
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="43747302"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 15:29:29 -0700
-X-CSE-ConnectionGUID: CHgcvB+JSDqRev1gJ1SdPQ==
-X-CSE-MsgGUID: joRNH7CeQEigbWNi4uNQzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="128041115"
-Received: from uaeoff-desk2.amr.corp.intel.com (HELO [10.124.220.142]) ([10.124.220.142])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 15:29:28 -0700
-Message-ID: <e03bf65b-c961-4196-8844-c61ac59a4a1c@linux.intel.com>
-Date: Wed, 19 Mar 2025 15:29:17 -0700
+	s=arc-20240116; t=1742424757; c=relaxed/simple;
+	bh=GEpYuDB4KVECTz5kVtQD0Kwu023EfQfhNZv9+pX30os=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nkkiD5Hsz0F/PUdaeFQNMbnxmvNdt7aruuvbkI6DTO4/4ScnFc/7A12wKNlLxIe2IcNznqJlLtaePMKy259LhFlsUukWzzzubBZnuWDyEGIsbSqIqeaY0ZiBsIfEwJDD2DcLa3NgBqRSWqYEYSsj5mrPu0NpLol7g5hC1n/lOzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cp+9mv/o; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-abec8b750ebso38627566b.0
+        for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 15:52:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742424753; x=1743029553; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GEpYuDB4KVECTz5kVtQD0Kwu023EfQfhNZv9+pX30os=;
+        b=Cp+9mv/olGbhaiPCe9cICnILXp7ll6Eo3TIWKYF4cHvLcS4JyKgHKdwq8I1OmKDFmb
+         4wuYscBZEYs/KxiHWIfppwLSEYTesV/8hlsTGM8HIdjiUZsDywqJr0Xq7o+A84fjaCF/
+         qguco7IJyVKpkuXeRdK1W0qFljlvmoOoyqRbMnpxlAvlml0Vw52sIDANn3Zj1C4q/Gba
+         lIxdJAGJNXWOEs/EVLQbySCfIimS8vcEdYj3JzSfMtQV1/Cu8qdBBgECwxU1WTzoOpfF
+         0LRahufBhg79RzqyXjH+N2sMf/qCiTzeWkTcXcmXLv22wIkd3MuUgvpI3xJXmob6eKqs
+         5Aow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742424753; x=1743029553;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GEpYuDB4KVECTz5kVtQD0Kwu023EfQfhNZv9+pX30os=;
+        b=IMT3ly7b/lL1WufVhq/wZ9wlrqblIPHcgJPXhJ8ZDYpt1uTAKMucb5TYbpm9jL9mBY
+         8Atpuqkurzx7yWBxsF6rWpGc6pBXcTYUW1+RmyhUvkfxrtT2nsjJp+3JFLvd/BwOA+18
+         gJ5RfteM9MaGxc720S1/gPkjZdHDoY5KqKXx8AcElVyiZvrJ7NWwwGsmr/+UTBxPv/vH
+         coAPCFuo9KbtPXzDuWgOH4AeJORm5BCKBeBPk+2zklwJvY5O5+IaSgXimxIZh4gp/Y/6
+         MsX5HVpwfhc8D6+lTM9JwN5yov4CYfbs/qxYf3DNxs/124TOdTMoD4c9H6s8kA6vXLiT
+         NCKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9cjCuMzgpEp061EJ6+tZlxpnBfDIxhc0w+kD8eBKU1RoPX07UP0G3GLQ+JzpZuEccvTI8Tx3Dax8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0qo0oOmXqwo3xUI/rTVHK3wv/2n140ia4RqfhgIsNT0nIeKIl
+	tpUlSml417W9ErDZl5IxDVWcz2chw8yuES1COLkQdnB/Dr3u5YyVnAy8hbXayB7YPx2UPBpjjAl
+	MG3FzXHeDO/yaXBGzAbKP/Ipi90IoDLURX/0A
+X-Gm-Gg: ASbGncuDw9B5Iqz41i/1N3KRkqwqQ+2waXeN5PLSRjF947FXlbRqO3e/U9JA/nI9Okk
+	NI2QNLQJWfkisq/J4VKSkmakwxaUGh6hPshh6bV8QDuvrvqNSffPoKw94UPMjcJssepGIpnraYo
+	fiCwc4nt1Tdc9StdvCaFXF+EalrRxu3yc46vzRv7jMSxh1lX6KCSNAEall
+X-Google-Smtp-Source: AGHT+IFpFkyc3aJVUJNsfdDwR0E+SrBYOjBObT/CKauj5i907Xbq1NEeDKEHd4ATNIT1J+Cplco7+UzmapXSyPwmtcE=
+X-Received: by 2002:a17:906:4795:b0:ac2:c1e:dff0 with SMTP id
+ a640c23a62f3a-ac3b7d7c110mr379867066b.19.1742424752984; Wed, 19 Mar 2025
+ 15:52:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <20250319084050.366718-1-pandoh@google.com> <e03bf65b-c961-4196-8844-c61ac59a4a1c@linux.intel.com>
+In-Reply-To: <e03bf65b-c961-4196-8844-c61ac59a4a1c@linux.intel.com>
+From: Jon Pan-Doh <pandoh@google.com>
+Date: Wed, 19 Mar 2025 15:52:21 -0700
+X-Gm-Features: AQ5f1Jq_6niQMEuTZjwyU_plBF40bweAZcGV6lcuu4Z3zwarWgSGnZvm0OzorDU
+Message-ID: <CAMC_AXXKqTMN2RR4d-h=Wnzf6kHG8Y2T028JYWDNByNE6n3Ttw@mail.gmail.com>
 Subject: Re: [PATCH v3 0/8] Rate limit AER logs
-To: Jon Pan-Doh <pandoh@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>
-Cc: linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>,
- Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
- Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Terry Bowman <Terry.bowman@amd.com>
-References: <20250319084050.366718-1-pandoh@google.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250319084050.366718-1-pandoh@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>, 
+	linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
+	Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+	Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Lukas Wunner <lukas@wunner.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Terry Bowman <Terry.bowman@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jon,
+On Wed, Mar 19, 2025 at 3:29=E2=80=AFPM Sathyanarayanan Kuppuswamy
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> What is the baseline version for this patch set? When I tried to apply it=
+ on
+> v6.14-rc7 or linux-next, it does not apply cleanly.
 
-On 3/19/25 1:40 AM, Jon Pan-Doh wrote:
-> Proposal
-> ========
->
-> When using native AER, spammy devices can flood kernel logs with AER errors
-> and slow/stall execution. Add per-device per-error-severity ratelimits
-> for more robust error logging. Allow userspace to configure ratelimits
-> via sysfs knobs.
->
-> Motivation
-> ==========
->
-> Several OCP members have issues with inconsistent PCIe error handling,
-> exacerbated at datacenter scale (myriad of devices).
-> OCP HW/Fault Management subproject set out to solve this by
-> standardizing industry:
->
-> - PCIe error handling best practices
-> - Fault Management/RAS (incl. PCIe errors)
->
-> Exposing PCIe errors/debug info in-band for a userspace daemon (e.g.
-> rasdaemon) to collect/pass on to repairability services is part of the
-> roadmap.
->
-> Background
-> ==========
->
-> AER error spam has been observed many times, both publicly (e.g. [1], [2],
-> [3]) and privately. While it usually occurs with correctable errors, it can
-> happen with uncorrectable errors (e.g. during new HW bringup).
->
-> There have been previous attempts to add ratelimits to AER logs ([4],
-> [5]). The most recent attempt[5] has many similarities with the proposed
-> approach.
->
-> Patch organization
-> ==================
-> 1-4 AER logging cleanup
-> 5-8 Ratelimits and sysfs knobs
->
-> Outstanding work
-> ================
-> Cleanup:
-> - Consolidate aer_print_error() and pci_print_error() path
->
-> Roadmap:
-> - IRQ ratelimiting
+v2 and v3 are both based off of pci/aer.
 
-What is the baseline version for this patch set? When I tried to apply it on
-v6.14-rc7 or linux-next, it does not apply cleanly.
-
-> v3:
-> - Ratelimit aer_print_port_info() (drop Patch 1)
-> - Add ratelimit enable toggle
-> - Move trace outside of ratelimit
-> - Split log level (Patch 2) into two
-> - More descriptive documentation/sysfs naming
-> v2:
-> - Rebased on top of pci/aer (6.14.rc-1)
-> - Split series into log and IRQ ratelimits (defer patch 5)
-> - Dropped patch 8 (Move AER sysfs)
-> - Added log level cleanup patch[6] from Karolina's series
-> - Fixed bug where dpc errors didn't increment counters
-> - "X callbacks suppressed" message on ratelimit release -> immediately
-> - Separate documentation into own patch
->
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=215027
-> [2] https://bugzilla.kernel.org/show_bug.cgi?id=201517
-> [3] https://bugzilla.kernel.org/show_bug.cgi?id=196183
-> [4] https://lore.kernel.org/linux-pci/20230606035442.2886343-2-grundler@chromium.org/
-> [5] https://lore.kernel.org/linux-pci/cover.1736341506.git.karolina.stolarek@oracle.com/
-> [6] https://lore.kernel.org/linux-pci/edd77011aafad4c0654358a26b4e538d0c5a321d.1736341506.git.karolina.stolarek@oracle.com/
->
-> Jon Pan-Doh (6):
->    PCI/AER: Move AER stat collection out of __aer_print_error()
->    PCI/AER: Rename struct aer_stats to aer_report
->    PCI/AER: Introduce ratelimit for error logs
->    PCI/AER: Add ratelimits to PCI AER Documentation
->    PCI/AER: Add sysfs attributes for log ratelimits
->    PCI/AER: Update AER sysfs ABI filename
->
-> Karolina Stolarek (2):
->    PCI/AER: Check log level once and propagate down
->    PCI/AER: Make all pci_print_aer() log levels depend on error type
->
->   ...es-aer_stats => sysfs-bus-pci-devices-aer} |  34 +++
->   Documentation/PCI/pcieaer-howto.rst           |  16 +-
->   drivers/pci/pci-sysfs.c                       |   1 +
->   drivers/pci/pci.h                             |   4 +-
->   drivers/pci/pcie/aer.c                        | 276 +++++++++++++-----
->   drivers/pci/pcie/dpc.c                        |   3 +-
->   include/linux/pci.h                           |   2 +-
->   7 files changed, 266 insertions(+), 70 deletions(-)
->   rename Documentation/ABI/testing/{sysfs-bus-pci-devices-aer_stats => sysfs-bus-pci-devices-aer} (77%)
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+Thanks,
+Jon
 
