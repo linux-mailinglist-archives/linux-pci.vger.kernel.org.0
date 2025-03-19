@@ -1,60 +1,59 @@
-Return-Path: <linux-pci+bounces-24065-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24066-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17554A67F1D
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 22:50:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFA2EA68171
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 01:25:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 78A861758F1
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Mar 2025 21:50:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 72C61189C247
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 00:24:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83B711DEFDA;
-	Tue, 18 Mar 2025 21:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81C823AC1C;
+	Wed, 19 Mar 2025 00:24:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q1vjQMJl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="YEMEirML"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1B41F0988
-	for <linux-pci@vger.kernel.org>; Tue, 18 Mar 2025 21:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631C733985;
+	Wed, 19 Mar 2025 00:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742334627; cv=none; b=qcothMi6MOan4Rd5HuD8zMCRlXI5EZrC0IV8MWt05rmzJwp22f8YxZnHB1PZsXh1qXfug1J+ckmjr36cmLU6UHdxiNj7X5OhDNPRh3XpxnHAyMKfsQ6nheNRy/qYHeO01ZsyFNj1m9NVidIUcMGYz90j3aC0GOh+gruMhU9o0Bg=
+	t=1742343843; cv=none; b=lPO7c6vn5MK7KLkAQS0dZK7/d/5WnIdXkGU1CDM0gHTk8pZyKjx9K2IwnqSK/NMfNd0RDTQONQY0ZmvF7p7zT99GuDoDXYZsAubVJ3d6u3ZVK5spbHBtK5GD9dN6WvBlBbeF13wQlp/wsMbEEXfqJEBpHOlayMKxMsRCUbaIXpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742334627; c=relaxed/simple;
-	bh=JQ9fPiB+aEU+fIvz8wPy9BTF9ZmsJD9nneZKBwpD+Nw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=s0KUfnK9JOtP8w6bu2QwziLYLvWGIbYaCvNFO4xOp4CwgAfUClC4jMBfgoSRspEIPmNiInOUqoaajiy49tTrLaeeO/kNXR0IOB7crWBKJdOWm5u4bCDNn2MnDWiwHb7dHfLlszMoLkw/vD+w5zC4lJqXbCr3TYSN4QEjkg6kOn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q1vjQMJl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A77ECC4CEDD;
-	Tue, 18 Mar 2025 21:50:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742334626;
-	bh=JQ9fPiB+aEU+fIvz8wPy9BTF9ZmsJD9nneZKBwpD+Nw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=q1vjQMJlzMQkWmq2cdvemQJe0NXKqm1V9k3ptBAr5U9W+bjgR4ybx5GJnLq5s0P71
-	 Tfh64xBdECJkb0xrq9aeCVzT1eWL7EiebBl7xXpkSAPL+6qrw2WiaErzDUFQhYJWdM
-	 WMEup0PO3Illo4AwvblxGC0IAjo6u4Gn5iMEhZkwkzOA9E6BiGDfu9sE8xDN+dTwCv
-	 3SjSW3JNrc9CRLuSnKginXU8VE3/woaZMV7kZ8wGpxSC3Wi4nhP6OYkJOZAz5yj8Zu
-	 dFrG8OC8F3oBGXQrJRkFo/hhVb7rAM6TvaBfXWSg2u6CSXvukZJQIf6qu0jz5kui2p
-	 DlhahlPML178Q==
-Date: Tue, 18 Mar 2025 16:50:25 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Huacai Chen <chenhuacai@gmail.com>
-Cc: Huacai Chen <chenhuacai@loongson.cn>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] PCI: loongson: Add quirk for OHCI device rev 0x02
-Message-ID: <20250318215025.GA1012479@bhelgaas>
+	s=arc-20240116; t=1742343843; c=relaxed/simple;
+	bh=kpwPorho5RAIlOTKwDI1K7TbUtmkZgLv9uf70GDbAzs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kZGQAxIv+eYoX4+1n7FLD2cbFFMMIgH6QHbvCu/qOb7dD5vXizmFvZMppYXJ7wS2ASTYeMI4pLCmwRf5PGF296X28T5aJjjYIzpZ/njsbS0Z/798O6yWJ2XORJX3dj4g+aeetGM7COmOaaTVMr/38On2EVnNWXJJychXnSZHncA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=YEMEirML; arc=none smtp.client-ip=185.70.40.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1742343831; x=1742603031;
+	bh=wo8sG357bqPQGvo1ptE/J2DUrCHu4PLnYcZXmvZkOVg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=YEMEirML/9gSZoY4uHrogBNTNvxEpxE0nxlVpywtlo14E0NRo4sgzUeJN1ICHW9iO
+	 Hs+62Ze9ETjQBTJTeuLI5K2hdmXC8SZpKd5BbjGLL6946MWSFePjzutamwGquo5qet
+	 kM5QtFDwNf4PGYH1yp70Gmcz0yrnE7oE2IfwKBlovHoFVkizndoKrRkJMIzZz08SKV
+	 6dV2+9PXQLkSRDJI7R1Td2XFN2wrvwQ1TY8VT+XnnuA+SE4kcXiQd9q9QSmfpA92bx
+	 Msx0AQFyXojGx3yE4tSzDjoUxLfRmylGQ7lyudT44w8+wb4hMqwdyzddxqNdSFsmxt
+	 HszvOGsn/Ha3Q==
+Date: Wed, 19 Mar 2025 00:23:44 +0000
+To: Alice Ryhl <aliceryhl@google.com>, Tamir Duberstein <tamird@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 6/6] rust: use strict provenance APIs
+Message-ID: <D8JTC30W0NF6.17SR73Y9I99ZT@proton.me>
+In-Reply-To: <Z9lnIJCcVSza6UVo@google.com>
+References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com> <20250317-ptr-as-ptr-v5-6-5b5f21fa230a@gmail.com> <Z9lnIJCcVSza6UVo@google.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 3ec742d730499fbb39dfc15a00acc0e43da941a3
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -62,160 +61,88 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H7c9jkXqwn2STdYq-1g4jVELjKL5jaO2aASFAETW5FLHw@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-[+cc Greg, USB maintainer; I'm proposing ohci_pci_quirks for this]
-
-On Tue, Mar 18, 2025 at 09:07:10PM +0800, Huacai Chen wrote:
-> On Sat, Mar 15, 2025 at 3:59 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Tue, Jan 21, 2025 at 07:42:25PM +0800, Huacai Chen wrote:
-> > > The OHCI controller (rev 0x02) under LS7A PCI host has a hardware flaw.
-> > > MMIO register with offset 0x60/0x64 is treated as legacy PS2-compatible
-> > > keyboard/mouse interface, which confuse the OHCI controller. Since OHCI
-> > > only use a 4KB BAR resource indeed, the LS7A OHCI controller's 32KB BAR
-> > > is wrapped around (the second 4KB BAR space is the same as the first 4KB
-> > > internally). So we can add an 4KB offset (0x1000) to the BAR resource as
-> > > a workaround.
-> >
-> > It looks like usb_hcd_pci_probe() only uses BAR 0 in the OHCI case, so
-> > I assume this OHCI controller has a single 32KB BAR?
+On Tue Mar 18, 2025 at 1:29 PM CET, Alice Ryhl wrote:
+> On Mon, Mar 17, 2025 at 10:23:56AM -0400, Tamir Duberstein wrote:
+>> Throughout the tree, use the strict provenance APIs stabilized in Rust
+>> 1.84.0[1]. Retain backwards-compatibility by introducing forwarding
+>> functions at the `kernel` crate root along with polyfills for rustc <
+>> 1.84.0.
+>>=20
+>> Use `#[allow(clippy::incompatible_msrv)]` to avoid warnings on rustc <
+>> 1.84.0 as our MSRV is 1.78.0.
+>>=20
+>> In the `kernel` crate, enable the strict provenance lints on rustc >=3D
+>> 1.84.0; do this in `lib.rs` rather than `Makefile` to avoid introducing
+>> compiler flags that are dependent on the rustc version in use.
+>>=20
+>> Link: https://blog.rust-lang.org/2025/01/09/Rust-1.84.0.html#strict-prov=
+enance-apis [1]
+>> Suggested-by: Benno Lossin <benno.lossin@proton.me>
+>> Link: https://lore.kernel.org/all/D8EIXDMRXMJP.36TFCGWZBRS3Y@proton.me/
+>> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 >
-> Yes.
-> 
-> > And you're saying that in that BAR, the 0x1000-0x1fff offsets are
-> > aliases of the 0x0000-0x0fff area?
+> I'm not convinced that the pros of this change outweigh the cons. I
+> think this is going to be too confusing for the C developers who look at
+> this code.
+
+1) I think we should eliminate all possible `as` conversions. They are
+   non-descriptive (since they can do may *very* different things) and
+   ptr2int conversions are part of that.
+2) At some point we will have to move to the provenance API, since
+   that's what Rust chose to do. I don't think that doing it at a later
+   point is doing anyone a favor.
+3) I don't understand the argument that this is confusing to C devs.
+   They are just normal functions that are well-documented (and if
+   that's not the case, we can just improve them upstream). And
+   functions are much easier to learn about than `as` casts (those are
+   IMO much more difficult to figure out than then strict provenance
+   functions).
+
+Thus I think we should keep this patch (with Boqun's improvement).
+
+>> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+>> index 719b0a48ff55..96393bcf6bd7 100644
+>> --- a/rust/kernel/uaccess.rs
+>> +++ b/rust/kernel/uaccess.rs
+>> @@ -226,7 +226,9 @@ pub fn read_raw(&mut self, out: &mut [MaybeUninit<u8=
+>]) -> Result {
+>>          }
+>>          // SAFETY: `out_ptr` points into a mutable slice of length `len=
+`, so we may write
+>>          // that many bytes to it.
+>> -        let res =3D unsafe { bindings::copy_from_user(out_ptr, self.ptr=
+ as *const c_void, len) };
+>> +        let res =3D unsafe {
+>> +            bindings::copy_from_user(out_ptr, crate::with_exposed_prove=
+nance(self.ptr), len)
+>> +        };
+>>          if res !=3D 0 {
+>>              return Err(EFAULT);
+>>          }
+>> @@ -264,7 +266,7 @@ pub fn read<T: FromBytes>(&mut self) -> Result<T> {
+>>          let res =3D unsafe {
+>>              bindings::_copy_from_user(
+>>                  out.as_mut_ptr().cast::<c_void>(),
+>> -                self.ptr as *const c_void,
+>> +                crate::with_exposed_provenance(self.ptr),
+>>                  len,
+>>              )
+>>          };
 >
-> Yes.
-> 
-> > And this causes some kind of problem because the OCHI driver looks at
-> > offsets 0x60 and 0x64 into the BAR and sees something it doesn't like?
->
-> Yes.
-> 
-> > And this quirk adds 0x1000 to the BAR start, so the OHCI driver looks
-> > at offsets 0x1060 and 0x1064 of the original BAR, and that somehow
-> > avoids a problem?  Even though those are aliases of 0x0060 and 0x0064
-> > of the original BAR?
->
-> Yes.
-> 
-> > > +static void loongson_ohci_quirk(struct pci_dev *dev)
-> > > +{
-> > > +     if (dev->revision == 0x2)
-> > > +             dev->resource[0].start += 0x1000;
-> >
-> > What does this do to the iomem_resource tree?  IIUC, dev->resource[0]
-> > no longer correctly describes the PCI address space consumed by the
-> > device.
->
-> In the iomem_resource tree the whole 32KB is requested for the OHCI
-> controller.
+> That's especially true for cases like this. These are userspace pointers
+> that are never dereferenced. It's not useful to care about provenance
+> here.
 
-I'm skeptical.  The quirk only updates the start, not the end, so I
-think the resource is only 28KB after the quirk.
+I agree for this case, but I think we shouldn't be using raw pointers
+for this to begin with. I'd think that a newtype wrapping `usize` is a
+much better fit. It can then also back the `IoRaw` type. AFAIU user
+space pointers don't have provenance, right? (if they do, then we should
+use this API :)
 
-This is a final quirk, so I think the quirk runs after the BAR
-resource has already been put in the iomem_resource tree.  We
-shouldn't update the resource start/end after that point.
+---
+Cheers,
+Benno
 
-> > If the BAR is actually programmed with [mem 0x20000000-0x20007fff],
-> > the device responds to PCI accesses in that range.  Now you update
-> > resource[0] so it describes the space [mem 0x20001000-0x20008fff].  So
-> > the kernel *thinks* the space at [mem 0x20000000-0x20000fff] is free
-> > and available for something else, which is not true, and that the
-> > device responds at [mem 0x0x20008000-0x20008fff], which is also not
-> > true.
-> >
-> > I think the resource has already been put into the iomem_resource tree
-> > by the time the final fixups are run, so this also may corrupt the
-> > sorting of the tree.
-> >
-> > This just doesn't look safe to me.
->
-> OHCI only uses 4KB io resources (hardware designer told me that this
-> is from USB specification). So if the BAR is [mem
-> 0x20000000-0x20007fff] and without this quirk, software will only
-> use [mem 0x20000000-0x20000fff]; and if we do this quirk, software
-> will only use [mem 0x20001000-0x20001fff]. Since the whole 32KB
-> belongs to OHCI, there won't be corruption.
-
-Here's the path where I think the BAR is requested.  Assume the BAR
-contains 0x20000000 when we boot:
-
-  acpi_pci_root_add
-    pci_acpi_scan_root                  # loongson
-      acpi_pci_root_create
-        pci_scan_child_bus
-          pci_scan_single_device        # details trimmed
-            pci_scan_device
-              pci_read_bases
-                resource[0].start = 0x20000000
-                resource[0].end   = 0x20007fff          # size 32KB
-            pci_device_add
-              pci_fixup_device(pci_fixup_header)        # <--
-      pci_bus_assign_resources          # details trimmed
-        pci_assign_resource
-          pci_bus_alloc_resource
-            allocate_resource
-              __request_resource        # inserted in iomem_resource
-    pci_bus_add_devices
-      pci_bus_add_device
-        pci_fixup_device(pci_fixup_final)
-          resource[0].start += 0x1000                   # now 0x20001000
-
-  ohci_pci_probe
-    usb_hcd_pci_probe(& ohci_pci_hc_driver)
-      if (driver->flags & HCD_MEMORY)
-        hcd->rsrc_start = pci_resource_start(dev, 0)    # 0x20001000
-        hcd->rsrc_len = pci_resource_len(dev, 0)        # now 28KB
-        devm_request_mem_region
-        hcd->regs = devm_ioremap
-      usb_add_hcd
-        hcd->driver->reset
-          ohci_pci_reset                                # <--
-
-So I suspect:
-
-  - BAR contains 0x20000000 initially (for example)
-
-  - pci_bus_assign_resources() inserts 0x20000000-0x20007fff in
-    iomem_resource
-
-  - final quirk updates res->start, so resource is now
-    0x20001000-0x20007fff
-
-  - OHCI driver binds and sees 0x20001000-0x20007fff
-
-  - OHCI driver requests 0x20001000-0x20007fff (28KB)
-
-  - OHCI may only use 4KB, but AFAICS it actually reserves the entire
-    resource[0], which is now only 28KB
-
-  - BAR still contains 0x20000000 ("lspci -b" should confirm this)
-
-  - /proc/iomem contains something like this:
-
-      20001000-20007fff 0000:3e:00.0
-        20001000-20007fff ohci-hcd
-
-Now the device still responds to accesses at 0x20000000 because that's
-what's in the BAR, but the kernel doesn't know that anybody is using
-the 0x20000000-0x20000fff region.
-
-I think the best solution would be to add an entry in
-ohci_pci_quirks[] that bumps hcd->regs up by 0x1000.  Then we wouldn't
-have to touch the struct resource, it would stay 32KB, and it would
-accurately reflect the hardware.
-
-If that doesn't work, I guess you could also make this a *header*
-fixup instead of a final one.  Then we would at least update the
-resource before inserting it in iomem_resource.  But I don't like it
-because the device still responds to an area not mentioned in
-iomem_resource, and the resource is now 28KB, which is an illegal size
-for a PCI BAR.
-
-> > > +}
-> > > +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LOONGSON, DEV_LS7A_OHCI, loongson_ohci_quirk);
 
