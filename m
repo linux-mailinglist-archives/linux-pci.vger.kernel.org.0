@@ -1,229 +1,180 @@
-Return-Path: <linux-pci+bounces-24071-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24072-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80DB2A686D0
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 09:31:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4415AA68715
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 09:41:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D76F617A44D
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 08:31:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92515188D2AB
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 08:41:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B409251789;
-	Wed, 19 Mar 2025 08:31:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C272615A85A;
+	Wed, 19 Mar 2025 08:41:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/ZmCalc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xyoLY7UA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C994D20F091;
-	Wed, 19 Mar 2025 08:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2939C24EF7D
+	for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 08:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742373064; cv=none; b=RzdkwKfac6Rf+c9N9OBTOIuZiLPR4sBUmgcHPxk72VnU/5NutxShNmzge43QSrV3vvdEktIhE2ri81Y1nbdvTBZpSyjNW/vgS8PL/A9NYTrhpae/kgu7+eLemU5GkIzWddUQ6uEGjQwu8DZS/C+H1UotPz6s931hb8TuF5CFDdY=
+	t=1742373660; cv=none; b=sORU8/KZ5JDHhE80/DcQ5fEG8pXCz10Z4KDF1WuanmBNxpt2TYJJVq9BL3oHBKiwah4gBftfR/apKGVt04dsevKdcAAZjGK7mwUFN71H4yFPQQBzgWOmIORTVlm9P/Q8Co0+oUlBR6+VTs60BNQ5bnAWE3QG9rBpNHh/FxTQvmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742373064; c=relaxed/simple;
-	bh=w3JmB7o8CKormT/Akok+UN9U+U8VYEVmbKd3okiCYoE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WcgP+Rt+xPObIsmt1BqHd3kuIvYuVeA+JzlrwHBTJngo8cyeE61nA38kDLiV+xG6gNN1eG/sT+YCRh7/yn+BKu2pG3h0MnAqWDOD0mSfrL+Lt8Sa7Al9oLz1f8aVVDhO2E1wUo4FW4mnQhyivBvyDGOtJB972JsS+wlirjcumWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/ZmCalc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96DF5C4CEE9;
-	Wed, 19 Mar 2025 08:31:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742373063;
-	bh=w3JmB7o8CKormT/Akok+UN9U+U8VYEVmbKd3okiCYoE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k/ZmCalc1dPOZG6tOAhA+Vbavt7ywew9AlCIx2pzmLHVBTMjREfKHqE2Yum/A2k90
-	 Mgo+utD6esZ3GSzapnLqbyG8yVsrTWUf4LItvlOCrYiiwuNO3yR2hQSEZpAOU6nnCo
-	 ZQRiEYn2mZ5bFSK8HEji2pCWj4CLMwBv5PoBA514qIBaTnW4NxRHmPJsRxHz6F9LM6
-	 DEj4Vkpkiz3HR+9d8OInlfDxTa9WdUELXV90gpobKxd8KKBd5UGsQL7y13D0qR11Xw
-	 1V/5hXHr1Z4zSHswxS63wOUI6bDFZ2FK5D8dKbOltHWG9ThPOmE1f0m3YkoTz1ruoI
-	 rs/FbXe+RBpfw==
-Date: Wed, 19 Mar 2025 10:30:58 +0200
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org, linux-mm@kvack.org,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
-Message-ID: <20250319083058.GG1322339@unreal>
-References: <cover.1738765879.git.leonro@nvidia.com>
- <20250220124827.GR53094@unreal>
- <CGME20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648@eucas1p2.samsung.com>
- <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
- <d408b1c7-eabf-4a1e-861c-b2ddf8bf9f0e@samsung.com>
- <20250312193249.GI1322339@unreal>
- <adb63b87-d8f2-4ae6-90c4-125bde41dc29@samsung.com>
- <20250314184911.GR1322339@unreal>
+	s=arc-20240116; t=1742373660; c=relaxed/simple;
+	bh=d/7dSLOwVK4SQyZGJ5xU/bEX1mTCtqM4vFgK5IH0rcM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=WAQ2fFfpFBjG6WqkMCum1CwGe4vIagBZAjsRuL453MxaKRyNXelLlS8CFaG8Me87zF4+xnHVP4Bq+NbIqQmhrjHTgXjta9oqPMOEHFdh9GZ1DXjN0p94DsVLB4AVncVGuHdvhEQhosSXJ1qCE/sPy9i/s5FE2mJTyiDXw0kRSg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pandoh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xyoLY7UA; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pandoh.bounces.google.com
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff8a2c7912so1035297a91.1
+        for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 01:40:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742373658; x=1742978458; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8DGNoL7CybCSP0f8gUzMjvsRtsxkjGkSgopo0IaV0Fk=;
+        b=xyoLY7UAmBg8amyPX5n/aX6RkQ895i4RMVasturCGSAJKtj/8hciuk6Pwyed4ChpBz
+         cAtibQUw1nkRSpCpEorMWffu+RmR+E063fwPdER1AUFlYI66c8mmm+NMHVMsuPxFieM6
+         Y5L7qT12zpuJA5npiuCvLXwrQ4I2aY8/cUCxvtLBBLlnywYuPyDT/Dys8WeYjDgCi+xS
+         1gtj4WK4nj67xYhUoTtlJXQSRnIMp41gWIk4lhmRdqsAmVKsL1RHOWNXMJvjkekPFS6/
+         yrbdH4ju5+3U2QA5DzkLdRAPlCCPyLpjMrIpP48MRpBwwY+sXOtcTjVh8UAprSyZDB54
+         YgBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742373658; x=1742978458;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8DGNoL7CybCSP0f8gUzMjvsRtsxkjGkSgopo0IaV0Fk=;
+        b=nzBW/+S+rTF8ZtvEffnMLko9KzlYdTWETPsDQCx4zru01VJeIA2DJB5mOC3rlAoOVf
+         zTEvToMRhrZSXYyI7vrmFUFAy8Rk20Li+VxjNvtjnw+AQndV8zJq/pFXXxUO7iZ98LRM
+         OmGHf8Wj8a3hNeTwDC0Hf9kVID+5Q5k363dUqMx70eE1G4+oqQfcvO5GeJeczbYiarIQ
+         AD+JAiEljzyo9UPvV/g1ClBZ0inStmkz6sE259LtKQ3b7yXZx25ZVaPkADzGk7iUrE4W
+         XkRAEo6cdqdtu4F9wABesJIObloNtdyBCVkkB5hepDPtn4Dy4O951jgg6+UM44qXhyKz
+         T/Kw==
+X-Gm-Message-State: AOJu0YzNazzl3FgxflLkf817UVRHzu6KTRf2nmXX5oZFdQ05OghGMP4L
+	57pSOMWx6v0QXMxsDY9P7tA+GqJQfBv+AMw+/8xmqNIrBNbTXcz/5JjfwU5zD7yFlRESJgw2xcc
+	22g==
+X-Google-Smtp-Source: AGHT+IG2yH3QksnWU3hbt+aXBwYL7aPCgOL8Q0Dm6VNKvk3n4iLL9J7xBKqAEE+Eid13vS/di3kzJPx0c+k=
+X-Received: from pjbee11.prod.google.com ([2002:a17:90a:fc4b:b0:2ea:46ed:5d3b])
+ (user=pandoh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:180c:b0:2fb:fe21:4841
+ with SMTP id 98e67ed59e1d1-301a5b16c1bmr8401032a91.8.1742373658389; Wed, 19
+ Mar 2025 01:40:58 -0700 (PDT)
+Date: Wed, 19 Mar 2025 01:40:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250314184911.GR1322339@unreal>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
+Message-ID: <20250319084050.366718-1-pandoh@google.com>
+Subject: [PATCH v3 0/8] Rate limit AER logs
+From: Jon Pan-Doh <pandoh@google.com>
+To: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>
+Cc: linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
+	Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+	Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+	"=?UTF-8?q?Ilpo=20J=C3=A4rvinen?=" <ilpo.jarvinen@linux.intel.com>, 
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Terry Bowman <Terry.bowman@amd.com>, 
+	Jon Pan-Doh <pandoh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Mar 14, 2025 at 08:49:11PM +0200, Leon Romanovsky wrote:
-> On Fri, Mar 14, 2025 at 11:52:58AM +0100, Marek Szyprowski wrote:
-> > On 12.03.2025 20:32, Leon Romanovsky wrote:
-> > > On Wed, Mar 12, 2025 at 10:28:32AM +0100, Marek Szyprowski wrote:
-> > >> Hi Robin
-> > >>
-> > >> On 28.02.2025 20:54, Robin Murphy wrote:
-> > >>> On 20/02/2025 12:48 pm, Leon Romanovsky wrote:
-> > >>>> On Wed, Feb 05, 2025 at 04:40:20PM +0200, Leon Romanovsky wrote:
-> > >>>>> From: Leon Romanovsky <leonro@nvidia.com>
-> > >>>>>
-> > >>>>> Changelog:
-> > >>>>> v7:
-> > >>>>>    * Rebased to v6.14-rc1
-> > >>>> <...>
-> > >>>>
-> > >>>>> Christoph Hellwig (6):
-> > >>>>>     PCI/P2PDMA: Refactor the p2pdma mapping helpers
-> > >>>>>     dma-mapping: move the PCI P2PDMA mapping helpers to pci-p2pdma.h
-> > >>>>>     iommu: generalize the batched sync after map interface
-> > >>>>>     iommu/dma: Factor out a iommu_dma_map_swiotlb helper
-> > >>>>>     dma-mapping: add a dma_need_unmap helper
-> > >>>>>     docs: core-api: document the IOVA-based API
-> > >>>>>
-> > >>>>> Leon Romanovsky (11):
-> > >>>>>     iommu: add kernel-doc for iommu_unmap and iommu_unmap_fast
-> > >>>>>     dma-mapping: Provide an interface to allow allocate IOVA
-> > >>>>>     dma-mapping: Implement link/unlink ranges API
-> > >>>>>     mm/hmm: let users to tag specific PFN with DMA mapped bit
-> > >>>>>     mm/hmm: provide generic DMA managing logic
-> > >>>>>     RDMA/umem: Store ODP access mask information in PFN
-> > >>>>>     RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page
-> > >>>>>       linkage
-> > >>>>>     RDMA/umem: Separate implicit ODP initialization from explicit ODP
-> > >>>>>     vfio/mlx5: Explicitly use number of pages instead of allocated
-> > >>>>> length
-> > >>>>>     vfio/mlx5: Rewrite create mkey flow to allow better code reuse
-> > >>>>>     vfio/mlx5: Enable the DMA link API
-> > >>>>>
-> > >>>>>    Documentation/core-api/dma-api.rst   |  70 ++++
-> > >>>>    drivers/infiniband/core/umem_odp.c   | 250 +++++---------
-> > >>>>>    drivers/infiniband/hw/mlx5/mlx5_ib.h |  12 +-
-> > >>>>>    drivers/infiniband/hw/mlx5/odp.c     |  65 ++--
-> > >>>>>    drivers/infiniband/hw/mlx5/umr.c     |  12 +-
-> > >>>>>    drivers/iommu/dma-iommu.c            | 468
-> > >>>>> +++++++++++++++++++++++----
-> > >>>>>    drivers/iommu/iommu.c                |  84 ++---
-> > >>>>>    drivers/pci/p2pdma.c                 |  38 +--
-> > >>>>>    drivers/vfio/pci/mlx5/cmd.c          | 375 +++++++++++----------
-> > >>>>>    drivers/vfio/pci/mlx5/cmd.h          |  35 +-
-> > >>>>>    drivers/vfio/pci/mlx5/main.c         |  87 +++--
-> > >>>>>    include/linux/dma-map-ops.h          |  54 ----
-> > >>>>>    include/linux/dma-mapping.h          |  85 +++++
-> > >>>>>    include/linux/hmm-dma.h              |  33 ++
-> > >>>>>    include/linux/hmm.h                  |  21 ++
-> > >>>>>    include/linux/iommu.h                |   4 +
-> > >>>>>    include/linux/pci-p2pdma.h           |  84 +++++
-> > >>>>>    include/rdma/ib_umem_odp.h           |  25 +-
-> > >>>>>    kernel/dma/direct.c                  |  44 +--
-> > >>>>>    kernel/dma/mapping.c                 |  18 ++
-> > >>>>>    mm/hmm.c                             | 264 +++++++++++++--
-> > >>>>>    21 files changed, 1435 insertions(+), 693 deletions(-)
-> > >>>>>    create mode 100644 include/linux/hmm-dma.h
-> > >>>> Kind reminder.
-> > > <...>
-> > >
-> > >> Removing the need for scatterlists was advertised as the main goal of
-> > >> this new API, but it looks that similar effects can be achieved with
-> > >> just iterating over the pages and calling page-based DMA API directly.
-> > > Such iteration can't be enough because P2P pages don't have struct pages,
-> > > so you can't use reliably and efficiently dma_map_page_attrs() call.
-> > >
-> > > The only way to do so is to use dma_map_sg_attrs(), which relies on SG
-> > > (the one that we want to remove) to map P2P pages.
-> > 
-> > That's something I don't get yet. How P2P pages can be used with 
-> > dma_map_sg_attrs(), but not with dma_map_page_attrs()? Both operate 
-> > internally on struct page pointer.
-> 
-> Yes, and no.
-> See users of is_pci_p2pdma_page(...) function. In dma_*_sg() APIs, there
-> is a real check and support for p2p. In dma_map_page_attrs() variants,
-> this support is missing (ignored, or error is returned).
-> 
-> > 
-> > >> Maybe I missed something. I still see some advantages in this DMA API
-> > >> extension, but I would also like to see the clear benefits from
-> > >> introducing it, like perf logs or other benchmark summary.
-> > > We didn't focus yet on performance, however Christoph mentioned in his
-> > > block RFC [1] that even simple conversion should improve performance as
-> > > we are performing one P2P lookup per-bio and not per-SG entry as was
-> > > before [2]. In addition it decreases memory [3] too.
-> > >
-> > > [1] https://lore.kernel.org/all/cover.1730037261.git.leon@kernel.org/
-> > > [2] https://lore.kernel.org/all/34d44537a65aba6ede215a8ad882aeee028b423a.1730037261.git.leon@kernel.org/
-> > > [3] https://lore.kernel.org/all/383557d0fa1aa393dbab4e1daec94b6cced384ab.1730037261.git.leon@kernel.org/
-> > >
-> > > So clear benefits are:
-> > > 1. Ability to use native for subsystem structure, e.g. bio for block,
-> > > umem for RDMA, dmabuf for DRM, e.t.c. It removes current wasteful
-> > > conversions from and to SG in order to work with DMA API.
-> > > 2. Batched request and iotlb sync optimizations (perform only once).
-> > > 3. Avoid very expensive call to pgmap pointer.
-> > > 4. Expose MMIO over VFIO without hacks (PCI BAR doesn't have struct pages).
-> > > See this series for such a hack
-> > > https://lore.kernel.org/all/20250307052248.405803-1-vivek.kasireddy@intel.com/
-> > 
-> > I see those benefits and I admit that for typical DMA-with-IOMMU case it 
-> > would improve some things. I think that main concern from Robin was how 
-> > to handle it for the cases without an IOMMU.
-> 
-> In such case, we fallback to non-IOMMU flow (old, well-established one).
-> See this HMM patch as an example https://lore.kernel.org/all/a796da065fa8a9cb35d591ce6930400619572dcc.1738765879.git.leonro@nvidia.com/
-> +dma_addr_t hmm_dma_map_pfn(struct device *dev, struct hmm_dma_map *map,
-> +			   size_t idx,
-> +			   struct pci_p2pdma_map_state *p2pdma_state)
-> ...
-> +	if (dma_use_iova(state)) {
-> ...
-> +	} else {
-> ...
-> +		dma_addr = dma_map_page(dev, page, 0, map->dma_entry_size,
-> +					DMA_BIDIRECTIONAL);
-> 
-> Thanks
+Proposal
+========
 
-Marek,
+When using native AER, spammy devices can flood kernel logs with AER errors
+and slow/stall execution. Add per-device per-error-severity ratelimits
+for more robust error logging. Allow userspace to configure ratelimits
+via sysfs knobs.
 
-Did it answer your concerns?
+Motivation
+==========
 
-How can we progress here? As you can see, the chances to get meaningful
-response to your review request and my questions are not high.
+Several OCP members have issues with inconsistent PCIe error handling,
+exacerbated at datacenter scale (myriad of devices).
+OCP HW/Fault Management subproject set out to solve this by
+standardizing industry:
 
-Thanks
+- PCIe error handling best practices
+- Fault Management/RAS (incl. PCIe errors)
 
-> 
-> > 
-> > Best regards
-> > -- 
-> > Marek Szyprowski, PhD
-> > Samsung R&D Institute Poland
-> > 
-> 
+Exposing PCIe errors/debug info in-band for a userspace daemon (e.g.
+rasdaemon) to collect/pass on to repairability services is part of the
+roadmap.
+
+Background
+==========
+
+AER error spam has been observed many times, both publicly (e.g. [1], [2],
+[3]) and privately. While it usually occurs with correctable errors, it can
+happen with uncorrectable errors (e.g. during new HW bringup). 
+
+There have been previous attempts to add ratelimits to AER logs ([4],
+[5]). The most recent attempt[5] has many similarities with the proposed
+approach.
+
+Patch organization
+==================
+1-4 AER logging cleanup
+5-8 Ratelimits and sysfs knobs
+
+Outstanding work
+================
+Cleanup:
+- Consolidate aer_print_error() and pci_print_error() path
+
+Roadmap:
+- IRQ ratelimiting
+
+v3:
+- Ratelimit aer_print_port_info() (drop Patch 1)
+- Add ratelimit enable toggle
+- Move trace outside of ratelimit
+- Split log level (Patch 2) into two
+- More descriptive documentation/sysfs naming
+v2:
+- Rebased on top of pci/aer (6.14.rc-1)
+- Split series into log and IRQ ratelimits (defer patch 5)
+- Dropped patch 8 (Move AER sysfs)
+- Added log level cleanup patch[6] from Karolina's series
+- Fixed bug where dpc errors didn't increment counters
+- "X callbacks suppressed" message on ratelimit release -> immediately
+- Separate documentation into own patch
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=215027
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=201517
+[3] https://bugzilla.kernel.org/show_bug.cgi?id=196183
+[4] https://lore.kernel.org/linux-pci/20230606035442.2886343-2-grundler@chromium.org/
+[5] https://lore.kernel.org/linux-pci/cover.1736341506.git.karolina.stolarek@oracle.com/
+[6] https://lore.kernel.org/linux-pci/edd77011aafad4c0654358a26b4e538d0c5a321d.1736341506.git.karolina.stolarek@oracle.com/
+
+Jon Pan-Doh (6):
+  PCI/AER: Move AER stat collection out of __aer_print_error()
+  PCI/AER: Rename struct aer_stats to aer_report
+  PCI/AER: Introduce ratelimit for error logs
+  PCI/AER: Add ratelimits to PCI AER Documentation
+  PCI/AER: Add sysfs attributes for log ratelimits
+  PCI/AER: Update AER sysfs ABI filename
+
+Karolina Stolarek (2):
+  PCI/AER: Check log level once and propagate down
+  PCI/AER: Make all pci_print_aer() log levels depend on error type
+
+ ...es-aer_stats => sysfs-bus-pci-devices-aer} |  34 +++
+ Documentation/PCI/pcieaer-howto.rst           |  16 +-
+ drivers/pci/pci-sysfs.c                       |   1 +
+ drivers/pci/pci.h                             |   4 +-
+ drivers/pci/pcie/aer.c                        | 276 +++++++++++++-----
+ drivers/pci/pcie/dpc.c                        |   3 +-
+ include/linux/pci.h                           |   2 +-
+ 7 files changed, 266 insertions(+), 70 deletions(-)
+ rename Documentation/ABI/testing/{sysfs-bus-pci-devices-aer_stats => sysfs-bus-pci-devices-aer} (77%)
+
+-- 
+2.49.0.rc1.451.g8f38331e32-goog
+
 
