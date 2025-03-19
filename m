@@ -1,106 +1,117 @@
-Return-Path: <linux-pci+bounces-24136-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24134-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C0CAA69221
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 16:02:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD55CA692D8
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 16:17:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E2399171A7B
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 14:56:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 256521B8039C
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 14:53:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DA9B1DF98E;
-	Wed, 19 Mar 2025 14:54:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30F0619DF6A;
+	Wed, 19 Mar 2025 14:42:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y4qD2VAX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="GcDS8OTD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322B912C499;
-	Wed, 19 Mar 2025 14:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E02A1C2DC8;
+	Wed, 19 Mar 2025 14:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742396040; cv=none; b=AA2BrP5Z0Lg+1jzSIGAn1/txPt09vL1JEpi48kpjIboBRJsvOkgmLGTaNVQBtpB1RgLC4Lhz9ZCLvfvKU2FcumnEBefaJi3dOq3eAV2yZVXzk1QyZ4QIeYxwnmtakN/PCrojrN3FZaYIGUQn3grEyaOjsYdZIsOLcOB2Kl/gRhk=
+	t=1742395335; cv=none; b=S2FVfiTG6glFccys9bqLqzBS+mNe30WT/2EYsgBjCRJQ9x8DkW9OVPYXnTwnzLw7ejrHJEIzEn3Whzs72qw2XINcP+dQaJs4P8jCDeh/CcONGZQP2dW8SIIS16IoJL0azdaJcfeFGmKWxRNHVfCkZLmtD9gQvabHlCZvxyd3MMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742396040; c=relaxed/simple;
-	bh=UbK7w+zXIirXffFtrlTXfemOE22THTSAu37y25idMog=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=moHU8m618CnfRVwN9iOFMU1I2oqXqbBbX91WuXGtC9UitBOVPRWvf12byTI04QpLb5KrEQ7r024F1C8KtLdiDR407ZNWNyF/+oKvMQCLu2yrZUoyagGx+3JBG3drkKN3E0yrpFsObFoM7lmQoRLyTkmUi5+J8HFK0Bl3o56UXMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y4qD2VAX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CA14C4CEEC;
-	Wed, 19 Mar 2025 14:53:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742396039;
-	bh=UbK7w+zXIirXffFtrlTXfemOE22THTSAu37y25idMog=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y4qD2VAXSvm2lK+Tgjl7+RXJZRdsk4arFDNiB8407Z3Q1AI2bWv7vKlOZhbYc4RQS
-	 uCQpUvXtsBQpIxyVwtOvSGcdZAIs9yUsHNwnzdDjP4gEI3YhDoRmHA2JUEsEgHVQzM
-	 eB2vG2dZq8koIEATdNPt+0tlPtc2V2vW4xSOztH+Sbiv/I0KmpiZKKDFyi5Q/pCkoB
-	 UQYQ2UE7Ijiap1Sqgo3TE3kSeHNkqUNbVoWk/NIFA+arg7jltcNgqgaGVcboVPoXKb
-	 uBOxo/ALVfo2SBaK6aEEUcKlDohZ1covUS5SN7DFMLdKL1zQRlSdYdwA+rfFsU72an
-	 X32rKGq2lNobA==
-From: Danilo Krummrich <dakr@kernel.org>
-To: bhelgaas@google.com,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu
-Cc: linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 2/2] rust: platform: require Send for Driver trait implementers
-Date: Wed, 19 Mar 2025 15:52:56 +0100
-Message-ID: <20250319145350.69543-2-dakr@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250319145350.69543-1-dakr@kernel.org>
-References: <20250319145350.69543-1-dakr@kernel.org>
+	s=arc-20240116; t=1742395335; c=relaxed/simple;
+	bh=bCOft/JhMU8SEKijSQKbTE4qG+J6v26KZ9Z7njGEcfM=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IOoAzUvSSkqwa2wVU5luDqb32GCVHf9Z7LAOPh3q1fx6sObzgL3W6JhihCKr8AFEL3fV9MNBY9Xnq/QkG+2qo4JOMp3p/c7GPkHuehvJiRSqfouioBBc/WnneeVCLMlFt/y1PrNVwXSulRphmxquJEvs0plYZHgoaDD7Ji9PC3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=GcDS8OTD; arc=none smtp.client-ip=185.70.40.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=jnzritqb25f3dpabhq6q3tlb3i.protonmail; t=1742395329; x=1742654529;
+	bh=fKjxqBanJ4UwqwqzsSkDUGmW2J4uGrM8pH9avz1kRVg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=GcDS8OTDEF9InoMEGSe19FdGzOCb6kgP3vStM6cGFZGeSxYLN1y0nS+w7HNZQdZdL
+	 pOJLwqjKD0biMVP8nkDMq8ZByEBm07bngocavgm6Hzody1/alY3GmAUra2ZAwoInku
+	 3KqN+d4Lr8pQ/khEsI5SnC1KkDfEs5kcS/c4z+gd+eK9PwbNhnTlDUYz6wjS8Xh6s9
+	 7E1p7+PNMCubDN4f7ExWowPll90FzPq4CtjjlB9kvPfZYMsSGq4pIqXKHmfJ1AjyUQ
+	 hTQsKDrpV5uV4vMR7SqMtiDI4+lvbow4PcXMV6GVg20Tp6pPXetGVtndvAYad3QP64
+	 4h3tu7Tpt93GA==
+Date: Wed, 19 Mar 2025 14:42:03 +0000
+To: Tamir Duberstein <tamird@gmail.com>, Alice Ryhl <aliceryhl@google.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 6/6] rust: use strict provenance APIs
+Message-ID: <D8KBL9Z0B68N.2Q3MU9UK9YI6G@proton.me>
+In-Reply-To: <CAJ-ks9m8r_ABh4ift3wmM_wpbYLo=ZuhUarfLJKQnS7TcGHRdg@mail.gmail.com>
+References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com> <20250317-ptr-as-ptr-v5-6-5b5f21fa230a@gmail.com> <Z9lnIJCcVSza6UVo@google.com> <D8JTC30W0NF6.17SR73Y9I99ZT@proton.me> <Z9q2xpwsNMDzZ2Gp@google.com> <CAJ-ks9m8r_ABh4ift3wmM_wpbYLo=ZuhUarfLJKQnS7TcGHRdg@mail.gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: dd49ae1b90588e97a7bfa9a9405906359dcc61de
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The instance of Self, returned and created by Driver::probe() is
-dropped in the bus' remove() callback.
+On Wed Mar 19, 2025 at 3:14 PM CET, Tamir Duberstein wrote:
+> On Wed, Mar 19, 2025 at 8:21=E2=80=AFAM Alice Ryhl <aliceryhl@google.com>=
+ wrote:
+>> On Wed, Mar 19, 2025 at 12:23:44AM +0000, Benno Lossin wrote:
+>> > On Tue Mar 18, 2025 at 1:29 PM CET, Alice Ryhl wrote:
+>> > > On Mon, Mar 17, 2025 at 10:23:56AM -0400, Tamir Duberstein wrote:
+>> > >> @@ -264,7 +266,7 @@ pub fn read<T: FromBytes>(&mut self) -> Result<=
+T> {
+>> > >>          let res =3D unsafe {
+>> > >>              bindings::_copy_from_user(
+>> > >>                  out.as_mut_ptr().cast::<c_void>(),
+>> > >> -                self.ptr as *const c_void,
+>> > >> +                crate::with_exposed_provenance(self.ptr),
+>> > >>                  len,
+>> > >>              )
+>> > >>          };
+>> > >
+>> > > That's especially true for cases like this. These are userspace poin=
+ters
+>> > > that are never dereferenced. It's not useful to care about provenanc=
+e
+>> > > here.
+>> >
+>> > I agree for this case, but I think we shouldn't be using raw pointers
+>> > for this to begin with. I'd think that a newtype wrapping `usize` is a
+>> > much better fit. It can then also back the `IoRaw` type. AFAIU user
+>> > space pointers don't have provenance, right? (if they do, then we shou=
+ld
+>> > use this API :)
+>>
+>> We're doing that to the fullest extent possible already. We only convert
+>> them to pointers when calling C FFI functions that take user pointers as
+>> a raw pointer.
+>>
+>> Alice
+>
+> Personally, I agree with Benno that `as` conversions are a misfeature
+> in the language.
+>
+> I think this patch and the ensuing discussion is making perfect the
+> enemy of good, so I'd prefer to drop it and revisit when the
+> ergonomics have improved.
 
-Request implementers of the Driver trait to implement Send, since the
-remove() callback is not guaranteed to run from the same thread as
-probe().
+I don't think that we need to rush on the rest of the patch series.
+Boqun's suggestion is very good and I'm not sure which ergonomics need
+to be improved here.
 
-Fixes: 683a63befc73 ("rust: platform: add basic platform device / driver abstractions")
-Reported-by: Alice Ryhl <aliceryhl@google.com>
-Closes: https://lore.kernel.org/lkml/Z9rDxOJ2V2bPjj5i@google.com/
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/platform.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index 2811ca53d8b6..e37531bae8e9 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -149,7 +149,7 @@ macro_rules! module_platform_driver {
- ///     }
- /// }
- ///```
--pub trait Driver {
-+pub trait Driver: Send {
-     /// The type holding driver private data about each device id supported by the driver.
-     ///
-     /// TODO: Use associated_type_defaults once stabilized:
--- 
-2.48.1
+Cheers,
+Benno
 
 
