@@ -1,78 +1,78 @@
-Return-Path: <linux-pci+bounces-24176-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24177-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB20CA69B5B
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 22:52:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 237FBA69B6C
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 22:53:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 732FB19C0E66
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 21:52:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E511F8A2501
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Mar 2025 21:52:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A46221D3F5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6200821D5A2;
 	Wed, 19 Mar 2025 21:51:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="AkUZAIa+"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="e2eX6k3U"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF62D21C18A
-	for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 21:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F037D21B9DF
+	for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 21:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742421099; cv=none; b=qi/eoWBsxmcpjwaAuA3dDlptQRDGq2l+LaUIfDWTgtjJnYdXe5wXLkMBCMEQX9WLQPYi9kAABKY1KPKptUL8AvNHnC7i1r7+k+0GlKlr6LmEtyExBMa4C1b6F4AxFCCwwfA4zsmNPS7FaLgnwtp0IWtJfPlk8zeAo6DqSpakQL4=
+	t=1742421099; cv=none; b=JYu6lQn0rk1jYhyhfvS+DMa+mWqXljCjsu5ZWW6/MoMN9UubMJ5wgkBCauekJrPYGKjg+69DnKulaLdfZGZVk6m/oOI6aRKHurtd3ZCzEqyMDyarm862vDDpMwO4YIt5whGeZf417F2liCNGxc0cW7fZISHjBbqd9KI9sOEjAhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742421099; c=relaxed/simple;
-	bh=wuknwZLxLt2qNCptppIXMc1I86STDBXg9/xvk3YQ4p8=;
+	bh=eDNRqUbvzAmNlS85fAcYjalGmSbq3zyjbxYXnR64aTM=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pq8je1jbTEO9VYlIMcQepDaN6/aZOfnrcMbRWiBLyVB0CPJtotlGDuDUOvO1pAoz2sASyasQFysDDb2woelt8d0+3GibMAIc/KiOaxdf5/FOdDshre6f+QwwLFSP5u/2apjFEcrU1e+Ah7edaG8NVk1ZXJMx3gbzA+oxeG+iX8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AkUZAIa+; arc=none smtp.client-ip=209.85.208.49
+	 MIME-Version; b=up8HMNXmKuxcylChErpPdLAfXfmKhG41DRScEpjGJPKCMXEr8Bct7tGN49loaOgwfW3axjUP9MDrfeQztqs+f6ymi1/ppAxIw8bYP84fjSeBbs0Uzc15M+ZrvSNxbqwHoCf49qKWivdyxsLmYlcc1J5RYrLX1AnDISA6dj6EdWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=e2eX6k3U; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e61375c108so191812a12.1
-        for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 14:51:32 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac297cbe017so224158366b.0
+        for <linux-pci@vger.kernel.org>; Wed, 19 Mar 2025 14:51:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1742421091; x=1743025891; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1742421092; x=1743025892; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UG7ce5K9BRvhMvy7f8Xcql7UdHIn9+1aScTI/TDbS48=;
-        b=AkUZAIa+7RucKDlN/OTytzTcrVrx2W848XCa6WH02ycVgXy1jn++8Tj8p8cFmbDkb3
-         Yn+dacWYV6jAHJueAP3pBl3E5mirx3NtTYkoW9FrPu9JfRl+yrhFEnmFz2uV8k7/MPt4
-         NeugMjR+WSbtwRLYhF9wCxik/AYyu1BNLO8Y24aubjt8iCSF0dEVgyVz1BayeuEKw8g6
-         XzYpeLmmowgmKUc6axT1cM7dpHz3WNSh+VQNKfjUIyiLD/qZN7cCn2cd5RQyuZBDT5mI
-         3EGO4e52jdtU8m+M/iIJ1UPRT9X4FP76kpuBivk8uIpEfAY2mneyNGt2WLB+VDP2N7rB
-         eyHQ==
+        bh=QevKPwqW8YUaS72p79IwmwVKLmJBNGfQKtwymY/cxYg=;
+        b=e2eX6k3ULSSpTC4m13qZxSJdAE+OTyf1yOQl7lt7pIWj5MczE/UXPiQNIG2Dh0nRZF
+         CH6AeOETeuoUoFzinO2eMgzoeYz+X8ses63QVj+FlumJeJ6LzaZcfJowusgv9l0O1a7h
+         mQF37QdLexxun9LYOXr+c8ocLPDyKCa+dY5hFYmueFdrweCNa1EwMXmyUos6v6553j1J
+         iaKI2wb1Jl3ylyrDe3XOjgV6/avEIti+o00ZkUm8j3IJ1RiGlc4stQbJ3P7XCXXQFw7p
+         pBxLoriwDrtJXVCI9H0F/h1kT9nfuulGUTDp4Wgmv7XloxvnK0T8+9cf8V0dLqAGAzid
+         EukQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742421091; x=1743025891;
+        d=1e100.net; s=20230601; t=1742421092; x=1743025892;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UG7ce5K9BRvhMvy7f8Xcql7UdHIn9+1aScTI/TDbS48=;
-        b=V0RXJjwIr+hvLHo4KbF2v8YqmSLM++Anc/jpoUvFBPa8wZWzrcSmOdDinVE8jdHrYx
-         dCwNu0ljnM8ZjjqESvc8qR7CD93B4a5nosUXwUfF5vsysvwYx4xWeb38utcip5pDhzp1
-         pTJUAznAMpVTQK/L5uJ6+gH2kD5Vg6UnpyHDvppcyx7n12skDshs3/gCeC4XIdkpAemq
-         +H1QiTBseHrqrYwsSj09Zor/xhXvP+jJ0lQnEFeQ2ZaDFt9iqONEc0g11QJScdqjKkU7
-         hQU24sFsCfTsfnPcY9XWgXuadx5w5Z4U4KUY7gAFNzsV8+AT5N1gIw98I6l9/8KJ2AiY
-         nFEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXiNp0hmQ9qQyJCZGcmgADXo/DdypovIIwIB3pmYfyYS55mdXy+HXHA0E13XMrCsAiDFoh1GbMEKCc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+5Q8drdgBx+likE+NvQGJ07Q67egGalDbEZfV6vAaKSHXJwPL
-	DrLcdhiUgg4awvPlQ3RPmmRIsO7FkurZVekVIqXKn/AJon3DfHlFYOHaskcWPDE=
-X-Gm-Gg: ASbGncvmYuXzQNG+9IkxxPfYMihlaV8HkWDYrPPQhEc7waaMQxjzNGb2e3Lzkrv6j6F
-	B9Z2Nrdgjch/FDBhJKENOCSgWu5KzlMIevDKfq617haHEo+veEta37ZYw4iCji3m5WBbjkpnbdO
-	iMwxY6UZAb6ebcD5Uez/h00yONwr69lZxYsqUvu1ypLzSxidwqiqNK4+OCpe0OLvB4JRcBE0HYP
-	0Jj84+7K9Bs6WlYjgx4A/jvuN1o5XK1zAaIL/PVDh4fY4RSARtQjxc9FJjlFFSoZI0KgecLTCM1
-	ZtvZ4xKr3oXHCvuSAGqEy4LM2cRErxzo1mSH9VA/mnSkahLsQ6ibOk+pQb73HV4kn4B+Tl91AO5
-	dIufD03xD0A==
-X-Google-Smtp-Source: AGHT+IERteuRQWX1BBajZrcAYw2H5oKveZj4SPQqflp5CRELBuITP/P5wmHXJND9C6p4TNSAlhcqKw==
-X-Received: by 2002:a05:6402:4408:b0:5e7:8503:1a4b with SMTP id 4fb4d7f45d1cf-5eb9f6b60cdmr1018103a12.18.1742421090716;
-        Wed, 19 Mar 2025 14:51:30 -0700 (PDT)
+        bh=QevKPwqW8YUaS72p79IwmwVKLmJBNGfQKtwymY/cxYg=;
+        b=tjtdEmFBU79Shx8e9oojb51WZs6KAfm/ajc82dIHL1jfcpuI+afU0XsLeEIrGG9i9x
+         gwyq3TRYWl+JkZ0KAVjqYSiC/0u/SfENyk4OmFsyHOhvYfOStr8drLcBANRf/5pv8d/O
+         0hg7O5W/oxka6UbBCx/J8JNDnFui44cr0AIUtlBPOC9igk6U5Oc0q3xCLsOYnR+J5NO9
+         ucBApgJd+6UluhG5/wbYrOvtfFraJOUTJwGW7LWcnq5BDR8gGwZ3Is53DE57FxIahfoA
+         lhmyHZOEUGf3ZQPoUdIwfnpJ+d/wwXdx+n4os0Ezzv+cu/lopE4sjaflMqm69sDlQwr3
+         /u3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVO7w2lIEovh81YZwXdfBd6ZVLtRUA0r0tMNqP6E27Q/a6wOlItR8b82UdvD08QuO+bWOLypglcghM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwB6OnfqzOWdTJ3YCB5uk3DZtoot1SYG2FKk5Si87YyWK00FeGj
+	c1lwCbrd6YJwmNr9K+ItGKzW7kI0YzSVpEmvx+eaAQn7mEq0+BeN7chgaXd+H8g=
+X-Gm-Gg: ASbGncsDcXSG7RQcTX3xVCJcBkxbIxZ0W2ylJvMeWVTuMNe6BszOOsUm8fvKfeHDt/+
+	dUcQUn1J+QGCI9/o8ea0RkywjRgrbeKl3K9nCyXM/apYeHR5z8J4P9VYevISrAW31RKPKkxcX4v
+	F0iJr6HsAXiukdChjgY0t/qtLzopXGmwsnSIlKCRsA4NP+uk5Jjv5DNZ2nf2h0Son0iKNrP0Ths
+	aylmfRSSWHJGEJ4l0Bx1g3bkp4CzlZ/ReFNjRdcxSS0Zx5hrQBe+FEJ7KLXiikqEo/NLHue5EEF
+	26zu9SkJkprYbT8KqtcByHy++5gr06EyAR6crxmcQDCHBzp1HkP0pB4M5PSQRlWJFLalDUumAVm
+	CEdUKaBVNfA==
+X-Google-Smtp-Source: AGHT+IHAVocnO7DU/71pyjkmZ9uqGOqRjILhUmI5pFJlWP5fB2FXo1jOugt61jiOMW/Ysjy2eEQGhg==
+X-Received: by 2002:a17:907:c5c9:b0:ac0:4364:4083 with SMTP id a640c23a62f3a-ac3cd293a02mr150052566b.0.1742421091979;
+        Wed, 19 Mar 2025 14:51:31 -0700 (PDT)
 Received: from localhost (host-87-4-238-14.retail.telecomitalia.it. [87.4.238.14])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e8169b04e5sm9909183a12.35.2025.03.19.14.51.30
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3147ef34asm1079231666b.68.2025.03.19.14.51.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 14:51:30 -0700 (PDT)
+        Wed, 19 Mar 2025 14:51:31 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -110,9 +110,9 @@ To: Andrea della Porta <andrea.porta@suse.com>,
 	Phil Elwell <phil@raspberrypi.com>,
 	Dave Stevenson <dave.stevenson@raspberrypi.com>,
 	kernel-list@raspberrypi.com
-Subject: [PATCH v8 05/13] clk: rp1: Add support for clocks provided by RP1
-Date: Wed, 19 Mar 2025 22:52:26 +0100
-Message-ID: <370137263691f4fc14928e4b378b27f75bfd0826.1742418429.git.andrea.porta@suse.com>
+Subject: [PATCH v8 06/13] pinctrl: rp1: Implement RaspberryPi RP1 gpio support
+Date: Wed, 19 Mar 2025 22:52:27 +0100
+Message-ID: <511141fb10db44d0500de5a8e65ac1b3aa7316ed.1742418429.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1742418429.git.andrea.porta@suse.com>
 References: <cover.1742418429.git.andrea.porta@suse.com>
@@ -124,1584 +124,863 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-RaspberryPi RP1 is an MFD providing, among other peripherals, several
-clock generators and PLLs that drives the sub-peripherals.
-Add the driver to support the clock providers.
+The RP1 is an MFD supporting a gpio controller and /pinmux/pinctrl.
+Add minimum support for the gpio only portion. The driver is in
+pinctrl folder since upcoming patches will add the pinmux/pinctrl
+support where the gpio part can be seen as an addition.
 
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
 ---
- MAINTAINERS           |    5 +
- drivers/clk/Kconfig   |    9 +
- drivers/clk/Makefile  |    1 +
- drivers/clk/clk-rp1.c | 1512 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 1527 insertions(+)
- create mode 100644 drivers/clk/clk-rp1.c
+ MAINTAINERS                   |   1 +
+ drivers/pinctrl/Kconfig       |  11 +
+ drivers/pinctrl/Makefile      |   1 +
+ drivers/pinctrl/pinctrl-rp1.c | 790 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 803 insertions(+)
+ create mode 100644 drivers/pinctrl/pinctrl-rp1.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 896a307fa065..75263700370d 100644
+index 75263700370d..c2749c588809 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -19748,6 +19748,11 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/media/raspberrypi,rp1-cfe.yaml
- F:	drivers/media/platform/raspberrypi/rp1-cfe/
+@@ -19752,6 +19752,7 @@ RASPBERRY PI RP1 PCI DRIVER
+ M:	Andrea della Porta <andrea.porta@suse.com>
+ S:	Maintained
+ F:	drivers/clk/clk-rp1.c
++F:	drivers/pinctrl/pinctrl-rp1.c
  
-+RASPBERRY PI RP1 PCI DRIVER
-+M:	Andrea della Porta <andrea.porta@suse.com>
-+S:	Maintained
-+F:	drivers/clk/clk-rp1.c
-+
  RC-CORE / LIRC FRAMEWORK
  M:	Sean Young <sean@mess.org>
- L:	linux-media@vger.kernel.org
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 713573b6c86c..cff90de71409 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -88,6 +88,15 @@ config COMMON_CLK_RK808
- 	  These multi-function devices have two fixed-rate oscillators, clocked at 32KHz each.
- 	  Clkout1 is always on, Clkout2 can off by control register.
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 95a8e2b9a614..53b265cabc26 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -612,6 +612,17 @@ config PINCTRL_MLXBF3
+ 	  each pin. This driver can also be built as a module called
+ 	  pinctrl-mlxbf3.
  
-+config COMMON_CLK_RP1
-+	tristate "Raspberry Pi RP1-based clock support"
-+	depends on MISC_RP1 || COMPILE_TEST
++config PINCTRL_RP1
++	tristate "Pinctrl driver for RP1"
++	depends on MISC_RP1
 +	default MISC_RP1
++	select PINMUX
++	select PINCONF
++	select GENERIC_PINCONF
 +	help
-+	  Enable common clock framework support for Raspberry Pi RP1.
-+	  This multi-function device has 3 main PLLs and several clock
-+	  generators to drive the internal sub-peripherals.
++	  Enable the gpio and pinctrl/mux driver for RaspberryPi RP1
++	  multi function device.
 +
- config COMMON_CLK_HI655X
- 	tristate "Clock driver for Hi655x" if EXPERT
- 	depends on (MFD_HI655X_PMIC || COMPILE_TEST)
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index bf4bd45adc3a..ff3993ed7e09 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -84,6 +84,7 @@ obj-$(CONFIG_CLK_LS1028A_PLLDIG)	+= clk-plldig.o
- obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
- obj-$(CONFIG_CLK_QORIQ)			+= clk-qoriq.o
- obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
-+obj-$(CONFIG_COMMON_CLK_RP1)            += clk-rp1.o
- obj-$(CONFIG_COMMON_CLK_HI655X)		+= clk-hi655x.o
- obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
- obj-$(CONFIG_COMMON_CLK_SCMI)           += clk-scmi.o
-diff --git a/drivers/clk/clk-rp1.c b/drivers/clk/clk-rp1.c
+ source "drivers/pinctrl/actions/Kconfig"
+ source "drivers/pinctrl/aspeed/Kconfig"
+ source "drivers/pinctrl/bcm/Kconfig"
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index fba1c56624c0..6fb77de58545 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -48,6 +48,7 @@ obj-$(CONFIG_PINCTRL_PIC32)	+= pinctrl-pic32.o
+ obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
+ obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
+ obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
++obj-$(CONFIG_PINCTRL_RP1)       += pinctrl-rp1.o
+ obj-$(CONFIG_PINCTRL_SCMI)	+= pinctrl-scmi.o
+ obj-$(CONFIG_PINCTRL_SINGLE)	+= pinctrl-single.o
+ obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
+diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
 new file mode 100644
-index 000000000000..72c74e344c1d
+index 000000000000..7ff2db0320ba
 --- /dev/null
-+++ b/drivers/clk/clk-rp1.c
-@@ -0,0 +1,1512 @@
++++ b/drivers/pinctrl/pinctrl-rp1.c
+@@ -0,0 +1,790 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
++ * Driver for Raspberry Pi RP1 GPIO unit
++ *
 + * Copyright (C) 2023 Raspberry Pi Ltd.
 + *
-+ * Clock driver for RP1 PCIe multifunction chip.
++ * This driver is inspired by:
++ * pinctrl-bcm2835.c, please see original file for copyright information
 + */
 +
-+#include <linux/bitfield.h>
-+#include <linux/clk-provider.h>
-+#include <linux/regmap.h>
-+#include <linux/math64.h>
-+#include <linux/module.h>
++#include <linux/gpio/driver.h>
++#include <linux/of_irq.h>
 +#include <linux/platform_device.h>
-+#include <linux/units.h>
++#include <linux/regmap.h>
 +
-+#include <dt-bindings/clock/raspberrypi,rp1-clocks.h>
++#define MODULE_NAME "pinctrl-rp1"
++#define RP1_NUM_GPIOS	54
++#define RP1_NUM_BANKS	3
 +
-+#define PLL_SYS_OFFSET			0x08000
-+#define PLL_SYS_CS			(PLL_SYS_OFFSET + 0x00)
-+#define PLL_SYS_PWR			(PLL_SYS_OFFSET + 0x04)
-+#define PLL_SYS_FBDIV_INT		(PLL_SYS_OFFSET + 0x08)
-+#define PLL_SYS_FBDIV_FRAC		(PLL_SYS_OFFSET + 0x0c)
-+#define PLL_SYS_PRIM			(PLL_SYS_OFFSET + 0x10)
-+#define PLL_SYS_SEC			(PLL_SYS_OFFSET + 0x14)
++#define RP1_INT_EDGE_FALLING		BIT(0)
++#define RP1_INT_EDGE_RISING		BIT(1)
++#define RP1_INT_LEVEL_LOW		BIT(2)
++#define RP1_INT_LEVEL_HIGH		BIT(3)
++#define RP1_INT_MASK			GENMASK(3, 0)
++#define RP1_INT_EDGE_BOTH		(RP1_INT_EDGE_FALLING |	\
++					 RP1_INT_EDGE_RISING)
 +
-+#define PLL_AUDIO_OFFSET		0x0c000
-+#define PLL_AUDIO_CS			(PLL_AUDIO_OFFSET + 0x00)
-+#define PLL_AUDIO_PWR			(PLL_AUDIO_OFFSET + 0x04)
-+#define PLL_AUDIO_FBDIV_INT		(PLL_AUDIO_OFFSET + 0x08)
-+#define PLL_AUDIO_FBDIV_FRAC		(PLL_AUDIO_OFFSET + 0x0c)
-+#define PLL_AUDIO_PRIM			(PLL_AUDIO_OFFSET + 0x10)
-+#define PLL_AUDIO_SEC			(PLL_AUDIO_OFFSET + 0x14)
-+#define PLL_AUDIO_TERN			(PLL_AUDIO_OFFSET + 0x18)
++#define RP1_FSEL_COUNT			9
 +
-+#define PLL_VIDEO_OFFSET		0x10000
-+#define PLL_VIDEO_CS			(PLL_VIDEO_OFFSET + 0x00)
-+#define PLL_VIDEO_PWR			(PLL_VIDEO_OFFSET + 0x04)
-+#define PLL_VIDEO_FBDIV_INT		(PLL_VIDEO_OFFSET + 0x08)
-+#define PLL_VIDEO_FBDIV_FRAC		(PLL_VIDEO_OFFSET + 0x0c)
-+#define PLL_VIDEO_PRIM			(PLL_VIDEO_OFFSET + 0x10)
-+#define PLL_VIDEO_SEC			(PLL_VIDEO_OFFSET + 0x14)
++#define RP1_FSEL_ALT0			0x00
++#define RP1_FSEL_GPIO			0x05
++#define RP1_FSEL_NONE			0x09
++#define RP1_FSEL_NONE_HW		0x1f
 +
-+#define GPCLK_OE_CTRL			0x00000
++#define RP1_PAD_DRIVE_2MA		0x0
++#define RP1_PAD_DRIVE_4MA		0x1
++#define RP1_PAD_DRIVE_8MA		0x2
++#define RP1_PAD_DRIVE_12MA		0x3
 +
-+#define CLK_SYS_OFFSET			0x00014
-+#define CLK_SYS_CTRL			(CLK_SYS_OFFSET + 0x00)
-+#define CLK_SYS_DIV_INT			(CLK_SYS_OFFSET + 0x04)
-+#define CLK_SYS_SEL			(CLK_SYS_OFFSET + 0x0c)
-+
-+#define CLK_SLOW_OFFSET			0x00024
-+#define CLK_SLOW_SYS_CTRL		(CLK_SLOW_OFFSET + 0x00)
-+#define CLK_SLOW_SYS_DIV_INT		(CLK_SLOW_OFFSET + 0x04)
-+#define CLK_SLOW_SYS_SEL		(CLK_SLOW_OFFSET + 0x0c)
-+
-+#define CLK_DMA_OFFSET			0x00044
-+#define CLK_DMA_CTRL			(CLK_DMA_OFFSET + 0x00)
-+#define CLK_DMA_DIV_INT			(CLK_DMA_OFFSET + 0x04)
-+#define CLK_DMA_SEL			(CLK_DMA_OFFSET + 0x0c)
-+
-+#define CLK_UART_OFFSET			0x00054
-+#define CLK_UART_CTRL			(CLK_UART_OFFSET + 0x00)
-+#define CLK_UART_DIV_INT		(CLK_UART_OFFSET + 0x04)
-+#define CLK_UART_SEL			(CLK_UART_OFFSET + 0x0c)
-+
-+#define CLK_ETH_OFFSET			0x00064
-+#define CLK_ETH_CTRL			(CLK_ETH_OFFSET + 0x00)
-+#define CLK_ETH_DIV_INT			(CLK_ETH_OFFSET + 0x04)
-+#define CLK_ETH_SEL			(CLK_ETH_OFFSET + 0x0c)
-+
-+#define CLK_PWM0_OFFSET			0x00074
-+#define CLK_PWM0_CTRL			(CLK_PWM0_OFFSET + 0x00)
-+#define CLK_PWM0_DIV_INT		(CLK_PWM0_OFFSET + 0x04)
-+#define CLK_PWM0_DIV_FRAC		(CLK_PWM0_OFFSET + 0x08)
-+#define CLK_PWM0_SEL			(CLK_PWM0_OFFSET + 0x0c)
-+
-+#define CLK_PWM1_OFFSET			0x00084
-+#define CLK_PWM1_CTRL			(CLK_PWM1_OFFSET + 0x00)
-+#define CLK_PWM1_DIV_INT		(CLK_PWM1_OFFSET + 0x04)
-+#define CLK_PWM1_DIV_FRAC		(CLK_PWM1_OFFSET + 0x08)
-+#define CLK_PWM1_SEL			(CLK_PWM1_OFFSET + 0x0c)
-+
-+#define CLK_AUDIO_IN_OFFSET		0x00094
-+#define CLK_AUDIO_IN_CTRL		(CLK_AUDIO_IN_OFFSET + 0x00)
-+#define CLK_AUDIO_IN_DIV_INT		(CLK_AUDIO_IN_OFFSET + 0x04)
-+#define CLK_AUDIO_IN_SEL		(CLK_AUDIO_IN_OFFSET + 0x0c)
-+
-+#define CLK_AUDIO_OUT_OFFSET		0x000a4
-+#define CLK_AUDIO_OUT_CTRL		(CLK_AUDIO_OUT_OFFSET + 0x00)
-+#define CLK_AUDIO_OUT_DIV_INT		(CLK_AUDIO_OUT_OFFSET + 0x04)
-+#define CLK_AUDIO_OUT_SEL		(CLK_AUDIO_OUT_OFFSET + 0x0c)
-+
-+#define CLK_I2S_OFFSET			0x000b4
-+#define CLK_I2S_CTRL			(CLK_I2S_OFFSET + 0x00)
-+#define CLK_I2S_DIV_INT			(CLK_I2S_OFFSET + 0x04)
-+#define CLK_I2S_SEL			(CLK_I2S_OFFSET + 0x0c)
-+
-+#define CLK_MIPI0_CFG_OFFSET		0x000c4
-+#define CLK_MIPI0_CFG_CTRL		(CLK_MIPI0_CFG_OFFSET + 0x00)
-+#define CLK_MIPI0_CFG_DIV_INT		(CLK_MIPI0_CFG_OFFSET + 0x04)
-+#define CLK_MIPI0_CFG_SEL		(CLK_MIPI0_CFG_OFFSET + 0x0c)
-+
-+#define CLK_MIPI1_CFG_OFFSET		0x000d4
-+#define CLK_MIPI1_CFG_CTRL		(CLK_MIPI1_CFG_OFFSET + 0x00)
-+#define CLK_MIPI1_CFG_DIV_INT		(CLK_MIPI1_CFG_OFFSET + 0x04)
-+#define CLK_MIPI1_CFG_SEL		(CLK_MIPI1_CFG_OFFSET + 0x0c)
-+
-+#define CLK_PCIE_AUX_OFFSET		0x000e4
-+#define CLK_PCIE_AUX_CTRL		(CLK_PCIE_AUX_OFFSET + 0x00)
-+#define CLK_PCIE_AUX_DIV_INT		(CLK_PCIE_AUX_OFFSET + 0x04)
-+#define CLK_PCIE_AUX_SEL		(CLK_PCIE_AUX_OFFSET + 0x0c)
-+
-+#define CLK_USBH0_MICROFRAME_OFFSET	0x000f4
-+#define CLK_USBH0_MICROFRAME_CTRL	(CLK_USBH0_MICROFRAME_OFFSET + 0x00)
-+#define CLK_USBH0_MICROFRAME_DIV_INT	(CLK_USBH0_MICROFRAME_OFFSET + 0x04)
-+#define CLK_USBH0_MICROFRAME_SEL	(CLK_USBH0_MICROFRAME_OFFSET + 0x0c)
-+
-+#define CLK_USBH1_MICROFRAME_OFFSET	0x00104
-+#define CLK_USBH1_MICROFRAME_CTRL	(CLK_USBH1_MICROFRAME_OFFSET + 0x00)
-+#define CLK_USBH1_MICROFRAME_DIV_INT	(CLK_USBH1_MICROFRAME_OFFSET + 0x04)
-+#define CLK_USBH1_MICROFRAME_SEL	(CLK_USBH1_MICROFRAME_OFFSET + 0x0c)
-+
-+#define CLK_USBH0_SUSPEND_OFFSET	0x00114
-+#define CLK_USBH0_SUSPEND_CTRL		(CLK_USBH0_SUSPEND_OFFSET + 0x00)
-+#define CLK_USBH0_SUSPEND_DIV_INT	(CLK_USBH0_SUSPEND_OFFSET + 0x04)
-+#define CLK_USBH0_SUSPEND_SEL		(CLK_USBH0_SUSPEND_OFFSET + 0x0c)
-+
-+#define CLK_USBH1_SUSPEND_OFFSET	0x00124
-+#define CLK_USBH1_SUSPEND_CTRL		(CLK_USBH1_SUSPEND_OFFSET + 0x00)
-+#define CLK_USBH1_SUSPEND_DIV_INT	(CLK_USBH1_SUSPEND_OFFSET + 0x04)
-+#define CLK_USBH1_SUSPEND_SEL		(CLK_USBH1_SUSPEND_OFFSET + 0x0c)
-+
-+#define CLK_ETH_TSU_OFFSET		0x00134
-+#define CLK_ETH_TSU_CTRL		(CLK_ETH_TSU_OFFSET + 0x00)
-+#define CLK_ETH_TSU_DIV_INT		(CLK_ETH_TSU_OFFSET + 0x04)
-+#define CLK_ETH_TSU_SEL			(CLK_ETH_TSU_OFFSET + 0x0c)
-+
-+#define CLK_ADC_OFFSET			0x00144
-+#define CLK_ADC_CTRL			(CLK_ADC_OFFSET + 0x00)
-+#define CLK_ADC_DIV_INT			(CLK_ADC_OFFSET + 0x04)
-+#define CLK_ADC_SEL			(CLK_ADC_OFFSET + 0x0c)
-+
-+#define CLK_SDIO_TIMER_OFFSET		0x00154
-+#define CLK_SDIO_TIMER_CTRL		(CLK_SDIO_TIMER_OFFSET + 0x00)
-+#define CLK_SDIO_TIMER_DIV_INT		(CLK_SDIO_TIMER_OFFSET + 0x04)
-+#define CLK_SDIO_TIMER_SEL		(CLK_SDIO_TIMER_OFFSET + 0x0c)
-+
-+#define CLK_SDIO_ALT_SRC_OFFSET		0x00164
-+#define CLK_SDIO_ALT_SRC_CTRL		(CLK_SDIO_ALT_SRC_OFFSET + 0x00)
-+#define CLK_SDIO_ALT_SRC_DIV_INT	(CLK_SDIO_ALT_SRC_OFFSET + 0x04)
-+#define CLK_SDIO_ALT_SRC_SEL		(CLK_SDIO_ALT_SRC_OFFSET + 0x0c)
-+
-+#define CLK_GP0_OFFSET			0x00174
-+#define CLK_GP0_CTRL			(CLK_GP0_OFFSET + 0x00)
-+#define CLK_GP0_DIV_INT			(CLK_GP0_OFFSET + 0x04)
-+#define CLK_GP0_DIV_FRAC		(CLK_GP0_OFFSET + 0x08)
-+#define CLK_GP0_SEL			(CLK_GP0_OFFSET + 0x0c)
-+
-+#define CLK_GP1_OFFSET			0x00184
-+#define CLK_GP1_CTRL			(CLK_GP1_OFFSET + 0x00)
-+#define CLK_GP1_DIV_INT			(CLK_GP1_OFFSET + 0x04)
-+#define CLK_GP1_DIV_FRAC		(CLK_GP1_OFFSET + 0x08)
-+#define CLK_GP1_SEL			(CLK_GP1_OFFSET + 0x0c)
-+
-+#define CLK_GP2_OFFSET			0x00194
-+#define CLK_GP2_CTRL			(CLK_GP2_OFFSET + 0x00)
-+#define CLK_GP2_DIV_INT			(CLK_GP2_OFFSET + 0x04)
-+#define CLK_GP2_DIV_FRAC		(CLK_GP2_OFFSET + 0x08)
-+#define CLK_GP2_SEL			(CLK_GP2_OFFSET + 0x0c)
-+
-+#define CLK_GP3_OFFSET			0x001a4
-+#define CLK_GP3_CTRL			(CLK_GP3_OFFSET + 0x00)
-+#define CLK_GP3_DIV_INT			(CLK_GP3_OFFSET + 0x04)
-+#define CLK_GP3_DIV_FRAC		(CLK_GP3_OFFSET + 0x08)
-+#define CLK_GP3_SEL			(CLK_GP3_OFFSET + 0x0c)
-+
-+#define CLK_GP4_OFFSET			0x001b4
-+#define CLK_GP4_CTRL			(CLK_GP4_OFFSET + 0x00)
-+#define CLK_GP4_DIV_INT			(CLK_GP4_OFFSET + 0x04)
-+#define CLK_GP4_DIV_FRAC		(CLK_GP4_OFFSET + 0x08)
-+#define CLK_GP4_SEL			(CLK_GP4_OFFSET + 0x0c)
-+
-+#define CLK_GP5_OFFSET			0x001c4
-+#define CLK_GP5_CTRL			(CLK_GP5_OFFSET + 0x00)
-+#define CLK_GP5_DIV_INT			(CLK_GP5_OFFSET + 0x04)
-+#define CLK_GP5_DIV_FRAC		(CLK_GP5_OFFSET + 0x08)
-+#define CLK_GP5_SEL			(CLK_GP5_OFFSET + 0x0c)
-+
-+#define CLK_SYS_RESUS_CTRL		0x0020c
-+
-+#define CLK_SLOW_SYS_RESUS_CTRL		0x00214
-+
-+#define FC0_OFFSET			0x0021c
-+#define FC0_REF_KHZ			(FC0_OFFSET + 0x00)
-+#define FC0_MIN_KHZ			(FC0_OFFSET + 0x04)
-+#define FC0_MAX_KHZ			(FC0_OFFSET + 0x08)
-+#define FC0_DELAY			(FC0_OFFSET + 0x0c)
-+#define FC0_INTERVAL			(FC0_OFFSET + 0x10)
-+#define FC0_SRC				(FC0_OFFSET + 0x14)
-+#define FC0_STATUS			(FC0_OFFSET + 0x18)
-+#define FC0_RESULT			(FC0_OFFSET + 0x1c)
-+#define FC_SIZE				0x20
-+#define FC_COUNT			8
-+#define FC_NUM(idx, off)		((idx) * 32 + (off))
-+
-+#define AUX_SEL				1
-+
-+#define VIDEO_CLOCKS_OFFSET		0x4000
-+#define VIDEO_CLK_VEC_CTRL		(VIDEO_CLOCKS_OFFSET + 0x0000)
-+#define VIDEO_CLK_VEC_DIV_INT		(VIDEO_CLOCKS_OFFSET + 0x0004)
-+#define VIDEO_CLK_VEC_SEL		(VIDEO_CLOCKS_OFFSET + 0x000c)
-+#define VIDEO_CLK_DPI_CTRL		(VIDEO_CLOCKS_OFFSET + 0x0010)
-+#define VIDEO_CLK_DPI_DIV_INT		(VIDEO_CLOCKS_OFFSET + 0x0014)
-+#define VIDEO_CLK_DPI_SEL		(VIDEO_CLOCKS_OFFSET + 0x001c)
-+#define VIDEO_CLK_MIPI0_DPI_CTRL	(VIDEO_CLOCKS_OFFSET + 0x0020)
-+#define VIDEO_CLK_MIPI0_DPI_DIV_INT	(VIDEO_CLOCKS_OFFSET + 0x0024)
-+#define VIDEO_CLK_MIPI0_DPI_DIV_FRAC	(VIDEO_CLOCKS_OFFSET + 0x0028)
-+#define VIDEO_CLK_MIPI0_DPI_SEL		(VIDEO_CLOCKS_OFFSET + 0x002c)
-+#define VIDEO_CLK_MIPI1_DPI_CTRL	(VIDEO_CLOCKS_OFFSET + 0x0030)
-+#define VIDEO_CLK_MIPI1_DPI_DIV_INT	(VIDEO_CLOCKS_OFFSET + 0x0034)
-+#define VIDEO_CLK_MIPI1_DPI_DIV_FRAC	(VIDEO_CLOCKS_OFFSET + 0x0038)
-+#define VIDEO_CLK_MIPI1_DPI_SEL		(VIDEO_CLOCKS_OFFSET + 0x003c)
-+
-+#define DIV_INT_8BIT_MAX		GENMASK(7, 0)	/* max divide for most clocks */
-+#define DIV_INT_16BIT_MAX		GENMASK(15, 0)	/* max divide for GPx, PWM */
-+#define DIV_INT_24BIT_MAX               GENMASK(23, 0)	/* max divide for CLK_SYS */
-+
-+#define FC0_STATUS_DONE			BIT(4)
-+#define FC0_STATUS_RUNNING		BIT(8)
-+#define FC0_RESULT_FRAC_SHIFT		5
-+
-+#define PLL_PRIM_DIV1_MASK		GENMASK(18, 16)
-+#define PLL_PRIM_DIV2_MASK		GENMASK(14, 12)
-+
-+#define PLL_SEC_DIV_MASK		GENMASK(12, 8)
-+
-+#define PLL_CS_LOCK			BIT(31)
-+#define PLL_CS_REFDIV_MASK		BIT(1)
-+
-+#define PLL_PWR_PD			BIT(0)
-+#define PLL_PWR_DACPD			BIT(1)
-+#define PLL_PWR_DSMPD			BIT(2)
-+#define PLL_PWR_POSTDIVPD		BIT(3)
-+#define PLL_PWR_4PHASEPD		BIT(4)
-+#define PLL_PWR_VCOPD			BIT(5)
-+#define PLL_PWR_MASK			GENMASK(5, 0)
-+
-+#define PLL_SEC_RST			BIT(16)
-+#define PLL_SEC_IMPL			BIT(31)
-+
-+/* PLL phase output for both PRI and SEC */
-+#define PLL_PH_EN			BIT(4)
-+#define PLL_PH_PHASE_SHIFT		0
-+
-+#define RP1_PLL_PHASE_0			0
-+#define RP1_PLL_PHASE_90		1
-+#define RP1_PLL_PHASE_180		2
-+#define RP1_PLL_PHASE_270		3
-+
-+/* Clock fields for all clocks */
-+#define CLK_CTRL_ENABLE			BIT(11)
-+#define CLK_CTRL_AUXSRC_MASK		GENMASK(9, 5)
-+#define CLK_CTRL_SRC_SHIFT		0
-+#define CLK_DIV_FRAC_BITS		16
-+
-+#define LOCK_TIMEOUT_US			100000
-+#define LOCK_POLL_DELAY_US		5
-+
-+#define MAX_CLK_PARENTS			16
-+
-+#define PLL_DIV_INVALID			19
-+/*
-+ * Secondary PLL channel output divider table.
-+ * Divider values range from 8 to 19, where
-+ * 19 means invalid.
-+ */
-+static const struct clk_div_table pll_sec_div_table[] = {
-+	{ 0x00, PLL_DIV_INVALID },
-+	{ 0x01, PLL_DIV_INVALID },
-+	{ 0x02, PLL_DIV_INVALID },
-+	{ 0x03, PLL_DIV_INVALID },
-+	{ 0x04, PLL_DIV_INVALID },
-+	{ 0x05, PLL_DIV_INVALID },
-+	{ 0x06, PLL_DIV_INVALID },
-+	{ 0x07, PLL_DIV_INVALID },
-+	{ 0x08,  8 },
-+	{ 0x09,  9 },
-+	{ 0x0a, 10 },
-+	{ 0x0b, 11 },
-+	{ 0x0c, 12 },
-+	{ 0x0d, 13 },
-+	{ 0x0e, 14 },
-+	{ 0x0f, 15 },
-+	{ 0x10, 16 },
-+	{ 0x11, 17 },
-+	{ 0x12, 18 },
-+	{ 0x13, PLL_DIV_INVALID },
-+	{ 0x14, PLL_DIV_INVALID },
-+	{ 0x15, PLL_DIV_INVALID },
-+	{ 0x16, PLL_DIV_INVALID },
-+	{ 0x17, PLL_DIV_INVALID },
-+	{ 0x18, PLL_DIV_INVALID },
-+	{ 0x19, PLL_DIV_INVALID },
-+	{ 0x1a, PLL_DIV_INVALID },
-+	{ 0x1b, PLL_DIV_INVALID },
-+	{ 0x1c, PLL_DIV_INVALID },
-+	{ 0x1d, PLL_DIV_INVALID },
-+	{ 0x1e, PLL_DIV_INVALID },
-+	{ 0x1f, PLL_DIV_INVALID },
-+	{ 0 }
++enum {
++	RP1_PUD_OFF			= 0,
++	RP1_PUD_DOWN			= 1,
++	RP1_PUD_UP			= 2,
 +};
 +
-+struct rp1_clockman {
++enum {
++	RP1_DIR_OUTPUT			= 0,
++	RP1_DIR_INPUT			= 1,
++};
++
++enum {
++	RP1_OUTOVER_PERI		= 0,
++	RP1_OUTOVER_INVPERI		= 1,
++	RP1_OUTOVER_LOW			= 2,
++	RP1_OUTOVER_HIGH		= 3,
++};
++
++enum {
++	RP1_OEOVER_PERI			= 0,
++	RP1_OEOVER_INVPERI		= 1,
++	RP1_OEOVER_DISABLE		= 2,
++	RP1_OEOVER_ENABLE		= 3,
++};
++
++enum {
++	RP1_INOVER_PERI			= 0,
++	RP1_INOVER_INVPERI		= 1,
++	RP1_INOVER_LOW			= 2,
++	RP1_INOVER_HIGH			= 3,
++};
++
++enum {
++	RP1_GPIO_CTRL_IRQRESET_SET		= 0,
++	RP1_GPIO_CTRL_INT_CLR			= 1,
++	RP1_GPIO_CTRL_INT_SET			= 2,
++	RP1_GPIO_CTRL_OEOVER			= 3,
++	RP1_GPIO_CTRL_FUNCSEL			= 4,
++	RP1_GPIO_CTRL_OUTOVER			= 5,
++	RP1_GPIO_CTRL				= 6,
++};
++
++enum {
++	RP1_INTE_SET			= 0,
++	RP1_INTE_CLR			= 1,
++};
++
++enum {
++	RP1_RIO_OUT_SET			= 0,
++	RP1_RIO_OUT_CLR			= 1,
++	RP1_RIO_OE			= 2,
++	RP1_RIO_OE_SET			= 3,
++	RP1_RIO_OE_CLR			= 4,
++	RP1_RIO_IN			= 5,
++};
++
++enum {
++	RP1_PAD_SLEWFAST		= 0,
++	RP1_PAD_SCHMITT			= 1,
++	RP1_PAD_PULL			= 2,
++	RP1_PAD_DRIVE			= 3,
++	RP1_PAD_IN_ENABLE		= 4,
++	RP1_PAD_OUT_DISABLE		= 5,
++};
++
++static const struct reg_field rp1_gpio_fields[] = {
++	[RP1_GPIO_CTRL_IRQRESET_SET]	= REG_FIELD(0x2004, 28, 28),
++	[RP1_GPIO_CTRL_INT_CLR]		= REG_FIELD(0x3004, 20, 23),
++	[RP1_GPIO_CTRL_INT_SET]		= REG_FIELD(0x2004, 20, 23),
++	[RP1_GPIO_CTRL_OEOVER]		= REG_FIELD(0x0004, 14, 15),
++	[RP1_GPIO_CTRL_FUNCSEL]		= REG_FIELD(0x0004, 0, 4),
++	[RP1_GPIO_CTRL_OUTOVER]		= REG_FIELD(0x0004, 12, 13),
++	[RP1_GPIO_CTRL]			= REG_FIELD(0x0004, 0, 31),
++};
++
++static const struct reg_field rp1_inte_fields[] = {
++	[RP1_INTE_SET]			= REG_FIELD(0x2000, 0, 0),
++	[RP1_INTE_CLR]			= REG_FIELD(0x3000, 0, 0),
++};
++
++static const struct reg_field rp1_rio_fields[] = {
++	[RP1_RIO_OUT_SET]		= REG_FIELD(0x2000, 0, 0),
++	[RP1_RIO_OUT_CLR]		= REG_FIELD(0x3000, 0, 0),
++	[RP1_RIO_OE]			= REG_FIELD(0x0004, 0, 0),
++	[RP1_RIO_OE_SET]		= REG_FIELD(0x2004, 0, 0),
++	[RP1_RIO_OE_CLR]		= REG_FIELD(0x3004, 0, 0),
++	[RP1_RIO_IN]			= REG_FIELD(0x0008, 0, 0),
++};
++
++static const struct reg_field rp1_pad_fields[] = {
++	[RP1_PAD_SLEWFAST]		= REG_FIELD(0, 0, 0),
++	[RP1_PAD_SCHMITT]		= REG_FIELD(0, 1, 1),
++	[RP1_PAD_PULL]			= REG_FIELD(0, 2, 3),
++	[RP1_PAD_DRIVE]			= REG_FIELD(0, 4, 5),
++	[RP1_PAD_IN_ENABLE]		= REG_FIELD(0, 6, 6),
++	[RP1_PAD_OUT_DISABLE]		= REG_FIELD(0, 7, 7),
++};
++
++struct rp1_iobank_desc {
++	int min_gpio;
++	int num_gpios;
++	int gpio_offset;
++	int inte_offset;
++	int ints_offset;
++	int rio_offset;
++	int pads_offset;
++};
++
++struct rp1_pin_info {
++	u8 num;
++	u8 bank;
++	u8 offset;
++	u8 fsel;
++	u8 irq_type;
++
++	struct regmap_field *gpio[ARRAY_SIZE(rp1_gpio_fields)];
++	struct regmap_field *rio[ARRAY_SIZE(rp1_rio_fields)];
++	struct regmap_field *inte[ARRAY_SIZE(rp1_inte_fields)];
++	struct regmap_field *pad[ARRAY_SIZE(rp1_pad_fields)];
++};
++
++struct rp1_pinctrl {
 +	struct device *dev;
-+	void __iomem *regs;
-+	struct regmap *regmap;
-+	spinlock_t regs_lock; /* spinlock for all clocks */
++	void __iomem *gpio_base;
++	void __iomem *rio_base;
++	void __iomem *pads_base;
++	int irq[RP1_NUM_BANKS];
++	struct rp1_pin_info pins[RP1_NUM_GPIOS];
 +
-+	/* Must be last */
-+	struct clk_hw_onecell_data onecell;
++	struct pinctrl_dev *pctl_dev;
++	struct gpio_chip gpio_chip;
++	struct pinctrl_gpio_range gpio_range;
++
++	raw_spinlock_t irq_lock[RP1_NUM_BANKS];
 +};
 +
-+struct rp1_pll_core_data {
-+	u32 cs_reg;
-+	u32 pwr_reg;
-+	u32 fbdiv_int_reg;
-+	u32 fbdiv_frac_reg;
-+	u32 fc0_src;
++static const struct rp1_iobank_desc rp1_iobanks[RP1_NUM_BANKS] = {
++	/*         gpio   inte    ints     rio    pads */
++	{  0, 28, 0x0000, 0x011c, 0x0124, 0x0000, 0x0004 },
++	{ 28,  6, 0x4000, 0x411c, 0x4124, 0x4000, 0x4004 },
++	{ 34, 20, 0x8000, 0x811c, 0x8124, 0x8000, 0x8004 },
 +};
 +
-+struct rp1_pll_data {
-+	u32 ctrl_reg;
-+	u32 fc0_src;
-+};
++static int rp1_pinconf_set(struct rp1_pin_info *pin,
++			   unsigned int offset, unsigned long *configs,
++			   unsigned int num_configs);
 +
-+struct rp1_pll_ph_data {
-+	unsigned int phase;
-+	unsigned int fixed_divider;
-+	u32 ph_reg;
-+	u32 fc0_src;
-+};
-+
-+struct rp1_pll_divider_data {
-+	u32 sec_reg;
-+	u32 fc0_src;
-+};
-+
-+struct rp1_clock_data {
-+	int num_std_parents;
-+	int num_aux_parents;
-+	u32 oe_mask;
-+	u32 clk_src_mask;
-+	u32 ctrl_reg;
-+	u32 div_int_reg;
-+	u32 div_frac_reg;
-+	u32 sel_reg;
-+	u32 div_int_max;
-+	unsigned long max_freq;
-+	u32 fc0_src;
-+};
-+
-+struct rp1_clk_desc {
-+	struct clk_hw *(*clk_register)(struct rp1_clockman *clockman,
-+				       struct rp1_clk_desc *desc);
-+	const void *data;
-+	struct clk_hw hw;
-+	struct rp1_clockman *clockman;
-+	unsigned long cached_rate;
-+	struct clk_divider div;
-+};
-+
-+static inline
-+void clockman_write(struct rp1_clockman *clockman, u32 reg, u32 val)
++static struct rp1_pin_info *rp1_get_pin(struct gpio_chip *chip,
++					unsigned int offset)
 +{
-+	regmap_write(clockman->regmap, reg, val);
++	struct rp1_pinctrl *pc = gpiochip_get_data(chip);
++
++	if (pc && offset < RP1_NUM_GPIOS)
++		return &pc->pins[offset];
++	return NULL;
 +}
 +
-+static inline u32 clockman_read(struct rp1_clockman *clockman, u32 reg)
++static void rp1_input_enable(struct rp1_pin_info *pin, int value)
 +{
-+	u32 val;
-+
-+	regmap_read(clockman->regmap, reg, &val);
-+
-+	return val;
++	regmap_field_write(pin->pad[RP1_PAD_IN_ENABLE], !!value);
 +}
 +
-+static int rp1_pll_core_is_on(struct clk_hw *hw)
++static void rp1_output_enable(struct rp1_pin_info *pin, int value)
 +{
-+	struct rp1_clk_desc *pll_core = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = pll_core->clockman;
-+	const struct rp1_pll_core_data *data = pll_core->data;
-+	u32 pwr = clockman_read(clockman, data->pwr_reg);
-+
-+	return (pwr & PLL_PWR_PD) || (pwr & PLL_PWR_POSTDIVPD);
++	regmap_field_write(pin->pad[RP1_PAD_OUT_DISABLE], !value);
 +}
 +
-+static int rp1_pll_core_on(struct clk_hw *hw)
++static u32 rp1_get_fsel(struct rp1_pin_info *pin)
 +{
-+	struct rp1_clk_desc *pll_core = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = pll_core->clockman;
-+	const struct rp1_pll_core_data *data = pll_core->data;
-+	u32 fbdiv_frac, val;
-+	int ret;
++	u32 oeover, fsel;
 +
-+	spin_lock(&clockman->regs_lock);
++	regmap_field_read(pin->gpio[RP1_GPIO_CTRL_OEOVER], &oeover);
++	regmap_field_read(pin->gpio[RP1_GPIO_CTRL_FUNCSEL], &fsel);
 +
-+	if (!(clockman_read(clockman, data->cs_reg) & PLL_CS_LOCK)) {
-+		/* Reset to a known state. */
-+		clockman_write(clockman, data->pwr_reg, PLL_PWR_MASK);
-+		clockman_write(clockman, data->fbdiv_int_reg, 20);
-+		clockman_write(clockman, data->fbdiv_frac_reg, 0);
-+		clockman_write(clockman, data->cs_reg, PLL_CS_REFDIV_MASK);
++	if (oeover != RP1_OEOVER_PERI || fsel >= RP1_FSEL_COUNT)
++		fsel = RP1_FSEL_NONE;
++
++	return fsel;
++}
++
++static void rp1_set_fsel(struct rp1_pin_info *pin, u32 fsel)
++{
++	if (fsel >= RP1_FSEL_COUNT)
++		fsel = RP1_FSEL_NONE_HW;
++
++	rp1_input_enable(pin, 1);
++	rp1_output_enable(pin, 1);
++
++	if (fsel == RP1_FSEL_NONE) {
++		regmap_field_write(pin->gpio[RP1_GPIO_CTRL_OEOVER], RP1_OEOVER_DISABLE);
++	} else {
++		regmap_field_write(pin->gpio[RP1_GPIO_CTRL_OUTOVER], RP1_OUTOVER_PERI);
++		regmap_field_write(pin->gpio[RP1_GPIO_CTRL_OEOVER], RP1_OEOVER_PERI);
 +	}
 +
-+	/* Come out of reset. */
-+	fbdiv_frac = clockman_read(clockman, data->fbdiv_frac_reg);
-+	clockman_write(clockman, data->pwr_reg, fbdiv_frac ? 0 : PLL_PWR_DSMPD);
-+	spin_unlock(&clockman->regs_lock);
++	regmap_field_write(pin->gpio[RP1_GPIO_CTRL_FUNCSEL], fsel);
++}
 +
-+	/* Wait for the PLL to lock. */
-+	ret = regmap_read_poll_timeout(clockman->regmap, data->cs_reg, val,
-+				       val & PLL_CS_LOCK,
-+				       LOCK_POLL_DELAY_US, LOCK_TIMEOUT_US);
-+	if (ret)
-+		dev_err(clockman->dev, "%s: can't lock PLL\n",
-+			clk_hw_get_name(hw));
++static int rp1_get_dir(struct rp1_pin_info *pin)
++{
++	unsigned int val;
++
++	regmap_field_read(pin->rio[RP1_RIO_OE], &val);
++
++	return !val ? RP1_DIR_INPUT : RP1_DIR_OUTPUT;
++}
++
++static void rp1_set_dir(struct rp1_pin_info *pin, bool is_input)
++{
++	int reg = is_input ? RP1_RIO_OE_CLR : RP1_RIO_OE_SET;
++
++	regmap_field_write(pin->rio[reg], 1);
++}
++
++static int rp1_get_value(struct rp1_pin_info *pin)
++{
++	unsigned int val;
++
++	regmap_field_read(pin->rio[RP1_RIO_IN], &val);
++
++	return !!val;
++}
++
++static void rp1_set_value(struct rp1_pin_info *pin, int value)
++{
++	/* Assume the pin is already an output */
++	int reg = value ? RP1_RIO_OUT_SET : RP1_RIO_OUT_CLR;
++
++	regmap_field_write(pin->rio[reg], 1);
++}
++
++static int rp1_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	struct rp1_pin_info *pin = rp1_get_pin(chip, offset);
++	int ret;
++
++	if (!pin)
++		return -EINVAL;
++
++	ret = rp1_get_value(pin);
 +
 +	return ret;
 +}
 +
-+static void rp1_pll_core_off(struct clk_hw *hw)
++static void rp1_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
 +{
-+	struct rp1_clk_desc *pll_core = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = pll_core->clockman;
-+	const struct rp1_pll_core_data *data = pll_core->data;
++	struct rp1_pin_info *pin = rp1_get_pin(chip, offset);
 +
-+	spin_lock(&clockman->regs_lock);
-+	clockman_write(clockman, data->pwr_reg, 0);
-+	spin_unlock(&clockman->regs_lock);
++	if (pin)
++		rp1_set_value(pin, value);
 +}
 +
-+static inline unsigned long get_pll_core_divider(struct clk_hw *hw,
-+						 unsigned long rate,
-+						 unsigned long parent_rate,
-+						 u32 *div_int, u32 *div_frac)
++static int rp1_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
 +{
-+	u32 fbdiv_int, fbdiv_frac;
-+	unsigned long calc_rate;
-+	u64 shifted_fbdiv_int;
-+	u64 div_fp64; /* 32.32 fixed point fraction. */
++	struct rp1_pin_info *pin = rp1_get_pin(chip, offset);
++	u32 fsel;
 +
-+	/* Factor of reference clock to VCO frequency. */
-+	div_fp64 = (u64)(rate) << 32;
-+	div_fp64 = DIV_ROUND_CLOSEST_ULL(div_fp64, parent_rate);
-+
-+	/* Round the fractional component at 24 bits. */
-+	div_fp64 += 1 << (32 - 24 - 1);
-+
-+	fbdiv_int = div_fp64 >> 32;
-+	fbdiv_frac = (div_fp64 >> (32 - 24)) & 0xffffff;
-+
-+	shifted_fbdiv_int = (u64)fbdiv_int << 24;
-+	calc_rate = (u64)parent_rate * (shifted_fbdiv_int + fbdiv_frac);
-+	calc_rate += BIT(23);
-+	calc_rate >>= 24;
-+
-+	*div_int = fbdiv_int;
-+	*div_frac = fbdiv_frac;
-+
-+	return calc_rate;
-+}
-+
-+static int rp1_pll_core_set_rate(struct clk_hw *hw,
-+				 unsigned long rate, unsigned long parent_rate)
-+{
-+	struct rp1_clk_desc *pll_core = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = pll_core->clockman;
-+	const struct rp1_pll_core_data *data = pll_core->data;
-+	unsigned long calc_rate;
-+	u32 fbdiv_int, fbdiv_frac;
-+
-+	/* Disable dividers to start with. */
-+	spin_lock(&clockman->regs_lock);
-+	clockman_write(clockman, data->fbdiv_int_reg, 0);
-+	clockman_write(clockman, data->fbdiv_frac_reg, 0);
-+	spin_unlock(&clockman->regs_lock);
-+
-+	calc_rate = get_pll_core_divider(hw, rate, parent_rate,
-+					 &fbdiv_int, &fbdiv_frac);
-+
-+	spin_lock(&clockman->regs_lock);
-+	clockman_write(clockman, data->pwr_reg, fbdiv_frac ? 0 : PLL_PWR_DSMPD);
-+	clockman_write(clockman, data->fbdiv_int_reg, fbdiv_int);
-+	clockman_write(clockman, data->fbdiv_frac_reg, fbdiv_frac);
-+	spin_unlock(&clockman->regs_lock);
-+
-+	/* Check that reference frequency is no greater than VCO / 16. */
-+	if (WARN_ON_ONCE(parent_rate > (rate / 16)))
-+		return -ERANGE;
-+
-+	pll_core->cached_rate = calc_rate;
-+
-+	spin_lock(&clockman->regs_lock);
-+	/* Don't need to divide ref unless parent_rate > (output freq / 16) */
-+	clockman_write(clockman, data->cs_reg,
-+		       clockman_read(clockman, data->cs_reg) |
-+				     PLL_CS_REFDIV_MASK);
-+	spin_unlock(&clockman->regs_lock);
-+
-+	return 0;
-+}
-+
-+static unsigned long rp1_pll_core_recalc_rate(struct clk_hw *hw,
-+					      unsigned long parent_rate)
-+{
-+	struct rp1_clk_desc *pll_core = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = pll_core->clockman;
-+	const struct rp1_pll_core_data *data = pll_core->data;
-+	u32 fbdiv_int, fbdiv_frac;
-+	unsigned long calc_rate;
-+	u64 shifted_fbdiv_int;
-+
-+	fbdiv_int = clockman_read(clockman, data->fbdiv_int_reg);
-+	fbdiv_frac = clockman_read(clockman, data->fbdiv_frac_reg);
-+
-+	shifted_fbdiv_int = (u64)fbdiv_int << 24;
-+	calc_rate = (u64)parent_rate * (shifted_fbdiv_int + fbdiv_frac);
-+	calc_rate += BIT(23);
-+	calc_rate >>= 24;
-+
-+	return calc_rate;
-+}
-+
-+static long rp1_pll_core_round_rate(struct clk_hw *hw, unsigned long rate,
-+				    unsigned long *parent_rate)
-+{
-+	u32 fbdiv_int, fbdiv_frac;
-+
-+	return get_pll_core_divider(hw, rate, *parent_rate,
-+				    &fbdiv_int, &fbdiv_frac);
-+}
-+
-+static void get_pll_prim_dividers(unsigned long rate, unsigned long parent_rate,
-+				  u32 *divider1, u32 *divider2)
-+{
-+	unsigned int div1, div2;
-+	unsigned int best_div1 = 7, best_div2 = 7;
-+	unsigned long best_rate_diff =
-+		abs_diff(DIV_ROUND_CLOSEST(parent_rate, best_div1 * best_div2), rate);
-+	unsigned long rate_diff, calc_rate;
-+
-+	for (div1 = 1; div1 <= 7; div1++) {
-+		for (div2 = 1; div2 <= div1; div2++) {
-+			calc_rate = DIV_ROUND_CLOSEST(parent_rate, div1 * div2);
-+			rate_diff = abs_diff(calc_rate, rate);
-+
-+			if (calc_rate == rate) {
-+				best_div1 = div1;
-+				best_div2 = div2;
-+				goto done;
-+			} else if (rate_diff < best_rate_diff) {
-+				best_div1 = div1;
-+				best_div2 = div2;
-+				best_rate_diff = rate_diff;
-+			}
-+		}
-+	}
-+
-+done:
-+	*divider1 = best_div1;
-+	*divider2 = best_div2;
-+}
-+
-+static int rp1_pll_set_rate(struct clk_hw *hw,
-+			    unsigned long rate, unsigned long parent_rate)
-+{
-+	struct rp1_clk_desc *pll = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = pll->clockman;
-+	const struct rp1_pll_data *data = pll->data;
-+
-+	u32 prim, prim_div1, prim_div2;
-+
-+	get_pll_prim_dividers(rate, parent_rate, &prim_div1, &prim_div2);
-+
-+	spin_lock(&clockman->regs_lock);
-+	prim = clockman_read(clockman, data->ctrl_reg);
-+	prim &= ~PLL_PRIM_DIV1_MASK;
-+	prim |= FIELD_PREP(PLL_PRIM_DIV1_MASK, prim_div1);
-+	prim &= ~PLL_PRIM_DIV2_MASK;
-+	prim |= FIELD_PREP(PLL_PRIM_DIV2_MASK, prim_div2);
-+	clockman_write(clockman, data->ctrl_reg, prim);
-+	spin_unlock(&clockman->regs_lock);
-+
-+	return 0;
-+}
-+
-+static unsigned long rp1_pll_recalc_rate(struct clk_hw *hw,
-+					 unsigned long parent_rate)
-+{
-+	struct rp1_clk_desc *pll = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = pll->clockman;
-+	const struct rp1_pll_data *data = pll->data;
-+	u32 prim, prim_div1, prim_div2;
-+
-+	prim = clockman_read(clockman, data->ctrl_reg);
-+	prim_div1 = FIELD_GET(PLL_PRIM_DIV1_MASK, prim);
-+	prim_div2 = FIELD_GET(PLL_PRIM_DIV2_MASK, prim);
-+
-+	if (!prim_div1 || !prim_div2) {
-+		dev_err(clockman->dev, "%s: (%s) zero divider value\n",
-+			__func__, clk_hw_get_name(hw));
-+		return 0;
-+	}
-+
-+	return DIV_ROUND_CLOSEST(parent_rate, prim_div1 * prim_div2);
-+}
-+
-+static long rp1_pll_round_rate(struct clk_hw *hw, unsigned long rate,
-+			       unsigned long *parent_rate)
-+{
-+	u32 div1, div2;
-+
-+	get_pll_prim_dividers(rate, *parent_rate, &div1, &div2);
-+
-+	return DIV_ROUND_CLOSEST(*parent_rate, div1 * div2);
-+}
-+
-+static int rp1_pll_ph_is_on(struct clk_hw *hw)
-+{
-+	struct rp1_clk_desc *pll_ph = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = pll_ph->clockman;
-+	const struct rp1_pll_ph_data *data = pll_ph->data;
-+
-+	return !!(clockman_read(clockman, data->ph_reg) & PLL_PH_EN);
-+}
-+
-+static int rp1_pll_ph_on(struct clk_hw *hw)
-+{
-+	struct rp1_clk_desc *pll_ph = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = pll_ph->clockman;
-+	const struct rp1_pll_ph_data *data = pll_ph->data;
-+	u32 ph_reg;
-+
-+	/*
-+	 * TODO: ensure the parent clock is enabled before
-+	 * enabling its phase shifted child.
-+	 */
-+	spin_lock(&clockman->regs_lock);
-+	ph_reg = clockman_read(clockman, data->ph_reg);
-+	ph_reg |= data->phase << PLL_PH_PHASE_SHIFT;
-+	ph_reg |= PLL_PH_EN;
-+	clockman_write(clockman, data->ph_reg, ph_reg);
-+	spin_unlock(&clockman->regs_lock);
-+
-+	return 0;
-+}
-+
-+static void rp1_pll_ph_off(struct clk_hw *hw)
-+{
-+	struct rp1_clk_desc *pll_ph = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = pll_ph->clockman;
-+	const struct rp1_pll_ph_data *data = pll_ph->data;
-+
-+	spin_lock(&clockman->regs_lock);
-+	clockman_write(clockman, data->ph_reg,
-+		       clockman_read(clockman, data->ph_reg) & ~PLL_PH_EN);
-+	spin_unlock(&clockman->regs_lock);
-+}
-+
-+static unsigned long rp1_pll_ph_recalc_rate(struct clk_hw *hw,
-+					    unsigned long parent_rate)
-+{
-+	struct rp1_clk_desc *pll_ph = container_of(hw, struct rp1_clk_desc, hw);
-+	const struct rp1_pll_ph_data *data = pll_ph->data;
-+
-+	return parent_rate / data->fixed_divider;
-+}
-+
-+static long rp1_pll_ph_round_rate(struct clk_hw *hw, unsigned long rate,
-+				  unsigned long *parent_rate)
-+{
-+	struct rp1_clk_desc *pll_ph = container_of(hw, struct rp1_clk_desc, hw);
-+	const struct rp1_pll_ph_data *data = pll_ph->data;
-+
-+	return *parent_rate / data->fixed_divider;
-+}
-+
-+static int rp1_pll_divider_is_on(struct clk_hw *hw)
-+{
-+	struct rp1_clk_desc *divider = container_of(hw, struct rp1_clk_desc, div.hw);
-+	struct rp1_clockman *clockman = divider->clockman;
-+	const struct rp1_pll_data *data = divider->data;
-+
-+	return !(clockman_read(clockman, data->ctrl_reg) & PLL_SEC_RST);
-+}
-+
-+static int rp1_pll_divider_on(struct clk_hw *hw)
-+{
-+	struct rp1_clk_desc *divider = container_of(hw, struct rp1_clk_desc, div.hw);
-+	struct rp1_clockman *clockman = divider->clockman;
-+	const struct rp1_pll_data *data = divider->data;
-+
-+	spin_lock(&clockman->regs_lock);
-+	/* Check the implementation bit is set! */
-+	WARN_ON(!(clockman_read(clockman, data->ctrl_reg) & PLL_SEC_IMPL));
-+	clockman_write(clockman, data->ctrl_reg,
-+		       clockman_read(clockman, data->ctrl_reg) & ~PLL_SEC_RST);
-+	spin_unlock(&clockman->regs_lock);
-+
-+	return 0;
-+}
-+
-+static void rp1_pll_divider_off(struct clk_hw *hw)
-+{
-+	struct rp1_clk_desc *divider = container_of(hw, struct rp1_clk_desc, div.hw);
-+	struct rp1_clockman *clockman = divider->clockman;
-+	const struct rp1_pll_data *data = divider->data;
-+
-+	spin_lock(&clockman->regs_lock);
-+	clockman_write(clockman, data->ctrl_reg,
-+		       clockman_read(clockman, data->ctrl_reg) | PLL_SEC_RST);
-+	spin_unlock(&clockman->regs_lock);
-+}
-+
-+static int rp1_pll_divider_set_rate(struct clk_hw *hw,
-+				    unsigned long rate,
-+				    unsigned long parent_rate)
-+{
-+	struct rp1_clk_desc *divider = container_of(hw, struct rp1_clk_desc, div.hw);
-+	struct rp1_clockman *clockman = divider->clockman;
-+	const struct rp1_pll_data *data = divider->data;
-+	u32 div, sec;
-+
-+	div = DIV_ROUND_UP_ULL(parent_rate, rate);
-+	div = clamp(div, 8u, 19u);
-+
-+	spin_lock(&clockman->regs_lock);
-+	sec = clockman_read(clockman, data->ctrl_reg);
-+	sec &= ~PLL_SEC_DIV_MASK;
-+	sec |= FIELD_PREP(PLL_SEC_DIV_MASK, div);
-+
-+	/* Must keep the divider in reset to change the value. */
-+	sec |= PLL_SEC_RST;
-+	clockman_write(clockman, data->ctrl_reg, sec);
-+
-+	/* TODO: must sleep 10 pll vco cycles */
-+	sec &= ~PLL_SEC_RST;
-+	clockman_write(clockman, data->ctrl_reg, sec);
-+	spin_unlock(&clockman->regs_lock);
-+
-+	return 0;
-+}
-+
-+static unsigned long rp1_pll_divider_recalc_rate(struct clk_hw *hw,
-+						 unsigned long parent_rate)
-+{
-+	return clk_divider_ops.recalc_rate(hw, parent_rate);
-+}
-+
-+static long rp1_pll_divider_round_rate(struct clk_hw *hw,
-+				       unsigned long rate,
-+				       unsigned long *parent_rate)
-+{
-+	return clk_divider_ops.round_rate(hw, rate, parent_rate);
-+}
-+
-+static int rp1_clock_is_on(struct clk_hw *hw)
-+{
-+	struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = clock->clockman;
-+	const struct rp1_clock_data *data = clock->data;
-+
-+	return !!(clockman_read(clockman, data->ctrl_reg) & CLK_CTRL_ENABLE);
-+}
-+
-+static unsigned long rp1_clock_recalc_rate(struct clk_hw *hw,
-+					   unsigned long parent_rate)
-+{
-+	struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = clock->clockman;
-+	const struct rp1_clock_data *data = clock->data;
-+	u64 calc_rate;
-+	u64 div;
-+	u32 frac;
-+
-+	div = clockman_read(clockman, data->div_int_reg);
-+	frac = (data->div_frac_reg != 0) ?
-+		clockman_read(clockman, data->div_frac_reg) : 0;
-+
-+	/* If the integer portion of the divider is 0, treat it as 2^16 */
-+	if (!div)
-+		div = 1 << 16;
-+
-+	div = (div << CLK_DIV_FRAC_BITS) | (frac >> (32 - CLK_DIV_FRAC_BITS));
-+
-+	calc_rate = (u64)parent_rate << CLK_DIV_FRAC_BITS;
-+	calc_rate = div64_u64(calc_rate, div);
-+
-+	return calc_rate;
-+}
-+
-+static int rp1_clock_on(struct clk_hw *hw)
-+{
-+	struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = clock->clockman;
-+	const struct rp1_clock_data *data = clock->data;
-+
-+	spin_lock(&clockman->regs_lock);
-+	clockman_write(clockman, data->ctrl_reg,
-+		       clockman_read(clockman, data->ctrl_reg) | CLK_CTRL_ENABLE);
-+	/* If this is a GPCLK, turn on the output-enable */
-+	if (data->oe_mask)
-+		clockman_write(clockman, GPCLK_OE_CTRL,
-+			       clockman_read(clockman, GPCLK_OE_CTRL) | data->oe_mask);
-+	spin_unlock(&clockman->regs_lock);
-+
-+	return 0;
-+}
-+
-+static void rp1_clock_off(struct clk_hw *hw)
-+{
-+	struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = clock->clockman;
-+	const struct rp1_clock_data *data = clock->data;
-+
-+	spin_lock(&clockman->regs_lock);
-+	clockman_write(clockman, data->ctrl_reg,
-+		       clockman_read(clockman, data->ctrl_reg) & ~CLK_CTRL_ENABLE);
-+	/* If this is a GPCLK, turn off the output-enable */
-+	if (data->oe_mask)
-+		clockman_write(clockman, GPCLK_OE_CTRL,
-+			       clockman_read(clockman, GPCLK_OE_CTRL) & ~data->oe_mask);
-+	spin_unlock(&clockman->regs_lock);
-+}
-+
-+static u32 rp1_clock_choose_div(unsigned long rate, unsigned long parent_rate,
-+				const struct rp1_clock_data *data)
-+{
-+	u64 div;
-+
-+	/*
-+	 * Due to earlier rounding, calculated parent_rate may differ from
-+	 * expected value. Don't fail on a small discrepancy near unity divide.
-+	 */
-+	if (!rate || rate > parent_rate + (parent_rate >> CLK_DIV_FRAC_BITS))
-+		return 0;
-+
-+	/*
-+	 * Always express div in fixed-point format for fractional division;
-+	 * If no fractional divider is present, the fraction part will be zero.
-+	 */
-+	if (data->div_frac_reg) {
-+		div = (u64)parent_rate << CLK_DIV_FRAC_BITS;
-+		div = DIV_ROUND_CLOSEST_ULL(div, rate);
-+	} else {
-+		div = DIV_ROUND_CLOSEST_ULL(parent_rate, rate);
-+		div <<= CLK_DIV_FRAC_BITS;
-+	}
-+
-+	div = clamp(div,
-+		    1ull << CLK_DIV_FRAC_BITS,
-+		    (u64)data->div_int_max << CLK_DIV_FRAC_BITS);
-+
-+	return div;
-+}
-+
-+static u8 rp1_clock_get_parent(struct clk_hw *hw)
-+{
-+	struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = clock->clockman;
-+	const struct rp1_clock_data *data = clock->data;
-+	u32 sel, ctrl;
-+	u8 parent;
-+
-+	/* Sel is one-hot, so find the first bit set */
-+	sel = clockman_read(clockman, data->sel_reg);
-+	parent = ffs(sel) - 1;
-+
-+	/* sel == 0 implies the parent clock is not enabled yet. */
-+	if (!sel) {
-+		/* Read the clock src from the CTRL register instead */
-+		ctrl = clockman_read(clockman, data->ctrl_reg);
-+		parent = (ctrl & data->clk_src_mask) >> CLK_CTRL_SRC_SHIFT;
-+	}
-+
-+	if (parent >= data->num_std_parents)
-+		parent = AUX_SEL;
-+
-+	if (parent == AUX_SEL) {
-+		/*
-+		 * Clock parent is an auxiliary source, so get the parent from
-+		 * the AUXSRC register field.
-+		 */
-+		ctrl = clockman_read(clockman, data->ctrl_reg);
-+		parent = FIELD_GET(CLK_CTRL_AUXSRC_MASK, ctrl);
-+		parent += data->num_std_parents;
-+	}
-+
-+	return parent;
-+}
-+
-+static int rp1_clock_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = clock->clockman;
-+	const struct rp1_clock_data *data = clock->data;
-+	u32 ctrl, sel;
-+
-+	spin_lock(&clockman->regs_lock);
-+	ctrl = clockman_read(clockman, data->ctrl_reg);
-+
-+	if (index >= data->num_std_parents) {
-+		/* This is an aux source request */
-+		if (index >= data->num_std_parents + data->num_aux_parents) {
-+			spin_unlock(&clockman->regs_lock);
-+			return -EINVAL;
-+		}
-+
-+		/* Select parent from aux list */
-+		ctrl &= ~CLK_CTRL_AUXSRC_MASK;
-+		ctrl |= FIELD_PREP(CLK_CTRL_AUXSRC_MASK, index - data->num_std_parents);
-+		/* Set src to aux list */
-+		ctrl &= ~data->clk_src_mask;
-+		ctrl |= (AUX_SEL << CLK_CTRL_SRC_SHIFT) & data->clk_src_mask;
-+	} else {
-+		ctrl &= ~data->clk_src_mask;
-+		ctrl |= (index << CLK_CTRL_SRC_SHIFT) & data->clk_src_mask;
-+	}
-+
-+	clockman_write(clockman, data->ctrl_reg, ctrl);
-+	spin_unlock(&clockman->regs_lock);
-+
-+	sel = rp1_clock_get_parent(hw);
-+	WARN_ONCE(sel != index, "(%s): Parent index req %u returned back %u\n",
-+		  clk_hw_get_name(hw), index, sel);
-+
-+	return 0;
-+}
-+
-+static int rp1_clock_set_rate_and_parent(struct clk_hw *hw,
-+					 unsigned long rate,
-+					 unsigned long parent_rate,
-+					 u8 parent)
-+{
-+	struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-+	struct rp1_clockman *clockman = clock->clockman;
-+	const struct rp1_clock_data *data = clock->data;
-+	u32 div = rp1_clock_choose_div(rate, parent_rate, data);
-+
-+	WARN_ONCE(rate > data->max_freq,
-+		  "(%s): Requested rate (%lu) > max rate (%lu)\n",
-+		  clk_hw_get_name(hw), rate, data->max_freq);
-+
-+	if (WARN_ONCE(!div,
-+		      "clk divider calculated as 0! (%s, rate %lu, parent rate %lu)\n",
-+		      clk_hw_get_name(hw), rate, parent_rate))
-+		div = 1 << CLK_DIV_FRAC_BITS;
-+
-+	spin_lock(&clockman->regs_lock);
-+
-+	clockman_write(clockman, data->div_int_reg, div >> CLK_DIV_FRAC_BITS);
-+	if (data->div_frac_reg)
-+		clockman_write(clockman, data->div_frac_reg, div << (32 - CLK_DIV_FRAC_BITS));
-+
-+	spin_unlock(&clockman->regs_lock);
-+
-+	if (parent != 0xff)
-+		rp1_clock_set_parent(hw, parent);
-+
-+	return 0;
-+}
-+
-+static int rp1_clock_set_rate(struct clk_hw *hw, unsigned long rate,
-+			      unsigned long parent_rate)
-+{
-+	return rp1_clock_set_rate_and_parent(hw, rate, parent_rate, 0xff);
-+}
-+
-+static void rp1_clock_choose_div_and_prate(struct clk_hw *hw,
-+					   int parent_idx,
-+					   unsigned long rate,
-+					   unsigned long *prate,
-+					   unsigned long *calc_rate)
-+{
-+	struct rp1_clk_desc *clock = container_of(hw, struct rp1_clk_desc, hw);
-+	const struct rp1_clock_data *data = clock->data;
-+	struct clk_hw *parent;
-+	u32 div;
-+	u64 tmp;
-+
-+	parent = clk_hw_get_parent_by_index(hw, parent_idx);
-+
-+	*prate = clk_hw_get_rate(parent);
-+	div = rp1_clock_choose_div(rate, *prate, data);
-+
-+	if (!div) {
-+		*calc_rate = 0;
-+		return;
-+	}
-+
-+	/* Recalculate to account for rounding errors */
-+	tmp = (u64)*prate << CLK_DIV_FRAC_BITS;
-+	tmp = div_u64(tmp, div);
-+
-+	/*
-+	 * Prevent overclocks - if all parent choices result in
-+	 * a downstream clock in excess of the maximum, then the
-+	 * call to set the clock will fail.
-+	 */
-+	if (tmp > data->max_freq)
-+		*calc_rate = 0;
-+	else
-+		*calc_rate = tmp;
-+}
-+
-+static int rp1_clock_determine_rate(struct clk_hw *hw,
-+				    struct clk_rate_request *req)
-+{
-+	struct clk_hw *parent, *best_parent = NULL;
-+	unsigned long best_rate = 0;
-+	unsigned long best_prate = 0;
-+	unsigned long best_rate_diff = ULONG_MAX;
-+	unsigned long prate, calc_rate;
-+	size_t i;
-+
-+	/*
-+	 * If the NO_REPARENT flag is set, try to use existing parent.
-+	 */
-+	if ((clk_hw_get_flags(hw) & CLK_SET_RATE_NO_REPARENT)) {
-+		i = rp1_clock_get_parent(hw);
-+		parent = clk_hw_get_parent_by_index(hw, i);
-+		if (parent) {
-+			rp1_clock_choose_div_and_prate(hw, i, req->rate, &prate,
-+						       &calc_rate);
-+			if (calc_rate > 0) {
-+				req->best_parent_hw = parent;
-+				req->best_parent_rate = prate;
-+				req->rate = calc_rate;
-+				return 0;
-+			}
-+		}
-+	}
-+
-+	/*
-+	 * Select parent clock that results in the closest rate (lower or
-+	 * higher)
-+	 */
-+	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-+		parent = clk_hw_get_parent_by_index(hw, i);
-+		if (!parent)
-+			continue;
-+
-+		rp1_clock_choose_div_and_prate(hw, i, req->rate, &prate,
-+					       &calc_rate);
-+
-+		if (abs_diff(calc_rate, req->rate) < best_rate_diff) {
-+			best_parent = parent;
-+			best_prate = prate;
-+			best_rate = calc_rate;
-+			best_rate_diff = abs_diff(calc_rate, req->rate);
-+
-+			if (best_rate_diff == 0)
-+				break;
-+		}
-+	}
-+
-+	if (best_rate == 0)
++	if (!pin)
 +		return -EINVAL;
 +
-+	req->best_parent_hw = best_parent;
-+	req->best_parent_rate = best_prate;
-+	req->rate = best_rate;
++	fsel = rp1_get_fsel(pin);
++	if (fsel != RP1_FSEL_GPIO)
++		return -EINVAL;
++
++	return (rp1_get_dir(pin) == RP1_DIR_OUTPUT) ?
++		GPIO_LINE_DIRECTION_OUT :
++		GPIO_LINE_DIRECTION_IN;
++}
++
++static int rp1_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
++{
++	struct rp1_pin_info *pin = rp1_get_pin(chip, offset);
++
++	if (!pin)
++		return -EINVAL;
++	rp1_set_dir(pin, RP1_DIR_INPUT);
++	rp1_set_fsel(pin, RP1_FSEL_GPIO);
 +
 +	return 0;
 +}
 +
-+static const struct clk_ops rp1_pll_core_ops = {
-+	.is_prepared = rp1_pll_core_is_on,
-+	.prepare = rp1_pll_core_on,
-+	.unprepare = rp1_pll_core_off,
-+	.set_rate = rp1_pll_core_set_rate,
-+	.recalc_rate = rp1_pll_core_recalc_rate,
-+	.round_rate = rp1_pll_core_round_rate,
-+};
-+
-+static const struct clk_ops rp1_pll_ops = {
-+	.set_rate = rp1_pll_set_rate,
-+	.recalc_rate = rp1_pll_recalc_rate,
-+	.round_rate = rp1_pll_round_rate,
-+};
-+
-+static const struct clk_ops rp1_pll_ph_ops = {
-+	.is_prepared = rp1_pll_ph_is_on,
-+	.prepare = rp1_pll_ph_on,
-+	.unprepare = rp1_pll_ph_off,
-+	.recalc_rate = rp1_pll_ph_recalc_rate,
-+	.round_rate = rp1_pll_ph_round_rate,
-+};
-+
-+static const struct clk_ops rp1_pll_divider_ops = {
-+	.is_prepared = rp1_pll_divider_is_on,
-+	.prepare = rp1_pll_divider_on,
-+	.unprepare = rp1_pll_divider_off,
-+	.set_rate = rp1_pll_divider_set_rate,
-+	.recalc_rate = rp1_pll_divider_recalc_rate,
-+	.round_rate = rp1_pll_divider_round_rate,
-+};
-+
-+static const struct clk_ops rp1_clk_ops = {
-+	.is_prepared = rp1_clock_is_on,
-+	.prepare = rp1_clock_on,
-+	.unprepare = rp1_clock_off,
-+	.recalc_rate = rp1_clock_recalc_rate,
-+	.get_parent = rp1_clock_get_parent,
-+	.set_parent = rp1_clock_set_parent,
-+	.set_rate_and_parent = rp1_clock_set_rate_and_parent,
-+	.set_rate = rp1_clock_set_rate,
-+	.determine_rate = rp1_clock_determine_rate,
-+};
-+
-+static struct clk_hw *rp1_register_pll(struct rp1_clockman *clockman,
-+				       struct rp1_clk_desc *desc)
++static int rp1_gpio_direction_output(struct gpio_chip *chip, unsigned int offset,
++				     int value)
 +{
-+	int ret;
++	struct rp1_pin_info *pin = rp1_get_pin(chip, offset);
 +
-+	desc->clockman = clockman;
++	if (!pin)
++		return -EINVAL;
++	rp1_set_value(pin, value);
++	rp1_set_dir(pin, RP1_DIR_OUTPUT);
++	rp1_set_fsel(pin, RP1_FSEL_GPIO);
 +
-+	ret = devm_clk_hw_register(clockman->dev, &desc->hw);
-+
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return &desc->hw;
++	return 0;
 +}
 +
-+static struct clk_hw *rp1_register_pll_divider(struct rp1_clockman *clockman,
-+					       struct rp1_clk_desc *desc)
++static int rp1_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
++			       unsigned long config)
 +{
-+	const struct rp1_pll_data *divider_data = desc->data;
-+	int ret;
++	struct rp1_pin_info *pin = rp1_get_pin(chip, offset);
++	unsigned long configs[] = { config };
 +
-+	desc->div.reg = clockman->regs + divider_data->ctrl_reg;
-+	desc->div.shift = __ffs(PLL_SEC_DIV_MASK);
-+	desc->div.width = __ffs(~(PLL_SEC_DIV_MASK >> desc->div.shift));
-+	desc->div.flags = CLK_DIVIDER_ROUND_CLOSEST;
-+	desc->div.lock = &clockman->regs_lock;
-+	desc->div.hw.init = desc->hw.init;
-+	desc->div.table = pll_sec_div_table;
-+
-+	desc->clockman = clockman;
-+
-+	ret = devm_clk_hw_register(clockman->dev, &desc->div.hw);
-+
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return &desc->div.hw;
++	return rp1_pinconf_set(pin, offset, configs,
++			       ARRAY_SIZE(configs));
 +}
 +
-+static struct clk_hw *rp1_register_clock(struct rp1_clockman *clockman,
-+					 struct rp1_clk_desc *desc)
++static const struct gpio_chip rp1_gpio_chip = {
++	.label = MODULE_NAME,
++	.owner = THIS_MODULE,
++	.request = gpiochip_generic_request,
++	.free = gpiochip_generic_free,
++	.direction_input = rp1_gpio_direction_input,
++	.direction_output = rp1_gpio_direction_output,
++	.get_direction = rp1_gpio_get_direction,
++	.get = rp1_gpio_get,
++	.set = rp1_gpio_set,
++	.base = -1,
++	.set_config = rp1_gpio_set_config,
++	.ngpio = RP1_NUM_GPIOS,
++	.can_sleep = false,
++};
++
++static void rp1_gpio_irq_handler(struct irq_desc *desc)
 +{
-+	const struct rp1_clock_data *clock_data = desc->data;
-+	int ret;
++	struct gpio_chip *chip = irq_desc_get_handler_data(desc);
++	struct irq_chip *host_chip = irq_desc_get_chip(desc);
++	struct rp1_pinctrl *pc = gpiochip_get_data(chip);
++	const struct rp1_iobank_desc *bank;
++	int irq = irq_desc_get_irq(desc);
++	unsigned long ints;
++	int bit_pos;
 +
-+	if (WARN_ON_ONCE(MAX_CLK_PARENTS <
-+	       clock_data->num_std_parents + clock_data->num_aux_parents))
-+		return NULL;
++	if (pc->irq[0] == irq)
++		bank = &rp1_iobanks[0];
++	else if (pc->irq[1] == irq)
++		bank = &rp1_iobanks[1];
++	else
++		bank = &rp1_iobanks[2];
 +
-+	/* There must be a gap for the AUX selector */
-+	if (WARN_ON_ONCE(clock_data->num_std_parents > AUX_SEL &&
-+			 desc->hw.init->parent_data[AUX_SEL].index != -1))
-+		return NULL;
++	chained_irq_enter(host_chip, desc);
 +
-+	desc->clockman = clockman;
++	ints = readl(pc->gpio_base + bank->ints_offset);
++	for_each_set_bit(bit_pos, &ints, 32) {
++		struct rp1_pin_info *pin = rp1_get_pin(chip, bit_pos);
 +
-+	ret = devm_clk_hw_register(clockman->dev, &desc->hw);
++		regmap_field_write(pin->gpio[RP1_GPIO_CTRL_IRQRESET_SET], 1);
++		generic_handle_irq(irq_linear_revmap(pc->gpio_chip.irq.domain,
++						     bank->gpio_offset + bit_pos));
++	}
 +
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return &desc->hw;
++	chained_irq_exit(host_chip, desc);
 +}
 +
-+/* Assignment helper macros for different clock types. */
-+#define _REGISTER(f, ...)	{ .clk_register = f, __VA_ARGS__ }
++static void rp1_gpio_irq_config(struct rp1_pin_info *pin, bool enable)
++{
++	int reg = enable ? RP1_INTE_SET : RP1_INTE_CLR;
 +
-+#define CLK_DATA(type, ...)	.data = &(struct type) { __VA_ARGS__ }
++	regmap_field_write(pin->inte[reg], 1);
++	if (!enable)
++		/* Clear any latched events */
++		regmap_field_write(pin->gpio[RP1_GPIO_CTRL_IRQRESET_SET], 1);
++}
 +
-+#define REGISTER_PLL(...)	_REGISTER(&rp1_register_pll,		\
-+					  __VA_ARGS__)
++static void rp1_gpio_irq_enable(struct irq_data *data)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	unsigned int gpio = irqd_to_hwirq(data);
++	struct rp1_pin_info *pin = rp1_get_pin(chip, gpio);
 +
-+#define REGISTER_PLL_DIV(...)	_REGISTER(&rp1_register_pll_divider,	\
-+					  __VA_ARGS__)
++	rp1_gpio_irq_config(pin, true);
++}
 +
-+#define REGISTER_CLK(...)	_REGISTER(&rp1_register_clock,		\
-+					  __VA_ARGS__)
++static void rp1_gpio_irq_disable(struct irq_data *data)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	unsigned int gpio = irqd_to_hwirq(data);
++	struct rp1_pin_info *pin = rp1_get_pin(chip, gpio);
 +
-+static struct rp1_clk_desc pll_sys_core_desc = REGISTER_PLL(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"pll_sys_core",
-+		(const struct clk_parent_data[]) { { .index = 0 } },
-+		&rp1_pll_core_ops,
-+		CLK_IS_CRITICAL
-+	),
-+	CLK_DATA(rp1_pll_core_data,
-+		 .cs_reg = PLL_SYS_CS,
-+		 .pwr_reg = PLL_SYS_PWR,
-+		 .fbdiv_int_reg = PLL_SYS_FBDIV_INT,
-+		 .fbdiv_frac_reg = PLL_SYS_FBDIV_FRAC,
-+	)
-+);
++	rp1_gpio_irq_config(pin, false);
++}
 +
-+static struct rp1_clk_desc pll_audio_core_desc = REGISTER_PLL(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"pll_audio_core",
-+		(const struct clk_parent_data[]) { { .index = 0 } },
-+		&rp1_pll_core_ops,
-+		CLK_IS_CRITICAL
-+	),
-+	CLK_DATA(rp1_pll_core_data,
-+		 .cs_reg = PLL_AUDIO_CS,
-+		 .pwr_reg = PLL_AUDIO_PWR,
-+		 .fbdiv_int_reg = PLL_AUDIO_FBDIV_INT,
-+		 .fbdiv_frac_reg = PLL_AUDIO_FBDIV_FRAC,
-+	)
-+);
++static int rp1_irq_set_type(struct rp1_pin_info *pin, unsigned int type)
++{
++	u32 irq_flags;
 +
-+static struct rp1_clk_desc pll_video_core_desc = REGISTER_PLL(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"pll_video_core",
-+		(const struct clk_parent_data[]) { { .index = 0 } },
-+		&rp1_pll_core_ops,
-+		CLK_IS_CRITICAL
-+	),
-+	CLK_DATA(rp1_pll_core_data,
-+		 .cs_reg = PLL_VIDEO_CS,
-+		 .pwr_reg = PLL_VIDEO_PWR,
-+		 .fbdiv_int_reg = PLL_VIDEO_FBDIV_INT,
-+		 .fbdiv_frac_reg = PLL_VIDEO_FBDIV_FRAC,
-+	)
-+);
++	switch (type) {
++	case IRQ_TYPE_NONE:
++		irq_flags = 0;
++		break;
++	case IRQ_TYPE_EDGE_RISING:
++		irq_flags = RP1_INT_EDGE_RISING;
++		break;
++	case IRQ_TYPE_EDGE_FALLING:
++		irq_flags = RP1_INT_EDGE_FALLING;
++		break;
++	case IRQ_TYPE_EDGE_BOTH:
++		irq_flags = RP1_INT_EDGE_RISING | RP1_INT_EDGE_FALLING;
++		break;
++	case IRQ_TYPE_LEVEL_HIGH:
++		irq_flags = RP1_INT_LEVEL_HIGH;
++		break;
++	case IRQ_TYPE_LEVEL_LOW:
++		irq_flags = RP1_INT_LEVEL_LOW;
++		break;
 +
-+static struct rp1_clk_desc pll_sys_desc = REGISTER_PLL(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"pll_sys",
-+		(const struct clk_parent_data[]) {
-+			{ .hw = &pll_sys_core_desc.hw }
-+		},
-+		&rp1_pll_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_pll_data,
-+		 .ctrl_reg = PLL_SYS_PRIM,
-+		 .fc0_src = FC_NUM(0, 2),
-+	)
-+);
++	default:
++		return -EINVAL;
++	}
 +
-+static struct rp1_clk_desc pll_sys_sec_desc = REGISTER_PLL_DIV(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"pll_sys_sec",
-+		(const struct clk_parent_data[]) {
-+			{ .hw = &pll_sys_core_desc.hw }
-+		},
-+		&rp1_pll_divider_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_pll_data,
-+		 .ctrl_reg = PLL_SYS_SEC,
-+		 .fc0_src = FC_NUM(2, 2),
-+	)
-+);
++	/* Clear them all */
++	regmap_field_write(pin->gpio[RP1_GPIO_CTRL_INT_CLR], RP1_INT_MASK);
 +
-+static struct rp1_clk_desc clk_eth_tsu_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_eth_tsu",
-+		(const struct clk_parent_data[]) { { .index = 0 } },
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 1,
-+		 .ctrl_reg = CLK_ETH_TSU_CTRL,
-+		 .div_int_reg = CLK_ETH_TSU_DIV_INT,
-+		 .sel_reg = CLK_ETH_TSU_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 50 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(5, 7),
-+	)
-+);
++	/* Set those that are needed */
++	regmap_field_write(pin->gpio[RP1_GPIO_CTRL_INT_SET], irq_flags);
++	pin->irq_type = type;
 +
-+static const struct clk_parent_data clk_eth_parents[] = {
-+	{ .hw = &pll_sys_sec_desc.div.hw },
-+	{ .hw = &pll_sys_desc.hw },
++	return 0;
++}
++
++static int rp1_gpio_irq_set_type(struct irq_data *data, unsigned int type)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	unsigned int gpio = irqd_to_hwirq(data);
++	struct rp1_pin_info *pin = rp1_get_pin(chip, gpio);
++	struct rp1_pinctrl *pc = gpiochip_get_data(chip);
++	int bank = pin->bank;
++	unsigned long flags;
++	int ret;
++
++	raw_spin_lock_irqsave(&pc->irq_lock[bank], flags);
++
++	ret = rp1_irq_set_type(pin, type);
++	if (!ret) {
++		if (type & IRQ_TYPE_EDGE_BOTH)
++			irq_set_handler_locked(data, handle_edge_irq);
++		else
++			irq_set_handler_locked(data, handle_level_irq);
++	}
++
++	raw_spin_unlock_irqrestore(&pc->irq_lock[bank], flags);
++
++	return ret;
++}
++
++static void rp1_gpio_irq_ack(struct irq_data *data)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	unsigned int gpio = irqd_to_hwirq(data);
++	struct rp1_pin_info *pin = rp1_get_pin(chip, gpio);
++
++	/* Clear any latched events */
++	regmap_field_write(pin->gpio[RP1_GPIO_CTRL_IRQRESET_SET], 1);
++}
++
++static struct irq_chip rp1_gpio_irq_chip = {
++	.name = MODULE_NAME,
++	.irq_enable = rp1_gpio_irq_enable,
++	.irq_disable = rp1_gpio_irq_disable,
++	.irq_set_type = rp1_gpio_irq_set_type,
++	.irq_ack = rp1_gpio_irq_ack,
++	.irq_mask = rp1_gpio_irq_disable,
++	.irq_unmask = rp1_gpio_irq_enable,
++	.flags = IRQCHIP_IMMUTABLE,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
 +};
 +
-+static struct rp1_clk_desc clk_eth_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_eth",
-+		clk_eth_parents,
-+		&rp1_clk_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 0,
-+		 .num_aux_parents = 2,
-+		 .ctrl_reg = CLK_ETH_CTRL,
-+		 .div_int_reg = CLK_ETH_DIV_INT,
-+		 .sel_reg = CLK_ETH_SEL,
-+		 .div_int_max = DIV_INT_8BIT_MAX,
-+		 .max_freq = 125 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(4, 6),
-+	)
-+);
++static void rp1_pull_config_set(struct rp1_pin_info *pin, unsigned int arg)
++{
++	regmap_field_write(pin->pad[RP1_PAD_PULL], arg & 0x3);
++}
 +
-+static const struct clk_parent_data clk_sys_parents[] = {
-+	{ .index = 0 },
-+	{ .index = -1 },
-+	{ .hw = &pll_sys_desc.hw },
++static int rp1_pinconf_set(struct rp1_pin_info *pin, unsigned int offset,
++			   unsigned long *configs, unsigned int num_configs)
++{
++	u32 param, arg;
++	int i;
++
++	if (!pin)
++		return -EINVAL;
++
++	for (i = 0; i < num_configs; i++) {
++		param = pinconf_to_config_param(configs[i]);
++		arg = pinconf_to_config_argument(configs[i]);
++
++		switch (param) {
++		case PIN_CONFIG_BIAS_DISABLE:
++			rp1_pull_config_set(pin, RP1_PUD_OFF);
++			break;
++
++		case PIN_CONFIG_BIAS_PULL_DOWN:
++			rp1_pull_config_set(pin, RP1_PUD_DOWN);
++			break;
++
++		case PIN_CONFIG_BIAS_PULL_UP:
++			rp1_pull_config_set(pin, RP1_PUD_UP);
++			break;
++
++		case PIN_CONFIG_INPUT_ENABLE:
++			rp1_input_enable(pin, arg);
++			break;
++
++		case PIN_CONFIG_OUTPUT_ENABLE:
++			rp1_output_enable(pin, arg);
++			break;
++
++		case PIN_CONFIG_OUTPUT:
++			rp1_set_value(pin, arg);
++			rp1_set_dir(pin, RP1_DIR_OUTPUT);
++			rp1_set_fsel(pin, RP1_FSEL_GPIO);
++			break;
++
++		case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
++			regmap_field_write(pin->pad[RP1_PAD_SCHMITT], !!arg);
++			break;
++
++		case PIN_CONFIG_SLEW_RATE:
++			regmap_field_write(pin->pad[RP1_PAD_SLEWFAST], !!arg);
++			break;
++
++		case PIN_CONFIG_DRIVE_STRENGTH:
++			switch (arg) {
++			case 2:
++				arg = RP1_PAD_DRIVE_2MA;
++				break;
++			case 4:
++				arg = RP1_PAD_DRIVE_4MA;
++				break;
++			case 8:
++				arg = RP1_PAD_DRIVE_8MA;
++				break;
++			case 12:
++				arg = RP1_PAD_DRIVE_12MA;
++				break;
++			default:
++				return -ENOTSUPP;
++			}
++			regmap_field_write(pin->pad[RP1_PAD_DRIVE], arg);
++			break;
++
++		default:
++			return -ENOTSUPP;
++
++		} /* switch param type */
++	} /* for each config */
++
++	return 0;
++}
++
++static const struct of_device_id rp1_pinctrl_match[] = {
++	{ .compatible = "raspberrypi,rp1-gpio" },
++	{},
 +};
++MODULE_DEVICE_TABLE(of, rp1_pinctrl_match);
 +
-+static struct rp1_clk_desc clk_sys_desc = REGISTER_CLK(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"clk_sys",
-+		clk_sys_parents,
-+		&rp1_clk_ops,
-+		CLK_IS_CRITICAL
-+	),
-+	CLK_DATA(rp1_clock_data,
-+		 .num_std_parents = 3,
-+		 .num_aux_parents = 0,
-+		 .ctrl_reg = CLK_SYS_CTRL,
-+		 .div_int_reg = CLK_SYS_DIV_INT,
-+		 .sel_reg = CLK_SYS_SEL,
-+		 .div_int_max = DIV_INT_24BIT_MAX,
-+		 .max_freq = 200 * HZ_PER_MHZ,
-+		 .fc0_src = FC_NUM(0, 4),
-+		 .clk_src_mask = 0x3,
-+	)
-+);
++static struct rp1_pinctrl rp1_pinctrl_data = {};
 +
-+static struct rp1_clk_desc pll_sys_pri_ph_desc = REGISTER_PLL(
-+	.hw.init = CLK_HW_INIT_PARENTS_DATA(
-+		"pll_sys_pri_ph",
-+		(const struct clk_parent_data[]) {
-+			{ .hw = &pll_sys_desc.hw }
-+		},
-+		&rp1_pll_ph_ops,
-+		0
-+	),
-+	CLK_DATA(rp1_pll_ph_data,
-+		 .ph_reg = PLL_SYS_PRIM,
-+		 .fixed_divider = 2,
-+		 .phase = RP1_PLL_PHASE_0,
-+		 .fc0_src = FC_NUM(1, 2),
-+	)
-+);
-+
-+static struct rp1_clk_desc *const clk_desc_array[] = {
-+	[RP1_PLL_SYS_CORE] = &pll_sys_core_desc,
-+	[RP1_PLL_AUDIO_CORE] = &pll_audio_core_desc,
-+	[RP1_PLL_VIDEO_CORE] = &pll_video_core_desc,
-+	[RP1_PLL_SYS] = &pll_sys_desc,
-+	[RP1_CLK_ETH_TSU] = &clk_eth_tsu_desc,
-+	[RP1_CLK_ETH] = &clk_eth_desc,
-+	[RP1_CLK_SYS] = &clk_sys_desc,
-+	[RP1_PLL_SYS_PRI_PH] = &pll_sys_pri_ph_desc,
-+	[RP1_PLL_SYS_SEC] = &pll_sys_sec_desc,
-+};
-+
-+static const struct regmap_range rp1_reg_ranges[] = {
-+	regmap_reg_range(PLL_SYS_CS, PLL_SYS_SEC),
-+	regmap_reg_range(PLL_AUDIO_CS, PLL_AUDIO_TERN),
-+	regmap_reg_range(PLL_VIDEO_CS, PLL_VIDEO_SEC),
-+	regmap_reg_range(GPCLK_OE_CTRL, GPCLK_OE_CTRL),
-+	regmap_reg_range(CLK_SYS_CTRL, CLK_SYS_DIV_INT),
-+	regmap_reg_range(CLK_SYS_SEL, CLK_SYS_SEL),
-+	regmap_reg_range(CLK_SLOW_SYS_CTRL, CLK_SLOW_SYS_DIV_INT),
-+	regmap_reg_range(CLK_SLOW_SYS_SEL, CLK_SLOW_SYS_SEL),
-+	regmap_reg_range(CLK_DMA_CTRL, CLK_DMA_DIV_INT),
-+	regmap_reg_range(CLK_DMA_SEL, CLK_DMA_SEL),
-+	regmap_reg_range(CLK_UART_CTRL, CLK_UART_DIV_INT),
-+	regmap_reg_range(CLK_UART_SEL, CLK_UART_SEL),
-+	regmap_reg_range(CLK_ETH_CTRL, CLK_ETH_DIV_INT),
-+	regmap_reg_range(CLK_ETH_SEL, CLK_ETH_SEL),
-+	regmap_reg_range(CLK_PWM0_CTRL, CLK_PWM0_SEL),
-+	regmap_reg_range(CLK_PWM1_CTRL, CLK_PWM1_SEL),
-+	regmap_reg_range(CLK_AUDIO_IN_CTRL, CLK_AUDIO_IN_DIV_INT),
-+	regmap_reg_range(CLK_AUDIO_IN_SEL, CLK_AUDIO_IN_SEL),
-+	regmap_reg_range(CLK_AUDIO_OUT_CTRL, CLK_AUDIO_OUT_DIV_INT),
-+	regmap_reg_range(CLK_AUDIO_OUT_SEL, CLK_AUDIO_OUT_SEL),
-+	regmap_reg_range(CLK_I2S_CTRL, CLK_I2S_DIV_INT),
-+	regmap_reg_range(CLK_I2S_SEL, CLK_I2S_SEL),
-+	regmap_reg_range(CLK_MIPI0_CFG_CTRL, CLK_MIPI0_CFG_DIV_INT),
-+	regmap_reg_range(CLK_MIPI0_CFG_SEL, CLK_MIPI0_CFG_SEL),
-+	regmap_reg_range(CLK_MIPI1_CFG_CTRL, CLK_MIPI1_CFG_DIV_INT),
-+	regmap_reg_range(CLK_MIPI1_CFG_SEL, CLK_MIPI1_CFG_SEL),
-+	regmap_reg_range(CLK_PCIE_AUX_CTRL, CLK_PCIE_AUX_DIV_INT),
-+	regmap_reg_range(CLK_PCIE_AUX_SEL, CLK_PCIE_AUX_SEL),
-+	regmap_reg_range(CLK_USBH0_MICROFRAME_CTRL, CLK_USBH0_MICROFRAME_DIV_INT),
-+	regmap_reg_range(CLK_USBH0_MICROFRAME_SEL, CLK_USBH0_MICROFRAME_SEL),
-+	regmap_reg_range(CLK_USBH1_MICROFRAME_CTRL, CLK_USBH1_MICROFRAME_DIV_INT),
-+	regmap_reg_range(CLK_USBH1_MICROFRAME_SEL, CLK_USBH1_MICROFRAME_SEL),
-+	regmap_reg_range(CLK_USBH0_SUSPEND_CTRL, CLK_USBH0_SUSPEND_DIV_INT),
-+	regmap_reg_range(CLK_USBH0_SUSPEND_SEL, CLK_USBH0_SUSPEND_SEL),
-+	regmap_reg_range(CLK_USBH1_SUSPEND_CTRL, CLK_USBH1_SUSPEND_DIV_INT),
-+	regmap_reg_range(CLK_USBH1_SUSPEND_SEL, CLK_USBH1_SUSPEND_SEL),
-+	regmap_reg_range(CLK_ETH_TSU_CTRL, CLK_ETH_TSU_DIV_INT),
-+	regmap_reg_range(CLK_ETH_TSU_SEL, CLK_ETH_TSU_SEL),
-+	regmap_reg_range(CLK_ADC_CTRL, CLK_ADC_DIV_INT),
-+	regmap_reg_range(CLK_ADC_SEL, CLK_ADC_SEL),
-+	regmap_reg_range(CLK_SDIO_TIMER_CTRL, CLK_SDIO_TIMER_DIV_INT),
-+	regmap_reg_range(CLK_SDIO_TIMER_SEL, CLK_SDIO_TIMER_SEL),
-+	regmap_reg_range(CLK_SDIO_ALT_SRC_CTRL, CLK_SDIO_ALT_SRC_DIV_INT),
-+	regmap_reg_range(CLK_SDIO_ALT_SRC_SEL, CLK_SDIO_ALT_SRC_SEL),
-+	regmap_reg_range(CLK_GP0_CTRL, CLK_GP0_SEL),
-+	regmap_reg_range(CLK_GP1_CTRL, CLK_GP1_SEL),
-+	regmap_reg_range(CLK_GP2_CTRL, CLK_GP2_SEL),
-+	regmap_reg_range(CLK_GP3_CTRL, CLK_GP3_SEL),
-+	regmap_reg_range(CLK_GP4_CTRL, CLK_GP4_SEL),
-+	regmap_reg_range(CLK_GP5_CTRL, CLK_GP5_SEL),
-+	regmap_reg_range(CLK_SYS_RESUS_CTRL, CLK_SYS_RESUS_CTRL),
-+	regmap_reg_range(CLK_SLOW_SYS_RESUS_CTRL, CLK_SLOW_SYS_RESUS_CTRL),
-+	regmap_reg_range(FC0_REF_KHZ, FC0_RESULT),
-+	regmap_reg_range(VIDEO_CLK_VEC_CTRL, VIDEO_CLK_VEC_DIV_INT),
-+	regmap_reg_range(VIDEO_CLK_VEC_SEL, VIDEO_CLK_DPI_DIV_INT),
-+	regmap_reg_range(VIDEO_CLK_DPI_SEL, VIDEO_CLK_MIPI1_DPI_SEL),
-+};
-+
-+static const struct regmap_access_table rp1_reg_table = {
-+	.yes_ranges = rp1_reg_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(rp1_reg_ranges),
-+};
-+
-+static const struct regmap_config rp1_clk_regmap_cfg = {
++static const struct regmap_config rp1_pinctrl_regmap_cfg = {
 +	.reg_bits = 32,
 +	.val_bits = 32,
 +	.reg_stride = 4,
-+	.max_register = PLL_VIDEO_SEC,
-+	.name = "rp1-clk",
-+	.rd_table = &rp1_reg_table,
++	.fast_io = true,
++	.name = "rp1-pinctrl",
 +};
 +
-+static int rp1_clk_probe(struct platform_device *pdev)
++static int rp1_gen_regfield(struct device *dev,
++			    const struct reg_field *array,
++			    size_t array_size,
++			    int reg_off,
++			    int pin_off,
++			    bool additive_offset,
++			    struct regmap *regmap,
++			    struct regmap_field *out[])
 +{
-+	const size_t asize = ARRAY_SIZE(clk_desc_array);
-+	struct rp1_clk_desc *desc;
-+	struct device *dev = &pdev->dev;
-+	struct rp1_clockman *clockman;
-+	struct clk_hw **hws;
-+	unsigned int i;
++	struct reg_field regfield;
++	int k;
 +
-+	clockman = devm_kzalloc(dev, struct_size(clockman, onecell.hws, asize),
-+				GFP_KERNEL);
-+	if (!clockman)
-+		return -ENOMEM;
++	for (k = 0; k < array_size; k++) {
++		regfield = array[k];
++		regfield.reg = (additive_offset ? regfield.reg : 0) + reg_off;
++		if (pin_off >= 0) {
++			regfield.lsb = pin_off;
++			regfield.msb = regfield.lsb;
++		}
++		out[k] = devm_regmap_field_alloc(dev, regmap, regfield);
 +
-+	spin_lock_init(&clockman->regs_lock);
-+	clockman->dev = dev;
-+
-+	clockman->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(clockman->regs))
-+		return PTR_ERR(clockman->regs);
-+
-+	clockman->regmap = devm_regmap_init_mmio(dev, clockman->regs,
-+						 &rp1_clk_regmap_cfg);
-+	if (IS_ERR(clockman->regmap)) {
-+		dev_err_probe(dev, PTR_ERR(clockman->regmap),
-+			      "could not init clock regmap\n");
-+		return PTR_ERR(clockman->regmap);
++		if (IS_ERR(out[k]))
++			return PTR_ERR(out[k]);
 +	}
 +
-+	clockman->onecell.num = asize;
-+	hws = clockman->onecell.hws;
++	return 0;
++}
 +
-+	for (i = 0; i < asize; i++) {
-+		desc = clk_desc_array[i];
-+		if (desc && desc->clk_register && desc->data) {
-+			hws[i] = desc->clk_register(clockman, desc);
-+			if (IS_ERR_OR_NULL(hws[i]))
-+				dev_err_probe(dev, PTR_ERR(hws[i]),
-+					      "Unable to register clock: %s\n",
-+					      clk_hw_get_name(hws[i]));
++static int rp1_pinctrl_probe(struct platform_device *pdev)
++{
++	struct regmap *gpio_regmap, *rio_regmap, *pads_regmap;
++	struct rp1_pinctrl *pc = &rp1_pinctrl_data;
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct gpio_irq_chip *girq;
++	int err, i;
++
++	pc->dev = dev;
++	pc->gpio_chip = rp1_gpio_chip;
++	pc->gpio_chip.parent = dev;
++
++	pc->gpio_base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(pc->gpio_base))
++		return dev_err_probe(dev, PTR_ERR(pc->gpio_base), "could not get GPIO IO memory\n");
++
++	pc->rio_base = devm_platform_ioremap_resource(pdev, 1);
++	if (IS_ERR(pc->rio_base))
++		return dev_err_probe(dev, PTR_ERR(pc->rio_base), "could not get RIO IO memory\n");
++
++	pc->pads_base = devm_platform_ioremap_resource(pdev, 2);
++	if (IS_ERR(pc->pads_base))
++		return dev_err_probe(dev, PTR_ERR(pc->pads_base), "could not get PADS IO memory\n");
++
++	gpio_regmap = devm_regmap_init_mmio(dev, pc->gpio_base,
++					    &rp1_pinctrl_regmap_cfg);
++	if (IS_ERR(gpio_regmap))
++		return dev_err_probe(dev, PTR_ERR(gpio_regmap), "could not init GPIO regmap\n");
++
++	rio_regmap = devm_regmap_init_mmio(dev, pc->rio_base,
++					   &rp1_pinctrl_regmap_cfg);
++	if (IS_ERR(rio_regmap))
++		return dev_err_probe(dev, PTR_ERR(rio_regmap), "could not init RIO regmap\n");
++
++	pads_regmap = devm_regmap_init_mmio(dev, pc->pads_base,
++					    &rp1_pinctrl_regmap_cfg);
++	if (IS_ERR(pads_regmap))
++		return dev_err_probe(dev, PTR_ERR(pads_regmap), "could not init PADS regmap\n");
++
++	for (i = 0; i < RP1_NUM_BANKS; i++) {
++		const struct rp1_iobank_desc *bank = &rp1_iobanks[i];
++		int j;
++
++		for (j = 0; j < bank->num_gpios; j++) {
++			struct rp1_pin_info *pin =
++				&pc->pins[bank->min_gpio + j];
++			int reg_off;
++
++			pin->num = bank->min_gpio + j;
++			pin->bank = i;
++			pin->offset = j;
++
++			reg_off = bank->gpio_offset + pin->offset *
++				  sizeof(u32) * 2;
++			err = rp1_gen_regfield(dev,
++					       rp1_gpio_fields,
++					       ARRAY_SIZE(rp1_gpio_fields),
++					       reg_off,
++					       -1,
++					       true,
++					       gpio_regmap,
++					       pin->gpio);
++
++			if (err)
++				return dev_err_probe(dev, err,
++						     "Unable to allocate regmap for gpio\n");
++
++			reg_off = bank->inte_offset;
++			err = rp1_gen_regfield(dev,
++					       rp1_inte_fields,
++					       ARRAY_SIZE(rp1_inte_fields),
++					       reg_off,
++					       pin->offset,
++					       true,
++					       gpio_regmap,
++					       pin->inte);
++
++			if (err)
++				return dev_err_probe(dev, err,
++						     "Unable to allocate regmap for inte\n");
++
++			reg_off = bank->rio_offset;
++			err = rp1_gen_regfield(dev,
++					       rp1_rio_fields,
++					       ARRAY_SIZE(rp1_rio_fields),
++					       reg_off,
++					       pin->offset,
++					       true,
++					       rio_regmap,
++					       pin->rio);
++
++			if (err)
++				return dev_err_probe(dev, err,
++						     "Unable to allocate regmap for rio\n");
++
++			reg_off = bank->pads_offset + pin->offset * sizeof(u32);
++			err = rp1_gen_regfield(dev,
++					       rp1_pad_fields,
++					       ARRAY_SIZE(rp1_pad_fields),
++					       reg_off,
++					       -1,
++					       false,
++					       pads_regmap,
++					       pin->pad);
++
++			if (err)
++				return dev_err_probe(dev, err,
++						     "Unable to allocate regmap for pad\n");
++		}
++
++		raw_spin_lock_init(&pc->irq_lock[i]);
++	}
++
++	girq = &pc->gpio_chip.irq;
++	girq->chip = &rp1_gpio_irq_chip;
++	girq->parent_handler = rp1_gpio_irq_handler;
++	girq->num_parents = RP1_NUM_BANKS;
++	girq->parents = pc->irq;
++	girq->default_type = IRQ_TYPE_NONE;
++	girq->handler = handle_level_irq;
++
++	/*
++	 * Use the same handler for all groups: this is necessary
++	 * since we use one gpiochip to cover all lines - the
++	 * irq handler then needs to figure out which group and
++	 * bank that was firing the IRQ and look up the per-group
++	 * and bank data.
++	 */
++	for (i = 0; i < RP1_NUM_BANKS; i++) {
++		pc->irq[i] = irq_of_parse_and_map(np, i);
++		if (!pc->irq[i]) {
++			girq->num_parents = i;
++			break;
 +		}
 +	}
 +
-+	platform_set_drvdata(pdev, clockman);
++	platform_set_drvdata(pdev, pc);
 +
-+	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
-+					   &clockman->onecell);
++	err = devm_gpiochip_add_data(dev, &pc->gpio_chip, pc);
++	if (err)
++		return dev_err_probe(dev, err, "could not add GPIO chip\n");
++
++	return 0;
 +}
 +
-+static const struct of_device_id rp1_clk_of_match[] = {
-+	{ .compatible = "raspberrypi,rp1-clocks" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, rp1_clk_of_match);
-+
-+static struct platform_driver rp1_clk_driver = {
++static struct platform_driver rp1_pinctrl_driver = {
++	.probe = rp1_pinctrl_probe,
 +	.driver = {
-+		.name = "rp1-clk",
-+		.of_match_table = rp1_clk_of_match,
++		.name = MODULE_NAME,
++		.of_match_table = rp1_pinctrl_match,
++		.suppress_bind_attrs = true,
 +	},
-+	.probe = rp1_clk_probe,
 +};
++module_platform_driver(rp1_pinctrl_driver);
 +
-+module_platform_driver(rp1_clk_driver);
-+
-+MODULE_AUTHOR("Naushir Patuck <naush@raspberrypi.com>");
++MODULE_AUTHOR("Phil Elwell <phil@raspberrypi.com>");
 +MODULE_AUTHOR("Andrea della Porta <andrea.porta@suse.com>");
-+MODULE_DESCRIPTION("RP1 clock driver");
++MODULE_DESCRIPTION("RP1 pinctrl/gpio driver");
 +MODULE_LICENSE("GPL");
 -- 
 2.35.3
