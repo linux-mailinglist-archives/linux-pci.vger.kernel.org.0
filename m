@@ -1,87 +1,87 @@
-Return-Path: <linux-pci+bounces-24212-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24213-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40DF6A6A155
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 09:28:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6172CA6A166
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 09:31:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F06D1894980
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 08:28:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C930E464396
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 08:30:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D587211299;
-	Thu, 20 Mar 2025 08:28:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15DCF21421D;
+	Thu, 20 Mar 2025 08:30:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iVcVaYV2"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uVFsZKVO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C343220F070
-	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 08:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B0B20B803
+	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 08:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742459304; cv=none; b=Z2xC+yI+5oBJx7PCRsCPRTTbVu0C4LCLiKzgrm29SKs6qI+uB6TSKiPMaWuvfANxRI70lOUGdKTg5mpoVK6sgCyZDDhozXYoZjJpl4kjfwpdyBWv6K97shrcyRxRlo/DQua6tMdNt7cZ/iFMhBSL056esCfEWFpSm68z3ss1oYQ=
+	t=1742459407; cv=none; b=rnKRZ9YXmipyoegPzxHupeVeDQezwDiM1aDtcDCnqTN+aLyT5VsXkE8vnCleR15bva0eX88tpeY9Tb3C28YcCi+Ixu4cFXck3GHjRfIVhkxAViBq9mAvtyTehzE9uTLWyBntoM+vE+yFJXtch1dcbLNRgCUeNHdu/Eu0K6vEKbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742459304; c=relaxed/simple;
-	bh=9iRhKQvC51ISRCoTsWHbZEPd+v7VDn2vLrGduepW1rk=;
+	s=arc-20240116; t=1742459407; c=relaxed/simple;
+	bh=7OAxyGGLfGu20i0e/DvkCBzREKQ3WqBXkvKmPAlqRZI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lT7ZfW3agitNgLpPXzKmZqAdhf8tOFw5iFKjTDcAdoIsQW9PUJKMbf+xDKp3kxsSq3uu6Ntr60lLUfCepU4kdqUflnk5Ut7ui516mRp8APPlg6HDiYsvRnrWhIS3d3lAPiB0oIv8+Nb6H3IIBibwcfuf5a91cIIxX+Bzrugd78c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iVcVaYV2; arc=none smtp.client-ip=209.85.208.49
+	 To:Cc:Content-Type; b=gLf1iUHZe1SJVHkbCwCr1cBWKhOajhLggG0aJBJhK5wqRpDjA2masQeHa5YgssFwyxvHZxkm67QQkVdtDzuC9ETCKKKaGQNryfbMsYb05nm+g4BoJPdIFxERhRU/Sxl7khCEodgdi9s7za0G+s9zetOCIBdYCINkMy7zzganXvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uVFsZKVO; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so841760a12.1
-        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 01:28:22 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5eb92df4fcbso890016a12.0
+        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 01:30:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742459301; x=1743064101; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742459404; x=1743064204; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9iRhKQvC51ISRCoTsWHbZEPd+v7VDn2vLrGduepW1rk=;
-        b=iVcVaYV2fgAXreQrhFE07z4hmCYQTEpnLvEt4qa1eCNlKMyagIvcjsRgKI2NZtbrZa
-         5L4lC3utz/pvAu2hBEh74Ez4PeJWzIT+ZVAqGT/Yx/KlJn6KSlX86tfGvQMnjahUb5dI
-         i0nhAojghfB3HKEAY2CQZahz1xOw8c9doqyT38pDkIcS753AnubqC5hL/RWw2Vz3tYCL
-         ImHiX3kMGotmFk2Yc67FtE4g8YiCdZmnrqWL/xWHSB7QA0lraTmqbl4ZasJcCtDAA4bL
-         aEdCLd1RSGrNxN2Y5ZICEjo/Kcl5ryIetCSUnCS45CYwM18vd/3B0WflIc+h9fUvlhWN
-         JYvQ==
+        bh=7OAxyGGLfGu20i0e/DvkCBzREKQ3WqBXkvKmPAlqRZI=;
+        b=uVFsZKVOrRUzfryPvkHO4qvMpaisc78gD32ZRZOerQ2drI03Z4pr7U9HxfpcXF2uZd
+         xS8t99SUu2YQZGZoPuw8V4bDK4RtCibkTj2hADo+XXd8rT3qKiSPSn89pllKNqIWs/8N
+         HX8/M5YAkAPzDeJLXyhxpigknNPWnen5j4/ttWYJqCoqjppuiOWyzR0rlb433JPlyt5L
+         1BQF3PboHDlPe/i5qvAHBY121ITSRe6RR+YSt9iaWriOZp8rVL08W3NrduiJUtxywQCK
+         Iv6jq3AUTapQqfzbIaTt+c8da8Pmq2Hbvc2DcZW3ejnNNHsLKX94DuKvZTTaND++iaN6
+         NWkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742459301; x=1743064101;
+        d=1e100.net; s=20230601; t=1742459404; x=1743064204;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9iRhKQvC51ISRCoTsWHbZEPd+v7VDn2vLrGduepW1rk=;
-        b=nLkIJ2RNBmRVJ1SdTi/SK+EoqTKfUzj04FSA+s/bJvFhhSlyGoavYpY1Jt4UJKuEBe
-         CQ8YsIipDOci2FRSzt6TMeCXNq5YIPhLLu1flZfKddCxZtO9oaclKp9chzVW7AP+lzaH
-         v6cApyx8XU+xESohZexdjaRQCURyyCjJAgAN+A9TnqbbqXvW4C+q7Rles9eoo75RvKMk
-         pWEEtBvLVITzsHKQyg+2aJedwKgd8ui5yJoUOcvGkTHCQvviMsV/YEJXcueqKgc81/X7
-         /ycfcX6JE5IijmbolvpNkTZK6rpLnu4C3z1tkM56DPPObbXK/goZdESr0tmlwnIk7yGu
-         x2jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJeMIzqJ+U+qeu/qAHv9Uj548jLzOS+yUPjPpnHnHD+3eAcbA3RL7X1DuMlp3FgQRhUu2I0OruqAk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIiiZyMaFJYF+mahYaqbdUnxLUQqhT3BhBDawrsqJ6bb8b1SH/
-	BJEkYx13dS+dJEMp47hObkI9/F84aDCgzAoA4BTjiZat1NjJd8ed32x0IbpPIk29X9KW/fzPSuz
-	UK00K75QSVIxTcCAYx+g1eMyfkC4S+fxZMKQ2
-X-Gm-Gg: ASbGncuH2B6petm4UZe3o9W56F1dCNklmpqdiMq8950hIamOLBwz185kHhVZjGtmIa8
-	EEmWc1chTv4/6XH3THUpXnTfqwgwm+KbWWPvRCOP5JdgOOYNdoHYA3SjZYUQUfIfGD1gBUlH9uY
-	ALUPx3E8kt2yeqTFobS0IrDYY=
-X-Google-Smtp-Source: AGHT+IHDrFIwLG0vcFsLPTAnd6JPjI7+SzaHRhsNayMUGuyMJ3SfAfwt7lCMBe7DdXFXHXCj8K35Ogq6fMf+YPFHXVI=
-X-Received: by 2002:a05:6402:5194:b0:5dc:9589:9f64 with SMTP id
- 4fb4d7f45d1cf-5eb80cfc810mr6094227a12.13.1742459300914; Thu, 20 Mar 2025
- 01:28:20 -0700 (PDT)
+        bh=7OAxyGGLfGu20i0e/DvkCBzREKQ3WqBXkvKmPAlqRZI=;
+        b=aCJMT7vDipjpfy93m2i8KkNfpqERC0LNx1YsyVmC5wtQU+L8FhG1DTmMFrLi9hIhB7
+         37oO+FBqBu718U9CFJTH7IgTCsKOMr8A0IvO8hio0ZF5U0ksFUj3+BdRlj+tROZq7ZW6
+         Ybdy7dFPnhLCsnDb+2l6nRDhZIkNGoZY4A58gnj1WF6rr7vkjDSYFnhB1bLkUy8VJquc
+         lZI+Xy3rDFl8Xj8bYnm0Jp4tWyWxPtfXN/JudmPK0ya5AoveFBt/NWCLv0pCLa5q/rA2
+         3gTRxTbo4Y/OVDr9GRW6ZdBDVYH5PDwjymc7mlUKIkHTgmEInR3nN8eN8sThvGVC3oTk
+         rqDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUYxqgywLRonfSt5WXXOG1nSME2T2bHvwqHl2a8pI4+KDe6QpwKmakVBJ7aj9sSW6D3VFiV1Q5ZMBQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrOAHp+szoi7wDlycXyb94D+M4zEpXhGqczyLu3RXXD+19C6UQ
+	AZEDyo+u70DgdfxMRBmhN3tTPO+FLXz0SEqC+3x7JuviTB3ewMtLFl/Sh8fUCJsmOsygOMV7ctO
+	O48pWj+s1MmUX6CWG0dR8ZU4Ei2SC/P/Z3kn/
+X-Gm-Gg: ASbGnctA8eSbpRBkC1OpmnhvKWqzpCvfEU7J6dbnvU3PNDebrFXt3+ynOWr8xDfkGEV
+	1uOBC2ijyF/UUs9t1PigI/9cd6U93sJqHVEPSUJnIZ5p1uQmuzBu1dHYEFKtB6nq0ItEqaXONH0
+	P5w8XWkQPUKH6Jjnlae0vntV8=
+X-Google-Smtp-Source: AGHT+IFamuQQoM5Pph2ELP5pw3eWhPtFtanEl5l+3nX+sAdIl4kyeMnWavlyAlaeBvBqP+vKJm6bmcH6XpXfI1MyJdA=
+X-Received: by 2002:a05:6402:1d50:b0:5e7:8501:8c86 with SMTP id
+ 4fb4d7f45d1cf-5eb80f7347cmr5537703a12.22.1742459403408; Thu, 20 Mar 2025
+ 01:30:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319084050.366718-1-pandoh@google.com> <20250319084050.366718-5-pandoh@google.com>
- <8e0a2c15-f26d-451d-b91d-bc7b8029a9af@linux.intel.com>
-In-Reply-To: <8e0a2c15-f26d-451d-b91d-bc7b8029a9af@linux.intel.com>
+References: <20250319084050.366718-1-pandoh@google.com> <20250319084050.366718-4-pandoh@google.com>
+ <9208619f-5640-47f8-ac46-898894198499@linux.intel.com>
+In-Reply-To: <9208619f-5640-47f8-ac46-898894198499@linux.intel.com>
 From: Jon Pan-Doh <pandoh@google.com>
-Date: Thu, 20 Mar 2025 01:28:10 -0700
-X-Gm-Features: AQ5f1JoOPW4_Bj_DxT5_MoSnnqRy8f0inm95t1Eix4MipckZuMEjrL8l3Bt_xTs
-Message-ID: <CAMC_AXV2BSYsPwgO=a6_JP7Lq--H9wANaLu5jAfZF_dCYPTcoQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/8] PCI/AER: Rename struct aer_stats to aer_report
+Date: Thu, 20 Mar 2025 01:29:52 -0700
+X-Gm-Features: AQ5f1JrhRfgXdrEXpM-p0E85cd8AmB5fuOsab8n1hFye_1jjGDsnrAdc_nJkUwY
+Message-ID: <CAMC_AXW04FfaVKYLc+h1kjRjYUrxqA97kLXf0z7shpS1k5O=nQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/8] PCI/AER: Move AER stat collection out of __aer_print_error()
 To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>, 
 	linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
@@ -93,32 +93,19 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@or
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 19, 2025 at 8:29=E2=80=AFPM Sathyanarayanan Kuppuswamy
+On Wed, Mar 19, 2025 at 8:23=E2=80=AFPM Sathyanarayanan Kuppuswamy
 <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->
-> On 3/19/25 1:40 AM, Jon Pan-Doh wrote:
-> > -/* AER stats for the device */
-> > -struct aer_stats {
-> > +/* AER report for the device */
-> > +struct aer_report {
->
-> This struct only seems to have details related to AER error status. Why
-> rename
-> it to aer_report() ? Are you extending it in future patches? If yes,
-> include that
-> motivation in the commit log.
+> pci_print_aer() also seems to do more than printing the AER stat. Why onl=
+y
+> care about stat collection in __aer_print_error(). If the motivation is
+> to just improve the code readability, I am not sure it is worth the
+> effort. Please correct me if my understanding is incorrect.
 
-Karolina suggested aer_report[1] as a more suitable name than the
-previously proposed aer_info. aer_stats is no longer suitable as the
-struct contains more than just error counters (e.g. ratelimits).
+Bjorn had similar concerns. Hopefully my response[1] answers your questions=
+.
 
-I did not have a plan on extending it (other than maybe adding
-ratelimits for IRQs in a follow-up series) at this time.
-
-Do you have an alternative suggestion instead of aer_report?
-
-[1] https://lore.kernel.org/linux-pci/12d24891-c32e-4a84-a6ee-4501106a6957@=
-oracle.com/
+[1] https://lore.kernel.org/linux-pci/CAMC_AXW85x_LRT5UTD0C_VvK8WTG6kbfvp5k=
+_7RjnLzGM3Bg-g@mail.gmail.com/
 
 Thanks,
 Jon
