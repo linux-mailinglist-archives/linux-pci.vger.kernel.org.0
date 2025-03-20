@@ -1,143 +1,176 @@
-Return-Path: <linux-pci+bounces-24246-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24247-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F3B4A6AC94
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 18:59:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B893A6ACF3
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 19:14:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90428982760
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 17:57:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B662E3A75E4
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 18:13:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F410226520;
-	Thu, 20 Mar 2025 17:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E8891DED4B;
+	Thu, 20 Mar 2025 18:14:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IgdTDTb1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T+tbcdjN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88901DE3A8
-	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 17:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67BE226173
+	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 18:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742493446; cv=none; b=PEro2QeNa9b3vRlQ8WB/CDMxPD3mZjOBBDT3I97xrwU2Ivrnil6wAzsbSlf8pWJtEPL6tLzEjdiybjUbyRuSjWHB0ZW4aJPkXcdZlH1y5gcA6D11efX8J4C6JoiwGYzsQvUdXiPsNwaeCkEOlPVKbFnQjzqKMCyY/BbpI0MUYO0=
+	t=1742494445; cv=none; b=cKABJyZxEs40Uc4PtTmwXqEVqRRDlbIyeqHkrsY3SGg3i78bvZzwSePHe/A3MhQPQl6qag141ZQ988Ty+66vk+5bDBFq9NIU1woTH6N/Rgj+dcu/Rr9/JrF/plp9/AgylfJ5KIRAkbsVY3BgCWmbezHsG3PACUKEjd23B5ZSl1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742493446; c=relaxed/simple;
-	bh=mO6ApbMHzxFMCtQxPMSGmJnnaUVaxpdYXWiMJjhdnYw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PVV9uA0f1h5A647KyGdXebHKlnnb8ICE4+F+GkQGgBpUEjaZENwjptprRA7dpBm81vfxqsFPmqI3Uo3vEGGfKoBxgOmcVtcXxkyGGq1nyI3U8wOzzNTyVM61Vl20BiA7GIIk1Qtx22SZyVnX1DH0dPEtVJOKRQgAI0MHG0FDvaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IgdTDTb1; arc=none smtp.client-ip=209.85.216.54
+	s=arc-20240116; t=1742494445; c=relaxed/simple;
+	bh=dIq2rFVsMRPfjTTzICdGo2oAsZfoxmPnshpJze5uM1s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UGmxRQkz80M9yeg/kPjTU/Pu/fF6zF5/6/WPosiRq/oNrGcMHtGeHWvAuYeRCYrk+WgCuBoIaD2pvaMbfs+fAtphCnrn9Ozf7qI5h086T8hiccTJ91LCfnrJCsE/y+26tWx43/QqoXTBqLPYO3wYb6WYudJNE/BmCPVVp5+73f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=T+tbcdjN; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so4940235a91.1
-        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 10:57:24 -0700 (PDT)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224019ad9edso27900865ad.1
+        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 11:14:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1742493444; x=1743098244; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KZBuAO/4lH4CVBlD86N+IBRXOKzZiRkJHD/4cEnzLg8=;
-        b=IgdTDTb1X2qtQtOkDRsbcKFEP0YT598B/9Y24roSjP6k+N94B0usGnhtgNhRHvg0oA
-         ug/vDzEqKyvbWyEoPZoWX7T1fP0ze0kP5URxeXtgHY3H1yKyh+FQBkONrq/sUv+v4HRb
-         SAI/w/sQUA+DLKkcAVN5KHw+yH3qNxSmovIy4=
+        d=chromium.org; s=google; t=1742494443; x=1743099243; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jIkGguZ4dnQIKNQIeCLR9up0U6ko09Dl8rkZeShLSI0=;
+        b=T+tbcdjNddLmsN3DILHgadqwkuTyfN64mDLQya5sHqvr4Ya2UlcHDtS3/d6mrhl/gq
+         d4aeEsNKs3xox9BFp6jDFXwKMbpmmK+1z/GlLFQZHfz0MQm0mpCYUj5k0PQhza/FvwiT
+         OCBhtuVyk3Qb6ibBfts3uSZiWgH8H/dpmUQHs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742493444; x=1743098244;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KZBuAO/4lH4CVBlD86N+IBRXOKzZiRkJHD/4cEnzLg8=;
-        b=VT7AXAaN2wj4gPe+isWuFn+yzfN59r7wrYEWjDabnxSyM0n2p4RpWInwnDzDkfce02
-         d20WRnAmNYkVXipT0ALbQ8w0+FCALboW71iSaIwWdIS3XmRhEIJSSi7/laXHJbpAs9Hi
-         lXsW/uPoAZa/pLuYFw0ytZ06yI19BxSMrzOL20QePbviGRoF7aowGYX9Mr1hXniEPJng
-         Ya6I8a7u8PfDKRjBWKOLE74U6FvWos4MC2Wy75qY6CBgjxw61TpTECwbQTKwTteLegn2
-         M0l/2icO4lvoZARKSVVLv9H/YkRGBID3lZCTrCGEPlojvUHivb3Rw7Pob6ezWZfqP8oI
-         jV9w==
-X-Forwarded-Encrypted: i=1; AJvYcCU7cgOkk+0jclnUDbEnZZKi3ZRquRkB0yc3TxXDHXven5WktgIkhQDUKoJp+k3702xdBYu0T3mUBn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyO1sNE7Fjd3sBsAFBTAJcy5wsIFi8kKcCtl/ZYI/2de+7BjPt4
-	FN1dJP6y4kg2dcYqPrtseY7nphj+zQK4Kr0eKZXZg9R+9C5tPYH/0L9EIv1IsQ==
-X-Gm-Gg: ASbGncvNKs0iWVFD/YkcrvJGD3q7vvKvLNtVHUh6mCkriR+4axh+9l1x/+cSNIUNurW
-	lvzR67x0IOYM5L/WMX2R2gSvDhwtrBmq4vGNesS0iwgdi/1yzHB4pfZyfxd9Xc+P9IM8z4vxXeS
-	C0upsYRNPOp1+QKfjBGktHcOXy9ewTOapt8ubVdwqUn/+KAtEmGR7CBCtPsiDuzT5m3+qj3wfn8
-	ABecY8awIzP2x4+XII9R1b86sVKIK08uCCyrWzlcznXVRbMq7BgaetTfE0XJOmnzIiEiU2T0rwG
-	kxoirFjkaSJLSRB5V2CdbdRsG8/4HiNmHeBxqySYnfC56GTTduNhSfT1nVzJQI/X6S+2XwW8uM7
-	AmVEwUkc=
-X-Google-Smtp-Source: AGHT+IE7xF5qbvgKRnHfx2I3KfMDgIwTK12qXs2qkhWYJrmEZMMPOAnefkb2h4CcUxPOX3VUqrZHNw==
-X-Received: by 2002:a17:90b:54c7:b0:2fe:93be:7c9d with SMTP id 98e67ed59e1d1-3030ec2a985mr625654a91.7.1742493444134;
-        Thu, 20 Mar 2025 10:57:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742494443; x=1743099243;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jIkGguZ4dnQIKNQIeCLR9up0U6ko09Dl8rkZeShLSI0=;
+        b=TuXflQ9+FxK76cvZBjjNsugeGPofcirUeUmMgYO2wm6t7u8yvSGbPXySpMlxfwrvTO
+         zZ8T+Fz71xiA23ooooAG/B6OuWHhNaVl0KgmN3Z/7Vt7yi77o3y8E4EkAV7YjJLhgt1c
+         TWTbCgbrU1ehKK1kS0O2btch956L7/fXnIPmLN1YVvDrKyc25r1SN4K2vwEOABR6DVFu
+         OnRoKXPuI4kdH98pdCNi/lyy9U0368F0VfXW8nwamenAlBbz9wZhWLXORZF+GYXbmeBI
+         jYJRaZlaGV0laywXZlfb0/O7o9J8w2IqZsUfqqpXFgaQ+ETrsFs9N93COHn2GgG69C4v
+         rvMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWjVA9d2VHg/cVgHi5a8gprg/9Ncz/SB2UfNPS/rU3XuXMgiyem7yA2/PY0JCJJ/YyvKykjd+CGxXk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEgc9HT25eFc6xApfp+cI9w4DwItTZsWvAcDPlbtGQ4Lt6dhlH
+	9Ny8ewp0Hpe/byZbOVJMQ4KX3N2dnLGqg8QLWtlLsVpttnZ/m1464g9PNedG7w==
+X-Gm-Gg: ASbGncuuFCXmkd4Ou1eBjVsjXLLzNAyxDbFGUluCKaPXQJxTC6+iq1EG+BpnwKlQL2V
+	qLq1zCeF4BPl3fX/J8/yaKG0ggBfi3W9hUB50dx/QVWfYsTOm03CmZ3tsYL5xB6zs6T9iZa0TtJ
+	fLKjHLYTIt2UgiqqAH0m9+AG7CSsGpe2BJNiit6Dyfqtk51hGYhd3U2ooBXar0GqAwmJk7oW9ej
+	g32jA6Yjy+SAyoWE206VWSolsLHcv8f2PWPgXArWi7ijZksCjbQ/aH3DzTqZ5BJW8GiUXO1Dr0B
+	FrizOxx2tESOBNBLMtgBW9J5wijfASbcKlA/K9dtPq5QJwVSLLxbAxcQl6Lietj4fVALf0okhOZ
+	euE9FPOk=
+X-Google-Smtp-Source: AGHT+IFKNeA0nv8K4qQWl3UeJBhgwTr+2rWreG0zcMznfH4QEcK/AEsy8WvwIEoY2DqRAuKaZ2Dhgw==
+X-Received: by 2002:a05:6a00:3927:b0:736:4644:86ee with SMTP id d2e1a72fcca58-739059d0a99mr743410b3a.14.1742494442872;
+        Thu, 20 Mar 2025 11:14:02 -0700 (PDT)
 Received: from localhost ([2a00:79e0:2e14:7:9e6b:24df:389d:f71b])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-301a5ea4e9asm2514396a91.1.2025.03.20.10.57.22
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7390611d580sm98101b3a.119.2025.03.20.11.14.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Mar 2025 10:57:23 -0700 (PDT)
-Date: Thu, 20 Mar 2025 10:57:21 -0700
+        Thu, 20 Mar 2025 11:14:02 -0700 (PDT)
 From: Brian Norris <briannorris@chromium.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
-	Hsin-Yi Wang <hsinyi@chromium.org>, linux-kernel@vger.kernel.org,
-	mika.westerberg@linux.intel.com, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, lukas@wunner.de
-Subject: Re: [PATCH v5] PCI: Allow PCI bridges to go to D3Hot on all
- Devicetree based platforms
-Message-ID: <Z9xXAYA4KS5BabhE@google.com>
-References: <20241126151711.v5.1.Id0a0e78ab0421b6bce51c4b0b87e6aebdfc69ec7@changeid>
- <20250228174509.GA58365@bhelgaas>
- <Z8IC_WDmix3YjOkv@google.com>
- <CAJZ5v0j_6jeMAQ7eFkZBe5Yi+USGzysxAgfemYh=-zq4h5W+Qg@mail.gmail.com>
- <20250313052113.zk5yuz5e76uinbq5@thinkpad>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Hsin-Yi Wang <hsinyi@chromium.org>,
+	lukas@wunner.de,
+	mika.westerberg@linux.intel.com,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Brian Norris <briannorris@chromium.org>
+Subject: [PATCH v6] PCI: Allow PCI bridges to go to D3Hot on all non-x86
+Date: Thu, 20 Mar 2025 11:06:04 -0700
+Message-ID: <20250320110604.v6.1.Id0a0e78ab0421b6bce51c4b0b87e6aebdfc69ec7@changeid>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250313052113.zk5yuz5e76uinbq5@thinkpad>
+Content-Transfer-Encoding: 8bit
 
-Hi Rafael, Manivannan,
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-On Thu, Mar 13, 2025 at 10:51:13AM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Mar 05, 2025 at 02:41:26PM +0100, Rafael J. Wysocki wrote:
-> > There were hardware issues related to PM on x86 platforms predating
-> > the introduction of Connected Standby in Windows.  For instance,
-> > programming a port into D3hot by writing to its PMCSR might cause the
-> > PCIe link behind it to go down and the only way to revive it was to
-> > power cycle the Root Complex.  And similar.
-> > 
-> > Also, PM has never really worked correctly on PCI (non-PCIe) bridges
-> > and there is this case where the platform firmware handles hotplug and
-> > doesn't want the OS to get in the way (the bridge->is_hotplug_bridge
-> > && !pciehp_is_native(bridge) check in pci_bridge_d3_possible()).
-> > 
-> > The DMI check at the end of pci_bridge_d3_possible() is really
-> > something to the effect of "there is no particular reason to prevent
-> > this bridge from going into D3, but try to avoid platforms where it
-> > may not work".
-> > 
-> 
-> Thanks for sharing the background. This could go in the commit message IMO.
+Currently, pci_bridge_d3_possible() encodes a variety of decision
+factors when deciding whether a given bridge can be put into D3. A
+particular one of note is for "recent enough PCIe ports." Per Rafael [0]:
 
-Yes, thanks Rafael. This adds a bit more than the guesswork I've done so
-far.
+  "There were hardware issues related to PM on x86 platforms predating
+   the introduction of Connected Standby in Windows.  For instance,
+   programming a port into D3hot by writing to its PMCSR might cause the
+   PCIe link behind it to go down and the only way to revive it was to
+   power cycle the Root Complex.  And similar."
 
-> > Basically, as far as I'm concerned, this check can be changed into
-> > something like
-> > 
-> > if (!IS_ENABLED(CONFIG_X86) || dmi_get_bios_year() >= 2015)
-> >         return true;
+Thus, this function contains a DMI-based check for post-2015 BIOS.
 
-I suppose if this harms any non-x86 BIOS systems, we can just add to
-bridge_d3_blacklist[]. This works for me too.
+The above factors (Windows, x86) don't really apply to non-x86 systems,
+and also, many such systems don't have BIOS or DMI. However, we'd like
+to be able to suspend bridges on non-x86 systems too.
 
-> > which also requires updating the comment above it accordingly.
-> > 
-> > This would have been better than the check added by the $subject patch IMV.
-> 
-> Looks good to me. Brian, could you please respin incorporating the comments?
+Restrict the "recent enough" check to x86. If we find further
+incompatibilities, it probably makes sense to expand on the deny-list
+approach (i.e., bridge_d3_blacklist or similar).
 
-Sure, will send shortly.
+Link: https://lore.kernel.org/linux-pci/CAJZ5v0j_6jeMAQ7eFkZBe5Yi+USGzysxAgfemYh=-zq4h5W+Qg@mail.gmail.com/ [0]
+Link: https://lore.kernel.org/linux-pci/20240227225442.GA249898@bhelgaas/ [1]
+Link: https://lore.kernel.org/linux-pci/20240828210705.GA37859@bhelgaas/ [2]
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+[Brian: rewrite to !X86 based on Rafael's suggestions]
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+---
+Based on prior work by Manivannan Sadhasivam that was part of a bigger
+series that stalled:
 
-Brian
+[PATCH v5 4/4] PCI: Allow PCI bridges to go to D3Hot on all Devicetree based platforms
+https://lore.kernel.org/linux-pci/20240802-pci-bridge-d3-v5-4-2426dd9e8e27@linaro.org/
+
+I'm resubmitting this single patch, since it's useful and seemingly had
+agreement.
+
+Changes in v6:
+- Include more background lore (thanks Rafael)
+- Switch to "non-x86" instead of "uses Device Tree" condition
+
+Changes in v5:
+- Pulled out of the larger series, as there were more controversial
+  changes in there, while this one had agreement (Link [1][2]).
+- Rewritten with a relaxed set of rules, because the above patch
+  required us to modify many device trees to add bridge nodes.
+
+ drivers/pci/pci.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ff69f3d653ce..4d7c9f64ea24 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3031,7 +3031,7 @@ static const struct dmi_system_id bridge_d3_blacklist[] = {
+  * @bridge: Bridge to check
+  *
+  * This function checks if it is possible to move the bridge to D3.
+- * Currently we only allow D3 for recent enough PCIe ports and Thunderbolt.
++ * Currently we only allow D3 for some PCIe ports and for Thunderbolt.
+  */
+ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+ {
+@@ -3075,10 +3075,10 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+ 			return false;
+ 
+ 		/*
+-		 * It should be safe to put PCIe ports from 2015 or newer
+-		 * to D3.
++		 * Out of caution, we only allow PCIe ports from 2015 or newer
++		 * into D3 on x86.
+ 		 */
+-		if (dmi_get_bios_year() >= 2015)
++		if (!IS_ENABLED(CONFIG_X86) || dmi_get_bios_year() >= 2015)
+ 			return true;
+ 		break;
+ 	}
+-- 
+2.49.0.395.g12beb8f557-goog
+
 
