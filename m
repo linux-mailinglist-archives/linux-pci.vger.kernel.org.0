@@ -1,321 +1,222 @@
-Return-Path: <linux-pci+bounces-24242-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24243-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 027D6A6A9ED
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 16:30:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D24A9A6AC3E
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 18:41:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C79898115C
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 15:28:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3534E1890FEE
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 17:41:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61FF21E5B6D;
-	Thu, 20 Mar 2025 15:27:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47983224231;
+	Thu, 20 Mar 2025 17:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HVgq75X2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j//XmriG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C3D14B08A
-	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 15:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA06D2253A7
+	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 17:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742484460; cv=none; b=AlkRi0LXRc0v1hQmGAkdSoZIHYlQPISlN8tpmWoJlfokztiX1KdrwpP1XDhxk6bH2Ubo/0+kWQ1yuJFYtoeaLkUs4mVIxIkyd8+qNApJc/Ov83FxNXblYPDUZc2eqHKTgdt409F5Fkb+j3XENebWPel8fofiPWV5FU2ja+dBW28=
+	t=1742492452; cv=none; b=Tr0Nu1Mn/qR1GfifycwSZCJHlu7ti+f+vB8SVog8VhYKkz0yp8hY02R2B5oJI8yCv7OeVPZ+ws94W10Zios0gfSNctklTGnIoxA3yD8ngRZ3IxM+EVIy6ptNo9caIvJBkvIdhwqTgq7/uDs0H2nia+jRm8wamZSd8F68ibA6hW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742484460; c=relaxed/simple;
-	bh=+YiBdAVUBzLgSfU9Zu/PYZgcee7y090TXxDmJRoQC3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iA9G+F7Oibnos9T122wz3ZB70HlJ9nFiKPAApLNgzW335YnQLXfaFE7xqlw22xDs0G6myMO6jyWQ8Jzx9pCxwGtLnKFPJqjTW18opUp2wPQYWjTyYhnyG25QFzbKHkNBzn4nLWz2C13fSNP39pfpi0qZUoZBfTYBK/ESkGhTbkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HVgq75X2; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2241053582dso22881365ad.1
-        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 08:27:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742484458; x=1743089258; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xrL9P/1puFkHJt5XCanQRpLTSwYlrVdw6HI7j3JjPz8=;
-        b=HVgq75X2a/evvdYIxZMdpMHHV0xe0zCm0YqZ+kO1EqTyCf0FYKu6ddGWdnHSaoC3Jj
-         nDQepW29ieqU+ewpGkI62RWyy9PXAT99oCnjE2cfPx+dQE+zWMqNcl1iffehJp2Z7woo
-         qekwb6NqSdYqQ3PZg5QfCuihaPfpF6weF0vWJsYJGFyUej69/v08Bf2KcB/YikxXUacP
-         FwKfVbgalk9eSD/pHM809lGiu5tnLhRUR9I32TXB2rPwsNDCUEWOS+HUxZpIPirTfU4u
-         eOrgY5R0IUh5bvB9MRhAulRwEn7d9SkoITIO4YaN1cGNQvWP5vLXi6DkNhJTyygIiIQy
-         3FYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742484458; x=1743089258;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xrL9P/1puFkHJt5XCanQRpLTSwYlrVdw6HI7j3JjPz8=;
-        b=w6UstdW3TGf1iZ/x2uLojLZHZdrHKyR+J1ZrNQj3OQCrvL1Q3WGtoD/7xocWxMwVYu
-         SluQEM27k6zxa43teBfvbDn6/Bsap2AZPQ89ajqqBoQgk/iJXF4VXAA4YKViKT6XyZ1U
-         Z1I/Oa9o79Y1o2HGfxbxrXey0iNtGSLIhmQR8ROi6TQd1Rw/WjxMOmsXuPKdcIs4zVMF
-         KxFBIq9XLu2MtXBTl77M1xMLH0Jne4iu8flJseFS0RZS63p7vhgvyd83q7xDYFTCKP4P
-         jcCDBFdZeiSq2rHguIyQQUdowqRTZlvvRlv2H8S7iWO/6z98tdpCjlQFaJMb4xCO/a0M
-         oCag==
-X-Forwarded-Encrypted: i=1; AJvYcCWEl5u+WYe85O/dUXqEDWHeh8lrVjZiuF0izCUHprlDyakTJ72RfQ9IHmq/ktDj5ocxs1MGuJ7TCnc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4tM5+HYc+Vg1IEIwxkEGtfFl28KCWK62LpeJ7Q9yUJntw+VCK
-	I7asJpUBZBDODRmV3zQueuFSXYqlY4JNRLbTwLSWi2quRQ3+5hlW5Jq+tImR3w==
-X-Gm-Gg: ASbGncv5PAHndQKlltBStm9IpLgZmWmONofdTMbHDJ1f++rUmNQaZp0s75qGu0+Bwzr
-	5M99iTfgjzirI71mro0TxyBgH97cxA+PvmVZxNenK59CGxo9u7JyoKpkZ4sxL76v6tfWOoEWmrX
-	BV5G2oI381hZgO6slBF43ifPF20gN0lxc1VuPTHdd8NwLWSyVlWbQwcfwglv5Nkr9/nZrHWuVtP
-	X8juuLK+9CTI47MCtvRjBjFQlfhUHm+DDKVfZXE6g1GYCSRCfB175r1HNMem0xlvml7NNlMQcI7
-	8XOyYNhg9TOTqUWVl23qko7uGAI5ng3klOaYSx2chTK2UcZGSHGjgUDoGKlE
-X-Google-Smtp-Source: AGHT+IFvs6cVHqAtZVkE9DRS+gJcji1u2+sYhS08wJb0ez8IWjnLqtZ2hcYglB6SboEehpT3B543pg==
-X-Received: by 2002:a17:903:2349:b0:21f:859a:9eab with SMTP id d9443c01a7336-22649a67fa4mr86641805ad.37.1742484457492;
-        Thu, 20 Mar 2025 08:27:37 -0700 (PDT)
-Received: from thinkpad ([2409:40f4:3109:f8b2:e8d0:5797:6511:46aa])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-737116b1103sm13968737b3a.167.2025.03.20.08.27.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 08:27:36 -0700 (PDT)
-Date: Thu, 20 Mar 2025 20:57:32 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: bhelgaas@google.com, kw@linux.com, linux-pci@vger.kernel.org,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 3/4] misc: pci_endpoint_test: Let
- PCITEST_{READ,WRITE,COPY} set IRQ type automatically
-Message-ID: <20250320152732.l346sbaioubb5qut@thinkpad>
-References: <20250318103330.1840678-6-cassel@kernel.org>
- <20250318103330.1840678-9-cassel@kernel.org>
+	s=arc-20240116; t=1742492452; c=relaxed/simple;
+	bh=NztWI47GOzCr2h2uvBOVRktULfAUCg5T9+yccdebFDg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=suExt2lCETFRGsJB2dV8z7PpsLHjxYRQhUtgp4VZrgqzgLy4PgUAm5VmKmceg3NANbpfrqPmw1NRTMNBS3nLZVyL6bzYmmJXHtA3YWtVxjR51uXnMhgjU7axoaqau/QTkcO/GWbEGOuYvF2TpHu9/VWdgaQ9oxj7qvDj0LdYCV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j//XmriG; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742492450; x=1774028450;
+  h=date:from:to:cc:subject:message-id;
+  bh=NztWI47GOzCr2h2uvBOVRktULfAUCg5T9+yccdebFDg=;
+  b=j//XmriGzrjlpQy8z/JKRvUMLkLCXPaMyh2srLuOvSdULgkBamrxiGu7
+   mVlvCQSuaNzKxOOZmD/uesocGZKc+e5ujEIBOd05lci/1lWSMvs5I+58M
+   mPlRcw3fLSNvKx9WEEOOTP8p5oL4AktmXKXX+78xcN9QFXkUjyqvdF7ya
+   S9zDAKX1FKjFPMIL9kzRCyAg7jsQV/exqBQ90Q0NAqCcK9diJ6Ucbf5c9
+   2/y/ovr61Hp6eI+hfRB7cbEW/OZ1kZHVcomksOiXwafcYa5ohmznE2Qye
+   eNpzwQAGQH5sNGRolyRDYA3yf1RnUljUBWE3WRjLEOBe1BT7WyUr7HPDh
+   Q==;
+X-CSE-ConnectionGUID: rbuhNjqtQnCaoh0TH//Osg==
+X-CSE-MsgGUID: 930XKUCSSMy9Xzm7K1daiQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="46495771"
+X-IronPort-AV: E=Sophos;i="6.14,262,1736841600"; 
+   d="scan'208";a="46495771"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 10:40:49 -0700
+X-CSE-ConnectionGUID: FeSbMuaBR3604CqcOywKTQ==
+X-CSE-MsgGUID: bwjuH3p1RhK4++Pn4tvXCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,262,1736841600"; 
+   d="scan'208";a="122970965"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by fmviesa006.fm.intel.com with ESMTP; 20 Mar 2025 10:40:48 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tvJsp-0000dr-1I;
+	Thu, 20 Mar 2025 17:40:44 +0000
+Date: Fri, 21 Mar 2025 01:40:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org
+Subject: [pci:controller/dwc-cpu-addr-fixup] BUILD SUCCESS
+ 757e87a91fabb73910bae44f1a1ada53ad6360a2
+Message-ID: <202503210119.eFtCi1v3-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250318103330.1840678-9-cassel@kernel.org>
 
-On Tue, Mar 18, 2025 at 11:33:34AM +0100, Niklas Cassel wrote:
-> The test cases for read/write/copy currently do:
-> 1) ioctl(PCITEST_SET_IRQTYPE, MSI)
-> 2) ioctl(PCITEST_{READ,WRITE,COPY})
-> 
-> This design is quite bad for a few reasons:
-> -It assumes that all PCI EPCs support MSI.
-> -One ioctl should be sufficient for these test cases.
-> 
-> Modify the PCITEST_{READ,WRITE,COPY} ioctls to set IRQ type automatically,
-> overwriting the currently configured IRQ type. It there are no IRQ types
-> supported in the CAPS register, fall back to MSI IRQs. This way the
-> implementation is no worse than before this commit.
-> 
-> Any test case that requires a specific IRQ type, e.g. MSIX_TEST, will do
-> an explicit PCITEST_SET_IRQTYPE ioctl at the start of the test case, thus
-> it is safe to always overwrite the configured IRQ type.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/dwc-cpu-addr-fixup
+branch HEAD: 757e87a91fabb73910bae44f1a1ada53ad6360a2  PCI: imx6: Remove cpu_addr_fixup()
 
-I don't quite understand this sentence. What if users wants to use a specific
-IRQ type like MSI-X if the platform supports both MSI/MSI-X? That's why I wanted
-to honor 'test->irq_type' if already set before READ,WRITE,COPY testcases.
+elapsed time: 1444m
 
-Everything else looks good to me.
+configs tested: 129
+configs skipped: 4
 
-- Mani
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> ---
->  drivers/misc/pci_endpoint_test.c | 126 +++++++++++++++++--------------
->  1 file changed, 68 insertions(+), 58 deletions(-)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 3c04121d24733..cfaeeea7642ac 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -464,6 +464,62 @@ static int pci_endpoint_test_validate_xfer_params(struct device *dev,
->  	return 0;
->  }
->  
-> +static int pci_endpoint_test_clear_irq(struct pci_endpoint_test *test)
-> +{
-> +	pci_endpoint_test_release_irq(test);
-> +	pci_endpoint_test_free_irq_vectors(test);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
-> +				      int req_irq_type)
-> +{
-> +	struct pci_dev *pdev = test->pdev;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	if (req_irq_type < PCITEST_IRQ_TYPE_INTX ||
-> +	    req_irq_type > PCITEST_IRQ_TYPE_MSIX) {
-> +		dev_err(dev, "Invalid IRQ type option\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (test->irq_type == req_irq_type)
-> +		return 0;
-> +
-> +	pci_endpoint_test_release_irq(test);
-> +	pci_endpoint_test_free_irq_vectors(test);
-> +
-> +	ret = pci_endpoint_test_alloc_irq_vectors(test, req_irq_type);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = pci_endpoint_test_request_irq(test);
-> +	if (ret) {
-> +		pci_endpoint_test_free_irq_vectors(test);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int pci_endpoint_test_set_auto_irq(struct pci_endpoint_test *test,
-> +					  int *irq_type)
-> +{
-> +	if (test->ep_caps & CAP_MSI)
-> +		*irq_type = PCITEST_IRQ_TYPE_MSI;
-> +	else if (test->ep_caps & CAP_MSIX)
-> +		*irq_type = PCITEST_IRQ_TYPE_MSIX;
-> +	else if (test->ep_caps & CAP_INTX)
-> +		*irq_type = PCITEST_IRQ_TYPE_INTX;
-> +	else
-> +		/* fallback to MSI if no caps defined */
-> +		*irq_type = PCITEST_IRQ_TYPE_MSI;
-> +
-> +	return pci_endpoint_test_set_irq(test, *irq_type);
-> +}
-> +
->  static int pci_endpoint_test_copy(struct pci_endpoint_test *test,
->  				   unsigned long arg)
->  {
-> @@ -483,7 +539,7 @@ static int pci_endpoint_test_copy(struct pci_endpoint_test *test,
->  	dma_addr_t orig_dst_phys_addr;
->  	size_t offset;
->  	size_t alignment = test->alignment;
-> -	int irq_type = test->irq_type;
-> +	int irq_type;
->  	u32 src_crc32;
->  	u32 dst_crc32;
->  	int ret;
-> @@ -504,11 +560,9 @@ static int pci_endpoint_test_copy(struct pci_endpoint_test *test,
->  	if (use_dma)
->  		flags |= FLAG_USE_DMA;
->  
-> -	if (irq_type < PCITEST_IRQ_TYPE_INTX ||
-> -	    irq_type > PCITEST_IRQ_TYPE_MSIX) {
-> -		dev_err(dev, "Invalid IRQ type option\n");
-> -		return -EINVAL;
-> -	}
-> +	ret = pci_endpoint_test_set_auto_irq(test, &irq_type);
-> +	if (ret)
-> +		return ret;
->  
->  	orig_src_addr = kzalloc(size + alignment, GFP_KERNEL);
->  	if (!orig_src_addr) {
-> @@ -616,7 +670,7 @@ static int pci_endpoint_test_write(struct pci_endpoint_test *test,
->  	dma_addr_t orig_phys_addr;
->  	size_t offset;
->  	size_t alignment = test->alignment;
-> -	int irq_type = test->irq_type;
-> +	int irq_type;
->  	size_t size;
->  	u32 crc32;
->  	int ret;
-> @@ -637,11 +691,9 @@ static int pci_endpoint_test_write(struct pci_endpoint_test *test,
->  	if (use_dma)
->  		flags |= FLAG_USE_DMA;
->  
-> -	if (irq_type < PCITEST_IRQ_TYPE_INTX ||
-> -	    irq_type > PCITEST_IRQ_TYPE_MSIX) {
-> -		dev_err(dev, "Invalid IRQ type option\n");
-> -		return -EINVAL;
-> -	}
-> +	ret = pci_endpoint_test_set_auto_irq(test, &irq_type);
-> +	if (ret)
-> +		return ret;
->  
->  	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
->  	if (!orig_addr) {
-> @@ -714,7 +766,7 @@ static int pci_endpoint_test_read(struct pci_endpoint_test *test,
->  	dma_addr_t orig_phys_addr;
->  	size_t offset;
->  	size_t alignment = test->alignment;
-> -	int irq_type = test->irq_type;
-> +	int irq_type;
->  	u32 crc32;
->  	int ret;
->  
-> @@ -734,11 +786,9 @@ static int pci_endpoint_test_read(struct pci_endpoint_test *test,
->  	if (use_dma)
->  		flags |= FLAG_USE_DMA;
->  
-> -	if (irq_type < PCITEST_IRQ_TYPE_INTX ||
-> -	    irq_type > PCITEST_IRQ_TYPE_MSIX) {
-> -		dev_err(dev, "Invalid IRQ type option\n");
-> -		return -EINVAL;
-> -	}
-> +	ret = pci_endpoint_test_set_auto_irq(test, &irq_type);
-> +	if (ret)
-> +		return ret;
->  
->  	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
->  	if (!orig_addr) {
-> @@ -790,46 +840,6 @@ static int pci_endpoint_test_read(struct pci_endpoint_test *test,
->  	return ret;
->  }
->  
-> -static int pci_endpoint_test_clear_irq(struct pci_endpoint_test *test)
-> -{
-> -	pci_endpoint_test_release_irq(test);
-> -	pci_endpoint_test_free_irq_vectors(test);
-> -
-> -	return 0;
-> -}
-> -
-> -static int pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
-> -				      int req_irq_type)
-> -{
-> -	struct pci_dev *pdev = test->pdev;
-> -	struct device *dev = &pdev->dev;
-> -	int ret;
-> -
-> -	if (req_irq_type < PCITEST_IRQ_TYPE_INTX ||
-> -	    req_irq_type > PCITEST_IRQ_TYPE_MSIX) {
-> -		dev_err(dev, "Invalid IRQ type option\n");
-> -		return -EINVAL;
-> -	}
-> -
-> -	if (test->irq_type == req_irq_type)
-> -		return 0;
-> -
-> -	pci_endpoint_test_release_irq(test);
-> -	pci_endpoint_test_free_irq_vectors(test);
-> -
-> -	ret = pci_endpoint_test_alloc_irq_vectors(test, req_irq_type);
-> -	if (ret)
-> -		return ret;
-> -
-> -	ret = pci_endpoint_test_request_irq(test);
-> -	if (ret) {
-> -		pci_endpoint_test_free_irq_vectors(test);
-> -		return ret;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
->  				    unsigned long arg)
->  {
-> -- 
-> 2.48.1
-> 
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-9.3.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                     haps_hs_smp_defconfig    gcc-14.2.0
+arc                   randconfig-001-20250320    gcc-10.5.0
+arc                   randconfig-002-20250320    gcc-8.5.0
+arm                              allmodconfig    gcc-8.5.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-6.5.0
+arm                          pxa3xx_defconfig    clang-21
+arm                   randconfig-001-20250320    clang-20
+arm                   randconfig-002-20250320    clang-16
+arm                   randconfig-003-20250320    gcc-8.5.0
+arm                   randconfig-004-20250320    gcc-6.5.0
+arm                          sp7021_defconfig    gcc-14.2.0
+arm                           u8500_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250320    clang-21
+arm64                 randconfig-002-20250320    clang-21
+arm64                 randconfig-003-20250320    clang-19
+arm64                 randconfig-004-20250320    gcc-8.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250320    gcc-10.5.0
+csky                  randconfig-002-20250320    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250320    clang-18
+hexagon               randconfig-002-20250320    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250320    gcc-12
+i386        buildonly-randconfig-002-20250320    clang-20
+i386        buildonly-randconfig-003-20250320    clang-20
+i386        buildonly-randconfig-004-20250320    clang-20
+i386        buildonly-randconfig-005-20250320    gcc-12
+i386        buildonly-randconfig-006-20250320    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-12.4.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250320    gcc-14.2.0
+loongarch             randconfig-002-20250320    gcc-12.4.0
+m68k                             allmodconfig    gcc-8.5.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-6.5.0
+m68k                           virt_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-9.3.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-9.3.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250320    gcc-6.5.0
+nios2                 randconfig-002-20250320    gcc-12.4.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-10.5.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250320    gcc-13.3.0
+parisc                randconfig-002-20250320    gcc-11.5.0
+powerpc                          allmodconfig    gcc-5.5.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                    amigaone_defconfig    gcc-14.2.0
+powerpc                      mgcoge_defconfig    clang-21
+powerpc                 mpc837x_rdb_defconfig    gcc-14.2.0
+powerpc                     mpc83xx_defconfig    clang-21
+powerpc               randconfig-001-20250320    gcc-6.5.0
+powerpc               randconfig-002-20250320    clang-21
+powerpc               randconfig-003-20250320    clang-21
+powerpc64             randconfig-001-20250320    clang-21
+powerpc64             randconfig-002-20250320    gcc-8.5.0
+powerpc64             randconfig-003-20250320    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250320    clang-21
+riscv                 randconfig-002-20250320    gcc-8.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-8.5.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20250320    gcc-5.5.0
+s390                  randconfig-002-20250320    gcc-7.5.0
+sh                               allmodconfig    gcc-9.3.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-7.5.0
+sh                                  defconfig    gcc-14.2.0
+sh                 kfr2r09-romimage_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250320    gcc-14.2.0
+sh                    randconfig-002-20250320    gcc-10.5.0
+sh                   rts7751r2dplus_defconfig    gcc-14.2.0
+sh                  sh7785lcr_32bit_defconfig    gcc-14.2.0
+sh                        sh7785lcr_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-6.5.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250320    gcc-7.5.0
+sparc                 randconfig-002-20250320    gcc-7.5.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250320    gcc-5.5.0
+sparc64               randconfig-002-20250320    gcc-13.3.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250320    gcc-12
+um                    randconfig-002-20250320    clang-16
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250320    clang-20
+x86_64      buildonly-randconfig-002-20250320    gcc-12
+x86_64      buildonly-randconfig-003-20250320    clang-20
+x86_64      buildonly-randconfig-004-20250320    clang-20
+x86_64      buildonly-randconfig-005-20250320    clang-20
+x86_64      buildonly-randconfig-006-20250320    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                       common_defconfig    gcc-14.2.0
+xtensa                randconfig-001-20250320    gcc-9.3.0
+xtensa                randconfig-002-20250320    gcc-11.5.0
 
--- 
-மணிவண்ணன் சதாசிவம்
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
