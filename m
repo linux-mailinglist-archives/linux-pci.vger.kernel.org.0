@@ -1,129 +1,116 @@
-Return-Path: <linux-pci+bounces-24218-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24219-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 863B0A6A197
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 09:41:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B810CA6A1BA
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 09:48:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1DFC19C1887
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 08:41:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3691B16731A
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 08:48:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71163211710;
-	Thu, 20 Mar 2025 08:41:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 764D3207A0F;
+	Thu, 20 Mar 2025 08:48:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hU/AGhG4"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z2wg2vuJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S5SgXWhI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A556D20B7F9
-	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 08:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72E6130A73;
+	Thu, 20 Mar 2025 08:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742460060; cv=none; b=Qglv/zwb4XDR8TrJLLERn6+0s9DL3EAM1NAAivm7MK4Pfc5Rm/pPEvkKQ8wiHLnqh9HyL1rlQwoL/foI4YHh1e6yMAbVWUHYP9FFmrEc4ugR75fpVy5fhLsHvajZJNb87hQltAnhnp1hbkBYj6ikvrviAx802VTFYdmtrxsIXzA=
+	t=1742460507; cv=none; b=if9FAWUSbOzCHTQrBAhF5x3AhN3XRBS3ALZ/mx5LUomlu6PBtAYZ+akbx/vW2Y39dY5pmZcvPkTux3QMvC3PaVyJkVYerzvdIYYpSj+iPw2PyPJkc5l5daEyKd2gDfhvidwofWCQSegxEA/9WsBSU/8hYj13W3NRVpsuDUhGSt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742460060; c=relaxed/simple;
-	bh=+JphUaWBHj8e5Dy/goJmtvqb5JUUBJCl4r3rVDM3IPc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gHusMJ13MYXSs0OUEVom44bBb+zbjOz+OGCT5bpCAmna26L/ZHoXJXdI9ju4nmAqsZpXmgU6G76w6Pn1MNM199F0fvfleT1vxBoSAQt50UPbuD1ARdj0j7QemPZtXjYm5DMoTiYpzp2mmtdluucmCAKOQga3EsTFsSeF4Cpgyrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hU/AGhG4; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso2287375e9.0
-        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 01:40:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742460057; x=1743064857; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=joq+AsBCw/cRk0tuewc3GK3q7weyXB1E25fHZd+BIYo=;
-        b=hU/AGhG4T8sfg+24Pousp30rYI0FbaMiskQArGxpHf+g1TudUs/L8024Un1VEGseHw
-         bJqrycXf7yb+lPA/TDFGLkn/E1SD5oK+yn4vzh717+bHJNi78VrXbFbqZLK3rtetlKaP
-         UPsbFgruL6ZNQMIAx1yV4A98ckzuU56F2aUNVlO1asxz9jPqCwAQzLn54T94eGjh3sJf
-         vV8m3TpHwfQsP9m2150Sv8zrD7ezOxV1/gwBnHp0L9sLG0RysSXKbpsaAfX5xrPlm6iP
-         SHEqtIl9ZEzMUH2cXqmoaDXKViEEAODiYT28czcC9Hrl0vKMx1nB1leA3FKQ9FaD0TQ/
-         rJlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742460057; x=1743064857;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=joq+AsBCw/cRk0tuewc3GK3q7weyXB1E25fHZd+BIYo=;
-        b=LmV4AYGiL+ay1QfPKIPaFOMtkfoEAMmfBXA6ryQFVl0J0RbF3vRr3Rn8UOQQpsrKly
-         Wjje6HafN8GooIOSTPmlXnYAGfDaxiBKaIk+mS2jZjDNFlyA0pLm0SQgkqd3C+SaA41a
-         wHBZViIJDxvDxvDA2boOX4yazFmoegqsxV6bVnbY74dPYHl8cezb5KAB23mwXzK5dHGH
-         TwBt8Xr8TAZAVzVdlyJbDEWpuEIjhDmRNyrEsvePL7nSWaRa9pWEej7GWyJN9o2WHMu7
-         CQkR80sv9c8++yLf0QpmuE4ShVy55sLW6095YYQKLNbmsni4jHWTIVEW/yFdb3Hr5cGq
-         h2bA==
-X-Forwarded-Encrypted: i=1; AJvYcCXcBXkg8pJcK1aUFs++zPDfiP8djZKeVntsClBdDVkQOgHHtR7BGBwrkG2MW1/pk0Mg5CxaqynC8gs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4AqxxyfeVDLUhleqA9V9lU6QLetwwmO3K3pFTmdU8UQ3XaJUO
-	JI/i86qkEUnFPt6HZvQosj6qOnwkDCdaQKFG935g1IheTXakjhu53iwChOpEp9HC+GhUnv14mmQ
-	pXMoeg9PkMxDrncDN1T3wGx1spZiSA3E4nk2/
-X-Gm-Gg: ASbGncsAP/goQYncaTCbwpsjKw6L1BnRdW0nM4pO77I/WzVHuzXpyHwMerUCurUYa9R
-	K2D8h9qwnWI5hPjjql5DS6m9H3xih1Mui1AQ0GlRPsGxqFGLKZQeU2vKQd7PiUfB0idivw4GKU4
-	UuUt9YVQ+kxP/n41o2Lz/8DoE0W2E=
-X-Google-Smtp-Source: AGHT+IGYRoX+7Vs588yGWmq8/C3g+/34z1UTJnjq4uAIISiLs6lNMbMTr8uEmsIxn9Cs0JCzmBgJuVwG12+9/NJjvT0=
-X-Received: by 2002:a05:600c:3b20:b0:43c:fd1b:d6d6 with SMTP id
- 5b1f17b1804b1-43d43842e8bmr48239855e9.31.1742460056723; Thu, 20 Mar 2025
- 01:40:56 -0700 (PDT)
+	s=arc-20240116; t=1742460507; c=relaxed/simple;
+	bh=aSzSfbFxyW0DCZ/9YIQGJxTqKVV2ZHUsAEQuaVJC12Q=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=jOWcUaHrWgUZazzWVxSkatT3sPwLzHtivMpCDZrt+aZQh/jyJeOwQhL7ej8Y1tnJbxviHPwShodzNvDjrLqSzV7vWcmxnQ+KS1zgp6koDJ3uVRk4PmaPt/lrZcCsJ+nkWtz1h0tIZoe5hLeDBUAlqE33tdv49oQD9RaWNXa20U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=z2wg2vuJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S5SgXWhI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742460504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gJ0fWumRi3cSVABPnhheHjD9lGzrLvyFl+HCBfJN+Bw=;
+	b=z2wg2vuJQk5IcDQjB9Ogzc+FrG4h58MTWJe5+QNnZKpTA1VFDJOd/x6WY8KRU+cJys4oyg
+	Cd9WsrvKKii1g0EAeGMNHYT4LtWl86hiKyKgQsqW2JUvTTdng1nFEVwjpuvwkiLbGYwnaE
+	z2MEqrXiVWVw6yq81jZW/1i6rGWztZYcvapnixIkTpqd5BroA8mb1nnFdsRptyEGNIOEpX
+	MWwT/K/HIv7QQPqGTUakz+spCW0AlZp/2dtu8Uaby2cFCXts/4xz8sVZY/TGq/tprwfHwC
+	512WqJ6nNj958tjBC4F5yofsikS8+ftGdoxO5XxL7cSU2NvXAhIQ4ZoUrUAyjg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742460504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gJ0fWumRi3cSVABPnhheHjD9lGzrLvyFl+HCBfJN+Bw=;
+	b=S5SgXWhIa5tQX9KrG8tLAilp7eDawznMy5pDFv4rMbSEikKajt61fI6a4CY9qNXnsTMk52
+	duIc+eDNOUwsOCAw==
+To: Wen Xiong <wenxiong@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, gjoyce@linux.ibm.com,
+ linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+ linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 1/1] genirq/msi: Dynamic remove/add stroage adapter hits
+ EEH
+In-Reply-To: <877c4k3yc5.ffs@tglx>
+References: <1742386474-13717-1-git-send-email-wenxiong@linux.ibm.com>
+ <87a59h3sk9.ffs@tglx> <90777da90abe02c87d30968bfedc9168@linux.ibm.com>
+ <877c4k3yc5.ffs@tglx>
+Date: Thu, 20 Mar 2025 09:48:23 +0100
+Message-ID: <874izo3x60.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319203112.131959-1-dakr@kernel.org> <20250319203112.131959-2-dakr@kernel.org>
- <Z9vTDUnr-G4vmUqS@google.com>
-In-Reply-To: <Z9vTDUnr-G4vmUqS@google.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 20 Mar 2025 09:40:45 +0100
-X-Gm-Features: AQ5f1JoNNdmHyOEpMkchf2aXocskZ-uhSkAZrFXKySPwesw-HUObFmlhnFttP6w
-Message-ID: <CAH5fLggvFanUvysDkZiLqFz4Ay7XSP5LF3CvxBU3xgWE3PSZXQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] rust: device: implement Device::parent()
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: bhelgaas@google.com, gregkh@linuxfoundation.org, rafael@kernel.org, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
-	a.hindborg@kernel.org, tmgross@umich.edu, linux-pci@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Mar 20, 2025 at 9:34=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
+On Thu, Mar 20 2025 at 09:23, Thomas Gleixner wrote:
+> On Wed, Mar 19 2025 at 21:58, Wen Xiong wrote:
+>> We don't see the issue without dynamically remove/add operation.
+>> There is a small window which irqbalance daemon kicks in during device
+>> reset. So it took about over 6 hours to recreate the issue when doing
+>> remove/add loop operation.
 >
-> On Wed, Mar 19, 2025 at 09:30:25PM +0100, Danilo Krummrich wrote:
-> > Device::parent() returns a reference to the device' parent device, if
-> > any.
-> >
-> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> > ---
-> >  rust/kernel/device.rs | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-> > index 21b343a1dc4d..76b341441f3f 100644
-> > --- a/rust/kernel/device.rs
-> > +++ b/rust/kernel/device.rs
-> > @@ -65,6 +65,19 @@ pub(crate) fn as_raw(&self) -> *mut bindings::device=
- {
-> >          self.0.get()
-> >      }
-> >
-> > +    /// Returns a reference to the parent device, if any.
-> > +    pub fn parent<'a>(&self) -> Option<&'a Self> {
-> > +        // SAFETY: By the type invariant `self.as_raw()` is always val=
-id.
-> > +        let parent =3D unsafe { *self.as_raw() }.parent;
->
-> This means:
-> 1. Copy the entire `struct device` onto the stack.
-> 2. Read the `parent` field of the copy.
->
-> Please write this instead to only read the `parent` field:
-> let parent =3D unsafe { *self.as_raw().parent };
+> Sure. You need a loop to hit the window. And it does not matter whether
+> it's the probe or the remove which triggers it. Fact is that the reset
+> wipes out the config space, which means that any read from the config
+> space between reset and restore will return garbage. That problem is not
+> restricted to the interrupt code. It's a general problem.
 
-Sorry I meant (*self.as_raw()).parent
+After looking at the code again, it's a problem in the remove()
+function:
+
+__ipr_remove()
+  ipr_initiate_ioa_bringdown() 
+    // resets device
+    restore_config_space()
+  ....
+  ipr_free_all_resources()
+    free_irqs()
+
+So yes, it's not probe(). But the question is pretty much the same.
+
+Why is a reset issued while the driver is fully operational and
+resources are still in use?
+
+Don't even think about telling me that this is a problem of the MSI
+interrupt rework. It is not. It's been broken forever.
+
+You _cannot_ pull the rung under a fully operational driver and expect
+that all involved parts will just magically handle this gracefully.
+
+What about tearing down resources first and then issuing the reset?
+
+Thanks,
+
+        tglx
+
 
