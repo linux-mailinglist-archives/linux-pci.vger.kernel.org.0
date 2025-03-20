@@ -1,63 +1,91 @@
-Return-Path: <linux-pci+bounces-24245-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24246-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C80DA6AC7D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 18:51:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F3B4A6AC94
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 18:59:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A68247AC6ED
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 17:50:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90428982760
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 17:57:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E15F226CF9;
-	Thu, 20 Mar 2025 17:51:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F410226520;
+	Thu, 20 Mar 2025 17:57:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G50IUNNw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IgdTDTb1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB38226D02
-	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 17:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88901DE3A8
+	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 17:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742493076; cv=none; b=SyU7AVxYzaetqTqDvz21srFl7hE9BCr6PlKy+HpIWhRwCdEffObYvsZXDqOrc69EbTrr24tnQlCSLy3UzYnYkSBWLxduZOtvlRKA/6QfC7qoVpXDCWzdc/m8Z19X0Wlaw77BGrryERjLvxx2mZ7RdWgE1j7vAghNMJsb1e6NHBU=
+	t=1742493446; cv=none; b=PEro2QeNa9b3vRlQ8WB/CDMxPD3mZjOBBDT3I97xrwU2Ivrnil6wAzsbSlf8pWJtEPL6tLzEjdiybjUbyRuSjWHB0ZW4aJPkXcdZlH1y5gcA6D11efX8J4C6JoiwGYzsQvUdXiPsNwaeCkEOlPVKbFnQjzqKMCyY/BbpI0MUYO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742493076; c=relaxed/simple;
-	bh=ayhB41P/EMNT89Y8iG8vAXEYTGJ941LK5pl5ZmTct18=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=r67pDurwb0ZATn3OCSz27vSFIWB6KoFotxgtfI1/QWfA5Oj+gwxaTC+w7NfnvLiRjeIFJcguIXRcoDID0gGWsM47VeW13tbExwu3vXKjFihGlb5x+yFrDR2umcF4X9sRRj7Kcd+fHnQ4E9ey0eO8dwgaJwA6/9c2Uba2zwu/cfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G50IUNNw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 371DDC4CEE7;
-	Thu, 20 Mar 2025 17:51:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742493075;
-	bh=ayhB41P/EMNT89Y8iG8vAXEYTGJ941LK5pl5ZmTct18=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=G50IUNNwJIxj/6bF9nIh0o+JlG2ECTDz5JeXL3kgEhaBkgxjpgJrYk/qeippUXMS+
-	 SJ+OlljUkPkSxB5awciFZKi4skNCyiY/IbbRxHsa3LjAxhe0xZEYbgX1oFBbf7ZzWb
-	 FVrzI7H/c4EATuDDReBhb+Q86NAF+1LrSr6GoB3ryDuzR6qvAQVGL469oZTopiErEM
-	 YK2gCLEfCE1UMFr8edDCXsLQRYmwVhv4rQUvPjxTMPt10ljARaTh+VrLcALOCveGe6
-	 9lM1e+OHf4G0WXqYcaRr6hVdDweIefuibWTVMMijgH4zEfdWRDh0tGS9zrXJmwPowI
-	 +HRRb3/im1pNA==
-Date: Thu, 20 Mar 2025 12:51:13 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Karolina Stolarek <karolina.stolarek@oracle.com>
-Cc: Jon Pan-Doh <pandoh@google.com>, linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Terry Bowman <Terry.bowman@amd.com>
-Subject: Re: [PATCH v4 5/7] PCI/AER: Introduce ratelimit for error logs
-Message-ID: <20250320175113.GA1089681@bhelgaas>
+	s=arc-20240116; t=1742493446; c=relaxed/simple;
+	bh=mO6ApbMHzxFMCtQxPMSGmJnnaUVaxpdYXWiMJjhdnYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PVV9uA0f1h5A647KyGdXebHKlnnb8ICE4+F+GkQGgBpUEjaZENwjptprRA7dpBm81vfxqsFPmqI3Uo3vEGGfKoBxgOmcVtcXxkyGGq1nyI3U8wOzzNTyVM61Vl20BiA7GIIk1Qtx22SZyVnX1DH0dPEtVJOKRQgAI0MHG0FDvaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IgdTDTb1; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so4940235a91.1
+        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 10:57:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1742493444; x=1743098244; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KZBuAO/4lH4CVBlD86N+IBRXOKzZiRkJHD/4cEnzLg8=;
+        b=IgdTDTb1X2qtQtOkDRsbcKFEP0YT598B/9Y24roSjP6k+N94B0usGnhtgNhRHvg0oA
+         ug/vDzEqKyvbWyEoPZoWX7T1fP0ze0kP5URxeXtgHY3H1yKyh+FQBkONrq/sUv+v4HRb
+         SAI/w/sQUA+DLKkcAVN5KHw+yH3qNxSmovIy4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742493444; x=1743098244;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KZBuAO/4lH4CVBlD86N+IBRXOKzZiRkJHD/4cEnzLg8=;
+        b=VT7AXAaN2wj4gPe+isWuFn+yzfN59r7wrYEWjDabnxSyM0n2p4RpWInwnDzDkfce02
+         d20WRnAmNYkVXipT0ALbQ8w0+FCALboW71iSaIwWdIS3XmRhEIJSSi7/laXHJbpAs9Hi
+         lXsW/uPoAZa/pLuYFw0ytZ06yI19BxSMrzOL20QePbviGRoF7aowGYX9Mr1hXniEPJng
+         Ya6I8a7u8PfDKRjBWKOLE74U6FvWos4MC2Wy75qY6CBgjxw61TpTECwbQTKwTteLegn2
+         M0l/2icO4lvoZARKSVVLv9H/YkRGBID3lZCTrCGEPlojvUHivb3Rw7Pob6ezWZfqP8oI
+         jV9w==
+X-Forwarded-Encrypted: i=1; AJvYcCU7cgOkk+0jclnUDbEnZZKi3ZRquRkB0yc3TxXDHXven5WktgIkhQDUKoJp+k3702xdBYu0T3mUBn4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO1sNE7Fjd3sBsAFBTAJcy5wsIFi8kKcCtl/ZYI/2de+7BjPt4
+	FN1dJP6y4kg2dcYqPrtseY7nphj+zQK4Kr0eKZXZg9R+9C5tPYH/0L9EIv1IsQ==
+X-Gm-Gg: ASbGncvNKs0iWVFD/YkcrvJGD3q7vvKvLNtVHUh6mCkriR+4axh+9l1x/+cSNIUNurW
+	lvzR67x0IOYM5L/WMX2R2gSvDhwtrBmq4vGNesS0iwgdi/1yzHB4pfZyfxd9Xc+P9IM8z4vxXeS
+	C0upsYRNPOp1+QKfjBGktHcOXy9ewTOapt8ubVdwqUn/+KAtEmGR7CBCtPsiDuzT5m3+qj3wfn8
+	ABecY8awIzP2x4+XII9R1b86sVKIK08uCCyrWzlcznXVRbMq7BgaetTfE0XJOmnzIiEiU2T0rwG
+	kxoirFjkaSJLSRB5V2CdbdRsG8/4HiNmHeBxqySYnfC56GTTduNhSfT1nVzJQI/X6S+2XwW8uM7
+	AmVEwUkc=
+X-Google-Smtp-Source: AGHT+IE7xF5qbvgKRnHfx2I3KfMDgIwTK12qXs2qkhWYJrmEZMMPOAnefkb2h4CcUxPOX3VUqrZHNw==
+X-Received: by 2002:a17:90b:54c7:b0:2fe:93be:7c9d with SMTP id 98e67ed59e1d1-3030ec2a985mr625654a91.7.1742493444134;
+        Thu, 20 Mar 2025 10:57:24 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:9e6b:24df:389d:f71b])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-301a5ea4e9asm2514396a91.1.2025.03.20.10.57.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Mar 2025 10:57:23 -0700 (PDT)
+Date: Thu, 20 Mar 2025 10:57:21 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, Len Brown <lenb@kernel.org>,
+	Hsin-Yi Wang <hsinyi@chromium.org>, linux-kernel@vger.kernel.org,
+	mika.westerberg@linux.intel.com, linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org, lukas@wunner.de
+Subject: Re: [PATCH v5] PCI: Allow PCI bridges to go to D3Hot on all
+ Devicetree based platforms
+Message-ID: <Z9xXAYA4KS5BabhE@google.com>
+References: <20241126151711.v5.1.Id0a0e78ab0421b6bce51c4b0b87e6aebdfc69ec7@changeid>
+ <20250228174509.GA58365@bhelgaas>
+ <Z8IC_WDmix3YjOkv@google.com>
+ <CAJZ5v0j_6jeMAQ7eFkZBe5Yi+USGzysxAgfemYh=-zq4h5W+Qg@mail.gmail.com>
+ <20250313052113.zk5yuz5e76uinbq5@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,102 +94,50 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ebafe3cc-2d0f-4000-863d-20365977e27c@oracle.com>
+In-Reply-To: <20250313052113.zk5yuz5e76uinbq5@thinkpad>
 
-On Thu, Mar 20, 2025 at 03:56:53PM +0100, Karolina Stolarek wrote:
-> On 20/03/2025 09:20, Jon Pan-Doh wrote:
-> > Spammy devices can flood kernel logs with AER errors and slow/stall
-> > execution. Add per-device ratelimits for AER correctable and
-> > uncorrectable errors that use the kernel defaults (10 per 5s).
+Hi Rafael, Manivannan,
 
-> > +	/*
-> > +	 * Ratelimits are doubled as a given error produces 2 logs (root port
-> > +	 * and endpoint) that should be under same ratelimit.
-> > +	 */
+On Thu, Mar 13, 2025 at 10:51:13AM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Mar 05, 2025 at 02:41:26PM +0100, Rafael J. Wysocki wrote:
+> > There were hardware issues related to PM on x86 platforms predating
+> > the introduction of Connected Standby in Windows.  For instance,
+> > programming a port into D3hot by writing to its PMCSR might cause the
+> > PCIe link behind it to go down and the only way to revive it was to
+> > power cycle the Root Complex.  And similar.
+> > 
+> > Also, PM has never really worked correctly on PCI (non-PCIe) bridges
+> > and there is this case where the platform firmware handles hotplug and
+> > doesn't want the OS to get in the way (the bridge->is_hotplug_bridge
+> > && !pciehp_is_native(bridge) check in pci_bridge_d3_possible()).
+> > 
+> > The DMI check at the end of pci_bridge_d3_possible() is really
+> > something to the effect of "there is no particular reason to prevent
+> > this bridge from going into D3, but try to avoid platforms where it
+> > may not work".
+> > 
 > 
-> It took me a bit to understand what this comment is about.
+> Thanks for sharing the background. This could go in the commit message IMO.
+
+Yes, thanks Rafael. This adds a bit more than the guesswork I've done so
+far.
+
+> > Basically, as far as I'm concerned, this check can be changed into
+> > something like
+> > 
+> > if (!IS_ENABLED(CONFIG_X86) || dmi_get_bios_year() >= 2015)
+> >         return true;
+
+I suppose if this harms any non-x86 BIOS systems, we can just add to
+bridge_d3_blacklist[]. This works for me too.
+
+> > which also requires updating the comment above it accordingly.
+> > 
+> > This would have been better than the check added by the $subject patch IMV.
 > 
-> When we handle an error message, we first use the source's ratelimit to
-> decide if we want to print the port info, and then the actual error. In
-> theory, there could be more errors of the same class coming from other
-> devices within one message.
+> Looks good to me. Brian, could you please respin incorporating the comments?
 
-I think this refers to the fact that when we get an AER interrupt from
-a Root Port, the RP has a single Requester ID logged in the Source
-Identification, but if Multiple ERR_* is set, find_device_iter() may
-collect error info from several devices?
+Sure, will send shortly.
 
-> For these devices, we would call the ratelimit
-> just once. I don't have a nice an clean solution for this problem, I just
-> wanted to highlight that 1) we don't use the Root Port's ratelimit in
-> aer_print_port_info(), 2) we may use the bursts to either print port_info +
-> error message or just the message, in different combinations. I think we
-> should reword this comment to highlight the fact that we don't check the
-> ratelimit once per error, we could do it twice.
-
-Very good point.  aer_print_rp_info() is always ratelimited based on
-the ERR_* Source Identification, but if Multiple ERR_* is set,
-aer_print_error() ratelimits based on whatever downstream device we
-found that had any error of the same class logged.
-
-E.g., if we had something like this topology:
-
-  00:1c.0 Root Port to [bus 01-04]
-  01:00.0 Switch Upstream Port to [bus 02-04]
-  02:00.0 Switch Downstream Port to [bus 03]
-  02:00.1 Switch Downstream Port to [bus 04]
-  03:00.0 NIC
-  04:00.0 NVMe
-
-where 03:00.0 and 04:00.0 both logged ERR_FATAL, and the Root Port
-received the 03:00.0 message first, 03:00.0 would be logged as the
-Source Identification, and Multiple ERR_FATAL Received should be set.
-The messages related to 00:1c.0 and 03:00.0 would be ratelimited based
-on 03:00.0, but aer_print_error() messages related to 04:00.0 would be
-ratelimited based on 04:00.0.
-
-That does seem like a problem.  I would propose that we always
-ratelimit using the device from Source Identification. I think that's
-available in aer_print_error(); we would just use info->id instead of
-"dev".
-
-That does mean we'd have to figure out the pci_dev corresponding to
-the Requester ID in info->id.  Maybe we could add an
-aer_err_info.src_dev pointer, and fill it in when find_device_iter()
-finds the right device?
-
-> Also, I wonder -- do only Endpoints generate error messages? From what I
-> understand, that some errors can be detected by intermediary devices.
-
-Yes, I think any device, including switches between a Root Port and
-Endpoint, can detect errors and generate error messages.
-
-I guess this means the "endpoint" variable in aer_print_port_info() is
-probably too specific.  IIUC the aer_print_port_info() "dev" parameter
-is always a Root Port since it came from aer_rpc.rpd.  Naming it "rp"
-would make this more obvious and free up "dev" for the source device.
-And "aer_print_port_info" itself could be more descriptive, e.g.,
-"aer_print_rp_info()", since *every* PCIe device has a Port.
-
-> I'm also thinking -- we are ratelimiting the aer_print_port_info() and
-> aer_print_error(). What about the messages in dpc_process_error()? Should we
-> check early if DPC was triggered because of an uncorrectable error, and if
-> so, ratelimit that?
-
-Good question.  It does seem like the dpc_process_error() messages
-should be similarly ratelimited.  I think we currently only enable DPC
-for fatal errors, and the Downstream Port takes the link down, which
-resets the hierarchy below.  So (1) we probably won't see storms of
-fatal error messages, and (2) it looks like we might not print any
-error info from downstream devices, since they're not reachable while
-the link is down.
-
-It does seem like we *should* try to print that info after the link
-comes back up, since the log registers are sticky and should survive
-the reset.  Maybe we do that already and I just missed it.
-
-This seems like something we could put off a little bit while we deal
-with the AER correctable error issue.
-
-Bjorn
+Brian
 
