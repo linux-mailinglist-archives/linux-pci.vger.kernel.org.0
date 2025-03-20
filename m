@@ -1,45 +1,46 @@
-Return-Path: <linux-pci+bounces-24266-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24267-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32340A6B0B7
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 23:28:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 044C7A6B0B9
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 23:28:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A788288249C
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 22:28:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E14A1892497
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 22:28:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0998422170A;
-	Thu, 20 Mar 2025 22:28:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BAEA22A7FD;
+	Thu, 20 Mar 2025 22:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WYhcrtN2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OVBKluKi"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CEB1B422A;
-	Thu, 20 Mar 2025 22:28:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FED31B422A;
+	Thu, 20 Mar 2025 22:28:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742509709; cv=none; b=F1q+Ka3UC7nUL+q+PgfbZ/iy9Bp4N5N3nxWsyqhJl5+xVYeqXtkVD8dV9Skvb5KUn3L+2aGClGDemDfMCvXB22gjHAfFoQDu8X4PUcykwBesdU1bbm/kRsBpFnwGcW/LIU4mQbLlIaIoj3ijxJPzNCU8FLM01n6MIR/XteTgBwE=
+	t=1742509713; cv=none; b=JOBtDWT0R628vxSgbmILluokzkK6ZRkqw3L/rT/Dz/2DouPSQrE5Ywa5sVY/tm6T37Fe5pQZTg4vDGlkzw2IXKc4uwGuemrKum4SoVQorqzn7cUXdfLvbJ43ht22BUrTqXZ8K6aQhAAdl/YJQPfsvVfQkDjHSUOAPEIqJtiq6/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742509709; c=relaxed/simple;
-	bh=/eDF6C2JflWG+9e9o4PLQ+zXIJKnOxeTv4ZNaiuzPc0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QOwDqzhYfMAdapAxD4cGcLQhYJMKFR9m2SRcv7BEyu3TmGd9pXatD/5o+dmvksk/x11JVY1+pPjq7NUev4wAbWzDM0f8lL2FbCTrooi11uZDTrjmU7oX5FR8W8Mxy/rV04gqsGG12MAWYX6dOm8ABVmbM1OSngQCAA7DPNu7FrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WYhcrtN2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F257AC4CEDD;
-	Thu, 20 Mar 2025 22:28:25 +0000 (UTC)
+	s=arc-20240116; t=1742509713; c=relaxed/simple;
+	bh=HhRSRCpXSFmxEsrtP/Su72cgc0XjK9N/nmHPf0AN9A0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SyH9IszolMeXP3IFhpWjWbNbSYnrVwzsj3tTYbpP9ybz0OhP3RL+dmXyR7HarIp7E6CmFQFostNte8y+E0Ct29a7SsH4g8QKsckjsSkzZUnFw6Bb8FGvw+EeP0Zxd4VqWdpc4Kw2G1xvUNANg4NQYpYRE8OJ+aH5g7rZl5uWu0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OVBKluKi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3417C4CEE3;
+	Thu, 20 Mar 2025 22:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742509709;
-	bh=/eDF6C2JflWG+9e9o4PLQ+zXIJKnOxeTv4ZNaiuzPc0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=WYhcrtN2N0wRNwHd6ATYSuo0sFbvF/YKHSOAbppAWtbKpmpAnSeo2RYbgmJcfOBEG
-	 eqThoGFvlnjvvD0k8Iiu2ZDCbC20+/seNa3QIOykMofN5liwtODQ/BLjhAjOcFp6EV
-	 R//JVxNLAi5YCCnBve4Cu6DtjTbk7Xu6lTcIKhjTbIej9BkbcFmqeZElaWPaATbm2u
-	 8KK8qw5+XGOwNaSy9KSvl6eTdnVBPlOepDxvoRSIC4YILT6hodxvLNIIN5Awa3mruO
-	 gXRn61ASGLzNeFwMF7Fi1yV+WXSg/BL8jYOdJB7jhGSQjYcAP7DbRjwkZyMkT/CWUH
-	 56DMNYb4btB/g==
+	s=k20201202; t=1742509712;
+	bh=HhRSRCpXSFmxEsrtP/Su72cgc0XjK9N/nmHPf0AN9A0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OVBKluKiT6sMtv+Gve8DS0qobblLGUkrPLSIXeU7MIR4BcU9stYxVYPX2gLFpAIqe
+	 pe7jZeMikOu6dHKl9TTeYLOngqB2nj3AkVO225liBESTI45PHdTAQt49dyKoHNNMHr
+	 ZDuS61/ov3FdkwO3PbX89Eh2lg3BsoeziMSqwOhxpSY/ylRFikkZTNEAMRgTOtkDtb
+	 m4k5dma34/V3Ll3F3N/kz+td9vu7g46YtYOlxS1xM9DqZWcmfKpmR9B/lyJvvDJBTX
+	 xY88PSgFxvv2bV5d0//2Dpy5yuAULJI5OxmgvPj9tLOLTpLHxV7qGwQscS8YOuKHYL
+	 /l4R6+qO7sJvg==
 From: Danilo Krummrich <dakr@kernel.org>
 To: bhelgaas@google.com,
 	gregkh@linuxfoundation.org,
@@ -57,10 +58,12 @@ Cc: linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v2 0/4] Implement TryFrom<&Device> for bus specific devices
-Date: Thu, 20 Mar 2025 23:27:42 +0100
-Message-ID: <20250320222823.16509-1-dakr@kernel.org>
+Subject: [PATCH v2 1/4] rust: device: implement Device::parent()
+Date: Thu, 20 Mar 2025 23:27:43 +0100
+Message-ID: <20250320222823.16509-2-dakr@kernel.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250320222823.16509-1-dakr@kernel.org>
+References: <20250320222823.16509-1-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -69,47 +72,41 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series provides a mechanism to safely convert a struct device into its
-corresponding bus specific device instance, if any.
+Device::parent() returns a reference to the device' parent device, if
+any.
 
-In C a generic struct device is typically converted to a specific bus device
-with container_of(). This requires the caller to know whether the generic struct
-device is indeed embedded within the expected bus specific device type.
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+---
+ rust/kernel/device.rs | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-In Rust we can do the same thing by implementing the TryFrom trait, e.g.
-
-        impl TryFrom<&Device> for pci::Device
-
-This is a safe operation, since we can check whether dev->bus equals the the
-expected struct bus_type.
-
-Additionally, provide an accessor for a device' parent.
-
-A branch containing the patches can be found in [1].
-
-This is needed for the auxiliary bus abstractions and connecting nova-core with
-nova-drm. [2]
-
-[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/device
-[2] https://gitlab.freedesktop.org/drm/nova/-/tree/staging/nova-drm
-
-Changes in v2:
-  - s/unsafe { *self.as_raw() }.parent/unsafe { (*self.as_raw()).parent }/
-  - expand safety comment on Device::bus_type_raw()
-
-Danilo Krummrich (4):
-  rust: device: implement Device::parent()
-  rust: device: implement bus_type_raw()
-  rust: pci: impl TryFrom<&Device> for &pci::Device
-  rust: platform: impl TryFrom<&Device> for &platform::Device
-
- rust/kernel/device.rs   | 24 ++++++++++++++++++++++++
- rust/kernel/pci.rs      | 21 +++++++++++++++++++--
- rust/kernel/platform.rs | 22 ++++++++++++++++++++--
- 3 files changed, 63 insertions(+), 4 deletions(-)
-
-
-base-commit: 51d0de7596a458096756c895cfed6bc4a7ecac10
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index 21b343a1dc4d..f6bdc2646028 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -65,6 +65,21 @@ pub(crate) fn as_raw(&self) -> *mut bindings::device {
+         self.0.get()
+     }
+ 
++    /// Returns a reference to the parent device, if any.
++    pub fn parent<'a>(&self) -> Option<&'a Self> {
++        // SAFETY:
++        // - By the type invariant `self.as_raw()` is always valid.
++        // - The parent device is only ever set at device creation.
++        let parent = unsafe { (*self.as_raw()).parent };
++
++        if parent.is_null() {
++            None
++        } else {
++            // SAFETY: Since `parent` is not NULL, it must be a valid pointer to a `struct device`.
++            Some(unsafe { Self::as_ref(parent) })
++        }
++    }
++
+     /// Convert a raw C `struct device` pointer to a `&'a Device`.
+     ///
+     /// # Safety
 -- 
 2.48.1
 
