@@ -1,264 +1,321 @@
-Return-Path: <linux-pci+bounces-24241-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24242-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5085FA6A998
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 16:20:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 027D6A6A9ED
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 16:30:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 43DD0188176D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 15:19:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8C79898115C
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 15:28:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF5431E7C1C;
-	Thu, 20 Mar 2025 15:18:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61FF21E5B6D;
+	Thu, 20 Mar 2025 15:27:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jtAZa04N"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HVgq75X2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBCF14B08A;
-	Thu, 20 Mar 2025 15:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C3D14B08A
+	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 15:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742483937; cv=none; b=OMRJ94PgOp+SNGi6FwFDwH7e0smL2GYZNvHn/GdwtWsM95NdwPtSjzDgMkW7TWf561ejRlZ+EFCq0SfzMPE9SzS4X+xqCXPYUyqXZSnvIJjnjOc8j5Jb85MSk5BPWSZ2BvpoV3yCxVFjOGNW6PB3PLdDsMMdF102CN/dUsUlPTk=
+	t=1742484460; cv=none; b=AlkRi0LXRc0v1hQmGAkdSoZIHYlQPISlN8tpmWoJlfokztiX1KdrwpP1XDhxk6bH2Ubo/0+kWQ1yuJFYtoeaLkUs4mVIxIkyd8+qNApJc/Ov83FxNXblYPDUZc2eqHKTgdt409F5Fkb+j3XENebWPel8fofiPWV5FU2ja+dBW28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742483937; c=relaxed/simple;
-	bh=1Z6H2iLvH3rXMt19HL+9taZFJeo/GqQ1pEgfLHm/VO8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ffiktKpYT0dnPb3VPhH6Sm1TN4G5d03h4CC18XgEdoplTGPtyEJXlXWskCd4aM4oBLny5hi/h9dDFcytLmXEJkgiu1VOJn0kVQPipu07hdvDFxYBTAd3BmVzoZA+CiSNSCKBMxLq796yUehzDn7kYiiW7KkRpEnOx2XOvNpfd0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jtAZa04N; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A232C4CEDD;
-	Thu, 20 Mar 2025 15:18:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742483936;
-	bh=1Z6H2iLvH3rXMt19HL+9taZFJeo/GqQ1pEgfLHm/VO8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=jtAZa04NkVALEmArILtqhgvGWzNrqybg3hrSGdZZ2VVAFhkXh1nT4jpUcZ4Kc2DDn
-	 0A6i4ERYcuiCeprXqYIMy4u4kiFrkwJYEeYsWv+53EA4mBSJ6BqBYD7yzk5jl0BW7F
-	 3K+uSeS65G8FFh9VmSyWsSaODa9u59R3cNyzrD/bWKcMoby2y3/LjyBnzNkYD+iJSL
-	 9QHQkLG/EQ0PXCuzUmTG72RV9mKDT4ZRjt1NiAC6yuM4pg17khef1prwdyUg+6q41R
-	 XwbECsZNkZ4re5+LVruYEIZ107+IH+Jq6zDSLtPqFFjlA4zbkDNY4cbCQwK98Zoq0c
-	 4mfWfzYas3b3w==
-From: Mark Brown <broonie@kernel.org>
-To: tglx@linutronix.de, "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: maz@kernel.org, linux-kernel@vger.kernel.org, 
- Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Alexandre Ghiti <alex@ghiti.fr>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Alex Deucher <alexander.deucher@amd.com>, Alex Shi <alexs@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, 
- =?utf-8?q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, amd-gfx@lists.freedesktop.org, 
- Amit Kucheria <amitk@kernel.org>, Anatolij Gustschin <agust@denx.de>, 
- Andi Shyti <andi.shyti@kernel.org>, 
- =?utf-8?q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
- Andreas Kemnade <andreas@kemnade.info>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, Andrew Lunn <andrew@lunn.ch>, 
- Andy Shevchenko <andy@kernel.org>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Antoine Tenart <atenart@kernel.org>, 
- Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
- Anup Patel <anup@brainfault.org>, Arnd Bergmann <arnd@arndb.de>, 
- asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>, 
- Baruch Siach <baruch@tkos.co.il>, 
- Benjamin Herrenschmidt <benh@kernel.crashing.org>, 
- Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>, 
- Bjorn Andersson <andersson@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Borislav Petkov <bp@alien8.de>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
- Corentin Chary <corentin.chary@gmail.com>, 
- Daire McNamara <daire.mcnamara@microchip.com>, 
- Daniel Golle <daniel@makrotopia.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Daniel Mack <daniel@zonque.org>, 
- Daniel Palmer <daniel@thingy.jp>, Dave Hansen <dave.hansen@linux.intel.com>, 
- David Airlie <airlied@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
- DENG Qingfang <dqfext@gmail.com>, Dinh Nguyen <dinguyen@kernel.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Dongliang Mu <dzm91@hust.edu.cn>, Doug Berger <opendmb@gmail.com>, 
- dri-devel@lists.freedesktop.org, Eddie James <eajames@linux.ibm.com>, 
- Eric Dumazet <edumazet@google.com>, Fabio Estevam <festevam@gmail.com>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Geoff Levand <geoff@infradead.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Gregory Clement <gregory.clement@bootlin.com>, Guo Ren <guoren@kernel.org>, 
- Hans de Goede <hdegoede@redhat.com>, 
- Haojian Zhuang <haojian.zhuang@gmail.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, 
- Heiko Stuebner <heiko@sntech.de>, Herve Codina <herve.codina@bootlin.com>, 
- Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, "H. Peter Anvin" <hpa@zytor.com>, 
- Huacai Chen <chenhuacai@kernel.org>, 
- Changhuang Liang <changhuang.liang@starfivetech.com>, 
- Chen-Yu Tsai <wens@csie.org>, "Chester A. Unal" <chester.a.unal@arinc9.com>, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Chris Zankel <chris@zankel.net>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Imre Kaloz <kaloz@openwrt.org>, Ingo Molnar <mingo@redhat.com>, 
- Jakub Kicinski <kuba@kernel.org>, James Morse <james.morse@arm.com>, 
- Janne Grunau <j@jannau.net>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
- Jaroslav Kysela <perex@perex.cz>, Jassi Brar <jassisinghbrar@gmail.com>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Jerome Brunet <jbrunet@baylibre.com>, 
- Jianjun Wang <jianjun.wang@mediatek.com>, 
- Jiawen Wu <jiawenwu@trustnetic.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
- Jim Quinlan <jim2101024@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, 
- Joel Stanley <joel@jms.id.au>, Johannes Berg <johannes@sipsolutions.net>, 
- John Crispin <john@phrozen.org>, 
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
- Jonas Bonn <jonas@southpole.se>, Jonathan Cameron <jic23@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, Jonathan Hunter <jonathanh@nvidia.com>, 
- =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
- Joyce Ooi <joyce.ooi@intel.com>, 
- Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>, 
- Keerthy <j-keerthy@ti.com>, Kevin Hilman <khilman@baylibre.com>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
- Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, 
- Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, 
- Linus Walleij <linus.walleij@linaro.org>, Linus Walleij <linusw@kernel.org>, 
- linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-edac@vger.kernel.org, linux-gpio@vger.kernel.org, 
- linux-iio@vger.kernel.org, linux-i2c@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, 
- linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, linux-remoteproc@vger.kernel.org, 
- linux-riscv@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, 
- linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
- linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-um@lists.infradead.org, linux-wireless@vger.kernel.org, 
- loongarch@lists.linux.dev, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- Ludovic Desroches <ludovic.desroches@microchip.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, "Luke D. Jones" <luke@ljones.dev>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- =?utf-8?q?Marek_Beh=C3=BAn?= <kabel@kernel.org>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- Mark-PK Tsai <mark-pk.tsai@mediatek.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Max Filippov <jcmvbkbc@gmail.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Mengyuan Lou <mengyuanlou@net-swift.com>, Michael Buesch <m@bues.ch>, 
- Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <michal.simek@amd.com>, 
- Miodrag Dinic <miodrag.dinic@mips.com>, Naveen N Rao <naveen@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, netdev@vger.kernel.org, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Nicolas Saenz Julienne <nsaenz@kernel.org>, 
- Nicholas Piggin <npiggin@gmail.com>, 
- Nikhil Agarwal <nikhil.agarwal@amd.com>, Nipun Gupta <nipun.gupta@amd.com>, 
- Nishanth Menon <nm@ti.com>, =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Paolo Abeni <pabeni@redhat.com>, 
- Paul Cercueil <paul@crapouillou.net>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Peter Rosin <peda@axentia.se>, Philipp Zabel <p.zabel@pengutronix.de>, 
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
- platform-driver-x86@vger.kernel.org, 
- Prasad Kumpatla <quic_pkumpatl@quicinc.com>, 
- Qiang Zhao <qiang.zhao@nxp.com>, Qin Jian <qinjian@cqplus1.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Randy Dunlap <rdunlap@infradead.org>, Ray Jui <rjui@broadcom.com>, 
- Rengarajan Sundararajan <Rengarajan.S@microchip.com>, 
- Richard Cochran <richardcochran@gmail.com>, 
- Richard Weinberger <richard@nod.at>, Rich Felker <dalias@libc.org>, 
- Rob Clark <robdclark@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, 
- Robert Richter <rric@kernel.org>, Rob Herring <robh@kernel.org>, 
- Roger Quadros <rogerq@kernel.org>, Russell King <linux@armlinux.org.uk>, 
- Ryan Chen <ryan_chen@aspeedtech.com>, Ryder Lee <ryder.lee@mediatek.com>, 
- Samuel Holland <samuel@sholland.org>, 
- Santosh Shilimkar <ssantosh@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Scott Branden <sbranden@broadcom.com>, Scott Wood <oss@buserror.net>, 
- Sean Paul <sean@poorly.run>, Sean Wang <sean.wang@kernel.org>, 
- Sean Wang <sean.wang@mediatek.com>, 
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
- Sergio Paracuellos <sergio.paracuellos@gmail.com>, 
- Shawn Guo <shawnguo@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, 
- Siddharth Vadapalli <s-vadapalli@ti.com>, Simona Vetter <simona@ffwll.ch>, 
- Stafford Horne <shorne@gmail.com>, 
- Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, 
- Stephen Boyd <sboyd@kernel.org>, Sven Peter <sven@svenpeter.dev>, 
- Takashi Iwai <tiwai@suse.com>, Talel Shenhar <talel@amazon.com>, 
- Tero Kristo <kristo@kernel.org>, 
- Thangaraj Samynathan <Thangaraj.S@microchip.com>, 
- Thara Gopinath <thara.gopinath@gmail.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Toan Le <toan@os.amperecomputing.com>, Tony Lindgren <tony@atomide.com>, 
- Tony Luck <tony.luck@intel.com>, UNGLinuxDriver@microchip.com, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Vignesh Raghavendra <vigneshr@ti.com>, Vineet Gupta <vgupta@kernel.org>, 
- Vladimir Oltean <olteanv@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>, 
- WANG Xuerui <kernel@xen0n.name>, Woojung Huh <woojung.huh@microchip.com>, 
- x86@kernel.org, Yanteng Si <si.yanteng@linux.dev>, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, 
- Zhang Rui <rui.zhang@intel.com>
-In-Reply-To: <20250319092951.37667-1-jirislaby@kernel.org>
-References: <20250319092951.37667-1-jirislaby@kernel.org>
-Subject: Re: (subset) [PATCH v2 00/57] irqdomain: Cleanups and
- Documentation
-Message-Id: <174248389026.68765.4225899402848645156.b4-ty@kernel.org>
-Date: Thu, 20 Mar 2025 15:18:10 +0000
+	s=arc-20240116; t=1742484460; c=relaxed/simple;
+	bh=+YiBdAVUBzLgSfU9Zu/PYZgcee7y090TXxDmJRoQC3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iA9G+F7Oibnos9T122wz3ZB70HlJ9nFiKPAApLNgzW335YnQLXfaFE7xqlw22xDs0G6myMO6jyWQ8Jzx9pCxwGtLnKFPJqjTW18opUp2wPQYWjTyYhnyG25QFzbKHkNBzn4nLWz2C13fSNP39pfpi0qZUoZBfTYBK/ESkGhTbkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HVgq75X2; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2241053582dso22881365ad.1
+        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 08:27:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742484458; x=1743089258; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xrL9P/1puFkHJt5XCanQRpLTSwYlrVdw6HI7j3JjPz8=;
+        b=HVgq75X2a/evvdYIxZMdpMHHV0xe0zCm0YqZ+kO1EqTyCf0FYKu6ddGWdnHSaoC3Jj
+         nDQepW29ieqU+ewpGkI62RWyy9PXAT99oCnjE2cfPx+dQE+zWMqNcl1iffehJp2Z7woo
+         qekwb6NqSdYqQ3PZg5QfCuihaPfpF6weF0vWJsYJGFyUej69/v08Bf2KcB/YikxXUacP
+         FwKfVbgalk9eSD/pHM809lGiu5tnLhRUR9I32TXB2rPwsNDCUEWOS+HUxZpIPirTfU4u
+         eOrgY5R0IUh5bvB9MRhAulRwEn7d9SkoITIO4YaN1cGNQvWP5vLXi6DkNhJTyygIiIQy
+         3FYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742484458; x=1743089258;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xrL9P/1puFkHJt5XCanQRpLTSwYlrVdw6HI7j3JjPz8=;
+        b=w6UstdW3TGf1iZ/x2uLojLZHZdrHKyR+J1ZrNQj3OQCrvL1Q3WGtoD/7xocWxMwVYu
+         SluQEM27k6zxa43teBfvbDn6/Bsap2AZPQ89ajqqBoQgk/iJXF4VXAA4YKViKT6XyZ1U
+         Z1I/Oa9o79Y1o2HGfxbxrXey0iNtGSLIhmQR8ROi6TQd1Rw/WjxMOmsXuPKdcIs4zVMF
+         KxFBIq9XLu2MtXBTl77M1xMLH0Jne4iu8flJseFS0RZS63p7vhgvyd83q7xDYFTCKP4P
+         jcCDBFdZeiSq2rHguIyQQUdowqRTZlvvRlv2H8S7iWO/6z98tdpCjlQFaJMb4xCO/a0M
+         oCag==
+X-Forwarded-Encrypted: i=1; AJvYcCWEl5u+WYe85O/dUXqEDWHeh8lrVjZiuF0izCUHprlDyakTJ72RfQ9IHmq/ktDj5ocxs1MGuJ7TCnc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4tM5+HYc+Vg1IEIwxkEGtfFl28KCWK62LpeJ7Q9yUJntw+VCK
+	I7asJpUBZBDODRmV3zQueuFSXYqlY4JNRLbTwLSWi2quRQ3+5hlW5Jq+tImR3w==
+X-Gm-Gg: ASbGncv5PAHndQKlltBStm9IpLgZmWmONofdTMbHDJ1f++rUmNQaZp0s75qGu0+Bwzr
+	5M99iTfgjzirI71mro0TxyBgH97cxA+PvmVZxNenK59CGxo9u7JyoKpkZ4sxL76v6tfWOoEWmrX
+	BV5G2oI381hZgO6slBF43ifPF20gN0lxc1VuPTHdd8NwLWSyVlWbQwcfwglv5Nkr9/nZrHWuVtP
+	X8juuLK+9CTI47MCtvRjBjFQlfhUHm+DDKVfZXE6g1GYCSRCfB175r1HNMem0xlvml7NNlMQcI7
+	8XOyYNhg9TOTqUWVl23qko7uGAI5ng3klOaYSx2chTK2UcZGSHGjgUDoGKlE
+X-Google-Smtp-Source: AGHT+IFvs6cVHqAtZVkE9DRS+gJcji1u2+sYhS08wJb0ez8IWjnLqtZ2hcYglB6SboEehpT3B543pg==
+X-Received: by 2002:a17:903:2349:b0:21f:859a:9eab with SMTP id d9443c01a7336-22649a67fa4mr86641805ad.37.1742484457492;
+        Thu, 20 Mar 2025 08:27:37 -0700 (PDT)
+Received: from thinkpad ([2409:40f4:3109:f8b2:e8d0:5797:6511:46aa])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-737116b1103sm13968737b3a.167.2025.03.20.08.27.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 08:27:36 -0700 (PDT)
+Date: Thu, 20 Mar 2025 20:57:32 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: bhelgaas@google.com, kw@linux.com, linux-pci@vger.kernel.org,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH 3/4] misc: pci_endpoint_test: Let
+ PCITEST_{READ,WRITE,COPY} set IRQ type automatically
+Message-ID: <20250320152732.l346sbaioubb5qut@thinkpad>
+References: <20250318103330.1840678-6-cassel@kernel.org>
+ <20250318103330.1840678-9-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250318103330.1840678-9-cassel@kernel.org>
 
-On Wed, 19 Mar 2025 10:28:53 +0100, Jiri Slaby (SUSE) wrote:
-> tl;dr if patches are agreed upon, I ask subsys maintainers to take the
-> respective ones via their trees (as they are split per subsys), so that
-> the IRQ tree can take only the rest. That would minimize churn/conflicts
-> during merges.
+On Tue, Mar 18, 2025 at 11:33:34AM +0100, Niklas Cassel wrote:
+> The test cases for read/write/copy currently do:
+> 1) ioctl(PCITEST_SET_IRQTYPE, MSI)
+> 2) ioctl(PCITEST_{READ,WRITE,COPY})
 > 
-> ===
+> This design is quite bad for a few reasons:
+> -It assumes that all PCI EPCs support MSI.
+> -One ioctl should be sufficient for these test cases.
 > 
-> [...]
+> Modify the PCITEST_{READ,WRITE,COPY} ioctls to set IRQ type automatically,
+> overwriting the currently configured IRQ type. It there are no IRQ types
+> supported in the CAPS register, fall back to MSI IRQs. This way the
+> implementation is no worse than before this commit.
+> 
+> Any test case that requires a specific IRQ type, e.g. MSIX_TEST, will do
+> an explicit PCITEST_SET_IRQTYPE ioctl at the start of the test case, thus
+> it is safe to always overwrite the configured IRQ type.
+> 
 
-Applied to
+I don't quite understand this sentence. What if users wants to use a specific
+IRQ type like MSI-X if the platform supports both MSI/MSI-X? That's why I wanted
+to honor 'test->irq_type' if already set before READ,WRITE,COPY testcases.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Everything else looks good to me.
 
-Thanks!
+- Mani
 
-[35/57] irqdomain: sound: Switch to irq_domain_create_linear()
-        commit: 83eddf0116b09186f909bc643f2093f266f204ea
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> ---
+>  drivers/misc/pci_endpoint_test.c | 126 +++++++++++++++++--------------
+>  1 file changed, 68 insertions(+), 58 deletions(-)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index 3c04121d24733..cfaeeea7642ac 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -464,6 +464,62 @@ static int pci_endpoint_test_validate_xfer_params(struct device *dev,
+>  	return 0;
+>  }
+>  
+> +static int pci_endpoint_test_clear_irq(struct pci_endpoint_test *test)
+> +{
+> +	pci_endpoint_test_release_irq(test);
+> +	pci_endpoint_test_free_irq_vectors(test);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
+> +				      int req_irq_type)
+> +{
+> +	struct pci_dev *pdev = test->pdev;
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	if (req_irq_type < PCITEST_IRQ_TYPE_INTX ||
+> +	    req_irq_type > PCITEST_IRQ_TYPE_MSIX) {
+> +		dev_err(dev, "Invalid IRQ type option\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (test->irq_type == req_irq_type)
+> +		return 0;
+> +
+> +	pci_endpoint_test_release_irq(test);
+> +	pci_endpoint_test_free_irq_vectors(test);
+> +
+> +	ret = pci_endpoint_test_alloc_irq_vectors(test, req_irq_type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = pci_endpoint_test_request_irq(test);
+> +	if (ret) {
+> +		pci_endpoint_test_free_irq_vectors(test);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int pci_endpoint_test_set_auto_irq(struct pci_endpoint_test *test,
+> +					  int *irq_type)
+> +{
+> +	if (test->ep_caps & CAP_MSI)
+> +		*irq_type = PCITEST_IRQ_TYPE_MSI;
+> +	else if (test->ep_caps & CAP_MSIX)
+> +		*irq_type = PCITEST_IRQ_TYPE_MSIX;
+> +	else if (test->ep_caps & CAP_INTX)
+> +		*irq_type = PCITEST_IRQ_TYPE_INTX;
+> +	else
+> +		/* fallback to MSI if no caps defined */
+> +		*irq_type = PCITEST_IRQ_TYPE_MSI;
+> +
+> +	return pci_endpoint_test_set_irq(test, *irq_type);
+> +}
+> +
+>  static int pci_endpoint_test_copy(struct pci_endpoint_test *test,
+>  				   unsigned long arg)
+>  {
+> @@ -483,7 +539,7 @@ static int pci_endpoint_test_copy(struct pci_endpoint_test *test,
+>  	dma_addr_t orig_dst_phys_addr;
+>  	size_t offset;
+>  	size_t alignment = test->alignment;
+> -	int irq_type = test->irq_type;
+> +	int irq_type;
+>  	u32 src_crc32;
+>  	u32 dst_crc32;
+>  	int ret;
+> @@ -504,11 +560,9 @@ static int pci_endpoint_test_copy(struct pci_endpoint_test *test,
+>  	if (use_dma)
+>  		flags |= FLAG_USE_DMA;
+>  
+> -	if (irq_type < PCITEST_IRQ_TYPE_INTX ||
+> -	    irq_type > PCITEST_IRQ_TYPE_MSIX) {
+> -		dev_err(dev, "Invalid IRQ type option\n");
+> -		return -EINVAL;
+> -	}
+> +	ret = pci_endpoint_test_set_auto_irq(test, &irq_type);
+> +	if (ret)
+> +		return ret;
+>  
+>  	orig_src_addr = kzalloc(size + alignment, GFP_KERNEL);
+>  	if (!orig_src_addr) {
+> @@ -616,7 +670,7 @@ static int pci_endpoint_test_write(struct pci_endpoint_test *test,
+>  	dma_addr_t orig_phys_addr;
+>  	size_t offset;
+>  	size_t alignment = test->alignment;
+> -	int irq_type = test->irq_type;
+> +	int irq_type;
+>  	size_t size;
+>  	u32 crc32;
+>  	int ret;
+> @@ -637,11 +691,9 @@ static int pci_endpoint_test_write(struct pci_endpoint_test *test,
+>  	if (use_dma)
+>  		flags |= FLAG_USE_DMA;
+>  
+> -	if (irq_type < PCITEST_IRQ_TYPE_INTX ||
+> -	    irq_type > PCITEST_IRQ_TYPE_MSIX) {
+> -		dev_err(dev, "Invalid IRQ type option\n");
+> -		return -EINVAL;
+> -	}
+> +	ret = pci_endpoint_test_set_auto_irq(test, &irq_type);
+> +	if (ret)
+> +		return ret;
+>  
+>  	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
+>  	if (!orig_addr) {
+> @@ -714,7 +766,7 @@ static int pci_endpoint_test_read(struct pci_endpoint_test *test,
+>  	dma_addr_t orig_phys_addr;
+>  	size_t offset;
+>  	size_t alignment = test->alignment;
+> -	int irq_type = test->irq_type;
+> +	int irq_type;
+>  	u32 crc32;
+>  	int ret;
+>  
+> @@ -734,11 +786,9 @@ static int pci_endpoint_test_read(struct pci_endpoint_test *test,
+>  	if (use_dma)
+>  		flags |= FLAG_USE_DMA;
+>  
+> -	if (irq_type < PCITEST_IRQ_TYPE_INTX ||
+> -	    irq_type > PCITEST_IRQ_TYPE_MSIX) {
+> -		dev_err(dev, "Invalid IRQ type option\n");
+> -		return -EINVAL;
+> -	}
+> +	ret = pci_endpoint_test_set_auto_irq(test, &irq_type);
+> +	if (ret)
+> +		return ret;
+>  
+>  	orig_addr = kzalloc(size + alignment, GFP_KERNEL);
+>  	if (!orig_addr) {
+> @@ -790,46 +840,6 @@ static int pci_endpoint_test_read(struct pci_endpoint_test *test,
+>  	return ret;
+>  }
+>  
+> -static int pci_endpoint_test_clear_irq(struct pci_endpoint_test *test)
+> -{
+> -	pci_endpoint_test_release_irq(test);
+> -	pci_endpoint_test_free_irq_vectors(test);
+> -
+> -	return 0;
+> -}
+> -
+> -static int pci_endpoint_test_set_irq(struct pci_endpoint_test *test,
+> -				      int req_irq_type)
+> -{
+> -	struct pci_dev *pdev = test->pdev;
+> -	struct device *dev = &pdev->dev;
+> -	int ret;
+> -
+> -	if (req_irq_type < PCITEST_IRQ_TYPE_INTX ||
+> -	    req_irq_type > PCITEST_IRQ_TYPE_MSIX) {
+> -		dev_err(dev, "Invalid IRQ type option\n");
+> -		return -EINVAL;
+> -	}
+> -
+> -	if (test->irq_type == req_irq_type)
+> -		return 0;
+> -
+> -	pci_endpoint_test_release_irq(test);
+> -	pci_endpoint_test_free_irq_vectors(test);
+> -
+> -	ret = pci_endpoint_test_alloc_irq_vectors(test, req_irq_type);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = pci_endpoint_test_request_irq(test);
+> -	if (ret) {
+> -		pci_endpoint_test_free_irq_vectors(test);
+> -		return ret;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  static long pci_endpoint_test_ioctl(struct file *file, unsigned int cmd,
+>  				    unsigned long arg)
+>  {
+> -- 
+> 2.48.1
+> 
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+-- 
+மணிவண்ணன் சதாசிவம்
 
