@@ -1,181 +1,107 @@
-Return-Path: <linux-pci+bounces-24251-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24252-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0892A6AD4B
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 19:49:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C606A6AE1C
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 20:08:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C6273AC8EB
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 18:47:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 472481887E23
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 19:06:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36DFB227B8E;
-	Thu, 20 Mar 2025 18:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74FC1227E99;
+	Thu, 20 Mar 2025 19:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dGoE1WIY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yGrn754s"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7CD01953A1;
-	Thu, 20 Mar 2025 18:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EDB1EC006
+	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 19:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742496448; cv=none; b=WibKbz6wfassP8PWgzjV0zLczJYa+xdcgw8J7iuoMwPJs03lluF46hC3T0OGWsh0bi7OSOxOcE6TmLOTGh7kVXPduom3K9cgI1ZpjcFPwple3chq5T0WdlzbypKX1TGhDFgqSb16XgGLbL9VPXDzhK1ItvEQBoazayIG7On5u6o=
+	t=1742497586; cv=none; b=M7TebwGFD6XCzEJS8TYPdn2W+uRpqh+8QQEWs9O2gy3odv+GuNQ1Qcbta8i8O/5+ER94E7kIh/dEhVo13IcrtGLlxN3OUIVO9Rh17A/jTWt61044L0BiEP2riry/tZv0peRvFGQHhqHhU68ugIlV3FRxNrtEVnBRTuRYy2IFMGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742496448; c=relaxed/simple;
-	bh=p7MoLMJgztUeM2mOX1O2C/+yxOVVFon1dqzplcanEj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QzVPYnR0k64XEBGOunxlXuu8HxItst9h8qTWdC+iYb70LIki3wDGu8X25ek9tx1YStPEBhkKOK+cYMKcSpnxJhUbVz47g4AEPeIJfubiVd/DdDp33l/RPGaPblGSJJ0Dofx4P+lWWvdb8vXbkGmpylDMSnxu/7mhPxqQUjjOSWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=dGoE1WIY; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 6483B2116B4D;
-	Thu, 20 Mar 2025 11:47:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6483B2116B4D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1742496439;
-	bh=2L2Q31XCa0Xdbd9gsYILKzkM4+b+VTYhlEAF67KZJpE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dGoE1WIYcV3miDSU7tnIjSORwMD3YiiuMtgapwqYs3PxoUrikjyglFZJEbSJEaC1I
-	 qppAONaKxLV3qmJYo7gpaRMBNla6xREmO+/WMeSBr/85MzxtUvCAfKqrGUxvaVfV3z
-	 LX02uwyNNHxgqfnDJgcNePxL4YNOD7FoIVq49fLM=
-Message-ID: <42a1a90b-ae3e-47df-ad6c-500055e69218@linux.microsoft.com>
-Date: Thu, 20 Mar 2025 11:47:18 -0700
+	s=arc-20240116; t=1742497586; c=relaxed/simple;
+	bh=a/jrDGXBBTvpPP1JojCI8HHSOOPQXl2O6Qc6nhYH4PY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GdGSF5QCtV8i8X2Ee0CxTBVyQmQ6xNXmKc60itIviQHcY8sUxbc41jalRfGcpQHCoaW5oLLjr57CrISv0AmVUASktTos1nGbcUXiZIjKCT59G4+v8K3g99Ahr8PCCvWcXLs3URrSNVR9A9X4YbpMgOHBALs0yuENnbF+exErkps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yGrn754s; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e686d39ba2so2416759a12.2
+        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 12:06:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742497583; x=1743102383; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a/jrDGXBBTvpPP1JojCI8HHSOOPQXl2O6Qc6nhYH4PY=;
+        b=yGrn754sPlSiyRli0vCmPVYJikdRcZqNog/r5Q7zSiJPrPVAdEfrakMdzjEbydewpd
+         GKRQe1ikZ6ETU3ukt5O3IkYsu0/sjLp5qgNKdIk3hudrrYnZDImEYmgv+uk1BjR7/uDm
+         uJ47znc46e+nwkNHngI8p2aUqPtSud6JqLEAO0v1fRgElRgMQto4VvkzlnBnL3svmNcc
+         Cs2XsL96cRM49xx7hqjLfhRyEk+CuWKFmRfYRKg6XNBsBhbqJ4+ZMFCbbjs+7pe4g2Pf
+         OtUy9VJp2munpVZ5rVXheIhW69TNG1QRWKwuhiY9VtgQrmb5PMpZBvifc33JQvXK50RZ
+         fAPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742497583; x=1743102383;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a/jrDGXBBTvpPP1JojCI8HHSOOPQXl2O6Qc6nhYH4PY=;
+        b=sMTyeDizuEoIcT0vftax4301w00iLpSZPYqVRtT2RwfqkqGLtnuKQsHJ/8w+D8XLJe
+         XBpofj2AZLHt7VcESEIDKxEh2BVhRVwT5SXVAvS+Laad0zNHUt+VQzi22PDW7iInPN1a
+         WsgWvPoXLuStgEaBpyNZKqtstNxjWx1G9KnNSYZzgAJTYB610/qnD6DstCDfVU8h9xOS
+         Xh462ZI1PREhYgiW7M98y/oLZxSIYnkWIhoGlsX5G5mwzXx0d/tOs8sVTDGwtDEaqqGV
+         DBrAb/xUeub2NPd3tYrkZeVdIsfYa2xp8R3BBlUM9Ke+Dq/thwVKHXRcpNHFiv71bTrD
+         rRFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXivHFZdCDIzFRutYVWtp57hhE0MkO4xMmQmv3GAPABHeBFpaUBa0XOu4iPUzcYx68Qs2Ttlgwq6TY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtqKShfn342DIMQPC1CuQAZDpINT3aEXueu2XoYi/oa1EuuUlV
+	Q+vMJzFPGxQIB0hWH9G6rlfSVvlCrh9AZLWgt4D5jjuuWOQiRtFNDUSKYlRDalkeizhOEEW6WQh
+	6NAnAnq7RldyPDxylEm4+fofbi0mv9UrqH7ZZ
+X-Gm-Gg: ASbGncs1fuYvyRIFYNMrM6RtQsMq6ricKF0gorO9aPHP4Q7x5xVOeP/MOQUgikOTws0
+	3VdvW8awZ+HoHNfREW08NozgMtmQMQeOjtzmB4lW+tn/eiKjr7Df3nJLeabY/7LmcZ6SUoO3hd1
+	vhNdjvLwevnpeU3HA4FvUANER4dGTml9ABWkMvScTu1UtltzCqrDzAkUUU
+X-Google-Smtp-Source: AGHT+IGzYxTe78mR92M78v6TUCY5stb2TNpWtStMelj7PdsgMZoWfOkCh+wSI8r27oYL9yeGpkIv5ag1D5Z/tAxAPyk=
+X-Received: by 2002:a05:6402:2546:b0:5eb:1706:aa17 with SMTP id
+ 4fb4d7f45d1cf-5ebcd40bd13mr505707a12.6.1742497582773; Thu, 20 Mar 2025
+ 12:06:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next v6 02/11] arm64: hyperv: Use SMCCC to detect
- hypervisor presence
-To: Michael Kelley <mhklinux@outlook.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, "bhelgaas@google.com"
- <bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "hpa@zytor.com" <hpa@zytor.com>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "kw@linux.com" <kw@linux.com>,
- "kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org"
- <lenb@kernel.org>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "maz@kernel.org" <maz@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
- "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
- "rafael@kernel.org" <rafael@kernel.org>, "robh@kernel.org"
- <robh@kernel.org>, "ssengar@linux.microsoft.com"
- <ssengar@linux.microsoft.com>, "sudeep.holla@arm.com"
- <sudeep.holla@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
- <will@kernel.org>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>, "apais@microsoft.com"
- <apais@microsoft.com>, "benhill@microsoft.com" <benhill@microsoft.com>,
- "bperkins@microsoft.com" <bperkins@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>
-References: <20250315001931.631210-1-romank@linux.microsoft.com>
- <20250315001931.631210-3-romank@linux.microsoft.com>
- <Z9gJlQgV3hm1kxY0@J2N7QTR9R3.cambridge.arm.com>
- <BN7PR02MB414871F1A3D8EF3809391F2FD4D92@BN7PR02MB4148.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <BN7PR02MB414871F1A3D8EF3809391F2FD4D92@BN7PR02MB4148.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250319084050.366718-1-pandoh@google.com> <20250319084050.366718-3-pandoh@google.com>
+ <79f4ddd5-af44-4fc9-9f04-4e79f66db21e@linux.intel.com> <CAMC_AXX11GcfbOyp4HXaA_9MmzfKPyPFtA470-aCdMqC7zanVA@mail.gmail.com>
+ <35a6ab6b-209c-46bc-ad6a-d4a1b4f76bb1@linux.intel.com>
+In-Reply-To: <35a6ab6b-209c-46bc-ad6a-d4a1b4f76bb1@linux.intel.com>
+From: Jon Pan-Doh <pandoh@google.com>
+Date: Thu, 20 Mar 2025 12:06:10 -0700
+X-Gm-Features: AQ5f1JpGs5Qtn_xWy1dwiPYM7JiiOR6uOPE82iAg9pg-VvnR50PRkklGisyXAfg
+Message-ID: <CAMC_AXX29XzoBqL2Ve9JdiPaxxGUA9J3Lq3vGViwSyYFHF5k5g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/8] PCI/AER: Make all pci_print_aer() log levels
+ depend on error type
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>, 
+	linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
+	Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+	Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Lukas Wunner <lukas@wunner.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Terry Bowman <Terry.bowman@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Mar 20, 2025 at 7:23=E2=80=AFAM Sathyanarayanan Kuppuswamy
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=
+=3Daer&id=3Dfab874e12593b68f9a7fcb1a31a7dcf4829e88f7
 
+Ah. I have no objections if this patch is squashed with Ilpo's.
 
-On 3/19/2025 3:11 PM, Michael Kelley wrote:
-> From: Mark Rutland <mark.rutland@arm.com> Sent: Monday, March 17, 2025 4:38 AM
-
->>
->> The 'acpi_disabled' variable doesn't exist for !CONFIG_ACPI, so its use
->> prior to the ifdeffery looks misplaced.
-> 
-> FWIW, include/linux/acpi.h has
-> 
-> #define acpi_disabled 1
-> 
-> when !CONFIG_ACPI.  But I agree that using a stub is better.
-
-Thanks, Michael! I didn't "fact-checked" what was suggested indeed.
-Agreed that the stub makes the code look better.
-
-> 
-> Michael
-> 
->>
->> Usual codestyle is to avoid ifdeffery if possible, using IS_ENABLED().
->> Otherwise, use a stub, e.g.
->>
->> | #ifdef CONFIG_ACPI
->> | static bool __init hyperv_detect_via_acpi(void)
->> | {
->> | 	if (acpi_disabled)
->> | 		return false;
->> |
->> | 	if (acpi_gbl_FADT.header.revision < 6)
->> | 		return false;
->> |
->> | 	return strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8) == 0;
->> | }
->> | #else
->> | static inline bool hyperv_detect_via_acpi(void) { return false; }
->> | #endif
->>
->> Mark.
->>
->>> +static bool __init hyperv_detect_via_smccc(void)
->>> +{
->>> +	uuid_t hyperv_uuid = UUID_INIT(
->>> +		0x4d32ba58, 0x4764, 0xcd24,
->>> +		0x75, 0x6c, 0xef, 0x8e,
->>> +		0x24, 0x70, 0x59, 0x16);
->>> +
->>> +	return arm_smccc_hyp_present(&hyperv_uuid);
->>> +}
->>> +
->>>   static int __init hyperv_init(void)
->>>   {
->>>   	struct hv_get_vp_registers_output	result;
->>> @@ -35,13 +70,11 @@ static int __init hyperv_init(void)
->>>
->>>   	/*
->>>   	 * Allow for a kernel built with CONFIG_HYPERV to be running in
->>> -	 * a non-Hyper-V environment, including on DT instead of ACPI.
->>> +	 * a non-Hyper-V environment.
->>> +	 *
->>>   	 * In such cases, do nothing and return success.
->>>   	 */
->>> -	if (acpi_disabled)
->>> -		return 0;
->>> -
->>> -	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
->>> +	if (!hyperv_detect_via_acpi() && !hyperv_detect_via_smccc())
->>>   		return 0;
->>>
->>>   	/* Setup the guest ID */
->>> --
->>> 2.43.0
->>>
-> 
-
--- 
-Thank you,
-Roman
-
+Thanks,
+Jon
 
