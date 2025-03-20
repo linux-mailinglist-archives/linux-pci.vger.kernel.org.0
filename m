@@ -1,112 +1,130 @@
-Return-Path: <linux-pci+bounces-24213-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24214-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6172CA6A166
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 09:31:00 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D1A7A6A16F
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 09:34:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C930E464396
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 08:30:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B5ED4645D1
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 08:34:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15DCF21421D;
-	Thu, 20 Mar 2025 08:30:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27DE81E9B39;
+	Thu, 20 Mar 2025 08:34:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uVFsZKVO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lSFGm9SN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B0B20B803
-	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 08:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6837C135A53
+	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 08:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742459407; cv=none; b=rnKRZ9YXmipyoegPzxHupeVeDQezwDiM1aDtcDCnqTN+aLyT5VsXkE8vnCleR15bva0eX88tpeY9Tb3C28YcCi+Ixu4cFXck3GHjRfIVhkxAViBq9mAvtyTehzE9uTLWyBntoM+vE+yFJXtch1dcbLNRgCUeNHdu/Eu0K6vEKbM=
+	t=1742459669; cv=none; b=N9uPM/cXWsH3j3zOxGhu2yQB59RRy6LhO56R9dkihqxD1mCPu1mDLIrVaelD4N/rRKsWf25ra4aXL0szkO5pgjiZVGn+zWVX6ayHh7K9uQ2EbCAIz/w3iN4CWrx4luEyPklD+rYvJDAWG6JQaL052VpsarUlMoUqwX4Q74+2OVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742459407; c=relaxed/simple;
-	bh=7OAxyGGLfGu20i0e/DvkCBzREKQ3WqBXkvKmPAlqRZI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gLf1iUHZe1SJVHkbCwCr1cBWKhOajhLggG0aJBJhK5wqRpDjA2masQeHa5YgssFwyxvHZxkm67QQkVdtDzuC9ETCKKKaGQNryfbMsYb05nm+g4BoJPdIFxERhRU/Sxl7khCEodgdi9s7za0G+s9zetOCIBdYCINkMy7zzganXvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uVFsZKVO; arc=none smtp.client-ip=209.85.208.42
+	s=arc-20240116; t=1742459669; c=relaxed/simple;
+	bh=l3VwoIVwLUP27LDC5NTNwQF3pDkwJD3vZbcEVWf8GZA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=NXZHLikkU2FLn6gERLBNRWIORIcDcqj2JjxsXXxhTLSzEPLk88Gz3aV+wbb0KQEkte86MpfiDECPW6XbOMH+yntfEblPxyQePQUj/zCi+8YsQJv0bvXFxvo3wvMK7g1Wn/unQ9xiCd2niBUfQxdtWpqJCayGhfBQs2bsyE8TVAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lSFGm9SN; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5eb92df4fcbso890016a12.0
-        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 01:30:05 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43bd0586a73so2945875e9.2
+        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 01:34:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742459404; x=1743064204; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7OAxyGGLfGu20i0e/DvkCBzREKQ3WqBXkvKmPAlqRZI=;
-        b=uVFsZKVOrRUzfryPvkHO4qvMpaisc78gD32ZRZOerQ2drI03Z4pr7U9HxfpcXF2uZd
-         xS8t99SUu2YQZGZoPuw8V4bDK4RtCibkTj2hADo+XXd8rT3qKiSPSn89pllKNqIWs/8N
-         HX8/M5YAkAPzDeJLXyhxpigknNPWnen5j4/ttWYJqCoqjppuiOWyzR0rlb433JPlyt5L
-         1BQF3PboHDlPe/i5qvAHBY121ITSRe6RR+YSt9iaWriOZp8rVL08W3NrduiJUtxywQCK
-         Iv6jq3AUTapQqfzbIaTt+c8da8Pmq2Hbvc2DcZW3ejnNNHsLKX94DuKvZTTaND++iaN6
-         NWkg==
+        d=google.com; s=20230601; t=1742459666; x=1743064466; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UFns9AG268hK1rHV5ZYPNSTIs8c0QR41lOuUEuj/IrY=;
+        b=lSFGm9SNHHHdmvdG01URJ6pJnyPceQkbsIun2aVR0n0t3LSHayO8yYRE7lsLjVKm9M
+         NdbG1Dk2M7stb1dqd1Sf9eNVmjTxXUbDBTl0j5DNec275nW4IB4dfcle4jz0jnD9XDCK
+         eNVkR7C12zq+WJ5P7hXAP9s/uhtmchHr5fm9QZCS6zsMIeCMVZk8Rnm/sywtqOCqtq3W
+         RILWOnQJtkpJO08rkP+9YHJPha+qlJz5yesYrLX+nOXHpecXhkM7EMl5/tuQ3ethjtAQ
+         whkSKRNpGVEfNk4S8iDEiXCm+O0ZxZiLCusd4neqfr1Nl4NTY9J/Ub6hlUivIus8Ge/w
+         j5Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742459404; x=1743064204;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7OAxyGGLfGu20i0e/DvkCBzREKQ3WqBXkvKmPAlqRZI=;
-        b=aCJMT7vDipjpfy93m2i8KkNfpqERC0LNx1YsyVmC5wtQU+L8FhG1DTmMFrLi9hIhB7
-         37oO+FBqBu718U9CFJTH7IgTCsKOMr8A0IvO8hio0ZF5U0ksFUj3+BdRlj+tROZq7ZW6
-         Ybdy7dFPnhLCsnDb+2l6nRDhZIkNGoZY4A58gnj1WF6rr7vkjDSYFnhB1bLkUy8VJquc
-         lZI+Xy3rDFl8Xj8bYnm0Jp4tWyWxPtfXN/JudmPK0ya5AoveFBt/NWCLv0pCLa5q/rA2
-         3gTRxTbo4Y/OVDr9GRW6ZdBDVYH5PDwjymc7mlUKIkHTgmEInR3nN8eN8sThvGVC3oTk
-         rqDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYxqgywLRonfSt5WXXOG1nSME2T2bHvwqHl2a8pI4+KDe6QpwKmakVBJ7aj9sSW6D3VFiV1Q5ZMBQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrOAHp+szoi7wDlycXyb94D+M4zEpXhGqczyLu3RXXD+19C6UQ
-	AZEDyo+u70DgdfxMRBmhN3tTPO+FLXz0SEqC+3x7JuviTB3ewMtLFl/Sh8fUCJsmOsygOMV7ctO
-	O48pWj+s1MmUX6CWG0dR8ZU4Ei2SC/P/Z3kn/
-X-Gm-Gg: ASbGnctA8eSbpRBkC1OpmnhvKWqzpCvfEU7J6dbnvU3PNDebrFXt3+ynOWr8xDfkGEV
-	1uOBC2ijyF/UUs9t1PigI/9cd6U93sJqHVEPSUJnIZ5p1uQmuzBu1dHYEFKtB6nq0ItEqaXONH0
-	P5w8XWkQPUKH6Jjnlae0vntV8=
-X-Google-Smtp-Source: AGHT+IFamuQQoM5Pph2ELP5pw3eWhPtFtanEl5l+3nX+sAdIl4kyeMnWavlyAlaeBvBqP+vKJm6bmcH6XpXfI1MyJdA=
-X-Received: by 2002:a05:6402:1d50:b0:5e7:8501:8c86 with SMTP id
- 4fb4d7f45d1cf-5eb80f7347cmr5537703a12.22.1742459403408; Thu, 20 Mar 2025
- 01:30:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742459666; x=1743064466;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UFns9AG268hK1rHV5ZYPNSTIs8c0QR41lOuUEuj/IrY=;
+        b=jeUo7aUna4WedoG5TcemXPlLVZTXafFa0Va5/EjaOJjLpsl8TJY39wPRQlCe9lbxFT
+         7FYwRBowOajDBEqd15Hs1yYOlimk2D9ZrU44sZQxa7O12cglIN+Joy32TUhNZJJWiHRw
+         CN+OsjHHlYKjmqWzhS4654HGUq5YYx5R/NHjUXB88A7P3q6mxRxcg8WaUJGf9m/7jmGB
+         /9JBFGVHqNZplKX2NeoAByGxYtUpT2e3p46hD6duQeiqHCVVUmkJxZxsjTQ9KNZ+b3GJ
+         cOu5hH1LAWsKe/+mGi3RQhglBTzK2D/w5WyTtMRISpDmjH2zHMtiWI3oC69eUIhKIg+c
+         SR0g==
+X-Forwarded-Encrypted: i=1; AJvYcCVY7O1FOYZhSCgT2uB8OC24B10ObxbOhyqaOwla6ktALkZ8oXTnsdVM5P8rk3TyjFfMjUDODbNSfUE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyigEdTw0SHAtFChJmH2s8s7UdZ5UeD0d7mouyQ/KA4+Cp6Nf/7
+	/+9q4emVoOdz+aL4xA0iMNaju4nu3ZSoZTVtg9bQp7McY9AoaMfHrfrTBXg693XzDxysAcU4Ows
+	JZCXrRl0CJJrKWg==
+X-Google-Smtp-Source: AGHT+IHugWNIf0NTcJ1BqVmz9bIucegvlBQBCECxMHN4Jb5Pzy5PsgyGHPknwC9dbNhN2W5DuUZR8ZPXN7RoR94=
+X-Received: from wmbbe3.prod.google.com ([2002:a05:600c:1e83:b0:43b:c914:a2d9])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3d97:b0:43c:efed:732d with SMTP id 5b1f17b1804b1-43d437c32bcmr62405395e9.16.1742459665813;
+ Thu, 20 Mar 2025 01:34:25 -0700 (PDT)
+Date: Thu, 20 Mar 2025 08:34:21 +0000
+In-Reply-To: <20250319203112.131959-2-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250319084050.366718-1-pandoh@google.com> <20250319084050.366718-4-pandoh@google.com>
- <9208619f-5640-47f8-ac46-898894198499@linux.intel.com>
-In-Reply-To: <9208619f-5640-47f8-ac46-898894198499@linux.intel.com>
-From: Jon Pan-Doh <pandoh@google.com>
-Date: Thu, 20 Mar 2025 01:29:52 -0700
-X-Gm-Features: AQ5f1JrhRfgXdrEXpM-p0E85cd8AmB5fuOsab8n1hFye_1jjGDsnrAdc_nJkUwY
-Message-ID: <CAMC_AXW04FfaVKYLc+h1kjRjYUrxqA97kLXf0z7shpS1k5O=nQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/8] PCI/AER: Move AER stat collection out of __aer_print_error()
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>, 
-	linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
-	Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-	Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Lukas Wunner <lukas@wunner.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Terry Bowman <Terry.bowman@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250319203112.131959-1-dakr@kernel.org> <20250319203112.131959-2-dakr@kernel.org>
+Message-ID: <Z9vTDUnr-G4vmUqS@google.com>
+Subject: Re: [PATCH 1/4] rust: device: implement Device::parent()
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: bhelgaas@google.com, gregkh@linuxfoundation.org, rafael@kernel.org, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	a.hindborg@kernel.org, tmgross@umich.edu, linux-pci@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Mar 19, 2025 at 8:23=E2=80=AFPM Sathyanarayanan Kuppuswamy
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> pci_print_aer() also seems to do more than printing the AER stat. Why onl=
-y
-> care about stat collection in __aer_print_error(). If the motivation is
-> to just improve the code readability, I am not sure it is worth the
-> effort. Please correct me if my understanding is incorrect.
+On Wed, Mar 19, 2025 at 09:30:25PM +0100, Danilo Krummrich wrote:
+> Device::parent() returns a reference to the device' parent device, if
+> any.
+> 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>  rust/kernel/device.rs | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+> index 21b343a1dc4d..76b341441f3f 100644
+> --- a/rust/kernel/device.rs
+> +++ b/rust/kernel/device.rs
+> @@ -65,6 +65,19 @@ pub(crate) fn as_raw(&self) -> *mut bindings::device {
+>          self.0.get()
+>      }
+>  
+> +    /// Returns a reference to the parent device, if any.
+> +    pub fn parent<'a>(&self) -> Option<&'a Self> {
+> +        // SAFETY: By the type invariant `self.as_raw()` is always valid.
+> +        let parent = unsafe { *self.as_raw() }.parent;
 
-Bjorn had similar concerns. Hopefully my response[1] answers your questions=
-.
+This means:
+1. Copy the entire `struct device` onto the stack.
+2. Read the `parent` field of the copy.
 
-[1] https://lore.kernel.org/linux-pci/CAMC_AXW85x_LRT5UTD0C_VvK8WTG6kbfvp5k=
-_7RjnLzGM3Bg-g@mail.gmail.com/
+Please write this instead to only read the `parent` field:
+let parent = unsafe { *self.as_raw().parent };
 
-Thanks,
-Jon
+> +        if parent.is_null() {
+> +            None
+> +        } else {
+> +            // SAFETY: Since `parent` is not NULL, it must be a valid pointer to a `struct device`.
+> +            Some(unsafe { Self::as_ref(parent) })
+> +        }
+> +    }
+> +
+>      /// Convert a raw C `struct device` pointer to a `&'a Device`.
+>      ///
+>      /// # Safety
+> -- 
+> 2.48.1
+> 
 
