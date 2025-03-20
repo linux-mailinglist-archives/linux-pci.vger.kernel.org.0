@@ -1,86 +1,86 @@
-Return-Path: <linux-pci+bounces-24253-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24254-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F4EDA6AE32
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 20:11:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 25713A6AE9D
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 20:37:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2259616C04A
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 19:07:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 81DEB463E77
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 19:37:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 125C41953A1;
-	Thu, 20 Mar 2025 19:07:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3C78226D1B;
+	Thu, 20 Mar 2025 19:37:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nZWQ2ktC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oAIuBQRV"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F83E1C5F2C
-	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 19:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC431E47B3
+	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 19:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742497635; cv=none; b=EDVx2IMfGCUhl5DtJV5JWbv+/AIowZZaR//grtpXu2kHD/l9E0fLtHLhYxMEmn5ZE4JJOJcACcdEB8lDknMUvPknk+r/ULqscWkH6Ubq41oxVKxHf2vQOQ1ISUnlZbMORL9EvQ12Mfhxp9yWhQXqpM3GZtni9d9Qj0ynLaNLLlY=
+	t=1742499425; cv=none; b=U+GelIp2aMDM20RowLgoUitEoH2dhA4SHCUE6oCzt5RC0nq2sN+ydz22owjBYkjnKAaLz5q+PvAnhrn958eITdMiyFjnVTQXWFAWSx2qo4Px6nEyzxjA2OwQaeJoMhLqAITPCERn/CGgYCr/7ZCICy2VVC7mybALj7yAR6whWYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742497635; c=relaxed/simple;
-	bh=HjnFDf5srSi8TnMMbNXv/ZM07arFtGVuLWBPzkF4SUA=;
+	s=arc-20240116; t=1742499425; c=relaxed/simple;
+	bh=T79ARQW5/glxzqdRjKlzzkCqt9422G4W37RZmBPiCnE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fhvubKOD4+TRcQud7SlOvx5wgqBTR4h6W5crdWdNYVvu45YM4SIy7VlAevvlpfgY9qes6DJdT1OjLvFdRMH00cUl+m3739Tilmnogv2x3/ZEztdTN9JB4jeTCyrB5Gu5RSTOsZkiJQTqI6MdRQhzohhMZCVVHfnPWvDfjtBKpAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nZWQ2ktC; arc=none smtp.client-ip=209.85.208.42
+	 To:Cc:Content-Type; b=THjxwKYUkgY1Hlg/dFZR3Ad8l6hvPHfQyZfVdtHlwAQRqNRgGTMZxPDaiSjB8s20JsctE9xyD9GI94yc/0EORUH5NInsqCyNfRey/WlufLK7zoy/qD/YBPcBoARcmyZuSmctN8If7X4OTcRmzjW/XtkTrbRA+/74iGsKfwwpYHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oAIuBQRV; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5dce099f4so1638893a12.1
-        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 12:07:13 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5e22e6ed2so1979005a12.3
+        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 12:37:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742497631; x=1743102431; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742499422; x=1743104222; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HjnFDf5srSi8TnMMbNXv/ZM07arFtGVuLWBPzkF4SUA=;
-        b=nZWQ2ktCNRUePd+hCNnJCvAzT3DuvNcqcFWk/dfsck0+dYcniIvVfV6/YcwvvYVnKK
-         vgfB8Xs3guMwyVaKQYdkZYqtuCuFekBpuESV2chvv6T30LahN/OtFIK0kGP0lxzsi+V8
-         q5/s4OiFq8viOEjEdbdS2yxOQbwpXTDoTTjenkIPqxtKRxjb+oCUSbqdrV0P1tzbEWnJ
-         dJKLxy1/OPoD4IpNNeB69K4bhZrNwe89wEA1i2l8qzjZTY4+QhtwqsI3myO0v06dPWdn
-         Az/C3on3Y+tUIJ4kH3xh1EPAbeh2z7HBiAT6xRRn0XScsx5v4Tm1ML06HMFxI62DL+ic
-         0UHg==
+        bh=b7pimKdwXr8uIbZyKnfwc1wPKZSFIyl9WvOsMZ7Ayig=;
+        b=oAIuBQRV338LkzkrBiMAihuzCy2yb8BhPxKfS5AKzZ+a4aNJKr2/HoTio1OsLrY1Jf
+         lj8VmeVpvy/ph6Zie4Pfp/U2CMDocZf6QLBXZngJWOyIxroQNqcCtSl0zPEtzjqmN1MJ
+         sZuPTEVCk2Fq+yfWUHBRcpN3KohrEAR46KK/6zhe1Sykrhmj8OrxmnGCWIhlL2GWhIqD
+         GHmTvoP47/kLMktuCiPx1nOfiGaIw44K5kOdg7VFcT3wBaGuwJYBmdame2xSedwI9nUZ
+         62DrcOPbUwa8Ici5DobDKDDHRlWJaShfk87zJDndOf0lbt5GvIaz7qj9uUsKkKHAokW8
+         Eh9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742497631; x=1743102431;
+        d=1e100.net; s=20230601; t=1742499422; x=1743104222;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HjnFDf5srSi8TnMMbNXv/ZM07arFtGVuLWBPzkF4SUA=;
-        b=dyOj1dsyl6zUeu38kKb4YTln7E3JARcf+iiaZHyPH0Wu/kdpOSfwK7D9jLdu20Txel
-         oncYAFA+iK4YBOiW1qY289gaGPIFebXyx5vsaLsh1GUbthewkUDpDSdqLKW0nE92Diq/
-         gPX1hp1LeoH1xnZhfDWoDTr6LixsVDeTeVZ1r/T/8YVebXNs/oq3ii0qXEdYRWWuQrkt
-         plElLEZV2eCnjOOkp+uDWeWdpKmF0lkV76tfmMZY7CR4oC9ViXYdERbPF668zblkjmGl
-         l8UHSg+eAP/A7e5ZEDvBNhV+0oyH4go7O0xhGazojnaayC4KKwEC5i68laJ19oYmhsE6
-         3cJw==
-X-Gm-Message-State: AOJu0Yxn/zPg86qc2rwv0opklz/UGi2Nel07X/7/vchpFu9t1Ic8RKVu
-	UrfrpkBb9KUOt594Dw9i9y/1Go2fwcw2qFeJx/hTKuRaGXy76Y4Y86ZlNJs5Zp3b8pDA7YIExq3
-	PttlM8r7ifpcyLwFtSCsRu0H7mIIAI8N4IW/I
-X-Gm-Gg: ASbGncsFuoL2sXdB/irXfMpVz/OLt04vBHpGDkY6NXrTULft8xyIkl3UTgRoDZxjIn0
-	/ftlKq5iNlCZNYxXDG6FOPcHFfrCxExmRL2S0Cz0v+Zm7okqqoBzrDm++Vkm7spbkIlWZMKaoLx
-	IpgqJDr4xY7huxz8sbpLpeiBv4eKmEMbPLm1cqfep3OK5CRPWFXIFapjrx
-X-Google-Smtp-Source: AGHT+IFgv/UV7XRpXNngh5B7q1Lg2Yrlm/I+Xd1mONg/ZBPfxB5TTWVli7PM90IlJ8+Dp0Worgwbr92N7UOw0tSIoao=
-X-Received: by 2002:a05:6402:268f:b0:5e0:9252:3550 with SMTP id
- 4fb4d7f45d1cf-5ebcd406becmr416545a12.2.1742497631408; Thu, 20 Mar 2025
- 12:07:11 -0700 (PDT)
+        bh=b7pimKdwXr8uIbZyKnfwc1wPKZSFIyl9WvOsMZ7Ayig=;
+        b=u711DnOmVnO6RvIXvJxtpuldx7QIAJW35DUWOhLD1HNWCwtG1L0ZMmr1W6gCp+C8N4
+         AJ822oarbSeN7HBdB4kAHH1tfmxRX731+LFaI+DSC0a11Nc65k18BwI+RSXGPjO+QVI0
+         Vw25uvf4TzEci17A0TSQOg0JTnCT34JLBgwT9APVkExUd7l795SYFZl4CE9sUWCt0oNS
+         GkAo16gHcXGxqWgPn0+PabmL9cV4NlPsAzWwzfS3HuBacp+eMwpZOagJVVWr61sySjBZ
+         UOr+zBvfiflGgiv6kzkydWEQfUp49TwcBYQ2Ho5TwUJ7NWdwiCGzUz2diygB3KR4NlML
+         iv8Q==
+X-Gm-Message-State: AOJu0YzptUj66U7AcEkyWb1EN7jfZCV+lPV/8EkA6V/7ZLCWXtNvFJld
+	u6a4v11uP9Z3ZSdEqv7mWR9y3nrejp2xhrRzgR8yYFyaRWO3jaT21b6NAuECshxlC8ugfOS1h51
+	raW5fUJfMEO/wnxlB1XDIipXzLaKNs5ZJBPz8
+X-Gm-Gg: ASbGncvty0zEFtHlbI0ND41ZcQP3vh85PTREgAGzYGLN2SCLsQNL+/IAi+LkzoeDHTj
+	q6OxJB03mroZVRerqbwBituWmhJhqoN9x8yYuPGp6su8msMJjHYiu4gsW4v9nxumv5O3B7xw2J4
+	vFb3AWHaxwFi0LIupwitJYvDAQ4cszXL0y9As2lUTa2OlbnlRMBhkBx0IL
+X-Google-Smtp-Source: AGHT+IEJ21HSBemblJkPkrx+N26cq1f8W7KDg7GGoXALGJdRpXHW7Oa+f5GBxyBM5ZHKqh6NQUnHx9W5YqgGV2ovAqA=
+X-Received: by 2002:a05:6402:84f:b0:5e5:bdfe:6c00 with SMTP id
+ 4fb4d7f45d1cf-5ebcd467281mr438361a12.19.1742499422191; Thu, 20 Mar 2025
+ 12:37:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320082057.622983-1-pandoh@google.com> <20250320082057.622983-4-pandoh@google.com>
- <93a5832f-3e64-40ce-b089-b94181e8ba09@oracle.com>
-In-Reply-To: <93a5832f-3e64-40ce-b089-b94181e8ba09@oracle.com>
+References: <20250320082057.622983-1-pandoh@google.com> <20250320082057.622983-8-pandoh@google.com>
+ <d75a96f1-5162-4ec4-971b-9ebd4cfa5447@oracle.com>
+In-Reply-To: <d75a96f1-5162-4ec4-971b-9ebd4cfa5447@oracle.com>
 From: Jon Pan-Doh <pandoh@google.com>
-Date: Thu, 20 Mar 2025 12:07:00 -0700
-X-Gm-Features: AQ5f1JoOuz3xxSB1RktIy_5i2Q2B53eHUX40xTIH0w88FqAw73Dttmff9LiAO_k
-Message-ID: <CAMC_AXXKqeQOVmNHZyY4L7+nxGiDsy9Wsex-cx6Sbwm7z5unCw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/7] PCI/AER: Move AER stat collection out of __aer_print_error()
+Date: Thu, 20 Mar 2025 12:36:51 -0700
+X-Gm-Features: AQ5f1JrjSzYStb9fdtUzcHUb4GzVurrds-LMEvIMi1wkuwxFKW1IHwjxH0-vVqo
+Message-ID: <CAMC_AXU1OZwiPZycWmaxxyUQnNTzbhmF1pf2Kx0Sk8MOb57XVQ@mail.gmail.com>
+Subject: Re: [PATCH v4 7/7] PCI/AER: Add sysfs attributes for log ratelimits
 To: Karolina Stolarek <karolina.stolarek@oracle.com>
 Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
 	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller <ben.fuller@oracle.com>, 
@@ -91,18 +91,38 @@ Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 20, 2025 at 7:59=E2=80=AFAM Karolina Stolarek
+On Thu, Mar 20, 2025 at 7:58=E2=80=AFAM Karolina Stolarek
 <karolina.stolarek@oracle.com> wrote:
-> As for the first one, I'd restructure it to chain all the sentences
-> together. I'm thinking about something like this:
 >
-> "
-> Decouple stat collection from internal AER print functions, so the
-> ratelimit does not impact the error counters. The stats collection is no
-> longer buried in nested functions, simplifying the function flow.
-> "
+> On 20/03/2025 09:20, Jon Pan-Doh wrote:
+> > +What:                /sys/bus/pci/devices/<dev>/aer/ratelimit_in_5secs=
+_cor_log
+>
+> I think this attribute name (and the uncor counterpart) is too wordy. A
+> user can check what this knob controls by looking up this file or AER
+> docs, so I'd name it to "ratelimit_burst_cor_log" or something along
+> these lines.
 
-Thanks for the suggestion. Will reword in v5.
+Will change in v5.
+
+> > +/*
+> > + * Ratelimit enable toggle uses interval value of
+> > + * 0: disabled
+> > + * DEFAULT_RATELIMIT_INTERVAL: enabled
+>
+> We set that internally, but to the user we are just operating on 0s and
+> 1s. I would connect this comment with what we have in the documentation.
+
+Will reword in v5
+
+> > +     pdev->aer_report->cor_log_ratelimit.interval =3D interval;
+> > +     pdev->aer_report->uncor_log_ratelimit.interval =3D interval;
+> > +     return count;
+>
+> Nit, suggestion: add a blank line before return (this applies to all
+> returns in the patch)
+
+Ack.
 
 Thanks,
 Jon
