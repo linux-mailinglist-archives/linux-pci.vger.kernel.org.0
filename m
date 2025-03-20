@@ -1,185 +1,181 @@
-Return-Path: <linux-pci+bounces-24250-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24251-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB575A6AD38
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 19:45:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A0892A6AD4B
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 19:49:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 74236882FED
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 18:45:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C6273AC8EB
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 18:47:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8844E1EC006;
-	Thu, 20 Mar 2025 18:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36DFB227B8E;
+	Thu, 20 Mar 2025 18:47:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J7S5qMlk"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="dGoE1WIY"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628DE22540F
-	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 18:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7CD01953A1;
+	Thu, 20 Mar 2025 18:47:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742496325; cv=none; b=X4GgX3+hUAxqsYxkgOLTJsjGkyuFrV+G5LoGyTu70mlNeRx3dlJOvSZj3qL6UA7KFSFzSRPsXqDyQZWMhYXvV+MCaCCYwBp+23JbqctvL7wS4dnCt1vf57bbW07weTCeGt5A9511XZ5Hz2Hn32sFr7l9O233pqnijFA+2q0Q38U=
+	t=1742496448; cv=none; b=WibKbz6wfassP8PWgzjV0zLczJYa+xdcgw8J7iuoMwPJs03lluF46hC3T0OGWsh0bi7OSOxOcE6TmLOTGh7kVXPduom3K9cgI1ZpjcFPwple3chq5T0WdlzbypKX1TGhDFgqSb16XgGLbL9VPXDzhK1ItvEQBoazayIG7On5u6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742496325; c=relaxed/simple;
-	bh=YWMSZn9B7JlNs79o3naI1bmf46y09FSsawFryXmfvxk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tn1vzxYeLyvez4930tUC29KGSSTBx04iuKcPbRMwVp+9Vw/4iLtBwFDbjZ0pQ/XCrTXOgRXhLUsP8VpihQ4LGz0bPMZ8HPzrf1PbihAwbhVCKWhFE+rH0A3nHB7vA/T1gcTPM2TzAXCUtSvuzPch9KsQDv7/95tIjzzlt7H5/k8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7S5qMlk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C063EC4CEDD;
-	Thu, 20 Mar 2025 18:45:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742496324;
-	bh=YWMSZn9B7JlNs79o3naI1bmf46y09FSsawFryXmfvxk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=J7S5qMlkKrF/uPcTyH6etPSIz/bkaJCID0orx1t9aDnCimh37E02y8r5ihumyAF5V
-	 gDW+6FzGsmZi/MIFL3apWMHXr+vpxajEvUzARKLsS8n2pgTGYvv3MEXsJ26+e/OEdu
-	 RJQ6XD+2IBMCM7+wx5cDVQIZhSsM7KczVSz0jEbSpyMGoe6SsvGWnqYQox0kdQdJuT
-	 mwegMpb1BKsIgDBXeIhjurSjPUV1pszYFjJbdCbve/IF88GOqjqYXNAir4sQZZPj3c
-	 XjlVE/sjhmoMif+hBeMUjsxkC8icDDVJp9E/AGiEPnA1oLMQfZufy6SmZQi8Yjnlr2
-	 n+oayrJeAKFCA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 69692CE0AE0; Thu, 20 Mar 2025 11:45:24 -0700 (PDT)
-Date: Thu, 20 Mar 2025 11:45:24 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Jon Pan-Doh <pandoh@google.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	linux-pci@vger.kernel.org,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Terry Bowman <Terry.bowman@amd.com>
-Subject: Re: [PATCH v4 0/7] Rate limit AER logs
-Message-ID: <75742734-c795-4a10-9a4a-31ff5332e721@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250320082057.622983-1-pandoh@google.com>
+	s=arc-20240116; t=1742496448; c=relaxed/simple;
+	bh=p7MoLMJgztUeM2mOX1O2C/+yxOVVFon1dqzplcanEj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QzVPYnR0k64XEBGOunxlXuu8HxItst9h8qTWdC+iYb70LIki3wDGu8X25ek9tx1YStPEBhkKOK+cYMKcSpnxJhUbVz47g4AEPeIJfubiVd/DdDp33l/RPGaPblGSJJ0Dofx4P+lWWvdb8vXbkGmpylDMSnxu/7mhPxqQUjjOSWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=dGoE1WIY; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 6483B2116B4D;
+	Thu, 20 Mar 2025 11:47:19 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6483B2116B4D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742496439;
+	bh=2L2Q31XCa0Xdbd9gsYILKzkM4+b+VTYhlEAF67KZJpE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dGoE1WIYcV3miDSU7tnIjSORwMD3YiiuMtgapwqYs3PxoUrikjyglFZJEbSJEaC1I
+	 qppAONaKxLV3qmJYo7gpaRMBNla6xREmO+/WMeSBr/85MzxtUvCAfKqrGUxvaVfV3z
+	 LX02uwyNNHxgqfnDJgcNePxL4YNOD7FoIVq49fLM=
+Message-ID: <42a1a90b-ae3e-47df-ad6c-500055e69218@linux.microsoft.com>
+Date: Thu, 20 Mar 2025 11:47:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250320082057.622983-1-pandoh@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v6 02/11] arm64: hyperv: Use SMCCC to detect
+ hypervisor presence
+To: Michael Kelley <mhklinux@outlook.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: "arnd@arndb.de" <arnd@arndb.de>, "bhelgaas@google.com"
+ <bhelgaas@google.com>, "bp@alien8.de" <bp@alien8.de>,
+ "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "dan.carpenter@linaro.org" <dan.carpenter@linaro.org>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "hpa@zytor.com" <hpa@zytor.com>, "joey.gouly@arm.com" <joey.gouly@arm.com>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "kw@linux.com" <kw@linux.com>,
+ "kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org"
+ <lenb@kernel.org>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "maz@kernel.org" <maz@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+ "oliver.upton@linux.dev" <oliver.upton@linux.dev>,
+ "rafael@kernel.org" <rafael@kernel.org>, "robh@kernel.org"
+ <robh@kernel.org>, "ssengar@linux.microsoft.com"
+ <ssengar@linux.microsoft.com>, "sudeep.holla@arm.com"
+ <sudeep.holla@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>, "will@kernel.org"
+ <will@kernel.org>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>, "apais@microsoft.com"
+ <apais@microsoft.com>, "benhill@microsoft.com" <benhill@microsoft.com>,
+ "bperkins@microsoft.com" <bperkins@microsoft.com>,
+ "sunilmut@microsoft.com" <sunilmut@microsoft.com>
+References: <20250315001931.631210-1-romank@linux.microsoft.com>
+ <20250315001931.631210-3-romank@linux.microsoft.com>
+ <Z9gJlQgV3hm1kxY0@J2N7QTR9R3.cambridge.arm.com>
+ <BN7PR02MB414871F1A3D8EF3809391F2FD4D92@BN7PR02MB4148.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <BN7PR02MB414871F1A3D8EF3809391F2FD4D92@BN7PR02MB4148.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 20, 2025 at 01:20:50AM -0700, Jon Pan-Doh wrote:
-> Proposal
-> ========
-> 
-> When using native AER, spammy devices can flood kernel logs with AER errors
-> and slow/stall execution. Add per-device per-error-severity ratelimits
-> for more robust error logging. Allow userspace to configure ratelimits
-> via sysfs knobs.
-> 
-> Motivation
-> ==========
-> 
-> Several OCP members have issues with inconsistent PCIe error handling,
-> exacerbated at datacenter scale (myriad of devices).
-> OCP HW/Fault Management subproject set out to solve this by
-> standardizing industry:
-> 
-> - PCIe error handling best practices
-> - Fault Management/RAS (incl. PCIe errors)
-> 
-> Exposing PCIe errors/debug info in-band for a userspace daemon (e.g.
-> rasdaemon) to collect/pass on to repairability services is part of the
-> roadmap.
 
-For the series:
 
-Reported-by: Sargun Dhillon <sargun@meta.com>
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
+On 3/19/2025 3:11 PM, Michael Kelley wrote:
+> From: Mark Rutland <mark.rutland@arm.com> Sent: Monday, March 17, 2025 4:38 AM
 
-And thank you!  I did throw together a quick hack to get things going
-internally on our fleet, but this series is way better.
+>>
+>> The 'acpi_disabled' variable doesn't exist for !CONFIG_ACPI, so its use
+>> prior to the ifdeffery looks misplaced.
+> 
+> FWIW, include/linux/acpi.h has
+> 
+> #define acpi_disabled 1
+> 
+> when !CONFIG_ACPI.  But I agree that using a stub is better.
 
-							Thanx, Paul
+Thanks, Michael! I didn't "fact-checked" what was suggested indeed.
+Agreed that the stub makes the code look better.
 
-> Background
-> ==========
 > 
-> AER error spam has been observed many times, both publicly (e.g. [1], [2],
-> [3]) and privately. While it usually occurs with correctable errors, it can
-> happen with uncorrectable errors (e.g. during new HW bringup). 
+> Michael
 > 
-> There have been previous attempts to add ratelimits to AER logs ([4],
-> [5]). The most recent attempt[5] has many similarities with the proposed
-> approach.
+>>
+>> Usual codestyle is to avoid ifdeffery if possible, using IS_ENABLED().
+>> Otherwise, use a stub, e.g.
+>>
+>> | #ifdef CONFIG_ACPI
+>> | static bool __init hyperv_detect_via_acpi(void)
+>> | {
+>> | 	if (acpi_disabled)
+>> | 		return false;
+>> |
+>> | 	if (acpi_gbl_FADT.header.revision < 6)
+>> | 		return false;
+>> |
+>> | 	return strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8) == 0;
+>> | }
+>> | #else
+>> | static inline bool hyperv_detect_via_acpi(void) { return false; }
+>> | #endif
+>>
+>> Mark.
+>>
+>>> +static bool __init hyperv_detect_via_smccc(void)
+>>> +{
+>>> +	uuid_t hyperv_uuid = UUID_INIT(
+>>> +		0x4d32ba58, 0x4764, 0xcd24,
+>>> +		0x75, 0x6c, 0xef, 0x8e,
+>>> +		0x24, 0x70, 0x59, 0x16);
+>>> +
+>>> +	return arm_smccc_hyp_present(&hyperv_uuid);
+>>> +}
+>>> +
+>>>   static int __init hyperv_init(void)
+>>>   {
+>>>   	struct hv_get_vp_registers_output	result;
+>>> @@ -35,13 +70,11 @@ static int __init hyperv_init(void)
+>>>
+>>>   	/*
+>>>   	 * Allow for a kernel built with CONFIG_HYPERV to be running in
+>>> -	 * a non-Hyper-V environment, including on DT instead of ACPI.
+>>> +	 * a non-Hyper-V environment.
+>>> +	 *
+>>>   	 * In such cases, do nothing and return success.
+>>>   	 */
+>>> -	if (acpi_disabled)
+>>> -		return 0;
+>>> -
+>>> -	if (strncmp((char *)&acpi_gbl_FADT.hypervisor_id, "MsHyperV", 8))
+>>> +	if (!hyperv_detect_via_acpi() && !hyperv_detect_via_smccc())
+>>>   		return 0;
+>>>
+>>>   	/* Setup the guest ID */
+>>> --
+>>> 2.43.0
+>>>
 > 
-> Patch organization
-> ==================
-> 1-4 AER logging cleanup
-> 5-7 Ratelimits and sysfs knobs
-> 
-> Outstanding work
-> ================
-> Cleanup:
-> - Consolidate aer_print_error() and pci_print_error() path
-> 
-> Roadmap:
-> - IRQ ratelimiting
-> 
-> v4:
-> - Fix bug where trace not emitted with malformed aer_err_info
-> - Extend ratelimit to malformed aer_err_info
-> - Update commit messages with patch motivation
-> - Squash AER sysfs filename change (Patch 8)
-> v3:
-> - Ratelimit aer_print_port_info() (drop Patch 1)
-> - Add ratelimit enable toggle
-> - Move trace outside of ratelimit
-> - Split log level (Patch 2) into two
-> - More descriptive documentation/sysfs naming
-> v2:
-> - Rebased on top of pci/aer (6.14.rc-1)
-> - Split series into log and IRQ ratelimits (defer patch 5)
-> - Dropped patch 8 (Move AER sysfs)
-> - Added log level cleanup patch[6] from Karolina's series
-> - Fixed bug where dpc errors didn't increment counters
-> - "X callbacks suppressed" message on ratelimit release -> immediately
-> - Separate documentation into own patch
-> 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=215027
-> [2] https://bugzilla.kernel.org/show_bug.cgi?id=201517
-> [3] https://bugzilla.kernel.org/show_bug.cgi?id=196183
-> [4] https://lore.kernel.org/linux-pci/20230606035442.2886343-2-grundler@chromium.org/
-> [5] https://lore.kernel.org/linux-pci/cover.1736341506.git.karolina.stolarek@oracle.com/
-> [6] https://lore.kernel.org/linux-pci/edd77011aafad4c0654358a26b4e538d0c5a321d.1736341506.git.karolina.stolarek@oracle.com/
-> 
-> Jon Pan-Doh (5):
->   PCI/AER: Move AER stat collection out of __aer_print_error()
->   PCI/AER: Rename struct aer_stats to aer_report
->   PCI/AER: Introduce ratelimit for error logs
->   PCI/AER: Add ratelimits to PCI AER Documentation
->   PCI/AER: Add sysfs attributes for log ratelimits
-> 
-> Karolina Stolarek (2):
->   PCI/AER: Check log level once and propagate down
->   PCI/AER: Make all pci_print_aer() log levels depend on error type
-> 
->  ...es-aer_stats => sysfs-bus-pci-devices-aer} |  34 +++
->  Documentation/PCI/pcieaer-howto.rst           |  16 +-
->  drivers/pci/pci-sysfs.c                       |   1 +
->  drivers/pci/pci.h                             |   4 +-
->  drivers/pci/pcie/aer.c                        | 271 +++++++++++++-----
->  drivers/pci/pcie/dpc.c                        |   3 +-
->  include/linux/pci.h                           |   2 +-
->  7 files changed, 260 insertions(+), 71 deletions(-)
->  rename Documentation/ABI/testing/{sysfs-bus-pci-devices-aer_stats => sysfs-bus-pci-devices-aer} (77%)
-> 
-> -- 
-> 2.49.0.rc1.451.g8f38331e32-goog
-> 
+
+-- 
+Thank you,
+Roman
+
 
