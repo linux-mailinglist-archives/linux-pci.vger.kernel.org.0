@@ -1,106 +1,108 @@
-Return-Path: <linux-pci+bounces-24252-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24253-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C606A6AE1C
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 20:08:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F4EDA6AE32
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 20:11:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 472481887E23
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 19:06:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2259616C04A
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 19:07:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74FC1227E99;
-	Thu, 20 Mar 2025 19:06:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 125C41953A1;
+	Thu, 20 Mar 2025 19:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yGrn754s"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nZWQ2ktC"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EDB1EC006
-	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 19:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F83E1C5F2C
+	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 19:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742497586; cv=none; b=M7TebwGFD6XCzEJS8TYPdn2W+uRpqh+8QQEWs9O2gy3odv+GuNQ1Qcbta8i8O/5+ER94E7kIh/dEhVo13IcrtGLlxN3OUIVO9Rh17A/jTWt61044L0BiEP2riry/tZv0peRvFGQHhqHhU68ugIlV3FRxNrtEVnBRTuRYy2IFMGc=
+	t=1742497635; cv=none; b=EDVx2IMfGCUhl5DtJV5JWbv+/AIowZZaR//grtpXu2kHD/l9E0fLtHLhYxMEmn5ZE4JJOJcACcdEB8lDknMUvPknk+r/ULqscWkH6Ubq41oxVKxHf2vQOQ1ISUnlZbMORL9EvQ12Mfhxp9yWhQXqpM3GZtni9d9Qj0ynLaNLLlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742497586; c=relaxed/simple;
-	bh=a/jrDGXBBTvpPP1JojCI8HHSOOPQXl2O6Qc6nhYH4PY=;
+	s=arc-20240116; t=1742497635; c=relaxed/simple;
+	bh=HjnFDf5srSi8TnMMbNXv/ZM07arFtGVuLWBPzkF4SUA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GdGSF5QCtV8i8X2Ee0CxTBVyQmQ6xNXmKc60itIviQHcY8sUxbc41jalRfGcpQHCoaW5oLLjr57CrISv0AmVUASktTos1nGbcUXiZIjKCT59G4+v8K3g99Ahr8PCCvWcXLs3URrSNVR9A9X4YbpMgOHBALs0yuENnbF+exErkps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yGrn754s; arc=none smtp.client-ip=209.85.208.53
+	 To:Cc:Content-Type; b=fhvubKOD4+TRcQud7SlOvx5wgqBTR4h6W5crdWdNYVvu45YM4SIy7VlAevvlpfgY9qes6DJdT1OjLvFdRMH00cUl+m3739Tilmnogv2x3/ZEztdTN9JB4jeTCyrB5Gu5RSTOsZkiJQTqI6MdRQhzohhMZCVVHfnPWvDfjtBKpAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nZWQ2ktC; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e686d39ba2so2416759a12.2
-        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 12:06:24 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5dce099f4so1638893a12.1
+        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 12:07:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742497583; x=1743102383; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742497631; x=1743102431; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a/jrDGXBBTvpPP1JojCI8HHSOOPQXl2O6Qc6nhYH4PY=;
-        b=yGrn754sPlSiyRli0vCmPVYJikdRcZqNog/r5Q7zSiJPrPVAdEfrakMdzjEbydewpd
-         GKRQe1ikZ6ETU3ukt5O3IkYsu0/sjLp5qgNKdIk3hudrrYnZDImEYmgv+uk1BjR7/uDm
-         uJ47znc46e+nwkNHngI8p2aUqPtSud6JqLEAO0v1fRgElRgMQto4VvkzlnBnL3svmNcc
-         Cs2XsL96cRM49xx7hqjLfhRyEk+CuWKFmRfYRKg6XNBsBhbqJ4+ZMFCbbjs+7pe4g2Pf
-         OtUy9VJp2munpVZ5rVXheIhW69TNG1QRWKwuhiY9VtgQrmb5PMpZBvifc33JQvXK50RZ
-         fAPA==
+        bh=HjnFDf5srSi8TnMMbNXv/ZM07arFtGVuLWBPzkF4SUA=;
+        b=nZWQ2ktCNRUePd+hCNnJCvAzT3DuvNcqcFWk/dfsck0+dYcniIvVfV6/YcwvvYVnKK
+         vgfB8Xs3guMwyVaKQYdkZYqtuCuFekBpuESV2chvv6T30LahN/OtFIK0kGP0lxzsi+V8
+         q5/s4OiFq8viOEjEdbdS2yxOQbwpXTDoTTjenkIPqxtKRxjb+oCUSbqdrV0P1tzbEWnJ
+         dJKLxy1/OPoD4IpNNeB69K4bhZrNwe89wEA1i2l8qzjZTY4+QhtwqsI3myO0v06dPWdn
+         Az/C3on3Y+tUIJ4kH3xh1EPAbeh2z7HBiAT6xRRn0XScsx5v4Tm1ML06HMFxI62DL+ic
+         0UHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742497583; x=1743102383;
+        d=1e100.net; s=20230601; t=1742497631; x=1743102431;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a/jrDGXBBTvpPP1JojCI8HHSOOPQXl2O6Qc6nhYH4PY=;
-        b=sMTyeDizuEoIcT0vftax4301w00iLpSZPYqVRtT2RwfqkqGLtnuKQsHJ/8w+D8XLJe
-         XBpofj2AZLHt7VcESEIDKxEh2BVhRVwT5SXVAvS+Laad0zNHUt+VQzi22PDW7iInPN1a
-         WsgWvPoXLuStgEaBpyNZKqtstNxjWx1G9KnNSYZzgAJTYB610/qnD6DstCDfVU8h9xOS
-         Xh462ZI1PREhYgiW7M98y/oLZxSIYnkWIhoGlsX5G5mwzXx0d/tOs8sVTDGwtDEaqqGV
-         DBrAb/xUeub2NPd3tYrkZeVdIsfYa2xp8R3BBlUM9Ke+Dq/thwVKHXRcpNHFiv71bTrD
-         rRFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXivHFZdCDIzFRutYVWtp57hhE0MkO4xMmQmv3GAPABHeBFpaUBa0XOu4iPUzcYx68Qs2Ttlgwq6TY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtqKShfn342DIMQPC1CuQAZDpINT3aEXueu2XoYi/oa1EuuUlV
-	Q+vMJzFPGxQIB0hWH9G6rlfSVvlCrh9AZLWgt4D5jjuuWOQiRtFNDUSKYlRDalkeizhOEEW6WQh
-	6NAnAnq7RldyPDxylEm4+fofbi0mv9UrqH7ZZ
-X-Gm-Gg: ASbGncs1fuYvyRIFYNMrM6RtQsMq6ricKF0gorO9aPHP4Q7x5xVOeP/MOQUgikOTws0
-	3VdvW8awZ+HoHNfREW08NozgMtmQMQeOjtzmB4lW+tn/eiKjr7Df3nJLeabY/7LmcZ6SUoO3hd1
-	vhNdjvLwevnpeU3HA4FvUANER4dGTml9ABWkMvScTu1UtltzCqrDzAkUUU
-X-Google-Smtp-Source: AGHT+IGzYxTe78mR92M78v6TUCY5stb2TNpWtStMelj7PdsgMZoWfOkCh+wSI8r27oYL9yeGpkIv5ag1D5Z/tAxAPyk=
-X-Received: by 2002:a05:6402:2546:b0:5eb:1706:aa17 with SMTP id
- 4fb4d7f45d1cf-5ebcd40bd13mr505707a12.6.1742497582773; Thu, 20 Mar 2025
- 12:06:22 -0700 (PDT)
+        bh=HjnFDf5srSi8TnMMbNXv/ZM07arFtGVuLWBPzkF4SUA=;
+        b=dyOj1dsyl6zUeu38kKb4YTln7E3JARcf+iiaZHyPH0Wu/kdpOSfwK7D9jLdu20Txel
+         oncYAFA+iK4YBOiW1qY289gaGPIFebXyx5vsaLsh1GUbthewkUDpDSdqLKW0nE92Diq/
+         gPX1hp1LeoH1xnZhfDWoDTr6LixsVDeTeVZ1r/T/8YVebXNs/oq3ii0qXEdYRWWuQrkt
+         plElLEZV2eCnjOOkp+uDWeWdpKmF0lkV76tfmMZY7CR4oC9ViXYdERbPF668zblkjmGl
+         l8UHSg+eAP/A7e5ZEDvBNhV+0oyH4go7O0xhGazojnaayC4KKwEC5i68laJ19oYmhsE6
+         3cJw==
+X-Gm-Message-State: AOJu0Yxn/zPg86qc2rwv0opklz/UGi2Nel07X/7/vchpFu9t1Ic8RKVu
+	UrfrpkBb9KUOt594Dw9i9y/1Go2fwcw2qFeJx/hTKuRaGXy76Y4Y86ZlNJs5Zp3b8pDA7YIExq3
+	PttlM8r7ifpcyLwFtSCsRu0H7mIIAI8N4IW/I
+X-Gm-Gg: ASbGncsFuoL2sXdB/irXfMpVz/OLt04vBHpGDkY6NXrTULft8xyIkl3UTgRoDZxjIn0
+	/ftlKq5iNlCZNYxXDG6FOPcHFfrCxExmRL2S0Cz0v+Zm7okqqoBzrDm++Vkm7spbkIlWZMKaoLx
+	IpgqJDr4xY7huxz8sbpLpeiBv4eKmEMbPLm1cqfep3OK5CRPWFXIFapjrx
+X-Google-Smtp-Source: AGHT+IFgv/UV7XRpXNngh5B7q1Lg2Yrlm/I+Xd1mONg/ZBPfxB5TTWVli7PM90IlJ8+Dp0Worgwbr92N7UOw0tSIoao=
+X-Received: by 2002:a05:6402:268f:b0:5e0:9252:3550 with SMTP id
+ 4fb4d7f45d1cf-5ebcd406becmr416545a12.2.1742497631408; Thu, 20 Mar 2025
+ 12:07:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319084050.366718-1-pandoh@google.com> <20250319084050.366718-3-pandoh@google.com>
- <79f4ddd5-af44-4fc9-9f04-4e79f66db21e@linux.intel.com> <CAMC_AXX11GcfbOyp4HXaA_9MmzfKPyPFtA470-aCdMqC7zanVA@mail.gmail.com>
- <35a6ab6b-209c-46bc-ad6a-d4a1b4f76bb1@linux.intel.com>
-In-Reply-To: <35a6ab6b-209c-46bc-ad6a-d4a1b4f76bb1@linux.intel.com>
+References: <20250320082057.622983-1-pandoh@google.com> <20250320082057.622983-4-pandoh@google.com>
+ <93a5832f-3e64-40ce-b089-b94181e8ba09@oracle.com>
+In-Reply-To: <93a5832f-3e64-40ce-b089-b94181e8ba09@oracle.com>
 From: Jon Pan-Doh <pandoh@google.com>
-Date: Thu, 20 Mar 2025 12:06:10 -0700
-X-Gm-Features: AQ5f1JpGs5Qtn_xWy1dwiPYM7JiiOR6uOPE82iAg9pg-VvnR50PRkklGisyXAfg
-Message-ID: <CAMC_AXX29XzoBqL2Ve9JdiPaxxGUA9J3Lq3vGViwSyYFHF5k5g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/8] PCI/AER: Make all pci_print_aer() log levels
- depend on error type
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>, 
-	linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
-	Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-	Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Lukas Wunner <lukas@wunner.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Terry Bowman <Terry.bowman@amd.com>
+Date: Thu, 20 Mar 2025 12:07:00 -0700
+X-Gm-Features: AQ5f1JoOuz3xxSB1RktIy_5i2Q2B53eHUX40xTIH0w88FqAw73Dttmff9LiAO_k
+Message-ID: <CAMC_AXXKqeQOVmNHZyY4L7+nxGiDsy9Wsex-cx6Sbwm7z5unCw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/7] PCI/AER: Move AER stat collection out of __aer_print_error()
+To: Karolina Stolarek <karolina.stolarek@oracle.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller <ben.fuller@oracle.com>, 
+	Drew Walton <drewwalton@microsoft.com>, Anil Agrawal <anilagrawal@meta.com>, 
+	Tony Luck <tony.luck@intel.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Terry Bowman <Terry.bowman@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 20, 2025 at 7:23=E2=80=AFAM Sathyanarayanan Kuppuswamy
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=
-=3Daer&id=3Dfab874e12593b68f9a7fcb1a31a7dcf4829e88f7
+On Thu, Mar 20, 2025 at 7:59=E2=80=AFAM Karolina Stolarek
+<karolina.stolarek@oracle.com> wrote:
+> As for the first one, I'd restructure it to chain all the sentences
+> together. I'm thinking about something like this:
+>
+> "
+> Decouple stat collection from internal AER print functions, so the
+> ratelimit does not impact the error counters. The stats collection is no
+> longer buried in nested functions, simplifying the function flow.
+> "
 
-Ah. I have no objections if this patch is squashed with Ilpo's.
+Thanks for the suggestion. Will reword in v5.
 
 Thanks,
 Jon
