@@ -1,161 +1,144 @@
-Return-Path: <linux-pci+bounces-24258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24259-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EC91A6AF2D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 21:29:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB3D8A6AF72
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 21:57:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB6BB481EE6
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 20:29:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F19CB188EF3C
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 20:57:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D74DB1E8337;
-	Thu, 20 Mar 2025 20:29:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D684229B1A;
+	Thu, 20 Mar 2025 20:56:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dh1BuHHU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OK6kFbdZ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D7F2A1A4
-	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 20:29:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A8B45027;
+	Thu, 20 Mar 2025 20:56:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742502555; cv=none; b=ugx3KQTwErpJFt88hcTcbRKN0ywxfbrVDQkSKaN4ycCR5VczMuyPBtz60OKoyAbhx9Q75Lm2b3QxlpTocbMZA2IrmvbFF+XpuJ76TStc37/J5PoLp3vDZlRrGPII0pvpikxPz3ZIW9AXbS+x3T9clH1VXaxymhZEjjxBew7grgA=
+	t=1742504216; cv=none; b=gLjK4WtS7mrrB2GQNDInDRx7e6nX6vHze/i22sQmh8E2xgERNhPSnEHKX5Erxb7bKhiPwdHzXCgj+wKUMgpPkbv7JFQH97p12uUDOoL3WA3QMLag1L0ZR7SQDD/XTLUqz8WGOAkDGs6lTgbW2vZ80M18JpLHas0UdfoKAmZQY+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742502555; c=relaxed/simple;
-	bh=GY+uOMdexOuW15NVjDL1ks7HetEkmcWHEvFS6jNxmyY=;
+	s=arc-20240116; t=1742504216; c=relaxed/simple;
+	bh=KzYuCbF/0WoU7lS07M4U1UqMt3uKsndEKoSXWbsCoGQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=F82Swz0vR05rJhHTseZxMCRZqu0DoTi1JzmpK2bBVbJUoUXDZhV7u4hu4rLRNKYudr6e88mcNEOwRTppeiIdfn4S/Sjrw4ePGObvwHFG+qXp5HYfrpq1ssNt/Dr/0dePSwEMa5Lvlx7aRCAQzOdQRwZQx1/4xmyWpSjIyLIE614=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dh1BuHHU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E197C4CEEC;
-	Thu, 20 Mar 2025 20:29:14 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=ZSSAE2UZx6TRl3kGmNY/T+KsbeHnijC0nVyaeJ3789WJJwXCQ9cOE+uLaIGgZB/8Xz/5wYA/hZFVni2hE0hJSZuR1YVjEh/q8v4uAmcXp2yrcG7TKNEC+/ef3RWu+rJ8P7t0k4Jw9F4ohX3Xa74e3F/xQZ+ClLCNmG+U4rX/XyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OK6kFbdZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CD6CC4CEDD;
+	Thu, 20 Mar 2025 20:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742502555;
-	bh=GY+uOMdexOuW15NVjDL1ks7HetEkmcWHEvFS6jNxmyY=;
+	s=k20201202; t=1742504216;
+	bh=KzYuCbF/0WoU7lS07M4U1UqMt3uKsndEKoSXWbsCoGQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Dh1BuHHUzF40NtKDwwtXFDyPMCGepJ0eOv1LKNvx7l/RZ2AqWrAafa2rszNkTcZUB
-	 bhUPJIe+e0HBKyDt489grBGi5m8fUk3E7fN0fTUugV6TLb4/oFJzlqJxL+aTWWJNqN
-	 6Hvk+Pxc/FsaG9eCja7+VK8Z4EuhzUm7o3KK+A/Cq//+1XqsCC0/5xGwB2k1OE6cwf
-	 CQTrYbqd7AmZdVPTHvcCRlnsZyR5fUoyc7NHBXUs0Vvw7FPAMQeFoyZYChn13iV3Qv
-	 BsGtSsgrJ799SaeDUCjDDkl4wopFqVWQ78LDssr74xmOyYRv/EbwbvnMSbHG4QX82Y
-	 F+h7egdRoPk0w==
-Date: Thu, 20 Mar 2025 15:29:13 -0500
+	b=OK6kFbdZx/S49999jDk1V8ruCLuzxKDjAEjyVAp1JTxfvTeZAS4EyHpxu7xM69LyA
+	 GHZjHgAoRY+e+5P4Hdjcy9KpPnie14+HSGSfE+DgG0/gzbHFYwLKKZbqKyNRGPMgae
+	 HeGhiRyN5lWM7lk/TiPh2R+Y/e00G3OLKUSeqpK0oAvV3lqU9H2XxqBbcoIAPfmR48
+	 In5BtHvG0o3QYVg3LQEnfC1Yp0hIAj6L5QDyqMrsNU32UOgf5P9SAq9kil7yito9E1
+	 5naolHxPe4uUgTOgv3rm/GJfat+E/k22WdUHpHnY5voURUXR+cAnrkatoEzjSuJeBC
+	 oQjuiNu17/eGg==
+Date: Thu, 20 Mar 2025 15:56:54 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jon Pan-Doh <pandoh@google.com>
-Cc: Karolina Stolarek <karolina.stolarek@oracle.com>,
-	linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Terry Bowman <Terry.bowman@amd.com>
-Subject: Re: [PATCH v4 5/7] PCI/AER: Introduce ratelimit for error logs
-Message-ID: <20250320202913.GA1097165@bhelgaas>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Chuanhua Lei <lchuanhua@maxlinear.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC NOT TESTED] PCI: intel-gw: Use use_parent_dt_ranges
+ and clean up intel_pcie_cpu_addr_fixup()
+Message-ID: <20250320205654.GA1098970@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMC_AXVi7cFOnSa25SEkZsYf27eoX1NwFmc8VnRgFQS44PpKRQ@mail.gmail.com>
+In-Reply-To: <20250305-intel-v1-1-40db3a685490@nxp.com>
 
-On Thu, Mar 20, 2025 at 12:53:53PM -0700, Jon Pan-Doh wrote:
-> On Thu, Mar 20, 2025 at 10:51 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Thu, Mar 20, 2025 at 03:56:53PM +0100, Karolina Stolarek wrote:
-> > > On 20/03/2025 09:20, Jon Pan-Doh wrote:
-> > > > +   /*
-> > > > +    * Ratelimits are doubled as a given error produces 2 logs (root port
-> > > > +    * and endpoint) that should be under same ratelimit.
-> > > > +    */
-> > > For these devices, we would call the ratelimit just once. I
-> > > don't have a nice an clean solution for this problem, I just
-> > > wanted to highlight that 1) we don't use the Root Port's
-> > > ratelimit in aer_print_port_info(), 2) we may use the bursts to
-> > > either print port_info + error message or just the message, in
-> > > different combinations. I think we should reword this comment to
-> > > highlight the fact that we don't check the ratelimit once per
-> > > error, we could do it twice.
+On Wed, Mar 05, 2025 at 12:07:54PM -0500, Frank Li wrote:
+> Remove intel_pcie_cpu_addr_fixup() as the DT bus fabric should provide correct
+> address translation. Set use_parent_dt_ranges to allow the DWC core driver to
+> fetch address translation from the device tree.
 > 
-> You're right. I was thinking of amending it to something like:
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+
+Applied to pci/controller/dwc-cpu-addr-fixup for v6.15, thanks!
+
+There is a minor dts change required, but Lei Chuan Hua has confirmed
+that all users are internal to Maxlinear and will update:
+
+https://lore.kernel.org/r/BY3PR19MB507667CE7531D863E1E5F8AEBDD82@BY3PR19MB5076.namprd19.prod.outlook.com
+
+> ---
+> This patches basic on
+> https://lore.kernel.org/imx/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com/
 > 
-> Ratelimits are doubled as a given error notification produces up to
-> 2 logs (1 at root port and 1 at source device) that should be under
-> the same ratelimit.
+> I have not hardware to test and there are not intel,lgm-pcie in kernel
+> tree.
 > 
-> > Very good point.  aer_print_rp_info() is always ratelimited based
-> > on the ERR_* Source Identification, but if Multiple ERR_* is set,
-> > aer_print_error() ratelimits based on whatever downstream device
-> > we found that had any error of the same class logged.
-> >
-> > That does seem like a problem.  I would propose that we always
-> > ratelimit using the device from Source Identification. I think
-> > that's available in aer_print_error(); we would just use info->id
-> > instead of "dev".
+> Your dts should correct reflect hardware behavor, ref:
+> https://lore.kernel.org/linux-pci/Z8huvkENIBxyPKJv@axis.com/T/#mb7ae78c3a22324b37567d24ecc1c810c1b3f55c5
 > 
-> Wouldn't you be incorrectly counting the non-source ID devices then?
-> I think this is another reason where removing
-> aer_print_port_info()[1] (only printing port info when failing to
-> get device error info) simplifies things. Of course, we then have to
-> weigh whether the loss of info is less than the ratelimit
-> complexity.
-
-Yes, I guess so.  Maybe the ratelimit should be in the source of the
-interrupt (Root Port for AER, Root Port or Downstream Port for DPC) so
-it's more directly related to the interrupt that got us here in the
-first place.
-
-I think the struct aer_err_info is basically a per-interrupt thing, so
-maybe we could evaluate __ratelimit() once at the initial entry, save
-the result in aer_err_info, and use that saved value everywhere we
-print messages?
-
-  - native AER: aer_isr_one_error() has RP pointer in rpc->rpd and
-    could save it (or pointer to the RP's ratelimit struct, or just
-    the result of __ratelimit()) in aer_err_info.
-
-  - GHES AER: I'm not sure struct cper_sec_pcie contains the RP, might
-    have to search upwards from the device we know about?
-
-  - native DPC: dpc_process_error() has DP pointer and could save it
-    in aer_err_info.
-
-  - EDR DPC: passes DP pointer to dpc_process_error().
-
-> > > I'm also thinking -- we are ratelimiting the
-> > > aer_print_port_info() and aer_print_error(). What about the
-> > > messages in dpc_process_error()? Should we check early if DPC
-> > > was triggered because of an uncorrectable error, and if so,
-> > > ratelimit that?
-> >
-> > Good question.  It does seem like the dpc_process_error() messages
-> > should be similarly ratelimited.  I think we currently only enable
-> > DPC for fatal errors, and the Downstream Port takes the link down,
-> > which resets the hierarchy below.  So (1) we probably won't see
-> > storms of fatal error messages, and (2) it looks like we might not
-> > print any error info from downstream devices, since they're not
-> > reachable while the link is down.
+> According to your intel_pcie_cpu_addr_fixup()
 > 
-> I did not expect error storms from DPC so I thought it best to focus
-> on AER.
-
-Completely agreed.
-
-> [1] https://lore.kernel.org/linux-pci/CAMC_AXWVOtKh2r4kX6c7jtJwQaEE4KEQsH=uoB1OhczJ=8K2VA@mail.gmail.com/
-
-[BTW, email quoting style error here; shouldn't have the entire
-message you're replying to repeated below.  Gmail tries hard to screw
-this up for you ;)]
-
-> On Thu, Mar 20, 2025 at 10:51 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> ... (snipped)
+> Basically, config space/io/mem space need minus SZ_256. parent bus range
+> convert it to original value.
+> 
+> Look for driver owner, who help test this and start move forward to remove
+> cpu_addr_fixup() work.
+> ---
+> Frank Li <Frank.Li@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-intel-gw.c | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> index 9b53b8f6f268e..c21906eced618 100644
+> --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
+> +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> @@ -57,7 +57,6 @@
+>  	PCIE_APP_IRN_INTA | PCIE_APP_IRN_INTB | \
+>  	PCIE_APP_IRN_INTC | PCIE_APP_IRN_INTD)
+>  
+> -#define BUS_IATU_OFFSET			SZ_256M
+>  #define RESET_INTERVAL_MS		100
+>  
+>  struct intel_pcie {
+> @@ -381,13 +380,7 @@ static int intel_pcie_rc_init(struct dw_pcie_rp *pp)
+>  	return intel_pcie_host_setup(pcie);
+>  }
+>  
+> -static u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
+> -{
+> -	return cpu_addr + BUS_IATU_OFFSET;
+> -}
+> -
+>  static const struct dw_pcie_ops intel_pcie_ops = {
+> -	.cpu_addr_fixup = intel_pcie_cpu_addr,
+>  };
+>  
+>  static const struct dw_pcie_host_ops intel_pcie_dw_ops = {
+> @@ -409,6 +402,7 @@ static int intel_pcie_probe(struct platform_device *pdev)
+>  	platform_set_drvdata(pdev, pcie);
+>  	pci = &pcie->pci;
+>  	pci->dev = dev;
+> +	pci->use_parent_dt_ranges = true;
+>  	pp = &pci->pp;
+>  
+>  	ret = intel_pcie_get_resources(pdev);
+> 
+> ---
+> base-commit: 1552be4855dacca5ea39b15b1ef0b96c91dbea0d
+> change-id: 20250305-intel-7c25bfb498b1
+> 
+> Best regards,
+> 
 
