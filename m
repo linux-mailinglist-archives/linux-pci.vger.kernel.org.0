@@ -1,52 +1,52 @@
-Return-Path: <linux-pci+bounces-24419-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24420-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78849A6C5CC
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 23:19:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46E38A6C5F9
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 23:30:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 51FB17A901F
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 22:17:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 897193BDC14
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 22:30:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 842354A0C;
-	Fri, 21 Mar 2025 22:16:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E6F422E3E9;
+	Fri, 21 Mar 2025 22:30:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fJaHBYQv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fgw2A5EO"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC4A28E7
-	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 22:16:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BD122CBE9
+	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 22:30:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742595409; cv=none; b=DcuMo7JReRfR0wjTNhdFNXJ5c3ey3p2ASej80eoJCPjflGN0EYCxg1PDFBYmZu9J93J3BI3n32iSmrnoU8/n+FVZ7H8kMO5QJ9eFs1uckTRXDvgJ2JMeUWlPBAcZloiqbEoLX+cfVhl4W/6jgYRDakpFXtrKbojPL+2umrkSn2k=
+	t=1742596222; cv=none; b=g/SaX1a8OkVIkHB8p5Wyx94AHMiGL1JuY6qKYXdnv3O9VL8UfUziyIrj40iIS7LVV24XSMimbBeML2G2zBeDPkolMuzpbYYS8lshrxUng2BJsveprYYQxGgmK0PdBItnF/YtbI4yWSy9/Nr3hWKeGZgWAQG35n2A/lrQ6U10qdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742595409; c=relaxed/simple;
-	bh=Nh/fn5g5UzB3bD0BFUck5TrJn8YhcCybrx0ypjr9+jw=;
+	s=arc-20240116; t=1742596222; c=relaxed/simple;
+	bh=AnD8yspu1sudfER/tOjiOsTq3E77m1P8kwlhM+qW/rE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qKyo8ffXOuXfhN4rV4YmsjkKVRtIm0EHfIH8LNT14QcibMEp2EQjRlVMBtlz95XAbv0ga7SYP0UJAV7f6yaeDXfJBTdBYu/q2QoAUsCaFgPBhjaCrIJaa7y6XIdDlqxZQ0v0T6nljBI6xLlkO/2YVl8xGnvaf5Nf/yPVUMvv1gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fJaHBYQv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3004C4CEE3;
-	Fri, 21 Mar 2025 22:16:48 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=hwp3kaD3WDQe3H0X3gIpsFNL4JxwnjrvA8+O4BcUIT2wAk76D2up5ULEtqn9qBRtVCgiTzEmNTOkdC9kc/eCHNMJ9VBt8qh+GlD1xWWDpTik/ZYP5ejLc7i9ZUtNaZ/zCB/pDZ3gKxFnE1Asf7PkLBVgfqk6ev6zsHWlIIDknm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fgw2A5EO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96233C4CEE3;
+	Fri, 21 Mar 2025 22:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742595408;
-	bh=Nh/fn5g5UzB3bD0BFUck5TrJn8YhcCybrx0ypjr9+jw=;
+	s=k20201202; t=1742596220;
+	bh=AnD8yspu1sudfER/tOjiOsTq3E77m1P8kwlhM+qW/rE=;
 	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=fJaHBYQvQ8c4A3k3dXzIsTZ99XkF705xbO0JK9xYYE9DLwjtTLSiNF6MyXt2ZzR6v
-	 jc+d4bp6sV88RuDZRXO4DLJyk6inAT6wdRamio1e4pOvQLbRjdIRolgkdUlCuNM/sT
-	 oZg3x4IDdjuda+lsVWZ8ETZSib4BLWS6ZSQQiHDOYi1feUEp9BqiUszLBG0CcwB7K2
-	 pEmCJ3ebVRsnghoyIgM8j6mgPmqygOfrzkubZcCO8m2IQez4MOjWWndL15Quflzigy
-	 q8U7LoJz4PHm3trsxanFWID5gjFmMFpEkmHSyJD7W39+fS7/BJMQnjjGMwkQbpzXKJ
-	 lOZ6JwlBwVlRw==
+	b=Fgw2A5EO/MNHWGYT0bW9t68gCaRmyShAud1kVJ8e7G1hX2ZKXTk3LrtwZ5TbEn6ej
+	 tKLC1vVGcoxY6vDSPrWrVgAqmBLI83ovugFOVacEssPLA8V0XgM6oZMJuNDNWNSyFD
+	 IUo+u5btzExq5v3RN6BENQyZV/QSytBP1suIwNdBxHtnrwfKRxAIriyfVNQHYFxVCK
+	 JB3SmHEOZW1hKc//mWDEpptmVQAFFqVWhVx/dcREAFAd/uYuYDdm8YA/6BWan06ahf
+	 QCtZPpOiq8UQoLDKmfij9Xk6oziDVktDmGTOgISu1XZrexz/topAa5DS9NQLa57/gI
+	 MhkuygKhJH0cA==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 72287CE0D1D; Fri, 21 Mar 2025 15:16:48 -0700 (PDT)
-Date: Fri, 21 Mar 2025 15:16:48 -0700
+	id 4627DCE0D1D; Fri, 21 Mar 2025 15:30:20 -0700 (PDT)
+Date: Fri, 21 Mar 2025 15:30:20 -0700
 From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Jon Pan-Doh <pandoh@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
+To: Jon Pan-Doh <pandoh@google.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
 	Karolina Stolarek <karolina.stolarek@oracle.com>,
 	linux-pci@vger.kernel.org,
 	Martin Petersen <martin.petersen@oracle.com>,
@@ -60,48 +60,37 @@ Cc: Jon Pan-Doh <pandoh@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Sargun Dhillon <sargun@meta.com>
 Subject: Re: [PATCH v5 5/8] PCI/AER: Rename struct aer_stats to aer_report
-Message-ID: <9c62d088-36b3-4311-9e53-d7cf87cf3393@paulmck-laptop>
+Message-ID: <d267db19-88f1-4dcf-8a85-2a446d858d33@paulmck-laptop>
 Reply-To: paulmck@kernel.org
 References: <20250321015806.954866-6-pandoh@google.com>
  <20250321220115.GA1170462@bhelgaas>
+ <CAMC_AXX0PKDY1sqJKxCbUxLGB2-0uGG3Ytr3ess8d+8pv5TYiw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250321220115.GA1170462@bhelgaas>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMC_AXX0PKDY1sqJKxCbUxLGB2-0uGG3Ytr3ess8d+8pv5TYiw@mail.gmail.com>
 
-On Fri, Mar 21, 2025 at 05:01:15PM -0500, Bjorn Helgaas wrote:
-> On Thu, Mar 20, 2025 at 06:58:03PM -0700, Jon Pan-Doh wrote:
-> > Update name to reflect the broader definition of structs/variables that
-> > are stored (e.g. ratelimits). This is a preparatory patch for adding rate
-> > limit support.
-> > 
-> > Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
-> > Signed-off-by: Jon Pan-Doh <pandoh@google.com>
-> > Reported-by: Sargun Dhillon <sargun@meta.com>
+On Fri, Mar 21, 2025 at 03:15:26PM -0700, Jon Pan-Doh wrote:
+> On Fri, Mar 21, 2025 at 3:01 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > What did Sargun report?  Is there a bug fix in here?  Can we include a
+> > URL to whatever Sargun reported?
 > 
-> What did Sargun report?  Is there a bug fix in here?  Can we include a
-> URL to whatever Sargun reported?
+> Paul added Reported-By and Acked-By tags[1] for the series which I
+> applied to each patch. Checkpatch mildly complained about not having a
+> Closes tag for Reported-By.
+> 
+> Sargun/Paul, do you have a Closes/URL tag?
 
-He reported RCU CPU stall warnings and CSD-lock warnings internally
-within Meta, so sorry, no useful URL.
+The URL of this email?
 
-I did put together a series of hacks that fix the problem: (1) Disabling
-__aer_print_error() entirely, (2) Disabling __aer_print_error() printk()
-and sysfs, (3) Disabling only __aer_print_error() printk(), and finally
-(4) Throttling __aer_print_error() printk().  Jon's patch looks to
-cover my #4 plus it looks to allow run-time control of the throttling.
-So my patch is strictly a stop-the-bleeding measure for Meta's fleet
-while this patch series makes its way upstream.
-
-I do plan to look at Jon's patch in more detail when he posts the next
-version.
-
-Fair enough?
+Perhaps more productively, I hope that we can run tests on this series,
+but it will take some time.
 
 							Thanx, Paul
 
