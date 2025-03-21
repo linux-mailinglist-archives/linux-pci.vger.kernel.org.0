@@ -1,154 +1,103 @@
-Return-Path: <linux-pci+bounces-24318-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24322-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 837EEA6B80B
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 10:51:00 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD4F5A6B89A
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 11:18:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2F9B27AAA6C
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 09:49:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 29259482533
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 10:18:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BB261F1906;
-	Fri, 21 Mar 2025 09:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86F5D1F585C;
+	Fri, 21 Mar 2025 10:18:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BcfeoHQa"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OeBXtyr8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48481F17E5;
-	Fri, 21 Mar 2025 09:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3864D2AE6A;
+	Fri, 21 Mar 2025 10:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742550607; cv=none; b=mD9O2yCNDCc+fgYHjQGNVD0bPxakCEZo5ww9xGDfsHud/phveoQZip8BsFQlYdw/8WFopLw2FTGxYsxUmxIf+kqN8NGrhzCTvJod5rTzbU6dlqTK5l9UOIIVORuRDn3llC50HTz9VIC6bBt5WDuqGDzFIow2B6DRhGC6GAnBsQY=
+	t=1742552285; cv=none; b=kSQa5+QujgQCjHW8PCbpRcYsLQUB7whZOtxNJqKZSl8xvj8tjKcZOcZz75G89ZZhkZhCxri0EueoRmVDYi6QGo3iEVbLzSVRL9zs41vqRnQk0hUSs83DrJ2izEuoAEh7J1iE5Cx9p/GvTeFt4jFWDl9GqwehwsmOrhRKt7JTRLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742550607; c=relaxed/simple;
-	bh=3YG+DczV632k/slGK52ohCebjqt0NGwK/ts86iP6w6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dr1vpSYAV8fP4MU0EhcIRAf7oqBpFJFwKj3nW4xoNFpXwpZIGBkb4AIXjo37bDlcmIQdBwe9QYMBwsSCOCWVOPA2mb24uND28dBsXGVtONBz4zQDJc/ttS6mhWadztSJV6X1oJbJZdeJSU1IrWxTNCe9i6DOepfYme5ldYcVFOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BcfeoHQa; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742550606; x=1774086606;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3YG+DczV632k/slGK52ohCebjqt0NGwK/ts86iP6w6A=;
-  b=BcfeoHQapQgfMcRCDKlGhJaX1HKmEs8SCnE1uyDSqARD38CRdJ5WnnHm
-   u/MvuBUIQXD7NcA78iv4I+p42ZFKL6i9EVSnDHTVNaRU86H6IO1NNewaZ
-   g9kCsEXE7J4gZdtlNzURunh0vKrM3MYLyaH79crdXXz+MkP3Z2K/WZxT0
-   xXzhZH5GtTzgSG51V77l1DuZQUU6Dvwjomy/AZ6j0WaK27W7ZeBOSTamZ
-   kUWdp3Hfd3CloAZzbaVRUGw40g95sf8For4YdymZF/qKhHN/IjwgJnY5Y
-   JPDPXLJ6rq2nCrKKibnVpwaB70qzcHu8ZgxjNrcHzXWmq66B4O07GN7AT
-   w==;
-X-CSE-ConnectionGUID: e6iSqTFTSgaR/ka0IH9GOg==
-X-CSE-MsgGUID: oS7xP5wzSeS+9SIDXINPdQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="43825223"
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="43825223"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 02:50:06 -0700
-X-CSE-ConnectionGUID: TXGJfUADThyc287pgEfijQ==
-X-CSE-MsgGUID: pAtjGjIhSGiEC4g0ma5+AA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="123379760"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 21 Mar 2025 02:50:03 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tvZ0q-0001F1-1K;
-	Fri, 21 Mar 2025 09:50:00 +0000
-Date: Fri, 21 Mar 2025 17:49:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Hans Zhang <18255117159@163.com>
-Subject: Re: [v3 1/4] PCI: Introduce generic capability search functions
-Message-ID: <202503211714.tv7E2QkK-lkp@intel.com>
-References: <20250321040358.360755-2-18255117159@163.com>
+	s=arc-20240116; t=1742552285; c=relaxed/simple;
+	bh=rMeWRHKHUpPcUeWgQif5Yw8um54LUTIRYRDGLGKszGk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eGM4y/h+5W1+IMP8QOXGK0bP5fY73kWdTmPHwIaxdGjIT8TI77nhsnUOlvOIJSsFwnIRBCb8bGBjNDbbjyBbcBNtjH5O0vSVPJZgQYpNrV4G2LMLJ1k7hGRMRVtjTIPUHwRvbTfN9+rTx7Fvtv75yCAWHLNReUD4w9/iabXc8EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OeBXtyr8; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=1Gwxk
+	5l8w1oAuHTEdurv7jwjGQeM6ATEIA0at1Ql0OM=; b=OeBXtyr85vcpa+Zl5b8jD
+	A+UKxUvFiwYv8mKyNHXuWNnQd7Gjux5Y1j3EGcsZ6cXTakLUyycO+Sz0L5fq3zPd
+	CRE5C9UpUgmwnRZ8+Itsv0Q67q25hLnL1KZ/0e31HeQrcCVW08eno39CV1lutd0l
+	5Qsh2aLztuWrl+19hX83CE=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgCnKl+oPN1n7W5_AA--.28658S2;
+	Fri, 21 Mar 2025 18:17:13 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org
+Cc: kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	jingoohan1@gmail.com,
+	thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [v4 0/4] Introduce generic capability search functions
+Date: Fri, 21 Mar 2025 18:17:06 +0800
+Message-Id: <20250321101710.371480-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321040358.360755-2-18255117159@163.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PSgvCgCnKl+oPN1n7W5_AA--.28658S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Gw43KFW8Xr15Cw4xCr15Jwb_yoW8Jr1rpF
+	yxC3W3Cw4fArWavan3Aa1q93W3WF93ArW7J3y3K34fXF17Ca4DKr4ktryrJF9rCrWIqF13
+	XrWUJFykKFnrA37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zEwID3UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwoXo2fdN0OTeAABsV
 
-Hi Hans,
+1. Introduce generic capability search functions.
+2. Replace dw_pcie_find_capability() and dw_pcie_find_ext_capability().
+3. Add configuration space capability search API.
+4. Use cdns_pcie_find_*capability to find capability offset instead of
+hardcore.
 
-kernel test robot noticed the following build errors:
+Changes since v3:
+- Resolved [v3 1/4] compilation error.
+- Other patches are not modified.
 
-[auto build test ERROR on a1cffe8cc8aef85f1b07c4464f0998b9785b795a]
+Changes since v2:
+- Add and split into a series of patches.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Introduce-generic-capability-search-functions/20250321-120748
-base:   a1cffe8cc8aef85f1b07c4464f0998b9785b795a
-patch link:    https://lore.kernel.org/r/20250321040358.360755-2-18255117159%40163.com
-patch subject: [v3 1/4] PCI: Introduce generic capability search functions
-config: arc-randconfig-001-20250321 (https://download.01.org/0day-ci/archive/20250321/202503211714.tv7E2QkK-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 13.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250321/202503211714.tv7E2QkK-lkp@intel.com/reproduce)
+Hans Zhang (4):
+  PCI: Introduce generic capability search functions
+  PCI: dwc: Replace dw_pcie_find_capability() and
+    dw_pcie_find_ext_capability()
+  PCI: cadence: Add configuration space capability search API
+  PCI: cadence: Use cdns_pcie_find_*capability to find capability offset
+    instead of hardcore
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503211714.tv7E2QkK-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/pci/pci.c:691:5: error: conflicting types for 'pci_generic_find_ext_capability'; have 'u16(void *, u32 (*)(void *, int,  int), int)' {aka 'short unsigned int(void *, unsigned int (*)(void *, int,  int), int)'}
-     691 | u16 pci_generic_find_ext_capability(void *priv, pci_generic_read_cfg read_cfg,
-         |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from drivers/pci/pci.c:18:
-   include/linux/pci.h:1211:5: note: previous declaration of 'pci_generic_find_ext_capability' with type 'u16(void *, u32 (*)(void *, int,  int), u8)' {aka 'short unsigned int(void *, unsigned int (*)(void *, int,  int), unsigned char)'}
-    1211 | u16 pci_generic_find_ext_capability(void *priv, pci_generic_read_cfg read_cfg,
-         |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from include/linux/linkage.h:7,
-                    from include/linux/preempt.h:10,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/slab.h:16,
-                    from include/linux/resource_ext.h:11,
-                    from include/linux/acpi.h:13,
-                    from drivers/pci/pci.c:11:
-   drivers/pci/pci.c:696:19: error: conflicting types for 'pci_generic_find_ext_capability'; have 'u16(void *, u32 (*)(void *, int,  int), int)' {aka 'short unsigned int(void *, unsigned int (*)(void *, int,  int), int)'}
-     696 | EXPORT_SYMBOL_GPL(pci_generic_find_ext_capability);
-         |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/export.h:70:28: note: in definition of macro '__EXPORT_SYMBOL'
-      70 |         extern typeof(sym) sym;                                 \
-         |                            ^~~
-   include/linux/export.h:84:41: note: in expansion of macro '_EXPORT_SYMBOL'
-      84 | #define EXPORT_SYMBOL_GPL(sym)          _EXPORT_SYMBOL(sym, "GPL")
-         |                                         ^~~~~~~~~~~~~~
-   drivers/pci/pci.c:696:1: note: in expansion of macro 'EXPORT_SYMBOL_GPL'
-     696 | EXPORT_SYMBOL_GPL(pci_generic_find_ext_capability);
-         | ^~~~~~~~~~~~~~~~~
-   include/linux/pci.h:1211:5: note: previous declaration of 'pci_generic_find_ext_capability' with type 'u16(void *, u32 (*)(void *, int,  int), u8)' {aka 'short unsigned int(void *, unsigned int (*)(void *, int,  int), unsigned char)'}
-    1211 | u16 pci_generic_find_ext_capability(void *priv, pci_generic_read_cfg read_cfg,
-         |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 40 +++++----
+ drivers/pci/controller/cadence/pcie-cadence.c | 25 ++++++
+ drivers/pci/controller/cadence/pcie-cadence.h |  8 +-
+ drivers/pci/controller/dwc/pcie-designware.c  | 71 ++--------------
+ drivers/pci/pci.c                             | 83 +++++++++++++++++++
+ include/linux/pci.h                           | 14 +++-
+ 6 files changed, 152 insertions(+), 89 deletions(-)
 
 
-vim +691 drivers/pci/pci.c
-
-   690	
- > 691	u16 pci_generic_find_ext_capability(void *priv, pci_generic_read_cfg read_cfg,
-   692					    int cap)
-   693	{
-   694		return pci_generic_find_next_ext_capability(priv, read_cfg, 0, cap);
-   695	}
-   696	EXPORT_SYMBOL_GPL(pci_generic_find_ext_capability);
-   697	
-
+base-commit: a1cffe8cc8aef85f1b07c4464f0998b9785b795a
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
 
