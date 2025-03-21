@@ -1,97 +1,116 @@
-Return-Path: <linux-pci+bounces-24396-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24397-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC352A6C362
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 20:36:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D4307A6C365
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 20:36:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2EDEC3B8D47
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 19:35:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A1A83B8CA9
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 19:35:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66E801E5B6D;
-	Fri, 21 Mar 2025 19:36:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5ACF22E414;
+	Fri, 21 Mar 2025 19:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="c/PbSQNi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED7118FC75
-	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 19:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F4461D54CF;
+	Fri, 21 Mar 2025 19:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742585764; cv=none; b=mjQ0OVDFtyJICqBmH7B8IRs4V73Bx2uj4xttLcUoRRBn4Nej+E9a9pGwM9D+zO8UMRx7sQdmgKE0BNaPDY1sK6WdFJh1eUkrKoU1cD0pNQlri10auU/svqhFJbU06LhFjZIM/2Ek0ay5cBj0F4Ldgzro5MjUp8l0NXb7ukeDbAg=
+	t=1742585766; cv=none; b=bYoEroNU1R9hkx1Y/u4M/rjMzF9vI4uvA3SpC85TC/2W1QSDa0WqfD9gIVX4L8w/m2qX775o0afHshUDVFTySS0Go9y7ULVIj7UMaYGEQI3YoIetiFIxvleAPTAXS0OTh8GxOGDiBjeEGFMf5fBOoLzjaxYtE+96Os9Ix6hJIeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742585764; c=relaxed/simple;
-	bh=49QAv/XnT35N2WyePIVmBcYLvTskiGWE6YeOHQsfbOs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fDty2kWU9egiKVwjj3Wr7zhaO3mmayZvxFr+8Xah/ztWCaWv4U400fErDfFVQMx3ithueANB0hor/XG1CctyboYEPnoDzCeXSQ/+zZ5xm56pRLnaqzJjAeVM3fXu9+rWEZwC6/4LzuyeBfYFpQlFWW7tUSZosHEcCP51BqhdeaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 02527102B7B0E;
-	Fri, 21 Mar 2025 20:35:53 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id AE1BB2642B; Fri, 21 Mar 2025 20:35:52 +0100 (CET)
-Date: Fri, 21 Mar 2025 20:35:52 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [Bug 219906] New: Kernel Oops in pcie_update_link_speed when
- hotplugging TB4 dock on x870e / kernel 6.14.0-rc7
-Message-ID: <Z92_mHU3CcTXdaKV@wunner.de>
-References: <bug-219906-41252@https.bugzilla.kernel.org/>
- <20250321191504.GA1139362@bhelgaas>
+	s=arc-20240116; t=1742585766; c=relaxed/simple;
+	bh=C++Y8u3ya02o1vKzmoM0dnDY7A2chUdCqKyyJh4SfA8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RtkCq3HF+pKugQTT5vIi/g+ECi8JWS2tckIqJaud+hx8RT20E9sCj48qPPRauRej/tAsNYMFicn+z9s8a8IzytnkSGBt5WFssoO4BFqDCsovdUxHl77GpbYgR7xy/ThscpktrYBASF7yf04+iPpJiAWLvtxgU/spiEtue8HJFWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=c/PbSQNi; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9E7672025389;
+	Fri, 21 Mar 2025 12:36:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9E7672025389
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742585763;
+	bh=i3HSKurM5BztT+SIxfmwMikTCwCikJk6+44/qfduWSo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=c/PbSQNi6xW7xt4qq/YZKnryb+JE1EPhc6+zDpfT6yk2I5a8iVpVIWvCazf9pjqjI
+	 qTi/0ZJr06K3vQ+l7bHQ90m7I2zIF+LEXr+wHsFQ3kvpMuVPaUjubkaBXnXnxHNbFc
+	 z5liRIDSpGRGa0jRI78+VxZ292ebAiKWTRi2KogM=
+Message-ID: <96f2c859-790a-4282-9eef-9863ffb42ee1@linux.microsoft.com>
+Date: Fri, 21 Mar 2025 12:35:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250321191504.GA1139362@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/6] x86/hyperv: Use hv_hvcall_*() to set up hypercall
+ arguments -- part 2
+To: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, bhelgaas@google.com, arnd@arndb.de
+Cc: x86@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org
+References: <20250313061911.2491-1-mhklinux@outlook.com>
+ <20250313061911.2491-4-mhklinux@outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <20250313061911.2491-4-mhklinux@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 21, 2025 at 02:15:04PM -0500, Bjorn Helgaas wrote:
-> On Fri, Mar 21, 2025 at 06:30:40PM +0000, bugzilla-daemon@kernel.org wrote:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=219906
-> > 
-> >             Bug ID: 219906
-> >            Summary: Kernel Oops in pcie_update_link_speed when hotplugging
-> >                     TB4 dock on x870e / kernel 6.14.0-rc7
+On 3/12/2025 11:19 PM, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
 > 
-> Do you know whether this is a regression?  Does any kernel work
-> correctly on the system in question?
+> Update hypercall call sites to use the new hv_hvcall_*() functions
+> to set up hypercall arguments. Since these functions zero the
+> fixed portion of input memory, remove now redundant calls to memset()
+> and explicit zero'ing of input fields.
+> 
+> For hv_mark_gpa_visibility(), use the computed batch_size instead
+> of HV_MAX_MODIFY_GPA_REP_COUNT. Also update the associated gpa_page_list[]
+> field to have zero size, which is more consistent with other array
+> arguments to hypercalls. Due to the interaction with the calling
+> hv_vtom_set_host_visibility(), HV_MAX_MODIFY_GPA_REP_COUNT cannot be
+> completely eliminated without some further restructuring, but that's
+> for another patch set.
+> 
+> Similarly, for the nested flush functions, update the gpa_list[] to
+> have zero size. Again, separate restructuring would be required to
+> completely eliminate the need for HV_MAX_FLUSH_REP_COUNT.
+> 
+> Finally, hyperv_flush_tlb_others_ex() requires special handling
+> because the input consists of two arrays -- one for the hv_vp_set and
+> another for the gva list. The batch_size computed by hv_hvcall_in_array()
+> is adjusted to account for the number of entries in the hv_vp_set.
+> 
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+> 
+> Notes:
+>     Changes in v2:
+>     * In hyperv_flush_tlb_others_ex(), added check of the adjusted
+>       max_gvas to make sure it doesn't go to zero or negative, which would
+>       happen if there is insufficient space to hold the hv_vpset and have
+>       at least one entry in the gva list. Since an hv_vpset currently
+>       represents a maximum of 4096 CPUs, the hv_vpset size does not exceed
+>       512 bytes and there should always be sufficent space. But do the
+>       check just in case something changes. [Nuno Das Neves]
+> 
+>  arch/x86/hyperv/ivm.c       | 18 +++++++++---------
+>  arch/x86/hyperv/mmu.c       | 19 +++++--------------
+>  arch/x86/hyperv/nested.c    | 14 +++++---------
+>  include/hyperv/hvgdk_mini.h |  4 ++--
+>  4 files changed, 21 insertions(+), 34 deletions(-)
+> 
 
-This is a regression caused by
-
-    commit 665745f274870c921020f610e2c99a3b1613519b
-    Author: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-    Date:   Fri Oct 18 17:47:52 2024 +0300
-
-    PCI/bwctrl: Re-add BW notification portdrv as PCIe BW controller
-
-which went into v6.13-rc1.  It can be overcome by duplicating
-
-    commit 62e4492c3063048a163d238cd1734273f2fc757d
-    Author: Andreas Noever <andreas.noever@gmail.com>
-    Date:   Mon Jun 9 23:03:32 2014 +0200
-
-    PCI: Prevent NULL dereference during pciehp probe
-
-in the bandwidth controller driver.
-
-I can submit a patch tomorrow unless you or Ilpo beat me to it.
-(Sorry, I'm still a little sleep deprived today after OSPM Summit.)
-
-Thanks,
-
-Lukas
+Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 
