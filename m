@@ -1,132 +1,176 @@
-Return-Path: <linux-pci+bounces-24398-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24399-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91FF7A6C36B
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 20:38:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 134DDA6C373
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 20:41:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 108801722C6
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 19:38:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 865AE3B7D51
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 19:41:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA6C822E412;
-	Fri, 21 Mar 2025 19:38:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9259B22E414;
+	Fri, 21 Mar 2025 19:41:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXZeF4A5"
+	dkim=pass (2048-bit key) header.d=wouterbijlsma.nl header.i=@wouterbijlsma.nl header.b="Fgq9ewxG";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="G1EMFh1E"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4913F1D54CF;
-	Fri, 21 Mar 2025 19:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF8B22D781
+	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 19:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742585881; cv=none; b=TzWpMuSP6nGe/nWx2Ti/wLUl0PQhsuU1j18CTV9S5w1PGVXBd86Dh5wS+4Ficr7qHgvfKZq6onsmRJZyjV+1N0GXp84F79Jh4Br4W1275VKG9wFTyFHTLgCeX/hCVVSV4qMN7RHvm8P9weOjtoAUYEXXeCsd0mj/eBWi1NrPS0k=
+	t=1742586099; cv=none; b=LTr5eYlrOKkN3lA0MnUThVio8Wtlfdq2KGJP9P4fd/sEBLMiZKZM0WJXlWojtqdS22YAB3Y86WSNPth2YxEc5cTu8MSzTv0XXGJidPTfrq1umf9wyMSTCQQSCJoqP/5ar2hX7ci8Jy5X8FTRcV6O9AdrlPCnzjAJswu/6rwMxPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742585881; c=relaxed/simple;
-	bh=VmGk2QKnCgeNy1W5/I3wjMhcHhVvDTr6PEDFoCrfs4g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=okQEfRPJQ8qiX5+nUnjdoKHoi7XYxBzetlCKH/jiQfiRcUyjPOnsIm3GuSZDegPj8ouDvriiNE9acW5iJBnT47bLaDQ9dOwui46BuU4h4Rx4zgvICVTL1kAk3dkxUWykk/p6IBXMzGJcEYMj0x7uVgxtT3gD2u2Ed9TtW9u0pto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fXZeF4A5; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ff62f9b6e4so679265a91.0;
-        Fri, 21 Mar 2025 12:38:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742585879; x=1743190679; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VmGk2QKnCgeNy1W5/I3wjMhcHhVvDTr6PEDFoCrfs4g=;
-        b=fXZeF4A5UpqluhQSkt4GRNwXmwEKE6h3qHQ+Y/T6Ae83q0hln9MjPUwM/XOnd7aCCz
-         482oaPNlZhhk4h98RTlMmA6DHGDoYTCFF88IhudBde6UAbUlAXWxrvJFZFFnuBZNBmFt
-         2JhaoOWQet4C6rNhChkl0Zest1sUVZqrM0oVjI1bP6QhhAtI7bM2Sg9YuosdyG08pLSv
-         H2NWa9HpYyM1HdAmNDKt9EGVWJUE2+NI9QHyn8E+TIch63qQuMj17icmhbjub0Ntv/Sa
-         MoNt2izc4P//gZXlUugxa9rkmalBzuiMnKPhprNGpHhi2mcEyl3jyfuRIDFhgCoCflpb
-         bydA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742585879; x=1743190679;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VmGk2QKnCgeNy1W5/I3wjMhcHhVvDTr6PEDFoCrfs4g=;
-        b=NeVQ8A7P8tBYpyNGpnMc92BjoJ7/2Tdh3p/Kzsb8qLbdAH+1Ehdb1TVIVaPAaflIe+
-         lRFaAftz4JLQZX5xYqwPVtR6N/XKhR1zXxPIskP1UcHiHytA5j40JHDnZ/UswDLgOAAa
-         Kw7jcFe8iUQIH72h5jmI1Y8AKkxONM64nux9mcMqQd1q4ufIy7fHBzcj5tlg+H9aXmAb
-         OlAty6wYNdSAoEepJp1ipLh5ark3Sym5MTs49CQ6Xw2LHC51FHBCJh5fH6KmS2yfRl4o
-         FaNqC7EoQkFDzSK+JUtcMJRe5QTezrBTgGFtsBFH1sg+dR5NFvTixxgn4HnyYEesiS50
-         YPIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYtYODF8rUzI3RPVE+39yTWl9meW9csyfWwTWEZKM9vHCFEU+hb7wS8Dpc/nirsqTZM6hnwFI0VEgs85w=@vger.kernel.org, AJvYcCWED/yuiFjXQrFG2fstn/cKNa7UJhjmZHyjJ0t5G0Q80rPw47km7egwVGjn+MyLzIVN40L93DyFRMZR@vger.kernel.org, AJvYcCWcnfmq9tzGP+mlXIQHKtwCQ5SKz3d88zr4vaVukp2SfWeOMduMcLzkTg0oz1vuK6NMrb2V621wNKsc7M5H9Rc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/pKGojOT7dSkBsMiAMjs/g4ao+EI/upyX75OnkoRotfrfK2W3
-	e9LYXIR/mGcQF+/gMXVIvUfvtbl5eZdUZA+BciRn5l7kIJtAfFrUr+T1rWe1HopZajnFyrvWVuu
-	/yD6n2qpazYohdbYRPz59B+UBFNc=
-X-Gm-Gg: ASbGncu0o2jXKIEBwkUBdb0OwD8uSANtfY4Y9OEqB5hcN9LDf0D3h6kCyn4kZb+bNE1
-	9xF0FySXY+DQnHeGlB3rCclLpJq0NOFKyU64H0ggr/oZ3laSLaYmkkjeIrlERhKsR4BkJtp69B5
-	kqYbybPWWwIn4a7QG4uaqxaicRQg==
-X-Google-Smtp-Source: AGHT+IHcbZzF+JlsnM7N1XM9q9dnz9lZIXPMELUd/weF/NBB/+ylTDpLlAt78Ks9jpFQJPhbWPjCqFXH0ARLhFmlQwA=
-X-Received: by 2002:a17:90a:e7cc:b0:2fe:7f51:d2ec with SMTP id
- 98e67ed59e1d1-3030fb1fff3mr2593669a91.0.1742585879537; Fri, 21 Mar 2025
- 12:37:59 -0700 (PDT)
+	s=arc-20240116; t=1742586099; c=relaxed/simple;
+	bh=Q0DaybA4oKVStvJUy43IZuC1ME6SCkKbay5WMQ04cdI=;
+	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
+	 Cc:In-Reply-To:To; b=NoXgJLC6tH57YlWS8paQlMQgG/wQjdkapkubqUu3XdMkDF+GRomwQTFQs3Of+Zql4SbSdPe8348OCDOzhHnu8IGAamM+k7GlTKl5m38BkxYhn6PoVbiGSLX9NSwWOUTbJYAGVTv4uyRL/EV6VkAKSQJ0Mndged+xIS6g0jKByIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wouterbijlsma.nl; spf=pass smtp.mailfrom=wouterbijlsma.nl; dkim=pass (2048-bit key) header.d=wouterbijlsma.nl header.i=@wouterbijlsma.nl header.b=Fgq9ewxG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=G1EMFh1E; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wouterbijlsma.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wouterbijlsma.nl
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id 3A20B138277C;
+	Fri, 21 Mar 2025 15:41:36 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Fri, 21 Mar 2025 15:41:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	wouterbijlsma.nl; h=cc:cc:content-transfer-encoding:content-type
+	:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to; s=fm3; t=1742586096; x=1742672496; bh=vWb7UdsHne7XmMwfTr1VX
+	mAKloCvQyj8Cca8cX2+VUU=; b=Fgq9ewxGvGfa3zCOyGWhQ1RzfuzC6AcRsrd0o
+	nB9awsJurASVuUgmREW4Oulakq/CxpfzeRt5XV/0+WSDWeHopQ/Y/070hGLsvoMx
+	LPlQLXjEII/Dxg3PIJJdajQLs6WkLJ22NpdyCJO6xysm6fa2RNJ+QLyr37IVieUI
+	bxTiKbKvCOcROFP+v2fa4RaiQuvkgg2gAZtRfdns2Hs8feAu7PiTR5GlM6dyS6V4
+	/wTtNvGBSSVvkyekI8LrPdKuVkrwdGBoz2HnCnhJJkXeV/8xxYwbC32kXPdvvaiq
+	IVLI7ZKFhR3hXzrIe1jo145tfIib1l2Fp5bgDRPY9kq/4k8lQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742586096; x=
+	1742672496; bh=vWb7UdsHne7XmMwfTr1VXmAKloCvQyj8Cca8cX2+VUU=; b=G
+	1EMFh1EGweCJzNjS/Zr3kSUZLdVdFlXUqqnYYn/7VJLKMTQBrL/NsfiEMjzwG+ge
+	VskWp1tWelc5sKNGD7kNz1LLamqNUE2JduBfLOaLBlDoA8+aaNhSHPHr6SueiAbX
+	wHTAa6TtHP07JSjRL3oeQGG4Ct/ZCLCkUwDSDPheSDQzdD5SyZWdcTsDzalyK6K5
+	rdi1tb9PIh4MguZumQ/oo39rSD1U73ecyNGiqms6aqb/DmDDd+ffMcOgZVq0Vcmm
+	Mah5zeOXuJZffx2mrpNYNIScmmnYZJPi8iJEmnbybdy3m6EBSjpBCLpgU+4Zvwno
+	NkXO+ndTBWdelPJoJXIhQ==
+X-ME-Sender: <xms:78DdZ22Dd3THPG_VUFFqw53xSy6ZOTXjPff11e2F8fgxfyzNjobpEg>
+    <xme:78DdZ5H_aO0ygALkM2X1Sn8U_it2C-LyPSubI0YiOEWm2qqd1NbWES3p4cIe3XGob
+    _qMf6yvm7yPiacwvSA>
+X-ME-Received: <xmr:78DdZ-5uXbr-6oNcemmMRS7iCKveETkbMnV196Qe58P-iSPSVjyUniMf3XVHRHieMyo2tb2rDpGqWCf9PsoNV9ZW1_Mkdw-Ds5xv-BMi>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheduleehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurheptgfghfggufffkfhfvegjvffosehtqhhmtdhh
+    tdejnecuhfhrohhmpeghohhuthgvrhcuuehijhhlshhmrgcuoeifohhuthgvrhesfihouh
+    htvghrsghijhhlshhmrgdrnhhlqeenucggtffrrghtthgvrhhnpeeigfdvffegueekieei
+    gfehhffggefhfefhlefhueevfeffffegvdduleekffejueenucffohhmrghinhepkhgvrh
+    hnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomhepfihouhhtvghrseifohhuthgvrhgsihhjlhhsmhgrrdhnlhdpnhgspghrtghpth
+    htohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhukhgrshesfihunhhn
+    vghrrdguvgdprhgtphhtthhopehhvghlghgrrghssehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhr
+    tghpthhtoheplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:78DdZ317vTdSlwreAR2zSewXyNVlKnfDufm9aq4AQu_wMp1jixfARg>
+    <xmx:78DdZ5GmH3I25c_UWJrlkQhZ8DTZB1W6b_dy_dXAorFc9o1zXxc_uQ>
+    <xmx:78DdZw_OstP1blTcCOGxdxVquNDWPtoLrGMPQE8WGGbpcU69CzUvEg>
+    <xmx:78DdZ-nHtDLdAn_YZhwkI_zT7N_E-33CgOI-qvcyUVkB0mah7nVDBw>
+    <xmx:8MDdZ9gKFsJ4KKA55l-CVXYw16cjsSo-o7T_sR1B8DAVIf__OIkc7uP2>
+Feedback-ID: ib07144fb:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 21 Mar 2025 15:41:35 -0400 (EDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Wouter Bijlsma <wouter@wouterbijlsma.nl>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250320222823.16509-4-dakr@kernel.org> <202503220040.TDePlxma-lkp@intel.com>
- <Z92ldvI4ihlm0HJd@cassiopeiae> <CANiq72=s3rQwRt-TOr0_n=EKHwJSQSGmKfu_4TtoEhSTc2Fvqg@mail.gmail.com>
- <Z9253sEI_cRS3mtN@pollux>
-In-Reply-To: <Z9253sEI_cRS3mtN@pollux>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 21 Mar 2025 20:37:47 +0100
-X-Gm-Features: AQ5f1JrVmdS3YKYMvAc3O62mGzPeFxqsSgBlARAqJZSbBraEX8Zy_C2Dxa7CiEw
-Message-ID: <CANiq72nvp_fWD6oDULgq1PVBD417iUVVWcZr_cvfd8r9Lpk=rg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] rust: pci: impl TryFrom<&Device> for &pci::Device
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: kernel test robot <lkp@intel.com>, bhelgaas@google.com, gregkh@linuxfoundation.org, 
-	rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com, 
-	tmgross@umich.edu, llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, 
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (1.0)
+Subject: Re: [Bug 219906] New: Kernel Oops in pcie_update_link_speed when hotplugging TB4 dock on x870e / kernel 6.14.0-rc7
+Date: Fri, 21 Mar 2025 20:41:23 +0100
+Message-Id: <4928CE1C-6F6C-49BA-B403-3EF7E311CC73@wouterbijlsma.nl>
+References: <20250321191504.GA1139362@bhelgaas>
+Cc: linux-pci@vger.kernel.org,
+ =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>
+In-Reply-To: <20250321191504.GA1139362@bhelgaas>
+To: Bjorn Helgaas <helgaas@kernel.org>
+X-Mailer: iPhone Mail (22D82)
 
-On Fri, Mar 21, 2025 at 8:11=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> From the second link:
->
-> "Previously, the compiler's safety checks were not aware that the raw ref
-> operator did not actually affect the operand's place, treating it as a po=
-ssible
-> read or write to a pointer. No unsafety is actually present, however, as =
-it just
-> creates a pointer.
->
-> That sounds like it was a bug, or do I miss anything?
+I don=E2=80=99t know if this is a kernel regression, the only kernel I have t=
+ried before 6.14.0-rc7 was the latest stable kernel (6.13.7) which had the s=
+ame problem.
 
-Yeah, if they didn't intend it originally, then I would call it a bug
--- they also seemed to considered it a bug themselves in the end, so I
-think you are right.
+There might some interaction with the system BIOS though, which may also be b=
+ugged. On an earlier BIOS version I could at least get output on displays co=
+nnected to the dock, despite getting similar kernel crashes and hanging udev=
+_worker processes. With the new bios I cannot get any display output at all,=
+ not even for the UEFI boot screens or the Linux text console.
 
-I meant it from the point of view of the language, i.e. in the sense
-that it was a restriction before, and now they relaxed it, so more
-programs are accepted, and the feature would be "you need less
-`unsafe`" etc.
+The dmesg output I posted is when plugging in the dock without any displays c=
+onnected to it though, so something is already failing independent of any po=
+tential other issues related to displays.
 
-The blog post seems to mention both sides of the coin ("This code is
-now allowed", "Relaxed this", "A future version of Rust is expected to
-generalize this").
+-Wouter
 
-> Yeah, thanks a lot. Especially for the second link, I couldn't find it ev=
-en
-> after quite a while of searching.
 
-You're welcome!
+> On 21 Mar 2025, at 20:15, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>=20
+> =EF=BB=BFOn Fri, Mar 21, 2025 at 06:30:40PM +0000, bugzilla-daemon@kernel.=
+org wrote:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=3D219906
+>>=20
+>>            Bug ID: 219906
+>>           Summary: Kernel Oops in pcie_update_link_speed when hotplugging=
 
-Cheers,
-Miguel
+>>                    TB4 dock on x870e / kernel 6.14.0-rc7
+>=20
+>> Created attachment 307878
+>>  --> https://bugzilla.kernel.org/attachment.cgi?id=3D307878&action=3Dedit=
+
+>> dmesg output hotplugging dock
+>>=20
+>> When connecting a Lenovo TB4 dock (40B0) using the USB4 port of an ASRock=
+ x870E
+>> Nova motherboard, Linux kernel 6.14.0-rc7 will Oops with a NULL pointer
+>> dereference.
+>>=20
+>> This is 100% reproducible on my system and happens immediately when plugg=
+ing
+>> the USB4 cable into the docking station. Interestingly, USB devices conne=
+cted
+>> to the docking station still work, but displays connected to it will not.=
+ Also,
+>> after the kernel Oops the system is in some corrupted state, as things li=
+ke
+>> mkinitcpio will hang at the autodetect hook when enumerating udev devices=
+, and
+>> when shutting down the system will get stuck indefinitely on hanging
+>> udev_worker processes.
+>>=20
+>> When booting the machine while the dock is already attached, the kernel b=
+oots
+>> without any apparent problems, but displays connected to the dock will st=
+ill
+>> not show any image.
+>>=20
+>> This dock has been working without any issue in combination with a differ=
+ent
+>> Linux laptop with USB4 and an AMD780M, a MacBook Pro, and a Windows 11 la=
+ptop.
+>>=20
+>> Attached is the dmesg output after hot-plugging the dock.
+>=20
+> Do you know whether this is a regression?  Does any kernel work
+> correctly on the system in question?
+
 
