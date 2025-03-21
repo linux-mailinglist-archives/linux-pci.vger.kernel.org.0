@@ -1,71 +1,69 @@
-Return-Path: <linux-pci+bounces-24290-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24291-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2DB4A6B2C3
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 02:58:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11CA4A6B2C8
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 02:58:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 541471890DDC
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 01:58:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1EE52882806
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 01:58:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDFC01DFD86;
-	Fri, 21 Mar 2025 01:58:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1FE01DF979;
+	Fri, 21 Mar 2025 01:58:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EFZeufen"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uJ2slKpt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6AF9461
-	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 01:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E777D1E0DBA
+	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 01:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742522303; cv=none; b=TwhsGgGF/fNEGq7DwbKya9HNAebvujyio4KfnJk4Ey/3NiOclpCh33goNwW3hfLg/pWRZta0lG7J5Ccp16BLk9xKk3tdyYvd97LUGs7hLGZ/XAavSTA4l0DcWhjxXsG884yKhhvXrDlkydJQ/Z9p7jxn6PFUfIm2Dj83USl08jg=
+	t=1742522306; cv=none; b=k0UA68UwByv8O4A8I1qRSWs/gLlzvNpR9V8bnjU2AcsZIgRDv5aFq7ztv7Gz6uup4idFbzP32dV0X8wBnZYm/dHB+PoCECsUa66KahynidTp/V6MnkGnznqPLYHs0tDzzIHXiHVbU3aVi7RvQ2iXalF4iKresLlEryFRErsaNio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742522303; c=relaxed/simple;
-	bh=KZOcOyizsUrn78Tt3nRHBxYUDqgCvXlp2As7lgDjcgQ=;
+	s=arc-20240116; t=1742522306; c=relaxed/simple;
+	bh=dTbJMiOM8w8eTApIsT0zFZVI4R8afXrqoMJE/SCp08k=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=InMk3rDTNT88OhpMd3kTakU9plQzC4eVcC9VIANZ4VLxrTkV3WJlUXbdoGwZEEJR78Xhasg2lzg5wo/ituUKg9Mt+wUok+lzbSLiVoT0hXiOdnZCV+068OxrrfLEjIs3VMQ4KR3GruMRELneD5EQ583QOVzDRB/rJ5BArKybt18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pandoh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EFZeufen; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=RwvZ81qIHR9UznIQmSBXdXptxz4YYI/KGthzPhOAZlH8MdAV8wtK6sBFbAMkb3EoiMDPHFOVSYzcXF7UJoBn909aOSAIoL29sG+dbg7x8McH4Ag2EOQrJGq744p1MVs9uW+RNiwAZ5sWs656AYF83m+PFDTfoxlQGyYMgsitD3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--pandoh.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uJ2slKpt; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--pandoh.bounces.google.com
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff8a2c7912so2318533a91.1
-        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 18:58:20 -0700 (PDT)
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff605a7a43so3673829a91.3
+        for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 18:58:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742522300; x=1743127100; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GGqOhVbhYbRp09iQ8MkomGhZ6WYASwULI1k3fzWO1To=;
-        b=EFZeufenmYGQ4Xh1B6qffl7x/QNj3moWjQ+BdJ+R652mO2aH+gdYMhqfSP5POM52yB
-         b384toBNBtiWij6PzfEBXSJX9GCcI6UVu1PjB53zVPEUdbPy2jOK+RedCEel91QLMTE2
-         PNWOdeqmz47aBgNEKD9IjbRvDasjxS777q62qDGgkAlScV+NYiHo73wy/z8PXqcD8ZHx
-         rGsBMYD3CwR8Ync9AmeTz5X8KwiB/SPMScSQqs/i8DMijdOFnXkHJiYMNPi6hlsOrfUL
-         oygsFBjGR0I8ZxCySw0GYy+FnicQenoSWoogAONPR6VGJvg1EbW3kxiZ+S6WfyKuYuzI
-         dujw==
+        d=google.com; s=20230601; t=1742522303; x=1743127103; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5o+H1+slcsM+kRAnO5vDiFeOSdTxVMfuQTpFrFusKP8=;
+        b=uJ2slKpty7U+qCGHRqv/BiTkFZX19K/omtrHudyXKLGApaQBG1YEZzEMjHaJD+EP31
+         GqhJ1PuWZJpxSRFpCIoagCDbH7AIrE7FBVV1m8N59jgdbuiQXzD1BxJPG1mBEh3pBtBy
+         lvZ1PF3BtRurEinXCO25uopWA33kVvkAx9KEq31cAehXUYiv6x0B+1ZIrmAh3NqzQgZh
+         7iVRGZTjT/lOQkg5yvTLtSQBiFU3VkGcAcIYg71/R3Qfe6nadREaEI+XQJtOUd8DuE6S
+         epXFAIYuaaiLUI+afpSBUsazi/cgAfnOCzyrQc8m+I7RXjLnT2aZZHm9YWxiNlBEP+xb
+         iTHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742522300; x=1743127100;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GGqOhVbhYbRp09iQ8MkomGhZ6WYASwULI1k3fzWO1To=;
-        b=lzLWxJvyZ5mE4Ui5Bcog1hgEhbcPiaFDHYZQgoyNYmuxFKy+AX2atasttB28/oNJ7j
-         eVpO+fdtfiK5+ngi4lz+bkFXI0ND2PDenSJB48Udaz/1HGSGLmO9KEOVR/78phpkHWVF
-         LZyt+c2QF7/XewiApke8JCwZcNYB2ljNurJB/HmkSILUmUY0XOpfEtjRmO6BghG28rTo
-         XMkeS8oXEJEoQin7iTHWfs9eMqo8kMYHTuzfk0w6RacJFt0t4y5mPSRHcYAkArOiyK06
-         X/r3fIPTnCOXhlHcLg2olUHKS9W78VsqsXSTgQA+NCsN/iK+HFm2VB+cBJfDSNUrfyo3
-         sgsw==
-X-Gm-Message-State: AOJu0YwfuQW4tyodKar4ExMdaAra9eQ2npsJcMYXvbPnDvRbY3Urybi0
-	rYUH0P37CDyV1ncAWmPL/ZnQJJmZBngE+CdMGRTSiRTU/1SoDADkEMVn6wT63bEnFkUQaaASN7D
-	JaQ==
-X-Google-Smtp-Source: AGHT+IEGk4/ag7wItbxC5hY9A3Qv+9sMPGiy2A1c6kctOI6EBzYxep0n89spcU0PrQWe+aGsDAgI97wgwts=
-X-Received: from pjur6.prod.google.com ([2002:a17:90a:d406:b0:2ee:4a90:3d06])
- (user=pandoh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:38d0:b0:2fa:30e9:2051
- with SMTP id 98e67ed59e1d1-301d42b3a2dmr8394844a91.5.1742522300062; Thu, 20
- Mar 2025 18:58:20 -0700 (PDT)
-Date: Thu, 20 Mar 2025 18:58:00 -0700
+        d=1e100.net; s=20230601; t=1742522303; x=1743127103;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5o+H1+slcsM+kRAnO5vDiFeOSdTxVMfuQTpFrFusKP8=;
+        b=QZWTfwJLlnae58ahxSk8OL3hFnFNY6jK6sEpRfU89O/mIhNRsIvRvA4XhZFYZ0rDlI
+         iYh+wmJLQUt8zHai4q5bLkm68shmB0hr0HHS7bPE0AJ5V+KYh62V6FXnmYS2R1ds7Hzz
+         87HMfvUxbaPPRnAfD3t+FYAdFqiCKsOmVcePi9Z/kkCOM91Y42sCeBdNNJN4FtlxjeWu
+         pGxq0Fv0jxhs3CTrZvD3t0WiTb810vKpEgojCEMPcIrcbRfc/f7gU+Gaf9f9i+/TlsAw
+         ZqgUyYhOi7JzsKXgFJTlSS45CEs+A/rpCQm7vAUM1ocxYZtK13p43MoOo/Kpxc8SsXPv
+         2NEA==
+X-Gm-Message-State: AOJu0YxQXnE0FAp3rHI/uFBVupmtEpBsIhiYE4Dvqu55zHvnEd70uldl
+	jeA+/QeVGmM5AkweikOtMIYFIFRLU6XJGcEfZD7ZJk4RYAGvCGMTkonoXq/WDjfAFfgOT88S77T
+	0Tg==
+X-Google-Smtp-Source: AGHT+IGilcyPCWNu864h2jEzpMYcvLo7bAWmF9h6hjnvT1Z817uL9EvDSbCLT5XwdmbKQHLLxfj8CGZErvY=
+X-Received: from pjbpq9.prod.google.com ([2002:a17:90b:3d89:b0:2fa:a101:755])
+ (user=pandoh job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:528b:b0:2fa:17dd:6afa
+ with SMTP id 98e67ed59e1d1-3030feb1d3dmr2539113a91.17.1742522303169; Thu, 20
+ Mar 2025 18:58:23 -0700 (PDT)
+Date: Thu, 20 Mar 2025 18:58:01 -0700
 In-Reply-To: <20250321015806.954866-1-pandoh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
@@ -75,9 +73,8 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250321015806.954866-1-pandoh@google.com>
 X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250321015806.954866-3-pandoh@google.com>
-Subject: [PATCH v5 2/8] PCI/AER: Make all pci_print_aer() log levels depend on
- error type
+Message-ID: <20250321015806.954866-4-pandoh@google.com>
+Subject: [PATCH v5 3/8] PCI/AER: Move AER stat collection out of __aer_print_error()
 From: Jon Pan-Doh <pandoh@google.com>
 To: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>
 Cc: linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
@@ -88,52 +85,92 @@ Cc: linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Sargun Dhillon <sargun@meta.com>, 
 	"Paul E . McKenney" <paulmck@kernel.org>, Jon Pan-Doh <pandoh@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-From: Karolina Stolarek <karolina.stolarek@oracle.com>
+Decouple stat collection from internal AER print functions, so the
+ratelimit does not impact the error counters. The stats collection is no
+longer buried in nested functions, simplifying the function flow.
 
-Some existing logs in pci_print_aer() log with error severity
-by default. Convert them to depend on error type (consistent
-with rest of AER logging).
+AERs from ghes or cxl drivers are a minor exception. Stat collection occurs
+in pci_print_aer(), an external interface, as that is where aer_err_info
+is populated.
 
-Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
 Signed-off-by: Jon Pan-Doh <pandoh@google.com>
 Reported-by: Sargun Dhillon <sargun@meta.com>
 Acked-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.i=
-ntel.com>
 ---
- drivers/pci/pcie/aer.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/pci/pci.h      |  1 +
+ drivers/pci/pcie/aer.c | 10 ++++++----
+ drivers/pci/pcie/dpc.c |  1 +
+ 3 files changed, 8 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 75985b96ecc1..9d63d32f041c 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -551,6 +551,7 @@ struct aer_err_info {
+ };
+ 
+ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
++void pci_dev_aer_stats_incr(struct pci_dev *pdev, struct aer_err_info *info);
+ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info, const char *level);
+ 
+ int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
 diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 45629e1ea058..3116b4678081 100644
+index 3116b4678081..e5db1fdd8421 100644
 --- a/drivers/pci/pcie/aer.c
 +++ b/drivers/pci/pcie/aer.c
-@@ -784,14 +784,14 @@ void pci_print_aer(struct pci_dev *dev, int aer_sever=
-ity,
- 	info.mask =3D mask;
- 	info.first_error =3D PCI_ERR_CAP_FEP(aer->cap_control);
-=20
--	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
-+	aer_printk(level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, =
-mask);
+@@ -617,8 +617,7 @@ const struct attribute_group aer_stats_attr_group = {
+ 	.is_visible = aer_stats_attrs_are_visible,
+ };
+ 
+-static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
+-				   struct aer_err_info *info)
++void pci_dev_aer_stats_incr(struct pci_dev *pdev, struct aer_err_info *info)
+ {
+ 	unsigned long status = info->status & ~info->mask;
+ 	int i, max = -1;
+@@ -691,7 +690,6 @@ static void __aer_print_error(struct pci_dev *dev,
+ 		aer_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
+ 				info->first_error == i ? " (First)" : "");
+ 	}
+-	pci_dev_aer_stats_incr(dev, info);
+ }
+ 
+ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
+@@ -784,6 +782,8 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+ 	info.mask = mask;
+ 	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
+ 
++	pci_dev_aer_stats_incr(dev, &info);
++
+ 	aer_printk(level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
  	__aer_print_error(dev, &info, level);
--	pci_err(dev, "aer_layer=3D%s, aer_agent=3D%s\n",
--		aer_error_layer[layer], aer_agent_string[agent]);
-+	aer_printk(level, dev, "aer_layer=3D%s, aer_agent=3D%s\n",
-+		   aer_error_layer[layer], aer_agent_string[agent]);
-=20
- 	if (aer_severity !=3D AER_CORRECTABLE)
--		pci_err(dev, "aer_uncor_severity: 0x%08x\n",
--			aer->uncor_severity);
-+		aer_printk(level, dev, "aer_uncor_severity: 0x%08x\n",
-+			   aer->uncor_severity);
-=20
- 	if (tlp_header_valid)
- 		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
---=20
+ 	aer_printk(level, dev, "aer_layer=%s, aer_agent=%s\n",
+@@ -1263,8 +1263,10 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info,
+ 
+ 	/* Report all before handle them, not to lost records by reset etc. */
+ 	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+-		if (aer_get_device_error_info(e_info->dev[i], e_info))
++		if (aer_get_device_error_info(e_info->dev[i], e_info)) {
++			pci_dev_aer_stats_incr(e_info->dev[i], e_info);
+ 			aer_print_error(e_info->dev[i], e_info, level);
++		}
+ 	}
+ 	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
+ 		if (aer_get_device_error_info(e_info->dev[i], e_info))
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index 9e4c9ac737a7..81cd6e8ff3a4 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -289,6 +289,7 @@ void dpc_process_error(struct pci_dev *pdev)
+ 	else if (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
+ 		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
+ 		 aer_get_device_error_info(pdev, &info)) {
++		pci_dev_aer_stats_incr(pdev, &info);
+ 		aer_print_error(pdev, &info, KERN_ERR);
+ 		pci_aer_clear_nonfatal_status(pdev);
+ 		pci_aer_clear_fatal_status(pdev);
+-- 
 2.49.0.395.g12beb8f557-goog
 
 
