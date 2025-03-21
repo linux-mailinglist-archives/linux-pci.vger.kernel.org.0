@@ -1,90 +1,104 @@
-Return-Path: <linux-pci+bounces-24372-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24377-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 819ABA6BFF5
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 17:32:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D788A6C036
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 17:41:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CF12A7A3D70
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 16:31:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEF4A3BACDF
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 16:39:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0A9E1C5D4B;
-	Fri, 21 Mar 2025 16:32:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C22922DFBF;
+	Fri, 21 Mar 2025 16:38:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GWoVjPcU"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="cgqH6cRH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D09146A68;
-	Fri, 21 Mar 2025 16:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF63B22DFA1;
+	Fri, 21 Mar 2025 16:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742574762; cv=none; b=U4J3AJLQEOE7WVu13UOPcncBvx9hs0o8SKEdc/ctZZDWdbYOz6snkt+0WguADdMVN656NMzM8byq/dpFVvIxm18Q8jMgLB9+Dmh6/mhZdqhaXD84jzhcE6JNLvGjfwU6F65VrMnDmSicHiJoON7Q42UxD5kaSW7uYPYkcM7lxjc=
+	t=1742575125; cv=none; b=lBJOSxQG7uFF0sWMkQob4jETJZBV/983NXKAXwOgY+eYN3151GPD7Ob4ChHCL5HMfMr3NB9BIfIqlNgnuvEAvzFzmxhClUV/5vTmbfva5THPhdbew1nkp+t6DTVQcxsHiqKvGXUVY/64r1QU31R8nTW9Z6o1Uoq4OvbWOTSUUWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742574762; c=relaxed/simple;
-	bh=BqNAlk7rXAlcVOFBgEHRS+hiVmaJg6AYHU2f42U4Q6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=m/t8ABOe72Gp0xvv9qiezi0rx/2AbpxFPW2Jjk30O4OIT8HRObL/rii85a+W9nZeioeJYitY2V068YOaMMnrfVk6fSSrxHgDZ+rrV9RRU2IfbdoUuixjr7OAnoxHp97wm9rT6tYvy1lneKYcZ3evbMGnKwLVI4ndKUbfV0w12B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GWoVjPcU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF8A2C4CEE3;
-	Fri, 21 Mar 2025 16:32:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742574762;
-	bh=BqNAlk7rXAlcVOFBgEHRS+hiVmaJg6AYHU2f42U4Q6g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=GWoVjPcUuHiSvan9BqoVytjybeH1rUYg6Q+hO/Vd8LJ81fsr9P2d4YUocxgn0yxOZ
-	 vczmYLN/eMzwLzMenjR6rL9ISgVan1byWsapnm7/+8jovi5/0TVoqOBzphXfdRZP/9
-	 w+hwUmW8i4EEd0yY3RiyZkFu9lz2xJVZwyv2ES9vVQuf6Lm2/kBK81xGm5Pwrkm1uY
-	 4f+tNNn3LiTNdgSJWwIb+XaXhGXbSVt3Vldxsng0Q2xexz7cGxbu1Ykk7VDMy6U4Pz
-	 66ndKB4t+2pqvev2lAQwD9ltJHIZmKS5WyIyZdgCMEdKE+ve/LRVNWSdJhzdeDZcFT
-	 kQeu5OA4CGdZg==
-Date: Fri, 21 Mar 2025 11:32:40 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: tglx@linutronix.de, maz@kernel.org, linux-kernel@vger.kernel.org,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-	Toan Le <toan@os.amperecomputing.com>,
-	Joyce Ooi <joyce.ooi@intel.com>, Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 07/57] irqdomain: pci: Switch to of_fwnode_handle()
-Message-ID: <20250321163240.GA1130095@bhelgaas>
+	s=arc-20240116; t=1742575125; c=relaxed/simple;
+	bh=YKtEr9wF3Q9oj+jVbKYrVT+BIWYZzl5DDzbLu+pO4Qg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n0FIoXmomCaJnSXN02xpDSS/x4jzz/BTn6iGhg4UjBpV5Us4ueGX/HGwmRC471lWrbp+bho0hGJ1ykPUVihNjzAMGSxT98oUtDS59or80jFiTvLjTeyTWar4mQuEFkK5oSqSM5EwtZ1Z3pl3oRVk/8lXfn6wl1Y5Ao3E+fHyEFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=cgqH6cRH; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=yh4Jx
+	v4hhAHkYmuK74y/G1BO0VulqF5y3DNr9kAR0lE=; b=cgqH6cRH3yQ25K+r0760a
+	Qv3sizcOBKDkPjWtZjZUmVz7Zxvz0ax8ET2572Ooi46Pnf5mZ7eFUonaAUvcKdbD
+	J65ZgREB0fHcjCvjASM3r6lFpHaIsRa2z0qn4OxQHgjzvJpnnldrJkAWROXnjEgy
+	VGozd0JcLRshTvAQqa+FYA=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wC30e7sld1nnmPrAw--.48109S2;
+	Sat, 22 Mar 2025 00:38:04 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org
+Cc: kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	jingoohan1@gmail.com,
+	thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [v5 0/4] Introduce generic capability search functions
+Date: Sat, 22 Mar 2025 00:37:59 +0800
+Message-Id: <20250321163803.391056-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319092951.37667-8-jirislaby@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wC30e7sld1nnmPrAw--.48109S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWrtFyfGw4rtrykCw15uF1xZrb_yoW8Jr1UpF
+	yrG3Z3Ar4rAFWa9an3Aa1F9Fy3X3Z7J3y7J3y7Kw1fXF1xAayDKr4kKF1rArZrX397X3sx
+	XF4UJr95KF1qyFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEGYLPUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhsXo2fdjwDO-AABsT
 
-On Wed, Mar 19, 2025 at 10:29:00AM +0100, Jiri Slaby (SUSE) wrote:
-> of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
-> defined of_fwnode_handle(). The former is in the process of being
-> removed, so use the latter instead.
+1. Introduce generic capability search functions.
+2. dwc/cdns use common PCI host bridge APIs for finding the capabilities.
+3. Use cdns_pcie_find_*capability to avoid hardcode.
 
-I'm fine with these and happy to apply via the PCI tree, but it sounds
-like you're planning a v3 with a few updates, so I'll hold off for
-now:
+Changes since v4:
+- Resolved [v4 1/4] compilation warning.
+- The patch subject and commit message were modified.
 
-https://lore.kernel.org/r/4bc0e1ca-a523-424a-8759-59e353317fba@kernel.org
+Changes since v3:
+- Resolved [v3 1/4] compilation error.
+- Other patches are not modified.
+
+Changes since v2:
+- Add and split into a series of patches.
+
+Hans Zhang (4):
+  PCI: Introduce generic capability search functions
+  PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
+  PCI: cadence: Use common PCI host bridge APIs for finding the
+    capabilities
+  PCI: cadence: Use cdns_pcie_find_*capability to avoid hardcode.
+
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 40 +++++----
+ drivers/pci/controller/cadence/pcie-cadence.c | 25 ++++++
+ drivers/pci/controller/cadence/pcie-cadence.h |  8 +-
+ drivers/pci/controller/dwc/pcie-designware.c  | 71 ++-------------
+ drivers/pci/pci.c                             | 86 +++++++++++++++++++
+ include/linux/pci.h                           | 16 +++-
+ 6 files changed, 157 insertions(+), 89 deletions(-)
+
+
+base-commit: a1cffe8cc8aef85f1b07c4464f0998b9785b795a
+-- 
+2.25.1
+
 
