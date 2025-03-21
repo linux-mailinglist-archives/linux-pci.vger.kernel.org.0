@@ -1,43 +1,43 @@
-Return-Path: <linux-pci+bounces-24299-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24300-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4D24A6B38E
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 05:04:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E479A6B390
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 05:05:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 640FA3B7A2B
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 04:04:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4F1774850FE
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 04:05:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE9682A1CF;
-	Fri, 21 Mar 2025 04:04:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B55DF1E8837;
+	Fri, 21 Mar 2025 04:04:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ZLuJGqvM"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Q5kle9s2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5D5F4120B;
-	Fri, 21 Mar 2025 04:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC69E1E8333;
+	Fri, 21 Mar 2025 04:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742529893; cv=none; b=NB3jxI8RvnEAI29NHLI5Sa7Wj1vUKvVNwRTkgtcQNxPt8pNxcB3BAn9XaIlMH8e99X0IZ49PFwZhgeAkl0Nu83T6JfGZXgOaZQDXF+Gvv33AogNj0m1pXubjL9aGkfWek8umWBaijfU+DFM+Jc34Duul9yZMrVXz+W3czpb0zCA=
+	t=1742529898; cv=none; b=PDaLbI6KhUcTaqODt3B6b/pxQtVgIrobZYCXGP7LLE4gu3rLLbWwtp6GdvowMgRzshj8eFlwXdaKBnGRYd2txXGSf2VOVIou7ulXtEZJCsZcbyKimFXVQz3FDnzziTD9Qi5O/Bzovy+bgd64mvyA5RTtlrw5rBcMQbATLfUdYvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742529893; c=relaxed/simple;
-	bh=kKaeIwqRQTK/Z3a1vplSclrEskxqJxM0XWjs825IJok=;
+	s=arc-20240116; t=1742529898; c=relaxed/simple;
+	bh=ox5udzqG/KT9+OZArNDmLfoIcNRtLjZn0Kaw0AnGc3A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iga7xoufVFOQZbv4dl43gQVlGzR+wetDKvllbFECl6qouC4t8b8k1AQK3MSh1aEDLdYCbAfwmUrNHwoqxNEkSZqfD5FIdiDoxOWYqtpX09v/7RedgMjLf1t7VYau/T53moTaLHyVbvrr/p2DrBjHGAK8qc5pXo302TPNCRnTAG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ZLuJGqvM; arc=none smtp.client-ip=117.135.210.5
+	 MIME-Version; b=rNEibxIrW9D9/6KLqEXPp/5sM3jp09bC3VmndyyS9GQ+TIWeLv3O4ECf1masPIK19aSXqobjhEgdTt2RabFOFQak314Kmqxy6g1rNEiFTFamJAkAfomK6e3UXx0buLYNgBqpRtvoKwmvCoBkcVX9+T+8u5D4g28HAuJvUdRPWUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Q5kle9s2; arc=none smtp.client-ip=117.135.210.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Iu8sw
-	yOIw5K+t0r0RVA6DVR/ICbwmaceAEuARoTDftY=; b=ZLuJGqvMuC8a8HIxYAM5+
-	uvAZI7Nndbi51CukyDdpmFTBbHZzFQ7zpfmwaXo9BEhI3cDy3LHjLYwzX+TperhW
-	NCeMABBWacnJ/teTV4OSExAk66+2cqaFkmDtHWxvZGYs/J6MRxJ/aqDVvTnNyPCT
-	NQDw8afxRiYvk27ZlMMCek=
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=STvJs
+	11cV91iEDVl7C6DCjKJOOl/s9f4G1GvVfDsg64=; b=Q5kle9s2WP8ap8s9/f/Zg
+	PVx+9lYHniIVlrUKmBpAx5XJSLinFfAMNCm+aSSVien+OlMFob8PDy800eo9+4nw
+	7F9lSAhqHrpQ4nUFHMs2Ot5tzF6M5fIApGVJhPoydoY1QD/25v+nVoVL2bGAc0oW
+	sKIjlfYrGBEcvJYWXdWgTk=
 Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD3Hxsw5dxnbYNpAw--.34788S3;
-	Fri, 21 Mar 2025 12:04:02 +0800 (CST)
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD3Hxsw5dxnbYNpAw--.34788S4;
+	Fri, 21 Mar 2025 12:04:03 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: lpieralisi@kernel.org
 Cc: kw@linux.com,
@@ -49,9 +49,9 @@ Cc: kw@linux.com,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <18255117159@163.com>
-Subject: [v3 1/4] PCI: Introduce generic capability search functions
-Date: Fri, 21 Mar 2025 12:03:55 +0800
-Message-Id: <20250321040358.360755-2-18255117159@163.com>
+Subject: [v3 2/4] PCI: dwc: Replace dw_pcie_find_capability() and dw_pcie_find_ext_capability()
+Date: Fri, 21 Mar 2025 12:03:56 +0800
+Message-Id: <20250321040358.360755-3-18255117159@163.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250321040358.360755-1-18255117159@163.com>
 References: <20250321040358.360755-1-18255117159@163.com>
@@ -62,167 +62,113 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3Hxsw5dxnbYNpAw--.34788S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW3GF4fuFyrCr4fAw1ftw45Awb_yoW7GF1rpF
-	Z5AF15A3yrGF47trsIvF4qyr13XrZ2vFWxtFWxC3sYvr12ywn5KryI9345tF12yrs2gF13
-	trZrtFZ5Cr1ktaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zR7fHUUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxUXo2fc32Nz2QACsB
+X-CM-TRANSID:_____wD3Hxsw5dxnbYNpAw--.34788S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXF17JFy3JFWDCrW7ury5CFg_yoW5XFWrpa
+	yrAF1FkF4Fyr4Yqw4qvFn0vr13AF9xZFyxJa97G3ZavF1akrW5K340yaySqFn3ArZF9F13
+	Kr4Utas5Cw1kJa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0z_SoG_UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxUXo2fc32Nz2QAEsH
 
-Existing controller drivers (e.g., DWC, custom out-of-tree drivers)
-duplicate logic for scanning PCI capability lists. This creates
-maintenance burdens and risks inconsistencies.
-
-To resolve this:
-
-1. Add pci_generic_find_capability() and pci_generic_find_ext_capability()
-in drivers/pci/pci.c, accepting controller-specific read functions
-and device data as parameters.
-
-2. Refactor dwc_pcie_find_capability() and similar functions to utilize
-these new generic interfaces.
-
-3. Update out-of-tree drivers to leverage the common implementation,
-eliminating code duplication.
-
-This approach:
-- Centralizes critical PCI capability scanning logic
-- Allows flexible adaptation to varied hardware access methods
-- Reduces future maintenance overhead
-- Aligns with kernel code reuse best practices
-
-Tested with DWC PCIe controller and CDNS PCIe drivers.
+Replace duplicate logic code. Use a common interface and provide callback
+functions.
 
 Signed-off-by: Hans Zhang <18255117159@163.com>
 ---
- drivers/pci/pci.c   | 83 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/pci.h | 13 ++++++-
- 2 files changed, 95 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-designware.c | 71 ++------------------
+ 1 file changed, 5 insertions(+), 66 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 869d204a70a3..d686d89d211e 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -612,6 +612,89 @@ u16 pci_find_ext_capability(struct pci_dev *dev, int cap)
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 145e7f579072..2ebebedbf18d 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -203,83 +203,22 @@ void dw_pcie_version_detect(struct dw_pcie *pci)
+ 		pci->type = ver;
  }
- EXPORT_SYMBOL_GPL(pci_find_ext_capability);
  
-+/*
-+ * These interfaces resemble the pci_find_*capability() interfaces, but these
-+ * are for configuring host controllers, which are bridges *to* PCI devices but
-+ * are not PCI devices themselves.
-+ */
-+static u8 __pci_generic_find_next_cap(void *priv, pci_generic_read_cfg read_cfg,
-+				      u8 cap_ptr, u8 cap)
-+{
-+	u8 cap_id, next_cap_ptr;
-+	u16 reg;
-+
-+	if (!cap_ptr)
-+		return 0;
-+
-+	reg = read_cfg(priv, cap_ptr, 2);
-+	cap_id = (reg & 0x00ff);
-+
-+	if (cap_id > PCI_CAP_ID_MAX)
-+		return 0;
-+
-+	if (cap_id == cap)
-+		return cap_ptr;
-+
-+	next_cap_ptr = (reg & 0xff00) >> 8;
-+	return __pci_generic_find_next_cap(priv, read_cfg, next_cap_ptr, cap);
-+}
-+
-+u8 pci_generic_find_capability(void *priv, pci_generic_read_cfg read_cfg,
-+			       u8 cap)
-+{
-+	u8 next_cap_ptr;
-+	u16 reg;
-+
-+	reg = read_cfg(priv, PCI_CAPABILITY_LIST, 2);
-+	next_cap_ptr = (reg & 0x00ff);
-+
-+	return __pci_generic_find_next_cap(priv, read_cfg, next_cap_ptr, cap);
-+}
-+EXPORT_SYMBOL_GPL(pci_generic_find_capability);
-+
-+static u16 pci_generic_find_next_ext_capability(void *priv,
-+						pci_generic_read_cfg read_cfg,
-+						u16 start, u8 cap)
-+{
-+	u32 header;
-+	int ttl;
-+	int pos = PCI_CFG_SPACE_SIZE;
-+
-+	/* minimum 8 bytes per capability */
-+	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
-+
-+	if (start)
-+		pos = start;
-+
-+	header = read_cfg(priv, pos, 4);
-+	/*
-+	 * If we have no capabilities, this is indicated by cap ID,
-+	 * cap version and next pointer all being 0.
-+	 */
-+	if (header == 0)
-+		return 0;
-+
-+	while (ttl-- > 0) {
-+		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
-+			return pos;
-+
-+		pos = PCI_EXT_CAP_NEXT(header);
-+		if (pos < PCI_CFG_SPACE_SIZE)
-+			break;
-+
-+		header = read_cfg(priv, pos, 4);
-+	}
-+
-+	return 0;
-+}
-+
-+u16 pci_generic_find_ext_capability(void *priv, pci_generic_read_cfg read_cfg,
-+				    int cap)
-+{
-+	return pci_generic_find_next_ext_capability(priv, read_cfg, 0, cap);
-+}
-+EXPORT_SYMBOL_GPL(pci_generic_find_ext_capability);
-+
- /**
-  * pci_get_dsn - Read and return the 8-byte Device Serial Number
-  * @dev: PCI device to query
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 47b31ad724fa..48c2b45a4d04 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1205,6 +1205,11 @@ u8 pci_find_ht_capability(struct pci_dev *dev, int ht_cap);
- u8 pci_find_next_ht_capability(struct pci_dev *dev, u8 pos, int ht_cap);
- u16 pci_find_ext_capability(struct pci_dev *dev, int cap);
- u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 pos, int cap);
-+typedef u32 (*pci_generic_read_cfg)(void *priv, int where, int size);
-+u8 pci_generic_find_capability(void *priv, pci_generic_read_cfg read_cfg,
-+			       u8 cap);
-+u16 pci_generic_find_ext_capability(void *priv, pci_generic_read_cfg read_cfg,
-+				    u8 cap);
- struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
- u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap);
- u16 pci_find_dvsec_capability(struct pci_dev *dev, u16 vendor, u16 dvsec);
-@@ -2012,7 +2017,13 @@ static inline u8 pci_find_next_capability(struct pci_dev *dev, u8 post, int cap)
- { return 0; }
- static inline u16 pci_find_ext_capability(struct pci_dev *dev, int cap)
- { return 0; }
+-/*
+- * These interfaces resemble the pci_find_*capability() interfaces, but these
+- * are for configuring host controllers, which are bridges *to* PCI devices but
+- * are not PCI devices themselves.
+- */
+-static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+-				  u8 cap)
++static u32 dwc_pcie_read_cfg(void *priv, int where, int size)
+ {
+-	u8 cap_id, next_cap_ptr;
+-	u16 reg;
 -
-+typedef u32 (*pci_generic_read_cfg)(void *priv, int where, int size);
-+u8 pci_generic_find_capability(void *priv, pci_generic_read_cfg read_cfg,
-+			       u8 cap)
-+{ return 0; }
-+u16 pci_generic_find_ext_capability(void *priv, pci_generic_read_cfg read_cfg,
-+				    u8 cap)
-+{ return 0; }
- static inline u64 pci_get_dsn(struct pci_dev *dev)
- { return 0; }
+-	if (!cap_ptr)
+-		return 0;
+-
+-	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+-	cap_id = (reg & 0x00ff);
+-
+-	if (cap_id > PCI_CAP_ID_MAX)
+-		return 0;
++	struct dw_pcie *pci = priv;
+ 
+-	if (cap_id == cap)
+-		return cap_ptr;
+-
+-	next_cap_ptr = (reg & 0xff00) >> 8;
+-	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++	return dw_pcie_read_dbi(pci, where, size);
+ }
+ 
+ u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+ {
+-	u8 next_cap_ptr;
+-	u16 reg;
+-
+-	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+-	next_cap_ptr = (reg & 0x00ff);
+-
+-	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++	return pci_generic_find_capability(pci, dwc_pcie_read_cfg, cap);
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+ 
+-static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+-					    u8 cap)
+-{
+-	u32 header;
+-	int ttl;
+-	int pos = PCI_CFG_SPACE_SIZE;
+-
+-	/* minimum 8 bytes per capability */
+-	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+-
+-	if (start)
+-		pos = start;
+-
+-	header = dw_pcie_readl_dbi(pci, pos);
+-	/*
+-	 * If we have no capabilities, this is indicated by cap ID,
+-	 * cap version and next pointer all being 0.
+-	 */
+-	if (header == 0)
+-		return 0;
+-
+-	while (ttl-- > 0) {
+-		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+-			return pos;
+-
+-		pos = PCI_EXT_CAP_NEXT(header);
+-		if (pos < PCI_CFG_SPACE_SIZE)
+-			break;
+-
+-		header = dw_pcie_readl_dbi(pci, pos);
+-	}
+-
+-	return 0;
+-}
+-
+ u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
+ {
+-	return dw_pcie_find_next_ext_capability(pci, 0, cap);
++	return pci_generic_find_ext_capability(pci, dwc_pcie_read_cfg, cap);
+ }
+ EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
  
 -- 
 2.25.1
