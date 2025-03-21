@@ -1,111 +1,121 @@
-Return-Path: <linux-pci+bounces-24394-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24395-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1AB8A6C350
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 20:24:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24C15A6C352
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 20:26:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C5FA18946B6
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 19:24:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C3133B3CFF
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 19:26:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B569A22D4C9;
-	Fri, 21 Mar 2025 19:24:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D6FE1DEFF3;
+	Fri, 21 Mar 2025 19:26:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bs5l+Cd+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="glTeAWO4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6F91DEFF3
-	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 19:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E0E1D54D1
+	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 19:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742585068; cv=none; b=KFzcgYiAVPkZZL/AOpGFsQ1WNVvhgfre/P1Kx8FI8Uq52PZnPMnvKGmNhwTPINL+K7JSBqmNV2Xx7kvTaJwMO9javdL315qTVWPVa64/6EOrqIVdsczGOMU21nT25HNzWdV4JtgBRTnl+iqU/KLArwBA8IBbx4hWVn36tJyI8DQ=
+	t=1742585192; cv=none; b=ABnPS/7X46fsRgdRnxfQjuAYK+/e+L/zYgjrsS9ih6weXXKbQdGvVsbogsWX24OaHl0+8Sl1uOs+Pz8dvccXEquCwn0jB8H38awvJGuWSmQP2dVMmdB6fV9an705g7E1fei1rIG/EcIWhz5mcdMiyUtkp70Umlfu9MroISA8pZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742585068; c=relaxed/simple;
-	bh=5/p+ha8OqilpejwLlK//DsAVZs2H0J9qncLbaJM4EF8=;
+	s=arc-20240116; t=1742585192; c=relaxed/simple;
+	bh=v5KtOTNIkW76SJrnfubH35VIVDZstbWxAwAjU8+UdjA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uRdb+fJH//+HH9deueF9MOGRfKEJeLqCb+ew91nJcOV+0PI913PngdwqkD/Nbt+FWV0N+nQGBNAwxngjnS0b9X5KKuJIfhxkg4HxN91nZm1PXVqBs2r0yCvMEitg8S8WpihOyO0n8haiUeM5Pe7zyEt+Yarh4HegWjsLrPtDB6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bs5l+Cd+; arc=none smtp.client-ip=209.85.208.41
+	 To:Cc:Content-Type; b=i3ZA9R4nlZbP87Sx5WtXFGribxVg1mNWPIIsp81kRgwc70WMKO+EkSJcg4QH8O6BcnfQmDiv6KN3LCsV1g6TTjQC0HxBTL9YgyoqCuzh0IZfpHjahMd82ObSEKFYSEmBNlZ9jAPR1ktreLbLe+o4d+1olBMfvw4MZGPi9wl19ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=glTeAWO4; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e535e6739bso3684079a12.1
-        for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 12:24:26 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e673822f76so3817227a12.2
+        for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 12:26:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742585065; x=1743189865; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742585189; x=1743189989; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5/p+ha8OqilpejwLlK//DsAVZs2H0J9qncLbaJM4EF8=;
-        b=Bs5l+Cd+Rda1GcGJrHKHPc0bIhYkWRKUmQ0uwSWEEbyXYBNCeqd2X8bPXtWAJqqxd1
-         cV05+Kk3FhkIlZCfNUIgWyMPkF87jJDNU4RduikZ/WSbGMFr66IlU9G49ejzRCK66TAk
-         kX1OPiM9j49MssQxcPBDdxRBLFlHSNjb8wOOZ0Rf6I+hG9TOPI7NrptRApEBhA0CB9Yv
-         xAAvGVCXIBSfRXUJcxsPr4ffTUuq3CaUbxLWqKtfDwvO+4KdgQzVyj7c5YM3iB32lnF9
-         1P2mpvnRvPonis7GaRBLZVPm5VV52Vt713H46IhzIZetdqXUpqFdPlsJYyTha+KnGI+1
-         EHUg==
+        bh=3tng6UjipctFtDfxhMerRP0haQzcsPpyH85dwcCigpU=;
+        b=glTeAWO4ocKdsj6oYXWgNx7blPqCvfKz/2NW+ovnUJmYr8SoJwvxFdmBwjPW9G34ds
+         ZCam7VrbRK4Akyqv74VX0O4mY4+YW/d5cNDgb6V+Y6xwWpAz195r8JcwrIgQCFGQlGJV
+         BNNSHFhqTclZTeyUxL1fbvEZocq7FjJ+SbRVRj5qm870JoMxFM+8q2H5qTywjCnLkRVC
+         vJZpFN9Ljom1KYdhgBI1de9y8KW8iDMibp/JBHBUZsahVRhCSmCpmaVLHHb/R2buCi0t
+         4lGdy5Rquuxye4QX10WXrbq/bj9bkSpRwj1/N/r4vECYbpXJArPkwnjAOTDAKUqLASCr
+         Kb8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742585065; x=1743189865;
+        d=1e100.net; s=20230601; t=1742585189; x=1743189989;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5/p+ha8OqilpejwLlK//DsAVZs2H0J9qncLbaJM4EF8=;
-        b=aRSwyFPPfXl2UOX4m1eBkws7FCRxj1Dh8N5te1DZIzt11oaw/UJrWnGoXmDJuT1zTm
-         RVcE8Lh0805L0jQUMstMQaLcfVqtpQlu/HBeovad0Fb8D8NUJrtNjsK2L51JBRq8+mHG
-         EwdMO3IAgipMJtYkbxSlGEG/qtibrn6L8r+n/kQfwh4gkG0fQ9i/KPi0eFvCg8dDAm7n
-         ay29UCyptT5R6TWD7VSC/7la65elHqGztkSlkV3FLRertVR4H+HN823P+sZsOm1IwcH5
-         GZLFXpPFhVoDKjs8Zv9JLyeE1CtLiB3PISUqEBOMdtNSOyDvT2NZPG7zayteUzM+88v8
-         H+Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZx3+pdqdTWJ69IdqHwPlv1pGdBiljuCwO8FDWELlOn9ygRhzdX6jivf/1fHwafYPHP4+sZiyU+Wk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzxhgh3y+5n4c2MhAKMxBh3XmTkfn2kVpYJPF5Utae2T787msfU
-	28k2xfVg55rmP9oMagO+ni82M6Bh+JcXQcgngWWfA4SADhWkFBkKP55iTPx/ucDa2io8a6G7/T1
-	k43uKn7hHIVEIobzynVBZDUm7E3MSVICmTFSH
-X-Gm-Gg: ASbGncsWmiKWIHb3jtJmRkAZrMPaN2Mh2aP9oO/Q8kQAgGopJ4Lz1yCuD+FPDhY2dzD
-	Y0rEcXhwQAZr+RHN23ECzvrEntYqcICwgsK1lNhy5AhA7laR0qX8huaVcQKRmaFi/21e5QQOfHQ
-	4iogaUNM+laWavQlO8Mj2edhNugszDIl0HIP7Db04SRbgE2yL/xI711fYD
-X-Google-Smtp-Source: AGHT+IFJDs9q4STpG7rlW1ZEDxlMm/ukQHsFufhwPw4izW38wLD+kBBWX5i71yRFpV4J4e+rrqPADeY4D8VnLDhFmo8=
-X-Received: by 2002:a05:6402:2355:b0:5eb:534e:1c7f with SMTP id
- 4fb4d7f45d1cf-5ebcd51c591mr3937408a12.32.1742585065075; Fri, 21 Mar 2025
- 12:24:25 -0700 (PDT)
+        bh=3tng6UjipctFtDfxhMerRP0haQzcsPpyH85dwcCigpU=;
+        b=gHQiWIVcK0VWQirwLbe0DRihZcfi0hYYlVnrkN0AA2/DKOpTXdozryctfok/nsOkzn
+         FmfDSiK5UUX2diSm2CqOmHE5e9HnGKJ7P7ADnTVYvmR06Yd6m14ISabYuaMzL1MJt1i9
+         hqRUb8fgGuojwCxRyU9EkrS2ZEN49YPFiWlPDCqqyVnp1fYdjXTPsBq//oprubmhWKac
+         1MlzqjGKBIWfQ+k7f/bYRLLULALD6CowgM+NaVwBdUw4dj9bzHcYg12PLK2d2SRi06Uu
+         jtI/CEj1EHbmeKGuICd0urJY2/sWha3V7ETMNbFFPmk3EZpS4PGyy/oIUzK8jwIC2YxV
+         bZsg==
+X-Gm-Message-State: AOJu0Yw5Drqeg82F+XpmjrJ/2fjOyTkz2oU/YRXVDRk4/+5SzMl3E8eW
+	/izvpZoh5az7KNLQkVqUWMCdJymmk0FY8jzSyG46SaAks+AbSXaixoYMnLRfXu+OIa2/a1SmEyk
+	h61FmP7erS5+Ty/E8De4jRzPSiVVzSTX788U2
+X-Gm-Gg: ASbGncs/a3fXwVWLwP36T9YwyQrvLxDP2cJ6C8VXWCWhGc/V7UeuJWwdSYWCKCgjqeo
+	xgJz8mWPVlPBArjztFuDhh0emJqsFnhgt5+EBY+giaRe9hvGAQ5rSrFjKEEn+KC06p1vw6J3SNF
+	RbDFD8Bc4R8beqQdnpYujWT0wMWF66JX4fwuvkxR1ZsSUJ4R7f647mrGG2
+X-Google-Smtp-Source: AGHT+IFdVy1mx8ngQrdtIbHXa6JnfMbBOXsxmz85aPdUtkVeTQRngXqptM5GMwMX7zVVhec4bygM7hiK8NuAwKtSkwo=
+X-Received: by 2002:a05:6402:3495:b0:5eb:cc1c:bb9e with SMTP id
+ 4fb4d7f45d1cf-5ebcd409024mr4846295a12.7.1742585188749; Fri, 21 Mar 2025
+ 12:26:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320082057.622983-1-pandoh@google.com> <20250320082057.622983-6-pandoh@google.com>
- <85bd0cd9-c09f-464d-9397-ced829df27d7@linux.intel.com>
-In-Reply-To: <85bd0cd9-c09f-464d-9397-ced829df27d7@linux.intel.com>
+References: <20250321015806.954866-1-pandoh@google.com> <20250321015806.954866-5-pandoh@google.com>
+ <f690cd8b-4d11-4fc6-8ae8-73996b7b3c21@oracle.com>
+In-Reply-To: <f690cd8b-4d11-4fc6-8ae8-73996b7b3c21@oracle.com>
 From: Jon Pan-Doh <pandoh@google.com>
-Date: Fri, 21 Mar 2025 12:24:13 -0700
-X-Gm-Features: AQ5f1Jr0XobOCreEGp9ydfickQ9PZ-NfENarr56H0d9gvc1an_PiFAZcgTO1ylU
-Message-ID: <CAMC_AXW6QgDV9bSiYR5UpgSAii+YSPLk_xCdYHZGjudDZpGstQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/7] PCI/AER: Introduce ratelimit for error logs
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>, 
-	linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
-	Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-	Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Lukas Wunner <lukas@wunner.de>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Terry Bowman <Terry.bowman@amd.com>
+Date: Fri, 21 Mar 2025 12:26:17 -0700
+X-Gm-Features: AQ5f1JrrLcN7rIjmcjR0AEKpYXFUfRg-lKFCy6IhRjDZ9vlVWDE3LvwPIae1hHA
+Message-ID: <CAMC_AXUqd4jZ-XzSSMBh6QXXasAsc6f5DGss28iv8eBdszuXjw@mail.gmail.com>
+Subject: Re: [PATCH v5 4/8] PCI/AER: Rename aer_print_port_info() to aer_printrp_info()
+To: Karolina Stolarek <karolina.stolarek@oracle.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller <ben.fuller@oracle.com>, 
+	Drew Walton <drewwalton@microsoft.com>, Anil Agrawal <anilagrawal@meta.com>, 
+	Tony Luck <tony.luck@intel.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Sargun Dhillon <sargun@meta.com>, 
+	"Paul E . McKenney" <paulmck@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 20, 2025 at 6:00=E2=80=AFPM Sathyanarayanan Kuppuswamy
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> Should we exclude fatal errors from the rate limit? Fatal error logs
-> would be
-> really useful for debug analysis, and they not happen very frequently.
+On Fri, Mar 21, 2025 at 6:39=E2=80=AFAM Karolina Stolarek
+<karolina.stolarek@oracle.com> wrote:
+> This commit description doesn't provide enough information on why and
+> how we make the names more descriptive. With this change, we want to
+> make it clear that this function logs information about the Root Port
+> that received an error message, not just a generic PCIe Port.
+>
+> Also, there's a typo in the subject:
+> s/aer_printrp_info()/aer_print_rp_info()/
+>
+> I'm fine with the code changes but I'd like to see the new commit
+> description before giving the r-b.
 
-The logs today only make the distinction between correctable vs.
-uncorrectable so I thought it made sense to be consistent.
+Ack. Will add more detail/fix typos (incl. s/institue/institute) in
+v6. Something like:
 
-Maybe this is something that could be deferred? The only fixed
-component is the sysfs attribute names (which can be made to refer to
-uncorrectable nonfatal vs. uncorrectable in doc/underlying
-implementation).
+PCI/AER: Rename aer_print_port_info() to aer_print_rp_info()
+
+    Update function/param names to be more descriptive. Make it clear that
+    this function logs error information from a root port vs. generic PCIe
+    port.
+
+    This is a preparatory patch for instituting rate limits on logs. It
+    frees up the dev variable for source device iteration.
 
 Thanks,
 Jon
