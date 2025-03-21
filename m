@@ -1,160 +1,167 @@
-Return-Path: <linux-pci+bounces-24388-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24389-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42B3DA6C21D
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 19:08:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6234AA6C2AE
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 19:41:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C135A1897F08
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 18:08:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 199D21B63024
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 18:41:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7520722DF9E;
-	Fri, 21 Mar 2025 18:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D85AE1EB9E1;
+	Fri, 21 Mar 2025 18:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u3mD72Qn"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2ED22DF96;
-	Fri, 21 Mar 2025 18:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1086622F395
+	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 18:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742580478; cv=none; b=CSdaO+O85CQ4z3BBPGU8FHwvvink/1DL6HXG3WOxcH5IKnS8RcyyA/r1JN6gOGlBAdFBF/1Q0xsg1aLr6s15Dgmnktyw13vDCR70x6pjaw/EUADRTbiuEUff7Kc7uIM1KVkLNtkYWqq5LVh9Qldz//ZfBri7ZMId4JUppl9FJjE=
+	t=1742582479; cv=none; b=olq3QRswM2QHUSF6gYhnDlcaqA5D8RW4jCLR6uyMyoG0hrNa1bfG7Hq2HmyHkpifyJz2eNGhCoEyfi9qZ6PGRZ9R/xuvJikF0ejyvqJwCk9fCc2ghkJFYQTnzDwA90oajd28khCns0llRLF/zK/LinL3tv4/wOL7i04Y6THflIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742580478; c=relaxed/simple;
-	bh=Fhfz8OLbMJGn2RhXYgEr4QUyo4HEVfdIWVl+nUy8CXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LcU7rH89cZFsAicYJcAwyqujdgxrZyF1WDLNXpwZILuRIHAaim4ODNyolqle2jUDNqf+bvYUl3hQujPeSMrzoQfV/hU6Apn4vNYZmKTjWVcsUtsygYRerbDp7eZBirzOFC4BpxtrFNM7qMOGy5HG8HqSxwkcUtwTrvG5TJChdXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 64B9028041578;
-	Fri, 21 Mar 2025 19:07:47 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 45E432CDCD; Fri, 21 Mar 2025 19:07:47 +0100 (CET)
-Date: Fri, 21 Mar 2025 19:07:47 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] PCI/hotplug: Don't enable HPIE in poll mode
-Message-ID: <Z92q84PdWVtftxI4@wunner.de>
-References: <20250321162114.3939-1-ilpo.jarvinen@linux.intel.com>
- <20250321170919.GA1130592@bhelgaas>
+	s=arc-20240116; t=1742582479; c=relaxed/simple;
+	bh=ySYR74zSQmJCdmta8A2rVRGqDs+nXMgr0M4g19WZE/M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ruix6dnpIsLCeEIqmFkey47xsmjfVPtZfTqmP9MCx9cAY4ZNdYkowIPDSXlrm2fpDIfE2X+vR6RJFnihJ2aLohzp0UfwffcUKmwEjKlOX9K6VTv6zjE0S0PH2SI0QCce/HQ+Iy3E/S9hsn9xBiD2nUktBdDfFh8p3HE/IUi5idk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u3mD72Qn; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e6194e9d2cso4050342a12.2
+        for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 11:41:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742582475; x=1743187275; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vfeAszGUjaAPFD0R+uo2uM06RMF7HeplZLPhdeGePc8=;
+        b=u3mD72QnGe96gR5qnduvfCOoMqTsJhZx70Ni7TSOhMhcidGQHhhIzRDUEn92WieNod
+         7PLgh717y+EQMmZ0ss54Is2sQd3IZgO0adme52JDUjemXAW0rlB7Eccbkwgbp4THlUvV
+         dwuMY+KUdpYaB2CtN8VDpZ4lDPjzjYjRtKqNTNjeFexW937+bWJq3jdObZaSiH2cn2xW
+         SpzriFaEmtGEidF3AtsZmn0TZhmKqNTOHLoIzIruZ9RsIHuP2Yfrfz7WGm+RyFTtDRKK
+         xCcUCjMinDqLmWhK+mp1l2Yq2Jvprd/BbVix76AB57HCc8MNOh4IL56QHzz6SFhD0CSM
+         v+8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742582475; x=1743187275;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vfeAszGUjaAPFD0R+uo2uM06RMF7HeplZLPhdeGePc8=;
+        b=ojUtmvqQBJj9IbsfB+ocg/YJ23/IYAJCMOq+23wNQd4pH+SyzL79+/lTuWKhebKAoz
+         YDeX0hzI7NvkYg7EfyklvqEJ+bkwAiMgA7KAb7LAAND0kP4vmrf0j+A2zJAsSzkmh97M
+         2Afhk3017vieotW5ePC3szuK8bUtamiDnRw2L96vVy/xMovItjN5RZ8+nLaTqfSXDu2G
+         wbE0ceNq8kkZ7F8RxfHF/2yBnvzt69vOXZ1SnGgM2TKldTkWF/ZYeYh0bEWtfXeI5BlK
+         DrzBqsAdOXPvJZMXT+IwgpF8pf8CplsusbED6QRFa2IGPLMbfdAmRU8oPBMaG250JA++
+         J1gg==
+X-Gm-Message-State: AOJu0YxhkL83dqeBMOwklZyHK2icFsr4YDJDmgcVHwIPJHQOM11YuQZo
+	jRaBFav3ZnbQvOCnA2v5RCF46RxQge8Z3AEYQDU/68Zwh1rLofIeABXvuSubqgSpNFXzyaSEmnx
+	W36ALyxukkU9+USOdeu6JJ7YNyQjjTZ/lHoLr
+X-Gm-Gg: ASbGncsi1a7yV2PPruqVPW88UfkDcWWNhjvHQ3uxBvujM5dzOaNwAFo2kZ2nTGRsJLd
+	Vi/AHB97bmQ+vLW8fz2np/JzE8eJOkp+wp0iEB2Rn4oNjFXIMhSIRK871yd+Oyo0DPmRCF7w8y+
+	hoaqql+LhbOtSlGCHHaHbULzeWQYEGo4bR1tJUZwB4Bys2FksznwYcxDW4rNxh/RTze/Y=
+X-Google-Smtp-Source: AGHT+IF+la3XA91c697pmJFtpIpvVG3e2v/1UIAGT02/DFDxHFm1sPJgcLqaHYc+erT3I83nduABNK8C/BBiBDxa8Ow=
+X-Received: by 2002:a05:6402:27d1:b0:5e4:d229:ad3d with SMTP id
+ 4fb4d7f45d1cf-5ebcd45caf5mr3828182a12.16.1742582475087; Fri, 21 Mar 2025
+ 11:41:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321170919.GA1130592@bhelgaas>
+References: <20250321015806.954866-1-pandoh@google.com> <20250321015806.954866-7-pandoh@google.com>
+ <e028eed2-440d-4094-bbf4-016ae5c0acf0@oracle.com>
+In-Reply-To: <e028eed2-440d-4094-bbf4-016ae5c0acf0@oracle.com>
+From: Jon Pan-Doh <pandoh@google.com>
+Date: Fri, 21 Mar 2025 11:41:04 -0700
+X-Gm-Features: AQ5f1JoaviP9oyagVte9qQ9d8BIiFBGfO3idHWs6Rwh657KuShn20-KhmixgpQg
+Message-ID: <CAMC_AXWSXLwnS7-KbK=xFR+r84s+VCYYEegBVFCqehx21L4AeA@mail.gmail.com>
+Subject: Re: [PATCH v5 6/8] PCI/AER: Introduce ratelimit for error logs
+To: Karolina Stolarek <karolina.stolarek@oracle.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller <ben.fuller@oracle.com>, 
+	Drew Walton <drewwalton@microsoft.com>, Anil Agrawal <anilagrawal@meta.com>, 
+	Tony Luck <tony.luck@intel.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Sargun Dhillon <sargun@meta.com>, 
+	"Paul E . McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 21, 2025 at 12:09:19PM -0500, Bjorn Helgaas wrote:
->   - It does make me wonder why we have both pcie_enable_interrupt()
->     and pcie_enable_notification().  Apparently we don't need to
->     restore the other PCI_EXP_SLTCTL bits when resuming?  Maybe we
->     depend on some other restoration, e.g., pci_restore_pcie_state(),
->     that happens first?
+On Fri, Mar 21, 2025 at 6:46=E2=80=AFAM Karolina Stolarek
+<karolina.stolarek@oracle.com> wrote:
+>
+> On 21/03/2025 02:58, Jon Pan-Doh wrote:
+> >   void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
+> > -                  const char *level)
+> > +                  const char *level, bool ratelimited)
+>
+> Ideally, we would like to be able to extract the "ratelimited" flag from
+> the aer_err_info struct, with no need for extra parameters in this functi=
+on.
 
-Yes and yes.
+I considered this, but pci_print_aer() and dpc_process_aer() both call
+aer_print_error directly without populating info->dev[]. I thought it
+was easier/cleaner to pass it in vs. populate info->dev[] and then
+read it.
 
-> 
->     That makes me worry that there's a window between
->     pci_restore_pcie_state() and pcie_enable_interrupt().  I suppose
->     we probably saved the pcie state after pcie_disable_interrupt(),
->     so HPIE would be disabled in the saved state.
+> (please correct me if I'm misreading the patch)
+>
+> It looks like we ratelimit the Root Port logs based on the source device
+> that generated the message, and the actual errors in
+> aer_process_err_devices() use their own ratelimits. As you noted in one
+> of your emails, there might be the case where we report errors but
+> there's no information about the Root Port that issued the interrupt
+> we're handling.
 
-Yes.
+Your understanding is correct. I think the edge case described is
+acceptable behavior:
 
-> 
->   - I also wonder about the fact that pci_restore_pcie_state() doesn't
->     account for Command Completed events, so we might write to Slot
->     Control too fast.
+1. Multiple errors arrive where the first source device is ratelimited
+2. Root port log and first source device log are not printed
+3. Other error source device(s) logs are printed
 
-We don't. :)  See commit 469e764c4a3c ("PCI: pciehp: Obey compulsory
-command delay after resume").
+The root port message is of the form:
+<root port> (Multiple) <severity> error message received from <first
+source device>
 
-So this is all a bit subtle and perhaps restoring the Slot Control
-registers should not be done in pci_restore_pcie_state() but rather
-in pciehp and pnv (which are the only hotplug drivers touching
-PCI_EXP_SLTCTL).
+If the root port log is printed, this could cause confusion as:
+- root port log mentions first source device only
+- source device logs mention other source device(s) but not
+ratelimited first source device
 
-In particular, if hotplug control was not granted by the platform,
-I don't think the kernel is supposed to touch the Slot Control
-registers at all.  So it probably shouldn't restore them either.
+There's an argument that there is still value in the root port log as
+you can infer that the subsequent source device logs are under that
+same root port. I don't think it's that useful (biased as I advocated
+for removing root port logs to begin with :))
 
-We've been doing this since 2006 with commit b56a5a23bfec ("PCI:
-Restore PCI Express capability registers after PM event").
-Negotiation of _OSC wasn't added until 2010 with 75fb60f26bef
-("ACPI/PCI: Negotiate _OSC control bits before requesting them").
-But the OSC_PCI_EXPRESS_NATIVE_HP_CONTROL predates the introduction
-of git.  I guess noone ever realized that restoring Slot Control
-shouldn't be done if hotplug control wasn't granted.  I can't
-remember anyone ever reporting issues because of that though.
+> The way I understood the suggestion in 20250320202913.GA1097165@bhelgaas
+> is that we evaluate the ratelimit of the Root Port or Downstream Port,
+> save it in aer_err_info, and use it in aer_print_rp_info() and
+> aer_print_error(). I'm worried that one noisy device under a Root Port
+> could hit a ratelimit and hide everything else
 
-On the other hand, changing something like this always risks
-regressions.
+This is not a 100% translation of Bjorn's suggestion as I share your
+concern (1 spammy device ratelimits and hides other devices).
 
->   - It's annoying that pcie_enable_interrupt() and
->     pcie_disable_interrupt() are global symbols, a consequence of
->     pciehp being split across five files instead of being one, which
->     is also a nuisance for code browsing.
+> A fair (and complicated) solution would be to check the ratelimits of
+> all devices in the Error Message to see if there is at least one that
+> can be reported. If so, use that ratelimit when printing both the Root
+> Port info and the error details from that device.
 
-Roughly,
-pciehp_core.c contains the interface to the PCI hotplug core
-  (registering the hotplug_slot_ops etc),
-pciehp_hpc.c contains the interaction with hardware registers,
-pciehp_core.c contains the state machine,
-pciehp_pci.c contains the interaction with the PCI core
-  (enumeration / de-enumeration of devices on slot bringup / bringdown).
+I mentioned this as well[1], albeit briefly. I'd opt for this if my
+initial solution isn't satisfactory. You could make it more
+complicated by substituting the source device, if it is ratelimited,
+to a non-ratelimited one. However, it's not good as it changes the
+default expectation that the root port log would have the source ID.
 
-The only reason I've refrained from making major adjustments to this
-structure in the past was that it would make "git blame" a little more
-difficult and applying fixes to stable kernels would also become somewhat
-more painful as it would require backporting.
-
->     Also annoying that they are generically named, with no pciehp
->     connection (probably another consequence of being split into
->     several files).
-
-They can be renamed.  There's no good reason for using the "pcie_"
-prefix, it just appears to be a historic artifact.
-
->   - The eb34da60edee commit log hints at the reason for testing
->     pme_is_native().  Would be nice if there were also a comment in
->     the code about this because it's not 100% obvious why we test PME
->     support in the PCIe native hotplug driver.
-> 
->   - Also slightly weird that eb34da60edee added the pme_is_native()
->     tests in pciehp_suspend() and pciehp_resume(), but somewhere along
->     the line the suspend-side one got moved to
->     pciehp_disable_interrupt(), so they're no longer parallel for no
->     obvious reason.
-> 
->   - I forgot why we have both pcie_write_cmd() and
->     pcie_write_cmd_nowait() and how to decide which to use.
-
-pcie_write_cmd_nowait() is the "fire and forget" variant,
-whereas pcie_write_cmd() can be thought of as the "_sync" variant,
-i.e. the control flow doesn't continue until the command has been
-processed by the slot.
-
-E.g. pciehp_power_on_slot() waits for the slot command to complete
-before making sure the Link Disable bit is clear.  It wouldn't make
-much sense to do the latter when the former hasn't been completed yet.
+[1] https://lore.kernel.org/linux-pci/CAMC_AXWQg53uNLsZizxEsOf_3C2gv=3DvBdA=
+AeMek1AmnTnMmDAw@mail.gmail.com/
 
 Thanks,
-
-Lukas
+Jon
 
