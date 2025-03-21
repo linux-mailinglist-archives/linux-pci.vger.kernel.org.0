@@ -1,162 +1,227 @@
-Return-Path: <linux-pci+bounces-24401-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24402-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEBA3A6C3D5
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 21:06:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0481A6C3FA
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 21:11:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4AC8B468A59
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 20:06:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 533371894087
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 20:11:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DDFF22DFA6;
-	Fri, 21 Mar 2025 20:06:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D03FF13774D;
+	Fri, 21 Mar 2025 20:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fQw1UpSo"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="nvSStd5E"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A1B1EEA3C;
-	Fri, 21 Mar 2025 20:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BDD51E7C0B;
+	Fri, 21 Mar 2025 20:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742587566; cv=none; b=MSO+ETad/jbetUVXS2V1KspbsFZ+wkeOvb6ozbE1LXQrDsGEYYUphxvQk5TYhuyZz5A5FwqF4xYXFSk2D1WU1FSeo1yDW56PuX50r2xpDkXivcHE5CxHkdKYGZ97Bkx/Wgo90G+PnNQnFXbzLG9WapXleH5F56MrFp0mwnN1ThI=
+	t=1742587890; cv=none; b=ctNwEECC6f6ZkxPUvgBk+qwCEs06U6UCvpdPHGIl/Qkc0olXNQIyTqs5MsD8pqp7EUaOX1yQ5Bko6T6vJULWJvgAi4ykB1vpnzfdHEbUqwvulkwvJMe+EhFt3dl8mmjcTLklMGzim1E6lIFr/j1Dkp/QF2EGniXCW58SgoOc8pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742587566; c=relaxed/simple;
-	bh=V2PQ1B96+LOOx9jmCYATmDQGnJZ+JVZ5BSmL2n6WdDw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uuzg1VYcD5qQ4j5R4Qc6q4TfVTA5bBe7isokdvsf+tXzxzDJwdZyRW1UNdw36w69XBXgh19GM9tQh+lwoSQV3ArmutWaDWGIOSofdytDZvwYEpYi2hjH9p/cPaJ0AsyyOcy4MaFulzdw+wa+g4kJfoA7P61r27fZyqWS1SvH3HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fQw1UpSo; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742587565; x=1774123565;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=V2PQ1B96+LOOx9jmCYATmDQGnJZ+JVZ5BSmL2n6WdDw=;
-  b=fQw1UpSoEJ1PEL14saM52fgS2rf/EORV8GU4jVvjif3vpo/tXRgYzooA
-   Za/av+kanLOqfQ9kSYDRsbr0QCJkuMjBLIpfdFtLkG7oUjXhcWgA4KWGx
-   MdnU6V1RRl16kvli3AH153kY/U52WVvqZfcVlHmCc8EvkytqN4GcKKbou
-   Tf1Zh/1ewddLMDCf1TNex0VjiDsINFBmlZIidXyLkFdQK1c6OugfYVR2R
-   D8YDDghTfryudck+hM9rYzUgT+7qrDnP98Zu8WauY4Cz0YVgP2JS+9IjN
-   RClNVu4i6r//ZNHxIUyBSGLyaOUTbx0t5CCBr82l3IM2Yn6attYOJw2Js
-   A==;
-X-CSE-ConnectionGUID: QF4MSPwXQ+m+iMWJ+W2ffg==
-X-CSE-MsgGUID: DlS0tGGZQpCKms20shUnzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="43030660"
-X-IronPort-AV: E=Sophos;i="6.14,265,1736841600"; 
-   d="scan'208";a="43030660"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 13:06:04 -0700
-X-CSE-ConnectionGUID: cs+1kr6VShuVyPbwE3Ut7Q==
-X-CSE-MsgGUID: 2HHFYUrfQumOA+E7tI8GRg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,265,1736841600"; 
-   d="scan'208";a="123201454"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 21 Mar 2025 13:06:02 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tvicx-0001ep-0Z;
-	Fri, 21 Mar 2025 20:05:59 +0000
-Date: Sat, 22 Mar 2025 04:05:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Hans Zhang <18255117159@163.com>
-Subject: Re: [v5 1/4] PCI: Introduce generic capability search functions
-Message-ID: <202503220356.59PxEhDx-lkp@intel.com>
-References: <20250321163803.391056-2-18255117159@163.com>
+	s=arc-20240116; t=1742587890; c=relaxed/simple;
+	bh=xsq4fMA9KErOYHpGLUUJOLylW+Xto3AugMKGT4drrrk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hv1spOftKL4jFrnviB17lFMMxqKpD5utbYrs9bkfex/bMmKAiZrec0oS2fdJ8orAhST1/ahQF6+3rMwBFwSWqL9s8TtE1uiwTpLb025b7lK5E9HvFytk6YnYRLcr/QSVT0fBI8xaK6V6kiiC6G7VJyPMkSriMENBpVKZfsxtau4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=nvSStd5E; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 353462025389;
+	Fri, 21 Mar 2025 13:11:28 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 353462025389
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742587888;
+	bh=ITpL14RmT7jWiNjR2GtSe0m1zpsnePBZKTOpKhGLiCU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nvSStd5EIPUCS1lGHYZ0GWov/8+OkkDrMUoX+9aDmf6yrWik1ywMI7mldvkqbHeqH
+	 BD+PFvVYsttpY06YF2fI0tZLy2OPKopSoMrBwtFLAqFMr9glMVJxlbaaSnhB4EMn7B
+	 Zxb+lEKFL/oz3QDhZbbZ02k7poz0h5+SF7i/ukzo=
+Message-ID: <bae5bb62-d480-46fd-837c-9267c0a30fae@linux.microsoft.com>
+Date: Fri, 21 Mar 2025 13:11:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321163803.391056-2-18255117159@163.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/6] Drivers: hv: Use hv_hvcall_*() to set up hypercall
+ arguments
+To: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, bhelgaas@google.com, arnd@arndb.de
+Cc: x86@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org
+References: <20250313061911.2491-1-mhklinux@outlook.com>
+ <20250313061911.2491-5-mhklinux@outlook.com>
+Content-Language: en-US
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <20250313061911.2491-5-mhklinux@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Hans,
+On 3/12/2025 11:19 PM, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> Update hypercall call sites to use the new hv_hvcall_*() functions
+> to set up hypercall arguments. Since these functions zero the
+> fixed portion of input memory, remove now redundant zero'ing of
+> input fields.
+> 
+> hv_post_message() requires additional updates. The payload area is
+> treated as an array to avoid wasting cycles on zero'ing it and
+> then overwriting with memcpy(). To allow treatment as an array,
+> the corresponding payload[] field is updated to have zero size.
+> 
+I'd prefer to leave the payload field as a fixed-sized array.
+Changing it to a flexible array makes it look like that input is
+for a variable-sized or rep hypercall, and it makes the surrounding
+code in hv_post_message() more complex and inscrutable as a result.
 
-kernel test robot noticed the following build warnings:
+I suggest leaving hv_post_message() alone, except for changing
+hyperv_pcpu_input_arg -> hyperv_pcpu_arg, and perhaps a comment
+explaining why hv_hvcall_input() isn't used there.
 
-[auto build test WARNING on a1cffe8cc8aef85f1b07c4464f0998b9785b795a]
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+>  drivers/hv/hv.c           | 9 ++++++---
+>  drivers/hv/hv_balloon.c   | 4 ++--
+>  drivers/hv/hv_common.c    | 2 +-
+>  drivers/hv/hv_proc.c      | 8 ++++----
+>  drivers/hv/hyperv_vmbus.h | 2 +-
+>  5 files changed, 14 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+> index a38f84548bc2..e2dcbc816fc5 100644
+> --- a/drivers/hv/hv.c
+> +++ b/drivers/hv/hv.c
+> @@ -66,7 +66,8 @@ int hv_post_message(union hv_connection_id connection_id,
+>  	if (hv_isolation_type_tdx() && ms_hyperv.paravisor_present)
+>  		aligned_msg = this_cpu_ptr(hv_context.cpu_context)->post_msg_page;
+>  	else
+> -		aligned_msg = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +		hv_hvcall_in_array(&aligned_msg, sizeof(*aligned_msg),
+> +				   sizeof(aligned_msg->payload[0]));
+>  
+>  	aligned_msg->connectionid = connection_id;
+>  	aligned_msg->reserved = 0;
+> @@ -80,8 +81,10 @@ int hv_post_message(union hv_connection_id connection_id,
+>  						  virt_to_phys(aligned_msg), 0);
+>  		else if (hv_isolation_type_snp())
+>  			status = hv_ghcb_hypercall(HVCALL_POST_MESSAGE,
+> -						   aligned_msg, NULL,
+> -						   sizeof(*aligned_msg));
+> +						   aligned_msg,
+> +						   NULL,
+> +						   struct_size(aligned_msg, payload,
+> +							       HV_MESSAGE_PAYLOAD_QWORD_COUNT));
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Introduce-generic-capability-search-functions/20250322-004312
-base:   a1cffe8cc8aef85f1b07c4464f0998b9785b795a
-patch link:    https://lore.kernel.org/r/20250321163803.391056-2-18255117159%40163.com
-patch subject: [v5 1/4] PCI: Introduce generic capability search functions
-config: arm-randconfig-001-20250322 (https://download.01.org/0day-ci/archive/20250322/202503220356.59PxEhDx-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250322/202503220356.59PxEhDx-lkp@intel.com/reproduce)
+See my comment above, I'd prefer to leave this function mostly
+alone to maintain readability.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503220356.59PxEhDx-lkp@intel.com/
+>  		else
+>  			status = HV_STATUS_INVALID_PARAMETER;
+>  	} else {
+> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+> index fec2f18679e3..2def8b8794ee 100644
+> --- a/drivers/hv/hv_balloon.c
+> +++ b/drivers/hv/hv_balloon.c
+> @@ -1582,14 +1582,14 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
+>  	WARN_ON_ONCE(nents > HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES);
+>  	WARN_ON_ONCE(sgl->length < (HV_HYP_PAGE_SIZE << page_reporting_order));
+>  	local_irq_save(flags);
+> -	hint = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +
+> +	hv_hvcall_in_array(&hint, sizeof(*hint), sizeof(hint->ranges[0]));
 
-All warnings (new ones prefixed by >>):
+We should ensure the returned batch size is large enough for
+"nents".
 
-   In file included from arch/arm/mm/iomap.c:9:0:
-   include/linux/pci.h:2025:1: error: expected identifier or '(' before '{' token
-    { return 0; }
-    ^
-   include/linux/pci.h:2029:1: error: expected identifier or '(' before '{' token
-    { return 0; }
-    ^
-   In file included from arch/arm/mm/iomap.c:9:0:
->> include/linux/pci.h:2023:1: warning: 'pci_host_bridge_find_capability' declared 'static' but never defined [-Wunused-function]
-    pci_host_bridge_find_capability(void *priv, pci_host_bridge_read_cfg read_cfg,
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/pci.h:2027:1: warning: 'pci_host_bridge_find_ext_capability' declared 'static' but never defined [-Wunused-function]
-    pci_host_bridge_find_ext_capability(void *priv,
-    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  	if (!hint) {
+>  		local_irq_restore(flags);
+>  		return -ENOSPC;
+>  	}
+>  
+>  	hint->heat_type = HV_EXTMEM_HEAT_HINT_COLD_DISCARD;
+> -	hint->reserved = 0;
+>  	for_each_sg(sgl, sg, nents, i) {
+>  		union hv_gpa_page_range *range;
+>  
+> diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+> index 9804adb4cc56..a6b1cdfbc8d4 100644
+> --- a/drivers/hv/hv_common.c
+> +++ b/drivers/hv/hv_common.c
+> @@ -293,7 +293,7 @@ void __init hv_get_partition_id(void)
+>  	u64 status, pt_id;
+>  
+>  	local_irq_save(flags);
+> -	output = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +	hv_hvcall_inout(NULL, 0, &output, sizeof(*output));
+>  	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, &output);
+>  	pt_id = output->partition_id;
+>  	local_irq_restore(flags);
+> diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+> index 2fae18e4f7d2..5c580ee1c23f 100644
+> --- a/drivers/hv/hv_proc.c
+> +++ b/drivers/hv/hv_proc.c
+> @@ -73,7 +73,8 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+>  
+>  	local_irq_save(flags);
+>  
+> -	input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +	hv_hvcall_in_array(&input_page, sizeof(*input_page),
+> +			   sizeof(input_page->gpa_page_list[0]));
 
+We should ensure the returned batch size is large enough.
 
-vim +2023 include/linux/pci.h
+>  
+>  	input_page->partition_id = partition_id;
+>  
+> @@ -124,9 +125,8 @@ int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
+>  	do {
+>  		local_irq_save(flags);
+>  
+> -		input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+>  		/* We don't do anything with the output right now */
+> -		output = *this_cpu_ptr(hyperv_pcpu_output_arg);
+> +		hv_hvcall_inout(&input, sizeof(*input), &output, sizeof(*output));
+>  
+>  		input->lp_index = lp_index;
+>  		input->apic_id = apic_id;
+> @@ -167,7 +167,7 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
+>  	do {
+>  		local_irq_save(irq_flags);
+>  
+> -		input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +		hv_hvcall_in(&input, sizeof(*input));
+>  
+>  		input->partition_id = partition_id;
+>  		input->vp_index = vp_index;
+> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> index 29780f3a7478..44b5e8330d9d 100644
+> --- a/drivers/hv/hyperv_vmbus.h
+> +++ b/drivers/hv/hyperv_vmbus.h
+> @@ -101,7 +101,7 @@ struct hv_input_post_message {
+>  	u32 reserved;
+>  	u32 message_type;
+>  	u32 payload_size;
+> -	u64 payload[HV_MESSAGE_PAYLOAD_QWORD_COUNT];
+> +	u64 payload[];
 
-  2000	
-  2001	static inline void pci_set_master(struct pci_dev *dev) { }
-  2002	static inline void pci_clear_master(struct pci_dev *dev) { }
-  2003	static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
-  2004	static inline void pci_disable_device(struct pci_dev *dev) { }
-  2005	static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
-  2006	static inline int pci_assign_resource(struct pci_dev *dev, int i)
-  2007	{ return -EBUSY; }
-  2008	static inline int __must_check __pci_register_driver(struct pci_driver *drv,
-  2009							     struct module *owner,
-  2010							     const char *mod_name)
-  2011	{ return 0; }
-  2012	static inline int pci_register_driver(struct pci_driver *drv)
-  2013	{ return 0; }
-  2014	static inline void pci_unregister_driver(struct pci_driver *drv) { }
-  2015	static inline u8 pci_find_capability(struct pci_dev *dev, int cap)
-  2016	{ return 0; }
-  2017	static inline u8 pci_find_next_capability(struct pci_dev *dev, u8 post, int cap)
-  2018	{ return 0; }
-  2019	static inline u16 pci_find_ext_capability(struct pci_dev *dev, int cap)
-  2020	{ return 0; }
-  2021	typedef u32 (*pci_host_bridge_read_cfg)(void *priv, int where, int size);
-  2022	static inline u8
-> 2023	pci_host_bridge_find_capability(void *priv, pci_host_bridge_read_cfg read_cfg,
-  2024					u8 cap);
-> 2025	{ return 0; }
-  2026	static inline u16
-> 2027	pci_host_bridge_find_ext_capability(void *priv,
-  2028					    pci_host_bridge_read_cfg read_cfg, u8 cap);
-> 2029	{ return 0; }
-  2030	static inline u64 pci_get_dsn(struct pci_dev *dev)
-  2031	{ return 0; }
-  2032	
+See my comment above, I'd prefer to keep this how it is.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  };
+>  
+>  
+
+Thanks
+Nuno
+
 
