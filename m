@@ -1,115 +1,177 @@
-Return-Path: <linux-pci+bounces-24346-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24347-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DC62A6BB9E
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 14:18:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72538A6BBBA
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 14:27:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E422116300C
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 13:18:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF10C189280B
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 13:27:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 814FA227EA3;
-	Fri, 21 Mar 2025 13:18:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B70622A7FF;
+	Fri, 21 Mar 2025 13:27:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O5f+qcoy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hKc0s5xA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2F81F4181
-	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 13:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6703D22A7F4
+	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 13:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742563094; cv=none; b=RLdsbcubzfY8NY0tn8EMbo/k2hCZqqN+Rb4Sw4GwdXtvhwje9FJ07pKrziG8rJjIoN5Uqp9XsESLJgIqeLDmipSHuUleawXT4V/SwSbq4u2fHAnKFdJBFPYJz8lxpD4IeLkALHi8qE4rVTKmXiRCedc7nuHsl++xx6X7fYJbfOk=
+	t=1742563659; cv=none; b=HKEIrOgiM2O1/bPw6bXnNh9vfFwe4Au28oYOCfGXvFTVyxlNe2XIMA7PIJR6jJYhDGauK9aC1AkMb8SY1tgfM6IWi+Nj9BjAfIu0vzXjMYoHk4VJ51LSRZli0hmNWFfTY8iZk8PWPQabuU1BIu0WO+ACk/iAZifz0P0Y8to9xFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742563094; c=relaxed/simple;
-	bh=NombQves/w/CJOPVeBM13rWw3dr3xC5H9bM41iFYTEY=;
+	s=arc-20240116; t=1742563659; c=relaxed/simple;
+	bh=AVxzUTP8MmtTvT1tmfx33iZtiXKdp2B3kyLrkrgPfL8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ePiKblR2pjWW8Ew6S9bnp2fFEnF7CdJqBioR3a6jUtnLDacuuPpVEpUUw/9AE4yuMHfLopRYcQ5JclOW6b0Zlj0ROX61JlcGi8JZflllcbJDap7JlJxA9kcwUUjMqKRrcy4ew004n+QpuvYcXEF/UORAeHZSvXTGSRiINgvNaWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O5f+qcoy; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-224100e9a5cso36710415ad.2
-        for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 06:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742563092; x=1743167892; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=slNX4cCQBrcrmq6L11WIT4xDIUcpyPfGH047qS7ymg8=;
-        b=O5f+qcoy6pn7s7T3wkUGym9dULmLucRCmI0DzO4803Kvao5C7hvtu170ckB8vMw+Q1
-         VIBzCvnMQpSr/vjM6e5NDflauLvNMiDEHkcJD5xNQPF3PPRFzlGbr/7p5gi59exE0d3D
-         ND9AT3vGBgWdsPYeX168WMUadfblHMCXUl9KOKOTgU5fbhdVQfrSiCYVqC8CEY4WxZ0Z
-         QBXRwxXuX8h2EJd91mQX5JZ9/CvpM5KOb9dJQ1Uq8yWkGM3locWwwJtNmyAKyPeIY6O+
-         ry1l+ArX61hlWLKOmB6wOtPRIPVUFzMQqCRbZ2Ao/CAhRcR5E8Ddo+TYLVfT9+FSe6Fq
-         AQRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742563092; x=1743167892;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=slNX4cCQBrcrmq6L11WIT4xDIUcpyPfGH047qS7ymg8=;
-        b=g+ty5shNWMyt1Oq3jVoK7Ipmq/Ozp9kN2kX6dgrFboHB6LSSSUBlmNRlhr8N0yuxDR
-         rU8+LQ9Pe22r4UOt/mYXmsd2hJVz/WjcrqFvN5AfxWnlTLB+aMcuOkb/9L7wpNJDPr68
-         A5kxv22PZgqHNcHi7WQb4SgfLrtrs+9fD/fB2dd7TDdqvopH1QLE9GBxWpGvGM82W2I4
-         00dLsQBI3D6M+NBUb4P5Ni5yznSYbkHBQDaRotnEmfE0lPcaOhb58e7rmLvfT+qYHg6K
-         RXgs7L1NBJnRTEVKL0drVJVkuouFr1haDA5Wv5tjHqZuz+JI4O0WmgQ/yMCSY1rDnrqr
-         ctnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpWZT6IgjsYGHPBpX2XEtKxNiZh1Fosc02fUMFGv7yV9N2zMUAs+l5eUbZ/tslM9HlUHNYrz2BJ50=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoG9t/zEGOSE6DQ4PqFt4uGvoYfoTdKIaz8pq6BvnoNvaJY94d
-	3kjXQ/PqlVGmJRRBWKKM6NkmKUNw0RJnqEJ3fjG8wXtEM3EsLlxxuClpHH9KhQ==
-X-Gm-Gg: ASbGncsaL4wveOyuTJbREdeSnQppA/2jG8g/8H7J5If0jQl7tXc8GouzsotbsIXsZFq
-	pmACFbgbDqCFgSt7bedKf2r8oqwSkNUY0cse16XWOAVaeR2Hb6E8yfwCTcq51QSn/eJgm8NUvql
-	nTbdSNv2DYTRPhRuhQBfIftPZHfdArepTMLO8Vzn1g1fRFulszkMUCRBDFMBoeZQkTddoqSPW4F
-	Myi5GBsRyNcGS/eJAGaHTnGpePKeVipTFMzlkpb4OdpGfqUGLwTzUowWgtlYZ1GwoRNp86iTBwO
-	33eE/K18Aq/AS5GVGjk1GojF3Sf4UzwDOZMiHHWfQeE3x+wyLFJt5vwHNsj/EeZDCEgA
-X-Google-Smtp-Source: AGHT+IF0+4ERgFeq9+JcDVf8/T/R07dw+GX864DNjg2M5q6sj+GkUQquyUh5pHbg8Y7H/8aIEkJYtw==
-X-Received: by 2002:a05:6a21:101:b0:1f5:8eec:e500 with SMTP id adf61e73a8af0-1fe42f08e54mr5667492637.9.1742563091943;
-        Fri, 21 Mar 2025 06:18:11 -0700 (PDT)
-Received: from thinkpad ([2409:40f4:22:5799:90ea:bfc4:b1d2:dda2])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af8a284888bsm1645367a12.46.2025.03.21.06.18.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 06:18:11 -0700 (PDT)
-Date: Fri, 21 Mar 2025 18:48:06 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [v4 4/4] PCI: cadence: Use cdns_pcie_find_*capability to find
- capability offset instead of hardcore
-Message-ID: <20250321131806.34xeuaw2itl6gilj@thinkpad>
-References: <20250321101710.371480-1-18255117159@163.com>
- <20250321101710.371480-5-18255117159@163.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KFSQFCk0CfozTFffAl2cTAvBeauxmCFtY3gKoyM3AyCBWdXPUNnmkCCQx5l10VXTRaTfDuBpESQUak+GeES2RNChV8cEqMvDl3kjdb21FX4bwfnVrYu7I9byvRjxfo/OuOdNku204vOzcrvZqqVxGnRat+PnyX83Pc6eRBSP+jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hKc0s5xA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FE77C4CEE3;
+	Fri, 21 Mar 2025 13:27:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742563658;
+	bh=AVxzUTP8MmtTvT1tmfx33iZtiXKdp2B3kyLrkrgPfL8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hKc0s5xATUY3asB6hnmBqq1o0JVXwgU/HEmr1howEc4mFbB8XfX/OsJ2JxYhozhXS
+	 asm3aivfwscKA2gtNKET+JEt0ZIJNu9MUkvjL56P98ZHeS+3Olod+FhMLD1PKVFGR2
+	 GJI6bcs3hhdzqgxCSKezXWsQiVvj3p+dtmhweiZNrsJ9B3IT1n9xA0KGZAcBpspM4I
+	 ent3zTDWFgmwYGKSM+G0wwQlp1gmaxho9OunOcNqfJmWd9VE+pyLdGcPGx/ri1CywB
+	 ZXUkdY/UnI/ZczdK7vAlYwB48xIRBpWG/cJ+a5y829MJ38I7K/v5aFQcrTDxLQaEXe
+	 W/w9abP46n/+g==
+Date: Fri, 21 Mar 2025 14:27:34 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: bhelgaas@google.com, kw@linux.com, linux-pci@vger.kernel.org,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH 3/4] misc: pci_endpoint_test: Let
+ PCITEST_{READ,WRITE,COPY} set IRQ type automatically
+Message-ID: <Z91pRhf50ErRt5jD@x1-carbon>
+References: <20250318103330.1840678-6-cassel@kernel.org>
+ <20250318103330.1840678-9-cassel@kernel.org>
+ <20250320152732.l346sbaioubb5qut@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250321101710.371480-5-18255117159@163.com>
+In-Reply-To: <20250320152732.l346sbaioubb5qut@thinkpad>
 
-On Fri, Mar 21, 2025 at 06:17:10PM +0800, Hans Zhang wrote:
-> The offset address of capability or extended capability designed by
-> different SOC design companies may not be the same. Therefore, a flexible
-> public API is required to find the offset address of a capability or
-> extended capability in the configuration space.
+Hello Mani,
+
+On Thu, Mar 20, 2025 at 08:57:32PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Mar 18, 2025 at 11:33:34AM +0100, Niklas Cassel wrote:
+> > The test cases for read/write/copy currently do:
+> > 1) ioctl(PCITEST_SET_IRQTYPE, MSI)
+> > 2) ioctl(PCITEST_{READ,WRITE,COPY})
+> > 
+> > This design is quite bad for a few reasons:
+> > -It assumes that all PCI EPCs support MSI.
+> > -One ioctl should be sufficient for these test cases.
+> > 
+> > Modify the PCITEST_{READ,WRITE,COPY} ioctls to set IRQ type automatically,
+> > overwriting the currently configured IRQ type. It there are no IRQ types
+> > supported in the CAPS register, fall back to MSI IRQs. This way the
+> > implementation is no worse than before this commit.
+> > 
+> > Any test case that requires a specific IRQ type, e.g. MSIX_TEST, will do
+> > an explicit PCITEST_SET_IRQTYPE ioctl at the start of the test case, thus
+> > it is safe to always overwrite the configured IRQ type.
+> > 
 > 
+> I don't quite understand this sentence.
 
-The PCIe capability/extended capability offsets are not guaranteed to be
-the same across all SoCs integrating the Cadence PCIe IP. Hence, use the
-cdns_pcie_find_{ext}_capability() APIs for finding them.
+What I was trying to say is that it is okay if PCITEST_{READ,WRITE,COPY}
+ioctls always overwrite the configured IRQ type, because all test cases
+in tools/testing/selftests/pci_endpoint/pci_endpoint_test.c that require
+a specific IRQ type, e.g.:
 
-This avoids hardcoding the offsets in the driver.
+- TEST_F(pci_ep_basic, LEGACY_IRQ_TEST)
+  will call pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_INTX);
+  before calling pci_ep_ioctl(PCITEST_LEGACY_IRQ, 0);
 
-- Mani
+- TEST_F(pci_ep_basic, MSI_TEST)
+  will call pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_MSI);
+  before calling pci_ep_ioctl(PCITEST_MSI, i);
 
--- 
-மணிவண்ணன் சதாசிவம்
+- TEST_F(pci_ep_basic, MSIX_TEST)
+  will call pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_MSIX);
+  before calling pci_ep_ioctl(PCITEST_MSIX, i);
+
+Thus, all test cases will still work, even if PCITEST_{READ,WRITE,COPY}
+overwrites the configured IRQ type.
+
+
+> What if users wants to use a specific
+> IRQ type like MSI-X if the platform supports both MSI/MSI-X? That's why I wanted
+> to honor 'test->irq_type' if already set before READ,WRITE,COPY testcases.
+
+As I said, I don't think you can have the cake and eat it too ;)
+
+Let me explain:
+If you simply run pcitest, it will execute the test cases in the following
+order:
+1) pci_ep_bar.BARx.BAR_TEST
+2) pci_ep_basic.CONSECUTIVE_BAR_TEST
+3) pci_ep_basic.LEGACY_IRQ_TEST
+4) pci_ep_basic.MSI_TEST
+5) pci_ep_basic.MSIX_TEST
+6) pci_ep_data_transfer.memcpy.READ_TEST
+7) pci_ep_data_transfer.memcpy.WRITE_TEST
+8) pci_ep_data_transfer.memcpy.COPY_TEST
+
+Thus, when you reach 6) (READ_TEST), irq_type will already be set, and
+READ_TEST will use whatever IRQ type that happened to be the last one that was
+executed successfully. That unpredictability doesn't sound like very good
+design to me.
+
+
+To me, it sounds like what you want is actually what is already queued up on
+pci/next.
+
+Because with that, READ_TEST / WRITE_TEST / COPY_TEST test cases will always
+call pci_ep_ioctl(PCITEST_SET_IRQTYPE, PCITEST_IRQ_TYPE_AUTO);
+(If you want the behavior that the READ_TEST / WRITE_TEST / COPY_TEST case
+should automatically figure out which IRQ type to use.)
+
+If you want to use a specific IRQ type for READ_TEST / WRITE_TEST / COPY_TEST,
+it should be trivial to write a new test case variant (or new test case), that
+does SET_IRQ(WHICH_EVER_IRQ_TYPE_YOU_WANT); (depending on the test case variant)
+followed by the ioctl() for the test itself.
+
+This determinism is not possible if you move the "automatic IRQ selection"
+logic to be within the PCITEST_{READ,WRITE,COPY} ioctls. (As this series does.)
+
+
+I'm travelling to a conference this weekend, and will be busy all next week.
+
+I've sent two proposals, what is currently queued up on pci/next, and this
+series.
+
+As you might guess, I think that IRQ_TYPE_AUTO is the most elegant solution
+with regard to the existing design.
+
+But, if you want to make changes before the merge window opens, feel free to:
+-Take over this series; or
+-Write your own series on top of what is on pci/next; or
+-Keep pci/next as it is.
+
+
+I'm really (honestly) happy with whatever solution, as long as we, once again,
+handle EPCs that only support INTx, or only support MSI-X.
+
+(Because ever since your patch series that migrated pcitest to selftests,
+READ_TEST / WRITE_TEST / COPY_TEST test cases unconditionally use MSI, which
+is a regression for EPCs that only support INTx, or only support MSI-X,
+which is the whole reason why I wrote this series.)
+
+
+Kind regards,
+Niklas
 
