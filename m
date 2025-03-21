@@ -1,50 +1,50 @@
-Return-Path: <linux-pci+bounces-24415-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24416-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D16BA6C58E
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 22:59:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C095A6C595
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 23:01:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0150317E10B
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 21:59:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 09A9B189F55B
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 22:01:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4419231A37;
-	Fri, 21 Mar 2025 21:59:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2C801F12E9;
+	Fri, 21 Mar 2025 22:01:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aM66dTVt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="awNp+hwS"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD981E51FF
-	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 21:59:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7E41F0E3C
+	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 22:01:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742594380; cv=none; b=ZZ1+3L5oT1lCbG3XxRlUtJ7SAfW3UELS66d7TyPiAg6ewXCt4QXoCBjClVpObgSfJVCN+K+pjwlZ7oJZm+SPzL4U61eHn9whzGdSCPo2i5FLS5Qf58qq3zJ40R3NFSNDvlIJDAOwLb06Vim0j4c4FCQqHyFQwKqnc84ZwI4DAoo=
+	t=1742594477; cv=none; b=MpvbQOJ4pCD+e4qRHxI/2VExJFy27NsVe0ztfpGbBGgS65r+djFIawywcI5ReQZEnGE4D6lFFmY6pTtA8eMKIQD0qVHbRp5TgYl+2q+zOPhpWzcw4hKJ3k5IVvUNbUyZI0OreBaZpGzqd6HD6d0V23UtQmFVKpC+/R4mjVUZv4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742594380; c=relaxed/simple;
-	bh=n1nWlc2bQ5MRB7rW8pyqi+QIIEJq1D0GaRdmiBdTUQ8=;
+	s=arc-20240116; t=1742594477; c=relaxed/simple;
+	bh=GcsHBO4WXUZHEG2rucSJVBBxP58q5GuPErZu/SwFWOI=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=R8+NDnLDD0qhEYz1Uhsj1bLOALJju0bF9geU3lrI5XAZ69B+S+ejVSO5m3p9GRjQJjs9iAdQ207CMqjDs3NGaCGOt2m1jhodkXvIBBQPwUWkZ/FtY6MXwH7UNK/H6jfiUCbV7d9uOry+P+o4zxIHDIv3x+9Wz6wsOlj5Wo4vUDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aM66dTVt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05BC1C4CEE3;
-	Fri, 21 Mar 2025 21:59:39 +0000 (UTC)
+	 Content-Disposition:In-Reply-To; b=mblL1XfVq9VagB6429voWbDzACc1e0azLyEHd/Aqbeeh7Weaw75o4D1d1I5VRk4raGSC0KabjRG/RNf20ttj9ls+ayB43Csry7c30LsBaWysp3W51lCIydgcGGyXoZpR3oJ9uW9KCKW196BVZyMmkPTXhGRqH92HulUK1wOg3Os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=awNp+hwS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31729C4CEE3;
+	Fri, 21 Mar 2025 22:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742594380;
-	bh=n1nWlc2bQ5MRB7rW8pyqi+QIIEJq1D0GaRdmiBdTUQ8=;
+	s=k20201202; t=1742594477;
+	bh=GcsHBO4WXUZHEG2rucSJVBBxP58q5GuPErZu/SwFWOI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=aM66dTVtRpnUnwQQDFsz/Hg2OMl9P6gIL8xYz2QHDXB16wIdHizYh2iGqBNbgjYf5
-	 KWrXFFAi00iedIOG4XnMhQmrbaSXi4sqzAc80RfVhyjHnwCTRLpEW3koXN4LJ5j69j
-	 XqLbapofCRgdOTtAXixfr3fWhLzFA4mX0g3Yy5ifnVp7oD7QEiTfRwd7EtCTzwI0Qn
-	 6LLHDGCM57nr3VhqG3hEFtn++37xl7jFBfTlNvPvsn/vBW+AxdUYdTuNUEhecfmvfP
-	 5jSC5ky7OGPyoeKGiEtzxF8HPx2O372N3RmGoFfNM5V2QyPVZ3zy7IjdpfMy9BKKWb
-	 nM082PI8en5Ig==
-Date: Fri, 21 Mar 2025 16:59:38 -0500
+	b=awNp+hwSrV9dWXyC/RxhlWYh8Cz8OxVo8aceLIWtPguuEfW8byJZuLePe2OXvqG58
+	 dfPNm7obx4xg8dUQZ8wCeOR9dkjXdD1wHhC2zzKq7aJzbl1kF6B5CJrNg+jLdl026R
+	 EZDH5arr38lQPno2C49sUyWOIGP3DaqY4lNpMMqJpzd/4wrg43T6WIBh9P19q3+u53
+	 yRxzxuAgybhRLKCJ6x1lZfVCQAwOReCZKB74MQx/GuQMQaQsiHRkL+ioqIebft+SFV
+	 es+fQZkbEabCOW/72nPqWIZfYSOnk8ImPxLjZQ4di+JSBdUwrOhSZlib7UC+8eeX9k
+	 JNd1t8+wdhdtw==
+Date: Fri, 21 Mar 2025 17:01:15 -0500
 From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Jon Pan-Doh <pandoh@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
+To: Jon Pan-Doh <pandoh@google.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
 	Karolina Stolarek <karolina.stolarek@oracle.com>,
 	linux-pci@vger.kernel.org,
 	Martin Petersen <martin.petersen@oracle.com>,
@@ -53,53 +53,32 @@ Cc: Jon Pan-Doh <pandoh@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
 	Anil Agrawal <anilagrawal@meta.com>,
 	Tony Luck <tony.luck@intel.com>,
 	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
 	Lukas Wunner <lukas@wunner.de>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Terry Bowman <Terry.bowman@amd.com>
-Subject: Re: [PATCH v4 5/7] PCI/AER: Introduce ratelimit for error logs
-Message-ID: <20250321215938.GA1170366@bhelgaas>
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH v5 5/8] PCI/AER: Rename struct aer_stats to aer_report
+Message-ID: <20250321220115.GA1170462@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bfd75767-7743-47d7-939e-f0c5204ee647@linux.intel.com>
+In-Reply-To: <20250321015806.954866-6-pandoh@google.com>
 
-On Fri, Mar 21, 2025 at 02:47:36PM -0700, Sathyanarayanan Kuppuswamy wrote:
-> On 3/21/25 12:24 PM, Jon Pan-Doh wrote:
-> > On Thu, Mar 20, 2025 at 6:00 PM Sathyanarayanan Kuppuswamy
-> > <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
-> > > Should we exclude fatal errors from the rate limit? Fatal error
-> > > logs would be really useful for debug analysis, and they not
-> > > happen very frequently.
->
-> > The logs today only make the distinction between correctable vs.
-> > uncorrectable so I thought it made sense to be consistent.
+On Thu, Mar 20, 2025 at 06:58:03PM -0700, Jon Pan-Doh wrote:
+> Update name to reflect the broader definition of structs/variables that
+> are stored (e.g. ratelimits). This is a preparatory patch for adding rate
+> limit support.
 > 
-> You're right. From a logging perspective, the current driver only
-> differentiates between correctable and uncorrectable errors.
-> However, the goal of your patch series is to reduce the spam of
-> frequent errors.  While we are rate-limiting these frequent logs, we
-> must ensure that we don't miss important logs. I believe we did not
-> rate-limit DPC logs for this very reason.
-> 
-> > Maybe this is something that could be deferred? The only fixed
-> 
-> I am fine with deferring. IIUC, if needed, through sysfs user can
-> skip rate-limit for uncorrectable errors, right?
-> 
-> But, is the required change to do this complex? Won't skipping the
-> rate limit check for fatal errors solve the problem?
-> 
-> Bjorn, any comments? Do you think Fatal errors should be
-> rate-limited?
+> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
+> Reported-by: Sargun Dhillon <sargun@meta.com>
 
-I'm inclined to not ratelimit fatal errors unless we've seen issues
-with a flood of them.
-
-Bjorn
+What did Sargun report?  Is there a bug fix in here?  Can we include a
+URL to whatever Sargun reported?
 
