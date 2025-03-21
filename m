@@ -1,284 +1,306 @@
-Return-Path: <linux-pci+bounces-24337-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24338-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47CCEA6BA7F
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 13:18:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5641A6BAD8
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 13:40:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 592A419C696C
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 12:17:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D3DC318937F0
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 12:39:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15913227BA2;
-	Fri, 21 Mar 2025 12:15:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2980E226CF8;
+	Fri, 21 Mar 2025 12:39:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uJ66fLs7"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UI8J5aiW"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2080.outbound.protection.outlook.com [40.107.244.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5795C227599
-	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 12:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742559319; cv=none; b=msor1QntUw2m6BDCespPwiHZuzzplLiapWxZCZdkpPpl7AFEAL/9FILGGU81tir0Jm20LPczur2IIkGLeBMY6RBnd9N5rMmW5XAFxBW5MRBBGMi1ldKZu3JdwHyvPNHFaYKVy/lyUDQrxhSlBNRQ/sN1ze+tCjeqk+JCsQO6wWs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742559319; c=relaxed/simple;
-	bh=jdxnifYvhpOegrtIsz4x1N9dIvwhi//1Du1rbtxiZ2w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=pn2D0iNRzV7t+UhbeyhfICA+5qVFsIF+34zfxPtTdf/JERD+f96oivINxyIoHXs1jz53kt/BaAMCdUtZa+iYIC9RKsRQewG8m2S7uZNMJUK69f0MUyGsQ1Rru9gChNREMgsIurFRPgKNy4RpJNXp04RXc5ml1g/GIkzvijZoirY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=uJ66fLs7; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250321121514euoutp0227898c65b51ea4038adede19bfed4d6c~u0HbYU76-0264602646euoutp02R
-	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 12:15:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250321121514euoutp0227898c65b51ea4038adede19bfed4d6c~u0HbYU76-0264602646euoutp02R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1742559314;
-	bh=MHO6SdbNFs1J7nO+41CHx9xqMsSu4tdXH9vnU5Jzzo4=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=uJ66fLs7Obilq9mId7yKjwF50346mYhfbEOPUZxyOKN8Sh5Pn9OhQnju0XagfuJMS
-	 jH6Cm7ik0xZAj9fwzXRS7Iz6nGn4plED88CovnWjXA8BxbPtxi6FbzjDr6IL4+0k2L
-	 +bFl6wNnY1LtrhnzNhe+HGyaJY+PB5PZVwUJY7KM=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250321121514eucas1p1ee13ac2a07d447599b9c7c32b594ecc0~u0Ha9Jj1p0634006340eucas1p1V;
-	Fri, 21 Mar 2025 12:15:14 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 31.10.20821.2585DD76; Fri, 21
-	Mar 2025 12:15:14 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250321121513eucas1p2c17d32842a41ad058b914bf3d9ff7512~u0HaTDMvC0313803138eucas1p2b;
-	Fri, 21 Mar 2025 12:15:13 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250321121513eusmtrp18028559e7e8c3a8d821562fa4b64ad93~u0HaRrSkW3246232462eusmtrp1h;
-	Fri, 21 Mar 2025 12:15:13 +0000 (GMT)
-X-AuditID: cbfec7f2-b09c370000005155-cc-67dd58525c00
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id 67.C1.19920.1585DD76; Fri, 21
-	Mar 2025 12:15:13 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250321121511eusmtip23c2fe1a430242457999298218d0d3fd7~u0HYaApUO3026630266eusmtip21;
-	Fri, 21 Mar 2025 12:15:11 +0000 (GMT)
-Message-ID: <ace3a01f-4700-4455-ada3-0f88fc8ea4cd@samsung.com>
-Date: Fri, 21 Mar 2025 13:15:09 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644D1226545;
+	Fri, 21 Mar 2025 12:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742560778; cv=fail; b=U1nYT8yJ57XxM/afnO4jZ8ErsV7M6RjkqGvwFn74rQ/AmJZ4YaofXq+ibYipX8Y6TcNpCB811YD6wObXk+vBZnPtXRD89QM0YWekF8LGrIMVEh+XYWUEkEJRkcgVBihfiFurMmTkMJWTBVYo/AtOdnYSZ6qXqRqBAYsFlHCr5Bw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742560778; c=relaxed/simple;
+	bh=5WP/Y5hiNzoPLDcpKfxWmrD0YJHaYI7xvdoLdF1CvFY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Dcszo3QaJ9dNLM1tTNj6uvvoawQzuiLcp5StiPzU76rkCuCjqAhhAaTmXq5U9kYxgqUdywf38b/tBAvZYBnTK2rxQg8F/frMZWsfXfgarUR0MNuQ0TvjGAyM/8ux37mZUPSyGEW0PQxSNWsoGR6gmzuRPexXRaBidr1oT6ImcO0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UI8J5aiW; arc=fail smtp.client-ip=40.107.244.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lRJfmCeN+llv7bQqmlNmqSzCCx1giPt/YlB+yy3vjAW0cgdgMbZJnDGhlec8iFZuIhjxFkHrecDPakZz1Y6hoZUaNs/hdxi+E3AdkxVz+o4HpZYIWlGYTV2hc4atv3n1ZpHpkqnwdmLT7j3xYQd7ijMjjcqhPV+1lsooXsdNbzE/3CnPpgLC8utq6G50aXcYCDoqa+0CBIqH5ofgNf9dyH6s1aJtDf3OHQ/kbPFebJyh3CNigctkUzSt/OtiEdxCf+2mzq4mZsEBTlVEwEJ3ev3F6BX3h1ukribW7UdFr266mWsilfdUQ8AS6nClEr1XnurviIwED5uZI5aseZVKdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eKlONNFDxdIqE8Ndv1QE2geADDmJ/yVzyqFOJNCFtEM=;
+ b=EWx7CH+65EfBRLWNvgzcAZi0BaLygCIrCkkwO8MDRuWMJZ6XfzFGYWIUE6pN6o6hnRVGE60Q49ikTxdOAUOeQJ8YdYuC2qw/DU7S3IuJIcohw6vaWx7pIm4g6Q+WZ/TpuHn3BaWmgTqcXyeZ4Q5/yArrzmRbCK/XVW2zDeO7xtRV7orTmBZOZoAdVPxcVntCoFT4UgKyjw7pBj7LR201hN59Z5liawDaNfJ7ybqd2AF1jeZSxlaXvNYJtgoSmA+f+JNLWx0vOyOI9K7CJsvrvJyEwN8FYeizcMCvTdohI0BLEu6OvRWlyCQIwMft/qwxDPcuRm4OnVhDDU/KBLVaAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eKlONNFDxdIqE8Ndv1QE2geADDmJ/yVzyqFOJNCFtEM=;
+ b=UI8J5aiWtftlE/48mivTUwt1cGIP5DHfsurpVkGJywTIUx+9FcgXCzkkFAjxqkIvX3It3h0E/8EtcE6lK7XnecRrho7GdfVertCFZkn0Fqt48aogkqJAvdnx5IxVcd26lOE7t4LRAr2g1ZTsykZTBAJgRh18itUYJ6RQFtCy0zM=
+Received: from DM4PR12MB6158.namprd12.prod.outlook.com (2603:10b6:8:a9::20) by
+ SJ2PR12MB9116.namprd12.prod.outlook.com (2603:10b6:a03:557::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.36; Fri, 21 Mar
+ 2025 12:39:31 +0000
+Received: from DM4PR12MB6158.namprd12.prod.outlook.com
+ ([fe80::b639:7db5:e0cc:be5e]) by DM4PR12MB6158.namprd12.prod.outlook.com
+ ([fe80::b639:7db5:e0cc:be5e%4]) with mapi id 15.20.8534.036; Fri, 21 Mar 2025
+ 12:39:30 +0000
+From: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
+To: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "manivannan.sadhasivam@linaro.org"
+	<manivannan.sadhasivam@linaro.org>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "cassel@kernel.org" <cassel@kernel.org>
+CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
+ Michal" <michal.simek@amd.com>, "Gogada, Bharat Kumar"
+	<bharat.kumar.gogada@amd.com>, "Havalige, Thippeswamy"
+	<thippeswamy.havalige@amd.com>
+Subject: RE: [PATCH v5 1/2] dt-bindings: PCI: xilinx-cpm: Add reset-gpios for
+ PCIe RP PERST#
+Thread-Topic: [PATCH v5 1/2] dt-bindings: PCI: xilinx-cpm: Add reset-gpios for
+ PCIe RP PERST#
+Thread-Index: AQHbmlZS72oOjqZzdEGn3rPtbJPMDLN9hxRQ
+Date: Fri, 21 Mar 2025 12:39:30 +0000
+Message-ID:
+ <DM4PR12MB61582AD96A788BD9544D973BCDDB2@DM4PR12MB6158.namprd12.prod.outlook.com>
+References: <20250321114211.2185782-1-sai.krishna.musham@amd.com>
+ <20250321114211.2185782-2-sai.krishna.musham@amd.com>
+In-Reply-To: <20250321114211.2185782-2-sai.krishna.musham@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=6bdfacac-44f7-49cc-9e28-591ab5d5fd5e;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-03-21T12:36:33Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM4PR12MB6158:EE_|SJ2PR12MB9116:EE_
+x-ms-office365-filtering-correlation-id: a6567510-8f7f-4869-367c-08dd68756d08
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|1800799024|366016|921020|7053199007|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?3zCqWN82bPpWjr9eSAnq/C3JnOlP9fkkLElm5db1yNRi0zAsbAMXvycOYm2r?=
+ =?us-ascii?Q?ZPG4eeVU/GFkYOtEh+Ik2plu9GjGLCdzkmthkIBFDUQSfklp3OO034WxfxrC?=
+ =?us-ascii?Q?v29m0gHNDxBH3IuC1AvGoCqtmIymRQh118mS/wjR+0Z/SY7JRjVkQsXlvE4G?=
+ =?us-ascii?Q?oDtQf2NxH+R2rtPCzKwuhoudKXuGzZ5zmOfzsjFHvTRmk8rQeG9JPOwkOjPY?=
+ =?us-ascii?Q?fmpV5ORijkbHMO7KBP8Fjfk9H46sbEgnOyESxhljhSHIMODSz/gYU3NnyYco?=
+ =?us-ascii?Q?+cBx/SmJ59eAoYTf78L8prvFEQtqtzKtoWm1BXw31jpgxI4ofRShpfcVD19t?=
+ =?us-ascii?Q?TTo9abi2anO6RzNDTqzYTMpOwKy2uiF/STRbB/tSOIrqwaj3DCyonwb9TQBq?=
+ =?us-ascii?Q?AoInaQvg3bO8IokMYaR+l9OYsqH5RunX8mkOXG97YbXHwU6XEd2hLxQNZ5YJ?=
+ =?us-ascii?Q?9pfMZ/pBZ3jdkrgFIsUl/mj2PjgBodizecSXmHOn3CIRJEZI8F4WzQciXDrt?=
+ =?us-ascii?Q?Ca986VNYIr16U0+5LyIVSApr+ceLSSVMEPb6P3gRElGG7JZvPx4xvyGvjBaj?=
+ =?us-ascii?Q?qRZ8Pb8yWoqAp02C+y+lFY9Ep8yyaFrfiuBFnJapBOTpqT0eqrbS+f0bO7K8?=
+ =?us-ascii?Q?SnOPhuA6Ku2myfeZKw1SERlq63/ccXJKqCRR3cmkzqr59cg8hsPXtICUWILs?=
+ =?us-ascii?Q?YhjZaT0IoZ/pLp6KF3ZkWYjfCyG9sEgVJwCxVmtec2LXNdR1JQSl2lVwH4v1?=
+ =?us-ascii?Q?8BRFoJQkbySTLGECxptEIR9pt4O4VUA3kp6OHKLHwLBiEqeNCe25C9JNXZaQ?=
+ =?us-ascii?Q?3Bqe3D0rt+dNwmireO0RJqF1AR6ItYXABK8CMlFtqie/qD0Xc68EtClzxJaT?=
+ =?us-ascii?Q?t8x5eO63lKndTKl3otE8GGYf+HYWMQCb1SAXvG4vHxHHPj2ZtSASXQ+J+l05?=
+ =?us-ascii?Q?7bV7gDuVtn63CwbxXbQGnbgPuiiHm9JE4inWO5lTVuuOREwto+h3VJivOZkh?=
+ =?us-ascii?Q?a4Af0zbe0nyHYz8mO1MqOog3YRLlXfgh9nfDfYOBxY2Lo1iHHG7JD9K8P+ra?=
+ =?us-ascii?Q?leE6jEMhUFYAD/BA5Qy8fzkc5MBQ1JGgi11bbHWIKGC51Rm1i+RlSvcNMXIt?=
+ =?us-ascii?Q?+tgcR7DyhWUtx/2DXHMJ8EhRHOLJgpLhAj5d7s7LnorfjtmG+mC5IujuyxBl?=
+ =?us-ascii?Q?yxvuNz9VHB5OT1cCIIlJXUQKcfthpjSwnBHYaUn7R0szcSKUqxcwMV2A8sux?=
+ =?us-ascii?Q?7zZNlXO+X/cVBoh86I5SOxKSbwmnKT1Fv0FuHf+OK8xbNQNCZu6tLInVHcvJ?=
+ =?us-ascii?Q?RKQs95teY4inUbhU+mQ6G0w1R82qFMCTw6UeEWP8G5XnS09yGqotToS2ekn6?=
+ =?us-ascii?Q?qsQcdvrLZ4aBV25OFJmlZxCIzZpVQxElWKJiZK0ix1rwu5QkPedRbvH7GRoX?=
+ =?us-ascii?Q?UtQeaSdwCIS+0IY03q/pxXz+R/fCR/00diqZPNMQkddVwW4Sz7pnCw=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6158.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(921020)(7053199007)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?7XD61ZADw4Ir7BZkdkakGbOjkSTLHYl51FJ1KFAxQAeYmAobIRbVZbXhdHBP?=
+ =?us-ascii?Q?cJIREZ0XnTF0Gyl1rPV+VqVkbjTmngLFS1yCJnnhHjhIigsSOfTX+lV6ujM8?=
+ =?us-ascii?Q?CrRySHkbso+1y7QWq3VejXhG39Huf4wiwEkIMhHFiBFtA6XLuQ3SW27ci9tb?=
+ =?us-ascii?Q?K1CM+NpLlmyRdhiqzpA2SOK+vs0FJ7NNwyzpOxXGY7lVq+5YU+sjH+/HlGO0?=
+ =?us-ascii?Q?2O4as3wsNdCZaRoCxMpnwR+KrgdNafZZnE08jEJvqzuFsPKz6Wc0jRnE0SeP?=
+ =?us-ascii?Q?dhp/CyaFrhFsd/VSMv+4R7bbJPwiZ4H1Nh80C7fwVbL5QIFFPCk3ftgNDPco?=
+ =?us-ascii?Q?jqVUu4n8IKeAwTBkWBQ1Mc5tZnpOCysCcrYUaV76DdtN1j3aeICaYTGGzuzI?=
+ =?us-ascii?Q?+zpgDAnRcZlwW80fEFGUDJuNrFrkFFc4vrsvA9QdybbOLQ5ZGpARi+6bWr0N?=
+ =?us-ascii?Q?GCG0iNZzyRFCwHRmVCgpclRp0bsRZVhxHsWubJO9r2947ftke5j1y3KK16PI?=
+ =?us-ascii?Q?l2KC4oT2FKAX1uFb9Og0Lmn4ZxoNmiZcerihO9q5cdEM3FwI846RQrpCZuAY?=
+ =?us-ascii?Q?xAftPBfIT7nTVycmktRLBQ6asEWeqS8naKdk8pUJ1GLb2BsaeOUAXA0Lhbmn?=
+ =?us-ascii?Q?MUTIeryPBZb3MMwteCZlP4aHePasO6lOS6vefR9SaC4/HP6E02bU2kWyJlWW?=
+ =?us-ascii?Q?Yok+DkNUHYTyuSb9lJWQMTy1BcozKhdgaRvmKMtxonyVR6gfIpRRmUtWKUb8?=
+ =?us-ascii?Q?fwaA7jwnONTe0fmqYrNOys5miI85P2QfagkaVFqxB2qKuBv2Ff5MmqYDa+cL?=
+ =?us-ascii?Q?yfwgA7//D8cRNy1IgAXUYkOR4MtOEU7ZOZG0kR4ouVCNMDnY88oxoPSuGYtT?=
+ =?us-ascii?Q?vyZwAhwlpwS5I0Jp+fGb0efANeZ97KJgDVixogDWU7gsGRaDRqD+GnUK/T6n?=
+ =?us-ascii?Q?Zuf7OUaIlFUzzp17ls+Ahkll9i9FbMv718RVy8hq/gedXnq31Ucm+TtFBYJG?=
+ =?us-ascii?Q?vY/757lbT15y32FGQ3TcX/9nAkX7zPPaNm5F6eBiKyjimP9J5Mnmmc5MV3bC?=
+ =?us-ascii?Q?5VY0XM3fd7nLY/qIjh846Mo/apF/rIAcpr6P/NrHHv8yANkM5dRxiCAGhWR6?=
+ =?us-ascii?Q?ZPcFYI7F+Cz7LZm48pkVzlYhF8Xb/rUSmxFd6GhidgJArRSJXXX7KIYBMgaW?=
+ =?us-ascii?Q?iexvCNUkj9rxFvjWhAvuEuDj8VSEt35KzwbuO7NcB4keS6HbUB2+lJ3gR44P?=
+ =?us-ascii?Q?2XgoWiCfHVUYXmUjrPOfDpy0nmcKjUpU93rTsepxyP/am+r6hPeRUlERhsjc?=
+ =?us-ascii?Q?+WNtKspA65neCOt/sfM8FTvQ4gSFGiYMFO9ntgSqydgL75bNEgoGUdO08KBB?=
+ =?us-ascii?Q?CgMM0Q7ENf8jDXTk2qaKfZ7ILNrG320NYyVgqiSFWznzQFhCpk1O6NyLgXYP?=
+ =?us-ascii?Q?bq9mBBzi0DIuJyH26YjJ6oWcw5VUMq2a+IU7FnB7v/AY2IlnA5r/iLqhhoH/?=
+ =?us-ascii?Q?jC5KHXtaSQOakph8al8PSnsjvu5Q8RdVAMNRebO3SAcxR1WZITXOOIDYjaPw?=
+ =?us-ascii?Q?Jc1Arv8fMHyrExv6V5Q=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
- path
-To: Robin Murphy <robin.murphy@arm.com>, Lorenzo Pieralisi
-	<lpieralisi@kernel.org>, Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla
-	<sudeep.holla@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
-	<lenb@kernel.org>, Russell King <linux@armlinux.org.uk>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, Stuart
-	Yoder <stuyoder@gmail.com>, Laurentiu Tudor <laurentiu.tudor@nxp.com>, Nipun
-	Gupta <nipun.gupta@amd.com>, Nikhil Agarwal <nikhil.agarwal@amd.com>, Joerg
-	Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, Rob Herring
-	<robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
-	<bhelgaas@google.com>
-Cc: linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Charan Teja Kalla
-	<quic_charante@quicinc.com>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <d6cd5e64-e2c0-4c6e-9c89-ce8b3e0a4a5b@arm.com>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0xTZxj26zk9PdS0HgqOD9xG0kQHmxYZunyJzMmi2XGXhOCWEZc56zgp
-	ILe14PAyRlYQ7NgGVlQKpc3A1WgDtDBXGi6jNC13GUUgXMZgMBQGUqnEOdBZDtv49z7P+7y3
-	Jy+JiXREEJmQks7IU6RJYoKP33L8dXtXTOyYbPfqDwSq/CoezV1eJJDO3sNFyopqArXUl/DQ
-	Yw9CF0preMhT2Imj+ol5AhmavgPI/PsAF7msZQTqLncSyFbcCFDOSg6Orlok6OG9yziq1iUj
-	racYQ08bLDzUsjjFRSrb6rO2pmEMGTosOMoZ3XsgkJ5qKefQuX2rBG0sNwLaNfALRtdrxni0
-	3pxB59jnubT5xgWCbtYaeXRt5Zf03doSQJsWLBy6qCGLXjK/GC08yo+MY5ISTjHysP3H+fGD
-	mlZeWm94Zn/REzwb2ENUgCQhtQcuKM+oAJ8UUdcBNDm6OCzwAGhp6SdYsASgNbcZUwGftQqX
-	Xr+eMAD46OvldeAG8HzNAu5VCaj9sLwvj/DGOLUd9toGeCzvC9tLptY0W6lgOD58dY33o47A
-	BdUk8Dbyp8xcOJjbxfUCjJoGsObO0FonjAqAw1M6jjcmqHComlet8T7UPjhw3wxYTTBU/liK
-	eYshpeVDm2mRxy5+EKpHZrhs7AdnnXXr/POwU12AswV5AOr/HuewoBDA7JlhwKr2wdGex4TX
-	NIwKhdXWMJaOgqqlYoz1UgiH5n3ZJYTw4q0r67QA5p8XseodUOOs+m9sS28fVgjEmg3GaDac
-	qdlwjub/uXqA3wABTIYiWcYowlOYzyUKabIiI0Um+TQ12Qye/XDnE+cDC9DOuiU2wCGBDUAS
-	E/sL/PNHZCJBnPT0GUae+ok8I4lR2MA2EhcHCL5vzpWJKJk0nTnJMGmM/N8sh/QJyuZsr+RE
-	3QykWj9WGE+dMG6JeNB29w4d2hE7bzzk2LW32pkeM9k5veSOiyx4/7nJbh/fkvYeUv3bztdc
-	jqbG1ar2CM9bb5/9ItF8752J1ANDh7c2BkWIrMcSihIKLwnmNg+oNte8/ub0TQCVJ8u0Ev/E
-	0baK3aPCn7r28F6KXF4OfSVv08ziwysFrcdL+/saVAfxsu5NcQ71ubA/Plv59aI+OiT/bKDb
-	9YLpgxGy6ZunIVW3pYnqa/bZrK4ThqzwIsN7FRNRf0ZH1V6HTY++Pf2R8NWYmXc70rDgQ207
-	75ubKpZi6yK2uD9sMzReOzcWZLdu+7nuDZ1f5qD46LHxuUJlbNXKZOZhMa6Il4a/jMkV0n8A
-	DUX1DjIEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEKsWRmVeSWpSXmKPExsVy+t/xe7qBEXfTDVZvl7JY0pRh8XraBzaL
-	+UfOsVo0L17PZnFw50x2i19fLCw6Z29gt/gy4TSLxc6Hb9kslu/rZ7TY9Pgaq8XlXXPYLM7O
-	O85mcWjqXkaLlj8tLBYzduhZfH05jcVi/fxci7lfpjJb/N+zg93i4IcnrBZdh/4Cjd14i9li
-	+akdLBYtd0wdJD2eHJzH5NF66S+bx5p5axg9Ll+7yOyxc9Zddo8Fm0o9Wo68ZfXYtKqTzWP/
-	3DXsHpuX1Hu82DyT0WPjux1MHhP31Hl83iQXwBelZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdk
-	YqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl3F91mH2gguGFVcm/mNpYDyi0cXIySEhYCJxecEC
-	ti5GLg4hgaWMEkt/HWeESMhInJzWwAphC0v8udYFVfSeUWLNsZlgRbwCdhLzLrWzgdgsAqoS
-	Fw5dY4eIC0qcnPmEBcQWFZCXuH9rBlhcWCBY4l3XI0aQQSIC21glrs3byQziMAs8ZZT4cv4Z
-	K8SK/SwSZx8vZwZpYRYQl7j1ZD4TiM0mYCjR9bYLbB2ngLXEtfebGCFqzCS6tnZB2fISzVtn
-	M09gFJqF5JJZSEbNQtIyC0nLAkaWVYwiqaXFuem5xYZ6xYm5xaV56XrJ+bmbGIGJZ9uxn5t3
-	MM579VHvECMTB+MhRgkOZiURXpGO2+lCvCmJlVWpRfnxRaU5qcWHGE2BwTGRWUo0OR+Y+vJK
-	4g3NDEwNTcwsDUwtzYyVxHndLp9PExJITyxJzU5NLUgtgulj4uCUamBKr338iTny7zIjk+aH
-	7FeXbVs918HcnjGPtX7XvGyxe9P2qnxlLoxpt3iSV7maoeC+QeHhtNzYqXYl6kqi17orxa5P
-	4eP9GZ1369HXo6t7VHVPyd94bCGtzruobem8kmp5Mw+XU+s8DHYeO32Cbcoctw0z/8yx0Twh
-	ciO86cqG+R2p3vZbTKJWNtwNLd7u8+1xIUeGfinHsmSG6Qutjj74dr96m1dC2Ibffduv7mUz
-	f1Sp0f3pOVf/wc977xp9X5fG+t1K/auarsHmbpliprusbmwpUglPEm9xMzlIdrOKp1sYWZu9
-	bOi0fTzhwsR7M3KVd2uUvJm5w1/u717N9d/vWGZwvbudHhd/w11CqUCJpTgj0VCLuag4EQBP
-	2Er8xQMAAA==
-X-CMS-MailID: 20250321121513eucas1p2c17d32842a41ad058b914bf3d9ff7512
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd
-References: <cover.1740753261.git.robin.murphy@arm.com>
-	<e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
-	<CGME20250313095633eucas1p29cb55f2504b4bcf67c16b3bd3fa9b8cd@eucas1p2.samsung.com>
-	<9b358d68-332e-404e-9a75-740297f7b28d@samsung.com>
-	<417d6f59-0d78-4e81-ad0b-e06846f786b0@arm.com>
-	<bf2adf5d-1432-4bb7-846c-e1bcfa84858b@samsung.com>
-	<016bb7ca-f0d3-464e-ac74-46e6f78e90d7@arm.com>
-	<b63ff6b4-9dc3-42ea-8b87-d4fdead8d0eb@arm.com>
-	<cdc333e4-25bb-4171-9f6e-01f1de947db3@samsung.com>
-	<d6cd5e64-e2c0-4c6e-9c89-ce8b3e0a4a5b@arm.com>
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6158.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6567510-8f7f-4869-367c-08dd68756d08
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2025 12:39:30.5753
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LWNj8+0GakxyEagRbZBlZksownD7y0PY5vi6Kei26tfh/uWax945XqRiyGgdd0YTa0CDx6IqRbWXlTO8Rzt4Sg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9116
 
-On 17.03.2025 19:22, Robin Murphy wrote:
-> On 17/03/2025 7:37 am, Marek Szyprowski wrote:
->> On 13.03.2025 15:12, Robin Murphy wrote:
->>> On 2025-03-13 1:06 pm, Robin Murphy wrote:
->>>> On 2025-03-13 12:23 pm, Marek Szyprowski wrote:
->>>>> On 13.03.2025 12:01, Robin Murphy wrote:
->>>>>> On 2025-03-13 9:56 am, Marek Szyprowski wrote:
->>>>>> [...]
->>>>>>> This patch landed in yesterday's linux-next as commit bcb81ac6ae3c
->>>>>>> ("iommu: Get DT/ACPI parsing into the proper probe path"). In my
->>>>>>> tests I
->>>>>>> found it breaks booting of ARM64 RK3568-based Odroid-M1 board
->>>>>>> (arch/arm64/boot/dts/rockchip/rk3568-odroid-m1.dts). Here is the
->>>>>>> relevant kernel log:
->>>>>>
->>>>>> ...and the bug-flushing-out begins!
->>>>>>
->>>>>>> Unable to handle kernel NULL pointer dereference at virtual address
->>>>>>> 00000000000003e8
->>>>>>> Mem abort info:
->>>>>>>       ESR = 0x0000000096000004
->>>>>>>       EC = 0x25: DABT (current EL), IL = 32 bits
->>>>>>>       SET = 0, FnV = 0
->>>>>>>       EA = 0, S1PTW = 0
->>>>>>>       FSC = 0x04: level 0 translation fault
->>>>>>> Data abort info:
->>>>>>>       ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
->>>>>>>       CM = 0, WnR = 0, TnD = 0, TagAccess = 0
->>>>>>>       GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
->>>>>>> [00000000000003e8] user address but active_mm is swapper
->>>>>>> Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
->>>>>>> Modules linked in:
->>>>>>> CPU: 3 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc3+ #15533
->>>>>>> Hardware name: Hardkernel ODROID-M1 (DT)
->>>>>>> pstate: 00400009 (nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->>>>>>> pc : devm_kmalloc+0x2c/0x114
->>>>>>> lr : rk_iommu_of_xlate+0x30/0x90
->>>>>>> ...
->>>>>>> Call trace:
->>>>>>>      devm_kmalloc+0x2c/0x114 (P)
->>>>>>>      rk_iommu_of_xlate+0x30/0x90
->>>>>>
->>>>>> Yeah, looks like this is doing something a bit questionable which
->>>>>> can't
->>>>>> work properly. TBH the whole dma_dev thing could probably be
->>>>>> cleaned up
->>>>>> now that we have proper instances, but for now does this work?
->>>>>
->>>>> Yes, this patch fixes the problem I've observed.
->>>>>
->>>>> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>>>> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>>>>
->>>>> BTW, this dma_dev idea has been borrowed from my exynos_iommu driver
->>>>> and
->>>>> I doubt it can be cleaned up.
->>>>
->>>> On the contrary I suspect they both can - it all dates back to when
->>>> we had the single global platform bus iommu_ops and the SoC drivers
->>>> were forced to bodge their own notion of multiple instances, but with
->>>> the modern core code, ops are always called via a valid IOMMU
->>>> instance or domain, so in principle it should always be possible to
->>>> get at an appropriate IOMMU device now. IIRC it was mostly about
->>>> allocating and DMA-mapping the pagetables in domain_alloc, where the
->>>> private notion of instances didn't have enough information, but
->>>> domain_alloc_paging solves that.
->>>
->>> Bah, in fact I think I am going to have to do that now, since although
->>> it doesn't crash, rk_domain_alloc_paging() will also be failing for
->>> the same reason. Time to find a PSU for the RK3399 board, I guess...
->>>
->>> (Or maybe just move the dma_dev assignment earlier to match Exynos?)
->>
->> Well I just found that Exynos IOMMU is also broken on some on my test
->> boards. It looks that the runtime pm links are somehow not correctly
->> established. I will try to analyze this later in the afternoon.
->
-> Hmm, I tried to get an Odroid-XU3 up and running, but it seems unable 
-> to boot my original 6.14-rc3-based branch - even with the IOMMU driver 
-> disabled, it's consistently dying somewhere near (or just after) init 
-> with what looks like some catastrophic memory corruption issue - very 
-> occasionally it's managed to print the first line of various different 
-> panics.
->
-> Before that point though, with the IOMMU driver enabled it does appear 
-> to show signs of working OK:
->
-> [    0.649703] exynos-sysmmu 14650000.sysmmu: hardware version: 3.3
-> [    0.654220] platform 14450000.mixer: Adding to iommu group 1
-> ...
-> [    2.680920] exynos-mixer 14450000.mixer: 
-> exynos_iommu_attach_device: Attached IOMMU with pgtable 0x42924000
-> ...
-> [    5.196674] exynos-mixer 14450000.mixer: 
-> exynos_iommu_identity_attach: Restored IOMMU to IDENTITY from pgtable 
-> 0x42924000
-> [    5.207091] exynos-mixer 14450000.mixer: 
-> exynos_iommu_attach_device: Attached IOMMU with pgtable 0x42884000
->
->
-> The multi-instance stuff in probe/release does look a bit suspect, 
-> however - seems like the second instance probe would overwrite the 
-> first instance's links, and then there would be a double-del() if the 
-> device were ever actually released again? I may have made that much 
-> more likely to happen, but I suspect it was already possible with 
-> async driver probe...
+[AMD Official Use Only - AMD Internal Distribution Only]
 
-That is really strange. My Odroid XU3 boots fine from commit 
-bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path"), 
-although the IOMMU seems not to be working correctly. I've tested this 
-with 14450000.mixer device (one need to attach HDMI cable to get it 
-activated) and it looks that the video data are not being read from 
-memory at all (the lack of VSYNC is reported, no IOMMU fault). However, 
-from time to time, everything initializes and works properly.
+Hi,
+Typo in commit message, corrected here, I will update in v6 patch.
+> Add `cpm_crx` property between `cfg` and `cpm_csr` as required. Presence =
+of this
+> property results in an ABI break.
 
-It looks that this is somehow related to the different IOMMU/DMA-mapping 
-glue code, as the other boards (ARM64 based) with exactly the same 
-Exynos IOMMU driver always work fine. I've tried to figure out what 
-actually happens, but so far I didn't get anything for sure. Disabling 
-the call to dev->bus->dma_configure(dev) from iommu_init_device() seems 
-to be fixing this, but this is almost equal to the revert of the 
-$subject patch. I don't get why calling it in iommu_init_device() causes 
-problems. It also doesn't look that this is anyhow related to the 
-multi-instance stuff, as the same happens if I only leave a single 
-exynos-sysmmu instance and its client (only 14450000.mixer device in the 
-system).
+- Sai Krishna
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+> -----Original Message-----
+> From: Sai Krishna Musham <sai.krishna.musham@amd.com>
+> Sent: Friday, March 21, 2025 5:12 PM
+> To: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
+> manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org;
+> conor+dt@kernel.org; cassel@kernel.org
+> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>; Gogada, Bha=
+rat
+> Kumar <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
+> <thippeswamy.havalige@amd.com>; Musham, Sai Krishna
+> <sai.krishna.musham@amd.com>
+> Subject: [PATCH v5 1/2] dt-bindings: PCI: xilinx-cpm: Add reset-gpios for=
+ PCIe RP
+> PERST#
+>
+> Introduce `reset-gpios` property to enable GPIO-based control of the PCIe=
+ RP
+> PERST# signal, generating assert and deassert signals.
+>
+> Traditionally, the reset was managed in hardware and enabled during initi=
+alization.
+> With this patch set, the reset will be handled by the driver. Consequentl=
+y, the `reset-
+> gpios` property must be explicitly provided to ensure proper functionalit=
+y.
+>
+> Add CPM clock and reset control registers base (`cpm_crx`) to handle PCIe=
+ IP reset
+> along with PCIe RP PERST# to avoid Link Training errors.
+>
+> Add `cpm_crx` property between `cfg` and `cpm_csr` as required. Presence =
+of this
+> property results in an ABI break.
+>
+> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
+> ---
+> Changes for v5:
+> - Remove `reset-gpios` property from required as it is already present
+>   in pci-bus-common.yaml
+> - Update commit message
+> Changes for v4:
+> - Add CPM clock and reset control registers base to handle PCIe IP
+>   reset.
+> - Update commit message.
+>
+> Changes for v3:
+> - None
+>
+> Changes for v2:
+> - Add define from include/dt-bindings/gpio/gpio.h for PERST# polarity
+> - Update commit message
+> ---
+>  .../bindings/pci/xilinx-versal-cpm.yaml         | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> index d674a24c8ccc..293df91d4e74 100644
+> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> @@ -24,15 +24,17 @@ properties:
+>      items:
+>        - description: CPM system level control and status registers.
+>        - description: Configuration space region and bridge registers.
+> +      - description: CPM clock and reset control registers.
+>        - description: CPM5 control and status registers.
+> -    minItems: 2
+> +    minItems: 3
+>
+>    reg-names:
+>      items:
+>        - const: cpm_slcr
+>        - const: cfg
+> +      - const: cpm_crx
+>        - const: cpm_csr
+> -    minItems: 2
+> +    minItems: 3
+>
+>    interrupts:
+>      maxItems: 1
+> @@ -76,6 +78,7 @@ unevaluatedProperties: false
+>
+>  examples:
+>    - |
+> +    #include <dt-bindings/gpio/gpio.h>
+>
+>      versal {
+>                 #address-cells =3D <2>;
+> @@ -98,8 +101,10 @@ examples:
+>                                  <0x43000000 0x80 0x00000000 0x80 0x00000=
+000 0x0
+> 0x80000000>;
+>                         msi-map =3D <0x0 &its_gic 0x0 0x10000>;
+>                         reg =3D <0x0 0xfca10000 0x0 0x1000>,
+> -                             <0x6 0x00000000 0x0 0x10000000>;
+> -                       reg-names =3D "cpm_slcr", "cfg";
+> +                             <0x6 0x00000000 0x0 0x10000000>,
+> +                             <0x0 0xfca00000 0x0 10000>;
+> +                       reg-names =3D "cpm_slcr", "cfg", "cpm_crx";
+> +                       reset-gpios =3D <&gpio1 38 GPIO_ACTIVE_LOW>;
+>                         pcie_intc_0: interrupt-controller {
+>                                 #address-cells =3D <0>;
+>                                 #interrupt-cells =3D <1>; @@ -126,8 +131,=
+10 @@ examples:
+>                         msi-map =3D <0x0 &its_gic 0x0 0x10000>;
+>                         reg =3D <0x00 0xfcdd0000 0x00 0x1000>,
+>                               <0x06 0x00000000 0x00 0x1000000>,
+> +                             <0x00 0xfcdc0000 0x00 0x10000>,
+>                               <0x00 0xfce20000 0x00 0x1000000>;
+> -                       reg-names =3D "cpm_slcr", "cfg", "cpm_csr";
+> +                       reg-names =3D "cpm_slcr", "cfg", "cpm_crx", "cpm_=
+csr";
+> +                       reset-gpios =3D <&gpio1 38 GPIO_ACTIVE_LOW>;
+>
+>                         pcie_intc_1: interrupt-controller {
+>                                 #address-cells =3D <0>;
+> --
+> 2.44.1
 
 
