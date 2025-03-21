@@ -1,133 +1,123 @@
-Return-Path: <linux-pci+bounces-24408-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24409-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 848D7A6C560
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 22:47:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1E52A6C567
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 22:48:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BC2CA7A27C7
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 21:46:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C3B9189F4C6
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 21:48:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87F531EF0B1;
-	Fri, 21 Mar 2025 21:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9D7C233126;
+	Fri, 21 Mar 2025 21:48:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hpeJdxgz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DgjyGHhs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C150728E7
-	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 21:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6402327A1;
+	Fri, 21 Mar 2025 21:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742593660; cv=none; b=hxppeJQiAwIFFn+qITSaJDfsx/YPL/Lr+TZlPSHWobrXS6osw60kNrVK1GU+bB7Ed35Q7IlVEv31aqQYOM/xKP0s7eYudTkBGaFzZhC1aJHSxAuIASyLLcoTZ+x8/4dnuvdmwdngj04A9V4dCxtU1zkmPOpfY2oWdldhl609DTo=
+	t=1742593713; cv=none; b=mxaI8qqBLkVIpzY2Gv2OZZ/pDOCUIP4Gy0VCGqtqpS542uw6tKxc9qTdm308D7xgmUIGVQ/gY9RNllkvo1QC31v6ImlwnSKC++JQLg2DgeKFlAu747BW7FW7q9g5fJ+q6+l+0X8/7o+06LmQ79wTQwRZin8D+400di38+3TPckg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742593660; c=relaxed/simple;
-	bh=l7IInD4cjEJ/3oPOv3agmrfw9e0pgn1NDKAqHr4Dtbs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=epLtXRW6exR3NDurR+pl/AD9qPwF/d65EcQbkgUzziqEYkko0a5AhToK7neNZuQBiJTGhTN9md1XJAjMYX6/gaRSzjQXINYujsc7hQvP55RcrMN1fzoSOEyHopT5mFpPvHkcFSLa0nTPaHdjwHG0+Bg76kK749PcG2jEVWtDrhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hpeJdxgz; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742593659; x=1774129659;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=l7IInD4cjEJ/3oPOv3agmrfw9e0pgn1NDKAqHr4Dtbs=;
-  b=hpeJdxgzqIb5ewVgpwSIwMiZ5bgr2koQP73B3x3/blx6+DyluXhpqAMf
-   Oy9N2GHAdfZTFrN2rR2zhkwWFUlcU4MwHgh2z0kBTosC80q4iI+SFG1iM
-   Ead2wcdK2gBQ0DWfW91+b5mbxgwmuPQP/sYK2ievpTQbbOLfeRv6lC2d6
-   v/nWIc5shaflDwx8pO4dNqfaZrwRiRAuqixNqv1NDWEq8TGvq1uSVMWZI
-   D/HzXNafALMy3UYOTDtM73FAXnaz+70ER9VDCWDrTkNKF9EJUEXX0UhSh
-   3DTKhSfYfTNCfWgSc/eotGf9QP/jBM/+54uwj7m6c0vdvSGsnrbyvn0yO
-   w==;
-X-CSE-ConnectionGUID: eV5qBYAzTaS2TaadHGMtmA==
-X-CSE-MsgGUID: GVHVtoPDQT2R9c6IQ7vLtg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="47529959"
-X-IronPort-AV: E=Sophos;i="6.14,266,1736841600"; 
-   d="scan'208";a="47529959"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 14:47:38 -0700
-X-CSE-ConnectionGUID: IBuhSUy2TlKDEeGxsQnouw==
-X-CSE-MsgGUID: 9OZhQG0bSX6Uv6/2seRFZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,266,1736841600"; 
-   d="scan'208";a="123678551"
-Received: from bkammerd-mobl.amr.corp.intel.com (HELO [10.124.221.233]) ([10.124.221.233])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 14:47:37 -0700
-Message-ID: <bfd75767-7743-47d7-939e-f0c5204ee647@linux.intel.com>
-Date: Fri, 21 Mar 2025 14:47:36 -0700
+	s=arc-20240116; t=1742593713; c=relaxed/simple;
+	bh=gFVLFoBbRVI7YrvkgLG88tqFY5GkEJSMaYCfnvuQIig=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EdoqSq5yHnj8Ja+GSwx5WoHWzX3xMupBujoQmhIe5V6K4fF6xCtdqpX/ZClXoldYiSllY8YNBZ8HFXDH0lq6xQyN4q4jn3jx4JfBjAmO1TFgG9TfmjeyKOuyNkRqkTHrLOGsBnVvfgF8HxHBwwZJoj+2BYU8OaM0Bflw2QL7Ad8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DgjyGHhs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD492C4CEE3;
+	Fri, 21 Mar 2025 21:48:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742593713;
+	bh=gFVLFoBbRVI7YrvkgLG88tqFY5GkEJSMaYCfnvuQIig=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DgjyGHhsXrzBkoNFRqXgayI/ySiABNv4OJklgKlyZRkL9KBCeVRLWF/Af1NyXy3XM
+	 REfXJNHwKoXc+el9kDFgqFCHxdgcBnWBNyclEqCRSLORIrB89bh4PhNvuuxEtgtSpC
+	 9IyaMSuiLnb/fFP2iaH9XXD8eH+GGHgziClkC2MRna2PHGdS0JkR92JS85G7O4Xflm
+	 9cP9G7u4rNVNvRN4COunHYH+S9JLGgGcBJYF+P57yhG4VNjSR79wvxco1Ysv2WNEwu
+	 O2BR/3Z86NwveMbFfwi2XORTzE9Ux0C0E/5IOVJwkNRlYDmp8pdYp9OhuueIi/E3IK
+	 Opmw5TFVvb+Fw==
+From: Danilo Krummrich <dakr@kernel.org>
+To: bhelgaas@google.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu
+Cc: linux-pci@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH v4 0/3] Implement TryFrom<&Device> for bus specific devices
+Date: Fri, 21 Mar 2025 22:47:52 +0100
+Message-ID: <20250321214826.140946-1-dakr@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/7] PCI/AER: Introduce ratelimit for error logs
-To: Jon Pan-Doh <pandoh@google.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>, linux-pci@vger.kernel.org,
- Martin Petersen <martin.petersen@oracle.com>,
- Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
- Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Terry Bowman <Terry.bowman@amd.com>
-References: <20250320082057.622983-1-pandoh@google.com>
- <20250320082057.622983-6-pandoh@google.com>
- <85bd0cd9-c09f-464d-9397-ced829df27d7@linux.intel.com>
- <CAMC_AXW6QgDV9bSiYR5UpgSAii+YSPLk_xCdYHZGjudDZpGstQ@mail.gmail.com>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <CAMC_AXW6QgDV9bSiYR5UpgSAii+YSPLk_xCdYHZGjudDZpGstQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Jon,
+This series provides a mechanism to safely convert a struct device into its
+corresponding bus specific device instance, if any.
 
-On 3/21/25 12:24 PM, Jon Pan-Doh wrote:
-> On Thu, Mar 20, 2025 at 6:00 PM Sathyanarayanan Kuppuswamy
-> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->> Should we exclude fatal errors from the rate limit? Fatal error logs
->> would be
->> really useful for debug analysis, and they not happen very frequently.
-> The logs today only make the distinction between correctable vs.
-> uncorrectable so I thought it made sense to be consistent.
+In C a generic struct device is typically converted to a specific bus device
+with container_of(). This requires the caller to know whether the generic struct
+device is indeed embedded within the expected bus specific device type.
 
-You're right. From a logging perspective, the current driver only
-differentiates between correctable and uncorrectable errors. However,
-the goal of your patch series is to reduce the spam of frequent errors.
-While we are rate-limiting these frequent logs, we must ensure that we
-don't miss important logs. I believe we did not rate-limit DPC logs for
-this very reason.
+In Rust we can do the same thing by implementing the TryFrom trait, e.g.
+
+        impl TryFrom<&Device> for pci::Device
+
+This is a safe operation, since we can check whether dev->bus equals the the
+expected struct bus_type.
+
+A branch containing the patches can be found in [1].
+
+This is needed for the auxiliary bus abstractions and connecting nova-core with
+nova-drm. [2]
+
+[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/device
+[2] https://gitlab.freedesktop.org/drm/nova/-/tree/staging/nova-drm
+
+Changes in v4:
+  - work around a minor issue in rustc < 1.82
+    - https://blog.rust-lang.org/2024/10/17/Rust-1.82.0.html#safely-addressing-unsafe-statics
+
+Changes in v3:
+  - drop patch to add Device::parent(), will make it crate private and part of
+    the auxbus series
+  - safety comment: clarify that a device' bus type is guaranteed to be set
+    correctly by the corresponding C code
+
+Changes in v2:
+  - s/unsafe { *self.as_raw() }.parent/unsafe { (*self.as_raw()).parent }/
+  - expand safety comment on Device::bus_type_raw()
+
+Danilo Krummrich (3):
+  rust: device: implement bus_type_raw()
+  rust: pci: impl TryFrom<&Device> for &pci::Device
+  rust: platform: impl TryFrom<&Device> for &platform::Device
+
+ rust/kernel/device.rs   |  9 +++++++++
+ rust/kernel/pci.rs      | 25 +++++++++++++++++++++++--
+ rust/kernel/platform.rs | 25 +++++++++++++++++++++++--
+ 3 files changed, 55 insertions(+), 4 deletions(-)
 
 
->
-> Maybe this is something that could be deferred? The only fixed
-
-I am fine with deferring. IIUC, if needed, through sysfs user can
-skip rate-limit for uncorrectable errors, right?
-
-But, is the required change to do this complex? Won't skipping the
-rate limit check for fatal errors solve the problem?
-
-Bjorn, any comments? Do you think Fatal errors should be
-rate-limited?
-
-> component is the sysfs attribute names (which can be made to refer to
-> uncorrectable nonfatal vs. uncorrectable in doc/underlying
-> implementation).
->
-> Thanks,
-> Jon
-
+base-commit: 51d0de7596a458096756c895cfed6bc4a7ecac10
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.48.1
 
 
