@@ -1,77 +1,115 @@
-Return-Path: <linux-pci+bounces-24345-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24346-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 336BEA6BB79
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 14:11:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DC62A6BB9E
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 14:18:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23DEC189CB73
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 13:10:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E422116300C
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 13:18:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0626E227EB6;
-	Fri, 21 Mar 2025 13:10:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 814FA227EA3;
+	Fri, 21 Mar 2025 13:18:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fPlzFkeq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O5f+qcoy"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31911F8F09;
-	Fri, 21 Mar 2025 13:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2F81F4181
+	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 13:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742562626; cv=none; b=VuJ3DMAM67vaMqq7Jk5rGQye8kVzC5dMH3JKSuZUKJeXnVWtJm3hTDIABlgJ+kGU2ZM6ZcP+v49HTbu4q+B/L2ymQz5b74ghHw8H8CPpo0i8Ryvd1It+AlQhn1fCWC9+IY8hBnWH0rHFxpGO1TaFwCVcaBXjXruDbK3nhuBMBzA=
+	t=1742563094; cv=none; b=RLdsbcubzfY8NY0tn8EMbo/k2hCZqqN+Rb4Sw4GwdXtvhwje9FJ07pKrziG8rJjIoN5Uqp9XsESLJgIqeLDmipSHuUleawXT4V/SwSbq4u2fHAnKFdJBFPYJz8lxpD4IeLkALHi8qE4rVTKmXiRCedc7nuHsl++xx6X7fYJbfOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742562626; c=relaxed/simple;
-	bh=lkJ795Xi3YIfzoTXYBWBB7Bfltn4j1dL37rIVKkwt7o=;
+	s=arc-20240116; t=1742563094; c=relaxed/simple;
+	bh=NombQves/w/CJOPVeBM13rWw3dr3xC5H9bM41iFYTEY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FCNqPcVRGVvaQqVjxg3jxYkF9Eh8PxN+rzGVv82Xked8pEccnGMDN3AFr8H4LdB4S85NxR1hBZOeQlIOW/hp76TXLfZtFayKvnC9FygXSdA1cSAHKAfJHpYGl5hJwdyIW4nD+vnsR4eTu1iobYEBB/xm/bo7iI901Rtg9fb631w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fPlzFkeq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FC37C4CEE3;
-	Fri, 21 Mar 2025 13:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742562626;
-	bh=lkJ795Xi3YIfzoTXYBWBB7Bfltn4j1dL37rIVKkwt7o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fPlzFkeq2fOofhZa+osFQRaCQ1shTkGXZ/jV8VPJKhd2ycixksKj2G520II+MS/7E
-	 2VC83MnnmcCqQ1tUW+HXmPf3rM6+ftCS2xhHFoBEM62RWoBxLhtr2r0FDevZ1B/8YY
-	 lnQbH9am6F5k8GrNrpfe0h5Am+EIieF7PY7Rj/Fg=
-Date: Fri, 21 Mar 2025 06:09:06 -0700
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=ePiKblR2pjWW8Ew6S9bnp2fFEnF7CdJqBioR3a6jUtnLDacuuPpVEpUUw/9AE4yuMHfLopRYcQ5JclOW6b0Zlj0ROX61JlcGi8JZflllcbJDap7JlJxA9kcwUUjMqKRrcy4ew004n+QpuvYcXEF/UORAeHZSvXTGSRiINgvNaWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O5f+qcoy; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-224100e9a5cso36710415ad.2
+        for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 06:18:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742563092; x=1743167892; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=slNX4cCQBrcrmq6L11WIT4xDIUcpyPfGH047qS7ymg8=;
+        b=O5f+qcoy6pn7s7T3wkUGym9dULmLucRCmI0DzO4803Kvao5C7hvtu170ckB8vMw+Q1
+         VIBzCvnMQpSr/vjM6e5NDflauLvNMiDEHkcJD5xNQPF3PPRFzlGbr/7p5gi59exE0d3D
+         ND9AT3vGBgWdsPYeX168WMUadfblHMCXUl9KOKOTgU5fbhdVQfrSiCYVqC8CEY4WxZ0Z
+         QBXRwxXuX8h2EJd91mQX5JZ9/CvpM5KOb9dJQ1Uq8yWkGM3locWwwJtNmyAKyPeIY6O+
+         ry1l+ArX61hlWLKOmB6wOtPRIPVUFzMQqCRbZ2Ao/CAhRcR5E8Ddo+TYLVfT9+FSe6Fq
+         AQRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742563092; x=1743167892;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=slNX4cCQBrcrmq6L11WIT4xDIUcpyPfGH047qS7ymg8=;
+        b=g+ty5shNWMyt1Oq3jVoK7Ipmq/Ozp9kN2kX6dgrFboHB6LSSSUBlmNRlhr8N0yuxDR
+         rU8+LQ9Pe22r4UOt/mYXmsd2hJVz/WjcrqFvN5AfxWnlTLB+aMcuOkb/9L7wpNJDPr68
+         A5kxv22PZgqHNcHi7WQb4SgfLrtrs+9fD/fB2dd7TDdqvopH1QLE9GBxWpGvGM82W2I4
+         00dLsQBI3D6M+NBUb4P5Ni5yznSYbkHBQDaRotnEmfE0lPcaOhb58e7rmLvfT+qYHg6K
+         RXgs7L1NBJnRTEVKL0drVJVkuouFr1haDA5Wv5tjHqZuz+JI4O0WmgQ/yMCSY1rDnrqr
+         ctnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpWZT6IgjsYGHPBpX2XEtKxNiZh1Fosc02fUMFGv7yV9N2zMUAs+l5eUbZ/tslM9HlUHNYrz2BJ50=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoG9t/zEGOSE6DQ4PqFt4uGvoYfoTdKIaz8pq6BvnoNvaJY94d
+	3kjXQ/PqlVGmJRRBWKKM6NkmKUNw0RJnqEJ3fjG8wXtEM3EsLlxxuClpHH9KhQ==
+X-Gm-Gg: ASbGncsaL4wveOyuTJbREdeSnQppA/2jG8g/8H7J5If0jQl7tXc8GouzsotbsIXsZFq
+	pmACFbgbDqCFgSt7bedKf2r8oqwSkNUY0cse16XWOAVaeR2Hb6E8yfwCTcq51QSn/eJgm8NUvql
+	nTbdSNv2DYTRPhRuhQBfIftPZHfdArepTMLO8Vzn1g1fRFulszkMUCRBDFMBoeZQkTddoqSPW4F
+	Myi5GBsRyNcGS/eJAGaHTnGpePKeVipTFMzlkpb4OdpGfqUGLwTzUowWgtlYZ1GwoRNp86iTBwO
+	33eE/K18Aq/AS5GVGjk1GojF3Sf4UzwDOZMiHHWfQeE3x+wyLFJt5vwHNsj/EeZDCEgA
+X-Google-Smtp-Source: AGHT+IF0+4ERgFeq9+JcDVf8/T/R07dw+GX864DNjg2M5q6sj+GkUQquyUh5pHbg8Y7H/8aIEkJYtw==
+X-Received: by 2002:a05:6a21:101:b0:1f5:8eec:e500 with SMTP id adf61e73a8af0-1fe42f08e54mr5667492637.9.1742563091943;
+        Fri, 21 Mar 2025 06:18:11 -0700 (PDT)
+Received: from thinkpad ([2409:40f4:22:5799:90ea:bfc4:b1d2:dda2])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af8a284888bsm1645367a12.46.2025.03.21.06.18.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 06:18:11 -0700 (PDT)
+Date: Fri, 21 Mar 2025 18:48:06 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	bhelgaas@google.com, jingoohan1@gmail.com,
+	thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] rust: device: implement Device::parent()
-Message-ID: <2025032149-erasure-halt-d179@gregkh>
-References: <20250320222823.16509-1-dakr@kernel.org>
- <20250320222823.16509-2-dakr@kernel.org>
- <2025032018-perceive-expectant-5c48@gregkh>
- <Z90rlKC_S5WQzO8P@pollux>
- <Z91joggxxBh3e0d8@pollux>
+Subject: Re: [v4 4/4] PCI: cadence: Use cdns_pcie_find_*capability to find
+ capability offset instead of hardcore
+Message-ID: <20250321131806.34xeuaw2itl6gilj@thinkpad>
+References: <20250321101710.371480-1-18255117159@163.com>
+ <20250321101710.371480-5-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z91joggxxBh3e0d8@pollux>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250321101710.371480-5-18255117159@163.com>
 
-On Fri, Mar 21, 2025 at 02:03:30PM +0100, Danilo Krummrich wrote:
-> So, maybe we should make Device::parent() crate private instead, such that it
-> can't be accessed by drivers, but only the core abstractions and instead only
-> provide accessors for the parent device for specific bus devices, where this is
-> reasonable to be used by drivers, e.g. auxiliary.
+On Fri, Mar 21, 2025 at 06:17:10PM +0800, Hans Zhang wrote:
+> The offset address of capability or extended capability designed by
+> different SOC design companies may not be the same. Therefore, a flexible
+> public API is required to find the offset address of a capability or
+> extended capability in the configuration space.
 > 
 
-That sounds reasonable, thanks!
+The PCIe capability/extended capability offsets are not guaranteed to be
+the same across all SoCs integrating the Cadence PCIe IP. Hence, use the
+cdns_pcie_find_{ext}_capability() APIs for finding them.
 
-greg k-h
+This avoids hardcoding the offsets in the driver.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
