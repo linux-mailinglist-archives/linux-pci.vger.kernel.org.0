@@ -1,72 +1,65 @@
-Return-Path: <linux-pci+bounces-24280-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24281-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F012A6B1D8
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 00:52:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEEF1A6B277
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 02:00:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ECB33179F9E
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Mar 2025 23:52:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C21C8189D3F3
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 01:00:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBE0A21C9E7;
-	Thu, 20 Mar 2025 23:52:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 455F11EA65;
+	Fri, 21 Mar 2025 01:00:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ut2npbg4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cZsQXIs8"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD4621859F
-	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 23:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DF0184F
+	for <linux-pci@vger.kernel.org>; Fri, 21 Mar 2025 01:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742514761; cv=none; b=etQHYNOCxWTA8iyeuZ5PM6vyX+dq+zWinkRT/PpsCm6uQ2M/mnY3Fn5Ek5PVTjBilPslq4dwpGUJDI83+bOBbb7LkBkRx05pr8QYNbXj/wKAnvYOLLUPTgJrmQwPYAkI4WT/blhkZK4PO5i7GxJh5bBekKaYa+7lZqnOtbT4QiM=
+	t=1742518813; cv=none; b=Yc2KQONPfqQ6ZSUTyZbczTG1q6ICBvL890Bq61tpHeLpD8fmRnk1BjD0y7IyP3XwT54RaZHSlD7rMWTHu+TIUsNrUXGvSLkDfHV5W/LpoKGjBP0zz3gM5AZdJdP5b10cRoQ2P2ML3fyO1SJN4Zaox74vZ8Q4J/4q6SfnI/XJPIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742514761; c=relaxed/simple;
-	bh=VKx7RH8Mg8DPC+U1B1C8czPF3VXsHpYGIbro1lkVn6s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=Pzx5W9n9DiiwYR9K/ve7Xjxw8w4fLm/Lbc3NtARcr/h/hBKdjn3T6eE3BqMrwj5nWJA0QHKKODtkC7jpQzogGpHD8gbit7pO4AuIIBGRGmxakkU9xU6pyVXsmc3Tx+CFOrNQ2ZtLFMOJFRxwY7eM9reWXPRaYd7W8nYjW+xtoZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ut2npbg4; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250320235237euoutp024d3c157c288f40beb9fb1892a8c1deea~up-CtounT1443514435euoutp02g
-	for <linux-pci@vger.kernel.org>; Thu, 20 Mar 2025 23:52:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250320235237euoutp024d3c157c288f40beb9fb1892a8c1deea~up-CtounT1443514435euoutp02g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1742514758;
-	bh=V40Yt8b5UQP5CQRebMaM4XT/r0qYRmMZ1DD0U7kvnK4=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=ut2npbg4/kdcP2bqSdFlfrUbOPb3A5+wIWFnP1CDcxcmTBdUP5JsoPTmaSPgllVtW
-	 12v/xbNbkMJ8m2iNY9Y0f+LGHF28UMshTJ8v7BXonnoeHcoMfhc6dJCAR4w6RO+Biz
-	 v0cL49lJyjsjlqArWlGlfnAFNqjgUfI3WAGoW4Jk=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250320235236eucas1p2d25a78b8b13dc4ab1b2ca298ada0dfd6~up-BT_ZSP1299312993eucas1p2O;
-	Thu, 20 Mar 2025 23:52:36 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 33.34.20821.44AACD76; Thu, 20
-	Mar 2025 23:52:36 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250320235235eucas1p20083fac3310cb507f47cd27594507feb~up-Ah0Xfl1299312993eucas1p2N;
-	Thu, 20 Mar 2025 23:52:35 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250320235235eusmtrp147af0699b5659e6df38f53ef4ac28c3e~up-AhBruB1931419314eusmtrp12;
-	Thu, 20 Mar 2025 23:52:35 +0000 (GMT)
-X-AuditID: cbfec7f2-b09c370000005155-97-67dcaa4406f9
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id 4F.88.19920.34AACD76; Thu, 20
-	Mar 2025 23:52:35 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250320235231eusmtip12043beb3ef63386f7348b314310b8aad~up_9CwvKL2854028540eusmtip1R;
-	Thu, 20 Mar 2025 23:52:31 +0000 (GMT)
-Message-ID: <1034b694-2b25-4649-a004-19e601061b90@samsung.com>
-Date: Fri, 21 Mar 2025 00:52:30 +0100
+	s=arc-20240116; t=1742518813; c=relaxed/simple;
+	bh=auag+boPzIZDk5C2GRIwHjQpngviOwTfeK8A2SltueA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WrSAI8RR5GkH7cxA+UhrtuSSpWdwoqwjfWDAOdf+n4fQV5le9Fi0tCRowmKdhqLefe67GujsQfVJTHWbnTS3rB49KXITEnva4eUxZTqc/9JcxNbWZNJXp8gRdOWGk01CwPe2TbgThlI2ArZ05L1nRFVbzvBb3y8+XQNX03XZRtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cZsQXIs8; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742518812; x=1774054812;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=auag+boPzIZDk5C2GRIwHjQpngviOwTfeK8A2SltueA=;
+  b=cZsQXIs8TxkG8P1ChxtKMSUGX/ZDUTQuEK46X7Jt8w9AlY6EzqRP3dzD
+   XJrvIyDpeoZaZnTmuNtH+IY9qNU6kGp8p/gnRoktZ4uh4/HgurBrJ3LUp
+   Oo8elcuaHWvJ+RK2xt565/bbHt0YJymMvnNkYIP066PvZoepfaxMWv5FZ
+   ISdUaxlzJZgW6wJ9AZUNkznF9Wu6zBdSL5Y/49vchzWHQDk5X/52Wvk2j
+   bwDyyBy5b/4gWnmjbdj7u+y3PJxNaJBAxhBYQG/PZkDpAVgTmEOSKh1Ts
+   2V06NEewlUDd3Fm9GhPLQGBLxA4XErGwNzWiamk1YAjOA/L3m/StZb/ga
+   A==;
+X-CSE-ConnectionGUID: QgPWTlWgQwW0LQBMWhEpBw==
+X-CSE-MsgGUID: +tt+IAW+SZ2Xx4f+6IgN5Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="47552765"
+X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
+   d="scan'208";a="47552765"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 18:00:10 -0700
+X-CSE-ConnectionGUID: /tYNQ0nNQHmb0yyBN4FVcg==
+X-CSE-MsgGUID: oOfE369BQ8yeTVwsRm/A+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
+   d="scan'208";a="127415316"
+Received: from jairdeje-mobl1.amr.corp.intel.com (HELO [10.124.221.27]) ([10.124.221.27])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 18:00:08 -0700
+Message-ID: <85bd0cd9-c09f-464d-9397-ced829df27d7@linux.intel.com>
+Date: Thu, 20 Mar 2025 18:00:08 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -74,154 +67,209 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Leon Romanovsky <leon@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>, Joerg Roedel
-	<joro@8bytes.org>, Will Deacon <will@kernel.org>, Sagi Grimberg
-	<sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas
-	<yishaih@nvidia.com>, Shameer Kolothum
-	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, Randy
-	Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v4 5/7] PCI/AER: Introduce ratelimit for error logs
+To: Jon Pan-Doh <pandoh@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Karolina Stolarek <karolina.stolarek@oracle.com>
+Cc: linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>,
+ Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
+ Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Terry Bowman <Terry.bowman@amd.com>
+References: <20250320082057.622983-1-pandoh@google.com>
+ <20250320082057.622983-6-pandoh@google.com>
 Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20250319175840.GG10600@ziepe.ca>
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250320082057.622983-6-pandoh@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUxTVxjOuff2tjQpuRQcB2UjK5MFNgrdNJ5kwMCw5U7/4H5sGcviGrkW
-	t1K1tYgk2zrGl11RKLCWwko3y4eF8C1gFYQiK4QJDCNiBTsTZEztBsJ0fAxHe3Xj3/M+z/N+
-	PCeHhws7yO28I4oTjFIhlYtIPtH508podLJtWhY71BiIqpobSfT4qY5EDTNnSWTNSUezfQUA
-	nW8YxNDqMkIVxiGAKg3zGDpd2cJFesckQDWeC1xUVX4cla3W4KjH9Rr6Id9KoOv2KhLdaXzK
-	QdW197jomtlJojlHEYGseZvIM20gUP/CLAc1PfiTQF03cjgod3o3qi3nJ4bSs/1mjG40NwJ6
-	7sYcoC1tanrsTitB5171cOj2+ij63OXfMfr6NTXdZjtN0m2P9Fx6yLhG0O3Wr+j59gpAX7ql
-	IelzZ0o5KUGp/Lg0Rn4kk1HGJHzKTz/v6CWPbYRkDRdWExowEKQFfjxI7YITXeOYFvB5Qqoe
-	wG8vDZJeQUgtA6hxxbPCEoC3NXr8eUeBuxBnhToA6w1zBFssAqgtrfa1C6gEaC4x+DBB7YSa
-	xRKc5QPgcMUs4cXbqDDodhm5XhxIJcO+TtYTRIlgr72E6x2KU51caJpfxLwCTgVD12y1D5OU
-	BGo9Wt8CP0oMS8bmnnnCYJen6tmpPXzo7E7RAt4mToZVRRKWDoT3nR1cFofCkVKdLwCkCgC0
-	rLkxtijezP+bC7Cut+D06CrpHYRTkbDZHsPSSXD8r7tcdr4/nPIEsCf4Q32nAWdpASzMF7Lu
-	CGhyNv23tn98Ai8GItOWVzFtCWnaEsb0/14LIGwgmFGrMmSMSqJgTopV0gyVWiETHzqa0QY2
-	P/bIhvNRN/j+/qLYATAecADIw0VBgqDC2zKhIE16KptRHj2oVMsZlQPs4BGiYMGPV/JkQkom
-	PcF8zjDHGOVzFeP5bddgqbkxO+oK9yxULue/+apiwhhge6XBP+lJZsIv4nj9njMD+6s5kfbo
-	vZaQfR91L67Y4tt7i12Wla+L392bvYTVt7uN6Ilj6hvzzNquy1+EvDEzaD8QR6jOmsqOl4X1
-	JYa/3KLTW9HFn4u4bcHY+8v+fusvuK/8un7h1MmWOOvBT4bX/7l44O/3djo/nH67qzYl1uGp
-	e5Bz8+qSOWUsemXI4Hp8C6xt8D+2CMOSbdnNqff+GI35kp7MGi6TK16aVC7dVH23sC8p0ZaZ
-	Jw+u0EVQD2vsD/PQ67EfhN9NM4QuROoGWnts68ShEUVTXYdjqnX3O11Z5ZPWiM8U+qjD2yTp
-	4bkvHhYRqnSpJApXqqT/ApX9M15HBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUxTZxTG8957e1uqXS61pi/oYDZxc+oqBVpflrZjH3HXLDMkhmRzG6zC
-	tTRAi70tkS1mjWMCzZyrFoFKWrTFjNK5rY1CABvo1EoMQyCSwQAH1spYikgWEoXJKM0S/vvl
-	nOc5z8nJ4eHCfk4qT6c3MUa9pkxC8om7L8KTb7zrndBmDNrTUPNPPhItrX5LovbJsyTynCpB
-	kd4agNrab2Ho+T8INTXeAehiwyyG6i7+zEXnQqMAtcaucVFz/XFkf96Koxvje9Cl0x4CjXQ1
-	k2jKt8pBriuPuGjAGSZRNHSGQJ5v1ig20UCgvoUIB139+wmBOu6f4qDqCTm6Us/P3U5H+pwY
-	7XP6AB29HwV0i99MD079QtDVN2McOvDDbtrd8xdGjwyYab+3jqT9i+e49J3GZYIOeL6iZwNN
-	gO4es5C0+7vznDzREanSaDCbmFdKDKxJJflEhjKlshwkzczOkcqy9n/2ZqZcsk+tLGbKdJWM
-	cZ/6c2lJWyhIVrxIOdFf6yIs4FeRFSTxIJUNax7U4lbA5wmpVgB7Fn/EE43tsP+ChZPgLXBl
-	1EomRE8A9J5d5MYbAkoNnbYGMs4EtRNantrwRD0Z9jdFiDhvpdLhg/HGdf0W6j3Yez2hEVES
-	GOyyceNDcaqTC4e6wlgi4QwOH12eX4/GKTEcj7iwOJOUDFpj1vW0JEoKbYNRLKFRQOs1K0hw
-	OuyINePfA6FjwyKODaMcGyyODZYWQHiBiDGz5dpyViZlNeWsWa+VFhnK/WDtp67ffhboBM65
-	p9IQwHggBCAPl4gEoto/tEJBsabqC8ZoKDSayxg2BORr17DhqVuLDGtPqTcVyhQZclm2IidD
-	nqPIkogFB0YGjwkprcbElDJMBWP834fxklItWOl0L9ItF7g+euwDqsX+HcaV9kO/hXVfpqpe
-	L25r+1Q79afD61DOvR8eyh1Gy3vempoVpvk387pVWSbvRNrC2LG9p2fGYkdP7OrUFAqTu6Em
-	N7Ksyg8etCuSH6fGQuik+8LDg/zjoV0dtfXBqzvu3VhoKSlYiKmml8r61GI3/m/KtqMVhw+3
-	z/w+XjbQ6vmw+jw7D6O5Kfbp2qqu18YqOUpD3jv5O5eKOh7e4yuH82sCz3RzH0xs6t58+/K2
-	7gGKSb/lLvDZxZbiHuPbwqG6m/MnZ1ZW1XLMtp8NCzqrXHurJ0eDw1/XZR3p0XNe8i+9vCk3
-	cDfPKa50lr5a+XG9hGBLNLLduJHV/AehhEaR3AMAAA==
-X-CMS-MailID: 20250320235235eucas1p20083fac3310cb507f47cd27594507feb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648
-References: <cover.1738765879.git.leonro@nvidia.com>
-	<20250220124827.GR53094@unreal>
-	<CGME20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648@eucas1p2.samsung.com>
-	<1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
-	<d408b1c7-eabf-4a1e-861c-b2ddf8bf9f0e@samsung.com>
-	<20250312193249.GI1322339@unreal>
-	<adb63b87-d8f2-4ae6-90c4-125bde41dc29@samsung.com>
-	<20250319175840.GG10600@ziepe.ca>
 
-On 19.03.2025 18:58, Jason Gunthorpe wrote:
-> On Fri, Mar 14, 2025 at 11:52:58AM +0100, Marek Szyprowski wrote:
->
->>> The only way to do so is to use dma_map_sg_attrs(), which relies on SG
->>> (the one that we want to remove) to map P2P pages.
->> That's something I don't get yet. How P2P pages can be used with
->> dma_map_sg_attrs(), but not with dma_map_page_attrs()? Both operate
->> internally on struct page pointer.
-> It is a bit subtle, I ran in to this when exploring enabling proper
-> P2P for dma_map_resource() too.
->
-> The API signatures are:
->
-> dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
-> 		size_t offset, size_t size, enum dma_data_direction dir,
-> 		unsigned long attrs);
-> void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr, size_t size,
-> 		enum dma_data_direction dir, unsigned long attrs);
->
-> The thing to notice immediately is that the unmap path does not get
-> passed a struct page.
+Hi,
 
-I see, thanks for pointing this out. It looks that I've encountered this 
-issue too long time ago when I was implementing first 
-iommu-to-dma-mapping glue for ARM arch. The lack of some kind of 
-'object' returned from dma_map* (and dma_alloc*) and passed back to 
-dma_unmap* (and dma_free_*) required some non-trivial workarounds there 
-and made the unmap/free path a bit more complicated.
+On 3/20/25 1:20 AM, Jon Pan-Doh wrote:
+> Spammy devices can flood kernel logs with AER errors and slow/stall
+> execution. Add per-device ratelimits for AER correctable and uncorrectable
+> errors that use the kernel defaults (10 per 5s).
 
-> So, lets think about the flow when the iommu is turned on.
+Should we exclude fatal errors from the rate limit? Fatal error logs 
+would be
+really useful for debug analysis, and they not happen very frequently.
+
 >
-> For normal struct page memory:
+> Tested using aer-inject[1]. Sent 11 AER errors. Observed 10 errors logged
+> while AER stats (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) show
+> true count of 11.
 >
->   - dma_map_page_attrs() allocates some IOVA and returns it in the
->     dma_addr_t and then maps the struct page to the iommu page table
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
 >
->   - dma_unmap_page_attrs() frees the IOVA from the given dma_addr_t
+> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
+> Reviewed-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> ---
+>   drivers/pci/pcie/aer.c | 74 +++++++++++++++++++++++++++++++++---------
+>   1 file changed, 58 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 3069376b3553..081cef5fc678 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -28,6 +28,7 @@
+>   #include <linux/interrupt.h>
+>   #include <linux/delay.h>
+>   #include <linux/kfifo.h>
+> +#include <linux/ratelimit.h>
+>   #include <linux/slab.h>
+>   #include <acpi/apei.h>
+>   #include <acpi/ghes.h>
+> @@ -88,6 +89,10 @@ struct aer_report {
+>   	u64 rootport_total_cor_errs;
+>   	u64 rootport_total_fatal_errs;
+>   	u64 rootport_total_nonfatal_errs;
+> +
+> +	/* Ratelimits for errors */
+> +	struct ratelimit_state cor_log_ratelimit;
+> +	struct ratelimit_state uncor_log_ratelimit;
+>   };
 >   
-> If we think about P2P now:
->
->   - dma_map_page_attrs() can inspect the struct page and determine it
->     is P2P. It computes a bus address which is not an IOVA, and does
->     not transit through the IOMMU. No IOVA allocation is performed. the
->     bus address is returned as the dma_addr_t
->
->   - dma_unmap_page_attrs() ... is impossible. We just get this
->     dma_addr_t that doesn't have enough information to tell anymore if
->     the address is a P2P bus address or not, so we can't tell if we
->     should unmap an iova from the dma_addr_t :\
->
-> The sg path fixes this because it introduced a new flag in the
-> scatterlist, SG_DMA_BUS_ADDRESS, that allows the sg map path to record
-> the information for the unmap path so it can do the right thing.
->
-> Leon's approach fixes this by putting an overarching transaction state
-> around the DMA operation so that map and unmap operations can look in
-> the state and determine if this is a P2P or non P2P map and then know
-> how to unmap.
->
-> For some background here, Christoph gave me this idea back at LSF/MM
-> in Vancouver (two years ago now). At the time I was looking at
-> replacing scatterlist and giving new DMA API ops to operate on a
-> "scatterlist v2" structure.
->
-> Christoph's vision was to make a performance DMA API path that could
-> be used to implement any scatterlist-like data structure very
-> efficiently without having to teach the DMA API about all sorts of
-> scatterlist-like things.
+>   #define AER_LOG_TLP_MASKS		(PCI_ERR_UNC_POISON_TLP|	\
+> @@ -379,6 +384,15 @@ void pci_aer_init(struct pci_dev *dev)
+>   
+>   	dev->aer_report = kzalloc(sizeof(*dev->aer_report), GFP_KERNEL);
+>   
+> +	/*
+> +	 * Ratelimits are doubled as a given error produces 2 logs (root port
+> +	 * and endpoint) that should be under same ratelimit.
+> +	 */
+> +	ratelimit_state_init(&dev->aer_report->cor_log_ratelimit,
+> +			     DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST * 2);
+> +	ratelimit_state_init(&dev->aer_report->uncor_log_ratelimit,
+> +			     DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST * 2);
+> +
+>   	/*
+>   	 * We save/restore PCI_ERR_UNCOR_MASK, PCI_ERR_UNCOR_SEVER,
+>   	 * PCI_ERR_COR_MASK, and PCI_ERR_CAP.  Root and Root Complex Event
+> @@ -668,6 +682,17 @@ static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
+>   	}
+>   }
+>   
+> +static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
+> +{
+> +	struct ratelimit_state *ratelimit;
+> +
+> +	if (severity == AER_CORRECTABLE)
+> +		ratelimit = &dev->aer_report->cor_log_ratelimit;
+> +	else
+> +		ratelimit = &dev->aer_report->uncor_log_ratelimit;
+> +	return __ratelimit(ratelimit);
+> +}
+> +
+>   static void __aer_print_error(struct pci_dev *dev,
+>   			      struct aer_err_info *info,
+>   			      const char *level)
+> @@ -698,6 +723,12 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
+>   	int layer, agent;
+>   	int id = pci_dev_id(dev);
+>   
+> +	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+> +			info->severity, info->tlp_header_valid, &info->tlp);
+> +
+> +	if (!aer_ratelimit(dev, info->severity))
+> +		return;
+> +
+>   	if (!info->status) {
+>   		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
+>   			aer_error_severity_string[info->severity]);
+> @@ -722,21 +753,28 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
+>   out:
+>   	if (info->id && info->error_dev_num > 1 && info->id == id)
+>   		pci_err(dev, "  Error of this Agent is reported first\n");
+> -
+> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+> -			info->severity, info->tlp_header_valid, &info->tlp);
+>   }
+>   
+>   static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
+>   {
+>   	u8 bus = info->id >> 8;
+>   	u8 devfn = info->id & 0xff;
+> +	struct pci_dev *endpoint;
+> +	int i;
+> +
+> +	/* extract endpoint device ratelimit */
+> +	for (i = 0; i < info->error_dev_num; i++) {
+> +		endpoint = info->dev[i];
+> +		if (info->id == pci_dev_id(endpoint))
+> +			break;
+> +	}
+>   
+> -	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d\n",
+> -		 info->multi_error_valid ? "Multiple " : "",
+> -		 aer_error_severity_string[info->severity],
+> -		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
+> -		 PCI_FUNC(devfn));
+> +	if (aer_ratelimit(endpoint, info->severity))
+> +		pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d\n",
+> +			 info->multi_error_valid ? "Multiple " : "",
+> +			 aer_error_severity_string[info->severity],
+> +			 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
+> +			 PCI_FUNC(devfn));
+>   }
+>   
+>   #ifdef CONFIG_ACPI_APEI_PCIEAER
+> @@ -784,6 +822,12 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   
+>   	pci_dev_aer_stats_incr(dev, &info);
+>   
+> +	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+> +			aer_severity, tlp_header_valid, &aer->header_log);
+> +
+> +	if (!aer_ratelimit(dev, aer_severity))
+> +		return;
+> +
+>   	aer_printk(level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+>   	__aer_print_error(dev, &info, level);
+>   	aer_printk(level, dev, "aer_layer=%s, aer_agent=%s\n",
+> @@ -795,9 +839,6 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   
+>   	if (tlp_header_valid)
+>   		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+> -
+> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+> -			aer_severity, tlp_header_valid, &aer->header_log);
+>   }
+>   EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+>   
+> @@ -1299,10 +1340,11 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>   			e_info.multi_error_valid = 1;
+>   		else
+>   			e_info.multi_error_valid = 0;
+> -		aer_print_port_info(pdev, &e_info);
+>   
+> -		if (find_source_device(pdev, &e_info))
+> +		if (find_source_device(pdev, &e_info)) {
+> +			aer_print_port_info(pdev, &e_info);
+>   			aer_process_err_devices(&e_info, KERN_WARNING);
+> +		}
+>   	}
+>   
+>   	if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
+> @@ -1318,10 +1360,10 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>   		else
+>   			e_info.multi_error_valid = 0;
+>   
+> -		aer_print_port_info(pdev, &e_info);
+> -
+> -		if (find_source_device(pdev, &e_info))
+> +		if (find_source_device(pdev, &e_info)) {
+> +			aer_print_port_info(pdev, &e_info);
+>   			aer_process_err_devices(&e_info, KERN_ERR);
+> +		}
+>   	}
+>   }
+>   
 
-Thanks for explaining one more motivation behind this patchset!
-
-Best regards
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
 
