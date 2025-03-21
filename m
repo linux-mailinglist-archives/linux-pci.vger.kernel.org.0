@@ -1,52 +1,52 @@
-Return-Path: <linux-pci+bounces-24312-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24311-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B84BA6B6B9
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 10:11:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3D1BA6B6AC
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 10:10:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 198D919C50A9
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 09:10:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9CB833B2536
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Mar 2025 09:10:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 960881F150F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 953DA1F150A;
 	Fri, 21 Mar 2025 09:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNHMk2x9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRaCVwXn"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DDD1F03D8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D548BEE;
 	Fri, 21 Mar 2025 09:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742548196; cv=none; b=h8CI8R4EF0DCMwNZ5e4EuYBy/rWnS83G49Osfbo/Sp6pF42JOtVnSJA27I4NASCVxt/AILr6nFcSPzddfYO7FKrM6qCNl8TNTkWGdnT9oc7uw/fk40Y5V+Rpuri9GykFnYIuuohqasCqaVeuoAFtOOuwhx52vIuQuaVK8L2kFjA=
+	t=1742548196; cv=none; b=uwfpD0827d/vW8S7R9aeR8Ly4JVFJaRAVBNsz+VuQlhOvrqFw4Lz4BpfGJ3GqUiHu09UGYgYM8OGT3EGJS/4A2Hag/yb2XNVvFVliArS2YKtCVisL/v837yRFnNMy2lX2X/cSrFx2D0WuKitQxOuyN7lsEOl8qrJ6KkdwEVPiak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742548196; c=relaxed/simple;
-	bh=Vlq0R7cLd+B8V83Bai1T9Yowc+PdKkhwH/55AXdKJTM=;
+	bh=tlVg37QeIwq/BVXEmQZGCinc72LFFyHRz41tzUQAGsk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Fah7C0liPNGQoPRDotpLNYU028oo9KM6sMJOOvNDwNv5xcAb3mzaJOJYgpJLMhQqM0pEoSGM953lLr1rOLOg1YA/yi8Jt2XochS+YAGELwjxJURYmdgWCQu6TEWKed6lgoF9O9RWq8CyPVMzEWR62IehG9A44Jqo1AECleT8/Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNHMk2x9; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D4907C4CEEA;
+	 In-Reply-To:To:Cc; b=R2G8NVNJ5hNubRzIaNwJanzakzZTNs+ozRAXzCJe8U84+UqM7FWUB+RbRe+PKd7iDe+UOJfMlrNtWNhzdZU4VVtcVhxbNPKGxjPMRb7xkS/OdSe9txRyJlUGZnRwaarCX28LwpVcML3JRImfn1emWCv/dbR/1hDPXGhNKDoALu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRaCVwXn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E9D45C4AF13;
 	Fri, 21 Mar 2025 09:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1742548196;
-	bh=Vlq0R7cLd+B8V83Bai1T9Yowc+PdKkhwH/55AXdKJTM=;
+	bh=tlVg37QeIwq/BVXEmQZGCinc72LFFyHRz41tzUQAGsk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=FNHMk2x9dyRc0gPGALdSvz6f5pvgQelRlCqpYZINxYaewbbSv/y+S8KF2/JTaP7Aq
-	 ISPk/IJpQUW/lwF95MCF58kuy9EYyo7zjizGNoR+RlciPc/8PbbG1DnIrc0wyulVfh
-	 TTZcxiR6Deyou/DYI4438OE3jRXHkpMW/m5OxGKKvPgydexPa5DiJzkFBIH/TwAiOQ
-	 5/F3SFoA9hST9rqs3yn9SmJIEt5lK2VMrE7WlGLzIOuv0i0iVjF5WUMllRItP8f5/g
-	 +4JLVmMjr65xiCia4AGMjp6rW5sd70PGMrG/iuPtKWl5/Qdobn8hWRCD78LudU4GBo
-	 OTYxGp0sq41bA==
+	b=mRaCVwXnqQm2nDcR+GjHI4hEMMR52opV30KvM8BpCsluXguXP6szU4Kt/LpMCkjIS
+	 d+kCfwNxWvogTa+by6R5gwEhtVMkJga3uycnxNA6tVz+6FjaIcMB7iVvFflYAo9rxO
+	 +Euf6ccYlJxZKXNEap2lYP1FVd3YyrPyZ/JUtBmERLqCEr+M7Cg0ZBVbrVa6t/rYC9
+	 pDEDWPIbnybhWg50FeWMG3paLOZsttVYRWnp7flIBZxgACI54i/JdhDzOz1yejgQ0g
+	 FZEdzHBUjwycr2CtzMcZdBnG/JAil972hwU0thhojRROdwozWmWU4F71+xLn9pXJqa
+	 dGpkCkjdZgkeg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CC8C35FFF;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC68C36005;
 	Fri, 21 Mar 2025 09:09:55 +0000 (UTC)
 From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Fri, 21 Mar 2025 13:09:52 +0400
-Subject: [PATCH v5 3/6] dt-bindings: PCI: qcom: Add IPQ5018 SoC
+Date: Fri, 21 Mar 2025 13:09:53 +0400
+Subject: [PATCH v5 4/6] PCI: qcom: Add support for IPQ5018
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250321-ipq5018-pcie-v5-3-aae2caa1f418@outlook.com>
+Message-Id: <20250321-ipq5018-pcie-v5-4-aae2caa1f418@outlook.com>
 References: <20250321-ipq5018-pcie-v5-0-aae2caa1f418@outlook.com>
 In-Reply-To: <20250321-ipq5018-pcie-v5-0-aae2caa1f418@outlook.com>
 To: Vinod Koul <vkoul@kernel.org>, 
@@ -73,13 +73,13 @@ Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-pci@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>, 
  20250317100029.881286-2-quic_varada@quicinc.com, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>
+ Sricharan R <quic_srichara@quicinc.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742548192; l=3072;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742548192; l=1329;
  i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=n1pq98OF6nCyGBtv37e9qjebYlzLP26UOUQF23Nah7k=;
- b=HxPtt29b2Xz941ykzosjFdDL8NuX+ZEK2YcOobB5XMVeU6a5/fRbB1/AoDv3IkRPTvw/kIeFR
- jELXAyxOONsD0mbl6CnC8bWsvuO26Rv2d3HZXzGL3fTI/s43hIxU45F
+ bh=hdHPuZTrjBVTUJ6XMbo2uB5TbhhbWj1SbVqmNl1k/ZI=;
+ b=aWl7qLTKgwpbadAYtN8Rc/gI4tAlinSvRPw6wCeNui7cQAoBnfyHqlUwGojkyh/aNRv6qpCDE
+ FM1aVhTZKyMBkodvkC3nZDBKIonDreezBCYvDDa71euaqYZy9Z8LtS8
 X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
  pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
 X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
@@ -89,98 +89,32 @@ Reply-To: george.moussalem@outlook.com
 
 From: Nitheesh Sekar <quic_nsekar@quicinc.com>
 
-Add support for the PCIe controller on the Qualcomm
-IPQ5108 SoC to the bindings.
+Add IPQ5018 platform with is based on Qcom IP rev. 2.9.0
+and Synopsys IP rev. 5.00a.
 
+The platform itself has two PCIe Gen2 controllers: one single-lane and
+one dual-lane. So let's add the IPQ5018 compatible and re-use 2_9_0 ops.
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
-Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Signed-off-by: Sricharan R <quic_srichara@quicinc.com>
 Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 ---
- .../devicetree/bindings/pci/qcom,pcie.yaml         | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ drivers/pci/controller/dwc/pcie-qcom.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 469b99fa0f0e..668ff03f2561 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -21,6 +21,7 @@ properties:
-           - qcom,pcie-apq8064
-           - qcom,pcie-apq8084
-           - qcom,pcie-ipq4019
-+          - qcom,pcie-ipq5018
-           - qcom,pcie-ipq6018
-           - qcom,pcie-ipq8064
-           - qcom,pcie-ipq8064-v2
-@@ -168,6 +169,7 @@ allOf:
-         compatible:
-           contains:
-             enum:
-+              - qcom,pcie-ipq5018
-               - qcom,pcie-ipq6018
-               - qcom,pcie-ipq8074-gen3
-               - qcom,pcie-ipq9574
-@@ -324,6 +326,53 @@ allOf:
-             - const: ahb # AHB reset
-             - const: phy_ahb # PHY AHB reset
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - qcom,pcie-ipq5018
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 6
-+          maxItems: 6
-+        clock-names:
-+          items:
-+            - const: iface # PCIe to SysNOC BIU clock
-+            - const: axi_m # AXI Master clock
-+            - const: axi_s # AXI Slave clock
-+            - const: ahb # AHB clock
-+            - const: aux # Auxiliary clock
-+            - const: axi_bridge # AXI bridge clock
-+        resets:
-+          minItems: 8
-+          maxItems: 8
-+        reset-names:
-+          items:
-+            - const: pipe # PIPE reset
-+            - const: sleep # Sleep reset
-+            - const: sticky # Core sticky reset
-+            - const: axi_m # AXI master reset
-+            - const: axi_s # AXI slave reset
-+            - const: ahb # AHB reset
-+            - const: axi_m_sticky # AXI master sticky reset
-+            - const: axi_s_sticky # AXI slave sticky reset
-+        interrupts:
-+          minItems: 9
-+          maxItems: 9
-+        interrupt-names:
-+          items:
-+            - const: msi0
-+            - const: msi1
-+            - const: msi2
-+            - const: msi3
-+            - const: msi4
-+            - const: msi5
-+            - const: msi6
-+            - const: msi7
-+            - const: global
-+
-   - if:
-       properties:
-         compatible:
-@@ -564,6 +613,7 @@ allOf:
-               enum:
-                 - qcom,pcie-apq8064
-                 - qcom,pcie-ipq4019
-+                - qcom,pcie-ipq5018
-                 - qcom,pcie-ipq8064
-                 - qcom,pcie-ipq8064v2
-                 - qcom,pcie-ipq8074
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index dc98ae63362d..e91bbe218569 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -1840,6 +1840,7 @@ static const struct of_device_id qcom_pcie_match[] = {
+ 	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+ 	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+ 	{ .compatible = "qcom,pcie-ipq4019", .data = &cfg_2_4_0 },
++	{ .compatible = "qcom,pcie-ipq5018", .data = &cfg_2_9_0 },
+ 	{ .compatible = "qcom,pcie-ipq6018", .data = &cfg_2_9_0 },
+ 	{ .compatible = "qcom,pcie-ipq8064", .data = &cfg_2_1_0 },
+ 	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
 
 -- 
 2.48.1
