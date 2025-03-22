@@ -1,122 +1,142 @@
-Return-Path: <linux-pci+bounces-24435-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24436-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48427A6C7BD
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Mar 2025 06:31:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A780FA6C8F0
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Mar 2025 11:09:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78DCD18996A8
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Mar 2025 05:32:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADFE11899259
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Mar 2025 10:09:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A763513B5A0;
-	Sat, 22 Mar 2025 05:31:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37C8A1E3DD0;
+	Sat, 22 Mar 2025 10:09:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ujRRApW0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="As+i6puU"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82EF52C80
-	for <linux-pci@vger.kernel.org>; Sat, 22 Mar 2025 05:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4561B1EBFE4;
+	Sat, 22 Mar 2025 10:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742621508; cv=none; b=uvKo+Oq01wR+CEnBn/RdLfgWclPaQ9MH02WhgUpKYfbrzRvEb5DjhMbXd8/BYMoaET0CazvpSwxfHW/6xb83ZpZVjVeLvp97sFOz39e1Ba4mspi4+ZD6h8XOmBgZjw1hZXb5VTQwElb9Q85Bzj8fmfBkD4HbMDLkIdoJfb7IpGo=
+	t=1742638150; cv=none; b=rN9+mkeCJ1DLfJujsDWGfW5K+ovLlLARxGynYpAgN6ZBvB/BpM+goVB5o9y0va6t/zaTJRT1qNgQbRWGFfGMrJ1RvSBu0Fl+QtPCv7K/2IePSq6e70l7TUtqd/cE3BHRVgCOwHXdQ5LujcG0qSI11kLqmKNLYbh0e2V+G2Bo3W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742621508; c=relaxed/simple;
-	bh=tto1K1dR9V1JtvpnRN45tcxKtb070neecMqe+R+eYjo=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=SO4w7zbTRZAcbKyLTvalfhhO1xbiU+E6ljqy3VmSSi9FVuilnSB67RAkZc7xLKhLkSyDEs5qBEoqIkf93RBOL8HL2cJ52Fb8Qr8dFct5epluhwlnCfUPzWBj2cwGntA5vr6eKcrYhMfxF10kJYh4Z786bvfRLl36U7WOVLjwh7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ujRRApW0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6421EC4CEDD;
-	Sat, 22 Mar 2025 05:31:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742621507;
-	bh=tto1K1dR9V1JtvpnRN45tcxKtb070neecMqe+R+eYjo=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=ujRRApW0jWuSjkwbM/dtGVmgbKM9sR8+omjj+a/hCjbWgYc1I7BToSkVtp2xaWBkm
-	 wuw+ltIy0ykZ2UAgnqSMTiIDUZioE5IDYagMXPcLbWTbX8KBayza7KXd6ANahkCaUM
-	 k7Gm7ZwFoatkrsA/2GLwF1X9DMFz7tSNQP1+NAACAocwbsd6fAFB3UUmSXKLkHGCIV
-	 JoFNizn3+7PBFCL6fPuel5vq8uR9uJrcefMZxXqB4eURHWQ66diWRIz7yQxp71jl2d
-	 RWSmR0ZIqk3zAENI5kOrt++Q6LWhM7f3Fn14COo5jwf9YHZ9FVMNnFKrVqE3iA6tsw
-	 9Vu+5EMV8DAdQ==
-Date: Sat, 22 Mar 2025 06:31:44 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: bhelgaas@google.com, kw@linux.com, linux-pci@vger.kernel.org,
- Damien Le Moal <dlemoal@kernel.org>,
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_3/4=5D_misc=3A_pc?=
- =?US-ASCII?Q?i=5Fendpoint=5Ftest=3A_Let_PCI?=
- =?US-ASCII?Q?TEST=5F=7BREAD=2CWRITE=2CCOPY=7D_set_IRQ_type_automatically?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250322022450.jn2ea4dastonv36v@thinkpad>
-References: <20250318103330.1840678-6-cassel@kernel.org> <20250318103330.1840678-9-cassel@kernel.org> <20250320152732.l346sbaioubb5qut@thinkpad> <Z91pRhf50ErRt5jD@x1-carbon> <20250322022450.jn2ea4dastonv36v@thinkpad>
-Message-ID: <2D76B56E-00A1-4AC1-B7B5-4ABEA53267CF@kernel.org>
+	s=arc-20240116; t=1742638150; c=relaxed/simple;
+	bh=Hdv42PI+SQv5JUjnRTSo8idtKkWDywJe2XkqlGKHXbk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h1z8UkmyJhPqzjsfZn2JuCkdbyXbuZJfrxEVB2JmHC7F9q0tK5IH90y+2FzhljjzfAt3aJUTlVYi5H8NS9iB9vgGVb/Ap7lfMOBmEdPapgznWNc067MjIN8KsZsMyrTuqiN4v45pFg+qoOEY9Fv5wrAQVkT9Li7aAeii9aJ2M6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=As+i6puU; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1742638138; x=1742897338;
+	bh=ZFFKz10EMacfDB3xAKr3jPI1Qcnx3CwnTAUEEkeCMJo=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=As+i6puUOChqNYwjfuQbipHqiHnACG+UwFrA+edTl42+0UFiXWTzD4tcgdaGwMqLU
+	 8cu8mBWPDyKg4fu5zvg8aLH9COXNyWd7D2vEiQU5hr0UKwsuFq9qAjD1z8N1sUvZ6p
+	 sRYKDRiub1ZX2qHx1VV7djzTwPKnP1N8Ha6VtRrOMJ9PUiapxHj/T/tqxr04TRPBfk
+	 MJZt0KwVBayBmwVaQCOuqnh1ZTGu5+gzqYjSi/3dj/+jto6XCYlfFAw+CkNg4fqrfT
+	 44rcKBAZomTosmwdCDQhkwJXCf0iOK8jidYdlPUkFKq76bnI9PmW2LRcHX7dxTHuRe
+	 V5zRzmShxw5+g==
+Date: Sat, 22 Mar 2025 10:08:53 +0000
+To: kernel test robot <lkp@intel.com>, Danilo Krummrich <dakr@kernel.org>, bhelgaas@google.com, gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] rust: pci: impl TryFrom<&Device> for &pci::Device
+Message-ID: <D8MPNRAYNZIS.T7U3XLKHN523@proton.me>
+In-Reply-To: <202503220040.TDePlxma-lkp@intel.com>
+References: <20250320222823.16509-4-dakr@kernel.org> <202503220040.TDePlxma-lkp@intel.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: dfc469007ca1960c05e3b75300ee8c8b99f6f5a4
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-
-
-On 22 March 2025 03:24:50 CET, Manivannan Sadhasivam <manivannan=2Esadhasi=
-vam@linaro=2Eorg> wrote:
->On Fri, Mar 21, 2025 at 02:27:34PM +0100, Niklas Cassel wrote:
->>=20
->> I'm really (honestly) happy with whatever solution, as long as we, once=
- again,
->> handle EPCs that only support INTx, or only support MSI-X=2E
->>=20
+On Fri Mar 21, 2025 at 5:56 PM CET, kernel test robot wrote:
+> Hi Danilo,
 >
->We will keep your old series as it is=2E
+> kernel test robot noticed the following build errors:
 >
->> (Because ever since your patch series that migrated pcitest to selftest=
-s,
->> READ_TEST / WRITE_TEST / COPY_TEST test cases unconditionally use MSI, =
-which
->> is a regression for EPCs that only support INTx, or only support MSI-X,
->> which is the whole reason why I wrote this series=2E)
->>=20
+> [auto build test ERROR on 51d0de7596a458096756c895cfed6bc4a7ecac10]
 >
->IMO, the regression could be simply fixed if you have removed the ASSERT_=
-EQ from
->READ/WRITE/COPY testcases=2E
+> url:    https://github.com/intel-lab-lkp/linux/commits/Danilo-Krummrich/r=
+ust-device-implement-Device-parent/20250321-063101
+> base:   51d0de7596a458096756c895cfed6bc4a7ecac10
+> patch link:    https://lore.kernel.org/r/20250320222823.16509-4-dakr%40ke=
+rnel.org
+> patch subject: [PATCH v2 3/4] rust: pci: impl TryFrom<&Device> for &pci::=
+Device
+> config: x86_64-buildonly-randconfig-005-20250321 (https://download.01.org=
+/0day-ci/archive/20250322/202503220040.TDePlxma-lkp@intel.com/config)
+> compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c=
+2d9b7e4de40d0804dd374721e6411c27d1d1)
+> rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20250322/202503220040.TDePlxma-lkp@intel.com/reproduce)
 >
->But anyway, all good now=2E Thanks a lot for your patience in educating m=
-e :)
->Really appreciated=2E
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202503220040.TDePlxma-lkp=
+@intel.com/
+>
+> All errors (new ones prefixed by >>):
+>
+>    ***
+>    *** Rust bindings generator 'bindgen' < 0.69.5 together with libclang =
+>=3D 19.1
+>    *** may not work due to a bug (https://github.com/rust-lang/rust-bindg=
+en/pull/2824),
+>    *** unless patched (like Debian's).
+>    ***   Your bindgen version:  0.65.1
+>    ***   Your libclang version: 20.1.1
+>    ***
+>    ***
+>    *** Please see Documentation/rust/quick-start.rst for details
+>    *** on how to set up the Rust support.
+>    ***
+>>> error[E0133]: use of extern static is unsafe and requires unsafe block
+>    --> rust/kernel/pci.rs:473:43
+>    |
+>    473 |         if dev.bus_type_raw() !=3D addr_of!(bindings::pci_bus_ty=
+pe) {
+>    |                                           ^^^^^^^^^^^^^^^^^^^^^^ use=
+ of extern static
+>    |
+>    =3D note: extern statics are not controlled by the Rust type system: i=
+nvalid data, aliasing violations or data races will cause undefined behavio=
+r
 
-Don't say it like that :)
+This is just a minor annoyance with these error reports, but I would
+very much like the error to have the correct indentation:
 
-I understand where you were coming from=2E
-I think if we designed the API today, we would have kept it as one ioctl, =
-and user space could have provided the IRQ type (and/or auto) as a struct m=
-ember in the struct supplied in the ioctl=2E
+>> error[E0133]: use of extern static is unsafe and requires unsafe block
+    --> rust/kernel/pci.rs:473:43
+        |
+    473 |         if dev.bus_type_raw() !=3D addr_of!(bindings::pci_bus_typ=
+e) {
+        |                                           ^^^^^^^^^^^^^^^^^^^^^^ =
+use of extern static
+        |
 
-But, considering that we already have PCITEST_SET_IRQTYPE as a separate io=
-ctl, I think what is currently queued fits the current design the best, eve=
-n if it is not a "real" IRQ type=2E
+Would that be possible to fix? That way the `^^^^` align with the item
+they are referencing.
 
+Otherwise they are very helpful!
 
-I still need to send a patch that fixes the kdoc=2E
+---
+Cheers,
+Benno
 
-BTW, can all Qcom platform raise INTx interrupts in EP mode?
-
-Bjorn did not like that I added intx_capable to epc_features without havin=
-g any platform that sets it to true=2E I'm quite sure that many platforms c=
-an raise INTx interrupts=2E
-If all Qcom platforms can raise INTx interrupts,
-then I could set intx_capable to true in epc_features in qcom-ep=2Ec, to a=
-ddress Bjorns comment=2E
-
-
-Kind regards,
-Niklas
 
