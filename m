@@ -1,190 +1,121 @@
-Return-Path: <linux-pci+bounces-24443-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24444-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99231A6CBC1
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Mar 2025 18:59:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A132A6CBEA
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Mar 2025 19:58:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C009188A99B
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Mar 2025 17:59:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 638113B2118
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Mar 2025 18:58:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81D3715CD46;
-	Sat, 22 Mar 2025 17:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n3iYnyO/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56A5822F3BD;
+	Sat, 22 Mar 2025 18:58:43 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mailout1.hostsharing.net (mailout1.hostsharing.net [83.223.95.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F44B22B8C3
-	for <linux-pci@vger.kernel.org>; Sat, 22 Mar 2025 17:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BDC41C84B6
+	for <linux-pci@vger.kernel.org>; Sat, 22 Mar 2025 18:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742666342; cv=none; b=G0avR2AqRe5vuSscTzUOD+l7u3+U39WPjFdVN7EF9LOGMnmt+jlDWKT7u2voMKSaPo9L2zJZptYi86ruebpbQ2PpmzEvonARA5Ft3pmgnROeM3kqYsBmTZ+Rx8DqR+e2E/wzvkRxaAcu1Y2StPAIihKp4Ta57O7MeMDGYQ6HRsg=
+	t=1742669923; cv=none; b=qP76S6j2axiHdML1qv7PZz7fY1ejUUHZ3MhJxBEtwhbk7D+Kmv/Yd29sefy5sVIJDP3XCavV+iM+jjwep+gmWIBw7DtFNquc5AGK5Mss9VzH8UV4BjQwL521XVBpe8CE+FGtAbnpwlW6uv2OTtEyohWkeC6M2J12xTa5MB5yNOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742666342; c=relaxed/simple;
-	bh=ZiA7Ur2YkX34Gz0vCSVtJcdowLhCDZ/nYr7DBsYCcuw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=cfti4KPlQtwfwWMquL15uQNNA6ZUH/O+zNspRfPh/L0fEf+1MeNolqHjmDwute/TPieWqviS3rulpbkde2ocEBACI4RbDTVXYb0F8CekPi2SZ3kGFFsjpAtnVQBbNcHeNzxToBMHDwoGe4IDSg8H/rQuZNmYiZQD0x29cr2mVuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n3iYnyO/; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742666340; x=1774202340;
-  h=date:from:to:cc:subject:message-id;
-  bh=ZiA7Ur2YkX34Gz0vCSVtJcdowLhCDZ/nYr7DBsYCcuw=;
-  b=n3iYnyO/TsHWHEY2eEjudL4G2Cjb765Cz94Xx+5aNqzRZjNKF3tVaI1L
-   m7Jjn7vA0c+YWXU8AEly9F0ZLn2P0z2xtSqYpXJObSr8EGzFNNN3sA2+6
-   YPDlSk9ZMZqAk2zMU3nYgYzo6pSn7qhPjJ08khZfyCeYi8NwvMv2Rm5XO
-   eWNRcO7f9aj7sLsRQgTr/tezOynxzs79Acqy3+hsFfo00TCdR5wFaOzZV
-   nNQ3jmmjbLtzTCdcI+cnccvbvy8a6WFPyP5H24KMeLhBWn6tqjEmGaBff
-   1pMIgr6Z/xUHfrDSA7gGOu4ra96qKT3WMPjR8gsbrLKp+s0Z3kShKsR45
-   g==;
-X-CSE-ConnectionGUID: H3jf2prRQLKbFlkHL645pg==
-X-CSE-MsgGUID: sViesy7pQPuJyg6oa2PxOQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11381"; a="55293343"
-X-IronPort-AV: E=Sophos;i="6.14,268,1736841600"; 
-   d="scan'208";a="55293343"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2025 10:59:00 -0700
-X-CSE-ConnectionGUID: KVgeKV7JSHueYaCqv3jB/w==
-X-CSE-MsgGUID: XVJGwIauRWmtCn1HFXa12A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,268,1736841600"; 
-   d="scan'208";a="160896844"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 22 Mar 2025 10:58:38 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tw378-0002Jc-2b;
-	Sat, 22 Mar 2025 17:58:32 +0000
-Date: Sun, 23 Mar 2025 01:57:34 +0800
-From: kernel test robot <lkp@intel.com>
+	s=arc-20240116; t=1742669923; c=relaxed/simple;
+	bh=zoqr9ai99hcygtVL96nWOUsIchoRveYwqRfvVwrFSvk=;
+	h=Message-ID:From:Date:Subject:To:Cc; b=gPUwldjTQcaitU1PSy2RX2O8/oSdPD1vq+ovmXZPAu2gjQw6+SkGzU85z7uH+wFYYqVzz0LBcRc18TfV79PfF/A2qGeXDd0OGmOryb1hcpe8kkWV9qptFhzOBJbc/E8x2c5r7ZMiLcux/WQz0/Jya4OTLoZPtoqr1jGD2HV5qew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.95.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by mailout1.hostsharing.net (Postfix) with ESMTPS id 36D4A10192631;
+	Sat, 22 Mar 2025 19:52:11 +0100 (CET)
+Received: from localhost (unknown [89.246.108.87])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by h08.hostsharing.net (Postfix) with ESMTPSA id 04EDF603DF46;
+	Sat, 22 Mar 2025 19:52:10 +0100 (CET)
+X-Mailbox-Line: From 3b6c8d973aedc48860640a9d75d20528336f1f3c Mon Sep 17 00:00:00 2001
+Message-ID: <3b6c8d973aedc48860640a9d75d20528336f1f3c.1742669372.git.lukas@wunner.de>
+From: Lukas Wunner <lukas@wunner.de>
+Date: Sat, 22 Mar 2025 19:52:08 +0100
+Subject: [PATCH] PCI/bwctrl: Fix NULL pointer deref on bus number exhaustion
 To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:bwctrl] BUILD SUCCESS
- 026e4bffb0af9632f5a0bbf8d594f2aace44cf07
-Message-ID: <202503230128.VetxjpVR-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Cc: linux-pci@vger.kernel.org, Wouter Bijlsma <wouter@wouterbijlsma.nl>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git bwctrl
-branch HEAD: 026e4bffb0af9632f5a0bbf8d594f2aace44cf07  PCI/bwctrl: Fix pcie_bwctrl_select_speed() return type
+When BIOS neglects to assign bus numbers to PCI bridges, the kernel
+attempts to correct that during PCI device enumeration.  If it runs out
+of bus numbers, no pci_bus is allocated and the "subordinate" pointer in
+the bridge's pci_dev remains NULL.
 
-elapsed time: 1443m
+The PCIe bandwidth controller erroneously does not check for a NULL
+subordinate pointer and dereferences it on probe.
 
-configs tested: 97
-configs skipped: 2
+Bandwidth control of unusable devices below the bridge is of questionable
+utility, so simply error out instead.  This mirrors what PCIe hotplug does
+since commit 62e4492c3063 ("PCI: Prevent NULL dereference during pciehp
+probe").
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The PCI core emits a message with KERN_INFO severity if it has run out of
+bus numbers.  PCIe hotplug emits an additional message with KERN_ERR
+severity to inform the user that hotplug functionality is disabled at the
+bridge.  A similar message for bandwidth control does not seem merited,
+given that its only purpose so far is to expose an up-to-date link speed
+in sysfs and throttle the link speed on certain laptops with limited
+Thermal Design Power.  So error out silently.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                   randconfig-001-20250322    gcc-10.5.0
-arc                   randconfig-002-20250322    gcc-8.5.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250322    gcc-7.5.0
-arm                   randconfig-002-20250322    gcc-7.5.0
-arm                   randconfig-003-20250322    clang-21
-arm                   randconfig-004-20250322    clang-19
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250322    clang-21
-arm64                 randconfig-002-20250322    clang-21
-arm64                 randconfig-003-20250322    gcc-8.5.0
-arm64                 randconfig-004-20250322    clang-21
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250322    gcc-14.2.0
-csky                  randconfig-002-20250322    gcc-14.2.0
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250322    clang-21
-hexagon               randconfig-002-20250322    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250322    clang-20
-i386        buildonly-randconfig-002-20250322    gcc-12
-i386        buildonly-randconfig-003-20250322    gcc-12
-i386        buildonly-randconfig-004-20250322    clang-20
-i386        buildonly-randconfig-005-20250322    clang-20
-i386        buildonly-randconfig-006-20250322    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250322    gcc-14.2.0
-loongarch             randconfig-002-20250322    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-nios2                 randconfig-001-20250322    gcc-6.5.0
-nios2                 randconfig-002-20250322    gcc-10.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250322    gcc-5.5.0
-parisc                randconfig-002-20250322    gcc-13.3.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc               randconfig-001-20250322    clang-21
-powerpc               randconfig-002-20250322    gcc-8.5.0
-powerpc               randconfig-003-20250322    clang-21
-powerpc64             randconfig-001-20250322    clang-21
-powerpc64             randconfig-002-20250322    gcc-8.5.0
-powerpc64             randconfig-003-20250322    gcc-8.5.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250322    gcc-8.5.0
-riscv                 randconfig-002-20250322    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250322    gcc-9.3.0
-s390                  randconfig-002-20250322    gcc-6.5.0
-sh                               allmodconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250322    gcc-10.5.0
-sh                    randconfig-002-20250322    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                 randconfig-001-20250322    gcc-9.3.0
-sparc                 randconfig-002-20250322    gcc-9.3.0
-sparc64               randconfig-001-20250322    gcc-5.5.0
-sparc64               randconfig-002-20250322    gcc-5.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250322    clang-21
-um                    randconfig-002-20250322    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250322    clang-20
-x86_64      buildonly-randconfig-002-20250322    clang-20
-x86_64      buildonly-randconfig-003-20250322    clang-20
-x86_64      buildonly-randconfig-004-20250322    gcc-12
-x86_64      buildonly-randconfig-005-20250322    clang-20
-x86_64      buildonly-randconfig-006-20250322    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                randconfig-001-20250322    gcc-14.2.0
-xtensa                randconfig-002-20250322    gcc-14.2.0
+User-visible messages:
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  pci 0000:16:02.0: bridge configuration invalid ([bus 00-00]), reconfiguring
+  [...]
+  pci_bus 0000:45: busn_res: [bus 45-74] end is updated to 74
+  pci 0000:16:02.0: devices behind bridge are unusable because [bus 45-74] cannot be assigned for them
+  [...]
+  pcieport 0000:16:02.0: pciehp: Hotplug bridge without secondary bus, ignoring
+  [...]
+  BUG: kernel NULL pointer dereference
+  RIP: pcie_update_link_speed
+  pcie_bwnotif_enable
+  pcie_bwnotif_probe
+  pcie_port_probe_service
+  really_probe
+
+Fixes: 665745f27487 ("PCI/bwctrl: Re-add BW notification portdrv as PCIe BW controller")
+Reported-by: Wouter Bijlsma <wouter@wouterbijlsma.nl>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219906
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v6.13+
+---
+ drivers/pci/pcie/bwctrl.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
+index 0a5e7efbce2c..0e5807ae4083 100644
+--- a/drivers/pci/pcie/bwctrl.c
++++ b/drivers/pci/pcie/bwctrl.c
+@@ -294,6 +294,10 @@ static int pcie_bwnotif_probe(struct pcie_device *srv)
+ 	struct pci_dev *port = srv->port;
+ 	int ret;
+ 
++	/* Can happen if we run out of bus numbers during enumeration */
++	if (!port->subordinate)
++		return -ENODEV;
++
+ 	struct pcie_bwctrl_data *data = devm_kzalloc(&srv->device,
+ 						     sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+-- 
+2.43.0
+
 
