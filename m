@@ -1,142 +1,193 @@
-Return-Path: <linux-pci+bounces-24436-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24437-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A780FA6C8F0
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Mar 2025 11:09:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D17B5A6C8F2
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Mar 2025 11:11:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADFE11899259
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Mar 2025 10:09:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 438DE170C43
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Mar 2025 10:11:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37C8A1E3DD0;
-	Sat, 22 Mar 2025 10:09:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0176B1F4634;
+	Sat, 22 Mar 2025 10:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="As+i6puU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BsWK3eIF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4561B1EBFE4;
-	Sat, 22 Mar 2025 10:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DE31F37CE;
+	Sat, 22 Mar 2025 10:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742638150; cv=none; b=rN9+mkeCJ1DLfJujsDWGfW5K+ovLlLARxGynYpAgN6ZBvB/BpM+goVB5o9y0va6t/zaTJRT1qNgQbRWGFfGMrJ1RvSBu0Fl+QtPCv7K/2IePSq6e70l7TUtqd/cE3BHRVgCOwHXdQ5LujcG0qSI11kLqmKNLYbh0e2V+G2Bo3W4=
+	t=1742638257; cv=none; b=F74WKqGU5r9goS1bTqeuv5kLRnrJ022DafzFFfHkkTurBNEaxPsUBBxCM53e00ROyTAZ2GlK43F562rnT3dIwHNy0+J9JSj7QdGEuF/1APpD1ICf4hG1wHdJ9DIV+XzpoCj8eGrMRzTp2O7eHCWO5oVu6RFS4MkIM9IPArX/Y3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742638150; c=relaxed/simple;
-	bh=Hdv42PI+SQv5JUjnRTSo8idtKkWDywJe2XkqlGKHXbk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h1z8UkmyJhPqzjsfZn2JuCkdbyXbuZJfrxEVB2JmHC7F9q0tK5IH90y+2FzhljjzfAt3aJUTlVYi5H8NS9iB9vgGVb/Ap7lfMOBmEdPapgznWNc067MjIN8KsZsMyrTuqiN4v45pFg+qoOEY9Fv5wrAQVkT9Li7aAeii9aJ2M6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=As+i6puU; arc=none smtp.client-ip=79.135.106.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1742638138; x=1742897338;
-	bh=ZFFKz10EMacfDB3xAKr3jPI1Qcnx3CwnTAUEEkeCMJo=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=As+i6puUOChqNYwjfuQbipHqiHnACG+UwFrA+edTl42+0UFiXWTzD4tcgdaGwMqLU
-	 8cu8mBWPDyKg4fu5zvg8aLH9COXNyWd7D2vEiQU5hr0UKwsuFq9qAjD1z8N1sUvZ6p
-	 sRYKDRiub1ZX2qHx1VV7djzTwPKnP1N8Ha6VtRrOMJ9PUiapxHj/T/tqxr04TRPBfk
-	 MJZt0KwVBayBmwVaQCOuqnh1ZTGu5+gzqYjSi/3dj/+jto6XCYlfFAw+CkNg4fqrfT
-	 44rcKBAZomTosmwdCDQhkwJXCf0iOK8jidYdlPUkFKq76bnI9PmW2LRcHX7dxTHuRe
-	 V5zRzmShxw5+g==
-Date: Sat, 22 Mar 2025 10:08:53 +0000
-To: kernel test robot <lkp@intel.com>, Danilo Krummrich <dakr@kernel.org>, bhelgaas@google.com, gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] rust: pci: impl TryFrom<&Device> for &pci::Device
-Message-ID: <D8MPNRAYNZIS.T7U3XLKHN523@proton.me>
-In-Reply-To: <202503220040.TDePlxma-lkp@intel.com>
-References: <20250320222823.16509-4-dakr@kernel.org> <202503220040.TDePlxma-lkp@intel.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: dfc469007ca1960c05e3b75300ee8c8b99f6f5a4
+	s=arc-20240116; t=1742638257; c=relaxed/simple;
+	bh=s5SsZ1ZfndtxDRrW4P12D0A21t0bU6sBDxfleux/0uk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SAyUZlo6P0/iMYZbw3/cv0Ni6KUfLhC2tomW4nsrShJ8qG6NcMabC9YuWrpYpOMTXgMEezdVYiJJRgo5Fc1c9swfv6NsngbRiPPXmINgfq2PtQDxdNjBWXAQ8wgnACfdgp1U4Wh6iZ6XEie+l/SY1AemWW93XhwKRPPnte7tMxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BsWK3eIF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A40E2C4CEE9;
+	Sat, 22 Mar 2025 10:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742638257;
+	bh=s5SsZ1ZfndtxDRrW4P12D0A21t0bU6sBDxfleux/0uk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BsWK3eIFYMcUcy1Z5eM8u03+bcapNKK46RHNpRtZHnm3pon4s9JTzepGl+8but9Bi
+	 gY33Lmtfm7iLJalJDYY9ofnutGwNbuNhI/zKQp+24WlMHWJvYYQqqhfVnRCl2Vsum0
+	 4ywkwlT1wpmnryS6IqUra7U5btGujaL2VjEBP4Ml4Qxc2kFLRhvnltdtKydals44DN
+	 E5MYMFA3XD15NnRh+WWGPUnM5alkv9f6zba0qUGPeJqKurh33HzzjYkuKSnIKtI8rp
+	 VQtNGacLRi+f7P2L3VrnPY2L1dksWCSNAIw8aQF1KsWAN8nNxkSS4cXD2BxnHsCC1J
+	 o/PQaYxt/FrXw==
+Date: Sat, 22 Mar 2025 11:10:52 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] rust: pci: impl TryFrom<&Device> for &pci::Device
+Message-ID: <Z96MrGQvpVrFqWYJ@pollux>
+References: <20250321214826.140946-1-dakr@kernel.org>
+ <20250321214826.140946-3-dakr@kernel.org>
+ <2025032158-embezzle-life-8810@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025032158-embezzle-life-8810@gregkh>
 
-On Fri Mar 21, 2025 at 5:56 PM CET, kernel test robot wrote:
-> Hi Danilo,
+On Fri, Mar 21, 2025 at 08:25:07PM -0700, Greg KH wrote:
+> On Fri, Mar 21, 2025 at 10:47:54PM +0100, Danilo Krummrich wrote:
 >
-> kernel test robot noticed the following build errors:
->
-> [auto build test ERROR on 51d0de7596a458096756c895cfed6bc4a7ecac10]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Danilo-Krummrich/r=
-ust-device-implement-Device-parent/20250321-063101
-> base:   51d0de7596a458096756c895cfed6bc4a7ecac10
-> patch link:    https://lore.kernel.org/r/20250320222823.16509-4-dakr%40ke=
-rnel.org
-> patch subject: [PATCH v2 3/4] rust: pci: impl TryFrom<&Device> for &pci::=
-Device
-> config: x86_64-buildonly-randconfig-005-20250321 (https://download.01.org=
-/0day-ci/archive/20250322/202503220040.TDePlxma-lkp@intel.com/config)
-> compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c=
-2d9b7e4de40d0804dd374721e6411c27d1d1)
-> rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
-ve/20250322/202503220040.TDePlxma-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202503220040.TDePlxma-lkp=
-@intel.com/
->
-> All errors (new ones prefixed by >>):
->
->    ***
->    *** Rust bindings generator 'bindgen' < 0.69.5 together with libclang =
->=3D 19.1
->    *** may not work due to a bug (https://github.com/rust-lang/rust-bindg=
-en/pull/2824),
->    *** unless patched (like Debian's).
->    ***   Your bindgen version:  0.65.1
->    ***   Your libclang version: 20.1.1
->    ***
->    ***
->    *** Please see Documentation/rust/quick-start.rst for details
->    *** on how to set up the Rust support.
->    ***
->>> error[E0133]: use of extern static is unsafe and requires unsafe block
->    --> rust/kernel/pci.rs:473:43
->    |
->    473 |         if dev.bus_type_raw() !=3D addr_of!(bindings::pci_bus_ty=
-pe) {
->    |                                           ^^^^^^^^^^^^^^^^^^^^^^ use=
- of extern static
->    |
->    =3D note: extern statics are not controlled by the Rust type system: i=
-nvalid data, aliasing violations or data races will cause undefined behavio=
-r
+> Yes, over time, many subsystems were forced to come up with ways of
+> determining the device type, look at dev_is_pci() and where it's used
+> all over the place (wait, why can't you just use that here too?)
 
-This is just a minor annoyance with these error reports, but I would
-very much like the error to have the correct indentation:
+It's a macro and bindgen doesn't pick it up for us to use.
 
->> error[E0133]: use of extern static is unsafe and requires unsafe block
-    --> rust/kernel/pci.rs:473:43
-        |
-    473 |         if dev.bus_type_raw() !=3D addr_of!(bindings::pci_bus_typ=
-e) {
-        |                                           ^^^^^^^^^^^^^^^^^^^^^^ =
-use of extern static
-        |
+> But
+> those usages are the rare exception.  And I still think that was the
+> wrong choice.
+> 
+> What I don't want to see is this type of function to be the only way you
+> can get a pci device from a struct device in rust.
 
-Would that be possible to fix? That way the `^^^^` align with the item
-they are referencing.
+I see where you're coming from and I totally agree with that.
 
-Otherwise they are very helpful!
+The goal is to cover as much as possible by the corresponding abstractions, such
+that the abstraction already provide the driver with the correct (device) type,
+just like the bus callbacks do.
 
----
-Cheers,
-Benno
+We can do the same thing with IOCTLs, sysfs ops, etc. The miscdevice
+abstractions are a good example for this. The DRM abstractions will also provide
+the DRM device (typed to its corresponding driver) for all DRM IOCTLs a driver
+registers.
 
+> That's going to be
+> messy as that is going to be a very common occurance (maybe, I haven't
+> seen how you use this), and would force everyone to always test the
+> return value, adding complexity and additional work for everyone, just
+> because the few wants it.
+
+Given the above, I think in most cases we are (and plan to be) a step ahead and
+(almost) never have the driver in the situation that it ever needs any
+container_of() like thing, because the abstraction already provides the correct
+type.
+
+However, there may be some rare exceptions, where we need the driver to
+"upcast", more below.
+
+> So where/how are you going to use this?  Why can't you just store the
+> "real" reference to the pci device?  If you want to save off a generic
+> device reference, where did it come from?  Why can't you just explicitly
+> save off the correct type at the time you stored it?  Is this just
+> attempting to save a few pointers?  Is this going to be required to be
+> called as the only way to get from a device to a pci device in a rust
+> driver?
+
+As mentioned above, wherever the abstraction can already provide the correct
+(device) type to the driver, that's what we should do instead.
+
+One specific use-case I see with this is for the auxiliary bus and likely MFD,
+where we want to access the parent of a certain device.
+
+For instance, in nova-drm we'll probe against an auxiliary device registered by
+nova-core. nova-drm will use its auxiliary device to call into nova-core.
+nova-core can then validate that it is the originator of the auxiliary device
+(e.g. by name and ID, or simply pointer comparison).
+
+Subsequently, nova-core can find its (in this case) pci::Device instance through
+the parent device (Note that I changed this, such that you can only get the
+parent device from an auxiliary::Device, as discussed).
+
+	pub fn some_operation(adev: &auxiliary::Device, ...) -> ... {
+	   // validate that `adev` was created by us
+
+	   if let Some(parent) = adev.parent() {
+              let pdev: &pci::Device = parent.try_into()?;
+	      ...
+	   }
+	}
+
+Now, I understand that your concern isn't necessarily about the fact that we
+"upcast", but that it is fallible.
+
+And you're not wrong about this, nova-core knows for sure that the parent device
+must be its PCI device, since it can indeed validate that the auxiliary device
+was created and registered by itself.
+
+However, any other API that does not validate that `parent` is actually a
+pci::Device in the example above would be fundamentally unsafe. And I think we
+don't want to give out unsafe APIs to drivers.
+
+Given that this is only needed in very rare cases (since most of the time the
+driver should be provided with the correct type directly) I'm not concerned
+about the small overhead of the underlying pointer comparison. It's also not
+creating messy code as it would be in C.
+
+In C it would be
+
+		struct pci_dev *pdev;
+
+		if (!dev_is_pci(parent))
+			return -EINVAL;
+
+		pdev = to_pci_dev(parent);
+
+Whereas in Rust it's only
+
+		let pdev: &pci::Device = parent.try_into()?;
+
+and without any validation in Rust
+
+		// SAFETY: explain why this is safe to do
+		let pdev = unsafe { pci::Device::from_device(parent) };
+
+> Along these lines, if you can convince me that this is something that we
+> really should be doing, in that we should always be checking every time
+> someone would want to call to_pci_dev(), that the return value is
+> checked, then why don't we also do this in C if it's going to be
+> something to assure people it is going to be correct?  I don't want to
+> see the rust and C sides get "out of sync" here for things that can be
+> kept in sync, as that reduces the mental load of all of us as we travers
+> across the boundry for the next 20+ years.
+
+I think in this case it is good when the C and Rust side get a bit
+"out of sync":
+
+For most of the cases where we can cover things through the type system and
+already provide the driver with the correct object instance from the get-go,
+that's a great improvement over C.
+
+For the very rare cases where we have to "upcast", I really think it's better to
+uphold providing safe APIs to drivers, rather than unsafe ones.
 
