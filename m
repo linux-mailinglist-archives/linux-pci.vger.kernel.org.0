@@ -1,96 +1,151 @@
-Return-Path: <linux-pci+bounces-24463-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24464-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5C9EA6CF83
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Mar 2025 14:39:33 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 954ADA6CFE7
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Mar 2025 16:38:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E8A7F1895ADC
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Mar 2025 13:39:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 152E616E815
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Mar 2025 15:38:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CDF32111;
-	Sun, 23 Mar 2025 13:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2BF87F7FC;
+	Sun, 23 Mar 2025 15:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="g1a4C1HT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEF917E
-	for <linux-pci@vger.kernel.org>; Sun, 23 Mar 2025 13:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD4D77083F;
+	Sun, 23 Mar 2025 15:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742737164; cv=none; b=AV2wGgkfV+K4v081kqdXilLlR0wutAZl3r9SAolcfcqPwdjwarnEXgYkj7P6+3L9MA35muU7InrwAcYL/R8l348w+D8D8UrOeVxw0LDQMW6vasktYB57EnEY5aDUKLdj+zFpkt2NE/XDeTXcMmSvDecl78GNFU8qb28nkxTnHos=
+	t=1742744305; cv=none; b=a+j9IfjCPpZy7yBPwXsZrJ8PFm315gP/dNpxXMSzYsHgLWS9zWuYI1M71CXmK0SvSTYUluscByqFLNb2lrra2xT+kNf2EgbQHzaSp36LivtAoHFTP/FiJhJXgRoZWuMkfJTWxi1uHXwZvJ19rfADsRhFLFIWP5cp8Mju1hoH0Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742737164; c=relaxed/simple;
-	bh=dwl6QtpIFF9fEzrtbURsue9BYcKSm1pyTzJKp6nt7zw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dDBBjgbJSRt6a74TorsDcwoYCUM5E9ZMkGnx3DVO7oyMY1d2yvcQkdb4W3fLrRBlTC/PsuOerzPvm0eHiNRaYLcEqkYnM7tPfQED94tXCC6k7JlSNyUSVWgDMC+FrBvZki/PIfHTZvRLYRIEFgoU7xpw/RqIf+6/QO4j3ACIzO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-226185948ffso66376175ad.0
-        for <linux-pci@vger.kernel.org>; Sun, 23 Mar 2025 06:39:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742737163; x=1743341963;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LirhhL1Oqoa8Y4yqLeQAbBfVqgZMoZx9ZgYet4tucO8=;
-        b=ujo0wTJ+qBJ+1mcThh5gYKpeIZafAzod529obcK06AYLH1ElUGJxWhEsAcLnjRP9qV
-         oT0zK175fXso2ZNPlMzTRO84ZOw6+7y989JOc66HJty4bRykfYt2M0reOiDk8FZ1iWN0
-         S+Vs3TT8GkeHFdANTPeE8Os8ICyuunHb0S9rS3QfrXeOTvfOtbPO3DnwO3udyUicd//8
-         xKF5mSy2oB9TybI4VvTBDsA0YH/wtgGLLoTXFpUcS6EhdUpiJ43eXzyFFfBD3lvyfPYo
-         7HD1KTvBrzxjAUV0CDHyukulYwc/dEI6DT9OGnc/yyjX16AgLISmTKK20UL3y3sx34Jb
-         q7VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPC2NBrBmvD39eXbm3vQ8U0OhhVhDavTttDvfUsBH9fmWIHKTOM0JRWSqldStSoSXtANf8WHHaSZw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2cDMFJV5TReZqxXyY2Bt09Bq8KlzD60L8DIyYudmc37nLgfwq
-	MACps7MO4MseQic6CQyQaPoNx4MI+022RZlLGyCBdEvTyFHSTJSf
-X-Gm-Gg: ASbGncv1TEq+Igt7244p0EkWSLeAj94L75zX9IsP8Cg0IEDL3Q+aUVu4tIoyZ22LxB+
-	au7gX33U6a2jubg4K9k/EtWq2VJwlvGDWAATNxHkPqymhDQijNvlaoTcEMuRzM2NtmeCCl883S9
-	vs2wjrE26OJPIHWkwNIJot2hUWx61tut/D9q3FjrMIjiipXL5ukQb73joN5D2s5p26QQOLqaFgU
-	m8Gb9FbuRQ2x5t7wHKKvtgYc3HkiYfjGHwhr6HITKH+BUXNI6y0ijjNKSIxnIxiFuQXLFMHD41U
-	tO8JkBQEcim/HDYc0E/7s3vFsZz2iMN9CcQSaYoJG5jhJ0vjhM5Nwf404ta3KwtyUxpOcHlNNtK
-	/UCE=
-X-Google-Smtp-Source: AGHT+IFXK4cMxkwhYN3vUAMTaEKsnmqS3oLSY0eLfwVLE1AnaOxe3Ag130M3IRbwp0fwz3L/4Dym2Q==
-X-Received: by 2002:a05:6a00:1485:b0:736:51a6:78b1 with SMTP id d2e1a72fcca58-739059bfdb8mr16414535b3a.11.1742737162603;
-        Sun, 23 Mar 2025 06:39:22 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73905fab592sm5981966b3a.19.2025.03.23.06.39.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Mar 2025 06:39:22 -0700 (PDT)
-Date: Sun, 23 Mar 2025 22:39:20 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Wouter Bijlsma <wouter@wouterbijlsma.nl>
-Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
-	linux-pci@vger.kernel.org,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] PCI/bwctrl: Fix NULL pointer deref on bus number
- exhaustion
-Message-ID: <20250323133920.GK1902347@rocinante>
-References: <3b6c8d973aedc48860640a9d75d20528336f1f3c.1742669372.git.lukas@wunner.de>
- <20250323112456.GA1902347@rocinante>
- <2e16d6af-7d7d-47a7-9c69-26f0765a83d6@app.fastmail.com>
- <20250323125652.GJ1902347@rocinante>
- <eaa54741-e15c-457b-9313-1d5bcb518860@app.fastmail.com>
+	s=arc-20240116; t=1742744305; c=relaxed/simple;
+	bh=y2RJ1LlwUK3RVMGfvNs/Gokkk+Cs5qxHe99+/rQlNZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OSmzP228MlFVY5kEoOxSJzG079oi5QNw95CMvVkYEbyrD21N0JA+Tteb/bFlHI2s158bvU6rH9a3EaFZNyBQZw4wu7V1RQfN4eGG/d678+5zPNfmGIfEezd4tVy4CbnqTG/69QCVl180VQNwjUw8zEfosmcCpiq+aaL7RgVAtrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=g1a4C1HT; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=41JUD+fiRBn0TgwP++GGOmP/IuXeJMDNoAnv49VUXlo=;
+	b=g1a4C1HT3zSzytgEBtkI78sRqf12vhq8AiduVETM2sLjOInsPjROx6DB+Mk0KP
+	fVFrY/l933ipz8lDsd8k35QErRse9qvN3ZyMGanWaStlSvfJgWN9HVDtXnqkYKS+
+	/5fuCxaUwD9GRm93P7c+LFCQaAL6T6E/YDnSOavBFWqr0=
+Received: from [192.168.71.89] (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgAX+WOBKuBnsqUNAA--.2365S2;
+	Sun, 23 Mar 2025 23:36:33 +0800 (CST)
+Message-ID: <65049dff-cb22-44fd-8663-e4521d8b23fb@163.com>
+Date: Sun, 23 Mar 2025 23:36:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eaa54741-e15c-457b-9313-1d5bcb518860@app.fastmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v5 1/4] PCI: Introduce generic capability search functions
+To: Lukas Wunner <lukas@wunner.de>
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+ thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250321163803.391056-1-18255117159@163.com>
+ <20250321163803.391056-2-18255117159@163.com> <Z92cgXEGwgYD2gau@wunner.de>
+ <e6e808b6-302b-4f3e-ad2d-5f9c4dce7394@163.com> <Z97hLJM4z8R39ZBk@wunner.de>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <Z97hLJM4z8R39ZBk@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PygvCgAX+WOBKuBnsqUNAA--.2365S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWFyrtr4UuF4xJFWUZF43Jrb_yoW5Cw1xpa
+	y5Way3CF1kJF45A3ZFvw10ga4aqan7J34DGwn8G3s5Zrnxury7WrWqkr1Fya4DAr4Ivr4j
+	yF48t3W29FnxAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U3UUbUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwIZo2fgJyROnQAAs0
 
-Hello,
 
-> > Would you be happy to provide your "Tested-by:" tag?
+
+On 2025/3/23 00:11, Lukas Wunner wrote:
+> On Sat, Mar 22, 2025 at 11:47:18PM +0800, Hans Zhang wrote:
+>> On 2025/3/22 01:06, Lukas Wunner wrote:
+>>> On Sat, Mar 22, 2025 at 12:38:00AM +0800, Hans Zhang wrote:
+>>>> Add pci_host_bridge_find_*capability() in drivers/pci/pci.c, accepting
+>>>> controller-specific read functions and device data as parameters.
+>>>
+>>> Please put this in a .c file which is only compiled and linked if
+>>> one of the controller drivers using those new helpers is enabled
+>>> in .config.
+>>>
+>>> If you put the helpers in drivers/pci/pci.c, they unnecessarily
+>>> enlarge the kernel's .text section even if it's known already
+>>> at compile time that they're never going to be used (e.g. on x86).
+>>>
+>>> You could put them in drivers/pci/controller/pci-host-common.c
+>>> and then select PCI_HOST_COMMON for each driver using them.
+>>> Or put them in a separate completely new file.
+>>
+>> I add a drivers/pci/controller/pci-host-helpers.c file, how do you like it?
+>> Below, I have rearranged the patch, please kindly review it, thank you very
+>> much.
 > 
-> You can use 'Tested-by: Wouter Bijlsma <wouter@wouterbijlsma.nl>'
+> Looks fine to me, but I'm not one of the maintainers for the controller
+> drivers, they may have a different opinion.  I'd recommending submitting
+> this and see if any of them doesn't like it.
+> 
 
-Added to the other tags.  Thank you!
+Hi Lukas,
 
-	Krzysztof
+Thanks your for reply. I will submit it in the next version.
+
+> Just one nit that caught my eye:
+> 
+>> --- a/drivers/pci/controller/Kconfig
+>> +++ b/drivers/pci/controller/Kconfig
+>> @@ -132,6 +132,22 @@ config PCI_HOST_GENERIC
+>>   	  Say Y here if you want to support a simple generic PCI host
+>>   	  controller, such as the one emulated by kvmtool.
+>>
+>> +config PCI_HOST_HELPERS
+>> + 	bool "PCI Host Controller Helper Functions"
+>> + 	help
+>> +	  This provides common infrastructure for PCI host controller drivers to
+>> +	  handle PCI capability scanning and other shared operations. The helper
+>> +	  functions eliminate code duplication across controller drivers.
+>> +
+>> +	  These functions are used by PCI controller drivers that need to scan
+>> +	  PCI capabilities using controller-specific access methods (e.g. when
+>> +	  the controller is behind a non-standard configuration space).
+>> +
+>> +	  If you are using any PCI host controller drivers that require these
+>> +	  helpers (such as DesignWare, Cadence, etc), this will be
+>> +	  automatically selected. Say N unless you are developing a custom PCI
+>> +	  host controller driver.
+> 
+> I like the comprehensive help text, but I'd recommend removing the
+> input prompt "PCI Host Controller Helper Functions" after the "bool".
+> 
+> I think generally only menu entries should be displayed that are relevant
+> for end users.  The prompt is only needed for developers and they can
+> easily modify Kconfig to select the item when they add their driver.
+> 
+> If you absolutely positively want to have a prompt, I'd recommend
+> hiding the menu entry unless CONFIG_EXPERT is also enabled, i.e.:
+> 
+> 	bool
+> 	prompt "PCI Host Controller Helper Functions" if EXPERT
+> 
+> Or maybe there's something better than CONFIG_EXPERT for cases like this,
+> dunno.
+> 
+
+Well, thank you for your advice.
+
+Best regards,
+Hans
+
 
