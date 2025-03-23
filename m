@@ -1,76 +1,77 @@
-Return-Path: <linux-pci+bounces-24460-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24461-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2E0CA6CF59
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Mar 2025 13:51:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AB34A6CF5D
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Mar 2025 13:57:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 084413A96BF
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Mar 2025 12:50:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E498D16E18B
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Mar 2025 12:57:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDD9D5CB8;
-	Sun, 23 Mar 2025 12:51:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D2282E3375;
+	Sun, 23 Mar 2025 12:56:57 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8E8D51C;
-	Sun, 23 Mar 2025 12:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFA32E336B
+	for <linux-pci@vger.kernel.org>; Sun, 23 Mar 2025 12:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742734265; cv=none; b=T9s4KTo4YXq0hMBjp3+50HswF793yWaOP+siNH91RKX/1uD1kR/XvLcXzNC5Z/bz+C+FwMLmoNUrIkRpD0QgcNRhl2ppkon+ijgWDiND8feLKBeIsNZYvpZ228mpAN6RMBowLdw2Ikv11jNxlx1vscK/rgJkuQMKCvHPqbKhMVE=
+	t=1742734616; cv=none; b=UblEN4ZpN1VdNAy4bPpU/21QVuHejN0vrpIhPrEtnE0BDh3Nz24osxhT4S7ZEqnx793SbNbiJ3bqYKbpD00svtXRmZ7icpV4Wa5UhOTWV1HcnJ8MilIT35Cpiey92Me8/sKwAQ6js6CGtr7FDd8sKXpeatTBKQpcA9zc0Ztoi4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742734265; c=relaxed/simple;
-	bh=BhF8gcfapWyM4aGiOj/iWMLe48MJ73X2c6jX8fS/T2c=;
+	s=arc-20240116; t=1742734616; c=relaxed/simple;
+	bh=46hKFX71keKHtbSXXG0BLhKs3lhIePe2LKtByWAP+Dc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cb0VjQ2I3BcK8+naWirsQi6zRwoy2e4ZxyL+2sCI8CogJ9pcVi8utRfC2vHBkud/IlBnn011tFDZ7XR5vz1wDh19ono7MZnHnNK8kYeg8ZiuEbfKB7VZxaWqNwVsrj5/URHnTJT+OGngKC79Ka/rEkJjUIshtF+LAZcVaTYFKo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=UgvzoK8AKpWWu79Oh9oHn0jkO4J5zZvWN+heikQyyRjZsf4jG7ZoV89BDPBf2/wwRnZLZ9W8raejfzWWRVdhSc+qGgQmLFD8kZxO98o4EecVUeCaSs26U8lqd306G3CcFWnMr29klwWVAaMD7ONEKi2Yc3V1YwowuFOAbEa7h4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22548a28d0cso55156075ad.3;
-        Sun, 23 Mar 2025 05:51:04 -0700 (PDT)
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2239c066347so77362885ad.2
+        for <linux-pci@vger.kernel.org>; Sun, 23 Mar 2025 05:56:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742734263; x=1743339063;
+        d=1e100.net; s=20230601; t=1742734615; x=1743339415;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=swiakFE0BnbY2gdpf+4Mq3owvw/sqrogLFaAdc3fltg=;
-        b=gbSfx/ObMkmRqKQGmStIj8jL3kd1tjxgcvbYBeh00Fwpl2UFaMrb4rpxfpnV3p3B8T
-         HJLcADSXWUcKcvUKRT6JfYzlqM6wFq4pj/u8XwjEPpyy77U0opHcXT1MIJJXWrP5IbSf
-         8p97Dah6sfe/6oT7nUayLFvzbc/5BGMiwAjJIwChCs2xBfmhK4Bs4Jp9oB0MyxNhqc29
-         vEyX9MiL7Qd9WCdSWYsCEWgIZ4+HB7b4hqR8ftnx7DitNXpEt5mJyiLsXxsf3OE47obX
-         RGmgYua6k/kJVxzi1ot2Ht0ZscV7Ty0ejxgT6Re/dpUqt4U7Sf50rpFaOVeFQuuelJlb
-         UQLA==
-X-Forwarded-Encrypted: i=1; AJvYcCUzJxF0lqUumBqCnGKrCYWiLuCMxSSNVlGItfHhKhr/uHJ+bErsMD7XAlc08ANaposJBvAmLSAsK8KJ@vger.kernel.org, AJvYcCVPujmCtFbiLnxjowp9wappcpB3U9oVBoEoHLXaWQLAIVLc7TSBK5p+jpl67azNXyDL2OaXEKBm8eLGc/Xv@vger.kernel.org, AJvYcCWv2yYoHytrk4virGYEdZVK0en9/YdyHV3FUfiiyMTLQ62c7EZJHuIob2x0j3EfKfXFz4kcdsrEGuc2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhSdXhAqavRnivKx3ImeJSiLrmTAr5hQWm5z5YuLT3wcEbr0eY
-	46aX0OUqKKPgA2hIdADJa5fTiZQBrue1CINR9FMkOkfWlZ4R3ETgfZv19nocaSU=
-X-Gm-Gg: ASbGncv0yTkrOAp04Pt5JLniOj47tm+XJ4d8CkLtXXsiBh+hg8CwftAYecZucL6Uv6l
-	xAMADg6tj3E7F7tThWaK1OkiYosiiTVHP3UB0aI0LrOOH0f6bqqpRCs2PAaQB8w0DJ+gWrNXM3T
-	W3Vx346R8vk+foTz9AqIJndTVjNO4TBqqotxm1aTzrR3F2Zwsdk4i2a/iSWIp138kg/33s71pwg
-	+dnJPyY4oToUSf4tq9J2ylH4ITEq4c0SojUyNaUEbH7t7Clt1BCdZNKZgu1jB+yJ3BgdL6RDbxq
-	pADyLp83eGO0oyxaaVh6avGlobTEWXewlEj+pfwNQ+F6LV3V5x1+I914hSh//KLqP/V6wSz/4uP
-	0Z/o=
-X-Google-Smtp-Source: AGHT+IGtYS6hIcWqAZuSsZKMB4lCtvBiGtoQUPK7C7dOnn0+dCiK477pjuBz5dzjBas1XzjyQaQK4A==
-X-Received: by 2002:a17:902:d2d1:b0:224:24d5:f20a with SMTP id d9443c01a7336-22780e231a1mr178479015ad.48.1742734263537;
-        Sun, 23 Mar 2025 05:51:03 -0700 (PDT)
+        bh=sTjZra+B+J+uPu3AlVtnDpku2g9YtvywBzljnjYwikA=;
+        b=p0FaY0lyqcleaLajHQnGMbR/YmBXvCMAHxfjUT+Icy+V395jvpJQ2j3LSLzNhEPWoT
+         w5rkDs8v/wee2mVX/aKjSZXYS2eCCkNTxlv1cwmUD6OGmL+VQFUNJE/VMVJDXFA1J2Bl
+         sEv01ipm34FMf5D4Axyd82oBSbyjlcUSKt3U/dqUShvI1GlaazWmwFSgAeJ3kosq11eu
+         PGq9zeHHWPr944xYNCatDJnubxkGFSJKZwbrP/4vfIpuR3uf+4IUPuG4HOz9sw4bthav
+         m+52LMVZrqNo8TkjaAml7cgVdcaydhBMe0cJmHjYAG+sCNB1ewDJcYVaFqGcpG75HJRj
+         GR9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUjR6ik3h9IafIzbL1DNaZLHiHGCQdRRaubyKJx76c5t8OwMjEe1SriVFFL0/ypFVb/wSoYzJuk9jA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnG/kHV9drsb9laIZV5pgh3vy79V66kX5FZF2mf5mC/DBKRJO7
+	qpkFoYg6bS99oFyxa5rBiNwix+3tWw8Nw9GuvNYs4+QBUeLyflrn
+X-Gm-Gg: ASbGnctyO7stTGHyGBP6U0Zq0gRNp0MhzW94GGQOhS1KwhB1K6hLD/TaJ17+/Ar5yxO
+	rnxzstZXqwhfQSTx8/2z5mP2hyWFcHBjbXhCAkiwalvpZ4SxhlQqDhT1WeSuSD2KPmfH0qz0tRd
+	Ks2H3fXpsHDBRSpq2Uvp4JfyYKgCsaF1iKRVbCv5d6aPGzyPioZCocDNqydkP7t2BKbDm6exiOh
+	PUJdlVFptnC3mUaqLEDfISjK4kGZ6Qec/tIrIO5m85szP1g99uzRHTuy3dQl4k1SkZL4yfFHxze
+	mFb/KCokMioeyut9t/Ed9CASrL4K3BoVAk2ZGaSnI6uNNBH/qeTboYcYFG5jLegBe6x2bB9I3Fn
+	0UsU=
+X-Google-Smtp-Source: AGHT+IGcKbRw+9sI1I54i45BSoPwZWt5kKiPXWpYEAFxh8MY6Ko1Puod3hid+w6GMFPIB1yDsfgZNg==
+X-Received: by 2002:a05:6a00:b4e:b0:736:34a2:8a20 with SMTP id d2e1a72fcca58-73905a2300cmr15308806b3a.21.1742734614668;
+        Sun, 23 Mar 2025 05:56:54 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-227811baf19sm51204155ad.149.2025.03.23.05.51.02
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7390611d212sm5903762b3a.95.2025.03.23.05.56.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Mar 2025 05:51:03 -0700 (PDT)
-Date: Sun, 23 Mar 2025 21:51:01 +0900
+        Sun, 23 Mar 2025 05:56:54 -0700 (PDT)
+Date: Sun, 23 Mar 2025 21:56:52 +0900
 From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com
-Subject: Re: [PATCH] PCI: xilinx-cpm: Add cpm5_csr register mapping for
- CPM5_HOST1 variant
-Message-ID: <20250323125101.GI1902347@rocinante>
-References: <20250317124136.1317723-1-thippeswamy.havalige@amd.com>
+To: Wouter Bijlsma <wouter@wouterbijlsma.nl>
+Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
+	linux-pci@vger.kernel.org,
+	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH] PCI/bwctrl: Fix NULL pointer deref on bus number
+ exhaustion
+Message-ID: <20250323125652.GJ1902347@rocinante>
+References: <3b6c8d973aedc48860640a9d75d20528336f1f3c.1742669372.git.lukas@wunner.de>
+ <20250323112456.GA1902347@rocinante>
+ <2e16d6af-7d7d-47a7-9c69-26f0765a83d6@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -79,18 +80,24 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250317124136.1317723-1-thippeswamy.havalige@amd.com>
+In-Reply-To: <2e16d6af-7d7d-47a7-9c69-26f0765a83d6@app.fastmail.com>
 
 Hello,
 
-> This commit updates the CPM5 variant check to include CPM5_HOST1.
-> Previously, only CPM5 was considered when mapping the "cpm_csr" register.
+> The patch is working, no kernel crashes and shutting down after hotplugging the Thunderbolt 4 dock does not hang anymore, thanks!
 
-The subject says "cpm5_csr" but here we say "cpm_csr", I think it's only
-the latter?  Let me know, so I can update the branch correctly.  Maybe both
-things are correct.  I am just double-checking.
+Thank you for testing!  Appreciated!
 
-Thank you!
+> I still see messages in the kernel log that 'devices behind bridge are unusable' because 'no bus can be assigned to them', 'Hotplug bridge without secondary bus, ignoring', etc. These all refer to the Thunderbolt 4 bridge. Adding "pci=hpbussize=0x33" to the kernel doesn't make a difference. Adding "pci=realloc,asssign-busses,hpbussize=0x33" actually does 'fix' the bus allocation failures (or at least I don't see any messages in the log anymore), but then amdgpu fails to initialize the IGP.
+
+We can fix any outstanding issues or drop this patch.  I leave it to hot
+plug experts like Ilpo, Bjorn and Lukas to make the call here.
+
+> Anyway, all devices connected to the Thunderbolt 4 dock appear to work (USB, screens, ethernet) even despite these bus allocation failures, so I will just ignore them. 
+> 
+> Thanks again!
+
+Would you be happy to provide your "Tested-by:" tag?
 
 	Krzysztof
 
