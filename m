@@ -1,99 +1,85 @@
-Return-Path: <linux-pci+bounces-24456-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24457-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B2DFA6CF0A
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Mar 2025 12:56:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60EBEA6CF21
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Mar 2025 13:21:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 260F81898B11
-	for <lists+linux-pci@lfdr.de>; Sun, 23 Mar 2025 11:56:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A41B43B3190
+	for <lists+linux-pci@lfdr.de>; Sun, 23 Mar 2025 12:20:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7D37204864;
-	Sun, 23 Mar 2025 11:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7122202C2A;
+	Sun, 23 Mar 2025 12:21:03 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A3C1FFC4C;
-	Sun, 23 Mar 2025 11:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAAC16B3A1
+	for <linux-pci@vger.kernel.org>; Sun, 23 Mar 2025 12:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742730966; cv=none; b=W1M6meOqneKU3+9EoJ3Xdn90E3H9+8Nd/oEefTCc8ibbAXKKOBxootY+39oU6uSoOPEyUH07XtugvB5ZTULGpr+4wcikePfhN8F5LRlS2Raj0qS7W43WCAc01XvD9TQYALkRY0zEQVICvkN2j4SKNYS411dSFW7ZxHSjwcBbM1I=
+	t=1742732463; cv=none; b=kAuH0othitPabzRctfmIFlICLX4vr67B9UxmDEV3CWLzUXlCv5DBLMkb97iLehlE8rPo6UOUNiMoNNt23dC8AZ9ii0/8zSC8WBXgS2ggQi+ISJWAhHeX2bn7GHVAV2PNRhrmdQpz92/7FQI6j56q47nAWsWRi24kyGzMA1F6n0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742730966; c=relaxed/simple;
-	bh=zaHJZ790y6z9d8LloSV8uGUpKzfsaeNLXw+plMJIaRE=;
+	s=arc-20240116; t=1742732463; c=relaxed/simple;
+	bh=0Kj5ulhLext7lP40+hN3ydrVy50dbiOgiQUC3DTj20o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zdtot6MJkrzoa2RU9chMKR13xSJpPsE8YQuP6CuBRk9A/urvz/a5q8zZZ/QOLocm4Qyk2e7iJuLQsZLH6e3PsI0K48U+hfgTo8wFIMdcF5B9KpMXyibH7qtEB3mVTmS4czsSQ56abgqJYxp2OiOxWbBsOlAN/lh0xq6qd3ZBvc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=N9peL9QjbG64zkOHNpDStIU0xn4IVf/56fHat4xaMB/Y8ul3jZKzBCQBSIUYUenwBNRJmK5ewHXtvvWeOlwi71cJ7mQXP9FpCFtJCbF8yeC8AfYlFRgEX2J/4Q6ssLKypncGBUxiYv1wYYmsG6hY/wGcgX/lGEDxTM71QIR98Lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-227914acd20so24536355ad.1;
-        Sun, 23 Mar 2025 04:56:05 -0700 (PDT)
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-227aaa82fafso7443605ad.2
+        for <linux-pci@vger.kernel.org>; Sun, 23 Mar 2025 05:21:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742730965; x=1743335765;
+        d=1e100.net; s=20230601; t=1742732462; x=1743337262;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8iP6s7RJZTq9P1esZphsb8AleCV4Kmq3vN6x3kTIwGs=;
-        b=Ebj7uySwrkztCeX8S8RWdKG7ekghDOdf8HTdaGcj76o/ASDV2u/cdgY1LDXIBQPqQd
-         4iKtAS3CIXE3qMppk6JvX57UAR5nTr8gLosuD9jIuBd0seLUCDWM+dLehxVtICXVaWCa
-         TtmzBaTbOftGrb5/8iI//lxX6ZiThygsEfCi1FXybEdaGKge08g2rNngT3rdICfUGO8U
-         vj60J2AB9rZmm4/amai0AoG0GvnzUG5N5wOlmoBQsWLZMhcXyxcrISspM375zFbD6IM9
-         lEGdLwZS+v32PVCEGZ41Itp6cggaxOhDm8g8jMrkzGTWIN/eDoeryqI+3FzyAePMG2KD
-         Jp+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUidUAr95DajjMtOgfG1tvTJoEJAeZ7GNhU5XfUoOcRYEKXWs7IZDVBxBi3UlbCXGv2gHp2kUSN36ky@vger.kernel.org, AJvYcCVDoxV9OfmVJr0Gs1bWhoakRxyrh0qGn4soq1TpuvIeuej5yIBHdhshZnVJrGMYPHtI5eogwMgbVBT7@vger.kernel.org, AJvYcCVWQHaBWYnmaAKO/dMdVv5RD9SxWWSVLsWYvRxftX3MYtn3X/Z89VJ4FvNMFlJ/1NBBf4XZDa6ol7aVgw==@vger.kernel.org, AJvYcCWigPA6jPMTeFDzsJwk7UGEYVr7WLPk9rk3UFAsOLaMi0JrO64qDO/IGfUFhdUoL81v1rXyGRVPtS9T@vger.kernel.org, AJvYcCXia582Jo8P+BwRStxwsR763/oLFHI+lIqTZLlNgq/G5tpdIndWWb2hqbd/pvlX7EbftaketQOWgYmfK50Z@vger.kernel.org
-X-Gm-Message-State: AOJu0YxI+qXreRW8/4udzEs3Nu6xbOEfNX3JsFZUzrXAvlUQ75KIWBzo
-	jiXL0ArW9kFAU6gojQb+CiPRiGUwpWmymmQvKoXQ9CWOjBDGL/Mc
-X-Gm-Gg: ASbGncscy4+9v571QLoSLwO+jSW5B5oNvN4ThCj9u5jaQJqrDvKHZ0ZBDKUAvi7qS1s
-	qMJ542ezEQihAF6C12nuuGfli/wAzLE3b92iMPrkRavZ4IutBPZMkakUZvBE5LagRGSgZCzPYEm
-	3VYHfU0lbwucP1F3TYr4zF4rlNCz+WzHA1tvehZszx2febB4KFhlJghduYxNgRjPn9oqJHlmVx2
-	eUw0u+m3vT+SRWZJ/Pc53QTl7tDzeytXK4lZVPHQ2zSylVZ+i1qVRHXFJ5AILJqsv/G9/fgqecv
-	aq6mEaXIaxAwIdGFrtq0QS6I6dq4Qhof17wwr7zPL1uyci0qoFwuBzWUCLBQS8jQPG59sTcOhyr
-	pVoA=
-X-Google-Smtp-Source: AGHT+IGFrPrOjm1ltZW+6Dht1zMb++j1BuTfrfYxmMgOcEiQGmIANrOACm+sR9E2VHw4F5IauWW82A==
-X-Received: by 2002:a05:6a20:7288:b0:1f0:e2a9:fb2a with SMTP id adf61e73a8af0-1fd085563b1mr18959356637.4.1742730964522;
-        Sun, 23 Mar 2025 04:56:04 -0700 (PDT)
+        bh=eqFyAAa68l2/H0/BNfDY/O6jxUtCbEe6n0nmqHVUXf0=;
+        b=EyHpYSdcy3EN+ReZy0vjBB0IrbASs+9vh7NPppTAi1lNmsqlaNzwR5W+iW6BXEqot0
+         q2MKuUg9KGe5wPdHnXVi3c2u0yA8cH0AsA5+63ObgqU9U4Vn6l7T9WvSUn8gr/U8fEoD
+         lSN8Jyix7TZrhWK2CX8NJCCxq+GJXL+8K5ZjJpiRqvINls3QWj7qz1gT9FYL11huzcN9
+         ylr6Vn4+TaGSMsjc3jRDhnTvPTwyet9Otwc1deV8PpSQEXrFWm1x5jIsQKfTXl2CtLtD
+         QK/jyywZUUKQIwj/NQEQ02tcFzxOd07+yOPdVKdJ/F1buJ+94zaep6tS6kWuVTOp9uRS
+         6gLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLamdmiyBdO8KWy32Se/Rn+o/n66UI7Sjtp+glU+M4HW3lB0ruPKNl3u0kQVQqtS9S3WRhVrAzMnk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr9XWN8SzX2J7D8HrrUeqqmmC01jjGiDlzBuiXV7TdL0ZA+1hl
+	z4m6fP2z3zEvMC7ghESl+vYh8e+HMLcRGeYZr07KyF43TDgo/FVs
+X-Gm-Gg: ASbGncurt6q6MPLe/x00URJEsfn1ADZr3ekOGwSYgXDJxky1hcE1/3TIXI/Fh6JzlB4
+	J/H84Ri4gMu2kkZgS2iTCpp5w44rFXMRaNTYhjlV5+KtVC3b4M+gN7eKN7kzWgnvV6WTTWNv7e+
+	9SGLvy/VZG1zsqZdv65HSAmYwPv3qoPZbl4uaRGB8PbxUJmU31r5nJfbbREAUGUTmvQk49QW1qn
+	4oW54vI5lY4sp0hmzC8Awi7p/6Mv9v2wOSyAlVUBp4VbX5PRPZN4sIIjgggf54uVDzOamHNQrE4
+	4LaV2yrLC7UCCvSEwg1m/ztwz43UcXAsFOjTjC1DFJibqY810HLYnks4op1Qm5ZorY+AX7SAtu7
+	2bx4=
+X-Google-Smtp-Source: AGHT+IHGqVjSb6eXOnMuGOCjvlXhmnFBtterHJaYSfOZlqG0zPNEuWyhKak62OnYxyAU2n2EMqmPCQ==
+X-Received: by 2002:a17:903:2f47:b0:223:fdac:2e4 with SMTP id d9443c01a7336-22780c5574dmr139753185ad.1.1742732461495;
+        Sun, 23 Mar 2025 05:21:01 -0700 (PDT)
 Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-af8a2a4f585sm5062513a12.73.2025.03.23.04.56.03
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22781207f2fsm50420475ad.248.2025.03.23.05.21.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Mar 2025 04:56:03 -0700 (PDT)
-Date: Sun, 23 Mar 2025 20:56:02 +0900
-From: Krzysztof Wilczynski <kw@linux.com>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v7 08/11] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <20250323115602.GE1902347@rocinante>
-References: <cover.1738963156.git.andrea.porta@suse.com>
- <d1362766e3e966f78591129de918046a4b892c18.1738963156.git.andrea.porta@suse.com>
- <20250314083730.GC234496@rocinante>
- <Z9lA31gBjpIRHm6y@apocalypse>
+        Sun, 23 Mar 2025 05:21:01 -0700 (PDT)
+Date: Sun, 23 Mar 2025 21:20:59 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Jon Pan-Doh <pandoh@google.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	linux-pci@vger.kernel.org,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH v5 8/8] PCI/AER: Add sysfs attributes for log ratelimits
+Message-ID: <20250323122059.GF1902347@rocinante>
+References: <20250321015806.954866-1-pandoh@google.com>
+ <20250321015806.954866-9-pandoh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -102,34 +88,91 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z9lA31gBjpIRHm6y@apocalypse>
+In-Reply-To: <20250321015806.954866-9-pandoh@google.com>
 
 Hello,
 
+A few small comments.
+
+> +/*
+> + * Ratelimit enable toggle
+> + * 0: disabled with ratelimit.interval = 0
+> + * 1: enabled with ratelimit.interval = nonzero
+> + */
+
+Move the above comment so it hugs ratelimit_log_enable_store().  Also,
+perhaps "Ratelimit enable toggle:", while at it, and feel free to indent
+both choices for readability.
+
+That sad, I am not sure if we really  need to explain here how this
+particular store() function works.
+
+> +static ssize_t ratelimit_log_enable_show(struct device *dev,
+> +					 struct device_attribute *attr,
+> +					 char *buf)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	bool enable = pdev->aer_report->cor_log_ratelimit.interval != 0;
+> +
+> +	return sysfs_emit(buf, "%d\n", enable);
+> +}
+
+Perhaps "status" or "enabled" for the variable name above.
+
+> +static ssize_t ratelimit_log_enable_store(struct device *dev,
+> +					  struct device_attribute *attr,
+> +					  const char *buf, size_t count)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +	bool enable;
+> +	int interval;
+
+I would love if we could add the following here:
+
+	if (!capable(CAP_SYS_ADMIN))
+		return -EPERM;
+
+To ensure that only privileged user also sporting a proper set capabilities
+can modify this attribute.
+
+> +	if (kstrtobool(buf, &enable) < 0)
+> +		return -EINVAL;
+> +
+> +	if (enable)
+> +		interval = DEFAULT_RATELIMIT_INTERVAL;
+> +	else
+> +		interval = 0;
+> +
+> +	pdev->aer_report->cor_log_ratelimit.interval = interval;
+> +	pdev->aer_report->uncor_log_ratelimit.interval = interval;
+> +
+> +	return count;
+> +}
+> +static DEVICE_ATTR_RW(ratelimit_log_enable);
+
 [...]
-> > Or, something like this over this the function name.  Perhaps exposing
-> > error code could be useful to the end user? If so then something like this:
-> > 
-> >   return dev_err_probe(&pdev->dev, err,
-> > 		       "Failed to allocate MSI-X vectors, err=%d\n", err);
-> 
-> dev_err_probe() should already print the err code, no need to add it.
+> +	static ssize_t							\
+> +	name##_store(struct device *dev, struct device_attribute *attr,	\
+> +		     const char *buf, size_t count)			\
+> +{									\
+> +	struct pci_dev *pdev = to_pci_dev(dev);				\
+> +	int burst;							\
 
-Ahh...
+Same as earlier comment.  Add the following:
 
-I did a copy-paste of the code from above purely for illustration, sorry
-for the confusion here!
+	if (!capable(CAP_SYS_ADMIN))
+		return -EPERM;
 
-> > Here and other errors where appropriate.
-> 
-> I've changed dev_err() to dev_err_probe() in cases where the error code
-> is not evident (i.e. hardcoded) from the source.
+> +	if (kstrtoint(buf, 0, &burst) < 0)				\
+> +		return -EINVAL;						\
+> +									\
+> +	pdev->aer_report->ratelimit.burst = burst;			\
+> +									\
+> +	return count;							\
+> +}									\
+> +static DEVICE_ATTR_RW(name)
 
-Makes sense.
-
-> Thank you so much for your review!
-
-Pleasure!  Thank you for all the work here!
+Thank you!
 
 	Krzysztof
 
