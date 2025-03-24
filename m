@@ -1,223 +1,164 @@
-Return-Path: <linux-pci+bounces-24563-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24564-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A399A6E322
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 20:14:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D892A6E327
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 20:15:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 061367A374A
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 19:13:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 015F07A37BB
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 19:14:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EBEB2620FC;
-	Mon, 24 Mar 2025 19:14:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F84884D08;
+	Mon, 24 Mar 2025 19:15:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="WAwi8Qa0"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Z3l8S/Ag"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013012.outbound.protection.outlook.com [40.107.159.12])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92B026389D;
-	Mon, 24 Mar 2025 19:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742843659; cv=fail; b=FZ320vMepotOsGI98A+s8RTtl1ktTxgEvJSM0KDKAJ5pvwE+0n6QLpo2D6LhLwXx5u+f2C8IiG9ohmIavmaIqZfqiOGI6he1hnXIvkARGDdZF0Xw7QyVmflgccE32qAZjEmb5w/clJKksxJj2PyNidDAvLERUdIsFudczG9e9Ss=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742843659; c=relaxed/simple;
-	bh=Cl+WqOMhTQ4IaNlA++TTU0/ofqgjyOgEQ8/llAe8htY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=qMCjTqfrP2NgCZfDnRAspsA4YPpgJUH6nkdOVoO+H3I1DJJgCYTrS/IWXxMJYkAqdY3h643PZRaHlMgpS2mRQpDFQV1VrCqszdUphc3tzDvW83zDhcfuLsyLxNYLmQgrcoiOH9GT48D4Gu+qSP77YW596XyMRoFrwG7oZZ4hCXA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=WAwi8Qa0; arc=fail smtp.client-ip=40.107.159.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zKJT2hwxOtLYcwy2rpAp9LVcQwZifPThss4OYTFEphOYmrHcSppWLt8s6DJL7AiFNECa3+hKtScrMFQE6Ql4SyDE8ui1k2SkGFm4XcUXpD0Rw36Pyts1Gjay3IdeVjThu6KwlE1wvzNgpJyJ7Uh8VLG7/DGbV8nhzz2ODOYJ1AflQZE5LnfMAaot/heKvr8s7ST19ZXCuPLm5z52frL20B2jT79gTMVljl4JcCgHviVePlwYSjNWFPcdmpnoiWG+buHXRCeEJIXU+SGBi8JOlFVLWt6E+A0/HB2fVOAtNOuLGD4sP4uMTDjKNy6SU0f/EZ3Z8yQUoSDdUbBUZBmdbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6BbVHMCiAUNyTjY+95gdqwMruxqrP8xyjC2fFREOqjw=;
- b=fCA59NfL+PYqrIrWjN0+Jp3Gj0DQ2LiKzyBCunX7HCS7/cSUMmjNjcdbIqMjtZjfadqK+zBBNlpeYIGByFsOh33MGL3SR/VugJXp5vPO0h6PbViMOBSyb6O1XGwKXr3IYzTs0M+ZdtTFiz7a2Vplshgj6cMiCDB9xSO1CwsMBOm/spKyyHjjBQzJKQiLCbmAqIt5euUfeVbiX2zErfaqppDTK97PNo7+U5A7nELuG2fpIQDN28EUmPgrVq5Ol+AnIWxDedvK6/aCO9iw6damE0yuwqvqUvFR2ZJjypxhuSPCmsZeizM+IQ6zqEBDne6iQZPbHCATOKAbAcPnaa9BIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6BbVHMCiAUNyTjY+95gdqwMruxqrP8xyjC2fFREOqjw=;
- b=WAwi8Qa0OzI8MwuK9vSvo02fwnlcuS7B65zWr4aRmhR3YHeVAR4YcDbEI0L16TtqDZbueKSAG/aRgJOCWYu1gTrVvXzTCcdkduIaT3dizax50szsqbb788Y99SY1kj9fI9PBmJdBB07RKJSkS7IXNfeG6XER/EURnF7E9IlkYN/78wd4+YdUG3BjcNED1+ByR3apfQJzvAinc4/1zs6cfJAHnvdlmuSQCrMpYUDO345VKNjwhO1X3p73UF+WdFlsPabcUML2Q6CIzbGkSwYUvwY7hcmXbR8CGdZTdwZLjJ+0OgV9aPKDhZE6U2ysZKk5G6TOigMe2IGQ5tpRjRi35Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI0PR04MB10439.eurprd04.prod.outlook.com (2603:10a6:800:238::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Mon, 24 Mar
- 2025 19:14:13 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%3]) with mapi id 15.20.8534.040; Mon, 24 Mar 2025
- 19:14:13 +0000
-Date: Mon, 24 Mar 2025 15:14:06 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: l.stach@pengutronix.de, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/5] PCI: imx6: Workaround i.MX95 PCIe may not exit
- L23 ready
-Message-ID: <Z+Gu/gmioiVJfDV0@lizhi-Precision-Tower-5810>
-References: <20250324062647.1891896-1-hongxing.zhu@nxp.com>
- <20250324062647.1891896-4-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324062647.1891896-4-hongxing.zhu@nxp.com>
-X-ClientProxiedBy: PH7PR02CA0007.namprd02.prod.outlook.com
- (2603:10b6:510:33d::13) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19C215E96
+	for <linux-pci@vger.kernel.org>; Mon, 24 Mar 2025 19:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742843752; cv=none; b=lYZA7aR1qsQSNWpjXPtqv8ScjR/DP8DTKWTzmZsYZt9PjpQYp4mAp+KUhXTqyWMFNf5kbwwRmlxSCNik5S1/NdXi5VQ080Ia0mW4uJbqhTntyt5Vb+AqA8skA8Owcoymq/PRD4FfmGd1ezA6HP4h0MkYF0L4pkZJ9f5Hhc6By/0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742843752; c=relaxed/simple;
+	bh=fBNjGhw6eywjKM4CPjTagVCVi48iAj00DoDAQIEtcVs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o7z73SALHa6WeKDfI4n4zQ/EtNtk6SPFgYDeeemWmORWEnSScSU7AJgCgzxBc9bAEkVmNYNEe+3j7ISraNsVjUZCDO3vKyKMpQvu/4taTRzToHFweDbgSov+YuD+iJakmRLx5QNpa4GtZkss0+d+bOEOnKM/0Yv0TmCcMSfyMDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Z3l8S/Ag; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52OIk4mR002624
+	for <linux-pci@vger.kernel.org>; Mon, 24 Mar 2025 19:15:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	g3WlA5imHAbR+jao8j3DyOpD0bdaiCLBhc5RaKXj5z4=; b=Z3l8S/Ag79s1WMv7
+	hGqHRFCxtFF/PTWnSmWTp2wvAP/2/2T1BzfZ9SDFxkX8OSNyeUYmPw1KDsJ0EhB+
+	PGY2Gh7fpOXeA6xrxJC4G0U5WI3QlM1FziRzPvsZHMxt7dp2tK+ouX8+ZKXSriQ2
+	lLvH/MelqWNHgrwuNyjVxV2EzizsAd2Uce14/a2eYBLlDTzhT8DXjZdYqDl8Lh+f
+	sJ/DNZcmT9yfyG/BlFMtFZOWYrt9wHIC0ASwCehN2npqq34GHlFCJnVB8Pw5Pv/4
+	LTKI2jkaLNzpN7hOdGVpVBK+gO/mZrSntgnQrWMYhoGyEMQ1GQvRs4lcwGmM+NJr
+	pBswtA==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hmhk5eph-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Mon, 24 Mar 2025 19:15:49 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-47708fd6446so2504141cf.3
+        for <linux-pci@vger.kernel.org>; Mon, 24 Mar 2025 12:15:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742843748; x=1743448548;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g3WlA5imHAbR+jao8j3DyOpD0bdaiCLBhc5RaKXj5z4=;
+        b=wnbEw2iRyRTCexzjrKWiYC3rQlRjAxUWpy59s2tjM945tOpYns1LzKBZLVdJDRlrS5
+         XuzKIBN6KkCmQNA8IqE+Vs80Tmol+CCbIcPuXJTD+DwtFzR+5dietgngcnnM+VlYyZEM
+         +8cX+ExHq7n/XthaWWk71pXU0gJLyHhxxc9CjefsdOSKSWf/LuRqdN8YTno0hGELPlRP
+         OfjDD9UfMPdcqs5i/k0ULxWmpDm+8UphXMLC8EdH++8gsbTD9VXAPUFRkueFW7oSHdi+
+         nwLlbjsC7Heo7OANAhJRVlXc8tcHN95uiGpqsOlz4lqeM0lZvGMq3PD887/5IZqNqzbt
+         0fOw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6+XLxBz9+6rNC7tmXiTTYiuliberxJtCebrlgMEurDxQm9GV11mllGfAKvKaq+MG2Uid4LJAUTYA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8tu4vIS0sj5SoKMs/nJljqbY8pQKWiw+NV8mDoxhVbaPKt1Vh
+	TX3YfILfwQCduB+3HWb40yFDnueXO95v0v4ajoglJw62jTmbRxLdqvIVM/uFr0g8UvqFmJVd79h
+	E+m1S7adr72QGkYEg21mbppL5fOv/az9m9yys7KeWlNBQ7DdgqBqA52SOX8o=
+X-Gm-Gg: ASbGncsO848nuaRoszqvOlvnAzSuvXBAVRjW9kIrDWiTIVmegBMzjgcl0/mPDSs6e5d
+	LfhQeZejbcqyd+rX6Ou9uVMZllop+Ksbq9vVwRkyuvxLcdwpPwUxNFo+SqU5J2eLzAlIGq5Wmso
+	uUCcYqS+SnhXJjwqkpCs0areVQEh8H3368v/Cb10xp1FCpIqQwv/EgpOwvyG6CqWIpmloDIaYPU
+	DcDrXNe6Yi/yK5l0+v/JxFkujBzQMuXZZXc14P2ygo5nfml9BUxrPyftAjF7AjUpHWv1nRLCle4
+	ZYau/UVr53O9PWrQXje7XkX06tzOSAG4n3JR9lSQFowfGqRRJz/NRkZ3K8TqpBI0doxufg==
+X-Received: by 2002:a05:622a:8b:b0:474:efa8:3607 with SMTP id d75a77b69052e-4771dd591camr75030551cf.1.1742843748417;
+        Mon, 24 Mar 2025 12:15:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEtmaP6yOrhxO/q6iKc0oEvHBuaQJo1z8Kot1OeZWFMeia/4semGeZRZf9taq7A7UDWKD4wzA==
+X-Received: by 2002:a05:622a:8b:b0:474:efa8:3607 with SMTP id d75a77b69052e-4771dd591camr75030291cf.1.1742843747870;
+        Mon, 24 Mar 2025 12:15:47 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efb658e4sm719173166b.87.2025.03.24.12.15.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Mar 2025 12:15:47 -0700 (PDT)
+Message-ID: <2b038454-8994-490c-9d59-9bd03f52e337@oss.qualcomm.com>
+Date: Mon, 24 Mar 2025 20:15:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI0PR04MB10439:EE_
-X-MS-Office365-Filtering-Correlation-Id: dce68205-bf56-43f1-5193-08dd6b081032
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|7416014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?b0WO77GOvzSM6FzP+xPmlsMhNrKjrEyPEcn3NGlajATbOy2KpsanJqnEWOJv?=
- =?us-ascii?Q?5/wOuAaJmdAClsi3tjFS8mZTV4g/d+LM+asrtVX6ZfjhlfeS9MB90XgW1k2L?=
- =?us-ascii?Q?T1eBDF1tiIzQhptScAWqvGlgSBtTvwNSrfqprtC/yFA9hm+2X5wif7f7arI7?=
- =?us-ascii?Q?sQMn3QaRjrIqyw2AMOnZHu81CSNBMg9mrw9UNbYPdePjSlpmpVN9J8vQbwu/?=
- =?us-ascii?Q?NgvIYBttqtDCjioBwy7IyCv5qL/+AfdgXW2xlHYchieBL2Z5omB841nyX9um?=
- =?us-ascii?Q?blGbgG/VN01F5pFk0qi/lLH7F5J2hwg+iXkOBXCoZk0TUOgYiVH/OSJtjiq/?=
- =?us-ascii?Q?Uw+e0IatasYYzKin2FntugZvDFxQu9KaE7sekSLcGBPmrwfX0TYKTGU5z3ZU?=
- =?us-ascii?Q?+C9hYx94RPMTAVSe1Hu+0xy4Ux4mleUJRWQa+kj5L+hDl3ferP5232UL0cQD?=
- =?us-ascii?Q?KPP9v4J8kp3azAajrLaMXwciyK8+Wdxbm0/02jD7zrw5YjsuuPeUym75VVjC?=
- =?us-ascii?Q?F+hrPs4uLg77q3FjDPnhPvpZH5XT8Xpzd3Wo7SNRzwao98CYzQr6wPQTFiOf?=
- =?us-ascii?Q?3f64erBFNbxf6HxAe5AEIrRwfI7SqOZDeD2OgoVqTKiFMpaTF783MiK/c7Ts?=
- =?us-ascii?Q?n3PthdVhGTA70lAllFypIgIyJaG58+ZH+2cKu81zVhhMW36PMF2Iz+/Q7xGM?=
- =?us-ascii?Q?aUdAVpFXXv2Wv905jNhFPa+xPWQicNHaMzjC9kOo8jzbVa4YtBxSyJ9vvwGn?=
- =?us-ascii?Q?oD5aehLI4szK8A9uWBkvadZK+T4j+h8gPY37JZdvX4ykCHUr9uW1nomwde2Z?=
- =?us-ascii?Q?47WY2PylNsDUO9F3W4PCH+MBhoDBl28rcO904tL3GE8gdgg70f3BQMnn8YOF?=
- =?us-ascii?Q?SE6vXDSe/CGB8x0s03imcyYNst243iQ2eTiPpIwDyRj1Mp5lfWQK6YPqMlck?=
- =?us-ascii?Q?lAyriNi1V4NJVPShcy79WcnRirMjs9jNAiuN4q4MetGsVMcXhzNxjgz8xxNi?=
- =?us-ascii?Q?ptugHHVb+s92O4NoiSwdjHkv4mfm9DbW4vRQbv3VQjyvSCSwtxmvFkouJVbz?=
- =?us-ascii?Q?98J675q9lu8vqSMQ6YGw/hK9RWq0me3VZCpNigB1EOa0h7wZyq0Dt8SDAlOP?=
- =?us-ascii?Q?XoC2MipMWH7FvL6kxyF76ip9kgi0fa4NTbKaBw/6HJ5QR11Cny0wLQpdaVrZ?=
- =?us-ascii?Q?KLDoNw5C7TP1Cjox+QAdX7o1nKFjnDMLLpRxbILQH53lwexxfe85eVaUaQqx?=
- =?us-ascii?Q?RVUaC3wypDKUNW+rVcE+RyC23ng4KqkAuei8+E19Nl9aDDWerFHNdU2EZ5eT?=
- =?us-ascii?Q?20d8FCYIOg/00YmN14hsT5YEyFbOPKRFT53rCHst4n1IzXaz3KJreczVHbEv?=
- =?us-ascii?Q?+vGHx2d2rAe7I55tTWVecbI0y8i8/A36bewewZn3qvtxJF1Q5jmaZH3L4RbE?=
- =?us-ascii?Q?a6oezMsRkJG0hOkm6eCgO0jvVm7LXMYe?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?m/ge2Abo50ugDzezCaV99xEOXSrLj6j5yhbYoV/G9U9Zgv0cfch+Q/ZhJdOI?=
- =?us-ascii?Q?kVmPxKQHFd2bn/sMaN7umLjR/gcs4uWtQfjPIFlb3ARbJgoPB8xbu67dKUVt?=
- =?us-ascii?Q?YvKXnsKvU8piqWLOaHIuskSYr/l5RVu+zhckvOKOxpnNs9SOVo2zRZTGBoSU?=
- =?us-ascii?Q?tc+0dEbqay7c6ICitu1hHqIyn7Acnuf1/5QdtOaedkv1LYdZsGcmPb5Kz1GG?=
- =?us-ascii?Q?eqB0wc3DztRc9vBHEXAwjN19fiuHb9VnIE9U5cQN/uLfLRst9QenSbQy5q76?=
- =?us-ascii?Q?Sul6yoEvWn2upNLZdUMqEdkOQhDDEbik9INuenpxDfX7DfWndyFLZKYfLCfQ?=
- =?us-ascii?Q?mGjZ7v7CahuyYQQXpV/MuDhaFcW/ln4OTB2qzla1kK5KVdv2EG/6nULNlScr?=
- =?us-ascii?Q?59Y+/Ug4JZpuFE1Lf38zqttuavljjlY8xxowX/NcIOi0aRmjBRlzFBqty+Ww?=
- =?us-ascii?Q?OVhyTE6A5LfWPyY94PqIqhql7CSZH4/WMNvPFj17EB+zx5iUNga2iku8YkWk?=
- =?us-ascii?Q?SVLpyu6+0sEnojfV9kg/YGFO4QTkx+S2AY9394aKAlO9AgK2mJk59BwoJyfG?=
- =?us-ascii?Q?ha29x644xmITy7f+3z8TbJT50/7eMi5MmhN67aTp9yCBWFgDWs8pXddxBWht?=
- =?us-ascii?Q?Ewhv6oWFzU0JPAn2y+NKJDfeslmXamG0RnLYhhbDTJc/cHK6ub3bCvTP2lGL?=
- =?us-ascii?Q?7Mqsr1q+d6gnlXN3eYe89TwwBBRS9PXLKSrkfEEtsZNzHHj+JsfRLzMEyEgk?=
- =?us-ascii?Q?z2cI4hPwq/31MFhyRZ5f313ttHvVN2a7d1loQqSu3r/mnjm29f2EjGu3SiKd?=
- =?us-ascii?Q?Xp988o43qAILQ3UiO8qKBbviqZWAvMA2V+qQAu7THYhXMa/cp5uermzoFLnC?=
- =?us-ascii?Q?p2CyfWs9ZVQZ7KvOhT72+9h4bnpdj0ABvi06twMmr2nJIGRWHiuLrWxpNy9j?=
- =?us-ascii?Q?GSb0VzTF8TlQm/DVP/ZvLD3nCyNM6HV0/STzCFu49tzQBAgeQsioQEiidSXu?=
- =?us-ascii?Q?SOHLtZn0Cf52mrNe+GEddEL6zOZGSB0FrvNH4vx+0UwVnVZ4BpooIULzl87a?=
- =?us-ascii?Q?T2NMidIAKNJOxqaK07+tmA4PIMSppA1kUSjtBZIirc6lm2x1Ge2aXH+eStbk?=
- =?us-ascii?Q?UN4kYmFeOzofMx/1/GYU0UINmXXsKXAZ/EYS6bkNZ6lL/xwvSzrO4edYkRAu?=
- =?us-ascii?Q?W/KtwuhvCo6OPdQXF6DvU+QEfDiZgRH4iAbvEf4nhosQAUPDfaMbPVkkxssD?=
- =?us-ascii?Q?XiF9zpbwq1owLi+UaLu8vLrxgvJEXM/PypSVgBy67z3k0yZJQ9kdQoMNkWuO?=
- =?us-ascii?Q?QYM2gJ0ICuHAyOHMD056Ka+KnOX5Y8qTqUIC75aEgy810CQFBDLePmMXYKQw?=
- =?us-ascii?Q?4+IhTTAtS4YAEfGcjGe2K835+Ic1zEGVi5H7Ugysz4n9i/KQ8u20vygxzYRq?=
- =?us-ascii?Q?3f4HurGG+wiSborGmTIAV+1bTQWyu+Ddn23fO3s4dqiuaHTIsvrwRAXowHbr?=
- =?us-ascii?Q?iSy3qtcO4I0amEvGVIUHZwpAWCXSF+DQkYTE6Pr96L/Jb6twG/7WvWMPgXG7?=
- =?us-ascii?Q?W8co05h4yTkH/lUbpoJdCs20KDG1XPUdIsLPC8Hk?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dce68205-bf56-43f1-5193-08dd6b081032
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2025 19:14:13.4676
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YmAELHpIsfzU+yuYU7H72f4gUkJmM9AjNcX4pVcr7SuO2HfcBMoIbiGqlw4q+nP5KT5BoDSJSnQMEl7ziwc08Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10439
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] arm64: qcom: sc7280: Move phy, perst to root port
+ node
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+References: <20250322-perst-v1-0-e5e4da74a204@oss.qualcomm.com>
+ <20250322-perst-v1-2-e5e4da74a204@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250322-perst-v1-2-e5e4da74a204@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=C4PpyRP+ c=1 sm=1 tr=0 ts=67e1af65 cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=bSnlr1PQR7FYCNIf-OoA:9 a=QEXdDO2ut3YA:10
+ a=a_PwQJl-kcHnX1M80qC6:22
+X-Proofpoint-GUID: x-uGRF2gflPL4cka4g-mx9B6ofMYI6Jo
+X-Proofpoint-ORIG-GUID: x-uGRF2gflPL4cka4g-mx9B6ofMYI6Jo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-24_06,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ phishscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ bulkscore=0 clxscore=1015 spamscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503240137
 
-On Mon, Mar 24, 2025 at 02:26:45PM +0800, Richard Zhu wrote:
-> Workaround for ERR051624: The Controller Without Vaux Cannot Exit L23
-
-provide a errata link here.
-
-ERR051624: ...
-
-The words after ERR051624 is descript errata itself, not workaround.
-
-> Ready Through Beacon or PERST# De-assertion
->
-> When the auxiliary power is not available, the controller cannot exit
-> from L23 Ready with beacon or PERST# de-assertion when main power is not
-> removed.
->
-> Workaround: Set SS_RW_REG_1[SYS_AUX_PWR_DET] to 1.
->
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+On 3/22/25 4:00 AM, Krishna Chaitanya Chundru wrote:
+> Move phy, perst, to root port from the controller node.
+> 
+> Rename perst-gpios to reset-gpios to align with the expected naming
+> convention of pci-bus-common.yaml.
+> 
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 > ---
->  drivers/pci/controller/dwc/pci-imx6.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 0f42ab63f5ad..52aa8bd66cde 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -48,6 +48,8 @@
->  #define IMX95_PCIE_SS_RW_REG_0			0xf0
->  #define IMX95_PCIE_REF_CLKEN			BIT(23)
->  #define IMX95_PCIE_PHY_CR_PARA_SEL		BIT(9)
-> +#define IMX95_PCIE_SS_RW_REG_1			0xf4
-> +#define IMX95_PCIE_SYS_AUX_PWR_DET		BIT(31)
->
->  #define IMX95_PE0_GEN_CTRL_1			0x1050
->  #define IMX95_PCIE_DEVICE_TYPE			GENMASK(3, 0)
-> @@ -227,6 +229,19 @@ static unsigned int imx_pcie_grp_offset(const struct imx_pcie *imx_pcie)
->
->  static int imx95_pcie_init_phy(struct imx_pcie *imx_pcie)
->  {
-> +	/*
-> +	 * Workaround for ERR051624: The Controller Without Vaux Cannot
-> +	 * Exit L23 Ready Through Beacon or PERST# De-assertion
-> +	 *
-> +	 * When the auxiliary power is not available, the controller
-> +	 * cannot exit from L23 Ready with beacon or PERST# de-assertion
-> +	 * when main power is not removed.
-> +	 *
-> +	 * Workaround: Set SS_RW_REG_1[SYS_AUX_PWR_DET] to 1.
-> +	 */
-> +	regmap_update_bits(imx_pcie->iomuxc_gpr, IMX95_PCIE_SS_RW_REG_1,
-> +			IMX95_PCIE_SYS_AUX_PWR_DET, IMX95_PCIE_SYS_AUX_PWR_DET);
 
-regmap_set_bits()
+[...]
 
-Frank
-> +
->  	regmap_update_bits(imx_pcie->iomuxc_gpr,
->  			IMX95_PCIE_SS_RW_REG_0,
->  			IMX95_PCIE_PHY_CR_PARA_SEL,
-> --
-> 2.37.1
->
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> index 0f2caf36910b..6c21c320a2b5 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> @@ -2271,9 +2271,6 @@ pcie1: pcie@1c08000 {
+>  
+>  			power-domains = <&gcc GCC_PCIE_1_GDSC>;
+>  
+> -			phys = <&pcie1_phy>;
+> -			phy-names = "pciephy";
+> -
+>  			pinctrl-names = "default";
+>  			pinctrl-0 = <&pcie1_clkreq_n>;
+>  
+> @@ -2284,7 +2281,7 @@ pcie1: pcie@1c08000 {
+>  
+>  			status = "disabled";
+>  
+> -			pcie@0 {
+> +			pcieport1: pcie@0 {
+
+pcie1_port0 (or pcie1_port), please
+
+Konrad
 
