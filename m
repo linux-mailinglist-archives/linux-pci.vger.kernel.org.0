@@ -1,181 +1,232 @@
-Return-Path: <linux-pci+bounces-24516-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24517-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F388CA6D8C1
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 12:00:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CD8DA6D908
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 12:19:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6ED3B16A011
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 11:00:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C40D3A942E
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 11:19:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4851310A3E;
-	Mon, 24 Mar 2025 11:00:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DD2425DD07;
+	Mon, 24 Mar 2025 11:19:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jr/oRkwB"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gY00k1gF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A135C2E337E;
-	Mon, 24 Mar 2025 11:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EDE25D8F5;
+	Mon, 24 Mar 2025 11:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742814041; cv=none; b=ebnfiwOnw9kc/eeysDYwhJXfVLEGnVW4y3L9AkNieFjdrCzEmFa/1IvYPVhirHQSlMu0xskf4YVaegp/P8yjhOhqvANudzas0tUUYVXbgmCaN24xSiSWAnk2xEHE0KnYCPBUy1eRJZWxlHrhse6ObEJvZoT+tKvFw0QXMueZthU=
+	t=1742815148; cv=none; b=lr8SGDU03KqDDfLKWUSP4LTyC8QfPH3lnOLhBbP7sdr/VkFLjUBjfK5SzXAOPkTbscAzgSeDDd4aD5V3mk6XHRlSYn1W8K1zVBG5lQBss99KuECV/+P0ECoQW7i7lmf68nnJ6CIu1yMFHOaSNqofyT09t22NcjogYdfRmJgvVgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742814041; c=relaxed/simple;
-	bh=EjvNWj2bu9mDgzWHLlrFrR4A2jejj1JVVbCwu0bDSig=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=f5RGYaCw6OEuknxCSJpyCCM3odLvTV1Jm0TRzhboKKLstOU0kOAnR+98rArxABua+gKXJezZXQ7ko123OsGMFu8Rh3dpfbPuixw+WuWBoa2dgZXmoB7W9bHG1aLElQ0sOjUDiIcQGQiMuSxp590KEd80rcwjsDCZpssG3EYeCmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jr/oRkwB; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742814040; x=1774350040;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=EjvNWj2bu9mDgzWHLlrFrR4A2jejj1JVVbCwu0bDSig=;
-  b=Jr/oRkwBaiDtaH9UrCPqAk4Akd1MpVDw8q3wSakKBO6cynJuL30QZU2l
-   hK7sAsb6ajcl+tlM1TsjkEcm38i6/HX9N45nlMIL8mMJ4kans7zZHmzTv
-   GjDPlHuORMBcayeG43B3aEqEaPvzzPelSN/+NqmbMi7ruVgRTKGxQ6u+e
-   nhb3yUEOXLuTPn6LtV5TH/a+RlyCbgXKQFJ5x2VKUVQswZpGFJigPwY4r
-   Xn3vgNX8aykJxtSG1dLtXGfQ+HiiZNPqqe/hcXMwgqIZZD+oymXZm3QcD
-   lM2mT4z6wLklKHSRgVkl6usdR7USbreb37FW0DgvAeB5MJSq26Nky7QkR
-   w==;
-X-CSE-ConnectionGUID: 9/4d2/hcQTejOj97wZW5Kg==
-X-CSE-MsgGUID: jcS4b/mTQVuQl+RaOgJkhg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11382"; a="54676231"
-X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
-   d="scan'208";a="54676231"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 04:00:39 -0700
-X-CSE-ConnectionGUID: rm+Udpj5SPKxIK5tTJfTVA==
-X-CSE-MsgGUID: S/auv3rTQMSOodTCW+mPtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
-   d="scan'208";a="124024087"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.251])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 04:00:37 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 24 Mar 2025 13:00:33 +0200 (EET)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>, 
-    "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] PCI/hotplug: Don't enable HPIE in poll mode
-In-Reply-To: <20250321205114.GA1144421@bhelgaas>
-Message-ID: <005837ad-e7dd-85c8-b0d3-ce5aa0257354@linux.intel.com>
-References: <20250321205114.GA1144421@bhelgaas>
+	s=arc-20240116; t=1742815148; c=relaxed/simple;
+	bh=9ic5k5snCOiqhHpGUJK7796tgMOKErKy6GnG+qpwY/I=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=ZtWKVlpaJsFEMGz9dBBRaV1iotAmb+OcWklFLjnMa1jJ7rNEjZyseBTTmBDBwsWowhgs/kGxy5appZky2SiGkWA9MPghzp7dY06V6T2HE+baVE8m6sLoAw2GTgFg8nrBKoLEwut/cLnpri+QmrlMiIuroMJEf39cvH39c5SU8bA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gY00k1gF; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O9PN1R002624;
+	Mon, 24 Mar 2025 11:18:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	w1lri5MqZbIT02ibyEkRFfUvHwlxk+LHgwBFL00OjhI=; b=gY00k1gFxfLivE8E
+	BZ6xyau2fQ8qg/XSRLgGkrvj0h0glPqCiXIvsUEk4hHQgmJBJGvs/PfxscWhCzlv
+	iIjSvuifJUFY8i0wxl6FyxYDKEeVpDdt/nS6nOuISM6v2mcTMKdxpPWe9O6VdR9Q
+	aqskGrcVhXfHCT8iPd77JTdd0+Hdl1DtnoVIKjVUHQvrZXDSlKYnyRlWtX68G7CT
+	nfuQRDU8luvIK/LHnRDDI+273AlkA0rzm5DoF6oNwNLislM24plUmP9Bq09J+pen
+	4z2Wk3KtL0ufzWVQAjuhrA0K90e66nYzZWSfFeSRwBRera2gG1FJwLAvxxDZeBnD
+	SXlQOA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hmhk46mn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 11:18:53 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52OBIqhV027639
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 11:18:52 GMT
+Received: from [10.151.37.172] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 24 Mar
+ 2025 04:18:46 -0700
+Message-ID: <6fa2bd30-762b-4a3a-b94f-8798c027764a@quicinc.com>
+Date: Mon, 24 Mar 2025 16:48:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+From: Praveenkumar I <quic_ipkumar@quicinc.com>
+Subject: Re: [PATCH v6 5/6] arm64: dts: qcom: ipq5018: Add PCIe related nodes
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        <george.moussalem@outlook.com>
+CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Nitheesh Sekar <quic_nsekar@quicinc.com>,
+        Varadarajan Narayanan <quic_varada@quicinc.com>,
+        Bjorn Helgaas
+	<bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>,
+        <20250317100029.881286-2-quic_varada@quicinc.com>,
+        Sricharan R
+	<quic_srichara@quicinc.com>
+References: <20250321-ipq5018-pcie-v6-0-b7d659a76205@outlook.com>
+ <20250321-ipq5018-pcie-v6-5-b7d659a76205@outlook.com>
+ <a4n3w62bg6x2iux4z7enu3po56hr5pcavjfmvtzdcwv2w4ptrr@ssvfdrltfg5y>
+Content-Language: en-US
+In-Reply-To: <a4n3w62bg6x2iux4z7enu3po56hr5pcavjfmvtzdcwv2w4ptrr@ssvfdrltfg5y>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=C4PpyRP+ c=1 sm=1 tr=0 ts=67e13f9d cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=UqCG9HQmAAAA:8 a=KKAkSRfTAAAA:8
+ a=togc-Yv_Yop6_gjJSswA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: tvOXR0j-S9vTqQaLenCORO2uNHcFWaqZ
+X-Proofpoint-ORIG-GUID: tvOXR0j-S9vTqQaLenCORO2uNHcFWaqZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ phishscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ bulkscore=0 clxscore=1011 spamscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503240082
 
-On Fri, 21 Mar 2025, Bjorn Helgaas wrote:
 
-> On Fri, Mar 21, 2025 at 07:07:47PM +0100, Lukas Wunner wrote:
-> > On Fri, Mar 21, 2025 at 12:09:19PM -0500, Bjorn Helgaas wrote:
-> > ...
-> 
-> > >   - It's annoying that pcie_enable_interrupt() and
-> > >     pcie_disable_interrupt() are global symbols, a consequence of
-> > >     pciehp being split across five files instead of being one, which
-> > >     is also a nuisance for code browsing.
-> > 
-> > Roughly,
-> > pciehp_core.c contains the interface to the PCI hotplug core
-> >   (registering the hotplug_slot_ops etc),
 
-This is at least oneway as it contains only static functions if 
-init func is not counted.
+On 3/24/2025 1:26 PM, Manivannan Sadhasivam wrote:
+> On Fri, Mar 21, 2025 at 04:14:43PM +0400, George Moussalem via B4 Relay wrote:
+>> From: Nitheesh Sekar<quic_nsekar@quicinc.com>
+>>
+>> Add phy and controller nodes for a 2-lane Gen2 and
+> Controller is Gen 3 capable but you are limiting it to Gen 2.
+>
+>> a 1-lane Gen2 PCIe bus. IPQ5018 has 8 MSI SPI interrupts and
+>> one global interrupt.
+>>
+>> Signed-off-by: Nitheesh Sekar<quic_nsekar@quicinc.com>
+>> Signed-off-by: Sricharan R<quic_srichara@quicinc.com>
+>> Signed-off-by: George Moussalem<george.moussalem@outlook.com>
+> One comment below. With that addressed,
+>
+> Reviewed-by: Manivannan Sadhasivam<manivannan.sadhasivam@linaro.org>
+>
+>> ---
+>>   arch/arm64/boot/dts/qcom/ipq5018.dtsi | 234 +++++++++++++++++++++++++++++++++-
+>>   1 file changed, 232 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+>> index 8914f2ef0bc4..d08034b57e80 100644
+>> --- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+>> @@ -147,6 +147,40 @@ usbphy0: phy@5b000 {
+>>   			status = "disabled";
+>>   		};
+>>   
+>> +		pcie1_phy: phy@7e000{
+>> +			compatible = "qcom,ipq5018-uniphy-pcie-phy";
+>> +			reg = <0x0007e000 0x800>;
+>> +
+>> +			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
+>> +
+>> +			resets = <&gcc GCC_PCIE1_PHY_BCR>,
+>> +				 <&gcc GCC_PCIE1PHY_PHY_BCR>;
+>> +
+>> +			#clock-cells = <0>;
+>> +			#phy-cells = <0>;
+>> +
+>> +			num-lanes = <1>;
+>> +
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		pcie0_phy: phy@86000{
+>> +			compatible = "qcom,ipq5018-uniphy-pcie-phy";
+>> +			reg = <0x00086000 0x800>;
+>> +
+>> +			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
+>> +
+>> +			resets = <&gcc GCC_PCIE0_PHY_BCR>,
+>> +				 <&gcc GCC_PCIE0PHY_PHY_BCR>;
+>> +
+>> +			#clock-cells = <0>;
+>> +			#phy-cells = <0>;
+>> +
+>> +			num-lanes = <2>;
+>> +
+>> +			status = "disabled";
+>> +		};
+>> +
+>>   		tlmm: pinctrl@1000000 {
+>>   			compatible = "qcom,ipq5018-tlmm";
+>>   			reg = <0x01000000 0x300000>;
+>> @@ -170,8 +204,8 @@ gcc: clock-controller@1800000 {
+>>   			reg = <0x01800000 0x80000>;
+>>   			clocks = <&xo_board_clk>,
+>>   				 <&sleep_clk>,
+>> -				 <0>,
+>> -				 <0>,
+>> +				 <&pcie0_phy>,
+>> +				 <&pcie1_phy>,
+>>   				 <0>,
+>>   				 <0>,
+>>   				 <0>,
+>> @@ -387,6 +421,202 @@ frame@b128000 {
+>>   				status = "disabled";
+>>   			};
+>>   		};
+>> +
+>> +		pcie1: pcie@80000000 {
+>> +			compatible = "qcom,pcie-ipq5018";
+>> +			reg = <0x80000000 0xf1d>,
+>> +			      <0x80000f20 0xa8>,
+>> +			      <0x80001000 0x1000>,
+>> +			      <0x00078000 0x3000>,
+>> +			      <0x80100000 0x1000>,
+>> +			      <0x0007b000 0x1000>;
+>> +			reg-names = "dbi",
+>> +				    "elbi",
+>> +				    "atu",
+>> +				    "parf",
+>> +				    "config",
+>> +				    "mhi";
+>> +			device_type = "pci";
+>> +			linux,pci-domain = <0>;
+>> +			bus-range = <0x00 0xff>;
+>> +			num-lanes = <1>;
+>> +			max-link-speed = <2>;
+> This still needs some justification. If Qcom folks didn't reply, atleast move
+> this to board dts with a comment saying that the link is not coming up with
+> Gen3.
+>
+> - Mani
+The IPQ5018 PCIe controller can support Gen3, but the PCIe phy is 
+limited Gen2 and does not supported Gen3.
+Hence, it is restricted using the DTSI property.
 
-But it has things like pciehp_check_presence() and set_attention_status()
-that aren't about interfacing to the hp core.
-
-> > pciehp_hpc.c contains the interaction with hardware registers,
-> > pciehp_core.c contains the state machine,
-
-pciehp_ctrl.c is full of PCI_EXP_* usage so it definitely is deeply 
-intertwined with hardware registers and does HW related waits, etc.
-Thus, the split between hpc and ctrl feels especially artificial and
-that's where the back and forth calls also are.
-
-> > pciehp_pci.c contains the interaction with the PCI core
-> >   (enumeration / de-enumeration of devices on slot bringup / bringdown).
-
-+ it plays with the reset_lock deep down in the long call chain. It's
-also a very short file.
-
-> > The only reason I've refrained from making major adjustments to this
-> > structure in the past was that it would make "git blame" a little more
-> > difficult and applying fixes to stable kernels would also become somewhat
-> > more painful as it would require backporting.
-> 
-> Yeah, that's the main reason I haven't tried to do anything either.
-> On the other hand, the browsing nuisance is an everyday thing forever
-> if we leave it as-is.
-
-I get half mad every time I need to browse code under hotplug/. I even 
-started doing:
-
-  cat ./pciehp*.[hc] | less -S 
-
-...to workaround the constant need to jump between those files. I 
-certainly would like to see the split gone especially between ctrl and 
-hpc.
-
-There are also some forward declaration within a file which are mostly not 
-needed I think if the functions are shuffled around.
-
-> I did consolidate portdrv.c a couple years ago
-> and don't regret it.  But moving things definitely makes "git blame" a
-> bit of a hassle; my notes are full of things like this:
-> 
->   a1ccd3d91138 ("PCI/portdrv: Squash into portdrv.c")
->     squash drivers/pci/pcie/portdrv_pci.c and portdrv_core.c into portdrv.c
->   950bf6388bc2 ("PCI: Move DesignWare IP support to new drivers/pci/dwc/ directory")
->     mv drivers/pci/host/pci-imx6.c drivers/pci/dwc/pci-imx6.c
->   6e0832fa432e ("PCI: Collect all native drivers under drivers/pci/controller/")
->     mv drivers/pci/dwc/pci-imx6.c drivers/pci/controller/dwc/pci-imx6.c
-
-Can't git blame be given -M -C to deal with this? Or are those truly lines 
-that were introduced by the consolidation commit?
-
-I usually need to look older changes as well since there is plenty of API 
-reworks and other noise beyond such consolidations, so I tend to end up 
-doing this a lot while browing the history of some code fragment with 
-increasingly old commit IDs:
-
-git annotate a1ccd3d911382^ portdrv_core.c
-
-...to find the next points of interest in the history. So those commits 
-don't stand out as much for me.
-
--- 
- i.
-
-> > >   - I forgot why we have both pcie_write_cmd() and
-> > >     pcie_write_cmd_nowait() and how to decide which to use.
-> > 
-> > pcie_write_cmd_nowait() is the "fire and forget" variant,
-> > whereas pcie_write_cmd() can be thought of as the "_sync" variant,
-> > i.e. the control flow doesn't continue until the command has been
-> > processed by the slot.
-> > 
-> > E.g. pciehp_power_on_slot() waits for the slot command to complete
-> > before making sure the Link Disable bit is clear.  It wouldn't make
-> > much sense to do the latter when the former hasn't been completed yet.
-> 
-> Right, I know what the difference is; I guess I just don't know how to
-> figure out when pcie_write_cmd_nowait() is safe.
-> 
-> Bjorn
-> 
+--
+Thanks,
+Praveenkumar
 
 
