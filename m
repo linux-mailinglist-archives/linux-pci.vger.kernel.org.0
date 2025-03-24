@@ -1,93 +1,58 @@
-Return-Path: <linux-pci+bounces-24552-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24553-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 084A3A6E16C
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 18:48:20 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4DF6A6E164
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 18:47:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F286C168B91
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 17:46:22 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 513187A6F0E
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 17:45:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9359264FBA;
-	Mon, 24 Mar 2025 17:34:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7BFB265CB2;
+	Mon, 24 Mar 2025 17:37:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jauDl7DA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="aJxFE3Z+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42FEA264625
-	for <linux-pci@vger.kernel.org>; Mon, 24 Mar 2025 17:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E137262815;
+	Mon, 24 Mar 2025 17:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742837662; cv=none; b=u7+chdYIs+Xqhoal1sA7f2b0GDyQB3iIR+tTHuJyVC9RTmQSZhRYdMqPI50qIyCLZx+n65+yxLLopZ6gK2MiUw0+BT/6Qo7BlpPy9ALgtvDD0FDldFSB3O0b1SzyFeAPz46C72WhD4qh+XXQM+pYo6HwZlpNawLdCKBBMGCiZBs=
+	t=1742837822; cv=none; b=uKCWr6ocimRny7tt/L/o2SRdXaSLw83Td2yvQetCZVCBevfkYZrJ0sODOeBsOyKsQGkFy5aMc9OwAWPoEIoD5sbI6l6B+fybs1+oVDzQUQSDuJknax3BzYl6hUAImLZMOSubS42vLmsORCHbSgXRPUaXYgDgv4r+9cZIWW1ARUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742837662; c=relaxed/simple;
-	bh=9VD5yRc3tLAiwhVEBXo82ZOS86iUaUZI1Asrk4moJko=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ix8QfpRrJuVqmGbekUaeFcRz6Rff6MlukjUC3wPhswcKBvKPhCAGapjuxYVRTAiV67e8E7Q2K4apyMqyv797PYJKi9sN1Nz2ACZUAknbyPxnimIdDB9uJoe0rpQO+oQdmPhsU3lQ0G0CnuGDmng1iB37RgqVsoVKU57hFxd0VBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jauDl7DA; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-301493f461eso5630472a91.3
-        for <linux-pci@vger.kernel.org>; Mon, 24 Mar 2025 10:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742837660; x=1743442460; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=83CYsZDlIxjagBMUpXjJLP1JyYGcnqEAQYBsR+/D8Lg=;
-        b=jauDl7DA903iMHf6apJ2L7OURIkE3timkN3eaGgGcFlnz+vhePrbWCtTTCnLaGHrxh
-         NCtZBUowGzKx2mdDZDPWcvUP29SprxinIZHb727ZzMQOJREO52Xgg43TviMIdwlmjcqU
-         +CA04U8f+85g0a1jQ0hayxPckUVK+BLKIkhpVtbJtpH0pcJy3e8zO3LDlEK8Pr8JPbEM
-         VFLioNdCP+1afQtg5L9Lu9vD5gDoUaOs/OsvLvQ8zpdjcoXNJbLxXxa5K6+WTCgWmLxT
-         sjFHEkG6+a+wjYjNHwhVOMKy9RKVHtx6vP4qu6aI90DqOc2reWvgWX9FaH+4iTyPcewc
-         XPxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742837660; x=1743442460;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=83CYsZDlIxjagBMUpXjJLP1JyYGcnqEAQYBsR+/D8Lg=;
-        b=Mit/7wVbDU9hERjPFRqWANv6PCzVGb5JBrNIIp8UOOSnDqjQpRMQiZJ3OqZpzf3Vsl
-         B7YNZHEpc953ZxlNhzh9Gvn8FUIwgc+vXEBrm7hxg3ozMbri0zop75FkOS4dw3Yh3cuk
-         4qVZEbR+AB90D7Zegdisy1XKalkiXmi92BnRgwEf521AaH7VR92+VlUoQNo8drOaZHbE
-         Dn/JOAwGC/Z1uYCgkdsPGniEnoD+uO7hr1YHZLpHD5HHhHQKo2V2Kne8huq/BHC42+aQ
-         Bul+6e7m4hCLNBEK1EIW6xW19hLs1weDAZO+h1M7HI8LhpYu/9Mpn++PeZKZFl1LNf/K
-         ieeA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1MYiISysp84YBDiWIIWngPAFk/K+WTHa/Y+Iv1t2mSgwkc21D1eD1qf4EGWnRd8vms80+M91wnmA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrtfbRuOmfmCi5ismVb5e7YB6zuZVUwlDw5H4BBeBXjjx0IM/V
-	Ndatp4YtgQ+V3BjOciVBnkCjxOrXlDD2BDw7hWkmDZQ3Hkios7h/KtkY0FI8WQ==
-X-Gm-Gg: ASbGnctSW17iGI2EzWUJ62f0ToFpse/TMBDomfM7Dtc8Iz5MWbO3q3WlAgxN2wCKVb7
-	jQ6vJR0VhPGgzKqUu1payVLMy5SaEB/HwfLWn1ZzxzSpau50U3jz0nRma0G/wFThxghWK4M5ZTK
-	EpdbpyLpsRY7X0o5ZpzQd7BISLYTIMdhHlZ0UlgAVQctWVZUb7+xN1yB4w58Rm1gOCR2A1//NGk
-	mq7hODXklUrXC1MQ7hKOM40YzHy8ZpTKKIs3DdlFOUXhQ9gYYeWekMabLhKhAL4X65eUXGdiJJ6
-	T1dEVE3eFD1MjQd20NnGCT/1eYf41Qn9P99JjeQzogtbszLA96OL954=
-X-Google-Smtp-Source: AGHT+IHbIVCssVeg7Lv61Tjada9UpukwFQFdXBab670umPHzvG4MJv+C/Yb75yCUgxbb10I3kj+LVA==
-X-Received: by 2002:a17:90b:510d:b0:2ff:4bac:6fba with SMTP id 98e67ed59e1d1-3030fefd847mr23814182a91.24.1742837660393;
-        Mon, 24 Mar 2025 10:34:20 -0700 (PDT)
-Received: from thinkpad ([120.60.67.138])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf61b525sm12457882a91.35.2025.03.24.10.34.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 10:34:19 -0700 (PDT)
-Date: Mon, 24 Mar 2025 23:04:10 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Niklas Cassel <cassel@kernel.org>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v12 00/13] PCI: Use device bus range info to cleanup RC
- Host/EP pci_fixup_addr()
-Message-ID: <sffiojhyyu5gc7nx4oe6re53r3ti4nbnkworsxzawkus6ovlsh@3auwqhcpdp3c>
-References: <20250315201548.858189-1-helgaas@kernel.org>
+	s=arc-20240116; t=1742837822; c=relaxed/simple;
+	bh=pr+TErMsVxDlfkiS5MHu/5LIlKend1IEbpzReT3WRCs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kajCA8wnUcf/9Zum6aWdfhp47Un8kRymG4e/gKQnqMGkv7p58tqzSodFEnU5Cz+3A5ao7xDbBV4tL56p4OYbYLgaS4hAcEfUK78cykeA63oVDKJT40bCSvWW2Z5fuafzdVuSx2Ff/INefxhXpPj7rJoD4WGqVEi6dPOti9ixbm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=aJxFE3Z+; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1742837812; x=1743097012;
+	bh=gzjWOjpOta91XnfdGX5MvAMkuzEnujIhqjARpEPjTIo=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=aJxFE3Z+1qsqYa3hVJ+gBJHED1dcKaiGpxcPPASqawq7u9fCjBjapsb5WGUMFycMj
+	 I/OUrTVXk78LCc7c9XCkoRuCttvY/jd+9oSgWYxmBS+RNQnk8jEQ6JX4qgvnQfXvDx
+	 s+ImhioG9IujYnHdT4pOPrdVoc9tsOjqNn3urNqJX495wQ83BuXeaPgRh5n7zQATB7
+	 +fgar0I4BpwxMH8LlpexwncDpnGctNqumtgLr7ZAhr+P3+Z6lCfR8nFqlNt6Xe9PLO
+	 t5rGfkzHzqVebkMBjHsCJePn3RRm/7D+JI1jKhAuRX15tGoyuIDNY35ch3Ingow1oV
+	 yUSNuW+WGM/xw==
+Date: Mon, 24 Mar 2025 17:36:45 +0000
+To: Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Greg KH <gregkh@linuxfoundation.org>, bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] rust: pci: impl TryFrom<&Device> for &pci::Device
+Message-ID: <D8OOFRRSLHP4.1B2FHQRGH3LKW@proton.me>
+In-Reply-To: <Z-GNDE68vwhk0gaV@cassiopeiae>
+References: <20250321214826.140946-1-dakr@kernel.org> <20250321214826.140946-3-dakr@kernel.org> <2025032158-embezzle-life-8810@gregkh> <Z96MrGQvpVrFqWYJ@pollux> <Z-CG01QzSJjp46ad@pollux> <D8ON7WC8WMFG.2S2JRK6G9TOSL@proton.me> <Z-GNDE68vwhk0gaV@cassiopeiae>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 9c1e69920ada344c286ef23456f72788df8f151c
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -95,74 +60,71 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250315201548.858189-1-helgaas@kernel.org>
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Mar 15, 2025 at 03:15:35PM -0500, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> This is a v12 based on Frank's v11 series.
-> 
+On Mon Mar 24, 2025 at 5:49 PM CET, Danilo Krummrich wrote:
+> On Mon, Mar 24, 2025 at 04:39:25PM +0000, Benno Lossin wrote:
+>> On Sun Mar 23, 2025 at 11:10 PM CET, Danilo Krummrich wrote:
+>> > On Sat, Mar 22, 2025 at 11:10:57AM +0100, Danilo Krummrich wrote:
+>> >> On Fri, Mar 21, 2025 at 08:25:07PM -0700, Greg KH wrote:
+>> >> > Along these lines, if you can convince me that this is something th=
+at we
+>> >> > really should be doing, in that we should always be checking every =
+time
+>> >> > someone would want to call to_pci_dev(), that the return value is
+>> >> > checked, then why don't we also do this in C if it's going to be
+>> >> > something to assure people it is going to be correct?  I don't want=
+ to
+>> >> > see the rust and C sides get "out of sync" here for things that can=
+ be
+>> >> > kept in sync, as that reduces the mental load of all of us as we tr=
+avers
+>> >> > across the boundry for the next 20+ years.
+>> >>=20
+>> >> I think in this case it is good when the C and Rust side get a bit
+>> >> "out of sync":
+>> >
+>> > A bit more clarification on this:
+>> >
+>> > What I want to say with this is, since we can cover a lot of the commo=
+n cases
+>> > through abstractions and the type system, we're left with the not so c=
+ommon
+>> > ones, where the "upcasts" are not made in the context of common and we=
+ll
+>> > established patterns, but, for instance, depend on the semantics of th=
+e driver;
+>> > those should not be unsafe IMHO.
+>>=20
+>> I don't think that we should use `TryFrom` for stuff that should only be
+>> used seldomly. A function that we can document properly is a much better
+>> fit, since we can point users to the "correct" API.
+>
+> Most of the cases where drivers would do this conversion should be covere=
+d by
+> the abstraction to already provide that actual bus specific device, rathe=
+r than
+> a generic one or some priv pointer, etc.
+>
+> So, the point is that the APIs we design won't leave drivers with a reaso=
+n to
+> make this conversion in the first place. For the cases where they have to
+> (which should be rare), it's the right thing to do. There is not an alter=
+native
+> API to point to.
 
-Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> #SA8775P-RIDE
+Yes, but for such a case, I wouldn't want to use `TryFrom`, since that
+trait to me is a sign of a canonical way to convert a value. So if it
+shouldn't be used lightly, then I would prefer a normal method. Even if
+there is no alternative API, we could say that it is unusual to use it
+and the correct type should normally be available. This kind of
+documentation is not possible with `TryFrom`.
 
-- Mani
+For a user it won't make a big difference, they'll just call a method
+not named `try_from`.
 
-> v11 https://lore.kernel.org/r/20250313-pci_fixup_addr-v11-0-01d2313502ab@nxp.com
->     
-> Changes from v11:
->   - Call devm_pci_alloc_host_bridge() early in dw_pcie_host_init(), before
->     any devicetree-related code
->   - Call devm_pci_epc_create() early in dw_pcie_ep_init(), before any
->     devicetree-related code
->   - Consolidate devicetree-related code in dw_pcie_host_get_resources() and
->     dw_pcie_ep_get_resources()
->   - Integrate dw_pcie_cfg0_setup() into dw_pcie_host_get_resources()
->   - Convert dw_pcie_init_parent_bus_offset() to dw_pcie_parent_bus_offset()
->     which returns the offset rather than setting it internally
->   - Split the debug comparison of devicetree info with .cpu_addr_fixup() to
->     separate patch so we can easily revert it later
->   - Drop "cpu_addr_fixup() usage detected" warning since we always warn
->     about something in that case anyway
-> 
-> Any comments welcome.
-> 
-> 
-> Bjorn Helgaas (3):
->   PCI: dwc: Consolidate devicetree handling in
->     dw_pcie_host_get_resources()
->   PCI: dwc: ep: Call epc_create() early in dw_pcie_ep_init()
->   PCI: dwc: ep: Consolidate devicetree handling in
->     dw_pcie_ep_get_resources()
-> 
-> Frank Li (10):
->   PCI: dwc: Use resource start as iomap() input in
->     dw_pcie_pme_turn_off()
->   PCI: dwc: Rename cpu_addr to parent_bus_addr for ATU configuration
->   PCI: dwc: Call devm_pci_alloc_host_bridge() early in
->     dw_pcie_host_init()
->   PCI: dwc: Add dw_pcie_parent_bus_offset()
->   PCI: dwc: Add dw_pcie_parent_bus_offset() checking and debug
->   PCI: dwc: Use devicetree 'reg[config]' to derive CPU -> ATU addr
->     offset
->   PCI: dwc: ep: Use devicetree 'reg[addr_space]' to derive CPU -> ATU
->     addr offset
->   PCI: dwc: ep: Ensure proper iteration over outbound map windows
->   PCI: dwc: Use parent_bus_offset to remove need for .cpu_addr_fixup()
->   PCI: imx6: Remove cpu_addr_fixup()
-> 
->  drivers/pci/controller/dwc/pci-imx6.c         | 18 +---
->  .../pci/controller/dwc/pcie-designware-ep.c   | 74 +++++++++++------
->  .../pci/controller/dwc/pcie-designware-host.c | 57 ++++++++-----
->  drivers/pci/controller/dwc/pcie-designware.c  | 82 ++++++++++++++-----
->  drivers/pci/controller/dwc/pcie-designware.h  | 24 +++++-
->  5 files changed, 171 insertions(+), 84 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+---
+Cheers,
+Benno
 
--- 
-மணிவண்ணன் சதாசிவம்
 
