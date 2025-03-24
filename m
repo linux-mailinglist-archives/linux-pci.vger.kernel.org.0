@@ -1,99 +1,102 @@
-Return-Path: <linux-pci+bounces-24542-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24543-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B5DCA6DFA2
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 17:29:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A224FA6DFF0
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 17:39:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C665188A6E3
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 16:29:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D97E3B0688
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 16:39:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25EB2263C6A;
-	Mon, 24 Mar 2025 16:28:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA10B263C85;
+	Mon, 24 Mar 2025 16:39:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTbJDIRl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="JpDdT+ey"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92D917E8E2;
-	Mon, 24 Mar 2025 16:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72F9262813
+	for <linux-pci@vger.kernel.org>; Mon, 24 Mar 2025 16:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742833737; cv=none; b=o0+fk4y7gT0/QuyeBOLAukADIV/Gj3b3elGZiscaJEbRU2P/UPvHogHSwbACRv3lBtn7+MPxmtO17hb0kCwj/4ZkSNUZfJzU5ZWMiM0n/SnZ9LvmlAlZyDz1MqlI32sETXkOfaR2WpfMQ6SCOp1/z0VIDX1s5b88kVRyfpcd5jk=
+	t=1742834375; cv=none; b=kcXEydvvqigOHJ39CT/GAj7Wjpg9Ggtr7JKxolySgLp8Ezub2rlXiTRPb/OgTrArLj1JVOMJDEC8QicfxBYXaabSzyWoFTUFi5okvVTC1bF5LZNs8cC4X6dnct9A8MKnwH0px8yHV/rOnM7ESZtbgE5DOK2etmY2UuTFtwEqtWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742833737; c=relaxed/simple;
-	bh=R0gPXHbvAqWNDd47lfOaYO5xK+3SNYLwqbTvSnvFKjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=EzXXvhkGRYTovcjb7g2VIijE0Jf/6FXDj7Ce3dBfOVzTsReI9/cth2KDcrNkvL3tD5TRI4g6Lxx2l7A+4HMg8XVVLwDBft47YxorGRTtRsmtev2YmWtxAAanhE8dXCblS9/WWKRO2Hyt+nZDL+HijlPnS84jecplJS3qGXmoDSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTbJDIRl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FBBCC4CEDD;
-	Mon, 24 Mar 2025 16:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742833736;
-	bh=R0gPXHbvAqWNDd47lfOaYO5xK+3SNYLwqbTvSnvFKjo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=RTbJDIRlLFromiiuyfl93KafQWjdzWw92XxE5XUaUNWceSjO/RluUvBLVMtWTc+GA
-	 beWRnbhXOPRJ3pmL4f+PL+9uYP4gddWGm2EJA+7SX0CX/yzUsR3MypF00w3SMOD+a1
-	 8MVYA/QWcja2KZqtOJXu3Zgk/zA+NW0E4aJhwxgTKRgIOOGxklDx5lYIASpQW8HPbz
-	 mo3uIqqXE/+4vInGV44n5WW41E5MuPDtagqikgELNzV/EelHeXvwpJFDSLTsz6mHpQ
-	 6G+XZePc0NDu7Y/DfBvrwfQbZFft9t5veL6whEibekQXs71vvGDFL47dNmwZK9BwsN
-	 FiF5RQr6IKpIw==
-Date: Mon, 24 Mar 2025 11:28:54 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: manivannan.sadhasivam@linaro.org
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] PCI: Add sysfs support for exposing PTM context
-Message-ID: <20250324162854.GA1251469@bhelgaas>
+	s=arc-20240116; t=1742834375; c=relaxed/simple;
+	bh=M/tu2Elne1pWCI/q5zOSWCRw9rqFQ6EcGfnZYmdRtps=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oImnMhlFxNSJVy8gnfTZxM5kumg17D2ZTPYxy38efpsRqidG+P6Nik2/n/pGMjbId1JqNOHdwY12bpYDgGk+5i8gZMtcxZoEayCL58KK76Tripw3LBzAjVRW+/KQwobT5yQonjadPIF7V98oAJW6276xwRfqBklhv75CKRJBDeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=JpDdT+ey; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=p6yri6f4p5ayrdaj5tyc2fv74e.protonmail; t=1742834371; x=1743093571;
+	bh=ifYKmdtaNhgtRfXf0+4J1IB0aZUSdquuIytSMsdwDBw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=JpDdT+eypr4OP96ZK64A5HYyRjzFlQDDZ9EX6uSqBqEQl1gPc6F5N1Pb6APbYhZuU
+	 rF8KHQ4TKNCP7PT5JQzuAtOlGdGn5kwPsgzZPIXloLCeT2k8KhsBDxdwkk06IbfLV8
+	 L4fOwUalBfKtJ8WfWS5g1GU7clcfQO4yfS8yJ1Kd/EspvHv2WctBGyVaK2EaaURw0J
+	 pCNSKzlHqQdsiT0Cbx3PWsUa6vrK6TEI8DMR6oknMXuaqn7ndSLz9gujAbEo4UzxGw
+	 KZ1O7Afyjo0S2iCTh0V84x2jOSS2MFAonAhOLWUqAlFqaiwYbw6Xs+4ROfZOWxwmZM
+	 1hjUQ8hDWE58A==
+Date: Mon, 24 Mar 2025 16:39:25 +0000
+To: Danilo Krummrich <dakr@kernel.org>, Greg KH <gregkh@linuxfoundation.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] rust: pci: impl TryFrom<&Device> for &pci::Device
+Message-ID: <D8ON7WC8WMFG.2S2JRK6G9TOSL@proton.me>
+In-Reply-To: <Z-CG01QzSJjp46ad@pollux>
+References: <20250321214826.140946-1-dakr@kernel.org> <20250321214826.140946-3-dakr@kernel.org> <2025032158-embezzle-life-8810@gregkh> <Z96MrGQvpVrFqWYJ@pollux> <Z-CG01QzSJjp46ad@pollux>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 990da4dcde6434a006d722b52b205a8f1cadb5ec
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324-pcie-ptm-v2-1-c7d8c3644b4a@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 24, 2025 at 03:34:35PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Precision Time Management (PTM) mechanism defined in PCIe spec r6.0,
-> sec 6.22 allows precise coordination of timing information across multiple
-> components in a PCIe hierarchy with independent local time clocks.
-> 
-> PCI core already supports enabling PTM in the root port and endpoint
-> devices through PTM Extended Capability registers. But the PTM context
-> supported by the PTM capable components such as Root Complex (RC) and
-> Endpoint (EP) controllers were not exposed as of now.
-> 
-> Hence, add the sysfs support to expose the PTM context to userspace from
-> both PCIe RC and EP controllers. Controller drivers are expected to call
-> pcie_ptm_create_sysfs() to create the sysfs attributes for the PTM context
-> and call pcie_ptm_destroy_sysfs() to destroy them. The drivers should also
-> populate the relevant callbacks in the 'struct pcie_ptm_ops' structure
-> based on the controller implementation.
+On Sun Mar 23, 2025 at 11:10 PM CET, Danilo Krummrich wrote:
+> On Sat, Mar 22, 2025 at 11:10:57AM +0100, Danilo Krummrich wrote:
+>> On Fri, Mar 21, 2025 at 08:25:07PM -0700, Greg KH wrote:
+>> > Along these lines, if you can convince me that this is something that =
+we
+>> > really should be doing, in that we should always be checking every tim=
+e
+>> > someone would want to call to_pci_dev(), that the return value is
+>> > checked, then why don't we also do this in C if it's going to be
+>> > something to assure people it is going to be correct?  I don't want to
+>> > see the rust and C sides get "out of sync" here for things that can be
+>> > kept in sync, as that reduces the mental load of all of us as we trave=
+rs
+>> > across the boundry for the next 20+ years.
+>>=20
+>> I think in this case it is good when the C and Rust side get a bit
+>> "out of sync":
+>
+> A bit more clarification on this:
+>
+> What I want to say with this is, since we can cover a lot of the common c=
+ases
+> through abstractions and the type system, we're left with the not so comm=
+on
+> ones, where the "upcasts" are not made in the context of common and well
+> established patterns, but, for instance, depend on the semantics of the d=
+river;
+> those should not be unsafe IMHO.
 
-Can we include some motivation here, e.g., what is the value of
-exposing this information?  Is this for debugging or bringup purposes?
-Can users or administrators use this for something?  Obviously they
-can read and update some internal PTM state, but it would be nice to
-know what that's good for.
+I don't think that we should use `TryFrom` for stuff that should only be
+used seldomly. A function that we can document properly is a much better
+fit, since we can point users to the "correct" API.
 
-It looks like this requires device-specific support, i.e., the context
-itself, context update modes, access to the clock values, etc., is not
-specified by the generic PCIe spec.  Consequently this probably can't
-be done by generic drivers like ACPI, and maybe this is a candidate
-for debugfs instead of sysfs.
+---
+Cheers,
+Benno
 
-The merge window is open now, so this will be v6.16 material, so no
-hurry about updating before v6.15-rc1.
-
-Bjorn
 
