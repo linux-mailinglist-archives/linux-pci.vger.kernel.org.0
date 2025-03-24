@@ -1,295 +1,249 @@
-Return-Path: <linux-pci+bounces-24561-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24562-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F968A6E2D2
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 19:58:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61BA5A6E301
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 20:02:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AEFD53B4451
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 18:58:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C3D6017249E
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 19:02:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C707266F18;
-	Mon, 24 Mar 2025 18:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5902266F17;
+	Mon, 24 Mar 2025 19:01:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SJI4zR+7"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="cU3by8aA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2086.outbound.protection.outlook.com [40.107.20.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4249266F16;
-	Mon, 24 Mar 2025 18:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742842699; cv=none; b=E8EieNAuM4gFErtl0jVdH9RcpWhw4WGMAASYySrjpAsh3PeN7zLHJDBsM0rnvXofAmFzhYJ4FQdC9NDbhtJKSN12bderJ/WvRh3h0evmwIDtNTfDBcVy4Lys3PwnBNVFEDkdcUTkEpUR3eZEbTVyTva+8PBmzD1xUU9X6Pxrzpg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742842699; c=relaxed/simple;
-	bh=QOQzHPHB0XtBwefDNVY5PkLuraecI8p1uDp99MXJxLw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UxrkmWVeOxeuncm11HyBn4+K+Wp0mpIIYNUS4OWRUKBEpbV3Rtah/KdgTumg1+VezWJ9ftEX3FsPYFT7JBXM7E0kaaXPgkpJo6eRXT4JL1MyYpM/a4NgQKC/GcOWzFIdln7UqwB4gZ1VyzqxtpuCRjMw36pmxqRI7MR6a72rp0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SJI4zR+7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1276CC4CEDD;
-	Mon, 24 Mar 2025 18:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742842697;
-	bh=QOQzHPHB0XtBwefDNVY5PkLuraecI8p1uDp99MXJxLw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SJI4zR+74n0yOOMlhDR3z+JT+tWsVTbf9epf4GlyONcrfp7eWogrQlZjr917sTYNF
-	 GRYKTCsztf/ZPuALz3gXONmQZHWh1Ujjft0bkgfjCdAL27xY2zPqnOryb4UYkxR48U
-	 v/aETd7V2rHAnGssVeR3JxdTjy2F3fhObSNQjs4+GGcpheql2z/Y5/riOnIw0Ctm8w
-	 4q9wdcaIfq7QNeqKxYBAXP1v5jokmh5V5NC8HgX+d7Of1fLXTFy4LPfm7f3CBBmGVS
-	 kZRF6vmPvcguGf8n60SRzpStxo+eiGYRxWHUaTW083+30PEI+SFG13PJUtxElU/OHc
-	 obj5WdpmZ/l7g==
-Date: Mon, 24 Mar 2025 19:58:14 +0100
-From: Daniel Gomez <da.gomez@kernel.org>
-To: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-Cc: =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, 
-	Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-pci@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v3 3/3] PCI/MSI: Convert pci_msi_ignore_mask to per MSI
- domain flag
-Message-ID: <kp372led6jcryd4ubpyglc4h7b3erramgzsjl2slahxdk7w575@jganskuwkfvb>
-References: <20250320210741.GA1099701@bhelgaas>
- <846c80f8-b80f-49fd-8a50-3fe8a473b8ec@suse.com>
- <qn7fzggcj6qe6r6gdbwcz23pzdz2jx64aldccmsuheabhmjgrt@tawf5nfwuvw7>
- <Z-GbuiIYEdqVRsHj@macbook.local>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5289171C9;
+	Mon, 24 Mar 2025 19:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742842871; cv=fail; b=K07d5Za66aSJQMglo8qZa5IaNtLv7XKkkRHcLlxoryUlw2KLnceMfFIqT/dWb2DH7v5NCOmK5YaqHdksTuaVg34Oaz/oRLgdCN3HC0biNq3aYzutsu/XbleEne9jboft6TxdMz3AJoQyX/8Z1EwmQyMXtTQDRGFqz0bmA7iCkAQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742842871; c=relaxed/simple;
+	bh=5RZ+lhXZMmlRUnqx+GOl4TCV/lrMohCoav13lf+IRdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=oLR5hbtQ6//fe4+NJ2Q3uIhzB2f8KdGDoT2A96TyQzYkS3qW0IU9bI6c1BliWtu7S5QwWeCqgNB27mgfBdV0cz+GAJaNE1uihuAGaxWkviKUJ7AudfxYX8+vZQOmkgiWAJX4OMpIDzMQ/vHkV9yjoiYMViT2ckjImVfx6JZnee0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=cU3by8aA; arc=fail smtp.client-ip=40.107.20.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RoNUUp+aarE7LdnUyPdCyubYpiJES/qzpEVUdNT55wT+xBjrjIufmRAri+8qeTLfr7lgUtru7MuUUVziliLe5HWM0Nmclk/PJGTfOC9n3gPpYjrzpboLD9rahNC8sAKEZkFbsA0o61g05Azl1aU8DGEhlyKKpgOQXHDj+MYxyjFre6lbwfTVTMvWf4XOdkKk5bBAA4KZl8m74iO42c8XZZ3nFgaYSyWHjJr5aPAarFv5Z+5QzjsBERpyRHEasuH6ORzklP1/ZkSRmGhXMJR4n2x1R/oIuN0OGf84DdWjIzc0It+N/8dVCjzcapNqLSh/t6GNM44iNlNtYEs60jo+mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=H8k9dIw6po+UE+bm1w4luATbvjym1FQEu0PVRNiWHqg=;
+ b=J1FVFAb+E8ISVNIwZBroQ84V6p3Jh3GlA5Tp5T5acIL8ogJKzC4rD7yLy+CU/p9YgZENDZNVzpSMXF/O4VW5gsXSIeMOnG6Pgf5ctKjaDCIfx54/vjB6SHOfGcvE+cydqmxBRsPEKoAj1n1ZYl0+y7qdY/bHiYAGhQdcWFNTJOsvJ00qYkoy12vjvQSlmsOF0JA5K3m7v4G7w2My4ksz5Z30y3Al4P+crXFHD34N7q0z5/y+OPD6QO12lBsybn/qtDdN6MCByM9gl2InZBWaDIrslsxySqI1ebK6U+lp8akcyNYbRil1uhu3dJEWYLA0KQKO+MzoqaZ0aaJXmZdP3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H8k9dIw6po+UE+bm1w4luATbvjym1FQEu0PVRNiWHqg=;
+ b=cU3by8aAg2kzRC/3S1fn8ihfvXRevbER0gLyZY8OjMDToTE9iVsAYg8HT4EALFxvsOO9T2kvFrqqLe9/IkvXPu35ZnHASdiHI56wt4Rx9FTb/WEUUAn17nNsqnINc7nQmIqwDDasUbmpvgS4bVBvswt7E5z6mjvAQwJkSuzPs6u79xYPzaDUChNRrjaA1K3pvCtMyR7ziB067lU2IcYOUmnT/kBFnnblNY0/iAgpDlQKbcerHQV1dQt3ZLJ4nNEcWKAt4yQbgYcoEXIYMo2mcgs1SJXdvX35sofUpYHpRXa+cGaB+RT7QYT7njwJfdEnD/pp35n0S2e5eZwGGUzO+w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DB9PR04MB8363.eurprd04.prod.outlook.com (2603:10a6:10:24b::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Mon, 24 Mar
+ 2025 19:01:06 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%3]) with mapi id 15.20.8534.040; Mon, 24 Mar 2025
+ 19:01:06 +0000
+Date: Mon, 24 Mar 2025 15:00:58 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: l.stach@pengutronix.de, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+	kernel@pengutronix.de, festevam@gmail.com,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/5] PCI: imx6: Toggle the cold reset for i.MX95 PCIe
+Message-ID: <Z+Gr6gXQWu+E+LQo@lizhi-Precision-Tower-5810>
+References: <20250324062647.1891896-1-hongxing.zhu@nxp.com>
+ <20250324062647.1891896-3-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250324062647.1891896-3-hongxing.zhu@nxp.com>
+X-ClientProxiedBy: PH1PEPF000132F2.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:518:1::35) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z-GbuiIYEdqVRsHj@macbook.local>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB8363:EE_
+X-MS-Office365-Filtering-Correlation-Id: 906b51c7-79d3-403c-c76b-08dd6b063b18
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?wVMyhlxAs4D8kAYJOaUFkDnFh+dewWMS1ken2RLDngSdd7qHu/6TYDvCUgjG?=
+ =?us-ascii?Q?GQxiYrdHnnzaI7oTBSnHxBzpZnZ8f3ld++MWa21UpNJvn0q38NuvNzpiPwL9?=
+ =?us-ascii?Q?uY5wlexdZFE4ZPFpIJDq0dyZ6LYo3ISVajCJu1LRHIl7s/wbboRmvtVtgVxL?=
+ =?us-ascii?Q?ByWem6EzVZDS7wQwYV/CwyFhMrDleyd8I81oPYYt9X49KkLfo9FoXTjCxHUo?=
+ =?us-ascii?Q?3Vx1r4My3bcJLprR2x3EYrDDu75Rx+fRthZA78pyDqUDTD4cTBlQEfC3kptx?=
+ =?us-ascii?Q?Ox8jxCRKT5/ZDDA52Cia4qcKjFIafbGMKWwhPuFAqDErTMRZBYIsmKWjT80X?=
+ =?us-ascii?Q?dU+GN0ZcsOa4hXE/UswrqiFfLBhAZeklt/ptoVBTt/sDlUm+byJZFW1NvE8V?=
+ =?us-ascii?Q?hmG36LDdn0dGd5dgZUoh5sA9h1Dj1vwGVxMnMqyrtXVwrGHQkViaqNimRd/O?=
+ =?us-ascii?Q?BQf/BSxUSXcOjR/IMxbfsh6UhvKxM49bSpw2wAhdEVRQHiCfOn9I/jkIm3m6?=
+ =?us-ascii?Q?B+pTNZpVaXkJPMtKiXHV3399FE5w9qlf7kY+0Oq/FtsU56hLscdHwjzq2F62?=
+ =?us-ascii?Q?MvaCOUFbaWjK16Hz99IyK0CGTKmLxfh0GyhVAw6Adjem/JG0nLR9QaaH2DzK?=
+ =?us-ascii?Q?P5+f3LLsDLMhR6A2opSEc/35HR0YCW5uOLN++zYmLThngLWaBrFlqix3XMJf?=
+ =?us-ascii?Q?5i6W4ypI7jti5LlpeoymMLDjVJHiCOwHR/bn8PMeuSTg5vS6gE9Nj0HDaEmT?=
+ =?us-ascii?Q?J2lfBz9Km9IgEvnDdylmUb+eRVZFF9A18utlDY9iPxdFCxP++0SCKlQZv0Dd?=
+ =?us-ascii?Q?rKd8RTVclLw9HuFIJS/ZC7WQrbelLJnBGL9WHWAg40ugVFnhgMTwN5zytTdJ?=
+ =?us-ascii?Q?ItvusArD1FK1GXx/kSlqKKn/anVxmi+nLKylplgdV86ZuAUzMPDGOVHrc86N?=
+ =?us-ascii?Q?7B1ymw5Td1t5ovg8tDtzKgc5WNTaHEqMXbbHkAhMjcOIuogOSvLuBJ9nNEj3?=
+ =?us-ascii?Q?DD4x0c4KVSkgWJ7MpATlXocT4tRB7LakNdTlLQSAmC5jygp7p8iIR29KnvDI?=
+ =?us-ascii?Q?R1bAYcQOOimyJ+q/laa3QKAc5nId0QW9lMX4Gn5NS8B79uP1vgmpNLTP/+dt?=
+ =?us-ascii?Q?BbGG0fJbazFpOHtnlc3PVd0MS8IjoO3Q1I65kHsYFLSTe/PryZ3pO5XOKFVG?=
+ =?us-ascii?Q?Lem0aYfV4mtlAOCUBfcwvlfuo6n2HZc4qrzigtjuW3o73l1TSqXaYGeBTz+c?=
+ =?us-ascii?Q?AwwNZGupHDfFC74K7gCMllJEOB1BCTJ8gjkAw5CiNK8xgi8eFAmn/Fa3UMh9?=
+ =?us-ascii?Q?FzSPsNlRavwOjnDI/3EBC1mJc4jeYqa2naQfCpPBMl5zQkQURTrjCRJMgQHW?=
+ =?us-ascii?Q?gUQLjhaypYP5repVbowDlfLaJCVjtfjvn9vEFAb1RedofXwZ+fo2liXNXrFp?=
+ =?us-ascii?Q?j7coVHywM+WtKypBBhWsf1oAkGQpbrpd?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?m8VdxeDXn4iGOb6X8Fr4YIC9Z0xl9MMMRdUGS616F38Nex8CeTrEQ22SPkBg?=
+ =?us-ascii?Q?zCljUk0RPnTFq2nq0F1eF5u+qVbd+fR4D5vCAzof/zAdhzcHArU0BrBspBPC?=
+ =?us-ascii?Q?FzwfpoM7GMyyCqXuXAKB/jNafu7fhHbTmyQ4jGKo90Ikuz0/vNx72vep5MGx?=
+ =?us-ascii?Q?sSPIP6NKK6yb+O4XssFu7/mylEDqSg+t5yT4Hi4jltXWX30T3kCteBbdxEGu?=
+ =?us-ascii?Q?CyVT4EpWn8EzcD2vOIEVFJOnCdj/mocIu8188ofIDikyiQzWkac23TfMueKe?=
+ =?us-ascii?Q?XzvqQ38kMgdVAkts1gzt8NnLRXDI7WPQIVnnLpEbhRC/Vn+je+eegcMuiMjY?=
+ =?us-ascii?Q?IrL6cvnTfgSFPwNzcwCJcLwB5KYy9oP/sfg6S6tokVKFruwtma5UMjjK2ENx?=
+ =?us-ascii?Q?F/ZQOgI0Uqb+3dwb6PoEUg7cNCkqQ2tZDSwuOt4bxWy8l91pGOqnIuHkBqYG?=
+ =?us-ascii?Q?dnhsAQ8wlZupIW9+J4l9dxedl/tOmouluUrWjZHiZk4zF+Cjcfkl8Ntuq8dc?=
+ =?us-ascii?Q?DPakvkCiRf1jnS6FsdDkuhKnRFCIXoUEQq/ZuIWsXlxL4wIBx4mGMTtr5wKY?=
+ =?us-ascii?Q?NMj5lTgJc5tHqhMqvlcscdDv1YKg+TSsjZw/Nf8zgxzWEERPQWMEtodu9oAy?=
+ =?us-ascii?Q?tVhnCqmCHHzSpMd90D5RVPmgFQwr5Lm7PAxqqLSGdbGPjtdkZz9N8PeTsl41?=
+ =?us-ascii?Q?8huzDbkwUdKth09UP82c6eH/rWvhPE6S+QukyRz9DSUK45JVDJHNXr7GIHdH?=
+ =?us-ascii?Q?8u/NvF8/dLSbRosVOAhfK4G0eEvAvZ9NDmnnQXAcAxj54V3VjioeIPSn8q7/?=
+ =?us-ascii?Q?R3fdGsb05conLlpqdTkYEaqPxlar01uZnbppCsG2y6UImt0ZKVNjXN3qC6cA?=
+ =?us-ascii?Q?l66t7enXiHteGRT4yLS5q+zDBPyQTFJ3s8DENidRTc2tFXMIUEBGDgi1fnJP?=
+ =?us-ascii?Q?qnThoFO9D8J6YIgpf7jfBgDjSyWnA8dvOPv520dwD46cu8pFY+8w9ALWYBp7?=
+ =?us-ascii?Q?kzZoKhY4C+dA+8/WDquFbPxZvuJI0VqKhZ5QWmaEGj5R4L/5ZXZL4rv7/59F?=
+ =?us-ascii?Q?Y1k7HyuuUvnKJxv2Zt924QeYr+E9PGJWqLQcS+QWTPxislmHUgk7X1rERvRE?=
+ =?us-ascii?Q?4BY+m2Sunv+zXk8NV+K199bz0znSc0rn8duXgUTPy+HhofHEcyuQ/vAvG/+b?=
+ =?us-ascii?Q?Nl4pnZVV4hRa4eK7Rj5IH1upDpjY3MZBBJYbLie5bnjAzuS/W/us/SUszhVd?=
+ =?us-ascii?Q?S3y6oahWnwbzOgWdWgwvgsvd6pL8G739hVNW7c3f/Z1xd7UeDwFDYit4FUxi?=
+ =?us-ascii?Q?RxlGg2VBrCJ93BpBWHvrTN6SqKzYsh37og9onPqMGE8REmNLc1Gwlvpwwq5B?=
+ =?us-ascii?Q?oUwLXguGKF7fNCi7zi4+OAa7aV0hl3DhneQv1LzIH3VX4lDk0mj8re55vdGF?=
+ =?us-ascii?Q?NVVHPo0oX1yuZTlF4Pusvbcv+H01UEAXJrSpKj0loLXpgCDBJ5Dwgy5rMl9d?=
+ =?us-ascii?Q?0peA4EnW/csGxBHVo5/dfIwNyFg82/W8jt/D75xqP7TGyBeJesiMKLGWbl+c?=
+ =?us-ascii?Q?j0oiZ8bFJ80dG6BKhlRIfAywJh+CsySmjsAbTXHV?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 906b51c7-79d3-403c-c76b-08dd6b063b18
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2025 19:01:06.3804
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4o2HNp7E4JtWAaIiM0Aaq4sKUVrIhxFq/s+TLRKRH8N4yiZVzezqZ5QEwCdHHh4QcPM+g1IkT/nOeZybay/mgg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8363
 
-On Mon, Mar 24, 2025 at 06:51:54PM +0100, Roger Pau Monné wrote:
-> On Mon, Mar 24, 2025 at 03:29:46PM +0100, Daniel Gomez wrote:
-> > 
-> > Hi,
-> > 
-> > On Fri, Mar 21, 2025 at 09:00:09AM +0100, Jürgen Groß wrote:
-> > > On 20.03.25 22:07, Bjorn Helgaas wrote:
-> > > > On Wed, Feb 19, 2025 at 10:20:57AM +0100, Roger Pau Monne wrote:
-> > > > > Setting pci_msi_ignore_mask inhibits the toggling of the mask bit for both
-> > > > > MSI and MSI-X entries globally, regardless of the IRQ chip they are using.
-> > > > > Only Xen sets the pci_msi_ignore_mask when routing physical interrupts over
-> > > > > event channels, to prevent PCI code from attempting to toggle the maskbit,
-> > > > > as it's Xen that controls the bit.
-> > > > > 
-> > > > > However, the pci_msi_ignore_mask being global will affect devices that use
-> > > > > MSI interrupts but are not routing those interrupts over event channels
-> > > > > (not using the Xen pIRQ chip).  One example is devices behind a VMD PCI
-> > > > > bridge.  In that scenario the VMD bridge configures MSI(-X) using the
-> > > > > normal IRQ chip (the pIRQ one in the Xen case), and devices behind the
-> > > > > bridge configure the MSI entries using indexes into the VMD bridge MSI
-> > > > > table.  The VMD bridge then demultiplexes such interrupts and delivers to
-> > > > > the destination device(s).  Having pci_msi_ignore_mask set in that scenario
-> > > > > prevents (un)masking of MSI entries for devices behind the VMD bridge.
-> > > > > 
-> > > > > Move the signaling of no entry masking into the MSI domain flags, as that
-> > > > > allows setting it on a per-domain basis.  Set it for the Xen MSI domain
-> > > > > that uses the pIRQ chip, while leaving it unset for the rest of the
-> > > > > cases.
-> > > > > 
-> > > > > Remove pci_msi_ignore_mask at once, since it was only used by Xen code, and
-> > > > > with Xen dropping usage the variable is unneeded.
-> > > > > 
-> > > > > This fixes using devices behind a VMD bridge on Xen PV hardware domains.
-> > > > > 
-> > > > > Albeit Devices behind a VMD bridge are not known to Xen, that doesn't mean
-> > > > > Linux cannot use them.  By inhibiting the usage of
-> > > > > VMD_FEAT_CAN_BYPASS_MSI_REMAP and the removal of the pci_msi_ignore_mask
-> > > > > bodge devices behind a VMD bridge do work fine when use from a Linux Xen
-> > > > > hardware domain.  That's the whole point of the series.
-> > > > > 
-> > > > > Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-> > > > > Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> > > > > Acked-by: Juergen Gross <jgross@suse.com>
-> > > > 
-> > > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > > > 
-> > > > I assume you'll merge this series via the Xen tree.  Let me know if
-> > > > otherwise.
-> > > 
-> > > I've pushed the series to the linux-next branch of the Xen tree.
-> > > 
-> > > 
-> > > Juergen
-> > 
-> > This patch landed in latest next-20250324 tag causing this crash:
-> > 
-> > [    0.753426] BUG: kernel NULL pointer dereference, address: 0000000000000002
-> > [    0.753921] #PF: supervisor read access in kernel mode
-> > [    0.754286] #PF: error_code(0x0000) - not-present page
-> > [    0.754656] PGD 0 P4D 0
-> > [    0.754842] Oops: Oops: 0000 [#1]
-> > [    0.755080] CPU: 0 UID: 0 PID: 1 Comm: swapper Not tainted 6.14.0-rc7-next-20250324 #1 NONE
-> > [    0.755691] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> > [    0.756349] RIP: 0010:msix_prepare_msi_desc+0x39/0x80
-> > [    0.756390] Code: 20 c7 46 04 01 00 00 00 8b 56 4c 89 d0 0d 01 01 00 00 66 89 46 4c 8b 8f 64 02 00 00 89 4e 50 48 8b 8f 70 06 00 00 48 89 4e 58 <41> f6 40 02 40 75 2a c1 ea 02 bf 80 00 00 00 21 fa 25 7f ff ff ff
-> > [    0.756390] RSP: 0000:ffff8881002a76e0 EFLAGS: 00010202
-> > [    0.756390] RAX: 0000000000000101 RBX: ffff88810074d000 RCX: ffffc9000002e000
-> > [    0.756390] RDX: 0000000000000000 RSI: ffff8881002a7710 RDI: ffff88810074d000
-> > [    0.756390] RBP: ffff8881002a7710 R08: 0000000000000000 R09: ffff8881002a76b4
-> > [    0.756390] R10: 000000701000c001 R11: ffffffff82a3dc01 R12: 0000000000000000
-> > [    0.756390] R13: 0000000000000005 R14: 0000000000000000 R15: 0000000000000002
-> > [    0.756390] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
-> > [    0.756390] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [    0.756390] CR2: 0000000000000002 CR3: 0000000002a3d001 CR4: 00000000003706b0
-> > [    0.756390] Call Trace:
-> > [    0.756390]  <TASK>
-> > [    0.756390]  ? __die_body+0x1b/0x60
-> > [    0.756390]  ? page_fault_oops+0x2d0/0x310
-> > [    0.756390]  ? exc_page_fault+0x59/0xc0
-> > [    0.756390]  ? asm_exc_page_fault+0x22/0x30
-> > [    0.756390]  ? msix_prepare_msi_desc+0x39/0x80
-> > [    0.756390]  ? msix_capability_init+0x172/0x2c0
-> > [    0.756390]  ? __pci_enable_msix_range+0x1a8/0x1d0
-> > [    0.756390]  ? pci_alloc_irq_vectors_affinity+0x7c/0xf0
-> > [    0.756390]  ? vp_find_vqs_msix+0x187/0x400
-> > [    0.756390]  ? vp_find_vqs+0x2f/0x250
-> > [    0.756390]  ? snprintf+0x3e/0x50
-> > [    0.756390]  ? vp_modern_find_vqs+0x13/0x60
-> > [    0.756390]  ? init_vq+0x184/0x1e0
-> > [    0.756390]  ? vp_get_status+0x20/0x20
-> > [    0.756390]  ? virtblk_probe+0xeb/0x8d0
-> > [    0.756390]  ? __kernfs_new_node+0x122/0x160
-> > [    0.756390]  ? vp_get_status+0x20/0x20
-> > [    0.756390]  ? virtio_dev_probe+0x171/0x1c0
-> > [    0.756390]  ? really_probe+0xc2/0x240
-> > [    0.756390]  ? driver_probe_device+0x1d/0x70
-> > [    0.756390]  ? __driver_attach+0x96/0xe0
-> > [    0.756390]  ? driver_attach+0x20/0x20
-> > [    0.756390]  ? bus_for_each_dev+0x7b/0xb0
-> > [    0.756390]  ? bus_add_driver+0xe6/0x200
-> > [    0.756390]  ? driver_register+0x5e/0xf0
-> > [    0.756390]  ? virtio_blk_init+0x4d/0x90
-> > [    0.756390]  ? add_boot_memory_block+0x90/0x90
-> > [    0.756390]  ? do_one_initcall+0xe2/0x250
-> > [    0.756390]  ? xas_store+0x4b/0x4b0
-> > [    0.756390]  ? number+0x13b/0x260
-> > [    0.756390]  ? ida_alloc_range+0x36a/0x3b0
-> > [    0.756390]  ? parameq+0x13/0x90
-> > [    0.756390]  ? parse_args+0x10f/0x2a0
-> > [    0.756390]  ? do_initcall_level+0x83/0xb0
-> > [    0.756390]  ? do_initcalls+0x43/0x70
-> > [    0.756390]  ? rest_init+0x80/0x80
-> > [    0.756390]  ? kernel_init_freeable+0x70/0xb0
-> > [    0.756390]  ? kernel_init+0x16/0x110
-> > [    0.756390]  ? ret_from_fork+0x30/0x40
-> > [    0.756390]  ? rest_init+0x80/0x80
-> > [    0.756390]  ? ret_from_fork_asm+0x11/0x20
-> > [    0.756390]  </TASK>
-> > [    0.756390] Modules linked in:
-> > [    0.756390] CR2: 0000000000000002
-> > [    0.756390] ---[ end trace 0000000000000000 ]---
-> > [    0.756390] RIP: 0010:msix_prepare_msi_desc+0x39/0x80
-> > [    0.756390] Code: 20 c7 46 04 01 00 00 00 8b 56 4c 89 d0 0d 01 01 00 00 66 89 46 4c 8b 8f 64 02 00 00 89 4e 50 48 8b 8f 70 06 00 00 48 89 4e 58 <41> f6 40 02 40 75 2a c1 ea 02 bf 80 00 00 00 21 fa 25 7f ff ff ff
-> > [    0.756390] RSP: 0000:ffff8881002a76e0 EFLAGS: 00010202
-> > [    0.756390] RAX: 0000000000000101 RBX: ffff88810074d000 RCX: ffffc9000002e000
-> > [    0.756390] RDX: 0000000000000000 RSI: ffff8881002a7710 RDI: ffff88810074d000
-> > [    0.756390] RBP: ffff8881002a7710 R08: 0000000000000000 R09: ffff8881002a76b4
-> > [    0.756390] R10: 000000701000c001 R11: ffffffff82a3dc01 R12: 0000000000000000
-> > [    0.756390] R13: 0000000000000005 R14: 0000000000000000 R15: 0000000000000002
-> > [    0.756390] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
-> > [    0.756390] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [    0.756390] CR2: 0000000000000002 CR3: 0000000002a3d001 CR4: 00000000003706b0
-> > [    0.756390] note: swapper[1] exited with irqs disabled
-> > [    0.782774] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
-> > [    0.783560] Kernel Offset: disabled
-> > [    0.783909] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009 ]---
-> > 
-> > 
-> > msix_prepare_msi_desc+0x39/0x80:
-> > msix_prepare_msi_desc at drivers/pci/msi/msi.c:616
-> >  611            desc->nvec_used                         = 1;
-> >  612            desc->pci.msi_attrib.is_msix            = 1;
-> >  613            desc->pci.msi_attrib.is_64              = 1;
-> >  614            desc->pci.msi_attrib.default_irq        = dev->irq;
-> >  615            desc->pci.mask_base                     = dev->msix_base;
-> > >616<           desc->pci.msi_attrib.can_mask           = !(info->flags & MSI_FLAG_NO_MASK) &&
-> >  617                                                      !desc->pci.msi_attrib.is_virtual;
-> >  618
-> >  619            if (desc->pci.msi_attrib.can_mask) {
-> >  620                    void __iomem *addr = pci_msix_desc_addr(desc);
-> >  621
-> > 
-> > Reverting patch 3 fixes the issue.
-> 
-> Thanks for the report and sorry for the breakage.  Do you have a QEMU
-> command line I can use to try to reproduce this locally?
-> 
-> Will work on a patch ASAP.
+On Mon, Mar 24, 2025 at 02:26:44PM +0800, Richard Zhu wrote:
+> Beside the power-on reset, add the cold reset toggle for i.MX95 PCIe.
 
-Thanks for the quick reply.
+Add the code reset toggle for i.MX95 PCIe to align PHY's power on sequency.
 
-The issue is that info appears to be uninitialized. So, this worked for me:
+>
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 31 +++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index aa5c3f235995..0f42ab63f5ad 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -71,6 +71,9 @@
+>  #define IMX95_SID_MASK				GENMASK(5, 0)
+>  #define IMX95_MAX_LUT				32
+>
+> +#define IMX95_PCIE_RST_CTRL			0x3010
+> +#define IMX95_PCIE_COLD_RST			BIT(0)
+> +
+>  #define to_imx_pcie(x)	dev_get_drvdata((x)->dev)
+>
+>  enum imx_pcie_variants {
+> @@ -773,6 +776,32 @@ static int imx7d_pcie_core_reset(struct imx_pcie *imx_pcie, bool assert)
+>  	return 0;
+>  }
+>
+> +static int imx95_pcie_core_reset(struct imx_pcie *imx_pcie, bool assert)
+> +{
+> +	if (assert) {
+> +		/*
+> +		 * From i.MX95 PCIe PHY perspective, the COLD reset toggle
+> +		 * should be complete after power-up by the following sequence.
+> +		 *                 > 10us(at power-up)
+> +		 *                 > 10ns(warm reset)
+> +		 *               |<------------>|
+> +		 *                ______________
+> +		 * phy_reset ____/              \________________
+> +		 *                                   ____________
+> +		 * ref_clk_en_______________________/
+> +		 * Toggle COLD reset aligned with this sequence for i.MX95 PCIe.
+> +		 */
+> +		regmap_update_bits(imx_pcie->iomuxc_gpr, IMX95_PCIE_RST_CTRL,
+> +				   IMX95_PCIE_COLD_RST, IMX95_PCIE_COLD_RST);
 
-diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-index dcbb4f9ac578..b76c7ec33602 100644
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -609,8 +609,10 @@ void msix_prepare_msi_desc(struct pci_dev *dev, struct msi_desc *desc)
-        desc->pci.msi_attrib.is_64              = 1;
-        desc->pci.msi_attrib.default_irq        = dev->irq;
-        desc->pci.mask_base                     = dev->msix_base;
--       desc->pci.msi_attrib.can_mask           = !(info->flags & MSI_FLAG_NO_MASK) &&
--                                                 !desc->pci.msi_attrib.is_virtual;
-+       desc->pci.msi_attrib.can_mask =
-+               info ? !(info->flags & MSI_FLAG_NO_MASK) &&
-+                               !desc->pci.msi_attrib.is_virtual :
-+                      1;
+regmap_set_bits()
 
-        if (desc->pci.msi_attrib.can_mask) {
-                void __iomem *addr = pci_msix_desc_addr(desc);
-@@ -743,7 +745,7 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
-        /* Disable INTX */
-        pci_intx_for_msi(dev, 0);
+> +		udelay(15);
 
--       if (!(info->flags & MSI_FLAG_NO_MASK)) {
-+       if (info && !(info->flags & MSI_FLAG_NO_MASK)) {
-                /*
-                 * Ensure that all table entries are masked to prevent
-                 * stale entries from firing in a crash kernel.
+udelay may not use MMIO. It cause delay time less than 15us. Need read one
+register before udelay(15);
 
-I also noticed d (struct irq_domain) can return NULL if CONFIG_GENERIC_MSI_IRQ
-is not set and we are not checking that either.
+> +		regmap_update_bits(imx_pcie->iomuxc_gpr, IMX95_PCIE_RST_CTRL,
+> +				   IMX95_PCIE_COLD_RST, 0);
 
-I run QEMU with vmctl [1]. This is my command:
+regmap_clr_bits();
 
-[1] https://github.com/SamsungDS/vmctl
+Frank
 
-/usr/bin/qemu-system-x86_64 \
-  -nodefaults \
-  -display "none" \
-  -machine "q35,accel=kvm,kernel-irqchip=split" \
-  -cpu "host" \
-  -smp "4" \
-  -m "8G" \
-  -device "intel-iommu,intremap=on" \
-  -netdev "user,id=net0,hostfwd=tcp::2222-:22" \
-  -device "virtio-net-pci,netdev=net0" \
-  -device "virtio-rng-pci" \
-  -drive "id=boot,file=file.qcow2,format=qcow2,if=virtio,discard=unmap,media=disk,read-only=no" \
-  -device "pcie-root-port,id=pcie_root_port0,chassis=1,slot=0" \
-  -device "nvme,id=nvme0,serial=deadbeef,bus=pcie_root_port0,mdts=7" \
-  -drive "id=nvm,file=~/nvm.img,format=raw,if=none,discard=unmap,media=disk,read-only=no" \
-  -device "nvme-ns,id=nvm,drive=nvm,bus=nvme0,nsid=1,logical_block_size=4096,physical_block_size=4096" \
-  -pidfile "~/vmctl/confdir/run/nvme/pidfile" \
-  -kernel "~/src/kernel/linux/arch/x86_64/boot/bzImage" \
-  -append "root=/dev/vda1 console=ttyS0,115200 audit=0" \
-  -virtfs "local,path=~/linux,security_model=none,readonly=on,mount_tag=kernel_dir" \
-  -serial "mon:stdio" \
-  -d "guest_errors" \
-  -D "~/vmctl/confdir/log/nvme/qemu.log"
-
-Daniel
-
-> 
-> Regards, Roger.
+> +		udelay(10);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static void imx_pcie_assert_core_reset(struct imx_pcie *imx_pcie)
+>  {
+>  	reset_control_assert(imx_pcie->pciephy_reset);
+> @@ -1762,6 +1791,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.ltssm_mask = IMX95_PCIE_LTSSM_EN,
+>  		.mode_off[0]  = IMX95_PE0_GEN_CTRL_1,
+>  		.mode_mask[0] = IMX95_PCIE_DEVICE_TYPE,
+> +		.core_reset = imx95_pcie_core_reset,
+>  		.init_phy = imx95_pcie_init_phy,
+>  	},
+>  	[IMX8MQ_EP] = {
+> @@ -1815,6 +1845,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
+>  		.mode_off[0]  = IMX95_PE0_GEN_CTRL_1,
+>  		.mode_mask[0] = IMX95_PCIE_DEVICE_TYPE,
+>  		.init_phy = imx95_pcie_init_phy,
+> +		.core_reset = imx95_pcie_core_reset,
+>  		.epc_features = &imx95_pcie_epc_features,
+>  		.mode = DW_PCIE_EP_TYPE,
+>  	},
+> --
+> 2.37.1
+>
 
