@@ -1,136 +1,108 @@
-Return-Path: <linux-pci+bounces-24544-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24545-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1087A6DFF5
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 17:39:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 51B92A6E008
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 17:41:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 17253170AD0
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 16:39:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EEAF2188C16F
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 16:41:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BC9C263C88;
-	Mon, 24 Mar 2025 16:39:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA113263C75;
+	Mon, 24 Mar 2025 16:41:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEHhlF1+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SENGSk+b"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC60F25F96B;
-	Mon, 24 Mar 2025 16:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD411E531;
+	Mon, 24 Mar 2025 16:41:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742834386; cv=none; b=NCTiEpbeH+3tU/v7DxgexyI0iU3UDG/Hu+yF8vKj0xc4d10OgXF26h6mrAt2Y+5zfmUU1w3PB9D2Sx0Kz87Hi8nvKGIqhaACeJF0TrJ8R4zMWUokGYZY8JqsJ2qk1/eXfmtdCoiOIBdnV3fRb0qGz4LydzV2YCivQR5cW7dI3Yo=
+	t=1742834488; cv=none; b=Hozsu+Ff7VB5mrRjW3X7rkvzvE1+b5FfM2mAEN67+qq9DHeVXYntd2/11qJBImzmeynvnZX1IB0kbKh/SeWKTqlTwrHqYva6zbzuGdIpa04NDj6R7F5Xhzhwk67upQ5GzIJavvng5BrntUbgn25WH57Pk+is1iyhVogqysGBAEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742834386; c=relaxed/simple;
-	bh=PkU41z1npHU361mFlL7uOSF2RgIZLrl2UcM2T4+kpTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eiCZS3qE1DP3i3Cs+gAM9EAdoX8sM14297RFmmhIQdqhlK1iQ7FrAL4BvDMOL2FCz7rDJd/dS+ZC8dhPH4/Ky8ZjldIg3inyZPsevEicZ28xFhs5MTxC0Qk2Sgi8Pvn+BB3JygVNaFJ86s3qOp251fg27Y7xAgr/Urv4P/SIOzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEHhlF1+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03E47C4CEEA;
-	Mon, 24 Mar 2025 16:39:45 +0000 (UTC)
+	s=arc-20240116; t=1742834488; c=relaxed/simple;
+	bh=04kfgYIzADto3t7bsBZLbAym6L+z8rL/NeALURMHoWc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=qbzyxb0rQJjvJfvzA0LkIrOyH+YFLGVl2cOkDDT8GpQfkVISVerWfFfq9RLCKzpVww8YVE0gvYp0JW0cVsfZqQoooYk3txQbvQBlhVr6sHVdMaggvv9bh0LWddMl0mDbQhriO94umOR7giHYt29veOevJwo0T58HKsOfANZjDOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SENGSk+b; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D11A8C4CEEA;
+	Mon, 24 Mar 2025 16:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742834386;
-	bh=PkU41z1npHU361mFlL7uOSF2RgIZLrl2UcM2T4+kpTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oEHhlF1+KjBN6VZ6R3OqvS0W9SotslDejwxbnt+zH6pZ52NTWTnx8QHhx2U3/sSQj
-	 r1L5bzp3hFx/6tas4BM1CRZd4gG8XtLw6FAvI97qvhxxIrAOnm6TBCxoTD72UEhIlI
-	 /MH6y0jOcYGdSfIDefC1dr+lrlZBj4drPIUsSAp01jTMFuMA/ZzqxhWWI8q9A60XhJ
-	 LvK4la4O0nq3ISKlqXpV4OB08co+9tzQgliYleonJWD2tT+ZHCcXxExGJFvt895/zg
-	 nB49fbHtc9TtnR5zrMzOlhjip2lFVTFRPpTw5PVzi8FP2LunktYpBJ+jQrmMX8QSBj
-	 GclopDQUx+69g==
-Date: Mon, 24 Mar 2025 11:39:45 -0500
-From: Rob Herring <robh@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
-	quic_mrana@quicinc.com
-Subject: Re: [PATCH 1/3] dt-bindings: PCI: qcom: Move phy, wake & reset
- gpio's to root port
-Message-ID: <20250324163945.GA304502-robh@kernel.org>
-References: <20250322-perst-v1-0-e5e4da74a204@oss.qualcomm.com>
- <20250322-perst-v1-1-e5e4da74a204@oss.qualcomm.com>
+	s=k20201202; t=1742834488;
+	bh=04kfgYIzADto3t7bsBZLbAym6L+z8rL/NeALURMHoWc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=SENGSk+bE6nHZx+U4geFQTVl9bzNPaXLTy5mnB4G0Y2i+JlB+Ld8KqXEnXsY9Kexa
+	 DbfQg+lwSi3zUDGqVRr6BRSjPKEZggIfLs0860jlWWkiphE9UlMmpkXYpRIk/y5Bpu
+	 CVkQuPzmcwG+WUz77rFQM/yeYTSDCfXh4s2GPmMXnF9zyb4whXfRGJ9rwgU79VlV93
+	 CkNKDHqEpiW0V/wwTURlYgdvdUqmiqHhzVUI3JdDaxdhjQEcB7lxZItgJp+y8689Vj
+	 X89zxKRyF+rtrB+F3dyld/C363PHGUDtSSRo7HoIaVCjcpJCD0XuW/S5EtunwQWeP2
+	 huKhUAQ6ibwUQ==
+Date: Mon, 24 Mar 2025 11:41:26 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] PCI/hotplug: Don't enable HPIE in poll mode
+Message-ID: <20250324164126.GA1252202@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250322-perst-v1-1-e5e4da74a204@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <005837ad-e7dd-85c8-b0d3-ce5aa0257354@linux.intel.com>
 
-On Sat, Mar 22, 2025 at 08:30:43AM +0530, Krishna Chaitanya Chundru wrote:
-> Move the phy, phy-names, wake-gpio's to the pcie root port node instead of
-> the bridge node, as agreed upon in multiple places one instance is[1].
-
-You aren't really moving them except in the example. This is an ABI 
-break for sc7280. Is anyone going to care?
-
-You need to deprecate the properties in the old location.
-
-> Update the qcom,pcie-common.yaml to include the phy, phy-names, and
-> wake-gpios properties in the root port node. There is already reset-gpio
-> defined for PERST# in pci-bus-common.yaml, start using that property
-> instead of perst-gpio.
+On Mon, Mar 24, 2025 at 01:00:33PM +0200, Ilpo Järvinen wrote:
+> On Fri, 21 Mar 2025, Bjorn Helgaas wrote:
 > 
-> For backward compatibility, do not remove any existing properties in the
-> bridge node.
-> 
-> [1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie-common.yaml  | 22 ++++++++++++++++++++++
->  .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  | 18 ++++++++++++++----
->  2 files changed, 36 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> index 0480c58f7d99..258c21c01c72 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> @@ -85,6 +85,28 @@ properties:
->    opp-table:
->      type: object
->  
-> +patternProperties:
-> +  "^pcie@":
-> +    type: object
-> +    $ref: /schemas/pci/pci-pci-bridge.yaml#
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +
-> +      phys:
-> +        maxItems: 1
-> +
-> +      phy-names:
-> +        items:
-> +          - const: pciephy
+> > On Fri, Mar 21, 2025 at 07:07:47PM +0100, Lukas Wunner wrote:
+> > > On Fri, Mar 21, 2025 at 12:09:19PM -0500, Bjorn Helgaas wrote:
+> > > ...
 
-Just drop phy-names in the new location. It's pointless especially when 
-foo-names is just "${module}foo".
+> > > >   - It's annoying that pcie_enable_interrupt() and
+> > > >     pcie_disable_interrupt() are global symbols, a consequence of
+> > > >     pciehp being split across five files instead of being one, which
+> > > >     is also a nuisance for code browsing.
+> ...
 
-> +
-> +      wake-gpios:
-> +        description: GPIO controlled connection to WAKE# signal
-> +        maxItems: 1
-> +
-> +    unevaluatedProperties: false
-> +
->  required:
->    - reg
->    - reg-names
+> > > The only reason I've refrained from making major adjustments to this
+> > > structure in the past was that it would make "git blame" a little more
+> > > difficult and applying fixes to stable kernels would also become somewhat
+> > > more painful as it would require backporting.
+> > 
+> > Yeah, that's the main reason I haven't tried to do anything either.
+> > On the other hand, the browsing nuisance is an everyday thing forever
+> > if we leave it as-is.
+> 
+> I get half mad every time I need to browse code under hotplug/. I even 
+> started doing:
+> 
+>   cat ./pciehp*.[hc] | less -S 
+> 
+> ...to workaround the constant need to jump between those files. I 
+> certainly would like to see the split gone especially between ctrl and 
+> hpc.
+
+I would definitely take patches to consolidate pciehp and maybe
+acpiphp.
+
+The other drivers are annoying, too, but I'm not sure it's worth the
+trouble since they're rarely used and updated.
+
+> Can't git blame be given -M -C to deal with this? Or are those truly lines 
+> that were introduced by the consolidation commit?
+
+I'm so git-illiterate that I habitually just search "git log -p".  
+"git blame -M -C ..." would probably be much more effective.
+
+Bjorn
 
