@@ -1,63 +1,58 @@
-Return-Path: <linux-pci+bounces-24547-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24548-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1185FA6E026
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 17:49:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C10CA6E02C
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 17:50:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E206F16BE8A
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 16:49:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9A5616E167
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 16:49:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36F7D263C8A;
-	Mon, 24 Mar 2025 16:49:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A074A2641EC;
+	Mon, 24 Mar 2025 16:49:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1Z6IMN+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cND0NoAT"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069052620C3;
-	Mon, 24 Mar 2025 16:49:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74FCB2641E7;
+	Mon, 24 Mar 2025 16:49:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742834963; cv=none; b=a4R/VVjTVjiNxm6IrAutfdtUmNkRzS+NuHRQnj84vH9FCiw7WDWJALSyXaDxvJtcUbtCRVehqHRaeAENrnIkQb0QhenSYHwGCTkvz8S0G8hNWmverDgV/m6HvnJynTeQjLFu1O+imsBkS2cm+5G5+L3gAf0kEHuwOETYrfSZa1U=
+	t=1742834968; cv=none; b=RelIuqTALSrbprwzIsaHFH5cxiSlEaDt/b5VGEQbbFFj8kDBkz1Q6D4gVhg+I7ovrDCzbcgM7Rfqyej1X2ErPPlU6AA0fylGvikYqJdOAMk0cAVh+UDMNwSS1eGmfr2wOv2iBsTPQGyK2+jPkbX6pj5DWD6HJToIVfttFI15wis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742834963; c=relaxed/simple;
-	bh=KJqgtiZ5ZdlB750vGe4zUjRFX7IN6DR7LFII+F/opFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ibECJvvgYOafanJWubwM291DMczISUTicgP0UUggWrseZnTrEW0K8HFtTqAIl5XtkCfd8EX7b8ZvQ4NAA4hA/7FEv+2GVqzkuvOJxcecEbZSUxDlc78oSPpbJ8Y7DJgqAlo5BbWul3QyzoXgaLO7KjYCZlXN7lP3GRE6nytWuJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1Z6IMN+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60AD2C4CEDD;
-	Mon, 24 Mar 2025 16:49:19 +0000 (UTC)
+	s=arc-20240116; t=1742834968; c=relaxed/simple;
+	bh=6Mwb1qD+CguuWVLptcwKTAjQQ8Ri9yrju+Fcusg5Azo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=IaRcduNOIuNuowr1TyzP8YH+paK6mw6O7bzpWCWpKpGj5rIyzmrAhfWLJWa0nYTGfeaDkUSn2Ot6Yd9HgjwExRwWOrITRUy0eUwk6MwJKD0m+l0EKQHUB+hhaLuesxDpVhq0hYtDyK8kgk/qC6yL/jEGtwuy1PjyT3g9fopI0wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cND0NoAT; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D014AC4CEDD;
+	Mon, 24 Mar 2025 16:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742834962;
-	bh=KJqgtiZ5ZdlB750vGe4zUjRFX7IN6DR7LFII+F/opFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h1Z6IMN+gzcXp78xjN9Nz7rDBrBS1QswNCk7WK8ESxNOrWujJyeza3GcQrTfIf37S
-	 2lelpI7YanKBeKFlRvkThrBaXOYvrJohirHQvR9RfHWbIn/zNzD0io7b71eJnkps+d
-	 uHe0awWqgGx0aL5BHfwu8JPwsqPTs5f1TbsnFqJiqTRKJ2rXA2S+dnV3aKxCou0W2b
-	 foXKV0Jh20xLNCLiWr9DOMTsQxiFjBLhGv+iv9Cu3ON9cPLizbME3C+jEZPGLcrmWE
-	 IbfmxoIBr/hFklaCe37r84kuauHt8FUqXYsN68pw1l8G4GLbce7Ie7XrjED7n/YPXJ
-	 Zs5f6xNLK34cA==
-Date: Mon, 24 Mar 2025 17:49:16 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Greg KH <gregkh@linuxfoundation.org>, bhelgaas@google.com,
-	rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] rust: pci: impl TryFrom<&Device> for &pci::Device
-Message-ID: <Z-GNDE68vwhk0gaV@cassiopeiae>
-References: <20250321214826.140946-1-dakr@kernel.org>
- <20250321214826.140946-3-dakr@kernel.org>
- <2025032158-embezzle-life-8810@gregkh>
- <Z96MrGQvpVrFqWYJ@pollux>
- <Z-CG01QzSJjp46ad@pollux>
- <D8ON7WC8WMFG.2S2JRK6G9TOSL@proton.me>
+	s=k20201202; t=1742834968;
+	bh=6Mwb1qD+CguuWVLptcwKTAjQQ8Ri9yrju+Fcusg5Azo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=cND0NoATGotPtRmqTfuvZttDfEYNyhXPBBSZgvIczpo1sAd0zGd6LKlrzJtyDq5hO
+	 D2xHeRwC885//sAr1OLslTbI/b02ZjD0KpBCpBa0lqem2RCQJ4FUqWJwfVwJGGnrcD
+	 VlaYgXn8gpjuBcd5oxhCi/igpOLNAgr/s0/Ue2kErAQUEzQ6xT50aKGaqgjtN/er+l
+	 CWyaZG6FP+eBkntehQp+TgMOW0Um0SUcquv0EoX+O5/Ety0oiy9Uaok3zf2Swn3hhV
+	 pDM7QvFgI3KccjVMZLwhwJSlGCsY3WCHCbJ00tVFkUw3puK4u/jhxX8/tkAepGhtyR
+	 0FlI4F36gxsUw==
+Date: Mon, 24 Mar 2025 11:49:26 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH 0/6] Enhancements for PCIe Cadence Controllers
+Message-ID: <20250324164926.GA1252416@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -66,42 +61,35 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <D8ON7WC8WMFG.2S2JRK6G9TOSL@proton.me>
+In-Reply-To: <CH2PPF4D26F8E1C205166209F012D4F3A81A2A42@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 
-On Mon, Mar 24, 2025 at 04:39:25PM +0000, Benno Lossin wrote:
-> On Sun Mar 23, 2025 at 11:10 PM CET, Danilo Krummrich wrote:
-> > On Sat, Mar 22, 2025 at 11:10:57AM +0100, Danilo Krummrich wrote:
-> >> On Fri, Mar 21, 2025 at 08:25:07PM -0700, Greg KH wrote:
-> >> > Along these lines, if you can convince me that this is something that we
-> >> > really should be doing, in that we should always be checking every time
-> >> > someone would want to call to_pci_dev(), that the return value is
-> >> > checked, then why don't we also do this in C if it's going to be
-> >> > something to assure people it is going to be correct?  I don't want to
-> >> > see the rust and C sides get "out of sync" here for things that can be
-> >> > kept in sync, as that reduces the mental load of all of us as we travers
-> >> > across the boundry for the next 20+ years.
-> >> 
-> >> I think in this case it is good when the C and Rust side get a bit
-> >> "out of sync":
-> >
-> > A bit more clarification on this:
-> >
-> > What I want to say with this is, since we can cover a lot of the common cases
-> > through abstractions and the type system, we're left with the not so common
-> > ones, where the "upcasts" are not made in the context of common and well
-> > established patterns, but, for instance, depend on the semantics of the driver;
-> > those should not be unsafe IMHO.
+On Mon, Mar 24, 2025 at 09:08:09AM +0000, Manikandan Karunakaran Pillai wrote:
+> Enhances the exiting Cadence PCIe controller drivers to support second
+> generation PCIe controller also referred as HPA(High Performance
+> Architecture) controllers.
 > 
-> I don't think that we should use `TryFrom` for stuff that should only be
-> used seldomly. A function that we can document properly is a much better
-> fit, since we can point users to the "correct" API.
+> Comments from the earlier patch submission on the same enhancements are
+> taken into consideration. The previous submitted patch links is
+> https://patchwork.kernel.org/project/linux-pci/patch/
+> CH2PPF4D26F8E1CB68755477DCA7AA9C6EBA2EE2@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
 
-Most of the cases where drivers would do this conversion should be covered by
-the abstraction to already provide that actual bus specific device, rather than
-a generic one or some priv pointer, etc.
+Thanks for splitting this into several patches.
 
-So, the point is that the APIs we design won't leave drivers with a reason to
-make this conversion in the first place. For the cases where they have to
-(which should be rare), it's the right thing to do. There is not an alternative
-API to point to.
+Thanks also for the pointer to the previous version.  It would be
+easier to follow if you could include the lore URL, e.g.,
+
+  https://lore.kernel.org/r/CH2PPF4D26F8E1CB68755477DCA7AA9C6EBA2EE2@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
+
+because lore is more widely used and more stable than patchwork.  It's
+helpful if you can also include a little changelog of what changed
+since the previous version.
+
+When you post the next version of this (no hurry, since the merge
+window is open and nothing new will be merged until v6.15-rc1), can
+you please send the individual patches as responses to the cover
+letter?  That keeps the whole series together and makes it easy for b4
+to download the entire series at once.  "git format-patch" and "git
+send-email" will do that for you automatically.
+
+Bjorn
 
