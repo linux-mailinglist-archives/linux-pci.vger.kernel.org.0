@@ -1,289 +1,631 @@
-Return-Path: <linux-pci+bounces-24519-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24521-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A8ACA6DA4F
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 13:52:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5563FA6DA5A
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 13:53:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D6CBD7A4968
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 12:50:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E0A461894250
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 12:53:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C99D25EFAE;
-	Mon, 24 Mar 2025 12:51:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09E4325F966;
+	Mon, 24 Mar 2025 12:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MUBAoO0P"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k9KC7duf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0A125E462
-	for <linux-pci@vger.kernel.org>; Mon, 24 Mar 2025 12:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B4A25EFAD
+	for <linux-pci@vger.kernel.org>; Mon, 24 Mar 2025 12:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742820689; cv=none; b=ZPsO9tLYLaQV+An2aG2utiM418d4F/8jgM7tJpJDtjco5ayc7RdygV4RrzH/Bt6lDluLwz7hO9MRTXUigI2tOx84lzk6v3TCzuUCKZ525tPbDKzId77mJA2yKP7IEMyZU3fBoSvJjqHuiPC+sZKjuUqE1b4/r/CjsAGc8Fx87JU=
+	t=1742820730; cv=none; b=rw1T371seoXExQydNc8TVctrrJV5k5bvKFzPnXQVhXh6k2zGWg3TlVJuq6H9njh91n2KtwoDVpbL0nd9806zcq52iBA4tSLXcKc+/QD9OtkQQajQcHtS1GOUxzUz4/86QoOvwXqcQaJqxDn9gO/goqVIsdz9exeXpPmxChozTTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742820689; c=relaxed/simple;
-	bh=AdXwgEW9xEIbK1wCi4Zm3jKnMSfKlsQHx89ATVXpmF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jQ/B+iI/MISw+UWQoj6oBOq2Siz5rNA3snpJiSJhlqggYelmiXbnuZzXnsn33pBhZt1RGv/kSSFfkqnY2zFGdVAThOMiR7OGO0+MSQ2dA5clUpPuf11T4TwYJ2MA2b4+TYcEEkU2N5gpr+1www9P5qQpeAhCcpNiTutM3vpg5Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MUBAoO0P; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742820687; x=1774356687;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=AdXwgEW9xEIbK1wCi4Zm3jKnMSfKlsQHx89ATVXpmF4=;
-  b=MUBAoO0Ps4V/InC8LxhmS892asMoeAyTk86mVP1lzuQKJDtMCuQdcbe+
-   8hvKXJwtFOs2/+W8iEZ4Z26vIGdt6bsp03jo998nOiZGbitWKxdfwiPsy
-   bkApdiq8WmCrYFMArFjGe0ic1oJy2dOuN3HXAdoyEiGPbDDLSxfCKZHnJ
-   gs9wN86b25LlsojAA6zBsuFOVMPyM89vdQ8XNYkO7+bVlpd0aoHCaLOOa
-   piDTVw412eY2EbFIt0nDGTplzSSjhDffz+9shGvTYmPlsVlwbLEZc2hQo
-   v0dM+FKah3R7amVsGsC/o/Y/0BbLaA/37hOwPIl1gw7ewcAastWUP5Vam
-   g==;
-X-CSE-ConnectionGUID: 6toiKeRbTTy7n/+YqqLgwg==
-X-CSE-MsgGUID: ISMwgQGxRLScMoTTyNdonA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="54227742"
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="54227742"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 05:51:27 -0700
-X-CSE-ConnectionGUID: fCVq/CbKTpGEYxQqUBKR8g==
-X-CSE-MsgGUID: p6NwWVqqTG+TULz3qzRdLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="124051790"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 24 Mar 2025 05:51:26 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1twhH1-0003ZF-1f;
-	Mon, 24 Mar 2025 12:51:23 +0000
-Date: Mon, 24 Mar 2025 20:51:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Krzysztof =?utf-8?Q?Wilczy=C5=84ski"?= <kwilczynski@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Subject: [pci:controller/brcmstb] BUILD SUCCESS
- 2d72d81caccad516ece9f91f86ac65ff1f2c68a2
-Message-ID: <202503242002.Qf6hoy7s-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1742820730; c=relaxed/simple;
+	bh=l6XNwYZzVEyldu2L1XIJIXB2rpGx7TM2hQ0ZGfc6Tuo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pr9BNUfn67+Nh8rs8nsiH8I5RySwf2e4yGbWeluFRiTIksO/PCUnr/A6RGXI/Hdmk8OmUL/LgPqg5w/InZnml2yIsrYdfImtA7IfDX1M4sbVqQCgLcBq9O3UD89ad2o4qsVwcNdfT6kTpMAbN523mZTz+NGz/s9PRYsG92I3lHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k9KC7duf; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4394944f161so4663175e9.3
+        for <linux-pci@vger.kernel.org>; Mon, 24 Mar 2025 05:52:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742820727; x=1743425527; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=R1A1Q+2wy4k15GAqSgjm67tMHvqg/xX+3SaoiedBFQQ=;
+        b=k9KC7dufYGFRCJ6vaAMkOIt0ttqorW7Z284uq57SAw8K38d0yJu0aPuG1xdPaOcl6Z
+         r6BnImYOAhfa7T3/qVg8Thz3/7cY6v6SIINDD41ryWqB1OAm6oyX17AuTBJiDRZdO3yr
+         tuRFFa/hRcjsrfBpdVYAnKtAGcrEYKqpa46eeHw/UsajoisfHteG3qz1uYWrqL5yzIby
+         +KnItX2WXctPzOiS68K04FQRFg1Sfl1o7ZJ1Faoyg7AcalKOaQXBeWrCS1IJyyaLDYGO
+         Aq2Ut3eTUrTw8J22rLP2hb/cQ/Uw3FRATD4VXu8BvPQ5FZtAHCDWh490oOTwjCFqu5Fu
+         DVmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742820727; x=1743425527;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R1A1Q+2wy4k15GAqSgjm67tMHvqg/xX+3SaoiedBFQQ=;
+        b=rkb34E1lpIcPZujsygtFXr6/CDWdBPV9xW/np8+1WHxZ+IzKs9W1ZOnLkMQzErQ/vT
+         mKAkKC8RMHqbgXLYS7/p4bDXV4lr3DwBg7uJ9Vz7WcuCql/+zR3SYHgS9RTePGMbVx+O
+         kGz/bpRF3qiLZPp6A9aZW5if8JSVBuLLZ2vamycbSgDk7eFTA1lTJ+xA0gRa9afXsKc1
+         bw2NSMdNQ0N2CNIokY+9FMFg8Cy5jFX57RF1VOs+wneOVGINIWTVq+As/nixyCzeZYBh
+         nsKJRZEjqyAY3VGkz/BT9fiU7XwtIxAof4T8Lp7c6XE3ZOQSh3guEe2ePBYGVDPuVDDp
+         402g==
+X-Forwarded-Encrypted: i=1; AJvYcCVMUqpvHXlOnUfOuGrY7otGqnVUlRNuTLS+J+z4eagul7sdxEBR0eEPTONdqRqnzhgySr6oqikjBvw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzf4pRAxgO45DpEs9dn1mt4mlSohg1hNyWZGhZ8/dqvh6ilquhp
+	s4qnPv2hecSvkePORhxSR5ag4bAdOqTLhEtyQRCaBKLEgRHoimM6nksbgVgj7o8=
+X-Gm-Gg: ASbGncvUUQ/JDe/SFXu3otbSPUztZzmzLYRiqulTxm+7wnDyxrFT9JXuIYI/H6+IaAc
+	yLvSttETC2gCritY+G3L0AsYqGiBg8RblRqvZic8KVWglqfrRy04yhdbtqoZ5KfqvsV1osKkl2c
+	to5HEvmn9jcC3a4P+tl1Qhwcl5CKTs2hjW6X8E4s9vkckOC5B+/1RNkTBWwBJ7+i6xOt53D7Jk8
+	mYZEBb1S9Nyd3abLwYidqFCuaOR2XCEdaV8qmuQEYl2PpA9QnAneqqnf1qWnBMExkoUg2JPFMGw
+	aia+lznmNz1ZMWAWi5SOCAkLj1RyoNGO/ZuZNG+cRhxKxbaNIZ3Xn12oMg==
+X-Google-Smtp-Source: AGHT+IGp6OoK+LL772bza4xOXI8JB/t2slrk7Xmti+PTEuocNjBZEmHgZtjGi4JTILsctkK+qOrR9Q==
+X-Received: by 2002:a05:600c:b8b:b0:439:a1ce:5669 with SMTP id 5b1f17b1804b1-43d50a521f6mr48781635e9.5.1742820726497;
+        Mon, 24 Mar 2025 05:52:06 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.198.86])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fd2704bsm118704565e9.18.2025.03.24.05.52.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 05:52:05 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Srikanth Thokala <srikanth.thokala@intel.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Greentime Hu <greentime.hu@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Tom Joseph <tjoseph@cadence.com>,
+	Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/2] dt-bindings: PCI: Correct indentation and style in DTS example
+Date: Mon, 24 Mar 2025 13:52:01 +0100
+Message-ID: <20250324125202.81986-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/brcmstb
-branch HEAD: 2d72d81caccad516ece9f91f86ac65ff1f2c68a2  PCI: brcmstb: Make const read-only arrays static
+DTS example in the bindings should be indented with 2- or 4-spaces and
+aligned with opening '- |', so correct any differences like 3-spaces or
+mixtures 2- and 4-spaces in one binding.
 
-elapsed time: 1446m
+No functional changes here, but saves some comments during reviews of
+new patches built on existing code.
 
-configs tested: 194
-configs skipped: 7
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../bindings/pci/brcm,stb-pcie.yaml           |  81 +++++++------
+ .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  16 +--
+ .../bindings/pci/intel,keembay-pcie-ep.yaml   |  26 ++--
+ .../bindings/pci/intel,keembay-pcie.yaml      |  38 +++---
+ .../bindings/pci/microchip,pcie-host.yaml     |  54 ++++-----
+ .../devicetree/bindings/pci/rcar-pci-ep.yaml  |  34 +++---
+ .../bindings/pci/rcar-pci-host.yaml           |  46 +++----
+ .../bindings/pci/xilinx-versal-cpm.yaml       | 112 +++++++++---------
+ 8 files changed, 202 insertions(+), 205 deletions(-)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+index 29f0e1eb5096..c4f9674e8695 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+@@ -186,49 +186,48 @@ examples:
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+     scb {
+-            #address-cells = <2>;
+-            #size-cells = <1>;
+-            pcie0: pcie@7d500000 {
+-                    compatible = "brcm,bcm2711-pcie";
+-                    reg = <0x0 0x7d500000 0x9310>;
+-                    device_type = "pci";
+-                    #address-cells = <3>;
+-                    #size-cells = <2>;
+-                    #interrupt-cells = <1>;
+-                    interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
+-                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+-                    interrupt-names = "pcie", "msi";
+-                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+-                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH
+-                                     0 0 0 2 &gicv2 GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH
+-                                     0 0 0 3 &gicv2 GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH
+-                                     0 0 0 4 &gicv2 GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
++        #address-cells = <2>;
++        #size-cells = <1>;
++        pcie0: pcie@7d500000 {
++            compatible = "brcm,bcm2711-pcie";
++            reg = <0x0 0x7d500000 0x9310>;
++            device_type = "pci";
++            #address-cells = <3>;
++            #size-cells = <2>;
++            #interrupt-cells = <1>;
++            interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-names = "pcie", "msi";
++            interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++            interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH
++                             0 0 0 2 &gicv2 GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH
++                             0 0 0 3 &gicv2 GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH
++                             0 0 0 4 &gicv2 GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+ 
+-                    msi-parent = <&pcie0>;
+-                    msi-controller;
+-                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
+-                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
+-                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+-                    brcm,enable-ssc;
+-                    brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
++            msi-parent = <&pcie0>;
++            msi-controller;
++            ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
++            dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
++                         <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
++            brcm,enable-ssc;
++            brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
+ 
+-                    /* PCIe bridge, Root Port */
+-                    pci@0,0 {
+-                            #address-cells = <3>;
+-                            #size-cells = <2>;
+-                            reg = <0x0 0x0 0x0 0x0 0x0>;
+-                            compatible = "pciclass,0604";
+-                            device_type = "pci";
+-                            vpcie3v3-supply = <&vreg7>;
+-                            ranges;
++            /* PCIe bridge, Root Port */
++            pci@0,0 {
++                #address-cells = <3>;
++                #size-cells = <2>;
++                reg = <0x0 0x0 0x0 0x0 0x0>;
++                compatible = "pciclass,0604";
++                device_type = "pci";
++                vpcie3v3-supply = <&vreg7>;
++                ranges;
+ 
+-                            /* PCIe endpoint */
+-                            pci-ep@0,0 {
+-                                    assigned-addresses =
+-                                        <0x82010000 0x0 0xf8000000 0x6 0x00000000 0x0 0x2000>;
+-                                    reg = <0x0 0x0 0x0 0x0 0x0>;
+-                                    compatible = "pci14e4,1688";
+-                            };
+-                    };
++                /* PCIe endpoint */
++                pci-ep@0,0 {
++                    assigned-addresses = <0x82010000 0x0 0xf8000000 0x6 0x00000000 0x0 0x2000>;
++                    reg = <0x0 0x0 0x0 0x0 0x0>;
++                    compatible = "pci14e4,1688";
++                };
+             };
++        };
+     };
+diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+index 98651ab22103..8735293962ee 100644
+--- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+@@ -37,14 +37,14 @@ examples:
+         #size-cells = <2>;
+ 
+         pcie-ep@fc000000 {
+-                compatible = "cdns,cdns-pcie-ep";
+-                reg = <0x0 0xfc000000 0x0 0x01000000>,
+-                      <0x0 0x80000000 0x0 0x40000000>;
+-                reg-names = "reg", "mem";
+-                cdns,max-outbound-regions = <16>;
+-                max-functions = /bits/ 8 <8>;
+-                phys = <&pcie_phy0>;
+-                phy-names = "pcie-phy";
++            compatible = "cdns,cdns-pcie-ep";
++            reg = <0x0 0xfc000000 0x0 0x01000000>,
++                  <0x0 0x80000000 0x0 0x40000000>;
++            reg-names = "reg", "mem";
++            cdns,max-outbound-regions = <16>;
++            max-functions = /bits/ 8 <8>;
++            phys = <&pcie_phy0>;
++            phy-names = "pcie-phy";
+         };
+     };
+ ...
+diff --git a/Documentation/devicetree/bindings/pci/intel,keembay-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/intel,keembay-pcie-ep.yaml
+index 730e63fd7669..b19f61ae72fb 100644
+--- a/Documentation/devicetree/bindings/pci/intel,keembay-pcie-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/intel,keembay-pcie-ep.yaml
+@@ -53,17 +53,17 @@ examples:
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+     #include <dt-bindings/interrupt-controller/irq.h>
+     pcie-ep@37000000 {
+-          compatible = "intel,keembay-pcie-ep";
+-          reg = <0x37000000 0x00001000>,
+-                <0x37100000 0x00001000>,
+-                <0x37300000 0x00001000>,
+-                <0x36000000 0x01000000>,
+-                <0x37800000 0x00000200>;
+-          reg-names = "dbi", "dbi2", "atu", "addr_space", "apb";
+-          interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
+-                       <GIC_SPI 108 IRQ_TYPE_EDGE_RISING>,
+-                       <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
+-                       <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
+-          interrupt-names = "pcie", "pcie_ev", "pcie_err", "pcie_mem_access";
+-          num-lanes = <2>;
++        compatible = "intel,keembay-pcie-ep";
++        reg = <0x37000000 0x00001000>,
++              <0x37100000 0x00001000>,
++              <0x37300000 0x00001000>,
++              <0x36000000 0x01000000>,
++              <0x37800000 0x00000200>;
++        reg-names = "dbi", "dbi2", "atu", "addr_space", "apb";
++        interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 108 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "pcie", "pcie_ev", "pcie_err", "pcie_mem_access";
++        num-lanes = <2>;
+     };
+diff --git a/Documentation/devicetree/bindings/pci/intel,keembay-pcie.yaml b/Documentation/devicetree/bindings/pci/intel,keembay-pcie.yaml
+index 1fd557504b10..dd71e3d6bf94 100644
+--- a/Documentation/devicetree/bindings/pci/intel,keembay-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/intel,keembay-pcie.yaml
+@@ -75,23 +75,23 @@ examples:
+     #define KEEM_BAY_A53_PCIE
+     #define KEEM_BAY_A53_AUX_PCIE
+     pcie@37000000 {
+-          compatible = "intel,keembay-pcie";
+-          reg = <0x37000000 0x00001000>,
+-                <0x37300000 0x00001000>,
+-                <0x36e00000 0x00200000>,
+-                <0x37800000 0x00000200>;
+-          reg-names = "dbi", "atu", "config", "apb";
+-          #address-cells = <3>;
+-          #size-cells = <2>;
+-          device_type = "pci";
+-          ranges = <0x02000000 0 0x36000000 0x36000000 0 0x00e00000>;
+-          interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
+-                       <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
+-                       <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
+-          interrupt-names = "pcie", "pcie_ev", "pcie_err";
+-          clocks = <&scmi_clk KEEM_BAY_A53_PCIE>,
+-                   <&scmi_clk KEEM_BAY_A53_AUX_PCIE>;
+-          clock-names = "master", "aux";
+-          reset-gpios = <&pca2 9 GPIO_ACTIVE_LOW>;
+-          num-lanes = <2>;
++        compatible = "intel,keembay-pcie";
++        reg = <0x37000000 0x00001000>,
++              <0x37300000 0x00001000>,
++              <0x36e00000 0x00200000>,
++              <0x37800000 0x00000200>;
++        reg-names = "dbi", "atu", "config", "apb";
++        #address-cells = <3>;
++        #size-cells = <2>;
++        device_type = "pci";
++        ranges = <0x02000000 0 0x36000000 0x36000000 0 0x00e00000>;
++        interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "pcie", "pcie_ev", "pcie_err";
++        clocks = <&scmi_clk KEEM_BAY_A53_PCIE>,
++                 <&scmi_clk KEEM_BAY_A53_AUX_PCIE>;
++        clock-names = "master", "aux";
++        reset-gpios = <&pca2 9 GPIO_ACTIVE_LOW>;
++        num-lanes = <2>;
+     };
+diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+index 103574d18dbc..1aadfdee868f 100644
+--- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
++++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+@@ -65,33 +65,33 @@ unevaluatedProperties: false
+ examples:
+   - |
+     soc {
+-            #address-cells = <2>;
++        #address-cells = <2>;
++        #size-cells = <2>;
++        pcie0: pcie@2030000000 {
++            compatible = "microchip,pcie-host-1.0";
++            reg = <0x0 0x70000000 0x0 0x08000000>,
++                  <0x0 0x43008000 0x0 0x00002000>,
++                  <0x0 0x4300a000 0x0 0x00002000>;
++            reg-names = "cfg", "bridge", "ctrl";
++            device_type = "pci";
++            #address-cells = <3>;
+             #size-cells = <2>;
+-            pcie0: pcie@2030000000 {
+-                    compatible = "microchip,pcie-host-1.0";
+-                    reg = <0x0 0x70000000 0x0 0x08000000>,
+-                          <0x0 0x43008000 0x0 0x00002000>,
+-                          <0x0 0x4300a000 0x0 0x00002000>;
+-                    reg-names = "cfg", "bridge", "ctrl";
+-                    device_type = "pci";
+-                    #address-cells = <3>;
+-                    #size-cells = <2>;
+-                    #interrupt-cells = <1>;
+-                    interrupts = <119>;
+-                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+-                    interrupt-map = <0 0 0 1 &pcie_intc0 0>,
+-                                    <0 0 0 2 &pcie_intc0 1>,
+-                                    <0 0 0 3 &pcie_intc0 2>,
+-                                    <0 0 0 4 &pcie_intc0 3>;
+-                    interrupt-parent = <&plic0>;
+-                    msi-parent = <&pcie0>;
+-                    msi-controller;
+-                    bus-range = <0x00 0x7f>;
+-                    ranges = <0x03000000 0x0 0x78000000 0x0 0x78000000 0x0 0x04000000>;
+-                    pcie_intc0: interrupt-controller {
+-                        #address-cells = <0>;
+-                        #interrupt-cells = <1>;
+-                        interrupt-controller;
+-                    };
++            #interrupt-cells = <1>;
++            interrupts = <119>;
++            interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++            interrupt-map = <0 0 0 1 &pcie_intc0 0>,
++                            <0 0 0 2 &pcie_intc0 1>,
++                            <0 0 0 3 &pcie_intc0 2>,
++                            <0 0 0 4 &pcie_intc0 3>;
++            interrupt-parent = <&plic0>;
++            msi-parent = <&pcie0>;
++            msi-controller;
++            bus-range = <0x00 0x7f>;
++            ranges = <0x03000000 0x0 0x78000000 0x0 0x78000000 0x0 0x04000000>;
++            pcie_intc0: interrupt-controller {
++                #address-cells = <0>;
++                #interrupt-cells = <1>;
++                interrupt-controller;
+             };
++        };
+     };
+diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+index 32a3b7665ff5..6b91581c30ae 100644
+--- a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+@@ -73,21 +73,21 @@ examples:
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+     #include <dt-bindings/power/r8a774c0-sysc.h>
+ 
+-     pcie0_ep: pcie-ep@fe000000 {
+-            compatible = "renesas,r8a774c0-pcie-ep",
+-                         "renesas,rcar-gen3-pcie-ep";
+-            reg = <0xfe000000 0x80000>,
+-                  <0xfe100000 0x100000>,
+-                  <0xfe200000 0x200000>,
+-                  <0x30000000 0x8000000>,
+-                  <0x38000000 0x8000000>;
+-            reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
+-            interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+-                         <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
+-                         <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+-            resets = <&cpg 319>;
+-            power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
+-            clocks = <&cpg CPG_MOD 319>;
+-            clock-names = "pcie";
+-            max-functions = /bits/ 8 <1>;
++    pcie0_ep: pcie-ep@fe000000 {
++        compatible = "renesas,r8a774c0-pcie-ep",
++                     "renesas,rcar-gen3-pcie-ep";
++        reg = <0xfe000000 0x80000>,
++              <0xfe100000 0x100000>,
++              <0xfe200000 0x200000>,
++              <0x30000000 0x8000000>,
++              <0x38000000 0x8000000>;
++        reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
++        interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++        resets = <&cpg 319>;
++        power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
++        clocks = <&cpg CPG_MOD 319>;
++        clock-names = "pcie";
++        max-functions = /bits/ 8 <1>;
+     };
+diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
+index 666f013e3af8..7896576920aa 100644
+--- a/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
++++ b/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
+@@ -113,27 +113,27 @@ examples:
+         pcie: pcie@fe000000 {
+             compatible = "renesas,pcie-r8a7791", "renesas,pcie-rcar-gen2";
+             reg = <0 0xfe000000 0 0x80000>;
+-             #address-cells = <3>;
+-             #size-cells = <2>;
+-             bus-range = <0x00 0xff>;
+-             device_type = "pci";
+-             ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000>,
+-                      <0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000>,
+-                      <0x02000000 0 0x30000000 0 0x30000000 0 0x08000000>,
+-                      <0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
+-             dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000>,
+-                          <0x42000000 2 0x00000000 2 0x00000000 0 0x40000000>;
+-             interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+-                          <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
+-                          <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+-             #interrupt-cells = <1>;
+-             interrupt-map-mask = <0 0 0 0>;
+-             interrupt-map = <0 0 0 0 &gic GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
+-             clocks = <&cpg CPG_MOD 319>, <&pcie_bus_clk>;
+-             clock-names = "pcie", "pcie_bus";
+-             power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+-             resets = <&cpg 319>;
+-             vpcie3v3-supply = <&pcie_3v3>;
+-             vpcie12v-supply = <&pcie_12v>;
+-         };
++            #address-cells = <3>;
++            #size-cells = <2>;
++            bus-range = <0x00 0xff>;
++            device_type = "pci";
++            ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000>,
++                     <0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000>,
++                     <0x02000000 0 0x30000000 0 0x30000000 0 0x08000000>,
++                     <0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
++            dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000>,
++                         <0x42000000 2 0x00000000 2 0x00000000 0 0x40000000>;
++            interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++            #interrupt-cells = <1>;
++            interrupt-map-mask = <0 0 0 0>;
++            interrupt-map = <0 0 0 0 &gic GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
++            clocks = <&cpg CPG_MOD 319>, <&pcie_bus_clk>;
++            clock-names = "pcie", "pcie_bus";
++            power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
++            resets = <&cpg 319>;
++            vpcie3v3-supply = <&pcie_3v3>;
++            vpcie12v-supply = <&pcie_12v>;
++        };
+     };
+diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+index d674a24c8ccc..9823456addea 100644
+--- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
++++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+@@ -76,64 +76,62 @@ unevaluatedProperties: false
+ 
+ examples:
+   - |
+-
+     versal {
+-               #address-cells = <2>;
+-               #size-cells = <2>;
+-               cpm_pcie: pcie@fca10000 {
+-                       compatible = "xlnx,versal-cpm-host-1.00";
+-                       device_type = "pci";
+-                       #address-cells = <3>;
+-                       #interrupt-cells = <1>;
+-                       #size-cells = <2>;
+-                       interrupts = <0 72 4>;
+-                       interrupt-parent = <&gic>;
+-                       interrupt-map-mask = <0 0 0 7>;
+-                       interrupt-map = <0 0 0 1 &pcie_intc_0 0>,
+-                                       <0 0 0 2 &pcie_intc_0 1>,
+-                                       <0 0 0 3 &pcie_intc_0 2>,
+-                                       <0 0 0 4 &pcie_intc_0 3>;
+-                       bus-range = <0x00 0xff>;
+-                       ranges = <0x02000000 0x0 0xe0010000 0x0 0xe0010000 0x0 0x10000000>,
+-                                <0x43000000 0x80 0x00000000 0x80 0x00000000 0x0 0x80000000>;
+-                       msi-map = <0x0 &its_gic 0x0 0x10000>;
+-                       reg = <0x0 0xfca10000 0x0 0x1000>,
+-                             <0x6 0x00000000 0x0 0x10000000>;
+-                       reg-names = "cpm_slcr", "cfg";
+-                       pcie_intc_0: interrupt-controller {
+-                               #address-cells = <0>;
+-                               #interrupt-cells = <1>;
+-                               interrupt-controller;
+-                       };
+-               };
++        #address-cells = <2>;
++        #size-cells = <2>;
++        pcie@fca10000 {
++            compatible = "xlnx,versal-cpm-host-1.00";
++            device_type = "pci";
++            #address-cells = <3>;
++            #interrupt-cells = <1>;
++            #size-cells = <2>;
++            interrupts = <0 72 4>;
++            interrupt-parent = <&gic>;
++            interrupt-map-mask = <0 0 0 7>;
++            interrupt-map = <0 0 0 1 &pcie_intc_0 0>,
++                            <0 0 0 2 &pcie_intc_0 1>,
++                            <0 0 0 3 &pcie_intc_0 2>,
++                            <0 0 0 4 &pcie_intc_0 3>;
++            bus-range = <0x00 0xff>;
++            ranges = <0x02000000 0x0 0xe0010000 0x0 0xe0010000 0x0 0x10000000>,
++                     <0x43000000 0x80 0x00000000 0x80 0x00000000 0x0 0x80000000>;
++            msi-map = <0x0 &its_gic 0x0 0x10000>;
++            reg = <0x0 0xfca10000 0x0 0x1000>,
++                  <0x6 0x00000000 0x0 0x10000000>;
++            reg-names = "cpm_slcr", "cfg";
++            pcie_intc_0: interrupt-controller {
++                    #address-cells = <0>;
++                    #interrupt-cells = <1>;
++                    interrupt-controller;
++            };
++        };
+ 
+-               cpm5_pcie: pcie@fcdd0000 {
+-                       compatible = "xlnx,versal-cpm5-host";
+-                       device_type = "pci";
+-                       #address-cells = <3>;
+-                       #interrupt-cells = <1>;
+-                       #size-cells = <2>;
+-                       interrupts = <0 72 4>;
+-                       interrupt-parent = <&gic>;
+-                       interrupt-map-mask = <0 0 0 7>;
+-                       interrupt-map = <0 0 0 1 &pcie_intc_1 0>,
+-                                       <0 0 0 2 &pcie_intc_1 1>,
+-                                       <0 0 0 3 &pcie_intc_1 2>,
+-                                       <0 0 0 4 &pcie_intc_1 3>;
+-                       bus-range = <0x00 0xff>;
+-                       ranges = <0x02000000 0x0 0xe0000000 0x0 0xe0000000 0x0 0x10000000>,
+-                                <0x43000000 0x80 0x00000000 0x80 0x00000000 0x0 0x80000000>;
+-                       msi-map = <0x0 &its_gic 0x0 0x10000>;
+-                       reg = <0x00 0xfcdd0000 0x00 0x1000>,
+-                             <0x06 0x00000000 0x00 0x1000000>,
+-                             <0x00 0xfce20000 0x00 0x1000000>;
+-                       reg-names = "cpm_slcr", "cfg", "cpm_csr";
+-
+-                       pcie_intc_1: interrupt-controller {
+-                               #address-cells = <0>;
+-                               #interrupt-cells = <1>;
+-                               interrupt-controller;
+-                       };
+-               };
++        pcie@fcdd0000 {
++            compatible = "xlnx,versal-cpm5-host";
++            device_type = "pci";
++            #address-cells = <3>;
++            #interrupt-cells = <1>;
++            #size-cells = <2>;
++            interrupts = <0 72 4>;
++            interrupt-parent = <&gic>;
++            interrupt-map-mask = <0 0 0 7>;
++            interrupt-map = <0 0 0 1 &pcie_intc_1 0>,
++                            <0 0 0 2 &pcie_intc_1 1>,
++                            <0 0 0 3 &pcie_intc_1 2>,
++                            <0 0 0 4 &pcie_intc_1 3>;
++            bus-range = <0x00 0xff>;
++            ranges = <0x02000000 0x0 0xe0000000 0x0 0xe0000000 0x0 0x10000000>,
++                     <0x43000000 0x80 0x00000000 0x80 0x00000000 0x0 0x80000000>;
++            msi-map = <0x0 &its_gic 0x0 0x10000>;
++            reg = <0x00 0xfcdd0000 0x00 0x1000>,
++                  <0x06 0x00000000 0x00 0x1000000>,
++                  <0x00 0xfce20000 0x00 0x1000000>;
++            reg-names = "cpm_slcr", "cfg", "cpm_csr";
+ 
++            pcie_intc_1: interrupt-controller {
++                #address-cells = <0>;
++                #interrupt-cells = <1>;
++                interrupt-controller;
++            };
++        };
+     };
+-- 
+2.43.0
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                                 defconfig    gcc-14.2.0
-arc                   randconfig-001-20250323    gcc-11.5.0
-arc                   randconfig-002-20250323    gcc-13.3.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                         assabet_defconfig    clang-18
-arm                                 defconfig    clang-14
-arm                                 defconfig    gcc-14.2.0
-arm                          exynos_defconfig    clang-21
-arm                   randconfig-001-20250323    gcc-7.5.0
-arm                   randconfig-002-20250323    gcc-9.3.0
-arm                   randconfig-003-20250323    clang-15
-arm                   randconfig-004-20250323    gcc-5.5.0
-arm                        realview_defconfig    gcc-14.2.0
-arm                         s3c6400_defconfig    gcc-14.2.0
-arm                           spitz_defconfig    gcc-14.2.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250323    clang-21
-arm64                 randconfig-002-20250323    gcc-5.5.0
-arm64                 randconfig-003-20250323    gcc-9.5.0
-arm64                 randconfig-004-20250323    gcc-7.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250323    gcc-13.3.0
-csky                  randconfig-002-20250323    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon                             defconfig    gcc-14.2.0
-hexagon               randconfig-001-20250323    clang-21
-hexagon               randconfig-002-20250323    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250323    clang-20
-i386        buildonly-randconfig-002-20250323    gcc-12
-i386        buildonly-randconfig-003-20250323    clang-20
-i386        buildonly-randconfig-004-20250323    clang-20
-i386        buildonly-randconfig-005-20250323    gcc-12
-i386        buildonly-randconfig-006-20250323    clang-20
-i386                                defconfig    clang-20
-i386                  randconfig-001-20250324    gcc-12
-i386                  randconfig-002-20250324    gcc-12
-i386                  randconfig-003-20250324    gcc-12
-i386                  randconfig-004-20250324    gcc-12
-i386                  randconfig-005-20250324    gcc-12
-i386                  randconfig-006-20250324    gcc-12
-i386                  randconfig-007-20250324    gcc-12
-i386                  randconfig-011-20250324    clang-20
-i386                  randconfig-012-20250324    clang-20
-i386                  randconfig-013-20250324    clang-20
-i386                  randconfig-014-20250324    clang-20
-i386                  randconfig-015-20250324    clang-20
-i386                  randconfig-016-20250324    clang-20
-i386                  randconfig-017-20250324    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-loongarch             randconfig-001-20250323    gcc-14.2.0
-loongarch             randconfig-002-20250323    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                       bvme6000_defconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                        m5307c3_defconfig    gcc-14.2.0
-m68k                        m5407c3_defconfig    gcc-14.2.0
-m68k                       m5475evb_defconfig    gcc-14.2.0
-m68k                          sun3x_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                           ip30_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                               defconfig    gcc-14.2.0
-nios2                 randconfig-001-20250323    gcc-13.3.0
-nios2                 randconfig-002-20250323    gcc-9.3.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-12
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-12
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250323    gcc-10.5.0
-parisc                randconfig-002-20250323    gcc-6.5.0
-parisc64                            defconfig    gcc-14.1.0
-parisc64                            defconfig    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                        cell_defconfig    gcc-14.2.0
-powerpc                     ksi8560_defconfig    gcc-14.2.0
-powerpc                      mgcoge_defconfig    gcc-14.2.0
-powerpc                  mpc885_ads_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20250323    gcc-9.3.0
-powerpc               randconfig-002-20250323    gcc-7.5.0
-powerpc               randconfig-003-20250323    gcc-9.3.0
-powerpc                    sam440ep_defconfig    gcc-14.2.0
-powerpc                     taishan_defconfig    gcc-14.2.0
-powerpc                 xes_mpc85xx_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250323    clang-16
-powerpc64             randconfig-002-20250323    gcc-9.3.0
-powerpc64             randconfig-003-20250323    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250323    gcc-9.3.0
-riscv                 randconfig-002-20250323    gcc-14.2.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250323    gcc-8.5.0
-s390                  randconfig-002-20250323    clang-15
-s390                       zfcpdump_defconfig    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-12
-sh                                  defconfig    gcc-14.2.0
-sh                         ecovec24_defconfig    gcc-14.2.0
-sh                            hp6xx_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250323    gcc-5.5.0
-sh                    randconfig-002-20250323    gcc-5.5.0
-sh                          rsk7203_defconfig    gcc-14.2.0
-sh                           se7343_defconfig    gcc-14.2.0
-sh                           se7721_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250323    gcc-14.2.0
-sparc                 randconfig-002-20250323    gcc-10.3.0
-sparc64                             defconfig    gcc-12
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250323    gcc-14.2.0
-sparc64               randconfig-002-20250323    gcc-6.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250323    gcc-12
-um                    randconfig-002-20250323    clang-17
-um                           x86_64_defconfig    clang-15
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250323    clang-20
-x86_64      buildonly-randconfig-002-20250323    clang-20
-x86_64      buildonly-randconfig-003-20250323    gcc-12
-x86_64      buildonly-randconfig-004-20250323    clang-20
-x86_64      buildonly-randconfig-005-20250323    clang-20
-x86_64      buildonly-randconfig-006-20250323    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                randconfig-001-20250324    gcc-12
-x86_64                randconfig-002-20250324    gcc-12
-x86_64                randconfig-003-20250324    gcc-12
-x86_64                randconfig-004-20250324    gcc-12
-x86_64                randconfig-005-20250324    gcc-12
-x86_64                randconfig-006-20250324    gcc-12
-x86_64                randconfig-007-20250324    gcc-12
-x86_64                randconfig-008-20250324    gcc-12
-x86_64                randconfig-071-20250324    clang-20
-x86_64                randconfig-072-20250324    clang-20
-x86_64                randconfig-073-20250324    clang-20
-x86_64                randconfig-074-20250324    clang-20
-x86_64                randconfig-075-20250324    clang-20
-x86_64                randconfig-076-20250324    clang-20
-x86_64                randconfig-077-20250324    clang-20
-x86_64                randconfig-078-20250324    clang-20
-xtensa                           alldefconfig    gcc-14.2.0
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                  cadence_csp_defconfig    gcc-14.2.0
-xtensa                  nommu_kc705_defconfig    gcc-14.2.0
-xtensa                randconfig-001-20250323    gcc-14.2.0
-xtensa                randconfig-002-20250323    gcc-8.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
