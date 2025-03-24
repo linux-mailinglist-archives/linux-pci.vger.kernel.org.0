@@ -1,251 +1,169 @@
-Return-Path: <linux-pci+bounces-24572-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24573-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 824A9A6E3E6
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 21:04:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7759CA6E3FF
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 21:16:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 272321890126
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 20:04:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 11CDB1891AEF
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 20:16:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FFDD192D77;
-	Mon, 24 Mar 2025 20:04:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4B641A2872;
+	Mon, 24 Mar 2025 20:16:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ir4HnYiT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="TI71ew07"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C05157A46;
-	Mon, 24 Mar 2025 20:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411EB18CC13
+	for <linux-pci@vger.kernel.org>; Mon, 24 Mar 2025 20:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742846679; cv=none; b=aDwsUg6VWyTCO3T5ZPKYXneB2eklRY+nHdRqCtZ9n8yud5m8Rr7zRalhgh11vex4kWXgAiWRkWKSTJB/LS17ituIWRtt6/egukVSvKyfHSS09Xa0ZtGewPqFUtb9hTzDlxl2lMU2fgBdZysVL2KzJWYeDSSSjLGVR07yYzGfUw4=
+	t=1742847389; cv=none; b=ftq/RyZ6G1NqI9u54c5EovBs2kuYgcZyVs+ciAWtpp1bvQd0Bu0PmA8MY0Q9Hle/tt7Qpn0PxjjZtbPyJS0d9hjNq7FbiW8yW/1xu5ldAndBeTM3DTzJxuaulqkX1701H7eXIHvZTziBDME/x6IELPI/iZochFkFa6H2q6Yb9Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742846679; c=relaxed/simple;
-	bh=zxmtxJA+3RpFU/Hf5MWAcrc6kL1d19pYvJFVOyd3j58=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=hO20TK5eBe9DyqS05rU5abWifAuXkaszMxbn76AHyBJWjswqYY9dbAQZjLrVG3ZyVJLfbkCCmU+kAdp3Okj9PpdA+7WvxcNzDDAwpM8ONzSjpsdASh7lOWpkehQE7KcBqI0SdHhaYHRIb4k4Abtkwe2hYr7fI4+4j5XrRB8HlgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ir4HnYiT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15781C4CEDD;
-	Mon, 24 Mar 2025 20:04:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742846679;
-	bh=zxmtxJA+3RpFU/Hf5MWAcrc6kL1d19pYvJFVOyd3j58=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ir4HnYiTuYT/ai0rJIcleFJsWExMp9ZpWaRwj7+63VVwCK46PgXa0be18Ci1eIm49
-	 bYu3M/v62UAR2hjJJn+ykZOhnfRBVDvrhSwOzCR2nOW4x9NNPqwpsLIcviOBXzjZwz
-	 1I6rdOWMyasnuyjoCCp36hSVh83Ho8A3oNkpNk5TA0yJnSUwQZdMIVj1QxgrYmvsvr
-	 VypkSNJq2c5mqRzX1u65o80YA15c9fZGU1F75/gC9EjKlq5N23A08mdLtQsBM+HdQ1
-	 ukkv7RV93Jl9n7VU2yIjPXwzPUMkEjYIpunR/1jJdKvCEvXD5hdOzmATu+1ZLxuQ37
-	 VrANkVTI8xK0Q==
-Date: Mon, 24 Mar 2025 15:04:37 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v12 06/13] PCI: dwc: Add dw_pcie_parent_bus_offset()
- checking and debug
-Message-ID: <20250324200437.GA1257874@bhelgaas>
+	s=arc-20240116; t=1742847389; c=relaxed/simple;
+	bh=pi/J5f+zxa5+vr4I4x8F+Q+w3M7QcKQqlVHWcxr7Mbc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Af/gdKfaKjNWLPBtosrAWc8Q9R2wZsAre+yKCKhwKn+abUFub7GzYkveaTP4TA4i4MPcbSV7TCDLhuZyo0O08TOY2sWjSwDcmvZnlmwV3uiGGN/4yJc72UsLFMY7cVq1r/cGIkZMaJWsWiWYYZgJ2bLd9pyh1k+gatIaqtjZbgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=TI71ew07; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1742847380; x=1743106580;
+	bh=5zkri0TfwaVQ5Do9MmCdBt/y8+WtBGC8HaDSalWQ/b8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=TI71ew073ff2IQeYGaFDBN5e4BpGTt+SQkDr3Gkx+pNBx1wepjbufC3naVIb0fTMo
+	 J2yr7/mP9FptcD9UZh5KkLdy+CarcuEfod41sZ3T24kmeQSSMoeWGVSmafgHR/6KBJ
+	 J29pRX64HDAQU0ukZj2mUOBhTIO8UNETpQgZs/eGfIS4WLTI8KO8Lw0tooKRx+TDdE
+	 ZLlUBETcRMBO7pIfsQc0d+rlN/I9yBKB0Vom9Rl01ucsiWJhLsG1GCy3nMuXHvBInX
+	 dRHApYxwuXhZH/un8+cFYrQfOFEOtO5JPJH/8s50xSt9+q4265ZNup+5zk0vSxihPO
+	 KYVjDrnsAN9dQ==
+Date: Mon, 24 Mar 2025 20:16:15 +0000
+To: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 0/6] rust: reduce pointer casts, enable related lints
+Message-ID: <D8ORTXSUTKGL.1KOJAGBM8F8TN@proton.me>
+In-Reply-To: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
+References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 389621328b72d358f474de1a56bb51cdd22e9db2
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <x2r2xfxrnkihvpoqiamgjmvppverjugp5r4we7lcfpz6jloxzy@7kdfzxiwv2po>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 24, 2025 at 11:00:24PM +0530, Manivannan Sadhasivam wrote:
-> On Sat, Mar 15, 2025 at 03:15:41PM -0500, Bjorn Helgaas wrote:
-> > From: Frank Li <Frank.Li@nxp.com>
-> > 
-> > dw_pcie_parent_bus_offset() looks up the parent bus address of a PCI
-> > controller 'reg' property in devicetree.  If implemented, .cpu_addr_fixup()
-> > is a hard-coded way to get the parent bus address corresponding to a CPU
-> > physical address.
-> > 
-> > Add debug code to compare the address from .cpu_addr_fixup() with the
-> > address from devicetree.  If they match, warn that .cpu_addr_fixup() is
-> > redundant and should be removed; if they differ, warn that something is
-> > wrong with the devicetree.
-> > 
-> > If .cpu_addr_fixup() is not implemented, the parent bus address should be
-> > identical to the CPU physical address because we previously ignored the
-> > parent bus address from devicetree.  If the devicetree has a different
-> > parent bus address, warn about it being broken.
-> > 
-> > [bhelgaas: split debug to separate patch for easier future revert, commit
-> > log]
-> > Link: https://lore.kernel.org/r/20250313-pci_fixup_addr-v11-5-01d2313502ab@nxp.com
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware.c | 26 +++++++++++++++++++-
-> >  drivers/pci/controller/dwc/pcie-designware.h | 13 ++++++++++
-> >  2 files changed, 38 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > index 0a35e36da703..985264c88b92 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > @@ -1114,7 +1114,8 @@ resource_size_t dw_pcie_parent_bus_offset(struct dw_pcie *pci,
-> >  	struct device *dev = pci->dev;
-> >  	struct device_node *np = dev->of_node;
-> >  	int index;
-> > -	u64 reg_addr;
-> > +	u64 reg_addr, fixup_addr;
-> > +	u64 (*fixup)(struct dw_pcie *pcie, u64 cpu_addr);
-> >  
-> >  	/* Look up reg_name address on parent bus */
-> >  	index = of_property_match_string(np, "reg-names", reg_name);
-> > @@ -1126,5 +1127,28 @@ resource_size_t dw_pcie_parent_bus_offset(struct dw_pcie *pci,
-> >  
-> >  	of_property_read_reg(np, index, &reg_addr, NULL);
-> >  
-> > +	fixup = pci->ops->cpu_addr_fixup;
-> > +	if (fixup) {
-> > +		fixup_addr = fixup(pci, cpu_phy_addr);
-> > +		if (reg_addr == fixup_addr) {
-> > +			dev_warn(dev, "%#010llx %s reg[%d] == %#010llx; %ps is redundant\n",
-> > +				 cpu_phy_addr, reg_name, index,
-> > +				 fixup_addr, fixup);
-> > +		} else {
-> > +			dev_warn(dev, "%#010llx %s reg[%d] != %#010llx fixed up addr; devicetree is broken\n",
-> > +				 cpu_phy_addr, reg_name,
-> > +				 index, fixup_addr);
-> > +			reg_addr = fixup_addr;
-> > +		}
-> > +	} else if (!pci->use_parent_dt_ranges) {
-> 
-> Is this check still valid? 'use_parent_dt_ranges' is only used here for
-> validation. Moreover, if the fixup is not available, we should be able to
-> safely return 'cpu_phy_addr - reg_addr' unconditionally.
+On Mon Mar 17, 2025 at 3:23 PM CET, Tamir Duberstein wrote:
+> This started with a patch that enabled `clippy::ptr_as_ptr`. Benno
+> Lossin suggested I also look into `clippy::ptr_cast_constness` and I
+> discovered `clippy::as_ptr_cast_mut`. This series now enables all 3
+> lints. It also enables `clippy::as_underscore` which ensures other
+> pointer casts weren't missed. The first commit reduces the need for
+> pointer casts and is shared with another series[1].
+>
+> The final patch also enables pointer provenance lints and fixes
+> violations. See that commit message for details. The build system
+> portion of that commit is pretty messy but I couldn't find a better way
+> to convincingly ensure that these lints were applied globally.
+> Suggestions would be very welcome.
 
-Yes, that's true IF the devicetree has the correct 'ranges'
-translation.  This is to avoid breaking platforms with broken
-devicetrees.
+I applied the patches to v6.14-rc7 and did a quick pass with
 
-> > +		if (reg_addr != cpu_phy_addr) {
-> > +			dev_warn(dev, "devicetree has incorrect translation; please check parent \"ranges\" property. CPU physical addr %#010llx, parent bus addr %#010llx\n",
-> > +				 cpu_phy_addr, reg_addr);
-> > +			return 0;
-> > +		}
-> > +	}
-> > +
-> > +	dev_info(dev, "%s parent bus offset is %#010llx\n",
-> > +		 reg_name, cpu_phy_addr - reg_addr);
-> 
-> This info is useless on platforms having no translation between CPU and PCI
-> controller. The offset will always be 0.
+    rg -nC 3 -t rust ' as ' | bat -l rust
 
-You're right.  This was probably an overzealous message for any
-possible issues.
+to see if there are any cases left that we could fix and I found a
+couple:
 
-What would you think of the below as a replacement?  It should emit at
-most one message, and none for platforms where devicetree describes no
-translation and there never was a .cpu_addr_fixup().
+* there are several cases of `number as int_type` (like `num as c_int`
+  or `my_u32 as usize` etc.) not sure what we can do about these, some
+  are probably unavoidable, but since the kernel doesn't support 16 bit
+  systems (that is true, right?), we *could* have a `From<u32> for
+  usize` impl...
+* some instances of `'|' as u32` (samples/rust/rust_misc_device.rs:112).
+  There is a `From<char> for u32` impl, so this can just be replaced
+  with `.into()` (or maybe by using a byte literal `b'|'`?).
+* `shared_ref as *const _` (for example in rust/kernel/uaccess.rs:247,
+  rust/kernel/str.rs:32 and rust/kernel/fs/file.rs:367), these we can
+  replace with `let ptr: *const ... =3D shared_ref;`. Don't know if there
+  is a clippy lint for this.
+* some pointer casts in rust/kernel/list/impl_list_item_mod.rs:{253,254}
+  not sure if they can be converted though (maybe they are unsizing the
+  pointer?)
+  Another pointer cast in rust/kernel/driver.rs:81 (I'm pretty sure this
+  one can be replaced by a `.cast()`)
 
-It's still pretty aggressive logging, but I'm just concerned about
-being able to quickly debug and fix any regressions.  Ideally we can
-revert the whole thing eventually.
+Some clippy lints that we could also enable that share the spirit of
+this series:
 
+* `char_lit_as_u8` (maybe that also covers the `'|' as u32` case from
+  above?)
+* `cast_lossless` (maybe this catches some of the `num as int_type`
+  conversions I mentioned above)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 27b464a405a4..4b442d1aa55b 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -1114,7 +1114,8 @@ resource_size_t dw_pcie_parent_bus_offset(struct dw_pcie *pci,
- 	struct device *dev = pci->dev;
- 	struct device_node *np = dev->of_node;
- 	int index;
--	u64 reg_addr;
-+	u64 reg_addr, fixup_addr;
-+	u64 (*fixup)(struct dw_pcie *pcie, u64 cpu_addr);
- 
- 	/* Look up reg_name address on parent bus */
- 	index = of_property_match_string(np, "reg-names", reg_name);
-@@ -1126,5 +1127,42 @@ resource_size_t dw_pcie_parent_bus_offset(struct dw_pcie *pci,
- 
- 	of_property_read_reg(np, index, &reg_addr, NULL);
- 
-+	fixup = pci->ops ? pci->ops->cpu_addr_fixup : NULL;
-+	if (fixup) {
-+		fixup_addr = fixup(pci, cpu_phys_addr);
-+		if (reg_addr == fixup_addr) {
-+			dev_info(dev, "%s reg[%d] %#010llx == %#010llx == fixup(cpu %#010llx); %ps is redundant with this devicetree\n",
-+				 reg_name, index, reg_addr, fixup_addr,
-+				 (unsigned long long) cpu_phys_addr, fixup);
-+		} else {
-+			dev_warn(dev, "%s reg[%d] %#010llx != %#010llx == fixup(cpu %#010llx); devicetree is broken\n",
-+				 reg_name, index, reg_addr, fixup_addr,
-+				 (unsigned long long) cpu_phys_addr);
-+			reg_addr = fixup_addr;
-+		}
-+
-+		return cpu_phys_addr - reg_addr;
-+	}
-+
-+	if (pci->use_parent_dt_ranges) {
-+
-+		/*
-+		 * This platform once had a fixup, presumably because it
-+		 * translates between CPU and PCI controller addresses.
-+		 * Log a note if devicetree didn't describe a translation.
-+		 */
-+		if (reg_addr == cpu_phys_addr)
-+			dev_info(dev, "%s reg[%d] %#010llx == cpu %#010llx\n; no fixup was ever needed for this devicetree\n",
-+				 reg_name, index, reg_addr,
-+				 (unsigned long long) cpu_phys_addr);
-+	} else {
-+		if (reg_addr != cpu_phys_addr) {
-+			dev_warn(dev, "%s reg[%d] %#010llx != cpu %#010llx; no fixup and devicetree \"ranges\" is broken, assuming no translation\n",
-+				 reg_name, index, reg_addr,
-+				 (unsigned long long) cpu_phys_addr);
-+			return 0;
-+		}
-+	}
-+
- 	return cpu_phys_addr - reg_addr;
- }
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 16548b01347d..f08d2852cfd5 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -465,6 +465,19 @@ struct dw_pcie {
- 	struct reset_control_bulk_data	core_rsts[DW_PCIE_NUM_CORE_RSTS];
- 	struct gpio_desc		*pe_rst;
- 	bool			suspended;
-+
-+	/*
-+	 * If iATU input addresses are offset from CPU physical addresses,
-+	 * we previously required .cpu_addr_fixup() to convert them.  We
-+	 * now rely on the devicetree instead.  If .cpu_addr_fixup()
-+	 * exists, we compare its results with devicetree.
-+	 *
-+	 * If .cpu_addr_fixup() does not exist, we assume the offset is
-+	 * zero and warn if devicetree claims otherwise.  If we know all
-+	 * devicetrees correctly describe the offset, set
-+	 * use_parent_dt_ranges to true to avoid this warning.
-+	 */
-+	bool			use_parent_dt_ranges;
- };
- 
- #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
+I'll leave it up to you what you want to do with this: add it to this
+series, make a new one, or let someone else handle it. If you don't want
+to handle it, let me know, then I'll create a good-first-issue :)
+
+> ---
+> Tamir Duberstein (6):
+>       rust: retain pointer mut-ness in `container_of!`
+>       rust: enable `clippy::ptr_as_ptr` lint
+>       rust: enable `clippy::ptr_cast_constness` lint
+>       rust: enable `clippy::as_ptr_cast_mut` lint
+>       rust: enable `clippy::as_underscore` lint
+>       rust: use strict provenance APIs
+>
+>  Makefile                               |   4 ++
+>  init/Kconfig                           |   3 +
+>  rust/bindings/lib.rs                   |   1 +
+>  rust/kernel/alloc.rs                   |   2 +-
+>  rust/kernel/alloc/allocator_test.rs    |   2 +-
+>  rust/kernel/alloc/kvec.rs              |   4 +-
+>  rust/kernel/block/mq/operations.rs     |   2 +-
+>  rust/kernel/block/mq/request.rs        |   7 +-
+>  rust/kernel/device.rs                  |   5 +-
+>  rust/kernel/device_id.rs               |   2 +-
+>  rust/kernel/devres.rs                  |  19 +++---
+>  rust/kernel/error.rs                   |   2 +-
+>  rust/kernel/firmware.rs                |   3 +-
+>  rust/kernel/fs/file.rs                 |   2 +-
+>  rust/kernel/io.rs                      |  16 ++---
+>  rust/kernel/kunit.rs                   |  15 ++---
+>  rust/kernel/lib.rs                     | 113 +++++++++++++++++++++++++++=
++++++-
+>  rust/kernel/list/impl_list_item_mod.rs |   2 +-
+>  rust/kernel/miscdevice.rs              |   2 +-
+>  rust/kernel/of.rs                      |   6 +-
+>  rust/kernel/pci.rs                     |  15 +++--
+>  rust/kernel/platform.rs                |   6 +-
+>  rust/kernel/print.rs                   |  11 ++--
+>  rust/kernel/rbtree.rs                  |  23 +++----
+>  rust/kernel/seq_file.rs                |   3 +-
+>  rust/kernel/str.rs                     |  18 ++----
+>  rust/kernel/sync/poll.rs               |   2 +-
+>  rust/kernel/uaccess.rs                 |  12 ++--
+>  rust/kernel/workqueue.rs               |  12 ++--
+>  rust/uapi/lib.rs                       |   1 +
+>  30 files changed, 218 insertions(+), 97 deletions(-)
+> ---
+> base-commit: 498f7ee4773f22924f00630136da8575f38954e8
+
+Btw I didn't find this commit anywhere I usually check, where is it
+from?
+
+---
+Cheers,
+Benno
+
+> change-id: 20250307-ptr-as-ptr-21b1867fc4d4
+
 
