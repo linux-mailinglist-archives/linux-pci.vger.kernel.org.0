@@ -1,133 +1,132 @@
-Return-Path: <linux-pci+bounces-24577-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24578-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDA7FA6E596
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 22:22:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 237C1A6E5BB
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 22:35:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64BAF3A1A8A
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 21:17:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3673D170A5B
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Mar 2025 21:34:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE2221DE8A0;
-	Mon, 24 Mar 2025 21:17:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 345E41DB128;
+	Mon, 24 Mar 2025 21:34:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lt+n+2x1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NjlCj8kT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE73519007F;
-	Mon, 24 Mar 2025 21:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EF315E96;
+	Mon, 24 Mar 2025 21:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742851044; cv=none; b=GmSANLUDEcsDuxGhFOGcI5Lv+AonGJAs6dCQWRD/wyqLaN/iH5DOK8f3Uv6mC5KBIx1Ayx0mRB/9kocWpTbJvwz5hi6KACCr38R5/TtmloVRCKW9AVHrveAflvcC0arS6L1Dmj1fmg07Oqp/V7h0BsupiM9UiYV7QAx1+bwxEmQ=
+	t=1742852041; cv=none; b=HDZADnOBrZj1mthST1/XiWC2UUQNB9JVYVW59ubbUZA8DdGG2Ifei4TXWkcIKq8AtSXb5oy8jn8vLtVTzXuB/yNuS6jjNtwEVuNEw3nSJoA7C2ggDSNJvAnpXjFqTZhzQaSu+6o8WJZ2/I7YNyWt18wMupBx/P2PosFTfJ2BuSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742851044; c=relaxed/simple;
-	bh=EYXS49vIEDNmzWn2U+P9XyZXY3qP7ZlhbLU+6p87r2o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c49WL2hj5sarle4ZB0UU7Uxk+HiTO2gST/F0laF4y8CPFeL5dpcv+sKlolIGz4/Ekai6thRsnWsye7tVcJJWY9xUlb6a8phLfr6H+doVVCi3n47h402jWg8pgNDDnXxD/Mt8zcnSFgcK4KlY98mrKy9KQKT9UHfi1UuGcqFGwl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lt+n+2x1; arc=none smtp.client-ip=209.85.208.173
+	s=arc-20240116; t=1742852041; c=relaxed/simple;
+	bh=yj29XxXDijy6110W5Qn+nQ++u5/2IdJ6YUbzNqw9a14=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Cs78fl1KImPo3EB5n88yR8zoJJUdATS6LiqkdGE3vAMU84Es9x8gS23mJ27irhhiPx2VyOSBjBAy6JutW5t/aIOu1HKldXQ+ux1ePTdNki/GUYsrIeR++wgIlZ68mFfCTU1Z1fQNOdvrscNt9lXiNt38ZlU6IWTLA3pDL9lVRO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NjlCj8kT; arc=none smtp.client-ip=209.85.222.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-307c13298eeso56278541fa.0;
-        Mon, 24 Mar 2025 14:17:22 -0700 (PDT)
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c3c4ff7d31so611618485a.1;
+        Mon, 24 Mar 2025 14:33:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742851041; x=1743455841; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EYXS49vIEDNmzWn2U+P9XyZXY3qP7ZlhbLU+6p87r2o=;
-        b=Lt+n+2x1uzJU6vTSsj+1J67kBz7mf6egu3vqh8K4kDDTJi+oH1/H+xFzgiqJVwjggi
-         dciKeUUkly+cp6JIwY/1L4lsfj4Tj87iNcxHFMhAN7ejbKtLP95bpy18lZu6Ff/y8K/v
-         lcZTUkXb81vM2fsX3kr6fvWBuaxX6jHsNAXFycCj0kiI96a3S/77y0N0cQKO2hU1awTD
-         BkVWfImv0vLRwty30dx/tXToIrc3i3BQo1gwBBAAmHMGUuIBSqOC7+zNp+4shxaZy7us
-         koCQU7dG/mwxKDIOZ5C0Qp4wZXCovvBMPlx6A5MaJmjLxd1okoro+TJgA7/5Uzp/9cbe
-         fj4Q==
+        d=gmail.com; s=20230601; t=1742852036; x=1743456836; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=834hiSajVAxpAwnwfhaB+tqjUdT7ypFb+TjM58nDriM=;
+        b=NjlCj8kTUfzVsuBfWL4Xv3fKpPW4yDWvo/zBu/4/+sHfxk6KboTBretr95Tzw2NdcW
+         keFb1QOo2do/TC2I7UaNwBOj6z0OsvtNlh7yj/Jq7NXtAoVmJGsvWTnVQGEm8W5YACiz
+         P5d6AV1sPrylQ9IWpfgPvUx4y9CAdvPsmTAzZDyqjKyYnZzz/Rgm+/Jloc1XXsPNnEcL
+         OH7jjyw2wE3dLpY9NiJhfrA4HxYz4r+/7aDF9xLLDSrONg9Ug4u8nbHMN2TqJ7gsG6Q6
+         1eQQFB8H4qn7FuHe58Zo2u7meZGeLDoFIcnz/xIRQ2on0OxeRcoqm1apbPMPbBf9NyLt
+         oQRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742851041; x=1743455841;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EYXS49vIEDNmzWn2U+P9XyZXY3qP7ZlhbLU+6p87r2o=;
-        b=lai+rWBo8PQ/YXVeJSH75Y0Asigmw/b/jcYYZnKONT+48uXcs+oc12r3NX8R9mwJ86
-         ji+GpAHbdKoNVGqYjuRE8vWUF9ySOUbnCZr+dBX9MY0e3ECdmx9vcWTz16AvxfnlnwOw
-         2XqvRE1VwTljWM8tp97nhFpC+qmRSqmxtg7tPTDptLmb3tZQjk2TX0rAmrsxWOcR3cDD
-         WpFV7XjqOGuNIdKaBhaKIcoZ7b3mX7gK0JLX+rmnuw7eTIyOUtnLnKXvC33Tssua1EyD
-         m/HwfWA5B8ejHH6PWBZwuneNLb6Z6TYj2O5fEXobtYhtFlOA6eiB0lLkKB64jLXGqOLx
-         5GiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFJFwUx2q5a4usmOV6rU6UR62+WHLiqrcyQqdcmtj55guiWNi4cPyfe0vsynlLs+GnDkhVx1VbcB/MHYoo@vger.kernel.org, AJvYcCVhRmsUouKLh5C6zo/N8gmwH5f9qHUxogFmtKlNx8in/ppBz1DkVFq1cOlqVAFwgxYvfQsAUVB7oXtYRJE=@vger.kernel.org, AJvYcCW0N7Q5ZaZPi6Vy6C1gf+mgF2+zzRS9yQHZ5JUt9lIPQvKWINKF/J5VWsj24gnFDw/xVMq8as4elY8XsUbiNqcf@vger.kernel.org, AJvYcCW2JV0pckEJztaJc0rh+jntFgG75+orU4Uc7EWSxIzAUKJd6vwqZqsSi0u7skUkHy5z8z5tVGYHVsj1KfoUTlQ=@vger.kernel.org, AJvYcCWKPF5+qLtVwb6WJZJwYbjhg/vs18VlruRf3ec+C33JkoViZG/Yjie8vnIuBvk58qf19YZ5QQCV380sBVdn@vger.kernel.org, AJvYcCWvGxy3C3KklU2hk1sQ63FL0Tw+1y9EkkX7XjI0CbrY00+0EiGQ70lV21IbWVgXXXluhLEAOTaiU+jQ@vger.kernel.org, AJvYcCX/beTF1LvNkyVfTFZcEZtSXE+X+VgpW5ecwXZtl0xvGjRss3gGQCGHAddThyLS92+PX5hBwe3p2Y5s@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNiBRKDHtRhIBee5w0r0Tl+Lqj0nFA/nTOR9LTD6FFWLa/wiTy
-	e9FukQl0bYETNh0GWBh+QsFQdHr59QL+/xFiTcGoZTpEWEfpUG3Hq9kRnvcaxd1/K8n3zNvYm1T
-	HVfUb9jVZa2jkZvJqKF9egy93L8I=
-X-Gm-Gg: ASbGnctkwNrbiDimhgzCuH9VJ4/Ul+2lvpX1l8v3M6L0qhFUWTqNbmpk1AKHu8kjX14
-	bS+ugogq2CrsCbZBHlqX/Ah99+jYLkbkksrrNJ8bKzjgG36sBmm68p3taNZ5iYshE2RJdOw9EpO
-	PoD3vDaGgU0Z2W1czXV/9H1zIETxPNYDqaxrmOWLCUHgTN4knv05dr
-X-Google-Smtp-Source: AGHT+IFemchRnvUtUnQdwA3lXtxBXWGiiZIc1P9OgZ5X2p7jXeRSRDnG1ubs4vpNnHeVQo5SmtDh6lQfHRsYzcQX2JI=
-X-Received: by 2002:a2e:5152:0:b0:30b:9793:c1f6 with SMTP id
- 38308e7fff4ca-30d727b90d4mr70615511fa.17.1742851040590; Mon, 24 Mar 2025
- 14:17:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742852036; x=1743456836;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=834hiSajVAxpAwnwfhaB+tqjUdT7ypFb+TjM58nDriM=;
+        b=P7BZfpLRI04elyl+neUPAnuW3uDuvNu74YORzYkvlw4FWlkRB9fSd9tZDJ4iayhNeO
+         Z5vDvACzrxceR5ncbOEXH+Cwkr4Cn+eAjElTvukR5j/OBc/3Im/MviqdcPmslnl2JgrE
+         HB+5vao91caXKU8QxKyjOXF0/pot2gTwaU8hiFALfwO6f31ACoOtejoYPpN5ZXnF1wII
+         nZePfLoWKuUWNwGr+87N/x9KtfW5jfpWVbjl0zuaP5SCUBwDRpE7DlRmeTd+BvJ8z0Ut
+         yDcBq68aAipwQ4w2Im7C9PsdtljXEt4BCuLiZhDmwNvURsjlK00s1jiP8Or0r6vAeTdC
+         LUfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUT60KacA3yY6C3WNd/aqzKAAqwBVqWhlVYtn4EBfQNjuheofzC2BJhcvPjw01kBpi2yg1f3o1F/FLW@vger.kernel.org, AJvYcCVHKN9NjGhEmwafsUH4po02UE9dRYAO/+MPPpDACoVqUoKlIK0PFcuWgUVPEuQqT6N1qp+cnOkRbQXsfxc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7oarvT2AqfDstB04VExXTf28mB6kqURqW8QysZf4d9Ie5/WWg
+	46U58xg36dc/ZD3OYvGX0cjHz+pHzNXD5yTZ7VCS1ovOhikKVUe4
+X-Gm-Gg: ASbGnctL1FkYvTQJdC2DzO2lfUf/sbidC+pfI72hNyE9FHqfL2eXKBIf1gOvJ+YNhmm
+	C2SoW3vgQPSyrudIcEd/1W2UHTHYFm4kPmf4/Nlt+BlM2Tos+eHHvUPAmiBWub6ffziPEDsGSwx
+	YE90WR1bUy4MgbUxigEiDpBc2USDNOJpRPYeOuB41bbP10L47sXzbeJsUeDy3SK5c8YZwAI8nyA
+	wvaXeBjvoy//M9F2n4/WHKDg84aMomLIVjrMli+3C3kamPnowfpxnwvrFL7qvj8ez1ZFv/Vxbhr
+	0ruKP7gtEyzw4f2THLzjEDiMK0v0L0iEIT/qsbAnXZGVmwzoWUtnN58EBeZUbCJdKXPjmnrAW3H
+	yP0mpVU23UCRS6w5WTBRCFE0XBMLM2uWvKF3ewK2kHEI0rzGIzndGMQ==
+X-Google-Smtp-Source: AGHT+IFjk+x/dtk5BqihRe8E5S77EDc9lk2a+QfbsXPjiFFYwfARaTe/NB9jnfhThMb3t0ViuBcEpQ==
+X-Received: by 2002:a05:620a:269a:b0:7c5:3c0a:ab78 with SMTP id af79cd13be357-7c5ba14428dmr1679197785a.14.1742852035957;
+        Mon, 24 Mar 2025 14:33:55 -0700 (PDT)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:43c7])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5d7eb96fesm63232185a.90.2025.03.24.14.33.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 14:33:55 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH 0/5] rust: list: remove HasListLinks::OFFSET
+Date: Mon, 24 Mar 2025 17:33:42 -0400
+Message-Id: <20250324-list-no-offset-v1-0-afd2b7fc442a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
- <D8ORTXSUTKGL.1KOJAGBM8F8TN@proton.me> <CAJ-ks9n-z0SETz+zBfJmda6Q_vJDeM2jmDXx48xX9qpMmR-mdQ@mail.gmail.com>
-In-Reply-To: <CAJ-ks9n-z0SETz+zBfJmda6Q_vJDeM2jmDXx48xX9qpMmR-mdQ@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 24 Mar 2025 17:16:44 -0400
-X-Gm-Features: AQ5f1JrYruUbmO7kdKShDjP9Q62aedchRve93iCWOuc9o-zH3uTyfNH-6OBBv78
-Message-ID: <CAJ-ks9=sGRYAEs4eBCqwHPTvfL6Fa4_3fcrXCohHp6PsJsM1Fw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] rust: reduce pointer casts, enable related lints
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALfP4WcC/x3MQQqAIBBA0avIrBsoy6CuEi3MxhoIDScikO6et
+ HyL/zMIJSaBUWVIdLNwDAVNpcDtNmyEvBaDrrWpW93hwXJhiBi9F7pw6Mn3xi3aDgZKdCby/Pz
+ DaX7fD4BeAcNgAAAA
+X-Change-ID: 20250324-list-no-offset-96ef65cb2a95
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-On Mon, Mar 24, 2025 at 4:55=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> On Mon, Mar 24, 2025 at 4:16=E2=80=AFPM Benno Lossin <benno.lossin@proton=
-.me> wrote:
-> >
-> > On Mon Mar 17, 2025 at 3:23 PM CET, Tamir Duberstein wrote:
-> > > This started with a patch that enabled `clippy::ptr_as_ptr`. Benno
-> > > Lossin suggested I also look into `clippy::ptr_cast_constness` and I
-> > > discovered `clippy::as_ptr_cast_mut`. This series now enables all 3
-> > > lints. It also enables `clippy::as_underscore` which ensures other
-> > > pointer casts weren't missed. The first commit reduces the need for
-> > > pointer casts and is shared with another series[1].
-> > >
-> > > The final patch also enables pointer provenance lints and fixes
-> > > violations. See that commit message for details. The build system
-> > > portion of that commit is pretty messy but I couldn't find a better w=
-ay
-> > > to convincingly ensure that these lints were applied globally.
-> > > Suggestions would be very welcome.
-> >
-> > I applied the patches to v6.14-rc7 and did a quick pass with
+The bulk of this change occurs in the last commit, please its commit
+messages for details. The first commit exists in 2 other series but was
+picked into this series to allow using `container_of!` without the need
+to cast from `*const Self` to `*mut Self`.
 
-So I rebased this on rust-next and fixed a few more instances (in
-addition to enabling the extra lint), but I realized that rust-next is
-still based on v6.14-rc5. I think we're going to have the same problem
-here as in the &raw series; either Miguel is going to have to apply
-fixups when picking these patches, or we have to split the fixes out
-from the lints and land it over several cycles. Thoughts?
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Tamir Duberstein (5):
+      rust: retain pointer mut-ness in `container_of!`
+      rust: list: simplify macro capture
+      rust: list: use consistent type parameter names
+      rust: list: use consistent self parameter name
+      rust: list: remove OFFSET constants
+
+ rust/kernel/lib.rs                     |   5 +-
+ rust/kernel/list.rs                    |  18 +++--
+ rust/kernel/list/impl_list_item_mod.rs | 128 +++++++++++++++------------------
+ rust/kernel/pci.rs                     |   2 +-
+ rust/kernel/platform.rs                |   2 +-
+ rust/kernel/rbtree.rs                  |  23 +++---
+ 6 files changed, 81 insertions(+), 97 deletions(-)
+---
+base-commit: 28bb48c4cb34f65a9aa602142e76e1426da31293
+change-id: 20250324-list-no-offset-96ef65cb2a95
+
+Best regards,
+-- 
+Tamir Duberstein <tamird@gmail.com>
+
 
