@@ -1,259 +1,163 @@
-Return-Path: <linux-pci+bounces-24664-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24665-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2386DA6FAF3
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 13:18:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 988E1A7013A
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 14:21:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36AF617141D
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 12:17:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ECC353BED0F
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 13:09:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F7CD2580C3;
-	Tue, 25 Mar 2025 12:16:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0F0A29CB2F;
+	Tue, 25 Mar 2025 12:36:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="extbD/m+"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="R6aoxlLP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA8302580CB;
-	Tue, 25 Mar 2025 12:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE7529C357
+	for <linux-pci@vger.kernel.org>; Tue, 25 Mar 2025 12:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742905019; cv=none; b=dPWbY2mIEsiMwxCTUZBKwC27LkJlH8EgHCH2Hbm11tGi2s/32MGbJE0+PM/am8gyDCJ9STcELW3YF1El6ovGgXo0X9CwOkjxVrcSdimEvOsOoaQl3G8kGtaZiq9dKjDPZxgOHgQn5BDjQF8woIDZ8J2n3eP9WzJggBffFNZCK28=
+	t=1742906202; cv=none; b=uXH8yIYDJhnQTQ8x49cO90E5jy+Kn0P7Cny0QKeq5XOzlFLrG6GMLkkxbH4GclpzNlMQbN8DhwvvW3sfEy7SWwOej4d3s1mdek/Q5oxu3WTeZL9b1VVsHHevz6Qt4RiJwQxdI51U8SybzFapzyqgv+UMkkgy3GE32vU6RzCUIwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742905019; c=relaxed/simple;
-	bh=NcEPb55Rco6EjfgmgRqxo9YOOSFOucPfaWT3g07OCLY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IfTsWsSSKZM5Aern4xrVyETbzwOrZBkxInhKSCm1mQdMiSN9z/O+5HWGLj34BA7fP+ucUaqPerR14pQyHmSXPZysUwZ80qPEAlP1eYwAOT1YRvR66OxilDnjogsvRiuPkeZJRa0z4WZsJxsWXECnK8olwSev/WW+BSq9evQJtKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=extbD/m+; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=rnao7tYHGP/XCO8pJr95a8UIsRVe2QvBuKZ594nf8Qk=;
-	b=extbD/m+mQB7gssuj51WZuVMW15Wa1YryIk/AwXIPLk5lENT7oDHlrFT5CJkcP
-	Wm8asJYT4MpshdvzBOkX/jzuyBRmmhT7v+hLw6SvJgdsiyhdBQgzS7vLKu/1MV86
-	yszyV/lg6CcyIo7sntPHehSHsAqY0/fH0G9ZfAm5M+dhU=
-Received: from [192.168.60.52] (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3n1SJnuJnE9JrBw--.50275S2;
-	Tue, 25 Mar 2025 20:16:11 +0800 (CST)
-Message-ID: <f2725090-e199-493d-9ae3-e807d65f647b@163.com>
-Date: Tue, 25 Mar 2025 20:16:09 +0800
+	s=arc-20240116; t=1742906202; c=relaxed/simple;
+	bh=kF/4SP83eP8Xbwc4RoYXxSygK8pZn4d3t2Dba+Ka8B8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aIxl3s1BETCyNnOlwYouZz7WwYXHan81bXGgSk5xTOCD0/hJNWETV2G6stA9EP2Wpcyo/fXwxGEzsZQo0FfyrAbTybSujTzvrixuQo7n3vrYZLuueetCe83GJzE8uYVom7Q1RHuNW01LmfynJ+8S52bxlNuYAOGZjfehkrdx2hY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=R6aoxlLP; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-477296dce76so30549621cf.3
+        for <linux-pci@vger.kernel.org>; Tue, 25 Mar 2025 05:36:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1742906199; x=1743510999; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kF/4SP83eP8Xbwc4RoYXxSygK8pZn4d3t2Dba+Ka8B8=;
+        b=R6aoxlLPQAkjRJPVn6UQKY+axJtOgCb9opi7uMwdqzSxq6yDpzVJboXoMURzqFNmXG
+         L4O6evUJSpFvB1ok/nkAvZ2ctxsJoJGXuCD5Hfcl44KP64YYXU13GEP0YO8Nau/AluDo
+         dwmvpAQBTe1LqtUycADgDK7X5PVMkLiTdnUNXX0D9l0eroks0GyGaEG2e0DV8VX4ddgC
+         7zSjqhv0fWoL3gPf+VGU1+rXRM5Nwx0srQafUgfbqXPk3xjimSWRPzLHwxPFJ/VzIJm8
+         styI2AyIntvNjgTTu1Uz79TV7Z9P2nkoB/bDnkzGibSm9AMzCtsSkHlsSbxQRi2emnYn
+         A+Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742906199; x=1743510999;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kF/4SP83eP8Xbwc4RoYXxSygK8pZn4d3t2Dba+Ka8B8=;
+        b=qQKGiYs8+rApxFcevQlbJCfKQB/SxQ5aSrBIFuxUx9yhxO9xIkdNWje318ebolBZDL
+         dfuFmD/awdcFkSlGGwzxL8Yptakza1KiSK8OSWYEoZm43QhoFEUVNybfn9JhE5JVBbxN
+         DrzxUG6tGaRQMO8h1fhWw9JprjfLYNtm0W6ZZ4ENxkflurOSrxPQxs2BgFHm0LRPf/LI
+         w3pMm8njorpXuqz4qq27WdFLXrmZGnmdOtasmSszmQ48HDs9pc9leUAttROmCqTyNVL6
+         GJ3mJJPIyKOYbakiEYIntGzxt0CTgmkOKya5YeHN0cfZe6W3JPRwUOYWD/BXdQxuWkui
+         r0vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+ev1yDH/E6tXZ9VAYax3Lflfh8MmhtcjTcqnSZ8tr8uJru+DYzsBF/OMyct7VO2ncDCtDoU2aJVY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMKycoZIi7r9rYkOyO03w08aUw6ByqoLsRfR7UkCjBssf1yN1/
+	ghYJR4GC0bsqngWvrV910ADG+uA1fJ0xnE1eGnuOqfUJCPtQlfO+xcj+GQ5CgBM=
+X-Gm-Gg: ASbGnct1Hwv2FQdVZkLT+4AEAmXILzo5fbE+6VEmfeP7KVeLX+fcvZUlFgSCjro2kp7
+	XWcirJBtmjiGEAMSZKEYfYACS6iKlu+Dy2YYRFzDJjPcdiD/59SAebb7lYlnZwlxhRtSweJTUkA
+	oOrnWkqB28a2AAF0V28QLfRwFRn9fcuScUjvziJbxezDpiLto4ThNSQaHWOawtgixI6KYo+OkSv
+	9Rnnqz9O4Dradf6TiqVnVhq04Aob9iyxmOmA1QD9ci8IO6ie5ma8bFqfQpGa4dkqPgH+vD1ywZq
+	iVkglwIzCAy9+Om9dA==
+X-Google-Smtp-Source: AGHT+IFaGG2Y6kZs0f1G4EEOh4+V+xY6UlM60nMPDSox/R89SepA61uky3NuOhrbXo7zMnxqikKbBQ==
+X-Received: by 2002:a05:622a:4106:b0:477:cc4:cb76 with SMTP id d75a77b69052e-4771dd54452mr310138501cf.3.1742906199124;
+        Tue, 25 Mar 2025 05:36:39 -0700 (PDT)
+Received: from ziepe.ca ([99.209.85.25])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4771d63597dsm59500991cf.71.2025.03.25.05.36.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 05:36:38 -0700 (PDT)
+Received: from jgg by jggl with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tx3WH-0003AX-NS;
+	Tue, 25 Mar 2025 09:36:37 -0300
+Date: Tue, 25 Mar 2025 09:36:37 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Leon Romanovsky <leon@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
+Message-ID: <Z+KjVVpPttE3Ci62@ziepe.ca>
+References: <cover.1738765879.git.leonro@nvidia.com>
+ <20250220124827.GR53094@unreal>
+ <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
+ <20250302085717.GO53094@unreal>
+ <e024fe3d-bddf-4006-8535-656fd0a3fada@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v6 3/5] PCI: cadence: Use common PCI host bridge APIs for
- finding the capabilities
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
- thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20250323164852.430546-1-18255117159@163.com>
- <20250323164852.430546-4-18255117159@163.com>
- <f467056d-8d4a-9dab-2f0a-ca589adfde53@linux.intel.com>
- <d370b69a-3b70-4e3b-94a3-43e0bc1305cd@163.com>
- <a3462c68-ec1b-0b1a-fee7-612bd1109819@linux.intel.com>
- <3d9b2fa9-98bf-4f47-aa76-640a4f82cb2f@163.com>
- <26dcba54-93c1-dda4-c5e2-e324e9d50b09@linux.intel.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <26dcba54-93c1-dda4-c5e2-e324e9d50b09@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3n1SJnuJnE9JrBw--.50275S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Gw1UAFy5WF1xCryUZw4Dtwb_yoW7ur1xpF
-	W5tF15KF4kJr47Grn2va1FqF1ayr90yFy5X34kG34UZwn093WfGFWqkay5CFn7CFs7Jr1j
-	qayjqr93ur90yaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07ULzV8UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxUbo2fim2FegAAAsD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e024fe3d-bddf-4006-8535-656fd0a3fada@arm.com>
 
+On Fri, Mar 21, 2025 at 04:05:22PM +0000, Robin Murphy wrote:
 
+> What everyone seems to have missed is that while it is technically true that
+> the streaming DMA API doesn't need a literal struct page, it still very much
+> depends on something which having a struct page makes it sufficiently safe
+> to assume: that what it's being given is valid kernel memory that it can do
+> things like phys_to_virt() or kmap_atomic() on.
 
-On 2025/3/25 19:15, Ilpo Järvinen wrote:
-> On Tue, 25 Mar 2025, Hans Zhang wrote:
->> On 2025/3/24 23:02, Ilpo Järvinen wrote:
->>>>>>     +static u32 cdns_pcie_read_cfg(void *priv, int where, int size)
->>>>>> +{
->>>>>> +	struct cdns_pcie *pcie = priv;
->>>>>> +	u32 val;
->>>>>> +
->>>>>> +	if (size == 4)
->>>>>> +		val = readl(pcie->reg_base + where);
->>>>>
->>>>> Should this use cdns_pcie_readl() ?
->>>>
->>>> pci_host_bridge_find_*capability required to read two or four bytes.
->>>>
->>>> reg = read_cfg(priv, cap_ptr, 2);
->>>> or
->>>> header = read_cfg(priv, pos, 4);
->>>>
->>>> Here I mainly want to write it the same way as size == 2 and size == 1.
->>>> Or size == 4 should I write it as cdns_pcie_readl() ?
->>>
->>> As is, it seems two functions are added for the same thing for the case
->>> with size == 4 with different names which feels duplication. One could add
->>> cdns_pcie_readw() and cdns_pcie_readb() too but perhaps cdns_pcie_readl()
->>> should just call this new function instead?
->>
->> Hi Ilpo,
->>
->> Redefine a function with reference to DWC?
-> 
-> This patch was about cadence so my comment above what related to that.
-> 
+No one has missed this, we are not yet at the point of implementing a
+non-struct page PFN only path. That is going to be a followup series,
+and yes there are going to need to be some cases where DMA will get
+EOPNOTSUPP. You can't swiotlb something without a kmap, or MMIO for
+instance.
 
-Hi Ilpo,
+> efficiently. And pushing the complexity into every caller to encourage and
+> normalise drivers calling virt_to_phys() all over (_so_ many bugs there...)
 
-Thanks your for reply. Let's look at the main problem first.
+That is unlikely to be how things end up.
 
->> u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size)
->>    dw_pcie_read(pci->dbi_base + reg, size, &val);
->>      dw_pcie_read
->>
->> int dw_pcie_read(void __iomem *addr, int size, u32 *val)
->> {
->> 	if (!IS_ALIGNED((uintptr_t)addr, size)) {
->> 		*val = 0;
->> 		return PCIBIOS_BAD_REGISTER_NUMBER;
->> 	}
->>
->> 	if (size == 4) {
->> 		*val = readl(addr);
->> 	} else if (size == 2) {
->> 		*val = readw(addr);
->> 	} else if (size == 1) {
->> 		*val = readb(addr);
->> 	} else {
->> 		*val = 0;
->> 		return PCIBIOS_BAD_REGISTER_NUMBER;
->> 	}
->>
->> 	return PCIBIOS_SUCCESSFUL;
->> }
->> EXPORT_SYMBOL_GPL(dw_pcie_read);
->>
->>>
->>>>>> +	else if (size == 2)
->>>>>> +		val = readw(pcie->reg_base + where);
->>>>>> +	else if (size == 1)
->>>>>> +		val = readb(pcie->reg_base + where);
->>>>>> +
->>>>>> +	return val;
->>>>>> +}
->>>>>> +
->>>>>> +u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
->>>>>> +{
->>>>>> +	return pci_host_bridge_find_capability(pcie,
->>>>>> cdns_pcie_read_cfg, cap);
->>>>>> +}
->>>>>> +
->>>>>> +u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap)
->>>>>> +{
->>>>>> +	return pci_host_bridge_find_ext_capability(pcie,
->>>>>> cdns_pcie_read_cfg,
->>>>>> cap);
->>>>>> +}
->>>>>
->>>>> I'm really wondering why the read config function is provided directly
->>>>> as
->>>>> an argument. Shouldn't struct pci_host_bridge have some ops that can
->>>>> read
->>>>> config so wouldn't it make much more sense to pass it and use the func
->>>>> from there? There seems to ops in pci_host_bridge that has read(), does
->>>>> that work? If not, why?
->>>>>
->>>>
->>>> No effect.
->>>
->>> I'm not sure what you meant?
->>>
->>>> Because we need to get the offset of the capability before PCIe
->>>> enumerates the device.
->>>
->>> Is this to say it is needed before the struct pci_host_bridge is created?
->>>
->>>> I originally added a separate find capability related
->>>> function for CDNS in the following patch. It's also copied directly from
->>>> DWC.
->>>> Mani felt there was too much duplicate code and also suggested passing a
->>>> callback function that could manipulate the registers of the root port of
->>>> DWC
->>>> or CDNS.
->>>
->>> I very much like the direction this patchset is moving (moving shared
->>> part of controllers code to core), I just feel this doesn't go far enough
->>> when it's passing function pointer to the read function.
->>>
->>> I admit I've never written a controller driver so perhaps there's
->>> something detail I lack knowledge of but I'd want to understand why
->>> struct pci_ops (which exists both in pci_host_bridge and pci_bus) cannot
->>> be used?
->>>
->>
->>
->> I don't know if the following code can make it clear to you.
->>
->> static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
->> 	.host_init	= qcom_pcie_host_init,
->>                    pcie->cfg->ops->post_init(pcie);
->>                      qcom_pcie_post_init_2_3_3
->>                        dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->> };
->>
->> int dw_pcie_host_init(struct dw_pcie_rp *pp)
->>    bridge = devm_pci_alloc_host_bridge(dev, 0);
-> 
-> It does this almost immediately:
-> 
->      bridge->ops = &dw_pcie_ops;
-> 
-> Can we like add some function into those ops such that the necessary read
-> can be performed? Like .early_root_config_read or something like that?
-> 
-> Then the host bridge capability finder can input struct pci_host_bridge
-> *host_bridge and can do host_bridge->ops->early_root_cfg_read(host_bridge,
-> ...). That would already be a big win over passing the read function
-> itself as a pointer.
-> 
-> Hopefully having such a function in the ops would allow moving other
-> common controller driver functionality into PCI core as well as it would
-> abstract the per controller read function (for the time before everything
-> is fully instanciated).
-> 
-> Is that a workable approach?
->
+> and pass magic flags to influence internal behaviour of the API
+> implementation clearly isn't scalable. Don't think I haven't seen the other
+> thread where Christian had the same concern that this "sounds like an
+> absolutely horrible design."
 
-I'll try to add and test it in your way first.
+Christian's perspective is thinking about DMABUF exporters using CPU
+PFNs to mmap them to VMAs. Which is a uniquely DRM API abuse.
 
-Another problem here is that I've seen some drivers invoke 
-dw_pcie_find_*capability before if (pp->ops->init) {. When I confirm it, 
-or I'll see if I can cover all the issues.
+I think everyone who has really dug into this stuff understands that
+the driver that is going to perform the DMA should be the one to do
+the DMA mapping. It makes little sense for the driver providing the
+memory to do the DMA mapping on behalf of the driver programming the
+HW for DMA.
 
-If I pass the test, I will provide the temporary patch here, please 
-check whether it is OK, and then submit the next version. If not, we'll 
-discuss it.
+Regardless it doesn't really change this series as the same DMA API
+interface to the driver is required to do the work. It doesn't matter
+if the DMABUF API puts the calls on the exporter or importer side of
+it's API.
 
-Thank you very much for your advice.
+> So what is it now, a layering violation in a hat with still no clear path to
+> support SWIOTLB?
 
->>    if (pp->ops->host_init)
->>      pp->ops = &qcom_pcie_dw_ops;  // qcom here needs to find capability
->>
->>    pci_host_probe(bridge); // pcie enumerate flow
->>      pci_scan_root_bus_bridge(bridge);
->>        pci_register_host_bridge(bridge);
->>          bus->ops = bridge->ops;   // Only pci bus ops can be used
->>
->>
+I was under the impression Leon had been testing SWIOTLB?
 
+What does "no clear path to support SWIOTLB" mean?
 
-Best regards,
-Hans
-
+Jason
 
