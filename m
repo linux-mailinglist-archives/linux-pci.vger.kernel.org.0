@@ -1,193 +1,162 @@
-Return-Path: <linux-pci+bounces-24674-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24675-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB24BA70432
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 15:49:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5FC01A70443
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 15:51:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A2B263AAD72
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 14:48:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F1D9F3AD968
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 14:50:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2DE825A34E;
-	Tue, 25 Mar 2025 14:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 494B725B691;
+	Tue, 25 Mar 2025 14:50:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UV/YGwZH"
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="zzqb1WC5"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8896198A29;
-	Tue, 25 Mar 2025 14:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73F125A34E
+	for <linux-pci@vger.kernel.org>; Tue, 25 Mar 2025 14:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742914106; cv=none; b=Iz8EHeeBMEmp7F4h4/GlkHX1WsI99AHTRKdfgxvRjghguyizzw1gmslKAopuvlbZXXea9dH1Y6fz8H+XmJF51hpkoFyTu/gjsSgW653jjAfFojlKHkEjtkqHnluZhyOkaZkNoAT85/Xlt1mk3h8dmL4tk542HusjpIW2P+sTBdE=
+	t=1742914214; cv=none; b=oG6A3iYSAm4KEG91EtDjZh3Y1pLHk/O4iGCeQyIEkH5P5NcjYZ8urh7ATw8R5Ft0oAmGzyju76MCw7yKzpMW3bsfHkSv0uzNQ5qLpUvRtnpcWcNEiVmXmBRQJiZs9IZNdtsVSpWX9jFg4EWFAwok2+1gFtN8rmpkcBU36Ql62eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742914106; c=relaxed/simple;
-	bh=9+2Uh/BLViIs+1GHNo/s+KKopYxrsV6VsqfGI5tmUfk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Ycyob5aARveP3gMBdjOB8j2wtRUhhCLE8RNthNXZpf9cweqpUykVBH/uGYyVMD4Tnj1+rKA6URt4zEjQeSK71o2fh7U7ZFJnE7PMl5kBud4AyG+X3nTxjQahgoXSYArG3P89kl8Z/e5wwh8wReLHAd/ENsVo+dzdON1VCBCAvug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UV/YGwZH; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=txp6lf9K0o1E/un52ErXwYWFA2aX9m0KATXJ22mjZqg=;
-	b=UV/YGwZHERd+GITRKoypcpDEVAC+YcbpU0KN2MM3mdleF02gWUeAMo+2jn3glV
-	pYiyreE9/fedampuGZbJZxqXYAYMIsNLnAtBI1U/teozyUKeHMnI7VhHPxQ4rF5Z
-	GzjXJVo/BCokahWMTNccVuyu1SHxL7S57/jBBpcRm5gMk=
-Received: from [192.168.60.52] (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wCHrnEOwuJn_ts_Bw--.57661S2;
-	Tue, 25 Mar 2025 22:47:42 +0800 (CST)
-Message-ID: <de6ce71c-ba82-496e-9c72-7c9c61b37906@163.com>
-Date: Tue, 25 Mar 2025 22:47:42 +0800
+	s=arc-20240116; t=1742914214; c=relaxed/simple;
+	bh=m7HQhF5BiFf2it3+1htvmzKPX6UTZZRd8NpKtEuonqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jp5MXLzwIabYV6qeCN6drCyzNhxckBekwTgCxYJxqhIxSBexjsWuPeRaHqzc3cR2rXWZj7GLdIjcZdbzFLxJKGBPLB3Dxk4PwfxiWFuxDWG8Ty8gANEQ7+yY/fNFj0GP7iPsMx0EONy1XsUqJSOuYwnkQg7SO1AWXUEhlYkWxdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=zzqb1WC5; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+Date: Tue, 25 Mar 2025 10:50:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1742914208;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gxsCj8x2vFQrcLLWFmNKJpZcqjgp3XJqcW6qauCB4FA=;
+	b=zzqb1WC5mW/N93G+IA36ptJrmluUMrAolvskNckn8WdmMuDcfjMmOZ4s0L9uEMMgxny1Xi
+	Rs0VEUclMgOXGoF7NG6rbDVMQSixECvz7Gatq5IUPuzBPuEy1Fos2xgr+qKDCE/35XTMAY
+	/24eng98nUsPF/2WXuCjwjDY+1LTbIiADYzZr07aD+SOWFGEl+h43jWvZNBe6SwZcwEN2z
+	EOE/qP8sjVd0Y7ZZ7DLjr4nCZVgG1vcdpWR5Vt9VXD8sj9nvYFlxhqthGxZgZBJOBQObV8
+	aUgMD8Mo1hMeQVhBFYBlAN5BbTHVT3690SGmGjo3P97vWiQW34bJ8s+dlmOgGg==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	asahi@lists.linux.dev, Janne Grunau <j@jannau.net>,
+	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH v2 00/13] PCI: apple: Add support for t6020
+Message-ID: <Z-LCm_XI22kNvFx9@blossom>
+References: <20250325102610.2073863-1-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v6 3/5] PCI: cadence: Use common PCI host bridge APIs for
- finding the capabilities
-From: Hans Zhang <18255117159@163.com>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
- thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20250323164852.430546-1-18255117159@163.com>
- <20250323164852.430546-4-18255117159@163.com>
- <f467056d-8d4a-9dab-2f0a-ca589adfde53@linux.intel.com>
- <d370b69a-3b70-4e3b-94a3-43e0bc1305cd@163.com>
- <a3462c68-ec1b-0b1a-fee7-612bd1109819@linux.intel.com>
- <3d9b2fa9-98bf-4f47-aa76-640a4f82cb2f@163.com>
- <26dcba54-93c1-dda4-c5e2-e324e9d50b09@linux.intel.com>
- <f2725090-e199-493d-9ae3-e807d65f647b@163.com>
-Content-Language: en-US
-In-Reply-To: <f2725090-e199-493d-9ae3-e807d65f647b@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCHrnEOwuJn_ts_Bw--.57661S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGFykArW5Jr45KFy8tryxXwb_yoWrJF1kpa
-	yY93W7Kr4kJr43Cr1IvF48tF12yrZ0yrW5Xw1DJryUZw1q93W0gFZrCryjkFnrAF4rtF1j
-	qa1Yqryxur98AaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UBrWwUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhAbo2fivrtfRQAAsI
+In-Reply-To: <20250325102610.2073863-1-maz@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
+Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 
+Thanks maz!
 
-On 2025/3/25 20:16, Hans Zhang wrote:
->>>>>> I'm really wondering why the read config function is provided 
->>>>>> directly
->>>>>> as
->>>>>> an argument. Shouldn't struct pci_host_bridge have some ops that can
->>>>>> read
->>>>>> config so wouldn't it make much more sense to pass it and use the 
->>>>>> func
->>>>>> from there? There seems to ops in pci_host_bridge that has read(), 
->>>>>> does
->>>>>> that work? If not, why?
->>>>>>
->>>>>
->>>>> No effect.
->>>>
->>>> I'm not sure what you meant?
->>>>
->>>>> Because we need to get the offset of the capability before PCIe
->>>>> enumerates the device.
->>>>
->>>> Is this to say it is needed before the struct pci_host_bridge is 
->>>> created?
->>>>
->>>>> I originally added a separate find capability related
->>>>> function for CDNS in the following patch. It's also copied directly 
->>>>> from
->>>>> DWC.
->>>>> Mani felt there was too much duplicate code and also suggested 
->>>>> passing a
->>>>> callback function that could manipulate the registers of the root 
->>>>> port of
->>>>> DWC
->>>>> or CDNS.
->>>>
->>>> I very much like the direction this patchset is moving (moving shared
->>>> part of controllers code to core), I just feel this doesn't go far 
->>>> enough
->>>> when it's passing function pointer to the read function.
->>>>
->>>> I admit I've never written a controller driver so perhaps there's
->>>> something detail I lack knowledge of but I'd want to understand why
->>>> struct pci_ops (which exists both in pci_host_bridge and pci_bus) 
->>>> cannot
->>>> be used?
->>>>
->>>
->>>
->>> I don't know if the following code can make it clear to you.
->>>
->>> static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
->>>     .host_init    = qcom_pcie_host_init,
->>>                    pcie->cfg->ops->post_init(pcie);
->>>                      qcom_pcie_post_init_2_3_3
->>>                        dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->>> };
->>>
->>> int dw_pcie_host_init(struct dw_pcie_rp *pp)
->>>    bridge = devm_pci_alloc_host_bridge(dev, 0);
->>
->> It does this almost immediately:
->>
->>      bridge->ops = &dw_pcie_ops;
->>
->> Can we like add some function into those ops such that the necessary read
->> can be performed? Like .early_root_config_read or something like that?
->>
->> Then the host bridge capability finder can input struct pci_host_bridge
->> *host_bridge and can do 
->> host_bridge->ops->early_root_cfg_read(host_bridge,
->> ...). That would already be a big win over passing the read function
->> itself as a pointer.
->>
->> Hopefully having such a function in the ops would allow moving other
->> common controller driver functionality into PCI core as well as it would
->> abstract the per controller read function (for the time before everything
->> is fully instanciated).
->>
->> Is that a workable approach?
->>
+Everything here looks good to me aside from the dt-bindings that I
+screwed up (sorry!). But I didn't do a thorough review.
+
+Le Tue , Mar 25, 2025 at 10:25:57AM +0000, Marc Zyngier a �crit :
+> As Alyssa didn't have the bandwidth to deal with this series, I have
+> taken it over. All bugs are therefore mine.
 > 
-> I'll try to add and test it in your way first.
+> The initial series [1] stated:
 > 
-> Another problem here is that I've seen some drivers invoke 
-> dw_pcie_find_*capability before if (pp->ops->init) {. When I confirm it, 
-> or I'll see if I can cover all the issues.
+> "This series adds T6020 support to the Apple PCIe controller. Mostly
+>  Apple shuffled registers around (presumably to accommodate the larger
+>  configurations on those machines). So there's a bit of churn here but
+>  not too much in the way of functional changes."
 > 
-> If I pass the test, I will provide the temporary patch here, please 
-> check whether it is OK, and then submit the next version. If not, we'll 
-> discuss it.
+> The biggest change is affecting the ECAM layer, allowing an ECAM
+> driver to provide its own probe function instead of relying on the
+> .init() callback to do the work. The ECAM layer can therefore be used
+> as a library instead of a convoluted driver.
 > 
-
-Hi Ilpo,
-
-Another question comes to mind:
-If working in EP mode, devm_pci_alloc_host_bridge will not be executed 
-and there will be no struct pci_host_bridge.
-
-Don't know if you have anything to add?
-
-> Thank you very much for your advice.
+> The rest is a mix of bug fixes, cleanups, and required abstraction.
 > 
->>>    if (pp->ops->host_init)
->>>      pp->ops = &qcom_pcie_dw_ops;  // qcom here needs to find capability
->>>
->>>    pci_host_probe(bridge); // pcie enumerate flow
->>>      pci_scan_root_bus_bridge(bridge);
->>>        pci_register_host_bridge(bridge);
->>>          bus->ops = bridge->ops;   // Only pci bus ops can be used
->>>
->>>
-
-Best regards,
-Hans
-
+> This has been tested on T6020 (M2-Pro mini) and T8102 (M1 mini).
+> 
+> * From v1[1]:
+> 
+>   - Described the PHY registers in the DT binding
+> 
+>   - Extracted a ecam bridge creation helper from the host-common layer
+> 
+>   - Moved probing into its own function instead of pci_host_common_probe()
+>     
+>   - Moved host-specific data to the of_device_id[] table
+> 
+>   - Added dynamic allocation of the RID/SID bitmap
+> 
+>   - Fixed latent bug in RC-generated interrupts
+> 
+>   - Renamed reg_info to hw_info
+> 
+>   - Dropped useless max_msimap
+> 
+>   - Dropped code being moved around without justification
+> 
+>   - Re-split some of the patches to follow a more logical progression
+> 
+>   - General cleanup to fit my own taste
+> 
+> [1] https://lore.kernel.org/r/20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io
+> 
+> Alyssa Rosenzweig (1):
+>   dt-bindings: pci: apple,pcie: Add t6020 compatible string
+> 
+> Hector Martin (6):
+>   PCI: apple: Fix missing OF node reference in apple_pcie_setup_port
+>   PCI: apple: Move port PHY registers to their own reg items
+>   PCI: apple: Drop poll for CORE_RC_PHYIF_STAT_REFCLK
+>   PCI: apple: Use gpiod_set_value_cansleep in probe flow
+>   PCI: apple: Abstract register offsets via a SoC-specific structure
+>   PCI: apple: Add T602x PCIe support
+> 
+> Janne Grunau (1):
+>   PCI: apple: Set only available ports up
+> 
+> Marc Zyngier (5):
+>   PCI: host-generic: Extract an ecam bridge creation helper from
+>     pci_host_common_probe()
+>   PCI: ecam: Allow cfg->priv to be pre-populated from the root port
+>     device
+>   PCI: apple: Move over to standalone probing
+>   PCI: apple: Dynamically allocate RID-to_SID bitmap
+>   PCI: apple: Move away from INTMSK{SET,CLR} for INTx and private
+>     interrupts
+> 
+>  .../devicetree/bindings/pci/apple,pcie.yaml   |  11 +-
+>  drivers/pci/controller/pci-host-common.c      |  24 +-
+>  drivers/pci/controller/pcie-apple.c           | 241 +++++++++++++-----
+>  drivers/pci/ecam.c                            |   2 +
+>  include/linux/pci-ecam.h                      |   2 +
+>  5 files changed, 204 insertions(+), 76 deletions(-)
+> 
+> -- 
+> 2.39.2
+> 
 
