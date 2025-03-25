@@ -1,117 +1,273 @@
-Return-Path: <linux-pci+bounces-24660-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24661-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37867A6EF7E
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 12:12:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1C6AA6F0CC
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 12:16:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A59E1732C9
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 11:10:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B7F63B523E
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 11:15:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8DCD25522B;
-	Tue, 25 Mar 2025 11:10:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD0E5198A29;
+	Tue, 25 Mar 2025 11:15:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VDk63Gtu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qlun8Bqw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA0618E351;
-	Tue, 25 Mar 2025 11:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA062E337C;
+	Tue, 25 Mar 2025 11:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742901037; cv=none; b=sXp4vwkv4fzN9ApR1wM+3TENfbXhdpDsffczrCM9WVnlgKWg4S/utXdSldXE4KqjyASct3BZ848SJ20mVgJ8VmZL5uJ/PC+v05m/FwD07Td+j2iTzy4TxGhTmBf2qGEHaBXtFu9Dv10OTQfV8yhNiFcCP5bUOy0g/tTJ+3GOPRg=
+	t=1742901357; cv=none; b=NV+EIfQvQpe1mGoW1tGFslWzLZ9RHNHe/oQme1DPDK99OrOeWbJwVcv2Oau9AZxvwAEkCmFsdxH5KfGc7VoQJpjPzgZpLMEsNq8Ec1gIkBA5JV/Ly04jdXKXDafPr355SkDvmw+zlXltY3vffzG8lvMh6tfDKxFmclaBZTgd1tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742901037; c=relaxed/simple;
-	bh=52KHnFLo2jgwjIz3u/2IvJMxndBoJ9B+hywEvn+IgVw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SdO3ZgqEOHCtzY5cpdsExJ/+fd+EOESgyN1S/kwzAB0mnkn4JkQsFiSjSj9uu8sXKiy/kwvvQYRwgw4Ze+urcLes+wIxfXZh6jM++FfntrpyK+DX3ZaaTYD3OgohZ8/ezRkD1vMIE2YFkn0s0HYD4KqjcNCxtkvdNgdSe29f42s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VDk63Gtu; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-227e29b6c55so1956155ad.1;
-        Tue, 25 Mar 2025 04:10:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742901036; x=1743505836; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fpjqO8YLYhKVActbTnIJgvSrcw7QxNRRzPXj8z9Z3+o=;
-        b=VDk63GtulAOYXD/vJpLEKwnngE4o2u6huPP9p1TSIrI2qFRdbMDn7UjuvMNZ/J5IbL
-         74mGff6qeKPRUh7R2STMqBnT9NmUeUYvd8QRIVUWeadoRXdWo9mPvrDHdZpVz+P/L//S
-         qhRuW7MLt5uM4xY8npmdtfw70THQOYYC7uV6dy/Yp5pn5rUFGB68vaF/9TE1TtvnHD+y
-         q2NxzeVdSZlB+Gb6ANY5TyFQvMSSztBsMhqPiqZoxvx9mGHuagwChV3p9H5ZJ/iH6QvS
-         UyX6XVLUswyGCR129O+EVnkmsLfOY2cFPXbB5uPuirnQ2AwVTUAD1M67k5d21cvXGS0G
-         Gprw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742901036; x=1743505836;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fpjqO8YLYhKVActbTnIJgvSrcw7QxNRRzPXj8z9Z3+o=;
-        b=n0EktrYkzfBxHZqykwoxx4REXjQIxFayFRr0BaMYygU8vw3a2+BiC+AFKao62h3otE
-         J+PHMJ6RSMdAYMJ1Kv5fNzmhKHgicGUl8AFOrnfVlj0TB2hehAv4Qhpfd6JZuy171YZf
-         +Q3+MoEUVjP5NPeQxhTuwC+e0nTAX2usJq79RekJI1AdthPf5eYsNP1queX6IpmJIOt9
-         lroKh4KvS4jfNiYw5OPY15R2q+m7iizCiJzguNnQ4Ar6rGXiyooykCwutpXPynS5gMiW
-         U2LYCowmvBrOiAu/7svp8P9SBdjm0EU9v8Yov8Qqta+NpZYQgA+z71MmmfzdclGKNF2B
-         oyYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVKESd2Sz0hkrVthGqV43qXPiv4QhIQcZpRG3/tRbUHkRlbZb8+keINoHOvD0tb30gmSMR0sdYVTtaWMQ4TEPN@vger.kernel.org, AJvYcCUYj5lsDhLXpzOCgnxs2hWL6PhcooQMP7JX71jwgIOQuauZr2YWlV5NSu10fnp27mgEtLo3wJbWz6gsgei1@vger.kernel.org, AJvYcCVQk9HZpem8jH4eyoZH0+NlAcCLDxoBUichI+dj4oXVwCFUHntR7SGhpCnhT3/nNS9E2Wj1QB6aIrTpZBhdhXw=@vger.kernel.org, AJvYcCVtRB+nOBsn3YFOtMvkiQ0lFW2qdYQ4fF/iSKNlT24bE9dQVFfv/2ixHzmTY6NkLBfDtq0I8W6rg1VaFFYh@vger.kernel.org, AJvYcCWL398ioetrQb49o+1dEiG/Eg+otblSaHf+hSc7F3/520V+kT3zjgKPGbnS1g/wtkh7wPZf8yeJUYJytVI=@vger.kernel.org, AJvYcCWwq9v+N1+GThNOWiqdDXK3AT83FMp6YLi8XXoBxNXgH8qvuJdgCy9f+NznbV09t7rdGMVBPgzBFg+h@vger.kernel.org, AJvYcCXvOmlYJJQMYJfG7FcfJVtlUwBAfv1PeYE+RE/0vBhGdUHtmbMhkohVGKX5Egn2H4W4PO+xSerFyCpe@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNvyl88/5rnnaXv56Cd6E36l5OekKi3TkV5ymrokHgAOVK4Z3p
-	vXel+OBBhjP+lp2/Q0OnFHuv2cJv5XEmkKBjOeWNe2j81X2K+e7Jx3utq4jz9cZuv/pDG1/Ud4d
-	7e+gNcP2mJA7drNbQZDlcvavdDIc=
-X-Gm-Gg: ASbGncu18vKs7vaXx+XspUVg5LSwnua6+rh3mWZRKWQUTO6rwrU04C6wYPxT/dBFPti
-	2H1UwxAt/eKv1G35I+ralxA/2FsId997VrQzGskoqBBjYuSemTL9OZSu9z0TZYBeRrUAjRFD36P
-	GgfXMKvf/4BhbeqOlMrgOQRTsvbfQ+ZjjPUbES
-X-Google-Smtp-Source: AGHT+IHpJwxSmBo6BH0zzung/n6kxmjGM1u7xLnYxyUt7cmgQfavPYj2SsoHyvHVfv9gpydH4oInfkZrmJ+HN6tGAhY=
-X-Received: by 2002:a17:902:d2c4:b0:224:1785:8044 with SMTP id
- d9443c01a7336-22780c6b0c8mr90475055ad.4.1742901035512; Tue, 25 Mar 2025
- 04:10:35 -0700 (PDT)
+	s=arc-20240116; t=1742901357; c=relaxed/simple;
+	bh=ejo2mJfaZPVCPpYuCkYgIZdpbhitxkRb24uvxJioFd0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FQyffSbCBZ9APqebvo6mMiXz3QNz/L70UJl20o+oa8dKyeOt8br1cGkT3jRgqQOAHV2DtkRns4zCkyVzduroX7Sk7d2KAmeewLTapdm0s5s0MRB0tixjisPcy/28gA9fwPqmZwwRkPrBmgY5cFj6qiWbICbpAjC2D6/SibyWkp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qlun8Bqw; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742901356; x=1774437356;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=ejo2mJfaZPVCPpYuCkYgIZdpbhitxkRb24uvxJioFd0=;
+  b=Qlun8BqwW/Uv+e2Xtm89Rjr3UR/kXcG8rhwppZZb0pTmM2u+9dPcNb5L
+   1EMcI65UWhq3x2oWp/iFSpDdKMP6wO+Bq53sx+Xa8Otr0OocGOcpUYWo/
+   PEZyt49i6GzhdxufKVcRD9TbVbDPaNJwy/OCtQjSq0bw+ah4XmyqWE6o/
+   vzzl72AKiZ3WRsE9d4I/yymkMEzXnxjkCwJphQhsO0XnRaaxpudd98zt/
+   llr83f49SrqK4VR5gDGUwqZwftICavLduo3UgkP2K7Kd64scEROaXL9be
+   NDF49u2qjKTnOvrHWXpYZXYSl8ZiXzCcOnPxh61cBESZuRy4FucpegtBb
+   Q==;
+X-CSE-ConnectionGUID: O0j/QV13SQaljd87p0Wg1w==
+X-CSE-MsgGUID: UsM1+8oiReafEuLt36F5xg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="43299869"
+X-IronPort-AV: E=Sophos;i="6.14,274,1736841600"; 
+   d="scan'208";a="43299869"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 04:15:55 -0700
+X-CSE-ConnectionGUID: pezZcfE1QgmaLFl2HoRdKg==
+X-CSE-MsgGUID: Euqu4xK9QMqpCVBvr6tsdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,274,1736841600"; 
+   d="scan'208";a="155253915"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.158])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2025 04:15:52 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 25 Mar 2025 13:15:49 +0200 (EET)
+To: Hans Zhang <18255117159@163.com>
+cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
+    robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com, 
+    thomas.richard@bootlin.com, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [v6 3/5] PCI: cadence: Use common PCI host bridge APIs for
+ finding the capabilities
+In-Reply-To: <3d9b2fa9-98bf-4f47-aa76-640a4f82cb2f@163.com>
+Message-ID: <26dcba54-93c1-dda4-c5e2-e324e9d50b09@linux.intel.com>
+References: <20250323164852.430546-1-18255117159@163.com> <20250323164852.430546-4-18255117159@163.com> <f467056d-8d4a-9dab-2f0a-ca589adfde53@linux.intel.com> <d370b69a-3b70-4e3b-94a3-43e0bc1305cd@163.com> <a3462c68-ec1b-0b1a-fee7-612bd1109819@linux.intel.com>
+ <3d9b2fa9-98bf-4f47-aa76-640a4f82cb2f@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
- <D8ORTXSUTKGL.1KOJAGBM8F8TN@proton.me> <CAJ-ks9n-z0SETz+zBfJmda6Q_vJDeM2jmDXx48xX9qpMmR-mdQ@mail.gmail.com>
- <D8OTXLDQCOKI.34R1U5R0JSB8H@proton.me> <CAJ-ks9nc0ptzfh+tHj47aTCMqoaKB0SnGpZOLQ06upt7x8EBMQ@mail.gmail.com>
- <D8PAQXHJDVQE.36QKQGBVVL4QU@proton.me>
-In-Reply-To: <D8PAQXHJDVQE.36QKQGBVVL4QU@proton.me>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 25 Mar 2025 12:10:23 +0100
-X-Gm-Features: AQ5f1JqwX_NBrpr_QjwlspVeAWrNOtqXvG7Oj-9W1A9VEei-Tzd_1wGZRvEA414
-Message-ID: <CANiq72kLNYj7HELq4ieSPh7Lnqud63RoAitn-HWfcNUQW-yrrA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] rust: reduce pointer casts, enable related lints
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Tamir Duberstein <tamird@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; BOUNDARY="8323328-1369016099-1742899832=:930"
+Content-ID: <dcc4341b-40b0-3a66-8cf5-ba1fb697c37b@linux.intel.com>
 
-On Tue, Mar 25, 2025 at 12:05=E2=80=AFPM Benno Lossin <benno.lossin@proton.=
-me> wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1369016099-1742899832=:930
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <79a7a062-7cab-6b21-e28f-218eedc1a9ca@linux.intel.com>
+
+On Tue, 25 Mar 2025, Hans Zhang wrote:
+> On 2025/3/24 23:02, Ilpo J=E4rvinen wrote:
+> > > > >    +static u32 cdns_pcie_read_cfg(void *priv, int where, int size=
+)
+> > > > > +{
+> > > > > +=09struct cdns_pcie *pcie =3D priv;
+> > > > > +=09u32 val;
+> > > > > +
+> > > > > +=09if (size =3D=3D 4)
+> > > > > +=09=09val =3D readl(pcie->reg_base + where);
+> > > >=20
+> > > > Should this use cdns_pcie_readl() ?
+> > >=20
+> > > pci_host_bridge_find_*capability required to read two or four bytes.
+> > >=20
+> > > reg =3D read_cfg(priv, cap_ptr, 2);
+> > > or
+> > > header =3D read_cfg(priv, pos, 4);
+> > >=20
+> > > Here I mainly want to write it the same way as size =3D=3D 2 and size=
+ =3D=3D 1.
+> > > Or size =3D=3D 4 should I write it as cdns_pcie_readl() ?
+> >=20
+> > As is, it seems two functions are added for the same thing for the case
+> > with size =3D=3D 4 with different names which feels duplication. One co=
+uld add
+> > cdns_pcie_readw() and cdns_pcie_readb() too but perhaps cdns_pcie_readl=
+()
+> > should just call this new function instead?
+>=20
+> Hi Ilpo,
+>=20
+> Redefine a function with reference to DWC?
+
+This patch was about cadence so my comment above what related to that.
+
+> u32 dw_pcie_read_dbi(struct dw_pcie *pci, u32 reg, size_t size)
+>   dw_pcie_read(pci->dbi_base + reg, size, &val);
+>     dw_pcie_read
+>=20
+> int dw_pcie_read(void __iomem *addr, int size, u32 *val)
+> {
+> =09if (!IS_ALIGNED((uintptr_t)addr, size)) {
+> =09=09*val =3D 0;
+> =09=09return PCIBIOS_BAD_REGISTER_NUMBER;
+> =09}
+>=20
+> =09if (size =3D=3D 4) {
+> =09=09*val =3D readl(addr);
+> =09} else if (size =3D=3D 2) {
+> =09=09*val =3D readw(addr);
+> =09} else if (size =3D=3D 1) {
+> =09=09*val =3D readb(addr);
+> =09} else {
+> =09=09*val =3D 0;
+> =09=09return PCIBIOS_BAD_REGISTER_NUMBER;
+> =09}
+>=20
+> =09return PCIBIOS_SUCCESSFUL;
+> }
+> EXPORT_SYMBOL_GPL(dw_pcie_read);
+>=20
+> >=20
+> > > > > +=09else if (size =3D=3D 2)
+> > > > > +=09=09val =3D readw(pcie->reg_base + where);
+> > > > > +=09else if (size =3D=3D 1)
+> > > > > +=09=09val =3D readb(pcie->reg_base + where);
+> > > > > +
+> > > > > +=09return val;
+> > > > > +}
+> > > > > +
+> > > > > +u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
+> > > > > +{
+> > > > > +=09return pci_host_bridge_find_capability(pcie,
+> > > > > cdns_pcie_read_cfg, cap);
+> > > > > +}
+> > > > > +
+> > > > > +u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap=
+)
+> > > > > +{
+> > > > > +=09return pci_host_bridge_find_ext_capability(pcie,
+> > > > > cdns_pcie_read_cfg,
+> > > > > cap);
+> > > > > +}
+> > > >=20
+> > > > I'm really wondering why the read config function is provided direc=
+tly
+> > > > as
+> > > > an argument. Shouldn't struct pci_host_bridge have some ops that ca=
+n
+> > > > read
+> > > > config so wouldn't it make much more sense to pass it and use the f=
+unc
+> > > > from there? There seems to ops in pci_host_bridge that has read(), =
+does
+> > > > that work? If not, why?
+> > > >=20
+> > >=20
+> > > No effect.
+> >=20
+> > I'm not sure what you meant?
+> >=20
+> > > Because we need to get the offset of the capability before PCIe
+> > > enumerates the device.
+> >=20
+> > Is this to say it is needed before the struct pci_host_bridge is create=
+d?
+> >=20
+> > > I originally added a separate find capability related
+> > > function for CDNS in the following patch. It's also copied directly f=
+rom
+> > > DWC.
+> > > Mani felt there was too much duplicate code and also suggested passin=
+g a
+> > > callback function that could manipulate the registers of the root por=
+t of
+> > > DWC
+> > > or CDNS.
+> >=20
+> > I very much like the direction this patchset is moving (moving shared
+> > part of controllers code to core), I just feel this doesn't go far enou=
+gh
+> > when it's passing function pointer to the read function.
+> >=20
+> > I admit I've never written a controller driver so perhaps there's
+> > something detail I lack knowledge of but I'd want to understand why
+> > struct pci_ops (which exists both in pci_host_bridge and pci_bus) canno=
+t
+> > be used?
+> >=20
+>=20
+>=20
+> I don't know if the following code can make it clear to you.
+>=20
+> static const struct dw_pcie_host_ops qcom_pcie_dw_ops =3D {
+> =09.host_init=09=3D qcom_pcie_host_init,
+>                   pcie->cfg->ops->post_init(pcie);
+>                     qcom_pcie_post_init_2_3_3
+>                       dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> };
+>=20
+> int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>   bridge =3D devm_pci_alloc_host_bridge(dev, 0);
+
+It does this almost immediately:
+
+    bridge->ops =3D &dw_pcie_ops;
+
+Can we like add some function into those ops such that the necessary read=
+=20
+can be performed? Like .early_root_config_read or something like that?
+
+Then the host bridge capability finder can input struct pci_host_bridge=20
+*host_bridge and can do host_bridge->ops->early_root_cfg_read(host_bridge,=
+=20
+=2E..). That would already be a big win over passing the read function=20
+itself as a pointer.
+
+Hopefully having such a function in the ops would allow moving other=20
+common controller driver functionality into PCI core as well as it would=20
+abstract the per controller read function (for the time before everything=
+=20
+is fully instanciated).
+
+Is that a workable approach?
+
+>   if (pp->ops->host_init)
+>     pp->ops =3D &qcom_pcie_dw_ops;  // qcom here needs to find capability
 >
-> Done: https://github.com/rust-lang/rust-clippy/issues/14469
+>   pci_host_probe(bridge); // pcie enumerate flow
+>     pci_scan_root_bus_bridge(bridge);
+>       pci_register_host_bridge(bridge);
+>         bus->ops =3D bridge->ops;   // Only pci bus ops can be used
+>=20
+>=20
+> Best regards,
+> Hans
+>=20
 
-Linked in our list:
-
-    https://github.com/Rust-for-Linux/linux/issues/349
-
-Cheers,
-Miguel
+--=20
+ i.
+--8323328-1369016099-1742899832=:930--
 
