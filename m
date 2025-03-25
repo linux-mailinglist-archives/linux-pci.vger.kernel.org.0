@@ -1,50 +1,51 @@
-Return-Path: <linux-pci+bounces-24637-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24638-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D55DA6ED8A
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 11:26:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 61649A6ED8C
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 11:26:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C71C3AFACF
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 10:26:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 244BE3AFBBD
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 10:26:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ACC1204693;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43E2F25335F;
 	Tue, 25 Mar 2025 10:26:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rr0YtK1P"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G+oj1AWH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034591EEA4E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034C21EF099;
 	Tue, 25 Mar 2025 10:26:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742898395; cv=none; b=Vu00x35TD8aiqp2WDTTXZL2zrBJ2ijwautdxNHbrOwNY8ohkbqpUAyfVWAHM1OnwEAUAzVsCYkvO8sq/l7QHhZvQ/OncFte0VWK6ln5+bD5dwqJLdAo90qPs53gqxyVOH2I4xjheDWnukpXoPLKdi40TxKlBaER5mtvJTnQj4b8=
+	t=1742898395; cv=none; b=F90/sqy0jCpSMrhgeLxQhTUgM+M9BQoNna5EK0IS760ECkUZZFGtVW+FVzvfVDGt3YoFRzecJoBBtGmdEFTBYQXyZF24EyWmuVUAD+nXqYPS/YtBzPRVIg5XGvjZOrjmUB2E9Ry6tnDBdtI+dQKnXju1XzzWxKtYfx4xBs0b6JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742898395; c=relaxed/simple;
-	bh=6gx8a7ztb8u3B/u8fPofO/Tuvql7eBwSe4k9mBhaLjc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gAIZ7K4iqqaMFbvteeIH9vpCGcA9xPvN4ESJHf84c8Jzq+iCdhTun2W9qlBPXRjTdxPHaPfvQDvG+xjAx+4oxHNH4I91Q07sBeXnx/+iBeijYdqTEDiKuK0LjLrKnTeqZtsWtVUFyT6Hf7uVb/p0J24NDiFPqU5uyCYrnK1/EJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rr0YtK1P; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8030CC4CEE4;
+	bh=/pBN+ohvIjqo2ih8p/b4lanOQSzFYkL2+lcRC1yvrVo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=c4bOha5N08G/L73Gi05UMxzpSM+6562Pp9m4Ar1R76mf4ziTK8uwT4uN/K7XyNF7fcIS/1aE8plQ4aEzF+anQBuiLRudGs5X6ni8vmkI4FAOlOCeWyL+oloAojRn3mXwvxzT7WbDt0O7pazYBGjYIrskEAdHgMr2wZ5iXowcUtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G+oj1AWH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 830BEC4CEED;
 	Tue, 25 Mar 2025 10:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1742898394;
-	bh=6gx8a7ztb8u3B/u8fPofO/Tuvql7eBwSe4k9mBhaLjc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rr0YtK1PQzC4NSDXu0DSxFUvhd4oVsWJv62czkyG0iVVQ8VuGA5YnDFCqLi1twziZ
-	 tPfNakYxPcjcAv2pzkmvMKPJ3+uKM0rs6mUcTdjghbkIV5PvB+jZqh3dqt4R8U86D1
-	 lgnBd6zTLTnEjkj8Z3MXUI8Q1+lchlFLUaCzyhI1DZX25DGP7MBxEvChQPvaJXTrro
-	 +hfoE95+lbABCqwmPeY5GCylveZ1xfjSNhSvBbbkCnvRQ/HewS5e+079aANhN7Rc+Z
-	 2URIbNlp7x0rqzE4TIronOOBp9oB/osdXg08TPDB8BxZ4mxuS5/R/nLC+4N6vSZk5c
-	 8+IBZkrVVwpuw==
+	bh=/pBN+ohvIjqo2ih8p/b4lanOQSzFYkL2+lcRC1yvrVo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=G+oj1AWHl0o4XLiCt8VoROLvs/Q0L0pBhKLu06Ywe1Fg+BzXr9+5ip2+PApClIoHs
+	 fs7zcKnQ5DJFV48eHfrQ9RUt7TtDPTaFkkhH7fIkBH0uPke3YjsU8elUwpv6Jc3WeE
+	 8SOb+i0AeyL2ickHR8IG85j6Z7uX3iIY0Qs2qnvUVNsJ34ESqHmuJw8L2G2O8iZtNM
+	 trJfNMRQmQXIPx7rSfMfHn1huIQps7TUqsh+nhbx0jbsaNCmbxerWXTh3sMjImBRRu
+	 QIm5u42VFey8fYmjs9AbUng/ukqVW/96DNyFRqOrAVirWFSneaFxYuH0HcAPx/oEcB
+	 F9ha/hulenm7Q==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1tx1UO-00GsRS-28;
+	id 1tx1UO-00GsRS-Ci;
 	Tue, 25 Mar 2025 10:26:32 +0000
 From: Marc Zyngier <maz@kernel.org>
 To: linux-arm-kernel@lists.infradead.org,
@@ -62,10 +63,12 @@ Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: [PATCH v2 00/13] PCI: apple: Add support for t6020
-Date: Tue, 25 Mar 2025 10:25:57 +0000
-Message-Id: <20250325102610.2073863-1-maz@kernel.org>
+Subject: [PATCH v2 01/13] dt-bindings: pci: apple,pcie: Add t6020 compatible string
+Date: Tue, 25 Mar 2025 10:25:58 +0000
+Message-Id: <20250325102610.2073863-2-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250325102610.2073863-1-maz@kernel.org>
+References: <20250325102610.2073863-1-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -78,82 +81,58 @@ X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.o
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-As Alyssa didn't have the bandwidth to deal with this series, I have
-taken it over. All bugs are therefore mine.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 
-The initial series [1] stated:
+t6020 adds some register ranges compared to t8103, so requires
+a new compatible as well as the new PHY registers themselves.
 
-"This series adds T6020 support to the Apple PCIe controller. Mostly
- Apple shuffled registers around (presumably to accommodate the larger
- configurations on those machines). So there's a bit of churn here but
- not too much in the way of functional changes."
+Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+[maz: added PHY registers]
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ Documentation/devicetree/bindings/pci/apple,pcie.yaml | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-The biggest change is affecting the ECAM layer, allowing an ECAM
-driver to provide its own probe function instead of relying on the
-.init() callback to do the work. The ECAM layer can therefore be used
-as a library instead of a convoluted driver.
-
-The rest is a mix of bug fixes, cleanups, and required abstraction.
-
-This has been tested on T6020 (M2-Pro mini) and T8102 (M1 mini).
-
-* From v1[1]:
-
-  - Described the PHY registers in the DT binding
-
-  - Extracted a ecam bridge creation helper from the host-common layer
-
-  - Moved probing into its own function instead of pci_host_common_probe()
-    
-  - Moved host-specific data to the of_device_id[] table
-
-  - Added dynamic allocation of the RID/SID bitmap
-
-  - Fixed latent bug in RC-generated interrupts
-
-  - Renamed reg_info to hw_info
-
-  - Dropped useless max_msimap
-
-  - Dropped code being moved around without justification
-
-  - Re-split some of the patches to follow a more logical progression
-
-  - General cleanup to fit my own taste
-
-[1] https://lore.kernel.org/r/20250211-pcie-t6-v1-0-b60e6d2501bb@rosenzweig.io
-
-Alyssa Rosenzweig (1):
-  dt-bindings: pci: apple,pcie: Add t6020 compatible string
-
-Hector Martin (6):
-  PCI: apple: Fix missing OF node reference in apple_pcie_setup_port
-  PCI: apple: Move port PHY registers to their own reg items
-  PCI: apple: Drop poll for CORE_RC_PHYIF_STAT_REFCLK
-  PCI: apple: Use gpiod_set_value_cansleep in probe flow
-  PCI: apple: Abstract register offsets via a SoC-specific structure
-  PCI: apple: Add T602x PCIe support
-
-Janne Grunau (1):
-  PCI: apple: Set only available ports up
-
-Marc Zyngier (5):
-  PCI: host-generic: Extract an ecam bridge creation helper from
-    pci_host_common_probe()
-  PCI: ecam: Allow cfg->priv to be pre-populated from the root port
-    device
-  PCI: apple: Move over to standalone probing
-  PCI: apple: Dynamically allocate RID-to_SID bitmap
-  PCI: apple: Move away from INTMSK{SET,CLR} for INTx and private
-    interrupts
-
- .../devicetree/bindings/pci/apple,pcie.yaml   |  11 +-
- drivers/pci/controller/pci-host-common.c      |  24 +-
- drivers/pci/controller/pcie-apple.c           | 241 +++++++++++++-----
- drivers/pci/ecam.c                            |   2 +
- include/linux/pci-ecam.h                      |   2 +
- 5 files changed, 204 insertions(+), 76 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+index c8775f9cb0713..77554899b9420 100644
+--- a/Documentation/devicetree/bindings/pci/apple,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+@@ -17,6 +17,10 @@ description: |
+   implements its root ports.  But the ATU found on most DesignWare
+   PCIe host bridges is absent.
+ 
++  On systems derived from T602x, the PHY registers are in a region
++  separate from the port registers. In that case, there is one PHY
++  register range per port register range.
++
+   All root ports share a single ECAM space, but separate GPIOs are
+   used to take the PCI devices on those ports out of reset.  Therefore
+   the standard "reset-gpios" and "max-link-speed" properties appear on
+@@ -35,11 +39,12 @@ properties:
+           - apple,t8103-pcie
+           - apple,t8112-pcie
+           - apple,t6000-pcie
++          - apple,t6020-pcie
+       - const: apple,pcie
+ 
+   reg:
+     minItems: 3
+-    maxItems: 6
++    maxItems: 10
+ 
+   reg-names:
+     minItems: 3
+@@ -50,6 +55,10 @@ properties:
+       - const: port1
+       - const: port2
+       - const: port3
++      - const: phy0
++      - const: phy1
++      - const: phy2
++      - const: phy3
+ 
+   ranges:
+     minItems: 2
 -- 
 2.39.2
 
