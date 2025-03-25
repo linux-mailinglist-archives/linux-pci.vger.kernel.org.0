@@ -1,169 +1,172 @@
-Return-Path: <linux-pci+bounces-24668-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24669-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2063EA702CA
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 14:52:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBF3FA70272
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 14:46:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C86AB8429B5
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 13:38:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDB9517F394
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 13:40:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D14B25A64C;
-	Tue, 25 Mar 2025 13:35:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91529502BE;
+	Tue, 25 Mar 2025 13:39:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="af2z7Gyx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqTxAPOX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9250A25A63D;
-	Tue, 25 Mar 2025 13:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52D61C27;
+	Tue, 25 Mar 2025 13:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742909734; cv=none; b=qlij7+YNW4GzyTlcmGXbpRe3ALI3XKF9jC3dUXlGlWgyzcTKMfLAbWGaGW1j3244bG9rBfU6QOjl8VEiF0d3fTCdUrFSwoLSBi9JOo6v9GYevK6lpEP8jpdX1F6iT8pfQbTmf0m0jo3XaJRiuJt5m81LrhgmUmbGwD/tjI8EO3o=
+	t=1742909989; cv=none; b=ZfhCgBGwhxCWoaS2Mr7ScNJG55F9mdjbU1XWobz5NNXy5tO2bPUO6vAX2UlwePkGtqsBMwTMkQeotk3Z2cqvmkjiBJ5rgEQp2KEsRl+PC3JsMn/FZUh5pEr+ybv4blOjmR5npoQ4+BrmNX1HoXpaN82CZqOmHT0QsXEZY/0C0oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742909734; c=relaxed/simple;
-	bh=Jtg89UmefE0wWanYzwMP6U6AO+7GLC3NTqvTljYcaMU=;
+	s=arc-20240116; t=1742909989; c=relaxed/simple;
+	bh=dVSxouOXZHtGWTtiyOJabZwsvfWCpDzgJrprCLF6xus=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eyAiVNxFQpBn15g45J/EorNxhS49KfNzamVRoJ3POkEAiMb+4cX36AUDFfH80Qil1u73+iKPZjVIdyESUnOkryrrnTTokmWCGJ7/UF3ijVESfZftxM4pMUrWZClS6Xj92Jd3Fg3JDvNLDZ5PgCvTjunnAKTejpyqNSscJxucxB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=af2z7Gyx; arc=none smtp.client-ip=209.85.208.174
+	 To:Cc:Content-Type; b=teaBykX4PYKWUEX2m3OG4MiNSxCgmJNhsn4ov2kMpg7M0i3/4GNb51r+YH8EQ9dG09O+h10la6yhj4mOXpa7OY3kFiA6H/ZQwOE3Fm0gw73BFwCaSd/BsqwgJM6CDO4sibYhoigX2BlSnOWGtuK9ZpodunaZ0UKko0K4/Ir/wL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZqTxAPOX; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30c44a87b9cso48747981fa.3;
-        Tue, 25 Mar 2025 06:35:32 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30b83290b7bso56363651fa.1;
+        Tue, 25 Mar 2025 06:39:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742909731; x=1743514531; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742909985; x=1743514785; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ALfQyNQQvFgRQBUL1jyOJUKyoIc+aRMgFQDSk9Ni8HU=;
-        b=af2z7GyxE3T67vJtSyDctk5Se9D/ILNHkUUR4hxgNNWHbzIuHna6HVwVRelJid3NTN
-         u8jch5QRCQBsAf43ZVEaSHSoOf/mV2BDpc32vvyu3Eqp7jku1IpLvbH7osksgsa5l3E6
-         tEgW1xyMLm94E0xQVS3+Y2UwKc+2j9E9ZvsMJl6s58BX2zONGKtY0Zm/J3YVO3jAD9LN
-         EuLcAfrg3YcLeT+p/qk66Wz9iVyNKwyXK+CJA2ae77FWtBbORNFlcDQReoC+G8iQDKiE
-         UMUGwthv9GwCXxQiTVTsuE3SMbSyLOofX7YVjdncO+GObYku9s0jnWqF3h9kLBJ8cLu2
-         aeNw==
+        bh=myPV0T66Hh2V3wozAvJIfoZDXZ6qFR3qJHf4P3jl/Gc=;
+        b=ZqTxAPOXkPjJDfKTjJtckTFtNz6qxzOHwlbtmu00BQJoeS7vIIyb8Rv8AXI7g793Dg
+         32HsXVoga2SQLAyiOxEoGeSlXpOoQW0pqINSrU+G4JtgX0xAjegc3tIdaYKbqw92bvzi
+         t5fcGc0XGifEYxhewue3/M8puO12oz3+qlWhnQLF37XmetBXVod9JKzPSqylcVJuIqMl
+         4wfVZh7D80JFXTqLqpYUWt8E3TR/0fW3pAytnGkD8lSQRJ0U/+cWkkulXwDuDpzrDA8J
+         757yVAB4i6xEoP4NdzUqPSI1Er0KjPFkKu0POyFMR5R2v8moXjuzkX1yQMWvU5TxCtca
+         4PRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742909731; x=1743514531;
+        d=1e100.net; s=20230601; t=1742909985; x=1743514785;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ALfQyNQQvFgRQBUL1jyOJUKyoIc+aRMgFQDSk9Ni8HU=;
-        b=C4vlwm5U7/3KNk16sbIiLf2rHwVxIXjeaW3FXDJJAUa5C4r9kl+a2HJnqHL6qq9VcA
-         OF4jSXdXUM4InUnuDJAC2xBs2lT70U304gtq/VDBhYwHi5M732FBCylqn2K3kEcCzzF0
-         jh53vk/2yHd9zt1Upoi1ANZj1pD+er6MDVTp7Aj6EfaD1WFkzQKaso/oZrzEDIUFKIrw
-         0LazGdQrcA4cismv57wnkoROaELYS53H/3yMQi/tya60mM0GG7l9tfwRJ3DQKu46LYCq
-         0QdDp5i85m5dka5PFduHBO2QJcJOSiBxV/mgs3kW/RlTxhvTSeiO98KOFrV0R69aYPil
-         T16Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU4GIihZ+SF2d3Mw7sf9EP7Hs4PldNRn/KJTMQlZWk9YjHDGjyT36lFBhtl3vbTv26T9u2lcToGkGj4@vger.kernel.org, AJvYcCUkQit1KbCLNQ4aUPC+PDLhk8aYAn17q9D29e5Cp97Cz9vnU4sYV4BKH4hAI0sOhiJYeefIe2c+tLOeyDaDhtcS@vger.kernel.org, AJvYcCV2LjxP4qr802MlRpYpj61brQnU3o/0y1Zxhok9ljK3qvcunaAMW5y/HNaGEF+7DPj44hZ+tGXd1ai47DlL@vger.kernel.org, AJvYcCWn2A2oiAOJyIXJQ32b7BWusr7/Vw/LvxGcUBP4OfQTPU3i1fldJEELHk++WdUjub548KA8GEFjc1AAgxE=@vger.kernel.org, AJvYcCWys1Fr/JPPXwH3fvmmgDai/+pExtN295j0B6Psnl/yDuXRiXXsMKx7sIiyKByx7znQqSD/oqsPrpEe5WSX@vger.kernel.org, AJvYcCXEcWXMGYxZ7EiGWe4iwn5zXkacTUKOVfqcN3QtAgSoeGp+ivuUDiwm4Xolg+HyQtkRFT94l6p5Q0Fo@vger.kernel.org, AJvYcCXpO5IIfsytvEBYRYkfIbV3IUAFN5BRXHdnoaliNX2oo57efYDrpRzqgqejmwbsV3sTOuvS4C9eBv18uu7v4Fc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUVLzllI8j9/hOcr5GOrcRVNbLYPQlTJfJ3MSDMeTf19na1Ei7
-	QreYeLylq1XPE+ikSGCCjwiOecfbYiecaUIJ0HrnUUVWHy/Nn7cnB2FaqfSrFvzDTx1p8JzReqQ
-	bOwLhj0PE8wj8nDS/ohboNpl7PSQ=
-X-Gm-Gg: ASbGncs+PUbeScfMj9TaGdTNNcyh8WAQRxwSv/sm+TADjlPYyZP6qHDCp8pxcBE1S7h
-	zeUks7CFIh58QfZkHHwLIE8Spn2+xOfutc+KbA4DCJlEu4lgMRxcFW9mhnaynCqtYMLK4cjEOvk
-	sGF8hC7BYGOUSaO/A+LQShcfGhSd5qRFrPf/C4Qy5+Vw==
-X-Google-Smtp-Source: AGHT+IECfGJfPNX5mp249KVYKi7WWwCgZRCowQMjfUUxWLTD3q612os114yT+G0eH07umrgjJmQ2EnRvgj3jg2xq8Js=
-X-Received: by 2002:a2e:a99d:0:b0:309:17:750d with SMTP id 38308e7fff4ca-30d7e2a1829mr60147611fa.27.1742909730314;
- Tue, 25 Mar 2025 06:35:30 -0700 (PDT)
+        bh=myPV0T66Hh2V3wozAvJIfoZDXZ6qFR3qJHf4P3jl/Gc=;
+        b=aFo5EEh8Ax67mHles3Chb8YlbSJF5yLyvLLMsLMbmEtM/1qWDs8okANWB2+LvFtWxg
+         kQyfTWP4VajUTff0h4PKau1z5V+sW4sDDp8vrD02HhgOpTDgwiPuoqVew0TuI24+ktKc
+         dsANLckkhFIS/ZL728STOcdEw4YJhSetewu/BWv3SelcCtr8tfoiPTsTBEkZwsJ+ZTIb
+         l5+B17mJd0VKoj/JZ/DT0kdXcycJKvQSGVCIpBGpvlmBJJ+4jD7fdncHZDgxxxfqL7cj
+         GSGbyDhuzFVWBvqxkAvzkktoYQ9vdXTR5IxQt8+gun+Ie25uAIVUCZ+Ixhgs1NKKqVUR
+         aE9A==
+X-Forwarded-Encrypted: i=1; AJvYcCU5YkGxVqMNFwxEAeUkl/gvPttVxFWjkFMFk6MXo5i1vo5eMw0L4v1Q7K3xZpCfz8jwqIGu+DlshODERI8=@vger.kernel.org, AJvYcCVVhf3gVWtRD9dIXkaR9MFjSVmuwIuXzdioA9AbhHew7fYqa+BeYaPO9WKXX6qb4cvj3cOwz3GMtiXG@vger.kernel.org, AJvYcCWqgzPvdS+mnye5tVd1aaUdJ01Enwa9LfMCdbLX9re/P99AaXedqxPo7WF+gS5cPiOO4bp5BW447nLs+QDBJXY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweOacOdddgMT18pyPC0+mLnpAMdCbyNAdWdR1bbqHFC3IELK58
+	bwArZvGdvVphBYVsTYr7ir0vyPAUwbL1tgq6YiUi9iX/3cePyTS4w60vb7YHnsKs8BwOngjuXOf
+	/M2DO3woWqJu+/yqIyps1EJswUeo=
+X-Gm-Gg: ASbGncvCEzxtiEUXQliqv4XPHdnFVcvNf9TN3ptBY1zzQJTDIJumL2UbU0/mYiI3wEI
+	tm0/Un7jbaEF0xu9671ao8EdMiio9PlgP4dJSAAAaxu/oh+SGHM3IBmuAUDvkEh67BVp1epKgGw
+	KEdzAqGWhK18o4oY4i285LFBya06J19wWJxyID+/X0Vg==
+X-Google-Smtp-Source: AGHT+IGQKAXzEbYQwBhfNVo++jVfEu/zBZKZscu6KAG+LuY8INULRXFdRoAY3KbwyRZznozPQ8msRy9zM8JTWfjea6o=
+X-Received: by 2002:a2e:a78a:0:b0:30c:7a7:e87c with SMTP id
+ 38308e7fff4ca-30d7e32e8eemr72008461fa.35.1742909985355; Tue, 25 Mar 2025
+ 06:39:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
- <D8ORTXSUTKGL.1KOJAGBM8F8TN@proton.me> <CAJ-ks9n-z0SETz+zBfJmda6Q_vJDeM2jmDXx48xX9qpMmR-mdQ@mail.gmail.com>
- <D8OTXLDQCOKI.34R1U5R0JSB8H@proton.me> <CAJ-ks9nc0ptzfh+tHj47aTCMqoaKB0SnGpZOLQ06upt7x8EBMQ@mail.gmail.com>
- <D8PAQXHJDVQE.36QKQGBVVL4QU@proton.me>
-In-Reply-To: <D8PAQXHJDVQE.36QKQGBVVL4QU@proton.me>
+References: <20250324-list-no-offset-v1-0-afd2b7fc442a@gmail.com>
+ <20250324-list-no-offset-v1-3-afd2b7fc442a@gmail.com> <67e1d1b3.050a0220.4c4ff.6e89@mx.google.com>
+ <CAJ-ks9moCO83cGkKuONR-2JMN61x18T2UVO98jhspDR=uyaVqw@mail.gmail.com>
+ <CAJ-ks9kPhb00-Dv8KucYGOVjLFMVYvfpBnqrV87M+eJmODAmyw@mail.gmail.com>
+ <Z-Iq6Okk1j3ImH1u@Mac.home> <CAJ-ks9n66_vVg3ww58VqfXV6+phng8Bhq9C=NNn854gXK0KAHg@mail.gmail.com>
+ <D8PA5CKNMCGA.UODS331S36EG@proton.me> <CAJ-ks9kOFk2GGwjX_Eo7Kuxoh5eziGSKRpLE8oVjEs7pRnWyRw@mail.gmail.com>
+ <D8PB0LN62GOX.3P4K4V96OLVQ9@proton.me>
+In-Reply-To: <D8PB0LN62GOX.3P4K4V96OLVQ9@proton.me>
 From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 25 Mar 2025 09:34:54 -0400
-X-Gm-Features: AQ5f1JqRBixAhWSLEtDtEmMqzrYYyJsJMIA4qKRXBi18aYKgJEGRcFDgouTR9-A
-Message-ID: <CAJ-ks9kuG8SyybioKQ0+bYwjnCQFMhip+4A1WnMhsdgnNZGiZQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] rust: reduce pointer casts, enable related lints
+Date: Tue, 25 Mar 2025 09:39:09 -0400
+X-Gm-Features: AQ5f1JpqoNfVeezWzd4_2GOPTgYYN2XUtv5DasiBOJhEEhrX8nf_xe86DllRAjI
+Message-ID: <CAJ-ks9mEWshCkpq8=7=MKVDz8N-aUVSj0w-YdCsEvEhH3U7h_g@mail.gmail.com>
+Subject: Re: [PATCH 3/5] rust: list: use consistent type parameter names
 To: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
 	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 25, 2025 at 7:05=E2=80=AFAM Benno Lossin <benno.lossin@proton.m=
+On Tue, Mar 25, 2025 at 7:18=E2=80=AFAM Benno Lossin <benno.lossin@proton.m=
 e> wrote:
 >
-> On Mon Mar 24, 2025 at 10:59 PM CET, Tamir Duberstein wrote:
-> > On Mon, Mar 24, 2025 at 5:55=E2=80=AFPM Benno Lossin <benno.lossin@prot=
+> On Tue Mar 25, 2025 at 11:42 AM CET, Tamir Duberstein wrote:
+> > On Tue, Mar 25, 2025 at 6:37=E2=80=AFAM Benno Lossin <benno.lossin@prot=
 on.me> wrote:
-> >> On Mon Mar 24, 2025 at 9:55 PM CET, Tamir Duberstein wrote:
-> >> > On Mon, Mar 24, 2025 at 4:16=E2=80=AFPM Benno Lossin <benno.lossin@p=
-roton.me> wrote:
-> >> >> * `cast_lossless` (maybe this catches some of the `num as int_type`
-> >> >>   conversions I mentioned above)
+> >> On Tue Mar 25, 2025 at 10:52 AM CET, Tamir Duberstein wrote:
+> >> > On Tue, Mar 25, 2025 at 12:02=E2=80=AFAM Boqun Feng <boqun.feng@gmai=
+l.com> wrote:
+> >> >> On Mon, Mar 24, 2025 at 05:56:57PM -0400, Tamir Duberstein wrote:
+> >> >> > On Mon, Mar 24, 2025 at 5:51=E2=80=AFPM Tamir Duberstein <tamird@=
+gmail.com> wrote:
+> >> >> > > On Mon, Mar 24, 2025 at 5:42=E2=80=AFPM Boqun Feng <boqun.feng@=
+gmail.com> wrote:
+> >> >> > > > On Mon, Mar 24, 2025 at 05:33:45PM -0400, Tamir Duberstein wr=
+ote:
+> >> >> > > > >              #[inline]
+> >> >> > > > > @@ -81,16 +81,16 @@ pub unsafe trait HasSelfPtr<T: ?Sized, =
+const ID: u64 =3D 0>
+> >> >> > > > >  /// Implements the [`HasListLinks`] and [`HasSelfPtr`] tra=
+its for the given type.
+> >> >> > > > >  #[macro_export]
+> >> >> > > > >  macro_rules! impl_has_list_links_self_ptr {
+> >> >> > > > > -    ($(impl$({$($implarg:tt)*})?
+> >> >> > > > > +    ($(impl$({$($generics:tt)*})?
+> >> >> > > >
+> >> >> > > > While you're at it, can you also change this to be
+> >> >> > > >
+> >> >> > > >         ($(impl$(<$($generics:tt)*>)?
+> >> >> > > >
+> >> >> > > > ?
+> >> >> > > >
+> >> >> > > > I don't know why we chose <> for impl_has_list_links, but {} =
+for
+> >> >> > > > impl_has_list_links_self_ptr ;-)
+> >> >> > >
+> >> >> > > This doesn't work in all cases:
+> >> >> > >
+> >> >> > > error: local ambiguity when calling macro `impl_has_work`: mult=
+iple
+> >> >> > > parsing options: built-in NTs tt ('generics') or 1 other option=
+.
+> >> >> > >    --> ../rust/kernel/workqueue.rs:522:11
+> >> >> > >     |
+> >> >> > > 522 |     impl<T> HasWork<Self> for ClosureWork<T> { self.work =
+}
+> >> >> > >
+> >> >> > > The reason that `impl_has_list_links` uses <> and all others us=
+e {} is
+> >> >> > > that `impl_has_list_links` is the only one that captures the ge=
+neric
+> >> >> > > parameter as an `ident`, the rest use `tt`. So we could change
+> >> >>
+> >> >> Why impl_has_list_links uses generics at `ident` but rest use `tt`?=
+ I'm
+> >> >> a bit curious.
 > >> >
-> >> > Yeah, suggested the same above. I had hoped this would deal with the
-> >> > char as u32 pattern but it did not.
+> >> > I think it's because `ident` cannot deal with lifetimes or const
+> >> > generics - or at least I was not able to make it work with them.
 > >>
-> >> Aw that's a shame. Maybe we should create a clippy issue for that,
-> >> thoughts?
+> >> If you use `ident`, you can use the normal `<>` as the delimiters of
+> >> generics. For `tt`, you have to use `{}` (or `()`/`[]`).
 > >
-> > Yeah, it's not clear to me why it isn't covered by `cast_lossless`.
-> > Might just be a bug. Want to file it?
+> > Yes I know. But with `ident` you cannot capture lifetimes or const gene=
+rics.
 >
-> Done: https://github.com/rust-lang/rust-clippy/issues/14469
+> Why is that required for this macro? I think we could use `tt`.
 
-Nice, looks like there's already a PR out:
-https://github.com/rust-lang/rust-clippy/pull/14470.
-
-> >> >> I'll leave it up to you what you want to do with this: add it to th=
-is
-> >> >> series, make a new one, or let someone else handle it. If you don't=
- want
-> >> >> to handle it, let me know, then I'll create a good-first-issue :)
-> >> >
-> >> > I'll add a patch for `cast_lossless` -- the rest should probably go
-> >> > into an issue.
-> >>
-> >> Do you mind filing the issue? Then you can decide yourself what you wa=
-nt
-> >> to do yourself vs what you want to leave for others. Feel free to copy
-> >> from my mail summary.
-> >
-> > Well, I don't really know what's left to do. We're pretty close at
-> > this point to having enabled everything but the nukes. Then there's
-> > the strict provenance thing, which I suppose we can write down.
->
-> Yes, but there are also these from my original mail:
-> * `shared_ref as *const _` (for example in rust/kernel/uaccess.rs:247,
->   rust/kernel/str.rs:32 and rust/kernel/fs/file.rs:367), these we can
->   replace with `let ptr: *const ... =3D shared_ref;`. Don't know if there
->   is a clippy lint for this.
-
-I don't think we should go fixing things for which we don't have a
-clippy lint. That way lies madness, particularly as patches begin to
-be carried by other trees.
-
->
-> And the other points (haven't taken a look at the other series you
-> submitted, so I don't know to what extend you fixed the other `as` casts
-> I mentioned). So I figured you might know which ones we still have after
-> applying all your patches :)
->
-> ---
-> Cheers,
-> Benno
->
+We're in violent agreement. The change I've made is to use `tt`
+everywhere, including where `ident` is currently used with `<>`.
 
