@@ -1,184 +1,153 @@
-Return-Path: <linux-pci+bounces-24635-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24636-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 910F6A6ED16
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 10:54:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AD01A6ED7F
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 11:22:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9077B3A7D03
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 09:52:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BE2A418906EB
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 10:22:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20E13204686;
-	Tue, 25 Mar 2025 09:53:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A29A01C84A6;
+	Tue, 25 Mar 2025 10:22:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDVrOTBE"
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="V2yuKrpF"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355DE19CC2E;
-	Tue, 25 Mar 2025 09:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9A71FDD
+	for <linux-pci@vger.kernel.org>; Tue, 25 Mar 2025 10:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742896381; cv=none; b=HsXQTuI5hKa/i6Y2LyYFUeyP8doIPM2BWiAwhllCpmpGlQnbQEXrzZb7FgbefZFSLeBFzz20XYWiVXTWQ9NXOg4NTdnTG+5qjYTl1VSe2bJIhZcmp5+g1j/w8Jd6Po1qM+Dot3nzvAYNP7hJnjqYPAfzeEjYVdknp45ilQ17m4s=
+	t=1742898128; cv=none; b=PxCarXeBbBqCiO1kTPYk8lJLvN7d4DbgXw8uo5sLVOkX9A3h2YEwjWtJJx9tJPoPqS9Dr9bC18LEdtMdazl+tSLxGMGin9EputcM7WcAsvlnxgRyUlvIITMyzXRnPAcdGwx/FQcysh18XRXB5o6EdGf9PyNbYmG0FooVdTqZc1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742896381; c=relaxed/simple;
-	bh=G7dq4opATscHa1GwAcwYDZ/9MxMZNOO+pOreXVSwxLo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q6GuVOxd2rsUQkpL79kyLxP8CEOiobYRBWol79LQetYylMaB46rMXB//gmuxEXovOBYKTAHWepJqhyQSpU5ZAyJUvrI42S9XlUej1iUOoWvfjyTQa9t+rLMX8u1TAwEhKJ1FXR5MRiPsqHOJnsxpGOV1dLK2Xft86DdY1o6aVOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QDVrOTBE; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso54205691fa.0;
-        Tue, 25 Mar 2025 02:52:58 -0700 (PDT)
+	s=arc-20240116; t=1742898128; c=relaxed/simple;
+	bh=M5S7ZLwakXniYp0byHlo43iXNWTTXi2KKHi/LjIwHNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pQVtMIJRXnu4eyfM+Px/KC4M5BfGQIhLzmhUESnQZEWFMulfmISjaKt1Dcy8paeYcPHOU5soU5qKpr8ThN39Kz4X16iII1X91YU2BPMpbChGQ69pt66vU+5CoM6sqa4Lcl8RwrAuLfMDnNcnqvyLCbFGPrnYqvXtDdjdUIEf/i8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=V2yuKrpF; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-224171d6826so32635895ad.3
+        for <linux-pci@vger.kernel.org>; Tue, 25 Mar 2025 03:22:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742896377; x=1743501177; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0SDAsr7EomDTz5Y8FEYcT8NLpoB17+E7CJw8BsOZA9s=;
-        b=QDVrOTBEAyNdO3PmDFipWP/TyXte4Bl3DchugqbCaU0XKzgVjStMkeDcjzEr9wvMwg
-         RE3Ses8SjkOCjIWJ9qsOf0sWD12RzvMeV2wYKirN4dFUU67KZHJOqJYsrH1hXbhPdPF4
-         a9RHtbajvzRx0brTxf4XUipz++353Iks8sD4vsra/vbqtpa5uiM5s7BXc/DVpvK+/3t4
-         GCOgj3xzBXiobJRiASbCIOiiCUd9SHA3FZm8t6hBQQ71pYNYc0ZsboM4b2KUQGACcoyo
-         Glw5Hy3dYn9fS2IV4kI77YiT+KJHt317gJ7FlR00t4sl21rRpcXbkIEHLJ1ErRAFlq7h
-         Htew==
+        d=citrix.com; s=google; t=1742898126; x=1743502926; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=gQs2MQ7qVRbNMJHbCM5bWSarB3xGRHf2C0jjYhuIPRM=;
+        b=V2yuKrpFbJdb+5Z6fYE4yRWPf/bmkNiIrps1haTVXMIPT//OUoJEB71IgfJiJpwEjp
+         PtLVtltCwiXCDfrKHY1n6AJdjCDcd8C4ZVmIrEAc6N3QhcjnBfztYQyHp5WWQKdK25zC
+         9oakLTTUkFaMdmICKztIObpeG7ored4A0z8Vw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742896377; x=1743501177;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0SDAsr7EomDTz5Y8FEYcT8NLpoB17+E7CJw8BsOZA9s=;
-        b=hJHUu5sHNTXEaUsk0XbjTRP5PlH8JhkKugkzaT4DXqBRiEkWzmuToaXBtZxACZg4Pa
-         3qlBSG9dSWEP4Qxqz8NugfFJn285MaLQ6eEOC0yIitCvlKKoxjjFnVbf8rJ3CBRFo7U0
-         VjLLYsf6AVV4AY2VwllKv2pHVch4huXkahbIo6vOVkC9eQJqk7xjVtdEFRgYJ4n0fh+G
-         YULBoXYg1A7yJ5jj0nfUu2Cgu00GUpK6rZzPQZ9M36ITdfTopucwcTYY0UAvmEWFfjvl
-         m/jcUWvJpOCHnRYu3HgOJhwTL/cysx0LjYd17Pgry5XNFkCXJkedf+c1hQM6E9cTz7R2
-         wjuA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIj/BWiENi1lkCtE/K9RW9KfHupl/buZU3LNienMwPpfnoPa/+TBMKkQbtRIpbyWYZqcH54R/Al/OcyDE=@vger.kernel.org, AJvYcCWBISOpyWIIDnkj/vF/HuNjdYEIlla+T1aQcBtV7CeFgMmvaE2qZYZTXA872sTnRMVO+cl+NjWRuom4@vger.kernel.org, AJvYcCXj9R2NYkwZ+jH9hDD4Qwf5ntiEXqRs5BqEZ5pH0H2bGWR40Ho5Q2d1sjR5zLvfAWj+OxW4cbDf2FXlQ4B9YTQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR7oI4pbWrOl0ZrSr1ff6lTrT5/9MoTuF4ARHa+0Ti5gPlfOD9
-	PcFgF/NtkQCsekThPu0XYGGcABYv+eb32cD5QgD/+af/sShLp79pP15dBH8F6FUl6XQshoc33kh
-	gVo5vq7F57djhF9QcJzk3Z90HMys=
-X-Gm-Gg: ASbGncvlwTOmNJcJu3exmk/ELUU/Y2geoNzNSIfSqeOXgLtPSeRZPjvUpCi9DbH7nzk
-	gEdoWhN3EruobKnzLXScC+qdXY85QOLOgw0kD4UzRgkLwtFuIEadgihOi7bxNejJ4/Adg17/LyU
-	5eHthHFjKFb6RFjvFOwYQTRzs5Mc+JsaGYSwlvhDPKykxm7QkW0e0urUi0tYA=
-X-Google-Smtp-Source: AGHT+IFl+A+Ba20JPX9FmogbjoD7hGniVYN8d0KWTnxk/lLm/Lu/HBymNbtUAkDiT5NORHcz7MGSZqNNo3xaEtNJgzc=
-X-Received: by 2002:a2e:7817:0:b0:30b:fca2:6ac1 with SMTP id
- 38308e7fff4ca-30d7e23c2aemr55848501fa.22.1742896376916; Tue, 25 Mar 2025
- 02:52:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742898126; x=1743502926;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gQs2MQ7qVRbNMJHbCM5bWSarB3xGRHf2C0jjYhuIPRM=;
+        b=Qm73tYxHm8bPNd13LS2lBVzLv7W/sjoRdFAIwyWBjm/Fc7h3qQIAfLBq+zMIXPqJGx
+         nn4ZPCV/P/LNe0B3ly94coCh28Z2G8NkqLXk2ovmXJCdlf0nQ9AxvIIynKk8E5XOpXJ1
+         KZWkUSLjEELVU/BVovu4t3QBPHKN3xKBJMjxhXkp6l+6hyDL8I7So4NjKGnJphyamNWB
+         llNzMgXrQ6IC+5WBtG042LxgIepnmSgXMen+AehRB8sfGBSX55aRJpAL6PNpDgJ3xzLI
+         0a7sJPiL+deupenLpKgvqGa7IwCCd/yrmHw47lfREFc1D1mNOhbvb3liptfdXLI+8jfX
+         zxew==
+X-Forwarded-Encrypted: i=1; AJvYcCUznI8r72BhcJf/0wNIfceXDH3TjouxuWnh5t3/mdrE36HUcFoYQYSt17fvN6RC6JoEHilPt/yJNXQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpDkL8kxBYDyC4hIklFxbIyG1bPZfloszclJoJlBEP9DN10M9e
+	S68yDWNI6WDKhkutvpao6jobtYnMGxiHiNMgIXqUPupSwiSSfmwSrU2/tjgMwV4=
+X-Gm-Gg: ASbGnctLLgYwKO8+pEJyIjiWA2aaGcbn3MVF7aLy4KzHCCZRwy6/AZYIWuSQ6AUsNq4
+	lJnaqUOn8eGzzfgqrYb4NsUbhgCfTig8vnh6MRjAbAFyp2ZlrGX68Uo1gN3Ek0eM0M5P7EHyWMP
+	5T/lzTrh+WyIz95LAP4aKtkJ+h/2j+2OQqmrFyIezGLR2R+ce5bCKp5r/tY45+9Y1TyCDqf6Ugy
+	HH5VNhYAI2Ir18YFFMTv2guGiVfdH+xebCWG0+ZppRZl0CjNtC2T+vcvAYA4fIL1F35LAEJLNT8
+	aIL3jpjtWyJByJ40asNS+sGdItV7ilouogAw4ATWzdGPd7vOOQ==
+X-Google-Smtp-Source: AGHT+IF85xhWKCrs08RP4P7IKWzeGYUYqC72eXPjEagDGhBRZZgGX/BU+7NeI+5hClPwqyJM9bhKWA==
+X-Received: by 2002:a17:902:ef11:b0:224:c46:d166 with SMTP id d9443c01a7336-22780e14e84mr295978445ad.40.1742898126108;
+        Tue, 25 Mar 2025 03:22:06 -0700 (PDT)
+Received: from localhost ([84.78.159.3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-227811c0cb8sm86079655ad.122.2025.03.25.03.22.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 03:22:05 -0700 (PDT)
+Date: Tue, 25 Mar 2025 11:22:00 +0100
+From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Daniel Gomez <da.gomez@kernel.org>,
+	=?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v3 3/3] PCI/MSI: Convert pci_msi_ignore_mask to per MSI
+ domain flag
+Message-ID: <Z-KDyCzeovpFGiVu@macbook.local>
+References: <20250320210741.GA1099701@bhelgaas>
+ <846c80f8-b80f-49fd-8a50-3fe8a473b8ec@suse.com>
+ <qn7fzggcj6qe6r6gdbwcz23pzdz2jx64aldccmsuheabhmjgrt@tawf5nfwuvw7>
+ <Z-GbuiIYEdqVRsHj@macbook.local>
+ <kp372led6jcryd4ubpyglc4h7b3erramgzsjl2slahxdk7w575@jganskuwkfvb>
+ <Z-Gv6TG9dwKI-fvz@macbook.local>
+ <87y0wtzg0z.ffs@tglx>
+ <87v7rxzct0.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324-list-no-offset-v1-0-afd2b7fc442a@gmail.com>
- <20250324-list-no-offset-v1-3-afd2b7fc442a@gmail.com> <67e1d1b3.050a0220.4c4ff.6e89@mx.google.com>
- <CAJ-ks9moCO83cGkKuONR-2JMN61x18T2UVO98jhspDR=uyaVqw@mail.gmail.com>
- <CAJ-ks9kPhb00-Dv8KucYGOVjLFMVYvfpBnqrV87M+eJmODAmyw@mail.gmail.com> <Z-Iq6Okk1j3ImH1u@Mac.home>
-In-Reply-To: <Z-Iq6Okk1j3ImH1u@Mac.home>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 25 Mar 2025 05:52:20 -0400
-X-Gm-Features: AQ5f1JrtiJucZ4hs_wMZ1sKyb5AnOZiV8hIMZ0BUk72C9G6LuNd267LkKeV2Nu0
-Message-ID: <CAJ-ks9n66_vVg3ww58VqfXV6+phng8Bhq9C=NNn854gXK0KAHg@mail.gmail.com>
-Subject: Re: [PATCH 3/5] rust: list: use consistent type parameter names
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87v7rxzct0.ffs@tglx>
 
-On Tue, Mar 25, 2025 at 12:02=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> =
-wrote:
->
-> On Mon, Mar 24, 2025 at 05:56:57PM -0400, Tamir Duberstein wrote:
-> > On Mon, Mar 24, 2025 at 5:51=E2=80=AFPM Tamir Duberstein <tamird@gmail.=
-com> wrote:
-> > >
-> > > On Mon, Mar 24, 2025 at 5:42=E2=80=AFPM Boqun Feng <boqun.feng@gmail.=
-com> wrote:
-> > > >
-> > > > On Mon, Mar 24, 2025 at 05:33:45PM -0400, Tamir Duberstein wrote:
-> > > > > Refer to the type parameters of `impl_has_list_links{,_self_ptr}!=
-` by
-> > > > > the same name used in `impl_list_item!`.
-> > > > >
-> > > > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > > > > ---
-> > > > >  rust/kernel/list/impl_list_item_mod.rs | 10 +++++-----
-> > > > >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > > > >
-> > > > > diff --git a/rust/kernel/list/impl_list_item_mod.rs b/rust/kernel=
-/list/impl_list_item_mod.rs
-> > > > > index 5ed66fdce953..9d2102138c48 100644
-> > > > > --- a/rust/kernel/list/impl_list_item_mod.rs
-> > > > > +++ b/rust/kernel/list/impl_list_item_mod.rs
-> > > > > @@ -41,7 +41,7 @@ unsafe fn raw_get_list_links(ptr: *mut Self) ->=
- *mut ListLinks<ID> {
-> > > > >  /// Implements the [`HasListLinks`] trait for the given type.
-> > > > >  #[macro_export]
-> > > > >  macro_rules! impl_has_list_links {
-> > > > > -    ($(impl$(<$($implarg:ident),*>)?
-> > > > > +    ($(impl$(<$($generics:ident),*>)?
-> > > > >         HasListLinks$(<$id:tt>)?
-> > > > >         for $self:ty
-> > > > >         { self$(.$field:ident)* }
-> > > > > @@ -51,7 +51,7 @@ macro_rules! impl_has_list_links {
-> > > > >          //
-> > > > >          // The behavior of `raw_get_list_links` is not changed s=
-ince the `addr_of_mut!` macro is
-> > > > >          // equivalent to the pointer offset operation in the tra=
-it definition.
-> > > > > -        unsafe impl$(<$($implarg),*>)? $crate::list::HasListLink=
-s$(<$id>)? for $self {
-> > > > > +        unsafe impl$(<$($generics),*>)? $crate::list::HasListLin=
-ks$(<$id>)? for $self {
-> > > > >              const OFFSET: usize =3D ::core::mem::offset_of!(Self=
-, $($field).*) as usize;
-> > > > >
-> > > > >              #[inline]
-> > > > > @@ -81,16 +81,16 @@ pub unsafe trait HasSelfPtr<T: ?Sized, const =
-ID: u64 =3D 0>
-> > > > >  /// Implements the [`HasListLinks`] and [`HasSelfPtr`] traits fo=
-r the given type.
-> > > > >  #[macro_export]
-> > > > >  macro_rules! impl_has_list_links_self_ptr {
-> > > > > -    ($(impl$({$($implarg:tt)*})?
-> > > > > +    ($(impl$({$($generics:tt)*})?
-> > > >
-> > > > While you're at it, can you also change this to be
-> > > >
-> > > >         ($(impl$(<$($generics:tt)*>)?
-> > > >
-> > > > ?
-> > > >
-> > > > I don't know why we chose <> for impl_has_list_links, but {} for
-> > > > impl_has_list_links_self_ptr ;-)
-> > >
-> > > This doesn't work in all cases:
-> > >
-> > > error: local ambiguity when calling macro `impl_has_work`: multiple
-> > > parsing options: built-in NTs tt ('generics') or 1 other option.
-> > >    --> ../rust/kernel/workqueue.rs:522:11
-> > >     |
-> > > 522 |     impl<T> HasWork<Self> for ClosureWork<T> { self.work }
-> > >
-> > > The reason that `impl_has_list_links` uses <> and all others use {} i=
-s
-> > > that `impl_has_list_links` is the only one that captures the generic
-> > > parameter as an `ident`, the rest use `tt`. So we could change
->
-> Why impl_has_list_links uses generics at `ident` but rest use `tt`? I'm
-> a bit curious.
+On Tue, Mar 25, 2025 at 10:20:43AM +0100, Thomas Gleixner wrote:
+> On Tue, Mar 25 2025 at 09:11, Thomas Gleixner wrote:
+> 
+> > On Mon, Mar 24 2025 at 20:18, Roger Pau Monné wrote:
+> >> On Mon, Mar 24, 2025 at 07:58:14PM +0100, Daniel Gomez wrote:
+> >>> The issue is that info appears to be uninitialized. So, this worked for me:
+> >>
+> >> Indeed, irq_domain->host_data is NULL, there's no msi_domain_info.  As
+> >> this is x86, I was expecting x86 ot always use
+> >> x86_init_dev_msi_info(), but that doesn't seem to be the case.  I
+> >> would like to better understand this.
+> >
+> > Indeed. On x86 this should not happen at all. On architectures, which do
+> > not use (hierarchical) interrupt domains, it will return NULL.
+> >
+> > So I really want to understand why this happens on x86 before such a
+> > "fix" is deployed.
+> 
+> So after staring at it some more it's clear. Without XEN, the domain
+> returned is the MSI parent domain, which is the vector domain in that
+> setup. That does not have a domain info set. But on legacy architectures
+> there is not even a domain.
+> 
+> It's really wonderful that we have a gazillion ways to manage the
+> backends of PCI/MSI....
 
-I think it's because `ident` cannot deal with lifetimes or const
-generics - or at least I was not able to make it work with them.
+I'm a bit confused by what msi_create_device_irq_domain() does, as it
+does allocate an irq_domain with an associated msi_domain_info
+structure, however that irq_domain is set in
+dev->msi.data->__domains[domid].domain rather than dev->msi.domain,
+and doesn't override the default irq_domain set by
+pcibios_device_add().
+
+And the default x86 irq_domain (set by pcibios_device_add()) doesn't
+have an associated msi_domain_info.
+
+> So none of the suggested pointer checks will cover it correctly. Though
+> there is already a function which allows to query MSI domain flags
+> independent of the underlying insanity. Sorry for not catching it in
+> review.
+
+Oh, that's nice, I didn't know about that helper.
+
+> Untested patch below.
+
+LGTM, but (as you can see) I'm not expert on that area.
+
+Thanks, Roger.
 
