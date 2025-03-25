@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-24647-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24649-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 65E75A6ED9F
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 11:27:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E131A6EDA6
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 11:28:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EBE4516D568
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 10:27:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F3BC1189723D
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 10:27:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEB582566D9;
-	Tue, 25 Mar 2025 10:26:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73460256C85;
+	Tue, 25 Mar 2025 10:26:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUDBtS4P"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YCQ/8UOH"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DC01EBFE2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35706256C6D;
 	Tue, 25 Mar 2025 10:26:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742898396; cv=none; b=poJhZgh8oBDFUOcTE7hqHjD6e/2pggxL7UIrTPTHjdUcod9AmI7pR81boPwH8zH0MwIGiwtMrF5aXcz2v17UF0niCQFvOAIiXkixzJTJgiCEbuSh8vnm4t3gjW2WtZ3Yb6EB2MTgSUIFPXBNSZ+2l7ZYDSdvjDKGOyfZvqIMwBI=
+	t=1742898397; cv=none; b=MsDKPyGpKO8y8paqLmdSzMLmqTHXdHzOhKSTo99BEk+ekKh1H6Z9OlUa2X3llgNDpPZAjwzd1n1K7izqp0JC/H1maDBxQN8p8dpnJ0Ct2s+SIul/ehlUrvKaknHBYPyVQa70ilNiY1rZ3y8zJ6+9/e68fdPVYpLU3jWfZ2XbqzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742898396; c=relaxed/simple;
-	bh=1vQPJifRV9s/zzFihe691RAxq/RpVicRgI4tNMPv98s=;
+	s=arc-20240116; t=1742898397; c=relaxed/simple;
+	bh=FXNN5Scx+4h2r+tjfXFGM0L2JoQizw/qNxVtoO8WdrA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C5Mr4E8lGkiW8w4dP1aAetHjMii6RcIJBTdxzUqHJ5Ewvr5PQbAZe/1ilecYIJ5y9hDdLzYN3LJfxRBkZlgnnwSrlK92rjRfQ/0+/Agq6+wKhfa1G7ICLYhZeWPjRgcL93L6fJVNvVPvpj+iwLCPuX5jI4h6D7JQJoM8AHWJUU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUDBtS4P; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D8CC4AF0B;
+	 MIME-Version; b=V23VGmur4AopPQg+yXLrEuAvBZtLxEEMvMdxwcsyiSoVN0kkjEt8JzgOwgpLbUPojWTWWwM61fNjVOc7ujYZi0+Jgiy3xeK1XsjNbkN0oAigj+MJFZfCU3APRidYjxUCDRUBm6x4xjUcNruERySbvTcYSm1cMHN7VCA+UhAq1cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YCQ/8UOH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ED88C4AF0D;
 	Tue, 25 Mar 2025 10:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1742898396;
-	bh=1vQPJifRV9s/zzFihe691RAxq/RpVicRgI4tNMPv98s=;
+	bh=FXNN5Scx+4h2r+tjfXFGM0L2JoQizw/qNxVtoO8WdrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YUDBtS4PqAalbD9NTxNEjtGTz1mgJn+UuJYeXEjupg774VvxT5qJXUDprUqGBD6sD
-	 2CtC/2jFQTOSj71Nxdg0iv7wlyddSk7pwbtmxJ/3N0JD8p4Fkp93D9g1kRV4aDXCeq
-	 3kAzUzOXRE1bSdGl6e4DLEkQcmCudnsJms0YVGntHTAtYmwRa+iJDixrMNzLpT7FyB
-	 Zs/PWjsUyWOnQvdgLqIItz0Z+iPuOEEjLKkqi7DY5Tsp0RoZa133Pv+e3o4W7EdfBK
-	 1dbjqC3zsVh0e1BHl+HU40klcnR3liAdrJbHRNgMDmmL0YdjlUrYtFgthaxWIGvoUe
-	 cd8JNab55Hjgw==
+	b=YCQ/8UOHxvpctHxRlsyZc+SCKLCZyJoX6yztcEZ5ouxY6WbK2sp+qPGxnWYaOed6B
+	 wYud6CkXeaNzFKss0AT3ecy7yH+R7QxfOm9GfBIAZj9nqreQ6R8ppYSBO6AGwCBfiu
+	 JagL7LzuJRSScxoakeQMVsyI9pOA2G3mDd6v2HwqhwiYfAPaaavnnRDwHeCZA9Unqm
+	 +EN2cyHrJZvTCJupnT7QxYw7TYpzY0vz9vdQj7hNUk8YXJ6cFgCM7q5i/DhGzqI0sK
+	 NijmmdHVXSQTYrLxdDwDBhtHzmUYtrf38wOrSLBEq6uIP4db1JkCi3gEGzNauqaqV2
+	 z75xGeZoKkHAw==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1tx1UQ-00GsRS-G8;
+	id 1tx1UQ-00GsRS-NQ;
 	Tue, 25 Mar 2025 10:26:34 +0000
 From: Marc Zyngier <maz@kernel.org>
 To: linux-arm-kernel@lists.infradead.org,
@@ -63,9 +63,9 @@ Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: [PATCH v2 10/13] PCI: apple: Drop poll for CORE_RC_PHYIF_STAT_REFCLK
-Date: Tue, 25 Mar 2025 10:26:07 +0000
-Message-Id: <20250325102610.2073863-11-maz@kernel.org>
+Subject: [PATCH v2 11/13] PCI: apple: Use gpiod_set_value_cansleep in probe flow
+Date: Tue, 25 Mar 2025 10:26:08 +0000
+Message-Id: <20250325102610.2073863-12-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250325102610.2073863-1-maz@kernel.org>
 References: <20250325102610.2073863-1-maz@kernel.org>
@@ -83,35 +83,39 @@ X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to 
 
 From: Hector Martin <marcan@marcan.st>
 
-This is checking a core refclk in per-port setup which doesn't make a
-lot of sense, and the bootloader needs to have gone through this anyway.
+We're allowed to sleep here, so tell the GPIO core by using
+gpiod_set_value_cansleep instead of gpiod_set_value.
 
-It doesn't work on T602x, so just drop it across the board.
-
+Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
 Signed-off-by: Hector Martin <marcan@marcan.st>
 Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/pci/controller/pcie-apple.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/pci/controller/pcie-apple.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index 94c49611b74df..c00ec0781fabc 100644
+index c00ec0781fabc..505adf64bd66d 100644
 --- a/drivers/pci/controller/pcie-apple.c
 +++ b/drivers/pci/controller/pcie-apple.c
-@@ -475,12 +475,6 @@ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
- 	u32 stat;
- 	int res;
+@@ -562,7 +562,7 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 	rmw_set(PORT_APPCLK_EN, port->base + PORT_APPCLK);
  
--	res = readl_relaxed_poll_timeout(pcie->base + CORE_RC_PHYIF_STAT, stat,
--					 stat & CORE_RC_PHYIF_STAT_REFCLK,
--					 100, 50000);
--	if (res < 0)
--		return res;
--
- 	rmw_set(PHY_LANE_CTL_CFGACC, port->phy + PHY_LANE_CTL);
- 	rmw_set(PHY_LANE_CFG_REFCLK0REQ, port->phy + PHY_LANE_CFG);
+ 	/* Assert PERST# before setting up the clock */
+-	gpiod_set_value(reset, 1);
++	gpiod_set_value_cansleep(reset, 1);
  
+ 	ret = apple_pcie_setup_refclk(pcie, port);
+ 	if (ret < 0)
+@@ -573,7 +573,7 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 
+ 	/* Deassert PERST# */
+ 	rmw_set(PORT_PERST_OFF, port->base + PORT_PERST);
+-	gpiod_set_value(reset, 0);
++	gpiod_set_value_cansleep(reset, 0);
+ 
+ 	/* Wait for 100ms after PERST# deassertion (PCIe r5.0, 6.6.1) */
+ 	msleep(100);
 -- 
 2.39.2
 
