@@ -1,132 +1,249 @@
-Return-Path: <linux-pci+bounces-24662-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24663-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEA95A6F1A1
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 12:18:31 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93BD1A6F578
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 12:43:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 35877188D2F5
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 11:18:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 452577A39EA
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 11:41:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57D3B198A29;
-	Tue, 25 Mar 2025 11:18:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C96E22561DC;
+	Tue, 25 Mar 2025 11:41:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="NpEMeVyE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MgLXv+cB"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D09D2E337C;
-	Tue, 25 Mar 2025 11:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA262566C5
+	for <linux-pci@vger.kernel.org>; Tue, 25 Mar 2025 11:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742901507; cv=none; b=EPwNCEDtkjU6L+UjFXYxg56uNAePj5F0gPhcDAdZO+40Lg5l1v207EdGOwYM0v8h5cK1FVhzU5YQSp+Bi8ueatUlwYqSauyGocfzWFMB99sbjf4kaLE52DuM9tk06CFKc1uYKCwZffJ0M5UqXCPGdAgtFC4zUNgWqctgzRePKGk=
+	t=1742902895; cv=none; b=OukByJ+v40Lp58qb3OQZLfLlGsejRuoFu+3DYOf9Kv23eyoZceqatYlRi5JJV9G+hTqhnN8MbYl+TbhHbiLGC0phqMuf+pVnLyvIH6xRRsnVUYaeMkryShFFDhuZmxlovPij2Jn6itHnNYDI1SEDttv/F4b+entdKTu9Fho1u+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742901507; c=relaxed/simple;
-	bh=/A4Re9ZnXk9dFMPy8kLJyTDBCliwhE9DawViBWNrdTY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CBYmcnb348p2MMVTE85NpIOqjxNlKAFDX2iJGbK6DL+IG7tFO1TZArMqQ1vN5OVr9zcBEim22/LHVX+u4fxG1Weq8A88G85X/6eMYVRInZV03QzBqri4pY5kIS8Y7Bs6RTEeWYrO7Y59m0BUOIE0bFNAUHmjZ5wBjEDM5Sf8iGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=NpEMeVyE; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=j3jqpzi7fbao5nhxypqetcbjbi.protonmail; t=1742901501; x=1743160701;
-	bh=PRIAuT+urW+Uxb9HvRuGGsdWcowDVCzwb9vcglusjuc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=NpEMeVyE9u+h5Gj12RsbKxkQT+GjekJu1zM6uwwaQxjNnelrHRtav897efjjRl2YV
-	 IuMRX1CgLBIKtopQ317TtoiRTgrlPKT2S/1VIS1u5So6kpyWVWFaaSc/lgzuMiFtV1
-	 UO764HId23CR+0WVRoZVjKlY4ydXzv9XxCbkEs3i5PmCCzrbk8zzSpdLy457LPYd8J
-	 gbLQxKoYPpEI69NA7Pdz6rsWftpNs8osKjAcscSL6/loYj1S2X4UNuznYO2MxeSsBr
-	 90nT8KHJGILTjcrbfKk5+36vezA7wF4fSldi/Zr/rw1I8y9BN3TOE5XBkoZ/moUhsj
-	 XzihJiduIIb3A==
-Date: Tue, 25 Mar 2025 11:18:17 +0000
-To: Tamir Duberstein <tamird@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/5] rust: list: use consistent type parameter names
-Message-ID: <D8PB0LN62GOX.3P4K4V96OLVQ9@proton.me>
-In-Reply-To: <CAJ-ks9kOFk2GGwjX_Eo7Kuxoh5eziGSKRpLE8oVjEs7pRnWyRw@mail.gmail.com>
-References: <20250324-list-no-offset-v1-0-afd2b7fc442a@gmail.com> <20250324-list-no-offset-v1-3-afd2b7fc442a@gmail.com> <67e1d1b3.050a0220.4c4ff.6e89@mx.google.com> <CAJ-ks9moCO83cGkKuONR-2JMN61x18T2UVO98jhspDR=uyaVqw@mail.gmail.com> <CAJ-ks9kPhb00-Dv8KucYGOVjLFMVYvfpBnqrV87M+eJmODAmyw@mail.gmail.com> <Z-Iq6Okk1j3ImH1u@Mac.home> <CAJ-ks9n66_vVg3ww58VqfXV6+phng8Bhq9C=NNn854gXK0KAHg@mail.gmail.com> <D8PA5CKNMCGA.UODS331S36EG@proton.me> <CAJ-ks9kOFk2GGwjX_Eo7Kuxoh5eziGSKRpLE8oVjEs7pRnWyRw@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 8a508fb47a377576bf6cba327da34cc8bd8a0f3d
+	s=arc-20240116; t=1742902895; c=relaxed/simple;
+	bh=/4MN9pL13QS8WSvmrDAkH9tjZnUJYGKfLLZEMOGkYI4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=qJeZotMoK0uI4DGnc24iKUTiido4M821ueCzgcEEpK7OdbSwIzfSrgGXWMGROU9TEICeFnG7qfPFzUXDBOm/DYB3ZA60prcoZNZuykyk7cMKUWs2Xxvxv+oW4+1u+CDF0++RI7dT1wOB4fNx0KYmGRErVQOdk/UD/8Di3WYkx+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MgLXv+cB; arc=none smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-5259327a937so2148145e0c.0
+        for <linux-pci@vger.kernel.org>; Tue, 25 Mar 2025 04:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742902892; x=1743507692; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GojWv6JgO00ZhMt6mOebWUL6XxDfc/RWWGCpH5UC34U=;
+        b=MgLXv+cB28foKrGLTatBjcBBVIBvdKNDE/yoCExu1J7VUIPu0WgZsxMobKaqeekO07
+         +vINemjTkv1e6VVZPUyaoj+Bz2FTBTVaxnqTwAuTyUPqoHsifCcOMwxPxWznJ0vWScuk
+         7mvozJuvnQGNorY0y0rD7e2iAga/OJpGq/8dc/YV8AwS9IpLb+Fh4u2uYhjl5ITafmkH
+         5OJ/ZhKLVqX01/Bww+fAd0NAQMJZiM0aR9IZ41mREVruHreSbZgsnyc8RzmRvqYOZTd4
+         B0lw67JonW+lzQkU2Ix2UTj9fj4K0x95vCTvua4NgK5uzhoI02PsgKeB2TKagljd7Fv8
+         OPPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742902892; x=1743507692;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GojWv6JgO00ZhMt6mOebWUL6XxDfc/RWWGCpH5UC34U=;
+        b=EbbiTH9QbBMY9js7Kzl+Mgq0CJ22dSZHiubFpn6Z7Onv2IrdJkJXfzrNhbUPwtPWQn
+         QRKp3VNwwz8YPtI1/Df28f+LWzZ+x5Cr6xqO4uvUQ7fpVtCghTO9xkG6SndGWzglyjKz
+         /xC3P/xLMH+9y0lmp++Li1kr0zubIb8VPyDRvBeMzaP3FEczKPlBGB98kK4FZXrv8QLs
+         GBJU0NCZFmpXTT9u9Qwhm5PMmo7Vp/iDBRdyt7Rct28ZplaBnmXRCOE9X09hDYVZlOkF
+         Pkv35idIH92udC2CLxlEGibE12Mbe8+f4UR5wBQL1Vd3SYPdu8XPAfJqUYyPsSfMRqFs
+         zh9g==
+X-Gm-Message-State: AOJu0Yzm9HKaXHt9mqej+Y+fN5wcTPo1WgcOx7WD84qpdW9BrVydCTHd
+	yoXwPisd43FNH0Xv+X6zCJESpTwWUGF9ypTmL4kuDYc8jBmulxf4G8FqUwu6m2QxH5g8cxFAtWb
+	yVsFMi6UWn0TqQvacbC41S1EGKxB9FbhxAMsEaxENZjr5VxVfcxI=
+X-Gm-Gg: ASbGncshKT1OJfm3BANbdpfoc1HdLG+F7IDgldGhCaF2OLfObvVfNtqdOzqxwMOZVwV
+	YYj0OIO9ovkrJJUmbj7hlJsPu9tV4n1vm/ZHc4c8P0LGZmeyKamar3/ttpKWITeD9doWreSdan5
+	lhaozrViyNuORm9SvHFmMI/l/51CWqA46uTxaifcC7ju6RGtPRNBE5+EOcryg=
+X-Google-Smtp-Source: AGHT+IErnLB8k2eURQkQuvonw7hDaTgDK/6MY679H/xblBZRcECFv8MSDYwthPn/gDiugNBls/DTd74DC7XLhdBeVrs=
+X-Received: by 2002:a05:6122:2783:b0:51b:a11f:cbdb with SMTP id
+ 71dfb90a1353d-525a833b0cfmr11322920e0c.4.1742902892035; Tue, 25 Mar 2025
+ 04:41:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 25 Mar 2025 17:11:20 +0530
+X-Gm-Features: AQ5f1Jp4MnK8M9WIj6QfiQc4fPhqZDUJiPB_52yu7nH9UEpCQdOPXm-gf5TLGEQ
+Message-ID: <CA+G9fYs4-4y=edxddERXQ_fMsW_nUJU+V0bSMHFDL3St7NiLxQ@mail.gmail.com>
+Subject: next-20250324: x86_64: BUG: kernel NULL pointer dereference __pci_enable_msi_range
+To: PCI <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, shivamurthy.shastri@linutronix.de, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue Mar 25, 2025 at 11:42 AM CET, Tamir Duberstein wrote:
-> On Tue, Mar 25, 2025 at 6:37=E2=80=AFAM Benno Lossin <benno.lossin@proton=
-.me> wrote:
->> On Tue Mar 25, 2025 at 10:52 AM CET, Tamir Duberstein wrote:
->> > On Tue, Mar 25, 2025 at 12:02=E2=80=AFAM Boqun Feng <boqun.feng@gmail.=
-com> wrote:
->> >> On Mon, Mar 24, 2025 at 05:56:57PM -0400, Tamir Duberstein wrote:
->> >> > On Mon, Mar 24, 2025 at 5:51=E2=80=AFPM Tamir Duberstein <tamird@gm=
-ail.com> wrote:
->> >> > > On Mon, Mar 24, 2025 at 5:42=E2=80=AFPM Boqun Feng <boqun.feng@gm=
-ail.com> wrote:
->> >> > > > On Mon, Mar 24, 2025 at 05:33:45PM -0400, Tamir Duberstein wrot=
-e:
->> >> > > > >              #[inline]
->> >> > > > > @@ -81,16 +81,16 @@ pub unsafe trait HasSelfPtr<T: ?Sized, co=
-nst ID: u64 =3D 0>
->> >> > > > >  /// Implements the [`HasListLinks`] and [`HasSelfPtr`] trait=
-s for the given type.
->> >> > > > >  #[macro_export]
->> >> > > > >  macro_rules! impl_has_list_links_self_ptr {
->> >> > > > > -    ($(impl$({$($implarg:tt)*})?
->> >> > > > > +    ($(impl$({$($generics:tt)*})?
->> >> > > >
->> >> > > > While you're at it, can you also change this to be
->> >> > > >
->> >> > > >         ($(impl$(<$($generics:tt)*>)?
->> >> > > >
->> >> > > > ?
->> >> > > >
->> >> > > > I don't know why we chose <> for impl_has_list_links, but {} fo=
-r
->> >> > > > impl_has_list_links_self_ptr ;-)
->> >> > >
->> >> > > This doesn't work in all cases:
->> >> > >
->> >> > > error: local ambiguity when calling macro `impl_has_work`: multip=
-le
->> >> > > parsing options: built-in NTs tt ('generics') or 1 other option.
->> >> > >    --> ../rust/kernel/workqueue.rs:522:11
->> >> > >     |
->> >> > > 522 |     impl<T> HasWork<Self> for ClosureWork<T> { self.work }
->> >> > >
->> >> > > The reason that `impl_has_list_links` uses <> and all others use =
-{} is
->> >> > > that `impl_has_list_links` is the only one that captures the gene=
-ric
->> >> > > parameter as an `ident`, the rest use `tt`. So we could change
->> >>
->> >> Why impl_has_list_links uses generics at `ident` but rest use `tt`? I=
-'m
->> >> a bit curious.
->> >
->> > I think it's because `ident` cannot deal with lifetimes or const
->> > generics - or at least I was not able to make it work with them.
->>
->> If you use `ident`, you can use the normal `<>` as the delimiters of
->> generics. For `tt`, you have to use `{}` (or `()`/`[]`).
->
-> Yes I know. But with `ident` you cannot capture lifetimes or const generi=
-cs.
+Regressions on x86_64 boot failed with Linux next-20250324 tag kernel
+6.14.0-rc7-next-20250324
 
-Why is that required for this macro? I think we could use `tt`.
+First seen on the next-20250324
+ Good: next-20250321
+ Bad:  next-20250324 ..next-20250325
 
----
-Cheers,
-Benno
+Regressions found on x86_84:
+ - boot
 
+Regression Analysis:
+ - New regression? Yes
+ - Reproducible? Yes
+
+Boot regression: x86 boot fail kernel panic __pci_enable_msi_range
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Boot log
+<1>[    1.525485] BUG: kernel NULL pointer dereference, address:
+0000000000000002
+<1>[    1.525573] #PF: supervisor read access in kernel mode
+<1>[    1.525573] #PF: error_code(0x0000) - not-present page
+<6>[    1.525573] PGD 0 P4D 0
+<4>[    1.525573] Oops: Oops: 0000 [#1] SMP PTI
+<4>[    1.525573] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted
+6.14.0-rc7-next-20250324 #1 PREEMPT(voluntary)
+<4>[    1.525573] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+<4>[    1.525573] RIP: 0010:__pci_enable_msi_range+0x306/0x6b0
+<4>[    1.525573] Code: ff ff ff e8 1c 05 fe ff f6 83 21 08 00 00 10
+0f b7 85 6e ff ff ff 74 0c 0d 00 01 00 00 66 89 85 6e ff ff ff 8b 8d
+68 ff ff ff <41> f6 44 24 02 40 74 0c 25 ff fe 00 00 66 89 85 6e ff ff
+ff 89 8d
+<4>[    1.525573] RSP: 0000:ffffa83b00013740 EFLAGS: 00010246
+<4>[    1.525573] RAX: 0000000000000080 RBX: ffffa11c8023e000 RCX:
+0000000000000001
+<4>[    1.525573] RDX: 0000000000000000 RSI: ffffffff9e60c683 RDI:
+ffffffff9e6519a8
+<4>[    1.525573] RBP: ffffa83b00013810 R08: 0000000000000002 R09:
+ffffa83b0001370c
+<4>[    1.525573] R10: 0000000000000001 R11: ffffffff9e60c5b0 R12:
+0000000000000000
+<4>[    1.525573] R13: 0000000000000000 R14: 0000000000000001 R15:
+ffffa11c8023e000
+<4>[    1.525573] FS:  0000000000000000(0000)
+GS:ffffa11d5c339000(0000) knlGS:0000000000000000
+<4>[    1.525573] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[    1.525573] CR2: 0000000000000002 CR3: 000000007d844000 CR4:
+00000000000006f0
+<4>[    1.525573] Call Trace:
+<4>[    1.525573]  <TASK>
+<4>[    1.525573]  ? __die_body+0xb4/0xc0
+<4>[    1.525573]  ? __die+0x2e/0x40
+<4>[    1.525573]  ? page_fault_oops+0x3ae/0x410
+<4>[    1.525573]  ? kernelmode_fixup_or_oops+0x54/0x70
+<4>[    1.525573]  ? __bad_area_nosemaphore+0x52/0x240
+<4>[    1.525573]  ? bad_area_nosemaphore+0x16/0x20
+<4>[    1.525573]  ? do_user_addr_fault+0x738/0x7a0
+<4>[    1.525573]  ? irqentry_enter+0x2d/0x50
+<4>[    1.525573]  ? exc_page_fault+0x4d/0x120
+<4>[    1.525573]  ? exc_page_fault+0x70/0x120
+<4>[    1.525573]  ? asm_exc_page_fault+0x2b/0x30
+<4>[    1.525573]  ? __pfx_pci_conf1_read+0x10/0x10
+<4>[    1.525573]  ? pci_conf1_read+0xd3/0xf0
+<4>[    1.525573]  ? _raw_spin_unlock_irqrestore+0x28/0x50
+<4>[    1.525573]  ? __pci_enable_msi_range+0x306/0x6b0
+<4>[    1.525573]  ? _raw_spin_unlock_irqrestore+0x28/0x50
+<4>[    1.525573]  pci_alloc_irq_vectors_affinity+0xbf/0x140
+<4>[    1.525573]  pci_alloc_irq_vectors+0x15/0x20
+<4>[    1.525573]  ahci_init_irq+0x90/0xc0
+<4>[    1.525573]  ahci_init_one+0x82c/0xd10
+<4>[    1.525573]  pci_device_probe+0x198/0x230
+<4>[    1.525573]  really_probe+0x146/0x450
+<4>[    1.525573]  __driver_probe_device+0x7a/0xf0
+<4>[    1.525573]  driver_probe_device+0x24/0x190
+<4>[    1.525573]  __driver_attach+0x104/0x250
+<4>[    1.525573]  ? __pfx___driver_attach+0x10/0x10
+<4>[    1.525573]  bus_for_each_dev+0x10e/0x160
+<4>[    1.525573]  driver_attach+0x22/0x30
+<4>[    1.525573]  bus_add_driver+0x175/0x2c0
+<4>[    1.525573]  driver_register+0x65/0xf0
+<4>[    1.525573]  ? __pfx_ahci_pci_driver_init+0x10/0x10
+<4>[    1.525573]  __pci_register_driver+0x68/0x70
+<4>[    1.525573]  ahci_pci_driver_init+0x22/0x30
+<4>[    1.525573]  do_one_initcall+0x121/0x330
+<4>[    1.525573]  ? alloc_pages_mpol+0x170/0x1c0
+<4>[    1.525573]  ? alloc_pages_mpol+0x170/0x1c0
+<4>[    1.525573]  ? trace_preempt_on+0x12/0x80
+<4>[    1.525573]  ? alloc_pages_mpol+0x170/0x1c0
+<4>[    1.525573]  ? preempt_count_sub+0x63/0x80
+<4>[    1.525573]  ? alloc_pages_mpol+0x170/0x1c0
+<4>[    1.525573]  ? trace_hardirqs_on+0x29/0xa0
+<4>[    1.525573]  ? irqentry_exit+0x57/0x60
+<4>[    1.525573]  ? sysvec_apic_timer_interrupt+0x52/0x90
+<4>[    1.525573]  ? next_arg+0xcd/0x150
+<4>[    1.525573]  ? next_arg+0x138/0x150
+<4>[    1.525573]  ? parse_args+0x16e/0x440
+<4>[    1.525573]  do_initcall_level+0x80/0xf0
+<4>[    1.525573]  do_initcalls+0x48/0x80
+<4>[    1.525573]  do_basic_setup+0x1d/0x30
+<4>[    1.525573]  kernel_init_freeable+0x10c/0x180
+<4>[    1.525573]  ? __pfx_kernel_init+0x10/0x10
+<4>[    1.525573]  kernel_init+0x1e/0x130
+<4>[    1.525573]  ret_from_fork+0x45/0x50
+<4>[    1.525573]  ? __pfx_kernel_init+0x10/0x10
+<4>[    1.525573]  ret_from_fork_asm+0x1a/0x30
+<4>[    1.525573]  </TASK>
+<4>[    1.525573] Modules linked in:
+<4>[    1.525573] CR2: 0000000000000002
+<4>[    1.525573] ---[ end trace 0000000000000000 ]---
+<4>[    1.525573] RIP: 0010:__pci_enable_msi_range+0x306/0x6b0
+<4>[    1.525573] Code: ff ff ff e8 1c 05 fe ff f6 83 21 08 00 00 10
+0f b7 85 6e ff ff ff 74 0c 0d 00 01 00 00 66 89 85 6e ff ff ff 8b 8d
+68 ff ff ff <41> f6 44 24 02 40 74 0c 25 ff fe 00 00 66 89 85 6e ff ff
+ff 89 8d
+<4>[    1.525573] RSP: 0000:ffffa83b00013740 EFLAGS: 00010246
+<4>[    1.525573] RAX: 0000000000000080 RBX: ffffa11c8023e000 RCX:
+0000000000000001
+<4>[    1.525573] RDX: 0000000000000000 RSI: ffffffff9e60c683 RDI:
+ffffffff9e6519a8
+<4>[    1.525573] RBP: ffffa83b00013810 R08: 0000000000000002 R09:
+ffffa83b0001370c
+<4>[    1.525573] R10: 0000000000000001 R11: ffffffff9e60c5b0 R12:
+0000000000000000
+<4>[    1.525573] R13: 0000000000000000 R14: 0000000000000001 R15:
+ffffa11c8023e000
+<4>[    1.525573] FS:  0000000000000000(0000)
+GS:ffffa11d5c339000(0000) knlGS:0000000000000000
+<4>[    1.525573] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[    1.525573] CR2: 0000000000000002 CR3: 000000007d844000 CR4:
+00000000000006f0
+<6>[    1.525573] note: swapper/0[1] exited with irqs disabled
+<0>[    1.553459] Kernel panic - not syncing: Attempted to kill init!
+exitcode=0x00000009
+<0>[    1.553844] Kernel Offset: 0x1c000000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+<0>[    1.553844] ---[ end Kernel panic - not syncing: Attempted to
+kill init! exitcode=0x00000009 ]---
+
+
+## Source
+* Kernel version: 6.14.0-rc7-next-20250324
+* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+* Git sha: 882a18c2c14fc79adb30fe57a9758283aa20efaa
+* Git describe: next-20250324
+* Project details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/
+
+## Test
+* Test log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/testrun/27735988/suite/boot/test/clang-20-lkftconfig/log
+* Test history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/testrun/27735988/suite/boot/test/clang-20-lkftconfig/history/
+* Test details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/testrun/27735936/suite/boot/test/clang-20-lkftconfig/
+* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2ulLSNJUAxmyv6UZdUMeoptIZNn/
+* Kernel config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2ulLSNJUAxmyv6UZdUMeoptIZNn/config
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
 
