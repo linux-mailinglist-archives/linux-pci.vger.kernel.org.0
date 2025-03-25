@@ -1,377 +1,160 @@
-Return-Path: <linux-pci+bounces-24689-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24690-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E1B9A707DB
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 18:17:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C610A707E2
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 18:18:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 859F616C281
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 17:17:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4EBCC3A9DF0
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 17:17:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E79741E5B9E;
-	Tue, 25 Mar 2025 17:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1C1225DD07;
+	Tue, 25 Mar 2025 17:17:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSmUM0SX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="chE8zGi4"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22BA2E339B
-	for <linux-pci@vger.kernel.org>; Tue, 25 Mar 2025 17:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5201E5B9E;
+	Tue, 25 Mar 2025 17:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742923026; cv=none; b=ieP/vCMVifvGq81uONFcziKGNDjs1SZGVGzLGjthgwqytWvP9Y1VNqhYbeIjeO/59K5OVUEP/Zg5LG7Sx71rdNQ3Q1oV+nmRZ11j/r62obGiCw6yHRr0qD0Rtc/bM8ZErFlBqjlraFt+bglRXG7cFo1YZ2QqOjLoSMLVO+tlRo8=
+	t=1742923070; cv=none; b=rtKNfm1I6LROd8L73C2QXjvpjIGog0wjfxaP6sYEV8C5wq8gFnjqFAaN3OeXxJDdHJm4SlV8oFHaGU8PNQYSKpRodGazUxkiQJzZzTl7QsLBcOngsGtaCH5/DHbtSbw7Y4+H4JbMpO5Rg7JY8wgItpTc0dzZc2DbNknefG0yeVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742923026; c=relaxed/simple;
-	bh=9mcoMDyBWFl0a/dOp+AqVBoRDr3yZZEYgEx53/56OwI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VtLAV/F2fIf8C1UhCxXJgV5T0QLMqhsLw6Niodu5s0i8xKdiaQMIyJwhZiTmsxpvmmtIRBQs2xcLm47asxiXyHKyM+PFxhVGpRnF85HA1Bk4cXwb8NWAnyL/exs7/dEifJRrFI58DLYXsOyGnH+Ym77ycPIDYWyNDKaW5/R8804=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSmUM0SX; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FBEAC4CEEA;
-	Tue, 25 Mar 2025 17:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742923026;
-	bh=9mcoMDyBWFl0a/dOp+AqVBoRDr3yZZEYgEx53/56OwI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=GSmUM0SXBQyjpep0aTp7L6pU7HePL5WDLo3WtLMP8uqAJLj9CQQMKghqLx6hnIVh8
-	 0e5seIUj8yRSk7koUNpB0ej92GNlbijyuOoWl64IBZIehbaXEamPr8sDbL3y0ot++0
-	 SrKF5L+yXSyyOJRoVof46jk7XqTDT3lBxzoNE/TxCJyRiBv1kZXQVZ6lKwKxug1skR
-	 60rAJjqg+rmmDyDLFdToSoexq2CocUai4rQ2ucMTMnKGvtjZd7dBoKlx++h6edIZfc
-	 EH6VogVgcmQ+zRyYwVrTlIoK/AYG+gugFWeSWOSLw/ewWS+uOQ6FAeVxIDHG0yGxg9
-	 MGINpBL+t3onA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id B6393CE0843; Tue, 25 Mar 2025 10:17:05 -0700 (PDT)
-Date: Tue, 25 Mar 2025 10:17:05 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Jon Pan-Doh <pandoh@google.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	linux-pci@vger.kernel.org,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>
-Subject: Re: [PATCH v5 6/8] PCI/AER: Introduce ratelimit for error logs
-Message-ID: <614abb3f-fd4f-40e1-8e22-3c58bc2314b0@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250321015806.954866-1-pandoh@google.com>
- <20250321015806.954866-7-pandoh@google.com>
+	s=arc-20240116; t=1742923070; c=relaxed/simple;
+	bh=b6MGlnUVaFKBQ+2xHwkDeovJSJdklX90bjhSIP8Uqkc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lbx6HuIATkn/hOjfCdr9qmroOaXsCpLhDcss4qLE2PHLPpdPHvuvRF7z5aSLGNCB2oStADd0PIXfXZLfSSpWQ5uT+ZNoOSOZay92/SBvaHwTuXBZKAOQsy8AB1HyBorJo5eQvmP7Xb+vlN4z08g6djbXWJwPrkodbk3/DGA+Iww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=chE8zGi4; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30bfd4d4c63so60157881fa.2;
+        Tue, 25 Mar 2025 10:17:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742923067; x=1743527867; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ncjZuqLz4pCC4vphDuKl5ZPEUefScVXYO+j+PxLNSXk=;
+        b=chE8zGi4XqIqrv5sB9O5OWgRv3IWYGWbTNPTrgIkCSnLu4mpaEtpyDqCBx+FQUmXyQ
+         Fl0fEWKOuVdo6AfvbQ6lQDmBN9O/Sq6oTvCdPt8sprjVhCs388SMlux64f6Z1/1i8k2Z
+         0Q5qiJlSR5E5hJkgwGFiDyEcAEOryMlE/1Xa9dg9PjSGwJ5JLOLArHWD8ESltnQ5mF9K
+         JxwK3UostqofxMdAlH5vUE/Y9vbVO9M/2uJLwYTIQgBZcxjRSBIM1mB9FUhOV+uyGe0/
+         mC27Q43oCbD1yxSQJ6qDqzrJG7AU3zi81frK6Ov510F+JDT4o8IYg3+VNUFXEM8UHHdW
+         FLQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742923067; x=1743527867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ncjZuqLz4pCC4vphDuKl5ZPEUefScVXYO+j+PxLNSXk=;
+        b=O+H1NCc5ZiihLR5VaslFJQpKUYAfg1qk0tvveRfuUHfh2wleQWDC/PyCkxMX9pk8zY
+         iuG9Wv4BXpqqcNe5Mb8b2GsAUazGb7wliHVuykQjbrTy0vDRcN1MgPLchfSQC4cCDPUi
+         oAIZurjwqkYk0fEma+LGODLLJjzqQ8Su8KjsBU18r/PC/9QEGPobvVRgAsnCX7aI+t+u
+         xuruTm9NY+t6qEduNYg+hBAa/aeDh0g2WWCSbhjM6UD5TkeS1RWBYpVmP5RMCqx+jXLW
+         dcylwhx1iLvxs8r6iRHFHwmhTLQsx9lKuEMlLzAy5oIlPmQpcpi36AYUpH6YPUNgF27i
+         bXEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCURQcgI4KfD9HA1UuB3yE7JQHkLKIXGzot2H6ncwW9+tLYmsIi+XEGWdeAhiYHV4rmG9LJtpK060V/8i8D+@vger.kernel.org, AJvYcCUxmyZFjf9+7SEpHAPU5LNoQd74T1rHzsPYSR8WHIvpiSDll3ObszKlGqLiolNkttJxbFxEYGIrEQj5LK0=@vger.kernel.org, AJvYcCVDOXk5CSSltCXMusu/YaW3+X00KSJQ/xKdRe6fBRUjJicizZj0CKXT3vaPxXZ0jIMAXdBHMCWNnncazolQM9yu@vger.kernel.org, AJvYcCVS0KJoxxoEgD93+bzub5IDrTyw464yCiOq2rRdVGQ0Uu4w6gVG2h48/XxakYHG2kAIZ+7DCzAuj11f@vger.kernel.org, AJvYcCVjzI95P2wI0ISTP1RWMTbvvqagt369jA2C/hhQ+6MvHDRDWiJjJzE0Gonaft4++NGn3mQ/tVihcvgu@vger.kernel.org, AJvYcCXEyOGWpjSMEEIVKumtMEgtOGqqLIxrp1X0ew5fb/f30mZ9YxDV3coijqcckpwJG4zmnQjPZ4ut8Klp9567@vger.kernel.org, AJvYcCXROI1TbrYkYL66KTXX9gLdNMgNA1aGQ8jhF8OcSVuUksf8BhK3wxP7W8Fr4m7vh9vfHt2/s9qKx5DfzO/jCx8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPDqaRApEYYME2dVxALU485X8l9+W/1PbBahFmupYkf3VoWWt/
+	45DCVo4wUhHYg/lDrKsDJgVLjEJcfKnwaIbZUpHDnzrN21/90LUrSZJZS26J4d8upAdyBZLetay
+	sonJpnpj7kdgE1uqDPzRRJjj0HfA=
+X-Gm-Gg: ASbGncutG8fUCQatClst2ow8OXecMPw+wcjbWH16j++a87li5srjRO6Tss6+SSiKFPs
+	xrrFA58c35/K3TUhB724FfrhZ92qzNa4RZUrR9iR9kWUq51XWzbndqb4E41/4AQKeAmP6Wx5Yjn
+	iwupgEJ8yUKYVpGX3bkBTssYDVRVeCSHZ854xmz4671A==
+X-Google-Smtp-Source: AGHT+IEho6TRTFYibffTOcXg2imxNyfO/NDJlMfW4YuFXt5pXTh3sRV4mlcchTRWE3KKFuAFKeLrQV8vCY3tNcZg+Mc=
+X-Received: by 2002:a2e:88cb:0:b0:30c:177c:9e64 with SMTP id
+ 38308e7fff4ca-30d7e2bce01mr65584441fa.35.1742923066511; Tue, 25 Mar 2025
+ 10:17:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321015806.954866-7-pandoh@google.com>
+References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com>
+ <D8ORTXSUTKGL.1KOJAGBM8F8TN@proton.me> <CAJ-ks9n-z0SETz+zBfJmda6Q_vJDeM2jmDXx48xX9qpMmR-mdQ@mail.gmail.com>
+ <D8OTXLDQCOKI.34R1U5R0JSB8H@proton.me> <CAJ-ks9nc0ptzfh+tHj47aTCMqoaKB0SnGpZOLQ06upt7x8EBMQ@mail.gmail.com>
+ <D8PAQXHJDVQE.36QKQGBVVL4QU@proton.me> <CAJ-ks9kuG8SyybioKQ0+bYwjnCQFMhip+4A1WnMhsdgnNZGiZQ@mail.gmail.com>
+ <D8PGG7NTWB6U.3SS3A5LN4XWMN@proton.me>
+In-Reply-To: <D8PGG7NTWB6U.3SS3A5LN4XWMN@proton.me>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 25 Mar 2025 13:17:10 -0400
+X-Gm-Features: AQ5f1Jo-XOMVt3AtJU0OfhrKyPKg6t27WTK1AODdNRJ_VnhlwpYHl6kJ4WNIc0w
+Message-ID: <CAJ-ks9mMVzm4m20AxiZ53DyAmSEaEh9veMoVB5XRxmTQP_H_ZQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] rust: reduce pointer casts, enable related lints
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 20, 2025 at 06:58:04PM -0700, Jon Pan-Doh wrote:
-> Spammy devices can flood kernel logs with AER errors and slow/stall
-> execution. Add per-device ratelimits for AER correctable and uncorrectable
-> errors that use the kernel defaults (10 per 5s).
-> 
-> Tested using aer-inject[1]. Sent 11 AER errors. Observed 10 errors logged
-> while AER stats (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) show
-> true count of 11.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
-> 
-> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
-> Reported-by: Sargun Dhillon <sargun@meta.com>
-> Acked-by: Paul E. McKenney <paulmck@kernel.org>
+On Tue, Mar 25, 2025 at 11:33=E2=80=AFAM Benno Lossin <benno.lossin@proton.=
+me> wrote:
+>
+> On Tue Mar 25, 2025 at 2:34 PM CET, Tamir Duberstein wrote:
+> > On Tue, Mar 25, 2025 at 7:05=E2=80=AFAM Benno Lossin <benno.lossin@prot=
+on.me> wrote:
+> >> On Mon Mar 24, 2025 at 10:59 PM CET, Tamir Duberstein wrote:
+> >> > On Mon, Mar 24, 2025 at 5:55=E2=80=AFPM Benno Lossin <benno.lossin@p=
+roton.me> wrote:
+> >> >> On Mon Mar 24, 2025 at 9:55 PM CET, Tamir Duberstein wrote:
+> >> >> > On Mon, Mar 24, 2025 at 4:16=E2=80=AFPM Benno Lossin <benno.lossi=
+n@proton.me> wrote:
+> >> >> >> I'll leave it up to you what you want to do with this: add it to=
+ this
+> >> >> >> series, make a new one, or let someone else handle it. If you do=
+n't want
+> >> >> >> to handle it, let me know, then I'll create a good-first-issue :=
+)
+> >> >> >
+> >> >> > I'll add a patch for `cast_lossless` -- the rest should probably =
+go
+> >> >> > into an issue.
+> >> >>
+> >> >> Do you mind filing the issue? Then you can decide yourself what you=
+ want
+> >> >> to do yourself vs what you want to leave for others. Feel free to c=
+opy
+> >> >> from my mail summary.
+> >> >
+> >> > Well, I don't really know what's left to do. We're pretty close at
+> >> > this point to having enabled everything but the nukes. Then there's
+> >> > the strict provenance thing, which I suppose we can write down.
+> >>
+> >> Yes, but there are also these from my original mail:
+> >> * `shared_ref as *const _` (for example in rust/kernel/uaccess.rs:247,
+> >>   rust/kernel/str.rs:32 and rust/kernel/fs/file.rs:367), these we can
+> >>   replace with `let ptr: *const ... =3D shared_ref;`. Don't know if th=
+ere
+> >>   is a clippy lint for this.
+> >
+> > I don't think we should go fixing things for which we don't have a
+> > clippy lint. That way lies madness, particularly as patches begin to
+> > be carried by other trees.
+>
+> There already exists a lint for that: `clippy::ref_as_ptr` (almost
+> created an issue asking for one :)
 
-Just taking a closer look.  There are some things that I would do
-differently, but I don't see any show-stoppers here.
+=F0=9F=AB=A1 picked this one up as well.
 
-I don't see this patch series in -next, which is fine:  This is not
-so urgent that I would want to drive it into the current merge window.
-I am hoping that it goes into -next as soon as v6.14-rc1 comes out.
+> Here is another lint that we probably want to enable (after the `&raw
+> {const,mut}` series lands): `clippy::borrow_as_ptr`.
 
-> ---
->  drivers/pci/pci.h      |  4 +-
->  drivers/pci/pcie/aer.c | 87 ++++++++++++++++++++++++++++++++----------
->  drivers/pci/pcie/dpc.c |  2 +-
->  3 files changed, 71 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 9d63d32f041c..f709290e9e00 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -533,6 +533,7 @@ static inline bool pci_dev_test_and_set_removed(struct pci_dev *dev)
->  
->  struct aer_err_info {
->  	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
-> +	bool ratelimited[AER_MAX_MULTI_ERR_DEVICES];
-
-In my stop-the-bleeding patch, I pass this as an argument to the functions
-needing it, but this works fine too.  Yes, this approach does consume
-a bit more storage, but I doubt that it is enough to matter.
-
-The main concern is that either all information for a given error is
-printed or none of it is, to avoid confusion.  (There will of course be
-the possibility of partial drops due to buffer overruns further down
-the console-log pipeline, but no need for additional opportunities
-for confusion.)
-
-For this boolean array to provide this property, the error path for a
-given device must be single threaded, for example, only one interrupt
-handler at a time.  Is this the case?
-
->  	int error_dev_num;
->  
->  	unsigned int id:16;
-> @@ -552,7 +553,8 @@ struct aer_err_info {
->  
->  int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
->  void pci_dev_aer_stats_incr(struct pci_dev *pdev, struct aer_err_info *info);
-> -void aer_print_error(struct pci_dev *dev, struct aer_err_info *info, const char *level);
-> +void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
-> +		     const char *level, bool ratelimited);
-
-And here you do pass it in.
-
->  int pcie_read_tlp_log(struct pci_dev *dev, int where, int where2,
->  		      unsigned int tlp_len, bool flit,
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index f657edca8769..e0f526960134 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -28,6 +28,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/delay.h>
->  #include <linux/kfifo.h>
-> +#include <linux/ratelimit.h>
->  #include <linux/slab.h>
->  #include <acpi/apei.h>
->  #include <acpi/ghes.h>
-> @@ -88,6 +89,10 @@ struct aer_report {
->  	u64 rootport_total_cor_errs;
->  	u64 rootport_total_fatal_errs;
->  	u64 rootport_total_nonfatal_errs;
-> +
-> +	/* Ratelimits for errors */
-> +	struct ratelimit_state cor_log_ratelimit;
-> +	struct ratelimit_state uncor_log_ratelimit;
-
-Separate per-device rate limiting for correctable and uncorrectable
-errors, very good!
-
->  };
->  
->  #define AER_LOG_TLP_MASKS		(PCI_ERR_UNC_POISON_TLP|	\
-> @@ -379,6 +384,11 @@ void pci_aer_init(struct pci_dev *dev)
->  
->  	dev->aer_report = kzalloc(sizeof(*dev->aer_report), GFP_KERNEL);
->  
-> +	ratelimit_state_init(&dev->aer_report->cor_log_ratelimit,
-> +			     DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST);
-> +	ratelimit_state_init(&dev->aer_report->uncor_log_ratelimit,
-> +			     DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST);
-> +
->  	/*
->  	 * We save/restore PCI_ERR_UNCOR_MASK, PCI_ERR_UNCOR_SEVER,
->  	 * PCI_ERR_COR_MASK, and PCI_ERR_CAP.  Root and Root Complex Event
-> @@ -668,6 +678,18 @@ static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
->  	}
->  }
->  
-> +static bool aer_ratelimited(struct pci_dev *dev, unsigned int severity)
-> +{
-> +	struct ratelimit_state *ratelimit;
-> +
-> +	if (severity == AER_CORRECTABLE)
-> +		ratelimit = &dev->aer_report->cor_log_ratelimit;
-> +	else
-> +		ratelimit = &dev->aer_report->uncor_log_ratelimit;
-> +
-> +	return !__ratelimit(ratelimit);
-> +}
-
-Initialization and single is-it-ratelimited function, good.
-
-> +
->  static void __aer_print_error(struct pci_dev *dev,
->  			      struct aer_err_info *info,
->  			      const char *level)
-> @@ -693,11 +715,17 @@ static void __aer_print_error(struct pci_dev *dev,
->  }
->  
->  void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
-> -		     const char *level)
-> +		     const char *level, bool ratelimited)
->  {
->  	int layer, agent;
->  	int id = pci_dev_id(dev);
->  
-> +	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
-> +			info->severity, info->tlp_header_valid, &info->tlp);
-
-Unconditional tracing, as before.  I cannot imagine that moving this to
-the top of the function hurts anything.
-
-> +	if (ratelimited)
-> +		return;
-> +
->  	if (!info->status) {
->  		pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
->  			aer_error_severity_string[info->severity]);
-> @@ -722,21 +750,31 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
->  out:
->  	if (info->id && info->error_dev_num > 1 && info->id == id)
->  		pci_err(dev, "  Error of this Agent is reported first\n");
-> -
-> -	trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
-> -			info->severity, info->tlp_header_valid, &info->tlp);
->  }
->  
->  static void aer_print_rp_info(struct pci_dev *rp, struct aer_err_info *info)
->  {
->  	u8 bus = info->id >> 8;
->  	u8 devfn = info->id & 0xff;
-> +	struct pci_dev *dev;
-> +	bool ratelimited = false;
-> +	int i;
->  
-> -	pci_info(rp, "%s%s error message received from %04x:%02x:%02x.%d\n",
-> -		 info->multi_error_valid ? "Multiple " : "",
-> -		 aer_error_severity_string[info->severity],
-> -		 pci_domain_nr(rp->bus), bus, PCI_SLOT(devfn),
-> -		 PCI_FUNC(devfn));
-> +	/* extract endpoint device ratelimit */
-> +	for (i = 0; i < info->error_dev_num; i++) {
-> +		dev = info->dev[i];
-> +		if (info->id == pci_dev_id(dev)) {
-> +			ratelimited = info->ratelimited[i];
-> +			break;
-> +		}
-> +	}
-
-I cannot resist noting that passing a "ratelimited" argument to this
-function would make it unnecessary to search this array.  This would
-require doing rate-limiting checks in aer_isr_one_error(), which looks
-like it should work.  Then again, I do not claim to be familiar with
-this AER code.
-
-The "ratelimited" arguments would need to be added to
-aer_print_port_info(), aer_process_err_devices(), and aer_print_error().
-Maybe some that I have missed.  Or is there some handoff to
-softirq or workqueues that I missed?
-
-> +	if (!ratelimited)
-> +		pci_info(rp, "%s%s error message received from %04x:%02x:%02x.%d\n",
-> +			 info->multi_error_valid ? "Multiple " : "",
-> +			 aer_error_severity_string[info->severity],
-> +			 pci_domain_nr(rp->bus), bus, PCI_SLOT(devfn),
-> +			 PCI_FUNC(devfn));
->  }
->  
->  #ifdef CONFIG_ACPI_APEI_PCIEAER
-> @@ -784,6 +822,12 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  
->  	pci_dev_aer_stats_incr(dev, &info);
->  
-> +	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
-> +			aer_severity, tlp_header_valid, &aer->header_log);
-> +
-> +	if (aer_ratelimited(dev, aer_severity))
-> +		return;
-
-PCIe suffices for our use case, but symmetry is not a bad thing.
-
->  	aer_printk(level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
->  	__aer_print_error(dev, &info, level);
->  	aer_printk(level, dev, "aer_layer=%s, aer_agent=%s\n",
-> @@ -795,9 +839,6 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  
->  	if (tlp_header_valid)
->  		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
-> -
-> -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
-> -			aer_severity, tlp_header_valid, &aer->header_log);
->  }
->  EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
->  
-> @@ -808,8 +849,12 @@ EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
->   */
->  static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
->  {
-> -	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
-> -		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
-> +	int dev_idx = e_info->error_dev_num;
-> +	unsigned int severity = e_info->severity;
-> +
-> +	if (dev_idx < AER_MAX_MULTI_ERR_DEVICES) {
-> +		e_info->dev[dev_idx] = pci_dev_get(dev);
-> +		e_info->ratelimited[dev_idx] = aer_ratelimited(dev, severity);
->  		e_info->error_dev_num++;
->  		return 0;
->  	}
-> @@ -1265,7 +1310,8 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info,
->  	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
->  		if (aer_get_device_error_info(e_info->dev[i], e_info)) {
->  			pci_dev_aer_stats_incr(e_info->dev[i], e_info);
-> -			aer_print_error(e_info->dev[i], e_info, level);
-> +			aer_print_error(e_info->dev[i], e_info, level,
-> +					e_info->ratelimited[i]);
->  		}
->  	}
->  	for (i = 0; i < e_info->error_dev_num && e_info->dev[i]; i++) {
-> @@ -1299,10 +1345,11 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->  			e_info.multi_error_valid = 1;
->  		else
->  			e_info.multi_error_valid = 0;
-> -		aer_print_rp_info(pdev, &e_info);
->  
-> -		if (find_source_device(pdev, &e_info))
-> +		if (find_source_device(pdev, &e_info)) {
-> +			aer_print_rp_info(pdev, &e_info);
->  			aer_process_err_devices(&e_info, KERN_WARNING);
-> +		}
->  	}
-
-And here we are in the interrupts handler.
-
->  	if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
-> @@ -1318,10 +1365,10 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->  		else
->  			e_info.multi_error_valid = 0;
->  
-> -		aer_print_rp_info(pdev, &e_info);
-> -
-> -		if (find_source_device(pdev, &e_info))
-> +		if (find_source_device(pdev, &e_info)) {
-> +			aer_print_rp_info(pdev, &e_info);
->  			aer_process_err_devices(&e_info, KERN_ERR);
-> +		}
->  	}
->  }
->  
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 81cd6e8ff3a4..42a36df4a651 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -290,7 +290,7 @@ void dpc_process_error(struct pci_dev *pdev)
->  		 dpc_get_aer_uncorrect_severity(pdev, &info) &&
->  		 aer_get_device_error_info(pdev, &info)) {
->  		pci_dev_aer_stats_incr(pdev, &info);
-> -		aer_print_error(pdev, &info, KERN_ERR);
-> +		aer_print_error(pdev, &info, KERN_ERR, false);
-
-And we don't throttle DPC errors.  No opinion on this one.
-
->  		pci_aer_clear_nonfatal_status(pdev);
->  		pci_aer_clear_fatal_status(pdev);
->  	}
-> -- 
-> 2.49.0.395.g12beb8f557-goog
-> 
+This sounds like a good one to file.
 
