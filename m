@@ -1,52 +1,52 @@
-Return-Path: <linux-pci+bounces-24640-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24641-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F22CA6ED90
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 11:26:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E5C2EA6ED97
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 11:27:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 87E013B0221
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 10:26:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F28F13B09D1
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 10:26:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4BE8254AE5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3042254AF7;
 	Tue, 25 Mar 2025 10:26:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/vhHGya"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVgKAnP6"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77460254857;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A179525487B;
 	Tue, 25 Mar 2025 10:26:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742898395; cv=none; b=izCH4nS8zyaKr29ipfpjU//rpz1n2wR3JY/6Hv4uptJaxcw93Hivmj8K5a3LeKqymK/mrhlRYi/zD7RFbIXVeqw1iDJiw1wIFTgeHKWC4r9GpOOlVr2mBmOsV2UZeF9amrqkMfZ5fxfCxeNg2eNa1Ce9JAOOyir6R4xgzzeDfvI=
+	t=1742898395; cv=none; b=E1zWLXWBLSgdhbE3M811YD7MPZa9tMhVCM0eua03we9ADiqz561tMsk0/AQ581zgXsCW/eBd+/tK7P2ly69QGO6iIH/oHA2HgVGS8KqKyH+exDbMTHjlsZzaTaxfPN4DCLuzq8w96hevDr75RIRrXHXtGcLNxCzmMEtSg//SPGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742898395; c=relaxed/simple;
-	bh=khvmda81Vor6ELCVCuRt/OG1eU4tA4ZfEAJHXcgitdM=;
+	bh=zGUc2WvnYPIRzvCp5NMj+Y73rWIsopTAR6HTlwhIfgs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mu/XNQkv01il3ODShDagfjxcBeXM19qJ2a+wdBlAl0ZANlLzeKUAAdSnmd9n0kapkMiNensPGcd2XEvVrGGYcPyawPLCPi+OzSh1qI9nnjYMLLwrLZoEml5cFu+nX9WWfNLWPCZ8CW/xMeAe/fuANGLOuhlS4Raa187ZWWEktKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E/vhHGya; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E690DC4CEE8;
-	Tue, 25 Mar 2025 10:26:34 +0000 (UTC)
+	 MIME-Version; b=DDdB9ENetTphNPkbxyVgIj3DbSxPzTpTsIiJiUFkD+2zL/l3fuH/VEzVLIYjzXKg8TCf8U+Go1TsXMJz3mG8gdQafr6l7faz1AYWVz5O2oMgnEmL4cpdAF4h+KgDOSUvVNSJWsegJKHo3u32DLW2Hp500L4K7iFMogxZLwQLGbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVgKAnP6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24742C4CEF1;
+	Tue, 25 Mar 2025 10:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1742898395;
-	bh=khvmda81Vor6ELCVCuRt/OG1eU4tA4ZfEAJHXcgitdM=;
+	bh=zGUc2WvnYPIRzvCp5NMj+Y73rWIsopTAR6HTlwhIfgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E/vhHGyaqwh1rnTLsKJxY99Gn6mvVieJtZJMPvBvbzGB5tcM2b3c614iEVhoyzIRo
-	 WlM3lrXldAiHAp1xIloJZ1ZRtwpSO3YTobH0W2lscNBjfAq/vvQibiEoa6E1pnvIeZ
-	 rJGIZR61JW7RR/USAyDJZ4aqzA9RKwt7w9d25sqQxPudlg2i39K4TKLryf0X/YZJNr
-	 yb9aedZCw11ax+G3UybagMzZLIpQqaWRA/kPr47grZQxmqVMQMs/qGBR8D/B05+yb4
-	 y3PwXAL55i2v5HCHF2qg9vcgW6rdXIY4Xb/+biAjnpuN7/eHhOPalEi6n5uvvcO/IL
-	 w5z9u+u8eMzZQ==
+	b=pVgKAnP6STdlwjgThZhygZXsyT5DOz0Gr7M3/npeDViBtaDUBKT0w//YXjwD39gO0
+	 NEj3SW0aPwZn0shn8AsigfGE4My7dHT8SRNq/Fa4SmLfSJhMj4eMSvDM+BGBqOFz+W
+	 MmUqCUvFOfBlyEpHrAczdgUxX/bwOWft2OA9+ciCUAOE+6A/lpxzYVUCjamvF+Z1sH
+	 9W5cuC27Pv/GQCPxjUS470qsHb86ymmHUyLj7ttvAQyiT9JUP9QxT86746FvjOi593
+	 Ag0+MN9AMnrkcjd4PfYzikV/cbVgKOM5TS9SBzP8OGoMue6rKRr0mWaa506AvDnPPt
+	 IcRpMaJCAwlnQ==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1tx1UO-00GsRS-Rw;
-	Tue, 25 Mar 2025 10:26:32 +0000
+	id 1tx1UP-00GsRS-32;
+	Tue, 25 Mar 2025 10:26:33 +0000
 From: Marc Zyngier <maz@kernel.org>
 To: linux-arm-kernel@lists.infradead.org,
 	linux-pci@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: [PATCH v2 03/13] PCI: ecam: Allow cfg->priv to be pre-populated from the root port device
-Date: Tue, 25 Mar 2025 10:26:00 +0000
-Message-Id: <20250325102610.2073863-4-maz@kernel.org>
+Subject: [PATCH v2 04/13] PCI: apple: Move over to standalone probing
+Date: Tue, 25 Mar 2025 10:26:01 +0000
+Message-Id: <20250325102610.2073863-5-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250325102610.2073863-1-maz@kernel.org>
 References: <20250325102610.2073863-1-maz@kernel.org>
@@ -81,34 +81,107 @@ X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.o
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-In order to decouple ecam config space creation from probing via
-pci_host_common_probe(), allow the private pointer to be populated
-via the device drvdata pointer.
+Now that we have the required infrastructure, split the Apple PCIe
+setup into two categories:
 
-Crucially, this is set before calling ops->init(), allowing that
-particular callback to have access to probe data.
+- stuff that has to do with PCI setup stays in the .init() callback
 
-This should have no impact on existing code which ignores the
-current value of cfg->priv.
+- stuff that is just driver gunk (such as MSI setup) goes into a
+  probe routine, which will eventually call into the host-common
+  code
+
+The result is a far more logical setup process.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/pci/ecam.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/controller/pcie-apple.c | 54 ++++++++++++++++-------------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
-index 260b7de2dbd57..2c5e6446e00ee 100644
---- a/drivers/pci/ecam.c
-+++ b/drivers/pci/ecam.c
-@@ -84,6 +84,8 @@ struct pci_config_window *pci_ecam_create(struct device *dev,
- 			goto err_exit_iomap;
- 	}
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+index a7e51bc1c2fe8..9c3103d0d1174 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -730,35 +730,15 @@ static void apple_pcie_disable_device(struct pci_host_bridge *bridge, struct pci
  
-+	cfg->priv = dev_get_drvdata(dev);
+ static int apple_pcie_init(struct pci_config_window *cfg)
+ {
++	struct apple_pcie *pcie = cfg->priv;
+ 	struct device *dev = cfg->parent;
+-	struct platform_device *platform = to_platform_device(dev);
+ 	struct device_node *of_port;
+-	struct apple_pcie *pcie;
+ 	int ret;
+ 
+-	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+-	if (!pcie)
+-		return -ENOMEM;
+-
+-	pcie->dev = dev;
+-
+-	mutex_init(&pcie->lock);
+-
+-	pcie->base = devm_platform_ioremap_resource(platform, 1);
+-	if (IS_ERR(pcie->base))
+-		return PTR_ERR(pcie->base);
+-
+-	cfg->priv = pcie;
+-	INIT_LIST_HEAD(&pcie->ports);
+-
+-	ret = apple_msi_init(pcie);
+-	if (ret)
+-		return ret;
+-
+ 	for_each_child_of_node(dev->of_node, of_port) {
+ 		ret = apple_pcie_setup_port(pcie, of_port);
+ 		if (ret) {
+-			dev_err(pcie->dev, "Port %pOF setup fail: %d\n", of_port, ret);
++			dev_err(dev, "Port %pOF setup fail: %d\n", of_port, ret);
+ 			of_node_put(of_port);
+ 			return ret;
+ 		}
+@@ -778,14 +758,40 @@ static const struct pci_ecam_ops apple_pcie_cfg_ecam_ops = {
+ 	}
+ };
+ 
++static int apple_pcie_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct apple_pcie *pcie;
++	int ret;
 +
- 	if (ops->init) {
- 		err = ops->init(cfg);
- 		if (err)
++	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
++	if (!pcie)
++		return -ENOMEM;
++
++	pcie->dev = dev;
++	pcie->base = devm_platform_ioremap_resource(pdev, 1);
++	if (IS_ERR(pcie->base))
++		return PTR_ERR(pcie->base);
++
++	mutex_init(&pcie->lock);
++	INIT_LIST_HEAD(&pcie->ports);
++	dev_set_drvdata(dev, pcie);
++
++	ret = apple_msi_init(pcie);
++	if (ret)
++		return ret;
++
++	return pci_host_common_init(pdev, &apple_pcie_cfg_ecam_ops);
++}
++
+ static const struct of_device_id apple_pcie_of_match[] = {
+-	{ .compatible = "apple,pcie", .data = &apple_pcie_cfg_ecam_ops },
++	{ .compatible = "apple,pcie" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, apple_pcie_of_match);
+ 
+ static struct platform_driver apple_pcie_driver = {
+-	.probe	= pci_host_common_probe,
++	.probe	= apple_pcie_probe,
+ 	.driver	= {
+ 		.name			= "pcie-apple",
+ 		.of_match_table		= apple_pcie_of_match,
 -- 
 2.39.2
 
