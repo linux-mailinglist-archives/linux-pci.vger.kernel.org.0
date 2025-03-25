@@ -1,322 +1,225 @@
-Return-Path: <linux-pci+bounces-24695-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24696-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A70AA70A55
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 20:25:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26E44A70B1C
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 21:11:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 500BF1897D45
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 19:25:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EF87168A5E
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 20:10:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD9CF1F3FC2;
-	Tue, 25 Mar 2025 19:22:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D38B5266B51;
+	Tue, 25 Mar 2025 20:07:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="lJ8Cdhvs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2dUHyyD"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2060.outbound.protection.outlook.com [40.107.104.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98AF81F4160;
-	Tue, 25 Mar 2025 19:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742930578; cv=fail; b=FfqTfsxQTF6Y7Wm7jWIw/0ae3hj5p6SsWlnmEUJqPrU/wPV2FSvFqxlzKsn6AlxhRWL0SVIN0uBDPJv8GyLD+xvYJoI9CPv4T1f7zc2E0HtaY8GusShfiwGYLnOue7lUZhZlqkAihPH6YcfZrCaYHJp8Uw++yR7ma8PKxVT4Q+I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742930578; c=relaxed/simple;
-	bh=X/3oPkGBdGN2vAsBcfji7SFKvVVqYcJKKFptSqHH8EI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IpOlbx+yuj6ohI+Kop76DLBx//2R+NhlpkryM8FIsSOxfuImf/eSRHrduvHOB4V9v+56ITIuCnuObJrGdi+FtYH1Wdbzl6jSo1cr86T+SewtHhthuFyo8fnsItEE4LvM06Ljd20sA5Oyy1UdiCJLvWtwWr2hQyiHB8tLejN0ytw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=lJ8Cdhvs; arc=fail smtp.client-ip=40.107.104.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MM3JuobpJLk1PfR3uU8dXQhBJMbnZYi+ph7wdykKz1W1P/6pEdrSGVyCcwDtIDaBohHT1J0KJaFDfQdEMLN7RMU6W/NKH6Vs1FCAdWqBL98cLk8uisGaHY7Nmpi1bOyVgZ+INyp0a2jzzaz/Wh2Wbh9Frv0llyqsAPzR/FRRprAylpJlDFSQO4oEVvK+uIiY8s6/EKHhE1PxjX2mLag62CX1xyFfozXw+NCGFfMn0ouUrsb/7G7lRGQeX5O1YihSrRhxxeVInm6e4NOpeUaGRZhq+dfNOygm1MvXQ3maDfI4Uy49knrCzKQhhAV8asYDsbmKvM1LPnOoPLGG0CuJOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GqzpiXdE2Lko2EcIAlLoWa+qbGQoQGjdYD1W2pt4Gis=;
- b=Ax/ZBB3bC3hHVGMVgJER3BvP9AN+SS6rYElcGe4CG2hou1LX5kaCEMm+ztQdWaSS3g4aU0pblqG3yOIMz0in6wTfjPW11GSiwy9coGj2A2U2Qxxfpp4kDLKdTLGtA1f8nweA44xI6daoOkt10uEHakesQD0bZdRvNCVkQ1wn9u7NU0sOGTbzzEBHiWd8njGvgjONepAXbOGfn4a01ZWBeiQ1NFQGEZBypGW1MED2nJf8iF3kp4DfZRlcIWgrmCg4sHsxwVWErvvyojTvkJwjgxePrqiUTvgz9FrdBT/jjAH2NqtbYjU9u2exba8FGnE3GvM9STUe4kDiU0aZsR0vDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GqzpiXdE2Lko2EcIAlLoWa+qbGQoQGjdYD1W2pt4Gis=;
- b=lJ8CdhvsB4FcNb7XFHO6IcN+4Bl+vo2V5OYJ5n7zwnZa9/MwFRUArmwIWwXjleNwIIr637GLu/I2v5Mj2OTch7t/5IRrN/Nqf/U7cgPinGIqnnCcutmnUlSFv9UK49qCKgyd5CeoadqImV8HxWSBauKL8umpcsbu8Pl6srWDrldq40zXyyBtHTKXuDYIw2Ov1/ZQ0OvT4hFRe5pL21O8lITaCoY/HcL+iQ6TB+Ne2dFH2n6KIHsw/TqNZm7NPBf+FxgHzdNsC0R2YuZ7IJC3SBV59voIX1jQ9I1lqfk66vgRpf9fr3G5m9TOhwwY8JM56fxZbpiO3RkqxstKA1FpaA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB8466.eurprd04.prod.outlook.com (2603:10a6:20b:349::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Tue, 25 Mar
- 2025 19:22:53 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%3]) with mapi id 15.20.8534.040; Tue, 25 Mar 2025
- 19:22:53 +0000
-Date: Tue, 25 Mar 2025 15:22:45 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v12 05/13] PCI: dwc: Add dw_pcie_parent_bus_offset()
-Message-ID: <Z+MChacLT8iehI5p@lizhi-Precision-Tower-5810>
-References: <j3qw4zmopulpn3iqq5wsjt6dbs4z3micoeoxkw3354txkx22ml@67ip5sfo6wwd>
- <20250324182827.GA1257218@bhelgaas>
- <5hkzuqptaor4v5fc7ljxb36zdipeg67lsjfkcah5fkxfyyjt6e@oknqdtbwjitj>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5hkzuqptaor4v5fc7ljxb36zdipeg67lsjfkcah5fkxfyyjt6e@oknqdtbwjitj>
-X-ClientProxiedBy: PH8PR07CA0044.namprd07.prod.outlook.com
- (2603:10b6:510:2cf::12) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BBA266560;
+	Tue, 25 Mar 2025 20:07:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742933271; cv=none; b=r71WaxZOq+VpDiW9Ss/wrsYPNTSl4D5vJcDjeLQZ62u+yPbtzIfUGAANcsC7X3WLS6v1jwAHYZArczrNtJabCQuIR+k04nzvF2JGtgUJL0rlhqsxUahLL1PwD9jMeHUuNAHcoiE5mLpotNJS7jDoE7fozp02VaRv1R8VwnTtmfk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742933271; c=relaxed/simple;
+	bh=XIr4D/B5iXjvurP1wpN32Wp73Mkw1cr+ytGAtObmgTk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nqFTbjuFNl1WFZgs9royWSStDM9qGZYY2XSzo2MVYgkBWIA+R7a3dloIpTfkVj13fGRceHF6EgFNNcspllb72IH/7uLaO9XKAwXqxD0rTXbR9QnmnrYEOJqR1DsT4F15jzv7sjQdtMDZvKW4AnzJkRgK88eGKy51wKBXBqoVn/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S2dUHyyD; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8f8657f29so50813126d6.3;
+        Tue, 25 Mar 2025 13:07:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742933268; x=1743538068; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=De1j2kxM+B3PrrF0JXUY7dB3WGtLTgac0gJhkCjYocc=;
+        b=S2dUHyyD6pCAZltNFmeWh7Gu8Tg/XkYAdm553qd7QFPMnJknS/RGqCycYQLYf4CzLO
+         gmpxnnyd/8w2lLXCQz6VKizshT7QHmRdU2KiP4pVXqJk37h8BYminru9macilIjUCY4J
+         zF8l+63ymGalSKp3HxG3jh0oYhiE7Vx8Oj+thQqIFY6/WK6oTDmgDeyei+7w4s9IWEGn
+         SGZWtTwv2lhHpDBhDMAzGZz6Aj/ZFpybi/f6TtKwpPeMY696p0T/turQc1/LELoMpjBb
+         TgIIViadAYVj8E2cFXfXP1aNvol8T58/DgVnuNiNiKP82pFZcNbjtjUzuFOhg2X/R1WY
+         VUnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742933268; x=1743538068;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=De1j2kxM+B3PrrF0JXUY7dB3WGtLTgac0gJhkCjYocc=;
+        b=gCugj5fCRPbzFs0I2Cl+wdeCmrR15mFMaV100mMNI6xwCkAfekbCswX+6Jfz+i/KtW
+         klmFZGEBjWbsSloyAr3uz3F1rrXNKS/OyFPvvJWVwWEj+b+V2UfcDK20LbmOgirccDHc
+         qxzH+/323jbQaY1WE64TdEY81gV2wy3otBKlexuyVqzE8qfN+AjPBrG1s8jkKbhy7dHU
+         qQirHGjCTVdgINigmHu5BqKPQlBGCn2drNcmnjllWCHaLiFz05Dn/mCtUuvNfSoO6sFX
+         rb9J2BzXXSz7wryKqwp0A4PuQyc5ciO9kP0EMRsu3VquMRS1UX5rF7ZCShXxg+NFnWuc
+         wkKw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8qz10BUqJOKs2AzAU5V7RnX96odeznchHXDjp/B3zysx8ybkfrO9JciU0A+c6IHGn7np5Jkb1@vger.kernel.org, AJvYcCV8uAE+ElDMEaJQ3QrEf37Z5n6tX2k9VHzkB7bmuqv+BhOsHt83tBsaLCPGG1PvrcyQDJhMZz3DB/Y5/qjDj2AP@vger.kernel.org, AJvYcCVW1vksDFVbD79OXEWuaD89lIpwLwPO9VwR1hY2RPoAlxtm72l80kh4fhHVvD8ZEyF+6JJLahBWZzeX5Iw8@vger.kernel.org, AJvYcCWoIUH+HEDLMtp1ktqMlzt0KujpKfN2prT2zo0QxnhXqPJgG6V5Ms2XxpJnQd/vPN2u53GFqX+Dz+Us@vger.kernel.org, AJvYcCX6f/oDTga61PrYpOcuNIDx/dqKvwF+ZSygUzidnRGewvkCboz4if1kc88pJEiLkQzsNdWkXAClSFygWDY=@vger.kernel.org, AJvYcCXBYXAILXHQCtmMOFwj0R46Nd2uKhd6Zd0O4PIgAQhjUPQIZcbTKZTbQxAbianh79DmQ4XY3ue8EyvI@vger.kernel.org, AJvYcCXZMnZliimL1Tqv7iK4qmK3jp1Pxl5e7VxtTuJxHpE5YLFu8aku/+GnCTjAsHnhms8ko5nSctpFEIx22GsbbtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5aIETYrNjgEy0YkpGxLdXlQhXfDFgOXNKpXWS5PT5kFJ1xdjs
+	WSKaKUVw4iGVzntrdsOfHYlzmW2gbPsLPbyWCdjpdtowLIl4pcwV
+X-Gm-Gg: ASbGncuI/i7oht6bLPvx+UZJIipntESrsLgPjUBqnEv3CK+1hpJtxbdKz6uVYS/wzno
+	6e3aI+0QHJfAkds/HdbGqVqZ8d2qtY02UITiGDVP0a+hGHo/L5A9xs5sdcmLMcR5Cj2Hfjh6dUv
+	cQapiZLapzknkGNnmHLW+o7pAYJi0p5Ys7k3MzyNo15Io7ig0QDQhBRkpOfGkz+2h9uiTis3mx2
+	n6J29el+Aix162eDlaeHlngc83HSwiEkNANWLLfkSrY2hJtDWEFaY9Bev/vKQcrp9Q+q7vExiaF
+	7NwE771g+Xs4A6LprXj2o745mk1cFob2puwxQ6uhP0jZI1H+78hjEg9ZZeqd28r/EnX0LCoB41S
+	YWX5DyA39LDQdzBwZlP2EwLTXQvWCMxjH5eU107MqWcY7uovgG0b397iLtdqJ0fM/
+X-Google-Smtp-Source: AGHT+IGLBNBsuCm5QT13IWM9Uun0NwuqyHHphAVZs3TNbnowX2o/8kuPM4uDvAmDt8ri644wQ+EGig==
+X-Received: by 2002:ad4:5c42:0:b0:6e8:f91a:c5a with SMTP id 6a1803df08f44-6eb3f2d5384mr324494996d6.22.1742933268279;
+        Tue, 25 Mar 2025 13:07:48 -0700 (PDT)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:38f6])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eb3ef31810sm59790316d6.64.2025.03.25.13.07.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 13:07:47 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v7 0/7] rust: reduce `as` casts, enable related lints
+Date: Tue, 25 Mar 2025 16:07:40 -0400
+Message-Id: <20250325-ptr-as-ptr-v7-0-87ab452147b9@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB8466:EE_
-X-MS-Office365-Filtering-Correlation-Id: eee305d4-f8c5-4748-3a50-08dd6bd270aa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|52116014|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YUJ4REhQWVl4MTc1KzA1STQ1ZTRqZzVwNVNBem9PZWFNUVIwNFg5aXZXZmFx?=
- =?utf-8?B?UEt4Q25ETWNYQUZCVUpORkFZQ3lyb1h6MUhsenFqeGRJd1NKSWwwdWNFODhw?=
- =?utf-8?B?WHhheEFUOUhMUkJIa3dSLzRDMU5TclRpNldMWjJaNGRHQ1l5MGUwZE5Cdlc0?=
- =?utf-8?B?TUhtNzJHNmxtaXdadWw2MFJEMG5jcXVnSlEwYWhpY2J2UmlqU1FkQ0RPV3VB?=
- =?utf-8?B?S0c2bXJBTGVJMFdVMXZOTCtZUlJaZUhSbjZkb3V0b2dzMzNQeVRZWUlyK0I4?=
- =?utf-8?B?OHlKbHJZbUQyU0w1bE9ZdFBacXQ0b0k3eWNKT1BoSmVlTytvREc2bzBtdFFB?=
- =?utf-8?B?OVBWSHQ3d3JMcWcxV1JTQWEzTDhPN0VpZVQxWW1PVmNUWDI4RU1seGhidG9B?=
- =?utf-8?B?NnIwQmM2RGNXYnVxUGI5VFFET0pJS1RkNi9mK2E3a2NRdG5WQVhUcGtDNkxj?=
- =?utf-8?B?eXd4Q25NRWh5Y2hyQS80VHYveFAxakc0V0M2OVpVd0xEVW1kMEZKa1VGaEQ5?=
- =?utf-8?B?MVJVbnY0NXhGRXU1WVppejAyOXlXNHdheUJqeDlZL1pCazY4ZytSUTRnV0Zm?=
- =?utf-8?B?dm5aOW5vUGFqaHF0Vm5ocUVld2VxdU4yWVJ0aUdFQlJ2TEFYeTJFaHd4WU4r?=
- =?utf-8?B?YjRvY1V3dVcxMjNOeEJIb0hJUU5NVjlzWUNIMG0zMjFtckVFTE5rYzkzOHQr?=
- =?utf-8?B?S2JQR0JSckhyRytXK3JjdS9XRmh6RGcrR0pKSmxzNCtCbFZ6VG1zNWFaVTEv?=
- =?utf-8?B?bUpFNk1wMlN1bmduVGQvTmpIKzl0T29Ecm1EZDFTTUxBc0RmZXZrUE9OT2N2?=
- =?utf-8?B?NDdRSWZrTlpDQVB6VDRQeHpnUTVNTC9KYWlZc1ZSU0s5NXpwQno3ZEI5c0JD?=
- =?utf-8?B?WkNCZVJlMWJKRWUrM3lrTnR1MTMrdmd0V1Z1Z25HZlJ5S2E5RWlJMCtKVyth?=
- =?utf-8?B?RHE1S0dCdkVRWnN6N21KMWJQRWh2QU1jUERGZDhaakFJd1F1VCtzMklYSmpQ?=
- =?utf-8?B?Mzg1bDVkVWJOVU1Cbi9IM3hJbGY5L3hkS2VCcE03ckNRODI3aE1helh5R1dn?=
- =?utf-8?B?bUhWZWZzTGIzVTVCVkxkTWEvRlNTbGJBbEhqcFd3SElESi9xUEZzQktzbmxj?=
- =?utf-8?B?RGFqbGxBYkxGUTJqMTVsWENoeFk0N3BpbjhuRzdCOXRUT0hGRXh0cHk0ZzRr?=
- =?utf-8?B?RVZMZkxxTmlHWnB5KzRFdHlUOXk1UTY5N1o1TGgyVWJsRkJzMmlvNkxqVVF1?=
- =?utf-8?B?YVFCdzQxMWlPTFNnSnFmMXI2N0g5SGJGK0pwaGQ2QkxtWWk5cnNIcEs2WC9w?=
- =?utf-8?B?ekFmZE4vUnoreWxydU51ZkRlOHZNV215MUk5V1VRSE80WlVRYUJNcEdYbmhh?=
- =?utf-8?B?K0dCWHJYc283MmgvOWtSMDBGZDFaNlZKbTJVSVFJdmhaZXV0ZDczSWVvSGhm?=
- =?utf-8?B?RnU4NWZqMkQvUmxtYVhGNDJwSWVxZWtkVFloTnRRWUtINWVHOVhESlZlYnI2?=
- =?utf-8?B?OFduU1RNSDJxdTE5NnlXd01QZFRqWW5taEUzWDZmZXBoOGVqbE9INk84WXVO?=
- =?utf-8?B?SE1pdXY0WkpBQ0tid1NWWTVwWnFKVWg0RHRTOE5ZQmJ4d2ZxR3Faai83MFZy?=
- =?utf-8?B?NW9oOWhxcTFXM3ZIUC9lMmR1RVo1dy91eitmM2ZpSEZEcVExNFVNei8vY3oy?=
- =?utf-8?B?NndHQWl6UW1NU1N0elJyd2tFeVlGOWRkTi83UjZoTVIrTHBNemthb2wzM0NI?=
- =?utf-8?B?MytDeTc2TjUrVHgyMkgvQ3hWcXlwSXpoTGc1R0FabkpmNEpNY0c5MHV0d2RB?=
- =?utf-8?B?Nk82ZGEzNlUvYkFFVUtjM2FYRG1Ua3Z2aHFUTGd6ZzAxNXB6RGIwK3VjeUEr?=
- =?utf-8?B?ZEhodTREOHR6QWJPKzZlWWFqbE0xL0Q5YVRzc2I1enA3YTA1RUYyR2tvbTFj?=
- =?utf-8?Q?t74CDYyw0q0b4XVY8oGd0/M09dGHwrOu?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SUdReUFGS3g4NWNQcm1iL2NLd08rYS9LMWd6RUNWcUd1K2l0YUNyRlV1RElC?=
- =?utf-8?B?cURCNjBRbzhUTFRDeU1XUEk0QUl2QzJzRTJ2TGF5TnBYRFEyMVV0VlZLbklv?=
- =?utf-8?B?Q1VXSmc3bEtieTZ0MnhhblVkbUpRbVlIQmQ0SEI5ejcvTytoQ1ZpM3FmV0FZ?=
- =?utf-8?B?bU1iejN0SWJlVXJNdHZrNWJTQnQ3eTFqTWpWY0NLTmdmTEVkZUF2SUYrb3lX?=
- =?utf-8?B?c1lvaTdGczd0RE9YcVF4RWZRZ20wRFFjZnJHbXJ0anJHYU16MzNzVUV6cVlW?=
- =?utf-8?B?K3lLR2tFMVpHZ1NZVHZCNTNxaG1pK1ZjZkRMbDBCNDYvY1J2UlkyUGRYcGRr?=
- =?utf-8?B?blZmaGtZQStaM2pKRG9sc0ZFK0hxakxMSEpSd2pzNXMrRVVDUW1xdVp2UDRz?=
- =?utf-8?B?TldSNytoN2gxbTFLL0tTRGYyMzV4RzNnOEs4bitSeVlHSk5qYnBWa0NBUHVG?=
- =?utf-8?B?MVlaWG1TNFdxR0JoQnhOZ2dQTCsyRHQ2VXUvdzhJbU5TcFkza0F4K1VKbUpa?=
- =?utf-8?B?WVl4aVl4SjIvYy85QUpOeTh6dXN2UlpHbEN0MjJNdzMyZFhnOGZFeHE1TldP?=
- =?utf-8?B?c0Uzb1dJK1JCWm0vSy9uSGdCVFR0eW1PeFZlWjEwQ3V0dEg3Q2JSa2ZIeHNV?=
- =?utf-8?B?ck5aajlLQWhMWGU5OGFLb0lOQlAxVDMvc2VoM29mNzA2NUkxL1FRNytEQlpO?=
- =?utf-8?B?dnZoL1I3cFdQTTlsMVljMkJzM3NvUzJONE55aWpjSm9PNXR1a3I3TXdiRVgz?=
- =?utf-8?B?ZDZhcWhPYnFQN2xsSUNWVTQ5SEZmRjQ1T2Voc3ZseHlFYWs0NFVVcm03U0Rv?=
- =?utf-8?B?ZXkzYkEzTG12L0ZLUHN5azY5NFh6UzAxWjdIZTVrNThyQlcrYnlub0grbkZw?=
- =?utf-8?B?MmNZYStDNGdHN05Fb2MzQ2hhSFlUQlpQL2NUNWdZWE5xYlNUVlhtWEpubUh6?=
- =?utf-8?B?Wnh5dEhOcnE1cVp3RTB6WmhIRTVTc1g0RjgxODVJWCtKRllNQmxsaUxQMWFw?=
- =?utf-8?B?MTdSMWkxRzBTTTFUeFpTV3htdXZNTHMyY3E5ZldXSXVWOXAwYjRyVDVzY2tl?=
- =?utf-8?B?czFNNGREWjQ0TXF1WEZ4Sk5KSUgzK2FmZk4rQjJIQ3JiRVQvREhkM0dIL09l?=
- =?utf-8?B?S2htQ0xRYk9yOHdMMThrWWp1TzRjVllNcWpNb3UwTkdzb1hTZkU3SWs2cmIy?=
- =?utf-8?B?MUdGSTdUY1A4bXdFT1dTWFo1VVBuWDhBKzM1VXk1RkpQVmUyaDBqUUk2b2I3?=
- =?utf-8?B?NStIWDQ0YndoZTRtNTR5QzRBQk13a1JRcWNSTnorRU1MdWR5V2V0Rk1zUk54?=
- =?utf-8?B?VndzTzIzaVZSTWVLWVk1ckhqOEpPbVF0MUV4SnR1UlFoQk1tcjhOenY3cDRv?=
- =?utf-8?B?RWJCd1RaN0VrRWxDVm5kMC8xWjJrZ2hPSVVYQUQ2V0dxSkp2NnQzQVV0a2tM?=
- =?utf-8?B?MHNDL1hHZGg4eU85ZmJXeUdPcng1eWJ0OXp0UlF6SFA1Y1YweUxPcUtVRnBq?=
- =?utf-8?B?cUUzVENlVStPOTVUQ3Z3STdYWjRibEp6cXVjMlh6KzBZV1VMLy9uRkNSZjR6?=
- =?utf-8?B?NDl1djYyOEZDMVNXM2k0cFpBY2JoZ2lUaW9JRGVLNDVjT1Z0YU1WdUE5bmF4?=
- =?utf-8?B?QVljanlPN0RkczNTVmplcDRqUThuemZZelFFTHEvdUJBMk1aVEJhaEM2SlRO?=
- =?utf-8?B?NkNDZTdCSFp5dy8xL1RuOUh5UDNWSW1OZWVkQ2xTTEg5cTlwSExYRlZpOEJO?=
- =?utf-8?B?a2FnTkl0VXdjV21zWEJIRklnaExZdnl0dnRkemlWbThFSVNNWFdkdjBiMGd2?=
- =?utf-8?B?V1hxY0lteEt0UGRrekpUZ1hWbURIQXQwUmJ6dFJUQjBpQnMyQ1RlakRNMFJh?=
- =?utf-8?B?akNQOW1sUXdNYUF3N1Jwb2hoZ0UrV2Z4SHFnTGxsWUJqSzF3YzlJMS9DRDJj?=
- =?utf-8?B?MUFFYUhoTGFkcDQyL0dlOVVOOGc1VlVSdW1uV2Jsa2FFVS9ZR2hpdXNIaTU0?=
- =?utf-8?B?ckJ4ZzR1WHRtb3hMQ1BvTUl5T0ozb0xqY2lkYXpmR0ltNnRieE10MDRiNk9u?=
- =?utf-8?B?UU1QTVFLWEtMNjBJTVJvVm9HeHlXSzZyK1Z1aHYzRWhVUGVMWlRXZGdpaGxZ?=
- =?utf-8?Q?qYJg=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eee305d4-f8c5-4748-3a50-08dd6bd270aa
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2025 19:22:53.5852
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7NGLA0wL2vzGrJ0I4LBZrsGEugHtUQkOudGLh8qwS0FABwWrzRSETAYhto84LCW2ZU03asvaS+i80gyAizpEhg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8466
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAwN42cC/23PTW7DIBAF4KtErEvFjAewu+o9qiz4TZCaOILIa
+ hT57iVegdsVekjfm5knKyGnUNjH4clyWFJJ87UG/XZg7myup8CTr5mhQCkGofntnrkp24NgYVQ
+ 6OvLEKrjlENPPVvZ1rPmcyn3Oj617gdfvvzULcOByRC+UBHLT+Hm6mPT97uYLe9Us2NKpo8gFR
+ +mVMH5CtHpPh4YCdXSoNGhrFAgaI5k9pZbKjlKlFr1GB+Qdqj2VLe1vlZVKKyNCNDiIP1NVQ7F
+ fWFVKkweroyecREvXdf0FAc7SdcsBAAA=
+X-Change-ID: 20250307-ptr-as-ptr-21b1867fc4d4
+To: Masahiro Yamada <masahiroy@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+ Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+ Saravana Kannan <saravanak@google.com>, 
+ Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Robin Murphy <robin.murphy@arm.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
+ linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-On Tue, Mar 25, 2025 at 11:59:14PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Mar 24, 2025 at 01:28:27PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Mar 24, 2025 at 10:48:23PM +0530, Manivannan Sadhasivam wrote:
-> > > On Sat, Mar 15, 2025 at 03:15:40PM -0500, Bjorn Helgaas wrote:
-> > > > From: Frank Li <Frank.Li@nxp.com>
-> > > >
-> > > > Return the offset from CPU physical address to the parent bus address of
-> > > > the specified element of the devicetree 'reg' property.
-> >
-> > > > +resource_size_t dw_pcie_parent_bus_offset(struct dw_pcie *pci,
-> > > > +					  const char *reg_name,
-> > > > +					  resource_size_t cpu_phy_addr)
-> > > > +{
-> > >
-> > > s/cpu_phy_addr/cpu_phys_addr/g
-> >
-> > Fixed, thanks!
-> >
-> > > > +	struct device *dev = pci->dev;
-> > > > +	struct device_node *np = dev->of_node;
-> > > > +	int index;
-> > > > +	u64 reg_addr;
-> > > > +
-> > > > +	/* Look up reg_name address on parent bus */
-> > >
-> > > 'parent bus' is not accurate as the below code checks for the 'reg_name' in
-> > > current PCI controller node.
-> >
-> > We want the address of "reg_name" on the node's primary side.  We've
-> > been calling that the "parent bus address", I guess because it's the
-> > address on the "parent bus" of the node.
-> >
->
-> Yeah, 'parent bus address' sounds bogus to me. 'ranges' property is described
-> as:
->
-> 	ranges = <child_addr parent_addr child_size>
->
-> Here, child_addr refers to the PCIe host controller's view of the address space
-> and parent_addr refers to the CPU's view of the address space.
->
-> So the register address described in the PCIe controller node is not a 'parent
-> bus address'.
+This started with a patch that enabled `clippy::ptr_as_ptr`. Benno
+Lossin suggested I also look into `clippy::ptr_cast_constness` and I
+discovered `clippy::as_ptr_cast_mut`. This series now enables all 3
+lints. It also enables `clippy::as_underscore` which ensures other
+pointer casts weren't missed. The first commit reduces the need for
+pointer casts and is shared with another series[1].
 
+As a later addition, `clippy::cast_lossless` and `clippy::ref_as_ptr`
+are also enabled.
 
-All should be parent bus address. See Rob's comments
+Link: https://lore.kernel.org/all/20250307-no-offset-v1-0-0c728f63b69c@gmail.com/ [1]
 
-https://lore.kernel.org/imx/20240927221831.GA135061-robh@kernel.org/
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Changes in v7:
+- Add patch to enable `clippy::ref_as_ptr`.
+- Link to v6: https://lore.kernel.org/r/20250324-ptr-as-ptr-v6-0-49d1b7fd4290@gmail.com
 
+Changes in v6:
+- Drop strict provenance patch.
+- Fix URLs in doc comments.
+- Add patch to enable `clippy::cast_lossless`.
+- Rebase on rust-next.
+- Link to v5: https://lore.kernel.org/r/20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com
 
-bus{
-	ranges = <child_addr parent_addr child_size>
-	pcie {
+Changes in v5:
+- Use `pointer::addr` in OF. (Boqun Feng)
+- Add documentation on stubs. (Benno Lossin)
+- Mark stubs `#[inline]`.
+- Pick up Alice's RB on a shared commit from
+  https://lore.kernel.org/all/Z9f-3Aj3_FWBZRrm@google.com/.
+- Link to v4: https://lore.kernel.org/r/20250315-ptr-as-ptr-v4-0-b2d72c14dc26@gmail.com
 
-		All address here, will be translated by bus's ranges, which
-use 1:1 map if out of ranges by default.
+Changes in v4:
+- Add missing SoB. (Benno Lossin)
+- Use `without_provenance_mut` in alloc. (Boqun Feng)
+- Limit strict provenance lints to the `kernel` crate to avoid complex
+  logic in the build system. This can be revisited on MSRV >= 1.84.0.
+- Rebase on rust-next.
+- Link to v3: https://lore.kernel.org/r/20250314-ptr-as-ptr-v3-0-e7ba61048f4a@gmail.com
 
-		from pcie node (children node of bus) view, the 'child_addr'
-		is parent node (bus)'s output address.
+Changes in v3:
+- Fixed clippy warning in rust/kernel/firmware.rs. (kernel test robot)
+  Link: https://lore.kernel.org/all/202503120332.YTCpFEvv-lkp@intel.com/
+- s/as u64/as bindings::phys_addr_t/g. (Benno Lossin)
+- Use strict provenance APIs and enable lints. (Benno Lossin)
+- Link to v2: https://lore.kernel.org/r/20250309-ptr-as-ptr-v2-0-25d60ad922b7@gmail.com
 
-	}
-}
+Changes in v2:
+- Fixed typo in first commit message.
+- Added additional patches, converted to series.
+- Link to v1: https://lore.kernel.org/r/20250307-ptr-as-ptr-v1-1-582d06514c98@gmail.com
 
+---
+Tamir Duberstein (7):
+      rust: retain pointer mut-ness in `container_of!`
+      rust: enable `clippy::ptr_as_ptr` lint
+      rust: enable `clippy::ptr_cast_constness` lint
+      rust: enable `clippy::as_ptr_cast_mut` lint
+      rust: enable `clippy::as_underscore` lint
+      rust: enable `clippy::cast_lossless` lint
+      rust: enable `clippy::ref_as_ptr` lint
 
-bus may not only one layer to CPU.
+ Makefile                               |  6 ++++++
+ drivers/gpu/drm/drm_panic_qr.rs        | 10 +++++-----
+ rust/bindings/lib.rs                   |  3 +++
+ rust/kernel/alloc/allocator_test.rs    |  2 +-
+ rust/kernel/alloc/kvec.rs              |  4 ++--
+ rust/kernel/block/mq/operations.rs     |  2 +-
+ rust/kernel/block/mq/request.rs        |  7 ++++---
+ rust/kernel/device.rs                  |  5 +++--
+ rust/kernel/device_id.rs               |  5 +++--
+ rust/kernel/devres.rs                  | 19 ++++++++++---------
+ rust/kernel/dma.rs                     |  6 +++---
+ rust/kernel/error.rs                   |  2 +-
+ rust/kernel/firmware.rs                |  3 ++-
+ rust/kernel/fs/file.rs                 |  3 ++-
+ rust/kernel/io.rs                      | 18 +++++++++---------
+ rust/kernel/kunit.rs                   | 15 +++++++--------
+ rust/kernel/lib.rs                     |  5 ++---
+ rust/kernel/list/impl_list_item_mod.rs |  2 +-
+ rust/kernel/miscdevice.rs              |  2 +-
+ rust/kernel/net/phy.rs                 |  4 ++--
+ rust/kernel/of.rs                      |  6 +++---
+ rust/kernel/pci.rs                     | 13 ++++++++-----
+ rust/kernel/platform.rs                |  6 ++++--
+ rust/kernel/print.rs                   | 11 +++++------
+ rust/kernel/rbtree.rs                  | 23 ++++++++++-------------
+ rust/kernel/seq_file.rs                |  3 ++-
+ rust/kernel/str.rs                     | 14 +++++++-------
+ rust/kernel/sync/poll.rs               |  2 +-
+ rust/kernel/uaccess.rs                 |  5 +++--
+ rust/kernel/workqueue.rs               | 12 ++++++------
+ rust/uapi/lib.rs                       |  3 +++
+ 31 files changed, 120 insertions(+), 101 deletions(-)
+---
+base-commit: 28bb48c4cb34f65a9aa602142e76e1426da31293
+change-id: 20250307-ptr-as-ptr-21b1867fc4d4
 
-bus1 {
-	ranges = <...>
+Best regards,
+-- 
+Tamir Duberstein <tamird@gmail.com>
 
-	bus2 {
-		ranges = <...>
-
-		bus3 {
-			ranges = <...>
-
-			All address here is parent's node (bus3)'s bus address
-			So, 'parent bus address' means the parent node's
-			output bus address.
-		};
-	};
-};
-
-Frank
-
->
-> > I'm not sure what the best term is for this.  Do you have a
-> > suggestion?
-> >
->
-> We are just extracting the offset between translated (cpu_phy_addr) and
-> untranslated (reg_addr) addresses of a specific register. Maybe the function
-> should just return the 'untranslated address' and the caller should compute the
-> offset to make it simple?
->
-> > If "parent bus address" is the wrong term, maybe we need to rename
-> > dw_pcie_parent_bus_offset() itself?
-> >
->
-> Yes!
->
-> > Currently we pass in cpu_phys_addr, but this function doesn't need it
-> > except for the debug code added later.  I would really rather have
-> > something like this in the callers:
-> >
-> >   pci->parent_bus_offset = pp->cfg0_base -
-> >       dw_pcie_parent_bus_addr(pci, "config");
-> >
->
-> I agree. This should become, dw_pcie_get_untranslated_addr().
->
-> > because then the offset is computed sort of at the same level where
-> > it's used, and a grep for "cfg0_base" would find both the set and the
-> > use and they would be easy to match up.
-> >
-> > > > +	index = of_property_match_string(np, "reg-names", reg_name);
-> > > > +
-> > > > +	if (index < 0) {
-> > > > +		dev_err(dev, "No %s in devicetree \"reg\" property\n", reg_name);
-> > >
-> > > Both of these callers are checking for the existence of the
-> > > 'reg_name' property before calling this API. So this check seems to
-> > > be redundant (for now).
-> >
-> > True, but I don't see a way to enforce the caller checks.  I don't
-> > like the idea of calling of_property_read_reg(np, index, ...) where we
-> > have to look the caller to verify that "index" is valid.
-> >
->
-> Ok.
->
-> - Mani
->
-> --
-> மணிவண்ணன் சதாசிவம்
 
