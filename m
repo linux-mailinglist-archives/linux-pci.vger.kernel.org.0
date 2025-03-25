@@ -1,188 +1,117 @@
-Return-Path: <linux-pci+bounces-24658-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24659-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F8D6A6EE5E
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 12:02:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4148A6EE9D
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 12:06:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CA66B3B38B1
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 11:02:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A635A17076D
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Mar 2025 11:06:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7569125523D;
-	Tue, 25 Mar 2025 11:02:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2400A255248;
+	Tue, 25 Mar 2025 11:05:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rSbVJsc+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="GvzDdMjA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-10628.protonmail.ch (mail-10628.protonmail.ch [79.135.106.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D005254B0D;
-	Tue, 25 Mar 2025 11:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6A92561B3
+	for <linux-pci@vger.kernel.org>; Tue, 25 Mar 2025 11:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742900554; cv=none; b=nH/JuuOKUfnWzb5LzrHDxF493tm8IHhYXcB+jES+pBU+Es5ecIqvm5P86BxZ3xP/bQN+5FqHUlOTWg5ahwkp1lJahQ7eIpA0cAeAyMDAaQxf/zey6hFrNVBK811neHmhgpsuGnWj0fl1glj5F9YL2mZ3Uz4YWYjD01qz4jJYghE=
+	t=1742900755; cv=none; b=tARyD34zauKCMPNOc/WetaZtuLGx5JuSTuDG7lOjryrpI15w9je4dnjETJrvCC+8DkRaC4EwVwLU53xANl7mWqr/syPrMzlvvPsheSLZ6PHysRpnG/QvnMiOq8ev/x2bqYaS0CeF/QjW0ttYeA3PkjJPR7ULaDdDNIlg7aqrUHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742900554; c=relaxed/simple;
-	bh=82PBDk1yiFJDvWrapv7fPLNTJc8KmRBR6OCSlAlVnvg=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZBecaRQBDs06HEE5gWfOKXLhrIwjvcnOD7jeFclowqBOtVXuGyrG+fDzsR2/QIVQYfkEPIfQcil0thyyvbXOggVLXW4X8cFC8gpYeIc5c5LgPj30Z54hJgoBvxmXvUTGpAUpo5WL3grsd5YL1eh0o2SnJnRhFMKQcHbPiRZq6KY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rSbVJsc+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 922ECC4CEE4;
-	Tue, 25 Mar 2025 11:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742900553;
-	bh=82PBDk1yiFJDvWrapv7fPLNTJc8KmRBR6OCSlAlVnvg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rSbVJsc+GL6lv2xUEvkmMYClr4BiE9asuFbIhOWTxxaTs1tG0Q+KN6REoH02rnooI
-	 OAgNfErYs+2G3nGMOZAJMzD+1iqergbb9ImDFAFBpOq+vpOMy4/LiR+ZylRBJRwXuC
-	 fb+1o7mFU0aMOYtKunH3eSkvaM1E1sY+8+w+oNgNKxT0mTgioll1qq8uXcBg3ZDOcD
-	 pbp1V/ytAHzzsG7A2AYLooNSLrHZsk1ezedBL8ikmWbDSo9+DgO/c6Z3DYqxAWslNe
-	 Jbo9bTUbQJVq9vCZOkrWJy3L7Q9XZRDATr6uPPpLTlFma39EmhDluCsCLYWyYNsrNf
-	 249nDn7rWyJxA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tx23C-00Gt6v-IK;
-	Tue, 25 Mar 2025 11:02:30 +0000
-Date: Tue, 25 Mar 2025 11:02:30 +0000
-Message-ID: <864izhmkzd.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Mark Kettenis <mark.kettenis@xs4all.nl>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	asahi@lists.linux.dev,
-	alyssa@rosenzweig.io,
-	j@jannau.net,
-	marcan@marcan.st,
-	sven@svenpeter.dev,
-	bhelgaas@google.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org
-Subject: Re: [PATCH v2 01/13] dt-bindings: pci: apple,pcie: Add t6020 compatible string
-In-Reply-To: <87iknx75at.fsf@bloch.sibelius.xs4all.nl>
-References: <20250325102610.2073863-1-maz@kernel.org>
-	<20250325102610.2073863-2-maz@kernel.org>
-	<87iknx75at.fsf@bloch.sibelius.xs4all.nl>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1742900755; c=relaxed/simple;
+	bh=RE1crkjfDMTRfO9l+NkEoKH5Q2VQv5QCMnn24nrgW2Y=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OfCSA0U7EUeLNjMkLx6HNUHyvM2gG95jN2AVFGg7sE6euNtQDQzGArb6GSHmMledb+RPnDr4Cuw+b0S7XX/CmU9NnlbgXtOoZPfkvoV1GpOStRKigezR9zIM/aAm2fxp4XxEpmhLN/9v2vSBsRQqpKFIgVOALfwzrI4rHl4N8Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=GvzDdMjA; arc=none smtp.client-ip=79.135.106.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=hkgfeukzircddjyssmulfeqlhi.protonmail; t=1742900744; x=1743159944;
+	bh=ZTrBETovGBbpxaZItuToVrfYc/UT5EF5gB+KAeul71U=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=GvzDdMjAUG7NS1sIsIN2ySv/tEePVztcY+FA/xzy7VQx0a3x+TFR30bbwt2Eu10wU
+	 CGFA0AkdW+g9/NNAC4Wc9SA7LUHKsA30BQuzj9bqyZSmTnFEf7nV7RHigfUJakwEnd
+	 3h2OVFvIvBXZ0VDaaU1b+5wR041AqHZlk8B2jz6SRvOQKzImecs5GrSEVFRvuokfsj
+	 9oiWa9J/5keCoKrgomvku1hsfe9iQyjKB/LaxECf5adMnVsnnQ5aGDqlmeEfwPke9Y
+	 7gPPw50JJ9ssVhSVR3QE7wXr9ivWCGrPqOU+qieHTem5y/S6pG3Lb1hnTBLklO7Aao
+	 D3SMfk/3USJPw==
+Date: Tue, 25 Mar 2025 11:05:40 +0000
+To: Tamir Duberstein <tamird@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 0/6] rust: reduce pointer casts, enable related lints
+Message-ID: <D8PAQXHJDVQE.36QKQGBVVL4QU@proton.me>
+In-Reply-To: <CAJ-ks9nc0ptzfh+tHj47aTCMqoaKB0SnGpZOLQ06upt7x8EBMQ@mail.gmail.com>
+References: <20250317-ptr-as-ptr-v5-0-5b5f21fa230a@gmail.com> <D8ORTXSUTKGL.1KOJAGBM8F8TN@proton.me> <CAJ-ks9n-z0SETz+zBfJmda6Q_vJDeM2jmDXx48xX9qpMmR-mdQ@mail.gmail.com> <D8OTXLDQCOKI.34R1U5R0JSB8H@proton.me> <CAJ-ks9nc0ptzfh+tHj47aTCMqoaKB0SnGpZOLQ06upt7x8EBMQ@mail.gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 43fd8f7124349bec9ba6525a35e3b09516fe44d7
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: mark.kettenis@xs4all.nl, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, asahi@lists.linux.dev, alyssa@rosenzweig.io, j@jannau.net, marcan@marcan.st, sven@svenpeter.dev, bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mark,
-
-On Tue, 25 Mar 2025 10:50:18 +0000,
-Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
-> 
-> > From: Marc Zyngier <maz@kernel.org>
-> > Date: Tue, 25 Mar 2025 10:25:58 +0000
-> 
-> Hi Marc,
-> 
-> Sorry for not spotting this in the earlier versions, but:
-
-No worries -- I expected issues in that department.
-
+On Mon Mar 24, 2025 at 10:59 PM CET, Tamir Duberstein wrote:
+> On Mon, Mar 24, 2025 at 5:55=E2=80=AFPM Benno Lossin <benno.lossin@proton=
+.me> wrote:
+>> On Mon Mar 24, 2025 at 9:55 PM CET, Tamir Duberstein wrote:
+>> > On Mon, Mar 24, 2025 at 4:16=E2=80=AFPM Benno Lossin <benno.lossin@pro=
+ton.me> wrote:
+>> >> * `cast_lossless` (maybe this catches some of the `num as int_type`
+>> >>   conversions I mentioned above)
+>> >
+>> > Yeah, suggested the same above. I had hoped this would deal with the
+>> > char as u32 pattern but it did not.
+>>
+>> Aw that's a shame. Maybe we should create a clippy issue for that,
+>> thoughts?
 >
-> > From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> > 
-> > t6020 adds some register ranges compared to t8103, so requires
-> > a new compatible as well as the new PHY registers themselves.
-> > 
-> > Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> > [maz: added PHY registers]
-> > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/pci/apple,pcie.yaml | 11 ++++++++++-
-> >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> > index c8775f9cb0713..77554899b9420 100644
-> > --- a/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-> > @@ -17,6 +17,10 @@ description: |
-> >    implements its root ports.  But the ATU found on most DesignWare
-> >    PCIe host bridges is absent.
-> >  
-> > +  On systems derived from T602x, the PHY registers are in a region
-> > +  separate from the port registers. In that case, there is one PHY
-> > +  register range per port register range.
-> > +
-> >    All root ports share a single ECAM space, but separate GPIOs are
-> >    used to take the PCI devices on those ports out of reset.  Therefore
-> >    the standard "reset-gpios" and "max-link-speed" properties appear on
-> > @@ -35,11 +39,12 @@ properties:
-> >            - apple,t8103-pcie
-> >            - apple,t8112-pcie
-> >            - apple,t6000-pcie
-> > +          - apple,t6020-pcie
-> >        - const: apple,pcie
-> 
-> Since the T602x PCIe controller has a different register layout, it
-> isn't compatible with the others, so it should not include the
-> "apple,pcie" compatible.  The "downstream" device trees for
-> T602x-based devices do indeed not list "apple,pcie" as a compatible.
-> So I think this needs to be written as:
-> 
->   compatible:
->     oneOf:
->       - items:
->           - enum:
->               - apple,t8103-pcie
->               - apple,t8112-pcie
->               - apple,t6000-pcie
->           - const: apple,pcie
->       - const: apple,t6020-pcie
+> Yeah, it's not clear to me why it isn't covered by `cast_lossless`.
+> Might just be a bug. Want to file it?
 
-Ah, indeed, that's a good point. Thanks for that.
+Done: https://github.com/rust-lang/rust-clippy/issues/14469
 
-Whilst I have your attention, how about my question below:
-
+>> >> I'll leave it up to you what you want to do with this: add it to this
+>> >> series, make a new one, or let someone else handle it. If you don't w=
+ant
+>> >> to handle it, let me know, then I'll create a good-first-issue :)
+>> >
+>> > I'll add a patch for `cast_lossless` -- the rest should probably go
+>> > into an issue.
+>>
+>> Do you mind filing the issue? Then you can decide yourself what you want
+>> to do yourself vs what you want to leave for others. Feel free to copy
+>> from my mail summary.
 >
-> >  
-> >    reg:
-> >      minItems: 3
-> > -    maxItems: 6
-> > +    maxItems: 10
-> >  
-> >    reg-names:
-> >      minItems: 3
-> > @@ -50,6 +55,10 @@ properties:
-> >        - const: port1
-> >        - const: port2
-> >        - const: port3
-> > +      - const: phy0
-> > +      - const: phy1
-> > +      - const: phy2
-> > +      - const: phy3
+> Well, I don't really know what's left to do. We're pretty close at
+> this point to having enabled everything but the nukes. Then there's
+> the strict provenance thing, which I suppose we can write down.
 
-Do we need to make this t6020 specific?
+Yes, but there are also these from my original mail:
+* `shared_ref as *const _` (for example in rust/kernel/uaccess.rs:247,
+  rust/kernel/str.rs:32 and rust/kernel/fs/file.rs:367), these we can
+  replace with `let ptr: *const ... =3D shared_ref;`. Don't know if there
+  is a clippy lint for this.
 
-Obviously, separate PHY registers do not make much sense before t6020,
-but I couldn't find a way to describe that. I don't even know if
-that's a desirable outcome.
+And the other points (haven't taken a look at the other series you
+submitted, so I don't know to what extend you fixed the other `as` casts
+I mentioned). So I figured you might know which ones we still have after
+applying all your patches :)
 
-Thanks,
+---
+Cheers,
+Benno
 
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
 
