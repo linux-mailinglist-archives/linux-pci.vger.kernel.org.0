@@ -1,139 +1,182 @@
-Return-Path: <linux-pci+bounces-24797-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24798-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58CE4A720EE
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 22:43:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DDD6A722BB
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 23:10:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D8F83173FB4
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 21:43:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 236CE7A504F
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 22:09:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C02972620C4;
-	Wed, 26 Mar 2025 21:43:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2402A219E8F;
+	Wed, 26 Mar 2025 22:10:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EDGhT6TH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpNYGiYO"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2446F1F460E;
-	Wed, 26 Mar 2025 21:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C5314A4E0;
+	Wed, 26 Mar 2025 22:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743025411; cv=none; b=opQiULyka7lVxagPsHpNYBryP9TTvxoS0gWAqwAs+2yKPAkw2zDyurfLXdp9GnkIPtotNFKGenYQ+YWJHAjBxtSinL2f/dlqu7EsZlphhjBwH+TDlo28v9zSNg40ZHzszqv7brAfMtSBnsIwtsX7uir0c2iYsFTxr0yIiqV91Ws=
+	t=1743027001; cv=none; b=Xexb1JGlScjtz8EfkGFvKc+GI9cC9Xst4DNAYZ4bAclY+nwtqgrCZgZ6tb1/Fa4s+NkllZCgWP3V2t1pTypXSz0UPO6yVsmcGBGU6rDJ22Y27O3Ug+mTs4EZaYlLBptajcDze0ag5D5kWKpsK6ANQa3pNOQB3HMhZR6/5cFWmvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743025411; c=relaxed/simple;
-	bh=RIm2iQ3s/e/fPL2X39oO+OfIIkezi9eH0r/BTF0Mc78=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nEjHLs1EbRPULl91kgDvuyJoUqds48QY4N7l0RpfVWmKERo3H0dbMn+esyx5/ZTy39N72ZXiGo3iEEquyuXiGojKsM1Tz8npLtj4su89g3n00/Ho+0JDZpVw25cthpiW+pLsM+lZFEeBsv2FMzAriWLCpqkCbSig+FuFlP7Z6gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EDGhT6TH; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743025410; x=1774561410;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RIm2iQ3s/e/fPL2X39oO+OfIIkezi9eH0r/BTF0Mc78=;
-  b=EDGhT6THMxO2SFytLw0Gzd3IbGtUfDR9c4TJNPRNaSD5oWSQhoizZ571
-   SX6caqptluXstqJGAKbdpRlsEPoaIrxq/EEJLjl8wmQIC1ArfoA16nlix
-   uu4TQS5+QCYArLh8sa2MkVyQC9RbZe7DVPZAqGKFIWT38vYDinYsIweJr
-   drVPMZ/Ahv+sj3MMneNQRP8Vg8CUovXHHVdJISFMCPO1c8hwN6YMqm07I
-   4AnNlTm1S/HALsh69EqzHwYnJRYSGwz5alhMZ9AdusaGlMamDlLCwueNo
-   jxbs9AWRR99gA8J4MgCQd98IxWr1z88mk4WEX4qUaQuDNv4/WxSK5iIxx
-   g==;
-X-CSE-ConnectionGUID: bS4rCjdoSdWOtKzgN79S1A==
-X-CSE-MsgGUID: n00tdjo4SmGZKBch+2cD5g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44521367"
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="44521367"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 14:43:29 -0700
-X-CSE-ConnectionGUID: Didorik1Q0CUaWp1ofD6TA==
-X-CSE-MsgGUID: LRnfdugRTHWmIjo3hrcb1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="124723729"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa006.fm.intel.com with ESMTP; 26 Mar 2025 14:43:27 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1txYWy-000663-38;
-	Wed, 26 Mar 2025 21:43:24 +0000
-Date: Thu, 27 Mar 2025 05:42:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 2/3] PCI: dwc: Add sysfs support for PTM context
-Message-ID: <202503270545.z7lzaIQz-lkp@intel.com>
-References: <20250324-pcie-ptm-v2-2-c7d8c3644b4a@linaro.org>
+	s=arc-20240116; t=1743027001; c=relaxed/simple;
+	bh=25Tr7RM7XhHf1JCtkM+bWEr7gcCanZ/l1B2na6DpLrY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QE3l01OmJvmL/jfnM6oaQUfvExV/N/2SfID19zogj+E6y+r+tjfnAEN9Oi3yWqczeGUgldtsOcM7AAhXF/dz8dnqXPgCx4WarnMFuXrgRr3e0h71cRauOhhTNaqd1WzlqSi+04LK5ldPmiz44YeBrxryH35cgxohF5xrCh55Obw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MpNYGiYO; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf5d7d107so3074791fa.2;
+        Wed, 26 Mar 2025 15:09:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743026997; x=1743631797; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=25Tr7RM7XhHf1JCtkM+bWEr7gcCanZ/l1B2na6DpLrY=;
+        b=MpNYGiYO4yDbsQe6zzpDaE0Jd/jCtiogrX12Ioy6whfOJAU3y9m1k7l7cW70JIG+Fm
+         Ca5xdpz3VgWvEwzfx678zlvFel4PwLXnZarxoDYD0/CD4p7a4wOEXCoLKEW+ghVwzRUS
+         PCtqfP2RgGi7+V+iX+AZvoImf2ieXhPxYjagUGKBRNOMrScdIRA8j9aq1K5+L1HQD4Sl
+         rda++dZgGs66cUqhdWsC7o6SS3Ks/ln4rZcxL/cfXmeIo+KSCD+hjhRR3j5Ewb6Q+y8B
+         UJjCN6CBI1oJ8Hzq2ekfv8eAvUfWa6CWH0vgkaw6LOoGY7NTmChGhgI4g2DwJUxOA1kz
+         b3Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743026997; x=1743631797;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=25Tr7RM7XhHf1JCtkM+bWEr7gcCanZ/l1B2na6DpLrY=;
+        b=EMRytNpPpeJSBetJzjSFTNS0vQeO+9oYZ0JjSI4HpnASXXIzpgGodVN64YJiGCOJrf
+         WXgRFVxgfoGolk41nmX5L+SvkyvWH2FGO9h7BXYG/pWg71az88gvNKi4Cn983ritjucF
+         xgM2aSElRrNqwuYzUPB3QYXMO5nthSEplRGTbPNO331Mn57vOGQS05xt30IsvsbWugrV
+         nevDTK+uwqJ47nf9Ci+ljD26gjrn1xN20AR51Pi3K5/iK6k97TTouxkCQnKniDpHaUwe
+         sjj6KgnVV57I5g9ssT87RtIwHUCgnEoh5M4o7UcR0knv1SK4kw66sQURAhSEs+pwumcC
+         /zGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUxleR5oNwQo7SV8hTsRlmt2UDGO9ONUyzGgtHvASQ9PKfKpHrYGJnHIMu7bwdlyQK4Dm+T1Yl0@vger.kernel.org, AJvYcCWKDY38m5VfGk0LJ07aVGUFhYCj/M9174jxGRw3meHwL0EgxDIqz0fi+swWWcxVIAY/ifjMbRO6Kg41uoQNtbI8@vger.kernel.org, AJvYcCWo6rR5PHOu1XlVVThMr4NWdahdatc8N3yzFedHlKVkA4CFymTro5Q+bEvFUcTAN3sK5/uCe+1e+V/aTdAUA+4=@vger.kernel.org, AJvYcCWywqkt2fq4j2ELv/C9JHaAjMnBiwZXnfODfGj4sq/gG7TqUgEgZ+2tYLWrqjFDIUaiEzxgLAgoKR7taZE=@vger.kernel.org, AJvYcCX9g1T5j2VtYsAWGFoQkn9qJfvka0LRu1usnStjIwPp29eOcO9uOIvz9OD1x7gti+dvkJLoC4Umtk3d@vger.kernel.org, AJvYcCXMo3mMrUjLf1kvQh5GGuK6Gcm/7gjny2lXHOdbztCNO2HcFsTWXOwk9mzzRwjLydUMhBhZpuJFNjU3@vger.kernel.org, AJvYcCXy05nECEpnzM8zjSunTd39mnCQKezQcSnxH/2CwJ5rEYFFAO3He8JUMFCfCa5EydxNxBtUbWcnFDfQ0gA+@vger.kernel.org, AJvYcCXypFzzZdXDMuzBUet+Kw7QrQrRKPVTs1YZc6j+mA+JQoKPf5pJl/y3dXx4PQeGmdTy/hWfUkEs9o+d5XNV@vger.kernel.org
+X-Gm-Message-State: AOJu0YxitNT2j9+EmgpBzSQEgBHFiWEMkJl/jpJLKXa/u1LG7+9TnddQ
+	FjoB9Yo/yv9bgtsIvY3pt79U5B9o1v7CN11ONwAOWu0xxZNpOjXfsiyL2NnzGoEVtDzUAkpqnWZ
+	oSptoz6UcBd04FA3lkSGyfuz7G/Y=
+X-Gm-Gg: ASbGncszqYk7+OX+x3vd8arnrbRXtlPaOu4YfZ36ZmsCAZSEWMNuZQyIBOwvcksI8ss
+	YmpywSGPlRFzUqbZll5iBMvgyJXD3UxXB1RtYr7ds5NNrimApp47Vigx1JduJClx7E7DukK0ks0
+	7x9sG7M4ZYhVOjnH+qaLiEF4FWwWg3VP/wmwiatdfh/A==
+X-Google-Smtp-Source: AGHT+IHX4HWxiuDcJh6RFBYB0z4mv1VQdnwmt/CKhKHr01wYV9yimExXiWC5KliSOM/5II+nRJgfsPlCyM8KCWUVSdg=
+X-Received: by 2002:a2e:9982:0:b0:300:26bc:4311 with SMTP id
+ 38308e7fff4ca-30dc5dd50b1mr5206711fa.18.1743026996866; Wed, 26 Mar 2025
+ 15:09:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324-pcie-ptm-v2-2-c7d8c3644b4a@linaro.org>
+References: <20250325-ptr-as-ptr-v7-0-87ab452147b9@gmail.com>
+ <D8PPIYIJCNX8.13VPQULEI0ALN@proton.me> <CAJ-ks9k6220j6CQSOF4TDrgY9qq4PfV9uaMXz1Qk4m=eeSr5Ag@mail.gmail.com>
+ <D8Q4MSXXZ7OI.1NC226MO02VSN@proton.me> <CAJ-ks9nHKpQPuSBypXTSATYhbAFkQTJzUq8jN0nu4t=Kw+0xxg@mail.gmail.com>
+ <D8QCK3CQES3Y.3LTZ4MVO5B3KT@proton.me> <CAJ-ks9nKT2PUDm6=b4AB1QUWwwvcqPn7Vz60=c0B+uFMZrqPew@mail.gmail.com>
+ <D8QDOBUM6NF0.CGJY7ZA5KD9S@proton.me> <CAJ-ks9ntTxBM=c5nUZWGv3MoRt-LveBchn-c1Xy-DGap7fLVRA@mail.gmail.com>
+ <D8QI804Q3DAS.2BV4WSL81H52Z@proton.me>
+In-Reply-To: <D8QI804Q3DAS.2BV4WSL81H52Z@proton.me>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 26 Mar 2025 18:09:20 -0400
+X-Gm-Features: AQ5f1Jr4h_VyjyWTUSlSb_WqvOkQ5GTUuP7SqBZOv0icJYUW2AkHAvgmWwY4H9E
+Message-ID: <CAJ-ks9mA5QDeZ3EvOD3THayFt4TtDysgm0jp2aiSF2mQCrhWiQ@mail.gmail.com>
+Subject: Re: [PATCH v7 7/7] rust: enable `clippy::ref_as_ptr` lint
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Manivannan,
+On Wed, Mar 26, 2025 at 5:09=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> On Wed Mar 26, 2025 at 8:06 PM CET, Tamir Duberstein wrote:
+> > On Wed, Mar 26, 2025 at 1:36=E2=80=AFPM Benno Lossin <benno.lossin@prot=
+on.me> wrote:
+> >> On Wed Mar 26, 2025 at 5:57 PM CET, Tamir Duberstein wrote:
+> >> > In the current code you're looking at, yes. But in the code I have
+> >> > locally I'm transmuting `[u8]` to `BStr`. See my earlier reply where=
+ I
+> >> > said "Hmm, looking at this again we can just transmute ref-to-ref an=
+d
+> >> > avoid pointers entirely. We're already doing that in
+> >> > `CStr::from_bytes_with_nul_unchecked`".
+> >>
+> >> `CStr::from_bytes_with_nul_unchecked` does the transmute with
+> >> references. That is a usage that the docs of `transmute` explicitly
+> >> recommend to change to an `as` cast [1].
+> >
+> > RIght. That guidance was written in 2016
+> > (https://github.com/rust-lang/rust/pull/34609) and doesn't present any
+> > rationale for `as` casts being preferred to transmute. I posted a
+> > comment in the most relevant issue I could find:
+> > https://github.com/rust-lang/rust/issues/34249#issuecomment-2755316610.
+>
+> Not sure if that's the correct issue, maybe we should post one on the
+> UCG (unsafe code guidelines). But before that we probably should ask on
+> zulip...
+>
+> >> No idea about provenance still.
+> >
+> > Well that's not surprising, nobody was thinking about provenance in
+> > 2016. But I really don't think we should blindly follow the advice in
+> > this case. It doesn't make an iota of sense to me - does it make sense
+> > to you?
+>
+> For ptr-to-int transmutes, I know that they will probably remove
+> provenance, hence I am a bit cautious about using them for ptr-to-ptr or
+> ref-to-ref.
+>
+> >> [1]: https://doc.rust-lang.org/std/mem/fn.transmute.html#alternatives
+> >>
+> >> >> I tried to find some existing issues about the topic and found that
+> >> >> there exists a clippy lint `transmute_ptr_to_ptr`. There is an issu=
+e
+> >> >> asking for a better justification [1] and it seems like nobody prov=
+ided
+> >> >> one there. Maybe we should ask the opsem team what happens to prove=
+nance
+> >> >> when transmuting?
+> >> >
+> >> > Yeah, we should do this - but again: not relevant in this discussion=
+.
+> >>
+> >> I think it's pretty relevant.
+> >
+> > It's not relevant because we're no longer talking about transmuting
+> > pointer to pointer. The two options are:
+> > 1. transmute reference to reference.
+> > 2. coerce reference to pointer, `as` cast pointer to pointer (triggers
+> > `ptr_as_ptr`), reborrow pointer to reference.
+> >
+> > If anyone can help me understand why (2) is better than (1), I'd
+> > certainly appreciate it.
+>
+> I am very confident that (2) is correct. With (1) I'm not sure (see
+> above), so that's why I mentioned it.
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on 1f5a69f1b3132054d8d82b8d7546d0af6a2ed4f6]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Manivannan-Sadhasivam-via-B4-Relay/PCI-Add-sysfs-support-for-exposing-PTM-context/20250324-181039
-base:   1f5a69f1b3132054d8d82b8d7546d0af6a2ed4f6
-patch link:    https://lore.kernel.org/r/20250324-pcie-ptm-v2-2-c7d8c3644b4a%40linaro.org
-patch subject: [PATCH v2 2/3] PCI: dwc: Add sysfs support for PTM context
-config: i386-randconfig-062-20250326 (https://download.01.org/0day-ci/archive/20250327/202503270545.z7lzaIQz-lkp@intel.com/config)
-compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250327/202503270545.z7lzaIQz-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503270545.z7lzaIQz-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/pci/controller/dwc/pcie-designware-sysfs.c:222:21: sparse: sparse: symbol 'dw_pcie_ptm_ops' was not declared. Should it be static?
-
-vim +/dw_pcie_ptm_ops +222 drivers/pci/controller/dwc/pcie-designware-sysfs.c
-
-   221	
- > 222	struct pcie_ptm_ops dw_pcie_ptm_ops = {
-   223		.check_capability = dw_pcie_ptm_check_capability,
-   224		.context_update_store = dw_pcie_ptm_context_update_store,
-   225		.context_update_show = dw_pcie_ptm_context_update_show,
-   226		.context_valid_store = dw_pcie_ptm_context_valid_store,
-   227		.context_valid_show = dw_pcie_ptm_context_valid_show,
-   228		.local_clock_show = dw_pcie_ptm_local_clock_show,
-   229		.master_clock_show = dw_pcie_ptm_master_clock_show,
-   230		.t1_show = dw_pcie_ptm_t1_show,
-   231		.t2_show = dw_pcie_ptm_t2_show,
-   232		.t3_show = dw_pcie_ptm_t3_show,
-   233		.t4_show = dw_pcie_ptm_t4_show,
-   234		.context_update_visible = dw_pcie_ptm_context_update_visible,
-   235		.context_valid_visible = dw_pcie_ptm_context_valid_visible,
-   236		.local_clock_visible = dw_pcie_ptm_local_clock_visible,
-   237		.master_clock_visible = dw_pcie_ptm_master_clock_visible,
-   238		.t1_visible = dw_pcie_ptm_t1_visible,
-   239		.t2_visible = dw_pcie_ptm_t2_visible,
-   240		.t3_visible = dw_pcie_ptm_t3_visible,
-   241		.t4_visible = dw_pcie_ptm_t4_visible,
-   242	};
-   243	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Can you help me understand why you're confident about (2) but not (1)?
 
