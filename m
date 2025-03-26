@@ -1,105 +1,173 @@
-Return-Path: <linux-pci+bounces-24785-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24787-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29EC2A71C87
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 17:58:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A1D7A71D3D
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 18:36:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D7AF1646D5
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 16:57:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F44616E561
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 17:36:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C2221F4E25;
-	Wed, 26 Mar 2025 16:57:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C18FD23C8B6;
+	Wed, 26 Mar 2025 17:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJmHmHqV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="KLeAnQw7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BD11F95C;
-	Wed, 26 Mar 2025 16:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D862080F4;
+	Wed, 26 Mar 2025 17:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743008250; cv=none; b=eZi+gCL8AwtV5h7z1B+2SGznPNv42dYPEW7+Wv0r+tqCBubSx+tTE5NQ+FcLabefaGZ9VYqSERapdMe54o/Ao+dhDsEq/O/hpEUb+qNxFMwu5CphvcCzrVQB6x5swZVy3GJrNjGBZqpvpvnBrWRuWugvn/I5ekmrYe3tHw26YrI=
+	t=1743010571; cv=none; b=IWlxH7vBbbL+p9rUDOdB4dR/AN6Ri7YfyM79dAUgheGryOecmLvR8tIuafLLU89ETP2d9Y6uJv/RRppSju58rZ2qk0e7MOPqJvrDfTAwu7jquXs/00va5yl8Aq3cn52KSEoOCXfsuNkeUEFacX6bz/SnV5QYy5IKz7tMtqMvwM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743008250; c=relaxed/simple;
-	bh=doUGU7qVE0nBslUip4rBHGXcaNRqYNLVIEXEA4QLHQA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=tedSUquQGt/fWLzJ5dHxesXQPNjseXa3O6h1Hniu5qafCepZUvj0zttb/VCtrp4wMQGDRXFwy/GB8It+PpgHlKMy4Mqp2MTQGuSXYdwf0y8yF6h/YulNoCVNxWJDffuw9RIPcaFjy1+y7FCERPj0LkWuQLZco76wT41ogi2rzwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJmHmHqV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBE67C4CEE2;
-	Wed, 26 Mar 2025 16:57:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743008249;
-	bh=doUGU7qVE0nBslUip4rBHGXcaNRqYNLVIEXEA4QLHQA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=UJmHmHqVI3uYPPPWwZz7PXpzmD9dQ/ucfsM7V7xxc5q13C8Rwio5uuH4TjbFn8O2M
-	 G4Z2l0eXdzlB5lfeG+bNdnWMgXiMC7Odzgy2vYwgjRtJ6W7hH0NWJQ18YFdPsq46yj
-	 WbWr4eusBPxPD6uHupuMQDorBHriEtOuHZV0AOPPeAXGdoi20pHFI8qmdsv+MXy8MA
-	 MfbRdz+dCsni9WuPBZtxDHgsmPfVueqlUKrPKficvchGgIhZ2OqTug4P/h4Xn9jxwz
-	 hu520cCH7UoblQQeZ1dmNORLokqOLHmBjl+5gVTs5apTbK7vt8a0O6x24SL4Y7cwkZ
-	 nsqwOY0X9SrUQ==
-Date: Wed, 26 Mar 2025 11:57:28 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Yibo Dong <dong100@mucse.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add MUCSE vendor ID to pci_ids.h
-Message-ID: <20250326165728.GA1339144@bhelgaas>
+	s=arc-20240116; t=1743010571; c=relaxed/simple;
+	bh=vmo70qi4jubeax8r03jesK1Pt//JC5tXOdcGJJd8Swc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GpcGoO35bx5qFUQ/H1koMela2L9RaAqCHWI3rDN6iZa7+tcNU1BEkFgG/RmXMlP+IpXnnArzRI+J4ykmcwsiVfJURa9Nnuq5KpMMs6cKEVglgH2YdvOYzh1WPbmh0vKG6/B5zQ+eG502FnzUkWVq6CVHaai07gLHPZcGigN9Afk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=KLeAnQw7; arc=none smtp.client-ip=79.135.106.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1743010566; x=1743269766;
+	bh=ISTNGVgFNAIYx4YxVawxUgwnjBdmAFD9xRz8nBxjPR4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=KLeAnQw7pMwTIc0aP8iawFI8ULRG+OGlYN/wCnE45deKP4azWBgmStXT+icgK/+NK
+	 wv4nibfgtrEPn2ayPX1GCkqf/OcZ4xvleZX0dAm++M/xykGsV/A2eI5gFpsR+5p1ki
+	 uM4mSYToshLeMtIIXgxDyQvbB+R3/n2EpSPb6Aipx4oB7Ng10QGx/nRd50g76irVxH
+	 VFEJoigZu8OkUii3xC7p3pXKV/7QSBllcv8VGqOkzqLWdvI5gvuakA0M+osHV3k5R5
+	 ylVKJaUq+efycUbXXYSbzu5Zz9ssEVULj0ZPmQloCwKSrrONqFy77iu8W7tgUEDjRI
+	 22E/xuo2GEh3g==
+Date: Wed, 26 Mar 2025 17:36:01 +0000
+To: Tamir Duberstein <tamird@gmail.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, FUJITA Tomonori <fujita.tomonori@gmail.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v7 7/7] rust: enable `clippy::ref_as_ptr` lint
+Message-ID: <D8QDOBUM6NF0.CGJY7ZA5KD9S@proton.me>
+In-Reply-To: <CAJ-ks9nKT2PUDm6=b4AB1QUWwwvcqPn7Vz60=c0B+uFMZrqPew@mail.gmail.com>
+References: <20250325-ptr-as-ptr-v7-0-87ab452147b9@gmail.com> <20250325-ptr-as-ptr-v7-7-87ab452147b9@gmail.com> <D8POWLFKWABG.37BVXN2QCL8MP@proton.me> <CAJ-ks9mUYw4FEJQfmDrHHt0oMy256jhp7qZ-CHp6R5c_sOCD4w@mail.gmail.com> <D8PPIYIJCNX8.13VPQULEI0ALN@proton.me> <CAJ-ks9k6220j6CQSOF4TDrgY9qq4PfV9uaMXz1Qk4m=eeSr5Ag@mail.gmail.com> <D8Q4MSXXZ7OI.1NC226MO02VSN@proton.me> <CAJ-ks9nHKpQPuSBypXTSATYhbAFkQTJzUq8jN0nu4t=Kw+0xxg@mail.gmail.com> <D8QCK3CQES3Y.3LTZ4MVO5B3KT@proton.me> <CAJ-ks9nKT2PUDm6=b4AB1QUWwwvcqPn7Vz60=c0B+uFMZrqPew@mail.gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: c0a294e4fdda451a84b260cbeb67b2c355063bc8
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250325065718.333301-1-dong100@mucse.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 25, 2025 at 02:57:18PM +0800, Yibo Dong wrote:
-> Add MUCSE as a vendor ID (0x8848) for PCI devices so we can use
-> the macro for future drivers.
-> 
-> Signed-off-by: Yibo Dong <dong100@mucse.com>
+On Wed Mar 26, 2025 at 5:57 PM CET, Tamir Duberstein wrote:
+> On Wed, Mar 26, 2025 at 12:43=E2=80=AFPM Benno Lossin <benno.lossin@proto=
+n.me> wrote:
+>> On Wed Mar 26, 2025 at 11:35 AM CET, Tamir Duberstein wrote:
+>> > On Wed, Mar 26, 2025 at 6:31=E2=80=AFAM Benno Lossin <benno.lossin@pro=
+ton.me> wrote:
+>> >> On Wed Mar 26, 2025 at 12:54 AM CET, Tamir Duberstein wrote:
+>> >> > On Tue, Mar 25, 2025 at 6:40=E2=80=AFPM Benno Lossin <benno.lossin@=
+proton.me> wrote:
+>> >> >> On Tue Mar 25, 2025 at 11:33 PM CET, Tamir Duberstein wrote:
+>> >> >> > On Tue, Mar 25, 2025 at 6:11=E2=80=AFPM Benno Lossin <benno.loss=
+in@proton.me> wrote:
+>> >> >> >> On Tue Mar 25, 2025 at 9:07 PM CET, Tamir Duberstein wrote:
+>> >> >> >> > diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+>> >> >> >> > index 40034f77fc2f..6233af50bab7 100644
+>> >> >> >> > --- a/rust/kernel/str.rs
+>> >> >> >> > +++ b/rust/kernel/str.rs
+>> >> >> >> > @@ -29,7 +29,7 @@ pub const fn is_empty(&self) -> bool {
+>> >> >> >> >      #[inline]
+>> >> >> >> >      pub const fn from_bytes(bytes: &[u8]) -> &Self {
+>> >> >> >> >          // SAFETY: `BStr` is transparent to `[u8]`.
+>> >> >> >> > -        unsafe { &*(bytes as *const [u8] as *const BStr) }
+>> >> >> >> > +        unsafe { &*(core::mem::transmute::<*const [u8], *con=
+st Self>(bytes)) }
+>> >> >> >>
+>> >> >> >> Hmm I'm not sure about using `transmute` here. Yes the types ar=
+e
+>> >> >> >> transparent, but I don't think that we should use it here.
+>> >> >> >
+>> >> >> > What's your suggestion? I initially tried
+>> >> >> >
+>> >> >> > let bytes: *const [u8] =3D bytes;
+>> >> >> > unsafe { &*bytes.cast() }
+>> >> >> >
+>> >> >> > but that doesn't compile because of the implicit Sized bound on =
+pointer::cast.
+>> >> >>
+>> >> >> This is AFAIK one of the only places where we cannot get rid of th=
+e `as`
+>> >> >> cast. So:
+>> >> >>
+>> >> >>     let bytes: *const [u8] =3D bytes;
+>> >> >>     // CAST: `BStr` transparently wraps `[u8]`.
+>> >> >>     let bytes =3D bytes as *const BStr;
+>> >> >>     // SAFETY: `bytes` is derived from a reference.
+>> >> >>     unsafe { &*bytes }
+>> >> >>
+>> >> >> IMO a `transmute` is worse than an `as` cast :)
+>> >> >
+>> >> > Hmm, looking at this again we can just transmute ref-to-ref and avo=
+id
+>> >> > pointers entirely. We're already doing that in
+>> >> > `CStr::from_bytes_with_nul_unchecked`
+>> >> >
+>> >> > Why is transmute worse than an `as` cast?
+>> >>
+>> >> It's right in the docs: "`transmute` should be the absolute last
+>> >> resort." [1]. IIRC, Gary was a bit more lenient in its use, but I thi=
+nk
+>> >> we should avoid it as much as possible such that people copying code =
+or
+>> >> taking inspiration also don't use it.
+>> >>
+>> >> So for both cases I'd prefer an `as` cast.
+>> >>
+>> >> [1]: https://doc.rust-lang.org/std/mem/fn.transmute.html
+>> >
+>> > I don't follow the logic. The trouble with `as` casts is that they are
+>> > very lenient in what they allow, and to do these conversions with `as`
+>> > casts requires ref -> pointer -> pointer -> pointer deref versus a
+>> > single transmute. The safety comment perfectly describes why it's OK
+>> > to do: the types are transparent. So why is `as` casting pointers
+>> > better? It's just as unchecked as transmuting, and worse, it requires
+>> > a raw pointer dereference.
+>>
+>> Note that you're not transmuting `[u8]` to `BStr`, but `*const [u8]` to
+>> `*const BStr`. Those pointers have provenance and I'm not sure if
+>> transmuting them preserves it.
+>
+> In the current code you're looking at, yes. But in the code I have
+> locally I'm transmuting `[u8]` to `BStr`. See my earlier reply where I
+> said "Hmm, looking at this again we can just transmute ref-to-ref and
+> avoid pointers entirely. We're already doing that in
+> `CStr::from_bytes_with_nul_unchecked`".
 
-Please post this in the series where you add the future drivers.
+`CStr::from_bytes_with_nul_unchecked` does the transmute with
+references. That is a usage that the docs of `transmute` explicitly
+recommend to change to an `as` cast [1].
 
-We don't add new things to pci_ids.h unless they are actually used by
-more than one driver because it complicates life for people who
-backport things (there's a note at the top of the file about this).
+No idea about provenance still.
 
-> ---
->  include/linux/pci_ids.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index de5deb1a0118..f1b4c61c6d3c 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -3143,6 +3143,8 @@
->  #define PCI_VENDOR_ID_SCALEMP		0x8686
->  #define PCI_DEVICE_ID_SCALEMP_VSMP_CTL	0x1010
->  
-> +#define PCI_VENDOR_ID_MUCSE		0x8848
+[1]: https://doc.rust-lang.org/std/mem/fn.transmute.html#alternatives
 
-https://pcisig.com/membership/member-companies?combine=8848 says this
-Vendor ID belongs to:
+>> I tried to find some existing issues about the topic and found that
+>> there exists a clippy lint `transmute_ptr_to_ptr`. There is an issue
+>> asking for a better justification [1] and it seems like nobody provided
+>> one there. Maybe we should ask the opsem team what happens to provenance
+>> when transmuting?
+>
+> Yeah, we should do this - but again: not relevant in this discussion.
 
-  Wuxi Micro Innovation Integrated Circuit Design Co.,Ltd
+I think it's pretty relevant.
 
-I suppose "MUCSE" connects with that somehow.
+---
+Cheers,
+Benno
 
-It's nice if people can connect PCI_VENDOR_ID_MUCSE with a name used
-in marketing the product.  Maybe "MUCSE" is the name under which
-Wuxi Micro Innovation Integrated Circuit Design Co.,Ltd markets
-products?
-
->  #define PCI_VENDOR_ID_COMPUTONE		0x8e0e
->  #define PCI_DEVICE_ID_COMPUTONE_PG	0x0302
->  #define PCI_SUBVENDOR_ID_COMPUTONE	0x8e0e
-> -- 
-> 2.25.1
-> 
 
