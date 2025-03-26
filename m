@@ -1,300 +1,254 @@
-Return-Path: <linux-pci+bounces-24762-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24763-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79EEDA71651
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 13:16:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 368C1A716AE
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 13:28:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3596F188E7AE
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 12:16:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E968F18840F8
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 12:28:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD8751D7E52;
-	Wed, 26 Mar 2025 12:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="kT1hkvSt";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="t/xV5bHn"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CD3D1DAC97;
+	Wed, 26 Mar 2025 12:28:35 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCC620311
-	for <linux-pci@vger.kernel.org>; Wed, 26 Mar 2025 12:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B2518E377
+	for <linux-pci@vger.kernel.org>; Wed, 26 Mar 2025 12:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742991372; cv=none; b=YGsB0nnYnc4ikBrlk/7LA/YMMDZXs8Y7LGJ0d8WoQWRBIuduHvRrrSbwIGdyTN71unf0wj+jUyTt+5n9BXcxAnJrLNaznj7gp8m2KWrlt0h7aaC24XLqfgZUUKFgTk8eUauavPxR+IfuFAt3lBpKyaooeGPzh1xUVVORtI+sK2I=
+	t=1742992115; cv=none; b=EXQBJK9yTGd6koMTcWI1MJU6KuQ2X2XkEuFlQwS0FGPLugel5lq0g6n6OwerzMBL2EsFU9jpLSSIsCen2pV7mrjoW/N9Zsi6lqPlZzOBXZdm0mdzLCcJ+EfyM7BWwc4iku9ZhWcKh2or1HiZ7hcRVAprLnDOjBtcAwXJvSrNwPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742991372; c=relaxed/simple;
-	bh=7KHBZEmF/HmuUaj/FrpcKwdYyFB6mZxiRitXy8Q+JJk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lDHacQZ6xMzbeQoy2kQL4nA+f/6aZnnxB+0O7wd4m15PXtnvMuj7wIahwT8iLf/iRmeg60z5ucegh/BPojKkw3Q7oz0k64g8musJLGFwIsIn8wWjTyz2Rv7D2AIiR/rjOmPUROx/ez4COIxwZSxZ/a/GFuX/iA1vs8ZBi/iGdJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=kT1hkvSt; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=t/xV5bHn; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DF1961F391;
-	Wed, 26 Mar 2025 12:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1742991369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7KHBZEmF/HmuUaj/FrpcKwdYyFB6mZxiRitXy8Q+JJk=;
-	b=kT1hkvSt8Za7FZG91PfiWNbGnI6W/cF1wfx2gCK6aIPcA5t/QKNh5FvFIV+sHLh5ec2PY1
-	ba+A5HF7QKFQE8cbUlTsaf9kck6oLk/k86uJUHljh2dphlwePfODdkxHGbfofxKgBUoKSL
-	ofWDLS44HLhnODpCq+pyEE0BBAUT8t8=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b="t/xV5bHn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1742991368; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7KHBZEmF/HmuUaj/FrpcKwdYyFB6mZxiRitXy8Q+JJk=;
-	b=t/xV5bHn8MTu/K4B0nnrksV/tTmi5irn3Tpc4MA9kQp87N3d7pROr4jv47J1GUDLHt+iwW
-	vsNcJjt8vrRMnp+19FoamlqXM+a96xSemI1HZilUecHsZfSxh3N/xbxIgmn5iBfiollhXh
-	mYBJvAiVfgOofWzClVfebWFs8s1WwPc=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 73D9A13927;
-	Wed, 26 Mar 2025 12:16:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id tupQGgjw42eLGwAAD6G6ig
-	(envelope-from <jgross@suse.com>); Wed, 26 Mar 2025 12:16:08 +0000
-Message-ID: <bdccc663-1d54-4006-bc69-6bf85f357864@suse.com>
-Date: Wed, 26 Mar 2025 13:16:07 +0100
+	s=arc-20240116; t=1742992115; c=relaxed/simple;
+	bh=1n4g/6bdveJW/rR0rc725KSzXn22VA+CQD/mrwBCn1E=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lIn1UBDG7ebUwZvGsVanJ0oas1t7BRdxuL4VmLGN+ycABlVxZzflIbTF8t3G3CSLp+nGvRLCxH4HBagpftbgjy5v5WXOog3ViTGVPz49wlPIkIj6S99JSSu2oXosy+PbqHriPs2y1kKz6DxFGXcqHZkHQ4+u7DADO24VwwQKTEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d2a379bbf0so125541155ab.1
+        for <linux-pci@vger.kernel.org>; Wed, 26 Mar 2025 05:28:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742992112; x=1743596912;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zYnXh1BdEnQUt4wBq7i6LTY5UTlxXJ/thaAO5zlxW3g=;
+        b=sF1uORk8mf+kwxUGGqG9EbEk0U7VlpLVGlqPRxM3ywKkQvkywwodYMXzT4uKA4W+VS
+         Oa0ye5v2v78+klAC7+qlUrOhCB7R3hWuW7LymGiRZrKUZrABO9MsRC/4/3uLHCOcsfI3
+         WeIsITRpdNnuOdxithuXZcSp71gfkUeXkQljTumE0ixJsr/RGgUHpf/aUdYih9t42Sqs
+         /GhwJbcmyr87s8jYMLb5MbXWS7QQnMM5M5o4Lr1CeQG5aoqH1Td5EF+v801nc9JXbn0z
+         LloBErv9kamun4Yj7Y8cSe5ej/EVbHPHLKzOtI9ZSfNLIblYl+ZB/MW7OgpMk2T7kkKm
+         b7oA==
+X-Forwarded-Encrypted: i=1; AJvYcCVz/r8B0lIe63V1F8kJ3w4cme6yD5PaGiRBm0li5jrwqhQdU1/GZ2Oavt6zAJl/ssrf+99uU2tvQH4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb+zI1b6WqHSDzBwabw86MDYsgRWYHjhKRZupCuko24zQizmQJ
+	5PHqT5okgLEuun+0IQeoPyNc/HxWv8IoA36AoVXP4BdNk8OCpQfxpMnO5ZvtwEeF8KrZz0bKaeB
+	l/z5NPCGMpgXUE3ey4VgZBgh18QTSZi0e66JaAwyjVtQ+EpqvR33NCcU=
+X-Google-Smtp-Source: AGHT+IGVDZHVkoEBceZ2iUZrV27RwSUzjxrOpJ+blnO4CWSNtBcm02AI77VKCcLQ3Nr7zs9VlUmbOlReY69oRfuGXSloAC0czTtH
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI/MSI: Handle the NOMASK flag correctly for all PCI/MSI
- backends
-To: Thomas Gleixner <tglx@linutronix.de>,
- =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>,
- Daniel Gomez <da.gomez@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-References: <20250320210741.GA1099701@bhelgaas>
- <846c80f8-b80f-49fd-8a50-3fe8a473b8ec@suse.com>
- <qn7fzggcj6qe6r6gdbwcz23pzdz2jx64aldccmsuheabhmjgrt@tawf5nfwuvw7>
- <Z-GbuiIYEdqVRsHj@macbook.local>
- <kp372led6jcryd4ubpyglc4h7b3erramgzsjl2slahxdk7w575@jganskuwkfvb>
- <Z-Gv6TG9dwKI-fvz@macbook.local> <87y0wtzg0z.ffs@tglx> <87v7rxzct0.ffs@tglx>
- <87iknwyp2o.ffs@tglx>
-Content-Language: en-US
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <87iknwyp2o.ffs@tglx>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------HcTd9fMVKgPPh8seRo7TXej0"
-X-Rspamd-Queue-Id: DF1961F391
-X-Spam-Score: -5.41
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.41 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SIGNED_PGP(-2.00)[];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_BASE64_TEXT(0.10)[];
-	MIME_UNKNOWN(0.10)[application/pgp-keys];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	TO_DN_SOME(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	HAS_ATTACHMENT(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[samsung.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,alien8.de:email,suse.com:dkim,suse.com:mid,suse.com:email,linutronix.de:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-Received: by 2002:a05:6e02:188d:b0:3d3:e296:1c1c with SMTP id
+ e9e14a558f8ab-3d5961468famr187936185ab.9.1742992112369; Wed, 26 Mar 2025
+ 05:28:32 -0700 (PDT)
+Date: Wed, 26 Mar 2025 05:28:32 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67e3f2f0.050a0220.2f068f.0004.GAE@google.com>
+Subject: [syzbot] [pci?] upstream test error: BUG: unable to handle kernel
+ NULL pointer dereference in msix_capability_init
+From: syzbot <syzbot+38d72234503f2b05981f@syzkaller.appspotmail.com>
+To: bhelgaas@google.com, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------HcTd9fMVKgPPh8seRo7TXej0
-Content-Type: multipart/mixed; boundary="------------0OuqVq0LqY0119xfRnPHbYoB";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
- =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>,
- Daniel Gomez <da.gomez@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <bdccc663-1d54-4006-bc69-6bf85f357864@suse.com>
-Subject: Re: [PATCH] PCI/MSI: Handle the NOMASK flag correctly for all PCI/MSI
- backends
-References: <20250320210741.GA1099701@bhelgaas>
- <846c80f8-b80f-49fd-8a50-3fe8a473b8ec@suse.com>
- <qn7fzggcj6qe6r6gdbwcz23pzdz2jx64aldccmsuheabhmjgrt@tawf5nfwuvw7>
- <Z-GbuiIYEdqVRsHj@macbook.local>
- <kp372led6jcryd4ubpyglc4h7b3erramgzsjl2slahxdk7w575@jganskuwkfvb>
- <Z-Gv6TG9dwKI-fvz@macbook.local> <87y0wtzg0z.ffs@tglx> <87v7rxzct0.ffs@tglx>
- <87iknwyp2o.ffs@tglx>
-In-Reply-To: <87iknwyp2o.ffs@tglx>
+Hello,
 
---------------0OuqVq0LqY0119xfRnPHbYoB
-Content-Type: multipart/mixed; boundary="------------9WU1HeswuHFEhP0QuyQap7ah"
+syzbot found the following issue on:
 
---------------9WU1HeswuHFEhP0QuyQap7ah
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+HEAD commit:    1e26c5e28ca5 Merge tag 'media/v6.15-1' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1697cbb0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ae7b143bbda6d951
+dashboard link: https://syzkaller.appspot.com/bug?extid=38d72234503f2b05981f
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-T24gMjYuMDMuMjUgMTM6MDUsIFRob21hcyBHbGVpeG5lciB3cm90ZToNCj4gVGhlIGNvbnZl
-cnNpb24gb2YgdGhlIFhFTiBzcGVjaWZpYyBnbG9iYWwgdmFyaWFibGUgcGNpX21zaV9pZ25v
-cmVfbWFzayB0byBhDQo+IE1TSSBkb21haW4gZmxhZywgbWlzc2VkIHRoZSBmYWN0cyB0aGF0
-Og0KPiANCj4gICAgICAxKSBMZWdhY3kgYXJjaGl0ZWN0dXJlcyBkbyBub3QgcHJvdmlkZSBh
-IGludGVycnVwdCBkb21haW4NCj4gICAgICAyKSBQYXJlbnQgTVNJIGRvbWFpbnMgZG8gbm90
-IG5lY2Vzc2FyaWx5IGhhdmUgYSBkb21haW4gaW5mbyBhdHRhY2hlZA0KPiAgICAgDQo+IEJv
-dGggY2FzZXMgcmVzdWx0IGluIGFuIHVuY29uZGl0aW9uYWwgTlVMTCBwb2ludGVyIGRlcmVm
-ZXJlbmNlLg0KPiANCj4gQ3VyZSB0aGlzIGJ5IHVzaW5nIHRoZSBleGlzdGluZyBwY2lfbXNp
-X2RvbWFpbl9zdXBwb3J0cygpIGhlbHBlciwgd2hpY2gNCj4gaGFuZGxlcyBhbGwgcG9zc2li
-bGUgY2FzZXMgY29ycmVjdGx5Lg0KPiANCj4gRml4ZXM6IGMzMTY0ZDJlMGQxOCAoIlBDSS9N
-U0k6IENvbnZlcnQgcGNpX21zaV9pZ25vcmVfbWFzayB0byBwZXIgTVNJIGRvbWFpbiBmbGFn
-IikNCj4gUmVwb3J0ZWQtYnk6IERhbmllbCBHb21leiA8ZGEuZ29tZXpAa2VybmVsLm9yZz4N
-Cj4gUmVwb3J0ZWQtYnk6IEJvcmlzbGF2IFBldGtvdiA8YnBAYWxpZW44LmRlPg0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4NCj4gVGVz
-dGVkLWJ5OiBNYXJlayBTenlwcm93c2tpIDxtLnN6eXByb3dza2lAc2Ftc3VuZy5jb20+DQo+
-IFRlc3RlZC1ieTogQm9yaXNsYXYgUGV0a292IDxicEBhbGllbjguZGU+DQo+IFRlc3RlZC1i
-eTogRGFuaWVsIEdvbWV6IDxkYS5nb21lekBrZXJuZWwub3JnPg0KDQpSZXZpZXdlZC1ieTog
-SnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2UuY29tPg0KDQoNCkp1ZXJnZW4NCg==
---------------9WU1HeswuHFEhP0QuyQap7ah
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/91cf4f757ca2/disk-1e26c5e2.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1415c0b3bc2e/vmlinux-1e26c5e2.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d363b301f320/bzImage-1e26c5e2.xz
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+38d72234503f2b05981f@syzkaller.appspotmail.com
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+UDP-Lite hash table entries: 4096 (order: 6, 262144 bytes, linear)
+NET: Registered PF_UNIX/PF_LOCAL protocol family
+RPC: Registered named UNIX socket transport module.
+RPC: Registered udp transport module.
+RPC: Registered tcp transport module.
+RPC: Registered tcp-with-tls transport module.
+RPC: Registered tcp NFSv4.1 backchannel transport module.
+NET: Registered PF_XDP protocol family
+pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+pci_bus 0000:00: resource 7 [mem 0xc0000000-0xfebfefff window]
+pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+PCI: CLS 0 bytes, default 64
+PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+software IO TLB: mapped [mem 0x00000000bbffd000-0x00000000bfffd000] (64MB)
+ACPI: bus type thunderbolt registered
+RAPL PMU: API unit is 2^-32 Joules, 0 fixed counters, 10737418240 ms ovfl timer
+clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x1fb63109b96, max_idle_ns: 440795265316 ns
+clocksource: Switched to clocksource tsc
+Initialise system trusted keyrings
+workingset: timestamp_bits=40 max_order=21 bucket_order=0
+NFS: Registering the id_resolver key type
+Key type id_resolver registered
+Key type id_legacy registered
+9p: Installing v9fs 9p2000 file system support
+Key type asymmetric registered
+Asymmetric key parser 'x509' registered
+Block layer SCSI generic (bsg) driver version 0.4 loaded (major 246)
+io scheduler mq-deadline registered
+io scheduler kyber registered
+usbcore: registered new interface driver udlfb
+usbcore: registered new interface driver smscufx
+input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+ACPI: button: Power Button [PWRF]
+input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
+ACPI: button: Sleep Button [SLPF]
+ACPI: \_SB_.LNKC: Enabled at IRQ 11
+virtio-pci 0000:00:03.0: virtio_pci: leaving for legacy driver
+ACPI: \_SB_.LNKD: Enabled at IRQ 10
+virtio-pci 0000:00:04.0: virtio_pci: leaving for legacy driver
+ACPI: \_SB_.LNKB: Enabled at IRQ 10
+virtio-pci 0000:00:06.0: virtio_pci: leaving for legacy driver
+virtio-pci 0000:00:07.0: virtio_pci: leaving for legacy driver
+Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+00:04: ttyS1 at I/O 0x2f8 (irq = 3, base_baud = 115200) is a 16550A
+00:05: ttyS2 at I/O 0x3e8 (irq = 6, base_baud = 115200) is a 16550A
+00:06: ttyS3 at I/O 0x2e8 (irq = 7, base_baud = 115200) is a 16550A
+Non-volatile memory driver v1.3
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0 
+Oops: Oops: 0000 [#1] SMP PTI
+CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-syzkaller-02665-g1e26c5e28ca5 #0 PREEMPT(voluntary) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:msix_prepare_msi_desc drivers/pci/msi/msi.c:615 [inline]
+RIP: 0010:msix_setup_msi_descs drivers/pci/msi/msi.c:639 [inline]
+RIP: 0010:__msix_setup_interrupts drivers/pci/msi/msi.c:672 [inline]
+RIP: 0010:msix_setup_interrupts drivers/pci/msi/msi.c:701 [inline]
+RIP: 0010:msix_capability_init+0x3f7/0x8c0 drivers/pci/msi/msi.c:743
+Code: e8 fe 3d 77 ff 41 8b 06 89 84 24 e0 00 00 00 4c 89 ff e8 bc 42 77 ff 4d 8b 3f 4c 89 bc 24 e8 00 00 00 48 89 df e8 d9 3d 77 ff <8b> 1b be 00 00 40 00 21 de 31 ff e8 29 9a 5d ff b8 00 00 40 00 21
+RSP: 0000:ffffc900000174a8 EFLAGS: 00010246
+RAX: ffff8881001b8a98 RBX: 0000000000000000 RCX: ffffffff81f5f7e7
+RDX: 000000000000004c RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000101 R08: 0000000000000003 R09: 0000000000000000
+R10: 0001ffffffffffff R11: 0001c90000017476 R12: 0000000000000000
+R13: 0000000000000000 R14: ffff8881013d239c R15: ffffc90000029008
+FS:  0000000000000000(0000) GS:ffff8882aee5d000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000000006836000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __pci_enable_msix_range+0x435/0x4d0 drivers/pci/msi/msi.c:851
+ pci_alloc_irq_vectors_affinity+0xae/0x1f0 drivers/pci/msi/api.c:268
+ vp_request_msix_vectors drivers/virtio/virtio_pci_common.c:160 [inline]
+ vp_find_vqs_msix+0x412/0x8b0 drivers/virtio/virtio_pci_common.c:417
+ vp_find_vqs+0x50/0x510 drivers/virtio/virtio_pci_common.c:525
+ virtio_find_vqs include/linux/virtio_config.h:226 [inline]
+ virtio_find_single_vq include/linux/virtio_config.h:237 [inline]
+ probe_common+0x1f0/0x3d0 drivers/char/hw_random/virtio-rng.c:155
+ virtrng_probe+0x15/0x20 drivers/char/hw_random/virtio-rng.c:193
+ virtio_dev_probe+0x632/0x7b0 drivers/virtio/virtio.c:341
+ really_probe+0x1cf/0x5d0 drivers/base/dd.c:658
+ __driver_probe_device+0x12d/0x200 drivers/base/dd.c:800
+ driver_probe_device+0x38/0x2f0 drivers/base/dd.c:830
+ __driver_attach+0x311/0x400 drivers/base/dd.c:1216
+ bus_for_each_dev+0x1af/0x210 drivers/base/bus.c:370
+ driver_attach+0x2b/0x40 drivers/base/dd.c:1234
+ bus_add_driver+0x272/0x470 drivers/base/bus.c:678
+ driver_register+0x163/0x220 drivers/base/driver.c:249
+ __register_virtio_driver+0x7a/0x90 drivers/virtio/virtio.c:415
+ virtio_rng_driver_init+0x17/0x20 drivers/char/hw_random/virtio-rng.c:256
+ do_one_initcall+0x10d/0x580 init/main.c:1257
+ do_initcall_level+0x91/0x190 init/main.c:1319
+ do_initcalls+0x89/0xf0 init/main.c:1335
+ do_basic_setup+0x5b/0x70 init/main.c:1354
+ kernel_init_freeable+0x1d5/0x280 init/main.c:1567
+ kernel_init+0x1b/0x300 init/main.c:1457
+ ret_from_fork+0x4b/0x60 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+CR2: 0000000000000000
+---[ end trace 0000000000000000 ]---
+RIP: 0010:msix_prepare_msi_desc drivers/pci/msi/msi.c:615 [inline]
+RIP: 0010:msix_setup_msi_descs drivers/pci/msi/msi.c:639 [inline]
+RIP: 0010:__msix_setup_interrupts drivers/pci/msi/msi.c:672 [inline]
+RIP: 0010:msix_setup_interrupts drivers/pci/msi/msi.c:701 [inline]
+RIP: 0010:msix_capability_init+0x3f7/0x8c0 drivers/pci/msi/msi.c:743
+Code: e8 fe 3d 77 ff 41 8b 06 89 84 24 e0 00 00 00 4c 89 ff e8 bc 42 77 ff 4d 8b 3f 4c 89 bc 24 e8 00 00 00 48 89 df e8 d9 3d 77 ff <8b> 1b be 00 00 40 00 21 de 31 ff e8 29 9a 5d ff b8 00 00 40 00 21
+RSP: 0000:ffffc900000174a8 EFLAGS: 00010246
+RAX: ffff8881001b8a98 RBX: 0000000000000000 RCX: ffffffff81f5f7e7
+RDX: 000000000000004c RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000101 R08: 0000000000000003 R09: 0000000000000000
+R10: 0001ffffffffffff R11: 0001c90000017476 R12: 0000000000000000
+R13: 0000000000000000 R14: ffff8881013d239c R15: ffffc90000029008
+FS:  0000000000000000(0000) GS:ffff8882aee5d000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 0000000006836000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	e8 fe 3d 77 ff       	call   0xff773e03
+   5:	41 8b 06             	mov    (%r14),%eax
+   8:	89 84 24 e0 00 00 00 	mov    %eax,0xe0(%rsp)
+   f:	4c 89 ff             	mov    %r15,%rdi
+  12:	e8 bc 42 77 ff       	call   0xff7742d3
+  17:	4d 8b 3f             	mov    (%r15),%r15
+  1a:	4c 89 bc 24 e8 00 00 	mov    %r15,0xe8(%rsp)
+  21:	00
+  22:	48 89 df             	mov    %rbx,%rdi
+  25:	e8 d9 3d 77 ff       	call   0xff773e03
+* 2a:	8b 1b                	mov    (%rbx),%ebx <-- trapping instruction
+  2c:	be 00 00 40 00       	mov    $0x400000,%esi
+  31:	21 de                	and    %ebx,%esi
+  33:	31 ff                	xor    %edi,%edi
+  35:	e8 29 9a 5d ff       	call   0xff5d9a63
+  3a:	b8 00 00 40 00       	mov    $0x400000,%eax
+  3f:	21                   	.byte 0x21
 
---------------9WU1HeswuHFEhP0QuyQap7ah--
 
---------------0OuqVq0LqY0119xfRnPHbYoB--
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
---------------HcTd9fMVKgPPh8seRo7TXej0
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
------BEGIN PGP SIGNATURE-----
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmfj8AcFAwAAAAAACgkQsN6d1ii/Ey/+
-WQf+OFn8vy9d6E51rxI0Ol5OiFPJVx7b6JEte57s4mRDGClJ/9c5lFpnP+pes3Piv/SoIzkGvJ6M
-vznHTTd3Unf6a6UBxavhXfmTasW5py0Ys7y4gy187lmc5frQykw/poUb+hPhI9IaRp9550hlzN55
-lBvpAAfhgKaLnJy+Ql68IMU9ZsNIwgMY2SYVA97I5vwsIuMrvzVIa02tNT0iYYJq0M9r974yFCrx
-oAQQhtTWfeX4zDpefavJ3R6/zkmli6pMl/fKsjW0Ih70Qym+0e47AGG44lXYkibUIUS44ComsPF+
-B7eExH5Llnan2qUo510iY7HOkM1/KeMMj3q5Yu8l6g==
-=kWGv
------END PGP SIGNATURE-----
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
---------------HcTd9fMVKgPPh8seRo7TXej0--
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
 
