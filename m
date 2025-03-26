@@ -1,157 +1,166 @@
-Return-Path: <linux-pci+bounces-24788-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24789-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 070C5A71DDF
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 18:59:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFCB3A71ECA
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 20:07:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 54D433B3F7C
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 17:56:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E82CB3B8943
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 19:06:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28A4523FC48;
-	Wed, 26 Mar 2025 17:56:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5A8524CEEE;
+	Wed, 26 Mar 2025 19:06:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MMaLDRUC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTiaoPUT"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630A723E334
-	for <linux-pci@vger.kernel.org>; Wed, 26 Mar 2025 17:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1804A28F4;
+	Wed, 26 Mar 2025 19:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743011771; cv=none; b=R+fB1pZOB+PtyXsu8v3B2ILkzzrl62sb/o1+a4frp49874MvBTol+Z2PGQGg88BogG4UpASCFWHNXDqEuzeAO8guh3W9uXY9FssMawBmwHI6vna0POzQ/suAr6MEqhKNTKJ5els/n6E7qbhHh0ZBKX5H4uhl7p8RlHk2iieX0Vw=
+	t=1743016019; cv=none; b=LW5i8X0o7ECsneNNaJJV38hM88vnamW6EnYLW1E3Ujtp/Sb9xu9pie3d0TUGQ+9zMZztvMkOB0aGvrYjEK03jG2tdbw27OMjxLafFsopahnXHJCB++hyTgZXk3h/GpzxPTnB4PCKYGm+xO3eq1MSUz5E+ngu+pgZh6hMstYryV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743011771; c=relaxed/simple;
-	bh=FOIE47d2wp0LC0VDLsB3snc29xU6ss8U478EjWgM9Gs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZOGlZscxIExNXaTxLO/B4Mb6W/U2qg0PilODJMXa4WkvJfFpDwUITDBbFqZUpwcUKiBxkS8n9/q0NuDV0SaLJ44ZjYnB89NY/PcRZyGzC6TPVtJC0pcfRsVZ7dwzHtCH+aktQ+UfeXZE4dlSTJvok4qXrq7QFx7dEfLOkUyz5KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MMaLDRUC; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52QF6AgR014431
-	for <linux-pci@vger.kernel.org>; Wed, 26 Mar 2025 17:56:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Lxqno0230pcqB0H6Ol9XwwTC6E/yX89Z1LsI9uh3Cpc=; b=MMaLDRUCBI435iSA
-	aGUj+zJEParOZXAr3hFQYuqXY29BDofFSZbsPunJ1/4bkUMNbmhKkFa/AT/QTHJU
-	deOdmcufix7pePxdTkCP9L9hLSl8RP+J7YPks6WkzgGRG08tYpqYe2iRaHMG3iLM
-	UhxVjWce6vrYHPBzRWJ7ddEYccu7YTjnMqDfwatbP75/o+auzdxDaGDY+xTrzwQ9
-	+f+C+gObVekxoXb1ibmLI0xUtBzi2PXnPEgCZTKcplNaaIi6B20xMeP9CQhgigPN
-	QJK3QrjfrDXR2cBcTWHIyXuVdEBLpC8lyaBprzLcBwu+H9tWyKiws/DM1N9KYZng
-	UOoLpQ==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45mb9mt58m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Wed, 26 Mar 2025 17:56:08 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5841ae28eso4539185a.1
-        for <linux-pci@vger.kernel.org>; Wed, 26 Mar 2025 10:56:08 -0700 (PDT)
+	s=arc-20240116; t=1743016019; c=relaxed/simple;
+	bh=xyxvZkbyduy9RmkQ3WSeK6/tBzwWPMrfRAoEJmlTmuE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XPRRJFjPZ3tUZYhJqdvDZd0R9AMtbCAd8+xdFbD0GIZGfj3M5E0oPAFCl2P4X22rz4lV8eA84QefGpIFAgwufX5pXGfzVoKUR2kwGfNH04vWnBETPlUfd0+bln6nnvcdmHvzmIQuQKXFAcN5BSRco/y/xIRzgXfmHXwc5lJ5an0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aTiaoPUT; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30bfed67e08so2255321fa.2;
+        Wed, 26 Mar 2025 12:06:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743016016; x=1743620816; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xyxvZkbyduy9RmkQ3WSeK6/tBzwWPMrfRAoEJmlTmuE=;
+        b=aTiaoPUTXhlz0TWPtz+Y44JteqxaDLfRo2CXuDryjK/5Nef0PPICQBIUqY4YIhhTmU
+         i/w8AGV/lTNgNPYNX0ulVacg3IZAwpb6vEJa0jVz/TlWZXtmQYm0aiLO6pLvjVuav4Ul
+         aH3Pg62nzVPkXRmdrPv/aC9LoddjkxcuySQGlvO0ongu1fTtJhytIDkGYSLrZAH+wCzb
+         lCCEFdGDf8Q8bPct91/6D1LpnBe7A3cSuDnbyBc+lVvCuB6VfGrOJGFC9TyjjrbsZJuL
+         HZfrlp4hsiIl7BQsJz1daj/KyLt8q4ovKxNCr0DYCClG6RWXmaMkv3qg5Y4dQskrykJ/
+         Kx+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743011767; x=1743616567;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lxqno0230pcqB0H6Ol9XwwTC6E/yX89Z1LsI9uh3Cpc=;
-        b=fHmlY2SY5njPOPLlTbS9rNQbCjP8Tbh3tCMu+OmjihsGGlH1bOtrzdC+yrANQHQnAx
-         7ALlu1KK7jiaojDQfEZlR8nJ1iWqVY8LvaoM/ox0bJtZIJ63H/M/K4bED/SyxksT53wA
-         ZPubY1o38UpFkzEYv22Te7erRX+9jrZIlthmivSZ656IkOsRCM9Jz3Rk5vyK4UHj26Ip
-         tF/eiYNJR9tCiCkCh9tfe5BXWzzWGWXKEFtwaag0wCAGDgxtRluzom1tngcbX7sFs83A
-         vgO4wTT7a9u7WsC6KUtP1eIKIeW9XXDEDV7mPoY4uKr9U2sT0CDZJk4ubfJGPlL2HJ5f
-         wlSA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2i4Yw4nvF5aBmSEQAePf23bvzwCJcT4cHgNhqn6zQIpZzO1R8RMqI50VppE5wrfwJ0hUH2CSRn8w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe8/ekm0lWDgoMoDpVjAUe5q+LSvyGz5CdIbl8EutNFYT3UqAJ
-	1bhdLRpSRWptrNb4pW7WXFJhbVcyvLeJq+yx2O3vo8RCsn5UTM0E2nHXU+Z6xghTIZGXQhwDvFJ
-	3e+oTPxoC8Wk2MZZbwzgjNhkGmqkx9t4EdcbQ5z3GKb/iHnIeJP2ulnfjI2M=
-X-Gm-Gg: ASbGncuJm4KYZEsoYJZhmZib07fQpDcNaSlwvdbAXiJz/1XW2yNgXfTWnlLjJDpCGWy
-	cdCF4kiwkTpIAE1NKi4CK6rY1Pglybtx8ePc4bZjRLhlnPB5GC8je9CU28MpS3JoI8xU/772d5y
-	voF2lcsa9OEIMvgig/IZ7sc0BJbQHsH/3YmlFnqsd+tDIsMTJpF9FUE1f+QeCDf3xugdvsJgi1w
-	cds/+EQ7E9qKA+UWcjYyYR+QvH/ekvYL80eEepmks6RmnQnvu2EYjxvodBOfxDgaguN9RlYGCbL
-	Esx7a4MS2vcrgGI1Iz+Wm10Er3sBvroGoHcMunfwVUI6TBBsv+ynWLIzFhFeJje5Z2bssg==
-X-Received: by 2002:a05:620a:4588:b0:7c3:d752:f256 with SMTP id af79cd13be357-7c5eda1ef32mr33501985a.7.1743011767162;
-        Wed, 26 Mar 2025 10:56:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGPo1a1tkN/XZXeNGAAUJcp1b82A8YyOkx8pDC2Hf99u7C+rn8fvVrRAP5A3JMYBukqijRm1A==
-X-Received: by 2002:a05:620a:4588:b0:7c3:d752:f256 with SMTP id af79cd13be357-7c5eda1ef32mr33498785a.7.1743011766592;
-        Wed, 26 Mar 2025 10:56:06 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef93e5cfsm1073652266b.82.2025.03.26.10.56.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Mar 2025 10:56:05 -0700 (PDT)
-Message-ID: <0cc247a4-d857-4fb1-8f87-0d52d641eced@oss.qualcomm.com>
-Date: Wed, 26 Mar 2025 18:56:02 +0100
+        d=1e100.net; s=20230601; t=1743016016; x=1743620816;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xyxvZkbyduy9RmkQ3WSeK6/tBzwWPMrfRAoEJmlTmuE=;
+        b=u7ASLFfjWU3+C4Hbd8ojDjidpvZA8E9wg5fXGtu2Oyu30jJjtQEfukZEmelEyUDeq/
+         Z1lIlXAz3uMD4JTFy0F+/LzxsZtXqhOUzy4H5EqzQDxiZ9YwhnhCENa15bBZsEat3w6u
+         ltwzmAMnK5RmkpsvYfOf1CybN1wToLbV5XeHBA3VwreXwYz5eDaXyS9nyQtiXQI77F9T
+         J2WzxuT+WLstCyq7zfKiqO6m62c/a/3w2INuw/SldqSxSXAR5SzZFnCRR3BCRUAk7KQo
+         qhorjFKUy2cY1CNfRaDzW8fQfY8UUvKvobnQuJmWk06mgqaPQhJ5fEDDAFHAyJMKlZ6L
+         S4zw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjstPFP8AutMsI7KFZy2sxUcI8lpofjeaDtujc5nZb1KM+DSaDgiEDV5Ysph54mc2TjPjX0cKg@vger.kernel.org, AJvYcCUlWlE3gQ4V5qI4mnZA5OfZsXjeEkP0FnyYhEn/0UI5vw09LXjkBETsMNzz6dGwJMPRAlM0yLhyGIWY@vger.kernel.org, AJvYcCUxHO5cL5xOtYBwQ4ssyK3pbgD2Sx5vPX0/kCnar1Bt68z3AFL4c4bpwVyqynkAOWCpjAg95aaruIlAGIsG@vger.kernel.org, AJvYcCUzHrs9hhZPhJHdc8T2hQSfJtlajJClJaaTZZXirNG0rLunB5dfXHvrXxPP4ZrmRYVcf8al2TMrf496wno=@vger.kernel.org, AJvYcCV83ZrNc7qR83APq23ziwqVAqEMJHhCntcCJ2HPdrnQgF9M4z/LnkKOZRQmA7MMggUgv4aX1wtSOP6f@vger.kernel.org, AJvYcCW0MGnWhUKfW7WLe9XElSZ0h6mA+cr+9XzQYCzItXbThwc1R+4GA4KWxlm7eYWhA4LQBWDsQOH8dSP8Mka/ECg=@vger.kernel.org, AJvYcCWCLHlsCqrgPCLB4YzC8gG2XkkJwu2g8DsAqwyr/Kh6P6FfhT0tKSAIIJs7LpXZM+O244iUptxoqmHNfbmd@vger.kernel.org, AJvYcCWRPQKLEotIxfWvm7jfKl4WN43SEV3G8V1tEtQFTmCnMSyHUG5Ld5vnER6ofRGzWKRbMBrBRb3uCP8x9RZnoKPh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzvx5V1cHjnkhzKrKY5P8Z1exSSq9Zq4BWDAxyt0QTmSthHycBf
+	gy970IOCP5mamWPyrxXOnU9xa0jcvhuiTPwtTM6oJZPXKPjgFlubsskDMFAbqWKF6PJL2i+MFp6
+	40fnd+cwpaboLAdwkBQnCtluHI/A=
+X-Gm-Gg: ASbGnctj9WgJZ7cCM3YPJaNxw5v6UwiJ+j7IeNOxGRp0wt24ooHXhLAGEJ0S9u9NLk2
+	fylV1BlBEoN3wpI8nMsMBO288/mmCph6NfqixLXVGcNuti+otdsyTbQzLqwTZHRRC+F2JYBLQd3
+	Iyi3B6OtmlcYHkTt1/o8iDkT32YFBnWeh6IYgFQMHXXQ==
+X-Google-Smtp-Source: AGHT+IHDYgVo8MGaQ9BkG5+GyvT0+QD0Hn1jlcmz/IJfG8ECGaCOtoHRacJDMqa8JoaxSiLcVOV3Dc1Whxt+lMktHno=
+X-Received: by 2002:a05:651c:4ca:b0:30b:e440:dbdb with SMTP id
+ 38308e7fff4ca-30dc5f45b99mr3646831fa.37.1743016015848; Wed, 26 Mar 2025
+ 12:06:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/7] arm64: dts: qcom: sc7280: Increase config size to
- 256MB for ECAM feature
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        cros-qcom-dts-watchers@chromium.org,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
-        quic_vpernami@quicinc.com, mmareddy@quicinc.com
-References: <20250309-ecam_v4-v5-0-8eff4b59790d@oss.qualcomm.com>
- <20250309-ecam_v4-v5-1-8eff4b59790d@oss.qualcomm.com>
- <3332fe69-dddb-439d-884f-2b97845c14e1@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <3332fe69-dddb-439d-884f-2b97845c14e1@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=cs+bk04i c=1 sm=1 tr=0 ts=67e43fb8 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=hNMOycGrYB8S6Zk86AkA:9 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: xyMrtAR0ChFtQXZ9Ryw_LS8lBY_Q6tDV
-X-Proofpoint-ORIG-GUID: xyMrtAR0ChFtQXZ9Ryw_LS8lBY_Q6tDV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-26_08,2025-03-26_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- bulkscore=0 mlxlogscore=852 malwarescore=0 lowpriorityscore=0
- clxscore=1015 adultscore=0 priorityscore=1501 phishscore=0 suspectscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503260110
+References: <20250325-ptr-as-ptr-v7-0-87ab452147b9@gmail.com>
+ <20250325-ptr-as-ptr-v7-7-87ab452147b9@gmail.com> <D8POWLFKWABG.37BVXN2QCL8MP@proton.me>
+ <CAJ-ks9mUYw4FEJQfmDrHHt0oMy256jhp7qZ-CHp6R5c_sOCD4w@mail.gmail.com>
+ <D8PPIYIJCNX8.13VPQULEI0ALN@proton.me> <CAJ-ks9k6220j6CQSOF4TDrgY9qq4PfV9uaMXz1Qk4m=eeSr5Ag@mail.gmail.com>
+ <D8Q4MSXXZ7OI.1NC226MO02VSN@proton.me> <CAJ-ks9nHKpQPuSBypXTSATYhbAFkQTJzUq8jN0nu4t=Kw+0xxg@mail.gmail.com>
+ <D8QCK3CQES3Y.3LTZ4MVO5B3KT@proton.me> <CAJ-ks9nKT2PUDm6=b4AB1QUWwwvcqPn7Vz60=c0B+uFMZrqPew@mail.gmail.com>
+ <D8QDOBUM6NF0.CGJY7ZA5KD9S@proton.me>
+In-Reply-To: <D8QDOBUM6NF0.CGJY7ZA5KD9S@proton.me>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 26 Mar 2025 15:06:19 -0400
+X-Gm-Features: AQ5f1Jou-JUIkYYZHmN0n0DjKziFwOI3NizL41USvJvQpjSfAnBz0gZwusssOLs
+Message-ID: <CAJ-ks9ntTxBM=c5nUZWGv3MoRt-LveBchn-c1Xy-DGap7fLVRA@mail.gmail.com>
+Subject: Re: [PATCH v7 7/7] rust: enable `clippy::ref_as_ptr` lint
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/11/25 12:13 PM, Konrad Dybcio wrote:
-> On 3/9/25 6:45 AM, Krishna Chaitanya Chundru wrote:
->> PCIe ECAM(Enhanced Configuration Access Mechanism) feature requires
->> maximum of 256MB configuration space.
->>
->> To enable this feature increase configuration space size to 256MB. If
->> the config space is increased, the BAR space needs to be truncated as
->> it resides in the same location. To avoid the bar space truncation move
->> config space, DBI, ELBI, iATU to upper PCIe region and use lower PCIe
->> iregion entirely for BAR region.
->>
->> This depends on the commit: '10ba0854c5e6 ("PCI: qcom: Disable mirroring
->> of DBI and iATU register space in BAR region")'
->>
->> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->> ---
-> 
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Wed, Mar 26, 2025 at 1:36=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> On Wed Mar 26, 2025 at 5:57 PM CET, Tamir Duberstein wrote:
+> >
+> >
+> > In the current code you're looking at, yes. But in the code I have
+> > locally I'm transmuting `[u8]` to `BStr`. See my earlier reply where I
+> > said "Hmm, looking at this again we can just transmute ref-to-ref and
+> > avoid pointers entirely. We're already doing that in
+> > `CStr::from_bytes_with_nul_unchecked`".
+>
+> `CStr::from_bytes_with_nul_unchecked` does the transmute with
+> references. That is a usage that the docs of `transmute` explicitly
+> recommend to change to an `as` cast [1].
 
-I took a second look - why are dbi and config regions overlapping?
+RIght. That guidance was written in 2016
+(https://github.com/rust-lang/rust/pull/34609) and doesn't present any
+rationale for `as` casts being preferred to transmute. I posted a
+comment in the most relevant issue I could find:
+https://github.com/rust-lang/rust/issues/34249#issuecomment-2755316610.
 
-I would imagine the latter to be at a certain offset
+> No idea about provenance still.
 
-Konrad
+Well that's not surprising, nobody was thinking about provenance in
+2016. But I really don't think we should blindly follow the advice in
+this case. It doesn't make an iota of sense to me - does it make sense
+to you?
+
+>
+> [1]: https://doc.rust-lang.org/std/mem/fn.transmute.html#alternatives
+>
+> >> I tried to find some existing issues about the topic and found that
+> >> there exists a clippy lint `transmute_ptr_to_ptr`. There is an issue
+> >> asking for a better justification [1] and it seems like nobody provide=
+d
+> >> one there. Maybe we should ask the opsem team what happens to provenan=
+ce
+> >> when transmuting?
+> >
+> > Yeah, we should do this - but again: not relevant in this discussion.
+>
+> I think it's pretty relevant.
+
+It's not relevant because we're no longer talking about transmuting
+pointer to pointer. The two options are:
+1. transmute reference to reference.
+2. coerce reference to pointer, `as` cast pointer to pointer (triggers
+`ptr_as_ptr`), reborrow pointer to reference.
+
+If anyone can help me understand why (2) is better than (1), I'd
+certainly appreciate it.
 
