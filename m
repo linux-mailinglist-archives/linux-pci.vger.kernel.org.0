@@ -1,255 +1,272 @@
-Return-Path: <linux-pci+bounces-24758-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24759-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AB00A715B9
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 12:27:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2ED1EA71621
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 12:58:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84CF53BF411
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 11:27:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D94DF188DA6E
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 11:58:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5078F1C8635;
-	Wed, 26 Mar 2025 11:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E12A1DC997;
+	Wed, 26 Mar 2025 11:57:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="H/Gsgbhh"
+	dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b="kfP5lyuM"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2097.outbound.protection.outlook.com [40.107.22.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD34F1BE871
-	for <linux-pci@vger.kernel.org>; Wed, 26 Mar 2025 11:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742988428; cv=none; b=dipUSEe5TY41VnYe8yod1tVpvD6Q75vEMcgkZEJOJcEkbx9BbNJWP1yMM+onpLwgP/fvNSxi8RgC21KWuHor+NKS08FnJGoh4vn0FnuwKT3CA/qaainJ6Yj7+oOht0ElixoUAmI0uf2XvicSeAIbmFEujOedjGwpvqZvL9q84kE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742988428; c=relaxed/simple;
-	bh=mW/Q9nIU0kp8tDCh+6U2GwhNo9XqlHJ6PigaoBmWwcs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=icEtwU9uD8ndfr/fwCZ+8GP7RDZyJgTvb02HJAGQoYTL+3O1MP9wF8+4BDMu/ZigrqycLhTe3Tqza1TDYMoVPSTviSYqlSROFOAFQRTvylfhwPCLuUC0aDcKWOyYpx0LAbRPK0qs3BOv6PE8CWi06iEFkHyhPpVlup3vDVJzOiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=H/Gsgbhh; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250326112658euoutp010bcce13c79245e2d8cf8e0c27e9ffa57~wVrtT022d0642806428euoutp01C
-	for <linux-pci@vger.kernel.org>; Wed, 26 Mar 2025 11:26:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250326112658euoutp010bcce13c79245e2d8cf8e0c27e9ffa57~wVrtT022d0642806428euoutp01C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1742988418;
-	bh=JNzUkgewJxVw+djbfV7Om+X3X2br3UJlxB3aD3WIpL4=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=H/Gsgbhh52kAkAWU1ySSVLdyYXoZgdzsmqF40i09jQZEwz60rYhR1kyuNqz/Pg2D5
-	 0gPtMRNvonNd1jn22H/zqS+z7qcX1AEgyoebJQiQpTJeayGkUnfVa4ocSicGAzaJ/3
-	 G2h5OruCWuxJbnj3czNDlF3hvtt+FNSMX+WOcc1I=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250326112656eucas1p193066b529e16ef428bd680dabf570841~wVrr7tGkI0973109731eucas1p1N;
-	Wed, 26 Mar 2025 11:26:56 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id 33.35.20397.084E3E76; Wed, 26
-	Mar 2025 11:26:56 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250326112656eucas1p27c3b714ecf38ca2249c5aa1261ed3f7e~wVrrUROrM0050000500eucas1p2X;
-	Wed, 26 Mar 2025 11:26:56 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250326112656eusmtrp1c89addaa1a2d2f471d76f305d45578c9~wVrrTlktV2343023430eusmtrp1C;
-	Wed, 26 Mar 2025 11:26:56 +0000 (GMT)
-X-AuditID: cbfec7f5-ed1d670000004fad-ca-67e3e48044ff
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 14.CD.19654.084E3E76; Wed, 26
-	Mar 2025 11:26:56 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250326112654eusmtip17f1c64d1e828f29e834b0004a1496fd7~wVrpgGmx13273532735eusmtip1B;
-	Wed, 26 Mar 2025 11:26:54 +0000 (GMT)
-Message-ID: <289d54b8-91eb-44cc-9304-355f1f865d4d@samsung.com>
-Date: Wed, 26 Mar 2025 12:26:53 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE72315199A;
+	Wed, 26 Mar 2025 11:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.97
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742990276; cv=fail; b=UVHYmmtQ9GCqAj6k4AfyMudur/WtsLxGgyKcECyIjfstlJb2d7SOwmgYwWEdtyeyJQaxIXlpp1WBctpAfHqwA0BkDaRSA9rx9fegBbZ1aVbZz9JewAhq7sIztboWcPpwOkCkQZjJBb9lX1wjhylRRuN7UR7swN/NE4vG89y9cVc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742990276; c=relaxed/simple;
+	bh=a5buKVMymFTIbqXsaG+njaJbGPnqN5Vln0TtyrMZiqI=;
+	h=Message-ID:Date:From:Subject:To:CC:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=lyMgxGTDJP/3vZ8w7yARo4Hj1l7WyHB+vbi+pYXGvfM6R8x5HhWVoJrfasieJbSlcymOJ2APPKW7nrR05fJVC/NL0AOJ2cNFVADaVjfAV6T0hV2gmZ8C+G6FqnjZS10aNVOs2f59TMgazRjNgry0b3KTb5xhS0Rr7aUp9JeHIdM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=topic.nl; spf=pass smtp.mailfrom=topic.nl; dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b=kfP5lyuM; arc=fail smtp.client-ip=40.107.22.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=topic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=topic.nl
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Gpoh/flVT+nkDcELNFSyRkpZOPU2FlsEcUQaTHf8cw1j0HP7a4L3/OwtH4Uthp/gBFKVISTZAmJlLv8HSmROA/w0Cqj/e+RarnQGKXPrqDBz82/M7nOhK8YbMwumOvj9LPjHxKGxpiuNP6Vaj4iZfBky0ZCEfxT9jlahCfUzqF87tWsXJPBmHWh9smNWzIgDGWaxafhHK4qh3xxr8nF7y8QHQMi1a/q5XV1Am5l7tB7Zrkk27VTzoNXwvOqt4lQmwxtp4l2sxXNRJgNeVpoZhx5k1sGREHDqqZG5cALbB7GevO3XkwoQ+HB38QtZknCxxAT+gc1uAKuKnWgUunWupQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZUGLKnk4daE6DnFs4uV49R6bd9nBV9eBJxg88+KUxZo=;
+ b=As5WKgzkcxYKXtaKRUcE5FbN7cHjya9CWphS6Oup/14gdZJH+HBzjJ+7/JcQlKWdQz5Ap4gZcKfx0a1gykewUj3nWc3E3AV8KG1jDRA4rGLJRcM7Z05dwkZS7V0Uq2WgclqRaOx2GsFYrXQ5ExHf2S/5SI912S1lhVN1UBsQKPqzZjEQ1wSOD844hKOOv0rItM8GMry7InDQP7QPI2mxTJ3v5iwtYFxc5FDeX1mmoJdirCc++Ac0mxtrVkBDzz2gJnvfwPmo+zlBTkmYCrlbVIhANYJqG9JWs9I7JSd1JzxtawBswvmMbtlG8nVuUwhLq7MXwXu9DgrcgJ4sXREKyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 13.93.42.39) smtp.rcpttodomain=kernel.org smtp.mailfrom=topic.nl; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=topic.nl; dkim=none (message
+ not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=topic.nl; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZUGLKnk4daE6DnFs4uV49R6bd9nBV9eBJxg88+KUxZo=;
+ b=kfP5lyuMzC6V6tq1RpCuFBWj+++lP4BQxSiovW4vK9eBOvXd1f8rSv7E8d2PgyFXGK7etjP2Na3sfpLxDpXKcFCdyhBfocFZRAdirPfBaUPCoiybyyRaj1DQZqcQLJ7gvqOmiW7+/5evVWqVlFSZsEWQheVDYthwbf6m14qX97fOyz0G1Rrz5J5uuiQrMXW5N028FYKwBFTU5+zWz0km9FlafMkT+ii+ZISxFU32l4KkZV0O8EgDTa+h8F5NZXXIi9C8JyrNhaL3fByTyyWKy4AE1/kF8+urJJK7mCfpOWflPU3HlSoomM1t/OyPTIDRK7R4vKmoXClM9whGd3prhQ==
+Received: from DU2PR04CA0247.eurprd04.prod.outlook.com (2603:10a6:10:28e::12)
+ by DB9PR04MB9284.eurprd04.prod.outlook.com (2603:10a6:10:36c::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Wed, 26 Mar
+ 2025 11:57:49 +0000
+Received: from DU2PEPF00028D0A.eurprd03.prod.outlook.com
+ (2603:10a6:10:28e:cafe::89) by DU2PR04CA0247.outlook.office365.com
+ (2603:10a6:10:28e::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.44 via Frontend Transport; Wed,
+ 26 Mar 2025 11:57:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 13.93.42.39)
+ smtp.mailfrom=topic.nl; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=topic.nl;
+Received-SPF: Pass (protection.outlook.com: domain of topic.nl designates
+ 13.93.42.39 as permitted sender) receiver=protection.outlook.com;
+ client-ip=13.93.42.39; helo=westeu12-emailsignatures-cloud.codetwo.com; pr=C
+Received: from westeu12-emailsignatures-cloud.codetwo.com (13.93.42.39) by
+ DU2PEPF00028D0A.mail.protection.outlook.com (10.167.242.170) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.20 via Frontend Transport; Wed, 26 Mar 2025 11:57:49 +0000
+Received: from AM0PR02CU008.outbound.protection.outlook.com (40.93.65.3) by westeu12-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Wed, 26 Mar 2025 11:57:48 +0000
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=topic.nl;
+Received: from AS8PR04MB8644.eurprd04.prod.outlook.com (2603:10a6:20b:42b::12)
+ by AM0PR04MB6897.eurprd04.prod.outlook.com (2603:10a6:208:184::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Wed, 26 Mar
+ 2025 11:57:47 +0000
+Received: from AS8PR04MB8644.eurprd04.prod.outlook.com
+ ([fe80::e86d:f110:534e:480a]) by AS8PR04MB8644.eurprd04.prod.outlook.com
+ ([fe80::e86d:f110:534e:480a%5]) with mapi id 15.20.8534.043; Wed, 26 Mar 2025
+ 11:57:45 +0000
+Message-ID: <cad53d39-26f8-49fa-9fb2-94261e74cced@topic.nl>
+Date: Wed, 26 Mar 2025 12:57:44 +0100
+User-Agent: Mozilla Thunderbird
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: Re: [PATCH v2 2/3] dt-bindings: PCI: xilinx-pcie: Add reset-gpios for
+ PERST#
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84s?=
+ =?UTF-8?Q?ki?= <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>,
+ Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+ linux-kernel@vger.kernel.org
+References: <20250325071832.21229-1-mike.looijmans@topic.nl>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.7424060c-f116-40af-8bb3-d789f371b07a@emailsignatures365.codetwo.com>
+ <20250325071832.21229-2-mike.looijmans@topic.nl>
+ <20250325-victorious-silky-firefly-2a3cec@krzk-bin>
+Content-Language: en-US, nl
+Organization: Topic
+In-Reply-To: <20250325-victorious-silky-firefly-2a3cec@krzk-bin>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: AS4P195CA0039.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:20b:65a::15) To AS8PR04MB8644.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42b::12)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] PCI/MSI: Convert pci_msi_ignore_mask to per MSI
- domain flag
-To: Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?Q?Roger_Pau_Monn=C3=A9?=
-	<roger.pau@citrix.com>, Daniel Gomez <da.gomez@kernel.org>
-Cc: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>, Bjorn Helgaas
-	<helgaas@kernel.org>, linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org, Bjorn Helgaas
-	<bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <87v7rxzct0.ffs@tglx>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJKsWRmVeSWpSXmKPExsWy7djP87oNTx6nGxz4r2expCnD4vOGf2wW
-	f6dlW7zY0M5o8erMWjaLaRvFLebcNLK4vGsOm8XZecfZLC4dWMBkMeP8YlaLzZumMlv82PCY
-	1eL7lslMDnwe31v7WDxeT57A6LFgU6nHplWdbB7vzp1j95h3MtDj8IcrLB7v911l81i/5SqL
-	x+dNch4nWr6wBnBHcdmkpOZklqUW6dslcGXMmK9ecFip4tiu3WwNjOukuxg5OSQETCQ2TTjK
-	1MXIxSEksIJRYt6OS6wQzhdGiVXXPkE5nxklNu+YygLT0nH4BTtEYjmjxLJlh5ghnI+MEp++
-	/WPrYuTg4BWwkzj+NwikgUVAVWLx1y2sIDavgKDEyZlPwAaJCshL3L81gx3EFhaIlNi46CXY
-	HSIC7YwSZ2a9YQRxmAX+M0k0dc9lA6liFhCXuPVkPhOIzSZgKNH1tgsszimgJPH/5XUmiBp5
-	ieats8EukhDYzynR/WAh2EUSAi4SP3sjIV4Qlnh1fAs7hC0jcXpyDwtEPdDmBb/vM0E4Exgl
-	Gp7fYoSospa4c+4X2CBmAU2J9bv0IcKOElM7J7JDzOeTuPFWEOIGPolJ26YzQ4R5JTrahCCq
-	1SRmHV8Ht/bghUvMExiVZiGFyywkX85C8s0shL0LGFlWMYqnlhbnpqcWG+ellusVJ+YWl+al
-	6yXn525iBKa+0/+Of93BuOLVR71DjEwcjIcYJTiYlUR4j7E+TBfiTUmsrEotyo8vKs1JLT7E
-	KM3BoiTOu2h/a7qQQHpiSWp2ampBahFMlomDU6qBqak1o1nlbEDn/KwXAl5FqbzJO7mO5yQW
-	Sa9fbZjh5hDndd9zvezfQ63VN5d99zvneO4M++bEmRMucYUJXC+UlbzxWapG8g3vn4MHgjLn
-	znV4Zfer9HEDs8S9o5P/sRhlMX2UzSjIDfIXOaX3Mchs9U62ruRuxfkZlT/nPdsny6+56u+7
-	J08+O6p3VrGt/Z1yZWF5s6fNIY//E/n2r9cXXhAf3WKbtoAv7lPbkXIhQbaK/ZF138s+ZnqF
-	bHJf+ko2umh+tvbdf1f0G2d+s5+6V2GukMiC4BX1X0ILrDyN2N2/H+wtqD+2bJL3Fq3v8j+X
-	3bKYrS1nnP7d6q88g9GJSzFvD/79U/yQ1bHeVey+EktxRqKhFnNRcSIAWalNN+wDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDIsWRmVeSWpSXmKPExsVy+t/xu7oNTx6nG6z7y26xpCnD4vOGf2wW
-	f6dlW7zY0M5o8erMWjaLaRvFLebcNLK4vGsOm8XZecfZLC4dWMBkMeP8YlaLzZumMlv82PCY
-	1eL7lslMDnwe31v7WDxeT57A6LFgU6nHplWdbB7vzp1j95h3MtDj8IcrLB7v911l81i/5SqL
-	x+dNch4nWr6wBnBH6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZk
-	lqUW6dsl6GXMmK9ecFip4tiu3WwNjOukuxg5OSQETCQ6Dr9g72Lk4hASWMoosfT0ZhaIhIzE
-	yWkNrBC2sMSfa11sEEXvGSWOb7nL1MXIwcErYCdx/G8QSA2LgKrE4q9bwOp5BQQlTs58AjZH
-	VEBe4v6tGewgtrBApMTGRS+ZQOaICHQySixvvcAC4jAL/GeS2PVqKjPEhttMEvc6n4K1MwuI
-	S9x6Mp8JxGYTMJToegtyBicHp4CSxP+X15kgaswkurZ2MULY8hLNW2czT2AUmoXkkllIRs1C
-	0jILScsCRpZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgdG+7djPLTsYV776qHeIkYmD8RCj
-	BAezkgjvMdaH6UK8KYmVValF+fFFpTmpxYcYTYHBMZFZSjQ5H5hu8kriDc0MTA1NzCwNTC3N
-	jJXEedmunE8TEkhPLEnNTk0tSC2C6WPi4JRqYNpmEcbf5u544/O/7kmMh/Zvv78l4tSxsG2s
-	ldxRdidsuFVuhywsdIrnKo4ut1227YF9Rv3+v1cmXGfXYV9ybX1IbFrO5ddyX19c+TnT7k7c
-	mt6COZb3C6M2talaLmM/MOvwgpev3m7afIyVuY1Fbu8BmY0savkB9480qWQF7LvPEVqms/HH
-	JqYNS7OuLDl90KXP7NSWxKaFp9qmLrvpsSFut93Lkz88+0KeHjw+40aXdp7a6llT1xs+Wsbc
-	2DHV/+5GY601TZJffqRG3FWPUXs+74KG/dkVNrN39f7iWeqTVulkmJF35mBLqWb0famm+lVS
-	xin50hp26RxS6tlmSpP+bO/81iVyiP1Bn8jDumwlluKMREMt5qLiRABMzfnpfwMAAA==
-X-CMS-MailID: 20250326112656eucas1p27c3b714ecf38ca2249c5aa1261ed3f7e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250326112656eucas1p27c3b714ecf38ca2249c5aa1261ed3f7e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250326112656eucas1p27c3b714ecf38ca2249c5aa1261ed3f7e
-References: <20250320210741.GA1099701@bhelgaas>
-	<846c80f8-b80f-49fd-8a50-3fe8a473b8ec@suse.com>
-	<qn7fzggcj6qe6r6gdbwcz23pzdz2jx64aldccmsuheabhmjgrt@tawf5nfwuvw7>
-	<Z-GbuiIYEdqVRsHj@macbook.local>
-	<kp372led6jcryd4ubpyglc4h7b3erramgzsjl2slahxdk7w575@jganskuwkfvb>
-	<Z-Gv6TG9dwKI-fvz@macbook.local> <87y0wtzg0z.ffs@tglx> <87v7rxzct0.ffs@tglx>
-	<CGME20250326112656eucas1p27c3b714ecf38ca2249c5aa1261ed3f7e@eucas1p2.samsung.com>
+X-MS-TrafficTypeDiagnostic:
+	AS8PR04MB8644:EE_|AM0PR04MB6897:EE_|DU2PEPF00028D0A:EE_|DB9PR04MB9284:EE_
+X-MS-Office365-Filtering-Correlation-Id: b9e5e9e1-cada-436e-b569-08dd6c5d6e33
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|376014|52116014|7416014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?utf-8?B?QTE1Q0ptcmt6cVhNZGVwbXUzZTlmalVyQ3hya2dSdjdISWEyV0JGNXB1Vkpj?=
+ =?utf-8?B?MTVqYWVNWWpOS2pnWVVPRGNRM3pkV2dxVnpTZW41K0pBaVpMTForeXlCbmpB?=
+ =?utf-8?B?S0s5WHVLaWFnVFoyZXpKOTJ5eHYxVXY0OWZLRmFLS1BXNG9YTUpwTHFRNmww?=
+ =?utf-8?B?RHY3VEYrSFNNMlBlVnNMbm40dEMwNFBpei90S1NRYmE4WDVrbVZESHA2M2Jp?=
+ =?utf-8?B?MEFwVDQ2eUVWREwzdms2T1c0NDVtUGM4VGE4NlZDZTNzRlFNRklRUXNGL29T?=
+ =?utf-8?B?Tm1DeDdvckNReVNwaWtIMTdKRHhhS256V201VGtWRFMrcVROQzhzREIvOU9M?=
+ =?utf-8?B?Z1hxQVVPUzhHaElERmhaTXJUd3VqUzFnOEhrYVBqSWxXVy9VZUFXb0FuVDZk?=
+ =?utf-8?B?TUhveDBBSERhZm9jS2gvcXVSeEphVVM1UkQxSWVBbDVXcldGSGFZeHE4YXpk?=
+ =?utf-8?B?S1FkZklaQ3F2UzVRQUtqQXFtVlczUEd3RDBKaWZZZm1rdU54TUNsa2ZIOXdS?=
+ =?utf-8?B?ajRSTFhiaWxOcy9kbU56TlR4allkSHJwTHR2UWx6MlNCRnk1Y3pDUXBNWXZ1?=
+ =?utf-8?B?UFB1c2lWbXFsN2I2QXVGbWlYS29xRXpYb1Q3dFE4Ky8vVkp5dVF0RjZwRUxS?=
+ =?utf-8?B?RGtMWnhRQ2VaQWN1S0xMSDgybW1Ydm55ME04WVJQZnpkditQVnV0NXpvNUtr?=
+ =?utf-8?B?eEtaYXA1Ym1RYlI3dkk4MWxMcWNNV3pYY08xbVptdkxQSGpISWdLTEwybElz?=
+ =?utf-8?B?aVRsL0tsbHh0bmlabGlMUi9pSm9raDJUdjJWOE9VclhCcEJiNERTanhtRmlp?=
+ =?utf-8?B?dzdKaFhKY2lnUjV4Nkc5L3lSeUF5NEZINHZUVWRRam9laks2ZWtUZHUzLy9P?=
+ =?utf-8?B?d2ZiNHl2UzdTTzA2Rk8yNU5OZnRZdjRvbTdVNjByMDFEdzBFY3pPTGRObmZQ?=
+ =?utf-8?B?Tkp2VTh2SzZTMjdxMFk0RVRBeUJDdWhPMjBpUHZUUU1XOFRjRHVhSnVRa0lD?=
+ =?utf-8?B?UGtJQXFXNGMwWUJndTBhbHhQMUcyR2l2VEZuUkhYZXZiNXk2bVBUSkgxWjVX?=
+ =?utf-8?B?bzdDclBDaGlzY2cvOE1WQUozb2IzZ1VtTksrYUVKb0h1aTRhcEFxdkFVTkJZ?=
+ =?utf-8?B?SWI5enl3WE5zTHJNZlVtZkU0RGZSeFg5UjdWZWlKM1NxdDNuZTZ6NDQ2QURN?=
+ =?utf-8?B?cTdhTUdNSlRyRFhhdTUwYWFjYytMYnVqMENYejZabjBYTnI1SjdKcy8yWlQv?=
+ =?utf-8?B?V05KOEU2UUZzQUEzUU9iY0M0bWJIRk1JVjJqSEU1K2docWlORjRWbjB4dmFN?=
+ =?utf-8?B?cFAyd1loUHNOUkJFeS8xMHNydmNrdTQ1VmE5YmVEcDdaU1dCc0srVTN2M0tk?=
+ =?utf-8?B?TmlTSVZJLzV3K293N2RkY0Q4b0liNkNscFNCK2pIc2JNc1RVU3piaFZhSS9N?=
+ =?utf-8?B?UzVuZGpzSks0Y1hTRXRCZHBEd21ZZEN5cWVZNFgzKzBabzViSyt2MUhxMVo2?=
+ =?utf-8?B?bUlmS0RlTlpjdEh3WXRpNGRtZTljVnV1UjBuMmJQS2N2ZnBvTFB0SG5pN1Uy?=
+ =?utf-8?B?WExSSUI0YlRtRGxkc3YweSt0eG5vUC9ZNG95ZStmVTVkT0ZYbHNPUTFQNy9T?=
+ =?utf-8?B?S1Rzc3ZmQ2hQQ1gxM2lmT2dkLzhuWUgyT01lRVhBWEdqQmxPSkpzNW5ScnZq?=
+ =?utf-8?B?MlIzN2ZIYWhOeE1DZVFtQUY0TDJJTkc0VUkwK0w4WUFqbVdlY3FaVTR0ZGdV?=
+ =?utf-8?B?Z2xIRGJzcks5OVdDZ0tjL1NoaTRRbU53alVESVdVWENwRUk3RVlXSEJrSG1v?=
+ =?utf-8?B?WGtjQS9JdnZjYXpqSDlNNkxJTXhzaFZYVUoyOGtuR1ZvTWUyLzByNUtad3R3?=
+ =?utf-8?Q?cNtbQaPfFufC7?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8644.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(7416014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6897
+X-CodeTwo-MessageID: b6219cfe-861d-4242-bcb5-11335ffb1030.20250326115748@westeu12-emailsignatures-cloud.codetwo.com
+X-CodeTwoProcessed: true
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DU2PEPF00028D0A.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	2a2975a4-e249-4c11-b4a7-08dd6c5d6bcf
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|7416014|35042699022|82310400026|14060799003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cldaWFBxdlhmZ2wvUEtMU2VnT3RUK0krK1FIQTRCbDJBRzlQTEtGNFZTUzdz?=
+ =?utf-8?B?eWxleVQ5TkdHaDNmSUQrRGdiTVdqZXFsc1BGZUlnOC93Y2Z5d21KYUFTcEdD?=
+ =?utf-8?B?K1ppRHJQSDlrYXVWRzNTUnRhVzZ6Q3lUM3BUR2JDM2FvblBVVlc2akh4Rm9U?=
+ =?utf-8?B?YUJrRnczQk5lVyttMXVOS01Ec3I5a0tUa05IcHNIVTRodmxoM016ZlN3dUpU?=
+ =?utf-8?B?eCtXaUlpakFCdzlMNDgrVGNQL29vVDZGUDNKT21zeXNIUUtOTUNiVmpDSkpU?=
+ =?utf-8?B?aTUzVTI1NEJQZDFpR3VySjE4U1J1ZzJqa2kzMDBJaU9sUUwvUlZDUGhjUjVx?=
+ =?utf-8?B?NjA1bUZ4bHJKYWZSODAvd09ndDZlazdnUnlHQ1dGbHlyd0xLVkhTb2pEeGdl?=
+ =?utf-8?B?c0pKRTFQNkQxUHo1bjV5VXlPWGg1dTB3T3VFOGhaM0JDdk5lZWZrSnpJTHI3?=
+ =?utf-8?B?bll1Ti8ySWdET1Nzd3pqMTZvbmY1SDhnZkdJMVBiQmVjQmJhYlpZK2VaQjFQ?=
+ =?utf-8?B?dmtJM0pHbGhIVzVuNks4MXVpS3BBdVk2N3ByWWI2cVlQdEVIUE5iN0xvNXo0?=
+ =?utf-8?B?a2lwUmpiREtmMkZmRlMveHVPQ1YyNTRHOTBQWXA3NlMyRkdKaGd0UGdvNXVZ?=
+ =?utf-8?B?ajFuK3ZycXU5SkRuTERsUmVWWDVITURsZ21TVXg2VXRLaEJhM3d6MVE5TVMw?=
+ =?utf-8?B?NlpraStEMWY1anBYQzFsZkNtMlpXLzdhU0xwdW40V3lwQkprK00yTGNJQi9W?=
+ =?utf-8?B?Y05qTnRyTjdMZC9YSldyRHQ1MHdPUGhFb08xZi94enJHOGF0b01XbEZHTWM0?=
+ =?utf-8?B?ZmMvUWxPZWpTZ3pDSkZpNEkycTROc2gxdlorYXlhTi9WQWZzUFlOQ3NoeSth?=
+ =?utf-8?B?N1VGbEFUNmdPVkVaZS9zakU1NVNCYnRXRnUrVDhZbkt2TkJXdXhJajNtakR2?=
+ =?utf-8?B?WHM4cWI2bkFyYmxOSnVkaFR2bm0zYkNxeVFkQ2RXYmY0cWNULzZGdHIwaXAz?=
+ =?utf-8?B?RHBzanczYXR5d3cwRDFWeWQzNVhnRmplSFB4N2hQTXNLenh0NmV0b01vaFZ1?=
+ =?utf-8?B?eVFobWZnSGYzWXdPc2JBWTk1a0NmNkE4Mm5yRlo5d0d1bXNyQVpoSytMOGJC?=
+ =?utf-8?B?TUFVM0k4ZHJVQ3JnalB6eVI0NHR4dDg3Z0xlT2xNdU13UTYxWVhGWC8yL3Zw?=
+ =?utf-8?B?UHZFMkxCR1ArWm8vb3RWdjdwVTVreEp1QzI0MzZacTJ3RG9VVTFHOUpZQXlq?=
+ =?utf-8?B?YlIrRW1mVVBmMys4akUzeEVGTjlLdlBmQzJzUkhLMFFkQUZNdjBRU2gvTGE5?=
+ =?utf-8?B?VHpXckdLRGRFZEtsTkM0cjVreDcxdG1RV2MxY3JBWFpMc0VjUHV6YlhxWENR?=
+ =?utf-8?B?ZVdQUmo4S2FvYlRWM2ZwYmNBV3FubFdlWGJDMVB1MGlxaDdNSWRZUkc5OWc0?=
+ =?utf-8?B?SHRlSlBYRmtrRlZnYVBBWVFTRWkzdSthcDFTMnRrZGY3TG1FRkxHUUFwZURl?=
+ =?utf-8?B?a1lWZFpUWDRuK1FKbkNuWkhtT1VMSGZuT3Y5TW5DeUxDcGtIdUV0T1dMdUxp?=
+ =?utf-8?B?Tm1iV3Z3TWM5SjlPTVRpdmwyRGJCTGt5NktuUzVyT1kwTTlCU3F0MmZUU3Ex?=
+ =?utf-8?B?dHNyR2dNRUs3NHRPdVRhOTFkNnl4QkRtd1BzYW8rM1VCWmY4ZVhPZWxMUU85?=
+ =?utf-8?B?bHFEck4vdktJdjY0THJJMzlGbjF0dWFhckFhNEFDalFMZU40R0FtKzJ0U1oz?=
+ =?utf-8?B?elR2OFhDNWFDcEQ4Mi9WWmpjOE1jdnFQMXpXbG8vZ3VIaEZjQkR5OE1vWEFm?=
+ =?utf-8?B?dElKblZZenFUZnI5eVh3dUxPY0gyOWkyV3dDRktGMk1ZT09xcVNFMkI0L0lE?=
+ =?utf-8?B?eWZpNThCM1ZOT0UrbE1WWUtiMGtUL0k3ZE1JeDNibEk3SWw3ajBTY2EzdUtr?=
+ =?utf-8?Q?cuWD0VOS9xs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:13.93.42.39;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu12-emailsignatures-cloud.codetwo.com;PTR:westeu12-emailsignatures-cloud.codetwo.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(7416014)(35042699022)(82310400026)(14060799003);DIR:OUT;SFP:1102;
+X-OriginatorOrg: topic.nl
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2025 11:57:49.0931
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9e5e9e1-cada-436e-b569-08dd6c5d6e33
+X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[13.93.42.39];Helo=[westeu12-emailsignatures-cloud.codetwo.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DU2PEPF00028D0A.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9284
 
-On 25.03.2025 10:20, Thomas Gleixner wrote:
-> On Tue, Mar 25 2025 at 09:11, Thomas Gleixner wrote:
->> On Mon, Mar 24 2025 at 20:18, Roger Pau Monné wrote:
->>> On Mon, Mar 24, 2025 at 07:58:14PM +0100, Daniel Gomez wrote:
->>>> The issue is that info appears to be uninitialized. So, this worked for me:
->>> Indeed, irq_domain->host_data is NULL, there's no msi_domain_info.  As
->>> this is x86, I was expecting x86 ot always use
->>> x86_init_dev_msi_info(), but that doesn't seem to be the case.  I
->>> would like to better understand this.
->> Indeed. On x86 this should not happen at all. On architectures, which do
->> not use (hierarchical) interrupt domains, it will return NULL.
+On 25-03-2025 09:17, Krzysztof Kozlowski wrote:
+> On Tue, Mar 25, 2025 at 08:18:26AM +0100, Mike Looijmans wrote:
+>> Introduce optional `reset-gpios` property to enable GPIO-based control
+>> of the PCIe root port PERST# signal, as described in pci.txt.
+> Drop pci.txt, we don't use TXT bindings anymore.
+>
+>> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+>> ---
 >>
->> So I really want to understand why this happens on x86 before such a
->> "fix" is deployed.
-> So after staring at it some more it's clear. Without XEN, the domain
-> returned is the MSI parent domain, which is the vector domain in that
-> setup. That does not have a domain info set. But on legacy architectures
-> there is not even a domain.
->
-> It's really wonderful that we have a gazillion ways to manage the
-> backends of PCI/MSI....
->
-> So none of the suggested pointer checks will cover it correctly. Though
-> there is already a function which allows to query MSI domain flags
-> independent of the underlying insanity. Sorry for not catching it in
-> review.
->
-> Untested patch below.
+>> Changes in v2:
+>> Add binding for reset-gpios
+> So what was in v1? Empty patch?
 
-This fixes the panic observed on ARM64 RK3568-based Odroid-M1 board 
-(arch/arm64/boot/dts/rockchip/rk3568-odroid-m1.dts) on next-20250325. 
-Thanks!
-
-Feel free to add to the final patch:
-
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Feedback on v1 was that I had to add bindings documentation...
 
 
+>>   .../devicetree/bindings/pci/xlnx,axi-pcie-host.yaml          | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/xlnx,axi-pcie-host.ya=
+ml b/Documentation/devicetree/bindings/pci/xlnx,axi-pcie-host.yaml
+>> index fb87b960a250..2b0fabdd5e16 100644
+>> --- a/Documentation/devicetree/bindings/pci/xlnx,axi-pcie-host.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/xlnx,axi-pcie-host.yaml
+>> @@ -28,6 +28,9 @@ properties:
+>>             ranges for the PCI memory regions (I/O space region is not
+>>             supported by hardware)
+>>  =20
+>> +  reset-gpios:
+>> +    maxItems: 1
+> Why do you need it? It's already there, in PCI schemas, isn't it?
 >
-> Thanks,
+> Why is this patch needed?
+
+Apparently not needed then, sorry for the noise.
+
+
+
 >
->          tglx
-> ---
->   drivers/pci/msi/msi.c |   18 ++++++------------
->   1 file changed, 6 insertions(+), 12 deletions(-)
+> Best regards,
+> Krzysztof
 >
-> --- a/drivers/pci/msi/msi.c
-> +++ b/drivers/pci/msi/msi.c
-> @@ -285,8 +285,6 @@ static void pci_msi_set_enable(struct pc
->   static int msi_setup_msi_desc(struct pci_dev *dev, int nvec,
->   			      struct irq_affinity_desc *masks)
->   {
-> -	const struct irq_domain *d = dev_get_msi_domain(&dev->dev);
-> -	const struct msi_domain_info *info = d->host_data;
->   	struct msi_desc desc;
->   	u16 control;
->   
-> @@ -297,7 +295,7 @@ static int msi_setup_msi_desc(struct pci
->   	/* Lies, damned lies, and MSIs */
->   	if (dev->dev_flags & PCI_DEV_FLAGS_HAS_MSI_MASKING)
->   		control |= PCI_MSI_FLAGS_MASKBIT;
-> -	if (info->flags & MSI_FLAG_NO_MASK)
-> +	if (pci_msi_domain_supports(dev, MSI_FLAG_NO_MASK, DENY_LEGACY))
->   		control &= ~PCI_MSI_FLAGS_MASKBIT;
->   
->   	desc.nvec_used			= nvec;
-> @@ -605,20 +603,18 @@ static void __iomem *msix_map_region(str
->    */
->   void msix_prepare_msi_desc(struct pci_dev *dev, struct msi_desc *desc)
->   {
-> -	const struct irq_domain *d = dev_get_msi_domain(&dev->dev);
-> -	const struct msi_domain_info *info = d->host_data;
-> -
->   	desc->nvec_used				= 1;
->   	desc->pci.msi_attrib.is_msix		= 1;
->   	desc->pci.msi_attrib.is_64		= 1;
->   	desc->pci.msi_attrib.default_irq	= dev->irq;
->   	desc->pci.mask_base			= dev->msix_base;
-> -	desc->pci.msi_attrib.can_mask		= !(info->flags & MSI_FLAG_NO_MASK) &&
-> -						  !desc->pci.msi_attrib.is_virtual;
->   
-> -	if (desc->pci.msi_attrib.can_mask) {
-> +
-> +	if (!pci_msi_domain_supports(dev, MSI_FLAG_NO_MASK, DENY_LEGACY) &&
-> +	    !desc->pci.msi_attrib.is_virtual) {
->   		void __iomem *addr = pci_msix_desc_addr(desc);
->   
-> +		desc->pci.msi_attrib.can_mask = true;
->   		desc->pci.msix_ctrl = readl(addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
->   	}
->   }
-> @@ -715,8 +711,6 @@ static int msix_setup_interrupts(struct
->   static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
->   				int nvec, struct irq_affinity *affd)
->   {
-> -	const struct irq_domain *d = dev_get_msi_domain(&dev->dev);
-> -	const struct msi_domain_info *info = d->host_data;
->   	int ret, tsize;
->   	u16 control;
->   
-> @@ -747,7 +741,7 @@ static int msix_capability_init(struct p
->   	/* Disable INTX */
->   	pci_intx_for_msi(dev, 0);
->   
-> -	if (!(info->flags & MSI_FLAG_NO_MASK)) {
-> +	if (!pci_msi_domain_supports(dev, MSI_FLAG_NO_MASK, DENY_LEGACY)) {
->   		/*
->   		 * Ensure that all table entries are masked to prevent
->   		 * stale entries from firing in a crash kernel.
->
->
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+
+--=20
+Mike Looijmans
+System Expert
+
+TOPIC Embedded Products B.V.
+Materiaalweg 4, 5681 RJ Best
+The Netherlands
+
+T: +31 (0) 499 33 69 69
+E: mike.looijmans@topic.nl
+W: www.topic.nl
+
+
 
 
