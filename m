@@ -1,65 +1,65 @@
-Return-Path: <linux-pci+bounces-24772-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24773-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20848A7195E
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 15:51:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB321A71992
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 15:58:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB4441685DF
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 14:47:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 051AE1883479
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 14:52:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 635461C8638;
-	Wed, 26 Mar 2025 14:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD2FC1F2C3B;
+	Wed, 26 Mar 2025 14:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AmcP9Hd+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YvEEf/hk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4B81DEFD7;
-	Wed, 26 Mar 2025 14:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3708B1E8349;
+	Wed, 26 Mar 2025 14:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743000392; cv=none; b=ak88rf3K2amU5n6eGKzzdZJSn/WPQX4lCLABW3COaeNEBZP0SyQbeIawLKvD8FK4dv3n8LpNbiJYVFlE/C9SzERFjobo3YoOK1PgbWbU5AiocDnoE2Pd/uLwrjQVsHfQ6m7+mMHB3nERhzU+m7DKsbDlcSoiEvdVVUu5J+2mPDU=
+	t=1743000754; cv=none; b=tRXZEE30+5yk5rOE44MGbTk/DOxVMebzdJ/mqMNdHjoxKyJ9kyA1vFkHtgU7ENP6356jd8cNPe39mkH3O8XPtt0kPfPgWfAedd31m68RECTjFaryXK/u3UnPDBqywPgk+lXmwDzTY8dk8RqFnZ7nwoHHqaOfPTobYwbr/EwM/yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743000392; c=relaxed/simple;
-	bh=Cc7wktbOWDJBZ+sIqX0WmKXii8fobhHZDsEO0msqRKU=;
+	s=arc-20240116; t=1743000754; c=relaxed/simple;
+	bh=kMWBFtvP0kEE/trvo0qGsOmq8xhchyKSw1YVss2QtLk=;
 	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KO4C4zP9g4xILpIgycKHsr8sfzkjhGQnnNIVc5M/ZVSQr5gdCv0jLS5guj8v+ZxsDRnaWEPCFRNg1dQDW4bsTyir+OGiFOZohcGfsLZgq08A4VdMQUqZUMdX6BdlkR5zWGfBWsAqzIyFYiRMDvKtqD8A4q9EzRfe3Ye84dWONaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AmcP9Hd+; arc=none smtp.client-ip=192.198.163.16
+	 MIME-Version:Content-Type; b=PdMEhNYKJZf16X0b15XhBEwd2G7Vdx/H3Aiugv2tuRnaOWiMG6BKmLiTzvjOq7M55ahbGFUSQ0+E+tBfo/rk1nOlRhx5/igbSYCDTBKQ4S14Q1D/vOT9zChv/gr29uMM2RCiZNs4WNOMWLDXvjSlQxepPeqkpU15ECD/Kx3k7ZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YvEEf/hk; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743000390; x=1774536390;
+  t=1743000753; x=1774536753;
   h=from:date:to:cc:subject:in-reply-to:message-id:
    references:mime-version;
-  bh=Cc7wktbOWDJBZ+sIqX0WmKXii8fobhHZDsEO0msqRKU=;
-  b=AmcP9Hd+FjaGYJ1uRGhpBmZ+sulEcU0uzSkItEeok5GS0NkCzuMLBu/4
-   UV7TBSK5/iqtvTbec+WVbwoEtbdc7gz9J55h5POhNN2F6AVJW98SLvz4w
-   aHD/sNYm5G0l1l6Az1+VZUfK3oz49h1FZJZpD8J7ha1jDv6f/xYN+JKp9
-   InSllFMDQQr5cbmtgqrlm6oCs8a1dLtRqwBFrx6yOwOnGe8gEgKFeN1oo
-   P5zFBGWthbvI3DoCARDB5e+6WhkNG+yAOpEm7DkLWZFLYrlSub80Vl1aP
-   FF2EkzYC3QtWjWNToAp5pP0Gd5kJZAEezjLxbngjEzR8WuSrknJgwPuyq
-   Q==;
-X-CSE-ConnectionGUID: TfmwU6AfQkm3yk1Cn3vmyg==
-X-CSE-MsgGUID: Nnn2h0xYQkKPLNDXEwnhjQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="31898297"
+  bh=kMWBFtvP0kEE/trvo0qGsOmq8xhchyKSw1YVss2QtLk=;
+  b=YvEEf/hk7OPwYSPoeBL39D0ZFQUfkn00k8f4PW1v4XQo71kzQiXhNiGh
+   PiygvvF9hmde1Gwe67blZtf5vwNwmsZY12hDLhduHgWSY2/VNM38JxQGA
+   CLXMVQvwV/y69ClRzw5cr6Ilk8jjojeplyNKMa4Kuz09+9oh0gET8TDZc
+   ywW1yqHqty2NkSEbqXcUoS04lurU+Mc55Py1+9RsMTZOc1YygFfSFwgpe
+   dLjQzfQdahxdmyCo89qMQxgkzJj6z5CvvliOFZBLD0iZxtKdWf0VL3w/C
+   WJ/xI4+vX6Ch6Z3rLyosJ1tP6mBw50gq9OwIpmG7KFWW//EKZQnSK06+s
+   A==;
+X-CSE-ConnectionGUID: ByqPfI5lQNiYyucK4Fx7gw==
+X-CSE-MsgGUID: HTWb3y2YTQWb/DpcSAoGDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="44455139"
 X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="31898297"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 07:46:29 -0700
-X-CSE-ConnectionGUID: s+ipq+BcQTq9kbQs3QqtxQ==
-X-CSE-MsgGUID: LBm8mf+MSyyjbS37H75K2w==
+   d="scan'208";a="44455139"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 07:52:32 -0700
+X-CSE-ConnectionGUID: /xCYhiUWTT+6GflWnlz/Pw==
+X-CSE-MsgGUID: I5/SSNZdRc6H47G3BpwTZg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="124759051"
+   d="scan'208";a="124596406"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.5])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 07:46:23 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 07:52:26 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 26 Mar 2025 16:46:19 +0200 (EET)
+Date: Wed, 26 Mar 2025 16:52:22 +0200 (EET)
 To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
 cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
     dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
@@ -74,192 +74,175 @@ cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
     Maxime Ripard <mripard@kernel.org>, 
     Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
     Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v6 2/6] PCI: Add a helper to convert between VF BAR number
- and IOV resource
-In-Reply-To: <20250320110854.3866284-3-michal.winiarski@intel.com>
-Message-ID: <fd94c15d-7fcc-c9db-8af0-868c15bc34a3@linux.intel.com>
-References: <20250320110854.3866284-1-michal.winiarski@intel.com> <20250320110854.3866284-3-michal.winiarski@intel.com>
+Subject: Re: [PATCH v6 1/6] PCI/IOV: Restore VF resizable BAR state after
+ reset
+In-Reply-To: <b10b559c-cb23-d21e-d6ee-e060eb0b6b5b@linux.intel.com>
+Message-ID: <f12b85eb-0dad-fa48-ffca-d052f41e0a28@linux.intel.com>
+References: <20250320110854.3866284-1-michal.winiarski@intel.com> <20250320110854.3866284-2-michal.winiarski@intel.com> <b10b559c-cb23-d21e-d6ee-e060eb0b6b5b@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1096444980-1743000379=:942"
+Content-Type: multipart/mixed; boundary="8323328-657385912-1743000742=:942"
 
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1096444980-1743000379=:942
+--8323328-657385912-1743000742=:942
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Thu, 20 Mar 2025, Micha=C5=82 Winiarski wrote:
+On Wed, 26 Mar 2025, Ilpo J=C3=A4rvinen wrote:
 
-> There are multiple places where conversions between IOV resources and
-> corresponding VF BAR numbers are done.
+> On Thu, 20 Mar 2025, Micha=C5=82 Winiarski wrote:
 >=20
-> Extract the logic to pci_resource_num_from_vf_bar() and
-> pci_resource_num_to_vf_bar() helpers.
+> > Similar to regular resizable BAR, VF BAR can also be resized, e.g. by
+> > the system firmware or the PCI subsystem itself.
+> >=20
+> > Add the capability ID and restore it as a part of IOV state.
+> >
+> > See PCIe r4.0, sec 9.3.7.4.
 >=20
-> Suggested-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
-> Acked-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> ---
->  drivers/pci/iov.c       | 22 ++++++++++++----------
->  drivers/pci/pci.h       | 19 +++++++++++++++++++
->  drivers/pci/setup-bus.c |  3 ++-
->  3 files changed, 33 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> index bf95387993cd5..985ea11339c45 100644
-> --- a/drivers/pci/iov.c
-> +++ b/drivers/pci/iov.c
-> @@ -151,7 +151,7 @@ resource_size_t pci_iov_resource_size(struct pci_dev =
-*dev, int resno)
->  =09if (!dev->is_physfn)
->  =09=09return 0;
-> =20
-> -=09return dev->sriov->barsz[resno - PCI_IOV_RESOURCES];
-> +=09return dev->sriov->barsz[pci_resource_num_to_vf_bar(resno)];
->  }
-> =20
->  static void pci_read_vf_config_common(struct pci_dev *virtfn)
-> @@ -322,12 +322,13 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
->  =09virtfn->multifunction =3D 0;
-> =20
->  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -=09=09res =3D &dev->resource[i + PCI_IOV_RESOURCES];
-> +=09=09res =3D &dev->resource[pci_resource_num_from_vf_bar(i)];
->  =09=09if (!res->parent)
->  =09=09=09continue;
->  =09=09virtfn->resource[i].name =3D pci_name(virtfn);
->  =09=09virtfn->resource[i].flags =3D res->flags;
-> -=09=09size =3D pci_iov_resource_size(dev, i + PCI_IOV_RESOURCES);
-> +=09=09size =3D pci_iov_resource_size(dev,
-> +=09=09=09=09=09     pci_resource_num_from_vf_bar(i));
->  =09=09resource_set_range(&virtfn->resource[i],
->  =09=09=09=09   res->start + size * id, size);
->  =09=09rc =3D request_resource(res, &virtfn->resource[i]);
-> @@ -624,8 +625,8 @@ static int sriov_enable(struct pci_dev *dev, int nr_v=
-irtfn)
-> =20
->  =09nres =3D 0;
->  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -=09=09bars |=3D (1 << (i + PCI_IOV_RESOURCES));
-> -=09=09res =3D &dev->resource[i + PCI_IOV_RESOURCES];
-> +=09=09bars |=3D (1 << pci_resource_num_from_vf_bar(i));
-> +=09=09res =3D &dev->resource[pci_resource_num_from_vf_bar(i)];
->  =09=09if (res->parent)
->  =09=09=09nres++;
->  =09}
-> @@ -791,8 +792,9 @@ static int sriov_init(struct pci_dev *dev, int pos)
-> =20
->  =09nres =3D 0;
->  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -=09=09res =3D &dev->resource[i + PCI_IOV_RESOURCES];
-> -=09=09res_name =3D pci_resource_name(dev, i + PCI_IOV_RESOURCES);
-> +=09=09res =3D &dev->resource[pci_resource_num_from_vf_bar(i)];
-> +=09=09res_name =3D pci_resource_name(dev,
-> +=09=09=09=09=09     pci_resource_num_from_vf_bar(i));
+> Usually it's best o refer to latest gen doc, the section number seems to=
+=20
+> be the same also in r6.2.
 
-All these get easier to read if you add (same comment for the cases=20
-above):
+Actually, it isn't. r6.2 9.3.7 does specify capability IDs so I though you=
+=20
+be refering to that section, but there's no 9.3.7.4 section at all.
 
-=09=09int idx =3D pci_resource_num_from_vf_bar(i);
-
-> =20
->  =09=09/*
->  =09=09 * If it is already FIXED, don't change it, something
-> @@ -851,7 +853,7 @@ static int sriov_init(struct pci_dev *dev, int pos)
->  =09dev->is_physfn =3D 0;
->  failed:
->  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -=09=09res =3D &dev->resource[i + PCI_IOV_RESOURCES];
-> +=09=09res =3D &dev->resource[pci_resource_num_from_vf_bar(i)];
->  =09=09res->flags =3D 0;
->  =09}
-> =20
-> @@ -913,7 +915,7 @@ static void sriov_restore_state(struct pci_dev *dev)
->  =09pci_write_config_word(dev, iov->pos + PCI_SRIOV_CTRL, ctrl);
-> =20
->  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++)
-> -=09=09pci_update_resource(dev, i + PCI_IOV_RESOURCES);
-> +=09=09pci_update_resource(dev, pci_resource_num_from_vf_bar(i));
-> =20
->  =09pci_write_config_dword(dev, iov->pos + PCI_SRIOV_SYS_PGSIZE, iov->pgs=
-z);
->  =09pci_iov_set_numvfs(dev, iov->num_VFs);
-> @@ -979,7 +981,7 @@ void pci_iov_update_resource(struct pci_dev *dev, int=
- resno)
->  {
->  =09struct pci_sriov *iov =3D dev->is_physfn ? dev->sriov : NULL;
->  =09struct resource *res =3D pci_resource_n(dev, resno);
-> -=09int vf_bar =3D resno - PCI_IOV_RESOURCES;
-> +=09int vf_bar =3D pci_resource_num_to_vf_bar(resno);
->  =09struct pci_bus_region region;
->  =09u16 cmd;
->  =09u32 new;
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index adc54bb2c8b34..f44840ee3c327 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -693,6 +693,15 @@ static inline bool pci_resource_is_iov(int resno)
->  {
->  =09return resno >=3D PCI_IOV_RESOURCES && resno <=3D PCI_IOV_RESOURCE_EN=
-D;
->  }
-> +static inline int pci_resource_num_from_vf_bar(int resno)
-> +{
-> +=09return resno + PCI_IOV_RESOURCES;
-> +}
-> +
-> +static inline int pci_resource_num_to_vf_bar(int resno)
-> +{
-> +=09return resno - PCI_IOV_RESOURCES;
-> +}
->  extern const struct attribute_group sriov_pf_dev_attr_group;
->  extern const struct attribute_group sriov_vf_dev_attr_group;
->  #else
-> @@ -717,6 +726,16 @@ static inline bool pci_resource_is_iov(int resno)
->  {
->  =09return false;
->  }
-> +static inline int pci_resource_num_from_vf_bar(int resno)
-> +{
-> +=09WARN_ON_ONCE(1);
-> +=09return -ENODEV;
-> +}
-> +static inline int pci_resource_num_to_vf_bar(int resno)
-> +{
-> +=09WARN_ON_ONCE(1);
-> +=09return -ENODEV;
-> +}
->  #endif /* CONFIG_PCI_IOV */
-> =20
->  #ifdef CONFIG_PCIE_TPH
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index 54d6f4fa3ce16..55e91ba1e74a2 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1885,7 +1885,8 @@ static int iov_resources_unassigned(struct pci_dev =
-*dev, void *data)
->  =09bool *unassigned =3D data;
-> =20
->  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> -=09=09struct resource *r =3D &dev->resource[i + PCI_IOV_RESOURCES];
-> +=09=09struct resource *r =3D
-> +=09=09=09&dev->resource[pci_resource_num_from_vf_bar(i)];
-
-I'd add int idx here as well.
-
->  =09=09struct pci_bus_region region;
-> =20
->  =09=09/* Not assigned or rejected by kernel? */
->=20
-
---=20
+--
  i.
 
---8323328-1096444980-1743000379=:942--
+> This didn't refer to spec section that specified VF Rebar ext capability
+> (7.8.7) though. I think it should and it would also be good to mention th=
+e=20
+> capability layout is the same as with the rebar cap.
+>=20
+> > Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
+> > Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> > Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> > ---
+> >  drivers/pci/iov.c             | 30 +++++++++++++++++++++++++++++-
+> >  drivers/pci/pci.h             |  1 +
+> >  include/uapi/linux/pci_regs.h |  1 +
+> >  3 files changed, 31 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > index 121540f57d4bf..bf95387993cd5 100644
+> > --- a/drivers/pci/iov.c
+> > +++ b/drivers/pci/iov.c
+> > @@ -7,6 +7,7 @@
+> >   * Copyright (C) 2009 Intel Corporation, Yu Zhao <yu.zhao@intel.com>
+> >   */
+> > =20
+> > +#include <linux/bitfield.h>
+> >  #include <linux/pci.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/export.h>
+> > @@ -830,6 +831,7 @@ static int sriov_init(struct pci_dev *dev, int pos)
+> >  =09pci_read_config_byte(dev, pos + PCI_SRIOV_FUNC_LINK, &iov->link);
+> >  =09if (pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_RC_END)
+> >  =09=09iov->link =3D PCI_DEVFN(PCI_SLOT(dev->devfn), iov->link);
+> > +=09iov->vf_rebar_cap =3D pci_find_ext_capability(dev, PCI_EXT_CAP_ID_V=
+F_REBAR);
+> > =20
+> >  =09if (pdev)
+> >  =09=09iov->dev =3D pci_dev_get(pdev);
+> > @@ -868,6 +870,30 @@ static void sriov_release(struct pci_dev *dev)
+> >  =09dev->sriov =3D NULL;
+> >  }
+> > =20
+> > +static void sriov_restore_vf_rebar_state(struct pci_dev *dev)
+> > +{
+> > +=09unsigned int pos, nbars, i;
+> > +=09u32 ctrl;
+> > +
+> > +=09pos =3D dev->sriov->vf_rebar_cap;
+> > +=09if (!pos)
+> > +=09=09return;
+> > +
+> > +=09pci_read_config_dword(dev, pos + PCI_REBAR_CTRL, &ctrl);
+> > +=09nbars =3D FIELD_GET(PCI_REBAR_CTRL_NBAR_MASK, ctrl);
+> > +
+> > +=09for (i =3D 0; i < nbars; i++, pos +=3D 8) {
+> > +=09=09int bar_idx, size;
+> > +
+> > +=09=09pci_read_config_dword(dev, pos + PCI_REBAR_CTRL, &ctrl);
+> > +=09=09bar_idx =3D FIELD_GET(PCI_REBAR_CTRL_BAR_IDX, ctrl);
+> > +=09=09size =3D pci_rebar_bytes_to_size(dev->sriov->barsz[bar_idx]);
+> > +=09=09ctrl &=3D ~PCI_REBAR_CTRL_BAR_SIZE;
+> > +=09=09ctrl |=3D FIELD_PREP(PCI_REBAR_CTRL_BAR_SIZE, size);
+> > +=09=09pci_write_config_dword(dev, pos + PCI_REBAR_CTRL, ctrl);
+>=20
+> I started to wonder if we'd still want to have the VF Rebar ones in=20
+> uapi/linux/pci_regs.h (despite the same capability layout):
+>=20
+> /*
+>  * PCI Resizable BAR and PCI VF Resizable BAR extended capabilities have=
+=20
+>  * the same layout of fields.
+>  */
+> #define PCI_VF_REBAR_CTRL=09=09PCI_REBAR_CTRL
+> #define PCI_VF_REBAR_CTRL_BAR_IDX=09PCI_REBAR_CTRL_BAR_IDX
+> etc.
+>=20
+> as then it would be possible grep to pick up only the relevant lines.
+>=20
+> I'd not duplicate _SHIFT defines though. FIELD_PREP/GET() in general does=
+=20
+> not need _SHIFT defines at all and they are just duplicated information.
+>=20
+> > +=09}
+> > +}
+> > +
+> >  static void sriov_restore_state(struct pci_dev *dev)
+> >  {
+> >  =09int i;
+> > @@ -1027,8 +1053,10 @@ resource_size_t pci_sriov_resource_alignment(str=
+uct pci_dev *dev, int resno)
+> >   */
+> >  void pci_restore_iov_state(struct pci_dev *dev)
+> >  {
+> > -=09if (dev->is_physfn)
+> > +=09if (dev->is_physfn) {
+> > +=09=09sriov_restore_vf_rebar_state(dev);
+> >  =09=09sriov_restore_state(dev);
+> > +=09}
+> >  }
+> > =20
+> >  /**
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index b81e99cd4b62a..adc54bb2c8b34 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -482,6 +482,7 @@ struct pci_sriov {
+> >  =09u16=09=09subsystem_vendor; /* VF subsystem vendor */
+> >  =09u16=09=09subsystem_device; /* VF subsystem device */
+> >  =09resource_size_t=09barsz[PCI_SRIOV_NUM_BARS];=09/* VF BAR size */
+> > +=09u16=09=09vf_rebar_cap;=09/* VF Resizable BAR capability offset */
+> >  =09bool=09=09drivers_autoprobe; /* Auto probing of VFs by driver */
+> >  };
+> > =20
+> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_reg=
+s.h
+> > index ba326710f9c8b..bb2a334e50386 100644
+> > --- a/include/uapi/linux/pci_regs.h
+> > +++ b/include/uapi/linux/pci_regs.h
+> > @@ -745,6 +745,7 @@
+> >  #define PCI_EXT_CAP_ID_L1SS=090x1E=09/* L1 PM Substates */
+> >  #define PCI_EXT_CAP_ID_PTM=090x1F=09/* Precision Time Measurement */
+> >  #define PCI_EXT_CAP_ID_DVSEC=090x23=09/* Designated Vendor-Specific */
+> > +#define PCI_EXT_CAP_ID_VF_REBAR 0x24=09/* VF Resizable BAR */
+> >  #define PCI_EXT_CAP_ID_DLF=090x25=09/* Data Link Feature */
+> >  #define PCI_EXT_CAP_ID_PL_16GT=090x26=09/* Physical Layer 16.0 GT/s */
+> >  #define PCI_EXT_CAP_ID_NPEM=090x29=09/* Native PCIe Enclosure Manageme=
+nt */
+>=20
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+>=20
+>=20
+--8323328-657385912-1743000742=:942--
 
