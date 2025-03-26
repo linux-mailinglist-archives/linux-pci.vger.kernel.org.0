@@ -1,189 +1,182 @@
-Return-Path: <linux-pci+bounces-24780-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24781-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD666A71A69
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 16:33:43 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EA1E4A71A6D
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 16:34:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 08F383AC4A8
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 15:29:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B0F407A7030
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 15:32:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26A5A1F0E5D;
-	Wed, 26 Mar 2025 15:29:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 267091F416B;
+	Wed, 26 Mar 2025 15:32:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mpnWHTgi"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="h9CXDAO1"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901EE1A8F60;
-	Wed, 26 Mar 2025 15:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E8431F2369;
+	Wed, 26 Mar 2025 15:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743002983; cv=none; b=EObJBKmd5NzM8RnTmrgV+ZcTEQ1VmNtzNBJEUzw8aj3CYZh4Zge89pfokJ1lxnaiGhBAddtoVp2nW0+HOfN3GfR4woMqRQjhfxn4TUYSwpzYSvrS+Cv9XBKMGpLwrwhaMA2oHbEDPggmeGwVRE+T8T5ifilpGr+3hkimhi7Se9s=
+	t=1743003176; cv=none; b=hUQXm4FDE3TSnkqysZJ6rmZR/N+xmxESqrZqGDOQeqyGSy3GJQvcTSh+3gZGTAscYdXDBtG5uKD7StB8stB+1scZf78j7uvOBdmpFSL2bv0L9+JeEsGT/nI/4f04dbYw/KnqhAT32w/vfgqgCX66hkKqrUx0Xm3vSchqE35Rt48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743002983; c=relaxed/simple;
-	bh=1rR+/faxkHLlYltbcuI3PbbS4s/fXFMou00xu/7HeXY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Zae7GFlcvFZ+zZoK6x80xO/ZEZqFII5ehynVM8SbJ0k3Nn7k6VFvBomGhKBoVDxMdfn2Pp6zWendT+EzRSZfPMvTZXJN85jzso6zCiV5C0RL9nLhYd6OSZ6Uo6bArpzeKITWhK0bNfcLWMjgIBtK6VN9+yiD92TaKCqJXfaA6DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mpnWHTgi; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743002981; x=1774538981;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=1rR+/faxkHLlYltbcuI3PbbS4s/fXFMou00xu/7HeXY=;
-  b=mpnWHTgiDJBA/64CQhfDNg4MSTqk9xEr/6q004lzqoV6b6T+Oc5rbKRL
-   H5lUOtSxTRPjPfeiDqb7Ez0LXdfGuZajEp//ZgmuVCnrfmz/OnkwcL4Fl
-   G1Wj5MtOiuKFBMiLCX1i9Y2OQB5RGL1Ny1JwWEfJhEU3hfp6zUM+daAet
-   DHNM6h0HYaUImpRnALMdg2X5U4vKjPEWYfmVKbaUu/WjO7frBEAwvRDHn
-   9QgX4AoiVOR0B0hyDUDJiM0MIghrC+dCumza2E86bwnj3PpyPKWj9ImCW
-   i2zfx5JYRr4UGxONZ3QLkn01EVXrYzhAOecZj4Dd4b6ZSYdojBEEBRi0a
-   g==;
-X-CSE-ConnectionGUID: jByE/pSPSzaswhum6VvZvA==
-X-CSE-MsgGUID: 5Cyg2YVUTvSYJo8AxW4SXA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="48090994"
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="48090994"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 08:29:41 -0700
-X-CSE-ConnectionGUID: YzU27J2ySvuWW45LWD51FQ==
-X-CSE-MsgGUID: zcEnZjfDTm2RZuW6qMnLTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,278,1736841600"; 
-   d="scan'208";a="125742493"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.5])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2025 08:29:35 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 26 Mar 2025 17:29:31 +0200 (EET)
-To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
-cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
-    Lucas De Marchi <lucas.demarchi@intel.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v6 6/6] drm/xe/pf: Set VF LMEM BAR size
-In-Reply-To: <20250320110854.3866284-7-michal.winiarski@intel.com>
-Message-ID: <bdfe5413-547a-67b0-b822-9852d3f94cc5@linux.intel.com>
-References: <20250320110854.3866284-1-michal.winiarski@intel.com> <20250320110854.3866284-7-michal.winiarski@intel.com>
+	s=arc-20240116; t=1743003176; c=relaxed/simple;
+	bh=QfFKHtPjhnsVEIyS3XzuUBPioCudwzrqL/GSdI3aKa8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MrR3+R4CLs0PFi1jp19GbhXBjZyEif48CJhoGDk2avP0TCepY6sHjgKngSInTbbjmRLWH1VBUrd1zBuEKfEjQFDFluG+SROraYYlaasND8PED7opOLEfB3Y3UCD5JWsrOsTK6VKaaVwTciv45zDo+HKzvWrGCfQFSes9nk2sCa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=h9CXDAO1; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A914B210C320;
+	Wed, 26 Mar 2025 08:32:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A914B210C320
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743003174;
+	bh=5dEhZXpJIQDYjKp44/xRbSpFUSHWMuuE2+/dnL6k/lU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=h9CXDAO1ZrAH2QmyDPeZh9D575YKdAtnwcuvQxr+2h+cWYYQEZjW0lE1GdOfjm8h0
+	 WTL8D4VFuAxQbfVPl4CANyl7MImvzKVJrV1UkEJ6ZDQRtMcF1/oXVnUIM04GP/33qq
+	 SoTHHkrgirDlGx5JlRlVXulkrfzJWIihHsu4hJNE=
+Message-ID: <f8ccc874-e153-4b78-8159-9923dfa77fc3@linux.microsoft.com>
+Date: Wed, 26 Mar 2025 08:32:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1374919276-1743002971=:942"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v6 10/11] ACPI: irq: Introduce
+ acpi_get_gsi_dispatcher()
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: arnd@arndb.de, bhelgaas@google.com, bp@alien8.de,
+ catalin.marinas@arm.com, conor+dt@kernel.org, dan.carpenter@linaro.org,
+ dave.hansen@linux.intel.com, decui@microsoft.com, haiyangz@microsoft.com,
+ hpa@zytor.com, joey.gouly@arm.com, krzk+dt@kernel.org, kw@linux.com,
+ kys@microsoft.com, lenb@kernel.org, lpieralisi@kernel.org,
+ manivannan.sadhasivam@linaro.org, mark.rutland@arm.com, maz@kernel.org,
+ mingo@redhat.com, oliver.upton@linux.dev, robh@kernel.org,
+ ssengar@linux.microsoft.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
+ tglx@linutronix.de, wei.liu@kernel.org, will@kernel.org,
+ yuzenghui@huawei.com, devicetree@vger.kernel.org, kvmarm@lists.linux.dev,
+ linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org,
+ apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com
+References: <20250315001931.631210-1-romank@linux.microsoft.com>
+ <20250315001931.631210-11-romank@linux.microsoft.com>
+ <CAJZ5v0g1bX_3zRUUf-=euuvhm1dPB6bjEXPH9O-kMGcZjRspcw@mail.gmail.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <CAJZ5v0g1bX_3zRUUf-=euuvhm1dPB6bjEXPH9O-kMGcZjRspcw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1374919276-1743002971=:942
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On Thu, 20 Mar 2025, Micha=C5=82 Winiarski wrote:
+On 3/26/2025 7:55 AM, Rafael J. Wysocki wrote:
+> On Sat, Mar 15, 2025 at 1:19 AM Roman Kisel <romank@linux.microsoft.com> wrote:
+[...]
+> 
+> This basically looks OK to me except for a couple of coding style
+> related nits below.
+> 
 
-> LMEM is partitioned between multiple VFs and we expect that the more
-> VFs we have, the less LMEM is assigned to each VF.
-> This means that we can achieve full LMEM BAR access without the need to
-> attempt full VF LMEM BAR resize via pci_resize_resource().
->=20
-> Always set the largest possible BAR size that allows to fit the number
-> of enabled VFs.
->=20
-> Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
-> ---
->  drivers/gpu/drm/xe/regs/xe_bars.h |  1 +
->  drivers/gpu/drm/xe/xe_pci_sriov.c | 22 ++++++++++++++++++++++
->  2 files changed, 23 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/xe/regs/xe_bars.h b/drivers/gpu/drm/xe/regs/=
-xe_bars.h
-> index ce05b6ae832f1..880140d6ccdca 100644
-> --- a/drivers/gpu/drm/xe/regs/xe_bars.h
-> +++ b/drivers/gpu/drm/xe/regs/xe_bars.h
-> @@ -7,5 +7,6 @@
-> =20
->  #define GTTMMADR_BAR=09=09=090 /* MMIO + GTT */
->  #define LMEM_BAR=09=09=092 /* VRAM */
-> +#define VF_LMEM_BAR=09=09=099 /* VF VRAM */
-> =20
->  #endif
-> diff --git a/drivers/gpu/drm/xe/xe_pci_sriov.c b/drivers/gpu/drm/xe/xe_pc=
-i_sriov.c
-> index aaceee748287e..57cdeb41ef1d9 100644
-> --- a/drivers/gpu/drm/xe/xe_pci_sriov.c
-> +++ b/drivers/gpu/drm/xe/xe_pci_sriov.c
-> @@ -3,6 +3,10 @@
->   * Copyright =C2=A9 2023-2024 Intel Corporation
+Appreciate taking time to review this very much! Will squash the nits in
+the next version.
+
+>> ---
+>>   drivers/acpi/irq.c   | 15 +++++++++++++--
+>>   include/linux/acpi.h |  5 ++++-
+>>   2 files changed, 17 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/acpi/irq.c b/drivers/acpi/irq.c
+>> index 1687483ff319..8eb09e45e5c5 100644
+>> --- a/drivers/acpi/irq.c
+>> +++ b/drivers/acpi/irq.c
+>> @@ -12,7 +12,7 @@
+>>
+>>   enum acpi_irq_model_id acpi_irq_model;
+>>
+>> -static struct fwnode_handle *(*acpi_get_gsi_domain_id)(u32 gsi);
+>> +static acpi_gsi_domain_disp_fn acpi_get_gsi_domain_id;
+>>   static u32 (*acpi_gsi_to_irq_fallback)(u32 gsi);
+>>
+>>   /**
+>> @@ -307,12 +307,23 @@ EXPORT_SYMBOL_GPL(acpi_irq_get);
+>>    *     for a given GSI
+>>    */
+>>   void __init acpi_set_irq_model(enum acpi_irq_model_id model,
+>> -                              struct fwnode_handle *(*fn)(u32))
+> 
+> Please retain the indentation here and analogously below.
+> 
+>> +       acpi_gsi_domain_disp_fn fn)
+>>   {
+>>          acpi_irq_model = model;
+>>          acpi_get_gsi_domain_id = fn;
+>>   }
+>>
+>> +/**
+>> + * acpi_get_gsi_dispatcher - Returns dispatcher function that
+>> + *                           computes the domain fwnode for a
+>> + *                           given GSI.
+>> + */
+> 
+> I would format this kerneldoc comment a bit differently:
+> 
+> /*
+>   * acpi_get_gsi_dispatcher() - Get the GSI dispatcher function
+>   *
+>   * Return the dispatcher function that computes the domain fwnode for
+> a given GSI.
 >   */
-> =20
-> +#include <linux/bitops.h>
-> +#include <linux/pci.h>
-> +
-> +#include "regs/xe_bars.h"
->  #include "xe_assert.h"
->  #include "xe_device.h"
->  #include "xe_gt_sriov_pf_config.h"
-> @@ -62,6 +66,18 @@ static void pf_reset_vfs(struct xe_device *xe, unsigne=
-d int num_vfs)
->  =09=09=09xe_gt_sriov_pf_control_trigger_flr(gt, n);
->  }
-> =20
-> +static int resize_vf_vram_bar(struct xe_device *xe, int num_vfs)
-> +{
-> +=09struct pci_dev *pdev =3D to_pci_dev(xe->drm.dev);
-> +=09u32 sizes;
-> +
-> +=09sizes =3D pci_iov_vf_bar_get_sizes(pdev, VF_LMEM_BAR, num_vfs);
-> +=09if (!sizes)
-> +=09=09return 0;
-> +
-> +=09return pci_iov_vf_bar_set_size(pdev, VF_LMEM_BAR, __fls(sizes));
-> +}
-> +
->  static int pf_enable_vfs(struct xe_device *xe, int num_vfs)
->  {
->  =09struct pci_dev *pdev =3D to_pci_dev(xe->drm.dev);
-> @@ -88,6 +104,12 @@ static int pf_enable_vfs(struct xe_device *xe, int nu=
-m_vfs)
->  =09if (err < 0)
->  =09=09goto failed;
-> =20
-> +=09if (IS_DGFX(xe)) {
-> +=09=09err =3D resize_vf_vram_bar(xe, num_vfs);
-> +=09=09if (err)
-> +=09=09=09xe_sriov_info(xe, "Failed to set VF LMEM BAR size: %d\n", err);
+> 
+>> +acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void)
+>> +{
+>> +       return acpi_get_gsi_domain_id;
+>> +}
+>> +EXPORT_SYMBOL_GPL(acpi_get_gsi_dispatcher);
+>> +
+>>   /**
+>>    * acpi_set_gsi_to_irq_fallback - Register a GSI transfer
+>>    * callback to fallback to arch specified implementation.
+>> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+>> index 4e495b29c640..abc51288e867 100644
+>> --- a/include/linux/acpi.h
+>> +++ b/include/linux/acpi.h
+>> @@ -336,8 +336,11 @@ int acpi_register_gsi (struct device *dev, u32 gsi, int triggering, int polarity
+>>   int acpi_gsi_to_irq (u32 gsi, unsigned int *irq);
+>>   int acpi_isa_irq_to_gsi (unsigned isa_irq, u32 *gsi);
+>>
+>> +typedef struct fwnode_handle *(*acpi_gsi_domain_disp_fn)(u32);
+>> +
+>>   void acpi_set_irq_model(enum acpi_irq_model_id model,
+>> -                       struct fwnode_handle *(*)(u32));
+>> +       acpi_gsi_domain_disp_fn fn);
+>> +acpi_gsi_domain_disp_fn acpi_get_gsi_dispatcher(void);
+>>   void acpi_set_gsi_to_irq_fallback(u32 (*)(u32));
+>>
+>>   struct irq_domain *acpi_irq_create_hierarchy(unsigned int flags,
+>> --
+> 
+> With the above addressed, please feel free to add
+> 
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> to the patch and route it along with the rest of the series.
+> 
 
-If you intended this error to not result in failure, please mention it=20
-in the changelog so that it's recorded somewhere for those who have to=20
-look up things from the git history one day :-).
+Will do, thanks!
 
-> +=09}
-> +
->  =09err =3D pci_enable_sriov(pdev, num_vfs);
->  =09if (err < 0)
->  =09=09goto failed;
+> Thanks!
 
-Seems pretty straightforward after reading the support code on the PCI=20
-core side,
+-- 
+Thank you,
+Roman
 
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
---8323328-1374919276-1743002971=:942--
 
