@@ -1,166 +1,114 @@
-Return-Path: <linux-pci+bounces-24789-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24790-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFCB3A71ECA
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 20:07:07 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8991DA71F08
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 20:22:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E82CB3B8943
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 19:06:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6F1533AFC0F
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 19:22:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5A8524CEEE;
-	Wed, 26 Mar 2025 19:06:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEA2B2505D4;
+	Wed, 26 Mar 2025 19:22:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTiaoPUT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kELVlrOb"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1804A28F4;
-	Wed, 26 Mar 2025 19:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94A015990C
+	for <linux-pci@vger.kernel.org>; Wed, 26 Mar 2025 19:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743016019; cv=none; b=LW5i8X0o7ECsneNNaJJV38hM88vnamW6EnYLW1E3Ujtp/Sb9xu9pie3d0TUGQ+9zMZztvMkOB0aGvrYjEK03jG2tdbw27OMjxLafFsopahnXHJCB++hyTgZXk3h/GpzxPTnB4PCKYGm+xO3eq1MSUz5E+ngu+pgZh6hMstYryV8=
+	t=1743016931; cv=none; b=lh/2wjiOe+OJ1rbL6O01cYAd5+RGGtBemZXE7BltS4sAY2Hv0os9+/wRVuHWmVrDPQBbtzG1oebl8gMEuGw3YCx7P2hM3pGy3pQEs6vVgVMCE5MINP/7eiiSQCLQ986UptrBtFbvjiQOmjlCcZ3aM5ITLydVjNgA0D867w5ZMvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743016019; c=relaxed/simple;
-	bh=xyxvZkbyduy9RmkQ3WSeK6/tBzwWPMrfRAoEJmlTmuE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XPRRJFjPZ3tUZYhJqdvDZd0R9AMtbCAd8+xdFbD0GIZGfj3M5E0oPAFCl2P4X22rz4lV8eA84QefGpIFAgwufX5pXGfzVoKUR2kwGfNH04vWnBETPlUfd0+bln6nnvcdmHvzmIQuQKXFAcN5BSRco/y/xIRzgXfmHXwc5lJ5an0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aTiaoPUT; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30bfed67e08so2255321fa.2;
-        Wed, 26 Mar 2025 12:06:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743016016; x=1743620816; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xyxvZkbyduy9RmkQ3WSeK6/tBzwWPMrfRAoEJmlTmuE=;
-        b=aTiaoPUTXhlz0TWPtz+Y44JteqxaDLfRo2CXuDryjK/5Nef0PPICQBIUqY4YIhhTmU
-         i/w8AGV/lTNgNPYNX0ulVacg3IZAwpb6vEJa0jVz/TlWZXtmQYm0aiLO6pLvjVuav4Ul
-         aH3Pg62nzVPkXRmdrPv/aC9LoddjkxcuySQGlvO0ongu1fTtJhytIDkGYSLrZAH+wCzb
-         lCCEFdGDf8Q8bPct91/6D1LpnBe7A3cSuDnbyBc+lVvCuB6VfGrOJGFC9TyjjrbsZJuL
-         HZfrlp4hsiIl7BQsJz1daj/KyLt8q4ovKxNCr0DYCClG6RWXmaMkv3qg5Y4dQskrykJ/
-         Kx+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743016016; x=1743620816;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xyxvZkbyduy9RmkQ3WSeK6/tBzwWPMrfRAoEJmlTmuE=;
-        b=u7ASLFfjWU3+C4Hbd8ojDjidpvZA8E9wg5fXGtu2Oyu30jJjtQEfukZEmelEyUDeq/
-         Z1lIlXAz3uMD4JTFy0F+/LzxsZtXqhOUzy4H5EqzQDxiZ9YwhnhCENa15bBZsEat3w6u
-         ltwzmAMnK5RmkpsvYfOf1CybN1wToLbV5XeHBA3VwreXwYz5eDaXyS9nyQtiXQI77F9T
-         J2WzxuT+WLstCyq7zfKiqO6m62c/a/3w2INuw/SldqSxSXAR5SzZFnCRR3BCRUAk7KQo
-         qhorjFKUy2cY1CNfRaDzW8fQfY8UUvKvobnQuJmWk06mgqaPQhJ5fEDDAFHAyJMKlZ6L
-         S4zw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjstPFP8AutMsI7KFZy2sxUcI8lpofjeaDtujc5nZb1KM+DSaDgiEDV5Ysph54mc2TjPjX0cKg@vger.kernel.org, AJvYcCUlWlE3gQ4V5qI4mnZA5OfZsXjeEkP0FnyYhEn/0UI5vw09LXjkBETsMNzz6dGwJMPRAlM0yLhyGIWY@vger.kernel.org, AJvYcCUxHO5cL5xOtYBwQ4ssyK3pbgD2Sx5vPX0/kCnar1Bt68z3AFL4c4bpwVyqynkAOWCpjAg95aaruIlAGIsG@vger.kernel.org, AJvYcCUzHrs9hhZPhJHdc8T2hQSfJtlajJClJaaTZZXirNG0rLunB5dfXHvrXxPP4ZrmRYVcf8al2TMrf496wno=@vger.kernel.org, AJvYcCV83ZrNc7qR83APq23ziwqVAqEMJHhCntcCJ2HPdrnQgF9M4z/LnkKOZRQmA7MMggUgv4aX1wtSOP6f@vger.kernel.org, AJvYcCW0MGnWhUKfW7WLe9XElSZ0h6mA+cr+9XzQYCzItXbThwc1R+4GA4KWxlm7eYWhA4LQBWDsQOH8dSP8Mka/ECg=@vger.kernel.org, AJvYcCWCLHlsCqrgPCLB4YzC8gG2XkkJwu2g8DsAqwyr/Kh6P6FfhT0tKSAIIJs7LpXZM+O244iUptxoqmHNfbmd@vger.kernel.org, AJvYcCWRPQKLEotIxfWvm7jfKl4WN43SEV3G8V1tEtQFTmCnMSyHUG5Ld5vnER6ofRGzWKRbMBrBRb3uCP8x9RZnoKPh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzvx5V1cHjnkhzKrKY5P8Z1exSSq9Zq4BWDAxyt0QTmSthHycBf
-	gy970IOCP5mamWPyrxXOnU9xa0jcvhuiTPwtTM6oJZPXKPjgFlubsskDMFAbqWKF6PJL2i+MFp6
-	40fnd+cwpaboLAdwkBQnCtluHI/A=
-X-Gm-Gg: ASbGnctj9WgJZ7cCM3YPJaNxw5v6UwiJ+j7IeNOxGRp0wt24ooHXhLAGEJ0S9u9NLk2
-	fylV1BlBEoN3wpI8nMsMBO288/mmCph6NfqixLXVGcNuti+otdsyTbQzLqwTZHRRC+F2JYBLQd3
-	Iyi3B6OtmlcYHkTt1/o8iDkT32YFBnWeh6IYgFQMHXXQ==
-X-Google-Smtp-Source: AGHT+IHDYgVo8MGaQ9BkG5+GyvT0+QD0Hn1jlcmz/IJfG8ECGaCOtoHRacJDMqa8JoaxSiLcVOV3Dc1Whxt+lMktHno=
-X-Received: by 2002:a05:651c:4ca:b0:30b:e440:dbdb with SMTP id
- 38308e7fff4ca-30dc5f45b99mr3646831fa.37.1743016015848; Wed, 26 Mar 2025
- 12:06:55 -0700 (PDT)
+	s=arc-20240116; t=1743016931; c=relaxed/simple;
+	bh=xQbUaVqFmSlQNiSKlzvwaOqbK38pBb7T2zUyaxNmQdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BoAgtPUKwtSdspBJxQxb7BpJMu/2eh5CmXZUHo+9jwOYXDv3nDMS0lQv/gvuTFiVm1odD1uer5RDGDtoTl06/mXTh9duM9GVP3ZgJ1ShnOrCjlNvoPxkvcAPGp2gOaW+T6PNR0Eqevl1olo4Jf2j7Ta+i4FLBnpalcZUQP9mrcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kELVlrOb; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32FCFC4CEE2;
+	Wed, 26 Mar 2025 19:22:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743016931;
+	bh=xQbUaVqFmSlQNiSKlzvwaOqbK38pBb7T2zUyaxNmQdI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kELVlrOba4rMsJWbhStPu5l4H7AVfoU2M/EJYPpJco49JX74M1FUAaeqI8fIp2AVo
+	 7Tu7yN51l34xRsEBrnv0ZteEmdKLp83SnbpLX9kc3Xz/sJpSMCMJg3WkDMgJsihk/k
+	 /Cc5dhqnFwAy0MujyUHYMTzJtR8u5dP/J6HFFGzQEBWZQdAHcF79TSgkrNmP2ul4WF
+	 ZWC2f+WamV1UdHoqm+oTwlLwCjg/inC2U8HHO1SKVC+Y0KEG51p95fFOmjNPn74LId
+	 BaeK3o+FAzbLfKgAHFUYxxmVad25KVW16FjaM1BA3ahbYNXmp5hJngZsKUB/jlDOka
+	 JQ3GS0kQCrmTA==
+Date: Wed, 26 Mar 2025 20:22:08 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: bhelgaas@google.com, kw@linux.com, linux-pci@vger.kernel.org,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH 3/4] misc: pci_endpoint_test: Let
+ PCITEST_{READ,WRITE,COPY} set IRQ type automatically
+Message-ID: <Z+RT4BxBzK68Crac@x1-carbon>
+References: <20250318103330.1840678-6-cassel@kernel.org>
+ <20250318103330.1840678-9-cassel@kernel.org>
+ <20250320152732.l346sbaioubb5qut@thinkpad>
+ <Z91pRhf50ErRt5jD@x1-carbon>
+ <20250322022450.jn2ea4dastonv36v@thinkpad>
+ <2D76B56E-00A1-4AC1-B7B5-4ABEA53267CF@kernel.org>
+ <01676177-4757-41D3-BEC2-F61C0C7C3F69@kernel.org>
+ <bbgwy44nxf4h4hiycyue56uzfktfqzzwvw73bovtz42uklhuri@ejqrp5kjqbqh>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325-ptr-as-ptr-v7-0-87ab452147b9@gmail.com>
- <20250325-ptr-as-ptr-v7-7-87ab452147b9@gmail.com> <D8POWLFKWABG.37BVXN2QCL8MP@proton.me>
- <CAJ-ks9mUYw4FEJQfmDrHHt0oMy256jhp7qZ-CHp6R5c_sOCD4w@mail.gmail.com>
- <D8PPIYIJCNX8.13VPQULEI0ALN@proton.me> <CAJ-ks9k6220j6CQSOF4TDrgY9qq4PfV9uaMXz1Qk4m=eeSr5Ag@mail.gmail.com>
- <D8Q4MSXXZ7OI.1NC226MO02VSN@proton.me> <CAJ-ks9nHKpQPuSBypXTSATYhbAFkQTJzUq8jN0nu4t=Kw+0xxg@mail.gmail.com>
- <D8QCK3CQES3Y.3LTZ4MVO5B3KT@proton.me> <CAJ-ks9nKT2PUDm6=b4AB1QUWwwvcqPn7Vz60=c0B+uFMZrqPew@mail.gmail.com>
- <D8QDOBUM6NF0.CGJY7ZA5KD9S@proton.me>
-In-Reply-To: <D8QDOBUM6NF0.CGJY7ZA5KD9S@proton.me>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 26 Mar 2025 15:06:19 -0400
-X-Gm-Features: AQ5f1Jou-JUIkYYZHmN0n0DjKziFwOI3NizL41USvJvQpjSfAnBz0gZwusssOLs
-Message-ID: <CAJ-ks9ntTxBM=c5nUZWGv3MoRt-LveBchn-c1Xy-DGap7fLVRA@mail.gmail.com>
-Subject: Re: [PATCH v7 7/7] rust: enable `clippy::ref_as_ptr` lint
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
-	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bbgwy44nxf4h4hiycyue56uzfktfqzzwvw73bovtz42uklhuri@ejqrp5kjqbqh>
 
-On Wed, Mar 26, 2025 at 1:36=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
-e> wrote:
->
-> On Wed Mar 26, 2025 at 5:57 PM CET, Tamir Duberstein wrote:
-> >
-> >
-> > In the current code you're looking at, yes. But in the code I have
-> > locally I'm transmuting `[u8]` to `BStr`. See my earlier reply where I
-> > said "Hmm, looking at this again we can just transmute ref-to-ref and
-> > avoid pointers entirely. We're already doing that in
-> > `CStr::from_bytes_with_nul_unchecked`".
->
-> `CStr::from_bytes_with_nul_unchecked` does the transmute with
-> references. That is a usage that the docs of `transmute` explicitly
-> recommend to change to an `as` cast [1].
+On Wed, Mar 26, 2025 at 09:47:18PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Mar 26, 2025 at 10:39:50AM -0400, Niklas Cassel wrote:
+> > 
+> > Can all Qcom platforms raise INTx in EP mode?
+> > 
+> 
+> Yes, all Qcom platforms support INTx. But if we start setting the flag to true,
+> there is no need to set it to false as that would be the default value. So let's
+> just set 'true' for INTx capable platforms and assume others as not supported. I
+> know that you had added justification in the commit message, but I think we'd
+> have to drop the below commit:
+> 
+> PCI: dw-rockchip: Endpoint mode cannot raise INTx interrupts
 
-RIght. That guidance was written in 2016
-(https://github.com/rust-lang/rust/pull/34609) and doesn't present any
-rationale for `as` casts being preferred to transmute. I posted a
-comment in the most relevant issue I could find:
-https://github.com/rust-lang/rust/issues/34249#issuecomment-2755316610.
+Well, with that logic, we should also remove the following:
 
-> No idea about provenance still.
+$ git grep "msi_capable = false"
+drivers/pci/controller/dwc/pcie-tegra194.c:     .msi_capable = false,
 
-Well that's not surprising, nobody was thinking about provenance in
-2016. But I really don't think we should blindly follow the advice in
-this case. It doesn't make an iota of sense to me - does it make sense
-to you?
+$ git grep "msix_capable = false"
+drivers/pci/controller/dwc/pci-dra7xx.c:        .msix_capable = false,
+drivers/pci/controller/dwc/pci-imx6.c:  .msix_capable = false,
+drivers/pci/controller/dwc/pci-imx6.c:  .msix_capable = false,
+drivers/pci/controller/dwc/pcie-artpec6.c:      .msix_capable = false,
+drivers/pci/controller/dwc/pcie-qcom-ep.c:      .msix_capable = false,
+drivers/pci/controller/dwc/pcie-rcar-gen4.c:    .msix_capable = false,
+drivers/pci/controller/dwc/pcie-tegra194.c:     .msix_capable = false,
+drivers/pci/controller/dwc/pcie-uniphier-ep.c:          .msix_capable = false,
+drivers/pci/controller/dwc/pcie-uniphier-ep.c:          .msix_capable = false,
+drivers/pci/controller/pcie-rcar-ep.c:  .msix_capable = false,
+drivers/pci/controller/pcie-rockchip-ep.c:      .msix_capable = false,
 
->
-> [1]: https://doc.rust-lang.org/std/mem/fn.transmute.html#alternatives
->
-> >> I tried to find some existing issues about the topic and found that
-> >> there exists a clippy lint `transmute_ptr_to_ptr`. There is an issue
-> >> asking for a better justification [1] and it seems like nobody provide=
-d
-> >> one there. Maybe we should ask the opsem team what happens to provenan=
-ce
-> >> when transmuting?
-> >
-> > Yeah, we should do this - but again: not relevant in this discussion.
->
-> I think it's pretty relevant.
+Feel free to send patches that removes all:
+{msi_capable,msix_capable,intx_capable}=false;
 
-It's not relevant because we're no longer talking about transmuting
-pointer to pointer. The two options are:
-1. transmute reference to reference.
-2. coerce reference to pointer, `as` cast pointer to pointer (triggers
-`ptr_as_ptr`), reborrow pointer to reference.
+I will be happy to help out with reviews.
 
-If anyone can help me understand why (2) is better than (1), I'd
-certainly appreciate it.
+However, I'm slightly leaning towards thinking that there actually is some
+value in _explicitly_ seeing that something is not supported.
+
+
+Kind regards,
+Niklas
 
