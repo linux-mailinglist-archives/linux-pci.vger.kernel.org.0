@@ -1,339 +1,262 @@
-Return-Path: <linux-pci+bounces-24716-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24717-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D941A70EAA
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 02:56:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A778A70EF4
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 03:24:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18F70177545
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 01:56:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ACF443B65EB
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 02:23:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0C5E74040;
-	Wed, 26 Mar 2025 01:56:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48EEC76034;
+	Wed, 26 Mar 2025 02:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2gU6XF5x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2123.outbound.protection.outlook.com [40.107.255.123])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2054.outbound.protection.outlook.com [40.107.94.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866684086A;
-	Wed, 26 Mar 2025 01:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2F67F9;
+	Wed, 26 Mar 2025 02:23:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742954211; cv=fail; b=iSIJyXA/hm21HeYHm/jeNfLYQ0rK5Fo1UjM11Pm8tp2rWFQc6oJIpOn/e/iU+hlHOk449inEo2fRj2QAflUwUPF2baDaBipZ6MxG19GNLMGVFezzr0O883DsvxqtSmbfUP3CE35pkiDL9187SrMNpAdH2i9XoE0LIeQeHUFMVZo=
+	t=1742955799; cv=fail; b=d3QU9yilbsjH8nJPL3IOvjQSCWY3aSkameHET1PcDxyXXUC2JaogCn46uSr7lIbRWvvNCJVNpBMXZ3nBfKcECJ4ztgeX/goxdc4SfpGKOniH7Ej6UhhZ8aL1hrPNfMMY43794YbUYhX4tmz2y4MCpxzv7HwNfL90vS2vvCVqqZg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742954211; c=relaxed/simple;
-	bh=PA2pS+GKLbDTH8FyKEqCwS03134DTnjlBItude3iZn0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YhRZ6b+QDsruEuuL+GVOw0wx7ZPZ+shReEbgtfLpPuAafWQLaTzbuGW6waw47liSQyPSj4W7XPKtJE5/dxGPE7zWBrAMqFaoPH6EUtWvPEQuTqnjUFKTrng6P8PhQ6RGf3RetaKmVsKG7ybRJj4HGQXmG+lJjkuwl0OG6Bprzms=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.255.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+	s=arc-20240116; t=1742955799; c=relaxed/simple;
+	bh=8+FbF1z649XZLIhXkHeIdtpibNVwqPWAp2TGX94qDJ4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=dl+Wi0CMQ37aqg8cO+XT3oR0w3qG80KN8CzAPnV5Blc4+fePVUTmJa6RRo3ZLPEFra2H6HWqUkNe/T+0zope6F1KFKNUkR5N5A6MqjVY4DhxobLtvNHdoLuflZrRn3FEp3UHanzE8acDtjjhqNotjqabv96SeZd2p/2CtgNWiZ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2gU6XF5x; arc=fail smtp.client-ip=40.107.94.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LnkrTRahDGFEmqZ+RXfHVSZL00tu+DQ//Q0s6n+DC7vaEn8DqnLRPDAk6pEge9/3aYSnSzSF0uyKYMUSFg3SaUF0AVbZga6S8ceMKQ7QXS+Vbn19RbaCQIETD63GhsoGm8kUoTTaekXSlBZvB0iS6B4BI2LUeXZGJeoGAkWoL4ur40Xt6imBMa1TIWrIPRIBus/HdiqpxUMdeJxun0KUAmEw+jpZc1VubITv2cA3uAQszhFJ1F1SqWDhiuQBeVu43dI1q3x/GF5h66DOauZyo01RjP8VkNqmnuxVRyyHjAxJezGj1S3ap2bsmb6pKi+0LMBQG3GCIUjtf+76VL6BhQ==
+ b=BKlsWLjIQGqtVwpWGlHsT2DvF1oF9s3Du9HTZ+1DQS272OxoDn0Q1vCc8nLgVd+05xjB+vQ+RCubxEW48JLjteY0gDDO5VgypgH4CH8iP0mYBGSHwYA0vm52uXBfdmqRPIvkxjE8bZdUvTt+EXJvOhfLWwRkdvBjYLz1jh3YdRJU1F7EYZNgizRcYlnATngBduqzRcw7F2KEEmok3LUeDayl+wBK46Wowi0BWfmaASx4cj3uc78A6ciRiDKS0QiBVv2lmbbUbzQEXQFXyc5bd4pWQiKDPyuqseKP+nNVwtHBRDhXfNlfCdlRc7AI3pkC0p0luFL5pfTzt3Uk1DtPpQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PugqvdqHcuCBZvNsgBPKrpw/hgFa+/7KSaVbwkc1FK4=;
- b=eJA3WIwj3wTMXHVKz+Dc9D0TIXA5QFL9POvi/ukhlvuLimEjUluyrwTN/p3onx0iA8W0WPCQ5agj3tIN3ioJYhY3Fse4UXOw3RPQbIAmNDgw+YmDJSw8yimN5/x2CeJvl/UpolIewjJhtKLm1jsjMVrnm64a0SWB+t+8j0t2pXguSOn+CvvwTSU5fWg0xSEziemiFMSMqJddfjC5gsjzVRy40r6Doo+vf8zg+4goDNoLq8wkNbDupzUvOO3WkrT982Tbrn9lCKfWYS4svUOA3sSg0W/dBh3Eqbbt7kAtIJ6KaSRKQUq+1+MBaqfQ0w0D6mPaVwH22POn15qjS8PTYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=bootlin.com smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from TY2PR0101CA0026.apcprd01.prod.exchangelabs.com
- (2603:1096:404:8000::12) by SEZPR06MB6689.apcprd06.prod.outlook.com
- (2603:1096:101:17c::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Wed, 26 Mar
- 2025 01:56:42 +0000
-Received: from TY2PEPF0000AB88.apcprd03.prod.outlook.com
- (2603:1096:404:8000:cafe::27) by TY2PR0101CA0026.outlook.office365.com
- (2603:1096:404:8000::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.42 via Frontend Transport; Wed,
- 26 Mar 2025 01:56:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- TY2PEPF0000AB88.mail.protection.outlook.com (10.167.253.11) with Microsoft
+ bh=8+FbF1z649XZLIhXkHeIdtpibNVwqPWAp2TGX94qDJ4=;
+ b=UDEZbchxAyRGGS0qrhjb5+9a61JwnPyvzTK6c5UYP6cWYLIvWJectvWBzLjDryp21K7SV4/Do/hmheK0QOTuLrc3h8ScBD5d8D9NZwagxlZlb6iL1VbL4iQRNESn15RZyE+n0+574A5yqhMLJKCOgLsnHUBP2y4QoCZbQd2DNPeW8i6lWrixy2PiGH3k3LvZVQEHeCZly7uGzF9OYy+WU8qTezks6J6jsiFtKSH2MBIfuRmmIgMQqceyL9BWXXVAi1SsKs1bizQ1GwjfgKBmwxtKIcNDpBCBMEEQLimVwgilm0fc0a6ugifu/Qn5/MnBjl02D4Pq+v0ur8Nlg/7vZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8+FbF1z649XZLIhXkHeIdtpibNVwqPWAp2TGX94qDJ4=;
+ b=2gU6XF5xz29+oARpjZqYQJmqjFImGGAnWYuOmLLG772w/x6sCy14N34a4MpnNRt3vrRjE7J1WBXQ2ln4oTagFPZfbR/tJz45Kyi15GR/mKAvDtXBn/8KlQpVtkI+lVhUfemHCpCJP8E/fnSqP7XHoEEa9ORD4zrm4a/HrWp4Zvs=
+Received: from DM4PR12MB6158.namprd12.prod.outlook.com (2603:10b6:8:a9::20) by
+ DS7PR12MB5790.namprd12.prod.outlook.com (2603:10b6:8:75::18) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.20 via Frontend Transport; Wed, 26 Mar 2025 01:56:41 +0000
-Received: from [172.16.64.208] (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 4934A4160CA0;
-	Wed, 26 Mar 2025 09:56:40 +0800 (CST)
-Message-ID: <9ba07a35-ec55-49ba-9484-e2ab9e511534@cixtech.com>
-Date: Wed, 26 Mar 2025 09:56:39 +0800
+ 15.20.8534.42; Wed, 26 Mar 2025 02:23:12 +0000
+Received: from DM4PR12MB6158.namprd12.prod.outlook.com
+ ([fe80::b639:7db5:e0cc:be5e]) by DM4PR12MB6158.namprd12.prod.outlook.com
+ ([fe80::b639:7db5:e0cc:be5e%4]) with mapi id 15.20.8534.040; Wed, 26 Mar 2025
+ 02:23:12 +0000
+From: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "manivannan.sadhasivam@linaro.org"
+	<manivannan.sadhasivam@linaro.org>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "cassel@kernel.org" <cassel@kernel.org>
+CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
+ Michal" <michal.simek@amd.com>, "Gogada, Bharat Kumar"
+	<bharat.kumar.gogada@amd.com>, "Havalige, Thippeswamy"
+	<thippeswamy.havalige@amd.com>
+Subject: RE: [PATCH v4 1/2] dt-bindings: PCI: xilinx-cpm: Add reset-gpios for
+ PCIe RP PERST#
+Thread-Topic: [PATCH v4 1/2] dt-bindings: PCI: xilinx-cpm: Add reset-gpios for
+ PCIe RP PERST#
+Thread-Index: AQHbl+frJF7RvdoXyE2lj0XSnTqI+bN4pyWAgASzLNCABJAbgIAC0X/Q
+Date: Wed, 26 Mar 2025 02:23:12 +0000
+Message-ID:
+ <DM4PR12MB615829F0D68B77C42A442DCFCDA62@DM4PR12MB6158.namprd12.prod.outlook.com>
+References: <20250318092648.2298280-1-sai.krishna.musham@amd.com>
+ <20250318092648.2298280-2-sai.krishna.musham@amd.com>
+ <afe7947b-ed71-40d0-aa2e-b16549fc6b7d@kernel.org>
+ <DM4PR12MB6158F761C80CA82B59FC0634CDDB2@DM4PR12MB6158.namprd12.prod.outlook.com>
+ <39968d11-1b7d-4453-8350-26ed31dae02f@kernel.org>
+In-Reply-To: <39968d11-1b7d-4453-8350-26ed31dae02f@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=86a912ae-014a-488d-9cf1-618c991f88e2;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-03-26T02:22:04Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM4PR12MB6158:EE_|DS7PR12MB5790:EE_
+x-ms-office365-filtering-correlation-id: f1656e71-273c-466d-595d-08dd6c0d288e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?d0VXc21TSGgzWW5SaWFaL1hKV0NnaWhkUDJReXAyc0VuVEY1MmxNazc0UHJN?=
+ =?utf-8?B?VVNsaHAwM2NsWE1ZcVRMdEtReDFTcHRKNWx5MnlxN1hMS2lEU3lSK2w5WXJC?=
+ =?utf-8?B?Rk9DY0hzNllqWTU2V2dDRU94MHlJNVBJNXM5bFhkcThOeGkvN2JFUFpjOEpZ?=
+ =?utf-8?B?QktnRHFHNUp6TTVUYTVlMG5GU2lGeWRnenZuNGpUc203UDZzUUJhcTlhMkd5?=
+ =?utf-8?B?ZXJTNW5MZUZDYldUVjhDS2ZTcjNVUUJXSzRzenk4SWpCZ1psbU1NckNrbGVN?=
+ =?utf-8?B?bUJnU3RZWkI0L29nWldHREg2QWN6OGFvZkxTMkpkRWR0ZzVkV08wd211OWpq?=
+ =?utf-8?B?cGlQRzc4NFJOMTEwMFBmN2c0T0k0ZW5QbThDZXZqVUFxL3lMSzNpZmhlWW13?=
+ =?utf-8?B?TlJZVmQyeXdPUytMSEJNaFhxdU9QekVEMWVlVmZjN0p2Wm5MWUlFS21uTkNY?=
+ =?utf-8?B?cklxNEJ0Y3JCVGR0Y3FHdkdoTE5nY0F6c0NxdTFCVzZXSFhzMzFmTUdNWnA3?=
+ =?utf-8?B?amt6MFpOaFJSb25Ud20xMWpkaTRjNktTU2NhcDF1REgzUjNKYjlSR3k0NnFQ?=
+ =?utf-8?B?OEcwZFlxajZ2V0ZpN3lTOUZ3WHdDTWUreE9zbnpzWWFFN2JkcUJBVU5nb3ho?=
+ =?utf-8?B?bW5BbXpDNFZrYXFrWDFoaFRKcndRaWhCU3c0WTNST2VrckV6VjN6a3Nhang2?=
+ =?utf-8?B?YzIzUmd6bFJxSlpmL2ZYcm1jL3c1WC9oTnJYNFVnTFRHeSswcHJpWlhnb3ox?=
+ =?utf-8?B?RWFkN0NhTzRSV3BYMElNSnZKOUQxalhtTE03TERhaEE0d1F1NlNORXc2d00y?=
+ =?utf-8?B?a1BoUFBoQmNpKzl6cHlDQU1SL3VLUzJhdVRJeU95ZlVGUm9FU3FoTWE3bmF2?=
+ =?utf-8?B?YTFRZXYxdkpuemd0RlJvQjljOXhRRHJGWjdBZzR1Z2JrazN4aURWSlhjTHBN?=
+ =?utf-8?B?bjk1dG55UEk1Q3Q1OVBjaWo0MFpJQ285ZENEc1NFaUpudERuWjk4MjdyWFhj?=
+ =?utf-8?B?bGVaMWw3VVZSMU1scWV0MG94WHdFL3pnc2pRTFo4VEFqMEgzald3SE1RRGQy?=
+ =?utf-8?B?TUpBWTRFOWJ4eEZjOXpHZkdLYWxkRFBpZ05QVDQyUkFDZTZjYW44S0tZampx?=
+ =?utf-8?B?MkNOd1hTNUREbHU0NE1VR256cEd1QkF2UTdmSkRXZG5HWnROVVNkNDhpaVcy?=
+ =?utf-8?B?SHZuR0ovUVM2bkRiSGNOZ3Y5TCtSTkppenp2VHg5SWU0aTFEbi9EU3BNR3Ru?=
+ =?utf-8?B?MTREcm9ya0VaRThEYzduYmhtdHFlVVpDZDZNQytQM0sra1RWV1Z1dVdCMlhz?=
+ =?utf-8?B?SzFCVTJFRE9OMytGSTVQbEY3Y0pSenFEMW5TSENJQmZCWko2dkJsWW5KYm4z?=
+ =?utf-8?B?R3hTOUVLL1BwbDNNUy96U1ZaUzJtTlNXajMvZ2xRb2kzVUNoNWtIanczYTRI?=
+ =?utf-8?B?NWpaTm9NVHRtWEkvcXJ0MVBmYUVsTUhVejdLbTdZV2x2Uk05L3NYOE14Y2kz?=
+ =?utf-8?B?U2ExN1h1QllzYjM1Yjhjb1hjTmI4cEx4cnlYNmpWK3NPREFxODd4eWs0QVJJ?=
+ =?utf-8?B?ajQ5UDgxSXJrT1VHc3JzOUg4TWdBc0dzT3VDdmx6cTIrS1BsbDR1dk1ZbHBz?=
+ =?utf-8?B?N2M0WFRxNTJjUmszejY0SzEzcmg5N0E1SDREWFFWMUh6c0gvRllGNEdRZDRB?=
+ =?utf-8?B?NnZkRzNTbHUvM0l2U1k1ckRVZ0RiTDBDWUJ1emlSUGJHcUUxaVNJVzl5dTR3?=
+ =?utf-8?B?UXk3OWZGQUJzYVVBdHN6Zm9jTDlZdngxditySkNZQjZ1ZWlmWEpPV3RlZVJo?=
+ =?utf-8?B?bFBTc2J1SkoxQmZHZkRZeE50UGozWXNIUjFCWXg4NXU5R2E4UEppR3VnbXdq?=
+ =?utf-8?B?SU9TR0tIWjZoOVJlZjBwaHNvTGlEaUtkNXJvd212Z3FVY1E9PQ==?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6158.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?bUlLT2FwYVhVeFIzamo0bFk1WEhUM3Nub3Jmd0dmMWNQaXA2WjNaV3RFZUZo?=
+ =?utf-8?B?Njlkb3pWbFRVc01TV01YMGd0MHYxMmJFcXlncmtXY3pteFhIY2tFRkpRdUVp?=
+ =?utf-8?B?UDFwSGtCeFVaQWlsVTVVeVRoSFU3d0V0eDVjZGE4T1JhWjVjL0p1MnNWTUxU?=
+ =?utf-8?B?dlpEZWFUc1ZHcWZqTlNqS3htYzJWWjFJOGl2eURVTzZoVnJ1MGhrODBMVkdR?=
+ =?utf-8?B?eHBHcEo5WmxBb2hUTmNGcnVyTnF2N25iSnVYOU8zZzlDNlFpdDYzY0M2ZFZ2?=
+ =?utf-8?B?c1AyOW5FMWgyVXRiOUZsV3J0Y0tobEFmdTdnbXVYbnRWbGtHWVdGNXlJYnly?=
+ =?utf-8?B?OFVBWXppVmJRWjJ3d0QyWERSUlFyc0ZteWdOY2hqS1FqUW8xM2JsQ2d2c1NX?=
+ =?utf-8?B?THdsbWYwem5JNUhmRERQQWx0cTJmenp3aUZ2SGt1OHp5cHRXdUtWWGRMaklQ?=
+ =?utf-8?B?N2pZcFpyNFNybzIybEpuR1doUEJjNHpGNkVpUGZXL1V4L082OVlhTmxxQkFR?=
+ =?utf-8?B?d2RiT1lpUGlMcm8vT3MrNVFvOVVBU0xvSUY2c240dnNFbUE0QXRwUUZMUit3?=
+ =?utf-8?B?T3JqaHV3MjNaOUV6Rko5TVlSdmpCOHN5ZGFselFDKzBubjhnSzlLNnVDeVVs?=
+ =?utf-8?B?clp1VVpndjZIMEhOSDF1ckR3Mm51ZlppeUFmN2xaSFNTc0l4WXJqYndZQjRZ?=
+ =?utf-8?B?b0RLd1VHSWQybUsxWHpCSlhJak5jcnJaQ2tpNzByWjBTdlltbUUveWJsemNw?=
+ =?utf-8?B?b0xreHJyWlFSWGZYQVMrNG1wMUZMaFV5ZHFtajNEMlNUV2U3VE9XUXhwT1BM?=
+ =?utf-8?B?eWhiUkNSY200R3M0WUV4OXBTdTJDZFJsd3NHaWx2MW9yNitKbFZNYXdlV3pL?=
+ =?utf-8?B?dnN0YVlRNk5mZXkrOThmTWtHaitEUXZKU0IzTVFlUDlTWDYranQweXBsc1hi?=
+ =?utf-8?B?SE5zbHpFRkdiY2x6Z2RWRyszSDFtOTRLT0w5ZXVzd2pvTU14dy9BZEk0NjVY?=
+ =?utf-8?B?OUxtemJRbHFTZXZJT3p5Ky9nYmVRWkdwaW10bjNrRW4yYldyaVVySFp1RWk2?=
+ =?utf-8?B?N1hKdGVZUUEzODkvRnNzWGk4bzVicVR6b3cwOStGM1Q5VWI5K0JIbzc1dXZ3?=
+ =?utf-8?B?SkFIV0NudnN3aDgwYmtjSkIzWjRUeGlTR1daNVJhT2RwV0Fad3F2RS8vZ0I1?=
+ =?utf-8?B?Z2xsamFraTZCZXNxSXErZlBBUWlacWF2VHBnSkZJQ29KWGRlQ0VTaXREZmhG?=
+ =?utf-8?B?RHB3V2Y1S2RoTEwyUEpYL2pJT0Q3Y0d6TkdzcERBblc5Vk85VmxYUWsyZlVB?=
+ =?utf-8?B?enhoMDNUQXI4VE9yVldBRmRFUmpyVXRuY0lMRHlOdkJxSzZ6b0phdDAvSnh2?=
+ =?utf-8?B?a0I3dGNYYnFIUG5Ld3hsUXFRRE9rVHdDVmV2WlBiRThwZVh1RGhFQ2FwNHVB?=
+ =?utf-8?B?QWI0MHZyQVpvZ3gwNkhxcThoZS9NSFVOMzB5bUdZckpIckptckVla0JNNVRz?=
+ =?utf-8?B?ekk1aVB5ZDJ2Z1JyM3JtaWZ4djVURjZKeVF4UTFDa2lCSVh4aGZvdEFrMy9w?=
+ =?utf-8?B?KzNVbEo1TllCN2hvNEl5TjJ2ZmdkUVNNZXJCbW1rRmdqVVJnbFRtT1pvbm5k?=
+ =?utf-8?B?NlBNdGdMN1RBZWMyRFBtY3p4S3Qya2FybkRGbThERGlqY08vcFkzRy8rZjBO?=
+ =?utf-8?B?Qy9ucDZEOGJKZlkwc2NFRzVCN3AvY2pFMk03TlpJaWdLUnprcTA1dEtZeTFn?=
+ =?utf-8?B?bzlpOXVHQWdlOStkUm8rRTBHMlBtaGQwaEJNMUxwRi9xZVIrQi9jZEI1WEZK?=
+ =?utf-8?B?c3FWWkMxb3dMZXRlR3J4UFdPZVNyT2NBd3paRkJYeVRMRTkvNUxHS0JvT1lh?=
+ =?utf-8?B?a0ZKSWpmMjhGWE1UcVlBcUxVaXYwcVlZNGdIcFBSUEFPKzB2WGU1TTlFditY?=
+ =?utf-8?B?cW5GUk04Q1c2eFpoc0JrMVBScVcxYzN2Z2hVNEJsT0lBQTZjNFgxRzJIQy91?=
+ =?utf-8?B?bnllWGdCY0J5a1B3MVA3V3NIUE9ETnZHMC9xQnU5T280amJ3TGtxa2M2b3VB?=
+ =?utf-8?B?Szh0SkdFWmQ5RGpCQnRVdjVGWFJXY1Bwanp0bHB6TmFUalM0R3hYbWoybGZp?=
+ =?utf-8?Q?adIw=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] Loadable Module support for PCIe Cadence and J721E
-To: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
-Cc: Peter Chen <peter.chen@cixtech.com>,
- Siddharth Vadapalli <s-vadapalli@ti.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "vigneshr@ti.com" <vigneshr@ti.com>, "kishon@kernel.org"
- <kishon@kernel.org>, "cassel@kernel.org" <cassel@kernel.org>,
- "wojciech.jasko-EXT@continental-corporation.com"
- <wojciech.jasko-EXT@continental-corporation.com>,
- "thomas.richard@bootlin.com" <thomas.richard@bootlin.com>,
- "bwawrzyn@cisco.com" <bwawrzyn@cisco.com>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>, "srk@ti.com" <srk@ti.com>
-References: <20250307103128.3287497-1-s-vadapalli@ti.com>
- <Z9pffxeXHVOsoi4O@nchen-desktop> <20250319062534.ollh3s5t7znf5zqs@uda0492258>
- <Z9qO1f5MgNcwO5A4@nchen-desktop> <20250319095511.hf3y2c6vbbnm3ien@thinkpad>
- <a8966792-fa0e-4e8e-aceb-427819ae4ef5@cixtech.com>
- <bkw4xm4jwe3iuf6sixxl4udosea3bhlwogfua66naf5echbyzv@dlwcbscedh6w>
- <96940e1e-a395-49bc-ac29-7ca86bfb8ad7@cixtech.com>
- <2sxwud7mllpbtymfvlw5sshv3fhz3rpk37x23x5ywpzle2qlg4@7bsqhcimnfqp>
-Content-Language: en-US
-From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <2sxwud7mllpbtymfvlw5sshv3fhz3rpk37x23x5ywpzle2qlg4@7bsqhcimnfqp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB88:EE_|SEZPR06MB6689:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2db02264-cf18-42e9-7f6d-08dd6c09743d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bFBrQmtWWWR1ZG43K1c5c1pnVGFpSEwvUGpzSThUQkprK2x2a2w2cDdMQS9y?=
- =?utf-8?B?SzdrbC9QQmFPcklCUUdXQkRGZVlyT1p5Q2hmTEFtMzlTTGNOZDIrZWF2VWE0?=
- =?utf-8?B?RmVPUTZpUU43SEhPTFhUMk9hN3pUTDltT3VTNC9NWEphT0lLNFlHZGNEUmls?=
- =?utf-8?B?NnRQMDlseVFZQ2tKT3c4UHhrNDNIeGIvNUxSQkhUVUgwaGlvTzJGV0NBWlFw?=
- =?utf-8?B?cVJ4RUZ0c2sveW9Yc2w5d1Z4MmN0VXZGTUd6SUwzMi9uZXlNajFVazNQaHlJ?=
- =?utf-8?B?RTh4YUwzTDNsc3BrbFF1cHhqWGN5L3U3Mm1RS00xQ2VkMkhCUDhIZGlQTUow?=
- =?utf-8?B?TStWbFV5cHIzMnhiTUVoWHAyYVRyZHptbXJHelNsaW9iTlN2WiswSE9jUHRl?=
- =?utf-8?B?dU41bVRiMUNudDRPOGNrWkplcEhMYUlUcmJUUUlCVW5UVGVYZG1sdkpBdmF4?=
- =?utf-8?B?TlRzWVhDdWV5dVlhTTIwZXVnRlUxNGRvTXRtMjF5OUpYb0NBRDdZSHdUL2Vq?=
- =?utf-8?B?a3BGUTlVVzVBc0ZvMS85bTZjbjVCeE9ubUdmMDdqNkoxeEliNFRYSG1KUWNq?=
- =?utf-8?B?Uzd5Q1pzWGp5SzEzb3hkbDhZWG05UDh3K0g2T0FXNnlIVVJCQjY2Zy91N3V2?=
- =?utf-8?B?Vk5VREg1RVM3ZHcySms4Um5ydEp3YndzNSt5c1c2VjFHNkRvTWliM3pKeTdD?=
- =?utf-8?B?aUR6Vy9mWWdjQlVPbzRkWU1aR3M2aTdWZEp1Vm9QdlJueXc3ay8rSllQQk5U?=
- =?utf-8?B?SFdmRU1yeVR1TW15czE2c2lPakxJMTZSQ3F0UDREMTJXRDA1c00vcU1ZYXNv?=
- =?utf-8?B?dWgzWkJRS0tDZVl6SzM2Y1g0MVFhV0FWcTBIcVY2RnNhcTh5bmFtRHJMOUpk?=
- =?utf-8?B?QTl1VUJkenpGODJWT3lLMjFYSDJTUnhkTDB0TzZwTWp0alQ4dnpOSVRHbUlH?=
- =?utf-8?B?Vkh5OVZpd0E1ZHo5MkFndmJNM2VMU0pwaVpnZ1ozYnJ0Nk1vbm1YZEl2TTB4?=
- =?utf-8?B?WEJGOGtNRGJyVHRJbXNyeUJ2aDR0cmlESGlUMHk2YmNYS2xiV2hRdFM0RTh2?=
- =?utf-8?B?clA4ckxlQjk1SngzU3B4WFJxMDgxNHZoUVIzaVZBdUdSVzFSdXh6V2Q5MlJm?=
- =?utf-8?B?U3lZNXRzQ1BjWndiV1RWR3B1TmtDZFo2MzNCSGRwRDlDRmxYeDJlcVF2U2gy?=
- =?utf-8?B?RmN4dDlvaXVTZzJrSW5NZTBLOFM3V0NpNS9yUVppem5ydGhqSHA4YkpRMmJG?=
- =?utf-8?B?NUoyOFlXQ1RJQVozVTlIeVpMYnNUNUNpYm1mZnF2cnFVd2RyNEJYeEVxWTda?=
- =?utf-8?B?dXlKTkl1TSt4bkdjQmRvdFc2amtsbVRPbGx6LzZjM1hzMHBWSU16Z010SXBn?=
- =?utf-8?B?R1RaOW40bmppNGhPOWdiNXJDUy9KQWtaWlFPT241blA5WXNWNmdNa2cwbnpM?=
- =?utf-8?B?enZvekJhM2hOUVI2bnBlR1FUL0pReENJbjlVZXVaZEJMVE0yYW1YNmJYR0Ev?=
- =?utf-8?B?SE5BWGp5c2N6Y1VqOG1vMVhUSFozUXNCc2NkL3BmQ3FBUFVSNTloNS9MSFg3?=
- =?utf-8?B?cUcydTMxdE5KWUN2RVlKaFlwZndhVk1TWWVUNVFEdXJXT0RGeS9IK2ljaWNG?=
- =?utf-8?B?ckw5Tk9pUWxjTndrV2RXSHkzS3E5YkZ3K1djbHZDd2dXMUhUQ2JaNWJHK0Q5?=
- =?utf-8?B?WlVSZ0xDK2k5djU2WHA0SmU0ZjZQQTZhNWo2ZHBxNkxrcDBqS2phTDcyOFZm?=
- =?utf-8?B?dzBxWGtWcDEwb09lN1ZvWXBEY1Vab0hVUS9PTmtLM3dnOW16SUE1bUhWV01S?=
- =?utf-8?B?bjNVd2c0YkI4ak5odGMxdnkyZ0RxdDJ4cWJHWHJJWjc0dEgzSUNsNXdBV0ph?=
- =?utf-8?B?WmJoejZXN3dsSjdhQUw0TUlsK3hadHFacVNrMWhCOFMvVnJHTE5La01NbEFu?=
- =?utf-8?B?ZWdZVWRkQ3NvVS9ITHZyQUMvcEZJdGJYenNhU1diQll2NUY3K1daQm5aeVZN?=
- =?utf-8?Q?TNbRIPBj0yt29AqHKIGgWHUmnX7ytY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2025 01:56:41.4826
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6158.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1656e71-273c-466d-595d-08dd6c0d288e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2025 02:23:12.6881
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2db02264-cf18-42e9-7f6d-08dd6c09743d
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: TY2PEPF0000AB88.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB6689
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: epGRPdn1Vy1PW5Lh6/TPUKtBZ8Yc4kAWTxo9v9H8Q4xJxJnlW+DMZNgEP57qqSqOucNc6XteU0P8phXzUpkeoQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5790
 
-
-
-On 2025/3/26 00:36, manivannan.sadhasivam@linaro.org wrote:
-> EXTERNAL EMAIL
-> 
-> On Wed, Mar 26, 2025 at 12:03:01AM +0800, Hans Zhang wrote:
->>
->>
->> On 2025/3/25 23:26, manivannan.sadhasivam@linaro.org wrote:
->>> EXTERNAL EMAIL
->>>
->>> On Thu, Mar 20, 2025 at 10:14:02AM +0800, hans.zhang wrote:
->>>>
->>>>
->>>> On 2025/3/19 17:55, manivannan.sadhasivam@linaro.org wrote:
->>>>> EXTERNAL EMAIL
->>>>>
->>>>> On Wed, Mar 19, 2025 at 05:31:01PM +0800, Peter Chen wrote:
->>>>>> On 25-03-19 14:25:34, Siddharth Vadapalli wrote:
->>>>>>>>>
->>>>>>>>> Hello,
->>>>>>>>>
->>>>>>>>> This series enables support to build the PCIe Cadence Controller drivers
->>>>>>>>> and the PCI J721E Application/Wrapper/Glue driver as Loadable Kernel
->>>>>>>>> Modules. The motivation for this series is that PCIe is not a necessity
->>>>>>>>> for booting the SoC, due to which it doesn't have to be a built-in
->>>>>>>>> module. Additionally, the defconfig doesn't enable the PCIe Cadence
->>>>>>>>> Controller drivers and the PCI J721E driver, due to which PCIe is not
->>>>>>>>> supported by default. Enabling the configs as of now (i.e. without this
->>>>>>>>> series) will result in built-in drivers i.e. a bloated Linux Image for
->>>>>>>>> everyone who doesn't have the PCIe Controller.
->>>>>>>>
->>>>>>>> If the user doesn't enable PCIe controller device through DTS/ACPI,
->>>>>>>> that's doesn't matter.
->>>>>>>
->>>>>>> The Linux Image for arm64 systems built using:
->>>>>>> arch/arm64/configs/defconfig
->>>>>>> will not have support for the Cadence PCIe Controller and the PCIe J721e
->>>>>>> driver, because these configs aren't enabled.
->>>>>>>
->>>>>>>>
->>>>>>>>> @@ -209,6 +209,12 @@ CONFIG_NFC=m
->>>>>>>>>     CONFIG_NFC_NCI=m
->>>>>>>>>     CONFIG_NFC_S3FWRN5_I2C=m
->>>>>>>>>     CONFIG_PCI=y
->>>>>>>>> +CONFIG_PCI_J721E=m
->>>>>>>>> +CONFIG_PCI_J721E_HOST=m
->>>>>>>>> +CONFIG_PCI_J721E_EP=m
->>>>>>>>> +CONFIG_PCIE_CADENCE=m
->>>>>>>>> +CONFIG_PCIE_CADENCE_HOST=m
->>>>>>>>> +CONFIG_PCIE_CADENCE_EP=m
->>>>>>>>
->>>>>>>> The common Cadence configuration will be select if the glue layer's
->>>>>>>> configuration is select according to Kconfig.
->>>>>>>>
->>>>>>>> Please do not set common configuration as module, some user may need
->>>>>>>> it as build-in like dw's. Considering the situation, the rootfs is at
->>>>>>>> NVMe.
->>>>>>>
->>>>>>> The common configuration at the moment is "DISABLED" i.e. no support for
->>>>>>> the Cadence Controller at all. Which "user" are you referring to? This
->>>>>>> series was introduced since having the drivers built-in was pushed back at:
->>>>>>
->>>>>> We are using Cadence controller, and prepare upstream radxa-o6 board
->>>>>> whose rootfs is at PCIe NVMe.
->>>>>>
->>>>>
->>>>> It doesn't matter. Only criteria AFAIK to build the driver as built-in in
->>>>> defconfig is that it should be a depedency for console. For some time, storage
->>>>> was also a dependency, but for sure PCIe is not.
->>>>>
->>>>> Moreover, CONFIG_BLK_DEV_NVME is built as a module in ARM64 defconfig. So it
->>>>> doesn't matter if you build PCIe controller driver as a built-in or not. You
->>>>> need to load the NVMe driver somehow.
->>>>>
->>>>> So please use initramfs.
->>>>>
->>>>>> You could build driver as module for TI glue layer, but don't force
->>>>>> other vendors using module as well, see dwc as an example please.
->>>>>>
->>>>>
->>>>> DWC is a bad example here. Only reason the DWC drivers are not loadable is due
->>>>> to the in-built MSI controller implementation as irqchip. People tend to build
->>>>> the irqchip controllers as always built-in for some known issues. Even then some
->>>>> driver developers prefer to built them as loadable module but suppress unbind to
->>>>> avoid rmmoding the module.
->>>> Hi Mani,
->>>>
->>>> I think the MSI RTL module provided by Synopsys PCIe controller IP is not a
->>>> standard operation. The reason for this MSI module is probably to be used by
->>>> some cpus that do not have ITS(LPI interrupt) designed. Or RISC-V SOC, etc.
->>>> MSI is defined as an MSI/MSIX interrupt that starts with a direct write
->>>> memory access.
->>>>
->>>
->>> Yeah, DWC MSI controller is not a great design. The older ones are even more
->>> horrible (using SPI interrupts for reporting AERs etc...).
->>
->> Hi Mani,
->>
->> Currently Synopsys and Cadence provide SPI interrupts for reporting AERs
->> etc... This IP vendor only provides an alternative approach that actually
->> requires SOC design companies to design according to PCIe SPEC and conform
->> to linux OS software behavior.
->>
->> I have a way to workaround AER is SPI interrupt. It can also use aer.c
->> drivers. However, I have been afraid to submit patch, because this is a
->> problem of SOC designers themselves, which does not conform to the port
->> driver of linux os (aer.c). So it will certainly not be accepted.
->>
-> 
-> Right. There is not clean way afaik.
-> 
->>
->>>
->>>> There are also SOC vendors that do not use the built-in MSI RTL module.
->>>> Instead, MSI/MSIX interrupts are transmitted directly to the GIC's ITS
->>>> module via the GIC V3/V4 interface. For example, RK3588, they do not use the
->>>> PCIe controller built-in MSI module. Some Qualcomm platforms also modify the
->>>> PCIe controller's built-in MSI modules to connect each of them to 32 SPI
->>>> interrupts to the GIC. I was under the impression that the SDM845 was
->>>> designed that way. The only explanation is that SPI interrupts are faster
->>>> than LPI interrupts without having to look up some tables.
->>>>
->>>
->>> If ITS is available, platforms should make use of that. There is no way DWC MSI
->>> is superior than ITS. We are slowly migrating the Qcom platforms to use ITS.
->>>
->>
->> I agree with you.
->>
->>> And btw, Qcom DWC MSI controller raise interrupts for AER/PME sent by the
->>> downstream components. So enabling ITS is uncovering AER errors which were
->>> already present :)
->>>
->>>> So the dwc driver can also compile to ko?
->>>>
->>>
->>> Only if the MSI support is made as a build time option and there is a guarantee
->>> that the platform will never use it (which is difficult to do as the driver can
->>> only detect it during the runtime based on devicetree).
->>
->> Anyway, I would still like to request that the Cadence PCIe controller
->> driver not be in module mode. Cadence also has a lot of customers, we are
->> one of them, it's just that many customers don't have upstream. We are about
->> to upstream.
->>
->> This series was introduced since having the drivers built-in was pushed back
->> at:
->> https://lore.kernel.org/linux-arm-kernel/20250122145822.4ewsmkk6ztbeejzf@slashing/
->>
->> Hans:
->> The Cadence PCIe root port driver can not be made into module mode because
->> of TI's idea. We should consider the ideas of other customers. If you have
->> to make it module mode, I think all peripheral drivers should be module
->> mode. Maybe I'm being direct, but that's probably the case.
->>
-> 
-> It is not about one company's idea to make the driver as a module. Linux kernel
-> community in general strongly encourages developers to build the drivers as
-> module unless there are exceptions (which I have already quoted). If you keep
-> building the drivers as built-in, it will result in a bloated kernel image. For
-> sure vendors would want *their* interested drivers to be built-in so that they
-> do not need to package the drivers in initramfs/rootfs, but that's not a
-> practice which is encouraged by the Linux community.
-> 
-> So I'm in favor of making the PCIe controllers as module if there are no
-> technical issues.
-> 
-
-Hi Mani,
-
-Okay, you must be more thoughtful than I am.
-
-Best regards,
-Hans
-
-
+W0FNRCBPZmZpY2lhbCBVc2UgT25seSAtIEFNRCBJbnRlcm5hbCBEaXN0cmlidXRpb24gT25seV0N
+Cg0KSGkgS3J6eXN6dG9mLA0KDQpUaGFua3MsIEkgaGF2ZSByZXNvbHZlZCB0aGUgQUJJIGJyZWFr
+IGFuZCBhZGRlZCBjcG1fY3J4IGF0IHRoZSBlbmQuDQpJIHdpbGwgc2VuZCBpbiB2NiBzZXJpZXMu
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3J6eXN6dG9mIEtvemxv
+d3NraSA8a3J6a0BrZXJuZWwub3JnPg0KPiBTZW50OiBNb25kYXksIE1hcmNoIDI0LCAyMDI1IDEy
+OjUwIFBNDQo+IFRvOiBNdXNoYW0sIFNhaSBLcmlzaG5hIDxzYWkua3Jpc2huYS5tdXNoYW1AYW1k
+LmNvbT47DQo+IGJoZWxnYWFzQGdvb2dsZS5jb207IGxwaWVyYWxpc2lAa2VybmVsLm9yZzsga3dA
+bGludXguY29tOw0KPiBtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGluYXJvLm9yZzsgcm9iaEBrZXJu
+ZWwub3JnOyBrcnprK2R0QGtlcm5lbC5vcmc7DQo+IGNvbm9yK2R0QGtlcm5lbC5vcmc7IGNhc3Nl
+bEBrZXJuZWwub3JnDQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFNpbWVr
+LCBNaWNoYWwgPG1pY2hhbC5zaW1la0BhbWQuY29tPjsgR29nYWRhLCBCaGFyYXQNCj4gS3VtYXIg
+PGJoYXJhdC5rdW1hci5nb2dhZGFAYW1kLmNvbT47IEhhdmFsaWdlLCBUaGlwcGVzd2FteQ0KPiA8
+dGhpcHBlc3dhbXkuaGF2YWxpZ2VAYW1kLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NCAx
+LzJdIGR0LWJpbmRpbmdzOiBQQ0k6IHhpbGlueC1jcG06IEFkZCByZXNldC1ncGlvcyBmb3IgUENJ
+ZQ0KPiBSUCBQRVJTVCMNCj4NCj4gQ2F1dGlvbjogVGhpcyBtZXNzYWdlIG9yaWdpbmF0ZWQgZnJv
+bSBhbiBFeHRlcm5hbCBTb3VyY2UuIFVzZSBwcm9wZXIgY2F1dGlvbg0KPiB3aGVuIG9wZW5pbmcg
+YXR0YWNobWVudHMsIGNsaWNraW5nIGxpbmtzLCBvciByZXNwb25kaW5nLg0KPg0KPg0KPiBPbiAy
+MS8wMy8yMDI1IDEwOjQyLCBNdXNoYW0sIFNhaSBLcmlzaG5hIHdyb3RlOg0KPiA+IFtBTUQgT2Zm
+aWNpYWwgVXNlIE9ubHkgLSBBTUQgSW50ZXJuYWwgRGlzdHJpYnV0aW9uIE9ubHldDQo+ID4NCj4g
+PiBIaSBLcnp5c3p0b2YsDQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
+Pj4gRnJvbTogS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPg0KPiA+PiBTZW50
+OiBUdWVzZGF5LCBNYXJjaCAxOCwgMjAyNSAzOjIzIFBNDQo+ID4+IFRvOiBNdXNoYW0sIFNhaSBL
+cmlzaG5hIDxzYWkua3Jpc2huYS5tdXNoYW1AYW1kLmNvbT47DQo+ID4+IGJoZWxnYWFzQGdvb2ds
+ZS5jb207IGxwaWVyYWxpc2lAa2VybmVsLm9yZzsga3dAbGludXguY29tOw0KPiA+PiBtYW5pdmFu
+bmFuLnNhZGhhc2l2YW1AbGluYXJvLm9yZzsgcm9iaEBrZXJuZWwub3JnOw0KPiA+PiBrcnprK2R0
+QGtlcm5lbC5vcmc7DQo+ID4+IGNvbm9yK2R0QGtlcm5lbC5vcmc7IGNhc3NlbEBrZXJuZWwub3Jn
+DQo+ID4+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZzsgbGludXgtDQo+ID4+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFNpbWVrLCBNaWNo
+YWwgPG1pY2hhbC5zaW1la0BhbWQuY29tPjsgR29nYWRhLA0KPiA+PiBCaGFyYXQgS3VtYXIgPGJo
+YXJhdC5rdW1hci5nb2dhZGFAYW1kLmNvbT47IEhhdmFsaWdlLCBUaGlwcGVzd2FteQ0KPiA+PiA8
+dGhpcHBlc3dhbXkuaGF2YWxpZ2VAYW1kLmNvbT4NCj4gPj4gU3ViamVjdDogUmU6IFtQQVRDSCB2
+NCAxLzJdIGR0LWJpbmRpbmdzOiBQQ0k6IHhpbGlueC1jcG06IEFkZA0KPiA+PiByZXNldC1ncGlv
+cyBmb3IgUENJZSBSUCBQRVJTVCMNCj4gPj4NCj4gPj4gQ2F1dGlvbjogVGhpcyBtZXNzYWdlIG9y
+aWdpbmF0ZWQgZnJvbSBhbiBFeHRlcm5hbCBTb3VyY2UuIFVzZSBwcm9wZXINCj4gPj4gY2F1dGlv
+biB3aGVuIG9wZW5pbmcgYXR0YWNobWVudHMsIGNsaWNraW5nIGxpbmtzLCBvciByZXNwb25kaW5n
+Lg0KPiA+Pg0KPiA+Pg0KPiA+PiBPbiAxOC8wMy8yMDI1IDEwOjI2LCBTYWkgS3Jpc2huYSBNdXNo
+YW0gd3JvdGU6DQo+ID4+PiBDaGFuZ2VzIGZvciB2MjoNCj4gPj4+IC0gQWRkIGRlZmluZSBmcm9t
+IGluY2x1ZGUvZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmggZm9yIFBFUlNUIw0KPiA+Pj4gcG9sYXJp
+dHkNCj4gPj4+IC0gVXBkYXRlIGNvbW1pdCBtZXNzYWdlDQo+ID4+PiAtLS0NCj4gPj4+ICAuLi4v
+YmluZGluZ3MvcGNpL3hpbGlueC12ZXJzYWwtY3BtLnlhbWwgICAgICAgfCAyMSArKysrKysrKysr
+KysrKy0tLS0tDQo+ID4+PiAgMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDUgZGVs
+ZXRpb25zKC0pDQo+ID4+Pg0KPiA+Pj4gZGlmZiAtLWdpdA0KPiA+Pj4gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3hpbGlueC12ZXJzYWwtY3BtLnlhbWwNCj4gPj4+IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS94aWxpbngtdmVyc2FsLWNwbS55
+YW1sDQo+ID4+PiBpbmRleCBkNjc0YTI0YzhjY2MuLjkwNDU5NDEzOGFmMiAxMDA2NDQNCj4gPj4+
+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kveGlsaW54LXZlcnNh
+bC1jcG0ueWFtbA0KPiA+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3BjaS94aWxpbngtdmVyc2FsLWNwbS55YW1sDQo+ID4+PiBAQCAtMjQsMTUgKzI0LDIwIEBAIHBy
+b3BlcnRpZXM6DQo+ID4+PiAgICAgIGl0ZW1zOg0KPiA+Pj4gICAgICAgIC0gZGVzY3JpcHRpb246
+IENQTSBzeXN0ZW0gbGV2ZWwgY29udHJvbCBhbmQgc3RhdHVzIHJlZ2lzdGVycy4NCj4gPj4+ICAg
+ICAgICAtIGRlc2NyaXB0aW9uOiBDb25maWd1cmF0aW9uIHNwYWNlIHJlZ2lvbiBhbmQgYnJpZGdl
+IHJlZ2lzdGVycy4NCj4gPj4+ICsgICAgICAtIGRlc2NyaXB0aW9uOiBDUE0gY2xvY2sgYW5kIHJl
+c2V0IGNvbnRyb2wgcmVnaXN0ZXJzLg0KPiA+Pj4gICAgICAgIC0gZGVzY3JpcHRpb246IENQTTUg
+Y29udHJvbCBhbmQgc3RhdHVzIHJlZ2lzdGVycy4NCj4gPj4NCj4gPj4gWW91IGNhbm5vdCBhZGQg
+aXRlbXMgdG8gdGhlIG1pZGRsZSwgdGhhdCdzIGFuIEFCSSBicmVhay4gQWRkaW5nDQo+ID4+IHJl
+cXVpcmVkIHByb3BlcnRpZXMgaXMgYWxzbyBhbiBBQkkgYnJlYWsuIFdoeSB5b3UgY2Fubm90IGFk
+ZCBpdCB0byB0aGUgZW5kIG9mIHRoZQ0KPiBsaXN0Pw0KPiA+Pg0KPiA+PiBPciBhdCBsZWFzdCBl
+eHBsYWluIEFCSSBicmVhayBpbXBhY3QgaW4gY29tbWl0IG1zZz8NCj4gPj4NCj4gPiBXaGVuIEkg
+YWRkIHByb3BlcnR5IGF0IHRoZSBlbmQsIEknbSBvYnNlcnZpbmcgZmFpbHVyZSBkdXJpbmcgZHRf
+YmluZGluZ19jaGVjay4NCj4gPiAkIG1ha2UgRFRfQ0hFQ0tFUl9GTEFHUz0tbSBkdF9iaW5kaW5n
+X2NoZWNrDQo+ID4gRFRfU0NIRU1BX0ZJTEVTPURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9wY2kveGlsaW54LXZlcnNhbC1jcA0KPiA+IG0ueWFtbA0KPiA+IERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kveGlsaW54LXZlcnNhbC1jcG0uZXhhbXBsZS5kdGI6DQo+
+IHBjaWVAZmNhMTAwMDA6IHJlZy1uYW1lczoyOiAnY3BtX2Nzcicgd2FzIGV4cGVjdGVkDQo+ID4g
+ICAgICAgICBmcm9tIHNjaGVtYSAkaWQ6DQo+ID4gaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVt
+YXMvcGNpL3hpbGlueC12ZXJzYWwtY3BtLnlhbWwjDQo+IE1heWJlIGZvciBhIGdvb2QgcmVhc29u
+Lg0KPg0KPiBCZXN0IHJlZ2FyZHMsDQo+IEtyenlzenRvZg0K
 
