@@ -1,179 +1,130 @@
-Return-Path: <linux-pci+bounces-24746-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24747-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B68DA71236
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 09:11:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B239DA7125D
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 09:14:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 282353B8660
-	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 08:11:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3FAE016F523
+	for <lists+linux-pci@lfdr.de>; Wed, 26 Mar 2025 08:14:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A80A1A5BB2;
-	Wed, 26 Mar 2025 08:11:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F3291A2C27;
+	Wed, 26 Mar 2025 08:14:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTJsqd6S"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="miqIZvAd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z74KjXxa"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8481A3164;
-	Wed, 26 Mar 2025 08:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9B61A23A9;
+	Wed, 26 Mar 2025 08:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742976664; cv=none; b=epbfSKH48mcs5/6e521+xkpxib+uWg39I1ztBxl15TitIn6DF5OQVNjoCSRbLYWARw5Fa23pJ1bQjpTp2jWWfrZooQxlffi624gHRx4uYLL/oicEExlsg9KVE7PPiFu4eoKv1gMmug+UCHRf2nUp5OeT1b1n2VOx2JVbgbQazCE=
+	t=1742976874; cv=none; b=poJLkFqy6geHxoFmLGgsD1jwTRo3/VqZUc9XSVTQ5l7ZlrboUEcWr+0U9ftxiHm2ofrdnDRNzIRm2f4GmJ7VK02E3Y+0LW/DiFFhPAkgLg9QvH+W3LOF9O6Zbeg0IWhfTl0o69IjyGLdvF4uzASti/EptOLKKhbSUtlX6ZfvyT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742976664; c=relaxed/simple;
-	bh=EePur+oXQTN/Q0Mfo8DIsWZ0cPCciOMp+Cc7Bx6MPW8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NNCwvkkKscTVkjUd86vM5QRJVCfASUZRqbavUuVJ6gGWtq468AuGkyO108m8qkEdI/gqlvK7MMM5QJY+bHfafD1HJB/k4Yj8PZlrYjBYq0dPtiT/6rL5IiPT1egYDGq38wk5YVYMon4/XeyRwYrdFmkezGqon7wih5WpBOdI3Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTJsqd6S; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1E8FEC2BC86;
-	Wed, 26 Mar 2025 08:11:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742976664;
-	bh=EePur+oXQTN/Q0Mfo8DIsWZ0cPCciOMp+Cc7Bx6MPW8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=VTJsqd6Su6ExmfRB6upU29+8pFoan9fbDwvFlz/p5cTUJMv71kNhh19ulmKM3/DMv
-	 9BXidMtPHHHLtQXWu1QCbapzfNKQOREMG2tz/z9RucMX9HsA7FKy1AmWLY8HvCoQD8
-	 hgIcLpRw+VCDaoy57HyCJdFTxQV7JbHE9HYPN8PcP5S2XnAuezatg/9IjmllXajx/d
-	 Q4L7FoWL6dvTvrQAsuI1zuGYA1a4RJjf5xeiK6sFrXZWbAxPJVgu5pd51Jz3DE9AMQ
-	 wRGBYLTaskDQPJQ9OIpkAkEHrfxPW4BtrD4GfzqihQ4QRBLo474UMfdoaKaIwRBbF1
-	 FhkTPPYt6WL3A==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D2AC36010;
-	Wed, 26 Mar 2025 08:11:04 +0000 (UTC)
-From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Wed, 26 Mar 2025 12:11:00 +0400
-Subject: [PATCH v7 6/6] arm64: dts: qcom: ipq5018: Enable PCIe
+	s=arc-20240116; t=1742976874; c=relaxed/simple;
+	bh=97GGlFoIUVFMwr67oOosvZJZX3ZQCsIweKvgIVSQmec=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GzuhH2hDe1ERF+LMcDC+yJd0FQPv76xhka+EUd7OMJuoCPb1LcrWjIfKjNFs/K6CrdpCCQ50ecn/79H4jzMHNx137DTmbDvHOBeQTFjGdvgjU8Ghb6UdCZ4YC8zdfaTiiLxrlpfpWbrpUvS8SQc4XtBYZwyq1Rr5Puz1Bf0XAFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=miqIZvAd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z74KjXxa; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742976871;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fKcMiwg131TmW5oikumSj99JLfzIDAkNS32OxdtAXEk=;
+	b=miqIZvAdfz9A0oXzn4AFAoacHJhs3i5TmQQYeqKcGNg3b3PYTpMfZpCLhq3rcNLtbpFykb
+	//mge/g1ERF/HEnyZSx8GFU8S8itHQgOWMiqijBBJm0v5Xb6xN71F5fbH90t+REvgw27nk
+	yV0pjXd3ON/XsOI5bAkoJYIUQS0bELPb6rbrIcGOx6eP0ebWCQczSZ7H2v406DUJtSjsqT
+	7wpYmQuXBJFtdMjrFzR3w07Kp4KKgHK0JJLh2SHQ9FCKzQjpT6K7/vJZAoRayWt0wNbUpw
+	beaaSQiVCkCGljV6iH/MUqAdfCi7CRVpVjtzo2J+SOCaIWKFV7b556ebFiVmww==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742976871;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fKcMiwg131TmW5oikumSj99JLfzIDAkNS32OxdtAXEk=;
+	b=Z74KjXxaq9z8YvoCfDYk+wS2LQPfyuRxNWP5wyKollJxrr/dAX/8yLGcNhPHwsclteOzcJ
+	8+DUDm2TmMgPcjBQ==
+To: Roger Pau =?utf-8?Q?Monn=C3=A9?= <roger.pau@citrix.com>
+Cc: Daniel Gomez <da.gomez@kernel.org>, =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?=
+ <jgross@suse.com>, Bjorn
+ Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org, Bjorn Helgaas
+ <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v3 3/3] PCI/MSI: Convert pci_msi_ignore_mask to per MSI
+ domain flag
+In-Reply-To: <Z-KLhBHoNBB_lr7y@macbook.local>
+References: <20250320210741.GA1099701@bhelgaas>
+ <846c80f8-b80f-49fd-8a50-3fe8a473b8ec@suse.com>
+ <qn7fzggcj6qe6r6gdbwcz23pzdz2jx64aldccmsuheabhmjgrt@tawf5nfwuvw7>
+ <Z-GbuiIYEdqVRsHj@macbook.local>
+ <kp372led6jcryd4ubpyglc4h7b3erramgzsjl2slahxdk7w575@jganskuwkfvb>
+ <Z-Gv6TG9dwKI-fvz@macbook.local> <87y0wtzg0z.ffs@tglx>
+ <87v7rxzct0.ffs@tglx> <Z-KDyCzeovpFGiVu@macbook.local>
+ <87sen1z9p4.ffs@tglx> <Z-KLhBHoNBB_lr7y@macbook.local>
+Date: Wed, 26 Mar 2025 09:14:30 +0100
+Message-ID: <87msd8yzrt.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250326-ipq5018-pcie-v7-6-e1828fef06c9@outlook.com>
-References: <20250326-ipq5018-pcie-v7-0-e1828fef06c9@outlook.com>
-In-Reply-To: <20250326-ipq5018-pcie-v7-0-e1828fef06c9@outlook.com>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Nitheesh Sekar <quic_nsekar@quicinc.com>, 
- Varadarajan Narayanan <quic_varada@quicinc.com>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Praveenkumar I <quic_ipkumar@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>, 
- 20250317100029.881286-1-quic_varada@quicinc.com, 
- 20250317100029.881286-2-quic_varada@quicinc.com, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742976660; l=2062;
- i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=OKmTrcmt0ksiQwz9dz8aVIs/K+GfvvlMVFo78Mfk/ZA=;
- b=R8864Q3jSMy5CJI5tbESukf0aiOmCd8LsHj2rv+3Q7yzjSwArSn95riZx5X2BDe0bL7voz296
- T4Q3eFT6wJTDPiWOhty/o7WwnBE8TO6A5YYCujLFOXBw13PIOlaPwU5
-X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
- pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
-X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
- with auth_id=364
-X-Original-From: George Moussalem <george.moussalem@outlook.com>
-Reply-To: george.moussalem@outlook.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Nitheesh Sekar <quic_nsekar@quicinc.com>
+On Tue, Mar 25 2025 at 11:55, Roger Pau Monn=C3=A9 wrote:
+> On Tue, Mar 25, 2025 at 11:27:51AM +0100, Thomas Gleixner wrote:
+>> On Tue, Mar 25 2025 at 11:22, Roger Pau Monn=C3=A9 wrote:
+>> > On Tue, Mar 25, 2025 at 10:20:43AM +0100, Thomas Gleixner wrote:
+>> > I'm a bit confused by what msi_create_device_irq_domain() does, as it
+>> > does allocate an irq_domain with an associated msi_domain_info
+>> > structure, however that irq_domain is set in
+>> > dev->msi.data->__domains[domid].domain rather than dev->msi.domain,
+>> > and doesn't override the default irq_domain set by
+>> > pcibios_device_add().
+>>=20
+>> The default irq domain is a parent domain in that case on top of which
+>> the per device domains are built. And those are private to the device.
+>
+> Sorry to ask, but shouldn't dev_get_msi_domain() return the specific
+> device domain rather than the parent one?  Otherwise I feel the
+> function should rather be named dev_get_parent_msi_domain().
 
-Enable the PCIe controller and PHY nodes for RDP 432-c2.
+The function returns the MSI domain pointer which is associated to the
+device. That can be either a global MSI domain or a parent MSI domain.
 
-Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
-Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Signed-off-by: George Moussalem <george.moussalem@outlook.com>
----
- arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts | 40 ++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+The few places which actually care about it have the proper checks in
+place and until we consolidate the MSI handling to per device domains,
+this will unfortunately remain slightly confusing.
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
-index 8460b538eb6a3e2d6b971bd9637309809e0c0f0c..43def95e9275258041e7522ba4098a3767be3df1 100644
---- a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
-@@ -9,6 +9,8 @@
- 
- #include "ipq5018.dtsi"
- 
-+#include <dt-bindings/gpio/gpio.h>
-+
- / {
- 	model = "Qualcomm Technologies, Inc. IPQ5018/AP-RDP432.1-C2";
- 	compatible = "qcom,ipq5018-rdp432-c2", "qcom,ipq5018";
-@@ -28,6 +30,20 @@ &blsp1_uart1 {
- 	status = "okay";
- };
- 
-+&pcie0 {
-+	pinctrl-0 = <&pcie0_default>;
-+	pinctrl-names = "default";
-+
-+	perst-gpios = <&tlmm 15 GPIO_ACTIVE_LOW>;
-+	wake-gpios = <&tlmm 16 GPIO_ACTIVE_LOW>;
-+
-+	status = "okay";
-+};
-+
-+&pcie0_phy {
-+	status = "okay";
-+};
-+
- &sdhc_1 {
- 	pinctrl-0 = <&sdc_default_state>;
- 	pinctrl-names = "default";
-@@ -43,6 +59,30 @@ &sleep_clk {
- };
- 
- &tlmm {
-+	pcie0_default: pcie0-default-state {
-+		clkreq-n-pins {
-+			pins = "gpio14";
-+			function = "pcie0_clk";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+		};
-+
-+		perst-n-pins {
-+			pins = "gpio15";
-+			function = "gpio";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+			output-low;
-+		};
-+
-+		wake-n-pins {
-+			pins = "gpio16";
-+			function = "pcie0_wake";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	sdc_default_state: sdc-default-state {
- 		clk-pins {
- 			pins = "gpio9";
+>> The XEN variant uses the original global PCI/MSI domain concept with
+>> this outrageous domain wrapper hack. A crime committed by some tglx
+>> dude.
+>
+> I see.  So the proper way would be for Xen to not override the default
+> x86 irq_domain in dev->msi.domain (so don't have a Xen PV specific
+> version of x86_init.irqs.create_pci_msi_domain) and instead do
+> something similar to what VMD does?
 
--- 
-2.49.0
+No. Xen should override it as it provides the default domain for the
+system. VMD is a special case as it provides it's own magic on top.
 
+If XEN would not override it as the global default, then you'd need a
+lot of extra hackery to do the override at the end.
 
+Thanks,
+
+        tglx
 
