@@ -1,215 +1,122 @@
-Return-Path: <linux-pci+bounces-24886-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24887-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9A00A73E58
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 20:05:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6B4BA73E60
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 20:09:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F040A3BB80B
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 19:05:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6C4F3BDA3D
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 19:09:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A36301BCA0E;
-	Thu, 27 Mar 2025 19:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3A711C5496;
+	Thu, 27 Mar 2025 19:09:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcjxtNcR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1vXCELj"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F1F1B4233;
-	Thu, 27 Mar 2025 19:05:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7889C1E505;
+	Thu, 27 Mar 2025 19:09:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743102326; cv=none; b=eC1gi4tjMQQUbdfePhF28GscgmPVh3I2i+KKv80rrXugiH64K7Q9v/XhCJCqlPjfel+ow8qAtnYNUpSzUb7Km1936sn4VlQd91SK7r80bAv7wQRjldANRXT+bafLizYy6St5lr0+RzX3AnGdiKI9WGlDu+iZbW4vKR5Mbogek94=
+	t=1743102558; cv=none; b=kfVEzBZTrRDq9O+Xr9dx1+/v0yPQmeQB5RuvyEXeLNBnvmkRwN4clUw2TJnV7z7e0hP4YEM1QaZkaAtDdX9LecX+MUPoikxDRPdpbqB9raDbLfT/9oImpTVtd+uEpjYOA+8YexFsB5e0qYdQqI3mFdnNE6uwHM4qO6lGbPJTVOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743102326; c=relaxed/simple;
-	bh=royO+w2c6N9+Ae4O+8R9pvu8Oa6kniOImOeVjP+Vgo8=;
+	s=arc-20240116; t=1743102558; c=relaxed/simple;
+	bh=7xNJ7z0ZgU3oH74BiWXl6Ym9NlEqMNNX5XOBW0Dd2bc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PkksAwGwate//vSXS9GhWJpbW3U6JibjtrMtOX8D+QlbHvPkLKKQ61EMUia4eboqeShbPH19NxNI35QJb6Ud4VuhWP8/efFXX0+L54EH2zH66lRZGpA6cyVRKsi+QKwQQ1RhQVfH7pSU7z9KV6P2lZ+6ttrhoVBikNh4+OzBgsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcjxtNcR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F967C4CEEA;
-	Thu, 27 Mar 2025 19:05:26 +0000 (UTC)
+	 To:Cc:Content-Type; b=S+niBr32UN9pR1YhzdcQut89BXyEoq129Lb/2rgOtnwezPuAB79IZqeLmONZWBmaxa0kVhM7Gbud3skNIGRkBQUg9J1nT00fqoE0f6wRMV632EPvqCZqtGbgmbkbLilx06skOuWyz2vD5aO8zcOssxU1xRf46pLV5y0a/8iDXwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1vXCELj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B755C4CEE8;
+	Thu, 27 Mar 2025 19:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743102326;
-	bh=royO+w2c6N9+Ae4O+8R9pvu8Oa6kniOImOeVjP+Vgo8=;
+	s=k20201202; t=1743102558;
+	bh=7xNJ7z0ZgU3oH74BiWXl6Ym9NlEqMNNX5XOBW0Dd2bc=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BcjxtNcRk2a5gj9Jo1yGk5c+nyUjO85bmg20mflzNVETdkhRNzqBplv5rk+268ab4
-	 ewCGop7tC8fSB/BzZh8iVsUUDVMHdIKUI/FQYOUyUiGSrAwHMTM970qh0lnbriiLG+
-	 ouyZQ8HbWjli9nOdyoojRGRXqti2QAfOQiVu95udrxkAAjUy0YeR3YeQKfiHRjvDGC
-	 wTYtGQoYLKd9WTnBW3jCgBsOTONvYNglI+yixuA59dRTOWq5y+qeX1xtllRCWFc6A/
-	 Qa75ypbXEVtgOx96jJzwIfqJg9vHwmyqZ7zukFXMcbd54WoVm8z/wtigjt36oPw3Da
-	 gA7URGLk5xUCg==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2c769da02b0so727580fac.3;
-        Thu, 27 Mar 2025 12:05:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVsDycktYPzZQuQmpHNzkgQ0MtvopmtfXFaI6cBRKwoa4aX22WE5FuCqOk8dDQ3BO1hPnmYWcGGrkt8@vger.kernel.org, AJvYcCWKdYLmxZ7fqzHPWGLe4gTKlIy7C/tGQ3o8e3TQieGUoUoGpMLtFV/WPYWF7VBzJjlbJ7yk8A5GkSLG@vger.kernel.org, AJvYcCXckiE6R+THC6S/3hhWst8hhyejYnm7sT453ykgYYFFhxv04JX84yBfQp5H9U2g7nx4J5aAHY8afw/ByHSN@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiK/Z/tNl7Vjx9gzQN3xuyRKOOelvj1t1wPGEVK4C1YI98U5Sv
-	HFNlTJhECZcyHKLHZF/47nljWSrTEn9jGqmMWx9B4GXPIBbxbXWhuzrWvAX1GslQgOWWhYYFkNH
-	hXs8WtHdB2mJNMB0LtDSdOunV5u0=
-X-Google-Smtp-Source: AGHT+IE/2aQJNTEVm5F9T/mY1JuTqpsVUFboEGKZv4C9PsotATB3DZ4H6GW/BJBYunP13VbST/P9FXomPk09bn2SKG4=
-X-Received: by 2002:a05:6870:2891:b0:29e:569a:f90d with SMTP id
- 586e51a60fabf-2c84823dfeamr3093612fac.32.1743102325633; Thu, 27 Mar 2025
- 12:05:25 -0700 (PDT)
+	b=e1vXCELj298XaWFFsV8fQULerII2krdXvsXMn4s6tsqx81RY8qqMa+h6Btuz98PCN
+	 GyT+F/aO4lZCgVoOdbkYqyVvmbYmRbYG4LVRBMPoir5hjqQ8i88VttMb10mzXcdHg7
+	 xFbKDJTZriRbm4RV6mK1PLouVf+oM2D+mS4Rb5i5LeewgSaQirNnAMHrHPY8bVno8b
+	 MoWRZ1H+cKlhJ24Wz3wmOfbEPjSj0j5ktWaQjOX8dXiHYfP3WMODtYmHiMeMXauhMT
+	 J0sZo40Ri4L2bL4tjNwONapSKpUImdlYgaa7FJrnvnC268aB+n/w3TJ7l/aSYXtuM9
+	 7fPE11wd9LZvw==
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-601e77a880eso178737eaf.2;
+        Thu, 27 Mar 2025 12:09:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUZB0je3NF+2IGx9FzJ8uafSWwgTgxBTccexRQPD00V0mtJfIyYy/E6cGunTmqZIq2NmuenNKx0mNdnkuOv@vger.kernel.org, AJvYcCUsJiatzPKi/e2x9f+be+21gvvFJu7vS0cNUA9QpQM+3d5uxxacWsXOc8euOXUeO2CTxSo6j9P7Ccc+@vger.kernel.org, AJvYcCW1KAgTyYifATOYDwlBH5DuInFen8bFB7ggDWT3JHKQYTlwNRFa8kzoXPzCGgFZJH/rhQ6W7XETYXp0@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ8kfaIOegwpHyrBLF7uiyHOv7RQZ8WIXO8tynJCpsqrxbwyfG
+	8JjOiahedRF4puyP3tzaWdXi7JTzzev+e+IGiAZt9Jz/JJfqnmJsEHHBTHyLR3QdwG8Uh+JaLBs
+	pw+W5SHbQTiY5q7/qxPMtWt3ArFE=
+X-Google-Smtp-Source: AGHT+IHVfmp4UGQiNKRP+ftRW36JY8Cf0hCDGwBPcNlNgEx2rcVubY3CUjY7zXPpPqgbNW69e+BpCzIHmqL2Ngv6Y2g=
+X-Received: by 2002:a05:6870:46a7:b0:29e:7dd8:92b1 with SMTP id
+ 586e51a60fabf-2c8481dba82mr2705377fac.24.1743102557643; Thu, 27 Mar 2025
+ 12:09:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313100658.15805-1-zhoushengqing@ttyinfo.com> <CAJZ5v0jBrTuuf_RJ45Eu2OwpRNXS-hFyL-PxGMv2K+jYVQtn2w@mail.gmail.com>
-In-Reply-To: <CAJZ5v0jBrTuuf_RJ45Eu2OwpRNXS-hFyL-PxGMv2K+jYVQtn2w@mail.gmail.com>
+References: <20250313100658.15805-1-zhoushengqing@ttyinfo.com> <20250313100658.15805-2-zhoushengqing@ttyinfo.com>
+In-Reply-To: <20250313100658.15805-2-zhoushengqing@ttyinfo.com>
 From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 27 Mar 2025 20:05:14 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gd5-QfbLhneYKJxER6XC1aDE8KxvX5j695=FdZWHc-kQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JoKVaAeBmRAv4MMHbTxt02rfq6mRQYHxuSVaxLpnITNa1jOYmm9ErObqDQ
-Message-ID: <CAJZ5v0gd5-QfbLhneYKJxER6XC1aDE8KxvX5j695=FdZWHc-kQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] Add rev 2 check for PRESERVE_BOOT_CONFIG function
+Date: Thu, 27 Mar 2025 20:09:06 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0h1goEuX83jfKYMQJ_5wbpXpt=2XW82yWJYzzyJyGwzYQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JolyiSoyEA1nM3bg6xe_rkgRaceF2hrKwPUfK2fVdhMflD1D8rkKB-8ASM
+Message-ID: <CAJZ5v0h1goEuX83jfKYMQJ_5wbpXpt=2XW82yWJYzzyJyGwzYQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] Add acpi_check_dsm() for PCI _DSM definitions
 To: Zhou Shengqing <zhoushengqing@ttyinfo.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, lenb@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, rafael@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 27, 2025 at 7:57=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
+On Thu, Mar 13, 2025 at 11:07=E2=80=AFAM Zhou Shengqing
+<zhoushengqing@ttyinfo.com> wrote:
 >
-> On Thu, Mar 13, 2025 at 11:07=E2=80=AFAM Zhou Shengqing
-> <zhoushengqing@ttyinfo.com> wrote:
-> >
-> > Per PCI Firmware Specification Revision 3.3 Table 4-7 _DSM Definitions
-> > for PCI. Preserve PCI Boot Configuration Initial Revision ID changed to=
- 2.
-> >
-> > And add acpi_check_dsm() for DSM_PCI_PRESERVE_BOOT_CONFIG.
-> >
-> > Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
-> > ---
-> > v5:follow Bjorn advice, add acpi_check_dsm for PCI _DSM.
-> > v4:Initialize *obj to NULL.
-> > v3:try revision id 1 first, then try revision id 2.
-> > v2:add Fixes tag.
-> >
-> > Fixes: 9d7d5db8e78e ("PCI: Move PRESERVE_BOOT_CONFIG _DSM evaluation to=
- pci_re")
-> > ---
-> >  drivers/pci/pci-acpi.c | 43 ++++++++++++++++++++++++++++++------------
-> >  1 file changed, 31 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > index af370628e583..4f9e0548c96d 100644
-> > --- a/drivers/pci/pci-acpi.c
-> > +++ b/drivers/pci/pci-acpi.c
-> > @@ -122,24 +122,43 @@ phys_addr_t acpi_pci_root_get_mcfg_addr(acpi_hand=
-le handle)
-> >
-> >  bool pci_acpi_preserve_config(struct pci_host_bridge *host_bridge)
-> >  {
-> > -       if (ACPI_HANDLE(&host_bridge->dev)) {
-> > -               union acpi_object *obj;
-> > +       bool rc =3D false;
-> > +       union acpi_object *obj;
+> add acpi_check_dsm() for DSM_PCI_POWER_ON_RESET_DELAY,
+> DSM_PCI_DEVICE_READINESS_DURATIONS.
 >
-> + u64 rev;
+> Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
+> ---
+>  drivers/pci/pci-acpi.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 >
-> >
-> > -               /*
-> > -                * Evaluate the "PCI Boot Configuration" _DSM Function.=
-  If it
-> > -                * exists and returns 0, we must preserve any PCI resou=
-rce
-> > -                * assignments made by firmware for this host bridge.
-> > -                */
-> > +       if (!ACPI_HANDLE(&host_bridge->dev))
-> > +               return false;
-> > +
-> > +       /*
-> > +        * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
-> > +        * exists and returns 0, we must preserve any PCI resource
-> > +        * assignments made by firmware for this host bridge.
-> > +        *
-> > +        * Per PCI Firmware r3.2, released Jan 26, 2015,
-> > +        * DSM_PCI_PRESERVE_BOOT_CONFIG Revision ID is 1. But PCI Firmw=
-are r3.3,
-> > +        * released Jan 20, 2021, changed sec 4.6.5 to say
-> > +        * "lowest valid Revision ID value: 2". So check rev 1 first, t=
-hen rev 2.
-> > +        */
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 4f9e0548c96d..47caad28a133 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -1257,6 +1257,10 @@ void acpi_pci_add_bus(struct pci_bus *bus)
+>         if (!pci_is_root_bus(bus))
+>                 return;
 >
-> +         for (rev =3D 1; rev <=3D 2; rev++) {
-> +                 if (!acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev),
-> &pci_acpi_dsm_guid,
-> +                                   rev, BIT(DSM_PCI_PRESERVE_BOOT_CONFIG=
-)))
-> +                         continue;
+> +       if (!acpi_check_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid,=
+ 3,
+> +                               BIT(DSM_PCI_POWER_ON_RESET_DELAY)))
+> +               return;
 > +
-> +                obj =3D
-> acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev), ,
-> &pci_acpi_dsm_guid,
-> +                                  rev, BIT(DSM_PCI_PRESERVE_BOOT_CONFIG)=
-);
-
-Of course, the above acpi_evaluate_dsm_typed() call has been
-messed-up, it should be
-
-obj =3D acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridge->dev),
-                                  &pci_acpi_dsm_guid, rev,
-                                  DSM_PCI_PRESERVE_BOOT_CONFIG,
-                                 NULL, ACPI_TYPE_INTEGER);
-
-but the idea should be clear nevertheless.
-
-> +                if (obj && obj->integer.value =3D=3D 0)
-> +                        rc =3D true;
-> +
-> +                ACPI_FREE(obj);
-> +
-> +                if (rc)
-> +                       return true;
-> +         }
-> +
-> +         return false;
+>         obj =3D acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge), &pci_ac=
+pi_dsm_guid, 3,
+>                                       DSM_PCI_POWER_ON_RESET_DELAY, NULL,=
+ ACPI_TYPE_INTEGER);
+>         if (!obj)
+> @@ -1418,6 +1422,10 @@ static void pci_acpi_optimize_delay(struct pci_dev=
+ *pdev,
+>         if (bridge->ignore_reset_delay)
+>                 pdev->d3cold_delay =3D 0;
 >
-> would achieve the same with fewer lines of code and less code
-> duplication if I'm not mistaken.
->
-> > +       if (acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev),
-> > +                               &pci_acpi_dsm_guid, 1, BIT(DSM_PCI_PRES=
-ERVE_BOOT_CONFIG))) {
-> >                 obj =3D acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridg=
-e->dev),
-> > -                                             &pci_acpi_dsm_guid,
-> > -                                             1, DSM_PCI_PRESERVE_BOOT_=
-CONFIG,
-> > -                                             NULL, ACPI_TYPE_INTEGER);
-> > +                                               &pci_acpi_dsm_guid,
-> > +                                               1, DSM_PCI_PRESERVE_BOO=
-T_CONFIG,
-> > +                                               NULL, ACPI_TYPE_INTEGER=
-);
-> >                 if (obj && obj->integer.value =3D=3D 0)
-> > -                       return true;
-> > +                       rc =3D true;
-> > +               ACPI_FREE(obj);
-> > +       } else if (acpi_check_dsm(ACPI_HANDLE(&host_bridge->dev),
-> > +                                       &pci_acpi_dsm_guid, 2, BIT(DSM_=
-PCI_PRESERVE_BOOT_CONFIG))) {
-> > +               obj =3D acpi_evaluate_dsm_typed(ACPI_HANDLE(&host_bridg=
-e->dev),
-> > +                                               &pci_acpi_dsm_guid,
-> > +                                               2, DSM_PCI_PRESERVE_BOO=
-T_CONFIG,
-> > +                                               NULL, ACPI_TYPE_INTEGER=
-);
-> > +               if (obj && obj->integer.value =3D=3D 0)
-> > +                       rc =3D true;
-> >                 ACPI_FREE(obj);
-> >         }
-> >
-> > -       return false;
-> > +       return rc;
-> >  }
-> >
-> >  /* _HPX PCI Setting Record (Type 0); same as _HPP */
-> > --
+> +       if (!acpi_check_dsm(handle, &pci_acpi_dsm_guid, 3,
+> +                               BIT(DSM_PCI_DEVICE_READINESS_DURATIONS)))
+> +               return;
+> +
+>         obj =3D acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 3,
+>                                       DSM_PCI_DEVICE_READINESS_DURATIONS,=
+ NULL,
+>                                       ACPI_TYPE_PACKAGE);
+> --
+
+The code changes look reasonable to me, although it would be cleaner
+to use a local variable for the revision instead of repeating the
+number 3 multiple times, but please add the "PCI/ACPI:" prefix to the
+subject.
 
