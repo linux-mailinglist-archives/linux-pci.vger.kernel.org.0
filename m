@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-24831-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24832-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 59711A72E7E
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 12:08:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65AF8A72E83
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 12:08:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78A3B189D6AD
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 11:08:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C56F617885F
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 11:08:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E92AA2116FD;
-	Thu, 27 Mar 2025 11:07:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7374C2116F6;
+	Thu, 27 Mar 2025 11:07:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CK/nszKP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WOd6RVnn"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01692116F6;
-	Thu, 27 Mar 2025 11:07:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434AF2101BD;
+	Thu, 27 Mar 2025 11:07:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743073660; cv=none; b=o3INqBvV/3ZR4QReWGVr6hUrtjuv2nJXSqS/paBNGCIoYHx4+rglUD23LHpykuwIJ+NrOtQcpnd/DSK6fQgOSkO9IQmMFBnNR0CxupciH7ufW0PtaOY4mRiGXrrxBvrSrEptZ42Wj/F0qdLvXfIfytthnkHj8whWZfihJOK1Uxw=
+	t=1743073665; cv=none; b=cjYmet76Wof/I5GH2MKc8f3JQBbwyi3ehR3phGPgjy2/e88KfPMItpqx93qHDc0kVcbXskide3wm0gpy7s4yzUJwN0xY/fyTINDF436RghnEEaEF6VvCK61XTIv85FBU2OjgixQtooKevD9tTMNMJu53PefHBskN7HPw+mQumx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743073660; c=relaxed/simple;
-	bh=FbMtkhsM4PEe39tIGPItq+7v4k2UfpBD4FAsk8XjaX8=;
+	s=arc-20240116; t=1743073665; c=relaxed/simple;
+	bh=Dvi5btozFJtTcgREwrstpdJeuJ6eZajLPIGDsvSUmLM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BEiKt9GWJWf1stsIxzFB/dSbL0a50ChS2azY6SY0iE38YbencSB7FlRaTqioS/nvt9CY8VDR3/BeUYPV0PTns9mCaYi+PZ5KSmzqQAXY3Ahhwt+rHEqncJF2zsn3VyGD9s4zMoP4eMCO33qKMg/I+OGliYIHsrt/bafpDY5mZ8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CK/nszKP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA787C4CEDD;
-	Thu, 27 Mar 2025 11:07:35 +0000 (UTC)
+	 MIME-Version; b=DtyqqzqQNusoWY3vDgVKsZ0WlzQovZekWW9kmXA8fFgYF16xrukLjMwnUfAzt6gcpSoEQthWVTaZXPzvGCsb9Z62tj+M9AmjtYP0SOV7UnobntGu+pGeuviublwbRrgmDDL3mbkNGA6utN72U0eWvzbx+L16098eqSz4jZ6YhAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WOd6RVnn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD6FC4CEEB;
+	Thu, 27 Mar 2025 11:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743073660;
-	bh=FbMtkhsM4PEe39tIGPItq+7v4k2UfpBD4FAsk8XjaX8=;
+	s=k20201202; t=1743073664;
+	bh=Dvi5btozFJtTcgREwrstpdJeuJ6eZajLPIGDsvSUmLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CK/nszKPNstpezxlJ6vsP33DRgLrjAXRU9wzHYMq9d9dyuAG7liRcBMiwgVYlF4w5
-	 J1X8SbknLh3+nkYXz+A63rCvk50RV5ViM+vOT4BJm0erNBg4h+xDGrVpHzXZ0RtiPS
-	 Z6MVQ0tzkyrzYOJcExGbTuKZDojclPVwUzDR3zaygpXhPsFxH979r068IsQ/wq1pWY
-	 A9RcEoKk8421N0ZugstLA8+vQe+KUbzPry2LoWHTvnyEQI9G4/N7hXVzordXYnrVuq
-	 cZPO0KXX6gp8uftZMvcVp+pIDnm4RDvRpHGr1Od2aFiiMluxWsAjCJQiW/AWZDQnLw
-	 5Aqkc4ZKBs3Ug==
+	b=WOd6RVnnHMZ2iLhSj3+dDLlbVEq37EvLFtb1Cn67TjbXM3yWGmGJwXVkGbupRFTvr
+	 Uu4MS0EXybE4wCWUS8GakAXOnpilNS3k2TgkmUgWc4DrWHOBs+je1UWBPYXSVwrMr5
+	 fdxmUpnppAwo6LR3AKjU8agNHUQy8lUoe90iV21XOGQ9vXPLu+F28oRPZdcikkKpnV
+	 qrQm4WoUPD291sWdaz7p9qzg8z88NfFMvMWpAEnsiKKwZMpj//LAlTVc53HNInR683
+	 6C9NCbCTbcdDFynecOBCK5pX86uR/FXriGlep5lawP7AZvd2gAK9+Q1vm/i6bPIqc7
+	 C8bytQO5hNbDg==
 From: Philipp Stanner <phasta@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Jens Axboe <axboe@kernel.dk>,
@@ -59,11 +59,10 @@ To: Jonathan Corbet <corbet@lwn.net>,
 Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-block@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Philipp Stanner <phasta@kernel.org>
-Subject: [PATCH 1/2] mtip32xx: Remove unnecessary PCI function calls
-Date: Thu, 27 Mar 2025 12:07:07 +0100
-Message-ID: <20250327110707.20025-3-phasta@kernel.org>
+	linux-pci@vger.kernel.org
+Subject: [PATCH 2/2] PCI: Remove pcim_iounmap_regions()
+Date: Thu, 27 Mar 2025 12:07:08 +0100
+Message-ID: <20250327110707.20025-4-phasta@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250327110707.20025-2-phasta@kernel.org>
 References: <20250327110707.20025-2-phasta@kernel.org>
@@ -75,56 +74,77 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-pcim_iounmap_regions() is deprecated. Moreover, it is not necessary to
-call it in the driver's remove() function or if probe() fails, since it
-does cleanup automatically on driver detach.
+From: Philipp Stanner <pstanner@redhat.com>
 
-Remove all calls to pcim_iounmap_regions().
+All users of the deprecated function pcim_iounmap_regions() have been
+ported by now. Remove it.
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
+Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 ---
- drivers/block/mtip32xx/mtip32xx.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ .../driver-api/driver-model/devres.rst        |  1 -
+ drivers/pci/devres.c                          | 24 -------------------
+ include/linux/pci.h                           |  1 -
+ 3 files changed, 26 deletions(-)
 
-diff --git a/drivers/block/mtip32xx/mtip32xx.c b/drivers/block/mtip32xx/mtip32xx.c
-index 95361099a2dc..63b9c41d3c25 100644
---- a/drivers/block/mtip32xx/mtip32xx.c
-+++ b/drivers/block/mtip32xx/mtip32xx.c
-@@ -3717,7 +3717,7 @@ static int mtip_pci_probe(struct pci_dev *pdev,
- 	rv = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
- 	if (rv) {
- 		dev_warn(&pdev->dev, "64-bit DMA enable failed\n");
--		goto setmask_err;
-+		goto iomap_err;
- 	}
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index d75728eb05f8..601f1a74d34d 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -396,7 +396,6 @@ PCI
+   pcim_iomap_regions()		: do request_region() and iomap() on multiple BARs
+   pcim_iomap_table()		: array of mapped addresses indexed by BAR
+   pcim_iounmap()		: do iounmap() on a single BAR
+-  pcim_iounmap_regions()	: do iounmap() and release_region() on multiple BARs
+   pcim_pin_device()		: keep PCI device enabled after release
+   pcim_set_mwi()		: enable Memory-Write-Invalidate PCI transaction
  
- 	/* Copy the info we may need later into the private data structure. */
-@@ -3733,7 +3733,7 @@ static int mtip_pci_probe(struct pci_dev *pdev,
- 	if (!dd->isr_workq) {
- 		dev_warn(&pdev->dev, "Can't create wq %d\n", dd->instance);
- 		rv = -ENOMEM;
--		goto setmask_err;
-+		goto iomap_err;
- 	}
+diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+index 3431a7df3e0d..c60441555758 100644
+--- a/drivers/pci/devres.c
++++ b/drivers/pci/devres.c
+@@ -946,30 +946,6 @@ int pcim_request_all_regions(struct pci_dev *pdev, const char *name)
+ }
+ EXPORT_SYMBOL(pcim_request_all_regions);
  
- 	memset(cpu_list, 0, sizeof(cpu_list));
-@@ -3830,8 +3830,6 @@ static int mtip_pci_probe(struct pci_dev *pdev,
- 		drop_cpu(dd->work[1].cpu_binding);
- 		drop_cpu(dd->work[2].cpu_binding);
- 	}
--setmask_err:
--	pcim_iounmap_regions(pdev, 1 << MTIP_ABAR);
+-/**
+- * pcim_iounmap_regions - Unmap and release PCI BARs (DEPRECATED)
+- * @pdev: PCI device to map IO resources for
+- * @mask: Mask of BARs to unmap and release
+- *
+- * Unmap and release regions specified by @mask.
+- *
+- * This function is DEPRECATED. Do not use it in new code.
+- * Use pcim_iounmap_region() instead.
+- */
+-void pcim_iounmap_regions(struct pci_dev *pdev, int mask)
+-{
+-	int i;
+-
+-	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+-		if (!mask_contains_bar(mask, i))
+-			continue;
+-
+-		pcim_iounmap_region(pdev, i);
+-		pcim_remove_bar_from_legacy_table(pdev, i);
+-	}
+-}
+-EXPORT_SYMBOL(pcim_iounmap_regions);
+-
+ /**
+  * pcim_iomap_range - Create a ranged __iomap mapping within a PCI BAR
+  * @pdev: PCI device to map IO resources for
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 47b31ad724fa..7661f10913ca 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2323,7 +2323,6 @@ void pcim_iounmap(struct pci_dev *pdev, void __iomem *addr);
+ void __iomem * const *pcim_iomap_table(struct pci_dev *pdev);
+ int pcim_request_region(struct pci_dev *pdev, int bar, const char *name);
+ int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char *name);
+-void pcim_iounmap_regions(struct pci_dev *pdev, int mask);
+ void __iomem *pcim_iomap_range(struct pci_dev *pdev, int bar,
+ 				unsigned long offset, unsigned long len);
  
- iomap_err:
- 	kfree(dd);
-@@ -3907,7 +3905,6 @@ static void mtip_pci_remove(struct pci_dev *pdev)
- 
- 	pci_disable_msi(pdev);
- 
--	pcim_iounmap_regions(pdev, 1 << MTIP_ABAR);
- 	pci_set_drvdata(pdev, NULL);
- 
- 	put_disk(dd->disk);
 -- 
 2.48.1
 
