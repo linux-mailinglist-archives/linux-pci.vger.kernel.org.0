@@ -1,122 +1,185 @@
-Return-Path: <linux-pci+bounces-24887-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24888-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6B4BA73E60
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 20:09:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD7D8A73F04
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 20:48:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6C4F3BDA3D
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 19:09:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 082541884E5F
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 19:45:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3A711C5496;
-	Thu, 27 Mar 2025 19:09:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 200692192E1;
+	Thu, 27 Mar 2025 19:44:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1vXCELj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsmdXRm2"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7889C1E505;
-	Thu, 27 Mar 2025 19:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2314518FC84;
+	Thu, 27 Mar 2025 19:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743102558; cv=none; b=kfVEzBZTrRDq9O+Xr9dx1+/v0yPQmeQB5RuvyEXeLNBnvmkRwN4clUw2TJnV7z7e0hP4YEM1QaZkaAtDdX9LecX+MUPoikxDRPdpbqB9raDbLfT/9oImpTVtd+uEpjYOA+8YexFsB5e0qYdQqI3mFdnNE6uwHM4qO6lGbPJTVOU=
+	t=1743104691; cv=none; b=RM9gTZLThpNsFye4hWbe0OIqdrrALqocx5hAMfYXr+B+SoPT5KpiyEUYVGMxEls/SIbwLWM25xEi+y6abAOrCcK+LgwZjKWOkQVvGqH1kLHDTiStGxRpYkIRhAbpkiQuvbZw1JrUv/xwG7dS5N6JPA1mWrI+NfsElGqSsDP+xOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743102558; c=relaxed/simple;
-	bh=7xNJ7z0ZgU3oH74BiWXl6Ym9NlEqMNNX5XOBW0Dd2bc=;
+	s=arc-20240116; t=1743104691; c=relaxed/simple;
+	bh=9Mh6b4oCJpQSlZk5cgr4GaAks7FOVq/dlbEme+EYRvs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S+niBr32UN9pR1YhzdcQut89BXyEoq129Lb/2rgOtnwezPuAB79IZqeLmONZWBmaxa0kVhM7Gbud3skNIGRkBQUg9J1nT00fqoE0f6wRMV632EPvqCZqtGbgmbkbLilx06skOuWyz2vD5aO8zcOssxU1xRf46pLV5y0a/8iDXwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1vXCELj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B755C4CEE8;
-	Thu, 27 Mar 2025 19:09:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743102558;
-	bh=7xNJ7z0ZgU3oH74BiWXl6Ym9NlEqMNNX5XOBW0Dd2bc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=e1vXCELj298XaWFFsV8fQULerII2krdXvsXMn4s6tsqx81RY8qqMa+h6Btuz98PCN
-	 GyT+F/aO4lZCgVoOdbkYqyVvmbYmRbYG4LVRBMPoir5hjqQ8i88VttMb10mzXcdHg7
-	 xFbKDJTZriRbm4RV6mK1PLouVf+oM2D+mS4Rb5i5LeewgSaQirNnAMHrHPY8bVno8b
-	 MoWRZ1H+cKlhJ24Wz3wmOfbEPjSj0j5ktWaQjOX8dXiHYfP3WMODtYmHiMeMXauhMT
-	 J0sZo40Ri4L2bL4tjNwONapSKpUImdlYgaa7FJrnvnC268aB+n/w3TJ7l/aSYXtuM9
-	 7fPE11wd9LZvw==
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-601e77a880eso178737eaf.2;
-        Thu, 27 Mar 2025 12:09:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUZB0je3NF+2IGx9FzJ8uafSWwgTgxBTccexRQPD00V0mtJfIyYy/E6cGunTmqZIq2NmuenNKx0mNdnkuOv@vger.kernel.org, AJvYcCUsJiatzPKi/e2x9f+be+21gvvFJu7vS0cNUA9QpQM+3d5uxxacWsXOc8euOXUeO2CTxSo6j9P7Ccc+@vger.kernel.org, AJvYcCW1KAgTyYifATOYDwlBH5DuInFen8bFB7ggDWT3JHKQYTlwNRFa8kzoXPzCGgFZJH/rhQ6W7XETYXp0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ8kfaIOegwpHyrBLF7uiyHOv7RQZ8WIXO8tynJCpsqrxbwyfG
-	8JjOiahedRF4puyP3tzaWdXi7JTzzev+e+IGiAZt9Jz/JJfqnmJsEHHBTHyLR3QdwG8Uh+JaLBs
-	pw+W5SHbQTiY5q7/qxPMtWt3ArFE=
-X-Google-Smtp-Source: AGHT+IHVfmp4UGQiNKRP+ftRW36JY8Cf0hCDGwBPcNlNgEx2rcVubY3CUjY7zXPpPqgbNW69e+BpCzIHmqL2Ngv6Y2g=
-X-Received: by 2002:a05:6870:46a7:b0:29e:7dd8:92b1 with SMTP id
- 586e51a60fabf-2c8481dba82mr2705377fac.24.1743102557643; Thu, 27 Mar 2025
- 12:09:17 -0700 (PDT)
+	 To:Cc:Content-Type; b=HE1RPoGv7wQziyxVRT3vLqyFI6id0R3AmCixw9VRRKTk14ju1N/y5SlNIvDKAgtvQFh4W5JbMGGJnA+U9F0aIc6WWd3uXBnp/j7FeLzdwYZr4Odn4oZYuHQjNwfzbiOqxFvA9l49gh21/DZYbMs2QVBm6tA1j84GNpvWC7E/4RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IsmdXRm2; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30db2c2c609so16057911fa.3;
+        Thu, 27 Mar 2025 12:44:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743104687; x=1743709487; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zJrB+25qfJY+3ZkUCcZjNy69G3uZBa+b+woWWSnmCkY=;
+        b=IsmdXRm23/Fm9qltyt5/JnGBuuY5HnYS/qrrOQII/YAGpAWTq57SnJuXEehsaa/PDp
+         7mZy9pZN3I5jobE9Eq8UPKJsNtFhifjhFlBxeo8HKSsGaf/wWLQQ+ogwEDI2q7G+/qE5
+         jTzfSTvfGgqhnj8bw+uTDmwiX3i5wI8k2PAyVJ5Zfjanr6ATtzxAdwak7+SKWmnE7vWy
+         oRliUyyJngEa5uo4eB8JH8qOYaBxw0UWMN+9TcvnjQl+bbrP2RE+RWUgyg1n0fZ2FC4Q
+         Ij0dGiFsy4eMcj/BTbCgYhDwXOB0YPv5idfzP1M6au6fx0QRxUp+YDucFQ9YDm5x/hUI
+         VAog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743104687; x=1743709487;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zJrB+25qfJY+3ZkUCcZjNy69G3uZBa+b+woWWSnmCkY=;
+        b=Iqms9mhU+CnOX4YtzUa4iuZhpmUCeN6gbI9h30HCIdXWcwK8J7DhxdHWL2mg++eIsT
+         MMGJ57Lame7RVITWNkWoJHFiR7ADzClwBS30rIU4oIbTWjRNPHMz+v6cD/qNyxMwImf8
+         4sRsJJDXsJCDpiAsZ8JqtKH3SJlCotxZ28cH/HpOyKfLYX/odrFtj5vPlQQXdCFpgGKj
+         gySn7oriT9u0ZgbmQ6fmosbyq9d6qb/G3sIjzpbAA3PpGfg+L9L4InxM4Yx5VIpCql4p
+         y8MNruHZtj7B1Ill33SAqKP8bFccrYE92N853RgENQnANXuB7QKJXL3WDaMeRQ2h/1mO
+         bWSw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3m8X1wsG3flm5ngLIVI9cT2kfGquo1R/faoM8nYu4Dro6fT+Ee97K334gVPcaTmdjQAVA5EKm@vger.kernel.org, AJvYcCURc2lTdHZs6s5adC2p1OnYxOdropwzFO0Mkq8dL0qDkk7rL/wTUglIRq3m734qtED59lJTgIemuUsIZmA=@vger.kernel.org, AJvYcCVqY3kTZHRd8Pzt7ZrR0XRrfc5Ok2FcqiAGQCXbomK6LcfS4m1//uJfXt5vAFKttBAQpWB28WHN8BI0GiqaNBM=@vger.kernel.org, AJvYcCWJRErpN9XhzW5Ci2JAq591q9naGjpv/CdmUfJnTQHZvYsJ5tRkp440GaW68p4K55nza4hjY/bMNqsa@vger.kernel.org, AJvYcCWYFvXMnaVcxaGraMoFvCcJcfXVHORcnaepAgOqKpc3yB/zuWdQn1KBUw0AzSCC7u8vJjRX0/P9Eu6tg/N6@vger.kernel.org, AJvYcCWhhu9cYoJ7tChJSEVAugPaNBuzgIKu6RCnm6IH3hSVP7o79HvoB8woHs+vTtFoSRMpZi0jVyxoMt43@vger.kernel.org, AJvYcCXACS2pyvZA43LmcpPhRAOooai3fK1dTUdkFnP9oNQN2azz/sYU0aEPp8F+B+Q7HE8OOVx9c08GFLJCipQjjPXJ@vger.kernel.org, AJvYcCXoQZSUWiSb1HmrTRy8xxJWOFOASw1dUQDlMPPeIfIJuxass0Z1dh2QcJYxei1T74X8XOGkX8rMsiq7+eHi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxSCiBRCnrcnxVzIPN0NSQv7z87APFUbavQwX1F4KfS2lP0qmV
+	ZsRhuPpTU44HTTZEsQFSEE9H4ztwzNtYyI20LrYxoB0QaiOEm7q0J4nNx/l9YeMKpRYE9nd7ZpL
+	ihNQX6PPRi0E1Z73pZ/pb9Kb3zhg=
+X-Gm-Gg: ASbGnctltDuWzWGDQ2lrkzW9hJYBCRt7lEdevxZQWN7HVKMG6V+jH/ov8k7MY1SSyMP
+	eXJ7kZ2pDOy8x+gDpWKH6QDSc0O9J4rJRFSxrQPcu/VFSzvLv3zAJC5J3aES88XsQ4uqnRb3AOT
+	zFzv43S9zGqyFOfbpUML5rIZUvgckOMfPklR9p5oZZlWlBhFiXAJvg
+X-Google-Smtp-Source: AGHT+IFyLKYlIEvGpAd9CCRPDur7dyQO/OEa86nU/lx3w5Jjq2h0PxLW9TMc3L3t1yE/rhj6ZShnSCOlezEb1R9xtqM=
+X-Received: by 2002:a05:651c:1a0b:b0:30b:b7c3:ea71 with SMTP id
+ 38308e7fff4ca-30dc5e31b95mr23059291fa.15.1743104686814; Thu, 27 Mar 2025
+ 12:44:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313100658.15805-1-zhoushengqing@ttyinfo.com> <20250313100658.15805-2-zhoushengqing@ttyinfo.com>
-In-Reply-To: <20250313100658.15805-2-zhoushengqing@ttyinfo.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 27 Mar 2025 20:09:06 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0h1goEuX83jfKYMQJ_5wbpXpt=2XW82yWJYzzyJyGwzYQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JolyiSoyEA1nM3bg6xe_rkgRaceF2hrKwPUfK2fVdhMflD1D8rkKB-8ASM
-Message-ID: <CAJZ5v0h1goEuX83jfKYMQJ_5wbpXpt=2XW82yWJYzzyJyGwzYQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] Add acpi_check_dsm() for PCI _DSM definitions
-To: Zhou Shengqing <zhoushengqing@ttyinfo.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, lenb@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, rafael@kernel.org
+References: <20250325-ptr-as-ptr-v7-0-87ab452147b9@gmail.com>
+ <D8Q4MSXXZ7OI.1NC226MO02VSN@proton.me> <CAJ-ks9nHKpQPuSBypXTSATYhbAFkQTJzUq8jN0nu4t=Kw+0xxg@mail.gmail.com>
+ <D8QCK3CQES3Y.3LTZ4MVO5B3KT@proton.me> <CAJ-ks9nKT2PUDm6=b4AB1QUWwwvcqPn7Vz60=c0B+uFMZrqPew@mail.gmail.com>
+ <D8QDOBUM6NF0.CGJY7ZA5KD9S@proton.me> <CAJ-ks9ntTxBM=c5nUZWGv3MoRt-LveBchn-c1Xy-DGap7fLVRA@mail.gmail.com>
+ <D8QI804Q3DAS.2BV4WSL81H52Z@proton.me> <CAJ-ks9mA5QDeZ3EvOD3THayFt4TtDysgm0jp2aiSF2mQCrhWiQ@mail.gmail.com>
+ <D8QJMH5UR6VG.2OT5MXJJQU5QT@proton.me> <CAJ-ks9m96vf_HxttuopuC_UfNGJbHHNdEGS2er6nZZG38pe3HQ@mail.gmail.com>
+In-Reply-To: <CAJ-ks9m96vf_HxttuopuC_UfNGJbHHNdEGS2er6nZZG38pe3HQ@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 27 Mar 2025 15:44:09 -0400
+X-Gm-Features: AQ5f1Jr0ooXTkF4heGS1OXy1iD2yeKYqVr9uVRi6oc_-HuImKMszqPEfh2j-Kuc
+Message-ID: <CAJ-ks9n3BdKkfCpMXhE8M8Sx4B5rASoNvbmA4zPU3rmPQwZCiQ@mail.gmail.com>
+Subject: Re: [PATCH v7 7/7] rust: enable `clippy::ref_as_ptr` lint
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-pci@vger.kernel.org, linux-block@vger.kernel.org, 
+	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 13, 2025 at 11:07=E2=80=AFAM Zhou Shengqing
-<zhoushengqing@ttyinfo.com> wrote:
+On Thu, Mar 27, 2025 at 10:15=E2=80=AFAM Tamir Duberstein <tamird@gmail.com=
+> wrote:
 >
-> add acpi_check_dsm() for DSM_PCI_POWER_ON_RESET_DELAY,
-> DSM_PCI_DEVICE_READINESS_DURATIONS.
+> On Wed, Mar 26, 2025 at 6:15=E2=80=AFPM Benno Lossin <benno.lossin@proton=
+.me> wrote:
+> >
+> > On Wed Mar 26, 2025 at 11:09 PM CET, Tamir Duberstein wrote:
+> > > On Wed, Mar 26, 2025 at 5:09=E2=80=AFPM Benno Lossin <benno.lossin@pr=
+oton.me> wrote:
+> > >> On Wed Mar 26, 2025 at 8:06 PM CET, Tamir Duberstein wrote:
+> > >> > On Wed, Mar 26, 2025 at 1:36=E2=80=AFPM Benno Lossin <benno.lossin=
+@proton.me> wrote:
+> > >> >> On Wed Mar 26, 2025 at 5:57 PM CET, Tamir Duberstein wrote:
+> > >> >> >
+> > >> >> > Yeah, we should do this - but again: not relevant in this discu=
+ssion.
+> > >> >>
+> > >> >> I think it's pretty relevant.
+> > >> >
+> > >> > It's not relevant because we're no longer talking about transmutin=
+g
+> > >> > pointer to pointer. The two options are:
+> > >> > 1. transmute reference to reference.
+> > >> > 2. coerce reference to pointer, `as` cast pointer to pointer (trig=
+gers
+> > >> > `ptr_as_ptr`), reborrow pointer to reference.
+> > >> >
+> > >> > If anyone can help me understand why (2) is better than (1), I'd
+> > >> > certainly appreciate it.
+> > >>
+> > >> I am very confident that (2) is correct. With (1) I'm not sure (see
+> > >> above), so that's why I mentioned it.
+> > >
+> > > Can you help me understand why you're confident about (2) but not (1)=
+?
+> >
+> > My explanation from above explains why I'm not confident about (1):
+> >
+> >     For ptr-to-int transmutes, I know that they will probably remove
+> >     provenance, hence I am a bit cautious about using them for ptr-to-p=
+tr or
+> >     ref-to-ref.
+> >
+> > The reason I'm confident about (2) is that that is the canonical way to
+> > cast the type of a reference pointing to an `!Sized` value.
 >
-> Signed-off-by: Zhou Shengqing <zhoushengqing@ttyinfo.com>
-> ---
->  drivers/pci/pci-acpi.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 4f9e0548c96d..47caad28a133 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -1257,6 +1257,10 @@ void acpi_pci_add_bus(struct pci_bus *bus)
->         if (!pci_is_root_bus(bus))
->                 return;
->
-> +       if (!acpi_check_dsm(ACPI_HANDLE(bus->bridge), &pci_acpi_dsm_guid,=
- 3,
-> +                               BIT(DSM_PCI_POWER_ON_RESET_DELAY)))
-> +               return;
-> +
->         obj =3D acpi_evaluate_dsm_typed(ACPI_HANDLE(bus->bridge), &pci_ac=
-pi_dsm_guid, 3,
->                                       DSM_PCI_POWER_ON_RESET_DELAY, NULL,=
- ACPI_TYPE_INTEGER);
->         if (!obj)
-> @@ -1418,6 +1422,10 @@ static void pci_acpi_optimize_delay(struct pci_dev=
- *pdev,
->         if (bridge->ignore_reset_delay)
->                 pdev->d3cold_delay =3D 0;
->
-> +       if (!acpi_check_dsm(handle, &pci_acpi_dsm_guid, 3,
-> +                               BIT(DSM_PCI_DEVICE_READINESS_DURATIONS)))
-> +               return;
-> +
->         obj =3D acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 3,
->                                       DSM_PCI_DEVICE_READINESS_DURATIONS,=
- NULL,
->                                       ACPI_TYPE_PACKAGE);
-> --
+> Do you have a citation, other than the transmute doc?
 
-The code changes look reasonable to me, although it would be cleaner
-to use a local variable for the revision instead of repeating the
-number 3 multiple times, but please add the "PCI/ACPI:" prefix to the
-subject.
+Turns out this appeases clippy:
+
+diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+index 80a9782b1c6e..7a6fc78fc314 100644
+--- a/rust/kernel/uaccess.rs
++++ b/rust/kernel/uaccess.rs
+@@ -240,9 +240,10 @@ pub fn read_raw(&mut self, out: &mut
+[MaybeUninit<u8>]) -> Result {
+     /// Fails with [`EFAULT`] if the read happens on a bad address,
+or if the read goes out of
+     /// bounds of this [`UserSliceReader`]. This call may modify
+`out` even if it returns an error.
+     pub fn read_slice(&mut self, out: &mut [u8]) -> Result {
++        let out: *mut [u8] =3D out;
+         // SAFETY: The types are compatible and `read_raw` doesn't
+write uninitialized bytes to
+         // `out`.
+-        let out =3D unsafe { &mut *(out as *mut [u8] as *mut
+[MaybeUninit<u8>]) };
++        let out =3D unsafe { &mut *(out as *mut [MaybeUninit<u8>]) };
+         self.read_raw(out)
+     }
+
+Benno, would that work for you? Same in str.rs, of course.
 
