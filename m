@@ -1,55 +1,55 @@
-Return-Path: <linux-pci+bounces-24844-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24845-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B61A3A73193
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 13:01:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70147A731AE
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 13:03:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 72F391899039
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 12:02:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B78BF176DD4
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 12:03:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE64C20F097;
-	Thu, 27 Mar 2025 12:01:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7ED62135A6;
+	Thu, 27 Mar 2025 12:03:23 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2090.outbound.protection.outlook.com [40.107.117.90])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sg2apc01on2130.outbound.protection.outlook.com [40.107.215.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F48140849;
-	Thu, 27 Mar 2025 12:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56C01B960;
+	Thu, 27 Mar 2025 12:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.130
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743076910; cv=fail; b=mwvv/9bq+J98q0DUvzQLrtOcggbvkEKs+N6xbMTITTmqDkLqSXdPL0aNw2ODf36g0hBzZaV85MR3058JBnCHAdLGITJDxOvSEq/HiIdUMJS8Lm2aeLBx7GX+MdLROIbrJwxDrH4YoxBkEnrLDlFDidGRnqnWx8sVXogUaxawuKI=
+	t=1743077003; cv=fail; b=k6dHno3ZUPD/HjdpF7vqTFU/LgUAOGRh+Y0BA+dsluP4UMSLF/c63VnZ7nKLfVIuM5zH+Pm82jZr4yWyPTiyWeoMIFR1lhj8oGoknkCb4ck48uGf6F0wppWBI7adLhWCPhIIkwbT0UXwTx2ekmGaO4ZzMTTEYwfdbYut4Cp/2v0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743076910; c=relaxed/simple;
-	bh=yrwrn0jL+sBwcPqOow7a8hnt8md8e8KHHUpn3p31ec0=;
+	s=arc-20240116; t=1743077003; c=relaxed/simple;
+	bh=D/W/astpbBbKyIPRIDsrctk7V5FpM5GrerEWPMld8nQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cj6kE5/N6s7GEMVa7i/nyst3N5PhI8ZfVEIRxTmUc6KeUVFZtnzAJ4tUO0G9P8+u+Ns9tBek28oBNGir8x8k3w9VL3SDas9nCAYR5fEBABWLYnFSNxL4aSZHMLeJPggL6IxI4qiS+9lW/UU/wmsUWcTE80gSZa+tVwaUJfFAlyo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.117.90
+	 In-Reply-To:Content-Type; b=WCaySPQ0D/K6riJM2O19wxV3QUPeuErorexnhgejAbI10+7Uht5CibcyK8FlxqDL35lphbhtKz0izYjvycOLgPybIYjew8sWQn+Yr9AHmCmDOIttlu2NuE8z+U4jO84r5xrvjhBuu04O1eOE6gfnl19IqRwp1tC69CnAvs91DvE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.215.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Pk/vTBR6pckHZLlHabfDuITsE3g8BKM7y2GDaOi3zTG7o9ggDTOIWhhIPpHoIS0leu7nSbO/B+5q06dFDstMQ4OA7h4MGD50/Bm7kdgJaxMEl4MF8+sugEGQQet+tHtwYoQtMV6HSAoK+nk+ohZoxCUPVhRZ0BampPsjffikIte8I70fZhDrQSADJWjNp4dQ12qTP5Bt7djOLTKWIks2aSz06P5CVeSUQwiUSFvyGpTMqIqSZ7tuuL4tfMC8HVC9U6hQkQk8I1S2dFD8Kt9ZSFNet8POpElcKCa7AKBSmG9Q7Lu5YAa2UufgBudiOW/Hb1gtBB1Keqt1PmpywG7tow==
+ b=pmXN1TFkzaGrNMYWnTtUVDJb5PoaALezVNV6XGBFVUoYUe04S+W0xn2hTtCLt1ILzFeWeTmxZL+gz87jfdmxu3sn3QPxx03VjhXzlWSV5cNNVSC5eXrNVwNc6g1VLjL9e319m9o8KNcFedNYmr3OmwAd0KybaoSj/W8x1njcqyZbfExgk5Odp+qSC/GaVhEOuTaPfFydX2t79GRLsXY593b6YSYAZrDLwT6DWAahOsLLCTU+b3lIWmOCla+wOcjoygt75L9Ghwoatnb2tWbS8mJWeXJycey+RKkiMTjKm7Ck7xXAz/+uU3U2WmySXfkpByXaiL/JXMge+X030qZUPQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ltzRY6kvgMTMrTnMuHWA+ZRL10M2sh0vLjKg654iAeU=;
- b=vmGVNdqtNLNWxd8FjEDw0sfMAvv/E3/ACD+GcYo/hAwf/KOTgjuzUWua3Pmu7GbmzQyVAIsOPQfgzEhZCSc9gPorctiVrf+2DGGF15m/VNiMFyHosZh9Ym+gRUEcqkKVXomzEuYQGkDj6wQDaJLAUDgUI7TkdHZD6cLI9r4SbTHy0GQl4qokx+g2j6EJtsaTI1vghkACPwREJpZag1AxCrrJhfbLjouqkOr3cBcsks63eK0NBRnp5I/xyZu5csMCchdAL1eyDHOgQuHeVnv2kHKnKb0+kLVIIEc7TmXV/PvCPzNM2ljglz8/whCswvFvdKXN/w9hw8rKmQGrMBNxyg==
+ bh=YK0UPQ+t29BshZMNuF1EQBj9+yFNiQVI6nMsmuCRGf0=;
+ b=yn6+X/lmZYTjuepFDvSOZFB5Z9Bi22CkZe+9XzOrTHRhHKkygLS/Ud+EgHTCjF+zEmIZlu4zbbxaH1/JF8JhZyn5M4NSvmSXhcCWqzCJI93KeGHOUA3oaP/IKxphi148eA3yFheQ9aTypnd1WWuM5tEBl6W6IpE+BQ1URIAlh0rsKFmpgH7UvUgUesHzRSVJi9RVfqjlrYPG38f9rWqtCTlJ+CAOqbaIttJZKiYsZ1JkY7BtFnx8SndiXtvwaMgpCOLwwb4r6eyWJFEz/yh7Wy/Rvygl4K+z0BthshOcaLc2TSJmbUmCer9BC8Q6i86yjPDO5IcfBgcsrkIFy7ISFg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  222.71.101.198) smtp.rcpttodomain=cadence.com smtp.mailfrom=cixtech.com;
  dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
  not signed); arc=none (0)
-Received: from TYAPR01CA0129.jpnprd01.prod.outlook.com (2603:1096:404:2d::21)
- by SEYPR06MB6949.apcprd06.prod.outlook.com (2603:1096:101:1e4::14) with
+Received: from SI2P153CA0007.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::8) by
+ KL1PR06MB7049.apcprd06.prod.outlook.com (2603:1096:820:120::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 27 Mar
- 2025 12:01:41 +0000
-Received: from TY2PEPF0000AB84.apcprd03.prod.outlook.com
- (2603:1096:404:2d:cafe::c8) by TYAPR01CA0129.outlook.office365.com
- (2603:1096:404:2d::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.43 via Frontend Transport; Thu,
- 27 Mar 2025 12:01:40 +0000
+ 2025 12:03:18 +0000
+Received: from SG2PEPF000B66CD.apcprd03.prod.outlook.com
+ (2603:1096:4:140:cafe::3a) by SI2P153CA0007.outlook.office365.com
+ (2603:1096:4:140::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.13 via Frontend Transport; Thu,
+ 27 Mar 2025 12:03:18 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
  smtp.mailfrom=cixtech.com; dkim=none (message not signed)
  header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
@@ -57,14 +57,14 @@ Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
  222.71.101.198 as permitted sender) receiver=protection.outlook.com;
  client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
 Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- TY2PEPF0000AB84.mail.protection.outlook.com (10.167.253.9) with Microsoft
+ SG2PEPF000B66CD.mail.protection.outlook.com (10.167.240.27) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.20 via Frontend Transport; Thu, 27 Mar 2025 12:01:39 +0000
+ 15.20.8534.20 via Frontend Transport; Thu, 27 Mar 2025 12:03:16 +0000
 Received: from [172.16.64.208] (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 2571F4160CA0;
-	Thu, 27 Mar 2025 20:01:39 +0800 (CST)
-Message-ID: <71c6ba9b-adc3-4ca7-84b1-bbcb074d1f0f@cixtech.com>
-Date: Thu, 27 Mar 2025 20:01:39 +0800
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id DF25B4160CA0;
+	Thu, 27 Mar 2025 20:03:15 +0800 (CST)
+Message-ID: <ab7817d8-c998-48e1-8349-596c043d9db4@cixtech.com>
+Date: Thu, 27 Mar 2025 20:03:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -72,154 +72,153 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/7] PCI: cadence: Add header support for PCIe next
- generation controllers
+Subject: Re: [PATCH 0/7] Enhance the PCIe controller driver
 To: Manikandan Karunakaran Pillai <mpillai@cadence.com>,
  "bhelgaas@google.com" <bhelgaas@google.com>,
  "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
  <kw@linux.com>,
  "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
- "robh@kernel.org" <robh@kernel.org>
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ Milind Parab <mparab@cadence.com>
 Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
- <20250327111127.2947944-1-mpillai@cadence.com>
- <CH2PPF4D26F8E1CE94EC3F4A0D6B9849818A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+References: <20250327105429.2947013-1-mpillai@cadence.com>
+ <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 Content-Language: en-US
 From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <CH2PPF4D26F8E1CE94EC3F4A0D6B9849818A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+In-Reply-To: <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PEPF0000AB84:EE_|SEYPR06MB6949:EE_
-X-MS-Office365-Filtering-Correlation-Id: e0f8572b-ebde-4b1b-bc39-08dd6d272231
+X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CD:EE_|KL1PR06MB7049:EE_
+X-MS-Office365-Filtering-Correlation-Id: 985b5fc2-93bf-4fc6-0771-08dd6d275bbe
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OVhwNm40QTlnKzdwdWFJb01kdzFMQWhac3hETi80YVhYdmk3bWRFVjd0WjFx?=
- =?utf-8?B?REE1aFREWTI1Q0F0UTJ4RnhHZ1pwRjRtMnVobmdlcnZoYnpUR2F4VHVNNERk?=
- =?utf-8?B?ZmRKM0x1ZHl4T1VMcUl2UXI0U1poM205UjdTUVRJWWppcVdGNDNpMUtGNTJ2?=
- =?utf-8?B?N3JBRmdVelFFRWF4ZmMzRDE1WnhFZ3VyclVwU3RMb2lQTFkrRnFjaStpRmVl?=
- =?utf-8?B?QW1TcVIxSDJraS8xRnVyVDVWQXFvRWMrWFc4Yk1FamhTWUpkU0MrWVkrSk9X?=
- =?utf-8?B?UXgzL3d4MlZRcmtDeDZSQ3M2bzlPYUlBekwzU2pyUFJFZzJSOE84SkVrNGdL?=
- =?utf-8?B?RXZNcU9LWGxpeFhVTzhlYkFkRG9MQml1ZXNmMjM4eFFwWjRycXZaZVBPdlN1?=
- =?utf-8?B?MVdaUXhIaEthR1RVaGtsQmE2ZGkxT0JLNnI4QUo2WEdpTFFMZGtUc0ZkR3Bl?=
- =?utf-8?B?eTVyUS9remE4WXdEbDR4NWpGV0FJWjZmMDlkdmQrY2x3OEVCOHJPWUNSZDR4?=
- =?utf-8?B?S0I4cENzUTBqcnZEQ1cyKzJTbnpsREdDYUpHWjJwQzZJVktiVzg2Q1gyQTQ0?=
- =?utf-8?B?OEdtRFpBbThuQm5GaUdLWDhzdVMzVlQrUXU1MUZqK0RQajFveEVvMDVEU1Uz?=
- =?utf-8?B?RXNaRnBSVUR2QzI4VWpFWmpWWGJJdWZJREtqdlNLNlVDQTN2aTJESEdvSHBP?=
- =?utf-8?B?QmhaMEVOWjdCdy9LdlBQS0NvUEJjazNqUXJjTW4xRU5abFNnZUl5R1J3REdI?=
- =?utf-8?B?ZW52UXdvTDVxL2VseGN5eWwwcWMxeVJxRFlTb1Y2TDFpT1lYTW1rcmJONis0?=
- =?utf-8?B?K3NMTkVkUjFTU01wbDl0RjNzcHVYaktqWlF5RHlHRmZiMFdvVFpoSjVVKytQ?=
- =?utf-8?B?RVo5K1hsTFR5djNzZmNtVTJhVEZJZ0lxZE83aHVrNjluK1lVSlBlempjOS9u?=
- =?utf-8?B?c3VxVjJvU1RkT2RBL2lPZjE1Vm9rTGhnZ2plY3c0dkxJSmI3SldnLzBobWE2?=
- =?utf-8?B?U0h0RWxkOWlIc0tVMjQyVTIxUC9Ba25tZDFSUTFtQ2lXcHJrbERJaktudXhx?=
- =?utf-8?B?QWowVUx4RHQxWXNDaEFmdDR3UmRvMDZVZjFjQm9OYU9SaHJaRWptTHdWTUdi?=
- =?utf-8?B?eWx4NWFSbWhvRDF1KzhMRG5pZkpnOEFqTkh1YlYrL1FLa0tSeDNuWEVxTGFO?=
- =?utf-8?B?OWdVN04rNnIyTVM0bHVoUjY1WU9WL1RxeUdRQzN6bXpGMzFKMlVZZXBvakZo?=
- =?utf-8?B?bWtRcTUrWjdCYks5RWtLaXU1Z1dFVXYwUFY3RlA3OUdoVEN0bGZINlM2NDlj?=
- =?utf-8?B?K094Z1pJWmcvS0ZKL1B1STJKYUgybXV5dDczZFh1UE5KVjdvbTZPYUVBdjUw?=
- =?utf-8?B?Mjl0WWtKUEtMMXZxZVBqYW1oZmw0OU0yWGJsRWhYcDVCZC8wenl0TXdCcStj?=
- =?utf-8?B?RTdaUTY5a09yaHdYaGpHYy93VWY3bWJCd1Q5dVBYTGRzS2wvRlJObUUxY3Iw?=
- =?utf-8?B?L0xIV3plNVRkNlNvUkpPNW5yNUd2L2cyb0YxWTJ0SGEwd0tBaEZyNGdwM2Nl?=
- =?utf-8?B?MytyVXFweTV4azY1MzdPbHZ1OTVlS2ZrNlRlVk1ZWkdoTkZKa0RkenE3VVQ5?=
- =?utf-8?B?VzArRHBUQXg4S2lNS2dFek9wSEpndTlVdUJGa1oyQk9tVll6VXkzaHBYdSt1?=
- =?utf-8?B?N3EvNkJEalJzdGR4TnBuRUg2SHA2TUFtTHRrdC9JcEJxc0FxK05JRmVIYXhG?=
- =?utf-8?B?UFFJemxSb3p1aXZVYlA5dDM2OVk0bFZCdEx1TXAyRndWc05ZY3NFaWZGZWNh?=
- =?utf-8?B?L0RubzFscFJRcGk5N1lVeU5tZWp4c2pnMXRTYXVHYlFlaWdwR0pMSG5iK0U0?=
- =?utf-8?B?S2F0VDJrU0p5U0FhdUNJbVFPWE83RmVpejNjb2djNDl3elJaZjJDb20vVUJw?=
- =?utf-8?B?dkNubjRMeDFwSjZkNXFuLzc5UFFmckJxNGFVQjhEVm5Sc2Vkb2gzdEpMc3hx?=
- =?utf-8?Q?SVx8j7+9d0LgYqc4QjJzClNpK4ZPGc=3D?=
+	=?utf-8?B?WnFmUGJLSGVMMjJCNWhsZkFDNDl0SkhGZmJzODVvQlArMXpwMkJUV3Y5ZmhK?=
+ =?utf-8?B?V2h1bFZncHZha2E5QUw1MFJGMnBwanZ4bHlTRGIvdjlQcGgxVDl6WUlSZkp5?=
+ =?utf-8?B?REptaTVPdUh1MC9wQ3dhZ1lPYkw1eGJuMml6NGVjVnZtdXFPTjUydUhNaGRG?=
+ =?utf-8?B?NVBON2JEWEEyWHRLNjl0WDhLZU9pYUwyMXo1eDJKb2VrMm5aRkZYNHFVM0Fl?=
+ =?utf-8?B?WVFpUFBDSC9QV0lSdEJFWWJ2ZitwaGxpelpYUzh5TkVzdDB0L1N0TDZXNkh2?=
+ =?utf-8?B?VjhhcWswc2g5R1FWcllaNVk4UVd4OHU1OG5pajNCQTI0UlRJbTg3N2VqWmdR?=
+ =?utf-8?B?Y29JV2swRE1EcWN5T0NrRGdzaStLZ1Ura2RMUnJpZEhuaEUwNWxKRFQyOEk0?=
+ =?utf-8?B?UC9ZWVFwQTFWdFRmeFNKeFhrQjBrNU9Jc29JTVBFRkZJVDVPL3NQZ244TWJ6?=
+ =?utf-8?B?MHIwbnFXL1NQcndLdmM0ZzNqSDZOMEhTc1FNbFZEalZSbFQrOE81dXM0c0VH?=
+ =?utf-8?B?Z3hkSEE4ZU8wS3dzMXFQMW0wZWg4UmdJQ1Vmem9XSlNXYVFRbEZBS3JhMzY0?=
+ =?utf-8?B?VnlnTy96bWJOZmJXTHpuT283MlVDSlkwT3h6d0xpK29XejlRa2ZNNGNSQlNm?=
+ =?utf-8?B?TzN5QUJobkZ3Q01BNSs1bVhuQ0YyU25reHF0Mk5kNzhmTzhnbUlNZDNMY25v?=
+ =?utf-8?B?V3k3TGVFSkdhV2FSeE93Tlo1SHhRWXhnd1FmWXBWd01IY28xSWYyZ29veDZn?=
+ =?utf-8?B?aWtoTkR4andpZ3paZEhLWjFUcWRVaElpV2pWNUhwSDU3QndEUlRrdE13OUlW?=
+ =?utf-8?B?UWtpdWc1MGhvdzNLQnNKL29zUTNuS2twR3g4VU53MUpLaThXOGdlY2dNTStz?=
+ =?utf-8?B?d2FrY3hJZWNwWjVUN2hXTUY2NjN6UW96a3N1MThVVXE5ZjVYcFRSblMvUWJL?=
+ =?utf-8?B?L1cyR2dyWFY4UUFCNTdIcjduMjRqM2tjMTVWVUh3QW5zR1JEL3NtSG1NU0Jw?=
+ =?utf-8?B?MkxsSE5aQkxnTnF3b2srNE81a0llRFBhM2hwUVg1UHVIOTN3MWR5d01Ia3py?=
+ =?utf-8?B?TmpJSjU3ZFlkbElnMFZxeHlzajFlbUJxT0wwNkFVWmlJUHV0Zzl5T2tvSGZy?=
+ =?utf-8?B?T1FCN0JVandudytyNDBmZmphTGoxQkZDYS85MjNJK1U2YnMrbHZvcXN6RlFs?=
+ =?utf-8?B?cVN4Mit2bmdoNjNzTkF0cVRNZTdCek5rOGExV3VmZlQrWnVhOEtlYTFQd0R2?=
+ =?utf-8?B?cFA3MDNNOW9mVVFnb1FSaVd4SXh2cXlQbXgzRnRBYm5VaEMvY0tQaFlCUTdP?=
+ =?utf-8?B?WkFSMTVFdG5OOWpyMlpESlplVmpoZU10Um94aXRBZDBBV0wzeSsxdGNHZmNR?=
+ =?utf-8?B?a1BlNVdiWCtNU1FvWlB2TXNoVXFvYXJoWUd0UkU5MUw3dzIybHc5dXMyUnF0?=
+ =?utf-8?B?YUlJOFBYL2dQOGRiRzI3dGRPaUp0K2FkelJQTE14RG92cUhrVVNvUXRMc1lO?=
+ =?utf-8?B?VThxdjl4TXVHVk9nSkV3ZzVMVjNaSnFXTXpUMmJMck5RZHRmZGxreDlTQThW?=
+ =?utf-8?B?T1llTFNHcFZtbG90R0VWemhkbmluTXdMajlQaXhnYXdjdXl2eUkwanl2VnJn?=
+ =?utf-8?B?U1REUkU3cUtQK1JNK0xrcTZsVFptb3pMZHdpcUh5OFRZbzlOTUxzS2ZjWTNH?=
+ =?utf-8?B?WnhpMTBEdFZBYWxQVGUveSs0Z2VEVm9BcFhzM25sR1p5WFlrNmRBdlZOdkxX?=
+ =?utf-8?B?S2dBcHdrR0ZYdkxNWWpPM3hUUCtWMDJGVWNYbFRUNXV2WHJZTzFoK2lWSXhk?=
+ =?utf-8?B?SDNDdDdCcDVzTzAybUtPd2RjNnYxVU51OE5IeFNnclc4MXpkSG8yTEpTODFB?=
+ =?utf-8?B?cHh5ZGZWT0M5UzU1MXB0MmJhUG5nR1M1c0pXR3BmbHAvNWIzcTVzNm1zY3hN?=
+ =?utf-8?B?bEQ5OHR3NEhQS0xvQmhWQ2s4Z1VoN2xjei9EZXRwaktlTVJxNjA4YVV1T1Z5?=
+ =?utf-8?Q?vQHUeX4JNh1zagFnTJ6UQDH5yxtgmE=3D?=
 X-Forefront-Antispam-Report:
 	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1102;
 X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 12:01:39.9283
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2025 12:03:16.5092
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0f8572b-ebde-4b1b-bc39-08dd6d272231
+X-MS-Exchange-CrossTenant-Network-Message-Id: 985b5fc2-93bf-4fc6-0771-08dd6d275bbe
 X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: TY2PEPF0000AB84.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: SG2PEPF000B66CD.apcprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6949
-
-
-
-On 2025/3/27 19:26, Manikandan Karunakaran Pillai wrote:
-> +/*
-> + * High Performance Architecture(HPA) PCIe controller register
-> + */
-> +#define CDNS_PCIE_HPA_IP_REG_BANK              0x01000000
-> +#define CDNS_PCIE_HPA_IP_CFG_CTRL_REG_BANK     0x01003C00
-> +#define CDNS_PCIE_HPA_IP_AXI_MASTER_COMMON     0x01020000
-> +/*
-> + * Address Translation Registers(HPA)
-> + */
-> +#define CDNS_PCIE_HPA_AXI_SLAVE                 0x03000000
-> +#define CDNS_PCIE_HPA_AXI_MASTER                0x03002000
-
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB7049
 
 Hi Manikandan,
 
-I have replied to your email in Cadence case, and our design engineer 
-has also explained it. Please provide a way for us, as Cadence 
-customers, to modify it ourselves. Please think about it.
-
-Please kindly follow up HPA's patch CC to my email address, thank you 
-very much.
-
-V1 patch:
-https://patchwork.kernel.org/project/linux-pci/patch/CH2PPF4D26F8E1CDE19710828C0186B13EEA2A42@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
-
-
-Communication history:
-
-Can you change this part of the code to look like this?
-
-#define CDNS_PCIE_HPA_IP_REG_BANK(a)              (a)
-#define CDNS_PCIE_HPA_IP_CFG_CTRL_REG_BANK(a)     (a)
-#define CDNS_PCIE_HPA_IP_AXI_MASTER_COMMON(a)     (a)
-#define CDNS_PCIE_HPA_AXI_SLAVE(a)                (a)
-#define CDNS_PCIE_HPA_AXI_MASTER(a)               (a)
-
-
-
-The offset we designed is: (Cixtech)
-#define CDNS_PCIE_HPA_IP_REG_BANK 0x1000
-#define CDNS_PCIE_HPA_IP_CFG_CTRL_REG_BANK 0x4c00
-#define CDNS_PCIE_HPA_IP_AXI_MASTER_COMMON 0xf000
-#define CDNS_PCIE_HPA_AXI_SLAVE 0x9000
-#define CDNS_PCIE_HPA_AXI_MASTER 0xb000
-#define CDNS_PCIE_HPA_AXI_HLS_REGISTERS 0xc000
-#define CDNS_PCIE_HPA_DTI_REGISTERS 0xd000
-#define CDNS_PCIE_HPA_AXI_RAS_REGISTERS 0xe000
-#define CDNS_PCIE_HPA_DMA_BASE 0xf400
-#define CDNS_PCIE_HPA_DMA_COMMON_BASE 0xf800
-
-
-The original register bank consumed at least 48MB address space which is
-begin from 0x0000_0000 to 0x03020000. Because there is unoccupied
-address space between every two register banks , our hardware remaps the
-registers to a smaller address space which means the register bank
-offset address is changed by custormer. So, we cannot utilise the common
-code directly without rewriting the function.
-
-
-We submit and pull a Cadence case: #46872873
-
-
-Reply from Cadence case Manikandan:
-Another option I can propose is to pass these values through the DTS
-file … (Hopefully that would be lesser changes)
-
-Hans:
-I agree to get it through the DTS attribute, please modify it, so as to
-be more flexible. This offset value may be modified when RTL is integrated.
-
+You should update your patch to V2, not no version at all.
 
 Best regards,
 Hans
+
+On 2025/3/27 18:59, Manikandan Karunakaran Pillai wrote:
+> EXTERNAL EMAIL
+> 
+> Enhances the exiting Cadence PCIe controller drivers to support second
+> generation PCIe controller also referred as HPA(High Performance
+> Architecture) controllers.
+> 
+> The patch set enhances the Cadence PCIe driver for the new high
+> performance architecture changes. The "compatible" property in DTS
+> is added with  more strings to support the new platform architecture
+> and the register maps that change with it. The driver read register
+> and write register functions take the updated offset stored from the
+> platform driver to access the registers. The driver now supports
+> the legacy and HPA architecture, with the legacy code being changed
+> minimal. The TI SoC continues to be supported with the changes
+> incorporated. The changes are also in tune with how multiple platforms
+> are supported in related drivers.
+> 
+> Patch 1/7 - DTS related changes for property "compatible"
+> Patch 2/7 - Updates the header file with relevant register offsets and
+>              bit definitions
+> Patch 3/7 - Platform related code changes
+> Patch 4/7 - PCIe EP related code changes
+> Patch 5/7 - Header file is updated with register offsets and updated
+>              read and write register functions
+> Patch 6/7 - Support for multiple arch by using registered callbacks
+> Patch 7/7 - TIJ72X board is updated to use the new approach
+> 
+> Comments from the earlier patch submission on the same enhancements are
+> taken into consideration. The previous submitted patch links is
+> https://lore.kernel.org/lkml/CH2PPF4D26F8E1C205166209F012D4F3A81A2A42@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
+> 
+> The scripts/checkpatch.pl has been run on the patches with and without
+> --strict. With the --strict option, 4 checks are generated on 1 patch
+> (patch 0002 of the series), which can be ignored. There are no code
+> fixes required for these checks. The rest of the 'scripts/checkpatch.pl'
+> is clean.
+> 
+> The changes are tested on TI platforms. The legacy controller changes are
+> tested on an TI J7200 EVM and HPA changes are planned for on an FPGA
+> platform available within Cadence.
+> 
+> Manikandan K Pillai (7):
+>    dt-bindings: pci: cadence: Extend compatible for new platform
+>      configurations
+>    PCI: cadence: Add header support for PCIe next generation controllers
+>    PCI: cadence: Add platform related architecture and register
+>      information
+>    PCI: cadence: Add support for PCIe Endpoint HPA controllers
+>    PCI: cadence: Update the PCIe controller register address offsets
+>    PCI: cadence: Add callback functions for Root Port and EP controller
+>    PCI: cadence: Update support for TI J721e boards
+> 
+>   .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  12 +-
+>   .../bindings/pci/cdns,cdns-pcie-host.yaml     | 119 +++++-
+>   drivers/pci/controller/cadence/pci-j721e.c    |   8 +
+>   .../pci/controller/cadence/pcie-cadence-ep.c  | 184 +++++++--
+>   .../controller/cadence/pcie-cadence-host.c    | 264 ++++++++++--
+>   .../controller/cadence/pcie-cadence-plat.c    | 145 +++++++
+>   drivers/pci/controller/cadence/pcie-cadence.c | 217 +++++++++-
+>   drivers/pci/controller/cadence/pcie-cadence.h | 380 +++++++++++++++++-
+>   8 files changed, 1259 insertions(+), 70 deletions(-)
+> 
+> --
+> 2.27.0
+> 
+> 
 
