@@ -1,153 +1,196 @@
-Return-Path: <linux-pci+bounces-24893-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24894-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3FFAA740A8
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 23:17:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B32DAA74122
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 23:49:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8ED69189E4C9
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 22:17:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 717F7189255B
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 22:49:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F2A51DE3C9;
-	Thu, 27 Mar 2025 22:17:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1842D1C6FED;
+	Thu, 27 Mar 2025 22:49:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="jic0rZP8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dHKMPCzN"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9181ACEBE;
-	Thu, 27 Mar 2025 22:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACBF1B6D08
+	for <linux-pci@vger.kernel.org>; Thu, 27 Mar 2025 22:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743113842; cv=none; b=JjAMGBYKi5unv9oPzb4F7gwlovTkne5jCCFeNi9+nnuUMURVt4vK0SvU/raTjAUd/wG7ETMUFlxqXheoIwNlaQbllpJUQsOBDm2fhtjXTawKBy0fTXha96KYd7Gy5oCwrB6j47ypDpA+CujVr93zdIgb8eJxKK6E2VHSm5B2Nsc=
+	t=1743115767; cv=none; b=rqRdpDDdh8BXFdDMkRf/54uukEZD/ovckxCm32e6qNJ3kZOtnHYyaQCvzqL68V4qzVBqGMqqqTaRK3oJX38QWCZIpJAkbdTRTl5yHV1b4sdbz6amhovb9sryMGX+5DsDs1EzVbehwYA7fyk8kQio5iyudvexpLQq6k6Tjo8IS+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743113842; c=relaxed/simple;
-	bh=89psVsuhmLnpB0D1Kli4UHQLPn+imufHphtlmAmXIs0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Yj1jiFYyPNoKQl+l+O+b07F1z86xYEMDAGueip+THKLPuwU85vKsUxH0oxueoiDnTWO/XfUV6VjTXd+EbMJgeTElPUnDAhNwoyIC+ZhiRge+GXJQEkZWqdADZ8GFqTU0feCecPqyzxNL8C0Xs6JKcrIiwXO6mqx+EPYVBwe2GEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=jic0rZP8; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1743113838; x=1743373038;
-	bh=pOr0DNwW22udl+QjNXdk6JXxuaFTQiZdJAYlJD9wBnM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=jic0rZP8jIRDUlYJVFn/WyH0SzSXhx/zI69q9kX7QeIHgrcfENJqk0J8WRHjnVLi8
-	 NYQ1OQjEs2l7GGNjObJEnLrPxDYndr08EDpfs5TYJPPr+lShwi3LeLeDuagfKMTX0v
-	 UXJnlwsDLJtsylUVLqPjRLZYRG8dDGGuGYSii/uS3sv0xX1IDXSgSC7+Wz31lLkvL2
-	 5BnTTLJTUPFluto7iYwREkzHvpTxJGSFCr0IhBxuyRScrQ9B5ClXkGkU0BdIv7WVEx
-	 65PCUwy1qRK0ngPc/CSLFvWJ2GfvoP8cmalbSSqimzg1t97SUicTxDSvJk0LsHlwll
-	 zekMJyBpIF4Pg==
-Date: Thu, 27 Mar 2025 22:17:13 +0000
-To: Tamir Duberstein <tamird@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, FUJITA Tomonori <fujita.tomonori@gmail.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, linux-block@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v7 7/7] rust: enable `clippy::ref_as_ptr` lint
-Message-ID: <D8REA6VW7QFS.Y5195VX38USO@proton.me>
-In-Reply-To: <CAJ-ks9n3BdKkfCpMXhE8M8Sx4B5rASoNvbmA4zPU3rmPQwZCiQ@mail.gmail.com>
-References: <20250325-ptr-as-ptr-v7-0-87ab452147b9@gmail.com> <CAJ-ks9nKT2PUDm6=b4AB1QUWwwvcqPn7Vz60=c0B+uFMZrqPew@mail.gmail.com> <D8QDOBUM6NF0.CGJY7ZA5KD9S@proton.me> <CAJ-ks9ntTxBM=c5nUZWGv3MoRt-LveBchn-c1Xy-DGap7fLVRA@mail.gmail.com> <D8QI804Q3DAS.2BV4WSL81H52Z@proton.me> <CAJ-ks9mA5QDeZ3EvOD3THayFt4TtDysgm0jp2aiSF2mQCrhWiQ@mail.gmail.com> <D8QJMH5UR6VG.2OT5MXJJQU5QT@proton.me> <CAJ-ks9m96vf_HxttuopuC_UfNGJbHHNdEGS2er6nZZG38pe3HQ@mail.gmail.com> <CAJ-ks9n3BdKkfCpMXhE8M8Sx4B5rASoNvbmA4zPU3rmPQwZCiQ@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 82a53baabf13e0ce95fda485724e51f17f7c7368
+	s=arc-20240116; t=1743115767; c=relaxed/simple;
+	bh=GqgiUgQzTuachwpE83erEBD5APQu6MQKKAcYqIQFXlk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vk27G5LGN+mohY2jQ07n82xZWumAYqh3m6q4tq34DC2boGUJtC9PRCNgfkkF85cdEu0Uwqi4hfa9QLptCQ+LUgtgQX1BYtl3Dp0ePMtbnxnLarzskyoIrt7kMaCgzG5odCtktIez7NKS4rcQD+15L844i0pKHhShAn5/qq07wx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dHKMPCzN; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dca468c5e4so2707451a12.1
+        for <linux-pci@vger.kernel.org>; Thu, 27 Mar 2025 15:49:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1743115763; x=1743720563; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ko96aC2XhNp3VJtoDCX6aRTYa+8MPfXvreAUPSIkGKU=;
+        b=dHKMPCzNZzSRAKXCOfKkRcU467UcBCrZlHqfL+90uvQNQpLo9SQFBLkiYLbVCPH8KB
+         /MpMB7kqvQbuJAK2giY7ZqwGxAuVToAuTM1st82o+1F1n0iEl0RD3AfY6OvztRETD16l
+         M99Bo16194SJYmUzWlM8DM+aVNraQZDJVIkGZcjU6rorue0LJiwMUJSyJEiGxXYBA9Q2
+         soDHKEtxTzAfH7o6av3I8hXr7VE7TpmUzV1nLRwRy6jIGe1GOWiQJ4FnFtW8sRj0z09Y
+         dh5Bpalup+ubis16vtB7kJAG8tNl+w/kuDPfmldQ2XNXFdipRW7zYrKHeEETSyoeHxwZ
+         L9KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743115763; x=1743720563;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ko96aC2XhNp3VJtoDCX6aRTYa+8MPfXvreAUPSIkGKU=;
+        b=u5ioQ50XvY4Q4BH/kwsb4ZIZGm+lwin3xM+d+hHKUYPsdC8qE1utfXimGNX1WIakje
+         Bo5eo/+EoexyJrbBOUTdaMpOeaADbmnVGgeO+ntbgXy6op2ejCzyGwMsY5Uiwpx7eqeH
+         M+nvVpFBEPW6peSCIjXyVDRMlLSjRgWskObIa6OaGZ9AGdMfzHKNDyPltdIWlvO30sHk
+         VR0jPT6FzxgwUYjl8JafJIm5BM7ZpZ/xOH+mWiM61+M8B3jQl99N7aLr4bfo3mTNU1lc
+         SROPRSipMxeuT1coih9YSKeP+XFzuxQE7nzDFMSuh+s4OAl3nQOuNgIzpnN58YKXb6z3
+         eTQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLyXia65wCZi4qbSmtVOGTicIolyLG52DUWoZG8RY55ADWpa+dJ4b50nsUCUxPtUSsLFAh71fS1qs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv372Il0wWZX/4RUhNrndrGQApRJyti+DOiYRrnrbmQRnRgW5E
+	v7demfeZdobwloxfriPpRj9mcn6L0Y7oM0ski3tZAbmlNgcsF2+fCHnLsLVJkAgm2ABi1q+K0HT
+	wvFCQ8Y1QpRB60JXuZ6qbjOLNZhrlK1Gttr9q
+X-Gm-Gg: ASbGncv0MlhXW9XTBAFYjmYr5gpMYs0xS854Nbr/AwEbS8FQVA910CgSFTrVXyeEu/c
+	DFMSG3EcGEUWbLcdzDXJFs1JCoEDpDLl7gR+u8Rcbpb5IXBuKULIElR+ctSgaVjblEHFjIt6tL3
+	Tn0/wG1z3naz/GfE06AYlaavycVRf7NfmD0nXmP3bHjQdLOPW16uCB8Jip
+X-Google-Smtp-Source: AGHT+IGGKipq49dbbFdsOX7HsBG2FTRBgE5W/r/BShtFy/x8Lij5Epzt2jZRXjgbqUdoInsNeqsqVGBUcWZwMS2KU5A=
+X-Received: by 2002:a05:6402:278e:b0:5ec:9513:1eaa with SMTP id
+ 4fb4d7f45d1cf-5ed8ec1c0d3mr4670974a12.23.1743115763183; Thu, 27 Mar 2025
+ 15:49:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250321015806.954866-1-pandoh@google.com> <20250321015806.954866-7-pandoh@google.com>
+ <614abb3f-fd4f-40e1-8e22-3c58bc2314b0@paulmck-laptop>
+In-Reply-To: <614abb3f-fd4f-40e1-8e22-3c58bc2314b0@paulmck-laptop>
+From: Jon Pan-Doh <pandoh@google.com>
+Date: Thu, 27 Mar 2025 15:49:12 -0700
+X-Gm-Features: AQ5f1JpP2IjeV9NuRBqVrcp5w5q9OMnbZBgHlxQSbcX40YS3yaFBF2tCqCSl_U0
+Message-ID: <CAMC_AXUNNCDVqUufwWHrXZU8URz3VzZL4ifwQaHf23e0BCTB0Q@mail.gmail.com>
+Subject: Re: [PATCH v5 6/8] PCI/AER: Introduce ratelimit for error logs
+To: paulmck@kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>, 
+	linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
+	Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+	Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Sargun Dhillon <sargun@meta.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu Mar 27, 2025 at 8:44 PM CET, Tamir Duberstein wrote:
-> On Thu, Mar 27, 2025 at 10:15=E2=80=AFAM Tamir Duberstein <tamird@gmail.c=
-om> wrote:
->> On Wed, Mar 26, 2025 at 6:15=E2=80=AFPM Benno Lossin <benno.lossin@proto=
-n.me> wrote:
->> > On Wed Mar 26, 2025 at 11:09 PM CET, Tamir Duberstein wrote:
->> > > On Wed, Mar 26, 2025 at 5:09=E2=80=AFPM Benno Lossin <benno.lossin@p=
-roton.me> wrote:
->> > >> On Wed Mar 26, 2025 at 8:06 PM CET, Tamir Duberstein wrote:
->> > >> > On Wed, Mar 26, 2025 at 1:36=E2=80=AFPM Benno Lossin <benno.lossi=
-n@proton.me> wrote:
->> > >> >> On Wed Mar 26, 2025 at 5:57 PM CET, Tamir Duberstein wrote:
->> > >> >> >
->> > >> >> > Yeah, we should do this - but again: not relevant in this disc=
-ussion.
->> > >> >>
->> > >> >> I think it's pretty relevant.
->> > >> >
->> > >> > It's not relevant because we're no longer talking about transmuti=
-ng
->> > >> > pointer to pointer. The two options are:
->> > >> > 1. transmute reference to reference.
->> > >> > 2. coerce reference to pointer, `as` cast pointer to pointer (tri=
-ggers
->> > >> > `ptr_as_ptr`), reborrow pointer to reference.
->> > >> >
->> > >> > If anyone can help me understand why (2) is better than (1), I'd
->> > >> > certainly appreciate it.
->> > >>
->> > >> I am very confident that (2) is correct. With (1) I'm not sure (see
->> > >> above), so that's why I mentioned it.
->> > >
->> > > Can you help me understand why you're confident about (2) but not (1=
-)?
->> >
->> > My explanation from above explains why I'm not confident about (1):
->> >
->> >     For ptr-to-int transmutes, I know that they will probably remove
->> >     provenance, hence I am a bit cautious about using them for ptr-to-=
-ptr or
->> >     ref-to-ref.
->> >
->> > The reason I'm confident about (2) is that that is the canonical way t=
-o
->> > cast the type of a reference pointing to an `!Sized` value.
->>
->> Do you have a citation, other than the transmute doc?
-
-Not that I am aware of anything.
-
-> Turns out this appeases clippy:
+On Tue, Mar 25, 2025 at 10:17=E2=80=AFAM Paul E. McKenney <paulmck@kernel.o=
+rg> wrote:
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -533,6 +533,7 @@ static inline bool pci_dev_test_and_set_removed(str=
+uct pci_dev *dev)
+> >
+> >  struct aer_err_info {
+> >       struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+> > +     bool ratelimited[AER_MAX_MULTI_ERR_DEVICES];
 >
-> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-> index 80a9782b1c6e..7a6fc78fc314 100644
-> --- a/rust/kernel/uaccess.rs
-> +++ b/rust/kernel/uaccess.rs
-> @@ -240,9 +240,10 @@ pub fn read_raw(&mut self, out: &mut
-> [MaybeUninit<u8>]) -> Result {
->      /// Fails with [`EFAULT`] if the read happens on a bad address,
-> or if the read goes out of
->      /// bounds of this [`UserSliceReader`]. This call may modify
-> `out` even if it returns an error.
->      pub fn read_slice(&mut self, out: &mut [u8]) -> Result {
-> +        let out: *mut [u8] =3D out;
->          // SAFETY: The types are compatible and `read_raw` doesn't
-> write uninitialized bytes to
->          // `out`.
-> -        let out =3D unsafe { &mut *(out as *mut [u8] as *mut
-> [MaybeUninit<u8>]) };
-> +        let out =3D unsafe { &mut *(out as *mut [MaybeUninit<u8>]) };
->          self.read_raw(out)
->      }
+> In my stop-the-bleeding patch, I pass this as an argument to the function=
+s
+> needing it, but this works fine too.  Yes, this approach does consume
+> a bit more storage, but I doubt that it is enough to matter.
 
-Seems like your email client auto-wrapped that :(
+The reason for the boolean array is that we want to eval/use the same
+ratelimit for two log functions (aer_print_rp_info() and
+aer_print_error()). In past versions[1], I removed aer_print_rp_info()
+which simplified the ratelimit eval (i.e. directly eval within
+aer_print_error()). However, others found it helpful to keep the root
+port logs as it directly showed the linkage from interrupt on root
+port -> error source device(s).
 
-> Benno, would that work for you? Same in str.rs, of course.
+> The main concern is that either all information for a given error is
+> printed or none of it is, to avoid confusion.  (There will of course be
+> the possibility of partial drops due to buffer overruns further down
+> the console-log pipeline, but no need for additional opportunities
+> for confusion.)
+>
+> For this boolean array to provide this property, the error path for a
+> given device must be single threaded, for example, only one interrupt
+> handler at a time.  Is this the case?
 
-For this specific case, I do have a `cast_slice_mut` function I
-mentioned in the other thread, but that is still stuck in the untrusted
-data series, I hope that it's ready tomorrow or maybe next week. I'd
-prefer if we use that (since its implementation also doesn't use `as`
-casts :). But if you can't wait, then the above is fine.
+I believe so. AER uses threaded irq where interrupt processing is done
+by storing/reading info from a FIFO (i.e. serializes handling).
 
----
-Cheers,
-Benno
+> > @@ -722,21 +750,31 @@ void aer_print_error(struct pci_dev *dev, struct =
+aer_err_info *info,
+> >  out:
+> >       if (info->id && info->error_dev_num > 1 && info->id =3D=3D id)
+> >               pci_err(dev, "  Error of this Agent is reported first\n")=
+;
+> > -
+> > -     trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask)=
+,
+> > -                     info->severity, info->tlp_header_valid, &info->tl=
+p);
+> >  }
+> >
+> >  static void aer_print_rp_info(struct pci_dev *rp, struct aer_err_info =
+*info)
+> >  {
+> >       u8 bus =3D info->id >> 8;
+> >       u8 devfn =3D info->id & 0xff;
+> > +     struct pci_dev *dev;
+> > +     bool ratelimited =3D false;
+> > +     int i;
+> >
+> > -     pci_info(rp, "%s%s error message received from %04x:%02x:%02x.%d\=
+n",
+> > -              info->multi_error_valid ? "Multiple " : "",
+> > -              aer_error_severity_string[info->severity],
+> > -              pci_domain_nr(rp->bus), bus, PCI_SLOT(devfn),
+> > -              PCI_FUNC(devfn));
+> > +     /* extract endpoint device ratelimit */
+> > +     for (i =3D 0; i < info->error_dev_num; i++) {
+> > +             dev =3D info->dev[i];
+> > +             if (info->id =3D=3D pci_dev_id(dev)) {
+> > +                     ratelimited =3D info->ratelimited[i];
+> > +                     break;
+> > +             }
+> > +     }
+>
+> I cannot resist noting that passing a "ratelimited" argument to this
+> function would make it unnecessary to search this array.  This would
+> require doing rate-limiting checks in aer_isr_one_error(), which looks
+> like it should work.  Then again, I do not claim to be familiar with
+> this AER code.
+>
+> The "ratelimited" arguments would need to be added to
+> aer_print_port_info(), aer_process_err_devices(), and aer_print_error().
+> Maybe some that I have missed.  Or is there some handoff to
+> softirq or workqueues that I missed?
 
+We are not ratelimiting the root port, but the source device that
+generated the interrupt on the root port. Thus, we have to search the
+array at some point. We could bake this into the topology traversal
+(link PCI ID with pci_dev) as another param to aer_error_info, but the
+array is <=3D 8 (i.e. small).
+
+The root port itself can generate AER notifications. Ratelimiting by
+both its own errors as well as downstream devices will most likely
+mask its own errors.
+
+[1] https://lore.kernel.org/linux-pci/20250214023543.992372-2-pandoh@google=
+.com/
+
+Thanks,
+Jon
 
