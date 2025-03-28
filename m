@@ -1,157 +1,108 @@
-Return-Path: <linux-pci+bounces-24938-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24939-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12825A7498E
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 12:57:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 612ECA749BA
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 13:21:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AABF57A71A9
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 11:56:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01FB61796B9
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 12:21:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ED7C21ABDF;
-	Fri, 28 Mar 2025 11:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t9FkWAyP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE9451537C6;
+	Fri, 28 Mar 2025 12:21:27 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A734D21ABBD
-	for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 11:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A151714C6
+	for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 12:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743163052; cv=none; b=rBR7R9cu/107Wa2db5Ey3ZRUCMOI9daImyvsz0IcKQkP+umepO9z4QGBQItePEtpfAD8Zaf4LeFJl1Nb3SRa8x9oC3Hs57Lo2A3IAlVTR9Lz3keIUth1xmhgWwKoVeJQ7uyWcBNiYYFI2hG03Yfx7omJyTgkI+Sxg8Imfm+gPL8=
+	t=1743164487; cv=none; b=GbgD+wScUPYLxkpR8HyBHLub1ZZ3M1+CBzv3FaVSQ2K5GqBndcIO3zNPHJnLM9h79keAOwd5gA6xRCk56A1bfyqSj3EoyBNY9qR97cBEN51uIGeCwWs0FN9k10/L+nj0ysdXHaPglA1NaL7mT4R47bpNHgtvKlbTuBFy0rxrXEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743163052; c=relaxed/simple;
-	bh=5GDfzUJ0O1UJv+6AsGBK+HNuTYhMO6vdvgxFzmpti90=;
+	s=arc-20240116; t=1743164487; c=relaxed/simple;
+	bh=onPZONaQSMs4AEMZGDMvbQ8S970SvlNZYm+bPpF35Wk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PZXNKm9qGmLs6V8cV+/yG1W6P4ccS+XYav7edr/duEQDcIWIhGOzH0kgDtE6BdK1ftq/xSyOJDzzT5tu7pckkQ1C1cdwTQuR59Wa8wLFKBX7cU6S+UAzVo5x5TzffpdT8PSUcdEAlAuLiPGFkZHc0Yf7kt7PamJBi6Gk4iNoD7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t9FkWAyP; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-225477548e1so39858775ad.0
-        for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 04:57:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743163050; x=1743767850; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2WSTXYuPuJrQiD3WS1ovJqKrZZeFszs51P1tbuSXoqo=;
-        b=t9FkWAyP+1JEHEV8vVmmkUceqVQlsPT3ZsDhNgEGeb68VBOcXKgsmlIw8+aR0+5Q2a
-         ugIDshbTcscA7ndDcD8KW39izKuf2mPOcRF/zyVaEhZuZL3PLi0VGoOXNjabgBq2k9Gp
-         U2Zf7kEa/MO1FcJf8dorWlXwPR75ccHhWVs6qmBxkWTiIn7dnlnMxNV5eZRYxGe4bMYX
-         /ZziiGTvso803MXwl5H5oJGLtf4hUVV0/PCuJdhLaTPNRPbA7OkAdwZAalAz9RMi22eK
-         XqMjcH5dD+15UQpM+n72KTHZnQPu3sALTrj3YIWMvtXVtInEvtd65uz+HtI2Ak8hE7zr
-         KvEw==
+	 Content-Type:Content-Disposition:In-Reply-To; b=rtUKUm2o/wr0J6oWOGOYL0kAB40eLaRPsBSm5QfKPkoDZf1eW5nsBinUy2TjkxSLYM9afSYoo3npHyGtumFm9tlrUxiL8oHuiNfUCqDNZCoP97n8a52Q4G+oTLxrMAzcMU3i9Zklw3KoWjfY45QaVREFxeN++JxtIhjexlaHTYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-225df540edcso62383125ad.0
+        for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 05:21:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743163050; x=1743767850;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2WSTXYuPuJrQiD3WS1ovJqKrZZeFszs51P1tbuSXoqo=;
-        b=NQobENgbrFZHEEvd58bI9uZIcsHa/gKg+Gwg+q8/e1T8VZF542p6LUWiHvVpSwH8K6
-         Y2SDrjendgRRbxlSWuG20CXykpDwt6HBdEeTM8SMgt1uM/eug+qPa1a3A71mzpvqXNzr
-         5NGU9aLXelgeN6teyews7XwvZo6R7Ar9EvsMNtJX1AXArH/HLCI4Oudb0YrKu/vYAiIO
-         JdpBHoBCR2iCWVH9ZlzDjFYfGPCeN13dbmljeLPiBKR32v5Th9wmwihOSCy9qGf57gwb
-         foGQ9x4Uj+lQDS+5KW0diJQ4794pYGax63hkCDJv8sl7zEFNzzm9jhXXnKtiZGmBtRXi
-         L14A==
-X-Forwarded-Encrypted: i=1; AJvYcCV9xj4rCWSAcCVrznZRHLO5fIzyp5dlciHNyKKFxGL9xqGx/C77RbbViSrjwKHnKoPAdksOmrxJm6I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc9c4y5GcEL4oqBqlvfLcnxi61MzTWzuG72850thI7Uk8GqFce
-	nPjmKOeendSTHqZmlJdj3okeflW7kSuSqO2Ky+2aVEMBvBelReZcKGxDK5Tlgy90NRAKAv4pISs
-	=
-X-Gm-Gg: ASbGnct2GYt1xAdsPMUScgw6vlfGoksHVUcS0nhPNyGi1mmgYlr6LoPV34wvJZBMgb/
-	iOK+BN3oMH14JMm0T+FMtzRABxX6p3gxGPq0KkcBWXW4Xt6BtsklyeTkKl4SvKDGNPRqycCbfDk
-	VYHQqsY1uDiENKTJir+KWzewFVkqI1NhLcDmnGVHeeYTcLmez3xhDbutPWtBxC6Edv5bBpak7IS
-	tu5jieegjIbH3Hg1FDbNo6uI0k3Sn3LvUL6jbxRNNuE53k+UuAJc9Eg4JHky/2sFumy8WSj3CbM
-	zcRKJnRtwtg619/tfol4IvMXixY067rf2aKeutjQcGvUldQyd2soolk=
-X-Google-Smtp-Source: AGHT+IFdD+HV+lVgnf7AEQHBGqiVj/X5kE9O+NyRDYWYelqL9118SJPkXyhWPFS6cffYjzlGTjWgXQ==
-X-Received: by 2002:a17:902:d2d0:b0:224:1eab:97b5 with SMTP id d9443c01a7336-2280482a729mr114984625ad.1.1743163049794;
-        Fri, 28 Mar 2025 04:57:29 -0700 (PDT)
-Received: from thinkpad ([120.60.68.219])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291f1cf131sm15861545ad.134.2025.03.28.04.57.24
+        d=1e100.net; s=20230601; t=1743164485; x=1743769285;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r/9N6IGO2b06XLqPK9RBGgEbBk8wQn9vBDguitaJu18=;
+        b=T++G+4mamQwKZ/QbBaoGg1Ry0qK0Vj3rfb5ojIxDFvz1TrYV9nTxnarIg7hufV0v8e
+         GBJSQ8g/xLE5xyG4nNQphLa3jdm4Z69FY7pcpr0H135N/efomCTNhW6PjW4lvUeU9Fd6
+         hnyYSkgMQqYtLtnk3ct9DFR/E+H+Cr4zRX3rfhULmoMw95LU7nYooyNiMVp0wM1cQisd
+         WS2/t6eho7DZ4EptZBSBSu667QmDkcwS4UmkOt5XiyE++VhOD/FqdIebDqnuIezEUg3O
+         hFz5s5lU/WcOqLAGf6MpDyRPrTqTCaXv/AsnljHkhjx7nNjzERT5HqS8WzRBwpZRg6Dx
+         aVLg==
+X-Forwarded-Encrypted: i=1; AJvYcCUtb1OzGPtLlz/Jv4CP30mV6+5VvxsLFs5bTIGy/fPY0ACe0RwYfSouAzuuvptCAbhqonS6843PuYs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMwJuqUybTkWndvy7b3ntmWORhWpw4kQd9v/MJZTznrd60JHNH
+	LSZdLJUhob+iQsTmHYUMT1SuN9/Pipi3QB3pzx+DcwPIcPOeNQjx1yDYRUL7
+X-Gm-Gg: ASbGncuytI65dq+BUSMci8CG8+/uFXtcI0kLEHLDXQ1LRQMeMpEB+Htr2NQ60P4YV7N
+	1GtWCsUyAdCCyuI/AQYoYFMqD3f9SKN7LTruPCLllbQOQnKXE+eNOoVj8Kg+xW4+pH9KIh0JG30
+	hUPTdW5H8A48b9DjAG7dUAyFkaIuOczUYeXOz9s1PXT+t1iSgxuQjQ8UkLKKL+lXQCTmQs/1o5e
+	OL6dBLO+3IWY/8nH33jPjBUchiZPRn2zu3FxSCnaIG7iCdW+ip/V26fyHhXaT0P2QIOoJ4FywTy
+	+BGD+6RgJ5r58kCtiHDg6cISqzuUxThcki5Q8EQ1SFM3LxhBeux3bzIO3bWu+xdqU/OpTSXhbHg
+	K/ak=
+X-Google-Smtp-Source: AGHT+IEiqFnwgAfpimqiawKJtkxu/+UqZskGggMC1JBWEQJ69Smb/Nhm2zy+DwpXPUHdJzcDz3gJlg==
+X-Received: by 2002:a05:6a20:9f03:b0:1fe:61a4:7210 with SMTP id adf61e73a8af0-1feb5b80d62mr4306855637.2.1743164485217;
+        Fri, 28 Mar 2025 05:21:25 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-af93b52ea6bsm1271537a12.0.2025.03.28.05.21.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 04:57:29 -0700 (PDT)
-Date: Fri, 28 Mar 2025 17:27:22 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: cros-qcom-dts-watchers@chromium.org, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, quic_vbadigan@quicinc.com, 
-	quic_mrana@quicinc.com, quic_vpernami@quicinc.com, mmareddy@quicinc.com
-Subject: Re: [PATCH v5 5/7] PCI: dwc: qcom: Switch to dwc ELBI resource
- mapping
-Message-ID: <kaesp6i5n5bocpp7m3i5qzsw7amyy4nw5f7bspe5zpxjeu4m3h@m3eg66rkxjhi>
-References: <20250309-ecam_v4-v5-0-8eff4b59790d@oss.qualcomm.com>
- <20250309-ecam_v4-v5-5-8eff4b59790d@oss.qualcomm.com>
+        Fri, 28 Mar 2025 05:21:24 -0700 (PDT)
+Date: Fri, 28 Mar 2025 21:21:23 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: rockchip-ep: Mark RK3399 as intx_capable
+Message-ID: <20250328122123.GA1187318@rocinante>
+References: <20250326200115.3804380-2-cassel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250309-ecam_v4-v5-5-8eff4b59790d@oss.qualcomm.com>
+In-Reply-To: <20250326200115.3804380-2-cassel@kernel.org>
 
-On Sun, Mar 09, 2025 at 11:15:27AM +0530, Krishna Chaitanya Chundru wrote:
-> Instead of using qcom ELBI resources mapping use dwc mapping as this
+Hello,
 
-s/use dwc mapping/let the DWC core map it
-
-> ELBI is dwc specific.
+> RK3399 can raise INTx interrupts, as can be seen by
+> rockchip_pcie_ep_send_intx_irq().
 > 
-
-s/dwc/DWC
-
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-One comment below.
-
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
+> This is also in line with the register description of
+> PCIE_CLIENT_LEGACY_INT_CTRL, section "17.6.3 PCIe Client Detail Register
+> Description" of the RK3399 TRM.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index e4d3366ead1f..258b2d615080 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -265,7 +265,6 @@ struct qcom_pcie_cfg {
->  struct qcom_pcie {
->  	struct dw_pcie *pci;
->  	void __iomem *parf;			/* DT parf */
-> -	void __iomem *elbi;			/* DT elbi */
->  	void __iomem *mhi;
->  	union qcom_pcie_resources res;
->  	struct phy *phy;
-> @@ -390,12 +389,13 @@ static void qcom_pcie_configure_dbi_atu_base(struct qcom_pcie *pcie)
->  
->  static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
->  {
-> +	struct dw_pcie *pci = pcie->pci;
->  	u32 val;
->  
->  	/* enable link training */
-> -	val = readl(pcie->elbi + ELBI_SYS_CTRL);
-> +	val = readl(pci->elbi_base + ELBI_SYS_CTRL);
->  	val |= ELBI_SYS_CTRL_LT_ENABLE;
-> -	writel(val, pcie->elbi + ELBI_SYS_CTRL);
-> +	writel(val, pci->elbi_base + ELBI_SYS_CTRL);
+> Thus, mark RK3399 as intx_capable.
 
-Since the driver was checking for the ELBI presence always and the DWC core is
-handling it optionally now, you could add a check here to make sure that the
-'elbi_base' is pointing to a valid memory.
+Replaced the following commit:
 
-- Mani
+  e55c67837a8c ("PCI: dw-rockchip: Endpoint mode cannot raise INTx interrupts")
 
--- 
-மணிவண்ணன் சதாசிவம்
+With this one directly on the "endpoint-test" branch.  This is per the
+conversation at:
+
+  https://lore.kernel.org/linux-pci/20250318103330.1840678-6-cassel@kernel.org
+
+Thank you!
+
+	Krzysztof
 
