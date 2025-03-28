@@ -1,248 +1,151 @@
-Return-Path: <linux-pci+bounces-24951-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24952-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAF3EA74D2A
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 15:53:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 545FFA74D2F
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 15:54:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 51B987A60BC
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 14:52:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7D0591894EF9
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 14:54:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78C5C1C4609;
-	Fri, 28 Mar 2025 14:53:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D9B71C9B62;
+	Fri, 28 Mar 2025 14:53:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="e04/jbhK"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="j47aPpmg"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013014.outbound.protection.outlook.com [40.107.159.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95DEA17332C;
-	Fri, 28 Mar 2025 14:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743173628; cv=fail; b=Iphx6BNlmH+EbRomeRk396ccbe+VOmzDtRxvyLWdjZ95zMbt2Lh8evMxb2iLAbmcZ20l/wPr7o/0y3mNe2rCCiUXRJLn02PNVd8OC0VfNtgNsRH1u68KHawN8YuvgWZ+zT6F4ZzNsPy7zuXvqJR6uSMIp3c6me5eCxTG1se9Mdk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743173628; c=relaxed/simple;
-	bh=tfkPGjbAn9HZBB0rG3wyOBTdtvqatww3BxYVVVNZjjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kRyJkgVD4/Lbv20gMRjl41tTap6bLTg6EKYSQ9efReMRxtAqWN8Kt93zaTHn0/uj/Z68hGRiK/bYjDixYYO9hTcfp6YHgRNrQHO5iJmNiZIIcJWhddktpYCiC4ZMrqbbMMT0giUm9Bw9gS57V7u5XguE7cSHQHv+aU264VK1ZZ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=e04/jbhK; arc=fail smtp.client-ip=40.107.159.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ySjAy7jA6DdowykwhDGLkcXDiIKwCQZGNGlfEaaB/q8IytBDd8eiFA4OCJOMQq+0brobBggiClUSi1R5gj+WWd8NNu1+OU82iUN/1lQt7eXRy//n2QZmBsqpWeSpBft8uKE03/JCDJF3u5UBo451mdI8/2t6DZYZ7JLN8r0M2sNhLhtbjgvR3EhrgKrhnJMHa0MJHubx8hwotSqXQHIObgLX1s82F+tILmf7FklpMkIHzAFtVNz2+a7c/kzglN3miR35bKNj0/ZwCJJHvRI5jLjqPh96W37M0pjeF5zaer/VRTRwCea/9+0NyGuddi2kVI6jH7oNQXlifiDcHp2EyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZW4XRC8RRIvswrNqc1GytbUJSPMhqHsI1ePi5uwuvuU=;
- b=uW5oi6YqT6pe8+rGpeSVjO9W3S270g2RbTAYhiMduy/EHRdPlIvH2xXNevxz1YkE9j44y/9H5M00BMxzDyHIR/yaWwzLSh+r4+Odx88qFpfCQkG7guiryMmXLdfajUESOEZd2f53MPUn+s7GPvsY3TpRfOwYQwymulWhyUvxvaOhraVfy48ABcZ7DirNRhpHlw5KSl1PgeKJ+dU87p5hc2LiKPWwSm6Jw30ZilBhkOoAUkdU6sFjscfp+1AAkV1McD/AD7dtf45JOtT8b3n1QyPMIlw62tEOwRbVrPI0k/d5DGGl+H7R1Ao/0BSUy37ryXhkmYR0GISbwNUvpHHR4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZW4XRC8RRIvswrNqc1GytbUJSPMhqHsI1ePi5uwuvuU=;
- b=e04/jbhK05AsWwPg1ulqx8TDN1cHHXe5fzzqyKqc8ysZ2//w9kdzwITm2JoPLapvJkwg8Ah2oHzekq3BBwrtO0xp8OwZ6eZjUY1oHfjb25bIC5UqfQo5fRCSSm5B4RXqF4bpHNwJ7q4jvGw7C/2M1uKQ+24W1EBDnmZd9pytJ9FgkNYvFPyv9BZVQeCQhIDYpcQd2ORBKD+XdSf6JtpZcEOqF1ngK6vZb8cjoZXXYRU6dp5reWhS//S7hjBoAGxldlwCuJfwWafOuZCG6znY4ZJ6cfuVJbXQobcF/GEP98IulfRVTFhO6IK26LBrObV5uuAZHoZbUKCp3ezaFcMbPQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by VI1PR04MB6864.eurprd04.prod.outlook.com (2603:10a6:803:138::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Fri, 28 Mar
- 2025 14:53:43 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.8534.043; Fri, 28 Mar 2025
- 14:53:43 +0000
-Date: Fri, 28 Mar 2025 10:53:34 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: l.stach@pengutronix.de, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] PCI: imx6: Toggle the cold reset for i.MX95 PCIe
-Message-ID: <Z+a37g228ERrR9qd@lizhi-Precision-Tower-5810>
-References: <20250328030213.1650990-1-hongxing.zhu@nxp.com>
- <20250328030213.1650990-3-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328030213.1650990-3-hongxing.zhu@nxp.com>
-X-ClientProxiedBy: SJ0PR05CA0162.namprd05.prod.outlook.com
- (2603:10b6:a03:339::17) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790171C4A2D
+	for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 14:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743173631; cv=none; b=lFqju9UURXaWIMARoVKZuN62yccLYHEYD04Ln1pCCuKIfET+7cZ9SmTuj3t1dCWukFeIwpZMjKc5uu7ar7k6ABrgadr2cnK4zrhtVSiDRGqOJrrpbvvDioq2Weu6rh01kdUQ3W3gTqEkRCilrjRAEFneapwkhDcRkcWAgH7hWI4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743173631; c=relaxed/simple;
+	bh=h+SzrP+RZ8z9TwNW8IncYGnwYKmJ+Japqx/sQUvxAAk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Hx86J953XwBzuU7GbaIFOJ4xkv+NKEFILnOzhJBzdzCSdlN4PclN/B6/Ihz+Fck/0UmlN4UwS79Zy9LhZUHkQQoHN5rHH99jl1k3yJoom8sIjtvKyS9gs9nfNW3dDAqOC8KCOO2ZvxrvIZqN1mnCZ3kYYBQOQnrtoc1PlDWMu3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=j47aPpmg; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43690d4605dso15736135e9.0
+        for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 07:53:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743173628; x=1743778428; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MkLAt8PK2xSjKKwaEKAeZ6n8Ih4eyZAWH2VlHcJWcqY=;
+        b=j47aPpmgTDSlW/QP9AD/JOqfES38bh6IHHFuddOQ4VffqIQSeOZ7RbzVDzwVl/wTHy
+         /IlQL54XDwIFZ+I2Rc0VWZqeCKT55MsNAfNCpquoYGAQtT7ieEe2ykzdXKA4PjKd36mm
+         RhmSIWWWGKNLMz5mDiJaShAem7rPXKli3MvouCeYmDE7jHcceBsFqfPyxRUST11s7/ZQ
+         S8LUdbsoySw3EhTf8z6whrgZPheWdO/WoGzSEVUCeXf0V4Il6Sw/tiCdOcn6doPhOmVe
+         o1QZ6D133CceGggSXDJ9910ZRffUZKuO8PJH46KLbCGddx2kyzN8slYN6KnW2tnlmJLS
+         x2TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743173628; x=1743778428;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MkLAt8PK2xSjKKwaEKAeZ6n8Ih4eyZAWH2VlHcJWcqY=;
+        b=XLWoYCU+V3GR1IwJE47RDS9eilsvjUaREzbYReHoKUVrjnHzf08op8zhZNJn936wLh
+         pu3YnzD6PHvLhdIbvjisLrl+Dos543GuZT4Yn8iNqZQrBnyM4KbAFRF9RUa1GkgdnB1+
+         VWYbTJch7nSp3TKlGswCFzAe0OH/aZNK17E0eNaKe+mMrXHL3CZZfLUjwPnIE10p5qly
+         /H+2iu6zpJLShbm6JWTLllPabbBivSkGLToj2n05/sidrKDPSuzOOt+cp8Y4Wfc0nm6q
+         DxvGQvVZa2vkTA8rPjR7xkOP3YdB0+lHG9AMdn34FH8QpHjPX95c/nfKD8i/onHUQcSK
+         zEhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9fU+Kq8B7bC7oy7d0kyb6zYPuqHD/r6g/Xs3cCuDEv3LNZhuGqyYA3NLmctYPDkzqJtJxlLm2SKM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcLy1mlQ8wsKXxmZUtP+Ug0QohPjL8VKIfOfmhHHuPw5qgB79l
+	/RTHXFpzSjGsTqfzWgA2rRr/fu4b8PC+yPRDrNvZ3liyAUVIKxG4yT5GQ0DVRU4=
+X-Gm-Gg: ASbGnctD3+YrQfmsqfJQjC2cDS8HsOv13LvsvhxlF0VecqL40hJaoDhJ2GRvgBlARvv
+	VgBCNcxMdAkUaENeASy+JaHEUo5pvnu87bAcE35n8+jBS17Flf33OA0Mswvm9vQr6KXLiJxjEY/
+	70UOvtSCf2Od0vQENERy/Pirr7kGd+kb0xyHK6D/1MbFGYbd31qhsBIjlJwDrIurcHkhhRNQNlQ
+	+UzimUIr0Zf8jp2aHBB04B0WJbFYk7V7/8CpieaI5dm39uWYb+V4SRwmozTYnAE+GwVV5XgID27
+	DNxkVX1A1UCnj/JYPwzSedGdMH3FbYldqo1v+L+iZjD7EhkKEN0u34ThYIo=
+X-Google-Smtp-Source: AGHT+IGNCjgZ3Bl84aRncvmcRZ1fKqVabYX/8QK9ricPnQMRBg81uZzPmVzF9hh/OcpNiA/ptaZDaQ==
+X-Received: by 2002:a05:600c:1e87:b0:43d:ea:51d2 with SMTP id 5b1f17b1804b1-43d850fd4c6mr101061575e9.14.1743173627741;
+        Fri, 28 Mar 2025 07:53:47 -0700 (PDT)
+Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:70c0:edf6:6897:a3f8])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43d8314e110sm75219615e9.39.2025.03.28.07.53.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 07:53:47 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/2] PCI: endpoint: space allocation fixups
+Date: Fri, 28 Mar 2025 15:53:41 +0100
+Message-Id: <20250328-pci-ep-size-alignment-v1-0-ee5b78b15a9a@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|VI1PR04MB6864:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6252eba4-62f1-4cf8-79f4-08dd6e085541
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?z2wnugEkZsWpTgDYB7pRPLCBJx4UByJMPpzkpAOwiG+u0sVf/xTYrWoM2fDo?=
- =?us-ascii?Q?UZIK0oq+wwzvI8BcLcfWANUASsaIs6BjrqUWgtArsROtNgZrQOkOLB2OnVzA?=
- =?us-ascii?Q?GsX2i1Mtn+QON2vQ7nZcP2TcI7yoOvFN5+hlgwHmij2/Pd+XVa5mLGuVIdYf?=
- =?us-ascii?Q?PWHAlwlyVaqgrsPkqWprFuMSxQvVbdCzXM/NCa648qBN1xk6PbF8XgPwYOVA?=
- =?us-ascii?Q?nplB61+n95/FlhJWxuxlA9G11SR0sIC8K+07wD3pq7PW++Od7EiVQEZHiNpF?=
- =?us-ascii?Q?ZIjMpjW066q+Mzp8z9qO04qjYQfvDUs0254VZ2MVwrkSZ+7y1gphvIOu34co?=
- =?us-ascii?Q?BhoFN38KGu5xPaC7wAMxr3Cx3YA7tkO9m0blw3eEHz1aAJkACmHqvdmEGokZ?=
- =?us-ascii?Q?hn6jbt3aPaPIm9ZyNyY+rKGjg2U+xfRo3tlNfl64HeYUsX3DbDbLjE+7ggHd?=
- =?us-ascii?Q?d7qYeDwaT1zRRNq4iGiUycuBXYUy/Y7WnDolKKY/jLTbRvR7vT2JbE2b+8iL?=
- =?us-ascii?Q?T69PbpeRY4dZpl4cwjraGyytziCVJjmlMbTTY9xpjchVUvPuTNmHd5JHgHOk?=
- =?us-ascii?Q?3atOs5emqkQDZHfbISm9YCkagAnaBG0UW1bV0D0CRIRJ0KPMv3cHTgBkEbYe?=
- =?us-ascii?Q?SQ2w6+KwGtjB1VasGCVNltrzUr4bjc/xatiBbKUFnr9/nZDqsClrlfm0Zxol?=
- =?us-ascii?Q?+pfPcWes/tN5Ka5Zk9ZOrxOGGl298McFhYwZnSU/m7JZtsUE8epmAhPhF3aS?=
- =?us-ascii?Q?tJFuO0umqcUyz/cWFhMM75J1CyzkgjVwU3brcn9K1Hl59YZlwKNju02oYTwS?=
- =?us-ascii?Q?lt1rvHcKxNTxIDOm0Jnc3KgAQvlChtRZpn9BEIhGbT8w6Naqhh6M9oFZVzmq?=
- =?us-ascii?Q?4vy3ESLk5j33wuv7ZLyJwpcqmKCNWuAl7n3KYxUnavYLg4BqdpRwpg3TPL1m?=
- =?us-ascii?Q?A2mQ2uHpuxmiAUKaWhBcrOUgBvyCd+zcv11Eixw+rjqGWiGwNakaao22Y5i4?=
- =?us-ascii?Q?zbZ45yIkpVfKt2XHFiQifrwnIcICteqQhDqq090zRO1wz7V6F6ffN2YJtd9H?=
- =?us-ascii?Q?m12rED3jHmzmJXNu1zxe2TH55EfYp69erO5bXlK7JnXZd56QCoI9p13aHz1+?=
- =?us-ascii?Q?L+GbshutTARWldjPTdXe/hc8+jLaok1juWiUsgZrxns2BitQeYQIgBMh2ICe?=
- =?us-ascii?Q?bIDWRYTw/qe3z6ZwbIxDbdLg5E0vOvuCN65+12eDIetXB27pTj8qWYzkgSNh?=
- =?us-ascii?Q?7kOoPjAf0rBG0OLCDXPzr/xSMKHZdpczW2930oopkbWwPThbd8yrddXRt9yf?=
- =?us-ascii?Q?0K23mAKhdO7o2k83dqt394arE34Vsx/siAQ1uQAUDs9MkAF/KpC9e1pNPn/G?=
- =?us-ascii?Q?U5MdhDRndGh3OKodG9E5/TIA18Si4uD7UAjxvGt2Dq2bok11hRDGBZgOXAyO?=
- =?us-ascii?Q?u4YfRVWins2ao1mft+AzScRxIlebGUbQ?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ooGk45nmJdtQq29hjqjFAFxN6pAyZUC4wivkZ6Cm+JM1huf7iz+YjFfsIsHs?=
- =?us-ascii?Q?9nu9et0APGyNpc0KazNO+EtbkDHu5+9n+ndBgCXtKYeRfprlozOk/4xw5q+9?=
- =?us-ascii?Q?uD6DxZUflVmAk6VJIcUTJQCCltElh1lRQjJtjuao4A7mKc/2ZEzTufshzcEB?=
- =?us-ascii?Q?EYOAe4DO3bSXaKNYogpcvtBqR3+8rVSFu7qpeBxCrLCQpLP8R9/otJwZ9w/8?=
- =?us-ascii?Q?KqkUbelQTpMqjMpx/QU0nrBPWqi8Kb3a7a95LiqqIcDdOxOrDOTxxoEfZtVR?=
- =?us-ascii?Q?ORONEgCBFka4yzm279sbGviP+EfTI86nMNUTmaMSOWQ0rXwj0/V6NCX1Pw1s?=
- =?us-ascii?Q?LI5YemKBbP0NucfkaBmzuNXL2zgc4Q7RXMS4l0wxq4Ct39QEW4byk+GK66Kx?=
- =?us-ascii?Q?u1ZP4DfLwTZnGEhKJWz3/TGc93C6Dqs0Xzh8Tl85pt03sDrKFBAtLUic8FcO?=
- =?us-ascii?Q?pEMnpPG+iIGznXTkaFg+IS1J8IhZceOTZBY/7/pbrO2yfy6Pejf6T09KOcEK?=
- =?us-ascii?Q?ecSrbgswtfs7ih5OJbjhEi0Lwj6RcNKQxsPCEIxUGv4uiKsQbApDAcdb2jr0?=
- =?us-ascii?Q?LIgpSSgNE8nuSsUWvh3mF4RibkIMID8U4pRUZJ8AooSgL/0yjdnwoNj8lxoP?=
- =?us-ascii?Q?AmzD3oHw89ghoh7T0yl+nsGaueqN0uPSszNS9F/oW3Tfgyy9JyWQgsUhbHUl?=
- =?us-ascii?Q?asla4zEevWKCnAl5U749ryXcPoTANprMepM2ilgETkV/plN8alJEzhyt8Ztz?=
- =?us-ascii?Q?Q+b56Lwnj8KDG4uzn9UKEzv+zWGeeI/bzIbmlrztvXSCaPMnJ8Z7S/zkj2++?=
- =?us-ascii?Q?fauZbR7HLI9JsHLdAb9DRkM78qDTjEq9j9fyplkrXCfvMIdh45LAIz6cfKE5?=
- =?us-ascii?Q?LP5dEZcW/yBRhX4TPtynrYiXwiqN42dWlsGNr7h1EHOficc1/J85PhbUiNYp?=
- =?us-ascii?Q?UeU9kK81QzJ5MneI16a8LhKbldHTOBD/EoE3iD2VFUeP8+PHvwVmhQejGt+g?=
- =?us-ascii?Q?bxvbHv5XxG74NXrtkJzJ5KAskU76SkE/zLh47qtoMY7a/qw7plb0caXVC12Y?=
- =?us-ascii?Q?s/hs0ioMaUmPoVlSHpHx/TZss6kYuE7nAbF2yOLU/QsL99Se5QLvvadNVzHU?=
- =?us-ascii?Q?rR4ouJ16midr/lCGIr1uRZJ732FND9q8T30nKyfx55Y5xyAGyq+fg9k3sI+g?=
- =?us-ascii?Q?B7YVYTRfQPy0CHmQS2J3EI+/h3426Ut5NwI85yUmkIiVbUgJq0AU8IgnRZhR?=
- =?us-ascii?Q?0LbHi7dRWkjk2bN24BY7MD0q81SCZLMCge2ylViOFTXvmw23rZw6k/wOq6zW?=
- =?us-ascii?Q?QvMZxnLtMIrR/pW12Dk9EQsz+Wemt0iGC9F6ccbrKGnkzvKxBGd5gTUMccLk?=
- =?us-ascii?Q?H3pmgEKm+RVq2UyBWzbeyGcVLPsv+SxSJHagnOFMzP+SdDmlOPWD+IHvIyHq?=
- =?us-ascii?Q?UXmgDhc/GqMRTOI1lWaRU5G4uxl+sPaBCymaMbj4oCtiJ/ulRThv44JD+hbe?=
- =?us-ascii?Q?UrE4m2PC13UAUMaad54RiWSNfnLzSwclJLKVGRRIYQkPhmWAHDxNuUdyyZig?=
- =?us-ascii?Q?++zFTUe1LabsGY1araLYIIs/+x1QZWkCusZLTxD2?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6252eba4-62f1-4cf8-79f4-08dd6e085541
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2025 14:53:43.2029
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HBDLVEmbmO6Oqhmf/Us9HxglFdgRNXKkm6+sCG3k+QckVSh1qV4wao79yBB3/2wjI8Pj17umavEYFdY4ReOj/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6864
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPW35mcC/x3MQQqAIBBA0avIrBswQ7CuEi00pxooE42IorsnL
+ d/i/wcyJaYMnXgg0cmZ91BQVwLGxYaZkH0xKKm0bJTBODJSxMw3oV15DhuFA1tvtFPGGakllDY
+ mmvj6v/3wvh/So2qPZwAAAA==
+X-Change-ID: 20250328-pci-ep-size-alignment-9d85b28b8050
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Jon Mason <jdmason@kudzu.us>, 
+ Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>
+Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>, linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, ntb@lists.linux.dev, 
+ Jerome Brunet <jbrunet@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1131; i=jbrunet@baylibre.com;
+ h=from:subject:message-id; bh=h+SzrP+RZ8z9TwNW8IncYGnwYKmJ+Japqx/sQUvxAAk=;
+ b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBn5rf3xAEcVhRALQDeCJiKrmyvwItNhXGCxC0ay
+ wRo6Wa/OkiJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCZ+a39wAKCRDm/A8cN/La
+ hdF0EACTpRUMvCU/wOvjdf1cqHznSt44zlfO+tSUZuOgT+NJzi949cAUHB1spKGFqF481MJtTDI
+ NvdIZkR4YrTWFXbCxiUa+55YL5Y9gWG91c+lYVwp4q7BTqvbYDE48Iwvag/Zkbj5Nc2l9N0n1Ja
+ Eg2xvUArK9CGvEhUoo9lzUeuprfo5OSpogtLvoyG1F5WQMLDAH1nUf+T+LzOFzLTbbVTMJwxbZG
+ dnxgteTNrwqANTbxorv+b51/5pRbak3YvUtgRhrNWMKg6KkRAoZhfslTe+M+nyEfDxEdsCjXb4D
+ TiTMOxpiTWFm8C1Cj88NwRpGyQvuoSGKGLFUa/gjfKGV0gAGtSsgfmLBl9kJfXy9Nr2T5nten++
+ u9GEwtgnDspcBFCXEJTQUgQtL6jNUVi2UHjHepwVVMwP21kQS6hn516xUG06zSCDYc1dJ+yHb/F
+ i4U7KqMK2s4PGb1EEsUV5CnCuDzy3J8+SJbOmqkwBLMjf2gKrMBbSVCJBykRqlDVgZVfpAdSt++
+ OPBDXz3JJRwh1QkEnNMUtNw36DFF/wdimHclAqRD1BUytA0wbwVTRLVeeApOHMEPUQssFzafiRv
+ tBQV5ijsPDBeNNC/XP6me9S/9MGr5xyCcgYzOVhQhvNuTixGb9+e7AhrAfjv/fZmWbz6zzu5kqA
+ iAHkXA2b74vDOrg==
+X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp;
+ fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
 
-On Fri, Mar 28, 2025 at 11:02:09AM +0800, Richard Zhu wrote:
-> Add the cold reset toggle for i.MX95 PCIe to align PHY's power up sequency.
->
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+This patchset fixes problems while trying to allocate space for PCI
+endpoint function.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+The problems, and related fixups, have been found while trying to link two
+renesas rcar-gen4 r8a779f0-spider devices with the vNTB endpoint
+function. This platform has 2 configurable BAR0 and BAR2, with an alignment
+of 1MB, and fairly small fixed BAR4 of 256B.
 
-> ---
->  drivers/pci/controller/dwc/pci-imx6.c | 42 +++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 57aa777231ae..6051b3b5928f 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -71,6 +71,9 @@
->  #define IMX95_SID_MASK				GENMASK(5, 0)
->  #define IMX95_MAX_LUT				32
->
-> +#define IMX95_PCIE_RST_CTRL			0x3010
-> +#define IMX95_PCIE_COLD_RST			BIT(0)
-> +
->  #define to_imx_pcie(x)	dev_get_drvdata((x)->dev)
->
->  enum imx_pcie_variants {
-> @@ -773,6 +776,43 @@ static int imx7d_pcie_core_reset(struct imx_pcie *imx_pcie, bool assert)
->  	return 0;
->  }
->
-> +static int imx95_pcie_core_reset(struct imx_pcie *imx_pcie, bool assert)
-> +{
-> +	u32 val;
-> +
-> +	if (assert) {
-> +		/*
-> +		 * From i.MX95 PCIe PHY perspective, the COLD reset toggle
-> +		 * should be complete after power-up by the following sequence.
-> +		 *                 > 10us(at power-up)
-> +		 *                 > 10ns(warm reset)
-> +		 *               |<------------>|
-> +		 *                ______________
-> +		 * phy_reset ____/              \________________
-> +		 *                                   ____________
-> +		 * ref_clk_en_______________________/
-> +		 * Toggle COLD reset aligned with this sequence for i.MX95 PCIe.
-> +		 */
-> +		regmap_set_bits(imx_pcie->iomuxc_gpr, IMX95_PCIE_RST_CTRL,
-> +				IMX95_PCIE_COLD_RST);
-> +		/*
-> +		 * To make sure delay enough time, do regmap_read_bypassed
-> +		 * before udelay(). Since udelay() might not use MMIO, and cause
-> +		 * delay time less than setting value.
-> +		 */
-> +		regmap_read_bypassed(imx_pcie->iomuxc_gpr, IMX95_PCIE_RST_CTRL,
-> +				     &val);
-> +		udelay(15);
-> +		regmap_clear_bits(imx_pcie->iomuxc_gpr, IMX95_PCIE_RST_CTRL,
-> +				  IMX95_PCIE_COLD_RST);
-> +		regmap_read_bypassed(imx_pcie->iomuxc_gpr, IMX95_PCIE_RST_CTRL,
-> +				     &val);
-> +		udelay(10);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static void imx_pcie_assert_core_reset(struct imx_pcie *imx_pcie)
->  {
->  	reset_control_assert(imx_pcie->pciephy_reset);
-> @@ -1762,6 +1802,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
->  		.ltssm_mask = IMX95_PCIE_LTSSM_EN,
->  		.mode_off[0]  = IMX95_PE0_GEN_CTRL_1,
->  		.mode_mask[0] = IMX95_PCIE_DEVICE_TYPE,
-> +		.core_reset = imx95_pcie_core_reset,
->  		.init_phy = imx95_pcie_init_phy,
->  	},
->  	[IMX8MQ_EP] = {
-> @@ -1815,6 +1856,7 @@ static const struct imx_pcie_drvdata drvdata[] = {
->  		.mode_off[0]  = IMX95_PE0_GEN_CTRL_1,
->  		.mode_mask[0] = IMX95_PCIE_DEVICE_TYPE,
->  		.init_phy = imx95_pcie_init_phy,
-> +		.core_reset = imx95_pcie_core_reset,
->  		.epc_features = &imx95_pcie_epc_features,
->  		.mode = DW_PCIE_EP_TYPE,
->  	},
-> --
-> 2.37.1
->
+This was tested with
+ * BAR0 (1MB):  CTRL+SPAD
+ * BAR2 (1MB):  MW0
+ * BAR4 (256B): Doorbell
+
+This setup is currently not supported by the vNTB EP driver and requires a
+small hack. I'm working on that too.
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+Jerome Brunet (2):
+      PCI: endpoint: strictly apply bar fixed size to allocate space
+      PCI: endpoint: pci-epf-vntb: simplify ctrl/spad space allocation
+
+ drivers/pci/endpoint/functions/pci-epf-vntb.c | 24 ++----------------------
+ drivers/pci/endpoint/pci-epf-core.c           |  7 +++----
+ 2 files changed, 5 insertions(+), 26 deletions(-)
+---
+base-commit: dea140198b846f7432d78566b7b0b83979c72c2b
+change-id: 20250328-pci-ep-size-alignment-9d85b28b8050
+
+Best regards,
+-- 
+Jerome
+
 
