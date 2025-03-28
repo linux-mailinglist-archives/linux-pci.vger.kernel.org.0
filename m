@@ -1,205 +1,151 @@
-Return-Path: <linux-pci+bounces-24943-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24944-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAA0EA74C45
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 15:19:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEBEDA74CC6
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 15:34:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8F0C23AB232
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 14:18:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B4603AC7DD
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 14:32:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E59721B4244;
-	Fri, 28 Mar 2025 14:18:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA4561D5AB2;
+	Fri, 28 Mar 2025 14:30:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LzJ9hYAu"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CYaQssJG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6525017B4EC
-	for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 14:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0893417BCE
+	for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 14:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743171531; cv=none; b=PdfLe8XEyQvCi20i/Z55un3XdlAyBKGFwoXEKT/50fsJjtkIbqpVLRm3uCqI7cPI8YHmDtWLTC3FC2MqoAzgnIm8VcaKf90hnoQv3PxjDOVdi6HxIRFOuknTS0ZdAd6v6jA7PaIEhlaGzUihRfueVqa/Rl/8PAli6bgHg6VPlYc=
+	t=1743172252; cv=none; b=L3TB3TfPLyS84HICd1WGAPgIkmUsew9adQ54Ee6eXn0Y1OIVFcBerxp2IGYki8KEGNRNLJ7tIxLfhGK/TP3qzLZ9Xg5xppxW+dQGIvOksWL8v+tFyqL1rCnTBjavRwk0uxLNF9DS1Nrj3SHddWuRuMpGobY+OP40jtKTQI3FvBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743171531; c=relaxed/simple;
-	bh=aRsjjWJzK8Szt9gdEbaPUx+/TAhrL4HukvLzIArcr1M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=pQUoKMJQWVvqAvTBl7ZriVJA5DLkFMHkSNpCCErXC2mXYbJSVwNKwM4uO1gulshmsrXNcu5jHxlJ3ESIuL+oKP9Ma2qs6jX97yYEDtTpJfFhDPzTjjUpUbLLTsy2CAdtEcFW1ylWxSm6KuUrScpY29U0W37EWDbdupcx9wBlGko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=LzJ9hYAu; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250328141842euoutp01116a1511ee0df79adb8eb3e21d057eff~w-UOMjIyf2861628616euoutp01h
-	for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 14:18:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250328141842euoutp01116a1511ee0df79adb8eb3e21d057eff~w-UOMjIyf2861628616euoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1743171522;
-	bh=lO48Yx1dRxN6L1ypDuwiGhfZgN4Rzqi6MuK49Ng7t8Q=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=LzJ9hYAuVORDdpPDNoaAsSxqQPvxAGN70JzbeWTmHFXBBQgApzHABzlGOwL7v/NTq
-	 Bt8Py3MY06YHzpCwrOOD4l40Zl0MQ/FF8ERl5yImACnQCUZssD16PAHT56NCF007wz
-	 90uDi0LLMtuZPUD23/QJMqJdaUkIsTHwBiJmT6tk=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250328141841eucas1p1619292970847f923dcfe86bb5c47ab46~w-UNvtGSP2939129391eucas1p1d;
-	Fri, 28 Mar 2025 14:18:41 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id C6.C6.20821.1CFA6E76; Fri, 28
-	Mar 2025 14:18:41 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250328141841eucas1p246ea46aed1be0fbf2d32f4681bff0ebf~w-UNT_XZY0412104121eucas1p2i;
-	Fri, 28 Mar 2025 14:18:41 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250328141841eusmtrp2242bde5cbf852d9b3900ec6a0b0bf6da~w-UNS7Wbt0154501545eusmtrp2_;
-	Fri, 28 Mar 2025 14:18:41 +0000 (GMT)
-X-AuditID: cbfec7f2-b11c470000005155-8c-67e6afc17b98
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id A7.C7.19920.1CFA6E76; Fri, 28
-	Mar 2025 14:18:41 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250328141839eusmtip22afc9ba3e6f88769393f971c378bbae1~w-ULzCb-Z1176711767eusmtip2M;
-	Fri, 28 Mar 2025 14:18:39 +0000 (GMT)
-Message-ID: <c916a21e-2d95-476d-9895-4d91873fc5d5@samsung.com>
-Date: Fri, 28 Mar 2025 15:18:39 +0100
+	s=arc-20240116; t=1743172252; c=relaxed/simple;
+	bh=r69myt5CYJDUUxJ5eZ651vr//FxFOh0JfBQxRjDjfyk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=oyrHvckC8oDzAsNlw0wlKcZhvbD1KE8BTwC7/E5+g5vc63xzVhMfyRwtHRtdGNNVxEYTkCpeCFR1mVTSOViHdQ3c8Rf4UpjcoYH1guXEQFlFUZ6Gve1A1OodAuceJFf2rjgcn5GnkKn7EnJzqzfWWsj4EcPWJKigGXIPumfSwBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CYaQssJG; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39129fc51f8so1642298f8f.0
+        for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 07:30:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743172247; x=1743777047; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xY2G9dr/4ekvZx7BFTEs3c751w4Nf1CQJqhKZMVEU4o=;
+        b=CYaQssJGH9CF9609ik2N3bZjYjbqLw3saKXH0l+GQO+7tQKQkYN4pl1NDaB2orzFpL
+         Zd96daiHUw4OoaMd7Ybc6Cpj1MbQnTQ0QaaLbQ8MHxHn9jRjk/5zjlVuFTCg4bvrWrYS
+         OQ/kBxfsWxKsCaA4OEUI8Bk5jy6ML5f+IB2kXC4iQr50qogMrUMoCwFz2JHgF7kKBiuB
+         gS1T32mmw/IiOqLW81n1dW98b2ARcLbVv93E8W5lew/r3Au5d41rPof+lUQz2mmL4/jF
+         wJStJz4TH6PZlTH1G69MbyUW5Jswt9AyaOWm5hxM4dJnMU4CWXFVyHcMGmkeJIOpfi9S
+         gRdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743172247; x=1743777047;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xY2G9dr/4ekvZx7BFTEs3c751w4Nf1CQJqhKZMVEU4o=;
+        b=Bp5yARA66MMhGgr17gbX/NzXEG3gYhUaTFdSAkJQT20RxEVQlzq/cc6OCcsuV0tmYk
+         xU+geQN/UU/k8qci4mXpi3i+KPM7CXXyyyIe0Wtgg5CC4kYtY7ShN/jj8JiD7BU71z9U
+         LtFzG+LPu08KXJM9STHrkjQC+g7C6ruCyteMD7Rkez/bfHo6C0+P4R+dTXZgKsvlAanc
+         53VJhkh5ebj9Ib2EH7oWBHZT1s5IWuaDKzYm37rcEqK31UHxb449WPNbBP7GDYC9wugK
+         m1wTTLy0CNcm5BL1Gh2XmsSb6H1jHwadp/DG7GLJpKvaFyuW4rRKQfV48fYMdNZaBzB1
+         sPeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWy77+zRV1tssCgSiME4tuy+5/sWVdQMK47SOVs1Tv0PqfS+WZTxha6omjPMK/gp9uxmu2yx0lLhtg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6XjZmiX9FHzr4Lb2TAIHgODiP3DYgl0kJimeKB3xLXmK+PLl0
+	6YFWM1XgTII3H3nZMWglSTgNWyzv7tU4vC/2SmI4cInOpFp6A5YK8NYkzyE2HDI=
+X-Gm-Gg: ASbGncuGd3G/aH+djNmhzID8OgVhAL1bkqHCdvY2Am3Nga8anRTPY2ThTwk8uJkSzrz
+	7ofSWWR4VdMOmIW1E+brWcCgRTZZ5l7HzVVWWhowIx8ZqRM554L7o+hHrroKyXyT5s3+rf4w7/n
+	LmSoBMfAYxCVFQMRusZsxHHxF3WLr9JBF6dV5d4Riul09Uo8V2kmxVxL7JYksaoWB/Frq39iDwz
+	TYRombCFrhy87nFGu+A8Iu1B9dVfT4qKZnxWXpPDogzbErYcSzTcfdbFe2dDQkGKJK81Ae8j/fk
+	oxmDalXcIdWyDvXPHIpdkA2br29+ULciwEWmmgnlLlFRKqnAzCB6g4dfPj4=
+X-Google-Smtp-Source: AGHT+IEqlAqw/EIsqm1BgyscIBxGUOeIxfC2lXTrnQ19OhlcGKYtCY+38uMpnMJk3wcdZrYVzV+TOA==
+X-Received: by 2002:a5d:584c:0:b0:398:9e96:e798 with SMTP id ffacd0b85a97d-39ad17415a2mr7314079f8f.13.1743172246976;
+        Fri, 28 Mar 2025 07:30:46 -0700 (PDT)
+Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:70c0:edf6:6897:a3f8])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39c0b79e0dcsm2789859f8f.64.2025.03.28.07.30.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Mar 2025 07:30:46 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Fri, 28 Mar 2025 15:30:44 +0100
+Subject: [PATCH] PCI: rcar-gen4: set ep BAR4 fixed size
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Leon Romanovsky <leon@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>, Joerg Roedel
-	<joro@8bytes.org>, Will Deacon <will@kernel.org>, Sagi Grimberg
-	<sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>, Yishai Hadas
-	<yishaih@nvidia.com>, Shameer Kolothum
-	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org, Randy
-	Dunlap <rdunlap@infradead.org>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20250322004130.GS126678@ziepe.ca>
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0xTVxzuaW/vvTS2uxYmR6cjqWEPl7Uj2eMsoLJA3DViHHu4jOhYM+8K
-	4aUtdUyTiQRhFiYVZYUWC4yCCAQEZlGUjVZmyxigAzbpamFZqQg0rMg2pWaM9uLGf9/5Hr/v
-	/E4OyRNfwjeQqZnZjDJTni7BBZj5xsOhFy2tHsVLDyakqLK1GUd/LRXjqOlOCY5MeSnI3VMI
-	0IWm77locQGhinI7QAbdFBedNFwkUKn1Z4DqvJcIVFl2CJ1drOOhbscLqKbAhKHhrkocuZqX
-	+KiqfpJAA0YbjjzWLzFkOrGMvE4dhix/uPmoZWYOQ52jeXyU73wF1ZcJYjfSbouRSzcbmwHt
-	GfUAurpdTQ+52jA6v9fLpzsattC11+5x6eEBNd3eeBKn2+dLCdpe7sfoDtMxeqqjAtBXx3Jx
-	uvbUGf5bYUmCmANMeuphRinb9pEgxVVTzz9oF+cUjw2BXFAl0oAQElIvQ1/hKE8DBKSYagDw
-	xm0bPyCIqQUA68oBK9wHUOe/Ax4nbk3cwljTeQAnF5JZkw9AX4WTCAhCahtsah4KTsKoSDhd
-	6uCx/FrYV+EOhp+kIuC4ozzoD6XiYY/5dNATRkngt12nicBQHmUmoH7Kxw0IPCocOtxVQYxT
-	UVDj1eABHELJoLHfxWc9EbDTWxncB1LdAjhWNsJnrx0PB4w/rKwQCqdt3xAs3giXrgSGBgKF
-	AFb7x1cOWgBz7zpWEtHQObi4XEcuVzwPW7tkLP0GvPnnb0SAhpQI3vauZS8hgqVmHY+lhfCL
-	AjHrfgbqbS3/1Vpu/sTTAol+1bvoV62pX7WO/v/eaoA1gnBGrcpQMKqoTOZTqUqeoVJnKqQf
-	Z2W0g+Wf3f+Pbf4yODftk1oBlwRWAEmeJEy4fsStEAsPyD87wiizkpXqdEZlBU+RmCRc+PV3
-	JxRiSiHPZtIY5iCjfKxyyZANudwd+2y1u+b6x/UciSlyZnechJIl1vSqZt3xYW+WvL6Gsz02
-	YSH577vX7Rfn9xr2J3I+3AOjYyzJO1skv86F9l0w+jBfQbT/uPZHTsMnxLqxWUPao63D+4jo
-	Pp9j73ZTI6mNsHlEZnlqvPq+9omchznvlnNadr+2xmI/luY8/JyhbZ1+fCDhF//+9WrzB73Z
-	5DWdKi7JOfn5SIzrq9B3PC5r0YBXTt/Lcm4KGQlXOaHm2d8TwvqV08pXW+OSrh6dLYrdLNqE
-	Py051/P+2WzDoevwvYnJK/NHyrr37Kiwt5XUDmYZNw++/WDnrqPFx21bTxX10ImyzsjzUzmX
-	DdKZR/lTeRJMlSKP2sJTquT/AioQlFtIBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJKsWRmVeSWpSXmKPExsVy+t/xe7oH1z9LN5hxkc9izvo1bBbf/vew
-	Way+289msaQpw+LJgXZGi5WrjzJZ/PpiYTFzxglGi9nTXzBZdM7ewG4x6dA1Roulb7eyW8yZ
-	Wmgx5ddSZou9t7QtFrYtYbG4vGsOm8W9Nf9ZLeYve8pucXbecTaLZ4d6WSyWtAJZb+9MZ7E4
-	+OEJq8W61+9ZLLZfbWK1aLljarFsKpeDjMeTg/OYPNbMW8Po8ezqM0aPBZtKPc7f28ji0XLk
-	LavH5hVaHov3vGTyuHy21GPTqk42j02fJrF7nJjxm8Vj85J6jxebZzJ67L7ZwOaxuG8ya4BI
-	lJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7GvYXL
-	WAtOCFX03DzP2MA4n6+LkZNDQsBE4uKDiyxdjFwcQgJLGSVamtqZIBIyEienNbBC2MISf651
-	sUEUvWeUOHNsGSNIglfATmL1mvNgRSwCqhKvJt1ihogLSpyc+YQFxBYVkJe4f2sGO4gtLOAi
-	cWDbRLAaEQEliX27JrKDDGUW2MEucXHXcSaIDc+ZJf52HwLrYBYQl7j1ZD7YSWwChhJdb0HO
-	4OTgFNCXmHf6HitEjZlE19YuRghbXmL72znMExiFZiE5ZBaSUbOQtMxC0rKAkWUVo0hqaXFu
-	em6xoV5xYm5xaV66XnJ+7iZGYJraduzn5h2M81591DvEyMTBeIhRgoNZSYRX8sqTdCHelMTK
-	qtSi/Pii0pzU4kOMpsDQmMgsJZqcD0yUeSXxhmYGpoYmZpYGppZmxkrivG6Xz6cJCaQnlqRm
-	p6YWpBbB9DFxcEo1MFldaJWPjrp8esKyTQs39a9UPna0699GGZvqxVrZ/Os/tK/rO79/ab2J
-	le6Uzt+/AhhsVefceLSfwc2YK/L/qhsbJhX5r/apvuecIXGXNVfrpphdj+vqWS9UbEVy4h+d
-	3tdz9A5zYfifi62yU6vfK7judn5w0HxL9cmj999GxvsVFSzI1Y3945SdYOV8c+HLvHPfmoML
-	ub/+mO0treTxo55p5XXxsB2/whqjhP+eLsgL2tcUedx3oU79lK4bbzka1PjS7TU9NfVnBPuY
-	TZ4n86Bp4enTZSr/Zq7ScXQ4yWjM6u63uHD9G/HCo4t4nQ7yRjFMZ4yT26/+vLKep6HxZe73
-	Nk0v3w9bvGdOc/mrpcRSnJFoqMVcVJwIAGW+P3ncAwAA
-X-CMS-MailID: 20250328141841eucas1p246ea46aed1be0fbf2d32f4681bff0ebf
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648
-References: <cover.1738765879.git.leonro@nvidia.com>
-	<20250220124827.GR53094@unreal>
-	<CGME20250228195423eucas1p221736d964e9aeb1b055d3ee93a4d2648@eucas1p2.samsung.com>
-	<1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
-	<d408b1c7-eabf-4a1e-861c-b2ddf8bf9f0e@samsung.com>
-	<20250312193249.GI1322339@unreal>
-	<adb63b87-d8f2-4ae6-90c4-125bde41dc29@samsung.com>
-	<20250319175840.GG10600@ziepe.ca>
-	<1034b694-2b25-4649-a004-19e601061b90@samsung.com>
-	<20250322004130.GS126678@ziepe.ca>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250328-rcar-gen4-bar4-v1-1-10bb6ce9ee7f@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAJOy5mcC/x3MPQqAMAxA4auUzAbsjyheRRxqm2qWKimIIL27x
+ fEb3nuhkDAVmNULQjcXPnOD7hSEw+edkGMzmN4MvTUTSvCCO2WHmxeHMYSorRsT2QladAklfv7
+ hstb6AfDmTqdgAAAA
+X-Change-ID: 20250328-rcar-gen4-bar4-dccd1347fe38
+To: Marek Vasut <marek.vasut+renesas@gmail.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Serge Semin <fancer.lancer@gmail.com>
+Cc: =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1164; i=jbrunet@baylibre.com;
+ h=from:subject:message-id; bh=r69myt5CYJDUUxJ5eZ651vr//FxFOh0JfBQxRjDjfyk=;
+ b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBn5rKU93EsfEvQqRKfYw9fYTj3oD6m4KNpZ84sz
+ uxMinKIJd2JAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCZ+aylAAKCRDm/A8cN/La
+ hcPzEACgdAwbHl3qVRBYfJhEGKIBUUVbe3SP6v/HrFIig9GMe+v6Vh5MwjgOI8sSrJNPputEyDV
+ LPk+aYT18SfUg0BK3Ji8plS6dtfAAKYqAF2NP7JQrkhFvLf15Wnp2gNSrI0cAvZTNAvc7fTSh2G
+ G/FEe0tl80zU7/1p+jtzoN6RJjAI76zroHqREmJlWkELpfluQoDaKIjL56N+kbrCh3DyqqDBfQb
+ NCZXUBtoRmw8AsBJquKGDdj8a9NgeGLmeFdxOuf4w2neq+6XEuxaYs/MtSaj+d2Boij8Ppsf91Y
+ m/9fOePAM1dvizw3PcrOzzSoKu/oC78vptAYlehYHX6N7x94vl/+iBs4nRyyKUwXR9fgZeZ55M/
+ JUuyAmaOQQ8Qr0ef0W1opD14erhPETY9o/9Z9s9wZ/zmb1y7uFVuV9l652kPjKY5eWxzoxrhkNm
+ owPbGUdNWeSPockslN6cRjZUmDcJZNGJvLOJtEIGh7Fz+gbhJ6vZYT0U6lqcj1/jS961f9qaT78
+ 9FC8tNf+f3+zKbn7FUYlIukFgKwYjADEMUsc89sJbqsXqZKFWJqMoWQU0KO2MrMs2CyrTBYzI8l
+ L4dmhkVNNTO/VI41+28MryVmwHl7rJbniok+Ucvthn1L1J2ig8sBGFt3K2DuNHm1yh1cG8QQIAI
+ upkny4XrrLDWubw==
+X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp;
+ fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
 
-On 22.03.2025 01:41, Jason Gunthorpe wrote:
-> On Fri, Mar 21, 2025 at 12:52:30AM +0100, Marek Szyprowski wrote:
->>> Christoph's vision was to make a performance DMA API path that could
->>> be used to implement any scatterlist-like data structure very
->>> efficiently without having to teach the DMA API about all sorts of
->>> scatterlist-like things.
->> Thanks for explaining one more motivation behind this patchset!
-> Sure, no problem.
->
-> To close the loop on the bigger picture here..
->
-> When you put the parts together:
->
->   1) dma_map_sg is the only API that is both performant and fully
->      functional
->
->   2) scatterlist is a horrible leaky design and badly misued all over
->      the place. When Logan added SG_DMA_BUS_ADDRESS it became quite
->      clear that any significant changes to scatterlist are infeasible,
->      or at least we'd break a huge number of untestable legacy drivers
->      in the process.
->
->   3) We really want to do full featured performance DMA *without* a
->      struct page. This requires changing scatterlist, inventing a new
->      scatterlist v2 and DMA map for it, or this idea here of a flexible
->      lower level DMA API entry point.
->
->      Matthew has been talking about struct-pageless for a long time now
->      from the block/mm direction using folio & memdesc and this is
->      meeting his work from the other end of the stack by starting to
->      build a way to do DMA on future struct pageless things. This is
->      going to be huge multi-year project but small parts like this need
->      to be solved and agreed to make progress.
+On rcar-gen4, the ep BAR4 has a fixed size of 256B.
+Document this constraint in the epc features of the platform.
 
-Again, thanks for another summary!
+Fixes: e311b3834dfa ("PCI: rcar-gen4: Add endpoint mode support")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+This was tested on rcar-gen4 r8a779f0-spider device.
+---
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c | 1 +
+ 1 file changed, 1 insertion(+)
 
->   4) In the immediate moment we still have problems in VFIO, RDMA, and
->      DRM managing P2P transfers because dma_map_resource/page() don't
->      properly work, and we don't have struct pages to use
->      dma_map_sg(). Hacks around the DMA API have been in the kernel for
->      a long time now, we want to see a properly architected solution.
+diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+index fc872dd35029c083da58144dce23cd1ce80f9374..02638ec442e7012d61dfad70016077d9becf56a6 100644
+--- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
++++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
+@@ -403,6 +403,7 @@ static const struct pci_epc_features rcar_gen4_pcie_epc_features = {
+ 	.msix_capable = false,
+ 	.bar[BAR_1] = { .type = BAR_RESERVED, },
+ 	.bar[BAR_3] = { .type = BAR_RESERVED, },
++	.bar[BAR_4] = { .type = BAR_FIXED, .fixed_size = 256 },
+ 	.bar[BAR_5] = { .type = BAR_RESERVED, },
+ 	.align = SZ_1M,
+ };
 
-What kind of a fix is needed to dma_map_resource()/dma_unmap_resource() 
-API to make it usable with P2P DMA? It looks that this API is closest to 
-the mentioned dma_map_phys() and has little clients, so potentially 
-changing the function signature should be quite easy.
+---
+base-commit: dea140198b846f7432d78566b7b0b83979c72c2b
+change-id: 20250328-rcar-gen4-bar4-dccd1347fe38
 
-Best regards
+Best regards,
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Jerome
 
 
