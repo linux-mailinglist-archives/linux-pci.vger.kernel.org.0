@@ -1,153 +1,171 @@
-Return-Path: <linux-pci+bounces-24895-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24896-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB8DCA7412A
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 23:51:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 08DF1A741FF
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 02:19:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 973233B7602
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Mar 2025 22:50:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD9533B68F9
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 01:19:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D51F31B6D08;
-	Thu, 27 Mar 2025 22:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 305A9537F8;
+	Fri, 28 Mar 2025 01:19:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lh7tbnCV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hjvCnl5X"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFC0188734
-	for <linux-pci@vger.kernel.org>; Thu, 27 Mar 2025 22:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E39A93D;
+	Fri, 28 Mar 2025 01:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743115814; cv=none; b=N1Se/SBcaTeCDoa8oyIHRIt3LJ2oeube9Ejqy/5ZiawqOMfTF3Y8VcFvodaamfUY8RVragFJzNO0Pxush7Kn9yzPMSdKIAODrHyYtuOcWaBqSN+mMS7WSlYVoM8am5jiJTx8xoUImYrYO75HQ9qJUuQ8yrbMlVUDsJUmiYi5JSg=
+	t=1743124764; cv=none; b=iLp9vtMJ7zEncgIcskphJ+Brx5VtiG4HdKH4NlNWHFVe34mz6V3tcK9dl1ues3h+MUkPgsDwIuFGQLPh1tGsFhq2p1P0h0omsRThPNPM3ZILsMWUEyaVLxLeZ/LtzIVvnuNrDpvaDi9UAV+aNvFyGALr9/tb/7KCaU1dK7W2heE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743115814; c=relaxed/simple;
-	bh=1xnvHALLzW/dRpLr9+8qGYDuMjuhigictiBWxjcapSc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eAwkqECq8sp1YbF3bzwS6PDHc3/kLsFOnKChZdNjTGhkbXKGiRTB7g704MFon1/AhDW+fBF7gLUOvmniDhCiHU07qhLD0rMnbSxYcyaT79fLAR4nCLFOLxnaxlR1Qc231hDDstkOmvpEzCrgI0ODocsoMP5eKaQJJ5eI/kktw5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Lh7tbnCV; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5ec9d24acfbso4719730a12.0
-        for <linux-pci@vger.kernel.org>; Thu, 27 Mar 2025 15:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743115811; x=1743720611; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ioYJPNAmH8HlNTApVc1wpgStn9YIFgSRnrVT9GOs8gg=;
-        b=Lh7tbnCVWhBYrFkl4B0FE4H8IeTxnYOs+Vdb0banX6qo8avsPls5mKa1k/IG3RcTvf
-         c84zK8gV3MmKq5503Nzk2dFSdR53ocESySCFrUeD2exX37onfHWNYGQ3uYngkn5Y4N6E
-         ZEeTVU/o92Sw45NAvY0n+C8sVaP/9PRuRFdaQ8rOJePeHQAALNQBUFMiW2jpTQSaL9RG
-         Fnv/xY+bD8tj+/xNLMEZAS+xiiBwynqT/tiKwLtVaXTPrgD3hdcVj80xY1hhaP06KmFb
-         Wwmtw20mJ//hxke110GEpxGBGRAVsso5wi1w2H/9lh9+/SyUWcFH4Qiuv6SG5dcV02f6
-         IYOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743115811; x=1743720611;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ioYJPNAmH8HlNTApVc1wpgStn9YIFgSRnrVT9GOs8gg=;
-        b=IHyElKqxvpGQuxS0vfR/CE4+IFtVWvGz/I86hoB5TTnpPQ2kBlGEj+8oQm1cuR4JLa
-         RN/+FhMdwBLc5qijp1+FX8YzZL2BC/99kvFK97ypkUFjU/+1OMRr4o1ir7TjPHHaq5aj
-         rAPPFHJRZzxNX6hWNuD/TUxjaVNg0nFvmfoZaryfsgWyvMEGo43mdL2g4j1khTVBKGCh
-         nV068lf+uXBv57Lfr/bMcLvGGN93qA/bbm01ujrvQYp5PGE51zi473dbSQvZMVXvZEcz
-         GR403t1AkV7Sn3vKcTxa8+2MHtX1334AL8bWXvw0fY2KSDj7u4ap/mxrfwoat9sT6d7I
-         bR6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVk/oleG65u3ldnFu5LkR6Y81n9zMrBAv5cdV4LfUXtNrl+id/cvw65ajpMC5dEeUk9x+bIq3N1M+U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFiVMnDPOLMSgMNEvzO72g0GhoSgjw+kkTC4GmSZZYCKWhZqsK
-	Esl716NurcwyCFOgGKpEmwu4rVIXivOza5aVPSzZ8fxJHdPFxLXAtRejCd81ECV8/NHh8j0Jurp
-	xLRxUco5hkgrvMfOHldNNWWLGENOu4mbaYAuC/vptGbSGHo6Bz+Hf
-X-Gm-Gg: ASbGncvCUaDy0BmrJE2hzelMEHrykd8oytsOz7/M3TeKlFVCnvolRjGDJgb+cLqWed4
-	/1OwZfGisJ9pHducSLIeHA1TDmATW9A3fMpbuS3dfSLyUu5VCMNvXxpL8pRQo0E2pxtS3W40bqB
-	ELBAV+QbonsvFERQXARtoXgGSc6JczloDofeyTv78s/SIbKl9zK28q+EmP
-X-Google-Smtp-Source: AGHT+IEewdUn5p13FbAdqn/6Z8cCjCm687hu1jIxvPO6zX/JE338mXATYFaOfqcenxUeqzMuErnhscv9Edop+YfAecg=
-X-Received: by 2002:a05:6402:1ed3:b0:5e6:14ab:ab6a with SMTP id
- 4fb4d7f45d1cf-5edc4c07346mr421969a12.7.1743115811041; Thu, 27 Mar 2025
- 15:50:11 -0700 (PDT)
+	s=arc-20240116; t=1743124764; c=relaxed/simple;
+	bh=nbe6Pi8tlh6LZT+q5xurltwfuX2F6rU4c5Dmj0Pz8eg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lrk47ZVw5k6PWsWi6j2mWiebnyfsha7swKC5y09t6EWiJc7sEX0biHQCbVGXEG1YTagrc2PO13X2qrHF2T15TAaiVMFAMR7SwqFKRDrV8guXCZuIiHYm1iX/jUHD9kl3jR5H4ch+iBeuq6EjUseUrPf+lcuO8713fnnppScGEF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hjvCnl5X; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743124762; x=1774660762;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nbe6Pi8tlh6LZT+q5xurltwfuX2F6rU4c5Dmj0Pz8eg=;
+  b=hjvCnl5XNVnTR1dO0SWATArLRekIKKTWEVeb6/T6xAMkHYu8UNW51+KC
+   1gTx0SDpfa4Ic+8P30T+HoLgiKkhXfRSQgCDXo+JlvRc3IkHJMI0anQBC
+   IRkwrhw9H5M8YgThNceAxD+lKfALTuoGsfmAnwq1gmd5IZiR6EzWqHs3i
+   rjM9GunR0tQH8kC/pju8/w6ThDyC+UQ5ycVj7aB34PRL7ZZvqGiJs3WdG
+   q3ZCa6LTWrtyxFZB7yuPnm8CI91tkr1SwSBtJrleJjYpSw7oN8K6dNiyL
+   njgQXRsTvW0a2c+G0Yi4v3mq2z6g7OOw8pDRkJdgoPckD0bUUseQd+mbF
+   w==;
+X-CSE-ConnectionGUID: oEyfQUz+She5VJ4oH/BZow==
+X-CSE-MsgGUID: 59HUFyZ4TPyxuHBuqRQo9Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="47213315"
+X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
+   d="scan'208";a="47213315"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 18:19:21 -0700
+X-CSE-ConnectionGUID: VF0u9KfwSPyPHHyPFMvJIg==
+X-CSE-MsgGUID: npAypc4PTEGOR8C32fBsjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
+   d="scan'208";a="125525419"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 27 Mar 2025 18:19:16 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1txyNO-00073S-0Z;
+	Fri, 28 Mar 2025 01:19:14 +0000
+Date: Fri, 28 Mar 2025 09:18:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, dan.j.williams@intel.com,
+	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
+	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
+	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com,
+	lukas@wunner.de, ming.li@zohomail.com,
+	PradeepVineshReddy.Kodamati@amd.com
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v8 16/16] CXL/PCI: Disable CXL protocol errors during CXL
+ Port cleanup
+Message-ID: <202503280816.M7DZmSDT-lkp@intel.com>
+References: <20250327014717.2988633-17-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321015806.954866-1-pandoh@google.com> <20250321015806.954866-9-pandoh@google.com>
- <20250323122059.GF1902347@rocinante>
-In-Reply-To: <20250323122059.GF1902347@rocinante>
-From: Jon Pan-Doh <pandoh@google.com>
-Date: Thu, 27 Mar 2025 15:50:00 -0700
-X-Gm-Features: AQ5f1JpUiQmIrLFoFjrOaBJXy0FF7GhXKqc0jpfxuDBFg_BRN8RujL4K5dFFbG0
-Message-ID: <CAMC_AXWd_3jY-Yb3bOs7EvTtRzGrjzV0DYAr3YMWKmhNs0M=pw@mail.gmail.com>
-Subject: Re: [PATCH v5 8/8] PCI/AER: Add sysfs attributes for log ratelimits
-To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>, 
-	linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
-	Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-	Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Sargun Dhillon <sargun@meta.com>, 
-	"Paul E . McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327014717.2988633-17-terry.bowman@amd.com>
 
-On Sun, Mar 23, 2025 at 5:21=E2=80=AFAM Krzysztof Wilczy=C5=84ski <kw@linux=
-.com> wrote:
-> That sad, I am not sure if we really  need to explain here how this
-> particular store() function works.
+Hi Terry,
 
-Will remove in v6 since it made sense to others w/o comment.
+kernel test robot noticed the following build warnings:
 
-> > +static ssize_t ratelimit_log_enable_show(struct device *dev,
-> > +                                      struct device_attribute *attr,
-> > +                                      char *buf)
-> > +{
-> > +     struct pci_dev *pdev =3D to_pci_dev(dev);
-> > +     bool enable =3D pdev->aer_report->cor_log_ratelimit.interval !=3D=
- 0;
-> > +
-> > +     return sysfs_emit(buf, "%d\n", enable);
-> > +}
->
-> Perhaps "status" or "enabled" for the variable name above.
+[auto build test WARNING on aae0594a7053c60b82621136257c8b648c67b512]
 
-s/enable/enabled in v6.
+url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/PCI-CXL-Introduce-PCIe-helper-function-pcie_is_cxl/20250327-095738
+base:   aae0594a7053c60b82621136257c8b648c67b512
+patch link:    https://lore.kernel.org/r/20250327014717.2988633-17-terry.bowman%40amd.com
+patch subject: [PATCH v8 16/16] CXL/PCI: Disable CXL protocol errors during CXL Port cleanup
+config: csky-randconfig-r122-20250327 (https://download.01.org/0day-ci/archive/20250328/202503280816.M7DZmSDT-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 12.4.0
+reproduce: (https://download.01.org/0day-ci/archive/20250328/202503280816.M7DZmSDT-lkp@intel.com/reproduce)
 
-> > +static ssize_t ratelimit_log_enable_store(struct device *dev,
-> > +                                       struct device_attribute *attr,
-> > +                                       const char *buf, size_t count)
-> > +{
-> > +     struct pci_dev *pdev =3D to_pci_dev(dev);
-> > +     bool enable;
-> > +     int interval;
->
-> I would love if we could add the following here:
->
->         if (!capable(CAP_SYS_ADMIN))
->                 return -EPERM;
->
-> To ensure that only privileged user also sporting a proper set capabiliti=
-es
-> can modify this attribute.
-> [...]
-> > +     static ssize_t                                                  \
-> > +     name##_store(struct device *dev, struct device_attribute *attr, \
-> > +                  const char *buf, size_t count)                     \
-> > +{                                                                    \
-> > +     struct pci_dev *pdev =3D to_pci_dev(dev);                        =
- \
-> > +     int burst;                                                      \
->
-> Same as earlier comment.  Add the following:
->
->         if (!capable(CAP_SYS_ADMIN))
->                 return -EPERM;
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503280816.M7DZmSDT-lkp@intel.com/
 
-Will add in v6.
+sparse warnings: (new ones prefixed by >>)
+   drivers/cxl/port.c:68:33: sparse: sparse: symbol 'cxl_ep_error_handlers' was not declared. Should it be static?
+>> drivers/cxl/port.c:104:6: sparse: sparse: symbol 'cxl_disable_prot_errors' was not declared. Should it be static?
 
-Thanks,
-Jon
+vim +/cxl_disable_prot_errors +104 drivers/cxl/port.c
+
+    67	
+  > 68	const struct cxl_error_handlers cxl_ep_error_handlers = {
+    69		.error_detected = cxl_error_detected,
+    70		.cor_error_detected = cxl_cor_error_detected,
+    71	};
+    72	
+    73	static void cxl_assign_error_handlers(struct device *_dev,
+    74					      const struct cxl_error_handlers *handlers)
+    75	{
+    76		struct device *dev __free(put_device) = get_device(_dev);
+    77		struct cxl_driver *pdrv;
+    78	
+    79		if (!dev)
+    80			return;
+    81	
+    82		pdrv = to_cxl_drv(dev->driver);
+    83		pdrv->err_handler = handlers;
+    84	}
+    85	
+    86	void cxl_enable_prot_errors(struct device *dev)
+    87	{
+    88		struct pci_dev *pdev = to_pci_dev(dev);
+    89		struct device *pci_dev __free(put_device) = get_device(&pdev->dev);
+    90	
+    91		if (!pci_dev)
+    92			return;
+    93	
+    94		if (!pdev->aer_cap) {
+    95			pdev->aer_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ERR);
+    96			if (!pdev->aer_cap)
+    97				return;
+    98		}
+    99	
+   100		pci_aer_unmask_internal_errors(pdev);
+   101	}
+   102	EXPORT_SYMBOL_NS_GPL(cxl_enable_prot_errors, "CXL");
+   103	
+ > 104	void cxl_disable_prot_errors(void *_dev)
+   105	{
+   106		struct device *dev = _dev;
+   107		struct pci_dev *pdev = to_pci_dev(dev);
+   108		struct device *pci_dev __free(put_device) = get_device(&pdev->dev);
+   109	
+   110		if (!pci_dev || !pdev->aer_cap)
+   111			return;
+   112	
+   113		pci_aer_mask_internal_errors(pdev);
+   114	}
+   115	EXPORT_SYMBOL_NS_GPL(cxl_disable_prot_errors, "CXL");
+   116	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
