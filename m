@@ -1,272 +1,502 @@
-Return-Path: <linux-pci+bounces-24929-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24930-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6EEAA74856
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 11:31:27 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4ECA9A7485E
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 11:34:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3AA7117C2A1
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 10:30:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2C0CB1896116
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 10:34:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2112321CC49;
-	Fri, 28 Mar 2025 10:29:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9253517A302;
+	Fri, 28 Mar 2025 10:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FjG5K+U9"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="aj9regYp"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BA521CA14
-	for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 10:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68F734A35;
+	Fri, 28 Mar 2025 10:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743157766; cv=none; b=nXZ24CMGZ7uy/g4HmR8L6zKaOdbCT8I7ygSBV0g5Nm6HKFdlM4qqx1IfoP7TDA+x6Z1lA80/Adj9Ja7LBIZMirOU9e1qYqBvIE3Je/rKU/rXVWw6BGCFHa3rHOCEmByfO5cIaBYRaaXjLXVsd/ABs/syyMimxn4pmCPFEIv6ZCM=
+	t=1743158053; cv=none; b=Ednmnw3IpNfjfeZc6tCiYXXBauG3nUFirbMbf50t1siUwXrFlMyGObJ2bOG8+D0lPZCowfx5fD/KZBWZOQs5bMxdGMi4JW4sJMoZkH9Z3nxfUm5F8o4HD1vYGDcjM9U4EuW7Ic4i3Xxq564v//7WKOT4Kw6W7v4ziD/RIZeM5Hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743157766; c=relaxed/simple;
-	bh=U7DWrCD6EQXqUQIkpwerhpxSQhLGZ9eFto7N2dbcVTs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BaVUShBT1i0l+X3Ufqg8roSPx7JKgkn6di5lMnwefGKUzABi1tQ9PON57xKKygU3ijbnmLd1poiYR4cSWyR+509LyG/1nCvFXMZnZ58klVufp+sHXtPuc6ER2yXOfJEaoZIkGYiHnjT0GkEVZz5+QWmB51670Qh9eKGPEJZiwC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FjG5K+U9; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52S859K6011463
-	for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 10:29:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	YZyozmENnf1D4BlU1MbFdQpfwvTwdNp0J/DqysHuxfs=; b=FjG5K+U95cf8EhPB
-	6x4JwH11FCMLZvGAdwnJjjL/o78Y9ujkdHHpeQ2krlZXflnlCWWR6rkJr/6EMfCA
-	jFpfXnRSZvczgEiNCGihfaV4dFBYtKUcSPe8RxqjdgmXDvhNd64rPAj69tHj3NlW
-	HdPXiG8LGRLPWAVC+uz91IsQBLAr/EFwWwarKJ4rF3SCkrOGwKCzzxhYHO9PULe9
-	0qy45rfs64BPDY4M2iXbDELE7SkLm2CKoXgj9US9p0OhBqzcfDDmNrpUp1ApbpFO
-	PnEvXY4Ii5YsioEhvyhzRKVhLYukSnxQpdXV3wRwWWffcFT9tx8iJyeLIuRwGlXD
-	6tnwoA==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45nqxugehy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 10:29:21 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2242f3fd213so33755455ad.1
-        for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 03:29:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743157761; x=1743762561;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YZyozmENnf1D4BlU1MbFdQpfwvTwdNp0J/DqysHuxfs=;
-        b=D6k6RtkY4lWTI4s3bn0DVCVKBv6AGGvT77DWudYFJeMCvBXS8dVdKUH5SPfTjD+SiN
-         rnEqL2g58QhWfJzOfmhLuXOsMww6zF68hA1DT0MltBGOVe8MCs+hgm5SzblqQDOd3Jnj
-         kX3NkCrU9Gg5+kAPAOseiL2qocdqUk6j5kcqPnRweZ68qIfpe7pHaFVu/rz1tYqFRZrR
-         MxnqZkJJy/tuN+wG9DbSi4lFqK1x7VzJtcemTqQ2BTA4Sgrzc9JDHv+ZVdziaMsQZzqf
-         n7m0JjCSqPFkwl9uEvesz07XdX/E6dIFf1wSWZtIGyqd2CnDo4zjzdlfDbH4VHaondeX
-         52zw==
-X-Forwarded-Encrypted: i=1; AJvYcCXWoksUYQLZl5/gGfaD76ZOvsDQ8OCgPOlQbdFUrr+4dJqvf63t80QaolRNJCLob1s0Cw6HAvzhv+I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQRaq/UAvL1n9Wcc1MxBgMLn7eS75UwYVKsmjU3HqYkEjDu6Jy
-	S0YzmeswsE+oZmP5OgkI3xO3Xsc7V1tgeNv+RjW7SCWvXrKsFbHOOQkQQTbKxfAZquEG2ebKJBk
-	5g2jgAal6a0LpgoDiMsPFYcV4K37UOWTofAbNV6c/twIFSld1hiBFs2B7D3Y=
-X-Gm-Gg: ASbGncuNPTmmF721DSwt66BNYYjCkJ/yWOQKdeLifMkVeHlQ8OHn4wVyV2eEwdAY0bh
-	Px8NjiYu5oO8r07OumaKUKtNyuKHKVm+Iu1MCGeobeoahYElpZmn+g8I1BlSMY34KAXCYuHr9fK
-	du+aFolzBC/HqSrzVz/Cd/C6JxJ6GW+qIf8RRjVHYPukCgae4kDn3M3cfOZRbrqcnz70E6v6155
-	LGLQp5qj5us0FZs2FDBhOlRzt0tnwybt4mWdg9keimI60mBi9Uf2to1263e8TbMt3cx0mLwBA3R
-	oKgpqAvl7wmJr172t65G42CSprnU6qW1zcvH3t56Fcr6bR/TsYA=
-X-Received: by 2002:a17:902:f646:b0:224:f12:3735 with SMTP id d9443c01a7336-228048c8674mr121121765ad.31.1743157761003;
-        Fri, 28 Mar 2025 03:29:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGTLwXEUOwEmMsUdJEpr/rmOv1KKLheXbqRHRhCDP2HIepa0hdRuCAfWHrz2ORIUC0rf+g8sA==
-X-Received: by 2002:a17:902:f646:b0:224:f12:3735 with SMTP id d9443c01a7336-228048c8674mr121121265ad.31.1743157760482;
-        Fri, 28 Mar 2025 03:29:20 -0700 (PDT)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eee11b7sm14561965ad.86.2025.03.28.03.29.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 03:29:20 -0700 (PDT)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Fri, 28 Mar 2025 15:58:33 +0530
-Subject: [PATCH v9 5/5] PCI: dwc: Add support for configuring lane
- equalization presets
+	s=arc-20240116; t=1743158053; c=relaxed/simple;
+	bh=n8LV2y0jcl19jFEKy2366B4vJq+cf9Ba091cscKrEZY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=eP7sEKnxxWl70CckFlm8YAUOTaunJxJUpCcrGJxKLa8XTCf5rDsM8V/evNWt16H/y6iT5VqeAq5CN0qqq/KWsCwlheTESiqeWU11acscWcIZl2PL3cdNTx8NCXT1Jzx6GXjvdAGu6uyuHeRgfS4cpO+JwjJI0ebacD7KJJlxtBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=aj9regYp; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=LmapWkrqWUTuiw6YKSd8zCrQeL5wVOZLPa/A4AV+vE0=;
+	b=aj9regYpb3rZw9VPeCIptFKmJWnUfJ1RDhZix9uD18z5uvIPrK3BdMoKDQScUj
+	sDcPFPh/6T8IpInVQ4hmlErqrN16GCB2vGLY/KCReSViQw4IaNyXu3G5glJwXdLz
+	9sSfsxbpvoKM9wL1a4BxE+DXEwplqSqvloDvD2E+JO43Y=
+Received: from [192.168.60.52] (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wBHnJb2euZnh+KxCQ--.63968S2;
+	Fri, 28 Mar 2025 18:33:28 +0800 (CST)
+Message-ID: <b279863e-8d8c-4c14-98ad-c19d26c69146@163.com>
+Date: Fri, 28 Mar 2025 18:33:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250328-preset_v6-v9-5-22cfa0490518@oss.qualcomm.com>
-References: <20250328-preset_v6-v9-0-22cfa0490518@oss.qualcomm.com>
-In-Reply-To: <20250328-preset_v6-v9-0-22cfa0490518@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_mrana@quicinc.com, quic_vbadigan@quicinc.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743157732; l=4766;
- i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=U7DWrCD6EQXqUQIkpwerhpxSQhLGZ9eFto7N2dbcVTs=;
- b=ViVIJg5kkCvIkqx3JzuIUQN0sSRyoXOi/qnO2mEdfQm4OUIlPz9oHhnr8KbEv4i7UX18xCpYj
- /+zdbyIrLUjCq8x/e45RiGbdUi1PTRy2ZoMyrZhMZAZ0+CXHcpW0mX/
-X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-ORIG-GUID: EAyWxXnNVlhjYQwoyXr9xG12qmAgZQco
-X-Authority-Analysis: v=2.4 cv=e7QGSbp/ c=1 sm=1 tr=0 ts=67e67a01 cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=S-wDCh2AgS0RhsWIeBgA:9 a=QEXdDO2ut3YA:10
- a=1OuFwYUASf3TG4hYMiVC:22
-X-Proofpoint-GUID: EAyWxXnNVlhjYQwoyXr9xG12qmAgZQco
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-28_05,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- malwarescore=0 spamscore=0 bulkscore=0 mlxlogscore=999 lowpriorityscore=0
- priorityscore=1501 adultscore=0 impostorscore=0 suspectscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503280071
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v6 3/5] PCI: cadence: Use common PCI host bridge APIs for
+ finding the capabilities
+From: Hans Zhang <18255117159@163.com>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+ jingoohan1@gmail.com, thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20250323164852.430546-1-18255117159@163.com>
+ <20250323164852.430546-4-18255117159@163.com>
+ <f467056d-8d4a-9dab-2f0a-ca589adfde53@linux.intel.com>
+ <d370b69a-3b70-4e3b-94a3-43e0bc1305cd@163.com>
+ <a3462c68-ec1b-0b1a-fee7-612bd1109819@linux.intel.com>
+ <3d9b2fa9-98bf-4f47-aa76-640a4f82cb2f@163.com>
+ <26dcba54-93c1-dda4-c5e2-e324e9d50b09@linux.intel.com>
+ <f2725090-e199-493d-9ae3-e807d65f647b@163.com>
+ <de6ce71c-ba82-496e-9c72-7c9c61b37906@163.com>
+ <ddabf340-a00f-75b1-2b6b-d9ab550a984f@linux.intel.com>
+ <9118fcc0-e5a5-40f2-be4b-7e06b4b20601@163.com>
+Content-Language: en-US
+In-Reply-To: <9118fcc0-e5a5-40f2-be4b-7e06b4b20601@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBHnJb2euZnh+KxCQ--.63968S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3KrWftw4ktry8JFyUJrW5Jrb_yoWDKr4UpF
+	W5Ja4SyFWrJF13Zrn2van0yr1ayF9Ika47JayxG34avr12krWrAFyIkFyagF1fKr4kWF13
+	X3yDtFWkC3Z0yFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UJnYwUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhQeo2fmdyluRQAAsn
 
-PCIe equalization presets are predefined settings used to optimize
-signal integrity by compensating for signal loss and distortion in
-high-speed data transmission.
 
-Based upon the number of lanes and the data rate supported, write
-the preset data read from the device tree in to the lane equalization
-control registers.
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
----
- drivers/pci/controller/dwc/pcie-designware-host.c | 76 +++++++++++++++++++++++
- drivers/pci/controller/dwc/pcie-designware.h      |  3 +
- 2 files changed, 79 insertions(+)
+On 2025/3/25 23:37, Hans Zhang wrote:
+> 
+> 
+> On 2025/3/25 23:18, Ilpo Järvinen wrote:>>
+>>> Hi Ilpo,
+>>>
+>>> Another question comes to mind:
+>>> If working in EP mode, devm_pci_alloc_host_bridge will not be 
+>>> executed and
+>>> there will be no struct pci_host_bridge.
+>>>
+>>> Don't know if you have anything to add?
+>>
+>> Hi Hans,
+>>
+>> No, I don't have further ideas at this point, sorry. It seems it isn't
+>> realistic without something more substantial that currently isn't there.
+>>
+>> This lack of way to have a generic way to read the config before the main
+>> struct are instanciated by the PCI core seems to be the limitation that
+>> hinders sharing code between controller drivers and it would have been
+>> nice to address it.
+>>
+>> But please still make the capability list parsing code common, it should
+>> be relatively straightforward using a macro which can take different read
+>> functions similar to read_poll_timeout. That will avoid at least some
+>> amount of code duplication.
+>>
+>> Thanks for trying to come up with a solution (or thinking enough to say
+>> it doesn't work)!
+>>
+> 
+> Hi Ilpo,
+> 
+> It's okay. It's what I'm supposed to do. Thank you very much for your 
+> discussion with me. I'll try a macro definition like read_poll_timeout. 
+> Will share the revised patches soon for your feedback.
+> 
+> Best regards,
+> Hans
+> 
+> 
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index dd56cc02f4ef..153f9ce93ccd 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -507,6 +507,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
- 	if (pci->num_lanes < 1)
- 		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
- 
-+	ret = of_pci_get_equalization_presets(dev, &pp->presets, pci->num_lanes);
-+	if (ret)
-+		goto err_free_msi;
-+
- 	/*
- 	 * Allocate the resource for MSG TLP before programming the iATU
- 	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
-@@ -808,6 +812,77 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
- 	return 0;
- }
- 
-+static void dw_pcie_program_presets(struct dw_pcie_rp *pp, enum pci_bus_speed speed)
+Dear Ilpo, Mani and Bjorn,
+
+
+The following is my new idea, and the following is patch. Please help to 
+check whether it is reasonable.
+
+I successfully tested the CDNS and DWC drivers locally. If there are 
+other risks, please point them out, and we'll discuss them. Please give 
+your opinion. Thank you very much.
+
+Or is the submitted patch reasonable? I'd like to ask for your advice.
+
+Patchs:
+
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.c 
+b/drivers/pci/controller/cadence/pcie-cadence.c
+index 204e045aed8c..92aea42a18d0 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.c
++++ b/drivers/pci/controller/cadence/pcie-cadence.c
+@@ -5,9 +5,37 @@
+
+  #include <linux/kernel.h>
+  #include <linux/of.h>
++#include <linux/pci.h>
+
+  #include "pcie-cadence.h"
+
++static int cdns_pcie_read_cfg(void *priv, unsigned int devfn, int where,
++			      int size, u32 *val)
 +{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	u8 lane_eq_offset, lane_reg_size, cap_id;
-+	u8 *presets;
-+	u32 cap;
-+	int i;
++	struct cdns_pcie *pcie = priv;
 +
-+	if (speed == PCIE_SPEED_8_0GT) {
-+		presets = (u8 *)pp->presets.eq_presets_8gts;
-+		lane_eq_offset =  PCI_SECPCI_LE_CTRL;
-+		cap_id = PCI_EXT_CAP_ID_SECPCI;
-+		/* For data rate of 8 GT/S each lane equalization control is 16bits wide*/
-+		lane_reg_size = 0x2;
-+	} else if (speed == PCIE_SPEED_16_0GT) {
-+		presets = pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS - 1];
-+		lane_eq_offset = PCI_PL_16GT_LE_CTRL;
-+		cap_id = PCI_EXT_CAP_ID_PL_16GT;
-+		lane_reg_size = 0x1;
-+	} else if (speed == PCIE_SPEED_32_0GT) {
-+		presets =  pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_32GTS - 1];
-+		lane_eq_offset = PCI_PL_32GT_LE_CTRL;
-+		cap_id = PCI_EXT_CAP_ID_PL_32GT;
-+		lane_reg_size = 0x1;
-+	} else if (speed == PCIE_SPEED_64_0GT) {
-+		presets =  pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_64GTS - 1];
-+		lane_eq_offset = PCI_PL_64GT_LE_CTRL;
-+		cap_id = PCI_EXT_CAP_ID_PL_64GT;
-+		lane_reg_size = 0x1;
-+	} else {
-+		return;
-+	}
++	if (size == 4)
++		*val = cdns_pcie_readl(pcie, where);
++	else if (size == 2)
++		*val = cdns_pcie_readw(pcie, where);
++	else if (size == 1)
++		*val = cdns_pcie_readb(pcie, where);
 +
-+	if (presets[0] == PCI_EQ_RESV)
-+		return;
-+
-+	cap = dw_pcie_find_ext_capability(pci, cap_id);
-+	if (!cap)
-+		return;
-+
-+	/*
-+	 * Write preset values to the registers byte-by-byte for the given
-+	 * number of lanes and register size.
-+	 */
-+	for (i = 0; i < pci->num_lanes * lane_reg_size; i++)
-+		dw_pcie_writeb_dbi(pci, cap + lane_eq_offset + i, presets[i]);
++	return PCIBIOS_SUCCESSFUL;
 +}
 +
-+static void dw_pcie_config_presets(struct dw_pcie_rp *pp)
++u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
 +{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	enum pci_bus_speed speed = pcie_link_speed[pci->max_link_speed];
-+
-+	/*
-+	 * Lane equalization needs to be perfomed for all data rates
-+	 * the controller supports and for all supported lanes.
-+	 */
-+
-+	if (speed >= PCIE_SPEED_8_0GT)
-+		dw_pcie_program_presets(pp, PCIE_SPEED_8_0GT);
-+
-+	if (speed >= PCIE_SPEED_16_0GT)
-+		dw_pcie_program_presets(pp, PCIE_SPEED_16_0GT);
-+
-+	if (speed >= PCIE_SPEED_32_0GT)
-+		dw_pcie_program_presets(pp, PCIE_SPEED_32_0GT);
-+
-+	if (speed >= PCIE_SPEED_64_0GT)
-+		dw_pcie_program_presets(pp, PCIE_SPEED_64_0GT);
++	return PCI_FIND_NEXT_CAP_TTL(pcie, 0, cdns_pcie_read_cfg,
++				     PCI_CAPABILITY_LIST, cap);
 +}
 +
- int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-@@ -861,6 +936,7 @@ int dw_pcie_setup_rc(struct dw_pcie_rp *pp)
- 		PCI_COMMAND_MASTER | PCI_COMMAND_SERR;
- 	dw_pcie_writel_dbi(pci, PCI_COMMAND, val);
- 
-+	dw_pcie_config_presets(pp);
- 	/*
- 	 * If the platform provides its own child bus config accesses, it means
- 	 * the platform uses its own address translation component rather than
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 61d1fb6b437b..30ae8d3f4282 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -25,6 +25,8 @@
- #include <linux/pci-epc.h>
- #include <linux/pci-epf.h>
- 
-+#include "../../pci.h"
++u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap)
++{
++	return PCI_FIND_NEXT_EXT_CAPABILITY(pcie, 0, cdns_pcie_read_cfg, 0,
++					    cap);
++}
 +
- /* DWC PCIe IP-core versions (native support since v4.70a) */
- #define DW_PCIE_VER_365A		0x3336352a
- #define DW_PCIE_VER_460A		0x3436302a
-@@ -381,6 +383,7 @@ struct dw_pcie_rp {
- 	int			msg_atu_index;
- 	struct resource		*msg_res;
- 	bool			use_linkup_irq;
-+	struct pci_eq_presets	presets;
- };
- 
- struct dw_pcie_ep_ops {
+  void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
+  {
+  	u32 delay = 0x3;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h 
+b/drivers/pci/controller/cadence/pcie-cadence.h
+index f5eeff834ec1..dd7cb6b6b291 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -398,6 +398,16 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie 
+*pcie, u32 reg)
+  	return readl(pcie->reg_base + reg);
+  }
 
--- 
-2.34.1
++static inline u32 cdns_pcie_readw(struct cdns_pcie *pcie, u32 reg)
++{
++	return readw(pcie->reg_base + reg);
++}
++
++static inline u32 cdns_pcie_readb(struct cdns_pcie *pcie, u32 reg)
++{
++	return readb(pcie->reg_base + reg);
++}
++
+  static inline u32 cdns_pcie_read_sz(void __iomem *addr, int size)
+  {
+  	void __iomem *aligned_addr = PTR_ALIGN_DOWN(addr, 0x4);
+@@ -557,6 +567,9 @@ static inline int cdns_pcie_ep_setup(struct 
+cdns_pcie_ep *ep)
+  }
+  #endif
+
++u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap);
++u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap);
++
+  void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
+
+  void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, 
+u8 fn,
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c 
+b/drivers/pci/controller/dwc/pcie-designware.c
+index 145e7f579072..1b579dbc5cb1 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -203,83 +203,26 @@ void dw_pcie_version_detect(struct dw_pcie *pci)
+  		pci->type = ver;
+  }
+
+-/*
+- * These interfaces resemble the pci_find_*capability() interfaces, but 
+these
+- * are for configuring host controllers, which are bridges *to* PCI 
+devices but
+- * are not PCI devices themselves.
+- */
+-static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
+-				  u8 cap)
++static int dw_pcie_read_cfg(void *priv, unsigned int devfn, int where, 
+int size,
++			    u32 *val)
+  {
+-	u8 cap_id, next_cap_ptr;
+-	u16 reg;
+-
+-	if (!cap_ptr)
+-		return 0;
+-
+-	reg = dw_pcie_readw_dbi(pci, cap_ptr);
+-	cap_id = (reg & 0x00ff);
+-
+-	if (cap_id > PCI_CAP_ID_MAX)
+-		return 0;
++	struct dw_pcie *pcie = priv;
++	*val = dw_pcie_read_dbi(pcie, where, size);
+
+-	if (cap_id == cap)
+-		return cap_ptr;
+-
+-	next_cap_ptr = (reg & 0xff00) >> 8;
+-	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++	return PCIBIOS_SUCCESSFUL;
+  }
+
+  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+  {
+-	u8 next_cap_ptr;
+-	u16 reg;
+-
+-	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
+-	next_cap_ptr = (reg & 0x00ff);
+-
+-	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
++	return PCI_FIND_NEXT_CAP_TTL(pcie, 0, dw_pcie_read_cfg,
++				     PCI_CAPABILITY_LIST, cap);
+  }
+  EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+
+-static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
+-					    u8 cap)
+-{
+-	u32 header;
+-	int ttl;
+-	int pos = PCI_CFG_SPACE_SIZE;
+-
+-	/* minimum 8 bytes per capability */
+-	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+-
+-	if (start)
+-		pos = start;
+-
+-	header = dw_pcie_readl_dbi(pci, pos);
+-	/*
+-	 * If we have no capabilities, this is indicated by cap ID,
+-	 * cap version and next pointer all being 0.
+-	 */
+-	if (header == 0)
+-		return 0;
+-
+-	while (ttl-- > 0) {
+-		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+-			return pos;
+-
+-		pos = PCI_EXT_CAP_NEXT(header);
+-		if (pos < PCI_CFG_SPACE_SIZE)
+-			break;
+-
+-		header = dw_pcie_readl_dbi(pci, pos);
+-	}
+-
+-	return 0;
+-}
+-
+  u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
+  {
+-	return dw_pcie_find_next_ext_capability(pci, 0, cap);
++	return PCI_FIND_NEXT_EXT_CAPABILITY(pcie, 0, dw_pcie_read_cfg, 0,
++					    cap);
+  }
+  EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 869d204a70a3..af7467c3143d 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -423,28 +423,27 @@ static int pci_dev_str_match(struct pci_dev *dev, 
+const char *p,
+  	return 1;
+  }
+
+-static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
+-				  u8 pos, int cap, int *ttl)
++static int __pci_bus_read_config(void *priv, unsigned int devfn, int where,
++				 u32 size, u32 *val)
+  {
+-	u8 id;
+-	u16 ent;
++	struct pci_bus *bus = priv;
++	int ret;
+
+-	pci_bus_read_config_byte(bus, devfn, pos, &pos);
++	if (size == 1)
++		ret = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
++	else if (size == 2)
++		ret = pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
++	else
++		ret = pci_bus_read_config_dword(bus, devfn, where, val);
+
+-	while ((*ttl)--) {
+-		if (pos < 0x40)
+-			break;
+-		pos &= ~3;
+-		pci_bus_read_config_word(bus, devfn, pos, &ent);
++	return ret;
++}
+
+-		id = ent & 0xff;
+-		if (id == 0xff)
+-			break;
+-		if (id == cap)
+-			return pos;
+-		pos = (ent >> 8);
+-	}
+-	return 0;
++static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
++				  u8 pos, int cap, int *ttl)
++{
++	return PCI_FIND_NEXT_CAP_TTL(bus, devfn, __pci_bus_read_config, pos,
++				     cap);
+  }
+
+  static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
+@@ -553,42 +552,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
+   */
+  u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
+  {
+-	u32 header;
+-	int ttl;
+-	u16 pos = PCI_CFG_SPACE_SIZE;
+-
+-	/* minimum 8 bytes per capability */
+-	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
+-
+  	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
+  		return 0;
+
+-	if (start)
+-		pos = start;
+-
+-	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
+-		return 0;
+-
+-	/*
+-	 * If we have no capabilities, this is indicated by cap ID,
+-	 * cap version and next pointer all being 0.
+-	 */
+-	if (header == 0)
+-		return 0;
+-
+-	while (ttl-- > 0) {
+-		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
+-			return pos;
+-
+-		pos = PCI_EXT_CAP_NEXT(header);
+-		if (pos < PCI_CFG_SPACE_SIZE)
+-			break;
+-
+-		if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
+-			break;
+-	}
+-
+-	return 0;
++	return PCI_FIND_NEXT_EXT_CAPABILITY(dev->bus, dev->devfn,
++					    __pci_bus_read_config, start, cap);
+  }
+  EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
+
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 47b31ad724fa..0d5dfd010a01 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1198,6 +1198,64 @@ void pci_sort_breadthfirst(void);
+
+  /* Generic PCI functions exported to card drivers */
+
++/* Extended capability finder */
++#define PCI_FIND_NEXT_CAP_TTL(priv, devfn, read_cfg, start, cap) 
+     \
++	({                                                                  \
++		typeof(start) __pos = (start);                              \
++		int __ttl = PCI_FIND_CAP_TTL;                               \
++		u16 __ent = 0;                                              \
++		u8 __found_pos = 0;                                         \
++		u8 __id;                                                    \
++ 
+     \
++		read_cfg((priv), (devfn), __pos, 1, (u32 *)&__pos);         \
++ 
+     \
++		while (__ttl--) {                                           \
++			if (__pos < 0x40)                                   \
++				break;                                      \
++			__pos &= ~3;                                        \
++			read_cfg((priv), (devfn), __pos, 2, (u32 *)&__ent); \
++ 
+     \
++			__id = __ent & 0xff;                                \
++			if (__id == 0xff)                                   \
++				break;                                      \
++			if (__id == (cap)) {                                \
++				__found_pos = __pos;                        \
++				break;                                      \
++			}                                                   \
++			__pos = (__ent >> 8);                               \
++		}                                                           \
++		__found_pos;                                                \
++	})
++
++/* Extended capability finder */
++#define PCI_FIND_NEXT_EXT_CAPABILITY(priv, devfn, read_cfg, start, cap) 
+    \
++	({                                                                 \
++		u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;                 \
++		u16 __found_pos = 0;                                       \
++		int __ttl, __ret;                                          \
++		u32 __header;                                              \
++ 
+    \
++		__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8; \
++		while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {       \
++			__ret = read_cfg((priv), (devfn), __pos, 4,        \
++					 &__header);                       \
++			if (__ret != PCIBIOS_SUCCESSFUL)                   \
++				break;                                     \
++ 
+    \
++			if (__header == 0)                                 \
++				break;                                     \
++ 
+    \
++			if (PCI_EXT_CAP_ID(__header) == (cap) &&           \
++			    __pos != start) {                              \
++				__found_pos = __pos;                       \
++				break;                                     \
++			}                                                  \
++ 
+    \
++			__pos = PCI_EXT_CAP_NEXT(__header);                \
++		}                                                          \
++		__found_pos;                                               \
++	})
++
+  u8 pci_bus_find_capability(struct pci_bus *bus, unsigned int devfn, 
+int cap);
+  u8 pci_find_capability(struct pci_dev *dev, int cap);
+  u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
+
+
+
+
+
+Best regards,
+Hans
 
 
