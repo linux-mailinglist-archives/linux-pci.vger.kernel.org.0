@@ -1,225 +1,254 @@
-Return-Path: <linux-pci+bounces-24916-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24917-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 789B8A7443F
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 08:16:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BC24A7444A
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 08:20:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5350A1893520
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 07:16:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 236B61898057
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 07:20:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA34019259F;
-	Fri, 28 Mar 2025 07:16:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B764521148E;
+	Fri, 28 Mar 2025 07:20:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YgrC65eo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfDtM1qf"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F100C182D0
-	for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 07:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA1919F11F;
+	Fri, 28 Mar 2025 07:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743146193; cv=none; b=u1uyWtcT+G9J3k+UhkE4W0J4GSXS2MJf9ytghbhx4i4na/A+LTiIi5NKn8WYBXs+IwsLBUjt0htxVHA4zHZ2nFAfST2Bi7R5sFz5wTEpR6DuHqVyK1MVymtXp+N9XmScHfxBbpUmEb4xtZVfi1t6+LKP+XrXPi/vrakJuhTm2WA=
+	t=1743146428; cv=none; b=is8wi1AVznz6/XwCKl3y+/CsbZe/I4cS+bZiQvTwZ84UMtUzp24rxPrqVZfbn8zW55Xmn4AOz2A66L3JCeU8VW+6NHmW9jG4LaSusCEEt5tUx+LS55gg3RTEUroKI/ZDHPHIGdaAGrJ+eP0+MbieASk71monNAauzAzBGfIQbRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743146193; c=relaxed/simple;
-	bh=TKJevRNqOhkTY0h/YKrlLZg0MRUpwuJ18SAD/eNyIGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LC8rP5SrPc+25raCCRo5qdgJagJITzL2eSIzAfjySERc7IEMEzgJ6uhut/9VtcK4CFBcT1cxhZE/yu+PWzQpFxuckaM1j7Eqo+0pDo73c183+e7ZpJtWwC1+r6fYjnmaz1+RMnZ74PtdBGMQBh2XkVUs8A6+nxH+R0B+bLPm/9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YgrC65eo; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ff69365e1dso2414956a91.3
-        for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 00:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743146191; x=1743750991; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3PegE+Cjkboiq51xGZf8q33++7d0FPsqepnmGrruHt0=;
-        b=YgrC65eoHc+G8Z9UF/bRRFXl6isnZ1EWhzsV4VT51Wm8fUd+hu7r9RQJ/AhOAB5sNn
-         UnX/iydSNmCHvaKt/nEj5eCigQtxc6FmXk/AxSYtJ5sxLcDoa+W7Xsub/rKroPNbBwXc
-         716ehGDwW8DS0ju4zPhNYM+Qc907vmxGsHoZb3zs2BvXV67y3eV0XpJVxTEI0Gt3P8RT
-         O/6cYx28sp847KFs3708W5SnycT1VeY0HH01Pgkt3SUkpsRyvV/4zKaItLt4zEY/9WWU
-         wQSBiyHbtVWNo3ds5Shhzc+fthw8J1tZceCrqR1guksBVDbIbgxqEEuDQiUMKXYp+gbF
-         dIDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743146191; x=1743750991;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3PegE+Cjkboiq51xGZf8q33++7d0FPsqepnmGrruHt0=;
-        b=WevFDJDCbq32AIRuyVt8v+YL96gUKXWuHRlq8pPpOBbFpOhn/nWkBUiF8nZ8fNO3w5
-         80XbGknctm7LP+wlGQYjXvATOgxhNbo0OTkLr8iUOg3PWtf3UZ9f+khTfyJNRW3lQ0OR
-         zCzjOhWu1VYxpsuHG4svxA3UKKckJTrveXA1n8lzhdbCSRiaRqXBKC+3t2XnI6L+IzQ6
-         Oz7HF5oSQoAk7AWSiU6Fgi7OOxku/wNQrtcNMSRJ4UGu3pLUKr4c1ebHCZOcKQMfchr+
-         AJjXXlUTnf5Ca3/CNwcuhHL9Af3UV9RpaOWDHXIh/p2LxNTztG6AahGh4mQHYfANq0JA
-         zC2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU/AoHO28DYNafVSDs/a11LP4wt51Ub6K9XKAOlxNNnNokKpGOmHwxrBp9pvVJ+FVJcKYYxGuflAF8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjL7+9CKKYM+BVxhrQs31NsI1imgCwDGUqJsDcwmf0Zo2ycHgB
-	gZhCjjQv6//gQKi9rTNt0zh0hJM44SXC1Kg0pkoj9wpNUXqaiV4WTEEqYJ2zpg==
-X-Gm-Gg: ASbGncuiwy2VNNpM1xhZT0c9CunKA5Fs/ZArgnns6jsc+aME+jihhLURri3VDJ3Oljm
-	rxey5CUta7q/2HeaGnBuKpHrPUFc7L9Vxv3lIoLwwifQCs4IDxCM5WhQi1u+WmUMDBv3RGHOOwj
-	YtXgN5F674/IUOgub2zO1PoHq9F0IcS1dfCSQg6l974MFKP5MEwlzduKdxTIXO9QpWiCrxEfwcu
-	FCKm0tHDJojBPMm/RP4OHUbgogD1uBClaFLaWynv+l0No9APNFd4PN4A3Efd4k6p0CVxYDzpB9g
-	Ifv/5l42kJVRmt7y/HHo57vrW/GC6kHWqvKnbCkEY1yXFRAwqROVRnk=
-X-Google-Smtp-Source: AGHT+IF5UepItCcJSaeWzDfap9vxalQuYDYhnqB0lwk9s1M095ggieOIxfPLzD1T6Ad52VDSjIQciA==
-X-Received: by 2002:a05:6a00:1405:b0:730:d5ca:aee with SMTP id d2e1a72fcca58-739610e20d9mr10149300b3a.23.1743146190944;
-        Fri, 28 Mar 2025 00:16:30 -0700 (PDT)
-Received: from thinkpad ([120.60.68.219])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970e2e2bcsm1041441b3a.70.2025.03.28.00.16.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 00:16:30 -0700 (PDT)
-Date: Fri, 28 Mar 2025 12:46:24 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v8 2/4] PCI: of: Add of_pci_get_equalization_presets() API
-Message-ID: <gkyewqpwc5hxlyvjriqdpt2mkkg7dqvasbhmz72jdfwjtwnmni@sj7lyd2iil7l>
-References: <20250316-preset_v6-v8-0-0703a78cb355@oss.qualcomm.com>
- <20250316-preset_v6-v8-2-0703a78cb355@oss.qualcomm.com>
- <gl2klkvpkb2vrxrzdqbqjomfis66tldy6witvbqdd2ig3st3rw@jstguoejcofa>
- <7a0724ad-89a5-0ccd-eba5-ca4871ce1cdd@oss.qualcomm.com>
- <epg6mtsnemzwnqvsze7zbkehovxvu6fpmw52kzfrjmjahadg66@k4gprl4zg5b3>
- <bc8cbbfd-b96f-21b6-6c6d-dd1b97f16035@oss.qualcomm.com>
+	s=arc-20240116; t=1743146428; c=relaxed/simple;
+	bh=tyNjwTGcUTBr1cGYdYH3l/AqGZbj90ulg1UKuRkqgmQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KPnNHgkTRlRG/3qFCgQ/zYNcr/DE+B2Qgrv7Zn+wrE1omNg7bbuf2bQ168HcvFtmuvGj1OkU2JMUozSFBW9m20JkaXe5MCxeCZYVAMwYaidUbny8lF6wGfT71YU8BtNqPIHbUgQHiTr7VX7IGT+plP2FCqcnTKGlyXKYkxP2RiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfDtM1qf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F984C4CEE4;
+	Fri, 28 Mar 2025 07:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743146428;
+	bh=tyNjwTGcUTBr1cGYdYH3l/AqGZbj90ulg1UKuRkqgmQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QfDtM1qfZEHlWZ0QKzEtnmzeMvkGjvtS8jdD29cc6g7B4vbT1nxach763FISX4ltW
+	 ciAH1LlzwiOkDKCsSbeTpdyCvIShsie2OTxgoUYPvZOZSD9qMHYePhoufy7GXKGJTt
+	 wBC/eokG58QmidmTb24NzqQjJFT69TdDYpUye/i1OTIvEVdxC/u/Nv9j1VW2vgZP3t
+	 Wqmo6x7mBoe2OLrd3epOkSRFBpE7xrM03RtotDq0ehbhu6PSZHG1x+0uaXgH5oz+Hq
+	 6QVlSiBcWo+g2YlwqciiWnHRL3OcQuV9AsbIhT6gj+8eTuyuUK+wvDSC71lBajl7UB
+	 ypg9gnBZ2n27Q==
+Message-ID: <bf329eeb-62e5-405e-8954-df9d4fc73d63@kernel.org>
+Date: Fri, 28 Mar 2025 08:20:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bc8cbbfd-b96f-21b6-6c6d-dd1b97f16035@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] dt-bindings: pci: cadence: Extend compatible for new
+ platform configurations
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ Milind Parab <mparab@cadence.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <20250327111106.2947888-1-mpillai@cadence.com>
+ <CH2PPF4D26F8E1C1CBD2A866C59AA55CD7AA2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <6a487a73-3f2d-4373-8e02-ba749181bdfb@kernel.org>
+ <DS0PR07MB1049293A9CDEBA2B3BCCED34DA2A02@DS0PR07MB10492.namprd07.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <DS0PR07MB1049293A9CDEBA2B3BCCED34DA2A02@DS0PR07MB10492.namprd07.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 28, 2025 at 12:22:23PM +0530, Krishna Chaitanya Chundru wrote:
+On 28/03/2025 06:07, Manikandan Karunakaran Pillai wrote:
+>> EXTERNAL MAIL
+>>
+>>
+>> On 27/03/2025 12:19, Manikandan Karunakaran Pillai wrote:
+>>> Document the compatible property for the newly added values for PCIe EP
+>> and
+>>> RP configurations. Fix the compilation issues that came up for the existing
+>>> Cadence bindings
+>>
+>> These are two different commits.
 > 
+> Ok
 > 
-> On 3/28/2025 12:13 PM, Manivannan Sadhasivam wrote:
-> > On Fri, Mar 28, 2025 at 10:54:25AM +0530, Krishna Chaitanya Chundru wrote:
-> > > 
-> > > 
-> > > On 3/28/2025 10:09 AM, Manivannan Sadhasivam wrote:
-> > > > On Sun, Mar 16, 2025 at 09:39:02AM +0530, Krishna Chaitanya Chundru wrote:
-> > > > > PCIe equalization presets are predefined settings used to optimize
-> > > > > signal integrity by compensating for signal loss and distortion in
-> > > > > high-speed data transmission.
-> > > > > 
-> > > > > As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
-> > > > > of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
-> > > > > configure lane equalization presets for each lane to enhance the PCIe
-> > > > > link reliability. Each preset value represents a different combination
-> > > > > of pre-shoot and de-emphasis values. For each data rate, different
-> > > > > registers are defined: for 8.0 GT/s, registers are defined in section
-> > > > > 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
-> > > > > an extra receiver preset hint, requiring 16 bits per lane, while the
-> > > > > remaining data rates use 8 bits per lane.
-> > > > > 
-> > > > > Based on the number of lanes and the supported data rate,
-> > > > > of_pci_get_equalization_presets() reads the device tree property and
-> > > > > stores in the presets structure.
-> > > > > 
-> > > > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > > > > ---
-> > > > >    drivers/pci/of.c  | 44 ++++++++++++++++++++++++++++++++++++++++++++
-> > > > >    drivers/pci/pci.h | 32 +++++++++++++++++++++++++++++++-
-> > > > >    2 files changed, 75 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> > > > > index 7a806f5c0d20..18691483e108 100644
-> > > > > --- a/drivers/pci/of.c
-> > > > > +++ b/drivers/pci/of.c
-> > > > > @@ -851,3 +851,47 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
-> > > > >    	return slot_power_limit_mw;
-> > > > >    }
-> > > > >    EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
-> > > > > +
-> > > > > +/**
-> > > > > + * of_pci_get_equalization_presets - Parses the "eq-presets-Ngts" property.
-> > > > > + *
-> > > > > + * @dev: Device containing the properties.
-> > > > > + * @presets: Pointer to store the parsed data.
-> > > > > + * @num_lanes: Maximum number of lanes supported.
-> > > > > + *
-> > > > > + * If the property is present, read and store the data in the @presets structure.
-> > > > > + * Else, assign a default value of PCI_EQ_RESV.
-> > > > > + *
-> > > > > + * Return: 0 if the property is not available or successfully parsed else
-> > > > > + * errno otherwise.
-> > > > > + */
-> > > > > +int of_pci_get_equalization_presets(struct device *dev,
-> > > > > +				    struct pci_eq_presets *presets,
-> > > > > +				    int num_lanes)
-> > > > > +{
-> > > > > +	char name[20];
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	presets->eq_presets_8gts[0] = PCI_EQ_RESV;
-> > > > > +	ret = of_property_read_u16_array(dev->of_node, "eq-presets-8gts",
-> > > > > +					 presets->eq_presets_8gts, num_lanes);
-> > > > > +	if (ret && ret != -EINVAL) {
-> > > > > +		dev_err(dev, "Error reading eq-presets-8gts :%d\n", ret);
-> > > > 
-> > > > 'Error reading eq-presets-8gts: %d'
-> > > > 
-> > > > > +		return ret;
-> > > > > +	}
-> > > > > +
-> > > > > +	for (int i = 0; i < EQ_PRESET_TYPE_MAX - 1; i++) {
-> > > > > +		presets->eq_presets_Ngts[i][0] = PCI_EQ_RESV;
-> > > > > +		snprintf(name, sizeof(name), "eq-presets-%dgts", 8 << (i + 1));
-> > > > > +		ret = of_property_read_u8_array(dev->of_node, name,
-> > > > > +						presets->eq_presets_Ngts[i],
-> > > > > +						num_lanes);
-> > > > > +		if (ret && ret != -EINVAL) {
-> > > > > +			dev_err(dev, "Error reading %s :%d\n", name, ret);
-> > > > 
-> > > > 'Error reading %s: %d'
-> > > > 
-> > > > > +			return ret;
-> > > > > +		}
-> > > > > +	}
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +EXPORT_SYMBOL_GPL(of_pci_get_equalization_presets);
-> > > > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > > > > index 01e51db8d285..78c9cc0ad8fa 100644
-> > > > > --- a/drivers/pci/pci.h
-> > > > > +++ b/drivers/pci/pci.h
-> > > > > @@ -9,6 +9,8 @@ struct pcie_tlp_log;
-> > > > >    /* Number of possible devfns: 0.0 to 1f.7 inclusive */
-> > > > >    #define MAX_NR_DEVFNS 256
-> > > > > +#define MAX_NR_LANES 16
-> > > > 
-> > > > Why did you limit to 16?
-> > > > 
-> > > As per PCIe spec we support maximum of 16 lanes only right
-> > > 
-> > 
-> > No. PCIe spec defines Max Link Width up to 32 lanes. Though, we have only seen
-> > 16 lanes used widely. This field should correspond to 'Maximum Link Width' value
-> > in the Link Capabilities Register.
-> > 
-> As per spec 6.0.1 section 7.5.3.6 Link Capabilities Register max link
-> width is x16 only.
+>>
+>>>
+>>> Signed-off-by: Manikandan K Pillai <mpillai@cadence.com>
+>>> ---
+>>>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  12 +-
+>>>  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 119 +++++++++++++++---
+>>>  2 files changed, 110 insertions(+), 21 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>> b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>>> index 98651ab22103..aa4ad69a9b71 100644
+>>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
+>>> @@ -7,14 +7,22 @@ $schema:
+>> https://urldefense.com/v3/__http://devicetree.org/meta-
+>> schemas/core.yaml*__;Iw!!EHscmS1ygiU1lA!CB5lvkvRUKSEDPSjpW7GJoPNyXZ
+>> xMge5SyndD4Z-VVLCZvzLIPDP-BMRjhKZ2UTxi6a18vaodaU$
+>>>  title: Cadence PCIe EP Controller
+>>>
+>>>  maintainers:
+>>> -  - Tom Joseph <tjoseph@cadence.com>
+>>> +  - Manikandan K Pillai <mpillai@cadence.com>
+>>>
+>>>  allOf:
+>>>    - $ref: cdns-pcie-ep.yaml#
+>>>
+>>>  properties:
+>>>    compatible:
+>>> -    const: cdns,cdns-pcie-ep
+>>> +    oneOf:
+>>> +      - const: cdns,cdns-pcie-ep
+>>> +      - const: cdns,cdns-pcie-hpa-ep
+>>
+>> What is hpa? Which soc is that?
+>>
+>> I don't think this should keep growing, but instead use SoC based
+>> compatibles.
+>>
+>> Anyway, that's enum.
+>>
 > 
+> HPA is high performance architecture based controllers. The major difference here in PCIe controllers is that
+> the address map changes. Each of the compatibles defined here have different address maps that allow the driver
+> to support them from the driver using compable property that provides the info from related data "struct of_device_id" in the driver.
 
-Interesting! I referred the 5.0 spec and it mentions x32 and they seem to have
-removed it in 6.0. So I guess we should go with the latest spec (I hope it stays
-the same at 7.0 also).
+Just switch to SoC specific compatibles.
 
-- Mani
+> 
+>>> +      - const: cdns,cdns-cix-pcie-hpa-ep
+>>
+>> What is cix? If you want to stuff here soc in the middle, then no, no
+>> no. Please read devicetree spec and writing bindings how the compatibles
+>> are created.
+>>
+> 
+> As mentioned in the earlier sections, cix is another implementation of the PCIe controller where 
+> the address map is changed by our customer
 
--- 
-மணிவண்ணன் சதாசிவம்
+So a SoC. Use SoC compatibles and follow every other recent binding.
+
+> 
+>>> +      - description: PCIe EP controller from cadence
+>>> +        items:
+>>> +          - const: cdns,cdns-pcie-ep
+>>> +          - const: cdns,cdns-pcie-hpa-ep
+>>> +          - const: cdns,cdns-cix-pcie-hpa-ep
+>>
+>> This makes no sense.
+>>
+> Only one of the above compatible is valid for PCIe controllers, which will be defined in the SoC related binding.
+
+That's not how lists are working. Don't explain me what it does, because
+I know that it does nothing good: it's broken code. You can explain me
+what you wanted to achieve, but still this part is just wrong and makes
+no sense. Drop.
+
+
+
+
+> 
+>>>
+>>>    reg:
+>>> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>> b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>>> index a8190d9b100f..bb7ffb9ddaf9 100644
+>>> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>>> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+>>>
+>>>  maintainers:
+>>> -  - Tom Joseph <tjoseph@cadence.com>
+>>> +  - Manikandan K Pillai <mpillai@cadence.com>
+>>>
+>>>  allOf:
+>>> -  - $ref: cdns-pcie-host.yaml#
+>>> +  - $ref: cdns-pcie.yaml#
+>>
+>> Why?
+>>
+> 
+> The existing yaml files were throwing out errors and the changes in these files are for fixing them.
+
+Then rather investigate the errors instead of doing random changes.
+
+> 
+>>>
+>>>  properties:
+>>> +  "#size-cells":
+>>> +    const: 2
+>>> +  "#address-cells":
+>>> +    const: 3
+>>
+>> Huh? Why? Nothing here makes sense.
+>>
+>>
+> Compilation error related fixes.
+
+NAK, no point at all.
+
+Best regards,
+Krzysztof
 
