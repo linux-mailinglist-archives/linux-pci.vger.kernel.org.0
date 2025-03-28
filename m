@@ -1,110 +1,191 @@
-Return-Path: <linux-pci+bounces-24961-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24962-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E306BA74E44
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 17:11:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38CFCA74E9E
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 17:39:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB83B7A3210
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 16:10:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DBC643B9561
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 16:39:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 828451D63F9;
-	Fri, 28 Mar 2025 16:11:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D5EE1D5AAD;
+	Fri, 28 Mar 2025 16:39:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QqjE1Bod"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="drIDHl70"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528E51C8FD7;
-	Fri, 28 Mar 2025 16:11:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1703B17CA1B;
+	Fri, 28 Mar 2025 16:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743178292; cv=none; b=KwDBP2OGyZvPvJ8kZf6lCeT8N4XBU5UYGc0SE4LxZFx3UlX1/jGUt8czS/e80wuYpILAfwngt7DaGXmAXHtQg4OfTTqmeP8TulS0iSikd+MTIJengHdS846ZNyG5xQxK9vaqzZmQ5n2b9SVu9VH1Fqkr12djAzJbi89B9A2wvP4=
+	t=1743179981; cv=none; b=dEdy5bLFeYLu3a+vF+X1EPQB44rR+jeomEO1qh/fl4Q+5xZ/zsx58r2UXipgz7gWLlbRjFPPNbRbPEx1MIsYjnZeGivQZjyBAl4NfDFnISyeXF6q9GWxBPFBaPDIAmTZIo4CUzYlHIRa1m8Hz2LdSJTmG17kKVMPjur4ePi80hY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743178292; c=relaxed/simple;
-	bh=vd+MsqR+zb+ZUwrDod4YyaT5G91/MYukXepr+eOQBMM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jxJWqIpN77CHTqxhnKUTkLV+tr+uSIajOrotrCSMoGSURAe2y9pv9KNqIqu4uqLajqz5xB9z1qgjs6jbHdB1kS2Zvx5A23C81M/ZvqB18jnN9iTfC+AxeVQFDnqIf+nVKiU2C3nUrpMTjZrX6oa5FbGvNUw+Jti15uVmnWx9qis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QqjE1Bod; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68534C4CEE4;
-	Fri, 28 Mar 2025 16:11:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743178290;
-	bh=vd+MsqR+zb+ZUwrDod4YyaT5G91/MYukXepr+eOQBMM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QqjE1BodPJFzurkmx6XGTJzHwXGtQsoj6RrUC9OFfJw9Q5rrVLGe+fQvF7lBiRmih
-	 Q5n3RLJXMhEzWJ8L+pwPclOgDTZFeY+I5d7jJhHAD3mtKZ7VBpGw08rFqzFK7ybnka
-	 HTTwDLHNvWdlsfTuhBPWCsCB7XOcS6vdSYZYb2vpNf+6AtSFUE2tSsU9rVas11XopT
-	 gnupgIcs/V6SVdwUMrtoE2K3BcX0+Sd4j6lEdvYj3vpcuC24r7lrgjPuEIyhQKuKzL
-	 FTYnoboB9tXJN1zY3z3iroEVGlasuOtNb2YYT7IXKwn21/l7FII8CjUQBWXVFktYpf
-	 qiWnSOdZvaeoA==
-Message-ID: <04201b5a-34fe-45e0-bb96-237bd6eec414@kernel.org>
-Date: Fri, 28 Mar 2025 09:11:29 -0700
+	s=arc-20240116; t=1743179981; c=relaxed/simple;
+	bh=rli8gCkSQGB9JpRw0Pa80TvJo0wcWK5OPRHOyfpODsM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=W7m4xrMefXO8Pe/HWhmmo1N3D4+oZB6gcq6r0K7uBiJ+H/i42yLY5eC4ZNo56IX1h2cgjg71NU94HMw/D2VOxDKTcbCobV9PqbfCQnTzDAIF5casI2/oBY22tkYcfazr2KzdJfM4NUZK7VDGYj6eP8rbEmR4QtLFbZZLm+GA1/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=drIDHl70; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743179979; x=1774715979;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=rli8gCkSQGB9JpRw0Pa80TvJo0wcWK5OPRHOyfpODsM=;
+  b=drIDHl70aQje8jGj8VJ0+3HH1yLa/4FjcBIssRC9Z1/912vw64TXBWvu
+   6777fCVaGO6C/yyw6M+TTBzTM55H4t+9zYVLsU7vDpD9XaUUFE00ZO29u
+   VA3iSRdMXXRTiHyCfJQuIGIzJ/yKeRp6UrEV5g3stZSaySx7YzldnYMPj
+   4SBGzLAInNe2vfHckeg0ZT2O9+Socckx0jD8nN7uZrCY8smeLbNOB02Km
+   PZYhLyna0YIOBkLAj8XOBdadeervCmsV+UllnF1GIvfm6aqHmFHbkQgVm
+   km27i/XNc6NnmMBNqgrnKp/isgCQRgH/qvkh2GuHybrk4Jfklq7utLuKT
+   g==;
+X-CSE-ConnectionGUID: wxdjFixsTRWuA3X9rmtaCg==
+X-CSE-MsgGUID: mO1VY/BqRUKiwhbrbFfcHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11387"; a="32153172"
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="32153172"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:39:38 -0700
+X-CSE-ConnectionGUID: sbJ66p1vQY6AxqAT4flbNA==
+X-CSE-MsgGUID: 0ksRt6/wQDu9gNyM9SijuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,283,1736841600"; 
+   d="scan'208";a="162724321"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.43])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2025 09:39:33 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 28 Mar 2025 18:39:29 +0200 (EET)
+To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
+cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
+    Lucas De Marchi <lucas.demarchi@intel.com>, 
+    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
+    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+    Maxime Ripard <mripard@kernel.org>, 
+    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
+Subject: Re: [PATCH v6 4/6] PCI/IOV: Check that VF BAR fits within the
+ reservation
+In-Reply-To: <4959d675-edd8-a296-661c-6a7bd22fbc0d@linux.intel.com>
+Message-ID: <77a5558f-fe6f-cba1-4515-c8597ae3c9bb@linux.intel.com>
+References: <20250320110854.3866284-1-michal.winiarski@intel.com> <20250320110854.3866284-5-michal.winiarski@intel.com> <4959d675-edd8-a296-661c-6a7bd22fbc0d@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] PCI/arm64/ath11k/ath12k: Rename pwrctrl Kconfig
- symbols
-To: Johan Hovold <johan+linaro@kernel.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Jeff Johnson <jjohnson@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- ath11k@lists.infradead.org, ath12k@lists.infradead.org,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250328143646.27678-1-johan+linaro@kernel.org>
-From: Jeff Johnson <jjohnson@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250328143646.27678-1-johan+linaro@kernel.org>
+Content-Type: multipart/mixed; boundary="8323328-1549821212-1743179969=:932"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1549821212-1743179969=:932
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On 3/28/2025 7:36 AM, Johan Hovold wrote:
-> The PCI pwrctrl framework was renamed after being merged, but the
-> Kconfig symbols still reflect the old name ("pwrctl" without an "r").
-> 
-> This leads to people not knowing how to refer to the framework in
-> writing, inconsistencies in module naming, etc.
-> 
-> Let's rename also the Kconfig symbols before this gets any worse.
-> 
-> The arm64, ath11k and ath12k changes could go through the corresponding
-> subsystem trees once they have the new symbols (e.g. in the next cycle)
-> or they could all go in via the PCI tree with an ack from their
-> maintainers.
+On Wed, 26 Mar 2025, Ilpo J=C3=A4rvinen wrote:
 
+> On Thu, 20 Mar 2025, Micha=C5=82 Winiarski wrote:
+>=20
+> > When the resource representing VF MMIO BAR reservation is created, its
+> > size is always large enough to accommodate the BAR of all SR-IOV Virtua=
+l
+> > Functions that can potentially be created (total VFs). If for whatever
+> > reason it's not possible to accommodate all VFs - the resource is not
+> > assigned and no VFs can be created.
+> >=20
+> > The following patch will allow VF BAR size to be modified by drivers at
+>=20
+> "The following patch" sounds to be like you're referring to patch that=20
+> follows this description, ie., the patch below. "An upcoming change" is=
+=20
+> alternative that doesn't suffer from the same problem.
+>=20
+> > a later point in time, which means that the check for resource
+> > assignment is no longer sufficient.
+> >=20
+> > Add an additional check that verifies that VF BAR for all enabled VFs
+> > fits within the underlying reservation resource.
+>=20
+> So this does not solve the case where the initial size was too large to=
+=20
+> fix and such VF BARs remain unassigned, right?
+>=20
+> > Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
+> > ---
+> >  drivers/pci/iov.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >=20
+> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> > index cbf335725d4fb..861273ad9a580 100644
+> > --- a/drivers/pci/iov.c
+> > +++ b/drivers/pci/iov.c
+> > @@ -646,8 +646,13 @@ static int sriov_enable(struct pci_dev *dev, int n=
+r_virtfn)
+> > =20
+> >  =09nres =3D 0;
+> >  =09for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
+> > +=09=09resource_size_t vf_bar_sz =3D
+> > +=09=09=09pci_iov_resource_size(dev,
+> > +=09=09=09=09=09      pci_resource_num_from_vf_bar(i));
+>=20
+> Please add int idx =3D pci_resource_num_from_vf_bar(i);
+>=20
+> >  =09=09bars |=3D (1 << pci_resource_num_from_vf_bar(i));
+> >  =09=09res =3D &dev->resource[pci_resource_num_from_vf_bar(i)];
+> > +=09=09if (vf_bar_sz * nr_virtfn > resource_size(res))
+> > +=09=09=09continue;
+>=20
+> Not directly related to this patch, I suspect this could actually try to=
+=20
+> assign an unassigned resource by doing something like this (perhaps in ow=
+n=20
+> patch, it doesn't even need to be part of this series but can be sent=20
+> later if you find the suggestion useful):
+>=20
+> =09=09/* Retry assignment if the initial size didn't fit */
+> =09=09if (!res->parent && pci_assign_resource(res, idx))
+> =09=09=09continue;
+>=20
+> Although I suspect reset_resource() might have been called for the=20
+> resource and IIRC it breaks the resource somehow but it could have been=
+=20
+> that IOV resources can be resummoned from that state though thanks to=20
+> their size not being stored into the resource itself but comes from iov=
+=20
+> structures.
 
-I'm fine with the entire series going through PCI
-Acked-by: Jeff Johnson <jjohnson@kernel.org> # drivers/net/wireless/ath/...
+I realized reset_resource() will zero the flags so it won't work without=20
+getting rid of reset_resource() calls first which I've not yet completed.=
+=20
 
+And once I get the rebar sizes included into bridge window sizing=20
+algorithm, the default size could possibly be shrunk by the resource
+fitting/assignment code so the resource assignment should no longer fail=20
+just because the initial size was too large. So it shouldn't be necessary=
+=20
+after that.
 
-> 
-> There are some new pwrctrl drivers and an arm64 defconfig change on the
-> lists so we may need to keep deprecated symbols for a release or two.
-> 
-> Johan
-> 
-> 
-> Johan Hovold (4):
->   PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
->   arm64: Kconfig: switch to HAVE_PWRCTRL
->   wifi: ath11k: switch to PCI_PWRCTRL_PWRSEQ
->   wifi: ath12k: switch to PCI_PWRCTRL_PWRSEQ
-> 
->  arch/arm64/Kconfig.platforms            |  2 +-
->  drivers/net/wireless/ath/ath11k/Kconfig |  2 +-
->  drivers/net/wireless/ath/ath12k/Kconfig |  2 +-
->  drivers/pci/pwrctrl/Kconfig             | 27 +++++++++++++++++++------
->  drivers/pci/pwrctrl/Makefile            |  8 ++++----
->  5 files changed, 28 insertions(+), 13 deletions(-)
-> 
+> >  =09=09if (res->parent)
+> >  =09=09=09nres++;
+> >  =09}
+> >=20
+>=20
+>=20
 
+--=20
+ i.
+
+--8323328-1549821212-1743179969=:932--
 
