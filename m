@@ -1,142 +1,153 @@
-Return-Path: <linux-pci+bounces-24932-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24933-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F85EA748D6
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 11:59:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A7C5A74933
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 12:27:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C27C93BE309
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 10:59:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 58AF63BC11E
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 11:27:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36283214A7D;
-	Fri, 28 Mar 2025 10:59:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1311218AA5;
+	Fri, 28 Mar 2025 11:27:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=friendlyarm-com.20230601.gappssmtp.com header.i=@friendlyarm-com.20230601.gappssmtp.com header.b="FWdzvTps"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3J/oMR+p";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="swosjZEx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B8F2135CE
-	for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 10:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5B1145B27;
+	Fri, 28 Mar 2025 11:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743159576; cv=none; b=WziEt7811QKh1lrQlA7+OI0UhRlgXt9oGXo9k4hj/TgUjv0C0P5Z6Q4Zx72jSSLvFTIBxwybAVUMlh7tu1yiTNsCqnSw6kyxv3WxkyKlo/zJtiJIkFXKZXWJwrZmVn6v0V/vjHU1nslGi77Fk8kIqfN9Lpu8YF5R1+Pj1yqlvgw=
+	t=1743161241; cv=none; b=EQU0MBVrLBG9rsAn5QgAGlq+cBe8olhWAmSMxcZxU9/aU9wEm/EOSLElARrcNBwBqtlB28oP3ESJkVQPzO4U2rV1zS+bPMCBw3/iStDhN1stkHjU4NrPjHH1hs1VNZ6+lifjmCwwhZ6P0F0LSjV61f20MMqe5jnd/rtdXRdrAs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743159576; c=relaxed/simple;
-	bh=wyvzx6aL7zIW8l9CT9CGKBFa3TtXPNgrV+U99H/B9n0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cvapdY9B8aHimdq4E9ho+/U5dYwb8mrDkynUyIKKBcOYq2K/IhSkktQfqbpSE5wUNINSArSkdLa0nulF1dKJrFPe9B7JtDP15jtgmNgH2Zgh3vJbuqOhNBBRCtYalcDnBzamSy3JE/lyYaKLao7Qzs7pvB2Xe9oKOJpGVghYUuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=friendlyarm.com; spf=none smtp.mailfrom=friendlyarm.com; dkim=pass (2048-bit key) header.d=friendlyarm-com.20230601.gappssmtp.com header.i=@friendlyarm-com.20230601.gappssmtp.com header.b=FWdzvTps; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=friendlyarm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=friendlyarm.com
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so3611519a91.2
-        for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 03:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=friendlyarm-com.20230601.gappssmtp.com; s=20230601; t=1743159574; x=1743764374; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vHj6gQ1zeVt3QGQTw+FIAxu8YW4dxt5y3xOPYH0BIdw=;
-        b=FWdzvTpsLLL8b5Qt/Ib9OrO9fa9OfOhm965fQ5sw1uB6zyeoZaIcMejwi4rxjt93EL
-         awqGdHdwPl4X6oYdY60LIGSTqW7PgrR5U9ImrfoXqQ2uPs5YVQNV/Lb6U5/4acICa+Le
-         if/No6fcS8nWUPLOoE1nAsBhb8ghyXcYaoyb3x3fbv5h5bel9I2m9iW4Bu1YcyXoih2S
-         7SipkNaE2oRiRC5Hisn9JLAn3QHgiYjiOYPHgtAUT3cBD6dhPGUiGx/iTtbkbdiixUnb
-         XiNzkHj4M6Uk0OiPggbfJvK7CkL17ZAlqntSkLr1gaREkB8wktOtElkXueO+FT/XyTj1
-         MzdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743159574; x=1743764374;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vHj6gQ1zeVt3QGQTw+FIAxu8YW4dxt5y3xOPYH0BIdw=;
-        b=xUL/HB8QjP1o3BkOaa+W6m4HIJoIu1kx4KL/scMnVFkqK+kIeb5k95U5GWZswKk5XJ
-         Tchk/1YGPk8JHHKSouLh5TBWB03XKKXHc5j+eSL6oz5zSeMDg1dLSTuHmzoihgDh2OX3
-         +PhyuGKW1VK/KaYvVov2A2q0Otq6+ctKI54A+CDZGYuShv9wSMe4mRq56eMQTTtJ8NKe
-         i9sDBhjX5iXpmuXd74DqykK3j/5WIPlEhr6puZmxGgGMUHv94d29XUMENBLkmrceNb9X
-         gtaIawsxSDppz/7wLxhMpktBQdepzyQvr8pwM4evmMd3zdNDmQs1YC+PaPjUkwCf5Gaq
-         YI3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXsFyW9E91mXfnuO6zublr2WHxRPw15vAgdj+hGh+UiDtEvnseKrBi1sWGllZiJDqIhBQCG7ELCUR0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLE6tMdyUMvsv0ttzgBbMjpz5elhaldXwIlGjs77A8do+9sLPw
-	idRAu5iaoH7x7NU4UUwS9CzMRBU1DgVc6hpaVP5SaU3bCl4PzsGSJlqx60OZYso=
-X-Gm-Gg: ASbGncug0w8mYAVazFR3tZ8LFXyw2/O81/UsQH2X8Az8fh2zP1OujeTu1+8dE5aj6l4
-	dE0wLFNawd8+6gBGqerN+uqTi0feARgDU/4W5e8rNF/VB3KuDsaMlnoePaPIkUUSllYmAGUcR9N
-	Mu0e2396UzboC9goEllsxm+oxxtVWhHxxifFCa40DnGyVYIhil82kJN7lEQiFlhT6vmA2B7Ay85
-	NhOBHKnACRe65UO3gLUFehVBUOMl5cisB4CmchjJjiOwW4lYxRGLRM7TNTX7RzmmJ8cLM1Sn/zp
-	AFPqPh3/PodaseRusgfZ0Kn1VN25OWPqDwXATqLrbq3iwYbMKP6JIU7xubX8oNr3nkbe
-X-Google-Smtp-Source: AGHT+IHCY/P45TjdQpykRBnac2GduXlszHbzvBxCFlitCRhl0UAFu8AkE4JL9IObg2JicXApsmQMBg==
-X-Received: by 2002:a17:90b:2645:b0:2ff:4bac:6fba with SMTP id 98e67ed59e1d1-303a85c1c47mr11926254a91.24.1743159573765;
-        Fri, 28 Mar 2025 03:59:33 -0700 (PDT)
-Received: from localhost.localdomain ([113.119.38.251])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3039f1d4efdsm3844649a91.34.2025.03.28.03.59.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 03:59:33 -0700 (PDT)
-From: Jensen Huang <jensenhuang@friendlyarm.com>
-To: Shawn Lin <shawn.lin@rock-chips.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Anand Moon <linux.amoon@gmail.com>
-Cc: Jensen Huang <jensenhuang@friendlyarm.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: rockchip: Fix order of rockchip_pci_core_rsts
-Date: Fri, 28 Mar 2025 18:58:22 +0800
-Message-ID: <20250328105822.3946767-1-jensenhuang@friendlyarm.com>
-X-Mailer: git-send-email 2.49.0-1
+	s=arc-20240116; t=1743161241; c=relaxed/simple;
+	bh=2kPJpnTzcGC0XDddPxH/fxFkaBQl1BQPYqmHSzE7kQs=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
+	 Content-Type; b=dwfrY9ukmFP6h0fJLDJ3Us8KR9bt8CkTHPQQqj8wxkDNPjyStOgPwakN8FjpOi6kOOVetXn9x5O/EC5yJoYCP9+3H1B5hZJn+5hrL+ZLeNfwN/U7mo+vigRggB0DOrz+8XFDZEnLWDz4ccbRuNe2iKV/iYaZ4JnBTf+OFAt35G8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3J/oMR+p; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=swosjZEx; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1743161237;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
+	bh=UCv2LYhy+qHjJvbQ43Z92CZSDEUuxtS324OMj+L46D4=;
+	b=3J/oMR+pa/YX7X2Qz3PNt44PyVWqbK5lWB9HfpmmTLuLocDtMccTGw1ZnuxEgNrhTwktHI
+	P1JA0pr0SbVtxtnJMdC6+HmjjFAVjKsrNbKXwMG6HydCUeXQ64+dhacJW1RgkOBY6AvRmL
+	VzSo54F/BOigHn8Zu5It1jtb9R58IXaYn1G5T7TG4vIW1ier5coOgl4Y5Kqn8S9tKlBadb
+	EYHH9r8EUJ/xK48DdbJoHa4/MLma2+/wfcQDsqwLwVSDZhauboQ5szRwktE/QQ3ZocMCu2
+	ASJ7XwtEopb42Hq2aNRfIIm4ZwAuzQ2o8lLlJ6TTaqd1xUlt7dJ5tzTfpT22qw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1743161237;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
+	bh=UCv2LYhy+qHjJvbQ43Z92CZSDEUuxtS324OMj+L46D4=;
+	b=swosjZExrNPYITaGElmQZNNGiyJ01CKqxxnGbV8/w6rYwyx4VSUJNpCxE5UpXpgHYxcDnE
+	mn+asDlrPU7lkACQ==
+To: Wen Xiong <wenxiong@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, gjoyce@linux.ibm.com,
+ linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+ linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 1/1] genirq/msi: Dynamic remove/add stroage adapter hits
+ EEH
+In-Reply-To: <8383b17f160bb75dd6ca6b47cd1a0d32@linux.ibm.com>
+Date: Fri, 28 Mar 2025 12:27:16 +0100
+Message-ID: <87wmc9wg2z.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The order of rockchip_pci_core_rsts follows the previous comments suggesting
-to avoid reordering. However, reset_control_bulk_deassert() applies resets in
-reverse, which may lead to the link downgrading to 2.5 GT/s.
+On Thu, Mar 27 2025 at 16:36, Wen Xiong wrote:
+> When secondary adapter doing a reset, we use the same code path as=20
+> removing operation. We can=E2=80=99t free irqs for Secondary adapter sinc=
+e=20
+> kernel has assigned the irqs for Secondary adapter.
+>
+> Actually we discussed about "calling pci_free_irq_vectors()" before=20
+> doing bist reset when we trying to fix in device driver.
+> That might cause other problems. It is also not what a user would=20
+> expect. For example, if they disabled irq balance and manually setup irq=
+=20
+> binding and affinity, if we go and free and reallocate the interrupts=20
+> across a reset, this would wipe out those changes, which would not be=20
+> expected.
 
-This patch restores the deassert order and comments for core_rsts, introduced in
-commit 58c6990c5ee7 ("PCI: rockchip: Improve the deassert sequence of four reset pins").
+You are completely missing the point. This is not a problem restricted
+to PCI/MSI interrupts.
 
-Tested on NanoPC-T4 with Samsung 970 Pro.
+You have interrupts, work, queues and whatever in fully operational
+state. Then you tell the firmware to reset the adapter and swap the
+secondary adapter in. This reset operation brings the hardware temporary
+into an undefined state as you have observed. How is any part of the
+kernel, which can access and operate on this adapter, supposed to deal
+with that correctly?=20
 
-Fixes: 18715931a5c0 ("PCI: rockchip: Simplify reset control handling by using reset_control_bulk*() function")
-Signed-off-by: Jensen Huang <jensenhuang@friendlyarm.com>
----
- drivers/pci/controller/pcie-rockchip.h | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+You are now focussing solely on papering over the symptom in PCI/MSI
+because that's where you actually observed the fallout.
 
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index 11def598534b..4f63a03d535c 100644
---- a/drivers/pci/controller/pcie-rockchip.h
-+++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -320,11 +320,15 @@ static const char * const rockchip_pci_pm_rsts[] = {
- 	"aclk",
- };
- 
-+/*
-+ * Please don't reorder the deassert sequence of the following
-+ * four reset pins.
-+ */
- static const char * const rockchip_pci_core_rsts[] = {
--	"mgmt-sticky",
--	"core",
--	"mgmt",
- 	"pipe",
-+	"mgmt",
-+	"core",
-+	"mgmt-sticky",
- };
- 
- struct rockchip_pcie {
--- 
-2.49.0-1
+But as you know curing the symptom is not fixing anything because the
+underlying root cause still persists and will roar its ugly head at some
+other place sooner than later.
 
+So no, instead of sprinkling horrible band-aids all over the place, you
+have to sit down and think about a properly orchestrated mechanism for
+this failover scenario.
+
+I understand that you want to preserve the state of the secondary
+adapter including interrupt numbers and related settings, but for that
+you have to properly freeze _all_ related kernel resources first, then
+let the firmware do the swap and once that's complete unfreeze
+everything again.
+
+That will need support in other subsystems, like the interrupt layer,
+but that needs to be properly designed and integrated so that it works
+with all possible PCI/MSI backend implementations and under all
+circumstances. Setting affinity is not the only way to make this go
+wrong, there are other operations which access the underlying hardware
+and config space. You just haven't triggered them yet, but they exist.
+
+And it's not a problem restricted to the pSeries MSI backend
+implementation either. That's just one way to expose it.
+
+Even if I put the secondary swap problem aside and just look at a single
+instance, __ipr_remove() is already broken in itself. As I pointed out
+to you before:
+
+    __ipr_remove()
+      ipr_initiate_ioa_bringdown()=20
+	// resets device -> undefined state
+	restore_config_space()
+      ....
+      ipr_free_all_resources()
+	free_irqs()
+
+Up to the point where interrupts are freed, they are fully operational
+and exposed to user space. The related functionality can hit the
+undefined state not only via set_affinity() independent of the swap
+problem.
+
+The adapter swap is just a worse variant of the above because it affects
+the secondary side behind its back.
+
+This needs quite some work to resolve properly, but that's the only way
+to fix it once and forever. Proliferating the 'Plug and Pray' approach
+with a lot of handwaving is just helping you to close your ticket, but
+it's not a solution.
+
+Thanks,
+
+        tglx
 
