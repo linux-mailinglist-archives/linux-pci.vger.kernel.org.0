@@ -1,151 +1,108 @@
-Return-Path: <linux-pci+bounces-24944-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24946-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEBEDA74CC6
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 15:34:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1E2AA74CE9
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 15:41:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B4603AC7DD
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 14:32:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E06B3A7D00
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 14:41:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA4561D5AB2;
-	Fri, 28 Mar 2025 14:30:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 018A4188596;
+	Fri, 28 Mar 2025 14:41:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CYaQssJG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FhE2tGtw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0893417BCE
-	for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 14:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C844C140E5F;
+	Fri, 28 Mar 2025 14:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743172252; cv=none; b=L3TB3TfPLyS84HICd1WGAPgIkmUsew9adQ54Ee6eXn0Y1OIVFcBerxp2IGYki8KEGNRNLJ7tIxLfhGK/TP3qzLZ9Xg5xppxW+dQGIvOksWL8v+tFyqL1rCnTBjavRwk0uxLNF9DS1Nrj3SHddWuRuMpGobY+OP40jtKTQI3FvBU=
+	t=1743172877; cv=none; b=bO7Z0Y1Ay2Tqwz7KYART1Fdf9AKdGGkgtPXMgk2Dnk+a11ndgs0bh5gO2YqRcsjzSko3PVpfItl7znaJjL9NXdrvYUoA4gfkTkwTZxCU6uQA76YpZguc0pA3DoXgGJXx2E4xJu/YPBtG5Rty6TPqxWB7RYMJKnudujHDaLaTW9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743172252; c=relaxed/simple;
-	bh=r69myt5CYJDUUxJ5eZ651vr//FxFOh0JfBQxRjDjfyk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=oyrHvckC8oDzAsNlw0wlKcZhvbD1KE8BTwC7/E5+g5vc63xzVhMfyRwtHRtdGNNVxEYTkCpeCFR1mVTSOViHdQ3c8Rf4UpjcoYH1guXEQFlFUZ6Gve1A1OodAuceJFf2rjgcn5GnkKn7EnJzqzfWWsj4EcPWJKigGXIPumfSwBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CYaQssJG; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39129fc51f8so1642298f8f.0
-        for <linux-pci@vger.kernel.org>; Fri, 28 Mar 2025 07:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743172247; x=1743777047; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xY2G9dr/4ekvZx7BFTEs3c751w4Nf1CQJqhKZMVEU4o=;
-        b=CYaQssJGH9CF9609ik2N3bZjYjbqLw3saKXH0l+GQO+7tQKQkYN4pl1NDaB2orzFpL
-         Zd96daiHUw4OoaMd7Ybc6Cpj1MbQnTQ0QaaLbQ8MHxHn9jRjk/5zjlVuFTCg4bvrWrYS
-         OQ/kBxfsWxKsCaA4OEUI8Bk5jy6ML5f+IB2kXC4iQr50qogMrUMoCwFz2JHgF7kKBiuB
-         gS1T32mmw/IiOqLW81n1dW98b2ARcLbVv93E8W5lew/r3Au5d41rPof+lUQz2mmL4/jF
-         wJStJz4TH6PZlTH1G69MbyUW5Jswt9AyaOWm5hxM4dJnMU4CWXFVyHcMGmkeJIOpfi9S
-         gRdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743172247; x=1743777047;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xY2G9dr/4ekvZx7BFTEs3c751w4Nf1CQJqhKZMVEU4o=;
-        b=Bp5yARA66MMhGgr17gbX/NzXEG3gYhUaTFdSAkJQT20RxEVQlzq/cc6OCcsuV0tmYk
-         xU+geQN/UU/k8qci4mXpi3i+KPM7CXXyyyIe0Wtgg5CC4kYtY7ShN/jj8JiD7BU71z9U
-         LtFzG+LPu08KXJM9STHrkjQC+g7C6ruCyteMD7Rkez/bfHo6C0+P4R+dTXZgKsvlAanc
-         53VJhkh5ebj9Ib2EH7oWBHZT1s5IWuaDKzYm37rcEqK31UHxb449WPNbBP7GDYC9wugK
-         m1wTTLy0CNcm5BL1Gh2XmsSb6H1jHwadp/DG7GLJpKvaFyuW4rRKQfV48fYMdNZaBzB1
-         sPeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWy77+zRV1tssCgSiME4tuy+5/sWVdQMK47SOVs1Tv0PqfS+WZTxha6omjPMK/gp9uxmu2yx0lLhtg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6XjZmiX9FHzr4Lb2TAIHgODiP3DYgl0kJimeKB3xLXmK+PLl0
-	6YFWM1XgTII3H3nZMWglSTgNWyzv7tU4vC/2SmI4cInOpFp6A5YK8NYkzyE2HDI=
-X-Gm-Gg: ASbGncuGd3G/aH+djNmhzID8OgVhAL1bkqHCdvY2Am3Nga8anRTPY2ThTwk8uJkSzrz
-	7ofSWWR4VdMOmIW1E+brWcCgRTZZ5l7HzVVWWhowIx8ZqRM554L7o+hHrroKyXyT5s3+rf4w7/n
-	LmSoBMfAYxCVFQMRusZsxHHxF3WLr9JBF6dV5d4Riul09Uo8V2kmxVxL7JYksaoWB/Frq39iDwz
-	TYRombCFrhy87nFGu+A8Iu1B9dVfT4qKZnxWXpPDogzbErYcSzTcfdbFe2dDQkGKJK81Ae8j/fk
-	oxmDalXcIdWyDvXPHIpdkA2br29+ULciwEWmmgnlLlFRKqnAzCB6g4dfPj4=
-X-Google-Smtp-Source: AGHT+IEqlAqw/EIsqm1BgyscIBxGUOeIxfC2lXTrnQ19OhlcGKYtCY+38uMpnMJk3wcdZrYVzV+TOA==
-X-Received: by 2002:a5d:584c:0:b0:398:9e96:e798 with SMTP id ffacd0b85a97d-39ad17415a2mr7314079f8f.13.1743172246976;
-        Fri, 28 Mar 2025 07:30:46 -0700 (PDT)
-Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:70c0:edf6:6897:a3f8])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39c0b79e0dcsm2789859f8f.64.2025.03.28.07.30.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Mar 2025 07:30:46 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Fri, 28 Mar 2025 15:30:44 +0100
-Subject: [PATCH] PCI: rcar-gen4: set ep BAR4 fixed size
+	s=arc-20240116; t=1743172877; c=relaxed/simple;
+	bh=y7cHCyZAEfSlg6AyD3uU4qQU2vhubF/C2tytpK45mgI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E+g9YJYMMSomxHbC/9B0u6C8cv6gT5V/lqSp9y07jb6dh1TVz3NlaYNN2aFQcKa8yw55BjHCsTMS3a1mKhqj1aeswf7fa92p7DRVcuZVXgA0fKintcnvAHJASBzVqjqb3i9I4PlR60gYiRcwNpykdtlezTJlN8C+EyrajXXHfLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FhE2tGtw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 416FFC4CEE4;
+	Fri, 28 Mar 2025 14:41:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743172877;
+	bh=y7cHCyZAEfSlg6AyD3uU4qQU2vhubF/C2tytpK45mgI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FhE2tGtwR/3+u2Pxi0Nic1s8CgrzGIuTvwq6WqBTWMA2CxUrHpLNg8V5M5U/5NMbz
+	 sfkvii5DH4bxQq9Wr7+QsOJT4hKvSiENvMymmNdqLgyirCpuhaIYs7T+X60hfE5Hd4
+	 lyBqTyiMMZDj2qBNM5DGdqCFo/YJV0xjBkQlmYgePwNu8IbTQ4v6baT/nbgkY7ZaPa
+	 OX4ew5klYUT0UvgmxuRhinMtYq17kp5BPn5KPgAkGg2HaskmQyiom7Y2sYKWeet0g+
+	 C/ZFo5TZh/XU7FjWncQ7FilvaeVkgqk2TAkB1WBn1jZ0nX/JdUN7k8bb2tuLrzsMzc
+	 6Iif3uzKrFgBw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1tyAte-000000007JE-3B3i;
+	Fri, 28 Mar 2025 15:41:22 +0100
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Jeff Johnson <jjohnson@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	ath11k@lists.infradead.org,
+	ath12k@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH 0/4] PCI/arm64/ath11k/ath12k: Rename pwrctrl Kconfig symbols
+Date: Fri, 28 Mar 2025 15:36:42 +0100
+Message-ID: <20250328143646.27678-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250328-rcar-gen4-bar4-v1-1-10bb6ce9ee7f@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIAJOy5mcC/x3MPQqAMAxA4auUzAbsjyheRRxqm2qWKimIIL27x
- fEb3nuhkDAVmNULQjcXPnOD7hSEw+edkGMzmN4MvTUTSvCCO2WHmxeHMYSorRsT2QladAklfv7
- hstb6AfDmTqdgAAAA
-X-Change-ID: 20250328-rcar-gen4-bar4-dccd1347fe38
-To: Marek Vasut <marek.vasut+renesas@gmail.com>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Serge Semin <fancer.lancer@gmail.com>
-Cc: =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>, 
- Jerome Brunet <jbrunet@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1164; i=jbrunet@baylibre.com;
- h=from:subject:message-id; bh=r69myt5CYJDUUxJ5eZ651vr//FxFOh0JfBQxRjDjfyk=;
- b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBn5rKU93EsfEvQqRKfYw9fYTj3oD6m4KNpZ84sz
- uxMinKIJd2JAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCZ+aylAAKCRDm/A8cN/La
- hcPzEACgdAwbHl3qVRBYfJhEGKIBUUVbe3SP6v/HrFIig9GMe+v6Vh5MwjgOI8sSrJNPputEyDV
- LPk+aYT18SfUg0BK3Ji8plS6dtfAAKYqAF2NP7JQrkhFvLf15Wnp2gNSrI0cAvZTNAvc7fTSh2G
- G/FEe0tl80zU7/1p+jtzoN6RJjAI76zroHqREmJlWkELpfluQoDaKIjL56N+kbrCh3DyqqDBfQb
- NCZXUBtoRmw8AsBJquKGDdj8a9NgeGLmeFdxOuf4w2neq+6XEuxaYs/MtSaj+d2Boij8Ppsf91Y
- m/9fOePAM1dvizw3PcrOzzSoKu/oC78vptAYlehYHX6N7x94vl/+iBs4nRyyKUwXR9fgZeZ55M/
- JUuyAmaOQQ8Qr0ef0W1opD14erhPETY9o/9Z9s9wZ/zmb1y7uFVuV9l652kPjKY5eWxzoxrhkNm
- owPbGUdNWeSPockslN6cRjZUmDcJZNGJvLOJtEIGh7Fz+gbhJ6vZYT0U6lqcj1/jS961f9qaT78
- 9FC8tNf+f3+zKbn7FUYlIukFgKwYjADEMUsc89sJbqsXqZKFWJqMoWQU0KO2MrMs2CyrTBYzI8l
- L4dmhkVNNTO/VI41+28MryVmwHl7rJbniok+Ucvthn1L1J2ig8sBGFt3K2DuNHm1yh1cG8QQIAI
- upkny4XrrLDWubw==
-X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp;
- fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
+Content-Transfer-Encoding: 8bit
 
-On rcar-gen4, the ep BAR4 has a fixed size of 256B.
-Document this constraint in the epc features of the platform.
+The PCI pwrctrl framework was renamed after being merged, but the
+Kconfig symbols still reflect the old name ("pwrctl" without an "r").
 
-Fixes: e311b3834dfa ("PCI: rcar-gen4: Add endpoint mode support")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
-This was tested on rcar-gen4 r8a779f0-spider device.
----
- drivers/pci/controller/dwc/pcie-rcar-gen4.c | 1 +
- 1 file changed, 1 insertion(+)
+This leads to people not knowing how to refer to the framework in
+writing, inconsistencies in module naming, etc.
 
-diff --git a/drivers/pci/controller/dwc/pcie-rcar-gen4.c b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-index fc872dd35029c083da58144dce23cd1ce80f9374..02638ec442e7012d61dfad70016077d9becf56a6 100644
---- a/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-+++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.c
-@@ -403,6 +403,7 @@ static const struct pci_epc_features rcar_gen4_pcie_epc_features = {
- 	.msix_capable = false,
- 	.bar[BAR_1] = { .type = BAR_RESERVED, },
- 	.bar[BAR_3] = { .type = BAR_RESERVED, },
-+	.bar[BAR_4] = { .type = BAR_FIXED, .fixed_size = 256 },
- 	.bar[BAR_5] = { .type = BAR_RESERVED, },
- 	.align = SZ_1M,
- };
+Let's rename also the Kconfig symbols before this gets any worse.
 
----
-base-commit: dea140198b846f7432d78566b7b0b83979c72c2b
-change-id: 20250328-rcar-gen4-bar4-dccd1347fe38
+The arm64, ath11k and ath12k changes could go through the corresponding
+subsystem trees once they have the new symbols (e.g. in the next cycle)
+or they could all go in via the PCI tree with an ack from their
+maintainers.
 
-Best regards,
+There are some new pwrctrl drivers and an arm64 defconfig change on the
+lists so we may need to keep deprecated symbols for a release or two.
+
+Johan
+
+
+Johan Hovold (4):
+  PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
+  arm64: Kconfig: switch to HAVE_PWRCTRL
+  wifi: ath11k: switch to PCI_PWRCTRL_PWRSEQ
+  wifi: ath12k: switch to PCI_PWRCTRL_PWRSEQ
+
+ arch/arm64/Kconfig.platforms            |  2 +-
+ drivers/net/wireless/ath/ath11k/Kconfig |  2 +-
+ drivers/net/wireless/ath/ath12k/Kconfig |  2 +-
+ drivers/pci/pwrctrl/Kconfig             | 27 +++++++++++++++++++------
+ drivers/pci/pwrctrl/Makefile            |  8 ++++----
+ 5 files changed, 28 insertions(+), 13 deletions(-)
+
 -- 
-Jerome
+2.48.1
 
 
