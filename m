@@ -1,104 +1,110 @@
-Return-Path: <linux-pci+bounces-24960-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24961-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72A93A74E0F
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 16:50:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E306BA74E44
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 17:11:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A59E188D29B
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 15:50:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB83B7A3210
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 16:10:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 293191C4A2D;
-	Fri, 28 Mar 2025 15:50:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 828451D63F9;
+	Fri, 28 Mar 2025 16:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/+W/YuS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QqjE1Bod"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFCA81DE4C6;
-	Fri, 28 Mar 2025 15:50:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528E51C8FD7;
+	Fri, 28 Mar 2025 16:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743177020; cv=none; b=S9Ik6bGXSp6frNE7twwKxkYGFU+YJwLu18ztbJZ9HdTZQ/YulUm9yzLMOE1H348g8Bp5/mSdO7A9jGxKC/FxyMO8ULEwpPW/fV2D05HFYwQJk2mpCs5CnDWw+RqsAZvSX1Zw5P3fULj1UFJbcDN79PZl7IR1ukJ3cSRSEB7HCIY=
+	t=1743178292; cv=none; b=KwDBP2OGyZvPvJ8kZf6lCeT8N4XBU5UYGc0SE4LxZFx3UlX1/jGUt8czS/e80wuYpILAfwngt7DaGXmAXHtQg4OfTTqmeP8TulS0iSikd+MTIJengHdS846ZNyG5xQxK9vaqzZmQ5n2b9SVu9VH1Fqkr12djAzJbi89B9A2wvP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743177020; c=relaxed/simple;
-	bh=XpdgurEEM4pGK+nmglwdfRGJx7e9ro+vyFuyinGGwJ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F4XoLLnXtni5HhVHfwidIA7/GCQ5pPAcEtPT5/FAfo9NWwBOus02PTQv48Z5T58C8mzaeG16unMPKGCYnMf9F+GLRnXAe8X8VsYNsvhVVCcfwcr9qydBaRKSzlW8peMnqxoyT85d3cHM/bJNdPeHbQXcl/mQApvh3SbuH/7e/os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H/+W/YuS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 567E3C4CEE4;
-	Fri, 28 Mar 2025 15:50:15 +0000 (UTC)
+	s=arc-20240116; t=1743178292; c=relaxed/simple;
+	bh=vd+MsqR+zb+ZUwrDod4YyaT5G91/MYukXepr+eOQBMM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jxJWqIpN77CHTqxhnKUTkLV+tr+uSIajOrotrCSMoGSURAe2y9pv9KNqIqu4uqLajqz5xB9z1qgjs6jbHdB1kS2Zvx5A23C81M/ZvqB18jnN9iTfC+AxeVQFDnqIf+nVKiU2C3nUrpMTjZrX6oa5FbGvNUw+Jti15uVmnWx9qis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QqjE1Bod; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68534C4CEE4;
+	Fri, 28 Mar 2025 16:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743177015;
-	bh=XpdgurEEM4pGK+nmglwdfRGJx7e9ro+vyFuyinGGwJ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H/+W/YuSDZSEKfr3TQLkBMnuic/Gx1VKjBmsiasBFVbA8EvKEXxt24hicmGH9DukJ
-	 5O54wzgd91elXEKHbSDqEAU+IiA0cx6HjWKgflDkS45vveIsKbnp4m+4eHVpAVm8Tm
-	 7ym3HIj/aU0ZIERlEIJt53fTjUm/vQ1Nf3TJv2gdkaSYPqlNouTcfxGj1ACXDBh2/w
-	 PtvHKOYPBO8JD3lkxrcLGyuJMMywbAL+NW+fPu/SIuYInFrfRazQsf87Okkkhk77Ej
-	 GdSCb+OgH6+E0Ihm1yvhGBrFqCuOu53yXWKT4Vo+ZD0et/sc+5c1w6y/y25TKibNtf
-	 nyhMQt//M4miA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tyByO-000000000Hv-0XtU;
-	Fri, 28 Mar 2025 16:50:20 +0100
-Date: Fri, 28 Mar 2025 16:50:20 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	ath11k@lists.infradead.org, ath12k@lists.infradead.org,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot
- module
-Message-ID: <Z-bFPDk3lziJkUmy@hovoldconsulting.com>
-References: <20250328143646.27678-2-johan+linaro@kernel.org>
- <20250328151343.GA1505019@bhelgaas>
+	s=k20201202; t=1743178290;
+	bh=vd+MsqR+zb+ZUwrDod4YyaT5G91/MYukXepr+eOQBMM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QqjE1BodPJFzurkmx6XGTJzHwXGtQsoj6RrUC9OFfJw9Q5rrVLGe+fQvF7lBiRmih
+	 Q5n3RLJXMhEzWJ8L+pwPclOgDTZFeY+I5d7jJhHAD3mtKZ7VBpGw08rFqzFK7ybnka
+	 HTTwDLHNvWdlsfTuhBPWCsCB7XOcS6vdSYZYb2vpNf+6AtSFUE2tSsU9rVas11XopT
+	 gnupgIcs/V6SVdwUMrtoE2K3BcX0+Sd4j6lEdvYj3vpcuC24r7lrgjPuEIyhQKuKzL
+	 FTYnoboB9tXJN1zY3z3iroEVGlasuOtNb2YYT7IXKwn21/l7FII8CjUQBWXVFktYpf
+	 qiWnSOdZvaeoA==
+Message-ID: <04201b5a-34fe-45e0-bb96-237bd6eec414@kernel.org>
+Date: Fri, 28 Mar 2025 09:11:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250328151343.GA1505019@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] PCI/arm64/ath11k/ath12k: Rename pwrctrl Kconfig
+ symbols
+To: Johan Hovold <johan+linaro@kernel.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Jeff Johnson <jjohnson@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ ath11k@lists.infradead.org, ath12k@lists.infradead.org,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250328143646.27678-1-johan+linaro@kernel.org>
+From: Jeff Johnson <jjohnson@kernel.org>
+Content-Language: en-US
+In-Reply-To: <20250328143646.27678-1-johan+linaro@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 28, 2025 at 10:13:43AM -0500, Bjorn Helgaas wrote:
-> On Fri, Mar 28, 2025 at 03:36:43PM +0100, Johan Hovold wrote:
-> > Commits b88cbaaa6fa1 ("PCI/pwrctrl: Rename pwrctl files to pwrctrl") and
-> > 3f925cd62874 ("PCI/pwrctrl: Rename pwrctrl functions and structures")
-> > renamed the "pwrctl" framework to "pwrctrl" for consistency reasons.
-> > 
-> > Rename also the Kconfig symbols so that they reflect the new name while
-> > adding entries for the deprecated ones. The old symbols can be removed
-> > once everything that depends on them has been updated.
+On 3/28/2025 7:36 AM, Johan Hovold wrote:
+> The PCI pwrctrl framework was renamed after being merged, but the
+> Kconfig symbols still reflect the old name ("pwrctl" without an "r").
 > 
-> I considered changing the Kconfig symbols at the time, but didn't do
-> it because I didn't want to break existing .config files.  Is that not
-> a concern?  Or do you think the long-term benefit is worth having
-> users re-answer these config questions?
+> This leads to people not knowing how to refer to the framework in
+> writing, inconsistencies in module naming, etc.
+> 
+> Let's rename also the Kconfig symbols before this gets any worse.
+> 
+> The arm64, ath11k and ath12k changes could go through the corresponding
+> subsystem trees once they have the new symbols (e.g. in the next cycle)
+> or they could all go in via the PCI tree with an ack from their
+> maintainers.
 
-I added entries for the old (deprecated) symbol names that select the
-new ones so that should not be a problem.
 
-> If we do want this, I would think we should squash all these so we
-> don't have breakage between this patch and the following ones.
+I'm fine with the entire series going through PCI
+Acked-by: Jeff Johnson <jjohnson@kernel.org> # drivers/net/wireless/ath/...
 
-The entries using the old names make sure that there is no breakage as
-long as the patches are applied in order. They also handle any new
-users being added to other subsystem trees.
 
-(As I mentioned in the cover letter we can drop those entries after a
-couple of releases.)
+> 
+> There are some new pwrctrl drivers and an arm64 defconfig change on the
+> lists so we may need to keep deprecated symbols for a release or two.
+> 
+> Johan
+> 
+> 
+> Johan Hovold (4):
+>   PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
+>   arm64: Kconfig: switch to HAVE_PWRCTRL
+>   wifi: ath11k: switch to PCI_PWRCTRL_PWRSEQ
+>   wifi: ath12k: switch to PCI_PWRCTRL_PWRSEQ
+> 
+>  arch/arm64/Kconfig.platforms            |  2 +-
+>  drivers/net/wireless/ath/ath11k/Kconfig |  2 +-
+>  drivers/net/wireless/ath/ath12k/Kconfig |  2 +-
+>  drivers/pci/pwrctrl/Kconfig             | 27 +++++++++++++++++++------
+>  drivers/pci/pwrctrl/Makefile            |  8 ++++----
+>  5 files changed, 28 insertions(+), 13 deletions(-)
+> 
 
-Johan
 
