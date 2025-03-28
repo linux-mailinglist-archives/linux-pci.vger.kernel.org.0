@@ -1,171 +1,134 @@
-Return-Path: <linux-pci+bounces-24896-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24897-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08DF1A741FF
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 02:19:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDB9DA74221
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 02:47:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD9533B68F9
-	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 01:19:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2C47189F77A
+	for <lists+linux-pci@lfdr.de>; Fri, 28 Mar 2025 01:47:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 305A9537F8;
-	Fri, 28 Mar 2025 01:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hjvCnl5X"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A990C1C6FF8;
+	Fri, 28 Mar 2025 01:47:18 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E39A93D;
-	Fri, 28 Mar 2025 01:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A91157A6B;
+	Fri, 28 Mar 2025 01:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743124764; cv=none; b=iLp9vtMJ7zEncgIcskphJ+Brx5VtiG4HdKH4NlNWHFVe34mz6V3tcK9dl1ues3h+MUkPgsDwIuFGQLPh1tGsFhq2p1P0h0omsRThPNPM3ZILsMWUEyaVLxLeZ/LtzIVvnuNrDpvaDi9UAV+aNvFyGALr9/tb/7KCaU1dK7W2heE=
+	t=1743126438; cv=none; b=PqILUP4tnaNydBWy9TwoIurFlyetlYyQq6bJ44/5K6rxyTXHcopNmwTitqCguMHNjO5b5EDKRrbyi7tKTanKuJX+OIf++YeS1cggXDO53uLAuUl22ubGqFGaDTaLlYUo8yJv76V15ub2R+5Qu4S0WcSJnZwmWk8oXlShCsPY+uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743124764; c=relaxed/simple;
-	bh=nbe6Pi8tlh6LZT+q5xurltwfuX2F6rU4c5Dmj0Pz8eg=;
+	s=arc-20240116; t=1743126438; c=relaxed/simple;
+	bh=0fG1vjWwRu801A+LB8ALUjJbXxkbE4MyLBH7IZHG3q8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lrk47ZVw5k6PWsWi6j2mWiebnyfsha7swKC5y09t6EWiJc7sEX0biHQCbVGXEG1YTagrc2PO13X2qrHF2T15TAaiVMFAMR7SwqFKRDrV8guXCZuIiHYm1iX/jUHD9kl3jR5H4ch+iBeuq6EjUseUrPf+lcuO8713fnnppScGEF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hjvCnl5X; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743124762; x=1774660762;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nbe6Pi8tlh6LZT+q5xurltwfuX2F6rU4c5Dmj0Pz8eg=;
-  b=hjvCnl5XNVnTR1dO0SWATArLRekIKKTWEVeb6/T6xAMkHYu8UNW51+KC
-   1gTx0SDpfa4Ic+8P30T+HoLgiKkhXfRSQgCDXo+JlvRc3IkHJMI0anQBC
-   IRkwrhw9H5M8YgThNceAxD+lKfALTuoGsfmAnwq1gmd5IZiR6EzWqHs3i
-   rjM9GunR0tQH8kC/pju8/w6ThDyC+UQ5ycVj7aB34PRL7ZZvqGiJs3WdG
-   q3ZCa6LTWrtyxFZB7yuPnm8CI91tkr1SwSBtJrleJjYpSw7oN8K6dNiyL
-   njgQXRsTvW0a2c+G0Yi4v3mq2z6g7OOw8pDRkJdgoPckD0bUUseQd+mbF
-   w==;
-X-CSE-ConnectionGUID: oEyfQUz+She5VJ4oH/BZow==
-X-CSE-MsgGUID: 59HUFyZ4TPyxuHBuqRQo9Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11385"; a="47213315"
-X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
-   d="scan'208";a="47213315"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2025 18:19:21 -0700
-X-CSE-ConnectionGUID: VF0u9KfwSPyPHHyPFMvJIg==
-X-CSE-MsgGUID: npAypc4PTEGOR8C32fBsjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,281,1736841600"; 
-   d="scan'208";a="125525419"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 27 Mar 2025 18:19:16 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1txyNO-00073S-0Z;
-	Fri, 28 Mar 2025 01:19:14 +0000
-Date: Fri, 28 Mar 2025 09:18:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Terry Bowman <terry.bowman@amd.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	nifan.cxl@gmail.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, dan.j.williams@intel.com,
-	bhelgaas@google.com, mahesh@linux.ibm.com, ira.weiny@intel.com,
-	oohall@gmail.com, Benjamin.Cheatham@amd.com, rrichter@amd.com,
-	nathan.fontenot@amd.com, Smita.KoralahalliChannabasappa@amd.com,
-	lukas@wunner.de, ming.li@zohomail.com,
-	PradeepVineshReddy.Kodamati@amd.com
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v8 16/16] CXL/PCI: Disable CXL protocol errors during CXL
- Port cleanup
-Message-ID: <202503280816.M7DZmSDT-lkp@intel.com>
-References: <20250327014717.2988633-17-terry.bowman@amd.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sB5OVRSetHccKu+L+Ney7idSgbdDoeC5AyGM1RTItiGiJ7MjLyjvk2R50FgSzUhOh6jNJQQsO0lTt1U4ynW9XRnIAG6o6QFwdrJD5ac+x2AMua+yIxBl8YA4BKoxqvD4rIRSpA7lV7GwVyxSdn8vqCuOy8/9k7VwNvS7ptQp4Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com; spf=pass smtp.mailfrom=mucse.com; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mucse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mucse.com
+X-QQ-mid: bizesmtpsz5t1743126386tw23d56
+X-QQ-Originating-IP: tKHlUoSpxt75h6MwjgWYv0l4jZfQJOF2u/XvujKvZ/A=
+Received: from localhost ( [103.233.162.252])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 28 Mar 2025 09:46:24 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 5407386532826325501
+Date: Fri, 28 Mar 2025 09:46:24 +0800
+From: Yibo Dong <dong100@mucse.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add MUCSE vendor ID to pci_ids.h
+Message-ID: <3DA9F11AA98928B5+20250328014624.GA500031@nic-Precision-5820-Tower>
+References: <1835B10BD36E99AC+20250327112426.GB468890@nic-Precision-5820-Tower>
+ <20250327133757.GA1432088@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250327014717.2988633-17-terry.bowman@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250327133757.GA1432088@bhelgaas>
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:mucse.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NDtUtlvFer7vl4dEv32+S4lUWKowORwLTaYDBZebED/b0zWh5Hp6L9Q/
+	xowcy0J6ZzErojd7E725CzEjGvALMpn2FdFY7Y0MpJjOcV205Mi+923Hkex+MvpCTSWY1Qw
+	nIf20sA61SzCENrZrSpWgCPX6Jh9ufXUV7kAgWIARH0Dr28633DOyGasUz7Kxjd4do64uMY
+	BLSaapUSpO5aNw/1Ub09n6Mh8RJyMO5TgAeHikDsGd3GyakIbowOJ7t8pVYhKBBXTFEMzx0
+	BdV1h0v/2vlOJ0/v9MejOeZirFY1pDsaeqfEVan4vWtLmJA88qBdTmam4TbxfsY+GvxjRb9
+	dlCtQd/irrDaHYwZnb5aUmzdUcr/RcO9w+iZDhA8eOmrf2vNWjj4cDBhG5fk5XeTG6474uZ
+	4G4FbTonBf8sjI44lRIVaefCzlhaafObv6aTm3Rv5CbBwqeDnFMt4/5sv832+vXsuejq6LH
+	93nwP0MOz0eDkuJVOjvVHlFjhK3bL+KxHLLAbqxuINzjYf/54+hJ0wOwVBxjVmIIV9lI9uD
+	qGfAkdlGWROiwmVac+aYc8KdSNiXh1EAzyYNHMVzozUW/Q8Vp7ih1MhwyFYhGgGukccTBgX
+	kLHJegChjwHRFFX0wjxp/HZgbOp1OeQSY7EMhLLVllXjNfu+4vSTtchBc4BpygkGnSz4ppc
+	rCWE+Ve7XJdS5eYzKqVtxheGOnD+lL+0LEI5RZXEuGsMRlkLUoZkLKgyz3w63ZYgeEj+S3r
+	AjQsoLx1aDkfb/CCOv9B+ZTBQbpciAPDHBV32KvLK1oSLGRFEa2ocXdmyr3NRnH5GuMhHx+
+	zWCwxEG2gdZUe6m0Wk6py4MdGnCJnLkhG2oEWLhbKRbgPngK2qWkNjpcrdquXPX0gkcu72u
+	yuSqGkvPQXkxJ0UiZqpaMkOkxEn7P51MD6Wf++wUF5pyy4VlaLxVJUEUivipmHULO3h5uzq
+	xCu4=
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-RECHKSPAM: 0
 
-Hi Terry,
+On Thu, Mar 27, 2025 at 08:37:57AM -0500, Bjorn Helgaas wrote:
+> On Thu, Mar 27, 2025 at 07:24:26PM +0800, Yibo Dong wrote:
+> > On Wed, Mar 26, 2025 at 11:57:28AM -0500, Bjorn Helgaas wrote:
+> > > On Tue, Mar 25, 2025 at 02:57:18PM +0800, Yibo Dong wrote:
+> > > > Add MUCSE as a vendor ID (0x8848) for PCI devices so we can use
+> > > > the macro for future drivers.
+> > > > 
+> > > > Signed-off-by: Yibo Dong <dong100@mucse.com>
+> > > 
+> > > Please post this in the series where you add the future drivers.
+> > > 
+> > > We don't add new things to pci_ids.h unless they are actually used by
+> > > more than one driver because it complicates life for people who
+> > > backport things (there's a note at the top of the file about this).
+> > 
+> > Thanks for the reminder; the drivers maybe use 'the define' are
+> > netdev drivers, so, I should first send patches to netdev subsystem,
+> > and re-send this patch to pci subsystem after my patches is applied
+> > by netdev subsytem? or I should send this to netdev subsystem along
+> > with the drivers?
+> 
+> Just include it with your netdev series and cc me.  I'll ack it and
+> the whole series can be merged together via netdev.
+> 
 
-kernel test robot noticed the following build warnings:
+Ok, I got it, thanks. 
 
-[auto build test WARNING on aae0594a7053c60b82621136257c8b648c67b512]
+> > > > +#define PCI_VENDOR_ID_MUCSE		0x8848
+> > > 
+> > > https://pcisig.com/membership/member-companies?combine=8848 says this
+> > > Vendor ID belongs to:
+> > > 
+> > >   Wuxi Micro Innovation Integrated Circuit Design Co.,Ltd
+> > > 
+> > > I suppose "MUCSE" connects with that somehow.
+> > > 
+> > > It's nice if people can connect PCI_VENDOR_ID_MUCSE with a name used
+> > > in marketing the product.  Maybe "MUCSE" is the name under which
+> > > Wuxi Micro Innovation Integrated Circuit Design Co.,Ltd markets
+> > > products?
+> > 
+> > Yes, MUCSE is just abbreviation for “Wuxi Micro Innovation Integrated Circuit
+> > Design Co.,Ltd”
+> 
+> Perfect.  I see you've already added it to the lspci database along
+> with several devices:
+> 
+>   https://admin.pci-ids.ucw.cz/read/PC/8848
+> 
+> All looks good!  I'll watch for your netdev patches.
+> 
+> Bjorn
+> 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Terry-Bowman/PCI-CXL-Introduce-PCIe-helper-function-pcie_is_cxl/20250327-095738
-base:   aae0594a7053c60b82621136257c8b648c67b512
-patch link:    https://lore.kernel.org/r/20250327014717.2988633-17-terry.bowman%40amd.com
-patch subject: [PATCH v8 16/16] CXL/PCI: Disable CXL protocol errors during CXL Port cleanup
-config: csky-randconfig-r122-20250327 (https://download.01.org/0day-ci/archive/20250328/202503280816.M7DZmSDT-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 12.4.0
-reproduce: (https://download.01.org/0day-ci/archive/20250328/202503280816.M7DZmSDT-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503280816.M7DZmSDT-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
-   drivers/cxl/port.c:68:33: sparse: sparse: symbol 'cxl_ep_error_handlers' was not declared. Should it be static?
->> drivers/cxl/port.c:104:6: sparse: sparse: symbol 'cxl_disable_prot_errors' was not declared. Should it be static?
-
-vim +/cxl_disable_prot_errors +104 drivers/cxl/port.c
-
-    67	
-  > 68	const struct cxl_error_handlers cxl_ep_error_handlers = {
-    69		.error_detected = cxl_error_detected,
-    70		.cor_error_detected = cxl_cor_error_detected,
-    71	};
-    72	
-    73	static void cxl_assign_error_handlers(struct device *_dev,
-    74					      const struct cxl_error_handlers *handlers)
-    75	{
-    76		struct device *dev __free(put_device) = get_device(_dev);
-    77		struct cxl_driver *pdrv;
-    78	
-    79		if (!dev)
-    80			return;
-    81	
-    82		pdrv = to_cxl_drv(dev->driver);
-    83		pdrv->err_handler = handlers;
-    84	}
-    85	
-    86	void cxl_enable_prot_errors(struct device *dev)
-    87	{
-    88		struct pci_dev *pdev = to_pci_dev(dev);
-    89		struct device *pci_dev __free(put_device) = get_device(&pdev->dev);
-    90	
-    91		if (!pci_dev)
-    92			return;
-    93	
-    94		if (!pdev->aer_cap) {
-    95			pdev->aer_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ERR);
-    96			if (!pdev->aer_cap)
-    97				return;
-    98		}
-    99	
-   100		pci_aer_unmask_internal_errors(pdev);
-   101	}
-   102	EXPORT_SYMBOL_NS_GPL(cxl_enable_prot_errors, "CXL");
-   103	
- > 104	void cxl_disable_prot_errors(void *_dev)
-   105	{
-   106		struct device *dev = _dev;
-   107		struct pci_dev *pdev = to_pci_dev(dev);
-   108		struct device *pci_dev __free(put_device) = get_device(&pdev->dev);
-   109	
-   110		if (!pci_dev || !pdev->aer_cap)
-   111			return;
-   112	
-   113		pci_aer_mask_internal_errors(pdev);
-   114	}
-   115	EXPORT_SYMBOL_NS_GPL(cxl_disable_prot_errors, "CXL");
-   116	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Nice, I'm preparing the patches, but it may take some times. 
 
