@@ -1,68 +1,68 @@
-Return-Path: <linux-pci+bounces-24991-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24989-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29368A75C10
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Mar 2025 21:59:20 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E4B5A75C06
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Mar 2025 21:58:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9805F7A3654
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Mar 2025 19:58:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B91873A5E1E
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Mar 2025 19:58:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB5591DEFE4;
-	Sun, 30 Mar 2025 19:58:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BDB71C5F1B;
+	Sun, 30 Mar 2025 19:58:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="vxch+Ql9";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="H1BpsCWV"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="xtEjQVcL";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="AJAD76cw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60531DED47;
-	Sun, 30 Mar 2025 19:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37643C3C;
+	Sun, 30 Mar 2025 19:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743364724; cv=none; b=uXeJsNKuoWLQFBT9yEwcr983M54A31HLq6OJQnQ/XCZV22MX1kFcwe0kJ9S+/hCnKcH5SQPTCoASDJNwPoG90mV/Ik41HDDJH9jlAiX1VBuSxprZdsi0jaxs4qas60WISm7iZY9mSAS59Xh9EQYT3yJLMRDyQEqIrBvfsaJ8QZ8=
+	t=1743364720; cv=none; b=NqlpWQXa0vUedK5KPAOdkKQIRU6wQBro7TOk7daVEEjyNOmEgrpSqzQ5ze2+aDBNaU3i5IStjUiVf1A0kKOjPUD8wMRZEvppeTIq+8rOwiyXRMot8BgCR7POZGMAEz84UQOkDt6QvC6amhOrk+/vg9wdKvEFfAGo4J6M8aUwtJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743364724; c=relaxed/simple;
-	bh=ySdr8I/DstDADLCiLnooQ0omqDTPN5vhEgIktUWV3Ss=;
+	s=arc-20240116; t=1743364720; c=relaxed/simple;
+	bh=f8DN0tQCvcx968ar0Zm25kr03aBahPDCYQonMwTxYfE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YQHKXPgb2P7lwHoSVROisixrAAGcJWX7pL7Arj1jPaim95fOvQMpXqv8TOCv6/DERodGK+uHxrPfpt1JCJSJ/mzTby5tuJh02Ykv+IdEqYsqTKnxdXQBjO5xj0yV+D2VMQ3cmgcuMyDaNbQwNRChE2Wzm0YFu0A0utjscK4IKBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=vxch+Ql9; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=H1BpsCWV; arc=none smtp.client-ip=80.241.56.151
+	 MIME-Version:Content-Type; b=aH4mBxNVvd6A6V5RWkRMo4W2RTKK7EJ5lEEoFID8a+QskSDyikzO6/X/uvRxa2Px4404DnVOx+JwTRz/7HSpjd7L46tXJJYCAl1Q3KJtJQgzZn4WmGeVUwW/fr4aqhFNCo7VGtU6e78m9EQmKdhrR0W/YHIGZMFkYjYJWj4IsLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=xtEjQVcL; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=AJAD76cw; arc=none smtp.client-ip=80.241.56.152
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZQlSS5x0Mz9tMt;
-	Sun, 30 Mar 2025 21:58:32 +0200 (CEST)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4ZQlSX0yn0z9vKS;
+	Sun, 30 Mar 2025 21:58:36 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1743364712;
+	t=1743364716;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yFYNJp1q91kxPG/H+VOGMsvd3pVp9apafCx8eaD2V3Q=;
-	b=vxch+Ql90wwi2KwUc+3O1anRnVoHEhcEBabr6VOPgxsWbtPt8cr0cLTR6i5gxh15mXmqlY
-	NBYVMANACNKeYKLgJ2bLaH/tCg/e8Q9MRMmNcOWIPW9KKjynqhf8jIE5j0onMTFwYZPHuu
-	RyzXhEOr/yoyDaWnSQEJ8PHxM55RgGjlI4G80oSE6yUBLW3QvNdEKInUKM+NVlqVv6kZxQ
-	qaVaJRYHJkg1hQQnYoFCUDuwWNWU/lUUONb3IWlcLrLNOGeG/LYbWojeoX4hC7TzS1Vm3Y
-	yyZAd435A3ufqKH8r+KjDDyvI61NTSQZs2IeVTaSGZBZPnXJ+F0N3Mujsmkbtw==
+	bh=p5zvtELYdfg78Sbj3ph4wBdcMnC22AQDDB19emjW67I=;
+	b=xtEjQVcLyX+MDGVldXa/kbkIOOuMrjBjBezsfhWTSlfKy/+nTbA8sw2QFQNHv6ZCRYheKS
+	VGhsCXor3b1cSuHwTKS1o5nZs7Qd3gAVzDmAedhQIAuKW0KYwwJSEcOZLLqX58AZ+mg+dQ
+	zuDPqCviNDNewVpMCg3vRTiwgtcBwA7jTnHrHQ2KgmsiAIUumByv9I2PMqfilg8djXQND+
+	JF+cXiZHiOrYC3Sp2Vu2qrcQnXkSB6kLVCDdZ49aSrFh73HHnyFpR8Nr2NOj4vTga4LhEl
+	5G0VyXW6VwQvxp8pKPJh/pdAVgu8xvpGP8LRDsUn9tr8OX+YephyGIYrHfLm0A==
 From: Marek Vasut <marek.vasut+renesas@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1743364710;
+	t=1743364713;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yFYNJp1q91kxPG/H+VOGMsvd3pVp9apafCx8eaD2V3Q=;
-	b=H1BpsCWVtiHOp7/LzfWsgrBCWkUEZlQfXHArFOx0zWI0n0VLK5XB43NArNE+2jqAYxrGAK
-	pKcna13LpqHs8J4IpUm2xq9bndH61nOTmlHBcNebkPnroxkjSeMLlt0L80c7esvYS+W5jH
-	7sftrJ/J/2yjDdbdv13F/niWXoNlaI6+qfKRjRLKbLWCrE4Yz2ifFTtdC6KpjH4HTOTuzl
-	TEo1yCVUzKm5gTdbR6KDs6mS6SuSuDV70pqk3EJmRMOVNlkxqWFLoJNcm7Ur6II0hN8lDp
-	BSR/cR91bBgBYEkjEWro1lUCx6c+01mHFUeUQTJHxgVaZAXwtOBF7MExogrcdg==
+	bh=p5zvtELYdfg78Sbj3ph4wBdcMnC22AQDDB19emjW67I=;
+	b=AJAD76cwfcL1cADI3rx7/pIl5rjH53YlSC9uqGKTTvb00YK7VgoRGo3IM4lb8hQpHngjpZ
+	gijY6wCpeXdEiR2EhVmrlAd5gArCquroty02GeSCWvZhwgOielC2wK5FVq+cxoiVgbquif
+	whqdQEE8d7AuXdMBXFhZAI0oh1p14qfPqD/ei2rXqXUjNlitqaLK+XmZl84ZsyFECii5jb
+	xDITMe4zoyeuoSVCTqcUmz/kFSrlAeKpJfHsu79YvGN10O9hYjQi4nWFVSuOFXwRXIeMTK
+	xiNcikJiHN3gEl+kEM7nolkJ9q9jb/L/r92v6FBE8s07L+bqfQIdaKXvEQsm2g==
 To: linux-arm-kernel@lists.infradead.org
 Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -86,9 +86,9 @@ Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH 1/4] dt-bindings: PCI: rcar-gen4-pci-host: Document optional aux clock
-Date: Sun, 30 Mar 2025 21:56:09 +0200
-Message-ID: <20250330195715.332106-2-marek.vasut+renesas@mailbox.org>
+Subject: [PATCH 2/4] dt-bindings: vendor-prefixes: Add Retronix Technology Inc.
+Date: Sun, 30 Mar 2025 21:56:10 +0200
+Message-ID: <20250330195715.332106-3-marek.vasut+renesas@mailbox.org>
 In-Reply-To: <20250330195715.332106-1-marek.vasut+renesas@mailbox.org>
 References: <20250330195715.332106-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
@@ -99,43 +99,14 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: ftkny4rcrcptq5mm8d8hrq8nw5ziwthm
-X-MBO-RS-ID: 55d868de086f88903b8
-X-Rspamd-Queue-Id: 4ZQlSS5x0Mz9tMt
+X-MBO-RS-ID: b8661ee7c2dfdccacdf
+X-MBO-RS-META: qixsr7raqyt3ypir5g31bn5b5xg8inia
+X-Rspamd-Queue-Id: 4ZQlSX0yn0z9vKS
 
-Document 'aux' clock which are used to supply the PCIe bus. This
-is useful in case of a hardware setup, where the PCIe controller
-input clock and the PCIe bus clock are supplied from the same
-clock synthesiser, but from different differential clock outputs:
-
- ____________                    _____________
-| R-Car PCIe |                  | PCIe device |
-|            |                  |             |
-|    PCIe RX<|==================|>PCIe TX     |
-|    PCIe TX<|==================|>PCIe RX     |
-|            |                  |             |
-|   PCIe CLK<|======..  ..======|>PCIe CLK    |
-'------------'      ||  ||      '-------------'
-                    ||  ||
- ____________       ||  ||
-|  9FGV0441  |      ||  ||
-|            |      ||  ||
-|   CLK DIF0<|======''  ||
-|   CLK DIF1<|==========''
-|   CLK DIF2<|
-|   CLK DIF3<|
-'------------'
-
-The clock are named 'aux' because those are one of the clock listed in
-Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml which
-fit closest to the PCIe bus clock. According to that binding document,
-the 'aux' clock describe clock which supply the PMC domain, which is
-likely PCIe Mezzanine Card domain.
+Add vendor prefix for Retronix Technology Inc.
+https://www.retronix.com.tw/en/about.html
 
 Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
----
-NOTE: Shall we patch Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml
-      instead and add 'bus' clock outright ?
 ---
 Cc: "Krzysztof Wilczyński" <kw@linux.com>
 Cc: "Rafał Miłecki" <rafal@milecki.pl>
@@ -159,40 +130,22 @@ Cc: linux-kernel@vger.kernel.org
 Cc: linux-pci@vger.kernel.org
 Cc: linux-renesas-soc@vger.kernel.org
 ---
- .../devicetree/bindings/pci/rcar-gen4-pci-host.yaml       | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
-index bb3f843c59d91..5e2624d4c62c7 100644
---- a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
-@@ -46,12 +46,14 @@ properties:
-       - const: app
- 
-   clocks:
--    maxItems: 2
-+    minItems: 2
-+    maxItems: 3
- 
-   clock-names:
-     items:
-       - const: core
-       - const: ref
-+      - const: aux
- 
-   power-domains:
-     maxItems: 1
-@@ -105,8 +107,8 @@ examples:
-                          <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
-                          <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
-             interrupt-names = "msi", "dma", "sft_ce", "app";
--            clocks = <&cpg CPG_MOD 624>, <&pcie0_clkref>;
--            clock-names = "core", "ref";
-+            clocks = <&cpg CPG_MOD 624>, <&pcie0_clkref>, <&pcie0_clkgen>;
-+            clock-names = "core", "ref", "aux";
-             power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
-             resets = <&cpg 624>;
-             reset-names = "pwr";
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 86f6a19b28ae2..2b1bf6709aac7 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1262,6 +1262,8 @@ patternProperties:
+     description: Renesas Electronics Corporation
+   "^rervision,.*":
+     description: Shenzhen Rervision Technology Co., Ltd.
++  "^retronix,.*":
++    description: Retronix Technology Inc.
+   "^revotics,.*":
+     description: Revolution Robotics, Inc. (Revotics)
+   "^rex,.*":
 -- 
 2.47.2
 
