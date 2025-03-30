@@ -1,264 +1,145 @@
-Return-Path: <linux-pci+bounces-24979-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24984-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23C49A75873
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Mar 2025 05:20:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 029C2A7590B
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Mar 2025 10:59:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 11B79188D5BB
-	for <lists+linux-pci@lfdr.de>; Sun, 30 Mar 2025 03:20:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 203D4188BAEE
+	for <lists+linux-pci@lfdr.de>; Sun, 30 Mar 2025 08:59:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E81BEEC8;
-	Sun, 30 Mar 2025 03:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A7021482F5;
+	Sun, 30 Mar 2025 08:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CR6AnNXx"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFAF6846C
-	for <linux-pci@vger.kernel.org>; Sun, 30 Mar 2025 03:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82C274C08;
+	Sun, 30 Mar 2025 08:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743304834; cv=none; b=Lj+i5zevuXo7GIr1+0VXurQMZa3oD5YPBYb3HR7dTYOFl91wL9hfToItem65VJdudSRuRIqNcy8RwUE7U4tqXJ+4Ihn1tiY4IZSO7t9a8f0MQcibp7pslJ/G25fOZfdM8umg27i/k5Fmqz/m/GMdKaz6AQVfpPP7ymjh4KUGHho=
+	t=1743325150; cv=none; b=T1j7hFTAkGWknU8pD3qkr3UyvB35b5rRAMyoZAX4mXw7mF8KtCPUZ7Hs1KzgHPvM+yNELC2Q9icSk3Ib73fjFr/+zC7VXWyR3r7ac/5UU3jUkXkhVV+I/RJqaReYZRUwPDH57Lvm1ewlNvbj9vIxEq3lyDE5XPZa7izi1ftrEfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743304834; c=relaxed/simple;
-	bh=NUELN+vXwPSdRMSiBMYjLqA4DpTiYHKGcxPI9rOua0w=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=CRoE3HlpoXiGy86ML78QKbkXgNFNKRGc/yaXTPETir1qdlczcNYPxXjnZtUavESvN45uGqrDdv0uA262VKxYOLwP/pxsz0cqrDyF1VfUGPJr6WenhUY31nZhb9QCzXCDx3r+r1wV+SStMEXJU25N9tx9UDyN4K6YXsaYKGoakok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d5b38276deso62428255ab.3
-        for <linux-pci@vger.kernel.org>; Sat, 29 Mar 2025 20:20:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743304832; x=1743909632;
-        h=content-transfer-encoding:to:from:subject:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Rh27twaqixdY5U0tfoS2SVcqg226Y/goo21/F+KfXvQ=;
-        b=v6o0/dzZI0b/ufYxFYQfleaZWDjoZZtrZKcqzZmpwhCS+sF9na1DyoXndrTxfITXlk
-         KUsuDQNuFL7gEqJHWLRfZI8iMFLyHl5gA1bjqOPckckEMoQ/vc8XShfZnuJyJDMdgAbw
-         iCxnEgyO+bYBZxGxJs69U62EmE4Hn0UV1HxUVOE5yVLMZa5PyYkHyy4nj7J/5Q0GPxsF
-         wNyIHsAPbj4zeiaF6pqjpHREzRbbtVzbNo/VxQgct5vQrAWB27/wghvBO8T6S5j9Ek8k
-         DZd4DL+KM13qY6FgEgFeccNLL5AsbIxeaUQ1HgLK/lUuKc7X06ANJYFBiPL+9vmKnpDD
-         Ojuw==
-X-Forwarded-Encrypted: i=1; AJvYcCXiYkPQsxdOSyj1gR2Zi8SSJYtvppk7oDzdiCtN3uYghVu8F13SFtJCbqRTiaDYCh+f4ES1kmNlvMs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4eABIHQfMA405lj2lIlVGG8yW02JCQA4DS6U+w77dpnJZcIOj
-	U8DN9kHQQKJVKhCT1G30WqbKqpneRmJJ6TQ1xLoGRwVWG9tbDwhtZFnfsDJ8h8+5qD/P7rVUmxG
-	kwtFuZ9kFI4qEwubIaVUu9lVU8zYdf+zJxJDiF18oRKIn0YXBSuuHar0=
-X-Google-Smtp-Source: AGHT+IEbxfEUE5JoNFjGaYG0oC1oZGzxPQdJ1nGFJXPgwAfVMFlX+ycMFE3Dc13QSN0n3ZZ8B0rBq9E0wDBm7iQAZ97R9hljDWJm
+	s=arc-20240116; t=1743325150; c=relaxed/simple;
+	bh=/km/b3RP7+meUdGujK5Cfjr3gVbfpj8Ix+nZ0yoaw80=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=opyOBPoIBA8DBalkPnAKssJsTG/XPXi/dE138ZVavArP9WynyzwF0IQorKR7KBwoBC36SJ9WH3FFvxlSoMIWvJmNLFVy+jD737gNU0Hhc4PD9PZBycMD0M6OM6eiyhH6+ml36QiJtYoK8aFFo0iiEBjV6NUuaw4ODWF0XRjhqQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CR6AnNXx; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52U8dKo53063341
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Sun, 30 Mar 2025 03:39:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1743323960;
+	bh=zVyzdrsq8rwcKEYT3slz18YJ/cFCFrZ4CWV2JbLOQZg=;
+	h=From:To:CC:Subject:Date;
+	b=CR6AnNXxBE8XeAGt6nNrC2LOTQwIlN7yitDmLdEDpYT3rVcHLm8OfbVxDMLNPVtTK
+	 ia1Fp6Jx7t9dFfDjNOQKRHiKYHaP4KM8FJQPdN0JSpi94znarBoF+CqZ82eZkGCCYI
+	 qm/hyf4JSBQjIAlLbWmElYreWFpu2mr/RwR5gg+g=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52U8dKrW118394;
+	Sun, 30 Mar 2025 03:39:20 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sun, 30
+ Mar 2025 03:39:19 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sun, 30 Mar 2025 03:39:19 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52U8dE4g015769;
+	Sun, 30 Mar 2025 03:39:15 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <vigneshr@ti.com>, <kishon@kernel.org>,
+        <18255117159@163.com>, <cassel@kernel.org>,
+        <wojciech.jasko-EXT@continental-corporation.com>,
+        <thomas.richard@bootlin.com>, <bwawrzyn@cisco.com>
+CC: <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH v2 0/4] Loadable Module support for PCIe Cadence and J721E
+Date: Sun, 30 Mar 2025 14:09:10 +0530
+Message-ID: <20250330083914.529222-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1809:b0:3d4:700f:67e7 with SMTP id
- e9e14a558f8ab-3d5e09d8e17mr38785765ab.17.1743304831902; Sat, 29 Mar 2025
- 20:20:31 -0700 (PDT)
-Date: Sat, 29 Mar 2025 20:20:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e8b87f.050a0220.1547ec.0084.GAE@google.com>
-Subject: [syzbot] [pci?] upstream test error: general protection fault in msix_capability_init
-From: syzbot <syzbot+b6184128c9fa59212e62@syzkaller.appspotmail.com>
-To: bhelgaas@google.com, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
 Hello,
 
-syzbot found the following issue on:
+This series enables support to build the PCIe Cadence Controller drivers
+and the PCI J721E Application/Wrapper/Glue driver as Loadable Kernel
+Modules. The motivation for this series is that PCIe is not a necessity
+for booting the SoC, due to which it doesn't have to be a built-in
+module. Additionally, the defconfig doesn't enable the PCIe Cadence
+Controller drivers and the PCI J721E driver, due to which PCIe is not
+supported by default. Enabling the configs as of now (i.e. without this
+series) will result in built-in drivers i.e. a bloated Linux Image for
+everyone who doesn't have the PCIe Controller. Therefore, with this
+series, after enabling support for building the drivers as loadable
+modules, the driver configs can be enabled in the defconfig to build
+the drivers as loadable modules, thereby enabling PCIe.
 
-HEAD commit:    f6e0150b2003 Merge tag 'mtd/for-6.15' of git://git.kernel..=
-.
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D15ffd43f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3D46a07195688b794=
-b
-dashboard link: https://syzkaller.appspot.com/bug?extid=3Db6184128c9fa59212=
-e62
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
-n) 2.40
+Series is based on linux-next tagged next-20250328.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/f989fd9edbe9/disk-=
-f6e0150b.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/8494075fac70/vmlinux-=
-f6e0150b.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/eef916e9c416/bzI=
-mage-f6e0150b.xz
+Series has been tested by loading and unloading the PCI J721E driver
+when operating in the Root-Complex mode on J700-EVM with an NVMe SSD
+connected to the PCIe Connector. "hdparm" based reads of the NVMe SSD
+have been performed to validate functionality before and after a module
+unload-load sequence using modprobe. Additionally, the module unload
+was performed while running "hdparm" in the background. No crash was
+seen and reloading the module enumerated the NVMe SSD and "hdparm" could
+be re-run successfully.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit=
-:
-Reported-by: syzbot+b6184128c9fa59212e62@syzkaller.appspotmail.com
+v1 of this series is at:
+https://lore.kernel.org/r/20250307103128.3287497-1-s-vadapalli@ti.com/
+Changes since v1:
+- Collected "Reviewed-by" tags from:
+  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+  for the first two patches in this series.
+- Based on feedback from Mani on the third patch of the v1 series at:
+  https://lore.kernel.org/r/20250318080304.jsmrxqil6pn74nzh@thinkpad/
+  pci_epc_deinit_notify() has been included in cdns_pcie_ep_disable().
+- Based on feedback from Thomas on the fourth patch of the v1 series at:
+  https://lore.kernel.org/r/88b3ecbe-32b6-4310-afb9-da19a2d0506a@bootlin.com/
+  the "check" for a non-NULL "pcie-refclk" in j721e_pcie_remove() has been
+  dropped.
 
-ntfs3: Enabled Linux POSIX ACLs support
-ntfs3: Read-only LZX/Xpress compression included
-efs: 1.0a - http://aeschi.ch.eu.org/efs/
-jffs2: version 2.2. (NAND) (SUMMARY)  =C2=A9 2001-2006 Red Hat, Inc.
-romfs: ROMFS MTD (C) 2007 Red Hat, Inc.
-QNX4 filesystem 0.2.3 registered.
-qnx6: QNX6 filesystem 1.0.0 registered.
-fuse: init (API version 7.42)
-orangefs_debugfs_init: called with debug mask: :none: :0:
-orangefs_init: module version upstream loaded
-JFS: nTxBlock =3D 8192, nTxLock =3D 65536
-SGI XFS with ACLs, security attributes, realtime, quota, no debug enabled
-9p: Installing v9fs 9p2000 file system support
-NILFS version 2 loaded
-befs: version: 0.9.3
-ocfs2: Registered cluster interface o2cb
-ocfs2: Registered cluster interface user
-OCFS2 User DLM kernel interface loaded
-gfs2: GFS2 installed
-ceph: loaded (mds proto 32)
-NET: Registered PF_ALG protocol family
-xor: automatically using best checksumming function   avx      =20
-async_tx: api initialized (async)
-Key type asymmetric registered
-Asymmetric key parser 'x509' registered
-Asymmetric key parser 'pkcs8' registered
-Key type pkcs7_test registered
-Block layer SCSI generic (bsg) driver version 0.4 loaded (major 238)
-io scheduler mq-deadline registered
-io scheduler kyber registered
-io scheduler bfq registered
-input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
-ACPI: button: Power Button [PWRF]
-input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
-ACPI: button: Sleep Button [SLPF]
-ioatdma: Intel(R) QuickData Technology Driver 5.00
-ACPI: \_SB_.LNKC: Enabled at IRQ 11
-virtio-pci 0000:00:03.0: virtio_pci: leaving for legacy driver
-ACPI: \_SB_.LNKD: Enabled at IRQ 10
-virtio-pci 0000:00:04.0: virtio_pci: leaving for legacy driver
-ACPI: \_SB_.LNKB: Enabled at IRQ 10
-virtio-pci 0000:00:06.0: virtio_pci: leaving for legacy driver
-virtio-pci 0000:00:07.0: virtio_pci: leaving for legacy driver
-N_HDLC line discipline registered with maxframe=3D4096
-Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
-00:03: ttyS0 at I/O 0x3f8 (irq =3D 4, base_baud =3D 115200) is a 16550A
-00:04: ttyS1 at I/O 0x2f8 (irq =3D 3, base_baud =3D 115200) is a 16550A
-00:05: ttyS2 at I/O 0x3e8 (irq =3D 6, base_baud =3D 115200) is a 16550A
-00:06: ttyS3 at I/O 0x2e8 (irq =3D 7, base_baud =3D 115200) is a 16550A
-Non-volatile memory driver v1.3
-Oops: general protection fault, probably for non-canonical address 0xdffffc=
-0000000000: 0000 [#1] SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-syzkaller-03565-gf6=
-e0150b2003 #0 PREEMPT(full)=20
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
-gle 02/12/2025
-RIP: 0010:msix_prepare_msi_desc drivers/pci/msi/msi.c:615 [inline]
-RIP: 0010:msix_setup_msi_descs drivers/pci/msi/msi.c:639 [inline]
-RIP: 0010:__msix_setup_interrupts drivers/pci/msi/msi.c:672 [inline]
-RIP: 0010:msix_setup_interrupts drivers/pci/msi/msi.c:701 [inline]
-RIP: 0010:msix_capability_init+0x7a0/0x1550 drivers/pci/msi/msi.c:743
-Code: 10 00 74 0f e8 81 aa e7 fc 48 ba 00 00 00 00 00 fc ff df 48 89 9c 24 =
-d8 00 00 00 48 89 9c 24 a0 01 00 00 4c 89 f0 48 c1 e8 03 <0f> b6 04 10 84 c=
-0 0f 85 75 02 00 00 41 8b 1e be 00 00 40 00 21 de
-RSP: 0000:ffffc90000066ee0 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffffc9000008e008 RCX: ffff88801cac8000
-RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffffc90000067080
-RBP: ffffc90000067138 R08: ffffffff8543f82f R09: 0000000000000000
-R10: ffffc90000067020 R11: fffff5200000ce11 R12: 0000000000000000
-R13: 0000000000000101 R14: 0000000000000000 R15: 1ffff9200000ce0e
-FS:  0000000000000000(0000) GS:ffff888125324000(0000) knlGS:000000000000000=
-0
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000000e938000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __pci_enable_msix_range+0x5c7/0x710 drivers/pci/msi/msi.c:851
- pci_alloc_irq_vectors_affinity+0x10e/0x2b0 drivers/pci/msi/api.c:268
- vp_request_msix_vectors drivers/virtio/virtio_pci_common.c:160 [inline]
- vp_find_vqs_msix+0x5da/0xeb0 drivers/virtio/virtio_pci_common.c:417
- vp_find_vqs+0xa0/0x7e0 drivers/virtio/virtio_pci_common.c:525
- virtio_find_vqs include/linux/virtio_config.h:226 [inline]
- virtio_find_single_vq include/linux/virtio_config.h:237 [inline]
- probe_common+0x37b/0x6b0 drivers/char/hw_random/virtio-rng.c:155
- virtio_dev_probe+0x931/0xc80 drivers/virtio/virtio.c:341
- really_probe+0x2b9/0xad0 drivers/base/dd.c:658
- __driver_probe_device+0x1a2/0x390 drivers/base/dd.c:800
- driver_probe_device+0x50/0x430 drivers/base/dd.c:830
- __driver_attach+0x45f/0x710 drivers/base/dd.c:1216
- bus_for_each_dev+0x23e/0x2b0 drivers/base/bus.c:370
- bus_add_driver+0x346/0x670 drivers/base/bus.c:678
- driver_register+0x23a/0x320 drivers/base/driver.c:249
- do_one_initcall+0x24a/0x940 init/main.c:1257
- do_initcall_level+0x157/0x210 init/main.c:1319
- do_initcalls+0x71/0xd0 init/main.c:1335
- kernel_init_freeable+0x432/0x5d0 init/main.c:1567
- kernel_init+0x1d/0x2b0 init/main.c:1457
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:msix_prepare_msi_desc drivers/pci/msi/msi.c:615 [inline]
-RIP: 0010:msix_setup_msi_descs drivers/pci/msi/msi.c:639 [inline]
-RIP: 0010:__msix_setup_interrupts drivers/pci/msi/msi.c:672 [inline]
-RIP: 0010:msix_setup_interrupts drivers/pci/msi/msi.c:701 [inline]
-RIP: 0010:msix_capability_init+0x7a0/0x1550 drivers/pci/msi/msi.c:743
-Code: 10 00 74 0f e8 81 aa e7 fc 48 ba 00 00 00 00 00 fc ff df 48 89 9c 24 =
-d8 00 00 00 48 89 9c 24 a0 01 00 00 4c 89 f0 48 c1 e8 03 <0f> b6 04 10 84 c=
-0 0f 85 75 02 00 00 41 8b 1e be 00 00 40 00 21 de
-RSP: 0000:ffffc90000066ee0 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffffc9000008e008 RCX: ffff88801cac8000
-RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffffc90000067080
-RBP: ffffc90000067138 R08: ffffffff8543f82f R09: 0000000000000000
-R10: ffffc90000067020 R11: fffff5200000ce11 R12: 0000000000000000
-R13: 0000000000000101 R14: 0000000000000000 R15: 1ffff9200000ce0e
-FS:  0000000000000000(0000) GS:ffff888125324000(0000) knlGS:000000000000000=
-0
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000000e938000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	10 00                	adc    %al,(%rax)
-   2:	74 0f                	je     0x13
-   4:	e8 81 aa e7 fc       	call   0xfce7aa8a
-   9:	48 ba 00 00 00 00 00 	movabs $0xdffffc0000000000,%rdx
-  10:	fc ff df
-  13:	48 89 9c 24 d8 00 00 	mov    %rbx,0xd8(%rsp)
-  1a:	00
-  1b:	48 89 9c 24 a0 01 00 	mov    %rbx,0x1a0(%rsp)
-  22:	00
-  23:	4c 89 f0             	mov    %r14,%rax
-  26:	48 c1 e8 03          	shr    $0x3,%rax
-* 2a:	0f b6 04 10          	movzbl (%rax,%rdx,1),%eax <-- trapping instruct=
-ion
-  2e:	84 c0                	test   %al,%al
-  30:	0f 85 75 02 00 00    	jne    0x2ab
-  36:	41 8b 1e             	mov    (%r14),%ebx
-  39:	be 00 00 40 00       	mov    $0x400000,%esi
-  3e:	21 de                	and    %ebx,%esi
+Regards,
+Siddharth.
 
+Kishon Vijay Abraham I (1):
+  PCI: cadence: Add support to build pcie-cadence library as a kernel
+    module
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Siddharth Vadapalli (3):
+  PCI: cadence-host: Introduce cdns_pcie_host_disable helper for cleanup
+  PCI: cadence-ep: Introduce cdns_pcie_ep_disable helper for cleanup
+  PCI: j721e: Add support to build as a loadable module
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ drivers/pci/controller/cadence/Kconfig        |  12 +-
+ drivers/pci/controller/cadence/pci-j721e.c    |  33 ++++-
+ .../pci/controller/cadence/pcie-cadence-ep.c  |  17 +++
+ .../controller/cadence/pcie-cadence-host.c    | 113 ++++++++++++++++++
+ drivers/pci/controller/cadence/pcie-cadence.c |  12 ++
+ drivers/pci/controller/cadence/pcie-cadence.h |  14 ++-
+ 6 files changed, 192 insertions(+), 9 deletions(-)
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+-- 
+2.34.1
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
 
