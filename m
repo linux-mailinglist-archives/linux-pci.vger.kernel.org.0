@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-25020-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25021-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6642A76F48
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 22:30:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 049CDA76F4B
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 22:30:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 12A801887283
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 20:30:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B008F16B08C
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 20:30:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BEA121B9DC;
-	Mon, 31 Mar 2025 20:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FE5021D3CA;
+	Mon, 31 Mar 2025 20:29:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sIXeGIBW"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rDyGRwDk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA2D21A45F;
-	Mon, 31 Mar 2025 20:29:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F7121ABC3;
+	Mon, 31 Mar 2025 20:29:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743452942; cv=none; b=h1yT8AeCQQK793X88vVzZR+xjxEuy1hs/lVKyAGiasANgMKTD+AovfBSXu0cF54NP1DIFhiskPPg+xll0JWJPW0iZxsamYfpvMsbqrohlCnUQsjEVAdZfKH2h/9OWfUMPHeatCYukBxi57upAan5E9bWI+ckkyyVCw1iVftlC4c=
+	t=1743452946; cv=none; b=RUzKwySiess9uG+EvuSrTVgGob+IqXzQsxSHkR+NFGCF6WVYcI+pExMfz2u/C6NVbx4wT94VI5L8yD0MHQR7SbL8ECS7WpZlgNV1SZDN/vpLtwZExscvQ30vtVqp5uOiYVWYwW0U68WSeoy/ZWTt63h4LjLwLmY5vQZsl77nmcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743452942; c=relaxed/simple;
-	bh=nxP79RjMxaLT6mWO28gxcx1n2NZPhyKfYT/HHlAu4b8=;
+	s=arc-20240116; t=1743452946; c=relaxed/simple;
+	bh=YooJygfybgW+FdQ7/bu7ky5o5E8yt0T77/D8/f7ELV0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a1qBP67nB74laHoM6aK3sJQom0tkHhqJ6mFbhIoXUTMmC3bdGAN7b6sXOFC1qJIEX+eafnF51vQa2gnX/ei1YAEZoGhtFL1Xzqklrdx5eCN1TCMqLbdxEZiGWEZ4a7goGVBQF1WYkn5LBcG+T6rXi7qeH7meUAYIvGYwoftW2Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sIXeGIBW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F1B7C4CEE5;
-	Mon, 31 Mar 2025 20:28:58 +0000 (UTC)
+	 MIME-Version; b=brv05/WJWR46XdDQ/17epwfrxXH+l0x0GQaSgE7+72+1owCGHXO+2Klh+0dsSTOMMMdZC5++JM10XVVQonr59zo/a4D0F612NvTyztdZXUvr51pug/gl2oAMKw+AStztKHy//Zne2gF4GGuLHBEDCpLxt6F/AahLXESued/mptA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rDyGRwDk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52732C4CEE3;
+	Mon, 31 Mar 2025 20:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743452941;
-	bh=nxP79RjMxaLT6mWO28gxcx1n2NZPhyKfYT/HHlAu4b8=;
+	s=k20201202; t=1743452946;
+	bh=YooJygfybgW+FdQ7/bu7ky5o5E8yt0T77/D8/f7ELV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sIXeGIBWSrDXxazYUOOjVsRzWz3VGPhwJLQw7+9DK9AOt6UZaUdbbV2ea2ODgvR6P
-	 FMzLwf7QolokWK/ELoXLcdA4edBlriOv+LaKqvotiBQ23CSVvj4Jzmpr99z4tDOACR
-	 nLdPyw2VLZSLGd87rwDN1c5pWg2AaTrrj8vokjkkvuLUi/jqyT8GVT63arPmOWw5v6
-	 76wV1SIRCp3WgGJnBgPDVrJ4ubY7SToxV1kGq/TNLdlSNwi4Aitw9Lio2dzFuihv1h
-	 ofUnoHQDhdwfBJ2A3IPyC6vNr+o0nak2P6Ut94tU1znN4arveZxQM22yRLpH+CaNbg
-	 nGNtExxR4Muzw==
+	b=rDyGRwDkQhN+FSpeaw1RF3LFiqdVfDSWQTScgiG8S4SRucrG/8qZO4VfNLLcfj6P5
+	 I5JM71+2Moh0kTm9oO2H9Gh5JJnXCtN85I+CIDLxD2t/PI4aZqcEADbgCnq9PgUk5l
+	 i39TnQWTlymfWlrEIbiay6sPU5noQH6juh+jshg9zbF+9DKWKG/eZc3M6x46TDDPa4
+	 HTw9AdPyW8utJnckeyNPcaPtSE+TKbuD9VIhXgdxebgk/m8M5OH13z4npOl8G56Fuh
+	 3zzMgLM/2CSJ52llRAvGrSAcGc5g7dNhC6NTstW8f6B+wg6+51mfmT5DfiW7nC/71r
+	 vBlZr4gmuu3GA==
 From: Danilo Krummrich <dakr@kernel.org>
 To: bhelgaas@google.com,
 	gregkh@linuxfoundation.org,
@@ -61,9 +61,9 @@ Cc: ojeda@kernel.org,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 3/9] rust: device: implement device context for Device
-Date: Mon, 31 Mar 2025 22:27:56 +0200
-Message-ID: <20250331202805.338468-4-dakr@kernel.org>
+Subject: [PATCH 4/9] rust: platform: preserve device context in AsRef
+Date: Mon, 31 Mar 2025 22:27:57 +0200
+Message-ID: <20250331202805.338468-5-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250331202805.338468-1-dakr@kernel.org>
 References: <20250331202805.338468-1-dakr@kernel.org>
@@ -75,59 +75,41 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Analogous to bus specific device, implement the DeviceContext generic
-for generic devices.
+Since device::Device has a generic over its context, preserve this
+device context in AsRef.
 
-This is used for APIs that work with generic devices (such as Devres) to
-evaluate the device' context.
+For instance, when calling platform::Device<Core> the new AsRef
+implementation returns device::Device<Core>.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/device.rs | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ rust/kernel/platform.rs | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-index 68652ba62b02..2d98e650376e 100644
---- a/rust/kernel/device.rs
-+++ b/rust/kernel/device.rs
-@@ -9,7 +9,7 @@
-     str::CStr,
-     types::{ARef, Opaque},
- };
--use core::{fmt, ptr};
-+use core::{fmt, marker::PhantomData, ptr};
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 9133490ea4c9..fa07f895af3a 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -183,7 +183,7 @@ pub struct Device<Ctx: device::DeviceContext = device::Normal>(
+     PhantomData<Ctx>,
+ );
  
- #[cfg(CONFIG_PRINTK)]
- use crate::c_str;
-@@ -42,7 +42,7 @@
- /// `bindings::device::release` is valid to be called from any thread, hence `ARef<Device>` can be
- /// dropped from any thread.
- #[repr(transparent)]
--pub struct Device(Opaque<bindings::device>);
-+pub struct Device<Ctx: DeviceContext = Normal>(Opaque<bindings::device>, PhantomData<Ctx>);
- 
- impl Device {
-     /// Creates a new reference-counted abstraction instance of an existing `struct device` pointer.
-@@ -59,7 +59,9 @@ pub unsafe fn get_device(ptr: *mut bindings::device) -> ARef<Self> {
-         // SAFETY: By the safety requirements ptr is valid
-         unsafe { Self::as_ref(ptr) }.into()
-     }
-+}
- 
-+impl<Ctx: DeviceContext> Device<Ctx> {
-     /// Obtain the raw `struct device *`.
-     pub(crate) fn as_raw(&self) -> *mut bindings::device {
+-impl Device {
++impl<Ctx: device::DeviceContext> Device<Ctx> {
+     fn as_raw(&self) -> *mut bindings::platform_device {
          self.0.get()
-@@ -189,6 +191,9 @@ pub fn property_present(&self, name: &CStr) -> bool {
+     }
+@@ -205,8 +205,8 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
      }
  }
  
-+kernel::impl_device_context_deref!(Device);
-+kernel::impl_device_context_into_aref!(Device);
-+
- // SAFETY: Instances of `Device` are always reference-counted.
- unsafe impl crate::types::AlwaysRefCounted for Device {
-     fn inc_ref(&self) {
+-impl AsRef<device::Device> for Device {
+-    fn as_ref(&self) -> &device::Device {
++impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for Device<Ctx> {
++    fn as_ref(&self) -> &device::Device<Ctx> {
+         // SAFETY: By the type invariant of `Self`, `self.as_raw()` is a pointer to a valid
+         // `struct platform_device`.
+         let dev = unsafe { addr_of_mut!((*self.as_raw()).dev) };
 -- 
 2.49.0
 
