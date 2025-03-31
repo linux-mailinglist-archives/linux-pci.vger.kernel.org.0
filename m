@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-25018-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25019-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5B16A76F44
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 22:29:56 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7C55CA76F45
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 22:30:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8EF32188D322
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 20:29:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5C02016B3A1
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 20:29:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58A5521C188;
-	Mon, 31 Mar 2025 20:28:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21C5E21C9FF;
+	Mon, 31 Mar 2025 20:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AmIje9AY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pEJGvFVW"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C62821B9D1;
-	Mon, 31 Mar 2025 20:28:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01D521B9DC;
+	Mon, 31 Mar 2025 20:28:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743452934; cv=none; b=oZz1k8sr2Ly4/u258cCEP8FODTFF63bKxraB9TMEnwmrK/HjMyXJqfgogaK4Fp95WwdzSu70Tb9Hf2wooHzhOmrpDug+sV4dGDTfWfcVcIFho61SWlu4RxiCiI71+uW1nQoFOldPl0YNqZWesVKkoPTquP+gAhkS1JGIhxv1VLo=
+	t=1743452938; cv=none; b=oDyEQo7PjvRPohdgPuGxTTBu2hxDjB8IjQwJYJT/SU8LY0YRerunjC8vVEry+dZYDDprtdRiwnPPniTrc3U38A8detyazlhZQkbzce1kHU5ReL/5iLmVGuIvyn098MVUBuAk0T7SQ9JCId+24O7B+b7cVMFn8A0278DG1k7V+n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743452934; c=relaxed/simple;
-	bh=YtAeePVBbSHdITuUrszzto4t2A2eShloNRdKMMuxwuU=;
+	s=arc-20240116; t=1743452938; c=relaxed/simple;
+	bh=E8LvxAEPSE3C1ltgikB5ignndFPecSrN9rb0pMCJ7ZQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JA9WAxSzdziqVA7S58PGUADWviGkW5sjR3oxJJbaiBw9SK1mwnsVj9dwfRAaSn4dk3rs1HvkDOUnV18AUZkbGy+SNTskZjPFsBLfUzfXqrzaa02I1m95RO2pikGVkF3AXVPynPo0w4ieimtMnBgFcq8toKTWys0/mYfBnM0KnDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AmIje9AY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E58CEC4CEE5;
-	Mon, 31 Mar 2025 20:28:49 +0000 (UTC)
+	 MIME-Version; b=ndIl/Bro2ysQboNH+F1sO4FPa+vJvNfjfkQoQTJzSStU9e/nltCj0mIAfHKUewMc3P6aD6MdihY7bQGslEPIA3OvAp6YLnCrbizvfCNEEzLlU7LO6102NRPFoi50wfQk6WTWE8PyehOpJ3DifC2TAnpL6iFUq/lUcbCGoV5B0rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pEJGvFVW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F4E4C4CEED;
+	Mon, 31 Mar 2025 20:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743452933;
-	bh=YtAeePVBbSHdITuUrszzto4t2A2eShloNRdKMMuxwuU=;
+	s=k20201202; t=1743452937;
+	bh=E8LvxAEPSE3C1ltgikB5ignndFPecSrN9rb0pMCJ7ZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AmIje9AYESzfS4539CMNdY4OTlfZ3CgR9MThTKrMIsb3g00LVmBOD60EM79vzpfnD
-	 9rbmRbMx5+pvJ2u9Xf6whbfCior//uiQ44IRMhIrxPEQZQSNBZs1/zwQNjuV8+t3F9
-	 BOYSAoP09cKXgNzECVdgS5O/8DaIb4Ml24UGaFvcB1zR8i433CsAV4bmkkdKkD0Q5C
-	 QdGK3UkJT7LwQQxX4Fq2PG/VGaOUs3QQWf/B/7ZRV5LZRM2KUyDN+G8Y0cPOf+llFJ
-	 9DoHmNt3+MDxANmZJPQPEtAr0NvY1LRusxJ59iNIPGpceZjF5O+J+Xy2l3Jc34x397
-	 uXMY3cuXFA8yg==
+	b=pEJGvFVWkUIYq7gvPiP2/39DUdzWlVXPB65bfUy8K9T1eG5OiKu9fcYN+EHpT2YQJ
+	 ZXksRN/D48IWVTWsiOrxMposIWC2kucl8aLMmKl4tbLhSXeTA0N5H18iucmVEGnXR0
+	 so6QvsRg2tjQA9KSDotB4bEniU4rl1k8VwLG8gHJCtzND7HzNZNeoi0gg1P/mv3hv5
+	 qdB6/wI6gGeSTuMiiU1VvhGGxtXQhBkkIe2GgpXsWRmo0uS8mJBv4GpAOgc8iIDIKO
+	 pzzQbNbwe/3/dAtDr/D9YW7Y0gC8wHVssOxpTViTgG9PdOkeW4Hb1UA/0Ru3VdUexq
+	 BrGugvfe3ltgw==
 From: Danilo Krummrich <dakr@kernel.org>
 To: bhelgaas@google.com,
 	gregkh@linuxfoundation.org,
@@ -61,9 +61,9 @@ Cc: ojeda@kernel.org,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 1/9] rust: device: implement impl_device_context_deref!
-Date: Mon, 31 Mar 2025 22:27:54 +0200
-Message-ID: <20250331202805.338468-2-dakr@kernel.org>
+Subject: [PATCH 2/9] rust: device: implement impl_device_context_into_aref!
+Date: Mon, 31 Mar 2025 22:27:55 +0200
+Message-ID: <20250331202805.338468-3-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250331202805.338468-1-dakr@kernel.org>
 References: <20250331202805.338468-1-dakr@kernel.org>
@@ -75,54 +75,45 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Deref hierarchy for device context generics is the same for every
-(bus specific) device.
+Implement a macro to implement all From conversions of a certain device
+to ARef<Device>.
 
-Implement those with a generic macro to avoid duplicated boiler plate
-code and ensure the correct Deref hierarchy for every device
+This avoids unnecessary boiler plate code for every device
 implementation.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/device.rs   | 29 +++++++++++++++++++++++++++++
- rust/kernel/pci.rs      | 14 +-------------
- rust/kernel/platform.rs | 15 +--------------
- 3 files changed, 31 insertions(+), 27 deletions(-)
+ rust/kernel/device.rs   | 21 +++++++++++++++++++++
+ rust/kernel/pci.rs      |  7 +------
+ rust/kernel/platform.rs |  9 ++-------
+ 3 files changed, 24 insertions(+), 13 deletions(-)
 
 diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-index 21b343a1dc4d..e3ab8980270e 100644
+index e3ab8980270e..68652ba62b02 100644
 --- a/rust/kernel/device.rs
 +++ b/rust/kernel/device.rs
-@@ -235,6 +235,35 @@ impl Sealed for super::Normal {}
- impl DeviceContext for Core {}
- impl DeviceContext for Normal {}
+@@ -264,6 +264,27 @@ macro_rules! impl_device_context_deref {
+     };
+ }
  
 +#[doc(hidden)]
 +#[macro_export]
-+macro_rules! __impl_device_context_deref {
-+    ($src:ty, $dst:ty, $device:tt) => {
-+        impl core::ops::Deref for $device<$src> {
-+            type Target = $device<$dst>;
-+
-+            fn deref(&self) -> &Self::Target {
-+                let ptr: *const Self = self;
-+
-+                // CAST: `Device<Ctx: DeviceContext>` types are transparent to each other.
-+                let ptr = ptr.cast::<Self::Target>();
-+
-+                // SAFETY: `ptr` was derived from `&self`.
-+                unsafe { &*ptr }
++macro_rules! __impl_device_context_into_aref {
++    ($src:ty, $device:tt) => {
++        impl core::convert::From<&$device<$src>> for $crate::types::ARef<$device> {
++            fn from(dev: &$device<$src>) -> Self {
++                (&**dev).into()
 +            }
 +        }
 +    };
 +}
 +
-+/// Implement [`core::ops::Deref`] traits for allowed [`DeviceContext`] conversions of a (bus
-+/// specific) device.
++/// Implement [`core::convert::From`], such that all `&Device<Ctx>` can be converted to an
++/// `ARef<Device>`.
 +#[macro_export]
-+macro_rules! impl_device_context_deref {
++macro_rules! impl_device_context_into_aref {
 +    ($device:tt) => {
-+        kernel::__impl_device_context_deref!($crate::device::Core, $crate::device::Normal, $device);
++        kernel::__impl_device_context_into_aref!($crate::device::Core, $device);
 +    };
 +}
 +
@@ -130,63 +121,50 @@ index 21b343a1dc4d..e3ab8980270e 100644
  #[macro_export]
  macro_rules! dev_printk {
 diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index c97d6d470b28..0e735409bfc4 100644
+index 0e735409bfc4..e235aa23c63a 100644
 --- a/rust/kernel/pci.rs
 +++ b/rust/kernel/pci.rs
-@@ -422,19 +422,7 @@ pub fn set_master(&self) {
-     }
+@@ -423,12 +423,7 @@ pub fn set_master(&self) {
  }
  
--impl Deref for Device<device::Core> {
--    type Target = Device;
+ kernel::impl_device_context_deref!(Device);
 -
--    fn deref(&self) -> &Self::Target {
--        let ptr: *const Self = self;
--
--        // CAST: `Device<Ctx>` is a transparent wrapper of `Opaque<bindings::pci_dev>`.
--        let ptr = ptr.cast::<Device>();
--
--        // SAFETY: `ptr` was derived from `&self`.
--        unsafe { &*ptr }
+-impl From<&Device<device::Core>> for ARef<Device> {
+-    fn from(dev: &Device<device::Core>) -> Self {
+-        (&**dev).into()
 -    }
 -}
-+kernel::impl_device_context_deref!(Device);
++kernel::impl_device_context_into_aref!(Device);
  
- impl From<&Device<device::Core>> for ARef<Device> {
-     fn from(dev: &Device<device::Core>) -> Self {
+ // SAFETY: Instances of `Device` are always reference-counted.
+ unsafe impl crate::types::AlwaysRefCounted for Device {
 diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index 4917cb34e2fe..9268e1edca9b 100644
+index 9268e1edca9b..9133490ea4c9 100644
 --- a/rust/kernel/platform.rs
 +++ b/rust/kernel/platform.rs
-@@ -16,7 +16,6 @@
- 
- use core::{
-     marker::PhantomData,
--    ops::Deref,
-     ptr::{addr_of_mut, NonNull},
+@@ -10,7 +10,7 @@
+     of,
+     prelude::*,
+     str::CStr,
+-    types::{ARef, ForeignOwnable, Opaque},
++    types::{ForeignOwnable, Opaque},
+     ThisModule,
  };
  
-@@ -190,19 +189,7 @@ fn as_raw(&self) -> *mut bindings::platform_device {
-     }
+@@ -190,12 +190,7 @@ fn as_raw(&self) -> *mut bindings::platform_device {
  }
  
--impl Deref for Device<device::Core> {
--    type Target = Device;
+ kernel::impl_device_context_deref!(Device);
 -
--    fn deref(&self) -> &Self::Target {
--        let ptr: *const Self = self;
--
--        // CAST: `Device<Ctx>` is a transparent wrapper of `Opaque<bindings::platform_device>`.
--        let ptr = ptr.cast::<Device>();
--
--        // SAFETY: `ptr` was derived from `&self`.
--        unsafe { &*ptr }
+-impl From<&Device<device::Core>> for ARef<Device> {
+-    fn from(dev: &Device<device::Core>) -> Self {
+-        (&**dev).into()
 -    }
 -}
-+kernel::impl_device_context_deref!(Device);
++kernel::impl_device_context_into_aref!(Device);
  
- impl From<&Device<device::Core>> for ARef<Device> {
-     fn from(dev: &Device<device::Core>) -> Self {
+ // SAFETY: Instances of `Device` are always reference-counted.
+ unsafe impl crate::types::AlwaysRefCounted for Device {
 -- 
 2.49.0
 
