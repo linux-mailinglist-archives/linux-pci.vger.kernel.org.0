@@ -1,47 +1,47 @@
-Return-Path: <linux-pci+bounces-24998-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-24999-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDA71A76144
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 10:19:59 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E054FA76150
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 10:20:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1E2E818893CA
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 08:20:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 268451889329
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 08:20:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D0E71D5AD4;
-	Mon, 31 Mar 2025 08:19:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 687141D5ADE;
+	Mon, 31 Mar 2025 08:20:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rYO4k9nl"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n0MVxr7S"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6431D514B;
-	Mon, 31 Mar 2025 08:19:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34ED11D54E2;
+	Mon, 31 Mar 2025 08:20:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743409195; cv=none; b=oDBF/SvFXJUHN5B/s6ubRpWzcwdPJE7hLLw4SrEzJn0wvA2+LOigc0yMD4Gi94Z8mPdW9i0eCEQ+Ri2lN0bbt66OLPboyqG+BNMT94hg70DKYQOMM5MUOL7odDnG2FX5rdqQ8py9/WrclzBQxu+lq0UWEju/dq3oBMQqOlb26is=
+	t=1743409209; cv=none; b=CMcWJLNnWC3FNxS5rM+pV+DNBHZ0IWyYytl3GdI/gZ4k65aMS8pR1wTcyoOJPMwJcMxsZBX9jN/nbtU3fvpfC4eNwm0MJGGuWXyDFuK703IskLQniY90v/iko/ruJJGK7DoOmjHlOTEcZIQb1nfLVg2+DiLKqkyefjkuBswv9mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743409195; c=relaxed/simple;
-	bh=k7k2/pOIGDeCvNTJE50TOMWYK9qKx/YV3St05Kv63+s=;
+	s=arc-20240116; t=1743409209; c=relaxed/simple;
+	bh=VXxFxHZK8YI/P4GsKu4JzltWluQVJHCyC/qX/kW2Ars=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P+MstOL5XK9LvB/xl2ngc9X19s4P/AInYcMv/Fkd0LZaAkzowewwZfK5RTj488JtJv8q+Ryi8suD1jho5xmDPdtFeK8o5U0HcwGN59sZlIDiYZs9x6TONvQAD1gRwH4pwC/+30rWkofQE/XnqJUFjw0vO+Qw9hAHEvnsZe0u8Xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rYO4k9nl; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AD33C4CEEA;
-	Mon, 31 Mar 2025 08:19:53 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q9neYPKYezvPDp2wE06f5OLgBmBJJ6VzN/sXBpI2mSFLCX44wKImkwjTlEXc2NWVLFV/bsq0p1ljIujELUmVXHrmeN2h14jJHQ49AV//zG8r2n9Joh57wIrNXTOu7lN1FYLpNRVEUHhKWT7Hc1ZlZAG9sfXF3vZwYxfH6v93/r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n0MVxr7S; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A27FBC4CEE5;
+	Mon, 31 Mar 2025 08:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743409194;
-	bh=k7k2/pOIGDeCvNTJE50TOMWYK9qKx/YV3St05Kv63+s=;
+	s=k20201202; t=1743409208;
+	bh=VXxFxHZK8YI/P4GsKu4JzltWluQVJHCyC/qX/kW2Ars=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rYO4k9nl6kCuo8SfsJnxldb3o7ezS9EXsXYjzd6R6CRm6jcHAZxImU+QpOBbehMA4
-	 isxoEzsCa3wEGkacepZzACOq/aJHwzhbtp1gIhT8UkU+/TgB90ZCy9TBiJ99oavGAZ
-	 o72V3uNSP7BVSKmmzrv4PxXCYiK65kjmbh8xqBqfkPuokbGnYs3Bm5R+ubOyy5Xh00
-	 1x6bLWCjFBZHN3JppQunNl5kVBttaPS/9Dy/uc6UHncor+a+HdFrx56C4x9RmBvqRZ
-	 F/jWucXhyBgfSfQOT5ryNylz5NSVdLXgajOz9pDC1SQEMyvZcmRns0K16hT7o7oXR2
-	 DInck3dgP766g==
-Date: Mon, 31 Mar 2025 10:19:51 +0200
+	b=n0MVxr7SWsGz09FCeo/mbZGUhEy6sE2B7F9J2KGvWnhNIlbWWYcHVbD5Nd8Q0DMjX
+	 CPBJbyVVCgnV6rKqWVtdNsdW/RMY+E0lFLdSKZUsAzNUtbGfaPzaMw+FqwIyJX61TZ
+	 0FNqyOdxR/dmCwafSGrvqy56cCT44gq2xpJ7imhRdmoJiryrbW6o9sWfi/d9AH4SO5
+	 K+rcq6YXWm/efJo29pN1aEvptRNAwsRzy01L/8uR4ATaWWXyXuFO0p40FI4opcnJfH
+	 oxbCT2j0hLvXDRS8Nbq/H2Dg6ftAUO9pfHExgEotQuvQdLzg8FD2MJcuRuZZRzEVO+
+	 do5JrglvID+uw==
+Date: Mon, 31 Mar 2025 10:20:04 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Marek Vasut <marek.vasut+renesas@mailbox.org>
 Cc: linux-arm-kernel@lists.infradead.org, 
@@ -55,11 +55,11 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>, 
 	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: PCI: rcar-gen4-pci-host: Document
- optional aux clock
-Message-ID: <20250331-excellent-nautilus-of-apotheosis-fbd30a@krzk-bin>
+Subject: Re: [PATCH 2/4] dt-bindings: vendor-prefixes: Add Retronix
+ Technology Inc.
+Message-ID: <20250331-logical-furry-rhino-04acf3@krzk-bin>
 References: <20250330195715.332106-1-marek.vasut+renesas@mailbox.org>
- <20250330195715.332106-2-marek.vasut+renesas@mailbox.org>
+ <20250330195715.332106-3-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -68,29 +68,15 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250330195715.332106-2-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250330195715.332106-3-marek.vasut+renesas@mailbox.org>
 
-On Sun, Mar 30, 2025 at 09:56:09PM +0200, Marek Vasut wrote:
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
-> index bb3f843c59d91..5e2624d4c62c7 100644
-> --- a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
-> +++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
-> @@ -46,12 +46,14 @@ properties:
->        - const: app
->  
->    clocks:
-> -    maxItems: 2
-> +    minItems: 2
-> +    maxItems: 3
->  
->    clock-names:
+On Sun, Mar 30, 2025 at 09:56:10PM +0200, Marek Vasut wrote:
+> Add vendor prefix for Retronix Technology Inc.
+> https://www.retronix.com.tw/en/about.html
+> 
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 
-missing minItems: 2
-
-(xxx and xxx-names are always synced in dimensions)
-
-I understand that clock is optional? Your diagram in commit msg suggests
-that clock is there always.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
