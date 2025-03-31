@@ -1,104 +1,190 @@
-Return-Path: <linux-pci+bounces-25006-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25007-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1A6DA7651C
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 13:44:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84635A766EC
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 15:32:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5118B3AAA8B
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 11:43:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 88CCE188B737
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 13:33:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 975871DF738;
-	Mon, 31 Mar 2025 11:44:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F212E212FAB;
+	Mon, 31 Mar 2025 13:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l8wfqMOR"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EB2136352;
-	Mon, 31 Mar 2025 11:43:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C1E212B3D;
+	Mon, 31 Mar 2025 13:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743421442; cv=none; b=P/ZRkyqPKSrKwodxjKzI26hRGz6FL8iTCVUuLQF/2iHkays3VXkvxb75g1fVM2hp5l8RReXoGxuH/gSk4RKjINIVsUjX2EgaIBocBdHu7J80w1vQrJeqNxBS1ScTwmR48/qV8ltex5HIuIWgNSysTh+Ot/p+NHIuF3hZfDa170s=
+	t=1743427965; cv=none; b=PGhLA7m2DfzGeTCKIsr798qKBD5JQOHICabLzJTp7rWOGgDHO3mJmjfp6KlqXN/GCarhRJ2J5InNHwA3dlInyfnp6Rsf4ZfGca+ovS48Rn5wk58L9aS75j94iJ+pPV822zVFT9awQfhqZbngXMLwqREsw+vwr3Nk3+U8DcWcsXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743421442; c=relaxed/simple;
-	bh=VwtcWRGkbuUGP9F5bdb3pyQWL/+vqoqNVSoYEpXLvX0=;
-	h=Message-ID:Date:MIME-Version:CC:From:Subject:To:Content-Type; b=ei2D+9OLaRFvBUxMnountrCgGHPTfajvOvHDj/kJs0vnI0Zm71pvei6Urs16pjqBW4Ucf3miV5p0dbQYw1NzuYInHWHg/TX6G4SSbjfZcCooVj5ZpoxHgESbUOBzCEQ3AeGnf+rPmjcsOW+ySsUZcq1w8U80VHwQbzfmj5sbnmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZR8Pg2sZVztQpp;
-	Mon, 31 Mar 2025 19:42:31 +0800 (CST)
-Received: from kwepemg200007.china.huawei.com (unknown [7.202.181.34])
-	by mail.maildlp.com (Postfix) with ESMTPS id E70B8180080;
-	Mon, 31 Mar 2025 19:43:56 +0800 (CST)
-Received: from [10.174.179.176] (10.174.179.176) by
- kwepemg200007.china.huawei.com (7.202.181.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 31 Mar 2025 19:43:55 +0800
-Message-ID: <805b2e50-00f7-40a4-975c-6bfe7d3c431b@huawei.com>
-Date: Mon, 31 Mar 2025 19:43:55 +0800
+	s=arc-20240116; t=1743427965; c=relaxed/simple;
+	bh=wCPV4I6wxnXDIBDU9w1IluZ+zjKn8hfElMW+5JaDEC0=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=jQtazTfww9BdSx/BUr7KO3dEjmmXnoHP/kmISBsyZJbf8PNyd9l5I29SN99OiHfU7DNsZ7uzrkXkdeiNuOaSeHp3/5n45ruQe5RK0QEMm6LyhXGPnWN33Wy7fVOyXZ45h8u1lgwniuUvXgOxXk8EuW77RZo/EQWkSVHTS2ba4fY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l8wfqMOR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAA63C4CEE9;
+	Mon, 31 Mar 2025 13:32:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743427965;
+	bh=wCPV4I6wxnXDIBDU9w1IluZ+zjKn8hfElMW+5JaDEC0=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=l8wfqMOR3nQ2jR199RvQllaryJPM3uSggSgD0a6d3Q+FS/v9hTzWlrmZ8HXw87d5o
+	 a6IiI+sQ8X6AOo78ctWlNfCMqWJq9/vc4YAHT2WRPsMfCLzxuINRjmGcUYNi0zgHv+
+	 43vldzx4q0+HmAnMml1kMGBwt4P8zeC7LxMM320Ue+H20uEO3MmMQhwTRdMBWHESuo
+	 ELRDW1IDQESY8y3t4LHdIdzxTjIHBjrRbQkzJ5Y20g9jM2A42zVMCH+5RZAQ+OPxgI
+	 MV8KqT8kmc+ZnbrVOoUa4bvHm7si9bj41qLY5kAUhS5vDKd0Gd0LbHivEeHzTR0Kwx
+	 wG4V4NpoOL3wA==
+Date: Mon, 31 Mar 2025 08:32:44 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: "liwei (JK)" <liwei728@huawei.com>, Xiongfeng Wang
-	<wangxiongfeng2@huawei.com>, <libang.li@antgroup.com>,
-	<bobo.shaobowang@huawei.com>, <weiliang.qwl@antgroup.com>,
-	<zhaochuanfeng@huawei.com>, <linux-pci@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-From: "liwei (JK)" <liwei728@huawei.com>
-Subject: [Question] pcie_do_recovery and pci_enable_sriov deadlock problem
-To: <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemg200007.china.huawei.com (7.202.181.34)
-
-Hi, Bjorn
-
-I have encountered a PCI-related deadlock issue triggered by a NONFATAL
-AER event during the kdump kernel boot process. However, I have not yet
-devised a suitable fix for this problem and would appreciate your
-guidance in resolving it. Could you please assist me with this?
-
-The deadlock description is as follows:
-When a device is added to the delay_probe_pending_list, the
-pci_enable_sriov function is called in the probe interface of struct
-pci_driver, if the device triggers an AER NONFATAL event and this
-process occurs during the kdump boot sequence, a deadlock will arise.
-
-       The deferred_probe_work side is:
-
-       deferred_probe_work_func
-         ...
-         __device_attach
-           device_lock                         # hold the device_lock
-             ...
-             pci_enable_sriov
-               sriov_enable
-                 ...
-                 pci_device_add
-                   down_write(&pci_bus_sem)    # wait for the pci_bus_sem
-
-       The AER side is:
-
-       pcie_do_recovery
-         pci_walk_bus
-           down_read(&pci_bus_sem)           # hold the pci_bus_sem
-             report_normal_detected
-               device_lock                   # wait for device_unlock()
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kever Yang <kever.yang@rock-chips.com>, Aradhya Bhatia <a-bhatia1@ti.com>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+ linux-renesas-soc@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ linux-kernel@vger.kernel.org, Junhao Xie <bigfoot@classfun.cn>
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250330195715.332106-1-marek.vasut+renesas@mailbox.org>
+References: <20250330195715.332106-1-marek.vasut+renesas@mailbox.org>
+Message-Id: <174342765546.2641812.18254954916877172569.robh@kernel.org>
+Subject: Re: [PATCH 0/4] arm64: dts: renesas: r8a779g3: Add Renesas R-Car
+ V4H Sparrow Hawk board support
 
 
-This issue was reported by Jay Fang <f.fangjian@huawei.com> in 2019.
-Reference link: 
-https://lore.kernel.org/linux-pci/bdfaaa34-3d3d-ad9a-4e24-4be97e85d216@huawei.com/T/#mcb7dfafd0f76beaddfc9f56a71aee6d984ed4a7f
+On Sun, 30 Mar 2025 21:56:08 +0200, Marek Vasut wrote:
+> Add Renesas R-Car V4H Sparrow Hawk board based on R-Car V4H ES3.0 (R8A779G3)
+> SoC. This is a single-board computer with single gigabit ethernet, DSI-to-eDP
+> bridge, DSI and two CSI2 interfaces, audio codec, two CANFD ports, micro SD
+> card slot, USB PD supply, USB 3.0 ports, M.2 Key-M slot for NVMe SSD, debug
+> UART and JTAG.
+> 
+> The board uses split clock for PCIe controller and device, which requires
+> slight extension of rcar-gen4-pci-host.yaml DT schema, to cover this kind
+> of description. The DWC PCIe controller driver already supports this mode
+> of clock operation, hence no driver change is needed.
+> 
+> Marek Vasut (4):
+>   dt-bindings: PCI: rcar-gen4-pci-host: Document optional aux clock
+>   dt-bindings: vendor-prefixes: Add Retronix Technology Inc.
+>   dt-bindings: soc: renesas: Document Renesas R-Car V4H Sparrow Hawk
+>     board support
+>   arm64: dts: renesas: r8a779g3: Add Renesas R-Car V4H Sparrow Hawk
+>     board support
+> 
+>  .../bindings/pci/rcar-gen4-pci-host.yaml      |   8 +-
+>  .../bindings/soc/renesas/renesas.yaml         |   7 +
+>  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>  arch/arm64/boot/dts/renesas/Makefile          |   2 +
+>  .../dts/renesas/r8a779g3-sparrow-hawk.dts     | 671 ++++++++++++++++++
+>  5 files changed, 687 insertions(+), 3 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+> 
+> ---
+> Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> Cc: "Rafał Miłecki" <rafal@milecki.pl>
+> Cc: Aradhya Bhatia <a-bhatia1@ti.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Junhao Xie <bigfoot@classfun.cn>
+> Cc: Kever Yang <kever.yang@rock-chips.com>
+> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Magnus Damm <magnus.damm@gmail.com>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Neil Armstrong <neil.armstrong@linaro.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> 
+> --
+> 2.47.2
+> 
+> 
 
-Thanks,
-Xiangwei Li
+
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: attempting to guess base-commit...
+ Base: tags/next-20250328 (exact match)
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/renesas/' for 20250330195715.332106-1-marek.vasut+renesas@mailbox.org:
+
+arch/arm64/boot/dts/renesas/r8a779g0-white-hawk.dtb: pcie@e65d0000: clock-names: ['core', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
+arch/arm64/boot/dts/renesas/r8a779g0-white-hawk.dtb: pcie@e65d8000: clock-names: ['core', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
+arch/arm64/boot/dts/renesas/r8a779g2-white-hawk-single.dtb: pcie@e65d0000: clock-names: ['core', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
+arch/arm64/boot/dts/renesas/r8a779g2-white-hawk-single.dtb: pcie@e65d8000: clock-names: ['core', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
+arch/arm64/boot/dts/renesas/r8a779f4-s4sk.dtb: pcie@e65d0000: clock-names: ['core', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
+arch/arm64/boot/dts/renesas/r8a779f4-s4sk.dtb: pcie@e65d8000: clock-names: ['core', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
+arch/arm64/boot/dts/renesas/r8a779h0-gray-hawk-single.dtb: pcie@e65d0000: clock-names: ['core', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
+arch/arm64/boot/dts/renesas/r8a779g3-white-hawk-single.dtb: pcie@e65d0000: clock-names: ['core', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
+arch/arm64/boot/dts/renesas/r8a779g3-white-hawk-single.dtb: pcie@e65d8000: clock-names: ['core', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
+arch/arm64/boot/dts/renesas/r8a779f0-spider.dtb: pcie@e65d0000: clock-names: ['core', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
+arch/arm64/boot/dts/renesas/r8a779f0-spider.dtb: pcie@e65d8000: clock-names: ['core', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
+arch/arm64/boot/dts/renesas/r8a779g0-white-hawk-cpu.dtb: pcie@e65d0000: clock-names: ['core', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
+arch/arm64/boot/dts/renesas/r8a779g0-white-hawk-cpu.dtb: pcie@e65d8000: clock-names: ['core', 'ref'] is too short
+	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
+
+
+
+
+
 
