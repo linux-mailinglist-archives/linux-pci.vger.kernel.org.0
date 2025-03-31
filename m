@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-25022-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25023-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E6C1A76F4A
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 22:30:31 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0823BA76F4F
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 22:31:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6C4B83AAE6D
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 20:30:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B441D1666CA
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 20:30:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF10621B905;
-	Mon, 31 Mar 2025 20:29:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1624D13C918;
+	Mon, 31 Mar 2025 20:29:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T4zSVxqs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PnSZSNZF"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16DC21B199;
-	Mon, 31 Mar 2025 20:29:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC39521ADC5;
+	Mon, 31 Mar 2025 20:29:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743452951; cv=none; b=Rt9srwQUClEidyHITRCwz4lx3mBM+pr6pRXVMFAOBOqvdXsveS7gZu5SBarTsqPPDwwqJM/yzMFSn9J4hG6VvdH0U/re9qwVLvIySNh8IlnKHnDptZJVOsFl5e5pZ+KpNNI5E4yurXiwpDYoPFFkcbKNgOQQFnHKpfNFXZvm9+8=
+	t=1743452957; cv=none; b=jMEAun1p9smZn8zr3U5zT7ig3dghFsyCgzjLt6AgwQ/M7yHeS7uguwy30e7eSxAj6MRdq+GNPPrjOxXldnQvOVjHofUlUOMR2xdfykQdJKJDrNK+CHftFG+MIEyAjdTT1dWQxtq5gPH5pYjFQ5RnSA4uYtvMQcm+CB3PHIGjPvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743452951; c=relaxed/simple;
-	bh=YxHRs5a6HHHdMxiYXlHaorHuDEWaBr0Vhep1wlSBUhw=;
+	s=arc-20240116; t=1743452957; c=relaxed/simple;
+	bh=4LBQYOuKWUMJKxTctedQtQnbNZFRSegEXeOdIXP3acY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SVskWtbgyf9JlbmWjODaasijU7uMJQBpXbYGD0O0ULALcvrLFnCNN6tbCV9AtLYhC3wtZF4fuRlFHMo68LdTqm/yMIKXkCfHBTIWly+OqUIMbBhGR/6ULm2YyNsDHAJWAx9aL9hVL37A57hNe/M7wjNV73hkOiDhZyhaAgAuGpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T4zSVxqs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7204FC4CEE3;
-	Mon, 31 Mar 2025 20:29:06 +0000 (UTC)
+	 MIME-Version; b=KOi4/4V+ah91pRmv09JkMyFHRpsIvpU9Xeh3crFSJ0kvUqyYQLTgZQv9Ofr+oDv0saoyIIj9PiVH31wj6U198WyuXHG81p2y5Umcsm4fvUQeXiFyx3LVEBvDXDUYiJOJ58Nj22wntOzPbHgFzxYvI591QX4u4xxzPOEYk2bD2ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PnSZSNZF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FAE9C4CEE5;
+	Mon, 31 Mar 2025 20:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743452950;
-	bh=YxHRs5a6HHHdMxiYXlHaorHuDEWaBr0Vhep1wlSBUhw=;
+	s=k20201202; t=1743452954;
+	bh=4LBQYOuKWUMJKxTctedQtQnbNZFRSegEXeOdIXP3acY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T4zSVxqsVW9dEyoK7om3DWhnKEDZFbLfanpUkkPKKbbzRg18ur3S07RpgPqSCOeTT
-	 BbamUZzpWcYj94Zw+h+oiNpNg4uG2/iq7ROS3LZRgYsx8WEyzSIbLZFi4AYVC7LloL
-	 QFgSvI/oJRGSglsxkgcxHBI0QWi8KNQ2KYaH+BtQolmwFWI5iZ6Q+kw3kvcCcfEKw0
-	 XJKA2PUqVv1ZxVStVclslMZlEjM0nc6QxHJViZ39IAZnPrzGptSayImcmddky2Js2b
-	 s7STfAH4LRrgLwnF1VVd+98NTbYOXimpD/TwPhFQLfxGOBppYOuYi2SaQoLzZDAaTM
-	 4CSYexckOuaeQ==
+	b=PnSZSNZFiPLA+JW4CNZQW+GSBuNbsGx57oQDJaYQQWb4AX+fHsMPh37/lTp7YJoIW
+	 fbDl9cD9HxY4LFAvn2W2Cz+NXwWjjYxF9EgdX3cmUyTEitNDx4AowIcmYjTHN8sVdc
+	 cUwp3P49l/bIgKpOBu4+ARPSKX2JA0txJLx3zvoho9ecCXkyZACppYEjTqnA7Jl6NL
+	 N4Y9UO0Z4nf1wjp6GL8NhDZjsXQRbQIm4AR6SUbzS3Zqeq8eHJzYg6WpaR/1Oj1jnD
+	 NnQGU0q6EDofYUNSGwXWSsR+kKJ/8VazrM3736PSxGrvBaV1CAahQI/IrDZh7a9lxD
+	 phZ+su4qUzeYg==
 From: Danilo Krummrich <dakr@kernel.org>
 To: bhelgaas@google.com,
 	gregkh@linuxfoundation.org,
@@ -61,9 +61,9 @@ Cc: ojeda@kernel.org,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 5/9] rust: pci: preserve device context in AsRef
-Date: Mon, 31 Mar 2025 22:27:58 +0200
-Message-ID: <20250331202805.338468-6-dakr@kernel.org>
+Subject: [PATCH 6/9] rust: device: implement Bound device context
+Date: Mon, 31 Mar 2025 22:27:59 +0200
+Message-ID: <20250331202805.338468-7-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250331202805.338468-1-dakr@kernel.org>
 References: <20250331202805.338468-1-dakr@kernel.org>
@@ -75,47 +75,64 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since device::Device has a generic over its context, preserve this
-device context in AsRef.
+The Bound device context indicates that a device is bound to a driver.
+It must be used for APIs that require the device to be bound, such as
+Devres or dma::CoherentAllocation.
 
-For instance, when calling pci::Device<Core> the new AsRef implementation
-returns device::Device<Core>.
+Implement Bound and add the corresponding Deref hierarchy, as well as the
+corresponding ARef conversion for this device context.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/pci.rs | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ rust/kernel/device.rs | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index e235aa23c63a..de140cce13cf 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -360,11 +360,13 @@ fn deref(&self) -> &Self::Target {
-     }
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index 2d98e650376e..a7da1519439d 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -230,13 +230,19 @@ pub trait DeviceContext: private::Sealed {}
+ /// any of the bus callbacks, such as `probe()`.
+ pub struct Core;
+ 
++/// The [`Bound`] context is the context of a bus specific device reference when it is guranteed to
++/// be bound for the duration of its lifetime.
++pub struct Bound;
++
+ mod private {
+     pub trait Sealed {}
+ 
++    impl Sealed for super::Bound {}
+     impl Sealed for super::Core {}
+     impl Sealed for super::Normal {}
  }
  
--impl Device {
-+impl<Ctx: device::DeviceContext> Device<Ctx> {
-     fn as_raw(&self) -> *mut bindings::pci_dev {
-         self.0.get()
-     }
-+}
++impl DeviceContext for Bound {}
+ impl DeviceContext for Core {}
+ impl DeviceContext for Normal {}
  
-+impl Device {
-     /// Returns the PCI vendor ID.
-     pub fn vendor_id(&self) -> u16 {
-         // SAFETY: `self.as_raw` is a valid pointer to a `struct pci_dev`.
-@@ -438,8 +440,8 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
-     }
+@@ -265,7 +271,12 @@ fn deref(&self) -> &Self::Target {
+ #[macro_export]
+ macro_rules! impl_device_context_deref {
+     ($device:tt) => {
+-        kernel::__impl_device_context_deref!($crate::device::Core, $crate::device::Normal, $device);
++        kernel::__impl_device_context_deref!($crate::device::Core, $crate::device::Bound, $device);
++        kernel::__impl_device_context_deref!(
++            $crate::device::Bound,
++            $crate::device::Normal,
++            $device
++        );
+     };
  }
  
--impl AsRef<device::Device> for Device {
--    fn as_ref(&self) -> &device::Device {
-+impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for Device<Ctx> {
-+    fn as_ref(&self) -> &device::Device<Ctx> {
-         // SAFETY: By the type invariant of `Self`, `self.as_raw()` is a pointer to a valid
-         // `struct pci_dev`.
-         let dev = unsafe { addr_of_mut!((*self.as_raw()).dev) };
+@@ -287,6 +298,7 @@ fn from(dev: &$device<$src>) -> Self {
+ macro_rules! impl_device_context_into_aref {
+     ($device:tt) => {
+         kernel::__impl_device_context_into_aref!($crate::device::Core, $device);
++        kernel::__impl_device_context_into_aref!($crate::device::Bound, $device);
+     };
+ }
+ 
 -- 
 2.49.0
 
