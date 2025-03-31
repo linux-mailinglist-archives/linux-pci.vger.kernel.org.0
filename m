@@ -1,162 +1,151 @@
-Return-Path: <linux-pci+bounces-25001-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25002-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BE0AA76308
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 11:15:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8A57A76317
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 11:20:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10370164552
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 09:15:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0FD12188AF2B
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 09:20:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F8E01DA62E;
-	Mon, 31 Mar 2025 09:15:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 736AA1DB92C;
+	Mon, 31 Mar 2025 09:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="G0X9+3mE"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KRiVozBi"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF751D5CEA;
-	Mon, 31 Mar 2025 09:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C12515624B
+	for <linux-pci@vger.kernel.org>; Mon, 31 Mar 2025 09:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743412520; cv=none; b=G31Lj6Fdg9u2vmlWf04gvBgzpN4q3rJXq6jPoIiRH/+w0xEls7pevSK/KcUmPcnDy7VhZc5+L8yUjzR1osV/EDMBkwKtTZKrU5UBq6fOYrUUn+q7aAafAyJO+jRufv/QICLA6Hwdku1IBnkvT6OoBAAmwG/pcYnd7LvzWgLyrFk=
+	t=1743412832; cv=none; b=YXw5OHoYdgwoEeMzHabSgt6PK32FH/1VNfb/6Zdw2sT5A+sjUC8dpE4CVZIwZaoFLTRGRsK84+XSwaHSR+5UTODvk5g7HJ613uVwEVdRDwYv41vIWG5SevPmXGQ7m/i3FYUpF2a2enO5PtKSB5J5RHk1XSGZL8klClJVoU+v2tI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743412520; c=relaxed/simple;
-	bh=KlrxH/fPLdOyko3ZuF/Ylr9/egR0t8CZiXQy3CK+cwE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=V7pT9lCfnA74HLXF+025UrzcC9mkrGyjBZETmAcQggul5lZW53GoRaXsMtQjwIEb9AN9AyKYyOEj8Hw3frgqo6q+Pzq550WTs+8tBIKSOs+uTW2+OGgdfgjZB/w1VdLdqZwylqKKA8MzB8Fsrs4wM6wTE7NY8a28CytGoZ/FXOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=G0X9+3mE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52V6kbB4007189;
-	Mon, 31 Mar 2025 09:15:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	nEpx60HZ0imJLIebaYfsG4riJUfLcjjdp4ZTxj34Ops=; b=G0X9+3mEQ6PHzsh1
-	4RMBt8idz1r4U0cMnVCWL1qCyhLKP1JeDYuparMA7bDty1jOzM8spA917zEwAwj+
-	BDnquWPIg3D1NT24FyF/mGpEsxtz86NHL6U6oQRDQagecsuA5RAs5WkR0lLq6LGP
-	/PSjQxFiO1YWN1poFH68PMW5WNtmYDlfDR4chb/KcI+9kS+tGo7ShDB/nf8B63Z1
-	bA+TDT+2K0dUJcZiZtFlq/UZ5caSam3ZJGBVZQ7WtwP523ihNgf26IcxLWfkMTbA
-	GcFDs8FljZuPGCkLXaJ/qhztsTv+yXY5qbyHxtzG6xrWM/1G1EgcvKhWmRvbqPKt
-	WaQh9A==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p989430v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 09:15:09 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52V9F8rE026506
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 31 Mar 2025 09:15:08 GMT
-Received: from [10.233.19.224] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 31 Mar
- 2025 02:15:04 -0700
-Message-ID: <b9e0ab16-f17c-4880-af23-a4aa93f2da34@quicinc.com>
-Date: Mon, 31 Mar 2025 17:15:00 +0800
+	s=arc-20240116; t=1743412832; c=relaxed/simple;
+	bh=FH4g3fvpXV3lHKpvSvhwmjnLhb7FANS7ey999xYBE4E=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=egS2O+yk5YEw1+fkZCoSahSCDroGQRcbPMUCeHzIXcePYw0f9FVTdKFwj47vV01n2zs0e4rxRNjWqGDBnMIdxqHqTaSYkGEhv3x2Y+EJbWj6EFugfo8JLZFV9tpBVb0dR0YYSoWTAjP4l8r1igNT6R30afpo5EhF23ASYeDoWg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KRiVozBi; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2bfcd2a70so559287866b.0
+        for <linux-pci@vger.kernel.org>; Mon, 31 Mar 2025 02:20:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1743412829; x=1744017629; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vkzLnbFVOYDObQyUvRiCdFcMVyW9LHfEzzCWp7sSsRM=;
+        b=KRiVozBiaD6Kw3Pe2tHxOX3+sF2WPnMfxe0qGzETpUM24tWd+QSYBSVGbtoOH+Lf/v
+         +R3mO75sLVqqRD1xFpXQBHW4As8vEdAEylmTBrkzoqpnk1WNOkCUbSDImGqk3izW2ANz
+         tpjuW/L7I/Objb1MWNXG7mK+GkgoscDi/8K8Kc4Wa2wT8y2qo8sBAeDxWPxXfQOgV9Y9
+         KB6/5qy/9zWilcUFunTXHLVUZZF7mkz6b8+Z8VRVXHyXiTxn5bWvs+3dkYKuZw5rltDU
+         A0BfzLCeqaYRDnGdUiq7KSGZUsrjwJnRQGSyLmEcJ61kaI7wvFyb9YEnXfI9EgO+iyE2
+         sMfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743412829; x=1744017629;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vkzLnbFVOYDObQyUvRiCdFcMVyW9LHfEzzCWp7sSsRM=;
+        b=KROrZ2uGbqcae1BEazrIntZaeRyEeYJjNNZXRaM1VMFsQDroo1lAMcpKxh8Lnwl7vd
+         u12kzJHDxXf2uFKo+lbbR7w4aTgIIwr6n8QiCgQRbxhBOGp7mfIKkrGjpQ0QE3ZAnpaa
+         2q6IROPIdDd0lyk7n2na18eXDhaGIMSUeSjb6HrAgDjUdN4+U+MddOKtiYttpmZhypwz
+         acGQnabQa/J3UxzhVUOquCOc5jC6B7syY0pYGp8emELO9ZDzUzxkgx1UR/dSp+yZKiHR
+         F0bmLE2BDBMEwzRHWtBaRylxuNRoNvt54IbWHOUJN7Kh3mpu85r1wiBclRWRhkrAnpGQ
+         0oOw==
+X-Forwarded-Encrypted: i=1; AJvYcCVSssNP57BpAKR1+3xsFXokZhO/g5SOkBVM3C1G1Z9DJXAYlQONUzu3x1+W9LxpVi7R+mgz9G1EUhE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznUl9LmlQuHC1zIhM/vL7wDszEY95QFMAKT0F5P2pqTuN34r2w
+	nJMIGx6AOv3xIjAm2HWCNvhrK9KExgEn8yGTyF/wY7F6jXv2dJJCFFpH6GGOBjY=
+X-Gm-Gg: ASbGncs7VOsMHCSfO3aSsum+4OkT46apEx5C0ntsrz32SGwaxhDHLJ+JXK4e8sCgyWc
+	D1zSCvRNQXYowOE/vH8W5I/53Wpeq3TLQYjfefL7diuyrK1RDD041cFrKkTNEO8YiyuSAZAJ1eb
+	+cHcW5sqN35AIn5Fmb7fAlB878VUfajKMsFeCSXe7yutO+Vodic7EF3YrrVWG9qji2YKaHzOh7h
+	JwmTmLG0OFGIHU8vYrKGc0W/AGNQ3pClryjmQu6o2gsM+vXcxbWblYw78nj0qhaaa8WzNbueRZc
+	3Z5stx5sc5rlylIBduYV7fYIratVLVlfDN3dMtwY0bLAZWU1fz8UNghr5+6JGEWN7Wuqr0oKYyF
+	ebiQS3jQaMe3NNBHTEpYKJFY=
+X-Google-Smtp-Source: AGHT+IFw4ZQBM4RCOBDHsaOKEO0WJ/K/tqyXI3QtId7X55gIJKhmKgjgqUxtnj7DaAzH7tFUE8PTlQ==
+X-Received: by 2002:a17:907:8686:b0:ac3:ef11:8787 with SMTP id a640c23a62f3a-ac738b910e3mr830432866b.54.1743412828665;
+        Mon, 31 Mar 2025 02:20:28 -0700 (PDT)
+Received: from localhost (host-87-5-222-245.retail.telecomitalia.it. [87.5.222.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7192f0c66sm591000666b.78.2025.03.31.02.20.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 02:20:28 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Mon, 31 Mar 2025 11:21:45 +0200
+To: Krzysztof Wilczynski <kw@linux.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com
+Subject: Re: [PATCH v8 08/13] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <Z-peqcNpvIbKa1MT@apocalypse>
+References: <cover.1742418429.git.andrea.porta@suse.com>
+ <3fbc487bc0e4b855ffbee8ed62cfb6bf3b0592e8.1742418429.git.andrea.porta@suse.com>
+ <20250323114945.GD1902347@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: dwc: Set PORT_LOGIC_LINK_WIDTH to one lane
-To: <jingoohan1@gmail.com>, <manivannan.sadhasivam@linaro.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <quic_cang@quicinc.com>, <mrana@quicinc.com>,
-        yuqiang
-	<quic_qianyu@quicinc.com>
-References: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
-Content-Language: en-US
-From: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>
-In-Reply-To: <1524e971-8433-1e2d-b39e-65bad0d6c6ce@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=fIk53Yae c=1 sm=1 tr=0 ts=67ea5d1d cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=T5eSNwPAh3uAPVkemP4A:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: logPyLmu-ybid1oRvkfAMx5K8wpO-kX0
-X-Proofpoint-ORIG-GUID: logPyLmu-ybid1oRvkfAMx5K8wpO-kX0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-31_04,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 mlxscore=0 adultscore=0 phishscore=0 suspectscore=0
- mlxlogscore=999 clxscore=1011 lowpriorityscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503310065
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250323114945.GD1902347@rocinante>
 
-On 12/12/2024 4:19 PM, Wenbin Yao (Consultant) wrote:
-> PORT_LOGIC_LINK_WIDTH field of the PCIE_LINK_WIDTH_SPEED_CONTROL register
-> indicates the number of lanes to check for exit from Electrical Idle in
-> Polling.Active and L2.Idle. It is used to limit the effective link 
-> width to
-> ignore broken or unused lanes that detect a receiver to prevent one or 
-> more
-> bad Receivers or Transmitters from holding up a valid Link from being
-> configured.
->
-> In a PCIe link that support muiltiple lanes, setting 
-> PORT_LOGIC_LINK_WIDTH
-> to 1 will not affect the link width that is actually intended to be used.
-> But setting it to a value other than 1 will lead to link training fail if
-> one or more lanes are broken.
->
-> Hence, always set PORT_LOGIC_LINK_WIDTH to 1 no matter how many lanes the
-> port actually supports to make linking up more robust. Link can still be
-> established with one lane at least if other lanes are broken.
->
-> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c 
-> b/drivers/pci/controller/dwc/pcie-designware.c
-> index 6d6cbc8b5b2c..d40afe74ddd1 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -752,22 +752,19 @@ static void 
-> dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
->      /* Set link width speed control register */
->      lwsc = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
->      lwsc &= ~PORT_LOGIC_LINK_WIDTH_MASK;
-> +    lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
->      switch (num_lanes) {
->      case 1:
->          plc |= PORT_LINK_MODE_1_LANES;
-> -        lwsc |= PORT_LOGIC_LINK_WIDTH_1_LANES;
->          break;
->      case 2:
->          plc |= PORT_LINK_MODE_2_LANES;
-> -        lwsc |= PORT_LOGIC_LINK_WIDTH_2_LANES;
->          break;
->      case 4:
->          plc |= PORT_LINK_MODE_4_LANES;
-> -        lwsc |= PORT_LOGIC_LINK_WIDTH_4_LANES;
->          break;
->      case 8:
->          plc |= PORT_LINK_MODE_8_LANES;
-> -        lwsc |= PORT_LOGIC_LINK_WIDTH_8_LANES;
->          break;
->      default:
->          dev_err(pci->dev, "num-lanes %u: invalid value\n", num_lanes);
+Hi Krzysztof,
 
-Hello, do you have any futher comments?
+On 20:49 Sun 23 Mar     , Krzysztof Wilczynski wrote:
+> Hello,
+> 
+> Thank you for sending new version.  Appreciated.
+> 
+> > +	case IRQ_TYPE_LEVEL_HIGH:
+> > +		dev_dbg(&rp1->pdev->dev, "MSIX IACK EN for irq %u\n", hwirq);
+> > +		msix_cfg_set(rp1, hwirq, MSIX_CFG_IACK_EN);
+> > +		rp1->level_triggered_irq[hwirq] = true;
+> 
+> [...]
+> > +		if (!irq) {
+> > +			dev_err(&pdev->dev, "Failed to create irq mapping\n");
+> > +			err = -EINVAL;
+> > +			goto err_unregister_interrupts;
+> > +		}
+> 
+> A small nitpick: "IRQ" in both of the above.  Not a blocker, though, so
+> feel free to ignore this feedback.
 
--- 
-With best wishes
-Wenbin
+Ack.
 
+Many thanks,
+Andrea
+
+> 
+> 	Krzysztof
 
