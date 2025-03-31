@@ -1,135 +1,200 @@
-Return-Path: <linux-pci+bounces-25009-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25010-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 672A1A76717
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 15:48:27 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C98AEA768D3
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 16:55:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B72183AA9E1
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 13:48:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 030441890F2C
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 14:52:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDB0F1E3793;
-	Mon, 31 Mar 2025 13:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97856219A97;
+	Mon, 31 Mar 2025 14:39:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="u2Txhu/p";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="lc/nK/HG"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="BzEI8m5B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9221DED47;
-	Mon, 31 Mar 2025 13:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427B8219A93
+	for <linux-pci@vger.kernel.org>; Mon, 31 Mar 2025 14:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743428901; cv=none; b=TOdfVov5vnVPV0D1ZMzWQTVTdV8INgP4AWuEQYP/EvZfqT5c+Yuc4x8gdKxTLiu3OaJDAAvT1eAM6dboH0Tts85HuNrc+uxYO4ieLa0Tmg/nXqe5H26Q6R/kY7uha8gzOLjLH+3qXWhhGQCGhPHlUfmFSChyx1FCwE4/G/WuiKI=
+	t=1743431978; cv=none; b=UGEp3xuB6m0wPatzAGmPkEDpF7apufDuRnnISinIbyZQzuAE6FslDY4KSheKhJLMiTZrfsoVld10xTwY9wOCOCmuQys5S9CmWKZf0SMU3DyL054ebRsYCdMU4erCnqzfQTtIyx+LTIYixZrQx1yGtBFdNTnsWaT9AdhRHKji1Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743428901; c=relaxed/simple;
-	bh=a6YbF51RquKYdM00wX8FTZ5Fe+kgtZnlAWuuyURxYFA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G/UhIxaireauZ2U1KDrEsc/wsS5yHI3cFHvfz2MAFL7IKLtI3VEo7mbCUbnr3gZrLlKXzAjyW+VffnuDP1+99vOhIlLg5bo3KKkEY2Ib7Ku5pW8uiMyqm+jZ7UuIgWOcqf9KbMaOlcQoZIHKjd3wBob4/JgMpbZChoGNTEcQdRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=u2Txhu/p; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=lc/nK/HG; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4ZRCBh03Zpz9sbC;
-	Mon, 31 Mar 2025 15:48:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1743428892;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9RqYvmo1+63hE4DUnTOfQUG6qgRimzlpGgLI65lJ95Q=;
-	b=u2Txhu/pFD+mb7d5yvwNb99Axh74qUezDKL4vtc1Q5s+TVMQ1Z1UDvF0UHRp9ubC9Q7J84
-	SghQtkFciAjeCQDE4DFFVGEvU4taVNyjCkOta/FM4VdIB13a6H7Rh1MPIeiHzuZv74wYtC
-	IpW68WP3P8Tj668HnQpwAsvtc+udLouWLpSqPXmKpxVqdGRT906dB83ajzNy/N0aNgx0fx
-	QgwkXjDYrt5vULK0n2kcuEBTd8vU7Q0fyZdDnS4AH4BYJFzWntT3unGIhA5dtwBICN7HJT
-	muq214yZd32J1vW3YgOrnzyapyv6StNJqF7i96asDmZQEqTyVbrbUf6owOGLSQ==
-Message-ID: <daed453d-5b52-4bb6-810d-9195491e04c0@mailbox.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1743428889;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9RqYvmo1+63hE4DUnTOfQUG6qgRimzlpGgLI65lJ95Q=;
-	b=lc/nK/HGdnYy1zFMmImCHE0GuW93KXWyGIwHwRKiNopDIwcV9lkCL3azV9QutivFu25zKM
-	clU1gVg0vXBzuHDBOBEK/vi7DVXBN1pfxccqN8T8P/IaA8l63tYg4fmJanyRWihi6ASwRn
-	ZNqpgUO0EM+stOy2jJJE0B3237qSC1qQrCrCAwVQf1R5t/wcJfj122/PaY1OBnX5awfKF7
-	4ypNczXQHG3b44NNN5Iy78OjPQt9calfabsOOoB04Y7ZhY6ttCVoZruNX6VJdn9AbOasS1
-	vrVP27Y8id7goZGEfpGcMTjcfNLjdJNiJt2KfQV2kGtpNXStAc9PEha0TRhS+A==
-Date: Mon, 31 Mar 2025 15:48:04 +0200
+	s=arc-20240116; t=1743431978; c=relaxed/simple;
+	bh=ibQs+2z/9wxImQljXJmUepINT8PM9pQOCQn3UePZQE0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Hi1VTRfTVOUx8PyOY8OAitVFrHrJw0tNwnNUYfShR6qWXqlG7iLnQLz4Bpr3ANwMc4p01nFZWAPgssLQrNcyHXSjRV0wRNUlrKuiPSHGCrmt43pYu5Vudiq8b/FIW4YznVRvByhY4SL0Y7PCidxHITFsdshIkWTkr8kBdficq0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=BzEI8m5B; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3914a5def6bso2546443f8f.1
+        for <linux-pci@vger.kernel.org>; Mon, 31 Mar 2025 07:39:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1743431974; x=1744036774; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aH1MmO7i2EM9dG0Zv4KTfxBqqxe5CAwWZFTr2eT74Go=;
+        b=BzEI8m5BQntZAzZFPxHnumOh3BXc8a+JgY1ZZ+upLKvtad7mKJu5NBZpu3XlVxMwNB
+         /og/8oUR646h2iuBovc9LyqWJdPor+a91w5tH+wYKbJc2TjawQzT9B2e57CJ7EvM5Tko
+         uLysYOe0cvEuRAWF9J+C5Cxf282yrjBF+KRAKov/z1xUMQWsX72I1IuPwHGSzsdBpeMZ
+         OHHSmgQoXm/RTGFXMFdJMpTmggXe8zkO6jEupLg+VELMrJaCo02QjgISZnUtctoa3sBh
+         NgyU9vMrmeIySDJv7b6YqE+ip8tUQgxFtsqixxgO/V+RqUtj8yj/20WcwsoJ9L452ZSI
+         sfcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743431974; x=1744036774;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aH1MmO7i2EM9dG0Zv4KTfxBqqxe5CAwWZFTr2eT74Go=;
+        b=Za920aSCoHaZdWVBcbBsWGpahmoqF+7VOhp/CDNt9FL6Mu0vRersaXfCLVSebKR9Vn
+         OhboegcZCh4Amh4hMWyE6voM8G7mcYU/tyEoIrdOrbC1vn5i0Nj2E0Cx1I2v6Kng5A5I
+         O2orJ8GD/yUq/gLd9MWEygFtwVnomxR2dx2X4ZXWVofu9kYA3LPJIb1XkZcgomrJikCN
+         6YFRsCPXQ1DqxoXcTC4ch/btrJAdXTJ2Yrxb8BkvFzSIWp1nGXrlIGZGi0oPCDIHAG5u
+         iSaqEsHiEtb1NPiRQAP4fewqDN+l6oASV42jXU9rt/r5D+2nEPidX9MX9q5QHHi0zpKx
+         C+Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCUCNaVFpL3zFSDlAtNpp/yd+8T+elcTz7gZvGK/I01d2nHS3udnHuo9XnNXMte9lHvtfUKd/N2CeLo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS4s3NflFOwhMElFYH95g1UGxmTPGlxohT1/zr2sTgVESx/VJg
+	ta4PQ4wsjgvXQJieEx7rT2xTG9O5Zi4AA1+QJtWeF7fV4bQk8IHUFKE/xC+LET0=
+X-Gm-Gg: ASbGncvyg7+fIK1ay+Rz5cql8Bah5sU6P7nQHg74UsqFTWFsp5A77fXSNuWftFUqju1
+	PW4YasLw5BTorSvvS6ExtahTSco27yv04miw+FY5ZrhIiyekyECr3lovhpLSoCnLU48VRX6YEOO
+	tOaKB81+7lQGbKb9PAfKhwmAqgYcEVA7PKWKrhG+iYpeMf005VYw5lROOAdKnczsycJS0WdYJgs
+	BvdRIoWPRgr8fP+aALwSpu4wjbFa49EdaVhx/X06P0oZ0nzWRrDuN8EWW+jRiNGGLfDWS3A5bj8
+	3i7FgTNP2roTsrqQNzDdgwU3iiu3AzbuUbBdFjCaJLvQ
+X-Google-Smtp-Source: AGHT+IEQ/uIqH9TixYrcpDyssxC9uv+FPOAFMaFbCicsPzmrZZQcMc04/p5NwViA6XXeBDzftKYg8w==
+X-Received: by 2002:a5d:6d8d:0:b0:39a:ca04:3dff with SMTP id ffacd0b85a97d-39c1211805dmr6850731f8f.40.1743431974481;
+        Mon, 31 Mar 2025 07:39:34 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:93ce:f27b:6168:641b])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c0b658b7bsm11306445f8f.20.2025.03.31.07.39.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 07:39:33 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  Krzysztof
+ =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,  Kishon Vijay Abraham I
+ <kishon@kernel.org>,
+  Bjorn Helgaas <bhelgaas@google.com>,  Lorenzo Pieralisi
+ <lpieralisi@kernel.org>,  Jon Mason <jdmason@kudzu.us>,  Dave Jiang
+ <dave.jiang@intel.com>,  Allen Hubbe <allenbh@gmail.com>,  Marek Vasut
+ <marek.vasut+renesas@gmail.com>,  Yoshihiro Shimoda
+ <yoshihiro.shimoda.uh@renesas.com>,  Yuya Hamamachi
+ <yuya.hamamachi.sx@renesas.com>,  linux-pci@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  ntb@lists.linux.dev,  dlemoal@kernel.org
+Subject: Re: [PATCH 1/2] PCI: endpoint: strictly apply bar fixed size to
+ allocate space
+In-Reply-To: <Z-pO_c2zXxDqvIsU@ryzen> (Niklas Cassel's message of "Mon, 31 Mar
+	2025 10:14:53 +0200")
+References: <20250328-pci-ep-size-alignment-v1-0-ee5b78b15a9a@baylibre.com>
+	<20250328-pci-ep-size-alignment-v1-1-ee5b78b15a9a@baylibre.com>
+	<Z-pO_c2zXxDqvIsU@ryzen>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Mon, 31 Mar 2025 16:39:33 +0200
+Message-ID: <1jwmc5tgbe.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/4] arm64: dts: renesas: r8a779g3: Add Renesas R-Car V4H
- Sparrow Hawk board support
-To: "Rob Herring (Arm)" <robh@kernel.org>,
- Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Bjorn Helgaas <bhelgaas@google.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Magnus Damm <magnus.damm@gmail.com>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- Conor Dooley <conor+dt@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kever Yang <kever.yang@rock-chips.com>, Aradhya Bhatia <a-bhatia1@ti.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
- <rafal@milecki.pl>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- linux-renesas-soc@vger.kernel.org,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- linux-kernel@vger.kernel.org, Junhao Xie <bigfoot@classfun.cn>
-References: <20250330195715.332106-1-marek.vasut+renesas@mailbox.org>
- <174342765546.2641812.18254954916877172569.robh@kernel.org>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <174342765546.2641812.18254954916877172569.robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-ID: 307f491e7583be5091d
-X-MBO-RS-META: 3a3a1xx19f3anshqfe6z94mdr4ak1cfq
-X-Rspamd-Queue-Id: 4ZRCBh03Zpz9sbC
+Content-Type: text/plain
 
-On 3/31/25 3:32 PM, Rob Herring (Arm) wrote:
+On Mon 31 Mar 2025 at 10:14, Niklas Cassel <cassel@kernel.org> wrote:
 
-Hi,
+> Hello Jerome,
+>
+> On Fri, Mar 28, 2025 at 03:53:42PM +0100, Jerome Brunet wrote:
+>> When trying to allocate space for an endpoint function on a BAR with a
+>> fixed size, that size should be used regardless of the alignment.
+>
+> Why?
+>
+>
+>> 
+>> Some controller may have specified an alignment, but do have a BAR with a
+>> fixed size smaller that alignment. In such case, pci_epf_alloc_space()
+>> tries to allocate a space that matches the alignment and it won't work.
+>
+> Could you please elaborate "won't work".
+>
 
-> My bot found new DTB warnings on the .dts files added or changed in this
-> series.
-> 
-> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-> are fixed by another series. Ultimately, it is up to the platform
-> maintainer whether these warnings are acceptable or not. No need to reply
-> unless the platform maintainer has comments.
-> 
-> If you already ran DT checks and didn't see these error(s), then
-> make sure dt-schema is up to date:
-> 
->    pip3 install dtschema --upgrade
-> 
-> 
-> This patch series was applied (using b4) to base:
->   Base: attempting to guess base-commit...
->   Base: tags/next-20250328 (exact match)
-> 
-> If this is not the correct base, please add 'base-commit' tag
-> (or use b4 which does this automatically)
-> 
-> New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/renesas/' for 20250330195715.332106-1-marek.vasut+renesas@mailbox.org:
-> 
-> arch/arm64/boot/dts/renesas/r8a779g0-white-hawk.dtb: pcie@e65d0000: clock-names: ['core', 'ref'] is too short
-> 	from schema $id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
-I believe this will be fixed by input from Krzysztof on 1/4 which I 
-already added to V2 , thanks !
+As I explained in the cover letter, I'm trying to enable vNTB on the
+renesas platform. It started off with different Oopses, apparently
+accessing unmapped area, so I started digging in the code for anything
+that looked fishy. There was several problems leading to this but it
+ended with errors in pci_epc_set_bar() as you are pointing out bellow.
+
+>
+>> 
+>> When the BAR size is fixed, pci_epf_alloc_space() should not deviate
+>> from this fixed size.
+>
+> I think that this commit is wrong.
+>
+> In your specific SoC:
+>  	.msix_capable = false,
+>  	.bar[BAR_1] = { .type = BAR_RESERVED, },
+>  	.bar[BAR_3] = { .type = BAR_RESERVED, },
+> 	.bar[BAR_4] = { .type = BAR_FIXED, .fixed_size = 256 },
+>  	.bar[BAR_5] = { .type = BAR_RESERVED, },
+>  	.align = SZ_1M,
+>
+> fixed_size is 256B, inbound iATU alignment is 1 MB, which means that the
+> smallest area that the iATU can map is 1 MB.
+>
+> I do think that it makes sense to have backing memory for the whole area
+> that the iATU will have mapped.
+>
+> The reason why the the ALIGN() is done, is so that the size sent in to
+> dma_alloc_coherent() will return addresses that are aligned to the inbound
+> iATU alignment requirement.
+>
+
+Makes sense and thanks a lot for the detailed explanation. Much appreciated.
+
+>
+> I guess the problem is that your driver has a fixed size BAR that is smaller
+> than the inbound iATU alignment requirement, something that has never been a
+> problem before, because no SoC has previously defined such a fixed size BAR.
+>
+
+There is always a first I guess ;)
+
+> I doubt the problem is allocating such a BAR, so where is it you actually
+> encounter a problem? My guess is in .set_bar().
+
+pci_epc_set_bar() indeed. It seems the underlying dwc-ep driver does not
+care too much what it is given for a fixed bar:
+
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-designware-ep.c#n409
+
+>
+> Perhaps the solution is to add another struct member to struct pci_epf_bar,
+> size (meaning actual BAR size, which will be written to the BAR mask register)
+> and backing_mem_size.
+>
+> Or.. we modify pci_epf_alloc_space() to allocate an aligned size, but the
+> size that we store in (struct pci_epf_bar).size is the unaligned size.
+
+I tried this and it works. As pointed above, as long as pci_epc_set_bar() is
+happy, it will work for me since the dwc-ep driver does not really care for
+the size given with fixed BARs.
+
+However, when doing so, it gets a bit trick to properly call
+dma_free_coherent() as we don't have the size actually allocated
+anymore. It is possible to compute it again but it is rather ugly.
+
+It would probably be best to add a parameter indeed, to track the size
+allocated with dma_alloc_coherent(). What about .aligned_size ? Keeping
+.size to track the actual bar size requires less modification I think.
+
+>
+>
+> Kind regards,
+> Niklas
+
+-- 
+Jerome
 
