@@ -1,660 +1,191 @@
-Return-Path: <linux-pci+bounces-25013-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25014-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F377A76C21
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 18:41:16 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6D46A76CE9
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 20:29:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B9267188E02F
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 16:40:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D2EC166693
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 18:29:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A2D5214A92;
-	Mon, 31 Mar 2025 16:39:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4856216E23;
+	Mon, 31 Mar 2025 18:29:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="beprDTwe"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="B2HQaz53"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2074.outbound.protection.outlook.com [40.107.103.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C42214A93;
-	Mon, 31 Mar 2025 16:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743439197; cv=none; b=jR8BK3mS5eOazmj7u6DykeciLt4qChNoX5Czjon2OdkBD5lJk2jp/RuMfY1dLO4vNjFFS7nG0nQnPomMRvrQBBNY+7t+XK3d4RLlyiG/ddc6jx3mAbDvOCkPAvhn8TdQ/dKjNt7wMbkxHQntXJa1YBLxbHH4NKKcu9qvDKlRc+k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743439197; c=relaxed/simple;
-	bh=qXG5PHT6tlVlTcFTiHxE04VnFfN/PkHPJd2NMFps+zA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Zi7D5pnpWKvKIzCJC6qJDqaNHJki15bC+Y0gydjbLrNS1AH9tm6FTygdPsjdieYWxDLbCVFbM+Vl8clFxJ8KFmacvcYwTbSJQJcaKUh21ZEJCAagDosFjQkkejzdtKdsdLBHVxecCdIaozY5svIVGnE/iZJE0mVqsChdPFxkK4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=beprDTwe; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743439195; x=1774975195;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=qXG5PHT6tlVlTcFTiHxE04VnFfN/PkHPJd2NMFps+zA=;
-  b=beprDTwedgImqqfIM9x13wYMLXL//j7XvC0G5Oda6lbW0W7oO5P4xKL3
-   Mx19Aek5XE35Vhshlbb+YXHylEk7m8XZ7GtrUgt7LTXf08ZXtT2x/H3io
-   o7EnKmXQ3YdeIWCTx8DXriLn0oyFJy34TRs7WEVYvj8X2Sm+RSmT5EVJ7
-   5myaG+7b8KyXaehvqHiidTmhDo5VdtFjbH/WWgOhDzjrpha2/Ch5ASDoz
-   wlr3DDeJOyG0Pt4RkUUkHtjqqAgUbrApYAp9Sr7a3uAGwuimnSEYhLsr3
-   Una6bBDVI79S3R9BHfEkPpY2vBYNdpoOuHnEon9kuSxEnw7089v2vpoRm
-   A==;
-X-CSE-ConnectionGUID: LluK6bFxQcqm4eXq/Il0IA==
-X-CSE-MsgGUID: Rsa7BCJhTpOWCh/I31bh8w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="44446392"
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="44446392"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 09:39:54 -0700
-X-CSE-ConnectionGUID: AZ+j1FU3SpuqZ+iFZixnyQ==
-X-CSE-MsgGUID: 1NmxkuvIQDm7hZfYnIR8Xg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,291,1736841600"; 
-   d="scan'208";a="126599097"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.34])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 09:39:51 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 31 Mar 2025 19:39:48 +0300 (EEST)
-To: Hans Zhang <18255117159@163.com>
-cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, lpieralisi@kernel.org, kw@linux.com, 
-    robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [v6 3/5] PCI: cadence: Use common PCI host bridge APIs for
- finding the capabilities
-In-Reply-To: <95d9f7d9-6569-4252-a54d-cbe38ade706b@163.com>
-Message-ID: <fc6bec19-fb1e-bff0-8676-ba2c1ca860df@linux.intel.com>
-References: <20250323164852.430546-1-18255117159@163.com> <20250323164852.430546-4-18255117159@163.com> <f467056d-8d4a-9dab-2f0a-ca589adfde53@linux.intel.com> <d370b69a-3b70-4e3b-94a3-43e0bc1305cd@163.com> <a3462c68-ec1b-0b1a-fee7-612bd1109819@linux.intel.com>
- <3d9b2fa9-98bf-4f47-aa76-640a4f82cb2f@163.com> <26dcba54-93c1-dda4-c5e2-e324e9d50b09@linux.intel.com> <f2725090-e199-493d-9ae3-e807d65f647b@163.com> <de6ce71c-ba82-496e-9c72-7c9c61b37906@163.com> <ddabf340-a00f-75b1-2b6b-d9ab550a984f@linux.intel.com>
- <9118fcc0-e5a5-40f2-be4b-7e06b4b20601@163.com> <b279863e-8d8c-4c14-98ad-c19d26c69146@163.com> <0e493832-6292-10d7-6f87-ed190059c999@linux.intel.com> <95d9f7d9-6569-4252-a54d-cbe38ade706b@163.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60F7214A96;
+	Mon, 31 Mar 2025 18:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743445771; cv=fail; b=bmFE5a5OGM4Ah5woEOKQJkGxvXolbJEt3wfeX4xsmwwEYzTh4Xkfc4RODSubPmse18P9i+RcHXMd5IqtohEan80XvgIpH4fD5LtwlQZ2V1QzOtgskmPdEVqJWGpnFJ5nHcwTOkJJ6eM4kEiVzZ7fzMgem1lIpHMeyKkkBsi7oK8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743445771; c=relaxed/simple;
+	bh=TTJ+PEgmaG83BU089iVXCSQa6D2UmztSNytUgJC3T1s=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=go+l4k2rpYg2i+Xp8RDchIP1pBRipYWeRQtv8TTf2RCKqJ3ciNCjFP83PEwWe/1kOqNNHYnpk+HKvulpZ7cI7CU0iyPZMzHnJggkHD/2rIO9R5X+FajY9MOb+Ffz41+gGz8SCOnvSKq4lWPuRAl+0t0s+5F6OloaAJUdT6wMjW4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=B2HQaz53; arc=fail smtp.client-ip=40.107.103.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BpfGJL6SbQzX5odv1dEqpMyW+Ce06XkioEZX7BYD2WPyiqztXKH20vKhjji7yg7GZJKQkFHU/ryfsDIvcJR7xJje6N75HYSNLJ23G9YxgNQCvk63vDolclhVUK2cgrIR5LMb/uagNY6qyk73fTNOBlnZHxQOlxU5lfmTEpXiIEps7tc4rF7LxyovcOXvBYnC3lpcVxJf3GSTRAjdccH7DSuFYG6bhJt70PedotsYnu8gFstZOCyMWQjP5pU5ic88CJdbth/AUqB917HmkYspK9eASXSL/wPllKE2VhhtyYfM2/XoFgv+gNL1S49tenXXpMqknhuFmNcWb6wsQfN7/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=R2YmbZkwJnnm7Towg+ofnT9FJsw9kIDPihJEZjKeJMQ=;
+ b=Ih5ZbVAcfV1M8RaTmBAWJ0KW8AlGgLFn9dfXo+agScdJpDCAunELp9lZ/1aZK8zZTo2YacBfqoNVYQv+dvF4Y+2GDrD/TXFcue6Exv/f/GUfvix3ukWW7QPpi2q1jncltGloLxxQQUS+4zn3zU+deB52VoDOdUqEBzs+snGIGVC5h/tOa3KQ2ZNsbhz6j+3yns1o85KOTn24TqBx6BWV7a+i3PrVyFAJTALXqJe/HDXRJ2tmz3eCfthx0NXUxClM+JoeZZItUyvNJ3MjfXFD5bsRYnrIM8MAA4eS07SCdUFxIj7z9ELy2hSHz+WonhJeAR1BC5eTiaac2NyZXRo4jQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R2YmbZkwJnnm7Towg+ofnT9FJsw9kIDPihJEZjKeJMQ=;
+ b=B2HQaz539kWPyQs/LaitEJ/3wv+OPJ1x058lpl5l+kMJNwP7daN7VUK8JYXMrPh9EnMB/znPev5kaGqAd3OJnXMv4vi69EMjHq9un+Lym1PzJJGi90m5mJLOjgLdXutH/pibm4NBfSscMFdZi5KSHfb9GK2k6DWI+NxMfWjdS3vHFGs74PuVn2c3FS2bGbGiTxxXsmQWj6aGn1QfevJbM2fj8OT0Inz704VG9QcvUpH2bmzAziNI4JTMs1b82f17YeSNQ6ytkR8/mL+oggASjmK6IyOGd78LYe3pWvHL0Jgrwp7olr+vlZdPJX+zK7pl98A13lxYhGWqodbiOj2jWw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PA2PR04MB10347.eurprd04.prod.outlook.com (2603:10a6:102:424::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Mon, 31 Mar
+ 2025 18:29:26 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8534.048; Mon, 31 Mar 2025
+ 18:29:25 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	linux-pci@vger.kernel.org (open list:PCI ENDPOINT SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [PATCH 1/1] misc: pci_endpoint_test: Set .driver_data for PCI_DEVICE_ID_IMX8
+Date: Mon, 31 Mar 2025 14:29:10 -0400
+Message-Id: <20250331182910.2198877-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR08CA0072.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::49) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1694204000-1743439188=:929"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA2PR04MB10347:EE_
+X-MS-Office365-Filtering-Correlation-Id: df206211-4aa5-41c6-0c6d-08dd7081f718
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?2M5oIM88fQEr4igSROjBu2Wiv8iDlmWd4tkEpN+e+jJdd7PwL4Fy0cg5p8/h?=
+ =?us-ascii?Q?PomI95eBMQ5TbCTDxgynHuS09eWpHo1bxaYZ3en7yl6vBOG6IX39BTBgZITD?=
+ =?us-ascii?Q?/bLFPRYfcEUQK4/gSHp/EyW/tj7+kEUlhJJV2bnZHXQuo528TUl/q9Ql4z4a?=
+ =?us-ascii?Q?BL01EhLpXHgjsX0agDDnjKcQI3mq6NeNwSDvv0wug5Bfz838l9hNcvpxoApU?=
+ =?us-ascii?Q?Domrnifed84adjgkaoKIlPrXS9jjkv4CjbTtN7rPUe75jNl6yUAGO+pjs8R/?=
+ =?us-ascii?Q?heMsDX8dDnHmLrul+DifIyQ8XlB5Y87uPq6X+hf5x/+54cA1s2meBYZa4HEP?=
+ =?us-ascii?Q?EuGYq525zlJOjVGvlN5Jhqb0bIQe17J6CJfE5PIyjjzQeRFO2HjNV8NlN78l?=
+ =?us-ascii?Q?naIExIIiaQoLGGGP4g6nogUS+kXZb2lO7GgBl7BzIEnwdANNax1a5ATOSUva?=
+ =?us-ascii?Q?Nh5mpRGR1s4AMjLGFrGOU6ZH98SJ1qwSz4cgFkKBOhleTD4QlWfWHlrHherM?=
+ =?us-ascii?Q?6/efax1h9NXnInR5bTCAZqpJES0e3c/SYRh426feUOOcao+uut8aHuAMUM4V?=
+ =?us-ascii?Q?lDCDr5pOC6Cp27hfx5TKBVaF/008lZwORvHFYkQ/wqXLemT6IWZVzggCCj1H?=
+ =?us-ascii?Q?YnZt5oNtWOe/yjpgFjRW0GJf/NHCd7+2G2A3c7DrZTpn7SHhZLnLVI507vc1?=
+ =?us-ascii?Q?GoDUgmoku/8rfwpdhE9CZuYaYTYZrQC37WvOc5I4JhG/+BT3NLKIt61yEqzV?=
+ =?us-ascii?Q?Nv3yqpUeNAhs3qIonZyy02KrJ+egrTrVej55zt8ttxyT9Wn+/O91MfoJuB8x?=
+ =?us-ascii?Q?1OyinSKhlRXK00QVR6SRPzJlzWG9dWS/vGXgXMgSG9emCs7GCVPi1Ilv04qA?=
+ =?us-ascii?Q?wnN+PuPRyLGZqhA53pExeq+iqz7towFbb4ymVCfVf5vr33dgLYNiObr0Gtnp?=
+ =?us-ascii?Q?+iYtmL5uqiq3e2ILyCOEv19dFgGZMPOchhN//Ae1luE0CxC7iZV/V8fLOf9f?=
+ =?us-ascii?Q?dmvMdUFLYNAxJgIcQtsBE73NHiU1bwZWVvih/4GWXojvfl0CituIkYutSDrv?=
+ =?us-ascii?Q?aMAjnNRyeVtHp79JaQAXvC6YjaRnP8xxKRyaCFxLN5ix4zeFiItRlRft525E?=
+ =?us-ascii?Q?//0XmhdaLCn4lMTDl3u9zpnfWxHZwzVIfQ+R6hsV4g1AuHxOwPMEODsJw89d?=
+ =?us-ascii?Q?HmVebC5qIYhNuzS9vVDqE6BpvIRjA5lqGoreRxwg4ZUFm2Dc6t7SLEoFh8gJ?=
+ =?us-ascii?Q?M4iehJRFqgwFG9Kmga5utIZdkvHUVIFA7OmHK6Va2nlsxVaCWT3tWzypg+v8?=
+ =?us-ascii?Q?Irqu8fmuUUq2V5F1L8GIeO6WufaMwZfYe6/ohhyObt6u0jJrRdCGwdlLZ1cr?=
+ =?us-ascii?Q?x/gjsa8vXqrnV+uuMwk7YDly9xwfKJKUZ/2ALNVRteIna/kQbkBPvk0ELtcT?=
+ =?us-ascii?Q?Id6zWUgseuMclqolZidwHgUvMkZXyzXo?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?SRTWpTS04zpicaHLP8ygYeCnxDOGJIEvh6qxXMjlikbGKfjdvpvIsB4HI42q?=
+ =?us-ascii?Q?EQZ3QvQZGlNY0CXDB6UensYUY7B0fFCxBRIwFGrpFlIOCliLj/H/uMR1vlFr?=
+ =?us-ascii?Q?5mn4s29smtHeHPiXPasj7C7xYL+Rjk9IvBPiGTuFebJL4/byOrAhhlekM/kE?=
+ =?us-ascii?Q?ginfgDJKHgeMSl9G1/bsLrWUl+eLTtnNwAyVHvxIjemNMFHCFgo8ybCGXgn5?=
+ =?us-ascii?Q?uqjmT5b3bH3zkMn8JFNpyLvt3fhB0jUBXktH241hzhM66V6RHdf3+oYdXRq2?=
+ =?us-ascii?Q?hYv+rIKfXTeGt6RR7BaYYqHwNAFnq/fxJ9YkE+pyhBCHpQ7BF01LDKJ2vTKO?=
+ =?us-ascii?Q?Vlc19s1oqG37zANQU2R/rmAEV3f1fZusO/HL7UQf+1yxP7XK2mtBrmqkKreB?=
+ =?us-ascii?Q?adF/TDMuRpXlK2zdQvYO/6Uh/J4oqeBU48jfm85ZYy77Z8hSVUbcX/F18GTp?=
+ =?us-ascii?Q?cclw9bQ8IzaLXi+8VsciCzrYmWY8cFP3c/Gdx0G+N0MDFbGUwe98NRukFa94?=
+ =?us-ascii?Q?ORfB8KLzOBvNZnqNO3YgjNvhXjRkxLqcZ6vuUuaZ2q16hS1rYb473JVTv3nV?=
+ =?us-ascii?Q?0uImTZNm8EYY52HCcyXz+XNRCHGzXAS5nj3yQn6HoVw0Qed5dU/8LSdr53R2?=
+ =?us-ascii?Q?ffsVufk2kUW+f62e0py12LcI0nVqYhiSMgbzxIqxGn/ysQEAFzfhAajodhq3?=
+ =?us-ascii?Q?iHUJPZt6P0BxZRuT3f3su6iA1AB5gyeGVG1hIS1HfileC4v694+HzuW7GAAw?=
+ =?us-ascii?Q?Sifx4I1yfOzy8VWpv4OcqsCv0WrlBvmYlb7bhxRhRwfnzJV+D7ZmVZKv+I4G?=
+ =?us-ascii?Q?22UCwzAZbkVyjBKmc8HahzHWo204kokcvNeAXYkJXErjvYpME+Qjvfudspjv?=
+ =?us-ascii?Q?Fx+Y7M/PNZ6R9Pn2urf6ynK7sw+ovUGyk78hzk+GbymQahySJjQ2NkmF1pm1?=
+ =?us-ascii?Q?zk/0Kmm0pl+PzMgYekkAiJpGcUBWmHn1M8zcnX1XmGlD4nqdOSQCPt3ZG+G5?=
+ =?us-ascii?Q?N1lIKujojG7vOCei9Logcf+1n+5x5P4mWPE8uePIqxYurQFe/tgsluyx8u4c?=
+ =?us-ascii?Q?wpzhjrzQOyfTeG6Dn/JzNk4hnvmTI90Khxfv4BPnnLFgku7wnx5Fcjr8Ml7R?=
+ =?us-ascii?Q?cNf0c8j97zXP+8CSC69y4n8WaIrAuIv8Da5L2cO9iZQiOkjBtvfLDJSyW3VU?=
+ =?us-ascii?Q?SarVyynIU3ZW7Todt4RzImqex6vSZg9uCoZuqNck6/tKaB70OAHmsZ0FAZbF?=
+ =?us-ascii?Q?Ykmme1XLx9KHPBIKe8X7Ik7Vo1GrR3l/V0XcheKXJMl4Ek5BZHlZthO0rCA0?=
+ =?us-ascii?Q?F6jAf9eKzMAcDKY5g7VKGzlQTlZvTAwzlFZ+KmMFu15Go0IVT0xhfAvru28m?=
+ =?us-ascii?Q?2xX5sEH6UXfnkUVs3/lqtoXetExsJOHAtqp9wMH4bavpQHN7NDSZMLtUW0zD?=
+ =?us-ascii?Q?cVNoAnr55bmcTCZrlg/U+eeZE8IoEml4N+vmUmbaoIo6a1AfcRn0a4bBT8ll?=
+ =?us-ascii?Q?217GhrA/F8QGeoDVibC0Xv4Cyl/IxQmhdbKMzdzqE45TGkDdhmDJRo0/WoeJ?=
+ =?us-ascii?Q?4lkt6FG0zCm4EaZHlD8=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: df206211-4aa5-41c6-0c6d-08dd7081f718
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2025 18:29:25.8875
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zk7UWvXDFkNJz9WA/2ixMbXHOqmrMTbNG6iUsaT2HViObrvuZCiism9ueMfK6O8mLmL1FKgfK40CDFsVvAzaMQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10347
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Ensure driver_data is set for PCI_DEVICE_ID_IMX8 to specify the IRQ type,
+preventing probe failure.
 
---8323328-1694204000-1743439188=:929
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Fixes the following error:
+  pci-endpoint-test 0001:01:00.0: Invalid IRQ type selected
+  pci-endpoint-test 0001:01:00.0: probe with driver pci-endpoint-test failed with error -22
 
-On Sun, 30 Mar 2025, Hans Zhang wrote:
-> On 2025/3/28 19:42, Ilpo J=C3=A4rvinen wrote:
-> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > index 47b31ad724fa..0d5dfd010a01 100644
-> > > --- a/include/linux/pci.h
-> > > +++ b/include/linux/pci.h
-> > > @@ -1198,6 +1198,64 @@ void pci_sort_breadthfirst(void);
-> > >=20
-> > >   /* Generic PCI functions exported to card drivers */
-> > >=20
-> > > +/* Extended capability finder */
-> > > +#define PCI_FIND_NEXT_CAP_TTL(priv, devfn, read_cfg, start, cap)    =
- \
-> >=20
-> > Please put it into drivers/pci/pci.h but other than that this is certai=
-nly
-> > to the direction I was suggesting.
->=20
-> Hi Ilpo,
->=20
-> I'm sorry for not replying to you in time. I tried to understand your
-> suggestion, modify it, and then experiment on the actual SOC platform. Th=
-ank
-> you very much for your reply and patient advice.
->=20
-> I'm going to put it in the drivers/pci/pci.h file.
->=20
-> >=20
-> > You don't need to have those priv and devfn there like that but you can
-> > use the args... trick (see linux/iopoll.h) and put them as last paramet=
-ers
-> > to the macro so they can wary based on the caller needs, assuming args
-> > will work like this, I've not tested:
-> >=20
-> > =09=09read_cfg(args, __pos, &val)
-> >=20
->=20
-> I have modified it in the following reply, but I only modify it like this=
- at
-> present: read_cfg(args, __pos, size, &val)
->=20
-> > The size parameter is the most annoying one as it's in between where an=
-d
-> > *val arguments so args... trick won't work for it. I suggest just
-> > providing a function with the same signature as the related pci/access.=
-c
-> > function for now.
-> >=20
->=20
-> Currently DWC, CDNS, and pci.c seem to be unable to unify a common functi=
-on to
-> read config.
->=20
-> I don't quite understand what you mean here. Is the current dw_pcie_read_=
-cfg,
-> cdns_pcie_read_cfg, __pci_bus_read_config correct? Please look at my late=
-st
-> modification. If it is not correct, please explain it again. Thank you ve=
-ry
-> much.
+Fixes: a402006d48a9c ("misc: pci_endpoint_test: Remove global 'irq_type' and 'no_msi'")
+Cc: stable@vger.kernel.org
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+ drivers/misc/pci_endpoint_test.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-This was mostly me lamenting over the parameter order which makes the args=
-=20
-trick less efficient than it could be if the parameters would be in a=20
-different order. The patch below looked okay to me.
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index d294850a35a12..da96dba7357c6 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -1125,7 +1125,9 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0),
+ 	  .driver_data = (kernel_ulong_t)&default_data,
+ 	},
+-	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, PCI_DEVICE_ID_IMX8),},
++	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, PCI_DEVICE_ID_IMX8),
++	 .driver_data = (kernel_ulong_t)&default_data,
++	},
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, PCI_DEVICE_ID_LS1088A),
+ 	  .driver_data = (kernel_ulong_t)&default_data,
+ 	},
+-- 
+2.34.1
 
-> > A few nits related to the existing code quality of the cap parser funct=
-ion
-> > which should be addressed while we touch this function (probably in own
-> > patches indepedent of this code move/rearrange patch itself).
-> >=20
->=20
-> I will revise it in my final submission. The following reply has been
-> modified.
-
-
-> > > +=09=09=09read_cfg((priv), (devfn), __pos, 2, (u32 *)&__ent); \
-> > > +     \
-> > > +=09=09=09__id =3D __ent & 0xff;                                \
-> > > +=09=09=09if (__id =3D=3D 0xff)                                   \
-> > > +=09=09=09=09break;                                      \
-> > > +=09=09=09if (__id =3D=3D (cap)) {                                \
-> > > +=09=09=09=09__found_pos =3D __pos;                        \
-> > > +=09=09=09=09break;                                      \
-> > > +=09=09=09}                                                   \
-> > > +=09=09=09__pos =3D (__ent >> 8);                               \
-> >=20
-> > I'd add these into uapi/linux/pci_regs.h:
->=20
-> This means that you will submit, and I will submit after you?
-> Or should I submit this series of patches together?
-
-I commented these cleanup opportunities so that you could add them to=20
-your series. If I'd immediately start working on area/lines you're working=
-=20
-with, it would just trigger conflicts so it's better the original author=20
-does the improvements within the series he/she is working with. It's a lot=
-=20
-less work for the maintainer that way :-).
-
-> > #define PCI_CAP_ID_MASK=09=090x00ff
-> > #define PCI_CAP_LIST_NEXT_MASK=090xff00
-> >=20
-> > And then use FIELD_GET() to extract the fields.
->=20
-> It has been modified.
->=20
-> >=20
-> > > +=09=09}                                                           \
-> > > +=09=09__found_pos;                                                \
-> > > +=09})
-> > > +
-> > > +/* Extended capability finder */
-> > > +#define PCI_FIND_NEXT_EXT_CAPABILITY(priv, devfn, read_cfg, start, c=
-ap)
-> > > \
-> > > +=09({                                                               =
-  \
-> > > +=09=09u16 __pos =3D (start) ?: PCI_CFG_SPACE_SIZE;                 \
-> > > +=09=09u16 __found_pos =3D 0;                                       \
-> > > +=09=09int __ttl, __ret;                                          \
-> > > +=09=09u32 __header;                                              \
-> > > +    \
-> > > +=09=09__ttl =3D (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8; \
-> > > +=09=09while (__ttl-- > 0 && __pos >=3D PCI_CFG_SPACE_SIZE) {       \
-> > > +=09=09=09__ret =3D read_cfg((priv), (devfn), __pos, 4,        \
-> > > +=09=09=09=09=09 &__header);                       \
-> > > +=09=09=09if (__ret !=3D PCIBIOS_SUCCESSFUL)                   \
-> > > +=09=09=09=09break;                                     \
-> > > +    \
-> > > +=09=09=09if (__header =3D=3D 0)                                 \
-> > > +=09=09=09=09break;                                     \
-> > > +    \
-> > > +=09=09=09if (PCI_EXT_CAP_ID(__header) =3D=3D (cap) &&           \
-> > > +=09=09=09    __pos !=3D start) {                              \
-> > > +=09=09=09=09__found_pos =3D __pos;                       \
-> > > +=09=09=09=09break;                                     \
-> > > +=09=09=09}                                                  \
-> > > +    \
-> > > +=09=09=09__pos =3D PCI_EXT_CAP_NEXT(__header);                \
-> > > +=09=09}                                                          \
-> > > +=09=09__found_pos;                                               \
-> > > +=09})
-> > > +
-> > >   u8 pci_bus_find_capability(struct pci_bus *bus, unsigned int devfn,=
- int
-> > > cap);
-> > >   u8 pci_find_capability(struct pci_dev *dev, int cap);
-> > >   u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
-> >=20
-> >=20
-> > I started to wonder though if the controller drivers could simply creat=
-e
-> > an "early" struct pci_dev & pci_bus just so they can use the normal
-> > accessors while the real structs are not yet created. It looks not
-> > much is needed from those structs to let the accessors to work.
-> >=20
->=20
-> Here are a few questions:
-> 1. We need to initialize some variables for pci_dev. For example,
-> dev->cfg_size needs to be initialized to 4K for PCIe.
->=20
-> u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
-> {
-> =09......
-> =09if (dev->cfg_size <=3D PCI_CFG_SPACE_SIZE)
-> =09=09return 0;
-> =09......
->=20
-
-Sure, it would require some initialization of the struct (but not=20
-full init like the probe path does that does lots of setup too).
-
-> 2. Create an "early" struct pci_dev & pci_bus for each SOC vendor (Qcom,
-> Rockchip, etc). It leads to a lot of code that feels weird.
-
-The early pci_dev+pci_bus would be created by a helper in PCI core that=20
-initializes what is necessary for the supported set of early core=20
-functionality to work. The controller drivers themselves would just call=20
-that function.
-
-> I still prefer the approach we are discussing now.
-
-I'm not saying we should immediately head toward this new idea within this=
-=20
-series because it's going to be relatively big change. But it's certainly=
-=20
-something that looks worth exploring so that the current chicken-egg=20
-problem with controller drivers could be solved.
-
-> This is a modified patchs based on your suggestion:
->=20
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.c
-> b/drivers/pci/controller/cadence/pcie-cadence.c
-> index 204e045aed8c..3991cc4c58d6 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
-> @@ -7,6 +7,32 @@
->  #include <linux/of.h>
->=20
->  #include "pcie-cadence.h"
-> +#include "../../pci.h"
-> +
-> +static int cdns_pcie_read_cfg(void *priv, int where, int size, u32 *val)
-> +{
-> +=09struct cdns_pcie *pcie =3D priv;
-> +
-> +=09if (size =3D=3D 4)
-> +=09=09*val =3D cdns_pcie_readl(pcie, where);
-> +=09else if (size =3D=3D 2)
-> +=09=09*val =3D cdns_pcie_readw(pcie, where);
-> +=09else if (size =3D=3D 1)
-> +=09=09*val =3D cdns_pcie_readb(pcie, where);
-> +
-> +=09return PCIBIOS_SUCCESSFUL;
-> +}
-> +
-> +u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
-> +{
-> +=09return PCI_FIND_NEXT_CAP_TTL(cdns_pcie_read_cfg, PCI_CAPABILITY_LIST,
-> +=09=09=09=09     cap, pcie);
-> +}
-> +
-> +u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap)
-> +{
-> +=09return PCI_FIND_NEXT_EXT_CAPABILITY(cdns_pcie_read_cfg, 0, cap, pcie)=
-;
-> +}
->=20
->  void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
->  {
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h
-> b/drivers/pci/controller/cadence/pcie-cadence.h
-> index f5eeff834ec1..dd7cb6b6b291 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -398,6 +398,16 @@ static inline u32 cdns_pcie_readl(struct cdns_pcie *=
-pcie,
-> u32 reg)
->  =09return readl(pcie->reg_base + reg);
->  }
->=20
-> +static inline u32 cdns_pcie_readw(struct cdns_pcie *pcie, u32 reg)
-> +{
-> +=09return readw(pcie->reg_base + reg);
-> +}
-> +
-> +static inline u32 cdns_pcie_readb(struct cdns_pcie *pcie, u32 reg)
-> +{
-> +=09return readb(pcie->reg_base + reg);
-> +}
-> +
->  static inline u32 cdns_pcie_read_sz(void __iomem *addr, int size)
->  {
->  =09void __iomem *aligned_addr =3D PTR_ALIGN_DOWN(addr, 0x4);
-> @@ -557,6 +567,9 @@ static inline int cdns_pcie_ep_setup(struct cdns_pcie=
-_ep
-> *ep)
->  }
->  #endif
->=20
-> +u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap);
-> +u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap);
-> +
->  void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
->=20
->  void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 =
-fn,
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c
-> b/drivers/pci/controller/dwc/pcie-designware.c
-> index 145e7f579072..e9a9a80b1085 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -203,83 +203,25 @@ void dw_pcie_version_detect(struct dw_pcie *pci)
->  =09=09pci->type =3D ver;
->  }
->=20
-> -/*
-> - * These interfaces resemble the pci_find_*capability() interfaces, but =
-these
-> - * are for configuring host controllers, which are bridges *to* PCI devi=
-ces
-> but
-> - * are not PCI devices themselves.
-> - */
-> -static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
-> -=09=09=09=09  u8 cap)
-> +static int dw_pcie_read_cfg(void *priv, int where, int size, u32 *val)
->  {
-> -=09u8 cap_id, next_cap_ptr;
-> -=09u16 reg;
-> -
-> -=09if (!cap_ptr)
-> -=09=09return 0;
-> -
-> -=09reg =3D dw_pcie_readw_dbi(pci, cap_ptr);
-> -=09cap_id =3D (reg & 0x00ff);
-> -
-> -=09if (cap_id > PCI_CAP_ID_MAX)
-> -=09=09return 0;
-> +=09struct dw_pcie *pcie =3D priv;
->=20
-> -=09if (cap_id =3D=3D cap)
-> -=09=09return cap_ptr;
-> +=09*val =3D dw_pcie_read_dbi(pcie, where, size);
->=20
-> -=09next_cap_ptr =3D (reg & 0xff00) >> 8;
-> -=09return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-> +=09return PCIBIOS_SUCCESSFUL;
->  }
->=20
->  u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
->  {
-> -=09u8 next_cap_ptr;
-> -=09u16 reg;
-> -
-> -=09reg =3D dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
-> -=09next_cap_ptr =3D (reg & 0x00ff);
-> -
-> -=09return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-> +=09return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST,
-> cap,
-> +=09=09=09=09     pcie);
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
->=20
-> -static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 sta=
-rt,
-> -=09=09=09=09=09    u8 cap)
-> -{
-> -=09u32 header;
-> -=09int ttl;
-> -=09int pos =3D PCI_CFG_SPACE_SIZE;
-> -
-> -=09/* minimum 8 bytes per capability */
-> -=09ttl =3D (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
-> -
-> -=09if (start)
-> -=09=09pos =3D start;
-> -
-> -=09header =3D dw_pcie_readl_dbi(pci, pos);
-> -=09/*
-> -=09 * If we have no capabilities, this is indicated by cap ID,
-> -=09 * cap version and next pointer all being 0.
-> -=09 */
-> -=09if (header =3D=3D 0)
-> -=09=09return 0;
-> -
-> -=09while (ttl-- > 0) {
-> -=09=09if (PCI_EXT_CAP_ID(header) =3D=3D cap && pos !=3D start)
-> -=09=09=09return pos;
-> -
-> -=09=09pos =3D PCI_EXT_CAP_NEXT(header);
-> -=09=09if (pos < PCI_CFG_SPACE_SIZE)
-> -=09=09=09break;
-> -
-> -=09=09header =3D dw_pcie_readl_dbi(pci, pos);
-> -=09}
-> -
-> -=09return 0;
-> -}
-> -
->  u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
->  {
-> -=09return dw_pcie_find_next_ext_capability(pci, 0, cap);
-> +=09return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pcie);
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
->=20
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 869d204a70a3..778e366ea72e 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -423,28 +423,28 @@ static int pci_dev_str_match(struct pci_dev *dev, c=
-onst
-> char *p,
->  =09return 1;
->  }
->=20
-> -static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devf=
-n,
-> -=09=09=09=09  u8 pos, int cap, int *ttl)
-> +static int __pci_bus_read_config(void *priv, unsigned int devfn, int whe=
-re,
-> +=09=09=09=09 u32 size, u32 *val)
->  {
-> -=09u8 id;
-> -=09u16 ent;
-> +=09struct pci_bus *bus =3D priv;
-> +=09int ret;
->=20
-> -=09pci_bus_read_config_byte(bus, devfn, pos, &pos);
-> +=09if (size =3D=3D 1)
-> +=09=09ret =3D pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
-> +=09else if (size =3D=3D 2)
-> +=09=09ret =3D pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
-> +=09else
-> +=09=09ret =3D pci_bus_read_config_dword(bus, devfn, where, val);
->=20
-> -=09while ((*ttl)--) {
-> -=09=09if (pos < 0x40)
-> -=09=09=09break;
-> -=09=09pos &=3D ~3;
-> -=09=09pci_bus_read_config_word(bus, devfn, pos, &ent);
-> +=09return ret;
-> +}
->=20
-> -=09=09id =3D ent & 0xff;
-> -=09=09if (id =3D=3D 0xff)
-> -=09=09=09break;
-> -=09=09if (id =3D=3D cap)
-> -=09=09=09return pos;
-> -=09=09pos =3D (ent >> 8);
-> -=09}
-> -=09return 0;
-> +static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devf=
-n,
-> +=09=09=09=09  u8 pos, int cap, int *ttl)
-> +{
-> +=09// If accepted, I will remove all use of "int *ttl" in a future patch=
-=2E
-> +=09return PCI_FIND_NEXT_CAP_TTL(__pci_bus_read_config, pos, cap, bus,
-> +=09=09=09=09     devfn);
->  }
->=20
->  static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
-> @@ -553,42 +553,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
->   */
->  u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap=
-)
->  {
-> -=09u32 header;
-> -=09int ttl;
-> -=09u16 pos =3D PCI_CFG_SPACE_SIZE;
-> -
-> -=09/* minimum 8 bytes per capability */
-> -=09ttl =3D (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
-> -
->  =09if (dev->cfg_size <=3D PCI_CFG_SPACE_SIZE)
->  =09=09return 0;
->=20
-> -=09if (start)
-> -=09=09pos =3D start;
-> -
-> -=09if (pci_read_config_dword(dev, pos, &header) !=3D PCIBIOS_SUCCESSFUL)
-> -=09=09return 0;
-> -
-> -=09/*
-> -=09 * If we have no capabilities, this is indicated by cap ID,
-> -=09 * cap version and next pointer all being 0.
-> -=09 */
-> -=09if (header =3D=3D 0)
-> -=09=09return 0;
-> -
-> -=09while (ttl-- > 0) {
-> -=09=09if (PCI_EXT_CAP_ID(header) =3D=3D cap && pos !=3D start)
-> -=09=09=09return pos;
-> -
-> -=09=09pos =3D PCI_EXT_CAP_NEXT(header);
-> -=09=09if (pos < PCI_CFG_SPACE_SIZE)
-> -=09=09=09break;
-> -
-> -=09=09if (pci_read_config_dword(dev, pos, &header) !=3D
-> PCIBIOS_SUCCESSFUL)
-> -=09=09=09break;
-> -=09}
-> -
-> -=09return 0;
-> +=09return PCI_FIND_NEXT_EXT_CAPABILITY(__pci_bus_read_config, start, cap=
-,
-> +=09=09=09=09=09    dev->bus, dev->devfn);
->  }
->  EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
->=20
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 2e9cf26a9ee9..68c111be521d 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -4,6 +4,65 @@
->=20
->  #include <linux/pci.h>
-
-Make sure to add the necessary headers for the function/macros you're=20
-using so that things won't depend on the #include order in the .c file.
-
->=20
-> +/* Ilpo: I'd add these into uapi/linux/pci_regs.h: */
-> +#define PCI_CAP_ID_MASK=09=090x00ff
-> +#define PCI_CAP_LIST_NEXT_MASK=090xff00
-> +
-> +/* Standard capability finder */
-
-Capability
-
-Always use the same capitalization as the specs do.
-
-You should probably write a kernel doc for this macro too.
-
-I'd put these macro around where pcie_cap_has_*() forward declarations=20
-are so that the initial define block is not split.
-
-> +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)=09=09\
-> +({=09=09=09=09=09=09=09=09=09\
-> +=09u8 __pos =3D (start);=09=09=09=09=09=09\
-> +=09int __ttl =3D PCI_FIND_CAP_TTL;=09=09=09=09=09\
-> +=09u16 __ent;=09=09=09=09=09=09=09\
-> +=09u8 __found_pos =3D 0;=09=09=09=09=09=09\
-> +=09u8 __id;=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09\
-> +=09read_cfg(args, __pos, 1, (u32 *)&__pos);=09=09=09\
-> +=09=09=09=09=09=09=09=09=09\
-> +=09while (__ttl--) {=09=09=09=09=09=09\
-> +=09=09if (__pos < PCI_STD_HEADER_SIZEOF)=09=09=09\
-> +=09=09=09break;=09=09=09=09=09=09\
-> +=09=09__pos =3D ALIGN_DOWN(__pos, 4);=09=09=09=09\
-> +=09=09read_cfg(args, __pos, 2, (u32 *)&__ent);=09=09\
-> +=09=09__id =3D FIELD_GET(PCI_CAP_ID_MASK, __ent);=09=09\
-> +=09=09if (__id =3D=3D 0xff)=09=09=09=09=09\
-> +=09=09=09break;=09=09=09=09=09=09\
-> +=09=09if (__id =3D=3D (cap)) {=09=09=09=09=09\
-> +=09=09=09__found_pos =3D __pos;=09=09=09=09\
-> +=09=09=09break;=09=09=09=09=09=09\
-> +=09=09}=09=09=09=09=09=09=09\
-> +=09=09__pos =3D FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);=09\
-> +=09}=09=09=09=09=09=09=09=09\
-> +=09__found_pos;=09=09=09=09=09=09=09\
-> +})
-> +
-> +/* Extended capability finder */
-> +#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)=09\
-> +({=09=09=09=09=09=09=09=09=09\
-> +=09u16 __pos =3D (start) ?: PCI_CFG_SPACE_SIZE;=09=09=09\
-> +=09u16 __found_pos =3D 0;=09=09=09=09=09=09\
-> +=09int __ttl, __ret;=09=09=09=09=09=09\
-> +=09u32 __header;=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09\
-> +=09__ttl =3D (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;=09\
-> +=09while (__ttl-- > 0 && __pos >=3D PCI_CFG_SPACE_SIZE) {=09=09\
-> +=09=09__ret =3D read_cfg(args, __pos, 4, &__header);=09=09\
-> +=09=09if (__ret !=3D PCIBIOS_SUCCESSFUL)=09=09=09\
-> +=09=09=09break;=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09\
-> +=09=09if (__header =3D=3D 0)=09=09=09=09=09\
-> +=09=09=09break;=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09\
-> +=09=09if (PCI_EXT_CAP_ID(__header) =3D=3D (cap) && __pos !=3D start) {\
-> +=09=09=09__found_pos =3D __pos;=09=09=09=09\
-> +=09=09=09break;=09=09=09=09=09=09\
-> +=09=09}=09=09=09=09=09=09=09\
-> +=09=09=09=09=09=09=09=09=09\
-> +=09=09__pos =3D PCI_EXT_CAP_NEXT(__header);=09=09=09\
-> +=09}=09=09=09=09=09=09=09=09\
-> +=09__found_pos;=09=09=09=09=09=09=09\
-> +})
-> +
->  struct pcie_tlp_log;
->=20
->  /* Number of possible devfns: 0.0 to 1f.7 inclusive */
->=20
->=20
-> Looking forward to your latest suggestions.
-
-This generally looked good, I didn't read with a very fine comb but just=20
-focused on the important bits. I'll take a more detailed look once you=20
-make the official submission.
-
---=20
- i.
-
---8323328-1694204000-1743439188=:929--
 
