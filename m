@@ -1,46 +1,46 @@
-Return-Path: <linux-pci+bounces-25023-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25024-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0823BA76F4F
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 22:31:05 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61D66A76F55
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 22:31:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B441D1666CA
-	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 20:30:45 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DD1DE7A3807
+	for <lists+linux-pci@lfdr.de>; Mon, 31 Mar 2025 20:29:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1624D13C918;
-	Mon, 31 Mar 2025 20:29:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FD1E21D5BC;
+	Mon, 31 Mar 2025 20:29:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PnSZSNZF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cf7OrCSN"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC39521ADC5;
-	Mon, 31 Mar 2025 20:29:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E041121D5B4;
+	Mon, 31 Mar 2025 20:29:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743452957; cv=none; b=jMEAun1p9smZn8zr3U5zT7ig3dghFsyCgzjLt6AgwQ/M7yHeS7uguwy30e7eSxAj6MRdq+GNPPrjOxXldnQvOVjHofUlUOMR2xdfykQdJKJDrNK+CHftFG+MIEyAjdTT1dWQxtq5gPH5pYjFQ5RnSA4uYtvMQcm+CB3PHIGjPvs=
+	t=1743452959; cv=none; b=EgCzJbqCjhHWvexp/lj/FXwwfU8G7tkMngDGgQOG49bHd5HqIWL8ROaR9mMGWGDJlEuIHLgB0xht7Cr+mptRGmqKlF0Gu3TClX9YyhbOlWy3Bs8jK4n9InwOnlaAxulwaGhhGoOk0fYbRRHfC7bZXf6dGqc44rTNmNr/9AndLXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743452957; c=relaxed/simple;
-	bh=4LBQYOuKWUMJKxTctedQtQnbNZFRSegEXeOdIXP3acY=;
+	s=arc-20240116; t=1743452959; c=relaxed/simple;
+	bh=jj5/lxEZE+tngZSVTxtZjkJcf2L2JtaOvEVjvyRamcg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KOi4/4V+ah91pRmv09JkMyFHRpsIvpU9Xeh3crFSJ0kvUqyYQLTgZQv9Ofr+oDv0saoyIIj9PiVH31wj6U198WyuXHG81p2y5Umcsm4fvUQeXiFyx3LVEBvDXDUYiJOJ58Nj22wntOzPbHgFzxYvI591QX4u4xxzPOEYk2bD2ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PnSZSNZF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FAE9C4CEE5;
-	Mon, 31 Mar 2025 20:29:10 +0000 (UTC)
+	 MIME-Version; b=dX1JNGEd/w0CB8CwUFfvF7xIov5rAyCUGjW/ncqVvpm8TQZYebh6sTzPwlXXBsQZ+h8Pthz6fnDRdyag6EVlx2Vux8IPx9PNis7KqfjFk6qvtq7OFGR2g0ZJuB7dBo/+fcfKx8LXH20cO9Bod+JOkaLcEYuWbKOYU2/t3r9MhuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cf7OrCSN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD51C4CEE3;
+	Mon, 31 Mar 2025 20:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743452954;
-	bh=4LBQYOuKWUMJKxTctedQtQnbNZFRSegEXeOdIXP3acY=;
+	s=k20201202; t=1743452958;
+	bh=jj5/lxEZE+tngZSVTxtZjkJcf2L2JtaOvEVjvyRamcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PnSZSNZFiPLA+JW4CNZQW+GSBuNbsGx57oQDJaYQQWb4AX+fHsMPh37/lTp7YJoIW
-	 fbDl9cD9HxY4LFAvn2W2Cz+NXwWjjYxF9EgdX3cmUyTEitNDx4AowIcmYjTHN8sVdc
-	 cUwp3P49l/bIgKpOBu4+ARPSKX2JA0txJLx3zvoho9ecCXkyZACppYEjTqnA7Jl6NL
-	 N4Y9UO0Z4nf1wjp6GL8NhDZjsXQRbQIm4AR6SUbzS3Zqeq8eHJzYg6WpaR/1Oj1jnD
-	 NnQGU0q6EDofYUNSGwXWSsR+kKJ/8VazrM3736PSxGrvBaV1CAahQI/IrDZh7a9lxD
-	 phZ+su4qUzeYg==
+	b=Cf7OrCSNGRbmlU5cpIPJ/M46rf/5H22gXE01GUizW+bsNdMq8TcLRj2o+VlH9eHwD
+	 29vsy6IfbyQGzTvjIypH/HtONpTBktsuiv1z7iehuQbHYBr14P3U2iOFTubjRaCliH
+	 KrUEq6eo8z1y7DsojIzZizXY3LdbcKw8Z0rm1y0fKE5DWQQwYXFRMU1ZRJlunsVwg5
+	 nTnWpN/w2n2e/WbamKVBU68UqUcHY1msKh6Omhs6QRNyD0CzDi1aFdQ/aILuNLAbI3
+	 KPYv4WddZf+p6lribO+t281a03J34u7u1vtBCspc+Zqp3Dnd8v72DaPSbyzWyB5JgJ
+	 BWcrm3bFhA97w==
 From: Danilo Krummrich <dakr@kernel.org>
 To: bhelgaas@google.com,
 	gregkh@linuxfoundation.org,
@@ -61,9 +61,9 @@ Cc: ojeda@kernel.org,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 6/9] rust: device: implement Bound device context
-Date: Mon, 31 Mar 2025 22:27:59 +0200
-Message-ID: <20250331202805.338468-7-dakr@kernel.org>
+Subject: [PATCH 7/9] rust: pci: move iomap_region() to impl Device<Bound>
+Date: Mon, 31 Mar 2025 22:28:00 +0200
+Message-ID: <20250331202805.338468-8-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250331202805.338468-1-dakr@kernel.org>
 References: <20250331202805.338468-1-dakr@kernel.org>
@@ -75,64 +75,29 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Bound device context indicates that a device is bound to a driver.
-It must be used for APIs that require the device to be bound, such as
-Devres or dma::CoherentAllocation.
-
-Implement Bound and add the corresponding Deref hierarchy, as well as the
-corresponding ARef conversion for this device context.
+Require the Bound device context to be able to call iomap_region() and
+iomap_region_sized(). Creating I/O mapping requires the device to be
+bound.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/device.rs | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ rust/kernel/pci.rs | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-index 2d98e650376e..a7da1519439d 100644
---- a/rust/kernel/device.rs
-+++ b/rust/kernel/device.rs
-@@ -230,13 +230,19 @@ pub trait DeviceContext: private::Sealed {}
- /// any of the bus callbacks, such as `probe()`.
- pub struct Core;
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index de140cce13cf..b93bf57d2b54 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -390,7 +390,9 @@ pub fn resource_len(&self, bar: u32) -> Result<bindings::resource_size_t> {
+         // - by its type invariant `self.as_raw` is always a valid pointer to a `struct pci_dev`.
+         Ok(unsafe { bindings::pci_resource_len(self.as_raw(), bar.try_into()?) })
+     }
++}
  
-+/// The [`Bound`] context is the context of a bus specific device reference when it is guranteed to
-+/// be bound for the duration of its lifetime.
-+pub struct Bound;
-+
- mod private {
-     pub trait Sealed {}
- 
-+    impl Sealed for super::Bound {}
-     impl Sealed for super::Core {}
-     impl Sealed for super::Normal {}
- }
- 
-+impl DeviceContext for Bound {}
- impl DeviceContext for Core {}
- impl DeviceContext for Normal {}
- 
-@@ -265,7 +271,12 @@ fn deref(&self) -> &Self::Target {
- #[macro_export]
- macro_rules! impl_device_context_deref {
-     ($device:tt) => {
--        kernel::__impl_device_context_deref!($crate::device::Core, $crate::device::Normal, $device);
-+        kernel::__impl_device_context_deref!($crate::device::Core, $crate::device::Bound, $device);
-+        kernel::__impl_device_context_deref!(
-+            $crate::device::Bound,
-+            $crate::device::Normal,
-+            $device
-+        );
-     };
- }
- 
-@@ -287,6 +298,7 @@ fn from(dev: &$device<$src>) -> Self {
- macro_rules! impl_device_context_into_aref {
-     ($device:tt) => {
-         kernel::__impl_device_context_into_aref!($crate::device::Core, $device);
-+        kernel::__impl_device_context_into_aref!($crate::device::Bound, $device);
-     };
- }
- 
++impl Device<device::Bound> {
+     /// Mapps an entire PCI-BAR after performing a region-request on it. I/O operation bound checks
+     /// can be performed on compile time for offsets (plus the requested type size) < SIZE.
+     pub fn iomap_region_sized<const SIZE: usize>(
 -- 
 2.49.0
 
