@@ -1,51 +1,51 @@
-Return-Path: <linux-pci+bounces-25048-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25049-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB38FA77774
+	by mail.lfdr.de (Postfix) with ESMTPS id E5BEFA77775
 	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 11:18:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CBB5316A5E8
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 09:18:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D6D316A6B3
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 09:18:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 076551EF394;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21F511EFF82;
 	Tue,  1 Apr 2025 09:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2Lu4yvj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OSd5a0Fq"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5B31EF378;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B461EF388;
 	Tue,  1 Apr 2025 09:17:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743499058; cv=none; b=IeXsSdPX9uH7/tlu5DqImTPYSExFQjmedTubfpNcldsKg2TJNKRkIGUSgXLBmMFRB06lurUxodyskRErMDTz6nV6gkLHFla18Wryt0pQunS9yK4S4tEZjYYsEgWztntQpTX4DJ0VFP/+VwJ0QkBhNj1keIgwFcxmpxGeWh+WxNo=
+	t=1743499059; cv=none; b=VqBWRMCbOOywNixXS2zAbflq8pYeUtiQKWijfYCaeeA0+uqEAAElU1L6aJBPWnIx1Zo6rxyrFaUOqytuC8xn1nbwGJuLKIp7pW2b0PSWtdLCIg/0N+PmrmdS4HbG9+E9QTilIhv5Ml/wMKxgKS6rKPFuPUUqFwkUIzTvx2eHn98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743499058; c=relaxed/simple;
-	bh=AxgUPpe7veMz43oEYyqKVd2CX9jpZjZQhL1wqg2ys4A=;
+	s=arc-20240116; t=1743499059; c=relaxed/simple;
+	bh=Z64Y0a83D7907bZmI8Ufapa7X360ffiucFi1o4nkTKE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Heuu453lq2BN5wBRtep4JJpdgTElJJ76JtgPgqcQJR2AE2AUf/PrU1hNopZAKXiiUzsZYskbH7fV2kttoWomkrx0cv709oIU67AqaebUnP8QjNjYqEqoMdSBpxvKhflJJeXJ6p1kQNhrjwOQ9ftu3DAtnWjhO/QpTxXR34OoojY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q2Lu4yvj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FD5EC4CEFA;
+	 MIME-Version; b=dQP6TekSNpnQOz06OFBBLrhvAtmgeBarEwpjCgH5HjQBA4jgSeLfxuKGIoZCobg4M5+mhkYYE19ZwXemfM+GrmNQ9iWVMoTfQvLMnZrDoCW+2UavvLXi49N0Sd4c7MMLsX/DB/82+mtkl1irRwec4bsfcshtxypKe9b8PbQbUzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OSd5a0Fq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 874B4C4AF0B;
 	Tue,  1 Apr 2025 09:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1743499058;
-	bh=AxgUPpe7veMz43oEYyqKVd2CX9jpZjZQhL1wqg2ys4A=;
+	bh=Z64Y0a83D7907bZmI8Ufapa7X360ffiucFi1o4nkTKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q2Lu4yvjmBvDOFtlxJkxvjaYq0Hj9ZzcE60GMXnxdKlhfGXG/S0wYU5MnkVXhNT9G
-	 RkJ9jupOJE5FqGVhfqZ6KrXxBcgcFn+eo2H7KPGBEtvXMEiWiEwYmcJiCJh8v6DiX7
-	 xb2hpGPaaiqAqDJN0O2w56cLclzRoaCJI8QVgD/D4EEKnFa7XqbmrsLoRpIuOJpZ9S
-	 D0V5KJUcOb93HL6m6C6/p8UoFTS1KfIzVIbEzTSmbtgUJiiYMIiIm/z+ntyolCokWk
-	 oI8UzETL74D8ghCcIicA1coopW2K2LNadYKwNuooEPqBth57IWKlUeYowkOY2B8i4X
-	 VHCLvKyKsQApA==
+	b=OSd5a0Fq5MgQYBOgxKyA2BP6lFZ3L3o2X8YUHqChWS1c0YVro5vuxoa6s1erFqCXj
+	 LtDj//iirnna2suu99++Fom5ybJ2NQVGuBG3jKErZaFW/5JUC7OG37+gdPzA9P1vOX
+	 Lg6MjclX69KvZ5xk1oQulCEyQeMUqn6pIPhsFsFf6N+kWwnWNvb2etpsveIxKSPKyz
+	 9yJt+YaYoiWGS3UZOZIXuXY3WeXgpV6SyPmZFZbSTM8Rh41aCPOY6TUJO9p8lAuFpd
+	 T8HtTP2cpK2+DyX6oj65Ul9Kv0/bnMcmfCq05A5tBnP3QcnZYwIOT9RjWptboLDGLx
+	 2imhrTsw1IMNQ==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1tzXkW-001GqU-DE;
+	id 1tzXkW-001GqU-Kq;
 	Tue, 01 Apr 2025 10:17:36 +0100
 From: Marc Zyngier <maz@kernel.org>
 To: linux-arm-kernel@lists.infradead.org,
@@ -64,9 +64,9 @@ Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Mark Kettenis <mark.kettenis@xs4all.nl>
-Subject: [PATCH v3 07/13] PCI: apple: Move away from INTMSK{SET,CLR} for INTx and private interrupts
-Date: Tue,  1 Apr 2025 10:17:07 +0100
-Message-Id: <20250401091713.2765724-8-maz@kernel.org>
+Subject: [PATCH v3 08/13] PCI: apple: Fix missing OF node reference in apple_pcie_setup_port
+Date: Tue,  1 Apr 2025 10:17:08 +0100
+Message-Id: <20250401091713.2765724-9-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250401091713.2765724-1-maz@kernel.org>
 References: <20250401091713.2765724-1-maz@kernel.org>
@@ -82,69 +82,36 @@ X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.o
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-T602x seems to have dropped the rather useful SET/CLR accessors
-to the masking register.
+From: Hector Martin <marcan@marcan.st>
 
-Instead, let's use the mask register directly, and wrap it with
-a brand new spinlock. No, this isn't moving in the right direction.
+In the success path, we hang onto a reference to the node, so make sure
+to grab one. The caller iterator puts our borrowed reference when we
+return.
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 Tested-by: Janne Grunau <j@jannau.net>
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/pci/controller/pcie-apple.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-apple.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index 6d3aa186d9c5f..6b04bf0b41dcc 100644
+index 6b04bf0b41dcc..23d9f62bd2ad4 100644
 --- a/drivers/pci/controller/pcie-apple.c
 +++ b/drivers/pci/controller/pcie-apple.c
-@@ -142,6 +142,7 @@ struct apple_pcie {
- };
+@@ -593,6 +593,9 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+ 	list_add_tail(&port->entry, &pcie->ports);
+ 	init_completion(&pcie->event);
  
- struct apple_pcie_port {
-+	raw_spinlock_t		lock;
- 	struct apple_pcie	*pcie;
- 	struct device_node	*np;
- 	void __iomem		*base;
-@@ -261,14 +262,16 @@ static void apple_port_irq_mask(struct irq_data *data)
- {
- 	struct apple_pcie_port *port = irq_data_get_irq_chip_data(data);
- 
--	writel_relaxed(BIT(data->hwirq), port->base + PORT_INTMSKSET);
-+	guard(raw_spinlock_irqsave)(&port->lock);
-+	rmw_set(BIT(data->hwirq), port->base + PORT_INTMSK);
- }
- 
- static void apple_port_irq_unmask(struct irq_data *data)
- {
- 	struct apple_pcie_port *port = irq_data_get_irq_chip_data(data);
- 
--	writel_relaxed(BIT(data->hwirq), port->base + PORT_INTMSKCLR);
-+	guard(raw_spinlock_irqsave)(&port->lock);
-+	rmw_clear(BIT(data->hwirq), port->base + PORT_INTMSK);
- }
- 
- static bool hwirq_is_intx(unsigned int hwirq)
-@@ -387,7 +390,7 @@ static int apple_pcie_port_setup_irq(struct apple_pcie_port *port)
- 		return -ENOMEM;
- 
- 	/* Disable all interrupts */
--	writel_relaxed(~0, port->base + PORT_INTMSKSET);
-+	writel_relaxed(~0, port->base + PORT_INTMSK);
- 	writel_relaxed(~0, port->base + PORT_INTSTAT);
- 
- 	irq_set_chained_handler_and_data(irq, apple_port_irq_handler, port);
-@@ -537,6 +540,8 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
- 	port->pcie = pcie;
- 	port->np = np;
- 
-+	raw_spin_lock_init(&port->lock);
++	/* In the success path, we keep a reference to np around */
++	of_node_get(np);
 +
- 	port->base = devm_platform_ioremap_resource(platform, port->idx + 2);
- 	if (IS_ERR(port->base))
- 		return PTR_ERR(port->base);
+ 	ret = apple_pcie_port_register_irqs(port);
+ 	WARN_ON(ret);
+ 
 -- 
 2.39.2
 
