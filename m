@@ -1,230 +1,126 @@
-Return-Path: <linux-pci+bounces-25096-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25097-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4474AA78334
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 22:15:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CBA3A78331
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 22:15:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4494D3B0289
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 20:13:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D3A9A188E677
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 20:15:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB0721F30A4;
-	Tue,  1 Apr 2025 20:13:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63A9A213230;
+	Tue,  1 Apr 2025 20:15:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aApQExgO"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UoUO6NTH"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FD413212A;
-	Tue,  1 Apr 2025 20:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B923234;
+	Tue,  1 Apr 2025 20:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743538431; cv=none; b=W3f3vZgIBzuF/OAvgMG3amvQm+vmyCbYErhAnn4BRynNL4PF2H/+6d53RXbn+v+PtOb173ziwNxGsp+qyMZlvUHjwgsdaXo61YzEyZnnjXkNLdXDGyOuNgj4OwQMb4u+pm053zIzbZCQxC7lcc0ujWo0YJENubvSJEwhvgGdhY0=
+	t=1743538508; cv=none; b=e/VjJvDCjC6OFIOTQ8QdZDJAS5WxX/aSNM4+9EVIrR3moRlRM4Yj8teMF+pwfad3z6TXWQkhtvcxrrswdxFurLZA4/dGrmCcjL/XjPeYdR8vha4g5lxkkllrru8ovYxFWHxBO4aPsOuIt7tP2xcyPS1691RB1QwVF/CJyul33S8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743538431; c=relaxed/simple;
-	bh=TAU3yRCirznP64FHLdcFLDxK5Hfncrrs9R8Nl11FmC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=m4oYl/vndgabV7sNRAa7GM3XnhS2t9A6g2vBV3ftwohE64+nAglEBzF8ckbBeu6OPmV8i09qMNXSCvpVcSaAUaN+Yde7KOpqLa8yOCr6vs5kELcumymZEngCf5GBG7Lew+8hahpJY9R7vFb7MFxhyzb8xwdRBp15ev44fD+5HoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aApQExgO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C36C3C4CEE4;
-	Tue,  1 Apr 2025 20:13:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743538430;
-	bh=TAU3yRCirznP64FHLdcFLDxK5Hfncrrs9R8Nl11FmC4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=aApQExgOS9A/bg1U5ffreDdTY/jfN0rgy424y0so7e0IKJn49lPVGB33r7LZxYM/p
-	 H97g6qYL2pq8PySmeWgJkkUKlwIQKyN3fDARygqxgJ2gACJZ8RMEHtmxWYOf2XAQ60
-	 k+e05ohRwFEb7LEpsdQ2HYW2C8nHQ5rSpeky6I/JquAMoKwSo7nvS5KtYkdHLXQklX
-	 V1Tfyartjn8LdJcChAfcsuj/JWNJUCoTQBrx5yUHqYYADfQGFFJh83VN3c6VvgPYZR
-	 aXSqD8mWiMln+8v5cOq0rfUPSuM576Un3M5eRmgkK9NRFxDJFcUMKpPG8UE+xvewF9
-	 o73tiaZ8EMyCA==
-Date: Tue, 1 Apr 2025 15:13:49 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Anshuman Gupta <anshuman.gupta@intel.com>
-Cc: intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, rafael@kernel.org, lenb@kernel.org,
-	bhelgaas@google.com, ilpo.jarvinen@linux.intel.com,
-	lucas.demarchi@intel.com, rodrigo.vivi@intel.com,
-	badal.nilawar@intel.com, varun.gupta@intel.com,
-	ville.syrjala@linux.intel.com, uma.shankar@intel.com
-Subject: Re: [PATCH 03/12] PCI/ACPI: Add aux power grant notifier
-Message-ID: <20250401201349.GA1676401@bhelgaas>
+	s=arc-20240116; t=1743538508; c=relaxed/simple;
+	bh=Pq01BnmtIB0SRbfwFrvg4kMEEs+bl4tSxJrZiEgI3DM=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=XTtyZI4CfVXWVpVJ0+V1CTUjNXZjq4MYEB3Z1qxJQ07rBDQhmvlF2w/GHVdtVnSymwAmz+BVBw2Wrz8iXrfgC1hmFNEPBalDpXmcbpeywWfH5yA3nWAtffwkvlNVflMv9Dt2VQMdqxfLYM3l+SNqtFsJIrh5PvS6Y26So9mhpQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UoUO6NTH; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 531Gf6wq026021;
+	Tue, 1 Apr 2025 20:14:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=tIGOSl
+	v8z58Q+wkjqybI3RqRtNeKMb+3FoycqEDPy7c=; b=UoUO6NTHWVb5zMc+jEi1wQ
+	Z8sB3FnMIjlbysZHqcOp/Na1Y4R0BUW+Qi4hqi7OWy+T/hxKjTfOej9YUd3iD5X/
+	2jS3X0WTKAsvrFyU8ImmV0rnd9ZUctNCeA3+yCNoZ9K5wxgsuvNvxdBoBvx4NxRM
+	/sJJZLHQWCi58o0qf7GFHkxE/s22agFRlxDD41J/ua3rHgEFLCK8NWmvxvIEss7X
+	vcPbW7u+XA9G5fCftdITrVeKz3vmnGNxVaWLim3xhNo9zS26doUjoxtJbnu+Pgjf
+	4seoX3qiMaGR3dekXaIhVkWZVBLK9+Sbv13yGu9YDkr8MkrXjrIMwhG/lb3C3d3g
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45r27q608w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Apr 2025 20:14:52 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 531KASgX010272;
+	Tue, 1 Apr 2025 20:14:51 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45pv6nv9su-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 01 Apr 2025 20:14:51 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 531KEoeR31457894
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 1 Apr 2025 20:14:51 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A6EBA5805C;
+	Tue,  1 Apr 2025 20:14:50 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1E43858054;
+	Tue,  1 Apr 2025 20:14:50 +0000 (GMT)
+Received: from ltc.linux.ibm.com (unknown [9.5.196.140])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  1 Apr 2025 20:14:50 +0000 (GMT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401153225.96379-4-anshuman.gupta@intel.com>
+Date: Tue, 01 Apr 2025 15:14:49 -0500
+From: Wen Xiong <wenxiong@linux.ibm.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, gjoyce@linux.ibm.com,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 1/1] genirq/msi: Dynamic remove/add stroage adapter hits
+ EEH
+In-Reply-To: <87wmc9wg2z.ffs@tglx>
+References: <87wmc9wg2z.ffs@tglx>
+Message-ID: <e83622773199665d39db5f724537d9dd@linux.ibm.com>
+X-Sender: wenxiong@linux.ibm.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 97ggxYno2G7sRr-B88pD6kEeaU540Xda
+X-Proofpoint-GUID: 97ggxYno2G7sRr-B88pD6kEeaU540Xda
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-01_08,2025-04-01_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=995
+ impostorscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 clxscore=1015 phishscore=0 bulkscore=0 spamscore=0
+ priorityscore=1501 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2504010122
 
-On Tue, Apr 01, 2025 at 09:02:16PM +0530, Anshuman Gupta wrote:
-> Adding a notifier to notify all PCIe child devices about the
-> block main power removal. It is needed because theoretically
-> multiple PCIe Endpoint devices on same Root Port
-> can request for AUX power and _DSM method can return with
-> 80000000h signifies that the hierarchy connected via
-> the slot cannot support main power removal when in D3Cold.
+On 2025-03-28 06:27, Thomas Gleixner wrote:
 
-I wish the spec used different language here.  "D3cold" *means* "main
-power is removed" (PCIe r6.0, sec 5.3.1.4.2), so it doesn't make sense
-to say that "the slot cannot support main power removal when in
-D3cold".  If a device is in D3cold, its main power has been removed by
-definition.
-
-I suppose the spec is trying to say if the driver has called this _DSM
-with 80000000h, it means the platform must not remove main power from
-the device while the system is in S0?  Is that what you think it
-means?
-
-The 2h return value description says it "indicates that the platform
-will not remove main power from the slot while the system is in S0,"
-so I guess that must be it.
-
-In this series, pci_acpi_aux_power_setup() only supplies a 16-bit
-aux_pwr_limit value, so the driver cannot *request* that the platform
-not remove main power.
-
-So I guess the only scenario where the _DSM returns 80000000h is when
-the platform itself or other devices prevent the removal of main
-power.  And the point of the notifier is to tell devices that their
-main power will never be removed while the system is in S0.  Is that
-right?
-
-> This may disrupt functionality of other child device.
-
-What sort of disruption could happen?  I would think that if the _DSM
-returns 80000000h, it just means the device will not have main power
-removed, so it won't see that power state transition.  The only
-"disruption" would be that we're using more power.
-
-> Let's notify all PCIe devices requested Aux power resource
-> and Let PCIe End Point driver handle it in its callback.
-
-Wrap to fill 75 columns.
-
-s/Adding/Add/
-s/Let's notify/Notify/
-s/and Let/and let/
-s/End Point/Endpoint/ (several places here and below)
-
-> Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
-> ---
->  drivers/pci/pci-acpi.c   | 34 +++++++++++++++++++++++++++++++---
->  include/linux/pci-acpi.h | 13 +++++++++++++
->  2 files changed, 44 insertions(+), 3 deletions(-)
+> You are completely missing the point. This is not a problem restricted
+> to PCI/MSI interrupts.
 > 
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 04149f037664..d1ca1649e6e8 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -1421,6 +1421,32 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
->  	ACPI_FREE(obj);
->  }
->  
-> +static BLOCKING_NOTIFIER_HEAD(pci_acpi_aux_power_notify_list);
-> +
-> +/**
-> + * pci_acpi_register_aux_power_notifier - Register driver notifier
-> + * @nb: notifier block
-> + *
-> + * This function shall be called by PCIe End Point device requested the Aux
-> + * power resource in order to handle the any scenario gracefully when other
-> + * child PCIe devices Aux power request returns with No main power removal.
-> + * PCIe devices which register this notifier shall handle No main power
-> + * removal scenario accordingly.
+Thanks for all suggestions! I will investigate more and check if we can 
+fix it in device driver.
 
-This would actually be called by the *driver* (not by the device).
+Looks several device drivers in kernel use two kernel APIs to set/clean 
+IRQ_NO_BALACING status for a given irq.
 
-Reword in imperative mood if possible.
+irq_set_status_flags(irq, IRQ_NO_BALANCING);
+irq_clear_status_flags(irq, IRQ_NO_BALANCING);
 
-> + *
-> + * Return: Returns 0 on success and errno on failure.
-> + */
-> +int pci_acpi_register_aux_power_notifier(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_register(&pci_acpi_aux_power_notify_list, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_acpi_register_aux_power_notifier);
-> +
-> +void pci_acpi_unregister_aux_power_notifier(struct notifier_block *nb)
-> +{
-> +	blocking_notifier_chain_unregister(&pci_acpi_aux_power_notify_list, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_acpi_unregister_aux_power_notifier);
-> +
->  /**
->   * pci_acpi_request_d3cold_aux_power - Request D3cold aux power via ACPI DSM
->   * @dev: PCI device instance
-> @@ -1466,17 +1492,19 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power)
->  	result = out_obj->integer.value;
->  
->  	switch (result) {
-> -	case 0x0:
-> +	case ACPI_AUX_PW_DENIED:
+With these two APIs, device driver can decide if using kernel irq 
+balance or setting irq affinity by driver itself?
 
-Add these constants in the patch that adds the _DSM.  Then this patch
-will be just notifier-related code.
+So we can set/clear IRQ_NO_BALANCING during reset.
 
->  		dev_dbg(&dev->dev, "D3cold Aux Power %umW request denied\n",
->  			requested_power);
->  		break;
-> -	case 0x1:
-> +	case ACPI_AUX_PW_GRANTED:
->  		dev_info(&dev->dev, "D3cold Aux Power request granted: %umW\n",
->  			 requested_power);
->  		ret = 0;
->  		break;
-> -	case 0x2:
-> +	case ACPI_NO_MAIN_PW_REMOVAL:
->  		dev_info(&dev->dev, "D3cold Aux Power: Main power won't be removed\n");
-> +		blocking_notifier_call_chain(&pci_acpi_aux_power_notify_list,
-> +					     ACPI_NO_MAIN_PW_REMOVAL, dev);
->  		ret = -EBUSY;
->  		break;
->  	default:
-> diff --git a/include/linux/pci-acpi.h b/include/linux/pci-acpi.h
-> index 4b7373f91a9a..793b979af98b 100644
-> --- a/include/linux/pci-acpi.h
-> +++ b/include/linux/pci-acpi.h
-> @@ -124,6 +124,10 @@ extern const guid_t pci_acpi_dsm_guid;
->  #define DSM_PCI_D3COLD_AUX_POWER_LIMIT		0x0A
->  #define DSM_PCI_PERST_ASSERTION_DELAY		0x0B
->  
-> +#define ACPI_AUX_PW_DENIED			0x0
-> +#define ACPI_AUX_PW_GRANTED			0x1
-> +#define ACPI_NO_MAIN_PW_REMOVAL			0x2
-> +
->  #ifdef CONFIG_PCIE_EDR
->  void pci_acpi_add_edr_notifier(struct pci_dev *pdev);
->  void pci_acpi_remove_edr_notifier(struct pci_dev *pdev);
-> @@ -134,12 +138,21 @@ static inline void pci_acpi_remove_edr_notifier(struct pci_dev *pdev) { }
->  
->  int pci_acpi_set_companion_lookup_hook(struct acpi_device *(*func)(struct pci_dev *));
->  void pci_acpi_clear_companion_lookup_hook(void);
-> +int pci_acpi_register_aux_power_notifier(struct notifier_block *nb);
-> +void pci_acpi_unregister_aux_power_notifier(struct notifier_block *nb);
->  int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power);
->  int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_us);
->  
->  #else	/* CONFIG_ACPI */
->  static inline void acpi_pci_add_bus(struct pci_bus *bus) { }
->  static inline void acpi_pci_remove_bus(struct pci_bus *bus) { }
-> +int pci_acpi_register_aux_power_notifier(struct notifier_block *nb)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +void pci_acpi_unregister_aux_power_notifier(struct notifier_block *nb) { }
-> +
->  int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power)
->  {
->  	return -EOPNOTSUPP;
-> -- 
-> 2.43.0
-> 
+Thanks,
+Wendy
+
 
