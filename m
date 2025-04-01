@@ -1,149 +1,223 @@
-Return-Path: <linux-pci+bounces-25093-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25094-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20EB0A78253
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 20:37:36 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40F01A782C3
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 21:29:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1A40164D84
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 18:36:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 71F19188C1D7
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 19:29:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B7751DEFC6;
-	Tue,  1 Apr 2025 18:30:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C16D1A7253;
+	Tue,  1 Apr 2025 19:29:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DAHRh+/o"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IS4xfCe0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B651D63DD;
-	Tue,  1 Apr 2025 18:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8BD49461;
+	Tue,  1 Apr 2025 19:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743532232; cv=none; b=Aai4LBEA1PpDBiTYUr3KJyBY1m/3m+LkPF692MgZIk/7yhTlaWKKJhBSzsZR/Tkbtz6s5qWSY0HZbXut3SE2QQtzW6JCHzHueD82m0jk7ga4FEzGcv4fWSkptpUoe8wmNeLvttjpvNtwQuNLM/lvi6T7dA9WjXp4LadbUDXcFv0=
+	t=1743535770; cv=none; b=IWUb4VpvAyUs+r3urBi16mQy9MnKwrJdJWtiO9zNBVaquyNGZHsH09nJz3Py1M6VQCtVSgYynqM0Z0AqRxBiDAqRagurZaZbc0BNKA5Z3X285sfXukD2955JZg9AqPr0+f23fk1rUsspqNhqy2iJjYVbp2WT/OoTmF9ufNjGAlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743532232; c=relaxed/simple;
-	bh=4os2+XbhmtioCCLMDuFXfGu111eWd2jMSbaGOz3FyPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=dCABcmK5f2bgqgySRVR76T66SpRPtxYWLlVSKhCBLLy4S2UlFHvJ0G3hsVklnagrfgyWz4xFavt+sbUY3RNtXGWlkcQSr/F1p0sD1Iiu2AsCE6aNhE3LRI1PJOzKbeRjVlTG7FmuXfyjdb9RiyTkqHT2I+0pUcVWvk5lATLYP7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DAHRh+/o; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A5CDC4CEE4;
-	Tue,  1 Apr 2025 18:30:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743532231;
-	bh=4os2+XbhmtioCCLMDuFXfGu111eWd2jMSbaGOz3FyPc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=DAHRh+/oTEELBMDZFuJyitH+sbvoLVMs1xVnGHazWk23/GFAxn/k8udDP/jhl34wI
-	 jE3e5UIZQForRM9/zCaHFU4mHsFJ/0LZw/B2SNHn40suKvJTjxz47Gv1BrlSiZPWsl
-	 XeTpOtwry9aP1jdvbMrFbaDJiPvbXgPAZ9rfbUvNWxgIE0gVYdswG2V1VWQxuWv06y
-	 KPILXd4N5DS/ymQcjhXui8Lu0XQf0YWftEKl0pi4j9wh8hC4PvdCxUJJSx8fSCgNJx
-	 qHGFzu/MgaH9Ymm7i9fzlot8fMKjJ5I8Cgl0Lhkby8688D7EAN6/xl4q/iTDcF+3KX
-	 qjuircOLlW5kw==
-Date: Tue, 1 Apr 2025 13:30:30 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Anshuman Gupta <anshuman.gupta@intel.com>
-Cc: intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org, rafael@kernel.org, lenb@kernel.org,
-	bhelgaas@google.com, ilpo.jarvinen@linux.intel.com,
-	lucas.demarchi@intel.com, rodrigo.vivi@intel.com,
-	badal.nilawar@intel.com, varun.gupta@intel.com,
-	ville.syrjala@linux.intel.com, uma.shankar@intel.com
-Subject: Re: [PATCH 02/12] PCI/ACPI: Add PERST# Assertion Delay _DSM method
-Message-ID: <20250401183030.GA1676293@bhelgaas>
+	s=arc-20240116; t=1743535770; c=relaxed/simple;
+	bh=PPJUXrWwHEytxvARJTQER9IO5PUzIkGAvHb/WJFCSfI=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=G7upaUgnf3ImPWCufk6E8UaEjsEbp2f0BfxwBGwECow8tnHomgq4tbz9LYt+thurbPArIVE0Q2WC1r6Jg+1zU7QfaJ1QYNWaBST1BtOGUhGlrnAwhDy8r0GIoYq402ixnO5qjNubNBMj8Q9ZGOo12Xex/vfdVcU1BBvng6yRfJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=IS4xfCe0; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from [100.65.201.26] (unknown [20.236.10.206])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 770B020412F8;
+	Tue,  1 Apr 2025 12:29:27 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 770B020412F8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1743535768;
+	bh=ezzerkdidgGXkpIDYpjhjZMJiJIXbyNZbJ7W3iuDF8M=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=IS4xfCe0giHmDyLcIvFipVaAd9UszSS8w7B1pP+PUqSJMaj2WBtvuRklG3L7WUTep
+	 toPOxSFUsf9FPBXs/mIJFU5ZLR1i3ZWD4dTgeCpOzYOp9g6rhP/BsbPkl2XVb4Z7xo
+	 ybkPX4pbGzN/I88snlEjBoYcsCtZS/r8LURZddL8=
+Message-ID: <87238331-1ee3-4b92-b200-bd064a55edc7@linux.microsoft.com>
+Date: Tue, 1 Apr 2025 12:29:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401153225.96379-3-anshuman.gupta@intel.com>
+User-Agent: Mozilla Thunderbird
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, lpieralisi@kernel.org,
+ kw@linux.com, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ bhelgaas@google.com, arnd@arndb.de, eahariha@linux.microsoft.com,
+ x86@kernel.org, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] hyperv: Introduce new way to manage hypercall args
+To: mhklinux@outlook.com
+References: <20250313061911.2491-1-mhklinux@outlook.com>
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+Content-Language: en-US
+In-Reply-To: <20250313061911.2491-1-mhklinux@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 01, 2025 at 09:02:15PM +0530, Anshuman Gupta wrote:
-> Implement _DSM Method 11 as per PCI firmware specs
-> section 4.6.11 Rev 3.3.
-
-"PCI Firmware r3.3, sec 4.6.11" so the citation is major to minor.
-
-"0xb" or "0Bh" to match spec usage.
-
-> Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
-> ---
->  drivers/pci/pci-acpi.c   | 53 ++++++++++++++++++++++++++++++++++++++++
->  include/linux/pci-acpi.h |  7 ++++++
->  2 files changed, 60 insertions(+)
+On 3/12/2025 11:19 PM, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
 > 
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index ebd49e43457e..04149f037664 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -1499,6 +1499,59 @@ int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 requested_power)
->  }
->  EXPORT_SYMBOL(pci_acpi_request_d3cold_aux_power);
->  
-> +/**
-> + * pci_acpi_add_perst_assertion_delay - Request PERST# delay via ACPI DSM
-> + * @dev: PCI device instance
-> + * @delay_us: Requested delay_us
-> + *
-> + * This function sends a request to the host BIOS via ACPI _DSM to grant the
-> + * required PERST# delay for the specified PCI device. It evaluates the _DSM
-> + * to request the PERST# delay and handles the response accordingly.
-> + *
-> + * Return: returns 0 on success and errno on failure.
-> + */
-> +int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 delay_us)
-> +{
-> +	union acpi_object in_obj = {
-> +		.integer.type = ACPI_TYPE_INTEGER,
-> +		.integer.value = delay_us,
-> +	};
-> +
-> +	union acpi_object *out_obj;
-> +	acpi_handle handle;
-> +	int result, ret = -EINVAL;
-> +
-> +	if (!dev || !ACPI_HANDLE(&dev->dev))
-> +		return -EINVAL;
-> +
-> +	handle = ACPI_HANDLE(&dev->dev);
+> This patch set introduces a new way to manage the use of the per-cpu
+> memory that is usually the input and output arguments to Hyper-V
+> hypercalls. Current code allocates the "hyperv_pcpu_input_arg", and in
+> some configurations, the "hyperv_pcpu_output_arg". Each is a 4 KiB
+> page of memory allocated per-vCPU. A hypercall call site disables
+> interrupts, then uses this memory to set up the input parameters for
+> the hypercall, read the output results after hypercall execution, and
+> re-enable interrupts. The open coding of these steps has led to
+> inconsistencies, and in some cases, violation of the generic
+> requirements for the hypercall input and output as described in the
+> Hyper-V Top Level Functional Spec (TLFS)[1]. This patch set introduces
+> a new family of inline functions to replace the open coding. The new
+> functions encapsulate key aspects of the use of per-vCPU memory for
+> hypercall input and output,and ensure that the TLFS requirements are
+> met (max size of 1 page each for input and output, no overlap of input
+> and output, aligned to 8 bytes, etc.).
+> 
+> With this change, hypercall call sites no longer directly access
+> "hyperv_pcpu_input_arg" and "hyperv_pcpu_output_arg". Instead, one of
+> a family of new functions provides the per-cpu memory that a hypercall
+> call site uses to set up hypercall input and output areas.
+> Conceptually, there is no longer a difference between the "per-vCPU
+> input page" and "per-vCPU output page". Only a single per-vCPU page is
+> allocated, and it is used to provide both hypercall input and output.
+> All current hypercalls can fit their input and output within that single
+> page, though the new code allows easy changing to two pages should a
+> future hypercall require a full page for each of the input and output.
+> 
+> The new functions always zero the fixed-size portion of the hypercall
+> input area (but not any array portion -- see below) so that
+> uninitialized memory isn't inadvertently passed to the hypercall.
+> Current open-coded hypercall call sites are inconsistent on this point,
+> and use of the new functions addresses that inconsistency. The output
+> area is not zero'ed by the new code as it is Hyper-V's responsibility
+> to provide legal output.
+> 
+> When the input or output (or both) contain an array, the new code
+> calculates and returns how many array entries fit within the per-cpu
+> memory page, which is effectively the "batch size" for the hypercall
+> processing multiple entries. This batch size can then be used in the
+> hypercall control word to specify the repetition count. This
+> calculation of the batch size replaces current open coding of the
+> batch size, which is prone to errors. Note that the array portion of
+> the input area is *not* zero'ed. The arrays are almost always 64-bit
+> GPAs or something similar, and zero'ing that much memory seems
+> wasteful at runtime when it will all be overwritten. The hypercall
+> call site is responsible for ensuring that no part of the array is
+> left uninitialized (just as with current code).
+> 
+> The new family of functions is realized as a single inline function
+> that handles the most complex case, which is a hypercall with input
+> and output, both of which contain arrays. Simpler cases are mapped to
+> this most complex case with #define wrappers that provide zero or NULL
+> for some arguments. Several of the arguments to this new function
+> must be compile-time constants generated by "sizeof()" expressions.
+> As such, most of the code in the new function is evaluated by the
+> compiler, with the result that the runtime code paths are no longer
+> than with the current open coding. An exception is the new code
+> generated to zero the fixed-size portion of the input area in cases
+> where it was not previously done.
+> 
+> Use of the new function typically (but not always) saves a few lines
+> of code at each hypercall call site. This is traded off against the
+> lines of code added for the new functions. With code currently
+> upstream, the net is an add of about 60 lines of code and comments.
+> However, as additional hypercall call sites are upstreamed from the
+> OpenHCL project[2] in support of Linux running in the Hyper-V root
+> partition and in VTLs other than VTL 0, the net lines of code added is
+> nearly zero.
+> 
+> A couple hypercall call sites have requirements that are not 100%
+> handled by the new function. These still require some manual open-
+> coded adjustment or open-coded batch size calculations -- see the
+> individual patches in this series. Suggestions on how to do better
+> are welcome.
+> 
+> The patches in the series do the following:
+> 
+> Patch 1: Introduce the new family of functions for assigning hypercall
+>          input and output arguments.
+> 
+> Patch 2 to 5: Change existing hypercall call sites to use one of the new
+>          functions. In some cases, tweaks to the hypercall argument data
+>          structures are necessary, but these tweaks are making the data
+>          structures more consistent with the overall pattern. These
+>          four patches are independent of each other, and can go in any
+>          order. The breakup into 4 patches is for ease of review.
+> 
+> Patch 6: Update the name of the variable used to hold the per-cpu memory
+>          used for hypercall arguments. Remove code for managing the
+> 	 per-cpu output page.
+> 
+> Patch 1 from v1 of the patch set has been dropped in v2. It was a bug
+> fix that has already been picked up.
+> 
+> The new code compiles and runs successfully on x86 and arm64. Separate
+> from this patch set, for evaluation purposes I also applied the
+> changes to the additional hypercall call sites in the OpenHCL
+> project[2]. However, I don't have the hardware or Hyper-V
+> configurations needed to test running in the Hyper-V root partition or
+> in a VTL other than VTL 0. So the related hypercall call sites still
+> need to be tested to make sure I didn't break anything. Hopefully
+> someone with the necessary configurations and Hyper-V versions can
+> help with that testing.
+> 
+> For gcc 9.4.0, I've looked at the generated code for a couple of
+> hypercall call sites on both x86 and arm64 to ensure that it boils
+> down to the equivalent of the current open coding. I have not looked
+> at the generated code for later gcc versions or for Clang/LLVM, but
+> there's no reason to expect something worse as the code isn't doing
+> anything tricky.
+> 
+> This patch set is built against linux-next20250311.
+> 
+> [1] https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/tlfs
+> [2] https://github.com/microsoft/OHCL-Linux-Kernel
+> 
+> Michael Kelley (6):
+>   Drivers: hv: Introduce hv_hvcall_*() functions for hypercall arguments
+>   x86/hyperv: Use hv_hvcall_*() to set up hypercall arguments -- part 1
+>   x86/hyperv: Use hv_hvcall_*() to set up hypercall arguments -- part 2
+>   Drivers: hv: Use hv_hvcall_*() to set up hypercall arguments
+>   PCI: hv: Use hv_hvcall_*() to set up hypercall arguments
+>   Drivers: hv: Replace hyperv_pcpu_input/output_arg with hyperv_pcpu_arg
+> 
+>  arch/x86/hyperv/hv_apic.c           |  10 ++-
+>  arch/x86/hyperv/hv_init.c           |  12 ++--
+>  arch/x86/hyperv/hv_vtl.c            |   9 +--
+>  arch/x86/hyperv/irqdomain.c         |  17 +++--
+>  arch/x86/hyperv/ivm.c               |  18 ++---
+>  arch/x86/hyperv/mmu.c               |  19 ++---
+>  arch/x86/hyperv/nested.c            |  14 ++--
+>  drivers/hv/hv.c                     |  11 +--
+>  drivers/hv/hv_balloon.c             |   4 +-
+>  drivers/hv/hv_common.c              |  57 +++++----------
+>  drivers/hv/hv_proc.c                |   8 +--
+>  drivers/hv/hyperv_vmbus.h           |   2 +-
+>  drivers/pci/controller/pci-hyperv.c |  18 +++--
+>  include/asm-generic/mshyperv.h      | 103 +++++++++++++++++++++++++++-
+>  include/hyperv/hvgdk_mini.h         |   6 +-
+>  15 files changed, 184 insertions(+), 124 deletions(-)
+> 
 
-acpi_check_dsm().
+I do intend to review this series but it's been hard to get time in between doing
+commercial work. I'll leave it to Wei to determine how important my feedback is since
+Nuno has reviewed v1.
 
-> +	out_obj = acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4,
-> +					  DSM_PCI_PERST_ASSERTION_DELAY,
-> +					  &in_obj, ACPI_TYPE_INTEGER);
-> +	if (!out_obj)
-> +		return -EINVAL;
-> +
-> +	result = out_obj->integer.value;
-> +
-> +	if (result == delay_us) {
-> +		dev_info(&dev->dev, "PERST# Assertion Delay set to"
-> +			 "%u microseconds\n", delay_us);
+I do feel that it's important for *someone* to review the series from the Linux
+guest perspective.
 
-pci_info().
-
-Join these into a single string, even though they won't fit in a line
-without wrapping.  This is to make them easier to grep for when a user
-reports seeing the message.  (Do this on the previous patch too, where
-I forgot to mention it.)
-
-> +		ret = 0;
-> +	} else if (result == 0) {
-> +		dev_warn(&dev->dev, "PERST# Assertion Delay request failed,"
-> +			 "no previous valid request\n");
-> +	} else {
-> +		dev_warn(&dev->dev,
-> +			 "PERST# Assertion Delay request failed"
-> +			 "Previous valid delay: %u microseconds\n", result);
-> +	}
-> +
-> +	ACPI_FREE(out_obj);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(pci_acpi_add_perst_assertion_delay);
+Thanks,
+Easwar (he/him)
 
