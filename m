@@ -1,117 +1,179 @@
-Return-Path: <linux-pci+bounces-25055-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25056-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F390A777AA
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 11:26:07 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13F4EA777EA
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 11:41:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7DF9C188800D
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 09:26:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C2227169301
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 09:41:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC03A1EE7C6;
-	Tue,  1 Apr 2025 09:26:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 678EE1EEA27;
+	Tue,  1 Apr 2025 09:40:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BaDDO56N"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="FqAE2REk"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ewsoutbound.kpnmail.nl (ewsoutbound.kpnmail.nl [195.121.94.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0BD1EE02A;
-	Tue,  1 Apr 2025 09:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAED1EEA4D
+	for <linux-pci@vger.kernel.org>; Tue,  1 Apr 2025 09:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.121.94.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743499563; cv=none; b=e9u9spt1+6BfaMORU3KVmiqZ9uP+sBBDYNJ1rqzX1Eor0iLRWYfwCQ2Gto9F/PHhx4NqmZdqAOAsn30DtpA+yGNYluYKoqJraFWqLx2zj5f+X/Ndf4Bcm8+WLHmkAFrc9KtorGyqJE1PBCNpiwsDfhxPM/gvgTT7re2FmbL+h0c=
+	t=1743500459; cv=none; b=OIEsKyC5+G6HAkM4acbwgKcPQiSf9YoxeGLKRk73/fdlSSFZombE2bJo0clLR3Va6lct0sn3NekKlYCZbVoYTeZmnwiCrdI2vPfqH7ch5QJEBasYUIhHPwPyovJ1f4LqA61QbGNXCGgMWWAod002bvqiUCgepEIcFUDDu1eFftA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743499563; c=relaxed/simple;
-	bh=2S6+CIwU99AxyEmYroYUZ2AkN6k++Air0Ian5Ime1cI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PVBukulUF2G5bsmMtrKJtGdVlf9Jkn59M2EhlurFbuDj5gfJyP50Nz17C7cnZfcmJOpIk0YrOtwA2NnrQ2gK7usZAB/z51vyNA88uTKD4HNRedIlHeBWivJOL5soAVY07r+jZo4YrVVqzRNfMGDdSP9mj/9awEwVWwuLV+4rWtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BaDDO56N; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4E1C4CEE4;
-	Tue,  1 Apr 2025 09:25:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743499563;
-	bh=2S6+CIwU99AxyEmYroYUZ2AkN6k++Air0Ian5Ime1cI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BaDDO56NFD1sts9/zPJgBbmGP3TM4mGBcx58oTKdw/ouoyDMdwnKBuZ0ZXvPyJHS2
-	 gsAr0bTEu2Hrwzyz4xVjVJoOShv3R2xqof48nv4yK1wewlgKznIJgYClaqFu238xJn
-	 yLgOLKuB/W7ta0PxpvsY2c+jt1MVTANYQR0ZOUnKXiO4lei/jcrtFO5PlvhhaCZ0RB
-	 LGyign0Q70l0ewkvuGa5UZ7AY5VVb8tNwe+KRjqZL6rfgnBt9rrepCUvay0F2QBrdh
-	 b6VGMFe1PoDgxpn9OWwZddyOjwCabHoJEn/l96mHm/ilWQqlUynlK8zi5Jnk91uRsV
-	 56gl2nQk70JPA==
-Date: Tue, 1 Apr 2025 11:25:56 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-	Allen Hubbe <allenbh@gmail.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ntb@lists.linux.dev, dlemoal@kernel.org
-Subject: Re: [PATCH 1/2] PCI: endpoint: strictly apply bar fixed size to
- allocate space
-Message-ID: <Z-uxJKMQFY8eX1iw@ryzen>
-References: <20250328-pci-ep-size-alignment-v1-0-ee5b78b15a9a@baylibre.com>
- <20250328-pci-ep-size-alignment-v1-1-ee5b78b15a9a@baylibre.com>
- <Z-pO_c2zXxDqvIsU@ryzen>
- <1jwmc5tgbe.fsf@starbuckisacylon.baylibre.com>
+	s=arc-20240116; t=1743500459; c=relaxed/simple;
+	bh=gJlB4AeSDCKsRK8ivWcHTRoN7YcHomioN5Bj+ipSUpI=;
+	h=Date:Message-Id:From:To:Cc:In-Reply-To:Subject:References; b=tBMNHDgvHn1383hmHHb7P6/SMCcbUYiXrCF5FnWUFT6o1JRwQg3UscdYPfhIbJdVBaGVFwADksitiiWeOan7e9p/U8dOsPBU5tpzZ/EgukzaO1zWeHmmLZPZo53HSVPsXjEpAqwFTE5/FpqbTyV0kYpW7Jczen23jZtn96+IPhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xs4all.nl; spf=pass smtp.mailfrom=xs4all.nl; dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b=FqAE2REk; arc=none smtp.client-ip=195.121.94.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xs4all.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xs4all.nl
+X-KPN-MessageId: 645a4459-0edd-11f0-b8e6-005056999439
+Received: from smtp.kpnmail.nl (unknown [10.31.155.8])
+	by ewsoutbound.so.kpn.org (Halon) with ESMTPS
+	id 645a4459-0edd-11f0-b8e6-005056999439;
+	Tue, 01 Apr 2025 11:40:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=xs4all.nl; s=xs4all01;
+	h=subject:to:from:message-id:date;
+	bh=ey7yoOjV/lc5KcZj4q45sCx1nDoy4AmcmcNqfQe/iX8=;
+	b=FqAE2REkFgpO5l2/SNwlAFSrFOx/nu6RzHt2R1+ZsCDtBV69NLrvIrhuJGvE4fTGoK1ZmzxSNirSG
+	 ZwHLUY0PHF1CINuzACJAO/SfbfazgI03XZ+WhebvUE+J8i2x+VGt66VoqcEVIgDgnAgtFNOFzKujzs
+	 e3XICGWRWyabId09ZjxjE4SXaAKy/UrjoWYCmlGVs8xpAYan/LZSKBXRTbt/aSHuCqD6BmyFx4Yn4N
+	 J13gtkyWN7M3vcaqKuYGngCJFovRXrHFS8bvLvcN7tgXgQivboaPq3m4gxtTZaT2Zkx6DSE90Ljgd8
+	 rJkmMa+qi1t1I374U1YP5Y5vrb1gUxQ==
+X-KPN-MID: 33|Q3Biel+nTqoBd3E8Ejl4/blQ1eotWFPRsXPh84eyXyVG8o/qGN/zkB/xVlQuHaH
+ VetITMcREbJ3DnFIWK3u0glWOq0lwEsC5oKzxzT1vxGk=
+X-KPN-VerifiedSender: Yes
+X-CMASSUN: 33|W0d/KH2Hq4f/I/JXtohD/yi6JDISu5nftVLzXJnFRULuKq3Rc3Vn2VnYtkRYUy+
+ oTF6eiBDYAmLq8KY2ELmrXA==
+Received: from bloch.sibelius.xs4all.nl (80-61-163-207.fixed.kpn.net [80.61.163.207])
+	by smtp.xs4all.nl (Halon) with ESMTPSA
+	id 617e7e6a-0edd-11f0-97bf-00505699d6e5;
+	Tue, 01 Apr 2025 11:40:44 +0200 (CEST)
+Date: Tue, 01 Apr 2025 11:40:43 +0200
+Message-Id: <87cydwxlr8.fsf@bloch.sibelius.xs4all.nl>
+From: Mark Kettenis <mark.kettenis@xs4all.nl>
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	asahi@lists.linux.dev, alyssa@rosenzweig.io, j@jannau.net,
+	marcan@marcan.st, sven@svenpeter.dev, bhelgaas@google.com,
+	lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org
+In-Reply-To: <20250401091713.2765724-3-maz@kernel.org> (message from Marc
+	Zyngier on Tue, 1 Apr 2025 10:17:02 +0100)
+Subject: Re: [PATCH v3 02/13] dt-bindings: pci: apple,pcie: Add t6020 compatible string
+References: <20250401091713.2765724-1-maz@kernel.org> <20250401091713.2765724-3-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1jwmc5tgbe.fsf@starbuckisacylon.baylibre.com>
 
-On Mon, Mar 31, 2025 at 04:39:33PM +0200, Jerome Brunet wrote:
-> On Mon 31 Mar 2025 at 10:14, Niklas Cassel <cassel@kernel.org> wrote:
-> >
-> > Perhaps the solution is to add another struct member to struct pci_epf_bar,
-> > size (meaning actual BAR size, which will be written to the BAR mask register)
-> > and backing_mem_size.
-> >
-> > Or.. we modify pci_epf_alloc_space() to allocate an aligned size, but the
-> > size that we store in (struct pci_epf_bar).size is the unaligned size.
+> From: Marc Zyngier <maz@kernel.org>
+> Date: Tue,  1 Apr 2025 10:17:02 +0100
 > 
-> I tried this and it works. As pointed above, as long as pci_epc_set_bar() is
-> happy, it will work for me since the dwc-ep driver does not really care for
-> the size given with fixed BARs.
+> From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 > 
-> However, when doing so, it gets a bit trick to properly call
-> dma_free_coherent() as we don't have the size actually allocated
-> anymore. It is possible to compute it again but it is rather ugly.
-
-You are right.
-
-
+> t6020 adds some register ranges compared to t8103, so requires
+> a new compatible as well as the new PHY registers.
 > 
-> It would probably be best to add a parameter indeed, to track the size
-> allocated with dma_alloc_coherent(). What about .aligned_size ? Keeping
-> .size to track the actual bar size requires less modification I think.
+> Thanks to Mark and Rob for their helpful suggestions in updating
+> the binding.
 
-Your problem should be able to be reproducible also for BAR type
-BAR_PROGRAMMABLE, when sending in a size smaller than epc_features.align
-to pci_epf_alloc_space(), which will then modify epf_bar.size to be aligned.
+Ah, that's how you do it!  Thanks Rob.
 
-The call to set_bar() will then use the aligned size instead of the
-"BAR size" when writing the BAR mask register, which is wrong.
-(This means that the BAR size seen by the host is the aligned size and not
-"BAR size".)
+This matches the binding already in use for U-Boot and OpenBSD, so:
 
-So yes, I think having both size and aligned_size (or whatever name) is the
-way to go.
+Reviewed-by: Mark Kettenis <mark.kettenis@xs4all.nl>
 
-
-Kind regards,
-Niklas
+> Suggested-by: Mark Kettenis <mark.kettenis@xs4all.nl>
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> Tested-by: Janne Grunau <j@jannau.net>
+> Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> [maz: added PHY registers, constraints]
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  .../devicetree/bindings/pci/apple,pcie.yaml   | 33 +++++++++++++++----
+>  1 file changed, 26 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> index c8775f9cb0713..c0852be04f6de 100644
+> --- a/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
+> @@ -17,6 +17,10 @@ description: |
+>    implements its root ports.  But the ATU found on most DesignWare
+>    PCIe host bridges is absent.
+>  
+> +  On systems derived from T602x, the PHY registers are in a region
+> +  separate from the port registers. In that case, there is one PHY
+> +  register range per port register range.
+> +
+>    All root ports share a single ECAM space, but separate GPIOs are
+>    used to take the PCI devices on those ports out of reset.  Therefore
+>    the standard "reset-gpios" and "max-link-speed" properties appear on
+> @@ -30,16 +34,18 @@ description: |
+>  
+>  properties:
+>    compatible:
+> -    items:
+> -      - enum:
+> -          - apple,t8103-pcie
+> -          - apple,t8112-pcie
+> -          - apple,t6000-pcie
+> -      - const: apple,pcie
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - apple,t8103-pcie
+> +              - apple,t8112-pcie
+> +              - apple,t6000-pcie
+> +          - const: apple,pcie
+> +      - const: apple,t6020-pcie
+>  
+>    reg:
+>      minItems: 3
+> -    maxItems: 6
+> +    maxItems: 10
+>  
+>    reg-names:
+>      minItems: 3
+> @@ -50,6 +56,10 @@ properties:
+>        - const: port1
+>        - const: port2
+>        - const: port3
+> +      - const: phy0
+> +      - const: phy1
+> +      - const: phy2
+> +      - const: phy3
+>  
+>    ranges:
+>      minItems: 2
+> @@ -98,6 +108,15 @@ allOf:
+>            maxItems: 5
+>          interrupts:
+>            maxItems: 3
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: apple,t6020-pcie
+> +    then:
+> +      properties:
+> +        reg-names:
+> +          minItems: 10
+>  
+>  examples:
+>    - |
+> -- 
+> 2.39.2
+> 
+> 
+> 
 
