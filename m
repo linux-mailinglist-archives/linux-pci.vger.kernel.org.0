@@ -1,280 +1,274 @@
-Return-Path: <linux-pci+bounces-25059-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25060-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C6D8A778A4
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 12:16:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7AB5BA778B3
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 12:19:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B18343AB4E5
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 10:16:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09B6F3AAA4B
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 10:18:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40DA21F03DE;
-	Tue,  1 Apr 2025 10:16:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 715E11EB1A8;
+	Tue,  1 Apr 2025 10:18:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ayrmOtwW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jvHDD4GP"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711451F03C0
-	for <linux-pci@vger.kernel.org>; Tue,  1 Apr 2025 10:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1931F0987;
+	Tue,  1 Apr 2025 10:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743502611; cv=none; b=VcQXSjxNxzkyjhPYc6EgPK/zH5Qi/spRYYzqXI0881RhzNHdYYS+9sHk8ZmDA9T+pWWwyKdVdOuOZxXORgkdbi6QmFFZYcE4fcy50mIgQlCJGkgu5VGbUhosThDuUCADS97VkL0XKS3Bufa9Zd2txigr6KRTrRlBjmh+knvB3BI=
+	t=1743502707; cv=none; b=mng+bvq0ogTJK3T59RIBUztwQdjJ3VJ4ePG0TmWRjlbXKuX56vPMEoEUo6CzNh8MG8+ZL7LmMb6SSR4KSNagSTE+8Y4fWLnOA4bgdGxMlXzlDAqab2mRARRlX8xqxpjLlZAZfjdz2sPoTZvBCzdBZti+8wD2DUus+6+2rfJ3PJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743502611; c=relaxed/simple;
-	bh=sD4CB8CHFNifvtldLEPnFgCM7p6gq3dwx2PAH6fr6uM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tLNXpCopTNK8MH6EV/wKshS4YaAya/+WMLLawKzVjRTTVZzjyWjHJiaOOd2o5xJQNQxxooJoR7t3mwFxAjogVj5K/9UNg7G3klYTc66qBFS01uzXjts5APBJFMjmdh7vdA56tHwbb0qPFw+1xXwQIBGckcQVzeJ9t/snsZUgWL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ayrmOtwW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5315r78e025837
-	for <linux-pci@vger.kernel.org>; Tue, 1 Apr 2025 10:16:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5ytXOIhLLl5YHOvwMutlWCMfcOj8/4IQnCCLBLp7rU8=; b=ayrmOtwW6EDs4Tu1
-	uNZIrU+veDGFmzZeLXcJN7wCzvna/tNipxIn0zzCTSb84K4htYdrzOXQoniNgjJt
-	sDhQYGB3Q73jzS+Xtr+pdxKc9a//PTolvf7QIVt1kkoOpxDVFRHCkh8lQrojjYn2
-	C7akX0HV95NvxsOMNU4kLxF2Kfiq2/FpLF+7I6DdrF+cCWU6drIPIFNyqXB72Vqg
-	dJlX/ZrL9S8l4uq/I/+uE/uE6T4r3WctK951XlPBq0qQtwE2SBxZuGzasnV3Ehko
-	sCjyHFTdq1DByqD4lTEszFJ1O1KGjWcnRdnQ7hC8bHghMpvJKmNDgBU2dl1lnJje
-	oEDkIg==
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p6jhqty2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Tue, 01 Apr 2025 10:16:48 +0000 (GMT)
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2ff7f9a0b9bso8596600a91.0
-        for <linux-pci@vger.kernel.org>; Tue, 01 Apr 2025 03:16:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743502608; x=1744107408;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5ytXOIhLLl5YHOvwMutlWCMfcOj8/4IQnCCLBLp7rU8=;
-        b=fBIiucIXB34eHImNEssprsxJIx/qiQ1dQHlvhQkb/r5z+ir2BT/j45bpMHNRlfHH8e
-         Z03jOJKhe66f0U+8Pi95tKou/AZygWOPI/m6sU0NOxuEyiWJRsAvyXT3p456eOJIcLkR
-         5jmkAIYbdQ0iVirUJrvEY63Wg7OUxKyCfyH1hCko/zSQT5MxFdlUjyHUuEUs7EkINEVx
-         aAR+GoRdjT4vo0Kj89WTbfBiufYBvUW3B6oafinWgvjLNBTJMHoF+mpgzv4QA7cnx2sD
-         GUFT2FhKp7brAmjleOniaCsYwrNgfB6PUpVEGDAMnurIfYJvi0D6MTdNIpjgT73wkqC2
-         8QWA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqJfyTCNHv8k4/50wJ+2P/38vJSVmVDteEj250OJ9F/1KzjmJgQ9CxWx4N+juDV71sNxAj+QOpwj8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3pidgUCb6BrY8XMTtHkloJwmoJiUYMcbBAvFi4rsdl8GnjDo9
-	9S5U/YcPo0lsEXJusG74UoMLxsqKs9DhNJ64CMV3dCxzyWOHjqBUBMDger5UyZ5eHtmMQytvjNG
-	OfznKnce1cl8u+/IbSXU6C1+prkCnAicsBYclaZ9zL5uuKddY/o24x2pFA5o=
-X-Gm-Gg: ASbGnctR+shScGQMoFvDDU7utZY4/bRD03fYpbORqdfdqTXuOD7CRY5RvPgKn1uqkpH
-	X4G2HhbPOBXHYCqzSx1USFfuXZZq2EUwgqTedwe5vYLKHL8REL3qc4bKnbplxdhGwpzUxe3A7hU
-	UfLRouKCUR6CLX9SlYt5+XfafOV5jJ8oO9md6sGv7lPwuudL0UMfSvDgzqEL1jO5hCSx1wVqi92
-	hRdaEzto4q6udVs1glsVNQu1vOo40+GyNCd5a4AkTuqRPA5uFa8W2/XqVTH4Qza9H0kdVSLk73/
-	fMYkHRA5LrD9VkfJTSRhuX1jqmjIHSH1VmYaZeNkIOz8Ig==
-X-Received: by 2002:a05:6a21:3285:b0:1f3:3690:bf32 with SMTP id adf61e73a8af0-200d13b8205mr4889981637.18.1743502607649;
-        Tue, 01 Apr 2025 03:16:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHt/SbGJp1ZzXK+tJ23rfeTdETFc59fUK4eY74eMQ8a03RJ15vsBJ1bWLyNMu5ewZz0aPu9xA==
-X-Received: by 2002:a05:6a21:3285:b0:1f3:3690:bf32 with SMTP id adf61e73a8af0-200d13b8205mr4889933637.18.1743502607252;
-        Tue, 01 Apr 2025 03:16:47 -0700 (PDT)
-Received: from [10.92.192.202] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af95d59a786sm5273789a12.53.2025.04.01.03.16.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Apr 2025 03:16:46 -0700 (PDT)
-Message-ID: <98e99c80-b073-e82a-0ea1-b3ccbe137c59@oss.qualcomm.com>
-Date: Tue, 1 Apr 2025 15:46:40 +0530
+	s=arc-20240116; t=1743502707; c=relaxed/simple;
+	bh=/EHz54318NdoMp45HsLtrxjCORjhcPcP0lWu4il58HI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=iK/Yxk2lDbnX/ZMi7VaLBIf8TpuWYReoPNMBnzRlY9F7riO/7N4elUWWr14qJ1nw58CsDVjF57xagzaeoHxVnDtyey9F1XAGPu8Pw5jlinaNg7TdLDmuFVwJP6Wj835SywUwvz9dzYObLn0ASm0gkxGIO69Cn9Gvz6WM/AmNni0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jvHDD4GP; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743502705; x=1775038705;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=/EHz54318NdoMp45HsLtrxjCORjhcPcP0lWu4il58HI=;
+  b=jvHDD4GP9Ifq3fQ7RU6zTye/yZEjSJV/zb8uMvz1tA3nMeYHXRyfyXBF
+   vjei40I0iN5nI3cpU9t+zUyMeDdnm6ux+gfBAuur/Pol6hjVQTpco9G0M
+   R7iSeozyFW8QxFKBsE2ISyJO49VMmbACjyZMmlLZCxv+EOszzWKvJoC5h
+   N0tyEhCuPxvzPXzMuiZnG3C1l+caFwiob0VH7RKxHhR35D+Y1wFJS6Mpt
+   OY3HwzU3ChEnmsIeWX+yuCB9StOQBzPUYg1GJFXGBcKN35DkpeDwUb2xo
+   Tun63lIYxHqKZNvJGhHWAeQI+T3ItKNeWpe/BkUzTTCwL/8tlfI+fz1Xd
+   Q==;
+X-CSE-ConnectionGUID: K6MY/3QPSYmxh+1Zv/2U5g==
+X-CSE-MsgGUID: k07KUhraS5K0bfFWIE9Amg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="44531764"
+X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
+   d="scan'208";a="44531764"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 03:18:24 -0700
+X-CSE-ConnectionGUID: slC0r/iuTUq6wGP/SJvnFw==
+X-CSE-MsgGUID: QrB00bnMTgGIxQDKdFYIAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
+   d="scan'208";a="131068381"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.126])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 03:18:21 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 1 Apr 2025 13:18:17 +0300 (EEST)
+To: Guenter Roeck <linux@roeck-us.net>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>, 
+    Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+In-Reply-To: <01eb7d40-f5b5-4ec5-b390-a5c042c30aff@roeck-us.net>
+Message-ID: <75f74b48-edd8-7d1c-d303-1222d12e3812@linux.intel.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com> <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com> <01eb7d40-f5b5-4ec5-b390-a5c042c30aff@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 2/2] PCI: Add support for PCIe wake interrupt
-Content-Language: en-US
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
-References: <20250401-wake_irq_support-v1-0-d2e22f4a0efd@oss.qualcomm.com>
- <20250401-wake_irq_support-v1-2-d2e22f4a0efd@oss.qualcomm.com>
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-In-Reply-To: <20250401-wake_irq_support-v1-2-d2e22f4a0efd@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: XYJFiGKWtZ0Upr6y-8QQgXicjIiXLkgi
-X-Proofpoint-ORIG-GUID: XYJFiGKWtZ0Upr6y-8QQgXicjIiXLkgi
-X-Authority-Analysis: v=2.4 cv=bZZrUPPB c=1 sm=1 tr=0 ts=67ebbd10 cx=c_pps a=RP+M6JBNLl+fLTcSJhASfg==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=UypG6ifEkSd7053-VuIA:9 a=QEXdDO2ut3YA:10
- a=iS9zxrgQBfv6-_F4QbHw:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-01_04,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 clxscore=1015 phishscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504010066
+Content-Type: multipart/mixed; boundary="8323328-2117202481-1743502697=:932"
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323328-2117202481-1743502697=:932
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-On 4/1/2025 10:12 AM, Krishna Chaitanya Chundru wrote:
-> PCIe wake interrupt is needed for bringing back PCIe device state
-> from D3cold to D0.
-> 
-> Implement new functions, of_pci_setup_wake_irq() and
-> of_pci_teardown_wake_irq(), to manage wake interrupts for PCI devices
-> using the Device Tree.
-> 
->  From the port bus driver call these functions to enable wake support
-> for bridges.
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+On Mon, 31 Mar 2025, Guenter Roeck wrote:
+> On Mon, Dec 16, 2024 at 07:56:31PM +0200, Ilpo J=E4rvinen wrote:
+> > Resetting resource is problematic as it prevent attempting to allocate
+> > the resource later, unless something in between restores the resource.
+> > Similarly, if fail_head does not contain all resources that were reset,
+> > those resource cannot be restored later.
+> >=20
+> > The entire reset/restore cycle adds complexity and leaving resources
+> > into reseted state causes issues to other code such as for checks done
+> > in pci_enable_resources(). Take a small step towards not resetting
+> > resources by delaying reset until the end of resource assignment and
+> > build failure list (fail_head) in sync with the reset to avoid leaving
+> > behind resources that cannot be restored (for the case where the caller
+> > provides fail_head in the first place to allow restore somewhere in the
+> > callchain, as is not all callers pass non-NULL fail_head).
+> >=20
+> > The Expansion ROM check is temporarily left in place while building the
+> > failure list until the upcoming change which reworks optional resource
+> > handling.
+> >=20
+> > Ideally, whole resource reset could be removed but doing that in a big
+> > step would make the impact non-tractable due to complexity of all
+> > related code.
+> >=20
+> > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+>=20
+> With this patch in the mainline kernel, all mips:boston qemu emulations
+> fail when running a 64-bit little endian configuration (64r6el_defconfig)=
+=2E
+>=20
+> The problem is that the PCI based IDE/ATA controller is not initialized.
+> There are a number of pci error messages.
+>=20
+> pci_bus 0002:01: extended config space not accessible
+> pci 0002:01:00.0: [8086:2922] type 00 class 0x010601 conventional PCI end=
+point
+> pci 0002:01:00.0: BAR 4 [io  0x0000-0x001f]
+> pci 0002:01:00.0: BAR 5 [mem 0x00000000-0x00000fff]
+> pci 0002:00:00.0: PCI bridge to [bus 01-ff]
+> pci_bus 0002:01: busn_res: [bus 01-ff] end is updated to 01
+> pci 0002:00:00.0: bridge window [mem 0x16000000-0x160fffff]: assigned
+> pci 0002:00:00.0: bridge window [mem size 0x00100000 64bit pref]: can't a=
+ssign; no space
+> pci 0002:00:00.0: bridge window [mem size 0x00100000 64bit pref]: failed =
+to assign
+> pci 0002:00:00.0: bridge window [io  size 0x1000]: can't assign; no space
+> pci 0002:00:00.0: bridge window [io  size 0x1000]: failed to assign
+> pci 0002:00:00.0: bridge window [mem size 0x00100000]: can't assign; bogu=
+s alignment
+> pci 0002:00:00.0: bridge window [mem 0x16000000-0x160fffff 64bit pref]: a=
+ssigned
+> pci 0002:00:00.0: bridge window [io  size 0x1000]: can't assign; no space
+> pci 0002:00:00.0: bridge window [io  size 0x1000]: failed to assign
+> pci 0002:01:00.0: BAR 5 [mem size 0x00001000]: can't assign; no space
+> pci 0002:01:00.0: BAR 5 [mem size 0x00001000]: failed to assign
+> pci 0002:01:00.0: BAR 4 [io  size 0x0020]: can't assign; no space
+> pci 0002:01:00.0: BAR 4 [io  size 0x0020]: failed to assign
+> pci 0002:01:00.0: BAR 5 [mem size 0x00001000]: can't assign; no space
+> pci 0002:01:00.0: BAR 5 [mem size 0x00001000]: failed to assign
+> pci 0002:01:00.0: BAR 4 [io  size 0x0020]: can't assign; no space
+> pci 0002:01:00.0: BAR 4 [io  size 0x0020]: failed to assign
+> pci 0002:00:00.0: PCI bridge to [bus 01]
+> pci 0002:00:00.0:   bridge window [mem 0x16000000-0x160fffff 64bit pref]
+> pci_bus 0002:00: Some PCI device resources are unassigned, try booting wi=
+th pci=3Drealloc
+> pci_bus 0002:00: resource 4 [mem 0x16000000-0x160fffff]
+> pci_bus 0002:01: resource 2 [mem 0x16000000-0x160fffff 64bit pref]
+> ...
+> pci 0002:00:00.0: enabling device (0000 -> 0002)
+> ahci 0002:01:00.0: probe with driver ahci failed with error -12
+>=20
+> Bisect points to this patch. Reverting it together with "PCI: Rework
+> optional resource handling" fixes the problem. For comparison, after
+> reverting the offending patches, the log messages are as follows.
+>=20
+> pci_bus 0002:00: root bus resource [bus 00-ff]
+> pci_bus 0002:00: root bus resource [mem 0x16000000-0x160fffff]
+> pci 0002:00:00.0: [10ee:7021] type 01 class 0x060400 PCIe Root Complex In=
+tegrated Endpoint
+> pci 0002:00:00.0: PCI bridge to [bus 00]
+> pci 0002:00:00.0:   bridge window [io  0x0000-0x0fff]
+> pci 0002:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
+> pci 0002:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+> pci 0002:00:00.0: enabling Extended Tags
+> pci 0002:00:00.0: bridge configuration invalid ([bus 00-00]), reconfiguri=
+ng
+> pci_bus 0002:01: extended config space not accessible
+> pci 0002:01:00.0: [8086:2922] type 00 class 0x010601 conventional PCI end=
+point
+> pci 0002:01:00.0: BAR 4 [io  0x0000-0x001f]
+> pci 0002:01:00.0: BAR 5 [mem 0x00000000-0x00000fff]
+> pci 0002:00:00.0: PCI bridge to [bus 01-ff]
+> pci_bus 0002:01: busn_res: [bus 01-ff] end is updated to 01
+> pci 0002:00:00.0: bridge window [mem 0x16000000-0x160fffff]: assigned
+> pci 0002:00:00.0: bridge window [mem size 0x00100000 64bit pref]: can't a=
+ssign; no space
+> pci 0002:00:00.0: bridge window [mem size 0x00100000 64bit pref]: failed =
+to assign
+> pci 0002:00:00.0: bridge window [io  size 0x1000]: can't assign; no space
+> pci 0002:00:00.0: bridge window [io  size 0x1000]: failed to assign
+> pci 0002:01:00.0: BAR 5 [mem 0x16000000-0x16000fff]: assigned
+> pci 0002:01:00.0: BAR 4 [io  size 0x0020]: can't assign; no space
+> pci 0002:01:00.0: BAR 4 [io  size 0x0020]: failed to assign
+> pci 0002:00:00.0: PCI bridge to [bus 01]
+> pci 0002:00:00.0:   bridge window [mem 0x16000000-0x160fffff]
+> pci_bus 0002:00: Some PCI device resources are unassigned, try booting wi=
+th pci=3Drealloc
+> pci_bus 0002:00: resource 4 [mem 0x16000000-0x160fffff]
+> pci_bus 0002:01: resource 1 [mem 0x16000000-0x160fffff]
+> ...
+> pci 0002:00:00.0: enabling device (0000 -> 0002)
+> ahci 0002:01:00.0: enabling device (0000 -> 0002)
+> ahci 0002:01:00.0: AHCI vers 0001.0000, 32 command slots, 1.5 Gbps, SATA =
+mode
+> ahci 0002:01:00.0: 6/6 ports implemented (port mask 0x3f)
+> ahci 0002:01:00.0: flags: 64bit ncq only
+
+Hi,
+
+Thanks for reporting. Please add this to the command line to get the=20
+resource releasing between the steps to show:
+
+dyndbg=3D"file drivers/pci/setup-bus.c +p"
+
+Also, the log snippet just shows it fails but it is impossible to know=20
+from it why the resource assigments do not fit so could you please provide=
+=20
+a complete dmesg logs. Also providing the contents of /proc/iomem from the=
+=20
+working case would save me quite a bit of decoding the iomem layout from=20
+the dmesgs.
+
+> Bisect log is attached for reference.
+>=20
+> Guenter
 > ---
->   drivers/pci/of.c           | 60 ++++++++++++++++++++++++++++++++++++++++++++++
->   drivers/pci/pci.h          |  6 +++++
->   drivers/pci/pcie/portdrv.c |  6 +++++
->   3 files changed, 72 insertions(+)
-> 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 7a806f5c0d201bc322d4a53d6ac47cab2cd28c55..abb0ba001edf604170aaa118f7fdc1a1709c171f 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -7,6 +7,7 @@
->   #define pr_fmt(fmt)	"PCI: OF: " fmt
->   
->   #include <linux/cleanup.h>
-> +#include <linux/gpio/consumer.h>
->   #include <linux/irqdomain.h>
->   #include <linux/kernel.h>
->   #include <linux/pci.h>
-> @@ -15,6 +16,7 @@
->   #include <linux/of_address.h>
->   #include <linux/of_pci.h>
->   #include <linux/platform_device.h>
-> +#include <linux/pm_wakeirq.h>
->   #include "pci.h"
->   
->   #ifdef CONFIG_PCI
-> @@ -851,3 +853,61 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
->   	return slot_power_limit_mw;
->   }
->   EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
-> +
-> +/**
-> + * of_pci_setup_wake_irq - Set up wake interrupt for PCI device
-> + * @pdev: The PCI device structure
-> + *
-> + * This function sets up the wake interrupt for a PCI device by getting the
-> + * corresponding GPIO pin from the device tree, and configuring it as a
-> + * dedicated wake interrupt.
-> + *
-> + * Return: 0 if the wake gpio is not available or successfully parsed else
-> + * errno otherwise.
-> + */
-> +int of_pci_setup_wake_irq(struct pci_dev *pdev)
-> +{
-> +	struct gpio_desc *wake;
-> +	struct device_node *dn;
-> +	int ret, wake_irq;
-> +
-> +	dn = pci_device_to_OF_node(pdev);
-> +	if (!dn)
-> +		return 0;
-> +
-> +	wake = devm_fwnode_gpiod_get(&pdev->dev, of_fwnode_handle(dn),
-> +				     "wake", GPIOD_IN, NULL);
-> +	if (IS_ERR(wake)) {
-> +		dev_warn(&pdev->dev, "Cannot get wake GPIO\n");
-> +		return 0;
-> +	}
-> +
-> +	wake_irq = gpiod_to_irq(wake);
-> +	device_init_wakeup(&pdev->dev, true);
-> +
-> +	ret = dev_pm_set_dedicated_wake_irq(&pdev->dev, wake_irq);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Failed to set wake IRQ: %d\n", ret);
-> +		device_init_wakeup(&pdev->dev, false);
-> +		return ret;
-> +	}
-> +	irq_set_irq_type(wake_irq, IRQ_TYPE_EDGE_FALLING);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(of_pci_setup_wake_irq);
-> +
-> +/**
-> + * of_pci_teardown_wake_irq - Teardown wake interrupt setup for PCI device
-> + *
-> + * @pdev: The PCI device structure
-> + *
-> + * This function tears down the wake interrupt setup for a PCI device,
-> + * clearing the dedicated wake interrupt and disabling device wake-up.
-> + */
-> +void of_pci_teardown_wake_irq(struct pci_dev *pdev)
-> +{
-> +	dev_pm_clear_wake_irq(&pdev->dev);
-> +	device_init_wakeup(&pdev->dev, false);
-> +}
-> +EXPORT_SYMBOL_GPL(of_pci_teardown_wake_irq);
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 01e51db8d285af54673db3ea526ceda073c94ec9..6e3d90db4b2505dd3885b482d4c5eafa033714e7 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -820,6 +820,9 @@ void pci_release_of_node(struct pci_dev *dev);
->   void pci_set_bus_of_node(struct pci_bus *bus);
->   void pci_release_bus_of_node(struct pci_bus *bus);
->   
-> +int of_pci_setup_wake_irq(struct pci_dev *pdev);
-> +void of_pci_teardown_wake_irq(struct pci_dev *pdev);
-> +
->   int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge);
->   bool of_pci_supply_present(struct device_node *np);
->   
-> @@ -863,6 +866,9 @@ static inline int devm_of_pci_bridge_init(struct device *dev, struct pci_host_br
->   	return 0;
->   }
->   
-> +static int of_pci_setup_wake_irq(struct pci_dev *pdev) { return 0; }
-> +static void of_pci_teardown_wake_irq(struct pci_dev *pdev) { }
-> +
->   static inline bool of_pci_supply_present(struct device_node *np)
->   {
->   	return false;
-> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> index 02e73099bad0532466fa10f549cc3c5013aa1bbb..fe1da757e9eca0f82ae0d8043c0e4547ac9c30b6 100644
-> --- a/drivers/pci/pcie/portdrv.c
-> +++ b/drivers/pci/pcie/portdrv.c
-> @@ -695,6 +695,10 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
->   	if (type == PCI_EXP_TYPE_RC_EC)
->   		pcie_link_rcec(dev);
->   
-> +	status = of_pci_setup_wake_irq(dev);
-> +	if (status)
-> +		return status;
-> +
->   	status = pcie_port_device_register(dev);
->   	if (status)
->   		return status;
-> @@ -728,6 +732,8 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
->   		pm_runtime_dont_use_autosuspend(&dev->dev);
->   	}
->   
-> +	of_pci_teardown_wake_irq(dev);
-> +
->   	pcie_port_device_remove(dev);
->   
->   	pci_disable_device(dev);
-> 
-we need to teardown the wake irq in shutdown also, I will add it in the
-next patch.
+> # bad: [609706855d90bcab6080ba2cd030b9af322a1f0c] Merge tag 'trace-latenc=
+y-v6.15-3' of git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-tra=
+ce
+> # good: [acb4f33713b9f6cadb6143f211714c343465411c] Merge tag 'm68knommu-f=
+or-v6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu
+> git bisect start 'HEAD' 'acb4f33713b9'
+> # good: [cf05922d63e2ae6a9b1b52ff5236a44c3b29f78c] Merge tag 'drm-intel-g=
+t-next-2025-03-12' of https://gitlab.freedesktop.org/drm/i915/kernel into d=
+rm-next
+> git bisect good cf05922d63e2ae6a9b1b52ff5236a44c3b29f78c
+> # bad: [93d52288679e29aaa44a6f12d5a02e8a90e742c5] Merge tag 'backlight-ne=
+xt-6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight
+> git bisect bad 93d52288679e29aaa44a6f12d5a02e8a90e742c5
+> # bad: [e5e0e6bebef3a21081fd1057c40468d4cff1a60d] Merge tag 'v6.15-p1' of=
+ git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+> git bisect bad e5e0e6bebef3a21081fd1057c40468d4cff1a60d
+> # bad: [dea140198b846f7432d78566b7b0b83979c72c2b] Merge branch 'pci/misc'
+> git bisect bad dea140198b846f7432d78566b7b0b83979c72c2b
+> # bad: [a113afb84ae63ec4c893bc3204945ef6f3bb89f7] Merge branch 'pci/endpo=
+int'
+> git bisect bad a113afb84ae63ec4c893bc3204945ef6f3bb89f7
+> # good: [a7a8e7996c1c114b50df5599229b1e7be38be3db] Merge branch 'pci/rese=
+t'
+> git bisect good a7a8e7996c1c114b50df5599229b1e7be38be3db
+> # bad: [7d4bcc0f2631e4ee10b5bcfff24a423d1c3c02a3] PCI: Move resource reas=
+signment func declarations into pci/pci.h
+> git bisect bad 7d4bcc0f2631e4ee10b5bcfff24a423d1c3c02a3
+> # good: [acba174d2e754346c07578ad2220258706a203e2] PCI: Use while loop an=
+d break instead of gotos
+> git bisect good acba174d2e754346c07578ad2220258706a203e2
+> # good: [8884b5637b794ae541e8d6fb72102b1d8dba2b8d] PCI: Add debug print w=
+hen releasing resources before retry
+> git bisect good 8884b5637b794ae541e8d6fb72102b1d8dba2b8d
+> # bad: [5af473941b56189423a7d16c05efabaf77299847] PCI: Increase Resizable=
+ BAR support from 512 GB to 128 TB
+> git bisect bad 5af473941b56189423a7d16c05efabaf77299847
+> # bad: [96336ec702643aec2addb3b1cdb81d687fe362f0] PCI: Perform reset_reso=
+urce() and build fail list in sync
+> git bisect bad 96336ec702643aec2addb3b1cdb81d687fe362f0
+> # good: [e89df6d2beae847e931d84a190b192dfac41eba7] PCI: Use res->parent t=
+o check if resource is assigned
+> git bisect good e89df6d2beae847e931d84a190b192dfac41eba7
+> # first bad commit: [96336ec702643aec2addb3b1cdb81d687fe362f0] PCI: Perfo=
+rm reset_resource() and build fail list in sync
+>=20
 
-- Krishna Chaitanya.
+--=20
+ i.
+
+--8323328-2117202481-1743502697=:932--
 
