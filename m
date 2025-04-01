@@ -1,126 +1,119 @@
-Return-Path: <linux-pci+bounces-25027-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25028-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF5EEA771E2
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 02:31:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 864D2A77238
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 03:09:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AAEF6166B96
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 00:31:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0EA11886D77
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 01:09:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6665E13AC1;
-	Tue,  1 Apr 2025 00:31:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44A5A13B298;
+	Tue,  1 Apr 2025 01:09:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nNwkYcu7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ce0nhRfs"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0AE63FC7
-	for <linux-pci@vger.kernel.org>; Tue,  1 Apr 2025 00:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23FD3595D;
+	Tue,  1 Apr 2025 01:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743467466; cv=none; b=cWBc9cz45K/LvLcLnIB85iFnZEbVf+L/IX0mIQVICpvXaxXhnmxz5XrjPaF5TuwwuMIGMa9ysIe36Z0mu7S4VJj80pKq+RG5Vdw1lykoPUixabDiNybqLv+Wd9TdL2bCL7jB+qtAzRSyARnWbjiiQaB1MWJndQVsyd9y97cBd7E=
+	t=1743469771; cv=none; b=uK4+O16uJDGrjLCVE4zwPpu1nSVSSs8vP+vAI/wDg7G0lnSzXJXHo+6wxBMhcIU7E+fn7aFmbRitH6Tl0b6rpO56GG8t9LoQE1RD3aTsw7b5i6xdnNYfonZVkbJjoQD5EK/tNsBYnAdYEucrG8pYG3HMHl2j+5J740VswEIE0s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743467466; c=relaxed/simple;
-	bh=it4tebdH3W9XH7WVy7D6Mu3YzW+yUsu5LAh1yBR5RD8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BXuKYUgEGiFGtCsjJSmzPg+2YTCOA9a1TcRtwGAfx6yfL5YPdz7QIvRIhkqCJ50+h/8p10gMMZX3lKjJ9LRB0/HlJDvMXltZ8fOSb9vMdPotihoA0SAy3ZItljN6JB2HUF4o64bAVKfZlKp/0hHPuVUDUeuKDrm22ynhTAAO8L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nNwkYcu7; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e8be1bdb7bso8191923a12.0
-        for <linux-pci@vger.kernel.org>; Mon, 31 Mar 2025 17:31:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1743467462; x=1744072262; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OGMpLEB1pEXtxGrqIi72KnhFsnrxgYsT195Hwt3acg4=;
-        b=nNwkYcu7J5IEHfaEuGQEaj3ypkGFWK99HxDncE9h0/B/wqmVIjoy6V4ZYXgWeD/I6Y
-         g13DOgVUSdpcruG1nKrZgjrOZM84tL2mAeMrkNwPIqbQFrvAQWTD+29dLdqG/7XVbbBO
-         ZIbtVNXduxSknuirddH4sY/4I0O+/dRVvcq2NgqTjLDqmZ1AhPpiPAdVtHY+1vXGSwCF
-         CmcyYxNncfwgioHlfQmUQOUzbgFu+yA3CHBslKjhsdqVR+0CEAuQAh4bD0+VYC7r1kat
-         1vKFOE8UF6dA3monEujtNGgTNoYjKYssI5v68AH7lAYb7yDcrlFIQzeAYAGNOLvi5egC
-         dHDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743467462; x=1744072262;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OGMpLEB1pEXtxGrqIi72KnhFsnrxgYsT195Hwt3acg4=;
-        b=hoT5SY91/54uyK60FqrVr1dCAlBd2YusXl4AaC1HH+36w9YYRxRj72wcIDIUNll9f4
-         zYP6IKaMZPaLFzXlx41KgtlWYILiqaCxenG2dSS3ddAwfpkpnOPdQWCQnGnyXpdVHUZe
-         o64YF+kbr078eYB155TOS7XLWBvL3CxKUJNM8Eee4UDmgHFQVjaVn8n9+ZsJSdMdK+tq
-         J6WBgwDTWqE5YyX3pBgQo7RIxVogD/QmoNPoHZmvKEvI1Uk9OqFH/jFRezMllnH9EmSE
-         xsUme+GZvd+u5WwjDGoL9SfIx/DV1fKUGume/vwte8lo9UBNQjLYyUGKid4qt9fZ8c4a
-         BpXA==
-X-Forwarded-Encrypted: i=1; AJvYcCW5+pt1OxU0UVtJhbbP9UZFJEkS0hg0k2+RW0t6FcxVRAFsK5f8ILrDFwVGh0jxfvqeDHjS1o1nUcI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP2ZTOoN3QkTJd/mHFHpL7Eo193MC93LGkZ6CSidkMTnFY1+ww
-	YDYAvbtXZLFSXlxUjGffJffGGYSGYGm0/favzmHtTu0jnwfJzvJR0wP/UhI/lXQAa0OvsL46WOf
-	alSHjVuuRWxWVwWwmNhaNWV2jahCxGSUVrMSO
-X-Gm-Gg: ASbGncuvkjIdf8amSPS4vNquLzae5Cfm/0K61gjK7DIVc82sBI20SSj3/1hfQ/ZmJIs
-	EnEZ+459sPd50FD1cXUykr0W/5hkAcLu+COmocBFFX5rKu6hV/zbd1J7VhwABLJpwZ3UDx2jJ75
-	UO93EttvrqbEX3ZQc9Y4NPU02Vj3CELenl6TFQhSiTzN4yqDAbT0m+2u9p
-X-Google-Smtp-Source: AGHT+IFPtJIgg0kL+Syg/D82M+Qc4M8ch0rFdghgEF/VsCrqqQ771huQds7l3v+d/21qogBGxHAA+wuqMB+avCNI7I8=
-X-Received: by 2002:a05:6402:5211:b0:5e5:edf8:88f2 with SMTP id
- 4fb4d7f45d1cf-5edfd9f7949mr8562707a12.23.1743467461778; Mon, 31 Mar 2025
- 17:31:01 -0700 (PDT)
+	s=arc-20240116; t=1743469771; c=relaxed/simple;
+	bh=xnDKz4hdm/kkZqcWSzvYO96l5CqeHbCretys4W9iu2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JGihU/Z7m0/tO7rJ8ZFFvjo3RML6cRJoR/drLSBkZ6Jj2bq1t8exDUHY17iPyUswYt/u8kgmRo/Ikz76bOzsa7uarfjfNTDHyFGUnom8Li/N3u3FBEi4HQ2jg15tLIyy2wyCskXJxQiU2axPpwOBctliM38vveLhxG5RieF/WNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ce0nhRfs; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 978F4C4CEE3;
+	Tue,  1 Apr 2025 01:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743469769;
+	bh=xnDKz4hdm/kkZqcWSzvYO96l5CqeHbCretys4W9iu2o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ce0nhRfsh4foP8kliSiSC0eCyy1P530wNZv1yXlz0fhnntdzc2pHj8ehJ73sKloVM
+	 C0cw7cUj+BIc9kmwIU3OVnx2X/5KZolUkXS2nrcBmOD80XEOnwWEu+qaNld4IC1Lbz
+	 ktTwM4BKKx5FIv7O9NfsPq2v7mz23KDqI6mFjPh6003pPohStRGfOcfyHzqdAMOVmD
+	 1gOusmiwUbvZzBP/fZDRftY7IT+SckUkPyIVGM5JFjlw/2fk+9/Ns880REt1nFz5Or
+	 pRuSFvVxXKUnth/AX3auD+qu9VK2N7OyoDzrtCOl5aOlD0WNxZyXTU1dmfK4K2DInq
+	 5BLO5MT41pJgw==
+Date: Mon, 31 Mar 2025 18:09:27 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>, Daniel Gomez <da.gomez@samsung.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Robin Murphy <robin.murphy@arm.com>,
+	Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	kvm@vger.kernel.org, linux-mm@kvack.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v7 00/17] Provide a new two step DMA mapping API
+Message-ID: <Z-s8x_YyGEYTz8BJ@bombadil.infradead.org>
+References: <cover.1738765879.git.leonro@nvidia.com>
+ <20250220124827.GR53094@unreal>
+ <1166a5f5-23cc-4cce-ba40-5e10ad2606de@arm.com>
+ <20250302085717.GO53094@unreal>
+ <e024fe3d-bddf-4006-8535-656fd0a3fada@arm.com>
+ <Z+KjVVpPttE3Ci62@ziepe.ca>
+ <20250325144158.GA4558@unreal>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321015806.954866-7-pandoh@google.com> <20250331184840.GA1170881@bhelgaas>
-In-Reply-To: <20250331184840.GA1170881@bhelgaas>
-From: Jon Pan-Doh <pandoh@google.com>
-Date: Mon, 31 Mar 2025 17:30:50 -0700
-X-Gm-Features: AQ5f1Jow71aUrsU_7gsw-hpVm5_4MhfHoYOKsb7kzNr2ifo0tHU1Sq8GwMtpciY
-Message-ID: <CAMC_AXUDqeJbT3gh48JRL7OiutVqQyf0go_cGcR_xsTfqw+Qsw@mail.gmail.com>
-Subject: Re: [PATCH v5 6/8] PCI/AER: Introduce ratelimit for error logs
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Karolina Stolarek <karolina.stolarek@oracle.com>, 
-	linux-pci@vger.kernel.org, Martin Petersen <martin.petersen@oracle.com>, 
-	Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-	Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner <lukas@wunner.de>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Sargun Dhillon <sargun@meta.com>, 
-	"Paul E . McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250325144158.GA4558@unreal>
 
-On Mon, Mar 31, 2025 at 11:48=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org>=
- wrote:
-> I found the __ratelimit() return values a little confusing (1 =3D=3D prin=
-t
-> the message, 0 =3D=3D don't print), so this is appealing because it's les=
-s
-> confusing by itself.
->
-> But I think we should name this "aer_ratelimit()" and return the
-> result of __ratelimit() without inverting it so it works the same way
-> as __ratelimit() and similar wrappers like ata_ratelimit(),
-> net_ratelimit(), drbd_ratelimit().
+On Tue, Mar 25, 2025 at 04:41:58PM +0200, Leon Romanovsky wrote:
+> On Tue, Mar 25, 2025 at 09:36:37AM -0300, Jason Gunthorpe wrote:
+> > On Fri, Mar 21, 2025 at 04:05:22PM +0000, Robin Murphy wrote:
+> 
+> <...>
+> 
+> > > So what is it now, a layering violation in a hat with still no clear path to
+> > > support SWIOTLB?
+> > 
+> > I was under the impression Leon had been testing SWIOTLB?
+> 
+> Yes, SWIOTLB works
 
-Ack. Caught between readability and consistency :).
+We will double check too.
 
-> On Thu, Mar 20, 2025 at 06:58:04PM -0700, Jon Pan-Doh wrote:
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -533,6 +533,7 @@ static inline bool pci_dev_test_and_set_removed(str=
-uct pci_dev *dev)
-> >
-> >  struct aer_err_info {
-> >       struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
-> > +     bool ratelimited[AER_MAX_MULTI_ERR_DEVICES];
+> and Christoph said it more than once that he tested
+> NVMe conversion patches and they worked.
 
-s/ratelimited/ratelimit here as well? Should it store aer_ratelimit()
-or !aer_ratelimit()?
+We've taken this entire series and the NVMe patches and have built on
+top of them. The nvme-pci driver does not have scatter list chaining
+support, and we don't want to support that because it is backwards.
+Instead, the two step DMA API lets us actually remove all that scatter
+list cruft and provide a single solution for direct IO and io-uring
+command passthrough to support large IOs [0] [1] and logical block sizes
+up to 2 MiB.
 
-Thanks,
-Jon
+We continue to plan to work on this and are happy to test this further.
+
+Clearly, we don't want any regressions on NVMe.
+
+[0] https://lore.kernel.org/all/20250320111328.2841690-1-mcgrof@kernel.org/
+[1] https://lore.kernel.org/all/Z9v-1xjl7dD7Tr-H@bombadil.infradead.org/
+
+  Luis
 
