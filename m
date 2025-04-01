@@ -1,63 +1,63 @@
-Return-Path: <linux-pci+bounces-25080-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25081-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C0B6A77F1B
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 17:36:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 90BEFA77F1C
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 17:36:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8104A188F01A
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 15:37:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1A28188F523
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 15:37:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C84920AF84;
-	Tue,  1 Apr 2025 15:36:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CCDB20B208;
+	Tue,  1 Apr 2025 15:36:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R48QtlZj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lgZ6RSJQ"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A760E20AF92;
-	Tue,  1 Apr 2025 15:36:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6138820AF94;
+	Tue,  1 Apr 2025 15:36:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743521797; cv=none; b=pz1o6aO+DejM0IkusTfiC+eI2SsZFTQt/QOb3clGmDiFnfc/rPg0Ohfpy0ieZNZYYHnl/35pMVmcH3u5EDtYAlxcHVCAXSXdiq+89r2vV14KnF7NHT+vAkT4wtriYE1o3dAKvS3N5CMm32BL0WOX7/TrIKbADajOHK4dcVSy5rw=
+	t=1743521798; cv=none; b=Vti0GUuz2USjy0FWz0OTUKY/OIei0hgmjvau2cTPh1I2OFXRrHrQLlqyfVFg/qddYMpwhpFAi9ftnm2TZ4FiUdfJcy1rmTXvMKBcrjDftaActjCdUlvwKhhBWOI4UuXb9SVtpQyRudtBYexEKQvoQ9/FDDLM37QcUwxZNEzYFVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743521797; c=relaxed/simple;
-	bh=xKgkCLkKfYwa70Vqlgkw8ZfmHYnSeCmrJ7cFXTNhC/I=;
+	s=arc-20240116; t=1743521798; c=relaxed/simple;
+	bh=RGVfWksi97tOIwSsM8PfmoqSMtxWfhpbqylmDyrun3w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ka5jtJxT2gOvAvllM0f1ckJWNARgQpWF1NeTJGyVq4ohhBbwXvbPjono2CobVuyQ2rD4/w8yVD4j45TYJj6rnKCZjtNHLsTTY+aoiZ1bQeEnCHVv864SX1pT7Lc7PVmQWnvCL3mSWrs74t3qgRFXU+mpWY+6aNljbRIizkQIblU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R48QtlZj; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version; b=nHQMu8g9mZRSO38sFKJ3f07VWHEz5sQ6w/Lk/fBYWFEZp0ogVil5osArkMDynsqfyOLBW4BuROrloP2lfboaYOYm1WdCA1enyn3aRiPdwcRdzlmsi1bu72NHr5MkMgaIyIL6zOEeLuGAMowxq3cqOf1kPTsUx/2Wodu6uk3f/AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lgZ6RSJQ; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743521796; x=1775057796;
+  t=1743521798; x=1775057798;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=xKgkCLkKfYwa70Vqlgkw8ZfmHYnSeCmrJ7cFXTNhC/I=;
-  b=R48QtlZjtz6mvoLH1rrzOHNMXiKFGlTUkswQ7DlQ+sGRtFgYkxtcEELw
-   vVKRHvDztBcUgI9w4WYKXV+JOXcPbarYBnwks3s6JWJ4pnzXl2KErD6dk
-   lodC3SVa2ZIuWRWMuV5m+AWCbQcvl+SA51JgjxfX7OMnvGDobUCIvzv1D
-   i320be4SxeTuntJxnf91NBI52nJrAlF5B2bzIuZ4RsNU6CB2xlRA7WTPT
-   iCT9IreSHGkKwKVcP6wz7UFg6LygctVB/vFeec26YdqJSqmcFxJ01g++z
-   Nyo+4ZcAnYMu90DO6kBgLfmlwyNKlhacJPg76aLRUUy7+j/eGE2mVBRlC
+  bh=RGVfWksi97tOIwSsM8PfmoqSMtxWfhpbqylmDyrun3w=;
+  b=lgZ6RSJQ6ATomRajMUmEsH+BRTYgiQiozH3X7TISykMAELXoyVOI4OoV
+   qQxOj3RrurRAQDHBhI/dVc2EtvCr2+uSBZv+4wp2CQDx+i8Ff+OV1XlY5
+   nSUIaqU1a91IiToDpVsVN4Nxtw4FVz2Cr2kVnpesuMeyyHkekY5j2rxPh
+   SkYuX4bsjLA7XN7r9SXvWzakdhu85toSCorKQHui3pwPnMhl6zfwtPJDW
+   3D+9kCGjgieGL/bVTxb/EwN8GP1FPlgZ1p92Sq9qBf2+uzasgntYqdNJX
+   ufMAD3bso8iylszeGmnFmKnFq42yFexoTymFdv0kyZvZdx6pJ0uyt3/nb
    g==;
-X-CSE-ConnectionGUID: rGL+PSCLTiWdQtS7tsCR2w==
-X-CSE-MsgGUID: AGIBJ5eLRdKau16Duf1IRw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="67324926"
+X-CSE-ConnectionGUID: /BBiJzPMSyWwpY6ua/v3bw==
+X-CSE-MsgGUID: Sn2UrgixRdOYmw9eq7bPFQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="67324935"
 X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="67324926"
+   d="scan'208";a="67324935"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 08:36:31 -0700
-X-CSE-ConnectionGUID: y1SxeoRtSbWcHn7jYDYxVw==
-X-CSE-MsgGUID: 7EuT3IHJRtSuUJ4MwScQmg==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 08:36:35 -0700
+X-CSE-ConnectionGUID: Adpi5qGPSbSthHKsEI0htw==
+X-CSE-MsgGUID: RcDsk9/PTl2fNxN5ri5S9g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,293,1736841600"; 
-   d="scan'208";a="126410946"
+   d="scan'208";a="126410967"
 Received: from anshuma1-desk.iind.intel.com ([10.190.239.112])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 08:36:27 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2025 08:36:31 -0700
 From: Anshuman Gupta <anshuman.gupta@intel.com>
 To: intel-xe@lists.freedesktop.org,
 	linux-acpi@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: rafael@kernel.org,
 	varun.gupta@intel.com,
 	ville.syrjala@linux.intel.com,
 	uma.shankar@intel.com
-Subject: [PATCH 07/12] drm/xe/vrsr: Enable VRSR on default VGA boot device
-Date: Tue,  1 Apr 2025 21:02:20 +0530
-Message-ID: <20250401153225.96379-8-anshuman.gupta@intel.com>
+Subject: [PATCH 08/12] drm/xe: Add PCIe ACPI Aux Power notifier
+Date: Tue,  1 Apr 2025 21:02:21 +0530
+Message-ID: <20250401153225.96379-9-anshuman.gupta@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250401153225.96379-1-anshuman.gupta@intel.com>
 References: <20250401153225.96379-1-anshuman.gupta@intel.com>
@@ -87,102 +87,91 @@ List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Badal Nilawar <badal.nilawar@intel.com>
+Register PCIe ACPI notifier block and mark vrsr_capable
+false in the notifier callback. This will ensure that
+BMG GPU does not explode if any other PCIe child device
+(under same Root Port) aux power request returns
+with No main power removal.
 
-The VRSR feature is to enhance the display screen refresh experience
-when the device exits from the D3Cold state. Therefore, apply the VRSR
-feature to the default VGA boot device and when a display is connected.
-
-Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
 Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
 ---
- drivers/gpu/drm/xe/display/xe_display.c | 22 ++++++++++++++++++++++
- drivers/gpu/drm/xe/display/xe_display.h |  2 ++
- drivers/gpu/drm/xe/xe_pm.c              |  5 +++++
- 3 files changed, 29 insertions(+)
+ drivers/gpu/drm/xe/xe_device_types.h |  3 ++
+ drivers/gpu/drm/xe/xe_pm.c           | 41 ++++++++++++++++++++++++++++
+ 2 files changed, 44 insertions(+)
 
-diff --git a/drivers/gpu/drm/xe/display/xe_display.c b/drivers/gpu/drm/xe/display/xe_display.c
-index 23937ed3b33d..a7a50f48f1c5 100644
---- a/drivers/gpu/drm/xe/display/xe_display.c
-+++ b/drivers/gpu/drm/xe/display/xe_display.c
-@@ -88,6 +88,28 @@ static void display_destroy(struct drm_device *dev, void *dummy)
- 	destroy_workqueue(xe->display.hotplug.dp_wq);
- }
+diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
+index fd9dea207580..9aacd5af7d0f 100644
+--- a/drivers/gpu/drm/xe/xe_device_types.h
++++ b/drivers/gpu/drm/xe/xe_device_types.h
+@@ -517,6 +517,9 @@ struct xe_device {
+ 		struct mutex lock;
+ 	} d3cold;
  
-+bool xe_display_connected(struct xe_device *xe)
++	/** @nb: PCI ACPI Aux power notifier */
++	struct notifier_block nb;
++
+ 	/** @pmt: Support the PMT driver callback interface */
+ 	struct {
+ 		/** @pmt.lock: protect access for telemetry data */
+diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
+index 364b937e0ded..ea93923d6671 100644
+--- a/drivers/gpu/drm/xe/xe_pm.c
++++ b/drivers/gpu/drm/xe/xe_pm.c
+@@ -87,6 +87,41 @@ static struct lockdep_map xe_pm_runtime_nod3cold_map = {
+ };
+ #endif
+ 
++static int aux_pwr_notifier(struct notifier_block *nb,
++			    unsigned long val, void *data)
 +{
-+	struct drm_connector *list_connector;
-+	struct drm_connector_list_iter iter;
-+	bool ret = false;
++	struct pci_dev *root_pdev = data;
++	struct pci_dev *pdev;
++	struct xe_device *xe;
 +
-+	mutex_lock(&xe->drm.mode_config.mutex);
-+	drm_connector_list_iter_begin(&xe->drm, &iter);
++	xe = container_of(nb, struct xe_device, nb);
 +
-+	drm_for_each_connector_iter(list_connector, &iter) {
-+		if (list_connector->status == connector_status_connected) {
-+			ret = true;
-+			break;
-+		}
++	pdev = pcie_find_root_port(to_pci_dev(xe->drm.dev));
++	if (!pdev)
++		return -EINVAL;
++
++	if (root_pdev != pdev)
++		return 0;
++
++	xe_pm_runtime_get(xe);
++
++	if (val == ACPI_NO_MAIN_PW_REMOVAL) {
++		drm_err(&xe->drm, "PCIe core blocked the removal of Main Supply\n");
++		xe->d3cold.vrsr_capable = false;
 +	}
 +
-+	drm_connector_list_iter_end(&iter);
-+	mutex_unlock(&xe->drm.mode_config.mutex);
++	xe_pm_runtime_put(xe);
 +
-+	return ret;
++	return 0;
++}
++
++static void xe_pm_vrsr_fini(void *arg)
++{
++	struct xe_device *xe = arg;
++
++	pci_acpi_unregister_aux_power_notifier(&xe->nb);
 +}
 +
  /**
-  * xe_display_create - create display struct
-  * @xe: XE device instance
-diff --git a/drivers/gpu/drm/xe/display/xe_display.h b/drivers/gpu/drm/xe/display/xe_display.h
-index 46e14f8dee28..a432790d6d34 100644
---- a/drivers/gpu/drm/xe/display/xe_display.h
-+++ b/drivers/gpu/drm/xe/display/xe_display.h
-@@ -39,6 +39,7 @@ void xe_display_pm_resume(struct xe_device *xe);
- void xe_display_pm_runtime_suspend(struct xe_device *xe);
- void xe_display_pm_runtime_suspend_late(struct xe_device *xe);
- void xe_display_pm_runtime_resume(struct xe_device *xe);
-+bool xe_display_connected(struct xe_device *xe);
+  * xe_rpm_reclaim_safe() - Whether runtime resume can be done from reclaim context
+  * @xe: The xe device.
+@@ -295,6 +330,12 @@ static int pci_acpi_aux_power_setup(struct xe_device *xe)
+ 		return ret;
  
- #else
- 
-@@ -71,5 +72,6 @@ static inline void xe_display_pm_runtime_suspend(struct xe_device *xe) {}
- static inline void xe_display_pm_runtime_suspend_late(struct xe_device *xe) {}
- static inline void xe_display_pm_runtime_resume(struct xe_device *xe) {}
- 
-+static inline bool xe_display_connected(struct xe_device *xe) {}
- #endif /* CONFIG_DRM_XE_DISPLAY */
- #endif /* _XE_DISPLAY_H_ */
-diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
-index abb5099475cb..364b937e0ded 100644
---- a/drivers/gpu/drm/xe/xe_pm.c
-+++ b/drivers/gpu/drm/xe/xe_pm.c
-@@ -8,6 +8,7 @@
- #include <linux/fault-inject.h>
- #include <linux/pm_runtime.h>
- #include <linux/suspend.h>
-+#include <linux/vgaarb.h>
- 
- #include <drm/drm_managed.h>
- #include <drm/ttm/ttm_placement.h>
-@@ -300,6 +301,7 @@ static int pci_acpi_aux_power_setup(struct xe_device *xe)
- 
- static void xe_pm_vrsr_init(struct xe_device *xe)
- {
-+	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
- 	int ret;
- 
- 	/* Check if platform support d3cold vrsr */
-@@ -309,6 +311,9 @@ static void xe_pm_vrsr_init(struct xe_device *xe)
- 	if (!xe_pm_vrsr_capable(xe))
- 		return;
- 
-+	if (pdev != vga_default_device() || !xe_display_connected(xe))
-+		return;
+ 	ret = pci_acpi_add_perst_assertion_delay(root_pdev, perst_delay);
++	if (ret)
++		return ret;
 +
- 	/*
- 	 * If the VRSR initialization fails, the device will proceed with the regular
- 	 * D3 Cold flow
++	xe->nb.notifier_call = aux_pwr_notifier;
++	pci_acpi_register_aux_power_notifier(&xe->nb);
++	devm_add_action_or_reset(xe->drm.dev, xe_pm_vrsr_fini, xe);
+ 
+ 	return ret;
+ }
 -- 
 2.43.0
 
