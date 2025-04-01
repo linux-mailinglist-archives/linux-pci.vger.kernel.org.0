@@ -1,52 +1,52 @@
-Return-Path: <linux-pci+bounces-25051-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25050-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A350A77783
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 11:19:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 92C65A7777A
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 11:18:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 82D333ABAB2
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 09:18:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EF4EB188E9B0
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 09:18:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ACB01EFFB3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41D131EFFAB;
 	Tue,  1 Apr 2025 09:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NCNt5RoS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLuIph2j"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FEE1EF39F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B9A1EF39A;
 	Tue,  1 Apr 2025 09:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743499059; cv=none; b=RoI1oikGwBTWBYkDVXLIkMu4LMKqPgzwc6W9kvgQNnJ1yusRLW+zvxjeCYVgyhJ4tH9FuIkatnNPnsebpXSt6r9vSaRWAc+YeAatZ4VC4ecgp6SreCEssiVo1LjuhOPN+WKzh+TAFvKb/Lkz3nOvLohubIfe1zSk6UnTa4Ht870=
+	t=1743499059; cv=none; b=qISThWbX88ZIYHMBSYfeRAO2LTO/1QcHCv4SgNqETlLAB+m5MRU+gxy9O/YKXrSZVYqx1UMjOKpFXh8mIPDnIKNFkxpUr+bDjHYNe8LCkd7K6rChdLP1jxeh5oceS7vMOVs8GtnMfTe2IaHbC8L4MyUIvSpFpN6wNfI1eS4vNWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743499059; c=relaxed/simple;
-	bh=EBSOtpSc/6vHsHkDO7brKbWCI1HIqRXrpQE1DO7mtEE=;
+	bh=U0ysh0TLWp+CLpUidcyzO51hkifl4bGUq07snvSw+w4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mksvpEeZMbdZSLEfygBAAf4mcJ4iN6yjnw6BdLFJrx7bq3AACDir8owEr1Ro2BISu1zI+RfQVeYZCpwx4PuDK85AE44aUY25M2tQ1khwsm1vfQmjiBtzQqgS+ri8uO7dHDl0O0z6ytBsVf/ycC1U2dDjuNSYLSOuYaNXOBhtYbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NCNt5RoS; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E09A3C4AF0D;
+	 MIME-Version; b=nm+g5c5LQqpHKhFkGQwsr9bxsYwLO/PENV1aiwA7khZC7drPgefbrJWwacCZgS+D7GxVegwH5c2a1wJGngdKAGhsquBhIShpdyVMzLKOSVbhAjhL81qgwuzq/o41z6nUFSeb5iPvpNlEMW6bGkZJTGLbxH1nUsYE83s32vUSJBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLuIph2j; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8028C4AF12;
 	Tue,  1 Apr 2025 09:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1743499059;
-	bh=EBSOtpSc/6vHsHkDO7brKbWCI1HIqRXrpQE1DO7mtEE=;
+	bh=U0ysh0TLWp+CLpUidcyzO51hkifl4bGUq07snvSw+w4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NCNt5RoSTJFyXb50Y+wWLdtLLGtoFM5psy/axV/vIaWT0zRb4FJQk9P+hF2MQwKmc
-	 TpSHKLXG8V79z+Ff6Q1smd83zmnY3eQT4InTyuehGZhf3D6pXlMz2knHsf2H9MJfUD
-	 0c+xbNJgmXBPMgUFDRJ/vzINg36l9Jj2ZdPy1xFrnQYmHoiu9d51dAqDyE2HYidgLy
-	 frIAE1BkhmsrIiAW+lCOm3nginx6WilYI3MWKxN7tTSlqV89quKYYGMmwyqHdyfTlq
-	 EKD2+Pao/XVHEyWXYPVB42qnuqIe0i1Ns58fRyON12n3QVXY7/V3muM2rOwJImCBpN
-	 W9e3koBZA9tpA==
+	b=cLuIph2jPhPcO3cYdVQtZQtkVXG+tgLp/4t4smob/abxmh2OmnA/+5ZU6hUuX8wxV
+	 KBkK5kWx9h9FJIG7bi6lirw5sVbHustH0pvTEVRV9SNFKdn8eNcbJqHblU4E+MRCO/
+	 nwnkA0JbxNQOYkQVdfO/q9dIfBEiyvQ8hK3WyrtgriNyefrmbk+clmDjrJHqAb77BK
+	 brNHVNMm9wl+hXoiSLJv/gthJUak6a2tLQloDPoz6cN6L90JjSX3EkdR3kVb0S5v1f
+	 Uw7iWOekWcOeztD1MfwY7HhE32vtavMCCm4RThkevAiGrtbub7fCxsWY2skM6E6x+r
+	 2fkkFisZQ5lWA==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
 	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <maz@kernel.org>)
-	id 1tzXkW-001GqU-Sc;
-	Tue, 01 Apr 2025 10:17:36 +0100
+	id 1tzXkX-001GqU-4E;
+	Tue, 01 Apr 2025 10:17:37 +0100
 From: Marc Zyngier <maz@kernel.org>
 To: linux-arm-kernel@lists.infradead.org,
 	linux-pci@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Mark Kettenis <mark.kettenis@xs4all.nl>
-Subject: [PATCH v3 09/13] PCI: apple: Move port PHY registers to their own reg items
-Date: Tue,  1 Apr 2025 10:17:09 +0100
-Message-Id: <20250401091713.2765724-10-maz@kernel.org>
+Subject: [PATCH v3 10/13] PCI: apple: Drop poll for CORE_RC_PHYIF_STAT_REFCLK
+Date: Tue,  1 Apr 2025 10:17:10 +0100
+Message-Id: <20250401091713.2765724-11-maz@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250401091713.2765724-1-maz@kernel.org>
 References: <20250401091713.2765724-1-maz@kernel.org>
@@ -84,136 +84,38 @@ X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to 
 
 From: Hector Martin <marcan@marcan.st>
 
-T602x PCIe cores move these registers around. Instead of hardcoding in
-another offset, let's move them into their own reg entries. This matches
-what Apple does on macOS device trees too.
+This is checking a core refclk in per-port setup which doesn't make a
+lot of sense, and the bootloader needs to have gone through this anyway.
 
-Maintains backwards compatibility with old DTs by using the old offsets.
-
-Note that we open code devm_platform_ioremap_resource_byname() to avoid
-error messages on older platforms with missing resources in the pcie
-node. ("pcie-apple 590000000.pcie: invalid resource (null)" on probe)
+It doesn't work on T602x, so just drop it across the board.
 
 Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 Tested-by: Janne Grunau <j@jannau.net>
-Co-developed-by: Janne Grunau <j@jannau.net>
-Signed-off-by: Janne Grunau <j@jannau.net>
 Signed-off-by: Hector Martin <marcan@marcan.st>
 Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/pci/controller/pcie-apple.c | 55 +++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 18 deletions(-)
+ drivers/pci/controller/pcie-apple.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index 23d9f62bd2ad4..94c49611b74df 100644
+index 94c49611b74df..c00ec0781fabc 100644
 --- a/drivers/pci/controller/pcie-apple.c
 +++ b/drivers/pci/controller/pcie-apple.c
-@@ -39,14 +39,18 @@
- #define   CORE_RC_STAT_READY		BIT(0)
- #define CORE_FABRIC_STAT		0x04000
- #define   CORE_FABRIC_STAT_MASK		0x001F001F
--#define CORE_LANE_CFG(port)		(0x84000 + 0x4000 * (port))
--#define   CORE_LANE_CFG_REFCLK0REQ	BIT(0)
--#define   CORE_LANE_CFG_REFCLK1REQ	BIT(1)
--#define   CORE_LANE_CFG_REFCLK0ACK	BIT(2)
--#define   CORE_LANE_CFG_REFCLK1ACK	BIT(3)
--#define   CORE_LANE_CFG_REFCLKEN	(BIT(9) | BIT(10))
--#define CORE_LANE_CTL(port)		(0x84004 + 0x4000 * (port))
--#define   CORE_LANE_CTL_CFGACC		BIT(15)
-+
-+#define CORE_PHY_DEFAULT_BASE(port)	(0x84000 + 0x4000 * (port))
-+
-+#define PHY_LANE_CFG			0x00000
-+#define   PHY_LANE_CFG_REFCLK0REQ	BIT(0)
-+#define   PHY_LANE_CFG_REFCLK1REQ	BIT(1)
-+#define   PHY_LANE_CFG_REFCLK0ACK	BIT(2)
-+#define   PHY_LANE_CFG_REFCLK1ACK	BIT(3)
-+#define   PHY_LANE_CFG_REFCLKEN		(BIT(9) | BIT(10))
-+#define   PHY_LANE_CFG_REFCLKCGEN	(BIT(30) | BIT(31))
-+#define PHY_LANE_CTL			0x00004
-+#define   PHY_LANE_CTL_CFGACC		BIT(15)
+@@ -475,12 +475,6 @@ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
+ 	u32 stat;
+ 	int res;
  
- #define PORT_LTSSMCTL			0x00080
- #define   PORT_LTSSMCTL_START		BIT(0)
-@@ -146,6 +150,7 @@ struct apple_pcie_port {
- 	struct apple_pcie	*pcie;
- 	struct device_node	*np;
- 	void __iomem		*base;
-+	void __iomem		*phy;
- 	struct irq_domain	*domain;
- 	struct list_head	entry;
- 	unsigned long		*sid_map;
-@@ -476,26 +481,26 @@ static int apple_pcie_setup_refclk(struct apple_pcie *pcie,
- 	if (res < 0)
- 		return res;
+-	res = readl_relaxed_poll_timeout(pcie->base + CORE_RC_PHYIF_STAT, stat,
+-					 stat & CORE_RC_PHYIF_STAT_REFCLK,
+-					 100, 50000);
+-	if (res < 0)
+-		return res;
+-
+ 	rmw_set(PHY_LANE_CTL_CFGACC, port->phy + PHY_LANE_CTL);
+ 	rmw_set(PHY_LANE_CFG_REFCLK0REQ, port->phy + PHY_LANE_CFG);
  
--	rmw_set(CORE_LANE_CTL_CFGACC, pcie->base + CORE_LANE_CTL(port->idx));
--	rmw_set(CORE_LANE_CFG_REFCLK0REQ, pcie->base + CORE_LANE_CFG(port->idx));
-+	rmw_set(PHY_LANE_CTL_CFGACC, port->phy + PHY_LANE_CTL);
-+	rmw_set(PHY_LANE_CFG_REFCLK0REQ, port->phy + PHY_LANE_CFG);
- 
--	res = readl_relaxed_poll_timeout(pcie->base + CORE_LANE_CFG(port->idx),
--					 stat, stat & CORE_LANE_CFG_REFCLK0ACK,
-+	res = readl_relaxed_poll_timeout(port->phy + PHY_LANE_CFG,
-+					 stat, stat & PHY_LANE_CFG_REFCLK0ACK,
- 					 100, 50000);
- 	if (res < 0)
- 		return res;
- 
--	rmw_set(CORE_LANE_CFG_REFCLK1REQ, pcie->base + CORE_LANE_CFG(port->idx));
--	res = readl_relaxed_poll_timeout(pcie->base + CORE_LANE_CFG(port->idx),
--					 stat, stat & CORE_LANE_CFG_REFCLK1ACK,
-+	rmw_set(PHY_LANE_CFG_REFCLK1REQ, port->phy + PHY_LANE_CFG);
-+	res = readl_relaxed_poll_timeout(port->phy + PHY_LANE_CFG,
-+					 stat, stat & PHY_LANE_CFG_REFCLK1ACK,
- 					 100, 50000);
- 
- 	if (res < 0)
- 		return res;
- 
--	rmw_clear(CORE_LANE_CTL_CFGACC, pcie->base + CORE_LANE_CTL(port->idx));
-+	rmw_clear(PHY_LANE_CTL_CFGACC, port->phy + PHY_LANE_CTL);
- 
--	rmw_set(CORE_LANE_CFG_REFCLKEN, pcie->base + CORE_LANE_CFG(port->idx));
-+	rmw_set(PHY_LANE_CFG_REFCLKEN, port->phy + PHY_LANE_CFG);
- 	rmw_set(PORT_REFCLK_EN, port->base + PORT_REFCLK);
- 
- 	return 0;
-@@ -515,6 +520,8 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
- 	struct platform_device *platform = to_platform_device(pcie->dev);
- 	struct apple_pcie_port *port;
- 	struct gpio_desc *reset;
-+	struct resource *res;
-+	char name[16];
- 	u32 stat, idx;
- 	int ret, i;
- 
-@@ -542,10 +549,22 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
- 
- 	raw_spin_lock_init(&port->lock);
- 
--	port->base = devm_platform_ioremap_resource(platform, port->idx + 2);
-+	snprintf(name, sizeof(name), "port%d", port->idx);
-+	res = platform_get_resource_byname(platform, IORESOURCE_MEM, name);
-+	if (!res)
-+		res = platform_get_resource(platform, IORESOURCE_MEM, port->idx + 2);
-+
-+	port->base = devm_ioremap_resource(&platform->dev, res);
- 	if (IS_ERR(port->base))
- 		return PTR_ERR(port->base);
- 
-+	snprintf(name, sizeof(name), "phy%d", port->idx);
-+	res = platform_get_resource_byname(platform, IORESOURCE_MEM, name);
-+	if (res)
-+		port->phy = devm_ioremap_resource(&platform->dev, res);
-+	else
-+		port->phy = pcie->base + CORE_PHY_DEFAULT_BASE(port->idx);
-+
- 	rmw_set(PORT_APPCLK_EN, port->base + PORT_APPCLK);
- 
- 	/* Assert PERST# before setting up the clock */
 -- 
 2.39.2
 
