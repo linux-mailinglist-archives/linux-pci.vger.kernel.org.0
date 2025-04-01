@@ -1,280 +1,363 @@
-Return-Path: <linux-pci+bounces-25033-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25034-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0548A773A1
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 06:44:43 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB935A773CF
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 07:20:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9E0031885AC8
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 04:44:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6793516B6F5
+	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 05:20:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04D7A1DF739;
-	Tue,  1 Apr 2025 04:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3F421684B0;
+	Tue,  1 Apr 2025 05:20:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZyPtIp/Z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZPPya6AJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620BB1DEFD2
-	for <linux-pci@vger.kernel.org>; Tue,  1 Apr 2025 04:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743482599; cv=none; b=aNXJyTYIrcaqsfnpFTyu2crdFBROr1BUrX8TFGx/BOglV3tueFms9dvFV34UaYfaAqN/XM9SgzzR/qKfdAJ1AFilB02wU/QawZUueWmcqhkA6m+wCs9DI7iwTbmM7EA9RatHOjPq/J+R19xD2EQDxWtdxfo46ERg8JRgl4uBA7k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743482599; c=relaxed/simple;
-	bh=ux2W3fa5UF+jdQyyWQKpB6Q0rrH+j8lj+L+VJ6ZwaEc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fe3SFhxR63KAHf7EAmksOo0RTEEwA+TDi6C+RvrkeWDrBsjT6/pa0D66PIpDGKBeFuG4O1fbzrzHHLaFfd1pRg8u/3h7BHML5zRzNV6cO2kjsySeROvrNbGQ/vHWF0kZKgXLdBT4FLvW7/ZIVVMYjuXg8OyqPDpk/ANjhu6VEOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZyPtIp/Z; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52VFCrpC032704
-	for <linux-pci@vger.kernel.org>; Tue, 1 Apr 2025 04:43:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Bhbf80HBiZjeWneDSbVO1CX4rg1V65JnwlZBLRmEgRg=; b=ZyPtIp/ZGEaJeLgw
-	k3v0qQyWNrseS532oecOPu7m+If9/Q/3UtsuAOBkaE5Jusp6fBPv6Ezqvrt1kG9B
-	H1UZTF8IVzjSA8+YCw+oBKMZKS9cipbcit9UudQYI8Jg+xTpcwdBuz61DhIngEWL
-	jir8MvW403vIKQOIwh0v99Sq4PWl+I16lVYq63+xIxLN+WulgY7b37m0/ycJeYI0
-	JtoJEc1rTQ1MpUkGyyJeHKdDcHQ5rqsddzB3iw7txmoCW5h4KubuFnkkx0BYsm3w
-	TOYt6MUEtUp3aKnKaTcZQbsILmghvCfQ45yaByRk6jCLvGF/aEuRijtv9vxh0Dar
-	Gx4+3A==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p67qerdx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Tue, 01 Apr 2025 04:43:16 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-227a8cdd272so85670885ad.2
-        for <linux-pci@vger.kernel.org>; Mon, 31 Mar 2025 21:43:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743482595; x=1744087395;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bhbf80HBiZjeWneDSbVO1CX4rg1V65JnwlZBLRmEgRg=;
-        b=ptFBNLalsJsaQgUSG8oMgUicstFyRSNSEL929pJVQcHsGeKugva3Ilu+BIc58S0x0l
-         VxOZj9oUx/LkWXqeKn6vLqOVqkFJHPdlhMW7Cj83XklkfWGRgIZlw4EiH7WB5KI7FVqF
-         m6FLVG4eYsFLY0fN7oVw7zzQ+znWVLwkS0AW2iHphxppnTG4ZzD2XzRjLWhnYZLDOMjT
-         4m3KKYym5SQg2r5MvyMGPqD9H2+IuFs1vYzE+qKm0bTBf8le5+qRkE3c5NP/OEaEV5Xp
-         3+mETal0l3CN6ZRfyYTfASFQiUhT8CVArbnw0p4zfmBw6wD+BjzT3Y7hXeeuBFcpmUIw
-         wTXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFSuA24hgrraDL9eePbaUJiFKV3golbHcfEVFccfHNCA11+FnOX/ABAia4kZ5VU8b/SL9nRMZXpwE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT8kRCE8GNQHi3kuBU0rmn+W+qmxvHhIAmfmKAsZEH1XyXpzQ0
-	e0Oc8HoIB2YjaYb447jK8Um93I2+5hirWZko9XZWp1CVeffYlQ/IwK0KFYUPuDXwrUyh8K/1aUa
-	r6NHNgUEViGCf4zGScplAImdZ7kGn3ZDPjzjYzVsRgw8xNGoM0gxsANYEV+DTLuOG9wI=
-X-Gm-Gg: ASbGncu71pyUMwFKIN9hNSnmXsJfX35u3McPrTX62GataHP5KIFDWX2NpimVkNLScIN
-	kZnUPZqFZ04Ug5jsDEKM+/ZqrQqJFoAq/5axWD0aUjoTirOAce94dONNyxG52DBrkuEF6Kj7GuS
-	H+amsXkadzIXQmwz3JkWSUq75nhDA+VGD/cQVKTwMR66niS7Mrh3BSbfM1jCF4BnAT+E18PoVYd
-	riXZ130D08F1VHvEnhw5fo0khbDqwZ+XahVfkcAFeDCEQiOmBWDVdOSYWeYF2wTbYpLqH4rbOHD
-	CZoN4I16oncxvF16YA2adVSyIxVr7PkvMEu+8ACt5jkj5CgCmp4=
-X-Received: by 2002:a05:6a00:1784:b0:736:8c0f:7758 with SMTP id d2e1a72fcca58-7398038028cmr16685912b3a.10.1743482594816;
-        Mon, 31 Mar 2025 21:43:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHz+MOxmKD2YZ5JuPKKSQQaWVdGpFuYmspO+ReGzpMU1Pa0EptpT2IjBujNxWCzYr7pQoED6A==
-X-Received: by 2002:a05:6a00:1784:b0:736:8c0f:7758 with SMTP id d2e1a72fcca58-7398038028cmr16685882b3a.10.1743482594367;
-        Mon, 31 Mar 2025 21:43:14 -0700 (PDT)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73970deec96sm7940294b3a.34.2025.03.31.21.43.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 21:43:14 -0700 (PDT)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Tue, 01 Apr 2025 10:12:44 +0530
-Subject: [PATCH 2/2] PCI: Add support for PCIe wake interrupt
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4406117588;
+	Tue,  1 Apr 2025 05:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743484833; cv=fail; b=XLS+2Hkax3EmJ+tq4tviMDMA6ZsDP43/2LlQ1t21+irMnfxXjuMFUuJMIgbBEOzzuEh2Ne0E9T4VGsKGErhZE6BiYO6XAo6BjpzGqerfLeCtoNM2GkT5lM6GtJcl40APy5LtRpyHYMjUcExid64AkT2olR/jNa1/keSkI+us+rA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743484833; c=relaxed/simple;
+	bh=hJh31O4AcRAhT92kye5ygTZUQqM7lyZ0Hc9Qm97scBM=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=eEGeGUHQU0LA2E+pmG1T6Ysw2W4r3yAb7scUXqp3RzSvor6IzJTG/ICBEUnZB7v0Hl1sOFlk2qDJwh9HBRM7/QlWu56J7JtzNKFqHrLtXAhwr8VyIjKhg886YxcBhd3Wmc5o4BJKCLwB2NzHMvn7ah5Zksj2s5Ug/snnRkPJr88=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZPPya6AJ; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743484831; x=1775020831;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=hJh31O4AcRAhT92kye5ygTZUQqM7lyZ0Hc9Qm97scBM=;
+  b=ZPPya6AJ9rM72mSNMzf7sSs7TW82bd8qruxRlak8dBLVt0AQJh8tAGXE
+   Un7gh/g+8NVrroRs5F/dgW01EPSR4WEPNV6tyNO8dTBEPSfvmTq8HGAfT
+   iKom78Ak6MtNgml11rz8F1qKjkFL/ail4Yqm5ZksM8IiP1Xvigy+PPBa8
+   se9kxnNWzVPeIWplfoQmaPUx5csaMwb69hoiNJbcsYvLT8ZPgbT7lFTYW
+   LU+kPN1UVXOeLnH2bxaQsFKv8HtJhkOk5cAyEahib5Mz9uoyW+YFlImUT
+   ysLdQDYFScRftCwYJHbZo8s3+p1xPloJXfBf8h/Lm4/hCxLsOLC/w//O/
+   w==;
+X-CSE-ConnectionGUID: WHA1GyqhR7G/bNwnLcCmEQ==
+X-CSE-MsgGUID: Wd83smveT4edQDnvoOimuQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11390"; a="48455883"
+X-IronPort-AV: E=Sophos;i="6.14,292,1736841600"; 
+   d="scan'208";a="48455883"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 22:20:30 -0700
+X-CSE-ConnectionGUID: eYQf1KLjTlC0djF4sVveew==
+X-CSE-MsgGUID: YQwjD144SwW51J1fz9kizg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,292,1736841600"; 
+   d="scan'208";a="130994416"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2025 22:20:30 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Mon, 31 Mar 2025 22:20:29 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Mon, 31 Mar 2025 22:20:29 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.45) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Mon, 31 Mar 2025 22:20:29 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=P8zgMOKD/jdlGO1xmKC1DMd59asn39qhvrSsw3yAVXJxkeG0e5+4M3brVtuIeD5uNgbVWpVCtoH6Y/TftVar9aOLZrS3syB8kYYaTNhe69LDu9JQm/SsWQ02GXKbiXJLQSF5h4ibxm3SdTgfDIK3gX7Cq7Vi1isLRIVID/mosFl/ze3kBCUe6aTkJ0sMyldKUGlD1ZCG+UASdmkODbRyAf5IrzgcHfEtEYGVbCDjsbxoCupAcPRbwP3SiJkE2Vn9zPOA7H57SUfEQrmmjTcE7vUJXBFQcu5qkbgiPiTs/y2OE/dRri0/NSm6cArf3xdM5EJH1sb7bnDEuHJnsoEWpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0dImPhJgnAYm17hWuGFXntm+a7p+KvkATE7zszr9I+k=;
+ b=mLbnvT+QHd359wiObylxb0QvTXYa3j4tyNBjD8aKfIsNBU61VsiaTZyomRKevb3fPuM09U1m4LsRsutPju0YDACCxA5SuYMP4z97gbT5cSvx2D5PCz4FxEr74XBjn1mySL8Foj4uPut6RvE6quewa7s/rD6dGjPCS3GaE23tf6Af+dZbLo12z+ELB1aUX9eWveqFe/Je4vSnFShSEBdimXSFtKMakjg6iwzi3q9aQeWNq5Uu0Kn47OTDLKsLCVSfmSai5ci6NhEyudG/EhskLliEJMjIxt/R8ByNPlu8E5AuO5STmBtSbFD0aPNMFyxYbUAbrCPOkcwXdyP7Q1124w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM8PR11MB5703.namprd11.prod.outlook.com (2603:10b6:8:22::5) by
+ DS0PR11MB8764.namprd11.prod.outlook.com (2603:10b6:8:192::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.44; Tue, 1 Apr 2025 05:19:47 +0000
+Received: from DM8PR11MB5703.namprd11.prod.outlook.com
+ ([fe80::f734:e507:3083:e454]) by DM8PR11MB5703.namprd11.prod.outlook.com
+ ([fe80::f734:e507:3083:e454%4]) with mapi id 15.20.8534.043; Tue, 1 Apr 2025
+ 05:19:46 +0000
+Message-ID: <f3dbbd0a-adc7-426c-b476-e66059ae601c@intel.com>
+Date: Tue, 1 Apr 2025 10:49:38 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC,6/6] drm/xe/vrsr: Enable VRSR
+Content-Language: en-GB
+To: Anshuman Gupta <anshuman.gupta@intel.com>,
+	<intel-xe@lists.freedesktop.org>, <linux-acpi@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>
+CC: <rafael@kernel.org>, <lenb@kernel.org>, <bhelgaas@google.com>,
+	<ilpo.jarvinen@linux.intel.com>, <lucas.demarchi@intel.com>,
+	<rodrigo.vivi@intel.com>, <badal.nilawar@intel.com>, <kam.nasim@intel.com>
+References: <20250224164849.3746751-7-anshuman.gupta@intel.com>
+From: "Poosa, Karthik" <karthik.poosa@intel.com>
+In-Reply-To: <20250224164849.3746751-7-anshuman.gupta@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA0PR01CA0054.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:ac::6) To DM8PR11MB5703.namprd11.prod.outlook.com
+ (2603:10b6:8:22::5)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250401-wake_irq_support-v1-2-d2e22f4a0efd@oss.qualcomm.com>
-References: <20250401-wake_irq_support-v1-0-d2e22f4a0efd@oss.qualcomm.com>
-In-Reply-To: <20250401-wake_irq_support-v1-0-d2e22f4a0efd@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1743482582; l=4789;
- i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=ux2W3fa5UF+jdQyyWQKpB6Q0rrH+j8lj+L+VJ6ZwaEc=;
- b=j77PZzhEvi2s1vAWkryDc1cbVK09KS8RrSQxK5DVlcoCLxjZGd2QdV+Zrd/IBPCbx75WNPsfh
- JmTXTmY9JXjDyN/iPT4ihlhT3Ud411gAn1DSnypn1fVq6gnvAXNHT/L
-X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Authority-Analysis: v=2.4 cv=fMI53Yae c=1 sm=1 tr=0 ts=67eb6ee4 cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=iljMX2kAvVRlE-iODa4A:9 a=QEXdDO2ut3YA:10
- a=1OuFwYUASf3TG4hYMiVC:22
-X-Proofpoint-ORIG-GUID: bwEtuipT0esxDEuqX2E9193Fd0oh_BX6
-X-Proofpoint-GUID: bwEtuipT0esxDEuqX2E9193Fd0oh_BX6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-01_01,2025-03-27_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 clxscore=1015
- mlxlogscore=999 bulkscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504010030
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM8PR11MB5703:EE_|DS0PR11MB8764:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3af5443a-050b-4876-7314-08dd70dcd13a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?L3BoQ2N5MzRDbUpBMEhZeXl6NUxLN2piR3RYZ2ppYVRuRWZJaHlVWWJnZWdV?=
+ =?utf-8?B?T0RnMEV1NGpYb0RCcHNYK1ErZklSNWpDU29HUDN0bnl0a2swZ2ZtZ2puajdl?=
+ =?utf-8?B?QTBBWU1EcjZWZlpYRWlHNUtRaG52RmR0MWJ4TENrUHI0V2pUZUI1UnVvbFZs?=
+ =?utf-8?B?czBEdkdxbHd3bDZ2UVFFTkNQa3h1RXovemNhWFNkS0l2bnlQZC8vNEh1aUF2?=
+ =?utf-8?B?YlJRNm1ubW9Ta0g2ZjNyU0plRUdzNVZFYTRvaTUyYmRLOGY1OVQ0bkRiaita?=
+ =?utf-8?B?WFVXbWNlcU55TSsyT0xjNDdkNjdaMTZMZzN2ekNKNkZWenZSSHRxeDJEYXVO?=
+ =?utf-8?B?N3NuWlFRaEJTUFZ4MGU3MndGajhMdW15T0JQdmh1dHZPWFg4dFBkS2tucGt6?=
+ =?utf-8?B?d21ZbzVvSzh0ZFVIQVRYMjdZVzhFOFBqck4xcW51SDk4S2hlTitCcXBBSGVs?=
+ =?utf-8?B?MjlQdTJIMDNMeis1S3ZYR2NOcDFyZVdYUmgxT2ZSZlZXdE5lR3lGUEZrM0NY?=
+ =?utf-8?B?UnI5V2FOaWE1ZVE1Z3JoSG4vdWt6VzdIcjd4ZzVSSjh0NXJnU1RCVllUWUtj?=
+ =?utf-8?B?SDJWRUw4WHhJcndnRENlVVljU1k3Y2FWeXRnaWdIenVDRFRQTklGQUtFVHF6?=
+ =?utf-8?B?RmlUaDJsRHQvNkRKNkgwNnROSStEQ1RoMWt3enNCdlk4aTgxTTJoRlVhUDR3?=
+ =?utf-8?B?emhIay9LL1Z1aWQxMTFrN0ZQbHFtTGtDSjBybnNZYmxpN1ptUDZMS0RnWmth?=
+ =?utf-8?B?KzJDNzBobmJTN00zejErS051elBHZkxrN045QzUyMFdMSVltcEdUMUhJeGly?=
+ =?utf-8?B?Ry8ySnJPZ0tONnErbWhsZzlFMHVqWDhJOE5lTTlwZU9KbjJhVDZJRG11U3cz?=
+ =?utf-8?B?aWVUYUc4bklqS0ZNd3NYaiswUXZFSG5uazZIblQ5SUNuQnoxbDdqNEtEWDJl?=
+ =?utf-8?B?dkJZbUZSaktDbTByTDlwVnhvUjA2eG1VVEJscmpDdHVQS1dUSVNWNVI1MWFs?=
+ =?utf-8?B?aks3UnhzVjVMV2NSODZualNKT3NlZ1BHalBiNlRpSURJRVBuakx0K0RTWTZq?=
+ =?utf-8?B?ZmlXOThUeGw4M1lLcHAyQnVISXdFbHRUczhkQVhzV2V0b2JQUnBXODlzSzJW?=
+ =?utf-8?B?TXFtTlFNQVRIVWljRUMvRGxGRjFzcGR0RXRzdG02T0Vhd1JXNnFLeVFyYisw?=
+ =?utf-8?B?dFRFT0xkamp0Ky9xOUFxNk1uN2JqQVdLcVdOeW1EOGxOSS9tWnlQRWVEYkpS?=
+ =?utf-8?B?RjZ4VWJ2ZFpaeWZBWlVwaGh6UnpoaWJwaHh6NWpxQ0FycW5yQWVBWGh1bUpQ?=
+ =?utf-8?B?TzBnaHFkVUNZVEhxazkvazkwNDRKdkNvTWd4SUc1aGZJU1hWUXZ5dHdLVzdt?=
+ =?utf-8?B?Y1M0TTZaRGhsTDByTHFiZ2FWYW1FL0VVc09lZExGcWs3ZXIrMDhjVmt0QUlK?=
+ =?utf-8?B?enN2dlpNSVpIWm5SaTdwdjZQMytLMFgzeG9yU052dE4vNGprNUNsQzVzZjBu?=
+ =?utf-8?B?Y2s2RWhqQTRYdWs1WkRYc3BZMVJWbTlNRWdsTHFlZHRlRXFSaVFqeVF5aUhL?=
+ =?utf-8?B?VTkrei8zTnhYKzJwalJUaUlFMTh2OTNjNUhadjVOajFsblUzSm82Z0hteW5F?=
+ =?utf-8?B?UjQxc0p2d01rbnBpNzBlOFNENGRPbXFBVWMrcjRaNWRtWHdRcFgyU1lhd0pT?=
+ =?utf-8?B?S3RLNEpIQUNYNGU0c1dYY1lweUpRM0hGbWtqbnpmUFoyZzNyUUpMb1RHRVl0?=
+ =?utf-8?B?OThKclFlbWtCNlRST2VqNjIyUlJUa0t6Y0xxOFgwbFVpQ0VrcUN5RDQ5TXhB?=
+ =?utf-8?B?RStna0RIQkpsbVlrbkd3YTJuaTBQNm5SQTA4cUV1cGtPb2tBalZicWFWbHF1?=
+ =?utf-8?Q?7fBA8SfI+6yp0?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5703.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aWdJeDFMdmtDR00rcTQvUkVFbkR3V1o5eUo4WkU0a2IxWi9md3Nob1RNWTJm?=
+ =?utf-8?B?dDhFOGxKdkpYYXBZbFBiTUIzcWZpY2JxWHB3MlZYdGcxdXh1dU1JSWducE12?=
+ =?utf-8?B?UUJWa3BhMDZBWXZjdGdBanNtaC92SGJmcE1mdW9GQUJycmdhR2x3ZlcvYWkw?=
+ =?utf-8?B?NVBGL3pwSFdhYkswWFRGMFhXV3lEOTVIaXFyK1czNThkd1RFR2xKQ28wV01i?=
+ =?utf-8?B?UGF2Rko5UFpLaXBVeS9PeWZWZGdaV3VDcWtwZEpMcFgzWGdMNGtndk9xcnVQ?=
+ =?utf-8?B?cytZVEFtdW9qMDBneWxWRWV6dmNvR2FlSjlnaDlxb1dLNk5kWGdIVGRGM2g3?=
+ =?utf-8?B?bXlZWStiS0ZLRzBPUk44ZHpteWZHQk1sWHE2b0dIN1FiYzlYNXFPQytNNkxl?=
+ =?utf-8?B?M0w3Tmd3bUFCd2NoR0diUitZdytnNUIxWnphNFk1TWdBUXRwbEJCRitKOU1K?=
+ =?utf-8?B?eVhRYWxDZXFjc3ZDODEva2tqRUh6V1hYOWM5NzFaVjUvUjMyM3hQekhGMDJu?=
+ =?utf-8?B?QTljTUhMck4rYVNkOHU2TlRZMWpqbVhENnVHbURpUlZIcStVZnVMTUN3enNh?=
+ =?utf-8?B?QkhDWFEyMExVRkNJQUZINjBZUW0wSUpQK0R3YkRsQ2lQUm1rWW9CcFFvUmZL?=
+ =?utf-8?B?YmxaN3Jua1ZOSm1SSDRSZ0RHVUliU0UxZHJURTVYRkg0OXpBWFVPRVhITUpX?=
+ =?utf-8?B?eW45RE50TytnS2tuaVhUdnZJWmRWb2U5MVQvVEJBaWo0bkJQVVkvMjh4MEFT?=
+ =?utf-8?B?NEVNL3FkcXdETlpmMmJDUnRqQUdMOUJwQjVsMzRHSDU0Ukh2b0pXWEJVVSt2?=
+ =?utf-8?B?RGozbEhqQlo0QlRVK1YzL3R0bm9qZW0yUlJqU1dZYmE5eVlGcjJidndBL2VL?=
+ =?utf-8?B?T0xGZlBTVUZSSGdZdC9yVVc4R0orQnRwRUFkdzk3Tjd4MTdsejNaeGxJK3ph?=
+ =?utf-8?B?UzJodmhkWGpLNTlPTGp5RzdlcU1GUXc0OUZKTHJKbmtHVldHMkNWRnhOZ1Ja?=
+ =?utf-8?B?ZEFjbW9tWnZEMGNONzhvdmdROFBPTWxoMDRCaUczbnF5OG5YWjFhTytpSG1D?=
+ =?utf-8?B?Z1lZaTc3SkVMZ2k4RTBWcWp4ZXdLT0RQTnh0eTYvOWhqWXB1Mm02Um0wb1Zk?=
+ =?utf-8?B?T0xUSmV0ejZXR3p3MG9lNXpwUXd4NU51QVZ1U1pkZVNxWGtoeGF5N3ZGY3ZF?=
+ =?utf-8?B?NjhBZ2IwSkdmT0hZVjNKR3AwVi95aURFaGgycHR3UHBVOVpuSDMwS3MxQXkx?=
+ =?utf-8?B?czZXeGh3bE9mNTlXWStUak9wKzJReHlPblhyRHZtNDV5TXN3ZWlvSGZpbGY0?=
+ =?utf-8?B?WUZNMXcyWndodUdmc2NldFpCc2tUZWpNRlE1d2pjOVNXdEVrRTExOHRuOFpD?=
+ =?utf-8?B?dzVrN2pyblJySkY2b1Rub1ZHQ25Cc3J3dnhBNktvTm9Dc3FWVnRDLzNGajFC?=
+ =?utf-8?B?SVpJZlVneGRpUVBUajBlUFVDWnJGWUx5UzJGMTZ2VzBvMkRST2NQUlY3N2R5?=
+ =?utf-8?B?U1d3N2FPNVhlQ1BVY1RrMHVwSVVsQUFVSTNBd2tqb1g1aURQY21sNW94Yk5i?=
+ =?utf-8?B?aDA0dWhFV29GVkxyUzN2Tm5MTkFIcXVHUzJqN3ZLWWdEcEdVY1ZDR3AzWndq?=
+ =?utf-8?B?VHZhSEpiRHdqa09VUnhNMzNnVWozUG9WODRCS0lwZEVzUEtsT3VWS1J2RFRT?=
+ =?utf-8?B?NnNtQVpRS2k5VVl5TzA4dWZMNGFSZ3ZwcmJ5d281dFFwYVJGLzVJOFlHenNk?=
+ =?utf-8?B?RDVyWDlqWUZaWG9ibWNUdlhUNFRFMXI5TzE0OWdKdnRwc3JXLzFIRHU1STh0?=
+ =?utf-8?B?VWVSK2hrUERvQ2lmSlkxNlhRWE1vN0M2cnhNb2FWNG5yTFhucnRJM3drS1Vu?=
+ =?utf-8?B?S25Xc3N4L0dXU2h0ejRacGpBdWR5bm1lbnhlN2VUN2xZblZOUnBET0NNR2Zm?=
+ =?utf-8?B?Tk5BdStjQU5VTVM2UUh6L0pqMFZRaGZNOHI5cm1keERGci9ZWmliajByZHo1?=
+ =?utf-8?B?cUo0RjdlYVd0dWZNWlEyTkNwNFpCMzJLUTdNRElzZVlza0NzUlp1YW1aeUc1?=
+ =?utf-8?B?VlRTTVFVMitickJJSEx5aUwrbTRTWlhuR0VwVGZ1bi9LQUpvcjRZcjdURTlO?=
+ =?utf-8?B?dmdYTzlNVnUranRSQnZqTm9lL2RZeTZQczFFSk00TFVNZnpzbHRvRjhWNnlm?=
+ =?utf-8?B?a3c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3af5443a-050b-4876-7314-08dd70dcd13a
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5703.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2025 05:19:46.5744
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ftp6tHl8MixQ3QZqef0ENBQ0cobCKGzWjJ67AdqJy2+4z/tWENIzRbNMYK3spbZPV3IB1QDkp9fqPbSo2px0vw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8764
+X-OriginatorOrg: intel.com
 
-PCIe wake interrupt is needed for bringing back PCIe device state
-from D3cold to D0.
 
-Implement new functions, of_pci_setup_wake_irq() and
-of_pci_teardown_wake_irq(), to manage wake interrupts for PCI devices
-using the Device Tree.
+On 24-02-2025 22:18, Anshuman Gupta wrote:
+> Enabling VRSR in runtime suspend and also in System wide suspend.
+> Also fix couple of typo in xe_pm.c.
+>
+> Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
+> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+> ---
+>   drivers/gpu/drm/xe/xe_pci.c |  4 +--
+>   drivers/gpu/drm/xe/xe_pm.c  | 49 +++++++++++++++++++++++++++----------
+>   2 files changed, 38 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/xe/xe_pci.c b/drivers/gpu/drm/xe/xe_pci.c
+> index 70b697fde5b9..55b42b3a10d2 100644
+> --- a/drivers/gpu/drm/xe/xe_pci.c
+> +++ b/drivers/gpu/drm/xe/xe_pci.c
+> @@ -967,7 +967,7 @@ static int xe_pci_suspend(struct device *dev)
+>   
+>   	/*
+>   	 * Enabling D3Cold is needed for S2Idle/S0ix.
+> -	 * It is save to allow here since xe_pm_suspend has evicted
+> +	 * It is safe to allow here since xe_pm_suspend has evicted
+>   	 * the local memory and the direct complete optimization is disabled.
+>   	 */
+>   	d3cold_toggle(pdev, D3COLD_ENABLE);
+> @@ -983,7 +983,7 @@ static int xe_pci_resume(struct device *dev)
+>   	struct pci_dev *pdev = to_pci_dev(dev);
+>   	int err;
+>   
+> -	/* Give back the D3Cold decision to the runtime P M*/
+> +	/* Give back the D3Cold decision to the runtime PM */
+>   	d3cold_toggle(pdev, D3COLD_DISABLE);
+>   
+>   	err = pci_set_power_state(pdev, PCI_D0);
+> diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
+> index 6d28aedcb062..5c96f8629a87 100644
+> --- a/drivers/gpu/drm/xe/xe_pm.c
+> +++ b/drivers/gpu/drm/xe/xe_pm.c
+> @@ -232,10 +232,12 @@ int xe_pm_suspend(struct xe_device *xe)
+>   
+>   	xe_display_pm_suspend(xe);
+>   
+> -	/* FIXME: Super racey... */
+> -	err = xe_bo_evict_all(xe);
+> -	if (err)
+> -		goto err_pxp;
+> +	if (xe->d3cold.allowed == XE_D3COLD_OFF) {
+> +		/* FIXME: Super racey... */
+> +		err = xe_bo_evict_all(xe);
+> +		if (err)
+> +			goto err_pxp;
+> +	}
+>   
+>   	for_each_gt(gt, xe, id) {
+>   		err = xe_gt_suspend(gt);
+> @@ -247,6 +249,12 @@ int xe_pm_suspend(struct xe_device *xe)
+>   
+>   	xe_display_pm_suspend_late(xe);
+>   
+> +	if (xe->d3cold.allowed == XE_D3COLD_VRSR) {
+> +		err = xe_pm_enable_vrsr(xe, true);
+> +			if (err)
+> +				goto err_display;
+> +	}
+> +
+>   	drm_dbg(&xe->drm, "Device suspended\n");
+>   	return 0;
+>   
+> @@ -288,9 +296,11 @@ int xe_pm_resume(struct xe_device *xe)
+>   	 * This only restores pinned memory which is the memory required for the
+>   	 * GT(s) to resume.
+>   	 */
+> -	err = xe_bo_restore_kernel(xe);
+> -	if (err)
+> -		goto err;
+> +	if (xe->d3cold.allowed == XE_D3COLD_OFF) {
+> +		err = xe_bo_restore_kernel(xe);
+> +		if (err)
+> +			goto err;
+> +	}
+>   
+>   	xe_irq_resume(xe);
+>   
+> @@ -299,9 +309,11 @@ int xe_pm_resume(struct xe_device *xe)
+>   
+>   	xe_display_pm_resume(xe);
+>   
+> -	err = xe_bo_restore_user(xe);
+> -	if (err)
+> -		goto err;
+> +	if (xe->d3cold.allowed == XE_D3COLD_OFF) {
+> +		err = xe_bo_restore_user(xe);
+> +		if (err)
+> +			goto err;
+> +	}
+>   
+>   	xe_pxp_pm_resume(xe->pxp);
+>   
+> @@ -543,7 +555,7 @@ int xe_pm_runtime_suspend(struct xe_device *xe)
+>   
+>   	xe_display_pm_runtime_suspend(xe);
+>   
+> -	if (xe->d3cold.allowed) {
+> +	if (xe->d3cold.allowed == XE_D3COLD_OFF) {
+>   		err = xe_bo_evict_all(xe);
+>   		if (err)
+>   			goto out_resume;
+> @@ -559,6 +571,14 @@ int xe_pm_runtime_suspend(struct xe_device *xe)
+>   
+>   	xe_display_pm_runtime_suspend_late(xe);
+>   
+> +	if (xe->d3cold.allowed == XE_D3COLD_VRSR) {
+> +		err = xe_pm_enable_vrsr(xe, true);
+> +			if (err) {
+> +				drm_err(&xe->drm, "Failed to enable VRSR: %d\n", err);
+> +				goto out_resume;
+> +			}
+> +	}
+> +
+>   	xe_rpm_lockmap_release(xe);
+>   	xe_pm_write_callback_task(xe, NULL);
+>   	return 0;
+> @@ -590,7 +610,7 @@ int xe_pm_runtime_resume(struct xe_device *xe)
+>   
+>   	xe_rpm_lockmap_acquire(xe);
+>   
+> -	if (xe->d3cold.allowed) {
+> +	if (xe->d3cold.allowed == XE_D3COLD_OFF) {
+>   		err = xe_pcode_ready(xe, true);
+>   		if (err)
+>   			goto out;
+> @@ -606,6 +626,9 @@ int xe_pm_runtime_resume(struct xe_device *xe)
+>   			goto out;
+>   	}
+>   
+> +	if (xe->d3cold.allowed == XE_D3COLD_VRSR)
+> +		xe_display_pm_resume_early(xe);
+> +
+>   	xe_irq_resume(xe);
+>   
+>   	for_each_gt(gt, xe, id)
+> @@ -613,7 +636,7 @@ int xe_pm_runtime_resume(struct xe_device *xe)
+>   
+>   	xe_display_pm_runtime_resume(xe);
+>   
+> -	if (xe->d3cold.allowed) {
+> +	if (xe->d3cold.allowed == XE_D3COLD_OFF) {
+>   		err = xe_bo_restore_user(xe);
+>   		if (err)
+>   			goto out;
 
-From the port bus driver call these functions to enable wake support
-for bridges.
+LGTM.
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
----
- drivers/pci/of.c           | 60 ++++++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h          |  6 +++++
- drivers/pci/pcie/portdrv.c |  6 +++++
- 3 files changed, 72 insertions(+)
+Acked-by: Karthik Poosa <karthik.poosa@intel.com>
 
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index 7a806f5c0d201bc322d4a53d6ac47cab2cd28c55..abb0ba001edf604170aaa118f7fdc1a1709c171f 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -7,6 +7,7 @@
- #define pr_fmt(fmt)	"PCI: OF: " fmt
- 
- #include <linux/cleanup.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
- #include <linux/pci.h>
-@@ -15,6 +16,7 @@
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_wakeirq.h>
- #include "pci.h"
- 
- #ifdef CONFIG_PCI
-@@ -851,3 +853,61 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
- 	return slot_power_limit_mw;
- }
- EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
-+
-+/**
-+ * of_pci_setup_wake_irq - Set up wake interrupt for PCI device
-+ * @pdev: The PCI device structure
-+ *
-+ * This function sets up the wake interrupt for a PCI device by getting the
-+ * corresponding GPIO pin from the device tree, and configuring it as a
-+ * dedicated wake interrupt.
-+ *
-+ * Return: 0 if the wake gpio is not available or successfully parsed else
-+ * errno otherwise.
-+ */
-+int of_pci_setup_wake_irq(struct pci_dev *pdev)
-+{
-+	struct gpio_desc *wake;
-+	struct device_node *dn;
-+	int ret, wake_irq;
-+
-+	dn = pci_device_to_OF_node(pdev);
-+	if (!dn)
-+		return 0;
-+
-+	wake = devm_fwnode_gpiod_get(&pdev->dev, of_fwnode_handle(dn),
-+				     "wake", GPIOD_IN, NULL);
-+	if (IS_ERR(wake)) {
-+		dev_warn(&pdev->dev, "Cannot get wake GPIO\n");
-+		return 0;
-+	}
-+
-+	wake_irq = gpiod_to_irq(wake);
-+	device_init_wakeup(&pdev->dev, true);
-+
-+	ret = dev_pm_set_dedicated_wake_irq(&pdev->dev, wake_irq);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Failed to set wake IRQ: %d\n", ret);
-+		device_init_wakeup(&pdev->dev, false);
-+		return ret;
-+	}
-+	irq_set_irq_type(wake_irq, IRQ_TYPE_EDGE_FALLING);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_pci_setup_wake_irq);
-+
-+/**
-+ * of_pci_teardown_wake_irq - Teardown wake interrupt setup for PCI device
-+ *
-+ * @pdev: The PCI device structure
-+ *
-+ * This function tears down the wake interrupt setup for a PCI device,
-+ * clearing the dedicated wake interrupt and disabling device wake-up.
-+ */
-+void of_pci_teardown_wake_irq(struct pci_dev *pdev)
-+{
-+	dev_pm_clear_wake_irq(&pdev->dev);
-+	device_init_wakeup(&pdev->dev, false);
-+}
-+EXPORT_SYMBOL_GPL(of_pci_teardown_wake_irq);
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 01e51db8d285af54673db3ea526ceda073c94ec9..6e3d90db4b2505dd3885b482d4c5eafa033714e7 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -820,6 +820,9 @@ void pci_release_of_node(struct pci_dev *dev);
- void pci_set_bus_of_node(struct pci_bus *bus);
- void pci_release_bus_of_node(struct pci_bus *bus);
- 
-+int of_pci_setup_wake_irq(struct pci_dev *pdev);
-+void of_pci_teardown_wake_irq(struct pci_dev *pdev);
-+
- int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge *bridge);
- bool of_pci_supply_present(struct device_node *np);
- 
-@@ -863,6 +866,9 @@ static inline int devm_of_pci_bridge_init(struct device *dev, struct pci_host_br
- 	return 0;
- }
- 
-+static int of_pci_setup_wake_irq(struct pci_dev *pdev) { return 0; }
-+static void of_pci_teardown_wake_irq(struct pci_dev *pdev) { }
-+
- static inline bool of_pci_supply_present(struct device_node *np)
- {
- 	return false;
-diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-index 02e73099bad0532466fa10f549cc3c5013aa1bbb..fe1da757e9eca0f82ae0d8043c0e4547ac9c30b6 100644
---- a/drivers/pci/pcie/portdrv.c
-+++ b/drivers/pci/pcie/portdrv.c
-@@ -695,6 +695,10 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
- 	if (type == PCI_EXP_TYPE_RC_EC)
- 		pcie_link_rcec(dev);
- 
-+	status = of_pci_setup_wake_irq(dev);
-+	if (status)
-+		return status;
-+
- 	status = pcie_port_device_register(dev);
- 	if (status)
- 		return status;
-@@ -728,6 +732,8 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
- 		pm_runtime_dont_use_autosuspend(&dev->dev);
- 	}
- 
-+	of_pci_teardown_wake_irq(dev);
-+
- 	pcie_port_device_remove(dev);
- 
- 	pci_disable_device(dev);
-
--- 
-2.34.1
 
 
