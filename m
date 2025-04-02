@@ -1,142 +1,146 @@
-Return-Path: <linux-pci+bounces-25187-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25188-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93470A7917C
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 16:53:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B207A791F5
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 17:17:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BA233B170D
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 14:52:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B1DB016A06D
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 15:17:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D68423BD0E;
-	Wed,  2 Apr 2025 14:53:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 329412D7BF;
+	Wed,  2 Apr 2025 15:17:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aaFJsyO7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uihdAEGm"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051711DFF7;
-	Wed,  2 Apr 2025 14:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E3D39FD9
+	for <linux-pci@vger.kernel.org>; Wed,  2 Apr 2025 15:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743605588; cv=none; b=WF+MFxKw/vNlDHe75Tf2SBtJlg1Bx9lXBdi9wt0sSMiru6rCG2u0/D/TO67tVeRXBXZUORRe7AEE0Mh6XvrIB3NtElZO+CtKfsGyMRz5lT6Xgy3a2eNJKJHcbfSmgMRhbaRduWegN4ZLpyVpsREY5Yq3QBssVVyUX/aRjZ2Y4U0=
+	t=1743607062; cv=none; b=h2XJhJW7aAiqf+duVJZhMnpcMJlnKZlgSQi1RHOMCnvV44kHpZ+96XUn4iMkODWG4lD6jEaWB0VCtN2jWhYRozt3bVsL1pQX3skpYPVrcA/I9nRpGVnM1BBE7kjnZ1vMvzSpuMxstzG9cd0zMPfKG45brEEiyz2wCeCevNYsB0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743605588; c=relaxed/simple;
-	bh=3psBfHa6q9GaR3lB9SNaBK+ExW2OnGalIiGqg6cGeFc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GDz+IGIlAziornQQZm0ni4+qpe0FX44l0PF4bzS3KUlwVuON3zjDoSD3KHFxwCN+D46MPXM1uBIKrkF9HD53ekDpPutCV7JKbHbDA9BLXqophkrRuHYWb7VYd4W0moqPLQP31/E25ea5VtjKqkXlWU1NNuNqZUM2eXzKtx/iwDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aaFJsyO7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48DE1C4CEE7;
-	Wed,  2 Apr 2025 14:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743605587;
-	bh=3psBfHa6q9GaR3lB9SNaBK+ExW2OnGalIiGqg6cGeFc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=aaFJsyO75XOvD+hkgGkC/pjLpQ9z44qG+qB0EPuhY3h3NNu8SgKYRZLHi6vyZxdls
-	 hcRjnwqclfoecT1i/EUU1Nm0lh2GUpdyQ/1G32FXT3z1uGEo7nWg+W1TKtqTlNx7jG
-	 zKsMGUgDCr70CcvlJSK4hUlLED3u1GAogAS9kGr5rSkQYqrKaC74TpZrS8uQIn06gM
-	 DFRVlzOchg3DEzYUYNDfKdLbklYoLZc1hBrL1i3XDgyQ4T6Ch1pLbXKJF5w3K22+q+
-	 72SZLw8sL0GBYcA/QuGKvqh7dbODeshnW9zm59gWnNKT5unlsCTtB5wJ3m8RrYpd4H
-	 a0AhjqwjqNuaw==
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72c0b4a038fso4170435a34.0;
-        Wed, 02 Apr 2025 07:53:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVbRCyFgQrv+Lv53vNdbmyZ7E+nxSOTtNTusb6mfKTX49pUtHkwMBVOyAlmkP6T2GvescNgpExD/zd9@vger.kernel.org, AJvYcCWn3PhBpalWAd/iZ6Or1mNLNBtgSdP6hUALfY4hqNqTa4wmSNSiRHC5wKlYa/HAMLtahFNENJxebUi4@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiGUxe2iC8tZIglv/zqSFEQxbciKk2PR07KjOS9hkfHsOadleM
-	rAunHEfmnFqVH7g5etWd3XsYMpyCDbESHdhq/yUKQrMMjUobzXLj0LdyYpTxSYzLNoijAqhZVxa
-	WTRwtqr7CEPHcoU8c0t3kiaFz1ws=
-X-Google-Smtp-Source: AGHT+IEyltbLYDPynv/VzQLX4Ebg0HBz7/B1jIHBOb6/zoWxfWgXBGwqoQ25Jo6yLQIb7QUWPetgCorPQQQ39N8GVbc=
-X-Received: by 2002:a9d:3e56:0:b0:72b:8e84:3150 with SMTP id
- 46e09a7af769-72dae74a540mr4148634a34.24.1743605586573; Wed, 02 Apr 2025
- 07:53:06 -0700 (PDT)
+	s=arc-20240116; t=1743607062; c=relaxed/simple;
+	bh=bz3rHQ1LEZ5GlZRhjsHjlZAaWas133zf2WZHx8MQBRw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FAGxiqpOgibgYBIGnl23dgqm0+qwlb9+4/dG85ijZl4G2KekG/opnNmRw/1knotQvT3aYouZn/SFL320Pb3CYm/KgUh9aSIRJJCD0BvXUF1LPVqriOAAUftd8zxB9n2Wm+8qjaSH37j//tk35CqTQvwnNHqLvpL9jVd2iCI9G6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uihdAEGm; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af28bc68846so258334a12.1
+        for <linux-pci@vger.kernel.org>; Wed, 02 Apr 2025 08:17:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743607060; x=1744211860; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=A1VmkVlpRc4WSi9FaO0aW2j/f9rNxZ3VMxxdj/njEz0=;
+        b=uihdAEGm4PcmfdflyqkzuBZmJG3CKxvzbghFT48jhXFYejBMVyVTMYL99PS9Sbtk+s
+         NF1von7CcABHbFDLGxrqNgVV+P4ZHKnik/lMlvczg8lMvOv4xT6SN1w5a0SAy0JTebO/
+         5gOkOtwpKjHUTMMBvqhBYlA+nDS27B+0b1IU9VgDpkIMPHq/TdkGj3LsU0Vz1hyaS5Sb
+         DeASb8RjvcPYqZWJNB1eKEnyfLY8M/zVOE8xI+WgX5YfcWizXeAbAwp2tK/pz8ipNDvo
+         2daIy4zErCe3sVPvah9cNzvjTFJ9DBRscHDUwFF0Eq6OtQt/hVtBINl2NLZJjP3Gz2CC
+         NBYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743607060; x=1744211860;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A1VmkVlpRc4WSi9FaO0aW2j/f9rNxZ3VMxxdj/njEz0=;
+        b=mOy38o6JKkfw5F37ui0+2hvBDDvnT6DK55z6Vq/7TUOYcBYCycW05buGBcX5mB32mU
+         +WfCYvgJ3gCHSaQiln8eBsgc4iXIJBw/M4LumHtFLp9FMSDBqm+rpFRIFR46jQz/fLTW
+         ngDyUaOQBUt0bv54BnzzTY9W+IWzQI5nPY0vxZdqHQGrateFs+j1zPAvJDFqcaDSuK14
+         Y7FA+0iFFZX8FiR5S2sL2VIP/9mxZWHgSE0HID0B6dR0gGUwfoj6M/x+lbhxR4PHhh82
+         Bb+Q6X1m4xV7IE32g1xRTbhY7oH2bfnMwcyRTbvCYMNDpdH3QU5LJg+dOtXQRqF9hH+s
+         QeBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVu6hQ+Xa0+/RN4PMm/jMjLl/WhSmIbXa+XlvZqTait9SBBN8VY4der7joPUSAiGm4NThyC/jKHS4Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjVxv/WJ9h1311Rc0NMLqgsyPaLrWIT8PjRujkH7m29bjcJKOq
+	ARVwpx6QevxZvUUBbzq0bdc6auKRmjOG6FPWJp0NbD+oFf1gv/Xm75219Pq2TvrGycB8CgZxxTU
+	=
+X-Gm-Gg: ASbGnct2gicd9+B+wb16SG/u/dGSqWzfyFqdYwiFnYlnmCyuH0Kczu7CPOCHuqbqpvz
+	ENpWS8MDMEOtJlpZd2UstQpsaKzfYF6kQ29DEwpO5Xf25KM4CGN2HVoKbvBfn15YGlHKosNqsn/
+	U4W+Zsql3mtLu8X+OOWDKRKch10Yo+LgLGgJYsih9lmh+gEYdTEhgBaMA/wngbOFbJSM2GfBhns
+	r1lMB1Mw/9L9mqaX+XKlzkPGSO2fJJ4KNMSz12j22zM1ZXWQMh/NBgUvJEdz0rjKbdF903n1K43
+	y3r1tjDucOiEy7R9AvneofDuoGBK2RMec7GXkvNy9XdY30Fsprffc+xe
+X-Google-Smtp-Source: AGHT+IG16MivObzWU33JTwzx5znIxU6+vnQt0ROoOp8Kq1NbarWsZJpr2IHBGg06IH61ZT+KYFb1+A==
+X-Received: by 2002:a17:90a:e7c7:b0:2f4:432d:250d with SMTP id 98e67ed59e1d1-305320b166emr18279561a91.21.1743607059436;
+        Wed, 02 Apr 2025 08:17:39 -0700 (PDT)
+Received: from thinkpad ([120.56.205.103])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eedf9b4sm109376755ad.84.2025.04.02.08.17.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 08:17:38 -0700 (PDT)
+Date: Wed, 2 Apr 2025 20:47:33 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Hongxing Zhu <hongxing.zhu@nxp.com>
+Cc: Frank Li <frank.li@nxp.com>, 
+	"l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
+	"bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, 
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
+	"festevam@gmail.com" <festevam@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not exit
+ L23 ready
+Message-ID: <rqgl5jjauppyudgmugp34fillkeli3qkwf4uf2djghi6nslebg@pyi6rbwyduxd>
+References: <20250328030213.1650990-1-hongxing.zhu@nxp.com>
+ <20250328030213.1650990-4-hongxing.zhu@nxp.com>
+ <ovaomfvo7b3uxoss3tzhrkgdy6cvxi4kr2zxmqsfjxds5qfohl@t6kc4rswq6gp>
+ <AS8PR04MB8676687332C78840B927E7568CAF2@AS8PR04MB8676.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJZ5v0hN1qRzU96uAGf1+BoQyqF-1=C4XbCcPA-0xtGt8gj7qQ@mail.gmail.com>
- <20250402142104.GA1714299@bhelgaas>
-In-Reply-To: <20250402142104.GA1714299@bhelgaas>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Apr 2025 16:52:55 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0juJFTbPJh2rTmFe4gF9LzXsfao0k3ne2eXd5OqubtwCw@mail.gmail.com>
-X-Gm-Features: AQ5f1JobU1rpqVnO-t8Fh7ASRqyLnoweW7rZorW3wSWSFIFzCBWC5KgtSMi94XI
-Message-ID: <CAJZ5v0juJFTbPJh2rTmFe4gF9LzXsfao0k3ne2eXd5OqubtwCw@mail.gmail.com>
-Subject: Re: [PATCH 02/12] PCI/ACPI: Add PERST# Assertion Delay _DSM method
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Anshuman Gupta <anshuman.gupta@intel.com>, 
-	intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org, 
-	linux-pci@vger.kernel.org, lenb@kernel.org, bhelgaas@google.com, 
-	ilpo.jarvinen@linux.intel.com, lucas.demarchi@intel.com, 
-	rodrigo.vivi@intel.com, badal.nilawar@intel.com, varun.gupta@intel.com, 
-	ville.syrjala@linux.intel.com, uma.shankar@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AS8PR04MB8676687332C78840B927E7568CAF2@AS8PR04MB8676.eurprd04.prod.outlook.com>
 
-On Wed, Apr 2, 2025 at 4:21=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
-rote:
->
-> On Wed, Apr 02, 2025 at 01:06:42PM +0200, Rafael J. Wysocki wrote:
-> > On Tue, Apr 1, 2025 at 5:36=E2=80=AFPM Anshuman Gupta <anshuman.gupta@i=
-ntel.com> wrote:
+On Wed, Apr 02, 2025 at 07:59:26AM +0000, Hongxing Zhu wrote:
+> > -----Original Message-----
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Sent: 2025年4月2日 15:08
+> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de; lpieralisi@kernel.org;
+> > kw@linux.com; robh@kernel.org; bhelgaas@google.com;
+> > shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
+> > festevam@gmail.com; linux-pci@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; imx@lists.linux.dev;
+> > linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not exit L23
+> > ready
+> > 
+> > On Fri, Mar 28, 2025 at 11:02:10AM +0800, Richard Zhu wrote:
+> > > ERR051624: The Controller Without Vaux Cannot Exit L23 Ready Through
+> > > Beacon or PERST# De-assertion
+> > 
+> > Is it possible to share the link to the erratum?
+> > 
+> Sorry, the erratum document isn't ready to be published yet.
 > > >
-> > > Implement _DSM Method 11 as per PCI firmware specs
-> > > section 4.6.11 Rev 3.3.
->
-> > > +int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 dela=
-y_us)
-> > > +{
-> > > +       union acpi_object in_obj =3D {
-> > > +               .integer.type =3D ACPI_TYPE_INTEGER,
-> > > +               .integer.value =3D delay_us,
-> > > +       };
-> > > +
-> > > +       union acpi_object *out_obj;
-> > > +       acpi_handle handle;
-> > > +       int result, ret =3D -EINVAL;
-> > > +
-> > > +       if (!dev || !ACPI_HANDLE(&dev->dev))
-> > > +               return -EINVAL;
-> > > +
-> > > +       handle =3D ACPI_HANDLE(&dev->dev);
-> > > +
-> > > +       out_obj =3D acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_gui=
-d, 4,
-> >
-> > This is something I haven't noticed in the previous patch, but also
-> > applies to it.
-> >
-> > Why is rev 4 of the interface hard-coded here?
->
-> Thanks for asking this because it's related to the whole _DSM revision
-> question that I don't understand.
->
-> If we didn't use rev 4 here, what should we use?  The PCI Firmware
-> spec, r3.3, sec 4.6.11, documents this interface and says "lowest
-> valid Revision ID value is 4", so that's the source of the 4.
+> > > When the auxiliary power is not available, the controller cannot exit
+> > > from
+> > > L23 Ready with beacon or PERST# de-assertion when main power is not
+> > > removed.
+> > >
+> > 
+> > I don't understand how the presence of Vaux affects the controller. Same goes
+> > for PERST# deassertion. How does that relate to Vaux? Is this erratum for a
+> > specific endpoint behavior?
+> IMHO I don't know the exact details of the power supplies in this IP design.
+> Refer to my guess , maybe the beacon detect or wake-up logic in designs is
+>  relied on the status of SYS_AUX_PWR_DET signals in this case.
 
-Well, the "lowest vaild Revision ID" does not generally mean the "only
-valid Revision ID".
+Can you please try to get more details? I couldn't understand the errata.
 
-> My argument is that the spec documents rev 4, the kernel code was
-> tested with rev 4, so what would be the benefit of using a different
-> revision here?
+- Mani
 
-I'm talking about using a symbol to represent the number 4, not about
-possibly using a different number, along the lines of using, say,
-ACPI_FADT_LOW_POWER_S0 instead of putting BIT(21) directly into the
-code.
-
-The value is not likely to change, but using a symbol for representing
-it has merit (it can be meaningfully used in searches, it can be
-documented etc.).
-
-Now, I'm not sure how likely it is for the PCI Firmware spec to bump
-up the revision of this interface (I suppose that it will do so if a
-new function is defined), but even if it does so, the kernel will have
-to check both the new revision and rev 4 anyway, in case the firmware
-doesn't know about the new revision.
+-- 
+மணிவண்ணன் சதாசிவம்
 
