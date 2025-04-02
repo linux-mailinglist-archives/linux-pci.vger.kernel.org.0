@@ -1,301 +1,302 @@
-Return-Path: <linux-pci+bounces-25196-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25197-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55113A795F5
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 21:36:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4A87A7962F
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 22:01:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B75143B1B08
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 19:36:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7BA171670FE
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 20:01:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F29531EDA31;
-	Wed,  2 Apr 2025 19:36:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 469BA78C91;
+	Wed,  2 Apr 2025 20:01:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKs5rtRz"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="mhSQma+q"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012028.outbound.protection.outlook.com [52.101.71.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3D51EDA24;
-	Wed,  2 Apr 2025 19:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743622573; cv=none; b=fflN5BnsDyLkTbp0nyJAigV+QtJKbyNq/eE61CDGKlsFaOWKl3VP385hCr3IdCaOfDdamZaJe7EYeEQotSqT9p6dwbUH/L4RI9iD8EYYSkRo0cu71bMZKCv82ZNGqYrckg6FsuOp6TsneVa23prPSyYYwUUVOB4IXpDewiGMe/w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743622573; c=relaxed/simple;
-	bh=N6aEnNC1BVJp0+4yG0StSefwIxjnvJ1BAP9HWFigLMg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BkEwjN43JTD42w/14hT9/1oz98lrBrOoivuYEianS3QUAJRrbBUORK2k1hwPY3vyBOMn1U9vwoD6lNd4KPCbRZQnrGICNbOK52d5s0J7XjNpnGNJlB4kcQfRaSOkwmArhcZlUiRpkBdPv32HhZDMBYCF3yJdU2r7KCPOYuzzqds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKs5rtRz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4045BC4AF09;
-	Wed,  2 Apr 2025 19:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743622573;
-	bh=N6aEnNC1BVJp0+4yG0StSefwIxjnvJ1BAP9HWFigLMg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qKs5rtRzy/8w8K4QcavthdwiyqRS56rILrRRZvMFttPhL7EVZi2x1qNqBivnrWfWR
-	 0DnMaASiOtHP+5YEm6VMW64rk0aCKpVxQUPMdyNkrzR9DfnA2i16QGctd/XvhePIao
-	 goHZk1jPhkny65sK6r41sw0hM8DWR4/vJJsEN/ayq2vi5LFQQJs0LOKla3gFIQf+J5
-	 duNa/QLV8HWyb2bsXaEgyCw2nO//1OOQFcYaO6nsYLG2bV4KZQU+N62pPnAu47Eycu
-	 OQBL3rXeVS/WRpU5ElRMky6hmwmENKR3kr6SdlBLpzKqV+n+08wyobTrf8XCtwBqzB
-	 74Wc6YKJBLRyw==
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2b8e26063e4so42874fac.3;
-        Wed, 02 Apr 2025 12:36:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXIcgCDBumkMUEPOxUTOI9tdrMoA/93q+M7NRPAAdvphmtCMZdSngH9UqFvjw1PlQa0kO0DBKV/ixOG@vger.kernel.org, AJvYcCXt8TQ754IS7i+EXhbETuZiY6avryWB9Ddu+Npa4SMABPZH8GN39NyImpqMfTwdePXwQYIrHp3+wZhl@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKXG74uEUdmjlptcVuGrOKsnVYQ/hoqdgD8ItZXM1d0hStH2VD
-	GhQabXk0QIojkRGZYjTdnUNUFqDR+vbDOgwkdEN46zyNThEvhtbwh8vzhPs3Lku/BxUK7BU676T
-	QzOWZEhA1KI9uyHF/fXkXQMJxR8o=
-X-Google-Smtp-Source: AGHT+IEbLGuDKsj7mLsQ/fliURHgcHOUIssazmjJ/mSLq3LkY9RY8J7eawGItNQ60g+zmdbulS+xN5+5KirtjDRQWos=
-X-Received: by 2002:a05:6870:e389:b0:29e:24c7:2861 with SMTP id
- 586e51a60fabf-2cc60af34f2mr2056482fac.13.1743622572376; Wed, 02 Apr 2025
- 12:36:12 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FF86AA7
+	for <linux-pci@vger.kernel.org>; Wed,  2 Apr 2025 20:01:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.28
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743624087; cv=fail; b=YU/6PWknZfmcVlCFZEFn8uejWnw3OyTckaFqU1faQSFNwW2ans4hmVaOJp6u68D2O/d+ZCUGFL0kgap+MW9Q/rEuwvPO8F/IPsWJvedvICDy4WhOySZCSGRgoTEWVMYyC8fAGqhkq7v7dGKiv3W1pqsXvPb6KS9NIlcvRStEGYE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743624087; c=relaxed/simple;
+	bh=Iu2tQvVJF+CCxo3wA0hYiBfkX2l11m129ANhI3H3f9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=BTpPM+R17bFdRyws8vMRUP8YEnxquMF1x57neZntz8htGTFzzbRwCI8n4g3zND1d+J5kLVIoPHKtQY7r3MOcW0jd8OHE899URt0MQv/EWMr4/4cxw68I352zvCD0yQKeMfMJqZ6DPq0MCHNv1KlsLgVfRaTS8WWyugS0Mq28guE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=mhSQma+q; arc=fail smtp.client-ip=52.101.71.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=h8+58lzYmcsiDg+/vSGQNX7JFuPcLUWgIxo04oBUCETU2/f9ROEiNcpQtdyvB+p+7kzesl1uHPpOqIqxQtP6UNXHlU3bax9DBvI7/hmzdYuhEoKLL1bepqNiBF9FM0+XLaTu3UwIIsJinEPYgq4yUr5b1/sAa8mirh9PCOmhvf0X9qRbZxaxmvbUplvZBqAITL3zqS4O6okjVKcLFEWVlelxq6vRHT84uRtShgCEozbG+nLcgvfl7e7hwVv5wY6BIjzeOF3DHY8nUz0ozsyKG1SKEr1xKXqP6tU2NN2hgxkfxAaG0frxzXC6Y7E+Sgy09VzO+0E0BfXD17nH5LHseQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i5noXw2XY1JESP8DzcbORV1gjvN5+zZrkOpij+z6K54=;
+ b=qCBI3lVw/NlBSa/MsO2uBxbwnj8NLK5YNWtGmUXtliXpUulnSVgxcySWF6htflTitFqR+7j2T55LgnM+A4yg5chUmhRgqyX+4Po8tIBSn8vz5d2fzgdxm+eA/aHmDgX+G+7ZMo49T+7WU0re+CLxRkRD5A2s809W99SSVG/owlLjsofnzGFM3tqTI18Cv6VknEEbyaPGi856C2XviYCX8Mpur66TpEtR2s/3Q1AyzW3dhFPmWTOmRVk/bbhXB0pmBdgTbNhE8rrzOAwGgNbT7mLuvasXMdMQqFzd8K66y+rvn5EB7Cqt5zFGSWMV52uETYeQFqsPEvucRDWxXTrZgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i5noXw2XY1JESP8DzcbORV1gjvN5+zZrkOpij+z6K54=;
+ b=mhSQma+qzWucjBGa24Ca+CDwp/saP3CeoLGLO54NdN+4w6ljsLM86s5ppdzQ27wj4oRic507wgBnak0Z8QLeV6xc1fZcmeIJvRot4ysOd5Mjr8gY7Z5NQQ7goygZX8TxOn7ATrUjwdkPoNqUg7TNFns49UXe3H7oP/3yxWY7gnZCxI6aWVP4+i+ezDwZiJSmJqwI7Oz6pgeQoziN/BZa2wpr818gwfu7DOjX5XxlJd7Ads8jmIrR8s0Z82m7hM123lyzYQjAwQJHo8kla0G/wOnVeyUL0EHPzBJayFW49lbr6twjwDGv64xG8fVyIZWAGo+ZUYKtHN/s1z3AW7lCsg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS8PR04MB7925.eurprd04.prod.outlook.com (2603:10a6:20b:2a2::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.41; Wed, 2 Apr
+ 2025 20:01:22 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8534.048; Wed, 2 Apr 2025
+ 20:01:22 +0000
+Date: Wed, 2 Apr 2025 16:01:16 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: bhelgaas@google.com, kw@linux.com, manivannan.sadhasivam@linaro.org,
+	linux-pci@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH] misc: pci_endpoint_test: Defer IRQ allocation until
+ ioctl(PCITEST_SET_IRQTYPE)
+Message-ID: <Z+2XjBd1wQezRlNv@lizhi-Precision-Tower-5810>
+References: <20250402085659.4033434-2-cassel@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402085659.4033434-2-cassel@kernel.org>
+X-ClientProxiedBy: SJ0PR03CA0211.namprd03.prod.outlook.com
+ (2603:10b6:a03:39f::6) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJZ5v0h+oaw48B4EcrbNTtcKKY=1BwLdTcXoS0CkKFypnOs3cA@mail.gmail.com>
- <20250402184847.GA1737363@bhelgaas>
-In-Reply-To: <20250402184847.GA1737363@bhelgaas>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Apr 2025 21:36:01 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hQjtTCu1wXgKvBWBBegbj-VD+Z0yBspt1uFes8Xun7Cw@mail.gmail.com>
-X-Gm-Features: AQ5f1JqpkWWRN8yB3K891jYD1ZCljZwkLHbWFPmLbsL1CnEdBh7luPW11A3D8Qw
-Message-ID: <CAJZ5v0hQjtTCu1wXgKvBWBBegbj-VD+Z0yBspt1uFes8Xun7Cw@mail.gmail.com>
-Subject: Re: [PATCH 02/12] PCI/ACPI: Add PERST# Assertion Delay _DSM method
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Anshuman Gupta <anshuman.gupta@intel.com>, 
-	intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org, 
-	linux-pci@vger.kernel.org, lenb@kernel.org, bhelgaas@google.com, 
-	ilpo.jarvinen@linux.intel.com, lucas.demarchi@intel.com, 
-	rodrigo.vivi@intel.com, badal.nilawar@intel.com, varun.gupta@intel.com, 
-	ville.syrjala@linux.intel.com, uma.shankar@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7925:EE_
+X-MS-Office365-Filtering-Correlation-Id: d93b3372-e2d3-4028-ceda-08dd7221243b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?nwcZwqjb2qrtTRJJ+srpR8KiUzconvNI+cd6dYV6DQS7wE36eyEapwa4KD25?=
+ =?us-ascii?Q?wCNcnx3uDs3sZxECGg5CZ5OihKF1OHwLqlKjPsU4ZqhZqnt7CwGMR6Vl6Tq7?=
+ =?us-ascii?Q?nFCQEaktyJ+r/hIT3+4RcpQDx577fzURHd3PtvwyfmDURdd5btu8GEXTwoOc?=
+ =?us-ascii?Q?Kg84oi/fPx232wDVW4YBQRQL0aIpZh5N5szwOj3lxLRpsb86vgEjL3X98Ouk?=
+ =?us-ascii?Q?odw8idf5SpNAmHqTQkoH/ycgN/HVSXACZhRkdTeSCKA5QjYW9t7MtYM5JzrT?=
+ =?us-ascii?Q?ovYJnjMHeskxJN07yIaDCZr9ZMAD/y9SQA6kkbMJXNoW9jp5nnqvnZq1wEOY?=
+ =?us-ascii?Q?N/HRqi/+0nLOiqa6WcGP4oa5Q76oK4i3Zy7yzlRg6Yf4aKv9YyadD9Lu7gj3?=
+ =?us-ascii?Q?tZTSsbDEarXPSfDj3kvY9EwR4WZIQUy/hGlEgOhirRWR5RzuLfWh8x688cK6?=
+ =?us-ascii?Q?ddnmbMCJ0yIzVoebRq/oW1O3TPBSH99C2dnO8ROgNXANYQO0/K0YGfv48erU?=
+ =?us-ascii?Q?/FFT7ehQHLeuZa7XAtCIKMj2mRItejGvTzih3CrGG8eC/tYirkH+w8VVzkYK?=
+ =?us-ascii?Q?Y5W5RJvaCSEH5sKqh/tpWCZvf20dvQaVVdupq2stOEEXEMPH0bCnI+1ohjhL?=
+ =?us-ascii?Q?tMAS2APd5UOaaoE5OB/cmQfc4bTV1JdTOjxF3XeZYfewXpbBOvWfQdJLD4K7?=
+ =?us-ascii?Q?o6LkFek8OhtFwYEJrouG5Gv3x/tdJjBYAPQJqWtExiN4L+9g+payryzvb2KQ?=
+ =?us-ascii?Q?4Um4ptQw7nJ6zAaNT7W3btquIJhyzSTaBayl7dT5FJPb545q/hsCKhddZOQn?=
+ =?us-ascii?Q?HDPHthDJ/EPu9UoUgJRlddge/2Pyh76nJPXnAUBn7VHCA7XmCrnlidpJUHGF?=
+ =?us-ascii?Q?Ly6Lrdi2FvXR5UNOG25M+WUgX0eBSD7ZPh7MByEjnzcna2kC1ywz1RNEKYXk?=
+ =?us-ascii?Q?Mi0Rtj5LsDADamfwh+wkOJVdzDK7Rcx1kjMpRKHsXiQrDSSrff3SxNLR+Jho?=
+ =?us-ascii?Q?qSIo13gXrKr5RPEmZC5s/IjPru0t1BhPRUipLhxWx4M/6SM4Bv5UOjr1v/nn?=
+ =?us-ascii?Q?2b1XCkdyIWHOQgDo1nVrvUnGu749IiC1xSwNvRAhvq2bH57q71mVqOWBD7t9?=
+ =?us-ascii?Q?jd+XNjDBwpqorG26mw4xb0xzJ2V8YgLa9s7slypVytf7IeypW/VpDuLxTgJ4?=
+ =?us-ascii?Q?G/wHBqTLlsunaJTH0BzFTPzBLRI19R3m+DMdRNYYxqxHvCLHopi7+yoS09BW?=
+ =?us-ascii?Q?bYn/OKhCbZ/P5P2EpEElDaO4dBVSIlEeXoFC/j05rXP5flVFPlVMsEa5o0tg?=
+ =?us-ascii?Q?t+fUNCxWsnTMEenYDQSiyDt3wXxJu2PlokbSBJb3Yt6DmQFILTzhYDZdAhoO?=
+ =?us-ascii?Q?T3bpoVSUD+t9wWo/LD7/K2w42P4nlkO8SPhEUgfYc9CuMXXevpM7Hui9/GQH?=
+ =?us-ascii?Q?krOFxqMccZmjijzaP+9Y89Shq0Kzin0D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?sqcPg1yzByYD7x58iohXeMgwzVEGk9qcFYWtNl5khHm1QlRhOjbexEDqQ496?=
+ =?us-ascii?Q?Is09Ev0pEKndLqDZRc6uLFr51IJSIaytoCaCYKZ+7SVWEhyeegyr89D//HY5?=
+ =?us-ascii?Q?/dBCWTpEWD1xuFAZGzbs4tvidEuN7zTQCQb41KhRsC2qIJ32bSAt/a8qK+Me?=
+ =?us-ascii?Q?FAiGt3WNvj3tkdb3cA1R1FpsrnRLmJaXTnB9KBOz/UGNMk66FOn6fI4Y36eL?=
+ =?us-ascii?Q?0pXG2QO8/BtyZ2UFrd4gT6EgB67XGpmZYO1GsyGOlRW01xPBa85/v9Nfr9+9?=
+ =?us-ascii?Q?HKFY1wOePRR0tnHJMf4l1nsUa1Ej0ZaXONMunzpzOJGNVG3NcMLt2mZSV25/?=
+ =?us-ascii?Q?koy2qKvwrfbsWaS6RGhYapsrIJtkfNeyLBoXIOmrJj/yeik71gzMCGdhk9Q9?=
+ =?us-ascii?Q?oGQ7Cqvrt3mh2lJ8knhyqo5aMGS8oOdMV/jGd0k1D/uvuQkEcGWGP5jPCutw?=
+ =?us-ascii?Q?/l24TWyWgQJ0bGWOwe1BnrxXSJENTsQX/P59oas/GkwwWiARFtojFzlxu09N?=
+ =?us-ascii?Q?Hapi7iirIA2FTUWBn5lZQgOccHbaTHm4aRt/rMyT9tvxydLB/rIWSjS3o+Kx?=
+ =?us-ascii?Q?iShvaD/tPbVO/UcNpq6e3DmSBZWrJbGBGpu5a7okhprdrLUGkjiwqtnpjsMB?=
+ =?us-ascii?Q?XAE+U+3Gvb4eYQXWwKQNadi3KxH4od9U8DfinbfF37WTlsEkQnEIvON3xLpI?=
+ =?us-ascii?Q?rRNEbe0oDMe3bqHO5kRUej0nDOTpJkRx8uykqu7C6wObzEuWjQGZJUeqEoTY?=
+ =?us-ascii?Q?NAMUqQrbtvMOjHQwpKKh3YB77ahge9EtQwb7sCbs5ahw03qwXcwOkA5y4RUf?=
+ =?us-ascii?Q?fjh38P68KxfMLkJZdVMsewfAQUr7BbRaC/jrkeZehxO3rmj+Erifg7WTqbw+?=
+ =?us-ascii?Q?6Q1Aj7XtLpeX00ji5NHrdvbKIkX9AA06Tva1qZl5A9R7FGtn62ZfEdctOtjf?=
+ =?us-ascii?Q?IuHN16NPupHm3LQxJH/EpcQgptZQyrIovbNA5aPS32Y9BavqZSdpIfRU7f4w?=
+ =?us-ascii?Q?sGC4KFwZPHPH8c0VZiYZN/iWBhykhHruR7uLkHy59HbU7EZ4eSypyRKO75Yf?=
+ =?us-ascii?Q?PT6OBriNa/mud17tzJNNXRnI1tBVoyFJMyHTmovwGxDUosut3bWiXUQbS/h1?=
+ =?us-ascii?Q?YNKagFhkA1mUBGp33XUYWdR9qZUR1K5tffqyk6Tnrn/lmxYnuAJztlre+W+z?=
+ =?us-ascii?Q?Uj2cIP9yHAWn3vyNNfwq9s3hhEEWG9qHPYt3yNYLu85npMDn/qz+N8YoVHoy?=
+ =?us-ascii?Q?3er1NSdEp4j4mLwyqDVCzeJdCjgpxJF6wl23hXswZjg16doPWD9uH9U6au2E?=
+ =?us-ascii?Q?87S09GnXlbfGG57Ea//eTpxRNlRLVoDhaNC69vJYz2xcer7nJalUvprKBeID?=
+ =?us-ascii?Q?ZWbqjgyApGqhG+TvcvLeWAIgNm9L8hqpkZpM/L9iozBrFc/2WXTHmVXIEPLl?=
+ =?us-ascii?Q?Ck4I3SQE4Iqvprge479uw7a9U7DkgXidPdQ2TTnkIYz0ZRARmbMxT4PfTztd?=
+ =?us-ascii?Q?RXrZ+orlWCsX51WrSBk+R8grYOTZ8mMGfzT8uJx7lI0sP4furH2cyfrsDVq5?=
+ =?us-ascii?Q?IV9bTgc8BRH74FTT0qKQOGx8SFXlNMnjwGszas62?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d93b3372-e2d3-4028-ceda-08dd7221243b
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 20:01:22.5896
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KApl7zWMEGXZFzewzpB31D9nJUfCwMfDTdmLiDsfvWzcAN9BCTOJdF6qkPiwBI34QeXnD5x4H//4WNaVyfJaDw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7925
 
-On Wed, Apr 2, 2025 at 8:48=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
-rote:
+On Wed, Apr 02, 2025 at 10:57:00AM +0200, Niklas Cassel wrote:
+> Commit a402006d48a9 ("misc: pci_endpoint_test: Remove global 'irq_type'
+> and 'no_msi'") changed so that the default IRQ vector requested by
+> pci_endpoint_test_probe() was no longer the module param 'irq_type',
+> but instead test->irq_type. test->irq_type is by default
+> IRQ_TYPE_UNDEFINED (until someone calls ioctl(PCITEST_SET_IRQTYPE)).
 >
-> On Wed, Apr 02, 2025 at 07:51:29PM +0200, Rafael J. Wysocki wrote:
-> > On Wed, Apr 2, 2025 at 5:50=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.or=
-g> wrote:
-> > > On Wed, Apr 02, 2025 at 04:52:55PM +0200, Rafael J. Wysocki wrote:
-> > > > On Wed, Apr 2, 2025 at 4:21=E2=80=AFPM Bjorn Helgaas <helgaas@kerne=
-l.org> wrote:
-> > > > > On Wed, Apr 02, 2025 at 01:06:42PM +0200, Rafael J. Wysocki wrote=
-:
-> > > > > > On Tue, Apr 1, 2025 at 5:36=E2=80=AFPM Anshuman Gupta <anshuman=
-.gupta@intel.com> wrote:
-> > > > > > >
-> > > > > > > Implement _DSM Method 11 as per PCI firmware specs
-> > > > > > > section 4.6.11 Rev 3.3.
-> > > > >
-> > > > > > > +int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, =
-u32 delay_us)
-> > > > > > > +{
-> > > > > > > +       union acpi_object in_obj =3D {
-> > > > > > > +               .integer.type =3D ACPI_TYPE_INTEGER,
-> > > > > > > +               .integer.value =3D delay_us,
-> > > > > > > +       };
-> > > > > > > +
-> > > > > > > +       union acpi_object *out_obj;
-> > > > > > > +       acpi_handle handle;
-> > > > > > > +       int result, ret =3D -EINVAL;
-> > > > > > > +
-> > > > > > > +       if (!dev || !ACPI_HANDLE(&dev->dev))
-> > > > > > > +               return -EINVAL;
-> > > > > > > +
-> > > > > > > +       handle =3D ACPI_HANDLE(&dev->dev);
-> > > > > > > +
-> > > > > > > +       out_obj =3D acpi_evaluate_dsm_typed(handle, &pci_acpi=
-_dsm_guid, 4,
-> > > > > >
-> > > > > > This is something I haven't noticed in the previous patch, but =
-also
-> > > > > > applies to it.
-> > > > > >
-> > > > > > Why is rev 4 of the interface hard-coded here?
-> > > > >
-> > > > > Thanks for asking this because it's related to the whole _DSM rev=
-ision
-> > > > > question that I don't understand.
-> > > > >
-> > > > > If we didn't use rev 4 here, what should we use?  The PCI Firmwar=
-e
-> > > > > spec, r3.3, sec 4.6.11, documents this interface and says "lowest
-> > > > > valid Revision ID value is 4", so that's the source of the 4.
-> > > >
-> > > > Well, the "lowest valid Revision ID" does not generally mean the "o=
-nly
-> > > > valid Revision ID".
-> > >
-> > > True, but why should the kernel change from using the tested revision
-> > > ID to some other revision ID?  What would be the benefit of using rev
-> > > 5?
-> >
-> > TBH I'm not exactly buying the "tested revision ID" concept because
-> > what does it really mean?
-> >
-> > If a given _DSM interface has been tested on one platform, does it
-> > necessarily mean that it will work on all of the other platforms
-> > implementing it?
+> However, the commit also changed so that after initializing test->irq_type
+> to IRQ_TYPE_UNDEFINED, it also overrides it with driver_data->irq_type, if
+> the PCI device and vendor ID provides driver_data.
 >
-> No, all we can say is that this OS rev 4 code works on the platforms
-> we've tested.  Other platforms might have their own defects.
+> This causes a regression for PCI device and vendor IDs that do not provide
+> driver_data, and the driver now fails to probe on such platforms.
 >
-> My point is that this OS code was written to the rev 4 spec and has
-> been tested, and we shouldn't change the code or the revision it uses
-> unless we're fixing something.
+> Considering that the pci endpoint selftests and the old pcitest always
+> call ioctl(PCITEST_SET_IRQTYPE)
 
-Well, if the spec says "rev 5 is the same as rev 4 except for function
-Y which is new in rev 5", then arguably the same OS code is also
-compliant with rev 5 (it will not use function Y, but that's fine).
+Maybe my pcitest is too old. "pcitest -r" have not call ioctl(PCITEST_SET_IRQTYPE).
+I need run "pcitest -i 1" firstly. It'd better remove pcitest information
+because pcitest already was removed from git tree. and now pcitest always
+show NOT OKAY.
 
-If the platform firmware follows the same spec, then the rev 5
-implementation in it can be expected to work exactly as its rev 4
-implementation either.
-
-I see no problem with using rev 5 instead of rev 4 in that case and nn
-new platforms, rev 5 is just as risky as rev 4.
-
-> > > > Now, I'm not sure how likely it is for the PCI Firmware spec to
-> > > > bump up the revision of this interface (I suppose that it will
-> > > > do so if a new function is defined), but even if it does so, the
-> > > > kernel will have to check both the new revision and rev 4
-> > > > anyway, in case the firmware doesn't know about the new
-> > > > revision.
-> > >
-> > > I guess the reason the OS would check both rev 5 and rev 4 would
-> > > be that a new platform might implement
-> > > DSM_PCI_PERST_ASSERTION_DELAY only at rev 5?  I think this would
-> > > be a real mistake in terms of implementing something to the spec.
-> >
-> > This is a real possibility, however, because there's nothing to
-> > prevent this kind of spec interpretation.
-> >
-> > I didn't mean this, though.
-> >
-> > Say the kernel wants to use a function that is only defined at rev
-> > 5.  It will invoke function 0 at rev 5 to see if this function is
-> > available, but then it may as well see if the other functions it
-> > wants to use are available at rev 5 because it will get this
-> > information from the same _DSM call.  If the platform firmware
-> > responds that they all are implemented, why won't the kernel use
-> > them all at rev 5?
+> before performing any test that requires
+> IRQs, simply remove the allocation of IRQs in pci_endpoint_test_probe(),
+> and defer it until ioctl(PCITEST_SET_IRQTYPE) has been called.
 >
-> This is an unnecessary change, since the OS tested its rev 4 code and
-> now we're saying the OS should use rev 5 instead, which the OS did not
-> test.
-
-Yes, it did.  It is the same code, as per the above.
-
-> The reason rev 5 exists at all is probably that some completely
-> unrelated new function was added, and somebody decided it should be
-> rev 5.
+> A positive side effect of this is that even if the endpoint controller has
+> issues with IRQs, the user can do still do all the tests/ioctls() that do
+> not require working IRQs, e.g. PCITEST_BAR and PCITEST_BARS.
 >
-> I guess function 0 *could* have been defined to answer "yes/no" about
-> whether a single (function, revision) is implemented.  Then we
-> probably wouldn't be having this conversation.
->
-> But we do get an entire bitmask of implemented functions back from
-> function 0, which allows the possibility of using the same revision
-> for all the functions.  I suppose we could have a boot-time function
-> that calls function 0 with rev 0, 1, 2, ..., until it gets an empty
-> bitmask, and saves the highest rev with a non-empty mask.
->
-> In PCI we don't do that; instead, we call acpi_check_dsm() before
-> every acpi_evaluate_dsm().  The main reason is that I don't think it's
-> safe to change the function X rev just because function Y was added
-> later with a higher revision.
+> This also means that we can remove the now unused irq_type from
+> driver_data. The irq_type will always be the one configured by the user
+> using ioctl(PCITEST_SET_IRQTYPE). (A user that does not know, or care
+> which irq_type that is used, can use PCITEST_IRQ_TYPE_AUTO. This has
+> superseded the need for a default irq_type in driver_data.)
 
-So what if there is a platform that only implements revisions greater than =
-X?
+But you remove "irq_type" at driver_data, does it means PCITEST_IRQ_TYPE_AUTO
+will not be supported?
 
-Presumably, there is another OS targeted by this platform that only
-uses revisions X+1 and forward.
+Frank
 
-> > > The spec documents DSM_PCI_PERST_ASSERTION_DELAY rev 4.  Some
-> > > platforms implemented and tested DSM_PCI_PERST_ASSERTION_DELAY rev
-> > > 4.  Linux added and tested support for
-> > > DSM_PCI_PERST_ASSERTION_DELAY rev 4.  I propose new platforms
-> > > should also implement and test DSM_PCI_PERST_ASSERTION_DELAY rev
-> > > 4.
-> > >
-> > > If a new platform implements only DSM_PCI_PERST_ASSERTION_DELAY
-> > > rev 5, there is no actual documentation for that rev other than
-> > > the spec assertion that "rev 5 must support all functions defined
-> > > by previous revs of the UUID."  IMO this is nonsense.  The
-> > > platform might have no need to implement all the functions defined
-> > > for the UUID.
-> >
-> > Sure.  That's why function 0 should always be used.
 >
-> Yes.  But the requirement that rev 5 must support all functions ever
-> previously documented for the UUID still makes no sense to me.  I
-> don't think there's any requirement that a platform implement ALL of
-> the documented PCI functions.
-
-I think that there is some confusion in the spec language that seems
-to be conflating platforms with interface definitions.
-
-It ostensibly wants the definitions of subsequent revisions of the
-same interface to be consistent with each other, which is not a bad
-thing in principle IMV, but at the same time it ostensibly allows
-platforms to choose which functions to implement, and it doesn't say
-anything about the expected behavior when the OS attempts to use a
-function that is not implemented for a given rev.
-
-You are right that the backward compatibility language in the _DSM
-definition is not enforceable, but it can be regarded as a guidance:
-Do not change the interface that you have once defined arbitrarily
-between revisions.  After all, if you don't like this guidance, you
-can just allocate a new UUID and define a new interface based on it.
-
-Anyway, I'm not the author of this piece of the specification, so I
-don't really know the original intent, and it is not sufficiently
-clear.
-
-> Maybe the intent is that this only applies to a given platform, i.e.,
-> that new firmware for that platform must continue to support all
-> functions and revisions that were ever supported on that platform?
-> That seems obvious to me and hardly worth mentioning.
+> Fixes: a402006d48a9c ("misc: pci_endpoint_test: Remove global 'irq_type' and 'no_msi'")
+> Signed-off-by: Niklas Cassel <cassel@kernel.org>
+> ---
+>  drivers/misc/pci_endpoint_test.c | 21 +--------------------
+>  1 file changed, 1 insertion(+), 20 deletions(-)
 >
-> > > Even if the platform makes all its functions valid for "the lowest
-> > > valid Revision ID" through the "current Revision ID", there's
-> > > nothing other than the spec assertion to guarantee that they all
-> > > behave the same.  And dealing with multiple revisions that are
-> > > "supposed" to be the same just makes work and risk for the OS.
-> >
-> > You seem to be questioning the interface versioning at large by
-> > saying that there is no real guarantee of backwards compatibility
-> > between consecutive interface revisions on the same platform.
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index d294850a35a1..c4e5e2c977be 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -122,7 +122,6 @@ struct pci_endpoint_test {
+>  struct pci_endpoint_test_data {
+>  	enum pci_barno test_reg_bar;
+>  	size_t alignment;
+> -	int irq_type;
+>  };
 >
-> That's exactly what I'm saying, although I think problems are more
-> likely across different platforms.  There's the requirement in the
-> spec, but that's just words on a page.  There's no way to enforce or
-> validate it.
+>  static inline u32 pci_endpoint_test_readl(struct pci_endpoint_test *test,
+> @@ -948,7 +947,6 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+>  		test_reg_bar = data->test_reg_bar;
+>  		test->test_reg_bar = test_reg_bar;
+>  		test->alignment = data->alignment;
+> -		test->irq_type = data->irq_type;
+>  	}
 >
-> > Presumably, though, the interface is adhering to some specification
-> > which defines the behavior of the functions (and the set of
-> > available functions in the first place) for all of the valid
-> > revisions of it.  The OS and the platform firmware both follow the
-> > same spec and so they should be mutually compatible.  If this
-> > particular spec defines rev 5 to be an exact superset of rev 4,
-> > there is no reason to expect anything else.
+>  	init_completion(&test->irq_raised);
+> @@ -970,10 +968,6 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
 >
-> I don't *expect* rev 5 to be different.  But as a user of it, why
-> would I change working, tested code that is not broken?
+>  	pci_set_master(pdev);
 >
-> The PCI DPC function 0xc is an example where rev 5 (per ECN) and rev 6
-> (per r3.3) are not compatible.
+> -	ret = pci_endpoint_test_alloc_irq_vectors(test, test->irq_type);
+> -	if (ret)
+> -		goto err_disable_irq;
+> -
+>  	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+>  		if (pci_resource_flags(pdev, bar) & IORESOURCE_MEM) {
+>  			base = pci_ioremap_bar(pdev, bar);
+> @@ -1009,10 +1003,6 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+>  		goto err_ida_remove;
+>  	}
 >
-> If the OS implemented rev 5, then learns via function 0 that function
-> 0xc is also supported at rev 6, and starts using the same OS code with
-> rev 6, the OS is broken.
-
-Yes, in this case the backward compatibility language in the _DSM
-definition is obviously not followed.
+> -	ret = pci_endpoint_test_request_irq(test);
+> -	if (ret)
+> -		goto err_kfree_test_name;
+> -
+>  	pci_endpoint_test_get_capabilities(test);
+>
+>  	misc_device = &test->miscdev;
+> @@ -1020,7 +1010,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+>  	misc_device->name = kstrdup(name, GFP_KERNEL);
+>  	if (!misc_device->name) {
+>  		ret = -ENOMEM;
+> -		goto err_release_irq;
+> +		goto err_kfree_test_name;
+>  	}
+>  	misc_device->parent = &pdev->dev;
+>  	misc_device->fops = &pci_endpoint_test_fops;
+> @@ -1036,9 +1026,6 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+>  err_kfree_name:
+>  	kfree(misc_device->name);
+>
+> -err_release_irq:
+> -	pci_endpoint_test_release_irq(test);
+> -
+>  err_kfree_test_name:
+>  	kfree(test->name);
+>
+> @@ -1051,8 +1038,6 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
+>  			pci_iounmap(pdev, test->bar[bar]);
+>  	}
+>
+> -err_disable_irq:
+> -	pci_endpoint_test_free_irq_vectors(test);
+>  	pci_release_regions(pdev);
+>
+>  err_disable_pdev:
+> @@ -1092,23 +1077,19 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
+>  static const struct pci_endpoint_test_data default_data = {
+>  	.test_reg_bar = BAR_0,
+>  	.alignment = SZ_4K,
+> -	.irq_type = PCITEST_IRQ_TYPE_MSI,
+>  };
+>
+>  static const struct pci_endpoint_test_data am654_data = {
+>  	.test_reg_bar = BAR_2,
+>  	.alignment = SZ_64K,
+> -	.irq_type = PCITEST_IRQ_TYPE_MSI,
+>  };
+>
+>  static const struct pci_endpoint_test_data j721e_data = {
+>  	.alignment = 256,
+> -	.irq_type = PCITEST_IRQ_TYPE_MSI,
+>  };
+>
+>  static const struct pci_endpoint_test_data rk3588_data = {
+>  	.alignment = SZ_64K,
+> -	.irq_type = PCITEST_IRQ_TYPE_MSI,
+>  };
+>
+>  /*
+> --
+> 2.49.0
+>
 
