@@ -1,192 +1,122 @@
-Return-Path: <linux-pci+bounces-25102-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25103-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 373BDA7856B
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 02:06:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC945A7872A
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 06:21:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44D1E3ACE6D
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 00:06:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8EC9A1889EAC
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 04:21:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AECE436D;
-	Wed,  2 Apr 2025 00:06:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5235378F44;
+	Wed,  2 Apr 2025 04:21:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="TDpZp3n0"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="fGSts1yz"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7B5184;
-	Wed,  2 Apr 2025 00:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ECE42746C;
+	Wed,  2 Apr 2025 04:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743552371; cv=none; b=QcDahxYwj6GRE7Qr1f8grB2LXzBO+fMJVlelvZWbOT2czpbLBs075kcUpSJLHEZPv/uiBTLX4EbOqCWWbc8G2taKMP9MXUwgf2abOcmGkQXFl0OOddvztoc8jVLAX7BNmi5DB4ff988ldmFA0QRKNgqwXiUtk1hHseTu4hi4Ntk=
+	t=1743567682; cv=none; b=qpXLoVcJFgXMaK6vjxKRnyWZEId6b+Q/Aer6vFx/9EMqZTzTokOoI8bKMmsi+aEcP6JLTNy9KH3l7txTpawtzmg16aTWoU8m0Rf71nluMfsxiNOzNINfmg9aIEmhUYmv4jKpFZ4AZtU9uXbEoLQcz0PbkR0wp3ivC4EjelvAQhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743552371; c=relaxed/simple;
-	bh=SKvTKbz6ni8FnmJ1GP4IVeexdsrRnOKxcqNOXAHpVHk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bp3C+5Qvends5+zSb/IUUNONQsSCW+NPVjUVLycHNqYLlAECeYRU8GEhugKW5aLRLlfx23H1WtI9eB2ErER3LvQw8+d3FTdXmkFDkxyCkYWUQHbWB9NYFvpPqb0PHA2+Z4uTBUmLfj8l5fdftWeOIFx5X+6de1QVP4IhJFgT0+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=TDpZp3n0; arc=none smtp.client-ip=79.135.106.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=36zyj7lnbbclrifsrasst7ba2i.protonmail; t=1743552360; x=1743811560;
-	bh=GG1TKNw1ad56XFapM4VnVdkZu9HjKmQ/qsMjqEKVOoA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=TDpZp3n0Ds4RNhIfHGagrDTveMMpe6uFvDjgRfJW4QFU2AFnVNvahozjVSxIgaVCj
-	 lZKY2rApK5LUIHTR8OJaZVDUIhMi3MC3DOLvT+fFmEkzDdLAGyQnuX004HiW7mJrmt
-	 CF9Rk8hYubo4zj9vMn7NwiiLGInLknCqMiUWsBT7ruznXUAudQ4YZ80aA6J64V8M8B
-	 EPbLuHUJt/pXPreRUg+zb4nBqbydtQfbertYomZltWa1YNHjAfXAama51ey5UZ6tjZ
-	 8BmTdHfeTEzWQyp72D1Wx+TVP+W2gmU9W7OVO4OhrGRcdngCh1Y1hWw9AmmfP0EAhr
-	 24A0eUfyPf8wg==
-Date: Wed, 02 Apr 2025 00:05:56 +0000
-To: Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Greg KH <gregkh@linuxfoundation.org>, bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] rust: pci: impl TryFrom<&Device> for &pci::Device
-Message-ID: <D8VPQ5XL5NJZ.26OGZ3YML4QN3@proton.me>
-In-Reply-To: <Z-vvcPfgyaRdd0xQ@pollux>
-References: <20250321214826.140946-1-dakr@kernel.org> <Z96MrGQvpVrFqWYJ@pollux> <Z-CG01QzSJjp46ad@pollux> <D8ON7WC8WMFG.2S2JRK6G9TOSL@proton.me> <Z-GNDE68vwhk0gaV@cassiopeiae> <D8OOFRRSLHP4.1B2FHQRGH3LKW@proton.me> <Z-Ggu_YZBPM2Kf8J@cassiopeiae> <D8OPMRYE0SO5.2JQD6ZIYXHP68@proton.me> <Z-vvcPfgyaRdd0xQ@pollux>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: eaab470bc2e61cf080048f1271cbbfb5ec48b355
+	s=arc-20240116; t=1743567682; c=relaxed/simple;
+	bh=ls5NTV4DQfJaNC2maDihZDOrTw8SyLsYt6nzMvhGDYY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rYOttRW469uGW0xoLt7X+fdDrO63FYUMMepsimXfPvFHQqbJ4nl1aimVC2bAmOIRpEDExRiZJ/ilCT7iC9edUq/PxqzFbzRaZYk8Tl0frFx0YLwg9P4hrVIY0W0IdpFsxvSZ3TrtvMnouPLE84flUphzzCypX/fTYtSoQwR7+dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=fGSts1yz; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=yJC8H
+	bzIT+2T6qYVxwHQol7Zotfu76mcIHfKHiR6maQ=; b=fGSts1yzfaKks3yVtPJFF
+	3Te/iscBfYgP3458tzUtkNdRIOV2mAi7jnTu6joWyZIpBx2+QxRrnZ1erOGOeO5g
+	Sk6Nrkhn+txUvTTz2hm65hghLJNG66AMghj14Lc6U5bf9duzEqoKNZH6pyZkMIeD
+	WyKOCkzfEiPk+iUmCuLkWI=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wBXJtQIu+xn1HfgDQ--.39888S2;
+	Wed, 02 Apr 2025 12:20:25 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	bhelgaas@google.com
+Cc: kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	ilpo.jarvinen@linux.intel.com,
+	robh@kernel.org,
+	jingoohan1@gmail.com,
+	thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [v7 0/5] Refactor capability search into common macros
+Date: Wed,  2 Apr 2025 12:20:15 +0800
+Message-Id: <20250402042020.48681-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBXJtQIu+xn1HfgDQ--.39888S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Aw4xKr4xCw45Xr4fJFy5Arb_yoW8CF15pF
+	yfJ3Z3Aw1rArWa93Z3Xa1FqFW3X3Z7ArW7XrWfK34fXF1fuF4DKrn7KF1rAFW7J397X3Zx
+	ZF4UJr95KFnxAwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zEIzuLUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwsjo2fstXKvYAABsS
 
-On Tue Apr 1, 2025 at 3:51 PM CEST, Danilo Krummrich wrote:
-> On Mon, Mar 24, 2025 at 06:32:53PM +0000, Benno Lossin wrote:
->> On Mon Mar 24, 2025 at 7:13 PM CET, Danilo Krummrich wrote:
->> > On Mon, Mar 24, 2025 at 05:36:45PM +0000, Benno Lossin wrote:
->> >> On Mon Mar 24, 2025 at 5:49 PM CET, Danilo Krummrich wrote:
->> >> > On Mon, Mar 24, 2025 at 04:39:25PM +0000, Benno Lossin wrote:
->> >> >> On Sun Mar 23, 2025 at 11:10 PM CET, Danilo Krummrich wrote:
->> >> >> > On Sat, Mar 22, 2025 at 11:10:57AM +0100, Danilo Krummrich wrote=
-:
->> >> >> >> On Fri, Mar 21, 2025 at 08:25:07PM -0700, Greg KH wrote:
->> >> >> >> > Along these lines, if you can convince me that this is someth=
-ing that we
->> >> >> >> > really should be doing, in that we should always be checking =
-every time
->> >> >> >> > someone would want to call to_pci_dev(), that the return valu=
-e is
->> >> >> >> > checked, then why don't we also do this in C if it's going to=
- be
->> >> >> >> > something to assure people it is going to be correct?  I don'=
-t want to
->> >> >> >> > see the rust and C sides get "out of sync" here for things th=
-at can be
->> >> >> >> > kept in sync, as that reduces the mental load of all of us as=
- we travers
->> >> >> >> > across the boundry for the next 20+ years.
->> >> >> >>=20
->> >> >> >> I think in this case it is good when the C and Rust side get a =
-bit
->> >> >> >> "out of sync":
->> >> >> >
->> >> >> > A bit more clarification on this:
->> >> >> >
->> >> >> > What I want to say with this is, since we can cover a lot of the=
- common cases
->> >> >> > through abstractions and the type system, we're left with the no=
-t so common
->> >> >> > ones, where the "upcasts" are not made in the context of common =
-and well
->> >> >> > established patterns, but, for instance, depend on the semantics=
- of the driver;
->> >> >> > those should not be unsafe IMHO.
->> >> >>=20
->> >> >> I don't think that we should use `TryFrom` for stuff that should o=
-nly be
->> >> >> used seldomly. A function that we can document properly is a much =
-better
->> >> >> fit, since we can point users to the "correct" API.
->> >> >
->> >> > Most of the cases where drivers would do this conversion should be =
-covered by
->> >> > the abstraction to already provide that actual bus specific device,=
- rather than
->> >> > a generic one or some priv pointer, etc.
->> >> >
->> >> > So, the point is that the APIs we design won't leave drivers with a=
- reason to
->> >> > make this conversion in the first place. For the cases where they h=
-ave to
->> >> > (which should be rare), it's the right thing to do. There is not an=
- alternative
->> >> > API to point to.
->> >>=20
->> >> Yes, but for such a case, I wouldn't want to use `TryFrom`, since tha=
-t
->> >> trait to me is a sign of a canonical way to convert a value.
->> >
->> > Well, it is the canonical way to convert, it's just that by the design=
- of other
->> > abstractions drivers should very rarely get in the situation of needin=
-g it in
->> > the first place.
->>=20
->> I'd still prefer it though, since one can spot a
->>=20
->>     let dev =3D CustomDevice::checked_from(dev)?
->>=20
->> much better in review than the `try_from` conversion. It also prevents
->> one from giving it to a generic interface expecting the `TryFrom` trait.
->
-> (I plan to rebase this on my series introducing the Bound device context =
-[1].)
->
-> I thought about this for a while and I still think TryFrom is fine here.
+1. Refactor capability search into common macros.
+2. Refactor capability search functions to eliminate code duplication.
+2. DWC/CDNS use common PCI host bridge macros for finding the
+   capabilities.
+3. Use cdns_pcie_find_*capability to avoid hardcode.
 
-What reasoning do you have?
+Changes since v6:
+- Refactor capability search into common macros.
+- Delete pci-host-helpers.c and MAINTAINERS.
 
-> At some point I want to replace this implementation with a macro, since t=
-he code
-> is pretty similar for bus specific devices. I think that's a bit cleaner =
-with
-> TryFrom compared to with a custom method, since we'd need the bus specifi=
-c
-> device to call the macro from the generic impl, i.e.
->
-> =09impl<Ctx: DeviceContext> Device<Ctx>
->
-> rather than a specific one, which we can't control. We can control it for
-> TryFrom though.
+Changes since v5:
+- If you put the helpers in drivers/pci/pci.c, they unnecessarily enlarge
+  the kernel's .text section even if it's known already at compile time
+  that they're never going to be used (e.g. on x86).
+- Move the API for find capabilitys to a new file called
+  pci-host-helpers.c.
+- Add new patch for MAINTAINERS.
 
-We could have our own trait for that. Also it's not as controllable as
-you think: anyone can implement `TryFrom<&device::Device> for &MyType`.
+Changes since v4:
+- Resolved [v4 1/4] compilation warning.
+- The patch subject and commit message were modified.
 
-> However, I also do not really object to your proposal, hence I'm willing =
-to make
-> the change.
->
-> Do you want to make a proposal for the corresponding doc comment switchin=
-g to a
-> custom method?
+Changes since v3:
+- Resolved [v3 1/4] compilation error.
+- Other patches are not modified.
 
-I think have too little context what `device::Device` and `pci::Device`
-are. But I can give it a try:
+Changes since v2:
+- Add and split into a series of patches.
 
-    /// Tries to converts a generic [`Device`](device::Device) into a [`pci=
-::Device`].
-    ///
-    /// Normally, one wouldn't need to call this function, because APIs sho=
-uld directly expose the
-    /// concrete device type.
+Hans Zhang (5):
+  PCI: Refactor capability search into common macros
+  PCI: Refactor capability search functions to eliminate code
+    duplication
+  PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
+  PCI: cadence: Use common PCI host bridge APIs for finding the
+    capabilities
+  PCI: cadence: Use cdns_pcie_find_*capability to avoid hardcode.
 
-Then I think another sentence about a valid use-case of this function
-would make a lot of sense, but I don't know any.
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 40 +++++----
+ drivers/pci/controller/cadence/pcie-cadence.c | 28 +++++++
+ drivers/pci/controller/cadence/pcie-cadence.h | 18 +++--
+ drivers/pci/controller/dwc/pcie-designware.c  | 72 ++---------------
+ drivers/pci/pci.c                             | 79 +++++-------------
+ drivers/pci/pci.h                             | 81 +++++++++++++++++++
+ include/uapi/linux/pci_regs.h                 |  2 +
+ 7 files changed, 176 insertions(+), 144 deletions(-)
 
----
-Cheers,
-Benno
+
+base-commit: acb4f33713b9f6cadb6143f211714c343465411c
+-- 
+2.25.1
 
 
