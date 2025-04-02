@@ -1,42 +1,43 @@
-Return-Path: <linux-pci+bounces-25161-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25163-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A3B7A78EC5
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 14:41:59 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FB06A78ECB
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 14:42:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 61F043AB7B6
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 12:38:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB42F3A31A4
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 12:38:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E0BA239592;
-	Wed,  2 Apr 2025 12:38:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11A1423A984;
+	Wed,  2 Apr 2025 12:38:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="W/NTC3Gl"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ajJCLjmX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC44853A7;
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AF23237717;
 	Wed,  2 Apr 2025 12:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743597499; cv=none; b=rPFjoEIl0nC6AoovgLbEd+sSWACkY1FWkM35bHxDbKIRhrz2uwsLw3SY8eTniwXA0YX9mcokvwGpIis5vNvd9jboEyVtT3laAC/535KIVPOp11HWJ2iwRWer7oyD15I0Tt1VMdHkwlZ5etB7I7J4uGqPYBC5h2CmNz+VUgbdwwQ=
+	t=1743597500; cv=none; b=PlWsTLxrbTLVcEyHuga68oG73LVMzEz+9JDQ3A30OlAfTZoa3gxzC0TD452KmGG5S+9KIUYoHcl6hY5d4HcxQ2t20cQvBdlWOBulIFkeOVycFVQVVkKUP+vByii9MNAJOQU4SXg4b9qJoBHGKmdKbl3ge9yP7lAlaWD9/dvOrfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743597499; c=relaxed/simple;
-	bh=r3pcQv3TWClO650O09hMt1da44NNqNj3C/wcGPQoifw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YCsvCCLJEKIsEFqjPxT842oTbIzF7immjoMQgsaNFEgZPFVqHQVxy35eq53HOU4oGNuEbwPr4J4JelZ6P+lOkxc2dZJ7T9v7aijbB6oyiDe3atTYFFGvJG4KhcCRQiQKKyH7YqLT9U3sYcG8XdKsjS2PzvtNv5cvQwpsLKoW4PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=W/NTC3Gl; arc=none smtp.client-ip=220.197.31.2
+	s=arc-20240116; t=1743597500; c=relaxed/simple;
+	bh=Yuqvp68rdEEpleUzC6uc5JIop0Sh8kw0dPFfNujvun8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HlDe7DBVxC6AnHuj4xF9uGoITklTKwS0RBw2U6UBjlboSDtZ35K//CnpjE77lHUtOV3V4cCbrLr1u8Akk1/HlJJYXIfFmRBine2Evv9WIoaaV52S8uaPp+2lGsuNb5/uly4yKiHtgmxo0cyMN5YNRNAyQQn6rD+yaLe50dh1RPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ajJCLjmX; arc=none smtp.client-ip=117.135.210.2
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=s7Q/H
-	BLTb9ISe4YgGhFV75ejBEQE/ZjrOsxIZf4gJG4=; b=W/NTC3Glv9GsVM1QYZ2Ze
-	D3mQudpIQsGWkQGkE44HgT8Q2RJ0mnHRi/Ho6I3q8C922Wsm5BgeP4yaxlt7CnJT
-	1E42+5muCbamjtVw8d9sfjQGTtnOjsR/V/jdqF20zoIImheJce9yJf6ZTx/zLIVs
-	fjVGLLRIjYx/idAVII7BAM=
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=mVR7d
+	PI1RpCG5sh48f+87uNK1JGB6AwPUiNiO+gfKo0=; b=ajJCLjmXKPDZ40jIzGeSq
+	8MjNVb0Hc3913FatmwuovcfLu1sBcgvGutnNy/SnkKj5L1AAh+hjWORlzE651GFe
+	6nx3CW7gzy3AudahIz9YWUFjlQBBJ2NdaATRnTHf8/af+vl195BdOBLcS6c5Eufc
+	o6z2a2+eQOiOy114pCvu0k=
 Received: from localhost.localdomain (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgCXrkiUL+1nL3+IAA--.22499S2;
-	Wed, 02 Apr 2025 20:37:43 +0800 (CST)
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgCXrkiUL+1nL3+IAA--.22499S3;
+	Wed, 02 Apr 2025 20:37:45 +0800 (CST)
 From: Hans Zhang <18255117159@163.com>
 To: lpieralisi@kernel.org,
 	bhelgaas@google.com
@@ -49,10 +50,12 @@ Cc: kw@linux.com,
 	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Hans Zhang <18255117159@163.com>
-Subject: [v8 0/5] Refactor capability search into common macros
-Date: Wed,  2 Apr 2025 20:37:31 +0800
-Message-Id: <20250402123736.55995-1-18255117159@163.com>
+Subject: [v8 1/5] PCI: Refactor capability search into common macros
+Date: Wed,  2 Apr 2025 20:37:32 +0800
+Message-Id: <20250402123736.55995-2-18255117159@163.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250402123736.55995-1-18255117159@163.com>
+References: <20250402123736.55995-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
@@ -60,66 +63,139 @@ List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PCgvCgCXrkiUL+1nL3+IAA--.22499S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Aw4xKr4xCw45Xr4fJFy5Arb_yoW8ZryrpF
-	yfJ3Z3C3WrArWa93Z3Xa1FvFW3X3Z7ArW7JrWfK34SqF1fuF4Dtrn7KF1rAFy7J397X3Zx
-	ZF45Jr95KFnxA3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zE031iUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgojo2ftJvzjoAAAsj
+X-CM-TRANSID:PCgvCgCXrkiUL+1nL3+IAA--.22499S3
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAryxuFW7WFW3ZF4rCF4xXrb_yoWrAF1kpr
+	95WF1Sy395Ja129wnxZa18Krya9a97Aay29rWxGw15XFyDC3WxGF4FkFy2gFy7trZrAF13
+	Xw1qvFyru3ZIyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zR1mhrUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhsjo2ftJvzjoQABsy
 
-1. Refactor capability search into common macros.
-2. Refactor capability search functions to eliminate code duplication.
-2. DWC/CDNS use common PCI host bridge macros for finding the
-   capabilities.
-3. Use cdns_pcie_find_*capability to avoid hardcode.
+Introduce PCI_FIND_NEXT_CAP_TTL and PCI_FIND_NEXT_EXT_CAPABILITY macros
+to consolidate duplicate PCI capability search logic found throughout the
+driver tree. This refactoring:
 
-Changes since v7:
-- Patch 2/5 and 3/5 compilation error resolved.
-- Other patches are unchanged.
+  1. Eliminates code duplication in capability scanning routines
+  2. Provides a standardized, maintainable implementation
+  3. Reduces error-prone copy-paste implementations
+  4. Maintains identical functionality to existing code
 
-Changes since v6:
-- Refactor capability search into common macros.
-- Delete pci-host-helpers.c and MAINTAINERS.
+The macros abstract the low-level capability register scanning while
+preserving the existing PCI configuration space access patterns. They will
+enable future conversions of multiple capability search implementations
+across various drivers (e.g., PCI core, controller drivers) to use
+this centralized logic.
 
-Changes since v5:
-- If you put the helpers in drivers/pci/pci.c, they unnecessarily enlarge
-  the kernel's .text section even if it's known already at compile time
-  that they're never going to be used (e.g. on x86).
-- Move the API for find capabilitys to a new file called
-  pci-host-helpers.c.
-- Add new patch for MAINTAINERS.
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+ drivers/pci/pci.h             | 81 +++++++++++++++++++++++++++++++++++
+ include/uapi/linux/pci_regs.h |  2 +
+ 2 files changed, 83 insertions(+)
 
-Changes since v4:
-- Resolved [v4 1/4] compilation warning.
-- The patch subject and commit message were modified.
-
-Changes since v3:
-- Resolved [v3 1/4] compilation error.
-- Other patches are not modified.
-
-Changes since v2:
-- Add and split into a series of patches.
-
-Hans Zhang (5):
-  PCI: Refactor capability search into common macros
-  PCI: Refactor capability search functions to eliminate code
-    duplication
-  PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
-  PCI: cadence: Use common PCI host bridge APIs for finding the
-    capabilities
-  PCI: cadence: Use cdns_pcie_find_*capability to avoid hardcode.
-
- .../pci/controller/cadence/pcie-cadence-ep.c  | 40 +++++----
- drivers/pci/controller/cadence/pcie-cadence.c | 28 +++++++
- drivers/pci/controller/cadence/pcie-cadence.h | 18 +++--
- drivers/pci/controller/dwc/pcie-designware.c  | 72 ++---------------
- drivers/pci/pci.c                             | 80 ++++++------------
- drivers/pci/pci.h                             | 81 +++++++++++++++++++
- include/uapi/linux/pci_regs.h                 |  2 +
- 7 files changed, 177 insertions(+), 144 deletions(-)
-
-
-base-commit: acb4f33713b9f6cadb6143f211714c343465411c
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 2e9cf26a9ee9..f705b8bd3084 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -89,6 +89,87 @@ bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+ bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
+ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+ 
++/* Standard Capability finder */
++/**
++ * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
++ * @read_cfg: Function pointer for reading PCI config space
++ * @start: Starting position to begin search
++ * @cap: Capability ID to find
++ * @args: Arguments to pass to read_cfg function
++ *
++ * Iterates through the capability list in PCI config space to find
++ * the specified capability. Implements TTL (time-to-live) protection
++ * against infinite loops.
++ *
++ * Returns: Position of the capability if found, 0 otherwise.
++ */
++#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
++({									\
++	u8 __pos = (start);						\
++	int __ttl = PCI_FIND_CAP_TTL;					\
++	u16 __ent;							\
++	u8 __found_pos = 0;						\
++	u8 __id;							\
++									\
++	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
++									\
++	while (__ttl--) {						\
++		if (__pos < PCI_STD_HEADER_SIZEOF)			\
++			break;						\
++		__pos = ALIGN_DOWN(__pos, 4);				\
++		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
++		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
++		if (__id == 0xff)					\
++			break;						\
++		if (__id == (cap)) {					\
++			__found_pos = __pos;				\
++			break;						\
++		}							\
++		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
++	}								\
++	__found_pos;							\
++})
++
++/* Extended Capability finder */
++/**
++ * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
++ * @read_cfg: Function pointer for reading PCI config space
++ * @start: Starting position to begin search (0 for initial search)
++ * @cap: Extended capability ID to find
++ * @args: Arguments to pass to read_cfg function
++ *
++ * Searches the extended capability space in PCI config registers
++ * for the specified capability. Implements TTL protection against
++ * infinite loops using a calculated maximum search count.
++ *
++ * Returns: Position of the capability if found, 0 otherwise.
++ */
++#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)		\
++({										\
++	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;				\
++	u16 __found_pos = 0;							\
++	int __ttl, __ret;							\
++	u32 __header;								\
++										\
++	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;		\
++	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {			\
++		__ret = read_cfg(args, __pos, 4, &__header);			\
++		if (__ret != PCIBIOS_SUCCESSFUL)				\
++			break;							\
++										\
++		if (__header == 0)						\
++			break;							\
++										\
++		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {	\
++			__found_pos = __pos;					\
++			break;							\
++		}								\
++										\
++		__pos = PCI_EXT_CAP_NEXT(__header);				\
++	}									\
++	__found_pos;								\
++})
++
+ /* Functions internal to the PCI core code */
+ 
+ #ifdef CONFIG_DMI
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 3445c4970e4d..a11ebbab99fc 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -206,6 +206,8 @@
+ /* 0x48-0x7f reserved */
+ 
+ /* Capability lists */
++#define PCI_CAP_ID_MASK		0x00ff
++#define PCI_CAP_LIST_NEXT_MASK	0xff00
+ 
+ #define PCI_CAP_LIST_ID		0	/* Capability ID */
+ #define  PCI_CAP_ID_PM		0x01	/* Power Management */
 -- 
 2.25.1
 
