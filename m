@@ -1,209 +1,220 @@
-Return-Path: <linux-pci+bounces-25167-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25168-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76CBFA78ECF
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 14:43:55 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9880A78ED1
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 14:44:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A5E713B5D98
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 12:39:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 14D6F1894604
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 12:42:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D5742397BF;
-	Wed,  2 Apr 2025 12:38:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F265C2397B9;
+	Wed,  2 Apr 2025 12:42:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HCdFlrZi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Az4ghRa+"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE8D23959B;
-	Wed,  2 Apr 2025 12:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C6C23906B;
+	Wed,  2 Apr 2025 12:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743597526; cv=none; b=uNpg/wzF37Szy8Fm8hcISWGjnj6bUBWplymAxwXV2RWBeue2n1t7cn0Ay/6iStY0P5D2zckECsCeLuZZxyjzXaC8IT/qevqk1mtM34NTYHM7XU3Y3Ybo9Q5U91lOTWqV4CGwrnWRgyF3UL3/BzU+77TGAmadFAMhmz+H5jaj4ao=
+	t=1743597742; cv=none; b=PlWNkCuPhg4sOSU3gFmITfDXldpQVgxUR5tFoCid/MTNY9tY9fwK2AQp9UlMlChFYrA0uZqeKBYjiBN0+q4avGSWrUJJHKzJIlDyoLUn9a18SKC4QFMi7fJxPT1MufhKvA3hsK/t0zgX6+aaQxvR+2ojvNc60nHhH5KKPikW4zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743597526; c=relaxed/simple;
-	bh=oEhyNyNMZHsFewfythTjj6m7g/dZV8hw3gXRVCT8pNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jcP6A96xOpNtHkod3l49+DE0xhg8dchRqbsb+R99uzAxvuW4lZ59ePsa5vFFwrpEn7BV/czNdKwFnlQq6hyh2VUpJvwmwuGJlewhETwSvD4LDlhbMRnlsEdkRDs5bHejZPk2wrRdYJk6/BlsK7Ql0wiQDhIQLbhn7SiW4zArH7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HCdFlrZi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C46D7C4CEE9;
-	Wed,  2 Apr 2025 12:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743597524;
-	bh=oEhyNyNMZHsFewfythTjj6m7g/dZV8hw3gXRVCT8pNc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HCdFlrZivFl/UJ2eMNNSfT9+UYFDzF4gq16A9L9FZp24YoZaAz6/fL1v+ZsvmabGx
-	 FfVb5eltNG21n8hvETXN+F8aSCRv1JaELc3N9cZmNMxi2XEdwfhzL3LnpQPBR5S3o5
-	 EJd6NoP/8IUu/pu3A6RrSqgnRoPViqomT5lF8lHTpFwmATgtKJ2wzmrCuQJD9r27XB
-	 UTozMtVBJ2TlCDxA9A7PoIMyAhveFophTU4wtibnMkpMkgStfoKd4vpFNS3aEyLPKX
-	 dOmH3+IJ+CYAoy3dTQF9jrY9MEE/lVwHR6g7QloS9SxqlnyqP8zbsw09we9+fALFcA
-	 fjRsTa0533DYw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tzxMn-000000001WI-1voi;
-	Wed, 02 Apr 2025 14:38:49 +0200
-Date: Wed, 2 Apr 2025 14:38:49 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Jonas Gorski <jonas.gorski@gmail.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	ath11k@lists.infradead.org, ath12k@lists.infradead.org,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot
- module
-Message-ID: <Z-0v2RAtDe0bSfWI@hovoldconsulting.com>
-References: <20250328143646.27678-1-johan+linaro@kernel.org>
- <20250328143646.27678-2-johan+linaro@kernel.org>
- <CAOiHx=mo6Qd+7WrO2JvBLhqjGR7oHds14FwFFAVoEkVWLnbhdA@mail.gmail.com>
+	s=arc-20240116; t=1743597742; c=relaxed/simple;
+	bh=kA+wEg5U0TxgdVyJVb+RwCusLFTybNSYT0oSVkCtVEA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FdnLm/BvfnuX3+pr6uX/ofWrZXVBPgwsyjeUlp1lrSXSUXJfpPwFGi/9pRLdWUUaV+IE/y08KNSq0A3jRLOo+ctMx9GyslcHfY4fO/bMwv0xm1ZFPV+sRuuy7Xsj2AK5AAWujPEX/SKz2GbrTwAHk8U40/0h55w2RsNcX13QEVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Az4ghRa+; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743597742; x=1775133742;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=kA+wEg5U0TxgdVyJVb+RwCusLFTybNSYT0oSVkCtVEA=;
+  b=Az4ghRa+ZbsrEZ3Qo/s2qzPLaAvle185Vbqb/HUSbWT3GZzIQuITnj99
+   r1pFENALNf72Zk+KbxcgHKJZkuVK70l8ZvO0+aSGpE6oVIqVCy9NqYQNB
+   NwF04ykkGQQhIiYgKbORKuKUiuh9OOATupXrxDmhkn9n1kKxQpKhVJ4DU
+   oCuMuFpMTdyhIbjj9dlDL77Xv0LLyS6WRgKedvneXiocpe4it33BxMZi/
+   Vc24mAWdmjgj54Pe58EaiMyLanc4GA3oRj4oK2tIaPa6DB9q5YJccNyBf
+   8EyBU0g/2MHVeGLmLfApU4ZQqeK4oMM0c8yVKhxBBWzicI+1CF3b6zF8t
+   g==;
+X-CSE-ConnectionGUID: JPZAaG5sS1K2n4OJkQx+ug==
+X-CSE-MsgGUID: trxvzifXSBii/wz0Ne/lYw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="56332973"
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="56332973"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:42:21 -0700
+X-CSE-ConnectionGUID: CJGdjtZQT3qulREk/avKUg==
+X-CSE-MsgGUID: C30gUxmxRByxqRNI10HYyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="131407407"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.40])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:42:17 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 2 Apr 2025 15:42:14 +0300 (EEST)
+To: Hans Zhang <18255117159@163.com>
+cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com, 
+    manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com, 
+    thomas.richard@bootlin.com, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [v7 1/5] PCI: Refactor capability search into common macros
+In-Reply-To: <20250402042020.48681-2-18255117159@163.com>
+Message-ID: <909653ac-7ba2-9da7-f519-3d849146f433@linux.intel.com>
+References: <20250402042020.48681-1-18255117159@163.com> <20250402042020.48681-2-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOiHx=mo6Qd+7WrO2JvBLhqjGR7oHds14FwFFAVoEkVWLnbhdA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Apr 02, 2025 at 01:54:36PM +0200, Jonas Gorski wrote:
+On Wed, 2 Apr 2025, Hans Zhang wrote:
 
-> I have some nitpicks ...
-
-Thanks for taking a look.
-
-> On Fri, Mar 28, 2025 at 3:41 PM Johan Hovold <johan+linaro@kernel.org> wrote:
-> >
-> > Commits b88cbaaa6fa1 ("PCI/pwrctrl: Rename pwrctl files to pwrctrl") and
-> > 3f925cd62874 ("PCI/pwrctrl: Rename pwrctrl functions and structures")
-> > renamed the "pwrctl" framework to "pwrctrl" for consistency reasons.
-> >
-> > Rename also the Kconfig symbols so that they reflect the new name while
-> > adding entries for the deprecated ones. The old symbols can be removed
-> > once everything that depends on them has been updated.
-> >
-> > The new slot module is also renamed to reflect the framework name and
-> > match the other pwrctrl modules.
-> >
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> > ---
-> >  drivers/pci/pwrctrl/Kconfig  | 27 +++++++++++++++++++++------
-> >  drivers/pci/pwrctrl/Makefile |  8 ++++----
-> >  2 files changed, 25 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/pci/pwrctrl/Kconfig b/drivers/pci/pwrctrl/Kconfig
-> > index 990cab67d413..62f176e42e33 100644
-> > --- a/drivers/pci/pwrctrl/Kconfig
-> > +++ b/drivers/pci/pwrctrl/Kconfig
-> > @@ -1,19 +1,19 @@
-> >  # SPDX-License-Identifier: GPL-2.0-only
-> >
-> > -config HAVE_PWRCTL
-> > +config HAVE_PWRCTRL
-> >         bool
-> >
-> > -config PCI_PWRCTL
-> > +config PCI_PWRCTRL
-> >         tristate
-> >
-> > -config PCI_PWRCTL_PWRSEQ
-> > +config PCI_PWRCTRL_PWRSEQ
-> >         tristate
-> >         select POWER_SEQUENCING
-> > -       select PCI_PWRCTL
-> > +       select PCI_PWRCTRL
-> >
-> > -config PCI_PWRCTL_SLOT
-> > +config PCI_PWRCTRL_SLOT
-> >         tristate "PCI Power Control driver for PCI slots"
-> > -       select PCI_PWRCTL
-> > +       select PCI_PWRCTRL
-> >         help
-> >           Say Y here to enable the PCI Power Control driver to control the power
-> >           state of PCI slots.
-> > @@ -21,3 +21,18 @@ config PCI_PWRCTL_SLOT
-> >           This is a generic driver that controls the power state of different
-> >           PCI slots. The voltage regulators powering the rails of the PCI slots
-> >           are expected to be defined in the devicetree node of the PCI bridge.
-> > +
-> > +# deprecated
-> > +config HAVE_PWRCTL
-> > +       bool
-> > +       select HAVE_PWRCTRL
+> Introduce PCI_FIND_NEXT_CAP_TTL and PCI_FIND_NEXT_EXT_CAPABILITY macros
+> to consolidate duplicate PCI capability search logic found throughout the
+> driver tree. This refactoring:
 > 
-> I'm not sure this will work as intended. This symbol can only be != n
-> if anything selects it, but there may also be (outdated) config
-> symbols that depend on its value. E.g. ath1*k has "select
-> PCI_PWRCTL_PWRSEQ if HAVE_PWRCTL", and if there is nothing selecting
-> HAVE_PWRCTL, but HAVE_PWRCTRL directly instead, HAVE_PWRCTL will be =n
-> and the condition will fail.
+>   1. Eliminates code duplication in capability scanning routines
+>   2. Provides a standardized, maintainable implementation
+>   3. Reduces error-prone copy-paste implementations
+>   4. Maintains identical functionality to existing code
 > 
-> Since you rename the only one selecting HAVE_PWRCTL in patch 2/4, but
-> update ath1*k in 3/4 and 4/4, their select PCI_PWRCT(R)L_PWRSEQ use is
-> temporarily ineffective. Moving the arm64 patch last would avoid that
-> though, at least for the current state.
-
-You're right, thanks for catching this.
-
-> The alternative would be split this by config symbol instead of per
-> tree, so all users would be atomatically updated as well. These
-> patches need to go through the same tree anyways, so I see no issue
-> doing it that way.
-
-Moving the arm64 patch last would take care of the temporary glitch, but
-since it seems we need to take this through one tree (e.g. to avoid
-merging it over three cycles) perhaps we can just squash them.
-
-That said, it seems I would need to reverse the logic for HAVE_PWRCTL so
-that it is selected by HAVE_PWRCTRL if we think we still need to worry
-about new users of HAVE_PWRCTL being adding to other trees.
-
-If we could get this renamed already in rc1, we probably do no need to
-care about that though.
-
-> > +
-> > +# deprecated
-> > +config PCI_PWRCTL_PWRSEQ
-> > +       tristate
-> > +       select PCI_PWRCTRL_PWRSEQ
+> The macros abstract the low-level capability register scanning while
+> preserving the existing PCI configuration space access patterns. They will
+> enable future conversions of multiple capability search implementations
+> across various drivers (e.g., PCI core, controller drivers) to use
+> this centralized logic.
 > 
-> Similar issue, but there are no conditionals based on this, so this may be fine.
-
-Yeah, this one should be fine.
-
-> > +
-> > +# deprecated
-> > +config PCI_PWRCTL_SLOT
-> > +       tristate
-> > +       select PCI_PWRCTRL_SLOT
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  drivers/pci/pci.h             | 81 +++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/pci_regs.h |  2 +
+>  2 files changed, 83 insertions(+)
 > 
-> This one won't work. Its value will be automatically calculated based
-> on other symbols selecting it, and since there is nothing selecting
-> it, it will always be n, regardless what any existing .config says.
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 2e9cf26a9ee9..f705b8bd3084 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -89,6 +89,87 @@ bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
+>  bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
+>  bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+>  
+> +/* Standard Capability finder */
+> +/**
+> + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
+> + * @read_cfg: Function pointer for reading PCI config space
+> + * @start: Starting position to begin search
+> + * @cap: Capability ID to find
+> + * @args: Arguments to pass to read_cfg function
+> + *
+> + * Iterates through the capability list in PCI config space to find
+> + * the specified capability. Implements TTL (time-to-live) protection
+> + * against infinite loops.
+> + *
+> + * Returns: Position of the capability if found, 0 otherwise.
+> + */
+> +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
+> +({									\
+> +	u8 __pos = (start);						\
+> +	int __ttl = PCI_FIND_CAP_TTL;					\
+> +	u16 __ent;							\
+> +	u8 __found_pos = 0;						\
+> +	u8 __id;							\
+> +									\
+> +	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
+> +									\
+> +	while (__ttl--) {						\
+> +		if (__pos < PCI_STD_HEADER_SIZEOF)			\
+> +			break;						\
+> +		__pos = ALIGN_DOWN(__pos, 4);				\
+> +		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
+> +		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
+> +		if (__id == 0xff)					\
+> +			break;						\
+> +		if (__id == (cap)) {					\
+> +			__found_pos = __pos;				\
+> +			break;						\
+> +		}							\
+> +		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
+
+Could you please separate the coding style cleanups into own patch that 
+is before the actual move patch. IMO, all those cleanups can be in the 
+same patch.
+
+You also need to add #includes for the defines you now started to use.
+
+> +	}								\
+> +	__found_pos;							\
+> +})
+> +
+> +/* Extended Capability finder */
+> +/**
+> + * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
+> + * @read_cfg: Function pointer for reading PCI config space
+> + * @start: Starting position to begin search (0 for initial search)
+> + * @cap: Extended capability ID to find
+> + * @args: Arguments to pass to read_cfg function
+> + *
+> + * Searches the extended capability space in PCI config registers
+> + * for the specified capability. Implements TTL protection against
+> + * infinite loops using a calculated maximum search count.
+> + *
+> + * Returns: Position of the capability if found, 0 otherwise.
+> + */
+> +#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)		\
+> +({										\
+> +	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;				\
+> +	u16 __found_pos = 0;							\
+> +	int __ttl, __ret;							\
+> +	u32 __header;								\
+> +										\
+> +	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;		\
+> +	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {			\
+> +		__ret = read_cfg(args, __pos, 4, &__header);			\
+> +		if (__ret != PCIBIOS_SUCCESSFUL)				\
+> +			break;							\
+> +										\
+> +		if (__header == 0)						\
+> +			break;							\
+> +										\
+> +		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {	\
+> +			__found_pos = __pos;					\
+> +			break;							\
+> +		}								\
+> +										\
+> +		__pos = PCI_EXT_CAP_NEXT(__header);				\
+> +	}									\
+> +	__found_pos;								\
+> +})
+> +
+>  /* Functions internal to the PCI core code */
+>  
+>  #ifdef CONFIG_DMI
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index 3445c4970e4d..a11ebbab99fc 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -206,6 +206,8 @@
+>  /* 0x48-0x7f reserved */
+>  
+>  /* Capability lists */
+> +#define PCI_CAP_ID_MASK		0x00ff
+> +#define PCI_CAP_LIST_NEXT_MASK	0xff00
+>  
+>  #define PCI_CAP_LIST_ID		0	/* Capability ID */
+>  #define  PCI_CAP_ID_PM		0x01	/* Power Management */
 > 
-> So unless you make this a user selectable symbol as well, this will
-> (potentially) break existing .configs since its value will be then
-> automatically calculated as =n, and the new symbol takes the default
-> =n (unless explicitly enabled, or selected by ath1*k).
 
-Right. Since PCI_PWRCTL_SLOT will be new in rc1 and there is nothing
-selecting it, I think we can just rename this one. At least if we can
-get this into rc1 and make sure that the pending defconfig update is
-respun.
+-- 
+ i.
 
-Otherwise it would indeed need to be user selectable.
-
-Let me respin this. Since this is all quite new, we should be able to
-just rip of the band-aid for rc1 and not need to worry about this going
-forward.
-
-Johan
 
