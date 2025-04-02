@@ -1,220 +1,183 @@
-Return-Path: <linux-pci+bounces-25168-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25169-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9880A78ED1
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 14:44:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9868FA78ED2
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 14:44:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 14D6F1894604
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 12:42:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E6B8167BB1
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 12:44:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F265C2397B9;
-	Wed,  2 Apr 2025 12:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 556F4238158;
+	Wed,  2 Apr 2025 12:44:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Az4ghRa+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ghR5dZqt"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C6C23906B;
-	Wed,  2 Apr 2025 12:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2493620D4E4;
+	Wed,  2 Apr 2025 12:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743597742; cv=none; b=PlWNkCuPhg4sOSU3gFmITfDXldpQVgxUR5tFoCid/MTNY9tY9fwK2AQp9UlMlChFYrA0uZqeKBYjiBN0+q4avGSWrUJJHKzJIlDyoLUn9a18SKC4QFMi7fJxPT1MufhKvA3hsK/t0zgX6+aaQxvR+2ojvNc60nHhH5KKPikW4zc=
+	t=1743597868; cv=none; b=pSHUgp6115QKghYQmEA12L5hpT6UfTYGUbB3fqdMt/YUEHKonlMAisG8eVxpSagLUsuvHtkLWEuR8k+/dXHIggPJWJOm/+BqpKRFvJrOhJz98/s611R1H5/wbwbQ4MqSRWuin4hRatrl/+ZVB9HGaG/YRZpEP7MxolbHh18M440=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743597742; c=relaxed/simple;
-	bh=kA+wEg5U0TxgdVyJVb+RwCusLFTybNSYT0oSVkCtVEA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FdnLm/BvfnuX3+pr6uX/ofWrZXVBPgwsyjeUlp1lrSXSUXJfpPwFGi/9pRLdWUUaV+IE/y08KNSq0A3jRLOo+ctMx9GyslcHfY4fO/bMwv0xm1ZFPV+sRuuy7Xsj2AK5AAWujPEX/SKz2GbrTwAHk8U40/0h55w2RsNcX13QEVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Az4ghRa+; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743597742; x=1775133742;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=kA+wEg5U0TxgdVyJVb+RwCusLFTybNSYT0oSVkCtVEA=;
-  b=Az4ghRa+ZbsrEZ3Qo/s2qzPLaAvle185Vbqb/HUSbWT3GZzIQuITnj99
-   r1pFENALNf72Zk+KbxcgHKJZkuVK70l8ZvO0+aSGpE6oVIqVCy9NqYQNB
-   NwF04ykkGQQhIiYgKbORKuKUiuh9OOATupXrxDmhkn9n1kKxQpKhVJ4DU
-   oCuMuFpMTdyhIbjj9dlDL77Xv0LLyS6WRgKedvneXiocpe4it33BxMZi/
-   Vc24mAWdmjgj54Pe58EaiMyLanc4GA3oRj4oK2tIaPa6DB9q5YJccNyBf
-   8EyBU0g/2MHVeGLmLfApU4ZQqeK4oMM0c8yVKhxBBWzicI+1CF3b6zF8t
-   g==;
-X-CSE-ConnectionGUID: JPZAaG5sS1K2n4OJkQx+ug==
-X-CSE-MsgGUID: trxvzifXSBii/wz0Ne/lYw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="56332973"
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="56332973"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:42:21 -0700
-X-CSE-ConnectionGUID: CJGdjtZQT3qulREk/avKUg==
-X-CSE-MsgGUID: C30gUxmxRByxqRNI10HYyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="131407407"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.40])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:42:17 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 2 Apr 2025 15:42:14 +0300 (EEST)
-To: Hans Zhang <18255117159@163.com>
-cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com, 
-    manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com, 
-    thomas.richard@bootlin.com, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [v7 1/5] PCI: Refactor capability search into common macros
-In-Reply-To: <20250402042020.48681-2-18255117159@163.com>
-Message-ID: <909653ac-7ba2-9da7-f519-3d849146f433@linux.intel.com>
-References: <20250402042020.48681-1-18255117159@163.com> <20250402042020.48681-2-18255117159@163.com>
+	s=arc-20240116; t=1743597868; c=relaxed/simple;
+	bh=CZ+IdWIe9VKZfl+JdSpgyh5N8UOVUcPaKhTvtmJANPw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LYsI12ti7buCaHk4dhqG8kYm+YFdF/BVu9/v3Bs6JcpoLNoXlCSVUZkZSMRU1Kr+js63uHC0wUGhGqvujPxVMENLIt3mKJFWJSMi6iQxauiwYT03OYgNZz2XbAZQor8O8sK0ryj8gxlubnVIc6PwMB8Hp81z9P/RqDpWtDWTCp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ghR5dZqt; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 075FBC4CEDD;
+	Wed,  2 Apr 2025 12:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743597867;
+	bh=CZ+IdWIe9VKZfl+JdSpgyh5N8UOVUcPaKhTvtmJANPw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ghR5dZqte8DoVxcKor9OxMW6eynY1N5TVGuH6qnKBThZdSE9bv35jED1E876MkiNu
+	 Ie2CnnZuZRWwaMdqkAoJ+klBZQCuP3KAUjZ27QMH3e5TPh3FxpgLrRuIUZ/XKVPK4c
+	 nSQl0FAfkVMQENyz67adeSUcXbFvGZH8SPQBewDwmyIqOvEtaOb86WPv8JEbXhOCox
+	 aEc+MCbE9xK+iBw/NfOdt00Oy2MFqZ/EqCVC7OOhBlLBDythQtAcYgZ24mOi3zZxuV
+	 63cVjY6nURGlS8jLcfZj4jSx+ZqPp1wWQl6mib0pXlCJhYz7hc+DZZy+LtU+Y+QzK+
+	 RpscC1Alu3Itg==
+Date: Wed, 2 Apr 2025 14:44:22 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_mrana@quicinc.com,
+	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
+	quic_vpernami@quicinc.com
+Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback
+Message-ID: <Z-0xJpBrO4wN9UzN@ryzen>
+References: <20250401-shutdown-v1-1-f699859403ae@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401-shutdown-v1-1-f699859403ae@oss.qualcomm.com>
 
-On Wed, 2 Apr 2025, Hans Zhang wrote:
+Hello Krishna,
 
-> Introduce PCI_FIND_NEXT_CAP_TTL and PCI_FIND_NEXT_EXT_CAPABILITY macros
-> to consolidate duplicate PCI capability search logic found throughout the
-> driver tree. This refactoring:
-> 
->   1. Eliminates code duplication in capability scanning routines
->   2. Provides a standardized, maintainable implementation
->   3. Reduces error-prone copy-paste implementations
->   4. Maintains identical functionality to existing code
-> 
-> The macros abstract the low-level capability register scanning while
-> preserving the existing PCI configuration space access patterns. They will
-> enable future conversions of multiple capability search implementations
-> across various drivers (e.g., PCI core, controller drivers) to use
-> this centralized logic.
-> 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
+On Tue, Apr 01, 2025 at 04:51:37PM +0530, Krishna Chaitanya Chundru wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>
+> PCIe host controller drivers are supposed to properly remove the
+> endpoint drivers and release the resources during host shutdown/reboot
+> to avoid issues like smmu errors, NOC errors, etc.
+>
+> So, stop and remove the root bus and its associated devices and release
+> its resources during system shutdown to ensure a clean shutdown/reboot.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 > ---
->  drivers/pci/pci.h             | 81 +++++++++++++++++++++++++++++++++++
->  include/uapi/linux/pci_regs.h |  2 +
->  2 files changed, 83 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 2e9cf26a9ee9..f705b8bd3084 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -89,6 +89,87 @@ bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
->  bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
->  bool pcie_cap_has_rtctl(const struct pci_dev *dev);
->  
-> +/* Standard Capability finder */
-> +/**
-> + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
-> + * @read_cfg: Function pointer for reading PCI config space
-> + * @start: Starting position to begin search
-> + * @cap: Capability ID to find
-> + * @args: Arguments to pass to read_cfg function
-> + *
-> + * Iterates through the capability list in PCI config space to find
-> + * the specified capability. Implements TTL (time-to-live) protection
-> + * against infinite loops.
-> + *
-> + * Returns: Position of the capability if found, 0 otherwise.
-> + */
-> +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
-> +({									\
-> +	u8 __pos = (start);						\
-> +	int __ttl = PCI_FIND_CAP_TTL;					\
-> +	u16 __ent;							\
-> +	u8 __found_pos = 0;						\
-> +	u8 __id;							\
-> +									\
-> +	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
-> +									\
-> +	while (__ttl--) {						\
-> +		if (__pos < PCI_STD_HEADER_SIZEOF)			\
-> +			break;						\
-> +		__pos = ALIGN_DOWN(__pos, 4);				\
-> +		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
-> +		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
-> +		if (__id == 0xff)					\
-> +			break;						\
-> +		if (__id == (cap)) {					\
-> +			__found_pos = __pos;				\
-> +			break;						\
-> +		}							\
-> +		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
-
-Could you please separate the coding style cleanups into own patch that 
-is before the actual move patch. IMO, all those cleanups can be in the 
-same patch.
-
-You also need to add #includes for the defines you now started to use.
-
-> +	}								\
-> +	__found_pos;							\
-> +})
+>  drivers/pci/controller/dwc/pcie-qcom.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index e4d3366ead1f9198693e6f9da4ae1dc40a3a0519..926811a0e63eb3663c1f41dc598659993546d832 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1754,6 +1754,16 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>	return ret;
+>  }
+>
+> +static void qcom_pcie_shutdown(struct platform_device *pdev)
+> +{
+> +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
 > +
-> +/* Extended Capability finder */
-> +/**
-> + * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
-> + * @read_cfg: Function pointer for reading PCI config space
-> + * @start: Starting position to begin search (0 for initial search)
-> + * @cap: Extended capability ID to find
-> + * @args: Arguments to pass to read_cfg function
-> + *
-> + * Searches the extended capability space in PCI config registers
-> + * for the specified capability. Implements TTL protection against
-> + * infinite loops using a calculated maximum search count.
-> + *
-> + * Returns: Position of the capability if found, 0 otherwise.
-> + */
-> +#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)		\
-> +({										\
-> +	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;				\
-> +	u16 __found_pos = 0;							\
-> +	int __ttl, __ret;							\
-> +	u32 __header;								\
-> +										\
-> +	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;		\
-> +	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {			\
-> +		__ret = read_cfg(args, __pos, 4, &__header);			\
-> +		if (__ret != PCIBIOS_SUCCESSFUL)				\
-> +			break;							\
-> +										\
-> +		if (__header == 0)						\
-> +			break;							\
-> +										\
-> +		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {	\
-> +			__found_pos = __pos;					\
-> +			break;							\
-> +		}								\
-> +										\
-> +		__pos = PCI_EXT_CAP_NEXT(__header);				\
-> +	}									\
-> +	__found_pos;								\
-> +})
+> +	dw_pcie_host_deinit(&pcie->pci->pp);
+> +	phy_exit(pcie->phy);
+> +	pm_runtime_put(&pdev->dev);
+> +	pm_runtime_disable(&pdev->dev);
+> +}
 > +
->  /* Functions internal to the PCI core code */
->  
->  #ifdef CONFIG_DMI
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 3445c4970e4d..a11ebbab99fc 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -206,6 +206,8 @@
->  /* 0x48-0x7f reserved */
->  
->  /* Capability lists */
-> +#define PCI_CAP_ID_MASK		0x00ff
-> +#define PCI_CAP_LIST_NEXT_MASK	0xff00
->  
->  #define PCI_CAP_LIST_ID		0	/* Capability ID */
->  #define  PCI_CAP_ID_PM		0x01	/* Power Management */
-> 
+>  static int qcom_pcie_suspend_noirq(struct device *dev)
+>  {
+>	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+> @@ -1890,5 +1900,6 @@ static struct platform_driver qcom_pcie_driver = {
+>		.pm = &qcom_pcie_pm_ops,
+>		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>	},
+> +	.shutdown = qcom_pcie_shutdown,
+>  };
+>  builtin_platform_driver(qcom_pcie_driver);
+>
+> ---
 
--- 
- i.
+Out of curiosity, I tried something similar to on pcie-dw-rockchip.c
 
+Simply having a ->shutdown() callback that only calls dw_pcie_host_deinit()
+was enough for me to produce:
+
+[   40.209887] r8169 0004:41:00.0 eth0: Link is Down
+[   40.216572] ------------[ cut here ]------------
+[   40.216986] called from state HALTED
+[   40.217317] WARNING: CPU: 7 PID: 265 at drivers/net/phy/phy.c:1630 phy_stop+0x134/0x1a0
+[   40.218024] Modules linked in: rk805_pwrkey hantro_vpu v4l2_jpeg v4l2_vp9 v4l2_h264 v4l2_mem2mem videobuf2_v4l2 videobuf2_dma_contig videobuf2_memops videobuf2_common vidf
+[   40.220267] CPU: 7 UID: 0 PID: 265 Comm: init Not tainted 6.14.0+ #134 PREEMPT
+[   40.220908] Hardware name: Radxa ROCK 5B (DT)
+[   40.221289] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   40.221899] pc : phy_stop+0x134/0x1a0
+[   40.222222] lr : phy_stop+0x134/0x1a0
+[   40.222546] sp : ffff800082213820
+[   40.222836] x29: ffff800082213820 x28: ffff45ec84b30000 x27: 0000000000000000
+[   40.223463] x26: 0000000000000000 x25: 0000000000000000 x24: ffffbe8df7fde030
+[   40.224088] x23: ffff800082213990 x22: 0000000000000001 x21: ffff45ec80e10000
+[   40.224714] x20: ffff45ec82cb40c8 x19: ffff45ec82ccc000 x18: 0000000000000006
+[   40.225340] x17: 000000040044ffff x16: 005000f2b5503510 x15: 0720072007200720
+[   40.225966] x14: 0720072007200720 x13: 0720072007200720 x12: 0720072007200720
+[   40.226592] x11: 0000000000000058 x10: 0000000000000018 x9 : ffffbe8df556469c
+[   40.227217] x8 : 0000000000000268 x7 : ffffbe8df7a48648 x6 : ffffbe8df7a48648
+[   40.227842] x5 : 0000000000017fe8 x4 : 0000000000000000 x3 : 0000000000000000
+[   40.228468] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff45ec84b30000
+[   40.229093] Call trace:
+[   40.229308]  phy_stop+0x134/0x1a0 (P)
+[   40.229634]  rtl8169_down+0x34/0x280
+[   40.229952]  rtl8169_close+0x64/0x100
+[   40.230275]  __dev_close_many+0xbc/0x1f0
+[   40.230621]  dev_close_many+0x94/0x160
+[   40.230951]  unregister_netdevice_many_notify+0x14c/0x9c0
+[   40.231426]  unregister_netdevice_queue+0xe4/0x100
+[   40.231848]  unregister_netdev+0x2c/0x60
+[   40.232193]  rtl_remove_one+0xa0/0xe0
+[   40.232517]  pci_device_remove+0x4c/0xf8
+[   40.232864]  device_remove+0x54/0x90
+[   40.233182]  device_release_driver_internal+0x1d4/0x238
+[   40.233643]  device_release_driver+0x20/0x38
+[   40.234019]  pci_stop_bus_device+0x84/0xe0
+[   40.234381]  pci_stop_bus_device+0x40/0xe0
+[   40.234741]  pci_stop_root_bus+0x48/0x80
+[   40.235087]  dw_pcie_host_deinit+0x34/0xe0
+[   40.235452]  rockchip_pcie_shutdown+0x24/0x48
+[   40.235839]  platform_shutdown+0x2c/0x48
+[   40.236187]  device_shutdown+0x150/0x278
+[   40.236533]  kernel_restart+0x4c/0xb8
+[   40.236859]  __do_sys_reboot+0x178/0x280
+[   40.237206]  __arm64_sys_reboot+0x2c/0x40
+[   40.237561]  invoke_syscall+0x50/0x120
+[   40.237891]  el0_svc_common.constprop.0+0x48/0xf0
+[   40.238305]  do_el0_svc+0x24/0x38
+[   40.238597]  el0_svc+0x30/0xd0
+[   40.238868]  el0t_64_sync_handler+0x10c/0x138
+[   40.239251]  el0t_64_sync+0x198/0x1a0
+[   40.239575] ---[ end trace 0000000000000000 ]---
+
+Did you try your change with a simple network card connected to the PCI slot?
+(And not just another qcom board running in EP mode.)
+
+I don't see why you wouldn't see the same thing as me.
+
+
+Kind regards,
+Niklas
 
