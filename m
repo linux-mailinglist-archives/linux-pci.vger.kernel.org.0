@@ -1,120 +1,134 @@
-Return-Path: <linux-pci+bounces-25142-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25135-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26822A78AFD
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 11:23:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4F35A78998
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 10:14:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8527E1894194
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 09:23:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B2223B1E7A
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 08:13:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 798912356CE;
-	Wed,  2 Apr 2025 09:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6297E233D87;
+	Wed,  2 Apr 2025 08:13:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="ezHqbO70"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ExeKrk5M"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-m15595.qiye.163.com (mail-m15595.qiye.163.com [101.71.155.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1689F2356C3;
-	Wed,  2 Apr 2025 09:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A976C23373C
+	for <linux-pci@vger.kernel.org>; Wed,  2 Apr 2025 08:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743585768; cv=none; b=qsZx/xugdkmL0ctvHTz9UMPzEMgxOwktMj8Afa4P+FblBx9Tdf+RQwDKowsNBDCIA2io/DkhlemUsTit0kGleIoEbOCvrXA4CMGi+ZoJXMuWaufMOxhEzq4bNg9EOSQ0bWQd0SmdXhd8SaRaWfnNMzdDbZElj7dM8ggyBCP79LY=
+	t=1743581600; cv=none; b=mW926VjU3oX45pdude7KZNwlxLUi/BLI95oxOtLsKmVCQt2PYAUH3uv9Eiv2x5LujRs6dLuXScpoizUnsh7MlYaBKoBnswpfxBagSf0NdFJ6113RO1mWSSbxucrZmi9Axg2YQFW50M198zf2QFZk3P2GCWo1ZzbvXhJv0DgeTvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743585768; c=relaxed/simple;
-	bh=3bUvsKQx9rR3VdIidIu3W5+wjactKFssNxj9ejgwtzM=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=F+c5tjzat0p1qC67NHvxyww/AJMTtQKqWPTjvItMk8MLyq07gTQZX8KX8Xl36G4+2F0fxuiGHT4wU/oAQlLltas4iBOY/h7hV7DN5JlTfeb7lvnkDgPeBNrapx88DjOpIYQ8/d2rYq36dVD97LC0qRrR2ikmabIysOi6LJ7nFbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ezHqbO70; arc=none smtp.client-ip=101.71.155.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Received: from [172.16.12.129] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 10721275b;
-	Wed, 2 Apr 2025 16:06:59 +0800 (GMT+08:00)
-Message-ID: <e340a408-2e21-1bca-7267-46b84690f66f@rock-chips.com>
-Date: Wed, 2 Apr 2025 16:06:55 +0800
+	s=arc-20240116; t=1743581600; c=relaxed/simple;
+	bh=w93RkYtfhsYpvj5VoEDDq9lpAvc4F47ifTML7icGMbg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aIZ4DXjoInFCaGbrtQCBo59RG6JzYL6w+e6f17g60vA+e+Pi8UgNVdfWsmnk4o4BjPg7e4r5M0130qX6R9YGmTeJV999yG4PEdWKNrT5WRUe3Gw76SsuRgqtN/NkaIvBVyoKa5zfNAT6LTTwCAVjiCXLEhyZ+TMFcxRbtyG6UCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ExeKrk5M; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bfed67e08so65134831fa.2
+        for <linux-pci@vger.kernel.org>; Wed, 02 Apr 2025 01:13:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743581595; x=1744186395; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z5bKkMRbKxlSUJHVqMm4hUmrEWQcNn5FC/pLkQqhEAk=;
+        b=ExeKrk5M71A4I/E0XnkK88ktgGsgb1DsyE2/Dxxd+Iti0JcVq0nQUFIffaZxz8kpEW
+         rcWaGAqz9bm7QGpP4sIbTW0GTNOb8B7AXw4QL5F4R/Z/RLgwszH+OwfYdrB6m2Un0/51
+         VypwSCDr8bWHk0daZ2FNq2O5nu6MJbJRh2DB+B9ntXHgqJEy0Q3i2VWZAiA9Q2cmhgYZ
+         M1VQAjPn/FxLqzvAY4pcIRK2m8dTUZHj8iZCQoFZCaTYlZDBf7Usbsg7UImYbLVbNkJG
+         XKFLgoVCWYxQY5/P7cJUhL6X4w1tzT7ZX+/SuROS75XutBptZcnIQOaSXI3oqkqSVHom
+         2IDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743581595; x=1744186395;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z5bKkMRbKxlSUJHVqMm4hUmrEWQcNn5FC/pLkQqhEAk=;
+        b=gkCfMKHbjoQD3SWraM22RUXVHoBY4Wpp2F3Z0QhP3LlKK3Yx3dzQVbUEJcKJoSwxt+
+         OBrcoiTfqds/Tba/ZUFTkyXJA2zYm6P8GzVsceH6QSJ2aWa2Repk4MhyAX2JUK15Ht8b
+         +RssFUmWJTaVcP99YevQz/8lHLdI23ftMERRxF+OsL4GGwrwhnB7rV2BZsYlFeID/YOw
+         A4qt3HoHnX0vIMX0VuJkCUPGHkLt9Cdv+76rsOJHBElApVIekciVSKysG6VSXS5aY4pO
+         xE5HpaNmaB9QVqd4aDmpyIzqQBOVXQCtwyIB8GZA2PBvgCchHo0rcjGdv+2yrTf7GTha
+         z6vA==
+X-Forwarded-Encrypted: i=1; AJvYcCWeMv00Odr5lRRKPOBwdL2x90oSC6B/nNArytDni4wrCgyjVeK6ghcf20O5Wdmq4xF9jdCo2u8CKZw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtsIRNrUu8qJib+MCAOfS4RXBMpFFmeNEgDK2nP+G+uLKnujhI
+	YRz/i22P6bMDP47F15WK8Ku2MeyptzKFhJn0Tfc9+YujkjYrWM0tEgzJn+6etKE6LAK8gi5G83e
+	WupdhiZaypK2jLX2KvybNkpWTtoWMDPBmJJnG/w==
+X-Gm-Gg: ASbGncuT2WXvChQaozF3lMgfkAGXfx6+SRoSTss2vbJiPi/3CoCR7gYnjSGzmIIydRj
+	VcCczmEHgBwD2v9QWRm5K6S16BQeVvsmNE6z+vzi2vOANhY8x3y5Z4HyWT2neYoXvR0vlku/NyE
+	DjQlLC1ZEpwQ4QGJSg8XDs7LfOkREVMcOuUVdDnY3DMrjQ58JsdAE8KIVQlA==
+X-Google-Smtp-Source: AGHT+IFkSOGGYa3V9WycrY+gu8XDZN3eeiEk30gJ0tR1xS7OpisGKyrqxHEtle04WwZppsgW2yf3BQ5HfqnjWB9F/Gs=
+X-Received: by 2002:a05:651c:904:b0:30b:ee81:9622 with SMTP id
+ 38308e7fff4ca-30de035019cmr53207541fa.31.1743581594610; Wed, 02 Apr 2025
+ 01:13:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Cc: shawn.lin@rock-chips.com, =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
- <kwilczynski@kernel.org>, linux-pci@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: rockchip: Fix order of rockchip_pci_core_rsts
-To: Jensen Huang <jensenhuang@friendlyarm.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Heiko Stuebner <heiko@sntech.de>, Philipp Zabel <p.zabel@pengutronix.de>,
- Anand Moon <linux.amoon@gmail.com>
-References: <20250328105822.3946767-1-jensenhuang@friendlyarm.com>
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <20250328105822.3946767-1-jensenhuang@friendlyarm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGh0aQ1YdTE4aSB1IGhhPQkhWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a95f58a0bdb09cckunm10721275b
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NT46SDo*HTIBCw49PC8JDjEi
-	PQsaFE1VSlVKTE9ITkNKSUlKTkxKVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
-	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUlMSkk3Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=ezHqbO70EDBQxmzrLCl8NxYSVUIU6/oSSOrrNjkXlFPkG0MhWO2zqfrPwMD+crfahb9VQ1m3kShzgfpQbI8wgdNEnAHGAtsDOuLtpEIdG+1QMvlGT+S5LhC/FOXk1qrMY7NsgRhBCxRrvsvg0BnAuJl1ih/3WP2Qg3lLjEQY2yE=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=tNpsgBqjJ9UNRLTVKNe5wOYMfZoRUBD/vq55ueB1bPY=;
-	h=date:mime-version:subject:message-id:from;
+References: <20250328143646.27678-1-johan+linaro@kernel.org>
+In-Reply-To: <20250328143646.27678-1-johan+linaro@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 2 Apr 2025 10:13:03 +0200
+X-Gm-Features: AQ5f1JoGfVJ9ts98vDCtSYScI8e3HIFmZAN4o5AGXV0GNmnQTKivDH_VGXOT9Xk
+Message-ID: <CAMRc=McRPmWu4q9EqYC_3wDCKoniu7Rf308SsKrbCk5rbopFwA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] PCI/arm64/ath11k/ath12k: Rename pwrctrl Kconfig symbols
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, ath11k@lists.infradead.org, 
+	ath12k@lists.infradead.org, linux-wireless@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-在 2025/03/28 星期五 18:58, Jensen Huang 写道:
-> The order of rockchip_pci_core_rsts follows the previous comments suggesting
-> to avoid reordering. However, reset_control_bulk_deassert() applies resets in
-> reverse, which may lead to the link downgrading to 2.5 GT/s.
-> 
-> This patch restores the deassert order and comments for core_rsts, introduced in
-> commit 58c6990c5ee7 ("PCI: rockchip: Improve the deassert sequence of four reset pins").
-> 
-> Tested on NanoPC-T4 with Samsung 970 Pro.
+On Fri, Mar 28, 2025 at 3:41=E2=80=AFPM Johan Hovold <johan+linaro@kernel.o=
+rg> wrote:
+>
+> The PCI pwrctrl framework was renamed after being merged, but the
+> Kconfig symbols still reflect the old name ("pwrctl" without an "r").
+>
+> This leads to people not knowing how to refer to the framework in
+> writing, inconsistencies in module naming, etc.
+>
+> Let's rename also the Kconfig symbols before this gets any worse.
+>
+> The arm64, ath11k and ath12k changes could go through the corresponding
+> subsystem trees once they have the new symbols (e.g. in the next cycle)
+> or they could all go in via the PCI tree with an ack from their
+> maintainers.
+>
+> There are some new pwrctrl drivers and an arm64 defconfig change on the
+> lists so we may need to keep deprecated symbols for a release or two.
+>
+> Johan
+>
+>
+> Johan Hovold (4):
+>   PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
+>   arm64: Kconfig: switch to HAVE_PWRCTRL
+>   wifi: ath11k: switch to PCI_PWRCTRL_PWRSEQ
+>   wifi: ath12k: switch to PCI_PWRCTRL_PWRSEQ
+>
+>  arch/arm64/Kconfig.platforms            |  2 +-
+>  drivers/net/wireless/ath/ath11k/Kconfig |  2 +-
+>  drivers/net/wireless/ath/ath12k/Kconfig |  2 +-
+>  drivers/pci/pwrctrl/Kconfig             | 27 +++++++++++++++++++------
+>  drivers/pci/pwrctrl/Makefile            |  8 ++++----
+>  5 files changed, 28 insertions(+), 13 deletions(-)
+>
+> --
+> 2.48.1
+>
 
-Acked-by:  Shawn Lin <shawn.lin@rock-chips.com>
-
-> 
-> Fixes: 18715931a5c0 ("PCI: rockchip: Simplify reset control handling by using reset_control_bulk*() function")
-> Signed-off-by: Jensen Huang <jensenhuang@friendlyarm.com>
-> ---
->   drivers/pci/controller/pcie-rockchip.h | 10 +++++++---
->   1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-> index 11def598534b..4f63a03d535c 100644
-> --- a/drivers/pci/controller/pcie-rockchip.h
-> +++ b/drivers/pci/controller/pcie-rockchip.h
-> @@ -320,11 +320,15 @@ static const char * const rockchip_pci_pm_rsts[] = {
->   	"aclk",
->   };
->   
-> +/*
-> + * Please don't reorder the deassert sequence of the following
-> + * four reset pins.
-> + */
->   static const char * const rockchip_pci_core_rsts[] = {
-> -	"mgmt-sticky",
-> -	"core",
-> -	"mgmt",
->   	"pipe",
-> +	"mgmt",
-> +	"core",
-> +	"mgmt-sticky",
->   };
->   
->   struct rockchip_pcie {
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
