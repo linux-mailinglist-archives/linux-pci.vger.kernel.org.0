@@ -1,134 +1,208 @@
-Return-Path: <linux-pci+bounces-25135-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25136-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4F35A78998
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 10:14:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EF9FA7899A
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 10:14:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B2223B1E7A
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 08:13:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C6DF1893567
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 08:14:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6297E233D87;
-	Wed,  2 Apr 2025 08:13:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B72223373C;
+	Wed,  2 Apr 2025 08:14:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ExeKrk5M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Esg6k5M0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A976C23373C
-	for <linux-pci@vger.kernel.org>; Wed,  2 Apr 2025 08:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31D3233D86
+	for <linux-pci@vger.kernel.org>; Wed,  2 Apr 2025 08:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743581600; cv=none; b=mW926VjU3oX45pdude7KZNwlxLUi/BLI95oxOtLsKmVCQt2PYAUH3uv9Eiv2x5LujRs6dLuXScpoizUnsh7MlYaBKoBnswpfxBagSf0NdFJ6113RO1mWSSbxucrZmi9Axg2YQFW50M198zf2QFZk3P2GCWo1ZzbvXhJv0DgeTvc=
+	t=1743581663; cv=none; b=hyVHPyBuvytwWXTSPmxASO/fu3wJPnsZmLK5gxspKWf+LCeJdfANi6XDLAEFVrm6VpL/a7dtMDF2/O1JnBuzIUuQ9mSyKzoFCj8LPxCKjyW4Pp/fTeiD0ZHPabeo8GHZo5n+120h7GIwvkT+nAxg/a+5J/7L/WE0CveW9ne8+wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743581600; c=relaxed/simple;
-	bh=w93RkYtfhsYpvj5VoEDDq9lpAvc4F47ifTML7icGMbg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aIZ4DXjoInFCaGbrtQCBo59RG6JzYL6w+e6f17g60vA+e+Pi8UgNVdfWsmnk4o4BjPg7e4r5M0130qX6R9YGmTeJV999yG4PEdWKNrT5WRUe3Gw76SsuRgqtN/NkaIvBVyoKa5zfNAT6LTTwCAVjiCXLEhyZ+TMFcxRbtyG6UCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ExeKrk5M; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bfed67e08so65134831fa.2
-        for <linux-pci@vger.kernel.org>; Wed, 02 Apr 2025 01:13:16 -0700 (PDT)
+	s=arc-20240116; t=1743581663; c=relaxed/simple;
+	bh=igbpjlc+om75NKQRRy2GBs5xkFi6I3W5ExEdDflAGfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VS+p1XX78n+MxrEdmuJA3XhNm+JA6LcC1Dt/WLjDc/kzl1fKzcMJcDy6PMwhGrf7k+SI39zYOry4hvZWgEtsbbkmpL1doBZhLRN8rfI4bdo3IXcoqu7fWFKLNdJH3vNVpMCGm+wobKabR3TELo9fC/YmVkxaGJi8mGEUXPGPKBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Esg6k5M0; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227c7e57da2so96546205ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 02 Apr 2025 01:14:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1743581595; x=1744186395; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z5bKkMRbKxlSUJHVqMm4hUmrEWQcNn5FC/pLkQqhEAk=;
-        b=ExeKrk5M71A4I/E0XnkK88ktgGsgb1DsyE2/Dxxd+Iti0JcVq0nQUFIffaZxz8kpEW
-         rcWaGAqz9bm7QGpP4sIbTW0GTNOb8B7AXw4QL5F4R/Z/RLgwszH+OwfYdrB6m2Un0/51
-         VypwSCDr8bWHk0daZ2FNq2O5nu6MJbJRh2DB+B9ntXHgqJEy0Q3i2VWZAiA9Q2cmhgYZ
-         M1VQAjPn/FxLqzvAY4pcIRK2m8dTUZHj8iZCQoFZCaTYlZDBf7Usbsg7UImYbLVbNkJG
-         XKFLgoVCWYxQY5/P7cJUhL6X4w1tzT7ZX+/SuROS75XutBptZcnIQOaSXI3oqkqSVHom
-         2IDA==
+        d=linaro.org; s=google; t=1743581661; x=1744186461; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=H1cnwkimXqhzY/Km6QT4rMUsQ72mwN2an/NJZPWxQOI=;
+        b=Esg6k5M0nbHJtr0lwgbfwzoogF8RqwvL369+ty01NXcegdz1upN+TdhiI/eHOEIBn3
+         NBkpC0bEpO7KS07TVM/J//bus1NtmU5sYrqVL49LAP9RAKeJtgT3h2fJidFhJk5a3IfW
+         588HqCBANV5G7GFYxhVSPW4MPet+odb//fLL1VwC4SzfoHl+/wL0WrxmyaFqprnLEeQF
+         synYMl+EH5d/4Gc/7KP+8BpbY9XQzfkehpUPHFoKIZyTNcI5H7Vc7A+vMnsbtIuBCHsx
+         qA0zrWmLQOK9nIvk4joyoQFnjTYH1EJi89sEvb7Ov5+zQFssud9ZK3YamRYnajpYhCRg
+         JwoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743581595; x=1744186395;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z5bKkMRbKxlSUJHVqMm4hUmrEWQcNn5FC/pLkQqhEAk=;
-        b=gkCfMKHbjoQD3SWraM22RUXVHoBY4Wpp2F3Z0QhP3LlKK3Yx3dzQVbUEJcKJoSwxt+
-         OBrcoiTfqds/Tba/ZUFTkyXJA2zYm6P8GzVsceH6QSJ2aWa2Repk4MhyAX2JUK15Ht8b
-         +RssFUmWJTaVcP99YevQz/8lHLdI23ftMERRxF+OsL4GGwrwhnB7rV2BZsYlFeID/YOw
-         A4qt3HoHnX0vIMX0VuJkCUPGHkLt9Cdv+76rsOJHBElApVIekciVSKysG6VSXS5aY4pO
-         xE5HpaNmaB9QVqd4aDmpyIzqQBOVXQCtwyIB8GZA2PBvgCchHo0rcjGdv+2yrTf7GTha
-         z6vA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeMv00Odr5lRRKPOBwdL2x90oSC6B/nNArytDni4wrCgyjVeK6ghcf20O5Wdmq4xF9jdCo2u8CKZw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtsIRNrUu8qJib+MCAOfS4RXBMpFFmeNEgDK2nP+G+uLKnujhI
-	YRz/i22P6bMDP47F15WK8Ku2MeyptzKFhJn0Tfc9+YujkjYrWM0tEgzJn+6etKE6LAK8gi5G83e
-	WupdhiZaypK2jLX2KvybNkpWTtoWMDPBmJJnG/w==
-X-Gm-Gg: ASbGncuT2WXvChQaozF3lMgfkAGXfx6+SRoSTss2vbJiPi/3CoCR7gYnjSGzmIIydRj
-	VcCczmEHgBwD2v9QWRm5K6S16BQeVvsmNE6z+vzi2vOANhY8x3y5Z4HyWT2neYoXvR0vlku/NyE
-	DjQlLC1ZEpwQ4QGJSg8XDs7LfOkREVMcOuUVdDnY3DMrjQ58JsdAE8KIVQlA==
-X-Google-Smtp-Source: AGHT+IFkSOGGYa3V9WycrY+gu8XDZN3eeiEk30gJ0tR1xS7OpisGKyrqxHEtle04WwZppsgW2yf3BQ5HfqnjWB9F/Gs=
-X-Received: by 2002:a05:651c:904:b0:30b:ee81:9622 with SMTP id
- 38308e7fff4ca-30de035019cmr53207541fa.31.1743581594610; Wed, 02 Apr 2025
- 01:13:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743581661; x=1744186461;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H1cnwkimXqhzY/Km6QT4rMUsQ72mwN2an/NJZPWxQOI=;
+        b=gJLXrqd8lkAxvXrZNZBO2vfcon9lc3yTA62qe8rLwi7rdERyq5myl2o8YHqMiOyswQ
+         f/v9ChZgGaMUkY/gDUNS3ybsfl+l4Gofwsh6DzIGelKw+A0JTAa7w4gao4L0wMUvGgOB
+         B+2fLmbdtRt7FeFuh2AYq8lyLkAEGKftqtcqS+tvHRtpAvBv+Qw+3G3mk6rh5VVi4Kxh
+         5QgEslKZYQM9+3JG3/IX/68IpucDtYw0vh8uoNPLbLHKbXr32uLeTS9Lk2AfKMr6QDsW
+         7JeSxszu6yjaKI+8nlP6ZAhQxn9GchZk7zcbtzHgCALluXSgG0RIJPhriIzh+YDx3XOK
+         hG3g==
+X-Forwarded-Encrypted: i=1; AJvYcCU5j/65BagvK5oSPHbtuAVBDvz3fUex8DjIG+4Lx4iFcl6IAQP6j3eXtjqBis0Stmm9hIY/k/XTtME=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTDuvvc6oWQummBpdciFmPck4AoI6YopPrTiG0svwQloJAKGOc
+	Fuc2alwOggPxqalbBgRW5oHlqfrdAgGlJE7YhNmLYfVj4pB6IgC5AxR6NW9ouA==
+X-Gm-Gg: ASbGnct9D73L5CojPnpQxO6+nxQwxFiJk9V4dnZlOGb+Tq4vpD3N0SxXWhsfrXemyuv
+	motzUHeuyPznkQDhHeCuJ3drf4mDKF3km0zTni7xauILnJEboFLhsoobiYZqi1Pso5NChJjYFkX
+	gd6llB2UB8Fm0YchOKorwYA/4wb3SRI9EdruCS73aekE9g8kgnBw35u99gvhxPFEr2lulVCH58r
+	amFyLg9H3BK3XodHO3H4RRS3lHzNzWBWtvICXD70rSXTsdPvaOVCAB39LMY2vHM65xTbz5Dqr1R
+	z94WXPOLAKqmTqzTLJfD+tGAAoUv2Dhl+mGBMnqwY6eoneSehHu5X65Q
+X-Google-Smtp-Source: AGHT+IHF+a/qi9WRmwq/2EhAY/+Zv6byjb7whIpSeiPt/li72CYNWPJd27ConrCk1oEYHZTxrGAa3A==
+X-Received: by 2002:a17:902:ef0c:b0:21f:5638:2d8 with SMTP id d9443c01a7336-2292fa23240mr285972025ad.53.1743581661065;
+        Wed, 02 Apr 2025 01:14:21 -0700 (PDT)
+Received: from thinkpad ([120.56.205.103])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eee0bfdsm102773555ad.72.2025.04.02.01.14.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 01:14:20 -0700 (PDT)
+Date: Wed, 2 Apr 2025 13:44:14 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Wei Fang <wei.fang@nxp.com>
+Cc: 
+	"devnull+manivannan.sadhasivam.linaro.org@kernel.org" <devnull+manivannan.sadhasivam.linaro.org@kernel.org>, 
+	"bartosz.golaszewski@linaro.org" <bartosz.golaszewski@linaro.org>, "bhelgaas@google.com" <bhelgaas@google.com>, 
+	"brgl@bgdev.pl" <brgl@bgdev.pl>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"robh@kernel.org" <robh@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	Frank Li <frank.li@nxp.com>
+Subject: Re: [PATCH v3 3/5] PCI/pwrctrl: Skip scanning for the device further
+ if pwrctrl device is created
+Message-ID: <n74zsz7ae5eks5qccmqgsz72onuecp2cbyrmuod66f472isaxj@vhxq36t7b7uy>
+References: <20250116-pci-pwrctrl-slot-v3-3-827473c8fbf4@linaro.org>
+ <20250321025940.2103854-1-wei.fang@nxp.com>
+ <2BFDC577-949F-49EE-A639-A21010FEEE0E@linaro.org>
+ <PAXPR04MB85102429AE77159F8CAF914088DB2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+ <20250322032344.uypqhi3kg6nqixay@thinkpad>
+ <PAXPR04MB851005833B17C2B78CFB421388DA2@PAXPR04MB8510.eurprd04.prod.outlook.com>
+ <yzhvxyjb75epv4mkkocjqsqkus44c55zwnxta6ac3aauvswv3x@knyhszmrgfc3>
+ <PAXPR04MB851049B520288642141570F188A12@PAXPR04MB8510.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250328143646.27678-1-johan+linaro@kernel.org>
-In-Reply-To: <20250328143646.27678-1-johan+linaro@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 2 Apr 2025 10:13:03 +0200
-X-Gm-Features: AQ5f1JoGfVJ9ts98vDCtSYScI8e3HIFmZAN4o5AGXV0GNmnQTKivDH_VGXOT9Xk
-Message-ID: <CAMRc=McRPmWu4q9EqYC_3wDCKoniu7Rf308SsKrbCk5rbopFwA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] PCI/arm64/ath11k/ath12k: Rename pwrctrl Kconfig symbols
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, ath11k@lists.infradead.org, 
-	ath12k@lists.infradead.org, linux-wireless@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <PAXPR04MB851049B520288642141570F188A12@PAXPR04MB8510.eurprd04.prod.outlook.com>
 
-On Fri, Mar 28, 2025 at 3:41=E2=80=AFPM Johan Hovold <johan+linaro@kernel.o=
-rg> wrote:
->
-> The PCI pwrctrl framework was renamed after being merged, but the
-> Kconfig symbols still reflect the old name ("pwrctl" without an "r").
->
-> This leads to people not knowing how to refer to the framework in
-> writing, inconsistencies in module naming, etc.
->
-> Let's rename also the Kconfig symbols before this gets any worse.
->
-> The arm64, ath11k and ath12k changes could go through the corresponding
-> subsystem trees once they have the new symbols (e.g. in the next cycle)
-> or they could all go in via the PCI tree with an ack from their
-> maintainers.
->
-> There are some new pwrctrl drivers and an arm64 defconfig change on the
-> lists so we may need to keep deprecated symbols for a release or two.
->
-> Johan
->
->
-> Johan Hovold (4):
->   PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
->   arm64: Kconfig: switch to HAVE_PWRCTRL
->   wifi: ath11k: switch to PCI_PWRCTRL_PWRSEQ
->   wifi: ath12k: switch to PCI_PWRCTRL_PWRSEQ
->
->  arch/arm64/Kconfig.platforms            |  2 +-
->  drivers/net/wireless/ath/ath11k/Kconfig |  2 +-
->  drivers/net/wireless/ath/ath12k/Kconfig |  2 +-
->  drivers/pci/pwrctrl/Kconfig             | 27 +++++++++++++++++++------
->  drivers/pci/pwrctrl/Makefile            |  8 ++++----
->  5 files changed, 28 insertions(+), 13 deletions(-)
->
-> --
-> 2.48.1
->
+On Thu, Mar 27, 2025 at 06:02:27AM +0000, Wei Fang wrote:
+> > > > > > >The current patch logic is that if the pcie device node is found to
+> > > > > > >have the "xxx-supply" property, the scan will be skipped, and then
+> > > > > > >the pwrctrl driver will rescan and enable the regulators. However,
+> > > > > > >after merging this patch, there is a problem on our platform. The
+> > > > > > >.probe() of our device driver will not be called. The reason is
+> > > > > > >that CONFIG_PCI_PWRCTL_SLOT is not enabled at all in our
+> > > > > > >configuration file, and the compatible string of the device is also not
+> > > > added to the pwrctrl driver.
+> > > > > >
+> > > > > > Hmm. So I guess the controller driver itself is enabling the
+> > > > > > supplies I believe (which I failed to spot). May I know what platforms are
+> > > > affected?
+> > > > >
+> > > > > Yes, the affected device is an Ethernet controller on our i.MX95
+> > > > > platform, it has a "phy-supply" property to control the power of the
+> > > > > external Ethernet PHY chip in the device driver.
+> > > >
+> > > > Ah, I was not aware of any devices using 'phy-supply' in the pcie device node.
+> > >
+> > > It is not a standard property defined in ethernet-controller.yaml. Maybe
+> > > for other vendors, it’s called "vdd-supply" or something else.
+> > >
+> > 
+> > Ah, then why is it used at all in the first place (if not defined in the
+> > binding)? This makes me wonder if I really have to fix anything since everything
+> > we are talking about are out of tree.
+> 
+> "phy-supply" is a vendor defined property, we have added it to fsl,fec.yaml,
+> but fec is not a PCIe device. And this property is also added to other Ethernet
+> devices such as allwinner,sun4i-a10-mdio.yaml and rockchip,emac.yaml, etc.
+> But they are all not a PCIe device. So there is no need to fix it in upstream.
+> 
+> > 
+> > > >
+> > > > > This part has not been
+> > > > > pushed upstream yet. So for upstream tree, there is no need to fix our
+> > > > > platform, but I am not sure whether other platforms are affected by
+> > > > > this on the upstream tree.
+> > > > >
+> > > >
+> > > > Ok, this makes sense and proves that my grep skills are not bad :) I don't
+> > think
+> > > > there is any platform in upstream that has the 'phy-supply' in the pcie node.
+> > > > But I do not want to ignore this property since it is pretty valid for existing
+> > > > ethernet drivers to control the ethernet device attached via PCIe.
+> > > >
+> > > > > >
+> > > > > > > I think other
+> > > > > > >platforms should also have similar problems, which undoubtedly make
+> > > > > > >these platforms be unstable. This patch has been applied, and I am
+> > > > > > >not familiar with this. Can you fix this problem? I mean that those
+> > > > > > >platforms that do not use pwrctrl can avoid skipping the scan.
+> > > > > >
+> > > > > > Sure. It makes sense to add a check to see if the pwrctrl driver is enabled
+> > or
+> > > > not.
+> > > > > > If it is not enabled, then the pwrctrl device creation could be
+> > > > > > skipped. I'll send a patch once I'm infront of my computer.
+> > > > > >
+> > > > >
+> > > > > I don't know whether check the pwrctrl driver is enabled is a good
+> > > > > idea, for some devices it is more convenient to manage these
+> > > > > regulators in their drivers, for some devices, we may want pwrctrl
+> > > > > driver to manage the regulators. If both types of devices appear on
+> > > > > the same platform, it is not enough to just check whether the pinctrl driver
+> > is
+> > > > enabled.
+> > > > >
+> > > >
+> > > > Hmm. Now that I got the problem clearly, I think more elegant fix would be
+> > to
+> > > > ignore the device nodes that has the 'phy-supply' property. I do not envision
+> > > > device nodes to mix 'phy-supply' and other '-supply' properties though.
+> > > >
+> > >
+> > > I think the below solution is not generic, "phy-supply" is just an example,
+> > > the following modification is only for this case. In fact, there is also a
+> > > "serdes-supply" on our platform, of course, this is not included in the
+> > > upstream, because we haven't had time to complete these. So for the
+> > > "serdes-supply" case, the below solution won't take effect.
+> > >
+> > 
+> > Does your platform have a serdes connected to the PCIe port? I doubt so. Again,
+> > these are all non-standard properties, not available in upstream. So I'm not
+> > going to worry about them.
+> 
+> No, the serdes is inside the Ethernet MAC. I was wondering how to bypass
+> pwrctrl in the future if we add such a "xxx-supply" to a PCIe device node,
+> so that our drivers can be smoothly accepted by upstream.
+> 
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+In that case, the logic should be changed to only look for bindings defined
+supplies for the endpoint devices. Like, "v*pcie*-supply" properties instead of
+all supplies.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
