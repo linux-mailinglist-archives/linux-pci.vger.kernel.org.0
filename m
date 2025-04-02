@@ -1,314 +1,277 @@
-Return-Path: <linux-pci+bounces-25152-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25153-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC99BA78C9A
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 12:45:19 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5000BA78CBD
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 12:59:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D89563A7294
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 10:45:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EAEDC16E603
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 10:59:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 805BF214810;
-	Wed,  2 Apr 2025 10:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48838236424;
+	Wed,  2 Apr 2025 10:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bBk2zBRX"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTXo5pMA"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2FE353BE;
-	Wed,  2 Apr 2025 10:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743590716; cv=fail; b=kZQaNdWKu7LUgSGWjXGpy+olBfoFxVGYh/nc3WAB5yTKwl3Z2T6g3mTva6J8I6aOqU7jKBFA7MhDCGfASmCXMt1cT6MNBLxJLImMY/G7Wh5aituGEJ6WFxyR4kR/dcWaZ92aJQ3fm/ZhbL4s93ewPvpOe/5DdPIXlcr+lAV3J8k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743590716; c=relaxed/simple;
-	bh=76r8cAOsoR3AI7ktiPMzt2YT8euqfgX6AsaCNTg3iSI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=T0DXXXaUpIpa1NaeNRaV2JdHRDcsPDCVJOiSX3vulTegbFa+J5dKc+4USrVvKrUyxGRh1hZupt1pVzJV5WxDDLh8iGLEbRj7xbP9YqBdIU9vmLbi9lUPzztctJKBvNlOyRl7/5fDUDInM6N/Febbjv4hdLWmJtQ1IzPs6l7XFn8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bBk2zBRX; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743590715; x=1775126715;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=76r8cAOsoR3AI7ktiPMzt2YT8euqfgX6AsaCNTg3iSI=;
-  b=bBk2zBRXqdAzWbf69Bh10Egewh8DgT1nWFP1UpbX4SwcaqrHheyXxbGQ
-   Ke8Fpd7/Fx+MnfxfYlAADP6Pi9zzdV+N8An7E9R4KiR/A9O8V4zHmTLs+
-   Pd9GcHnLtqOp3h9NsMeVRa5I11ArGCf3PYiIR5yauf+JXDJzKhA0yEl4o
-   M8QmZp/TM3r8OtvpsgUmn11CTNd7ZZB9LUD2rNeR/XE/t6X+eRqQ7BUYH
-   VUzOs0sxqcSruLYrD5ce2tKwq/D04dnH/SuAC4umoIZhCE+BMxbhbV4Yp
-   zMdOdDSkTuRwRzRe/Lh2M3BIGiL11AWIVqGz/LZ9/SWZjiWxA1QrjKtYI
-   A==;
-X-CSE-ConnectionGUID: 5gJptniHQiuMKsS1nKsmEw==
-X-CSE-MsgGUID: 7LdUp7NdR7W4w6TrLdkbEw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11391"; a="44095335"
-X-IronPort-AV: E=Sophos;i="6.14,182,1736841600"; 
-   d="scan'208";a="44095335"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 03:45:14 -0700
-X-CSE-ConnectionGUID: uUU12KukRwSuvbH0jhPwpw==
-X-CSE-MsgGUID: S322LuH6To6phEhHD671dQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,182,1736841600"; 
-   d="scan'208";a="126640673"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 03:45:13 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 2 Apr 2025 03:45:12 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 2 Apr 2025 03:45:12 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.171)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 2 Apr 2025 03:45:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kxtHPnxy9iLd8+9OkzXilnJhH23Tt0UXdkqi3LZthvMUVfwGWbRytcv1fyoziGPmqNtMIc85fitoi+PdZP7A7fCIqmf3iuBSR8r5oI6jvQ0RisUwoE19qzicIXQLBNUo0tGKoj9nNRXBVoRZtGmMLnj/HDY6MsMesgNa1e9YRgATBCgxGB66/39oe2f4BCn0p33HjmZZ3htQKuaoA0GpvOe6IFTVpiw+EseLNoNVz8tFsJS007ztnAhdQ2hhTmqruqHBdP1Jegtdd8HLa7iNnSZUxo5COi0MgnPxI9nG08CM/oKuPA21cjftb5PtjJJAGh1LUrP7oNRrEz+MQkCvzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fHWlQR1IBN7+1RjymV5Z47R/DA5AWEFPmme4qlkhZqQ=;
- b=JLGVKvjl466k9yuYF3iZLfPX8vS8ucUttRQUab0sEmQ1iLIrcMy6TKUvg7DQr7KzwUw/nNFQiImH+6fI3q6NAP0l7PU+IXRWVeJR4ntL+MGNmMdfYJPlrbglvflVmQGmKt6qjgwFVC+9rOPmue7s3rbMkP10rQaAnLIlR9Axgt2OoO9AtS4889DpNjeOX6acPwpGAUL6324PMFlTLBv0Z7fE9HQNhmF/1oHj6BTXYTn1uSUVYOo1Jt3F6C/HUmhotGzm/qu0iMvRJI8PJTGQKG79pOD9GbUdY2H7agU1sgNdeXsTEPyriTUf77SIT4hhhMlazVha4kTmGrdgw7Is4Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com (2603:10b6:5:394::7) by
- SJ0PR11MB5199.namprd11.prod.outlook.com (2603:10b6:a03:2dd::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.44; Wed, 2 Apr 2025 10:45:03 +0000
-Received: from DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::927a:9c08:26f7:5b39]) by DM4PR11MB5373.namprd11.prod.outlook.com
- ([fe80::927a:9c08:26f7:5b39%4]) with mapi id 15.20.8583.041; Wed, 2 Apr 2025
- 10:45:02 +0000
-Date: Wed, 2 Apr 2025 12:44:59 +0200
-From: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-CC: <linux-pci@vger.kernel.org>, <intel-xe@lists.freedesktop.org>,
-	<dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>,
-	"Bjorn Helgaas" <bhelgaas@google.com>, Christian =?utf-8?B?S8O2bmln?=
-	<christian.koenig@amd.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
-	<kw@linux.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Michal Wajdeczko
-	<michal.wajdeczko@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	"Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matt Roper
-	<matthew.d.roper@intel.com>
-Subject: Re: [PATCH v6 6/6] drm/xe/pf: Set VF LMEM BAR size
-Message-ID: <gi24rnidkfgmcgszvi53kpmq4wxd36xhs5hd3hqaa4ihzeageg@bqlqtt4knjod>
-References: <20250320110854.3866284-1-michal.winiarski@intel.com>
- <20250320110854.3866284-7-michal.winiarski@intel.com>
- <bdfe5413-547a-67b0-b822-9852d3f94cc5@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bdfe5413-547a-67b0-b822-9852d3f94cc5@linux.intel.com>
-X-ClientProxiedBy: VI1PR07CA0135.eurprd07.prod.outlook.com
- (2603:10a6:802:16::22) To DM4PR11MB5373.namprd11.prod.outlook.com
- (2603:10b6:5:394::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBB12E3394;
+	Wed,  2 Apr 2025 10:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743591559; cv=none; b=tqAMI5UyzrpK/TlwsJFSBDBQqYmeVEqp+Qzn1jli5BipA/LQUc7JlOqUK2zC6TxQk10M/9AeOfCN0vLLm1XEPONOc5h7cnurXOT37MBuiZg/9RVHa7h9yPt4KDKxOBYwDxQw2SE85XsR1xYB7y9rUI44UNInsh43JhN2zYBYOOg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743591559; c=relaxed/simple;
+	bh=79vlvCwhFQ7PQ167zysxT2YjCVKh2MWHR+DdDGPB3xk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PKXOEJWuGVT9eIttU/Yu/ybS+rhXdtc9Dpp29RCw3RMYvzh6SaG8oDPBsi+QbPzHSEtDQWQ+qVFnDy9n03G8U8NKM28eNkkG3uJiHCL+YXumP1b9T+yQBdZnnJeohD6DAwVK7MdQV+z3iJ7wd6a15BpSF36IV/5wk63l0dhC6bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTXo5pMA; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DB56C4CEED;
+	Wed,  2 Apr 2025 10:59:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743591558;
+	bh=79vlvCwhFQ7PQ167zysxT2YjCVKh2MWHR+DdDGPB3xk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VTXo5pMATwS4NxbGZVkmTLXUmPqiDdvAl5J6oFqOEa0ItR+yMcZsPRkwg5ViPL508
+	 VFtKW0iEiRGuqSSNTOFUZaSQtYum0rh4+esxr7aQbZMirdOjURMe2S/6wsEge/qjK/
+	 MqfWnBIW5FlX480dhZv96IkYU6wsPHy+Fzr03LobSadb5z3GaDK3fYEOmcvtwR+Iar
+	 2+UsW71kVXjr0ZimbbIYcGG8asPt4WWtbP3mIeo3MBU4OOUlEPRsWWcCUmofSYUlF9
+	 P1yC2pFO2Ggid++9Y7NviGZxUrH4fvvxSW+0xpJV1/vn0wOkgyvX9b9e4a+YhJj9Uz
+	 NNRCKKG2KuvuQ==
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2c81fffd523so2053077fac.0;
+        Wed, 02 Apr 2025 03:59:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUMuF8Ge+8YSfyOEocCJzzNUc0pbf0Q4VU0HzsF85XAOrqgxrpgEJergUye6HSmEWQyQFhXfw2lXg7P@vger.kernel.org, AJvYcCWUD/mm+/wUXFntR2v3d41uR/Lr66DgACtBXFBPJd8uLX6zwhUc1nAr/jJrGRqt3KhwpBTzG6Xk/3Kb@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqUjKGVBkLlPc4RLRnbEQn+OKHue01FlRmKF2/hm6UUfrlfvWU
+	tIB29khi3TE+XTOE8kmkRb7Yl+e9kWgNGOIBQhBlciawlEHfZKvp0jTa64HBjFogT12HUsqvaHQ
+	sHgYgKwrD9QNHxJO3t6mCpBy7/sE=
+X-Google-Smtp-Source: AGHT+IH6x+zQ+KQ+Tks6DI6Vj8fOJmmwES4mwbgUQGsKJyto/xGcDz/5bdLYfnSyTqx/izit30fZr0JSawhSg9xHppw=
+X-Received: by 2002:a05:6870:9124:b0:2bc:7342:1a6c with SMTP id
+ 586e51a60fabf-2cc60b4f11cmr914246fac.19.1743591557770; Wed, 02 Apr 2025
+ 03:59:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB5373:EE_|SJ0PR11MB5199:EE_
-X-MS-Office365-Filtering-Correlation-Id: 355956af-ca68-4260-05c2-08dd71d36c17
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?YWhzN2p0clpUbEhTMmRtVy9PaW52Mm9oTDlLRVUyOU9nTWVHOEhQT2VsOEJL?=
- =?utf-8?B?OENIMGR0aVR5UFErM2xUdDNZeXZRV05HeU9EL0FCYTZHUFltVEpTQm1icnRm?=
- =?utf-8?B?TG5mV0dIaEFWc1hFU1FjakQyekZobndRZ1lBd0JmQUNQSDI3ZGdRZUlZc2tG?=
- =?utf-8?B?VG1DclVCbHZEMjV6emxPZ0lJbUxIQ1NCa1QyaklhWEkzNzVvUGZiNDg2YzJK?=
- =?utf-8?B?cVFWcmdTeStYdEVWdU9XQ2NVckx1NG02ZWp5VVB3T1djV24vYmRMeEJWWGc3?=
- =?utf-8?B?bG5mbDhVamdZNW9LSU5uWFZia3N5dFF2S2ZiWHpEMjgyRjRFVGpYTEJFenFD?=
- =?utf-8?B?RTcyWlh1M08vZEl5N2hKVWhEZHBWWVR6OWN3STZuQ3ZuRDEyM1NHQ29oWTdx?=
- =?utf-8?B?OVB2YUEwRjJSTFEyNmxGaEhqZDl3SUZpbTVqVEhrOXl1OGF0VmNyeG92d2Va?=
- =?utf-8?B?OUU2T2JDeDZDaWhQQng4a3A4RWtKckxYWGdCOTRZdDlHS2wybjZ6TFlqcGY2?=
- =?utf-8?B?ZzU2RU0veTZtVEdPSUU4TnM1bXVzdXM3M1JWZG9UdjU4cnduSU5VVnZ3cEdh?=
- =?utf-8?B?YUs1eDZLdzh0VFFQQ2hibTl1dEhKeGZyMnN1Zmt2TlJJbEI0UlNqSUgxRFBQ?=
- =?utf-8?B?UW05RVZHSFFCcm5haGNFbno5YUR0S1U0d0daQWtFYXQ5bU5DeFRPT3JoVHYz?=
- =?utf-8?B?R1VYWGcwTUFzVXk4cFFpaG5pWWtnbXdVVHpTV2FzNy9ScTFxSWczQ01ncFVq?=
- =?utf-8?B?U2NRMHBSZ1pYM0c3UDIzWjhRRkx2NDBvQWxkd0k2c3VXbmhGYnE2emJkdTQ0?=
- =?utf-8?B?VDhRY3RNSFQ4am1pRmNJNVNueE03Z2ZMM3RuMFRZaFRZTTRhek5iUzdNMDRx?=
- =?utf-8?B?V1NuRWhNOFlLZ2l3WS80SWE0dTFxRUhPVWh4OGs2TGgxOFZUM3RvQlNiZGhI?=
- =?utf-8?B?RWNZYXYvZzN2bnp1ZDcwRDVPTnBsMlJOY2lVL0E0Q29tUUd4MllWeC9KK1VY?=
- =?utf-8?B?RzZTSmxlMHhDMStNSys2WnpQQ2FvSnlsLzVqMFhGZ3dmaVU3V1I3N3o0Y1ZF?=
- =?utf-8?B?dGxJanFrWTJBWCtKOGY4bm9KcFlETE1QLzFQeGk1bW9ZV1VhVTRkSG05Uksr?=
- =?utf-8?B?akdYNUFNMTRnWnRZZTVrYitXcjdSSGpyZ3hQbHduQjBtbTk1MXZaUU8weHhZ?=
- =?utf-8?B?cmlJcGdUVUUxendSNFpWK2VmK0ZYTVlaTlNGeEpYTXVmd3YrQkNuTzNQK2w4?=
- =?utf-8?B?VFdSZnByYzVOT0pZZ1RwdStzcTdoOW5EaFpHSmExZElwTS9pU0VITS9FRDE3?=
- =?utf-8?B?RHNZdTVlNU8yekNQZVNqN1o0M2s3YXJQVWJQdmtpdkkyT2ltaFo4c2k1eWN5?=
- =?utf-8?B?MUd4S3JaNVdLQy96alI3MjJYd3EwTDlSUytiSmdrNWZFcHNwbDArd0p5WmlH?=
- =?utf-8?B?UDVsSUNnTFBEem9pVEl4a3I2eFg4ZWlnSS8xNnE4WEZvTS82QWhOcE9lSjd6?=
- =?utf-8?B?YnJKb25PWTl5S1RmTTZXRWZCS0FZUjBiR3JiQlZMaE5hYUZmS3FDMFJMK08v?=
- =?utf-8?B?TGlYVEdNM3N0VzA0ajM0SFozUWhSWWswcmJpMDZLZFd6QUhScWZoN1F1OHRK?=
- =?utf-8?B?NlZ1UlNNMGxXcmJ4QllVMElabkR2c2ZGY0FUdnRLRWx5ODBFSnNhOFprNEtv?=
- =?utf-8?B?UkQvT2tOU2pNd0lUY08rbFIyMG9JWk1IaklFZGtuaXVqb2xDSVg4RzJPV0p3?=
- =?utf-8?B?YzdrQTJYbkw3YmliUk1lY2NuQXBEcWpJQStBaTlRMmpPZVc0WmJ1STJCdm5v?=
- =?utf-8?B?N2JSTHJhbVJLWG9UR29ZQjFUZC9uelZncGFnb0xxSVZQQ0VpZUpNNU0yVXl6?=
- =?utf-8?Q?Oo8wj9VAPWh56?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5373.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WHYwME5MTU5Manp6ekphU3gvQWhldGZ2WE9IYlRzdG9WTUgwV0tzMmlTMUQ3?=
- =?utf-8?B?bnRXQVZZWVljaEQ4MHlXOXBvOUNrZ3l5SkRVTk1Qd0JOMkFUMzdwUllEVTVF?=
- =?utf-8?B?MkdNbzcxZlAvejBjdWZXeWRUODBPeEZBZ3l6Wkt6aFpXRVdtODU2QytMTlpw?=
- =?utf-8?B?TnNENFR2ekpsVVIycnNvUTZjWmlyak5HNm90NkhEdG5HRkR0MXJGcFZxZW4y?=
- =?utf-8?B?QWdtUG1VTktUajF3alJTc25IM3JpZnIvQW5ETVZRb0ZJL0VFZjlMSk9sdzBM?=
- =?utf-8?B?QnBKTU5SZTc1Ky9SVzNiWFpuSklaQXdCckVMOUpUYUFtWThHQVFKY2lyS25P?=
- =?utf-8?B?MVU1bHlNdDlkZ1pFbVl6b1JnRlA5MnJnOGJPWW1YdVo4ajBYdzVnZERWclBS?=
- =?utf-8?B?M2YxQmxvbFFTMGxIUjRTV2JMN0M5bEwxZllON0JXdkxqL2FuS3lTMkdjVWt6?=
- =?utf-8?B?ZnB0RlAvSzNtOFF0L1FscVVxcHV0dVVvZ0psSHdJc29nUWZiWXpod2FyL3l5?=
- =?utf-8?B?V1Y5bW1qdzZIZytsYkxzeVlJNUg0NE1QSHVnUWdkc0dxWUdwSjdGcE9xT1Bm?=
- =?utf-8?B?bXJ0STRqeFRIdHdjcFB3R2JORHJxMXBzbWppTjlyL3RXMXUyV016czVHSnpu?=
- =?utf-8?B?VHNNVTFHa0NYdFB6SWRnMEtDYjZYdnIyUlQrRGNOVDJzTFc3Uis4aklyYXJx?=
- =?utf-8?B?VFArM2ZvUStWT1VnMFpEcmQybEVCNEZiN0xURjR4ZnRmcytGRHhCZkZXaVQ4?=
- =?utf-8?B?eUp4ckxnY1pNbVM5WUpxeGk0K2ZtQlE3U01HK2xNKzNYZWR1bUU5aHJIbDA3?=
- =?utf-8?B?NHk2UmRXZmUxOGFkaDZkRGhHam01R05walZmM3BMTHR1NXN3L2JINEpLc0pW?=
- =?utf-8?B?ZTFOM1hUaGthZGh1anNySE8xa1BJTGxtcWdaM3ZzWWx1S1pHRHpZRjNEVlVU?=
- =?utf-8?B?SFRRSnRaYWpIVEFtU2VKbi9GSm42L1hjUzZIc2lOVWgwamtVRGQwSXQ2cVFm?=
- =?utf-8?B?M1l3Z0FmeXpLZFVlVWtwZlJWSjZDRCtYdkZNOENhc1ZHc2FEaFI4OEduV3R1?=
- =?utf-8?B?ZThXMmt5TlVzaVd3TTU3WTVuZUdUTDNHYnovTE1ZTjBISmRHNWZlU1ZMQ2Fh?=
- =?utf-8?B?MjZIbnpqTlpHMmtRbEV6ajhpN0tyN2hZSnpPb0JMOCs4YytyY3lwVEkvaExP?=
- =?utf-8?B?cVUvSjh4enRPRzJDVzg2SzlIa0FEOURvM0NjaDRrYjZUZU5tR1cvOUhhMmpK?=
- =?utf-8?B?T3g1YUtIemM3ei85QnBBdGpsRnVRaXh3YnprUFNCTllzdy8wTk1LWGRMWVlI?=
- =?utf-8?B?Q2QySUlFdzRYZ3lWK0Vub3EvVXZ2V2dzOER0azdXWk81eng4MW5XbkJCeGZX?=
- =?utf-8?B?SEU0WHo0M2gvVG1Rc2ttRW5Nc2tYQjdLMHExU0pmMyt0NzcyWXFCUVpiNE1u?=
- =?utf-8?B?WHhSdlRLdkhqVGFPYUFyY1Z6WW1rbTBEdHZkbnYwc0VkUVUwUElUdUJkTkdP?=
- =?utf-8?B?ZDE3VUd5ZHFJY2VFTy9pNWZ1WVROcDV6QytGWm5ndW9JMWJCc090UU1hMGZj?=
- =?utf-8?B?MFF0Z1VXUE9yZWhXZzRyeUVHWUN1a3c4UTkxSk5yUkRSc0w4VE1xM1R6UUpK?=
- =?utf-8?B?QXo2K09yRnpReHNHaE5sazA3WVRoOFkrUlpMQi9JZlVXYUdKZFp4TFBRa2VU?=
- =?utf-8?B?cDNLZmZiZmRzdXp6RzVkYTV0Zzk4NXJGR1FvZVRFNWhjQ1RHRS9ZelhlZWtM?=
- =?utf-8?B?TGpEaVFFK3pVVlJnSDBzZVNUNEE1YXdPdXg4dXVRK1JoK1MvcVVnTDhWK0wv?=
- =?utf-8?B?V3pFV2F4aWRGZ0hRcU5rUFZGbFNNZU5JalpnYmZqa1dVOXJMQTBNbkZLTlg2?=
- =?utf-8?B?ei9QaFUrSzdmU0FsVFRyTDNjVlBPbC9URGEzZUlTRnU4SExvM0srd1pCR0hJ?=
- =?utf-8?B?ekVOSmxiRmxtUmdEc0ZBdnp4U2UzaUV1NXZVSnF5QlNWcWxrUGtIbVd0a2o5?=
- =?utf-8?B?dTVnMk1aVHR2Mkh6L2JzbStGVmsvUkMreHJxajZ6V0QxS1c2V29zczlCZXJV?=
- =?utf-8?B?Rmg3UzZ1VHhhcWVCUmxXajBkWjdpSEZUbmxnQllCVG8zdXlDQ3FpYzZuY2oy?=
- =?utf-8?B?VnNkRnpTSjR6cTVqSTFmL3FpaUQxNUNiMURNN0gxaEx6T2tjS1RURk9YNTdK?=
- =?utf-8?B?cEE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 355956af-ca68-4260-05c2-08dd71d36c17
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5373.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 10:45:02.3383
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sZOP2k8bvvtaM0vtp3maIDIcTsvGPxU9VrwNuuP5qjIecFzXph+gPLyV0vnyjZcOHBE49UDpd2BCSIy7usU73bNGx6pKUnM05CPRIDL5Pns=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5199
-X-OriginatorOrg: intel.com
+References: <20250401153225.96379-2-anshuman.gupta@intel.com> <20250401182545.GA1675819@bhelgaas>
+In-Reply-To: <20250401182545.GA1675819@bhelgaas>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Apr 2025 12:59:06 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hs9ddB1dGzGsMfaWrHdq1cw8huao63_m6pKRQq6BnEcw@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq5BLkjL0lrW_VjmCt9KmP-6AC44giTO6xw8JDoD2ICihlpU3QmNicg3YQ
+Message-ID: <CAJZ5v0hs9ddB1dGzGsMfaWrHdq1cw8huao63_m6pKRQq6BnEcw@mail.gmail.com>
+Subject: Re: [PATCH 01/12] PCI/ACPI: Add D3cold Aux Power Limit_DSM method
+To: Bjorn Helgaas <helgaas@kernel.org>, Anshuman Gupta <anshuman.gupta@intel.com>
+Cc: intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org, 
+	linux-pci@vger.kernel.org, rafael@kernel.org, lenb@kernel.org, 
+	bhelgaas@google.com, ilpo.jarvinen@linux.intel.com, lucas.demarchi@intel.com, 
+	rodrigo.vivi@intel.com, badal.nilawar@intel.com, varun.gupta@intel.com, 
+	ville.syrjala@linux.intel.com, uma.shankar@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 26, 2025 at 05:29:31PM +0200, Ilpo Järvinen wrote:
-> On Thu, 20 Mar 2025, Michał Winiarski wrote:
-> 
-> > LMEM is partitioned between multiple VFs and we expect that the more
-> > VFs we have, the less LMEM is assigned to each VF.
-> > This means that we can achieve full LMEM BAR access without the need to
-> > attempt full VF LMEM BAR resize via pci_resize_resource().
-> > 
-> > Always set the largest possible BAR size that allows to fit the number
-> > of enabled VFs.
-> > 
-> > Signed-off-by: Michał Winiarski <michal.winiarski@intel.com>
+On Tue, Apr 1, 2025 at 8:25=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
+rote:
+>
+> On Tue, Apr 01, 2025 at 09:02:14PM +0530, Anshuman Gupta wrote:
+> > Implement _DSM method 10 and _DSM Method 11 as per PCI firmware specs
+> > section 4.6.10 Rev 3.3.
+>
+> Thanks for splitting this into two patches.  But I think now this only
+> implements function 10 (0x0a), so this sentence needs to be updated.
+>
+> I would write this consistently as "0x0a" or "0Ah" to match the spec
+> description.  I don't think the spec ever uses "10".
+>
+> > Note that this implementation assumes only a single device below the
+> > Downstream Port will request for Aux Power Limit under a given
+> > Root Port because it does not track and aggregate requests
+> > from all child devices below the Downstream Port as required
+> > by Section 4.6.10 Rev 3.3.
+
+Why is it regarded as compliant, then?
+
+Request aggregation is a known problem that has been addressed for a
+couple of times (at least) in the kernel.  Why is it too hard to
+address it here?
+
+> > One possible mitigation would be only allowing only first PCIe
+> > Non-Bridge Endpoint Function 0 driver to call_DSM method 10.
+
+What about topologies where there is a switch with multiple downstream
+ports below the Root Port?
+
+> >
+> > Signed-off-by: Varun Gupta <varun.gupta@intel.com>
+> > Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+> > Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
 > > ---
-> >  drivers/gpu/drm/xe/regs/xe_bars.h |  1 +
-> >  drivers/gpu/drm/xe/xe_pci_sriov.c | 22 ++++++++++++++++++++++
-> >  2 files changed, 23 insertions(+)
-> > 
-> > diff --git a/drivers/gpu/drm/xe/regs/xe_bars.h b/drivers/gpu/drm/xe/regs/xe_bars.h
-> > index ce05b6ae832f1..880140d6ccdca 100644
-> > --- a/drivers/gpu/drm/xe/regs/xe_bars.h
-> > +++ b/drivers/gpu/drm/xe/regs/xe_bars.h
-> > @@ -7,5 +7,6 @@
-> >  
-> >  #define GTTMMADR_BAR			0 /* MMIO + GTT */
-> >  #define LMEM_BAR			2 /* VRAM */
-> > +#define VF_LMEM_BAR			9 /* VF VRAM */
-> >  
-> >  #endif
-> > diff --git a/drivers/gpu/drm/xe/xe_pci_sriov.c b/drivers/gpu/drm/xe/xe_pci_sriov.c
-> > index aaceee748287e..57cdeb41ef1d9 100644
-> > --- a/drivers/gpu/drm/xe/xe_pci_sriov.c
-> > +++ b/drivers/gpu/drm/xe/xe_pci_sriov.c
-> > @@ -3,6 +3,10 @@
-> >   * Copyright © 2023-2024 Intel Corporation
-> >   */
-> >  
-> > +#include <linux/bitops.h>
-> > +#include <linux/pci.h>
-> > +
-> > +#include "regs/xe_bars.h"
-> >  #include "xe_assert.h"
-> >  #include "xe_device.h"
-> >  #include "xe_gt_sriov_pf_config.h"
-> > @@ -62,6 +66,18 @@ static void pf_reset_vfs(struct xe_device *xe, unsigned int num_vfs)
-> >  			xe_gt_sriov_pf_control_trigger_flr(gt, n);
+> >  drivers/pci/pci-acpi.c   | 78 ++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/pci-acpi.h |  6 ++++
+> >  2 files changed, 84 insertions(+)
+> >
+> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> > index af370628e583..ebd49e43457e 100644
+> > --- a/drivers/pci/pci-acpi.c
+> > +++ b/drivers/pci/pci-acpi.c
+> > @@ -1421,6 +1421,84 @@ static void pci_acpi_optimize_delay(struct pci_d=
+ev *pdev,
+> >       ACPI_FREE(obj);
 > >  }
-> >  
-> > +static int resize_vf_vram_bar(struct xe_device *xe, int num_vfs)
+> >
+> > +/**
+> > + * pci_acpi_request_d3cold_aux_power - Request D3cold aux power via AC=
+PI DSM
+> > + * @dev: PCI device instance
+> > + * @requested_power: Requested auxiliary power in milliwatts
+
+How's the caller supposed to find out what value to use here?
+
+> > + *
+> > + * This function sends a request to the host BIOS via ACPI _DSM Functi=
+on 10
+> > + * to grant the required D3Cold Auxiliary power for the specified PCI =
+device.
+> > + * It evaluates the _DSM (Device Specific Method) to request the Auxil=
+iary
+> > + * power and handles the response accordingly.
+> > + *
+> > + * This function shall be only called by 1st non-bridge Endpoint drive=
+r
+> > + * on Function 0. For a Multi-Function Device, the driver for Function=
+ 0 is
+> > + * required to report an aggregate power requirement covering all
+> > + * functions contained within the device.
+> > + *
+> > + * Return: Returns 0 on success and errno on failure.
+>
+> Write all this in imperative mood, e.g.,
+>
+>   Request auxiliary power while device is in D3cold ...
+>
+>   Return 0 on success ...
+>
+> > + */
+> > +int pci_acpi_request_d3cold_aux_power(struct pci_dev *dev, u32 request=
+ed_power)
 > > +{
-> > +	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
-> > +	u32 sizes;
+> > +     union acpi_object in_obj =3D {
+> > +             .integer.type =3D ACPI_TYPE_INTEGER,
+> > +             .integer.value =3D requested_power,
+> > +     };
 > > +
-> > +	sizes = pci_iov_vf_bar_get_sizes(pdev, VF_LMEM_BAR, num_vfs);
-> > +	if (!sizes)
-> > +		return 0;
+> > +     union acpi_object *out_obj;
+> > +     acpi_handle handle;
+> > +     int result, ret =3D -EINVAL;
 > > +
-> > +	return pci_iov_vf_bar_set_size(pdev, VF_LMEM_BAR, __fls(sizes));
+> > +     if (!dev || !ACPI_HANDLE(&dev->dev))
+> > +             return -EINVAL;
+> > +
+> > +     handle =3D ACPI_HANDLE(&dev->dev);
+
+Well, ACPI_HANDLE() is not a simple macro, so I'd rather avoid using
+it twice in a row for the same device.
+
+What about
+
+if (!dev)
+        return -EINVAL;
+
+handle =3D ACPI_HANDLE(&dev->dev);
+if (!handle)
+        return -EINVAL;
+
+>
+> This needs an acpi_check_dsm() call to find out whether the platform
+> supports DSM_PCI_D3COLD_AUX_POWER_LIMIT.
+
+Absolutely.
+
+> We have several _DSM calls that *should* do this, but unfortunately
+> they don't do it yet, so they're not good examples to copy.
+
+Right.
+
+> > +     out_obj =3D acpi_evaluate_dsm_typed(handle,
+> > +                                       &pci_acpi_dsm_guid,
+> > +                                       4,
+> > +                                       DSM_PCI_D3COLD_AUX_POWER_LIMIT,
+> > +                                       &in_obj,
+> > +                                       ACPI_TYPE_INTEGER);
+> > +     if (!out_obj)
+> > +             return -EINVAL;
+> > +
+> > +     result =3D out_obj->integer.value;
+> > +
+> > +     switch (result) {
+> > +     case 0x0:
+> > +             dev_dbg(&dev->dev, "D3cold Aux Power %umW request denied\=
+n",
+> > +                     requested_power);
+>
+> Use pci_dbg(dev), pci_info(dev), etc.
+>
+> > +             break;
+> > +     case 0x1:
+> > +             dev_info(&dev->dev, "D3cold Aux Power request granted: %u=
+mW\n",
+> > +                      requested_power);
+> > +             ret =3D 0;
+> > +             break;
+> > +     case 0x2:
+> > +             dev_info(&dev->dev, "D3cold Aux Power: Main power won't b=
+e removed\n");
+> > +             ret =3D -EBUSY;
+> > +             break;
+> > +     default:
+> > +             if (result >=3D 0x11 && result <=3D 0x1F) {
+> > +                     int retry_interval =3D result & 0xF;
+> > +
+> > +                     dev_warn(&dev->dev, "D3cold Aux Power request nee=
+ds retry."
+> > +                              "Interval: %d seconds.\n", retry_interva=
+l);
+> > +                     msleep(retry_interval * 1000);
+>
+> It doesn't seem right to me to do this sleep internally because it
+> means this interface might take up to 15 seconds to return, and the
+> caller has no idea what is happening during that time.
+
+I entirely agree here.
+
+If this is going to happen during system suspend, sleeping for seconds
+is a total no-go.
+
+> This seems like it should be done in the driver, which can decide
+> *whether* it wants to sleep, and if it does sleep, it may give a nice
+> indication to the user.
+
+So during a system suspend in progress, this is rather hard to achieve.
+
+I'd say that if the request is not granted right away, it is a failure
+and we don't use D3cold.
+
+> Of course, that would mean returning some kind of retry interval
+> information to the caller.
+>
+> > +                     ret =3D -EAGAIN;
+> > +             } else {
+> > +                     dev_err(&dev->dev, "D3cold Aux Power: Reserved or=
+ "
+> > +                             "unsupported response: 0x%x.\n", result);
+>
+> Drop periods at end of messages.
+>
+> > +             }
+> > +             break;
+> > +     }
+> > +
+> > +     ACPI_FREE(out_obj);
+> > +     return ret;
 > > +}
-> > +
-> >  static int pf_enable_vfs(struct xe_device *xe, int num_vfs)
-> >  {
-> >  	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
-> > @@ -88,6 +104,12 @@ static int pf_enable_vfs(struct xe_device *xe, int num_vfs)
-> >  	if (err < 0)
-> >  		goto failed;
-> >  
-> > +	if (IS_DGFX(xe)) {
-> > +		err = resize_vf_vram_bar(xe, num_vfs);
-> > +		if (err)
-> > +			xe_sriov_info(xe, "Failed to set VF LMEM BAR size: %d\n", err);
-> 
-> If you intended this error to not result in failure, please mention it 
-> in the changelog so that it's recorded somewhere for those who have to 
-> look up things from the git history one day :-).
-
-I'll rephrase the commit message into something like:
-
-"Always try to set the largest possible BAR size that allows to fit the
-number of enabled VFs and inform the user in case the resize attempt is
-not succesfull."
-
-> 
-> > +	}
-> > +
-> >  	err = pci_enable_sriov(pdev, num_vfs);
-> >  	if (err < 0)
-> >  		goto failed;
-> 
-> Seems pretty straightforward after reading the support code on the PCI 
-> core side,
-> 
-> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-
-Thanks,
--Michał
-
-> 
-> -- 
->  i.
-
+> > +EXPORT_SYMBOL(pci_acpi_request_d3cold_aux_power);
 
