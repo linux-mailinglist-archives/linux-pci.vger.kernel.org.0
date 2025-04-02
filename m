@@ -1,141 +1,142 @@
-Return-Path: <linux-pci+bounces-25186-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25187-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5222A79123
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 16:24:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93470A7917C
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 16:53:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA502188D322
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 14:23:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BA233B170D
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 14:52:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B618921B9D8;
-	Wed,  2 Apr 2025 14:22:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D68423BD0E;
+	Wed,  2 Apr 2025 14:53:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nC0THpW1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aaFJsyO7"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1257223643E
-	for <linux-pci@vger.kernel.org>; Wed,  2 Apr 2025 14:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051711DFF7;
+	Wed,  2 Apr 2025 14:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743603767; cv=none; b=m7BccM76J2vBvUOgVjzhc/OAtlp1kkWEgtGj9joGHxBLUokpFSu75MJUiMBeulSneJitMSHy7SwnEwCRM0uBf7GgtedNNb67seaXrxwR+VVydjGyIYWGpiTIRS1rBUq791qiqDRASaA00x73QzXovDcASi3Qbvjs7+3kSbYqojc=
+	t=1743605588; cv=none; b=WF+MFxKw/vNlDHe75Tf2SBtJlg1Bx9lXBdi9wt0sSMiru6rCG2u0/D/TO67tVeRXBXZUORRe7AEE0Mh6XvrIB3NtElZO+CtKfsGyMRz5lT6Xgy3a2eNJKJHcbfSmgMRhbaRduWegN4ZLpyVpsREY5Yq3QBssVVyUX/aRjZ2Y4U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743603767; c=relaxed/simple;
-	bh=ZBtbiksapYhQuPRHkCFj9XCSDMzKTcXQGX7XPNMUCHk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=knP/wGRjpvZQOIGKHODcz0+epI2Xa/0J6xO6rkBBNa1uAgZ+Aj0uGDJr4cSYcJce/bmarViJI0K1VW112Gkg1XIYZYPx4xK3IrIHI5rBcYvDi++plf5GZPyJ2Tw+LPPODf/5M7mAcQE/bjh9+lzqDiiygtXworxyDnKBTuHgzJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nC0THpW1; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 532B7tZP001410
-	for <linux-pci@vger.kernel.org>; Wed, 2 Apr 2025 14:22:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=XvDkTPzUzc+MUFlUQ0cUCLKe
-	htMRcvALbEgPYK8eAHE=; b=nC0THpW1BNK60WGhHw7MHNH01etuoISc2WlFJ2we
-	gmleIBlDHnHfABhdYoi+2Dcu9k689V/rFIa2LuCktEEQtt8Ps5OIGAw5XfgRL7Kw
-	/nQMM0S/GivXchUE6dh3bFsqj9ce/EcEBLWkQbQpBPYgW4r7WoOzzzAxkIv0MoqP
-	hlyH3P8HEUQPNfqTMRVvAnGseO3rVSoJH3ilwn5SCeGdrefvC6wMQlDjNDzDEYYb
-	mZyWDKWD0KPRfO8L1ED7SCX9UFNkHNtRFZD1fUJiCQNMholoyFfziTwMcM+sqY3H
-	fIwFIpM1t5zamALBIiY3rotL5eYCiFJJ4AXSrL3rIWuUTw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45p67qm02m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pci@vger.kernel.org>; Wed, 02 Apr 2025 14:22:38 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c54e7922a1so1509874785a.2
-        for <linux-pci@vger.kernel.org>; Wed, 02 Apr 2025 07:22:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743603758; x=1744208558;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XvDkTPzUzc+MUFlUQ0cUCLKehtMRcvALbEgPYK8eAHE=;
-        b=ehQxovegXf0SZyqdE0VNxq1Ude9JSNwIOONbGdefi/ItdClRrmsFmhiWu2W92TywSw
-         H254RWVZPkGQccFx50v1k28jpftiTpdiGTMug06mBU7qokEKM5wsehox3uEkgtxfkbN0
-         p0RHFqIHRVd5ko3BJ5KEt5OHC1Nhd/0v39r2eTaW6gUXoI2Px7PVctzn6Dbqj4f7I/Am
-         y/sBdY7aiWLkfNI2kr8bfZ863paS+6m6F7o5zTUN+44mxtzHJAWSHH0aotdL4MpPfQvM
-         YV8YsGj+ZcbU9rFgfYL94ZyItRQRD7l5HyWpBgJ5rjnOcKpoq82k4yd/rH/Lsz16CzHC
-         aVVg==
-X-Forwarded-Encrypted: i=1; AJvYcCXWRSJ35+EbSkfM4mlRgIJHLqUjOVvwXNZU+aAWN2Uwkh1T2Ckx8bjqKaPpQjCE9orOpoxvYYdakO4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBSsdV0+ijqF5kIFksg48fgdttK+VbYQHZ0Mdlv5uBlgd2YkBV
-	FOeGuvk/+xnOXAsLY90GJ0RJNbGVsB0o6Br3vvrsRilpM0cOhIJ3k/48TqWLbtzBUe2cB7LbMQ3
-	6z4+nvl/s7i1lRH14a4RwRH7WdZt6Y8cx8nX/uNO5HI+GGgiKOmyimfRB1LQ=
-X-Gm-Gg: ASbGncsBGgfdhAdmW+z9QBFjwXpRFnAuBzzLGYQtMVvbIuRr4z0qYPvsJE/WMr3bCC4
-	HLaDVmwXTIrIeRseSPGgOisG0llvGmFtIlBzLNzCDTKH3n1EL1/BYNT1cmrwcawuMWWyuLRQrJJ
-	QSnKp+1U4kBAfGXkq0AqvudboBvP7mwsHhT+QgRjdWv5eDh9jk+Dp/FXBGykvQOYBt/AVyRXauG
-	72haleLFWw537DXUwKa3+fNedkNOgSLlJO1ZceOCxu2SvlrH1003WLRa3WDj5pRI2LvszoNnvwN
-	wLc/fMOz0GmPjlH9gKDwF3rVOUwD0ExTtUvwuX9s6IXdRvuhkBeP/YRAPHYTd4ByH3UTFsAKvdl
-	SKMs=
-X-Received: by 2002:a05:620a:4106:b0:7c5:57b1:1fd1 with SMTP id af79cd13be357-7c69088f338mr2355763885a.47.1743603757786;
-        Wed, 02 Apr 2025 07:22:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGPoRHZRX1Q5/R8yYiX+DDgzB10Hi1NvWzDrIs6W+c5ZzX7/mjDrP1np54E+MI/I3ClFYT7QQ==
-X-Received: by 2002:a05:620a:4106:b0:7c5:57b1:1fd1 with SMTP id af79cd13be357-7c69088f338mr2355760585a.47.1743603757474;
-        Wed, 02 Apr 2025 07:22:37 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b094bb230sm1628216e87.15.2025.04.02.07.22.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Apr 2025 07:22:36 -0700 (PDT)
-Date: Wed, 2 Apr 2025 17:22:35 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: qcom-ep: Set intx_capable in epc_features
-Message-ID: <lqdw6jrusqv2w773ik73kgrkfghktzvfnq62qejagpbwtgpmyy@wfo4scb3xgtz>
-References: <20250402091628.4041790-2-cassel@kernel.org>
+	s=arc-20240116; t=1743605588; c=relaxed/simple;
+	bh=3psBfHa6q9GaR3lB9SNaBK+ExW2OnGalIiGqg6cGeFc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GDz+IGIlAziornQQZm0ni4+qpe0FX44l0PF4bzS3KUlwVuON3zjDoSD3KHFxwCN+D46MPXM1uBIKrkF9HD53ekDpPutCV7JKbHbDA9BLXqophkrRuHYWb7VYd4W0moqPLQP31/E25ea5VtjKqkXlWU1NNuNqZUM2eXzKtx/iwDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aaFJsyO7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48DE1C4CEE7;
+	Wed,  2 Apr 2025 14:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743605587;
+	bh=3psBfHa6q9GaR3lB9SNaBK+ExW2OnGalIiGqg6cGeFc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=aaFJsyO75XOvD+hkgGkC/pjLpQ9z44qG+qB0EPuhY3h3NNu8SgKYRZLHi6vyZxdls
+	 hcRjnwqclfoecT1i/EUU1Nm0lh2GUpdyQ/1G32FXT3z1uGEo7nWg+W1TKtqTlNx7jG
+	 zKsMGUgDCr70CcvlJSK4hUlLED3u1GAogAS9kGr5rSkQYqrKaC74TpZrS8uQIn06gM
+	 DFRVlzOchg3DEzYUYNDfKdLbklYoLZc1hBrL1i3XDgyQ4T6Ch1pLbXKJF5w3K22+q+
+	 72SZLw8sL0GBYcA/QuGKvqh7dbODeshnW9zm59gWnNKT5unlsCTtB5wJ3m8RrYpd4H
+	 a0AhjqwjqNuaw==
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72c0b4a038fso4170435a34.0;
+        Wed, 02 Apr 2025 07:53:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVbRCyFgQrv+Lv53vNdbmyZ7E+nxSOTtNTusb6mfKTX49pUtHkwMBVOyAlmkP6T2GvescNgpExD/zd9@vger.kernel.org, AJvYcCWn3PhBpalWAd/iZ6Or1mNLNBtgSdP6hUALfY4hqNqTa4wmSNSiRHC5wKlYa/HAMLtahFNENJxebUi4@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiGUxe2iC8tZIglv/zqSFEQxbciKk2PR07KjOS9hkfHsOadleM
+	rAunHEfmnFqVH7g5etWd3XsYMpyCDbESHdhq/yUKQrMMjUobzXLj0LdyYpTxSYzLNoijAqhZVxa
+	WTRwtqr7CEPHcoU8c0t3kiaFz1ws=
+X-Google-Smtp-Source: AGHT+IEyltbLYDPynv/VzQLX4Ebg0HBz7/B1jIHBOb6/zoWxfWgXBGwqoQ25Jo6yLQIb7QUWPetgCorPQQQ39N8GVbc=
+X-Received: by 2002:a9d:3e56:0:b0:72b:8e84:3150 with SMTP id
+ 46e09a7af769-72dae74a540mr4148634a34.24.1743605586573; Wed, 02 Apr 2025
+ 07:53:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402091628.4041790-2-cassel@kernel.org>
-X-Authority-Analysis: v=2.4 cv=fMI53Yae c=1 sm=1 tr=0 ts=67ed482e cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=mTN9ipMCngZs2EERi8MA:9 a=CjuIK1q_8ugA:10
- a=PEH46H7Ffwr30OY-TuGO:22
-X-Proofpoint-ORIG-GUID: Ojd4bqiU3uOuFBFYjity7lFXzLhP0tR_
-X-Proofpoint-GUID: Ojd4bqiU3uOuFBFYjity7lFXzLhP0tR_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-02_06,2025-04-02_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 clxscore=1015
- mlxlogscore=894 bulkscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504020091
+References: <CAJZ5v0hN1qRzU96uAGf1+BoQyqF-1=C4XbCcPA-0xtGt8gj7qQ@mail.gmail.com>
+ <20250402142104.GA1714299@bhelgaas>
+In-Reply-To: <20250402142104.GA1714299@bhelgaas>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 2 Apr 2025 16:52:55 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0juJFTbPJh2rTmFe4gF9LzXsfao0k3ne2eXd5OqubtwCw@mail.gmail.com>
+X-Gm-Features: AQ5f1JobU1rpqVnO-t8Fh7ASRqyLnoweW7rZorW3wSWSFIFzCBWC5KgtSMi94XI
+Message-ID: <CAJZ5v0juJFTbPJh2rTmFe4gF9LzXsfao0k3ne2eXd5OqubtwCw@mail.gmail.com>
+Subject: Re: [PATCH 02/12] PCI/ACPI: Add PERST# Assertion Delay _DSM method
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Anshuman Gupta <anshuman.gupta@intel.com>, 
+	intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org, 
+	linux-pci@vger.kernel.org, lenb@kernel.org, bhelgaas@google.com, 
+	ilpo.jarvinen@linux.intel.com, lucas.demarchi@intel.com, 
+	rodrigo.vivi@intel.com, badal.nilawar@intel.com, varun.gupta@intel.com, 
+	ville.syrjala@linux.intel.com, uma.shankar@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 02, 2025 at 11:16:28AM +0200, Niklas Cassel wrote:
-> While I do not have the technical reference manuals, the qcom-ep
-> maintainer assures me that all compatibles support generating INTx IRQs.
-> 
-> Thus, set intx_capable to true in epc_features.
-> 
-> This will currently not have any effect, as PCITEST_IRQ_TYPE_AUTO will
-> always prefer MSI over INTx when both are available, however, perhaps the
-> supported irq_types in epc_features will be used for something else, e.g.
-> failing a ioctl(PCITEST_SET_IRQTYPE) with PCITEST_IRQ_TYPE_INTX, on the
-> host side, before ever configuring anything on the EP side. Thus, ensure
-> that epc_features represents reality.
-> 
-> Signed-off-by: Niklas Cassel <cassel@kernel.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom-ep.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Wed, Apr 2, 2025 at 4:21=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
+rote:
+>
+> On Wed, Apr 02, 2025 at 01:06:42PM +0200, Rafael J. Wysocki wrote:
+> > On Tue, Apr 1, 2025 at 5:36=E2=80=AFPM Anshuman Gupta <anshuman.gupta@i=
+ntel.com> wrote:
+> > >
+> > > Implement _DSM Method 11 as per PCI firmware specs
+> > > section 4.6.11 Rev 3.3.
+>
+> > > +int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32 dela=
+y_us)
+> > > +{
+> > > +       union acpi_object in_obj =3D {
+> > > +               .integer.type =3D ACPI_TYPE_INTEGER,
+> > > +               .integer.value =3D delay_us,
+> > > +       };
+> > > +
+> > > +       union acpi_object *out_obj;
+> > > +       acpi_handle handle;
+> > > +       int result, ret =3D -EINVAL;
+> > > +
+> > > +       if (!dev || !ACPI_HANDLE(&dev->dev))
+> > > +               return -EINVAL;
+> > > +
+> > > +       handle =3D ACPI_HANDLE(&dev->dev);
+> > > +
+> > > +       out_obj =3D acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_gui=
+d, 4,
+> >
+> > This is something I haven't noticed in the previous patch, but also
+> > applies to it.
+> >
+> > Why is rev 4 of the interface hard-coded here?
+>
+> Thanks for asking this because it's related to the whole _DSM revision
+> question that I don't understand.
+>
+> If we didn't use rev 4 here, what should we use?  The PCI Firmware
+> spec, r3.3, sec 4.6.11, documents this interface and says "lowest
+> valid Revision ID value is 4", so that's the source of the 4.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Well, the "lowest vaild Revision ID" does not generally mean the "only
+valid Revision ID".
 
--- 
-With best wishes
-Dmitry
+> My argument is that the spec documents rev 4, the kernel code was
+> tested with rev 4, so what would be the benefit of using a different
+> revision here?
+
+I'm talking about using a symbol to represent the number 4, not about
+possibly using a different number, along the lines of using, say,
+ACPI_FADT_LOW_POWER_S0 instead of putting BIT(21) directly into the
+code.
+
+The value is not likely to change, but using a symbol for representing
+it has merit (it can be meaningfully used in searches, it can be
+documented etc.).
+
+Now, I'm not sure how likely it is for the PCI Firmware spec to bump
+up the revision of this interface (I suppose that it will do so if a
+new function is defined), but even if it does so, the kernel will have
+to check both the new revision and rev 4 anyway, in case the firmware
+doesn't know about the new revision.
 
