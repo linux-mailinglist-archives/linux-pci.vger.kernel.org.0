@@ -1,146 +1,187 @@
-Return-Path: <linux-pci+bounces-25157-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25158-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9A45A78DA1
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 13:59:14 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4252BA78DCC
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 14:05:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3957A188B6FB
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 11:59:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E46A216C367
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 12:05:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5234423771C;
-	Wed,  2 Apr 2025 11:59:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1209623771E;
+	Wed,  2 Apr 2025 12:04:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZTolIx0x"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b3MKtqYk"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B45023814E;
-	Wed,  2 Apr 2025 11:59:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64134235360;
+	Wed,  2 Apr 2025 12:04:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743595143; cv=none; b=VJJ7/U2ExFMluP/h8C32I8XsxiYzmYopdfcOBiQ9j+VbZbQkssQoYb2Xp6c6p0OkzRBhb0fqutheW4mK/JGXN+g8/euEN7dcXPzmbHZ0Iy/TTUBbdi+e3lRD8b4b8w0nvfAW9hYRvFJWjZPFMEcMj1gLYzwUKFJX44+Rz+LgWs8=
+	t=1743595497; cv=none; b=fCcWH0dATDUse+QyWRAcZiVWRpOeUGMc88xGy9ma9p45EPs7gOD1I12eVYbhjuKPFmqAb/Gm3tPkIEuJRsgkoINIWJnjb7e33K5U5yaL1B4ZfeTzY/8O5wyArVS5qQOXOwkNxtSatOPSnLDg36M02GMIeDEGKa7s5T24kAmHqsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743595143; c=relaxed/simple;
-	bh=lEgXEGc4oeSLWNn+tNIIYFjH345uNAMY4TODj7ii6hQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ovQpz04qdC6Dk3pPXBylboIzARYbBWi5Q7nF2gXCAsmBLDUy9J8bQfognPZoFtLtJtyv0IjhpuXsZd1q5uzDjnYLdgE12LdzkRNp6G1FCVG5M/lXT6Mve7mSH59+TImlzHE3ksbK3MCE8gZigVdN6x+CHPd/r+KkP50b0KratZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZTolIx0x; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1743595497; c=relaxed/simple;
+	bh=gyT77WPdhw/G+FzvEtM14D9rh108cqFsFkXIeMboHpk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JWRgjwyqERYvPwHuSPp7EL8u5HEMifejY8WWDYtOgNbQ1wOBixMvrdJTRAmEDdaPuMMRB6/Iu3HuZFpOcA00cdfxqtXOta34JKnU0CtRG1MwHHyK2SHE8YIBrXiS7ZMBea1nY4YRFyIgamt+3rCJ73mEA7dycIl98ej1HgIb3wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b3MKtqYk; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743595142; x=1775131142;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lEgXEGc4oeSLWNn+tNIIYFjH345uNAMY4TODj7ii6hQ=;
-  b=ZTolIx0xUsEnuob2xUOMBzm9gkSjl7TiC3Fy8BWH3y6AisZykptwgWAV
-   SqbbK1EcdJvehytJL+Qr2h4OdpqO0PAZ+XN62+7iZQ/DNPYqrnBD/COjY
-   QRTdJ/56h5cAW1jgsdObZD/2xEc6a1Cl2PY9VAnJhiTA1uDvJsLkIqocO
-   INus2wBz7uuvkhyVpqFTMQRyhVorkAdEUYoZ6cYmcpSGBIrDT10uJ2GKn
-   CvHJWDBZuibyUACp0JVCjxGDhrQz/9xRmOantpdGK9c+3FujR09UT1UyM
-   WDBal8ZGmZIne5RR3qG7nbztx0CzpV/hxaq3wHklTyUDJqS6GZPIG7x3f
-   w==;
-X-CSE-ConnectionGUID: 8g0UH4sWRYWi+wIC0yoR6Q==
-X-CSE-MsgGUID: daA3yRi/Smq922r7eTcjkg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="48619360"
+  t=1743595496; x=1775131496;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=gyT77WPdhw/G+FzvEtM14D9rh108cqFsFkXIeMboHpk=;
+  b=b3MKtqYk4Uw7c8jXV5qyJA/6kAVKBrfoHPypzlJiGM8R+X6qtDwMzl/r
+   NWvJBKu376norD0FmuOrktu4APSlC5EYJvIWSIPbFjjm+LaHQWmk5BSGF
+   s6taeddfGvRyux2VmptXRfG48zQF3l+2w+Cl2NkGEb1qBaHULCIAA6hxN
+   NNbNdZ8bMUMyUkoGFXmp3flaWtH8t/CCFSaElvS9kZruzf7T1HUqh8KZz
+   Fy4tcWVOUqzC//WzYgaOZ8prXmWB4f9uSLC3wSoyQ4GBubSLMB9zIHIqV
+   H/U43c5qXgGdtRPxTQ2+Un/1FuVa87l4zKZdYlCpEyXvsNH+LB1oxLs3J
+   A==;
+X-CSE-ConnectionGUID: 0bQWR08xQrKdzfkdA8xtRw==
+X-CSE-MsgGUID: sjvdT33mRdeonSkTIRW5pA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="48620593"
 X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="48619360"
+   d="scan'208";a="48620593"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 04:59:01 -0700
-X-CSE-ConnectionGUID: oW1R1pqPSH+xKuAfFo/IGg==
-X-CSE-MsgGUID: bR0HajQ8S0KfDxFBNx12MA==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:04:55 -0700
+X-CSE-ConnectionGUID: 0teg8t3fR3OxKzSxWSsNqA==
+X-CSE-MsgGUID: ZxrKiiIpTdqd/QP/Vs14QA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="126577539"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 02 Apr 2025 04:58:58 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tzwkB-000Afi-03;
-	Wed, 02 Apr 2025 11:58:55 +0000
-Date: Wed, 2 Apr 2025 19:58:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
-	bhelgaas@google.com
-Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, ilpo.jarvinen@linux.intel.com,
-	robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: Re: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding
- the capabilities
-Message-ID: <202504021958.YeTPCsW1-lkp@intel.com>
-References: <20250402042020.48681-4-18255117159@163.com>
+   d="scan'208";a="126579557"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.40])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:04:48 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 2 Apr 2025 15:04:44 +0300 (EEST)
+To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
+cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
+    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
+    Lucas De Marchi <lucas.demarchi@intel.com>, 
+    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
+    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+    Maxime Ripard <mripard@kernel.org>, 
+    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
+Subject: Re: [PATCH v6 5/6] PCI: Allow drivers to control VF BAR size
+In-Reply-To: <fnisbg2bng3f5rkcoc7duzi34g7hghcqgzzehc5v6yb772kdj4@rcjs4mftf7s6>
+Message-ID: <5de3951c-01f1-3892-09e1-f7d30a4e048d@linux.intel.com>
+References: <20250320110854.3866284-1-michal.winiarski@intel.com> <20250320110854.3866284-6-michal.winiarski@intel.com> <7374beef-46ed-ab53-ccb5-48565526545c@linux.intel.com> <fnisbg2bng3f5rkcoc7duzi34g7hghcqgzzehc5v6yb772kdj4@rcjs4mftf7s6>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402042020.48681-4-18255117159@163.com>
+Content-Type: multipart/mixed; boundary="8323328-679664592-1743595484=:952"
 
-Hi Hans,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-kernel test robot noticed the following build errors:
+--8323328-679664592-1743595484=:952
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-[auto build test ERROR on acb4f33713b9f6cadb6143f211714c343465411c]
+On Wed, 2 Apr 2025, Micha=C5=82 Winiarski wrote:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Refactor-capability-search-into-common-macros/20250402-122544
-base:   acb4f33713b9f6cadb6143f211714c343465411c
-patch link:    https://lore.kernel.org/r/20250402042020.48681-4-18255117159%40163.com
-patch subject: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
-config: loongarch-randconfig-001-20250402 (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504021958.YeTPCsW1-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/pci/controller/dwc/pcie-designware.c:23:
-   drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_capability':
->> drivers/pci/controller/dwc/pcie-designware.c:218:38: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
-     218 |                                      pcie);
-         |                                      ^~~~
-   drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
-     114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
-         |                  ^~~~
-   drivers/pci/controller/dwc/pcie-designware.c:218:38: note: each undeclared identifier is reported only once for each function it appears in
-     218 |                                      pcie);
-         |                                      ^~~~
-   drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
-     114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
-         |                  ^~~~
-   drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_ext_capability':
-   drivers/pci/controller/dwc/pcie-designware.c:224:71: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
-     224 |         return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pcie);
-         |                                                                       ^~~~
-   drivers/pci/controller/dwc/../../pci.h:156:34: note: in definition of macro 'PCI_FIND_NEXT_EXT_CAPABILITY'
-     156 |                 __ret = read_cfg(args, __pos, 4, &__header);                    \
-         |                                  ^~~~
+> On Wed, Mar 26, 2025 at 05:22:50PM +0200, Ilpo J=C3=A4rvinen wrote:
+> > On Thu, 20 Mar 2025, Micha=C5=82 Winiarski wrote:
+> >=20
+> > > Drivers could leverage the fact that the VF BAR MMIO reservation is
+> > > created for total number of VFs supported by the device by resizing t=
+he
+> > > BAR to larger size when smaller number of VFs is enabled.
+> > >=20
+> > > Add a pci_iov_vf_bar_set_size() function to control the size and a
+> > > pci_iov_vf_bar_get_sizes() helper to get the VF BAR sizes that will
+> > > allow up to num_vfs to be successfully enabled with the current
+> > > underlying reservation size.
+> > >=20
+> > > Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
 
 
-vim +218 drivers/pci/controller/dwc/pcie-designware.c
+> > > +/**
+> > > + * pci_iov_vf_bar_get_sizes - get VF BAR sizes allowing to create up=
+ to num_vfs
+> > > + * @dev: the PCI device
+> > > + * @resno: the resource number
+> > > + * @num_vfs: number of VFs
+> > > + *
+> > > + * Get the sizes of a VF resizable BAR that can be accommodated with=
+in the
+> > > + * resource that reserves the MMIO space if num_vfs are enabled.
+> >=20
+> > I'd rephrase to:
+> >=20
+> > Get the sizes of a VF resizable BAR that can be accommodate @num_vfs=20
+> > within the currently assigned size of the resource @resno.
+>=20
+> Ok.
 
-   214	
-   215	u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
-   216	{
-   217		return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
- > 218					     pcie);
-   219	}
-   220	EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
-   221	
+I have small grammar error in that:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+"can be accomodate" -> "can accomodate"
+
+> > > + * defined in the spec (bit 0=3D1MB, bit 31=3D128TB).
+> > > + */
+> > > +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num=
+_vfs)
+> > > +{
+> > > +=09resource_size_t size;
+> > > +=09u32 sizes;
+> > > +=09int i;
+> > > +
+> > > +=09sizes =3D pci_rebar_get_possible_sizes(dev, resno);
+> > > +=09if (!sizes)
+> > > +=09=09return 0;
+> > > +
+> > > +=09while (sizes > 0) {
+> > > +=09=09i =3D __fls(sizes);
+> > > +=09=09size =3D pci_rebar_size_to_bytes(i);
+> > > +
+> > > +=09=09if (size * num_vfs <=3D pci_resource_len(dev, resno))
+> > > +=09=09=09break;
+> > > +
+> > > +=09=09sizes &=3D ~BIT(i);
+> > > +=09}
+> >=20
+> > Couldn't this be handled without a loop:
+> >=20
+> > =09bar_sizes =3D (round_up(pci_resource_len(dev, resno) / num_vfs) - 1)=
+ >>
+> > =09=09    ilog2(SZ_1M);
+> >=20
+> > =09sizes &=3D bar_sizes;
+> >=20
+> > (Just to given an idea, I wrote this into the email so it might contain=
+=20
+> > some off-by-one errors or like).
+>=20
+> I think the division will need to be wrapped with something like do_div
+> (because IIUC, we have 32bit architectures where resource_size_t is
+> u64).
+>=20
+> But yeah, we can drop the loop, turning it into something like this:
+>=20
+> =09vf_len =3D pci_resource_len(dev, resno);
+> =09do_div(vf_len, num_vfs);
+> =09sizes =3D (roundup_pow_of_two(vf_len + 1) - 1) >> ilog2(SZ_1M);
+
+Yes, good point, 64-bit division is required.
+
+--=20
+ i.
+
+--8323328-679664592-1743595484=:952--
 
