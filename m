@@ -1,206 +1,146 @@
-Return-Path: <linux-pci+bounces-25156-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25157-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DACE6A78D85
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 13:54:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9A45A78DA1
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 13:59:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 210931893231
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 11:55:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3957A188B6FB
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 11:59:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEDAB23645F;
-	Wed,  2 Apr 2025 11:54:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5234423771C;
+	Wed,  2 Apr 2025 11:59:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSOVj4vh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZTolIx0x"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CF820F07D;
-	Wed,  2 Apr 2025 11:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B45023814E;
+	Wed,  2 Apr 2025 11:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743594889; cv=none; b=YeksScLq/YXMFned+0IfXbQPySDPgc7TcQ6HiQfyYay9SCjIq0C6i6ceqhyw5INSxYhCbEOkCj5WIY9kpwhoxS1HvRbL2zSuJVcS2mqKuflJqhlghh30HUUouwUmKiNGxu9Byoo6aowDxJVFCubNlyFO4kgR3D9B1h1+gtfJfYg=
+	t=1743595143; cv=none; b=VJJ7/U2ExFMluP/h8C32I8XsxiYzmYopdfcOBiQ9j+VbZbQkssQoYb2Xp6c6p0OkzRBhb0fqutheW4mK/JGXN+g8/euEN7dcXPzmbHZ0Iy/TTUBbdi+e3lRD8b4b8w0nvfAW9hYRvFJWjZPFMEcMj1gLYzwUKFJX44+Rz+LgWs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743594889; c=relaxed/simple;
-	bh=wWGayYP/hKKwUZK12OK3t67zfmerVRmMA32CFVG32/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mzMrJO87d1LRlhoICyv30ko270IxTolYeDRMiHsiKqTyPTmvw4TDaJgGqjBcYD+WdFpeNk+JQgB0kK06j45rvsY8Fqzlm+EaCxaBDxCq7GP4vbcvB++VCsR9vacnLYgtUtGoYq476IHFwjd3rImUBV5riEvENeL7rnnIRi4scUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KSOVj4vh; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e46ebe19489so5506661276.2;
-        Wed, 02 Apr 2025 04:54:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743594887; x=1744199687; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vy9/NJXhvn4mIwhmDZnkXdRgiPzF0YdRinTdxKRE0Rw=;
-        b=KSOVj4vhqTTnu5K1QPojNIa7RdrQOls6dznf9PXNwHJZl+k9JMRRb8cxy9y9DvwpV/
-         gwWUejVzl1JY2MUK/deDqtzPcknd6cbChN0LuSbtojkBk5i0v0gQN5AkQ70K7MXPdDvF
-         stBNX72UvVPXpfxVpQ5CIkUu+9pWB8xldYzApSsHdbzzxcK6QopctR8n+nmRJeGzzHmd
-         Mhg45WaYgTSYNM05QlOKa40Mu3MMyXwWmBwBPsfn8OTzOBkK7bpNfBimofao3vniN0fj
-         FJe61965qVEvhdZvLa8AySKpPEssF2UYYoqJazO0+GxtQ/TUyfxxH0RwK14XQtp+9Z6A
-         3BJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743594887; x=1744199687;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vy9/NJXhvn4mIwhmDZnkXdRgiPzF0YdRinTdxKRE0Rw=;
-        b=PzPBPHOaENF9NDlikcwQdoCnB0YVDBQz4bhq787QCzigomeFEW9o8V9PROf5aHeITR
-         m3N9GZC/RNQwbLePK4xOpRk4eao3mjGv30urWgvGR1IJ4jDuF+iCnYPOytkyP/Pe6LjF
-         x1D2irrIkNSZk8JrJeIGRzXvUx9Rgif1+8Tkn+9pRjHW32iOAGSHfbjoCRot9imEpcLx
-         y5n/Q4NyoX1xDATHzEZ4FbCDXNfxCnAroO2bmCv6HD8jNcoNm3Vzq1wxmuFg1RTrQI30
-         UGHlED78hoSN6uW57kHaQQ/kNZTwv1n56EzenxnzjH0SPZSOVoROxW5TVSbEa0ppaLZb
-         vtaA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFKwCd89Z/Dsk/LKA0WMxhhrWdLVyNcNFlWYOCj5qXIXNSt5Ai2GbwMP/2ArrTDh4aRjqZpjPEMGbsK7hlo9c=@vger.kernel.org, AJvYcCWk6HG6klR2vZOx2ee6U2/K1yjMyJPsiAG+oizIcQDtAUcf6xmv7njjJI194MsiL6eLhehtEsDszS/dAOg=@vger.kernel.org, AJvYcCWvv7q49mBrRDowbWDTxSxoQuF+oPFIqXaXJBg02dn7h94x04ktV8peyUNcZXYGoJdtAIGrhMFUE+cH@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz78P4DdpTaSI9hxNh/CAfozld55ihoXKB928IvjApiYfA4AnEH
-	dTljXoiN4P+09e6PRHAnJp9pGwI5npY27w7Vm17J5V3ixMro4PL06IppQYM56BZMm4KDu7xImvz
-	Sc4IxLiW6kHuqOpUwdIEiV2UESJM=
-X-Gm-Gg: ASbGncuyrUTBEG/1YlIIvG4M2T9xbQXhuNYDZL4TwI8xNojy/F+chzlkInTD1DX7eOb
-	KKigSh7odJy/3LSreiD2KDLKx3Bx1p94OXRVZMIlr520OYe7tR2tp7hIiW5n9djXGCuvktiBPCL
-	o+635r1Vd7yj1n8+jX6w1eyztq
-X-Google-Smtp-Source: AGHT+IFNDtBcIAQYO7+mpC5YBdxcpT/tGHFxiQO0PB6nI3IzfmthfCbTHs6kmv4TBqJ5DaKFjmvLCaVtnbat1OZZT2c=
-X-Received: by 2002:a05:6902:2289:b0:e69:371d:6861 with SMTP id
- 3f1490d57ef6-e6b838d5499mr22764455276.8.1743594886959; Wed, 02 Apr 2025
- 04:54:46 -0700 (PDT)
+	s=arc-20240116; t=1743595143; c=relaxed/simple;
+	bh=lEgXEGc4oeSLWNn+tNIIYFjH345uNAMY4TODj7ii6hQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ovQpz04qdC6Dk3pPXBylboIzARYbBWi5Q7nF2gXCAsmBLDUy9J8bQfognPZoFtLtJtyv0IjhpuXsZd1q5uzDjnYLdgE12LdzkRNp6G1FCVG5M/lXT6Mve7mSH59+TImlzHE3ksbK3MCE8gZigVdN6x+CHPd/r+KkP50b0KratZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZTolIx0x; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743595142; x=1775131142;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lEgXEGc4oeSLWNn+tNIIYFjH345uNAMY4TODj7ii6hQ=;
+  b=ZTolIx0xUsEnuob2xUOMBzm9gkSjl7TiC3Fy8BWH3y6AisZykptwgWAV
+   SqbbK1EcdJvehytJL+Qr2h4OdpqO0PAZ+XN62+7iZQ/DNPYqrnBD/COjY
+   QRTdJ/56h5cAW1jgsdObZD/2xEc6a1Cl2PY9VAnJhiTA1uDvJsLkIqocO
+   INus2wBz7uuvkhyVpqFTMQRyhVorkAdEUYoZ6cYmcpSGBIrDT10uJ2GKn
+   CvHJWDBZuibyUACp0JVCjxGDhrQz/9xRmOantpdGK9c+3FujR09UT1UyM
+   WDBal8ZGmZIne5RR3qG7nbztx0CzpV/hxaq3wHklTyUDJqS6GZPIG7x3f
+   w==;
+X-CSE-ConnectionGUID: 8g0UH4sWRYWi+wIC0yoR6Q==
+X-CSE-MsgGUID: daA3yRi/Smq922r7eTcjkg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="48619360"
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="48619360"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 04:59:01 -0700
+X-CSE-ConnectionGUID: oW1R1pqPSH+xKuAfFo/IGg==
+X-CSE-MsgGUID: bR0HajQ8S0KfDxFBNx12MA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
+   d="scan'208";a="126577539"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by orviesa010.jf.intel.com with ESMTP; 02 Apr 2025 04:58:58 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tzwkB-000Afi-03;
+	Wed, 02 Apr 2025 11:58:55 +0000
+Date: Wed, 2 Apr 2025 19:58:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org,
+	bhelgaas@google.com
+Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, ilpo.jarvinen@linux.intel.com,
+	robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: Re: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding
+ the capabilities
+Message-ID: <202504021958.YeTPCsW1-lkp@intel.com>
+References: <20250402042020.48681-4-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250328143646.27678-1-johan+linaro@kernel.org> <20250328143646.27678-2-johan+linaro@kernel.org>
-In-Reply-To: <20250328143646.27678-2-johan+linaro@kernel.org>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Date: Wed, 2 Apr 2025 13:54:36 +0200
-X-Gm-Features: AQ5f1Joz82s1WEmRV4TLp7DwBdkZ7lMGLaFCty5_AWjWPHUmCYB4oGRiYB1dCkM
-Message-ID: <CAOiHx=mo6Qd+7WrO2JvBLhqjGR7oHds14FwFFAVoEkVWLnbhdA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Jeff Johnson <jjohnson@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, ath11k@lists.infradead.org, 
-	ath12k@lists.infradead.org, linux-wireless@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402042020.48681-4-18255117159@163.com>
 
-Hi,
+Hi Hans,
 
-I have some nitpicks ...
+kernel test robot noticed the following build errors:
 
-On Fri, Mar 28, 2025 at 3:41=E2=80=AFPM Johan Hovold <johan+linaro@kernel.o=
-rg> wrote:
->
-> Commits b88cbaaa6fa1 ("PCI/pwrctrl: Rename pwrctl files to pwrctrl") and
-> 3f925cd62874 ("PCI/pwrctrl: Rename pwrctrl functions and structures")
-> renamed the "pwrctl" framework to "pwrctrl" for consistency reasons.
->
-> Rename also the Kconfig symbols so that they reflect the new name while
-> adding entries for the deprecated ones. The old symbols can be removed
-> once everything that depends on them has been updated.
->
-> The new slot module is also renamed to reflect the framework name and
-> match the other pwrctrl modules.
->
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  drivers/pci/pwrctrl/Kconfig  | 27 +++++++++++++++++++++------
->  drivers/pci/pwrctrl/Makefile |  8 ++++----
->  2 files changed, 25 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/pci/pwrctrl/Kconfig b/drivers/pci/pwrctrl/Kconfig
-> index 990cab67d413..62f176e42e33 100644
-> --- a/drivers/pci/pwrctrl/Kconfig
-> +++ b/drivers/pci/pwrctrl/Kconfig
-> @@ -1,19 +1,19 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->
-> -config HAVE_PWRCTL
-> +config HAVE_PWRCTRL
->         bool
->
-> -config PCI_PWRCTL
-> +config PCI_PWRCTRL
->         tristate
->
-> -config PCI_PWRCTL_PWRSEQ
-> +config PCI_PWRCTRL_PWRSEQ
->         tristate
->         select POWER_SEQUENCING
-> -       select PCI_PWRCTL
-> +       select PCI_PWRCTRL
->
-> -config PCI_PWRCTL_SLOT
-> +config PCI_PWRCTRL_SLOT
->         tristate "PCI Power Control driver for PCI slots"
-> -       select PCI_PWRCTL
-> +       select PCI_PWRCTRL
->         help
->           Say Y here to enable the PCI Power Control driver to control th=
-e power
->           state of PCI slots.
-> @@ -21,3 +21,18 @@ config PCI_PWRCTL_SLOT
->           This is a generic driver that controls the power state of diffe=
-rent
->           PCI slots. The voltage regulators powering the rails of the PCI=
- slots
->           are expected to be defined in the devicetree node of the PCI br=
-idge.
-> +
-> +# deprecated
-> +config HAVE_PWRCTL
-> +       bool
-> +       select HAVE_PWRCTRL
+[auto build test ERROR on acb4f33713b9f6cadb6143f211714c343465411c]
 
-I'm not sure this will work as intended. This symbol can only be !=3D n
-if anything selects it, but there may also be (outdated) config
-symbols that depend on its value. E.g. ath1*k has "select
-PCI_PWRCTL_PWRSEQ if HAVE_PWRCTL", and if there is nothing selecting
-HAVE_PWRCTL, but HAVE_PWRCTRL directly instead, HAVE_PWRCTL will be =3Dn
-and the condition will fail.
+url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Refactor-capability-search-into-common-macros/20250402-122544
+base:   acb4f33713b9f6cadb6143f211714c343465411c
+patch link:    https://lore.kernel.org/r/20250402042020.48681-4-18255117159%40163.com
+patch subject: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
+config: loongarch-randconfig-001-20250402 (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/reproduce)
 
-Since you rename the only one selecting HAVE_PWRCTL in patch 2/4, but
-update ath1*k in 3/4 and 4/4, their select PCI_PWRCT(R)L_PWRSEQ use is
-temporarily ineffective. Moving the arm64 patch last would avoid that
-though, at least for the current state.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504021958.YeTPCsW1-lkp@intel.com/
 
-The alternative would be split this by config symbol instead of per
-tree, so all users would be atomatically updated as well. These
-patches need to go through the same tree anyways, so I see no issue
-doing it that way.
+All errors (new ones prefixed by >>):
 
-> +
-> +# deprecated
-> +config PCI_PWRCTL_PWRSEQ
-> +       tristate
-> +       select PCI_PWRCTRL_PWRSEQ
+   In file included from drivers/pci/controller/dwc/pcie-designware.c:23:
+   drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_capability':
+>> drivers/pci/controller/dwc/pcie-designware.c:218:38: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
+     218 |                                      pcie);
+         |                                      ^~~~
+   drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
+     114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
+         |                  ^~~~
+   drivers/pci/controller/dwc/pcie-designware.c:218:38: note: each undeclared identifier is reported only once for each function it appears in
+     218 |                                      pcie);
+         |                                      ^~~~
+   drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
+     114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
+         |                  ^~~~
+   drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_ext_capability':
+   drivers/pci/controller/dwc/pcie-designware.c:224:71: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
+     224 |         return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pcie);
+         |                                                                       ^~~~
+   drivers/pci/controller/dwc/../../pci.h:156:34: note: in definition of macro 'PCI_FIND_NEXT_EXT_CAPABILITY'
+     156 |                 __ret = read_cfg(args, __pos, 4, &__header);                    \
+         |                                  ^~~~
 
-Similar issue, but there are no conditionals based on this, so this may be =
-fine.
 
-> +
-> +# deprecated
-> +config PCI_PWRCTL_SLOT
-> +       tristate
-> +       select PCI_PWRCTRL_SLOT
+vim +218 drivers/pci/controller/dwc/pcie-designware.c
 
-This one won't work. Its value will be automatically calculated based
-on other symbols selecting it, and since there is nothing selecting
-it, it will always be n, regardless what any existing .config says.
+   214	
+   215	u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+   216	{
+   217		return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
+ > 218					     pcie);
+   219	}
+   220	EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+   221	
 
-So unless you make this a user selectable symbol as well, this will
-(potentially) break existing .configs since its value will be then
-automatically calculated as =3Dn, and the new symbol takes the default
-=3Dn (unless explicitly enabled, or selected by ath1*k).
-
-Best regards,
-Jonas
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
