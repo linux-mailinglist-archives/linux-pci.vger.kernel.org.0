@@ -1,174 +1,206 @@
-Return-Path: <linux-pci+bounces-25155-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25156-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BB4AA78D02
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 13:24:17 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DACE6A78D85
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 13:54:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB2137A3E05
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 11:23:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 210931893231
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 11:55:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21A882356DF;
-	Wed,  2 Apr 2025 11:24:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEDAB23645F;
+	Wed,  2 Apr 2025 11:54:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nT7o9CTE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSOVj4vh"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7A1230BF1;
-	Wed,  2 Apr 2025 11:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CF820F07D;
+	Wed,  2 Apr 2025 11:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743593050; cv=none; b=bJ6PJEIRqVNqZSmtIbk52ywaXjUYtILeWveFR4xIteUySXehQNGJAQ7oI4ia7nD+vogM2eTNC2BxMF6agdBU9bLVYiF1kEUkOsKnoC4wKnJ/D8bOzVOOgZ8WO8ZgFfX9lPHK0kWKKZEft/d8sv8HHf3SWAyxLgnzObEGIJzIhVQ=
+	t=1743594889; cv=none; b=YeksScLq/YXMFned+0IfXbQPySDPgc7TcQ6HiQfyYay9SCjIq0C6i6ceqhyw5INSxYhCbEOkCj5WIY9kpwhoxS1HvRbL2zSuJVcS2mqKuflJqhlghh30HUUouwUmKiNGxu9Byoo6aowDxJVFCubNlyFO4kgR3D9B1h1+gtfJfYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743593050; c=relaxed/simple;
-	bh=EPzhky8croBlcg3eXw8ESbq4G0rLFB2FIRqwovbykyQ=;
+	s=arc-20240116; t=1743594889; c=relaxed/simple;
+	bh=wWGayYP/hKKwUZK12OK3t67zfmerVRmMA32CFVG32/Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JhZC9qz6sOz89+3WeWmjQGwj5ag1dvrxzRnQS+ep3UD3Q70xNq/EKm3wAbChoIAy+GVyFc/sa2dR8C577mlry7iGxeIMk3fXnt88y+WhLALvTAJckASfEWunY0vVDvN4wluzXXjcXza3RYbztziGjZuaGmRvWZ/R6CajVTNZf0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nT7o9CTE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B53AC4CEEF;
-	Wed,  2 Apr 2025 11:24:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743593049;
-	bh=EPzhky8croBlcg3eXw8ESbq4G0rLFB2FIRqwovbykyQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nT7o9CTEBu3Ik6VwdtBopclTuAxO298exnHL6+jFEuTzhJTvH0bDo76mTOHnKZpMx
-	 WWQsVsporobcTVHT1pRGtxHnqyomX2UaPnk8V1tyTxCdg1ayYNPZQa+JCgYfqw8aIs
-	 c1ffxYaIz5l5yl18dxyBORcOCB6B0XeTCsLCYmtjSYW62IA6EuUnqGSIGGOWxjhnq6
-	 B4dmmUiP1EmaIqwow/sYNT/HoLpQs/F/Nzf2zCNHFyhZHM2F37vOgY7nbE9+wpPJdX
-	 c1/15kWCz8nmm+5Nvgs9Zm0K9Pqv0uUsEbujmNnqu3ky/ewT0/9EdCS9KRCeB5z7PT
-	 aQRBoifZsNSNA==
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2c77a5747e0so3793917fac.2;
-        Wed, 02 Apr 2025 04:24:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUeXN6Ue17KitnA9nNdie3MoO8PJOOlQRT+rwpQ+dv7HOSJS9fYXACB/OquEsPJos2cJhSe9A0NHgdQ@vger.kernel.org, AJvYcCVnBqNQvNPjSW1uxPmO5kQwmkvpUae2TE/7qewfXME6J1HjGceAOSLroNA7+Rzepq4wkYP8VRkzPyJe@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMq6S9O7RfMX8NG5cTJKo7Ox3Plfvtv825fzc8coJuD1zxJPPB
-	gHnDj67R60Km6a0pHw5EF0L458Pm5qnxjx2PRoVXnOyaOv6eFM7XcGg2NiQyOEdfkJjH6DOEP8R
-	nsA/AbcKVXvJ9V1rDVrfm23PcTbo=
-X-Google-Smtp-Source: AGHT+IGSQqFvL1910IXuvRtcou/I3UYbe7Y4dIVCIemMKHGWcy8OEIN0tGE8/B6eMTj/nIzTwWHfCa0qWM4/ll5bAaA=
-X-Received: by 2002:a05:6870:d14f:b0:29e:3921:b1ea with SMTP id
- 586e51a60fabf-2cc60d5c606mr1151048fac.30.1743593048601; Wed, 02 Apr 2025
- 04:24:08 -0700 (PDT)
+	 To:Cc:Content-Type; b=mzMrJO87d1LRlhoICyv30ko270IxTolYeDRMiHsiKqTyPTmvw4TDaJgGqjBcYD+WdFpeNk+JQgB0kK06j45rvsY8Fqzlm+EaCxaBDxCq7GP4vbcvB++VCsR9vacnLYgtUtGoYq476IHFwjd3rImUBV5riEvENeL7rnnIRi4scUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KSOVj4vh; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e46ebe19489so5506661276.2;
+        Wed, 02 Apr 2025 04:54:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743594887; x=1744199687; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vy9/NJXhvn4mIwhmDZnkXdRgiPzF0YdRinTdxKRE0Rw=;
+        b=KSOVj4vhqTTnu5K1QPojNIa7RdrQOls6dznf9PXNwHJZl+k9JMRRb8cxy9y9DvwpV/
+         gwWUejVzl1JY2MUK/deDqtzPcknd6cbChN0LuSbtojkBk5i0v0gQN5AkQ70K7MXPdDvF
+         stBNX72UvVPXpfxVpQ5CIkUu+9pWB8xldYzApSsHdbzzxcK6QopctR8n+nmRJeGzzHmd
+         Mhg45WaYgTSYNM05QlOKa40Mu3MMyXwWmBwBPsfn8OTzOBkK7bpNfBimofao3vniN0fj
+         FJe61965qVEvhdZvLa8AySKpPEssF2UYYoqJazO0+GxtQ/TUyfxxH0RwK14XQtp+9Z6A
+         3BJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743594887; x=1744199687;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vy9/NJXhvn4mIwhmDZnkXdRgiPzF0YdRinTdxKRE0Rw=;
+        b=PzPBPHOaENF9NDlikcwQdoCnB0YVDBQz4bhq787QCzigomeFEW9o8V9PROf5aHeITR
+         m3N9GZC/RNQwbLePK4xOpRk4eao3mjGv30urWgvGR1IJ4jDuF+iCnYPOytkyP/Pe6LjF
+         x1D2irrIkNSZk8JrJeIGRzXvUx9Rgif1+8Tkn+9pRjHW32iOAGSHfbjoCRot9imEpcLx
+         y5n/Q4NyoX1xDATHzEZ4FbCDXNfxCnAroO2bmCv6HD8jNcoNm3Vzq1wxmuFg1RTrQI30
+         UGHlED78hoSN6uW57kHaQQ/kNZTwv1n56EzenxnzjH0SPZSOVoROxW5TVSbEa0ppaLZb
+         vtaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFKwCd89Z/Dsk/LKA0WMxhhrWdLVyNcNFlWYOCj5qXIXNSt5Ai2GbwMP/2ArrTDh4aRjqZpjPEMGbsK7hlo9c=@vger.kernel.org, AJvYcCWk6HG6klR2vZOx2ee6U2/K1yjMyJPsiAG+oizIcQDtAUcf6xmv7njjJI194MsiL6eLhehtEsDszS/dAOg=@vger.kernel.org, AJvYcCWvv7q49mBrRDowbWDTxSxoQuF+oPFIqXaXJBg02dn7h94x04ktV8peyUNcZXYGoJdtAIGrhMFUE+cH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz78P4DdpTaSI9hxNh/CAfozld55ihoXKB928IvjApiYfA4AnEH
+	dTljXoiN4P+09e6PRHAnJp9pGwI5npY27w7Vm17J5V3ixMro4PL06IppQYM56BZMm4KDu7xImvz
+	Sc4IxLiW6kHuqOpUwdIEiV2UESJM=
+X-Gm-Gg: ASbGncuyrUTBEG/1YlIIvG4M2T9xbQXhuNYDZL4TwI8xNojy/F+chzlkInTD1DX7eOb
+	KKigSh7odJy/3LSreiD2KDLKx3Bx1p94OXRVZMIlr520OYe7tR2tp7hIiW5n9djXGCuvktiBPCL
+	o+635r1Vd7yj1n8+jX6w1eyztq
+X-Google-Smtp-Source: AGHT+IFNDtBcIAQYO7+mpC5YBdxcpT/tGHFxiQO0PB6nI3IzfmthfCbTHs6kmv4TBqJ5DaKFjmvLCaVtnbat1OZZT2c=
+X-Received: by 2002:a05:6902:2289:b0:e69:371d:6861 with SMTP id
+ 3f1490d57ef6-e6b838d5499mr22764455276.8.1743594886959; Wed, 02 Apr 2025
+ 04:54:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401153225.96379-4-anshuman.gupta@intel.com> <20250401201349.GA1676401@bhelgaas>
-In-Reply-To: <20250401201349.GA1676401@bhelgaas>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 2 Apr 2025 13:23:56 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0irNFX6dFrStinNXamrhP143=yjjfx4iK0pY+-dTEkviw@mail.gmail.com>
-X-Gm-Features: AQ5f1JpD5yN41W6zicEv53RCDwYurpfQc2ba6-PISKF2FZ8VNX9mAf1AbD1wLQ0
-Message-ID: <CAJZ5v0irNFX6dFrStinNXamrhP143=yjjfx4iK0pY+-dTEkviw@mail.gmail.com>
-Subject: Re: [PATCH 03/12] PCI/ACPI: Add aux power grant notifier
-To: Bjorn Helgaas <helgaas@kernel.org>, Anshuman Gupta <anshuman.gupta@intel.com>
-Cc: intel-xe@lists.freedesktop.org, linux-acpi@vger.kernel.org, 
-	linux-pci@vger.kernel.org, rafael@kernel.org, lenb@kernel.org, 
-	bhelgaas@google.com, ilpo.jarvinen@linux.intel.com, lucas.demarchi@intel.com, 
-	rodrigo.vivi@intel.com, badal.nilawar@intel.com, varun.gupta@intel.com, 
-	ville.syrjala@linux.intel.com, uma.shankar@intel.com
+References: <20250328143646.27678-1-johan+linaro@kernel.org> <20250328143646.27678-2-johan+linaro@kernel.org>
+In-Reply-To: <20250328143646.27678-2-johan+linaro@kernel.org>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Date: Wed, 2 Apr 2025 13:54:36 +0200
+X-Gm-Features: AQ5f1Joz82s1WEmRV4TLp7DwBdkZ7lMGLaFCty5_AWjWPHUmCYB4oGRiYB1dCkM
+Message-ID: <CAOiHx=mo6Qd+7WrO2JvBLhqjGR7oHds14FwFFAVoEkVWLnbhdA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] PCI/pwrctrl: Rename pwrctrl Kconfig symbols and slot module
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Jeff Johnson <jjohnson@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, ath11k@lists.infradead.org, 
+	ath12k@lists.infradead.org, linux-wireless@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 1, 2025 at 10:13=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Tue, Apr 01, 2025 at 09:02:16PM +0530, Anshuman Gupta wrote:
-> > Adding a notifier to notify all PCIe child devices about the
-> > block main power removal. It is needed because theoretically
-> > multiple PCIe Endpoint devices on same Root Port
-> > can request for AUX power and _DSM method can return with
-> > 80000000h signifies that the hierarchy connected via
-> > the slot cannot support main power removal when in D3Cold.
->
-> I wish the spec used different language here.  "D3cold" *means* "main
-> power is removed" (PCIe r6.0, sec 5.3.1.4.2), so it doesn't make sense
-> to say that "the slot cannot support main power removal when in
-> D3cold".  If a device is in D3cold, its main power has been removed by
-> definition.
->
-> I suppose the spec is trying to say if the driver has called this _DSM
-> with 80000000h, it means the platform must not remove main power from
-> the device while the system is in S0?  Is that what you think it
-> means?
->
-> The 2h return value description says it "indicates that the platform
-> will not remove main power from the slot while the system is in S0,"
-> so I guess that must be it.
->
-> In this series, pci_acpi_aux_power_setup() only supplies a 16-bit
-> aux_pwr_limit value, so the driver cannot *request* that the platform
-> not remove main power.
->
-> So I guess the only scenario where the _DSM returns 80000000h is when
-> the platform itself or other devices prevent the removal of main
-> power.  And the point of the notifier is to tell devices that their
-> main power will never be removed while the system is in S0.  Is that
-> right?
->
-> > This may disrupt functionality of other child device.
->
-> What sort of disruption could happen?  I would think that if the _DSM
-> returns 80000000h, it just means the device will not have main power
-> removed, so it won't see that power state transition.  The only
-> "disruption" would be that we're using more power.
->
-> > Let's notify all PCIe devices requested Aux power resource
-> > and Let PCIe End Point driver handle it in its callback.
->
-> Wrap to fill 75 columns.
->
-> s/Adding/Add/
-> s/Let's notify/Notify/
-> s/and Let/and let/
-> s/End Point/Endpoint/ (several places here and below)
->
-> > Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
-> > ---
-> >  drivers/pci/pci-acpi.c   | 34 +++++++++++++++++++++++++++++++---
-> >  include/linux/pci-acpi.h | 13 +++++++++++++
-> >  2 files changed, 44 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > index 04149f037664..d1ca1649e6e8 100644
-> > --- a/drivers/pci/pci-acpi.c
-> > +++ b/drivers/pci/pci-acpi.c
-> > @@ -1421,6 +1421,32 @@ static void pci_acpi_optimize_delay(struct pci_d=
-ev *pdev,
-> >       ACPI_FREE(obj);
-> >  }
-> >
-> > +static BLOCKING_NOTIFIER_HEAD(pci_acpi_aux_power_notify_list);
-> > +
-> > +/**
-> > + * pci_acpi_register_aux_power_notifier - Register driver notifier
-> > + * @nb: notifier block
-> > + *
-> > + * This function shall be called by PCIe End Point device requested th=
-e Aux
-> > + * power resource in order to handle the any scenario gracefully when =
-other
-> > + * child PCIe devices Aux power request returns with No main power rem=
-oval.
-> > + * PCIe devices which register this notifier shall handle No main powe=
-r
-> > + * removal scenario accordingly.
->
-> This would actually be called by the *driver* (not by the device).
+Hi,
 
-Apart from this, there seems to be a design issue here because it
-won't notify every driver that has requested the Aux power, just the
-ones that have also registered notifiers.
+I have some nitpicks ...
 
-So this appears to be an opt-in from getting notifications on Aux
-power request rejection responses to requests from other drivers
-requesting Aux power for the same Root Port, but the changelog of the
-first patch already claimed that the aggregation of requests was not
-supported.  So if only one driver will be allowed to request the Aux
-power for the given Root Port, why would the notifiers be necessary
-after all?
+On Fri, Mar 28, 2025 at 3:41=E2=80=AFPM Johan Hovold <johan+linaro@kernel.o=
+rg> wrote:
+>
+> Commits b88cbaaa6fa1 ("PCI/pwrctrl: Rename pwrctl files to pwrctrl") and
+> 3f925cd62874 ("PCI/pwrctrl: Rename pwrctrl functions and structures")
+> renamed the "pwrctl" framework to "pwrctrl" for consistency reasons.
+>
+> Rename also the Kconfig symbols so that they reflect the new name while
+> adding entries for the deprecated ones. The old symbols can be removed
+> once everything that depends on them has been updated.
+>
+> The new slot module is also renamed to reflect the framework name and
+> match the other pwrctrl modules.
+>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+>  drivers/pci/pwrctrl/Kconfig  | 27 +++++++++++++++++++++------
+>  drivers/pci/pwrctrl/Makefile |  8 ++++----
+>  2 files changed, 25 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/pci/pwrctrl/Kconfig b/drivers/pci/pwrctrl/Kconfig
+> index 990cab67d413..62f176e42e33 100644
+> --- a/drivers/pci/pwrctrl/Kconfig
+> +++ b/drivers/pci/pwrctrl/Kconfig
+> @@ -1,19 +1,19 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>
+> -config HAVE_PWRCTL
+> +config HAVE_PWRCTRL
+>         bool
+>
+> -config PCI_PWRCTL
+> +config PCI_PWRCTRL
+>         tristate
+>
+> -config PCI_PWRCTL_PWRSEQ
+> +config PCI_PWRCTRL_PWRSEQ
+>         tristate
+>         select POWER_SEQUENCING
+> -       select PCI_PWRCTL
+> +       select PCI_PWRCTRL
+>
+> -config PCI_PWRCTL_SLOT
+> +config PCI_PWRCTRL_SLOT
+>         tristate "PCI Power Control driver for PCI slots"
+> -       select PCI_PWRCTL
+> +       select PCI_PWRCTRL
+>         help
+>           Say Y here to enable the PCI Power Control driver to control th=
+e power
+>           state of PCI slots.
+> @@ -21,3 +21,18 @@ config PCI_PWRCTL_SLOT
+>           This is a generic driver that controls the power state of diffe=
+rent
+>           PCI slots. The voltage regulators powering the rails of the PCI=
+ slots
+>           are expected to be defined in the devicetree node of the PCI br=
+idge.
+> +
+> +# deprecated
+> +config HAVE_PWRCTL
+> +       bool
+> +       select HAVE_PWRCTRL
+
+I'm not sure this will work as intended. This symbol can only be !=3D n
+if anything selects it, but there may also be (outdated) config
+symbols that depend on its value. E.g. ath1*k has "select
+PCI_PWRCTL_PWRSEQ if HAVE_PWRCTL", and if there is nothing selecting
+HAVE_PWRCTL, but HAVE_PWRCTRL directly instead, HAVE_PWRCTL will be =3Dn
+and the condition will fail.
+
+Since you rename the only one selecting HAVE_PWRCTL in patch 2/4, but
+update ath1*k in 3/4 and 4/4, their select PCI_PWRCT(R)L_PWRSEQ use is
+temporarily ineffective. Moving the arm64 patch last would avoid that
+though, at least for the current state.
+
+The alternative would be split this by config symbol instead of per
+tree, so all users would be atomatically updated as well. These
+patches need to go through the same tree anyways, so I see no issue
+doing it that way.
+
+> +
+> +# deprecated
+> +config PCI_PWRCTL_PWRSEQ
+> +       tristate
+> +       select PCI_PWRCTRL_PWRSEQ
+
+Similar issue, but there are no conditionals based on this, so this may be =
+fine.
+
+> +
+> +# deprecated
+> +config PCI_PWRCTL_SLOT
+> +       tristate
+> +       select PCI_PWRCTRL_SLOT
+
+This one won't work. Its value will be automatically calculated based
+on other symbols selecting it, and since there is nothing selecting
+it, it will always be n, regardless what any existing .config says.
+
+So unless you make this a user selectable symbol as well, this will
+(potentially) break existing .configs since its value will be then
+automatically calculated as =3Dn, and the new symbol takes the default
+=3Dn (unless explicitly enabled, or selected by ath1*k).
+
+Best regards,
+Jonas
 
