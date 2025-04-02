@@ -1,202 +1,153 @@
-Return-Path: <linux-pci+bounces-25149-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25150-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B7D7A78C73
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 12:34:12 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83AF3A78C8F
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 12:43:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CD5A51894A6E
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 10:34:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5A9407A5164
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 10:41:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2EC123718F;
-	Wed,  2 Apr 2025 10:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 077D6236458;
+	Wed,  2 Apr 2025 10:42:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="L+uh539n"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ontMlA/B"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FAC2356D7
-	for <linux-pci@vger.kernel.org>; Wed,  2 Apr 2025 10:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26C5C236A98;
+	Wed,  2 Apr 2025 10:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743590037; cv=none; b=qzqzCpqSVppm47BxxvcrcloKxBS8TmK+vKPpO1t9U04OYU8lzzI5OX0K6DP0MBgoLaBXQV9Lsov96YhpxNFYuZSODdPhVh+MMeQI7n7F2MZDg0MssZV8rMOCy9qwte5JRLwOpXzN245wXPyP0JExCvUjY3swvLHU3JMNKV9mJjM=
+	t=1743590574; cv=none; b=uOCiOeH9leYo4yHu7LqqMMi39JkwvZayToSxfNv3ksl4xHaoIISwg80m4zBnjcWdEGTvlexqLnij9Zoamyf4PdokrtsZSZI/MBCAInSXyQ+hryvlopMMpcAXdbe+JeqI7YNtv2tMO3UH08ZcACVdOEqvlqaIUWb//lUp6+Ln/oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743590037; c=relaxed/simple;
-	bh=9SObHreJTJCKI378qLSp40hzDx/1lSXFqj7gyNGu/zY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GTFWemXnBryCGo6YE0DYBVw1xOdjEhmmd5NWpBlYibKvjh2r54GxVgSQPw9/0MAeG6qwK7JsMne5/ZC+HYIOrIOmbZLnuFZFG5xzC9g7ahTkJONJNhZ4FWUVJ32D8CN8lHtQT/A3A507btkDtN8ZcfYfNx1JCSSgbswGC3irmRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=L+uh539n; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-225477548e1so117118605ad.0
-        for <linux-pci@vger.kernel.org>; Wed, 02 Apr 2025 03:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1743590035; x=1744194835; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9SObHreJTJCKI378qLSp40hzDx/1lSXFqj7gyNGu/zY=;
-        b=L+uh539nmhEsa7NCbyha4fKyGQlrbxtNARV52B4SG6PDkR+7JT3I4IolA1Up0QKzQk
-         w75by6xoqVAePYgIkhZdTSNp/HCZL7RUu8xs99Gsi9UDxeMmyIUsEmRrlqzH4eCnxs+7
-         uV/ehiBmB/zx83qhj3BoAzxa2umOsGbqYKT1s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743590035; x=1744194835;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9SObHreJTJCKI378qLSp40hzDx/1lSXFqj7gyNGu/zY=;
-        b=lDj2zGD2Ul8crlcGbcirBj/tvl2XeDCv1sdM476KucI+ApINbXIsoScqD2vBEr3U7v
-         sBDJGmRPdldxA5jS3hFLnUaYBMtRrRJZQ7PG8h+3vmgV47fFHU8ugDbSSPJHhq8j3DW1
-         bp6VcaJrz5sTXCATEh2Pc0pvbx6MboqTI7CRnWBnKn/78zsU41l6yXxE3tvzxEWxHEDg
-         GkEeYLYnuMamW7ROe84BAKkPO8mcZsMUpoipPfGixUlDETu4FlvwwRNHUYIBDjglzdlV
-         9caCnqTW26zto/3artg0Bsl8poNrctGQjfwK078UnbXmfo0rcuPjX5jjEA8D3TPA57f4
-         9pCw==
-X-Forwarded-Encrypted: i=1; AJvYcCVv4yDr0i7HT45o2GB6UFEkJg6XaHPCweABXGzXFzZHAezqwWaNvTPYSG9Yw18ZJzQA3mY/oK8VDQY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXXjtO/G0lQqs8qLbnzOfK3P1EXn8BSr+SS7oQeeHU/YeWo5Tr
-	7UIvSjKBEq/9hsH5L/qZFHiu49HQ1Wk/ctAeH8XJt+5QbjAKDIv20Uc8h/POx6NTkgOt7hx5aDJ
-	JfPs8fQ2Oi8sr+MrYaUmuM4Qrxz0AK3fOmq3q
-X-Gm-Gg: ASbGncsH4117SLNznm/Z5goOFGZpEfB4sGUgNxHhte7gcWdysA6UAN1jXlrCr79MPwn
-	t7bGx2yki3Uv5iyfzzFqLvjjB4MQwxt5DUgEiLp13clR42BMqiKzuyNvdwjIPJ/VU4d3RMZwnjn
-	xJUrCCcfUqH3BW5mY6RlqK/nNAVz4=
-X-Google-Smtp-Source: AGHT+IG7q0m14b0EbRkjX4UxkEapOIV+YmN2OqqxdMH3EGKIGp7LCJxKLEc79QHRw76ytulgD9SGJIYyI6D6yx9GcME=
-X-Received: by 2002:a05:6a00:2181:b0:739:56c2:b661 with SMTP id
- d2e1a72fcca58-7398038250fmr23158926b3a.12.1743590035289; Wed, 02 Apr 2025
- 03:33:55 -0700 (PDT)
+	s=arc-20240116; t=1743590574; c=relaxed/simple;
+	bh=jvCPXBkMR01+H0/gE+9GrtRjlN3dPzEAtl91KC/IW4w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CkWFjVzdOFwKdcr/OpK40bf0zaco/Hzbeo/jsbsIl2jRMIhSOYrmbhgAlq0kRLqDLHt8RBZVN5zxo7ssCb7YYtwQNiJFsf3nhuZ6jhyhYbjt9WIDjy+9WeWV6aN7n+zMO8p052adxy1lIy9VO0ij+64GA6rnZ6/6ofOlU64KWJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ontMlA/B; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=VR24xgoS8feUSFAEGMRfyNjAAFTUtLrhNnAA7b/J2oQ=;
+	b=ontMlA/BsnHycNKnU5V1TKXGfrKx9JFjrDc24A5L2nRx868+k+2lhbk6+1Ebuq
+	0993Wi1YEXVj0zyvhMQh3XbNZBl4au2YzUawOk7QdmkOpqbB/NMtwYTJfyeqsi7s
+	ji6UOJfLSZZC9j/NJrGXRopkZe+YlevPIXBUPlanEIVuI=
+Received: from [192.168.60.52] (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgCn8qF6FO1nmwyABA--.39487S2;
+	Wed, 02 Apr 2025 18:42:06 +0800 (CST)
+Message-ID: <b0dc232e-fdd8-4df3-a55e-d21b90441a4c@163.com>
+Date: Wed, 2 Apr 2025 18:42:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <b37b02ec-59fb-4b3b-8e51-ae866eb8ecc9@gmail.com> <20250401223503.GA1686962@bhelgaas>
-In-Reply-To: <20250401223503.GA1686962@bhelgaas>
-From: Pavan Chebbi <pavan.chebbi@broadcom.com>
-Date: Wed, 2 Apr 2025 16:03:42 +0530
-X-Gm-Features: AQ5f1JrXgc6t4BzK_3N0025H0cL-avvbz3cN-am3DRSvn75xlaHIDiEapM0nCV8
-Message-ID: <CALs4sv3awP3oA3-mvjSUmHCk=KZjF5F75SnnaE79ZUGqDC=orw@mail.gmail.com>
-Subject: Re: PCI VPD checksum ambiguity
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>, Michael Chan <mchan@broadcom.com>, 
-	Potnuri Bharat Teja <bharat@chelsio.com>, netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Leon Romanovsky <leon@kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000b685ce0631c93002"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v7 2/5] PCI: Refactor capability search functions to eliminate
+ code duplication
+To: kernel test robot <lkp@intel.com>, lpieralisi@kernel.org,
+ bhelgaas@google.com
+Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, ilpo.jarvinen@linux.intel.com,
+ robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250402042020.48681-3-18255117159@163.com>
+ <202504021623.LgnqoZPE-lkp@intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <202504021623.LgnqoZPE-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PygvCgCn8qF6FO1nmwyABA--.39487S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAr17tF17urW5tr1rKrW5GFg_yoWrXw4xpa
+	yxXFy7u3yUGw1vganrAa1Iyr92qaykArW7XFWDGwn8AF1DA345ZFWSgFWfJa47KF98KFy3
+	Xa98G34xJF12v3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UJkucUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgUjo2ftDGf+6gAAsK
 
---000000000000b685ce0631c93002
-Content-Type: text/plain; charset="UTF-8"
 
-> > >
-> > > Any idea how devices in the field populate their VPD?
-> > >
 
-I took a quick look at our manufacturing tool, and it does look like
-the computation simply starts at address 0.
+On 2025/4/2 17:19, kernel test robot wrote:
+> Hi Hans,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on acb4f33713b9f6cadb6143f211714c343465411c]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Refactor-capability-search-into-common-macros/20250402-122544
+> base:   acb4f33713b9f6cadb6143f211714c343465411c
+> patch link:    https://lore.kernel.org/r/20250402042020.48681-3-18255117159%40163.com
+> patch subject: [v7 2/5] PCI: Refactor capability search functions to eliminate code duplication
+> config: loongarch-randconfig-001-20250402 (https://download.01.org/0day-ci/archive/20250402/202504021623.LgnqoZPE-lkp@intel.com/config)
+> compiler: loongarch64-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250402/202504021623.LgnqoZPE-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202504021623.LgnqoZPE-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>     drivers/pci/pci.c: In function '__pci_find_next_ht_cap':
+>>> drivers/pci/pci.c:627:17: error: 'rc' undeclared (first use in this function); did you mean 'rq'?
+>       627 |                 rc = pci_read_config_byte(dev, pos + 3, &cap);
+>           |                 ^~
+>           |                 rq
+>     drivers/pci/pci.c:627:17: note: each undeclared identifier is reported only once for each function it appears in
+> 
 
-> > > Can you share any VPD dumps from devices that include an RV keyword
-> > > item?
+  static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+  {
+-	int rc, ttl = PCI_FIND_CAP_TTL;
+  	u8 cap, mask;
 
-A couple of devices I could find: hope it helps..
-000100: 822f0042 726f6164 636f6d20 4e657458 7472656d 65204769 67616269 74204574
-000120: 6865726e 65742043 6f6e7472 6f6c6c65 7200904b 00504e08 42434d39 35373230
-000140: 45430931 30363637 392d3135 534e0a30 31323334 35363738 394d4e04 31346534
-000160: 52561d1d 00000000 00000000 00000000 000000
+The rc variable was deleted by mistake and will be changed in the next 
+version.
 
-000100: 822f0042 726f6164 636f6d20 4e657458 7472656d 65204769 67616269 74204574
-000120: 6865726e 65742043 6f6e7472 6f6c6c65 7200904b 00504e08 42434d39 35373139
-000140: 45430931 30363637 392d3135 534e0a30 31323334 35363738 394d4e04 31346534
-000160: 52561d15 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+  static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+  {
+-	int rc;
+  	u8 cap, mask;
 
-> >
-> > I have only very dated devices which likely date back to before
-> > the existence of PCIe r6.0. So their VPD dump may not really help.
-> >
-> > IIRC there's an ongoing discussion regarding making VPD content
-> > user-readable on mlx5 devices. Maybe check with the Mellanox/Nvidia
-> > guys how they interpret the spec and implemented VPD checksumming.
->
-> Good idea, cc'd.
+Best regards,
+Hans
 
---000000000000b685ce0631c93002
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+> 
+> vim +627 drivers/pci/pci.c
+> 
+> 70c0923b0ef10b Jacob Keller     2020-03-02  614
+> f646c2a0a6685a Puranjay Mohan   2020-11-29  615  static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  616  {
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  617  	u8 cap, mask;
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  618
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  619  	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  620  		mask = HT_3BIT_CAP_MASK;
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  621  	else
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  622  		mask = HT_5BIT_CAP_MASK;
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  623
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  624  	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
+> 2675dfd086c109 Hans Zhang       2025-04-02  625  				      PCI_CAP_ID_HT);
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  626  	while (pos) {
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22 @627  		rc = pci_read_config_byte(dev, pos + 3, &cap);
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  628  		if (rc != PCIBIOS_SUCCESSFUL)
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  629  			return 0;
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  630
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  631  		if ((cap & mask) == ht_cap)
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  632  			return pos;
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  633
+> 47a4d5be7c50b2 Brice Goglin     2007-01-10  634  		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
+> 47a4d5be7c50b2 Brice Goglin     2007-01-10  635  					      pos + PCI_CAP_LIST_NEXT,
+> 2675dfd086c109 Hans Zhang       2025-04-02  636  					      PCI_CAP_ID_HT);
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  637  	}
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  638
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  639  	return 0;
+> 687d5fe3dc3379 Michael Ellerman 2006-11-22  640  }
+> f646c2a0a6685a Puranjay Mohan   2020-11-29  641
+> 
 
-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
-OltyqaGBuzv+bJTUL+bmV7E4QBLIqGt4jVr1R9hJdH6KxXwJdyfHZ9C6qXmoe2NQhiFUyBOJ0wgk
-dB9Z1IU7nCwvNKYg2JMoJs93tIgbhPJg/D7pqW8gabkCAwEAAaOCAdowggHWMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJAYDVR0R
-BB0wG4EZcGF2YW4uY2hlYmJpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNV
-HSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUEV6y/89alKPoFbKUaJXsvWu5
-fdowDQYJKoZIhvcNAQELBQADggEBAEHSIB6g652wVb+r2YCmfHW47Jo+5TuCBD99Hla8PYhaWGkd
-9HIyD3NPhb6Vb6vtMWJW4MFGQF42xYRrAS4LZj072DuMotr79rI09pbOiWg0FlRRFt6R9vgUgebu
-pWSH7kmwVXcPtY94XSMMak4b7RSKig2mKbHDpD4bC7eGlwl5RxzYkgrHtMNRmHmQor5Nvqe52cFJ
-25Azqtwvjt5nbrEd81iBmboNTEnLaKuxbbCtLaMEP8xKeDjAKnNOqHUMps0AsQT8c0EGq39YHpjp
-Wn1l67VU0rMShbEFsiUf9WYgE677oinpdm0t2mdCjxr35tryxptoTZXKHDxr/Yy6l6ExggJgMIIC
-XAIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQD
-EyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwV/XkICjVscn4SNZMw
-DQYJYIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIFy/cFTohhczi5nHnQ/475TGTXrWNW/V
-OLG4GPLEjOrfMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDQw
-MjEwMzM1NVowXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCG
-SAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJYIZIAWUDBAIBMA0GCSqGSIb3DQEB
-AQUABIIBAJuH6kAEjNVpNAkDjHg3hg11ZJ7nIoTZQgJxcmvnCDq+hH3aC8g5ZmHjwgG5o1CBev6j
-gS/hKopzxGipYtM82Q+iQ77jWgcF1En8Y5GMgwxf6uZew5Ih205eiibBZxBHDD3W7l3D11tsMc14
-+fQYxeb2Ba1ZFMTdCSTrcx8o+wws/X/thgEVQY4YtNmLwXZMx0Gd/7iZ4um1ett9aiMmgjeqX6ZH
-5hVdHz8IcdEkQIqVbbaDbSILyuq/Ugcmf0V7HwkUTwJw/1yxP1sUL39B4YNcDZAXPGXU9G36NP/5
-+3PVR/i72HDxhbeU1tvS3zWeP4oMsK3N+gMNC+NhAPcc9pg=
---000000000000b685ce0631c93002--
 
