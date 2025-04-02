@@ -1,187 +1,137 @@
-Return-Path: <linux-pci+bounces-25158-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25159-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4252BA78DCC
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 14:05:01 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1F45A78E15
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 14:19:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E46A216C367
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 12:05:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 862A77A1DAE
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 12:18:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1209623771E;
-	Wed,  2 Apr 2025 12:04:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AA041F3B96;
+	Wed,  2 Apr 2025 12:19:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b3MKtqYk"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="p3QW2AVX"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64134235360;
-	Wed,  2 Apr 2025 12:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF10E239094;
+	Wed,  2 Apr 2025 12:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743595497; cv=none; b=fCcWH0dATDUse+QyWRAcZiVWRpOeUGMc88xGy9ma9p45EPs7gOD1I12eVYbhjuKPFmqAb/Gm3tPkIEuJRsgkoINIWJnjb7e33K5U5yaL1B4ZfeTzY/8O5wyArVS5qQOXOwkNxtSatOPSnLDg36M02GMIeDEGKa7s5T24kAmHqsw=
+	t=1743596356; cv=none; b=J2xjMBDYvOX4eeA9Tf+haHeSNcBERN/Kvdqv2F0qXA8PX6gpcePoZ/W4LqnMDMfY5ud3wdPvW5LsKbyrlL/lsxzWK7eBkDqf0l+kerWMssX9rgg2owqux+YgWuIlYZ5hcSk//j+b6s94P4AhWJ/K5tiMjUjVtasKqihvjuJ6tc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743595497; c=relaxed/simple;
-	bh=gyT77WPdhw/G+FzvEtM14D9rh108cqFsFkXIeMboHpk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=JWRgjwyqERYvPwHuSPp7EL8u5HEMifejY8WWDYtOgNbQ1wOBixMvrdJTRAmEDdaPuMMRB6/Iu3HuZFpOcA00cdfxqtXOta34JKnU0CtRG1MwHHyK2SHE8YIBrXiS7ZMBea1nY4YRFyIgamt+3rCJ73mEA7dycIl98ej1HgIb3wQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b3MKtqYk; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743595496; x=1775131496;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=gyT77WPdhw/G+FzvEtM14D9rh108cqFsFkXIeMboHpk=;
-  b=b3MKtqYk4Uw7c8jXV5qyJA/6kAVKBrfoHPypzlJiGM8R+X6qtDwMzl/r
-   NWvJBKu376norD0FmuOrktu4APSlC5EYJvIWSIPbFjjm+LaHQWmk5BSGF
-   s6taeddfGvRyux2VmptXRfG48zQF3l+2w+Cl2NkGEb1qBaHULCIAA6hxN
-   NNbNdZ8bMUMyUkoGFXmp3flaWtH8t/CCFSaElvS9kZruzf7T1HUqh8KZz
-   Fy4tcWVOUqzC//WzYgaOZ8prXmWB4f9uSLC3wSoyQ4GBubSLMB9zIHIqV
-   H/U43c5qXgGdtRPxTQ2+Un/1FuVa87l4zKZdYlCpEyXvsNH+LB1oxLs3J
-   A==;
-X-CSE-ConnectionGUID: 0bQWR08xQrKdzfkdA8xtRw==
-X-CSE-MsgGUID: sjvdT33mRdeonSkTIRW5pA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="48620593"
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="48620593"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:04:55 -0700
-X-CSE-ConnectionGUID: 0teg8t3fR3OxKzSxWSsNqA==
-X-CSE-MsgGUID: ZxrKiiIpTdqd/QP/Vs14QA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,182,1739865600"; 
-   d="scan'208";a="126579557"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.40])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 05:04:48 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 2 Apr 2025 15:04:44 +0300 (EEST)
-To: =?ISO-8859-2?Q?Micha=B3_Winiarski?= <michal.winiarski@intel.com>
-cc: linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org, 
-    dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, 
-    Bjorn Helgaas <bhelgaas@google.com>, 
-    =?ISO-8859-15?Q?Christian_K=F6nig?= <christian.koenig@amd.com>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-    Michal Wajdeczko <michal.wajdeczko@intel.com>, 
-    Lucas De Marchi <lucas.demarchi@intel.com>, 
-    =?ISO-8859-15?Q?Thomas_Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, 
-    Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-    Simona Vetter <simona@ffwll.ch>, Matt Roper <matthew.d.roper@intel.com>
-Subject: Re: [PATCH v6 5/6] PCI: Allow drivers to control VF BAR size
-In-Reply-To: <fnisbg2bng3f5rkcoc7duzi34g7hghcqgzzehc5v6yb772kdj4@rcjs4mftf7s6>
-Message-ID: <5de3951c-01f1-3892-09e1-f7d30a4e048d@linux.intel.com>
-References: <20250320110854.3866284-1-michal.winiarski@intel.com> <20250320110854.3866284-6-michal.winiarski@intel.com> <7374beef-46ed-ab53-ccb5-48565526545c@linux.intel.com> <fnisbg2bng3f5rkcoc7duzi34g7hghcqgzzehc5v6yb772kdj4@rcjs4mftf7s6>
+	s=arc-20240116; t=1743596356; c=relaxed/simple;
+	bh=v9o/0GsG9hlpEVMILiuT/UXu6Gay+7R0EoqjQXNBKw8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cYRkt1EL7QjRD4hwxtGNS+FAnMIfOaF505hMZUMSy/iJaBA1x+ccTPG5zqFGe/EXUnvJbQC4P3RGQDVmiNVBCx6o/MIyXRLiZ0LbnHp5SIqqxJ05lBxVPmRuvzOCMitxO6R1UWJaZZs6r/X1AlaZjLzJPudqBNP3iTsBj5yxz2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=p3QW2AVX; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=1K93p+jfwwbKax5M8o/f4XaPFLFEtqliG2k63r4obes=;
+	b=p3QW2AVXL9zWuzV1dY8TkMfEAeCT3p/8khNHcr/3YBtVlrVNnqbA56Uk5aGT8c
+	L8KLxkvlKSjEWI2udr55Nf9//va0LYD8e3GKX0FDOUq7/tPwo01etlwR0S3Bc/Ch
+	ZEaFxorIdTmey363pUQpg/7N4d4YAuePZD+//XgyXQBDQ=
+Received: from [192.168.60.52] (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3t9gUK+1nh2qGDg--.42426S2;
+	Wed, 02 Apr 2025 20:18:30 +0800 (CST)
+Message-ID: <ad119d32-0755-4ca1-9db8-28f6a8f17c43@163.com>
+Date: Wed, 2 Apr 2025 20:18:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-679664592-1743595484=:952"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-679664592-1743595484=:952
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Wed, 2 Apr 2025, Micha=C5=82 Winiarski wrote:
-
-> On Wed, Mar 26, 2025 at 05:22:50PM +0200, Ilpo J=C3=A4rvinen wrote:
-> > On Thu, 20 Mar 2025, Micha=C5=82 Winiarski wrote:
-> >=20
-> > > Drivers could leverage the fact that the VF BAR MMIO reservation is
-> > > created for total number of VFs supported by the device by resizing t=
-he
-> > > BAR to larger size when smaller number of VFs is enabled.
-> > >=20
-> > > Add a pci_iov_vf_bar_set_size() function to control the size and a
-> > > pci_iov_vf_bar_get_sizes() helper to get the VF BAR sizes that will
-> > > allow up to num_vfs to be successfully enabled with the current
-> > > underlying reservation size.
-> > >=20
-> > > Signed-off-by: Micha=C5=82 Winiarski <michal.winiarski@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding
+ the capabilities
+To: kernel test robot <lkp@intel.com>, lpieralisi@kernel.org,
+ bhelgaas@google.com
+Cc: oe-kbuild-all@lists.linux.dev, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, ilpo.jarvinen@linux.intel.com,
+ robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250402042020.48681-4-18255117159@163.com>
+ <202504021958.YeTPCsW1-lkp@intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <202504021958.YeTPCsW1-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wD3t9gUK+1nh2qGDg--.42426S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAr17tF17urW5tr1rZw13Arb_yoW5Cr4xpa
+	yUAa13ZFyrJF4Sgw48t3WF93WaqF1DAry7G3ykG3W7WFy7Zry5GryIkFyagFy7tw4qgrya
+	kryqq3Z7Ars8AaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07ULyCXUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwQjo2ftJx1vAgAAsW
 
 
-> > > +/**
-> > > + * pci_iov_vf_bar_get_sizes - get VF BAR sizes allowing to create up=
- to num_vfs
-> > > + * @dev: the PCI device
-> > > + * @resno: the resource number
-> > > + * @num_vfs: number of VFs
-> > > + *
-> > > + * Get the sizes of a VF resizable BAR that can be accommodated with=
-in the
-> > > + * resource that reserves the MMIO space if num_vfs are enabled.
-> >=20
-> > I'd rephrase to:
-> >=20
-> > Get the sizes of a VF resizable BAR that can be accommodate @num_vfs=20
-> > within the currently assigned size of the resource @resno.
->=20
-> Ok.
 
-I have small grammar error in that:
+On 2025/4/2 19:58, kernel test robot wrote:
+> Hi Hans,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on acb4f33713b9f6cadb6143f211714c343465411c]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Refactor-capability-search-into-common-macros/20250402-122544
+> base:   acb4f33713b9f6cadb6143f211714c343465411c
+> patch link:    https://lore.kernel.org/r/20250402042020.48681-4-18255117159%40163.com
+> patch subject: [v7 3/5] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
+> config: loongarch-randconfig-001-20250402 (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/config)
+> compiler: loongarch64-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250402/202504021958.YeTPCsW1-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202504021958.YeTPCsW1-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>     In file included from drivers/pci/controller/dwc/pcie-designware.c:23:
+>     drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_capability':
+>>> drivers/pci/controller/dwc/pcie-designware.c:218:38: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
+>       218 |                                      pcie);
+>           |                                      ^~~~
+>     drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
+>       114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
+>           |                  ^~~~
+>     drivers/pci/controller/dwc/pcie-designware.c:218:38: note: each undeclared identifier is reported only once for each function it appears in
+>       218 |                                      pcie);
+>           |                                      ^~~~
+>     drivers/pci/controller/dwc/../../pci.h:114:18: note: in definition of macro 'PCI_FIND_NEXT_CAP_TTL'
+>       114 |         read_cfg(args, __pos, 1, (u32 *)&__pos);                        \
+>           |                  ^~~~
+>     drivers/pci/controller/dwc/pcie-designware.c: In function 'dw_pcie_find_ext_capability':
+>     drivers/pci/controller/dwc/pcie-designware.c:224:71: error: 'pcie' undeclared (first use in this function); did you mean 'pci'?
+>       224 |         return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pcie);
+>           |                                                                       ^~~~
+>     drivers/pci/controller/dwc/../../pci.h:156:34: note: in definition of macro 'PCI_FIND_NEXT_EXT_CAPABILITY'
+>       156 |                 __ret = read_cfg(args, __pos, 4, &__header);                    \
+>           |                                  ^~~~
+> 
 
-"can be accomodate" -> "can accomodate"
+Copy the errors carried over. Will change.
 
-> > > + * defined in the spec (bit 0=3D1MB, bit 31=3D128TB).
-> > > + */
-> > > +u32 pci_iov_vf_bar_get_sizes(struct pci_dev *dev, int resno, int num=
-_vfs)
-> > > +{
-> > > +=09resource_size_t size;
-> > > +=09u32 sizes;
-> > > +=09int i;
-> > > +
-> > > +=09sizes =3D pci_rebar_get_possible_sizes(dev, resno);
-> > > +=09if (!sizes)
-> > > +=09=09return 0;
-> > > +
-> > > +=09while (sizes > 0) {
-> > > +=09=09i =3D __fls(sizes);
-> > > +=09=09size =3D pci_rebar_size_to_bytes(i);
-> > > +
-> > > +=09=09if (size * num_vfs <=3D pci_resource_len(dev, resno))
-> > > +=09=09=09break;
-> > > +
-> > > +=09=09sizes &=3D ~BIT(i);
-> > > +=09}
-> >=20
-> > Couldn't this be handled without a loop:
-> >=20
-> > =09bar_sizes =3D (round_up(pci_resource_len(dev, resno) / num_vfs) - 1)=
- >>
-> > =09=09    ilog2(SZ_1M);
-> >=20
-> > =09sizes &=3D bar_sizes;
-> >=20
-> > (Just to given an idea, I wrote this into the email so it might contain=
-=20
-> > some off-by-one errors or like).
->=20
-> I think the division will need to be wrapped with something like do_div
-> (because IIUC, we have 32bit architectures where resource_size_t is
-> u64).
->=20
-> But yeah, we can drop the loop, turning it into something like this:
->=20
-> =09vf_len =3D pci_resource_len(dev, resno);
-> =09do_div(vf_len, num_vfs);
-> =09sizes =3D (roundup_pow_of_two(vf_len + 1) - 1) >> ilog2(SZ_1M);
+Best regards,
+Hans
 
-Yes, good point, 64-bit division is required.
+> 
+> vim +218 drivers/pci/controller/dwc/pcie-designware.c
+> 
+>     214	
+>     215	u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
+>     216	{
+>     217		return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
+>   > 218					     pcie);
+>     219	}
+>     220	EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
+>     221	
+> 
 
---=20
- i.
-
---8323328-679664592-1743595484=:952--
 
