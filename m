@@ -1,247 +1,126 @@
-Return-Path: <linux-pci+bounces-25110-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25111-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E6E3A787C9
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 08:02:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A7B6A787CC
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 08:04:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3120F7A3C50
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 06:01:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C1EB3AC0FC
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 06:04:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B50B720E026;
-	Wed,  2 Apr 2025 06:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sBLc54bM"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F7441EB9F3;
+	Wed,  2 Apr 2025 06:04:20 +0000 (UTC)
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64BF1EB9F3
-	for <linux-pci@vger.kernel.org>; Wed,  2 Apr 2025 06:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C996136A;
+	Wed,  2 Apr 2025 06:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743573747; cv=none; b=aSMAntZaz8NPEh6fLknExMVOz7c4PDNhhYblfBdRry0oGXlBnukBxXgu5Cp9IVJBUWKU8R1G3Twnab5vxb5HKn5sUmBPAX5wfD+E7aB3Hs+t58jUuTU4kJBvLVyaf3ExYiOsRVypQPDf3XMgw4qqijUPv/NVEooPURx/s5yUVn4=
+	t=1743573860; cv=none; b=uvR1+xj2iMv91/NgR94wem4CjgstlXzMLotQpBasjTel9nOv0Niw58m94D5ApJ9QJl7f9aQ6DTuCRp/+iaa+gMIDj4okkMblO3GzQCOB30SaK9aveoV2xlSD2gGlqP2e0xzZuxfLvWK8vpeLHpv/CtnoJi4Imx/Ra3Ev4LVLOhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743573747; c=relaxed/simple;
-	bh=wFoBMSzK4NpZw+UmRIp53Lw67dBhRYws9fCWeqmmtIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E5z8l/bI9iHCp84m9xqkkkONn9H+/jll2lO24kee6nDwxAkpT2T8cGCpYKUBbn4ushwA8K9W0iQjoe/epIutgxyymFhukcguKIm1Ym1Vg1JIJB0iJVvyryrL/y9FE99saiKJ9jLskT0pezHUDMsobZeyVd3B/jjXgxtMvFqGK7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sBLc54bM; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2240b4de12bso107715075ad.2
-        for <linux-pci@vger.kernel.org>; Tue, 01 Apr 2025 23:02:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743573745; x=1744178545; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XSPVI8TUn/isK4noC55TC4qkMMEfDFkjVI/2eFz1WUo=;
-        b=sBLc54bMO1oGmgtvH7gIGW0iJyMIrVBQsEWT53r90OBmFKbCj6ld5CIi04+5nJX9pg
-         eQsSYMkvw2Wz99gjJPZNZUrdbQaSgr6fmZr1JqNTWuIgWd+Y8UEM4Yu99XRU/vTcOY1o
-         wwHAqDWVJ06jq+lx0SRyaXNkxVD4LbukuKmNSzuZGmhLyNyj/bCm/09TZsO/keitgplf
-         UoMkrmjvaTPRlX42EG8rziPoAsgJfTvczMkvA3GksHc1IhhSa81vN/8sRk3ms23wxZRt
-         /+R077ehCzp9Q7aW8yE/o2OfYgm6LkbnY9d6e6YLvKJtrwxqKAmZfdMfMldm/BUdGI9n
-         X8kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743573745; x=1744178545;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XSPVI8TUn/isK4noC55TC4qkMMEfDFkjVI/2eFz1WUo=;
-        b=mzvtHR3XTaoo1zUfZNyCvJONjfaKSYcgVK/amcb0ujnN9wNARzJi5I1KKr+TIFDdXn
-         7HlCxn9ZQdYieUL5qk8vqrwxOAqagnR1YcuikEybLF8rPbS0mY6cjvwRHSeHIJ1fRKQY
-         EP7X5PKza+gie/CaVL+U8vzvDjAtJb9oPh3Nwkf89TWvP1iR3yz3P3K0mHKvm15A0VjD
-         N2YhHzSLY0/Z4Lx7QerpA9o5dv2R/xEbPEVnY8y1I0MnaZXlZ6AdFgHs4uH/C1hWr9vC
-         UarKDV2iPFd9x1Y/2Px7ZoRxW5uYUcYr5o/wKPe9QJrGBJ/ckkPQVV/YLW4z0VxPXcFy
-         3sow==
-X-Forwarded-Encrypted: i=1; AJvYcCXFFeBlJSd3aeYKsyjD3EmtRHOyF/ojG1YARFACzk/75kG0fLjbCjVZNictGC7ExfQX0kLLCDPRhno=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvOvUbPRuLeDvHqvZbUXzvcXnhrKxSrD5k7vwxm797zV+PSdpk
-	v79MWQVDzVChrSpgromb6KU1nPRFKR7ZZfsOAbjQWIy5R3hECPLK9xVNQJoufw==
-X-Gm-Gg: ASbGncuTup4kjRl5Vlkz2SQOqMNWM9AJdnA72l9D1nz5FFvPQOd0T1UmeoCqEVHROD3
-	awsANZDWetPzZgprsqpFOICcKesTFzGOhKkLYH+XhNR5uyM2vj96QbQYQpuZjNFnfo4D64J5ih7
-	XWIOl73vg9TxDVjr/QjqpcpH79v54kCdsbrnytYDOBajQOzwTszmZbkqNVyWCE74ebldhAPZ1K9
-	MJrkZqwUudOCClvQN8AZGOozTBiyv3iUg0LiNG7rXREheSWzZqIGw7JstvWpgUlmuCBM6gNeaDp
-	/EG00I0Y8PMFT6YYl7/G/6dczusmoyT8UchSVZ0HZJc+tm/V1B2g4+mt
-X-Google-Smtp-Source: AGHT+IH0V718KRlf/K5+UQm5rQKFssSsYgy9kQmxhhjMozcy/p40GYl5cS1u4E7j5U8om1rF1JIOqw==
-X-Received: by 2002:a05:6a00:148a:b0:736:5c8e:baaa with SMTP id d2e1a72fcca58-7398033ad19mr19011284b3a.2.1743573745001;
-        Tue, 01 Apr 2025 23:02:25 -0700 (PDT)
-Received: from thinkpad ([120.56.205.103])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7397106c7b7sm10030584b3a.116.2025.04.01.23.02.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Apr 2025 23:02:24 -0700 (PDT)
-Date: Wed, 2 Apr 2025 11:32:16 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Jingoo Han <jingoohan1@gmail.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, quic_mrana@quicinc.com, 
-	quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v8 4/4] PCI: dwc: Add support for configuring lane
- equalization presets
-Message-ID: <utswwqjgfy3iybt54ilyqnfss77vzit7kegctjp3tef636hc3p@724xe3dzlpip>
-References: <20250316-preset_v6-v8-0-0703a78cb355@oss.qualcomm.com>
- <20250316-preset_v6-v8-4-0703a78cb355@oss.qualcomm.com>
- <3sbflmznjfqpcja52v6bso74vhouv7ncuikrba5zlb74tqqb5u@ovndmib3kgqf>
- <92c4854d-033e-c7b5-ca92-cf44a1a8c0cc@oss.qualcomm.com>
- <mslh75np4tytzzk3dvwj5a3ulqmwn73zkj5cq4qmld5adkkldj@ad3bt3drffbn>
- <5fece4ac-2899-4e7d-8205-3b1ebba4b56b@oss.qualcomm.com>
- <abgqh3suczj2fckmt4m2bkqazfgwsfj43762ddzrpznr4xvftg@n5dkemffktyv>
- <622788fa-a067-49ac-b5b1-e4ec339e026f@oss.qualcomm.com>
- <4rep2gvymazkk7pgve36cw7moppozaju7h6aqc3gflxrvkskig@62ykri6v4trs>
- <ed8a59ce-0527-4514-91f8-c27972d799d4@oss.qualcomm.com>
+	s=arc-20240116; t=1743573860; c=relaxed/simple;
+	bh=d+daxh2bZDgEgIdduOHqJgn8DkbjEegI3Wmts69NkXE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dc+RCGPxjFSraZ3fgyzQPY9Eu/vXfrCsSjCTYmkiX4qRn1jjXGXFwxsVp2aOBOEUnDpzeyl5/tEM9JscUX6/YgALXE4+Wd7vbf4xPZ1gKUT2P/WIbh3fiKUor+Rxg0V4dgAAy6ffnkVKS3Kd5fxt6udGMn5pJyfsDKqquL+D5OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.198])
+	by gateway (Coremail) with SMTP id _____8CxG6xc0+xnRLOuAA--.62434S3;
+	Wed, 02 Apr 2025 14:04:12 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.198])
+	by front1 (Coremail) with SMTP id qMiowMCxKcRY0+xnrexrAA--.28983S2;
+	Wed, 02 Apr 2025 14:04:11 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>
+Cc: linux-pci@vger.kernel.org,
+	Jianmin Lv <lvjianmin@loongson.cn>,
+	Xuefeng Li <lixuefeng@loongson.cn>,
+	Huacai Chen <chenhuacai@gmail.com>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	stable@vger.kernel.org,
+	Xianglai Li <lixianglai@loongson.cn>
+Subject: [PATCH] PCI: Add ACS quirk for Loongson PCIe
+Date: Wed,  2 Apr 2025 14:03:54 +0800
+Message-ID: <20250402060354.4061578-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ed8a59ce-0527-4514-91f8-c27972d799d4@oss.qualcomm.com>
+X-CM-TRANSID:qMiowMCxKcRY0+xnrexrAA--.28983S2
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cr45Kw1fZw4xAF48Gr1Dtwc_yoW8CFyrpF
+	W3Cr92kr48Wr42ywn8X34UGryrAFykJ342gFW7Aas0ganxAas8ZFyxCFyrtF4akFWxXF1x
+	Xa1DCr1UuayjkwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+	JVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+	x2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
 
-On Sat, Mar 29, 2025 at 12:42:02PM +0100, Konrad Dybcio wrote:
-> On 3/29/25 10:39 AM, Manivannan Sadhasivam wrote:
-> > On Sat, Mar 29, 2025 at 09:59:46AM +0100, Konrad Dybcio wrote:
-> >> On 3/29/25 7:30 AM, Manivannan Sadhasivam wrote:
-> >>> On Fri, Mar 28, 2025 at 10:53:19PM +0100, Konrad Dybcio wrote:
-> >>>> On 3/28/25 7:45 AM, Manivannan Sadhasivam wrote:
-> >>>>> On Fri, Mar 28, 2025 at 11:04:11AM +0530, Krishna Chaitanya Chundru wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>> On 3/28/2025 10:23 AM, Manivannan Sadhasivam wrote:
-> >>>>>>> On Sun, Mar 16, 2025 at 09:39:04AM +0530, Krishna Chaitanya Chundru wrote:
-> >>>>>>>> PCIe equalization presets are predefined settings used to optimize
-> >>>>>>>> signal integrity by compensating for signal loss and distortion in
-> >>>>>>>> high-speed data transmission.
-> >>>>>>>>
-> >>>>>>>> Based upon the number of lanes and the data rate supported, write
-> >>>>>>>> the preset data read from the device tree in to the lane equalization
-> >>>>>>>> control registers.
-> >>>>>>>>
-> >>>>>>>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> >>>>>>>> ---
-> >>>>>>>>   drivers/pci/controller/dwc/pcie-designware-host.c | 60 +++++++++++++++++++++++
-> >>>>>>>>   drivers/pci/controller/dwc/pcie-designware.h      |  3 ++
-> >>>>>>>>   include/uapi/linux/pci_regs.h                     |  3 ++
-> >>>>>>>>   3 files changed, 66 insertions(+)
-> >>>>>>>>
-> >>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> >>>>>>>> index dd56cc02f4ef..7c6e6a74383b 100644
-> >>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> >>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> >>>>>>>> @@ -507,6 +507,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
-> >>>>>>>>   	if (pci->num_lanes < 1)
-> >>>>>>>>   		pci->num_lanes = dw_pcie_link_get_max_link_width(pci);
-> >>>>>>>> +	ret = of_pci_get_equalization_presets(dev, &pp->presets, pci->num_lanes);
-> >>>>>>>> +	if (ret)
-> >>>>>>>> +		goto err_free_msi;
-> >>>>>>>> +
-> >>>>>>>>   	/*
-> >>>>>>>>   	 * Allocate the resource for MSG TLP before programming the iATU
-> >>>>>>>>   	 * outbound window in dw_pcie_setup_rc(). Since the allocation depends
-> >>>>>>>> @@ -808,6 +812,61 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
-> >>>>>>>>   	return 0;
-> >>>>>>>>   }
-> >>>>>>>> +static void dw_pcie_program_presets(struct dw_pcie_rp *pp, enum pci_bus_speed speed)
-> >>>>>>>> +{
-> >>>>>>>> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> >>>>>>>> +	u8 lane_eq_offset, lane_reg_size, cap_id;
-> >>>>>>>> +	u8 *presets;
-> >>>>>>>> +	u32 cap;
-> >>>>>>>> +	int i;
-> >>>>>>>> +
-> >>>>>>>> +	if (speed == PCIE_SPEED_8_0GT) {
-> >>>>>>>> +		presets = (u8 *)pp->presets.eq_presets_8gts;
-> >>>>>>>> +		lane_eq_offset =  PCI_SECPCI_LE_CTRL;
-> >>>>>>>> +		cap_id = PCI_EXT_CAP_ID_SECPCI;
-> >>>>>>>> +		/* For data rate of 8 GT/S each lane equalization control is 16bits wide*/
-> >>>>>>>> +		lane_reg_size = 0x2;
-> >>>>>>>> +	} else if (speed == PCIE_SPEED_16_0GT) {
-> >>>>>>>> +		presets = pp->presets.eq_presets_Ngts[EQ_PRESET_TYPE_16GTS - 1];
-> >>>>>>>> +		lane_eq_offset = PCI_PL_16GT_LE_CTRL;
-> >>>>>>>> +		cap_id = PCI_EXT_CAP_ID_PL_16GT;
-> >>>>>>>> +		lane_reg_size = 0x1;
-> >>>>>>>> +	} else {
-> >>>>>>>
-> >>>>>>> Can you add conditions for other data rates also? Like 32, 64 GT/s. If
-> >>>>>>> controller supports them and if the presets property is defined in DT, then you
-> >>>>>>> should apply the preset values.
-> >>>>>>>
-> >>>>>>> If the presets property is not present in DT, then below 'PCI_EQ_RESV' will
-> >>>>>>> safely return.
-> >>>>>>>
-> >>>>>> I am fine to add it, but there is no GEN5 or GEN6 controller support
-> >>>>>> added in dwc, isn't it best to add when that support is added and
-> >>>>>> tested.
-> >>>>>>
-> >>>>>
-> >>>>> What is the guarantee that this part of the code will be updated once the
-> >>>>> capable controllers start showing up? I don't think there will be any issue in
-> >>>>> writing to these registers.
-> >>>>
-> >>>> Let's not make assumptions about the spec of a cross-vendor mass-deployed IP
-> >>>>
-> >>>
-> >>> I have seen the worse... The problem is, if those controllers start to show up
-> >>> and define preset properties in DT, there will be no errors whatsoever to
-> >>> indicate that the preset values were not applied, resulting in hard to debug
-> >>> errors.
-> >>
-> >> else {
-> >> 	dev_warn(pci->dev, "Missing equalization presets programming sequence\n");
-> >> }
-> >>
-> > 
-> > Then we'd warn for controllers supporting GEN5 or more if they do not pass the
-> > presets property (which is optional).
-> 
-> Ohh, I didn't think about that - and I can only think about solutions that are
-> rather janky.. with perhaps the least janky one being changing the else case I
-> proposed above into:
-> 
-> else if (speed >= PCIE_SPEED_32_0GT && eq_presets_Ngts[speed - PCIE_SPEED_16_0GT][0] != PCI_EQ_RESV) {
+Loongson PCIe Root Ports don't advertise an ACS capability, but they do
+not allow peer-to-peer transactions between Root Ports. Add an ACS quirk
+so each Root Port can be in a separate IOMMU group.
 
-s/PCIE_SPEED_16_0GT/PCIE_SPEED_32_0GT
+Cc: stable@vger.kernel.org
+Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ drivers/pci/quirks.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-> 	...
-
-So this I read as: Oh, your controller supports 32 GT/s and you firmware also
-wanted to apply the custom preset offsets, but sorry we didn't do it because we
-don't know if it would work or not. So please let us know so that we can work
-with you test it and then finally we can apply the presets.
-
-> }> 
-> >>>
-> >>> I'm not forseeing any issue in this part of the code to support higher GEN
-> >>> speeds though.
-> >>
-> >> I would hope so as well, but both not programming and misprogramming are
-> >> equally hard to detect
-> >>
-> > 
-> > I don't disagree. I wanted to have it since there is no sensible way of warning
-> > users that this part of the code needs to be updated in the future.
-> 
-> I understand, however I'm worried that the programming sequence or register
-> may change for higher speeds in a way that would be incompatible with what
-> we assume here
-> 
-
-Honestly, I don't know why you are having this opinion. This piece of code is
-not in Qcom driver and the registers are the same for 8 GT/s, 16 GT/s as per the
-PCIe spec. So the hardware programming sequence and other arguments doesn't
-apply here (atleast to me).
-
-- Mani
-
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 8d610c17e0f2..d52ec85f3382 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4995,6 +4995,18 @@ static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+ 		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ }
+ 
++static int pci_quirk_loongson_acs(struct pci_dev *dev, u16 acs_flags)
++{
++	/*
++	 * Loongson PCIe Root Ports don't advertise an ACS capability, but
++	 * they do not allow peer-to-peer transactions between Root Ports.
++	 * Allow each Root Port to be in a separate IOMMU group by masking
++	 * SV/RR/CR/UF bits.
++	 */
++	return pci_acs_ctrl_enabled(acs_flags,
++		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
++}
++
+ /*
+  * Wangxun 40G/25G/10G/1G NICs have no ACS capability, but on
+  * multi-function devices, the hardware isolates the functions by
+@@ -5128,6 +5140,9 @@ static const struct pci_dev_acs_enabled {
+ 	{ PCI_VENDOR_ID_BROADCOM, 0x1762, pci_quirk_mf_endpoint_acs },
+ 	{ PCI_VENDOR_ID_BROADCOM, 0x1763, pci_quirk_mf_endpoint_acs },
+ 	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
++	/* Loongson PCIe Root Ports */
++	{ PCI_VENDOR_ID_LOONGSON, 0x3C09, pci_quirk_loongson_acs },
++	{ PCI_VENDOR_ID_LOONGSON, 0x3C19, pci_quirk_loongson_acs },
+ 	/* Amazon Annapurna Labs */
+ 	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
+ 	/* Zhaoxin multi-function devices */
 -- 
-மணிவண்ணன் சதாசிவம்
+2.47.1
+
 
