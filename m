@@ -1,126 +1,191 @@
-Return-Path: <linux-pci+bounces-25111-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25112-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A7B6A787CC
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 08:04:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 004A6A78814
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 08:27:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C1EB3AC0FC
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 06:04:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A491316E2D8
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 06:27:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F7441EB9F3;
-	Wed,  2 Apr 2025 06:04:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DC13232386;
+	Wed,  2 Apr 2025 06:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zX+oJqvJ"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C996136A;
-	Wed,  2 Apr 2025 06:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BB71DB13A
+	for <linux-pci@vger.kernel.org>; Wed,  2 Apr 2025 06:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743573860; cv=none; b=uvR1+xj2iMv91/NgR94wem4CjgstlXzMLotQpBasjTel9nOv0Niw58m94D5ApJ9QJl7f9aQ6DTuCRp/+iaa+gMIDj4okkMblO3GzQCOB30SaK9aveoV2xlSD2gGlqP2e0xzZuxfLvWK8vpeLHpv/CtnoJi4Imx/Ra3Ev4LVLOhc=
+	t=1743575247; cv=none; b=gQbBJy96a1up7j30ZbZ3AknByJ4W5g6xJeFmGF5G9jnRypW9qFosUxhk+8DeZ3XmqHxuhYsovHgljCeJvg08FZG5euoSVk31fdQMKgLozIoH/uWlLZWUbtpvmYde/WbEq7cUf9KHxn/XDk3WQReZRNaE71BgSZOLorj+5Ei/dbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743573860; c=relaxed/simple;
-	bh=d+daxh2bZDgEgIdduOHqJgn8DkbjEegI3Wmts69NkXE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dc+RCGPxjFSraZ3fgyzQPY9Eu/vXfrCsSjCTYmkiX4qRn1jjXGXFwxsVp2aOBOEUnDpzeyl5/tEM9JscUX6/YgALXE4+Wd7vbf4xPZ1gKUT2P/WIbh3fiKUor+Rxg0V4dgAAy6ffnkVKS3Kd5fxt6udGMn5pJyfsDKqquL+D5OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.198])
-	by gateway (Coremail) with SMTP id _____8CxG6xc0+xnRLOuAA--.62434S3;
-	Wed, 02 Apr 2025 14:04:12 +0800 (CST)
-Received: from localhost.localdomain (unknown [223.64.68.198])
-	by front1 (Coremail) with SMTP id qMiowMCxKcRY0+xnrexrAA--.28983S2;
-	Wed, 02 Apr 2025 14:04:11 +0800 (CST)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>
-Cc: linux-pci@vger.kernel.org,
-	Jianmin Lv <lvjianmin@loongson.cn>,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Huacai Chen <chenhuacai@gmail.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org,
-	Xianglai Li <lixianglai@loongson.cn>
-Subject: [PATCH] PCI: Add ACS quirk for Loongson PCIe
-Date: Wed,  2 Apr 2025 14:03:54 +0800
-Message-ID: <20250402060354.4061578-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1743575247; c=relaxed/simple;
+	bh=dZNfw4e53R/2i9yKfUihZGMQ/0k4D+W1DqhP5bAjhq0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y8v+kGAYs4uRri/5E6UHe5APlBYmbdznTuQJV9NDTXUcK1QFfaoHxXq7EDHh8Ghwt+XZtTy/H2fFIVBupPEQf6EJiO9FUdwl7Cm6E3BOnw7KALbSk14emVQx0BMLE/6BNmHNXiJnrs625tn2z7Zsw6+zahrLzxDdQqCSgY7OKsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zX+oJqvJ; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-224100e9a5cso118653395ad.2
+        for <linux-pci@vger.kernel.org>; Tue, 01 Apr 2025 23:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1743575244; x=1744180044; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0vxtuFvSbsxOaM1zbzEuh2qcT0p6czX42zd3rEEDXyw=;
+        b=zX+oJqvJGBE5aDyxQQJ4Ix43jfeL4lSEdRC2C5sVAbLYr65hlcrk97oiWxVBwqZ+m8
+         gHQRxrkJx/M2U+18RevB7RoUmopxyYMrSD6CqVaTN913glGWBmrP92isLxbfn2O6p8LR
+         xKY+mYm12nVmiPHU2PRg3WlPxtn4ISmxCHfZuJOHAAPgSOb+enNk8ALp69sVMvc9OjAS
+         84RDlM6TcMjZbk9LZgpjAg/suTeeQ+Blh6obg1UbA3eS5bdccOwOht5U9nw8igQblPh9
+         ZzhvsF7W2LjpkP3XBPLefMJ2ILnBbnvFkvdzImEBHulDxd3WfP6rKsvPQo/+QF9w1/wr
+         GW1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743575244; x=1744180044;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0vxtuFvSbsxOaM1zbzEuh2qcT0p6czX42zd3rEEDXyw=;
+        b=lqBT4ChNtkuX/czYZCtNGaVZ+oCnc/MQV+vtixUMdqZRGwnQ4I++jJYO8TpTXUnxUz
+         1OUe6WwgdQ36shE9agYna1jqQOEr9B3FWawDORB/lowzFijr8Xv4Ysoy0fvWNDaNWA9Q
+         6HVbl5DvQDJDZVBDMLC28Mc4vZG8UJwEv7ZSZLeFayfa5Qpgput/v5+altn0qjJIBSDM
+         I9QgHzc9BVjpWJeB8/jncI+KTfZIMLUmG5C37xy9PWn6zoOm8GpgJaiifYezp0cUOz8S
+         uPYQ7VBE8V/Q81bWSYN7MYOA3/wxT4kPo1QHw8SXaw42CICTLYDygkGd9bpNDrUJftBU
+         aLAw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/uAttHOvQG40UfF8mTEGnM+jbAMRi7CAiJaejNiuE+FYw0em4kj4imluZKbV1Km4vucLfMcsiQfQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyatzf2+xrKZnFYQeCm8aeBPYkzJghrKmpmxErp81XF1EPvIug/
+	b1jWf/0MZBcbBI3ArA+V/oqgOKMaWxpZZ6+zzQfa9kE3af8/tpNO4LWryia8mw==
+X-Gm-Gg: ASbGncvLf469zMU7A9OuEpAa8UHj24bhSYG8cw6bvjKHgSO0J5gsFYEGMn31zx+X4RD
+	0omjosueZqowEb8RBUZNnnIibADd4M/MynEHCXL4K8Wl4OJBZ6zScko9FIrxMCdzoZ7zdORTuC9
+	5Nud0NP5prLQ1iBl2RuUq1jn9gC+Ng5kNlKw32h9pihQmQSmKKe84lkOU95m7vN+NssxlQzlo5b
+	tcfR2NIHmKxtAgwF5zBGTvpPn7E8dwFfQzFtZ+sZ1V7P7u3Lf5wPOEZmauTlWbtSHgEk49thEI0
+	H/auzA3CLMAxmmjG0JvDph6zBBzHzicEhUa8JPP1d5X8S0u9y20g9b58
+X-Google-Smtp-Source: AGHT+IEftqywmuVKm2jxf0hoVI8+XFFEcICMDydA0YNIWpJc2sWztLxMbLmbc7T+583swHeEhH9wPw==
+X-Received: by 2002:a17:903:11c7:b0:224:1ec0:8a16 with SMTP id d9443c01a7336-2292f9622b5mr229392235ad.21.1743575243714;
+        Tue, 01 Apr 2025 23:27:23 -0700 (PDT)
+Received: from thinkpad ([120.56.205.103])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2291eee1b3fsm99908325ad.74.2025.04.01.23.27.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 23:27:23 -0700 (PDT)
+Date: Wed, 2 Apr 2025 11:57:17 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org, 
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com, shawnguo@kernel.org, 
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] PCI: imx6: Start link directly when workaround is
+ not required
+Message-ID: <kskqytb67s6qpt2jfn6sry4oj3zq46y5hizyzxxvehtjtqtj6r@qmtfepjzjrpk>
+References: <20250328030213.1650990-1-hongxing.zhu@nxp.com>
+ <20250328030213.1650990-2-hongxing.zhu@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxKcRY0+xnrexrAA--.28983S2
-X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cr45Kw1fZw4xAF48Gr1Dtwc_yoW8CFyrpF
-	W3Cr92kr48Wr42ywn8X34UGryrAFykJ342gFW7Aas0ganxAas8ZFyxCFyrtF4akFWxXF1x
-	Xa1DCr1UuayjkwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
-	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-	xGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
+In-Reply-To: <20250328030213.1650990-2-hongxing.zhu@nxp.com>
 
-Loongson PCIe Root Ports don't advertise an ACS capability, but they do
-not allow peer-to-peer transactions between Root Ports. Add an ACS quirk
-so each Root Port can be in a separate IOMMU group.
+On Fri, Mar 28, 2025 at 11:02:08AM +0800, Richard Zhu wrote:
+> The current link setup procedure is one workaround to detect the device
+> behind PCIe switches on some i.MX6 platforms.
+> 
+> To describe more accurately, change the flag name from
+> IMX_PCIE_FLAG_IMX_SPEED_CHANGE to IMX_PCIE_FLAG_SPEED_CHANGE_WORKAROUND.
+> 
+> Start PCIe link directly when this flag is not set on i.MX7 or later
+> platforms to simple and speed up link training.
+> 
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/pci/quirks.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 8d610c17e0f2..d52ec85f3382 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4995,6 +4995,18 @@ static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
- 		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
- }
+One observation below (not related to this change).
+
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 34 +++++++++++----------------
+>  1 file changed, 14 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index c1f7904e3600..57aa777231ae 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -91,7 +91,7 @@ enum imx_pcie_variants {
+>  };
+>  
+>  #define IMX_PCIE_FLAG_IMX_PHY			BIT(0)
+> -#define IMX_PCIE_FLAG_IMX_SPEED_CHANGE		BIT(1)
+> +#define IMX_PCIE_FLAG_SPEED_CHANGE_WORKAROUND	BIT(1)
+>  #define IMX_PCIE_FLAG_SUPPORTS_SUSPEND		BIT(2)
+>  #define IMX_PCIE_FLAG_HAS_PHYDRV		BIT(3)
+>  #define IMX_PCIE_FLAG_HAS_APP_RESET		BIT(4)
+> @@ -860,6 +860,12 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+>  	u32 tmp;
+>  	int ret;
+>  
+> +	if (!(imx_pcie->drvdata->flags &
+> +	    IMX_PCIE_FLAG_SPEED_CHANGE_WORKAROUND)) {
+> +		imx_pcie_ltssm_enable(dev);
+> +		return 0;
+
+While looking into the code, I realized that we could skip waiting for link
+during the workaround in atleast one instance:
+
+```
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 5f267dd261b5..9dbfbd9de2da 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -875,11 +875,11 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+        /* Start LTSSM. */
+        imx_pcie_ltssm_enable(dev);
  
-+static int pci_quirk_loongson_acs(struct pci_dev *dev, u16 acs_flags)
-+{
-+	/*
-+	 * Loongson PCIe Root Ports don't advertise an ACS capability, but
-+	 * they do not allow peer-to-peer transactions between Root Ports.
-+	 * Allow each Root Port to be in a separate IOMMU group by masking
-+	 * SV/RR/CR/UF bits.
-+	 */
-+	return pci_acs_ctrl_enabled(acs_flags,
-+		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
-+}
+-       ret = dw_pcie_wait_for_link(pci);
+-       if (ret)
+-               goto err_reset_phy;
+-
+        if (pci->max_link_speed > 1) {
++               ret = dw_pcie_wait_for_link(pci);
++               if (ret)
++                       goto err_reset_phy;
 +
- /*
-  * Wangxun 40G/25G/10G/1G NICs have no ACS capability, but on
-  * multi-function devices, the hardware isolates the functions by
-@@ -5128,6 +5140,9 @@ static const struct pci_dev_acs_enabled {
- 	{ PCI_VENDOR_ID_BROADCOM, 0x1762, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_BROADCOM, 0x1763, pci_quirk_mf_endpoint_acs },
- 	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
-+	/* Loongson PCIe Root Ports */
-+	{ PCI_VENDOR_ID_LOONGSON, 0x3C09, pci_quirk_loongson_acs },
-+	{ PCI_VENDOR_ID_LOONGSON, 0x3C19, pci_quirk_loongson_acs },
- 	/* Amazon Annapurna Labs */
- 	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
- 	/* Zhaoxin multi-function devices */
--- 
-2.47.1
+                /* Allow faster modes after the link is up */
+                dw_pcie_dbi_ro_wr_en(pci);
+                tmp = dw_pcie_readl_dbi(pci, offset + PCI_EXP_LNKCAP);
+@@ -913,17 +913,10 @@ static int imx_pcie_start_link(struct dw_pcie *pci)
+                                goto err_reset_phy;
+                        }
+                }
+-
+-               /* Make sure link training is finished as well! */
+-               ret = dw_pcie_wait_for_link(pci);
+-               if (ret)
+-                       goto err_reset_phy;
+        } else {
+                dev_info(dev, "Link: Only Gen1 is enabled\n");
+        }
+ 
+-       tmp = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
+-       dev_info(dev, "Link up, Gen%i\n", tmp & PCI_EXP_LNKSTA_CLS);
+        return 0;
+ 
+ err_reset_phy:
+```
 
+dw_pcie_wait_for_link() in DWC core should serve the purpose.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
 
