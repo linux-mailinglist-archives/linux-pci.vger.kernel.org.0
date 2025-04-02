@@ -1,149 +1,192 @@
-Return-Path: <linux-pci+bounces-25101-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25102-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 882AEA784BE
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 00:35:10 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 373BDA7856B
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 02:06:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E2DE31891AAA
-	for <lists+linux-pci@lfdr.de>; Tue,  1 Apr 2025 22:35:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44D1E3ACE6D
+	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 00:06:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8BAB20E713;
-	Tue,  1 Apr 2025 22:35:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AECE436D;
+	Wed,  2 Apr 2025 00:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UusZ7dGe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=proton.me header.i=@proton.me header.b="TDpZp3n0"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879541EF378;
-	Tue,  1 Apr 2025 22:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7B5184;
+	Wed,  2 Apr 2025 00:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743546905; cv=none; b=Ea9okI7a4hLCCl7inc/Qxh5J1T+UFD2sPs5aIh7rq8TtelFmwSszY4mz7oOJCemSXNj/PJS+un9xv7i0I/doU6yFQfrvz7gZulc+N+S2qVSF/CJ8tUgekuM9xs3uuW+in7Jko69h6zFTXv3H0+C8jEH8F7hdW8pKxOAoCsiJCu0=
+	t=1743552371; cv=none; b=QcDahxYwj6GRE7Qr1f8grB2LXzBO+fMJVlelvZWbOT2czpbLBs075kcUpSJLHEZPv/uiBTLX4EbOqCWWbc8G2taKMP9MXUwgf2abOcmGkQXFl0OOddvztoc8jVLAX7BNmi5DB4ff988ldmFA0QRKNgqwXiUtk1hHseTu4hi4Ntk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743546905; c=relaxed/simple;
-	bh=wT0CH3/Qb+9cxLpxMMOsoXMAg1sIrUgDOVAp5HYpYm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=BbVXFnoaq7rtX4oPHQ9vhRI+IaasT+z5z0ddLtEoCKr2pmNMhGU6Ct44uPMHoziai4YUh/B60clIFa6n/C2Ku9lS0JHZQRmg/+o1/kTRTHlvTBVrc/7NkbLqmw2UxK0Z9mhhPN1kFOEZl2M9AzVuv9oIweZNNR5s90Vx84QsALE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UusZ7dGe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA58BC4CEE4;
-	Tue,  1 Apr 2025 22:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743546905;
-	bh=wT0CH3/Qb+9cxLpxMMOsoXMAg1sIrUgDOVAp5HYpYm4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=UusZ7dGedEcpHUWVqIXcxyhVgZOaTP6kGwi5CU5wNgcC3cg1oZYszk0s8Hps9lcSc
-	 U1vTiNZ7//YAqQltCDoKU4Up6gq471onC+apiVRfPfIpDj0NOC/Z7KRLRXJIF3dd0Q
-	 3pnexRZ33sYr3GSKfz9dp8/3QV8PyLnsnfGkNbhQdzj/zwJo7CbvCqYE0OphAVRKiR
-	 skcDIQdbxaUjAstBf/gx61lSP4y5TwW4urH6henw+VsWHxPHY9KaPOffVwpunssgWV
-	 phJmyo1ep9x6i17ef+RYmYaEHXYOJqoqzfkT7blG6m7XkEFfLf6mF7ki6vts5ci8gJ
-	 UVXRRBYxaEsrQ==
-Date: Tue, 1 Apr 2025 17:35:03 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Michael Chan <mchan@broadcom.com>,
-	Potnuri Bharat Teja <bharat@chelsio.com>, netdev@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Leon Romanovsky <leon@kernel.org>
-Subject: Re: PCI VPD checksum ambiguity
-Message-ID: <20250401223503.GA1686962@bhelgaas>
+	s=arc-20240116; t=1743552371; c=relaxed/simple;
+	bh=SKvTKbz6ni8FnmJ1GP4IVeexdsrRnOKxcqNOXAHpVHk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Bp3C+5Qvends5+zSb/IUUNONQsSCW+NPVjUVLycHNqYLlAECeYRU8GEhugKW5aLRLlfx23H1WtI9eB2ErER3LvQw8+d3FTdXmkFDkxyCkYWUQHbWB9NYFvpPqb0PHA2+Z4uTBUmLfj8l5fdftWeOIFx5X+6de1QVP4IhJFgT0+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=TDpZp3n0; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=36zyj7lnbbclrifsrasst7ba2i.protonmail; t=1743552360; x=1743811560;
+	bh=GG1TKNw1ad56XFapM4VnVdkZu9HjKmQ/qsMjqEKVOoA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=TDpZp3n0Ds4RNhIfHGagrDTveMMpe6uFvDjgRfJW4QFU2AFnVNvahozjVSxIgaVCj
+	 lZKY2rApK5LUIHTR8OJaZVDUIhMi3MC3DOLvT+fFmEkzDdLAGyQnuX004HiW7mJrmt
+	 CF9Rk8hYubo4zj9vMn7NwiiLGInLknCqMiUWsBT7ruznXUAudQ4YZ80aA6J64V8M8B
+	 EPbLuHUJt/pXPreRUg+zb4nBqbydtQfbertYomZltWa1YNHjAfXAama51ey5UZ6tjZ
+	 8BmTdHfeTEzWQyp72D1Wx+TVP+W2gmU9W7OVO4OhrGRcdngCh1Y1hWw9AmmfP0EAhr
+	 24A0eUfyPf8wg==
+Date: Wed, 02 Apr 2025 00:05:56 +0000
+To: Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Greg KH <gregkh@linuxfoundation.org>, bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] rust: pci: impl TryFrom<&Device> for &pci::Device
+Message-ID: <D8VPQ5XL5NJZ.26OGZ3YML4QN3@proton.me>
+In-Reply-To: <Z-vvcPfgyaRdd0xQ@pollux>
+References: <20250321214826.140946-1-dakr@kernel.org> <Z96MrGQvpVrFqWYJ@pollux> <Z-CG01QzSJjp46ad@pollux> <D8ON7WC8WMFG.2S2JRK6G9TOSL@proton.me> <Z-GNDE68vwhk0gaV@cassiopeiae> <D8OOFRRSLHP4.1B2FHQRGH3LKW@proton.me> <Z-Ggu_YZBPM2Kf8J@cassiopeiae> <D8OPMRYE0SO5.2JQD6ZIYXHP68@proton.me> <Z-vvcPfgyaRdd0xQ@pollux>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: eaab470bc2e61cf080048f1271cbbfb5ec48b355
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b37b02ec-59fb-4b3b-8e51-ae866eb8ecc9@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 01, 2025 at 11:51:07PM +0200, Heiner Kallweit wrote:
-> On 01.04.2025 22:55, Bjorn Helgaas wrote:
-> > Hi,
-> > 
-> > The PCIe spec is ambiguous about how the VPD checksum should be
-> > computed, and resolving this ambiguity might break drivers.
-> > 
-> > PCIe r6.0 sec 6.27 says only the VPD-R list should be included in the
-> > checksum:
-> > 
-> >   One VPD-R (10h) tag is used as a header for the read-only keywords.
-> >   The VPD-R list (including tag and length) must checksum to zero.
-> 
-> This requirement I don't find in the PCI 3.0 spec, not sure with which
-> version it was added. 
+On Tue Apr 1, 2025 at 3:51 PM CEST, Danilo Krummrich wrote:
+> On Mon, Mar 24, 2025 at 06:32:53PM +0000, Benno Lossin wrote:
+>> On Mon Mar 24, 2025 at 7:13 PM CET, Danilo Krummrich wrote:
+>> > On Mon, Mar 24, 2025 at 05:36:45PM +0000, Benno Lossin wrote:
+>> >> On Mon Mar 24, 2025 at 5:49 PM CET, Danilo Krummrich wrote:
+>> >> > On Mon, Mar 24, 2025 at 04:39:25PM +0000, Benno Lossin wrote:
+>> >> >> On Sun Mar 23, 2025 at 11:10 PM CET, Danilo Krummrich wrote:
+>> >> >> > On Sat, Mar 22, 2025 at 11:10:57AM +0100, Danilo Krummrich wrote=
+:
+>> >> >> >> On Fri, Mar 21, 2025 at 08:25:07PM -0700, Greg KH wrote:
+>> >> >> >> > Along these lines, if you can convince me that this is someth=
+ing that we
+>> >> >> >> > really should be doing, in that we should always be checking =
+every time
+>> >> >> >> > someone would want to call to_pci_dev(), that the return valu=
+e is
+>> >> >> >> > checked, then why don't we also do this in C if it's going to=
+ be
+>> >> >> >> > something to assure people it is going to be correct?  I don'=
+t want to
+>> >> >> >> > see the rust and C sides get "out of sync" here for things th=
+at can be
+>> >> >> >> > kept in sync, as that reduces the mental load of all of us as=
+ we travers
+>> >> >> >> > across the boundry for the next 20+ years.
+>> >> >> >>=20
+>> >> >> >> I think in this case it is good when the C and Rust side get a =
+bit
+>> >> >> >> "out of sync":
+>> >> >> >
+>> >> >> > A bit more clarification on this:
+>> >> >> >
+>> >> >> > What I want to say with this is, since we can cover a lot of the=
+ common cases
+>> >> >> > through abstractions and the type system, we're left with the no=
+t so common
+>> >> >> > ones, where the "upcasts" are not made in the context of common =
+and well
+>> >> >> > established patterns, but, for instance, depend on the semantics=
+ of the driver;
+>> >> >> > those should not be unsafe IMHO.
+>> >> >>=20
+>> >> >> I don't think that we should use `TryFrom` for stuff that should o=
+nly be
+>> >> >> used seldomly. A function that we can document properly is a much =
+better
+>> >> >> fit, since we can point users to the "correct" API.
+>> >> >
+>> >> > Most of the cases where drivers would do this conversion should be =
+covered by
+>> >> > the abstraction to already provide that actual bus specific device,=
+ rather than
+>> >> > a generic one or some priv pointer, etc.
+>> >> >
+>> >> > So, the point is that the APIs we design won't leave drivers with a=
+ reason to
+>> >> > make this conversion in the first place. For the cases where they h=
+ave to
+>> >> > (which should be rare), it's the right thing to do. There is not an=
+ alternative
+>> >> > API to point to.
+>> >>=20
+>> >> Yes, but for such a case, I wouldn't want to use `TryFrom`, since tha=
+t
+>> >> trait to me is a sign of a canonical way to convert a value.
+>> >
+>> > Well, it is the canonical way to convert, it's just that by the design=
+ of other
+>> > abstractions drivers should very rarely get in the situation of needin=
+g it in
+>> > the first place.
+>>=20
+>> I'd still prefer it though, since one can spot a
+>>=20
+>>     let dev =3D CustomDevice::checked_from(dev)?
+>>=20
+>> much better in review than the `try_from` conversion. It also prevents
+>> one from giving it to a generic interface expecting the `TryFrom` trait.
+>
+> (I plan to rebase this on my series introducing the Bound device context =
+[1].)
+>
+> I thought about this for a while and I still think TryFrom is fine here.
 
-I think it's there; that same text is in PCI r3.0, Appendix I, about
-five lines before I.1.
+What reasoning do you have?
 
-> Interestingly this doesn't even require the presence of a RV
-> keyword. Or the presence of the RV keyword is implicitly assumed.
+> At some point I want to replace this implementation with a macro, since t=
+he code
+> is pretty similar for bus specific devices. I think that's a bit cleaner =
+with
+> TryFrom compared to with a custom method, since we'd need the bus specifi=
+c
+> device to call the macro from the generic impl, i.e.
+>
+> =09impl<Ctx: DeviceContext> Device<Ctx>
+>
+> rather than a specific one, which we can't control. We can control it for
+> TryFrom though.
 
-I.3.1.1 says RV is required, and I guess it has to be last in VPD-R to
-cover any reserved space (as needed, I suppose to align to the VPD-W
-area, which might be in a different chip).
+We could have our own trait for that. Also it's not as controllable as
+you think: anyone can implement `TryFrom<&device::Device> for &MyType`.
 
-> Maybe this part isn't meant literally. I can imagine they wanted to
-> clarify that checksum calculation excludes the VPD-W area.
-> And unfortunately they weren't precise enough, and introduced the
-> ambiguity you found.
-> 
-> > But sec 6.27.2.2 says "all bytes in VPD ... up to the checksum byte":
-> > 
-> >   RV   The first byte of this item is a checksum byte. The checksum is
-> >        correct if the sum of all bytes in VPD (from VPD address 0 up
-> >        to and including this byte) is zero.
-> 
-> This one can be found identically in the PCI v3.0 spec already:
-> 
-> The checksum is correct if the sum of all bytes in VPD (from
-> VPD address 0 up to and including this byte) is zero.
-> 
-> I don't think they want to break backwards-compatibility, therefore
-> this requirement should still be valid.
+> However, I also do not really object to your proposal, hence I'm willing =
+to make
+> the change.
+>
+> Do you want to make a proposal for the corresponding doc comment switchin=
+g to a
+> custom method?
 
-Yes, and I think the RV description is more specific and is what I
-would have used to implement it.
+I think have too little context what `device::Device` and `pci::Device`
+are. But I can give it a try:
 
-> > These are obviously different unless VPD-R happens to be the first
-> > item in VPD.  But sec 6.27 and 6.27.2.1 suggest that the Identifier
-> > String item should be the first item, preceding the VPD-R list:
-> > 
-> >   The first VPD tag is the Identifier String (02h) and provides the
-> >   product name of the device. [6.27]
-> > 
-> >   Large resource type Identifier String (02h)
-> > 
-> >     This tag is the first item in the VPD storage component. It
-> >     contains the name of the add-in card in alphanumeric characters.
-> >     [6.27.2.1, Table 6-23]
-> > 
-> > I think pci_vpd_check_csum() follows sec 6.27.2.2: it sums all the
-> > bytes in the buffer up to and including the checksum byte of the RV
-> > keyword.  The range starts at 0, not at the beginning of the VPD-R
-> > read-only list, so it likely includes the Identifier String.
-> > 
-> > As far as I can tell, only the broadcom/tg3 and chelsio/cxgb4/t4
-> > drivers use pci_vpd_check_csum().  Of course, other drivers might
-> > compute the checksum themselves.
-> > 
-> > Any thoughts on how this spec ambiguity should be resolved?
-> > 
-> > Any idea how devices in the field populate their VPD?
-> > 
-> > Can you share any VPD dumps from devices that include an RV keyword
-> > item?
-> 
-> I have only very dated devices which likely date back to before
-> the existence of PCIe r6.0. So their VPD dump may not really help.
-> 
-> IIRC there's an ongoing discussion regarding making VPD content
-> user-readable on mlx5 devices. Maybe check with the Mellanox/Nvidia
-> guys how they interpret the spec and implemented VPD checksumming.
+    /// Tries to converts a generic [`Device`](device::Device) into a [`pci=
+::Device`].
+    ///
+    /// Normally, one wouldn't need to call this function, because APIs sho=
+uld directly expose the
+    /// concrete device type.
 
-Good idea, cc'd.
+Then I think another sentence about a valid use-case of this function
+would make a lot of sense, but I don't know any.
+
+---
+Cheers,
+Benno
+
 
