@@ -1,147 +1,183 @@
-Return-Path: <linux-pci+bounces-25198-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25199-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB758A79866
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 00:44:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFC15A79A56
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 05:12:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7EBB6166C27
-	for <lists+linux-pci@lfdr.de>; Wed,  2 Apr 2025 22:44:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4266018916E1
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 03:13:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47EE71EB199;
-	Wed,  2 Apr 2025 22:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 148811662E7;
+	Thu,  3 Apr 2025 03:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBnRFRtr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iUTR4bAI"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BD31EB183
-	for <linux-pci@vger.kernel.org>; Wed,  2 Apr 2025 22:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAD21854;
+	Thu,  3 Apr 2025 03:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743633869; cv=none; b=B1O2Cy73EAL9OVMdnXUPMtpYyoDIa+vqOuXnnqZh67MztsIsBE3FJq/77trY1qun4GRMNWMCpAWCzO5szvuALSYjs0vPKi1vlWAQJwT0+a5mVhju7wGDQ+cVh/2CTi04rhWPeOC0pEkcPzmZkq2N3OAZjDICwLf/chiCzgqHOoQ=
+	t=1743649973; cv=none; b=PChpVmBahfo8sjZ9kDpw/ztNkbfy2xy7s2aeaObiCURzwhMzOvEPqFDJ4sgRfiuCIKTcQj8m/rtYqvrbm63xuYbW++apcOYAa00YAuLVH1D4G96vkSyzCuVr8rHcEr0xINrZYboJ46uhi/EdVFG4uXkLrm5nJAuyzrcKsMQaizM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743633869; c=relaxed/simple;
-	bh=5jerJKwtBXPxFrsLVufViEy+TQ/1cqMd7muHN5rXFVI=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=GUuFFTB2LKKyzPSi0EUJkNY1wR8qCwJiN1esChor0qflNunGPDz9az5yB7dUZOICE/UFIIZgfsAp4TBtnYXHpoQWAcIn93izJwUJ96IJ3HFRzTSIFyKr4OCve4HHct5BXUCq1TqKHoIzGMIfndfz/3DlUo8M4WV2OEsdbWcBwjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBnRFRtr; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CCC8C4CEDD;
-	Wed,  2 Apr 2025 22:44:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743633868;
-	bh=5jerJKwtBXPxFrsLVufViEy+TQ/1cqMd7muHN5rXFVI=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=jBnRFRtrkkIQrejetDAt8TuVqicQPjFaRr00XJYTtWru6nis+BKRCvDvQ1/qSUQqg
-	 irOLjRDx5558yNNr3UIgdqmOVOzx7rWlDhDG4AzsOxLi9rvZA7/ymYNKjw1xtTrqX7
-	 fXHjcgtRoRUdBFkvekaInul+IzqNCtkIzLOV278R29mwjOtuXvntHatDWQVc7juUtS
-	 k4IdF+tmXpJJHFjObFc8simrKbkxv8PBcmwG913HM2oPLk011bwz4d6XP3QaM5PJ4G
-	 Lh+nVD96XG/Edfqdg3zlFMgjTCZ2wnUGqzMWBPFRhaqgXeRJ07zfUjWBnjkM22y7Iz
-	 yEkf2So3GB0og==
-Date: Thu, 03 Apr 2025 00:44:28 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-CC: bhelgaas@google.com, kw@linux.com, manivannan.sadhasivam@linaro.org,
- linux-pci@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_misc=3A_pci=5Fendpoint=5Ftest=3A_Defer_IR?=
- =?US-ASCII?Q?Q_allocation_until_ioctl=28PCITEST=5FSET=5FIRQTYPE=29?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <Z+2XjBd1wQezRlNv@lizhi-Precision-Tower-5810>
-References: <20250402085659.4033434-2-cassel@kernel.org> <Z+2XjBd1wQezRlNv@lizhi-Precision-Tower-5810>
-Message-ID: <1AB85045-9BBE-47B8-9643-487D82E28877@kernel.org>
+	s=arc-20240116; t=1743649973; c=relaxed/simple;
+	bh=YdNEYByXpy+p25o+6gqrAJE7UbZXNce2qEd5iM0TBE4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hsiEu6mPj3AQjjj+xqD6Nzq4x9jcjhOak7RvNY+uJyH2/i4Y3dglp52/0bToHOIH21iyXGDr3QgIPEAyDEF592hkdaS1ps9N6+hYTRvZR2fhWOA8qJvv04yg8PMfPzWUPuTjDvyeexkkjk7WZwH9mGL1hxrz0eme7gC6D2gBtT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iUTR4bAI; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743649971; x=1775185971;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=YdNEYByXpy+p25o+6gqrAJE7UbZXNce2qEd5iM0TBE4=;
+  b=iUTR4bAIf+emBfQqecJlgEGP/yLyAU8vx3mBoVz5htqZd/pEe73mbhQI
+   TXTeVHVOGAbHmXV1lcaUSbN3OwFJwV1schrAUMj73gWDkc+g25sVv76DS
+   t6D/WvGBbXijsWzyfOT+gvrehnv4PAvutlPbcfSok2DqR2pYTQ9XDJumw
+   kw/pCrlflDM4nQBZI/Z5OnfwD+VrsyX2Fv/7EG//PAwhe3Y6Qsg6hdxLQ
+   6u/NZPPZIjf/FLKGUyJUPtput6NT3TMnPgAbTRIuDNf+f/KvY7Hop0oEN
+   Pu9XmIhUaVno58O0ET24WMUBKu3OKDbmEB4EC1NJaOzBUEvaeWE8AY9Ue
+   w==;
+X-CSE-ConnectionGUID: wcXyotbiQliI7f5CUBMFGA==
+X-CSE-MsgGUID: s7kXbsmoTJmbi6Ddvp3Gwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="44935535"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="44935535"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 20:12:50 -0700
+X-CSE-ConnectionGUID: ka3ORGejSiecYb5pL+m57A==
+X-CSE-MsgGUID: HZ0o/hq7TZiLjnpMOCnkVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="127376205"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 20:12:47 -0700
+Date: Thu, 3 Apr 2025 06:12:44 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+	lucas.demarchi@intel.com, rodrigo.vivi@intel.com,
+	"Nilawar, Badal" <badal.nilawar@intel.com>,
+	intel-xe@lists.freedesktop.org, anshuman.gupta@intel.com,
+	mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/xe/d3cold: Set power state to D3Cold during s2idle/s3
+Message-ID: <Z-38rPeN_j7YGiEl@black.fi.intel.com>
+References: <Z-WHYbhu1QdjUFPR@intel.com>
+ <Z-bICZUBN_Fk0_mM@intel.com>
+ <Z-eDJUtxjzIjGlJT@black.fi.intel.com>
+ <Z-q_n1g9wIEZc-dm@intel.com>
+ <2d3f3cbe-c33d-4ded-8c19-e2bd2e76a68b@intel.com>
+ <Z-woHnrukI7qtB4m@black.fi.intel.com>
+ <CAJZ5v0j7ob4YQ9weQ6e5iVbHyRwf-6Vk2MU4r9mK11-8wD09RQ@mail.gmail.com>
+ <Z-znv8D3qIcVX-p1@black.fi.intel.com>
+ <Z-z2fz97RwX2kBya@black.fi.intel.com>
+ <CAJZ5v0hpkjH_Q7V70jWpC68YQxKkmh0wpwrPrHcUwQJ6uRGrOQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0hpkjH_Q7V70jWpC68YQxKkmh0wpwrPrHcUwQJ6uRGrOQ@mail.gmail.com>
 
+Cc: PCI maintainers
 
+On Wed, Apr 02, 2025 at 12:31:48PM +0200, Rafael J. Wysocki wrote:
+> On Wed, Apr 2, 2025 at 10:34 AM Raag Jadav <raag.jadav@intel.com> wrote:
+> >
+> > On Wed, Apr 02, 2025 at 10:31:16AM +0300, Raag Jadav wrote:
+> > > On Tue, Apr 01, 2025 at 09:35:49PM +0200, Rafael J. Wysocki wrote:
+> > > > On Tue, Apr 1, 2025 at 7:53 PM Raag Jadav <raag.jadav@intel.com> wrote:
+> > >
+> > > ...
+> > >
+> > > > > That's not what I meant here. There are multiple issues at play.
+> > > > >
+> > > > > 1. An AER is reported[*] on root port during system suspend even before we
+> > > > >    reach any of the driver PM callback. From initial investigation it seems
+> > > > >    like a case of misbehaviour by some child device, but this is a different
+> > > > >    issue entirely.
+> > > > >
+> > > > > [*] irq/120-aerdrv-145     [002] .....  1264.981023: <stack trace>
+> > > > > => xe_pm_runtime_resume
+> > > > > => xe_pci_runtime_resume
+> > > > > => pci_pm_runtime_resume
+> > > > > => __rpm_callback
+> > > > > => rpm_callback
+> > > > > => rpm_resume
+> > > > > => __pm_runtime_resume
+> > > > > => pci_pm_runtime_get_sync
+> > > > > => __pci_walk_bus
+> > > > > => pci_walk_bus
+> > > > > => pcie_do_recovery
+> > > > > => aer_process_err_devices
+> > > > > => aer_isr
+> > > > >
+> > > > > 2. Setting explicit pci_set_power_state(pdev, PCI_D3cold) from xe_pm_suspend().
+> > > > >    Although we see many drivers do it for their case, it's quite a questionable
+> > > > >    choice (atleast IMHO) to hard suspend the device from driver PM callback
+> > > > >    without any regard to runtime_usage counter. It can hide potential issues
+> > > > >    like AER during system suspend (regardless of whether or not it is supported
+> > > > >    by the driver, since it is supposed to keep the device active on such a
+> > > > >    catastrophic failure anyway), but I'll leave it to the experts to decide.
+> > > >
+> > > > If the driver does not set DPM_FLAG_SMART_SUSPEND, and xe doesn't set
+> > > > it AFAICS (at least not in the mainline), pci_pm_suspend() will resume
+> > > > the device from runtime suspend before invoking its driver's callback.
+> > > >
+> > > > This guarantees that the device is always RPM_ACTIVE when
+> > > > xe_pci_suspend() runs and it cannot be runtime-suspended because the
+> > > > core is holding a runtime PM reference on it (and so the runtime PM
+> > > > usage counter is always greater than zero when xe_pci_suspend() runs).
+> > > >
+> > > > This means that neither xe_pci_runtime_suspend() nor
+> > > > xe_pci_runtime_resume() can run concurrently with respect to it, so
+> > > > xe_pci_suspend() can change the power state of the device etc. safely.
+> > >
+> > > Ah, I failed to notice that __pm_runtime_resume() is taking a spin_lock_irqsave().
+> > > Thanks for clearing this up.
+> >
+> > On second thought, pcie_do_recovery() can still race with xe_pci_suspend(),
+> > is this understanding correct?
+> 
+> Yes, it can, but this is an AER issue.
+> 
+> Apparently, somebody took runtime PM into account, but they failed to
+> take system suspend into account.
+> 
+> There are many drivers that do PCI PM in their ->suspend() callbacks
+> and this predates pcie_do_recovery() AFAICS.  Some of them don't even
+> support runtime PM.
+> 
+> > I'm assuming this is why it's much safer to do pci_save_state() and
+> > pci_prepare_to_sleep() only in ->noirq() callbacks like originally done
+> > by PCI PM, right?
+> 
+> Not really, but close.
+> 
+> The noirq phases were introduced because drivers often failed to
+> prevent their interrupt handlers from messing up with devices after
+> powering them down.
+> 
+> Recovery is kind of like hot-add, doing any of them during system
+> suspend is a bad idea because the outcome is hard to predict.
+> 
+> AER needs to be fixed.
 
-On 2 April 2025 22:01:16 CEST, Frank Li <Frank=2Eli@nxp=2Ecom> wrote:
->On Wed, Apr 02, 2025 at 10:57:00AM +0200, Niklas Cassel wrote:
->> Commit a402006d48a9 ("misc: pci_endpoint_test: Remove global 'irq_type'
->> and 'no_msi'") changed so that the default IRQ vector requested by
->> pci_endpoint_test_probe() was no longer the module param 'irq_type',
->> but instead test->irq_type=2E test->irq_type is by default
->> IRQ_TYPE_UNDEFINED (until someone calls ioctl(PCITEST_SET_IRQTYPE))=2E
->>
->> However, the commit also changed so that after initializing test->irq_t=
-ype
->> to IRQ_TYPE_UNDEFINED, it also overrides it with driver_data->irq_type,=
- if
->> the PCI device and vendor ID provides driver_data=2E
->>
->> This causes a regression for PCI device and vendor IDs that do not prov=
-ide
->> driver_data, and the driver now fails to probe on such platforms=2E
->>
->> Considering that the pci endpoint selftests and the old pcitest always
->> call ioctl(PCITEST_SET_IRQTYPE)
->
->Maybe my pcitest is too old=2E "pcitest -r" have not call ioctl(PCITEST_S=
-ET_IRQTYPE)=2E
->I need run "pcitest -i 1" firstly=2E It'd better remove pcitest informati=
-on
->because pcitest already was removed from git tree=2E and now pcitest alwa=
-ys
->show NOT OKAY=2E
+I agree it's a bad idea and should be fixed but even more unpredictable
+in such cases is resuming the device afterwards, which may or may not
+succeed depending on the fault that has happened. So perhaps just not
+let the device suspend to D3 at all?
 
-If you are on an old version, the return value from the ioctls have been i=
-nverted by Mani:
-
-https://github=2Ecom/torvalds/linux/commit/f26d37ee9bda938e968d0e11ba1f8f1=
-588b2a135
-
-But you should use the pci endpoint selftest, or the pcitest=2Esh shell sc=
-ript=2E
-
-Both the pci endpoint selftest and the pcitest=2Esh shell script always do=
- ioctl(PCITEST_SET_IRQTYPE) before doing a read/write/copy test=2E
-
-Like you said, pcitest and the matching pcitest=2Esh shell script have bee=
-n removed, so I suggest using the selftest=2E
-
-
->
->> before performing any test that requires
->> IRQs, simply remove the allocation of IRQs in pci_endpoint_test_probe()=
-,
->> and defer it until ioctl(PCITEST_SET_IRQTYPE) has been called=2E
->>
->> A positive side effect of this is that even if the endpoint controller =
-has
->> issues with IRQs, the user can do still do all the tests/ioctls() that =
-do
->> not require working IRQs, e=2Eg=2E PCITEST_BAR and PCITEST_BARS=2E
->>
->> This also means that we can remove the now unused irq_type from
->> driver_data=2E The irq_type will always be the one configured by the us=
-er
->> using ioctl(PCITEST_SET_IRQTYPE)=2E (A user that does not know, or care
->> which irq_type that is used, can use PCITEST_IRQ_TYPE_AUTO=2E This has
->> superseded the need for a default irq_type in driver_data=2E)
->
->But you remove "irq_type" at driver_data, does it means PCITEST_IRQ_TYPE_=
-AUTO
->will not be supported?
-
-It is supported by the selftest=2E
-It is not supported by pcitest since it has been removed from the tree=2E
-
-driver_data was just specifying the default IRQ type, but that IRQ type wa=
-s always overriden using ioctl(PCITEST_SET_IRQTYPE) before a read/write/cop=
-y/test by the pcitest=2Esh shell script and the selftest, so the IRQ type i=
-n driver_data was quite pointless=2E
-
-
-Kind regards,
-Niklas
+Raag
 
