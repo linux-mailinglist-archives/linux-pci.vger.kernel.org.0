@@ -1,58 +1,65 @@
-Return-Path: <linux-pci+bounces-25258-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25259-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6021A7AEE7
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 22:37:37 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0BDC4A7AEDF
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 22:36:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 970EF3A6E3C
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 20:30:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E406173D8F
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 20:31:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A36F224B1B;
-	Thu,  3 Apr 2025 19:18:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87FB42253F9;
+	Thu,  3 Apr 2025 19:18:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3kjVBn1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aYtgk2vn"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F24F224253;
-	Thu,  3 Apr 2025 19:18:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6CD224B0E;
+	Thu,  3 Apr 2025 19:18:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707881; cv=none; b=Ozh38u25hSXlFizFPuVBnlhmMa+6FIetQpJ1iopwTrK0mHtJ+FYiJCxv09yd97oDaoD/by103W2fthp/VFXj1vE2QJnyme1RydI1s8IA9ee1vINd0YCtPF/LgHQuaKkyHDkTDD92Nx0pRfhBnLAGUqL2/KN71ej1Unf48aiE93U=
+	t=1743707883; cv=none; b=kPPBWAJTs577bbbeCiK2iMSgVG7WvR4U+QbgKrAG7OxHA0ySd8a9ADg1Z8NXRopVtT22qQQZYbi5vwDq8DxkN3g+JBYyX7aOjCqOsAdoLR+NkFgi3eNLH2eRD3iZKj+RguDfKjXzVX8VhjsWKIeABiLI/gio7p91ttt3wHrImpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707881; c=relaxed/simple;
-	bh=w7359Gz4/ZGcsNWm4OjS/61MHoV0jmzW1gb2QWU8hmI=;
+	s=arc-20240116; t=1743707883; c=relaxed/simple;
+	bh=IG7F6U3gfOQMS8ntvj31o+mv8hA3t80Jqo5rURTTYQ8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H6DDvntKf84vBaAEC4o1pobQyjoW+XHPhHMYHxdnEM9KUCy/yQGu5jfbWvDVv7KyZn1QzECUPh8SG8+ykuuPg7YZQcEVr3LrMmhN5ENi7piFFxyiJ/qpIjHNgZXsChJE/F5Tm5QW2ng8vlUe8GhY8Gj7FC6MvhhMgqSdxV8bzuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3kjVBn1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FBE3C4CEE8;
-	Thu,  3 Apr 2025 19:18:00 +0000 (UTC)
+	 MIME-Version:Content-Type; b=mfvQGdmFMgl+JpJS0lvxblftntVthfu0hmLyAiTuuw523ZS05OTQRUQN+ud79hgwJFV9aRMqt5hgqU86vZv5g41LDJidO+j7D5YZUT/R8UFcTId3rp7foNhFzcb/3gpgVaMeOvAZhzeFaVWw4dmOkulf/vCxk/0VMbBg92fgdm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aYtgk2vn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A21A0C4CEE8;
+	Thu,  3 Apr 2025 19:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707881;
-	bh=w7359Gz4/ZGcsNWm4OjS/61MHoV0jmzW1gb2QWU8hmI=;
+	s=k20201202; t=1743707883;
+	bh=IG7F6U3gfOQMS8ntvj31o+mv8hA3t80Jqo5rURTTYQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L3kjVBn1a22ZCbgzx/dmEW/i2I2Pzh2JxEGv/Zjv3Tr3lh50tby+oU4aFb/jov8ad
-	 veh5mItxXghUOXpEjdq1aaYggxBfx1a0PLv5m+VQiNXhf76ZltnF/0X3rzTe7GFj7f
-	 8/zqlt/B/wATu8KG1AZCmlaPze2/M/bmvYjh8NmdhFP0tyihrJsr2xAh16wY/j9IAV
-	 w3blDLir/mshkxrEiYnt99eWBH22OTnFoQa64hQnGvPRtXfWnzqRVyURDPMpAxj056
-	 aab23qM1+HRF3o5NP516BlXHG9Q/5vq1BLNYEdPWpWpBe0vlWJn4dpJgLiNbc3/O1b
-	 mqoDcy+8g1GsQ==
+	b=aYtgk2vnrVVAOcdzjw9RCJQURmxi8KcT+ckXa9TSu/84nmDdqalDy1th0FxSZ0bB5
+	 +pXdQrX6QanpKuu4yKBXBhuA7nxoXR/7TeA/ayLD7WQIAxoUfJ1l931wFdjHaDN7pB
+	 lIV1Np5zkDk/AAqzd7FihE8W23qVWJsvrnGSyf4TGmnkq+ptmCYSELBO6p8uZf5PUS
+	 5BOnU63K0Mf7Mi3wkJk0vrmbRIajN3y1ekKD50vMJzKNYRR/YHCZazjvlQgIjbg/rH
+	 FGW3B6u2X9eaTHR2V4qQTGXt8q4SyeX5syYcV3vd7smi2ArvG/H28qmFQ9xikEj541
+	 2ezSPxTduO9kg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Philipp Stanner <phasta@kernel.org>,
-	Bingbu Cao <bingbu.cao@linux.intel.com>,
+Cc: Ryo Takakura <ryotkkr98@gmail.com>,
+	"Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 26/33] PCI: Check BAR index for validity
-Date: Thu,  3 Apr 2025 15:16:49 -0400
-Message-Id: <20250403191656.2680995-26-sashal@kernel.org>
+	nirmal.patel@linux.intel.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	clrkwllms@kernel.org,
+	rostedt@goodmis.org,
+	linux-pci@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.12 27/33] PCI: vmd: Make vmd_dev::cfg_lock a raw_spinlock_t type
+Date: Thu,  3 Apr 2025 15:16:50 -0400
+Message-Id: <20250403191656.2680995-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250403191656.2680995-1-sashal@kernel.org>
 References: <20250403191656.2680995-1-sashal@kernel.org>
@@ -68,214 +75,107 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.12.21
 Content-Transfer-Encoding: 8bit
 
-From: Philipp Stanner <phasta@kernel.org>
+From: Ryo Takakura <ryotkkr98@gmail.com>
 
-[ Upstream commit b1a7f99967fc0c052db8e65b449c7b32b1e9177f ]
+[ Upstream commit 18056a48669a040bef491e63b25896561ee14d90 ]
 
-Many functions in PCI use accessor macros such as pci_resource_len(),
-which take a BAR index. That index, however, is never checked for
-validity, potentially resulting in undefined behavior by overflowing the
-array pci_dev.resource in the macro pci_resource_n().
+The access to the PCI config space via pci_ops::read and pci_ops::write is
+a low-level hardware access. The functions can be accessed with disabled
+interrupts even on PREEMPT_RT. The pci_lock is a raw_spinlock_t for this
+purpose.
 
-Since many users of those macros directly assign the accessed value to
-an unsigned integer, the macros cannot be changed easily anymore to
-return -EINVAL for invalid indexes. Consequently, the problem has to be
-mitigated in higher layers.
+A spinlock_t becomes a sleeping lock on PREEMPT_RT, so it cannot be
+acquired with disabled interrupts. The vmd_dev::cfg_lock is accessed in
+the same context as the pci_lock.
 
-Add pci_bar_index_valid(). Use it where appropriate.
+Make vmd_dev::cfg_lock a raw_spinlock_t type so it can be used with
+interrupts disabled.
 
-Link: https://lore.kernel.org/r/20250312080634.13731-4-phasta@kernel.org
-Closes: https://lore.kernel.org/all/adb53b1f-29e1-3d14-0e61-351fd2d3ff0d@linux.intel.com/
-Reported-by: Bingbu Cao <bingbu.cao@linux.intel.com>
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
-[kwilczynski: correct if-statement condition the pci_bar_index_is_valid()
-helper function uses, tidy up code comments]
+This was reported as:
+
+  BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
+  Call Trace:
+   rt_spin_lock+0x4e/0x130
+   vmd_pci_read+0x8d/0x100 [vmd]
+   pci_user_read_config_byte+0x6f/0xe0
+   pci_read_config+0xfe/0x290
+   sysfs_kf_bin_read+0x68/0x90
+
+Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+Tested-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+Acked-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+[bigeasy: reword commit message]
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Tested-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+Link: https://lore.kernel.org/r/20250218080830.ufw3IgyX@linutronix.de
+[kwilczynski: commit log]
 Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-[bhelgaas: fix typo]
+[bhelgaas: add back report info from
+https://lore.kernel.org/lkml/20241218115951.83062-1-ryotkkr98@gmail.com/]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/devres.c | 16 ++++++++++++++--
- drivers/pci/iomap.c  | 29 +++++++++++++++++++++--------
- drivers/pci/pci.c    |  6 ++++++
- drivers/pci/pci.h    | 16 ++++++++++++++++
- 4 files changed, 57 insertions(+), 10 deletions(-)
+ drivers/pci/controller/vmd.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-index 643f85849ef64..cd39479de7c72 100644
---- a/drivers/pci/devres.c
-+++ b/drivers/pci/devres.c
-@@ -577,7 +577,7 @@ static int pcim_add_mapping_to_legacy_table(struct pci_dev *pdev,
- {
- 	void __iomem **legacy_iomap_table;
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 9d9596947350f..94ceec50a2b94 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -125,7 +125,7 @@ struct vmd_irq_list {
+ struct vmd_dev {
+ 	struct pci_dev		*dev;
  
--	if (bar >= PCI_STD_NUM_BARS)
-+	if (!pci_bar_index_is_valid(bar))
- 		return -EINVAL;
+-	spinlock_t		cfg_lock;
++	raw_spinlock_t		cfg_lock;
+ 	void __iomem		*cfgbar;
  
- 	legacy_iomap_table = (void __iomem **)pcim_iomap_table(pdev);
-@@ -622,7 +622,7 @@ static void pcim_remove_bar_from_legacy_table(struct pci_dev *pdev, int bar)
- {
- 	void __iomem **legacy_iomap_table;
+ 	int msix_count;
+@@ -391,7 +391,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
+ 	if (!addr)
+ 		return -EFAULT;
  
--	if (bar >= PCI_STD_NUM_BARS)
-+	if (!pci_bar_index_is_valid(bar))
- 		return;
- 
- 	legacy_iomap_table = (void __iomem **)pcim_iomap_table(pdev);
-@@ -655,6 +655,9 @@ void __iomem *pcim_iomap(struct pci_dev *pdev, int bar, unsigned long maxlen)
- 	void __iomem *mapping;
- 	struct pcim_addr_devres *res;
- 
-+	if (!pci_bar_index_is_valid(bar))
-+		return NULL;
-+
- 	res = pcim_addr_devres_alloc(pdev);
- 	if (!res)
- 		return NULL;
-@@ -722,6 +725,9 @@ void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar,
- 	int ret;
- 	struct pcim_addr_devres *res;
- 
-+	if (!pci_bar_index_is_valid(bar))
-+		return IOMEM_ERR_PTR(-EINVAL);
-+
- 	res = pcim_addr_devres_alloc(pdev);
- 	if (!res)
- 		return IOMEM_ERR_PTR(-ENOMEM);
-@@ -822,6 +828,9 @@ static int _pcim_request_region(struct pci_dev *pdev, int bar, const char *name,
- 	int ret;
- 	struct pcim_addr_devres *res;
- 
-+	if (!pci_bar_index_is_valid(bar))
-+		return -EINVAL;
-+
- 	res = pcim_addr_devres_alloc(pdev);
- 	if (!res)
- 		return -ENOMEM;
-@@ -1043,6 +1052,9 @@ void __iomem *pcim_iomap_range(struct pci_dev *pdev, int bar,
- 	void __iomem *mapping;
- 	struct pcim_addr_devres *res;
- 
-+	if (!pci_bar_index_is_valid(bar))
-+		return IOMEM_ERR_PTR(-EINVAL);
-+
- 	res = pcim_addr_devres_alloc(pdev);
- 	if (!res)
- 		return IOMEM_ERR_PTR(-ENOMEM);
-diff --git a/drivers/pci/iomap.c b/drivers/pci/iomap.c
-index 9fb7cacc15cde..fe706ed946dfd 100644
---- a/drivers/pci/iomap.c
-+++ b/drivers/pci/iomap.c
-@@ -9,6 +9,8 @@
- 
- #include <linux/export.h>
- 
-+#include "pci.h" /* for pci_bar_index_is_valid() */
-+
- /**
-  * pci_iomap_range - create a virtual mapping cookie for a PCI BAR
-  * @dev: PCI device that owns the BAR
-@@ -33,12 +35,19 @@ void __iomem *pci_iomap_range(struct pci_dev *dev,
- 			      unsigned long offset,
- 			      unsigned long maxlen)
- {
--	resource_size_t start = pci_resource_start(dev, bar);
--	resource_size_t len = pci_resource_len(dev, bar);
--	unsigned long flags = pci_resource_flags(dev, bar);
-+	resource_size_t start, len;
-+	unsigned long flags;
-+
-+	if (!pci_bar_index_is_valid(bar))
-+		return NULL;
-+
-+	start = pci_resource_start(dev, bar);
-+	len = pci_resource_len(dev, bar);
-+	flags = pci_resource_flags(dev, bar);
- 
- 	if (len <= offset || !start)
- 		return NULL;
-+
- 	len -= offset;
- 	start += offset;
- 	if (maxlen && len > maxlen)
-@@ -77,16 +86,20 @@ void __iomem *pci_iomap_wc_range(struct pci_dev *dev,
- 				 unsigned long offset,
- 				 unsigned long maxlen)
- {
--	resource_size_t start = pci_resource_start(dev, bar);
--	resource_size_t len = pci_resource_len(dev, bar);
--	unsigned long flags = pci_resource_flags(dev, bar);
-+	resource_size_t start, len;
-+	unsigned long flags;
- 
--
--	if (flags & IORESOURCE_IO)
-+	if (!pci_bar_index_is_valid(bar))
- 		return NULL;
- 
-+	start = pci_resource_start(dev, bar);
-+	len = pci_resource_len(dev, bar);
-+	flags = pci_resource_flags(dev, bar);
-+
- 	if (len <= offset || !start)
- 		return NULL;
-+	if (flags & IORESOURCE_IO)
-+		return NULL;
- 
- 	len -= offset;
- 	start += offset;
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 1aa5d6f98ebda..b1f8ad6adf656 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3914,6 +3914,9 @@ EXPORT_SYMBOL(pci_enable_atomic_ops_to_root);
-  */
- void pci_release_region(struct pci_dev *pdev, int bar)
- {
-+	if (!pci_bar_index_is_valid(bar))
-+		return;
-+
- 	/*
- 	 * This is done for backwards compatibility, because the old PCI devres
- 	 * API had a mode in which the function became managed if it had been
-@@ -3959,6 +3962,9 @@ EXPORT_SYMBOL(pci_release_region);
- static int __pci_request_region(struct pci_dev *pdev, int bar,
- 				const char *res_name, int exclusive)
- {
-+	if (!pci_bar_index_is_valid(bar))
-+		return -EINVAL;
-+
- 	if (pci_is_managed(pdev)) {
- 		if (exclusive == IORESOURCE_EXCLUSIVE)
- 			return pcim_request_region_exclusive(pdev, bar, res_name);
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 1cdc2c9547a7e..65df6d2ac0032 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -165,6 +165,22 @@ static inline void pci_wakeup_event(struct pci_dev *dev)
- 	pm_wakeup_event(&dev->dev, 100);
+-	spin_lock_irqsave(&vmd->cfg_lock, flags);
++	raw_spin_lock_irqsave(&vmd->cfg_lock, flags);
+ 	switch (len) {
+ 	case 1:
+ 		*value = readb(addr);
+@@ -406,7 +406,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
+ 		ret = -EINVAL;
+ 		break;
+ 	}
+-	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
++	raw_spin_unlock_irqrestore(&vmd->cfg_lock, flags);
+ 	return ret;
  }
  
-+/**
-+ * pci_bar_index_is_valid - Check whether a BAR index is within valid range
-+ * @bar: BAR index
-+ *
-+ * Protects against overflowing &struct pci_dev.resource array.
-+ *
-+ * Return: true for valid index, false otherwise.
-+ */
-+static inline bool pci_bar_index_is_valid(int bar)
-+{
-+	if (bar >= 0 && bar < PCI_NUM_RESOURCES)
-+		return true;
-+
-+	return false;
-+}
-+
- static inline bool pci_has_subordinate(struct pci_dev *pci_dev)
- {
- 	return !!(pci_dev->subordinate);
+@@ -426,7 +426,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
+ 	if (!addr)
+ 		return -EFAULT;
+ 
+-	spin_lock_irqsave(&vmd->cfg_lock, flags);
++	raw_spin_lock_irqsave(&vmd->cfg_lock, flags);
+ 	switch (len) {
+ 	case 1:
+ 		writeb(value, addr);
+@@ -444,7 +444,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
+ 		ret = -EINVAL;
+ 		break;
+ 	}
+-	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
++	raw_spin_unlock_irqrestore(&vmd->cfg_lock, flags);
+ 	return ret;
+ }
+ 
+@@ -1009,7 +1009,7 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	if (features & VMD_FEAT_OFFSET_FIRST_VECTOR)
+ 		vmd->first_vec = 1;
+ 
+-	spin_lock_init(&vmd->cfg_lock);
++	raw_spin_lock_init(&vmd->cfg_lock);
+ 	pci_set_drvdata(dev, vmd);
+ 	err = vmd_enable_domain(vmd, features);
+ 	if (err)
 -- 
 2.39.5
 
