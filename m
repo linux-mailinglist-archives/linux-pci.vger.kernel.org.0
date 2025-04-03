@@ -1,180 +1,244 @@
-Return-Path: <linux-pci+bounces-25236-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25237-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0522A7A2D0
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 14:26:13 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1589A7A3E9
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 15:38:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD6E03B61A1
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 12:25:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CD66173EAC
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 13:37:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3367224BC14;
-	Thu,  3 Apr 2025 12:25:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDFB524EA81;
+	Thu,  3 Apr 2025 13:34:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Ni8jksu1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EU4bRLET"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3424624CEE1;
-	Thu,  3 Apr 2025 12:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9490924E4CE;
+	Thu,  3 Apr 2025 13:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743683146; cv=none; b=H5gzFF2/amXhzvyP5OjLBztPaiYemaWVdyL0LL2386/gmWbbfS0Kg/VGRFYPDoGm+bvDOT3LTQlhDiTRNJQnw+G4NNaM+3og6+eqhT67UnKRGafrvSV6ojfJ2bRL2/lMHrdN4StsP5lUG5yvFYg2wHJNUi0jKXSEoDX4Mys7GxY=
+	t=1743687271; cv=none; b=PiQjWEMI6JVeKvqD/RGg4SKSuF+QgZZVOjZjkUoqNiA9T4bSO7Fk0GaooNaLmSGY/hs2tuZKmeiwSHfj0e/S+CQMp9GVJB7U8lI8VbWxF7AEpB3LQgqM5gXTdLjvrgTsfjI3Oam49hFyXD52w0axmqWEgYEigWKTdfCM0di3jz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743683146; c=relaxed/simple;
-	bh=aYvnp3rjcHqgeu5q1Bg/myMR5Oa1l+xmSrX96Y1n/rY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r1bbNUJNzhOvESfpJrpF2MGvmh/dm5AEvv4/KiTiHwHy14KJGgOVISRN5DPWaIcf/34Y5usagLhAeCpXehX4aAK/yJsTVXLazV+Laa6x5GR1HWbm2/GqHtUgBISOoBWynKSeutoYXSq3zd0WuTlqSBah0GQq1ClgQFXifNWJN+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Ni8jksu1; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=YOVGxu+Pa9F9S2YKMRxxQPidaydp1+plrOXzivuJhgI=;
-	b=Ni8jksu1UeXcQ5bdgkbl4cNlxi682KXN1OSfRg7bgdinuMZSU3nbasnbFf0Zqw
-	Nsu6dSF5P0KlCyYq86PYsFrVz1yyl3bV7WXPkttOHNUNSFZkGGFd/4vvVT3P1rXx
-	f3c+xIBjCz7TKrbTFPG+srxW6HDzQ8bxb0cMxPulOsyRE=
-Received: from [192.168.60.52] (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wCH3Jb6fe5nIXo0Dw--.40417S2;
-	Thu, 03 Apr 2025 20:24:27 +0800 (CST)
-Message-ID: <f77f60a0-72d2-4a9c-864e-bd8c4ea8a514@163.com>
-Date: Thu, 3 Apr 2025 20:24:25 +0800
+	s=arc-20240116; t=1743687271; c=relaxed/simple;
+	bh=6RjrX6SmRqnQWq4LY/kZC/9S8/r7qMbPRi0OR7gJ4ow=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L4E1l7+WKmQtWIXynlZ2XYoUfugQBWyk4Z1Lue+Wv1guUpiwqhe94RzNflTGh2ekUle1nO5k26n94v/Vw0OOcAwog2+s3ZOuf+tlOe1Sozlus15yMG3de7xNfxvu07GU2djWTrPujkwlNRMMM5LN/nJDvS5h2nKXcWTUtCY86Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EU4bRLET; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71F46C4CEE5;
+	Thu,  3 Apr 2025 13:34:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743687271;
+	bh=6RjrX6SmRqnQWq4LY/kZC/9S8/r7qMbPRi0OR7gJ4ow=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EU4bRLETKpzRLpYyYx8qt+c9++6j/Ezgou1aKOtAVKfuRPu0ccVxJpbqd+vxZC4mb
+	 wur4+Dr2qX+gWMbydgfkgxhB8+8bKppgZeF74T6LZpFcePr/GIe8OtZaNzg3oywhR8
+	 QUt1pO4XYVJF2nUkeyOJwc1h9y4i7d3mIWrswEvo0fLsihOf2v5t7eW8s7JytZJQJT
+	 xRBpbhF7Ygc9aBBCX01umOXHbCPaeu14PhZ/2FVuTQpIda9z/VN8sH2tOYSPLUlQO1
+	 8lWhMhzJ8eb/XKGm5dQLzongXTnh2Jh3eTTvM8Z0pAhYPvyHvmG4TnKLy/i9fqxlTw
+	 Vhe9vSB4AyBRQ==
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2c75830b455so548344fac.1;
+        Thu, 03 Apr 2025 06:34:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXp5ZWy5lr6ZkzoJ8MbXAVgsF+SlkRcS0wncWSv4HA0Ai28UVzP7a4zsHsL55+zSmV4vrgncqluMogs@vger.kernel.org, AJvYcCXyp2RPzyUMOi6fQjycWqN0l4/4TO8aLUfs6M0QKSgy3VxPTJdkpUhXsW2DEaFw0Abd7bFswGsyb5ME@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVqh7mGFeKlA/NLncHiAjPNZ75zD7GkBjo5p3ciLmAYqS3pJ2R
+	BHYU9H+5qN6wktGvlDUkwaSh+vIkT2C/8h8nE4N0DltBjTerJh9fFej9X+G1j2kzdCPtsLmHyos
+	nmQMf1YCAWvBQgyGIZ7Hcj7Utnpc=
+X-Google-Smtp-Source: AGHT+IErzExqZCnHXv6vAXOSSx4sthsks5a9/NeM7CLvDChyPfrDi45shw4D7wTYISZ/wQxQZxZa4i47ESkl/HctuEE=
+X-Received: by 2002:a05:6871:2313:b0:296:5928:7a42 with SMTP id
+ 586e51a60fabf-2cc8397c01dmr1223827fac.22.1743687270755; Thu, 03 Apr 2025
+ 06:34:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v7 2/5] PCI: Refactor capability search functions to eliminate
- code duplication
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
- thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20250402042020.48681-1-18255117159@163.com>
- <20250402042020.48681-3-18255117159@163.com>
- <8b693bfc-73e0-2956-2ba3-1bfd639660b6@linux.intel.com>
- <c6706073-86b0-445a-b39f-993ac9b054fa@163.com>
- <bf6f0acb-9c48-05de-6d6d-efb0236e2d30@linux.intel.com>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <bf6f0acb-9c48-05de-6d6d-efb0236e2d30@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCH3Jb6fe5nIXo0Dw--.40417S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXw1fXr18KF1xWw1UCF17Jrb_yoW5tF4kpF
-	WUJF12krW8GF1UtF4qqay09r1aqas7tFyxGr48C3sIvF9FkasYvFy3Kr15Wr1SgrWDWF1x
-	Za1FgF9xCa4FyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Ul0PhUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOh0ko2fufCM1IQAAsi
+References: <20250401153225.96379-4-anshuman.gupta@intel.com>
+ <20250401201349.GA1676401@bhelgaas> <CAJZ5v0irNFX6dFrStinNXamrhP143=yjjfx4iK0pY+-dTEkviw@mail.gmail.com>
+ <CY5PR11MB6211021207DE5ECAA43BF26595AE2@CY5PR11MB6211.namprd11.prod.outlook.com>
+In-Reply-To: <CY5PR11MB6211021207DE5ECAA43BF26595AE2@CY5PR11MB6211.namprd11.prod.outlook.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 3 Apr 2025 15:34:19 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0inCpM2UhzZ_pD52S0Hf8aaEMa40CyE-dwzVmO1n3PMwA@mail.gmail.com>
+X-Gm-Features: AQ5f1Jq5ygn2A-o3P8j6nUP7IfUyydRmUNgORNNjZJ_sXGhr5ufiojwS7vdz5ic
+Message-ID: <CAJZ5v0inCpM2UhzZ_pD52S0Hf8aaEMa40CyE-dwzVmO1n3PMwA@mail.gmail.com>
+Subject: Re: [PATCH 03/12] PCI/ACPI: Add aux power grant notifier
+To: "Gupta, Anshuman" <anshuman.gupta@intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, 
+	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "lenb@kernel.org" <lenb@kernel.org>, 
+	"bhelgaas@google.com" <bhelgaas@google.com>, 
+	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>, 
+	"De Marchi, Lucas" <lucas.demarchi@intel.com>, "Vivi, Rodrigo" <rodrigo.vivi@intel.com>, 
+	"Nilawar, Badal" <badal.nilawar@intel.com>, "Gupta, Varun" <varun.gupta@intel.com>, 
+	"ville.syrjala@linux.intel.com" <ville.syrjala@linux.intel.com>, "Shankar, Uma" <uma.shankar@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Apr 3, 2025 at 1:30=E2=80=AFPM Gupta, Anshuman <anshuman.gupta@inte=
+l.com> wrote:
+>
+> > -----Original Message-----
+> > From: Rafael J. Wysocki <rafael@kernel.org>
+> > Sent: Wednesday, April 2, 2025 4:54 PM
+> > To: Bjorn Helgaas <helgaas@kernel.org>; Gupta, Anshuman
+> > <anshuman.gupta@intel.com>
+> > Cc: intel-xe@lists.freedesktop.org; linux-acpi@vger.kernel.org; linux-
+> > pci@vger.kernel.org; rafael@kernel.org; lenb@kernel.org;
+> > bhelgaas@google.com; ilpo.jarvinen@linux.intel.com; De Marchi, Lucas
+> > <lucas.demarchi@intel.com>; Vivi, Rodrigo <rodrigo.vivi@intel.com>; Nil=
+awar,
+> > Badal <badal.nilawar@intel.com>; Gupta, Varun <varun.gupta@intel.com>;
+> > ville.syrjala@linux.intel.com; Shankar, Uma <uma.shankar@intel.com>
+> > Subject: Re: [PATCH 03/12] PCI/ACPI: Add aux power grant notifier
+> >
+> > On Tue, Apr 1, 2025 at 10:13=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.o=
+rg> wrote:
+> > >
+> > > On Tue, Apr 01, 2025 at 09:02:16PM +0530, Anshuman Gupta wrote:
+> > > > Adding a notifier to notify all PCIe child devices about the block
+> > > > main power removal. It is needed because theoretically multiple PCI=
+e
+> > > > Endpoint devices on same Root Port can request for AUX power and
+> > > > _DSM method can return with 80000000h signifies that the hierarchy
+> > > > connected via the slot cannot support main power removal when in
+> > > > D3Cold.
+> > >
+> > > I wish the spec used different language here.  "D3cold" *means* "main
+> > > power is removed" (PCIe r6.0, sec 5.3.1.4.2), so it doesn't make sens=
+e
+> > > to say that "the slot cannot support main power removal when in
+> > > D3cold".  If a device is in D3cold, its main power has been removed b=
+y
+> > > definition.
+> > >
+> > > I suppose the spec is trying to say if the driver has called this _DS=
+M
+> > > with 80000000h, it means the platform must not remove main power from
+> > > the device while the system is in S0?  Is that what you think it
+> > > means?
+> > >
+> > > The 2h return value description says it "indicates that the platform
+> > > will not remove main power from the slot while the system is in S0,"
+> > > so I guess that must be it.
+> > >
+> > > In this series, pci_acpi_aux_power_setup() only supplies a 16-bit
+> > > aux_pwr_limit value, so the driver cannot *request* that the platform
+> > > not remove main power.
+> > >
+> > > So I guess the only scenario where the _DSM returns 80000000h is when
+> > > the platform itself or other devices prevent the removal of main
+> > > power.  And the point of the notifier is to tell devices that their
+> > > main power will never be removed while the system is in S0.  Is that
+> > > right?
+> > >
+> > > > This may disrupt functionality of other child device.
+> > >
+> > > What sort of disruption could happen?  I would think that if the _DSM
+> > > returns 80000000h, it just means the device will not have main power
+> > > removed, so it won't see that power state transition.  The only
+> > > "disruption" would be that we're using more power.
+> > >
+> > > > Let's notify all PCIe devices requested Aux power resource and Let
+> > > > PCIe End Point driver handle it in its callback.
+> > >
+> > > Wrap to fill 75 columns.
+> > >
+> > > s/Adding/Add/
+> > > s/Let's notify/Notify/
+> > > s/and Let/and let/
+> > > s/End Point/Endpoint/ (several places here and below)
+> > >
+> > > > Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
+> > > > ---
+> > > >  drivers/pci/pci-acpi.c   | 34 +++++++++++++++++++++++++++++++---
+> > > >  include/linux/pci-acpi.h | 13 +++++++++++++
+> > > >  2 files changed, 44 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c index
+> > > > 04149f037664..d1ca1649e6e8 100644
+> > > > --- a/drivers/pci/pci-acpi.c
+> > > > +++ b/drivers/pci/pci-acpi.c
+> > > > @@ -1421,6 +1421,32 @@ static void pci_acpi_optimize_delay(struct
+> > pci_dev *pdev,
+> > > >       ACPI_FREE(obj);
+> > > >  }
+> > > >
+> > > > +static BLOCKING_NOTIFIER_HEAD(pci_acpi_aux_power_notify_list);
+> > > > +
+> > > > +/**
+> > > > + * pci_acpi_register_aux_power_notifier - Register driver notifier
+> > > > + * @nb: notifier block
+> > > > + *
+> > > > + * This function shall be called by PCIe End Point device requeste=
+d
+> > > > +the Aux
+> > > > + * power resource in order to handle the any scenario gracefully
+> > > > +when other
+> > > > + * child PCIe devices Aux power request returns with No main power
+> > removal.
+> > > > + * PCIe devices which register this notifier shall handle No main
+> > > > +power
+> > > > + * removal scenario accordingly.
+> > >
+> > > This would actually be called by the *driver* (not by the device).
+> >
+> Hi Rafael,
+> Thanks for review.
+> > Apart from this, there seems to be a design issue here because it won't=
+ notify
+> > every driver that has requested the Aux power, just the ones that have =
+also
+> > registered notifiers.
+> IMHO that is what intended, if any device has functional impact in our ca=
+se it is
+> INTEL GPU has functional impact if other PCIe device's (on same root port=
+) Aux
+> Power request returns with 0x2. We need to handle such case to handle it =
+gracefully.
+> >
+> > So this appears to be an opt-in from getting notifications on Aux power
+> > request rejection responses to requests from other drivers requesting A=
+ux
+> > power for the same Root Port, but the changelog of the first patch alre=
+ady
+> > claimed that the aggregation of requests was not supported.  So if only=
+ one
+> > driver will be allowed to request the Aux power for the given Root Port=
+, why
+> > would the notifiers be necessary after all?
+> >
+> Please guide us, if we remove the above limitation from the commit log.
+> Then do we have any design issue with notifier approach ?
 
+Exactly like I said: If you only allow one driver to use the _DSM to
+request the Aux power from a given Root Port, it will have all of the
+information and does not need to be notified about any changes.  Since
+no one else is allowed to use this interface for that Root Port, no
+one else will need a notifier either.  For this to work, you need some
+mechanism allowing drivers to claim the interface so no one else can
+use it (on a per Root Port basis) which is currently missing AFAICS.
+I think that this is the option you want to pursue.
 
-On 2025/4/3 17:15, Ilpo Järvinen wrote:
->>> I don't like how 1 & 2 patches are split into two. IMO, they mostly belong
->>> together. However, (IMO) you can introduce the new all-size config space
->>> accessor in a separate patch before the combined patch.
->>>
->>
->> Ok. I'll change it to the following. The rest I'll combine into a patch.
->>
->> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
->> index b123da16b63b..bb2e26c2eb81 100644
->> --- a/drivers/pci/access.c
->> +++ b/drivers/pci/access.c
->> @@ -85,6 +85,23 @@ EXPORT_SYMBOL(pci_bus_write_config_byte);
->>   EXPORT_SYMBOL(pci_bus_write_config_word);
->>   EXPORT_SYMBOL(pci_bus_write_config_dword);
->>
->> +
-> 
-> Extra newline
-> 
+OTOH, if you want to allow multiple drivers to use this interface for
+the same Root Port, you need to aggregate the requests (as required by
+the spec IIUC) in the first place, or else the users can override each
+other's request.  In that case you'll likely need a notification
+mechanism of some sort to let the requesters know whether or not the
+Aux power will be provided, but maybe that can be done through a
+callback associated with a request.
 
-Hi Ilpo,
+The second option is genuinely more complicated because all of the
+devices requesting the Aux power from the same Root Port cannot be
+suspended independently in that case, so until there is a clear
+real-world use case for it, my recommendation would be to go for the
+first option.
 
-Thanks your for reply. Will delete.
-
->> +int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
->> +			u32 *val)
->> +{
->> +	struct pci_bus *bus = priv;
->> +	int ret;
->> +
->> +	if (size == 1)
->> +		ret = pci_bus_read_config_byte(bus, devfn, where, (u8 *)val);
->> +	else if (size == 2)
->> +		ret = pci_bus_read_config_word(bus, devfn, where, (u16 *)val);
->> +	else
->> +		ret = pci_bus_read_config_dword(bus, devfn, where, val);
->> +
->> +	return ret;
->> +}
->> +
->>   int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
->>   			    int where, int size, u32 *val)
->>   {
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index 2e9cf26a9ee9..6a7c88b9cd35 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -88,6 +88,8 @@ extern bool pci_early_dump;
->>   bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
->>   bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
->>   bool pcie_cap_has_rtctl(const struct pci_dev *dev);
->> +int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
->> +			u32 *val);
->>
->>   /* Functions internal to the PCI core code */
->>
->>
->>>>    }
->>>>    EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
->>>>    @@ -648,7 +614,6 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
->>>>      static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int
->>>> ht_cap)
->>>>    {
->>>> -	int rc, ttl = PCI_FIND_CAP_TTL;
->>>>    	u8 cap, mask;
->>>>      	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
->>>> @@ -657,7 +622,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev,
->>>> u8 pos, int ht_cap)
->>>>    		mask = HT_5BIT_CAP_MASK;
->>>>      	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
->>>> -				      PCI_CAP_ID_HT, &ttl);
->>>> +				      PCI_CAP_ID_HT);
->>>>    	while (pos) {
->>>>    		rc = pci_read_config_byte(dev, pos + 3, &cap);
->>>>    		if (rc != PCIBIOS_SUCCESSFUL)
->>>> @@ -668,7 +633,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev,
->>>> u8 pos, int ht_cap)
->>>>      		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
->>>>    					      pos + PCI_CAP_LIST_NEXT,
->>>> -					      PCI_CAP_ID_HT, &ttl);
->>>> +					      PCI_CAP_ID_HT);
->>>
->>> This function kind of had the idea to share the ttl but I suppose that was
->>> just a final safeguard to make sure the loop will always terminate in case
->>> the config space is corrupted so the unsharing is not a big issue.
->>>
->>
->> __pci_find_next_cap_ttl
->>    // This macro definition already has ttl loop restrictions inside it.
->>    PCI_FIND_NEXT_CAP_TTL
->>
->> Do I understand that you agree to remove ttl initialization and parameter
->> passing?
-> 
-> Yes, I agree with it but doing anything like this (although I'd mention
-> the reasoning in the changelog myself).
-> 
-
-Ok, I see. I will give the reasons.
-
-Best regards,
-Hans
-
+But the first option means exclusive access and so no need for
+notifiers and such.
 
