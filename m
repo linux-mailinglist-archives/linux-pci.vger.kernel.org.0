@@ -1,125 +1,231 @@
-Return-Path: <linux-pci+bounces-25245-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25246-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A099A7A994
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 20:36:38 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 856BCA7A9E1
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 21:04:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D601118990D5
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 18:36:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E3CB7A70FC
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 19:02:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FD3B253B52;
-	Thu,  3 Apr 2025 18:35:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEB8225335B;
+	Thu,  3 Apr 2025 19:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gl54rLa+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3IX3tGx"
 X-Original-To: linux-pci@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58075253B4F;
-	Thu,  3 Apr 2025 18:35:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7EE253356
+	for <linux-pci@vger.kernel.org>; Thu,  3 Apr 2025 19:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743705357; cv=none; b=BZVmvkyJU6XooCW1AybB3r5YQE7IGAfxxEasxg7G6yLLlokVOUIC2vN/T0cgdZ/kMYc2MKiYOtt+EwNWZdXZXyQ43WVMMtPiOTCGBobLD/0CK1M9t6YphAnJlySGTKdyd0yposRv8gKrOnG/di8xa/iAOjhYA0QW3IzowZhe144=
+	t=1743706947; cv=none; b=EubThoAug7a0GAl6wDJf8y0WFhexVbUQNvKI/+UelsAUCH0aA5OSkqYPXnvVD17w98kVPUGG98CrOw4lN/jxcOJGieko/fgr6Vg1Mp47BsIBKLLYzhSjIeajSKGUh29Y6vcXZ5SQlcNTHVOUvhcyyk94ML/klAXI/zlQ+ONJHts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743705357; c=relaxed/simple;
-	bh=5mbL52N0goQdYU4Zj846yxwg2l69rBb2xtHi9EfKTCE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VhjRDRou89qI8gVrMDz82geZcUftC8/A+cgMDLskgQw4qiDPJ0lGCSzipYu5mju6oveB0tk0Cr/1uCTZRyk1r22A4ijCbtyA2WZhmcqTAKEl6rFiN+9+kd8RHLkpI37EN3hi3j5iVHan8l30vnEZtlJ4FmQBHUIXtCYUxrDfK0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gl54rLa+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFB60C4CEEB;
-	Thu,  3 Apr 2025 18:35:56 +0000 (UTC)
+	s=arc-20240116; t=1743706947; c=relaxed/simple;
+	bh=ZxErGwuD05sfnW7lJ1VUV4+I4T/2s5MxfSXzovV5LYU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nj8XOkQ3mEhbqDelYNX712CcSq4qPZ9eabaCeaacRjE7FiV6FlAd+x3f9zwlkyJWfcZpmV/t52680U7SHkFdFaoqeTjpWAFX1/FCVC7E5IxUJXAp3PjcIhgYDYiw78P/dORhp4kip48YHxgctLCFPYYTpcnScmTXel+Yd2aQI0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3IX3tGx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30BD2C4CEEA;
+	Thu,  3 Apr 2025 19:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743705356;
-	bh=5mbL52N0goQdYU4Zj846yxwg2l69rBb2xtHi9EfKTCE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Gl54rLa+NLkBiwY1LOi11jhjccJnPZ+kMm8lyzRBXKYAzyuTGjRt3yWbc06DbVlIU
-	 mBgFtmLF+0IeiRCMzkM3kthYJB9CWKPywJdpPyiMYYWHWUgi8nXrWtEC9yWmVCW8fA
-	 g2n5ZUoCsL+GnURwI106z95UaX6+jNg4nSzy7sR7WgdQJ+S+8vWcg/cp3jvi1fIP/M
-	 IkoMYFg0+V2GANFTzzCrSvSMrxKDz27WJ9KGn55sPcSfSy8eb+jt1s0WlFJCIhr+5f
-	 Mjihjcf0OaY2eBvhXYWC1w1zv0kFTKhFtxtf/iRcmLVxYYBEbmGSNQK7WlxZddUOi/
-	 PWrJqRXmxkO+A==
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3f8ae3ed8f4so637990b6e.3;
-        Thu, 03 Apr 2025 11:35:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVYpebwsiu6qPBINZe6bk3tEmuYB6g0jnRIIi3s0LplbTZZ7wR1RFb2s7BqGI4VTzJlmlyPvAjRm35y@vger.kernel.org, AJvYcCW6s7nc3q5yIFsS/3WkZv0fnMAR37EaFphH2iJeLqbM+Y+CDuzGWeScnFmkmaBw8Q7qAjqFob3iwLKMs0I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz06cwnk0VX+v5GxnmhkFg91+FhzkWgbabxg9aQIK5GXwMn77Zu
-	ol7bzdskaqpF4kXWp63obZ27ljo0sLkhou3BzTWHDIj9khFTZy9+E8Go8bQLUBh4SccWxlN4nCS
-	YVjcUsz8wZTHP5eZxoRgSFkVueVE=
-X-Google-Smtp-Source: AGHT+IH3bR/+nQLml4F6SSNwULwxeL06S1TAo9+R8D/bN+Nw80qGyi4Xz67D+3zjMF/KFuhnpXmHlkIwmQXn+095pJA=
-X-Received: by 2002:a05:6870:498a:b0:2c2:5c2b:3ae5 with SMTP id
- 586e51a60fabf-2cc9e5151d7mr304229fac.3.1743705356085; Thu, 03 Apr 2025
- 11:35:56 -0700 (PDT)
+	s=k20201202; t=1743706947;
+	bh=ZxErGwuD05sfnW7lJ1VUV4+I4T/2s5MxfSXzovV5LYU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=M3IX3tGxkWbh3XllMwebNUhjQQkpAlRQYuyv3HbICwHD9KpJ9McWCnFh5Sdfuz8b+
+	 ZQSVOte1B3XScnNnAJ4CQc+eDTpORQYJTFH2dlP+fqmJPp8IA/pCO8cdqu3uHThe0z
+	 52NCewdQ9glloOyg4SHln/WnrWnhOzWwHSpzfKc7cFQMere6mnf+62/44I4Zh3QVXA
+	 8WMPa5xEzU3kxtm2/kAXL1xiJF39VOogqh+3jOjgHSIBlSAB5wd7ZoC3Oki8V6dQvt
+	 fgnUrIFqDCBaHDrZkQAWRvPft6m9lzLHdiKuexlO4hhlJm8fs/JgjcMNJBp0m+N7SF
+	 fXINWfEjVf0ww==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id BA3A5CE0799; Thu,  3 Apr 2025 12:02:26 -0700 (PDT)
+Date: Thu, 3 Apr 2025 12:02:26 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Jon Pan-Doh <pandoh@google.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	linux-pci@vger.kernel.org,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>
+Subject: Re: [PATCH v5 6/8] PCI/AER: Introduce ratelimit for error logs
+Message-ID: <82e50706-77f3-4268-b25d-cf5b2ffbc68e@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250321015806.954866-1-pandoh@google.com>
+ <20250321015806.954866-7-pandoh@google.com>
+ <614abb3f-fd4f-40e1-8e22-3c58bc2314b0@paulmck-laptop>
+ <CAMC_AXUNNCDVqUufwWHrXZU8URz3VzZL4ifwQaHf23e0BCTB0Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403074425.1181053-1-raag.jadav@intel.com>
-In-Reply-To: <20250403074425.1181053-1-raag.jadav@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 3 Apr 2025 20:35:45 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gtUHbYPk-dFRwEZMnPv0gQG8+J+bwf8bahUskcDkw9HA@mail.gmail.com>
-X-Gm-Features: AQ5f1JpEKGzULge8D50zh4FtKryRbeuMeUaQnhfHjNr9UO16hDw67V7-YqSjal4
-Message-ID: <CAJZ5v0gtUHbYPk-dFRwEZMnPv0gQG8+J+bwf8bahUskcDkw9HA@mail.gmail.com>
-Subject: Re: [PATCH v1] PCI/AER: Avoid power state transition during system suspend
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com, 
-	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ilpo.jarvinen@linux.intel.com, lukas.wunner@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMC_AXUNNCDVqUufwWHrXZU8URz3VzZL4ifwQaHf23e0BCTB0Q@mail.gmail.com>
 
-On Thu, Apr 3, 2025 at 9:45=E2=80=AFAM Raag Jadav <raag.jadav@intel.com> wr=
-ote:
->
-> If an error is triggered while system suspend is in progress, any bus
-> level power state transition will result in unpredictable error handling.
-> Mark skip_bus_pm flag as true to avoid this.
+On Thu, Mar 27, 2025 at 03:49:12PM -0700, Jon Pan-Doh wrote:
+> On Tue, Mar 25, 2025 at 10:17 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > --- a/drivers/pci/pci.h
+> > > +++ b/drivers/pci/pci.h
+> > > @@ -533,6 +533,7 @@ static inline bool pci_dev_test_and_set_removed(struct pci_dev *dev)
+> > >
+> > >  struct aer_err_info {
+> > >       struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+> > > +     bool ratelimited[AER_MAX_MULTI_ERR_DEVICES];
+> >
+> > In my stop-the-bleeding patch, I pass this as an argument to the functions
+> > needing it, but this works fine too.  Yes, this approach does consume
+> > a bit more storage, but I doubt that it is enough to matter.
+> 
+> The reason for the boolean array is that we want to eval/use the same
+> ratelimit for two log functions (aer_print_rp_info() and
+> aer_print_error()). In past versions[1], I removed aer_print_rp_info()
+> which simplified the ratelimit eval (i.e. directly eval within
+> aer_print_error()). However, others found it helpful to keep the root
+> port logs as it directly showed the linkage from interrupt on root
+> port -> error source device(s).
+> 
+> > The main concern is that either all information for a given error is
+> > printed or none of it is, to avoid confusion.  (There will of course be
+> > the possibility of partial drops due to buffer overruns further down
+> > the console-log pipeline, but no need for additional opportunities
+> > for confusion.)
+> >
+> > For this boolean array to provide this property, the error path for a
+> > given device must be single threaded, for example, only one interrupt
+> > handler at a time.  Is this the case?
+> 
+> I believe so. AER uses threaded irq where interrupt processing is done
+> by storing/reading info from a FIFO (i.e. serializes handling).
 
-This needs to be synchronized with the skip_bus_pm clearing in pci_pm_suspe=
-nd().
+I traced out the call trees in v6.14 and got the following:
 
-Also, skip_bus_pm is only used in the _noirq phases, so if a driver
-calls pci_set_power_state() from its ->suspend() callback, this change
-won't help.
+------------------------------------------------------------------------
 
-I think that you're aware of it, but the changelog should mention this
-limitation.
+Call Tree for aer_print_port_info().  (This is the old name, with Jon’s
+patch applied this is aer_print_rp_info().)
 
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> ---
->
-> Ideally we'd want to defer recovery until system resume, but this is
-> good enough to prevent device suspend.
->
-> More discussion at [1].
-> [1] https://lore.kernel.org/r/Z-38rPeN_j7YGiEl@black.fi.intel.com
->
->  drivers/pci/pcie/aer.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 508474e17183..5acf4efc2df3 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1108,6 +1108,12 @@ static void pci_aer_handle_error(struct pci_dev *d=
-ev, struct aer_err_info *info)
->
->  static void handle_error_source(struct pci_dev *dev, struct aer_err_info=
- *info)
->  {
-> +       /*
-> +        * Avoid any power state transition if an error is triggered duri=
-ng
-> +        * system suspend.
-> +        */
-> +       dev->skip_bus_pm =3D true;
-> +
->         cxl_rch_handle_error(dev, info);
->         pci_aer_handle_error(dev, info);
->         pci_dev_put(dev);
-> --
+	aer_isr() is a threaded interrupt handler.
+		aer_isr() invokes aer_isr_one_error().
+			aer_isr_one_error() invokes aer_print_port_info().
+
+
+Call Tree for aer_print_error()
+
+	aer_isr() is a threaded interrupt handler.
+		aer_isr() invokes aer_isr_one_error().
+			aer_isr_one_error() invokes aer_process_err_devices().
+				aer_process_err_devices() invokes aer_print_error().
+
+	dpc_handler() is a threaded interrupt handler.
+		dpc_handler() invokes dpc_process_error().
+			dpc_process_error() invokes aer_print_error()
+
+	edr_handle_event() is an ACPI notifier.
+		edr_handle_event() invokes dpc_process_error().
+			dpc_process_error() invokes aer_print_error().
+
+------------------------------------------------------------------------
+
+So ___ratelimit() could be invoked in aer_isr_one_error() and the result
+could be passed down directly to aer_print_port_info() on the one hand
+and to aer_print_error() via aer_process_err_devices() on the other.
+
+And ___ratelimit() could be invoked in dpc_process_error() and the
+result passed directly to aer_print_error().
+
+This would permit the ratelimit_state structures to be placed in
+the portion of the pci_dev structure under #ifdef CONFIG_PCIEAER,
+avoiding the need to search the enclosing structure.
+
+Presumably using a helper function that invokes __ratelimit() for
+CONFIG_PCIEAER=y kernels and just returns true otherwise.
+
+Or am I missing something here?  (Quite possibly your root-port points
+below...)
+
+> > > @@ -722,21 +750,31 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info,
+> > >  out:
+> > >       if (info->id && info->error_dev_num > 1 && info->id == id)
+> > >               pci_err(dev, "  Error of this Agent is reported first\n");
+> > > -
+> > > -     trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
+> > > -                     info->severity, info->tlp_header_valid, &info->tlp);
+> > >  }
+> > >
+> > >  static void aer_print_rp_info(struct pci_dev *rp, struct aer_err_info *info)
+> > >  {
+> > >       u8 bus = info->id >> 8;
+> > >       u8 devfn = info->id & 0xff;
+> > > +     struct pci_dev *dev;
+> > > +     bool ratelimited = false;
+> > > +     int i;
+> > >
+> > > -     pci_info(rp, "%s%s error message received from %04x:%02x:%02x.%d\n",
+> > > -              info->multi_error_valid ? "Multiple " : "",
+> > > -              aer_error_severity_string[info->severity],
+> > > -              pci_domain_nr(rp->bus), bus, PCI_SLOT(devfn),
+> > > -              PCI_FUNC(devfn));
+> > > +     /* extract endpoint device ratelimit */
+> > > +     for (i = 0; i < info->error_dev_num; i++) {
+> > > +             dev = info->dev[i];
+> > > +             if (info->id == pci_dev_id(dev)) {
+> > > +                     ratelimited = info->ratelimited[i];
+> > > +                     break;
+> > > +             }
+> > > +     }
+> >
+> > I cannot resist noting that passing a "ratelimited" argument to this
+> > function would make it unnecessary to search this array.  This would
+> > require doing rate-limiting checks in aer_isr_one_error(), which looks
+> > like it should work.  Then again, I do not claim to be familiar with
+> > this AER code.
+> >
+> > The "ratelimited" arguments would need to be added to
+> > aer_print_port_info(), aer_process_err_devices(), and aer_print_error().
+> > Maybe some that I have missed.  Or is there some handoff to
+> > softirq or workqueues that I missed?
+> 
+> We are not ratelimiting the root port, but the source device that
+> generated the interrupt on the root port. Thus, we have to search the
+> array at some point. We could bake this into the topology traversal
+> (link PCI ID with pci_dev) as another param to aer_error_info, but the
+> array is <= 8 (i.e. small).
+> 
+> The root port itself can generate AER notifications. Ratelimiting by
+> both its own errors as well as downstream devices will most likely
+> mask its own errors.
+> 
+> [1] https://lore.kernel.org/linux-pci/20250214023543.992372-2-pandoh@google.com/
+
+OK, I see that aer_isr_one_error() invokes aer_print_port_info(),
+and only then invokes find_source_device(), and only after that invokes
+aer_process_err_devices().  And it appears that aer_process_err_devices()
+iterates over the devices and chooses one, which it passes to
+aer_print_error().
+
+Is the logging by aer_print_port_info() and by the subsequent call
+to aer_print_error() to be throttled as a group, but specific to the
+non-root device passed to aer_print_error()?  Or should the logging by
+aer_print_port_info() be throttled specific to the root device with the
+subsequent call to aer_print_error() throttled separately specific to
+the non-root device?
+
+Or have I lost the thread completely?
+
+							Thanx, Paul
 
