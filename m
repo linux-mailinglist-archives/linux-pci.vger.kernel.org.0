@@ -1,178 +1,191 @@
-Return-Path: <linux-pci+bounces-25263-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25264-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85260A7AFC6
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 23:00:29 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91414A7B09C
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 23:21:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5FC6F7A5F18
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 20:59:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 93097175178
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 21:15:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FE3D25A64B;
-	Thu,  3 Apr 2025 19:58:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF477205E35;
+	Thu,  3 Apr 2025 20:52:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I1WItLgw"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gggvwUVG"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B879B1A254E;
-	Thu,  3 Apr 2025 19:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564951F4626
+	for <linux-pci@vger.kernel.org>; Thu,  3 Apr 2025 20:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743710280; cv=none; b=daHqKke84dd2RZmGu7ADlMNuOGG2wedgwL0hO4jz410LsrjYNof8inm6N5XVyMsEJIbPC6gBLGLesUslpEHm7LnLwIgCFwk+grOe75UUlDlyTtFS9Jl1On55tzXxUSy3gwwHJTWTEtjAVaRs3Q7DseR7H4FDFXGOl419Tl4zovk=
+	t=1743713557; cv=none; b=TqEt4Wk4yqNpzE9wKWMAYeW60W0dYuV1KNlGWuuKB0RkBVl5AySfWEgVpY3d/TnDIygfdFln8/9FLBi2tc9HtzeibLwpifAi9IMNAgpYfwyswyjKtM7JiXD4yxNMT5114YpDNPYULP+AfHRlYMSvevJN9G5xqCWkqWLTnn8Bo+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743710280; c=relaxed/simple;
-	bh=IjAcaogJEfwe1QULvS0sPgg/YGtkzTNEh+GLxUY+kf4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PbKXqQAzWFbGKKDEW2HA7HzmpIZBHXQ8vH0+dNJ68e0SzMDzWLMVCho6z5JGNy9OqF9Xg8bGesQv1f+ghfzc57MfmiJgrMZFCO9QMCBgiMVxmkhneXQGgzjZYqcteHbPoK0uOwIvEkqdz+2ZyEILkKEMjbiNf5BbJOSIUxRSfg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I1WItLgw; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1743710278; x=1775246278;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IjAcaogJEfwe1QULvS0sPgg/YGtkzTNEh+GLxUY+kf4=;
-  b=I1WItLgwrCPu8b25xFTGU1GiRZ2VbL4Y6X8iEgz5Msd+43D810rC3BQb
-   MHqSWm1W+DKZhS4bKRM63H8+QZX+c09OFIdSCj27vUIxg3ykal7/H/DJU
-   jzgOH5T2YHTf++bO1n1KSNmoW6CWgNEvzGcyx9KIqlR9AJ8BLBBxGrxD8
-   0XCIuebqF5MpIXVbmgTOKTA0WhgF+czP+s7n3mBXS+DJrLK1RjlZzoCXK
-   kf4GEBSG9ncMzilp9wWQlvPkrDY0RmS8CW+89cF0o5tcg7qDyx/CsLAzy
-   FMoqV1dv7QK0xe0Y4MlQXYCkTUTq4QL2aQBYmGrvJ5BaNntrHWzhl5pig
-   A==;
-X-CSE-ConnectionGUID: GcBwqSY5Q6y+VwEKnE2msw==
-X-CSE-MsgGUID: jr+gDegATamgdxuVJV0jQw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="67611714"
-X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
-   d="scan'208";a="67611714"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 12:57:58 -0700
-X-CSE-ConnectionGUID: mRRrpAwESFaktxFDiOsS0Q==
-X-CSE-MsgGUID: 61Ht4NWSTWCHq56j/Ob+og==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
-   d="scan'208";a="158085692"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 03 Apr 2025 12:57:54 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u0QhD-0000lb-0S;
-	Thu, 03 Apr 2025 19:57:51 +0000
-Date: Fri, 4 Apr 2025 03:57:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: shao.mingyin@zte.com.cn, jonnyc@amazon.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, yang.yang29@zte.com.cn,
-	xu.xin16@zte.com.cn, ye.xingchen@zte.com.cn
-Subject: Re: [PATCH] PCI: al: Use devm_platform_ioremap_resource_byname
-Message-ID: <202504040353.k5kLpniy-lkp@intel.com>
-References: <20250403154833001aNpIIRBQWEw67Oo8nChch@zte.com.cn>
+	s=arc-20240116; t=1743713557; c=relaxed/simple;
+	bh=tUE21kp5Y2Ha6PPB2grCo0cVpZSG6e2ekaq4gDZt+HQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=laqlKqdeZRSbznYGDflFS+ctaCbEkjw7ArF+Aq3jQAhpNbZ2qLOIBb1duIz6XEveP8tOKUbx5icx1dAeTwoJY5Ok8cLwDw96E92zo9tl9O1QINu222sEq9rZfzzRfq0+lmuG5j+eVzFQ3q9caaIaEOjpi2gvnkAde5HEglTh7vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gggvwUVG; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 533JhlBF019460
+	for <linux-pci@vger.kernel.org>; Thu, 3 Apr 2025 20:52:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+of49W00ZvZSV6VdrBbed6Uq20VFhTrt4WWUZuWJagI=; b=gggvwUVGrfFp+OAJ
+	9TlQVozwtUF30ZSnxqe7wG7NU1Yj2qoxmtKxVyk21RpgBtLhN2LZnr6dB+ft6Y4e
+	aDnq/uGUYzwHG6gWtaAAMLm2RB0A4pIyqMceXmOkURRlHSzYVozBPfEbfTuT6+8+
+	bwpF+B1B6Jbf1Nl/0FWWshW+ZnoEZpzafvfUC/f1rxD4vxCibI26SqGb8FxIPlYM
+	t4Gh409WmUVIllVPdnOsODL45Yj1HfGi1OrZuc2s9aJgHoAarIIkQ2nZVgZCTkH+
+	P6QrVKqBS/UftkBq1sVyjbLOjmBnbA3PiQ0BxZw3Q8DxBdKbbmdJWALHJb+Db2o4
+	wGuyDQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45sc2yu8kn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-pci@vger.kernel.org>; Thu, 03 Apr 2025 20:52:33 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5ad42d6bcso33124285a.2
+        for <linux-pci@vger.kernel.org>; Thu, 03 Apr 2025 13:52:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743713553; x=1744318353;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+of49W00ZvZSV6VdrBbed6Uq20VFhTrt4WWUZuWJagI=;
+        b=ClWrhiwBUKreZVBwJzQWVzVIzhfRH0yOf6nurC2/HHnKrdeNrGWkgZxzu81F8/+VWz
+         3rTbwv0ev72N6z/jQKpeHhuAvvIHvizmXPRkDehd0TjZca6FX4BwP9a98NbM4Xfr91l4
+         tDovfqFQiWnwG4mztQ4pr21DJ35CTQbwv1oGvmKnUle6Uf1S+73FgIx97sX+G8MMME6N
+         yZODotmqWJXVvvomN52D4ECAzbURJeFkD0DAorKxUUPa2rm+i4Q2dYa8lrfxeLTzlhXQ
+         ZU87Bk8hp+hjJslJZGHPWoJivDr2Vfi24EqiA/vrITQjkTzPZjWu0IW6xpawm69drPlP
+         vuiw==
+X-Forwarded-Encrypted: i=1; AJvYcCXh7v3PPESp1FRQFkYI2azFqXCzLejkv/iJwPXLNKNW1H/+B5bEdIVwZp8lnZTIX1Zz1YcO+fI5vUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYeg9f8WnuzMBnYsBLMK4mNieHUEuAWkZuOYdmacwJQQHa/FD7
+	S+JdSGfFMfizyLsdOp2POm6ZFECGVVGfaoO8P1AW2uwmBwhcbWppdhRS2vZHy5VL2LfFJqqFDV2
+	eKW+xJI5vxMA8Ftw4pUVao3XtM1WOUYH8PTHOrxvLI/nSMiUdDDcfWjOMSb4=
+X-Gm-Gg: ASbGnctZTaidzPqOfyhOeKlYk6eRf9nqyJ2xozGvAx2hEN+y1Uwxk8rWtKhaR9J3SEU
+	oRtRddqg9LsU5ddZI1X1ksxJsOIvzJ7yzyek21qO/op3RZK29cLUV4vB3Jb4uScn3hA3dQ0EqSf
+	Cex7plZuuDH3gL7rLuaV4MC/FV4Du/9s5MFa4cngTSSkVOnl1VANZAZxQ16S9TQ89k7ZPeTf2p5
+	1fxR1kN2MCqhVF2OSyBKZ2MZJisGh09DgJ6xPCCNbnUoJ5gupEHSOIdqKEnWH3G84OmnToQCjJp
+	3r6q1z5VxsJESANNDGGI6edSXVLf39PDCPpT5IOwBkAM+PP7sXyqhbIePhGdAKKTD79JZw==
+X-Received: by 2002:a05:620a:d86:b0:7c3:d752:f256 with SMTP id af79cd13be357-7c774d52b1fmr37586185a.7.1743713552880;
+        Thu, 03 Apr 2025 13:52:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFW9VVgHZdVpymWLYQ76D50xpMzwHkQtShiUWmBOzkY0o7BLLMB1tDc8bRnl4Fm8Wny63ZmKw==
+X-Received: by 2002:a05:620a:d86:b0:7c3:d752:f256 with SMTP id af79cd13be357-7c774d52b1fmr37584485a.7.1743713552456;
+        Thu, 03 Apr 2025 13:52:32 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c018aeadsm144626866b.153.2025.04.03.13.52.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Apr 2025 13:52:31 -0700 (PDT)
+Message-ID: <c1f145b7-501d-4d73-a5bc-a1844e17a289@oss.qualcomm.com>
+Date: Thu, 3 Apr 2025 22:52:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250403154833001aNpIIRBQWEw67Oo8nChch@zte.com.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 4/4] PCI: dwc: Add support for configuring lane
+ equalization presets
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi
+ <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
+ <kw@linux.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
+References: <20250316-preset_v6-v8-0-0703a78cb355@oss.qualcomm.com>
+ <20250316-preset_v6-v8-4-0703a78cb355@oss.qualcomm.com>
+ <3sbflmznjfqpcja52v6bso74vhouv7ncuikrba5zlb74tqqb5u@ovndmib3kgqf>
+ <92c4854d-033e-c7b5-ca92-cf44a1a8c0cc@oss.qualcomm.com>
+ <mslh75np4tytzzk3dvwj5a3ulqmwn73zkj5cq4qmld5adkkldj@ad3bt3drffbn>
+ <5fece4ac-2899-4e7d-8205-3b1ebba4b56b@oss.qualcomm.com>
+ <abgqh3suczj2fckmt4m2bkqazfgwsfj43762ddzrpznr4xvftg@n5dkemffktyv>
+ <622788fa-a067-49ac-b5b1-e4ec339e026f@oss.qualcomm.com>
+ <4rep2gvymazkk7pgve36cw7moppozaju7h6aqc3gflxrvkskig@62ykri6v4trs>
+ <ed8a59ce-0527-4514-91f8-c27972d799d4@oss.qualcomm.com>
+ <utswwqjgfy3iybt54ilyqnfss77vzit7kegctjp3tef636hc3p@724xe3dzlpip>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <utswwqjgfy3iybt54ilyqnfss77vzit7kegctjp3tef636hc3p@724xe3dzlpip>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=AMoviu7M c=1 sm=1 tr=0 ts=67eef511 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=8zO8dPC1Pt-TAjq7ZcgA:9 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: 1hVqXSRQyY43wjMFHE0xud9NkqvLxbEc
+X-Proofpoint-ORIG-GUID: 1hVqXSRQyY43wjMFHE0xud9NkqvLxbEc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-03_09,2025-04-03_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 malwarescore=0 mlxscore=0 impostorscore=0
+ clxscore=1015 spamscore=0 phishscore=0 mlxlogscore=999 adultscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504030110
 
-Hi,
+On 4/2/25 8:02 AM, Manivannan Sadhasivam wrote:
+> On Sat, Mar 29, 2025 at 12:42:02PM +0100, Konrad Dybcio wrote:
+>> On 3/29/25 10:39 AM, Manivannan Sadhasivam wrote:
+>>> On Sat, Mar 29, 2025 at 09:59:46AM +0100, Konrad Dybcio wrote:
+>>>> On 3/29/25 7:30 AM, Manivannan Sadhasivam wrote:
+>>>>> On Fri, Mar 28, 2025 at 10:53:19PM +0100, Konrad Dybcio wrote:
+>>>>>> On 3/28/25 7:45 AM, Manivannan Sadhasivam wrote:
+>>>>>>> On Fri, Mar 28, 2025 at 11:04:11AM +0530, Krishna Chaitanya Chundru wrote:
 
-kernel test robot noticed the following build warnings:
+[...]
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.14 next-20250403]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>> Ohh, I didn't think about that - and I can only think about solutions that are
+>> rather janky.. with perhaps the least janky one being changing the else case I
+>> proposed above into:
+>>
+>> else if (speed >= PCIE_SPEED_32_0GT && eq_presets_Ngts[speed - PCIE_SPEED_16_0GT][0] != PCI_EQ_RESV) {
+> 
+> s/PCIE_SPEED_16_0GT/PCIE_SPEED_32_0GT
+> 
+>> 	...
+> 
+> So this I read as: Oh, your controller supports 32 GT/s and you firmware also
+> wanted to apply the custom preset offsets, but sorry we didn't do it because we
+> don't know if it would work or not. So please let us know so that we can work
+> with you test it and then finally we can apply the presets.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/shao-mingyin-zte-com-cn/PCI-al-Use-devm_platform_ioremap_resource_byname/20250403-155111
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250403154833001aNpIIRBQWEw67Oo8nChch%40zte.com.cn
-patch subject: [PATCH] PCI: al: Use devm_platform_ioremap_resource_byname
-config: s390-randconfig-002-20250404 (https://download.01.org/0day-ci/archive/20250404/202504040353.k5kLpniy-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250404/202504040353.k5kLpniy-lkp@intel.com/reproduce)
+Good, because that was exactly what I had in mind :)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504040353.k5kLpniy-lkp@intel.com/
+>>>>> I'm not forseeing any issue in this part of the code to support higher GEN
+>>>>> speeds though.
+>>>>
+>>>> I would hope so as well, but both not programming and misprogramming are
+>>>> equally hard to detect
+>>>>
+>>>
+>>> I don't disagree. I wanted to have it since there is no sensible way of warning
+>>> users that this part of the code needs to be updated in the future.
+>>
+>> I understand, however I'm worried that the programming sequence or register
+>> may change for higher speeds in a way that would be incompatible with what
+>> we assume here
+>>
+> 
+> Honestly, I don't know why you are having this opinion. This piece of code is
+> not in Qcom driver and the registers are the same for 8 GT/s, 16 GT/s as per the
+> PCIe spec. So the hardware programming sequence and other arguments doesn't
+> apply here (atleast to me).
 
-All warnings (new ones prefixed by >>):
+I'm not familiar with the spec, but if you think it's a good idea to extend
+the sequence for 32+ GT/s, I won't object anymore
 
->> drivers/pci/controller/dwc/pcie-al.c:359:4: warning: variable 'controller_res' is uninitialized when used here [-Wuninitialized]
-     359 |                         controller_res);
-         |                         ^~~~~~~~~~~~~~
-   include/linux/dev_printk.h:154:65: note: expanded from macro 'dev_err'
-     154 |         dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |                                                                        ^~~~~~~~~~~
-   include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
-     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-         |                                     ^~~~~~~~~~~
-   drivers/pci/controller/dwc/pcie-al.c:330:33: note: initialize the variable 'controller_res' to silence this warning
-     330 |         struct resource *controller_res;
-         |                                        ^
-         |                                         = NULL
-   1 warning generated.
-
-
-vim +/controller_res +359 drivers/pci/controller/dwc/pcie-al.c
-
-a8daea94754989 Jonathan Chocron 2019-09-12  326  
-a8daea94754989 Jonathan Chocron 2019-09-12  327  static int al_pcie_probe(struct platform_device *pdev)
-a8daea94754989 Jonathan Chocron 2019-09-12  328  {
-a8daea94754989 Jonathan Chocron 2019-09-12  329  	struct device *dev = &pdev->dev;
-a8daea94754989 Jonathan Chocron 2019-09-12  330  	struct resource *controller_res;
-a8daea94754989 Jonathan Chocron 2019-09-12  331  	struct resource *ecam_res;
-a8daea94754989 Jonathan Chocron 2019-09-12  332  	struct al_pcie *al_pcie;
-a8daea94754989 Jonathan Chocron 2019-09-12  333  	struct dw_pcie *pci;
-a8daea94754989 Jonathan Chocron 2019-09-12  334  
-a8daea94754989 Jonathan Chocron 2019-09-12  335  	al_pcie = devm_kzalloc(dev, sizeof(*al_pcie), GFP_KERNEL);
-a8daea94754989 Jonathan Chocron 2019-09-12  336  	if (!al_pcie)
-a8daea94754989 Jonathan Chocron 2019-09-12  337  		return -ENOMEM;
-a8daea94754989 Jonathan Chocron 2019-09-12  338  
-a8daea94754989 Jonathan Chocron 2019-09-12  339  	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-a8daea94754989 Jonathan Chocron 2019-09-12  340  	if (!pci)
-a8daea94754989 Jonathan Chocron 2019-09-12  341  		return -ENOMEM;
-a8daea94754989 Jonathan Chocron 2019-09-12  342  
-a8daea94754989 Jonathan Chocron 2019-09-12  343  	pci->dev = dev;
-60f5b73fa0f298 Rob Herring      2020-11-05  344  	pci->pp.ops = &al_pcie_host_ops;
-a8daea94754989 Jonathan Chocron 2019-09-12  345  
-a8daea94754989 Jonathan Chocron 2019-09-12  346  	al_pcie->pci = pci;
-a8daea94754989 Jonathan Chocron 2019-09-12  347  	al_pcie->dev = dev;
-a8daea94754989 Jonathan Chocron 2019-09-12  348  
-a8daea94754989 Jonathan Chocron 2019-09-12  349  	ecam_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
-a8daea94754989 Jonathan Chocron 2019-09-12  350  	if (!ecam_res) {
-a8daea94754989 Jonathan Chocron 2019-09-12  351  		dev_err(dev, "couldn't find 'config' reg in DT\n");
-a8daea94754989 Jonathan Chocron 2019-09-12  352  		return -ENOENT;
-a8daea94754989 Jonathan Chocron 2019-09-12  353  	}
-a8daea94754989 Jonathan Chocron 2019-09-12  354  	al_pcie->ecam_size = resource_size(ecam_res);
-a8daea94754989 Jonathan Chocron 2019-09-12  355  
-99f4e0afd9fbe4 Xie Ludan        2025-04-03  356  	al_pcie->controller_base = devm_platform_ioremap_resource_byname(pdev, "controller");
-a8daea94754989 Jonathan Chocron 2019-09-12  357  	if (IS_ERR(al_pcie->controller_base)) {
-a8daea94754989 Jonathan Chocron 2019-09-12  358  		dev_err(dev, "couldn't remap controller base %pR\n",
-a8daea94754989 Jonathan Chocron 2019-09-12 @359  			controller_res);
-a8daea94754989 Jonathan Chocron 2019-09-12  360  		return PTR_ERR(al_pcie->controller_base);
-a8daea94754989 Jonathan Chocron 2019-09-12  361  	}
-a8daea94754989 Jonathan Chocron 2019-09-12  362  
-a0fd361db8e508 Rob Herring      2020-11-05  363  	dev_dbg(dev, "From DT: controller_base: %pR\n", controller_res);
-a8daea94754989 Jonathan Chocron 2019-09-12  364  
-a8daea94754989 Jonathan Chocron 2019-09-12  365  	platform_set_drvdata(pdev, al_pcie);
-a8daea94754989 Jonathan Chocron 2019-09-12  366  
-60f5b73fa0f298 Rob Herring      2020-11-05  367  	return dw_pcie_host_init(&pci->pp);
-a8daea94754989 Jonathan Chocron 2019-09-12  368  }
-a8daea94754989 Jonathan Chocron 2019-09-12  369  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Konrad
 
