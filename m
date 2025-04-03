@@ -1,182 +1,178 @@
-Return-Path: <linux-pci+bounces-25262-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25263-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA878A7AF79
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 22:52:37 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85260A7AFC6
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 23:00:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F8693BBEB6
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 20:45:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5FC6F7A5F18
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 20:59:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1708261392;
-	Thu,  3 Apr 2025 19:20:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FE3D25A64B;
+	Thu,  3 Apr 2025 19:58:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rKGFXrX5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I1WItLgw"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE11261389;
-	Thu,  3 Apr 2025 19:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B879B1A254E;
+	Thu,  3 Apr 2025 19:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743708026; cv=none; b=F1IECPST8KkDwM+FASiZ9a4lhwDcNeQsLm8vn6I54/t9yXhr5ubmFb3Ur75D4FRCttMru4yqK7JJJ1d8EwcMaggwjviT5WT3g1UWj1arERtKxGoJSynajqConW8xucHM6oMaoOpsQCV+fc7GbCNVdUUisx/M6nWEZK2FSar9FXs=
+	t=1743710280; cv=none; b=daHqKke84dd2RZmGu7ADlMNuOGG2wedgwL0hO4jz410LsrjYNof8inm6N5XVyMsEJIbPC6gBLGLesUslpEHm7LnLwIgCFwk+grOe75UUlDlyTtFS9Jl1On55tzXxUSy3gwwHJTWTEtjAVaRs3Q7DseR7H4FDFXGOl419Tl4zovk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743708026; c=relaxed/simple;
-	bh=+tBY6UKWekhQJduG+EZZK0/ueq1BweiGDOAn9x+7Voc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jOBZKjooave54BVL6vJb0/ngHe4yExx92tKpHCGDHUZAT8QI1YQrseFAJ20i8UbSfvhAFUQF43YYaiCxa4ZAd/HC1320X8ATffzYtD7abcuwhdA+X09HZ5J4iLA/VgcJX2DafLMTT9uegLlt0+BGwryYRN24cMXXugm1qjEDppE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rKGFXrX5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91A06C4CEE3;
-	Thu,  3 Apr 2025 19:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743708026;
-	bh=+tBY6UKWekhQJduG+EZZK0/ueq1BweiGDOAn9x+7Voc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rKGFXrX5IScWLvIhJdMq2MyM6SZlZu+a64frc1CPQtfTD8epdfG9P0qTkxgqE5p9i
-	 xJ5eUrN02SWjwzvoy1um2g8OnyxaKnsSzlfDWvqB/JnMQsK4cb4dAVxlLKoFdlhMMR
-	 hp6/w1rSUpajDxyu04BgJfHD2/HDctLxm7hicLEl1cCvw5zR9PMakjFKg5Ul1S8xkH
-	 W9huzk+3xtZoifrMufrm7MKK5jPdCf4CB2MWtFOf5vJgv3095wNjP+07l8WvFYfsZ4
-	 qmGt8dxIS374wV8LpEkeVwYmAi1iHkjUiZwb/tLy07jWVNacUtxuTSP5pxrRntaKWm
-	 6w4RvXK7ycq+A==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ryo Takakura <ryotkkr98@gmail.com>,
-	"Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sasha Levin <sashal@kernel.org>,
-	nirmal.patel@linux.intel.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	clrkwllms@kernel.org,
-	rostedt@goodmis.org,
-	linux-pci@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: [PATCH AUTOSEL 5.15 10/12] PCI: vmd: Make vmd_dev::cfg_lock a raw_spinlock_t type
-Date: Thu,  3 Apr 2025 15:19:59 -0400
-Message-Id: <20250403192001.2682149-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403192001.2682149-1-sashal@kernel.org>
-References: <20250403192001.2682149-1-sashal@kernel.org>
+	s=arc-20240116; t=1743710280; c=relaxed/simple;
+	bh=IjAcaogJEfwe1QULvS0sPgg/YGtkzTNEh+GLxUY+kf4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PbKXqQAzWFbGKKDEW2HA7HzmpIZBHXQ8vH0+dNJ68e0SzMDzWLMVCho6z5JGNy9OqF9Xg8bGesQv1f+ghfzc57MfmiJgrMZFCO9QMCBgiMVxmkhneXQGgzjZYqcteHbPoK0uOwIvEkqdz+2ZyEILkKEMjbiNf5BbJOSIUxRSfg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I1WItLgw; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743710278; x=1775246278;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IjAcaogJEfwe1QULvS0sPgg/YGtkzTNEh+GLxUY+kf4=;
+  b=I1WItLgwrCPu8b25xFTGU1GiRZ2VbL4Y6X8iEgz5Msd+43D810rC3BQb
+   MHqSWm1W+DKZhS4bKRM63H8+QZX+c09OFIdSCj27vUIxg3ykal7/H/DJU
+   jzgOH5T2YHTf++bO1n1KSNmoW6CWgNEvzGcyx9KIqlR9AJ8BLBBxGrxD8
+   0XCIuebqF5MpIXVbmgTOKTA0WhgF+czP+s7n3mBXS+DJrLK1RjlZzoCXK
+   kf4GEBSG9ncMzilp9wWQlvPkrDY0RmS8CW+89cF0o5tcg7qDyx/CsLAzy
+   FMoqV1dv7QK0xe0Y4MlQXYCkTUTq4QL2aQBYmGrvJ5BaNntrHWzhl5pig
+   A==;
+X-CSE-ConnectionGUID: GcBwqSY5Q6y+VwEKnE2msw==
+X-CSE-MsgGUID: jr+gDegATamgdxuVJV0jQw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11393"; a="67611714"
+X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
+   d="scan'208";a="67611714"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2025 12:57:58 -0700
+X-CSE-ConnectionGUID: mRRrpAwESFaktxFDiOsS0Q==
+X-CSE-MsgGUID: 61Ht4NWSTWCHq56j/Ob+og==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,186,1739865600"; 
+   d="scan'208";a="158085692"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 03 Apr 2025 12:57:54 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u0QhD-0000lb-0S;
+	Thu, 03 Apr 2025 19:57:51 +0000
+Date: Fri, 4 Apr 2025 03:57:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: shao.mingyin@zte.com.cn, jonnyc@amazon.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, yang.yang29@zte.com.cn,
+	xu.xin16@zte.com.cn, ye.xingchen@zte.com.cn
+Subject: Re: [PATCH] PCI: al: Use devm_platform_ioremap_resource_byname
+Message-ID: <202504040353.k5kLpniy-lkp@intel.com>
+References: <20250403154833001aNpIIRBQWEw67Oo8nChch@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.179
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403154833001aNpIIRBQWEw67Oo8nChch@zte.com.cn>
 
-From: Ryo Takakura <ryotkkr98@gmail.com>
+Hi,
 
-[ Upstream commit 18056a48669a040bef491e63b25896561ee14d90 ]
+kernel test robot noticed the following build warnings:
 
-The access to the PCI config space via pci_ops::read and pci_ops::write is
-a low-level hardware access. The functions can be accessed with disabled
-interrupts even on PREEMPT_RT. The pci_lock is a raw_spinlock_t for this
-purpose.
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.14 next-20250403]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-A spinlock_t becomes a sleeping lock on PREEMPT_RT, so it cannot be
-acquired with disabled interrupts. The vmd_dev::cfg_lock is accessed in
-the same context as the pci_lock.
+url:    https://github.com/intel-lab-lkp/linux/commits/shao-mingyin-zte-com-cn/PCI-al-Use-devm_platform_ioremap_resource_byname/20250403-155111
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250403154833001aNpIIRBQWEw67Oo8nChch%40zte.com.cn
+patch subject: [PATCH] PCI: al: Use devm_platform_ioremap_resource_byname
+config: s390-randconfig-002-20250404 (https://download.01.org/0day-ci/archive/20250404/202504040353.k5kLpniy-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250404/202504040353.k5kLpniy-lkp@intel.com/reproduce)
 
-Make vmd_dev::cfg_lock a raw_spinlock_t type so it can be used with
-interrupts disabled.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504040353.k5kLpniy-lkp@intel.com/
 
-This was reported as:
+All warnings (new ones prefixed by >>):
 
-  BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
-  Call Trace:
-   rt_spin_lock+0x4e/0x130
-   vmd_pci_read+0x8d/0x100 [vmd]
-   pci_user_read_config_byte+0x6f/0xe0
-   pci_read_config+0xfe/0x290
-   sysfs_kf_bin_read+0x68/0x90
+>> drivers/pci/controller/dwc/pcie-al.c:359:4: warning: variable 'controller_res' is uninitialized when used here [-Wuninitialized]
+     359 |                         controller_res);
+         |                         ^~~~~~~~~~~~~~
+   include/linux/dev_printk.h:154:65: note: expanded from macro 'dev_err'
+     154 |         dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
+         |                                                                        ^~~~~~~~~~~
+   include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                                     ^~~~~~~~~~~
+   drivers/pci/controller/dwc/pcie-al.c:330:33: note: initialize the variable 'controller_res' to silence this warning
+     330 |         struct resource *controller_res;
+         |                                        ^
+         |                                         = NULL
+   1 warning generated.
 
-Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
-Tested-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-Acked-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-[bigeasy: reword commit message]
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Tested-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-Link: https://lore.kernel.org/r/20250218080830.ufw3IgyX@linutronix.de
-[kwilczynski: commit log]
-Signed-off-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-[bhelgaas: add back report info from
-https://lore.kernel.org/lkml/20241218115951.83062-1-ryotkkr98@gmail.com/]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/controller/vmd.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 10a078ef4799d..1195c570599c0 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -108,7 +108,7 @@ struct vmd_irq_list {
- struct vmd_dev {
- 	struct pci_dev		*dev;
- 
--	spinlock_t		cfg_lock;
-+	raw_spinlock_t		cfg_lock;
- 	void __iomem		*cfgbar;
- 
- 	int msix_count;
-@@ -386,7 +386,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
- 	if (!addr)
- 		return -EFAULT;
- 
--	spin_lock_irqsave(&vmd->cfg_lock, flags);
-+	raw_spin_lock_irqsave(&vmd->cfg_lock, flags);
- 	switch (len) {
- 	case 1:
- 		*value = readb(addr);
-@@ -401,7 +401,7 @@ static int vmd_pci_read(struct pci_bus *bus, unsigned int devfn, int reg,
- 		ret = -EINVAL;
- 		break;
- 	}
--	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
-+	raw_spin_unlock_irqrestore(&vmd->cfg_lock, flags);
- 	return ret;
- }
- 
-@@ -421,7 +421,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
- 	if (!addr)
- 		return -EFAULT;
- 
--	spin_lock_irqsave(&vmd->cfg_lock, flags);
-+	raw_spin_lock_irqsave(&vmd->cfg_lock, flags);
- 	switch (len) {
- 	case 1:
- 		writeb(value, addr);
-@@ -439,7 +439,7 @@ static int vmd_pci_write(struct pci_bus *bus, unsigned int devfn, int reg,
- 		ret = -EINVAL;
- 		break;
- 	}
--	spin_unlock_irqrestore(&vmd->cfg_lock, flags);
-+	raw_spin_unlock_irqrestore(&vmd->cfg_lock, flags);
- 	return ret;
- }
- 
-@@ -850,7 +850,7 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if (features & VMD_FEAT_OFFSET_FIRST_VECTOR)
- 		vmd->first_vec = 1;
- 
--	spin_lock_init(&vmd->cfg_lock);
-+	raw_spin_lock_init(&vmd->cfg_lock);
- 	pci_set_drvdata(dev, vmd);
- 	err = vmd_enable_domain(vmd, features);
- 	if (err)
+vim +/controller_res +359 drivers/pci/controller/dwc/pcie-al.c
+
+a8daea94754989 Jonathan Chocron 2019-09-12  326  
+a8daea94754989 Jonathan Chocron 2019-09-12  327  static int al_pcie_probe(struct platform_device *pdev)
+a8daea94754989 Jonathan Chocron 2019-09-12  328  {
+a8daea94754989 Jonathan Chocron 2019-09-12  329  	struct device *dev = &pdev->dev;
+a8daea94754989 Jonathan Chocron 2019-09-12  330  	struct resource *controller_res;
+a8daea94754989 Jonathan Chocron 2019-09-12  331  	struct resource *ecam_res;
+a8daea94754989 Jonathan Chocron 2019-09-12  332  	struct al_pcie *al_pcie;
+a8daea94754989 Jonathan Chocron 2019-09-12  333  	struct dw_pcie *pci;
+a8daea94754989 Jonathan Chocron 2019-09-12  334  
+a8daea94754989 Jonathan Chocron 2019-09-12  335  	al_pcie = devm_kzalloc(dev, sizeof(*al_pcie), GFP_KERNEL);
+a8daea94754989 Jonathan Chocron 2019-09-12  336  	if (!al_pcie)
+a8daea94754989 Jonathan Chocron 2019-09-12  337  		return -ENOMEM;
+a8daea94754989 Jonathan Chocron 2019-09-12  338  
+a8daea94754989 Jonathan Chocron 2019-09-12  339  	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+a8daea94754989 Jonathan Chocron 2019-09-12  340  	if (!pci)
+a8daea94754989 Jonathan Chocron 2019-09-12  341  		return -ENOMEM;
+a8daea94754989 Jonathan Chocron 2019-09-12  342  
+a8daea94754989 Jonathan Chocron 2019-09-12  343  	pci->dev = dev;
+60f5b73fa0f298 Rob Herring      2020-11-05  344  	pci->pp.ops = &al_pcie_host_ops;
+a8daea94754989 Jonathan Chocron 2019-09-12  345  
+a8daea94754989 Jonathan Chocron 2019-09-12  346  	al_pcie->pci = pci;
+a8daea94754989 Jonathan Chocron 2019-09-12  347  	al_pcie->dev = dev;
+a8daea94754989 Jonathan Chocron 2019-09-12  348  
+a8daea94754989 Jonathan Chocron 2019-09-12  349  	ecam_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+a8daea94754989 Jonathan Chocron 2019-09-12  350  	if (!ecam_res) {
+a8daea94754989 Jonathan Chocron 2019-09-12  351  		dev_err(dev, "couldn't find 'config' reg in DT\n");
+a8daea94754989 Jonathan Chocron 2019-09-12  352  		return -ENOENT;
+a8daea94754989 Jonathan Chocron 2019-09-12  353  	}
+a8daea94754989 Jonathan Chocron 2019-09-12  354  	al_pcie->ecam_size = resource_size(ecam_res);
+a8daea94754989 Jonathan Chocron 2019-09-12  355  
+99f4e0afd9fbe4 Xie Ludan        2025-04-03  356  	al_pcie->controller_base = devm_platform_ioremap_resource_byname(pdev, "controller");
+a8daea94754989 Jonathan Chocron 2019-09-12  357  	if (IS_ERR(al_pcie->controller_base)) {
+a8daea94754989 Jonathan Chocron 2019-09-12  358  		dev_err(dev, "couldn't remap controller base %pR\n",
+a8daea94754989 Jonathan Chocron 2019-09-12 @359  			controller_res);
+a8daea94754989 Jonathan Chocron 2019-09-12  360  		return PTR_ERR(al_pcie->controller_base);
+a8daea94754989 Jonathan Chocron 2019-09-12  361  	}
+a8daea94754989 Jonathan Chocron 2019-09-12  362  
+a0fd361db8e508 Rob Herring      2020-11-05  363  	dev_dbg(dev, "From DT: controller_base: %pR\n", controller_res);
+a8daea94754989 Jonathan Chocron 2019-09-12  364  
+a8daea94754989 Jonathan Chocron 2019-09-12  365  	platform_set_drvdata(pdev, al_pcie);
+a8daea94754989 Jonathan Chocron 2019-09-12  366  
+60f5b73fa0f298 Rob Herring      2020-11-05  367  	return dw_pcie_host_init(&pci->pp);
+a8daea94754989 Jonathan Chocron 2019-09-12  368  }
+a8daea94754989 Jonathan Chocron 2019-09-12  369  
+
 -- 
-2.39.5
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
