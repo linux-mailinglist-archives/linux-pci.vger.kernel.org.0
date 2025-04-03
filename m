@@ -1,414 +1,349 @@
-Return-Path: <linux-pci+bounces-25242-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25243-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BE6E2A7A80C
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 18:36:32 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E313A7A91A
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 20:15:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A1E8173D8A
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 16:36:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6D6D1895E0F
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 18:15:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC4F91F3BA9;
-	Thu,  3 Apr 2025 16:36:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE412253330;
+	Thu,  3 Apr 2025 18:15:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="PujN0zf+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBEfLS5p"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F6722500C5;
-	Thu,  3 Apr 2025 16:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C054824E012;
+	Thu,  3 Apr 2025 18:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743698188; cv=none; b=agyf83NMvFJnOQfedtMKUPUPuv1jAdvKKlwDvD1/hXaz9nUQOiu7WlpOtOAo7jjs8jK3RpZ8n3uxUFklFyLMkTeW7Ox3RdNzz13KFprhCIhyp2kj/SZug9fYSWqk186COjIEWOOc+W6DETNgGJbygCekEnsgh90p5XXyleA3HcQ=
+	t=1743704123; cv=none; b=f7x0/lxsdoeaO6r/HrZNRFqV9oXsqzpexDr/g7RFXFYlJjo+upZr8YbBOaMpi9vzXk0g05IGQcKGfHMT7QNW53XS+f2PUpCNl8IwefonyOlcidKqYi3LLhQFEsTWEdzNiuCWLLWnGZggYumQdN04Jk6kFVTgJaTySVK4HhnS1co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743698188; c=relaxed/simple;
-	bh=GWOjykiuNj6LqXHBcpsfAQL11Mg6d7NQ76P87A3BQGg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cHek+dzRc4nI+rX9uvV8AnYcJD9vdTbA5fnbvDLpiGIESiS1MFu+AcdhkpFfgpWRgSdFmXqdp+q69OKVPZMxKO62Sotvk6ROTOFadm4AZyYPCh06lXh5bCnL5wnxxcg76rRm3G0cQIlgjDmoxuu4aMcifDrr2FgICT0B4H8kqls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=PujN0zf+; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=1rWupM0SD6fPf+IhLnUO+yDXsCHCx3+mPDtUqa7WKsA=;
-	b=PujN0zf+upjs2ThgU2DXWp+UwH32aeHIZ3q8P3EucWQEGiqeDfKxLpFNe6Ympl
-	jkcg2Ms1bpylaP6oTIvEg0CdCTJHChE9VL8F53t/5APeyaOeRGjBqQez570dmcls
-	NwMVr59t/vaGU5KH49hXGneziaypFw/xu8Rv+5UhB2Y0w=
-Received: from [192.168.71.89] (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wCXMd_cuO5nu9qWDw--.46905S2;
-	Fri, 04 Apr 2025 00:35:40 +0800 (CST)
-Message-ID: <ef0237d9-f5da-44d7-ab45-2be037cf0f25@163.com>
-Date: Fri, 4 Apr 2025 00:35:40 +0800
+	s=arc-20240116; t=1743704123; c=relaxed/simple;
+	bh=IHvXA/4ffeiIOCG6zsvNkcvaxlsrzA7Y1aHdH6cANCI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sr3n2gtqzdrgXUYGBpELegmv007/qY79bUTwWTr7fR5IK6FsaVgHN0K1PqPpAt2uOEepZm/dSv+OAU9JWc+GihiLEPKI0oY0W8lWMIwgeXO3/i5fEVshtebRNHbnrxfTUq9SLlJDhUplG5g5eNDLn0LP/3PosibTIyz1TcdAdbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBEfLS5p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ED0DC4AF0B;
+	Thu,  3 Apr 2025 18:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743704123;
+	bh=IHvXA/4ffeiIOCG6zsvNkcvaxlsrzA7Y1aHdH6cANCI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fBEfLS5pKLgOq5wdDD9ngMrdMHzFXELzKtddY+e61np67N9CTcG0zNfLITOjRCP6O
+	 087dp2dAslrH+AOZIqccVFUCpDFZrWCzxtXsXSCagoch0CWdahQ76j+5mwtn01o1pW
+	 bBW6mNNEgFKDbb+3FVCUB5g2ZcrUnkuxyfb/VqoP0F8e+07P0YYxlKM8iwBF5YRIoY
+	 iw68bPwd2VS6d6EbH/2Mfr/rSyXjKtxoMwN2sSlT/rlN3GrBAjP0jouVJ+tVpCulah
+	 NwUUL2GT1Fol9OqhxE9rznWTSid/ptgfk5PzwTZxRN7AcnaS9mZVkvTTSbqxAVjlO1
+	 kwUGuYwmGlRFg==
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-72c13802133so347076a34.3;
+        Thu, 03 Apr 2025 11:15:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWnbb+glfytaPFyVgYxFI96XaAMu4w0rgm3YB2+HTjkuq6y7zM/YNUVYw/10uDssZA4nqeT5dZBZ5ny@vger.kernel.org, AJvYcCXONoM3ODlCwtb93AWaKqFk4bsu2Vj1Ds+7UzTrNd1iFIvQGxZuR9vEDRUj+BvrHEfaKXO0R+1N4MB6@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOn3hk+CGRVIENn0v1QMGe1Il86gKeht38Qw51aHNQm2xNawlw
+	OM06FAKJP/+QUIcJREWWbYObA2iO3GrY6KfP0A7LOziF+YO+h4vUcv84QnnZ+VY7pjMPizwTILO
+	YXWe8F2uxbjClUxf2MqUT0WsP8YQ=
+X-Google-Smtp-Source: AGHT+IGrK2wpNc2eDmJ11ljJ/U6Ot5pRbJzbsDnWyAxDlhKPPT5nv5jHvdx5iRteP505Sf/T8C/Mb2YQFbcuL7ovc1E=
+X-Received: by 2002:a05:6830:6e97:b0:72b:9387:84b2 with SMTP id
+ 46e09a7af769-72e36973f5fmr392572a34.27.1743704122428; Thu, 03 Apr 2025
+ 11:15:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v7 2/5] PCI: Refactor capability search functions to eliminate
- code duplication
-From: Hans Zhang <18255117159@163.com>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: lpieralisi@kernel.org, bhelgaas@google.com, kw@linux.com,
- manivannan.sadhasivam@linaro.org, robh@kernel.org, jingoohan1@gmail.com,
- thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20250402042020.48681-1-18255117159@163.com>
- <20250402042020.48681-3-18255117159@163.com>
- <8b693bfc-73e0-2956-2ba3-1bfd639660b6@linux.intel.com>
- <c6706073-86b0-445a-b39f-993ac9b054fa@163.com>
- <bf6f0acb-9c48-05de-6d6d-efb0236e2d30@linux.intel.com>
- <f77f60a0-72d2-4a9c-864e-bd8c4ea8a514@163.com>
-Content-Language: en-US
-In-Reply-To: <f77f60a0-72d2-4a9c-864e-bd8c4ea8a514@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCXMd_cuO5nu9qWDw--.46905S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Ww4Dtw4kWryxWFy8XF13urg_yoWDGFWDpF
-	y5A3WayrW8J3ZFqwsFva18tr1ava97Aay7urWxGwn0vFyqkF9YyFySyF1agFy7trZ7CF17
-	Xws0qFs5Ca1ayaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UsF4iUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhUko2fut54cUAAAsE
+References: <20250401153225.96379-4-anshuman.gupta@intel.com>
+ <20250401201349.GA1676401@bhelgaas> <CAJZ5v0irNFX6dFrStinNXamrhP143=yjjfx4iK0pY+-dTEkviw@mail.gmail.com>
+ <CY5PR11MB6211021207DE5ECAA43BF26595AE2@CY5PR11MB6211.namprd11.prod.outlook.com>
+ <CAJZ5v0inCpM2UhzZ_pD52S0Hf8aaEMa40CyE-dwzVmO1n3PMwA@mail.gmail.com> <MN0PR11MB6207F55ABAA2187609BB872695AE2@MN0PR11MB6207.namprd11.prod.outlook.com>
+In-Reply-To: <MN0PR11MB6207F55ABAA2187609BB872695AE2@MN0PR11MB6207.namprd11.prod.outlook.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 3 Apr 2025 20:15:10 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gKBYa_N-dA1JwF0yVbc6XSmQEy1LpVytDM7uc9kbZ8fA@mail.gmail.com>
+X-Gm-Features: AQ5f1Jp4RPnbi6Bs3PiB6NEgqUjb48BxQsVIREqIl0ymQIEeIELbrdMMQIZxQPk
+Message-ID: <CAJZ5v0gKBYa_N-dA1JwF0yVbc6XSmQEy1LpVytDM7uc9kbZ8fA@mail.gmail.com>
+Subject: Re: [PATCH 03/12] PCI/ACPI: Add aux power grant notifier
+To: "Gupta, Anshuman" <anshuman.gupta@intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, 
+	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "lenb@kernel.org" <lenb@kernel.org>, 
+	"bhelgaas@google.com" <bhelgaas@google.com>, 
+	"ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>, 
+	"De Marchi, Lucas" <lucas.demarchi@intel.com>, "Vivi, Rodrigo" <rodrigo.vivi@intel.com>, 
+	"Nilawar, Badal" <badal.nilawar@intel.com>, "Gupta, Varun" <varun.gupta@intel.com>, 
+	"ville.syrjala@linux.intel.com" <ville.syrjala@linux.intel.com>, "Shankar, Uma" <uma.shankar@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Apr 3, 2025 at 6:09=E2=80=AFPM Gupta, Anshuman <anshuman.gupta@inte=
+l.com> wrote:
+>
+> > -----Original Message-----
+> > From: Rafael J. Wysocki <rafael@kernel.org>
+> > Sent: Thursday, April 3, 2025 7:04 PM
+> > To: Gupta, Anshuman <anshuman.gupta@intel.com>
+> > Cc: Rafael J. Wysocki <rafael@kernel.org>; Bjorn Helgaas
+> > <helgaas@kernel.org>; intel-xe@lists.freedesktop.org; linux-
+> > acpi@vger.kernel.org; linux-pci@vger.kernel.org; lenb@kernel.org;
+> > bhelgaas@google.com; ilpo.jarvinen@linux.intel.com; De Marchi, Lucas
+> > <lucas.demarchi@intel.com>; Vivi, Rodrigo <rodrigo.vivi@intel.com>; Nil=
+awar,
+> > Badal <badal.nilawar@intel.com>; Gupta, Varun <varun.gupta@intel.com>;
+> > ville.syrjala@linux.intel.com; Shankar, Uma <uma.shankar@intel.com>
+> > Subject: Re: [PATCH 03/12] PCI/ACPI: Add aux power grant notifier
+> >
+> > On Thu, Apr 3, 2025 at 1:30=E2=80=AFPM Gupta, Anshuman
+> > <anshuman.gupta@intel.com> wrote:
+> > >
+> > > > -----Original Message-----
+> > > > From: Rafael J. Wysocki <rafael@kernel.org>
+> > > > Sent: Wednesday, April 2, 2025 4:54 PM
+> > > > To: Bjorn Helgaas <helgaas@kernel.org>; Gupta, Anshuman
+> > > > <anshuman.gupta@intel.com>
+> > > > Cc: intel-xe@lists.freedesktop.org; linux-acpi@vger.kernel.org;
+> > > > linux- pci@vger.kernel.org; rafael@kernel.org; lenb@kernel.org;
+> > > > bhelgaas@google.com; ilpo.jarvinen@linux.intel.com; De Marchi, Luca=
+s
+> > > > <lucas.demarchi@intel.com>; Vivi, Rodrigo <rodrigo.vivi@intel.com>;
+> > > > Nilawar, Badal <badal.nilawar@intel.com>; Gupta, Varun
+> > > > <varun.gupta@intel.com>; ville.syrjala@linux.intel.com; Shankar, Um=
+a
+> > > > <uma.shankar@intel.com>
+> > > > Subject: Re: [PATCH 03/12] PCI/ACPI: Add aux power grant notifier
+> > > >
+> > > > On Tue, Apr 1, 2025 at 10:13=E2=80=AFPM Bjorn Helgaas <helgaas@kern=
+el.org>
+> > wrote:
+> > > > >
+> > > > > On Tue, Apr 01, 2025 at 09:02:16PM +0530, Anshuman Gupta wrote:
+> > > > > > Adding a notifier to notify all PCIe child devices about the
+> > > > > > block main power removal. It is needed because theoretically
+> > > > > > multiple PCIe Endpoint devices on same Root Port can request fo=
+r
+> > > > > > AUX power and _DSM method can return with 80000000h signifies
+> > > > > > that the hierarchy connected via the slot cannot support main
+> > > > > > power removal when in D3Cold.
+> > > > >
+> > > > > I wish the spec used different language here.  "D3cold" *means*
+> > > > > "main power is removed" (PCIe r6.0, sec 5.3.1.4.2), so it doesn't
+> > > > > make sense to say that "the slot cannot support main power remova=
+l
+> > > > > when in D3cold".  If a device is in D3cold, its main power has
+> > > > > been removed by definition.
+> > > > >
+> > > > > I suppose the spec is trying to say if the driver has called this
+> > > > > _DSM with 80000000h, it means the platform must not remove main
+> > > > > power from the device while the system is in S0?  Is that what yo=
+u
+> > > > > think it means?
+> > > > >
+> > > > > The 2h return value description says it "indicates that the
+> > > > > platform will not remove main power from the slot while the syste=
+m is in
+> > S0,"
+> > > > > so I guess that must be it.
+> > > > >
+> > > > > In this series, pci_acpi_aux_power_setup() only supplies a 16-bit
+> > > > > aux_pwr_limit value, so the driver cannot *request* that the
+> > > > > platform not remove main power.
+> > > > >
+> > > > > So I guess the only scenario where the _DSM returns 80000000h is
+> > > > > when the platform itself or other devices prevent the removal of
+> > > > > main power.  And the point of the notifier is to tell devices tha=
+t
+> > > > > their main power will never be removed while the system is in S0.
+> > > > > Is that right?
+> > > > >
+> > > > > > This may disrupt functionality of other child device.
+> > > > >
+> > > > > What sort of disruption could happen?  I would think that if the
+> > > > > _DSM returns 80000000h, it just means the device will not have
+> > > > > main power removed, so it won't see that power state transition.
+> > > > > The only "disruption" would be that we're using more power.
+> > > > >
+> > > > > > Let's notify all PCIe devices requested Aux power resource and
+> > > > > > Let PCIe End Point driver handle it in its callback.
+> > > > >
+> > > > > Wrap to fill 75 columns.
+> > > > >
+> > > > > s/Adding/Add/
+> > > > > s/Let's notify/Notify/
+> > > > > s/and Let/and let/
+> > > > > s/End Point/Endpoint/ (several places here and below)
+> > > > >
+> > > > > > Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
+> > > > > > ---
+> > > > > >  drivers/pci/pci-acpi.c   | 34 +++++++++++++++++++++++++++++++-=
+--
+> > > > > >  include/linux/pci-acpi.h | 13 +++++++++++++
+> > > > > >  2 files changed, 44 insertions(+), 3 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> > > > > > index
+> > > > > > 04149f037664..d1ca1649e6e8 100644
+> > > > > > --- a/drivers/pci/pci-acpi.c
+> > > > > > +++ b/drivers/pci/pci-acpi.c
+> > > > > > @@ -1421,6 +1421,32 @@ static void
+> > > > > > pci_acpi_optimize_delay(struct
+> > > > pci_dev *pdev,
+> > > > > >       ACPI_FREE(obj);
+> > > > > >  }
+> > > > > >
+> > > > > > +static BLOCKING_NOTIFIER_HEAD(pci_acpi_aux_power_notify_list);
+> > > > > > +
+> > > > > > +/**
+> > > > > > + * pci_acpi_register_aux_power_notifier - Register driver
+> > > > > > +notifier
+> > > > > > + * @nb: notifier block
+> > > > > > + *
+> > > > > > + * This function shall be called by PCIe End Point device
+> > > > > > +requested the Aux
+> > > > > > + * power resource in order to handle the any scenario
+> > > > > > +gracefully when other
+> > > > > > + * child PCIe devices Aux power request returns with No main
+> > > > > > +power
+> > > > removal.
+> > > > > > + * PCIe devices which register this notifier shall handle No
+> > > > > > +main power
+> > > > > > + * removal scenario accordingly.
+> > > > >
+> > > > > This would actually be called by the *driver* (not by the device)=
+.
+> > > >
+> > > Hi Rafael,
+> > > Thanks for review.
+> > > > Apart from this, there seems to be a design issue here because it
+> > > > won't notify every driver that has requested the Aux power, just th=
+e
+> > > > ones that have also registered notifiers.
+> > > IMHO that is what intended, if any device has functional impact in ou=
+r
+> > > case it is INTEL GPU has functional impact if other PCIe device's (on
+> > > same root port) Aux Power request returns with 0x2. We need to handle
+> > such case to handle it gracefully.
+> > > >
+> > > > So this appears to be an opt-in from getting notifications on Aux
+> > > > power request rejection responses to requests from other drivers
+> > > > requesting Aux power for the same Root Port, but the changelog of
+> > > > the first patch already claimed that the aggregation of requests wa=
+s
+> > > > not supported.  So if only one driver will be allowed to request th=
+e
+> > > > Aux power for the given Root Port, why would the notifiers be neces=
+sary
+> > after all?
+> > > >
+> > > Please guide us, if we remove the above limitation from the commit lo=
+g.
+> > > Then do we have any design issue with notifier approach ?
+> >
+> > Exactly like I said: If you only allow one driver to use the _DSM to re=
+quest the
+> > Aux power from a given Root Port, it will have all of the information a=
+nd does
+> > not need to be notified about any changes.  Since no one else is allowe=
+d to use
+> > this interface for that Root Port, no one else will need a notifier eit=
+her.  For this
+> > to work, you need some mechanism allowing drivers to claim the interfac=
+e so
+> > no one else can use it (on a per Root Port basis) which is currently mi=
+ssing
+> > AFAICS.
+>
+> IMHO such kind of mechanism will require to add Root Port specific data s=
+tructure to claim
+> the interface. But real problem is the criteria  to claim the interface.
+> Is first PCIe Non-Bridge Endpoint Function 0 driver can be criteria  to c=
+laim the
+> Interface. Or first come and first serve approach ?
 
+IMV, the first PCIe Non-Bridge Endpoint Function 0 driver approach
+would be sort of fragile and cumbersome to enforce.
 
-On 2025/4/3 20:24, Hans Zhang wrote:
->>>>>    }
->>>>>    EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
->>>>>    @@ -648,7 +614,6 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
->>>>>      static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int
->>>>> ht_cap)
->>>>>    {
->>>>> -    int rc, ttl = PCI_FIND_CAP_TTL;
->>>>>        u8 cap, mask;
->>>>>          if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
->>>>> @@ -657,7 +622,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev 
->>>>> *dev,
->>>>> u8 pos, int ht_cap)
->>>>>            mask = HT_5BIT_CAP_MASK;
->>>>>          pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
->>>>> -                      PCI_CAP_ID_HT, &ttl);
->>>>> +                      PCI_CAP_ID_HT);
->>>>>        while (pos) {
->>>>>            rc = pci_read_config_byte(dev, pos + 3, &cap);
->>>>>            if (rc != PCIBIOS_SUCCESSFUL)
->>>>> @@ -668,7 +633,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev 
->>>>> *dev,
->>>>> u8 pos, int ht_cap)
->>>>>              pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
->>>>>                              pos + PCI_CAP_LIST_NEXT,
->>>>> -                          PCI_CAP_ID_HT, &ttl);
->>>>> +                          PCI_CAP_ID_HT);
->>>>
->>>> This function kind of had the idea to share the ttl but I suppose 
->>>> that was
->>>> just a final safeguard to make sure the loop will always terminate 
->>>> in case
->>>> the config space is corrupted so the unsharing is not a big issue.
->>>>
->>>
->>> __pci_find_next_cap_ttl
->>>    // This macro definition already has ttl loop restrictions inside it.
->>>    PCI_FIND_NEXT_CAP_TTL
->>>
->>> Do I understand that you agree to remove ttl initialization and 
->>> parameter
->>> passing?
->>
->> Yes, I agree with it but doing anything like this (although I'd mention
->> the reasoning in the changelog myself).
->>
-> 
-> Ok, I see. I will give the reasons.
+First come, first serve is much simpler and should be sufficient for now AF=
+AICS.
 
-Hi Ilpo,
+> > I think that this is the option you want to pursue.
+> >
+> We will prefer to stick with this option, if it can guaranty that XeKMD w=
+ill the only driver
+> allowed to request Aux power to enable VRSR.
+>
+> > OTOH, if you want to allow multiple drivers to use this interface for t=
+he same
+> > Root Port, you need to aggregate the requests (as required by the spec =
+IIUC) in
+> > the first place, or else the users can override each other's request.  =
+In that case
+>
+> INHO how Linux Kernel will aggregate the Aux Power request, without knowi=
+ng the
+> total Aux power budget. AFAIU aggregated Aux power request without knowle=
+dge of total
+> power budget can also be denied by BIOS[1].
+> Therefore how aggregation can be useful ?
 
-The [v9 3/6]patch I plan to submit is as follows, please review it.
+Say two drivers request the Aux power from the same Root Port and each
+of them passes a limit sufficient for its device.  Without
+aggregation, what guarantees that the last limit passed will be
+sufficient for both devices?
 
- From 6da415d130e76b57ecf401f14bf0b66f20407839 Mon Sep 17 00:00:00 2001
-From: Hans Zhang <18255117159@163.com>
-Date: Fri, 4 Apr 2025 00:20:29 +0800
-Subject: [v9 3/6] PCI: Refactor capability search into common macros
+Also see the spec provision regarding retries below.
 
-- Capability search is done both in PCI core and some controller drivers.
-- PCI core's cap search func requires PCI device and bus structs exist.
-- Controller drivers cannot use PCI core's cap search func as they
-   need to find capabilities before they instantiated the PCI device & bus
-   structs.
+> [1]As per r3.3 Section 4.6.10
+> Platform Firmware Budgeting of Aux Power Availability:
+> Platform firmware must not grant more power than what is available within=
+ the system. For
+> example, a board may be designed with four CEM slots (one x16 slot, one x=
+4 slot, and two x1
+> slots). The board may implement a power delivery circuit capable of suppl=
+ying 2 W of power for
+> the 3.3 Vaux rail supplying all 4 slots. The 3.3 Vaux pins on each CEM sl=
+ot can supply 1 W each.
+> Platform firmware may use the retry mechanism to prioritize requests from=
+ devices in preferred
+> slots in the following manner:
+>
+> -> Requests from a device in the highest priority slot (e.g., x16) are gr=
+anted immediately, if
+> available.
+>
+> -> Requests from devices in lower priority slots (e.g., x2, x1) are initi=
+ally rejected, with a retry
+> interval inversely proportional to the slot priority. For instance, if th=
+e x2 slot is higher priority
+> than the x1 slots, so the retry interval for the x2 slot may be 4 seconds=
+, and the x1 slots may be
+> 8 and 10 seconds.
+>
+> ->As requests are granted, the granted values are subtracted from the ava=
+ilable budget.
+>  Retried requests are granted based on the remaining power budget or deni=
+ed if insufficient
+> power budget is available. Another retry is not permitted.
+>
+> -> When there is insufficient power budget for a request, firmware may ch=
+oose to keep main
+> power on and return no power removal (2h).
 
-- Move capability search into a macro so it can be reused where normal
-   PCI config space accessors cannot yet be used due to lack of the
-   instantiated PCI dev.
-- Instead, give the config space reading function as an argument to the
-   new macro.
-- Convert PCI core to use the new macro.
+This means that the platform firmware is supposed to do its own
+aggregation, but at the system (board) level, not at the Root Port
+level.
 
-The macros now implement, parameterized by the config access method. The
-PCI core functions are converted to utilize these macros with the standard
-pci_bus_read_config accessors. Controller drivers can later use the same
-macros with their early access mechanisms while maintaining the existing
-protection against infinite loops through preserved TTL checks.
+The algorithm is described above and my understanding of it is that
+once a request has been granted, it cannot be retracted later.  Also
+it appears to assume a 1:1 correspondence between PCIe slots and Root
+Ports.
 
-The ttl parameter was originally an additional safeguard to prevent
-infinite loops in corrupted config space.  However, the
-PCI_FIND_NEXT_CAP_TTL macro already enforces a TTL limit internally.
-Removing redundant ttl handling simplifies the interface while maintaining
-the safety guarantee. This aligns with the macro's design intent of
-encapsulating TTL management.
-
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-  drivers/pci/pci.c | 70 +++++---------------------------------
-  drivers/pci/pci.h | 86 +++++++++++++++++++++++++++++++++++++++++++++++
-  2 files changed, 95 insertions(+), 61 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e4d3719b653d..bef242d84ab4 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -9,7 +9,6 @@
-   */
-
-  #include <linux/acpi.h>
--#include <linux/align.h>
-  #include <linux/kernel.h>
-  #include <linux/delay.h>
-  #include <linux/dmi.h>
-@@ -31,7 +30,6 @@
-  #include <asm/dma.h>
-  #include <linux/aer.h>
-  #include <linux/bitfield.h>
--#include <uapi/linux/pci_regs.h>
-  #include "pci.h"
-
-  DEFINE_MUTEX(pci_slot_mutex);
-@@ -426,35 +424,16 @@ static int pci_dev_str_match(struct pci_dev *dev, 
-const char *p,
-  }
-
-  static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
--				  u8 pos, int cap, int *ttl)
-+				  u8 pos, int cap)
-  {
--	u8 id;
--	u16 ent;
--
--	pci_bus_read_config_byte(bus, devfn, pos, &pos);
--
--	while ((*ttl)--) {
--		if (pos < PCI_STD_HEADER_SIZEOF)
--			break;
--		pos = ALIGN_DOWN(pos, 4);
--		pci_bus_read_config_word(bus, devfn, pos, &ent);
--
--		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
--		if (id == 0xff)
--			break;
--		if (id == cap)
--			return pos;
--		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
--	}
--	return 0;
-+	return PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config, pos, cap, bus,
-+				     devfn);
-  }
-
-  static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
-  			      u8 pos, int cap)
-  {
--	int ttl = PCI_FIND_CAP_TTL;
--
--	return __pci_find_next_cap_ttl(bus, devfn, pos, cap, &ttl);
-+	return __pci_find_next_cap_ttl(bus, devfn, pos, cap);
-  }
-
-  u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
-@@ -555,42 +534,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
-   */
-  u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
-  {
--	u32 header;
--	int ttl;
--	u16 pos = PCI_CFG_SPACE_SIZE;
--
--	/* minimum 8 bytes per capability */
--	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
--
-  	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
-  		return 0;
-
--	if (start)
--		pos = start;
--
--	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
--		return 0;
--
--	/*
--	 * If we have no capabilities, this is indicated by cap ID,
--	 * cap version and next pointer all being 0.
--	 */
--	if (header == 0)
--		return 0;
--
--	while (ttl-- > 0) {
--		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
--			return pos;
--
--		pos = PCI_EXT_CAP_NEXT(header);
--		if (pos < PCI_CFG_SPACE_SIZE)
--			break;
--
--		if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
--			break;
--	}
--
--	return 0;
-+	return PCI_FIND_NEXT_EXT_CAPABILITY(pci_bus_read_config, start, cap,
-+					    dev->bus, dev->devfn);
-  }
-  EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
-
-@@ -650,7 +598,7 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
-
-  static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
-  {
--	int rc, ttl = PCI_FIND_CAP_TTL;
-+	int rc;
-  	u8 cap, mask;
-
-  	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
-@@ -659,7 +607,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev 
-*dev, u8 pos, int ht_cap)
-  		mask = HT_5BIT_CAP_MASK;
-
-  	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
--				      PCI_CAP_ID_HT, &ttl);
-+				      PCI_CAP_ID_HT);
-  	while (pos) {
-  		rc = pci_read_config_byte(dev, pos + 3, &cap);
-  		if (rc != PCIBIOS_SUCCESSFUL)
-@@ -670,7 +618,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev 
-*dev, u8 pos, int ht_cap)
-
-  		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
-  					      pos + PCI_CAP_LIST_NEXT,
--					      PCI_CAP_ID_HT, &ttl);
-+					      PCI_CAP_ID_HT);
-  	}
-
-  	return 0;
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 6a7c88b9cd35..b204ebeeb1cf 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -2,7 +2,9 @@
-  #ifndef DRIVERS_PCI_H
-  #define DRIVERS_PCI_H
-
-+#include <linux/align.h>
-  #include <linux/pci.h>
-+#include <uapi/linux/pci_regs.h>
-
-  struct pcie_tlp_log;
-
-@@ -91,6 +93,90 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
-  int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 
-size,
-  			u32 *val);
-
-+/* Standard Capability finder */
-+/**
-+ * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
-+ * @read_cfg: Function pointer for reading PCI config space
-+ * @start: Starting position to begin search
-+ * @cap: Capability ID to find
-+ * @args: Arguments to pass to read_cfg function
-+ *
-+ * Iterates through the capability list in PCI config space to find
-+ * the specified capability. Implements TTL (time-to-live) protection
-+ * against infinite loops.
-+ *
-+ * Returns: Position of the capability if found, 0 otherwise.
-+ */
-+#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
-+({									\
-+	int __ttl = PCI_FIND_CAP_TTL;					\
-+	u8 __id, __found_pos = 0;					\
-+	u8 __pos = (start);						\
-+	u16 __ent;							\
-+									\
-+	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
-+									\
-+	while (__ttl--) {						\
-+		if (__pos < PCI_STD_HEADER_SIZEOF)			\
-+			break;						\
-+									\
-+		__pos = ALIGN_DOWN(__pos, 4);				\
-+		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
-+									\
-+		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
-+		if (__id == 0xff)					\
-+			break;						\
-+									\
-+		if (__id == (cap)) {					\
-+			__found_pos = __pos;				\
-+			break;						\
-+		}							\
-+									\
-+		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
-+	}								\
-+	__found_pos;							\
-+})
-+
-+/* Extended Capability finder */
-+/**
-+ * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
-+ * @read_cfg: Function pointer for reading PCI config space
-+ * @start: Starting position to begin search (0 for initial search)
-+ * @cap: Extended capability ID to find
-+ * @args: Arguments to pass to read_cfg function
-+ *
-+ * Searches the extended capability space in PCI config registers
-+ * for the specified capability. Implements TTL protection against
-+ * infinite loops using a calculated maximum search count.
-+ *
-+ * Returns: Position of the capability if found, 0 otherwise.
-+ */
-+#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)		\
-+({										\
-+	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;				\
-+	u16 __found_pos = 0;							\
-+	int __ttl, __ret;							\
-+	u32 __header;								\
-+										\
-+	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;		\
-+	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {			\
-+		__ret = read_cfg(args, __pos, 4, &__header);			\
-+		if (__ret != PCIBIOS_SUCCESSFUL)				\
-+			break;							\
-+										\
-+		if (__header == 0)						\
-+			break;							\
-+										\
-+		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {	\
-+			__found_pos = __pos;					\
-+			break;							\
-+		}								\
-+										\
-+		__pos = PCI_EXT_CAP_NEXT(__header);				\
-+	}									\
-+	__found_pos;								\
-+})
-+
-  /* Functions internal to the PCI core code */
-
-  #ifdef CONFIG_DMI
-
-
-
-Best regards,
-Hans
-
+The guys who haven't been granted their requests at once may be asked
+to try again later and there may not be enough Aux power for the last
+guys at all, so they will not get it and they will stay on the main
+power.  And again, this appears to be at the Root Port granularity.
 
