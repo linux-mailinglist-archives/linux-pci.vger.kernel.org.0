@@ -1,272 +1,313 @@
-Return-Path: <linux-pci+bounces-25211-lists+linux-pci=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pci+bounces-25212-lists+linux-pci=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4E00A79B7B
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 07:42:52 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9526A79BA2
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 07:59:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 16F313A4699
-	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 05:42:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A29FE1706C9
+	for <lists+linux-pci@lfdr.de>; Thu,  3 Apr 2025 05:59:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04D061A2C11;
-	Thu,  3 Apr 2025 05:41:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12F3B19ABDE;
+	Thu,  3 Apr 2025 05:59:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="DHEDx1SL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dOx3ou2w"
 X-Original-To: linux-pci@vger.kernel.org
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2073.outbound.protection.outlook.com [40.107.21.73])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089231C7005;
-	Thu,  3 Apr 2025 05:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1267A33993;
+	Thu,  3 Apr 2025 05:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743658897; cv=fail; b=P6UCmoIru5ng6catMoigYyILIZ6ertHm0aPEggEuJ2e7R3IgceZFwHR3Ynlnwj4ULyD1kLeAI0JItZedE+AwzGASIaETPY0XbmoVohwTYaj04WtsqaWcVDkcWGJ31b0t/pnn1XK/2VPmkeSmUU5DJVWKJUWKDpq4stqYRdixN40=
+	t=1743659995; cv=fail; b=pGBarjTQXG9UaWDtm4LBG1ribtS2fdTAcMw4mHXGEFm7bxkeyxkqcE6Aewi5JFgmfhsVhDnVF5LU86RqZnXI3i1YLEANpr2zJbJ5ySK88E4qsfSzsPLwlTDuvGzntk7MqOfsy10FruUbbB1z9S4qxUnAQN74Av0Tm/zqDoe28lI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743658897; c=relaxed/simple;
-	bh=LNzkxDNZtbuyawzgLVxP0Op+mM60LMh5ya0gMBg74Fc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=K3V3qO8tywyFZyYY5+/5gMq0j+jVLaTtrrGklgRdOGG7Lr4DsmvtOfak9VMwY+9WCx7N1brzw48JZSNPHmB/pgtY0buF3j/Pjs0hIZwsxboKT0DDtboJJ//t4/Z42W3jtnGLXIK6OhTfxQQnEaeTZu3LBL8Q+mWecLQEgwKRAWw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=DHEDx1SL; arc=fail smtp.client-ip=40.107.21.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1743659995; c=relaxed/simple;
+	bh=aXpcZ+e+fAUiJufuNBs1U4UpMJjmvll8US/1PoLh5lM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=RSfCWxMU0ggH4ozy6nIVlIi5m97ExJkoSAIQIVVRebLvVNutymh6YLK/TBsz8TjxVL2HftgwDrLpKDBa9bATNan44ayJsRufTiYBds1pQV5ke39A/PN7FdoIbncWSEcIjFwhka1RnrpkX8fgKPVQS7erp804pJ7gIT0yQMiB9Q8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dOx3ou2w; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1743659993; x=1775195993;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=aXpcZ+e+fAUiJufuNBs1U4UpMJjmvll8US/1PoLh5lM=;
+  b=dOx3ou2w9PE+KrqsymNlykRIeK5GBTD26UoWp/5jrOJwzYyW/5s4fV0f
+   Zoi4G2xl+h9yr1f4yuOvBAS8oCm0fF/HBTO/EevKVbbhnHsDFe57R+wMX
+   XRWdeB9byzTM9BYdkaZPij1OiB8r4cYaJZjvNZ2x6xqVgvLjiF7n4y45P
+   nCL7/DGYZcdZMam7ahJhdk1ZrkJwIluxsyaMaKJ9trIuUW7GY0Q4qlOom
+   JR9w0HPUm/mrA7PZ/zxyLvqwoBMFf/q9K59sy/x060OsAt7Iva6jgD/rT
+   YiUcXXBDC0JIMBb6w1C5vYiqx0rRrf8BpBUOQHQEhLvNsOevcxduTGGnk
+   A==;
+X-CSE-ConnectionGUID: phoYoAj7TF+0oI0vmPWM4w==
+X-CSE-MsgGUID: v61jBzxZTX6bBJqi8YmtEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11392"; a="56415125"
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="56415125"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2025 22:59:52 -0700
+X-CSE-ConnectionGUID: vReob5XARn66cC29VmoD6A==
+X-CSE-MsgGUID: R0I6z2m0QDWSxUOnNlUgCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,184,1739865600"; 
+   d="scan'208";a="131034296"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Apr 2025 22:59:52 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 2 Apr 2025 22:59:51 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 2 Apr 2025 22:59:51 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.45) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 2 Apr 2025 22:59:51 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Kpg6tnkyAWGDLdrPs7Gok+cXJfQvO6BVGM6hWU6U97ciCq+w4FJoOCch/Gfak+g1exbGAS/cGOvq5fvCN9+hzJoqQa5Yy+7V+jhogk24yoMbDl2zBmI4Ywo2fWB8E67l8v0+RTk6gAUkJIIRrlMuD0qw39yocgPLFC0chR3Oa5VzXn6dNz3+THj3gQkwiO5sUeeGBPZeDyjjRvhYuhCf2N3GnKC7sL2aOyXnSdXDZ3ygvg6H04VjFf3QTLira+IWby1h/RejEZA0F6Yfd1Dv6HtfWz895+l8kRC53XDJFG+cN1KPWSAbVYMQP1PqkciWbnwU21Cs/5feW2wK4AR9JQ==
+ b=cDpZCupp9rZkgpv1QocAxWZK0Oc5O0Wk4NwDL+lu15aQLlzVFqyHJwpeclQWCJ+Cd5mYIG4xCnhyKn+d2lQLhmsejbo07Z3qg4xwihh9FGZuV8EepCgMnbQSxr/4wJRcLW7UwKGWue6pQwy6xufEXbwcCK92qmVMUv9pOV/TJ2CFlOcsp1rXucpobWVSkEkp96Pb+MSYSHzOwIy+xxOFJq11bQNsD3xViZMqdclkXFvXBre35DiQjclG+OHZ/+pL1/aenet7+kcnErkCCV+XGD+yR9oXuJyIzvjsWGwyhJU+g+add5qce/FZ/XfvPU/B5O8PP8CEvABs9q62PxbCEQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7FVqzbUpnJP/6QYALcUHGeZ1JYt194NWiSde1H9Wz1E=;
- b=J+q4v05PafpMyp0SWvPEIzIaPeeVsnYhQ6O8+0h2Jof0Cs+rfveA1JvP9qzOHTcU56UJFn5aB4tXGNHZ/LElqj0FkB6QkxzY/ZmLG0KQJGgjaVxfn9gAuzZdjksNvYH/ZoLT58yhPgQR5ctJEHieZHN6r+P6Tek/KwMpz9WNsSIWRc8k02Tl8849p1Y6yUIhZ0IZMKkT8xIrvLe83gcPBTp8bbzQoRrVOfD9srM1J0Vp58kjTT65te1xVXf5UbnShwa8t2UaFe3jHNuXq5g+yAN4TOPTo5JCFdPwWn2mYQU2tTGRPhTFSoYCVz5xjCc7PgbArJDlG4/XxIDZVovpBg==
+ bh=xmQUe8PwxBoV4d1S/wIvbXjl4WBflbb7GsPvw6Sa97A=;
+ b=zLLlPgaXUAGkJSdXMV759AJvnd7xJi8t6wKZd8mAGs6peVAzCQm51EXRhae1DxsDN1NKz172XjxCAtrrnviWrTt10tB+RTeWrWfI1oeIk76xERsMUXu+RZ9UAsxQQJUn1T3macbtoYELMvyzOZPqi0Qe1OXaOSkMs/1pdDzOQEwB6poVexfbrH2grj8awvGYB72XXVzBhZgnALFG88+yAJh1egshQknAYIJqsCyunx1lvzEE6YI0nvTOJ94PrN5QVM59Ennmkykr36KwTYcvg18CxWi0Og7/htn7lPmA4XH/G7HADUS1p29cQ9UecHhNXL0Gy7MeFDctN0rYS1q3OQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7FVqzbUpnJP/6QYALcUHGeZ1JYt194NWiSde1H9Wz1E=;
- b=DHEDx1SLL7bEfVcCw09tMWU35ay+il294UB5n9ulMlOTV+WK/IDyc0gcD6O9So8Rp6yHn30YC2PiBzrE1q3tEWGJ6WMqXrCNwSSijjdDTthINpt022pzwbfTIZNXlVJNeH8fVxWHsPZSV+qTenzz+Vlf4PFQpdl/M+h/m2IwkFBV0JUr5eA6utWkKifGYfXj//HK+IRmbpXNLA36VMR06buP1nnEme9IfzAWK2dLiCsWsBI/K0pww5tuRWQ2WkJyQ0gFUKRB9EERa1sfL52A6f+GWur4z1tFbW56CrCkzlEBbZtyN896MjrORoSFH9wBUFNH2kZdasCyHviShCm3dA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
- by AM9PR04MB8145.eurprd04.prod.outlook.com (2603:10a6:20b:3e1::6) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CY5PR11MB6211.namprd11.prod.outlook.com (2603:10b6:930:25::6)
+ by DS7PR11MB7907.namprd11.prod.outlook.com (2603:10b6:8:db::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.46; Thu, 3 Apr
- 2025 05:41:33 +0000
-Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93]) by AS8PR04MB8676.eurprd04.prod.outlook.com
- ([fe80::28b2:de72:ad25:5d93%4]) with mapi id 15.20.8583.041; Thu, 3 Apr 2025
- 05:41:33 +0000
-From: Richard Zhu <hongxing.zhu@nxp.com>
-To: frank.li@nxp.com,
-	l.stach@pengutronix.de,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com
-Cc: linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Frank Li <Frank.Li@nxp.com>
-Subject: [PATCH v4 7/7] PCI: imx6: Save and restore the LUT setting for i.MX95 PCIe
-Date: Thu,  3 Apr 2025 13:39:37 +0800
-Message-Id: <20250403053937.765849-8-hongxing.zhu@nxp.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20250403053937.765849-1-hongxing.zhu@nxp.com>
-References: <20250403053937.765849-1-hongxing.zhu@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MA0PR01CA0042.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:81::13) To AS8PR04MB8676.eurprd04.prod.outlook.com
- (2603:10a6:20b:42b::10)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.44; Thu, 3 Apr
+ 2025 05:59:35 +0000
+Received: from CY5PR11MB6211.namprd11.prod.outlook.com
+ ([fe80::df5a:a32c:8904:15f1]) by CY5PR11MB6211.namprd11.prod.outlook.com
+ ([fe80::df5a:a32c:8904:15f1%7]) with mapi id 15.20.8534.045; Thu, 3 Apr 2025
+ 05:59:35 +0000
+From: "Gupta, Anshuman" <anshuman.gupta@intel.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "rafael@kernel.org"
+	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "ilpo.jarvinen@linux.intel.com"
+	<ilpo.jarvinen@linux.intel.com>, "De Marchi, Lucas"
+	<lucas.demarchi@intel.com>, "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+	"Nilawar, Badal" <badal.nilawar@intel.com>, "Gupta, Varun"
+	<varun.gupta@intel.com>, "ville.syrjala@linux.intel.com"
+	<ville.syrjala@linux.intel.com>, "Shankar, Uma" <uma.shankar@intel.com>
+Subject: RE: [PATCH 02/12] PCI/ACPI: Add PERST# Assertion Delay _DSM method
+Thread-Topic: [PATCH 02/12] PCI/ACPI: Add PERST# Assertion Delay _DSM method
+Thread-Index: AQHboxvS9+UDiaobzUKCMXM+EIsD97OPIhMAgAJP7iA=
+Date: Thu, 3 Apr 2025 05:59:35 +0000
+Message-ID: <CY5PR11MB6211B618338BECAF408917F795AE2@CY5PR11MB6211.namprd11.prod.outlook.com>
+References: <20250401153225.96379-3-anshuman.gupta@intel.com>
+ <20250401183030.GA1676293@bhelgaas>
+In-Reply-To: <20250401183030.GA1676293@bhelgaas>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY5PR11MB6211:EE_|DS7PR11MB7907:EE_
+x-ms-office365-filtering-correlation-id: 3c724e82-e445-496c-0465-08dd7274b608
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?lC/CLZYlSPrAtr+rQIgkCy4xvQ536HXxom5Lbr4QVsRorm+8DxLGOU9P8Ovp?=
+ =?us-ascii?Q?F0Mn+clvSsxqYqf1QRmND2jGzu+oaS91M8o9uRJM8n+ViTk+YfmILIyzZpSf?=
+ =?us-ascii?Q?2PgG1Qf44tkqK3RKm2QQMAQ/rUOptuR9eXhNYg8j+4QEuowNs55skhWkPO6R?=
+ =?us-ascii?Q?WY5iJpyxkunNI9JsKqX5YZRffwyGecKvXeOqSmeLTwXnX3B1HlxX2iqv0DYi?=
+ =?us-ascii?Q?Ioln/7tFMv1q4HzbOe/B/Ft6qioaGxchtMVBhV2MqOkqZ+IPeZb/qfieVkrq?=
+ =?us-ascii?Q?tQydkECcXpxDZPyYRuewg+FR1KEAwLaBZ28jHqJHWSyzypqLv8pHkWBXdexh?=
+ =?us-ascii?Q?mNDNJoS+hg83xukuDcDz3gCz6MsbvUvEzMoxVBJcFG/hEvpzdXymOVC19dTn?=
+ =?us-ascii?Q?iBSeRkXndthjedr6p8SqegC5yoL5zvXYhaIjBtw6NixHJH/KcbWuTl/a5xyr?=
+ =?us-ascii?Q?wVa80VSUT1R/3LJ3460tjoJbPPiHyNHZHrmLYIYN3lhudh0AdxGHDK9yoTWZ?=
+ =?us-ascii?Q?pcP8fGm4CFZcrFepPi5IvFlCGKHmUwfngq0FqK4iE0LsIdg//DUjZsbWjgre?=
+ =?us-ascii?Q?N7DrRjjNu016uN66h/WjMTbRHhlxwJw7talpyzm2LRdJyn2v22nW2x0169x3?=
+ =?us-ascii?Q?BXuCPT0kDeawm8KQfbdIw5OC2CBB5r3pUPTsKnRrZZ5iKtIjXr0Y8fGpl1Fz?=
+ =?us-ascii?Q?fK6G+GdAfGGc/QV1uWFXuS5BhTpQuLTW0u80pffvsuZC0z80RY3ZcciKfpCg?=
+ =?us-ascii?Q?6h2p6d1EMt8U0qJotdxOnBY8Y6d8q6ylzUNySi5TZXQG6lrfRAMzVYPGPoli?=
+ =?us-ascii?Q?mTj+ctWCJ/py4wLTW0MfX6TnzfP4j3uOc1EVk2oxb7UQgTV/cL6aRr7VtFkc?=
+ =?us-ascii?Q?WgpSRnQTpBEZ9OUdDa/vowIaoNgmMd4rzts932iR7HHfgWAJDy9/E7EN3JBe?=
+ =?us-ascii?Q?vKtFLYZTaN5+Hls5p8Rd2GoZ6Xhc8RHPdl4e1aKPQJccsP4CBiGCSCbBZ1op?=
+ =?us-ascii?Q?Uy5skHL1mz0doiqZFciISy7BLiLK3xE9lH5lX5rMXn8YaaCEvTEsYUYz2V3P?=
+ =?us-ascii?Q?7H0kYpmNuLdoBh6AGBCC8KedCnrKFhX+h3hrvla0vy0oWww719hkdiHE6oMS?=
+ =?us-ascii?Q?xmg56I6ySmwEuJ5THL5phHez861WoUzMMVCJA3fOhJh3Z/WFnPzdv+GS1Huy?=
+ =?us-ascii?Q?aaB67td5LhW2qaI9zPMV8mR7Nk179+lzmvuczNhyay6+xxxS8+rMu/GSNRol?=
+ =?us-ascii?Q?FkIe5UvOsyJhRWZGjUMZuUGV9WSoPstAqDi0r0yi5GfQvnsItdlh3Ue1A3Xm?=
+ =?us-ascii?Q?P06Rs6EcErySOBMswi5a1ZTjoO4b4oP1p2H1ansdF/+uphVeX5MunmCIQ16x?=
+ =?us-ascii?Q?Rt6zWMNVs0KAzLDJgJetHmlH7dsF6FNpP+k9+r4dd7uyEgpCjNq0+RKXDZKI?=
+ =?us-ascii?Q?VofJbf0xuZBBMIpOW+idzD7QFmaXJY59WZYGkyjrNbaSnBvEZzZvkQ=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6211.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?o15FN/nMidIgObMg7iAh7uCANBkOGtsz7+GdeCZGUZhUrb0zFG1ieFVMh2xP?=
+ =?us-ascii?Q?HiMlfZilmzlHeLdHqnsn+abEmjItA5eCKAWtHmsm1C9d+vCUTUXXyviWhiSG?=
+ =?us-ascii?Q?7I+qAKI53VzxNmOtO1qwoO8GlUpzfp/iKjGicJAXS1Z07o42S8yphLyLcWgt?=
+ =?us-ascii?Q?ifCKMKu+Dr0y1E1k2KK/M16DQ2/xOyc2ltClw3FQREjT11u6c1mCHbVD83zN?=
+ =?us-ascii?Q?+Zf0qPpWYPMRvkg95Ow8mWWanansUJuRyKUbpEUmYB6UIqqAfboSV9IzEFOQ?=
+ =?us-ascii?Q?G/yXPAwDlstz+uNqfWHyrBRFf81lOfZa/NgAbHI6hgBTPm38TgCoVma4fMQW?=
+ =?us-ascii?Q?meBMO9W6qffuQklYnmRP5feENpesy9UZar701S0SiP2MVBF+mqoFE6L7VpLF?=
+ =?us-ascii?Q?1jIFPhJdG8xYkNFDs6S4djfx8+J5/dKpb4awx5e0N22zrc84yw0minSPpseu?=
+ =?us-ascii?Q?0CBDFalDf2TS6eaYeC+JK3Ztdnz4irhd6TB4CwORuwb/DSpJTtaYxDT3jAbJ?=
+ =?us-ascii?Q?/cIgfM6saBFnRo9DC3VoGaDIajflFCEn2RvsuvRcpiisXHYVlfIHQ1AUj4MY?=
+ =?us-ascii?Q?uWXq4sAXcvRhWvl88HSIAdG09l66L6Fks7KBol/E6pognAYONGocv70Y+MIe?=
+ =?us-ascii?Q?54aql89niZdp8OnmfHTiEJWkLnmo8kChR1ctXtwlYweGG9UB7pgW6ihROSP1?=
+ =?us-ascii?Q?LhbetPmVDElvZOJRgY5jM1nrevwRA7MH4275u71BLCf8Xry7KQznBxuFCe74?=
+ =?us-ascii?Q?yqeoFh+BDHZcYD1+5zArBG/Hkep6USiU2T8g4lR1kUjOjxKXHmbhWWnFwreV?=
+ =?us-ascii?Q?IJhoKG74VjtqQIMAOBrTuDiUjs6NTjTuV1bBQfxi2elAYWHOb8Gb7dQfzCUZ?=
+ =?us-ascii?Q?SpbAndCbPCX+nAi8NfVCoFxv1YJXTRlFdfwa4F7Gzxj4+BT+fzxrEM3EklLF?=
+ =?us-ascii?Q?q2LkpYsT64zjgJJ8FD1CMVEji3caVierCVDktsenQJYzTAlIPRe4l0rBvwwY?=
+ =?us-ascii?Q?YupGBg7/PTZlxLlCLPJB/dEBsMfR60J22bnPwi8f89TZ0AZChkeTSQN4Usqc?=
+ =?us-ascii?Q?kJxs8oy+Sj12pWUVlJLq05k5h7fX6VmXIs2wgotcsFaRJoeZX1V4Mq1eWxOW?=
+ =?us-ascii?Q?M7Zbyou+d7//Ee/1lolTKS4ZIT3qbSpSVvqW6PFsUaRciSQ2stzBaP6TeoZW?=
+ =?us-ascii?Q?m2gyMI18xOnjt/hQmCvF39O1IwkcOd56xXb8tsJS94B/YzUfyNvSTuq/DGlL?=
+ =?us-ascii?Q?X2gm2x5omGB2NObvLSd6bAqJxF3eh/fdEvs8OPclYoxwSRt+uCtpkoyx1PaL?=
+ =?us-ascii?Q?6AJB9SExofhx0hYmjotjcXvi0VO4Kzt3xKWhYStwL0Afvs3gsIithwvGdhvT?=
+ =?us-ascii?Q?ylL+BttcC1mwrZUHWUzGmEH8BxdTaFwUKYEQR97E/REBhRcefS/KgYo8KIK2?=
+ =?us-ascii?Q?oWFdLsxVbUr7wS4A0DEoTNr4j5DaEW6CviQmEEnnEr6c98SFJglGMCwsFeS/?=
+ =?us-ascii?Q?s5qhzHTfDWYfap37TFrxbaFv4V+W+2dDgDlid/Kc5DXWTPswBl7UJhaqHh3q?=
+ =?us-ascii?Q?jnrEA5CbMntOqBYA48w6PFPIChGOlGXaIoyke/rR?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pci@vger.kernel.org
 List-Id: <linux-pci.vger.kernel.org>
 List-Subscribe: <mailto:linux-pci+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pci+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8676:EE_|AM9PR04MB8145:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5b5a03f8-0318-4fdf-4d65-08dd7272310d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|7416014|376014|1800799024|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?t0Edi+GsuIB492pGKN/wQVpeDydDEC2RGsuWs1rrZQJbOiev3xtcMDUYorWT?=
- =?us-ascii?Q?8knxzWodBxLoA6d2xLDpMQv1pAaX5tSG1ukA5mPlU8HzNiEu2SaI145AmEdX?=
- =?us-ascii?Q?WU9y0g3/sJM1/idMpXHNU29E1oW4gxKd5QXoXxeusK4qokHZuaYKo14OFTRe?=
- =?us-ascii?Q?h6ICsA728eC5r5CiEqYDESIj9dUmGAWopajdrQ1T2SN8MNAfFk3XbClyZroz?=
- =?us-ascii?Q?pJHIkagYAQDIAW2RnDnECUoZ7asQDuFQul65bXtedaltbUegT74a6cTwxZse?=
- =?us-ascii?Q?zllAZ8PSmt1g90+A0mkWI4Zsx4XegYsiWGNlEvtQeONwnU4wG2vmBDaCWC16?=
- =?us-ascii?Q?2th1vNagHU9WdwS5B5g2imFol3f/uwODnOR60e5a3B2kwTimNK6lOMXWTm3+?=
- =?us-ascii?Q?tH8gjRVENuwpdel0TZf8FTpCVqrcatjNBqtKAabpIkG5HBvkF6GifzeTk2v6?=
- =?us-ascii?Q?Unm7jSRh/2m1tm7jhufmITp4xpeJBYLKxd0f9ASR/NH5qubp8eb3b8ceNKW2?=
- =?us-ascii?Q?8FQ4emB9hKgVwigYLPWbROtDNSvEUubhISb0XYkY4ENx5q73T5Cid2XqUYwK?=
- =?us-ascii?Q?zO2TpFQlfqcRBvT4NhJcmx7dVWQOgUWyfH1OYDk+hdTfBtFtGdxNoUyG0VoH?=
- =?us-ascii?Q?dMbvnF88Fzxh6OjhIDFNvHBl11pYsIRuIhDl0RaAIDQLxG0bUC8k52qq2qwL?=
- =?us-ascii?Q?XIp6ObipKFkzkPsYEVvlX/vnNRfXDRXOwBegJwodmlYEbV1adwFfereAqdH5?=
- =?us-ascii?Q?PezjLk2uVFbpRs0KshyKA4Sec+r0KT81gR8MUnfJFv0lotdjIq6Ac4LfY2Du?=
- =?us-ascii?Q?OGEYPWvbsyDvpo6SX4b3EBQo5ECkkYtD3QnjBsY6GKBZH39hyDUo4W/TB3+N?=
- =?us-ascii?Q?H+qJyih1SYC3XmQY/k6Vd8ZVXmPwmLHbZ8+LQ7+LJQAofsqcR0BPdhCyjHPs?=
- =?us-ascii?Q?O5d3X+/tgsRJq4OjHT+1LMybOj1xOw7byTUi9+6L9dSCLPlVn5wtTIYRInRO?=
- =?us-ascii?Q?8iw/COJMD6feblJqvVtP4iMRO8OkClsp+rmaHQcfhdbGYgI5S6LKjdEdiMPS?=
- =?us-ascii?Q?tK7StCW11V6cEW2I+zEZh2Wj5zO6+RPLre+iWik82dYG5wOPErhYjrVSCEct?=
- =?us-ascii?Q?IhtP9zVD4yNCWsPtA4FMDlTT1hFXR7xq/uW5urfwqpd+GFgnri/SvBePGU1p?=
- =?us-ascii?Q?k+EPQgbmszE92qy+G5De4HeIyemqn6rp3sQIAdU7MCizjAeRHkV3j9vugQ9p?=
- =?us-ascii?Q?YVHXMEg26WSwoN1T89gu6T32ZLFhmQGO7V0TmwhzBO62Uhji6+b6WGf0Q5ij?=
- =?us-ascii?Q?NEvqtSg5gSoHPla0jKnH8Ai1Lxhk82ODAXuZTXvex71F7PqSHFjPbJ3xaGcj?=
- =?us-ascii?Q?x20W3BBGp5Y8JwExjdookyFaCiYkZwpLiHC3nN3Zugyn6QIlFF/NCoBtPM9q?=
- =?us-ascii?Q?MU0vNCq8sSPBAT5lregvucSXlFWs91PK8RiPUETROWHaGtlf0GI5nw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(7416014)(376014)(1800799024)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ozb/NrKIOntZxjKD8Q3/9MN94S0Epl0JW9o5LqpXSmDCMz4PJ/dCqTe2aFwg?=
- =?us-ascii?Q?Ux/v2awO8dD2rlkOihrhy35OjIzKlhcMoJgjrl4iKhHxfPbhpMDZJkdlfuJs?=
- =?us-ascii?Q?cnh4FRYD8RrHge+vWY+XHw3LyU6kb/Fgy7LMIbVkpD6IM3lX0cAETgkS06xD?=
- =?us-ascii?Q?fgmbar5ax1icBzNHsbmoWqVsEWINlItxIMlXYLYgy/3pNlmn62sfgG6ENtoU?=
- =?us-ascii?Q?entmGWx4Crl+jo0vr2KsBZ1ZUPER7Yk+XVY/NY4TwMP3OncuS3Yrq5HMKusO?=
- =?us-ascii?Q?hEZeBZVLZ3Zqlz+6ED9i4U5qkNStqajOyxGDdfr4kphtOqMEsHvfSDHQ2AzX?=
- =?us-ascii?Q?IKJ1x4+MuEP2ljAu+k8Jgh+TlF5prTWT/i7SVWDBrqTKEy/0I4Os4gICbSWc?=
- =?us-ascii?Q?Fgx7ak6sjFQRj7j7qnI5gtZcCD7WsBsR2dVBF840ehHXbImg3CFDfkK0lLCJ?=
- =?us-ascii?Q?26dVwdlTv7uG9WHunQ9T/0+Ey+C9QXS41g+pPRuYGCozRCDnzIzYrmYLk4I/?=
- =?us-ascii?Q?WeR+PqME1FzTkxqUjSBqYxT4xpM/w17WNu7nNv6sI07XNzUsAQMi0kEYXc/Y?=
- =?us-ascii?Q?ssad4jEhWhUXYmFE2ooVZzBqxSd1g9L6Eo4R9LForzSFrCnypxXl8/MqDGZ5?=
- =?us-ascii?Q?ESnYpQKXoTnkuvmd5oisw6Rh/hEJKQ5hhRiMsJdaySE8j/hd5cPwPJZegggJ?=
- =?us-ascii?Q?SoxhCTKREpx2q1JT71EJqM3ko3znJRtPzDcECQ+2hQHzOtb7swbE9NisQ1M0?=
- =?us-ascii?Q?IHsWlnQL4YecvXDFSU9Dk0wSyi9aNIUC9jXmk0+HTHWCxuWV+oq0Qq2DCuwK?=
- =?us-ascii?Q?xXHqyZOkvUAwUw+F0PXbABokw4LfMrMW77b86V+MNQJRlIt6sSERyMcsfoFz?=
- =?us-ascii?Q?J49DsSQ622nwvYV2wll70kb9yPTOb73lS9rBUEahPzTn+lLH7ciYGlWk076R?=
- =?us-ascii?Q?Thd+ObSxlo5RylXA7mVR6AtbA9BEuHeC3+OUg0sKRuLt/zl12Ugd0LuQVtWH?=
- =?us-ascii?Q?zn3YX8SuVRZXzNy0Nh9nsIusWvGwHBAhcrFZxWW7VWgbJebZ3sbO+N3rlEuZ?=
- =?us-ascii?Q?GaJioBWMgQeoq9UlxrDq2LU6290ZSpR1inzS039xzUb2AEZkNG+zwT+YBPz1?=
- =?us-ascii?Q?RSIG7Atb6OEqVW8I3Ga43ezJTBDg7AlEQA45/FYOeORuaTqhjxO4VWMApCnJ?=
- =?us-ascii?Q?lWIWTryd/2aG1ZUIrZPxhov4UvRei/+teh8HrB5cxw+XJux7/aQAxzwVR3uK?=
- =?us-ascii?Q?b+pLfx8aN1CMJnqXDPwEqpiTN5Xctnm0vkvmLSUr4qhWblNGUrH95o3qAoAS?=
- =?us-ascii?Q?SFcPy0Ug+nfC10D/OMzy8vhJUZkbbtn4hgydXhJCpPauMirUGMt94hDEow3j?=
- =?us-ascii?Q?ps9rc+8EcwB0prxErSHqrYbSuJVB4frGFA8HmfrOwqgLJ2/uXfvcTOCJJD1v?=
- =?us-ascii?Q?GuZIUNBvMk2aR8bb9CohWFOnb+BXqyNeup+sqm34ckzFaYX7I0YoMv6jRB1v?=
- =?us-ascii?Q?TQXdZv97WGEecKuct8O27xbihOYJaGjmKa2djTxXv5J4yl+AYz110vGbisrG?=
- =?us-ascii?Q?T2EEM+pXPA4764Ii0DfQeBuoxEPGZ/NVaoFZqEV4?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b5a03f8-0318-4fdf-4d65-08dd7272310d
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2025 05:41:33.3456
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6211.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c724e82-e445-496c-0465-08dd7274b608
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2025 05:59:35.1604
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sFYqN9whhLz653uRlkdU9rMkWYXqTtyDN/gEdNTNkrInJ0mJHviQY9Lm3d7hrZ1sWCgYB5JqIysYtEHCk2+KkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8145
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: goycKIekBAVkG0HJKkl+wshYrZXpks6cdlfKAnhecel0+QhZALInRAzmCO85AmvPj6mqBlCZSEmPq8aLVi/A/7greFYVR+FC/6jLHza3yok=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB7907
+X-OriginatorOrg: intel.com
 
-The look up table(LUT) setting would be lost during PCIe suspend on i.MX95.
 
-To ensure proper functionality after resume, save and restore the LUT
-setting in suspend and resume operations.
 
-Fixes: 9d6b1bd6b3c8 ("PCI: imx6: Add i.MX8MQ, i.MX8Q and i.MX95 PM support")
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/controller/dwc/pci-imx6.c | 47 +++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 614ec3c79f9c..46864204146e 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -138,6 +138,11 @@ struct imx_pcie_drvdata {
- 	const struct dw_pcie_host_ops *ops;
- };
- 
-+struct imx_lut_data {
-+	u32 data1;
-+	u32 data2;
-+};
-+
- struct imx_pcie {
- 	struct dw_pcie		*pci;
- 	struct gpio_desc	*reset_gpiod;
-@@ -157,6 +162,8 @@ struct imx_pcie {
- 	struct regulator	*vph;
- 	void __iomem		*phy_base;
- 
-+	/* LUT data for pcie */
-+	struct imx_lut_data	luts[IMX95_MAX_LUT];
- 	/* power domain for pcie */
- 	struct device		*pd_pcie;
- 	/* power domain for pcie phy */
-@@ -1498,6 +1505,42 @@ static void imx_pcie_msi_save_restore(struct imx_pcie *imx_pcie, bool save)
- 	}
- }
- 
-+static void imx_pcie_lut_save(struct imx_pcie *imx_pcie)
-+{
-+	u32 data1, data2;
-+	int i;
-+
-+	for (i = 0; i < IMX95_MAX_LUT; i++) {
-+		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL,
-+			     IMX95_PEO_LUT_RWA | i);
-+		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, &data1);
-+		regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2, &data2);
-+		if (data1 & IMX95_PE0_LUT_VLD) {
-+			imx_pcie->luts[i].data1 = data1;
-+			imx_pcie->luts[i].data2 = data2;
-+		} else {
-+			imx_pcie->luts[i].data1 = 0;
-+			imx_pcie->luts[i].data2 = 0;
-+		}
-+	}
-+}
-+
-+static void imx_pcie_lut_restore(struct imx_pcie *imx_pcie)
-+{
-+	int i;
-+
-+	for (i = 0; i < IMX95_MAX_LUT; i++) {
-+		if ((imx_pcie->luts[i].data1 & IMX95_PE0_LUT_VLD) == 0)
-+			continue;
-+
-+		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1,
-+			     imx_pcie->luts[i].data1);
-+		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA2,
-+			     imx_pcie->luts[i].data2);
-+		regmap_write(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_ACSCTRL, i);
-+	}
-+}
-+
- static int imx_pcie_suspend_noirq(struct device *dev)
- {
- 	struct imx_pcie *imx_pcie = dev_get_drvdata(dev);
-@@ -1506,6 +1549,8 @@ static int imx_pcie_suspend_noirq(struct device *dev)
- 		return 0;
- 
- 	imx_pcie_msi_save_restore(imx_pcie, true);
-+	if (imx_check_flag(imx_pcie, IMX_PCIE_FLAG_HAS_LUT))
-+		imx_pcie_lut_save(imx_pcie);
- 	if (imx_check_flag(imx_pcie, IMX_PCIE_FLAG_BROKEN_SUSPEND)) {
- 		/*
- 		 * The minimum for a workaround would be to set PERST# and to
-@@ -1550,6 +1595,8 @@ static int imx_pcie_resume_noirq(struct device *dev)
- 		if (ret)
- 			return ret;
- 	}
-+	if (imx_check_flag(imx_pcie, IMX_PCIE_FLAG_HAS_LUT))
-+		imx_pcie_lut_restore(imx_pcie);
- 	imx_pcie_msi_save_restore(imx_pcie, false);
- 
- 	return 0;
--- 
-2.37.1
-
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Wednesday, April 2, 2025 12:01 AM
+> To: Gupta, Anshuman <anshuman.gupta@intel.com>
+> Cc: intel-xe@lists.freedesktop.org; linux-acpi@vger.kernel.org; linux-
+> pci@vger.kernel.org; rafael@kernel.org; lenb@kernel.org;
+> bhelgaas@google.com; ilpo.jarvinen@linux.intel.com; De Marchi, Lucas
+> <lucas.demarchi@intel.com>; Vivi, Rodrigo <rodrigo.vivi@intel.com>; Nilaw=
+ar,
+> Badal <badal.nilawar@intel.com>; Gupta, Varun <varun.gupta@intel.com>;
+> ville.syrjala@linux.intel.com; Shankar, Uma <uma.shankar@intel.com>
+> Subject: Re: [PATCH 02/12] PCI/ACPI: Add PERST# Assertion Delay _DSM
+> method
+>=20
+> On Tue, Apr 01, 2025 at 09:02:15PM +0530, Anshuman Gupta wrote:
+> > Implement _DSM Method 11 as per PCI firmware specs section 4.6.11 Rev
+> > 3.3.
+>=20
+> "PCI Firmware r3.3, sec 4.6.11" so the citation is major to minor.
+>=20
+> "0xb" or "0Bh" to match spec usage.
+Thanks for review,
+will fix it.
+>=20
+> > Signed-off-by: Anshuman Gupta <anshuman.gupta@intel.com>
+> > ---
+> >  drivers/pci/pci-acpi.c   | 53
+> ++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/pci-acpi.h |  7 ++++++
+> >  2 files changed, 60 insertions(+)
+> >
+> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c index
+> > ebd49e43457e..04149f037664 100644
+> > --- a/drivers/pci/pci-acpi.c
+> > +++ b/drivers/pci/pci-acpi.c
+> > @@ -1499,6 +1499,59 @@ int pci_acpi_request_d3cold_aux_power(struct
+> > pci_dev *dev, u32 requested_power)  }
+> > EXPORT_SYMBOL(pci_acpi_request_d3cold_aux_power);
+> >
+> > +/**
+> > + * pci_acpi_add_perst_assertion_delay - Request PERST# delay via ACPI
+> > +DSM
+> > + * @dev: PCI device instance
+> > + * @delay_us: Requested delay_us
+> > + *
+> > + * This function sends a request to the host BIOS via ACPI _DSM to
+> > +grant the
+> > + * required PERST# delay for the specified PCI device. It evaluates
+> > +the _DSM
+> > + * to request the PERST# delay and handles the response accordingly.
+> > + *
+> > + * Return: returns 0 on success and errno on failure.
+> > + */
+> > +int pci_acpi_add_perst_assertion_delay(struct pci_dev *dev, u32
+> > +delay_us) {
+> > +	union acpi_object in_obj =3D {
+> > +		.integer.type =3D ACPI_TYPE_INTEGER,
+> > +		.integer.value =3D delay_us,
+> > +	};
+> > +
+> > +	union acpi_object *out_obj;
+> > +	acpi_handle handle;
+> > +	int result, ret =3D -EINVAL;
+> > +
+> > +	if (!dev || !ACPI_HANDLE(&dev->dev))
+> > +		return -EINVAL;
+> > +
+> > +	handle =3D ACPI_HANDLE(&dev->dev);
+>=20
+> acpi_check_dsm().
+Will fix it same as patch1
+>=20
+> > +	out_obj =3D acpi_evaluate_dsm_typed(handle, &pci_acpi_dsm_guid, 4,
+> > +					  DSM_PCI_PERST_ASSERTION_DELAY,
+> > +					  &in_obj, ACPI_TYPE_INTEGER);
+> > +	if (!out_obj)
+> > +		return -EINVAL;
+> > +
+> > +	result =3D out_obj->integer.value;
+> > +
+> > +	if (result =3D=3D delay_us) {
+> > +		dev_info(&dev->dev, "PERST# Assertion Delay set to"
+> > +			 "%u microseconds\n", delay_us);
+>=20
+> pci_info().
+>=20
+> Join these into a single string, even though they won't fit in a line wit=
+hout
+> wrapping.  This is to make them easier to grep for when a user reports se=
+eing
+> the message.  (Do this on the previous patch too, where I forgot to menti=
+on
+> it.)
+there was comment in RFC to warp the line with in 80.
+Will join the string.
+Thanks,
+Anshuman
+>=20
+> > +		ret =3D 0;
+> > +	} else if (result =3D=3D 0) {
+> > +		dev_warn(&dev->dev, "PERST# Assertion Delay request
+> failed,"
+> > +			 "no previous valid request\n");
+> > +	} else {
+> > +		dev_warn(&dev->dev,
+> > +			 "PERST# Assertion Delay request failed"
+> > +			 "Previous valid delay: %u microseconds\n", result);
+> > +	}
+> > +
+> > +	ACPI_FREE(out_obj);
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL(pci_acpi_add_perst_assertion_delay);
 
